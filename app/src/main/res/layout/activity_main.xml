@@ -16,12 +16,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true">
-
         <RadioGroup
             android:id="@+id/rg"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:gravity="center"
+            android:layout_height="@dimen/dp_49"
+            android:layout_alignParentBottom="true"
             android:orientation="horizontal">
 
             <RadioButton
@@ -31,22 +30,27 @@
                 android:layout_weight="1"
                 android:button="@null"
                 android:checked="true"
-
+                android:drawableTop="@drawable/activity_main_radiobutton1"
                 android:gravity="center"
-                android:text="首页"
+                android:paddingTop="@dimen/dp_9"
+                android:paddingBottom="@dimen/dp_5"
+                android:text="@string/home_page"
+                android:textColor="@drawable/activity_main_radiobutton_bottom_text"
+                android:textSize="10sp" />
 
-                />
-           <!-- android:drawableTop="@drawable/activity_main_radiobutton1"
-            android:textColor="@drawable/activity_main_radiobutton_text"-->
             <RadioButton
                 android:id="@+id/rb_two"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:button="@null"
+                android:drawableTop="@drawable/activity_main_radiobutton2"
                 android:gravity="center"
-                android:text="设备"
-                 />
+                android:paddingTop="@dimen/dp_9"
+                android:paddingBottom="@dimen/dp_5"
+                android:text="@string/device"
+                android:textColor="@drawable/activity_main_radiobutton_bottom_text"
+                android:textSize="10sp" />
 
             <RadioButton
                 android:id="@+id/rb_three"
@@ -54,11 +58,13 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:button="@null"
+                android:drawableTop="@drawable/activity_main_radiobutton3"
                 android:gravity="center"
-                android:text="我的"
-                 />
-
-
+                android:paddingTop="@dimen/dp_9"
+                android:paddingBottom="@dimen/dp_5"
+                android:text="@string/mine"
+                android:textColor="@drawable/activity_main_radiobutton_bottom_text"
+                android:textSize="10sp" />
         </RadioGroup>
     </LinearLayout>
 

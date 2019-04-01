@@ -15,7 +15,6 @@ import com.kaadas.lock.utils.cachefloder.CacheFloder;
 
 import java.util.Locale;
 
-import androidx.annotation.RequiresApi;
 
 /**
  *

@@ -2,6 +2,7 @@ package com.kaadas.lock.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
@@ -24,8 +25,7 @@ import com.kaadas.lock.utils.PhoneUtil;
 import com.kaadas.lock.utils.StringUtil;
 import com.kaadas.lock.utils.ToastUtil;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -74,9 +74,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         Intent intent;
         switch (v.getId()){
             case R.id.btn_login:
-                login();
-//                 intent=new Intent(this,MainActivity.class);
-//                startActivity(intent);
+//                login();
+                 intent=new Intent(this,MainActivity.class);
+                startActivity(intent);
                 break;
             case R.id.tv_register:
                  intent=new Intent(this,RegisterActivity.class);

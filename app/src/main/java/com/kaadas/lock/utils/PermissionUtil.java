@@ -3,14 +3,15 @@ package com.kaadas.lock.utils;
 import android.Manifest;
 import android.app.Activity;
 import android.os.Build;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 
 import com.kaadas.lock.MyApplication;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
+
 
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 

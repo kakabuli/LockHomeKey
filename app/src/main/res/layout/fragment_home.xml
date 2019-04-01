@@ -1,7 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ff0">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <!--有设备-->
+    <LinearLayout
+        android:id="@+id/ll_has_device"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#FFFFFF"
+        android:orientation="vertical"
+        android:visibility="gone">
 
-</LinearLayout>
+     <!--   <com.flyco.tablayout.SlidingTabLayout
+            android:id="@+id/user_pwd_tab_home"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_50"
+            app:tl_indicator_color="#51DDC4"
+            app:tl_indicator_height="@dimen/dp_3"
+            app:tl_indicator_width="@dimen/dp_50"
+            app:tl_indicator_width_equal_title="false"
+            app:tl_tab_space_equal="true"
+            app:tl_textSelectColor="#2B2F50"
+            app:tl_textUnselectColor="#666666"
+            app:tl_tab_padding="@dimen/dp_10"
+            app:tl_textsize="14sp" />-->
+        <android.support.v4.view.ViewPager
+            android:id="@+id/pager"
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+
+
+    </LinearLayout>
+    <!--无设备-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#1180EA"
+        android:orientation="vertical">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:src="@mipmap/logo"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="118dp"/>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:src="@mipmap/home_page_element"
+                android:layout_alignParentBottom="true"/>
+        </RelativeLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/guard_your_home"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/dp_60"
+                android:textSize="@dimen/sp_12"
+                android:textColor="#57D4FF"/>
+            <Button
+                android:id="@+id/btn_login"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_44"
+                android:layout_marginLeft="@dimen/dp_55"
+                android:layout_marginTop="@dimen/dp_36"
+                android:layout_marginRight="@dimen/dp_55"
+                android:background="@drawable/login_button_shape_check"
+                android:gravity="center"
+                android:text="@string/click_add_device"
+                android:textColor="#1F96F7"
+                android:textSize="@dimen/sp_15" />
+        </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>

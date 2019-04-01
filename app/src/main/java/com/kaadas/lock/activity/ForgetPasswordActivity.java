@@ -3,6 +3,8 @@ package com.kaadas.lock.activity;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
@@ -26,8 +28,7 @@ import com.kaadas.lock.utils.StringUtil;
 import com.kaadas.lock.utils.TimeUtils;
 import com.kaadas.lock.utils.ToastUtil;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
