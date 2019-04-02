@@ -43,4 +43,15 @@
     <string name="mine">我的</string>
     <string name="guard_your_home">守护您的家</string>
     <string name="click_add_device">点击添加设备</string>
+    <string name="my_message">我的消息</string>
+    <string name="production_activation">产品激活</string>
+    <string name="security_setting">安全设置</string>
+    <string name="user_feedback">用户反馈</string>
+    <string name="chang_jian_question">常见问题</string>
+    <string name="my_setting">我的设置</string>
+    <string name="about_us">关于我们</string>
+    <string name="strong_strong_guardian">壮壮家的守护者</string>
+    <string name="no_message">暂无消息</string>
+    <string name="official">官方</string>
+    <string name="delete">删除</string>
 </resources>

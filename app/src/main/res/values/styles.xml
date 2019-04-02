@@ -16,6 +16,7 @@
         <item name="android:backgroundDimEnabled">false</item>
         <item name="android:windowContentOverlay">@null</item>
     </style>
+
     <style name="MyDialog">
         <!-- alertDialog窗口背景色 -->
         <item name="android:windowBackground">@android:color/transparent</item>
@@ -32,4 +33,9 @@
         <!--背景是否模糊显示-->
         <item name="android:backgroundDimEnabled">true</item>
     </style>
+    <!--圆形imageview-->
+    <declare-styleable name="CircleImageView">
+        <attr name="border_width" format="dimension" />
+        <attr name="border_color" format="color" />
+    </declare-styleable>
 </resources>

@@ -1,4 +1,4 @@
-package com.kaadas.lock.activity;
+package com.kaadas.lock.activity.login;
 
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -8,7 +8,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -27,7 +26,6 @@ import com.kaadas.lock.utils.PhoneUtil;
 import com.kaadas.lock.utils.StringUtil;
 import com.kaadas.lock.utils.TimeUtils;
 import com.kaadas.lock.utils.ToastUtil;
-
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -61,6 +59,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     TimeUtils timeUtils;//时间工具类
     boolean passwordHide = true;//密码状态
     boolean userProtocolSlected = true;//用户协议选中状态
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -124,13 +123,14 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                     null, null, null);
         }
     }
+
     //注册
     private void register() {
         if (NetUtil.isNetworkAvailable()) {
             final String account = StringUtil.getEdittextContent(etAccount);
             if (TextUtils.isEmpty(account)) {
 //                ToastUtil.getInstance().showShort(R.string.input_telephone_or_rmail);
-                AlertDialogUtil.getInstance().noButtonSingleLineDialog(this,getString(R.string.account_message_not_empty));
+                AlertDialogUtil.getInstance().noButtonSingleLineDialog(this, getString(R.string.account_message_not_empty));
                 return;
             }
             String code = StringUtil.getEdittextContent(etVerification);
@@ -140,7 +140,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             }
 
             String pwd = StringUtil.getEdittextContent(etPassword);
-            if(StringUtil.judgeSpecialCharacter(pwd)){
+            if (StringUtil.judgeSpecialCharacter(pwd)) {
                 ToastUtil.getInstance().showShort(R.string.not_input_special_symbol);
                 return;
             }
@@ -156,7 +156,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             if (StringUtil.isNumeric(account)) {
                 if (!PhoneUtil.isMobileNO(account)) {
 //                    ToastUtil.getInstance().showShort(R.string.phone_not_right);
-                    AlertDialogUtil.getInstance().noButtonSingleLineDialog(this,getString(R.string.input_valid_telephone_or_email));
+                    AlertDialogUtil.getInstance().noButtonSingleLineDialog(this, getString(R.string.input_valid_telephone_or_email));
                     return;
                 }
                 String countryCode = tvAreaCode.getText().toString().trim().replace("+", "");
@@ -168,7 +168,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                     emailRegister(account, code, pwd);
                 } else {
 //                    ToastUtil.getInstance().showShort( R.string.email_not_right);
-                    AlertDialogUtil.getInstance().noButtonSingleLineDialog(this,getString(R.string.input_valid_telephone_or_email));
+                    AlertDialogUtil.getInstance().noButtonSingleLineDialog(this, getString(R.string.input_valid_telephone_or_email));
                     return;
                 }
             }
@@ -180,13 +180,12 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     }
 
     private void emailRegister(String account, String code, String pwd) {
-        LogUtils.d("davi 邮箱注册 account "+account+"  code "+code+" pwd "+pwd);
+        LogUtils.d("davi 邮箱注册 account " + account + "  code " + code + " pwd " + pwd);
     }
 
     private void phoneRegister(String account, String code, String pwd) {
-        LogUtils.d("davi 手机注册 account "+account+" code "+code+" pwd "+pwd);
+        LogUtils.d("davi 手机注册 account " + account + " code " + code + " pwd " + pwd);
     }
-
 
 
     private void changePasswordStatus() {
@@ -206,23 +205,24 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
         }
     }
+
     //获取验证码
     private void getVerification() {
         if (NetUtil.isNetworkAvailable()) {
             String account = StringUtil.getEdittextContent(etAccount);
             if (TextUtils.isEmpty(account)) {
 //                ToastUtil.getInstance().showShort(R.string.input_telephone_or_rmail);
-                AlertDialogUtil.getInstance().noButtonSingleLineDialog(this,getString(R.string.account_message_not_empty));
+                AlertDialogUtil.getInstance().noButtonSingleLineDialog(this, getString(R.string.account_message_not_empty));
                 return;
             }
             if (StringUtil.isNumeric(account)) {
                 if (!PhoneUtil.isMobileNO(account)) {
 //                    ToastUtil.getInstance().showShort( R.string.phone_not_right);
-                    AlertDialogUtil.getInstance().noButtonSingleLineDialog(this,getString(R.string.input_valid_telephone_or_email));
+                    AlertDialogUtil.getInstance().noButtonSingleLineDialog(this, getString(R.string.input_valid_telephone_or_email));
                     return;
                 } else {
                     String conuntryCode = tvAreaCode.getText().toString().trim().replace("+", "");
-                    sendPhoneVerification(conuntryCode+account, conuntryCode);
+                    sendPhoneVerification(conuntryCode + account, conuntryCode);
                 }
             } else {
                 //邮箱
@@ -230,7 +230,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                     sendEmailVerification(account);
                 } else {
 //                    ToastUtil.getInstance().showShort( R.string.email_not_right);
-                    AlertDialogUtil.getInstance().noButtonSingleLineDialog(this,getString(R.string.input_valid_telephone_or_email));
+                    AlertDialogUtil.getInstance().noButtonSingleLineDialog(this, getString(R.string.input_valid_telephone_or_email));
                     return;
                 }
             }
@@ -243,11 +243,11 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     }
 
     private void sendPhoneVerification(String account, String conuntryCode) {
-        LogUtils.d("davi 手机验证码 account"+account+" conuntryCode "+conuntryCode);
+        LogUtils.d("davi 手机验证码 account" + account + " conuntryCode " + conuntryCode);
     }
 
     private void sendEmailVerification(String account) {
-        LogUtils.d("davi 邮箱验证码 account "+account);
+        LogUtils.d("davi 邮箱验证码 account " + account);
     }
 
     @Override

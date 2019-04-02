@@ -38,6 +38,7 @@
     <uses-permission
         android:name="android.permission.READ_LOGS"
         tools:ignore="ProtectedPermissions" />
+
     <application
         android:name="com.kaadas.lock.MyApplication"
         android:allowBackup="true"
@@ -49,8 +50,7 @@
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait">
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".choosecountry.CountryActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
@@ -59,7 +59,7 @@
             android:screenOrientation="portrait" />
         <!--登录-->
         <activity
-            android:name=".activity.LoginActivity"
+            android:name=".activity.login.LoginActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -70,14 +70,21 @@
         </activity>
         <!--注册-->
         <activity
-            android:name=".activity.RegisterActivity"
+            android:name=".activity.login.RegisterActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait">
 
         </activity>
         <!--忘记密码-->
         <activity
-            android:name=".activity.ForgetPasswordActivity"
+            android:name=".activity.login.ForgetPasswordActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait">
+
+        </activity>
+        <!--我的消息-->
+        <activity
+            android:name=".activity.my.MyMessageActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait">
 

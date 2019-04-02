@@ -155,6 +155,14 @@ public class KeyConstants {
     public static final String PERIOD_END_TIME = "period_end_time";
     /**
      * 选择国家请求码
-     * */
-    public static final int SELECT_COUNTRY_REQUEST_CODE=12;
+     */
+    public static final int SELECT_COUNTRY_REQUEST_CODE = 12;
+
+
+    //1.系统消息
+    //2.共享设备授权信息
+    //3.网关授权信息
+    public static final int SYSTEM_MESSAGE = 1;
+    public static final int SHARE_DEVICE_AUTHORIZATION_MESSAGE = 2;
+    public static final int GATEWAY_AUTHORIZATION_MESSAGE = 3;
 }

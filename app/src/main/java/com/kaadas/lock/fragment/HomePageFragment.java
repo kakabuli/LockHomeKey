@@ -23,7 +23,7 @@ import butterknife.ButterKnife;
 
 
 /**
- * Created by asqw1 on 2018/3/14.
+ * Created by David.
  */
 
 public class HomePageFragment extends Fragment implements RadioGroup.OnCheckedChangeListener {
@@ -35,7 +35,8 @@ public class HomePageFragment extends Fragment implements RadioGroup.OnCheckedCh
     LinearLayout llHasDevice;
     @BindView(R.id.btn_add_device)
     Button btnAddDevice;
-    ArrayList<String> radioButtonList=new ArrayList<>();
+    ArrayList<String> radioButtonList = new ArrayList<>();
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,7 +56,7 @@ public class HomePageFragment extends Fragment implements RadioGroup.OnCheckedCh
         radioButtonList.add("111");
         radioButtonList.add("222");
         radioButtonList.add("333");
-        for(int i=0; i < radioButtonList.size(); i++) {
+        for (int i = 0; i < radioButtonList.size(); i++) {
             RadioButton radioButton = new RadioButton(getActivity());
             radioButton.setId(i);
             //设置RadioButton的背景
@@ -75,7 +76,7 @@ public class HomePageFragment extends Fragment implements RadioGroup.OnCheckedCh
             //设置RadioButton间距margin
             RadioGroup.LayoutParams params = new RadioGroup.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            params.setMargins(10,0,10,0);
+            params.setMargins(10, 0, 10, 0);
             //容器组装
             rg.addView(radioButton, params);
         }

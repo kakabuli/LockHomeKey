@@ -14,7 +14,7 @@ import com.kaadas.lock.R;
 import butterknife.ButterKnife;
 
 /**
- * Created by asqw1 on 2018/3/14.
+ * Created by David.
  */
 
 public class DeviceFragment extends Fragment {
@@ -26,7 +26,7 @@ public class DeviceFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-      View  view = View.inflate(getActivity(), R.layout.fragment_device, null);
+        View view = View.inflate(getActivity(), R.layout.fragment_device, null);
         ButterKnife.bind(this, view);
         return view;
     }
