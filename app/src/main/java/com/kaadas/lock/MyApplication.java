@@ -28,9 +28,7 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.constant.SpinnerStyle;
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
 import com.scwang.smartrefresh.layout.header.ClassicsHeader;
-import com.tencent.bugly.crashreport.CrashReport;
-import com.tencent.mm.opensdk.openapi.IWXAPI;
-import com.tencent.mm.opensdk.openapi.WXAPIFactory;
+
 
 
 import java.util.ArrayList;
@@ -57,17 +55,14 @@ public class MyApplication extends Application {
     //数据库文件名称
     private static final String DB_NAME="xiaokai.db";
     // IWXAPI 是第三方app和微信通信的openApi接口
-    public IWXAPI api;
 
     @Override
     public void onCreate() {
         super.onCreate();
         instance = this;
-        CrashReport.initCrashReport(getApplicationContext(), "9478401184", false);
         SPUtils.init(this);  //初始化SPUtils  传递Context进去  不需要每次都传递Context
         ToastUtil.init(this); //初始化ToastUtil 传递Context进去  不需要每次都传递
         initTokenAndUid();  //获取本地UUID
-        regToWx();
         listenerAppBackOrForge();
     }
 
@@ -130,12 +125,6 @@ public class MyApplication extends Application {
 
     }
 
-    private void regToWx() {
-        // 通过WXAPIFactory工厂，获取IWXAPI的实例
-        api = WXAPIFactory.createWXAPI(this, APP_ID, true);
-        // 将应用的appId注册到微信
-        api.registerApp(APP_ID);
-    }
 
 
 
