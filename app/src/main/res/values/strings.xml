@@ -131,4 +131,17 @@
     <string name="token_out_date">账号在别处登录</string>
     <string name="register_success">注册成功</string>
     <string name="pwd_resetting_success">密码重置成功</string>
+    <string name="my_device">我的设备</string>
+    <string name="you_no_device">您还没有设备哦</string>
+    <string name="device_nickname">Kaadas K9 智能锁</string>
+    <string name="device_power">电量</string>
+    <string name="add_device">添加设备</string>
+    <string name="device_zigbee">ZigBee</string>
+    <string name="bluetooth">蓝牙</string>
+    <string name="k7">Kaadas K7</string>
+    <string name="k8">Kaadas K8</string>
+    <string name="k9">Kaadas K9</string>
+    <string name="s8">Kaadas S8</string>
+    <string name="kx">Kaadas KX</string>
+    <string name="other">产品名称</string>
 </resources>

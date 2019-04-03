@@ -75,21 +75,4 @@ dependencies {
     implementation 'com.android.support:recyclerview-v7:28.0.0-alpha1'
     //SmartRefreshLayout
     implementation 'com.scwang.smartrefresh:SmartRefreshLayout:1.1.0-alpha-14'
-
-    implementation 'com.squareup.okhttp3:logging-interceptor:3.9.0'
-    //recylerview
-    implementation 'com.android.support:recyclerview-v7:28.0.0'
-    //微信分享
-    implementation 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:+'
-//    implementation project(path: ':imagepicker')
-//    implementation project(':library:WheelPicker')
-//    implementation project(':library:Common')
-
-    implementation 'org.greenrobot:greendao:3.2.2'
-    implementation 'net.zetetic:android-database-sqlcipher:3.4.0@aar'
-    //Bugly
-    implementation 'com.tencent.bugly:crashreport:latest.release'
-    //其中latest.release指代最新Bugly SDK版本号，也可以指定明确的版本号，例如2.1.9
-    implementation 'com.tencent.bugly:nativecrashreport:latest.release'
-    //其中latest.release指代最新Bugly NDK版本号，也可以指定明确的版本号，例如3.0
 }
