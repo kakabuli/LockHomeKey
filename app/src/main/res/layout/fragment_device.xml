@@ -2,6 +2,93 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="#F2F2F2"
+    >
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/dp_40"
+    android:background="#FFFFFF"
+    >
+ <TextView
+     android:layout_width="wrap_content"
+     android:layout_height="wrap_content"
+     android:layout_centerInParent="true"
+     android:text="@string/my_device"
+     android:textSize="@dimen/sp_17"
+     android:textColor="#000000"
+     android:textStyle="bold"
+     />
+  <ImageView
+      android:id="@+id/device_add"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_alignParentRight="true"
+      android:layout_centerVertical="true"
+      android:paddingRight="@dimen/dp_15"
+      android:paddingLeft="@dimen/dp_15"
+      android:layout_marginTop="@dimen/dp_5"
+      android:layout_marginBottom="@dimen/dp_5"
+      android:src="@mipmap/add_icon"
+      />
+</RelativeLayout>
+ <RelativeLayout
+     android:id="@+id/no_device_layout"
+     android:layout_width="match_parent"
+     android:layout_height="match_parent"
+     android:visibility="visible"
+     >
+     <ImageView
+         android:id="@+id/no_device_image"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:src="@mipmap/no_device"
+         android:layout_marginTop="@dimen/dp_84"
+         android:layout_centerHorizontal="true"
+         />
+     <TextView
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_gravity="center_horizontal"
+         android:layout_marginTop="@dimen/dp_35"
+         android:textSize="@dimen/sp_13"
+         android:textColor="#999999"
+         android:text="@string/you_no_device"
+         android:layout_below="@+id/no_device_image"
+         android:layout_centerHorizontal="true"
+         />
+     <Button
+         android:id="@+id/buy"
+         android:layout_width="@dimen/dp_267"
+         android:layout_height="@dimen/dp_45"
+         android:background="@drawable/go_and_buy"
+         android:layout_alignParentBottom="true"
+         android:layout_centerHorizontal="true"
+         android:text="快去购买吧！"
+         android:textSize="@dimen/sp_15"
+         android:textColor="#FFFFFF"
+         android:layout_marginBottom="@dimen/dp_143"
+         />
+ </RelativeLayout>
+    <com.scwang.smartrefresh.layout.SmartRefreshLayout
+        android:id="@+id/refresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        >
+      <android.support.v7.widget.RecyclerView
+          android:id="@+id/device_recycler"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent">
+
+
+
+      </android.support.v7.widget.RecyclerView>
+
+
+    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+
+
+
 
 </LinearLayout>
