@@ -84,7 +84,7 @@
         </activity>
         <!--我的消息-->
         <activity
-            android:name=".activity.my.MyMessageActivity"
+            android:name=".activity.my.PersonalMessageActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait">
 
@@ -95,5 +95,6 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"></activity>
     </application>
+
 
 </manifest>

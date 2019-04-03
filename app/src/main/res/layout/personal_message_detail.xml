@@ -40,7 +40,7 @@
             android:layout_marginLeft="@dimen/dp_16"
             android:layout_marginTop="@dimen/dp_12"
             android:layout_marginRight="@dimen/dp_16"
-            android:background="@color/device_item_background"
+            android:background="#FFFFFF"
             android:orientation="vertical">
 
             <TextView
@@ -53,8 +53,8 @@
                 android:layout_marginBottom="@dimen/dp_19"
                 android:lineSpacingExtra="@dimen/dp_8"
                 android:text=""
-                android:textColor="#959595"
-                android:textSize="@dimen/sp_13" />
+                android:textColor="#8E8E93"
+                android:textSize="@dimen/sp_12" />
         </LinearLayout>
 
     </LinearLayout>

@@ -3,8 +3,8 @@ package com.kaadas.lock.activity.login;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
@@ -16,24 +16,47 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.kaadas.lock.R;
+import com.kaadas.lock.base.mvpbase.BaseActivity;
 import com.kaadas.lock.choosecountry.CountryActivity;
+import com.kaadas.lock.presenter.RegisterPresenter;
+import com.kaadas.lock.publiclibrary.http.result.BaseResult;
+import com.kaadas.lock.publiclibrary.http.util.HttpUtils;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.DetectionEmailPhone;
-import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.NetUtil;
 import com.kaadas.lock.utils.PhoneUtil;
 import com.kaadas.lock.utils.StringUtil;
 import com.kaadas.lock.utils.TimeUtils;
 import com.kaadas.lock.utils.ToastUtil;
+import com.kaadas.lock.view.IRegisterView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
+public class RegisterActivity extends BaseActivity<IRegisterView, RegisterPresenter<IRegisterView>> implements IRegisterView, View.OnClickListener {
     @BindView(R.id.iv_back)
-    ImageView ivBack;
+    ImageView ivBack;//返回
+
+    @BindView(R.id.et_verification)
+    EditText etVerification;//验证码
+    @BindView(R.id.et_password)
+    EditText etPassword;//密码
+    @BindView(R.id.btn_register)
+    Button btnRegister;//注册
+
+
+    /*   @BindView(R.id.iv_user_protocol_icon)
+       ImageView ivUserProtocolIcon;*/
+    @BindView(R.id.tv_user_protocol)
+    TextView tvUserProtocol;
+    TimeUtils timeUtils;//时间工具类
+    boolean userProtocolSlected = true;//用户协议选中状态
+
+    @BindView(R.id.iv_password_status)
+    ImageView ivPasswordStatus;//密码状态图标
+    boolean passwordHide = true;//密码图标
     @BindView(R.id.tv_area_code)
     TextView tvAreaCode;
     @BindView(R.id.tv_country)
@@ -42,23 +65,11 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     RelativeLayout rlCountryChoose;
     @BindView(R.id.et_account)
     EditText etAccount;
-    @BindView(R.id.et_verification)
-    EditText etVerification;
     @BindView(R.id.tv_get_verification)
     TextView tvGetVerification;
-    @BindView(R.id.et_password)
-    EditText etPassword;
-    @BindView(R.id.iv_password_status)
-    ImageView ivPasswordStatus;
-    @BindView(R.id.btn_register)
-    Button btnRegister;
-    @BindView(R.id.tv_user_protocol)
-    TextView tvUserProtocol;
     @BindView(R.id.tv_register_default_agree)
     TextView tvRegisterDefaultAgree;
-    TimeUtils timeUtils;//时间工具类
-    boolean passwordHide = true;//密码状态
-    boolean userProtocolSlected = true;//用户协议选中状态
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -66,12 +77,12 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         setContentView(R.layout.activity_register);
         ButterKnife.bind(this);
         ivBack.setOnClickListener(this);
-        rlCountryChoose.setOnClickListener(this);
-        tvGetVerification.setOnClickListener(this);
-        ivPasswordStatus.setOnClickListener(this);
         btnRegister.setOnClickListener(this);
-        tvRegisterDefaultAgree.setOnClickListener(this);
+        tvGetVerification.setOnClickListener(this);
         tvUserProtocol.setOnClickListener(this);
+        ivPasswordStatus.setOnClickListener(this);
+        rlCountryChoose.setOnClickListener(this);
+        tvRegisterDefaultAgree.setOnClickListener(this);
     }
 
     @Override
@@ -81,28 +92,74 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             case R.id.iv_back:
                 finish();
                 break;
-            case R.id.rl_country_choose:
-                //国家选择
-                intent = new Intent();
-                intent.setClass(this, CountryActivity.class);
-                startActivityForResult(intent, KeyConstants.SELECT_COUNTRY_REQUEST_CODE);
+            case R.id.btn_register:
+                register();
                 break;
             case R.id.tv_get_verification:
                 getVerification();
                 break;
+            case R.id.tv_user_protocol:
+                changeUserProtocolIcon();
+                break;
             case R.id.iv_password_status:
                 changePasswordStatus();
+      /*          passwordHide = !passwordHide;
+                if (passwordHide) {
+                    //默认状态显示密码--设置文本 要一起写才能起作用 InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD
+                    etPassword.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+                    etPassword.setSelection(etPassword.getText().toString().length());//将光标移至文字末尾
+                    ivPasswordStatus.setImageResource(R.mipmap.show_password);
+                } else {
+                    etPassword.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                    *//* etPassword.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);*//*
+                    etPassword.setSelection(etPassword.getText().toString().length());//将光标移至文字末尾
+                    ivPasswordStatus.setImageResource(R.mipmap.hide_password_icon);
+                }*/
                 break;
-            case R.id.btn_register:
-                register();
+            case R.id.rl_country_choose:
+                intent = new Intent();
+                intent.setClass(this, CountryActivity.class);
+                this.startActivityForResult(intent, 12);
                 break;
             case R.id.tv_register_default_agree:
                 changeUserProtocolIcon();
                 break;
-            case R.id.tv_user_protocol:
-                //用户协议
+        }
+    }
+
+    private void changePasswordStatus() {
+        passwordHide = !passwordHide;
+        if (passwordHide) {
+            etPassword.setTransformationMethod(PasswordTransformationMethod.getInstance());
+            /* etPassword.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);*/
+            etPassword.setSelection(etPassword.getText().toString().length());//将光标移至文字末尾
+            ivPasswordStatus.setImageResource(R.mipmap.eye_close_no_color);
+
+        } else {
+            //默认状态显示密码--设置文本 要一起写才能起作用 InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD
+            //etPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+            etPassword.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+            etPassword.setSelection(etPassword.getText().toString().length());//将光标移至文字末尾
+            ivPasswordStatus.setImageResource(R.mipmap.eye_open_no_color);
+
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case 12:
+                if (resultCode == RESULT_OK) {
+                    Bundle bundle = data.getExtras();
+                    String countryName = bundle.getString("countryName");
+                    String countryNumber = bundle.getString("countryNumber");
+                    LogUtils.d("davi 选择的国家==" + countryName + " 区号==" + countryNumber);
+                    tvAreaCode.setText(countryNumber);
+                    tvCountry.setText(countryName);
+                }
                 break;
         }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     private void changeUserProtocolIcon() {
@@ -121,88 +178,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
             tvRegisterDefaultAgree.setCompoundDrawablesWithIntrinsicBounds(drawableLeft,
                     null, null, null);
-        }
-    }
-
-    //注册
-    private void register() {
-        if (NetUtil.isNetworkAvailable()) {
-            final String account = StringUtil.getEdittextContent(etAccount);
-            if (TextUtils.isEmpty(account)) {
-//                ToastUtil.getInstance().showShort(R.string.input_telephone_or_rmail);
-                AlertDialogUtil.getInstance().noButtonSingleLineDialog(this, getString(R.string.account_message_not_empty));
-                return;
-            }
-            String code = StringUtil.getEdittextContent(etVerification);
-            if (TextUtils.isEmpty(code) || code.length() != 6) {
-                ToastUtil.getInstance().showShort(R.string.verification_verify_error);
-                return;
-            }
-
-            String pwd = StringUtil.getEdittextContent(etPassword);
-            if (StringUtil.judgeSpecialCharacter(pwd)) {
-                ToastUtil.getInstance().showShort(R.string.not_input_special_symbol);
-                return;
-            }
-            if (!StringUtil.passwordJudge(pwd)) {
-                ToastUtil.getInstance().showShort(R.string.password_judgment);
-                return;
-            }
-
-            if (!userProtocolSlected) {
-                ToastUtil.getInstance().showShort(R.string.agree_user_protocol);
-                return;
-            }
-            if (StringUtil.isNumeric(account)) {
-                if (!PhoneUtil.isMobileNO(account)) {
-//                    ToastUtil.getInstance().showShort(R.string.phone_not_right);
-                    AlertDialogUtil.getInstance().noButtonSingleLineDialog(this, getString(R.string.input_valid_telephone_or_email));
-                    return;
-                }
-                String countryCode = tvAreaCode.getText().toString().trim().replace("+", "");
-                phoneRegister(countryCode + account, code, pwd);
-            } else {
-                LogUtils.e("邮箱注册：" + DetectionEmailPhone.getInstance().isEmail(account));
-                if (DetectionEmailPhone.getInstance().isEmail(account)) {
-                    // sendEmailClick(phone);
-                    emailRegister(account, code, pwd);
-                } else {
-//                    ToastUtil.getInstance().showShort( R.string.email_not_right);
-                    AlertDialogUtil.getInstance().noButtonSingleLineDialog(this, getString(R.string.input_valid_telephone_or_email));
-                    return;
-                }
-            }
-
-
-        } else {
-            ToastUtil.getInstance().showShort(R.string.noNet);
-        }
-    }
-
-    private void emailRegister(String account, String code, String pwd) {
-        LogUtils.d("davi 邮箱注册 account " + account + "  code " + code + " pwd " + pwd);
-    }
-
-    private void phoneRegister(String account, String code, String pwd) {
-        LogUtils.d("davi 手机注册 account " + account + " code " + code + " pwd " + pwd);
-    }
-
-
-    private void changePasswordStatus() {
-        passwordHide = !passwordHide;
-        if (passwordHide) {
-            etPassword.setTransformationMethod(PasswordTransformationMethod.getInstance());
-            /* etPassword.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);*/
-            etPassword.setSelection(etPassword.getText().toString().length());//将光标移至文字末尾
-            ivPasswordStatus.setImageResource(R.mipmap.eye_close_no_color);
-
-        } else {
-            //默认状态显示密码--设置文本 要一起写才能起作用 InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD
-            //etPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-            etPassword.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
-            etPassword.setSelection(etPassword.getText().toString().length());//将光标移至文字末尾
-            ivPasswordStatus.setImageResource(R.mipmap.eye_open_no_color);
-
         }
     }
 
@@ -242,28 +217,193 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         }
     }
 
-    private void sendPhoneVerification(String account, String conuntryCode) {
-        LogUtils.d("davi 手机验证码 account" + account + " conuntryCode " + conuntryCode);
+    private void sendEmailVerification(String account) {
+
+    }
+/*    //获取验证码
+    private void getVerification() {
+        if (NetUtil.isNetworkAvailable()) {
+            String phone = getEdittextContent(etTelephone);
+            if (TextUtils.isEmpty(phone)) {
+                ToastUtil.getInstance().showShort(R.string.phone_number_con_not_empty);
+                return;
+            }
+            if (!PhoneUtil.isMobileNO(phone)) {
+                ToastUtil.getInstance().showShort(R.string.phone_not_right);
+                return;
+            }
+            //手机号
+            String conuntryCode = tvCountryCode.getText().toString().trim().replace("+", "");
+            sendPhoneVerification(phone, conuntryCode);
+
+            btnGetVerification.setVisibility(View.GONE);
+            tvTime.setVisibility(View.VISIBLE);
+            //倒计时状态更改
+            timeUtils = new TimeUtils(tvTime, btnGetVerification);
+            timeUtils.RunTimer();
+        } else {
+            ToastUtil.getInstance().showShort(R.string.noNet);
+        }
+    }*/
+
+    //
+    private void sendPhoneVerification(String phone, String countryCode) {
+        mPresenter.sendRandomByPhone(phone, countryCode);
     }
 
-    private void sendEmailVerification(String account) {
-        LogUtils.d("davi 邮箱验证码 account " + account);
+    private void register() {
+        if (NetUtil.isNetworkAvailable()) {
+            final String account = StringUtil.getEdittextContent(etAccount);
+            if (TextUtils.isEmpty(account)) {
+//                ToastUtil.getInstance().showShort(R.string.input_telephone_or_rmail);
+                AlertDialogUtil.getInstance().noButtonSingleLineDialog(this, getString(R.string.account_message_not_empty));
+                return;
+            }
+            String code = StringUtil.getEdittextContent(etVerification);
+            if (TextUtils.isEmpty(code) || code.length() != 6) {
+                ToastUtil.getInstance().showShort(R.string.verification_verify_error);
+                return;
+            }
+
+            String pwd = StringUtil.getEdittextContent(etPassword);
+            if (StringUtil.judgeSpecialCharacter(pwd)) {
+                ToastUtil.getInstance().showShort(R.string.not_input_special_symbol);
+                return;
+            }
+            if (!StringUtil.passwordJudge(pwd)) {
+                ToastUtil.getInstance().showShort(R.string.password_judgment);
+                return;
+            }
+
+            if (!userProtocolSlected) {
+                ToastUtil.getInstance().showShort(R.string.agree_user_protocol);
+                return;
+            }
+            if (StringUtil.isNumeric(account)) {
+                if (!PhoneUtil.isMobileNO(account)) {
+//                    ToastUtil.getInstance().showShort(R.string.phone_not_right);
+                    AlertDialogUtil.getInstance().noButtonSingleLineDialog(this, getString(R.string.input_valid_telephone_or_email));
+                    return;
+                }
+                String countryCode = tvAreaCode.getText().toString().trim().replace("+", "");
+                phoneRegister(countryCode + account, code, pwd);
+
+            } else {
+                LogUtils.e("邮箱注册：" + DetectionEmailPhone.getInstance().isEmail(account));
+                if (DetectionEmailPhone.getInstance().isEmail(account)) {
+                    // sendEmailClick(phone);
+                    emailRegister(account, code, pwd);
+                } else {
+//                    ToastUtil.getInstance().showShort( R.string.email_not_right);
+                    AlertDialogUtil.getInstance().noButtonSingleLineDialog(this, getString(R.string.input_valid_telephone_or_email));
+                    return;
+                }
+            }
+
+
+        } else {
+            ToastUtil.getInstance().showShort(R.string.noNet);
+        }
+    }
+
+    private void emailRegister(String account, String code, String pwd) {
+
+    }
+    //注册
+/*    private void register() {
+        if (NetUtil.isNetworkAvailable()) {
+            final String phone = getEdittextContent(etTelephone);
+            if (TextUtils.isEmpty(phone)) {
+                ToastUtil.getInstance().showShort(R.string.phone_number_con_not_empty);
+                return;
+            }
+            if (!PhoneUtil.isMobileNO(phone)) {
+                ToastUtil.getInstance().showShort(R.string.phone_not_right);
+                return;
+            }
+            String code = getEdittextContent(etVerification);
+            if (TextUtils.isEmpty(code) || code.length() != 6) {
+                ToastUtil.getInstance().showShort(R.string.verification_verify_error);
+                return;
+            }
+            String pwd = getEdittextContent(etPassword);
+            if (StringUtil.judgeSpecialCharacter(pwd)) {
+                ToastUtil.getInstance().showShort(R.string.not_input_special_symbol);
+                return;
+            }
+            if (!StringUtil.passwordJudge(pwd)) {
+                ToastUtil.getInstance().showShort(R.string.password_judgment);
+                return;
+            }
+
+            if (!userProtocolSlected) {
+                ToastUtil.getInstance().showShort(R.string.agree_user_protocol);
+                return;
+            }
+            String countryCode = tvCountryCode.getText().toString().trim().replace("+", "");
+            phoneRegister(countryCode + phone, code, pwd);
+        } else {
+            ToastUtil.getInstance().showShort(R.string.noNet);
+        }
+    }*/
+
+
+    private void phoneRegister(String phone, String code, String pwd) {
+        mPresenter.registerByPhone(phone, pwd, code);
+    }
+
+    @NonNull
+    private String getEdittextContent(EditText et) {
+        return et.getText().toString().trim();
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode) {
-            case KeyConstants.SELECT_COUNTRY_REQUEST_CODE:
-                if (resultCode == RESULT_OK) {
-                    Bundle bundle = data.getExtras();
-                    String countryName = bundle.getString("countryName");
-                    String countryNumber = bundle.getString("countryNumber");
-                    LogUtils.d("davi 选择的国家==" + countryName + " 区号==" + countryNumber);
-                    tvAreaCode.setText(countryNumber);
-                    tvCountry.setText(countryName);
-                }
-                break;
+    protected void onDestroy() {
+        super.onDestroy();
+        if (timeUtils != null) {
+            timeUtils.cancelTimer();
         }
-        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    protected RegisterPresenter<IRegisterView> createPresent() {
+        return new RegisterPresenter<>();
+    }
+
+
+    @Override
+    public void sendRandomSuccess() { //发送验证码成功
+        LogUtils.e("发送验证码成功");
+
+    }
+
+    @Override
+    public void registerSuccess() { //注册成功
+        LogUtils.e("注册成功");
+        ToastUtil.getInstance().showLong(R.string.register_success);
+        startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
+        finish();
+    }
+
+    @Override
+    public void sendRandomFailed(Throwable e) { //发送验证码失败
+        ToastUtil.getInstance().showShort(HttpUtils.httpProtocolErrorCode(this, e));
+    }
+
+    @Override
+    public void sendRandomFailedServer(BaseResult result) {
+
+        ToastUtil.getInstance().showShort(HttpUtils.httpErrorCode(this, result.getCode()));
+    }
+
+    @Override
+    public void registerFailed(Throwable e) { //注册失败
+        ToastUtil.getInstance().showShort(HttpUtils.httpProtocolErrorCode(this, e));
+    }
+
+    @Override
+    public void registerFailedServer(BaseResult result) {
+        ToastUtil.getInstance().showShort(HttpUtils.httpErrorCode(this, result.getCode()));
+
     }
 }

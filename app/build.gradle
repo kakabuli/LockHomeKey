@@ -24,6 +24,9 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
 
     }
+    packagingOptions {
+        exclude 'META-INF/proguard/androidx-annotations.pro'
+    }
 }
 
 dependencies {
@@ -38,7 +41,55 @@ dependencies {
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
 //    implementation 'com.jakewharton:butterknife:10.0.0'
 //    annotationProcessor 'com.jakewharton:butterknife-compiler:10.0.0'
+    //----------------------------网络请求依赖----------------------------------
+    implementation 'com.squareup.retrofit2:retrofit:2.5.0'
+    implementation 'com.squareup.retrofit2:converter-scalars:2.5.0'
+    implementation 'com.squareup.okhttp3:okhttp:3.12.0'
+    //Retrofit通过GSON将结果转换为Bean对象
+    implementation 'com.squareup.retrofit2:converter-gson:2.5.0'
+    //okhttp拦截器
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.9.0'
+    //图片加载框架
+//    implementation 'com.github.bumptech.glide:glide:4.8.0'
+    implementation 'com.github.bumptech.glide:glide:3.7.0'
+    //    annotationProcessor 'com.github.bumptech.glide:compiler::3.7.0'
+    //Rxjava rx Android
+    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.5.0'
+    implementation 'io.reactivex.rxjava2:rxjava:2.2.5'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.1.0'
+
+    implementation 'com.github.franmontiel:PersistentCookieJar:v1.0.0'
+    implementation 'org.ligboy.retrofit2:converter-fastjson-android:2.1.0'
+    implementation 'com.safframework.log:saf-logginginterceptor:1.3.3'
+    //----------------------------网络请求依赖----------------------------------
+
+    implementation "com.polidea.rxandroidble2:rxandroidble:1.8.0"
+    implementation 'com.jakewharton.rxrelay2:rxrelay:2.1.0'
+    implementation 'com.jakewharton.rxbinding2:rxbinding:2.2.0'
+
+    implementation 'com.jakewharton.rx2:replaying-share:2.1.0'
+    implementation 'com.github.JakeWharton:ViewPagerIndicator:2.4.1'
+    implementation 'com.android.support:support-v4:28.0.0'
     implementation 'com.flyco.tablayout:FlycoTabLayout_Lib:2.1.2@aar'
     implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.42'
     implementation 'com.android.support:recyclerview-v7:28.0.0-alpha1'
+    //SmartRefreshLayout
+    implementation 'com.scwang.smartrefresh:SmartRefreshLayout:1.1.0-alpha-14'
+
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.9.0'
+    //recylerview
+    implementation 'com.android.support:recyclerview-v7:28.0.0'
+    //微信分享
+    implementation 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:+'
+//    implementation project(path: ':imagepicker')
+//    implementation project(':library:WheelPicker')
+//    implementation project(':library:Common')
+
+    implementation 'org.greenrobot:greendao:3.2.2'
+    implementation 'net.zetetic:android-database-sqlcipher:3.4.0@aar'
+    //Bugly
+    implementation 'com.tencent.bugly:crashreport:latest.release'
+    //其中latest.release指代最新Bugly SDK版本号，也可以指定明确的版本号，例如2.1.9
+    implementation 'com.tencent.bugly:nativecrashreport:latest.release'
+    //其中latest.release指代最新Bugly NDK版本号，也可以指定明确的版本号，例如3.0
 }
