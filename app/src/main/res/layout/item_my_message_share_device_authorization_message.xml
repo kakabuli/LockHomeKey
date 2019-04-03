@@ -22,7 +22,6 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/dp_87"
-            android:text="授权用户 壮壮家的门锁"
             android:textColor="#333333"
             android:textSize="@dimen/sp_15" />
 

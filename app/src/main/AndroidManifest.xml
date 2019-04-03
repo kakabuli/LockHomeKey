@@ -89,6 +89,11 @@
             android:screenOrientation="portrait">
 
         </activity>
+        <!--消息详情-->
+        <activity
+            android:name=".activity.my.PersonalMessageDetailActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"></activity>
     </application>
 
 </manifest>

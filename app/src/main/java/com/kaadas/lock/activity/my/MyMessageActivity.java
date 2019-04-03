@@ -1,5 +1,6 @@
 package com.kaadas.lock.activity.my;
 
+import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -97,7 +98,11 @@ public class MyMessageActivity extends AppCompatActivity implements View.OnClick
 
     @Override
     public void onItemClick(View view, int position) {
-
+        Intent mDetailIntent = new Intent(this, PersonalMessageDetailActivity.class);
+        mDetailIntent.putExtra(KeyConstants.MESSAGE_DETAIL_TIME, System.currentTimeMillis() / 1000);
+        mDetailIntent.putExtra(KeyConstants.MESSAGE_DETAIL_TITLE, "");
+        mDetailIntent.putExtra(KeyConstants.MESSAGE_DETAIL_CONTENT, "");
+        startActivity(mDetailIntent);
     }
 
     public class SpacesItemDecoration extends RecyclerView.ItemDecoration {

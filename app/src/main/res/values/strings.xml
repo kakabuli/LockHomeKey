@@ -54,4 +54,5 @@
     <string name="no_message">暂无消息</string>
     <string name="official">官方</string>
     <string name="delete">删除</string>
+    <string name="message_detail">消息详情</string>
 </resources>

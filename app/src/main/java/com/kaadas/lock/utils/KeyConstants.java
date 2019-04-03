@@ -165,4 +165,16 @@ public class KeyConstants {
     public static final int SYSTEM_MESSAGE = 1;
     public static final int SHARE_DEVICE_AUTHORIZATION_MESSAGE = 2;
     public static final int GATEWAY_AUTHORIZATION_MESSAGE = 3;
+    /**
+     * 消息详情标题
+     */
+    public static final String MESSAGE_DETAIL_TITLE = "message_detail_title";
+    /**
+     * 消息详情内容
+     */
+    public static final String MESSAGE_DETAIL_CONTENT = "message_detail_content";
+    /**
+     * 消息详情时间
+     */
+    public static final String MESSAGE_DETAIL_TIME = "message_detail_TIME";
 }

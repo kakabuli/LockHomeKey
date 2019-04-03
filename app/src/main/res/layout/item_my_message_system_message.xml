@@ -28,7 +28,6 @@
                 android:layout_width="@dimen/dp_150"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:text="凯迪仕元宵节优惠活动"
                 android:textColor="#333333"
                 android:textSize="@dimen/sp_15" />
 
@@ -65,8 +64,7 @@
             android:layout_marginRight="@dimen/dp_29"
             android:layout_marginBottom="@dimen/dp_30"
             android:ellipsize="end"
-            android:lines="1"
-            android:text="元宵节钜惠优惠专场活动火爆进行中，欢迎广大..." />
+            android:lines="1" />
     </RelativeLayout>
 
     <LinearLayout
