@@ -4,10 +4,10 @@ import android.content.Context;
 import android.widget.Toast;
 
 /**
- * Create By lxj  on 2019/1/9
+ * Create By David
  * Describe
  */
-public class ToastUtil  {
+public class ToastUtil {
 
     private Toast mToast;
     private static ToastUtil mToastUtils;
@@ -18,8 +18,8 @@ public class ToastUtil  {
         mToast = Toast.makeText(context.getApplicationContext(), null, Toast.LENGTH_SHORT);
     }
 
-    public static void init(Context context){
-        if (mToastUtils==null){
+    public static void init(Context context) {
+        if (mToastUtils == null) {
             mToastUtils = new ToastUtil(context);
         }
     }
@@ -29,28 +29,28 @@ public class ToastUtil  {
         return mToastUtils;
     }
 
-    public void showShort(String content){
+    public void showShort(String content) {
         mToast.setText(content);
         mToast.setDuration(Toast.LENGTH_SHORT);
         mToast.show();
     }
 
 
-    public void showLong(String content){
+    public void showLong(String content) {
         mToast.setText(content);
         mToast.setDuration(Toast.LENGTH_LONG);
         mToast.show();
     }
 
 
-    public void showShort(int stringId){
+    public void showShort(int stringId) {
         mToast.setText(context.getString(stringId));
         mToast.setDuration(Toast.LENGTH_SHORT);
         mToast.show();
     }
 
 
-    public void showLong(int stringId){
+    public void showLong(int stringId) {
         mToast.setText(context.getString(stringId));
         mToast.setDuration(Toast.LENGTH_LONG);
         mToast.show();

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/dp_75"
+    android:background="#fff"
+    android:orientation="horizontal">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/dp_28"
+            android:src="@mipmap/my_message_authorization_icon" />
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="@dimen/dp_155"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/dp_87"
+            android:text="授权用户 壮壮家的门锁"
+            android:textColor="#333333"
+            android:textSize="@dimen/sp_15" />
+
+        <TextView
+            android:id="@+id/tv_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/dp_16"
+            android:text="02-19 12:30"
+            android:textColor="#8E8E93"
+            android:textSize="@dimen/sp_12" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_delete"
+        android:layout_width="@dimen/dp_78"
+        android:layout_height="match_parent"
+        android:background="#F9F9F9"
+        android:gravity="center">
+
+        <TextView
+            android:id="@+id/tv_delete"
+            android:layout_width="@dimen/dp_45"
+            android:layout_height="@dimen/dp_45"
+            android:background="@drawable/my_message_delete_bj"
+            android:gravity="center"
+            android:text="@string/delete"
+            android:textColor="#FFFFFF"
+            android:textSize="@dimen/sp_12" />
+    </LinearLayout>
+</LinearLayout>

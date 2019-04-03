@@ -1,4 +1,4 @@
-package com.kaadas.lock.activity;
+package com.kaadas.lock.activity.login;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -24,7 +24,6 @@ import com.kaadas.lock.utils.NetUtil;
 import com.kaadas.lock.utils.PhoneUtil;
 import com.kaadas.lock.utils.StringUtil;
 import com.kaadas.lock.utils.ToastUtil;
-
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -66,24 +65,21 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
 
-
-
-
     @Override
     public void onClick(View v) {
         Intent intent;
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.btn_login:
 //                login();
-                 intent=new Intent(this,MainActivity.class);
+                intent = new Intent(this, MainActivity.class);
                 startActivity(intent);
                 break;
             case R.id.tv_register:
-                 intent=new Intent(this,RegisterActivity.class);
+                intent = new Intent(this, RegisterActivity.class);
                 startActivity(intent);
                 break;
             case R.id.tv_forget_password:
-                intent=new Intent(this,ForgetPasswordActivity.class);
+                intent = new Intent(this, ForgetPasswordActivity.class);
                 startActivity(intent);
                 break;
             case R.id.rl_country_choose:
@@ -142,10 +138,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             String pwd = getEdittextContent(etPassword);
             if (TextUtils.isEmpty(phone)) {
 //                ToastUtil.getInstance().showShort(R.string.input_telephone_or_rmail);
-                AlertDialogUtil.getInstance().noButtonSingleLineDialog(this,getString(R.string.account_message_not_empty));
+                AlertDialogUtil.getInstance().noButtonSingleLineDialog(this, getString(R.string.account_message_not_empty));
                 return;
             }
-            if(StringUtil.judgeSpecialCharacter(pwd)){
+            if (StringUtil.judgeSpecialCharacter(pwd)) {
                 ToastUtil.getInstance().showShort(R.string.not_input_special_symbol);
                 return;
             }
@@ -170,16 +166,16 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 if (!PhoneUtil.isMobileNO(phone)) {
 //                    ToastUtil.getInstance().showShort(R.string.phone_not_right);
                     //todo 账户密码错误 请输入正确验证码 调用这个方法传入对应的内容就可以
-                    AlertDialogUtil.getInstance().noButtonSingleLineDialog(this,getString(R.string.input_valid_telephone_or_email));
+                    AlertDialogUtil.getInstance().noButtonSingleLineDialog(this, getString(R.string.input_valid_telephone_or_email));
                     return;
                 } else {
                     String countryCode = tvAreaCode.getText().toString().trim().replace("+", "");
-                    phoneLogin(countryCode+phone, pwd);
+                    phoneLogin(countryCode + phone, pwd);
                 }
             } else {
                 if (!DetectionEmailPhone.isEmail(phone)) {
 //                    ToastUtil.getInstance().showShort(R.string.email_not_right);
-                    AlertDialogUtil.getInstance().noButtonSingleLineDialog(this,getString(R.string.input_valid_telephone_or_email));
+                    AlertDialogUtil.getInstance().noButtonSingleLineDialog(this, getString(R.string.input_valid_telephone_or_email));
                     return;
                 } else {
                     emialLogin(phone, pwd);
@@ -194,11 +190,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void emialLogin(String phone, String pwd) {
-        LogUtils.d("davi 邮箱登录 phone"+phone+" pwd "+pwd);
+        LogUtils.d("davi 邮箱登录 phone" + phone + " pwd " + pwd);
     }
 
     private void phoneLogin(String phone, String pwd) {
-        LogUtils.d("davi 手机登录 phone"+phone+" pwd "+pwd);
+        LogUtils.d("davi 手机登录 phone" + phone + " pwd " + pwd);
     }
 
 
