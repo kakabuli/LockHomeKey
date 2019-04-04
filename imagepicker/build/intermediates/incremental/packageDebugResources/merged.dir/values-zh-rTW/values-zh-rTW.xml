@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="cancel">cancel</string>
+    <string name="ip_all_images">所有圖片</string>
+    <string name="ip_complete">完成</string>
+    <string name="ip_folder_image_count">A total of %1$d piece</string>
+    <string name="ip_origin">Original image</string>
+    <string name="ip_origin_size">Original image(%1$s)</string>
+    <string name="ip_photo_crop">照片裁剪</string>
+    <string name="ip_play_camera">Taking pictures</string>
+    <string name="ip_preview">preview</string>
+    <string name="ip_preview_count">preview(%1$d)</string>
+    <string name="ip_preview_image_count">%1$d/%2$d</string>
+    <string name="ip_select_complete">complete(%1$d/%2$d)</string>
+    <string name="ip_select_limit">Choose %1$d image at most</string>
+    <string name="no_photo">A total of 0 zhang</string>
+    <string name="not_allow_camera_warring">Permission is denied to open the camera</string>
+    <string name="not_allow_sd_warring">Permission is disabled and local images cannot be selected</string>
+    <string name="photo">照片</string>
+    <string name="photograph">拍攝</string>
+    <string name="prompt">prompt</string>
+    <string name="select">choose</string>
+    <string name="sure">sure</string>
+    <string name="sure_delete_this_photo">Would you like to delete this photo</string>
+</resources>
