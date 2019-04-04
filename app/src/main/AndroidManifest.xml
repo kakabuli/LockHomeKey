@@ -130,9 +130,6 @@
             android:name=".activity.my.PersonalLanguageSettingActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"></activity>
-        <activity android:name=".activity.addDevice.DeviceAddActivity"
-                  android:launchMode="singleTop"
-                  android:screenOrientation="portrait"></activity>
         <activity android:name=".activity.addDevice.gateway.AddGatewayFirstActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"></activity>
