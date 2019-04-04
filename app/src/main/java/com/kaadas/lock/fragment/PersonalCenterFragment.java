@@ -16,6 +16,8 @@ import android.widget.TextView;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.my.PersonalMessageActivity;
+import com.kaadas.lock.activity.my.PersonalSecuritySettingActivity;
+import com.kaadas.lock.activity.my.PersonalUpdateHeadDataActivity;
 import com.kaadas.lock.base.mvpbase.BaseFragment;
 import com.kaadas.lock.presenter.MyFragmentPresenter;
 import com.kaadas.lock.utils.BitmapUtil;
@@ -38,7 +40,7 @@ import butterknife.Unbinder;
  * @company kaadas
  * created at 2019/2/25 14:47
  */
-public class PersonalCenterFragment extends BaseFragment<IMyFragmentView,MyFragmentPresenter<IMyFragmentView>> implements IMyFragmentView {
+public class PersonalCenterFragment extends BaseFragment<IMyFragmentView, MyFragmentPresenter<IMyFragmentView>> implements IMyFragmentView {
     @BindView(R.id.message_layout)
     RelativeLayout messageLayout;
     @BindView(R.id.security_setting_layout)
@@ -94,14 +96,14 @@ public class PersonalCenterFragment extends BaseFragment<IMyFragmentView,MyFragm
     private void initView() {
 
         //用户名
-        String userName= (String) SPUtils.get(SPUtils.USERNAME,"");
-        if (!TextUtils.isEmpty(userName)){
+        String userName = (String) SPUtils.get(SPUtils.USERNAME, "");
+        if (!TextUtils.isEmpty(userName)) {
             headPortraitName.setText(userName);
         }
-        String photoPath= (String) SPUtils.get(KeyConstants.HEAD_PATH, "");
-        if ("".equals(photoPath)){
+        String photoPath = (String) SPUtils.get(KeyConstants.HEAD_PATH, "");
+        if ("".equals(photoPath)) {
             mPresenter.downloadPicture(MyApplication.getInstance().getUid());
-        }else {
+        } else {
             showImage(photoPath);
         }
     }
@@ -126,7 +128,8 @@ public class PersonalCenterFragment extends BaseFragment<IMyFragmentView,MyFragm
 
                 break;
             case R.id.security_setting_layout:
-
+                Intent mSercurityIntent = new Intent(getActivity(), PersonalSecuritySettingActivity.class);
+                startActivity(mSercurityIntent);
                 break;
             case R.id.faq_layout:
 
@@ -138,7 +141,8 @@ public class PersonalCenterFragment extends BaseFragment<IMyFragmentView,MyFragm
 
                 break;
             case R.id.head_second:
-
+                Intent updateHeadData = new Intent(getActivity(), PersonalUpdateHeadDataActivity.class);
+                startActivity(updateHeadData);
                 break;
         }
     }

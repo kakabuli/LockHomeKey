@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F2F2F2"
+    >
+    <include
+        android:id="@+id/in_head"
+        layout="@layout/head"></include>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#FFFFFF"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/rl_head"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_75"
+            >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/dp_17"
+                android:text="@string/head_portrait"
+                android:textColor="#333333"
+                android:textSize="@dimen/sp_15" />
+
+            <ImageView
+                android:id="@+id/head_portrait_right"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/dp_16"
+                android:src="@mipmap/right" />
+
+            <com.kaadas.lock.widget.CircleImageView
+                android:id="@+id/iv_head"
+                android:layout_width="@dimen/dp_51"
+                android:layout_height="@dimen/dp_51"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/dp_39"
+                android:layout_alignParentRight="true"
+                android:src="@mipmap/default_head" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_1"
+                android:layout_marginLeft="@dimen/dp_20"
+                android:layout_alignParentBottom="true"
+                android:background="#F2F2F2"></View>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/head_nickname_layout"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_75"
+            >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/dp_17"
+                android:text="@string/nickname"
+                android:textColor="#333333"
+                android:textSize="@dimen/sp_15" />
+
+            <ImageView
+                android:id="@+id/head_name_right"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/dp_16"
+                android:src="@mipmap/right" />
+
+            <TextView
+                android:id="@+id/head_portrait_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/dp_38"
+                android:layout_alignParentRight="true"
+                android:textSize="@dimen/sp_15"
+                android:textColor="#8E8E93"
+                android:text="@string/head_portrait_name"
+                />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_1"
+                android:layout_marginLeft="@dimen/dp_20"
+                android:layout_alignParentBottom="true"
+                android:background="#F2F2F2"></View>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/head_telNum_layout"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_75"
+            >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/dp_17"
+                android:text="@string/tel_num"
+                android:textColor="#333333"
+                android:textSize="@dimen/sp_15" />
+
+
+
+            <TextView
+                android:id="@+id/head_telNum"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/dp_38"
+                android:layout_alignParentRight="true"
+                android:textSize="@dimen/sp_15"
+                android:textColor="#8E8E93"
+                android:text="17512016666"
+
+                />
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</LinearLayout>
