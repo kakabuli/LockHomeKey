@@ -172,4 +172,26 @@
     <string name="touchid_text">“小凯智能”的触控ID\n通过Home键验证已有手机纹</string>
     <string name="kaadas_touch_id">“凯迪仕”的触控ID</string>
     <string name="verify_telephone_fingerprint">通过Home键验证已有手机指纹</string>
+    <string name="hand_pwd_drraw_the_ailure">绘制错误，请重新绘制</string>
+    <string name="hand_pwd_drraw_the_old_ailure">请绘制旧手势密码</string>
+    <string name="set_gesture_pattern">再次绘制手势密码</string>
+    <string name="repaint_gesture_pattern">与上次绘制不一致，请重新绘制</string>
+    <string name="set_again_gesture_pattern">请再次绘制手势密码</string>
+    <string name="least_four_again_input">最少链接4个点, 请重新输入</string>
+    <string name="setting">设置</string>
+    <string name="new_version">已是最新版本</string>
+    <string name="confirm_log_out">确定退出登录?</string>
+    <string name="delete_cache_data_success">清除成功</string>
+    <string name="delete_cache_data">确定清除缓存？</string>
+    <string name="version_num">版本更新</string>
+    <string name="user_agreement">用户协议</string>
+    <string name="help_log">帮助日志</string>
+    <string name="clear_cache">清除缓存</string>
+    <string name="log_out">退出登录</string>
+    <string name="current_version">当前版本</string>
+    <string name="language_setting">语言设置</string>
+    <string name="setting_language_zh">简体中文</string>
+    <string name="setting_language_en">英语</string>
+    <string name="setting_language_tai">泰语</string>
+    <string name="tranitional_chinese">繁体中文</string>
 </resources>

@@ -80,9 +80,8 @@ public class PersonalSecuritySettingActivity extends BaseActivity<IPersonalSecur
             case R.id.update_hand_pwd_layout:
                 String code = CacheFloder.readHandPassword(ACache.get(MyApplication.getInstance()), MyApplication.getInstance().getUid() + "handPassword");
                 if (code != null) {
-                    //todo
-//                    Intent personalUpdateVerifyIntent = new Intent(this, PersonalUpdateVerifyGesturePwd.class);
-//                    startActivity(personalUpdateVerifyIntent);
+                    Intent personalUpdateVerifyIntent = new Intent(this, PersonalUpdateVerifyGesturePwd.class);
+                    startActivity(personalUpdateVerifyIntent);
                 } else {
                     showHandPwdDilog();
                 }
@@ -114,8 +113,8 @@ public class PersonalSecuritySettingActivity extends BaseActivity<IPersonalSecur
             case R.id.security_setting_switch:
                 //开启
                 if (isChecked) {
-//                    Intent open = new Intent(this, PersonalUpdateGesturePwdActivity.class);
-//                    startActivity(open);
+                    Intent open = new Intent(this, PersonalUpdateGesturePwdActivity.class);
+                    startActivity(open);
                 } else {
                     //关闭
                     //清除缓存手势密码数据

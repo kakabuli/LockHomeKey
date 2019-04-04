@@ -12,12 +12,13 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.my.PersonalMessageActivity;
 import com.kaadas.lock.activity.my.PersonalSecuritySettingActivity;
+import com.kaadas.lock.activity.my.PersonalSystemSettingActivity;
 import com.kaadas.lock.activity.my.PersonalUpdateHeadDataActivity;
+import com.kaadas.lock.activity.my.UserFeedbackActivity;
 import com.kaadas.lock.base.mvpbase.BaseFragment;
 import com.kaadas.lock.presenter.MyFragmentPresenter;
 import com.kaadas.lock.utils.BitmapUtil;
@@ -40,7 +41,7 @@ import butterknife.Unbinder;
  * @company kaadas
  * created at 2019/2/25 14:47
  */
-public class PersonalCenterFragment extends BaseFragment<IMyFragmentView, MyFragmentPresenter<IMyFragmentView>> implements IMyFragmentView {
+public class PersonalCenterFragment extends BaseFragment<IMyFragmentView, MyFragmentPresenter<IMyFragmentView>> implements IMyFragmentView, View.OnClickListener {
     @BindView(R.id.message_layout)
     RelativeLayout messageLayout;
     @BindView(R.id.security_setting_layout)
@@ -59,6 +60,8 @@ public class PersonalCenterFragment extends BaseFragment<IMyFragmentView, MyFrag
     //用户名称
     @BindView(R.id.head_portrait_name)
     TextView headPortraitName;
+    @BindView(R.id.rl_user_feedback)
+    RelativeLayout rlUserFeedback;
 
     private View mPersonlCenterView;
     private Bitmap changeBitmap;
@@ -70,6 +73,7 @@ public class PersonalCenterFragment extends BaseFragment<IMyFragmentView, MyFrag
             mPersonlCenterView = inflater.inflate(R.layout.fragment_my, container, false);
         }
         unbinder = ButterKnife.bind(this, mPersonlCenterView);
+        rlUserFeedback.setOnClickListener(this);
         return mPersonlCenterView;
     }
 
@@ -135,7 +139,8 @@ public class PersonalCenterFragment extends BaseFragment<IMyFragmentView, MyFrag
 
                 break;
             case R.id.system_setting_layout:
-
+                Intent mSystemSetting = new Intent(getActivity(), PersonalSystemSettingActivity.class);
+                startActivity(mSystemSetting);
                 break;
             case R.id.about_xk_layout:
 
@@ -171,5 +176,16 @@ public class PersonalCenterFragment extends BaseFragment<IMyFragmentView, MyFrag
     public void downloadPhotoError(Throwable e) {
 //        ToastUtil.getInstance().showShort( HttpUtils.httpProtocolErrorCode(getActivity(),e));
 
+    }
+
+    @Override
+    public void onClick(View v) {
+        Intent intent;
+        switch (v.getId()) {
+            case R.id.rl_user_feedback:
+                intent = new Intent(getActivity(), UserFeedbackActivity.class);
+                startActivity(intent);
+                break;
+        }
     }
 }
