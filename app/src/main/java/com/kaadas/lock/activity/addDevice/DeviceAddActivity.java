@@ -1,5 +1,6 @@
 package com.kaadas.lock.activity.addDevice;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -10,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.kaadas.lock.R;
+import com.kaadas.lock.activity.addDevice.bluetooth.AddBluetoothFirstActivity;
 import com.kaadas.lock.adapter.DeviceAddItemAdapter;
 import com.kaadas.lock.bean.deviceAdd.DeviceAddItemBean;
 
@@ -46,9 +48,6 @@ public class DeviceAddActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         initData();
         initView();
-
-
-
     }
 
 
@@ -99,8 +98,6 @@ public class DeviceAddActivity extends AppCompatActivity {
         }
     }
 
-
-
     @OnClick({R.id.back, R.id.device_add})
     public void onViewClicked(View view) {
         switch (view.getId()) {
@@ -109,7 +106,8 @@ public class DeviceAddActivity extends AppCompatActivity {
                 break;
 
             case R.id.device_add:
-
+                Intent gatewayIntent=new Intent(this, AddBluetoothFirstActivity.class);
+                startActivity(gatewayIntent);
                 break;
         }
     }
