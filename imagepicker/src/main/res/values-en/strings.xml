@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<resources>
+
+
+    <string name="ip_folder_image_count">A total of %1$d piece</string>
+    <string name="ip_preview_image_count">%1$d/%2$d</string>
+    <string name="ip_select_limit">Choose %1$d image at most</string>
+    <string name="ip_select_complete">complete(%1$d/%2$d)</string>
+    <string name="ip_preview">preview</string>
+    <string name="ip_preview_count">preview(%1$d)</string>
+    <string name="ip_origin">Original image</string>
+    <string name="ip_origin_size">Original image(%1$s)</string>
+    <string name="ip_play_camera">Taking pictures</string>
+    <string name="no_photo">A total of 0 zhang</string>
+    <string name="select">choose</string>
+    <string name="not_allow_sd_warring">Permission is disabled and local images cannot be selected</string>
+    <string name="not_allow_camera_warring">Permission is denied to open the camera</string>
+    <string name="sure_delete_this_photo">Would you like to delete this photo</string>
+    <string name="prompt">prompt</string>
+    <string name="sure">sure</string>
+    <string name="cancel">cancel</string>
+
+
+    <string name="photo">Picture</string>
+    <string name="ip_all_images">All images</string>
+    <string name="ip_complete">complete</string>
+    <string name="ip_photo_crop">Image cropping</string>
+    <string name="photograph">photograph</string>
+
+</resources>
