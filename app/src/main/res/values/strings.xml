@@ -234,4 +234,5 @@
     <string name="setting_language_en">英语</string>
     <string name="setting_language_tai">泰语</string>
     <string name="tranitional_chinese">繁体中文</string>
+    <string name="mqtt_connection_fail">mqtt连接失败</string>
 </resources>

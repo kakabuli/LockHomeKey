@@ -146,6 +146,8 @@ public class PersonalSystemSettingActivity extends BaseActivity<ISystemSettingVi
     @Override
     public void onLoginOutSuccess() {
         MyApplication.getInstance().tokenInvalid(false);
+        //断开mqtt
+        MyApplication.getInstance().getMqttService().mqttDisconnect(MyApplication.getInstance().getMqttService().getMqttAndroidClient());
     }
 
     @Override

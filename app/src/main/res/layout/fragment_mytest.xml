@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#fff"
+    android:orientation="vertical">
+
+    <Button
+        android:id="@+id/exit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="退出登陆"
+        android:textColor="#000" />
+
+    <Button
+        android:id="@+id/user_manager"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="用户管理"
+        android:textColor="#000" />
+    <Button
+        android:id="@+id/publish"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="发布"
+        android:textColor="#000" />
+    <Button
+        android:id="@+id/disconnect"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="断开"
+        android:textColor="#000" />
+    <Button
+        android:id="@+id/connect"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="连接"
+        android:textColor="#000" />
+<!--
+    <Button
+        android:id="@+id/add_password"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="添加密码"
+        android:textColor="#000" />
+
+    <Button
+        android:id="@+id/fingerprint_manage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="指纹管理"
+        android:textColor="#000" />
+
+    <Button
+        android:id="@+id/door_card_manage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="门卡管理"
+        android:textColor="#000" />
+
+    <Button
+        android:id="@+id/family_member_manage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="家庭成员"
+        android:textColor="#000" />
+
+    <Button
+        android:id="@+id/bluetooth_lock_authorization"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="蓝牙锁授权"
+        android:textColor="#000" />-->
+</LinearLayout>

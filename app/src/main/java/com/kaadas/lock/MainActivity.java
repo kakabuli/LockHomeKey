@@ -15,6 +15,7 @@ import android.widget.RadioGroup;
 
 import com.kaadas.lock.fragment.DeviceFragment;
 import com.kaadas.lock.fragment.HomePageFragment;
+import com.kaadas.lock.fragment.MyFragment;
 import com.kaadas.lock.fragment.PersonalCenterFragment;
 
 public class MainActivity extends AppCompatActivity implements RadioGroup.OnCheckedChangeListener {
@@ -33,6 +34,7 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
     private HomePageFragment homePageFragment;
     private DeviceFragment deviceFragment;
     PersonalCenterFragment personalCenterFragment;
+    MyFragment myFragment;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,7 +77,7 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
                 }
                 fragmentTransaction.commit();
                 break;
-            case R.id.rb_three:
+          /*  case R.id.rb_three:
                 hideAll(fragmentTransaction);
                 if (personalCenterFragment!=null){
                     fragmentTransaction.show(personalCenterFragment);
@@ -84,8 +86,17 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
                     fragmentTransaction.add(R.id.content, personalCenterFragment);
                 }
                 fragmentTransaction.commit();
+                break;*/
+            case R.id.rb_three:
+                hideAll(fragmentTransaction);
+                if (myFragment!=null){
+                    fragmentTransaction.show(myFragment);
+                }else {
+                    myFragment = new MyFragment();
+                    fragmentTransaction.add(R.id.content, myFragment);
+                }
+                fragmentTransaction.commit();
                 break;
-
         }
     }
     private void hideAll(FragmentTransaction ft){
