@@ -84,11 +84,52 @@
         </activity>
         <!--我的消息-->
         <activity
-            android:name=".activity.my.MyMessageActivity"
+            android:name=".activity.my.PersonalMessageActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait">
 
         </activity>
+        <!--消息详情-->
+        <activity
+            android:name=".activity.my.PersonalMessageDetailActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activity.addDevice.DeviceAddActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activity.my.PersonalUpdateHeadDataActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activity.my.PersonalUpdateNickNameActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activity.my.PersonalSecuritySettingActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activity.my.PersonalUpdateVerifyGesturePwd"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activity.my.PersonalUpdateGesturePwdActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activity.my.UserFeedbackActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activity.my.PersonalSystemSettingActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activity.my.PersonalLanguageSettingActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"></activity>
         <activity android:name=".activity.addDevice.DeviceAddActivity"
                   android:launchMode="singleTop"
                   android:screenOrientation="portrait"></activity>

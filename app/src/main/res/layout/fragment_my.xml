@@ -6,6 +6,7 @@
     android:orientation="vertical">
 
     <RelativeLayout
+        android:id="@+id/head_second"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
@@ -25,6 +26,7 @@
                 android:src="@mipmap/default_head" />
 
             <TextView
+                android:id="@+id/head_portrait_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
@@ -50,7 +52,7 @@
         android:orientation="vertical">
 
         <RelativeLayout
-            android:id="@+id/rl_my_message"
+            android:id="@+id/message_layout"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginTop="10dp"
@@ -106,7 +108,7 @@
         </RelativeLayout>
 
         <RelativeLayout
-            android:id="@+id/rl_security_setting"
+            android:id="@+id/security_setting_layout"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
@@ -176,7 +178,7 @@
         </RelativeLayout>
 
         <RelativeLayout
-            android:id="@+id/rl_chang_jian_question"
+            android:id="@+id/faq_layout"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
@@ -204,7 +206,7 @@
         </RelativeLayout>
 
         <RelativeLayout
-            android:id="@+id/rl_my_setting"
+            android:id="@+id/system_setting_layout"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginTop="10dp"
@@ -240,7 +242,7 @@
         </RelativeLayout>
 
         <RelativeLayout
-            android:id="@+id/rl_about_us"
+            android:id="@+id/about_xk_layout"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginBottom="@dimen/dp_23"

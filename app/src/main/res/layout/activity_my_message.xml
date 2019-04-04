@@ -43,10 +43,16 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.kaadas.lock.widget.SlideRecyclerView
-            android:id="@+id/rv"
+        <com.scwang.smartrefresh.layout.SmartRefreshLayout
+            android:id="@+id/refreshLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"></com.kaadas.lock.widget.SlideRecyclerView>
+            android:layout_height="wrap_content">
+
+            <com.kaadas.lock.widget.SlideRecyclerView
+                android:id="@+id/message_recycler"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"></com.kaadas.lock.widget.SlideRecyclerView>
+        </com.scwang.smartrefresh.layout.SmartRefreshLayout>
     </LinearLayout>
 
 </LinearLayout>

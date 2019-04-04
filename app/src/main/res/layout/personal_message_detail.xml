@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F2F2F2"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/in_head"
+        layout="@layout/head"></include>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/device_background"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_24"
+            android:text=""
+            android:textColor="#333333"
+            android:textSize="@dimen/sp_15" />
+
+        <TextView
+            android:id="@+id/tv_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_8"
+            android:text="2019/3/20   16:25"
+            android:textColor="#999999"
+            android:textSize="@dimen/sp_11" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dp_16"
+            android:layout_marginTop="@dimen/dp_12"
+            android:layout_marginRight="@dimen/dp_16"
+            android:background="#FFFFFF"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_detail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dp_11"
+                android:layout_marginTop="@dimen/dp_18"
+                android:layout_marginRight="@dimen/dp_11"
+                android:layout_marginBottom="@dimen/dp_19"
+                android:lineSpacingExtra="@dimen/dp_8"
+                android:text=""
+                android:textColor="#8E8E93"
+                android:textSize="@dimen/sp_12" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>
