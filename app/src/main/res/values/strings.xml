@@ -202,7 +202,6 @@
     <string name="nickname_not_empty">昵称不能为空</string>
     <string name="modify_nickname">修改昵称</string>
     <string name="nickName_not_empty">昵称不能为空</string>
-    <string name="save">保存</string>
     <string name="no_open_fingerprint">您的手机还未设置指纹识别，请去设置。</string>
     <string name="open_hand_pwd">开启手势密码</string>
     <string name="close_hand_pwd">关闭手势密码</string>
