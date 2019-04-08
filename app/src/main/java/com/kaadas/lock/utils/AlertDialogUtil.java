@@ -120,6 +120,74 @@ public class AlertDialogUtil {
         });
     }
 
+    //没有标题的对话框
+    public void noEditTitleTwoButtonDialog(Context context,String content,String left,String right,ClickListener clickListener){
+        View mView = LayoutInflater.from(context).inflate(R.layout.no_et_title_two_button_dialog, null);
+        TextView tvTitle = mView.findViewById(R.id.tv_hint);
+        TextView tvContent = mView.findViewById(R.id.tv_content);
+        TextView tv_cancel = mView.findViewById(R.id.tv_left);
+        TextView tv_query = mView.findViewById(R.id.tv_right);
+        AlertDialog alertDialog = AlertDialogUtil.getInstance().common(context, mView);
+        tvContent.setText(content);
+        tv_cancel.setText(left);
+        tv_query.setText(right);
+        //取消
+        tv_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (clickListener!=null){
+                    clickListener.left();
+                }
+                alertDialog.dismiss();
+            }
+        });
+        //确定
+        tv_query.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (clickListener!=null){
+                    clickListener.right();
+                }
+                alertDialog.dismiss();
+            }
+        });
+    }
+
+    //有标题的对话框
+    public void havaNoEditTwoButtonDialog(Context context,String title,String content,String left,String right,ClickListener clickListener){
+        View mView = LayoutInflater.from(context).inflate(R.layout.no_et_two_button_dialog, null);
+        TextView tvTitle = mView.findViewById(R.id.tv_title);
+        TextView tvContent = mView.findViewById(R.id.tv_content);
+        TextView tv_cancel = mView.findViewById(R.id.tv_left);
+        TextView tv_query = mView.findViewById(R.id.tv_right);
+        AlertDialog alertDialog = AlertDialogUtil.getInstance().common(context, mView);
+        tvTitle.setText(title);
+        tvContent.setText(content);
+        tv_cancel.setText(left);
+        tv_query.setText(right);
+        //取消
+        tv_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (clickListener!=null){
+                    clickListener.left();
+                }
+                alertDialog.dismiss();
+            }
+        });
+        //确定
+        tv_query.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (clickListener!=null){
+                    clickListener.right();
+                }
+                alertDialog.dismiss();
+            }
+        });
+    }
+
+
     public interface ClickListener {
         void left();
 

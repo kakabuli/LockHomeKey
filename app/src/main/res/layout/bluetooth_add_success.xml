@@ -5,7 +5,11 @@
     android:layout_height="match_parent"
     android:background="@color/background_color"
     >
-
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    >
     <ImageView
         android:id="@+id/lock"
         android:layout_width="wrap_content"
@@ -24,7 +28,7 @@
         android:layout_marginTop="@dimen/dp_25"
         />
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_50"
         android:layout_marginTop="@dimen/dp_36"
@@ -32,33 +36,46 @@
         android:layout_marginRight="@dimen/dp_15"
         android:background="@drawable/remind_background"
         >
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@mipmap/my_icon"
-        android:layout_marginLeft="@dimen/dp_15"
-        android:layout_gravity="center"
-        />
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:hint="@string/input_or_select_name"
-        android:textColor="#ffb1b1b1"
-        android:textSize="@dimen/sp_15"
-        android:background="@null"
-        android:layout_marginLeft="@dimen/dp_10"
-        />
-    </LinearLayout>
+
+        <EditText
+            android:id="@+id/input_name"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:textColor="#ffb1b1b1"
+            android:textSize="@dimen/sp_15"
+            android:background="@null"
+            android:layout_marginLeft="@dimen/dp_10"
+            android:text="Kaadas智能锁"
+            android:layout_centerVertical="true"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:maxLength="12"
+            />
+        <ImageView
+            android:id="@+id/update"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/edit_name_icon"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:paddingRight="@dimen/dp_24"
+            android:paddingTop="@dimen/dp_5"
+            android:paddingBottom="@dimen/dp_5"
+            android:paddingLeft="@dimen/dp_5"
+            />
+    </RelativeLayout>
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dp_14"
+        android:layout_marginTop="@dimen/dp_16"
         android:layout_marginLeft="@dimen/dp_15"
-        android:layout_marginRight="@dimen/dp_15"
         >
     </android.support.v7.widget.RecyclerView>
+
+</LinearLayout>
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
