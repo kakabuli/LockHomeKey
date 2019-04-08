@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/agreement_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_19"
+        android:text=""
+        android:textColor="#000000"
+        android:textSize="@dimen/sp_12"
+        android:textStyle="bold"
+
+        />
+
+    <TextView
+        android:id="@+id/agreement_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_19"
+        android:lineSpacingExtra="@dimen/dp_8"
+        android:textColor="#000000"
+        android:textSize="@dimen/sp_12" />
+
+</LinearLayout>
