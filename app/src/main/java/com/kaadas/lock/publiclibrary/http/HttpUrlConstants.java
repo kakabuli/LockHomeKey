@@ -5,11 +5,10 @@ package com.kaadas.lock.publiclibrary.http;
  * Describe
  */
 public class HttpUrlConstants {
-
-//        public static final String BASE_URL = "https://app-kaadas.juziwulian.com:34000/";//正式服务器
-//    public static final String BASE_URL = "https://47.107.175.212:8090/";//测试服务器
-
-    public static final String BASE_URL = "https://app.xiaokai.com:8090/";//正式服务器
+    //public static final String BASE_URL = "https://app.xiaokai.com:8090/";//小凯正式服务器
+    // public static final String BASE_URL = "https://app-kaadas.juziwulian.com:34000/";//凯迪仕正式服务器
+    //public static final String BASE_URL = "https://47.107.175.212:8090/";//小凯测试服务器
+    public static final String BASE_URL = "https://121.201.57.214:8090/";//凯迪仕测试服务器
 
     ////////////////////////////////////////2019年2月27日15:02:43  小凯新加接口////////////////
 

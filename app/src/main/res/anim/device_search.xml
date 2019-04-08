@@ -2,11 +2,11 @@
 <rotate xmlns:android="http://schemas.android.com/apk/res/android">
 
         <rotate
-            android:drawable="@mipmap/search_being"
+            android:drawable="@drawable/search_bluetooth"
             android:fromDegrees="0"
             android:toDegrees="359"
-            android:pivotX="50%"
-            android:pivotY="50%"
+            android:pivotX="10%"
+            android:pivotY="20%"
             android:duration="2000"
             android:repeatCount="10">
         </rotate>

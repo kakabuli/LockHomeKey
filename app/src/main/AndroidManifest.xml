@@ -35,6 +35,11 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
     <uses-permission
         android:name="android.permission.READ_LOGS"
         tools:ignore="ProtectedPermissions" />
@@ -130,6 +135,34 @@
             android:name=".activity.my.PersonalLanguageSettingActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"></activity>
+        <activity android:name=".activity.addDevice.gateway.AddGatewayFirstActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"></activity>
+        <activity android:name=".activity.addDevice.gateway.AddGatewayLightActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"></activity>
+        <activity android:name=".activity.addDevice.bluetooth.AddBluetoothFirstActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"></activity>
+        <activity android:name=".activity.addDevice.bluetooth.AddBluetoothSearchActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"></activity>
+        <activity android:name=".activity.addDevice.DeviceAddHelpActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"></activity>
+        <activity android:name=".activity.addDevice.bluetooth.AddBluetoothSecondActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"></activity>
+        <activity android:name=".activity.addDevice.bluetooth.AddBluetoothThirdActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"></activity>
+        <activity android:name=".activity.addDevice.bluetooth.AddBluetoothPairActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"></activity>
+
+
+        <service android:name="com.kaadas.lock.publiclibrary.mqtt.MqttService"></service>
+        <service android:name="org.eclipse.paho.android.service.MqttService"></service>
         <activity
             android:name=".activity.my.PersonalUserAgreementActivity"
             android:launchMode="singleTop"

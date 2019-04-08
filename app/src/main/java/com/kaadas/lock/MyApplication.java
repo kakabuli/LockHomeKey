@@ -15,6 +15,7 @@ import com.kaadas.lock.activity.login.LoginActivity;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.publiclibrary.http.result.GetPasswordResult;
 import com.kaadas.lock.publiclibrary.http.util.RetrofitServiceManager;
+import com.kaadas.lock.publiclibrary.mqtt.MqttService;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.SPUtils;
@@ -55,11 +56,12 @@ public class MyApplication extends Application {
     //数据库文件名称
     private static final String DB_NAME="xiaokai.db";
     // IWXAPI 是第三方app和微信通信的openApi接口
-
+    protected MqttService mqttService;
     @Override
     public void onCreate() {
         super.onCreate();
         instance = this;
+        initMqttService();//启动MqttService
         SPUtils.init(this);  //初始化SPUtils  传递Context进去  不需要每次都传递Context
         ToastUtil.init(this); //初始化ToastUtil 传递Context进去  不需要每次都传递
         initTokenAndUid();  //获取本地UUID
@@ -125,10 +127,30 @@ public class MyApplication extends Application {
 
     }
 
+    /**
+     * 启动MQTT服务
+     */
+    private void initMqttService() {
+        Intent intent = new Intent(this, MqttService.class);
+        bindService(intent, new ServiceConnection() {
+            @Override
+            public void onServiceConnected(ComponentName name, IBinder service) {
+                MqttService.MyBinder binder = (MqttService.MyBinder) service;
+                mqttService = binder.getService();
+                LogUtils.e("mqtt为空吗" + (mqttService == null));
+            }
+
+            @Override
+            public void onServiceDisconnected(ComponentName name) {
+
+            }
+        }, Context.BIND_AUTO_CREATE);
+    }
 
 
-
-
+    public MqttService getMqttService(){
+        return  mqttService;
+    }
 
     public static MyApplication getInstance() {
         return instance;
