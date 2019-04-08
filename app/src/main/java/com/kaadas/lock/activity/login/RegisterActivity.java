@@ -197,7 +197,7 @@ public class RegisterActivity extends BaseActivity<IRegisterView, RegisterPresen
                     return;
                 } else {
                     String conuntryCode = tvAreaCode.getText().toString().trim().replace("+", "");
-                    sendPhoneVerification(conuntryCode + account, conuntryCode);
+                    sendPhoneVerification(account, conuntryCode);
                 }
             } else {
                 //邮箱

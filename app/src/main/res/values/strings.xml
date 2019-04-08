@@ -169,7 +169,6 @@
     <string name="please_open_hand_pwd">请开启手势密码</string>
     <string name="update_hand_pwd">更改手势密码</string>
     <string name="open_touch_id">开启Touch ID</string>
-    <string name="touchid_text">“小凯智能”的触控ID\n通过Home键验证已有手机纹</string>
     <string name="kaadas_touch_id">“凯迪仕”的触控ID</string>
     <string name="verify_telephone_fingerprint">通过Home键验证已有手机指纹</string>
     <string name="hand_pwd_drraw_the_ailure">绘制错误，请重新绘制</string>
@@ -218,4 +217,13 @@
 8.4不可抗力条款：如果不能履行本协议是由于一方所不能预见和控制的原因造成的，如战争、罢工、自然灾害、恶劣天气、航空运输中断等，则不能履行本协议的一方可相应免责。\n
 8.5 本协议解释权及修订权归深圳市凯迪仕智能科技有限公司所有。</string>
     <string name="faq">常见问题</string>
+    <string name="fingerprint_unidentifiable">无法识别</string>
+    <string name="fingerprint_fail_check"> 指纹验证失败,手指过脏，或者移动过快等原因。</string>
+    <string name="fingerprint_fail">指纹验证失败，不可再验,请稍后重试！</string>
+    <string name="click_fingerPrint">点击进行指纹解锁</string>
+    <string name="pwd_select">密码登录</string>
+    <string name="select_register">切换注册页面</string>
+    <string name="fingerprint_success">验证成功</string>
+    <string name="device_detail_more">更多</string>
+    <string name="home_verify_telephone_fingerprint">通过Home键验证已有手机指纹</string>
 </resources>
