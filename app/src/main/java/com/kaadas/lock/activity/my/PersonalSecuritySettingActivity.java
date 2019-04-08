@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
+import com.kaadas.lock.activity.login.PersonalVerifyFingerPrintActivity;
 import com.kaadas.lock.base.mvpbase.BaseActivity;
 import com.kaadas.lock.presenter.personalpresenter.PersonalSecuritySettingPresenter;
 import com.kaadas.lock.utils.AlertDialogUtil;

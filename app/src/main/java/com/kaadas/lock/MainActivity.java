@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
                 }
                 fragmentTransaction.commit();
                 break;
-          /*  case R.id.rb_three:
+            case R.id.rb_three:
                 hideAll(fragmentTransaction);
                 if (personalCenterFragment!=null){
                     fragmentTransaction.show(personalCenterFragment);
@@ -86,8 +86,8 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
                     fragmentTransaction.add(R.id.content, personalCenterFragment);
                 }
                 fragmentTransaction.commit();
-                break;*/
-            case R.id.rb_three:
+                break;
+   /*         case R.id.rb_three:
                 hideAll(fragmentTransaction);
                 if (myFragment!=null){
                     fragmentTransaction.show(myFragment);
@@ -96,7 +96,7 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
                     fragmentTransaction.add(R.id.content, myFragment);
                 }
                 fragmentTransaction.commit();
-                break;
+                break;*/
         }
     }
     private void hideAll(FragmentTransaction ft){

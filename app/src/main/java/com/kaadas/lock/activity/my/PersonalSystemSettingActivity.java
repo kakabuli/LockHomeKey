@@ -95,9 +95,8 @@ public class PersonalSystemSettingActivity extends BaseActivity<ISystemSettingVi
                 checkVersion();
                 break;
             case R.id.user_agreement_layout:
-                //todo
-//                Intent agreementIntent = new Intent(this, PersonalUserAgreementActivity.class);
-//                startActivity(agreementIntent);
+                Intent agreementIntent = new Intent(this, PersonalUserAgreementActivity.class);
+                startActivity(agreementIntent);
 
                 break;
 
