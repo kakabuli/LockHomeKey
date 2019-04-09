@@ -40,7 +40,8 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="@dimen/dp_17"
-                android:button="@drawable/language_selector" />
+                android:button="@drawable/language_selector"
+                android:clickable="false"/>
 
             <View
                 android:layout_width="match_parent"
@@ -73,7 +74,8 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="@dimen/dp_17"
-                android:button="@drawable/language_selector" />
+                android:button="@drawable/language_selector"
+                android:clickable="false"/>
 
             <View
                 android:layout_width="match_parent"
@@ -109,7 +111,8 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="@dimen/dp_17"
-                android:button="@drawable/language_selector" />
+                android:button="@drawable/language_selector"
+                android:clickable="false"/>
 
             <View
                 android:layout_width="match_parent"
@@ -146,7 +149,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginRight="@dimen/dp_17"
                 android:button="@drawable/language_selector"
-
+                android:clickable="false"
                 />
 
         </RelativeLayout>

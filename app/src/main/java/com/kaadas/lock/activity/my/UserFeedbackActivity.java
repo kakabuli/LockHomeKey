@@ -13,8 +13,17 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
+import com.kaadas.lock.base.mvpbase.BaseActivity;
+import com.kaadas.lock.presenter.SystemSettingPresenter;
+import com.kaadas.lock.presenter.UserFeedbackPresenter;
+import com.kaadas.lock.publiclibrary.http.result.BaseResult;
+import com.kaadas.lock.publiclibrary.http.util.HttpUtils;
 import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.ToastUtil;
+import com.kaadas.lock.view.ISystemSettingView;
+import com.kaadas.lock.view.IUserFeedbackView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -22,7 +31,7 @@ import butterknife.ButterKnife;
 /**
  * Created by David on 2019/4/4
  */
-public class UserFeedbackActivity extends AppCompatActivity implements View.OnClickListener, RadioGroup.OnCheckedChangeListener, TextWatcher {
+public class UserFeedbackActivity extends BaseActivity<IUserFeedbackView, UserFeedbackPresenter<IUserFeedbackView>> implements IUserFeedbackView, View.OnClickListener, RadioGroup.OnCheckedChangeListener, TextWatcher {
     @BindView(R.id.iv_back)
     ImageView ivBack;
     @BindView(R.id.tv_content)
@@ -43,6 +52,7 @@ public class UserFeedbackActivity extends AppCompatActivity implements View.OnCl
     EditText et;
     @BindView(R.id.tv_number)
     TextView tvNumber;
+    int messageType = 0;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -58,13 +68,29 @@ public class UserFeedbackActivity extends AppCompatActivity implements View.OnCl
     }
 
     @Override
+    protected UserFeedbackPresenter<IUserFeedbackView> createPresent() {
+        return new UserFeedbackPresenter<>();
+    }
+
+    @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.iv_back:
                 finish();
                 break;
             case R.id.btn_submit:
+                //todo 后续等待服务器更改服务器接口
+                if (messageType != 0) {
+                    String text = et.getText().toString().trim();
+                    if (text.length()>=8){
+                        mPresenter.userFeedback(MyApplication.getInstance().getUid(),text);
+                    }else {
+                        ToastUtil.getInstance().showShort(R.string.feedback_little);
+                    }
 
+                } else {
+                    ToastUtil.getInstance().showShort(R.string.select_feedback_type);
+                }
                 break;
         }
     }
@@ -73,10 +99,13 @@ public class UserFeedbackActivity extends AppCompatActivity implements View.OnCl
     public void onCheckedChanged(RadioGroup group, int checkedId) {
         switch (checkedId) {
             case R.id.rb_one:
+                messageType = 1;
                 break;
             case R.id.rb_two:
+                messageType = 2;
                 break;
             case R.id.rb_three:
+                messageType = 3;
                 break;
         }
     }
@@ -95,5 +124,20 @@ public class UserFeedbackActivity extends AppCompatActivity implements View.OnCl
     public void afterTextChanged(Editable s) {
         LogUtils.d("davi s" + s.toString());
         tvNumber.setText(s.toString().length() + "/300");
+    }
+
+    @Override
+    public void userFeedbackSubmitSuccess() {
+        ToastUtil.getInstance().showShort(R.string.submit_success);
+    }
+
+    @Override
+    public void userFeedbackSubmitFailed(Throwable throwable) {
+        ToastUtil.getInstance().showShort(HttpUtils.httpProtocolErrorCode(this, throwable));
+    }
+
+    @Override
+    public void userFeedbackSubmitFailedServer(BaseResult result) {
+        ToastUtil.getInstance().showShort(HttpUtils.httpErrorCode(this, result.getCode()));
     }
 }
