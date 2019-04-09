@@ -17,6 +17,7 @@ import com.kaadas.lock.fragment.DeviceFragment;
 import com.kaadas.lock.fragment.HomePageFragment;
 import com.kaadas.lock.fragment.MyFragment;
 import com.kaadas.lock.fragment.PersonalCenterFragment;
+import com.kaadas.lock.utils.PermissionUtil;
 
 public class MainActivity extends AppCompatActivity implements RadioGroup.OnCheckedChangeListener {
     @BindView(R.id.rb_one)
@@ -40,6 +41,7 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        PermissionUtil.getInstance().requestPermission(PermissionUtil.getInstance().permission,this);
         rg.setOnCheckedChangeListener(this);
         initFragment();
     }

@@ -295,4 +295,12 @@
     <string name="gateway_connect_success">网关连接成功</string>
     <string name="add_zigbeelock">添加智能锁</string>
     <string name="in_gateway_success">入网成功</string>
+    <string name="cateye_first_text">打开包装盒扫描猫眼二维码</string>
+    <string name="add_gateway_cateye">添加网关猫眼</string>
+    <string name="go_scan_cateye">去扫描设备二维码</string>
+    <string name="qr_code">二维码</string>
+    <string name="scan_qr_failed">二维码识别失败</string>
+    <string name="please_qrcode_in">将设备二维码放入框内</string>
+    <string name="add_cateye">添加猫眼</string>
+
 </resources>
