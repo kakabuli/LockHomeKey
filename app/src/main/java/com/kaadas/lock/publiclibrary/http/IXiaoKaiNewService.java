@@ -45,7 +45,13 @@ public interface IXiaoKaiNewService {
     @POST(HttpUrlConstants.REGISTER_BY_PHONE)
     Observable<RegisterResult> registerByPhone(@Body RequestBody info);
 
-
+    /**
+     * 通过邮箱注册
+     *
+     * @return
+     */
+    @POST(HttpUrlConstants.EMAIL_REGISTER)
+    Observable<RegisterResult> registerByEmail(@Body RequestBody info);
     /**
      * 通过手机号登陆
      *
@@ -53,6 +59,14 @@ public interface IXiaoKaiNewService {
      */
     @POST(HttpUrlConstants.LOGIN_BY_PHONE)
     Observable<LoginResult> loginByPhone(@Body RequestBody info);
+
+    /**
+     * 通过邮箱登陆
+     *
+     * @return
+     */
+    @POST(HttpUrlConstants.EMAIL_LOGIN)
+    Observable<LoginResult> loginByEmail(@Body RequestBody info);
 
     /**
      * 忘记密码
@@ -324,6 +338,13 @@ public interface IXiaoKaiNewService {
      */
     @POST(HttpUrlConstants.SEND_MSG)
     Observable<BaseResult> sendMessage(@Body RequestBody info);
+    /**
+     * 发送邮箱验证码
+     *
+     * @return
+     */
+    @POST(HttpUrlConstants.GET_EMAIL_YZM)
+    Observable<BaseResult> sendEamilYZM(@Body RequestBody info);
 
     /**
      * 上传头像

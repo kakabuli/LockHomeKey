@@ -197,12 +197,12 @@ public class RegisterActivity extends BaseActivity<IRegisterView, RegisterPresen
                     return;
                 } else {
                     String conuntryCode = tvAreaCode.getText().toString().trim().replace("+", "");
-                    sendPhoneVerification(account, conuntryCode);
+                    mPresenter.sendRandomByPhone(account, conuntryCode);
                 }
             } else {
                 //邮箱
                 if (DetectionEmailPhone.getInstance().isEmail(account)) {
-                    sendEmailVerification(account);
+                    mPresenter.sendRandomByEmail(account);
                 } else {
 //                    ToastUtil.getInstance().showShort( R.string.email_not_right);
                     AlertDialogUtil.getInstance().noButtonSingleLineDialog(this, getString(R.string.input_valid_telephone_or_email));
@@ -217,9 +217,6 @@ public class RegisterActivity extends BaseActivity<IRegisterView, RegisterPresen
         }
     }
 
-    private void sendEmailVerification(String account) {
-
-    }
 /*    //获取验证码
     private void getVerification() {
         if (NetUtil.isNetworkAvailable()) {
@@ -246,10 +243,7 @@ public class RegisterActivity extends BaseActivity<IRegisterView, RegisterPresen
         }
     }*/
 
-    //
-    private void sendPhoneVerification(String phone, String countryCode) {
-        mPresenter.sendRandomByPhone(phone, countryCode);
-    }
+
 
     private void register() {
         if (NetUtil.isNetworkAvailable()) {
@@ -286,13 +280,12 @@ public class RegisterActivity extends BaseActivity<IRegisterView, RegisterPresen
                     return;
                 }
                 String countryCode = tvAreaCode.getText().toString().trim().replace("+", "");
-                phoneRegister(countryCode + account, code, pwd);
-
+                mPresenter.registerByPhone(countryCode + account, pwd, code);
             } else {
                 LogUtils.e("邮箱注册：" + DetectionEmailPhone.getInstance().isEmail(account));
                 if (DetectionEmailPhone.getInstance().isEmail(account)) {
                     // sendEmailClick(phone);
-                    emailRegister(account, code, pwd);
+                    mPresenter.registerByEmail(account,pwd,code);
                 } else {
 //                    ToastUtil.getInstance().showShort( R.string.email_not_right);
                     AlertDialogUtil.getInstance().noButtonSingleLineDialog(this, getString(R.string.input_valid_telephone_or_email));
@@ -306,9 +299,6 @@ public class RegisterActivity extends BaseActivity<IRegisterView, RegisterPresen
         }
     }
 
-    private void emailRegister(String account, String code, String pwd) {
-
-    }
     //注册
 /*    private void register() {
         if (NetUtil.isNetworkAvailable()) {
@@ -348,9 +338,7 @@ public class RegisterActivity extends BaseActivity<IRegisterView, RegisterPresen
     }*/
 
 
-    private void phoneRegister(String phone, String code, String pwd) {
-        mPresenter.registerByPhone(phone, pwd, code);
-    }
+
 
     @NonNull
     private String getEdittextContent(EditText et) {
