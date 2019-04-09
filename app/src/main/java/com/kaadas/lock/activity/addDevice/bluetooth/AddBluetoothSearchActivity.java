@@ -3,6 +3,7 @@ package com.kaadas.lock.activity.addDevice.bluetooth;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
@@ -24,6 +25,7 @@ import com.kaadas.lock.activity.addDevice.DeviceAddHelpActivity;
 import com.kaadas.lock.adapter.DeviceAddItemAdapter;
 import com.kaadas.lock.adapter.DeviceSearchAdapter;
 import com.kaadas.lock.adapter.inf.OnBindClickListener;
+import com.kaadas.lock.utils.AlertDialogUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,6 +65,7 @@ public class AddBluetoothSearchActivity extends AppCompatActivity implements OnB
         initAnimation();
         initView();
         initData();
+
     }
 
     private void initView() {
@@ -71,6 +74,7 @@ public class AddBluetoothSearchActivity extends AppCompatActivity implements OnB
         searchRecycler.addItemDecoration(dividerItemDecoration);
 
     }
+    //当有搜索到蓝牙设备时，显示recycler和重新搜索按钮。
     private void showRecycler(Boolean flag){
         if (flag){
             recyclerLayout.setVisibility(View.VISIBLE);
@@ -81,6 +85,20 @@ public class AddBluetoothSearchActivity extends AppCompatActivity implements OnB
         }
     }
 
+    //当没有搜索到蓝牙设备时，显示对话框。
+    private void showDialog(Boolean isNoData){
+        if (isNoData){
+            AlertDialogUtil.getInstance().noEditTitleTwoButtonDialog(this, getResources().getString(R.string.no_find_connect_device), getResources().getString(R.string.cancel), getResources().getString(R.string.rescan), new AlertDialogUtil.ClickListener() {
+                @Override
+                public void left() {
+                }
+                @Override
+                public void right() {
+                    //重新搜索设备
+                }
+            });
+        }
+    }
 
 
     private void initAnimation() {
@@ -114,9 +132,6 @@ public class AddBluetoothSearchActivity extends AppCompatActivity implements OnB
      */
     private void startAnimation() {
         if (operatingAnim != null) {
-            deviceAddSearch.startAnimation(operatingAnim);
-        } else {
-            deviceAddSearch.setAnimation(operatingAnim);
             deviceAddSearch.startAnimation(operatingAnim);
         }
     }

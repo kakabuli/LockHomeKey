@@ -113,5 +113,9 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
             ft.hide(personalCenterFragment);
         }
 
+        if (myFragment!=null){
+            ft.hide(myFragment);
+        }
+
     }
 }
