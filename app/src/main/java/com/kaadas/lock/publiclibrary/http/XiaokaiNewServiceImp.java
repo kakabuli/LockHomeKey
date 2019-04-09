@@ -19,6 +19,7 @@ import com.kaadas.lock.publiclibrary.http.postbean.GetSinglePasswordBean;
 import com.kaadas.lock.publiclibrary.http.postbean.GetUserNickBean;
 import com.kaadas.lock.publiclibrary.http.postbean.GetUserProtocolContentBean;
 import com.kaadas.lock.publiclibrary.http.postbean.GetWarringRecordBean;
+import com.kaadas.lock.publiclibrary.http.postbean.LoginByEmailBean;
 import com.kaadas.lock.publiclibrary.http.postbean.LoginByPhoneBean;
 import com.kaadas.lock.publiclibrary.http.postbean.ModifyLockNickBean;
 import com.kaadas.lock.publiclibrary.http.postbean.ModifyPasswordBean;
@@ -28,6 +29,7 @@ import com.kaadas.lock.publiclibrary.http.postbean.PutMessageBean;
 import com.kaadas.lock.publiclibrary.http.postbean.RegisterByPhoneBean;
 import com.kaadas.lock.publiclibrary.http.postbean.ResetDeviceBean;
 import com.kaadas.lock.publiclibrary.http.postbean.SearchUSerBean;
+import com.kaadas.lock.publiclibrary.http.postbean.SendEmailBean;
 import com.kaadas.lock.publiclibrary.http.postbean.SendMessageBean;
 import com.kaadas.lock.publiclibrary.http.postbean.UploadAppRecordBean;
 import com.kaadas.lock.publiclibrary.http.postbean.UploadBinRecordBean;
@@ -86,7 +88,21 @@ public class XiaokaiNewServiceImp {
                 .compose(RxjavaHelper.observeOnMainThread())
                 ;
     }
-
+    /**
+     * 通过手机号注册
+     * name	    是	String	邮箱
+     * password	是	String	密码
+     * tokens	是	String	邮箱验证码
+     *
+     * @return
+     */
+    public static Observable<RegisterResult> registerByEmail(String name, String password, String tokens) {
+        RegisterByPhoneBean registerByPhoneBean = new RegisterByPhoneBean(name, password, tokens);
+        return RetrofitServiceManager.getNoTokenInstance().create(IXiaoKaiNewService.class)
+                .registerByEmail(new HttpUtils<RegisterByPhoneBean>().getBody(registerByPhoneBean))
+                .compose(RxjavaHelper.observeOnMainThread())
+                ;
+    }
 
     /**
      * 通过手机号登陆
@@ -103,7 +119,21 @@ public class XiaokaiNewServiceImp {
                 .compose(RxjavaHelper.observeOnMainThread())
                 ;
     }
-
+    /**
+     * 通过邮箱登陆
+     * 参数名	必选	类型	说明
+     * Email	    是	    String	邮箱
+     * password	是	    String	密码
+     *
+     * @return
+     */
+    public static Observable<LoginResult> loginByEmail(String Email, String password) {
+        LoginByEmailBean loginByEmailBean = new LoginByEmailBean(Email, password);
+        return RetrofitServiceManager.getNoTokenInstance().create(IXiaoKaiNewService.class)
+                .loginByEmail(new HttpUtils<LoginByEmailBean>().getBody(loginByEmailBean))
+                .compose(RxjavaHelper.observeOnMainThread())
+                ;
+    }
     /**
      * 忘记密码
      * 参数名	必选	类型	说明
@@ -612,6 +642,21 @@ public class XiaokaiNewServiceImp {
         SendMessageBean sendMessageBean = new SendMessageBean(tel, code);
         return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
                 .sendMessage(new HttpUtils<SendMessageBean>().getBody(sendMessageBean))
+                .compose(RxjavaHelper.observeOnMainThread())
+                ;
+
+    }
+    /**
+     * 发送邮箱验证码
+     * 参数名	必选	类型	说明
+     * email	    是	    String	邮箱
+     *
+     * @return
+     */
+    public static Observable<BaseResult> sendEmailYZM(String email) {
+        SendEmailBean sendEmailBean = new SendEmailBean(email);
+        return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
+                .sendEamilYZM(new HttpUtils<SendEmailBean>().getBody(sendEmailBean))
                 .compose(RxjavaHelper.observeOnMainThread())
                 ;
 

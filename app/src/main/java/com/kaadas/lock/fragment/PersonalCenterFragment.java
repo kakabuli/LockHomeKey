@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
+import com.kaadas.lock.activity.my.AboutUsActivity;
 import com.kaadas.lock.activity.my.PersonalFAQActivity;
 import com.kaadas.lock.activity.my.PersonalMessageActivity;
 import com.kaadas.lock.activity.my.PersonalSecuritySettingActivity;
@@ -130,7 +131,6 @@ public class PersonalCenterFragment extends BaseFragment<IMyFragmentView, MyFrag
             case R.id.message_layout:
                 Intent mMessageIntent = new Intent(getActivity(), PersonalMessageActivity.class);
                 startActivity(mMessageIntent);
-
                 break;
             case R.id.security_setting_layout:
                 Intent mSercurityIntent = new Intent(getActivity(), PersonalSecuritySettingActivity.class);
@@ -145,7 +145,8 @@ public class PersonalCenterFragment extends BaseFragment<IMyFragmentView, MyFrag
                 startActivity(mSystemSetting);
                 break;
             case R.id.about_xk_layout:
-
+                Intent aboutIntent=new Intent(getActivity(),AboutUsActivity.class);
+                startActivity(aboutIntent);
                 break;
             case R.id.head_second:
                 Intent updateHeadData = new Intent(getActivity(), PersonalUpdateHeadDataActivity.class);

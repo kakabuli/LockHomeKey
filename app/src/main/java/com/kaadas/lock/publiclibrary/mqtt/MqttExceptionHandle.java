@@ -30,8 +30,8 @@ public class MqttExceptionHandle {
 		LogUtils.e("mqtt发生异常"+exception.toString()+"类型是"+type);
 		switch (result) {
 			//客户端遇到异常。使用{@link #getCause()}方法获取底层原因。
-
 			case 0:
+
 				break;
 			case 0x01:
 
@@ -75,6 +75,8 @@ public class MqttExceptionHandle {
 			 * *服务器不再响应保持活动的消息。
 			 */
 			case 32000:
+
+
 				break;
 
 			/**

@@ -19,13 +19,19 @@ public class HttpUrlConstants {
      */
     public static final String REGISTER_BY_PHONE = BASE_URL + "user/reg/putuserbytel";
 
-
+    /**
+     * 邮箱注册
+     */
+    public static final String EMAIL_REGISTER = BASE_URL + "user/reg/putuserbyemail";
     /**
      * 通过手机登陆
      */
     public static final String LOGIN_BY_PHONE = BASE_URL + "user/login/getuserbytel";
 
-
+    /**
+     * 邮箱登录
+     */
+    public static final String EMAIL_LOGIN = BASE_URL + "user/login/getuserbymail";
     /**
      * 忘记密码
      */
@@ -231,7 +237,10 @@ public class HttpUrlConstants {
      * 发送短信验证码
      */
     public static final String SEND_MSG = BASE_URL + "sms/sendSmsTokenByTX";
-
+    /**
+     * 发送邮箱验证码
+     */
+    public static final String GET_EMAIL_YZM = BASE_URL + "mail/sendemailtoken";
     /**
      * 上传头像 post
      */
