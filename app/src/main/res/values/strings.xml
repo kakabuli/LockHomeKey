@@ -267,4 +267,17 @@
     <string name="device_detail_more">更多</string>
     <string name="home_verify_telephone_fingerprint">通过Home键验证已有手机指纹</string>
     <string name="mqtt_connection_fail">mqtt连接失败</string>
+    <string name="account_problem">账号问题</string>
+    <string name="payment_problem">支付问题</string>
+    <string name="no_signal">没有信号</string>
+    <string name="user_feedback_hint">请输入反馈信息（8到300个字符),我们会尽快处理你的问题。</string>
+    <string name="submit">提 交</string>
+    <string name="about_us_content" >Kaadas凯迪仕专注于智能锁领域，是一家集产品研发、制造、销售、安装、售后于一体的全产业链公司，是国家级高新技术企业，总部位于中国深圳高新科技园——清华信息港。凯迪仕一直秉承“创新、智造、品质、诚信、工匠精神”做产品，为全球每一位消费者提供舒适，便捷，安全的高品质生活。目前凯迪仕有1000多名员工，上万家全球终端网点，销售规模位居全球前列。</string>
+    <string name="wechat_official_account">微信公众号</string>
+    <string name="kaadas_smart_door_lock">凯迪仕智能门锁</string>
+    <string name="wei_bo">微博</string>
+    <string name="kaadas_smart_lock">凯迪仕智能锁</string>
+    <string name="customer_service_phone">客服电话</string>
+    <string name="zhao_shang_phone">招商电话</string>
+    <string name="enterprise_official_website">企业官网</string>
 </resources>
