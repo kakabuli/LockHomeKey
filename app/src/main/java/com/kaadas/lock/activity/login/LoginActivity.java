@@ -223,7 +223,7 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter<ILogi
             if (StringUtil.isNumeric(phone)) {
                 if (!PhoneUtil.isMobileNO(phone)) {
 //                    ToastUtil.getInstance().showShort(R.string.phone_not_right);
-                    //todo 账户密码错误 请输入正确验证码 调用这个方法传入对应的内容就可以
+                    // 账户密码错误 请输入正确验证码 调用这个方法传入对应的内容就可以
                     AlertDialogUtil.getInstance().noButtonSingleLineDialog(this, getString(R.string.input_valid_telephone_or_email));
                     return;
                 } else {
@@ -238,7 +238,7 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter<ILogi
                     AlertDialogUtil.getInstance().noButtonSingleLineDialog(this, getString(R.string.input_valid_telephone_or_email));
                     return;
                 } else {
-                    emialLogin(phone, pwd);
+                    mPresenter.loginByEmail(phone,pwd);
                 }
             }
 
@@ -247,9 +247,6 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter<ILogi
         }
     }
 
-    private void emialLogin(String phone, String pwd) {
-
-    }
 
 
  /*   private void login() {

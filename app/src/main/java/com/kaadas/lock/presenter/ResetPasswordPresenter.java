@@ -51,10 +51,41 @@ public class ResetPasswordPresenter<T> extends BasePresenter<IResetPasswordView>
 
 
     }
+    /**
+     * 发送邮箱验证码
+     * @param email
+     */
+    public void sendRandomByEmail(String email) {
+        XiaokaiNewServiceImp.sendEmailYZM(email)
+                .subscribe(new BaseObserver<BaseResult>() {
+                    @Override
+                    public void onSuccess(BaseResult result) {
+                        if (mViewRef.get() != null) {
+                            mViewRef.get().senRandomSuccess();
+                        }
+                    }
+                    @Override
+                    public void onAckErrorCode(BaseResult baseResult) {
+                        if (mViewRef.get() != null) {
+                            mViewRef.get().sendRandomFailedServer(baseResult);
+                        }
+                    }
+                    @Override
+                    public void onFailed(Throwable throwable) {
+                        if (mViewRef.get() != null) {
+                            mViewRef.get().sendRandomFailed(throwable);
+                        }
+                    }
+                    @Override
+                    public void onSubscribe1(Disposable d) {
+                        compositeDisposable.add(d);
+                    }
+                });
 
+    }
 
-    public void resetPassword(String user_name, String pwd, String token) {
-        XiaokaiNewServiceImp.forgetPassword(user_name, pwd, 1, token)
+    public void resetPassword(String user_name, String pwd,int type, String token) {
+        XiaokaiNewServiceImp.forgetPassword(user_name, pwd, type, token)
                 .subscribe(new BaseObserver<BaseResult>() {
                     @Override
                     public void onSuccess(BaseResult result) {

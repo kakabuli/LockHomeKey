@@ -168,7 +168,7 @@ public class ForgetPasswordActivity extends BaseActivity<IResetPasswordView, Res
             } else {
                 //邮箱
                 if (DetectionEmailPhone.getInstance().isEmail(account)) {
-                    sendEmailVerification(account);
+                    mPresenter.sendRandomByEmail(account);
                 } else {
 //                    ToastUtil.getInstance().showShort( R.string.email_not_right);
                     AlertDialogUtil.getInstance().noButtonSingleLineDialog(this, getString(R.string.input_valid_telephone_or_email));
@@ -183,9 +183,7 @@ public class ForgetPasswordActivity extends BaseActivity<IResetPasswordView, Res
         }
     }
 
-    private void sendEmailVerification(String account) {
 
-    }
     //获取验证码
  /*   private void getVerification() {
         if (NetUtil.isNetworkAvailable()) {
@@ -248,12 +246,12 @@ public class ForgetPasswordActivity extends BaseActivity<IResetPasswordView, Res
 //                String countryCode = tvAreaCode.getText().toString().trim().replace("+", "");
 //                phoneRegister(countryCode + account, code, pwd);
                 String countryCode = tvAreaCode.getText().toString().trim().replace("+", "");
-                mPresenter.resetPassword(countryCode + account, pwd, code);
+                mPresenter.resetPassword(countryCode + account, pwd,1, code);
             } else {
                 LogUtils.e("邮箱注册：" + DetectionEmailPhone.getInstance().isEmail(account));
                 if (DetectionEmailPhone.getInstance().isEmail(account)) {
                     // sendEmailClick(phone);
-                    emailRegister(account, code, pwd);
+                    mPresenter.resetPassword(account, pwd,2, code);
                 } else {
 //                    ToastUtil.getInstance().showShort( R.string.email_not_right);
                     AlertDialogUtil.getInstance().noButtonSingleLineDialog(this, getString(R.string.input_valid_telephone_or_email));
@@ -267,9 +265,7 @@ public class ForgetPasswordActivity extends BaseActivity<IResetPasswordView, Res
         }
     }
 
-    private void emailRegister(String account, String code, String pwd) {
 
-    }
     //重置密码
 /*    private void register() {
         if (NetUtil.isNetworkAvailable()) {

@@ -46,6 +46,31 @@ public class LoginPresenter<T> extends BasePresenter<ILoginView> {
                     }
                 });
     }
+    public void loginByEmail(String Email, String pwd) {
+        XiaokaiNewServiceImp.loginByEmail(Email, pwd)
+                .subscribe(new BaseObserver<LoginResult>() {
+                    @Override
+                    public void onSuccess(LoginResult loginResult) {
+                        loginSuccess(loginResult,Email,pwd);
+                    }
+
+                    @Override
+                    public void onAckErrorCode(BaseResult result) {
+                        mViewRef.get().onLoginFailedServer(result);
+                        LogUtils.e("登陆失败   " + result.toString());
+                    }
+
+                    @Override
+                    public void onFailed(Throwable throwable) {
+                        mViewRef.get().onLoginFailed(throwable);
+                    }
+
+                    @Override
+                    public void onSubscribe1(Disposable d) {
+                        compositeDisposable.add(d);
+                    }
+                });
+    }
 
     //获取用户名称
     private void   getUserName(String uid){
