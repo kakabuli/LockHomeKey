@@ -242,8 +242,6 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter<ILogi
                 }
             }
 
-            String countryCode = tvAreaCode.getText().toString().trim().replace("+", "");
-//            mPresenter.loginByPhone(countryCode + phone, pwd,phone);
         } else {
             ToastUtil.getInstance().showShort(R.string.noNet);
         }
