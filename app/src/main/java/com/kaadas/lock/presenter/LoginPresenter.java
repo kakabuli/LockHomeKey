@@ -115,5 +115,7 @@ public class LoginPresenter<T> extends BasePresenter<ILoginView> {
         MyApplication.getInstance().setToken(loginResult.getData().getToken());
         MyApplication.getInstance().setUid(loginResult.getData().getUid());
         getUserName(loginResult.getData().getUid());
+        //连接mqtt
+        MyApplication.getInstance().getMqttService().mqttConnection( );
     }
 }

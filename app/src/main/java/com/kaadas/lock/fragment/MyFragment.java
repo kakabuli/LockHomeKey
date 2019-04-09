@@ -137,9 +137,7 @@ public class MyFragment extends Fragment {
             case R.id.disconnect:
                 MyApplication.getInstance().getMqttService().mqttDisconnect();
                 break;
-            case R.id.connect:
-                MyApplication.getInstance().getMqttService().mqttConnection( );
-                break;
+
         }
     }
 
