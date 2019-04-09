@@ -110,7 +110,7 @@ public class DeviceAddActivity extends AppCompatActivity {
     }
 
 
-    @OnClick({R.id.zigbee_layout, R.id.bluetooth_layout})
+    @OnClick({R.id.zigbee_layout, R.id.bluetooth_layout,R.id.back})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.zigbee_layout:
@@ -120,7 +120,9 @@ public class DeviceAddActivity extends AppCompatActivity {
             case R.id.bluetooth_layout:
                 Intent bluetoothIntent = new Intent(this, AddBluetoothFirstActivity.class);
                 startActivity(bluetoothIntent);
-
+                break;
+            case R.id.back:
+                finish();
                 break;
         }
     }

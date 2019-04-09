@@ -5,7 +5,7 @@ package com.kaadas.lock.publiclibrary.mqtt;
 *@company kaadas
 *created at 2019/3/27 17:09
 */
-public class Constant {
+public class MqttConstant {
 
     //断开后，是否自动连接
     public static final boolean MQTT_AUTOMATIC_RECONNECT=true;
@@ -26,4 +26,6 @@ public class Constant {
         String topic="/" + userId + "/rpc/reply";
         return topic;
     }
+
+
 }

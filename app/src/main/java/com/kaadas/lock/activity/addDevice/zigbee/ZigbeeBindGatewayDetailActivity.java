@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.kaadas.lock.R;
+import com.kaadas.lock.activity.addDevice.cateye.AddDeviceCatEyeFirstActivity;
 import com.kaadas.lock.adapter.AddZigbeeBindGatewayAdapter;
 import com.kaadas.lock.bean.deviceAdd.AddBluetoothPairSuccessBean;
 import com.kaadas.lock.bean.deviceAdd.AddZigbeeBindGatewayBean;
@@ -103,8 +104,8 @@ public class ZigbeeBindGatewayDetailActivity extends AppCompatActivity implement
                     }else{
                         if (type==2){
                             //跳转猫眼流程
-
-
+                            Intent catEyeIntent=new Intent(this, AddDeviceCatEyeFirstActivity.class);
+                            startActivity(catEyeIntent);
                         }else if (type==3){
                             //跳转zigbee锁流程
                             Intent intent=new Intent(this,AddZigbeeLockFirstActivity.class);

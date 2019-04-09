@@ -29,7 +29,7 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.constant.SpinnerStyle;
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
 import com.scwang.smartrefresh.layout.header.ClassicsHeader;
-
+import com.uuzuche.lib_zxing.activity.ZXingLibrary;
 
 
 import java.util.ArrayList;
@@ -66,6 +66,8 @@ public class MyApplication extends Application {
         ToastUtil.init(this); //初始化ToastUtil 传递Context进去  不需要每次都传递
         initTokenAndUid();  //获取本地UUID
         listenerAppBackOrForge();
+        //扫描二维码初始化
+        ZXingLibrary.initDisplayOpinion(this);
     }
 
     /**
@@ -192,10 +194,12 @@ public class MyApplication extends Application {
      *                     ....
      */
     public void tokenInvalid(boolean isShowDialog) {
+        LogUtils.e("token过期   ");
         SPUtils.put(KeyConstants.HEAD_PATH, "");
         boolean alreadyStart = false;
         Boolean appUpdate= (Boolean) SPUtils.get(SPUtils.APPUPDATE,false);
         String phone= (String) SPUtils.get(SPUtils.PHONEN,"");
+        //退出登录  清除数据
         SPUtils.clear();
         if (appUpdate==true){
             SPUtils.put(SPUtils.APPUPDATE,true);
