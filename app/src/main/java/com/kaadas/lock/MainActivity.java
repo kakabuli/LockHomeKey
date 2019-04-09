@@ -1,7 +1,6 @@
 package com.kaadas.lock;
 
 
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -13,12 +12,15 @@ import android.widget.FrameLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
+import com.kaadas.lock.base.mvpbase.BaseActivity;
+import com.kaadas.lock.base.mvpbase.BasePresenter;
+import com.kaadas.lock.base.mvpbase.IBaseView;
 import com.kaadas.lock.fragment.DeviceFragment;
 import com.kaadas.lock.fragment.HomePageFragment;
 import com.kaadas.lock.fragment.MyFragment;
 import com.kaadas.lock.fragment.PersonalCenterFragment;
 
-public class MainActivity extends AppCompatActivity implements RadioGroup.OnCheckedChangeListener {
+public class MainActivity extends BaseActivity<IBaseView,BasePresenter<IBaseView>> implements RadioGroup.OnCheckedChangeListener,IBaseView {
     @BindView(R.id.rb_one)
     RadioButton rbOne;
     @BindView(R.id.rb_two)
@@ -35,6 +37,7 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
     private DeviceFragment deviceFragment;
     PersonalCenterFragment personalCenterFragment;
     MyFragment myFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,13 +45,19 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
         ButterKnife.bind(this);
         rg.setOnCheckedChangeListener(this);
         initFragment();
+//        MyApplication.getInstance().getMqttService().mqttConnection();
+    }
+
+    @Override
+    protected BasePresenter createPresent() {
+        return new BasePresenter();
     }
 
     private void initFragment() {
         manager = getSupportFragmentManager();
         transaction = manager.beginTransaction();
-         homePageFragment=new HomePageFragment();
-        transaction.add(R.id.content,homePageFragment);
+        homePageFragment = new HomePageFragment();
+        transaction.add(R.id.content, homePageFragment);
         transaction.commit();
     }
 
@@ -59,61 +68,63 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
         switch (checkedId) {
             case R.id.rb_one:
                 hideAll(fragmentTransaction);
-                if (homePageFragment!=null){
+                if (homePageFragment != null) {
                     fragmentTransaction.show(homePageFragment);
-                }else {
-                    homePageFragment= new HomePageFragment();
-                    fragmentTransaction.add(R.id.content,homePageFragment);
+                } else {
+                    homePageFragment = new HomePageFragment();
+                    fragmentTransaction.add(R.id.content, homePageFragment);
                 }
                 fragmentTransaction.commit();
                 break;
             case R.id.rb_two:
                 hideAll(fragmentTransaction);
-                if (deviceFragment!=null){
+                if (deviceFragment != null) {
                     fragmentTransaction.show(deviceFragment);
-                }else {
+                } else {
                     deviceFragment = new DeviceFragment();
-                    fragmentTransaction.add(R.id.content,deviceFragment);
+                    fragmentTransaction.add(R.id.content, deviceFragment);
                 }
                 fragmentTransaction.commit();
                 break;
+//            case R.id.rb_three:
+//                hideAll(fragmentTransaction);
+//                if (personalCenterFragment!=null){
+//                    fragmentTransaction.show(personalCenterFragment);
+//                }else {
+//                    personalCenterFragment = new PersonalCenterFragment();
+//                    fragmentTransaction.add(R.id.content, personalCenterFragment);
+//                }
+//                fragmentTransaction.commit();
+//                break;
             case R.id.rb_three:
                 hideAll(fragmentTransaction);
-                if (personalCenterFragment!=null){
-                    fragmentTransaction.show(personalCenterFragment);
-                }else {
-                    personalCenterFragment = new PersonalCenterFragment();
-                    fragmentTransaction.add(R.id.content, personalCenterFragment);
-                }
-                fragmentTransaction.commit();
-                break;
-   /*         case R.id.rb_three:
-                hideAll(fragmentTransaction);
-                if (myFragment!=null){
+                if (myFragment != null) {
                     fragmentTransaction.show(myFragment);
-                }else {
+                } else {
                     myFragment = new MyFragment();
                     fragmentTransaction.add(R.id.content, myFragment);
                 }
                 fragmentTransaction.commit();
-                break;*/
+                break;
         }
     }
-    private void hideAll(FragmentTransaction ft){
-        if (ft==null){
+
+    private void hideAll(FragmentTransaction ft) {
+
+        if (ft == null) {
             return;
         }
-        if (homePageFragment!=null){
+        if (homePageFragment != null) {
             ft.hide(homePageFragment);
         }
-        if (deviceFragment!=null){
+        if (deviceFragment != null) {
             ft.hide(deviceFragment);
         }
-        if (personalCenterFragment!=null){
+        if (personalCenterFragment != null) {
             ft.hide(personalCenterFragment);
         }
 
-        if (myFragment!=null){
+        if (myFragment != null) {
             ft.hide(myFragment);
         }
 

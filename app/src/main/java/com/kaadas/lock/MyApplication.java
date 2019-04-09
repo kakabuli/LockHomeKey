@@ -192,10 +192,12 @@ public class MyApplication extends Application {
      *                     ....
      */
     public void tokenInvalid(boolean isShowDialog) {
+        LogUtils.e("token过期   ");
         SPUtils.put(KeyConstants.HEAD_PATH, "");
         boolean alreadyStart = false;
         Boolean appUpdate= (Boolean) SPUtils.get(SPUtils.APPUPDATE,false);
         String phone= (String) SPUtils.get(SPUtils.PHONEN,"");
+        //退出登录  清除数据
         SPUtils.clear();
         if (appUpdate==true){
             SPUtils.put(SPUtils.APPUPDATE,true);
