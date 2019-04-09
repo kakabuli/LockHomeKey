@@ -42,21 +42,21 @@ public class PersonalMessageAdapter extends BaseRecyclerViewAdapter<PersonalMess
     protected void onBindData(RecyclerViewHolder holder, PersonalMessageBean bean, int position) {
         switch (bean.getType()) {
             case KeyConstants.SYSTEM_MESSAGE:
-                ImageView iv = (ImageView) holder.getView(R.id.iv);
-                iv.setImageResource(Integer.parseInt(bean.getHeadPortrait()));
                 TextView tvTitle = (TextView) holder.getView(R.id.tv_title);
                 tvTitle.setText(bean.getTitle());
                 TextView tvContent = (TextView) holder.getView(R.id.tv_content);
                 tvContent.setText(bean.getContent());
                 TextView tvTime = (TextView) holder.getView(R.id.tv_time);
-                tvTime.setText(bean.getTime() + "");
+                String time= DateUtils.timestampToDateStr(bean.getTime());
+                tvTime.setText(time);
                 break;
             case KeyConstants.SHARE_DEVICE_AUTHORIZATION_MESSAGE:
             case KeyConstants.GATEWAY_AUTHORIZATION_MESSAGE:
                 tvTitle = (TextView) holder.getView(R.id.tv_title);
                 tvTitle.setText(bean.getTitle());
                 tvTime = (TextView) holder.getView(R.id.tv_time);
-                tvTime.setText(bean.getTime() + "");
+                 time= DateUtils.timestampToDateStr(bean.getTime());
+                tvTime.setText(time);
                 break;
         }
         View view = holder.getView(R.id.ll_delete);

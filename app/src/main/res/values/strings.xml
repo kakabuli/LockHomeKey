@@ -308,4 +308,12 @@
     <string name="customer_service_phone">客服电话</string>
     <string name="zhao_shang_phone">招商电话</string>
     <string name="enterprise_official_website">企业官网</string>
+    <string name="select_feedback_type">请选择反馈类别</string>
+    <string name="smart_lock">智能锁</string>
+    <string name="select_kaadas">我选凯迪仕</string>
+    <string name="resume_load">密码错误，还可以再输入</string>
+    <string name="second">次</string>
+    <string name="draw_gesture_password">绘制手势密码</string>
+    <string name="submit_success">提交成功</string>
+    <string name="feedback_little">反馈内容太少</string>
 </resources>

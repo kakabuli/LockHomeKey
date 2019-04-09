@@ -26,6 +26,7 @@ import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.result.GetMessageResult;
 import com.kaadas.lock.publiclibrary.http.util.HttpUtils;
 import com.kaadas.lock.utils.DpPxConversion;
+import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.NetUtil;
 import com.kaadas.lock.utils.ToastUtil;
 import com.kaadas.lock.view.personalview.IPersonalMessageView;
@@ -140,6 +141,7 @@ public class PersonalMessageActivity extends BaseActivity<IPersonalMessageView, 
             personalMessageBean.setContent(dataBeans.get(i).getContent());
             personalMessageBean.setTime(dataBeans.get(i).getCreateTime());
             personalMessageBean.setId(dataBeans.get(i).get_id());
+            personalMessageBean.setType(dataBeans.get(i).getType());
             mPersonalMessageList.add(personalMessageBean);
         }
         messageAdapter.notifyDataSetChanged();
@@ -197,9 +199,9 @@ public class PersonalMessageActivity extends BaseActivity<IPersonalMessageView, 
         //点击Item
         Intent mDetailIntent = new Intent(this, PersonalMessageDetailActivity.class);
         PersonalMessageBean messageBean = mPersonalMessageList.get(position);
-        mDetailIntent.putExtra("time", messageBean.getTime());
-        mDetailIntent.putExtra("title", messageBean.getTitle());
-        mDetailIntent.putExtra("content", messageBean.getContent());
+        mDetailIntent.putExtra(KeyConstants.MESSAGE_DETAIL_TIME, messageBean.getTime());
+        mDetailIntent.putExtra(KeyConstants.MESSAGE_DETAIL_TITLE, messageBean.getTitle());
+        mDetailIntent.putExtra(KeyConstants.MESSAGE_DETAIL_CONTENT, messageBean.getContent());
         startActivity(mDetailIntent);
 
     }

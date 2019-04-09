@@ -19,7 +19,7 @@
         <RadioGroup
             android:id="@+id/rg"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_49"
+            android:layout_height="@dimen/dp_52"
             android:layout_alignParentBottom="true"
             android:orientation="horizontal">
 

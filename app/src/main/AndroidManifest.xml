@@ -62,9 +62,8 @@
             android:exported="true"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
-        <!--登录-->
         <activity
-            android:name=".activity.login.LoginActivity"
+            android:name=".activity.login.SplashActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -72,6 +71,13 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <!--登录-->
+        <activity
+            android:name=".activity.login.LoginActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait">
+
         </activity>
         <!--注册-->
         <activity
@@ -215,6 +221,10 @@
             android:screenOrientation="portrait"></activity>
         <activity
             android:name=".activity.my.AboutUsActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activity.login.PersonalVerifyGesturePasswordActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"></activity>
     </application>
