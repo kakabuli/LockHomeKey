@@ -14,6 +14,7 @@ public class GatewayBindListFuc {
     private String meBindState;
     private String meUsername;
     private String mePwd;
+    private int msgId;
     public String getFunc() {
         return func;
     }
@@ -60,5 +61,13 @@ public class GatewayBindListFuc {
 
     public void setMePwd(String mePwd) {
         this.mePwd = mePwd;
+    }
+
+    public int getMsgId() {
+        return msgId;
+    }
+
+    public void setMsgId(int msgId) {
+        this.msgId = msgId;
     }
 }

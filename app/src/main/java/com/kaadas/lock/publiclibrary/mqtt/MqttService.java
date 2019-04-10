@@ -8,6 +8,7 @@ import android.os.IBinder;
 import android.text.TextUtils;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.utils.LogUtils;
@@ -23,6 +24,7 @@ import org.eclipse.paho.client.mqttv3.MqttCallbackExtended;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.json.JSONObject;
 
 import io.reactivex.Observable;
 import io.reactivex.subjects.PublishSubject;
@@ -41,7 +43,7 @@ public class MqttService extends Service {
      * 判断是否订阅成功
      */
     private PublishSubject<Boolean> mSubscribe = PublishSubject.create();
-    private PublishSubject<String> onReceiverDataObservable = PublishSubject.create();
+    private PublishSubject<MqttData> onReceiverDataObservable = PublishSubject.create();
     private PublishSubject<Boolean> connectStateObservable = PublishSubject.create();
     private PublishSubject<PublishResult> publishObservable = PublishSubject.create();
     private PublishSubject<Boolean> disconnectObservable = PublishSubject.create();
@@ -60,7 +62,7 @@ public class MqttService extends Service {
     }
 
 
-    public Observable<String> listenerDataBack() {
+    public Observable<MqttData> listenerDataBack() {
         return onReceiverDataObservable;
     }
 
@@ -154,7 +156,7 @@ public class MqttService extends Service {
                 if (null == cause) {
                     return;
                 }
-                //连接丢失--需要进行重连
+//                //连接丢失--需要进行重连
                 LogUtils.e("connectionLost", "连接丢失需要重连");
                 String userId = MyApplication.getInstance().getUid();
                 String userToken = MyApplication.getInstance().getToken();
@@ -168,10 +170,12 @@ public class MqttService extends Service {
             @Override
             public void messageArrived(String topic, MqttMessage message) throws Exception {
                 //收到消息
-                String mMqttMessage = new String(message.getPayload());
-                LogUtils.e("messageArrived", mMqttMessage + "---topic" + topic);
-               onReceiverDataObservable.onNext(mMqttMessage);
-
+                String payload = new String(message.getPayload());
+                LogUtils.e("messageArrived", payload + "---topic" + topic + "  messageID  "+message.getId());
+                //String func, String topic, String payload, MqttMessage mqttMessage
+                JSONObject jsonObject = new JSONObject(payload);
+                MqttData mqttData = new MqttData(jsonObject.getString("func"),topic,payload,message);
+               onReceiverDataObservable.onNext(mqttData);
             }
 
             @Override
@@ -207,13 +211,11 @@ public class MqttService extends Service {
                             // TODO: 2019/4/1  该用户在其他手机登录(清除所有数据）---暂时未处理
                             if (mqttClient != null  ) {
                                 mqttDisconnect();
-
-
                             }
                             return;
                         }
                         if ("错误的用户名或密码 (4)".equals(exception.toString())) {
-                            ToastUtil.getInstance().showShort("mqtt的用户名或密码错误");
+                            LogUtils.e("mqtt的用户名或密码错误");
                             return;
                         }
                         //两秒后进行重连
@@ -254,7 +256,6 @@ public class MqttService extends Service {
                                     mSubscribe.onNext(true);
                                     LogUtils.e("mqttSubscribe", "订阅成功");
                                 }
-
                                 @Override
                                 public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
                                     mSubscribe.onNext(false);
@@ -278,15 +279,16 @@ public class MqttService extends Service {
             mqttClient.publish(topic, mqttMessage, null, new IMqttActionListener() {
                 @Override
                 public void onSuccess(IMqttToken asyncActionToken) {
-//                    LogUtils.e("发布消息成功  ", topic + "success---" + payload);
-                    publishObservable.onNext(new PublishResult(true, asyncActionToken));
+                    LogUtils.e("发布消息成功  ", topic  +  "success---" + asyncActionToken.getMessageId());
+
+                    publishObservable.onNext(new PublishResult(true, asyncActionToken,mqttMessage));
                 }
 
                 @Override
                 public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
-                    LogUtils.e("mqttPublish", topic + "fail");
+                    LogUtils.e("发布消息失败", topic + "fail");
                     MqttExceptionHandle.onFail(MqttExceptionHandle.PublishException, asyncActionToken, exception);
-                    publishObservable.onNext(new PublishResult(false, asyncActionToken));
+                    publishObservable.onNext(new PublishResult(false, asyncActionToken,mqttMessage));
                 }
             });
         } catch (MqttException e) {
@@ -312,11 +314,12 @@ public class MqttService extends Service {
                         mqttClient=null;
                         MyApplication.getInstance().tokenInvalid(false);
                         LogUtils.e("mqttDisconnect", "断开连接成功");
+                        disconnectObservable.onNext(true);
                     }
 
                     @Override
                     public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
-
+                        disconnectObservable.onNext(false);
                     }
                 });
             } catch (MqttException e) {
@@ -324,6 +327,7 @@ public class MqttService extends Service {
             }
         }else{
             //被挤出
+            disconnectObservable.onNext(true);
             mqttClient.unregisterResources();
             mqttClient=null;
             MyApplication.getInstance().tokenInvalid(false);
