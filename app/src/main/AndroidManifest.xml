@@ -240,7 +240,14 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait"></activity>
 
+        <activity android:name=".activity.addDevice.zigbee.AddZigbeeLockFailActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"></activity>
         <activity android:name=".activity.addDevice.zigbee.AddZigbeeLockSuccessActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"></activity>
+
+        <activity android:name=".activity.addDevice.zigbee.AddZigbeeLockSuccessSaveActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan"

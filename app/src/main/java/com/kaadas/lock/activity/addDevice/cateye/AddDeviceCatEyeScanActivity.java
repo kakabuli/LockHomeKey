@@ -43,12 +43,14 @@ public class AddDeviceCatEyeScanActivity extends AppCompatActivity {
     CodeUtils.AnalyzeCallback analyzeCallback = new CodeUtils.AnalyzeCallback() {
         @Override
         public void onAnalyzeSuccess(Bitmap mBitmap, String result) {
-            String snCode = "";
+            /*String snCode = "";
             String[] strs = result.split(" ");
             snCode = strs[0].replace("SN-", "");
             Intent intent = new Intent();
             intent.putExtra("qrCodeData", snCode);
-            setResult(RESULT_OK, intent);
+            setResult(RESULT_OK, intent);*/
+            Intent successIntent=new Intent(AddDeviceCatEyeScanActivity.this,AddDeviceCatEyeSecondActivity.class);
+            startActivity(successIntent);
             finish();
         }
 
@@ -58,4 +60,6 @@ public class AddDeviceCatEyeScanActivity extends AppCompatActivity {
             ToastUtil.getInstance().showShort(getString(R.string.scan_qr_failed));
         }
     };
+
+
 }
