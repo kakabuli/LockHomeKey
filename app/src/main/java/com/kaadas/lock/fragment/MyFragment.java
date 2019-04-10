@@ -146,7 +146,7 @@ public class MyFragment extends Fragment {
         MqttMessage mqttMessage = new MqttMessage();
         mqttMessage.setQos(2);
         mqttMessage.setRetained(false);
-        mqttMessage.setId(MessageId++);
+        mqttMessage.setId(MessageId++);;
         mqttMessage.setPayload(payload.getBytes());
         return mqttMessage;
     }

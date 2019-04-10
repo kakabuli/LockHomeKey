@@ -1,4 +1,4 @@
-package com.kaadas.lock.activity.addDevice.zigbee;
+package com.kaadas.lock.activity.addDevice.cateye;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -22,8 +22,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class AddZigbeeLockSuccessActivity  extends AppCompatActivity implements BaseQuickAdapter.OnItemClickListener {
-
+public class AddDeviceCatEyeSaveNickNameActivity  extends AppCompatActivity implements BaseQuickAdapter.OnItemClickListener {
 
     @BindView(R.id.input_name)
     EditText inputName;
@@ -70,12 +69,14 @@ public class AddZigbeeLockSuccessActivity  extends AppCompatActivity implements 
             recycler.setAdapter(mAdapter);
             mAdapter.setOnItemClickListener(this);
         }
+        lock.setImageResource(R.mipmap.add_cat_eye_pic);
 
     }
 
 
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+
         for (int i = 0; i < mList.size(); i++) {
             mList.get(i).setSelected(false);
         }
@@ -98,6 +99,8 @@ public class AddZigbeeLockSuccessActivity  extends AppCompatActivity implements 
         switch (view.getId()) {
             case R.id.save:
                 //保存
+
+
                 break;
         }
     }

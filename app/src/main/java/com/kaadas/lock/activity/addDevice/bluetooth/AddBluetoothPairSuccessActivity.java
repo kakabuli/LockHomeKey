@@ -31,8 +31,6 @@ public class AddBluetoothPairSuccessActivity extends AppCompatActivity implement
     RecyclerView recycler;
     @BindView(R.id.save)
     Button save;
-    @BindView(R.id.update)
-    ImageView update;
     @BindView(R.id.lock)
     ImageView lock;
 
@@ -100,18 +98,9 @@ public class AddBluetoothPairSuccessActivity extends AppCompatActivity implement
     }
 
 
-    @OnClick({R.id.update, R.id.save})
+    @OnClick(R.id.save)
     public void onViewClicked(View view) {
         switch (view.getId()) {
-            case R.id.update:
-                //编辑
-                String name = inputName.getText().toString().trim();
-                inputName.setSelection(name.length());
-                inputName.setFocusable(true);
-                inputName.setFocusableInTouchMode(true);
-                inputName.requestFocus();
-                inputName.setCursorVisible(true);
-                break;
             case R.id.save:
                 //保存
                 break;

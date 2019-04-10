@@ -323,4 +323,24 @@
     <string name="draw_gesture_password">绘制手势密码</string>
     <string name="submit_success">提交成功</string>
     <string name="feedback_little">反馈内容太少</string>
+    <string name="pair_network">配置网络</string>
+    <string name="pairing_network">按猫眼上的配网按钮听到正在配置网络</string>
+    <string name="connecting_cateye">正在连接猫眼</string>
+    <string name="about_two_minute">大约需要两分钟</string>
+    <string name="connection_cateye_success">恭喜，猫眼连接成功</string>
+    <string name="connet_cateye_fail">未能连接成功</string>
+    <string name="reconnection">是否继续连接</string>
+    <string name="quit">退出</string>
+    <string name="open_gateway_qrcode">打开包装盒扫描网关二维码</string>
+    <string name="go_to_unbind">取消绑定</string>
+    <string name="gateway_bind_success">网关绑定成功!</string>
+    <string name="go_to_add_zigbee_device">前去添加ZigBee设备</string>
+    <string name="no_add_zigbee_device">暂不添加了</string>
+    <string name="gateway_bind_fail">连接失败！</string>
+    <string name="device_gateway_first_text">该网络非kaadas网关</string>
+    <string name="device_gateway_second_text">WiFi密码是否正确</string>
+    <string name="device_gateway_third">检查网络</string>
+    <string name="device_try">再试一下</string>
+    <string name="connecting_zigbeelock">正在连接网关锁</string>
+    <string name="connection_zigbeelock_success">恭喜，网关锁连接成功</string>
 </resources>

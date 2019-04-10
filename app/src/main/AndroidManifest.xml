@@ -116,7 +116,7 @@
             android:screenOrientation="portrait"></activity>
         <activity
             android:name=".activity.addDevice.DeviceAddActivity"
-            android:launchMode="singleTop"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"></activity>
         <activity
             android:name=".activity.my.PersonalUpdateHeadDataActivity"
@@ -164,55 +164,72 @@
             android:screenOrientation="portrait"></activity>
 
         <activity android:name=".activity.addDevice.gateway.AddGatewayFirstActivity"
-            android:launchMode="singleTop"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"></activity>
         <activity android:name=".activity.addDevice.gateway.AddGatewayLightActivity"
-            android:launchMode="singleTop"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"></activity>
+        <activity android:name=".activity.addDevice.gateway.AddGatewaySecondActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"></activity>
+        <activity android:name=".activity.addDevice.gateway.AddGatewayThirdActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"></activity>
+        <activity android:name=".activity.addDevice.gateway.AddGatewayScanActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"></activity>
+        <activity android:name=".activity.addDevice.gateway.AddGatewaySuccessActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"></activity>
+        <activity android:name=".activity.addDevice.gateway.AddGatewayFailActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"></activity>
+
+
         <activity android:name=".activity.addDevice.bluetooth.AddBluetoothFirstActivity"
-            android:launchMode="singleTop"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"></activity>
         <activity android:name=".activity.addDevice.bluetooth.AddBluetoothSearchActivity"
-            android:launchMode="singleTop"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"></activity>
         <activity android:name=".activity.addDevice.DeviceAddHelpActivity"
-            android:launchMode="singleTop"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"></activity>
         <activity android:name=".activity.addDevice.bluetooth.AddBluetoothSecondActivity"
-            android:launchMode="singleTop"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"></activity>
         <activity android:name=".activity.addDevice.bluetooth.AddBluetoothThirdActivity"
-            android:launchMode="singleTop"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"></activity>
         <activity android:name=".activity.addDevice.bluetooth.AddBluetoothPairActivity"
-            android:launchMode="singleTop"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"></activity>
         <activity android:name=".activity.addDevice.bluetooth.AddBluetoothPairSuccessActivity"
-            android:launchMode="singleTop"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan"
             ></activity>
         <activity android:name=".activity.addDevice.bluetooth.AddBluetoothPairFailActivity"
-            android:launchMode="singleTop"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"></activity>
         <activity android:name=".activity.addDevice.DeviceZigBeeDetailActivity"
-            android:launchMode="singleTop"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"></activity>
 
         <activity android:name=".activity.addDevice.zigbee.ZigbeeBindGatewayDetailActivity"
-            android:launchMode="singleTop"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"></activity>
 
         <activity android:name=".activity.addDevice.zigbee.AddZigbeeLockFirstActivity"
-            android:launchMode="singleTop"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"></activity>
 
         <activity android:name=".activity.addDevice.zigbee.AddZigbeeLockSecondActivity"
-            android:launchMode="singleTop"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"></activity>
 
         <activity android:name=".activity.addDevice.zigbee.AddZigbeeLockThirdActivity"
-            android:launchMode="singleTop"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"></activity>
 
         <activity android:name=".activity.addDevice.zigbee.AddZigbeeLockFourthActivity"
@@ -220,22 +237,34 @@
             android:screenOrientation="portrait"></activity>
 
         <activity android:name=".activity.addDevice.zigbee.AddZigbeeLockFifthActivity"
-            android:launchMode="singleTop"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"></activity>
 
         <activity android:name=".activity.addDevice.zigbee.AddZigbeeLockSuccessActivity"
-            android:launchMode="singleTop"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan"
             ></activity>
         <activity android:name=".activity.addDevice.cateye.AddDeviceCatEyeFirstActivity"
-            android:launchMode="singleTop"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"></activity>
 
         <activity android:name=".activity.addDevice.cateye.AddDeviceCatEyeScanActivity"
-            android:launchMode="singleTop"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"></activity>
 
+        <activity android:name=".activity.addDevice.cateye.AddDeviceCatEyeSecondActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"></activity>
+        <activity android:name=".activity.addDevice.cateye.AddDeviceCatEyeThirdActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"></activity>
+        <activity android:name=".activity.addDevice.cateye.AddDeviceCatEyeSuccessActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"></activity>
+        <activity android:name=".activity.addDevice.cateye.AddDeviceCatEyeFailActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"></activity>
 
 
 
