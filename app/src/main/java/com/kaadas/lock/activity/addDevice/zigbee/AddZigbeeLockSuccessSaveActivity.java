@@ -1,4 +1,4 @@
-package com.kaadas.lock.activity.addDevice.bluetooth;
+package com.kaadas.lock.activity.addDevice.zigbee;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -22,7 +22,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class AddBluetoothPairSuccessActivity extends AppCompatActivity implements BaseQuickAdapter.OnItemClickListener {
+public class AddZigbeeLockSuccessSaveActivity extends AppCompatActivity implements BaseQuickAdapter.OnItemClickListener {
 
 
     @BindView(R.id.input_name)
@@ -70,17 +70,12 @@ public class AddBluetoothPairSuccessActivity extends AppCompatActivity implement
             recycler.setAdapter(mAdapter);
             mAdapter.setOnItemClickListener(this);
         }
-        String name = inputName.getText().toString().trim();
-        if (name != null) {
-            inputName.setCursorVisible(false);
-        }
 
     }
 
 
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-        inputName.setCursorVisible(true);
         for (int i = 0; i < mList.size(); i++) {
             mList.get(i).setSelected(false);
         }

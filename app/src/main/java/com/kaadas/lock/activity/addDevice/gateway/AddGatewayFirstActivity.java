@@ -46,6 +46,8 @@ public class AddGatewayFirstActivity extends AppCompatActivity {
                 startActivity(settingLightIntent);
                 break;
             case R.id.button_next:
+                Intent nextIntent=new Intent(this,AddGatewaySecondActivity.class);
+                startActivity(nextIntent);
                 break;
         }
     }

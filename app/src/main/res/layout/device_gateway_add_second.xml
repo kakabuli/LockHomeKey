@@ -3,8 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_color"
     android:orientation="vertical"
+    android:background="@color/background_color"
     >
     <RelativeLayout
         android:layout_width="match_parent"
@@ -26,58 +26,39 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="@string/add_lock"
+            android:text="@string/add_gateway"
             android:textSize="@dimen/sp_17"
             android:textColor="#000000"
             android:textStyle="bold"
             />
-        <ImageView
-            android:id="@+id/help"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:paddingLeft="@dimen/dp_16"
-            android:paddingRight="@dimen/dp_16"
-            android:paddingTop="@dimen/dp_5"
-            android:paddingBottom="@dimen/dp_5"
-            android:src="@mipmap/help"
-            android:layout_centerVertical="true"
-            />
     </RelativeLayout>
-
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@mipmap/add_device_zigbee_success"
+        android:layout_marginTop="@dimen/dp_128"
+        android:src="@mipmap/add_gateway_pic"
         android:layout_gravity="center"
-        android:layout_marginTop="@dimen/dp_98"
         />
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_75"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:background="@drawable/remind_background"
+        android:layout_marginTop="@dimen/dp_142"
         android:layout_marginRight="@dimen/dp_15"
         android:layout_marginLeft="@dimen/dp_15"
-        android:layout_marginTop="@dimen/dp_134"
-        android:orientation="vertical"
-        android:background="@drawable/remind_background"
-        >
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:gravity="center"
-
         >
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@mipmap/remind"
+            android:src="@mipmap/one_icon"
             android:layout_marginLeft="@dimen/dp_23"
             />
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/in_gateway_success"
+            android:text="@string/open_gateway_qrcode"
             android:textColor="#ff333333"
             android:textSize="@dimen/sp_13"
             android:layout_marginLeft="@dimen/dp_17"
@@ -85,24 +66,36 @@
             android:layout_marginRight="@dimen/dp_24"
             />
     </LinearLayout>
-
-    </LinearLayout>
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <Button
-            android:id="@+id/button_next"
-            android:layout_width="@dimen/dp_200"
-            android:layout_height="@dimen/dp_44"
-            android:background="@drawable/button_next"
-            android:layout_centerHorizontal="true"
-            android:text="@string/add_next"
-            android:textColor="#1F96F7"
-            android:textSize="@dimen/sp_15"
-            android:layout_marginBottom="@dimen/dp_48"
-            android:layout_alignParentBottom="true"
-            />
+        android:layout_height="match_parent"
+        >
+       <LinearLayout
+           android:id="@+id/scan_gateway"
+           android:layout_width="@dimen/dp_200"
+           android:layout_height="@dimen/dp_44"
+           android:orientation="horizontal"
+           android:background="@drawable/go_and_buy"
+           android:layout_centerInParent="true"
+           >
+         <ImageView
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:src="@mipmap/scanning_icon"
+             android:layout_gravity="center_vertical"
+             android:layout_marginLeft="@dimen/dp_27"
+             />
+         <TextView
 
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:text="@string/go_scan_cateye"
+             android:layout_gravity="center_vertical"
+             android:layout_marginLeft="@dimen/dp_10"
+             android:textColor="#FFF"
+             android:textSize="@dimen/sp_15"
+             />
+       </LinearLayout>
 
 
     </RelativeLayout>

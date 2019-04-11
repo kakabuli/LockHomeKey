@@ -3,7 +3,6 @@ package com.kaadas.lock.fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +14,7 @@ import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.publiclibrary.http.util.RxjavaHelper;
 import com.kaadas.lock.publiclibrary.mqtt.GatewayBindListFuc;
+import com.kaadas.lock.publiclibrary.mqtt.MqttData;
 import com.kaadas.lock.publiclibrary.mqtt.MqttService;
 import com.kaadas.lock.publiclibrary.mqtt.PublishResult;
 import com.kaadas.lock.utils.LogUtils;
@@ -78,6 +78,7 @@ public class MyFragment extends Fragment {
         GatewayBindListFuc gatewayBindListFuc = new GatewayBindListFuc();
         gatewayBindListFuc.setFunc("gatewayBindList");
         gatewayBindListFuc.setUid(MyApplication.getInstance().getUid());
+        gatewayBindListFuc.setMsgId(MessageId);
         MqttService service = MyApplication.getInstance().getMqttService();
         MqttMessage message = getMessage(gatewayBindListFuc);
 
@@ -86,31 +87,38 @@ public class MyFragment extends Fragment {
                 .filter(new Predicate<PublishResult>() {
                     @Override
                     public boolean test(PublishResult publishResult) throws Exception {
-                        if (publishResult.isPublishResult()) { //发布成功
-                            LogUtils.e("发布成功");
+                        if (publishResult.isPublishSuccess()) { //发布成功
+                            LogUtils.e("发布成功  " +publishResult.getMqttMessage().getId() +"  "+message.getId());
                         } else {  //发布失败
-                            LogUtils.e("发布失败");
+                            LogUtils.e("发布失败  ");
                             return false;
                         }
-                        return publishResult.getAsyncActionToken().getMessageId() == message.getId();
+                        return publishResult.getMqttMessage().getId() == message.getId();
                     }
                 })
                 .timeout(10 * 1000, TimeUnit.MILLISECONDS)
-                .flatMap(new Function<PublishResult, ObservableSource<String>>() {
+                .flatMap(new Function<PublishResult, ObservableSource<MqttData>>() {
                     @Override
-                    public ObservableSource<String> apply(PublishResult publishResult) throws Exception {
-                        if (publishResult.isPublishResult()) { //发布成功
+                    public ObservableSource<MqttData> apply(PublishResult publishResult) throws Exception {
+                        LogUtils.e("发布成功111");
+                        if (publishResult.isPublishSuccess()) { //发布成功
                             return MyApplication.getInstance().getMqttService().listenerDataBack();
                         } else {
+                            if (disposable != null && !disposable.isDisposed()) {
+                                LogUtils.e("发布失败  此次发布结束  处理消息");
+                                disposable.dispose();
+                            }
                             return null;
                         }
                     }
-                }).subscribe(new Consumer<String>() {
+                }).subscribe(new Consumer<MqttData>() {
                     @Override
-                    public void accept(String s) throws Exception {
-                        LogUtils.e("收到消息   " + s);
-                        if (disposable !=null&&!disposable.isDisposed()){
-                            disposable.dispose();
+                    public void accept(MqttData data) throws Exception {
+                        if ("gatewayBindList".equals(data.getFunc())){
+                            LogUtils.e("收到网关列表   " + data.getPayload());
+                            if (disposable != null && !disposable.isDisposed()) {
+                                disposable.dispose();
+                            }
                         }
                     }
                 }, new Consumer<Throwable>() {
@@ -137,9 +145,7 @@ public class MyFragment extends Fragment {
             case R.id.disconnect:
                 MyApplication.getInstance().getMqttService().mqttDisconnect();
                 break;
-            case R.id.connect:
-                MyApplication.getInstance().getMqttService().mqttConnection( );
-                break;
+
         }
     }
 
@@ -148,7 +154,7 @@ public class MyFragment extends Fragment {
         MqttMessage mqttMessage = new MqttMessage();
         mqttMessage.setQos(2);
         mqttMessage.setRetained(false);
-        mqttMessage.setId(MessageId++);
+        mqttMessage.setId(MessageId++);;
         mqttMessage.setPayload(payload.getBytes());
         return mqttMessage;
     }

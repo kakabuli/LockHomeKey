@@ -1,4 +1,4 @@
-package com.kaadas.lock.activity.addDevice.zigbee;
+package com.kaadas.lock.activity.addDevice.cateye;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,7 +15,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class AddZigbeeLockFourthActivity extends AppCompatActivity {
+public class AddDeviceCatEyeThirdActivity extends AppCompatActivity {
+
 
     @BindView(R.id.back)
     ImageView back;
@@ -26,7 +27,7 @@ public class AddZigbeeLockFourthActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.device_zigbeelock_add_scan);
+        setContentView(R.layout.device_cateye_add_third);
         ButterKnife.bind(this);
         initAnimation();
         startAnimation();
@@ -38,16 +39,17 @@ public class AddZigbeeLockFourthActivity extends AppCompatActivity {
         finish();
     }
 
-    private void getZigbeeLockResult(Boolean flag){
+    //猫眼配置结果
+    private void pariCatEyeResult(Boolean flag){
         if (flag){
-            Intent successIntent=new Intent(this,AddZigbeeLockSuccessActivity.class);
+            Intent successIntent=new Intent(this,AddDeviceCatEyeSuccessActivity.class);
             startActivity(successIntent);
         }else{
-            Intent failIntent=new Intent(this,AddZigbeeLockFailActivity.class);
+            Intent failIntent=new Intent(this,AddDeviceCatEyeFailActivity.class);
             startActivity(failIntent);
         }
-
     }
+
     /**
      * 初始化动画
      */
@@ -78,6 +80,5 @@ public class AddZigbeeLockFourthActivity extends AppCompatActivity {
     private void stopAnimation() {
         addCateyeAwating.clearAnimation();
     }
-
 
 }

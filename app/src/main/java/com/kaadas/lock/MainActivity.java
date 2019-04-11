@@ -47,7 +47,7 @@ public class MainActivity extends BaseActivity<IBaseView,BasePresenter<IBaseView
         PermissionUtil.getInstance().requestPermission(PermissionUtil.getInstance().permission,this);
         rg.setOnCheckedChangeListener(this);
         initFragment();
-//        MyApplication.getInstance().getMqttService().mqttConnection();
+        MyApplication.getInstance().getMqttService().mqttConnection();
     }
 
     @Override
@@ -61,6 +61,7 @@ public class MainActivity extends BaseActivity<IBaseView,BasePresenter<IBaseView
         homePageFragment = new HomePageFragment();
         transaction.add(R.id.content, homePageFragment);
         transaction.commit();
+
     }
 
     @Override

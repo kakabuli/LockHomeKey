@@ -11,6 +11,7 @@ import android.widget.ImageView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.kaadas.lock.R;
+import com.kaadas.lock.activity.addDevice.gateway.AddGatewayFirstActivity;
 import com.kaadas.lock.activity.addDevice.zigbee.ZigbeeBindGatewayDetailActivity;
 import com.kaadas.lock.adapter.ZigbeeDetailAdapter;
 import com.kaadas.lock.bean.deviceAdd.AddZigbeeDetailItemBean;
@@ -31,6 +32,7 @@ public class DeviceZigBeeDetailActivity extends AppCompatActivity implements Bas
 
     private List<AddZigbeeDetailItemBean> mList;
     private ZigbeeDetailAdapter zigbeeDetailAdapter;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,7 +84,8 @@ public class DeviceZigBeeDetailActivity extends AppCompatActivity implements Bas
         //如果是网关直接跳转到网关添加流程，如果不是需要判断是否存在网关。
         if (detailItemBean.getType()==1){
             //直接跳转到网关添加流程
-
+            Intent gatewayIntent=new Intent(this, AddGatewayFirstActivity.class);
+            startActivity(gatewayIntent);
         }else{
             //获取绑定的网关列表，如果存在网关
             Boolean flag=getBindGatewayList();
@@ -103,7 +106,8 @@ public class DeviceZigBeeDetailActivity extends AppCompatActivity implements Bas
                     @Override
                     public void right() {
                         //跳转到配置网关添加的流程
-
+                        Intent gatewayIntent=new Intent(DeviceZigBeeDetailActivity.this, AddGatewayFirstActivity.class);
+                        startActivity(gatewayIntent);
                     }
                 });
             }
