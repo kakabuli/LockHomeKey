@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.addDevice.cateye.AddDeviceCatEyeFirstActivity;
+import com.kaadas.lock.activity.addDevice.gateway.AddGatewayFirstActivity;
 import com.kaadas.lock.adapter.AddZigbeeBindGatewayAdapter;
 import com.kaadas.lock.bean.deviceAdd.AddBluetoothPairSuccessBean;
 import com.kaadas.lock.bean.deviceAdd.AddZigbeeBindGatewayBean;
@@ -94,6 +95,8 @@ public class ZigbeeBindGatewayDetailActivity extends AppCompatActivity implement
                 break;
             case R.id.add_gateway:
                 //跳转到添加网关
+                Intent addGateway=new Intent(this, AddGatewayFirstActivity.class);
+                startActivity(addGateway);
                 break;
             case R.id.button_next:
                 if (zigbeeBindGatewayBeanSelect==null){

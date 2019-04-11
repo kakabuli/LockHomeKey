@@ -401,4 +401,13 @@
     <string name="in_upgarde_status">进入升级状态</string>
     <string name="upgradeing">正在升级</string>
     <string name="finish">完成</string>
+    <string name="device_zigbee_new_add">设备添加</string>
+    <string name="new_lock_connect_success">你的网关锁已联网成功</string>
+    <string name="finish">完成</string>
+    <string name="check_phone_nework">请检查手机网络是否正常连接</string>
+    <string name="add_new_lock_one">确保门锁已按引导进入配对状态</string>
+    <string name="add_new_lock_two">确保手机蓝牙处于开启状态</string>
+    <string name="device_connect_network_fail">设备联网失败</string>
+    <string name="reason">可能原因如下</string>
+    <string name="hand_bind">手动绑定</string>
 </resources>
