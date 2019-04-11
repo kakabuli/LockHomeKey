@@ -15,8 +15,11 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.addDevice.DeviceAddActivity;
+import com.kaadas.lock.activity.device.BluetoothLockAuthorizationActivity;
+import com.kaadas.lock.activity.device.BluetoothLockFunctionActivity;
 import com.kaadas.lock.adapter.DeviceDetailAdapter;
 import com.kaadas.lock.bean.DeviceDetailBean;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
@@ -33,7 +36,7 @@ import butterknife.Unbinder;
  * Created by asqw1 on 2018/3/14.
  */
 
-public class DeviceFragment extends Fragment {
+public class DeviceFragment extends Fragment implements BaseQuickAdapter.OnItemClickListener {
     @BindView(R.id.no_device_image)
     ImageView noDeviceImage;
 
@@ -53,7 +56,7 @@ public class DeviceFragment extends Fragment {
 
     private Unbinder unbinder;
 
-    private Boolean flag=true;
+    private Boolean flag = true;
 
     private DeviceDetailAdapter deviceDetailAdapter;
 
@@ -85,23 +88,23 @@ public class DeviceFragment extends Fragment {
     }
 
     private void initAdapter() {
-        if (mDeviceList!=null){
-            deviceDetailAdapter=new DeviceDetailAdapter(mDeviceList);
+        if (mDeviceList != null) {
+            deviceDetailAdapter = new DeviceDetailAdapter(mDeviceList);
             deviceRecycler.setAdapter(deviceDetailAdapter);
         }
-
+        deviceDetailAdapter.setOnItemClickListener(this);
     }
 
     private void initData() {
-        mDeviceList=new ArrayList<>();
-        DeviceDetailBean deviceDetailBean1=new DeviceDetailBean();
+        mDeviceList = new ArrayList<>();
+        DeviceDetailBean deviceDetailBean1 = new DeviceDetailBean();
         deviceDetailBean1.setDeviceName("凯迪仕智能门锁");
         deviceDetailBean1.setDeviceType(1);
         deviceDetailBean1.setPower(60);
         deviceDetailBean1.setType(1);
         mDeviceList.add(deviceDetailBean1);
 
-        DeviceDetailBean deviceDetailBean2=new DeviceDetailBean();
+        DeviceDetailBean deviceDetailBean2 = new DeviceDetailBean();
         deviceDetailBean2.setDeviceName("K9智能门锁");
         deviceDetailBean2.setDeviceType(1);
         deviceDetailBean2.setPower(20);
@@ -110,10 +113,10 @@ public class DeviceFragment extends Fragment {
     }
 
     private void initView() {
-        if (flag){
+        if (flag) {
             noDeviceLayout.setVisibility(View.GONE);
             refresh.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             noDeviceLayout.setVisibility(View.VISIBLE);
             refresh.setVisibility(View.GONE);
         }
@@ -131,7 +134,7 @@ public class DeviceFragment extends Fragment {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.device_add:
-                Intent deviceAdd=new Intent(getActivity(), DeviceAddActivity.class);
+                Intent deviceAdd = new Intent(getActivity(), DeviceAddActivity.class);
                 startActivity(deviceAdd);
                 break;
             case R.id.buy:
@@ -139,6 +142,20 @@ public class DeviceFragment extends Fragment {
                 intent.setAction("android.intent.action.VIEW");
                 Uri content_url = Uri.parse("http://www.kaadas.com/");//此处填链接
                 intent.setData(content_url);
+                startActivity(intent);
+                break;
+        }
+    }
+
+    @Override
+    public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+        DeviceDetailBean deviceDetailBean = mDeviceList.get(position);
+        Intent intent;
+        switch (deviceDetailBean.getType()) {
+            case 1:
+                //蓝牙
+//                intent=new Intent(getActivity(),BluetoothLockFunctionActivity.class);
+                intent = new Intent(getActivity(), BluetoothLockAuthorizationActivity.class);
                 startActivity(intent);
                 break;
         }

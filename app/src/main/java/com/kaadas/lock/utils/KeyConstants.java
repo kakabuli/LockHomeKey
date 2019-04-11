@@ -177,4 +177,14 @@ public class KeyConstants {
      * 消息详情时间
      */
     public static final String MESSAGE_DETAIL_TIME = "message_detail_TIME";
+    //开锁
+    //已反锁
+    //正在开锁
+    //开锁成功
+    //开锁失败
+    public static final int OPEN_LOCK = 0;
+    public static final int HAS_BEEN_LOCKED = 1;
+    public static final int IS_LOCKING = 2;
+    public static final int OPEN_LOCK_SUCCESS = 3;
+    public static final int OPEN_LOCK_FAILED = 4;
 }
