@@ -49,36 +49,43 @@ public class AlertDialogUtil {
     }
 
     //1 no_button_dialog只有内容的对话框
-    public AlertDialog noButtonDialog(Context context,String content){
+    public AlertDialog noButtonDialog(Context context, String content) {
         View mView = LayoutInflater.from(context).inflate(R.layout.no_button_dialog, null);
-        TextView tvContent=mView.findViewById(R.id.tv_content);
-        AlertDialog alertDialog=AlertDialogUtil.getInstance().common(context,mView);
+        TextView tvContent = mView.findViewById(R.id.tv_content);
+        AlertDialog alertDialog = AlertDialogUtil.getInstance().common(context, mView);
         tvContent.setText(content);
-        return  alertDialog;
-    }
-    public AlertDialog noButtonSingleLineDialog(Context context,String content){
-        View mView = LayoutInflater.from(context).inflate(R.layout.no_button_dialog, null);
-        TextView tvContent=mView.findViewById(R.id.tv_content);
-        AlertDialog alertDialog=AlertDialogUtil.getInstance().common(context,mView);
-        tvContent.setText(content);
-        return  alertDialog;
+        return alertDialog;
     }
 
-   //2  no_edit_singleButton
-    public void noEditSingleButtonDialog(Context context,String title,String content,String query,ClickListener clickListener){
+    public AlertDialog noButtonSingleLineDialog(Context context, String content) {
+        View mView = LayoutInflater.from(context).inflate(R.layout.no_button_dialog, null);
+        TextView tvContent = mView.findViewById(R.id.tv_content);
+        AlertDialog alertDialog = AlertDialogUtil.getInstance().common(context, mView);
+        tvContent.setText(content);
+        return alertDialog;
+    }
+
+    //2  no_edit_singleButton
+    public void noEditSingleButtonDialog(Context context, String title, String content, String query, ClickListener clickListener) {
         View mView = LayoutInflater.from(context).inflate(R.layout.no_edit_singlebutton_dialog, null);
         TextView tvTitle = mView.findViewById(R.id.tv_title);
         TextView tvContent = mView.findViewById(R.id.tv_content);
         TextView tv_query = mView.findViewById(R.id.tv_button);
         AlertDialog alertDialog = AlertDialogUtil.getInstance().common(context, mView);
-        tvTitle.setText(title);
+        if ("".equals(title)) {
+            tvTitle.setVisibility(View.GONE);
+        } else {
+            tvTitle.setText(title);
+            tvTitle.setVisibility(View.VISIBLE);
+        }
+
         tvContent.setText(content);
         tv_query.setText(query);
         //确定
         tv_query.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (clickListener!=null){
+                if (clickListener != null) {
                     clickListener.right();
                 }
                 alertDialog.dismiss();
@@ -87,7 +94,7 @@ public class AlertDialogUtil {
     }
 
     //no_et_dialog
-    public void noEditTwoButtonDialog(Context context,String title,String content,String left,String right,ClickListener clickListener){
+    public void noEditTwoButtonDialog(Context context, String title, String content, String left, String right, ClickListener clickListener) {
         View mView = LayoutInflater.from(context).inflate(R.layout.no_et_dialog, null);
         TextView tvTitle = mView.findViewById(R.id.tv_hint);
         TextView tvContent = mView.findViewById(R.id.tv_content);
@@ -102,7 +109,7 @@ public class AlertDialogUtil {
         tv_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (clickListener!=null){
+                if (clickListener != null) {
                     clickListener.left();
                 }
                 alertDialog.dismiss();
@@ -112,7 +119,7 @@ public class AlertDialogUtil {
         tv_query.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (clickListener!=null){
+                if (clickListener != null) {
                     clickListener.right();
                 }
                 alertDialog.dismiss();
@@ -121,7 +128,7 @@ public class AlertDialogUtil {
     }
 
     //没有标题的对话框
-    public void noEditTitleTwoButtonDialog(Context context,String content,String left,String right,ClickListener clickListener){
+    public void noEditTitleTwoButtonDialog(Context context, String content, String left, String right, ClickListener clickListener) {
         View mView = LayoutInflater.from(context).inflate(R.layout.no_et_title_two_button_dialog, null);
         TextView tvTitle = mView.findViewById(R.id.tv_hint);
         TextView tvContent = mView.findViewById(R.id.tv_content);
@@ -135,7 +142,7 @@ public class AlertDialogUtil {
         tv_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (clickListener!=null){
+                if (clickListener != null) {
                     clickListener.left();
                 }
                 alertDialog.dismiss();
@@ -145,7 +152,7 @@ public class AlertDialogUtil {
         tv_query.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (clickListener!=null){
+                if (clickListener != null) {
                     clickListener.right();
                 }
                 alertDialog.dismiss();
@@ -154,7 +161,7 @@ public class AlertDialogUtil {
     }
 
     //有标题的对话框
-    public void havaNoEditTwoButtonDialog(Context context,String title,String content,String left,String right,ClickListener clickListener){
+    public void havaNoEditTwoButtonDialog(Context context, String title, String content, String left, String right, ClickListener clickListener) {
         View mView = LayoutInflater.from(context).inflate(R.layout.no_et_two_button_dialog, null);
         TextView tvTitle = mView.findViewById(R.id.tv_title);
         TextView tvContent = mView.findViewById(R.id.tv_content);
@@ -169,7 +176,7 @@ public class AlertDialogUtil {
         tv_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (clickListener!=null){
+                if (clickListener != null) {
                     clickListener.left();
                 }
                 alertDialog.dismiss();
@@ -179,7 +186,7 @@ public class AlertDialogUtil {
         tv_query.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (clickListener!=null){
+                if (clickListener != null) {
                     clickListener.right();
                 }
                 alertDialog.dismiss();

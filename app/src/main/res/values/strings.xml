@@ -375,4 +375,25 @@
     <string name="unit_type">设备信号</string>
     <string name="lock_firmware_version">门锁固件版本</string>
     <string name="bluetooth_module_version">门锁蓝牙模块版本</string>
+    <string name="family_member">家庭成员</string>
+    <string name="hao_de">好的</string>
+    <string name="query_fail_requery">无网络时不能添加家庭成员</string>
+    <string name="add_common_user_success">添加普通用户成功</string>
+    <string name="share_user">共享用户</string>
+    <string name="no_user">暂无用户</string>
+    <string name="user_manage">用户管理</string>
+    <string name="input_other_telephone_or_account">请输入对方的手机账号</string>
+    <string name="add_family_member_hint">授权给对应账号或手机号用户，启用APP控制</string>
+    <string name="add_user">添加用户</string>
+    <string name="no_add_my">不能添加自己</string>
+    <string name="modify_user_nickname_success">修改用户昵称成功</string>
+    <string name="delete_common_user_success">删除普通用户成功</string>
+    <string name="user_nickname_no_update">成员昵称未修改</string>
+    <string name="input_user_name">请输入用户名称</string>
+    <string name="input_fingerprint_name">请输入指纹名称</string>
+    <string name="sure_delete_user_permission">确定删除该用户权限吗？</string>
+    <string name="authorization_time">授权时间</string>
+    <string name="user_detail">用户详情</string>
+    <string name="delete_user">删除用户</string>
+    <string name="ming_cheng">名称</string>
 </resources>
