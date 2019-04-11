@@ -91,7 +91,7 @@ public class FamilyMemberDetailActivity extends BaseActivity<IFamilyMemberDeatil
             case R.id.btn_delete:
                 //删除
                 if (NetUtil.isNetworkAvailable()) {
-                    AlertDialogUtil.getInstance().noEditTwoButtonDialog(this, getString(R.string.hint), getString(R.string.sure_delete_user_permission), getString(R.string.cancel), getString(R.string.query), new AlertDialogUtil.ClickListener() {
+                    AlertDialogUtil.getInstance().noEditTwoButtonDialog(this, "", getString(R.string.sure_delete_user_permission), getString(R.string.cancel), getString(R.string.delete), new AlertDialogUtil.ClickListener() {
                         @Override
                         public void left() {
 

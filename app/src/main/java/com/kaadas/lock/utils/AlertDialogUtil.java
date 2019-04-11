@@ -101,7 +101,12 @@ public class AlertDialogUtil {
         TextView tv_cancel = mView.findViewById(R.id.tv_left);
         TextView tv_query = mView.findViewById(R.id.tv_right);
         AlertDialog alertDialog = AlertDialogUtil.getInstance().common(context, mView);
-        tvTitle.setText(title);
+        if ("".equals(title)){
+            tvTitle.setVisibility(View.GONE);
+        }else {
+            tvTitle.setVisibility(View.VISIBLE);
+            tvTitle.setText(title);
+        }
         tvContent.setText(content);
         tv_cancel.setText(left);
         tv_query.setText(right);

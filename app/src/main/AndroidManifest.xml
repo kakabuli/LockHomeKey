@@ -338,6 +338,10 @@
             android:name=".activity.device.bluetooth.FamilyMemberDetailActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activity.device.bluetooth.BluetoothLockOTAUpgradeActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"></activity>
     </application>
 
 </manifest>

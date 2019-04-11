@@ -59,7 +59,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:textSize="@dimen/sp_13"
-            android:textColor="@color/dialog_text_color"
+            android:textColor="#FF3B30"
             android:text="@string/query"
             android:gravity="center"
             />
