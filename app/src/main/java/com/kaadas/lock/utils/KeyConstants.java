@@ -182,9 +182,11 @@ public class KeyConstants {
     //正在开锁
     //开锁成功
     //开锁失败
+    //设备离线
     public static final int OPEN_LOCK = 0;
     public static final int HAS_BEEN_LOCKED = 1;
     public static final int IS_LOCKING = 2;
     public static final int OPEN_LOCK_SUCCESS = 3;
     public static final int OPEN_LOCK_FAILED = 4;
+    public static final int DEVICE_OFFLINE=5;
 }

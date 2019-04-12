@@ -409,4 +409,5 @@
     <string name="device_connect_network_fail">设备联网失败</string>
     <string name="reason">可能原因如下</string>
     <string name="hand_bind">手动绑定</string>
+    <string name="device_offline">设备离线</string>
 </resources>

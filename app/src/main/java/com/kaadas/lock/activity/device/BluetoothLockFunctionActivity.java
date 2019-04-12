@@ -122,11 +122,19 @@ public class BluetoothLockFunctionActivity extends AppCompatActivity implements 
         switch (lockStatus) {
             case KeyConstants.OPEN_LOCK:
                 //可以开锁
+                tvOpenClock.setClickable(true);
                 tvOpenClock.setText(R.string.click_lock);
                 tvOpenClock.setTextColor(getResources().getColor(R.color.c16B8FD));
                 tvOpenClock.setBackgroundResource(R.mipmap.open_lock_bj);
                 break;
-            case KeyConstants.HAS_BEEN_LOCKED:
+            case KeyConstants.DEVICE_OFFLINE:
+                //设备离线
+                tvOpenClock.setClickable(false);
+                tvOpenClock.setText(getString(R.string.device_offline));
+                tvOpenClock.setTextColor(getResources().getColor(R.color.c149EF3));
+                tvOpenClock.setBackgroundResource(R.mipmap.has_been_locked_bj);
+                break;
+    /*        case KeyConstants.HAS_BEEN_LOCKED:
                 //已反锁
                 tvOpenClock.setText(getString(R.string.has_been_locked));
                 tvOpenClock.setTextColor(getResources().getColor(R.color.c149EF3));
@@ -149,7 +157,7 @@ public class BluetoothLockFunctionActivity extends AppCompatActivity implements 
                 tvOpenClock.setText(getString(R.string.open_lock_failed));
                 tvOpenClock.setTextColor(getResources().getColor(R.color.white));
                 tvOpenClock.setBackgroundResource(R.mipmap.open_lock_fail_bj);
-                break;
+                break;*/
         }
     }
 
