@@ -154,7 +154,7 @@ public class DeviceFragment extends Fragment implements BaseQuickAdapter.OnItemC
         switch (deviceDetailBean.getType()) {
             case 1:
                 //蓝牙
-//                intent=new Intent(getActivity(),BluetoothLockFunctionActivity.class);
+//                intent = new Intent(getActivity(), BluetoothLockFunctionActivity.class);
                 intent = new Intent(getActivity(), BluetoothLockAuthorizationActivity.class);
                 startActivity(intent);
                 break;

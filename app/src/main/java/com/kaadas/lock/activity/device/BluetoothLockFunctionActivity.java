@@ -1,5 +1,6 @@
 package com.kaadas.lock.activity.device;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -9,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.kaadas.lock.R;
+import com.kaadas.lock.activity.device.bluetooth.BluetoothSharedDeviceManagementActivity;
 import com.kaadas.lock.adapter.BluetoothLockFunctionAdapter;
 import com.kaadas.lock.bean.BluetoothLockFunctionBean;
 import com.kaadas.lock.utils.DateUtils;
@@ -184,6 +186,7 @@ public class BluetoothLockFunctionActivity extends AppCompatActivity implements 
         }*/
     @Override
     public void onClick(View v) {
+        Intent intent;
         switch (v.getId()) {
             case R.id.iv_back:
                 finish();
@@ -195,6 +198,8 @@ public class BluetoothLockFunctionActivity extends AppCompatActivity implements 
             case R.id.ll_three:
                 break;
             case R.id.ll_four:
+                intent = new Intent(this, BluetoothSharedDeviceManagementActivity.class);
+                startActivity(intent);
                 break;
             case R.id.ll_five:
                 break;

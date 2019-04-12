@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/head"></include>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2"
+        android:gravity="center">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/ota_grey_icon" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/ota_blue_icon" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/dp_96"
+                android:text="@string/ota_load_hint" />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_55"
+        android:layout_gravity="center_horizontal">
+
+        <com.kaadas.lock.widget.MutiProgress
+            android:id="@+id/mutiprogree"
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:layout_marginLeft="@dimen/dp_34"
+            android:layout_marginTop="@dimen/dp_8"
+            android:layout_marginRight="@dimen/dp_50"
+            app:currNodeNO="0"
+            app:currNodeState="1"
+            app:nodeRadius="@dimen/dp_6"
+            app:nodesNum="4"
+            app:processingLineColor="#70BFFA"
+            app:progresFailDrawable="@mipmap/ota_circle_grey"
+            app:progresSuccDrawable="@mipmap/ota_circle_blue"
+
+            app:progressingDrawable="@mipmap/ota_circle_blue"
+            app:unprogressingDrawable="@mipmap/ota_circle_grey" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="@dimen/dp_10"
+            android:layout_marginRight="@dimen/dp_34"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/download_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/download"
+                android:textColor="#ff2b2f50"
+                android:textSize="@dimen/sp_13" />
+
+            <TextView
+                android:id="@+id/in_upgarde_status_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/in_upgarde_status"
+                android:textColor="#ff2b2f50"
+                android:textSize="@dimen/sp_13" />
+
+            <TextView
+                android:id="@+id/upgradeing_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/upgradeing"
+                android:textColor="#ff2b2f50"
+                android:textSize="@dimen/sp_13" />
+
+            <TextView
+                android:id="@+id/finish_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/finish"
+                android:textColor="#ff2b2f50"
+                android:textSize="@dimen/sp_13" />
+
+        </LinearLayout>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"></LinearLayout>
+</LinearLayout>
