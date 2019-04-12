@@ -4,6 +4,9 @@ import android.os.Handler;
 import android.os.Looper;
 
 
+import com.kaadas.lock.MyApplication;
+import com.kaadas.lock.publiclibrary.mqtt.util.MqttService;
+import com.kaadas.lock.utils.LogUtils;
 
 import java.lang.ref.WeakReference;
 
@@ -17,6 +20,14 @@ import io.reactivex.disposables.Disposable;
 public class BasePresenter<T extends IBaseView> {
     public Handler handler = new Handler(Looper.getMainLooper());
     protected CompositeDisposable compositeDisposable = new CompositeDisposable();
+    public MqttService mqttService;
+
+    public BasePresenter() {
+        if (mqttService == null) {
+            mqttService = MyApplication.getInstance().getMqttService();
+        }
+
+    }
 
     /**
      * 弱引用

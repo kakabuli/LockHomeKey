@@ -384,4 +384,8 @@
     <string name="device_connect_network_fail">设备联网失败</string>
     <string name="reason">可能原因如下</string>
     <string name="hand_bind">手动绑定</string>
+    <string name="please_use_gateway_qr_code">请使用Kaadas网关二维码</string>
+    <string name="unbind_not_have_devicesn">无法绑定</string>
+    <string name="publish_message_fail">发布消息失败</string>
+    <string name="gateway_already_bind">网关已经被绑定</string>
 </resources>

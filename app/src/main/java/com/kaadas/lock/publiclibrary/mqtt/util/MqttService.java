@@ -1,4 +1,4 @@
-package com.kaadas.lock.publiclibrary.mqtt;
+package com.kaadas.lock.publiclibrary.mqtt.util;
 
 import android.app.Service;
 import android.content.Intent;
@@ -7,10 +7,9 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.text.TextUtils;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
+import com.kaadas.lock.publiclibrary.mqtt.publishutil.PublishResult;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.NetUtil;
 import com.kaadas.lock.utils.ToastUtil;
@@ -71,6 +70,7 @@ public class MqttService extends Service {
     public void onCreate() {
         super.onCreate();
 
+        LogUtils.e("attachView   mqtt 启动了"  );
     }
 
     @Override
@@ -110,6 +110,11 @@ public class MqttService extends Service {
         return connOpts;
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        LogUtils.e("mqtt","MqttService为空");
+    }
 
     public MqttAndroidClient getMqttClient() {
         return mqttClient;
@@ -272,8 +277,6 @@ public class MqttService extends Service {
 
     //发布
     public Observable<PublishResult> mqttPublish(String topic, MqttMessage mqttMessage) {
-        mqttMessage.setQos(2);
-        mqttMessage.setRetained(false);
         LogUtils.e("发布消息   " + mqttMessage.getId(), new String(mqttMessage.getPayload()));
         try {
             mqttClient.publish(topic, mqttMessage, null, new IMqttActionListener() {

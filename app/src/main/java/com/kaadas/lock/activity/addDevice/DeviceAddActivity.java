@@ -100,6 +100,7 @@ public class DeviceAddActivity extends AppCompatActivity {
         if (deviceList != null && deviceList.size() > 0) {
             deviceAddItemAdapter = new DeviceAddItemAdapter(deviceList);
             deviceAddRecycler.setAdapter(deviceAddItemAdapter);
+
         }
     }
 

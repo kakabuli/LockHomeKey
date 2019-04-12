@@ -1,4 +1,4 @@
-package com.kaadas.lock.publiclibrary.mqtt;
+package com.kaadas.lock.publiclibrary.mqtt.util;
 /**
 * 常量
 *@author FJH
@@ -21,6 +21,9 @@ public class MqttConstant {
 
     //允许同时发送几条消息（未收到broker确认信息）
     public static final int MQTT_MAX_INFLIGHT=10;
+
+    //MessageId
+    public static int MESSAGE_ID=0;
 
     public static String getSubscribeTopic(String userId){
         String topic="/" + userId + "/rpc/reply";
