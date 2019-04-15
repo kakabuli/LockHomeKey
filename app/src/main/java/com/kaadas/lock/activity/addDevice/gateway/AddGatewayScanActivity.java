@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
 
 import com.kaadas.lock.R;
+import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.ToastUtil;
 import com.uuzuche.lib_zxing.activity.CaptureFragment;
 import com.uuzuche.lib_zxing.activity.CodeUtils;
@@ -45,15 +46,20 @@ public class AddGatewayScanActivity extends AppCompatActivity {
     CodeUtils.AnalyzeCallback analyzeCallback = new CodeUtils.AnalyzeCallback() {
         @Override
         public void onAnalyzeSuccess(Bitmap mBitmap, String result) {
-            /*String snCode = "";
-            String[] strs = result.split(" ");
-            snCode = strs[0].replace("SN-", "");
-            Intent intent = new Intent();
-            intent.putExtra("qrCodeData", snCode);
-            setResult(RESULT_OK, intent);*/
-            Intent scanSuccessIntent=new Intent(context,AddGatewayThirdActivity.class);
-            startActivity(scanSuccessIntent);
-            finish();
+            LogUtils.e("result",result);
+            if (result.contains("SN-")&&result.contains("MAC-")&&result.contains(" ")){
+                String[] strs=result.split(" ");
+                String deviceSN=strs[0].replace("SN-","");
+                Intent scanSuccessIntent=new Intent(context,AddGatewayThirdActivity.class);
+                scanSuccessIntent.putExtra("deviceSN",deviceSN);
+                startActivity(scanSuccessIntent);
+                finish();
+            }else{
+                Intent scanSuccessIntent=new Intent(context,AddGatewaySecondActivity.class);
+                startActivity(scanSuccessIntent);
+                ToastUtil.getInstance().showShort(getString(R.string.please_use_gateway_qr_code));
+            }
+
         }
 
 

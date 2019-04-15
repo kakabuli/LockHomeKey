@@ -1,4 +1,4 @@
-package com.kaadas.lock.publiclibrary.mqtt;
+package com.kaadas.lock.publiclibrary.mqtt.publishutil;
 
 import org.eclipse.paho.client.mqttv3.IMqttToken;
 import org.eclipse.paho.client.mqttv3.MqttMessage;

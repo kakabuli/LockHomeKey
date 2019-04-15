@@ -6,7 +6,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.text.TextUtils;
@@ -15,7 +14,7 @@ import com.kaadas.lock.activity.login.LoginActivity;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.publiclibrary.http.result.GetPasswordResult;
 import com.kaadas.lock.publiclibrary.http.util.RetrofitServiceManager;
-import com.kaadas.lock.publiclibrary.mqtt.MqttService;
+import com.kaadas.lock.publiclibrary.mqtt.util.MqttService;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.SPUtils;
@@ -60,6 +59,7 @@ public class MyApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        LogUtils.e("attachView  App启动 ");
         instance = this;
         initMqttService();//启动MqttService
         SPUtils.init(this);  //初始化SPUtils  传递Context进去  不需要每次都传递Context
@@ -139,7 +139,7 @@ public class MyApplication extends Application {
             public void onServiceConnected(ComponentName name, IBinder service) {
                 MqttService.MyBinder binder = (MqttService.MyBinder) service;
                 mqttService = binder.getService();
-                LogUtils.e("mqtt为空吗" + (mqttService == null));
+                LogUtils.e("attachView service启动" + (mqttService == null));
             }
 
             @Override

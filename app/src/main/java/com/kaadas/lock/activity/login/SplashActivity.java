@@ -14,6 +14,7 @@ import com.kaadas.lock.activity.my.PersonalUpdateVerifyGesturePwd;
 import com.kaadas.lock.base.mvpbase.BaseActivity;
 import com.kaadas.lock.bean.VersionBean;
 import com.kaadas.lock.presenter.SplashPresenter;
+import com.kaadas.lock.publiclibrary.mqtt.util.MqttService;
 import com.kaadas.lock.utils.CheckLanguageUtil;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.NetUtil;
@@ -110,6 +111,14 @@ public class SplashActivity extends BaseActivity<ISplashView, SplashPresenter<IS
 
     @Override
     public void getVersionFail() {
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Intent intent=new Intent(this, MqttService.class);
+        startService(intent);
 
     }
 }

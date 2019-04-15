@@ -302,8 +302,7 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait"></activity>
 
-
-        <service android:name="com.kaadas.lock.publiclibrary.mqtt.MqttService"></service>
+        <service android:name="com.kaadas.lock.publiclibrary.mqtt.util.MqttService"></service>
         <service android:name="org.eclipse.paho.android.service.MqttService"></service>
 
         <activity

@@ -14,9 +14,9 @@ import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.publiclibrary.http.util.RxjavaHelper;
 import com.kaadas.lock.publiclibrary.mqtt.GatewayBindListFuc;
-import com.kaadas.lock.publiclibrary.mqtt.MqttData;
-import com.kaadas.lock.publiclibrary.mqtt.MqttService;
-import com.kaadas.lock.publiclibrary.mqtt.PublishResult;
+import com.kaadas.lock.publiclibrary.mqtt.util.MqttData;
+import com.kaadas.lock.publiclibrary.mqtt.util.MqttService;
+import com.kaadas.lock.publiclibrary.mqtt.publishutil.PublishResult;
 import com.kaadas.lock.utils.LogUtils;
 
 import org.eclipse.paho.client.mqttv3.MqttMessage;

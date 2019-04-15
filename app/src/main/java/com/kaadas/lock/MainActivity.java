@@ -19,6 +19,7 @@ import com.kaadas.lock.fragment.DeviceFragment;
 import com.kaadas.lock.fragment.HomePageFragment;
 import com.kaadas.lock.fragment.MyFragment;
 import com.kaadas.lock.fragment.PersonalCenterFragment;
+import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.PermissionUtil;
 
 public class MainActivity extends BaseActivity<IBaseView,BasePresenter<IBaseView>> implements RadioGroup.OnCheckedChangeListener,IBaseView {
@@ -47,6 +48,7 @@ public class MainActivity extends BaseActivity<IBaseView,BasePresenter<IBaseView
         PermissionUtil.getInstance().requestPermission(PermissionUtil.getInstance().permission,this);
         rg.setOnCheckedChangeListener(this);
         initFragment();
+        LogUtils.e("attachView  " + ( MyApplication.getInstance().getMqttService() == null));
         MyApplication.getInstance().getMqttService().mqttConnection();
     }
 
