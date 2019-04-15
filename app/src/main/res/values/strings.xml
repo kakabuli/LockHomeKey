@@ -410,4 +410,12 @@
     <string name="reason">可能原因如下</string>
     <string name="hand_bind">手动绑定</string>
     <string name="device_offline">设备离线</string>
+    <string name="skip">跳过</string>
+    <string name="smart_unlock">智能解锁</string>
+    <string name="guide_page_one_hint">指纹、卡片、密码等多重开锁，安全快捷</string>
+    <string name="one_trigger_open">一触即开</string>
+    <string name="guide_page_two_hint">指纹识别，解锁开门，一步到位</string>
+    <string name="remote_control">远程监控</string>
+    <string name="guide_page_three_hint">实时了解门锁动态，守护您的家</string>
+    <string name="immediate_experience">立即体验</string>
 </resources>

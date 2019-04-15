@@ -342,6 +342,10 @@
             android:name=".activity.device.bluetooth.BluetoothLockOTAUpgradeActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"></activity>
+        <activity android:name=".activity.login.GuidePageActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            ></activity>
     </application>
 
 </manifest>

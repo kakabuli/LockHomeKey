@@ -177,6 +177,11 @@ public class KeyConstants {
      * 消息详情时间
      */
     public static final String MESSAGE_DETAIL_TIME = "message_detail_TIME";
+    /**
+     * 引导页
+     */
+    public static final String SHOW_GUIDE_PAGE = "show_guide_page";
+
     //开锁
     //已反锁
     //正在开锁
@@ -188,5 +193,5 @@ public class KeyConstants {
     public static final int IS_LOCKING = 2;
     public static final int OPEN_LOCK_SUCCESS = 3;
     public static final int OPEN_LOCK_FAILED = 4;
-    public static final int DEVICE_OFFLINE=5;
+    public static final int DEVICE_OFFLINE = 5;
 }

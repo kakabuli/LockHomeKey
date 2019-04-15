@@ -15,7 +15,9 @@ import com.kaadas.lock.base.mvpbase.BaseActivity;
 import com.kaadas.lock.bean.VersionBean;
 import com.kaadas.lock.presenter.SplashPresenter;
 import com.kaadas.lock.utils.CheckLanguageUtil;
+import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.NetUtil;
+import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.ToastUtil;
 import com.kaadas.lock.utils.cachefloder.ACache;
 import com.kaadas.lock.utils.cachefloder.CacheFloder;
@@ -43,8 +45,16 @@ public class SplashActivity extends BaseActivity<ISplashView, SplashPresenter<IS
                 String fingerPwd = CacheFloder.readPhoneFingerPrint(ACache.get(MyApplication.getInstance()), MyApplication.getInstance().getUid() + "fingerStatus");
                 //一秒后判断当前是否登陆   如果登陆 跳转至首页   如果没有登陆  跳转至登陆界面
                 if (TextUtils.isEmpty(MyApplication.getInstance().getToken())) {  //没有登陆
-                    startActivity(new Intent(SplashActivity.this, LoginActivity.class));
-                    finish();
+                    boolean showGuidePage = (boolean) SPUtils.get(KeyConstants.SHOW_GUIDE_PAGE, false);
+                    if (!showGuidePage) {
+                        //第一次
+                        SPUtils.put(KeyConstants.SHOW_GUIDE_PAGE, true);
+                        startActivity(new Intent(SplashActivity.this, GuidePageActivity.class));
+                        finish();
+                    } else {
+                        startActivity(new Intent(SplashActivity.this, LoginActivity.class));
+                        finish();
+                    }
                 } else if (!TextUtils.isEmpty(fingerPwd)) {
                     //存在指纹密码
                     startActivity(new Intent(SplashActivity.this, PersonalVerifyFingerPrintActivity.class));
