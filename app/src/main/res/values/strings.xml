@@ -418,4 +418,19 @@
     <string name="remote_control">远程监控</string>
     <string name="guide_page_three_hint">实时了解门锁动态，守护您的家</string>
     <string name="immediate_experience">立即体验</string>
+    <string name="device_name">设备名称</string>
+    <string name="message_free">消息免打扰</string>
+    <string name="safe_mode">安全模式</string>
+    <string name="a_m_auto_lock">A-M 自动上锁</string>
+    <string name="door_lock_language_switch">门锁语言切换</string>
+    <string name="silent_mode">静音模式</string>
+    <string name="check_firmware_update">检查固件升级</string>
+    <string name="delete_device">删除设备</string>
+    <string name="settting">设置</string>
+    <string name="bluetooth_safe_mode_hint">在安全模式下，需双重验证方可开锁。</string>
+    <string name="password_and_fingerprint">密码+指纹</string>
+    <string name="password_or_card">密码+卡片（选项功能）</string>
+    <string name="finger_or_card">指纹+卡片（选项功能）</string>
+    <string name="chinese">中文</string>
+    <string name="lock_language">门锁语言</string>
 </resources>

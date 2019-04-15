@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.kaadas.lock.R;
+import com.kaadas.lock.activity.device.bluetooth.BluetoothMoreActivity;
 import com.kaadas.lock.activity.device.bluetooth.BluetoothSharedDeviceManagementActivity;
 import com.kaadas.lock.adapter.BluetoothLockFunctionAdapter;
 import com.kaadas.lock.bean.BluetoothLockFunctionBean;
@@ -210,6 +211,8 @@ public class BluetoothLockFunctionActivity extends AppCompatActivity implements 
                 startActivity(intent);
                 break;
             case R.id.ll_five:
+                intent = new Intent(this, BluetoothMoreActivity.class);
+                startActivity(intent);
                 break;
             case R.id.tv_open_clock:
                 //开锁

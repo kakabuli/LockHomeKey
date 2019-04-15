@@ -67,7 +67,7 @@
                 android:background="@drawable/guide_page_btn_bj"
                 android:text="@string/immediate_experience"
                 android:textColor="#FFFFFF"
-                android:textSize="@dimen/dp_16" />
+                android:textSize="@dimen/sp_16" />
         </LinearLayout>
     </LinearLayout>
 </RelativeLayout>

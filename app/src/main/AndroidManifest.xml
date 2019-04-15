@@ -342,10 +342,22 @@
             android:name=".activity.device.bluetooth.BluetoothLockOTAUpgradeActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"></activity>
-        <activity android:name=".activity.login.GuidePageActivity"
+        <activity
+            android:name=".activity.login.GuidePageActivity"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            ></activity>
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activity.device.bluetooth.BluetoothMoreActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activity.device.bluetooth.BluetoothSafeModeActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activity.device.bluetooth.BluetoothLockLanguageSettingActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"></activity>
     </application>
 
 </manifest>

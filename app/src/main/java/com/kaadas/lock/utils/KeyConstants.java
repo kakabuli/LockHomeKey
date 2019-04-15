@@ -182,6 +182,18 @@ public class KeyConstants {
      */
     public static final String SHOW_GUIDE_PAGE = "show_guide_page";
 
+    //消息免打扰状态
+    public static final String MESSAGE_FREE_STATUS = "message_free_status";
+
+    //A-M  自动上锁
+    public static final String AM_AUTO_LOCK_STATUS = "am_auto_lock_status";
+
+    //静音模式
+    public static final String SILENT_MODE_STATUS = "silent_mode_status";
+
+    //安全模式
+    public static final String SAFE_MODE_STATUS = "safe_mode_status";
+
     //开锁
     //已反锁
     //正在开锁
