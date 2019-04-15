@@ -194,6 +194,13 @@ public class KeyConstants {
     //安全模式
     public static final String SAFE_MODE_STATUS = "safe_mode_status";
 
+    //手势密码
+    public static final String HAND_PASSWORD = "hand_password";
+
+
+    //Touch ID
+    public static final String TOUCH_ID = "touch_id";
+
     //开锁
     //已反锁
     //正在开锁
