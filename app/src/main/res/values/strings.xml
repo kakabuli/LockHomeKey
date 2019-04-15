@@ -437,4 +437,9 @@
     <string name="unbind_not_have_devicesn">无法绑定</string>
     <string name="publish_message_fail">发布消息失败</string>
     <string name="gateway_already_bind">网关已经被绑定</string>
+    <string name="input_device_name">请输入设备名称</string>
+    <string name="device_nick_name_no_update">设备名称未修改</string>
+    <string name="device_delete_dialog_head">确认删除设备？</string>
+    <string name="device_delete_dialog_content">删除设备后,\n将设备恢复出厂设置/清除锁内数据
+                        </string>
 </resources>

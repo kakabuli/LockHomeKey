@@ -24,6 +24,7 @@
             android:textSize="@dimen/sp_13" />
 
         <TextView
+            android:id="@+id/tv_device_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
@@ -31,7 +32,6 @@
             android:layout_marginRight="@dimen/dp_16"
             android:drawableRight="@mipmap/right"
             android:drawablePadding="@dimen/dp_15"
-            android:text="壮壮家的门锁"
             android:textColor="#999999"
             android:textSize="@dimen/sp_12" />
 
