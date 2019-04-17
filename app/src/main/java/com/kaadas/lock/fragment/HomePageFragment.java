@@ -69,7 +69,7 @@ public class HomePageFragment extends Fragment implements RadioGroup.OnCheckedCh
         llHasDevice.setVisibility(View.GONE);
         llNoDevice.setVisibility(View.VISIBLE);
 
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i <8; i++) {
 //            int deviceType, String deviceId, String deviceNickName, Object object
             if (i % 2 == 0) {
                 devices.add(new HomeShowBean(HomeShowBean.TYPE_BLE_LOCK, "1", "昵称" + i, ""));
