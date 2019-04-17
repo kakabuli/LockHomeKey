@@ -1,73 +1,171 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:background="@drawable/background_gradient"
+    xmlns:tools="http://schemas.android.com/tools">
     <!--有设备-->
     <LinearLayout
         android:id="@+id/ll_has_device"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#117EEA"
         android:orientation="vertical"
-        android:visibility="gone"
+        android:paddingTop="12dp"
         >
 
-     <RadioGroup
-         android:id="@+id/rg"
-         android:layout_width="match_parent"
-         android:layout_height="@dimen/dp_76"
-         android:orientation="horizontal"
-         >
+        <RadioGroup
+            android:id="@+id/rg_home"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="50dp"
+            android:orientation="horizontal">
 
-     </RadioGroup>
+
+            <com.kaadas.lock.widget.UnderLineRadioBtn
+                android:textColor="@drawable/home_rb_cat_eye_text_color"
+                android:id="@+id/rb_home1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@null"
+                android:button="@null"
+                android:drawableTop="@drawable/home_rb_cat_eye_drawable"
+                android:drawablePadding="6dp"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:paddingVertical="6dp"
+                android:scaleX="0.85"
+                android:scaleY="0.85"
+                android:lines="1"
+                android:text="猫眼11111111111"
+                android:textSize="12sp"
+                android:textStyle="bold"
+
+
+                app:lineCheckColor="#FFFFFF"
+                app:lineDefaultColor="#00000000"
+                app:lineH="1dp"
+                app:lineRadius="0dp"
+                app:lineW="0.5"
+                app:textCheckColor="#FFFFFF"
+                app:textDefaultColor="#Afff"
+                tools:ignore="HardcodedText" />
+
+
+            <com.kaadas.lock.widget.UnderLineRadioBtn
+                android:textColor="@drawable/home_rb_cat_eye_text_color"
+                android:id="@+id/rb_home2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@null"
+                android:button="@null"
+                android:checked="true"
+                android:drawableTop="@drawable/home_rb_cat_eye_drawable"
+                android:drawablePadding="6dp"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:paddingVertical="6dp"
+                android:text="猫眼 "
+                android:textSize="12sp"
+                android:lines="1"
+                android:textStyle="bold"
+
+
+                app:lineCheckColor="#FFFFFF"
+                app:lineDefaultColor="#00000000"
+                app:lineH="1dp"
+                app:lineRadius="0dp"
+                app:lineW="0.5"
+                app:textCheckColor="#FFFFFF"
+                app:textDefaultColor="#Afff"
+                tools:ignore="HardcodedText" />
+
+
+            <com.kaadas.lock.widget.UnderLineRadioBtn
+                android:textColor="@drawable/home_rb_cat_eye_text_color"
+                android:id="@+id/rb_home3"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@null"
+                android:button="@null"
+                android:drawableTop="@drawable/home_rb_cat_eye_drawable"
+                android:drawablePadding="6dp"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:lines="1"
+                android:paddingVertical="6dp"
+                android:scaleX="0.85"
+                android:scaleY="0.85"
+                android:text="猫眼"
+                android:textSize="12sp"
+                android:textStyle="bold"
+
+                app:lineCheckColor="#FFFFFF"
+                app:lineDefaultColor="#00000000"
+                app:lineH="1dp"
+                app:lineRadius="0dp"
+                app:lineW="0.5"
+                app:textCheckColor="#FFFFFF"
+                app:textDefaultColor="#Afff"
+                tools:ignore="HardcodedText" />
+        </RadioGroup>
+
         <android.support.v4.view.ViewPager
-            android:id="@+id/pager"
+            android:id="@+id/vp_home"
             android:layout_width="fill_parent"
             android:layout_height="0dp"
             android:layout_weight="1" />
 
 
-
     </LinearLayout>
     <!--无设备-->
     <LinearLayout
+        android:id="@+id/ll_no_device"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#1180EA"
-        android:orientation="vertical"
-        >
+        android:orientation="vertical">
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1">
+
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:src="@mipmap/logo"
                 android:layout_alignParentBottom="true"
-                android:layout_marginBottom="118dp"/>
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="118dp"
+                android:src="@mipmap/logo" />
+
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
-                android:src="@mipmap/home_page_element"
-                android:layout_alignParentBottom="true"/>
+                android:src="@mipmap/home_page_element" />
         </RelativeLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
             android:orientation="vertical">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/guard_your_home"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/dp_60"
-                android:textSize="@dimen/sp_12"
-                android:textColor="#57D4FF"/>
+                android:text="@string/guard_your_home"
+                android:textColor="#57D4FF"
+                android:textSize="@dimen/sp_12" />
+
             <Button
                 android:id="@+id/btn_add_device"
                 android:layout_width="match_parent"
