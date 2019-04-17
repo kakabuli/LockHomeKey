@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.device.bluetooth.BluetoothMoreActivity;
 import com.kaadas.lock.activity.device.bluetooth.BluetoothSharedDeviceManagementActivity;
+import com.kaadas.lock.activity.device.bluetooth.fingerprint.FingerprintManagerActivity;
 import com.kaadas.lock.activity.device.bluetooth.password.BluetoothPasswordManagerActivity;
 import com.kaadas.lock.adapter.BluetoothLockFunctionAdapter;
 import com.kaadas.lock.bean.BluetoothLockFunctionBean;
@@ -206,6 +207,8 @@ public class BluetoothLockFunctionActivity extends AppCompatActivity implements 
                 startActivity(intent);
                 break;
             case R.id.ll_two:
+                intent = new Intent(this, FingerprintManagerActivity.class);
+                startActivity(intent);
                 break;
             case R.id.ll_three:
                 break;

@@ -378,6 +378,34 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             ></activity>
+        <activity android:name=".activity.device.bluetooth.fingerprint.FingerprintManagerActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            ></activity>
+        <activity android:name=".activity.device.bluetooth.fingerprint.FingerprintManagerDetailActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            ></activity>
+        <activity android:name=".activity.device.bluetooth.fingerprint.FingerprintLinkBluetoothActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            ></activity>
+        <activity android:name=".activity.device.bluetooth.fingerprint.FingerprintCollectionActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            ></activity>
+        <activity android:name=".activity.device.bluetooth.fingerprint.FingerprintNoConnectBluetoothOneActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            ></activity>
+        <activity android:name=".activity.device.bluetooth.fingerprint.FingerprintNoConnectBluetoothTwoActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            ></activity>
+        <activity android:name=".activity.device.bluetooth.fingerprint.FingerprintNoConnectBluetoothCollectionActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            ></activity>
     </application>
 
 </manifest>

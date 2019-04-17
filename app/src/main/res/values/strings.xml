@@ -504,4 +504,21 @@
     <string name="short_message">短信</string>
     <string name="wei_xin">微信</string>
     <string name="copy">复制</string>
+    <string name="door_card_synchronized">门卡同步</string>
+    <string name="add_door_card">添加门卡</string>
+    <string name="no_door_card">暂无门卡</string>
+    <string name="fingerprint_synchronized">指纹同步</string>
+    <string name="add_fingerprint">添加指纹</string>
+    <string name="no_fingerprint">暂无指纹</string>
+    <string name="connecting_door_lock">正在连接门锁...</string>
+    <string name="fingerprint_link_bluetooth_hint">请打开手机蓝牙，靠近门锁附近</string>
+    <string name="link_success">连接成功</string>
+    <string name="fingerprint_collection_hint">请找到门锁指纹采集位置,按照语音提示将要录制指纹手指触摸</string>
+    <string name="bluetooth_no_connect_bluetooth_one_hint">手机没有和门锁连接成功，\n您可以在门锁操作进行添加</string>
+    <string name="bluetooth_no_connect_bluetooth_one_one">触摸按键区域唤醒面板</string>
+    <string name="bluetooth_no_connect_bluetooth_one_two">先按“*”两次,再输入管理密码,按“#”确认。</string>
+    <string name="bluetooth_no_connect_bluetooth_one_three">语音提示：“已进入管理模式”。</string>
+    <string name="bluetooth_no_connect_bluetooth_two_hint">按照语音提示,点击对应数字选项,进入指纹添加</string>
+    <string name="bluetooth_no_connect_bluetooth_three_hint">请找到门锁指纹采集位置,按照语音提示将要手指触摸进行采集</string>
+    <string name="next_step">下一步</string>
 </resources>
