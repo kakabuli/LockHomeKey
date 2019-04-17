@@ -1,4 +1,4 @@
-package com.kaadas.lock.activity.device.bluetooth.password;
+package com.kaadas.lock.activity.device.bluetooth.fingerprint;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,14 +13,17 @@ import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.kaadas.lock.R;
+import com.kaadas.lock.activity.device.bluetooth.password.BluetoothPasswordManagerDetailActivity;
+import com.kaadas.lock.activity.device.bluetooth.password.BluetoothUserPasswordAddActivity;
 import com.kaadas.lock.adapter.BluetoothPasswordAdapter;
+import com.kaadas.lock.adapter.FingerprintManagerAdapter;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.publiclibrary.bean.ForeverPassword;
 import com.kaadas.lock.publiclibrary.http.postbean.AddPasswordBean;
+import com.kaadas.lock.publiclibrary.http.result.GetPasswordResult;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.ToastUtil;
-
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +34,7 @@ import butterknife.ButterKnife;
 /**
  * Created by David
  */
-public class BluetoothPasswordManagerActivity extends AppCompatActivity
+public class FingerprintManagerActivity extends AppCompatActivity
         implements BaseQuickAdapter.OnItemClickListener, View.OnClickListener {
     @BindView(R.id.iv_back)
     ImageView ivBack;//返回
@@ -40,7 +43,7 @@ public class BluetoothPasswordManagerActivity extends AppCompatActivity
 
     @BindView(R.id.recycleview)
     RecyclerView recycleview;
-    BluetoothPasswordAdapter bluetoothPasswordAdapter;
+    FingerprintManagerAdapter fingerprintManagerAdapter;
     boolean isNotPassword = true;
     @BindView(R.id.tv_synchronized_record)
     TextView tvSynchronizedRecord;
@@ -50,49 +53,45 @@ public class BluetoothPasswordManagerActivity extends AppCompatActivity
     LinearLayout llHasData;
     @BindView(R.id.tv_no_user)
     TextView tvNoUser;
-    List<ForeverPassword> pwdList = new ArrayList<>();;
+    List<GetPasswordResult.DataBean.Fingerprint> pwdList = new ArrayList<>();
+    ;
     private BleLockInfo bleLockInfo;
-    private boolean isSync = false; //是不是正在同步锁中的密码
-
+    private boolean isSync = false; //是不是正在同步锁中的指纹
 
 
     @Override
-
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_bluetooth_password_manager);
+        setContentView(R.layout.activity_fingerprint_manager);
         ButterKnife.bind(this);
-        tvContent.setText(getString(R.string.password));
+        tvContent.setText(getString(R.string.fingerprint));
         ivBack.setOnClickListener(this);
         tvSynchronizedRecord.setOnClickListener(this);
         llAddPassword.setOnClickListener(this);
         passwordPageChange();
         initRecycleview();
-        pwdList.add(new ForeverPassword("fff", "fff", 1));
+        pwdList.add(new GetPasswordResult.DataBean.Fingerprint("fff", "fff", 1));
         initData();
     }
 
     private void initRecycleview() {
-        bluetoothPasswordAdapter = new BluetoothPasswordAdapter(pwdList, R.layout.item_bluetooth_password);
+        fingerprintManagerAdapter = new FingerprintManagerAdapter(pwdList, R.layout.item_fingerprint_manager);
         recycleview.setLayoutManager(new LinearLayoutManager(this));
-        recycleview.setAdapter(bluetoothPasswordAdapter);
-        bluetoothPasswordAdapter.setOnItemClickListener(this);
+        recycleview.setAdapter(fingerprintManagerAdapter);
+        fingerprintManagerAdapter.setOnItemClickListener(this);
     }
 
 
     @Override
     protected void onResume() {
         super.onResume();
-        LogUtils.e("密码管理界面  onResume()   ");
     }
 
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-        Intent intent = new Intent(this, BluetoothPasswordManagerDetailActivity.class);
+        Intent intent = new Intent(this, FingerprintLinkBluetoothActivity.class);
         intent.putExtra(KeyConstants.BLE_DEVICE_INFO, bleLockInfo);
-        AddPasswordBean.Password password = new AddPasswordBean.Password(1, pwdList.get(position));
-        intent.putExtra(KeyConstants.TO_PWD_DETAIL, password);
-        intent.putExtra(KeyConstants.CREATE_TIME, pwdList.get(position).getCreateTime());
+        intent.putExtra(KeyConstants.PASSWORD_NICK, pwdList.get(position));
         startActivity(intent);
     }
 
@@ -115,7 +114,7 @@ public class BluetoothPasswordManagerActivity extends AppCompatActivity
                 finish();
                 break;
             case R.id.ll_add_password:
-                intent = new Intent(this, BluetoothUserPasswordAddActivity.class);
+                intent = new Intent(this, FingerprintLinkBluetoothActivity.class);
                 intent.putExtra(KeyConstants.BLE_DEVICE_INFO, bleLockInfo);
                 startActivity(intent);
                 break;
@@ -125,7 +124,6 @@ public class BluetoothPasswordManagerActivity extends AppCompatActivity
                 if (isSync) {
                     ToastUtil.getInstance().showShort(R.string.is_sync_please_wait);
                 } else {
-                    //同步密码
                 }
                 break;
         }
@@ -138,9 +136,6 @@ public class BluetoothPasswordManagerActivity extends AppCompatActivity
             isNotPassword = true;
         }
         passwordPageChange();
-        bluetoothPasswordAdapter.notifyDataSetChanged();
-        LogUtils.e("收到  同步的锁的密码   " + pwdList.toString());
-
-
+        fingerprintManagerAdapter.notifyDataSetChanged();
     }
 }
