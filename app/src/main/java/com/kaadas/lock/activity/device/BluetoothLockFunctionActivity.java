@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.device.bluetooth.BluetoothMoreActivity;
 import com.kaadas.lock.activity.device.bluetooth.BluetoothSharedDeviceManagementActivity;
+import com.kaadas.lock.activity.device.bluetooth.password.BluetoothPasswordManagerActivity;
 import com.kaadas.lock.adapter.BluetoothLockFunctionAdapter;
 import com.kaadas.lock.bean.BluetoothLockFunctionBean;
 import com.kaadas.lock.utils.DateUtils;
@@ -201,6 +202,8 @@ public class BluetoothLockFunctionActivity extends AppCompatActivity implements 
                 finish();
                 break;
             case R.id.ll_one:
+                intent = new Intent(this, BluetoothPasswordManagerActivity.class);
+                startActivity(intent);
                 break;
             case R.id.ll_two:
                 break;

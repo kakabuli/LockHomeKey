@@ -440,6 +440,68 @@
     <string name="input_device_name">请输入设备名称</string>
     <string name="device_nick_name_no_update">设备名称未修改</string>
     <string name="device_delete_dialog_head">确认删除设备？</string>
-    <string name="device_delete_dialog_content">删除设备后,\n将设备恢复出厂设置/清除锁内数据
-                        </string>
+    <string name="device_delete_dialog_content">删除设备后,\n将设备恢复出厂设置/清除锁内数据</string>
+    <string name="pwd_manager_syn">密码同步</string>
+    <string name="synchroniztion">同步</string>
+    <string name="week_day">周日</string>
+    <string name="monday">周一</string>
+    <string name="tuesday">周二</string>
+    <string name="wedensday">周三</string>
+    <string name="thursday">周四</string>
+    <string name="friday">周五</string>
+    <string name="saturday">周六</string>
+    <string name="foever_able">永久生效</string>
+    <string name="pwd_will">密码将每</string>
+    <string name="force">重复生效</string>
+    <string name="is_sync_please_wait">正在同步，请稍后再试...</string>
+    <string name="syc_pwd_fail">同步密码失败</string>
+    <string name="get_password_failed">获取秘钥列表失败</string>
+    <string name="add_password">添加密码</string>
+    <string name="no_password">暂无密码</string>
+    <string name="pwd_header_add_tv">添加密码</string>
+    <string-array name="home_top">
+        <item>时效</item>
+        <item>周期</item>
+        <item>临时</item>
+    </string-array>
+    <string name="user_pwd_tip">提示:</string>
+    <string name="user_pwd_time1">请打开手机蓝牙在门锁附近设置密码</string>
+    <string name="user_pwd_time2">为确保您的安全，密码请自行保存，手机只显示名称</string>
+    <string name="user_pwd_pwd">请输入6~12位数字密码</string>
+    <string name="user_pwd_random">随机生成</string>
+    <string name="pwd_manager_grant_name_tv">请输入密码名称</string>
+    <string name="forever">永久</string>
+    <string name="hours_24">24小时</string>
+    <string name="custom">自定义</string>
+    <string name="effective_time">生效时间</string>
+    <string name="afternoon">下午</string>
+    <string name="end_time">截止时间</string>
+    <string name="user_pwd_btn_ok">确定生成</string>
+    <string name="elder_brother">哥哥</string>
+    <string name="small_di_di">小弟弟</string>
+    <string name="elder_sister">姐姐</string>
+    <string name="time_setting">时间设置</string>
+    <string name="rule_repeat">规则重复</string>
+    <string name="temporary_password_used_once">目前临时密码只可以使用一次</string>
+    <string name="cycle_rules_loop">周重复</string>
+    <string name="cycle_rules_everyday">每天</string>
+    <string name="cycle_rules_1">每周一</string>
+    <string name="cycle_rules_2">每周二</string>
+    <string name="cycle_rules_3">每周三</string>
+    <string name="cycle_rules_4">每周四</string>
+    <string name="cycle_rules_5">每周五</string>
+    <string name="cycle_rules_6">每周六</string>
+    <string name="cycle_rules_7">每周日</string>
+    <string name="every_day">每天</string>
+    <string name="week_one">周一</string>
+    <string name="week_two">周二</string>
+    <string name="week_three">周三</string>
+    <string name="week_four">周四</string>
+    <string name="week_five">周五</string>
+    <string name="week_six">周六</string>
+    <string name="week_seven">周日</string>
+    <string name="password_share_hint">为确保您的安全，\n密码请自行保存或分享给家人，手机只保留名称</string>
+    <string name="short_message">短信</string>
+    <string name="wei_xin">微信</string>
+    <string name="copy">复制</string>
 </resources>

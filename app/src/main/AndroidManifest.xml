@@ -357,6 +357,27 @@
             android:name=".activity.device.bluetooth.BluetoothLockLanguageSettingActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activity.device.bluetooth.password.BluetoothPasswordManagerActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activity.device.bluetooth.password.BluetoothPasswordManagerDetailActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"></activity>
+
+        <activity
+            android:name=".activity.device.bluetooth.password.BluetoothUserPasswordAddActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"></activity>
+        <activity android:name=".activity.device.bluetooth.password.CycleRulesActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            ></activity>
+        <activity android:name=".activity.device.bluetooth.password.BluetoothPasswordShareActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            ></activity>
     </application>
 
 </manifest>
