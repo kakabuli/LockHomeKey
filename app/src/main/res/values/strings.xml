@@ -548,4 +548,15 @@
     <string name="door_card_detail">门卡详情</string>
     <string name="fingerprint_detail">指纹详情</string>
     <string name="user_password">用户密码</string>
+    <string name="ble_is_close">蓝牙没有打开，请打开蓝牙</string>
+    <string name="connet_failed_please_near">蓝牙连接失败，请在锁附近操作</string>
+    <string name="connecting_lock">正在连接门锁...</string>
+    <string name="no_fond_device">未搜索到设备，请在锁附近操作</string>
+    <string name="rebind">锁被重置，请重新绑定！</string>
+    <string name="device_disconnect_searchDevice">正在搜索设备</string>
+    <string name="please_allow_ble_permission">请允许申请的权限，以搜索蓝牙！</string>
+    <string name="device_coneected_can_control_device">连接成功</string>
+    <string name="is_authing">正在鉴权</string>
+
+
 </resources>

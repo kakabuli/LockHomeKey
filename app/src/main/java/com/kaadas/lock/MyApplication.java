@@ -12,6 +12,7 @@ import android.text.TextUtils;
 
 import com.kaadas.lock.activity.login.LoginActivity;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
+import com.kaadas.lock.publiclibrary.ble.BleService;
 import com.kaadas.lock.publiclibrary.http.result.GetPasswordResult;
 import com.kaadas.lock.publiclibrary.http.util.RetrofitServiceManager;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttService;
@@ -56,11 +57,14 @@ public class MyApplication extends Application {
     private static final String DB_NAME="xiaokai.db";
     // IWXAPI 是第三方app和微信通信的openApi接口
     protected MqttService mqttService;
+    private BleService bleService;
+
     @Override
     public void onCreate() {
         super.onCreate();
         LogUtils.e("attachView  App启动 ");
         instance = this;
+        initBleService();
         initMqttService();//启动MqttService
         SPUtils.init(this);  //初始化SPUtils  传递Context进去  不需要每次都传递Context
         ToastUtil.init(this); //初始化ToastUtil 传递Context进去  不需要每次都传递
@@ -68,6 +72,34 @@ public class MyApplication extends Application {
         listenerAppBackOrForge();
         //扫描二维码初始化
         ZXingLibrary.initDisplayOpinion(this);
+    }
+
+
+    /**
+     * 启动蓝牙服务
+     */
+    private void initBleService() {
+        Intent intent = new Intent(this, BleService.class);
+//        startService(intent);
+        bindService(intent, new ServiceConnection() {
+
+            @Override
+            public void onServiceConnected(ComponentName name, IBinder service) {
+                BleService.MyBinder binder = (BleService.MyBinder) service;
+                bleService = binder.getService();
+                LogUtils.e("服务启动成功    " + (bleService == null));
+            }
+
+            @Override
+            public void onServiceDisconnected(ComponentName name) {
+
+            }
+        }, Context.BIND_AUTO_CREATE);
+
+    }
+
+    public BleService getBleService() {
+        return bleService;
     }
 
     /**
