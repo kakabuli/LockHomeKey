@@ -343,12 +343,19 @@ public class MyApplication extends Application {
         return passwordLoaded;
     }
 
-
-
-
     private PublishSubject<Boolean> listenerAppChange = PublishSubject.create();
     public PublishSubject<Boolean> listenerAppState(){
         return listenerAppChange;
     }
+
+    @Override
+    public void onTerminate() {
+        super.onTerminate();
+        //程序终止时
+
+    }
+
+
+
 
 }

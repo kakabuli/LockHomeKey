@@ -5,13 +5,17 @@ import android.os.Looper;
 
 
 import com.kaadas.lock.MyApplication;
+import com.kaadas.lock.publiclibrary.mqtt.publishutil.PublishFucConstant;
+import com.kaadas.lock.publiclibrary.mqtt.util.MqttData;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttService;
 import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.SPUtils;
 
 import java.lang.ref.WeakReference;
 
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 
 /**
  * Create By lxj  on 2019/1/7
@@ -21,7 +25,6 @@ public class BasePresenter<T extends IBaseView> {
     public Handler handler = new Handler(Looper.getMainLooper());
     protected CompositeDisposable compositeDisposable = new CompositeDisposable();
     public MqttService mqttService;
-
     public BasePresenter() {
         if (mqttService == null) {
             mqttService = MyApplication.getInstance().getMqttService();

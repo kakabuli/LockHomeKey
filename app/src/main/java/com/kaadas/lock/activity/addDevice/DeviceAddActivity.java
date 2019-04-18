@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.addDevice.bluetooth.AddBluetoothFirstActivity;
+import com.kaadas.lock.activity.addDevice.zigbee.DeviceBindGatewayListActivity;
 import com.kaadas.lock.adapter.DeviceAddItemAdapter;
 import com.kaadas.lock.bean.deviceAdd.DeviceAddItemBean;
 
@@ -115,7 +116,7 @@ public class DeviceAddActivity extends AppCompatActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.zigbee_layout:
-                Intent zigbeeIntent=new Intent(this,DeviceZigBeeDetailActivity.class);
+                Intent zigbeeIntent=new Intent(this, DeviceZigBeeDetailActivity.class);
                 startActivity(zigbeeIntent);
                 break;
             case R.id.bluetooth_layout:

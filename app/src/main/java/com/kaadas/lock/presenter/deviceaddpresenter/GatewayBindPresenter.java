@@ -21,20 +21,22 @@ import java.util.concurrent.TimeUnit;
 import io.reactivex.ObservableSource;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function;
-import io.reactivex.functions.Predicate;
+
 
 public class GatewayBindPresenter<T> extends BasePresenter<GatewayBindView>{
     private Disposable disposable;
 
     //绑定网关
     public void bindGateway(String deviceSN){
-        BindGatewayBean bindGatewayBean=new BindGatewayBean(PublishFucConstant.BIND_GATEWAY,deviceSN,MyApplication.getInstance().getUid());
+        BindGatewayBean bindGatewayBean=new BindGatewayBean(MyApplication.getInstance().getUid(),PublishFucConstant.BIND_GATEWAY,deviceSN);
+
         disposable=PublishService.publicData(mqttService,bindGatewayBean, MqttUrlConstant.MQTT_REQUEST_APP)
                       .subscribe(new Consumer<MqttData>() {
                           @Override
                           public void accept(MqttData mqttData) throws Exception {
+                              LogUtils.e("fjh...."+mqttData);
                                 if (mqttData!=null){
+                                    LogUtils.e(mqttData.getPayload());
                                     BindGatewayBeanResult bindGatewayResult=new Gson().fromJson(mqttData.getPayload(),BindGatewayBeanResult.class);
                                     LogUtils.e(bindGatewayResult.getFunc());
                                     if (PublishFucConstant.BIND_GATEWAY.equals(bindGatewayResult.getFunc())){

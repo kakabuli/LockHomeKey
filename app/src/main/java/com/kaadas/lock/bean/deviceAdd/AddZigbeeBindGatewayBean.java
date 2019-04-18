@@ -48,4 +48,15 @@ public class AddZigbeeBindGatewayBean implements Serializable {
     public void setSelect(boolean select) {
         isSelect = select;
     }
+
+    public AddZigbeeBindGatewayBean(String nickName, String adminId, String gatewayId, int isOnLine, boolean isSelect) {
+        this.nickName = nickName;
+        this.adminId = adminId;
+        this.gatewayId = gatewayId;
+        this.isOnLine = isOnLine;
+        this.isSelect = isSelect;
+    }
+
+    public AddZigbeeBindGatewayBean() {
+    }
 }

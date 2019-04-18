@@ -46,6 +46,9 @@ public class AddGatewayFailActivity extends AppCompatActivity {
            if ("813".equals(code)){
                ToastUtil.getInstance().showShort(R.string.gateway_already_bind);
            }
+           if ("812".equals(code)){
+               ToastUtil.getInstance().showShort(R.string.gateway_already_bind);
+           }
             LogUtils.e("网关绑定失败"+msg);
         }
     }
