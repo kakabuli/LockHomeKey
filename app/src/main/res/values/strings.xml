@@ -521,4 +521,8 @@
     <string name="bluetooth_no_connect_bluetooth_two_hint">按照语音提示,点击对应数字选项,进入指纹添加</string>
     <string name="bluetooth_no_connect_bluetooth_three_hint">请找到门锁指纹采集位置,按照语音提示将要手指触摸进行采集</string>
     <string name="next_step">下一步</string>
+    <string name="door_card">门卡</string>
+    <string name="connect_fail">连接失败</string>
+    <string name="connect_success">连接成功</string>
+    <string name="door_card_identification_hint">将门卡靠近识别区直到嘀一声添加成功</string>
 </resources>

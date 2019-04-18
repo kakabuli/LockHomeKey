@@ -1,4 +1,4 @@
-package com.kaadas.lock.activity.device.bluetooth.fingerprint;
+package com.kaadas.lock.activity.device.bluetooth.card;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,24 +17,22 @@ import butterknife.ButterKnife;
 /**
  * Created by David on 2019/4/17
  */
-public class FingerprintLinkBluetoothActivity extends AppCompatActivity implements View.OnClickListener {
+public class DoorCardNearDoorActivity extends AppCompatActivity implements View.OnClickListener {
     @BindView(R.id.iv_back)
     ImageView ivBack;
     @BindView(R.id.tv_content)
     TextView tvContent;
     @BindView(R.id.iv_right)
     ImageView ivRight;
-    @BindView(R.id.btn_confirm_generation)
-    Button btnConfirmGeneration;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_fingerprint_link_bluetooth);
+        setContentView(R.layout.activity_door_card_near_door);
         ButterKnife.bind(this);
         ivBack.setOnClickListener(this);
-        tvContent.setText(R.string.add_fingerprint);
-        btnConfirmGeneration.setOnClickListener(this);
+        tvContent.setText(R.string.add_door_card);
     }
 
     @Override
@@ -43,13 +41,7 @@ public class FingerprintLinkBluetoothActivity extends AppCompatActivity implemen
             case R.id.iv_back:
                 finish();
                 break;
-            case R.id.btn_confirm_generation:
-//                Intent intent=new Intent(this,FingerprintCollectionActivity.class);
-                Intent intent = new Intent(this, FingerprintNoConnectBluetoothOneActivity.class);
-//                Intent intent = new Intent(this, FingerprintCollectionSuccessActivity.class);
-                startActivity(intent);
-                finish();
-                break;
+
         }
     }
 }

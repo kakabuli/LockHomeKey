@@ -1,4 +1,4 @@
-package com.kaadas.lock.activity.device.bluetooth.fingerprint;
+package com.kaadas.lock.activity.device.bluetooth.card;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.kaadas.lock.R;
-import com.kaadas.lock.adapter.FingerprintManagerAdapter;
+import com.kaadas.lock.adapter.DoorCardManagerAdapter;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.publiclibrary.http.result.GetPasswordResult;
 import com.kaadas.lock.utils.KeyConstants;
@@ -28,7 +28,7 @@ import butterknife.ButterKnife;
 /**
  * Created by David
  */
-public class FingerprintManagerActivity extends AppCompatActivity
+public class DoorCardManagerActivity extends AppCompatActivity
         implements BaseQuickAdapter.OnItemClickListener, View.OnClickListener {
     @BindView(R.id.iv_back)
     ImageView ivBack;//返回
@@ -37,7 +37,7 @@ public class FingerprintManagerActivity extends AppCompatActivity
 
     @BindView(R.id.recycleview)
     RecyclerView recycleview;
-    FingerprintManagerAdapter fingerprintManagerAdapter;
+    DoorCardManagerAdapter doorCardManagerAdapter;
     boolean isNotPassword = true;
     @BindView(R.id.tv_synchronized_record)
     TextView tvSynchronizedRecord;
@@ -47,32 +47,31 @@ public class FingerprintManagerActivity extends AppCompatActivity
     LinearLayout llHasData;
     @BindView(R.id.tv_no_user)
     TextView tvNoUser;
-    List<GetPasswordResult.DataBean.Fingerprint> list = new ArrayList<>();
-    ;
+    List<GetPasswordResult.DataBean.Card> list = new ArrayList<>();
     private BleLockInfo bleLockInfo;
-    private boolean isSync = false; //是不是正在同步锁中的指纹
+    private boolean isSync = false;
 
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_fingerprint_manager);
+        setContentView(R.layout.activity_door_card_manager);
         ButterKnife.bind(this);
-        tvContent.setText(getString(R.string.fingerprint));
+        tvContent.setText(getString(R.string.door_card));
         ivBack.setOnClickListener(this);
         tvSynchronizedRecord.setOnClickListener(this);
         llAddPassword.setOnClickListener(this);
         pageChange();
         initRecycleview();
-        list.add(new GetPasswordResult.DataBean.Fingerprint("fff", "fff", 1));
+        list.add(new GetPasswordResult.DataBean.Card("fff", "fff", 1));
         initData();
     }
 
     private void initRecycleview() {
-        fingerprintManagerAdapter = new FingerprintManagerAdapter(list, R.layout.item_fingerprint_manager);
+        doorCardManagerAdapter = new DoorCardManagerAdapter(list, R.layout.item_fingerprint_manager);
         recycleview.setLayoutManager(new LinearLayoutManager(this));
-        recycleview.setAdapter(fingerprintManagerAdapter);
-        fingerprintManagerAdapter.setOnItemClickListener(this);
+        recycleview.setAdapter(doorCardManagerAdapter);
+        doorCardManagerAdapter.setOnItemClickListener(this);
     }
 
 
@@ -83,10 +82,10 @@ public class FingerprintManagerActivity extends AppCompatActivity
 
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-        Intent intent = new Intent(this, FingerprintLinkBluetoothActivity.class);
+   /*     Intent intent = new Intent(this, DoorCardDetailActivity.class);
         intent.putExtra(KeyConstants.BLE_DEVICE_INFO, bleLockInfo);
-        intent.putExtra(KeyConstants.PASSWORD_NICK, list.get(position));
-        startActivity(intent);
+        intent.putExtra(KeyConstants.TO_PWD_DETAIL, showList.get(position));
+        startActivity(intent);*/
     }
 
     public void pageChange() {
@@ -108,7 +107,9 @@ public class FingerprintManagerActivity extends AppCompatActivity
                 finish();
                 break;
             case R.id.ll_add_password:
-                intent = new Intent(this, FingerprintLinkBluetoothActivity.class);
+//                intent = new Intent(this, DoorCardNearDoorActivity.class);
+                intent = new Intent(this, DoorCardConnectFailActivity.class);
+//                intent = new Intent(this, DoorCardConnectSuccessActivity.class);
                 intent.putExtra(KeyConstants.BLE_DEVICE_INFO, bleLockInfo);
                 startActivity(intent);
                 break;
@@ -130,6 +131,6 @@ public class FingerprintManagerActivity extends AppCompatActivity
             isNotPassword = true;
         }
         pageChange();
-        fingerprintManagerAdapter.notifyDataSetChanged();
+        doorCardManagerAdapter.notifyDataSetChanged();
     }
 }

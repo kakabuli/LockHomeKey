@@ -38,7 +38,7 @@ public class PasswordPeriodFragment extends Fragment implements BaseQuickAdapter
     @BindView(R.id.et_name)
     EditText etName;
     List<ShiXiaoNameBean> list = new ArrayList<>();
-    ShiXiaoNameAdapter ShiXiaoNameAdapter;
+    ShiXiaoNameAdapter shiXiaoNameAdapter;
     View mView;
     @BindView(R.id.ll_rule_repeat)
     LinearLayout llRuleRepeat;
@@ -68,10 +68,10 @@ public class PasswordPeriodFragment extends Fragment implements BaseQuickAdapter
         list.add(new ShiXiaoNameBean(getString(R.string.rests), false));
 
 
-        ShiXiaoNameAdapter = new ShiXiaoNameAdapter(list);
+        shiXiaoNameAdapter = new ShiXiaoNameAdapter(list);
         recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 6));
-        recyclerView.setAdapter(ShiXiaoNameAdapter);
-        ShiXiaoNameAdapter.setOnItemClickListener(this);
+        recyclerView.setAdapter(shiXiaoNameAdapter);
+        shiXiaoNameAdapter.setOnItemClickListener(this);
     }
 
     @Override
@@ -84,7 +84,7 @@ public class PasswordPeriodFragment extends Fragment implements BaseQuickAdapter
         etName.setText(name);
         etName.setSelection(name.length());
         list.get(position).setSelected(true);
-        ShiXiaoNameAdapter.notifyDataSetChanged();
+        shiXiaoNameAdapter.notifyDataSetChanged();
     }
 
     @Override

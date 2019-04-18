@@ -1,15 +1,16 @@
-package com.kaadas.lock.fragment;
+package com.kaadas.lock.activity.device.bluetooth.fingerprint;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.kaadas.lock.R;
@@ -22,30 +23,34 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-
 /**
- * Created by David
+ * Created by David on 2019/4/18
  */
-
-public class PasswordTemporaryFragment extends Fragment implements BaseQuickAdapter.OnItemClickListener {
-    @BindView(R.id.recycleview)
-    RecyclerView recyclerView;
+public class FingerprintCollectionSuccessActivity extends AppCompatActivity implements View.OnClickListener, BaseQuickAdapter.OnItemClickListener {
+    @BindView(R.id.iv_back)
+    ImageView ivBack;
+    @BindView(R.id.tv_content)
+    TextView tvContent;
+    @BindView(R.id.iv_right)
+    ImageView ivRight;
     @BindView(R.id.et_name)
     EditText etName;
+    @BindView(R.id.recycleview)
+    RecyclerView recycleview;
+    @BindView(R.id.btn_save)
+    Button btnSave;
     List<ShiXiaoNameBean> list = new ArrayList<>();
     ShiXiaoNameAdapter shiXiaoNameAdapter;
-    View mView;
 
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        if (mView == null) {
-            mView = inflater.inflate(R.layout.fragment_password_temporary, container, false);
-        }
-        ButterKnife.bind(this, mView);
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_fingerprint_collection_success);
+        ButterKnife.bind(this);
+        ivBack.setOnClickListener(this);
+        btnSave.setOnClickListener(this);
+        tvContent.setText(R.string.add_fingerprint);
         initRecycleview();
-        return mView;
-
     }
 
     private void initRecycleview() {
@@ -58,9 +63,23 @@ public class PasswordTemporaryFragment extends Fragment implements BaseQuickAdap
 
 
         shiXiaoNameAdapter = new ShiXiaoNameAdapter(list);
-        recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 6));
-        recyclerView.setAdapter(shiXiaoNameAdapter);
+        recycleview.setLayoutManager(new GridLayoutManager(this, 6));
+        recycleview.setAdapter(shiXiaoNameAdapter);
         shiXiaoNameAdapter.setOnItemClickListener(this);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.iv_back:
+                finish();
+                break;
+            case R.id.btn_save:
+                Intent intent = new Intent(this, FingerprintManagerActivity.class);
+                startActivity(intent);
+                finish();
+                break;
+        }
     }
 
     @Override

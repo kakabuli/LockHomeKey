@@ -1,4 +1,4 @@
-package com.kaadas.lock.activity.device.bluetooth.fingerprint;
+package com.kaadas.lock.activity.device.bluetooth.card;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,26 +15,27 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
- * Created by David on 2019/4/17
+ * Created by David on 2019/4/18
  */
-public class FingerprintLinkBluetoothActivity extends AppCompatActivity implements View.OnClickListener {
+public class DoorCardConnectSuccessActivity extends AppCompatActivity implements View.OnClickListener {
     @BindView(R.id.iv_back)
     ImageView ivBack;
     @BindView(R.id.tv_content)
     TextView tvContent;
     @BindView(R.id.iv_right)
     ImageView ivRight;
-    @BindView(R.id.btn_confirm_generation)
-    Button btnConfirmGeneration;
+    @BindView(R.id.btn)
+    Button btn;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_fingerprint_link_bluetooth);
+        setContentView(R.layout.activity_door_card_connect_success);
         ButterKnife.bind(this);
         ivBack.setOnClickListener(this);
-        tvContent.setText(R.string.add_fingerprint);
-        btnConfirmGeneration.setOnClickListener(this);
+        tvContent.setText(R.string.add_door_card);
+        btn.setOnClickListener(this);
     }
 
     @Override
@@ -43,10 +44,9 @@ public class FingerprintLinkBluetoothActivity extends AppCompatActivity implemen
             case R.id.iv_back:
                 finish();
                 break;
-            case R.id.btn_confirm_generation:
-//                Intent intent=new Intent(this,FingerprintCollectionActivity.class);
-                Intent intent = new Intent(this, FingerprintNoConnectBluetoothOneActivity.class);
-//                Intent intent = new Intent(this, FingerprintCollectionSuccessActivity.class);
+            case R.id.btn:
+//                Intent intent=new Intent(this,DoorCardIdentificationActivity.class);
+                Intent intent = new Intent(this, DoorCardAddSuccessActivity.class);
                 startActivity(intent);
                 finish();
                 break;
