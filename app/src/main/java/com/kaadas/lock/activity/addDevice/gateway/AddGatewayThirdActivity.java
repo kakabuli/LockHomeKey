@@ -1,26 +1,22 @@
 package com.kaadas.lock.activity.addDevice.gateway;
 
 import android.content.Intent;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
-import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
-import com.kaadas.lock.activity.addDevice.DeviceZigBeeDetailActivity;
 import com.kaadas.lock.base.mvpbase.BaseActivity;
 import com.kaadas.lock.presenter.deviceaddpresenter.GatewayBindPresenter;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttService;
-import com.kaadas.lock.publiclibrary.mqtt.util.MqttUrlConstant;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.NetUtil;
 import com.kaadas.lock.utils.ToastUtil;
+import com.kaadas.lock.view.deviceaddview.DeviceGatewayBindListView;
 import com.kaadas.lock.view.deviceaddview.GatewayBindView;
 
 import butterknife.BindView;
@@ -75,7 +71,7 @@ public class AddGatewayThirdActivity extends BaseActivity<GatewayBindView, Gatew
                 finish();
                 break;
             case R.id.cancel_bind:
-                Intent cancelBind = new Intent(this, DeviceZigBeeDetailActivity.class);
+                Intent cancelBind = new Intent(this, DeviceGatewayBindListView.class);
                 startActivity(cancelBind);
                 finish();
                 break;

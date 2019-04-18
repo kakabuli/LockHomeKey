@@ -3,6 +3,7 @@ package com.kaadas.lock;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.functions.Consumer;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
@@ -19,10 +20,13 @@ import com.kaadas.lock.fragment.DeviceFragment;
 import com.kaadas.lock.fragment.HomePageFragment;
 import com.kaadas.lock.fragment.MyFragment;
 import com.kaadas.lock.fragment.PersonalCenterFragment;
+import com.kaadas.lock.presenter.MainPresenter;
+import com.kaadas.lock.publiclibrary.mqtt.util.MqttData;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.PermissionUtil;
+import com.kaadas.lock.view.IMainView;
 
-public class MainActivity extends BaseActivity<IBaseView,BasePresenter<IBaseView>> implements RadioGroup.OnCheckedChangeListener,IBaseView {
+public class MainActivity extends BaseActivity<IMainView, MainPresenter<IMainView>> implements RadioGroup.OnCheckedChangeListener,IBaseView {
     @BindView(R.id.rb_one)
     RadioButton rbOne;
     @BindView(R.id.rb_two)
@@ -42,19 +46,20 @@ public class MainActivity extends BaseActivity<IBaseView,BasePresenter<IBaseView
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        super.onCreate(savedInstanceState);
         ButterKnife.bind(this);
         PermissionUtil.getInstance().requestPermission(PermissionUtil.getInstance().permission,this);
         rg.setOnCheckedChangeListener(this);
         initFragment();
         LogUtils.e("attachView  " + ( MyApplication.getInstance().getMqttService() == null));
-        MyApplication.getInstance().getMqttService().mqttConnection();
+        mPresenter.getPublishNotify();
+        MyApplication.getInstance().getMqttService().mqttConnection();//连接mqtt
     }
 
     @Override
-    protected BasePresenter createPresent() {
-        return new BasePresenter();
+    protected MainPresenter<IMainView> createPresent() {
+        return new MainPresenter<>();
     }
 
     private void initFragment() {

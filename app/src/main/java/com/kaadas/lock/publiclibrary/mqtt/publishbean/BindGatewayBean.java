@@ -11,25 +11,11 @@ public class BindGatewayBean extends BaseBean{
      * uid : 5902aca835736f21ae1e7a82
      */
 
-    private String func;
     private String devuuid;
-    private String uid;
 
-    public BindGatewayBean(String func, String devuuid, String uid) {
-        this.func = func;
+    public BindGatewayBean(String uid, String func, String devuuid) {
+        super(uid, func);
         this.devuuid = devuuid;
-        this.uid = uid;
-    }
-
-    public BindGatewayBean() {
-    }
-
-    public String getFunc() {
-        return func;
-    }
-
-    public void setFunc(String func) {
-        this.func = func;
     }
 
     public String getDevuuid() {
@@ -40,11 +26,5 @@ public class BindGatewayBean extends BaseBean{
         this.devuuid = devuuid;
     }
 
-    public String getUid() {
-        return uid;
-    }
 
-    public void setUid(String uid) {
-        this.uid = uid;
-    }
 }
