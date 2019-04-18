@@ -1,28 +1,26 @@
 package com.kaadas.lock.activity.addDevice.bluetooth;
 
+import android.animation.ObjectAnimator;
+import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
+import android.graphics.Path;
+import android.graphics.RectF;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.view.animation.LinearInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
-import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.addDevice.DeviceAddHelpActivity;
-import com.kaadas.lock.adapter.DeviceAddItemAdapter;
 import com.kaadas.lock.adapter.DeviceSearchAdapter;
 import com.kaadas.lock.adapter.inf.OnBindClickListener;
 import com.kaadas.lock.utils.AlertDialogUtil;
@@ -49,23 +47,32 @@ public class AddBluetoothSearchActivity extends AppCompatActivity implements OnB
     Button research;
     @BindView(R.id.device_add_search)
     ImageView deviceAddSearch;
+    @BindView(R.id.tv_is_searching)
+    TextView tvIsSearching;
 
     private Animation operatingAnim;
     private DeviceSearchAdapter deviceSearchAdapter;
 
     private TranslateAnimation translateAnimation;
     private DividerItemDecoration dividerItemDecoration;
-    private List<String> mList;
+    private List<BluetoothDevice> mList;
+    private ObjectAnimator traslateAnimator;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.device_bluetooth_search);
         ButterKnife.bind(this);
-        initAnimation();
+
         initView();
         initData();
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+//        initAnimation();
     }
 
     private void initView() {
@@ -74,24 +81,26 @@ public class AddBluetoothSearchActivity extends AppCompatActivity implements OnB
         searchRecycler.addItemDecoration(dividerItemDecoration);
 
     }
+
     //当有搜索到蓝牙设备时，显示recycler和重新搜索按钮。
-    private void showRecycler(Boolean flag){
-        if (flag){
+    private void showRecycler(Boolean flag) {
+        if (flag) {
             recyclerLayout.setVisibility(View.VISIBLE);
             research.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             recyclerLayout.setVisibility(View.GONE);
             research.setVisibility(View.GONE);
         }
     }
 
     //当没有搜索到蓝牙设备时，显示对话框。
-    private void showDialog(Boolean isNoData){
-        if (isNoData){
+    private void showDialog(Boolean isNoData) {
+        if (isNoData) {
             AlertDialogUtil.getInstance().noEditTitleTwoButtonDialog(this, getResources().getString(R.string.no_find_connect_device), getResources().getString(R.string.cancel), getResources().getString(R.string.rescan), new AlertDialogUtil.ClickListener() {
                 @Override
                 public void left() {
                 }
+
                 @Override
                 public void right() {
                     //重新搜索设备
@@ -102,28 +111,22 @@ public class AddBluetoothSearchActivity extends AppCompatActivity implements OnB
 
 
     private void initAnimation() {
-        operatingAnim = AnimationUtils.loadAnimation(this, R.anim.device_search);
-        LinearInterpolator lin = new LinearInterpolator();
-        operatingAnim.setInterpolator(lin);
-        startAnimation();
-
+        Path path = new Path();
+        RectF rectF = new RectF(deviceAddSearch.getLeft(), deviceAddSearch.getTop(), deviceAddSearch.getRight(), deviceAddSearch.getBottom());
+        path.addOval(rectF, Path.Direction.CW);
+        traslateAnimator = ObjectAnimator.ofFloat(deviceAddSearch, "x", "y", path);
+        traslateAnimator.start();
     }
 
 
     private void initData() {
-            mList=new ArrayList<>();
-            mList.add("XK113213");
-            mList.add("XK113213");
-            mList.add("XK113213");
-            mList.add("XK113213");
-            mList.add("XK113213");
-            mList.add("XK113213");
-            deviceSearchAdapter=new DeviceSearchAdapter(mList);
-            searchRecycler.setAdapter(deviceSearchAdapter);
-            showRecycler(true);
-            if (deviceSearchAdapter!=null){
-                deviceSearchAdapter.setBindClickListener(this);
-            }
+        mList = new ArrayList<>();
+        deviceSearchAdapter = new DeviceSearchAdapter(mList);
+        searchRecycler.setAdapter(deviceSearchAdapter);
+        showRecycler(true);
+        if (deviceSearchAdapter != null) {
+            deviceSearchAdapter.setBindClickListener(this);
+        }
 
     }
 
@@ -157,14 +160,19 @@ public class AddBluetoothSearchActivity extends AppCompatActivity implements OnB
                 startActivity(helpIntent);
                 break;
             case R.id.research:
+                initAnimation();
+
+
                 break;
         }
     }
 
 
     @Override
-    public void onItemClickListener(View view,int position) {
-        Intent secondIntent=new Intent(this,AddBluetoothSecondActivity.class);
+    public void onItemClickListener(View view, int position,BluetoothDevice device) {
+        //添加设备
+
+        Intent secondIntent = new Intent(this, AddBluetoothSecondActivity.class);
         startActivity(secondIntent);
     }
 }
