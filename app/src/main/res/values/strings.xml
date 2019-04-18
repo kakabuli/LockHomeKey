@@ -525,4 +525,8 @@
     <string name="connect_fail">连接失败</string>
     <string name="connect_success">连接成功</string>
     <string name="door_card_identification_hint">将门卡靠近识别区直到嘀一声添加成功</string>
+    <string name="door_card_no_connect_two_hint">按照语音提示,点击对应数字选项,进入门卡添加</string>
+    <string name="door_card_detail">门卡详情</string>
+    <string name="fingerprint_detail">指纹详情</string>
+    <string name="user_password">用户密码</string>
 </resources>

@@ -43,8 +43,8 @@ public class DoorCardNoConnectOneActivity extends AppCompatActivity implements V
                 finish();
                 break;
             case R.id.btn_next_step:
-//                Intent intent = new Intent(this, FingerprintNoConnectBluetoothTwoActivity.class);
-//                startActivity(intent);
+                Intent intent = new Intent(this, DoorCardNoConnectTwoActivity.class);
+                startActivity(intent);
                 break;
         }
     }

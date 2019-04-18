@@ -83,7 +83,7 @@ public class FingerprintManagerActivity extends AppCompatActivity
 
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-        Intent intent = new Intent(this, FingerprintLinkBluetoothActivity.class);
+        Intent intent = new Intent(this, FingerprintManagerDetailActivity.class);
         intent.putExtra(KeyConstants.BLE_DEVICE_INFO, bleLockInfo);
         intent.putExtra(KeyConstants.PASSWORD_NICK, list.get(position));
         startActivity(intent);

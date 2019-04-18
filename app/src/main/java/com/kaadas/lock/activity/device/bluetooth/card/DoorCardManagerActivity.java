@@ -82,10 +82,10 @@ public class DoorCardManagerActivity extends AppCompatActivity
 
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-   /*     Intent intent = new Intent(this, DoorCardDetailActivity.class);
+        Intent intent = new Intent(this, DoorCardManagerDetailActivity.class);
         intent.putExtra(KeyConstants.BLE_DEVICE_INFO, bleLockInfo);
-        intent.putExtra(KeyConstants.TO_PWD_DETAIL, showList.get(position));
-        startActivity(intent);*/
+        intent.putExtra(KeyConstants.TO_PWD_DETAIL, list.get(position));
+        startActivity(intent);
     }
 
     public void pageChange() {

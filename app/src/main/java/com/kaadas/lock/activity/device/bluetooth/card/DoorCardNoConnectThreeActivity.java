@@ -1,5 +1,6 @@
-package com.kaadas.lock.activity.device.bluetooth.fingerprint;
+package com.kaadas.lock.activity.device.bluetooth.card;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -14,39 +15,38 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
- * Created by David
+ * Created by David on 2019/4/18
  */
-public class FingerprintManagerDetailActivity extends AppCompatActivity implements View.OnClickListener {
-
-
+public class DoorCardNoConnectThreeActivity extends AppCompatActivity implements View.OnClickListener {
     @BindView(R.id.iv_back)
     ImageView ivBack;
     @BindView(R.id.tv_content)
     TextView tvContent;
-    @BindView(R.id.tv_number)
-    TextView tvNumber;
-    @BindView(R.id.btn_delete)
-    Button btnDelete;
-    @BindView(R.id.tv_name)
-    TextView tvName;
-    @BindView(R.id.iv_editor)
-    ImageView ivEditor;
-    @BindView(R.id.tv_time)
-    TextView tvTime;
+    @BindView(R.id.iv_right)
+    ImageView ivRight;
+    @BindView(R.id.btn_finish)
+    Button btnFinish;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_fingerprint_manager_detail);
+        setContentView(R.layout.activity_door_card_no_connect_three);
         ButterKnife.bind(this);
         ivBack.setOnClickListener(this);
-        tvContent.setText(getString(R.string.fingerprint_detail));
+        btnFinish.setOnClickListener(this);
+        tvContent.setText(R.string.add_door_card);
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.iv_back:
+                finish();
+                break;
+            case R.id.btn_finish:
+                Intent intent = new Intent(this, DoorCardManagerActivity.class);
+                startActivity(intent);
                 finish();
                 break;
         }

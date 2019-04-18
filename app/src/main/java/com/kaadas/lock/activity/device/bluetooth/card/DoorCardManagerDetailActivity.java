@@ -1,4 +1,4 @@
-package com.kaadas.lock.activity.device.bluetooth.fingerprint;
+package com.kaadas.lock.activity.device.bluetooth.card;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -16,7 +16,7 @@ import butterknife.ButterKnife;
 /**
  * Created by David
  */
-public class FingerprintManagerDetailActivity extends AppCompatActivity implements View.OnClickListener {
+public class DoorCardManagerDetailActivity extends AppCompatActivity implements View.OnClickListener {
 
 
     @BindView(R.id.iv_back)
@@ -37,16 +37,17 @@ public class FingerprintManagerDetailActivity extends AppCompatActivity implemen
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_fingerprint_manager_detail);
+        setContentView(R.layout.activity_door_card_manager_detail);
         ButterKnife.bind(this);
         ivBack.setOnClickListener(this);
-        tvContent.setText(getString(R.string.fingerprint_detail));
+        tvContent.setText(getString(R.string.door_card_detail));
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.iv_back:
+
                 finish();
                 break;
         }
