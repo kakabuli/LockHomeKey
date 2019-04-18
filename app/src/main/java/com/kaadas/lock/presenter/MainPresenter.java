@@ -3,7 +3,6 @@ package com.kaadas.lock.presenter;
 import com.google.gson.Gson;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.base.mvpbase.BasePresenter;
-import com.kaadas.lock.publiclibrary.mqtt.inf.NotifyListener;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.GetBindGatewayStatusResult;
 import com.kaadas.lock.publiclibrary.mqtt.publishutil.PublishFucConstant;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttData;

@@ -3,8 +3,6 @@ package com.kaadas.lock.presenter.deviceaddpresenter;
 import com.google.gson.Gson;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.base.mvpbase.BasePresenter;
-import com.kaadas.lock.publiclibrary.http.util.RxjavaHelper;
-import com.kaadas.lock.publiclibrary.mqtt.inf.NotifyListener;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.BaseBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.GetBindGatewayListResult;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.GetBindGatewayStatusResult;
