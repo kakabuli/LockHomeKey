@@ -3,12 +3,12 @@ package com.kaadas.lock.bean;
 import java.io.Serializable;
 
 public class MyMessageBean implements Serializable {
-
     private String headPortrait;
     private String title;
     private Long time;
     private String content;
     private String id;
+
 
     public MyMessageBean(String headPortrait, String title, Long time, String content, String id, int type) {
         this.headPortrait = headPortrait;
