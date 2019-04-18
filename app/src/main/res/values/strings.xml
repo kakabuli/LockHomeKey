@@ -521,4 +521,23 @@
     <string name="bluetooth_no_connect_bluetooth_two_hint">按照语音提示,点击对应数字选项,进入指纹添加</string>
     <string name="bluetooth_no_connect_bluetooth_three_hint">请找到门锁指纹采集位置,按照语音提示将要手指触摸进行采集</string>
     <string name="next_step">下一步</string>
+
+    <string name="warring_lock">错误验证多次，门锁系统锁定5分钟</string>
+    <string name="warring_three_times">三次错误报警</string>
+    <string name="warring_broken">防撬报警</string>
+    <string name="warring_mechanical_key">机械钥匙报警</string>
+    <string name="warring_low_power">低电量报警</string>
+    <string name="warring_door_not_lock">门锁不上报警</string>
+    <string name="warring_arm">门锁布防报警</string>
+    <string name="warrign_hijack">劫持报警</string>
+    <string name="warring_unkonw">未知警报</string>
+    <string name="warring_defence">布防报警</string>
+    <string name="warring_temp_exception">锁具温度异常</string>
+    <string name="warring_force">发生胁迫事件</string>
+    <string name="warring_reset">恢复出厂设置</string>
+    <string name="warring_force_open">发生暴力开锁</string>
+    <string name="warring_key_remain">钥匙遗落在锁上</string>
+    <string name="warring_safe">发生安全模式</string>
+    <string name="warring_unlock">未完全上锁</string>
+    <string name="open_door_fail_many_time">您的智能锁已多次验证开门失败，请回家或联系保安查看</string>
 </resources>
