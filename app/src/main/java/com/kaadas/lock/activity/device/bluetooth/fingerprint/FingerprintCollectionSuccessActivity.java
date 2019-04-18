@@ -26,6 +26,7 @@ import butterknife.ButterKnife;
 /**
  * Created by David on 2019/4/18
  */
+//TODO 这个不用
 public class FingerprintCollectionSuccessActivity extends AppCompatActivity implements View.OnClickListener, BaseQuickAdapter.OnItemClickListener {
     @BindView(R.id.iv_back)
     ImageView ivBack;

@@ -219,6 +219,7 @@ public class StringUtil {
         boolean isRight = isDigit && str.matches(regex);
         return isRight;
     }
+
     /**
      * 判断名称为不为null,不为空,长度小于16位
      * true 符合约束条件
@@ -238,6 +239,7 @@ public class StringUtil {
         }
         return true;
     }
+
     /**
      * 检查密码是否简单
      * true 密码简单
@@ -276,20 +278,34 @@ public class StringUtil {
         }
         return false;
     }
+
     /**
      * 判断特殊字符
-     * */
+     */
     public static boolean judgeSpecialCharacter(String data) {
         String regEx = "[ _`~!@#$%^&*()+=|{}':;',\\[\\].<>/?~！@#￥%……&*（）——+|{}【】‘；：”“’。，、？]|\n|\r|\t";
         Pattern p = Pattern.compile(regEx);
         Matcher m = p.matcher(data);
         if (m.find()) {
             return true;
-        }else {
+        } else {
             return false;
         }
 
     }
+
+    /**
+     * 判断修改的昵称是否和之前的相同
+     */
+    public static boolean judgeNicknameWhetherSame(String originalNickname, String currentNickanme) {
+        if (originalNickname != null) {
+            if (currentNickanme.equals(originalNickname)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static String getEdittextContent(EditText et) {
         return et.getText().toString().trim();
     }

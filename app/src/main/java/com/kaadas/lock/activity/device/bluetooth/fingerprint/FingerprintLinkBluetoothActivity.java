@@ -45,8 +45,8 @@ public class FingerprintLinkBluetoothActivity extends AppCompatActivity implemen
                 break;
             case R.id.btn_confirm_generation:
 //                Intent intent=new Intent(this,FingerprintCollectionActivity.class);
-                Intent intent = new Intent(this, FingerprintNoConnectBluetoothOneActivity.class);
-//                Intent intent = new Intent(this, FingerprintCollectionSuccessActivity.class);
+//                Intent intent = new Intent(this, FingerprintNoConnectBluetoothOneActivity.class);
+                Intent intent = new Intent(this, AddFingerprintSuccessActivity.class);
                 startActivity(intent);
                 finish();
                 break;

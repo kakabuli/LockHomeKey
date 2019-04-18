@@ -29,7 +29,7 @@
     <string name="dialog_confirm">确认</string>
     <string name="safe_mode_dialog">请去新增开锁方式，启动安全模式</string>
     <string name="cancel">取消</string>
-    <string name="query">确定</string>
+    <string name="query">确认</string>
     <string name="get_verification_content">重新获取(%1$s)</string>
     <string name="verification_verify_error">请输入六位验证码</string>
     <string name="password_judgment">必须同时存在字母和数字,并且在6-12位</string>
@@ -548,4 +548,12 @@
     <string name="door_card_detail">门卡详情</string>
     <string name="fingerprint_detail">指纹详情</string>
     <string name="user_password">用户密码</string>
+    <string name="input_door_card_name">请输入门卡名称</string>
+    <string name="nickname_not_modify">昵称未修改</string>
+    <string name="is_savving">正在保存</string>
+    <string name="please_have_net_add_card">请在有网络情况下添加卡片！</string>
+    <string name="confirm_delete_door_card">确定删除门卡吗？</string>
+    <string name="please_add_finger">请在有网络情况下添加指纹！</string>
+    <string name="save_failed">保存失败</string>
+    <string name="confirm_delete_fingerprint">确定删除指纹吗？</string>
 </resources>
