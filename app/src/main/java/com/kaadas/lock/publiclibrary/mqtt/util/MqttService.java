@@ -9,6 +9,7 @@ import android.text.TextUtils;
 
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
+import com.kaadas.lock.publiclibrary.mqtt.publishutil.PublishFucConstant;
 import com.kaadas.lock.publiclibrary.mqtt.publishutil.PublishResult;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.NetUtil;
@@ -27,6 +28,7 @@ import org.json.JSONObject;
 
 import io.reactivex.Observable;
 import io.reactivex.subjects.PublishSubject;
+import io.reactivex.subjects.ReplaySubject;
 
 public class MqttService extends Service {
 
@@ -46,6 +48,11 @@ public class MqttService extends Service {
     private PublishSubject<Boolean> connectStateObservable = PublishSubject.create();
     private PublishSubject<PublishResult> publishObservable = PublishSubject.create();
     private PublishSubject<Boolean> disconnectObservable = PublishSubject.create();
+    private PublishSubject<MqttData> notifyDataObservable=PublishSubject.create();
+
+
+
+
 
     /**
      * 订阅状态
@@ -64,6 +71,11 @@ public class MqttService extends Service {
     public Observable<MqttData> listenerDataBack() {
         return onReceiverDataObservable;
     }
+
+    public Observable<MqttData> listenerNotifyData(){
+        return  notifyDataObservable;
+    }
+
 
 
     @Override
@@ -176,11 +188,15 @@ public class MqttService extends Service {
             public void messageArrived(String topic, MqttMessage message) throws Exception {
                 //收到消息
                 String payload = new String(message.getPayload());
-                LogUtils.e("messageArrived", payload + "---topic" + topic + "  messageID  "+message.getId());
+                LogUtils.e("收到mqtt消息", payload + "---topic" + topic + "  messageID  "+message.getId());
                 //String func, String topic, String payload, MqttMessage mqttMessage
                 JSONObject jsonObject = new JSONObject(payload);
                 MqttData mqttData = new MqttData(jsonObject.getString("func"),topic,payload,message);
-               onReceiverDataObservable.onNext(mqttData);
+                //200毫秒后获取数据
+                onReceiverDataObservable.onNext(mqttData);
+                if (PublishFucConstant.GATEWAY_STATE.equals(mqttData.getFunc())){
+                    notifyDataObservable.onNext(mqttData);
+                }
             }
 
             @Override
@@ -274,6 +290,14 @@ public class MqttService extends Service {
             ex.printStackTrace();
         }
     }
+
+
+    //发布
+    public Observable<MqttData> mqttPublishListener( ) {
+
+        return notifyDataObservable;
+    }
+
 
     //发布
     public Observable<PublishResult> mqttPublish(String topic, MqttMessage mqttMessage) {

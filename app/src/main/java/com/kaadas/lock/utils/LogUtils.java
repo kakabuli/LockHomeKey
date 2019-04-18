@@ -33,7 +33,7 @@ public class LogUtils {
 	/**
 	 * 日志输出时的TAG
 	 */
-	private static String mTag = "-小凯-";
+	private static String mTag = "-凯迪仕-";
 //    private static String mTag = "---交易---";
 	/**
 	 * 是否允许输出log 的级别

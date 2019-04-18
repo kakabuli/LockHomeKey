@@ -30,6 +30,9 @@ public class BleLockInfo implements Serializable {
     private int doorState = -1; //门状态   0 lock  1 unlock
     private int backLock = -1; //反锁（独立锁舌）状态 0 lock 1 unlock
     private long readDeviceInfoTime = -1;  //读取锁信息的时间
+    private int adminMode = -1;
+    private long readBatteryTime = -1;
+    private int supportBackLock = -1;
 
     public String getSerialNumber() {
         return SerialNumber;
@@ -47,8 +50,17 @@ public class BleLockInfo implements Serializable {
         battery = -1; //-1为吗，没有获取到电量信息
         isAuth = false; //是否鉴权
         authKey = null;  //是否鉴权
-        isNew = false;  //是不是新模块
-        notNeedPwd = false; //是不是需要密码  新模块才有可能不需要密码
+        voice = -1;  // 音量   默认值为-1  表示没有获取到   0表示静音，非0表示不是静音
+        safeMode = -1; //安全模式  0不启用或不支持   1已启动
+        armMode = -1;  //布防模式 0不启用或不支持   1已启动
+        lang = null;   //语言设置   zh 中文   en  英语
+        autoMode = -1; // 手动自动模式  0手动  1自动
+        doorState = -1; //门状态   0 lock  1 unlock
+        backLock = -1; //反锁（独立锁舌）状态 0 lock 1 unlock
+        readDeviceInfoTime = -1;  //读取锁信息的时间
+        adminMode = -1;
+        readBatteryTime = -1;
+        supportBackLock = -1;
     }
 
     private ServerDevice serverLockInfo;
@@ -65,6 +77,14 @@ public class BleLockInfo implements Serializable {
         this.serverLockInfo = serverLockInfo;
     }
 
+
+    public int getSupportBackLock() {
+        return supportBackLock;
+    }
+
+    public void setSupportBackLock(int supportBackLock) {
+        this.supportBackLock = supportBackLock;
+    }
 
     public boolean isConnected() {
         return isConnected;
@@ -93,6 +113,14 @@ public class BleLockInfo implements Serializable {
 
     }
 
+
+    public int getAdminMode() {
+        return adminMode;
+    }
+
+    public void setAdminMode(int adminMode) {
+        this.adminMode = adminMode;
+    }
 
     public byte[] getAuthKey() {
         return authKey;
@@ -233,6 +261,13 @@ public class BleLockInfo implements Serializable {
         this.readDeviceInfoTime = readDeviceInfoTime;
     }
 
+    public long getReadBatteryTime() {
+        return readBatteryTime;
+    }
+
+    public void setReadBatteryTime(long readBatteryTime) {
+        this.readBatteryTime = readBatteryTime;
+    }
 
     @Override
     public String toString() {

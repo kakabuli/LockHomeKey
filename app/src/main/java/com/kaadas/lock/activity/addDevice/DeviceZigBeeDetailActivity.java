@@ -12,7 +12,7 @@ import android.widget.ImageView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.addDevice.gateway.AddGatewayFirstActivity;
-import com.kaadas.lock.activity.addDevice.zigbee.ZigbeeBindGatewayDetailActivity;
+import com.kaadas.lock.activity.addDevice.zigbee.DeviceBindGatewayListActivity;
 import com.kaadas.lock.adapter.ZigbeeDetailAdapter;
 import com.kaadas.lock.bean.deviceAdd.AddZigbeeDetailItemBean;
 import com.kaadas.lock.utils.AlertDialogUtil;
@@ -91,7 +91,7 @@ public class DeviceZigBeeDetailActivity extends AppCompatActivity implements Bas
             Boolean flag=getBindGatewayList();
             if (flag){
                 //跳转到网关列表
-                Intent zigbeeIntent=new Intent(this, ZigbeeBindGatewayDetailActivity.class);
+                Intent zigbeeIntent=new Intent(this, DeviceBindGatewayListActivity.class);
                 int type=detailItemBean.getType();
                 zigbeeIntent.putExtra("type",type);
                 startActivity(zigbeeIntent);

@@ -57,6 +57,7 @@
             android:src="@mipmap/search_bluetooth"
             />
         <TextView
+            android:id="@+id/tv_is_searching"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dp_35"
