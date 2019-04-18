@@ -177,14 +177,40 @@ public class KeyConstants {
      * 消息详情时间
      */
     public static final String MESSAGE_DETAIL_TIME = "message_detail_TIME";
+    /**
+     * 引导页
+     */
+    public static final String SHOW_GUIDE_PAGE = "show_guide_page";
+
+    //消息免打扰状态
+    public static final String MESSAGE_FREE_STATUS = "message_free_status";
+
+    //A-M  自动上锁
+    public static final String AM_AUTO_LOCK_STATUS = "am_auto_lock_status";
+
+    //静音模式
+    public static final String SILENT_MODE_STATUS = "silent_mode_status";
+
+    //安全模式
+    public static final String SAFE_MODE_STATUS = "safe_mode_status";
+
+    //手势密码
+    public static final String HAND_PASSWORD = "hand_password";
+
+
+    //Touch ID
+    public static final String TOUCH_ID = "touch_id";
+
     //开锁
     //已反锁
     //正在开锁
     //开锁成功
     //开锁失败
+    //设备离线
     public static final int OPEN_LOCK = 0;
     public static final int HAS_BEEN_LOCKED = 1;
     public static final int IS_LOCKING = 2;
     public static final int OPEN_LOCK_SUCCESS = 3;
     public static final int OPEN_LOCK_FAILED = 4;
+    public static final int DEVICE_OFFLINE = 5;
 }

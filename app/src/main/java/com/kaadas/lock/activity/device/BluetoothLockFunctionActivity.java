@@ -10,7 +10,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.kaadas.lock.R;
+import com.kaadas.lock.activity.device.bluetooth.BluetoothMoreActivity;
 import com.kaadas.lock.activity.device.bluetooth.BluetoothSharedDeviceManagementActivity;
+import com.kaadas.lock.activity.device.bluetooth.fingerprint.FingerprintManagerActivity;
+import com.kaadas.lock.activity.device.bluetooth.password.BluetoothPasswordManagerActivity;
 import com.kaadas.lock.adapter.BluetoothLockFunctionAdapter;
 import com.kaadas.lock.bean.BluetoothLockFunctionBean;
 import com.kaadas.lock.utils.DateUtils;
@@ -122,11 +125,19 @@ public class BluetoothLockFunctionActivity extends AppCompatActivity implements 
         switch (lockStatus) {
             case KeyConstants.OPEN_LOCK:
                 //可以开锁
+                tvOpenClock.setClickable(true);
                 tvOpenClock.setText(R.string.click_lock);
                 tvOpenClock.setTextColor(getResources().getColor(R.color.c16B8FD));
                 tvOpenClock.setBackgroundResource(R.mipmap.open_lock_bj);
                 break;
-            case KeyConstants.HAS_BEEN_LOCKED:
+            case KeyConstants.DEVICE_OFFLINE:
+                //设备离线
+                tvOpenClock.setClickable(false);
+                tvOpenClock.setText(getString(R.string.device_offline));
+                tvOpenClock.setTextColor(getResources().getColor(R.color.c149EF3));
+                tvOpenClock.setBackgroundResource(R.mipmap.has_been_locked_bj);
+                break;
+    /*        case KeyConstants.HAS_BEEN_LOCKED:
                 //已反锁
                 tvOpenClock.setText(getString(R.string.has_been_locked));
                 tvOpenClock.setTextColor(getResources().getColor(R.color.c149EF3));
@@ -149,7 +160,7 @@ public class BluetoothLockFunctionActivity extends AppCompatActivity implements 
                 tvOpenClock.setText(getString(R.string.open_lock_failed));
                 tvOpenClock.setTextColor(getResources().getColor(R.color.white));
                 tvOpenClock.setBackgroundResource(R.mipmap.open_lock_fail_bj);
-                break;
+                break;*/
         }
     }
 
@@ -192,8 +203,12 @@ public class BluetoothLockFunctionActivity extends AppCompatActivity implements 
                 finish();
                 break;
             case R.id.ll_one:
+                intent = new Intent(this, BluetoothPasswordManagerActivity.class);
+                startActivity(intent);
                 break;
             case R.id.ll_two:
+                intent = new Intent(this, FingerprintManagerActivity.class);
+                startActivity(intent);
                 break;
             case R.id.ll_three:
                 break;
@@ -202,6 +217,8 @@ public class BluetoothLockFunctionActivity extends AppCompatActivity implements 
                 startActivity(intent);
                 break;
             case R.id.ll_five:
+                intent = new Intent(this, BluetoothMoreActivity.class);
+                startActivity(intent);
                 break;
             case R.id.tv_open_clock:
                 //开锁

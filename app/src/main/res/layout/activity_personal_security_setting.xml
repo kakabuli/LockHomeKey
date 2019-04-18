@@ -1,48 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="#F2F2F2"
-    >
+    android:orientation="vertical">
+
     <include
         android:id="@+id/in_head"
         layout="@layout/head"></include>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#FFFFFF"
-        android:orientation="vertical"
-        >
+        android:orientation="vertical">
+
         <RelativeLayout
+            android:id="@+id/rl_open_hand_pwd"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_75">
+
             <TextView
                 android:id="@+id/security_setting_switch_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/sp_15"
-                android:textColor="#333333"
-                android:text="@string/open_hand_pwd"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="@dimen/dp_16"
-                />
+                android:text="@string/open_hand_pwd"
+                android:textColor="#333333"
+                android:textSize="@dimen/sp_15" />
 
-            <android.support.v7.widget.SwitchCompat
-                android:id="@+id/security_setting_switch"
+
+            <ImageView
+                android:id="@+id/iv_open_hand_pwd"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
                 android:layout_alignParentRight="true"
-                android:layout_marginRight="@dimen/dp_16"
-                android:theme="@style/SwitchTheme"
-                />
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/dp_16" />
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_marginLeft="@dimen/dp_16"
                 android:layout_alignParentBottom="true"
+                android:layout_marginLeft="@dimen/dp_16"
                 android:background="#F2F2F2"></View>
         </RelativeLayout>
 
@@ -50,54 +51,54 @@
             android:id="@+id/update_hand_pwd_layout"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_75">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/sp_15"
-                android:textColor="#333333"
-                android:text="@string/update_hand_pwd"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="@dimen/dp_16"
-                />
+                android:text="@string/update_hand_pwd"
+                android:textColor="#333333"
+                android:textSize="@dimen/sp_15" />
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
                 android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
                 android:layout_marginRight="@dimen/dp_16"
-                android:src="@mipmap/right"
-                />
+                android:src="@mipmap/right" />
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_marginLeft="@dimen/dp_16"
                 android:layout_alignParentBottom="true"
+                android:layout_marginLeft="@dimen/dp_16"
                 android:background="#F2F2F2"></View>
         </RelativeLayout>
 
         <RelativeLayout
+            android:id="@+id/rl_open_touch_id"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_75">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/sp_15"
-                android:textColor="#333333"
-                android:text="@string/open_touch_id"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="@dimen/dp_16"
-                />
+                android:text="@string/open_touch_id"
+                android:textColor="#333333"
+                android:textSize="@dimen/sp_15" />
 
-            <android.support.v7.widget.SwitchCompat
-                android:id="@+id/open_touch_id_switch"
+
+            <ImageView
+                android:id="@+id/iv_open_touch_id"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
                 android:layout_alignParentRight="true"
-                android:layout_marginRight="@dimen/dp_16"
-                android:theme="@style/SwitchTheme"
-                />
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/dp_16" />
         </RelativeLayout>
 
     </LinearLayout>

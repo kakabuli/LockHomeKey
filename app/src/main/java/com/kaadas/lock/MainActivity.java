@@ -74,7 +74,6 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter<IMainVie
     @Override
     public void onCheckedChanged(RadioGroup group, int checkedId) {
         FragmentTransaction fragmentTransaction = manager.beginTransaction();
-
         switch (checkedId) {
             case R.id.rb_one:
                 hideAll(fragmentTransaction);
@@ -96,26 +95,26 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter<IMainVie
                 }
                 fragmentTransaction.commit();
                 break;
-//            case R.id.rb_three:
-//                hideAll(fragmentTransaction);
-//                if (personalCenterFragment!=null){
-//                    fragmentTransaction.show(personalCenterFragment);
-//                }else {
-//                    personalCenterFragment = new PersonalCenterFragment();
-//                    fragmentTransaction.add(R.id.content, personalCenterFragment);
-//                }
-//                fragmentTransaction.commit();
-//                break;
             case R.id.rb_three:
                 hideAll(fragmentTransaction);
-                if (myFragment != null) {
-                    fragmentTransaction.show(myFragment);
-                } else {
-                    myFragment = new MyFragment();
-                    fragmentTransaction.add(R.id.content, myFragment);
+                if (personalCenterFragment!=null){
+                    fragmentTransaction.show(personalCenterFragment);
+                }else {
+                    personalCenterFragment = new PersonalCenterFragment();
+                    fragmentTransaction.add(R.id.content, personalCenterFragment);
                 }
                 fragmentTransaction.commit();
                 break;
+//            case R.id.rb_three:
+//                hideAll(fragmentTransaction);
+//                if (myFragment != null) {
+//                    fragmentTransaction.show(myFragment);
+//                } else {
+//                    myFragment = new MyFragment();
+//                    fragmentTransaction.add(R.id.content, myFragment);
+//                }
+//                fragmentTransaction.commit();
+//                break;
         }
     }
 

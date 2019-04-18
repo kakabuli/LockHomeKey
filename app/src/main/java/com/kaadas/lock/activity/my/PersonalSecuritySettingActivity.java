@@ -4,17 +4,14 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
-import com.kaadas.lock.activity.login.PersonalVerifyFingerPrintActivity;
 import com.kaadas.lock.base.mvpbase.BaseActivity;
 import com.kaadas.lock.presenter.personalpresenter.PersonalSecuritySettingPresenter;
 import com.kaadas.lock.utils.AlertDialogUtil;
@@ -27,7 +24,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class PersonalSecuritySettingActivity extends BaseActivity<IPersonalSecuritySettingView, PersonalSecuritySettingPresenter<IPersonalSecuritySettingView>> implements CompoundButton.OnCheckedChangeListener, IPersonalSecuritySettingView, View.OnClickListener {
+public class PersonalSecuritySettingActivity extends BaseActivity<IPersonalSecuritySettingView, PersonalSecuritySettingPresenter<IPersonalSecuritySettingView>> implements IPersonalSecuritySettingView, View.OnClickListener {
 
 
     @BindView(R.id.iv_back)
@@ -38,12 +35,18 @@ public class PersonalSecuritySettingActivity extends BaseActivity<IPersonalSecur
     ImageView ivRight;
     @BindView(R.id.security_setting_switch_text)
     TextView securitySettingSwitchText;
-    @BindView(R.id.security_setting_switch)
-    SwitchCompat securitySettingSwitch;
     @BindView(R.id.update_hand_pwd_layout)
     RelativeLayout updateHandPwdLayout;
-    @BindView(R.id.open_touch_id_switch)
-    SwitchCompat openTouchIdSwitch;
+    @BindView(R.id.iv_open_hand_pwd)
+    ImageView ivOpenHandPwd;
+    @BindView(R.id.iv_open_touch_id)
+    ImageView ivOpenTouchId;
+    boolean handPassword = false;
+    boolean touchId = false;
+    @BindView(R.id.rl_open_hand_pwd)
+    RelativeLayout rlOpenHandPwd;
+    @BindView(R.id.rl_open_touch_id)
+    RelativeLayout rlOpenTouchId;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -64,8 +67,9 @@ public class PersonalSecuritySettingActivity extends BaseActivity<IPersonalSecur
     }
 
     private void initListener() {
-        securitySettingSwitch.setOnCheckedChangeListener(this);
-        openTouchIdSwitch.setOnCheckedChangeListener(this);
+        rlOpenHandPwd.setOnClickListener(this);
+        rlOpenTouchId.setOnClickListener(this);
+
     }
 
     private void initView() {
@@ -107,42 +111,6 @@ public class PersonalSecuritySettingActivity extends BaseActivity<IPersonalSecur
         });
     }
 
-    @Override
-    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        switch (buttonView.getId()) {
-            //手势密码
-            case R.id.security_setting_switch:
-                //开启
-                if (isChecked) {
-                    Intent open = new Intent(this, PersonalUpdateGesturePwdActivity.class);
-                    startActivity(open);
-                } else {
-                    //关闭
-                    //清除缓存手势密码数据
-                    ACache.get(MyApplication.getInstance()).remove(MyApplication.getInstance().getUid() + "handPassword");
-                    securitySettingSwitchText.setText(R.string.open_hand_pwd);
-                }
-                break;
-
-            case R.id.open_touch_id_switch:
-                //指纹密码
-                //判断是否支持指纹识别
-                if (isChecked) {
-                    Boolean flag = mPresenter.isSupportFinger();
-                    if (flag == false) {
-                        //手机不支持指纹识别
-                        openTouchIdSwitch.setChecked(false);
-                        ToastUtil.getInstance().showShort(R.string.no_support_fingeprint);
-                    } else {
-                        mPresenter.isOpenFingerPrint();
-                    }
-                } else {
-                    ACache.get(MyApplication.getInstance()).remove(MyApplication.getInstance().getUid() + "fingerStatus");
-                }
-                break;
-
-        }
-    }
 
     @Override
     protected void onResume() {
@@ -154,20 +122,23 @@ public class PersonalSecuritySettingActivity extends BaseActivity<IPersonalSecur
 
     @Override
     public void openHandPwdSuccess() {
-        securitySettingSwitch.setChecked(true);
+        handPassword = true;
+        ivOpenHandPwd.setImageResource(R.mipmap.iv_open);
         securitySettingSwitchText.setText(R.string.close_hand_pwd);
     }
 
     @Override
     public void closeHandPwdSuccess() {
-        securitySettingSwitch.setChecked(false);
+        handPassword = false;
+        ivOpenHandPwd.setImageResource(R.mipmap.iv_close);
         securitySettingSwitchText.setText(R.string.open_hand_pwd);
     }
 
     @Override
     public void phoneFigerprintOpen() {
         //已经打开
-
+        touchId = true;
+        ivOpenTouchId.setImageResource(R.mipmap.iv_open);
         View mView = LayoutInflater.from(this).inflate(R.layout.activity_personal_fingerprint_security, null);
         TextView mFingerCancel = mView.findViewById(R.id.finger_cancel);
         AlertDialog alertDialog = AlertDialogUtil.getInstance().common(this, mView);
@@ -183,18 +154,21 @@ public class PersonalSecuritySettingActivity extends BaseActivity<IPersonalSecur
     @Override
     public void phoneFigerprintClose() {
         //关闭
-        openTouchIdSwitch.setChecked(false);
+        touchId = false;
+        ivOpenTouchId.setImageResource(R.mipmap.iv_close);
         ToastUtil.getInstance().showLong(R.string.no_open_fingerprint);
     }
 
     @Override
     public void openFingerPrintSuccess() {
-        openTouchIdSwitch.setChecked(true);
+        touchId = true;
+        ivOpenTouchId.setImageResource(R.mipmap.iv_open);
     }
 
     @Override
     public void closeFingerPrintSuccess() {
-        openTouchIdSwitch.setChecked(false);
+        touchId = false;
+        ivOpenTouchId.setImageResource(R.mipmap.iv_close);
     }
 
     @Override
@@ -202,6 +176,39 @@ public class PersonalSecuritySettingActivity extends BaseActivity<IPersonalSecur
         switch (v.getId()) {
             case R.id.iv_back:
                 finish();
+                break;
+            case R.id.rl_open_hand_pwd:
+                //开启
+                handPassword = !handPassword;
+                if (handPassword) {
+                    ivOpenHandPwd.setImageResource(R.mipmap.iv_open);
+                    Intent open = new Intent(this, PersonalUpdateGesturePwdActivity.class);
+                    startActivity(open);
+                } else {
+                    //关闭
+                    //清除缓存手势密码数据
+                    ivOpenHandPwd.setImageResource(R.mipmap.iv_close);
+                    ACache.get(MyApplication.getInstance()).remove(MyApplication.getInstance().getUid() + "handPassword");
+                    securitySettingSwitchText.setText(R.string.open_hand_pwd);
+                }
+                break;
+            case R.id.rl_open_touch_id:
+                //指纹密码
+                touchId = !touchId;
+                //判断是否支持指纹识别
+                if (touchId) {
+                    Boolean flag = mPresenter.isSupportFinger();
+                    if (flag == false) {
+                        //手机不支持指纹识别
+                        ivOpenTouchId.setImageResource(R.mipmap.iv_close);
+                        ToastUtil.getInstance().showShort(R.string.no_support_fingeprint);
+                    } else {
+                        mPresenter.isOpenFingerPrint();
+                    }
+                } else {
+                    ivOpenTouchId.setImageResource(R.mipmap.iv_close);
+                    ACache.get(MyApplication.getInstance()).remove(MyApplication.getInstance().getUid() + "fingerStatus");
+                }
                 break;
         }
     }

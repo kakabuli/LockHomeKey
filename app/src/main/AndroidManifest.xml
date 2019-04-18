@@ -341,6 +341,71 @@
             android:name=".activity.device.bluetooth.BluetoothLockOTAUpgradeActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activity.login.GuidePageActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activity.device.bluetooth.BluetoothMoreActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activity.device.bluetooth.BluetoothSafeModeActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activity.device.bluetooth.BluetoothLockLanguageSettingActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activity.device.bluetooth.password.BluetoothPasswordManagerActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activity.device.bluetooth.password.BluetoothPasswordManagerDetailActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"></activity>
+
+        <activity
+            android:name=".activity.device.bluetooth.password.BluetoothUserPasswordAddActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"></activity>
+        <activity android:name=".activity.device.bluetooth.password.CycleRulesActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            ></activity>
+        <activity android:name=".activity.device.bluetooth.password.BluetoothPasswordShareActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            ></activity>
+        <activity android:name=".activity.device.bluetooth.fingerprint.FingerprintManagerActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            ></activity>
+        <activity android:name=".activity.device.bluetooth.fingerprint.FingerprintManagerDetailActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            ></activity>
+        <activity android:name=".activity.device.bluetooth.fingerprint.FingerprintLinkBluetoothActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            ></activity>
+        <activity android:name=".activity.device.bluetooth.fingerprint.FingerprintCollectionActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            ></activity>
+        <activity android:name=".activity.device.bluetooth.fingerprint.FingerprintNoConnectBluetoothOneActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            ></activity>
+        <activity android:name=".activity.device.bluetooth.fingerprint.FingerprintNoConnectBluetoothTwoActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            ></activity>
+        <activity android:name=".activity.device.bluetooth.fingerprint.FingerprintNoConnectBluetoothCollectionActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            ></activity>
     </application>
 
 </manifest>

@@ -11,5 +11,18 @@
         <attr name="processingLineColor" format="color"></attr>
         <attr name="currNodeNO" format="integer"></attr>   <!-- 当前所到达的节点编号  0开始计算--> 
         <attr name="currNodeState" format="integer"></attr>   <!-- 当前所到达的节点状态，0：失败  1：成功 --> 
-    </declare-styleable>  
+    </declare-styleable>
+
+
+    <declare-styleable name="UnderLineRadioBtn">
+        <!--线相关-->
+        <attr name="lineH" format="dimension"/>
+        <attr name="lineW" format="float|dimension"/>
+        <attr name="lineCheckColor" format="color"/>
+        <attr name="lineDefaultColor" format="color"/>
+        <attr name="lineRadius" format="dimension"/>
+        <!--文字相关-->
+        <attr name="textCheckColor" format="color"/>
+        <attr name="textDefaultColor" format="color"/>
+    </declare-styleable>
 </resources>

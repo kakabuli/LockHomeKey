@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF">
+
+    <TextView
+        android:id="@+id/tv_skip"
+        android:layout_width="@dimen/dp_43"
+        android:layout_height="@dimen/dp_20"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="@dimen/dp_25"
+        android:layout_marginRight="@dimen/dp_21"
+        android:background="@drawable/retangle_15acf9_10"
+        android:gravity="center"
+        android:text="@string/skip"
+        android:textColor="#3FC4FC"
+        android:textSize="@dimen/sp_12" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/dp_45"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="2.8"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/guide_page_three" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/remote_control"
+            android:textColor="#333333"
+            android:textSize="27sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/dp_18"
+            android:text="@string/guide_page_three_hint"
+            android:textColor="#666666"
+            android:textSize="@dimen/sp_15" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center">
+
+            <Button
+                android:id="@+id/btn"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_40"
+                android:layout_marginLeft="@dimen/dp_113"
+                android:layout_marginRight="@dimen/dp_113"
+                android:background="@drawable/guide_page_btn_bj"
+                android:text="@string/immediate_experience"
+                android:textColor="#FFFFFF"
+                android:textSize="@dimen/sp_16" />
+        </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>
