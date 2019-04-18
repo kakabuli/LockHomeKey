@@ -18,7 +18,7 @@ import android.widget.TextView;
 
 
 import com.kaadas.lock.R;
-import com.kaadas.lock.choosecountry.CountrySortModel;
+import com.kaadas.lock.activity.choosecountry.CountrySortModel;
 
 import java.util.ArrayList;
 import java.util.List;

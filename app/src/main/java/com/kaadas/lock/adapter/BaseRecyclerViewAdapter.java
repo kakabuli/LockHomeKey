@@ -6,7 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.kaadas.lock.holder.RecyclerViewHolder;
+import com.kaadas.lock.adapter.holder.RecyclerViewHolder;
 import com.kaadas.lock.utils.KeyConstants;
 
 import java.util.List;

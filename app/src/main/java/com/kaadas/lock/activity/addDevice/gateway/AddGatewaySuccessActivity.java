@@ -8,11 +8,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
-import com.kaadas.lock.MainActivity;
+import com.kaadas.lock.activity.MainActivity;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.addDevice.DeviceAddActivity;
 import com.kaadas.lock.activity.addDevice.DeviceZigBeeDetailActivity;
-import com.kaadas.lock.activity.addDevice.zigbee.DeviceBindGatewayListActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

@@ -10,15 +10,15 @@ import android.widget.TextView;
 
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
-import com.kaadas.lock.base.mvpbase.BaseActivity;
-import com.kaadas.lock.presenter.personalpresenter.PersonalUpdateNickNamePresenter;
+import com.kaadas.lock.mvp.mvpbase.BaseActivity;
+import com.kaadas.lock.mvp.presenter.personalpresenter.PersonalUpdateNickNamePresenter;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.util.HttpUtils;
 import com.kaadas.lock.utils.NetUtil;
 import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.StringUtil;
 import com.kaadas.lock.utils.ToastUtil;
-import com.kaadas.lock.view.personalview.IPersonalUpdateNickNameView;
+import com.kaadas.lock.mvp.view.personalview.IPersonalUpdateNickNameView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

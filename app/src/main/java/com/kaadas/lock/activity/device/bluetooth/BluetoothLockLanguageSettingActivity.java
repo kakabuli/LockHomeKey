@@ -1,14 +1,9 @@
 package com.kaadas.lock.activity.device.bluetooth;
 
 import android.content.Context;
-import android.content.Intent;
-import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.text.TextUtils;
-import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -16,13 +11,8 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.kaadas.lock.MainActivity;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
-import com.kaadas.lock.utils.cachefloder.ACache;
-import com.kaadas.lock.utils.cachefloder.CacheFloder;
-
-import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

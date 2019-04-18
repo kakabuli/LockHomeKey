@@ -21,11 +21,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 
-import com.kaadas.lock.MainActivity;
+import com.kaadas.lock.activity.MainActivity;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
-import com.kaadas.lock.base.mvpbase.BaseActivity;
-import com.kaadas.lock.presenter.personalpresenter.PersonalFingerPrintPresenter;
+import com.kaadas.lock.mvp.mvpbase.BaseActivity;
+import com.kaadas.lock.mvp.presenter.personalpresenter.PersonalFingerPrintPresenter;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.BitmapUtil;
 import com.kaadas.lock.utils.EncryUtils;
@@ -33,7 +33,7 @@ import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.StorageUtil;
 import com.kaadas.lock.utils.ToastUtil;
-import com.kaadas.lock.view.personalview.IPersonalVerifyFingerPrintView;
+import com.kaadas.lock.mvp.view.personalview.IPersonalVerifyFingerPrintView;
 import com.kaadas.lock.widget.BottomMenuDialog;
 import com.kaadas.lock.widget.CircleImageView;
 

@@ -14,12 +14,12 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.kaadas.lock.MainActivity;
+import com.kaadas.lock.activity.MainActivity;
 import com.kaadas.lock.R;
 
-import com.kaadas.lock.base.mvpbase.BaseActivity;
-import com.kaadas.lock.choosecountry.CountryActivity;
-import com.kaadas.lock.presenter.LoginPresenter;
+import com.kaadas.lock.mvp.mvpbase.BaseActivity;
+import com.kaadas.lock.activity.choosecountry.CountryActivity;
+import com.kaadas.lock.mvp.presenter.LoginPresenter;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.util.HttpUtils;
 import com.kaadas.lock.utils.AlertDialogUtil;
@@ -31,12 +31,10 @@ import com.kaadas.lock.utils.PhoneUtil;
 import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.StringUtil;
 import com.kaadas.lock.utils.ToastUtil;
-import com.kaadas.lock.view.ILoginView;
+import com.kaadas.lock.mvp.view.ILoginView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
-import static com.kaadas.lock.utils.StringUtil.getEdittextContent;
 
 
 public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter<ILoginView>> implements ILoginView, View.OnClickListener {

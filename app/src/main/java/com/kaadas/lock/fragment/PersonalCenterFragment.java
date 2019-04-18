@@ -21,14 +21,14 @@ import com.kaadas.lock.activity.my.PersonalSecuritySettingActivity;
 import com.kaadas.lock.activity.my.PersonalSystemSettingActivity;
 import com.kaadas.lock.activity.my.PersonalUpdateHeadDataActivity;
 import com.kaadas.lock.activity.my.UserFeedbackActivity;
-import com.kaadas.lock.base.mvpbase.BaseFragment;
-import com.kaadas.lock.presenter.MyFragmentPresenter;
+import com.kaadas.lock.mvp.mvpbase.BaseFragment;
+import com.kaadas.lock.mvp.presenter.MyFragmentPresenter;
 import com.kaadas.lock.utils.BitmapUtil;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.StorageUtil;
-import com.kaadas.lock.view.IMyFragmentView;
+import com.kaadas.lock.mvp.view.IMyFragmentView;
 import com.kaadas.lock.widget.CircleImageView;
 
 import butterknife.BindView;

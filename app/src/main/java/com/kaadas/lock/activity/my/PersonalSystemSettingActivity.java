@@ -14,8 +14,8 @@ import android.widget.TextView;
 
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
-import com.kaadas.lock.base.mvpbase.BaseActivity;
-import com.kaadas.lock.presenter.SystemSettingPresenter;
+import com.kaadas.lock.mvp.mvpbase.BaseActivity;
+import com.kaadas.lock.mvp.presenter.SystemSettingPresenter;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.util.HttpUtils;
 import com.kaadas.lock.utils.AlertDialogUtil;
@@ -23,7 +23,7 @@ import com.kaadas.lock.utils.CheckLanguageUtil;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.ToastUtil;
-import com.kaadas.lock.view.ISystemSettingView;
+import com.kaadas.lock.mvp.view.ISystemSettingView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

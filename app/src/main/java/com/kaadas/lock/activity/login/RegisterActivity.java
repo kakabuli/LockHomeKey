@@ -16,9 +16,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.kaadas.lock.R;
-import com.kaadas.lock.base.mvpbase.BaseActivity;
-import com.kaadas.lock.choosecountry.CountryActivity;
-import com.kaadas.lock.presenter.RegisterPresenter;
+import com.kaadas.lock.mvp.mvpbase.BaseActivity;
+import com.kaadas.lock.activity.choosecountry.CountryActivity;
+import com.kaadas.lock.mvp.presenter.RegisterPresenter;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.util.HttpUtils;
 import com.kaadas.lock.utils.AlertDialogUtil;
@@ -29,7 +29,7 @@ import com.kaadas.lock.utils.PhoneUtil;
 import com.kaadas.lock.utils.StringUtil;
 import com.kaadas.lock.utils.TimeUtils;
 import com.kaadas.lock.utils.ToastUtil;
-import com.kaadas.lock.view.IRegisterView;
+import com.kaadas.lock.mvp.view.IRegisterView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

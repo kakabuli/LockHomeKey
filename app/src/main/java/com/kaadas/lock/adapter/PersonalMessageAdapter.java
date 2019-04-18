@@ -2,13 +2,12 @@ package com.kaadas.lock.adapter;
 
 import android.content.Context;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 
 import com.kaadas.lock.R;
 import com.kaadas.lock.bean.PersonalMessageBean;
-import com.kaadas.lock.holder.RecyclerViewHolder;
+import com.kaadas.lock.adapter.holder.RecyclerViewHolder;
 import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
 

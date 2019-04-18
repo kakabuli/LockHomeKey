@@ -12,13 +12,13 @@ import android.widget.TextView;
 
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
-import com.kaadas.lock.base.mvpbase.BaseActivity;
-import com.kaadas.lock.presenter.personalpresenter.PersonalSecuritySettingPresenter;
+import com.kaadas.lock.mvp.mvpbase.BaseActivity;
+import com.kaadas.lock.mvp.presenter.personalpresenter.PersonalSecuritySettingPresenter;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.ToastUtil;
 import com.kaadas.lock.utils.cachefloder.ACache;
 import com.kaadas.lock.utils.cachefloder.CacheFloder;
-import com.kaadas.lock.view.personalview.IPersonalSecuritySettingView;
+import com.kaadas.lock.mvp.view.personalview.IPersonalSecuritySettingView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

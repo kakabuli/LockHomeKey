@@ -7,7 +7,7 @@ import android.widget.TextView;
 
 import com.kaadas.lock.R;
 import com.kaadas.lock.bean.MyMessageBean;
-import com.kaadas.lock.holder.RecyclerViewHolder;
+import com.kaadas.lock.adapter.holder.RecyclerViewHolder;
 import com.kaadas.lock.utils.KeyConstants;
 
 

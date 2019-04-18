@@ -10,14 +10,14 @@ import android.widget.ImageView;
 
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
-import com.kaadas.lock.base.mvpbase.BaseActivity;
-import com.kaadas.lock.presenter.deviceaddpresenter.GatewayBindPresenter;
+import com.kaadas.lock.mvp.mvpbase.BaseActivity;
+import com.kaadas.lock.mvp.presenter.deviceaddpresenter.GatewayBindPresenter;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttService;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.NetUtil;
 import com.kaadas.lock.utils.ToastUtil;
-import com.kaadas.lock.view.deviceaddview.DeviceGatewayBindListView;
-import com.kaadas.lock.view.deviceaddview.GatewayBindView;
+import com.kaadas.lock.mvp.view.deviceaddview.DeviceGatewayBindListView;
+import com.kaadas.lock.mvp.view.deviceaddview.GatewayBindView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

@@ -7,13 +7,12 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
 
-import com.kaadas.lock.MainActivity;
+import com.kaadas.lock.activity.MainActivity;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
-import com.kaadas.lock.activity.my.PersonalUpdateVerifyGesturePwd;
-import com.kaadas.lock.base.mvpbase.BaseActivity;
+import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.bean.VersionBean;
-import com.kaadas.lock.presenter.SplashPresenter;
+import com.kaadas.lock.mvp.presenter.SplashPresenter;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttService;
 import com.kaadas.lock.utils.CheckLanguageUtil;
 import com.kaadas.lock.utils.KeyConstants;
@@ -22,7 +21,7 @@ import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.ToastUtil;
 import com.kaadas.lock.utils.cachefloder.ACache;
 import com.kaadas.lock.utils.cachefloder.CacheFloder;
-import com.kaadas.lock.view.ISplashView;
+import com.kaadas.lock.mvp.view.ISplashView;
 
 
 public class SplashActivity extends BaseActivity<ISplashView, SplashPresenter<ISplashView>> implements ISplashView {

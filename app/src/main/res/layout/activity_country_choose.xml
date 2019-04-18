@@ -93,7 +93,7 @@
             android:textSize="30.0dip"
             android:visibility="invisible" />
 
-        <com.kaadas.lock.choosecountry.SideBar
+        <com.kaadas.lock.activity.choosecountry.SideBar
             android:id="@+id/country_sidebar"
             android:layout_width="30.0dip"
             android:layout_height="match_parent"
