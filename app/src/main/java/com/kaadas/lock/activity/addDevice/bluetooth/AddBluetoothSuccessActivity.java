@@ -1,5 +1,6 @@
 package com.kaadas.lock.activity.addDevice.bluetooth;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -11,9 +12,19 @@ import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
+import com.kaadas.lock.activity.MainActivity;
+import com.kaadas.lock.activity.addDevice.DeviceAddActivity;
 import com.kaadas.lock.adapter.AddBluetoothPairSuccessAdapter;
 import com.kaadas.lock.bean.deviceAdd.AddBluetoothPairSuccessBean;
+import com.kaadas.lock.mvp.mvpbase.BaseActivity;
+import com.kaadas.lock.mvp.presenter.deviceaddpresenter.BindBleSuccessPresenter;
+import com.kaadas.lock.mvp.view.deviceaddview.IBindBleSuccessView;
+import com.kaadas.lock.publiclibrary.http.result.BaseResult;
+import com.kaadas.lock.publiclibrary.http.util.HttpUtils;
+import com.kaadas.lock.utils.KeyConstants;
+import com.kaadas.lock.utils.ToastUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +33,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class AddBluetoothPairSuccessActivity extends AppCompatActivity implements BaseQuickAdapter.OnItemClickListener {
+public class AddBluetoothSuccessActivity extends BaseActivity<IBindBleSuccessView, BindBleSuccessPresenter<IBindBleSuccessView>> implements IBindBleSuccessView, BaseQuickAdapter.OnItemClickListener {
 
 
     @BindView(R.id.input_name)
@@ -37,14 +48,21 @@ public class AddBluetoothPairSuccessActivity extends AppCompatActivity implement
     private List<AddBluetoothPairSuccessBean> mList;
 
     private AddBluetoothPairSuccessAdapter mAdapter;
+    private String deviceName;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.bluetooth_add_success);
         ButterKnife.bind(this);
+        deviceName = getIntent().getStringExtra(KeyConstants.DEVICE_NAME);
         initData();
         initView();
+    }
+
+    @Override
+    protected BindBleSuccessPresenter<IBindBleSuccessView> createPresent() {
+        return new BindBleSuccessPresenter<>();
     }
 
     private void initData() {
@@ -97,13 +115,32 @@ public class AddBluetoothPairSuccessActivity extends AppCompatActivity implement
         mAdapter.notifyDataSetChanged();
     }
 
-
     @OnClick(R.id.save)
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.save:
-                //保存
+                mPresenter.modifyDeviceNickname(deviceName, MyApplication.getInstance().getUid(), inputName.getText().toString().trim());
                 break;
         }
     }
+
+    @Override
+    public void modifyDeviceNicknameSuccess() {
+        ToastUtil.getInstance().showShort(R.string.save_success);
+        //设置成功  跳转到设备列别界面
+        Intent intent = new Intent(this, DeviceAddActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    @Override
+    public void modifyDeviceNicknameError(Throwable throwable) {
+        ToastUtil.getInstance().showShort(HttpUtils.httpProtocolErrorCode(this, throwable));
+    }
+
+    @Override
+    public void modifyDeviceNicknameFail(BaseResult baseResult) {
+        ToastUtil.getInstance().showShort(HttpUtils.httpErrorCode(this, baseResult.getCode()));
+    }
+
 }

@@ -395,4 +395,7 @@ public interface IXiaoKaiNewService {
     Observable<VersionBean> getAppVersion();
 
 
+
+
+
 }

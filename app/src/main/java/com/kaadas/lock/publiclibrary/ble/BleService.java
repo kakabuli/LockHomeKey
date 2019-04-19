@@ -339,7 +339,7 @@ public class BleService extends Service {
      */
     public Observable<BluetoothDevice> getDeviceByMac(String mac) {
         currentMac = mac;
-        handler.postDelayed(getRemoteDeviceRunnable, 2000);
+        handler.postDelayed(getRemoteDeviceRunnable, 5000);
         return scanBleDevice(true)
                 .filter(new Predicate<BluetoothDevice>() {
                     @Override
