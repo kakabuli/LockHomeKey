@@ -17,6 +17,7 @@ import com.kaadas.lock.adapter.FingerprintManagerAdapter;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.publiclibrary.http.result.GetPasswordResult;
 import com.kaadas.lock.utils.KeyConstants;
+import com.kaadas.lock.utils.NetUtil;
 import com.kaadas.lock.utils.ToastUtil;
 
 import java.util.ArrayList;
@@ -108,6 +109,10 @@ public class FingerprintManagerActivity extends AppCompatActivity
                 finish();
                 break;
             case R.id.ll_add_password:
+                if (!NetUtil.isNetworkAvailable()) {
+                    ToastUtil.getInstance().showShort(R.string.please_add_finger);
+                    return;
+                }
                 intent = new Intent(this, FingerprintLinkBluetoothActivity.class);
                 intent.putExtra(KeyConstants.BLE_DEVICE_INFO, bleLockInfo);
                 startActivity(intent);
@@ -118,6 +123,7 @@ public class FingerprintManagerActivity extends AppCompatActivity
                 if (isSync) {
                     ToastUtil.getInstance().showShort(R.string.is_sync_please_wait);
                 } else {
+                    //TODO 同步
                 }
                 break;
         }

@@ -17,6 +17,7 @@ import com.kaadas.lock.adapter.DoorCardManagerAdapter;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.publiclibrary.http.result.GetPasswordResult;
 import com.kaadas.lock.utils.KeyConstants;
+import com.kaadas.lock.utils.NetUtil;
 import com.kaadas.lock.utils.ToastUtil;
 
 import java.util.ArrayList;
@@ -107,9 +108,14 @@ public class DoorCardManagerActivity extends AppCompatActivity
                 finish();
                 break;
             case R.id.ll_add_password:
+                if (!NetUtil.isNetworkAvailable()) {
+                    ToastUtil.getInstance().showShort(R.string.please_have_net_add_card);
+                    return;
+                }
+
 //                intent = new Intent(this, DoorCardNearDoorActivity.class);
-                intent = new Intent(this, DoorCardConnectFailActivity.class);
-//                intent = new Intent(this, DoorCardConnectSuccessActivity.class);
+//                intent = new Intent(this, DoorCardConnectFailActivity.class);
+                intent = new Intent(this, DoorCardConnectSuccessActivity.class);
                 intent.putExtra(KeyConstants.BLE_DEVICE_INFO, bleLockInfo);
                 startActivity(intent);
                 break;

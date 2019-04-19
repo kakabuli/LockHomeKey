@@ -27,6 +27,7 @@ import butterknife.ButterKnife;
 /**
  * Created by David on 2019/4/18
  */
+//todo 这个不用
 public class DoorCardAddSuccessActivity extends AppCompatActivity implements View.OnClickListener, BaseQuickAdapter.OnItemClickListener {
     @BindView(R.id.iv_back)
     ImageView ivBack;

@@ -406,10 +406,7 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             ></activity>
-        <activity android:name=".activity.device.bluetooth.fingerprint.FingerprintCollectionSuccessActivity"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            ></activity>
+
         <activity android:name=".activity.device.bluetooth.card.DoorCardManagerActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
@@ -430,10 +427,7 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             ></activity>
-        <activity android:name=".activity.device.bluetooth.card.DoorCardAddSuccessActivity"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            ></activity>
+
         <activity android:name=".activity.device.bluetooth.card.DoorCardNoConnectOneActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
@@ -447,6 +441,14 @@
             android:screenOrientation="portrait"
             ></activity>
         <activity android:name=".activity.device.bluetooth.card.DoorCardManagerDetailActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            ></activity>
+        <activity android:name=".activity.device.bluetooth.card.AddDoorCardSuccessActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            ></activity>
+        <activity android:name=".activity.device.bluetooth.fingerprint.AddFingerprintSuccessActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             ></activity>
