@@ -600,4 +600,7 @@
     <string name="please_add_finger">请在有网络情况下添加指纹！</string>
     <string name="save_failed">保存失败</string>
     <string name="confirm_delete_fingerprint">确定删除指纹吗？</string>
+    <string name="already_notify_admin_sure">已通知管理员确认</string>
+    <string name="already_notify_admin">已通知管理员确认</string>
+    <string name="already_bind_gatway">您已绑定该网关</string>
 </resources>

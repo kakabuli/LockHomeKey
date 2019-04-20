@@ -4,8 +4,6 @@ import com.kaadas.lock.mvp.mvpbase.IBaseView;
 
 public interface GatewayBindView extends IBaseView {
 
-    //发布失败
-    void bindGatewayPublishFail(String fuc);
 
     //绑定网关成功的数据
     void bindGatewaySuccess();

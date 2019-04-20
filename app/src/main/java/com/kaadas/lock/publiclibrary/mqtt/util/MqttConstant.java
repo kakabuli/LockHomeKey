@@ -7,6 +7,11 @@ package com.kaadas.lock.publiclibrary.mqtt.util;
 */
 public class MqttConstant {
 
+    //public static String MQTT_BASE_URL = "tcp://121.201.57.214:1883";//测试服务器
+    public static String MQTT_BASE_URL = "tcp://mqtt-kaadas.juziwulian.com:1883";//正式服务器
+
+    public static String MQTT_REQUEST_APP="/request/app/func";
+
     //断开后，是否自动连接
     public static final boolean MQTT_AUTOMATIC_RECONNECT=true;
 
@@ -22,13 +27,22 @@ public class MqttConstant {
     //允许同时发送几条消息（未收到broker确认信息）
     public static final int MQTT_MAX_INFLIGHT=10;
 
-    //MessageId
-    public static int MESSAGE_ID=0;
+
 
     public static String getSubscribeTopic(String userId){
         String topic="/" + userId + "/rpc/reply";
         return topic;
     }
+
+
+    //1 绑定网关
+    public static final String BIND_GATEWAY = "bindGatewayByUser";
+
+    //2 获取网关列表
+    public static final String GET_BIND_GATEWAY_LIST = "gatewayBindList";
+
+    //3获取网关状态
+    public static final String GATEWAY_STATE = "gatewayState";
 
 
 }
