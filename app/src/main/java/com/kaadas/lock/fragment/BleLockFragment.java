@@ -20,6 +20,7 @@ import com.kaadas.lock.adapter.BluetoothRecordAdapter;
 import com.kaadas.lock.bean.BluetoothItemRecordBean;
 import com.kaadas.lock.bean.BluetoothRecordBean;
 import com.kaadas.lock.utils.KeyConstants;
+import com.kaadas.lock.utils.LogUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -131,22 +132,7 @@ public class BleLockFragment extends Fragment implements View.OnClickListener {
                 break;
             case 3:
                 //门锁不在有效范围内（一般两米）
-                ivExternalBig.setVisibility(View.VISIBLE);
-                ivExternalBig.setImageResource(R.mipmap.bluetooth_no_connect_big_middle_icon);
-                ivExternalMiddle.setVisibility(View.GONE);
-//                ivExternalMiddle.setImageResource();
-                ivExternalSmall.setVisibility(View.GONE);
-//                ivExternalSmall.setImageResource();
-                ivInnerMiddle.setVisibility(View.VISIBLE);
-                ivInnerMiddle.setImageResource(R.mipmap.bluetooth_connecting_inner_middle_icon);
-                ivInnerSmall.setVisibility(View.GONE);
-//                ivInnerSmall.setImageResource();
-                tvInner.setVisibility(View.VISIBLE);
-                tvInner.setText(getString(R.string.bluetooth_connecting));
-                tvInner.setTextColor(getResources().getColor(R.color.c15A6F5));
-                tvExternal.setVisibility(View.GONE);
-//                tvExternal.setTextColor();
-//                tvExternal.setText();
+
                 break;
             case 4:
                 //“已启动布防，长按开锁“
@@ -195,12 +181,31 @@ public class BleLockFragment extends Fragment implements View.OnClickListener {
                 //“长按开锁”（表示关闭状态）
                 ivExternalBig.setVisibility(View.VISIBLE);
                 ivExternalBig.setImageResource(R.mipmap.bluetooth_no_connect_big_icon);
+                ivExternalMiddle.setVisibility(View.GONE);
+//                ivExternalMiddle.setImageResource();
+                ivExternalSmall.setVisibility(View.VISIBLE);
+                ivExternalSmall.setImageResource(R.mipmap.bluetooth_open_lock_small_icon);
+                ivInnerMiddle.setVisibility(View.VISIBLE);
+                ivInnerMiddle.setImageResource(R.mipmap.bluetooth_lock_safe_inner_midder_icon);
+                ivInnerSmall.setVisibility(View.VISIBLE);
+                ivInnerSmall.setImageResource(R.mipmap.bluetooth_lock_bu_fang_inner_small_icon);
+                tvInner.setVisibility(View.VISIBLE);
+                tvInner.setText(R.string.long_press_open_lock);
+                tvInner.setTextColor(getResources().getColor(R.color.cF7FDFD));
+                tvExternal.setVisibility(View.VISIBLE);
+                tvExternal.setTextColor(getResources().getColor(R.color.cC6F5FF));
+                tvExternal.setText(getString(R.string.bluetooth_close_status));
+                break;
+            case 9:
+                //”开锁中....“
+                ivExternalBig.setVisibility(View.VISIBLE);
+                ivExternalBig.setImageResource(R.mipmap.bluetooth_no_connect_big_icon);
                 ivExternalMiddle.setVisibility(View.VISIBLE);
                 ivExternalMiddle.setImageResource(R.mipmap.bluetooth_open_lock_middle_icon);
                 ivExternalSmall.setVisibility(View.VISIBLE);
                 ivExternalSmall.setImageResource(R.mipmap.bluetooth_open_lock_small_icon);
                 ivInnerMiddle.setVisibility(View.VISIBLE);
-                ivInnerMiddle.setImageResource(R.mipmap.bluetooth_lock_safe_inner_midder_icon);
+                ivInnerMiddle.setImageResource(R.mipmap.bluetooth_open_lock_success_niner_middle_icon);
                 ivInnerSmall.setVisibility(View.GONE);
 //                ivInnerSmall.setImageResource();
                 tvInner.setVisibility(View.GONE);
@@ -209,10 +214,6 @@ public class BleLockFragment extends Fragment implements View.OnClickListener {
                 tvExternal.setVisibility(View.VISIBLE);
                 tvExternal.setTextColor(getResources().getColor(R.color.cC6F5FF));
                 tvExternal.setText(getString(R.string.is_lock));
-                break;
-            case 9:
-                //”开锁中....“
-
                 break;
             case 10:
                 //“锁已打开”
@@ -290,7 +291,7 @@ public class BleLockFragment extends Fragment implements View.OnClickListener {
                 tvExternal.setTextColor(getResources().getColor(R.color.white));
                 tvExternal.setText(getString(R.string.equipment_out_of_range));
                 break;
-            case 14:
+    /*        case 14:
                 //蓝牙锁关闭
                 ivExternalBig.setVisibility(View.VISIBLE);
                 ivExternalBig.setImageResource(R.mipmap.bluetooth_lock_close_big_middle_icon);
@@ -308,7 +309,7 @@ public class BleLockFragment extends Fragment implements View.OnClickListener {
                 tvExternal.setVisibility(View.VISIBLE);
                 tvExternal.setTextColor(getResources().getColor(R.color.cC6F5FF));
                 tvExternal.setText(getString(R.string.bluetooth_close_status));
-                break;
+                break;*/
             case 15:
                 //蓝牙锁布防被开启
                 ivExternalBig.setVisibility(View.VISIBLE);
@@ -351,7 +352,6 @@ public class BleLockFragment extends Fragment implements View.OnClickListener {
         }
     }
 
-
     @Override
     public void onClick(View v) {
         Intent intent;
@@ -361,6 +361,7 @@ public class BleLockFragment extends Fragment implements View.OnClickListener {
                 startActivity(intent);
                 break;
             case R.id.tv_more:
+
                 intent = new Intent(getActivity(), BluetoothEquipmentDynamicActivity.class);
                 startActivity(intent);
                 break;

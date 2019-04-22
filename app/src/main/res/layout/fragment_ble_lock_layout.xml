@@ -13,14 +13,16 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:gravity="center">
+            >
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                >
 
                 <RelativeLayout
+                    android:id="@+id/rl_icon"
+                    android:layout_centerInParent="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
 
@@ -46,7 +48,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerHorizontal="true"
-                        android:layout_marginTop="@dimen/dp_50" />
+                        android:layout_marginTop="@dimen/dp_40" />
 
                     <ImageView
                         android:id="@+id/iv_inner_middle"
@@ -59,7 +61,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerHorizontal="true"
-                        android:layout_marginTop="@dimen/dp_120"
+                        android:layout_marginTop="@dimen/dp_111"
                         android:text="jjfikfj"
                         android:textColor="#FEFEFE"
                         android:textSize="@dimen/sp_11" />
@@ -70,12 +72,13 @@
                     android:id="@+id/tv_external"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="@dimen/dp_10"
+                    android:layout_below="@id/rl_icon"
+                    android:layout_marginTop="@dimen/dp_18"
+                    android:layout_centerHorizontal="true"
                     android:text="jfifjj"
                     android:textColor="#C6F5FF"
                     android:textSize="@dimen/sp_10" />
-            </LinearLayout>
+            </RelativeLayout>
         </LinearLayout>
 
         <LinearLayout

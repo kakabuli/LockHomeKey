@@ -21,6 +21,7 @@ import com.kaadas.lock.adapter.BluetoothRecordAdapter;
 import com.kaadas.lock.bean.BluetoothItemRecordBean;
 import com.kaadas.lock.bean.BluetoothRecordBean;
 import com.kaadas.lock.utils.KeyConstants;
+import com.kaadas.lock.utils.LogUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -133,7 +134,6 @@ public class CatEyeFragment extends Fragment implements View.OnClickListener {
 
         }
     }
-
     @Override
     public void onClick(View v) {
         Intent intent;

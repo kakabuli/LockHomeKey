@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,7 @@ import com.kaadas.lock.adapter.BluetoothRecordAdapter;
 import com.kaadas.lock.bean.BluetoothItemRecordBean;
 import com.kaadas.lock.bean.BluetoothRecordBean;
 import com.kaadas.lock.utils.KeyConstants;
+import com.kaadas.lock.utils.LogUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -104,26 +106,7 @@ public class GatewayLockFragment extends Fragment implements View.OnClickListene
 
         switch (status) {
             case 1:
-                //WiFi不在线
-                ivExternalBig.setVisibility(View.VISIBLE);
-                ivExternalBig.setImageResource(R.mipmap.bluetooth_lock_close_big_middle_icon);
-                ivExternalMiddle.setVisibility(View.GONE);
-//                ivExternalMiddle.setImageResource();
-                ivExternalSmall.setVisibility(View.GONE);
-//                ivExternalSmall.setImageResource();
-                ivInnerMiddle.setVisibility(View.VISIBLE);
-                ivInnerMiddle.setImageResource(R.mipmap.bluetooth_lock_safe_inner_midder_icon);
-                ivInnerSmall.setVisibility(View.GONE);
-//                ivInnerSmall.setImageResource();
-                tvInner.setVisibility(View.VISIBLE);
-                tvInner.setText(getString(R.string.long_press_open_lock));
-                tvInner.setTextColor(getResources().getColor(R.color.cF7FDFD));
-                tvExternal.setVisibility(View.VISIBLE);
-                tvExternal.setTextColor(getResources().getColor(R.color.cC6F5FF));
-                tvExternal.setText(getText(R.string.bluetooth_close_status));
-                break;
-            case 2:
-                //“已启动布防，长按开锁“
+                //wifi不在线
                 ivExternalBig.setVisibility(View.VISIBLE);
                 ivExternalBig.setImageResource(R.mipmap.bluetooth_no_connect_big_middle_icon);
                 ivExternalMiddle.setVisibility(View.GONE);
@@ -140,6 +123,9 @@ public class GatewayLockFragment extends Fragment implements View.OnClickListene
                 tvExternal.setVisibility(View.GONE);
 //                tvExternal.setTextColor();
 //                tvExternal.setText();
+                break;
+            case 2:
+//     “已启动布防，长按开锁“
                 break;
             case 3:
 //                “安全模式”  长按不可APP开锁，提示
@@ -218,7 +204,6 @@ public class GatewayLockFragment extends Fragment implements View.OnClickListene
 
         }
     }
-
     @Override
     public void onClick(View v) {
         Intent intent;
@@ -228,6 +213,7 @@ public class GatewayLockFragment extends Fragment implements View.OnClickListene
                 startActivity(intent);
                 break;
             case R.id.tv_more:
+
                 intent = new Intent(getActivity(), GatewayEquipmentDynamicActivity.class);
                 startActivity(intent);
                 break;
