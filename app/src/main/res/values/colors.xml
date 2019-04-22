@@ -66,4 +66,9 @@
     <color name="background_color">#F2F2F2</color>
     <color name="c149EF3">#149EF3</color>
     <color name="c16B8FD">#16B8FD</color>
+    <color name="c14A6F5">#14A6F5</color>
+    <color name="c15A6F5">#15A6F5</color>
+    <color name="cC6F5FF">#C6F5FF</color>
+    <color name="cF7FDFD">#F7FDFD</color>
+    <color name="cFEFEFE">#FEFEFE</color>
 </resources>

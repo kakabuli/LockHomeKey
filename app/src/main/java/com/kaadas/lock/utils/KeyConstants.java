@@ -200,6 +200,10 @@ public class KeyConstants {
 
     //Touch ID
     public static final String TOUCH_ID = "touch_id";
+    //蓝牙动态 普通
+    public static final String BLUETOOTH_RECORD_COMMON = "bluetooth_record_common";
+    //蓝牙动态 警告
+    public static final String BLUETOOTH_RECORD_WARN = "bluetooth_record_warn";
 
     //开锁
     //已反锁

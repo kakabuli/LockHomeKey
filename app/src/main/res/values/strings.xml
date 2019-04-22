@@ -557,8 +557,6 @@
     <string name="is_authing">正在鉴权</string>
 
 
-
-
     <string name="check_bind_failed">查询绑定失败</string>
     <string name="is_checking_bind">正在查询设备是否绑定...</string>
     <string name="connect_failed_retry">连接设备失败，请重试</string>
@@ -600,4 +598,30 @@
     <string name="please_add_finger">请在有网络情况下添加指纹！</string>
     <string name="save_failed">保存失败</string>
     <string name="confirm_delete_fingerprint">确定删除指纹吗？</string>
+    <string name="guard_time">守护时间</string>
+    <string name="day">天</string>
+    <string name="guard_number">守护次数</string>
+    <string name="ci">次</string>
+    <string name="equipment_dynamic">设备动态</string>
+    <string name="bluetooth_synchronized_door_lock_status">蓝牙同步门锁状态</string>
+    <string name="synchronized_record">同步记录</string>
+    <string name="bluetooth_no_connect">蓝牙未连接</string>
+    <string name="equipment_out_of_range">设备不在有效范围内</string>
+    <string name="bluetooth_connecting">蓝牙链接中</string>
+    <string name="bluetooth_connect_success">蓝牙链接成功</string>
+    <string name="bluetooth_connect_fail">蓝牙链接失败</string>
+    <string name="long_press_open_lock">长按开锁</string>
+    <string name="bu_fang_status">布防状态</string>
+    <string name="double_lock_status">反锁状态</string>
+    <string name="bluetooth_close_status">关闭状态</string>
+    <string name="is_lock">正在开锁</string>
+    <string name="safe_status">安全状态</string>
+    <string name="wifi_not_online">WiFi不在线</string>
+    <string name="wifi_connecting">WiFi连接中</string>
+    <string name="wifi_connect_success">WiFi连接成功</string>
+    <string name="wifi_connect_fail">WiFi连接失败</string>
+    <string name="click_outside_door">点击查看门外</string>
+    <string name="cateye_online">猫眼在线</string>
+    <string name="device_has_offline">设备已离线</string>
+    <string name="cateye_offline">猫眼离线</string>
 </resources>
