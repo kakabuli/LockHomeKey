@@ -1,8 +1,6 @@
 package com.kaadas.lock.publiclibrary.mqtt.publishbean;
 
-import java.io.Serializable;
-
-public class BindGatewayBean extends BaseBean{
+public class BindGatewayBean extends GetBindGatewayListBean {
 
 
     /**

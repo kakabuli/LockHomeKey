@@ -16,7 +16,7 @@ import com.kaadas.lock.publiclibrary.http.util.RxjavaHelper;
 import com.kaadas.lock.publiclibrary.mqtt.GatewayBindListFuc;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttData;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttService;
-import com.kaadas.lock.publiclibrary.mqtt.publishutil.PublishResult;
+import com.kaadas.lock.publiclibrary.mqtt.PublishResult;
 import com.kaadas.lock.utils.LogUtils;
 
 import org.eclipse.paho.client.mqttv3.MqttMessage;
@@ -82,51 +82,51 @@ public class MyFragment extends Fragment {
         MqttService service = MyApplication.getInstance().getMqttService();
         MqttMessage message = getMessage(gatewayBindListFuc);
 
-        disposable = service.mqttPublish("/request/app/func", message)
-                .compose(RxjavaHelper.observeOnMainThread())
-                .filter(new Predicate<PublishResult>() {
-                    @Override
-                    public boolean test(PublishResult publishResult) throws Exception {
-                        if (publishResult.isPublishSuccess()) { //发布成功
-                            LogUtils.e("发布成功  " +publishResult.getMqttMessage().getId() +"  "+message.getId());
-                        } else {  //发布失败
-                            LogUtils.e("发布失败  ");
-                            return false;
-                        }
-                        return publishResult.getMqttMessage().getId() == message.getId();
-                    }
-                })
-                .timeout(10 * 1000, TimeUnit.MILLISECONDS)
-                .flatMap(new Function<PublishResult, ObservableSource<MqttData>>() {
-                    @Override
-                    public ObservableSource<MqttData> apply(PublishResult publishResult) throws Exception {
-                        LogUtils.e("发布成功111");
-                        if (publishResult.isPublishSuccess()) { //发布成功
-                            return MyApplication.getInstance().getMqttService().listenerDataBack();
-                        } else {
-                            if (disposable != null && !disposable.isDisposed()) {
-                                LogUtils.e("发布失败  此次发布结束  处理消息");
-                                disposable.dispose();
-                            }
-                            return null;
-                        }
-                    }
-                }).subscribe(new Consumer<MqttData>() {
-                    @Override
-                    public void accept(MqttData data) throws Exception {
-                        if ("gatewayBindList".equals(data.getFunc())){
-                            LogUtils.e("收到网关列表   " + data.getPayload());
-                            if (disposable != null && !disposable.isDisposed()) {
-                                disposable.dispose();
-                            }
-                        }
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        LogUtils.e("发布消息失败     " + throwable.getMessage());
-                    }
-                });
+//        disposable = service.mqttPublish("/request/app/func", message)
+//                .compose(RxjavaHelper.observeOnMainThread())
+//                .filter(new Predicate<PublishResult>() {
+//                    @Override
+//                    public boolean test(PublishResult publishResult) throws Exception {
+//                        if (publishResult.isPublishSuccess()) { //发布成功
+//                            LogUtils.e("发布成功  " +publishResult.getMqttMessage().getId() +"  "+message.getId());
+//                        } else {  //发布失败
+//                            LogUtils.e("发布失败  ");
+//                            return false;
+//                        }
+//                        return publishResult.getMqttMessage().getId() == message.getId();
+//                    }
+//                })
+//                .timeout(10 * 1000, TimeUnit.MILLISECONDS)
+//                .flatMap(new Function<PublishResult, ObservableSource<MqttData>>() {
+//                    @Override
+//                    public ObservableSource<MqttData> apply(PublishResult publishResult) throws Exception {
+//                        LogUtils.e("发布成功111");
+//                        if (publishResult.isPublishSuccess()) { //发布成功
+//                            return MyApplication.getInstance().getMqttService().listenerDataBack();
+//                        } else {
+//                            if (disposable != null && !disposable.isDisposed()) {
+//                                LogUtils.e("发布失败  此次发布结束  处理消息");
+//                                disposable.dispose();
+//                            }
+//                            return null;
+//                        }
+//                    }
+//                }).subscribe(new Consumer<MqttData>() {
+//                    @Override
+//                    public void accept(MqttData data) throws Exception {
+//                        if ("gatewayBindList".equals(data.getFunc())){
+//                            LogUtils.e("收到网关列表   " + data.getPayload());
+//                            if (disposable != null && !disposable.isDisposed()) {
+//                                disposable.dispose();
+//                            }
+//                        }
+//                    }
+//                }, new Consumer<Throwable>() {
+//                    @Override
+//                    public void accept(Throwable throwable) throws Exception {
+//                        LogUtils.e("发布消息失败     " + throwable.getMessage());
+//                    }
+//                });
     }
 
     @Override

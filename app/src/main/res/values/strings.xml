@@ -624,4 +624,7 @@
     <string name="cateye_online">猫眼在线</string>
     <string name="device_has_offline">设备已离线</string>
     <string name="cateye_offline">猫眼离线</string>
+    <string name="already_notify_admin_sure">已通知管理员确认</string>
+    <string name="already_notify_admin">已通知管理员确认</string>
+    <string name="already_bind_gatway">您已绑定该网关</string>
 </resources>

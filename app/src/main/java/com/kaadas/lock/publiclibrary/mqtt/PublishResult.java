@@ -1,4 +1,4 @@
-package com.kaadas.lock.publiclibrary.mqtt.publishutil;
+package com.kaadas.lock.publiclibrary.mqtt;
 
 import org.eclipse.paho.client.mqttv3.IMqttToken;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
@@ -8,7 +8,6 @@ public class PublishResult {
     private boolean isPublishSuccess;
     private IMqttToken asyncActionToken;
     private MqttMessage mqttMessage;
-
 
 
     public PublishResult(boolean publishResult, IMqttToken asyncActionToken, MqttMessage mqttMessage) {

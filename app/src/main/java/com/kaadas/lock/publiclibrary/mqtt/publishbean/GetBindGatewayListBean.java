@@ -2,17 +2,17 @@ package com.kaadas.lock.publiclibrary.mqtt.publishbean;
 
 import java.io.Serializable;
 
-public class BaseBean implements Serializable {
+public class GetBindGatewayListBean implements Serializable {
     private String uid;
 
     private String func;
 
-    public BaseBean(String uid, String func) {
+    public GetBindGatewayListBean(String uid, String func) {
         this.uid = uid;
         this.func = func;
     }
 
-    public BaseBean() {
+    public GetBindGatewayListBean() {
     }
 
     public String getUid() {

@@ -111,7 +111,6 @@ public class BindBlePresenter<T> extends BasePresenter<IBindBleView> {
                     unbindDevice();
                     toDisposable(pwd2Disposable);
                 }
-
             }
         });
         compositeDisposable.add(pwd2Disposable);

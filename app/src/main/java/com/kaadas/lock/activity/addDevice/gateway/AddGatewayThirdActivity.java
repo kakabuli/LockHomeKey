@@ -71,19 +71,13 @@ public class AddGatewayThirdActivity extends BaseActivity<GatewayBindView, Gatew
                 finish();
                 break;
             case R.id.cancel_bind:
-                Intent cancelBind = new Intent(this, DeviceGatewayBindListView.class);
-                startActivity(cancelBind);
-                finish();
+//                Intent cancelBind = new Intent(this, DeviceGatewayBindListView.class);
+//                startActivity(cancelBind);
+//                finish();
                 break;
         }
     }
 
-    @Override
-    public void bindGatewayPublishFail(String func) {
-        ToastUtil.getInstance().showLong(getString(R.string.publish_message_fail));
-        LogUtils.e("Publish Fail"+func);
-
-    }
 
     @Override
     public void bindGatewaySuccess() {
@@ -94,15 +88,31 @@ public class AddGatewayThirdActivity extends BaseActivity<GatewayBindView, Gatew
 
     @Override
     public void bindGatewayFail(String code,String msg) {
-        Intent failIntent = new Intent(this, AddGatewayFailActivity.class);
-        failIntent.putExtra("code",code);
-        failIntent.putExtra("msg",msg);
-        startActivity(failIntent);
-        finish();
+        if ("812".equals(code)){ //通知管理员确认
+            ToastUtil.getInstance().showLong(R.string.already_notify_admin);
+            Intent cancelBind = new Intent(this, DeviceGatewayBindListView.class);
+            startActivity(cancelBind);
+            finish();
+        }else if ("813".equals(code)){ //您已绑定该网关
+            ToastUtil.getInstance().showLong(R.string.already_bind_gatway);
+            Intent cancelBind = new Intent(this, DeviceGatewayBindListView.class);
+            startActivity(cancelBind);
+            finish();
+        }else {
+            Intent failIntent = new Intent(this, AddGatewayFailActivity.class);
+            failIntent.putExtra("code",code);
+            failIntent.putExtra("msg",msg);
+            startActivity(failIntent);
+            finish();
+        }
     }
 
     @Override
     public void bindGatewayThrowable(Throwable throwable) {
+
         LogUtils.e("绑定网关异常"+throwable);
+        Intent failIntent = new Intent(this, AddGatewayFailActivity.class);
+        startActivity(failIntent);
+        finish();
     }
 }

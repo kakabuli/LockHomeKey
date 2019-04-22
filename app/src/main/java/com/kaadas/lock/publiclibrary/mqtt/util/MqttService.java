@@ -9,8 +9,7 @@ import android.text.TextUtils;
 
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
-import com.kaadas.lock.publiclibrary.mqtt.publishutil.PublishFucConstant;
-import com.kaadas.lock.publiclibrary.mqtt.publishutil.PublishResult;
+import com.kaadas.lock.publiclibrary.mqtt.PublishResult;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.NetUtil;
 import com.kaadas.lock.utils.ToastUtil;
@@ -28,7 +27,6 @@ import org.json.JSONObject;
 
 import io.reactivex.Observable;
 import io.reactivex.subjects.PublishSubject;
-import io.reactivex.subjects.ReplaySubject;
 
 public class MqttService extends Service {
 
@@ -149,7 +147,7 @@ public class MqttService extends Service {
             return;
         }
         if (mqttClient==null){
-            mqttClient = new MqttAndroidClient(MyApplication.getInstance(), MqttUrlConstant.MQTT_BASE_URL, "app:" + userId);
+            mqttClient = new MqttAndroidClient(MyApplication.getInstance(), MqttConstant.MQTT_BASE_URL, "app:" + userId);
         }
         //已经连接
         if (mqttClient.isConnected()) {
@@ -186,6 +184,9 @@ public class MqttService extends Service {
 
             @Override
             public void messageArrived(String topic, MqttMessage message) throws Exception {
+                if (message==null){
+                    return;
+                }
                 //收到消息
                 String payload = new String(message.getPayload());
                 LogUtils.e("收到mqtt消息", payload + "---topic" + topic + "  messageID  "+message.getId());
@@ -194,7 +195,7 @@ public class MqttService extends Service {
                 MqttData mqttData = new MqttData(jsonObject.getString("func"),topic,payload,message);
                 //200毫秒后获取数据
                 onReceiverDataObservable.onNext(mqttData);
-                if (PublishFucConstant.GATEWAY_STATE.equals(mqttData.getFunc())){
+                if (MqttConstant.GATEWAY_STATE.equals(mqttData.getFunc())){
                     notifyDataObservable.onNext(mqttData);
                 }
             }
@@ -300,7 +301,7 @@ public class MqttService extends Service {
 
 
     //发布
-    public Observable<PublishResult> mqttPublish(String topic, MqttMessage mqttMessage) {
+    public Observable<MqttData> mqttPublish(String topic, MqttMessage mqttMessage) {
         LogUtils.e("发布消息   " + mqttMessage.getId(), new String(mqttMessage.getPayload()));
         try {
             mqttClient.publish(topic, mqttMessage, null, new IMqttActionListener() {
@@ -321,7 +322,7 @@ public class MqttService extends Service {
         } catch (MqttException e) {
             e.printStackTrace();
         }
-        return publishObservable;
+        return onReceiverDataObservable;
     }
 
     //断开连接
