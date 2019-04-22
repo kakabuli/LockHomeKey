@@ -627,4 +627,8 @@
     <string name="already_notify_admin_sure">已通知管理员确认</string>
     <string name="already_notify_admin">已通知管理员确认</string>
     <string name="already_bind_gatway">您已绑定该网关</string>
+    <string name="open_lock_record">开锁记录</string>
+    <string name="warn_information">预警信息</string>
+    <string name="device_dynamic">设备动态</string>
+    <string name="cateye_dynamic">猫眼动态</string>
 </resources>

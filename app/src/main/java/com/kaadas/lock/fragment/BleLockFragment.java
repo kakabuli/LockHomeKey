@@ -1,6 +1,6 @@
 package com.kaadas.lock.fragment;
 
-import android.graphics.Color;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -11,9 +11,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.kaadas.lock.R;
+import com.kaadas.lock.activity.home.BluetoothEquipmentDynamicActivity;
 import com.kaadas.lock.adapter.BluetoothRecordAdapter;
 import com.kaadas.lock.bean.BluetoothItemRecordBean;
 import com.kaadas.lock.bean.BluetoothRecordBean;
@@ -25,7 +27,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class BleLockFragment extends Fragment {
+public class BleLockFragment extends Fragment implements View.OnClickListener {
 
     List<BluetoothRecordBean> list = new ArrayList<>();
     @BindView(R.id.recycleview)
@@ -44,6 +46,10 @@ public class BleLockFragment extends Fragment {
     TextView tvInner;
     @BindView(R.id.tv_external)
     TextView tvExternal;
+    @BindView(R.id.rl_device_dynamic)
+    RelativeLayout rlDeviceDynamic;
+    @BindView(R.id.tv_more)
+    TextView tvMore;
 
     @Nullable
     @Override
@@ -51,7 +57,9 @@ public class BleLockFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_ble_lock_layout, null);
         ButterKnife.bind(this, view);
         initRecycleView();
-        changeOpenLockStatus(2);
+        changeOpenLockStatus(16);
+        rlDeviceDynamic.setOnClickListener(this);
+        tvMore.setOnClickListener(this);
         return view;
     }
 
@@ -63,7 +71,7 @@ public class BleLockFragment extends Fragment {
         itemList2.add(new BluetoothItemRecordBean("jff", KeyConstants.BLUETOOTH_RECORD_WARN, "fjjf", true, false));
         itemList2.add(new BluetoothItemRecordBean("jff", KeyConstants.BLUETOOTH_RECORD_COMMON, "fjjf", false, false));
         itemList2.add(new BluetoothItemRecordBean("jff", KeyConstants.BLUETOOTH_RECORD_WARN, "fjjf", false, true));
-        list.add(new BluetoothRecordBean("jfjfk", itemList2, false));
+        list.add(new BluetoothRecordBean("jfjfk", itemList2, true));
         BluetoothRecordAdapter bluetoothRecordAdapter = new BluetoothRecordAdapter(list);
         recycleview.setLayoutManager(new LinearLayoutManager(getActivity()));
         recycleview.setAdapter(bluetoothRecordAdapter);
@@ -340,6 +348,22 @@ public class BleLockFragment extends Fragment {
                 tvExternal.setText(getString(R.string.safe_status));
                 break;
 
+        }
+    }
+
+
+    @Override
+    public void onClick(View v) {
+        Intent intent;
+        switch (v.getId()) {
+            case R.id.rl_device_dynamic:
+                intent = new Intent(getActivity(), BluetoothEquipmentDynamicActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.tv_more:
+                intent = new Intent(getActivity(), BluetoothEquipmentDynamicActivity.class);
+                startActivity(intent);
+                break;
         }
     }
 }

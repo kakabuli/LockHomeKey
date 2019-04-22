@@ -96,6 +96,7 @@
                     android:layout_height="wrap_content" />
 
                 <TextView
+                    android:id="@+id/tv_more"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
@@ -153,6 +154,7 @@
 
 
         <RelativeLayout
+            android:id="@+id/rl_device_dynamic"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1">

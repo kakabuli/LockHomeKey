@@ -1,5 +1,6 @@
 package com.kaadas.lock.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -10,9 +11,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.kaadas.lock.R;
+import com.kaadas.lock.activity.home.CateyeEquipmentDynamicActivity;
+import com.kaadas.lock.activity.home.GatewayEquipmentDynamicActivity;
 import com.kaadas.lock.adapter.BluetoothRecordAdapter;
 import com.kaadas.lock.bean.BluetoothItemRecordBean;
 import com.kaadas.lock.bean.BluetoothRecordBean;
@@ -24,7 +28,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class CatEyeFragment extends Fragment {
+public class CatEyeFragment extends Fragment implements View.OnClickListener {
 
     List<BluetoothRecordBean> list = new ArrayList<>();
     @BindView(R.id.recycleview)
@@ -43,6 +47,10 @@ public class CatEyeFragment extends Fragment {
     TextView tvInner;
     @BindView(R.id.tv_external)
     TextView tvExternal;
+    @BindView(R.id.tv_more)
+    TextView tvMore;
+    @BindView(R.id.rl_device_dynamic)
+    RelativeLayout rlDeviceDynamic;
 
     @Nullable
     @Override
@@ -51,6 +59,8 @@ public class CatEyeFragment extends Fragment {
         ButterKnife.bind(this, view);
         initRecycleView();
         changeOpenLockStatus(1);
+        tvMore.setOnClickListener(this);
+        rlDeviceDynamic.setOnClickListener(this);
         return view;
     }
 
@@ -121,6 +131,21 @@ public class CatEyeFragment extends Fragment {
                 break;
 
 
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        Intent intent;
+        switch (v.getId()) {
+            case R.id.rl_device_dynamic:
+                intent = new Intent(getActivity(), CateyeEquipmentDynamicActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.tv_more:
+                intent = new Intent(getActivity(), CateyeEquipmentDynamicActivity.class);
+                startActivity(intent);
+                break;
         }
     }
 }
