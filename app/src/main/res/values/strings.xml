@@ -631,4 +631,6 @@
     <string name="warn_information">预警信息</string>
     <string name="device_dynamic">设备动态</string>
     <string name="cateye_dynamic">猫眼动态</string>
+    <string name="please_input_password_name">请输入密码名称</string>
+    <string name="password_detail">密码详情</string>
 </resources>
