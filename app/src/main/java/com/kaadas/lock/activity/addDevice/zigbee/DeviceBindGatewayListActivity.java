@@ -12,6 +12,7 @@ import android.widget.ImageView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.kaadas.lock.R;
+import com.kaadas.lock.activity.addDevice.cateye.AddDeviceCatEyeCheckWifi;
 import com.kaadas.lock.activity.addDevice.cateye.AddDeviceCatEyeFirstActivity;
 import com.kaadas.lock.activity.addDevice.gateway.AddGatewayFirstActivity;
 import com.kaadas.lock.adapter.AddZigbeeBindGatewayAdapter;
@@ -20,6 +21,7 @@ import com.kaadas.lock.bean.deviceAdd.AddZigbeeBindGatewayBean;
 import com.kaadas.lock.mvp.presenter.deviceaddpresenter.DeviceGatewayBindListPresenter;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.GetBindGatewayListResult;
 import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.NetUtil;
 import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.ToastUtil;
 import com.kaadas.lock.mvp.view.deviceaddview.DeviceGatewayBindListView;
@@ -119,9 +121,26 @@ DeviceBindGatewayListActivity extends BaseActivity<DeviceGatewayBindListView, De
                     ToastUtil.getInstance().showShort(getString(R.string.select_bindgateway));
                 } else {
                         if (type == 2) {
-                            //跳转猫眼流程
-                            Intent catEyeIntent = new Intent(this, AddDeviceCatEyeFirstActivity.class);
-                            startActivity(catEyeIntent);
+                            //跳转猫眼流程,需要网络
+                            if (NetUtil.isNetworkAvailable()){
+                                if (NetUtil.isWifi()){
+                                    mPresenter.getGatewayWifiPwd();
+
+                                    //获取wifi的名称
+                                    Intent catEyeIntent = new Intent(this, AddDeviceCatEyeFirstActivity.class);
+                                    startActivity(catEyeIntent);
+
+
+
+
+                                }else{
+                                    Intent wifiIntent=new Intent(this, AddDeviceCatEyeCheckWifi.class);
+                                    startActivity(wifiIntent);
+                                }
+                            }else{
+                              ToastUtil.getInstance().showShort(R.string.network_exception);
+                            }
+
                         } else if (type == 3) {
                             //跳转zigbee锁流程
                             Intent intent = new Intent(this, AddZigbeeLockFirstActivity.class);

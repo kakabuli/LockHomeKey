@@ -548,4 +548,6 @@
     <string name="door_card_detail">门卡详情</string>
     <string name="fingerprint_detail">指纹详情</string>
     <string name="user_password">用户密码</string>
+    <string name="connect_cateye_check_wifi">目前手机连接WiFi与所选网关不一致，请切换手机网络为所选网关</string>
+    <string name="switch_wifi">前去切换WIFI</string>
 </resources>
