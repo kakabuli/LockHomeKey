@@ -633,4 +633,6 @@
     <string name="cateye_dynamic">猫眼动态</string>
     <string name="please_input_password_name">请输入密码名称</string>
     <string name="password_detail">密码详情</string>
+    <string name="safe_protection">安全布防</string>
+    <string name="stress_warn">胁迫警告</string>
 </resources>

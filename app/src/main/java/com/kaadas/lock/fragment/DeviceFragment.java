@@ -18,8 +18,8 @@ import android.widget.RelativeLayout;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.addDevice.DeviceAddActivity;
-import com.kaadas.lock.activity.device.BluetoothLockAuthorizationActivity;
 import com.kaadas.lock.activity.device.BluetoothLockFunctionActivity;
+import com.kaadas.lock.activity.device.gateway.GatewayLockFunctionActivity;
 import com.kaadas.lock.adapter.DeviceDetailAdapter;
 import com.kaadas.lock.bean.DeviceDetailBean;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
@@ -156,6 +156,10 @@ public class DeviceFragment extends Fragment implements BaseQuickAdapter.OnItemC
                 //蓝牙
                 intent = new Intent(getActivity(), BluetoothLockFunctionActivity.class);
 //                intent = new Intent(getActivity(), BluetoothLockAuthorizationActivity.class);
+                startActivity(intent);
+                break;
+            case 2:
+                intent = new Intent(getActivity(), GatewayLockFunctionActivity.class);
                 startActivity(intent);
                 break;
         }

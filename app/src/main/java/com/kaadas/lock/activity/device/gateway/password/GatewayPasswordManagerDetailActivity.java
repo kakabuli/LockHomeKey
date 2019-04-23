@@ -1,4 +1,4 @@
-package com.kaadas.lock.activity.device.bluetooth.password;
+package com.kaadas.lock.activity.device.gateway.password;
 
 import android.app.AlertDialog;
 import android.os.Bundle;
@@ -22,7 +22,7 @@ import butterknife.ButterKnife;
 /**
  * Created by David
  */
-public class BluetoothPasswordManagerDetailActivity extends AppCompatActivity implements View.OnClickListener {
+public class GatewayPasswordManagerDetailActivity extends AppCompatActivity implements View.OnClickListener {
 
 
     @BindView(R.id.iv_back)
@@ -43,7 +43,7 @@ public class BluetoothPasswordManagerDetailActivity extends AppCompatActivity im
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_bluetooth_password_manager_detail);
+        setContentView(R.layout.activity_gateway_password_manager_detail);
         ButterKnife.bind(this);
         ivBack.setOnClickListener(this);
         tvContent.setText(getString(R.string.user_password));

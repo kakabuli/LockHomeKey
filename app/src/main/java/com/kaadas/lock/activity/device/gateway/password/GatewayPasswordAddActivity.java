@@ -1,4 +1,4 @@
-package com.kaadas.lock.activity.device.bluetooth.password;
+package com.kaadas.lock.activity.device.gateway.password;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -13,21 +13,20 @@ import android.widget.TextView;
 
 import com.flyco.tablayout.SlidingTabLayout;
 import com.kaadas.lock.R;
-import com.kaadas.lock.fragment.PasswordPeriodFragment;
-import com.kaadas.lock.fragment.PasswordTemporaryFragment;
-import com.kaadas.lock.fragment.PasswordTimeFragment;
-import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
-
+import com.kaadas.lock.fragment.GatewayPasswordPeriodFragment;
+import com.kaadas.lock.fragment.GatewayPasswordTemporaryFragment;
+import com.kaadas.lock.fragment.GatewayPasswordTimeFragment;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
 /**
  * Created by David
  */
-public class BluetoothUserPasswordAddActivity extends AppCompatActivity implements View.OnClickListener {
+public class GatewayPasswordAddActivity extends AppCompatActivity implements View.OnClickListener {
 
 
     @BindView(R.id.viewpager)
@@ -43,12 +42,11 @@ public class BluetoothUserPasswordAddActivity extends AppCompatActivity implemen
 
 
     private String[] tabs;
-    private BleLockInfo bleLockInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_bluetooth_user_password_add);
+        setContentView(R.layout.activity_gateway_password_add);
 
         ButterKnife.bind(this);
         ivBack.setOnClickListener(this);
@@ -58,9 +56,6 @@ public class BluetoothUserPasswordAddActivity extends AppCompatActivity implemen
         slidingTabLayout.setViewPager(viewPager);
     }
 
-    public BleLockInfo getLockInfo() {
-        return bleLockInfo;
-    }
 
     /**
      * 初始化ViewPager控件
@@ -71,9 +66,9 @@ public class BluetoothUserPasswordAddActivity extends AppCompatActivity implemen
         //添加Fragment
         // 这里可以从Activity中传递数据到Fragment中
         viewPager.setOffscreenPageLimit(3);
-        mFragments.add(new PasswordTimeFragment());
-        mFragments.add(new PasswordPeriodFragment());
-        mFragments.add(new PasswordTemporaryFragment());
+        mFragments.add(new GatewayPasswordTimeFragment());
+        mFragments.add(new GatewayPasswordPeriodFragment());
+        mFragments.add(new GatewayPasswordTemporaryFragment());
 
         //适配器
         mPagerAdapter = new ListFragmentPagerAdapter(getSupportFragmentManager(), mFragments);
