@@ -62,7 +62,7 @@ public class BluetoothSharedDeviceBean implements Serializable {
     public static class DataBean implements Serializable {
         @Override
         public String toString() {
-            return "DataBean{" +
+            return "GatewayInfo{" +
                     "_id='" + _id + '\'' +
                     ", adminname='" + adminname + '\'' +
                     ", uname='" + uname + '\'' +

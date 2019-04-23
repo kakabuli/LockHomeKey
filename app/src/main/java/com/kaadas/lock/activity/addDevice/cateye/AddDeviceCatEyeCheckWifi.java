@@ -51,6 +51,8 @@ public class AddDeviceCatEyeCheckWifi extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        //todo  检查当前WiFi与网关WiFi是否一致  一致则跳转添加猫眼扫描界面   否则不做逻辑
+
         LogUtils.e("onResume");
     }
 

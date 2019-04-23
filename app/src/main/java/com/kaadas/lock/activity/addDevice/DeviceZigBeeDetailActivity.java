@@ -43,30 +43,30 @@ public class DeviceZigBeeDetailActivity extends AppCompatActivity implements Bas
     }
 
     private void initData() {
-        mList=new ArrayList<>();
-        AddZigbeeDetailItemBean gateway=new AddZigbeeDetailItemBean();
+        mList = new ArrayList<>();
+        AddZigbeeDetailItemBean gateway = new AddZigbeeDetailItemBean();
         gateway.setImageId(R.mipmap.gateway_icon);
         gateway.setText(getString(R.string.zigbee_gateway));
         gateway.setType(1);
         mList.add(gateway);
 
-        AddZigbeeDetailItemBean catEye=new AddZigbeeDetailItemBean();
+        AddZigbeeDetailItemBean catEye = new AddZigbeeDetailItemBean();
         catEye.setImageId(R.mipmap.cat_eye_icon);
         catEye.setText(getString(R.string.zigbee_cat_eye));
         catEye.setType(2);
         mList.add(catEye);
 
-        AddZigbeeDetailItemBean lock=new AddZigbeeDetailItemBean();
+        AddZigbeeDetailItemBean lock = new AddZigbeeDetailItemBean();
         lock.setImageId(R.mipmap.zigbee_lock);
         lock.setText(getString(R.string.kaadas_lock));
-        lock.setType(3 );
+        lock.setType(3);
         mList.add(lock);
     }
 
     private void initView() {
         recycler.setLayoutManager(new LinearLayoutManager(this));
-        if (mList!=null){
-            zigbeeDetailAdapter=new ZigbeeDetailAdapter(mList);
+        if (mList != null) {
+            zigbeeDetailAdapter = new ZigbeeDetailAdapter(mList);
             zigbeeDetailAdapter.setOnItemClickListener(this);
             recycler.setAdapter(zigbeeDetailAdapter);
         }
@@ -80,23 +80,23 @@ public class DeviceZigBeeDetailActivity extends AppCompatActivity implements Bas
 
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-        AddZigbeeDetailItemBean detailItemBean=mList.get(position);
+        AddZigbeeDetailItemBean detailItemBean = mList.get(position);
         //如果是网关直接跳转到网关添加流程，如果不是需要判断是否存在网关。
-        if (detailItemBean.getType()==1){
+        if (detailItemBean.getType() == 1) {
             //直接跳转到网关添加流程
-            Intent gatewayIntent=new Intent(this, AddGatewayFirstActivity.class);
+            Intent gatewayIntent = new Intent(this, AddGatewayFirstActivity.class);
             startActivity(gatewayIntent);
-        }else{
+        } else {
             //获取绑定的网关列表，如果存在网关
-            Boolean flag=getBindGatewayList();
-            if (flag){
+            Boolean flag = getBindGatewayList();
+            if (flag) {
                 //跳转到网关列表
-                Intent zigbeeIntent=new Intent(this, DeviceBindGatewayListActivity.class);
-                int type=detailItemBean.getType();
-                zigbeeIntent.putExtra("type",type);
+                Intent zigbeeIntent = new Intent(this, DeviceBindGatewayListActivity.class);
+                int type = detailItemBean.getType();
+                zigbeeIntent.putExtra("type", type);
                 startActivity(zigbeeIntent);
 
-            }else{
+            } else {
                 AlertDialogUtil.getInstance().havaNoEditTwoButtonDialog(this, getString(R.string.no_usable_gateway), getString(R.string.add_zigbee_device_first_pair_gateway), getString(R.string.cancel), getString(R.string.configuration), new AlertDialogUtil.ClickListener() {
                     @Override
                     public void left() {
@@ -106,7 +106,7 @@ public class DeviceZigBeeDetailActivity extends AppCompatActivity implements Bas
                     @Override
                     public void right() {
                         //跳转到配置网关添加的流程
-                        Intent gatewayIntent=new Intent(DeviceZigBeeDetailActivity.this, AddGatewayFirstActivity.class);
+                        Intent gatewayIntent = new Intent(DeviceZigBeeDetailActivity.this, AddGatewayFirstActivity.class);
                         startActivity(gatewayIntent);
                     }
                 });
