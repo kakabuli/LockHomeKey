@@ -94,12 +94,14 @@ public class DeviceGatewayBindListPresenter<T> extends BasePresenter<DeviceGatew
 
     //获取网关的wifi名称和网关的wifi密码
     public void getGatewayWifiPwd(){
-       // GetWifiBasicBean getWifiBasicBean=new GetWifiBasicBean(Constants.MSG_TYPE,MyApplication.getInstance().getUid())
+
         if (mqttService!=null){
 
         }
-
-
     }
+
+    //获取
+
+
 
 }

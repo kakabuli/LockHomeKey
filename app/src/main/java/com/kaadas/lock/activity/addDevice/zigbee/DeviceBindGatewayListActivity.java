@@ -125,13 +125,9 @@ DeviceBindGatewayListActivity extends BaseActivity<DeviceGatewayBindListView, De
                             if (NetUtil.isNetworkAvailable()){
                                 if (NetUtil.isWifi()){
                                     mPresenter.getGatewayWifiPwd();
-
                                     //获取wifi的名称
                                     Intent catEyeIntent = new Intent(this, AddDeviceCatEyeFirstActivity.class);
                                     startActivity(catEyeIntent);
-
-
-
 
                                 }else{
                                     Intent wifiIntent=new Intent(this, AddDeviceCatEyeCheckWifi.class);

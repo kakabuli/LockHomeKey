@@ -25,7 +25,7 @@ public class MqttCommandFactory {
     }
 
     /**
-     * 绑定网关
+     * 获取绑定网关的列表
      *
      * @param uid
      * @return
@@ -34,6 +34,23 @@ public class MqttCommandFactory {
         GetBindGatewayListBean bindGatewayBean = new GetBindGatewayListBean(uid, MqttConstant.GET_BIND_GATEWAY_LIST);
         return getMessage(bindGatewayBean);
     }
+
+    /**
+     * 获取WIFI无线设置
+     * @param
+     * @return
+     */
+   /* public static MqttMessage getGatewayInfo(String uid,String gwId,String deviceId ){
+
+
+    }*/
+
+
+
+
+
+
+
 
 
     public static MqttMessage getMessage(Object o) {
