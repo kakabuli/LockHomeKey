@@ -46,7 +46,7 @@ public class DoorCardConnectSuccessActivity extends AppCompatActivity implements
                 break;
             case R.id.btn:
 //                Intent intent=new Intent(this,DoorCardIdentificationActivity.class);
-                Intent intent = new Intent(this, DoorCardAddSuccessActivity.class);
+                Intent intent = new Intent(this, AddDoorCardSuccessActivity.class);
                 startActivity(intent);
                 finish();
                 break;

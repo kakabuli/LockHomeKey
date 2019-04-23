@@ -10,6 +10,8 @@ import android.widget.ImageView;
 
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.addDevice.DeviceAddHelpActivity;
+import com.kaadas.lock.utils.KeyConstants;
+import com.kaadas.lock.utils.LogUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -23,10 +25,17 @@ public class AddBluetoothSecondActivity extends AppCompatActivity {
     Button buttonNext;
     @BindView(R.id.help)
     ImageView help;
+    private boolean isBind;
+    private String password1;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Intent intent = getIntent();
+        password1 = intent.getStringExtra(KeyConstants.PASSWORD1);
+        LogUtils.e("第二步   " + password1);
+        isBind = intent.getBooleanExtra(KeyConstants.IS_BIND,true);
+
         setContentView(R.layout.device_bluetooth_second);
         ButterKnife.bind(this);
     }
@@ -38,12 +47,18 @@ public class AddBluetoothSecondActivity extends AppCompatActivity {
                 finish();
                 break;
             case R.id.button_next:
+
                 Intent nextIntent = new Intent(this, AddBluetoothThirdActivity.class);
+                nextIntent.putExtra(KeyConstants.PASSWORD1, password1);
+                nextIntent.putExtra(KeyConstants.IS_BIND, isBind);
                 startActivity(nextIntent);
                 break;
             case R.id.help:
                 Intent intent=new Intent(this, DeviceAddHelpActivity.class);
                 startActivity(intent);
+
+
+
                 break;
         }
     }

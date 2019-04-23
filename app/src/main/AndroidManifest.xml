@@ -219,7 +219,7 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait"></activity>
         <activity
-            android:name=".activity.addDevice.bluetooth.AddBluetoothPairSuccessActivity"
+            android:name=".activity.addDevice.bluetooth.AddBluetoothSuccessActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan"></activity>
@@ -371,86 +371,102 @@
             android:name=".activity.device.bluetooth.password.BluetoothUserPasswordAddActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"></activity>
-        <activity android:name=".activity.device.bluetooth.password.CycleRulesActivity"
+        <activity
+            android:name=".activity.device.bluetooth.password.CycleRulesActivity"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            ></activity>
-        <activity android:name=".activity.device.bluetooth.password.BluetoothPasswordShareActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activity.device.bluetooth.password.BluetoothPasswordShareActivity"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            ></activity>
-        <activity android:name=".activity.device.bluetooth.fingerprint.FingerprintManagerActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activity.device.bluetooth.fingerprint.FingerprintManagerActivity"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait"
-            ></activity>
-        <activity android:name=".activity.device.bluetooth.fingerprint.FingerprintManagerDetailActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activity.device.bluetooth.fingerprint.FingerprintManagerDetailActivity"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            ></activity>
-        <activity android:name=".activity.device.bluetooth.fingerprint.FingerprintLinkBluetoothActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activity.device.bluetooth.fingerprint.FingerprintLinkBluetoothActivity"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            ></activity>
-        <activity android:name=".activity.device.bluetooth.fingerprint.FingerprintCollectionActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activity.device.bluetooth.fingerprint.FingerprintCollectionActivity"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            ></activity>
-        <activity android:name=".activity.device.bluetooth.fingerprint.FingerprintNoConnectBluetoothOneActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activity.device.bluetooth.fingerprint.FingerprintNoConnectBluetoothOneActivity"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            ></activity>
-        <activity android:name=".activity.device.bluetooth.fingerprint.FingerprintNoConnectBluetoothTwoActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activity.device.bluetooth.fingerprint.FingerprintNoConnectBluetoothTwoActivity"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            ></activity>
-        <activity android:name=".activity.device.bluetooth.fingerprint.FingerprintNoConnectBluetoothCollectionActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activity.device.bluetooth.fingerprint.FingerprintNoConnectBluetoothCollectionActivity"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            ></activity>
-        <activity android:name=".activity.device.bluetooth.fingerprint.FingerprintCollectionSuccessActivity"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            ></activity>
-        <activity android:name=".activity.device.bluetooth.card.DoorCardManagerActivity"
+            android:screenOrientation="portrait"></activity>
+
+        <activity
+            android:name=".activity.device.bluetooth.card.DoorCardManagerActivity"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait"
-            ></activity>
-        <activity android:name=".activity.device.bluetooth.card.DoorCardNearDoorActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activity.device.bluetooth.card.DoorCardNearDoorActivity"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            ></activity>
-        <activity android:name=".activity.device.bluetooth.card.DoorCardConnectFailActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activity.device.bluetooth.card.DoorCardConnectFailActivity"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            ></activity>
-        <activity android:name=".activity.device.bluetooth.card.DoorCardConnectSuccessActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activity.device.bluetooth.card.DoorCardConnectSuccessActivity"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            ></activity>
-        <activity android:name=".activity.device.bluetooth.card.DoorCardIdentificationActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activity.device.bluetooth.card.DoorCardIdentificationActivity"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            ></activity>
-        <activity android:name=".activity.device.bluetooth.card.DoorCardAddSuccessActivity"
+            android:screenOrientation="portrait"></activity>
+
+        <activity
+            android:name=".activity.device.bluetooth.card.DoorCardNoConnectOneActivity"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            ></activity>
-        <activity android:name=".activity.device.bluetooth.card.DoorCardNoConnectOneActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activity.device.bluetooth.card.DoorCardNoConnectTwoActivity"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            ></activity>
-        <activity android:name=".activity.device.bluetooth.card.DoorCardNoConnectTwoActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activity.device.bluetooth.card.DoorCardNoConnectThreeActivity"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            ></activity>
-        <activity android:name=".activity.device.bluetooth.card.DoorCardNoConnectThreeActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activity.device.bluetooth.card.DoorCardManagerDetailActivity"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            ></activity>
-        <activity android:name=".activity.device.bluetooth.card.DoorCardManagerDetailActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activity.device.bluetooth.card.AddDoorCardSuccessActivity"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            ></activity>
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activity.device.bluetooth.fingerprint.AddFingerprintSuccessActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activity.home.BluetoothEquipmentDynamicActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activity.home.GatewayEquipmentDynamicActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activity.home.CateyeEquipmentDynamicActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"></activity>
+
+        <service android:name="com.kaadas.lock.publiclibrary.ble.BleService" />
     </application>
 
 </manifest>

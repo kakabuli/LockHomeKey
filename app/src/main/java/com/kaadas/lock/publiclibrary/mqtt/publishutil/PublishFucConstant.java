@@ -1,7 +1,6 @@
 package com.kaadas.lock.publiclibrary.mqtt.publishutil;
 
 public class PublishFucConstant {
-
      //1 绑定网关
     public static final String BIND_GATEWAY="bindGatewayByUser";
 
@@ -11,6 +10,4 @@ public class PublishFucConstant {
     //3获取网关状态
     public static final String GATEWAY_STATE="gatewayState";
 
-    //4获取wifi用户名和密码
-    public static final String GET_WIFI_BASIC="getWiFiBasic";
 }

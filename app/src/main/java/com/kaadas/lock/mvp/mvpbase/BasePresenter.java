@@ -5,7 +5,9 @@ import android.os.Looper;
 
 
 import com.kaadas.lock.MyApplication;
+import com.kaadas.lock.publiclibrary.ble.BleService;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttService;
+import com.kaadas.lock.utils.LogUtils;
 
 import java.lang.ref.WeakReference;
 
@@ -20,11 +22,16 @@ public class BasePresenter<T extends IBaseView> {
     public Handler handler = new Handler(Looper.getMainLooper());
     protected CompositeDisposable compositeDisposable = new CompositeDisposable();
     public MqttService mqttService;
+    protected BleService bleService = MyApplication.getInstance().getBleService();
     public BasePresenter() {
         if (mqttService == null) {
             mqttService = MyApplication.getInstance().getMqttService();
         }
 
+        if (bleService == null) {
+            LogUtils.e("bleService  为空   异常情况  " + (MyApplication.getInstance().getBleService() == null));
+            bleService = MyApplication.getInstance().getBleService();
+        }
     }
 
     /**
