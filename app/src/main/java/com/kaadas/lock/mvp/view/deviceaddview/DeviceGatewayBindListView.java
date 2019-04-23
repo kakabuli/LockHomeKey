@@ -8,7 +8,7 @@ import java.util.List;
 public interface DeviceGatewayBindListView extends IBaseView {
 
     //获取到绑定的数据
-    void getGatewayBindList(List<GetBindGatewayListResult.DataBean>  bindGatewayList);
+    void getGatewayBindList(List<GetBindGatewayListResult.GatewayInfo>  bindGatewayList);
 
     //获取数据失败
     void getGatewayBindFail();

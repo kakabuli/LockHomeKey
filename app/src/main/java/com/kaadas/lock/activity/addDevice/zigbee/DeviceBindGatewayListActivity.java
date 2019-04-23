@@ -128,7 +128,6 @@ DeviceBindGatewayListActivity extends BaseActivity<DeviceGatewayBindListView, De
                                     //获取wifi的名称
                                     Intent catEyeIntent = new Intent(this, AddDeviceCatEyeFirstActivity.class);
                                     startActivity(catEyeIntent);
-
                                 }else{
                                     Intent wifiIntent=new Intent(this, AddDeviceCatEyeCheckWifi.class);
                                     startActivity(wifiIntent);
@@ -163,14 +162,14 @@ DeviceBindGatewayListActivity extends BaseActivity<DeviceGatewayBindListView, De
     }
 
     @Override
-    public void getGatewayBindList(List<GetBindGatewayListResult.DataBean> bindGatewayList) {
+    public void getGatewayBindList(List<GetBindGatewayListResult.GatewayInfo> bindGatewayList) {
         LogUtils.e("getGatewayBindList","getGatewayBindList请求成功");
         if (refresh!=null){
             refresh.finishRefresh();
         }
             mList.clear();
             if (bindGatewayList!=null&&bindGatewayList.size()>0){
-                for (GetBindGatewayListResult.DataBean bindGatewayItem:bindGatewayList){
+                for (GetBindGatewayListResult.GatewayInfo bindGatewayItem:bindGatewayList){
                     AddZigbeeBindGatewayBean addZigbeeBindGatewayBean=new AddZigbeeBindGatewayBean();
                     addZigbeeBindGatewayBean.setNickName(bindGatewayItem.getDeviceNickName());
                     addZigbeeBindGatewayBean.setAdminId(bindGatewayItem.getAdminName());

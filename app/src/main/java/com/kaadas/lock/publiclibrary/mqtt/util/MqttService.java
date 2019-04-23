@@ -23,6 +23,7 @@ import org.eclipse.paho.client.mqttv3.MqttCallbackExtended;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import io.reactivex.Observable;
@@ -46,10 +47,7 @@ public class MqttService extends Service {
     private PublishSubject<Boolean> connectStateObservable = PublishSubject.create();
     private PublishSubject<PublishResult> publishObservable = PublishSubject.create();
     private PublishSubject<Boolean> disconnectObservable = PublishSubject.create();
-    private PublishSubject<MqttData> notifyDataObservable=PublishSubject.create();
-
-
-
+    private PublishSubject<MqttData> notifyDataObservable = PublishSubject.create();
 
 
     /**
@@ -70,17 +68,16 @@ public class MqttService extends Service {
         return onReceiverDataObservable;
     }
 
-    public Observable<MqttData> listenerNotifyData(){
-        return  notifyDataObservable;
+    public Observable<MqttData> listenerNotifyData() {
+        return notifyDataObservable;
     }
-
 
 
     @Override
     public void onCreate() {
         super.onCreate();
 
-        LogUtils.e("attachView   mqtt 启动了"  );
+        LogUtils.e("attachView   mqtt 启动了");
     }
 
     @Override
@@ -123,7 +120,7 @@ public class MqttService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        LogUtils.e("mqtt","MqttService为空");
+        LogUtils.e("mqtt", "MqttService为空");
     }
 
     public MqttAndroidClient getMqttClient() {
@@ -146,7 +143,7 @@ public class MqttService extends Service {
             LogUtils.e("mqttConnection", "用户为空无法连接");
             return;
         }
-        if (mqttClient==null){
+        if (mqttClient == null) {
             mqttClient = new MqttAndroidClient(MyApplication.getInstance(), MqttConstant.MQTT_BASE_URL, "app:" + userId);
         }
         //已经连接
@@ -155,7 +152,7 @@ public class MqttService extends Service {
             return;
         }
         //设置mqtt参数
-        LogUtils.e("设置参数  userId  " + userId + "  token  " +token);
+        LogUtils.e("设置参数  userId  " + userId + "  token  " + token);
         MqttConnectOptions mqttConnectOptions = connectOption(userId, token);
         //设置回调
         mqttClient.setCallback(new MqttCallbackExtended() {
@@ -184,18 +181,28 @@ public class MqttService extends Service {
 
             @Override
             public void messageArrived(String topic, MqttMessage message) throws Exception {
-                if (message==null){
+                if (message == null) {
                     return;
                 }
                 //收到消息
                 String payload = new String(message.getPayload());
-                LogUtils.e("收到mqtt消息", payload + "---topic" + topic + "  messageID  "+message.getId());
+                LogUtils.e("收到mqtt消息", payload + "---topic" + topic + "  messageID  " + message.getId());
                 //String func, String topic, String payload, MqttMessage mqttMessage
                 JSONObject jsonObject = new JSONObject(payload);
-                MqttData mqttData = new MqttData(jsonObject.getString("func"),topic,payload,message);
-                //200毫秒后获取数据
+                int messageId = -1;
+                int returnCode = -1;
+                try {
+                    returnCode = jsonObject.getInt("returnCode");
+                    messageId = jsonObject.getInt("msgId");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                MqttData mqttData = new MqttData(jsonObject.getString("func"), topic, payload, message, messageId);
+
+                mqttData.setReturnCode(returnCode);
+
                 onReceiverDataObservable.onNext(mqttData);
-                if (MqttConstant.GATEWAY_STATE.equals(mqttData.getFunc())){
+                if (MqttConstant.GATEWAY_STATE.equals(mqttData.getFunc())) {
                     notifyDataObservable.onNext(mqttData);
                 }
             }
@@ -231,7 +238,7 @@ public class MqttService extends Service {
                         MqttExceptionHandle.onFail(MqttExceptionHandle.ConnectException, asyncActionToken, exception);
                         if (exception.toString().equals("无权连接 (5)")) {
                             // TODO: 2019/4/1  该用户在其他手机登录(清除所有数据）---暂时未处理
-                            if (mqttClient != null  ) {
+                            if (mqttClient != null) {
                                 mqttDisconnect();
                             }
                             return;
@@ -278,6 +285,7 @@ public class MqttService extends Service {
                                     mSubscribe.onNext(true);
                                     LogUtils.e("mqttSubscribe", "订阅成功");
                                 }
+
                                 @Override
                                 public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
                                     mSubscribe.onNext(false);
@@ -294,7 +302,7 @@ public class MqttService extends Service {
 
 
     //发布
-    public Observable<MqttData> mqttPublishListener( ) {
+    public Observable<MqttData> mqttPublishListener() {
 
         return notifyDataObservable;
     }
@@ -302,21 +310,19 @@ public class MqttService extends Service {
 
     //发布
     public Observable<MqttData> mqttPublish(String topic, MqttMessage mqttMessage) {
-        LogUtils.e("发布消息   " + mqttMessage.getId(), new String(mqttMessage.getPayload()));
         try {
             mqttClient.publish(topic, mqttMessage, null, new IMqttActionListener() {
                 @Override
                 public void onSuccess(IMqttToken asyncActionToken) {
-                    LogUtils.e("发布消息成功  ", topic  +  "success---" + asyncActionToken.getMessageId());
-
-                    publishObservable.onNext(new PublishResult(true, asyncActionToken,mqttMessage));
+                    LogUtils.e("发布消息成功  ", topic + "success---" + asyncActionToken.getMessageId());
+                    publishObservable.onNext(new PublishResult(true, asyncActionToken, mqttMessage));
                 }
 
                 @Override
                 public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
                     LogUtils.e("发布消息失败", topic + "fail");
                     MqttExceptionHandle.onFail(MqttExceptionHandle.PublishException, asyncActionToken, exception);
-                    publishObservable.onNext(new PublishResult(false, asyncActionToken,mqttMessage));
+                    publishObservable.onNext(new PublishResult(false, asyncActionToken, mqttMessage));
                 }
             });
         } catch (MqttException e) {
@@ -332,14 +338,14 @@ public class MqttService extends Service {
             LogUtils.e("mqttClient为空");
             return;
         }
-        if (mqttClient.isConnected()){
+        if (mqttClient.isConnected()) {
             try {
                 //退出登录
                 mqttClient.disconnect(null, new IMqttActionListener() {
                     @Override
                     public void onSuccess(IMqttToken asyncActionToken) {
                         mqttClient.unregisterResources();
-                        mqttClient=null;
+                        mqttClient = null;
                         MyApplication.getInstance().tokenInvalid(false);
                         LogUtils.e("mqttDisconnect", "断开连接成功");
                         disconnectObservable.onNext(true);
@@ -353,11 +359,11 @@ public class MqttService extends Service {
             } catch (MqttException e) {
                 e.printStackTrace();
             }
-        }else{
+        } else {
             //被挤出
             disconnectObservable.onNext(true);
             mqttClient.unregisterResources();
-            mqttClient=null;
+            mqttClient = null;
             MyApplication.getInstance().tokenInvalid(false);
         }
 
