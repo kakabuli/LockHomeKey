@@ -23,8 +23,8 @@ public class DeviceZigBeeDetailPresenter<T> extends BasePresenter<DeviceZigBeeDe
 
     //请求绑定的网关列表
     public void getGatewayBindList() {
-
         MqttMessage mqttMessage = MqttCommandFactory.getGatewayList(MyApplication.getInstance().getUid());
+        toDisposable(disposableBindGateway);
         if (mqttService != null) {
             disposableBindGateway = mqttService.mqttPublish(MqttConstant.MQTT_REQUEST_APP, mqttMessage)
                     .compose(RxjavaHelper.observeOnMainThread())
@@ -42,22 +42,29 @@ public class DeviceZigBeeDetailPresenter<T> extends BasePresenter<DeviceZigBeeDe
                     .subscribe(new Consumer<MqttData>() {
                         @Override
                         public void accept(MqttData mqttData) throws Exception {
-                            if (mViewRef.get() != null) {
+                            toDisposable(disposableBindGateway);
                                 if (mqttData != null) {
                                     if (MqttConstant.GET_BIND_GATEWAY_LIST.equals(mqttData.getFunc())) {
                                         GetBindGatewayListResult getBindGatewayListResult = new Gson().fromJson(mqttData.getPayload(), GetBindGatewayListResult.class);
                                         if ("200".equals(getBindGatewayListResult.getCode())) {
-                                            mViewRef.get().getGatewayBindList(getBindGatewayListResult.getData());
+                                            if (mViewRef.get()!=null){
+                                                mViewRef.get().getGatewayBindList(getBindGatewayListResult.getData());
+                                            }
                                         } else {
-                                            mViewRef.get().getGatewayBindFail();
+                                            if (mViewRef.get()!=null){
+                                                mViewRef.get().getGatewayBindFail();
+                                            }
+
                                         }
                                     }
-                                    toDisposable(disposableBindGateway);
+
                                 } else {
-                                    mViewRef.get().bindGatewayPublishFail(mqttData.getFunc());
-                                    toDisposable(disposableBindGateway);
+                                    if (mViewRef.get()!=null){
+                                        mViewRef.get().bindGatewayPublishFail(mqttData.getFunc());
+                                    }
+
                                 }
-                            }
+
                         }
                     }, new Consumer<Throwable>() {
                         @Override
@@ -65,6 +72,7 @@ public class DeviceZigBeeDetailPresenter<T> extends BasePresenter<DeviceZigBeeDe
                             mViewRef.get().getGatewayThrowable(throwable);
                         }
                     });
+            compositeDisposable.add(disposableBindGateway);
         }
     }
 

@@ -82,8 +82,8 @@ public class DeviceZigBeeDetailActivity extends BaseActivity<DeviceZigBeeDetailV
             zigbeeDetailAdapter.setOnItemClickListener(this);
             recycler.setAdapter(zigbeeDetailAdapter);
         }
-        if (mPresenter.mqttService.getMqttClient().isConnected()){
-            mPresenter.getGatewayBindList();;
+        if (mPresenter.mqttService.getMqttClient()!=null&&mPresenter.mqttService.getMqttClient().isConnected()){
+            mPresenter.getGatewayBindList();
         }
     }
 
@@ -94,10 +94,16 @@ public class DeviceZigBeeDetailActivity extends BaseActivity<DeviceZigBeeDetailV
 
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-        if (!mPresenter.mqttService.getMqttClient().isConnected()){
+        if (mPresenter.mqttService.getMqttClient()==null){
            ToastUtil.getInstance().showShort(getString(R.string.mqtt_connection_fail));
            return;
         }
+        if (!mPresenter.mqttService.getMqttClient().isConnected()){
+            ToastUtil.getInstance().showShort(getString(R.string.mqtt_connection_fail));
+            return;
+        }
+
+
         AddZigbeeDetailItemBean detailItemBean = mList.get(position);
         //如果是网关直接跳转到网关添加流程，如果不是需要判断是否存在网关。
         if (detailItemBean.getType() == 1) {

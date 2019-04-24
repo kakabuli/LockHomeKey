@@ -45,6 +45,7 @@ public class AddZigbeeLockPresenter<T> extends BasePresenter<IAddZigbeeLockView>
                         @Override
                         public void accept(MqttData mqttData) throws Exception {
                             //网关允许入网成功
+                            toDisposable(addZigbeeDisposable);
                             SetJoinAllowBean setJoinAllowBean=new Gson().fromJson(mqttData.getPayload(),SetJoinAllowBean.class);
                             if (setJoinAllowBean!=null){
                                 toDisposable(addZigbeeDisposable);
@@ -86,20 +87,21 @@ public class AddZigbeeLockPresenter<T> extends BasePresenter<IAddZigbeeLockView>
                         }
                     })
                     .compose(RxjavaHelper.observeOnMainThread())
-                    .timeout(20*1000,TimeUnit.MILLISECONDS)
+                    .timeout(120*1000,TimeUnit.MILLISECONDS)
                     .subscribe(new Consumer<MqttData>() {
                         @Override
                         public void accept(MqttData mqttData) throws Exception {
-                            toDisposable(addZigbeeEvent);
                             DeviceOnLineBean deviceOnLineBean = new Gson().fromJson(mqttData.getPayload(), DeviceOnLineBean.class);
-                            if (mViewRef.get()!=null) {
                                 if (gwId.equals(deviceOnLineBean.getGwId()) && MqttConstant.ON_LINE.equals(deviceOnLineBean.getEventparams().getEvent_str())&&deviceOnLineBean.getEventparams().getDevice_type().equals("zigbee")) {
                                     //设备信息匹配成功  且是上线上报
-                                    LogUtils.e("添加网关成功");
-                                    mViewRef.get().addZigbeeSuccess();
+                                    if (mViewRef.get()!=null){
+                                        LogUtils.e("添加网关成功");
+                                        mViewRef.get().addZigbeeSuccess();
+                                        toDisposable(addZigbeeEvent);
+                                    }
 
                                 }
-                            }
+
 
                         }
                     }, new Consumer<Throwable>() {

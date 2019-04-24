@@ -139,10 +139,6 @@ public class MqttService extends Service {
             ToastUtil.getInstance().showShort(getString(R.string.network_exception));
             return;
         }
-        if (TextUtils.isEmpty(userId) || TextUtils.isEmpty(token)) {
-            LogUtils.e("mqttConnection", "用户为空无法连接");
-            return;
-        }
         if (mqttClient == null) {
             mqttClient = new MqttAndroidClient(MyApplication.getInstance(), MqttConstant.MQTT_BASE_URL, "app:" + userId);
         }
@@ -253,6 +249,9 @@ public class MqttService extends Service {
                         }
                         if ("错误的用户名或密码 (4)".equals(exception.toString())) {
                             LogUtils.e("mqtt的用户名或密码错误");
+                            if (mqttClient!=null){
+                                mqttDisconnect();
+                            }
                             return;
                         }
                         //两秒后进行重连

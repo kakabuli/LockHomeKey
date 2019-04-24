@@ -5,12 +5,14 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 
 import com.kaadas.lock.R;
+import com.kaadas.lock.activity.addDevice.DeviceBindGatewayListActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.mvp.mvpbase.BasePresenter;
 import com.kaadas.lock.mvp.presenter.deviceaddpresenter.AddZigbeeLockPresenter;
@@ -66,7 +68,8 @@ public class AddZigbeeLockFourthActivity extends BaseActivity<IAddZigbeeLockView
 
     @OnClick(R.id.back)
     public void onViewClicked() {
-        finish();
+        Intent backIntent=new Intent(this, DeviceBindGatewayListActivity.class);
+        startActivity(backIntent);
     }
     /**
      * 初始化动画
@@ -111,7 +114,6 @@ public class AddZigbeeLockFourthActivity extends BaseActivity<IAddZigbeeLockView
     public void netInFail() {
         Intent failIntent=new Intent(this,AddZigbeeLockFailActivity.class);
         startActivity(failIntent);
-        finish();
         LogUtils.e("设备入网失败");
     }
 
@@ -146,6 +148,20 @@ public class AddZigbeeLockFourthActivity extends BaseActivity<IAddZigbeeLockView
     protected void onStop() {
         super.onStop();
         stopAnimation();
+    }
+
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            return isCosumenBackKey();
+        }
+        return false;
+    }
+
+    private boolean isCosumenBackKey() {
+        Intent backIntent=new Intent(this, DeviceBindGatewayListActivity.class);
+        startActivity(backIntent);
+        return true;
     }
 
 }

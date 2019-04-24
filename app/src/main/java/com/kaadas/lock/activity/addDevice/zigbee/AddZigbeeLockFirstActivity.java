@@ -31,7 +31,7 @@ public class AddZigbeeLockFirstActivity extends AppCompatActivity {
         setContentView(R.layout.device_bluetooth_first);
         //StatusBarUtils.setWindowStatusBarColor(this, R.color.current_time_bg);
         ButterKnife.bind(this);
-        Intent intent=getIntent();
+
 
     }
 

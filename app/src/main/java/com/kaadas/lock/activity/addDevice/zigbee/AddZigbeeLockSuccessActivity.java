@@ -4,12 +4,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.MainActivity;
+import com.kaadas.lock.activity.addDevice.DeviceBindGatewayListActivity;
 import com.kaadas.lock.activity.addDevice.DeviceZigBeeDetailActivity;
 
 import butterknife.BindView;
@@ -42,4 +44,19 @@ public class  AddZigbeeLockSuccessActivity extends AppCompatActivity {
                 break;
         }
     }
+
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            return isCosumenBackKey();
+        }
+        return false;
+    }
+
+    private boolean isCosumenBackKey() {
+        Intent backIntent=new Intent(this, MainActivity.class);
+        startActivity(backIntent);
+        return true;
+    }
+
 }
