@@ -52,6 +52,15 @@ public class MqttConstant {
     //3获取网关状态
     public static final String GATEWAY_STATE = "gatewayState";
 
+    //获取WiFi信息
+    public static final String GET_WIFI_BASIC = "getWiFiBasic";
+
+    //获取WiFi信息
+    public static final String ALLOW_GATEWAY_JOIN = "allowCateyeJoin";
+
+    //设备上下线的 func
+    public static final String GW_EVENT = "gwevent";
+
     //4网关开启允许设备入网模式
     public static final String SET_JOIN_ALLOW="setJoinAllow";
 

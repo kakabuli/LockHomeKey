@@ -52,8 +52,9 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter<IMainVie
         rg.setOnCheckedChangeListener(this);
         initFragment();
         LogUtils.e("attachView  " + ( MyApplication.getInstance().getMqttService() == null));
-        mPresenter.getPublishNotify();
         MyApplication.getInstance().getMqttService().mqttConnection();//连接mqtt
+        mPresenter.getPublishNotify();
+
     }
 
     @Override

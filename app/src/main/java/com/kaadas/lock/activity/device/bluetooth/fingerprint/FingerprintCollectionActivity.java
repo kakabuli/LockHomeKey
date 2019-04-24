@@ -1,6 +1,8 @@
 package com.kaadas.lock.activity.device.bluetooth.fingerprint;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -32,6 +34,13 @@ public class FingerprintCollectionActivity extends AppCompatActivity implements 
         ButterKnife.bind(this);
         ivBack.setOnClickListener(this);
         tvContent.setText(R.string.add_fingerprint);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Intent intent = new Intent(FingerprintCollectionActivity.this, AddFingerprintSuccessActivity.class);
+                startActivity(intent);
+            }
+        }, 3000);
     }
 
     @Override

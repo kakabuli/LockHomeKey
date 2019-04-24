@@ -39,17 +39,16 @@ public class FingerprintManagerActivity extends AppCompatActivity
     @BindView(R.id.recycleview)
     RecyclerView recycleview;
     FingerprintManagerAdapter fingerprintManagerAdapter;
-    boolean isNotPassword = true;
+    boolean isNotData = true;
     @BindView(R.id.tv_synchronized_record)
     TextView tvSynchronizedRecord;
-    @BindView(R.id.ll_add_password)
-    LinearLayout llAddPassword;
+    @BindView(R.id.ll_add)
+    LinearLayout llAdd;
     @BindView(R.id.ll_has_data)
     LinearLayout llHasData;
     @BindView(R.id.tv_no_user)
     TextView tvNoUser;
     List<GetPasswordResult.DataBean.Fingerprint> list = new ArrayList<>();
-    ;
     private BleLockInfo bleLockInfo;
     private boolean isSync = false; //是不是正在同步锁中的指纹
 
@@ -62,7 +61,7 @@ public class FingerprintManagerActivity extends AppCompatActivity
         tvContent.setText(getString(R.string.fingerprint));
         ivBack.setOnClickListener(this);
         tvSynchronizedRecord.setOnClickListener(this);
-        llAddPassword.setOnClickListener(this);
+        llAdd.setOnClickListener(this);
         pageChange();
         initRecycleview();
         list.add(new GetPasswordResult.DataBean.Fingerprint("fff", "fff", 1));
@@ -92,7 +91,7 @@ public class FingerprintManagerActivity extends AppCompatActivity
 
     public void pageChange() {
 
-        if (isNotPassword) {
+        if (isNotData) {
             llHasData.setVisibility(View.GONE);
             tvNoUser.setVisibility(View.VISIBLE);
         } else {
@@ -108,14 +107,14 @@ public class FingerprintManagerActivity extends AppCompatActivity
             case R.id.iv_back:
                 finish();
                 break;
-            case R.id.ll_add_password:
+            case R.id.ll_add:
                 if (!NetUtil.isNetworkAvailable()) {
                     ToastUtil.getInstance().showShort(R.string.please_add_finger);
                     return;
                 }
-                intent = new Intent(this, FingerprintLinkBluetoothActivity.class);
-                intent.putExtra(KeyConstants.BLE_DEVICE_INFO, bleLockInfo);
-                startActivity(intent);
+//                intent = new Intent(this, FingerprintLinkBluetoothActivity.class);
+//                intent.putExtra(KeyConstants.BLE_DEVICE_INFO, bleLockInfo);
+//                startActivity(intent);
                 break;
 
             case R.id.tv_synchronized_record:
@@ -131,9 +130,9 @@ public class FingerprintManagerActivity extends AppCompatActivity
 
     public void initData() {
         if (list.size() > 0) {
-            isNotPassword = false;
+            isNotData = false;
         } else {
-            isNotPassword = true;
+            isNotData = true;
         }
         pageChange();
         fingerprintManagerAdapter.notifyDataSetChanged();

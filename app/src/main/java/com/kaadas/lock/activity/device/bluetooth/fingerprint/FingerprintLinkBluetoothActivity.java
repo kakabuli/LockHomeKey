@@ -2,6 +2,7 @@ package com.kaadas.lock.activity.device.bluetooth.fingerprint;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -24,8 +25,9 @@ public class FingerprintLinkBluetoothActivity extends AppCompatActivity implemen
     TextView tvContent;
     @BindView(R.id.iv_right)
     ImageView ivRight;
-    @BindView(R.id.btn_confirm_generation)
-    Button btnConfirmGeneration;
+    //    @BindView(R.id.btn_confirm_generation)
+//    Button btnConfirmGeneration;
+    boolean bluetoothConnected = true;//蓝牙是否连接
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -34,7 +36,20 @@ public class FingerprintLinkBluetoothActivity extends AppCompatActivity implemen
         ButterKnife.bind(this);
         ivBack.setOnClickListener(this);
         tvContent.setText(R.string.add_fingerprint);
-        btnConfirmGeneration.setOnClickListener(this);
+//        btnConfirmGeneration.setOnClickListener(this);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Intent intent;
+                if (bluetoothConnected) {
+                    intent = new Intent(FingerprintLinkBluetoothActivity.this, FingerprintCollectionActivity.class);
+                } else {
+                    intent = new Intent(FingerprintLinkBluetoothActivity.this, FingerprintNoConnectBluetoothOneActivity.class);
+                }
+                startActivity(intent);
+                finish();
+            }
+        }, 3000);
     }
 
     @Override
@@ -43,13 +58,9 @@ public class FingerprintLinkBluetoothActivity extends AppCompatActivity implemen
             case R.id.iv_back:
                 finish();
                 break;
-            case R.id.btn_confirm_generation:
-//                Intent intent=new Intent(this,FingerprintCollectionActivity.class);
-//                Intent intent = new Intent(this, FingerprintNoConnectBluetoothOneActivity.class);
-                Intent intent = new Intent(this, AddFingerprintSuccessActivity.class);
-                startActivity(intent);
-                finish();
-                break;
+  /*          case R.id.btn_confirm_generation:
+
+                break;*/
         }
     }
 }

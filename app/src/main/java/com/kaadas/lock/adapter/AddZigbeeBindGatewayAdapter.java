@@ -33,7 +33,7 @@ public class AddZigbeeBindGatewayAdapter extends BaseQuickAdapter<AddZigbeeBindG
         }else{
            helper.setImageResource(R.id.gateway_online_img,R.mipmap.wifi_connect);
            helper.setText(R.id.gateway_online_text,R.string.online);
-           helper.setImageResource(R.id.gateway_img,R.mipmap.gateway_lock_icon);
+           helper.setImageResource(R.id.gateway_img,R.mipmap.gateway_img_icon);
            helper.setTextColor(R.id.gateway_online_text, ContextCompat.getColor(MyApplication.getInstance(),R.color.c1F96F7));
         }
 

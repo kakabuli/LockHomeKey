@@ -1,5 +1,6 @@
 package com.kaadas.lock.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -9,12 +10,16 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.kaadas.lock.R;
+import com.kaadas.lock.activity.device.bluetooth.password.BluetoothPasswordShareActivity;
 import com.kaadas.lock.adapter.ShiXiaoNameAdapter;
 import com.kaadas.lock.bean.ShiXiaoNameBean;
+import com.kaadas.lock.utils.StringUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +32,7 @@ import butterknife.ButterKnife;
  * Created by David
  */
 
-public class PasswordTemporaryFragment extends Fragment implements BaseQuickAdapter.OnItemClickListener {
+public class PasswordTemporaryFragment extends Fragment implements BaseQuickAdapter.OnItemClickListener, View.OnClickListener {
     @BindView(R.id.recycleview)
     RecyclerView recyclerView;
     @BindView(R.id.et_name)
@@ -35,6 +40,12 @@ public class PasswordTemporaryFragment extends Fragment implements BaseQuickAdap
     List<ShiXiaoNameBean> list = new ArrayList<>();
     ShiXiaoNameAdapter shiXiaoNameAdapter;
     View mView;
+    @BindView(R.id.et_password)
+    EditText etPassword;
+    @BindView(R.id.btn_random_generation)
+    TextView btnRandomGeneration;
+    @BindView(R.id.btn_confirm_generation)
+    Button btnConfirmGeneration;
 
     @Nullable
     @Override
@@ -44,6 +55,8 @@ public class PasswordTemporaryFragment extends Fragment implements BaseQuickAdap
         }
         ButterKnife.bind(this, mView);
         initRecycleview();
+        btnRandomGeneration.setOnClickListener(this);
+        btnConfirmGeneration.setOnClickListener(this);
         return mView;
 
     }
@@ -74,5 +87,26 @@ public class PasswordTemporaryFragment extends Fragment implements BaseQuickAdap
         etName.setSelection(name.length());
         list.get(position).setSelected(true);
         shiXiaoNameAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+    }
+
+    @Override
+    public void onClick(View v) {
+        Intent intent;
+        switch (v.getId()) {
+            case R.id.btn_random_generation:
+                String password = StringUtil.makeRandomPassword();
+                etPassword.setText(password);
+                etPassword.setSelection(password.length());
+                break;
+            case R.id.btn_confirm_generation:
+                intent = new Intent(getActivity(), BluetoothPasswordShareActivity.class);
+                startActivity(intent);
+                break;
+        }
     }
 }

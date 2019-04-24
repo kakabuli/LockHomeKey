@@ -30,10 +30,10 @@ import butterknife.ButterKnife;
 public class BluetoothUserPasswordAddActivity extends AppCompatActivity implements View.OnClickListener {
 
 
-    @BindView(R.id.user_pwd__viewpager)
-    ViewPager user_pwd__viewpager;
-    @BindView(R.id.user_pwd_tab_home)
-    SlidingTabLayout user_pwd_tab_home;
+    @BindView(R.id.viewpager)
+    ViewPager viewPager;
+    @BindView(R.id.sliding_tab_layout)
+    SlidingTabLayout slidingTabLayout;
     @BindView(R.id.iv_back)
     ImageView ivBack;
     @BindView(R.id.tv_content)
@@ -48,14 +48,14 @@ public class BluetoothUserPasswordAddActivity extends AppCompatActivity implemen
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_user_pwd_add);
+        setContentView(R.layout.activity_bluetooth_user_password_add);
 
         ButterKnife.bind(this);
         ivBack.setOnClickListener(this);
         tvContent.setText(getString(R.string.pwd_header_add_tv));
         tabs = getResources().getStringArray(R.array.home_top);
         initViewPager();
-        user_pwd_tab_home.setViewPager(user_pwd__viewpager);
+        slidingTabLayout.setViewPager(viewPager);
     }
 
     public BleLockInfo getLockInfo() {
@@ -66,13 +66,11 @@ public class BluetoothUserPasswordAddActivity extends AppCompatActivity implemen
      * 初始化ViewPager控件
      */
     private void initViewPager() {
-        user_pwd__viewpager = (ViewPager) findViewById(R.id.user_pwd__viewpager);
-        user_pwd_tab_home = findViewById(R.id.user_pwd_tab_home);
         //关闭预加载，默认一次只加载一个Fragment
         //mViewPager.setOffscreenPageLimit(1);
         //添加Fragment
         // 这里可以从Activity中传递数据到Fragment中
-        user_pwd__viewpager.setOffscreenPageLimit(3);
+        viewPager.setOffscreenPageLimit(3);
         mFragments.add(new PasswordTimeFragment());
         mFragments.add(new PasswordPeriodFragment());
         mFragments.add(new PasswordTemporaryFragment());
@@ -80,7 +78,7 @@ public class BluetoothUserPasswordAddActivity extends AppCompatActivity implemen
         //适配器
         mPagerAdapter = new ListFragmentPagerAdapter(getSupportFragmentManager(), mFragments);
 
-        user_pwd__viewpager.setAdapter(mPagerAdapter);
+        viewPager.setAdapter(mPagerAdapter);
     }
 
     @Override

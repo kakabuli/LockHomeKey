@@ -3,10 +3,13 @@ package com.kaadas.lock.mvp.presenter.deviceaddpresenter;
 import com.google.gson.Gson;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.mvp.mvpbase.BasePresenter;
+import com.kaadas.lock.publiclibrary.http.util.OtherException;
 import com.kaadas.lock.publiclibrary.http.util.RxjavaHelper;
 import com.kaadas.lock.publiclibrary.mqtt.MqttCommandFactory;
+import com.kaadas.lock.publiclibrary.mqtt.MqttReturnCodeError;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.GetBindGatewayListResult;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.GetBindGatewayStatusResult;
+import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.GwWiFiBaseInfo;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttConstant;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttData;
 import com.kaadas.lock.mvp.view.deviceaddview.DeviceGatewayBindListView;
@@ -97,12 +100,12 @@ public class DeviceGatewayBindListPresenter<T> extends BasePresenter<DeviceGatew
     public void getGatewayWifiPwd(String gwId) {
         if (mqttService != null) {
             MqttMessage wiFiBasic = MqttCommandFactory.getWiFiBasic(MyApplication.getInstance().getUid(), gwId, gwId);
-            getWiFiBasicDisposable = mqttService.mqttPublish("getWiFiBasic", wiFiBasic)
+            getWiFiBasicDisposable = mqttService.mqttPublish(MqttConstant.getCallTopic(MyApplication.getInstance().getUid()), wiFiBasic)
                     .filter(new Predicate<MqttData>() {
                         @Override
                         public boolean test(MqttData mqttData) throws Exception {
                             LogUtils.e("获取到的数据的messageId是   " + mqttData.getMessageId() + "   发送的messageId是  " + wiFiBasic.getId());
-                            return wiFiBasic.getId() == mqttData.getMessageId();
+                            return mqttData.isThisRequest(wiFiBasic.getId(),   MqttConstant.GET_WIFI_BASIC );
                         }
                     })
                     .compose(RxjavaHelper.observeOnMainThread())
@@ -110,16 +113,24 @@ public class DeviceGatewayBindListPresenter<T> extends BasePresenter<DeviceGatew
                     .subscribe(new Consumer<MqttData>() {
                         @Override
                         public void accept(MqttData mqttData) throws Exception {
-                            if (mqttData.getReturnCode() == 200 ){ //请求成功
+                            if ("200".equals(mqttData.getReturnCode() )   ){ //请求成功
+                                GwWiFiBaseInfo wiFiBaseInfo = new Gson().fromJson(mqttData.getPayload(), GwWiFiBaseInfo.class);
+                                if (mViewRef.get()!=null){
+                                    mViewRef.get().onGetWifiInfoSuccess(wiFiBaseInfo);
+                                }
+                            }else {
+                                if (mViewRef.get()!=null){
+                                    mViewRef.get().onGetWifiInfoFailed(new MqttReturnCodeError(mqttData.getReturnCode()));
+                                }
                             }
-
-
+                            toDisposable(getWiFiBasicDisposable);
                         }
                     }, new Consumer<Throwable>() {
                         @Override
                         public void accept(Throwable throwable) throws Exception {
-
-
+                            if (mViewRef.get()!=null){
+                                mViewRef.get().onGetWifiInfoFailed(throwable);
+                            }
                         }
                     });
             compositeDisposable.add(getWiFiBasicDisposable);

@@ -469,7 +469,34 @@
             android:name=".activity.home.CateyeEquipmentDynamicActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"></activity>
-
+        <activity
+            android:name=".activity.device.gateway.GatewayLockFunctionActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activity.device.gateway.password.GatewayPasswordManagerActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activity.device.gateway.password.GatewayPasswordManagerDetailActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"></activity>GatewayPasswordShareActivity
+        <activity
+            android:name=".activity.device.gateway.password.GatewayPasswordAddActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activity.device.gateway.password.GatewayPasswordShareActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"></activity>GatewayFingerprintManagerDetailActivity
+        <activity
+            android:name=".activity.device.gateway.fingerprint.GatewayFingerprintManagerActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activity.device.gateway.fingerprint.GatewayFingerprintManagerDetailActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"></activity>
         <service android:name="com.kaadas.lock.publiclibrary.ble.BleService" />
     </application>
 

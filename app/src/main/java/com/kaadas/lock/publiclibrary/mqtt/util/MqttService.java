@@ -159,6 +159,7 @@ public class MqttService extends Service {
             @Override
             public void connectComplete(boolean reconnect, String serverURI) {
                 //连接完成
+                LogUtils.e("mqtt 连接完成");
 
             }
 
@@ -190,16 +191,22 @@ public class MqttService extends Service {
                 //String func, String topic, String payload, MqttMessage mqttMessage
                 JSONObject jsonObject = new JSONObject(payload);
                 int messageId = -1;
-                int returnCode = -1;
+                String returnCode = "";
+                String msgtype = "";
                 try {
-                    returnCode = jsonObject.getInt("returnCode");
+                    returnCode = jsonObject.getString("returnCode");
                     messageId = jsonObject.getInt("msgId");
+                    if (messageId == -1){
+                        messageId = jsonObject.getInt("msgid");
+                    }
+                    msgtype = jsonObject.getString("msgtype");
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
                 MqttData mqttData = new MqttData(jsonObject.getString("func"), topic, payload, message, messageId);
 
                 mqttData.setReturnCode(returnCode);
+                mqttData.setMsgtype(msgtype);
 
                 onReceiverDataObservable.onNext(mqttData);
                 if (MqttConstant.GATEWAY_STATE.equals(mqttData.getFunc())) {
@@ -217,6 +224,7 @@ public class MqttService extends Service {
             mqttClient.connect(mqttConnectOptions, null, new IMqttActionListener() {
                 @Override
                 public void onSuccess(IMqttToken asyncActionToken) {
+                    LogUtils.e("mqtt连接", "连接成功");
                     DisconnectedBufferOptions disconnectedBufferOptions = new DisconnectedBufferOptions();
                     disconnectedBufferOptions.setBufferEnabled(true);
                     disconnectedBufferOptions.setBufferSize(100);
@@ -225,7 +233,6 @@ public class MqttService extends Service {
                     mqttClient.setBufferOpts(disconnectedBufferOptions);
                     //连接成功之后订阅主题
                     mqttSubscribe(mqttClient, MqttConstant.getSubscribeTopic(userId), 2);
-                    LogUtils.e("mqttConnection", "连接成功");
                     reconnectionNum = 10;
                     connectStateObservable.onNext(true);
                 }
@@ -234,7 +241,7 @@ public class MqttService extends Service {
                 public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
                     //可能出现无权连接（5）---用户在其他手机登录
                     if (reconnectionNum > 0) {
-                        LogUtils.e("mqttConnection", "连接失败1     " + exception.toString());
+                        LogUtils.e("mqtt连接", "连接失败1     " + exception.toString());
                         MqttExceptionHandle.onFail(MqttExceptionHandle.ConnectException, asyncActionToken, exception);
                         if (exception.toString().equals("无权连接 (5)")) {
                             // TODO: 2019/4/1  该用户在其他手机登录(清除所有数据）---暂时未处理
@@ -314,13 +321,13 @@ public class MqttService extends Service {
             mqttClient.publish(topic, mqttMessage, null, new IMqttActionListener() {
                 @Override
                 public void onSuccess(IMqttToken asyncActionToken) {
-                    LogUtils.e("发布消息成功  ", topic + "success---" + asyncActionToken.getMessageId());
+                    LogUtils.e("发布消息成功  ", topic + "    success---    messageId" + asyncActionToken.getMessageId());
                     publishObservable.onNext(new PublishResult(true, asyncActionToken, mqttMessage));
                 }
 
                 @Override
                 public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
-                    LogUtils.e("发布消息失败", topic + "fail");
+                    LogUtils.e("发布消息失败", topic + "    fail" );
                     MqttExceptionHandle.onFail(MqttExceptionHandle.PublishException, asyncActionToken, exception);
                     publishObservable.onNext(new PublishResult(false, asyncActionToken, mqttMessage));
                 }
