@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.BindGatewayBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.GetBindGatewayListBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.GetWifiBasicBean;
+import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetJoinAllowBean;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttConstant;
 
 import org.eclipse.paho.client.mqttv3.MqttMessage;
@@ -55,6 +56,17 @@ public class MqttCommandFactory {
                 new GetWifiBasicBean.ParamsBean(),0,new  GetWifiBasicBean.ReturnDataBean(),"0");
         return getMessage(getWifiBasicBean,messageId);
     }
+
+    public static MqttMessage setJoinAllow(String userId,String gwId,String deviceId){
+        int messageId = getMessageId();
+        SetJoinAllowBean.ParamsBean paramsBean=new SetJoinAllowBean.ParamsBean();
+        paramsBean.setMode("zigbee");
+        SetJoinAllowBean setJoinAllowBean=new SetJoinAllowBean(MqttConstant.MSG_TYPE_REQUEST,userId,messageId,gwId,deviceId,MqttConstant.SET_JOIN_ALLOW,paramsBean,"0",new SetJoinAllowBean.ReturnDataBean(),System.currentTimeMillis()+"");
+        return  getMessage(setJoinAllowBean,messageId);
+
+    }
+
+
 
 
     public static MqttMessage getMessage(Object o,int messageID) {

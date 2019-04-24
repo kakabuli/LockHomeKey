@@ -25,6 +25,7 @@ import com.kaadas.lock.utils.NetUtil;
 import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.ToastUtil;
 import com.kaadas.lock.mvp.view.deviceaddview.DeviceGatewayBindListView;
+import com.kaadas.lock.utils.handPwdUtil.Constants;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
@@ -124,7 +125,7 @@ DeviceBindGatewayListActivity extends BaseActivity<DeviceGatewayBindListView, De
                             //跳转猫眼流程,需要网络
                             if (NetUtil.isNetworkAvailable()){
                                 if (NetUtil.isWifi()){
-                                    mPresenter.getGatewayWifiPwd();
+                                   // mPresenter.getGatewayWifiPwd();
                                     //获取wifi的名称
                                     Intent catEyeIntent = new Intent(this, AddDeviceCatEyeFirstActivity.class);
                                     startActivity(catEyeIntent);
@@ -138,7 +139,9 @@ DeviceBindGatewayListActivity extends BaseActivity<DeviceGatewayBindListView, De
 
                         } else if (type == 3) {
                             //跳转zigbee锁流程
+                            String gatewayId=zigbeeBindGatewayBeanSelect.getGatewayId();
                             Intent intent = new Intent(this, AddZigbeeLockFirstActivity.class);
+                            SPUtils.putProtect(Constants.GATEWAYID,gatewayId);
                             startActivity(intent);
                         }
                     }

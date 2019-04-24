@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.addDevice.DeviceAddHelpActivity;
 import com.kaadas.lock.activity.addDevice.bluetooth.AddBluetoothSearchActivity;
+import com.kaadas.lock.utils.StatusBarUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -28,7 +29,10 @@ public class AddZigbeeLockFirstActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.device_bluetooth_first);
+        //StatusBarUtils.setWindowStatusBarColor(this, R.color.current_time_bg);
         ButterKnife.bind(this);
+        Intent intent=getIntent();
+
     }
 
     @OnClick({R.id.back, R.id.help, R.id.button_next})
