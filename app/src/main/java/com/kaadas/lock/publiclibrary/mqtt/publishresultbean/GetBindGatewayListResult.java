@@ -14,7 +14,7 @@ public class GetBindGatewayListResult extends BaseBeanResult {
     private String code;
     private String msg;
     private String func;
-    private List<DataBean> data;
+    private List<GatewayInfo> data;
 
     public String getCode() {
         return code;
@@ -40,15 +40,15 @@ public class GetBindGatewayListResult extends BaseBeanResult {
         this.func = func;
     }
 
-    public List<DataBean> getData() {
+    public List<GatewayInfo> getData() {
         return data;
     }
 
-    public void setData(List<DataBean> data) {
+    public void setData(List<GatewayInfo> data) {
         this.data = data;
     }
 
-    public static class DataBean {
+    public static class GatewayInfo {
         /**
          * deviceSN : GW01182510033
          * deviceNickName : GW01182510033

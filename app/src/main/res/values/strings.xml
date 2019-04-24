@@ -636,4 +636,6 @@
     <string name="safe_protection">安全布防</string>
     <string name="stress_warn">胁迫警告</string>
     <string name="sure_delete_password">确定删除密码吗？</string>
+    <string name="connect_cateye_check_wifi">目前手机连接WiFi与所选网关不一致，请切换手机网络为所选网关</string>
+    <string name="switch_wifi">前去切换WIFI</string>
 </resources>
