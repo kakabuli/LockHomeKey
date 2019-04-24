@@ -1,4 +1,4 @@
-package com.kaadas.lock.activity.device.bluetooth.fingerprint;
+package com.kaadas.lock.activity.device.gateway.fingerprint;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,6 +11,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.kaadas.lock.R;
+import com.kaadas.lock.activity.device.bluetooth.fingerprint.AddFingerprintSuccessActivity;
+import com.kaadas.lock.activity.device.bluetooth.fingerprint.FingerprintCollectionActivity;
+import com.kaadas.lock.activity.device.bluetooth.fingerprint.FingerprintLinkBluetoothActivity;
+import com.kaadas.lock.activity.device.bluetooth.fingerprint.FingerprintNoConnectBluetoothOneActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -18,38 +22,35 @@ import butterknife.ButterKnife;
 /**
  * Created by David on 2019/4/17
  */
-public class FingerprintLinkBluetoothActivity extends AppCompatActivity implements View.OnClickListener {
+public class GatewayFingerprintLinkActivity extends AppCompatActivity implements View.OnClickListener {
     @BindView(R.id.iv_back)
     ImageView ivBack;
     @BindView(R.id.tv_content)
     TextView tvContent;
     @BindView(R.id.iv_right)
     ImageView ivRight;
-    //    @BindView(R.id.btn_confirm_generation)
-//    Button btnConfirmGeneration;
-    boolean bluetoothConnected = true;//蓝牙是否连接
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_fingerprint_link_bluetooth);
+        setContentView(R.layout.activity_gateway_fingerprint_link);
         ButterKnife.bind(this);
         ivBack.setOnClickListener(this);
         tvContent.setText(R.string.add_fingerprint);
-//        btnConfirmGeneration.setOnClickListener(this);
-        new Handler().postDelayed(new Runnable() {
+/*        new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 Intent intent;
                 if (bluetoothConnected) {
-                    intent = new Intent(FingerprintLinkBluetoothActivity.this, FingerprintCollectionActivity.class);
+                    intent = new Intent(GatewayFingerprintLinkActivity.this, FingerprintCollectionActivity.class);
                 } else {
-                    intent = new Intent(FingerprintLinkBluetoothActivity.this, FingerprintNoConnectBluetoothOneActivity.class);
+                    intent = new Intent(GatewayFingerprintLinkActivity.this, FingerprintNoConnectBluetoothOneActivity.class);
                 }
                 startActivity(intent);
                 finish();
             }
-        }, 3000);
+        }, 3000);*/
     }
 
     @Override
@@ -58,9 +59,7 @@ public class FingerprintLinkBluetoothActivity extends AppCompatActivity implemen
             case R.id.iv_back:
                 finish();
                 break;
-  /*          case R.id.btn_confirm_generation:
 
-                break;*/
         }
     }
 }

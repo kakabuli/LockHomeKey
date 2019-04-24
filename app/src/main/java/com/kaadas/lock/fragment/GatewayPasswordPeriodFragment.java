@@ -17,8 +17,8 @@ import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.kaadas.lock.R;
-import com.kaadas.lock.activity.device.bluetooth.password.BluetoothPasswordShareActivity;
 import com.kaadas.lock.activity.device.bluetooth.password.CycleRulesActivity;
+import com.kaadas.lock.activity.device.gateway.password.GatewayPasswordShareActivity;
 import com.kaadas.lock.adapter.ShiXiaoNameAdapter;
 import com.kaadas.lock.bean.ShiXiaoNameBean;
 import com.kaadas.lock.utils.KeyConstants;
@@ -39,7 +39,7 @@ import static android.app.Activity.RESULT_OK;
  * Created by David
  */
 
-public class PasswordPeriodFragment extends Fragment implements BaseQuickAdapter.OnItemClickListener, View.OnClickListener {
+public class GatewayPasswordPeriodFragment extends Fragment implements BaseQuickAdapter.OnItemClickListener, View.OnClickListener {
     @BindView(R.id.recycleview)
     RecyclerView recyclerView;
     @BindView(R.id.et_name)
@@ -55,7 +55,7 @@ public class PasswordPeriodFragment extends Fragment implements BaseQuickAdapter
     TextView btnRandomGeneration;
     @BindView(R.id.et_password)
     EditText etPassword;
-    public static final int REQUEST_CODE = 100;
+    public static final int REQUEST_CODE = 200;
     String weekRule;
     @BindView(R.id.tv_rule_repeat)
     TextView tvRuleRepeat;
@@ -65,7 +65,7 @@ public class PasswordPeriodFragment extends Fragment implements BaseQuickAdapter
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         if (mView == null) {
-            mView = inflater.inflate(R.layout.fragment_password_period, container, false);
+            mView = inflater.inflate(R.layout.gateway_fragment_password_period, container, false);
         }
         ButterKnife.bind(this, mView);
         llRuleRepeat.setOnClickListener(this);
@@ -118,7 +118,7 @@ public class PasswordPeriodFragment extends Fragment implements BaseQuickAdapter
                 startActivityForResult(intent, REQUEST_CODE);
                 break;
             case R.id.btn_confirm_generation:
-                intent = new Intent(getActivity(), BluetoothPasswordShareActivity.class);
+                intent = new Intent(getActivity(), GatewayPasswordShareActivity.class);
                 startActivity(intent);
                 break;
             case R.id.btn_random_generation:

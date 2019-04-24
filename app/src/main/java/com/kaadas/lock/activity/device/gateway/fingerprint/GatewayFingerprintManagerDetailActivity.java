@@ -1,4 +1,4 @@
-package com.kaadas.lock.activity.device.bluetooth.password;
+package com.kaadas.lock.activity.device.gateway.fingerprint;
 
 import android.app.AlertDialog;
 import android.os.Bundle;
@@ -23,7 +23,7 @@ import butterknife.ButterKnife;
 /**
  * Created by David
  */
-public class BluetoothPasswordManagerDetailActivity extends AppCompatActivity implements View.OnClickListener {
+public class GatewayFingerprintManagerDetailActivity extends AppCompatActivity implements View.OnClickListener {
 
 
     @BindView(R.id.iv_back)
@@ -44,12 +44,12 @@ public class BluetoothPasswordManagerDetailActivity extends AppCompatActivity im
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_bluetooth_password_manager_detail);
+        setContentView(R.layout.activity_gateway_fingerprint_manager_detail);
         ButterKnife.bind(this);
         ivBack.setOnClickListener(this);
-        tvContent.setText(getString(R.string.user_password));
-        ivEditor.setOnClickListener(this);
+        tvContent.setText(getString(R.string.fingerprint_detail));
         btnDelete.setOnClickListener(this);
+        ivEditor.setOnClickListener(this);
     }
 
     @Override
@@ -58,19 +58,36 @@ public class BluetoothPasswordManagerDetailActivity extends AppCompatActivity im
             case R.id.iv_back:
                 finish();
                 break;
+            case R.id.btn_delete:
+                if (NetUtil.isNetworkAvailable()) {
+                    AlertDialogUtil.getInstance().noEditTwoButtonDialog(this, getString(R.string.hint), getString(R.string.confirm_delete_fingerprint), getString(R.string.cancel), getString(R.string.query), new AlertDialogUtil.ClickListener() {
+                        @Override
+                        public void left() {
+
+                        }
+
+                        @Override
+                        public void right() {
+                            //TODO 删除
+                        }
+                    });
+                } else {
+                    ToastUtil.getInstance().showLong(R.string.network_exception);
+                }
+                break;
             case R.id.iv_editor:
                 View mView = LayoutInflater.from(this).inflate(R.layout.have_edit_dialog, null);
                 TextView tvTitle = mView.findViewById(R.id.tv_title);
                 EditText editText = mView.findViewById(R.id.et_name);
-                //TODO 获取到密码设置
-              /*  if (password.getNickName()!=null){
-                    editText.setText(password.getNickName());
-                    editText.setSelection(password.getNickName().length());
+                //todo 获取到指纹判断
+         /*       if (fingerprint.getNickName()!=null){
+                    editText.setText(fingerprint.getNickName());
+                    editText.setSelection(fingerprint.getNickName().length());
                 }*/
                 TextView tv_cancel = mView.findViewById(R.id.tv_left);
                 TextView tv_query = mView.findViewById(R.id.tv_right);
                 AlertDialog alertDialog = AlertDialogUtil.getInstance().common(this, mView);
-                tvTitle.setText(getString(R.string.please_input_password_name));
+                tvTitle.setText(getString(R.string.input_fingerprint_name));
                 tv_cancel.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -85,34 +102,16 @@ public class BluetoothPasswordManagerDetailActivity extends AppCompatActivity im
                             ToastUtil.getInstance().showShort(R.string.nickname_verify_error);
                             return;
                         }
-                        //todo 获取到密码对比
-                  /*      if (StringUtil.judgeNicknameWhetherSame(password.getNickName(),name)){
+                        //TODO 获取到指纹判断
+                       /* if (StringUtil.judgeNicknameWhetherSame(fingerprint.getNickName(),name)){
                             ToastUtil.getInstance().showShort(R.string.nickname_not_modify);
                             alertDialog.dismiss();
                             return;
                         }*/
-                        //todo 更新昵称
+                        //TODO上传昵称
                         alertDialog.dismiss();
                     }
                 });
-                break;
-            case R.id.btn_delete:
-                if (NetUtil.isNetworkAvailable()) {
-                    AlertDialogUtil.getInstance().noEditTwoButtonDialog(this, "", getString(R.string.sure_delete_password), getString(R.string.cancel), getString(R.string.delete), new AlertDialogUtil.ClickListener() {
-                        @Override
-                        public void left() {
-
-                        }
-
-                        @Override
-                        public void right() {
-                            //确认删除
-                            //TODO 删除
-                        }
-                    });
-                } else {
-                    ToastUtil.getInstance().showLong(R.string.network_exception);
-                }
                 break;
         }
     }

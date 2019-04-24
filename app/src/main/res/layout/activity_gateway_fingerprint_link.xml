@@ -48,19 +48,6 @@
             android:textColor="#333333"
             android:textSize="@dimen/sp_13" />
 
-        <Button
-            android:id="@+id/btn_confirm_generation"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_44"
-            android:layout_alignParentBottom="true"
-            android:layout_marginLeft="@dimen/dp_88"
-            android:layout_marginRight="@dimen/dp_88"
-            android:layout_marginBottom="@dimen/dp_48"
-            android:background="@drawable/retangle_1f96f7_22"
-            android:gravity="center"
-            android:text="@string/link_success"
-            android:textColor="#FFFFFF"
-            android:textSize="@dimen/sp_15"
-            android:visibility="gone" />
+
     </RelativeLayout>
 </LinearLayout>

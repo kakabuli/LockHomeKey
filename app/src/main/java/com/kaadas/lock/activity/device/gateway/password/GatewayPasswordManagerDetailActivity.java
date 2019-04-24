@@ -1,4 +1,4 @@
-package com.kaadas.lock.activity.device.bluetooth.password;
+package com.kaadas.lock.activity.device.gateway.password;
 
 import android.app.AlertDialog;
 import android.os.Bundle;
@@ -13,7 +13,6 @@ import android.widget.TextView;
 
 import com.kaadas.lock.R;
 import com.kaadas.lock.utils.AlertDialogUtil;
-import com.kaadas.lock.utils.NetUtil;
 import com.kaadas.lock.utils.StringUtil;
 import com.kaadas.lock.utils.ToastUtil;
 
@@ -23,7 +22,7 @@ import butterknife.ButterKnife;
 /**
  * Created by David
  */
-public class BluetoothPasswordManagerDetailActivity extends AppCompatActivity implements View.OnClickListener {
+public class GatewayPasswordManagerDetailActivity extends AppCompatActivity implements View.OnClickListener {
 
 
     @BindView(R.id.iv_back)
@@ -44,12 +43,11 @@ public class BluetoothPasswordManagerDetailActivity extends AppCompatActivity im
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_bluetooth_password_manager_detail);
+        setContentView(R.layout.activity_gateway_password_manager_detail);
         ButterKnife.bind(this);
         ivBack.setOnClickListener(this);
         tvContent.setText(getString(R.string.user_password));
         ivEditor.setOnClickListener(this);
-        btnDelete.setOnClickListener(this);
     }
 
     @Override
@@ -95,24 +93,6 @@ public class BluetoothPasswordManagerDetailActivity extends AppCompatActivity im
                         alertDialog.dismiss();
                     }
                 });
-                break;
-            case R.id.btn_delete:
-                if (NetUtil.isNetworkAvailable()) {
-                    AlertDialogUtil.getInstance().noEditTwoButtonDialog(this, "", getString(R.string.sure_delete_password), getString(R.string.cancel), getString(R.string.delete), new AlertDialogUtil.ClickListener() {
-                        @Override
-                        public void left() {
-
-                        }
-
-                        @Override
-                        public void right() {
-                            //确认删除
-                            //TODO 删除
-                        }
-                    });
-                } else {
-                    ToastUtil.getInstance().showLong(R.string.network_exception);
-                }
                 break;
         }
     }

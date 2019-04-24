@@ -12,34 +12,27 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.kaadas.lock.R;
-import com.kaadas.lock.activity.device.bluetooth.password.BluetoothPasswordShareActivity;
-import com.kaadas.lock.activity.device.bluetooth.password.CycleRulesActivity;
+import com.kaadas.lock.activity.device.gateway.password.GatewayPasswordShareActivity;
 import com.kaadas.lock.adapter.ShiXiaoNameAdapter;
 import com.kaadas.lock.bean.ShiXiaoNameBean;
-import com.kaadas.lock.utils.KeyConstants;
-import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.StringUtil;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
-import static android.app.Activity.RESULT_OK;
 
 
 /**
  * Created by David
  */
 
-public class PasswordPeriodFragment extends Fragment implements BaseQuickAdapter.OnItemClickListener, View.OnClickListener {
+public class GatewayPasswordTemporaryFragment extends Fragment implements BaseQuickAdapter.OnItemClickListener, View.OnClickListener {
     @BindView(R.id.recycleview)
     RecyclerView recyclerView;
     @BindView(R.id.et_name)
@@ -47,31 +40,23 @@ public class PasswordPeriodFragment extends Fragment implements BaseQuickAdapter
     List<ShiXiaoNameBean> list = new ArrayList<>();
     ShiXiaoNameAdapter shiXiaoNameAdapter;
     View mView;
-    @BindView(R.id.ll_rule_repeat)
-    LinearLayout llRuleRepeat;
-    @BindView(R.id.btn_confirm_generation)
-    Button btnConfirmGeneration;
-    @BindView(R.id.btn_random_generation)
-    TextView btnRandomGeneration;
     @BindView(R.id.et_password)
     EditText etPassword;
-    public static final int REQUEST_CODE = 100;
-    String weekRule;
-    @BindView(R.id.tv_rule_repeat)
-    TextView tvRuleRepeat;
-    private int[] days;
+    @BindView(R.id.btn_random_generation)
+    TextView btnRandomGeneration;
+    @BindView(R.id.btn_confirm_generation)
+    Button btnConfirmGeneration;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         if (mView == null) {
-            mView = inflater.inflate(R.layout.fragment_password_period, container, false);
+            mView = inflater.inflate(R.layout.gateway_fragment_password_temporary, container, false);
         }
         ButterKnife.bind(this, mView);
-        llRuleRepeat.setOnClickListener(this);
-        btnConfirmGeneration.setOnClickListener(this);
-        btnRandomGeneration.setOnClickListener(this);
         initRecycleview();
+        btnRandomGeneration.setOnClickListener(this);
+        btnConfirmGeneration.setOnClickListener(this);
         return mView;
 
     }
@@ -113,33 +98,15 @@ public class PasswordPeriodFragment extends Fragment implements BaseQuickAdapter
     public void onClick(View v) {
         Intent intent;
         switch (v.getId()) {
-            case R.id.ll_rule_repeat:
-                intent = new Intent(getActivity(), CycleRulesActivity.class);
-                startActivityForResult(intent, REQUEST_CODE);
-                break;
-            case R.id.btn_confirm_generation:
-                intent = new Intent(getActivity(), BluetoothPasswordShareActivity.class);
-                startActivity(intent);
-                break;
             case R.id.btn_random_generation:
                 String password = StringUtil.makeRandomPassword();
                 etPassword.setText(password);
                 etPassword.setSelection(password.length());
                 break;
-        }
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK) {
-            if (REQUEST_CODE == requestCode) {
-                weekRule = data.getStringExtra(KeyConstants.WEEK_REPEAT_DATA);
-
-                days = data.getIntArrayExtra(KeyConstants.DAY_MASK);
-                LogUtils.e("收到的周计划是   " + Arrays.toString(days));
-                tvRuleRepeat.setText(weekRule);
-            }
+            case R.id.btn_confirm_generation:
+                intent = new Intent(getActivity(), GatewayPasswordShareActivity.class);
+                startActivity(intent);
+                break;
         }
     }
 }

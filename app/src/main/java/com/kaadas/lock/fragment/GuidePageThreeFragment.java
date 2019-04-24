@@ -48,6 +48,8 @@ public class GuidePageThreeFragment extends Fragment implements View.OnClickList
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.tv_skip:
+                startActivity(new Intent(getActivity(), LoginActivity.class));
+                getActivity().finish();
                 break;
             case R.id.btn:
                 startActivity(new Intent(getActivity(), LoginActivity.class));

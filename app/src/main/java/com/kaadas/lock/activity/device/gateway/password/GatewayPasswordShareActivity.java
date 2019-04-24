@@ -1,8 +1,6 @@
-package com.kaadas.lock.activity.device.bluetooth.fingerprint;
+package com.kaadas.lock.activity.device.gateway.password;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -18,29 +16,35 @@ import butterknife.ButterKnife;
 /**
  * Created by David on 2019/4/17
  */
-public class FingerprintCollectionActivity extends AppCompatActivity implements View.OnClickListener {
+public class GatewayPasswordShareActivity extends AppCompatActivity implements View.OnClickListener {
     @BindView(R.id.iv_back)
     ImageView ivBack;
     @BindView(R.id.tv_content)
     TextView tvContent;
     @BindView(R.id.iv_right)
     ImageView ivRight;
-
+    @BindView(R.id.tv_number)
+    TextView tvNumber;
+    @BindView(R.id.btn_delete)
+    Button btnDelete;
+    @BindView(R.id.tv_name)
+    TextView tvName;
+    @BindView(R.id.tv_time)
+    TextView tvTime;
+    @BindView(R.id.tv_short_message)
+    TextView tvShortMessage;
+    @BindView(R.id.tv_wei_xin)
+    TextView tvWeiXin;
+    @BindView(R.id.tv_copy)
+    TextView tvCopy;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_fingerprint_collection);
+        setContentView(R.layout.activity_bluetooth_password_share);
         ButterKnife.bind(this);
         ivBack.setOnClickListener(this);
-        tvContent.setText(R.string.add_fingerprint);
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Intent intent = new Intent(FingerprintCollectionActivity.this, AddFingerprintSuccessActivity.class);
-                startActivity(intent);
-            }
-        }, 3000);
+        tvContent.setText(getString(R.string.password_detail));
     }
 
     @Override
