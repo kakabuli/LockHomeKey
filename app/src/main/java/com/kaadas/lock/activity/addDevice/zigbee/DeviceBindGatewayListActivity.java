@@ -124,7 +124,8 @@ DeviceBindGatewayListActivity extends BaseActivity<DeviceGatewayBindListView, De
                             //跳转猫眼流程,需要网络
                             if (NetUtil.isNetworkAvailable()){
                                 if (NetUtil.isWifi()){
-                                    mPresenter.getGatewayWifiPwd();
+                                    //TODO
+//                                    mPresenter.getGatewayWifiPwd();
                                     //获取wifi的名称
                                     Intent catEyeIntent = new Intent(this, AddDeviceCatEyeFirstActivity.class);
                                     startActivity(catEyeIntent);
