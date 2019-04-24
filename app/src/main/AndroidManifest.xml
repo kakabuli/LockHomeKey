@@ -496,6 +496,14 @@
         <activity
             android:name=".activity.device.gateway.fingerprint.GatewayFingerprintManagerDetailActivity"
             android:launchMode="singleTop"
+            android:screenOrientation="portrait"></activity>GatewayDoorCardManagerDetailActivity
+        <activity
+            android:name=".activity.device.gateway.card.GatewayDoorCardManagerActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activity.device.gateway.card.GatewayDoorCardManagerDetailActivity"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait"></activity>
         <service android:name="com.kaadas.lock.publiclibrary.ble.BleService" />
     </application>
