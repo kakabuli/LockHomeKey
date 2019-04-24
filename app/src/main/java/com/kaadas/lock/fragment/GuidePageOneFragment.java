@@ -1,5 +1,6 @@
 package com.kaadas.lock.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -10,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.kaadas.lock.R;
+import com.kaadas.lock.activity.login.LoginActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -42,6 +44,8 @@ public class GuidePageOneFragment extends Fragment implements View.OnClickListen
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.tv_skip:
+                startActivity(new Intent(getActivity(), LoginActivity.class));
+                getActivity().finish();
                 break;
         }
     }

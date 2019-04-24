@@ -1,4 +1,4 @@
-package com.kaadas.lock.activity.device.bluetooth.fingerprint;
+package com.kaadas.lock.activity.device.gateway.fingerprint;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,7 +13,9 @@ import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.kaadas.lock.R;
-import com.kaadas.lock.adapter.FingerprintManagerAdapter;
+import com.kaadas.lock.activity.device.bluetooth.fingerprint.FingerprintLinkBluetoothActivity;
+import com.kaadas.lock.activity.device.bluetooth.fingerprint.FingerprintManagerDetailActivity;
+import com.kaadas.lock.adapter.GatewayFingerprintManagerAdapter;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.publiclibrary.http.result.GetPasswordResult;
 import com.kaadas.lock.utils.KeyConstants;
@@ -29,7 +31,7 @@ import butterknife.ButterKnife;
 /**
  * Created by David
  */
-public class FingerprintManagerActivity extends AppCompatActivity
+public class GatewayFingerprintManagerActivity extends AppCompatActivity
         implements BaseQuickAdapter.OnItemClickListener, View.OnClickListener {
     @BindView(R.id.iv_back)
     ImageView ivBack;//返回
@@ -38,10 +40,8 @@ public class FingerprintManagerActivity extends AppCompatActivity
 
     @BindView(R.id.recycleview)
     RecyclerView recycleview;
-    FingerprintManagerAdapter fingerprintManagerAdapter;
+    GatewayFingerprintManagerAdapter gatewayFingerprintManagerAdapter;
     boolean isNotData = true;
-    @BindView(R.id.tv_synchronized_record)
-    TextView tvSynchronizedRecord;
     @BindView(R.id.ll_add)
     LinearLayout llAdd;
     @BindView(R.id.ll_has_data)
@@ -49,18 +49,15 @@ public class FingerprintManagerActivity extends AppCompatActivity
     @BindView(R.id.tv_no_user)
     TextView tvNoUser;
     List<GetPasswordResult.DataBean.Fingerprint> list = new ArrayList<>();
-    private BleLockInfo bleLockInfo;
-    private boolean isSync = false; //是不是正在同步锁中的指纹
 
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_fingerprint_manager);
+        setContentView(R.layout.activity_gateway_fingerprint_manager);
         ButterKnife.bind(this);
         tvContent.setText(getString(R.string.fingerprint));
         ivBack.setOnClickListener(this);
-        tvSynchronizedRecord.setOnClickListener(this);
         llAdd.setOnClickListener(this);
         pageChange();
         initRecycleview();
@@ -69,10 +66,10 @@ public class FingerprintManagerActivity extends AppCompatActivity
     }
 
     private void initRecycleview() {
-        fingerprintManagerAdapter = new FingerprintManagerAdapter(list, R.layout.item_fingerprint_manager);
+        gatewayFingerprintManagerAdapter = new GatewayFingerprintManagerAdapter(list, R.layout.item_gateway_fingerprint_manager);
         recycleview.setLayoutManager(new LinearLayoutManager(this));
-        recycleview.setAdapter(fingerprintManagerAdapter);
-        fingerprintManagerAdapter.setOnItemClickListener(this);
+        recycleview.setAdapter(gatewayFingerprintManagerAdapter);
+        gatewayFingerprintManagerAdapter.setOnItemClickListener(this);
     }
 
 
@@ -83,8 +80,7 @@ public class FingerprintManagerActivity extends AppCompatActivity
 
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-        Intent intent = new Intent(this, FingerprintManagerDetailActivity.class);
-        intent.putExtra(KeyConstants.BLE_DEVICE_INFO, bleLockInfo);
+        Intent intent = new Intent(this, GatewayFingerprintManagerDetailActivity.class);
         intent.putExtra(KeyConstants.PASSWORD_NICK, list.get(position));
         startActivity(intent);
     }
@@ -113,18 +109,9 @@ public class FingerprintManagerActivity extends AppCompatActivity
                     return;
                 }
 //                intent = new Intent(this, FingerprintLinkBluetoothActivity.class);
-//                intent.putExtra(KeyConstants.BLE_DEVICE_INFO, bleLockInfo);
 //                startActivity(intent);
                 break;
 
-            case R.id.tv_synchronized_record:
-                //同步
-                if (isSync) {
-                    ToastUtil.getInstance().showShort(R.string.is_sync_please_wait);
-                } else {
-                    //TODO 同步
-                }
-                break;
         }
     }
 
@@ -135,6 +122,6 @@ public class FingerprintManagerActivity extends AppCompatActivity
             isNotData = true;
         }
         pageChange();
-        fingerprintManagerAdapter.notifyDataSetChanged();
+        gatewayFingerprintManagerAdapter.notifyDataSetChanged();
     }
 }

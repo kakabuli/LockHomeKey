@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.kaadas.lock.R;
 
+import com.kaadas.lock.activity.device.gateway.fingerprint.GatewayFingerprintManagerActivity;
 import com.kaadas.lock.activity.device.gateway.password.GatewayPasswordManagerActivity;
 import com.kaadas.lock.bean.BluetoothLockFunctionBean;
 import com.kaadas.lock.utils.DateUtils;
@@ -198,8 +199,8 @@ public class GatewayLockFunctionActivity extends AppCompatActivity implements Vi
                 startActivity(intent);
                 break;
             case R.id.ll_two:
-//                intent = new Intent(this, FingerprintManagerActivity.class);
-//                startActivity(intent);
+                intent = new Intent(this, GatewayFingerprintManagerActivity.class);
+                startActivity(intent);
                 break;
             case R.id.ll_three:
 //                intent = new Intent(this, DoorCardManagerActivity.class);
