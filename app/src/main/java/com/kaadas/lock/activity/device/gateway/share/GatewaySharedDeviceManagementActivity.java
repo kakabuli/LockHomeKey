@@ -1,4 +1,4 @@
-package com.kaadas.lock.activity.device.bluetooth;
+package com.kaadas.lock.activity.device.gateway.share;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,10 +14,15 @@ import android.widget.TextView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
+import com.kaadas.lock.activity.device.bluetooth.AddBluetoothFamilyMemberActivity;
+import com.kaadas.lock.activity.device.bluetooth.FamilyMemberDetailActivity;
 import com.kaadas.lock.adapter.BluetoothSharedDeviceManagementAdapter;
+import com.kaadas.lock.adapter.GatewaySharedDeviceManagementAdapter;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.mvp.presenter.BluetoothSharedDeviceManagementPresenter;
-import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
+import com.kaadas.lock.mvp.presenter.GatewaySharedDeviceManagementPresenter;
+import com.kaadas.lock.mvp.view.IBluetoothSharedDeviceManagementView;
+import com.kaadas.lock.mvp.view.IGatewaySharedDeviceManagementView;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.result.BluetoothSharedDeviceBean;
 import com.kaadas.lock.publiclibrary.http.util.HttpUtils;
@@ -25,7 +30,6 @@ import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.NetUtil;
 import com.kaadas.lock.utils.ToastUtil;
-import com.kaadas.lock.mvp.view.IBluetoothSharedDeviceManagementView;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
@@ -39,7 +43,7 @@ import butterknife.ButterKnife;
 /**
  * Created by David
  */
-public class BluetoothSharedDeviceManagementActivity extends BaseActivity<IBluetoothSharedDeviceManagementView, BluetoothSharedDeviceManagementPresenter<IBluetoothSharedDeviceManagementView>> implements IBluetoothSharedDeviceManagementView, BaseQuickAdapter.OnItemClickListener, View.OnClickListener {
+public class GatewaySharedDeviceManagementActivity extends BaseActivity<IGatewaySharedDeviceManagementView, GatewaySharedDeviceManagementPresenter<IGatewaySharedDeviceManagementView>> implements IGatewaySharedDeviceManagementView, BaseQuickAdapter.OnItemClickListener, View.OnClickListener {
     @BindView(R.id.iv_back)
     ImageView ivBack;//返回
     @BindView(R.id.tv_content)
@@ -47,7 +51,7 @@ public class BluetoothSharedDeviceManagementActivity extends BaseActivity<IBluet
     @BindView(R.id.recycleview)
     RecyclerView recycleview;
 
-    BluetoothSharedDeviceManagementAdapter bluetoothSharedDeviceManagementAdapter;
+    GatewaySharedDeviceManagementAdapter gatewaySharedDeviceManagementAdapter;
     List<BluetoothSharedDeviceBean.DataBean> list = new ArrayList<>();
     boolean isNotData = true;
     @BindView(R.id.refreshLayout)
@@ -60,20 +64,19 @@ public class BluetoothSharedDeviceManagementActivity extends BaseActivity<IBluet
     @BindView(R.id.ll_has_data)
     LinearLayout llHasData;
 
-    private BleLockInfo bleLockInfo;//蓝牙锁信息
-    public static final int REQUEST_CODE = 100;
+    public static final int REQUEST_CODE = 200;
     boolean querySuccess = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_bluetooth_shared_device_management);
+        setContentView(R.layout.activity_gateway_shared_device_management);
         ButterKnife.bind(this);
 
-        bluetoothSharedDeviceManagementAdapter = new BluetoothSharedDeviceManagementAdapter(list, R.layout.item_has_bluetooth_shared_device);
+        gatewaySharedDeviceManagementAdapter = new GatewaySharedDeviceManagementAdapter(list, R.layout.item_has_gateway_shared_device);
         recycleview.setLayoutManager(new LinearLayoutManager(this));
-        recycleview.setAdapter(bluetoothSharedDeviceManagementAdapter);
-        bluetoothSharedDeviceManagementAdapter.setOnItemClickListener(this);
+        recycleview.setAdapter(gatewaySharedDeviceManagementAdapter);
+        gatewaySharedDeviceManagementAdapter.setOnItemClickListener(this);
         ivBack.setOnClickListener(this);
         llAddUser.setOnClickListener(this);
         tvContent.setText(getString(R.string.user_manage));
@@ -81,8 +84,8 @@ public class BluetoothSharedDeviceManagementActivity extends BaseActivity<IBluet
     }
 
     @Override
-    protected BluetoothSharedDeviceManagementPresenter<IBluetoothSharedDeviceManagementView> createPresent() {
-        return new BluetoothSharedDeviceManagementPresenter<>();
+    protected GatewaySharedDeviceManagementPresenter<IGatewaySharedDeviceManagementView> createPresent() {
+        return new GatewaySharedDeviceManagementPresenter<>();
     }
 
     private void initRefresh() {
@@ -92,8 +95,7 @@ public class BluetoothSharedDeviceManagementActivity extends BaseActivity<IBluet
             public void onRefresh(@NonNull RefreshLayout refreshLayout) {
                 //清除数据
                 list.clear();
-                bluetoothSharedDeviceManagementAdapter.notifyDataSetChanged();
-                //todo 获取数据 李绪进---家庭成员
+                gatewaySharedDeviceManagementAdapter.notifyDataSetChanged();
                 queryUser();
 
 
@@ -111,23 +113,20 @@ public class BluetoothSharedDeviceManagementActivity extends BaseActivity<IBluet
      * 查询用户
      */
     public void queryUser() {
-        if (bleLockInfo != null && bleLockInfo.getServerLockInfo() != null && bleLockInfo.getServerLockInfo().getDevice_name() != null) {
-            if (NetUtil.isNetworkAvailable()) {
-                mPresenter.queryUserList(MyApplication.getInstance().getUid(), bleLockInfo.getServerLockInfo().getDevice_name());
-            } else {
-                ToastUtil.getInstance().showShort(R.string.noNet);
-            }
-
+        if (NetUtil.isNetworkAvailable()) {
+            //todo 查询用户
+        } else {
+            ToastUtil.getInstance().showShort(R.string.noNet);
         }
+
     }
 
 
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
         BluetoothSharedDeviceBean.DataBean dataBean = list.get(position);
-        Intent intent = new Intent(this, FamilyMemberDetailActivity.class);
+        Intent intent = new Intent(this, GatewayFamilyMemberDetailActivity.class);
         intent.putExtra(KeyConstants.COMMON_FAMILY_MEMBER_DATA, dataBean);
-        intent.putExtra(KeyConstants.BLE_DEVICE_INFO, bleLockInfo);
         startActivity(intent);
     }
 
@@ -186,7 +185,7 @@ public class BluetoothSharedDeviceManagementActivity extends BaseActivity<IBluet
             list.clear();
             list.addAll(dataBeanList);
             isNotData = false;
-            bluetoothSharedDeviceManagementAdapter.notifyDataSetChanged();
+            gatewaySharedDeviceManagementAdapter.notifyDataSetChanged();
         } else {
             isNotData = true;
         }
@@ -233,15 +232,10 @@ public class BluetoothSharedDeviceManagementActivity extends BaseActivity<IBluet
             if (REQUEST_CODE == requestCode) {
                 String phone = data.getStringExtra(KeyConstants.AUTHORIZATION_TELEPHONE);
                 String uid = MyApplication.getInstance().getUid();
-                if (bleLockInfo == null) {
-                    return;
-                }
-                String devmac = bleLockInfo.getServerLockInfo().getDevmac();
-                String device_name = bleLockInfo.getServerLockInfo().getDevice_name();
-                String device_nickname = bleLockInfo.getServerLockInfo().getDevice_nickname();
+
                 String time = System.currentTimeMillis() + "";
                 List<String> items = new ArrayList<>();
-                mPresenter.addCommonUser(uid, phone, devmac, device_name, "", device_nickname, "3", time, items);
+                //TODO 添加用户
             }
         }
     }

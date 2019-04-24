@@ -9,7 +9,7 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_marginLeft="@dimen/dp_29"
-        android:text="jfjkef"
+        android:text=""
         android:textColor="#999999"
         android:textSize="@dimen/sp_12" />
 
@@ -51,7 +51,17 @@
         android:layout_centerVertical="true"
         android:layout_marginLeft="@dimen/dp_110"
         android:layout_marginRight="@dimen/dp_50"
-        android:text="jffkfjfldfgggjlgljgljljglj"
+        android:text=""
+        android:textColor="#999999"
+        android:textSize="@dimen/sp_12" />
+    <TextView
+        android:id="@+id/tv_right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="@dimen/dp_98"
+        android:text=""
         android:textColor="#999999"
         android:textSize="@dimen/sp_12" />
 </RelativeLayout>

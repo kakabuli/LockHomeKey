@@ -9,7 +9,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/dp_29"
         android:layout_marginTop="@dimen/dp_18"
-        android:text="jfjkef"
+        android:text=""
         android:textColor="#333333"
         android:textSize="@dimen/sp_12" />
 

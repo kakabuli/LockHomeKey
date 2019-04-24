@@ -1,4 +1,4 @@
-package com.kaadas.lock.activity.device.bluetooth.card;
+package com.kaadas.lock.activity.device.gateway.card;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,8 +13,8 @@ import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.kaadas.lock.R;
-import com.kaadas.lock.adapter.DoorCardManagerAdapter;
-import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
+import com.kaadas.lock.activity.device.bluetooth.card.DoorCardManagerDetailActivity;
+import com.kaadas.lock.adapter.GatewayDoorCardManagerAdapter;
 import com.kaadas.lock.publiclibrary.http.result.GetPasswordResult;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.NetUtil;
@@ -29,7 +29,7 @@ import butterknife.ButterKnife;
 /**
  * Created by David
  */
-public class DoorCardManagerActivity extends AppCompatActivity
+public class GatewayDoorCardManagerActivity extends AppCompatActivity
         implements BaseQuickAdapter.OnItemClickListener, View.OnClickListener {
     @BindView(R.id.iv_back)
     ImageView ivBack;//返回
@@ -38,10 +38,8 @@ public class DoorCardManagerActivity extends AppCompatActivity
 
     @BindView(R.id.recycleview)
     RecyclerView recycleview;
-    DoorCardManagerAdapter doorCardManagerAdapter;
+    GatewayDoorCardManagerAdapter gatewayDoorCardManagerAdapter;
     boolean isNotData = true;
-    @BindView(R.id.tv_synchronized_record)
-    TextView tvSynchronizedRecord;
     @BindView(R.id.ll_add)
     LinearLayout llAdd;
     @BindView(R.id.ll_has_data)
@@ -49,18 +47,15 @@ public class DoorCardManagerActivity extends AppCompatActivity
     @BindView(R.id.tv_no_user)
     TextView tvNoUser;
     List<GetPasswordResult.DataBean.Card> list = new ArrayList<>();
-    private BleLockInfo bleLockInfo;
-    private boolean isSync = false;
 
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_door_card_manager);
+        setContentView(R.layout.activity_gateway_door_card_manager);
         ButterKnife.bind(this);
         tvContent.setText(getString(R.string.door_card));
         ivBack.setOnClickListener(this);
-        tvSynchronizedRecord.setOnClickListener(this);
         llAdd.setOnClickListener(this);
         pageChange();
         initRecycleview();
@@ -69,10 +64,10 @@ public class DoorCardManagerActivity extends AppCompatActivity
     }
 
     private void initRecycleview() {
-        doorCardManagerAdapter = new DoorCardManagerAdapter(list, R.layout.item_door_card_manager);
+        gatewayDoorCardManagerAdapter = new GatewayDoorCardManagerAdapter(list, R.layout.item_gateway_door_card_manager);
         recycleview.setLayoutManager(new LinearLayoutManager(this));
-        recycleview.setAdapter(doorCardManagerAdapter);
-        doorCardManagerAdapter.setOnItemClickListener(this);
+        recycleview.setAdapter(gatewayDoorCardManagerAdapter);
+        gatewayDoorCardManagerAdapter.setOnItemClickListener(this);
     }
 
 
@@ -83,8 +78,7 @@ public class DoorCardManagerActivity extends AppCompatActivity
 
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-        Intent intent = new Intent(this, DoorCardManagerDetailActivity.class);
-        intent.putExtra(KeyConstants.BLE_DEVICE_INFO, bleLockInfo);
+        Intent intent = new Intent(this, GatewayDoorCardManagerDetailActivity.class);
         intent.putExtra(KeyConstants.TO_PWD_DETAIL, list.get(position));
         startActivity(intent);
     }
@@ -113,20 +107,9 @@ public class DoorCardManagerActivity extends AppCompatActivity
                     return;
                 }
 
-//                intent = new Intent(this, DoorCardNearDoorActivity.class);
-//                intent = new Intent(this, DoorCardConnectFailActivity.class);
-                intent = new Intent(this, DoorCardConnectSuccessActivity.class);
-                intent.putExtra(KeyConstants.BLE_DEVICE_INFO, bleLockInfo);
-                startActivity(intent);
                 break;
 
-            case R.id.tv_synchronized_record:
-                //同步
-                if (isSync) {
-                    ToastUtil.getInstance().showShort(R.string.is_sync_please_wait);
-                } else {
-                }
-                break;
+
         }
     }
 
@@ -137,6 +120,6 @@ public class DoorCardManagerActivity extends AppCompatActivity
             isNotData = true;
         }
         pageChange();
-        doorCardManagerAdapter.notifyDataSetChanged();
+        gatewayDoorCardManagerAdapter.notifyDataSetChanged();
     }
 }

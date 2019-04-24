@@ -480,7 +480,7 @@
         <activity
             android:name=".activity.device.gateway.password.GatewayPasswordManagerDetailActivity"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait"></activity>GatewayPasswordShareActivity
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".activity.device.gateway.password.GatewayPasswordAddActivity"
             android:launchMode="singleTop"
@@ -488,13 +488,49 @@
         <activity
             android:name=".activity.device.gateway.password.GatewayPasswordShareActivity"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait"></activity>GatewayFingerprintManagerDetailActivity
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".activity.device.gateway.fingerprint.GatewayFingerprintManagerActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"></activity>
         <activity
             android:name=".activity.device.gateway.fingerprint.GatewayFingerprintManagerDetailActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activity.device.gateway.card.GatewayDoorCardManagerActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activity.device.gateway.card.GatewayDoorCardManagerDetailActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activity.device.gateway.share.GatewaySharedDeviceManagementActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activity.device.gateway.share.GatewayFamilyMemberDetailActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activity.device.gateway.GatewayLockAuthorizationActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activity.device.gateway.GatewayAuthorizationDeviceInformationActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activity.device.gateway.more.GatewayMoreActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activity.device.gateway.GatewayDeviceInformationActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activity.device.gateway.more.GatewayLockLanguageSettingActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"></activity>
         <service android:name="com.kaadas.lock.publiclibrary.ble.BleService" />

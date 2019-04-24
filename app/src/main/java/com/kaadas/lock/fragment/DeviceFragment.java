@@ -18,7 +18,9 @@ import android.widget.RelativeLayout;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.addDevice.DeviceAddActivity;
+import com.kaadas.lock.activity.device.BluetoothLockAuthorizationActivity;
 import com.kaadas.lock.activity.device.BluetoothLockFunctionActivity;
+import com.kaadas.lock.activity.device.gateway.GatewayLockAuthorizationActivity;
 import com.kaadas.lock.activity.device.gateway.GatewayLockFunctionActivity;
 import com.kaadas.lock.adapter.DeviceDetailAdapter;
 import com.kaadas.lock.bean.DeviceDetailBean;
@@ -61,7 +63,8 @@ public class DeviceFragment extends Fragment implements BaseQuickAdapter.OnItemC
     private DeviceDetailAdapter deviceDetailAdapter;
 
     private List<DeviceDetailBean> mDeviceList;
-
+    boolean bluetoothAuthorization = false;
+    boolean gatewayAuthorization = false;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -154,12 +157,20 @@ public class DeviceFragment extends Fragment implements BaseQuickAdapter.OnItemC
         switch (deviceDetailBean.getType()) {
             case 1:
                 //蓝牙
-                intent = new Intent(getActivity(), BluetoothLockFunctionActivity.class);
-//                intent = new Intent(getActivity(), BluetoothLockAuthorizationActivity.class);
+                if (bluetoothAuthorization) {
+                    intent = new Intent(getActivity(), BluetoothLockAuthorizationActivity.class);
+                } else {
+                    intent = new Intent(getActivity(), BluetoothLockFunctionActivity.class);
+                }
                 startActivity(intent);
                 break;
             case 2:
-                intent = new Intent(getActivity(), GatewayLockFunctionActivity.class);
+//                gatewayAuthorization=true;
+                if (gatewayAuthorization){
+                    intent = new Intent(getActivity(), GatewayLockAuthorizationActivity.class);
+                }else {
+                    intent = new Intent(getActivity(), GatewayLockFunctionActivity.class);
+                }
                 startActivity(intent);
                 break;
         }
