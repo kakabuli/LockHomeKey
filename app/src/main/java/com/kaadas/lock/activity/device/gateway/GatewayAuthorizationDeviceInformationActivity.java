@@ -13,7 +13,7 @@ import com.kaadas.lock.R;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class GatewayDeviceInformationActivity extends AppCompatActivity implements View.OnClickListener {
+public class GatewayAuthorizationDeviceInformationActivity extends AppCompatActivity implements View.OnClickListener {
 
 
     @BindView(R.id.iv_back)
@@ -38,7 +38,7 @@ public class GatewayDeviceInformationActivity extends AppCompatActivity implemen
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_gateway_device_information);
+        setContentView(R.layout.activity_authorization_gateway_device_information);
         ButterKnife.bind(this);
         ivBack.setOnClickListener(this);
         tvContent.setText(R.string.device_info);

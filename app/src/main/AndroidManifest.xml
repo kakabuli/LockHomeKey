@@ -518,7 +518,19 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"></activity>
         <activity
+            android:name=".activity.device.gateway.GatewayAuthorizationDeviceInformationActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activity.device.gateway.more.GatewayMoreActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"></activity>
+        <activity
             android:name=".activity.device.gateway.GatewayDeviceInformationActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activity.device.gateway.more.GatewayLockLanguageSettingActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"></activity>
         <service android:name="com.kaadas.lock.publiclibrary.ble.BleService" />

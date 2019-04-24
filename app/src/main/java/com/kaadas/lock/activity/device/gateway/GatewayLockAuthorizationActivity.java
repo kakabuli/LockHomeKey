@@ -11,8 +11,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.kaadas.lock.R;
-import com.kaadas.lock.activity.device.BluetoothDeviceInformationActivity;
-import com.kaadas.lock.activity.device.GatewayLockDeviceInformationActivity;
 import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
 
@@ -70,7 +68,7 @@ public class GatewayLockAuthorizationActivity extends AppCompatActivity implemen
                 changLockStatus();
                 break;
             case R.id.rl_device_information:
-                Intent intent = new Intent(this, GatewayDeviceInformationActivity.class);
+                Intent intent = new Intent(this, GatewayAuthorizationDeviceInformationActivity.class);
                 startActivity(intent);
                 break;
         }

@@ -1,4 +1,4 @@
-package com.kaadas.lock.activity.device.bluetooth;
+package com.kaadas.lock.activity.device.gateway.more;
 
 import android.app.AlertDialog;
 import android.content.Intent;
@@ -15,7 +15,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.kaadas.lock.R;
-import com.kaadas.lock.activity.device.BluetoothDeviceInformationActivity;
+import com.kaadas.lock.activity.device.bluetooth.BluetoothLockLanguageSettingActivity;
+import com.kaadas.lock.activity.device.bluetooth.BluetoothSafeModeActivity;
+import com.kaadas.lock.activity.device.gateway.GatewayDeviceInformationActivity;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.SPUtils;
@@ -28,7 +30,7 @@ import butterknife.ButterKnife;
 /**
  * Created by David on 2019/4/15
  */
-public class BluetoothMoreActivity extends AppCompatActivity implements View.OnClickListener {
+public class GatewayMoreActivity extends AppCompatActivity implements View.OnClickListener {
     @BindView(R.id.iv_back)
     ImageView ivBack;
     @BindView(R.id.tv_content)
@@ -69,7 +71,7 @@ public class BluetoothMoreActivity extends AppCompatActivity implements View.OnC
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_bluetooth_more);
+        setContentView(R.layout.activity_gateway_more);
         ButterKnife.bind(this);
         initClick();
         initData();
@@ -78,7 +80,7 @@ public class BluetoothMoreActivity extends AppCompatActivity implements View.OnC
 
     private void initData() {
         //todo 获取到设备名字时,key都加上设备名字
-        messageFreeStatus = (boolean) SPUtils.get(KeyConstants.MESSAGE_FREE_STATUS, false);
+        messageFreeStatus = (boolean) SPUtils.get(KeyConstants.MESSAGE_FREE_STATUS, true);
         if (messageFreeStatus) {
             ivMessageFree.setImageResource(R.mipmap.iv_open);
         } else {
@@ -174,8 +176,8 @@ public class BluetoothMoreActivity extends AppCompatActivity implements View.OnC
                 messageFreeStatus = !messageFreeStatus;
                 break;
             case R.id.rl_safe_mode:
-                intent = new Intent(this, BluetoothSafeModeActivity.class);
-                startActivity(intent);
+//                intent = new Intent(this, BluetoothSafeModeActivity.class);
+//                startActivity(intent);
 
                 break;
             case R.id.rl_am:
@@ -191,7 +193,7 @@ public class BluetoothMoreActivity extends AppCompatActivity implements View.OnC
                 amAutoLockStatus = !amAutoLockStatus;
                 break;
             case R.id.rl_door_lock_language_switch:
-                intent = new Intent(this, BluetoothLockLanguageSettingActivity.class);
+                intent = new Intent(this, GatewayLockLanguageSettingActivity.class);
                 startActivity(intent);
                 break;
             case R.id.rl_silent_mode:
@@ -207,13 +209,13 @@ public class BluetoothMoreActivity extends AppCompatActivity implements View.OnC
                 silentModeStatus = !silentModeStatus;
                 break;
             case R.id.rl_device_information:
-                intent=new Intent(this,BluetoothDeviceInformationActivity.class);
+                intent = new Intent(this, GatewayDeviceInformationActivity.class);
                 startActivity(intent);
                 break;
             case R.id.rl_check_firmware_update:
                 break;
             case R.id.btn_delete:
-                AlertDialogUtil.getInstance().noEditTwoButtonDialog(this, getString(R.string.device_delete_dialog_head), getString(R.string.device_delete_dialog_content),getString(R.string.cancel),getString(R.string.query) , new AlertDialogUtil.ClickListener() {
+                AlertDialogUtil.getInstance().noEditTwoButtonDialog(this, getString(R.string.device_delete_dialog_head), getString(R.string.device_delete_dialog_content), getString(R.string.cancel), getString(R.string.query), new AlertDialogUtil.ClickListener() {
                     @Override
                     public void left() {
 
