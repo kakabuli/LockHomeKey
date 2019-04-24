@@ -431,7 +431,7 @@
     <string name="finger_or_card">指纹+卡片（选项功能）</string>
     <string name="chinese">中文</string>
     <string name="lock_language">门锁语言</string>
-    <string name="please_use_gateway_qr_code">请使用Kaadas网关二维码</string>
+    <string name="please_use_gateway_qr_code">请扫描Kaadas网关二维码</string>
     <string name="unbind_not_have_devicesn">无法绑定</string>
     <string name="publish_message_fail">发布消息失败</string>
     <string name="gateway_already_bind">网关已经被绑定</string>
@@ -633,4 +633,5 @@
     <string name="cateye_dynamic">猫眼动态</string>
     <string name="connect_cateye_check_wifi">目前手机连接WiFi与所选网关不一致，请切换手机网络为所选网关</string>
     <string name="switch_wifi">前去切换WIFI</string>
+    <string name="please_scan_cateye_qrcode">请扫描kaadas猫眼二维码</string>
 </resources>

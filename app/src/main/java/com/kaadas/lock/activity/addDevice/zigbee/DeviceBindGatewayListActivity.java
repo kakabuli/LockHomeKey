@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -20,6 +21,8 @@ import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.bean.deviceAdd.AddZigbeeBindGatewayBean;
 import com.kaadas.lock.mvp.presenter.deviceaddpresenter.DeviceGatewayBindListPresenter;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.GetBindGatewayListResult;
+import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.GwWiFiBaseInfo;
+import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.NetUtil;
 import com.kaadas.lock.utils.SPUtils;
@@ -123,15 +126,7 @@ DeviceBindGatewayListActivity extends BaseActivity<DeviceGatewayBindListView, De
                         if (type == 2) {
                             //跳转猫眼流程,需要网络
                             if (NetUtil.isNetworkAvailable()){
-                                if (NetUtil.isWifi()){
-                                    mPresenter.getGatewayWifiPwd();
-                                    //获取wifi的名称
-                                    Intent catEyeIntent = new Intent(this, AddDeviceCatEyeFirstActivity.class);
-                                    startActivity(catEyeIntent);
-                                }else{
-                                    Intent wifiIntent=new Intent(this, AddDeviceCatEyeCheckWifi.class);
-                                    startActivity(wifiIntent);
-                                }
+                                mPresenter.getGatewayWifiPwd(zigbeeBindGatewayBeanSelect.getGatewayId());
                             }else{
                               ToastUtil.getInstance().showShort(R.string.network_exception);
                             }
@@ -232,6 +227,52 @@ DeviceBindGatewayListActivity extends BaseActivity<DeviceGatewayBindListView, De
 
     @Override
     public void getGatewayStateFail() {
+
+    }
+
+    @Override
+    public void onGetWifiInfoSuccess(GwWiFiBaseInfo gwWiFiBaseInfo) {
+        String ssid = gwWiFiBaseInfo.getReturnData().getSsid();
+        String pwd = gwWiFiBaseInfo.getReturnData().getPwd();
+        if (NetUtil.isWifi()){
+            //获取wifi的名称
+            String wifiName = NetUtil.getWifiName();
+            LogUtils.e("获取到的WiFi名称是    " + wifiName+"  网关的WiFi名称是  "+ssid+"   ");
+            if (TextUtils.isEmpty(wifiName)){//如果获取到的WiFi名称是空的话
+                LogUtils.e("获取到的WiFi名称是    为空" );
+                Intent wifiIntent=new Intent(this, AddDeviceCatEyeCheckWifi.class);
+                wifiIntent.putExtra(KeyConstants.GW_WIFI_SSID, ssid);
+                wifiIntent.putExtra(KeyConstants.GW_WIFI_PWD, pwd);
+                wifiIntent.putExtra(KeyConstants.GW_SN, zigbeeBindGatewayBeanSelect.getGatewayId());
+                startActivity(wifiIntent);
+            }else {  //查看是否是网关的WiFi
+                wifiName =wifiName.replaceAll("\"", "");
+                LogUtils.e("获取到的WiFi名称是    " + wifiName+"  网关的WiFi名称是  "+ssid+"   ");
+                if (wifiName.equals(ssid)){
+                    Intent catEyeIntent = new Intent(this, AddDeviceCatEyeFirstActivity.class);
+                    catEyeIntent.putExtra(KeyConstants.GW_WIFI_SSID, ssid);
+                    catEyeIntent.putExtra(KeyConstants.GW_WIFI_PWD, pwd);
+                    catEyeIntent.putExtra(KeyConstants.GW_SN, zigbeeBindGatewayBeanSelect.getGatewayId());
+                    startActivity(catEyeIntent);
+                }else {
+                    Intent wifiIntent=new Intent(this, AddDeviceCatEyeCheckWifi.class);
+                    wifiIntent.putExtra(KeyConstants.GW_WIFI_SSID, ssid);
+                    wifiIntent.putExtra(KeyConstants.GW_WIFI_PWD, pwd);
+                    wifiIntent.putExtra(KeyConstants.GW_SN, zigbeeBindGatewayBeanSelect.getGatewayId());
+                    startActivity(wifiIntent);
+                }
+            }
+        }else{
+            Intent wifiIntent=new Intent(this, AddDeviceCatEyeCheckWifi.class);
+            wifiIntent.putExtra(KeyConstants.GW_WIFI_SSID, ssid);
+            wifiIntent.putExtra(KeyConstants.GW_WIFI_PWD, pwd);
+            wifiIntent.putExtra(KeyConstants.GW_SN, zigbeeBindGatewayBeanSelect.getGatewayId());
+            startActivity(wifiIntent);
+        }
+    }
+
+    @Override
+    public void onGetWifiInfoFailed(Throwable throwable) {
 
     }
 

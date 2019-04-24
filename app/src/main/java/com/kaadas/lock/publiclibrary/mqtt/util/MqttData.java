@@ -1,5 +1,7 @@
 package com.kaadas.lock.publiclibrary.mqtt.util;
 
+import com.kaadas.lock.utils.LogUtils;
+
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 public class MqttData {
@@ -9,9 +11,10 @@ public class MqttData {
     private String payload;
     private MqttMessage mqttMessage;
     private int messageId = -1;
-    private int returnCode = -1;
+    private String returnCode;
+    private String msgtype = "";
 
-    public MqttData(String func, String topic, String payload, MqttMessage mqttMessage,int messageId) {
+    public MqttData(String func, String topic, String payload, MqttMessage mqttMessage, int messageId) {
         this.func = func;
         this.topic = topic;
         this.payload = payload;
@@ -62,11 +65,31 @@ public class MqttData {
         this.messageId = messageId;
     }
 
-    public int getReturnCode() {
+    public String getReturnCode() {
         return returnCode;
     }
 
-    public void setReturnCode(int returnCode) {
+    public void setReturnCode(String returnCode) {
         this.returnCode = returnCode;
+    }
+
+    public String getMsgtype() {
+        return msgtype;
+    }
+
+    public void setMsgtype(String msgtype) {
+        this.msgtype = msgtype;
+    }
+
+    public boolean isThisRequest(int messageId, String func) {
+        //严格判断   数据不对  协议不通用
+//        if (this.messageId == messageId && this.func.equalsIgnoreCase(func) && "respone".equals(msgtype)){
+//            return true;
+//        }
+
+        if (this.func.equalsIgnoreCase(func)) {
+            return true;
+        }
+        return false;
     }
 }

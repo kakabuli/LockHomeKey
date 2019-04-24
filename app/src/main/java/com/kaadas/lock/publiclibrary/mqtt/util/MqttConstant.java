@@ -34,6 +34,10 @@ public class MqttConstant {
         return topic;
     }
 
+    public static String getCallTopic(String userId){
+        return "/" + userId + "/rpc/call";
+    }
+
 
     //1 绑定网关
     public static final String BIND_GATEWAY = "bindGatewayByUser";
@@ -43,6 +47,15 @@ public class MqttConstant {
 
     //3获取网关状态
     public static final String GATEWAY_STATE = "gatewayState";
+
+    //获取WiFi信息
+    public static final String GET_WIFI_BASIC = "getWiFiBasic";
+
+    //获取WiFi信息
+    public static final String ALLOW_GATEWAY_JOIN = "allowCateyeJoin";
+
+    //设备上下线的 func
+    public static final String GW_EVENT = "gwevent";
 
 
 }

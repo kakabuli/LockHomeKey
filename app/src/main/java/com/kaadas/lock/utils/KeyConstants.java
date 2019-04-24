@@ -205,6 +205,17 @@ public class KeyConstants {
     //蓝牙动态 警告
     public static final String BLUETOOTH_RECORD_WARN = "bluetooth_record_warn";
 
+    //网关wifi的名称
+    public static final String GW_WIFI_SSID = "gwWifiSsid";
+    //网关WiFi的密码
+    public static final String GW_WIFI_PWD = "gwWifiPWd";
+    //扫描的设备SN
+    public static final String DEVICE_SN = "deviceSn";
+    //扫描的设备mac
+    public static final String DEVICE_MAC = "deviceMac";
+    //扫描的设备mac
+    public static final String GW_SN = "gwSn";
+
     //开锁
     //已反锁
     //正在开锁

@@ -35,25 +35,21 @@ public class AddGatewayThirdActivity extends BaseActivity<GatewayBindView, Gatew
         super.onCreate(savedInstanceState);
         setContentView(R.layout.device_gateway_add_three);
         ButterKnife.bind(this);
-        Intent scanIntent=getIntent();
-        deviceSN=scanIntent.getStringExtra("deviceSN");
+        Intent scanIntent = getIntent();
+        deviceSN = scanIntent.getStringExtra("deviceSN");
+
         initView();
     }
 
     private void initView() {
-        if (TextUtils.isEmpty(deviceSN)){
+        if (TextUtils.isEmpty(deviceSN)) {
             ToastUtil.getInstance().showShort(getString(R.string.unbind_not_have_devicesn));
             return;
         }
-        if (NetUtil.isNetworkAvailable()){
-            MqttService service= MyApplication.getInstance().getMqttService();
-            service.getMqttClient().isConnected();
-            if (mPresenter.mqttService!=null&&mPresenter.mqttService.getMqttClient().isConnected()){
-                mPresenter.bindGateway(deviceSN);
-            }else {
-                ToastUtil.getInstance().showShort(getString(R.string.unbind_not_have_devicesn));
-            }
-        }else{
+        if (NetUtil.isNetworkAvailable()) {
+            LogUtils.e("deviceSN    " + deviceSN);
+            mPresenter.bindGateway(deviceSN);
+        } else {
             ToastUtil.getInstance().showShort(getString(R.string.network_exception));
         }
 
@@ -87,21 +83,21 @@ public class AddGatewayThirdActivity extends BaseActivity<GatewayBindView, Gatew
     }
 
     @Override
-    public void bindGatewayFail(String code,String msg) {
-        if ("812".equals(code)){ //通知管理员确认
+    public void bindGatewayFail(String code, String msg) {
+        if ("812".equals(code)) { //通知管理员确认
             ToastUtil.getInstance().showLong(R.string.already_notify_admin);
             Intent cancelBind = new Intent(this, DeviceGatewayBindListView.class);
             startActivity(cancelBind);
             finish();
-        }else if ("813".equals(code)){ //您已绑定该网关
+        } else if ("813".equals(code)) { //您已绑定该网关
             ToastUtil.getInstance().showLong(R.string.already_bind_gatway);
             Intent cancelBind = new Intent(this, DeviceGatewayBindListView.class);
             startActivity(cancelBind);
             finish();
-        }else {
+        } else {
             Intent failIntent = new Intent(this, AddGatewayFailActivity.class);
-            failIntent.putExtra("code",code);
-            failIntent.putExtra("msg",msg);
+            failIntent.putExtra("code", code);
+            failIntent.putExtra("msg", msg);
             startActivity(failIntent);
             finish();
         }
@@ -110,7 +106,7 @@ public class AddGatewayThirdActivity extends BaseActivity<GatewayBindView, Gatew
     @Override
     public void bindGatewayThrowable(Throwable throwable) {
 
-        LogUtils.e("绑定网关异常"+throwable);
+        LogUtils.e("绑定网关异常" + throwable);
         Intent failIntent = new Intent(this, AddGatewayFailActivity.class);
         startActivity(failIntent);
         finish();

@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.kaadas.lock.R;
+import com.kaadas.lock.utils.KeyConstants;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -20,11 +21,17 @@ public class AddDeviceCatEyeFirstActivity extends AppCompatActivity {
     ImageView back;
     @BindView(R.id.scan_catEye)
     LinearLayout scanCatEye;
+    private String pwd;
+    private String ssid;
+    private String gwId;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.device_cateye_add_first);
+        ssid = getIntent().getStringExtra(KeyConstants.GW_WIFI_SSID);
+        pwd = getIntent().getStringExtra(KeyConstants.GW_WIFI_PWD);
+        gwId = getIntent().getStringExtra(KeyConstants.GW_SN);
         ButterKnife.bind(this);
 
     }
@@ -36,9 +43,15 @@ public class AddDeviceCatEyeFirstActivity extends AppCompatActivity {
                 finish();
                 break;
             case R.id.scan_catEye:
-                Intent scanIntent=new Intent(this,AddDeviceCatEyeScanActivity.class);
+                Intent scanIntent = new Intent(this, AddDeviceCatEyeScanActivity.class);
+                scanIntent.putExtra(KeyConstants.GW_WIFI_SSID, ssid);
+                scanIntent.putExtra(KeyConstants.GW_WIFI_PWD, pwd);
+                scanIntent.putExtra(KeyConstants.GW_SN, gwId);
                 startActivity(scanIntent);
                 break;
         }
     }
+
+
+
 }
