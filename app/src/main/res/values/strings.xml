@@ -359,7 +359,7 @@
     <string name="device_information">设备信息</string>
     <string name="serial_number">序列号</string>
     <string name="device_signal">设备信号</string>
-    <string name="firmware_version_number">固件包版本号</string>
+    <string name="firmware_version_number">固件版本号</string>
     <string name="hardware_version_number">硬件版本号</string>
     <string name="master_firmware_version_number">主控固件版本号</string>
     <string name="fingerprint_firmware_version_number">指纹固件版本号</string>
@@ -638,4 +638,6 @@
     <string name="sure_delete_password">确定删除密码吗？</string>
     <string name="connect_cateye_check_wifi">目前手机连接WiFi与所选网关不一致，请切换手机网络为所选网关</string>
     <string name="switch_wifi">前去切换WIFI</string>
+    <string name="software_version">软件版本</string>
+    <string name="bluetooth_version">蓝牙版本</string>
 </resources>

@@ -513,6 +513,14 @@
             android:name=".activity.device.gateway.share.GatewayFamilyMemberDetailActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activity.device.gateway.GatewayLockAuthorizationActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activity.device.gateway.GatewayDeviceInformationActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"></activity>
         <service android:name="com.kaadas.lock.publiclibrary.ble.BleService" />
     </application>
 
