@@ -30,6 +30,8 @@ public class MqttConstant {
     //msgtype---request
     public static final String MSG_TYPE_REQUEST="request";
 
+    //online
+    public static final String ON_LINE="online";
 
 
 
@@ -61,9 +63,9 @@ public class MqttConstant {
     //设备上下线的 func
     public static final String GW_EVENT = "gwevent";
 
-    //4网关开启允许设备入网模式
+    //网关开启允许设备入网模式
     public static final String SET_JOIN_ALLOW="setJoinAllow";
 
-
+    //
 
 }

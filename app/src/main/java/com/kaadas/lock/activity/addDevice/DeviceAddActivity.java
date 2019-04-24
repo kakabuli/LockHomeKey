@@ -5,15 +5,14 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.addDevice.bluetooth.AddBluetoothFirstActivity;
-import com.kaadas.lock.activity.addDevice.zigbee.DeviceBindGatewayListActivity;
 import com.kaadas.lock.adapter.DeviceAddItemAdapter;
 import com.kaadas.lock.bean.deviceAdd.DeviceAddItemBean;
 
@@ -24,23 +23,14 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class DeviceAddActivity extends AppCompatActivity {
+public class DeviceAddActivity extends AppCompatActivity implements BaseQuickAdapter.OnItemClickListener {
     @BindView(R.id.back)
     ImageView back;
-    @BindView(R.id.zigbee_image)
-    ImageView zigbeeImage;
-    @BindView(R.id.zigbee_text)
-    TextView zigbeeText;
-    @BindView(R.id.bluetooth_image)
-    ImageView bluetoothImage;
-    @BindView(R.id.bluetooth_text)
-    TextView bluetoothText;
+
     @BindView(R.id.device_add_recycler)
     RecyclerView deviceAddRecycler;
-    @BindView(R.id.zigbee_layout)
-    LinearLayout zigbeeLayout;
-    @BindView(R.id.bluetooth_layout)
-    LinearLayout bluetoothLayout;
+
+
 
     private DeviceAddItemAdapter deviceAddItemAdapter;
 
@@ -59,49 +49,25 @@ public class DeviceAddActivity extends AppCompatActivity {
     private void initData() {
         deviceList = new ArrayList<>();
         DeviceAddItemBean deviceAddItemBean1 = new DeviceAddItemBean();
-        deviceAddItemBean1.setImageId(R.mipmap.k7);
-        deviceAddItemBean1.setTypeText(getString(R.string.k7));
-        deviceAddItemBean1.setType(0);
+        deviceAddItemBean1.setImageId(R.mipmap.device_add_zigbee);
+        deviceAddItemBean1.setTitle(getString(R.string.device_zigbee));
+        deviceAddItemBean1.setContent(getString(R.string.device_add_zigbee));
         deviceList.add(deviceAddItemBean1);
 
         DeviceAddItemBean deviceAddItemBean2 = new DeviceAddItemBean();
-        deviceAddItemBean2.setImageId(R.mipmap.k8);
-        deviceAddItemBean2.setTypeText(getString(R.string.k8));
-        deviceAddItemBean2.setType(1);
+        deviceAddItemBean2.setImageId(R.mipmap.device_add_bluetooth);
+        deviceAddItemBean2.setTitle(getString(R.string.device_bluetooth));
+        deviceAddItemBean2.setContent(getString(R.string.device_add_bluetooth));
         deviceList.add(deviceAddItemBean2);
 
-
-        DeviceAddItemBean deviceAddItemBean3 = new DeviceAddItemBean();
-        deviceAddItemBean3.setImageId(R.mipmap.k9);
-        deviceAddItemBean3.setTypeText(getString(R.string.k9));
-        deviceAddItemBean3.setType(2);
-        deviceList.add(deviceAddItemBean3);
-
-        DeviceAddItemBean deviceAddItemBean4 = new DeviceAddItemBean();
-        deviceAddItemBean4.setImageId(R.mipmap.s8);
-        deviceAddItemBean4.setTypeText(getString(R.string.s8));
-        deviceAddItemBean4.setType(3);
-        deviceList.add(deviceAddItemBean4);
-
-        DeviceAddItemBean deviceAddItemBean5 = new DeviceAddItemBean();
-        deviceAddItemBean5.setImageId(R.mipmap.kx);
-        deviceAddItemBean5.setTypeText(getString(R.string.kx));
-        deviceAddItemBean5.setType(4);
-        deviceList.add(deviceAddItemBean5);
-
-        DeviceAddItemBean deviceAddItemBean6 = new DeviceAddItemBean();
-        deviceAddItemBean6.setImageId(R.mipmap.other);
-        deviceAddItemBean6.setTypeText(getString(R.string.other));
-        deviceAddItemBean6.setType(5);
-        deviceList.add(deviceAddItemBean6);
     }
 
     private void initView() {
-        deviceAddRecycler.setLayoutManager(new GridLayoutManager(this, 3));
+        deviceAddRecycler.setLayoutManager(new LinearLayoutManager(this));
         if (deviceList != null && deviceList.size() > 0) {
             deviceAddItemAdapter = new DeviceAddItemAdapter(deviceList);
             deviceAddRecycler.setAdapter(deviceAddItemAdapter);
-
+            deviceAddItemAdapter.setOnItemClickListener(this);
         }
     }
 
@@ -112,20 +78,22 @@ public class DeviceAddActivity extends AppCompatActivity {
     }
 
 
-    @OnClick({R.id.zigbee_layout, R.id.bluetooth_layout,R.id.back})
-    public void onViewClicked(View view) {
-        switch (view.getId()) {
-            case R.id.zigbee_layout:
-                Intent zigbeeIntent=new Intent(this, DeviceZigBeeDetailActivity.class);
-                startActivity(zigbeeIntent);
-                break;
-            case R.id.bluetooth_layout:
-                Intent bluetoothIntent = new Intent(this, AddBluetoothFirstActivity.class);
-                startActivity(bluetoothIntent);
-                break;
-            case R.id.back:
-                finish();
-                break;
+    @OnClick(R.id.back)
+    public void onViewClicked() {
+        finish();
+
+    }
+
+    @Override
+    public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+        if (position==0){
+            Intent zigbeeIntent=new Intent(this, DeviceZigBeeDetailActivity.class);
+            startActivity(zigbeeIntent);
+        }else if (position==1){
+            Intent bluetoothIntent = new Intent(this, AddBluetoothFirstActivity.class);
+            startActivity(bluetoothIntent);
         }
+
+
     }
 }

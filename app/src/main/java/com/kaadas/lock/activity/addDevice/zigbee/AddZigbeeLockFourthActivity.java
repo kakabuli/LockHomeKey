@@ -31,6 +31,7 @@ public class AddZigbeeLockFourthActivity extends BaseActivity<IAddZigbeeLockView
     ImageView addCateyeAwating;
 
     private Animation operatingAnim;
+    private String gatewayId;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,18 +39,24 @@ public class AddZigbeeLockFourthActivity extends BaseActivity<IAddZigbeeLockView
         ButterKnife.bind(this);
         initAnimation();
         startAnimation();
-        initData();
+
 
     }
 
     private void initData() {
-        String gatewayId= (String) SPUtils.getProtect(Constants.GATEWAYID,"");
+       gatewayId= (String) SPUtils.getProtect(Constants.GATEWAYID,"");
         if (!TextUtils.isEmpty(gatewayId)){
             LogUtils.e("允许设备入网的网关id",gatewayId);
             mPresenter.openJoinAllow(gatewayId);
         }
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        initData();
+
+    }
 
     @Override
     protected AddZigbeeLockPresenter<IAddZigbeeLockView> createPresent() {
@@ -96,17 +103,15 @@ public class AddZigbeeLockFourthActivity extends BaseActivity<IAddZigbeeLockView
     @Override
     public void netInSuccess() {
         //入网成功
-        stopAnimation();
-        Intent successIntent=new Intent(this,AddZigbeeLockSuccessActivity.class);
-        startActivity(successIntent);
-        LogUtils.e("设备入网成功");
+        mPresenter.deviceZigbeeIsOnLine(gatewayId);
+
     }
 
     @Override
     public void netInFail() {
-        stopAnimation();
         Intent failIntent=new Intent(this,AddZigbeeLockFailActivity.class);
         startActivity(failIntent);
+        finish();
         LogUtils.e("设备入网失败");
     }
 
@@ -114,4 +119,33 @@ public class AddZigbeeLockFourthActivity extends BaseActivity<IAddZigbeeLockView
     public void netInThrowable() {
         LogUtils.e("设备入网异常");
     }
+
+    @Override
+    public void addZigbeeSuccess() {
+        stopAnimation();
+        Intent successIntent=new Intent(this,AddZigbeeLockSuccessActivity.class);
+        startActivity(successIntent);
+        finish();
+        LogUtils.e("设备添加成功");
+    }
+
+    @Override
+    public void addZigbeeFail() {
+        LogUtils.e("设备添加失败");
+    }
+
+    @Override
+    public void addZigbeeThrowable() {
+        Intent failIntent=new Intent(this,AddZigbeeLockFailActivity.class);
+        startActivity(failIntent);
+        finish();
+        LogUtils.e("设备添加异常");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        stopAnimation();
+    }
+
 }

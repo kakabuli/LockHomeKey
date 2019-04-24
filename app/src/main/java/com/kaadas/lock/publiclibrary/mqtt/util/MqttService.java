@@ -165,6 +165,7 @@ public class MqttService extends Service {
 
             @Override
             public void connectionLost(Throwable cause) {
+                LogUtils.e("connectionLost", "连接丢失需要重连");
                 //连接丢失
                 if (null == cause) {
                     return;
@@ -318,20 +319,22 @@ public class MqttService extends Service {
     //发布
     public Observable<MqttData> mqttPublish(String topic, MqttMessage mqttMessage) {
         try {
-            mqttClient.publish(topic, mqttMessage, null, new IMqttActionListener() {
-                @Override
-                public void onSuccess(IMqttToken asyncActionToken) {
-                    LogUtils.e("发布消息成功  ", topic + "    success---    messageId" + asyncActionToken.getMessageId());
-                    publishObservable.onNext(new PublishResult(true, asyncActionToken, mqttMessage));
-                }
+            if (mqttClient!=null) {
+                mqttClient.publish(topic, mqttMessage, null, new IMqttActionListener() {
+                    @Override
+                    public void onSuccess(IMqttToken asyncActionToken) {
+                        LogUtils.e("发布消息成功  ", topic + "    success---    messageId" + asyncActionToken.getMessageId());
+                        publishObservable.onNext(new PublishResult(true, asyncActionToken, mqttMessage));
+                    }
 
-                @Override
-                public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
-                    LogUtils.e("发布消息失败", topic + "    fail" );
-                    MqttExceptionHandle.onFail(MqttExceptionHandle.PublishException, asyncActionToken, exception);
-                    publishObservable.onNext(new PublishResult(false, asyncActionToken, mqttMessage));
-                }
-            });
+                    @Override
+                    public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
+                        LogUtils.e("发布消息失败", topic + "    fail");
+                        MqttExceptionHandle.onFail(MqttExceptionHandle.PublishException, asyncActionToken, exception);
+                        publishObservable.onNext(new PublishResult(false, asyncActionToken, mqttMessage));
+                    }
+                });
+            }
         } catch (MqttException e) {
             e.printStackTrace();
         }

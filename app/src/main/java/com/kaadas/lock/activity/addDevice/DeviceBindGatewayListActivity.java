@@ -1,4 +1,4 @@
-package com.kaadas.lock.activity.addDevice.zigbee;
+package com.kaadas.lock.activity.addDevice;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,6 +16,7 @@ import com.kaadas.lock.R;
 import com.kaadas.lock.activity.addDevice.cateye.AddDeviceCatEyeCheckWifi;
 import com.kaadas.lock.activity.addDevice.cateye.AddDeviceCatEyeFirstActivity;
 import com.kaadas.lock.activity.addDevice.gateway.AddGatewayFirstActivity;
+import com.kaadas.lock.activity.addDevice.zigbee.AddZigbeeLockFirstActivity;
 import com.kaadas.lock.adapter.AddZigbeeBindGatewayAdapter;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.bean.deviceAdd.AddZigbeeBindGatewayBean;
