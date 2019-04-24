@@ -1,9 +1,11 @@
 package com.kaadas.lock.publiclibrary.mqtt;
 
 import com.google.gson.Gson;
+import com.kaadas.lock.publiclibrary.mqtt.publishbean.AllowCateyeJoinBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.BindGatewayBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.GetBindGatewayListBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.GetWifiBasicBean;
+import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetJoinAllowBean;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttConstant;
 
 import org.eclipse.paho.client.mqttv3.MqttMessage;
@@ -14,9 +16,10 @@ public class MqttCommandFactory {
     public static int MESSAGE_ID = 0;
 
 
-    public synchronized static int getMessageId(){
+    public synchronized static int getMessageId() {
         return MESSAGE_ID++;
     }
+
     /**
      * 绑定网关
      *
@@ -27,7 +30,7 @@ public class MqttCommandFactory {
     public static MqttMessage bindGateway(String uid, String Sn) {
         int messageId = getMessageId();
         BindGatewayBean bindGatewayBean = new BindGatewayBean(uid, MqttConstant.BIND_GATEWAY, Sn);
-        return getMessage(bindGatewayBean,messageId);
+        return getMessage(bindGatewayBean, messageId);
     }
 
     /**
@@ -39,25 +42,49 @@ public class MqttCommandFactory {
     public static MqttMessage getGatewayList(String uid) {
         int messageId = getMessageId();
         GetBindGatewayListBean bindGatewayBean = new GetBindGatewayListBean(uid, MqttConstant.GET_BIND_GATEWAY_LIST);
-        return getMessage(bindGatewayBean,messageId);
+        return getMessage(bindGatewayBean, messageId);
     }
 
     /**
      * 获取网关WIFI无线设置
+     *
      * @param userId
      * @param gwId
      * @param deviceId
      * @return
      */
-    public static MqttMessage getWiFiBasic(String userId, String gwId, String deviceId ){
+    public static MqttMessage getWiFiBasic(String userId, String gwId, String deviceId) {
         int messageId = getMessageId();
-        GetWifiBasicBean getWifiBasicBean = new GetWifiBasicBean("request",userId,messageId , gwId, deviceId, "getWiFiBasic",
-                new GetWifiBasicBean.ParamsBean(),0,new  GetWifiBasicBean.ReturnDataBean(),"0");
-        return getMessage(getWifiBasicBean,messageId);
+        GetWifiBasicBean getWifiBasicBean = new GetWifiBasicBean("request", userId, messageId, gwId, deviceId,
+                MqttConstant.GET_WIFI_BASIC, new GetWifiBasicBean.ParamsBean(), 0, new GetWifiBasicBean.ReturnDataBean(), "0");
+        return getMessage(getWifiBasicBean, messageId);
+    }
+
+    /**
+     * @param userId
+     * @param gwId
+     * @return
+     */
+    public static MqttMessage allowCateyeJoin(String userId, String gwId, String SN, String mac) {
+        int messageId = getMessageId();
+        AllowCateyeJoinBean getWifiBasicBean = new AllowCateyeJoinBean("request", userId, messageId,
+                gwId, MqttConstant.ALLOW_GATEWAY_JOIN, SN, mac, 300, 0, "0");
+        return getMessage(getWifiBasicBean, messageId);
+    }
+
+    public static MqttMessage setJoinAllow(String userId,String gwId,String deviceId){
+        int messageId = getMessageId();
+        SetJoinAllowBean.ParamsBean paramsBean=new SetJoinAllowBean.ParamsBean();
+        paramsBean.setMode("zigbee");
+        SetJoinAllowBean setJoinAllowBean=new SetJoinAllowBean(MqttConstant.MSG_TYPE_REQUEST,userId,messageId,gwId,deviceId,MqttConstant.SET_JOIN_ALLOW,paramsBean,"0",new SetJoinAllowBean.ReturnDataBean(),System.currentTimeMillis()+"");
+        return  getMessage(setJoinAllowBean,messageId);
+
     }
 
 
-    public static MqttMessage getMessage(Object o,int messageID) {
+
+
+    public static MqttMessage getMessage(Object o, int messageID) {
         String payload = new Gson().toJson(o);
         MqttMessage mqttMessage = new MqttMessage();
         mqttMessage.setQos(2);

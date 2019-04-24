@@ -9,12 +9,14 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import com.kaadas.lock.R;
+import com.kaadas.lock.activity.MainActivity;
+import com.kaadas.lock.activity.addDevice.DeviceZigBeeDetailActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class AddZigbeeLockSuccessActivity extends AppCompatActivity {
+public class  AddZigbeeLockSuccessActivity extends AppCompatActivity {
     @BindView(R.id.back)
     ImageView back;
     @BindView(R.id.button_next)
@@ -31,7 +33,8 @@ public class AddZigbeeLockSuccessActivity extends AppCompatActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.back:
-                finish();
+                Intent intent=new Intent(this, MainActivity.class);
+                startActivity(intent);
                 break;
             case R.id.button_next:
                 Intent saveIntent=new Intent(this,AddZigbeeLockSuccessSaveActivity.class);

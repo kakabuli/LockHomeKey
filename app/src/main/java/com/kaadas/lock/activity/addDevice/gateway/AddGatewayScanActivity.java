@@ -52,6 +52,7 @@ public class AddGatewayScanActivity extends AppCompatActivity {
                 String deviceSN=strs[0].replace("SN-","");
                 Intent scanSuccessIntent=new Intent(context,AddGatewayThirdActivity.class);
                 scanSuccessIntent.putExtra("deviceSN",deviceSN);
+                LogUtils.e("设备SN是   " + deviceSN);
                 startActivity(scanSuccessIntent);
                 finish();
             }else{

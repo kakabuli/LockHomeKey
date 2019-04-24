@@ -59,12 +59,11 @@ public class NetUtil {
 		return false;
 	}
 
-	public static String wifiName(){
+	public static String getWifiName(){
 		WifiManager wifiMgr = (WifiManager) MyApplication.getInstance().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
 		WifiInfo info = wifiMgr.getConnectionInfo();
 		String wifiId = info != null ? info.getSSID() : null;
 		return wifiId;
-
 	}
 
 

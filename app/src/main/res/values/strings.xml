@@ -638,6 +638,11 @@
     <string name="sure_delete_password">确定删除密码吗？</string>
     <string name="connect_cateye_check_wifi">目前手机连接WiFi与所选网关不一致，请切换手机网络为所选网关</string>
     <string name="switch_wifi">前去切换WIFI</string>
+    <string name="please_scan_cateye_qrcode">请扫描kaadas猫眼二维码</string>
+    <string name="add">添加</string>
+    <string name="device_add_zigbee">添加ZigBee设备</string>
+    <string name="device_bluetooth">蓝牙设备</string>
+    <string name="device_add_bluetooth">添加蓝牙设备</string>
     <string name="software_version">软件版本</string>
     <string name="bluetooth_version">蓝牙版本</string>
 </resources>

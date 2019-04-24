@@ -20,12 +20,12 @@ public class SetJoinAllowBean implements Serializable {
 
     private String msgtype;
     private String userId;
-    private String msgId;
+    private int msgId;
     private String gwId;
     private String deviceId;
     private String func;
     private ParamsBean params;
-    private int returnCode;
+    private String returnCode;
     private ReturnDataBean returnData;
     private String timestamp;
 
@@ -45,11 +45,11 @@ public class SetJoinAllowBean implements Serializable {
         this.userId = userId;
     }
 
-    public String getMsgId() {
+    public int getMsgId() {
         return msgId;
     }
 
-    public void setMsgId(String msgId) {
+    public void setMsgId(int msgId) {
         this.msgId = msgId;
     }
 
@@ -85,11 +85,12 @@ public class SetJoinAllowBean implements Serializable {
         this.params = params;
     }
 
-    public int getReturnCode() {
+
+    public String getReturnCode() {
         return returnCode;
     }
 
-    public void setReturnCode(int returnCode) {
+    public void setReturnCode(String returnCode) {
         this.returnCode = returnCode;
     }
 
@@ -146,5 +147,22 @@ public class SetJoinAllowBean implements Serializable {
     }
 
     public static class ReturnDataBean {
+    }
+
+
+    public SetJoinAllowBean(String msgtype, String userId, int msgId, String gwId, String deviceId, String func, ParamsBean params, String  returnCode, ReturnDataBean returnData, String timestamp) {
+        this.msgtype = msgtype;
+        this.userId = userId;
+        this.msgId = msgId;
+        this.gwId = gwId;
+        this.deviceId = deviceId;
+        this.func = func;
+        this.params = params;
+        this.returnCode = returnCode;
+        this.returnData = returnData;
+        this.timestamp = timestamp;
+    }
+
+    public SetJoinAllowBean() {
     }
 }

@@ -111,7 +111,7 @@ public class MyApplication extends Application {
             @Override
             public void onActivityStopped(Activity activity) {
                 count--;
-                LogUtils.e("程序切换", activity + "onActivityStopped  "+count);
+//                LogUtils.e("程序切换", activity + "onActivityStopped  "+count);
                 if (count == 0) {
                     LogUtils.e("程序切换", ">>>>>>>>>>>>>>>>>>>切到后台  lifecycle");
                     listenerAppChange.onNext(true);
@@ -127,19 +127,19 @@ public class MyApplication extends Application {
 
             @Override
             public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
-                LogUtils.e("程序切换", activity + "onActivitySaveInstanceState");
+//                LogUtils.e("程序切换", activity + "onActivitySaveInstanceState");
             }
 
             @Override
             public void onActivityResumed(Activity activity) {
-                LogUtils.e("程序切换", activity + "onActivityResumed");
+//                LogUtils.e("程序切换", activity + "onActivityResumed");
                 if (count == 0) {
                     LogUtils.e("程序切换", ">>>>>>>>>>>>>>>>>>>切到前台  lifecycle");
                     //是不是
                     listenerAppChange.onNext(false);
                 }
                 count++;
-                LogUtils.e("程序切换", activity + "onActivityStarted  " + count);
+//                LogUtils.e("程序切换", activity + "onActivityStarted  " + count);
             }
 
             @Override
@@ -172,6 +172,9 @@ public class MyApplication extends Application {
                 MqttService.MyBinder binder = (MqttService.MyBinder) service;
                 mqttService = binder.getService();
                 LogUtils.e("attachView service启动" + (mqttService == null));
+                if (mqttService!=null&&!TextUtils.isEmpty(uid)){
+                    mqttService.mqttConnection();
+                }
             }
 
             @Override

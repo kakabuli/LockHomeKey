@@ -233,7 +233,7 @@
             android:screenOrientation="portrait"></activity>
 
         <activity
-            android:name=".activity.addDevice.zigbee.DeviceBindGatewayListActivity"
+            android:name=".activity.addDevice.DeviceBindGatewayListActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"></activity>
 

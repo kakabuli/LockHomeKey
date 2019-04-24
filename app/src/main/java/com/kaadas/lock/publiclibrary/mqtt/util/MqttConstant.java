@@ -27,11 +27,21 @@ public class MqttConstant {
     //允许同时发送几条消息（未收到broker确认信息）
     public static final int MQTT_MAX_INFLIGHT=10;
 
+    //msgtype---request
+    public static final String MSG_TYPE_REQUEST="request";
+
+    //online
+    public static final String ON_LINE="online";
+
 
 
     public static String getSubscribeTopic(String userId){
         String topic="/" + userId + "/rpc/reply";
         return topic;
+    }
+
+    public static String getCallTopic(String userId){
+        return "/" + userId + "/rpc/call";
     }
 
 
@@ -44,5 +54,18 @@ public class MqttConstant {
     //3获取网关状态
     public static final String GATEWAY_STATE = "gatewayState";
 
+    //获取WiFi信息
+    public static final String GET_WIFI_BASIC = "getWiFiBasic";
+
+    //获取WiFi信息
+    public static final String ALLOW_GATEWAY_JOIN = "allowCateyeJoin";
+
+    //设备上下线的 func
+    public static final String GW_EVENT = "gwevent";
+
+    //网关开启允许设备入网模式
+    public static final String SET_JOIN_ALLOW="setJoinAllow";
+
+    //
 
 }

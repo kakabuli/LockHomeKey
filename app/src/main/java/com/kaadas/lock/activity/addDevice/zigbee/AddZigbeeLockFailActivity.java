@@ -35,6 +35,9 @@ public class AddZigbeeLockFailActivity extends AppCompatActivity {
                 finish();
                 break;
             case R.id.button_reconnection:
+
+
+
                 break;
             case R.id.button_out:
                 break;

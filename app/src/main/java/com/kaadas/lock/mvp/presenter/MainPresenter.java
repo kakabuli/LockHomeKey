@@ -33,6 +33,7 @@ public class MainPresenter<T> extends BasePresenter<IMainView> {
                            }
                        }
                    });
+        compositeDisposable.add(disposable);
     }
 
 
