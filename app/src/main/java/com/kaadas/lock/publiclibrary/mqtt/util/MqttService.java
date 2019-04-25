@@ -194,12 +194,20 @@ public class MqttService extends Service {
                 String returnCode = "";
                 String msgtype = "";
                 try {
-                    returnCode = jsonObject.getString("returnCode");
-                    messageId = jsonObject.getInt("msgId");
+                    if (payload.contains("returnCode")){
+                        returnCode = jsonObject.getString("returnCode");
+                    }
+
+                    if (payload.contains("msgId")){
+                        messageId = jsonObject.getInt("msgId");
+                    }
+
                     if (messageId == -1){
                         messageId = jsonObject.getInt("msgid");
                     }
-                    msgtype = jsonObject.getString("msgtype");
+                    if (payload.contains("msgtype")){
+                        msgtype = jsonObject.getString("msgtype");
+                    }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

@@ -9,7 +9,9 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import com.kaadas.lock.R;
+import com.kaadas.lock.activity.addDevice.DeviceAddActivity;
 import com.kaadas.lock.activity.addDevice.DeviceZigBeeDetailActivity;
+import com.kaadas.lock.activity.addDevice.zigbee.DeviceBindGatewayListActivity;
 
 
 import butterknife.BindView;
@@ -35,17 +37,23 @@ public class AddDeviceCatEyeFailActivity extends AppCompatActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.back:
-                finish();
+                startActivity(new Intent(AddDeviceCatEyeFailActivity.this,DeviceBindGatewayListActivity.class));
                 break;
             case R.id.button_reconnection:
                 //重新连接的页面---返回开始添加设备的页面
+                startActivity(new Intent(AddDeviceCatEyeFailActivity.this,DeviceBindGatewayListActivity.class));
 
                 break;
             case R.id.button_out:
                 //退出
-                Intent outIntent=new Intent(this, DeviceZigBeeDetailActivity.class);
+                Intent outIntent=new Intent(this, DeviceAddActivity.class);
                 startActivity(outIntent);
                 break;
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        startActivity(new Intent(AddDeviceCatEyeFailActivity.this,DeviceBindGatewayListActivity.class));
     }
 }

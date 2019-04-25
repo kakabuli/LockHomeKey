@@ -46,7 +46,6 @@ public class AddDeviceCatEyeThirdActivity extends BaseActivity<IAddCatEyeView, A
     @BindView(R.id.add_cateye_awating)
     ImageView addCateyeAwating;
 
-
     private String SSID;
     private String pwd;
     private String deviceSN;
@@ -54,6 +53,10 @@ public class AddDeviceCatEyeThirdActivity extends BaseActivity<IAddCatEyeView, A
     private Animation operatingAnim;
     private String deviceMac;
     private String gwId;
+
+    static {
+        System.loadLibrary("HisiLink");
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -73,7 +76,7 @@ public class AddDeviceCatEyeThirdActivity extends BaseActivity<IAddCatEyeView, A
         startAnimation();
         //上线消息
 
-        mPresenter.allowCateyeJoin(gwId, deviceMac, deviceSN);
+        mPresenter.startJoin(deviceMac, deviceSN, gwId, SSID, pwd);
     }
 
 
@@ -126,25 +129,20 @@ public class AddDeviceCatEyeThirdActivity extends BaseActivity<IAddCatEyeView, A
 
 
     @Override
-    public void allowCatEyeJoinSuccess() {
-
-        //允许入网成功
-        mPresenter.startJoin(deviceMac, deviceSN, gwId, SSID, pwd);
-    }
-
-    @Override
-    public void allowCatEyeJoinFailed(Throwable throwable) {
-        //允许入网失败
-        LogUtils.e("允许入网失败");
-        pairCatEyeResult(false);
-
-    }
-
-    @Override
     public void joinTimeout() {
         //允许入网失败
 //        加入网关超时
         LogUtils.e("加入网关超时");
+        pairCatEyeResult(false);
+    }
+
+    @Override
+    public void cateEyeJoinSuccess() {
+        pairCatEyeResult(true);
+    }
+
+    @Override
+    public void catEysJoinFailed(Throwable throwable) {
         pairCatEyeResult(false);
     }
 

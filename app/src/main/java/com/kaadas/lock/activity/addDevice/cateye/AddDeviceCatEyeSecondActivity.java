@@ -8,14 +8,33 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
+import com.kaadas.lock.mvp.mvpbase.BaseActivity;
+import com.kaadas.lock.mvp.mvpbase.IBaseView;
+import com.kaadas.lock.mvp.presenter.deviceaddpresenter.AddCatEyeSecondPresenter;
+import com.kaadas.lock.mvp.view.deviceaddview.IAddCatEyeSecondView;
+import com.kaadas.lock.publiclibrary.http.util.RxjavaHelper;
+import com.kaadas.lock.publiclibrary.mqtt.MqttCommandFactory;
+import com.kaadas.lock.publiclibrary.mqtt.MqttReturnCodeError;
+import com.kaadas.lock.publiclibrary.mqtt.util.MqttConstant;
+import com.kaadas.lock.publiclibrary.mqtt.util.MqttData;
 import com.kaadas.lock.utils.KeyConstants;
+import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.ToastUtil;
+
+import org.eclipse.paho.client.mqttv3.MqttMessage;
+
+import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Predicate;
 
-public class AddDeviceCatEyeSecondActivity extends AppCompatActivity {
+public class AddDeviceCatEyeSecondActivity extends BaseActivity<IAddCatEyeSecondView, AddCatEyeSecondPresenter<IAddCatEyeSecondView>>
+        implements IAddCatEyeSecondView {
 
     private static final String TAG = "配置猫眼";
     @BindView(R.id.back)
@@ -40,8 +59,13 @@ public class AddDeviceCatEyeSecondActivity extends AppCompatActivity {
         deviceMac = getIntent().getStringExtra(KeyConstants.DEVICE_MAC);
         gwId = getIntent().getStringExtra(KeyConstants.GW_SN);
 
-
         ButterKnife.bind(this);
+    }
+
+    @Override
+    protected AddCatEyeSecondPresenter<IAddCatEyeSecondView> createPresent() {
+
+        return new AddCatEyeSecondPresenter();
     }
 
     @OnClick({R.id.back, R.id.button_next})
@@ -51,16 +75,30 @@ public class AddDeviceCatEyeSecondActivity extends AppCompatActivity {
                 finish();
                 break;
             case R.id.button_next:
-                Intent btnNextIntent = new Intent(this, AddDeviceCatEyeThirdActivity.class);
-                btnNextIntent.putExtra(KeyConstants.GW_WIFI_SSID, SSID);
-                btnNextIntent.putExtra(KeyConstants.GW_WIFI_PWD, pwd);
-                btnNextIntent.putExtra(KeyConstants.DEVICE_SN, deviceSN);
-                btnNextIntent.putExtra(KeyConstants.DEVICE_MAC, deviceMac);
-                btnNextIntent.putExtra(KeyConstants.GW_SN, gwId);
-                startActivity(btnNextIntent);
+                showLoading(getString(R.string.is_allow_join));
+                mPresenter.allowCateyeJoin(gwId, deviceMac, deviceSN);
                 break;
         }
     }
 
 
+    @Override
+    public void allowCatEyeJoinSuccess() {
+        //允许入网成功
+        hiddenLoading();
+        Intent btnNextIntent = new Intent(this, AddDeviceCatEyeThirdActivity.class);
+        btnNextIntent.putExtra(KeyConstants.GW_WIFI_SSID, SSID);
+        btnNextIntent.putExtra(KeyConstants.GW_WIFI_PWD, pwd);
+        btnNextIntent.putExtra(KeyConstants.DEVICE_SN, deviceSN);
+        btnNextIntent.putExtra(KeyConstants.DEVICE_MAC, deviceMac);
+        btnNextIntent.putExtra(KeyConstants.GW_SN, gwId);
+        startActivity(btnNextIntent);
+
+    }
+
+    @Override
+    public void allowCatEyeJoinFailed(Throwable throwable) {
+        hiddenLoading();
+        ToastUtil.getInstance().showLong(R.string.http_expection_retry);
+    }
 }

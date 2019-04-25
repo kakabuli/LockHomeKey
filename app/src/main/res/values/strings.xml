@@ -639,4 +639,6 @@
     <string name="connect_cateye_check_wifi">目前手机连接WiFi与所选网关不一致，请切换手机网络为所选网关</string>
     <string name="switch_wifi">前去切换WIFI</string>
     <string name="please_scan_cateye_qrcode">请扫描kaadas猫眼二维码</string>
+    <string name="is_allow_join">正在允许入网...</string>
+    <string name="http_expection_retry">网络异常，请重试！</string>
 </resources>
