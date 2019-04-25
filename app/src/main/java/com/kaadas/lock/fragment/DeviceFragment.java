@@ -20,6 +20,7 @@ import com.kaadas.lock.R;
 import com.kaadas.lock.activity.addDevice.DeviceAddActivity;
 import com.kaadas.lock.activity.device.BluetoothLockAuthorizationActivity;
 import com.kaadas.lock.activity.device.BluetoothLockFunctionActivity;
+import com.kaadas.lock.activity.device.cateye.more.CateyeFunctionActivity;
 import com.kaadas.lock.activity.device.gateway.GatewayLockAuthorizationActivity;
 import com.kaadas.lock.activity.device.gateway.GatewayLockFunctionActivity;
 import com.kaadas.lock.adapter.DeviceDetailAdapter;
@@ -165,12 +166,12 @@ public class DeviceFragment extends Fragment implements BaseQuickAdapter.OnItemC
                 startActivity(intent);
                 break;
             case 2:
-//                gatewayAuthorization=true;
-                if (gatewayAuthorization){
+          /*      if (gatewayAuthorization){
                     intent = new Intent(getActivity(), GatewayLockAuthorizationActivity.class);
                 }else {
                     intent = new Intent(getActivity(), GatewayLockFunctionActivity.class);
-                }
+                }*/
+          intent=new Intent(getActivity(),CateyeFunctionActivity.class);
                 startActivity(intent);
                 break;
         }

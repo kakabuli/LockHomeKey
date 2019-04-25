@@ -648,4 +648,9 @@
     <string name="stress_password">胁迫密码</string>
     <string name="stress_fingerprint">胁迫指纹</string>
     <string name="app_notification">APP通知</string>
+    <string name="bell">铃声</string>
+    <string name="ring_number">响铃次数</string>
+    <string name="smart_monitor">智能监测</string>
+    <string name="video_resolution">视频分辨率</string>
+    <string name="look_back">回放</string>
 </resources>
