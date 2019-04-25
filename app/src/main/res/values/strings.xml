@@ -649,4 +649,6 @@
     <string name="input_name_max">字符最多只能输入%1$s个，汉字最多只能输入%2$s个</string>
     <string name="update_nickname_fail">设置名称失败</string>
     <string name="gateway_or_device_null">网关或者设备为空</string>
+    <string name="is_allow_join">正在允许入网...</string>
+    <string name="http_expection_retry">网络异常，请重试！</string>
 </resources>

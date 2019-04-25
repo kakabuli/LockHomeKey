@@ -66,10 +66,10 @@ public class MqttCommandFactory {
      * @param gwId
      * @return
      */
-    public static MqttMessage allowCateyeJoin(String userId, String gwId, String SN, String mac) {
+    public static MqttMessage allowCateyeJoin(String userId, String gwId, String SN, String mac,int timeout) {
         int messageId = getMessageId();
         AllowCateyeJoinBean getWifiBasicBean = new AllowCateyeJoinBean("request", userId, messageId,
-                gwId, MqttConstant.ALLOW_GATEWAY_JOIN, SN, mac, 300, 0, "0");
+                gwId, MqttConstant.ALLOW_GATEWAY_JOIN, SN, mac, timeout, 0, "0");
         return getMessage(getWifiBasicBean, messageId);
     }
 
