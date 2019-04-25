@@ -563,6 +563,10 @@
             android:name=".activity.device.cateye.more.CateyeFunctionActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activity.device.GatewayActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"></activity>
         <service android:name="com.kaadas.lock.publiclibrary.ble.BleService" />
     </application>
 
