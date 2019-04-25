@@ -1,4 +1,4 @@
-package com.kaadas.lock.activity.device.bluetooth.password;
+package com.kaadas.lock.activity.device.gateway.stress;
 
 import android.app.AlertDialog;
 import android.os.Bundle;
@@ -20,39 +20,33 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
- * Created by David on 2019/4/17
+ * Created by David
  */
-public class BluetoothPasswordShareActivity extends AppCompatActivity implements View.OnClickListener {
+public class GatewayStressWarnDetailActivity extends AppCompatActivity implements View.OnClickListener {
+
+
     @BindView(R.id.iv_back)
     ImageView ivBack;
     @BindView(R.id.tv_content)
     TextView tvContent;
-    @BindView(R.id.iv_right)
-    ImageView ivRight;
     @BindView(R.id.tv_number)
     TextView tvNumber;
     @BindView(R.id.btn_delete)
     Button btnDelete;
     @BindView(R.id.tv_name)
     TextView tvName;
-    @BindView(R.id.tv_time)
-    TextView tvTime;
-    @BindView(R.id.tv_short_message)
-    TextView tvShortMessage;
-    @BindView(R.id.tv_wei_xin)
-    TextView tvWeiXin;
-    @BindView(R.id.tv_copy)
-    TextView tvCopy;
     @BindView(R.id.iv_editor)
     ImageView ivEditor;
+    @BindView(R.id.tv_time)
+    TextView tvTime;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_bluetooth_password_share);
+        setContentView(R.layout.activity_gateway_stress_warn_detail);
         ButterKnife.bind(this);
         ivBack.setOnClickListener(this);
-        tvContent.setText(getString(R.string.password_detail));
+        tvContent.setText(getString(R.string.user_password));
         ivEditor.setOnClickListener(this);
     }
 

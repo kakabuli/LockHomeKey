@@ -17,6 +17,7 @@ import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.mvp.presenter.FamilyMemberDetailPresenter;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
+import com.kaadas.lock.publiclibrary.http.result.BluetoothSharedDeviceBean;
 import com.kaadas.lock.publiclibrary.http.result.FamilyMemberBean;
 import com.kaadas.lock.publiclibrary.http.util.HttpUtils;
 import com.kaadas.lock.utils.AlertDialogUtil;
@@ -49,7 +50,7 @@ public class FamilyMemberDetailActivity extends BaseActivity<IFamilyMemberDeatil
     ImageView ivEditor;
     @BindView(R.id.tv_time)
     TextView tvTime;
-    FamilyMemberBean.DataBean dataBean;
+    BluetoothSharedDeviceBean.DataBean dataBean;
     BleLockInfo bleLockInfo;
     @BindView(R.id.btn_delete)
     Button btnDelete;
@@ -66,7 +67,7 @@ public class FamilyMemberDetailActivity extends BaseActivity<IFamilyMemberDeatil
         btnDelete.setOnClickListener(this);
         tvContent.setText(getString(R.string.user_detail));
         Intent intent = getIntent();
-        dataBean = (FamilyMemberBean.DataBean) intent.getSerializableExtra(KeyConstants.COMMON_FAMILY_MEMBER_DATA);
+        dataBean = (BluetoothSharedDeviceBean.DataBean) intent.getSerializableExtra(KeyConstants.COMMON_FAMILY_MEMBER_DATA);
         tvNumber.setText(dataBean.getUname());
         tvName.setText(dataBean.getUnickname());
         long createTime = dataBean.getCreateTime();

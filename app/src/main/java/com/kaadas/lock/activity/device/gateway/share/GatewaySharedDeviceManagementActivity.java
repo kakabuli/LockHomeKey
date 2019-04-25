@@ -81,6 +81,14 @@ public class GatewaySharedDeviceManagementActivity extends BaseActivity<IGateway
         llAddUser.setOnClickListener(this);
         tvContent.setText(getString(R.string.user_manage));
         initRefresh();
+        //todo 假数据后续删除
+        List<String> itemList=new ArrayList<>();
+            list.add(new BluetoothSharedDeviceBean.DataBean("jfjj","jfji","jfi","jfjif","fjif","FJKj","fjif",1000,itemList));
+        list.add(new BluetoothSharedDeviceBean.DataBean("jfjj","jfji","jfi","jfjif","fjif","FJKj","fjif",1000,itemList));
+            isNotData = false;
+            gatewaySharedDeviceManagementAdapter.notifyDataSetChanged();
+
+        pageChange();
     }
 
     @Override
@@ -149,6 +157,8 @@ public class GatewaySharedDeviceManagementActivity extends BaseActivity<IGateway
                 break;
 
             case R.id.ll_add_user:
+                //todo 后续状态要更改
+                querySuccess=true;
                 if (querySuccess == true) {
                     if (list.size() < 10) {
                         intent = new Intent(this, AddBluetoothFamilyMemberActivity.class);

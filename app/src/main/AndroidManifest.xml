@@ -533,6 +533,24 @@
             android:name=".activity.device.gateway.more.GatewayLockLanguageSettingActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"></activity>
+
+        <activity
+            android:name=".activity.device.gateway.stress.GatewayStressPasswordManagerActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"></activity>
+
+        <activity
+            android:name=".activity.device.gateway.stress.GatewayStressPasswordAddActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activity.device.gateway.stress.GatewayStressPasswordShareActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activity.device.gateway.stress.GatewayStressWarnDetailActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"></activity>
         <service android:name="com.kaadas.lock.publiclibrary.ble.BleService" />
     </application>
 

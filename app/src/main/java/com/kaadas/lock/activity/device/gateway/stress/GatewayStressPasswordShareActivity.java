@@ -1,4 +1,4 @@
-package com.kaadas.lock.activity.device.bluetooth.password;
+package com.kaadas.lock.activity.device.gateway.stress;
 
 import android.app.AlertDialog;
 import android.os.Bundle;
@@ -20,9 +20,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
- * Created by David on 2019/4/17
+ * Created by David
  */
-public class BluetoothPasswordShareActivity extends AppCompatActivity implements View.OnClickListener {
+public class GatewayStressPasswordShareActivity extends AppCompatActivity implements View.OnClickListener {
     @BindView(R.id.iv_back)
     ImageView ivBack;
     @BindView(R.id.tv_content)
@@ -49,7 +49,7 @@ public class BluetoothPasswordShareActivity extends AppCompatActivity implements
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_bluetooth_password_share);
+        setContentView(R.layout.activity_gateway_stress_password_share);
         ButterKnife.bind(this);
         ivBack.setOnClickListener(this);
         tvContent.setText(getString(R.string.password_detail));
