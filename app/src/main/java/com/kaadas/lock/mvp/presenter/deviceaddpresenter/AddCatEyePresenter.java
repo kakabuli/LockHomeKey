@@ -44,7 +44,6 @@ public class AddCatEyePresenter<T> extends BasePresenter<IAddCatEyeView> {
     private long timeoutTime = 120 * 1000;
     private String TAG = "配置猫眼";
 
-    private Disposable allowCateyeJoinDisposable;
     private Disposable listenerCatEyeOnlineDisposable;
     private String wifiName;
     private String pwd;

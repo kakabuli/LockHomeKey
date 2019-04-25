@@ -10,8 +10,7 @@ import android.widget.ImageView;
 
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.addDevice.DeviceAddActivity;
-import com.kaadas.lock.activity.addDevice.DeviceZigBeeDetailActivity;
-import com.kaadas.lock.activity.addDevice.zigbee.DeviceBindGatewayListActivity;
+import com.kaadas.lock.activity.addDevice.DeviceBindGatewayListActivity;
 
 
 import butterknife.BindView;

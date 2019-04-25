@@ -18,6 +18,7 @@ import com.hisilicon.hisilink.OnlineReciever;
 import com.hisilicon.hisilink.WiFiAdmin;
 import com.hisilicon.hisilinkapi.HisiLibApi;
 import com.kaadas.lock.R;
+import com.kaadas.lock.activity.addDevice.DeviceBindGatewayListActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.mvp.presenter.deviceaddpresenter.AddCatEyePresenter;
 import com.kaadas.lock.mvp.view.deviceaddview.IAddCatEyeView;
@@ -82,6 +83,13 @@ public class AddDeviceCatEyeThirdActivity extends BaseActivity<IAddCatEyeView, A
 
     @OnClick(R.id.back)
     public void onViewClicked() {
+        startActivity(new Intent(AddDeviceCatEyeThirdActivity.this,DeviceBindGatewayListActivity.class));
+        finish();
+    }
+
+    @Override
+    public void onBackPressed() {
+        startActivity(new Intent(AddDeviceCatEyeThirdActivity.this,DeviceBindGatewayListActivity.class));
         finish();
     }
 
