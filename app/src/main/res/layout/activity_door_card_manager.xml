@@ -52,7 +52,7 @@
             android:src="@mipmap/door_card_icon" />
 
         <LinearLayout
-            android:id="@+id/ll_add_password"
+            android:id="@+id/ll_add"
             android:layout_width="@dimen/dp_170"
             android:layout_height="@dimen/dp_44"
             android:layout_alignParentRight="true"

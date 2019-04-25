@@ -4,7 +4,16 @@ package com.kaadas.lock.bean;
  * Created by David on 2019/4/19
  */
 public class BluetoothItemRecordBean {
-    private String content;
+    private String content;//中间的数据
+    private String strRight;//右边的数据
+
+    public String getStrRight() {
+        return strRight;
+    }
+
+    public void setStrRight(String strRight) {
+        this.strRight = strRight;
+    }
 
     public String getContent() {
         return content;
@@ -15,27 +24,28 @@ public class BluetoothItemRecordBean {
     }
 
     //用户编号
-    String open_type;//开门类型
+    String iconImg;//图标类型
     String open_time;//开门时间
     boolean firstData;//第一条数据
     boolean lastData;//最后一条数据
 
-    public BluetoothItemRecordBean(String content, String open_type, String open_time, boolean firstData, boolean lastData) {
+    public String getIconImg() {
+        return iconImg;
+    }
+
+    public void setIconImg(String iconImg) {
+        this.iconImg = iconImg;
+    }
+
+    public BluetoothItemRecordBean(String content,String strRight, String iconImg, String open_time, boolean firstData, boolean lastData) {
         this.content = content;
-        this.open_type = open_type;
+        this.strRight=strRight;
+        this.iconImg = iconImg;
         this.open_time = open_time;
         this.firstData = firstData;
         this.lastData = lastData;
     }
 
-
-    public String getOpen_type() {
-        return open_type;
-    }
-
-    public void setOpen_type(String open_type) {
-        this.open_type = open_type;
-    }
 
     public String getOpen_time() {
         return open_time;

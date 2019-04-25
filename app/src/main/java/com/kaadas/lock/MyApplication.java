@@ -172,6 +172,9 @@ public class MyApplication extends Application {
                 MqttService.MyBinder binder = (MqttService.MyBinder) service;
                 mqttService = binder.getService();
                 LogUtils.e("attachView service启动" + (mqttService == null));
+                if (mqttService!=null&&!TextUtils.isEmpty(uid)){
+                    mqttService.mqttConnection();
+                }
             }
 
             @Override

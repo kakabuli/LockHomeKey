@@ -29,9 +29,9 @@ public class DeviceGatewayBindListPresenter<T> extends BasePresenter<DeviceGatew
     private Disposable getWiFiBasicDisposable;
 
     public void getBindGatewayList() {
-
         MqttMessage mqttMessage = MqttCommandFactory.getGatewayList(MyApplication.getInstance().getUid());
         if (mqttService != null) {
+            toDisposable(disposableBindGateway);
             disposableBindGateway = mqttService.mqttPublish(MqttConstant.MQTT_REQUEST_APP, mqttMessage)
                     .compose(RxjavaHelper.observeOnMainThread())
                     .filter(new Predicate<MqttData>() {
@@ -48,29 +48,35 @@ public class DeviceGatewayBindListPresenter<T> extends BasePresenter<DeviceGatew
                     .subscribe(new Consumer<MqttData>() {
                         @Override
                         public void accept(MqttData mqttData) throws Exception {
-                            if (mViewRef.get() != null) {
+                            toDisposable(disposableBindGateway);
                                 if (mqttData != null) {
                                     if (MqttConstant.GET_BIND_GATEWAY_LIST.equals(mqttData.getFunc())) {
                                         GetBindGatewayListResult getBindGatewayListResult = new Gson().fromJson(mqttData.getPayload(), GetBindGatewayListResult.class);
                                         if ("200".equals(getBindGatewayListResult.getCode())) {
-                                            mViewRef.get().getGatewayBindList(getBindGatewayListResult.getData());
+                                            if (mViewRef.get()!=null){
+                                                mViewRef.get().getGatewayBindList(getBindGatewayListResult.getData());
+                                            }
                                         } else {
-                                            mViewRef.get().getGatewayBindFail();
+                                            if (mViewRef.get()!=null){
+                                                mViewRef.get().getGatewayBindFail();
+                                            }
                                         }
                                     }
-                                    toDisposable(disposableBindGateway);
+
                                 } else {
-                                    mViewRef.get().bindGatewayPublishFail(mqttData.getFunc());
-                                    toDisposable(disposableBindGateway);
+                                    if (mViewRef.get()!=null){
+                                        mViewRef.get().bindGatewayPublishFail(mqttData.getFunc());
+                                    }
                                 }
                             }
-                        }
+
                     }, new Consumer<Throwable>() {
                         @Override
                         public void accept(Throwable throwable) throws Exception {
                             mViewRef.get().getGatewayThrowable(throwable);
                         }
                     });
+            compositeDisposable.add(disposableBindGateway);
         }
     }
 
@@ -98,8 +104,8 @@ public class DeviceGatewayBindListPresenter<T> extends BasePresenter<DeviceGatew
 
     //获取网关的wifi名称和网关的wifi密码
     public void getGatewayWifiPwd(String gwId) {
+        MqttMessage wiFiBasic = MqttCommandFactory.getWiFiBasic(MyApplication.getInstance().getUid(), gwId, gwId);
         if (mqttService != null) {
-            MqttMessage wiFiBasic = MqttCommandFactory.getWiFiBasic(MyApplication.getInstance().getUid(), gwId, gwId);
             getWiFiBasicDisposable = mqttService.mqttPublish(MqttConstant.getCallTopic(MyApplication.getInstance().getUid()), wiFiBasic)
                     .filter(new Predicate<MqttData>() {
                         @Override

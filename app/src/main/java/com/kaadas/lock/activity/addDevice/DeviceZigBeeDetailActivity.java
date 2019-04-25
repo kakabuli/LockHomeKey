@@ -3,7 +3,6 @@ package com.kaadas.lock.activity.addDevice;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -12,10 +11,15 @@ import android.widget.ImageView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.addDevice.gateway.AddGatewayFirstActivity;
-import com.kaadas.lock.activity.addDevice.zigbee.DeviceBindGatewayListActivity;
 import com.kaadas.lock.adapter.ZigbeeDetailAdapter;
 import com.kaadas.lock.bean.deviceAdd.AddZigbeeDetailItemBean;
+import com.kaadas.lock.mvp.mvpbase.BaseActivity;
+import com.kaadas.lock.mvp.presenter.deviceaddpresenter.DeviceZigBeeDetailPresenter;
+import com.kaadas.lock.mvp.view.deviceaddview.DeviceZigBeeDetailView;
+import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.GetBindGatewayListResult;
 import com.kaadas.lock.utils.AlertDialogUtil;
+import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.ToastUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +28,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class DeviceZigBeeDetailActivity extends AppCompatActivity implements BaseQuickAdapter.OnItemClickListener {
+public class DeviceZigBeeDetailActivity extends BaseActivity<DeviceZigBeeDetailView, DeviceZigBeeDetailPresenter<DeviceZigBeeDetailView>> implements BaseQuickAdapter.OnItemClickListener,DeviceZigBeeDetailView {
     @BindView(R.id.back)
     ImageView back;
     @BindView(R.id.recycler)
@@ -32,6 +36,8 @@ public class DeviceZigBeeDetailActivity extends AppCompatActivity implements Bas
 
     private List<AddZigbeeDetailItemBean> mList;
     private ZigbeeDetailAdapter zigbeeDetailAdapter;
+
+    private boolean flag=false; //判断是否有绑定的网列表
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -42,7 +48,13 @@ public class DeviceZigBeeDetailActivity extends AppCompatActivity implements Bas
         initView();
     }
 
+    @Override
+    protected DeviceZigBeeDetailPresenter<DeviceZigBeeDetailView> createPresent() {
+        return new DeviceZigBeeDetailPresenter<>();
+    }
+
     private void initData() {
+
         mList = new ArrayList<>();
         AddZigbeeDetailItemBean gateway = new AddZigbeeDetailItemBean();
         gateway.setImageId(R.mipmap.gateway_icon);
@@ -70,7 +82,9 @@ public class DeviceZigBeeDetailActivity extends AppCompatActivity implements Bas
             zigbeeDetailAdapter.setOnItemClickListener(this);
             recycler.setAdapter(zigbeeDetailAdapter);
         }
-
+        if (mPresenter.mqttService.getMqttClient()!=null&&mPresenter.mqttService.getMqttClient().isConnected()){
+            mPresenter.getGatewayBindList();
+        }
     }
 
     @OnClick(R.id.back)
@@ -80,6 +94,16 @@ public class DeviceZigBeeDetailActivity extends AppCompatActivity implements Bas
 
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+        if (mPresenter.mqttService.getMqttClient()==null){
+           ToastUtil.getInstance().showShort(getString(R.string.mqtt_connection_fail));
+           return;
+        }
+        if (!mPresenter.mqttService.getMqttClient().isConnected()){
+            ToastUtil.getInstance().showShort(getString(R.string.mqtt_connection_fail));
+            return;
+        }
+
+
         AddZigbeeDetailItemBean detailItemBean = mList.get(position);
         //如果是网关直接跳转到网关添加流程，如果不是需要判断是否存在网关。
         if (detailItemBean.getType() == 1) {
@@ -88,7 +112,7 @@ public class DeviceZigBeeDetailActivity extends AppCompatActivity implements Bas
             startActivity(gatewayIntent);
         } else {
             //获取绑定的网关列表，如果存在网关
-            Boolean flag = getBindGatewayList();
+
             if (flag) {
                 //跳转到网关列表
                 Intent zigbeeIntent = new Intent(this, DeviceBindGatewayListActivity.class);
@@ -114,8 +138,27 @@ public class DeviceZigBeeDetailActivity extends AppCompatActivity implements Bas
         }
     }
 
-    private Boolean getBindGatewayList() {
 
-        return true;
+
+    @Override
+    public void getGatewayBindList(List<GetBindGatewayListResult.GatewayInfo> bindGatewayList) {
+        if (bindGatewayList.size()>0){
+            flag=true;
+        }
+    }
+
+    @Override
+    public void getGatewayBindFail() {
+        LogUtils.e("获取绑定的网关列表失败");
+    }
+
+    @Override
+    public void bindGatewayPublishFail(String fuc) {
+        LogUtils.e("获取绑定的网关列表发布失败");
+    }
+
+    @Override
+    public void getGatewayThrowable(Throwable throwable) {
+        LogUtils.e("获取绑定的网关列表异常");
     }
 }

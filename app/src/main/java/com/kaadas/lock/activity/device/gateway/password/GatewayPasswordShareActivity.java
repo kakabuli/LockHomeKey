@@ -14,7 +14,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
- * Created by David on 2019/4/17
+ * Created by David
  */
 public class GatewayPasswordShareActivity extends AppCompatActivity implements View.OnClickListener {
     @BindView(R.id.iv_back)

@@ -9,7 +9,7 @@ public class Constants {
 
 	public static final int POINT_STATE_WRONG = 2; // 错误状态
 
-	//请求类型
-	public static final String MSG_TYPE="request";
+	//保存在绑定网关的时候选择的网关id
+	public static final String GATEWAYID="gatewayId";
 
 }

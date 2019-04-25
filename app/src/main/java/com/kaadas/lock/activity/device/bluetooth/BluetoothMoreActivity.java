@@ -15,6 +15,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.kaadas.lock.R;
+import com.kaadas.lock.activity.device.BluetoothDeviceInformationActivity;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.SPUtils;
@@ -206,6 +207,8 @@ public class BluetoothMoreActivity extends AppCompatActivity implements View.OnC
                 silentModeStatus = !silentModeStatus;
                 break;
             case R.id.rl_device_information:
+                intent=new Intent(this,BluetoothDeviceInformationActivity.class);
+                startActivity(intent);
                 break;
             case R.id.rl_check_firmware_update:
                 break;

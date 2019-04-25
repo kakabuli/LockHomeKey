@@ -41,17 +41,17 @@ public class CateyeOpenLockRecordFragment extends Fragment {
 
     private void initRecycleView() {
         List<BluetoothItemRecordBean> itemList1 = new ArrayList<>();
-        itemList1.add(new BluetoothItemRecordBean("jff", KeyConstants.BLUETOOTH_RECORD_WARN, "fjjf", true, true));
+        itemList1.add(new BluetoothItemRecordBean("jff","jfji", KeyConstants.BLUETOOTH_RECORD_WARN, "fjjf", true, true));
         list.add(new BluetoothRecordBean("jfjfk", itemList1, false));
         List<BluetoothItemRecordBean> itemList2 = new ArrayList<>();
-        itemList2.add(new BluetoothItemRecordBean("jff", KeyConstants.BLUETOOTH_RECORD_WARN, "fjjf", true, false));
-        itemList2.add(new BluetoothItemRecordBean("jff", KeyConstants.BLUETOOTH_RECORD_COMMON, "fjjf", false, false));
-        itemList2.add(new BluetoothItemRecordBean("jff", KeyConstants.BLUETOOTH_RECORD_WARN, "fjjf", false, true));
+        itemList2.add(new BluetoothItemRecordBean("jff","jfji", KeyConstants.BLUETOOTH_RECORD_WARN, "fjjf", true, false));
+        itemList2.add(new BluetoothItemRecordBean("jff","jfji", KeyConstants.BLUETOOTH_RECORD_COMMON, "fjjf", false, false));
+        itemList2.add(new BluetoothItemRecordBean("jff","jfji", KeyConstants.BLUETOOTH_RECORD_WARN, "fjjf", false, true));
         list.add(new BluetoothRecordBean("jfjfk", itemList2, false));
         List<BluetoothItemRecordBean> itemList3 = new ArrayList<>();
-        itemList3.add(new BluetoothItemRecordBean("jff", KeyConstants.BLUETOOTH_RECORD_WARN, "fjjf", true, false));
-        itemList3.add(new BluetoothItemRecordBean("jff", KeyConstants.BLUETOOTH_RECORD_COMMON, "fjjf", false, false));
-        itemList3.add(new BluetoothItemRecordBean("jff", KeyConstants.BLUETOOTH_RECORD_WARN, "fjjf", false, true));
+        itemList3.add(new BluetoothItemRecordBean("jff","jfji", KeyConstants.BLUETOOTH_RECORD_WARN, "fjjf", true, false));
+        itemList3.add(new BluetoothItemRecordBean("jff","jfji", KeyConstants.BLUETOOTH_RECORD_COMMON, "fjjf", false, false));
+        itemList3.add(new BluetoothItemRecordBean("jff","jfji", KeyConstants.BLUETOOTH_RECORD_WARN, "fjjf", false, true));
         list.add(new BluetoothRecordBean("jfjfk", itemList3, true));
         BluetoothRecordAdapter bluetoothRecordAdapter = new BluetoothRecordAdapter(list);
         recycleview.setLayoutManager(new LinearLayoutManager(getActivity()));

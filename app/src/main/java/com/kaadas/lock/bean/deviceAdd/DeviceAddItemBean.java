@@ -2,10 +2,8 @@ package com.kaadas.lock.bean.deviceAdd;
 
 public class DeviceAddItemBean {
     private int imageId;
-    private String typeText;
-    private int type;
-
-
+    private String title;
+    private String content;
 
     public int getImageId() {
         return imageId;
@@ -15,19 +13,19 @@ public class DeviceAddItemBean {
         this.imageId = imageId;
     }
 
-    public String getTypeText() {
-        return typeText;
+    public String getTitle() {
+        return title;
     }
 
-    public void setTypeText(String typeText) {
-        this.typeText = typeText;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
-    public int getType() {
-        return type;
+    public String getContent() {
+        return content;
     }
 
-    public void setType(int type) {
-        this.type = type;
+    public void setContent(String content) {
+        this.content = content;
     }
 }

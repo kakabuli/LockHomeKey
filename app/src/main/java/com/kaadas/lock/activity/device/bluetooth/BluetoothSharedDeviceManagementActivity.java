@@ -37,7 +37,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
- * Created by David on 2019/2/19
+ * Created by David
  */
 public class BluetoothSharedDeviceManagementActivity extends BaseActivity<IBluetoothSharedDeviceManagementView, BluetoothSharedDeviceManagementPresenter<IBluetoothSharedDeviceManagementView>> implements IBluetoothSharedDeviceManagementView, BaseQuickAdapter.OnItemClickListener, View.OnClickListener {
     @BindView(R.id.iv_back)

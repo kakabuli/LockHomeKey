@@ -39,11 +39,11 @@ public class DoorCardManagerActivity extends AppCompatActivity
     @BindView(R.id.recycleview)
     RecyclerView recycleview;
     DoorCardManagerAdapter doorCardManagerAdapter;
-    boolean isNotPassword = true;
+    boolean isNotData = true;
     @BindView(R.id.tv_synchronized_record)
     TextView tvSynchronizedRecord;
-    @BindView(R.id.ll_add_password)
-    LinearLayout llAddPassword;
+    @BindView(R.id.ll_add)
+    LinearLayout llAdd;
     @BindView(R.id.ll_has_data)
     LinearLayout llHasData;
     @BindView(R.id.tv_no_user)
@@ -61,7 +61,7 @@ public class DoorCardManagerActivity extends AppCompatActivity
         tvContent.setText(getString(R.string.door_card));
         ivBack.setOnClickListener(this);
         tvSynchronizedRecord.setOnClickListener(this);
-        llAddPassword.setOnClickListener(this);
+        llAdd.setOnClickListener(this);
         pageChange();
         initRecycleview();
         list.add(new GetPasswordResult.DataBean.Card("fff", "fff", 1));
@@ -69,7 +69,7 @@ public class DoorCardManagerActivity extends AppCompatActivity
     }
 
     private void initRecycleview() {
-        doorCardManagerAdapter = new DoorCardManagerAdapter(list, R.layout.item_fingerprint_manager);
+        doorCardManagerAdapter = new DoorCardManagerAdapter(list, R.layout.item_door_card_manager);
         recycleview.setLayoutManager(new LinearLayoutManager(this));
         recycleview.setAdapter(doorCardManagerAdapter);
         doorCardManagerAdapter.setOnItemClickListener(this);
@@ -91,7 +91,7 @@ public class DoorCardManagerActivity extends AppCompatActivity
 
     public void pageChange() {
 
-        if (isNotPassword) {
+        if (isNotData) {
             llHasData.setVisibility(View.GONE);
             tvNoUser.setVisibility(View.VISIBLE);
         } else {
@@ -107,7 +107,7 @@ public class DoorCardManagerActivity extends AppCompatActivity
             case R.id.iv_back:
                 finish();
                 break;
-            case R.id.ll_add_password:
+            case R.id.ll_add:
                 if (!NetUtil.isNetworkAvailable()) {
                     ToastUtil.getInstance().showShort(R.string.please_have_net_add_card);
                     return;
@@ -132,9 +132,9 @@ public class DoorCardManagerActivity extends AppCompatActivity
 
     public void initData() {
         if (list.size() > 0) {
-            isNotPassword = false;
+            isNotData = false;
         } else {
-            isNotPassword = true;
+            isNotData = true;
         }
         pageChange();
         doorCardManagerAdapter.notifyDataSetChanged();

@@ -22,7 +22,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
- * Created by David on 2019/2/24
+ * Created by David
  */
 public class AddBluetoothFamilyMemberActivity extends AppCompatActivity implements View.OnClickListener {
     @BindView(R.id.iv_back)
