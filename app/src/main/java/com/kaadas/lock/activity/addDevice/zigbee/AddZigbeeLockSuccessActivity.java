@@ -13,6 +13,7 @@ import com.kaadas.lock.R;
 import com.kaadas.lock.activity.MainActivity;
 import com.kaadas.lock.activity.addDevice.DeviceBindGatewayListActivity;
 import com.kaadas.lock.activity.addDevice.DeviceZigBeeDetailActivity;
+import com.kaadas.lock.utils.KeyConstants;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -24,11 +25,25 @@ public class  AddZigbeeLockSuccessActivity extends AppCompatActivity {
     @BindView(R.id.button_next)
     Button buttonNext;
 
+    private String deviceId;
+    private String gatewayId;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.device_zigbeelock_add_success);
         ButterKnife.bind(this);
+        initData();
+        
+        
+        
+    }
+
+    private void initData() {
+        Intent intent=getIntent();
+        deviceId=intent.getStringExtra(KeyConstants.DEVICE_ID);
+        gatewayId=intent.getStringExtra(KeyConstants.GATEWAY_ID);
+
     }
 
     @OnClick({R.id.back, R.id.button_next})
@@ -40,6 +55,8 @@ public class  AddZigbeeLockSuccessActivity extends AppCompatActivity {
                 break;
             case R.id.button_next:
                 Intent saveIntent=new Intent(this,AddZigbeeLockSuccessSaveActivity.class);
+                saveIntent.putExtra(KeyConstants.DEVICE_ID,deviceId);
+                saveIntent.putExtra(KeyConstants.GATEWAY_ID,gatewayId);
                 startActivity(saveIntent);
                 break;
         }

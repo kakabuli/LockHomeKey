@@ -19,6 +19,7 @@ import com.kaadas.lock.mvp.view.deviceaddview.DeviceZigBeeDetailView;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.GetBindGatewayListResult;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.NetUtil;
 import com.kaadas.lock.utils.ToastUtil;
 
 import java.util.ArrayList;
@@ -82,6 +83,12 @@ public class DeviceZigBeeDetailActivity extends BaseActivity<DeviceZigBeeDetailV
             zigbeeDetailAdapter.setOnItemClickListener(this);
             recycler.setAdapter(zigbeeDetailAdapter);
         }
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
         if (mPresenter.mqttService.getMqttClient()!=null&&mPresenter.mqttService.getMqttClient().isConnected()){
             mPresenter.getGatewayBindList();
         }
@@ -94,6 +101,10 @@ public class DeviceZigBeeDetailActivity extends BaseActivity<DeviceZigBeeDetailV
 
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+        if (!NetUtil.isNetworkAvailable()){
+            ToastUtil.getInstance().showShort(getString(R.string.network_exception));
+            return;
+        }
         if (mPresenter.mqttService.getMqttClient()==null){
            ToastUtil.getInstance().showShort(getString(R.string.mqtt_connection_fail));
            return;
@@ -119,7 +130,6 @@ public class DeviceZigBeeDetailActivity extends BaseActivity<DeviceZigBeeDetailV
                 int type = detailItemBean.getType();
                 zigbeeIntent.putExtra("type", type);
                 startActivity(zigbeeIntent);
-
             } else {
                 AlertDialogUtil.getInstance().havaNoEditTwoButtonDialog(this, getString(R.string.no_usable_gateway), getString(R.string.add_zigbee_device_first_pair_gateway), getString(R.string.cancel), getString(R.string.configuration), new AlertDialogUtil.ClickListener() {
                     @Override
