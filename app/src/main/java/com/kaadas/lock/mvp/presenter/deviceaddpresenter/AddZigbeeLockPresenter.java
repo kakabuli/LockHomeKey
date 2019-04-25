@@ -96,7 +96,7 @@ public class AddZigbeeLockPresenter<T> extends BasePresenter<IAddZigbeeLockView>
                                     //设备信息匹配成功  且是上线上报
                                     if (mViewRef.get()!=null){
                                         LogUtils.e("添加网关成功");
-                                        mViewRef.get().addZigbeeSuccess();
+                                        mViewRef.get().addZigbeeSuccess(deviceOnLineBean);
                                         toDisposable(addZigbeeEvent);
                                     }
 

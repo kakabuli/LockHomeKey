@@ -6,6 +6,7 @@ import com.kaadas.lock.publiclibrary.mqtt.publishbean.BindGatewayBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.GetBindGatewayListBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.GetWifiBasicBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetJoinAllowBean;
+import com.kaadas.lock.publiclibrary.mqtt.publishbean.UpdateDevNickNameBean;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttConstant;
 
 import org.eclipse.paho.client.mqttv3.MqttMessage;
@@ -65,13 +66,20 @@ public class MqttCommandFactory {
      * @param gwId
      * @return
      */
-    public static MqttMessage allowCateyeJoin(String userId, String gwId, String SN, String mac) {
+    public static MqttMessage allowCateyeJoin(String userId, String gwId, String SN, String mac,int timeout) {
         int messageId = getMessageId();
         AllowCateyeJoinBean getWifiBasicBean = new AllowCateyeJoinBean("request", userId, messageId,
-                gwId, MqttConstant.ALLOW_GATEWAY_JOIN, SN, mac, 300, 0, "0");
+                gwId, MqttConstant.ALLOW_GATEWAY_JOIN, SN, mac, timeout, 0, "0");
         return getMessage(getWifiBasicBean, messageId);
     }
 
+    /**
+     * 是否允许网关入网
+     * @param userId
+     * @param gwId
+     * @param deviceId
+     * @return
+     */
     public static MqttMessage setJoinAllow(String userId,String gwId,String deviceId){
         int messageId = getMessageId();
         SetJoinAllowBean.ParamsBean paramsBean=new SetJoinAllowBean.ParamsBean();
@@ -80,6 +88,13 @@ public class MqttCommandFactory {
         return  getMessage(setJoinAllowBean,messageId);
 
     }
+
+    public static MqttMessage updateDeviceNickName(String uid,String devuuid,String deviceId,String nickName ){
+        int messageId=getMessageId();
+        UpdateDevNickNameBean updateDevNickNameBean=new UpdateDevNickNameBean(MqttConstant.UPDATE_DEV_NICK_NAME,uid,devuuid,deviceId,nickName);
+        return getMessage(updateDevNickNameBean,messageId);
+    }
+
 
 
 

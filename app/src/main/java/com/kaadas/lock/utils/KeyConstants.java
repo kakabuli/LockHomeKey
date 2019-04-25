@@ -219,6 +219,13 @@ public class KeyConstants {
     //扫描的设备mac
     public static final String GW_SN = "gwSn";
 
+    //网关的id
+    public static final String GATEWAY_ID="gatewayId";
+
+    //设备的id
+    public static final String DEVICE_ID="deviceId";
+
+
     //开锁
     //已反锁
     //正在开锁

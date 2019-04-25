@@ -32,7 +32,6 @@ public class AddDeviceCatEyeSuccessActivity extends AppCompatActivity {
         switch (view.getId()) {
             case R.id.back:
                 finish();
-
                 break;
             case R.id.button_next:
                 Intent saveIntent=new Intent(this,AddDeviceCatEyeSaveNickNameActivity.class);

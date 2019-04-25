@@ -58,7 +58,8 @@
             android:hint="手动输入或从下面已有名称选择"
             android:ellipsize="end"
             android:singleLine="true"
-            android:maxLength="12"
+            android:maxLength="50"
+            android:paddingRight="@dimen/dp_15"
             />
 
     </LinearLayout>
