@@ -95,6 +95,9 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
         }
         unbinder = ButterKnife.bind(this, mView);
         deviceRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
+        initData();
+        initView();
+        initAdapter();
         return mView;
     }
 
@@ -107,9 +110,7 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        initData();
-        initView();
-        initAdapter();
+
 
 
     }
@@ -127,10 +128,15 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
         mDeviceList = new ArrayList<>();
         AllBindDevices allBindDevices=MyApplication.getInstance().getAllBindDevices();
         if (allBindDevices!=null){
-            flag=true;
             List<HomeShowBean> homeShowBeanList= allBindDevices.getHomeShow(true);
+            if (homeShowBeanList.size()>0){
+                flag=true;
+            }
             for (HomeShowBean homeShowBean:homeShowBeanList){
-                 getDifferentTypeDevice(homeShowBean);
+                 for (int i=0;i<5;i++){
+                     getDifferentTypeDevice(homeShowBean);
+                 }
+
             }
         }
     }
@@ -145,8 +151,8 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                 DeviceDetailBean catEye=new DeviceDetailBean();
                 catEye.setDeviceName(showBean.getDeviceNickName());
                 catEye.setEvent_str(eventStr);
-                catEye.setType(0);
-                catEye.setPower(30);
+                catEye.setType(showBean.getDeviceType());
+                catEye.setPower(10);
 
                 mDeviceList.add(catEye);
                 break;
@@ -158,8 +164,8 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
 
                 lockBean.setDeviceName(showBean.getDeviceNickName());
                 lockBean.setEvent_str(event);
-                lockBean.setType(1);
-                lockBean.setPower(50);
+                lockBean.setType(showBean.getDeviceType());
+                lockBean.setPower(60);
 
                 mDeviceList.add(lockBean);
                 break;
@@ -172,7 +178,7 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                 //无电量
                 gatewayBean.setPower(-1);
                 gatewayBean.setEvent_str("online");
-                gatewayBean.setType(2);
+                gatewayBean.setType(showBean.getDeviceType());
                 mDeviceList.add(gatewayBean);
                 break;
             case 3:
@@ -180,15 +186,15 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                 BleLockInfo bleLockInfo= (BleLockInfo) showBean.getObject();
 
                 DeviceDetailBean bluetoothBean=new DeviceDetailBean();
-                bluetoothBean.setDeviceName(bleLockInfo.getServerLockInfo().getDevice_nickname());
-                bluetoothBean.setType(3);
+                bluetoothBean.setDeviceName(bleLockInfo.getServerLockInfo().getLockNickName());
+                bluetoothBean.setType(showBean.getDeviceType());
                 if (bleLockInfo.isConnected()){
                     bluetoothBean.setEvent_str("online");
                 }else{
                     bluetoothBean.setEvent_str("offline");
                 }
 
-                bluetoothBean.setPower(60);
+                bluetoothBean.setPower(100);
                 mDeviceList.add(bluetoothBean);
                 break;
 
