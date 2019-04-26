@@ -60,6 +60,18 @@ public class BluetoothSharedDeviceBean implements Serializable {
     }
 
     public static class DataBean implements Serializable {
+        public DataBean(String _id, String adminname, String uname, String unickname, String open_purview, String datestart, String dateend, int createTime, List<String> items) {
+            this._id = _id;
+            this.adminname = adminname;
+            this.uname = uname;
+            this.unickname = unickname;
+            this.open_purview = open_purview;
+            this.datestart = datestart;
+            this.dateend = dateend;
+            this.createTime = createTime;
+            this.items = items;
+        }
+
         @Override
         public String toString() {
             return "GatewayInfo{" +
