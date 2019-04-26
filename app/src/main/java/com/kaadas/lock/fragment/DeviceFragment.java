@@ -20,6 +20,8 @@ import com.kaadas.lock.R;
 import com.kaadas.lock.activity.addDevice.DeviceAddActivity;
 import com.kaadas.lock.activity.device.BluetoothLockAuthorizationActivity;
 import com.kaadas.lock.activity.device.BluetoothLockFunctionActivity;
+import com.kaadas.lock.activity.device.GatewayActivity;
+import com.kaadas.lock.activity.device.cateye.more.CateyeFunctionActivity;
 import com.kaadas.lock.activity.device.gateway.GatewayLockAuthorizationActivity;
 import com.kaadas.lock.activity.device.gateway.GatewayLockFunctionActivity;
 import com.kaadas.lock.adapter.DeviceDetailAdapter;
@@ -102,16 +104,18 @@ public class DeviceFragment extends Fragment implements BaseQuickAdapter.OnItemC
         mDeviceList = new ArrayList<>();
         DeviceDetailBean deviceDetailBean1 = new DeviceDetailBean();
         deviceDetailBean1.setDeviceName("凯迪仕智能门锁");
-        deviceDetailBean1.setDeviceType(1);
+        deviceDetailBean1.setDeviceImage(R.mipmap.product_k9);
         deviceDetailBean1.setPower(60);
         deviceDetailBean1.setType(1);
+        deviceDetailBean1.setLineStatus(0);
         mDeviceList.add(deviceDetailBean1);
 
         DeviceDetailBean deviceDetailBean2 = new DeviceDetailBean();
         deviceDetailBean2.setDeviceName("K9智能门锁");
-        deviceDetailBean2.setDeviceType(1);
+        deviceDetailBean2.setDeviceImage(R.mipmap.product_k9);
         deviceDetailBean2.setPower(20);
         deviceDetailBean2.setType(2);
+        deviceDetailBean1.setLineStatus(1);
         mDeviceList.add(deviceDetailBean2);
     }
 
@@ -165,12 +169,13 @@ public class DeviceFragment extends Fragment implements BaseQuickAdapter.OnItemC
                 startActivity(intent);
                 break;
             case 2:
-//                gatewayAuthorization=true;
                 if (gatewayAuthorization){
                     intent = new Intent(getActivity(), GatewayLockAuthorizationActivity.class);
                 }else {
                     intent = new Intent(getActivity(), GatewayLockFunctionActivity.class);
                 }
+//          intent=new Intent(getActivity(),CateyeFunctionActivity.class);
+//          intent=new Intent(getActivity(),GatewayActivity.class);
                 startActivity(intent);
                 break;
         }

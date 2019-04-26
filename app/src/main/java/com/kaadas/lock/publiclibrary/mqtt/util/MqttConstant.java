@@ -49,6 +49,9 @@ public class MqttConstant {
         return "/" + userId + "/rpc/call";
     }
 
+    //发布给服务器消息的主题，格式为/request/app/func
+    public static final String PUBLISH_TO_SERVER = "/request/app/func";
+
 
     //1 绑定网关
     public static final String BIND_GATEWAY = "bindGatewayByUser";
@@ -71,6 +74,7 @@ public class MqttConstant {
     //网关开启允许设备入网模式
     public static final String SET_JOIN_ALLOW="setJoinAllow";
 
-    //
+    //修改设备的昵称
+    public static final String UPDATE_DEV_NICK_NAME="updateDevNickName";
 
 }

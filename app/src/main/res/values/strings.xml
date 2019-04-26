@@ -264,7 +264,7 @@
     <string name="fingerprint_success">验证成功</string>
     <string name="device_detail_more">更多</string>
     <string name="home_verify_telephone_fingerprint">通过Home键验证已有手机指纹</string>
-    <string name="mqtt_connection_fail">mqtt连接失败</string>
+    <string name="mqtt_connection_fail">远程连接失败</string>
     <string name="no_find_connect_device">未发现待连接设备</string>
     <string name="rescan">重新扫描</string>
     <string name="father">爸爸</string>
@@ -645,6 +645,19 @@
     <string name="device_add_bluetooth">添加蓝牙设备</string>
     <string name="software_version">软件版本</string>
     <string name="bluetooth_version">蓝牙版本</string>
+    <string name="nickname_not_null">名称不能为空</string>
+    <string name="input_name_max">字符最多只能输入%1$s个，汉字最多只能输入%2$s个</string>
+    <string name="update_nickname_fail">设置名称失败</string>
+    <string name="gateway_or_device_null">网关或者设备为空</string>
     <string name="is_allow_join">正在允许入网...</string>
     <string name="http_expection_retry">网络异常，请重试！</string>
+    <string name="stress_password">胁迫密码</string>
+    <string name="stress_fingerprint">胁迫指纹</string>
+    <string name="app_notification">APP通知</string>
+    <string name="bell">铃声</string>
+    <string name="ring_number">响铃次数</string>
+    <string name="smart_monitor">智能监测</string>
+    <string name="video_resolution">视频分辨率</string>
+    <string name="look_back">回放</string>
+    <string name="connect_device">连接设备</string>
 </resources>

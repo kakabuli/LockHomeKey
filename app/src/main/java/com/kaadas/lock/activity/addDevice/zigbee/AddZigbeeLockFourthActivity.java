@@ -17,6 +17,8 @@ import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.mvp.mvpbase.BasePresenter;
 import com.kaadas.lock.mvp.presenter.deviceaddpresenter.AddZigbeeLockPresenter;
 import com.kaadas.lock.mvp.view.deviceaddview.IAddZigbeeLockView;
+import com.kaadas.lock.publiclibrary.mqtt.eventbean.DeviceOnLineBean;
+import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.handPwdUtil.Constants;
@@ -123,9 +125,13 @@ public class AddZigbeeLockFourthActivity extends BaseActivity<IAddZigbeeLockView
     }
 
     @Override
-    public void addZigbeeSuccess() {
+    public void addZigbeeSuccess(DeviceOnLineBean deviceOnLineBean) {
         stopAnimation();
+        String deviceId=deviceOnLineBean.getDeviceId();
+        String gwId=deviceOnLineBean.getGwId();
         Intent successIntent=new Intent(this,AddZigbeeLockSuccessActivity.class);
+        successIntent.putExtra(KeyConstants.GATEWAY_ID,gwId);
+        successIntent.putExtra(KeyConstants.DEVICE_ID,deviceId);
         startActivity(successIntent);
         finish();
         LogUtils.e("设备添加成功");

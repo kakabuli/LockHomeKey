@@ -92,11 +92,12 @@ public class AddZigbeeLockPresenter<T> extends BasePresenter<IAddZigbeeLockView>
                         @Override
                         public void accept(MqttData mqttData) throws Exception {
                             DeviceOnLineBean deviceOnLineBean = new Gson().fromJson(mqttData.getPayload(), DeviceOnLineBean.class);
-                                if (gwId.equals(deviceOnLineBean.getGwId()) && MqttConstant.ON_LINE.equals(deviceOnLineBean.getEventparams().getEvent_str())&&deviceOnLineBean.getEventparams().getDevice_type().equals("zigbee")) {
+                            //todo 假如此时其他的zigbee上线了，如何处理
+                            if (gwId.equals(deviceOnLineBean.getGwId()) && MqttConstant.ON_LINE.equals(deviceOnLineBean.getEventparams().getEvent_str())&&deviceOnLineBean.getEventparams().getDevice_type().equals("zigbee")) {
                                     //设备信息匹配成功  且是上线上报
                                     if (mViewRef.get()!=null){
                                         LogUtils.e("添加网关成功");
-                                        mViewRef.get().addZigbeeSuccess();
+                                        mViewRef.get().addZigbeeSuccess(deviceOnLineBean);
                                         toDisposable(addZigbeeEvent);
                                     }
 

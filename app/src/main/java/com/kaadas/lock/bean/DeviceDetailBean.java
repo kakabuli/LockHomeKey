@@ -2,21 +2,19 @@ package com.kaadas.lock.bean;
 
 public class DeviceDetailBean {
 
-    private int deviceType;
+    //电量
+    private int power=-1;
 
-    private int power;
-
+    //设备名称
     private String deviceName;
 
+    //1代表bluetooth，2代表zigbee,3代表猫眼，4网关，5代表猫眼套件
     private int type;
 
-    public int getDeviceType() {
-        return deviceType;
-    }
+    private int deviceImage;
 
-    public void setDeviceType(int deviceType) {
-        this.deviceType = deviceType;
-    }
+    //0代表离线，1代表在线
+    private int lineStatus;
 
     public int getPower() {
         return power;
@@ -40,5 +38,21 @@ public class DeviceDetailBean {
 
     public void setType(int type) {
         this.type = type;
+    }
+
+    public int getDeviceImage() {
+        return deviceImage;
+    }
+
+    public void setDeviceImage(int deviceImage) {
+        this.deviceImage = deviceImage;
+    }
+
+    public int getLineStatus() {
+        return lineStatus;
+    }
+
+    public void setLineStatus(int lineStatus) {
+        this.lineStatus = lineStatus;
     }
 }

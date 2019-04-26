@@ -181,7 +181,10 @@ public class KeyConstants {
      * 引导页
      */
     public static final String SHOW_GUIDE_PAGE = "show_guide_page";
-
+    //app通知
+    public static final String APP_NOTIFICATION_STATUS = "app_notification_status";
+    //智能监测
+    public static final String SMART_MONITOR_STATUS = "smart_monitor_status";
     //消息免打扰状态
     public static final String MESSAGE_FREE_STATUS = "message_free_status";
 
@@ -215,6 +218,13 @@ public class KeyConstants {
     public static final String DEVICE_MAC = "deviceMac";
     //扫描的设备mac
     public static final String GW_SN = "gwSn";
+
+    //网关的id
+    public static final String GATEWAY_ID="gatewayId";
+
+    //设备的id
+    public static final String DEVICE_ID="deviceId";
+
 
     //开锁
     //已反锁
