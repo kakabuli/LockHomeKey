@@ -167,13 +167,13 @@ public class DeviceFragment extends Fragment implements BaseQuickAdapter.OnItemC
                 startActivity(intent);
                 break;
             case 2:
-                if (gatewayAuthorization){
+           /*     if (gatewayAuthorization){
                     intent = new Intent(getActivity(), GatewayLockAuthorizationActivity.class);
                 }else {
                     intent = new Intent(getActivity(), GatewayLockFunctionActivity.class);
-                }
+                }*/
 //          intent=new Intent(getActivity(),CateyeFunctionActivity.class);
-//          intent=new Intent(getActivity(),GatewayActivity.class);
+          intent=new Intent(getActivity(),GatewayActivity.class);
                 startActivity(intent);
                 break;
         }
