@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.addDevice.DeviceAddActivity;
 import com.kaadas.lock.activity.device.BluetoothLockAuthorizationActivity;
@@ -26,6 +27,11 @@ import com.kaadas.lock.activity.device.gateway.GatewayLockAuthorizationActivity;
 import com.kaadas.lock.activity.device.gateway.GatewayLockFunctionActivity;
 import com.kaadas.lock.adapter.DeviceDetailAdapter;
 import com.kaadas.lock.bean.DeviceDetailBean;
+import com.kaadas.lock.mvp.mvpbase.BaseFragment;
+import com.kaadas.lock.mvp.mvpbase.IBaseView;
+import com.kaadas.lock.mvp.presenter.DevicePresenter;
+import com.kaadas.lock.mvp.view.IDeviceView;
+import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.AllBindDevices;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 
 import java.util.ArrayList;
@@ -40,7 +46,7 @@ import butterknife.Unbinder;
  * Created by asqw1 on 2018/3/14.
  */
 
-public class DeviceFragment extends Fragment implements BaseQuickAdapter.OnItemClickListener {
+public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<IDeviceView>> implements BaseQuickAdapter.OnItemClickListener,IDeviceView {
     @BindView(R.id.no_device_image)
     ImageView noDeviceImage;
 
@@ -85,11 +91,18 @@ public class DeviceFragment extends Fragment implements BaseQuickAdapter.OnItemC
     }
 
     @Override
+    protected DevicePresenter<IDeviceView> createPresent() {
+        return new DevicePresenter<>();
+    }
+
+    @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         initView();
         initData();
         initAdapter();
+
+
     }
 
     private void initAdapter() {
@@ -101,6 +114,12 @@ public class DeviceFragment extends Fragment implements BaseQuickAdapter.OnItemC
     }
 
     private void initData() {
+        AllBindDevices allBindDevices=MyApplication.getInstance().getAllBindDevices();
+        if (allBindDevices!=null){
+
+        }
+
+
         mDeviceList = new ArrayList<>();
         DeviceDetailBean deviceDetailBean1 = new DeviceDetailBean();
         deviceDetailBean1.setDeviceName("凯迪仕智能门锁");
@@ -179,5 +198,14 @@ public class DeviceFragment extends Fragment implements BaseQuickAdapter.OnItemC
                 startActivity(intent);
                 break;
         }
+    }
+
+    @Override
+    public void onDeviceRefresh(AllBindDevices allBindDevices) {
+        //数据更新了
+
+
+
+
     }
 }

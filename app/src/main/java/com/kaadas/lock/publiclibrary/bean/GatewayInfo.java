@@ -10,6 +10,10 @@ public class GatewayInfo {
     public GatewayInfo() {
     }
 
+    boolean isOnLine;
+
+    int power;
+
     public GatewayInfo(ServerGatewayInfo serverInfo) {
         this.serverInfo = serverInfo;
     }
@@ -20,5 +24,21 @@ public class GatewayInfo {
 
     public void setServerInfo(ServerGatewayInfo serverInfo) {
         this.serverInfo = serverInfo;
+    }
+
+    public boolean isOnLine() {
+        return isOnLine;
+    }
+
+    public void setOnLine(boolean onLine) {
+        isOnLine = onLine;
+    }
+
+    public int getPower() {
+        return power;
+    }
+
+    public void setPower(int power) {
+        this.power = power;
     }
 }

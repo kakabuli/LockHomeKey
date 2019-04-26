@@ -7,6 +7,13 @@ public class CateEyeInfo {
     //服务器返回的消息
     ServerGwDevice serverInfo;
 
+    //是否在线
+    boolean isOnLine;
+
+    //电量
+    int power;
+
+
     public CateEyeInfo() {
     }
 
@@ -29,5 +36,21 @@ public class CateEyeInfo {
 
     public void setServerInfo(ServerGwDevice serverInfo) {
         this.serverInfo = serverInfo;
+    }
+
+    public boolean isOnLine() {
+        return isOnLine;
+    }
+
+    public void setOnLine(boolean onLine) {
+        isOnLine = onLine;
+    }
+
+    public int getPower() {
+        return power;
+    }
+
+    public void setPower(int power) {
+        this.power = power;
     }
 }
