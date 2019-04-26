@@ -145,6 +145,7 @@ public class AddCatEyePresenter<T> extends BasePresenter<IAddCatEyeView> {
                                 if (mViewRef.get()!=null){
                                     mViewRef.get().cateEyeJoinSuccess(deviceOnLineBean);
                                 }
+                                MyApplication.getInstance().getAllDevicesByMqtt(true);
                                 toDisposable(compositeDisposable);
                             }
 

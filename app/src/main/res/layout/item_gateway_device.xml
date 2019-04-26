@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/dp_100"
         android:layout_marginTop="@dimen/dp_40"
-        android:text="@string/device_nickname"
+        android:text="@string/lockNickName"
         android:textColor="#ff333333"
         android:textSize="@dimen/sp_15"
         android:textStyle="bold" />
