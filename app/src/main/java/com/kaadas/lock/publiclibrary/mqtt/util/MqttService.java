@@ -131,10 +131,12 @@ public class MqttService extends Service {
     public void mqttConnection() {
         String userId = MyApplication.getInstance().getUid();
         String token = MyApplication.getInstance().getToken();
+        //TODO: 2019/4/25  此处为空   应该重新读取一下本地文件，延时100ms吧，如果再读取不到？直接退出   mqtt不能不登录的  不登录  这个APP就废了
         if (TextUtils.isEmpty(userId) || TextUtils.isEmpty(token)) {
             LogUtils.e("token  或者 userID  为空");
             return;
         }
+        // TODO: 2019/4/25    没联网也应该去登录？   或者在此处启用一个监听，监听到有网络了就连接   付积辉
         if (!NetUtil.isNetworkAvailable()) {
             ToastUtil.getInstance().showShort(getString(R.string.network_exception));
             return;
@@ -200,7 +202,9 @@ public class MqttService extends Service {
                     }
 
                     if (messageId == -1){
-                        messageId = jsonObject.getInt("msgid");
+                        if (payload.contains("msgid")){
+                            messageId = jsonObject.getInt("msgid");
+                        }
                     }
                     if (payload.contains("msgtype")){
                         msgtype = jsonObject.getString("msgtype");
@@ -299,6 +303,9 @@ public class MqttService extends Service {
                                 public void onSuccess(IMqttToken asyncActionToken) {
                                     mSubscribe.onNext(true);
                                     LogUtils.e("mqttSubscribe", "订阅成功");
+                                    //订阅成功，立即拿设备列表
+                                    MyApplication.getInstance().getAllDevicesByMqtt(true);
+
                                 }
 
                                 @Override
@@ -385,4 +392,9 @@ public class MqttService extends Service {
         }
 
     }
+
+
+
+
+
 }

@@ -33,12 +33,17 @@ public class MqttConstant {
     //online
     public static final String ON_LINE="online";
 
+    //获取所有绑定的设备接口
+    public static final String GET_ALL_BIND_DEVICE = "getAllBindDevice";
 
 
     public static String getSubscribeTopic(String userId){
         String topic="/" + userId + "/rpc/reply";
         return topic;
     }
+
+
+
 
     public static String getCallTopic(String userId){
         return "/" + userId + "/rpc/call";

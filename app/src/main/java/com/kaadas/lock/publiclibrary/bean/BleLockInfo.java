@@ -1,7 +1,7 @@
 package com.kaadas.lock.publiclibrary.bean;
 
 
-import com.kaadas.lock.publiclibrary.http.result.ServerDevice;
+import com.kaadas.lock.publiclibrary.http.result.ServerBleDevice;
 
 import java.io.Serializable;
 import java.util.Arrays;
@@ -63,17 +63,17 @@ public class BleLockInfo implements Serializable {
         supportBackLock = -1;
     }
 
-    private ServerDevice serverLockInfo;
+    private ServerBleDevice serverLockInfo;
 
-    public BleLockInfo(ServerDevice serverLockInfo) {
+    public BleLockInfo(ServerBleDevice serverLockInfo) {
         this.serverLockInfo = serverLockInfo;
     }
 
-    public ServerDevice getServerLockInfo() {
+    public ServerBleDevice getServerLockInfo() {
         return serverLockInfo;
     }
 
-    public void setServerLockInfo(ServerDevice serverLockInfo) {
+    public void setServerLockInfo(ServerBleDevice serverLockInfo) {
         this.serverLockInfo = serverLockInfo;
     }
 
