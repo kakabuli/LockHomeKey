@@ -251,7 +251,7 @@ public class AllBindDevices {
     /**
      * 获取首页显示需要的对象，即除了网管之外的所有设备
      */
-    public  List<HomeShowBean> getHomeShow() {
+    public  List<HomeShowBean> getHomeShow(boolean showGateway) {
         ReturnDataBean returnData = getData();
         List<HomeShowBean> homeShowBeans = new ArrayList<>();
         List<ServerBleDevice> bleDevices = returnData.getDevList();
@@ -263,7 +263,9 @@ public class AllBindDevices {
         List<ReturnDataBean.GwListBean> gwList = returnData.getGwList();
         for (ReturnDataBean.GwListBean gwListBean : gwList) {
             //首页不显示网关
-//            homeShowBeans.add(new HomeShowBean(HomeShowBean.TYPE_GATEWAY, gwListBean.getDeviceSN(), gwListBean.getDeviceNickName(), new GatewayInfo(new ServerGatewayInfo(gwListBean))));
+            if (showGateway==true){
+                homeShowBeans.add(new HomeShowBean(HomeShowBean.TYPE_GATEWAY, gwListBean.getDeviceSN(), gwListBean.getDeviceNickName(), new GatewayInfo(new ServerGatewayInfo(gwListBean))));
+            }
             List<ServerGwDevice> deviceList = gwListBean.getDeviceList();
             for (ServerGwDevice serverGwDevice:deviceList){
                 if ("kdscateye".equalsIgnoreCase(serverGwDevice.getDevice_type())){

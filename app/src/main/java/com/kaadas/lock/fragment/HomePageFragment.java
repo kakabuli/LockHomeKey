@@ -89,7 +89,7 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
 //        }
         AllBindDevices allBindDevices = MyApplication.getInstance().getAllBindDevices();
         if (allBindDevices != null) {
-            initData(allBindDevices.getHomeShow());
+            initData(allBindDevices.getHomeShow(false));
         }
         return view;
     }
@@ -380,7 +380,7 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
 
     @Override
     public void onDeviceRefresh(AllBindDevices allBindDevices) {
-        homeShow = allBindDevices.getHomeShow();
+        homeShow = allBindDevices.getHomeShow(false);
         initData(homeShow);
     }
 }

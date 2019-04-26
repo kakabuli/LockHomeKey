@@ -660,4 +660,5 @@
     <string name="video_resolution">视频分辨率</string>
     <string name="look_back">回放</string>
     <string name="connect_device">连接设备</string>
+    <string name="no_find_device">未找到设备</string>
 </resources>
