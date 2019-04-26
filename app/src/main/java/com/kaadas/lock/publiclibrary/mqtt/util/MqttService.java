@@ -26,6 +26,8 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Iterator;
+
 import io.reactivex.Observable;
 import io.reactivex.subjects.PublishSubject;
 
@@ -142,7 +144,8 @@ public class MqttService extends Service {
             return;
         }
         if (mqttClient == null) {
-            mqttClient = new MqttAndroidClient(MyApplication.getInstance(), MqttConstant.MQTT_BASE_URL, "app:" + userId);
+            mqttClient = new MqttAndroidClient(MyApplication.getInstance(), MqttConstant.MQTT_BASE_URL,
+                    "app:" + userId);
         }
         //已经连接
         if (mqttClient.isConnected()) {
@@ -158,7 +161,16 @@ public class MqttService extends Service {
             public void connectComplete(boolean reconnect, String serverURI) {
                 //连接完成
                 LogUtils.e("mqtt 连接完成");
-
+                DisconnectedBufferOptions disconnectedBufferOptions = new DisconnectedBufferOptions();
+                disconnectedBufferOptions.setBufferEnabled(true);
+                disconnectedBufferOptions.setBufferSize(100);
+                disconnectedBufferOptions.setPersistBuffer(false);
+                disconnectedBufferOptions.setDeleteOldestMessages(false);
+                mqttClient.setBufferOpts(disconnectedBufferOptions);
+                //连接成功之后订阅主题
+                mqttSubscribe(mqttClient, MqttConstant.getSubscribeTopic(userId), 2);
+                reconnectionNum = 10;
+                connectStateObservable.onNext(true);
             }
 
             @Override
@@ -234,16 +246,7 @@ public class MqttService extends Service {
                 @Override
                 public void onSuccess(IMqttToken asyncActionToken) {
                     LogUtils.e("mqtt连接", "连接成功");
-                    DisconnectedBufferOptions disconnectedBufferOptions = new DisconnectedBufferOptions();
-                    disconnectedBufferOptions.setBufferEnabled(true);
-                    disconnectedBufferOptions.setBufferSize(100);
-                    disconnectedBufferOptions.setPersistBuffer(false);
-                    disconnectedBufferOptions.setDeleteOldestMessages(false);
-                    mqttClient.setBufferOpts(disconnectedBufferOptions);
-                    //连接成功之后订阅主题
-                    mqttSubscribe(mqttClient, MqttConstant.getSubscribeTopic(userId), 2);
-                    reconnectionNum = 10;
-                    connectStateObservable.onNext(true);
+
                 }
 
                 @Override
@@ -294,6 +297,7 @@ public class MqttService extends Service {
             ToastUtil.getInstance().showShort(getString(R.string.network_exception));
             return;
         }
+        LogUtils.e("订阅    "+topic +"   "+(mqttClient != null));
         try {
             if (mqttClient != null) {
                 if (!TextUtils.isEmpty(topic) && mqttClient.isConnected()) {
@@ -337,7 +341,7 @@ public class MqttService extends Service {
                 mqttClient.publish(topic, mqttMessage, null, new IMqttActionListener() {
                     @Override
                     public void onSuccess(IMqttToken asyncActionToken) {
-                        LogUtils.e("发布消息成功  ", topic + "    success---    messageId" + asyncActionToken.getMessageId());
+                        LogUtils.e("发布消息成功  ", topic + "  发布消息内容  " + new String(mqttMessage.getPayload()) );
                         publishObservable.onNext(new PublishResult(true, asyncActionToken, mqttMessage));
                     }
 

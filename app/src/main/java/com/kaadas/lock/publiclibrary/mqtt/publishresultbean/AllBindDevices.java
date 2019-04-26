@@ -3,7 +3,6 @@ package com.kaadas.lock.publiclibrary.mqtt.publishresultbean;
 import com.kaadas.lock.bean.HomeShowBean;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.publiclibrary.bean.CateEyeInfo;
-import com.kaadas.lock.publiclibrary.bean.GatewayInfo;
 import com.kaadas.lock.publiclibrary.bean.ServerGwDevice;
 import com.kaadas.lock.publiclibrary.bean.ServerGatewayInfo;
 import com.kaadas.lock.publiclibrary.http.result.ServerBleDevice;
@@ -251,31 +250,37 @@ public class AllBindDevices {
     /**
      * 获取首页显示需要的对象，即除了网管之外的所有设备
      */
-    public  List<HomeShowBean> getHomeShow() {
+    public List<HomeShowBean> getHomeShow() {
         ReturnDataBean returnData = getData();
         List<HomeShowBean> homeShowBeans = new ArrayList<>();
         List<ServerBleDevice> bleDevices = returnData.getDevList();
-        for (ServerBleDevice bleDevice : bleDevices) {
-            BleLockInfo bleLockInfo = new BleLockInfo(bleDevice);
-            homeShowBeans.add(new HomeShowBean(HomeShowBean.TYPE_BLE_LOCK, bleDevice.getDevice_name(), bleDevice.getDevice_nickname(), bleLockInfo));
-        }
-
-        List<ReturnDataBean.GwListBean> gwList = returnData.getGwList();
-        for (ReturnDataBean.GwListBean gwListBean : gwList) {
-            //首页不显示网关
-//            homeShowBeans.add(new HomeShowBean(HomeShowBean.TYPE_GATEWAY, gwListBean.getDeviceSN(), gwListBean.getDeviceNickName(), new GatewayInfo(new ServerGatewayInfo(gwListBean))));
-            List<ServerGwDevice> deviceList = gwListBean.getDeviceList();
-            for (ServerGwDevice serverGwDevice:deviceList){
-                if ("kdscateye".equalsIgnoreCase(serverGwDevice.getDevice_type())){
-                    homeShowBeans.add(new HomeShowBean(HomeShowBean.TYPE_CAT_EYE, serverGwDevice.getDeviceId(),
-                            serverGwDevice.getNickName(), new CateEyeInfo(gwListBean.getDeviceSN(), serverGwDevice)));
-                }else {
-                    homeShowBeans.add(new HomeShowBean(HomeShowBean.TYPE_GATEWAY_LOCK, serverGwDevice.getDeviceId(),
-                            serverGwDevice.getNickName(), new CateEyeInfo(gwListBean.getDeviceSN(), serverGwDevice)));
-                }
-
+        if (bleDevices != null) {
+            for (ServerBleDevice bleDevice : bleDevices) {
+                BleLockInfo bleLockInfo = new BleLockInfo(bleDevice);
+                homeShowBeans.add(new HomeShowBean(HomeShowBean.TYPE_BLE_LOCK, bleDevice.getDevice_name(), bleDevice.getLockNickName(), bleLockInfo));
             }
         }
+
+
+        List<ReturnDataBean.GwListBean> gwList = returnData.getGwList();
+        if (gwList != null) {
+            for (ReturnDataBean.GwListBean gwListBean : gwList) {
+                //首页不显示网关
+//            homeShowBeans.add(new HomeShowBean(HomeShowBean.TYPE_GATEWAY, gwListBean.getDeviceSN(), gwListBean.getDeviceNickName(), new GatewayInfo(new ServerGatewayInfo(gwListBean))));
+                List<ServerGwDevice> deviceList = gwListBean.getDeviceList();
+                for (ServerGwDevice serverGwDevice : deviceList) {
+                    if ("kdscateye".equalsIgnoreCase(serverGwDevice.getDevice_type())) {
+                        homeShowBeans.add(new HomeShowBean(HomeShowBean.TYPE_CAT_EYE, serverGwDevice.getDeviceId(),
+                                serverGwDevice.getNickName(), new CateEyeInfo(gwListBean.getDeviceSN(), serverGwDevice)));
+                    } else {
+                        homeShowBeans.add(new HomeShowBean(HomeShowBean.TYPE_GATEWAY_LOCK, serverGwDevice.getDeviceId(),
+                                serverGwDevice.getNickName(), new CateEyeInfo(gwListBean.getDeviceSN(), serverGwDevice)));
+                    }
+
+                }
+            }
+        }
+
         return homeShowBeans;
     }
 
