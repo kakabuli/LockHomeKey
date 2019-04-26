@@ -3,6 +3,7 @@ package com.kaadas.lock.publiclibrary.mqtt;
 import com.google.gson.Gson;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.AllowCateyeJoinBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.BindGatewayBean;
+import com.kaadas.lock.publiclibrary.mqtt.publishbean.GetAllBindDeviceBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.GetBindGatewayListBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.GetWifiBasicBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetJoinAllowBean;
@@ -72,6 +73,13 @@ public class MqttCommandFactory {
         return getMessage(getWifiBasicBean, messageId);
     }
 
+    /**
+     * 设置让猫眼入网
+     * @param userId
+     * @param gwId
+     * @param deviceId
+     * @return
+     */
     public static MqttMessage setJoinAllow(String userId,String gwId,String deviceId){
         int messageId = getMessageId();
         SetJoinAllowBean.ParamsBean paramsBean=new SetJoinAllowBean.ParamsBean();
@@ -80,6 +88,19 @@ public class MqttCommandFactory {
         return  getMessage(setJoinAllowBean,messageId);
 
     }
+
+
+    /**
+     * 获取所有的设备信息
+     * @return
+     */
+    public static MqttMessage getAllBindDevice(String uid){
+        int messageId = getMessageId();
+        GetAllBindDeviceBean getAllBindDeviceBean = new GetAllBindDeviceBean(messageId,"request",MqttConstant.GET_ALL_BIND_DEVICE,uid);
+        return  getMessage(getAllBindDeviceBean,messageId);
+
+    }
+
 
 
 

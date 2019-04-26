@@ -7,7 +7,7 @@ import java.io.Serializable;
  * Create By lxj  on 2019/3/3
  * Describe
  */
-public class ServerDevice  implements Serializable {
+public class ServerBleDevice implements Serializable {
     private String _id;
     private String device_name;//设备唯一编号
     private String device_nickname;

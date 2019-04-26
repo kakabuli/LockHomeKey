@@ -162,7 +162,4 @@ public class HttpConstants {
     //获取锁编号对应的昵称
     public static final String GET_LOCK_USER_NUMBER_NICKNAME = BASE_URL + "adminlock/info/number/get";
 
-
-
-
 }

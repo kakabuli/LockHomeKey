@@ -14,15 +14,13 @@ import com.kaadas.lock.publiclibrary.ble.responsebean.ReadInfoBean;
 import com.kaadas.lock.publiclibrary.http.XiaokaiNewServiceImp;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.result.GetPasswordResult;
-import com.kaadas.lock.publiclibrary.http.result.ServerDevice;
+import com.kaadas.lock.publiclibrary.http.result.ServerBleDevice;
 import com.kaadas.lock.publiclibrary.http.util.BaseObserver;
 import com.kaadas.lock.publiclibrary.http.util.RxjavaHelper;
 import com.kaadas.lock.publiclibrary.rxutils.TimeOutException;
 import com.kaadas.lock.utils.LogUtils;
-import com.kaadas.lock.utils.NetUtil;
 import com.kaadas.lock.utils.Rsa;
 
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
@@ -56,8 +54,8 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
         LogUtils.e("设置的  设备信息为  " + bleLockInfo.getServerLockInfo().toString());
         if (bleService.getBleLockInfo() != null
                 && bleService.getBleLockInfo().getServerLockInfo().getDevice_name().equals(bleLockInfo.getServerLockInfo().getDevice_name())) {
-            ServerDevice serviceLockInfo = bleService.getBleLockInfo().getServerLockInfo();
-            ServerDevice serverLockInfo = bleLockInfo.getServerLockInfo();
+            ServerBleDevice serviceLockInfo = bleService.getBleLockInfo().getServerLockInfo();
+            ServerBleDevice serverLockInfo = bleLockInfo.getServerLockInfo();
             if (serverLockInfo.getPassword1().equals(serviceLockInfo.getPassword1()) && serverLockInfo.getPassword2().equals(serviceLockInfo.getPassword2())) {
                 LogUtils.e("进来了  设备  数据一致   " + bleService.getBleLockInfo().getServerLockInfo().toString());
                 return;

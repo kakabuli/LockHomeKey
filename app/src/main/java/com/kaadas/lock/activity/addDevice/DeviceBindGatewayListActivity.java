@@ -21,6 +21,7 @@ import com.kaadas.lock.adapter.AddZigbeeBindGatewayAdapter;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.bean.deviceAdd.AddZigbeeBindGatewayBean;
 import com.kaadas.lock.mvp.presenter.deviceaddpresenter.DeviceGatewayBindListPresenter;
+import com.kaadas.lock.publiclibrary.bean.ServerGatewayInfo;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.GetBindGatewayListResult;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.GwWiFiBaseInfo;
 import com.kaadas.lock.utils.KeyConstants;
@@ -160,14 +161,14 @@ DeviceBindGatewayListActivity extends BaseActivity<DeviceGatewayBindListView, De
     }
 
     @Override
-    public void getGatewayBindList(List<GetBindGatewayListResult.GatewayInfo> bindGatewayList) {
+    public void getGatewayBindList(List<ServerGatewayInfo> bindGatewayList) {
         LogUtils.e("getGatewayBindList","getGatewayBindList请求成功");
         if (refresh!=null){
             refresh.finishRefresh();
         }
             mList.clear();
             if (bindGatewayList!=null&&bindGatewayList.size()>0){
-                for (GetBindGatewayListResult.GatewayInfo bindGatewayItem:bindGatewayList){
+                for (ServerGatewayInfo bindGatewayItem:bindGatewayList){
                     AddZigbeeBindGatewayBean addZigbeeBindGatewayBean=new AddZigbeeBindGatewayBean();
                     addZigbeeBindGatewayBean.setNickName(bindGatewayItem.getDeviceNickName());
                     addZigbeeBindGatewayBean.setAdminId(bindGatewayItem.getAdminName());

@@ -16,6 +16,7 @@ import com.kaadas.lock.bean.deviceAdd.AddZigbeeDetailItemBean;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.mvp.presenter.deviceaddpresenter.DeviceZigBeeDetailPresenter;
 import com.kaadas.lock.mvp.view.deviceaddview.DeviceZigBeeDetailView;
+import com.kaadas.lock.publiclibrary.bean.ServerGatewayInfo;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.GetBindGatewayListResult;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.LogUtils;
@@ -141,7 +142,7 @@ public class DeviceZigBeeDetailActivity extends BaseActivity<DeviceZigBeeDetailV
 
 
     @Override
-    public void getGatewayBindList(List<GetBindGatewayListResult.GatewayInfo> bindGatewayList) {
+    public void getGatewayBindList(List<ServerGatewayInfo> bindGatewayList) {
         if (bindGatewayList.size()>0){
             flag=true;
         }
