@@ -17,6 +17,7 @@ public class BatteryView extends View {
     private int width;
     private int height;
     private int mColor;
+    private int mBorderColor=0;
 
     public BatteryView(Context context) {
         super(context);
@@ -72,7 +73,11 @@ public class BatteryView extends View {
         paint.setStrokeWidth(strokeWidth);
         RectF r1 = new RectF(strokeWidth_2, strokeWidth_2, width - strokeWidth - strokeWidth_2, height - strokeWidth_2);
         //设置外边框颜色为黑色
-        paint.setColor(getResources().getColor(R.color.c999999));
+        if(mBorderColor==R.color.white){
+            paint.setColor(getResources().getColor(R.color.white));
+        }else{
+            paint.setColor(getResources().getColor(R.color.c999999));
+        }
         canvas.drawRect(r1, paint);
         paint.setStrokeWidth(0);
         paint.setStyle(Paint.Style.FILL);
@@ -80,26 +85,22 @@ public class BatteryView extends View {
         float offset = (width - strokeWidth * 2) * mPower / 100.f;
         RectF r2 = new RectF(strokeWidth, strokeWidth, offset, height - strokeWidth);
         //根据电池电量决定电池内矩形电量颜色
-    /*    if (mPower < 30) {
-            paint.setColor(Color.RED);
+        if (mColor==R.color.c999999){
+            paint.setColor(getResources().getColor(R.color.c999999));
+        }else if (mColor==R.color.c25F290){
+            paint.setColor(getResources().getColor(R.color.c25F290));
         }
-        if (mPower >= 30 && mPower < 50) {
-            paint.setColor(Color.BLUE);
-        }
-        if (mPower >= 50) {
-
-        }*/
-    if (mColor==R.color.c999999){
-        paint.setColor(getResources().getColor(R.color.c999999));
-    }else if (mColor==R.color.c25F290){
-        paint.setColor(getResources().getColor(R.color.c25F290));
-    }
         LogUtils.e(mColor+"mColor");
         canvas.drawRect(r2, paint);
         //画电池头
         RectF r3 = new RectF(width - strokeWidth, height * 0.25f, width, height * 0.75f);
-        //设置电池头颜色为黑色
-        paint.setColor(getResources().getColor(R.color.c999999));
+        //设置电池头颜色为灰色
+
+        if(mBorderColor==R.color.white){
+            paint.setColor(getResources().getColor(R.color.white));
+        }else{
+            paint.setColor(getResources().getColor(R.color.c999999));
+        }
         canvas.drawRect(r3, paint);
     }
 
@@ -148,6 +149,16 @@ public class BatteryView extends View {
     public void setColor(int color) {
         this.mColor = color;
         invalidate();
+    }
+
+    /**
+     * 设置边框颜色
+     *
+     */
+    public void setBorderColor(int color){
+        this.mBorderColor=color;
+        invalidate();
+
     }
 
     /**

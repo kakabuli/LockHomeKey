@@ -51,14 +51,12 @@ public class GatewayActivity extends AppCompatActivity implements View.OnClickLi
         list = new ArrayList<>();
         DeviceDetailBean deviceDetailBean1 = new DeviceDetailBean();
         deviceDetailBean1.setDeviceName("凯迪仕智能门锁");
-        deviceDetailBean1.setDeviceType(1);
         deviceDetailBean1.setPower(60);
         deviceDetailBean1.setType(1);
         list.add(deviceDetailBean1);
 
         DeviceDetailBean deviceDetailBean2 = new DeviceDetailBean();
         deviceDetailBean2.setDeviceName("K9智能门锁");
-        deviceDetailBean2.setDeviceType(1);
         deviceDetailBean2.setPower(20);
         deviceDetailBean2.setType(2);
         list.add(deviceDetailBean2);
@@ -69,14 +67,12 @@ public class GatewayActivity extends AppCompatActivity implements View.OnClickLi
         list = new ArrayList<>();
         DeviceDetailBean deviceDetailBean1 = new DeviceDetailBean();
         deviceDetailBean1.setDeviceName("凯迪仕智能门锁");
-        deviceDetailBean1.setDeviceType(1);
         deviceDetailBean1.setPower(60);
         deviceDetailBean1.setType(1);
         list.add(deviceDetailBean1);
 
         DeviceDetailBean deviceDetailBean2 = new DeviceDetailBean();
         deviceDetailBean2.setDeviceName("K9智能门锁");
-        deviceDetailBean2.setDeviceType(1);
         deviceDetailBean2.setPower(20);
         deviceDetailBean2.setType(2);
         list.add(deviceDetailBean2);
