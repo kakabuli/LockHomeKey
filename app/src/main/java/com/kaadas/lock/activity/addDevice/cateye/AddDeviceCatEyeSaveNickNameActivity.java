@@ -1,10 +1,13 @@
 package com.kaadas.lock.activity.addDevice.cateye;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -12,8 +15,16 @@ import android.widget.ImageView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.kaadas.lock.R;
+import com.kaadas.lock.activity.MainActivity;
 import com.kaadas.lock.adapter.AddBluetoothPairSuccessAdapter;
 import com.kaadas.lock.bean.deviceAdd.AddBluetoothPairSuccessBean;
+import com.kaadas.lock.mvp.mvpbase.BaseActivity;
+import com.kaadas.lock.mvp.presenter.deviceaddpresenter.AddZigbeeLockSuccessSavePresenter;
+import com.kaadas.lock.mvp.view.deviceaddview.AddZigbeeLockSuccessSaveView;
+import com.kaadas.lock.utils.EditTextWatcher;
+import com.kaadas.lock.utils.KeyConstants;
+import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.ToastUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +33,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class AddDeviceCatEyeSaveNickNameActivity  extends AppCompatActivity implements BaseQuickAdapter.OnItemClickListener {
+public class AddDeviceCatEyeSaveNickNameActivity  extends BaseActivity<AddZigbeeLockSuccessSaveView, AddZigbeeLockSuccessSavePresenter<AddZigbeeLockSuccessSaveView>> implements BaseQuickAdapter.OnItemClickListener,AddZigbeeLockSuccessSaveView {
 
     @BindView(R.id.input_name)
     EditText inputName;
@@ -37,6 +48,9 @@ public class AddDeviceCatEyeSaveNickNameActivity  extends AppCompatActivity impl
 
     private AddBluetoothPairSuccessAdapter mAdapter;
 
+    private String deviceId;
+    private String gatewayId;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,6 +58,16 @@ public class AddDeviceCatEyeSaveNickNameActivity  extends AppCompatActivity impl
         ButterKnife.bind(this);
         initData();
         initView();
+        initListener();
+    }
+
+    @Override
+    protected AddZigbeeLockSuccessSavePresenter<AddZigbeeLockSuccessSaveView> createPresent() {
+        return new AddZigbeeLockSuccessSavePresenter<>();
+    }
+
+    private void initListener() {
+        inputName.addTextChangedListener(new EditTextWatcher(this,null,inputName,50));
     }
 
     private void initData() {
@@ -60,6 +84,10 @@ public class AddDeviceCatEyeSaveNickNameActivity  extends AppCompatActivity impl
         mList.add(little_brother);
         mList.add(sister);
         mList.add(other);
+
+        Intent intent=getIntent();
+        deviceId=intent.getStringExtra(KeyConstants.DEVICE_ID);
+        gatewayId=intent.getStringExtra(KeyConstants.GATEWAY_ID);
     }
 
     private void initView() {
@@ -99,9 +127,48 @@ public class AddDeviceCatEyeSaveNickNameActivity  extends AppCompatActivity impl
         switch (view.getId()) {
             case R.id.save:
                 //保存
-
+                String name=inputName.getText().toString().trim();
+                if (TextUtils.isEmpty(name)){
+                    ToastUtil.getInstance().showShort(getString(R.string.nickname_not_null));
+                    return;
+                }
+                if (!TextUtils.isEmpty(deviceId)&&!TextUtils.isEmpty(gatewayId)){
+                    mPresenter.updateZigbeeLockName(gatewayId,deviceId,name);
+                }else{
+                    ToastUtil.getInstance().showShort(R.string.gateway_or_device_null);
+                }
 
                 break;
         }
+    }
+
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            return isCosumenBackKey();
+        }
+        return false;
+    }
+
+    private boolean isCosumenBackKey() {
+        Intent backIntent=new Intent(this, MainActivity.class);
+        startActivity(backIntent);
+        return true;
+    }
+
+    @Override
+    public void updateDevNickNameSuccess() {
+        Intent backIntent=new Intent(this, MainActivity.class);
+        startActivity(backIntent);
+    }
+
+    @Override
+    public void updateDevNickNameFail() {
+        ToastUtil.getInstance().showShort(R.string.update_nickname_fail);
+    }
+
+    @Override
+    public void updateDevNickNameThrowable(Throwable throwable) {
+        LogUtils.e("修改名称出现异常"+throwable.getMessage());
     }
 }

@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -22,6 +23,7 @@ import com.kaadas.lock.activity.addDevice.DeviceBindGatewayListActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.mvp.presenter.deviceaddpresenter.AddCatEyePresenter;
 import com.kaadas.lock.mvp.view.deviceaddview.IAddCatEyeView;
+import com.kaadas.lock.publiclibrary.mqtt.eventbean.DeviceOnLineBean;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 
@@ -55,6 +57,8 @@ public class AddDeviceCatEyeThirdActivity extends BaseActivity<IAddCatEyeView, A
     private String deviceMac;
     private String gwId;
 
+    private String gatewayId; //猫眼添加成功之后
+    private String deviceId;  //猫眼添加成功之后的网关id
     static {
         System.loadLibrary("HisiLink");
     }
@@ -90,17 +94,22 @@ public class AddDeviceCatEyeThirdActivity extends BaseActivity<IAddCatEyeView, A
     @Override
     public void onBackPressed() {
         startActivity(new Intent(AddDeviceCatEyeThirdActivity.this,DeviceBindGatewayListActivity.class));
-        finish();
     }
 
     //猫眼配置结果
     private void pairCatEyeResult(Boolean flag) {
         if (flag) {
-            Intent successIntent = new Intent(this, AddDeviceCatEyeSuccessActivity.class);
-            startActivity(successIntent);
+            if (!TextUtils.isEmpty(gatewayId)&&!TextUtils.isEmpty(deviceId)){
+                Intent successIntent = new Intent(this, AddDeviceCatEyeSuccessActivity.class);
+                successIntent.putExtra(KeyConstants.GATEWAY_ID,gatewayId);
+                successIntent.putExtra(KeyConstants.DEVICE_ID,deviceId);
+                startActivity(successIntent);
+                finish();
+            }
         } else {
             Intent failIntent = new Intent(this, AddDeviceCatEyeFailActivity.class);
             startActivity(failIntent);
+            finish();
         }
     }
 
@@ -145,7 +154,9 @@ public class AddDeviceCatEyeThirdActivity extends BaseActivity<IAddCatEyeView, A
     }
 
     @Override
-    public void cateEyeJoinSuccess() {
+    public void cateEyeJoinSuccess(DeviceOnLineBean deviceOnLineBean) {
+        gatewayId=deviceOnLineBean.getGwId();
+        deviceId=deviceOnLineBean.getDeviceId();
         pairCatEyeResult(true);
     }
 

@@ -4,9 +4,9 @@ import android.support.annotation.Nullable;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
-import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.bean.DeviceDetailBean;
+import com.kaadas.lock.utils.BatteryView;
 
 import java.util.List;
 
@@ -22,37 +22,38 @@ public class DeviceDetailAdapter extends BaseQuickAdapter<DeviceDetailBean, Base
         int power=item.getPower();
         helper.setText(R.id.device_name,item.getDeviceName());
         int type=item.getType();
+        int lineStatus=item.getLineStatus();
+        BatteryView batteryView= helper.getView(R.id.horizontalBatteryView);
         if (type==1){
-            helper.setImageResource(R.id.device_type_image,R.mipmap.bluetooth_disconnenction);
-        }else{
-            helper.setImageResource(R.id.device_type_image,R.mipmap.wifi_disconnect);
-        }
-        int imgResId = -1;
-        if (power!=-1){
-            if (power > 100) {
-                power = 100;
-            }
-            if (power <= 5) {
-                imgResId = R.mipmap.device_power_0;
-            } else if (power <= 20) {
-                imgResId = R.mipmap.device_power_20;
-            } else if (power <= 40) {
-                imgResId = R.mipmap.device_power_40;
-            } else if (power <= 60) {
-                imgResId = R.mipmap.device_power_60;
-                //        } else if (power <= 100) {
-            } else if (power<=80){
-                imgResId = R.mipmap.device_power_80;
+            if (lineStatus==0){
+                helper.setImageResource(R.id.device_type_image,R.mipmap.bluetooth_disconnenction);
+                batteryView.setColor(R.color.cD6D6D6);
             }else{
-                imgResId=R.mipmap.device_power_100;
+                helper.setImageResource(R.id.device_type_image,R.mipmap.bluetooth_connection);
+                batteryView.setColor(R.color.c25F290);
             }
-        }else{
-            imgResId = R.mipmap.device_power_100;
+
+            if (power>=0){
+                batteryView.setPower(power);
+            }
+
+        }else {
+            if (lineStatus==0){
+                helper.setImageResource(R.id.device_type_image,R.mipmap.wifi_disconnect);
+                batteryView.setColor(R.color.cD6D6D6);
+            }else{
+                helper.setImageResource(R.id.device_type_image,R.mipmap.wifi_connect);
+                batteryView.setColor(R.color.c25F290);
+            }
+            batteryView.setPower(power);
+
         }
-        if (imgResId != -1) {
-            helper.setImageResource(R.id.device_power_image,imgResId);
-            helper.setText(R.id.device_power_text,power+"%");
-        }
+
+        ;
+        helper.setText(R.id.device_power_text,power+"%");
+
+
+
 
 
     }

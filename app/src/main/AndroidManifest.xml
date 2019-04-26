@@ -303,6 +303,11 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait"></activity>
         <activity
+            android:name=".activity.addDevice.cateye.AddDeviceCatEyeSaveNickNameActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan"></activity>
+        <activity
             android:name=".activity.addDevice.cateye.AddDeviceCatEyeFailActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"></activity>
