@@ -1,5 +1,7 @@
 package com.kaadas.lock.publiclibrary.mqtt.publishresultbean;
 
+import android.text.TextUtils;
+
 import com.kaadas.lock.bean.HomeShowBean;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.publiclibrary.bean.CateEyeInfo;
@@ -269,12 +271,17 @@ public class AllBindDevices {
 //            homeShowBeans.add(new HomeShowBean(HomeShowBean.TYPE_GATEWAY, gwListBean.getDeviceSN(), gwListBean.getDeviceNickName(), new GatewayInfo(new ServerGatewayInfo(gwListBean))));
                 List<ServerGwDevice> deviceList = gwListBean.getDeviceList();
                 for (ServerGwDevice serverGwDevice : deviceList) {
+                    String nickName = serverGwDevice.getNickName();
+                    if (TextUtils.isEmpty(nickName)){
+                        nickName = serverGwDevice.getDeviceId();
+                    }
                     if ("kdscateye".equalsIgnoreCase(serverGwDevice.getDevice_type())) {
                         homeShowBeans.add(new HomeShowBean(HomeShowBean.TYPE_CAT_EYE, serverGwDevice.getDeviceId(),
-                                serverGwDevice.getNickName(), new CateEyeInfo(gwListBean.getDeviceSN(), serverGwDevice)));
+                                nickName, new CateEyeInfo(gwListBean.getDeviceSN(), serverGwDevice)));
                     } else {
+
                         homeShowBeans.add(new HomeShowBean(HomeShowBean.TYPE_GATEWAY_LOCK, serverGwDevice.getDeviceId(),
-                                serverGwDevice.getNickName(), new CateEyeInfo(gwListBean.getDeviceSN(), serverGwDevice)));
+                                nickName, new CateEyeInfo(gwListBean.getDeviceSN(), serverGwDevice)));
                     }
 
                 }

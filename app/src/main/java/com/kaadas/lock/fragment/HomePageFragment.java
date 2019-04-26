@@ -89,7 +89,8 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
 //        }
         AllBindDevices allBindDevices = MyApplication.getInstance().getAllBindDevices();
         if (allBindDevices != null) {
-            initData(allBindDevices.getHomeShow());
+            devices = allBindDevices.getHomeShow();
+            initData(devices);
         }
         return view;
     }
@@ -99,10 +100,6 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
         return new HomePreseneter<>();
     }
 
-    public void onDeviceUpdate() {  //当有新的设备过来时
-
-
-    }
 
     public void initData(final List<HomeShowBean> devices) {
         if (devices == null) {
@@ -380,7 +377,13 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
 
     @Override
     public void onDeviceRefresh(AllBindDevices allBindDevices) {
-        homeShow = allBindDevices.getHomeShow();
-        initData(homeShow);
+        if (allBindDevices !=null){
+            devices = allBindDevices.getHomeShow();
+            initData(devices);
+        }else {
+            initData(null);
+        }
+
+
     }
 }
