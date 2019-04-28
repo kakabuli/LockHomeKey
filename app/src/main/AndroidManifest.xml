@@ -573,6 +573,8 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"></activity>
         <service android:name="com.kaadas.lock.publiclibrary.ble.BleService" />
+
+        <service android:name="com.kaadas.lock.linphonenew.LinphoneService" />
     </application>
 
 </manifest>

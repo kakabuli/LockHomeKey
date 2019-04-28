@@ -36,6 +36,8 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter<IMainVie
     @BindView(R.id.home_view_pager)
     NoScrollViewPager homeViewPager;
     private List<Fragment> fragments = new ArrayList<>();
+    private boolean isOnBackground = false;
+    private static MainActivity instance;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +52,7 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter<IMainVie
         fragments.add(new DeviceFragment());
         fragments.add(new PersonalCenterFragment());
 
-
+        instance = this;
 
         homeViewPager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager()) {
             @Override
@@ -88,4 +90,27 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter<IMainVie
                 break;
         }
     }
+
+
+    public boolean isOnBackground() {
+        return isOnBackground;
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        isOnBackground = false;
+    }
+
+    public static final boolean isInstanciated() {
+        return instance != null;
+    }
+
+
+    public static final MainActivity instance() {
+        if (instance != null)
+            return instance;
+        throw new RuntimeException("LinphoneActivity not instantiated yet");
+    }
+
 }

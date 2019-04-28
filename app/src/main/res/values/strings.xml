@@ -662,4 +662,13 @@
     <string name="connect_device">连接设备</string>
     <string name="no_find_device">未找到设备</string>
     <string name="refresh_data_fail">刷新失败，请稍后再试！</string>
+    <string name="return_code_409">设备正忙</string>
+    <string name="push_type">firebase</string>
+    <string name="push_sender_id">929724111839</string><!--firebase 929724111839 !! gcm 622464153529 -->
+    <string name="unknown_incoming_call_name">Unknown</string>
+    <string name="default_domain">sip.linphone.org</string><!-- Set the default domain used for account creation/addresses -->
+    <string name="ok">下载成功</string>
+    <string name="today_date_format">HH:mm</string>
+    <string name="notification_service_channel_id">linphone_notification_service_id</string>
+    <string name="notification_channel_id">linphone_notification_id</string>
 </resources>

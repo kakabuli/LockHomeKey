@@ -39,6 +39,7 @@ import com.uuzuche.lib_zxing.activity.ZXingLibrary;
 
 
 import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.linphone.core.LinphoneCore;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -199,6 +200,14 @@ public class MyApplication extends Application {
         }, Context.BIND_AUTO_CREATE);
     }
 
+
+    /**
+     * 初始化linphone服务
+     */
+    private void initLinphoneService() {
+
+
+    }
 
     public MqttService getMqttService() {
         return mqttService;
@@ -436,7 +445,7 @@ public class MyApplication extends Application {
                         }
                         String payload = mqttData.getPayload();
                         allBindDevices = new Gson().fromJson(payload, AllBindDevices.class);
-                        if (allBindDevices!=null){
+                        if (allBindDevices != null) {
                             getDevicesFromServer.onNext(allBindDevices);
                         }
 
@@ -448,9 +457,6 @@ public class MyApplication extends Application {
                     }
                 });
     }
-
-
-
 
 
     /**
@@ -473,5 +479,46 @@ public class MyApplication extends Application {
         return getDevicesFromServer;
     }
 
+
+    private long isComingTime;
+
+    /**
+     * 获取  呼进来的时间
+     *
+     * @return
+     */
+    public long getIsComingTime() {
+        return isComingTime;
+    }
+
+    public void setIsComingTime(long isComingTime) {
+        this.isComingTime = isComingTime;
+    }
+
+
+    private int linphone_port;
+
+    /**
+     * 获取 linphone的端口号
+     * @return
+     */
+    public int getLinphone_port() {
+        return linphone_port;
+    }
+
+    public void setLinphone_port(int linphone_port) {
+        this.linphone_port = linphone_port;
+    }
+
+
+   private boolean isVideoActivityRun=false;
+
+    public boolean isVideoActivityRun() {
+        return isVideoActivityRun;
+    }
+
+    public void setVideoActivityRun(boolean videoActivityRun) {
+        isVideoActivityRun = videoActivityRun;
+    }
 
 }
