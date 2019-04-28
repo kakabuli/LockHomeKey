@@ -681,4 +681,8 @@
     <string name="set_success">设置成功</string>
     <string name="set_failed">设置失败</string>
     <string name="upload_device_name">正在上传设备名称</string>
+    <string name="delete_lock_pwd_fail">删除锁上指纹失败</string>
+    <string name="lock_no_this_finger">锁上没有此指纹，请同步！</string>
+    <string name="get_lock_finger_failed">获取锁上指纹失败！</string>
+    <string name="please_connect_lock">锁设备未连接</string>
 </resources>
