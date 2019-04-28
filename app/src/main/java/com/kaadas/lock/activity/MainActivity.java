@@ -44,13 +44,12 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter<IMainVie
         ButterKnife.bind(this);
         PermissionUtil.getInstance().requestPermission(PermissionUtil.getInstance().permission, this);
         rg.setOnCheckedChangeListener(this);
-        MyApplication.getInstance().getMqttService().mqttConnection();//连接mqtt
-
+        if (MyApplication.getInstance().getMqttService().getMqttClient()==null||!MyApplication.getInstance().getMqttService().getMqttClient().isConnected()){
+            MyApplication.getInstance().getMqttService().mqttConnection(); //连接mqtt
+        }
         fragments.add(new HomePageFragment());
         fragments.add(new DeviceFragment());
         fragments.add(new PersonalCenterFragment());
-
-
 
         homeViewPager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager()) {
             @Override

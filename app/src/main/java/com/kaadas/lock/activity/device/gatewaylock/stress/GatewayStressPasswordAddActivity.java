@@ -1,29 +1,21 @@
-package com.kaadas.lock.fragment;
-
+package com.kaadas.lock.activity.device.gatewaylock.stress;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.kaadas.lock.R;
-import com.kaadas.lock.activity.device.gatewaylock.password.GatewayPasswordShareActivity;
 import com.kaadas.lock.adapter.ShiXiaoNameAdapter;
 import com.kaadas.lock.bean.ShiXiaoNameBean;
-import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.StringUtil;
 
 import java.util.ArrayList;
@@ -33,10 +25,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
- * Created by David
+ * Created by David on 2019/4/25
  */
-
-public class GatewayPasswordTimeFragment extends Fragment implements BaseQuickAdapter.OnItemClickListener, View.OnClickListener, RadioGroup.OnCheckedChangeListener {
+public class GatewayStressPasswordAddActivity extends AppCompatActivity implements View.OnClickListener, BaseQuickAdapter.OnItemClickListener {
     @BindView(R.id.recycleview)
     RecyclerView recyclerView;
     @BindView(R.id.et_name)
@@ -50,30 +41,21 @@ public class GatewayPasswordTimeFragment extends Fragment implements BaseQuickAd
     TextView btnRandomGeneration;
     @BindView(R.id.btn_confirm_generation)
     Button btnConfirmGeneration;
-    @BindView(R.id.rb_one)
-    RadioButton rbOne;
-    @BindView(R.id.rb_two)
-    RadioButton rbTwo;
-    @BindView(R.id.rb_three)
-    RadioButton rbThree;
-    @BindView(R.id.rg)
-    RadioGroup rg;
-    @BindView(R.id.ll_custom)
-    LinearLayout llCustom;
-    int timeStatus = 0;//时间策略
+    @BindView(R.id.iv_back)
+    ImageView ivBack;
+    @BindView(R.id.tv_content)
+    TextView tvContent;
 
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        if (mView == null) {
-            mView = inflater.inflate(R.layout.fragment_gateway_password_time, container, false);
-        }
-        ButterKnife.bind(this, mView);
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_gateway_stress_password_add);
+        ButterKnife.bind(this);
         initRecycleview();
+        tvContent.setText(getText(R.string.add_password));
+        ivBack.setOnClickListener(this);
         btnRandomGeneration.setOnClickListener(this);
         btnConfirmGeneration.setOnClickListener(this);
-        rg.setOnCheckedChangeListener(this);
-        return mView;
     }
 
 
@@ -84,8 +66,10 @@ public class GatewayPasswordTimeFragment extends Fragment implements BaseQuickAd
         list.add(new ShiXiaoNameBean(getString(R.string.small_di_di), false));
         list.add(new ShiXiaoNameBean(getString(R.string.elder_sister), false));
         list.add(new ShiXiaoNameBean(getString(R.string.rests), false));
+
+
         shiXiaoNameAdapter = new ShiXiaoNameAdapter(list);
-        recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 6));
+        recyclerView.setLayoutManager(new GridLayoutManager(this, 6));
         recyclerView.setAdapter(shiXiaoNameAdapter);
         shiXiaoNameAdapter.setOnItemClickListener(this);
     }
@@ -103,10 +87,6 @@ public class GatewayPasswordTimeFragment extends Fragment implements BaseQuickAd
         shiXiaoNameAdapter.notifyDataSetChanged();
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-    }
 
     @Override
     public void onClick(View v) {
@@ -118,26 +98,11 @@ public class GatewayPasswordTimeFragment extends Fragment implements BaseQuickAd
                 etPassword.setSelection(password.length());
                 break;
             case R.id.btn_confirm_generation:
-                intent = new Intent(getActivity(), GatewayPasswordShareActivity.class);
+                intent = new Intent(this, GatewayStressPasswordShareActivity.class);
                 startActivity(intent);
                 break;
-        }
-    }
-
-    @Override
-    public void onCheckedChanged(RadioGroup group, int checkedId) {
-        switch (checkedId) {
-            case R.id.rb_one:
-                llCustom.setVisibility(View.GONE);
-                timeStatus = KeyConstants.YONG_JIU;
-                break;
-            case R.id.rb_two:
-                llCustom.setVisibility(View.GONE);
-                timeStatus = KeyConstants.ONE_DAY;
-                break;
-            case R.id.rb_three:
-                timeStatus = KeyConstants.CUSTOM;
-                llCustom.setVisibility(View.VISIBLE);
+            case R.id.iv_back:
+                finish();
                 break;
         }
     }

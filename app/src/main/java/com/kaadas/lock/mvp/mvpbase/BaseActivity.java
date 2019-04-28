@@ -1,6 +1,9 @@
 package com.kaadas.lock.mvp.mvpbase;
 
 import android.content.Context;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -13,6 +16,7 @@ import android.widget.EditText;
 
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.utils.LoadingDialog;
+import com.kaadas.lock.utils.networkListenerutil.NetWorkChangReceiver;
 
 
 import butterknife.ButterKnife;
@@ -29,12 +33,23 @@ public abstract class BaseActivity<T extends IBaseView, V
     private Handler bHandler = new Handler();
     private Unbinder unbinder;
 
+    private boolean isRegistered = false;
+    private NetWorkChangReceiver netWorkChangReceiver;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mPresenter = createPresent();
         mPresenter.attachView((T) this);
         MyApplication.getInstance().addActivity(this);
+
+        //注册网络状态监听广播
+        netWorkChangReceiver = new NetWorkChangReceiver();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION);
+        filter.addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION);
+        filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(netWorkChangReceiver, filter);
+        isRegistered = true;
     }
 
 
@@ -52,6 +67,10 @@ public abstract class BaseActivity<T extends IBaseView, V
         //销毁时，删除回调，防止内存泄漏
         bHandler.removeCallbacksAndMessages(null);
         MyApplication.getInstance().removeActivity(this);
+        //解绑
+        if (isRegistered) {
+            unregisterReceiver(netWorkChangReceiver);
+        }
         unbinder.unbind();
         super.onDestroy();
     }

@@ -1,6 +1,8 @@
 package com.kaadas.lock.publiclibrary.bean;
 
-public class GwLockInfo {
+import java.io.Serializable;
+
+public class GwLockInfo implements Serializable {
 
     //网关锁绑定的网关的UUID
     String gwID;

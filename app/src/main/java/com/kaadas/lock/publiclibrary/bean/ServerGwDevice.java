@@ -1,6 +1,8 @@
 package com.kaadas.lock.publiclibrary.bean;
 
-public class ServerGwDevice {
+import java.io.Serializable;
+
+public class ServerGwDevice implements Serializable {
     /**
      * SW : orangecat-1.3.7
      * deviceId : 0C9A42B78CF5
