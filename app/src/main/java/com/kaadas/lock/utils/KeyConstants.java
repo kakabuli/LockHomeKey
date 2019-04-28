@@ -224,7 +224,10 @@ public class KeyConstants {
 
     //设备的id
     public static final String DEVICE_ID="deviceId";
-
+    //猫眼
+    public static final String CATEYE="cateye";
+    //网关锁
+    public static final String GATEWAY_LOCK="gateway_lock";
 
     //开锁
     //已反锁

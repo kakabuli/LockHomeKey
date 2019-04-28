@@ -7,8 +7,7 @@ public class GwLockInfo {
     //服务器返回的信息
     ServerGwDevice serverInfo;
 
-    //网关在线离线状态
-    boolean isOnLine;
+
 
     public GwLockInfo() {
     }
@@ -34,11 +33,5 @@ public class GwLockInfo {
         this.serverInfo = serverInfo;
     }
 
-    public boolean isOnLine() {
-        return isOnLine;
-    }
 
-    public void setOnLine(boolean onLine) {
-        isOnLine = onLine;
-    }
 }
