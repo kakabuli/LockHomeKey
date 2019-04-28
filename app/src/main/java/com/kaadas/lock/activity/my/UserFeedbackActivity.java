@@ -126,6 +126,7 @@ public class UserFeedbackActivity extends BaseActivity<IUserFeedbackView, UserFe
     @Override
     public void userFeedbackSubmitSuccess() {
         ToastUtil.getInstance().showShort(R.string.submit_success);
+        finish();
     }
 
     @Override
