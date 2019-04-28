@@ -8,6 +8,8 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,7 +42,11 @@ import com.kaadas.lock.publiclibrary.bean.ServerGatewayInfo;
 import com.kaadas.lock.publiclibrary.mqtt.eventbean.DeviceOnLineBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.AllBindDevices;
 import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.SPUtils;
+import com.kaadas.lock.utils.ToastUtil;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -78,10 +84,10 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
 
     private DeviceDetailAdapter deviceDetailAdapter;
 
-    private List<DeviceDetailBean> mDeviceList;
+    private List<DeviceDetailBean> mDeviceList=new ArrayList<>();
     boolean bluetoothAuthorization = false;
     boolean gatewayAuthorization = false;
-
+    private  List<HomeShowBean> homeShowBeanList;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -95,9 +101,12 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
         }
         unbinder = ButterKnife.bind(this, mView);
         deviceRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
-        initData();
-        initView();
-        initAdapter();
+        AllBindDevices allBindDevices = MyApplication.getInstance().getAllBindDevices();
+        if (allBindDevices != null) {
+            homeShowBeanList = allBindDevices.getHomeShow(true);
+            initData(homeShowBeanList);
+        }
+        initRefresh();
         return mView;
     }
 
@@ -109,9 +118,11 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+    }
 
-
-
+    @Override
+    public void onStart() {
+        super.onStart();
 
     }
 
@@ -124,21 +135,32 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
 
     }
 
-    private void initData() {
-        mDeviceList = new ArrayList<>();
-        AllBindDevices allBindDevices=MyApplication.getInstance().getAllBindDevices();
-        if (allBindDevices!=null){
-            List<HomeShowBean> homeShowBeanList= allBindDevices.getHomeShow(true);
+    private void initData(List<HomeShowBean> homeShowBeanList) {
+        mDeviceList.clear();
+        if (homeShowBeanList!=null){
             if (homeShowBeanList.size()>0){
-                flag=true;
+                noDeviceLayout.setVisibility(View.GONE);
+                refresh.setVisibility(View.VISIBLE);
+                for (HomeShowBean homeShowBean:homeShowBeanList){
+                    LogUtils.e(homeShowBeanList.size()+"");
+                    getDifferentTypeDevice(homeShowBean);
+                }
+                if (deviceDetailAdapter!=null){
+                    deviceDetailAdapter.notifyDataSetChanged();
+                }else{
+                    initAdapter();
+                }
+            }else{
+                noDeviceLayout.setVisibility(View.VISIBLE);
+                refresh.setVisibility(View.GONE);
             }
-            for (HomeShowBean homeShowBean:homeShowBeanList){
-                 for (int i=0;i<5;i++){
-                     getDifferentTypeDevice(homeShowBean);
-                 }
-
-            }
+        }else{
+            noDeviceLayout.setVisibility(View.VISIBLE);
+            refresh.setVisibility(View.GONE);
         }
+
+
+
     }
 
     private void getDifferentTypeDevice(HomeShowBean showBean) {
@@ -152,16 +174,16 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                 catEye.setDeviceName(showBean.getDeviceNickName());
                 catEye.setEvent_str(eventStr);
                 catEye.setType(showBean.getDeviceType());
-                catEye.setPower(10);
-
+                catEye.setPower(30);
                 mDeviceList.add(catEye);
+
                 break;
             case 1:
                 //网关锁
                 GwLockInfo lockInfo= (GwLockInfo) showBean.getObject();
                 String event=lockInfo.getServerInfo().getEvent_str();
-                DeviceDetailBean lockBean=new DeviceDetailBean();
 
+                DeviceDetailBean lockBean=new DeviceDetailBean();
                 lockBean.setDeviceName(showBean.getDeviceNickName());
                 lockBean.setEvent_str(event);
                 lockBean.setType(showBean.getDeviceType());
@@ -175,9 +197,15 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                 ServerGatewayInfo serverGatewayInfo=gatewayInfo.getServerInfo();
                 DeviceDetailBean gatewayBean=new DeviceDetailBean();
                 gatewayBean.setDeviceName(serverGatewayInfo.getDeviceNickName());
-                //无电量
-                gatewayBean.setPower(-1);
-                gatewayBean.setEvent_str("online");
+                //网关无电量的设置
+                gatewayBean.setPower(0);
+                String status= (String) SPUtils.getProtect(serverGatewayInfo.getDeviceSN(),"");
+                LogUtils.e(status+"isOnLine"+serverGatewayInfo.getDeviceSN());
+                if (status.equals("online")){
+                    gatewayBean.setEvent_str("online");
+                }else if (status.equals("offline")){
+                    gatewayBean.setEvent_str("offline");
+                }
                 gatewayBean.setType(showBean.getDeviceType());
                 mDeviceList.add(gatewayBean);
                 break;
@@ -204,14 +232,16 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
 
     }
 
-    private void initView() {
-        if (flag) {
-            noDeviceLayout.setVisibility(View.GONE);
-            refresh.setVisibility(View.VISIBLE);
-        } else {
-            noDeviceLayout.setVisibility(View.VISIBLE);
-            refresh.setVisibility(View.GONE);
-        }
+
+    private void initRefresh() {
+        refresh.setEnableLoadMore(false);
+        refresh.setOnRefreshListener(new OnRefreshListener() {
+            @Override
+            public void onRefresh(@NonNull RefreshLayout refreshLayout) {
+                //刷新页面
+                mPresenter.refreshData();
+            }
+        });
 
     }
 
@@ -269,9 +299,45 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
     @Override
     public void onDeviceRefresh(AllBindDevices allBindDevices) {
         //数据更新了
+        if (allBindDevices !=null){
+            homeShowBeanList = allBindDevices.getHomeShow(true);
+            initData(homeShowBeanList);
+        }else {
+            initData(null);
+        }
 
+    }
 
+    @Override
+    public void deviceDataRefreshSuccess(AllBindDevices allBindDevices) {
+        refresh.finishRefresh();
+        //刷新页面成功
+        if (mDeviceList!=null){
+            if (mDeviceList.size()>0){
+                mDeviceList.clear();
+            }
+            if (allBindDevices!=null){
+                List<HomeShowBean> homeShowBeanRefreshList= allBindDevices.getHomeShow(true);
+                initData(homeShowBeanRefreshList);
+            }
+        }
 
 
     }
+
+    @Override
+    public void deviceDataRefreshFail() {
+        LogUtils.e("刷新页面失败");
+        refresh.finishRefresh();
+        ToastUtil.getInstance().showShort(R.string.refresh_data_fail);
+    }
+
+    @Override
+    public void deviceDataRefreshThrowable() {
+        //刷新页面异常
+        refresh.finishRefresh();
+        LogUtils.e("刷新页面异常");
+    }
+
+
 }

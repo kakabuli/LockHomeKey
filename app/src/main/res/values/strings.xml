@@ -661,4 +661,5 @@
     <string name="look_back">回放</string>
     <string name="connect_device">连接设备</string>
     <string name="no_find_device">未找到设备</string>
+    <string name="refresh_data_fail">刷新失败，请稍后再试！</string>
 </resources>

@@ -98,6 +98,7 @@ public class AddZigbeeLockPresenter<T> extends BasePresenter<IAddZigbeeLockView>
                                     if (mViewRef.get()!=null){
                                         LogUtils.e("添加网关成功");
                                         mViewRef.get().addZigbeeSuccess(deviceOnLineBean);
+                                        MyApplication.getInstance().getAllDevicesByMqtt(true);
                                         toDisposable(addZigbeeEvent);
                                     }
 

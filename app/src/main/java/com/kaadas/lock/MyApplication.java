@@ -188,7 +188,7 @@ public class MyApplication extends Application {
                 mqttService = binder.getService();
                 LogUtils.e("attachView service启动" + (mqttService == null));
                 if (mqttService != null && !TextUtils.isEmpty(uid)) {
-                    mqttService.mqttConnection();
+                    //mqttService.mqttConnection();
                 }
             }
 
@@ -450,6 +450,9 @@ public class MyApplication extends Application {
     }
 
 
+
+
+
     /**
      * 获取缓存的设备
      */
@@ -461,7 +464,7 @@ public class MyApplication extends Application {
     /**
      * 从服务器获取到设备
      */
-    private PublishSubject<AllBindDevices> getDevicesFromServer = PublishSubject.create();
+    public PublishSubject<AllBindDevices> getDevicesFromServer = PublishSubject.create();
 
     /**
      *
