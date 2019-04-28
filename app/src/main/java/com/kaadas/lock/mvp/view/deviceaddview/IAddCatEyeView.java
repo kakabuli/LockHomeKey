@@ -1,6 +1,7 @@
 package com.kaadas.lock.mvp.view.deviceaddview;
 
 import com.kaadas.lock.mvp.mvpbase.IBaseView;
+import com.kaadas.lock.publiclibrary.mqtt.eventbean.DeviceOnLineBean;
 
 public interface IAddCatEyeView extends IBaseView {
 
@@ -13,7 +14,7 @@ public interface IAddCatEyeView extends IBaseView {
     /**
      * 添加猫眼成功
      */
-    void cateEyeJoinSuccess();
+    void cateEyeJoinSuccess(DeviceOnLineBean deviceOnLineBean);
 
     /**
      * 添加猫眼失败

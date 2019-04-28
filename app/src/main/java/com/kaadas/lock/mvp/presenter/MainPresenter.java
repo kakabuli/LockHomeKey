@@ -36,5 +36,10 @@ public class MainPresenter<T> extends BasePresenter<IMainView> {
         compositeDisposable.add(disposable);
     }
 
+    @Override
+    public void attachView(IMainView view) {
+        super.attachView(view);
+        getPublishNotify();
 
+    }
 }

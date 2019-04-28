@@ -10,14 +10,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.kaadas.lock.R;
-
-import com.kaadas.lock.activity.device.gateway.card.GatewayDoorCardManagerActivity;
-import com.kaadas.lock.activity.device.gateway.fingerprint.GatewayFingerprintManagerActivity;
 import com.kaadas.lock.activity.device.gateway.more.GatewayMoreActivity;
 import com.kaadas.lock.activity.device.gateway.password.GatewayPasswordManagerActivity;
 import com.kaadas.lock.activity.device.gateway.share.GatewaySharedDeviceManagementActivity;
 import com.kaadas.lock.activity.device.gateway.stress.GatewayStressPasswordManagerActivity;
 import com.kaadas.lock.bean.BluetoothLockFunctionBean;
+import com.kaadas.lock.utils.BatteryView;
 import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
 
@@ -38,15 +36,14 @@ public class GatewayLockFunctionActivity extends AppCompatActivity implements Vi
     @BindView(R.id.tv_type)
     TextView tvType;
     @BindView(R.id.iv_power)
-    ImageView ivPower;//电量图片
+    BatteryView ivPower;
+
     @BindView(R.id.tv_power)
     TextView tvPower;//电量大小
     @BindView(R.id.tv_date)
     TextView tvDate;//日期
     @BindView(R.id.ll_power)
     LinearLayout llPower;
-    //    @BindView(R.id.rv)
-//    RecyclerView rv;
     List<BluetoothLockFunctionBean> list = new ArrayList<>();
     @BindView(R.id.iv_one)
     ImageView ivOne;
@@ -80,28 +77,15 @@ public class GatewayLockFunctionActivity extends AppCompatActivity implements Vi
     TextView tvNumberFour;
     @BindView(R.id.ll_four)
     LinearLayout llFour;
-    @BindView(R.id.iv_five)
-    ImageView ivFive;
-    @BindView(R.id.tv_name_five)
-    TextView tvNameFive;
-    @BindView(R.id.tv_number_five)
-    TextView tvNumberFive;
-    @BindView(R.id.ll_five)
-    LinearLayout llFive;
-    @BindView(R.id.iv_six)
-    ImageView ivSix;
-    @BindView(R.id.tv_name_six)
-    TextView tvNameSix;
-    @BindView(R.id.tv_number_six)
-    TextView tvNumberSix;
-    @BindView(R.id.ll_six)
-    LinearLayout llSix;
+
+
     @BindView(R.id.tv_open_clock)
     TextView tvOpenClock;
     int lockStatus = -1;
     @BindView(R.id.iv_safe_protection)
     ImageView ivSafeProtection;
     boolean safeProtection = false;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -112,9 +96,8 @@ public class GatewayLockFunctionActivity extends AppCompatActivity implements Vi
         tvType.setText(getString(R.string.bluetooth_type) + " ");
         initData();
         initClick();
-        dealWithPower(100);
-        ivSafeProtection.setOnClickListener(this);
-//        initRecycleview();
+        dealWithPower(60);
+
     }
 
     private void initClick() {
@@ -122,9 +105,8 @@ public class GatewayLockFunctionActivity extends AppCompatActivity implements Vi
         llTwo.setOnClickListener(this);
         llThree.setOnClickListener(this);
         llFour.setOnClickListener(this);
-        llFive.setOnClickListener(this);
-        llSix.setOnClickListener(this);
         tvOpenClock.setOnClickListener(this);
+        ivSafeProtection.setOnClickListener(this);
     }
 
     public void changLockStatus() {
@@ -172,23 +154,27 @@ public class GatewayLockFunctionActivity extends AppCompatActivity implements Vi
     }
 
     private void initData() {
-        tvName.setText("jfjif");
+
+        //密码
+        tvName.setText("");
         ivOne.setImageResource(R.mipmap.bluetooth_password);
         tvNameOne.setText(R.string.password);
         tvNumberOne.setText(6 + getString(R.string.group));
-        ivTwo.setImageResource(R.mipmap.bluetooth_fingerprint);
-        tvNameTwo.setText(R.string.fingerprint);
-        tvNumberTwo.setText(5 + getString(R.string.ge));
-        ivThree.setImageResource(R.mipmap.bluetooth_card);
-        tvNameThree.setText(R.string.card);
-        tvNumberThree.setText(2 + getString(R.string.zhang));
-        ivFour.setImageResource(R.mipmap.bluetooth_share);
-        tvNameFour.setText(R.string.device_share);
-        tvNumberFour.setText(2 + getString(R.string.people));
-        ivFive.setImageResource(R.mipmap.stress_warn_icon);
-        tvNameFive.setText(getString(R.string.stress_warn));
-        ivSix.setImageResource(R.mipmap.bluetooth_more);
-        tvNameSix.setText(R.string.more);
+
+        //设备共享
+        ivTwo.setImageResource(R.mipmap.bluetooth_share);
+        tvNameTwo.setText(R.string.device_share);
+        tvNumberTwo.setText(2 + getString(R.string.people));
+
+
+        //胁迫警告
+        ivThree.setImageResource(R.mipmap.stress_warn_icon);
+        tvNameThree.setText(getString(R.string.stress_warn));
+
+        //更多
+        ivFour.setImageResource(R.mipmap.bluetooth_more);
+        tvNameFour.setText(R.string.more);
+
     }
 
     @Override
@@ -203,22 +189,14 @@ public class GatewayLockFunctionActivity extends AppCompatActivity implements Vi
                 startActivity(intent);
                 break;
             case R.id.ll_two:
-                intent = new Intent(this, GatewayFingerprintManagerActivity.class);
-                startActivity(intent);
-                break;
-            case R.id.ll_three:
-                intent = new Intent(this, GatewayDoorCardManagerActivity.class);
-                startActivity(intent);
-                break;
-            case R.id.ll_four:
                 intent = new Intent(this, GatewaySharedDeviceManagementActivity.class);
                 startActivity(intent);
                 break;
-            case R.id.ll_five:
+            case R.id.ll_three:
                 intent = new Intent(this, GatewayStressPasswordManagerActivity.class);
                 startActivity(intent);
                 break;
-            case R.id.ll_six:
+            case R.id.ll_four:
                 intent = new Intent(this, GatewayMoreActivity.class);
                 startActivity(intent);
                 break;
@@ -245,25 +223,10 @@ public class GatewayLockFunctionActivity extends AppCompatActivity implements Vi
             power = 100;
         }
         String lockPower = power + "%";
-        int imgResId = -1;
         tvPower.setText(lockPower);
-        if (power == 0) {
-            imgResId = R.mipmap.horization_power_0;
-        } else if (power <= 5) {
-            imgResId = R.mipmap.horization_power_1;
-        } else if (power <= 20) {
-            imgResId = R.mipmap.horization_power_2;
-        } else if (power <= 60) {
-            imgResId = R.mipmap.horization_power_3;
-        } else if (power <= 80) {
-            imgResId = R.mipmap.horization_power_4;
-//        } else if (power <= 100) {
-        } else {
-            imgResId = R.mipmap.horization_power_5;
-        }
-        if (imgResId != -1) {
-            ivPower.setImageResource(imgResId);
-        }
+        ivPower.setPower(power);
+        ivPower.setColor(R.color.c25F290);
+        ivPower.setBorderColor(R.color.white);
         //todo  读取电量时间
         long readDeviceInfoTime = System.currentTimeMillis();
         if (readDeviceInfoTime != -1) {

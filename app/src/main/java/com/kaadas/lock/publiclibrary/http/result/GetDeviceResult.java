@@ -14,7 +14,7 @@ public class GetDeviceResult extends BaseResult {
      * data : [{"_id":"5c70bd443c554639ea93cc89","device_name":"GI132231004","device_nickname":"GI132231004","devmac":"macadr2","open_purview":"3","is_admin":"1","center_latitude":"0","center_longitude":"0","circle_radius":"0","auto_lock":"0","password1":"123123","password2":"258258","model":"","createTime":1551426018}]
      */
 
-    private List<ServerDevice> data;
+    private List<ServerBleDevice> data;
 
     public String getCode() {
         return code;
@@ -32,11 +32,11 @@ public class GetDeviceResult extends BaseResult {
         this.msg = msg;
     }
 
-    public List<ServerDevice> getData() {
+    public List<ServerBleDevice> getData() {
         return data;
     }
 
-    public void setData(List<ServerDevice> data) {
+    public void setData(List<ServerBleDevice> data) {
         this.data = data;
     }
 

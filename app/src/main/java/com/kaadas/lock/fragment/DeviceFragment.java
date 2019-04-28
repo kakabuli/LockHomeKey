@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.addDevice.DeviceAddActivity;
 import com.kaadas.lock.activity.device.BluetoothLockAuthorizationActivity;
@@ -26,6 +27,19 @@ import com.kaadas.lock.activity.device.gateway.GatewayLockAuthorizationActivity;
 import com.kaadas.lock.activity.device.gateway.GatewayLockFunctionActivity;
 import com.kaadas.lock.adapter.DeviceDetailAdapter;
 import com.kaadas.lock.bean.DeviceDetailBean;
+import com.kaadas.lock.bean.HomeShowBean;
+import com.kaadas.lock.mvp.mvpbase.BaseFragment;
+import com.kaadas.lock.mvp.mvpbase.IBaseView;
+import com.kaadas.lock.mvp.presenter.DevicePresenter;
+import com.kaadas.lock.mvp.view.IDeviceView;
+import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
+import com.kaadas.lock.publiclibrary.bean.CateEyeInfo;
+import com.kaadas.lock.publiclibrary.bean.GatewayInfo;
+import com.kaadas.lock.publiclibrary.bean.GwLockInfo;
+import com.kaadas.lock.publiclibrary.bean.ServerGatewayInfo;
+import com.kaadas.lock.publiclibrary.mqtt.eventbean.DeviceOnLineBean;
+import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.AllBindDevices;
+import com.kaadas.lock.utils.LogUtils;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 
 import java.util.ArrayList;
@@ -40,7 +54,7 @@ import butterknife.Unbinder;
  * Created by asqw1 on 2018/3/14.
  */
 
-public class DeviceFragment extends Fragment implements BaseQuickAdapter.OnItemClickListener {
+public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<IDeviceView>> implements BaseQuickAdapter.OnItemClickListener,IDeviceView {
     @BindView(R.id.no_device_image)
     ImageView noDeviceImage;
 
@@ -60,7 +74,7 @@ public class DeviceFragment extends Fragment implements BaseQuickAdapter.OnItemC
 
     private Unbinder unbinder;
 
-    private Boolean flag = true;
+    private Boolean flag = false;
 
     private DeviceDetailAdapter deviceDetailAdapter;
 
@@ -81,40 +95,113 @@ public class DeviceFragment extends Fragment implements BaseQuickAdapter.OnItemC
         }
         unbinder = ButterKnife.bind(this, mView);
         deviceRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
+        initData();
+        initView();
+        initAdapter();
         return mView;
+    }
+
+    @Override
+    protected DevicePresenter<IDeviceView> createPresent() {
+        return new DevicePresenter<>();
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        initView();
-        initData();
-        initAdapter();
+
+
+
+
     }
 
     private void initAdapter() {
         if (mDeviceList != null) {
             deviceDetailAdapter = new DeviceDetailAdapter(mDeviceList);
             deviceRecycler.setAdapter(deviceDetailAdapter);
+            deviceDetailAdapter.setOnItemClickListener(this);
         }
-        deviceDetailAdapter.setOnItemClickListener(this);
+
     }
 
     private void initData() {
         mDeviceList = new ArrayList<>();
-        DeviceDetailBean deviceDetailBean1 = new DeviceDetailBean();
-        deviceDetailBean1.setDeviceName("凯迪仕智能门锁");
-        deviceDetailBean1.setDeviceType(1);
-        deviceDetailBean1.setPower(60);
-        deviceDetailBean1.setType(1);
-        mDeviceList.add(deviceDetailBean1);
+        AllBindDevices allBindDevices=MyApplication.getInstance().getAllBindDevices();
+        if (allBindDevices!=null){
+            List<HomeShowBean> homeShowBeanList= allBindDevices.getHomeShow(true);
+            if (homeShowBeanList.size()>0){
+                flag=true;
+            }
+            for (HomeShowBean homeShowBean:homeShowBeanList){
+                 for (int i=0;i<5;i++){
+                     getDifferentTypeDevice(homeShowBean);
+                 }
 
-        DeviceDetailBean deviceDetailBean2 = new DeviceDetailBean();
-        deviceDetailBean2.setDeviceName("K9智能门锁");
-        deviceDetailBean2.setDeviceType(1);
-        deviceDetailBean2.setPower(20);
-        deviceDetailBean2.setType(2);
-        mDeviceList.add(deviceDetailBean2);
+            }
+        }
+    }
+
+    private void getDifferentTypeDevice(HomeShowBean showBean) {
+        switch (showBean.getDeviceType()){
+            case 0:
+                //猫眼设备
+                CateEyeInfo cateEyeInfo= (CateEyeInfo) showBean.getObject();
+                String eventStr=cateEyeInfo.getServerInfo().getEvent_str();
+
+                DeviceDetailBean catEye=new DeviceDetailBean();
+                catEye.setDeviceName(showBean.getDeviceNickName());
+                catEye.setEvent_str(eventStr);
+                catEye.setType(showBean.getDeviceType());
+                catEye.setPower(10);
+
+                mDeviceList.add(catEye);
+                break;
+            case 1:
+                //网关锁
+                GwLockInfo lockInfo= (GwLockInfo) showBean.getObject();
+                String event=lockInfo.getServerInfo().getEvent_str();
+                DeviceDetailBean lockBean=new DeviceDetailBean();
+
+                lockBean.setDeviceName(showBean.getDeviceNickName());
+                lockBean.setEvent_str(event);
+                lockBean.setType(showBean.getDeviceType());
+                lockBean.setPower(60);
+
+                mDeviceList.add(lockBean);
+                break;
+            case 2:
+                //网关
+                GatewayInfo gatewayInfo= (GatewayInfo) showBean.getObject();
+                ServerGatewayInfo serverGatewayInfo=gatewayInfo.getServerInfo();
+                DeviceDetailBean gatewayBean=new DeviceDetailBean();
+                gatewayBean.setDeviceName(serverGatewayInfo.getDeviceNickName());
+                //无电量
+                gatewayBean.setPower(-1);
+                gatewayBean.setEvent_str("online");
+                gatewayBean.setType(showBean.getDeviceType());
+                mDeviceList.add(gatewayBean);
+                break;
+            case 3:
+                //蓝牙锁
+                BleLockInfo bleLockInfo= (BleLockInfo) showBean.getObject();
+
+                DeviceDetailBean bluetoothBean=new DeviceDetailBean();
+                bluetoothBean.setDeviceName(bleLockInfo.getServerLockInfo().getLockNickName());
+                bluetoothBean.setType(showBean.getDeviceType());
+                if (bleLockInfo.isConnected()){
+                    bluetoothBean.setEvent_str("online");
+                }else{
+                    bluetoothBean.setEvent_str("offline");
+                }
+
+                bluetoothBean.setPower(100);
+                mDeviceList.add(bluetoothBean);
+                break;
+
+        }
+
+
+
     }
 
     private void initView() {
@@ -177,5 +264,14 @@ public class DeviceFragment extends Fragment implements BaseQuickAdapter.OnItemC
                 startActivity(intent);
                 break;
         }
+    }
+
+    @Override
+    public void onDeviceRefresh(AllBindDevices allBindDevices) {
+        //数据更新了
+
+
+
+
     }
 }

@@ -50,6 +50,7 @@ public class GatewayBindPresenter<T> extends BasePresenter<GatewayBindView> {
                         if ("200".equals(bindGatewayResult.getCode())) {
                             if (mViewRef.get() != null) {
                                 mViewRef.get().bindGatewaySuccess();
+                                MyApplication.getInstance().getAllDevicesByMqtt(true);
                             }
                         } else {
                             if (mViewRef.get() != null) {

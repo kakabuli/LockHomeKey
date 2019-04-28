@@ -10,11 +10,17 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.text.TextUtils;
 
+import com.google.gson.Gson;
 import com.kaadas.lock.activity.login.LoginActivity;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.publiclibrary.ble.BleService;
 import com.kaadas.lock.publiclibrary.http.result.GetPasswordResult;
 import com.kaadas.lock.publiclibrary.http.util.RetrofitServiceManager;
+import com.kaadas.lock.publiclibrary.http.util.RxjavaHelper;
+import com.kaadas.lock.publiclibrary.mqtt.MqttCommandFactory;
+import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.AllBindDevices;
+import com.kaadas.lock.publiclibrary.mqtt.util.MqttConstant;
+import com.kaadas.lock.publiclibrary.mqtt.util.MqttData;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttService;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
@@ -32,13 +38,19 @@ import com.scwang.smartrefresh.layout.header.ClassicsHeader;
 import com.uuzuche.lib_zxing.activity.ZXingLibrary;
 
 
+import org.eclipse.paho.client.mqttv3.MqttMessage;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
 import io.reactivex.annotations.NonNull;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Predicate;
 import io.reactivex.subjects.PublishSubject;
 
 
@@ -54,10 +66,12 @@ public class MyApplication extends Application {
     // APP_ID 替换为你的应用从官方网站申请到的合法appID
     private static final String APP_ID = "wx8e524a5da9bfdd78";
     //数据库文件名称
-    private static final String DB_NAME="xiaokai.db";
+    private static final String DB_NAME = "xiaokai.db";
     // IWXAPI 是第三方app和微信通信的openApi接口
     protected MqttService mqttService;
     private BleService bleService;
+    private Disposable allBindDeviceDisposable;
+    private AllBindDevices allBindDevices;
 
     @Override
     public void onCreate() {
@@ -106,7 +120,8 @@ public class MyApplication extends Application {
      * 监听程序是前台还是后台
      */
     private int count;
-    public void listenerAppBackOrForge(){
+
+    public void listenerAppBackOrForge() {
         registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks() {
             @Override
             public void onActivityStopped(Activity activity) {
@@ -172,7 +187,7 @@ public class MyApplication extends Application {
                 MqttService.MyBinder binder = (MqttService.MyBinder) service;
                 mqttService = binder.getService();
                 LogUtils.e("attachView service启动" + (mqttService == null));
-                if (mqttService!=null&&!TextUtils.isEmpty(uid)){
+                if (mqttService != null && !TextUtils.isEmpty(uid)) {
                     mqttService.mqttConnection();
                 }
             }
@@ -185,8 +200,8 @@ public class MyApplication extends Application {
     }
 
 
-    public MqttService getMqttService(){
-        return  mqttService;
+    public MqttService getMqttService() {
+        return mqttService;
     }
 
     public static MyApplication getInstance() {
@@ -232,17 +247,17 @@ public class MyApplication extends Application {
         LogUtils.e("token过期   ");
         SPUtils.put(KeyConstants.HEAD_PATH, "");
         boolean alreadyStart = false;
-        Boolean appUpdate= (Boolean) SPUtils.get(SPUtils.APPUPDATE,false);
-        String phone= (String) SPUtils.get(SPUtils.PHONEN,"");
+        Boolean appUpdate = (Boolean) SPUtils.get(SPUtils.APPUPDATE, false);
+        String phone = (String) SPUtils.get(SPUtils.PHONEN, "");
         //退出登录  清除数据
         SPUtils.clear();
-        if (appUpdate==true){
-            SPUtils.put(SPUtils.APPUPDATE,true);
+        if (appUpdate == true) {
+            SPUtils.put(SPUtils.APPUPDATE, true);
         }
-        if (!TextUtils.isEmpty(phone)){
-            SPUtils.put(SPUtils.PHONEN,phone);
+        if (!TextUtils.isEmpty(phone)) {
+            SPUtils.put(SPUtils.PHONEN, phone);
         }
-       MyApplication.getInstance().initTokenAndUid();
+        MyApplication.getInstance().initTokenAndUid();
         //清除数据库数据
         for (Activity activity : activities) {
             if (activity != null) {
@@ -313,7 +328,7 @@ public class MyApplication extends Application {
         bleLockInfoSubject.onNext(bleLockInfos);
     }
 
-    public  List<BleLockInfo> getDevices(){
+    public List<BleLockInfo> getDevices() {
         return bleLockInfos;
     }
 
@@ -336,8 +351,8 @@ public class MyApplication extends Application {
     }
 
     public void deleteDevice(String deviceName) {
-        for (int i=0;i<bleLockInfos.size();i++){
-            if (deviceName.equals(bleLockInfos.get(i).getServerLockInfo().getDevice_name())){
+        for (int i = 0; i < bleLockInfos.size(); i++) {
+            if (deviceName.equals(bleLockInfos.get(i).getServerLockInfo().getDevice_name())) {
                 bleLockInfos.remove(i);
                 bleLockInfoSubject.onNext(bleLockInfos);
             }
@@ -349,10 +364,10 @@ public class MyApplication extends Application {
      */
     private Map<String, GetPasswordResult> passwordResults = new HashMap();
 
-    public void setPasswordResults(String deviceName, GetPasswordResult passwordList,boolean isNotify) {
+    public void setPasswordResults(String deviceName, GetPasswordResult passwordList, boolean isNotify) {
         LogUtils.e("设置数据  密码列表  " + deviceName + (passwordList.getData() == null));
         passwordResults.put(deviceName, passwordList);
-        if (isNotify){
+        if (isNotify) {
             passwordLoaded.onNext(true);
         }
     }
@@ -369,6 +384,7 @@ public class MyApplication extends Application {
     public PublishSubject<Boolean> passwordChangeListener() {
         return passwordChange;
     }
+
     /**
      * 密码获取成功，通知更新界面
      */
@@ -379,7 +395,8 @@ public class MyApplication extends Application {
     }
 
     private PublishSubject<Boolean> listenerAppChange = PublishSubject.create();
-    public PublishSubject<Boolean> listenerAppState(){
+
+    public PublishSubject<Boolean> listenerAppState() {
         return listenerAppChange;
     }
 
@@ -389,5 +406,69 @@ public class MyApplication extends Application {
         //程序终止时
 
     }
+
+
+    /**
+     * 全局的获取所有设备信息
+     *
+     * @param isForce 是否强制刷新
+     */
+    public void getAllDevicesByMqtt(boolean isForce) {
+        MqttMessage allBindDevice = MqttCommandFactory.getAllBindDevice(getUid());
+        if (allBindDeviceDisposable != null && allBindDeviceDisposable.isDisposed()) {
+            allBindDeviceDisposable.dispose();
+        }
+        allBindDeviceDisposable = mqttService.mqttPublish(MqttConstant.MQTT_REQUEST_APP, allBindDevice)
+                .compose(RxjavaHelper.observeOnMainThread())
+                .filter(new Predicate<MqttData>() {
+                    @Override
+                    public boolean test(MqttData mqttData) throws Exception {
+                        return mqttData.getFunc().equalsIgnoreCase(MqttConstant.GET_ALL_BIND_DEVICE);
+                    }
+                })
+                .timeout(10 * 1000, TimeUnit.MILLISECONDS)
+                .subscribe(new Consumer<MqttData>() {
+
+                    @Override
+                    public void accept(MqttData mqttData) throws Exception {
+                        if (allBindDeviceDisposable != null && allBindDeviceDisposable.isDisposed()) {
+                            allBindDeviceDisposable.dispose();
+                        }
+                        String payload = mqttData.getPayload();
+                        allBindDevices = new Gson().fromJson(payload, AllBindDevices.class);
+                        if (allBindDevices!=null){
+                            getDevicesFromServer.onNext(allBindDevices);
+                        }
+
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+
+                    }
+                });
+    }
+
+
+    /**
+     * 获取缓存的设备
+     */
+
+    public AllBindDevices getAllBindDevices() {
+        return allBindDevices;
+    }
+
+    /**
+     * 从服务器获取到设备
+     */
+    private PublishSubject<AllBindDevices> getDevicesFromServer = PublishSubject.create();
+
+    /**
+     *
+     */
+    public Observable<AllBindDevices> listenerAllDevices() {
+        return getDevicesFromServer;
+    }
+
 
 }

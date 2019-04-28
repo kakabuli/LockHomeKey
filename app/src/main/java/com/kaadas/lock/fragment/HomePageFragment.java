@@ -15,8 +15,13 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
+import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.bean.HomeShowBean;
+import com.kaadas.lock.mvp.mvpbase.BaseFragment;
+import com.kaadas.lock.mvp.presenter.HomePreseneter;
+import com.kaadas.lock.mvp.view.IHomeView;
+import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.AllBindDevices;
 import com.kaadas.lock.widget.UnderLineRadioBtn;
 
 import java.util.ArrayList;
@@ -31,7 +36,7 @@ import butterknife.Unbinder;
  * Created by David.
  */
 
-public class HomePageFragment extends Fragment implements RadioGroup.OnCheckedChangeListener {
+public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHomeView>> implements IHomeView {
 
     @BindView(R.id.ll_has_device)
     LinearLayout llHasDevice;
@@ -54,6 +59,7 @@ public class HomePageFragment extends Fragment implements RadioGroup.OnCheckedCh
     private List<Integer> realPositions = new ArrayList<>();  //保存的实际position
     private List<HomeShowBean> devices = new ArrayList<>();
     private Unbinder bind;
+    private List<HomeShowBean> homeShow;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -69,26 +75,31 @@ public class HomePageFragment extends Fragment implements RadioGroup.OnCheckedCh
         llHasDevice.setVisibility(View.GONE);
         llNoDevice.setVisibility(View.VISIBLE);
 
-        for (int i = 0; i <8; i++) {
-//            int deviceType, String deviceId, String deviceNickName, Object object
-            if (i % 2 == 0) {
-                devices.add(new HomeShowBean(HomeShowBean.TYPE_BLE_LOCK, "1", "昵称" + i, ""));
-            } else if (i % 3 == 0){
-                devices.add(new HomeShowBean(HomeShowBean.TYPE_CAT_EYE, "1", "昵称" + i, ""));
-            }else {
-                devices.add(new HomeShowBean(HomeShowBean.TYPE_GATEWAY_LOCK, "1", "昵称" + i, ""));
-            }
 
+//        for (int i = 0; i <8; i++) {
+////            int deviceType, String deviceId, String deviceNickName, Object object
+//            if (i % 2 == 0) {
+//                devices.add(new HomeShowBean(HomeShowBean.TYPE_BLE_LOCK, "1", "昵称" + i, ""));
+//            } else if (i % 3 == 0){
+//                devices.add(new HomeShowBean(HomeShowBean.TYPE_CAT_EYE, "1", "昵称" + i, ""));
+//            }else {
+//                devices.add(new HomeShowBean(HomeShowBean.TYPE_GATEWAY_LOCK, "1", "昵称" + i, ""));
+//            }
+//
+//        }
+        AllBindDevices allBindDevices = MyApplication.getInstance().getAllBindDevices();
+        if (allBindDevices != null) {
+            devices = allBindDevices.getHomeShow(false);
+            initData(devices);
         }
-        initData(devices);
-
         return view;
     }
 
-    public void onDeviceUpdate() {  //当有新的设备过来时
-
-
+    @Override
+    protected HomePreseneter<IHomeView> createPresent() {
+        return new HomePreseneter<>();
     }
+
 
     public void initData(final List<HomeShowBean> devices) {
         if (devices == null) {
@@ -125,7 +136,6 @@ public class HomePageFragment extends Fragment implements RadioGroup.OnCheckedCh
                 rbHome1.setCompoundDrawablesRelativeWithIntrinsicBounds(null, getActivity().getDrawable(R.drawable.home_rb_lock_drawable), null, null);
             } else {
                 rbHome1.setCompoundDrawablesRelativeWithIntrinsicBounds(null, getActivity().getDrawable(R.drawable.home_rb_cat_eye_drawable), null, null);
-
             }
         } else if (devices.size() == 2) {
             rbHome1.setVisibility(View.VISIBLE);
@@ -192,17 +202,17 @@ public class HomePageFragment extends Fragment implements RadioGroup.OnCheckedCh
 
         for (int i = 0; i < devices.size(); i++) {
             //此处初始化Fragment
-            switch (devices.get(i).getDeviceType()){
-                case HomeShowBean.TYPE_BLE_LOCK : //蓝牙锁:
+            switch (devices.get(i).getDeviceType()) {
+                case HomeShowBean.TYPE_BLE_LOCK: //蓝牙锁:
                     fragments.add(new BleLockFragment());
                     break;
-                case HomeShowBean.TYPE_GATEWAY_LOCK : //网关锁:
+                case HomeShowBean.TYPE_GATEWAY_LOCK: //网关锁:
                     fragments.add(new GatewayLockFragment());
                     break;
-                case HomeShowBean.TYPE_CAT_EYE : //猫眼:
+                case HomeShowBean.TYPE_CAT_EYE: //猫眼:
                     fragments.add(new CatEyeFragment());
                     break;
-                case HomeShowBean.TYPE_GATEWAY : //网关
+                case HomeShowBean.TYPE_GATEWAY: //网关
                     fragments.add(new MyFragment());
                     break;
             }
@@ -364,8 +374,16 @@ public class HomePageFragment extends Fragment implements RadioGroup.OnCheckedCh
         bind.unbind();
     }
 
+
     @Override
-    public void onCheckedChanged(RadioGroup group, int checkedId) {
+    public void onDeviceRefresh(AllBindDevices allBindDevices) {
+        if (allBindDevices !=null){
+            devices = allBindDevices.getHomeShow(false);
+            initData(devices);
+        }else {
+            initData(null);
+        }
+
 
     }
 }

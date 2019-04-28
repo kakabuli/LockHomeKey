@@ -134,6 +134,7 @@ public class AddCatEyePresenter<T> extends BasePresenter<IAddCatEyeView> {
                     .subscribe(new Consumer<MqttData>() {
                         @Override
                         public void accept(MqttData mqttData) throws Exception {
+                            toDisposable(listenerCatEyeOnlineDisposable);
                             DeviceOnLineBean deviceOnLineBean = new Gson().fromJson(mqttData.getPayload(), DeviceOnLineBean.class);
                             LogUtils.e("本地信息为   " + "   " + deviceMac + "   " + deviceSn + "    " + gwId);
                             if ( deviceMac.equalsIgnoreCase(deviceOnLineBean.getEventparams().getMacaddr())
@@ -142,8 +143,9 @@ public class AddCatEyePresenter<T> extends BasePresenter<IAddCatEyeView> {
                                 //设备信息匹配成功  且是上线上报
                                 LogUtils.e("添加猫眼成功");
                                 if (mViewRef.get()!=null){
-                                    mViewRef.get().cateEyeJoinSuccess();
+                                    mViewRef.get().cateEyeJoinSuccess(deviceOnLineBean);
                                 }
+                                MyApplication.getInstance().getAllDevicesByMqtt(true);
                                 toDisposable(compositeDisposable);
                             }
 
