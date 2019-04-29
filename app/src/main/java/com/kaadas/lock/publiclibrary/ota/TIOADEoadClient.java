@@ -8,8 +8,9 @@ import android.content.Context;
 import android.net.Uri;
 import android.util.Log;
 
-import com.xiaokai.lock.publiclibrary.ota.BluetoothLEController.BluetoothLEDevice;
-import com.xiaokai.lock.utils.Rsa;
+import com.kaadas.lock.publiclibrary.ota.BluetoothLEController.BluetoothLEDevice;
+import com.kaadas.lock.utils.Rsa;
+
 
 /**
  * Created by ole on 01/12/2017.

@@ -2,7 +2,8 @@ package com.kaadas.lock.publiclibrary.ota;
 
 import android.text.TextUtils;
 
-import com.xiaokai.lock.utils.Rsa;
+import com.kaadas.lock.utils.Rsa;
+
 
 /**
  * Create By lxj  on 2019/1/7

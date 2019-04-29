@@ -698,4 +698,10 @@
     <string name="hava_ble_new_version">检测到新蓝牙版本，是否升级？</string>
     <string name="lock_no_this_card">锁上没有此卡片，请同步</string>
     <string name="get_lock_card_failed">获取锁上卡片失败！</string>
+    <string name="password_full_and_delete_exist_code">密码库已满，请删除已有码库再添加</string>
+    <string name="please_have_net_add_pwd">请在有网络情况下添加密码！</string>
+    <string name="password_simple_please_reset">密码过于简单，请重新设置</string>
+    <string name="go_on">继续</string>
+    <string name="reinstall">重新设置</string>
+    <string name="select_time_ce_lue">请选择时间策略...</string>
 </resources>

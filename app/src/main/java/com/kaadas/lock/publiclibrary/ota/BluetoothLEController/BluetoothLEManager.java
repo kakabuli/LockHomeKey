@@ -17,8 +17,9 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
-import com.xiaokai.lock.publiclibrary.ota.BluetoothLEController.Exceptions.BluetoothLEBluetoothEnableTimeoutException;
-import com.xiaokai.lock.publiclibrary.ota.BluetoothLEController.Exceptions.BluetoothLEPermissionException;
+
+import com.kaadas.lock.publiclibrary.ota.BluetoothLEController.Exceptions.BluetoothLEBluetoothEnableTimeoutException;
+import com.kaadas.lock.publiclibrary.ota.BluetoothLEController.Exceptions.BluetoothLEPermissionException;
 
 import java.util.ArrayList;
 import java.util.List;

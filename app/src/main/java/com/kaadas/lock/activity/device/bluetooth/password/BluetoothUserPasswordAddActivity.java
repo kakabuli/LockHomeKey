@@ -90,6 +90,8 @@ public class BluetoothUserPasswordAddActivity extends AppCompatActivity implemen
         }
     }
 
+
+
     public class ListFragmentPagerAdapter extends FragmentPagerAdapter {
         private static final int TAB_COUNT = 2;
 
