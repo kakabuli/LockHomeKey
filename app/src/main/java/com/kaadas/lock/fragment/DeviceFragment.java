@@ -213,7 +213,7 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                 BleLockInfo bleLockInfo= (BleLockInfo) showBean.getObject();
 
                 DeviceDetailBean bluetoothBean=new DeviceDetailBean();
-                bluetoothBean.setDeviceName(bleLockInfo.getServerLockInfo().getLockNickName());
+                bluetoothBean.setDeviceName(bleLockInfo.getServerLockInfo().getDevice_name());
                 bluetoothBean.setType(showBean.getDeviceType());
                 if (bleLockInfo.isConnected()){
                     bluetoothBean.setEvent_str("online");

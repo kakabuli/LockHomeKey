@@ -660,16 +660,7 @@
     <string name="video_resolution">视频分辨率</string>
     <string name="look_back">回放</string>
     <string name="connect_device">连接设备</string>
-    <string name="no_find_device">未找到设备</string>
-    <string name="data_loading1">数据努力加载中....</string>
-    <string name="video_callback_info">回放</string>
-    <string name="recording_screen">录屏</string>
-    <string name="snapshot">快照</string>
-    <string name="img_loading1">图片努力加载中....</string>
-    <string name="watch_video">查看视频</string>
-    <string name="reload_download">重新下载</string>
-    <string name="pre_search_video">点击查看视频</string>
-    <string name="pir_history_notic">新增%d条消息,点击刷新</string>
+
     <string name="delete_fialed">删除失败</string>
     <string name="lock_delete_success_please_sync">锁上删除成功，服务器删除失败，请同步！</string>
     <string name="modify_success">修改成功</string>
@@ -697,4 +688,15 @@
     <string name="refresh_data_fail">刷新失败，请稍后再试！</string>
     <string name="input_open_lock_password">请输入开锁密码</string>
     <string name="random_verify_error">请输入6-12位数字</string>
+
+    <string name="data_loading1">数据努力加载中....</string>
+    <string name="video_callback_info">回放</string>
+    <string name="recording_screen">录屏</string>
+    <string name="snapshot">快照</string>
+    <string name="img_loading1">图片努力加载中....</string>
+    <string name="watch_video">查看视频</string>
+    <string name="reload_download">重新下载</string>
+    <string name="pre_search_video">点击查看视频</string>
+    <string name="pir_history_notic">新增%d条消息,点击刷新</string>
+    <string name="no_find_device">未找到设备</string>
 </resources>
