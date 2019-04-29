@@ -247,4 +247,8 @@ public class KeyConstants {
 
     //是否保存了开锁密码
     public static final String SAVA_LOCK_PWD="saveLockPwd";
+    /**
+     * 升级时，保存的设备蓝牙版本号的Key
+     */
+    public static final String BLE_VERSION= "bleVersion";
 }

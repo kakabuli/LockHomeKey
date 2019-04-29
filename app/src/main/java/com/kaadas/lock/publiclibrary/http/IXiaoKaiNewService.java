@@ -10,6 +10,7 @@ import com.kaadas.lock.publiclibrary.http.result.GetPwdBySnResult;
 import com.kaadas.lock.publiclibrary.http.result.GetWarringRecordResult;
 import com.kaadas.lock.publiclibrary.http.result.LockRecordResult;
 import com.kaadas.lock.publiclibrary.http.result.LoginResult;
+import com.kaadas.lock.publiclibrary.http.result.OTAResult;
 import com.kaadas.lock.publiclibrary.http.result.RegisterResult;
 import com.kaadas.lock.publiclibrary.http.result.SinglePasswordResult;
 import com.kaadas.lock.publiclibrary.http.result.UserNickResult;
@@ -394,7 +395,11 @@ public interface IXiaoKaiNewService {
     @GET(HttpUrlConstants.GET_APP_VERSION)
     Observable<VersionBean> getAppVersion();
 
-
+    /**
+     * OTA升级查询ApI
+     */
+    @POST(HttpUrlConstants.OTA_INFO_URL)
+    Observable<OTAResult> getOtaInfo(@Body RequestBody info);
 
 
 

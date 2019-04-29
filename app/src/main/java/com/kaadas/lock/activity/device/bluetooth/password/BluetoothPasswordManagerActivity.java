@@ -14,6 +14,9 @@ import android.widget.TextView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.kaadas.lock.R;
 import com.kaadas.lock.adapter.BluetoothPasswordAdapter;
+import com.kaadas.lock.mvp.mvpbase.BaseBleActivity;
+import com.kaadas.lock.mvp.presenter.PasswordManagerPresenter;
+import com.kaadas.lock.mvp.view.IPasswordManagerView;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.publiclibrary.bean.ForeverPassword;
 import com.kaadas.lock.publiclibrary.http.postbean.AddPasswordBean;
@@ -31,8 +34,8 @@ import butterknife.ButterKnife;
 /**
  * Created by David
  */
-public class BluetoothPasswordManagerActivity extends AppCompatActivity
-        implements BaseQuickAdapter.OnItemClickListener, View.OnClickListener {
+public class BluetoothPasswordManagerActivity extends BaseBleActivity<IPasswordManagerView, PasswordManagerPresenter<IPasswordManagerView>>
+        implements BaseQuickAdapter.OnItemClickListener, View.OnClickListener, IPasswordManagerView  {
     @BindView(R.id.iv_back)
     ImageView ivBack;//返回
     @BindView(R.id.tv_content)
@@ -50,7 +53,7 @@ public class BluetoothPasswordManagerActivity extends AppCompatActivity
     LinearLayout llHasData;
     @BindView(R.id.tv_no_user)
     TextView tvNoUser;
-    List<ForeverPassword> pwdList = new ArrayList<>();;
+    List<ForeverPassword> list = new ArrayList<>();;
     private BleLockInfo bleLockInfo;
     private boolean isSync = false; //是不是正在同步锁中的密码
 
@@ -68,12 +71,16 @@ public class BluetoothPasswordManagerActivity extends AppCompatActivity
         llAddPassword.setOnClickListener(this);
         passwordPageChange();
         initRecycleview();
-        pwdList.add(new ForeverPassword("fff", "fff", 1));
-        initData();
+        list.add(new ForeverPassword("fff", "fff", 1));
+    }
+
+    @Override
+    protected PasswordManagerPresenter<IPasswordManagerView> createPresent() {
+        return new PasswordManagerPresenter<>();
     }
 
     private void initRecycleview() {
-        bluetoothPasswordAdapter = new BluetoothPasswordAdapter(pwdList, R.layout.item_bluetooth_password);
+        bluetoothPasswordAdapter = new BluetoothPasswordAdapter(list, R.layout.item_bluetooth_password);
         recycleview.setLayoutManager(new LinearLayoutManager(this));
         recycleview.setAdapter(bluetoothPasswordAdapter);
         bluetoothPasswordAdapter.setOnItemClickListener(this);
@@ -90,9 +97,9 @@ public class BluetoothPasswordManagerActivity extends AppCompatActivity
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
         Intent intent = new Intent(this, BluetoothPasswordManagerDetailActivity.class);
         intent.putExtra(KeyConstants.BLE_DEVICE_INFO, bleLockInfo);
-        AddPasswordBean.Password password = new AddPasswordBean.Password(1, pwdList.get(position));
+        AddPasswordBean.Password password = new AddPasswordBean.Password(1, list.get(position));
         intent.putExtra(KeyConstants.TO_PWD_DETAIL, password);
-        intent.putExtra(KeyConstants.CREATE_TIME, pwdList.get(position).getCreateTime());
+        intent.putExtra(KeyConstants.CREATE_TIME, list.get(position).getCreateTime());
         startActivity(intent);
     }
 
@@ -125,22 +132,59 @@ public class BluetoothPasswordManagerActivity extends AppCompatActivity
                 if (isSync) {
                     ToastUtil.getInstance().showShort(R.string.is_sync_please_wait);
                 } else {
-                    //同步密码
+                    if (mPresenter.isAuth(bleLockInfo, true)) {
+                        mPresenter.syncPassword();
+                    }
                 }
                 break;
         }
     }
 
-    public void initData() {
-        if (pwdList.size() > 0) {
+
+
+    @Override
+    public void onSyncPasswordSuccess(List<ForeverPassword> pwdList) {
+        list = pwdList;
+        if (list.size() > 0) {
             isNotPassword = false;
         } else {
             isNotPassword = true;
         }
         passwordPageChange();
         bluetoothPasswordAdapter.notifyDataSetChanged();
-        LogUtils.e("收到  同步的锁的密码   " + pwdList.toString());
+        LogUtils.e("收到  同步的锁的密码   " + list.toString());
+    }
 
+    @Override
+    public void onSyncPasswordFailed(Throwable throwable) {
+        ToastUtil.getInstance().showShort(getString(R.string.syc_pwd_fail));
+    }
 
+    @Override
+    public void onUpdate(List<ForeverPassword> pwdList) {
+        if (bluetoothPasswordAdapter != null && !isFinishing()) {
+            bluetoothPasswordAdapter.notifyDataSetChanged();
+        }
+        list = pwdList;
+        isNotPassword = false;
+        passwordPageChange();
+    }
+
+    @Override
+    public void startSync() {
+        isSync = true;
+        showLoading(getString(R.string.is_sync_lock_data));
+    }
+
+    @Override
+    public void endSync() {
+        isSync = false;
+        hiddenLoading();
+    }
+
+    @Override
+    public void onServerDataUpdate() {
+        LogUtils.e("密码管理   服务器数据更新   ");
+        mPresenter.getAllPassword(bleLockInfo,false);
     }
 }

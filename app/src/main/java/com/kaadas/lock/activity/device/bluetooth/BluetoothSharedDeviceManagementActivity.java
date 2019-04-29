@@ -238,7 +238,7 @@ public class BluetoothSharedDeviceManagementActivity extends BaseActivity<IBluet
                 }
                 String devmac = bleLockInfo.getServerLockInfo().getDevmac();
                 String device_name = bleLockInfo.getServerLockInfo().getDevice_name();
-                String device_nickname = bleLockInfo.getServerLockInfo().getLockNickName();
+                String device_nickname = bleLockInfo.getServerLockInfo().getDevice_nickname();
                 String time = System.currentTimeMillis() + "";
                 List<String> items = new ArrayList<>();
                 mPresenter.addCommonUser(uid, phone, devmac, device_name, "", device_nickname, "3", time, items);

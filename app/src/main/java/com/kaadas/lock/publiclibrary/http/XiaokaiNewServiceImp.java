@@ -25,6 +25,7 @@ import com.kaadas.lock.publiclibrary.http.postbean.ModifyLockNickBean;
 import com.kaadas.lock.publiclibrary.http.postbean.ModifyPasswordBean;
 import com.kaadas.lock.publiclibrary.http.postbean.ModifyPasswordNickBean;
 import com.kaadas.lock.publiclibrary.http.postbean.ModifyUserNickBean;
+import com.kaadas.lock.publiclibrary.http.postbean.OTABean;
 import com.kaadas.lock.publiclibrary.http.postbean.PutMessageBean;
 import com.kaadas.lock.publiclibrary.http.postbean.RegisterByPhoneBean;
 import com.kaadas.lock.publiclibrary.http.postbean.ResetDeviceBean;
@@ -42,6 +43,7 @@ import com.kaadas.lock.publiclibrary.http.result.GetPwdBySnResult;
 import com.kaadas.lock.publiclibrary.http.result.GetWarringRecordResult;
 import com.kaadas.lock.publiclibrary.http.result.LockRecordResult;
 import com.kaadas.lock.publiclibrary.http.result.LoginResult;
+import com.kaadas.lock.publiclibrary.http.result.OTAResult;
 import com.kaadas.lock.publiclibrary.http.result.RegisterResult;
 import com.kaadas.lock.publiclibrary.http.result.SinglePasswordResult;
 import com.kaadas.lock.publiclibrary.http.result.UserNickResult;
@@ -746,6 +748,18 @@ public class XiaokaiNewServiceImp {
                 .compose(RxjavaHelper.observeOnMainThread());
     }
 
-
+    /**
+     * @param customer	是	int	客户：1凯迪仕 2小凯 3桔子物联 4飞利浦
+     * @param deviceName	是	String	设备唯一编号
+     * @param version	否	String	当前版本号
+     * @return
+     */
+    public static Observable<OTAResult> getOtaInfo(int customer, String deviceName, String version){
+        OTABean helpLogBean=new OTABean( customer,  deviceName,  version);
+        return RetrofitServiceManager.getNoTokenInstance().create(IXiaoKaiNewService.class)
+                .getOtaInfo(new HttpUtils<OTABean>().getBody(helpLogBean))
+                .subscribeOn(Schedulers.io())
+                .compose(RxjavaHelper.observeOnMainThread());
+    }
 
 }

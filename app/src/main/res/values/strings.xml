@@ -690,4 +690,12 @@
     <string name="random_verify_error">请输入6-12位数字</string>
     <string name="read_device_language_fail">获取当前的语言信息失败</string>
     <string name="sync_failed_card">同步门卡失败</string>
+    <string name="card_full_and_delete_exist_code">卡片库已满，请删除已有码库再添加</string>
+    <string name="set_card_failed_number">设置卡片失败，获取锁上编号失败！</string>
+    <string name="read_device_info_fail">读取设备信息失败</string>
+    <string name="already_newest_version">当前已是最新版本</string>
+    <string name="confirm">确定</string>
+    <string name="hava_ble_new_version">检测到新蓝牙版本，是否升级？</string>
+    <string name="lock_no_this_card">锁上没有此卡片，请同步</string>
+    <string name="get_lock_card_failed">获取锁上卡片失败！</string>
 </resources>
