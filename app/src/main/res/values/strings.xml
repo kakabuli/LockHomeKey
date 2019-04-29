@@ -688,4 +688,6 @@
     <string name="refresh_data_fail">刷新失败，请稍后再试！</string>
     <string name="input_open_lock_password">请输入开锁密码</string>
     <string name="random_verify_error">请输入6-12位数字</string>
+    <string name="read_device_language_fail">获取当前的语言信息失败</string>
+    <string name="sync_failed_card">同步门卡失败</string>
 </resources>
