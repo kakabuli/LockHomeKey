@@ -10,7 +10,7 @@ import java.io.Serializable;
 public class ServerBleDevice implements Serializable {
     private String _id;
     private String device_name;//设备唯一编号
-    private String lockNickName;
+    private String device_nickname;
     private String devmac;
     private String open_purview;
     private String is_admin;
@@ -38,12 +38,12 @@ public class ServerBleDevice implements Serializable {
         this.device_name = device_name;
     }
 
-    public String getLockNickName() {
-        return lockNickName;
+    public String getDevice_nickname() {
+        return device_nickname;
     }
 
-    public void setLockNickName(String lockNickName) {
-        this.lockNickName = lockNickName;
+    public void setDevice_nickname(String device_nickname) {
+        this.device_nickname = device_nickname;
     }
 
     public String getDevmac() {
@@ -144,7 +144,7 @@ public class ServerBleDevice implements Serializable {
         return "ServerDevices{" +
                 "_id='" + _id + '\'' +
                 ", device_name='" + device_name + '\'' +
-                ", lockNickName='" + lockNickName + '\'' +
+                ", device_nickname='" + device_nickname + '\'' +
                 ", devmac='" + devmac + '\'' +
                 ", open_purview='" + open_purview + '\'' +
                 ", is_admin='" + is_admin + '\'' +

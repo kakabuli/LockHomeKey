@@ -24,7 +24,7 @@ public class AllBindDevices {
      * gwId :
      * deviceId :
      * func : getAllBindDevice
-     * returnCode : 200
+     * code : 200
      * timestamp : 1556172487814
      * data : {"gwList":[{"deviceSN":"GW01182510163","deviceNickName":"GW01182510163","adminuid":"5c4fe492dc93897aa7d8600b","adminName":"8618954359822","adminNickname":"8618954359822","isAdmin":1,"meUsername":"17c830b7267a4d208029c217fbb6b7c5","mePwd":"1456dfc75ba34d5191399bcc6473b85a","meBindState":1,"deviceList":[{"ipaddr":"192.168.168.235","macaddr":"0C:9A:42:B7:8C:F5","SW":"orangecat-1.3.4","event_str":"offline","device_type":"kdscateye","deviceId":"CH01183910242","time":"2019-04-02 09:13:57.481"}]}],"devList":[{"_id":"5c8f5563dc938989e2f5429d","lockName":"BT123456","lockNickName":"BT123456","macLock":"123456","open_purview":"3","is_admin":"1","center_latitude":"0","center_longitude":"0","circle_radius":"0","auto_lock":"0","password1":"123456","password2":"654321","model":""}]}
      */
@@ -35,7 +35,7 @@ public class AllBindDevices {
     private String gwId;
     private String deviceId;
     private String func;
-    private String returnCode;
+    private String code;
     private String timestamp;
     private ReturnDataBean data;
 
@@ -87,12 +87,12 @@ public class AllBindDevices {
         this.func = func;
     }
 
-    public String getReturnCode() {
-        return returnCode;
+    public String getCode() {
+        return code;
     }
 
-    public void setReturnCode(String returnCode) {
-        this.returnCode = returnCode;
+    public void setCode(String code) {
+        this.code = code;
     }
 
     public String getTimestamp() {

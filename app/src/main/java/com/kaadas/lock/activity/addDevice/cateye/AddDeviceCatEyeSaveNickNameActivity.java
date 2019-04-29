@@ -137,7 +137,6 @@ public class AddDeviceCatEyeSaveNickNameActivity  extends BaseActivity<AddZigbee
                 }else{
                     ToastUtil.getInstance().showShort(R.string.gateway_or_device_null);
                 }
-
                 break;
         }
     }

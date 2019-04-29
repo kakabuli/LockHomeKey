@@ -383,7 +383,5 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
         }else {
             initData(null);
         }
-
-
     }
 }

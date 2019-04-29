@@ -48,7 +48,9 @@ public class AddZigbeeLockSuccessSavePresenter<T> extends BasePresenter<AddZigbe
                                             if ("200".equals(nameResult.getCode())){
                                                 if (mViewRef.get()!=null){
                                                     mViewRef.get().updateDevNickNameSuccess();
+                                                    MyApplication.getInstance().getAllDevicesByMqtt(true);
                                                 }
+                                                MyApplication.getInstance().getAllDevicesByMqtt(true);
                                             }else{
                                                 if (mViewRef.get()!=null){
                                                     mViewRef.get().updateDevNickNameFail();

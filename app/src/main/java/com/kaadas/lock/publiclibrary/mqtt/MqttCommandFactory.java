@@ -1,11 +1,14 @@
 package com.kaadas.lock.publiclibrary.mqtt;
 
 import com.google.gson.Gson;
+import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.AllowCateyeJoinBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.BindGatewayBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.GetAllBindDeviceBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.GetBindGatewayListBean;
+import com.kaadas.lock.publiclibrary.mqtt.publishbean.GetDevicePowerBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.GetWifiBasicBean;
+import com.kaadas.lock.publiclibrary.mqtt.publishbean.OpenLockBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetJoinAllowBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.UpdateDevNickNameBean;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttConstant;
@@ -91,6 +94,14 @@ public class MqttCommandFactory {
 
     }
 
+    /**
+     * 修改设备昵称
+     * @param uid
+     * @param devuuid
+     * @param deviceId
+     * @param nickName
+     * @return
+     */
     public static MqttMessage updateDeviceNickName(String uid,String devuuid,String deviceId,String nickName ){
         int messageId=getMessageId();
         UpdateDevNickNameBean updateDevNickNameBean=new UpdateDevNickNameBean(MqttConstant.UPDATE_DEV_NICK_NAME,uid,devuuid,deviceId,nickName);
@@ -110,7 +121,46 @@ public class MqttCommandFactory {
 
     }
 
+    /**
+     * 获取设备电量
+     * @param gatewayId
+     * @param deviceId
+     * @return
+     */
 
+    public static MqttMessage getDevicePower(String gatewayId,String deviceId){
+        int messageId = getMessageId();
+        GetDevicePowerBean getDevicePowerBean=new GetDevicePowerBean(MqttConstant.MSG_TYPE_REQUEST, MyApplication.getInstance().getUid(),messageId,gatewayId,deviceId,MqttConstant.GET_POWER,new GetDevicePowerBean.ParamsBean(),"0",new GetDevicePowerBean.ReturnDataBean(),System.currentTimeMillis()+"");
+        return  getMessage(getDevicePowerBean,messageId);
+    }
+
+    /**
+     * 开锁
+     * @param gatewayId
+     * @param deviceId
+     * @param opType
+     * @param type
+     * @param pwd
+     * @return
+     */
+
+    public static MqttMessage openLock(String gatewayId,String deviceId,String opType,String type,String pwd){
+        String uid=MyApplication.getInstance().getUid();
+        int messageId = getMessageId();
+        OpenLockBean.ParamsBean paramsBean=new OpenLockBean.ParamsBean();
+        paramsBean.setOptype(opType);
+        paramsBean.setUserid(uid);
+        paramsBean.setType(type);
+        paramsBean.setPin(pwd);
+        OpenLockBean openLockBean=new OpenLockBean(MqttConstant.MSG_TYPE_REQUEST,uid,messageId,gatewayId,deviceId,MqttConstant.OPEN_LOCK,paramsBean,"0",new OpenLockBean.ReturnDataBean(),System.currentTimeMillis()+"");
+        return getMessage(openLockBean,messageId);
+    }
+
+
+ /*   public static MqttMessage getLockPwd(){
+        int messageId=getMessageId();
+
+    }*/
 
 
 

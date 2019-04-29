@@ -241,4 +241,10 @@ public class KeyConstants {
     public static final int OPEN_LOCK_SUCCESS = 3;
     public static final int OPEN_LOCK_FAILED = 4;
     public static final int DEVICE_OFFLINE = 5;
+
+    //设备
+    public static final String DEVICE_DETAIL_BEAN="deviceDetailBean";
+
+    //是否保存了开锁密码
+    public static final String SAVA_LOCK_PWD="saveLockPwd";
 }

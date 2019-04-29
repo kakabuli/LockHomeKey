@@ -6,6 +6,7 @@ import com.kaadas.lock.mvp.mvpbase.BasePresenter;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.GetBindGatewayStatusResult;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttConstant;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttData;
+import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.mvp.view.IMainView;
 
@@ -26,6 +27,7 @@ public class MainPresenter<T> extends BasePresenter<IMainView> {
                                if (MqttConstant.GATEWAY_STATE.equals(mqttData.getFunc())){
                                     GetBindGatewayStatusResult gatewayStatusResult=new Gson().fromJson(mqttData.getPayload(),GetBindGatewayStatusResult.class);
                                     if (gatewayStatusResult!=null){
+                                        LogUtils.e("保存蓝牙状态");
                                         SPUtils.putProtect(gatewayStatusResult.getDevuuid(),gatewayStatusResult.getData().getState());
                                     }
 
