@@ -1,6 +1,8 @@
 package com.kaadas.lock.publiclibrary.bean;
 
-public class GatewayInfo {
+import java.io.Serializable;
+
+public class GatewayInfo implements Serializable {
 
     /**
      * 服务器返回的网关信息

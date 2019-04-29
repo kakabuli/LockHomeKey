@@ -62,6 +62,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+
+
         <activity
             android:name=".activity.MainActivity"
             android:launchMode="singleTask"
@@ -475,85 +478,85 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"></activity>
         <activity
-            android:name=".activity.device.gateway.GatewayLockFunctionActivity"
+            android:name=".activity.device.gatewaylock.GatewayLockFunctionActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"></activity>
         <activity
-            android:name=".activity.device.gateway.password.GatewayPasswordManagerActivity"
+            android:name=".activity.device.gatewaylock.password.GatewayPasswordManagerActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"></activity>
         <activity
-            android:name=".activity.device.gateway.password.GatewayPasswordManagerDetailActivity"
+            android:name=".activity.device.gatewaylock.password.GatewayPasswordManagerDetailActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"></activity>
         <activity
-            android:name=".activity.device.gateway.password.GatewayPasswordAddActivity"
+            android:name=".activity.device.gatewaylock.password.GatewayPasswordAddActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"></activity>
         <activity
-            android:name=".activity.device.gateway.password.GatewayPasswordShareActivity"
+            android:name=".activity.device.gatewaylock.password.GatewayPasswordShareActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"></activity>
         <activity
-            android:name=".activity.device.gateway.fingerprint.GatewayFingerprintManagerActivity"
+            android:name=".activity.device.gatewaylock.fingerprint.GatewayFingerprintManagerActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"></activity>
         <activity
-            android:name=".activity.device.gateway.fingerprint.GatewayFingerprintManagerDetailActivity"
+            android:name=".activity.device.gatewaylock.fingerprint.GatewayFingerprintManagerDetailActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"></activity>
         <activity
-            android:name=".activity.device.gateway.card.GatewayDoorCardManagerActivity"
+            android:name=".activity.device.gatewaylock.card.GatewayDoorCardManagerActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"></activity>
         <activity
-            android:name=".activity.device.gateway.card.GatewayDoorCardManagerDetailActivity"
+            android:name=".activity.device.gatewaylock.card.GatewayDoorCardManagerDetailActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"></activity>
         <activity
-            android:name=".activity.device.gateway.share.GatewaySharedDeviceManagementActivity"
+            android:name=".activity.device.gatewaylock.share.GatewaySharedDeviceManagementActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"></activity>
         <activity
-            android:name=".activity.device.gateway.share.GatewayFamilyMemberDetailActivity"
+            android:name=".activity.device.gatewaylock.share.GatewayFamilyMemberDetailActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"></activity>
         <activity
-            android:name=".activity.device.gateway.GatewayLockAuthorizationActivity"
+            android:name=".activity.device.gatewaylock.GatewayLockAuthorizationActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"></activity>
         <activity
-            android:name=".activity.device.gateway.GatewayAuthorizationDeviceInformationActivity"
+            android:name=".activity.device.gatewaylock.GatewayAuthorizationDeviceInformationActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"></activity>
         <activity
-            android:name=".activity.device.gateway.more.GatewayMoreActivity"
+            android:name=".activity.device.gatewaylock.more.GatewayMoreActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"></activity>
         <activity
-            android:name=".activity.device.gateway.GatewayDeviceInformationActivity"
+            android:name=".activity.device.gatewaylock.GatewayDeviceInformationActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"></activity>
         <activity
-            android:name=".activity.device.gateway.more.GatewayLockLanguageSettingActivity"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"></activity>
-
-        <activity
-            android:name=".activity.device.gateway.stress.GatewayStressPasswordManagerActivity"
+            android:name=".activity.device.gatewaylock.more.GatewayLockLanguageSettingActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"></activity>
 
         <activity
-            android:name=".activity.device.gateway.stress.GatewayStressPasswordAddActivity"
+            android:name=".activity.device.gatewaylock.stress.GatewayStressPasswordManagerActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"></activity>
+
+        <activity
+            android:name=".activity.device.gatewaylock.stress.GatewayStressPasswordAddActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"></activity>
         <activity
-            android:name=".activity.device.gateway.stress.GatewayStressPasswordShareActivity"
+            android:name=".activity.device.gatewaylock.stress.GatewayStressPasswordShareActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"></activity>
         <activity
-            android:name=".activity.device.gateway.stress.GatewayStressWarnDetailActivity"
+            android:name=".activity.device.gatewaylock.stress.GatewayStressWarnDetailActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"></activity>
         <activity
@@ -573,6 +576,15 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"></activity>
         <service android:name="com.kaadas.lock.publiclibrary.ble.BleService" />
+
+        <receiver android:name=".utils.networkListenerutil.NetWorkChangReceiver" >
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+                <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
+                <action android:name="android.net.wifi.STATE_CHANGE" />
+            </intent-filter>
+        </receiver>
+
     </application>
 
 </manifest>

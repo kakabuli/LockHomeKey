@@ -20,7 +20,7 @@ import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.kaadas.lock.R;
-import com.kaadas.lock.activity.device.gateway.password.GatewayPasswordShareActivity;
+import com.kaadas.lock.activity.device.gatewaylock.password.GatewayPasswordShareActivity;
 import com.kaadas.lock.adapter.ShiXiaoNameAdapter;
 import com.kaadas.lock.bean.ShiXiaoNameBean;
 import com.kaadas.lock.utils.KeyConstants;

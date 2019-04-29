@@ -77,4 +77,10 @@ public class MqttConstant {
     //修改设备的昵称
     public static final String UPDATE_DEV_NICK_NAME = "updateDevNickName";
 
+    //获取设备电量
+    public static final String GET_POWER="getPower";
+
+    //开锁
+    public static final String OPEN_LOCK="openLock";
+
 }

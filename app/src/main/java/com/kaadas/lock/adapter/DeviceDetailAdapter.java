@@ -10,6 +10,7 @@ import com.chad.library.adapter.base.BaseViewHolder;
 import com.kaadas.lock.R;
 import com.kaadas.lock.bean.DeviceDetailBean;
 import com.kaadas.lock.utils.BatteryView;
+import com.kaadas.lock.utils.LogUtils;
 
 import java.util.List;
 
@@ -24,6 +25,7 @@ public class DeviceDetailAdapter extends BaseQuickAdapter<DeviceDetailBean, Base
     @Override
     protected void convert(BaseViewHolder helper, DeviceDetailBean item) {
         int power=item.getPower();
+        LogUtils.e("显示电量",item.getDeviceName()+power);
         if (power>100){
             power=100;
         }
@@ -61,7 +63,7 @@ public class DeviceDetailAdapter extends BaseQuickAdapter<DeviceDetailBean, Base
                 batteryView.setPower(power);
                 break;
         }
-        helper.setText(R.id.device_power_text,power+"%");
+       helper.setText(R.id.device_power_text,power+"%");
 
     }
 

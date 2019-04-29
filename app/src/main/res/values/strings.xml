@@ -685,4 +685,7 @@
     <string name="lock_no_this_finger">锁上没有此指纹，请同步！</string>
     <string name="get_lock_finger_failed">获取锁上指纹失败！</string>
     <string name="please_connect_lock">锁设备未连接</string>
+    <string name="refresh_data_fail">刷新失败，请稍后再试！</string>
+    <string name="input_open_lock_password">请输入开锁密码</string>
+    <string name="random_verify_error">请输入6-12位数字</string>
 </resources>
