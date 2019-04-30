@@ -57,7 +57,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="@dimen/dp_15"
-                android:text="@string/unit_type"
+                android:text="@string/link_signal"
                 android:textColor="#333333"
                 android:textSize="@dimen/sp_13" />
 
@@ -147,6 +147,74 @@
         </RelativeLayout>
 
         <RelativeLayout
+            android:id="@+id/rl_hardware_version"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_60"
+
+            >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/dp_15"
+                android:text="@string/hardware_version"
+                android:textColor="#333333"
+                android:textSize="@dimen/sp_13" />
+
+            <TextView
+                android:id="@+id/tv_hardware_version"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/dp_15"
+                android:textColor="#999999"
+                android:textSize="@dimen/sp_12" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_alignParentBottom="true"
+                android:layout_marginLeft="@dimen/dp_17"
+                android:background="#EAE9E9"></View>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_module_mark"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_60"
+
+            >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/dp_15"
+                android:text="@string/module_mark"
+                android:textColor="#333333"
+                android:textSize="@dimen/sp_13" />
+
+            <TextView
+                android:id="@+id/tv_module_mark"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/dp_15"
+                android:textColor="#999999"
+                android:textSize="@dimen/sp_12" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_alignParentBottom="true"
+                android:layout_marginLeft="@dimen/dp_17"
+                android:background="#EAE9E9"></View>
+        </RelativeLayout>
+
+       <!-- <RelativeLayout
             android:id="@+id/rl_bluetooth_version"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_60"
@@ -187,9 +255,9 @@
                 android:layout_alignParentBottom="true"
                 android:layout_marginLeft="@dimen/dp_17"
                 android:background="#EAE9E9"></View>
-        </RelativeLayout>
+        </RelativeLayout>-->
 
-        <RelativeLayout
+       <!-- <RelativeLayout
             android:id="@+id/rl_zigbee"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_60"
@@ -224,7 +292,7 @@
                 android:layout_marginRight="@dimen/dp_15"
                 android:src="@mipmap/right" />
 
-        </RelativeLayout>
+        </RelativeLayout>-->
     </LinearLayout>
 
 </LinearLayout>

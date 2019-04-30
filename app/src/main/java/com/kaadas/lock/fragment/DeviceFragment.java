@@ -23,6 +23,7 @@ import com.kaadas.lock.activity.addDevice.DeviceAddActivity;
 import com.kaadas.lock.activity.device.BluetoothLockAuthorizationActivity;
 import com.kaadas.lock.activity.device.BluetoothLockFunctionActivity;
 
+import com.kaadas.lock.activity.device.GatewayActivity;
 import com.kaadas.lock.activity.device.gatewaylock.GatewayLockFunctionActivity;
 import com.kaadas.lock.adapter.DeviceDetailAdapter;
 import com.kaadas.lock.bean.DeviceDetailBean;
@@ -285,7 +286,8 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                 break;
             case 2:
                 //网关
-
+                Intent gatwayInfo=new Intent(getActivity(), GatewayActivity.class);
+                startActivity(gatwayInfo);
                 break;
             case 3:
                 //蓝牙

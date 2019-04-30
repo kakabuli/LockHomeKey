@@ -23,6 +23,7 @@ import com.kaadas.lock.mvp.view.gatewaylockview.GatewayLockMoreView;
 import com.kaadas.lock.publiclibrary.bean.GwLockInfo;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.KeyConstants;
+import com.kaadas.lock.utils.LoadingDialog;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.StringUtil;
@@ -56,8 +57,8 @@ public class GatewayMoreActivity extends BaseActivity<GatewayLockMoreView, Gatew
     RelativeLayout rlSilentMode;
     @BindView(R.id.rl_device_information)
     RelativeLayout rlDeviceInformation;
-    @BindView(R.id.rl_check_firmware_update)
-    RelativeLayout rlCheckFirmwareUpdate;
+   /* @BindView(R.id.rl_check_firmware_update)
+    RelativeLayout rlCheckFirmwareUpdate;*/
     @BindView(R.id.btn_delete)
     Button btnDelete;
     boolean messageFreeStatus;
@@ -72,6 +73,11 @@ public class GatewayMoreActivity extends BaseActivity<GatewayLockMoreView, Gatew
     private String deviceId;
     private GwLockInfo gwLockInfo;
 
+    private LoadingDialog loadingDialog;
+
+    //获取音量时避免用户去点开音量开关
+    private boolean flagSoundVolume=false;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,6 +90,7 @@ public class GatewayMoreActivity extends BaseActivity<GatewayLockMoreView, Gatew
 
     private void initView() {
         tvContent.setText(getString(R.string.settting));
+        loadingDialog=LoadingDialog.getInstance(this);
     }
 
     @Override
@@ -100,6 +107,7 @@ public class GatewayMoreActivity extends BaseActivity<GatewayLockMoreView, Gatew
             gwLockInfo= (GwLockInfo) deviceDetailBean.getShowCurentBean();
             gatewayId=gwLockInfo.getGwID();
             deviceId=gwLockInfo.getServerInfo().getDeviceId();
+
         }
 
 
@@ -110,11 +118,13 @@ public class GatewayMoreActivity extends BaseActivity<GatewayLockMoreView, Gatew
         } else {
             ivMessageFree.setImageResource(R.mipmap.iv_close);
         }
-        silentModeStatus = (boolean) SPUtils.get(KeyConstants.SILENT_MODE_STATUS, false);
-        if (silentModeStatus) {
-            ivSilentMode.setImageResource(R.mipmap.iv_open);
-        } else {
-            ivSilentMode.setImageResource(R.mipmap.iv_close);
+
+        if (gatewayId!=null&&deviceId!=null){
+            if (loadingDialog!=null){
+                loadingDialog.show("");
+                mPresenter.getSoundVolume(gatewayId,deviceId);
+            }
+
         }
     }
 
@@ -125,7 +135,6 @@ public class GatewayMoreActivity extends BaseActivity<GatewayLockMoreView, Gatew
         rlDoorLockLanguageSwitch.setOnClickListener(this);
         rlSilentMode.setOnClickListener(this);
         rlDeviceInformation.setOnClickListener(this);
-        rlCheckFirmwareUpdate.setOnClickListener(this);
         btnDelete.setOnClickListener(this);
     }
 
@@ -198,22 +207,31 @@ public class GatewayMoreActivity extends BaseActivity<GatewayLockMoreView, Gatew
                 startActivity(intent);
                 break;
             case R.id.rl_silent_mode:
-                if (silentModeStatus) {
-                    //打开状态 现在关闭
-                    ivSilentMode.setImageResource(R.mipmap.iv_close);
-                    SPUtils.put(KeyConstants.SILENT_MODE_STATUS, false);
-                } else {
-                    //关闭状态 现在打开
-                    ivSilentMode.setImageResource(R.mipmap.iv_open);
-                    SPUtils.put(KeyConstants.SILENT_MODE_STATUS, true);
+                if (flagSoundVolume) {
+                    LogUtils.e("");
+                    if (silentModeStatus) {
+                        //打开状态 现在关闭
+                        loadingDialog.show(getString(R.string.close_silence));
+                        if (gatewayId!=null&&deviceId!=null){
+                            mPresenter.setSoundVolume(gatewayId,deviceId,2);
+                        }
+                    } else {
+                        //关闭状态 现在打开
+                        loadingDialog.show(getString(R.string.open_slience));
+                        if (gatewayId!=null&&deviceId!=null){
+                            mPresenter.setSoundVolume(gatewayId,deviceId,0);
+                        }
+                    }
+                    rlSilentMode.setEnabled(false);
+                }else{
+                    ToastUtil.getInstance().showShort(R.string.get_sound_volme_no_fun);
                 }
-                silentModeStatus = !silentModeStatus;
                 break;
             case R.id.rl_device_information:
                 intent = new Intent(this, GatewayDeviceInformationActivity.class);
+                intent.putExtra(KeyConstants.DEVICE_ID,deviceId);
+                intent.putExtra(KeyConstants.GATEWAY_ID,gatewayId);
                 startActivity(intent);
-                break;
-            case R.id.rl_check_firmware_update:
                 break;
             case R.id.btn_delete:
                 AlertDialogUtil.getInstance().noEditTwoButtonDialog(this, getString(R.string.device_delete_dialog_head), getString(R.string.device_delete_dialog_content), getString(R.string.cancel), getString(R.string.query), new AlertDialogUtil.ClickListener() {
@@ -250,5 +268,69 @@ public class GatewayMoreActivity extends BaseActivity<GatewayLockMoreView, Gatew
     @Override
     public void updateDevNickNameThrowable(Throwable throwable) {
         LogUtils.e("设置昵称失败"+throwable.getMessage());
+    }
+
+    @Override
+    public void getSoundVolumeSuccess(int volume) {
+        //获取到音量
+        loadingDialog.dismiss();
+        if (volume!=0){
+            ivSilentMode.setImageResource(R.mipmap.iv_close);
+            silentModeStatus=false;
+            flagSoundVolume=true;
+        }else{
+            ivSilentMode.setImageResource(R.mipmap.iv_open);
+            silentModeStatus=true;
+            flagSoundVolume=true;
+        }
+
+
+    }
+
+    @Override
+    public void getSoundVolumeFail() {
+        loadingDialog.dismiss();
+        ToastUtil.getInstance().showShort(R.string.get_sound_volume_fail);
+
+    }
+
+    @Override
+    public void getSoundVolumeThrowable(Throwable throwable) {
+        loadingDialog.dismiss();
+        ToastUtil.getInstance().showShort(R.string.get_sound_volume_fail);
+        LogUtils.e("获取音量异常   "+throwable.getMessage());
+
+    }
+
+    @Override
+    public void setSoundVolumeSuccess(int volume) {
+        loadingDialog.dismiss();
+        LogUtils.e("设置的音量是  "+volume);
+        //设置成功
+        if (volume!=0){
+            ivSilentMode.setImageResource(R.mipmap.iv_close);
+            silentModeStatus=false;
+        }else{
+            ivSilentMode.setImageResource(R.mipmap.iv_open);
+            silentModeStatus=true;
+        }
+        rlSilentMode.setEnabled(true);
+
+
+    }
+
+    @Override
+    public void setSoundVolumeFail() {
+        //设置失败
+        loadingDialog.dismiss();
+        rlSilentMode.setEnabled(true);
+        ToastUtil.getInstance().showShort(getString(R.string.set_failed));
+    }
+
+    @Override
+    public void setSoundVolumeThrowable(Throwable throwable) {
+        loadingDialog.dismiss();
+        rlSilentMode.setEnabled(true);
+        LogUtils.e("设置音量异常    "+throwable.getMessage());
     }
 }

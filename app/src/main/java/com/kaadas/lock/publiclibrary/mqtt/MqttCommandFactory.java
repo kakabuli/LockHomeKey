@@ -7,6 +7,7 @@ import com.kaadas.lock.publiclibrary.mqtt.publishbean.BindGatewayBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.GetAllBindDeviceBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.GetBindGatewayListBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.GetDevicePowerBean;
+import com.kaadas.lock.publiclibrary.mqtt.publishbean.GetGatewayLockInfoBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.GetLockLang;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.GetSoundVolume;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.GetWifiBasicBean;
@@ -51,7 +52,7 @@ public class MqttCommandFactory {
      */
     public static MqttMessage registerMemeAndBind(String uid,String Sn){
         int messageId = getMessageId();
-        BindGatewayBean bindGatewayBean = new BindGatewayBean(uid, MqttConstant.BIND_GATEWAY, Sn);
+        BindGatewayBean bindGatewayBean = new BindGatewayBean(uid, MqttConstant.REGISTER_MIMI_BIND, Sn);
         return getMessage(bindGatewayBean, messageId);
     }
 
@@ -233,12 +234,42 @@ public class MqttCommandFactory {
         return getMessage(lockLang,messageId);
     }
 
+    /**
+     * 获取锁的音量
+     * @param gatewayId
+     * @param deviceId
+     * @return
+     */
     public static MqttMessage getSoundVolume(String gatewayId,String deviceId){
         int messageId=getMessageId();
         GetSoundVolume lockLang=new GetSoundVolume(MqttConstant.MSG_TYPE_REQUEST,MyApplication.getInstance().getUid(),messageId,gatewayId,deviceId,MqttConstant.SOUND_VOLUME,new GetSoundVolume.ParamsBean(),"0",new GetSoundVolume.ReturnDataBean(),System.currentTimeMillis()+"");
         return getMessage(lockLang,messageId);
 
     }
+
+    /**
+     * 设置锁的音量
+     * @param gatewayId
+     * @param deviceId
+     * @return
+     */
+    public static MqttMessage setSoundVolume(String gatewayId,String deviceId,int volume){
+        int messageId=getMessageId();
+        GetSoundVolume.ParamsBean paramsBean=new GetSoundVolume.ParamsBean();
+        paramsBean.setVolume(volume);
+        GetSoundVolume lockLang=new GetSoundVolume(MqttConstant.MSG_TYPE_REQUEST,MyApplication.getInstance().getUid(),messageId,gatewayId,deviceId,MqttConstant.SET_SOUND_VOLUME,paramsBean,"0",new GetSoundVolume.ReturnDataBean(),System.currentTimeMillis()+"");
+        return getMessage(lockLang,messageId);
+
+    }
+
+    public static MqttMessage getGatewayLockInformation(String gatewayId,String deviceId){
+        int messageId=getMessageId();
+        GetGatewayLockInfoBean getGatewayLockInfoBean=new GetGatewayLockInfoBean(MqttConstant.MSG_TYPE_REQUEST,MyApplication.getInstance().getUid(),messageId,gatewayId,deviceId,MqttConstant.GET_LOCK_INFO,new GetGatewayLockInfoBean.ParamsBean(),"0",new GetGatewayLockInfoBean.ReturnDataBean(),System.currentTimeMillis()+"");
+        return  getMessage(getGatewayLockInfoBean,messageId);
+    }
+
+
+
 
 
     public static MqttMessage getMessage(Object o, int messageID) {
