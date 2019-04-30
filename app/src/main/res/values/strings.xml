@@ -699,4 +699,10 @@
     <string name="pre_search_video">点击查看视频</string>
     <string name="pir_history_notic">新增%d条消息,点击刷新</string>
     <string name="no_find_device">未找到设备</string>
+    <string name="screenshot_name">截屏</string>
+    <string name="mute_name">静音</string>
+    <string name="novoice">免提</string>
+    <string name="recording_name">录屏</string>
+    <string name="select_no_lock">暂无联动门锁</string>
+    <string name="video_connecting">正在连接···</string>
 </resources>

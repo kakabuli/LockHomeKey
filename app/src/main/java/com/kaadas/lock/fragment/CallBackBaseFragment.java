@@ -1,8 +1,9 @@
 package com.kaadas.lock.fragment;
 
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -17,14 +18,9 @@ import android.widget.Toast;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.kaadas.lock.R;
-import com.kaadas.lock.activity.cateye.PreviewActivity;
-import com.kaadas.lock.adapter.DateAdapter;
-import com.kaadas.lock.adapter.PirHistoryAdapter;
 import com.kaadas.lock.adapter.TimeAdapter;
 import com.kaadas.lock.bean.MyDate;
 import com.kaadas.lock.widget.GravityPopup;
-import com.kaadas.lock.widget.GravityPopup.HidePopup;
-
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -36,31 +32,23 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-public class SnapshotFragment extends Fragment implements View.OnClickListener{
+/**
+ * Create By denganzhi  on 2019/4/29
+ * Describe
+ */
+
+public abstract class CallBackBaseFragment extends Fragment  implements View.OnClickListener{
 
 
-
-    private Unbinder unbinder;
-
-    @BindView(R.id.pir_history_notic_tv)
-    TextView pir_history_notic_tv;  //通知
-
-    @BindView(R.id.pir_history_all_ll)
-    LinearLayout pir_history_add_ll; //通知X
-
-    @BindView(R.id.pir_history_add_cancle)
-    LinearLayout pir_history_add_cancle;
-
-    @BindView(R.id.year_select_ll)
-    LinearLayout year_select_ll;
-
+    Unbinder unbinder;
     @BindView(R.id.day_select_ll)
     LinearLayout day_select_ll;
     @BindView(R.id.time_select_rl)
     RecyclerView time_select_rl;
     TimeAdapter timeAdapter=null;
 
-
+    @BindView(R.id.year_select_ll)
+    LinearLayout year_select_ll;
 
 
     List<String> yearList = new ArrayList<>();
@@ -90,19 +78,25 @@ public class SnapshotFragment extends Fragment implements View.OnClickListener{
     int currentyear=-1;
     int currentMonth=-1;
 
-    @BindView(R.id.history_rv_ff)
-    RecyclerView history_rv_ff;
 
+    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_snapshot, container, false);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view= initView(inflater,container);
         unbinder = ButterKnife.bind(this, view);
+        initDatePicker();
+        initOtherFunction();
+        return view;
+    }
 
+    public abstract View initView(LayoutInflater inflater,  ViewGroup container);
+
+    public abstract void initOtherFunction();
+
+    public void initDatePicker(){
         year_select_ll.setOnClickListener(this);
         day_select_ll.setOnClickListener(this);
-        pir_history_add_cancle.setOnClickListener(this);
+
 
         todayc.setTime(new Date());
         day= todayc.get(Calendar.DAY_OF_MONTH);
@@ -327,12 +321,8 @@ public class SnapshotFragment extends Fragment implements View.OnClickListener{
             }
         });
         // time_select_rl.smoothScrollToPosition(myDateList.size());
-
-        initPIR();
-
-
-        return view;
     }
+
 
     // 获取某一年有多少月
     public static int getDayOfMonthLength(int year,int month){
@@ -356,69 +346,13 @@ public class SnapshotFragment extends Fragment implements View.OnClickListener{
         return week;
     }
 
-    private GravityPopup mPopupWindow;
-    private GravityPopup date_mPopupWindow;
-
-
-
-    public void testMethod(View view){
-        date_mPopupWindow.notifydatechangeMonth(month12,true);
-    }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case  R.id.year_select_ll:
-
-
-                mPopupWindow.showPopupWindow(v);
-
-                break;
-            case  R.id.day_select_ll:
-
-
-                date_mPopupWindow.showPopupWindow(v);
-
-
-                break;
-
-            case  R.id.pir_history_add_cancle:
-                pir_history_add_ll.setVisibility(View.GONE);
-                break;
-
-        }
-    }
-
-    PirHistoryAdapter pirHistoryAdapter;
-    List<String> imageList=new ArrayList<>();
-    int catEyeCount=-1;
-    private  void initPIR(){
-
-        String format= String.format( getActivity().getResources().getString(R.string.pir_history_notic), catEyeCount);
-        pir_history_notic_tv.setText(format);
-
-        for (int i=0;i<20;i++){
-            imageList.add("2019-04-"+i+"12:34:23");
-        }
-        pirHistoryAdapter = new PirHistoryAdapter(getActivity(),imageList);
-        history_rv_ff.setLayoutManager(new LinearLayoutManager(getActivity()));
-        history_rv_ff.setAdapter(pirHistoryAdapter);
-
-        pirHistoryAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                Intent intent=new Intent(getActivity(), PreviewActivity.class);
-                startActivity(intent);
-            }
-        });
-    }
-
+    protected GravityPopup mPopupWindow;
+    protected GravityPopup date_mPopupWindow;
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
     }
-
 
 }

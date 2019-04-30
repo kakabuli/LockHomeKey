@@ -11,6 +11,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.kaadas.lock.R;
+import com.kaadas.lock.activity.cateye.VideoHActivity;
 import com.kaadas.lock.utils.DateUtils;
 
 import butterknife.BindView;
@@ -63,6 +64,7 @@ public class CateyeFunctionActivity extends AppCompatActivity implements View.On
         ivBack.setOnClickListener(this);
         llLookBack.setOnClickListener(this);
         llMore.setOnClickListener(this);
+        rlIcon.setOnClickListener(this);
         changeOpenLockStatus(1);
         dealWithPower(100);
     }
@@ -78,6 +80,10 @@ public class CateyeFunctionActivity extends AppCompatActivity implements View.On
                 break;
             case R.id.ll_more:
                 intent = new Intent(this, CateyeMoreActivity.class);
+                startActivity(intent);
+                break;
+            case  R.id.rl_icon:
+                intent = new Intent(this, VideoHActivity.class);
                 startActivity(intent);
                 break;
         }

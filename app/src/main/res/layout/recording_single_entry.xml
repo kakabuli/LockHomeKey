@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_gravity="center_horizontal"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:orientation="horizontal">
+
+      <RelativeLayout
+          android:id="@+id/pir_img_icon_rl"
+          android:layout_width="120dp"
+          android:layout_height="75dp"
+          android:layout_gravity="center_vertical"
+          android:layout_marginLeft="10dp">w
+
+          <ImageView
+              android:id="@+id/pir_img_icon"
+              android:layout_width="120dp"
+              android:layout_height="75dp"
+              android:layout_gravity="center_vertical"
+              android:background="@mipmap/pre_video_image"
+              android:scaleType="fitXY" />
+
+
+           <ImageView
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:background="@mipmap/recording_play"
+               android:layout_centerInParent="true"
+               />
+
+      </RelativeLayout>
+
+
+
+        <TextView
+            android:id="@+id/pir_img_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="25dp"
+            android:layout_centerVertical="true"
+            android:text=""
+            android:textSize="15sp"
+            android:layout_toRightOf="@id/pir_img_icon_rl"/>
+
+
+
+
+
+
+
+        <RelativeLayout
+            android:id="@+id/pir_img_rl"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="15dp"
+            android:clickable="true">
+
+
+            <TextView
+                android:id="@+id/pir_history_tv_cicle"
+                android:layout_width="6dp"
+                android:layout_height="6dp"
+                android:layout_centerVertical="true"
+                android:background="@drawable/oval1"
+                android:layout_marginLeft="5dp"/>
+
+
+            <ImageView
+                android:id="@+id/pir_img_ll"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:background="@mipmap/more_icon" />
+
+        </RelativeLayout>
+
+       <!-- <TextView
+            android:id="@+id/textView11"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/view4"
+            android:layout_alignParentEnd="true"
+            android:layout_marginBottom="7dp"
+            android:layout_marginRight="7dp"
+            android:text="已下载"
+            android:textColor="@color/white"
+            android:textSize="10dp"
+            android:visibility="gone" />-->
+
+
+
+
+        <!-- <ImageView
+             android:id="@+id/img_pir_del"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:background="@drawable/pir_del"
+             android:layout_alignParentRight="true"
+             android:paddingLeft="10dp"
+             android:paddingRight="5dp"
+             android:layout_marginRight="15dp"/>-->
+
+    </RelativeLayout>
+
+
+    <View
+        android:id="@+id/view4"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:background="#2666"></View>
+
+
+</LinearLayout>
