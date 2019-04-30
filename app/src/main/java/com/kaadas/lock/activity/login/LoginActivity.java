@@ -234,6 +234,7 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter<ILogi
                 } else {
 //                    String countryCode = tvAreaCode.getText().toString().trim().replace("+", "");
 //                    phoneLogin(countryCode + phone, pwd);
+                    showLoading("");
                     String countryCode = tvAreaCode.getText().toString().trim().replace("+", "");
                     mPresenter.loginByPhone(countryCode + phone, pwd, phone);
                 }
@@ -243,6 +244,7 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter<ILogi
                     AlertDialogUtil.getInstance().noButtonSingleLineDialog(this, getString(R.string.input_valid_telephone_or_email));
                     return;
                 } else {
+                    showLoading("");
                     mPresenter.loginByEmail(phone, pwd);
                 }
             }
@@ -282,6 +284,7 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter<ILogi
 
     @Override
     public void onLoginSuccess() {
+        hiddenLoading();
         LogUtils.e("登陆成功");
         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
         startActivity(intent);
@@ -290,11 +293,13 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter<ILogi
 
     @Override
     public void onLoginFailed(Throwable e) {
+        hiddenLoading();
         ToastUtil.getInstance().showShort(HttpUtils.httpProtocolErrorCode(this, e));
     }
 
     @Override
     public void onLoginFailedServer(BaseResult result) {
+        hiddenLoading();
         ToastUtil.getInstance().showShort(HttpUtils.httpErrorCode(this, result.getCode()));
 
     }
