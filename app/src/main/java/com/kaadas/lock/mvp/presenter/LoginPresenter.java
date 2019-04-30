@@ -1,5 +1,8 @@
 package com.kaadas.lock.mvp.presenter;
 
+import android.app.Activity;
+import android.content.Intent;
+
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.mvp.mvpbase.BasePresenter;
 import com.kaadas.lock.publiclibrary.http.XiaokaiNewServiceImp;
@@ -11,6 +14,8 @@ import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.mvp.view.ILoginView;
 
+
+import net.sdvn.cmapi.ConnectionService;
 
 import io.reactivex.disposables.Disposable;
 
@@ -116,4 +121,7 @@ public class LoginPresenter<T> extends BasePresenter<ILoginView> {
         MyApplication.getInstance().setUid(loginResult.getData().getUid());
         getUserName(loginResult.getData().getUid());
     }
+
+
+
 }

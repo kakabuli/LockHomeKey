@@ -9,10 +9,24 @@ package com.kaadas.lock.publiclibrary.mqtt.util;
  */
 public class MqttConstant {
 
-    public static String MQTT_BASE_URL = "tcp://192.168.3.180:1883";//测试服务器
+    //米米网参数
+    public final static String APP_ID = "AIB1EITFX0DB75MCUIZR";
+    public final static String APP_KEY = "MDXD51LH6NG5M7FP2AGN";
+    public final static String PARTERN_ID = "HQQ8H3HJGJ2KPQJ7NXZY";
+    public final static int  DC_TEST = 6750465;
+
+
+    public static final String MQTT_BASE_URL = "tcp://192.168.3.180:1883";//测试服务器
 //    public static String MQTT_BASE_URL = "tcp://mqtt-kaadas.juziwulian.com:1883";//正式服务器
 
-    public static String MQTT_REQUEST_APP = "/request/app/func";
+
+
+    public static String LINPHONE_URL = "sip-kaadas.juziwulian.com:5061";//正式sip
+    //    public static String LINPHONE_URL = "121.201.57.214:5061";//测试sip
+
+
+    public static final String MQTT_REQUEST_APP = "/request/app/func";
+
 
     //断开后，是否自动连接
     public static final boolean MQTT_AUTOMATIC_RECONNECT = true;

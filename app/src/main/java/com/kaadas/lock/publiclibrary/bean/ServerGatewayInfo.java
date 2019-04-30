@@ -17,7 +17,7 @@ public class ServerGatewayInfo {
     }
 
     public ServerGatewayInfo(AllBindDevices.ReturnDataBean.GwListBean gwListBean) {
-        this.deviceSN = gwListBean.getDeviceSN();
+        deviceSN = gwListBean.getDeviceSN();
         deviceNickName = gwListBean.getDeviceNickName();
         adminuid = gwListBean.getAdminuid();
         adminName = gwListBean.getAdminName();

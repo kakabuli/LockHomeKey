@@ -1,7 +1,9 @@
 package com.kaadas.lock.activity;
 
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.widget.RadioButton;
@@ -16,6 +18,9 @@ import com.kaadas.lock.mvp.presenter.MainPresenter;
 import com.kaadas.lock.mvp.view.IMainView;
 import com.kaadas.lock.utils.PermissionUtil;
 import com.kaadas.lock.widget.NoScrollViewPager;
+
+import net.sdvn.cmapi.CMAPI;
+import net.sdvn.cmapi.ConnectionService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +43,7 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter<IMainVie
     private List<Fragment> fragments = new ArrayList<>();
     private boolean isOnBackground = false;
     private static MainActivity instance;
+    private static final int REQUEST_CODE_VPN_SERVICE = 11;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +74,13 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter<IMainVie
 
         //首页的fragment不重新加载，导致各种问题
         homeViewPager.setOffscreenPageLimit(fragments.size());
+
+        checkVpnService();
+
+        //设置Linphone的监听
+
+        mPresenter.initLinphone();
+
     }
 
     @Override
@@ -113,4 +126,27 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter<IMainVie
         throw new RuntimeException("LinphoneActivity not instantiated yet");
     }
 
+
+    //检查vpn授权
+    public void checkVpnService() {
+        Intent prepare = ConnectionService.prepare(this);
+        boolean resultvpn = prepare == null ? true : false;
+        net.sdvn.cmapi.util.LogUtils.d(resultvpn + " 已授权 " + " 未授权 ");
+        if (prepare != null) {
+            startActivityForResult(prepare, REQUEST_CODE_VPN_SERVICE);
+        } else {
+            onActivityResult(REQUEST_CODE_VPN_SERVICE, RESULT_OK, null);
+        }
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        //  vpn  授权
+
+        if (requestCode == REQUEST_CODE_VPN_SERVICE) {
+            CMAPI.getInstance().onVpnPrepareResult(requestCode, resultCode);
+        }
+    }
 }

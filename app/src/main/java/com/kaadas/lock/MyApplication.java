@@ -9,14 +9,18 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.kaadas.lock.activity.login.LoginActivity;
+import com.kaadas.lock.publiclibrary.linphone.MemeManager;
+import com.kaadas.lock.publiclibrary.linphone.linphone.util.LinphoneHelper;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.publiclibrary.ble.BleService;
 import com.kaadas.lock.publiclibrary.http.result.GetPasswordResult;
 import com.kaadas.lock.publiclibrary.http.util.RetrofitServiceManager;
 import com.kaadas.lock.publiclibrary.http.util.RxjavaHelper;
+import com.kaadas.lock.publiclibrary.linphone.linphonenew.LinphoneService;
 import com.kaadas.lock.publiclibrary.mqtt.MqttCommandFactory;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.AllBindDevices;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttConstant;
@@ -37,6 +41,13 @@ import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
 import com.scwang.smartrefresh.layout.header.ClassicsHeader;
 import com.uuzuche.lib_zxing.activity.ZXingLibrary;
 
+
+import net.sdvn.cmapi.BaseInfo;
+import net.sdvn.cmapi.CMAPI;
+import net.sdvn.cmapi.Config;
+import net.sdvn.cmapi.Network;
+import net.sdvn.cmapi.protocal.ConnectStatusListener;
+import net.sdvn.cmapi.protocal.ConnectStatusListenerPlus;
 
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.linphone.core.LinphoneCore;
@@ -73,6 +84,7 @@ public class MyApplication extends Application {
     private BleService bleService;
     private Disposable allBindDeviceDisposable;
     private AllBindDevices allBindDevices;
+    private String TAG = "凯迪仕";
 
     @Override
     public void onCreate() {
@@ -81,13 +93,31 @@ public class MyApplication extends Application {
         instance = this;
         initBleService();
         initMqttService();//启动MqttService
+        initLinphoneService();
         SPUtils.init(this);  //初始化SPUtils  传递Context进去  不需要每次都传递Context
         ToastUtil.init(this); //初始化ToastUtil 传递Context进去  不需要每次都传递
         initTokenAndUid();  //获取本地UUID
         listenerAppBackOrForge();
         //扫描二维码初始化
         ZXingLibrary.initDisplayOpinion(this);
+
+        initMeme();
     }
+
+    private void initMeme() {
+        //设置配置项
+        Config config = new Config(true);
+        if (BuildConfig.DEBUG) {
+            config.setLogLevel(5);
+        } else {
+            config.setLogLevel(0);
+        }
+        CMAPI.getInstance().setConfig(config);
+        CMAPI.getInstance().init(this, MqttConstant.APP_ID, MqttConstant.PARTERN_ID, MqttConstant.DC_TEST);
+
+        MemeManager.getInstance().init();
+    }
+
 
 
     /**
@@ -205,8 +235,18 @@ public class MyApplication extends Application {
      * 初始化linphone服务
      */
     private void initLinphoneService() {
+        Intent intent = new Intent(this, LinphoneService.class);
+        bindService(intent, new ServiceConnection() {
+            @Override
+            public void onServiceConnected(ComponentName name, IBinder service) {
 
+            }
 
+            @Override
+            public void onServiceDisconnected(ComponentName name) {
+
+            }
+        }, Context.BIND_AUTO_CREATE);
     }
 
     public MqttService getMqttService() {
@@ -423,6 +463,12 @@ public class MyApplication extends Application {
      * @param isForce 是否强制刷新
      */
     public void getAllDevicesByMqtt(boolean isForce) {
+        if(!isForce){
+            if (allBindDevices!=null){
+                getDevicesFromServer.onNext(allBindDevices);
+                return;
+            }
+        }
         MqttMessage allBindDevice = MqttCommandFactory.getAllBindDevice(getUid());
         if (allBindDeviceDisposable != null && allBindDeviceDisposable.isDisposed()) {
             allBindDeviceDisposable.dispose();
@@ -499,8 +545,8 @@ public class MyApplication extends Application {
     private int linphone_port;
 
     /**
-     * 获取 linphone的端口号
-     * @return
+     *  获取 linphone的端口号
+     *  @return
      */
     public int getLinphone_port() {
         return linphone_port;
@@ -511,7 +557,7 @@ public class MyApplication extends Application {
     }
 
 
-   private boolean isVideoActivityRun=false;
+    private boolean isVideoActivityRun = false;
 
     public boolean isVideoActivityRun() {
         return isVideoActivityRun;
