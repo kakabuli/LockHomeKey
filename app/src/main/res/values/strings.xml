@@ -717,4 +717,7 @@
     <string name="select_time_ce_lue">请选择时间策略...</string>
     <string name="get_lock_lang">正在锁的语言状态，请稍后。。。</string>
     <string name="get_lock_lang_fail">获取当前锁的语言失败</string>
+    <string name="no_get_current_lang">未获取到锁当前的语言状态，无法进行设置</string>
+    <string name="lock_lang_no_change">锁的语言选择未改变，请重新选择</string>
+    <string name="is_setting_lock_lang">正在设置锁的语言，请稍后。。。</string>
 </resources>

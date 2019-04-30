@@ -3,6 +3,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -46,6 +47,9 @@ public class GatewayLockLanguageSettingActivity extends BaseActivity<GatewayLock
     private String  deviceId;
     private String  gatewayId;
     private LoadingDialog loadingDialog;
+
+    private String lockCurrentLang="";
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,8 +80,9 @@ public class GatewayLockLanguageSettingActivity extends BaseActivity<GatewayLock
         deviceId=intent.getStringExtra(KeyConstants.DEVICE_ID);
         gatewayId=intent.getStringExtra(KeyConstants.GATEWAY_ID);
         if (deviceId!=null&&gatewayId!=null){
-            mPresenter.getLang(gatewayId,deviceId);
             loadingDialog.show(getString(R.string.get_lock_lang));
+            mPresenter.getLang(gatewayId,deviceId);
+
         }
     }
 
@@ -95,9 +100,18 @@ public class GatewayLockLanguageSettingActivity extends BaseActivity<GatewayLock
                 languageCurrent = "en";
                 break;
             case R.id.btn_save:
-
-
-
+                if (TextUtils.isEmpty(lockCurrentLang)){
+                    ToastUtil.getInstance().showShort(getString(R.string.no_get_current_lang));
+                    return;
+                }
+                if (lockCurrentLang.equals(languageCurrent)){
+                    ToastUtil.getInstance().showShort(getString(R.string.lock_lang_no_change));
+                    return;
+                }
+                if (gatewayId!=null&&deviceId!= null){
+                    ToastUtil.getInstance().showShort(R.string.is_setting_lock_lang);
+                    mPresenter.setLang(gatewayId,deviceId,languageCurrent);
+                }
                 break;
         }
     }
@@ -114,18 +128,19 @@ public class GatewayLockLanguageSettingActivity extends BaseActivity<GatewayLock
 
     @Override
     public void getLockLangSuccess(String lang) {
-        LogUtils.e(lang);
+        LogUtils.e("获取到的语言是"+lang);
         loadingDialog.dismiss();
         if ("zh".equals(lang)){
             zhImg.setChecked(true);
             enImg.setChecked(false);
+            lockCurrentLang="zh";
             languageCurrent="zh";
         }else{
             zhImg.setChecked(false);
             enImg.setChecked(true);
+            lockCurrentLang="en";
             languageCurrent="en";
         }
-
 
     }
 
@@ -139,5 +154,23 @@ public class GatewayLockLanguageSettingActivity extends BaseActivity<GatewayLock
     public void getLockLangThrowable(Throwable throwable) {
         loadingDialog.dismiss();
         LogUtils.e("获取锁的语言异常      "+throwable.getMessage());
+    }
+
+    @Override
+    public void setLockLangSuccess(String lang) {
+        languageCurrent=lang;
+        lockCurrentLang=lang;
+        ToastUtil.getInstance().showShort(getString(R.string.set_success));
+    }
+
+
+    @Override
+    public void setLockLangFail() {
+        ToastUtil.getInstance().showShort(getString(R.string.set_failed));
+    }
+
+    @Override
+    public void setLockLangThrowable(Throwable throwable) {
+        LogUtils.e("设置锁的语言异常    "+throwable.getMessage());
     }
 }

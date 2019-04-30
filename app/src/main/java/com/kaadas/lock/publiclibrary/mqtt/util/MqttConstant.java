@@ -55,6 +55,8 @@ public class MqttConstant {
 
     //1 绑定网关
     public static final String BIND_GATEWAY = "bindGatewayByUser";
+    // 绑定咪咪网
+    public static final String REGISTER_MIMI_BIND="RegisterMemeAndBind";
 
     //2 获取网关列表
     public static final String GET_BIND_GATEWAY_LIST = "gatewayBindList";
@@ -91,5 +93,11 @@ public class MqttConstant {
 
     //获取锁的语言
     public static final String GET_LANG="getLang";
+
+    //设置锁的语言
+    public static final String SET_LANG="setLang";
+
+    //获取锁的音量
+    public static final String SOUND_VOLUME="soundVolume";
 
 }

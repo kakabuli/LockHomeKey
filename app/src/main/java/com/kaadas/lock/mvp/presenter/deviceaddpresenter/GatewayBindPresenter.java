@@ -23,7 +23,7 @@ import io.reactivex.functions.Predicate;
 
 public class GatewayBindPresenter<T> extends BasePresenter<GatewayBindView> {
     private Disposable bindGatewayDisposable;
-
+    private Disposable bingMimiDisposable;
     //绑定网关
     public void bindGateway(String deviceSN) {
         toDisposable(bindGatewayDisposable);
@@ -49,8 +49,7 @@ public class GatewayBindPresenter<T> extends BasePresenter<GatewayBindView> {
                         LogUtils.e(bindGatewayResult.getFunc());
                         if ("200".equals(bindGatewayResult.getCode())) {
                             if (mViewRef.get() != null) {
-                                mViewRef.get().bindGatewaySuccess();
-                                MyApplication.getInstance().getAllDevicesByMqtt(true);
+                                mViewRef.get().bindGatewaySuccess(deviceSN);
                             }
                         } else {
                             if (mViewRef.get() != null) {
@@ -68,6 +67,52 @@ public class GatewayBindPresenter<T> extends BasePresenter<GatewayBindView> {
                     }
                 });
         compositeDisposable.add(bindGatewayDisposable);
+    }
+
+    //绑定咪咪网
+    public void bindMimi(String deviceSN) {
+        toDisposable(bingMimiDisposable);
+        MqttMessage mqttMessage = MqttCommandFactory.registerMemeAndBind(MyApplication.getInstance().getUid(), deviceSN);
+        bingMimiDisposable = mqttService.mqttPublish(MqttConstant.MQTT_REQUEST_APP, mqttMessage)
+                .compose(RxjavaHelper.observeOnMainThread())
+                .filter(new Predicate<MqttData>() {
+                    @Override
+                    public boolean test(MqttData mqttData) throws Exception {
+                        //TODO  以后改成根据  msgId 区分是不是当前消息的回调
+                        if (MqttConstant.REGISTER_MIMI_BIND.equals(mqttData.getFunc())) {
+                            return true;
+                        }
+                        return false;
+                    }
+                })
+                .timeout(10 * 1000, TimeUnit.MILLISECONDS)
+                .subscribe(new Consumer<MqttData>() {
+                    @Override
+                    public void accept(MqttData mqttData) throws Exception {
+                        LogUtils.e("绑定咪咪回调" + mqttData.getPayload());
+                        BindGatewayBeanResult bindGatewayResult = new Gson().fromJson(mqttData.getPayload(), BindGatewayBeanResult.class);
+                        LogUtils.e(bindGatewayResult.getFunc());
+                        if ("200".equals(bindGatewayResult.getCode())) {
+                            if (mViewRef.get() != null) {
+                                mViewRef.get().bindMimiSuccess();
+                                MyApplication.getInstance().getAllDevicesByMqtt(true);
+                            }
+                        } else {
+                            if (mViewRef.get() != null) {
+                                mViewRef.get().bindMimiFail(bindGatewayResult.getCode(), bindGatewayResult.getMsg());
+                            }
+                        }
+                        toDisposable(bingMimiDisposable);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        if (mViewRef.get() != null) {
+                            mViewRef.get().bindMimiThrowable(throwable);
+                        }
+                    }
+                });
+        compositeDisposable.add(bingMimiDisposable);
     }
 
 
