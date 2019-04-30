@@ -247,6 +247,16 @@ public class KeyConstants {
 
     //是否保存了开锁密码
     public static final String SAVA_LOCK_PWD="saveLockPwd";
+
+    //开锁密码编号
+    public static final String LOCK_PWD_NUMber="lockPwdNumber";
+
+    //设备名称
+    public static final String NAME="name";
+
+    //设置onActivityResult
+    public static final int DEVICE_DETAIL_BEAN_NUM=1000;
+
     /**
      * 升级时，保存的设备蓝牙版本号的Key
      */

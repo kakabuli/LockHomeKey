@@ -62,9 +62,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
-
-
         <activity
             android:name=".activity.MainActivity"
             android:launchMode="singleTask"
@@ -576,6 +573,8 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"></activity>
         <service android:name="com.kaadas.lock.publiclibrary.ble.BleService" />
+
+        <service android:name=".publiclibrary.linphone.linphonenew.LinphoneService" />
 
         <receiver android:name=".utils.networkListenerutil.NetWorkChangReceiver" >
             <intent-filter>

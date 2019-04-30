@@ -276,7 +276,6 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
         switch (deviceDetailBean.getType()) {
             case 0:
                 //猫眼
-
                 break;
             case 1:
                 //网关锁

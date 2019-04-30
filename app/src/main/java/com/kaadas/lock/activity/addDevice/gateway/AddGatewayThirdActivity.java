@@ -76,10 +76,8 @@ public class AddGatewayThirdActivity extends BaseActivity<GatewayBindView, Gatew
 
 
     @Override
-    public void bindGatewaySuccess() {
-        Intent successIntent = new Intent(this, AddGatewaySuccessActivity.class);
-        startActivity(successIntent);
-        finish();
+    public void bindGatewaySuccess(String deviceSN) {
+       mPresenter.bindMimi(deviceSN);
     }
 
     @Override
@@ -107,6 +105,30 @@ public class AddGatewayThirdActivity extends BaseActivity<GatewayBindView, Gatew
     public void bindGatewayThrowable(Throwable throwable) {
 
         LogUtils.e("绑定网关异常" + throwable);
+        Intent failIntent = new Intent(this, AddGatewayFailActivity.class);
+        startActivity(failIntent);
+        finish();
+    }
+
+    @Override
+    public void bindMimiSuccess() {
+        Intent successIntent = new Intent(this, AddGatewaySuccessActivity.class);
+        startActivity(successIntent);
+        finish();
+    }
+
+    @Override
+    public void bindMimiFail(String code, String msg) {
+        Intent failIntent = new Intent(this, AddGatewayFailActivity.class);
+        failIntent.putExtra("code", code);
+        failIntent.putExtra("msg", msg);
+        startActivity(failIntent);
+        finish();
+    }
+
+    @Override
+    public void bindMimiThrowable(Throwable throwable) {
+        LogUtils.e("绑定mimi异常" + throwable);
         Intent failIntent = new Intent(this, AddGatewayFailActivity.class);
         startActivity(failIntent);
         finish();

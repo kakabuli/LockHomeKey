@@ -1,5 +1,6 @@
 package com.kaadas.lock.activity.login;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -33,6 +34,9 @@ import com.kaadas.lock.utils.StringUtil;
 import com.kaadas.lock.utils.ToastUtil;
 import com.kaadas.lock.mvp.view.ILoginView;
 
+import net.sdvn.cmapi.CMAPI;
+import net.sdvn.cmapi.ConnectionService;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -60,6 +64,8 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter<ILogi
 
     private boolean isShowDialog = false;
 
+    private static final int REQUEST_CODE_VPN_SERVICE = 11;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,6 +76,7 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter<ILogi
         //检查版本
         checkVersion();
         initView();
+        checkVpnService();
     }
 
     private void initView() {
@@ -236,7 +243,7 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter<ILogi
                     AlertDialogUtil.getInstance().noButtonSingleLineDialog(this, getString(R.string.input_valid_telephone_or_email));
                     return;
                 } else {
-                    mPresenter.loginByEmail(phone,pwd);
+                    mPresenter.loginByEmail(phone, pwd);
                 }
             }
 
@@ -246,49 +253,6 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter<ILogi
     }
 
 
-
- /*   private void login() {
-        if (NetUtil.isNetworkAvailable()) {
-            String phone = getEdittextContent(etAccount);
-            String pwd = getEdittextContent(etPassword);
-            if (StringUtil.judgeSpecialCharacter(pwd)) {
-                ToastUtil.getInstance().showShort(R.string.not_input_special_symbol);
-                return;
-            }
-            if (TextUtils.isEmpty(phone)) {
-                ToastUtil.getInstance().showShort(R.string.phone_number_con_not_empty);
-                return;
-            }
-            if (!PhoneUtil.isMobileNO(phone)) {
-                ToastUtil.getInstance().showShort(R.string.phone_not_right);
-                return;
-            }
-
-            if (!StringUtil.passwordJudge(pwd)) {
-//                ToastUtil.getInstance().showShort(R.string.password_judgment);
-                AlertDialogUtil.getInstance().noEditSingleButtonDialog(this, getString(R.string.hint), getString(R.string.password_error), getString(R.string.affirm), new AlertDialogUtil.ClickListener() {
-                    @Override
-                    public void left() {
-
-                    }
-
-                    @Override
-                    public void right() {
-
-                    }
-                });
-                return;
-            }
-
-
-            String countryCode = tvAreaCode.getText().toString().trim().replace("+", "");
-            mPresenter.loginByPhone(countryCode + phone, pwd, phone);
-        } else {
-            ToastUtil.getInstance().showShort(R.string.noNet);
-        }
-    }*/
-
-
     @NonNull
     private String getEdittextContent(EditText et) {
         return et.getText().toString().trim();
@@ -296,6 +260,11 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter<ILogi
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        //  vpn  授权
+        if (requestCode == REQUEST_CODE_VPN_SERVICE) {
+            CMAPI.getInstance().onVpnPrepareResult(requestCode, resultCode);
+        }
+
         switch (requestCode) {
             case 12:
                 if (resultCode == RESULT_OK) {
@@ -327,6 +296,20 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter<ILogi
     @Override
     public void onLoginFailedServer(BaseResult result) {
         ToastUtil.getInstance().showShort(HttpUtils.httpErrorCode(this, result.getCode()));
+
+    }
+
+
+    //检查vpn授权
+    public void checkVpnService() {
+        Intent prepare = ConnectionService.prepare(this);
+        boolean resultvpn = prepare == null ? true : false;
+        net.sdvn.cmapi.util.LogUtils.d(resultvpn + " 已授权 " + " 未授权 ");
+        if (prepare != null) {
+            startActivityForResult(prepare, REQUEST_CODE_VPN_SERVICE);
+        } else {
+            onActivityResult(REQUEST_CODE_VPN_SERVICE, RESULT_OK, null);
+        }
 
     }
 }

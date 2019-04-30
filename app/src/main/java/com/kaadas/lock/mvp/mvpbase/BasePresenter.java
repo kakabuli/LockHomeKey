@@ -27,7 +27,6 @@ public class BasePresenter<T extends IBaseView> {
         if (mqttService == null) {
             mqttService = MyApplication.getInstance().getMqttService();
         }
-
         if (bleService == null) {
             LogUtils.e("bleService  为空   异常情况  " + (MyApplication.getInstance().getBleService() == null));
             bleService = MyApplication.getInstance().getBleService();

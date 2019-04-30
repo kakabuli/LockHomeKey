@@ -10,9 +10,11 @@ import android.text.TextUtils;
 import com.kaadas.lock.activity.MainActivity;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
+import com.kaadas.lock.publiclibrary.linphone.linphonenew.LinphoneService;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.bean.VersionBean;
 import com.kaadas.lock.mvp.presenter.SplashPresenter;
+import com.kaadas.lock.publiclibrary.ble.BleService;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttService;
 import com.kaadas.lock.utils.CheckLanguageUtil;
 import com.kaadas.lock.utils.KeyConstants;
@@ -116,8 +118,14 @@ public class SplashActivity extends BaseActivity<ISplashView, SplashPresenter<IS
     @Override
     protected void onResume() {
         super.onResume();
-        Intent intent=new Intent(this, MqttService.class);
+        //启动mqttservice
+        Intent intent = new Intent(this, MqttService.class);
         startService(intent);
-
+        //启动bleService
+        Intent bleServiceIntent = new Intent(this, BleService.class);
+        startService(bleServiceIntent);
+        //启动linphoneService
+        Intent linphoneServiceIntent = new Intent(this, LinphoneService.class);
+        startService(linphoneServiceIntent);
     }
 }

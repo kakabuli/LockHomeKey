@@ -9,10 +9,24 @@ package com.kaadas.lock.publiclibrary.mqtt.util;
  */
 public class MqttConstant {
 
-    public static String MQTT_BASE_URL = "tcp://192.168.3.180:1883";//测试服务器
+    //米米网参数
+    public final static String APP_ID = "AIB1EITFX0DB75MCUIZR";
+    public final static String APP_KEY = "MDXD51LH6NG5M7FP2AGN";
+    public final static String PARTERN_ID = "HQQ8H3HJGJ2KPQJ7NXZY";
+    public final static int  DC_TEST = 6750465;
+
+
+    public static final String MQTT_BASE_URL = "tcp://192.168.3.180:1883";//测试服务器
 //    public static String MQTT_BASE_URL = "tcp://mqtt-kaadas.juziwulian.com:1883";//正式服务器
 
-    public static String MQTT_REQUEST_APP = "/request/app/func";
+
+
+    public static String LINPHONE_URL = "sip-kaadas.juziwulian.com:5061";//正式sip
+    //    public static String LINPHONE_URL = "121.201.57.214:5061";//测试sip
+
+
+    public static final String MQTT_REQUEST_APP = "/request/app/func";
+
 
     //断开后，是否自动连接
     public static final boolean MQTT_AUTOMATIC_RECONNECT = true;
@@ -55,6 +69,8 @@ public class MqttConstant {
 
     //1 绑定网关
     public static final String BIND_GATEWAY = "bindGatewayByUser";
+    // 绑定咪咪网
+    public static final String REGISTER_MIMI_BIND="RegisterMemeAndBind";
 
     //2 获取网关列表
     public static final String GET_BIND_GATEWAY_LIST = "gatewayBindList";
@@ -82,5 +98,20 @@ public class MqttConstant {
 
     //开锁
     public static final String OPEN_LOCK="openLock";
+
+    //锁密码的操作
+    public static final String SET_PWD="setPwd";
+
+    //获取锁密码和RFID基本信息
+    public static final String LOCK_PWD_INFO="lockPwdInfo";
+
+    //获取锁的语言
+    public static final String GET_LANG="getLang";
+
+    //设置锁的语言
+    public static final String SET_LANG="setLang";
+
+    //获取锁的音量
+    public static final String SOUND_VOLUME="soundVolume";
 
 }

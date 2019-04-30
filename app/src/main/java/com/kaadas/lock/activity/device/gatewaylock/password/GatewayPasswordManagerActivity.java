@@ -13,14 +13,21 @@ import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.kaadas.lock.R;
+import com.kaadas.lock.adapter.GatewayLockPasswordAdapter;
 import com.kaadas.lock.adapter.GatewayPasswordAdapter;
+import com.kaadas.lock.mvp.mvpbase.BaseActivity;
+import com.kaadas.lock.mvp.presenter.gatewaylockpresenter.GatewayLockFunctionPresenter;
+import com.kaadas.lock.mvp.view.gatewaylockview.GatewayLockFunctinView;
 import com.kaadas.lock.publiclibrary.bean.ForeverPassword;
 import com.kaadas.lock.publiclibrary.http.postbean.AddPasswordBean;
 import com.kaadas.lock.utils.KeyConstants;
+import com.kaadas.lock.utils.LoadingDialog;
 import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.ToastUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -28,8 +35,8 @@ import butterknife.ButterKnife;
 /**
  * Created by David
  */
-public class GatewayPasswordManagerActivity extends AppCompatActivity
-        implements BaseQuickAdapter.OnItemClickListener, View.OnClickListener {
+public class GatewayPasswordManagerActivity extends BaseActivity<GatewayLockFunctinView, GatewayLockFunctionPresenter<GatewayLockFunctinView>>
+        implements BaseQuickAdapter.OnItemClickListener, View.OnClickListener,GatewayLockFunctinView {
     @BindView(R.id.iv_back)
     ImageView ivBack;//返回
     @BindView(R.id.tv_content)
@@ -37,65 +44,85 @@ public class GatewayPasswordManagerActivity extends AppCompatActivity
 
     @BindView(R.id.recycleview)
     RecyclerView recycleview;
-    GatewayPasswordAdapter gatewayPasswordAdapter;
-    boolean isNotPassword = true;
+ /*   GatewayPasswordAdapter gatewayPasswordAdapter;*/
+
     @BindView(R.id.ll_add_password)
     LinearLayout llAddPassword;
     @BindView(R.id.ll_has_data)
     LinearLayout llHasData;
     @BindView(R.id.tv_no_user)
     TextView tvNoUser;
-    List<ForeverPassword> pwdList = new ArrayList<>();
-    ;
+    //List<ForeverPassword> pwdList = new ArrayList<>();
     private boolean isSync = false; //是不是正在同步锁中的密码
 
+    private String gatewayId;
+    private String deviceId;
+
+
+    private List<String> mList=new ArrayList<>();
+
+    private GatewayLockPasswordAdapter gatewayLockPasswordAdapter;
+
+    private LoadingDialog loadingDialog;
+
+    private int maxPwdId=0;
 
     @Override
-
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gateway_password_manager);
         ButterKnife.bind(this);
-        tvContent.setText(getString(R.string.password));
-        ivBack.setOnClickListener(this);
-        llAddPassword.setOnClickListener(this);
-        passwordPageChange();
-        initRecycleview();
-        pwdList.add(new ForeverPassword("fff", "fff", 1));
+
+        initView();
+        initListener();
         initData();
     }
 
-    private void initRecycleview() {
-        gatewayPasswordAdapter = new GatewayPasswordAdapter(pwdList, R.layout.item_gateway_password);
-        recycleview.setLayoutManager(new LinearLayoutManager(this));
-        recycleview.setAdapter(gatewayPasswordAdapter);
-        gatewayPasswordAdapter.setOnItemClickListener(this);
+    @Override
+    protected GatewayLockFunctionPresenter<GatewayLockFunctinView> createPresent() {
+        return new GatewayLockFunctionPresenter<>();
     }
 
+    private void initView() {
+        tvContent.setText(getString(R.string.password));
+        loadingDialog=LoadingDialog.getInstance(this);
+        initRecycleview();
+    }
+
+    private void initListener() {
+        ivBack.setOnClickListener(this);
+        llAddPassword.setOnClickListener(this);
+    }
+
+
+    private void initRecycleview() {
+
+        gatewayLockPasswordAdapter = new GatewayLockPasswordAdapter(mList);
+        recycleview.setLayoutManager(new LinearLayoutManager(this));
+        recycleview.setAdapter(gatewayLockPasswordAdapter);
+        gatewayLockPasswordAdapter.setOnItemClickListener(this);
+    }
 
     @Override
     protected void onResume() {
         super.onResume();
-        LogUtils.e("密码管理界面  onResume()   ");
     }
 
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
         Intent intent = new Intent(this, GatewayPasswordManagerDetailActivity.class);
-        AddPasswordBean.Password password = new AddPasswordBean.Password(1, pwdList.get(position));
-        intent.putExtra(KeyConstants.TO_PWD_DETAIL, password);
-        intent.putExtra(KeyConstants.CREATE_TIME, pwdList.get(position).getCreateTime());
+        intent.putExtra(KeyConstants.LOCK_PWD_NUMber,mList.get(position));
         startActivity(intent);
     }
 
-    public void passwordPageChange() {
+    public void passwordPageChange(boolean havePwd) {
 
-        if (isNotPassword) {
-            llHasData.setVisibility(View.GONE);
-            tvNoUser.setVisibility(View.VISIBLE);
-        } else {
+        if (havePwd) {
             llHasData.setVisibility(View.VISIBLE);
             tvNoUser.setVisibility(View.GONE);
+        } else {
+           llHasData.setVisibility(View.GONE);
+            tvNoUser.setVisibility(View.VISIBLE);
         }
     }
 
@@ -115,15 +142,70 @@ public class GatewayPasswordManagerActivity extends AppCompatActivity
     }
 
     public void initData() {
-        if (pwdList.size() > 0) {
-            isNotPassword = false;
-        } else {
-            isNotPassword = true;
-        }
-        passwordPageChange();
-        gatewayPasswordAdapter.notifyDataSetChanged();
-        LogUtils.e("收到  同步的锁的密码   " + pwdList.toString());
+        Intent intent=getIntent();
+        gatewayId=intent.getStringExtra(KeyConstants.GATEWAY_ID);
+        deviceId=intent.getStringExtra(KeyConstants.DEVICE_ID);
+        //1获取最大用户密码数量
+        loadingDialog.show("正在获取密码列表，请稍后。。。");
+        mPresenter.getLockPwdInfo(gatewayId,deviceId);
 
+    }
+
+    @Override
+    public void getLockSuccess(Map<String,Integer> map) {
+        //获取开锁密码成功
+        loadingDialog.dismiss();
+        LogUtils.e(map.size()+"map集合大小");
+        if (map.size()>0){
+            for (String key : map.keySet()) {
+                if (map.get(key)==1){
+                    mList.add(key);
+                }
+            }
+            if (mList.size()>0){
+                passwordPageChange(true);
+                gatewayLockPasswordAdapter.notifyDataSetChanged();
+            }else{
+                passwordPageChange(false);
+            }
+
+        }else{
+            passwordPageChange(false);
+        }
+    }
+
+    @Override
+    public void getLockFail() {
+        //获取开锁密码失败
+        ToastUtil.getInstance().showShort("获取密码列表失败");
+        passwordPageChange(false);
+
+    }
+
+    @Override
+    public void getLockThrowable(Throwable throwable) {
+        LogUtils.e("获取开锁密码异常   "+throwable.getMessage());
+    }
+
+    @Override
+    public void getLockInfoSuccess(int pwdNum) {
+        //获取到总的次数
+        maxPwdId=pwdNum;
+        if (pwdNum>0){
+            for (int i=0;i<pwdNum;i++){
+                mPresenter.getLockPwd(gatewayId,deviceId,"0"+i, pwdNum);
+            }
+        }
+
+    }
+
+    @Override
+    public void getLockInfoFail() {
+
+    }
+
+    @Override
+    public void getLockInfoThrowable(Throwable throwable) {
 
     }
 }
