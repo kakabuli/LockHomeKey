@@ -257,4 +257,8 @@ public class KeyConstants {
     //设置onActivityResult
     public static final int DEVICE_DETAIL_BEAN_NUM=1000;
 
+    /**
+     * 升级时，保存的设备蓝牙版本号的Key
+     */
+    public static final String BLE_VERSION= "bleVersion";
 }

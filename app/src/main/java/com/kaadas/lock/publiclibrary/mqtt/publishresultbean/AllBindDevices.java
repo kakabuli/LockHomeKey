@@ -261,7 +261,7 @@ public class AllBindDevices {
         if (bleDevices != null) {
             for (ServerBleDevice bleDevice : bleDevices) {
                 BleLockInfo bleLockInfo = new BleLockInfo(bleDevice);
-                homeShowBeans.add(new HomeShowBean(HomeShowBean.TYPE_BLE_LOCK, bleDevice.getDevice_name(), bleDevice.getLockNickName(), bleLockInfo));
+                homeShowBeans.add(new HomeShowBean(HomeShowBean.TYPE_BLE_LOCK, bleDevice.getDevice_name(), bleDevice.getDevice_nickname(), bleLockInfo));
             }
         }
 

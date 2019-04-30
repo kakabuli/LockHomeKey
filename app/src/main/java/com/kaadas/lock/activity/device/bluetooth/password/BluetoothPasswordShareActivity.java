@@ -1,6 +1,7 @@
 package com.kaadas.lock.activity.device.bluetooth.password;
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -12,7 +13,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.kaadas.lock.R;
+import com.kaadas.lock.mvp.mvpbase.BaseBleActivity;
+import com.kaadas.lock.mvp.presenter.PasswordDetailPresenter;
+import com.kaadas.lock.mvp.view.IPasswordDetailView;
+import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.utils.AlertDialogUtil;
+import com.kaadas.lock.utils.KeyConstants;
+import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.StringUtil;
 import com.kaadas.lock.utils.ToastUtil;
 
@@ -22,7 +29,8 @@ import butterknife.ButterKnife;
 /**
  * Created by David on 2019/4/17
  */
-public class BluetoothPasswordShareActivity extends AppCompatActivity implements View.OnClickListener {
+public class BluetoothPasswordShareActivity extends BaseBleActivity<IPasswordDetailView, PasswordDetailPresenter<IPasswordDetailView>>
+        implements View.OnClickListener, IPasswordDetailView {
     @BindView(R.id.iv_back)
     ImageView ivBack;
     @BindView(R.id.tv_content)
@@ -45,15 +53,22 @@ public class BluetoothPasswordShareActivity extends AppCompatActivity implements
     TextView tvCopy;
     @BindView(R.id.iv_editor)
     ImageView ivEditor;
-
+    private int type;;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bluetooth_password_share);
         ButterKnife.bind(this);
+        Intent intent = getIntent();
+        type = intent.getIntExtra(KeyConstants.TO_DETAIL_TYPE, 1);
         ivBack.setOnClickListener(this);
         tvContent.setText(getString(R.string.password_detail));
         ivEditor.setOnClickListener(this);
+    }
+
+    @Override
+    protected PasswordDetailPresenter<IPasswordDetailView> createPresent() {
+        return new PasswordDetailPresenter<>();
     }
 
     @Override
@@ -101,5 +116,77 @@ public class BluetoothPasswordShareActivity extends AppCompatActivity implements
                 });
                 break;
         }
+    }
+
+    @Override
+    public void onDeletePwdSuccess() {
+
+    }
+
+    @Override
+    public void onDeletePwdFailed(Throwable throwable) {
+        ToastUtil.getInstance().showShort(R.string.delete_fialed);
+        hiddenLoading();
+    }
+
+    @Override
+    public void onDeleteServerPwdSuccess() {
+        Intent intent = new Intent();
+        if (type == 1) {
+            intent.setClass(this, BluetoothPasswordManagerActivity.class);
+        }else {
+            intent.setClass(this, BluetoothPasswordManagerActivity.class);
+        }
+        startActivity(intent);
+        finish();
+    }
+
+    @Override
+    public void onDeleteServerPwdFailed(Throwable throwable) {
+        LogUtils.e("删除失败  " + throwable.getMessage());
+        ToastUtil.getInstance().showShort(R.string.delete_fialed);
+        hiddenLoading();
+    }
+
+    @Override
+    public void onDeleteServerPwdFailedServer(BaseResult result) {
+        LogUtils.e("删除失败  " +result.toString());
+        ToastUtil.getInstance().showShort(R.string.delete_fialed);
+        hiddenLoading();
+    }
+
+    @Override
+    public void updateNickNameSuccess(String nickName) {
+        hiddenLoading();
+        if (type == 1) {
+            Intent intent = new Intent(this, BluetoothPasswordManagerActivity.class);
+            startActivity(intent);
+        } else if (type == 2) {
+            Intent intent = new Intent(this, BluetoothPasswordManagerActivity.class);
+            startActivity(intent);
+        }
+        hiddenLoading();
+        ToastUtil.getInstance().showLong(R.string.nickname_modify_success);
+        finish();
+    }
+
+    @Override
+    public void updateNickNameFailed(Throwable throwable) {
+        hiddenLoading();
+    }
+
+    @Override
+    public void updateNickNameFailedServer(BaseResult result) {
+        hiddenLoading();
+    }
+
+    @Override
+    public void onLockNoThisNumber() {
+
+    }
+
+    @Override
+    public void onGetLockNumberFailed(Throwable throwable) {
+
     }
 }

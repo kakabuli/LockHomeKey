@@ -11,8 +11,14 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.kaadas.lock.R;
+import com.kaadas.lock.mvp.mvpbase.BaseBleActivity;
+import com.kaadas.lock.mvp.presenter.DeviceDetailPresenter;
+import com.kaadas.lock.mvp.view.IDeviceDetailView;
+import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
+import com.kaadas.lock.publiclibrary.http.util.HttpUtils;
 import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
+import com.kaadas.lock.utils.ToastUtil;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -20,7 +26,7 @@ import butterknife.ButterKnife;
 /**
  * Created by David on 2019/4/10
  */
-public class BluetoothLockAuthorizationActivity extends AppCompatActivity implements View.OnClickListener {
+public class BluetoothLockAuthorizationActivity extends BaseBleActivity<IDeviceDetailView, DeviceDetailPresenter<IDeviceDetailView>> implements IDeviceDetailView, View.OnClickListener  {
     @BindView(R.id.iv_back)
     ImageView ivBack;
     @BindView(R.id.tv_bluetooth_name)
@@ -40,13 +46,14 @@ public class BluetoothLockAuthorizationActivity extends AppCompatActivity implem
     @BindView(R.id.rl_device_information)
     RelativeLayout rlDeviceInformation;
     int lockStatus = -1;
-
+    private BleLockInfo bleLockInfo;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bluetooth_lock_authorization);
         ButterKnife.bind(this);
+        bleLockInfo = mPresenter.getBleLockInfo();
         ivBack.setOnClickListener(this);
         tvOpenClock.setOnClickListener(this);
         tvType.setText(getString(R.string.bluetooth_type) + " ");
@@ -54,6 +61,11 @@ public class BluetoothLockAuthorizationActivity extends AppCompatActivity implem
         rlDeviceInformation.setOnClickListener(this);
         dealWithPower(100);
 
+    }
+
+    @Override
+    protected DeviceDetailPresenter<IDeviceDetailView> createPresent() {
+        return new DeviceDetailPresenter();
     }
 
     @Override
@@ -158,6 +170,23 @@ public class BluetoothLockAuthorizationActivity extends AppCompatActivity implem
             }
         }
 
+
+    }
+
+    @Override
+    public void onElectricUpdata(Integer electric) {
+        if (bleLockInfo.getBattery() != -1) {
+            dealWithPower(bleLockInfo.getBattery());
+        }
+    }
+
+    @Override
+    public void onElectricUpdataFailed(Throwable throwable) {
+        ToastUtil.getInstance().showShort(HttpUtils.httpProtocolErrorCode(this, throwable));
+    }
+
+    @Override
+    public void onStateUpdate(int type) {
 
     }
 }
