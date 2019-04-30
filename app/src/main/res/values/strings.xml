@@ -689,8 +689,6 @@
     <string name="get_lock_finger_failed">获取锁上指纹失败！</string>
     <string name="please_connect_lock">锁设备未连接</string>
     <string name="refresh_data_fail">刷新失败，请稍后再试！</string>
-    <string name="input_open_lock_password">请输入开锁密码</string>
-    <string name="random_verify_error">请输入6-12位数字</string>
     <string name="return_code_409">设备正忙</string>
     <string name="push_type">firebase</string>
     <string name="push_sender_id">929724111839</string><!--firebase 929724111839 !! gcm 622464153529 -->
@@ -719,9 +717,6 @@
     <string name="lock_no_this_card">锁上没有此卡片，请同步</string>
     <string name="confirm">确定</string>
     <string name="random_verify_error">请输入6-12位数字</string>
-    <string name="no_get_current_lang">未获取到锁当前的语言状态，无法进行设置</string>
-    <string name="lock_lang_no_change">锁的语言选择未改变，请重新选择</string>
-    <string name="is_setting_lock_lang">正在设置锁的语言，请稍后。。。</string>
     <string name="get_lock_card_failed">获取锁上卡片失败！</string>
     <string name="password_full_and_delete_exist_code">密码库已满，请删除已有码库再添加</string>
     <string name="please_have_net_add_pwd">请在有网络情况下添加密码！</string>
