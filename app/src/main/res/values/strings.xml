@@ -645,6 +645,7 @@
     <string name="device_bluetooth">蓝牙设备</string>
     <string name="device_add_bluetooth">添加蓝牙设备</string>
     <string name="software_version">软件版本</string>
+    <string name="hardware_version">硬件版本</string>\
     <string name="module_mark">MAC地址</string>
     <string name="bluetooth_version">蓝牙版本</string>
     <string name="nickname_not_null">名称不能为空</string>
