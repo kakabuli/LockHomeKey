@@ -756,5 +756,4 @@
     <string name="set_temp_pwd_succcess">设置临时密码成功</string>
     <string name="sync_failed">同步秘钥失败</string>
     <string name="please_have_net_add_temp_pwd">请在有网络情况下添加临时密码！</string>
-    <string name="get_lock_lang">正在锁的语言状态，请稍后。。。</string>
 </resources>
