@@ -2,7 +2,7 @@ package com.kaadas.lock.publiclibrary.mqtt.publishbean;
 
 import java.io.Serializable;
 
-public class OpenLockBean implements Serializable {
+public class LockPwdFuncBean implements Serializable {
 
 
     /**
@@ -11,9 +11,9 @@ public class OpenLockBean implements Serializable {
      * msgId : 00001
      * gwId :
      * deviceId : devuuid
-     * func : openLock
-     * params : {"optype":"lock/unlock","userid":"xxxxx","type":"rfid/pin","pin":"xxxxxxxx"}
-     * returnCode : 200
+     * func : setPwd
+     * params : {"action":"set/clear/get","type":"rfid/pin","pwdid":"0~maxpwdnum","pwdvalue":"xxxxxxx"}
+     * returnCode : 0
      * returnData : {}
      * timestamp : 13433333333
      */
@@ -28,6 +28,22 @@ public class OpenLockBean implements Serializable {
     private String returnCode;
     private ReturnDataBean returnData;
     private String timestamp;
+
+    public LockPwdFuncBean(String msgtype, String userId, int msgId, String gwId, String deviceId, String func, ParamsBean params, String returnCode, ReturnDataBean returnData, String timestamp) {
+        this.msgtype = msgtype;
+        this.userId = userId;
+        this.msgId = msgId;
+        this.gwId = gwId;
+        this.deviceId = deviceId;
+        this.func = func;
+        this.params = params;
+        this.returnCode = returnCode;
+        this.returnData = returnData;
+        this.timestamp = timestamp;
+    }
+
+    public LockPwdFuncBean() {
+    }
 
     public String getMsgtype() {
         return msgtype;
@@ -111,31 +127,23 @@ public class OpenLockBean implements Serializable {
 
     public static class ParamsBean {
         /**
-         * optype : lock/unlock
-         * userid : xxxxx
+         * action : set/clear/get
          * type : rfid/pin
-         * pin : xxxxxxxx
+         * pwdid : 0~maxpwdnum
+         * pwdvalue : xxxxxxx
          */
 
-        private String optype;
-        private String userid;
+        private String action;
         private String type;
-        private String pin;
+        private String pwdid;
+        private String pwdvalue;
 
-        public String getOptype() {
-            return optype;
+        public String getAction() {
+            return action;
         }
 
-        public void setOptype(String optype) {
-            this.optype = optype;
-        }
-
-        public String getUserid() {
-            return userid;
-        }
-
-        public void setUserid(String userid) {
-            this.userid = userid;
+        public void setAction(String action) {
+            this.action = action;
         }
 
         public String getType() {
@@ -146,32 +154,32 @@ public class OpenLockBean implements Serializable {
             this.type = type;
         }
 
-        public String getPin() {
-            return pin;
+        public String getPwdid() {
+            return pwdid;
         }
 
-        public void setPin(String pin) {
-            this.pin = pin;
+        public void setPwdid(String pwdid) {
+            this.pwdid = pwdid;
+        }
+
+        public String getPwdvalue() {
+            return pwdvalue;
+        }
+
+        public void setPwdvalue(String pwdvalue) {
+            this.pwdvalue = pwdvalue;
         }
     }
 
     public static class ReturnDataBean {
+        private int status;
 
-    }
+        public int getStatus() {
+            return status;
+        }
 
-    public OpenLockBean(String msgtype, String userId, int msgId, String gwId, String deviceId, String func, ParamsBean params, String returnCode, ReturnDataBean returnData, String timestamp) {
-        this.msgtype = msgtype;
-        this.userId = userId;
-        this.msgId = msgId;
-        this.gwId = gwId;
-        this.deviceId = deviceId;
-        this.func = func;
-        this.params = params;
-        this.returnCode = returnCode;
-        this.returnData = returnData;
-        this.timestamp = timestamp;
-    }
-
-    public OpenLockBean() {
+        public void setStatus(int status) {
+            this.status = status;
+        }
     }
 }

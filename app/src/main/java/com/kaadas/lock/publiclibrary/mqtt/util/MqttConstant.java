@@ -83,4 +83,13 @@ public class MqttConstant {
     //开锁
     public static final String OPEN_LOCK="openLock";
 
+    //锁密码的操作
+    public static final String SET_PWD="setPwd";
+
+    //获取锁密码和RFID基本信息
+    public static final String LOCK_PWD_INFO="lockPwdInfo";
+
+    //获取锁的语言
+    public static final String GET_LANG="getLang";
+
 }

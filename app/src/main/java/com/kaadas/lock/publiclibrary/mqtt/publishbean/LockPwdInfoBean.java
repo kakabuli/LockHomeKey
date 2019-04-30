@@ -2,19 +2,19 @@ package com.kaadas.lock.publiclibrary.mqtt.publishbean;
 
 import java.io.Serializable;
 
-public class OpenLockBean implements Serializable {
+public class LockPwdInfoBean implements Serializable {
 
 
     /**
-     * msgtype : request
+     * msgtype : respone
      * userId :
      * msgId : 00001
      * gwId :
      * deviceId : devuuid
-     * func : openLock
-     * params : {"optype":"lock/unlock","userid":"xxxxx","type":"rfid/pin","pin":"xxxxxxxx"}
+     * func :  lockPwdInfo
+     * params : {}
      * returnCode : 200
-     * returnData : {}
+     * returnData : {"maxpwdusernum":100,"maxrfidusernum":100,"maxusernum":100,"maxpwdsize":8,"minpwdsize":8,"maxrfidsize":8,"minrfidsize":8}
      * timestamp : 13433333333
      */
 
@@ -110,56 +110,85 @@ public class OpenLockBean implements Serializable {
     }
 
     public static class ParamsBean {
-        /**
-         * optype : lock/unlock
-         * userid : xxxxx
-         * type : rfid/pin
-         * pin : xxxxxxxx
-         */
-
-        private String optype;
-        private String userid;
-        private String type;
-        private String pin;
-
-        public String getOptype() {
-            return optype;
-        }
-
-        public void setOptype(String optype) {
-            this.optype = optype;
-        }
-
-        public String getUserid() {
-            return userid;
-        }
-
-        public void setUserid(String userid) {
-            this.userid = userid;
-        }
-
-        public String getType() {
-            return type;
-        }
-
-        public void setType(String type) {
-            this.type = type;
-        }
-
-        public String getPin() {
-            return pin;
-        }
-
-        public void setPin(String pin) {
-            this.pin = pin;
-        }
     }
 
     public static class ReturnDataBean {
+        /**
+         * maxpwdusernum : 100
+         * maxrfidusernum : 100
+         * maxusernum : 100
+         * maxpwdsize : 8
+         * minpwdsize : 8
+         * maxrfidsize : 8
+         * minrfidsize : 8
+         */
 
+        private int maxpwdusernum;
+        private int maxrfidusernum;
+        private int maxusernum;
+        private int maxpwdsize;
+        private int minpwdsize;
+        private int maxrfidsize;
+        private int minrfidsize;
+
+        public int getMaxpwdusernum() {
+            return maxpwdusernum;
+        }
+
+        public void setMaxpwdusernum(int maxpwdusernum) {
+            this.maxpwdusernum = maxpwdusernum;
+        }
+
+        public int getMaxrfidusernum() {
+            return maxrfidusernum;
+        }
+
+        public void setMaxrfidusernum(int maxrfidusernum) {
+            this.maxrfidusernum = maxrfidusernum;
+        }
+
+        public int getMaxusernum() {
+            return maxusernum;
+        }
+
+        public void setMaxusernum(int maxusernum) {
+            this.maxusernum = maxusernum;
+        }
+
+        public int getMaxpwdsize() {
+            return maxpwdsize;
+        }
+
+        public void setMaxpwdsize(int maxpwdsize) {
+            this.maxpwdsize = maxpwdsize;
+        }
+
+        public int getMinpwdsize() {
+            return minpwdsize;
+        }
+
+        public void setMinpwdsize(int minpwdsize) {
+            this.minpwdsize = minpwdsize;
+        }
+
+        public int getMaxrfidsize() {
+            return maxrfidsize;
+        }
+
+        public void setMaxrfidsize(int maxrfidsize) {
+            this.maxrfidsize = maxrfidsize;
+        }
+
+        public int getMinrfidsize() {
+            return minrfidsize;
+        }
+
+        public void setMinrfidsize(int minrfidsize) {
+            this.minrfidsize = minrfidsize;
+        }
     }
 
-    public OpenLockBean(String msgtype, String userId, int msgId, String gwId, String deviceId, String func, ParamsBean params, String returnCode, ReturnDataBean returnData, String timestamp) {
+    public LockPwdInfoBean(String msgtype, String userId, int msgId, String gwId, String deviceId, String func, ParamsBean params, String returnCode, ReturnDataBean returnData, String timestamp) {
         this.msgtype = msgtype;
         this.userId = userId;
         this.msgId = msgId;
@@ -172,6 +201,6 @@ public class OpenLockBean implements Serializable {
         this.timestamp = timestamp;
     }
 
-    public OpenLockBean() {
+    public LockPwdInfoBean() {
     }
 }

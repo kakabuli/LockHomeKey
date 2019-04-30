@@ -16,8 +16,14 @@ import android.widget.TextView;
 
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.device.gatewaylock.GatewayDeviceInformationActivity;
+import com.kaadas.lock.bean.DeviceDetailBean;
+import com.kaadas.lock.mvp.mvpbase.BaseActivity;
+import com.kaadas.lock.mvp.presenter.gatewaylockpresenter.GatewayLockMorePresenter;
+import com.kaadas.lock.mvp.view.gatewaylockview.GatewayLockMoreView;
+import com.kaadas.lock.publiclibrary.bean.GwLockInfo;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.KeyConstants;
+import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.StringUtil;
 import com.kaadas.lock.utils.ToastUtil;
@@ -25,10 +31,11 @@ import com.kaadas.lock.utils.ToastUtil;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+
 /**
  * Created by David on 2019/4/15
  */
-public class GatewayMoreActivity extends AppCompatActivity implements View.OnClickListener {
+public class GatewayMoreActivity extends BaseActivity<GatewayLockMoreView, GatewayLockMorePresenter<GatewayLockMoreView>> implements View.OnClickListener,GatewayLockMoreView {
     @BindView(R.id.iv_back)
     ImageView ivBack;
     @BindView(R.id.tv_content)
@@ -41,12 +48,6 @@ public class GatewayMoreActivity extends AppCompatActivity implements View.OnCli
     ImageView ivMessageFree;
     @BindView(R.id.rl_message_free)
     RelativeLayout rlMessageFree;
-    @BindView(R.id.rl_safe_mode)
-    RelativeLayout rlSafeMode;
-    @BindView(R.id.iv_am)
-    ImageView ivAm;
-    @BindView(R.id.rl_am)
-    RelativeLayout rlAm;
     @BindView(R.id.rl_door_lock_language_switch)
     RelativeLayout rlDoorLockLanguageSwitch;
     @BindView(R.id.iv_silent_mode)
@@ -66,17 +67,42 @@ public class GatewayMoreActivity extends AppCompatActivity implements View.OnCli
     @BindView(R.id.tv_device_name)
     TextView tvDeviceName;
 
+    private DeviceDetailBean deviceDetailBean;
+    private String gatewayId;
+    private String deviceId;
+    private GwLockInfo gwLockInfo;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gateway_more);
         ButterKnife.bind(this);
-        initClick();
+        initView();
         initData();
-
+        initClick();
     }
 
+    private void initView() {
+        tvContent.setText(getString(R.string.settting));
+    }
+
+    @Override
+    protected GatewayLockMorePresenter<GatewayLockMoreView> createPresent() {
+        return new GatewayLockMorePresenter<>();
+    }
+
+
     private void initData() {
+        Intent intent=getIntent();
+        deviceDetailBean= (DeviceDetailBean) intent.getSerializableExtra(KeyConstants.DEVICE_DETAIL_BEAN);
+        if (deviceDetailBean!=null){
+            tvDeviceName.setText(deviceDetailBean.getDeviceName());
+            gwLockInfo= (GwLockInfo) deviceDetailBean.getShowCurentBean();
+            gatewayId=gwLockInfo.getGwID();
+            deviceId=gwLockInfo.getServerInfo().getDeviceId();
+        }
+
+
         //todo 获取到设备名字时,key都加上设备名字
         messageFreeStatus = (boolean) SPUtils.get(KeyConstants.MESSAGE_FREE_STATUS, true);
         if (messageFreeStatus) {
@@ -84,14 +110,6 @@ public class GatewayMoreActivity extends AppCompatActivity implements View.OnCli
         } else {
             ivMessageFree.setImageResource(R.mipmap.iv_close);
         }
-
-        amAutoLockStatus = (boolean) SPUtils.get(KeyConstants.AM_AUTO_LOCK_STATUS, false);
-        if (amAutoLockStatus) {
-            ivAm.setImageResource(R.mipmap.iv_open);
-        } else {
-            ivAm.setImageResource(R.mipmap.iv_close);
-        }
-
         silentModeStatus = (boolean) SPUtils.get(KeyConstants.SILENT_MODE_STATUS, false);
         if (silentModeStatus) {
             ivSilentMode.setImageResource(R.mipmap.iv_open);
@@ -102,11 +120,8 @@ public class GatewayMoreActivity extends AppCompatActivity implements View.OnCli
 
     private void initClick() {
         ivBack.setOnClickListener(this);
-        tvContent.setText(getString(R.string.settting));
         rlDeviceName.setOnClickListener(this);
         rlMessageFree.setOnClickListener(this);
-        rlSafeMode.setOnClickListener(this);
-        rlAm.setOnClickListener(this);
         rlDoorLockLanguageSwitch.setOnClickListener(this);
         rlSilentMode.setOnClickListener(this);
         rlDeviceInformation.setOnClickListener(this);
@@ -131,8 +146,9 @@ public class GatewayMoreActivity extends AppCompatActivity implements View.OnCli
                 AlertDialog alertDialog = AlertDialogUtil.getInstance().common(this, mView);
                 tvTitle.setText(getString(R.string.input_device_name));
                 //获取到设备名称设置
-                editText.setText("");
-                editText.setSelection("".length());
+                String deviceNickname=tvDeviceName.getText().toString().trim();
+                editText.setText(deviceNickname);
+                editText.setSelection(deviceNickname.length());
                 editText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(16)});
                 tv_cancel.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -149,14 +165,16 @@ public class GatewayMoreActivity extends AppCompatActivity implements View.OnCli
                             return;
                         }
                         //todo 判断名称是否修改
-                /*        if (deviceNickname!=null){
+                        if (deviceNickname!=null){
                             if (deviceNickname.equals(name)){
                                 ToastUtil.getInstance().showShort(getString(R.string.device_nick_name_no_update));
                                 alertDialog.dismiss();
                                 return;
                             }
-                        }*/
-                        tvDeviceName.setText(name);
+                        }
+                        if (gatewayId!=null&&deviceId!=null){
+                            mPresenter.updateZigbeeLockName(gatewayId,deviceId,name);
+                        }
                         alertDialog.dismiss();
                     }
                 });
@@ -173,25 +191,10 @@ public class GatewayMoreActivity extends AppCompatActivity implements View.OnCli
                 }
                 messageFreeStatus = !messageFreeStatus;
                 break;
-            case R.id.rl_safe_mode:
-//                intent = new Intent(this, BluetoothSafeModeActivity.class);
-//                startActivity(intent);
-
-                break;
-            case R.id.rl_am:
-                if (amAutoLockStatus) {
-                    //打开状态 现在关闭
-                    ivAm.setImageResource(R.mipmap.iv_close);
-                    SPUtils.put(KeyConstants.AM_AUTO_LOCK_STATUS, false);
-                } else {
-                    //关闭状态 现在打开
-                    ivAm.setImageResource(R.mipmap.iv_open);
-                    SPUtils.put(KeyConstants.AM_AUTO_LOCK_STATUS, true);
-                }
-                amAutoLockStatus = !amAutoLockStatus;
-                break;
             case R.id.rl_door_lock_language_switch:
                 intent = new Intent(this, GatewayLockLanguageSettingActivity.class);
+                intent.putExtra(KeyConstants.DEVICE_ID,deviceId);
+                intent.putExtra(KeyConstants.GATEWAY_ID,gatewayId);
                 startActivity(intent);
                 break;
             case R.id.rl_silent_mode:
@@ -226,5 +229,26 @@ public class GatewayMoreActivity extends AppCompatActivity implements View.OnCli
                 });
                 break;
         }
+    }
+
+    @Override
+    public void updateDevNickNameSuccess(String name) {
+        tvDeviceName.setText(name);
+        Intent intent = new Intent();
+        //把返回数据存入Intent
+        intent.putExtra(KeyConstants.NAME, name);
+        //设置返回数据
+        GatewayMoreActivity.this.setResult(RESULT_OK, intent);
+        ToastUtil.getInstance().showShort(getString(R.string.update_nick_name));
+    }
+
+    @Override
+    public void updateDevNickNameFail() {
+        ToastUtil.getInstance().showShort(getString(R.string.update_nickname_fail));
+    }
+
+    @Override
+    public void updateDevNickNameThrowable(Throwable throwable) {
+        LogUtils.e("设置昵称失败"+throwable.getMessage());
     }
 }
