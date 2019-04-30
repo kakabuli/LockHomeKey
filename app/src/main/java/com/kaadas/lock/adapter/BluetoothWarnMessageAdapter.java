@@ -5,7 +5,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -13,11 +12,7 @@ import com.chad.library.adapter.base.BaseViewHolder;
 import com.kaadas.lock.R;
 import com.kaadas.lock.bean.BluetoothItemRecordBean;
 import com.kaadas.lock.bean.BluetoothRecordBean;
-import com.kaadas.lock.publiclibrary.ble.bean.OpenLockRecord;
-import com.kaadas.lock.publiclibrary.http.result.FamilyMemberBean;
 
-
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -25,22 +20,22 @@ import java.util.List;
  */
 
 
-public class BluetoothRecordAdapter extends BaseQuickAdapter<BluetoothRecordBean, BaseViewHolder> {
+public class BluetoothWarnMessageAdapter extends BaseQuickAdapter<BluetoothRecordBean, BaseViewHolder> {
 
 
-    public BluetoothRecordAdapter(@Nullable List<BluetoothRecordBean> data) {
+    public BluetoothWarnMessageAdapter(@Nullable List<BluetoothRecordBean> data) {
         super(R.layout.item_bluetooth_record, data);
     }
 
 
     @Override
     protected void convert(BaseViewHolder helper, BluetoothRecordBean bean) {
-       TextView tvTitle= helper.getView(R.id.tv_title);
+        TextView tvTitle = helper.getView(R.id.tv_title);
         String time = bean.getTime();
-        if (!TextUtils.isEmpty(time)){
+        if (!TextUtils.isEmpty(time)) {
             tvTitle.setText(time);
             tvTitle.setVisibility(View.VISIBLE);
-        }else {
+        } else {
             tvTitle.setVisibility(View.GONE);
         }
         RecyclerView recyclerView = helper.getView(R.id.item_recycleview);

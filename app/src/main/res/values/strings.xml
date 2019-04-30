@@ -727,4 +727,11 @@
     <string name="select_end_time">请选择结束时间</string>
     <string name="end_time_great_start_time">结束时间要大于开始时间</string>
     <string name="select_repeat_rule">请选择重复规则</string>
+    <string name="sync_success">同步成功</string>
+    <string name="server_no_warring_data">服务器中没有报警记录，请同步</string>
+    <string name="is_setting_pwd">正在设置密码</string>
+    <string name="set_temp_pwd_failed">设置临时密码失败</string>
+    <string name="set_temp_pwd_succcess">设置临时密码成功</string>
+    <string name="sync_failed">同步秘钥失败</string>
+    <string name="please_have_net_add_temp_pwd">请在有网络情况下添加临时密码！</string>
 </resources>

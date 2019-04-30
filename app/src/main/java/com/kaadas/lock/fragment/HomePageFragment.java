@@ -1,5 +1,6 @@
 package com.kaadas.lock.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -17,6 +18,7 @@ import android.widget.RadioGroup;
 
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
+import com.kaadas.lock.activity.addDevice.DeviceAddActivity;
 import com.kaadas.lock.bean.HomeShowBean;
 import com.kaadas.lock.mvp.mvpbase.BaseFragment;
 import com.kaadas.lock.mvp.presenter.HomePreseneter;
@@ -36,7 +38,7 @@ import butterknife.Unbinder;
  * Created by David.
  */
 
-public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHomeView>> implements IHomeView {
+public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHomeView>> implements IHomeView, View.OnClickListener {
 
     @BindView(R.id.ll_has_device)
     LinearLayout llHasDevice;
@@ -60,7 +62,7 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
     private List<HomeShowBean> devices = new ArrayList<>();
     private Unbinder bind;
     private List<HomeShowBean> homeShow;
-
+    boolean hasDevice = false;//是否有设备  默认没有设备
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,10 +73,11 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = View.inflate(getActivity(), R.layout.fragment_home, null);
         bind = ButterKnife.bind(this, view);
-
-        llHasDevice.setVisibility(View.GONE);
-        llNoDevice.setVisibility(View.VISIBLE);
-
+        btnAddDevice.setOnClickListener(this);
+//        llHasDevice.setVisibility(View.GONE);
+//        llNoDevice.setVisibility(View.VISIBLE);
+        hasDevice=false;
+        changePage();
 
 //        for (int i = 0; i <8; i++) {
 ////            int deviceType, String deviceId, String deviceNickName, Object object
@@ -99,24 +102,41 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
     protected HomePreseneter<IHomeView> createPresent() {
         return new HomePreseneter<>();
     }
-
+    private void changePage() {
+        if (hasDevice) {
+            llHasDevice.setVisibility(View.VISIBLE);
+            llHasDevice.setClickable(true);
+            llNoDevice.setVisibility(View.GONE);
+            llNoDevice.setClickable(false);
+        } else {
+            llHasDevice.setVisibility(View.GONE);
+            llHasDevice.setClickable(false);
+            llNoDevice.setVisibility(View.VISIBLE);
+            llNoDevice.setClickable(true);
+        }
+    }
 
     public void initData(final List<HomeShowBean> devices) {
         if (devices == null) {
-            llHasDevice.setVisibility(View.GONE);
-            llNoDevice.setVisibility(View.VISIBLE);
+//            llHasDevice.setVisibility(View.GONE);
+//            llNoDevice.setVisibility(View.VISIBLE);
+            hasDevice=false;
+            changePage();
             return;
         }
 
         if (devices.size() == 0) {
-            llHasDevice.setVisibility(View.GONE);
-            llNoDevice.setVisibility(View.VISIBLE);
+//            llHasDevice.setVisibility(View.GONE);
+//            llNoDevice.setVisibility(View.VISIBLE);
+            hasDevice=false;
+            changePage();
             return;
         }
 
-        llHasDevice.setVisibility(View.VISIBLE);
-        llNoDevice.setVisibility(View.GONE);
-
+//        llHasDevice.setVisibility(View.VISIBLE);
+//        llNoDevice.setVisibility(View.GONE);
+        hasDevice=true;
+        changePage();
         fragments = new ArrayList<>();
 
         realPositions.clear();
@@ -382,6 +402,17 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
             initData(devices);
         }else {
             initData(null);
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        Intent intent;
+        switch (v.getId()){
+            case R.id.btn_add_device:
+                intent=new Intent(getActivity(),DeviceAddActivity.class);
+                startActivity(intent);
+                break;
         }
     }
 }

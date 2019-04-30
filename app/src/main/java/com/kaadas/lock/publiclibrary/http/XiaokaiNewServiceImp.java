@@ -1,6 +1,7 @@
 package com.kaadas.lock.publiclibrary.http;
 
 import com.kaadas.lock.bean.VersionBean;
+import com.kaadas.lock.publiclibrary.ble.bean.WarringRecord;
 import com.kaadas.lock.publiclibrary.http.postbean.AddDeviceBean;
 import com.kaadas.lock.publiclibrary.http.postbean.AddPasswordBean;
 import com.kaadas.lock.publiclibrary.http.postbean.AddUserBean;
@@ -34,6 +35,7 @@ import com.kaadas.lock.publiclibrary.http.postbean.SendEmailBean;
 import com.kaadas.lock.publiclibrary.http.postbean.SendMessageBean;
 import com.kaadas.lock.publiclibrary.http.postbean.UploadAppRecordBean;
 import com.kaadas.lock.publiclibrary.http.postbean.UploadBinRecordBean;
+import com.kaadas.lock.publiclibrary.http.postbean.UploadWarringRecordBean;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.result.DeleteMessageResult;
 import com.kaadas.lock.publiclibrary.http.result.GetDeviceResult;
@@ -761,5 +763,23 @@ public class XiaokaiNewServiceImp {
                 .subscribeOn(Schedulers.io())
                 .compose(RxjavaHelper.observeOnMainThread());
     }
+    /**
+     * 上报预警记录
+     * 参数名	    必选	类型	说明
+     * devName	    是	    String	设备唯一编号
+     * warningList	是	    JsonArray
+     * warningType	是	    int	预警类型：1低电量 2钥匙开门 3验证错误 4防撬提醒 5即时性推送消息
+     * warningTime	是	    timestamp（s）	预警时间
+     * content	    否	    String	预警内容
+     *
+     * @return
+     */
+    public static Observable<BaseResult> uploadWarringRecord(String devName, List<WarringRecord> warningList) {
+        UploadWarringRecordBean uploadWarringRecordBean = new UploadWarringRecordBean(devName, warningList);
+        return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
+                .uploadWarringRecord(new HttpUtils<UploadWarringRecordBean>().getBody(uploadWarringRecordBean))
+                .compose(RxjavaHelper.observeOnMainThread())
+                ;
 
+    }
 }
