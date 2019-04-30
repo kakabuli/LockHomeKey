@@ -1,5 +1,6 @@
 package com.kaadas.lock.activity.device.gatewaylock;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.device.gatewaylock.more.GatewayMoreActivity;
 import com.kaadas.lock.activity.device.gatewaylock.password.GatewayPasswordManagerActivity;
@@ -21,6 +23,7 @@ import com.kaadas.lock.activity.device.gatewaylock.share.GatewaySharedDeviceMana
 import com.kaadas.lock.activity.device.gatewaylock.stress.GatewayStressPasswordManagerActivity;
 import com.kaadas.lock.bean.BluetoothLockFunctionBean;
 import com.kaadas.lock.bean.DeviceDetailBean;
+import com.kaadas.lock.bean.HomeShowBean;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.mvp.presenter.deviceaddpresenter.GatewayBindPresenter;
 import com.kaadas.lock.mvp.presenter.gatewaylockpresenter.GatewayLockDetailPresenter;
@@ -42,6 +45,8 @@ import java.util.logging.Logger;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static com.kaadas.lock.MyApplication.getInstance;
 
 /**
  * Created by David
@@ -100,6 +105,8 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
     int lockStatus = -1;
     private String gatewayId;
     private String deviceId;
+    private DeviceDetailBean deviceDetailBean;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -109,6 +116,8 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
         initView();
         initData();
         initClick();
+
+
 
     }
 
@@ -197,7 +206,7 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
 
     private void initData() {
         Intent intent=getIntent();
-        DeviceDetailBean deviceDetailBean= (DeviceDetailBean) intent.getSerializableExtra(KeyConstants.DEVICE_DETAIL_BEAN);
+        deviceDetailBean= (DeviceDetailBean) intent.getSerializableExtra(KeyConstants.DEVICE_DETAIL_BEAN);
         //设置电量
         if(deviceDetailBean!=null){
             dealWithPower(deviceDetailBean.getPower());
@@ -206,9 +215,6 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
             gatewayId=lockInfo.getGwID();
             deviceId=lockInfo.getServerInfo().getDeviceId();
         }
-
-
-
 
     }
 
@@ -221,6 +227,8 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
                 break;
             case R.id.ll_one:
                 intent = new Intent(this, GatewayPasswordManagerActivity.class);
+                intent.putExtra(KeyConstants.GATEWAY_ID,gatewayId);
+                intent.putExtra(KeyConstants.DEVICE_ID,deviceId);
                 startActivity(intent);
                 break;
             case R.id.ll_two:
@@ -233,7 +241,8 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
                 break;
             case R.id.ll_four:
                 intent = new Intent(this, GatewayMoreActivity.class);
-                startActivity(intent);
+                intent.putExtra(KeyConstants.DEVICE_DETAIL_BEAN,deviceDetailBean);
+                startActivityForResult(intent,KeyConstants.DEVICE_DETAIL_BEAN_NUM);
                 break;
             case R.id.tv_open_clock:
                 //开锁
@@ -244,9 +253,7 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
                  showPwdDialog();
              }
 
-
-
-                break;
+             break;
 
         }
     }
@@ -336,5 +343,23 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
     public void openLockThrowable(Throwable throwable) {
         //开锁异常
         LogUtils.e("开锁异常   "+throwable.getMessage());
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode==KeyConstants.DEVICE_DETAIL_BEAN_NUM){
+            if (resultCode== Activity.RESULT_OK){
+                String name=data.getStringExtra(KeyConstants.NAME);
+                if (name!=null){
+                    if (deviceDetailBean!=null){
+                        deviceDetailBean.setDeviceName(name);
+                    }
+                    tvName.setText(name);
+
+                }
+            }
+        }
+
     }
 }

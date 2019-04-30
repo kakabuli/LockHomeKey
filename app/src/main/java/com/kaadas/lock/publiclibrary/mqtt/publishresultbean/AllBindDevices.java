@@ -261,7 +261,7 @@ public class AllBindDevices {
         if (bleDevices != null) {
             for (ServerBleDevice bleDevice : bleDevices) {
                 BleLockInfo bleLockInfo = new BleLockInfo(bleDevice);
-                homeShowBeans.add(new HomeShowBean(HomeShowBean.TYPE_BLE_LOCK, bleDevice.getDevice_name(), bleDevice.getDevice_name(), bleLockInfo));
+                homeShowBeans.add(new HomeShowBean(HomeShowBean.TYPE_BLE_LOCK, bleDevice.getDevice_name(), bleDevice.getDevice_nickname(), bleLockInfo));
             }
         }
 
@@ -307,36 +307,38 @@ public class AllBindDevices {
     /**
      * 获取猫眼列表
      */
-    public List<ServerGwDevice> getCateEyes() {
+    public List<CateEyeInfo> getCateEyes() {
         List<ReturnDataBean.GwListBean> gwList = data.getGwList();
-        List<ServerGwDevice> gwDevices = new ArrayList<>();
+        List<CateEyeInfo> cateEyeInfos = new ArrayList<>();
         for (ReturnDataBean.GwListBean gwListBean : gwList) {
             List<ServerGwDevice> deviceList = gwListBean.getDeviceList();
+            GatewayInfo gatewayInfo = new GatewayInfo(new ServerGatewayInfo(gwListBean));
             for (ServerGwDevice gwDevice : deviceList) {
                 if ("kdscateye".equalsIgnoreCase(gwDevice.getDevice_type())) {
-                    gwDevices.add(gwDevice);
+                    CateEyeInfo cateEyeInfo = new CateEyeInfo(gwListBean.getDeviceSN(), gwDevice);
+                    cateEyeInfo.setGatewayInfo(gatewayInfo);
+                    cateEyeInfos.add(cateEyeInfo);
                 }
             }
         }
-        return gwDevices;
+        return cateEyeInfos;
     }
 
     /**
      * 获取网关锁列表
      */
-    public List<ServerGwDevice> getGwLocks() {
+    public List<GwLockInfo> getGwLocks() {
         List<ReturnDataBean.GwListBean> gwList = data.getGwList();
-        List<ServerGwDevice> gwDevices = new ArrayList<>();
+        List<GwLockInfo> gwLockInfos = new ArrayList<>();
         for (ReturnDataBean.GwListBean gwListBean : gwList) {
             List<ServerGwDevice> deviceList = gwListBean.getDeviceList();
             for (ServerGwDevice gwDevice : deviceList) {
-                if (!"kdscateye".equalsIgnoreCase(gwDevice.getDevice_type())) {  //不是猫眼的设备
-                    gwDevices.add(gwDevice);
+                if ("kdscateye".equalsIgnoreCase(gwDevice.getDevice_type())) {
+                    gwLockInfos.add(new GwLockInfo(gwListBean.getDeviceSN(), gwDevice));
                 }
             }
         }
-
-        return gwDevices;
+        return gwLockInfos;
     }
 
     /**

@@ -7,9 +7,15 @@ import com.kaadas.lock.publiclibrary.mqtt.publishbean.BindGatewayBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.GetAllBindDeviceBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.GetBindGatewayListBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.GetDevicePowerBean;
+import com.kaadas.lock.publiclibrary.mqtt.publishbean.GetGatewayLockInfoBean;
+import com.kaadas.lock.publiclibrary.mqtt.publishbean.GetLockLang;
+import com.kaadas.lock.publiclibrary.mqtt.publishbean.GetSoundVolume;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.GetWifiBasicBean;
+import com.kaadas.lock.publiclibrary.mqtt.publishbean.LockPwdFuncBean;
+import com.kaadas.lock.publiclibrary.mqtt.publishbean.LockPwdInfoBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.OpenLockBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetJoinAllowBean;
+import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetLockLang;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.UpdateDevNickNameBean;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttConstant;
 
@@ -37,6 +43,19 @@ public class MqttCommandFactory {
         BindGatewayBean bindGatewayBean = new BindGatewayBean(uid, MqttConstant.BIND_GATEWAY, Sn);
         return getMessage(bindGatewayBean, messageId);
     }
+
+    /**
+     * 绑定咪咪网
+     * @param uid
+     * @param Sn
+     * @return
+     */
+    public static MqttMessage registerMemeAndBind(String uid,String Sn){
+        int messageId = getMessageId();
+        BindGatewayBean bindGatewayBean = new BindGatewayBean(uid, MqttConstant.REGISTER_MIMI_BIND, Sn);
+        return getMessage(bindGatewayBean, messageId);
+    }
+
 
     /**
      * 获取绑定网关的列表
@@ -108,8 +127,6 @@ public class MqttCommandFactory {
         return getMessage(updateDevNickNameBean,messageId);
     }
 
-
-
     /**
      * 获取所有的设备信息
      * @return
@@ -156,11 +173,102 @@ public class MqttCommandFactory {
         return getMessage(openLockBean,messageId);
     }
 
+    /**
+     * 密码的设置，查询，清除
+      * @param gatewayId
+     * @param deviceId
+     * @param action
+     * @param type
+     * @param pwdId
+     * @param pwdValue
+     * @return
+     */
 
- /*   public static MqttMessage getLockPwd(){
+  public static MqttMessage lockPwdFunc(String gatewayId,String deviceId,String action,String type,String pwdId,String pwdValue){
         int messageId=getMessageId();
+        LockPwdFuncBean.ParamsBean paramsBean=new LockPwdFuncBean.ParamsBean();
+        paramsBean.setAction(action);
+        paramsBean.setType(type);
+        paramsBean.setPwdid(pwdId);
+        paramsBean.setPwdvalue(pwdValue);
+        LockPwdFuncBean lockPwdFuncBean=new LockPwdFuncBean(MqttConstant.MSG_TYPE_REQUEST,MyApplication.getInstance().getUid(),messageId,gatewayId,deviceId,MqttConstant.SET_PWD,paramsBean,"0",new LockPwdFuncBean.ReturnDataBean(),System.currentTimeMillis()+"");
+        return getMessage(lockPwdFuncBean,messageId);
+    }
 
-    }*/
+    /**
+     * 获取锁密码和RFID基本信息
+     * @param gatewayId
+     * @param deviceId
+     * @return
+     */
+
+    public static MqttMessage getLockPwdInfo(String gatewayId,String deviceId){
+      int messageId=getMessageId();
+      LockPwdInfoBean lockPwdInfoBean=new LockPwdInfoBean(MqttConstant.MSG_TYPE_REQUEST,MyApplication.getInstance().getUid(),messageId,gatewayId,deviceId,MqttConstant.LOCK_PWD_INFO,new LockPwdInfoBean.ParamsBean(),"0",new LockPwdInfoBean.ReturnDataBean(),System.currentTimeMillis()+"");
+      return getMessage(lockPwdInfoBean,messageId);
+    }
+
+    /**
+     * 获取语言
+     * @param gatewayId
+     * @param deviceId
+     * @return
+     */
+    public static MqttMessage getLockLang(String gatewayId,String deviceId){
+        int messageId=getMessageId();
+        GetLockLang lockLang=new GetLockLang(MqttConstant.MSG_TYPE_REQUEST,MyApplication.getInstance().getUid(),messageId,gatewayId,deviceId,MqttConstant.GET_LANG,new GetLockLang.ParamsBean(),"0",new GetLockLang.ReturnDataBean(),System.currentTimeMillis()+"");
+        return getMessage(lockLang,messageId);
+    }
+
+    /**
+     * 设置锁的语言
+     * @param gatewayId
+     * @param deviceId
+     * @return
+     */
+    public static MqttMessage setLockLang(String gatewayId,String deviceId,String lang){
+        int messageId=getMessageId();
+        SetLockLang.ParamsBean paramsBean=new SetLockLang.ParamsBean();
+        paramsBean.setLanguage(lang);
+        SetLockLang lockLang=new SetLockLang(MqttConstant.MSG_TYPE_REQUEST,MyApplication.getInstance().getUid(),messageId,gatewayId,deviceId,MqttConstant.SET_LANG,paramsBean,"0",new SetLockLang.ReturnDataBean(),System.currentTimeMillis()+"");
+        return getMessage(lockLang,messageId);
+    }
+
+    /**
+     * 获取锁的音量
+     * @param gatewayId
+     * @param deviceId
+     * @return
+     */
+    public static MqttMessage getSoundVolume(String gatewayId,String deviceId){
+        int messageId=getMessageId();
+        GetSoundVolume lockLang=new GetSoundVolume(MqttConstant.MSG_TYPE_REQUEST,MyApplication.getInstance().getUid(),messageId,gatewayId,deviceId,MqttConstant.SOUND_VOLUME,new GetSoundVolume.ParamsBean(),"0",new GetSoundVolume.ReturnDataBean(),System.currentTimeMillis()+"");
+        return getMessage(lockLang,messageId);
+
+    }
+
+    /**
+     * 设置锁的音量
+     * @param gatewayId
+     * @param deviceId
+     * @return
+     */
+    public static MqttMessage setSoundVolume(String gatewayId,String deviceId,int volume){
+        int messageId=getMessageId();
+        GetSoundVolume.ParamsBean paramsBean=new GetSoundVolume.ParamsBean();
+        paramsBean.setVolume(volume);
+        GetSoundVolume lockLang=new GetSoundVolume(MqttConstant.MSG_TYPE_REQUEST,MyApplication.getInstance().getUid(),messageId,gatewayId,deviceId,MqttConstant.SET_SOUND_VOLUME,paramsBean,"0",new GetSoundVolume.ReturnDataBean(),System.currentTimeMillis()+"");
+        return getMessage(lockLang,messageId);
+
+    }
+
+    public static MqttMessage getGatewayLockInformation(String gatewayId,String deviceId){
+        int messageId=getMessageId();
+        GetGatewayLockInfoBean getGatewayLockInfoBean=new GetGatewayLockInfoBean(MqttConstant.MSG_TYPE_REQUEST,MyApplication.getInstance().getUid(),messageId,gatewayId,deviceId,MqttConstant.GET_LOCK_INFO,new GetGatewayLockInfoBean.ParamsBean(),"0",new GetGatewayLockInfoBean.ReturnDataBean(),System.currentTimeMillis()+"");
+        return  getMessage(getGatewayLockInfoBean,messageId);
+    }
+
+
 
 
 

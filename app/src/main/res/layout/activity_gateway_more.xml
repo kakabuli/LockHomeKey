@@ -76,7 +76,7 @@
             android:background="#EAE9E9"></View>
     </RelativeLayout>
 
-    <RelativeLayout
+   <!-- <RelativeLayout
         android:id="@+id/rl_safe_mode"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -106,9 +106,9 @@
             android:layout_alignParentBottom="true"
             android:layout_marginLeft="@dimen/dp_17"
             android:background="#EAE9E9"></View>
-    </RelativeLayout>
+    </RelativeLayout>-->
 
-    <RelativeLayout
+  <!--  <RelativeLayout
         android:id="@+id/rl_am"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -140,7 +140,7 @@
             android:layout_marginLeft="@dimen/dp_17"
             android:background="#EAE9E9"></View>
     </RelativeLayout>
-
+-->
     <RelativeLayout
         android:id="@+id/rl_door_lock_language_switch"
         android:layout_width="match_parent"
@@ -237,7 +237,7 @@
             android:layout_marginLeft="@dimen/dp_17"
             android:background="#EAE9E9"></View>
     </RelativeLayout>
-
+<!--
     <RelativeLayout
         android:id="@+id/rl_check_firmware_update"
         android:layout_width="match_parent"
@@ -262,7 +262,7 @@
             android:layout_marginRight="@dimen/dp_16"
             android:src="@mipmap/right" />
 
-    </RelativeLayout>
+    </RelativeLayout>-->
 
     <LinearLayout
         android:layout_width="match_parent"

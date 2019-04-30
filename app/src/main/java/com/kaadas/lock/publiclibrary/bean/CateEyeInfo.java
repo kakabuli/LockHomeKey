@@ -5,15 +5,19 @@ import java.io.Serializable;
 public class CateEyeInfo  implements Serializable {
 
     //猫眼的绑定的UUId
-    String gwID;
+    private String gwID;
     //服务器返回的消息
-    ServerGwDevice serverInfo;
+    private ServerGwDevice serverInfo;
 
     //是否在线
-    boolean isOnLine;
+    private boolean isOnLine;
 
     //电量
-    int power;
+    private int power;
+
+    //网关信息
+    private GatewayInfo gatewayInfo;
+
 
 
     public CateEyeInfo() {
@@ -54,5 +58,13 @@ public class CateEyeInfo  implements Serializable {
 
     public void setPower(int power) {
         this.power = power;
+    }
+
+    public GatewayInfo getGatewayInfo() {
+        return gatewayInfo;
+    }
+
+    public void setGatewayInfo(GatewayInfo gatewayInfo) {
+        this.gatewayInfo = gatewayInfo;
     }
 }

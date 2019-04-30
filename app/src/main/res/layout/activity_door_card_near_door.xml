@@ -47,6 +47,18 @@
             android:text="@string/fingerprint_link_bluetooth_hint"
             android:textColor="#333333"
             android:textSize="@dimen/sp_13" />
-
+        <Button
+            android:visibility="gone"
+            android:id="@+id/btn"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_44"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="@dimen/dp_88"
+            android:layout_marginRight="@dimen/dp_88"
+            android:layout_marginBottom="@dimen/dp_48"
+            android:gravity="center"
+            android:textColor="#FFFFFF"
+            android:textSize="@dimen/sp_15" />
     </RelativeLayout>
+
 </LinearLayout>

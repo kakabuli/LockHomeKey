@@ -49,7 +49,6 @@ public class BluetoothUserPasswordAddActivity extends AppCompatActivity implemen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bluetooth_user_password_add);
-
         ButterKnife.bind(this);
         ivBack.setOnClickListener(this);
         tvContent.setText(getString(R.string.pwd_header_add_tv));
@@ -89,6 +88,8 @@ public class BluetoothUserPasswordAddActivity extends AppCompatActivity implemen
                 break;
         }
     }
+
+
 
     public class ListFragmentPagerAdapter extends FragmentPagerAdapter {
         private static final int TAB_COUNT = 2;

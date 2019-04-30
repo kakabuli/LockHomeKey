@@ -14,6 +14,10 @@ import com.kaadas.lock.R;
 import com.kaadas.lock.fragment.BluetoothOpenLockRecordFragment;
 import com.kaadas.lock.fragment.BluetoothWarnInformationFragment;
 import com.kaadas.lock.fragment.HomePageFragment;
+import com.kaadas.lock.mvp.mvpbase.BaseBleActivity;
+import com.kaadas.lock.mvp.mvpbase.BlePresenter;
+import com.kaadas.lock.mvp.mvpbase.IBleView;
+import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -21,7 +25,8 @@ import butterknife.ButterKnife;
 /**
  * Created by David on 2019/4/22
  */
-public class BluetoothEquipmentDynamicActivity extends AppCompatActivity implements View.OnClickListener {
+public class BluetoothEquipmentDynamicActivity extends BaseBleActivity<IBleView,BlePresenter<IBleView>>
+        implements View.OnClickListener ,IBleView {
     @BindView(R.id.iv_back)
     ImageView ivBack;
     @BindView(R.id.tv_content)
@@ -36,7 +41,7 @@ public class BluetoothEquipmentDynamicActivity extends AppCompatActivity impleme
     private FragmentTransaction transaction;
     BluetoothOpenLockRecordFragment bluetoothOpenLockRecordFragment;
     BluetoothWarnInformationFragment bluetoothWarnInformationFragment;
-
+    private BleLockInfo bleLockInfo;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,7 +51,18 @@ public class BluetoothEquipmentDynamicActivity extends AppCompatActivity impleme
         tvContent.setText(getString(R.string.device_dynamic));
         tvOpenLockRecord.setOnClickListener(this);
         tvWarnInformation.setOnClickListener(this);
+        bleLockInfo = mPresenter.getBleLockInfo();
         initFragment();
+    }
+
+    @Override
+    protected BlePresenter<IBleView> createPresent() {
+        return new BlePresenter<IBleView>() {
+            @Override
+            public void authSuccess() {
+
+            }
+        };
     }
 
     private void initFragment() {
@@ -58,6 +74,9 @@ public class BluetoothEquipmentDynamicActivity extends AppCompatActivity impleme
 
     }
 
+    public BleLockInfo getBleDeviceInfo(){
+        return bleLockInfo;
+    }
     @Override
     public void onClick(View v) {
         switch (v.getId()) {

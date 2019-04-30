@@ -156,6 +156,7 @@ public class OpenLockBean implements Serializable {
     }
 
     public static class ReturnDataBean {
+
     }
 
     public OpenLockBean(String msgtype, String userId, int msgId, String gwId, String deviceId, String func, ParamsBean params, String returnCode, ReturnDataBean returnData, String timestamp) {
