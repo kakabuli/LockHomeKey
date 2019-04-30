@@ -17,6 +17,7 @@ import com.kaadas.lock.fragment.HomePageFragment;
 import com.kaadas.lock.mvp.mvpbase.BaseBleActivity;
 import com.kaadas.lock.mvp.mvpbase.BlePresenter;
 import com.kaadas.lock.mvp.mvpbase.IBleView;
+import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -40,7 +41,7 @@ public class BluetoothEquipmentDynamicActivity extends BaseBleActivity<IBleView,
     private FragmentTransaction transaction;
     BluetoothOpenLockRecordFragment bluetoothOpenLockRecordFragment;
     BluetoothWarnInformationFragment bluetoothWarnInformationFragment;
-
+    private BleLockInfo bleLockInfo;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,6 +51,7 @@ public class BluetoothEquipmentDynamicActivity extends BaseBleActivity<IBleView,
         tvContent.setText(getString(R.string.device_dynamic));
         tvOpenLockRecord.setOnClickListener(this);
         tvWarnInformation.setOnClickListener(this);
+        bleLockInfo = mPresenter.getBleLockInfo();
         initFragment();
     }
 
@@ -72,6 +74,9 @@ public class BluetoothEquipmentDynamicActivity extends BaseBleActivity<IBleView,
 
     }
 
+    public BleLockInfo getBleDeviceInfo(){
+        return bleLockInfo;
+    }
     @Override
     public void onClick(View v) {
         switch (v.getId()) {

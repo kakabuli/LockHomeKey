@@ -3,8 +3,10 @@ package com.kaadas.lock.adapter;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
@@ -33,6 +35,11 @@ public class BluetoothRecordAdapter extends BaseQuickAdapter<BluetoothRecordBean
 
     @Override
     protected void convert(BaseViewHolder helper, BluetoothRecordBean bean) {
+       TextView tvTitle= helper.getView(R.id.tv_title);
+        String time = bean.getTime();
+        if (!TextUtils.isEmpty(time)){
+            tvTitle.setText(time);
+        }
         RecyclerView recyclerView = helper.getView(R.id.item_recycleview);
         List<BluetoothItemRecordBean> data = bean.getList();
         BluetoothItemRecordAdapter bluetoothItemRecordAdapter = new BluetoothItemRecordAdapter(data);
