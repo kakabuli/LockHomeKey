@@ -1,6 +1,12 @@
 package com.kaadas.lock.bean;
 
-public class DeviceDetailBean {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import java.io.Serializable;
+
+
+public class DeviceDetailBean implements Serializable {
 
     //设备名称
     private String deviceName;
@@ -14,6 +20,15 @@ public class DeviceDetailBean {
 
     //电量
     private int power=-1;
+
+    private Serializable showCurentBean;
+
+
+
+    public DeviceDetailBean() {
+
+    }
+
 
     public int getPower() {
         return power;
@@ -45,5 +60,13 @@ public class DeviceDetailBean {
 
     public void setEvent_str(String event_str) {
         this.event_str = event_str;
+    }
+
+    public Serializable getShowCurentBean() {
+        return showCurentBean;
+    }
+
+    public void setShowCurentBean(Serializable showCurentBean) {
+        this.showCurentBean = showCurentBean;
     }
 }

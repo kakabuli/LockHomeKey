@@ -74,7 +74,8 @@ public class MqttService extends Service {
         return notifyDataObservable;
     }
 
-
+    private  String userId;
+    private  String token;
     @Override
     public void onCreate() {
         super.onCreate();
@@ -104,7 +105,7 @@ public class MqttService extends Service {
         //连接
         MqttConnectOptions connOpts = new MqttConnectOptions();
         //断开后，是否自动连接
-        connOpts.setAutomaticReconnect(false);
+        connOpts.setAutomaticReconnect(true);
         //是否清空客户端的连接记录。若为true，则断开后，broker将自动清除该客户端连接信息
         connOpts.setCleanSession(MqttConstant.MQTT_CLEANSE_SSION);
         //设置超时时间，单位为秒 10
@@ -131,18 +132,25 @@ public class MqttService extends Service {
 
     //连接
     public void mqttConnection() {
-        String userId = MyApplication.getInstance().getUid();
-        String token = MyApplication.getInstance().getToken();
+        userId= MyApplication.getInstance().getUid();
+        token= MyApplication.getInstance().getToken();
         //TODO: 2019/4/25  此处为空   应该重新读取一下本地文件，延时100ms吧，如果再读取不到？直接退出   mqtt不能不登录的  不登录  这个APP就废了
         if (TextUtils.isEmpty(userId) || TextUtils.isEmpty(token)) {
-            LogUtils.e("token  或者 userID  为空");
-            return;
+            //重新再次读取本地文件
+            Runnable reconncetRunnable = new Runnable() {
+                @Override
+                public void run() {
+                    userId=MyApplication.getInstance().getUid();
+                    token=MyApplication.getInstance().getToken();
+                    if (TextUtils.isEmpty(userId)||TextUtils.isEmpty(token)){
+                        mqttDisconnect();
+                    }
+                }
+            };
+            mHandler.postDelayed(reconncetRunnable, 100);
         }
-        // TODO: 2019/4/25    没联网也应该去登录？   或者在此处启用一个监听，监听到有网络了就连接   付积辉
-        if (!NetUtil.isNetworkAvailable()) {
-            ToastUtil.getInstance().showShort(getString(R.string.network_exception));
-            return;
-        }
+        //
+
         if (mqttClient == null) {
             mqttClient = new MqttAndroidClient(MyApplication.getInstance(), MqttConstant.MQTT_BASE_URL,
                     "app:" + userId);

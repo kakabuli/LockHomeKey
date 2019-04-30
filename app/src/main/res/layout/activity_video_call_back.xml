@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F2F2F2"
+    android:orientation="vertical">
+
+    <include layout="@layout/head"></include>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_30"
+        android:layout_marginLeft="@dimen/dp_15"
+        android:layout_marginTop="@dimen/dp_10"
+        android:layout_marginRight="@dimen/dp_15"
+        android:background="@drawable/retangle_fff_22"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/video_recording"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/retangle_1f96f7_22"
+            android:gravity="center"
+            android:text="@string/recording_screen"
+            android:textColor="#FFFFFF"
+            android:textSize="@dimen/sp_15"
+            android:clickable="true"/>
+
+        <TextView
+            android:id="@+id/snapshot_information"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/snapshot"
+            android:textColor="#1F96F7"
+            android:textSize="@dimen/sp_15"
+            android:clickable="true"/>
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"></FrameLayout>
+
+</LinearLayout>

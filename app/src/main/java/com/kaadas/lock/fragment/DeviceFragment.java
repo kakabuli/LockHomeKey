@@ -5,11 +5,10 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
+
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
-import android.util.Log;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,15 +22,13 @@ import com.kaadas.lock.R;
 import com.kaadas.lock.activity.addDevice.DeviceAddActivity;
 import com.kaadas.lock.activity.device.BluetoothLockAuthorizationActivity;
 import com.kaadas.lock.activity.device.BluetoothLockFunctionActivity;
-import com.kaadas.lock.activity.device.GatewayActivity;
-import com.kaadas.lock.activity.device.cateye.more.CateyeFunctionActivity;
-import com.kaadas.lock.activity.device.gateway.GatewayLockAuthorizationActivity;
-import com.kaadas.lock.activity.device.gateway.GatewayLockFunctionActivity;
+
+import com.kaadas.lock.activity.device.gatewaylock.GatewayLockFunctionActivity;
 import com.kaadas.lock.adapter.DeviceDetailAdapter;
 import com.kaadas.lock.bean.DeviceDetailBean;
 import com.kaadas.lock.bean.HomeShowBean;
 import com.kaadas.lock.mvp.mvpbase.BaseFragment;
-import com.kaadas.lock.mvp.mvpbase.IBaseView;
+
 import com.kaadas.lock.mvp.presenter.DevicePresenter;
 import com.kaadas.lock.mvp.view.IDeviceView;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
@@ -39,8 +36,9 @@ import com.kaadas.lock.publiclibrary.bean.CateEyeInfo;
 import com.kaadas.lock.publiclibrary.bean.GatewayInfo;
 import com.kaadas.lock.publiclibrary.bean.GwLockInfo;
 import com.kaadas.lock.publiclibrary.bean.ServerGatewayInfo;
-import com.kaadas.lock.publiclibrary.mqtt.eventbean.DeviceOnLineBean;
+
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.AllBindDevices;
+import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.ToastUtil;
@@ -86,7 +84,6 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
 
     private List<DeviceDetailBean> mDeviceList=new ArrayList<>();
     boolean bluetoothAuthorization = false;
-    boolean gatewayAuthorization = false;
     private  List<HomeShowBean> homeShowBeanList;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -175,6 +172,7 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                 catEye.setEvent_str(eventStr);
                 catEye.setType(showBean.getDeviceType());
                 catEye.setPower(30);
+                catEye.setShowCurentBean(cateEyeInfo);
                 mDeviceList.add(catEye);
 
                 break;
@@ -188,7 +186,7 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                 lockBean.setEvent_str(event);
                 lockBean.setType(showBean.getDeviceType());
                 lockBean.setPower(60);
-
+                lockBean.setShowCurentBean(lockInfo);
                 mDeviceList.add(lockBean);
                 break;
             case 2:
@@ -207,6 +205,7 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                     gatewayBean.setEvent_str("offline");
                 }
                 gatewayBean.setType(showBean.getDeviceType());
+                gatewayBean.setShowCurentBean(gatewayInfo);
                 mDeviceList.add(gatewayBean);
                 break;
             case 3:
@@ -214,7 +213,7 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                 BleLockInfo bleLockInfo= (BleLockInfo) showBean.getObject();
 
                 DeviceDetailBean bluetoothBean=new DeviceDetailBean();
-                bluetoothBean.setDeviceName(bleLockInfo.getServerLockInfo().getLockNickName());
+                bluetoothBean.setDeviceName(bleLockInfo.getServerLockInfo().getDevice_nickname());
                 bluetoothBean.setType(showBean.getDeviceType());
                 if (bleLockInfo.isConnected()){
                     bluetoothBean.setEvent_str("online");
@@ -223,6 +222,7 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                 }
 
                 bluetoothBean.setPower(100);
+                bluetoothBean.setShowCurentBean(bleLockInfo);
                 mDeviceList.add(bluetoothBean);
                 break;
 
@@ -274,23 +274,26 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
         DeviceDetailBean deviceDetailBean = mDeviceList.get(position);
         Intent intent;
         switch (deviceDetailBean.getType()) {
+            case 0:
+                //猫眼
+                break;
             case 1:
+                //网关锁
+                Intent gatewayLockintent=new Intent(getActivity(),GatewayLockFunctionActivity.class);
+                gatewayLockintent.putExtra(KeyConstants.DEVICE_DETAIL_BEAN,deviceDetailBean);
+                startActivity(gatewayLockintent);
+                break;
+            case 2:
+                //网关
+
+                break;
+            case 3:
                 //蓝牙
                 if (bluetoothAuthorization) {
                     intent = new Intent(getActivity(), BluetoothLockAuthorizationActivity.class);
                 } else {
                     intent = new Intent(getActivity(), BluetoothLockFunctionActivity.class);
                 }
-                startActivity(intent);
-                break;
-            case 2:
-           /*     if (gatewayAuthorization){
-                    intent = new Intent(getActivity(), GatewayLockAuthorizationActivity.class);
-                }else {
-                    intent = new Intent(getActivity(), GatewayLockFunctionActivity.class);
-                }*/
-//          intent=new Intent(getActivity(),CateyeFunctionActivity.class);
-          intent=new Intent(getActivity(),GatewayActivity.class);
                 startActivity(intent);
                 break;
         }

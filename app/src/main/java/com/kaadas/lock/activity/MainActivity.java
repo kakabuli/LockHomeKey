@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.view.View;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import com.kaadas.lock.MyApplication;
@@ -14,9 +16,15 @@ import com.kaadas.lock.fragment.DeviceFragment;
 import com.kaadas.lock.fragment.HomePageFragment;
 import com.kaadas.lock.fragment.PersonalCenterFragment;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
+import com.kaadas.lock.mvp.mvpbase.BaseBleActivity;
+import com.kaadas.lock.mvp.presenter.MainActivityPresenter;
 import com.kaadas.lock.mvp.presenter.MainPresenter;
+import com.kaadas.lock.mvp.view.IMainActivityView;
 import com.kaadas.lock.mvp.view.IMainView;
+import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
+import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.PermissionUtil;
+import com.kaadas.lock.utils.ToastUtil;
 import com.kaadas.lock.widget.NoScrollViewPager;
 
 import net.sdvn.cmapi.CMAPI;
@@ -28,7 +36,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends BaseActivity<IMainView, MainPresenter<IMainView>> implements RadioGroup.OnCheckedChangeListener, IMainView {
+public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivityPresenter<IMainActivityView>>
+        implements  ViewPager.OnPageChangeListener, IMainActivityView, RadioGroup.OnCheckedChangeListener {
     @BindView(R.id.rb_one)
     RadioButton rbOne;
     @BindView(R.id.rb_two)
@@ -45,6 +54,7 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter<IMainVie
     private static MainActivity instance;
     private static final int REQUEST_CODE_VPN_SERVICE = 11;
 
+    public boolean isSelectHome = true;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setContentView(R.layout.activity_main);
@@ -52,8 +62,9 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter<IMainVie
         ButterKnife.bind(this);
         PermissionUtil.getInstance().requestPermission(PermissionUtil.getInstance().permission, this);
         rg.setOnCheckedChangeListener(this);
-        MyApplication.getInstance().getMqttService().mqttConnection();//连接mqtt
-
+        if (MyApplication.getInstance().getMqttService().getMqttClient()==null||!MyApplication.getInstance().getMqttService().getMqttClient().isConnected()){
+            MyApplication.getInstance().getMqttService().mqttConnection(); //连接mqtt
+        }
         fragments.add(new HomePageFragment());
         fragments.add(new DeviceFragment());
         fragments.add(new PersonalCenterFragment());
@@ -84,11 +95,15 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter<IMainVie
     }
 
     @Override
-    protected MainPresenter<IMainView> createPresent() {
-        return new MainPresenter<>();
+    protected MainActivityPresenter<IMainActivityView> createPresent() {
+        return new MainActivityPresenter();
     }
 
+    public interface HomeSelectListener {
+        void onHomeSelectChange(boolean isSelect);
+    }
 
+    private List<HomeSelectListener> listeners = new ArrayList<>();
     @Override
     public void onCheckedChanged(RadioGroup group, int checkedId) {
         switch (checkedId) {
@@ -148,5 +163,45 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter<IMainVie
         if (requestCode == REQUEST_CODE_VPN_SERVICE) {
             CMAPI.getInstance().onVpnPrepareResult(requestCode, resultCode);
         }
+    }
+
+    @Override
+    public void onPageScrolled(int i, float v, int i1) {
+
+    }
+
+    @Override
+    public void onPageSelected(int i) {
+        if (i == 0) {
+            isSelectHome = true;
+            for (HomeSelectListener listener : listeners) {
+                listener.onHomeSelectChange(true);
+            }
+        } else {
+            isSelectHome = false;
+            for (HomeSelectListener listener : listeners) {
+                listener.onHomeSelectChange(false);
+            }
+        }
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int i) {
+
+    }
+
+
+    @Override
+    public void onWarringUp(String warringContent) {
+        ToastUtil.getInstance().showLong(warringContent);
+    }
+
+    @Override
+    public void onDeviceInBoot(BleLockInfo bleLockInfo) {
+        //todo ota 处理
+  /*      Intent intent = new Intent();
+        intent.setClass(MainActivity.this, OTADialogActivity.class);
+        intent.putExtra(KeyConstants.BLE_DEVICE_INFO, bleLockInfo);
+        startActivity(intent);*/
     }
 }

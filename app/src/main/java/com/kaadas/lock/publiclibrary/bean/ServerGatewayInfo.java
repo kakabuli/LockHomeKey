@@ -2,7 +2,9 @@ package com.kaadas.lock.publiclibrary.bean;
 
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.AllBindDevices;
 
-public class ServerGatewayInfo {
+import java.io.Serializable;
+
+public class ServerGatewayInfo implements Serializable {
     private String deviceSN;
     private String deviceNickName;
     private String adminuid;

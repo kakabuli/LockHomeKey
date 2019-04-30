@@ -69,6 +69,8 @@ public class MqttConstant {
 
     //1 绑定网关
     public static final String BIND_GATEWAY = "bindGatewayByUser";
+    // 绑定咪咪网
+    public static final String REGISTER_MIMI_BIND="RegisterMemeAndBind";
 
     //2 获取网关列表
     public static final String GET_BIND_GATEWAY_LIST = "gatewayBindList";
@@ -90,5 +92,26 @@ public class MqttConstant {
 
     //修改设备的昵称
     public static final String UPDATE_DEV_NICK_NAME = "updateDevNickName";
+
+    //获取设备电量
+    public static final String GET_POWER="getPower";
+
+    //开锁
+    public static final String OPEN_LOCK="openLock";
+
+    //锁密码的操作
+    public static final String SET_PWD="setPwd";
+
+    //获取锁密码和RFID基本信息
+    public static final String LOCK_PWD_INFO="lockPwdInfo";
+
+    //获取锁的语言
+    public static final String GET_LANG="getLang";
+
+    //设置锁的语言
+    public static final String SET_LANG="setLang";
+
+    //获取锁的音量
+    public static final String SOUND_VOLUME="soundVolume";
 
 }

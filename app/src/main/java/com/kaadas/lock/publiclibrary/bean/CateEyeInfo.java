@@ -1,6 +1,8 @@
 package com.kaadas.lock.publiclibrary.bean;
 
-public class CateEyeInfo {
+import java.io.Serializable;
+
+public class CateEyeInfo  implements Serializable {
 
     //猫眼的绑定的UUId
     private String gwID;

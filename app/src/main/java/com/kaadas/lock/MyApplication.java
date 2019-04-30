@@ -504,6 +504,9 @@ public class MyApplication extends Application {
                 });
     }
 
+    public void getPower(){
+
+    }
 
     /**
      * 获取缓存的设备

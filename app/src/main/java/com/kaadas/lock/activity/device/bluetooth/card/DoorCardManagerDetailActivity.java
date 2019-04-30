@@ -1,6 +1,7 @@
 package com.kaadas.lock.activity.device.bluetooth.card;
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -11,8 +12,18 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
+import com.kaadas.lock.mvp.mvpbase.BaseBleActivity;
+import com.kaadas.lock.mvp.presenter.PasswordDetailPresenter;
+import com.kaadas.lock.mvp.view.IPasswordDetailView;
+import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
+import com.kaadas.lock.publiclibrary.http.result.BaseResult;
+import com.kaadas.lock.publiclibrary.http.result.GetPasswordResult;
+import com.kaadas.lock.publiclibrary.http.util.HttpUtils;
 import com.kaadas.lock.utils.AlertDialogUtil;
+import com.kaadas.lock.utils.KeyConstants;
+import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.NetUtil;
 import com.kaadas.lock.utils.StringUtil;
 import com.kaadas.lock.utils.ToastUtil;
@@ -23,7 +34,8 @@ import butterknife.ButterKnife;
 /**
  * Created by David
  */
-public class DoorCardManagerDetailActivity extends AppCompatActivity implements View.OnClickListener {
+public class DoorCardManagerDetailActivity extends BaseBleActivity<IPasswordDetailView, PasswordDetailPresenter<IPasswordDetailView>>
+        implements View.OnClickListener, IPasswordDetailView  {
 
 
     @BindView(R.id.iv_back)
@@ -40,16 +52,24 @@ public class DoorCardManagerDetailActivity extends AppCompatActivity implements 
     ImageView ivEditor;
     @BindView(R.id.tv_time)
     TextView tvTime;
-
+    private BleLockInfo bleLockInfo;
+    private GetPasswordResult.DataBean.Card card;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_door_card_manager_detail);
         ButterKnife.bind(this);
+        bleLockInfo = MyApplication.getInstance().getBleService().getBleLockInfo();
+        card = (GetPasswordResult.DataBean.Card) getIntent().getSerializableExtra(KeyConstants.TO_PWD_DETAIL);
         ivBack.setOnClickListener(this);
         tvContent.setText(getString(R.string.door_card_detail));
         ivEditor.setOnClickListener(this);
         btnDelete.setOnClickListener(this);
+    }
+
+    @Override
+    protected PasswordDetailPresenter<IPasswordDetailView> createPresent() {
+        return new PasswordDetailPresenter<>();
     }
 
     @Override
@@ -65,10 +85,10 @@ public class DoorCardManagerDetailActivity extends AppCompatActivity implements 
                 TextView tvTitle = mView.findViewById(R.id.tv_title);
                 EditText editText = mView.findViewById(R.id.et_name);
                 //获取卡昵称判断
-               /* if (card.getNickName()!=null){
+                if (card.getNickName()!=null){
                     editText.setText(card.getNickName());
                     editText.setSelection(card.getNickName().length());
-                }*/
+                }
                 TextView tv_cancel = mView.findViewById(R.id.tv_left);
                 TextView tv_query = mView.findViewById(R.id.tv_right);
                 AlertDialog alertDialog = AlertDialogUtil.getInstance().common(this, mView);
@@ -87,13 +107,12 @@ public class DoorCardManagerDetailActivity extends AppCompatActivity implements 
                             ToastUtil.getInstance().showShort(R.string.nickname_verify_error);
                             return;
                         }
-                        //TODO 获取卡昵称判断
-                      /*  if (StringUtil.judgeNicknameWhetherSame(card.getNickName(),name)){
+                        if (StringUtil.judgeNicknameWhetherSame(card.getNickName(),name)){
                             ToastUtil.getInstance().showShort(R.string.nickname_not_modify);
                             alertDialog.dismiss();
                             return;
-                        }*/
-                        //todo 上传昵称
+                        }
+                        mPresenter.updateNick(4, card.getNum(), name);
                         alertDialog.dismiss();
                     }
                 });
@@ -109,7 +128,10 @@ public class DoorCardManagerDetailActivity extends AppCompatActivity implements 
 
                         @Override
                         public void right() {
-                            //todo 删除
+                            if (mPresenter.isAuth(bleLockInfo, true)) {
+                                showLoading(getString(R.string.is_deleting));
+                                mPresenter.deletePwd(4, Integer.parseInt(card.getNum()), 3, true);
+                            }
                         }
                     });
                 } else {
@@ -117,5 +139,72 @@ public class DoorCardManagerDetailActivity extends AppCompatActivity implements 
                 }
                 break;
         }
+    }
+
+    @Override
+    public void onDeletePwdSuccess() {
+        LogUtils.e("删除锁上密码成功");
+    }
+
+    @Override
+    public void onDeletePwdFailed(Throwable throwable) {
+        ToastUtil.getInstance().showShort(getString(R.string.delete_fialed));
+        hiddenLoading();
+    }
+
+    @Override
+    public void onDeleteServerPwdSuccess() {
+        LogUtils.e("删除服务器密码");
+        hiddenLoading();
+        Intent intent = new Intent(this, DoorCardManagerActivity.class);
+        intent.putExtra(KeyConstants.BLE_DEVICE_INFO, bleLockInfo);
+        startActivity(intent);
+        finish();
+    }
+
+    @Override
+    public void onDeleteServerPwdFailed(Throwable throwable) {
+        ToastUtil.getInstance().showShort(getString(R.string.lock_delete_success_please_sync) );
+        LogUtils.e("删除服务器密码失败   ");
+        hiddenLoading();
+        finish();
+    }
+
+    @Override
+    public void onDeleteServerPwdFailedServer(BaseResult result) {
+        ToastUtil.getInstance().showShort(getString(R.string.lock_delete_success_please_sync) );
+        hiddenLoading();
+        finish();
+    }
+
+    @Override
+    public void updateNickNameSuccess(String nickName) {
+        ToastUtil.getInstance().showShort(R.string.modify_success);
+        hiddenLoading();
+        Intent intent = new Intent(this, DoorCardManagerActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    @Override
+    public void updateNickNameFailed(Throwable throwable) {
+        ToastUtil.getInstance().showShort(HttpUtils.httpProtocolErrorCode(this, throwable));
+    }
+
+    @Override
+    public void updateNickNameFailedServer(BaseResult result) {
+        ToastUtil.getInstance().showShort(HttpUtils.httpErrorCode(this, result.getCode()));
+    }
+
+    @Override
+    public void onLockNoThisNumber() {
+        ToastUtil.getInstance().showLong(R.string.lock_no_this_card);
+        finish();
+    }
+
+    @Override
+    public void onGetLockNumberFailed(Throwable throwable) {
+        ToastUtil.getInstance().showLong(R.string.get_lock_card_failed);
+        finish();
     }
 }

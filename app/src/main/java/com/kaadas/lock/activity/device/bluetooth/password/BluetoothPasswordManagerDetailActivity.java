@@ -1,6 +1,7 @@
 package com.kaadas.lock.activity.device.bluetooth.password;
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -11,8 +12,17 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
+import com.kaadas.lock.mvp.mvpbase.BaseBleActivity;
+import com.kaadas.lock.mvp.presenter.PasswordDetailPresenter;
+import com.kaadas.lock.mvp.view.IPasswordDetailView;
+import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
+import com.kaadas.lock.publiclibrary.http.postbean.AddPasswordBean;
+import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.utils.AlertDialogUtil;
+import com.kaadas.lock.utils.KeyConstants;
+import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.NetUtil;
 import com.kaadas.lock.utils.StringUtil;
 import com.kaadas.lock.utils.ToastUtil;
@@ -23,7 +33,8 @@ import butterknife.ButterKnife;
 /**
  * Created by David
  */
-public class BluetoothPasswordManagerDetailActivity extends AppCompatActivity implements View.OnClickListener {
+public class BluetoothPasswordManagerDetailActivity extends BaseBleActivity<IPasswordDetailView, PasswordDetailPresenter<IPasswordDetailView>>
+        implements View.OnClickListener, IPasswordDetailView  {
 
 
     @BindView(R.id.iv_back)
@@ -40,7 +51,8 @@ public class BluetoothPasswordManagerDetailActivity extends AppCompatActivity im
     ImageView ivEditor;
     @BindView(R.id.tv_time)
     TextView tvTime;
-
+    private BleLockInfo bleLockInfo;
+    private AddPasswordBean.Password password;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,6 +62,13 @@ public class BluetoothPasswordManagerDetailActivity extends AppCompatActivity im
         tvContent.setText(getString(R.string.user_password));
         ivEditor.setOnClickListener(this);
         btnDelete.setOnClickListener(this);
+        password = (AddPasswordBean.Password) getIntent().getSerializableExtra(KeyConstants.TO_PWD_DETAIL);
+        bleLockInfo = MyApplication.getInstance().getBleService().getBleLockInfo();
+    }
+
+    @Override
+    protected PasswordDetailPresenter<IPasswordDetailView> createPresent() {
+        return new PasswordDetailPresenter<>();
     }
 
     @Override
@@ -62,11 +81,10 @@ public class BluetoothPasswordManagerDetailActivity extends AppCompatActivity im
                 View mView = LayoutInflater.from(this).inflate(R.layout.have_edit_dialog, null);
                 TextView tvTitle = mView.findViewById(R.id.tv_title);
                 EditText editText = mView.findViewById(R.id.et_name);
-                //TODO 获取到密码设置
-              /*  if (password.getNickName()!=null){
+                if (password.getNickName()!=null){
                     editText.setText(password.getNickName());
                     editText.setSelection(password.getNickName().length());
-                }*/
+                }
                 TextView tv_cancel = mView.findViewById(R.id.tv_left);
                 TextView tv_query = mView.findViewById(R.id.tv_right);
                 AlertDialog alertDialog = AlertDialogUtil.getInstance().common(this, mView);
@@ -85,13 +103,12 @@ public class BluetoothPasswordManagerDetailActivity extends AppCompatActivity im
                             ToastUtil.getInstance().showShort(R.string.nickname_verify_error);
                             return;
                         }
-                        //todo 获取到密码对比
-                  /*      if (StringUtil.judgeNicknameWhetherSame(password.getNickName(),name)){
+                        if (StringUtil.judgeNicknameWhetherSame(password.getNickName(),name)){
                             ToastUtil.getInstance().showShort(R.string.nickname_not_modify);
                             alertDialog.dismiss();
                             return;
-                        }*/
-                        //todo 更新昵称
+                        }
+                        mPresenter.updateNick(1, password.getNum(), name);
                         alertDialog.dismiss();
                     }
                 });
@@ -107,7 +124,11 @@ public class BluetoothPasswordManagerDetailActivity extends AppCompatActivity im
                         @Override
                         public void right() {
                             //确认删除
-                            //TODO 删除
+                            //确认删除
+                            if (mPresenter.isAuth(bleLockInfo, true)) {
+                                showLoading(getString(R.string.is_deleting));
+                                mPresenter.deletePwd(1, Integer.parseInt(password.getNum()), 1, true);
+                            }
                         }
                     });
                 } else {
@@ -115,5 +136,72 @@ public class BluetoothPasswordManagerDetailActivity extends AppCompatActivity im
                 }
                 break;
         }
+    }
+
+    @Override
+    public void onDeletePwdSuccess() {
+
+    }
+
+    @Override
+    public void onDeletePwdFailed(Throwable throwable) {
+        ToastUtil.getInstance().showShort(getString(R.string.delete_fialed));
+        hiddenLoading();
+    }
+
+    @Override
+    public void onDeleteServerPwdSuccess() {
+        LogUtils.e("删除服务器密码");
+        hiddenLoading();
+        Intent intent = new Intent(this, BluetoothPasswordManagerActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    @Override
+    public void onDeleteServerPwdFailed(Throwable throwable) {
+        ToastUtil.getInstance().showShort(getString(R.string.lock_delete_success_please_sync));
+        LogUtils.e("删除服务器密码失败   ");
+        hiddenLoading();
+        finish();
+    }
+
+    @Override
+    public void onDeleteServerPwdFailedServer(BaseResult result) {
+        ToastUtil.getInstance().showShort(getString(R.string.lock_delete_success_please_sync));
+        // ToastUtil.getInstance().showShort( HttpUtils.httpErrorCode(this, result.getCode()));
+        hiddenLoading();
+        finish();
+    }
+
+    @Override
+    public void updateNickNameSuccess(String nickName) {
+        ToastUtil.getInstance().showShort(R.string.modify_success);
+        hiddenLoading();
+        Intent intent = new Intent(this, BluetoothPasswordManagerActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    @Override
+    public void updateNickNameFailed(Throwable throwable) {
+        ToastUtil.getInstance().showShort(getString(R.string.modify_nickname_fail));
+    }
+
+    @Override
+    public void updateNickNameFailedServer(BaseResult result) {
+        ToastUtil.getInstance().showShort(getString(R.string.modify_nickname_fail));
+    }
+
+    @Override
+    public void onLockNoThisNumber() {
+        ToastUtil.getInstance().showLong(R.string.lock_no_this_password);
+        finish();
+    }
+
+    @Override
+    public void onGetLockNumberFailed(Throwable throwable) {
+        ToastUtil.getInstance().showLong(R.string.get_lock_password_failed);
+        finish();
     }
 }

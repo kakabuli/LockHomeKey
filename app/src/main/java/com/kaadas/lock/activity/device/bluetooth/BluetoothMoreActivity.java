@@ -14,10 +14,19 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
+import com.kaadas.lock.activity.MainActivity;
 import com.kaadas.lock.activity.device.BluetoothDeviceInformationActivity;
+import com.kaadas.lock.mvp.mvpbase.BaseBleActivity;
+import com.kaadas.lock.mvp.presenter.DeviceMorePresenter;
+import com.kaadas.lock.mvp.view.IDeviceMoreView;
+import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
+import com.kaadas.lock.publiclibrary.http.result.BaseResult;
+import com.kaadas.lock.publiclibrary.http.util.HttpUtils;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.KeyConstants;
+import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.StringUtil;
 import com.kaadas.lock.utils.ToastUtil;
@@ -28,7 +37,7 @@ import butterknife.ButterKnife;
 /**
  * Created by David on 2019/4/15
  */
-public class BluetoothMoreActivity extends AppCompatActivity implements View.OnClickListener {
+public class BluetoothMoreActivity extends BaseBleActivity<IDeviceMoreView, DeviceMorePresenter> implements IDeviceMoreView, View.OnClickListener {
     @BindView(R.id.iv_back)
     ImageView ivBack;
     @BindView(R.id.tv_content)
@@ -65,25 +74,47 @@ public class BluetoothMoreActivity extends AppCompatActivity implements View.OnC
     String name;
     @BindView(R.id.tv_device_name)
     TextView tvDeviceName;
+    String deviceNickname;//设备名称
+    private BleLockInfo bleLockInfo;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bluetooth_more);
+        bleLockInfo = mPresenter.getBleLockInfo();
         ButterKnife.bind(this);
         initClick();
         initData();
+        boolean isAuth = mPresenter.isAuth(bleLockInfo, false);
+        if (isAuth) {
+            mPresenter.getDeviceInfo();
+        }
 
     }
 
+    @Override
+    protected DeviceMorePresenter createPresent() {
+        return new DeviceMorePresenter();
+    }
+
     private void initData() {
-        //todo 获取到设备名字时,key都加上设备名字
-        messageFreeStatus = (boolean) SPUtils.get(KeyConstants.MESSAGE_FREE_STATUS, false);
-        if (messageFreeStatus) {
-            ivMessageFree.setImageResource(R.mipmap.iv_open);
-        } else {
-            ivMessageFree.setImageResource(R.mipmap.iv_close);
+        if (bleLockInfo != null && bleLockInfo.getServerLockInfo() != null && bleLockInfo.getServerLockInfo().getDevice_nickname() != null) {
+            deviceNickname = bleLockInfo.getServerLockInfo().getDevice_nickname();
+            tvDeviceName.setText(deviceNickname);
+            String deviceName = bleLockInfo.getServerLockInfo().getDevice_name();
+            if (deviceName != null) {
+                String flag = (String) SPUtils.get(deviceName + SPUtils.MESSAGE_STATUS, "false");
+                if (flag.equals("true")) {
+                    ivMessageFree.setImageResource(R.mipmap.iv_open);
+                } else {
+                    ivMessageFree.setImageResource(R.mipmap.iv_close);
+                }
+            }
+
         }
+
+        //todo 获取到设备名字时,key都加上设备名字
+
 
         amAutoLockStatus = (boolean) SPUtils.get(KeyConstants.AM_AUTO_LOCK_STATUS, false);
         if (amAutoLockStatus) {
@@ -92,12 +123,12 @@ public class BluetoothMoreActivity extends AppCompatActivity implements View.OnC
             ivAm.setImageResource(R.mipmap.iv_close);
         }
 
-        silentModeStatus = (boolean) SPUtils.get(KeyConstants.SILENT_MODE_STATUS, false);
+/*        silentModeStatus = (boolean) SPUtils.get(KeyConstants.SILENT_MODE_STATUS, false);
         if (silentModeStatus) {
             ivSilentMode.setImageResource(R.mipmap.iv_open);
         } else {
             ivSilentMode.setImageResource(R.mipmap.iv_close);
-        }
+        }*/
     }
 
     private void initClick() {
@@ -148,30 +179,34 @@ public class BluetoothMoreActivity extends AppCompatActivity implements View.OnC
                             ToastUtil.getInstance().showShort(R.string.nickname_verify_error);
                             return;
                         }
-                        //todo 判断名称是否修改
-                /*        if (deviceNickname!=null){
+                        if (deviceNickname!=null){
                             if (deviceNickname.equals(name)){
                                 ToastUtil.getInstance().showShort(getString(R.string.device_nick_name_no_update));
                                 alertDialog.dismiss();
                                 return;
                             }
-                        }*/
-                        tvDeviceName.setText(name);
+                        }
+                        showLoading(getString(R.string.upload_device_name));
+                        if (bleLockInfo != null && bleLockInfo.getServerLockInfo() != null && bleLockInfo.getServerLockInfo().getDevice_name() != null) {
+                            mPresenter.modifyDeviceNickname(bleLockInfo.getServerLockInfo().getDevice_name(), MyApplication.getInstance().getUid(), name);
+                        }
                         alertDialog.dismiss();
                     }
                 });
                 break;
             case R.id.rl_message_free:
-                if (messageFreeStatus) {
-                    //打开状态 现在关闭
-                    ivMessageFree.setImageResource(R.mipmap.iv_close);
-                    SPUtils.put(KeyConstants.MESSAGE_FREE_STATUS, false);
-                } else {
-                    //关闭状态 现在打开
-                    ivMessageFree.setImageResource(R.mipmap.iv_open);
-                    SPUtils.put(KeyConstants.MESSAGE_FREE_STATUS, true);
+                String deviceName = bleLockInfo.getServerLockInfo().getDevice_name();
+                String mSwitch = (String) SPUtils.get(deviceName + SPUtils.MESSAGE_STATUS, "false");
+                if (deviceName != null) {
+                    if (mSwitch.equals("false")) {
+                        SPUtils.put(deviceName + SPUtils.MESSAGE_STATUS, "true");
+                        ivMessageFree.setImageResource(R.mipmap.iv_open);
+                    } else {
+                        SPUtils.put(deviceName + SPUtils.MESSAGE_STATUS, "false");
+                        ivMessageFree.setImageResource(R.mipmap.iv_close);
+                    }
                 }
-                messageFreeStatus = !messageFreeStatus;
+
                 break;
             case R.id.rl_safe_mode:
                 intent = new Intent(this, BluetoothSafeModeActivity.class);
@@ -195,7 +230,18 @@ public class BluetoothMoreActivity extends AppCompatActivity implements View.OnC
                 startActivity(intent);
                 break;
             case R.id.rl_silent_mode:
-                if (silentModeStatus) {
+                ivSilentMode.setEnabled(false);
+                Boolean isAuth = mPresenter.isAuth(bleLockInfo, true);
+                if (isAuth) {
+                    if (silentModeStatus) {
+                        mPresenter.setVoice(1);
+                    } else {
+                        mPresenter.setVoice(0);
+                    }
+                    showLoading(getString(R.string.is_setting));
+                }
+
+  /*              if (silentModeStatus) {
                     //打开状态 现在关闭
                     ivSilentMode.setImageResource(R.mipmap.iv_close);
                     SPUtils.put(KeyConstants.SILENT_MODE_STATUS, false);
@@ -204,16 +250,16 @@ public class BluetoothMoreActivity extends AppCompatActivity implements View.OnC
                     ivSilentMode.setImageResource(R.mipmap.iv_open);
                     SPUtils.put(KeyConstants.SILENT_MODE_STATUS, true);
                 }
-                silentModeStatus = !silentModeStatus;
+                silentModeStatus = !silentModeStatus;*/
                 break;
             case R.id.rl_device_information:
-                intent=new Intent(this,BluetoothDeviceInformationActivity.class);
+                intent = new Intent(this, BluetoothDeviceInformationActivity.class);
                 startActivity(intent);
                 break;
             case R.id.rl_check_firmware_update:
                 break;
             case R.id.btn_delete:
-                AlertDialogUtil.getInstance().noEditTwoButtonDialog(this, getString(R.string.device_delete_dialog_head), getString(R.string.device_delete_dialog_content),getString(R.string.cancel),getString(R.string.query) , new AlertDialogUtil.ClickListener() {
+                AlertDialogUtil.getInstance().noEditTwoButtonDialog(this, getString(R.string.device_delete_dialog_head), getString(R.string.device_delete_dialog_content), getString(R.string.cancel), getString(R.string.query), new AlertDialogUtil.ClickListener() {
                     @Override
                     public void left() {
 
@@ -221,10 +267,103 @@ public class BluetoothMoreActivity extends AppCompatActivity implements View.OnC
 
                     @Override
                     public void right() {
-
+                        showLoading(getString(R.string.is_deleting));
+                        mPresenter.deleteDevice(bleLockInfo.getServerLockInfo().getDevice_name());
                     }
                 });
                 break;
         }
+    }
+
+    @Override
+    public void onDeleteDeviceSuccess() {
+        ToastUtil.getInstance().showLong(R.string.delete_success);
+        hiddenLoading();
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    @Override
+    public void onDeleteDeviceFailed(Throwable throwable) {
+        LogUtils.e("删除失败   " + throwable.getMessage());
+        ToastUtil.getInstance().showShort(HttpUtils.httpProtocolErrorCode(this, throwable));
+//        ToastUtil.getInstance().showLong(R.string.delete_fialed);
+        hiddenLoading();
+    }
+
+    @Override
+    public void onDeleteDeviceFailedServer(BaseResult result) {
+        LogUtils.e("删除失败   " + result.toString());
+        String httpErrorCode = HttpUtils.httpErrorCode(this, result.getCode());
+        ToastUtil.getInstance().showLong(httpErrorCode);
+        hiddenLoading();
+    }
+
+    @Override
+    public void modifyDeviceNicknameSuccess() {
+        hiddenLoading();
+        deviceNickname = name;
+        tvDeviceName.setText(deviceNickname);
+        bleLockInfo.getServerLockInfo().setDevice_nickname(deviceNickname);
+        ToastUtil.getInstance().showLong(R.string.device_nick_name_update_success);
+    }
+
+    @Override
+    public void modifyDeviceNicknameError(Throwable throwable) {
+        hiddenLoading();
+        ToastUtil.getInstance().showShort(HttpUtils.httpProtocolErrorCode(this, throwable));
+    }
+
+    @Override
+    public void modifyDeviceNicknameFail(BaseResult baseResult) {
+        hiddenLoading();
+        ToastUtil.getInstance().showLong(HttpUtils.httpErrorCode(this, baseResult.getCode()));
+    }
+
+    @Override
+    public void getVoice(int voice) {
+        LogUtils.e("fjh", voice + "-----getVoice");
+        if (voice == 0) {
+            silentModeStatus = true;
+            ivSilentMode.setImageResource(R.mipmap.iv_open);
+        } else {
+            silentModeStatus = false;
+            ivSilentMode.setImageResource(R.mipmap.iv_close);
+        }
+    }
+
+    @Override
+    public void setVoiceSuccess(int voice) {
+        hiddenLoading();
+        LogUtils.e("fjh",voice+"-----setVoiceSuccess");
+        if (voice==0){
+            silentModeStatus=true;
+            ivSilentMode.setImageResource(R.mipmap.iv_open);
+            ivSilentMode.setEnabled(true);
+        }else{
+            silentModeStatus=false;
+            ivSilentMode.setImageResource(R.mipmap.iv_close);
+            ivSilentMode.setEnabled(true);
+        }
+
+        ToastUtil.getInstance().showLong(getString(R.string.set_success));
+    }
+
+    @Override
+    public void setVoiceFailed(Throwable throwable, int voice) {
+        hiddenLoading();
+        LogUtils.e("fjh",voice+"-----setVoiceFailed");
+        if (voice==0){
+            silentModeStatus=true;
+            ivSilentMode.setImageResource(R.mipmap.iv_open);
+            ivSilentMode.setEnabled(true);
+        }else{
+            silentModeStatus=true;
+            ivSilentMode.setImageResource(R.mipmap.iv_close);
+            ivSilentMode.setEnabled(true);
+        }
+        //0失败，代表打开静音失败
+        ToastUtil.getInstance().showLong(getString(R.string.set_failed));
     }
 }

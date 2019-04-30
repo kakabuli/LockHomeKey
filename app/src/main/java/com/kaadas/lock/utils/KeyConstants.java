@@ -241,4 +241,24 @@ public class KeyConstants {
     public static final int OPEN_LOCK_SUCCESS = 3;
     public static final int OPEN_LOCK_FAILED = 4;
     public static final int DEVICE_OFFLINE = 5;
+
+    //设备
+    public static final String DEVICE_DETAIL_BEAN="deviceDetailBean";
+
+    //是否保存了开锁密码
+    public static final String SAVA_LOCK_PWD="saveLockPwd";
+
+    //开锁密码编号
+    public static final String LOCK_PWD_NUMber="lockPwdNumber";
+
+    //设备名称
+    public static final String NAME="name";
+
+    //设置onActivityResult
+    public static final int DEVICE_DETAIL_BEAN_NUM=1000;
+
+    /**
+     * 升级时，保存的设备蓝牙版本号的Key
+     */
+    public static final String BLE_VERSION= "bleVersion";
 }
