@@ -107,6 +107,7 @@ public class AddCatEyePresenter<T> extends BasePresenter<IAddCatEyeView> {
         String temp = cateEyeMac.replace(":", "");
         String lastFour = temp.substring(temp.length() - 4, temp.length()).toUpperCase();
 
+        LogUtils.e("猫眼名称是   " + "kaadasrgch5050" + lastFour);
         //TBD:返回值异常时的处理
         HisiLibApi.setNetworkInfo(mWiFiAdmin.getSecurity(), ONLINE_PORT_BY_TCP, ONLINE_MSG_BY_TCP,
                 mWiFiAdmin.getWifiIPAdress(), wifiName, pwd, ("kaadasrgch5050" + lastFour));
