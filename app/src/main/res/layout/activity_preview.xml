@@ -8,7 +8,7 @@
 
     <include
         android:id="@+id/preview_header"
-        layout="@layout/head"></include>
+        layout="@layout/head" />
 
 
 

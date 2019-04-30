@@ -695,4 +695,38 @@
     <string name="today_date_format">HH:mm</string>
     <string name="notification_service_channel_id">linphone_notification_service_id</string>
     <string name="notification_channel_id">linphone_notification_id</string>
+
+    <string name="data_loading1">数据努力加载中....</string>
+    <string name="video_callback_info">回放</string>
+    <string name="recording_screen">录屏</string>
+    <string name="snapshot">快照</string>
+    <string name="img_loading1">图片努力加载中....</string>
+    <string name="watch_video">查看视频</string>
+    <string name="reload_download">重新下载</string>
+    <string name="pre_search_video">点击查看视频</string>
+    <string name="pir_history_notic">新增%d条消息,点击刷新</string>
+    <string name="read_device_language_fail">获取当前的语言信息失败</string>
+    <string name="card_full_and_delete_exist_code">卡片库已满，请删除已有码库再添加</string>
+    <string name="set_card_failed_number">设置卡片失败，获取锁上编号失败！</string>
+    <string name="read_device_info_fail">读取设备信息失败</string>
+    <string name="already_newest_version">当前已是最新版本</string>
+    <string name="sync_failed_card">同步门卡失败</string>
+    <string name="lock_no_this_card">锁上没有此卡片，请同步</string>
+    <string name="confirm">确定</string>
+    <string name="random_verify_error">请输入6-12位数字</string>
+    <string name="no_get_current_lang">未获取到锁当前的语言状态，无法进行设置</string>
+    <string name="lock_lang_no_change">锁的语言选择未改变，请重新选择</string>
+    <string name="is_setting_lock_lang">正在设置锁的语言，请稍后。。。</string>
+    <string name="get_lock_card_failed">获取锁上卡片失败！</string>
+    <string name="password_full_and_delete_exist_code">密码库已满，请删除已有码库再添加</string>
+    <string name="please_have_net_add_pwd">请在有网络情况下添加密码！</string>
+    <string name="password_simple_please_reset">密码过于简单，请重新设置</string>
+    <string name="go_on">继续</string>
+    <string name="reinstall">重新设置</string>
+    <string name="select_time_ce_lue">请选择时间策略...</string>
+    <string name="get_lock_lang">正在锁的语言状态，请稍后。。。</string>
+    <string name="get_lock_lang_fail">获取当前锁的语言失败</string>
+    <string name="input_open_lock_password">请输入开锁密码</string>
+    <string name="no_find_device">未找到设备</string>
+
 </resources>
