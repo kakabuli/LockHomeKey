@@ -279,12 +279,14 @@ public class RegisterActivity extends BaseActivity<IRegisterView, RegisterPresen
                     AlertDialogUtil.getInstance().noButtonSingleLineDialog(this, getString(R.string.input_valid_telephone_or_email));
                     return;
                 }
+                showLoading("");
                 String countryCode = tvAreaCode.getText().toString().trim().replace("+", "");
                 mPresenter.registerByPhone(countryCode + account, pwd, code);
             } else {
                 LogUtils.e("邮箱注册：" + DetectionEmailPhone.getInstance().isEmail(account));
                 if (DetectionEmailPhone.getInstance().isEmail(account)) {
                     // sendEmailClick(phone);
+                    showLoading("");
                     mPresenter.registerByEmail(account,pwd,code);
                 } else {
 //                    ToastUtil.getInstance().showShort( R.string.email_not_right);
@@ -367,6 +369,7 @@ public class RegisterActivity extends BaseActivity<IRegisterView, RegisterPresen
 
     @Override
     public void registerSuccess() { //注册成功
+        hiddenLoading();
         LogUtils.e("注册成功");
         ToastUtil.getInstance().showLong(R.string.register_success);
         startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
@@ -386,11 +389,13 @@ public class RegisterActivity extends BaseActivity<IRegisterView, RegisterPresen
 
     @Override
     public void registerFailed(Throwable e) { //注册失败
+        hiddenLoading();
         ToastUtil.getInstance().showShort(HttpUtils.httpProtocolErrorCode(this, e));
     }
 
     @Override
     public void registerFailedServer(BaseResult result) {
+        hiddenLoading();
         ToastUtil.getInstance().showShort(HttpUtils.httpErrorCode(this, result.getCode()));
 
     }
