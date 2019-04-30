@@ -14,4 +14,23 @@ public interface GatewayLockMoreView extends IBaseView {
     void updateDevNickNameThrowable(Throwable throwable);
 
 
+    //设备音量获取成功
+    void getSoundVolumeSuccess(int volume);
+
+    //设备音量获取失败
+    void getSoundVolumeFail();
+
+    //设备获取音量异常
+    void getSoundVolumeThrowable(Throwable throwable);
+
+    //设备设置音量成功
+    void setSoundVolumeSuccess(int volume);
+
+    //设备设置音量失败
+    void setSoundVolumeFail();
+
+    //设备设置音量异常
+    void setSoundVolumeThrowable(Throwable throwable);
+
+
 }

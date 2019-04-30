@@ -359,6 +359,7 @@
     <string name="device_information">设备信息</string>
     <string name="serial_number">序列号</string>
     <string name="device_signal">设备信号</string>
+    <string name="link_signal">链路信号</string>
     <string name="firmware_version_number">固件版本号</string>
     <string name="hardware_version_number">硬件版本号</string>
     <string name="master_firmware_version_number">主控固件版本号</string>
@@ -644,6 +645,8 @@
     <string name="device_bluetooth">蓝牙设备</string>
     <string name="device_add_bluetooth">添加蓝牙设备</string>
     <string name="software_version">软件版本</string>
+    <string name="hardware_version">硬件版本</string>\
+    <string name="module_mark">MAC地址</string>
     <string name="bluetooth_version">蓝牙版本</string>
     <string name="nickname_not_null">名称不能为空</string>
     <string name="input_name_max">字符最多只能输入%1$s个，汉字最多只能输入%2$s个</string>
@@ -714,9 +717,6 @@
     <string name="lock_no_this_card">锁上没有此卡片，请同步</string>
     <string name="confirm">确定</string>
     <string name="random_verify_error">请输入6-12位数字</string>
-    <string name="no_get_current_lang">未获取到锁当前的语言状态，无法进行设置</string>
-    <string name="lock_lang_no_change">锁的语言选择未改变，请重新选择</string>
-    <string name="is_setting_lock_lang">正在设置锁的语言，请稍后。。。</string>
     <string name="get_lock_card_failed">获取锁上卡片失败！</string>
     <string name="password_full_and_delete_exist_code">密码库已满，请删除已有码库再添加</string>
     <string name="please_have_net_add_pwd">请在有网络情况下添加密码！</string>
@@ -724,6 +724,19 @@
     <string name="go_on">继续</string>
     <string name="reinstall">重新设置</string>
     <string name="select_time_ce_lue">请选择时间策略...</string>
+    <string name="get_lock_lang">正在获取锁的语言状态，请稍后。。。</string>
+    <string name="get_lock_lang_fail">获取当前锁的语言失败</string>
+    <string name="no_get_current_lang">未获取到锁当前的语言状态，无法进行设置</string>
+    <string name="lock_lang_no_change">锁的语言选择未改变，请重新选择</string>
+    <string name="is_setting_lock_lang">正在设置锁的语言，请稍后。。。</string>
+    <string name="get_sound_volume_fail">获取音量失败，请稍后获取</string>
+    <string name="get_sound_volme_no_fun">正在获取设备音量，无法操作</string>
+    <string name="close_silence">正在关闭静音模式</string>
+    <string name="open_slience">正在开启静音模式</string>
+    <string name="get_lock_info_fail">获取锁信息失败</string>
+    <string name="get_lock_info_later_on">正在获取锁的信息，请稍后。。。</string>
+    <string name="input_open_lock_password">请输入开锁密码</string>
+    <string name="no_find_device">未找到设备</string>
     <string name="lock_no_record">锁上还没有开锁记录！</string>
     <string name="get_record_ble_success">获取开锁记录成功</string>
     <string name="get_record_failed_please_wait">开锁记录为空</string>
@@ -744,7 +757,4 @@
     <string name="sync_failed">同步秘钥失败</string>
     <string name="please_have_net_add_temp_pwd">请在有网络情况下添加临时密码！</string>
     <string name="get_lock_lang">正在锁的语言状态，请稍后。。。</string>
-    <string name="get_lock_lang_fail">获取当前锁的语言失败</string>
-    <string name="input_open_lock_password">请输入开锁密码</string>
-    <string name="no_find_device">未找到设备</string>
 </resources>

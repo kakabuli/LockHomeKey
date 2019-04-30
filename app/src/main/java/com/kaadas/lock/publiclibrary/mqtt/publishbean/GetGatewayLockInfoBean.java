@@ -2,19 +2,17 @@ package com.kaadas.lock.publiclibrary.mqtt.publishbean;
 
 import java.io.Serializable;
 
-public class GetSoundVolume implements Serializable {
-
-
+public class GetGatewayLockInfoBean implements Serializable {
     /**
      * msgtype : respone
      * userId :
      * msgId : 00001
      * gwId :
      * deviceId : devuuid
-     * func :  soundVolume
+     * func : BasicInfo
      * params : {}
      * returnCode : 200
-     * returnData : {"volume":0}
+     * returnData : {"macaddr":"xxxxxx","model":"xxxxxx","firmware":"xxxxxx","hwversion":"xxxxxx","swversion":"xxxxxx","manufact":"xxxxxx","linkquality":"xxxxxx"}
      * timestamp : 13433333333
      */
 
@@ -110,34 +108,85 @@ public class GetSoundVolume implements Serializable {
     }
 
     public static class ParamsBean {
-        private int volume;
-
-        public int getVolume() {
-            return volume;
-        }
-
-        public void setVolume(int volume) {
-            this.volume = volume;
-        }
-
     }
 
     public static class ReturnDataBean {
+        /**
+         * macaddr : xxxxxx
+         * model : xxxxxx
+         * firmware : xxxxxx
+         * hwversion : xxxxxx
+         * swversion : xxxxxx
+         * manufact : xxxxxx
+         * linkquality : xxxxxx
+         */
 
+        private String macaddr;
+        private String model;
+        private String firmware;
+        private String hwversion;
+        private String swversion;
+        private String manufact;
+        private String linkquality;
 
-
-        private int volume;
-
-        public int getVolume() {
-            return volume;
+        public String getMacaddr() {
+            return macaddr;
         }
 
-        public void setVolume(int volume) {
-            this.volume = volume;
+        public void setMacaddr(String macaddr) {
+            this.macaddr = macaddr;
+        }
+
+        public String getModel() {
+            return model;
+        }
+
+        public void setModel(String model) {
+            this.model = model;
+        }
+
+        public String getFirmware() {
+            return firmware;
+        }
+
+        public void setFirmware(String firmware) {
+            this.firmware = firmware;
+        }
+
+        public String getHwversion() {
+            return hwversion;
+        }
+
+        public void setHwversion(String hwversion) {
+            this.hwversion = hwversion;
+        }
+
+        public String getSwversion() {
+            return swversion;
+        }
+
+        public void setSwversion(String swversion) {
+            this.swversion = swversion;
+        }
+
+        public String getManufact() {
+            return manufact;
+        }
+
+        public void setManufact(String manufact) {
+            this.manufact = manufact;
+        }
+
+        public String getLinkquality() {
+            return linkquality;
+        }
+
+        public void setLinkquality(String linkquality) {
+            this.linkquality = linkquality;
         }
     }
 
-    public GetSoundVolume(String msgtype, String userId, int msgId, String gwId, String deviceId, String func, ParamsBean params, String returnCode, ReturnDataBean returnData, String timestamp) {
+    public GetGatewayLockInfoBean(String msgtype, String userId, int msgId, String gwId, String deviceId, String func, ParamsBean params, String returnCode, ReturnDataBean returnData, String timestamp) {
         this.msgtype = msgtype;
         this.userId = userId;
         this.msgId = msgId;
@@ -150,6 +199,6 @@ public class GetSoundVolume implements Serializable {
         this.timestamp = timestamp;
     }
 
-    public GetSoundVolume() {
+    public GetGatewayLockInfoBean() {
     }
 }
