@@ -125,8 +125,8 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
         List<BleLockInfo> devices = MyApplication.getInstance().getDevices();
         if (devices != null && devices.size() > 0) {
             for (BleLockInfo lockInfo : devices) {
-                if (lockInfo.getServerLockInfo().getDevice_name().equals(name)) {
-                    return lockInfo.getServerLockInfo().getDevice_nickname();
+                if (lockInfo.getServerLockInfo().getLockName().equals(name)) {
+                    return lockInfo.getServerLockInfo().getLockNickName();
                 }
             }
         }

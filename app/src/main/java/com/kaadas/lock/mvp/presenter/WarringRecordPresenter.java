@@ -92,7 +92,7 @@ public class WarringRecordPresenter<T> extends BlePresenter<IWarringRecordView> 
         if (pagenum == 1) {  //如果是获取第一页的数据，那么清楚所有的开锁记录
             serverRecords.clear();
         }
-        XiaokaiNewServiceImp.getWarringRecord(bleService.getBleLockInfo().getServerLockInfo().getDevice_name(),
+        XiaokaiNewServiceImp.getWarringRecord(bleService.getBleLockInfo().getServerLockInfo().getLockName(),
                 pagenum)
                 .subscribe(new BaseObserver<GetWarringRecordResult>() {
                     @Override
@@ -190,7 +190,7 @@ public class WarringRecordPresenter<T> extends BlePresenter<IWarringRecordView> 
                 if (recordDisposable != null && !recordDisposable.isDisposed()) {
                     recordDisposable.dispose();
                 }
-                upLoadOpenRecord(bleLockInfo.getServerLockInfo().getDevice_name(), getRecordToServer());
+                upLoadOpenRecord(bleLockInfo.getServerLockInfo().getLockName(), getRecordToServer());
                 return;
             }
             currentPage++;
@@ -273,7 +273,7 @@ public class WarringRecordPresenter<T> extends BlePresenter<IWarringRecordView> 
                                             recordDisposable.dispose();
                                         }
                                         toDisposable(disposable);
-                                        upLoadOpenRecord(bleLockInfo.getServerLockInfo().getDevice_name(), getRecordToServer());
+                                        upLoadOpenRecord(bleLockInfo.getServerLockInfo().getLockName(), getRecordToServer());
                                     } else {  //如果后面还有
                                         LogUtils.e("收到一组完整的数据");
                                         currentPage++;  //下一组数据
@@ -325,7 +325,7 @@ public class WarringRecordPresenter<T> extends BlePresenter<IWarringRecordView> 
                                     if (recordDisposable != null && !recordDisposable.isDisposed()) {
                                         recordDisposable.dispose();
                                     }
-                                    upLoadOpenRecord(bleLockInfo.getServerLockInfo().getDevice_name(), getRecordToServer());
+                                    upLoadOpenRecord(bleLockInfo.getServerLockInfo().getLockName(), getRecordToServer());
                                 } else {  //如果后面还有
                                     currentPage++;  //下一组数据
                                     retryTimes = 0; //重试次数

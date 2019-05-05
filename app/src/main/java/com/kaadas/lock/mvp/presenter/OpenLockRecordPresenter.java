@@ -104,7 +104,7 @@ public class OpenLockRecordPresenter<T> extends BlePresenter<IOpenLockRecordView
         if (pagenum == 1) {  //如果是获取第一页的数据，那么清楚所有的开锁记录
             serverRecords.clear();
         }
-        XiaokaiNewServiceImp.getLockRecord(bleService.getBleLockInfo().getServerLockInfo().getDevice_name(),
+        XiaokaiNewServiceImp.getLockRecord(bleService.getBleLockInfo().getServerLockInfo().getLockName(),
                 MyApplication.getInstance().getUid(),
                 null,
                 pagenum + "")
@@ -210,8 +210,8 @@ public class OpenLockRecordPresenter<T> extends BlePresenter<IOpenLockRecordView
                 if (recordDisposable != null && !recordDisposable.isDisposed()) {
                     recordDisposable.dispose();
                 }
-                upLoadOpenRecord(bleService.getBleLockInfo().getServerLockInfo().getDevice_name()
-                        , bleService.getBleLockInfo().getServerLockInfo().getDevice_nickname()
+                upLoadOpenRecord(bleService.getBleLockInfo().getServerLockInfo().getLockName()
+                        , bleService.getBleLockInfo().getServerLockInfo().getLockNickName()
                         , getRecordToServer(), MyApplication.getInstance().getUid());
                 return;
             }
@@ -323,8 +323,8 @@ public class OpenLockRecordPresenter<T> extends BlePresenter<IOpenLockRecordView
                                         if (disposable != null && !disposable.isDisposed()) {
                                             disposable.dispose();
                                         }
-                                        upLoadOpenRecord(bleService.getBleLockInfo().getServerLockInfo().getDevice_name()
-                                                , bleService.getBleLockInfo().getServerLockInfo().getDevice_nickname()
+                                        upLoadOpenRecord(bleService.getBleLockInfo().getServerLockInfo().getLockName()
+                                                , bleService.getBleLockInfo().getServerLockInfo().getLockNickName()
                                                 , getRecordToServer(), MyApplication.getInstance().getUid());
                                     } else {  //如果后面还有
                                         LogUtils.e("收到一组完整的数据");
@@ -380,8 +380,8 @@ public class OpenLockRecordPresenter<T> extends BlePresenter<IOpenLockRecordView
                                     if (recordDisposable != null && !recordDisposable.isDisposed()) {
                                         recordDisposable.dispose();
                                     }
-                                    upLoadOpenRecord(bleService.getBleLockInfo().getServerLockInfo().getDevice_name()
-                                            , bleService.getBleLockInfo().getServerLockInfo().getDevice_nickname()
+                                    upLoadOpenRecord(bleService.getBleLockInfo().getServerLockInfo().getLockName()
+                                            , bleService.getBleLockInfo().getServerLockInfo().getLockNickName()
                                             , getRecordToServer(), MyApplication.getInstance().getUid());
                                 } else {  //如果后面还有
                                     currentPage++;  //下一组数据

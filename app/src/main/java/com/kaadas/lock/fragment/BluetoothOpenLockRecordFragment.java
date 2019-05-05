@@ -157,7 +157,7 @@ public class BluetoothOpenLockRecordFragment extends BaseBleFragment<IOpenLockRe
                 titleTime = DateUtils.getDayTimeFromMillisecond(dayTime);
             }
             List<BluetoothItemRecordBean> itemList = new ArrayList<>();
-            GetPasswordResult passwordResult = MyApplication.getInstance().getPasswordResults(bleLockInfo.getServerLockInfo().getDevice_name());
+            GetPasswordResult passwordResult = MyApplication.getInstance().getPasswordResults(bleLockInfo.getServerLockInfo().getLockName());
             String openLockType = getOpenLockType(passwordResult, record);
             itemList.add(new BluetoothItemRecordBean(record.getUser_num(), openLockType, KeyConstants.BLUETOOTH_RECORD_COMMON,
                     record.getOpen_time(), true, true));
@@ -234,7 +234,7 @@ public class BluetoothOpenLockRecordFragment extends BaseBleFragment<IOpenLockRe
                 titleTime = DateUtils.getDayTimeFromMillisecond(dayTime);
             }
             List<BluetoothItemRecordBean> itemList = new ArrayList<>();
-            GetPasswordResult passwordResult = MyApplication.getInstance().getPasswordResults(bleLockInfo.getServerLockInfo().getDevice_name());
+            GetPasswordResult passwordResult = MyApplication.getInstance().getPasswordResults(bleLockInfo.getServerLockInfo().getLockName());
             String openLockType = getOpenLockType(passwordResult, record);
             itemList.add(new BluetoothItemRecordBean(record.getUser_num(), openLockType, KeyConstants.BLUETOOTH_RECORD_COMMON,
                     record.getOpen_time(), true, true));

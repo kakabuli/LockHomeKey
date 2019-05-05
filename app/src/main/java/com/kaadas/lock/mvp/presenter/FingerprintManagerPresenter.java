@@ -49,7 +49,7 @@ public class FingerprintManagerPresenter<T> extends BlePresenter<IFingerprintMan
     public boolean isAuthAndNoConnect(BleLockInfo bleLockInfo) {
         if (bleService.getBleLockInfo() != null
                 && bleService.getCurrentDevice() != null
-                && bleService.getCurrentDevice().getAddress().equals(bleLockInfo.getServerLockInfo().getDevmac())
+                && bleService.getCurrentDevice().getAddress().equals(bleLockInfo.getServerLockInfo().getMacLock())
                 ) {
             if (bleLockInfo.isAuth()) {  //如果已经鉴权   不管
                 LogUtils.e("服务中的数据是   " + bleLockInfo.isAuth());
@@ -90,7 +90,7 @@ public class FingerprintManagerPresenter<T> extends BlePresenter<IFingerprintMan
 
     public void syncPassword() {
         //同步时将上次的数据
-        GetPasswordResult passwordResults = MyApplication.getInstance().getPasswordResults(bleLockInfo.getServerLockInfo().getDevice_name());
+        GetPasswordResult passwordResults = MyApplication.getInstance().getPasswordResults(bleLockInfo.getServerLockInfo().getLockName());
         if (passwordResults != null) {
             fingerprintList = passwordResults.getData().getFingerprintList();
         } else {
@@ -222,7 +222,7 @@ public class FingerprintManagerPresenter<T> extends BlePresenter<IFingerprintMan
             passwords.add(new AddPasswordBean.Password(3, number, number, 1));
         }
         XiaokaiNewServiceImp.addPassword(MyApplication.getInstance().getUid()
-                , bleLockInfo.getServerLockInfo().getDevice_name(), passwords)
+                , bleLockInfo.getServerLockInfo().getLockName(), passwords)
                 .subscribe(new BaseObserver<BaseResult>() {
                     @Override
                     public void onSuccess(BaseResult result) {
@@ -270,7 +270,7 @@ public class FingerprintManagerPresenter<T> extends BlePresenter<IFingerprintMan
             String number = i < 10 ? "0" + i : "" + i;
             deletePasswords.add(new DeletePasswordBean.DeletePassword(3, number));
         }
-        XiaokaiNewServiceImp.deletePassword(MyApplication.getInstance().getUid(), bleLockInfo.getServerLockInfo().getDevice_name(), deletePasswords)
+        XiaokaiNewServiceImp.deletePassword(MyApplication.getInstance().getUid(), bleLockInfo.getServerLockInfo().getLockName(), deletePasswords)
                 .subscribe(new BaseObserver<BaseResult>() {
                     @Override
                     public void onSuccess(BaseResult result) {

@@ -17,7 +17,6 @@ import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.Rsa;
 import com.kaadas.lock.utils.SPUtils;
 
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.disposables.Disposable;
@@ -45,7 +44,7 @@ public class DeviceMorePresenter extends BlePresenter<IDeviceMoreView> {
                         //清除消息免打扰
                         SPUtils.remove(deviceName + SPUtils.MESSAGE_STATUS);
                         //todo 清除保存的密码
-                        SPUtils.remove(KeyConstants.SAVE_PWD_HEARD + bleLockInfo.getServerLockInfo().getDevmac());
+                        SPUtils.remove(KeyConstants.SAVE_PWD_HEARD + bleLockInfo.getServerLockInfo().getMacLock());
 
                         //通知homeFragment  和  device刷新界面
                         bleService.release();
@@ -144,8 +143,8 @@ public class DeviceMorePresenter extends BlePresenter<IDeviceMoreView> {
                 if (mViewRef.get() != null) {
                     mViewRef.get().modifyDeviceNicknameSuccess();
                 }
-                bleLockInfo.getServerLockInfo().setDevice_nickname(lockNickName);
-                bleService.getBleLockInfo().getServerLockInfo().setDevice_nickname(lockNickName);
+                bleLockInfo.getServerLockInfo().setLockNickName(lockNickName);
+                bleService.getBleLockInfo().getServerLockInfo().setLockNickName(lockNickName);
                 MyApplication.getInstance().setDeviceChange();
             }
 

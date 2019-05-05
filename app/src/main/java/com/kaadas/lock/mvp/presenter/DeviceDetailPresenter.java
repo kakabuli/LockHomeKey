@@ -40,7 +40,7 @@ public class DeviceDetailPresenter<T> extends BlePresenter<IDeviceDetailView> {
 
 
     public void getAllPassword(BleLockInfo bleLockInfo) {
-        XiaokaiNewServiceImp.getPasswords(MyApplication.getInstance().getUid(), bleLockInfo.getServerLockInfo().getDevice_name(), 0)
+        XiaokaiNewServiceImp.getPasswords(MyApplication.getInstance().getUid(), bleLockInfo.getServerLockInfo().getLockName(), 0)
                 .subscribe(new BaseObserver<GetPasswordResult>() {
                     @Override
                     public void onSuccess(GetPasswordResult getPasswordResult) {
@@ -49,7 +49,7 @@ public class DeviceDetailPresenter<T> extends BlePresenter<IDeviceDetailView> {
                             mViewRef.get().onGetPasswordSuccess(getPasswordResult);
                         }
                         //更新列表
-                        MyApplication.getInstance().setPasswordResults(bleLockInfo.getServerLockInfo().getDevice_name(), getPasswordResult, true);
+                        MyApplication.getInstance().setPasswordResults(bleLockInfo.getServerLockInfo().getLockName(), getPasswordResult, true);
                     }
 
                     @Override
