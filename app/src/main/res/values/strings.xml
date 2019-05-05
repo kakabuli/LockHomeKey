@@ -762,4 +762,5 @@
     <string name="recording_name">录屏</string>
     <string name="select_no_lock">暂无联动门锁</string>
     <string name="video_connecting">正在连接···</string>
+    <string name="name_not_empty">输入值不能为空</string>
 </resources>

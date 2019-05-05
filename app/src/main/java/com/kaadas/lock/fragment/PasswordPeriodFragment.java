@@ -19,6 +19,7 @@ import android.widget.TextView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
+import com.kaadas.lock.activity.device.bluetooth.password.BluetoothPasswordManagerActivity;
 import com.kaadas.lock.activity.device.bluetooth.password.BluetoothPasswordShareActivity;
 import com.kaadas.lock.activity.device.bluetooth.password.BluetoothUserPasswordAddActivity;
 import com.kaadas.lock.activity.device.bluetooth.password.CycleRulesActivity;
@@ -196,8 +197,6 @@ public class PasswordPeriodFragment extends BaseBleFragment<IPasswordLoopView, P
                     mPresenter.setPwd(strPassword, nickName, startHour, startMin, endHour, endMin, days);
                 }
 
-                intent = new Intent(getActivity(), BluetoothPasswordShareActivity.class);
-                startActivity(intent);
                 break;
             case R.id.btn_random_generation:
                 String password = StringUtil.makeRandomPassword();
@@ -281,7 +280,7 @@ public class PasswordPeriodFragment extends BaseBleFragment<IPasswordLoopView, P
     public void onUploadPwdSuccess(String password, String number, String nickName) {
         LogUtils.e("添加密码成功   " + password.toString());
         //todo 获取到开始时间,结束时间 设置
-    /*    Intent intent = new Intent();
+      /*  Intent intent = new Intent();
         intent.setClass(MyApplication.getInstance(), BluetoothPasswordShareActivity.class);
         intent.putExtra(KeyConstants.TO_DETAIL_NUMBER, number);
         intent.putExtra(KeyConstants.TO_DETAIL_PASSWORD, password);
@@ -297,14 +296,14 @@ public class PasswordPeriodFragment extends BaseBleFragment<IPasswordLoopView, P
     @Override
     public void onUploadPwdFailed(Throwable throwable) {
         ToastUtil.getInstance().showShort(R.string.lock_set_success_please_sync);
-        startActivity(new Intent(getContext(),BluetoothPasswordShareActivity.class));
+        startActivity(new Intent(getContext(),BluetoothPasswordManagerActivity.class));
         getActivity().finish();
     }
 
     @Override
     public void onUploadPwdFailedServer(BaseResult result) {
         ToastUtil.getInstance().showShort(R.string.lock_set_success_please_sync);
-        startActivity(new Intent(getContext(),BluetoothPasswordShareActivity.class));
+        startActivity(new Intent(getContext(),BluetoothPasswordManagerActivity.class));
         getActivity().finish();
     }
 
