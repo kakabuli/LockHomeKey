@@ -258,6 +258,15 @@ public class KeyConstants {
     public static final int DEVICE_DETAIL_BEAN_NUM=1000;
 
     /**
+     * 传递蓝牙设备信息的Key
+     */
+    public static final String BLE_LOCK_INFO = "bleLockInfo";
+    /**
+     * 传递当前位置
+     */
+    public static final String FRAGMENT_POSITION = "fragmentPosition";
+
+    /**
      * 升级时，保存的设备蓝牙版本号的Key
      */
     public static final String BLE_VERSION= "bleVersion";

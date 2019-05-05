@@ -23,7 +23,8 @@ public class BindBleSuccessPresenter<T> extends BasePresenter<IBindBleSuccessVie
                 if (mViewRef.get() != null) {
                     mViewRef.get().modifyDeviceNicknameSuccess();
                 }
-                MyApplication.getInstance().setDeviceChange() ;
+
+                MyApplication.getInstance().getAllDevicesByMqtt(true);
             }
 
             @Override
