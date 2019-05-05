@@ -97,15 +97,15 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
             public void run() {
                 LogUtils.e(" 首页锁状态  反锁状态   " + bleLockInfo.getBackLock() + "    安全模式    " + bleLockInfo.getSafeMode() + "   布防模式   " + bleLockInfo.getArmMode());
                 isOpening = false;
-                lockStatus(8);
+                changeOpenLockStatus(8);
                 if (bleLockInfo.getBackLock() == 0) {  //等于0时是反锁状态
-                    lockStatus(6);
+                    changeOpenLockStatus(6);
                 }
                 if (bleLockInfo.getSafeMode() == 1) {//安全模式
-                    lockStatus(5);
+                    changeOpenLockStatus(5);
                 }
                 if (bleLockInfo.getArmMode() == 1) {//布防模式
-                    lockStatus(4);
+                    changeOpenLockStatus(4);
                 }
             }
         };
@@ -120,7 +120,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
         changeOpenLockStatus(16);
         rlDeviceDynamic.setOnClickListener(this);
         tvMore.setOnClickListener(this);
-
+        initView();
         return view;
     }
 
@@ -253,6 +253,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
         switch (status) {
             case 1:
                 //手机蓝牙未打开
+
 
                 break;
             case 2:
@@ -435,25 +436,6 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
                 tvExternal.setTextColor(getResources().getColor(R.color.white));
                 tvExternal.setText(getString(R.string.equipment_out_of_range));
                 break;
-    /*        case 14:
-                //蓝牙锁关闭
-                ivExternalBig.setVisibility(View.VISIBLE);
-                ivExternalBig.setImageResource(R.mipmap.bluetooth_lock_close_big_middle_icon);
-                ivExternalMiddle.setVisibility(View.GONE);
-//                ivExternalMiddle.setImageResource();
-                ivExternalSmall.setVisibility(View.GONE);
-//                ivExternalSmall.setImageResource();
-                ivInnerMiddle.setVisibility(View.VISIBLE);
-                ivInnerMiddle.setImageResource(R.mipmap.bluetooth_lock_safe_inner_midder_icon);
-                ivInnerSmall.setVisibility(View.VISIBLE);
-                ivInnerSmall.setImageResource(R.mipmap.bluetooth_lock_bu_fang_inner_small_icon);
-                tvInner.setVisibility(View.VISIBLE);
-                tvInner.setText(R.string.long_press_open_lock);
-                tvInner.setTextColor(getResources().getColor(R.color.cF7FDFD));
-                tvExternal.setVisibility(View.VISIBLE);
-                tvExternal.setTextColor(getResources().getColor(R.color.cC6F5FF));
-                tvExternal.setText(getString(R.string.bluetooth_close_status));
-                break;*/
             case 15:
                 //蓝牙锁布防被开启
                 ivExternalBig.setVisibility(View.VISIBLE);
@@ -522,7 +504,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
 
         } else {
             if (!isConnectingDevice) {
-                lockStatus(12);
+                changeOpenLockStatus(12);
             }
         }
     }
@@ -530,12 +512,12 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
     @Override
     public void onStartSearchDevice() {
         LogUtils.e("开始搜索   ");
-        lockStatus(2);
+        changeOpenLockStatus(2);
     }
 
     @Override
     public void onSearchDeviceFailed(Throwable throwable) {
-        lockStatus(3);
+        changeOpenLockStatus(3);
     }
 
     @Override
@@ -546,15 +528,15 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
 
     @Override
     public void onNeedRebind(int errorCode) {
-        lockStatus(11);
+        changeOpenLockStatus(11);
     }
 
     @Override
     public void authResult(boolean isSuccess) {
         if (isSuccess) {
-            lockStatus(8);
+            changeOpenLockStatus(8);
         } else {
-            lockStatus(12);
+            changeOpenLockStatus(12);
         }
     }
 
@@ -575,9 +557,9 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
     @Override
     public void onBleOpenStateChange(boolean isOpen) {
         if (isOpen) {
-            lockStatus(2);
+            changeOpenLockStatus(2);
         } else {
-            lockStatus(1);
+            changeOpenLockStatus(1);
         }
     }
 
@@ -644,12 +626,12 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
     public void isOpeningLock() {
 
         isOpening = true;
-        lockStatus(9);
+        changeOpenLockStatus(9);
     }
 
     @Override
     public void openLockSuccess() {
-        lockStatus(10);
+        changeOpenLockStatus(10);
         handler.removeCallbacks(lockRunnable);
         handler.postDelayed(lockRunnable, 15 * 1000);  //十秒后退出开门状态
     }
@@ -675,17 +657,17 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
 
     @Override
     public void onSafeMode() {
-        lockStatus(5);
+        changeOpenLockStatus(5);
     }
 
     @Override
     public void onArmMode() {
-        lockStatus(4);
+        changeOpenLockStatus(4);
     }
 
     @Override
     public void onBackLock() {
-        lockStatus(6);
+        changeOpenLockStatus(6);
     }
 
     @Override
@@ -748,11 +730,6 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
         super.onStop();
     }
 
-    public void lockStatus(int status) {
-        if (!isAdded()) {  //如果当前页面没有添加到activity中  那么不设置
-            return;
-        }
-    }
 
     @Override
     public void onStartConnectDevice() {
@@ -763,7 +740,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
     public void onEndConnectDevice(boolean isSuccess) {
         isConnectingDevice = false;
         if (!isSuccess) {
-            lockStatus(12);
+            changeOpenLockStatus(12);
         }
 
     }
@@ -790,7 +767,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
     public void noPermissions() {
         PermissionUtil.getInstance().requestPermission(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, getActivity());
         ToastUtil.getInstance().showLong(R.string.please_allow_ble_permission);
-        lockStatus(12);
+        changeOpenLockStatus(12);
     }
 
     ;
@@ -802,16 +779,16 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
             LogUtils.e("锁状态改变1   反锁模式  " + bleLockInfo.getBackLock() + "  布防模式   " + bleLockInfo.getArmMode()
                     + "   安全模式  " + bleLockInfo.getSafeMode() + "   管理模式  " + bleLockInfo.getAdminMode()
                     + "   动/自动模式  " + bleLockInfo.getAutoMode());
-            lockStatus(8);  //鉴权成功之后没有特殊状态
+            changeOpenLockStatus(8);  //鉴权成功之后没有特殊状态
             onElectricUpdata(bleLockInfo.getBattery());
             if (bleLockInfo.getBackLock() == 0) {  //等于0时是反锁状态
-                lockStatus(6);
+                changeOpenLockStatus(6);
             }
             if (bleLockInfo.getSafeMode() == 1) {//安全模式
-                lockStatus(5);
+                changeOpenLockStatus(5);
             }
             if (bleLockInfo.getArmMode() == 1) {//布防模式
-                lockStatus(4);
+                changeOpenLockStatus(4);
             }
         }
     }

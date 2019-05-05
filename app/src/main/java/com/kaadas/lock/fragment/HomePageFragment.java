@@ -69,7 +69,7 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
     private List<ISelectChangeListener> listeners = new ArrayList<>();
     private MainActivity activity;
     private int currentPosition;
-    public boolean isSelectHome;
+    public boolean isSelectHome = true;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {

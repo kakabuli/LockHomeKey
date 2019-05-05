@@ -362,20 +362,6 @@ public class BleService extends Service {
      * 连接设备
      */
     public PublishSubject<Boolean> connectDeviceByDevice(final BluetoothDevice device) {
-//        new Thread(){
-//            @Override
-//            public void run() {
-//                super.run();
-//                try {
-//                    release();
-//                    Thread.sleep(100);
-//                    currentDevice = device;
-//                    bluetoothGatt = currentDevice.connectGatt(BleService.this, false, bluetoothGattCallback);
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        }.start();
         release();
         currentDevice = device;
         bluetoothGatt = currentDevice.connectGatt(BleService.this, false, bluetoothGattCallback);
@@ -859,7 +845,7 @@ public class BleService extends Service {
         return bleLockInfo;
     }
 
-    public void setBleLockInfo(BleLockInfo currentBleDevice) {
+    public synchronized void setBleLockInfo(BleLockInfo currentBleDevice) {
         if (bleLockInfo != null && !bleLockInfo.getServerLockInfo().getLockName().equals(currentBleDevice.getServerLockInfo().getLockName())) {
             bleLockInfo.setAuth(false);
             bleLockInfo.setConnected(false);

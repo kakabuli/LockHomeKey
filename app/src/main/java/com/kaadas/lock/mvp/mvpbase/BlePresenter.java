@@ -52,16 +52,18 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
     public void setBleLockInfo(BleLockInfo bleLockInfo) {
         //如果service中有bleLockInfo  并且deviceName一致，就不重新设置。
         LogUtils.e("设置的  设备信息为  " + bleLockInfo.getServerLockInfo().toString());
+
         if (bleService.getBleLockInfo() != null
                 && bleService.getBleLockInfo().getServerLockInfo().getLockName().equals(bleLockInfo.getServerLockInfo().getLockName())) {
             ServerBleDevice serviceLockInfo = bleService.getBleLockInfo().getServerLockInfo();
             ServerBleDevice serverLockInfo = bleLockInfo.getServerLockInfo();
             if (serverLockInfo.getPassword1().equals(serviceLockInfo.getPassword1()) && serverLockInfo.getPassword2().equals(serviceLockInfo.getPassword2())) {
                 LogUtils.e("进来了  设备  数据一致   " + bleService.getBleLockInfo().getServerLockInfo().toString());
+                this.bleLockInfo = bleService.getBleLockInfo();
                 return;
             }
         }
-        bleService.setBleLockInfo(bleLockInfo);
+        bleService.setBleLockInfo( bleLockInfo);
         this.bleLockInfo = bleLockInfo;
     }
 
@@ -229,13 +231,16 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
                     public void accept(BleStateBean bleStateBean) throws Exception {
                         //连接状态改变之后   就不自动release连接了
                         handler.removeCallbacks(releaseRunnable);
-                        bleLockInfo.setConnected(bleStateBean.isConnected());
+                        if (bleLockInfo!=null){
+                            bleLockInfo.setConnected(bleStateBean.isConnected());
+                        }
                         if (mViewRef.get() != null && isNotify) {
                             mViewRef.get().onDeviceStateChange(bleStateBean.isConnected());
                         }
                         if (bleStateBean.isConnected()) {
                             //连接成功   直接鉴权
-                            if (bleStateBean.isConnected() && bleService.getCurrentDevice() != null && bleService.getCurrentDevice().getAddress().equals(bleLockInfo.getServerLockInfo().getMacLock())) {
+                            if (bleStateBean.isConnected() && bleService.getCurrentDevice() != null &&
+                                    bleService.getCurrentDevice().getAddress().equals(bleLockInfo.getServerLockInfo().getMacLock())) {
                                 readSystemId();
                             }
                             bleService.scanBleDevice(false);   //连接成功   停止搜索
