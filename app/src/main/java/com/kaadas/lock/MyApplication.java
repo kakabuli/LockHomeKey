@@ -9,12 +9,10 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.google.gson.Gson;
 import com.kaadas.lock.activity.login.LoginActivity;
 import com.kaadas.lock.publiclibrary.linphone.MemeManager;
-import com.kaadas.lock.publiclibrary.linphone.linphone.util.LinphoneHelper;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.publiclibrary.ble.BleService;
 import com.kaadas.lock.publiclibrary.http.result.GetPasswordResult;
@@ -42,15 +40,10 @@ import com.scwang.smartrefresh.layout.header.ClassicsHeader;
 import com.uuzuche.lib_zxing.activity.ZXingLibrary;
 
 
-import net.sdvn.cmapi.BaseInfo;
 import net.sdvn.cmapi.CMAPI;
 import net.sdvn.cmapi.Config;
-import net.sdvn.cmapi.Network;
-import net.sdvn.cmapi.protocal.ConnectStatusListener;
-import net.sdvn.cmapi.protocal.ConnectStatusListenerPlus;
 
 import org.eclipse.paho.client.mqttv3.MqttMessage;
-import org.linphone.core.LinphoneCore;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -401,7 +394,7 @@ public class MyApplication extends Application {
 
     public void deleteDevice(String deviceName) {
         for (int i = 0; i < bleLockInfos.size(); i++) {
-            if (deviceName.equals(bleLockInfos.get(i).getServerLockInfo().getDevice_name())) {
+            if (deviceName.equals(bleLockInfos.get(i).getServerLockInfo().getLockName())) {
                 bleLockInfos.remove(i);
                 bleLockInfoSubject.onNext(bleLockInfos);
             }

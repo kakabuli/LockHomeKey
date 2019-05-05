@@ -111,9 +111,9 @@ public class BluetoothSharedDeviceManagementActivity extends BaseActivity<IBluet
      * 查询用户
      */
     public void queryUser() {
-        if (bleLockInfo != null && bleLockInfo.getServerLockInfo() != null && bleLockInfo.getServerLockInfo().getDevice_name() != null) {
+        if (bleLockInfo != null && bleLockInfo.getServerLockInfo() != null && bleLockInfo.getServerLockInfo().getLockName() != null) {
             if (NetUtil.isNetworkAvailable()) {
-                mPresenter.queryUserList(MyApplication.getInstance().getUid(), bleLockInfo.getServerLockInfo().getDevice_name());
+                mPresenter.queryUserList(MyApplication.getInstance().getUid(), bleLockInfo.getServerLockInfo().getLockName());
             } else {
                 ToastUtil.getInstance().showShort(R.string.noNet);
             }
@@ -236,9 +236,9 @@ public class BluetoothSharedDeviceManagementActivity extends BaseActivity<IBluet
                 if (bleLockInfo == null) {
                     return;
                 }
-                String devmac = bleLockInfo.getServerLockInfo().getDevmac();
-                String device_name = bleLockInfo.getServerLockInfo().getDevice_name();
-                String device_nickname = bleLockInfo.getServerLockInfo().getDevice_nickname();
+                String devmac = bleLockInfo.getServerLockInfo().getMacLock();
+                String device_name = bleLockInfo.getServerLockInfo().getLockName();
+                String device_nickname = bleLockInfo.getServerLockInfo().getLockNickName();
                 String time = System.currentTimeMillis() + "";
                 List<String> items = new ArrayList<>();
                 mPresenter.addCommonUser(uid, phone, devmac, device_name, "", device_nickname, "3", time, items);

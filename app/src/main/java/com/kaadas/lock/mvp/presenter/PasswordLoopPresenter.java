@@ -203,7 +203,7 @@ public class PasswordLoopPresenter<T> extends BlePresenter<IPasswordLoopView> {
         List<AddPasswordBean.Password> passwords = new ArrayList<>();
         passwords.add(password);
         XiaokaiNewServiceImp.addPassword(MyApplication.getInstance().getUid(),
-                bleLockInfo.getServerLockInfo().getDevice_name(), passwords)
+                bleLockInfo.getServerLockInfo().getLockName(), passwords)
                 .subscribe(new BaseObserver<BaseResult>() {
                     @Override
                     public void onSuccess(BaseResult result) {
