@@ -24,6 +24,7 @@
             android:textSize="@dimen/sp_12" />
 
         <TextView
+            android:id="@+id/tv_synchronized_record"
             android:layout_width="@dimen/dp_68"
             android:layout_height="@dimen/dp_19"
             android:layout_alignParentRight="true"
@@ -36,11 +37,14 @@
             android:textSize="@dimen/sp_11" />
     </RelativeLayout>
 
-
+    <com.scwang.smartrefresh.layout.SmartRefreshLayout
+        android:id="@+id/refreshLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycleview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
-
+    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 
 </LinearLayout>

@@ -367,8 +367,6 @@ public class SnapshotFragment extends Fragment implements View.OnClickListener{
 
     @Override
     public void onClick(View v) {
-
-
         switch (v.getId()) {
             case  R.id.year_select_ll:
 

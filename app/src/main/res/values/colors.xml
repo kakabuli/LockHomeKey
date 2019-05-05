@@ -73,8 +73,8 @@
     <color name="cFEFEFE">#FEFEFE</color>
     <color name="cD6D6D6">#D6D6D6</color>
     <color name="c25F290">#25F290</color>
-
-
+    <color name="grayIconTint">#727272</color>
     <color name="colorA">#ff5e00</color>
     <color name="colorD">#808080</color>
+    <color name="video_color">#444444</color>
 </resources>

@@ -116,4 +116,10 @@ public class MqttConstant {
     //获取锁的音量
     public static final String SOUND_VOLUME="soundVolume";
 
+    //设置锁的音量
+    public static final String SET_SOUND_VOLUME="setSoundVolume";
+
+    //获取设备信息
+    public static final String GET_LOCK_INFO="BasicInfo";
+
 }

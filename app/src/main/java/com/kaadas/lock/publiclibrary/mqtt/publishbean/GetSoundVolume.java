@@ -110,12 +110,21 @@ public class GetSoundVolume implements Serializable {
     }
 
     public static class ParamsBean {
+        private int volume;
+
+        public int getVolume() {
+            return volume;
+        }
+
+        public void setVolume(int volume) {
+            this.volume = volume;
+        }
+
     }
 
     public static class ReturnDataBean {
-        /**
-         * volume : 0
-         */
+
+
 
         private int volume;
 

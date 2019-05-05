@@ -245,12 +245,14 @@ public class ForgetPasswordActivity extends BaseActivity<IResetPasswordView, Res
                 }
 //                String countryCode = tvAreaCode.getText().toString().trim().replace("+", "");
 //                phoneRegister(countryCode + account, code, pwd);
+                showLoading("");
                 String countryCode = tvAreaCode.getText().toString().trim().replace("+", "");
                 mPresenter.resetPassword(countryCode + account, pwd,1, code);
             } else {
                 LogUtils.e("邮箱注册：" + DetectionEmailPhone.getInstance().isEmail(account));
                 if (DetectionEmailPhone.getInstance().isEmail(account)) {
                     // sendEmailClick(phone);
+                    showLoading("");
                     mPresenter.resetPassword(account, pwd,2, code);
                 } else {
 //                    ToastUtil.getInstance().showShort( R.string.email_not_right);
@@ -330,6 +332,7 @@ public class ForgetPasswordActivity extends BaseActivity<IResetPasswordView, Res
 
     @Override
     public void resetPasswordSuccess() {
+        hiddenLoading();
         LogUtils.e("密码重置成功");
         ToastUtil.getInstance().showShort(getString(R.string.pwd_resetting_success));
         startActivity(new Intent(ForgetPasswordActivity.this, LoginActivity.class));
@@ -345,6 +348,7 @@ public class ForgetPasswordActivity extends BaseActivity<IResetPasswordView, Res
 
     @Override
     public void resetPasswordFailed(Throwable e) {
+        hiddenLoading();
         LogUtils.e("密码重置失败");
 //        ToastUtil.getInstance().showShort(R.string.pwd_reset_fail);
         ToastUtil.getInstance().showShort(HttpUtils.httpProtocolErrorCode(this, e));
@@ -358,6 +362,7 @@ public class ForgetPasswordActivity extends BaseActivity<IResetPasswordView, Res
 
     @Override
     public void resetPasswordFailedServer(BaseResult result) {
+        hiddenLoading();
         ToastUtil.getInstance().showShort(HttpUtils.httpErrorCode(this, result.getCode()));
     }
 }
