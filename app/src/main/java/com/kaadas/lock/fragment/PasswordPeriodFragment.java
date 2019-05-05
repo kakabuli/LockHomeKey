@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,14 +17,27 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
+import com.kaadas.lock.activity.device.bluetooth.password.BluetoothPasswordManagerActivity;
 import com.kaadas.lock.activity.device.bluetooth.password.BluetoothPasswordShareActivity;
+import com.kaadas.lock.activity.device.bluetooth.password.BluetoothUserPasswordAddActivity;
 import com.kaadas.lock.activity.device.bluetooth.password.CycleRulesActivity;
 import com.kaadas.lock.adapter.ShiXiaoNameAdapter;
 import com.kaadas.lock.bean.ShiXiaoNameBean;
+import com.kaadas.lock.mvp.mvpbase.BaseBleFragment;
+import com.kaadas.lock.mvp.presenter.PasswordLoopPresenter;
+import com.kaadas.lock.mvp.view.IPasswordLoopView;
+import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
+import com.kaadas.lock.publiclibrary.http.postbean.AddPasswordBean;
+import com.kaadas.lock.publiclibrary.http.result.BaseResult;
+import com.kaadas.lock.utils.AlertDialogUtil;
+import com.kaadas.lock.utils.DateFormatUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.NetUtil;
 import com.kaadas.lock.utils.StringUtil;
+import com.kaadas.lock.utils.ToastUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -39,7 +53,8 @@ import static android.app.Activity.RESULT_OK;
  * Created by David
  */
 
-public class PasswordPeriodFragment extends Fragment implements BaseQuickAdapter.OnItemClickListener, View.OnClickListener {
+public class PasswordPeriodFragment extends BaseBleFragment<IPasswordLoopView, PasswordLoopPresenter<IPasswordLoopView>>
+        implements View.OnClickListener, IPasswordLoopView, BaseQuickAdapter.OnItemClickListener {
     @BindView(R.id.recycleview)
     RecyclerView recyclerView;
     @BindView(R.id.et_name)
@@ -60,13 +75,20 @@ public class PasswordPeriodFragment extends Fragment implements BaseQuickAdapter
     @BindView(R.id.tv_rule_repeat)
     TextView tvRuleRepeat;
     private int[] days;
-
+    String strStart;//开始
+    String strEnd;//结束
+    private BleLockInfo bleLockInfo;
+    private int startMin;
+    private int startHour;
+    private int endMin;
+    private int endHour;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         if (mView == null) {
             mView = inflater.inflate(R.layout.fragment_password_period, container, false);
         }
+        bleLockInfo = ((BluetoothUserPasswordAddActivity) getActivity()).getLockInfo();
         ButterKnife.bind(this, mView);
         llRuleRepeat.setOnClickListener(this);
         btnConfirmGeneration.setOnClickListener(this);
@@ -74,6 +96,11 @@ public class PasswordPeriodFragment extends Fragment implements BaseQuickAdapter
         initRecycleview();
         return mView;
 
+    }
+
+    @Override
+    protected PasswordLoopPresenter<IPasswordLoopView> createPresent() {
+        return new PasswordLoopPresenter<>();
     }
 
     private void initRecycleview() {
@@ -118,8 +145,58 @@ public class PasswordPeriodFragment extends Fragment implements BaseQuickAdapter
                 startActivityForResult(intent, REQUEST_CODE);
                 break;
             case R.id.btn_confirm_generation:
-                intent = new Intent(getActivity(), BluetoothPasswordShareActivity.class);
-                startActivity(intent);
+                if (!NetUtil.isNetworkAvailable()){
+                    ToastUtil.getInstance().showShort(R.string.please_have_net_add_pwd);
+                    return;
+                }
+                String strPassword = etPassword.getText().toString().trim();
+                String nickName = etName.getText().toString().trim();
+
+                if (!StringUtil.randomJudge(strPassword)){
+                    ToastUtil.getInstance().showShort(R.string.random_verify_error);
+                    return;
+                }
+                if (StringUtil.checkSimplePassword(strPassword)) {
+                    AlertDialogUtil.getInstance().noEditTwoButtonDialog(getActivity(), getString(R.string.hint), getString(R.string.password_simple_please_reset), getString(R.string.go_on), getString(R.string.reinstall), new AlertDialogUtil.ClickListener() {
+
+                        @Override
+                        public void left() {
+
+                        }
+
+                        @Override
+                        public void right() {
+                            etPassword.setText("");
+                            return;
+                        }
+                    });
+                    return;
+                }
+                if (TextUtils.isEmpty(nickName)) {
+                    ToastUtil.getInstance().showShort(R.string.nickname_not_empty);
+                    return;
+                }
+
+                if (TextUtils.isEmpty(strStart)) {
+                    ToastUtil.getInstance().showShort(R.string.select_start_time);
+                    return;
+                }
+                if (TextUtils.isEmpty(strEnd)) {
+                    ToastUtil.getInstance().showShort(R.string.select_end_time);
+                    return;
+                }
+                if (DateFormatUtils.hourMinuteChangeMillisecond(strEnd) <= DateFormatUtils.hourMinuteChangeMillisecond(strStart)) {
+                    ToastUtil.getInstance().showShort(R.string.end_time_great_start_time);
+                    return;
+                }
+                if (TextUtils.isEmpty(weekRule)) {
+                    ToastUtil.getInstance().showShort(R.string.select_repeat_rule);
+                    return;
+                }
+                if (mPresenter.isAuth(bleLockInfo, true)) {
+                    mPresenter.setPwd(strPassword, nickName, startHour, startMin, endHour, endMin, days);
+                }
+
                 break;
             case R.id.btn_random_generation:
                 String password = StringUtil.makeRandomPassword();
@@ -141,5 +218,97 @@ public class PasswordPeriodFragment extends Fragment implements BaseQuickAdapter
                 tvRuleRepeat.setText(weekRule);
             }
         }
+    }
+
+    @Override
+    public void onPwdFull() {
+        hiddenLoading();
+        AlertDialogUtil.getInstance().noEditSingleButtonDialog(getActivity(), getString(R.string.hint), getString(R.string.password_full_and_delete_exist_code), getString(R.string.hao_de), new AlertDialogUtil.ClickListener() {
+            @Override
+            public void left() {
+
+            }
+
+            @Override
+            public void right() {
+
+            }
+        });
+    }
+
+    @Override
+    public void startSetPwd() {
+        showLoading(getString(R.string.is_setting));
+    }
+
+    @Override
+    public void endSetPwd() {
+        hiddenLoading();
+    }
+
+    @Override
+    public void onSetPasswordSuccess(AddPasswordBean.Password password) {
+
+    }
+
+    @Override
+    public void onSetPasswordFailed(Throwable throwable) {
+        ToastUtil.getInstance().showShort(R.string.set_failed);
+    }
+
+    @Override
+    public void setWeekPlanSuccess() {
+
+    }
+
+    @Override
+    public void setWeekPlanFailed(Throwable throwable) {
+        ToastUtil.getInstance().showShort(R.string.set_failed);
+    }
+
+    @Override
+    public void setUserTypeSuccess() {
+
+    }
+
+    @Override
+    public void setUserTypeFailed(Throwable throwable) {
+        ToastUtil.getInstance().showShort(R.string.set_failed);
+    }
+
+    @Override
+    public void onUploadPwdSuccess(String password, String number, String nickName) {
+        LogUtils.e("添加密码成功   " + password.toString());
+        //todo 获取到开始时间,结束时间 设置
+      /*  Intent intent = new Intent();
+        intent.setClass(MyApplication.getInstance(), BluetoothPasswordShareActivity.class);
+        intent.putExtra(KeyConstants.TO_DETAIL_NUMBER, number);
+        intent.putExtra(KeyConstants.TO_DETAIL_PASSWORD, password);
+        intent.putExtra(KeyConstants.TO_DETAIL_TYPE, 1);
+        intent.putExtra(KeyConstants.TO_DETAIL_NICKNAME, nickName);
+        intent.putExtra(KeyConstants.TIME_CE_LUE, KeyConstants.PERIOD);
+        intent.putExtra(KeyConstants.PERIOD_START_TIME, strStart);
+        intent.putExtra(KeyConstants.PERIOD_END_TIME, strEnd);
+        intent.putExtra(KeyConstants.WEEK_REPEAT_DATA, weekRule);
+        startActivity(intent);*/
+    }
+
+    @Override
+    public void onUploadPwdFailed(Throwable throwable) {
+        ToastUtil.getInstance().showShort(R.string.lock_set_success_please_sync);
+        startActivity(new Intent(getContext(),BluetoothPasswordManagerActivity.class));
+        getActivity().finish();
+    }
+
+    @Override
+    public void onUploadPwdFailedServer(BaseResult result) {
+        ToastUtil.getInstance().showShort(R.string.lock_set_success_please_sync);
+        startActivity(new Intent(getContext(),BluetoothPasswordManagerActivity.class));
+        getActivity().finish();
+    }
+
+    @Override
+    public void onSyncPasswordFailed(Throwable throwable) {
+        ToastUtil.getInstance().showLong(getString(R.string.set_failed));
     }
 }

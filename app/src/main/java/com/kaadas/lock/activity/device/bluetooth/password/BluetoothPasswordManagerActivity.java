@@ -71,7 +71,6 @@ public class BluetoothPasswordManagerActivity extends BaseBleActivity<IPasswordM
         llAddPassword.setOnClickListener(this);
         passwordPageChange();
         initRecycleview();
-        list.add(new ForeverPassword("fff", "fff", 1));
     }
 
     @Override
@@ -151,7 +150,8 @@ public class BluetoothPasswordManagerActivity extends BaseBleActivity<IPasswordM
             isNotPassword = true;
         }
         passwordPageChange();
-        bluetoothPasswordAdapter.notifyDataSetChanged();
+//        bluetoothPasswordAdapter.notifyDataSetChanged();
+        initRecycleview();
         LogUtils.e("收到  同步的锁的密码   " + list.toString());
     }
 

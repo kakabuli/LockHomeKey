@@ -24,6 +24,7 @@ import com.kaadas.lock.activity.device.BluetoothLockAuthorizationActivity;
 import com.kaadas.lock.activity.device.BluetoothLockFunctionActivity;
 
 import com.kaadas.lock.activity.device.GatewayActivity;
+import com.kaadas.lock.activity.device.cateye.more.CateyeFunctionActivity;
 import com.kaadas.lock.activity.device.gatewaylock.GatewayLockFunctionActivity;
 import com.kaadas.lock.adapter.DeviceDetailAdapter;
 import com.kaadas.lock.bean.DeviceDetailBean;
@@ -214,7 +215,7 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                 BleLockInfo bleLockInfo= (BleLockInfo) showBean.getObject();
 
                 DeviceDetailBean bluetoothBean=new DeviceDetailBean();
-                bluetoothBean.setDeviceName(bleLockInfo.getServerLockInfo().getDevice_nickname());
+                bluetoothBean.setDeviceName(bleLockInfo.getServerLockInfo().getLockNickName());
                 bluetoothBean.setType(showBean.getDeviceType());
                 if (bleLockInfo.isConnected()){
                     bluetoothBean.setEvent_str("online");
@@ -277,6 +278,8 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
         switch (deviceDetailBean.getType()) {
             case 0:
                 //猫眼
+                Intent  cateEyeInfoIntent=new Intent(getActivity(),CateyeFunctionActivity.class);
+                startActivity(cateEyeInfoIntent);
                 break;
             case 1:
                 //网关锁
@@ -291,6 +294,8 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                 break;
             case 3:
                 //蓝牙
+                BleLockInfo bleLockInfo = (BleLockInfo) deviceDetailBean.getShowCurentBean();
+                mPresenter.setBleLockInfo(bleLockInfo);
                 if (bluetoothAuthorization) {
                     intent = new Intent(getActivity(), BluetoothLockAuthorizationActivity.class);
                 } else {

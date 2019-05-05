@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -15,11 +14,23 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
+import com.kaadas.lock.activity.device.bluetooth.password.BluetoothPasswordManagerActivity;
 import com.kaadas.lock.activity.device.bluetooth.password.BluetoothPasswordShareActivity;
 import com.kaadas.lock.adapter.ShiXiaoNameAdapter;
 import com.kaadas.lock.bean.ShiXiaoNameBean;
+import com.kaadas.lock.mvp.mvpbase.BaseBleFragment;
+import com.kaadas.lock.mvp.presenter.AddTempPresenter;
+import com.kaadas.lock.mvp.view.IAddTempView;
+import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
+import com.kaadas.lock.publiclibrary.http.result.BaseResult;
+import com.kaadas.lock.utils.AlertDialogUtil;
+import com.kaadas.lock.utils.KeyConstants;
+import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.NetUtil;
 import com.kaadas.lock.utils.StringUtil;
+import com.kaadas.lock.utils.ToastUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +43,8 @@ import butterknife.ButterKnife;
  * Created by David
  */
 
-public class PasswordTemporaryFragment extends Fragment implements BaseQuickAdapter.OnItemClickListener, View.OnClickListener {
+public class PasswordTemporaryFragment extends BaseBleFragment<IAddTempView, AddTempPresenter<IAddTempView>>
+        implements BaseQuickAdapter.OnItemClickListener, View.OnClickListener, IAddTempView {
     @BindView(R.id.recycleview)
     RecyclerView recyclerView;
     @BindView(R.id.et_name)
@@ -46,7 +58,7 @@ public class PasswordTemporaryFragment extends Fragment implements BaseQuickAdap
     TextView btnRandomGeneration;
     @BindView(R.id.btn_confirm_generation)
     Button btnConfirmGeneration;
-
+    private BleLockInfo bleLockInfo; //蓝牙设备信息
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -54,11 +66,17 @@ public class PasswordTemporaryFragment extends Fragment implements BaseQuickAdap
             mView = inflater.inflate(R.layout.fragment_password_temporary, container, false);
         }
         ButterKnife.bind(this, mView);
+        bleLockInfo = MyApplication.getInstance().getBleService().getBleLockInfo();
         initRecycleview();
         btnRandomGeneration.setOnClickListener(this);
         btnConfirmGeneration.setOnClickListener(this);
         return mView;
 
+    }
+
+    @Override
+    protected AddTempPresenter<IAddTempView> createPresent() {
+        return new AddTempPresenter<>();
     }
 
     private void initRecycleview() {
@@ -68,8 +86,6 @@ public class PasswordTemporaryFragment extends Fragment implements BaseQuickAdap
         list.add(new ShiXiaoNameBean(getString(R.string.small_di_di), false));
         list.add(new ShiXiaoNameBean(getString(R.string.elder_sister), false));
         list.add(new ShiXiaoNameBean(getString(R.string.rests), false));
-
-
         shiXiaoNameAdapter = new ShiXiaoNameAdapter(list);
         recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 6));
         recyclerView.setAdapter(shiXiaoNameAdapter);
@@ -104,9 +120,123 @@ public class PasswordTemporaryFragment extends Fragment implements BaseQuickAdap
                 etPassword.setSelection(password.length());
                 break;
             case R.id.btn_confirm_generation:
-                intent = new Intent(getActivity(), BluetoothPasswordShareActivity.class);
-                startActivity(intent);
+                if (!NetUtil.isNetworkAvailable()) {
+                    ToastUtil.getInstance().showShort(R.string.please_have_net_add_temp_pwd);
+                    return;
+                }
+                String strTemporaryPassword = etPassword.getText().toString().trim();
+
+                if (!StringUtil.randomJudge(strTemporaryPassword)) {
+                    ToastUtil.getInstance().showShort(R.string.random_verify_error);
+                    return;
+                }
+                if (StringUtil.checkSimplePassword(strTemporaryPassword)) {
+                    AlertDialogUtil.getInstance().noEditTwoButtonDialog(getActivity(), getString(R.string.hint), getString(R.string.password_simple_please_reset), getString(R.string.go_on), getString(R.string.reinstall), new AlertDialogUtil.ClickListener() {
+                        @Override
+                        public void left() {
+                        }
+
+                        @Override
+                        public void right() {
+                            etPassword.setText("");
+                            return;
+                        }
+                    });
+                    return;
+                }
+                String temproaryPasswordName = etName.getText().toString().trim();
+                if (!StringUtil.nicknameJudge(temproaryPasswordName)) {
+                    ToastUtil.getInstance().showShort(R.string.nickname_verify_error);
+                    return;
+                }
+
+                if (mPresenter.isAuth(bleLockInfo, true)) {
+                    mPresenter.setPwd(strTemporaryPassword,
+                            bleLockInfo.getServerLockInfo().getLockName(),
+                            temproaryPasswordName);
+                }
+
+             /*   intent = new Intent(getActivity(), BluetoothPasswordShareActivity.class);
+                startActivity(intent);*/
                 break;
         }
+    }
+
+    @Override
+    public void onStartSetPwd() {
+        //开始设置密码
+        showLoading(getString(R.string.is_setting_pwd));
+    }
+
+    @Override
+    public void onEndSetPwd() {
+        hiddenLoading();
+    }
+
+    @Override
+    public void onSetPwdFailed(Throwable throwable) {
+        ToastUtil.getInstance().showLong(R.string.set_temp_pwd_failed);
+        hiddenLoading();
+    }
+
+    @Override
+    public void onSetPwdFailedServer(BaseResult result) {
+        hiddenLoading();
+        ToastUtil.getInstance().showShort(R.string.lock_set_success_please_sync);
+        startActivity(new Intent(getActivity(), BluetoothPasswordManagerActivity.class));
+        getActivity().finish();
+    }
+
+    @Override
+    public void onSetPwdSuccess() {
+        ToastUtil.getInstance().showLong(R.string.set_temp_pwd_succcess);
+    }
+
+    @Override
+    public void onUploadToServer() {
+
+    }
+
+    @Override
+    public void onUpLoadSuccess(String password, String number, String nickName) {
+        hiddenLoading();
+        LogUtils.e("添加密码成功   " + password.toString());
+        Intent intent = new Intent();
+        intent.setClass(MyApplication.getInstance(), BluetoothPasswordShareActivity.class);
+        intent.putExtra(KeyConstants.TO_DETAIL_NUMBER, number);
+        intent.putExtra(KeyConstants.TO_DETAIL_PASSWORD, password);
+        intent.putExtra(KeyConstants.TO_DETAIL_TYPE, 2);
+        intent.putExtra(KeyConstants.TO_DETAIL_NICKNAME, nickName);
+        intent.putExtra(KeyConstants.TIME_CE_LUE, KeyConstants.TEMP);
+        startActivity(intent);
+    }
+
+    @Override
+    public void onUploadFailed(Throwable throwable) {
+        ToastUtil.getInstance().showShort(R.string.lock_set_success_please_sync);
+        hiddenLoading();
+        startActivity(new Intent(getActivity(), BluetoothPasswordManagerActivity.class));
+        getActivity().finish();
+    }
+
+    @Override
+    public void onPwdFull() {
+        hiddenLoading();
+        AlertDialogUtil.getInstance().noEditSingleButtonDialog(getActivity(), getString(R.string.hint), getString(R.string.password_full_and_delete_exist_code), getString(R.string.hao_de), new AlertDialogUtil.ClickListener() {
+            @Override
+            public void left() {
+
+            }
+
+            @Override
+            public void right() {
+
+            }
+        });
+    }
+
+    @Override
+    public void onSyncPasswordFailed(Throwable throwable) {
+        ToastUtil.getInstance().showLong(getString(R.string.sync_failed));
     }
 }

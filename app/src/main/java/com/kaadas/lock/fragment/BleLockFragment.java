@@ -1,15 +1,22 @@
 package com.kaadas.lock.fragment;
 
+import android.Manifest;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.InputType;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -19,16 +26,33 @@ import com.kaadas.lock.activity.home.BluetoothEquipmentDynamicActivity;
 import com.kaadas.lock.adapter.BluetoothRecordAdapter;
 import com.kaadas.lock.bean.BluetoothItemRecordBean;
 import com.kaadas.lock.bean.BluetoothRecordBean;
+import com.kaadas.lock.mvp.mvpbase.BaseBleFragment;
+import com.kaadas.lock.mvp.mvpbase.IBleView;
+import com.kaadas.lock.mvp.presenter.BleLockPresenter;
+import com.kaadas.lock.mvp.view.IBleLockView;
+import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
+import com.kaadas.lock.publiclibrary.ble.BleProtocolFailedException;
+import com.kaadas.lock.publiclibrary.http.result.BaseResult;
+import com.kaadas.lock.publiclibrary.http.result.GetPasswordResult;
+import com.kaadas.lock.publiclibrary.http.util.HttpUtils;
+import com.kaadas.lock.utils.AlertDialogUtil;
+import com.kaadas.lock.utils.AnimatorUtil;
+import com.kaadas.lock.utils.DpPxConversion;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.PermissionUtil;
+import com.kaadas.lock.utils.StringUtil;
+import com.kaadas.lock.utils.ToastUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeoutException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class BleLockFragment extends Fragment implements View.OnClickListener {
+public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresenter<IBleLockView>>
+        implements View.OnClickListener, IBleLockView {
 
     List<BluetoothRecordBean> list = new ArrayList<>();
     @BindView(R.id.recycleview)
@@ -51,6 +75,41 @@ public class BleLockFragment extends Fragment implements View.OnClickListener {
     RelativeLayout rlDeviceDynamic;
     @BindView(R.id.tv_more)
     TextView tvMore;
+    private BleLockInfo bleLockInfo;
+    private boolean isOpening;
+    private Runnable lockRunnable;
+    private boolean isConnectingDevice;
+    private Handler handler = new Handler();
+    private HomePageFragment.ISelectChangeListener listener;
+    private HomePageFragment homeFragment;
+    private boolean isCurrentFragment;
+    private int position;
+
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Bundle arguments = getArguments();
+        bleLockInfo = (BleLockInfo) arguments.getSerializable(KeyConstants.BLE_LOCK_INFO);
+        position = arguments.getInt(KeyConstants.FRAGMENT_POSITION);
+        lockRunnable = new Runnable() {
+            @Override
+            public void run() {
+                LogUtils.e(" 首页锁状态  反锁状态   " + bleLockInfo.getBackLock() + "    安全模式    " + bleLockInfo.getSafeMode() + "   布防模式   " + bleLockInfo.getArmMode());
+                isOpening = false;
+                changeOpenLockStatus(8);
+                if (bleLockInfo.getBackLock() == 0) {  //等于0时是反锁状态
+                    changeOpenLockStatus(6);
+                }
+                if (bleLockInfo.getSafeMode() == 1) {//安全模式
+                    changeOpenLockStatus(5);
+                }
+                if (bleLockInfo.getArmMode() == 1) {//布防模式
+                    changeOpenLockStatus(4);
+                }
+            }
+        };
+    }
 
     @Nullable
     @Override
@@ -61,17 +120,102 @@ public class BleLockFragment extends Fragment implements View.OnClickListener {
         changeOpenLockStatus(16);
         rlDeviceDynamic.setOnClickListener(this);
         tvMore.setOnClickListener(this);
+        initView();
         return view;
+    }
+
+    private void initView() {
+
+        LogUtils.e("设备  HomeLockFragment  " + this);
+
+        homeFragment = (HomePageFragment) getParentFragment();
+
+        //切换到当前页面
+        listener = new HomePageFragment.ISelectChangeListener() {
+            @Override
+            public void onSelectChange(boolean isSelect) {
+                if (!isSelect) {
+                    mPresenter.detachView();
+                } else {
+                    LogUtils.e("切换到当前界面  设备 " + this + isCurrentFragment);
+                    //切换到当前页面
+                    mPresenter.attachView(BleLockFragment.this);
+                    if (isCurrentFragment) {
+                        mPresenter.setBleLockInfo(bleLockInfo);
+                        boolean auth = mPresenter.isAuth(bleLockInfo, true);
+                        LogUtils.e("切换到当前界面   设备" + auth);
+                        LogUtils.e(this + "   设置设备2  " + bleLockInfo.getServerLockInfo().toString());
+                        mPresenter.getAllPassword(bleLockInfo, false);
+                        isCurrentFragment = true;
+                        onChangeInitView();
+                        if (auth) {
+                            mPresenter.getDeviceInfo();
+                        }
+                    }
+                }
+            }
+        };
+
+        homeFragment.listenerSelect(listener);
+
+        homeFragment.getPager().addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int i, float v, int i1) {
+
+            }
+
+            @Override
+            public void onPageSelected(int i) {
+                if (i == position &&  homeFragment.isSelectHome) {
+                    mPresenter.attachView(BleLockFragment.this);
+                    mPresenter.setBleLockInfo(bleLockInfo);
+                    LogUtils.e(this + "   设置设备1  " + bleLockInfo.getServerLockInfo().toString());
+                    mPresenter.isAuth(bleLockInfo, true);
+                    mPresenter.getAllPassword(bleLockInfo, false);
+                    isCurrentFragment = true;
+                } else {
+                    mPresenter.detachView();
+                    isCurrentFragment = false;
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int i) {
+
+            }
+        });
+        LogUtils.e("设备position " + position + "    " + homeFragment.getCurrentPosition() + "     " + homeFragment.isSelectHome);
+        if (position == 0 && position == homeFragment.getCurrentPosition() && homeFragment.isSelectHome) {
+            mPresenter.attachView(this);
+            mPresenter.setBleLockInfo(bleLockInfo);
+            mPresenter.isAuth(bleLockInfo, true);
+            LogUtils.e(this + "  设置设备3  " + bleLockInfo.getServerLockInfo().toString());
+            mPresenter.getAllPassword(bleLockInfo, false);
+        } else {
+            mPresenter.detachView();
+        }
+
+        if (position == 0 && position == homeFragment.getCurrentPosition()) {
+            isCurrentFragment = true;
+        } else {
+            isCurrentFragment = false;
+        }
+
+    }
+
+    @Override
+    protected BleLockPresenter<IBleLockView> createPresent() {
+        return new BleLockPresenter<>();
     }
 
     private void initRecycleView() {
         List<BluetoothItemRecordBean> itemList1 = new ArrayList<>();
-        itemList1.add(new BluetoothItemRecordBean("jff","jfjji", KeyConstants.BLUETOOTH_RECORD_WARN, "fjjf", true, true));
+        itemList1.add(new BluetoothItemRecordBean("jff", "jfjji", KeyConstants.BLUETOOTH_RECORD_WARN, "fjjf", true, true));
         list.add(new BluetoothRecordBean("jfjfk", itemList1, false));
         List<BluetoothItemRecordBean> itemList2 = new ArrayList<>();
-        itemList2.add(new BluetoothItemRecordBean("jff","jfji", KeyConstants.BLUETOOTH_RECORD_WARN, "fjjf", true, false));
-        itemList2.add(new BluetoothItemRecordBean("jff","jfji", KeyConstants.BLUETOOTH_RECORD_COMMON, "fjjf", false, false));
-        itemList2.add(new BluetoothItemRecordBean("jff","jfji", KeyConstants.BLUETOOTH_RECORD_WARN, "fjjf", false, true));
+        itemList2.add(new BluetoothItemRecordBean("jff", "jfji", KeyConstants.BLUETOOTH_RECORD_WARN, "fjjf", true, false));
+        itemList2.add(new BluetoothItemRecordBean("jff", "jfji", KeyConstants.BLUETOOTH_RECORD_COMMON, "fjjf", false, false));
+        itemList2.add(new BluetoothItemRecordBean("jff", "jfji", KeyConstants.BLUETOOTH_RECORD_WARN, "fjjf", false, true));
         list.add(new BluetoothRecordBean("jfjfk", itemList2, true));
         BluetoothRecordAdapter bluetoothRecordAdapter = new BluetoothRecordAdapter(list);
         recycleview.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -109,6 +253,7 @@ public class BleLockFragment extends Fragment implements View.OnClickListener {
         switch (status) {
             case 1:
                 //手机蓝牙未打开
+
 
                 break;
             case 2:
@@ -291,25 +436,6 @@ public class BleLockFragment extends Fragment implements View.OnClickListener {
                 tvExternal.setTextColor(getResources().getColor(R.color.white));
                 tvExternal.setText(getString(R.string.equipment_out_of_range));
                 break;
-    /*        case 14:
-                //蓝牙锁关闭
-                ivExternalBig.setVisibility(View.VISIBLE);
-                ivExternalBig.setImageResource(R.mipmap.bluetooth_lock_close_big_middle_icon);
-                ivExternalMiddle.setVisibility(View.GONE);
-//                ivExternalMiddle.setImageResource();
-                ivExternalSmall.setVisibility(View.GONE);
-//                ivExternalSmall.setImageResource();
-                ivInnerMiddle.setVisibility(View.VISIBLE);
-                ivInnerMiddle.setImageResource(R.mipmap.bluetooth_lock_safe_inner_midder_icon);
-                ivInnerSmall.setVisibility(View.VISIBLE);
-                ivInnerSmall.setImageResource(R.mipmap.bluetooth_lock_bu_fang_inner_small_icon);
-                tvInner.setVisibility(View.VISIBLE);
-                tvInner.setText(R.string.long_press_open_lock);
-                tvInner.setTextColor(getResources().getColor(R.color.cF7FDFD));
-                tvExternal.setVisibility(View.VISIBLE);
-                tvExternal.setTextColor(getResources().getColor(R.color.cC6F5FF));
-                tvExternal.setText(getString(R.string.bluetooth_close_status));
-                break;*/
             case 15:
                 //蓝牙锁布防被开启
                 ivExternalBig.setVisibility(View.VISIBLE);
@@ -367,4 +493,305 @@ public class BleLockFragment extends Fragment implements View.OnClickListener {
                 break;
         }
     }
+
+    /////////////////////////////////////////        回调           //////////////////////////////////////
+
+
+    @Override
+    public void onDeviceStateChange(boolean isConnected) {
+        LogUtils.e("连接状态改变   " + isConnected);
+        if (isConnected) {
+
+        } else {
+            if (!isConnectingDevice) {
+                changeOpenLockStatus(12);
+            }
+        }
+    }
+
+    @Override
+    public void onStartSearchDevice() {
+        LogUtils.e("开始搜索   ");
+        changeOpenLockStatus(2);
+    }
+
+    @Override
+    public void onSearchDeviceFailed(Throwable throwable) {
+        changeOpenLockStatus(3);
+    }
+
+    @Override
+    public void onSearchDeviceSuccess() {
+
+    }
+
+
+    @Override
+    public void onNeedRebind(int errorCode) {
+        changeOpenLockStatus(11);
+    }
+
+    @Override
+    public void authResult(boolean isSuccess) {
+        if (isSuccess) {
+            changeOpenLockStatus(8);
+        } else {
+            changeOpenLockStatus(12);
+        }
+    }
+
+
+    @Override
+    public void onElectricUpdata(int power) {
+        int imgResId = -1;
+
+
+    }
+
+    @Override
+    public void onElectricUpdataFailed(Throwable throwable) {
+//        ToastUtil.getInstance().showShort(HttpUtils.httpProtocolErrorCode(getActivity(), throwable));
+//        ToastUtil.getInstance().showShort(getText(R.string.not_power_was_received) + " " + throwable.toString());
+    }
+
+    @Override
+    public void onBleOpenStateChange(boolean isOpen) {
+        if (isOpen) {
+            changeOpenLockStatus(2);
+        } else {
+            changeOpenLockStatus(1);
+        }
+    }
+
+    @Override
+    public void onGetOpenNumberSuccess(int number) {
+
+    }
+
+    @Override
+    public void onGetOpenNumberFailed(Throwable throwable) { //获取开锁次数失败
+//        ToastUtil.getInstance().showShort(HttpUtils.httpProtocolErrorCode(getActivity(), throwable));
+//        ToastUtil.getInstance().showShort(getText(R.string.fail_get_open_lock_number) + " " + throwable.toString());
+
+    }
+
+    @Override
+    public void notAdminMustHaveNet() {  //不是管理员开锁必须要有网络
+        ToastUtil.getInstance().showLong(R.string.not_admin_must_have_net);
+    }
+
+    @Override
+    public void inputPwd() {
+        View mView = LayoutInflater.from(getActivity()).inflate(R.layout.have_edit_dialog, null);
+        TextView tvTitle = mView.findViewById(R.id.tv_title);
+        EditText editText = mView.findViewById(R.id.et_name);
+        editText.setInputType(InputType.TYPE_CLASS_NUMBER);
+        TextView tv_cancel = mView.findViewById(R.id.tv_left);
+        TextView tv_query = mView.findViewById(R.id.tv_right);
+        AlertDialog alertDialog = AlertDialogUtil.getInstance().common(getActivity(), mView);
+        tvTitle.setText(getString(R.string.input_open_lock_password));
+        tv_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+            }
+        });
+        tv_query.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String name = editText.getText().toString().trim();
+                if (!StringUtil.randomJudge(name)) {
+                    ToastUtil.getInstance().showShort(R.string.random_verify_error);
+                    return;
+                }
+                mPresenter.realOpenLock(name, false);
+                alertDialog.dismiss();
+            }
+        });
+    }
+
+    @Override
+    public void authFailed(Throwable throwable) {
+        ToastUtil.getInstance().showShort(HttpUtils.httpProtocolErrorCode(getActivity(), throwable));
+
+    }
+
+    @Override
+    public void authServerFailed(BaseResult baseResult) {
+
+    }
+
+
+    @Override
+    public void isOpeningLock() {
+
+        isOpening = true;
+        changeOpenLockStatus(9);
+    }
+
+    @Override
+    public void openLockSuccess() {
+        changeOpenLockStatus(10);
+        handler.removeCallbacks(lockRunnable);
+        handler.postDelayed(lockRunnable, 15 * 1000);  //十秒后退出开门状态
+    }
+
+    @Override
+    public void onLockLock() {  //关门
+        handler.removeCallbacks(lockRunnable);
+        lockRunnable.run();
+    }
+
+    @Override
+    public void openLockFailed(Throwable throwable) {
+        if (throwable instanceof TimeoutException) {
+            ToastUtil.getInstance().showShort(getString(R.string.open_lock_failed));
+        } else if (throwable instanceof BleProtocolFailedException) {
+            BleProtocolFailedException bleProtocolFailedException = (BleProtocolFailedException) throwable;
+            ToastUtil.getInstance().showShort(getString(R.string.open_lock_failed));
+        } else {
+            ToastUtil.getInstance().showShort(getString(R.string.open_lock_failed));
+        }
+        lockRunnable.run();
+    }
+
+    @Override
+    public void onSafeMode() {
+        changeOpenLockStatus(5);
+    }
+
+    @Override
+    public void onArmMode() {
+        changeOpenLockStatus(4);
+    }
+
+    @Override
+    public void onBackLock() {
+        changeOpenLockStatus(6);
+    }
+
+    @Override
+    public void onWarringUp(int type) {
+
+        /**
+         * bit0：低电量报警
+         * =0：无低电量报警
+         * =1：有低电量报警
+         * bit1：锁定报警
+         * =0：无锁定报警
+         * =1：有锁定报警
+         * bit2：三次错误报警
+         * =0：无三次错误报警
+         * =1：有三次错误报警
+         * bit3：布防状态
+         * =0：撤防
+         * =1：布防报警
+         * bit4：温度状态
+         * =0：锁具温度正常
+         * =1：锁具温度异常
+         * bit5：胁迫状态
+         * =0：未发生胁迫事件
+         * =1：发生胁迫事件
+         * bit6：锁具恢复出厂设置
+         * =0：未发生
+         * =1：发生
+         * bit7：暴力开锁
+         * =0：未发生
+         * =1：发生
+         * bit8：钥匙遗落状态
+         * =0：钥匙没有遗落在锁上
+         * =1：钥匙遗落在锁上
+         * bit9：安全模式
+         * =0：未发生
+         * =1：发生
+         * Bit10：未完全上锁
+         * =0：未发生
+         * =1：发生
+         */
+
+        if (type == 9) {     //安全模式
+            if (!isOpening) {
+                onChangeInitView();
+            }
+        } else if (type == 6) {
+            //发生恢复出厂设置
+
+        } else if (type == -1) {
+            //为type==-1时实际是锁状态发生改变
+            if (!isOpening) {
+                onChangeInitView();
+            }
+        }
+    }
+
+
+    @Override
+    public void onStop() {
+        super.onStop();
+    }
+
+
+    @Override
+    public void onStartConnectDevice() {
+        isConnectingDevice = true;
+    }
+
+    @Override
+    public void onEndConnectDevice(boolean isSuccess) {
+        isConnectingDevice = false;
+        if (!isSuccess) {
+            changeOpenLockStatus(12);
+        }
+
+    }
+
+    @Override
+    public void onGetPasswordSuccess(GetPasswordResult result) {
+
+    }
+
+    @Override
+    public void onGetPasswordFailedServer(BaseResult result) {
+
+    }
+
+    @Override
+    public void onGetPasswordFailed(Throwable throwable) {
+
+    }
+
+    /**
+     * 没有权限
+     */
+    @Override
+    public void noPermissions() {
+        PermissionUtil.getInstance().requestPermission(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, getActivity());
+        ToastUtil.getInstance().showLong(R.string.please_allow_ble_permission);
+        changeOpenLockStatus(12);
+    }
+
+    ;
+
+
+    private void onChangeInitView() {
+        if (mPresenter.isAuth(bleLockInfo, true)) {
+            LogUtils.e("设备内容更新，  " + bleLockInfo.getBattery());
+            LogUtils.e("锁状态改变1   反锁模式  " + bleLockInfo.getBackLock() + "  布防模式   " + bleLockInfo.getArmMode()
+                    + "   安全模式  " + bleLockInfo.getSafeMode() + "   管理模式  " + bleLockInfo.getAdminMode()
+                    + "   动/自动模式  " + bleLockInfo.getAutoMode());
+            changeOpenLockStatus(8);  //鉴权成功之后没有特殊状态
+            onElectricUpdata(bleLockInfo.getBattery());
+            if (bleLockInfo.getBackLock() == 0) {  //等于0时是反锁状态
+                changeOpenLockStatus(6);
+            }
+            if (bleLockInfo.getSafeMode() == 1) {//安全模式
+                changeOpenLockStatus(5);
+            }
+            if (bleLockInfo.getArmMode() == 1) {//布防模式
+                changeOpenLockStatus(4);
+            }
+        }
+    }
+
+
 }

@@ -12,10 +12,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.adapter.ShiXiaoNameAdapter;
-import com.kaadas.lock.bean.AddTemporaryPasswordBean;
 import com.kaadas.lock.bean.ShiXiaoNameBean;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.mvp.presenter.AddFingerSuccessPresenter;
@@ -93,7 +91,7 @@ public class AddDoorCardSuccessActivity extends BaseActivity<IAddFingerSuccessVi
                 if (bleLockInfo == null) {
                     return;
                 }
-                mPresenter.uploadPasswordNickToServer(4, bleLockInfo.getServerLockInfo().getDevice_name(), strDoorCardName
+                mPresenter.uploadPasswordNickToServer(4, bleLockInfo.getServerLockInfo().getLockName(), strDoorCardName
                         , userNum > 9 ? "" + userNum : "0" + userNum);
                 break;
         }

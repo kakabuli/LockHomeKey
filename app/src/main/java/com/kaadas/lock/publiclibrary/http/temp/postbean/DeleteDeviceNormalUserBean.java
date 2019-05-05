@@ -3,7 +3,7 @@ package com.kaadas.lock.publiclibrary.http.temp.postbean;
 public class DeleteDeviceNormalUserBean {
 //	jsonObject.put("adminid", user_id);
 //				jsonObject.put("dev_username", userInfo.getUname());
-//				jsonObject.put("devname", deviceInfo.getDevice_name());
+//				jsonObject.put("devname", deviceInfo.getLockName());
     private String adminid;
     private String dev_username;
     private String devname;

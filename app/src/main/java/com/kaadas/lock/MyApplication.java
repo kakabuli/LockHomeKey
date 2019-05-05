@@ -9,12 +9,10 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.google.gson.Gson;
 import com.kaadas.lock.activity.login.LoginActivity;
 import com.kaadas.lock.publiclibrary.linphone.MemeManager;
-import com.kaadas.lock.publiclibrary.linphone.linphone.util.LinphoneHelper;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.publiclibrary.ble.BleService;
 import com.kaadas.lock.publiclibrary.http.result.GetPasswordResult;
@@ -42,15 +40,10 @@ import com.scwang.smartrefresh.layout.header.ClassicsHeader;
 import com.uuzuche.lib_zxing.activity.ZXingLibrary;
 
 
-import net.sdvn.cmapi.BaseInfo;
 import net.sdvn.cmapi.CMAPI;
 import net.sdvn.cmapi.Config;
-import net.sdvn.cmapi.Network;
-import net.sdvn.cmapi.protocal.ConnectStatusListener;
-import net.sdvn.cmapi.protocal.ConnectStatusListenerPlus;
 
 import org.eclipse.paho.client.mqttv3.MqttMessage;
-import org.linphone.core.LinphoneCore;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -117,7 +110,6 @@ public class MyApplication extends Application {
 
         MemeManager.getInstance().init();
     }
-
 
 
     /**
@@ -401,7 +393,7 @@ public class MyApplication extends Application {
 
     public void deleteDevice(String deviceName) {
         for (int i = 0; i < bleLockInfos.size(); i++) {
-            if (deviceName.equals(bleLockInfos.get(i).getServerLockInfo().getDevice_name())) {
+            if (deviceName.equals(bleLockInfos.get(i).getServerLockInfo().getLockName())) {
                 bleLockInfos.remove(i);
                 bleLockInfoSubject.onNext(bleLockInfos);
             }
@@ -463,14 +455,14 @@ public class MyApplication extends Application {
      * @param isForce 是否强制刷新
      */
     public void getAllDevicesByMqtt(boolean isForce) {
-        if(!isForce){
-            if (allBindDevices!=null){
+        if (!isForce) {
+            if (allBindDevices != null) {
                 getDevicesFromServer.onNext(allBindDevices);
                 return;
             }
         }
         MqttMessage allBindDevice = MqttCommandFactory.getAllBindDevice(getUid());
-        if (allBindDeviceDisposable != null && allBindDeviceDisposable.isDisposed()) {
+        if (allBindDeviceDisposable != null && !allBindDeviceDisposable.isDisposed()) {
             allBindDeviceDisposable.dispose();
         }
         allBindDeviceDisposable = mqttService.mqttPublish(MqttConstant.MQTT_REQUEST_APP, allBindDevice)
@@ -486,7 +478,7 @@ public class MyApplication extends Application {
 
                     @Override
                     public void accept(MqttData mqttData) throws Exception {
-                        if (allBindDeviceDisposable != null && allBindDeviceDisposable.isDisposed()) {
+                        if (allBindDeviceDisposable != null && !allBindDeviceDisposable.isDisposed()) {
                             allBindDeviceDisposable.dispose();
                         }
                         String payload = mqttData.getPayload();
@@ -504,7 +496,7 @@ public class MyApplication extends Application {
                 });
     }
 
-    public void getPower(){
+    public void getPower() {
 
     }
 
@@ -548,8 +540,9 @@ public class MyApplication extends Application {
     private int linphone_port;
 
     /**
-     *  获取 linphone的端口号
-     *  @return
+     * 获取 linphone的端口号
+     *
+     * @return
      */
     public int getLinphone_port() {
         return linphone_port;

@@ -187,7 +187,7 @@ public class PasswordTimeFragment extends BaseBleFragment<IAddTimePasswprdView, 
                 } else if (KeyConstants.CUSTOM == timeStatus) {
                     //自定义
                     //todo 获取到时间的处理
-         /*           if (startMilliseconds == 0) {
+                 /*   if (startMilliseconds == 0) {
                         ToastUtil.getInstance().showShort(R.string.select_take_effect_time);
                         return;
                     }
@@ -208,8 +208,7 @@ public class PasswordTimeFragment extends BaseBleFragment<IAddTimePasswprdView, 
                     }*/
                 }
 
-                intent = new Intent(getActivity(), BluetoothPasswordShareActivity.class);
-                startActivity(intent);
+
                 break;
         }
     }
@@ -290,6 +289,7 @@ public class PasswordTimeFragment extends BaseBleFragment<IAddTimePasswprdView, 
         intent.putExtra(KeyConstants.TIME_CE_LUE, timeStatus);
         if (KeyConstants.CUSTOM == timeStatus) {
             //todo 获取到时间传过去
+            return;
           /*  intent.putExtra(KeyConstants.CUSTOM_START_TIME, startMilliseconds);
             intent.putExtra(KeyConstants.CUSTOM_END_TIME, endMilliseconds);*/
         }

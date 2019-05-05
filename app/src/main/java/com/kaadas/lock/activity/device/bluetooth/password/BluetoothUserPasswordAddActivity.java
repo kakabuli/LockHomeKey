@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.flyco.tablayout.SlidingTabLayout;
+import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.fragment.PasswordPeriodFragment;
 import com.kaadas.lock.fragment.PasswordTemporaryFragment;
@@ -49,8 +50,8 @@ public class BluetoothUserPasswordAddActivity extends AppCompatActivity implemen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bluetooth_user_password_add);
-
         ButterKnife.bind(this);
+        bleLockInfo =MyApplication.getInstance().getBleService().getBleLockInfo();
         ivBack.setOnClickListener(this);
         tvContent.setText(getString(R.string.pwd_header_add_tv));
         tabs = getResources().getStringArray(R.array.home_top);

@@ -18,7 +18,6 @@ import com.kaadas.lock.mvp.presenter.FamilyMemberDetailPresenter;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.result.BluetoothSharedDeviceBean;
-import com.kaadas.lock.publiclibrary.http.result.FamilyMemberBean;
 import com.kaadas.lock.publiclibrary.http.util.HttpUtils;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.DateUtils;
@@ -104,7 +103,7 @@ public class FamilyMemberDetailActivity extends BaseActivity<IFamilyMemberDeatil
                             if (bleLockInfo == null) {
                                 return;
                             }
-                            mPresenter.deleteUserList(uid, dataBean.getUname(), bleLockInfo.getServerLockInfo().getDevice_name());
+                            mPresenter.deleteUserList(uid, dataBean.getUname(), bleLockInfo.getServerLockInfo().getLockName());
                         }
                     });
                 } else {
@@ -146,8 +145,8 @@ public class FamilyMemberDetailActivity extends BaseActivity<IFamilyMemberDeatil
                         if (bleLockInfo == null) {
                             return;
                         }
-                        String devmac = bleLockInfo.getServerLockInfo().getDevmac();
-                        String device_name = bleLockInfo.getServerLockInfo().getDevice_name();
+                        String devmac = bleLockInfo.getServerLockInfo().getMacLock();
+                        String device_name = bleLockInfo.getServerLockInfo().getLockName();
                         String device_nickname = data;
                         String time = dataBean.getCreateTime() + "";
                         List<String> items = dataBean.getItems();

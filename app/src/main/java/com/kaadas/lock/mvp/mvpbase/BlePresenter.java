@@ -52,16 +52,18 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
     public void setBleLockInfo(BleLockInfo bleLockInfo) {
         //如果service中有bleLockInfo  并且deviceName一致，就不重新设置。
         LogUtils.e("设置的  设备信息为  " + bleLockInfo.getServerLockInfo().toString());
+
         if (bleService.getBleLockInfo() != null
-                && bleService.getBleLockInfo().getServerLockInfo().getDevice_name().equals(bleLockInfo.getServerLockInfo().getDevice_name())) {
+                && bleService.getBleLockInfo().getServerLockInfo().getLockName().equals(bleLockInfo.getServerLockInfo().getLockName())) {
             ServerBleDevice serviceLockInfo = bleService.getBleLockInfo().getServerLockInfo();
             ServerBleDevice serverLockInfo = bleLockInfo.getServerLockInfo();
             if (serverLockInfo.getPassword1().equals(serviceLockInfo.getPassword1()) && serverLockInfo.getPassword2().equals(serviceLockInfo.getPassword2())) {
                 LogUtils.e("进来了  设备  数据一致   " + bleService.getBleLockInfo().getServerLockInfo().toString());
+                this.bleLockInfo = bleService.getBleLockInfo();
                 return;
             }
         }
-        bleService.setBleLockInfo(bleLockInfo);
+        bleService.setBleLockInfo( bleLockInfo);
         this.bleLockInfo = bleLockInfo;
     }
 
@@ -80,7 +82,7 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
         //如果service中有设备  且不为空  且是当前设备
         if (bleService.getBleLockInfo() != null
                 && bleService.getCurrentDevice() != null
-                && bleService.getCurrentDevice().getAddress().equals(this.bleLockInfo.getServerLockInfo().getDevmac())
+                && bleService.getCurrentDevice().getAddress().equals(this.bleLockInfo.getServerLockInfo().getMacLock())
                 ) {
             if (this.bleLockInfo.isAuth()) {  //如果已经鉴权   不管
                 return true;
@@ -162,7 +164,7 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
 
 
 
-        disposable = bleService.getDeviceByMac(this.bleLockInfo.getServerLockInfo().getDevmac())
+        disposable = bleService.getDeviceByMac(this.bleLockInfo.getServerLockInfo().getMacLock())
                 .timeout(10000, TimeUnit.MILLISECONDS)
                 .compose(RxjavaHelper.observeOnMainThread())
                 .subscribe(new Consumer<BluetoothDevice>() {
@@ -229,17 +231,20 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
                     public void accept(BleStateBean bleStateBean) throws Exception {
                         //连接状态改变之后   就不自动release连接了
                         handler.removeCallbacks(releaseRunnable);
-                        bleLockInfo.setConnected(bleStateBean.isConnected());
+                        if (bleLockInfo!=null){
+                            bleLockInfo.setConnected(bleStateBean.isConnected());
+                        }
                         if (mViewRef.get() != null && isNotify) {
                             mViewRef.get().onDeviceStateChange(bleStateBean.isConnected());
                         }
                         if (bleStateBean.isConnected()) {
                             //连接成功   直接鉴权
-                            if (bleStateBean.isConnected() && bleService.getCurrentDevice() != null && bleService.getCurrentDevice().getAddress().equals(bleLockInfo.getServerLockInfo().getDevmac())) {
+                            if (bleStateBean.isConnected() && bleService.getCurrentDevice() != null &&
+                                    bleService.getCurrentDevice().getAddress().equals(bleLockInfo.getServerLockInfo().getMacLock())) {
                                 readSystemId();
                             }
                             bleService.scanBleDevice(false);   //连接成功   停止搜索
-                        } else if (!bleStateBean.isConnected() && bleService.getCurrentDevice() != null && bleService.getCurrentDevice().getAddress().equals(bleLockInfo.getServerLockInfo().getDevmac())) {
+                        } else if (!bleStateBean.isConnected() && bleService.getCurrentDevice() != null && bleService.getCurrentDevice().getAddress().equals(bleLockInfo.getServerLockInfo().getMacLock())) {
                             if (mViewRef.get() != null && isNotify) {
                                 mViewRef.get().onEndConnectDevice(false);
                                 LogUtils.e("设备连接失败");
@@ -487,9 +492,9 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
      */
 
     public void getAllPassword(BleLockInfo bleLockInfo, boolean isForceServer) {
-//        if (MyApplication.getInstance().getPasswordResults(bleLockInfo.getServerLockInfo().getDevice_name()) != null && !isForceServer) {
+//        if (MyApplication.getInstance().getPasswordResults(bleLockInfo.getServerLockInfo().getLockName()) != null && !isForceServer) {
 //            if (mViewRef.get() != null) {
-//                mViewRef.get().onGetPasswordSuccess(MyApplication.getInstance().getPasswordResults(bleLockInfo.getServerLockInfo().getDevice_name()));
+//                mViewRef.get().onGetPasswordSuccess(MyApplication.getInstance().getPasswordResults(bleLockInfo.getServerLockInfo().getLockName()));
 //            }
 //            return;
 //        }
@@ -497,7 +502,7 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
 //            List<GetPasswordDaoBean> getPasswordDaoBeanList = MyApplication.getInstance().getDaoSession().getGetPasswordDaoBeanDao().queryBuilder().list();
 //            for (GetPasswordDaoBean getPasswordDaoBean : getPasswordDaoBeanList) {
 //                GetPasswordResult getPasswordResult = GetPasswordUtil.readPassword(getPasswordDaoBean);
-//                String deviceName = bleLockInfo.getServerLockInfo().getDevice_name();
+//                String deviceName = bleLockInfo.getServerLockInfo().getLockName();
 //                String deviceNameDao = getPasswordDaoBean.getDeviceName();
 //                if (deviceName != null && deviceNameDao != null) {
 //                    if (deviceName.equals(deviceNameDao)) {
@@ -509,20 +514,20 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
 //            }
 //            return;
 //        }
-        XiaokaiNewServiceImp.getPasswords(MyApplication.getInstance().getUid(), bleLockInfo.getServerLockInfo().getDevice_name(), 0)
+        XiaokaiNewServiceImp.getPasswords(MyApplication.getInstance().getUid(), bleLockInfo.getServerLockInfo().getLockName(), 0)
                 .subscribe(new BaseObserver<GetPasswordResult>() {
                     @Override
                     public void onSuccess(GetPasswordResult getPasswordResult) {
                         // TODO: 2019/3/6   密码昵称列表  需要做缓存 付积辉--已做
                         //获取成功缓存
-//                        GetPasswordUtil.deletePassword(bleLockInfo.getServerLockInfo().getDevice_name());
-//                        GetPasswordUtil.writePasswords(getPasswordResult, bleLockInfo.getServerLockInfo().getDevice_name());
+//                        GetPasswordUtil.deletePassword(bleLockInfo.getServerLockInfo().getLockName());
+//                        GetPasswordUtil.writePasswords(getPasswordResult, bleLockInfo.getServerLockInfo().getLockName());
                         LogUtils.e("获取所有密码成功   " + getPasswordResult.toString());
                         if (mViewRef.get() != null) {
                             mViewRef.get().onGetPasswordSuccess(getPasswordResult);
                         }
                         //更新列表
-                        MyApplication.getInstance().setPasswordResults(bleLockInfo.getServerLockInfo().getDevice_name(), getPasswordResult, false);
+                        MyApplication.getInstance().setPasswordResults(bleLockInfo.getServerLockInfo().getLockName(), getPasswordResult, false);
                     }
 
                     @Override

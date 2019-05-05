@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.kaadas.lock.R;
@@ -13,6 +14,7 @@ import com.kaadas.lock.fragment.BluetoothOpenLockRecordFragment;
 import com.kaadas.lock.fragment.BluetoothWarnInformationFragment;
 import com.kaadas.lock.fragment.RecordingFragment;
 import com.kaadas.lock.fragment.SnapshotFragment;
+import com.kaadas.lock.fragment.SnapshotFragment1;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -29,11 +31,13 @@ public class VideoCallBackActivity extends AppCompatActivity implements View.OnC
 
     @BindView(R.id.content)
     FrameLayout content;
+    @BindView(R.id.iv_back)
+    ImageView iv_back;
 
     private FragmentManager manager;
     private FragmentTransaction transaction;
     RecordingFragment recordingFragment;
-    SnapshotFragment snapshotFragment;
+    SnapshotFragment1 snapshotFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +47,7 @@ public class VideoCallBackActivity extends AppCompatActivity implements View.OnC
         tvContent.setText(getString(R.string.video_callback_info));
         videoRecording.setOnClickListener(this);
         snapshotInformation.setOnClickListener(this);
+        iv_back.setOnClickListener(this);
         initFragment();
 
     }
@@ -90,7 +95,7 @@ public class VideoCallBackActivity extends AppCompatActivity implements View.OnC
                 if (snapshotFragment != null) {
                     fragmentTransaction.show(snapshotFragment);
                 } else {
-                    snapshotFragment = new SnapshotFragment();
+                    snapshotFragment = new SnapshotFragment1();
                     fragmentTransaction.add(R.id.content, snapshotFragment);
                 }
                 fragmentTransaction.commit();

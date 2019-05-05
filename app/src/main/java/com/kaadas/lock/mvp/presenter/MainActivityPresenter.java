@@ -24,11 +24,16 @@ import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.Rsa;
 import com.kaadas.lock.utils.SPUtils;
 
+import net.sdvn.cmapi.Device;
+
 import org.linphone.core.LinphoneCall;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
+import io.reactivex.Observable;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Predicate;
 
@@ -41,6 +46,8 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
     private Disposable warringDisposable;
     private Disposable deviceInBootDisposable;
     private Disposable disposable;
+    private Disposable memeLoginDisposable;
+    private Disposable memeDisposable;
 
     @Override
     public void authSuccess() {
@@ -118,8 +125,8 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
         List<BleLockInfo> devices = MyApplication.getInstance().getDevices();
         if (devices != null && devices.size() > 0) {
             for (BleLockInfo lockInfo : devices) {
-                if (lockInfo.getServerLockInfo().getDevice_name().equals(name)) {
-                    return lockInfo.getServerLockInfo().getDevice_nickname();
+                if (lockInfo.getServerLockInfo().getLockName().equals(name)) {
+                    return lockInfo.getServerLockInfo().getLockNickName();
                 }
             }
         }
@@ -178,26 +185,25 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                     LogUtils.e("Linphone注册失败     ");
                 }
             }, new PhoneCallback() {
-
-
                 @Override
                 public void incomingCall(LinphoneCall linphoneCall) {
                     //收到来电通知
                     LogUtils.e("Linphone  收到来电     ");
-                    if (MyApplication.getInstance().isVideoActivityRun()){
+                    if (MyApplication.getInstance().isVideoActivityRun()) {
                         LogUtils.e("Linphone  收到来电   VideoActivity已经运行  不出来  ");
                         return;
                     }
                     //设置呼叫进来的时间
                     MyApplication.getInstance().setIsComingTime(System.currentTimeMillis());
                     //获取linphone的地址
-                    String linphoneSn =linphoneCall.getRemoteAddress().getUserName();
-                    LogUtils.e("Linphone   呼叫过来的linphoneSn   "  + linphoneSn);
+                    String linphoneSn = linphoneCall.getRemoteAddress().getUserName();
+                    LogUtils.e("Linphone   呼叫过来的linphoneSn   " + linphoneSn);
                     String gwId = "";
                     GatewayInfo gatewayInfo = null;
                     List<CateEyeInfo> cateEyes = MyApplication.getInstance().getAllBindDevices().getCateEyes();
-                    for (CateEyeInfo cateEyeInfo:cateEyes ) {
-                        if (linphoneSn.equalsIgnoreCase(cateEyeInfo.getServerInfo().getDeviceId())){
+                    for (CateEyeInfo cateEyeInfo : cateEyes) {
+                        LogUtils.e("猫眼的  getDeviceId  " + cateEyeInfo.getServerInfo().getDeviceId());
+                        if (linphoneSn.equalsIgnoreCase(cateEyeInfo.getServerInfo().getDeviceId())) {
                             LogUtils.e("获取到网关Id为  " + cateEyeInfo.getGwID());
                             gwId = cateEyeInfo.getGwID();
                             gatewayInfo = cateEyeInfo.getGatewayInfo();
@@ -205,28 +211,35 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                     }
 
                     //如果网关Id为空    不朝下走了
-                    if (TextUtils.isEmpty(gwId) ||gatewayInfo == null ){
+                    if (TextUtils.isEmpty(gwId) || gatewayInfo == null) {
                         return;
                     }
                     //获取米米网账号情况
                     int meBindState = gatewayInfo.getServerInfo().getMeBindState();
                     String mePwd = gatewayInfo.getServerInfo().getMePwd();
                     String meUsername = gatewayInfo.getServerInfo().getMeUsername();
-                    if (MemeManager.getInstance().isConnected()){ //meme网已经连接
+                    if (TextUtils.isEmpty(meUsername) || TextUtils.isEmpty(mePwd)) {
+                        //如果账号或者密码有一个为空  直接退出
+                        return;
+                    }
+                    if (MemeManager.getInstance().isConnected()) { //meme网已经连接
+                        //如果meme网登陆的账号密码为当前的账号密码，直接发起通信
+                        if (meUsername.equals(MemeManager.getInstance().getCurrentAccount())
+                                && mePwd.equals(MemeManager.getInstance().getCurrentPassword())) {
+                            //查看是否有设备在线   如果有  弹出来电框
+                            if (MemeManager.getInstance().getGwDevices().size() > 0) {
 
 
-                    }else { //meme网没有连接
-                        MemeManager.getInstance().LoginMeme(meUsername,mePwd,MyApplication.getInstance());
+                            }
+                        }
+                    } else { //meme网没有连接
+                        loginMeme(meUsername, mePwd);
                     }
                 }
 
                 @Override
                 public void outgoingInit() {
                     super.outgoingInit();
-
-
-
-
                 }
 
                 @Override
@@ -238,9 +251,6 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                     LinphoneHelper.toggleSpeaker(true);
                     // 所有通话默认非静音
                     LinphoneHelper.toggleMicro(false);
-
-
-
                 }
 
                 @Override
@@ -249,15 +259,51 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                     LogUtils.e("Linphone  通话结束   ");
                 }
             });
-
             LogUtils.e("登录linphone   UID   " + MyApplication.getInstance().getUid());
             LinphoneHelper.login();
         } else {
             LogUtils.e("登录linphone   失败   uid或者token为空   ");
-
         }
-
     }
 
+    private void loginMeme(String meUsername, String mePwd) {
+        //获取到设备列表
+        if (memeDisposable != null && !memeDisposable.isDisposed()) {
+            memeDisposable.dispose();
+        }
+        Observable<Boolean> loginMeme = MemeManager.getInstance().LoginMeme(meUsername, mePwd, MyApplication.getInstance());
+        Observable<List<Device>> devicesChange = MemeManager.getInstance().listDevicesChange();
+        memeDisposable = Observable.zip(loginMeme, devicesChange, new BiFunction<Boolean, List<Device>, Boolean>() {
+            @Override
+            public Boolean apply(Boolean aBoolean, List<Device> devices) throws Exception {
+                LogUtils.e("米米网登陆成功  且网关在线");
+                if (aBoolean && devices.size() > 0) { //米米网登陆成功且网关在线  正常到此处，那么都应该是成功的
+
+                    return true;
+                }
+                return false;
+            }
+        })
+                .compose(RxjavaHelper.observeOnMainThread())
+                .timeout(5 * 1000, TimeUnit.MILLISECONDS)
+                .subscribe(new Consumer<Boolean>() {
+                    @Override
+                    public void accept(Boolean aBoolean) throws Exception {
+                        if (memeDisposable != null && !memeDisposable.isDisposed()) {
+                            memeDisposable.dispose();
+                        }
+                        if (aBoolean) { // 米米网登陆成功且网关在线
+                            LogUtils.e("米米网  登陆成功   弹出来电框");
+                        } else { //米米网登陆失败或者网关不在线   不做处理
+
+                        }
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+
+                    }
+                });
+    }
 
 }

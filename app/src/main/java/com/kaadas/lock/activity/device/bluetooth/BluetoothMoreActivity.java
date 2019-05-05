@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.text.InputFilter;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -98,10 +97,10 @@ public class BluetoothMoreActivity extends BaseBleActivity<IDeviceMoreView, Devi
     }
 
     private void initData() {
-        if (bleLockInfo != null && bleLockInfo.getServerLockInfo() != null && bleLockInfo.getServerLockInfo().getDevice_nickname() != null) {
-            deviceNickname = bleLockInfo.getServerLockInfo().getDevice_nickname();
+        if (bleLockInfo != null && bleLockInfo.getServerLockInfo() != null && bleLockInfo.getServerLockInfo().getLockNickName() != null) {
+            deviceNickname = bleLockInfo.getServerLockInfo().getLockNickName();
             tvDeviceName.setText(deviceNickname);
-            String deviceName = bleLockInfo.getServerLockInfo().getDevice_name();
+            String deviceName = bleLockInfo.getServerLockInfo().getLockName();
             if (deviceName != null) {
                 String flag = (String) SPUtils.get(deviceName + SPUtils.MESSAGE_STATUS, "false");
                 if (flag.equals("true")) {
@@ -187,15 +186,15 @@ public class BluetoothMoreActivity extends BaseBleActivity<IDeviceMoreView, Devi
                             }
                         }
                         showLoading(getString(R.string.upload_device_name));
-                        if (bleLockInfo != null && bleLockInfo.getServerLockInfo() != null && bleLockInfo.getServerLockInfo().getDevice_name() != null) {
-                            mPresenter.modifyDeviceNickname(bleLockInfo.getServerLockInfo().getDevice_name(), MyApplication.getInstance().getUid(), name);
+                        if (bleLockInfo != null && bleLockInfo.getServerLockInfo() != null && bleLockInfo.getServerLockInfo().getLockName() != null) {
+                            mPresenter.modifyDeviceNickname(bleLockInfo.getServerLockInfo().getLockName(), MyApplication.getInstance().getUid(), name);
                         }
                         alertDialog.dismiss();
                     }
                 });
                 break;
             case R.id.rl_message_free:
-                String deviceName = bleLockInfo.getServerLockInfo().getDevice_name();
+                String deviceName = bleLockInfo.getServerLockInfo().getLockName();
                 String mSwitch = (String) SPUtils.get(deviceName + SPUtils.MESSAGE_STATUS, "false");
                 if (deviceName != null) {
                     if (mSwitch.equals("false")) {
@@ -268,7 +267,7 @@ public class BluetoothMoreActivity extends BaseBleActivity<IDeviceMoreView, Devi
                     @Override
                     public void right() {
                         showLoading(getString(R.string.is_deleting));
-                        mPresenter.deleteDevice(bleLockInfo.getServerLockInfo().getDevice_name());
+                        mPresenter.deleteDevice(bleLockInfo.getServerLockInfo().getLockName());
                     }
                 });
                 break;
@@ -305,7 +304,7 @@ public class BluetoothMoreActivity extends BaseBleActivity<IDeviceMoreView, Devi
         hiddenLoading();
         deviceNickname = name;
         tvDeviceName.setText(deviceNickname);
-        bleLockInfo.getServerLockInfo().setDevice_nickname(deviceNickname);
+        bleLockInfo.getServerLockInfo().setLockNickName(deviceNickname);
         ToastUtil.getInstance().showLong(R.string.device_nick_name_update_success);
     }
 

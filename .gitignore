@@ -9,3 +9,6 @@
 /build
 /captures
 .externalNativeBuild
+/.idea/misc.xml
+/.idea/kotlinc.xml
+/.gitignore

@@ -339,7 +339,7 @@ public class BleService extends Service {
      */
     public Observable<BluetoothDevice> getDeviceByMac(String mac) {
         currentMac = mac;
-        handler.postDelayed(getRemoteDeviceRunnable, 5000);
+        handler.postDelayed(getRemoteDeviceRunnable, 6000);
         return scanBleDevice(true)
                 .filter(new Predicate<BluetoothDevice>() {
                     @Override
@@ -362,20 +362,6 @@ public class BleService extends Service {
      * 连接设备
      */
     public PublishSubject<Boolean> connectDeviceByDevice(final BluetoothDevice device) {
-//        new Thread(){
-//            @Override
-//            public void run() {
-//                super.run();
-//                try {
-//                    release();
-//                    Thread.sleep(100);
-//                    currentDevice = device;
-//                    bluetoothGatt = currentDevice.connectGatt(BleService.this, false, bluetoothGattCallback);
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        }.start();
         release();
         currentDevice = device;
         bluetoothGatt = currentDevice.connectGatt(BleService.this, false, bluetoothGattCallback);
@@ -859,8 +845,8 @@ public class BleService extends Service {
         return bleLockInfo;
     }
 
-    public void setBleLockInfo(BleLockInfo currentBleDevice) {
-        if (bleLockInfo != null && !bleLockInfo.getServerLockInfo().getDevice_name().equals(currentBleDevice.getServerLockInfo().getDevice_name())) {
+    public synchronized void setBleLockInfo(BleLockInfo currentBleDevice) {
+        if (bleLockInfo != null && !bleLockInfo.getServerLockInfo().getLockName().equals(currentBleDevice.getServerLockInfo().getLockName())) {
             bleLockInfo.setAuth(false);
             bleLockInfo.setConnected(false);
         }

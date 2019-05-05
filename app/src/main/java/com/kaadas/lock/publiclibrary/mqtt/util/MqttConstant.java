@@ -21,7 +21,7 @@ public class MqttConstant {
     //public static final String MQTT_BASE_URL = "tcp:// 121.201.57.214:1883";//测试服务器
 
 
-    public static String LINPHONE_URL = "sip-kaadas.juziwulian.com:5061";//正式sip
+    public static final String LINPHONE_URL = "sip-kaadas.juziwulian.com:5061";//正式sip
     //    public static String LINPHONE_URL = "121.201.57.214:5061";//测试sip
 
 

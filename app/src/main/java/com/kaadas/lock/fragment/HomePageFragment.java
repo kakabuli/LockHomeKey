@@ -1,5 +1,6 @@
 package com.kaadas.lock.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -17,11 +18,15 @@ import android.widget.RadioGroup;
 
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
+import com.kaadas.lock.activity.MainActivity;
+import com.kaadas.lock.activity.addDevice.DeviceAddActivity;
 import com.kaadas.lock.bean.HomeShowBean;
 import com.kaadas.lock.mvp.mvpbase.BaseFragment;
 import com.kaadas.lock.mvp.presenter.HomePreseneter;
 import com.kaadas.lock.mvp.view.IHomeView;
+import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.AllBindDevices;
+import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.widget.UnderLineRadioBtn;
 
 import java.util.ArrayList;
@@ -36,7 +41,7 @@ import butterknife.Unbinder;
  * Created by David.
  */
 
-public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHomeView>> implements IHomeView {
+public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHomeView>> implements IHomeView, View.OnClickListener {
 
     @BindView(R.id.ll_has_device)
     LinearLayout llHasDevice;
@@ -60,10 +65,43 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
     private List<HomeShowBean> devices = new ArrayList<>();
     private Unbinder bind;
     private List<HomeShowBean> homeShow;
+    boolean hasDevice = false;//是否有设备  默认没有设备
+    private List<ISelectChangeListener> listeners = new ArrayList<>();
+    private MainActivity activity;
+    private int currentPosition;
+    public boolean isSelectHome = true;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        activity = (MainActivity) getActivity();
+        activity.getViewPager().addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+
+            @Override
+            public void onPageScrolled(int i, float v, int i1) {
+
+            }
+
+            @Override
+            public void onPageSelected(int i) {
+                if (i == 0) {
+                    isSelectHome = true;
+                    for (ISelectChangeListener listener : listeners) {
+                        listener.onSelectChange(true);
+                    }
+                } else {
+                    isSelectHome = false;
+                    for (ISelectChangeListener listener : listeners) {
+                        listener.onSelectChange(false);
+                    }
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int i) {
+
+            }
+        });
     }
 
     @Nullable
@@ -71,22 +109,10 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = View.inflate(getActivity(), R.layout.fragment_home, null);
         bind = ButterKnife.bind(this, view);
+        btnAddDevice.setOnClickListener(this);
+        hasDevice=false;
+        changePage();
 
-        llHasDevice.setVisibility(View.GONE);
-        llNoDevice.setVisibility(View.VISIBLE);
-
-
-//        for (int i = 0; i <8; i++) {
-////            int deviceType, String deviceId, String deviceNickName, Object object
-//            if (i % 2 == 0) {
-//                devices.add(new HomeShowBean(HomeShowBean.TYPE_BLE_LOCK, "1", "昵称" + i, ""));
-//            } else if (i % 3 == 0){
-//                devices.add(new HomeShowBean(HomeShowBean.TYPE_CAT_EYE, "1", "昵称" + i, ""));
-//            }else {
-//                devices.add(new HomeShowBean(HomeShowBean.TYPE_GATEWAY_LOCK, "1", "昵称" + i, ""));
-//            }
-//
-//        }
         AllBindDevices allBindDevices = MyApplication.getInstance().getAllBindDevices();
         if (allBindDevices != null) {
             devices = allBindDevices.getHomeShow(false);
@@ -99,24 +125,35 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
     protected HomePreseneter<IHomeView> createPresent() {
         return new HomePreseneter<>();
     }
-
+    private void changePage() {
+        if (hasDevice) {
+            llHasDevice.setVisibility(View.VISIBLE);
+            llHasDevice.setClickable(true);
+            llNoDevice.setVisibility(View.GONE);
+            llNoDevice.setClickable(false);
+        } else {
+            llHasDevice.setVisibility(View.GONE);
+            llHasDevice.setClickable(false);
+            llNoDevice.setVisibility(View.VISIBLE);
+            llNoDevice.setClickable(true);
+        }
+    }
 
     public void initData(final List<HomeShowBean> devices) {
         if (devices == null) {
-            llHasDevice.setVisibility(View.GONE);
-            llNoDevice.setVisibility(View.VISIBLE);
+            hasDevice=false;
+            changePage();
             return;
         }
 
         if (devices.size() == 0) {
-            llHasDevice.setVisibility(View.GONE);
-            llNoDevice.setVisibility(View.VISIBLE);
+            hasDevice=false;
+            changePage();
             return;
         }
 
-        llHasDevice.setVisibility(View.VISIBLE);
-        llNoDevice.setVisibility(View.GONE);
-
+        hasDevice=true;
+        changePage();
         fragments = new ArrayList<>();
 
         realPositions.clear();
@@ -179,7 +216,6 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
                 rbHome1.setCompoundDrawablesRelativeWithIntrinsicBounds(null, getActivity().getDrawable(R.drawable.home_rb_lock_drawable), null, null);
             } else {
                 rbHome1.setCompoundDrawablesRelativeWithIntrinsicBounds(null, getActivity().getDrawable(R.drawable.home_rb_cat_eye_drawable), null, null);
-
             }
 
             if (devices.get(1).getDeviceType() == HomeShowBean.TYPE_BLE_LOCK
@@ -204,7 +240,12 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
             //此处初始化Fragment
             switch (devices.get(i).getDeviceType()) {
                 case HomeShowBean.TYPE_BLE_LOCK: //蓝牙锁:
-                    fragments.add(new BleLockFragment());
+                    BleLockFragment bleLockFragment = new BleLockFragment();
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable(KeyConstants.BLE_LOCK_INFO,(BleLockInfo)devices.get(i).getObject());
+                    bundle.putSerializable(KeyConstants.FRAGMENT_POSITION,i);
+                    bleLockFragment.setArguments(bundle);
+                    fragments.add(bleLockFragment);
                     break;
                 case HomeShowBean.TYPE_GATEWAY_LOCK: //网关锁:
                     fragments.add(new GatewayLockFragment());
@@ -223,7 +264,6 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
             @Override
             public Fragment getItem(int i) {
                 return fragments.get(i);
-
             }
 
             @Override
@@ -260,7 +300,6 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
                         break;
                 }
                 resetRadioButton(realPosition);
-
             }
         });
 
@@ -273,6 +312,7 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
 
             @Override
             public void onPageSelected(int position) {
+                currentPosition = position;
                 resetRadioButton(position);
             }
 
@@ -317,14 +357,12 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
                 Log.e("下标是  ", "" + i);
                 realPositions.add(i);
             }
-
             if (devices.get(startPosition).getDeviceType() == HomeShowBean.TYPE_BLE_LOCK
                     || devices.get(startPosition).getDeviceType() == HomeShowBean.TYPE_GATEWAY_LOCK
                     ) {
                 rbHome1.setCompoundDrawablesRelativeWithIntrinsicBounds(null, getActivity().getDrawable(R.drawable.home_rb_lock_drawable), null, null);
             } else {
                 rbHome1.setCompoundDrawablesRelativeWithIntrinsicBounds(null, getActivity().getDrawable(R.drawable.home_rb_cat_eye_drawable), null, null);
-
             }
 
             if (devices.get(startPosition + 1).getDeviceType() == HomeShowBean.TYPE_BLE_LOCK
@@ -343,13 +381,12 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
                 rbHome3.setCompoundDrawablesRelativeWithIntrinsicBounds(null, getActivity().getDrawable(R.drawable.home_rb_cat_eye_drawable), null, null);
 
             }
-
-
         }
         //
         RadioButton radioButton = (RadioButton) rgHome.getChildAt(selectPosition);
         radioButton.setChecked(true);
         viewPager.setCurrentItem(realPosition);
+        currentPosition = realPosition;
         rbHome1.setScaleY((float) 0.85);
         rbHome1.setScaleX((float) 0.85);
         rbHome2.setScaleY((float) 0.85);
@@ -383,5 +420,32 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
         }else {
             initData(null);
         }
+    }
+
+    @Override
+    public void onClick(View v) {
+        Intent intent;
+        switch (v.getId()){
+            case R.id.btn_add_device:
+                intent=new Intent(getActivity(),DeviceAddActivity.class);
+                startActivity(intent);
+                break;
+        }
+    }
+
+    public ViewPager getPager() {
+        return viewPager;
+    }
+
+    public void listenerSelect(ISelectChangeListener listener) {
+        listeners.add(listener);
+    }
+    public interface ISelectChangeListener {
+        void onSelectChange(boolean isSelect);
+    }
+
+
+    public int getCurrentPosition() {
+        return currentPosition;
     }
 }

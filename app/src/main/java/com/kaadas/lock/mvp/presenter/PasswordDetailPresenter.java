@@ -94,7 +94,7 @@ public class PasswordDetailPresenter<T> extends BlePresenter<IPasswordDetailView
         List<DeletePasswordBean.DeletePassword> deletePasswords = new ArrayList<>();
         deletePasswords.add(new DeletePasswordBean.DeletePassword(serverType, number > 9 ? "" + number : "0" + number));
         XiaokaiNewServiceImp.deletePassword(MyApplication.getInstance().getUid(),
-                bleLockInfo.getServerLockInfo().getDevice_name(), deletePasswords)
+                bleLockInfo.getServerLockInfo().getLockName(), deletePasswords)
                 .subscribe(new BaseObserver<BaseResult>() {
                     @Override
                     public void onSuccess(BaseResult result) {
@@ -131,7 +131,7 @@ public class PasswordDetailPresenter<T> extends BlePresenter<IPasswordDetailView
      * @param nickname 昵称
      */
     public void updateNick(int pwdType, String num, String nickname) {
-        XiaokaiNewServiceImp.modifyPasswordNick(MyApplication.getInstance().getUid(), bleLockInfo.getServerLockInfo().getDevice_name(), pwdType, num, nickname)
+        XiaokaiNewServiceImp.modifyPasswordNick(MyApplication.getInstance().getUid(), bleLockInfo.getServerLockInfo().getLockName(), pwdType, num, nickname)
                 .subscribe(new BaseObserver<BaseResult>() {
                     @Override
                     public void onSuccess(BaseResult result) {
@@ -207,28 +207,28 @@ public class PasswordDetailPresenter<T> extends BlePresenter<IPasswordDetailView
                         List<Integer> serverNumbers = new ArrayList<>();
                         List<Integer> morePwd = new ArrayList<>();
                         if (serverType == 1) { //普通密码
-                            GetPasswordResult passwordResults = MyApplication.getInstance().getPasswordResults(bleLockInfo.getServerLockInfo().getDevice_name());
+                            GetPasswordResult passwordResults = MyApplication.getInstance().getPasswordResults(bleLockInfo.getServerLockInfo().getLockName());
                             if (passwordResults != null) {
                                 for (ForeverPassword p : passwordResults.getData().getPwdList()) {
                                     serverNumbers.add(Integer.parseInt(p.getNum()));
                                 }
                             }
                         } else if (serverType == 2) { //临时密码
-                            GetPasswordResult passwordResults = MyApplication.getInstance().getPasswordResults(bleLockInfo.getServerLockInfo().getDevice_name());
+                            GetPasswordResult passwordResults = MyApplication.getInstance().getPasswordResults(bleLockInfo.getServerLockInfo().getLockName());
                             if (passwordResults != null) {
                                 for (GetPasswordResult.DataBean.TempPassword p : passwordResults.getData().getTempPwdList()) {
                                     serverNumbers.add(Integer.parseInt(p.getNum()));
                                 }
                             }
                         } else if (serverType == 3) { //指纹密码
-                            GetPasswordResult passwordResults = MyApplication.getInstance().getPasswordResults(bleLockInfo.getServerLockInfo().getDevice_name());
+                            GetPasswordResult passwordResults = MyApplication.getInstance().getPasswordResults(bleLockInfo.getServerLockInfo().getLockName());
                             if (passwordResults != null) {
                                 for (GetPasswordResult.DataBean.Fingerprint p : passwordResults.getData().getFingerprintList()) {
                                     serverNumbers.add(Integer.parseInt(p.getNum()));
                                 }
                             }
                         } else if (serverType == 4) { //卡片密码
-                            GetPasswordResult passwordResults = MyApplication.getInstance().getPasswordResults(bleLockInfo.getServerLockInfo().getDevice_name());
+                            GetPasswordResult passwordResults = MyApplication.getInstance().getPasswordResults(bleLockInfo.getServerLockInfo().getLockName());
                             if (passwordResults != null) {
                                 for (GetPasswordResult.DataBean.Card p : passwordResults.getData().getCardList()) {
                                     serverNumbers.add(Integer.parseInt(p.getNum()));
@@ -334,7 +334,7 @@ public class PasswordDetailPresenter<T> extends BlePresenter<IPasswordDetailView
             String number = i < 10 ? "0" + i : "" + i;
             deletePasswords.add(new DeletePasswordBean.DeletePassword(type, number));
         }
-        XiaokaiNewServiceImp.deletePassword(MyApplication.getInstance().getUid(), bleLockInfo.getServerLockInfo().getDevice_name(), deletePasswords)
+        XiaokaiNewServiceImp.deletePassword(MyApplication.getInstance().getUid(), bleLockInfo.getServerLockInfo().getLockName(), deletePasswords)
                 .subscribe(new BaseObserver<BaseResult>() {
                     @Override
                     public void onSuccess(BaseResult result) {
