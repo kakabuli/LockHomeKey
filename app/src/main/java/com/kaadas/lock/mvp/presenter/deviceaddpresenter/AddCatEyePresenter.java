@@ -81,8 +81,6 @@ public class AddCatEyePresenter<T> extends BasePresenter<IAddCatEyeView> {
      */
 
     public void startJoin(String deviceMac, String deviceSn, String gwId, String ssid, String pwd) {
-
-
         LogUtils.e("开始加入网络   ");
         wifiName = ssid;
         this.pwd = pwd;
