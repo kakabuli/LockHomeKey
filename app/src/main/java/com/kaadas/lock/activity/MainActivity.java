@@ -10,6 +10,7 @@ import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.fragment.DeviceFragment;
@@ -18,7 +19,6 @@ import com.kaadas.lock.fragment.PersonalCenterFragment;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseBleActivity;
 import com.kaadas.lock.mvp.presenter.MainActivityPresenter;
-import com.kaadas.lock.mvp.presenter.MainPresenter;
 import com.kaadas.lock.mvp.view.IMainActivityView;
 import com.kaadas.lock.mvp.view.IMainView;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
@@ -37,7 +37,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivityPresenter<IMainActivityView>>
-        implements  ViewPager.OnPageChangeListener, IMainActivityView, RadioGroup.OnCheckedChangeListener {
+        implements ViewPager.OnPageChangeListener, IMainActivityView, RadioGroup.OnCheckedChangeListener {
     @BindView(R.id.rb_one)
     RadioButton rbOne;
     @BindView(R.id.rb_two)
@@ -55,6 +55,7 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
     private static final int REQUEST_CODE_VPN_SERVICE = 11;
 
     public boolean isSelectHome = true;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setContentView(R.layout.activity_main);
@@ -62,7 +63,7 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
         ButterKnife.bind(this);
         PermissionUtil.getInstance().requestPermission(PermissionUtil.getInstance().permission, this);
         rg.setOnCheckedChangeListener(this);
-        if (MyApplication.getInstance().getMqttService().getMqttClient()==null||!MyApplication.getInstance().getMqttService().getMqttClient().isConnected()){
+        if (MyApplication.getInstance().getMqttService().getMqttClient() == null || !MyApplication.getInstance().getMqttService().getMqttClient().isConnected()) {
             MyApplication.getInstance().getMqttService().mqttConnection(); //连接mqtt
         }
         fragments.add(new HomePageFragment());
@@ -104,6 +105,7 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
     }
 
     private List<HomeSelectListener> listeners = new ArrayList<>();
+
     @Override
     public void onCheckedChanged(RadioGroup group, int checkedId) {
         switch (checkedId) {

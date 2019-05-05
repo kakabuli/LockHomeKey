@@ -24,6 +24,7 @@ import com.kaadas.lock.activity.device.BluetoothLockAuthorizationActivity;
 import com.kaadas.lock.activity.device.BluetoothLockFunctionActivity;
 
 import com.kaadas.lock.activity.device.GatewayActivity;
+import com.kaadas.lock.activity.device.cateye.more.CateyeFunctionActivity;
 import com.kaadas.lock.activity.device.gatewaylock.GatewayLockFunctionActivity;
 import com.kaadas.lock.adapter.DeviceDetailAdapter;
 import com.kaadas.lock.bean.DeviceDetailBean;
@@ -277,6 +278,8 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
         switch (deviceDetailBean.getType()) {
             case 0:
                 //猫眼
+                Intent  cateEyeInfoIntent=new Intent(getActivity(),CateyeFunctionActivity.class);
+                startActivity(cateEyeInfoIntent);
                 break;
             case 1:
                 //网关锁

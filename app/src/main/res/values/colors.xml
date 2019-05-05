@@ -76,4 +76,5 @@
     <color name="grayIconTint">#727272</color>
     <color name="colorA">#ff5e00</color>
     <color name="colorD">#808080</color>
+    <color name="video_color">#444444</color>
 </resources>

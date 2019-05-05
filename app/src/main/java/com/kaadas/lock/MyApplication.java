@@ -112,7 +112,6 @@ public class MyApplication extends Application {
     }
 
 
-
     /**
      * 启动蓝牙服务
      */
@@ -456,14 +455,14 @@ public class MyApplication extends Application {
      * @param isForce 是否强制刷新
      */
     public void getAllDevicesByMqtt(boolean isForce) {
-        if(!isForce){
-            if (allBindDevices!=null){
+        if (!isForce) {
+            if (allBindDevices != null) {
                 getDevicesFromServer.onNext(allBindDevices);
                 return;
             }
         }
         MqttMessage allBindDevice = MqttCommandFactory.getAllBindDevice(getUid());
-        if (allBindDeviceDisposable != null && allBindDeviceDisposable.isDisposed()) {
+        if (allBindDeviceDisposable != null && !allBindDeviceDisposable.isDisposed()) {
             allBindDeviceDisposable.dispose();
         }
         allBindDeviceDisposable = mqttService.mqttPublish(MqttConstant.MQTT_REQUEST_APP, allBindDevice)
@@ -479,7 +478,7 @@ public class MyApplication extends Application {
 
                     @Override
                     public void accept(MqttData mqttData) throws Exception {
-                        if (allBindDeviceDisposable != null && allBindDeviceDisposable.isDisposed()) {
+                        if (allBindDeviceDisposable != null && !allBindDeviceDisposable.isDisposed()) {
                             allBindDeviceDisposable.dispose();
                         }
                         String payload = mqttData.getPayload();
@@ -497,7 +496,7 @@ public class MyApplication extends Application {
                 });
     }
 
-    public void getPower(){
+    public void getPower() {
 
     }
 
@@ -541,8 +540,9 @@ public class MyApplication extends Application {
     private int linphone_port;
 
     /**
-     *  获取 linphone的端口号
-     *  @return
+     * 获取 linphone的端口号
+     *
+     * @return
      */
     public int getLinphone_port() {
         return linphone_port;
