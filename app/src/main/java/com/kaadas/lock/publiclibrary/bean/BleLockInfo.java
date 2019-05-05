@@ -92,7 +92,7 @@ public class BleLockInfo implements Serializable {
 
 
     public boolean isNewMode() {
-        if (serverLockInfo.getDevice_name().startsWith("KDS") || serverLockInfo.getDevice_name().startsWith("kdslock")) {
+        if (serverLockInfo.getLockName().startsWith("KDS") || serverLockInfo.getLockName().startsWith("kdslock")) {
             return false;
         } else {
             return true;

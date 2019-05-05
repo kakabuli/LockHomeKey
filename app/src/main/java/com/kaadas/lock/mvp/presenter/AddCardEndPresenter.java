@@ -82,7 +82,7 @@ public class AddCardEndPresenter<T> extends BlePresenter<IAddCardEndView> {
                                 if (mViewRef.get() != null) {
                                     mViewRef.get().onSetCardSuccess(userNum);
                                 }
-                                uploadPasswordNickToServer(bleLockInfo.getServerLockInfo().getDevice_name(), number > 9 ? "" + number : "0" + number, number > 9 ? "" + number : "0" + number);
+                                uploadPasswordNickToServer(bleLockInfo.getServerLockInfo().getLockName(), number > 9 ? "" + number : "0" + number, number > 9 ? "" + number : "0" + number);
                                 toDisposable(addFingerDisposable);
                             }
 //                            else {

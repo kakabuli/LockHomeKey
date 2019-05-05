@@ -60,7 +60,7 @@ public class PasswordManagerPresenter<T> extends BlePresenter<IPasswordManagerVi
 
     public void syncPassword() {
         //同步时将上次的数据
-        GetPasswordResult passwordResults = MyApplication.getInstance().getPasswordResults(bleLockInfo.getServerLockInfo().getDevice_name());
+        GetPasswordResult passwordResults = MyApplication.getInstance().getPasswordResults(bleLockInfo.getServerLockInfo().getLockName());
         if (passwordResults != null) {
             pwdList = passwordResults.getData().getPwdList();
         } else {
@@ -216,7 +216,7 @@ public class PasswordManagerPresenter<T> extends BlePresenter<IPasswordManagerVi
             passwords.add(new AddPasswordBean.Password(1, number, number, 1));
         }
         XiaokaiNewServiceImp.addPassword(MyApplication.getInstance().getUid()
-                , bleLockInfo.getServerLockInfo().getDevice_name(), passwords)
+                , bleLockInfo.getServerLockInfo().getLockName(), passwords)
                 .subscribe(new BaseObserver<BaseResult>() {
                     @Override
                     public void onSuccess(BaseResult result) {
@@ -264,7 +264,7 @@ public class PasswordManagerPresenter<T> extends BlePresenter<IPasswordManagerVi
             String number = i < 10 ? "0" + i : "" + i;
             deletePasswords.add(new DeletePasswordBean.DeletePassword(1, number));
         }
-        XiaokaiNewServiceImp.deletePassword(MyApplication.getInstance().getUid(), bleLockInfo.getServerLockInfo().getDevice_name(), deletePasswords)
+        XiaokaiNewServiceImp.deletePassword(MyApplication.getInstance().getUid(), bleLockInfo.getServerLockInfo().getLockName(), deletePasswords)
                 .subscribe(new BaseObserver<BaseResult>() {
                     @Override
                     public void onSuccess(BaseResult result) {
@@ -313,7 +313,7 @@ public class PasswordManagerPresenter<T> extends BlePresenter<IPasswordManagerVi
         passwords.add(new AddPasswordBean.Password(1, foreverPassword));
         XiaokaiNewServiceImp
                 .addPassword(MyApplication.getInstance().getUid(),
-                        bleLockInfo.getServerLockInfo().getDevice_name(), passwords
+                        bleLockInfo.getServerLockInfo().getLockName(), passwords
                 )
                 .subscribe(new BaseObserver<BaseResult>() {
                     @Override

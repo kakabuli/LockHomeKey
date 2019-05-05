@@ -81,7 +81,7 @@ public class AddFingerprintEndPresenter<T> extends BlePresenter<IAddFingerprintE
                             if (eventType == 2 && eventSource == 4 && eventCode == 7) {  //这是添加指纹的回调，
                                 if (mViewRef.get() != null) {
                                     mViewRef.get().onSetFingerSuccess(userNum);
-                                    uploadPasswordNickToServer(bleLockInfo.getServerLockInfo().getDevice_name(), number > 9 ? "" + number : "0" + number, number > 9 ? "" + number : "0" + number);
+                                    uploadPasswordNickToServer(bleLockInfo.getServerLockInfo().getLockName(), number > 9 ? "" + number : "0" + number, number > 9 ? "" + number : "0" + number);
                                 }
                                 toDisposable(addFingerDisposable);
                             }

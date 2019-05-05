@@ -9,9 +9,9 @@ import java.io.Serializable;
  */
 public class ServerBleDevice implements Serializable {
     private String _id;
-    private String device_name;//设备唯一编号
-    private String device_nickname;
-    private String devmac;
+    private String lockName;//设备唯一编号
+    private String lockNickName;
+    private String macLock;
     private String open_purview;
     private String is_admin;
     private String center_latitude;
@@ -30,28 +30,28 @@ public class ServerBleDevice implements Serializable {
         this._id = _id;
     }
 
-    public String getDevice_name() {
-        return device_name;
+    public String getLockName() {
+        return lockName;
     }
 
-    public void setDevice_name(String device_name) {
-        this.device_name = device_name;
+    public void setLockName(String lockName) {
+        this.lockName = lockName;
     }
 
-    public String getDevice_nickname() {
-        return device_nickname;
+    public String getLockNickName() {
+        return lockNickName;
     }
 
-    public void setDevice_nickname(String device_nickname) {
-        this.device_nickname = device_nickname;
+    public void setLockNickName(String lockNickName) {
+        this.lockNickName = lockNickName;
     }
 
-    public String getDevmac() {
-        return devmac;
+    public String getMacLock() {
+        return macLock;
     }
 
-    public void setDevmac(String devmac) {
-        this.devmac = devmac;
+    public void setMacLock(String macLock) {
+        this.macLock = macLock;
     }
 
     public String getOpen_purview() {
@@ -143,9 +143,9 @@ public class ServerBleDevice implements Serializable {
     public String toString() {
         return "ServerDevices{" +
                 "_id='" + _id + '\'' +
-                ", device_name='" + device_name + '\'' +
-                ", device_nickname='" + device_nickname + '\'' +
-                ", devmac='" + devmac + '\'' +
+                ", lockName='" + lockName + '\'' +
+                ", lockNickName='" + lockNickName + '\'' +
+                ", macLock='" + macLock + '\'' +
                 ", open_purview='" + open_purview + '\'' +
                 ", is_admin='" + is_admin + '\'' +
                 ", center_latitude='" + center_latitude + '\'' +

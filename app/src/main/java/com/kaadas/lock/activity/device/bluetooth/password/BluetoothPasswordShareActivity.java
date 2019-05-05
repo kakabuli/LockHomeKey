@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -16,6 +17,7 @@ import com.kaadas.lock.R;
 import com.kaadas.lock.mvp.mvpbase.BaseBleActivity;
 import com.kaadas.lock.mvp.presenter.PasswordDetailPresenter;
 import com.kaadas.lock.mvp.view.IPasswordDetailView;
+import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.KeyConstants;
@@ -53,17 +55,24 @@ public class BluetoothPasswordShareActivity extends BaseBleActivity<IPasswordDet
     TextView tvCopy;
     @BindView(R.id.iv_editor)
     ImageView ivEditor;
-    private int type;;
+    private int type;
+    private BleLockInfo bleLockInfo;
+    private String number;
+    private String password;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bluetooth_password_share);
         ButterKnife.bind(this);
+        bleLockInfo = mPresenter.getBleLockInfo();
         Intent intent = getIntent();
         type = intent.getIntExtra(KeyConstants.TO_DETAIL_TYPE, 1);
+        number = intent.getStringExtra(KeyConstants.TO_DETAIL_NUMBER);
+        password = intent.getStringExtra(KeyConstants.TO_DETAIL_PASSWORD);
         ivBack.setOnClickListener(this);
         tvContent.setText(getString(R.string.password_detail));
         ivEditor.setOnClickListener(this);
+        btnDelete.setOnClickListener(this);
     }
 
     @Override
@@ -78,14 +87,10 @@ public class BluetoothPasswordShareActivity extends BaseBleActivity<IPasswordDet
                 finish();
                 break;
             case R.id.iv_editor:
+                //弹出编辑框
                 View mView = LayoutInflater.from(this).inflate(R.layout.have_edit_dialog, null);
                 TextView tvTitle = mView.findViewById(R.id.tv_title);
                 EditText editText = mView.findViewById(R.id.et_name);
-                //TODO 获取到密码设置
-              /*  if (password.getNickName()!=null){
-                    editText.setText(password.getNickName());
-                    editText.setSelection(password.getNickName().length());
-                }*/
                 TextView tv_cancel = mView.findViewById(R.id.tv_left);
                 TextView tv_query = mView.findViewById(R.id.tv_right);
                 AlertDialog alertDialog = AlertDialogUtil.getInstance().common(this, mView);
@@ -100,18 +105,31 @@ public class BluetoothPasswordShareActivity extends BaseBleActivity<IPasswordDet
                     @Override
                     public void onClick(View v) {
                         String name = editText.getText().toString().trim();
-                        if (!StringUtil.nicknameJudge(name)) {
-                            ToastUtil.getInstance().showShort(R.string.nickname_verify_error);
+                        if (TextUtils.isEmpty(name)) {
+                            ToastUtil.getInstance().showShort(R.string.name_not_empty);
                             return;
                         }
-                        //todo 获取到密码对比
-                  /*      if (StringUtil.judgeNicknameWhetherSame(password.getNickName(),name)){
-                            ToastUtil.getInstance().showShort(R.string.nickname_not_modify);
-                            alertDialog.dismiss();
-                            return;
-                        }*/
-                        //todo 更新昵称
+                        if (tvName != null) {
+                            tvName.setText(name);
+                            showLoading(getString(R.string.is_setting));
+                            mPresenter.updateNick(type, number, name);
+                        }
                         alertDialog.dismiss();
+                    }
+                });
+                break;
+            case R.id.btn_delete:
+                AlertDialogUtil.getInstance().noEditTwoButtonDialog(this, getString(R.string.hint), getString(R.string.sure_delete_password), getString(R.string.cancel),getString(R.string.query) ,new AlertDialogUtil.ClickListener() {
+                    @Override
+                    public void left() {
+
+                    }
+                    @Override
+                    public void right() {
+                        if (mPresenter.isAuth(bleLockInfo, true)) {
+                            showLoading(getString(R.string.is_deleting));
+                            mPresenter.deletePwd(type, Integer.parseInt(number), 1,true);
+                        }
                     }
                 });
                 break;

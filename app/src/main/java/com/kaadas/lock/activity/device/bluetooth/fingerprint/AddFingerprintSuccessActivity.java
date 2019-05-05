@@ -91,7 +91,7 @@ public class AddFingerprintSuccessActivity extends BaseActivity<IAddFingerSucces
                 if (bleLockInfo == null) {
                     return;
                 }
-                mPresenter.uploadPasswordNickToServer(3, bleLockInfo.getServerLockInfo().getDevice_name(), strFingerprintName
+                mPresenter.uploadPasswordNickToServer(3, bleLockInfo.getServerLockInfo().getLockName(), strFingerprintName
                         , userNum > 9 ? "" + userNum : "0" + userNum);
                 break;
         }

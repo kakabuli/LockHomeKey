@@ -3,14 +3,12 @@ package com.kaadas.lock.publiclibrary.linphone;
 import android.content.Context;
 import android.util.Log;
 
-import com.kaadas.lock.publiclibrary.linphone.linphone.util.LinphoneHelper;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.SPUtils;
 
 import net.sdvn.cmapi.BaseInfo;
 import net.sdvn.cmapi.CMAPI;
 import net.sdvn.cmapi.Device;
-import net.sdvn.cmapi.Network;
 import net.sdvn.cmapi.RealtimeInfo;
 import net.sdvn.cmapi.global.Constants;
 import net.sdvn.cmapi.protocal.ConnectStatusListener;
@@ -21,6 +19,9 @@ import net.sdvn.cmapi.protocal.ResultListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.Observable;
+import io.reactivex.subjects.PublishSubject;
+
 public class MemeManager {
 
     public static MemeManager instance;
@@ -28,6 +29,15 @@ public class MemeManager {
     private static final int BUILD_VPN_REQUEST = 101;
     private String currentAccount;
     private String currentPassword;
+    /**
+     *   false则认为登陆失败，true  则认为已经获取到设备列表，可以接听了
+     */
+    private PublishSubject<Boolean> connectStatusChange = PublishSubject.create();
+    /**
+     *   设备列表变化的监听
+     */
+    private PublishSubject<List<Device>> gwDeviceChange = PublishSubject.create();
+
 
     public static MemeManager getInstance() {
         if (instance == null) {
@@ -46,30 +56,35 @@ public class MemeManager {
         CMAPI.getInstance().subscribe(observer);
     }
 
-
     private EventObserver observer = new EventObserver() {
         @Override
         public void onNetworkChanged() {
             super.onNetworkChanged();
-            LogUtils.e(TAG, "onNetworkChanged   //网络发生变更");
+            LogUtils.e(TAG, "onNetworkChanged   //网络发生变更"+"  获取网络信息  " + CMAPI.getInstance().getBaseInfo().getVip());
         }
 
         @Override
         public void onDeviceChanged() {
             super.onDeviceChanged();
-            LogUtils.e(TAG, "onDeviceChanged   设备发生变更");
+            LogUtils.e(TAG, "onDeviceChanged   设备发生变更  " +"  获取网络信息  " + CMAPI.getInstance().getBaseInfo().getVip());
         }
 
         @Override
         public void onRealTimeInfoChanged(RealtimeInfo realtimeInfo) {
             super.onRealTimeInfoChanged(realtimeInfo);
-            LogUtils.e(TAG, "onRealTimeInfoChanged  实时信息变更");
+//            LogUtils.e(TAG, "onRealTimeInfoChanged  实时信息变更");
         }
 
         @Override
         public void onDeviceStatusChange(Device device) {
             super.onDeviceStatusChange(device);
-            LogUtils.e(TAG, "onDeviceStatusChange   设备状态变化，某个设备上线下线及 DLT隧道建立与销毁");
+            LogUtils.e(TAG, "onDeviceStatusChange   设备状态变化，某个设备上线下线及 DLT隧道建立与销毁  ");
+            List<Device> deviceList = CMAPI.getInstance().getDevices();
+            Log.e(TAG, "  设备状态变化     当前设备    设备类型  " + device.getDevClass() +"  设备状态  "+device.getStatus()+"  设备Ip "+ device.getVip());
+            for (Device device1: deviceList){
+                LogUtils.e(TAG, "  设备状态变化     设备类型  " + device1.getDevClass() +"  设备状态  "+device1.getStatus()+"  设备Ip "+ device1.getVip());
+            }
+            getGwDevices();
         }
 
         @Override
@@ -92,19 +107,7 @@ public class MemeManager {
 
         @Override
         public void onConnected() {
-            Log.e("denganzhi1", "咪咪网登陆成功.....");
-            //好友列表
-            //通过如下方式获取可用网络的集合
-            List<Network> networksList = new ArrayList<>();
-            networksList.addAll(CMAPI.getInstance().getNetworkList());
-            if (networksList.size() > 0) {
-
-
-            } else {
-                LinphoneHelper.hangUp();
-                CMAPI.getInstance().disconnect();
-                Log.e("denganzhi1", "MyApplication==>咪咪网获取设备列表失败");
-            }
+            Log.e(TAG, "咪咪网登陆成功.....   "+"  获取网络信息  " + CMAPI.getInstance().getBaseInfo().getVip());
         }
 
         @Override
@@ -120,25 +123,23 @@ public class MemeManager {
         @Override
         public void onEstablished() {
             Log.e(TAG, "(启动VPN通道完成-) onEstablished (-已连接)");
-            //            //连接成功时回调
-            BaseInfo baseInfo = CMAPI.getInstance().getBaseInfo();
-            if (baseInfo != null) {
-                String vip = baseInfo.getVip();
-                SPUtils.put("deviceIp", vip);
-            }
+            connectStatusChange.onNext(true);
+            getGwDevices();
         }
 
 
         @Override
         public void onDisconnected(int reason) {
             //连接断开时回调
-            Log.e(TAG, "onDisconnected (-未连接)");
+            Log.e(TAG, "onDisconnected (-断开连接)   "  + reason);
         }
     };
 
 
 
-    public void LoginMeme(String meAccount, String mePassword, Context context) {
+
+
+    public Observable<Boolean> LoginMeme(String meAccount, String mePassword, Context context) {
         currentAccount = meAccount;
         currentPassword = mePassword;
         LogUtils.e(TAG,"登录米米网   账号  " + currentAccount + "  密码  " + currentPassword);
@@ -146,12 +147,13 @@ public class MemeManager {
             @Override
             public void onError(int errorCode) {
                 LogUtils.e(TAG, "登录错误   " + errorCode);
+                connectStatusChange.onNext(false);
             }
         });
+        return connectStatusChange;
     }
 
     private void disconnectMeme(){
-
         CMAPI.getInstance().disconnect();
     }
 
@@ -176,15 +178,28 @@ public class MemeManager {
         return currentAccount;
     }
 
-    public void setCurrentAccount(String currentAccount) {
-        this.currentAccount = currentAccount;
-    }
 
     public String getCurrentPassword() {
         return currentPassword;
     }
 
-    public void setCurrentPassword(String currentPassword) {
-        this.currentPassword = currentPassword;
+
+    public Observable<List<Device>> listDevicesChange(){
+        return gwDeviceChange;
+    }
+
+    public List<Device> getGwDevices() {
+        List<Device> devices = new ArrayList<>();
+        List<Device> deviceList = CMAPI.getInstance().getDevices();
+        for (Device device:deviceList){
+            if (device.getDevClass() == 6756929){
+                devices.add(device);
+            }
+        }
+        if (devices.size()>0){
+            LogUtils.e(TAG,"网关设备在线   " +devices.size() );
+            gwDeviceChange.onNext(devices);
+        }
+        return devices;
     }
 }

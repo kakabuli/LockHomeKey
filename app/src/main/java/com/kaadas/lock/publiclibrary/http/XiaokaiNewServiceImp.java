@@ -53,6 +53,7 @@ import com.kaadas.lock.publiclibrary.http.result.UserProtocolResult;
 import com.kaadas.lock.publiclibrary.http.result.UserProtocolVersionResult;
 import com.kaadas.lock.publiclibrary.http.temp.postbean.DeleteDeviceNormalUserBean;
 import com.kaadas.lock.publiclibrary.http.temp.postbean.GetDeviceGeneralAdministratorBean;
+import com.kaadas.lock.publiclibrary.http.temp.postbean.OpenLockAuth;
 import com.kaadas.lock.publiclibrary.http.util.HttpUtils;
 import com.kaadas.lock.publiclibrary.http.util.RetrofitServiceManager;
 import com.kaadas.lock.publiclibrary.http.util.RxjavaHelper;
@@ -781,5 +782,13 @@ public class XiaokaiNewServiceImp {
                 .compose(RxjavaHelper.observeOnMainThread())
                 ;
 
+    }
+
+    public static Observable<BaseResult> openLockAuth(String devname, String is_admin, String open_type, String user_id){
+        OpenLockAuth openLockAuth = new OpenLockAuth(devname, is_admin, open_type, user_id);
+        return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
+                .openLockAuth(new HttpUtils<OpenLockAuth>().getBody(openLockAuth))
+                .compose(RxjavaHelper.observeOnMainThread())
+                ;
     }
 }

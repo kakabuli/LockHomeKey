@@ -401,6 +401,11 @@ public interface IXiaoKaiNewService {
     @POST(HttpUrlConstants.OTA_INFO_URL)
     Observable<OTAResult> getOtaInfo(@Body RequestBody info);
 
+    /**
+     * 开锁鉴权
+     */
+
+    Observable<BaseResult> openLockAuth(@Body RequestBody info);
 
 
 }

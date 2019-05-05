@@ -174,7 +174,7 @@ public class BindBlePresenter<T> extends BasePresenter<IBindBleView> {
                             mViewRef.get().onBindSuccess(bleService.getCurrentDevice().getName());
                         }
                         bleService.release();
-                        MyApplication.getInstance().setDeviceChange();
+                        MyApplication.getInstance().getAllDevicesByMqtt(true);
 
                         LogUtils.e("上传的密码1是   " + pwd1 + "   密码2是  " + pwd2);
                     }

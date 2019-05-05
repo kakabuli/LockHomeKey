@@ -339,7 +339,7 @@ public class BleService extends Service {
      */
     public Observable<BluetoothDevice> getDeviceByMac(String mac) {
         currentMac = mac;
-        handler.postDelayed(getRemoteDeviceRunnable, 5000);
+        handler.postDelayed(getRemoteDeviceRunnable, 6000);
         return scanBleDevice(true)
                 .filter(new Predicate<BluetoothDevice>() {
                     @Override
@@ -860,7 +860,7 @@ public class BleService extends Service {
     }
 
     public void setBleLockInfo(BleLockInfo currentBleDevice) {
-        if (bleLockInfo != null && !bleLockInfo.getServerLockInfo().getDevice_name().equals(currentBleDevice.getServerLockInfo().getDevice_name())) {
+        if (bleLockInfo != null && !bleLockInfo.getServerLockInfo().getLockName().equals(currentBleDevice.getServerLockInfo().getLockName())) {
             bleLockInfo.setAuth(false);
             bleLockInfo.setConnected(false);
         }
