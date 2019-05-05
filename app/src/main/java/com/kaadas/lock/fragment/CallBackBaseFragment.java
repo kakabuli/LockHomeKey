@@ -2,6 +2,7 @@ package com.kaadas.lock.fragment;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -20,6 +21,9 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.kaadas.lock.R;
 import com.kaadas.lock.adapter.TimeAdapter;
 import com.kaadas.lock.bean.MyDate;
+import com.kaadas.lock.mvp.mvpbase.BasePresenter;
+import com.kaadas.lock.mvp.mvpbase.IBaseView;
+import com.kaadas.lock.utils.LoadingDialog;
 import com.kaadas.lock.widget.GravityPopup;
 
 import java.text.SimpleDateFormat;
@@ -37,7 +41,8 @@ import butterknife.Unbinder;
  * Describe
  */
 
-public abstract class CallBackBaseFragment extends Fragment  implements View.OnClickListener{
+public abstract class CallBackBaseFragment<T extends IBaseView, V
+        extends BasePresenter<T>> extends Fragment  implements View.OnClickListener,IBaseView{
 
 
     Unbinder unbinder;
@@ -78,18 +83,51 @@ public abstract class CallBackBaseFragment extends Fragment  implements View.OnC
     int currentyear=-1;
     int currentMonth=-1;
 
+    protected V mPresenter;
+    private LoadingDialog loadingDialog;
+    private Handler bHandler = new Handler();
+
+    /**
+     * @param savedInstanceState
+     */
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mPresenter = createPresent();
+        mPresenter.attachView((T) this);
+    }
+    /**
+     * 子类实现具体的构建过程
+     *
+     * @return
+     */
+    protected abstract V createPresent();
+
+    @Override
+    public void showLoading(String Content) {
+        loadingDialog = LoadingDialog.getInstance(getContext());
+        if (!getActivity().isFinishing()) {
+            loadingDialog.show(Content);
+        }
+    }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view= initView(inflater,container);
         unbinder = ButterKnife.bind(this, view);
-        initDatePicker();
-        initOtherFunction();
+
         return view;
     }
 
-    public abstract View initView(LayoutInflater inflater,  ViewGroup container);
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        initDatePicker();
+        initOtherFunction();
+    }
+
+    public abstract View initView(LayoutInflater inflater, ViewGroup container);
 
     public abstract void initOtherFunction();
 
@@ -103,8 +141,8 @@ public abstract class CallBackBaseFragment extends Fragment  implements View.OnC
         month= todayc.get(Calendar.MONTH)+1;
         week=todayc.get(Calendar.DAY_OF_WEEK)-1;
         year=todayc.get(Calendar.YEAR);
-
-
+        year_tv.setText(year+"");
+        time_tv.setText(month+"");
         yearList.add(year+"");
         lastyear= year-1;
         yearList.add(lastyear+"");
@@ -211,6 +249,9 @@ public abstract class CallBackBaseFragment extends Fragment  implements View.OnC
                         myDateList.clear();
                         for (int i=0;i<current_month_date.size();i++){
                             myDateList.add(current_month_date.get(i));
+                        }
+                        for (int i=0;i<myDateList.size();i++){
+                            myDateList.get(i).setChecked(false);
                         }
                         timeAdapter.notifyDataSetChanged();
                         currentyear= year0;
@@ -353,6 +394,13 @@ public abstract class CallBackBaseFragment extends Fragment  implements View.OnC
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+        mPresenter.detachView();
+    }
+    @Override
+    public void hiddenLoading() {
+        if (loadingDialog != null) {
+            loadingDialog.dismiss();
+        }
     }
 
 }

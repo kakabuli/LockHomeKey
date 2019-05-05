@@ -12,6 +12,10 @@ import android.view.ViewGroup;
 import com.kaadas.lock.R;
 import com.kaadas.lock.adapter.PirHistoryAdapter;
 import com.kaadas.lock.adapter.RecordingAdapter;
+import com.kaadas.lock.mvp.presenter.RecordingPresenter;
+import com.kaadas.lock.mvp.presenter.SnapPresenter;
+import com.kaadas.lock.mvp.view.IRecordingView;
+import com.kaadas.lock.mvp.view.ISnapShotView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +23,7 @@ import java.util.List;
 import butterknife.BindView;
 
 
-public class RecordingFragment extends CallBackBaseFragment {
+public class RecordingFragment extends CallBackBaseFragment <IRecordingView, RecordingPresenter<IRecordingView>> implements IRecordingView {
 
 
     @BindView(R.id.recording_rv_ff)
@@ -31,6 +35,11 @@ public class RecordingFragment extends CallBackBaseFragment {
     }
 
     List<String> imageList=new ArrayList<>();
+
+    @Override
+    protected RecordingPresenter<IRecordingView> createPresent() {
+        return new RecordingPresenter();
+    }
 
     @Override
     public View initView(LayoutInflater inflater, ViewGroup container) {

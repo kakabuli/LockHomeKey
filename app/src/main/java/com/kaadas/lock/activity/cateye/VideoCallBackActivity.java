@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.kaadas.lock.R;
@@ -30,6 +31,8 @@ public class VideoCallBackActivity extends AppCompatActivity implements View.OnC
 
     @BindView(R.id.content)
     FrameLayout content;
+    @BindView(R.id.iv_back)
+    ImageView iv_back;
 
     private FragmentManager manager;
     private FragmentTransaction transaction;
@@ -44,6 +47,7 @@ public class VideoCallBackActivity extends AppCompatActivity implements View.OnC
         tvContent.setText(getString(R.string.video_callback_info));
         videoRecording.setOnClickListener(this);
         snapshotInformation.setOnClickListener(this);
+        iv_back.setOnClickListener(this);
         initFragment();
 
     }
