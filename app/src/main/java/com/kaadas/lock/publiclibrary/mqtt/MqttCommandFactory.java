@@ -51,7 +51,7 @@ public class MqttCommandFactory {
      */
     public static MqttMessage registerMemeAndBind(String uid,String Sn){
         int messageId = getMessageId();
-        BindGatewayBean bindGatewayBean = new BindGatewayBean(uid, MqttConstant.BIND_GATEWAY, Sn);
+        BindGatewayBean bindGatewayBean = new BindGatewayBean(uid, MqttConstant.REGISTER_MIMI_BIND, Sn);
         return getMessage(bindGatewayBean, messageId);
     }
 
