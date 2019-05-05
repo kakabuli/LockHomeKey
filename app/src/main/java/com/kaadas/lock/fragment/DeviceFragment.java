@@ -199,7 +199,7 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                 //网关无电量的设置
                 gatewayBean.setPower(0);
                 String status= (String) SPUtils.getProtect(serverGatewayInfo.getDeviceSN(),"");
-                LogUtils.e(status+"isOnLine"+serverGatewayInfo.getDeviceSN());
+                LogUtils.e(status+"======"+serverGatewayInfo.getDeviceSN());
                 if (status.equals("online")){
                     gatewayBean.setEvent_str("online");
                 }else if (status.equals("offline")){

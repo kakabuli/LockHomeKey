@@ -16,9 +16,9 @@ public class MqttConstant {
     public final static int  DC_TEST = 6750465;
 
 
-    public static final String MQTT_BASE_URL = "tcp://192.168.3.180:1883";//测试服务器
-//    public static String MQTT_BASE_URL = "tcp://mqtt-kaadas.juziwulian.com:1883";//正式服务器
-
+   public static final String MQTT_BASE_URL = "tcp://192.168.3.180:1883";//本地服务器
+   //public static String MQTT_BASE_URL = "tcp://mqtt-kaadas.juziwulian.com:1883";//正式服务器
+    //public static final String MQTT_BASE_URL = "tcp:// 121.201.57.214:1883";//测试服务器
 
 
     public static String LINPHONE_URL = "sip-kaadas.juziwulian.com:5061";//正式sip
@@ -120,4 +120,6 @@ public class MqttConstant {
     //获取设备信息
     public static final String GET_LOCK_INFO="BasicInfo";
 
+    //删除锁
+    public static final String DELETE_GATEWAY_LOCK="delDevice";
 }

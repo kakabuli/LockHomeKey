@@ -68,7 +68,7 @@ public class DeviceDetailAdapter extends BaseQuickAdapter<DeviceDetailBean, Base
     }
 
     public void isWifiDevice(boolean flag,BaseViewHolder helper, DeviceDetailBean item,BatteryView batteryView){
-
+            LogUtils.e(item.getEvent_str()+"==="+item.getDeviceName());
             if ("online".equals(item.getEvent_str())) {
                 //在线
                 if(flag){
