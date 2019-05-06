@@ -11,6 +11,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.kaadas.lock.R;
+import com.kaadas.lock.activity.cateye.CallComingActivity;
 import com.kaadas.lock.activity.cateye.VideoCallBackActivity;
 import com.kaadas.lock.activity.cateye.VideoVActivity;
 import com.kaadas.lock.utils.DateUtils;
@@ -86,7 +87,7 @@ public class CateyeFunctionActivity extends AppCompatActivity implements View.On
                 startActivity(intent);
                 break;
             case  R.id.rl_icon:
-                intent = new Intent(this, VideoVActivity.class);
+                intent = new Intent(this, CallComingActivity.class);
                 startActivity(intent);
                 break;
         }

@@ -56,7 +56,7 @@
 
 
     <Button
-        android:id="@+id/btn_login"
+        android:id="@+id/btn_play_video"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_gravity="center_horizontal"
