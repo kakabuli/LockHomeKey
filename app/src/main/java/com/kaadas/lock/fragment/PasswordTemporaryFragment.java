@@ -67,6 +67,7 @@ public class PasswordTemporaryFragment extends BaseBleFragment<IAddTempView, Add
         }
         ButterKnife.bind(this, mView);
         bleLockInfo = MyApplication.getInstance().getBleService().getBleLockInfo();
+        mPresenter.isAuth(bleLockInfo, false);  //自动连接  但是不提示用户
         initRecycleview();
         btnRandomGeneration.setOnClickListener(this);
         btnConfirmGeneration.setOnClickListener(this);
@@ -209,6 +210,7 @@ public class PasswordTemporaryFragment extends BaseBleFragment<IAddTempView, Add
         intent.putExtra(KeyConstants.TO_DETAIL_NICKNAME, nickName);
         intent.putExtra(KeyConstants.TIME_CE_LUE, KeyConstants.TEMP);
         startActivity(intent);
+
     }
 
     @Override
