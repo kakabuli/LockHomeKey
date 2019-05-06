@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.adapter.ShiXiaoNameAdapter;
 import com.kaadas.lock.bean.ShiXiaoNameBean;
@@ -65,7 +66,7 @@ public class AddDoorCardSuccessActivity extends BaseActivity<IAddFingerSuccessVi
         btnSave.setOnClickListener(this);
         tvContent.setText(getString(R.string.add_door_card));
         initRecycleview();
-
+        bleLockInfo = MyApplication.getInstance().getBleService().getBleLockInfo();
         userNum = getIntent().getIntExtra(KeyConstants.USER_NUM, 0);
         tvSuccessPageNumber.setText("" + userNum);
     }

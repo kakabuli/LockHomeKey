@@ -77,6 +77,7 @@ public class BluetoothSharedDeviceManagementActivity extends BaseActivity<IBluet
         ivBack.setOnClickListener(this);
         llAddUser.setOnClickListener(this);
         tvContent.setText(getString(R.string.user_manage));
+        bleLockInfo = MyApplication.getInstance().getBleService().getBleLockInfo();
         initRefresh();
     }
 

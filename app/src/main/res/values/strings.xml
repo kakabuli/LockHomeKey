@@ -763,4 +763,9 @@
     <string name="select_no_lock">暂无联动门锁</string>
     <string name="video_connecting">正在连接···</string>
     <string name="name_not_empty">输入值不能为空</string>
+    <string name="select_take_effect_time">请选择生效时间</string>
+    <string name="end_time_must_bigger_end_time">结束时间必须大于开始时间</string>
+    <string name="please_allow_open_ble">请允许打开蓝牙</string>
+    <string name="search_device_fail">查找设备失败</string>
+    <string name="connect_failed_please_hand_connect">连接失败，请手动添加！</string>
 </resources>
