@@ -13,10 +13,17 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.support.annotation.NonNull;
+
+import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.adapter.ForecastAdapter;
 import com.kaadas.lock.bean.Forecast;
+import com.kaadas.lock.bean.HomeShowBean;
 import com.kaadas.lock.bean.Weather;
+import com.kaadas.lock.publiclibrary.bean.CateEyeInfo;
+import com.kaadas.lock.publiclibrary.bean.GwLockInfo;
+import com.kaadas.lock.utils.KeyConstants;
+import com.kaadas.lock.utils.LogUtils;
 import com.yarolegovich.discretescrollview.DiscreteScrollView;
 import com.yarolegovich.discretescrollview.transform.ScaleTransformer;
 
@@ -30,14 +37,13 @@ import butterknife.ButterKnife;
 public class VideoVActivity extends AppCompatActivity implements
         DiscreteScrollView.ScrollStateChangeListener<ForecastAdapter.ViewHolder>,
         DiscreteScrollView.OnItemChangedListener<ForecastAdapter.ViewHolder>,
-        View.OnClickListener{
+        View.OnClickListener {
 
-    private List<Forecast> forecasts=new ArrayList<>();
 
     @BindView(R.id.forecast_city_picker)
     DiscreteScrollView cityPicker;
     @BindView(R.id.video_h_no_lock)
-    LinearLayout  video_h_no_lock;
+    LinearLayout video_h_no_lock;
     @BindView(R.id.video_start_play)
     ImageView video_start_play;
     @BindView(R.id.video_connecting_tv)
@@ -57,15 +63,14 @@ public class VideoVActivity extends AppCompatActivity implements
     @BindView(R.id.video_v_surfaceview)
     View video_v_surfaceview;
 
-    ForecastAdapter forecastAdapter=null;
-    int selectPostion=-1;
+    ForecastAdapter forecastAdapter = null;
+    private int selectPostion = -1;
 
-    Handler handler=new Handler(){
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-        }
-    };
+    Handler handler = new Handler();
+    private CateEyeInfo cateEyeInfo;
+    private boolean isCallIn;
+    private List<GwLockInfo> gwLockInfos;
+    private static final int REQUEST_CODE_CALL_COMING = 101;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,25 +78,67 @@ public class VideoVActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_video_v);
         ButterKnife.bind(this);
 
+        initData();
+        initView();
+
+    }
+
+    private void initData() {
+        cateEyeInfo = (CateEyeInfo) getIntent().getSerializableExtra(KeyConstants.CATE_INFO);
+        isCallIn = (boolean) getIntent().getSerializableExtra(KeyConstants.IS_CALL_IN);
+
+        String gwID = cateEyeInfo.getGwID();
+        List<HomeShowBean> homeShowDevices = MyApplication.getInstance().getHomeShowDevices();
+        gwLockInfos = new ArrayList<>();
+        //获取跟猫眼通一网关下的锁
+        for (HomeShowBean homeShowBean : homeShowDevices) {
+            if (homeShowBean.getDeviceType() == HomeShowBean.TYPE_GATEWAY_LOCK) {
+                GwLockInfo gwLockInfo = (GwLockInfo) homeShowBean.getObject();
+                if (gwLockInfo.getGwID().equals(gwID)) {
+                    gwLockInfos.add(gwLockInfo);
+                }
+            }
+        }
+        if (isCallIn) {
+            Intent intent = new Intent(this,CallComingActivity.class);
+            startActivityForResult(intent,REQUEST_CODE_CALL_COMING);
+        } else { //此处呼叫出去的逻辑
+            callCatEye();
+        }
+    }
+
+
+    //呼叫猫眼的逻辑
+    private void callCatEye(){
+
+
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK && requestCode == REQUEST_CODE_CALL_COMING){ //来电界面回调
+          boolean isAcceptCall =   data.getBooleanExtra(KeyConstants.IS_ACCEPT_CALL, false);
+          if (isAcceptCall){  //接听
+              LogUtils.e("接听了电话");
+          }else { //挂断
+              LogUtils.e("挂断了电话");
+              finish();
+          }
+        }
+    }
+
+    private void initView() {
         video_start_play.setOnClickListener(this);
         video_v_go.setOnClickListener(this);
         iv_back.setOnClickListener(this);
-        forecasts = Arrays.asList(
-                new Forecast("卧室门锁", R.mipmap.lock_on_select, "16", Weather.PARTLY_CLOUDY),
-                new Forecast("卧室门锁", R.mipmap.lock_on_select, "14", Weather.CLEAR),
-                new Forecast("卧室门锁", R.mipmap.lock_on_select, "9", Weather.MOSTLY_CLOUDY),
-                new Forecast("卧室门锁", R.mipmap.lock_on_select, "18", Weather.PARTLY_CLOUDY),
-                new Forecast("卧室门锁", R.mipmap.lock_on_select, "6", Weather.PERIODIC_CLOUDS),
-                new Forecast("卧室门锁", R.mipmap.lock_on_select, "20", Weather.CLEAR));
-
-       // cityPicker = (DiscreteScrollView) findViewById(R.id.forecast_city_picker);
         cityPicker.setSlideOnFling(true);
-        forecastAdapter=new ForecastAdapter(forecasts,this);
+        forecastAdapter = new ForecastAdapter(gwLockInfos, this);
         cityPicker.setAdapter(forecastAdapter);
         cityPicker.addOnItemChangedListener(this);
         cityPicker.addScrollStateChangeListener(this);
         cityPicker.scrollToPosition(1);
-    //    cityPicker.setItemTransitionTimeMillis(DiscreteScrollViewOptions.getTransitionTime());
         cityPicker.setItemTransformer(new ScaleTransformer.Builder()
                 .setMinScale(0.8f)
                 .build());
@@ -102,13 +149,13 @@ public class VideoVActivity extends AppCompatActivity implements
         forecastAdapter.setOnItemClickItem(new ForecastAdapter.OnItemClickItem() {
             @Override
             public void onItemClickItemMethod(int position) {
-                if(selectPostion!=-1 && position== selectPostion){
-                    Toast.makeText(VideoVActivity.this,"点击了:"+position,Toast.LENGTH_SHORT).show();
+                if (selectPostion != -1 && position == selectPostion) {
+                    Toast.makeText(VideoVActivity.this, "点击了:" + position, Toast.LENGTH_SHORT).show();
                 }
             }
         });
 
-        if(forecasts.size()==0){
+        if (gwLockInfos.size() == 0) {
             cityPicker.setVisibility(View.GONE);
             video_h_no_lock.setVisibility(View.VISIBLE);
         }
@@ -117,17 +164,18 @@ public class VideoVActivity extends AppCompatActivity implements
     @Override
     public void onCurrentItemChanged(@Nullable ForecastAdapter.ViewHolder holder, int position) {
         //viewHolder will never be null, because we never remove items from adapter's list
-        Log.e(Tag,"onCurrentItemChanged=======>:"+position);
-        selectPostion=position;
+        Log.e(Tag, "onCurrentItemChanged=======>:" + position);
+        selectPostion = position;
         if (holder != null) {
             holder.showText();
         }
     }
 
-    String Tag="denganzhi1";
+    String Tag = "denganzhi1";
+
     @Override
     public void onScrollStart(@NonNull ForecastAdapter.ViewHolder holder, int position) {
-        Log.e(Tag,"onScrollStart=======>");
+        Log.e(Tag, "onScrollStart=======>");
         holder.hideText();
     }
 
@@ -137,12 +185,6 @@ public class VideoVActivity extends AppCompatActivity implements
             int currentIndex, int newIndex,
             @Nullable ForecastAdapter.ViewHolder currentHolder,
             @Nullable ForecastAdapter.ViewHolder newHolder) {
-//        Log.e(Tag,"onScroll=======>");
-//        Forecast current = forecasts.get(currentIndex);
-//        if (newIndex >= 0 && newIndex < cityPicker.getAdapter().getItemCount()) {
-//            Forecast next = forecasts.get(newIndex);
-//            forecastView.onScroll(1f - Math.abs(position), current, next);
-//        }
     }
 
     @Override
@@ -160,22 +202,21 @@ public class VideoVActivity extends AppCompatActivity implements
                         video_play_time.setVisibility(View.VISIBLE);
                         video_h_footer.setVisibility(View.VISIBLE);
                         video_v_surfaceview.setVisibility(View.VISIBLE);
-
                     }
-                },3000);
+                }, 3000);
                 break;
             case R.id.video_v_go:
-                Intent intent=new Intent(VideoVActivity.this,VideoHActivity.class);
+                Intent intent = new Intent(VideoVActivity.this, VideoHActivity.class);
                 startActivity(intent);
                 break;
             case R.id.iv_back:
-               finish();
+                finish();
                 break;
         }
     }
 
     @Override
     public void onScrollEnd(@NonNull ForecastAdapter.ViewHolder holder, int position) {
-        Log.e(Tag,"onScrollEnd=======>");
+        Log.e(Tag, "onScrollEnd=======>");
     }
 }

@@ -265,6 +265,21 @@ public class KeyConstants {
      * 传递当前位置
      */
     public static final String FRAGMENT_POSITION = "fragmentPosition";
+    /**
+     *  传递猫眼数据
+     */
+    public static final String CATE_INFO = "cateInfo";
+
+
+    /**
+     *  是否是呼叫进来
+     */
+    public static final String IS_CALL_IN = "isCallIn";
+
+    /**
+     *  是否是呼叫进来
+     */
+    public static final String IS_ACCEPT_CALL = "isAcceptCall";
 
     /**
      * 升级时，保存的设备蓝牙版本号的Key

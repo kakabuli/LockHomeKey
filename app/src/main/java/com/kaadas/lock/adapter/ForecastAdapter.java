@@ -16,6 +16,7 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.kaadas.lock.R;
 import com.kaadas.lock.bean.Forecast;
+import com.kaadas.lock.publiclibrary.bean.GwLockInfo;
 
 
 import java.util.List;
@@ -26,14 +27,13 @@ import java.util.List;
 
 public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.ViewHolder> {
 
-    private RecyclerView parentRecycler;
-    private List<Forecast> data;
+    private List<GwLockInfo>  data;
     Context context;
 
 
     // Item 点击事件
-   public interface OnItemClickItem{
-         void onItemClickItemMethod(int position);
+    public interface OnItemClickItem {
+        void onItemClickItemMethod(int position);
     }
 
     public OnItemClickItem onItemClickItem;
@@ -42,15 +42,14 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.ViewHo
         this.onItemClickItem = onItemClickItem;
     }
 
-    public ForecastAdapter(List<Forecast> data, Context context1) {
+    public ForecastAdapter(List<GwLockInfo>  data, Context context1) {
         this.data = data;
-        this.context=context1;
+        this.context = context1;
     }
 
     @Override
     public void onAttachedToRecyclerView(RecyclerView recyclerView) {
         super.onAttachedToRecyclerView(recyclerView);
-        parentRecycler = recyclerView;
     }
 
     @Override
@@ -62,21 +61,19 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
-        int iconTint = ContextCompat.getColor(holder.itemView.getContext(), R.color.grayIconTint);
-        Forecast forecast = data.get(position);
+        GwLockInfo gwLockInfo = data.get(position);
         Glide.with(holder.itemView.getContext())
-                .load(forecast.getCityIcon())
-            //    .listener(new TintOnLoad(holder.imageView, iconTint))
+                .load(R.mipmap.lock_on_select)
                 .into(holder.imageView);
-        holder.textView.setText(forecast.getCityName());
+        holder.textView.setText(gwLockInfo.getServerInfo().getNickName());
         holder.textView.setTextColor(Color.parseColor("#70333333"));
 
         holder.itemView.findViewById(R.id.container).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                      if(onItemClickItem!=null){
-                          onItemClickItem.onItemClickItemMethod(position);
-                      }
+                if (onItemClickItem != null) {
+                    onItemClickItem.onItemClickItemMethod(position);
+                }
             }
         });
     }
@@ -86,7 +83,7 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.ViewHo
         return data.size();
     }
 
-   public class ViewHolder extends RecyclerView.ViewHolder /* implements View.OnClickListener */ {
+    public class ViewHolder extends RecyclerView.ViewHolder {
 
         private ImageView imageView;
         private TextView textView;
@@ -96,26 +93,9 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.ViewHo
             imageView = (ImageView) itemView.findViewById(R.id.city_image);
             textView = (TextView) itemView.findViewById(R.id.city_name);
 
-          //  itemView.findViewById(R.id.container).setOnClickListener(this);
         }
-        public void showText() {
-//            int parentHeight = ((View) imageView.getParent()).getHeight();
-//            float scale = (parentHeight - textView.getHeight()) / (float) imageView.getHeight();
-//            Log.e("denganzhi1","scale...:"+scale+"  parentHeight:"+parentHeight+"  imageView.getHeight:"+imageView.getHeight());
-//            imageView.setPivotX(imageView.getWidth() * 0.5f);
-//            imageView.setPivotY(0);
-//            imageView.animate().scaleX(scale)
-//                    .withEndAction(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            textView.setVisibility(View.VISIBLE);
-//                            imageView.setColorFilter(Color.BLACK);
-//                        }
-//                    })
-//                    .scaleY(scale).setDuration(200)
-//                    .start();
 
-           //   imageView.setBackgroundResource(R.mipmap.lock_select);
+        public void showText() {
             textView.setTextColor(Color.parseColor("#333333"));
             Glide.with(context)
                     .load(R.mipmap.lock_select)
@@ -123,44 +103,14 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.ViewHo
         }
 
         public void hideText() {
-           // imageView.setColorFilter(ContextCompat.getColor(imageView.getContext(), R.color.grayIconTint));
             Glide.with(context)
                     .load(R.mipmap.lock_on_select)
                     .into(imageView);
-          //  textView.setVisibility(View.INVISIBLE);
             imageView.animate().scaleX(1f).scaleY(1f)
                     .setDuration(200)
                     .start();
 
-              textView.setTextColor(Color.parseColor("#70333333"));
-        }
-
-//        @Override
-//        public void onClick(View v) {
-//            Log.e("denganzhi2","getAdapterPosition:"+getAdapterPosition()+"currentShowPosition："+currentShowPosition);
-//            parentRecycler.smoothScrollToPosition(getAdapterPosition());
-//        }
-    }
-
-    private static class TintOnLoad implements RequestListener<Integer, GlideDrawable> {
-
-        private ImageView imageView;
-        private int tintColor;
-
-        public TintOnLoad(ImageView view, int tintColor) {
-            this.imageView = view;
-            this.tintColor = tintColor;
-        }
-
-        @Override
-        public boolean onException(Exception e, Integer model, Target<GlideDrawable> target, boolean isFirstResource) {
-            return false;
-        }
-
-        @Override
-        public boolean onResourceReady(GlideDrawable resource, Integer model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
-            imageView.setColorFilter(tintColor);
-            return false;
+            textView.setTextColor(Color.parseColor("#70333333"));
         }
     }
 }

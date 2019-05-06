@@ -89,6 +89,7 @@
         android:layout_marginLeft="60dp">
 
         <ImageView
+            android:id="@+id/iv_accept_call"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@mipmap/call_coming_answer"

@@ -11,7 +11,7 @@ public class DeviceDetailBean implements Serializable {
     //设备名称
     private String deviceName;
 
-    //0代表猫眼，1代表网关锁，2代表网关，3代表网关
+    //0代表猫眼，1代表网关锁，2代表网关，3代表蓝牙
     private int type;
 
 
