@@ -107,7 +107,7 @@
                 android:layout_height="80dp"
                 android:background="#232323"
                 android:orientation="horizontal"
-                android:visibility="visible">
+                android:visibility="gone">
 
 
                 <LinearLayout
