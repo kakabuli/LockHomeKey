@@ -117,7 +117,7 @@ public class BluetoothLockFunctionActivity extends BaseBleActivity<IDeviceDetail
         ButterKnife.bind(this);
         bleLockInfo = mPresenter.getBleLockInfo();
         ivBack.setOnClickListener(this);
-        tvType.setText(getString(R.string.bluetooth_type) + " ");
+        tvType.setText(getString(R.string.bluetooth_type) + bleLockInfo.getServerLockInfo().getModel());
         initData();
         initClick();
         showData();
@@ -275,7 +275,19 @@ public class BluetoothLockFunctionActivity extends BaseBleActivity<IDeviceDetail
                 break;
         }
     }
-
+    @Override
+    public void onSearchDeviceFailed(Throwable throwable) {
+        lockStatus=KeyConstants.DEVICE_OFFLINE;
+        changLockStatus();
+    }
+    @Override
+    public void authResult(boolean isSuccess) {
+        if (isSuccess) {
+            lockStatus=KeyConstants.OPEN_LOCK;
+            changLockStatus();
+        } else {
+        }
+    }
     private void dealWithPower(int power) {
         //电量：80%
         if (power > 100) {
