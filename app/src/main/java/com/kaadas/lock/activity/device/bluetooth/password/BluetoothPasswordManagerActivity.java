@@ -21,6 +21,8 @@ import com.kaadas.lock.mvp.view.IPasswordManagerView;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.publiclibrary.bean.ForeverPassword;
 import com.kaadas.lock.publiclibrary.http.postbean.AddPasswordBean;
+import com.kaadas.lock.publiclibrary.http.result.BaseResult;
+import com.kaadas.lock.publiclibrary.http.result.GetPasswordResult;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.ToastUtil;
@@ -210,5 +212,49 @@ public class BluetoothPasswordManagerActivity extends BaseBleActivity<IPasswordM
     public void onServerDataUpdate() {
         LogUtils.e("密码管理   服务器数据更新   ");
         mPresenter.getAllPassword(bleLockInfo, false);
+    }
+    @Override
+    public void onGetPasswordFailedServer(BaseResult result) {
+//        isNotPassword = true;
+//        passwordPageChange();
+        ToastUtil.getInstance().showShort(R.string.get_password_failed);
+        refreshLayout.finishRefresh();
+    }
+    @Override
+    public void onGetPasswordSuccess(GetPasswordResult result) {
+        refreshLayout.finishRefresh();
+        if (isSync) {
+            return;
+        }
+        if (result == null) {
+            isNotPassword = true;
+            passwordPageChange();
+            return;
+        }
+
+        if (result.getData().getPwdList() == null) {
+            isNotPassword = true;
+            passwordPageChange();
+            return;
+        }
+        list = result.getData().getPwdList();
+        LogUtils.e("获取到的结果，    " + result.getData().getPwdList().toString());
+        initRecycleview();
+        if (result.getData().getPwdList().size() > 0) {
+            isNotPassword = false;
+            passwordPageChange();
+        } else {
+            isNotPassword = true;
+            passwordPageChange();
+        }
+
+    }
+    @Override
+    public void onGetPasswordFailed(Throwable throwable) {
+        refreshLayout.finishRefresh();
+        if (isSync) {
+            return;
+        }
+        ToastUtil.getInstance().showShort(R.string.get_password_failed);
     }
 }

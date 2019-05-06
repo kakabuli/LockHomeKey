@@ -789,4 +789,6 @@
     <string name="password_valid_shi_xiao">密码有效时效</string>
     <string name="week_hint">密码将于%1$s %2$s至 %3$s重复生效</string>
     <string name="password_once_valid">该密码一次性有效</string>
+    <string name="get_finger_failed">获取指纹列表失败</string>
+    <string name="get_card_failed">获取卡片列表失败</string>
 </resources>
