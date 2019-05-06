@@ -5,6 +5,7 @@ import android.text.TextUtils;
 
 import com.google.gson.Gson;
 import com.kaadas.lock.MyApplication;
+import com.kaadas.lock.bean.HomeShowBean;
 import com.kaadas.lock.mvp.mvpbase.BlePresenter;
 import com.kaadas.lock.mvp.view.IMainActivityView;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
@@ -122,11 +123,12 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
     }
 
     public String getNickNameByDeviceName(String name) {
-        List<BleLockInfo> devices = MyApplication.getInstance().getDevices();
-        if (devices != null && devices.size() > 0) {
-            for (BleLockInfo lockInfo : devices) {
-                if (lockInfo.getServerLockInfo().getLockName().equals(name)) {
-                    return lockInfo.getServerLockInfo().getLockNickName();
+        List<HomeShowBean> homeShowDevices = MyApplication.getInstance().getHomeShowDevices();
+        for (HomeShowBean homeShowBean:homeShowDevices){
+            if (homeShowBean.getDeviceType() == HomeShowBean.TYPE_BLE_LOCK){
+                BleLockInfo bleLockInfo = (BleLockInfo) homeShowBean.getObject();
+                if (bleLockInfo.getServerLockInfo().getLockName().equals(name)) {
+                    return bleLockInfo.getServerLockInfo().getLockNickName();
                 }
             }
         }

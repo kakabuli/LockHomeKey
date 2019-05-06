@@ -12,6 +12,7 @@ import android.text.TextUtils;
 
 import com.google.gson.Gson;
 import com.kaadas.lock.activity.login.LoginActivity;
+import com.kaadas.lock.bean.HomeShowBean;
 import com.kaadas.lock.publiclibrary.linphone.MemeManager;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.publiclibrary.ble.BleService;
@@ -78,6 +79,7 @@ public class MyApplication extends Application {
     private Disposable allBindDeviceDisposable;
     private AllBindDevices allBindDevices;
     private String TAG = "凯迪仕";
+    private List<HomeShowBean> homeShowDevices = new ArrayList<>();
 
     @Override
     public void onCreate() {
@@ -484,9 +486,11 @@ public class MyApplication extends Application {
                         String payload = mqttData.getPayload();
                         allBindDevices = new Gson().fromJson(payload, AllBindDevices.class);
                         if (allBindDevices != null) {
+
+                            homeShowDevices = allBindDevices.getHomeShow(false);
+                            LogUtils.e("获取到的首页设备个数是   "  +homeShowDevices.size() );
                             getDevicesFromServer.onNext(allBindDevices);
                         }
-
                     }
                 }, new Consumer<Throwable>() {
                     @Override
@@ -496,9 +500,10 @@ public class MyApplication extends Application {
                 });
     }
 
-    public void getPower() {
-
+    public List<HomeShowBean> getHomeShowDevices() {
+        return homeShowDevices;
     }
+
 
     /**
      * 获取缓存的设备
