@@ -780,6 +780,9 @@
     <string name="please_allow_open_ble">请允许打开蓝牙</string>
     <string name="search_device_fail">查找设备失败</string>
     <string name="connect_failed_please_hand_connect">连接失败，请手动添加！</string>
+    <string name="call_coming_connecting">等待接听···</string>
+    <string name="call_coming_refuse">拒绝</string>
+    <string name="call_coming_answer">接听</string>
     <string name="lock_power">%1$s</string>
     <string name="password_yong_jiu_valid">密码永久有效</string>
     <string name="password_one_day_valid">密码24小时有效</string>

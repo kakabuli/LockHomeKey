@@ -115,7 +115,7 @@ public class SnapshotFragment1 extends CallBackBaseFragment<ISnapShotView, SnapP
         }
 
 
-        history_rv_ff.setSwipeItemClickListener(mItemClickListener); // RecyclerView Item点击监听。
+     //   history_rv_ff.setSwipeItemClickListener(mItemClickListener); // RecyclerView Item点击监听。
         // 侧滑
         history_rv_ff.setSwipeMenuCreator(swipeMenuCreator);
         history_rv_ff.setSwipeMenuItemClickListener(mMenuItemClickListener);
@@ -234,12 +234,12 @@ public class SnapshotFragment1 extends CallBackBaseFragment<ISnapShotView, SnapP
     /**
      * Item点击监听。
      */
-    private SwipeItemClickListener mItemClickListener = new SwipeItemClickListener() {
-        @Override
-        public void onItemClick(View itemView, int position) {
-            Toast.makeText(getActivity(), "第SwipeItemClickListener：" + position + "个", Toast.LENGTH_SHORT).show();
-        }
-    };
+//    private SwipeItemClickListener mItemClickListener = new SwipeItemClickListener() {
+//        @Override
+//        public void onItemClick(View itemView, int position) {
+//            Toast.makeText(getActivity(), "第SwipeItemClickListener：" + position + "个", Toast.LENGTH_SHORT).show();
+//        }
+//    };
 
 
 
