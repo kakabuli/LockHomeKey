@@ -33,6 +33,7 @@ import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.publiclibrary.http.postbean.AddPasswordBean;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.utils.AlertDialogUtil;
+import com.kaadas.lock.utils.DateFormatUtils;
 import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
@@ -87,6 +88,7 @@ public class PasswordTimeFragment extends BaseBleFragment<IAddTimePasswprdView, 
         }
         ButterKnife.bind(this, mView);
         bleLockInfo = ((BluetoothUserPasswordAddActivity) getActivity()).getLockInfo();
+        mPresenter.isAuth(bleLockInfo, false);
         initRecycleview();
         btnRandomGeneration.setOnClickListener(this);
         btnConfirmGeneration.setOnClickListener(this);
@@ -213,7 +215,8 @@ public class PasswordTimeFragment extends BaseBleFragment<IAddTimePasswprdView, 
                 break;
         }
     }
-
+    String startcurrentTime = DateFormatUtils.long2Str(System.currentTimeMillis(), true);
+    String endcurrentTime = DateFormatUtils.long2Str(System.currentTimeMillis(), true);
     @Override
     public void onCheckedChanged(RadioGroup group, int checkedId) {
         switch (checkedId) {

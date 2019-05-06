@@ -783,4 +783,10 @@
     <string name="call_coming_connecting">等待接听···</string>
     <string name="call_coming_refuse">拒绝</string>
     <string name="call_coming_answer">接听</string>
+    <string name="lock_power">%1$s</string>
+    <string name="password_yong_jiu_valid">密码永久有效</string>
+    <string name="password_one_day_valid">密码24小时有效</string>
+    <string name="password_valid_shi_xiao">密码有效时效</string>
+    <string name="week_hint">密码将于%1$s %2$s至 %3$s重复生效</string>
+    <string name="password_once_valid">该密码一次性有效</string>
 </resources>

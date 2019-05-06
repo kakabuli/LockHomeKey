@@ -53,19 +53,55 @@ public class BluetoothPasswordManagerDetailActivity extends BaseBleActivity<IPas
     TextView tvTime;
     private BleLockInfo bleLockInfo;
     private AddPasswordBean.Password password;
+    private long createTime;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bluetooth_password_manager_detail);
         ButterKnife.bind(this);
+        bleLockInfo = MyApplication.getInstance().getBleService().getBleLockInfo();
         ivBack.setOnClickListener(this);
         tvContent.setText(getString(R.string.user_password));
         ivEditor.setOnClickListener(this);
         btnDelete.setOnClickListener(this);
         password = (AddPasswordBean.Password) getIntent().getSerializableExtra(KeyConstants.TO_PWD_DETAIL);
-        bleLockInfo = MyApplication.getInstance().getBleService().getBleLockInfo();
+        createTime = getIntent().getLongExtra(KeyConstants.CREATE_TIME, 0);
+        if (createTime == 0) {
+            createTime = System.currentTimeMillis()/1000;
+        }
+        mPresenter.isAuth(bleLockInfo, false);
+//        initData();
     }
-
+  /*  private void initData() {
+        String weeks = "";
+        if (password.getType() == 1) { //永久密码
+            tvPwdEnable.setText(getString(R.string.password_yong_jiu_valid));
+        } else {
+            tvPwdEnable.setVisibility(View.VISIBLE);
+            // 2时间段 3周期 4 24小时
+            if (password.getType() == 2 ) {  //时效密码
+//                tvPwdEnable.setText(DateUtils.getStrFromMillisecond2(password.getStartTime()) + "-" + DateUtils.getStrFromMillisecond2(password.getEndTime()));
+//                密码有效时效  2018/12/12  10：22~2018/12/24 10:22
+                String startTime = DateUtils.formatDetailTime(password.getStartTime());
+                String endTime = DateUtils.formatDetailTime(password.getEndTime());
+                String content=getString(R.string.password_valid_shi_xiao)+"  "+startTime+"~"+endTime;
+                tvPwdEnable.setText(content);
+            }else if (password.getType() == 4){ //24小时
+                tvPwdEnable.setText(getString(R.string.password_one_day_valid));
+            } else if (password.getType() == 3) {  //周期密码
+                for (int i = 0; i < password.getItems().size(); i++) {
+                    if ("1".equals(password.getItems().get(i))) {
+                        weeks += " " + weekdays[i];
+                    }
+                }
+                String strHint = String.format(getString(R.string.week_hint), weeks,
+                        DateUtils.long2HourMin(password.getStartTime()), DateUtils.long2HourMin(password.getEndTime()));
+                tvPwdEnable.setText(strHint);
+            }
+        }
+        tvCreateTime.setText(DateUtils.secondToDate(createTime));
+        tvName.setText(password.getNickName());
+    }*/
     @Override
     protected PasswordDetailPresenter<IPasswordDetailView> createPresent() {
         return new PasswordDetailPresenter<>();

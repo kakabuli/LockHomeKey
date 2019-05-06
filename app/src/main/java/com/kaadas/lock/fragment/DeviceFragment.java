@@ -294,12 +294,21 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                 break;
             case 3:
                 //蓝牙
-                if (bluetoothAuthorization) {
-                    intent = new Intent(getActivity(), BluetoothLockAuthorizationActivity.class);
+                BleLockInfo bleLockInfo = (BleLockInfo) deviceDetailBean.getShowCurentBean();
+                mPresenter.setBleLockInfo(bleLockInfo);
+                if (bleLockInfo.getServerLockInfo().getIs_admin() != null && bleLockInfo.getServerLockInfo().getIs_admin().equals("1")) {
+                    Intent detailIntent = new Intent(getActivity(), BluetoothLockFunctionActivity.class);
+                    String model = bleLockInfo.getServerLockInfo().getModel();
+                    detailIntent.putExtra(KeyConstants.DEVICE_TYPE, model);
+                    detailIntent.putExtra(KeyConstants.BLE_DEVICE_INFO, bleLockInfo);
+                    startActivity(detailIntent);
                 } else {
-                    intent = new Intent(getActivity(), BluetoothLockFunctionActivity.class);
+                    Intent impowerIntent = new Intent(getActivity(), BluetoothLockAuthorizationActivity.class);
+                    String model = bleLockInfo.getServerLockInfo().getModel();
+                    impowerIntent.putExtra(KeyConstants.DEVICE_TYPE, model);
+                    impowerIntent.putExtra(KeyConstants.BLE_DEVICE_INFO, bleLockInfo);
+                    startActivity(impowerIntent);
                 }
-                startActivity(intent);
                 break;
         }
     }
