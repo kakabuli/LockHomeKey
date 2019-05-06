@@ -294,8 +294,6 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                 break;
             case 3:
                 //蓝牙
-                BleLockInfo bleLockInfo = (BleLockInfo) deviceDetailBean.getShowCurentBean();
-                mPresenter.setBleLockInfo(bleLockInfo);
                 if (bluetoothAuthorization) {
                     intent = new Intent(getActivity(), BluetoothLockAuthorizationActivity.class);
                 } else {

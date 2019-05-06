@@ -69,35 +69,32 @@
             android:name=".activity.login.SplashActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait">
-
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
         <!-- 登录 -->
         <activity
             android:name=".activity.login.LoginActivity"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <!-- 注册 -->
         <activity
             android:name=".activity.login.RegisterActivity"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <!-- 忘记密码 -->
         <activity
             android:name=".activity.login.ForgetPasswordActivity"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <!-- 我的消息 -->
         <activity
             android:name=".activity.my.PersonalMessageActivity"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <!-- 消息详情 -->
         <activity
             android:name=".activity.my.PersonalMessageDetailActivity"
@@ -554,28 +551,36 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".activity.cateye.VideoCallBackActivity"
-            android:screenOrientation="portrait" >
-
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.MAIN" />-->
-
-                <!--<category android:name="android.intent.category.LAUNCHER" />-->
-            <!--</intent-filter>-->
+        <activity
+            android:name=".activity.cateye.VideoCallBackActivity"
+            android:screenOrientation="portrait">
 
         </activity>
-
-        <activity android:name=".activity.cateye.PreviewActivity"
-            android:screenOrientation="portrait" >
-        </activity>
-
-        <activity android:name=".activity.cateye.VideoVActivity"
-            android:screenOrientation="portrait" >
-
-        </activity>
-        <activity android:name=".activity.cateye.VideoHActivity"
+        <activity
+            android:name=".activity.cateye.PreviewActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activity.cateye.VideoVActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activity.cateye.VideoHActivity"
             android:screenOrientation="landscape"
-            android:theme="@style/NoTitleFullscreen">
+            android:theme="@style/NoTitleFullscreen"></activity>
+        <activity
+            android:name=".activity.cateye.MediaPlayerActivity"
+            android:screenOrientation="landscape"
+            android:theme="@style/NoTitleFullscreen"></activity>
+        <activity android:name=".activity.cateye.CallComingActivity"
+            android:screenOrientation="portrait">
+
+             <!--<intent-filter>-->
+             <!--<action android:name="android.intent.action.MAIN" />-->
+
+
+             <!--<category android:name="android.intent.category.LAUNCHER" />-->
+             <!--</intent-filter>-->
+
+
         </activity>
     </application>
 
