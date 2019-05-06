@@ -783,4 +783,21 @@
     <string name="call_coming_connecting">等待接听···</string>
     <string name="call_coming_refuse">拒绝</string>
     <string name="call_coming_answer">接听</string>
+    <string name="be_beging_syc_lockinfo">正在同步锁信息，请稍后。。。</string>
+    <string name="lock_has_bean_close">门锁已经打开</string>
+    <string name="for_the_moment_no_open">暂时无法开启，请稍后。。。</string>
+    <string name="scan">扫一扫</string>
+    <string name="add_device_before_pair_gateway">添加设备前，请先配置kaadas网关</string>
+    <string name="gateway">网关</string>
+    <string name="cateye">猫眼</string>
+    <string name="smart_lock">智能锁</string>
+    <string name="cateye_gateway">猫眼网关</string>
+    <string name="three_gateway">6030 网关</string>
+    <string name="kaadas_cateye">Kaadas 猫眼</string>
+    <string name="kaadas_smart_lock_zigbeee">Kaadas 智能锁\n（ZigBee）</string>
+    <string name="select_take_effect_time">请选择生效时间</string>
+    <string name="end_time_must_bigger_end_time">结束时间必须大于开始时间</string>
+    <string name="please_allow_open_ble">请允许打开蓝牙</string>
+    <string name="search_device_fail">查找设备失败</string>
+    <string name="connect_failed_please_hand_connect">连接失败，请手动添加！</string>
 </resources>
