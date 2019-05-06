@@ -73,7 +73,6 @@ public class DoorCardManagerActivity extends BaseBleActivity<ICardManagerView, C
         //进入默认鉴权
         mPresenter.isAuth(bleLockInfo, false);
         initRecycleview();
-        list.add(new GetPasswordResult.DataBean.Card("fff", "fff", 1));
         initData();
     }
 
@@ -193,7 +192,8 @@ public class DoorCardManagerActivity extends BaseBleActivity<ICardManagerView, C
             isNotData = true;
         }
         if (cardList.size() > 0) {
-            doorCardManagerAdapter.notifyDataSetChanged();
+//            doorCardManagerAdapter.notifyDataSetChanged();
+            initRecycleview();
         }
         pageChange();
     }

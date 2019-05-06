@@ -1,6 +1,7 @@
 package com.kaadas.lock.activity.addDevice;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -9,12 +10,23 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.addDevice.bluetooth.AddBluetoothFirstActivity;
+import com.kaadas.lock.activity.addDevice.gateway.AddGatewayFirstActivity;
 import com.kaadas.lock.adapter.DeviceAddItemAdapter;
+import com.kaadas.lock.adapter.DeviceAddSelectItemAdapter;
+import com.kaadas.lock.bean.deviceAdd.AddSelectDeviceAddItemBean;
 import com.kaadas.lock.bean.deviceAdd.DeviceAddItemBean;
+import com.kaadas.lock.mvp.mvpbase.BaseActivity;
+import com.kaadas.lock.mvp.presenter.deviceaddpresenter.DeviceZigBeeDetailPresenter;
+import com.kaadas.lock.mvp.view.deviceaddview.DeviceZigBeeDetailView;
+import com.kaadas.lock.publiclibrary.bean.ServerGatewayInfo;
+import com.kaadas.lock.utils.AlertDialogUtil;
+import com.kaadas.lock.utils.LogUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,51 +35,92 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class DeviceAddActivity extends AppCompatActivity implements BaseQuickAdapter.OnItemClickListener {
+public class DeviceAddActivity extends BaseActivity<DeviceZigBeeDetailView, DeviceZigBeeDetailPresenter<DeviceZigBeeDetailView>> implements BaseQuickAdapter.OnItemClickListener,DeviceZigBeeDetailView  {
+
     @BindView(R.id.back)
     ImageView back;
-
+    @BindView(R.id.bluetooth)
+    LinearLayout bluetooth;
+    @BindView(R.id.scan)
+    LinearLayout scan;
+    @BindView(R.id.gateway)
+    TextView gateway;
+    @BindView(R.id.cateye)
+    TextView cateye;
+    @BindView(R.id.lock)
+    TextView lock;
     @BindView(R.id.device_add_recycler)
     RecyclerView deviceAddRecycler;
+    private List<AddSelectDeviceAddItemBean> mDeviceList=new ArrayList<>();
 
+    private DeviceAddSelectItemAdapter deviceAddSelectItemAdapter;
 
-
-    private DeviceAddItemAdapter deviceAddItemAdapter;
-
-    private List<DeviceAddItemBean> deviceList;
+    private boolean flag=false; //判断是否有绑定的网列表
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.device_add);
+        setContentView(R.layout.device_add_select);
         ButterKnife.bind(this);
         initData();
         initView();
+
     }
 
-
     private void initData() {
-        deviceList = new ArrayList<>();
-        DeviceAddItemBean deviceAddItemBean1 = new DeviceAddItemBean();
-        deviceAddItemBean1.setImageId(R.mipmap.device_add_zigbee);
-        deviceAddItemBean1.setTitle(getString(R.string.device_zigbee));
-        deviceAddItemBean1.setContent(getString(R.string.device_add_zigbee));
-        deviceList.add(deviceAddItemBean1);
+        gatewayData();
+    }
 
-        DeviceAddItemBean deviceAddItemBean2 = new DeviceAddItemBean();
-        deviceAddItemBean2.setImageId(R.mipmap.device_add_bluetooth);
-        deviceAddItemBean2.setTitle(getString(R.string.device_bluetooth));
-        deviceAddItemBean2.setContent(getString(R.string.device_add_bluetooth));
-        deviceList.add(deviceAddItemBean2);
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mPresenter.getGatewayBindList();
+
+    }
+
+    private void gatewayData() {
+        //网关
+        AddSelectDeviceAddItemBean gatewayOne=new AddSelectDeviceAddItemBean();
+        gatewayOne.setImageId(R.mipmap.gateway_icon);
+        gatewayOne.setTitle(getString(R.string.cateye_gateway));
+        gatewayOne.setType(1);
+        gatewayOne.setDeviceType("猫眼网关");
+        mDeviceList.add(gatewayOne);
+
+        AddSelectDeviceAddItemBean gatewayTwo=new AddSelectDeviceAddItemBean();
+        gatewayTwo.setImageId(R.mipmap.gateway_three);
+        gatewayTwo.setTitle(getString(R.string.three_gateway));
+        gatewayTwo.setType(1);
+        gatewayTwo.setDeviceType("6030 网关");
+        mDeviceList.add(gatewayTwo);
+
+    }
+    private void  catEyeData(){
+        //猫眼
+        AddSelectDeviceAddItemBean catEye=new AddSelectDeviceAddItemBean();
+        catEye.setImageId(R.mipmap.cat_eye_icon);
+        catEye.setTitle(getString(R.string.kaadas_cateye));
+        catEye.setType(2);
+        catEye.setDeviceType("Kaadas 猫眼");
+        mDeviceList.add(catEye);
+    }
+
+    private void lockData(){
+        AddSelectDeviceAddItemBean lockData=new AddSelectDeviceAddItemBean();
+        lockData.setImageId(R.mipmap.lock_icon);
+        lockData.setTitle(getString(R.string.kaadas_smart_lock_zigbeee));
+        lockData.setType(3);
+        lockData.setDeviceType("Kaadas 智能锁");
+        mDeviceList.add(lockData);
 
     }
 
     private void initView() {
-        deviceAddRecycler.setLayoutManager(new LinearLayoutManager(this));
-        if (deviceList != null && deviceList.size() > 0) {
-            deviceAddItemAdapter = new DeviceAddItemAdapter(deviceList);
-            deviceAddRecycler.setAdapter(deviceAddItemAdapter);
-            deviceAddItemAdapter.setOnItemClickListener(this);
+        deviceAddRecycler.setLayoutManager(new GridLayoutManager(this,2));
+        if ( mDeviceList.size() > 0) {
+            deviceAddSelectItemAdapter = new DeviceAddSelectItemAdapter(mDeviceList);
+            deviceAddRecycler.setAdapter(deviceAddSelectItemAdapter);
+            deviceAddSelectItemAdapter.setOnItemClickListener(this);
         }
     }
 
@@ -77,23 +130,116 @@ public class DeviceAddActivity extends AppCompatActivity implements BaseQuickAda
         super.onDestroy();
     }
 
+    @Override
+    protected DeviceZigBeeDetailPresenter<DeviceZigBeeDetailView> createPresent() {
+        return new DeviceZigBeeDetailPresenter<>();
+    }
 
-    @OnClick(R.id.back)
-    public void onViewClicked() {
-        finish();
 
+    @OnClick({R.id.back, R.id.bluetooth, R.id.scan, R.id.gateway, R.id.cateye, R.id.lock})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.back:
+                finish();
+                break;
+            case R.id.bluetooth:
+                Intent bluetoothIntent = new Intent(this, AddBluetoothFirstActivity.class);
+                startActivity(bluetoothIntent);
+                break;
+            case R.id.scan:
+
+
+                break;
+            case R.id.gateway:
+                gateway.setBackgroundColor(Color.parseColor("#FFFFFF"));
+                cateye.setBackgroundColor(Color.parseColor("#F2F1F1"));
+                lock.setBackgroundColor(Color.parseColor("#F2F1F1"));
+                mDeviceList.clear();
+                gatewayData();
+                if (deviceAddSelectItemAdapter!=null){
+                    deviceAddSelectItemAdapter.notifyDataSetChanged();
+                }
+                break;
+            case R.id.cateye:
+                gateway.setBackgroundColor(Color.parseColor("#F2F1F1"));
+                cateye.setBackgroundColor(Color.parseColor("#FFFFFF"));
+                lock.setBackgroundColor(Color.parseColor("#F2F1F1"));
+                mDeviceList.clear();
+                catEyeData();
+                if (deviceAddSelectItemAdapter!=null){
+                    deviceAddSelectItemAdapter.notifyDataSetChanged();
+                }
+                break;
+            case R.id.lock:
+                gateway.setBackgroundColor(Color.parseColor("#F2F1F1"));
+                cateye.setBackgroundColor(Color.parseColor("#F2F1F1"));
+                lock.setBackgroundColor(Color.parseColor("#FFFFFF"));
+                mDeviceList.clear();
+                lockData();
+                if (deviceAddSelectItemAdapter!=null){
+                    deviceAddSelectItemAdapter.notifyDataSetChanged();
+                }
+                break;
+        }
     }
 
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-        if (position==0){
-            Intent zigbeeIntent=new Intent(this, DeviceZigBeeDetailActivity.class);
-            startActivity(zigbeeIntent);
-        }else if (position==1){
-            Intent bluetoothIntent = new Intent(this, AddBluetoothFirstActivity.class);
-            startActivity(bluetoothIntent);
+        AddSelectDeviceAddItemBean addSelectDeviceAddItemBean=mDeviceList.get(position);
+        if (addSelectDeviceAddItemBean.getType()==1){
+            //跳转到添加网关
+            Intent addGateway = new Intent(this, AddGatewayFirstActivity.class);
+            startActivity(addGateway);
+        }else {
+            if (flag == true) {
+                AlertDialogUtil.getInstance().havaNoEditTwoButtonDialog(this, getString(R.string.no_usable_gateway), getString(R.string.add_zigbee_device_first_pair_gateway), getString(R.string.cancel), getString(R.string.configuration), new AlertDialogUtil.ClickListener() {
+                    @Override
+                    public void left() {
+
+                    }
+
+                    @Override
+                    public void right() {
+                        //跳转到配置网关添加的流程
+                        Intent gatewayIntent = new Intent(DeviceAddActivity.this, AddGatewayFirstActivity.class);
+                        startActivity(gatewayIntent);
+                    }
+                });
+            } else if (addSelectDeviceAddItemBean.getType() == 2) {
+                Intent catEyeIntent = new Intent(this, DeviceBindGatewayListActivity.class);
+                int type = addSelectDeviceAddItemBean.getType();
+                catEyeIntent.putExtra("type", type);
+                startActivity(catEyeIntent);
+            } else if (addSelectDeviceAddItemBean.getType() == 3) {
+                Intent zigbeeIntent = new Intent(this, DeviceBindGatewayListActivity.class);
+                int type = addSelectDeviceAddItemBean.getType();
+                zigbeeIntent.putExtra("type", type);
+                startActivity(zigbeeIntent);
+            }
+
+
         }
+    }
 
+    @Override
+    public void getGatewayBindList(List<ServerGatewayInfo> bindGatewayList) {
+        if (bindGatewayList.size()>0){
+            flag=true;
+        }
+    }
 
+    @Override
+    public void getGatewayBindFail() {
+        LogUtils.e("获取绑定的网关列表失败");
+    }
+
+    @Override
+    public void bindGatewayPublishFail(String fuc) {
+        LogUtils.e("获取绑定的网关列表发布失败");
+    }
+
+    @Override
+    public void getGatewayThrowable(Throwable throwable) {
+        LogUtils.e("获取绑定的网关列表异常");
     }
 }

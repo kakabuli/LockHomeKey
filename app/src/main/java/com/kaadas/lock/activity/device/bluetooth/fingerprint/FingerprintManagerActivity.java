@@ -74,7 +74,6 @@ public class FingerprintManagerActivity extends BaseBleActivity<IFingerprintMana
         pageChange();
         initRecycleview();
         bleLockInfo = MyApplication.getInstance().getBleService().getBleLockInfo();
-        list.add(new GetPasswordResult.DataBean.Fingerprint("fff", "fff", 1));
         initData();
         initRefresh();
     }
@@ -160,7 +159,9 @@ public class FingerprintManagerActivity extends BaseBleActivity<IFingerprintMana
                 if (isSync) {
                     ToastUtil.getInstance().showShort(R.string.is_sync_please_wait);
                 } else {
-                    //TODO 同步
+                    if (mPresenter.isAuth(bleLockInfo, true)) {
+                        mPresenter.syncPassword();
+                    }
                 }
                 break;
         }
@@ -202,7 +203,8 @@ public class FingerprintManagerActivity extends BaseBleActivity<IFingerprintMana
             isNotData = true;
         }
         if (pwdList.size() > 0) {
-            fingerprintManagerAdapter.notifyDataSetChanged();
+//            fingerprintManagerAdapter.notifyDataSetChanged();
+            initRecycleview();
         }
         pageChange();
     }

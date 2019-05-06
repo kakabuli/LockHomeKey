@@ -15,6 +15,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.kaadas.lock.R;
+import com.kaadas.lock.activity.MainActivity;
 import com.kaadas.lock.activity.device.gatewaylock.GatewayDeviceInformationActivity;
 import com.kaadas.lock.bean.DeviceDetailBean;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
@@ -121,7 +122,7 @@ public class GatewayMoreActivity extends BaseActivity<GatewayLockMoreView, Gatew
 
         if (gatewayId!=null&&deviceId!=null){
             if (loadingDialog!=null){
-                loadingDialog.show("");
+                loadingDialog.show(getString(R.string.be_beging_syc_lockinfo));
                 mPresenter.getSoundVolume(gatewayId,deviceId);
             }
 
@@ -242,6 +243,9 @@ public class GatewayMoreActivity extends BaseActivity<GatewayLockMoreView, Gatew
 
                     @Override
                     public void right() {
+                        if (gatewayId!=null&&deviceId!=null){
+                            mPresenter.deleteLock(gatewayId,deviceId,"zigbee");
+                        }
 
                     }
                 });
@@ -332,5 +336,24 @@ public class GatewayMoreActivity extends BaseActivity<GatewayLockMoreView, Gatew
         loadingDialog.dismiss();
         rlSilentMode.setEnabled(true);
         LogUtils.e("设置音量异常    "+throwable.getMessage());
+    }
+
+    @Override
+    public void deleteDeviceSuccess() {
+        //删除成功
+        Intent intent=new Intent(this, MainActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    @Override
+    public void deleteDeviceFail() {
+        //删除失败
+        ToastUtil.getInstance().showShort(getString(R.string.delete_fialed));
+    }
+
+    @Override
+    public void deleteDeviceThrowable(Throwable throwable) {
+        LogUtils.e("删除异常   "+throwable.getMessage());
     }
 }

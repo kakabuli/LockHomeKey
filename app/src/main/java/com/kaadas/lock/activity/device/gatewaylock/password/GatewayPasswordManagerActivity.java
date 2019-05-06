@@ -152,6 +152,14 @@ public class GatewayPasswordManagerActivity extends BaseActivity<GatewayLockFunc
     }
 
     @Override
+    public void getLockOneSuccess(int pwdId) {
+        int pwd=pwdId+1;
+        if (maxPwdId>0&&pwd<maxPwdId){
+            mPresenter.getLockPwd(gatewayId,deviceId,"0"+pwd, maxPwdId,pwd);
+        }
+    }
+
+    @Override
     public void getLockSuccess(Map<String,Integer> map) {
         //获取开锁密码成功
         loadingDialog.dismiss();
@@ -191,10 +199,8 @@ public class GatewayPasswordManagerActivity extends BaseActivity<GatewayLockFunc
     public void getLockInfoSuccess(int pwdNum) {
         //获取到总的次数
         maxPwdId=pwdNum;
-        if (pwdNum>0){
-            for (int i=0;i<pwdNum;i++){
-                mPresenter.getLockPwd(gatewayId,deviceId,"0"+i, pwdNum);
-            }
+        if (maxPwdId>0){
+            mPresenter.getLockPwd(gatewayId,deviceId,"0"+0, pwdNum,0);
         }
 
     }

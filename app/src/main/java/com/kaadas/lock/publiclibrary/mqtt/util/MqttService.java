@@ -26,8 +26,6 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Iterator;
-
 import io.reactivex.Observable;
 import io.reactivex.subjects.PublishSubject;
 
@@ -233,7 +231,6 @@ public class MqttService extends Service {
                     e.printStackTrace();
                 }
                 MqttData mqttData = new MqttData(jsonObject.getString("func"), topic, payload, message, messageId);
-
                 mqttData.setReturnCode(returnCode);
                 mqttData.setMsgtype(msgtype);
 

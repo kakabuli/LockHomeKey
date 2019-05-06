@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.adapter.ShiXiaoNameAdapter;
 import com.kaadas.lock.bean.ShiXiaoNameBean;
@@ -65,7 +66,7 @@ public class AddFingerprintSuccessActivity extends BaseActivity<IAddFingerSucces
         tvContent.setText(getString(R.string.add_fingerprint));
         initRecycleview();
         userNum = getIntent().getIntExtra(KeyConstants.USER_NUM, 0);
-
+        bleLockInfo = MyApplication.getInstance().getBleService().getBleLockInfo();
         tvSuccessPageNumber.setText("" + userNum);
     }
 

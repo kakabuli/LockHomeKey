@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.AllowCateyeJoinBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.BindGatewayBean;
+import com.kaadas.lock.publiclibrary.mqtt.publishbean.DeleteGatewayLockDeviceBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.GetAllBindDeviceBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.GetBindGatewayListBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.GetDevicePowerBean;
@@ -261,6 +262,15 @@ public class MqttCommandFactory {
         return getMessage(lockLang,messageId);
 
     }
+    public static MqttMessage deleteDevice(String gatewayId,String deviceId,String bustType){
+        int messageId=getMessageId();
+        DeleteGatewayLockDeviceBean.ParamsBean paramsBean=new DeleteGatewayLockDeviceBean.ParamsBean();
+        paramsBean.setBustype(bustType);
+        paramsBean.setDeviceId(deviceId);
+        DeleteGatewayLockDeviceBean gatewayLockDeviceBean=new DeleteGatewayLockDeviceBean(MqttConstant.MSG_TYPE_REQUEST,MyApplication.getInstance().getUid(),messageId,gatewayId,gatewayId,MqttConstant.DELETE_GATEWAY_LOCK,paramsBean,"0",new DeleteGatewayLockDeviceBean.ReturnDataBean(),System.currentTimeMillis()+"");
+        return getMessage(gatewayLockDeviceBean,messageId);
+    }
+
 
     public static MqttMessage getGatewayLockInformation(String gatewayId,String deviceId){
         int messageId=getMessageId();

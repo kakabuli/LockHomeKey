@@ -3,16 +3,15 @@ package com.kaadas.lock.mvp.presenter.gatewaylockpresenter;
 import com.google.gson.Gson;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.mvp.mvpbase.BasePresenter;
-import com.kaadas.lock.mvp.view.gatewaylockview.GatewayLockFunctinView;
 import com.kaadas.lock.mvp.view.gatewaylockview.GatewayLockMoreView;
 import com.kaadas.lock.publiclibrary.http.util.RxjavaHelper;
 import com.kaadas.lock.publiclibrary.mqtt.MqttCommandFactory;
-import com.kaadas.lock.publiclibrary.mqtt.publishbean.GetLockLang;
+import com.kaadas.lock.publiclibrary.mqtt.eventbean.DeleteDeviceLockBean;
+import com.kaadas.lock.publiclibrary.mqtt.publishbean.DeleteGatewayLockDeviceBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.GetSoundVolume;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.UpdateDevNickNameResult;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttConstant;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttData;
-import com.kaadas.lock.utils.LogUtils;
 
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
@@ -26,6 +25,10 @@ public class GatewayLockMorePresenter<T> extends BasePresenter<GatewayLockMoreVi
     private Disposable updateNameDisposable;
     private Disposable getLockSoundVolumeDisposable;
     private Disposable setLockSoundVolumeDisposable;
+    private Disposable deleteLockInfoDisposable;
+    private Disposable deleteReceiveDisposable;
+
+
     //修改昵称
     public void updateZigbeeLockName(String devuuid,String deviceId,String nickName ){
         toDisposable(updateNameDisposable);
@@ -173,6 +176,112 @@ public class GatewayLockMorePresenter<T> extends BasePresenter<GatewayLockMoreVi
         }
 
     }
+
+    //删除设备-----由于网关的删除设备无响应事件，只有上报。网关说过后会修改。
+/*    public void deleteLock(String gatewayId,String deviceId,String bustType){
+        toDisposable(deleteLockInfoDisposable);
+        if (mqttService!=null){
+            MqttMessage mqttMessage= MqttCommandFactory.deleteDevice(gatewayId,deviceId,bustType);
+            deleteLockInfoDisposable=mqttService
+                    .mqttPublish(MqttConstant.getCallTopic(MyApplication.getInstance().getUid()),mqttMessage)
+                    .compose(RxjavaHelper.observeOnMainThread())
+                    .timeout(10*1000, TimeUnit.MILLISECONDS)
+                    .filter(new Predicate<MqttData>() {
+                        @Override
+                        public boolean test(MqttData mqttData) throws Exception {
+                            if (MqttConstant.DELETE_GATEWAY_LOCK.equals(mqttData.getFunc())){
+                                return true;
+                            }
+                            return false;
+                        }
+                    })
+                    .subscribe(new Consumer<MqttData>() {
+                        @Override
+                        public void accept(MqttData mqttData) throws Exception {
+                            toDisposable(deleteLockInfoDisposable);
+                            DeleteGatewayLockDeviceBean deleteGatewayLockDeviceBean=new Gson().fromJson(mqttData.getPayload(),DeleteGatewayLockDeviceBean.class);
+                            if (deleteGatewayLockDeviceBean!=null){
+                                if ("200".equals(deleteGatewayLockDeviceBean.getReturnCode())){
+                                    if (mViewRef.get()!=null){
+                                        mViewRef.get().deleteDeviceSuccess();
+                                        MyApplication.getInstance().getAllDevicesByMqtt(true);
+                                    }
+                                }else{
+                                    if (mViewRef.get()!=null){
+                                        mViewRef.get().deleteDeviceFail();
+                                    }
+                                }
+                            }
+                        }
+                    }, new Consumer<Throwable>() {
+                        @Override
+                        public void accept(Throwable throwable) throws Exception {
+                            if (mViewRef.get()!=null){
+                                mViewRef.get().deleteDeviceThrowable(throwable);
+                            }
+                        }
+                    });
+
+            compositeDisposable.add(deleteLockInfoDisposable);
+        }
+    }*/
+
+    public void deleteLock(String gatewayId,String deviceId,String bustType){
+        toDisposable(deleteLockInfoDisposable);
+        if (mqttService!=null){
+            MqttMessage mqttMessage= MqttCommandFactory.deleteDevice(gatewayId,deviceId,bustType);
+            deleteLockInfoDisposable=mqttService
+                    .mqttPublish(MqttConstant.getCallTopic(MyApplication.getInstance().getUid()),mqttMessage)
+                    .compose(RxjavaHelper.observeOnMainThread())
+                    .timeout(10*1000, TimeUnit.MILLISECONDS)
+                    .filter(new Predicate<MqttData>() {
+                        @Override
+                        public boolean test(MqttData mqttData) throws Exception {
+                            //由于网关那边没有响应事件，所以暂时以接收上报删除事件来判断是否删除成功。
+                            if (MqttConstant.GW_EVENT.equals(mqttData.getFunc())){
+                                return true;
+                            }
+                            return false;
+                        }
+                    })
+                    .subscribe(new Consumer<MqttData>() {
+                        @Override
+                        public void accept(MqttData mqttData) throws Exception {
+                            toDisposable(deleteLockInfoDisposable);
+                            DeleteDeviceLockBean deleteGatewayLockDeviceBean=new Gson().fromJson(mqttData.getPayload(),DeleteDeviceLockBean.class);
+                            if (deleteGatewayLockDeviceBean!=null){
+                                if ("kdszblock".equals(deleteGatewayLockDeviceBean.getDevtype())&&deleteGatewayLockDeviceBean.getEventparams().getEvent_str().equals("delete")){
+                                    if (mViewRef.get()!=null){
+                                        mViewRef.get().deleteDeviceSuccess();
+                                        MyApplication.getInstance().getAllDevicesByMqtt(true);
+                                    }
+                                }else{
+                                    if (mViewRef.get()!=null){
+                                        mViewRef.get().deleteDeviceFail();
+                                    }
+                                }
+                            }
+                        }
+                    }, new Consumer<Throwable>() {
+                        @Override
+                        public void accept(Throwable throwable) throws Exception {
+                            if (mViewRef.get()!=null){
+                                mViewRef.get().deleteDeviceThrowable(throwable);
+                            }
+                        }
+                    });
+
+            compositeDisposable.add(deleteLockInfoDisposable);
+        }
+    }
+
+
+
+
+
+
+
+
 
 
 

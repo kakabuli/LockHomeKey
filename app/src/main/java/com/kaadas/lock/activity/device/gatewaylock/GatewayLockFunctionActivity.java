@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 
 import android.text.InputType;
@@ -70,34 +71,28 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
     ImageView ivOne;
     @BindView(R.id.tv_name_one)
     TextView tvNameOne;
-    @BindView(R.id.tv_number_one)
-    TextView tvNumberOne;
     @BindView(R.id.ll_one)
     LinearLayout llOne;
     @BindView(R.id.iv_two)
     ImageView ivTwo;
     @BindView(R.id.tv_name_two)
     TextView tvNameTwo;
-    @BindView(R.id.tv_number_two)
-    TextView tvNumberTwo;
     @BindView(R.id.ll_two)
     LinearLayout llTwo;
     @BindView(R.id.iv_three)
     ImageView ivThree;
     @BindView(R.id.tv_name_three)
     TextView tvNameThree;
-    @BindView(R.id.tv_number_three)
-    TextView tvNumberThree;
     @BindView(R.id.ll_three)
     LinearLayout llThree;
-    @BindView(R.id.iv_four)
+   /* @BindView(R.id.iv_four)
     ImageView ivFour;
     @BindView(R.id.tv_name_four)
     TextView tvNameFour;
     @BindView(R.id.tv_number_four)
     TextView tvNumberFour;
     @BindView(R.id.ll_four)
-    LinearLayout llFour;
+    LinearLayout llFour;*/
 
 
     @BindView(R.id.tv_open_clock)
@@ -106,6 +101,8 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
     private String gatewayId;
     private String deviceId;
     private DeviceDetailBean deviceDetailBean;
+    private boolean lockIsOpen=false;
+    private Handler mHandler = new Handler();
 
 
     @Override
@@ -127,26 +124,16 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
     }
 
     private void initView() {
-
         //密码
-
         ivOne.setImageResource(R.mipmap.bluetooth_password);
         tvNameOne.setText(R.string.password);
-        tvNumberOne.setText(6 + getString(R.string.group));
-
-        //设备共享
-        ivTwo.setImageResource(R.mipmap.bluetooth_share);
-        tvNameTwo.setText(R.string.device_share);
-        tvNumberTwo.setText(2 + getString(R.string.people));
-
-
         //胁迫警告
-        ivThree.setImageResource(R.mipmap.stress_warn_icon);
-        tvNameThree.setText(getString(R.string.stress_warn));
+        ivTwo.setImageResource(R.mipmap.stress_warn_icon);
+        tvNameTwo.setText(getString(R.string.stress_warn));
 
         //更多
-        ivFour.setImageResource(R.mipmap.bluetooth_more);
-        tvNameFour.setText(R.string.more);
+        ivThree.setImageResource(R.mipmap.bluetooth_more);
+        tvNameThree.setText(R.string.more);
 
 
     }
@@ -156,7 +143,6 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
         llOne.setOnClickListener(this);
         llTwo.setOnClickListener(this);
         llThree.setOnClickListener(this);
-        llFour.setOnClickListener(this);
         tvOpenClock.setOnClickListener(this);
     }
 
@@ -214,6 +200,7 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
             GwLockInfo lockInfo= (GwLockInfo) deviceDetailBean.getShowCurentBean();
             gatewayId=lockInfo.getGwID();
             deviceId=lockInfo.getServerInfo().getDeviceId();
+            mPresenter.closeLockNotify(deviceId);
         }
 
     }
@@ -232,25 +219,39 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
                 startActivity(intent);
                 break;
             case R.id.ll_two:
-                intent = new Intent(this, GatewaySharedDeviceManagementActivity.class);
-                startActivity(intent);
-                break;
-            case R.id.ll_three:
                 intent = new Intent(this, GatewayStressPasswordManagerActivity.class);
                 startActivity(intent);
                 break;
-            case R.id.ll_four:
+            case R.id.ll_three:
                 intent = new Intent(this, GatewayMoreActivity.class);
                 intent.putExtra(KeyConstants.DEVICE_DETAIL_BEAN,deviceDetailBean);
                 startActivityForResult(intent,KeyConstants.DEVICE_DETAIL_BEAN_NUM);
                 break;
+
             case R.id.tv_open_clock:
                 //开锁
                 //对话框
-             String lockPwd= (String) SPUtils.get(KeyConstants.SAVA_LOCK_PWD,"");
+             String lockPwd= (String) SPUtils.get(KeyConstants.SAVA_LOCK_PWD+deviceId,"");
              if (TextUtils.isEmpty(lockPwd)){
                  //密码为空
-                 showPwdDialog();
+                 if (lockIsOpen){
+                    //门锁已经打开
+                     ToastUtil.getInstance().showShort(R.string.lock_has_bean_close);
+                     return;
+                 }else{
+                     showPwdDialog();
+                 }
+             }else{
+                    if (lockIsOpen){
+                        //门锁已经打开
+                        ToastUtil.getInstance().showShort(R.string.lock_has_bean_close);
+                        return;
+                    }else{
+                        mPresenter.openLock(gatewayId, deviceId,lockPwd);
+                        lockStatus = KeyConstants.IS_LOCKING;
+                        changLockStatus(lockStatus);
+                        tvOpenClock.setClickable(false);
+                    }
              }
 
              break;
@@ -276,15 +277,16 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
         tv_query.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String name = editText.getText().toString().trim();
-                if (!StringUtil.randomJudge(name)) {
+                String pwd = editText.getText().toString().trim();
+                if (!StringUtil.randomJudge(pwd)) {
                     ToastUtil.getInstance().showShort(R.string.random_verify_error);
                     return;
                 }
-                mPresenter.openLock(gatewayId, deviceId,name);
-                lockStatus = KeyConstants.IS_LOCKING;
-                changLockStatus(lockStatus);
-                alertDialog.dismiss();
+                    mPresenter.openLock(gatewayId, deviceId,pwd);
+                    lockStatus = KeyConstants.IS_LOCKING;
+                    changLockStatus(lockStatus);
+                    tvOpenClock.setClickable(false);
+                    alertDialog.dismiss();
             }
         });
 
@@ -329,6 +331,7 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
         //开锁成功
         lockStatus=KeyConstants.OPEN_LOCK_SUCCESS;
         changLockStatus(lockStatus);
+        tvOpenClock.setClickable(true);
     }
 
     @Override
@@ -336,13 +339,56 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
         //开锁失败
         lockStatus=KeyConstants.OPEN_LOCK_FAILED;
         changLockStatus(lockStatus);
-
+        SPUtils.remove(KeyConstants.SAVA_LOCK_PWD+deviceId);
+        Runnable reconncetRunnable = new Runnable() {
+            @Override
+            public void run() {
+                lockStatus=KeyConstants.OPEN_LOCK;
+                changLockStatus(lockStatus);
+                tvOpenClock.setClickable(true);
+            }
+        };
+        mHandler.postDelayed(reconncetRunnable, 3000);
     }
 
     @Override
     public void openLockThrowable(Throwable throwable) {
         //开锁异常
+        lockStatus=KeyConstants.OPEN_LOCK_FAILED;
+        changLockStatus(lockStatus);
+        //清除密码
+        SPUtils.remove(KeyConstants.SAVA_LOCK_PWD+deviceId);
+        Runnable reconncetRunnable = new Runnable() {
+            @Override
+            public void run() {
+                lockStatus=KeyConstants.OPEN_LOCK;
+                changLockStatus(lockStatus);
+                tvOpenClock.setClickable(true);
+            }
+        };
+        mHandler.postDelayed(reconncetRunnable, 3000);
+
         LogUtils.e("开锁异常   "+throwable.getMessage());
+
+    }
+
+    @Override
+    public void lockHasBeenClose() {
+        //门锁已经关闭
+        lockIsOpen=false;
+        lockStatus=KeyConstants.OPEN_LOCK;
+        changLockStatus(lockStatus);
+    }
+
+    @Override
+    public void lockHasBeenOpen() {
+        //门锁已经打开
+        lockIsOpen=true;
+    }
+
+    @Override
+    public void lockHasBeenThrowable(Throwable throwable) {
+        LogUtils.e("门锁上报信息出现异常"+throwable.getMessage());
     }
 
     @Override

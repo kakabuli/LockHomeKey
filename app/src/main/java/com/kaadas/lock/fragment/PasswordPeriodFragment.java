@@ -280,7 +280,7 @@ public class PasswordPeriodFragment extends BaseBleFragment<IPasswordLoopView, P
     public void onUploadPwdSuccess(String password, String number, String nickName) {
         LogUtils.e("添加密码成功   " + password.toString());
         //todo 获取到开始时间,结束时间 设置
-      /*  Intent intent = new Intent();
+        Intent intent = new Intent();
         intent.setClass(MyApplication.getInstance(), BluetoothPasswordShareActivity.class);
         intent.putExtra(KeyConstants.TO_DETAIL_NUMBER, number);
         intent.putExtra(KeyConstants.TO_DETAIL_PASSWORD, password);
@@ -290,7 +290,7 @@ public class PasswordPeriodFragment extends BaseBleFragment<IPasswordLoopView, P
         intent.putExtra(KeyConstants.PERIOD_START_TIME, strStart);
         intent.putExtra(KeyConstants.PERIOD_END_TIME, strEnd);
         intent.putExtra(KeyConstants.WEEK_REPEAT_DATA, weekRule);
-        startActivity(intent);*/
+        startActivity(intent);
     }
 
     @Override
