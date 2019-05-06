@@ -314,7 +314,6 @@
     <string name="please_qrcode_in">将设备二维码放入框内</string>
     <string name="add_cateye">添加猫眼</string>
     <string name="select_feedback_type">请选择反馈类别</string>
-    <string name="smart_lock">智能锁</string>
     <string name="select_kaadas">我选凯迪仕</string>
     <string name="resume_load">密码错误，还可以再输入</string>
     <string name="second">次</string>
@@ -732,7 +731,7 @@
     <string name="close_silence">正在关闭静音模式</string>
     <string name="open_slience">正在开启静音模式</string>
     <string name="get_lock_info_fail">获取锁信息失败</string>
-    <string name="get_lock_info_later_on">正在获取锁的信息，请稍后。。。</string>
+    <string name="get_lock_info_later_on">正在获取锁的进行信息，请稍后。。。</string>
     <string name="input_open_lock_password">请输入开锁密码</string>
     <string name="no_find_device">未找到设备</string>
     <string name="lock_no_record">锁上还没有开锁记录！</string>
@@ -762,7 +761,20 @@
     <string name="recording_name">录屏</string>
     <string name="select_no_lock">暂无联动门锁</string>
     <string name="video_connecting">正在连接···</string>
+    <string name="not_admin_must_have_net">授权用户开锁必须要有网络！</string>
     <string name="name_not_empty">输入值不能为空</string>
+    <string name="be_beging_syc_lockinfo">正在同步锁信息，请稍后。。。</string>
+    <string name="lock_has_bean_close">门锁已经打开</string>
+    <string name="for_the_moment_no_open">暂时无法开启，请稍后。。。</string>
+    <string name="scan">扫一扫</string>
+    <string name="add_device_before_pair_gateway">添加设备前，请先配置kaadas网关</string>
+    <string name="gateway">网关</string>
+    <string name="cateye">猫眼</string>
+    <string name="smart_lock">智能锁</string>
+    <string name="cateye_gateway">猫眼网关</string>
+    <string name="three_gateway">6030 网关</string>
+    <string name="kaadas_cateye">Kaadas 猫眼</string>
+    <string name="kaadas_smart_lock_zigbeee">Kaadas 智能锁\n（ZigBee）</string>
     <string name="select_take_effect_time">请选择生效时间</string>
     <string name="end_time_must_bigger_end_time">结束时间必须大于开始时间</string>
     <string name="please_allow_open_ble">请允许打开蓝牙</string>

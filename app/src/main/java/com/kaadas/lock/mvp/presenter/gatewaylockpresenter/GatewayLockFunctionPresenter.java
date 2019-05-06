@@ -30,7 +30,7 @@ public class GatewayLockFunctionPresenter<T> extends BasePresenter<GatewayLockFu
     private Disposable getLockPwdInfoDisposable;
     private Map<String,Integer> map=new HashMap<>();
     //获取开锁密码列表
-    public void getLockPwd(String gatewayId,String deviceId,String pwdId,int pwdNum){
+    public void getLockPwd(String gatewayId,String deviceId,String pwdId,int pwdNum,int currentNum){
         toDisposable(getLockPwdDisposable);
         if (mqttService!=null){
             getLockPwdDisposable=mqttService.mqttPublish(MqttConstant.getCallTopic(MyApplication.getInstance().getUid()),MqttCommandFactory.lockPwdFunc(gatewayId,deviceId,"get","pin",pwdId,""))
@@ -49,12 +49,17 @@ public class GatewayLockFunctionPresenter<T> extends BasePresenter<GatewayLockFu
                                  .subscribe(new Consumer<MqttData>() {
                                      @Override
                                      public void accept(MqttData mqttData) throws Exception {
+                                         toDisposable(getLockPwdDisposable);
                                          LockPwdFuncBean lockPwdFuncBean=new Gson().fromJson(mqttData.getPayload(),LockPwdFuncBean.class);
                                          if ("200".equals(lockPwdFuncBean.getReturnCode())){
                                              map.put(lockPwdFuncBean.getParams().getPwdid(),lockPwdFuncBean.getReturnData().getStatus());
+                                             if (mViewRef.get()!=null){
+                                                 mViewRef.get().getLockOneSuccess(currentNum);
+                                             }
                                              if (map.size()==pwdNum){
                                                  if (mViewRef.get()!=null){
                                                      mViewRef.get().getLockSuccess(map);
+                                                     toDisposable(getLockPwdDisposable);
                                                  }
                                              }
                                          }else{

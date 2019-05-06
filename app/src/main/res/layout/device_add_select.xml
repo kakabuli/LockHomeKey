@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    >
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_40"
+        android:background="#FFFFFF"
+        >
+        <ImageView
+            android:id="@+id/back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/dp_16"
+            android:paddingRight="@dimen/dp_16"
+            android:paddingTop="@dimen/dp_5"
+            android:paddingBottom="@dimen/dp_5"
+            android:src="@mipmap/back_gray"
+            android:layout_centerVertical="true"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/add_device"
+            android:textSize="@dimen/sp_17"
+            android:textColor="#000000"
+            android:textStyle="bold"
+            />
+    </RelativeLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_135"
+        android:layout_marginLeft="@dimen/dp_15"
+        android:layout_marginRight="@dimen/dp_15"
+        android:layout_marginTop="@dimen/dp_17"
+        android:layout_marginBottom="@dimen/dp_23"
+        android:background="@drawable/add_background"
+        android:orientation="horizontal"
+        >
+    <LinearLayout
+        android:id="@+id/bluetooth"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:gravity="center"
+        >
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/device_add_bluetooth_white"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_13"
+            android:text="@string/device_bluetooth"
+            android:layout_marginTop="@dimen/dp_15"
+            />
+    </LinearLayout>
+        <LinearLayout
+            android:id="@+id/scan"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center"
+            >
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/device_add_bluetooth_scan"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_13"
+                android:text="@string/scan"
+                android:layout_marginTop="@dimen/dp_15"
+                />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/dp_14"
+        android:orientation="horizontal"
+        android:gravity="center"
+        >
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/remind_small_icon"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/add_device_before_pair_gateway"
+            android:textColor="#ff333333"
+            android:textSize="@dimen/sp_12"
+            android:layout_marginLeft="@dimen/dp_7"
+            />
+    </LinearLayout>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_1"
+        android:layout_marginTop="@dimen/dp_13"
+        android:background="#DDDDDD"
+        />
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+
+
+    >
+    <LinearLayout
+        android:layout_width="@dimen/dp_88"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@color/white"
+        >
+        <TextView
+            android:id="@+id/gateway"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:text="@string/gateway"
+            android:textColor="#ff333333"
+            android:textSize="@dimen/sp_13"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:background="@color/white"
+
+            />
+        <TextView
+            android:id="@+id/cateye"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:text="@string/cateye"
+            android:textColor="#ff333333"
+            android:textSize="@dimen/sp_13"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:background="#F2F1F1"
+            />
+        <TextView
+            android:id="@+id/lock"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:text="@string/smart_lock"
+            android:textColor="#ff333333"
+            android:textSize="@dimen/sp_13"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:background="#F2F1F1"
+
+            />
+
+
+    </LinearLayout>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/device_add_recycler"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+    </android.support.v7.widget.RecyclerView>
+
+
+
+</LinearLayout>
+
+
+
+
+</LinearLayout>

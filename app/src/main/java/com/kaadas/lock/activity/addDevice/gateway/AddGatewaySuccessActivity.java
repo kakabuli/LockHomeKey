@@ -41,7 +41,7 @@ public class AddGatewaySuccessActivity extends AppCompatActivity {
                 finish();
                 break;
             case R.id.button_add_zigbee:
-                Intent deviceAddZigbee=new Intent(this, DeviceZigBeeDetailActivity.class);
+                Intent deviceAddZigbee=new Intent(this, DeviceAddActivity.class);
                 startActivity(deviceAddZigbee);
                 break;
             case R.id.button_stop:

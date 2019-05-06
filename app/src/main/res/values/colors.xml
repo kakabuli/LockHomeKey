@@ -77,4 +77,6 @@
     <color name="colorA">#ff5e00</color>
     <color name="colorD">#808080</color>
     <color name="video_color">#444444</color>
+    <color name="red_normal">#FF0000</color>
+    <color name="red_pressed">#FF6666</color>
 </resources>

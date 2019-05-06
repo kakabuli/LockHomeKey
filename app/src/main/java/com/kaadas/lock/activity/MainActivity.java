@@ -206,4 +206,10 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
         intent.putExtra(KeyConstants.BLE_DEVICE_INFO, bleLockInfo);
         startActivity(intent);*/
     }
+
+    public NoScrollViewPager getViewPager() {
+
+        return homeViewPager;
+    }
+
 }

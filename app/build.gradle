@@ -98,4 +98,5 @@ dependencies {
     implementation 'com.github.razerdp:BasePopup:2.1.9'
     implementation 'com.bm.photoview:library:1.4.1'
     implementation 'com.yarolegovich:discrete-scrollview:1.4.9'
+    implementation 'com.yanzhenjie:recyclerview-swipe:1.1.4'
 }

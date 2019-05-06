@@ -7,6 +7,9 @@ import java.util.Map;
 public interface GatewayLockFunctinView extends IBaseView {
 
     //获取某个密码成功
+    void getLockOneSuccess(int pwdId);
+
+    //获取全部密码成功
     void getLockSuccess(Map<String,Integer> map);
 
     //获取某个密码失败

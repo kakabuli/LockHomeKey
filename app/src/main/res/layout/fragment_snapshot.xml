@@ -19,15 +19,15 @@
             android:layout_height="match_parent">
 
             <com.scwang.smartrefresh.layout.SmartRefreshLayout
-                android:id="@+id/history_refreshLayout_ff"
+                android:id="@+id/snapshot_smartrefresh"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 >
-                <android.support.v7.widget.RecyclerView
+                <com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView
                     android:id="@+id/history_rv_ff"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
-                </android.support.v7.widget.RecyclerView>
+                </com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView>
             </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 
         </RelativeLayout>

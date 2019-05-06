@@ -555,10 +555,6 @@
         </receiver>
 
         <activity android:name=".activity.cateye.VideoCallBackActivity"
-            android:screenOrientation="portrait" ></activity>
-        <activity android:name=".activity.cateye.PreviewActivity"
-            android:screenOrientation="portrait" />
-        <activity android:name=".activity.cateye.VideoVActivity"
             android:screenOrientation="portrait" >
 
             <!--<intent-filter>-->
@@ -566,6 +562,15 @@
 
                 <!--<category android:name="android.intent.category.LAUNCHER" />-->
             <!--</intent-filter>-->
+
+        </activity>
+
+        <activity android:name=".activity.cateye.PreviewActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+
+        <activity android:name=".activity.cateye.VideoVActivity"
+            android:screenOrientation="portrait" >
 
         </activity>
         <activity android:name=".activity.cateye.VideoHActivity"
