@@ -798,4 +798,5 @@
     <string name="month">月</string>
     <string name="hour">时</string>
     <string name="minute">分</string>
+    <string name="auth_time">授权时间</string>
 </resources>

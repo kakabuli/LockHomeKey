@@ -48,7 +48,7 @@ public class DeviceMorePresenter extends BlePresenter<IDeviceMoreView> {
 
                         //通知homeFragment  和  device刷新界面
                         bleService.release();
-                        MyApplication.getInstance().deleteDevice(deviceName);
+//                        MyApplication.getInstance().deleteDevice(deviceName);
                         bleService.removeBleLockInfo();
                     }
 
