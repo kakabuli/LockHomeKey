@@ -157,9 +157,6 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
             noDeviceLayout.setVisibility(View.VISIBLE);
             refresh.setVisibility(View.GONE);
         }
-
-
-
     }
 
     private void getDifferentTypeDevice(HomeShowBean showBean) {
@@ -279,6 +276,8 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
             case 0:
                 //猫眼
                 Intent  cateEyeInfoIntent=new Intent(getActivity(),CateyeFunctionActivity.class);
+                CateEyeInfo cateEyeInfo = (CateEyeInfo) deviceDetailBean.getShowCurentBean();
+                cateEyeInfoIntent.putExtra(KeyConstants.CATE_INFO, cateEyeInfo);
                 startActivity(cateEyeInfoIntent);
                 break;
             case 1:

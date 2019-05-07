@@ -8,6 +8,14 @@
 
     <include layout="@layout/time_select_header"></include>
 
+    <Button
+        android:id="@+id/test_snap"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="测试btn"
+        android:visibility="gone"
+        />
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -19,7 +27,7 @@
             android:layout_height="match_parent">
 
             <com.scwang.smartrefresh.layout.SmartRefreshLayout
-                android:id="@+id/snapshot_smartrefresh"
+                android:id="@+id/history_refreshLayout_ff"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 >

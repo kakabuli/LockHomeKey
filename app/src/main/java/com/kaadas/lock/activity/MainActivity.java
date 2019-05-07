@@ -13,6 +13,7 @@ import android.widget.RadioGroup;
 
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
+import com.kaadas.lock.activity.cateye.VideoVActivity;
 import com.kaadas.lock.fragment.DeviceFragment;
 import com.kaadas.lock.fragment.HomePageFragment;
 import com.kaadas.lock.fragment.PersonalCenterFragment;
@@ -22,6 +23,7 @@ import com.kaadas.lock.mvp.presenter.MainActivityPresenter;
 import com.kaadas.lock.mvp.view.IMainActivityView;
 import com.kaadas.lock.mvp.view.IMainView;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
+import com.kaadas.lock.publiclibrary.bean.CateEyeInfo;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.PermissionUtil;
 import com.kaadas.lock.utils.ToastUtil;
@@ -205,6 +207,14 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
         intent.setClass(MainActivity.this, OTADialogActivity.class);
         intent.putExtra(KeyConstants.BLE_DEVICE_INFO, bleLockInfo);
         startActivity(intent);*/
+    }
+
+    @Override
+    public void onCatEyeCallIn(CateEyeInfo cateEyeInfo) {
+        Intent intent = new Intent(this,VideoVActivity.class);
+        intent.putExtra(KeyConstants.IS_CALL_IN, true);
+        intent.putExtra(KeyConstants.CATE_INFO, cateEyeInfo);
+        startActivity(intent);
     }
 
     public NoScrollViewPager getViewPager() {

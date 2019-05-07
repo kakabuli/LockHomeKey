@@ -52,7 +52,6 @@
             android:layout_marginBottom="10dp"
             android:layout_centerHorizontal="true"
             android:textColor="@color/white"
-            android:visibility="invisible"
             />
 
         <ImageView
@@ -78,8 +77,7 @@
           android:layout_height="75dp"
           android:orientation="horizontal"
           android:layout_alignParentBottom="true"
-          android:background="#99000000"
-          android:visibility="invisible">
+          android:background="#99000000" >
 
           <LinearLayout
               android:id="@+id/video_h_footer"
@@ -102,7 +100,7 @@
                       android:layout_width="23dp"
                       android:layout_height="22dp"
                       android:layout_marginTop="15dp"
-                      android:background="@mipmap/screenshot" />
+                      android:background="@mipmap/video_screenshot" />
 
                   <TextView
                       android:layout_width="wrap_content"
@@ -126,7 +124,7 @@
                   <ImageView
                       android:layout_width="23dp"
                       android:layout_height="22dp"
-                      android:background="@mipmap/mute"
+                      android:background="@mipmap/video_mute"
                       android:layout_marginTop="15dp"
                       />
 
@@ -170,7 +168,7 @@
                   <ImageView
                       android:layout_width="23dp"
                       android:layout_height="22dp"
-                      android:background="@mipmap/novoice"
+                      android:background="@mipmap/video_voice"
                       android:layout_marginTop="15dp"
                       />
 

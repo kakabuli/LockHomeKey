@@ -132,7 +132,7 @@ public class DeviceZigBeeDetailActivity extends BaseActivity<DeviceZigBeeDetailV
                 zigbeeIntent.putExtra("type", type);
                 startActivity(zigbeeIntent);
             } else {
-                AlertDialogUtil.getInstance().havaNoEditTwoButtonDialog(this, getString(R.string.no_usable_gateway), getString(R.string.add_zigbee_device_first_pair_gateway), getString(R.string.cancel), getString(R.string.configuration), new AlertDialogUtil.ClickListener() {
+                AlertDialogUtil.getInstance().havaNoEditTwoButtonDialog(this, getString(R.string.no_usable_gateway), getString(R.string.add_zigbee_device_first_pair_gateway), getString(R.string.cancel), getString(R.string.configuration),"#1F96F7", new AlertDialogUtil.ClickListener() {
                     @Override
                     public void left() {
 

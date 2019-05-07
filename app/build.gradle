@@ -94,10 +94,14 @@ dependencies {
     implementation 'com.android.support:design:28.0.0'
     implementation project(path: ':linphoneLibrary')
     implementation(name: 'cmapi_v2_0_0', ext: 'aar')
+
     implementation 'com.github.razerdp:BasePopup:2.1.9'
     implementation 'com.bm.photoview:library:1.4.1'
     implementation 'com.yarolegovich:discrete-scrollview:1.4.9'
     implementation 'com.yanzhenjie:recyclerview-swipe:1.1.4'
+    implementation 'org.greenrobot:eventbus:3.1.1'
+    //微信分享
+    implementation 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:+'
     implementation project(':imagepicker')
     implementation project(':linphoneLibrary')
     implementation project(':library:WheelPicker')

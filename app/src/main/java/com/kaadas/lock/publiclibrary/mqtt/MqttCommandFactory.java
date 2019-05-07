@@ -5,6 +5,7 @@ import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.AllowCateyeJoinBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.BindGatewayBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.DeleteGatewayLockDeviceBean;
+import com.kaadas.lock.publiclibrary.mqtt.publishbean.FtpEnableBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.GetAllBindDeviceBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.GetBindGatewayListBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.GetDevicePowerBean;
@@ -18,6 +19,7 @@ import com.kaadas.lock.publiclibrary.mqtt.publishbean.OpenLockBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetJoinAllowBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetLockLang;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.UpdateDevNickNameBean;
+import com.kaadas.lock.publiclibrary.mqtt.publishbean.WakeupCameraBean;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttConstant;
 
 import org.eclipse.paho.client.mqttv3.MqttMessage;
@@ -262,6 +264,16 @@ public class MqttCommandFactory {
         return getMessage(lockLang,messageId);
 
     }
+
+
+    /**
+     * 删除设备
+     * @param gatewayId
+     * @param deviceId
+     * @param bustType
+     * @return
+     */
+
     public static MqttMessage deleteDevice(String gatewayId,String deviceId,String bustType){
         int messageId=getMessageId();
         DeleteGatewayLockDeviceBean.ParamsBean paramsBean=new DeleteGatewayLockDeviceBean.ParamsBean();
@@ -271,13 +283,51 @@ public class MqttCommandFactory {
         return getMessage(gatewayLockDeviceBean,messageId);
     }
 
+    /**
+     * 唤醒FTP
+     * @param gatewayId
+     * @param deviceId
+     * @returne
+     */
+    public static MqttMessage setEnableFTP(String gatewayId,String deviceId){
+        int messageId=getMessageId();
 
+        //(String msgtype, String userId, int msgId, String gwId, String deviceId, String func, ParamsBean params, String returnCode, ReturnDataBean returnData, String timestamp)
+        FtpEnableBean ftpEnableBean=new FtpEnableBean(MqttConstant.MSG_TYPE_REQUEST,MyApplication.getInstance().getUid(),messageId,gatewayId,deviceId,MqttConstant.SET_FTP_ENABLE,new FtpEnableBean.ParamsBean(),"0",new FtpEnableBean.ReturnDataBean(),System.currentTimeMillis()+"");
+        return getMessage(ftpEnableBean,messageId);
+    }
+
+
+    /**
+     * 获取网关锁信息
+     * @param gatewayId
+     * @param deviceId
+     * @return
+     */
     public static MqttMessage getGatewayLockInformation(String gatewayId,String deviceId){
         int messageId=getMessageId();
         GetGatewayLockInfoBean getGatewayLockInfoBean=new GetGatewayLockInfoBean(MqttConstant.MSG_TYPE_REQUEST,MyApplication.getInstance().getUid(),messageId,gatewayId,deviceId,MqttConstant.GET_LOCK_INFO,new GetGatewayLockInfoBean.ParamsBean(),"0",new GetGatewayLockInfoBean.ReturnDataBean(),System.currentTimeMillis()+"");
         return  getMessage(getGatewayLockInfoBean,messageId);
     }
 
+
+    /**
+     * 唤醒猫眼
+     * @param deviceId
+     * @param gwId
+     * @param uid
+     * @return
+     */
+    public static MqttMessage wakeupCamera( String deviceId,String gwId,String uid){
+        int messageId=getMessageId();
+        WakeupCameraBean.ReturnDataBean returnDataBean = new WakeupCameraBean.ReturnDataBean();
+        WakeupCameraBean.ParamsBean paramsBean = new WakeupCameraBean.ParamsBean();
+        //(String deviceId, String func, String gwId, int msgId, String msgtype, ParamsBean params, int returnCode, ReturnDataBean returnData, String timestamp, String userId) {
+
+        WakeupCameraBean getGatewayLockInfoBean=new WakeupCameraBean(deviceId,MqttConstant.WAKEUP_CAMERA,
+                gwId,messageId,MqttConstant.MSG_TYPE_REQUEST, paramsBean,0,returnDataBean,""+System.currentTimeMillis(),uid);
+        return  getMessage(getGatewayLockInfoBean,messageId);
+    }
 
 
 

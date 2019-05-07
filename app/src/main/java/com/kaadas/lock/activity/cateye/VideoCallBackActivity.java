@@ -4,6 +4,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -15,6 +16,7 @@ import com.kaadas.lock.fragment.BluetoothWarnInformationFragment;
 import com.kaadas.lock.fragment.RecordingFragment;
 import com.kaadas.lock.fragment.SnapshotFragment;
 import com.kaadas.lock.fragment.SnapshotFragment1;
+import com.kaadas.lock.utils.Constants;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -38,7 +40,11 @@ public class VideoCallBackActivity extends AppCompatActivity implements View.OnC
     private FragmentTransaction transaction;
     RecordingFragment recordingFragment;
     SnapshotFragment1 snapshotFragment;
+    public static boolean isRunning = false;
 
+    String gatewayId="GW01182510163";
+    String deviceId="CH01191510002";
+    Bundle args = new Bundle();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,7 +54,16 @@ public class VideoCallBackActivity extends AppCompatActivity implements View.OnC
         videoRecording.setOnClickListener(this);
         snapshotInformation.setOnClickListener(this);
         iv_back.setOnClickListener(this);
+
+        if(!TextUtils.isEmpty(deviceId) && !TextUtils.isEmpty(gatewayId)){
+            args.putString(Constants.DEVICE_ID, deviceId);
+            args.putString(Constants.GATEWAY_ID,gatewayId);
+        }
         initFragment();
+        isRunning = true;
+
+
+
 
     }
 
@@ -56,11 +71,17 @@ public class VideoCallBackActivity extends AppCompatActivity implements View.OnC
         manager = getSupportFragmentManager();
         transaction = manager.beginTransaction();
         recordingFragment = new RecordingFragment();
+        recordingFragment.setArguments(args);
         transaction.add(R.id.content, recordingFragment);
         transaction.commit();
 
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        isRunning = false;
+    }
 
     @Override
     public void onClick(View v) {
@@ -80,6 +101,7 @@ public class VideoCallBackActivity extends AppCompatActivity implements View.OnC
                     fragmentTransaction.show(recordingFragment);
                 } else {
                     recordingFragment = new RecordingFragment();
+                    recordingFragment.setArguments(args);
                     fragmentTransaction.add(R.id.content, recordingFragment);
                 }
                 fragmentTransaction.commit();
@@ -96,6 +118,7 @@ public class VideoCallBackActivity extends AppCompatActivity implements View.OnC
                     fragmentTransaction.show(snapshotFragment);
                 } else {
                     snapshotFragment = new SnapshotFragment1();
+                    snapshotFragment.setArguments(args);
                     fragmentTransaction.add(R.id.content, snapshotFragment);
                 }
                 fragmentTransaction.commit();

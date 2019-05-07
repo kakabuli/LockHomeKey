@@ -249,13 +249,23 @@ public class KeyConstants {
     public static final String SAVA_LOCK_PWD="saveLockPwd";
 
     //开锁密码编号
-    public static final String LOCK_PWD_NUMber="lockPwdNumber";
+    public static final String LOCK_PWD_NUMBER="lockPwdNumber";
+
+    //开锁密码集合
+    public static final String LOCK_PWD_LIST="lockPwdList";
+
+    //开锁密码编号添加
+    public static final String ADD_LOCK_PWD_NUMBER="addLockPwdNumber";
 
     //设备名称
     public static final String NAME="name";
 
     //设置onActivityResult
     public static final int DEVICE_DETAIL_BEAN_NUM=1000;
+
+    public static final int DELETE_PWD_REQUEST_CODE=1001;
+
+    public static final int ADD_PWD_REQUEST_CODE=1002;
 
     /**
      * 传递蓝牙设备信息的Key
@@ -265,9 +275,35 @@ public class KeyConstants {
      * 传递当前位置
      */
     public static final String FRAGMENT_POSITION = "fragmentPosition";
+    /**
+     *  传递猫眼数据
+     */
+    public static final String CATE_INFO = "cateInfo";
+
+
+    /**
+     *  是否是呼叫进来
+     */
+    public static final String IS_CALL_IN = "isCallIn";
+
+    /**
+     *  是否是呼叫进来
+     */
+    public static final String IS_ACCEPT_CALL = "isAcceptCall";
 
     /**
      * 升级时，保存的设备蓝牙版本号的Key
      */
     public static final String BLE_VERSION= "bleVersion";
+
+    //区分密码是永久有效还是，临时有效
+    public static final String PWD_TYPE="pwdType";
+    //密码值
+    public static final String PWD_VALUE="pwdValue";
+    //密码编号
+    public static final String PWD_ID="pwdId";
+
+    //密码编号管理
+    public static final String ADD_PWD_ID="addPwdId";
+
 }

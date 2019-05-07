@@ -35,7 +35,7 @@ public class GatewayLockFunctionPresenter<T> extends BasePresenter<GatewayLockFu
         if (mqttService!=null){
             getLockPwdDisposable=mqttService.mqttPublish(MqttConstant.getCallTopic(MyApplication.getInstance().getUid()),MqttCommandFactory.lockPwdFunc(gatewayId,deviceId,"get","pin",pwdId,""))
                                  .compose(RxjavaHelper.observeOnMainThread())
-                                 .timeout(10*1000, TimeUnit.MILLISECONDS)
+                                 .timeout(20*1000, TimeUnit.MILLISECONDS)
                                  .filter(new Predicate<MqttData>() {
                                      @Override
                                      public boolean test(MqttData mqttData) throws Exception {

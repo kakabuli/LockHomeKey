@@ -2,6 +2,7 @@ package com.kaadas.lock.publiclibrary.mqtt.publishresultbean;
 
 import android.text.TextUtils;
 
+import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.bean.HomeShowBean;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.publiclibrary.bean.CateEyeInfo;
@@ -260,12 +261,24 @@ public class AllBindDevices {
         List<ServerBleDevice> bleDevices = returnData.getDevList();
         if (bleDevices != null) {
             for (ServerBleDevice bleDevice : bleDevices) {
-                BleLockInfo bleLockInfo = new BleLockInfo(bleDevice);
-                homeShowBeans.add(new HomeShowBean(HomeShowBean.TYPE_BLE_LOCK, bleDevice.getLockName(), bleDevice.getLockNickName(), bleLockInfo));
+                boolean isExist = false;
+                for (HomeShowBean homeShowBean : MyApplication.getInstance().getHomeShowDevices()) {
+                    if (!isExist && homeShowBean.getDeviceType() == HomeShowBean.TYPE_BLE_LOCK) {
+                        //如果设备原来就存在，那么只替换服务器数据   其他数据不变
+                        BleLockInfo bleLockInfo = (BleLockInfo) homeShowBean.getObject();
+                        if (bleDevice.getMacLock().equals(bleLockInfo.getServerLockInfo().getMacLock())) {
+                            isExist = true;
+                            bleLockInfo.setServerLockInfo(bleDevice);
+                            homeShowBeans.add(homeShowBean);
+                        }
+                    }
+                }
+                if (!isExist) {
+                    BleLockInfo bleLockInfo = new BleLockInfo(bleDevice);
+                    homeShowBeans.add(new HomeShowBean(HomeShowBean.TYPE_BLE_LOCK, bleDevice.getLockName(), bleDevice.getLockNickName(), bleLockInfo));
+                }
             }
         }
-
-
         List<ReturnDataBean.GwListBean> gwList = returnData.getGwList();
         if (gwList != null) {
             for (ReturnDataBean.GwListBean gwListBean : gwList) {
@@ -273,36 +286,61 @@ public class AllBindDevices {
                 if (showGateway == true) {
                     homeShowBeans.add(new HomeShowBean(HomeShowBean.TYPE_GATEWAY, gwListBean.getDeviceSN(), gwListBean.getDeviceNickName(), new GatewayInfo(new ServerGatewayInfo(gwListBean))));
                 }
-
                 List<ServerGwDevice> deviceList = gwListBean.getDeviceList();
-
                 for (ServerGwDevice serverGwDevice : deviceList) {
                     String nickName = serverGwDevice.getNickName();
                     if (TextUtils.isEmpty(nickName)) {
                         nickName = serverGwDevice.getDeviceId();
                     }
+                    boolean isExist = false;
                     if ("kdscateye".equalsIgnoreCase(serverGwDevice.getDevice_type())) {
-                        homeShowBeans.add(new HomeShowBean(HomeShowBean.TYPE_CAT_EYE, serverGwDevice.getDeviceId(),
-                                nickName, new CateEyeInfo(gwListBean.getDeviceSN(), serverGwDevice)));
+                        for (HomeShowBean homeShowBean : MyApplication.getInstance().getHomeShowDevices()) {
+                            if (!isExist && homeShowBean.getDeviceType() == HomeShowBean.TYPE_CAT_EYE) {
+                                CateEyeInfo cateEyeInfo = (CateEyeInfo) homeShowBean.getObject();
+                                //如果设备 网关Id 一致   且deviceId也一致   替换服务器数据
+                                if (cateEyeInfo.getGwID().equals(gwListBean.getDeviceSN())
+                                        && cateEyeInfo.getServerInfo().getDeviceId().equals(serverGwDevice.getDeviceId())
+                                        ) {
+                                    isExist = true;
+                                    cateEyeInfo.setServerInfo(serverGwDevice);
+                                    cateEyeInfo.setGatewayInfo(new GatewayInfo(new ServerGatewayInfo(gwListBean)));
+                                    homeShowBeans.add(homeShowBean);
+                                }
+                            }
+                        }
+                        if (!isExist) {
+
+
+                            CateEyeInfo cateEyeInfo = new CateEyeInfo(gwListBean.getDeviceSN(), serverGwDevice);
+                            cateEyeInfo.setGatewayInfo(new GatewayInfo(new ServerGatewayInfo(gwListBean)));
+                            homeShowBeans.add(new HomeShowBean(HomeShowBean.TYPE_CAT_EYE, serverGwDevice.getDeviceId(), nickName, cateEyeInfo));
+                        }
                     } else {
-                        homeShowBeans.add(new HomeShowBean(HomeShowBean.TYPE_GATEWAY_LOCK, serverGwDevice.getDeviceId(),
-                                nickName, new GwLockInfo(gwListBean.getDeviceSN(), serverGwDevice)));
+                        for (HomeShowBean homeShowBean : MyApplication.getInstance().getHomeShowDevices()) {
+                            if (!isExist && homeShowBean.getDeviceType() == HomeShowBean.TYPE_GATEWAY_LOCK) {
+                                GwLockInfo gwLockInfo = (GwLockInfo) homeShowBean.getObject();
+                                //如果设备 网关Id 一致   且deviceId也一致   替换服务器数据
+                                if (gwLockInfo.getGwID().equals(gwListBean.getDeviceSN())
+                                        && gwLockInfo.getServerInfo().getDeviceId().equals(serverGwDevice.getDeviceId())
+                                        ) {
+                                    isExist = true;
+                                    gwLockInfo.setServerInfo(serverGwDevice);
+                                    homeShowBeans.add(homeShowBean);
+                                }
+                            }
+                        }
+                        if (!isExist) {
+                            homeShowBeans.add(new HomeShowBean(HomeShowBean.TYPE_GATEWAY_LOCK, serverGwDevice.getDeviceId(),
+                                    nickName, new GwLockInfo(gwListBean.getDeviceSN(), serverGwDevice)));
+                        }
 
                     }
-
                 }
             }
         }
-
         return homeShowBeans;
     }
 
-    /**
-     * 获取蓝牙设备列表
-     */
-    public List<ServerBleDevice> getBleDevices() {
-        return data.getDevList();
-    }
 
     /**
      * 获取猫眼列表

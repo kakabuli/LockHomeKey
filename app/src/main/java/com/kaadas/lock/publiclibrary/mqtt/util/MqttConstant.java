@@ -25,7 +25,7 @@ public class MqttConstant {
     //    public static String LINPHONE_URL = "121.201.57.214:5061";//测试sip
 
 
-    public static final String MQTT_REQUEST_APP = "/request/app/func";
+    public static final String  MQTT_REQUEST_APP = "/request/app/func";
 
 
     //断开后，是否自动连接
@@ -65,7 +65,8 @@ public class MqttConstant {
 
     //发布给服务器消息的主题，格式为/request/app/func
     public static final String PUBLISH_TO_SERVER = "/request/app/func";
-
+    //发布给服务器中转网关消息的主题，/clientid/rpc/call
+    public static String PUBLISH_TO_GATEWAY = "/rpc/call";
 
     //1 绑定网关
     public static final String BIND_GATEWAY = "bindGatewayByUser";
@@ -117,9 +118,16 @@ public class MqttConstant {
     //设置锁的音量
     public static final String SET_SOUND_VOLUME="setSoundVolume";
 
-    //获取设备信息
-    public static final String GET_LOCK_INFO="BasicInfo";
+ //获取设备信息
+ public static final String GET_LOCK_INFO="BasicInfo";
+
+ //获取设备信息
+ public static final String WAKEUP_CAMERA="wakeupCamera";
 
     //删除锁
     public static final String DELETE_GATEWAY_LOCK="delDevice";
+
+    //唤醒FTP
+    public static final String SET_FTP_ENABLE="setFtpEnable";
+
 }

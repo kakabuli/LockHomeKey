@@ -150,41 +150,53 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
         switch (lockStatus) {
             case KeyConstants.OPEN_LOCK:
                 //可以开锁
-                tvOpenClock.setClickable(true);
-                tvOpenClock.setText(R.string.click_lock);
-                tvOpenClock.setTextColor(getResources().getColor(R.color.c16B8FD));
-                tvOpenClock.setBackgroundResource(R.mipmap.open_lock_bj);
+                if (tvOpenClock!=null) {
+                    tvOpenClock.setClickable(true);
+                    tvOpenClock.setText(R.string.click_lock);
+                    tvOpenClock.setTextColor(getResources().getColor(R.color.c16B8FD));
+                    tvOpenClock.setBackgroundResource(R.mipmap.open_lock_bj);
+                }
                 break;
             case KeyConstants.DEVICE_OFFLINE:
                 //设备离线
-                tvOpenClock.setClickable(false);
-                tvOpenClock.setText(getString(R.string.device_offline));
-                tvOpenClock.setTextColor(getResources().getColor(R.color.c149EF3));
-                tvOpenClock.setBackgroundResource(R.mipmap.has_been_locked_bj);
+                if (tvOpenClock!=null) {
+                    tvOpenClock.setClickable(false);
+                    tvOpenClock.setText(getString(R.string.device_offline));
+                    tvOpenClock.setTextColor(getResources().getColor(R.color.c149EF3));
+                    tvOpenClock.setBackgroundResource(R.mipmap.has_been_locked_bj);
+                }
                 break;
             case KeyConstants.HAS_BEEN_LOCKED:
                 //已反锁
-                tvOpenClock.setText(getString(R.string.has_been_locked));
-                tvOpenClock.setTextColor(getResources().getColor(R.color.c149EF3));
-                tvOpenClock.setBackgroundResource(R.mipmap.has_been_locked_bj);
+                if (tvOpenClock!=null) {
+                    tvOpenClock.setText(getString(R.string.has_been_locked));
+                    tvOpenClock.setTextColor(getResources().getColor(R.color.c149EF3));
+                    tvOpenClock.setBackgroundResource(R.mipmap.has_been_locked_bj);
+                }
                 break;
             case KeyConstants.IS_LOCKING:
                 //正在开锁中
-                tvOpenClock.setText(getString(R.string.is_locking));
-                tvOpenClock.setTextColor(getResources().getColor(R.color.white));
-                tvOpenClock.setBackgroundResource(R.mipmap.is_locking_bj);
+                if (tvOpenClock!=null) {
+                    tvOpenClock.setText(getString(R.string.is_locking));
+                    tvOpenClock.setTextColor(getResources().getColor(R.color.white));
+                    tvOpenClock.setBackgroundResource(R.mipmap.is_locking_bj);
+                }
                 break;
             case KeyConstants.OPEN_LOCK_SUCCESS:
                 //开锁成功
-                tvOpenClock.setText(getString(R.string.open_lock_success));
-                tvOpenClock.setTextColor(getResources().getColor(R.color.white));
-                tvOpenClock.setBackgroundResource(R.mipmap.open_lock_success_bj);
+                if (tvOpenClock!=null) {
+                    tvOpenClock.setText(getString(R.string.open_lock_success));
+                    tvOpenClock.setTextColor(getResources().getColor(R.color.white));
+                    tvOpenClock.setBackgroundResource(R.mipmap.open_lock_success_bj);
+                }
                 break;
             case KeyConstants.OPEN_LOCK_FAILED:
                 //开锁失败
-                tvOpenClock.setText(getString(R.string.open_lock_failed));
-                tvOpenClock.setTextColor(getResources().getColor(R.color.white));
-                tvOpenClock.setBackgroundResource(R.mipmap.open_lock_fail_bj);
+                if (tvOpenClock!=null) {
+                    tvOpenClock.setText(getString(R.string.open_lock_failed));
+                    tvOpenClock.setTextColor(getResources().getColor(R.color.white));
+                    tvOpenClock.setBackgroundResource(R.mipmap.open_lock_fail_bj);
+                }
                 break;
 
         }
@@ -345,7 +357,9 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
             public void run() {
                 lockStatus=KeyConstants.OPEN_LOCK;
                 changLockStatus(lockStatus);
-                tvOpenClock.setClickable(true);
+                if (tvOpenClock!=null) {
+                    tvOpenClock.setClickable(true);
+                }
             }
         };
         mHandler.postDelayed(reconncetRunnable, 3000);
@@ -363,7 +377,9 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
             public void run() {
                 lockStatus=KeyConstants.OPEN_LOCK;
                 changLockStatus(lockStatus);
-                tvOpenClock.setClickable(true);
+                if (tvOpenClock!=null) {
+                    tvOpenClock.setClickable(true);
+                }
             }
         };
         mHandler.postDelayed(reconncetRunnable, 3000);
@@ -401,8 +417,9 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
                     if (deviceDetailBean!=null){
                         deviceDetailBean.setDeviceName(name);
                     }
-                    tvName.setText(name);
-
+                    if (tvName!=null) {
+                        tvName.setText(name);
+                    }
                 }
             }
         }
