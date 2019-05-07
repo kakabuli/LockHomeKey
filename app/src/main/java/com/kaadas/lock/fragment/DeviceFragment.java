@@ -279,6 +279,8 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
             case 0:
                 //猫眼
                 Intent  cateEyeInfoIntent=new Intent(getActivity(),CateyeFunctionActivity.class);
+                CateEyeInfo cateEyeInfo= (CateEyeInfo) deviceDetailBean.getShowCurentBean();
+
                 startActivity(cateEyeInfoIntent);
                 break;
             case 1:
