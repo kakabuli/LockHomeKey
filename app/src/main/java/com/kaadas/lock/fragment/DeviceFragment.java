@@ -157,9 +157,6 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
             noDeviceLayout.setVisibility(View.VISIBLE);
             refresh.setVisibility(View.GONE);
         }
-
-
-
     }
 
     private void getDifferentTypeDevice(HomeShowBean showBean) {

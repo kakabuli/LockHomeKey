@@ -17,6 +17,9 @@ import com.kaadas.lock.mvp.presenter.SnapPresenter;
 import com.kaadas.lock.mvp.view.IRecordingView;
 import com.kaadas.lock.mvp.view.ISnapShotView;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,6 +58,12 @@ public class RecordingFragment extends CallBackBaseFragment <IRecordingView, Rec
         recordingAdapter = new RecordingAdapter(getActivity(),imageList);
         recording_rv_ff.setLayoutManager(new LinearLayoutManager(getActivity()));
         recording_rv_ff.setAdapter(recordingAdapter);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void recordingFun(String str) {
+
+
     }
 
 

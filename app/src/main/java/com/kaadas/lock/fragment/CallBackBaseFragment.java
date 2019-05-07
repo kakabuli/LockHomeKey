@@ -26,6 +26,8 @@ import com.kaadas.lock.mvp.mvpbase.IBaseView;
 import com.kaadas.lock.utils.LoadingDialog;
 import com.kaadas.lock.widget.GravityPopup;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -95,6 +97,10 @@ public abstract class CallBackBaseFragment<T extends IBaseView, V
         super.onCreate(savedInstanceState);
         mPresenter = createPresent();
         mPresenter.attachView((T) this);
+
+        if(!EventBus.getDefault().isRegistered(this)){
+            EventBus.getDefault().register(this);
+        }
     }
     /**
      * 子类实现具体的构建过程
@@ -142,7 +148,11 @@ public abstract class CallBackBaseFragment<T extends IBaseView, V
         week=todayc.get(Calendar.DAY_OF_WEEK)-1;
         year=todayc.get(Calendar.YEAR);
         year_tv.setText(year+"");
-        time_tv.setText(month+"");
+        if(month<10){
+            time_tv.setText("0"+month+"");
+        }else{
+            time_tv.setText(month+"");
+        }
         yearList.add(year+"");
         lastyear= year-1;
         yearList.add(lastyear+"");
@@ -350,20 +360,23 @@ public abstract class CallBackBaseFragment<T extends IBaseView, V
                 TextView bottom = view.findViewById(R.id.time_select_item_bottom);
                 bottom.setTextColor(Color.parseColor("#FFFFFF"));
 
-                Toast.makeText(getActivity(),myDateList.get(position).getDay()+"",Toast.LENGTH_SHORT).show();
-
-
+              //  Toast.makeText(getActivity(),myDateList.get(position).getDay()+"",Toast.LENGTH_SHORT).show();
 
                 lastView=childView;
                 lastTop= top;
                 lastBottom=bottom;
                 lastPosition=position;
 
+                getPirData(position);
+
             }
         });
         // time_select_rl.smoothScrollToPosition(myDateList.size());
     }
 
+    public void  getPirData(int position){
+
+    }
 
     // 获取某一年有多少月
     public static int getDayOfMonthLength(int year,int month){
@@ -395,6 +408,10 @@ public abstract class CallBackBaseFragment<T extends IBaseView, V
         super.onDestroyView();
         unbinder.unbind();
         mPresenter.detachView();
+
+        if(EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this);
+        }
     }
     @Override
     public void hiddenLoading() {
