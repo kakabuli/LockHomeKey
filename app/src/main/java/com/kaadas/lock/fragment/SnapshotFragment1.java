@@ -176,7 +176,21 @@ public class SnapshotFragment1 extends CallBackBaseFragment<ISnapShotView, SnapP
         pirHistoryAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                if(isFresh){
+                    return;
+                }
+                String imgUrl= newimageList.get(position);
+                String newImgUrl= imageList.get(position);
+                SPUtils2.put(MyApplication.getInstance(),newImgUrl,"looksuccess");
                 Intent intent=new Intent(getActivity(), PreviewActivity.class);
+                intent.putExtra("imgUrl",imgUrl);
+                intent.putExtra("deviceId",deviceId);
+                intent.putExtra("newImgUrl",newImgUrl);
+                intent.putExtra("gatewayId",gatewayId);
+
+                //LinearLayout itemFather=(LinearLayout) view.getParent();
+                view.findViewById(R.id.pir_history_tv_cicle).setVisibility(View.INVISIBLE);
+
                 startActivity(intent);
             }
         });
@@ -431,12 +445,17 @@ public class SnapshotFragment1 extends CallBackBaseFragment<ISnapShotView, SnapP
 
     @Override
     public void showFTPOverTime() {
-//        Toast.makeText(getActivity(),getActivity().getResources().getString(R.string.connect_out_of_date),Toast.LENGTH_SHORT).show();
-//        if(dialog!=null){
-//            dialog.dismiss();
-//        }
-//        history_refreshLayout_ff.finishRefresh();
-//        isFresh=false;
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(getActivity(),getResources().getString(R.string.connect_out_of_date),Toast.LENGTH_SHORT).show();
+                if(dialog!=null){
+                    dialog.dismiss();
+                }
+                history_refreshLayout_ff.finishRefresh();
+                isFresh=false;
+            }
+        });
     }
 
     private void showPirHistoryData(){

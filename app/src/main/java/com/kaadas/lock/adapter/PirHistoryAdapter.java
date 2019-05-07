@@ -55,7 +55,7 @@ public class PirHistoryAdapter extends BaseQuickAdapter<String, BaseViewHolder> 
 		String result=(String) SPUtils2.get(MyApplication.getInstance(),item,"");
 
 		String imgPath=(String) SPUtils2.get(MyApplication.getInstance(),item+ PirConst.IMG_DOWNLOAD_SUC,"");
-		Log.e(PirConst.VideoLog,"item:"+item+ PirConst.IMG_DOWNLOAD_SUC+"  PirHistoryAdapter:"+imgPath);
+		//Log.e(PirConst.VideoLog,"item:"+item+ PirConst.IMG_DOWNLOAD_SUC+"  PirHistoryAdapter:"+imgPath);
 
 
 		if(!TextUtils.isEmpty(imgPath)){
