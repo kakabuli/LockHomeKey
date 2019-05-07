@@ -21,6 +21,7 @@ import com.kaadas.lock.mvp.presenter.AddFingerSuccessPresenter;
 import com.kaadas.lock.mvp.view.IAddFingerSuccessView;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
+import com.kaadas.lock.publiclibrary.http.result.GetPasswordResult;
 import com.kaadas.lock.publiclibrary.http.util.HttpUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.StringUtil;

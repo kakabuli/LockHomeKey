@@ -53,6 +53,10 @@ public class BluetoothDeviceInformationActivity extends BaseBleActivity<IDeviceI
         setContentView(R.layout.activity_bluetooth_device_information);
         ButterKnife.bind(this);
         bleLockInfo = MyApplication.getInstance().getBleService().getBleLockInfo();
+        showLoading(getString(R.string.being_get_device_information));
+        if (mPresenter.isAuth(bleLockInfo, true)) {
+            mPresenter.getBluetoothDeviceInformation();
+        }
         ivBack.setOnClickListener(this);
         tvContent.setText(R.string.device_info);
         rlBluetoothModuleVersion.setOnClickListener(this);
@@ -70,7 +74,8 @@ public class BluetoothDeviceInformationActivity extends BaseBleActivity<IDeviceI
                 finish();
                 break;
             case R.id.rl_bluetooth_module_version:
-
+                mPresenter.checkOtaInfo(tvSerialNumber.getText().toString().trim(),
+                        tvBluetoothModuleVersion.getText().toString().replace("V", ""));
                 break;
         }
     }
@@ -171,5 +176,14 @@ public class BluetoothDeviceInformationActivity extends BaseBleActivity<IDeviceI
                     }
                 }
         );*/
+    }
+    @Override
+    public void onDeviceStateChange(boolean isConnected) {  //设备连接状态改变   连接成功时提示正在鉴权，连接失败时直接提示用户
+        if (isConnected) {
+            showLoading(getString(R.string.is_authing));
+        } else {
+            hiddenLoading();
+            ToastUtil.getInstance().showLong(R.string.connet_failed_please_near);
+        }
     }
 }
