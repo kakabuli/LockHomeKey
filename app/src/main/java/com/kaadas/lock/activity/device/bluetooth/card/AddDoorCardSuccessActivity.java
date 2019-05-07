@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.adapter.ShiXiaoNameAdapter;
 import com.kaadas.lock.bean.ShiXiaoNameBean;
@@ -20,6 +21,7 @@ import com.kaadas.lock.mvp.presenter.AddFingerSuccessPresenter;
 import com.kaadas.lock.mvp.view.IAddFingerSuccessView;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
+import com.kaadas.lock.publiclibrary.http.result.GetPasswordResult;
 import com.kaadas.lock.publiclibrary.http.util.HttpUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.StringUtil;
@@ -65,7 +67,7 @@ public class AddDoorCardSuccessActivity extends BaseActivity<IAddFingerSuccessVi
         btnSave.setOnClickListener(this);
         tvContent.setText(getString(R.string.add_door_card));
         initRecycleview();
-
+        bleLockInfo = MyApplication.getInstance().getBleService().getBleLockInfo();
         userNum = getIntent().getIntExtra(KeyConstants.USER_NUM, 0);
         tvSuccessPageNumber.setText("" + userNum);
     }

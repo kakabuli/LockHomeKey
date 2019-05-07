@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.mvp.mvpbase.BasePresenter;
 import com.kaadas.lock.mvp.view.IDeviceView;
+import com.kaadas.lock.mvp.view.IHomeView;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.publiclibrary.http.result.ServerBleDevice;
 import com.kaadas.lock.publiclibrary.http.util.RxjavaHelper;
@@ -91,6 +92,7 @@ public class DevicePresenter<T> extends BasePresenter<IDeviceView> {
                 });
         compositeDisposable.add(allBindDeviceDisposable);
     }
+
 
     public void setBleLockInfo(BleLockInfo bleLockInfo) {
         //如果service中有bleLockInfo  并且deviceName一致，就不重新设置。

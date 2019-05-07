@@ -27,6 +27,7 @@ import com.kaadas.lock.mvp.view.IHomeView;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.AllBindDevices;
 import com.kaadas.lock.utils.KeyConstants;
+import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.widget.UnderLineRadioBtn;
 
 import java.util.ArrayList;
@@ -76,7 +77,6 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
         super.onCreate(savedInstanceState);
         activity = (MainActivity) getActivity();
         activity.getViewPager().addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-
             @Override
             public void onPageScrolled(int i, float v, int i1) {
 
@@ -110,14 +110,10 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
         View view = View.inflate(getActivity(), R.layout.fragment_home, null);
         bind = ButterKnife.bind(this, view);
         btnAddDevice.setOnClickListener(this);
-        hasDevice=false;
+        hasDevice = false;
         changePage();
-
-        AllBindDevices allBindDevices = MyApplication.getInstance().getAllBindDevices();
-        if (allBindDevices != null) {
-            devices = allBindDevices.getHomeShow(false);
-            initData(devices);
-        }
+        devices = MyApplication.getInstance().getHomeShowDevices();
+        initData(devices);
         return view;
     }
 
@@ -125,6 +121,7 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
     protected HomePreseneter<IHomeView> createPresent() {
         return new HomePreseneter<>();
     }
+
     private void changePage() {
         if (hasDevice) {
             llHasDevice.setVisibility(View.VISIBLE);
@@ -141,18 +138,18 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
 
     public void initData(final List<HomeShowBean> devices) {
         if (devices == null) {
-            hasDevice=false;
+            hasDevice = false;
             changePage();
             return;
         }
 
         if (devices.size() == 0) {
-            hasDevice=false;
+            hasDevice = false;
             changePage();
             return;
         }
 
-        hasDevice=true;
+        hasDevice = true;
         changePage();
         fragments = new ArrayList<>();
 
@@ -242,8 +239,8 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
                 case HomeShowBean.TYPE_BLE_LOCK: //蓝牙锁:
                     BleLockFragment bleLockFragment = new BleLockFragment();
                     Bundle bundle = new Bundle();
-                    bundle.putSerializable(KeyConstants.BLE_LOCK_INFO,(BleLockInfo)devices.get(i).getObject());
-                    bundle.putSerializable(KeyConstants.FRAGMENT_POSITION,i);
+                    bundle.putSerializable(KeyConstants.BLE_LOCK_INFO, (BleLockInfo) devices.get(i).getObject());
+                    bundle.putSerializable(KeyConstants.FRAGMENT_POSITION, i);
                     bleLockFragment.setArguments(bundle);
                     fragments.add(bleLockFragment);
                     break;
@@ -414,20 +411,17 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
 
     @Override
     public void onDeviceRefresh(AllBindDevices allBindDevices) {
-        if (allBindDevices !=null){
-            devices = allBindDevices.getHomeShow(false);
-            initData(devices);
-        }else {
-            initData(null);
-        }
+        devices = MyApplication.getInstance().getHomeShowDevices();
+        LogUtils.e("首页  设备个数是   " + devices.size());
+        initData(devices);
     }
 
     @Override
     public void onClick(View v) {
         Intent intent;
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.btn_add_device:
-                intent=new Intent(getActivity(),DeviceAddActivity.class);
+                intent = new Intent(getActivity(), DeviceAddActivity.class);
                 startActivity(intent);
                 break;
         }
@@ -440,6 +434,7 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
     public void listenerSelect(ISelectChangeListener listener) {
         listeners.add(listener);
     }
+
     public interface ISelectChangeListener {
         void onSelectChange(boolean isSelect);
     }

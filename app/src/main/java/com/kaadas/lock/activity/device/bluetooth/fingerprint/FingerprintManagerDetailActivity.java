@@ -22,6 +22,7 @@ import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.result.GetPasswordResult;
 import com.kaadas.lock.publiclibrary.http.util.HttpUtils;
 import com.kaadas.lock.utils.AlertDialogUtil;
+import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.NetUtil;
@@ -58,9 +59,17 @@ public class FingerprintManagerDetailActivity extends BaseBleActivity<IPasswordD
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fingerprint_manager_detail);
+        ButterKnife.bind(this);
         bleLockInfo = MyApplication.getInstance().getBleService().getBleLockInfo();
         fingerprint = (GetPasswordResult.DataBean.Fingerprint) getIntent().getSerializableExtra(KeyConstants.PASSWORD_NICK);
-        ButterKnife.bind(this);
+        long createTime = fingerprint.getCreateTime();
+        if (createTime == 0) {
+            createTime = System.currentTimeMillis()/1000;
+        }
+        tvTime.setText(getString(R.string.authorization_time)+" "+DateUtils.secondToDate(createTime));
+        tvName.setText(fingerprint.getNickName());
+        tvNumber.setText(fingerprint.getNum()+" " + fingerprint.getNickName());
+        mPresenter.isAuth(bleLockInfo, false);
         ivBack.setOnClickListener(this);
         tvContent.setText(getString(R.string.fingerprint_detail));
         btnDelete.setOnClickListener(this);

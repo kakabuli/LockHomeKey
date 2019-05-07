@@ -122,4 +122,8 @@ public class MqttConstant {
 
     //删除锁
     public static final String DELETE_GATEWAY_LOCK="delDevice";
+
+    //唤醒FTP
+    public static final String SET_FTP_ENABLE="setFtpEnable";
+
 }

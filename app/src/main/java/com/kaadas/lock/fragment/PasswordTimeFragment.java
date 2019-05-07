@@ -33,6 +33,8 @@ import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.publiclibrary.http.postbean.AddPasswordBean;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.utils.AlertDialogUtil;
+import com.kaadas.lock.utils.DateFormatUtils;
+import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.NetUtil;
@@ -76,6 +78,8 @@ public class PasswordTimeFragment extends BaseBleFragment<IAddTimePasswprdView, 
     LinearLayout llCustom;
     int timeStatus = 0;//时间策略
     private BleLockInfo bleLockInfo;
+    long startMilliseconds = 0;//开始毫秒数
+    long endMilliseconds = 0;//结束毫秒数
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -84,6 +88,7 @@ public class PasswordTimeFragment extends BaseBleFragment<IAddTimePasswprdView, 
         }
         ButterKnife.bind(this, mView);
         bleLockInfo = ((BluetoothUserPasswordAddActivity) getActivity()).getLockInfo();
+        mPresenter.isAuth(bleLockInfo, false);
         initRecycleview();
         btnRandomGeneration.setOnClickListener(this);
         btnConfirmGeneration.setOnClickListener(this);
@@ -174,8 +179,7 @@ public class PasswordTimeFragment extends BaseBleFragment<IAddTimePasswprdView, 
                     return;
                 } else if (KeyConstants.YONG_JIU == timeStatus) {
                     if (mPresenter.isAuth(bleLockInfo, true)) {
-                        //todo 获取到时间设置
-//                        mPresenter.setPwd(strPassword, 1, nickName, startMilliseconds, endMilliseconds);
+                        mPresenter.setPwd(strPassword, 1, nickName, startMilliseconds, endMilliseconds);
                     }
                     //永久
                 } else if (KeyConstants.ONE_DAY == timeStatus) {
@@ -186,8 +190,7 @@ public class PasswordTimeFragment extends BaseBleFragment<IAddTimePasswprdView, 
                     }
                 } else if (KeyConstants.CUSTOM == timeStatus) {
                     //自定义
-                    //todo 获取到时间的处理
-                 /*   if (startMilliseconds == 0) {
+                    if (startMilliseconds == 0) {
                         ToastUtil.getInstance().showShort(R.string.select_take_effect_time);
                         return;
                     }
@@ -205,14 +208,15 @@ public class PasswordTimeFragment extends BaseBleFragment<IAddTimePasswprdView, 
                     LogUtils.e("当前时间   " + DateUtils.getDateTimeFromMillisecond(System.currentTimeMillis()));
                     if (mPresenter.isAuth(bleLockInfo, true)) {
                         mPresenter.setPwd(strPassword, 4, nickName, startMilliseconds, endMilliseconds);
-                    }*/
+                    }
                 }
 
 
                 break;
         }
     }
-
+    String startcurrentTime = DateFormatUtils.long2Str(System.currentTimeMillis(), true);
+    String endcurrentTime = DateFormatUtils.long2Str(System.currentTimeMillis(), true);
     @Override
     public void onCheckedChanged(RadioGroup group, int checkedId) {
         switch (checkedId) {
@@ -288,10 +292,8 @@ public class PasswordTimeFragment extends BaseBleFragment<IAddTimePasswprdView, 
         intent.putExtra(KeyConstants.TO_DETAIL_NICKNAME, nickName);
         intent.putExtra(KeyConstants.TIME_CE_LUE, timeStatus);
         if (KeyConstants.CUSTOM == timeStatus) {
-            //todo 获取到时间传过去
-            return;
-          /*  intent.putExtra(KeyConstants.CUSTOM_START_TIME, startMilliseconds);
-            intent.putExtra(KeyConstants.CUSTOM_END_TIME, endMilliseconds);*/
+            intent.putExtra(KeyConstants.CUSTOM_START_TIME, startMilliseconds);
+            intent.putExtra(KeyConstants.CUSTOM_END_TIME, endMilliseconds);
         }
         startActivity(intent);
     }

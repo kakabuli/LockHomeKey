@@ -1,5 +1,6 @@
 package com.kaadas.lock.activity.device;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -25,6 +26,8 @@ import com.kaadas.lock.publiclibrary.http.util.HttpUtils;
 import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.ToastUtil;
+
+import net.sdvn.cmapi.util.LogUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -106,23 +109,48 @@ public class BluetoothLockFunctionActivity extends BaseBleActivity<IDeviceDetail
     TextView tvOpenClock;
     int lockStatus = -1;
     private BleLockInfo bleLockInfo;
+    private static final int TO_MORE_REQUEST_CODE = 101;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bluetooth_lock_function);
         ButterKnife.bind(this);
+        bleLockInfo = mPresenter.getBleLockInfo();
         ivBack.setOnClickListener(this);
-        tvType.setText(getString(R.string.bluetooth_type) + " ");
+        tvType.setText(getString(R.string.bluetooth_type) + bleLockInfo.getServerLockInfo().getModel());
         initData();
         initClick();
-        bleLockInfo = mPresenter.getBleLockInfo();
-        dealWithPower(100);
+        showData();
+        mPresenter.getAllPassword(bleLockInfo);
 //        initRecycleview();
     }
 
     @Override
     protected DeviceDetailPresenter<IDeviceDetailView> createPresent() {
         return new DeviceDetailPresenter();
+    }
+    @SuppressLint("SetTextI18n")
+    private void showData() {
+        //todo 等从锁中获取自动还是手动模式进行展示
+//        tvLockMode.setText();
+        //默认为手动模式
+        if (mPresenter.isAuth(bleLockInfo, true)) {
+            authResult(true);
+            if (bleLockInfo.getBattery() != -1) {
+                dealWithPower(bleLockInfo.getBattery());
+            }
+            mPresenter.getDeviceInfo();
+        }
+
+
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (mPresenter.getBleLockInfo() != null && mPresenter.getBleLockInfo().getServerLockInfo() != null && mPresenter.getBleLockInfo().getServerLockInfo().getLockNickName() != null) {
+            LogUtils.e("设备昵称是   " + mPresenter.getBleLockInfo().getServerLockInfo().getLockNickName());
+            tvBluetoothName.setText(mPresenter.getBleLockInfo().getServerLockInfo().getLockNickName());
+        }
     }
 
     private void initClick() {
@@ -217,23 +245,28 @@ public class BluetoothLockFunctionActivity extends BaseBleActivity<IDeviceDetail
                 break;
             case R.id.ll_one:
                 intent = new Intent(this, BluetoothPasswordManagerActivity.class);
+                intent.putExtra(KeyConstants.BLE_DEVICE_INFO, bleLockInfo);
                 startActivity(intent);
                 break;
             case R.id.ll_two:
                 intent = new Intent(this, FingerprintManagerActivity.class);
+                intent.putExtra(KeyConstants.BLE_DEVICE_INFO, bleLockInfo);
                 startActivity(intent);
                 break;
             case R.id.ll_three:
                 intent = new Intent(this, DoorCardManagerActivity.class);
+                intent.putExtra(KeyConstants.BLE_DEVICE_INFO, bleLockInfo);
                 startActivity(intent);
                 break;
             case R.id.ll_four:
                 intent = new Intent(this, BluetoothSharedDeviceManagementActivity.class);
+                intent.putExtra(KeyConstants.BLE_DEVICE_INFO, bleLockInfo);
                 startActivity(intent);
                 break;
             case R.id.ll_five:
                 intent = new Intent(this, BluetoothMoreActivity.class);
-                startActivity(intent);
+                intent.putExtra(KeyConstants.BLE_DEVICE_INFO, bleLockInfo);
+                startActivityForResult(intent, TO_MORE_REQUEST_CODE);
                 break;
             case R.id.tv_open_clock:
                 //开锁
@@ -242,7 +275,19 @@ public class BluetoothLockFunctionActivity extends BaseBleActivity<IDeviceDetail
                 break;
         }
     }
-
+    @Override
+    public void onSearchDeviceFailed(Throwable throwable) {
+        lockStatus=KeyConstants.DEVICE_OFFLINE;
+        changLockStatus();
+    }
+    @Override
+    public void authResult(boolean isSuccess) {
+        if (isSuccess) {
+            lockStatus=KeyConstants.OPEN_LOCK;
+            changLockStatus();
+        } else {
+        }
+    }
     private void dealWithPower(int power) {
         //电量：80%
         if (power > 100) {
@@ -286,7 +331,15 @@ public class BluetoothLockFunctionActivity extends BaseBleActivity<IDeviceDetail
 
 
     }
-
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == TO_MORE_REQUEST_CODE && resultCode == RESULT_OK) {
+            if (data.getBooleanExtra(KeyConstants.IS_DELETE, false)) {
+                finish();
+            }
+        }
+    }
     @Override
     public void onElectricUpdata(Integer electric) {
         if (bleLockInfo.getBattery() != -1) {

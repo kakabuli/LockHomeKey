@@ -30,7 +30,7 @@ public class AddFingerSuccessPresenter<T> extends BasePresenter<IAddFingerSucces
                 .subscribe(new BaseObserver<BaseResult>() {
                     @Override
                     public void onSuccess(BaseResult result) {
-                        LogUtils.e("上传秘钥昵称到服务器成功");
+                        LogUtils.e("davi 上传秘钥昵称到服务器成功");
                         // TODO: 2019/3/8   通知更新秘钥列表   从服务器拿
                         if (mViewRef.get() != null) {
                             mViewRef.get().onUploadSuccess();

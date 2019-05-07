@@ -49,13 +49,10 @@ public class FingerprintCollectionActivity extends BaseBleActivity<IAddFingerpri
         ivBack.setOnClickListener(this);
         tvContent.setText(R.string.add_fingerprint);
         bleLockInfo = MyApplication.getInstance().getBleService().getBleLockInfo();
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Intent intent = new Intent(FingerprintCollectionActivity.this, AddFingerprintSuccessActivity.class);
-                startActivity(intent);
-            }
-        }, 3000);
+        if (mPresenter.isAuth(bleLockInfo,true)){
+            mPresenter.getFingerNumberFromLock();
+        }
+
     }
 
     @Override

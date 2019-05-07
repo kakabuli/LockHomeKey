@@ -46,6 +46,9 @@ public class DoorCardIdentificationActivity extends BaseBleActivity<IAddCardEndV
         bleLockInfo = MyApplication.getInstance().getBleService().getBleLockInfo();
         ivBack.setOnClickListener(this);
         tvContent.setText(R.string.add_door_card);
+        if (mPresenter.isAuth(bleLockInfo, true)) {
+            mPresenter.getCardNumberFromLock();
+        }
     }
 
     @Override

@@ -12,6 +12,7 @@ import android.text.TextUtils;
 
 import com.google.gson.Gson;
 import com.kaadas.lock.activity.login.LoginActivity;
+import com.kaadas.lock.bean.HomeShowBean;
 import com.kaadas.lock.publiclibrary.linphone.MemeManager;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.publiclibrary.ble.BleService;
@@ -80,6 +81,8 @@ public class MyApplication extends Application {
     private AllBindDevices allBindDevices;
     private String TAG = "凯迪仕";
     private IWXAPI api;
+    private List<HomeShowBean> homeShowDevices = new ArrayList<>();
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -487,7 +490,6 @@ public class MyApplication extends Application {
                 })
                 .timeout(10 * 1000, TimeUnit.MILLISECONDS)
                 .subscribe(new Consumer<MqttData>() {
-
                     @Override
                     public void accept(MqttData mqttData) throws Exception {
                         if (allBindDeviceDisposable != null && !allBindDeviceDisposable.isDisposed()) {
@@ -496,9 +498,11 @@ public class MyApplication extends Application {
                         String payload = mqttData.getPayload();
                         allBindDevices = new Gson().fromJson(payload, AllBindDevices.class);
                         if (allBindDevices != null) {
+
+                            homeShowDevices = allBindDevices.getHomeShow(false);
+                            LogUtils.e("获取到的首页设备个数是   "  +homeShowDevices.size() );
                             getDevicesFromServer.onNext(allBindDevices);
                         }
-
                     }
                 }, new Consumer<Throwable>() {
                     @Override
@@ -508,9 +512,10 @@ public class MyApplication extends Application {
                 });
     }
 
-    public void getPower() {
-
+    public List<HomeShowBean> getHomeShowDevices() {
+        return homeShowDevices;
     }
+
 
     /**
      * 获取缓存的设备
@@ -564,15 +569,5 @@ public class MyApplication extends Application {
         this.linphone_port = linphone_port;
     }
 
-
-    private boolean isVideoActivityRun = false;
-
-    public boolean isVideoActivityRun() {
-        return isVideoActivityRun;
-    }
-
-    public void setVideoActivityRun(boolean videoActivityRun) {
-        isVideoActivityRun = videoActivityRun;
-    }
 
 }

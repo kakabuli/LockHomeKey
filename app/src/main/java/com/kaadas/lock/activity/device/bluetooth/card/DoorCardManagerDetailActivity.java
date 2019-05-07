@@ -22,6 +22,7 @@ import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.result.GetPasswordResult;
 import com.kaadas.lock.publiclibrary.http.util.HttpUtils;
 import com.kaadas.lock.utils.AlertDialogUtil;
+import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.NetUtil;
@@ -61,6 +62,16 @@ public class DoorCardManagerDetailActivity extends BaseBleActivity<IPasswordDeta
         ButterKnife.bind(this);
         bleLockInfo = MyApplication.getInstance().getBleService().getBleLockInfo();
         card = (GetPasswordResult.DataBean.Card) getIntent().getSerializableExtra(KeyConstants.TO_PWD_DETAIL);
+        long createTime = card.getCreateTime();
+        if (createTime == 0) {
+            createTime = System.currentTimeMillis() / 1000;
+        }
+        tvTime.setText(DateUtils.secondToDate(createTime ));
+
+        tvName.setText(card.getNickName());
+
+        tvNumber.setText(card.getNum());
+        mPresenter.isAuth(bleLockInfo, true);
         ivBack.setOnClickListener(this);
         tvContent.setText(getString(R.string.door_card_detail));
         ivEditor.setOnClickListener(this);

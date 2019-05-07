@@ -11,9 +11,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.kaadas.lock.R;
+import com.kaadas.lock.activity.cateye.CallComingActivity;
 import com.kaadas.lock.activity.cateye.VideoCallBackActivity;
 import com.kaadas.lock.activity.cateye.VideoVActivity;
+import com.kaadas.lock.publiclibrary.bean.CateEyeInfo;
 import com.kaadas.lock.utils.DateUtils;
+import com.kaadas.lock.utils.KeyConstants;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -46,8 +49,6 @@ public class CateyeFunctionActivity extends AppCompatActivity implements View.On
     TextView tvExternal;
     @BindView(R.id.iv_power)
     ImageView ivPower;
-    //    @BindView(R.id.tv_power)
-//    TextView tvPower;
     @BindView(R.id.tv_date)
     TextView tvDate;
     @BindView(R.id.ll_power)
@@ -56,6 +57,7 @@ public class CateyeFunctionActivity extends AppCompatActivity implements View.On
     LinearLayout llLookBack;
     @BindView(R.id.ll_more)
     LinearLayout llMore;
+    private CateEyeInfo cateEyeInfo;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -68,6 +70,8 @@ public class CateyeFunctionActivity extends AppCompatActivity implements View.On
         rlIcon.setOnClickListener(this);
         changeOpenLockStatus(1);
         dealWithPower(100);
+        cateEyeInfo = (CateEyeInfo) getIntent().getSerializableExtra(KeyConstants.CATE_INFO);
+        tvName.setText(cateEyeInfo.getServerInfo().getNickName());
     }
 
     @Override
@@ -78,15 +82,17 @@ public class CateyeFunctionActivity extends AppCompatActivity implements View.On
                 finish();
                 break;
             case R.id.ll_look_back:
-                Intent intentVideo=new Intent(CateyeFunctionActivity.this,VideoCallBackActivity.class);
+                Intent intentVideo = new Intent(CateyeFunctionActivity.this, VideoCallBackActivity.class);
                 startActivity(intentVideo);
                 break;
             case R.id.ll_more:
                 intent = new Intent(this, CateyeMoreActivity.class);
                 startActivity(intent);
                 break;
-            case  R.id.rl_icon:
+            case R.id.rl_icon:
                 intent = new Intent(this, VideoVActivity.class);
+                intent.putExtra(KeyConstants.IS_CALL_IN, false);
+                intent.putExtra(KeyConstants.CATE_INFO, cateEyeInfo);
                 startActivity(intent);
                 break;
         }
@@ -98,8 +104,6 @@ public class CateyeFunctionActivity extends AppCompatActivity implements View.On
       /*  在线：“点击，查看门外”
 
         离线：“设备已离线”*/
-
-
         switch (status) {
             case 1:
                 //猫眼在线

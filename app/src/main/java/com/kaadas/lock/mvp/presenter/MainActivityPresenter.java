@@ -5,6 +5,8 @@ import android.text.TextUtils;
 
 import com.google.gson.Gson;
 import com.kaadas.lock.MyApplication;
+import com.kaadas.lock.activity.cateye.VideoVActivity;
+import com.kaadas.lock.bean.HomeShowBean;
 import com.kaadas.lock.mvp.mvpbase.BlePresenter;
 import com.kaadas.lock.mvp.view.IMainActivityView;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
@@ -27,6 +29,7 @@ import com.kaadas.lock.utils.SPUtils;
 import net.sdvn.cmapi.Device;
 
 import org.linphone.core.LinphoneCall;
+import org.linphone.mediastream.Log;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -48,6 +51,8 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
     private Disposable disposable;
     private Disposable memeLoginDisposable;
     private Disposable memeDisposable;
+    private Disposable deviceChangeDisposable;
+    private CateEyeInfo callInCatEyeInfo;  //呼叫进来的猫眼信息
 
     @Override
     public void authSuccess() {
@@ -122,11 +127,12 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
     }
 
     public String getNickNameByDeviceName(String name) {
-        List<BleLockInfo> devices = MyApplication.getInstance().getDevices();
-        if (devices != null && devices.size() > 0) {
-            for (BleLockInfo lockInfo : devices) {
-                if (lockInfo.getServerLockInfo().getLockName().equals(name)) {
-                    return lockInfo.getServerLockInfo().getLockNickName();
+        List<HomeShowBean> homeShowDevices = MyApplication.getInstance().getHomeShowDevices();
+        for (HomeShowBean homeShowBean : homeShowDevices) {
+            if (homeShowBean.getDeviceType() == HomeShowBean.TYPE_BLE_LOCK) {
+                BleLockInfo bleLockInfo = (BleLockInfo) homeShowBean.getObject();
+                if (bleLockInfo.getServerLockInfo().getLockName().equals(name)) {
+                    return bleLockInfo.getServerLockInfo().getLockNickName();
                 }
             }
         }
@@ -195,7 +201,7 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                 public void incomingCall(LinphoneCall linphoneCall) {
                     //收到来电通知
                     LogUtils.e("Linphone  收到来电     ");
-                    if (MyApplication.getInstance().isVideoActivityRun()) {
+                    if (VideoVActivity.isRunning) {
                         LogUtils.e("Linphone  收到来电   VideoActivity已经运行  不出来  ");
                         return;
                     }
@@ -213,9 +219,9 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                             LogUtils.e("获取到网关Id为  " + cateEyeInfo.getGwID());
                             gwId = cateEyeInfo.getGwID();
                             gatewayInfo = cateEyeInfo.getGatewayInfo();
+                            callInCatEyeInfo = cateEyeInfo;
                         }
                     }
-
                     //如果网关Id为空    不朝下走了
                     if (TextUtils.isEmpty(gwId) || gatewayInfo == null) {
                         return;
@@ -234,9 +240,14 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                                 && mePwd.equals(MemeManager.getInstance().getCurrentPassword())) {
                             //查看是否有设备在线   如果有  弹出来电框
                             if (MemeManager.getInstance().getGwDevices().size() > 0) {
-
-
+                                if (mViewRef.get()!=null){
+                                    mViewRef.get().onCatEyeCallIn(callInCatEyeInfo);
+                                }
+                            } else {  //本地登录了米米网账号且是当前猫眼的meme网昂好   但是没有本地设备在线  等待五秒
+                                listDeviceChange();
                             }
+                        } else {  //本地登录的meme网账号不是呼叫进来猫眼的meme网账号   不处理
+
                         }
                     } else { //meme网没有连接
                         loginMeme(meUsername, mePwd);
@@ -251,17 +262,17 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                 @Override
                 public void callConnected() {
                     super.callConnected();
-
                     LogUtils.e("Linphone  通话连接成功   ");
                     // 视频通话默认免提，语音通话默认非免提
-                    LinphoneHelper.toggleSpeaker(true);
-                    // 所有通话默认非静音
-                    LinphoneHelper.toggleMicro(false);
+//                    LinphoneHelper.toggleSpeaker(true);
+//                    // 所有通话默认非静音
+//                    LinphoneHelper.toggleMicro(false);
                 }
 
                 @Override
                 public void callEnd() {
                     super.callEnd();
+
                     LogUtils.e("Linphone  通话结束   ");
                 }
             });
@@ -272,6 +283,11 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
         }
     }
 
+    /**
+     * 登录米米网
+     * @param meUsername
+     * @param mePwd
+     */
     private void loginMeme(String meUsername, String mePwd) {
         //获取到设备列表
         if (memeDisposable != null && !memeDisposable.isDisposed()) {
@@ -279,17 +295,17 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
         }
         Observable<Boolean> loginMeme = MemeManager.getInstance().LoginMeme(meUsername, mePwd, MyApplication.getInstance());
         Observable<List<Device>> devicesChange = MemeManager.getInstance().listDevicesChange();
-        memeDisposable = Observable.zip(loginMeme, devicesChange, new BiFunction<Boolean, List<Device>, Boolean>() {
-            @Override
-            public Boolean apply(Boolean aBoolean, List<Device> devices) throws Exception {
-                LogUtils.e("米米网登陆成功  且网关在线");
-                if (aBoolean && devices.size() > 0) { //米米网登陆成功且网关在线  正常到此处，那么都应该是成功的
-
-                    return true;
-                }
-                return false;
-            }
-        })
+        memeDisposable = Observable.zip(loginMeme, devicesChange,
+                new BiFunction<Boolean, List<Device>, Boolean>() {
+                    @Override
+                    public Boolean apply(Boolean aBoolean, List<Device> devices) throws Exception {
+                        LogUtils.e("米米网登陆成功  且网关在线");
+                        if (aBoolean && devices.size() > 0) { //米米网登陆成功且网关在线  正常到此处，那么都应该是成功的
+                            return true;
+                        }
+                        return false;
+                    }
+                })
                 .compose(RxjavaHelper.observeOnMainThread())
                 .timeout(5 * 1000, TimeUnit.MILLISECONDS)
                 .subscribe(new Consumer<Boolean>() {
@@ -300,8 +316,34 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                         }
                         if (aBoolean) { // 米米网登陆成功且网关在线
                             LogUtils.e("米米网  登陆成功   弹出来电框");
+                            if (mViewRef.get()!=null){
+                                mViewRef.get().onCatEyeCallIn(callInCatEyeInfo);
+                            }
                         } else { //米米网登陆失败或者网关不在线   不做处理
 
+                        }
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        LogUtils.e("登录米米网失败或者设备部在线");
+                    }
+                });
+    }
+
+
+    private void listDeviceChange(){
+        deviceChangeDisposable = MemeManager.getInstance().listDevicesChange()
+                .compose(RxjavaHelper.observeOnMainThread())
+                .timeout(5 * 1000, TimeUnit.MILLISECONDS)
+                .subscribe(new Consumer<List<Device>>() {
+                    @Override
+                    public void accept(List<Device> devices) throws Exception {
+                        toDisposable(deviceChangeDisposable);
+                        if (devices.size()>1){
+                            if (mViewRef.get()!=null){
+                                mViewRef.get().onCatEyeCallIn(callInCatEyeInfo);
+                            }
                         }
                     }
                 }, new Consumer<Throwable>() {
@@ -310,6 +352,12 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
 
                     }
                 });
+        compositeDisposable.add(deviceChangeDisposable);
     }
 
+    @Override
+    public void detachView() {
+        super.detachView();
+        LinphoneHelper.deleteUser();
+    }
 }

@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.kaadas.lock.activity.cateye.CallComingActivity"
+    android:background="@mipmap/call_coming_bg">
+
+
+    <TextView
+        android:id="@+id/call_coming_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="15dp"/>
+
+    <ImageView
+        android:id="@+id/call_coming_img"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@mipmap/call_coming_eye"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="185dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="@string/call_coming_connecting"
+        android:layout_below="@id/call_coming_img"
+        android:textColor="@color/white"
+        android:textSize="11sp"
+        android:layout_marginTop="30dp"/>
+
+
+
+
+
+
+        <View
+            android:id="@+id/call_coming_center_view"
+            android:layout_width="1dp"
+            android:layout_height="20dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="110dp"></View>
+
+
+    <LinearLayout
+        android:id="@+id/call_coming_refuse_ll"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:layout_toLeftOf="@id/call_coming_center_view"
+        android:layout_marginBottom="65dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginRight="60dp">
+
+        <ImageView
+            android:id="@+id/tv_cat_device_power"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@mipmap/call_coming_refuse"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_20"
+            android:drawablePadding="@dimen/dp_9"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="11sp"
+            android:text="@string/call_coming_refuse" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/call_coming_answer_ll"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:layout_toRightOf="@id/call_coming_center_view"
+        android:layout_marginBottom="65dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="60dp">
+
+        <ImageView
+            android:id="@+id/iv_accept_call"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@mipmap/call_coming_answer"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_20"
+            android:drawablePadding="@dimen/dp_9"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="11sp"
+            android:text="@string/call_coming_answer" />
+    </LinearLayout>
+
+
+
+</RelativeLayout>

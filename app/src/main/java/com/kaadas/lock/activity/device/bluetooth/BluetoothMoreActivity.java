@@ -209,6 +209,7 @@ public class BluetoothMoreActivity extends BaseBleActivity<IDeviceMoreView, Devi
                 break;
             case R.id.rl_safe_mode:
                 intent = new Intent(this, BluetoothSafeModeActivity.class);
+                intent.putExtra(KeyConstants.BLE_DEVICE_INFO, bleLockInfo);
                 startActivity(intent);
 
                 break;
@@ -226,6 +227,7 @@ public class BluetoothMoreActivity extends BaseBleActivity<IDeviceMoreView, Devi
                 break;
             case R.id.rl_door_lock_language_switch:
                 intent = new Intent(this, BluetoothLockLanguageSettingActivity.class);
+                intent.putExtra(KeyConstants.BLE_DEVICE_INFO, bleLockInfo);
                 startActivity(intent);
                 break;
             case R.id.rl_silent_mode:
@@ -253,6 +255,7 @@ public class BluetoothMoreActivity extends BaseBleActivity<IDeviceMoreView, Devi
                 break;
             case R.id.rl_device_information:
                 intent = new Intent(this, BluetoothDeviceInformationActivity.class);
+                intent.putExtra(KeyConstants.BLE_DEVICE_INFO, bleLockInfo);
                 startActivity(intent);
                 break;
             case R.id.rl_check_firmware_update:

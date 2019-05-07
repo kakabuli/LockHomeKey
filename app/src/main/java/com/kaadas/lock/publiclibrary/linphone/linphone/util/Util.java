@@ -16,7 +16,7 @@ public class Util {
     public final static String KAADAS_DIR = MyApplication.getInstance().getExternalFilesDir("") + File.separator + KAADAS;
     public final static String VIDEO_DIR = KAADAS_DIR + "/videos";
     public final static String PICTURE_DIR = KAADAS_DIR + "/pictures";
-    public final static String RECORD_VIDEO_PATH = VIDEO_DIR + "/"+"20181314520.mkv";
+    public final static String RECORD_VIDEO_PATH = VIDEO_DIR + "/"+"temp.mkv";
     //系统相册路径
 //	public  static final String SYSTEM_ALBUM_PATH=Environment.getExternalStorageDirectory()
 	public  static final String SYSTEM_ALBUM_PATH=MyApplication.getInstance().getExternalFilesDir("")

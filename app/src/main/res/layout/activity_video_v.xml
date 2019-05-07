@@ -4,33 +4,24 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.kaadas.lock.activity.cateye.VideoHActivity"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context="com.kaadas.lock.activity.cateye.VideoHActivity">
 
     <include
         android:id="@+id/preview_header"
-        layout="@layout/head"></include>
+        layout="@layout/head" />
 
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        >
+        android:orientation="vertical">
 
-      <!-- 视频 -->
+        <!-- 视频 -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="300dp"
             android:orientation="vertical">
-
-            <!--<View-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="match_parent"-->
-                <!--&gt;-->
-                <!---->
-            <!--</View>-->
-
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -38,66 +29,68 @@
                 android:layout_weight="1"
                 android:background="@color/video_color">
 
+                <SurfaceView
+                    android:id="@+id/video_preview"
+                    android:layout_width="120dp"
+                    android:layout_height="145dp"
+                    android:visibility="gone" />
 
                 <!-- 视频播放页面 -->
-                <View
+                <org.linphone.mediastream.video.display.GL2JNIView
                     android:id="@+id/video_v_surfaceview"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:visibility="gone"></View>
+                    android:layout_height="match_parent" />
 
 
                 <ImageView
-                    android:id="@+id/video_v_go"
+                    android:id="@+id/video_v_full"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@mipmap/video_full_screen"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentRight="true"
                     android:layout_marginTop="15dp"
-                    android:layout_marginRight="15dp"/>
+                    android:layout_marginRight="15dp"
+                    android:background="@mipmap/video_full_screen" />
 
 
-                  <TextView
-                      android:id="@+id/video_play_time"
-                      android:layout_width="wrap_content"
-                      android:layout_height="wrap_content"
-                      android:text="00:12:20"
-                      android:layout_centerHorizontal="true"
-                      android:layout_marginBottom="15dp"
-                      android:layout_alignParentBottom="true"
-                      android:textColor="#FFFFFF"
-                      android:visibility="gone"/>
+                <TextView
+                    android:id="@+id/video_play_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="15dp"
+                    android:text="00:12:20"
+                    android:textColor="#FFFFFF"
+                    android:visibility="gone" />
 
 
-                  <ImageView
-                      android:id="@+id/video_start_play"
-                      android:layout_width="wrap_content"
-                      android:layout_height="wrap_content"
-                      android:background="@mipmap/startplay"
-                      android:layout_centerInParent="true"
-                      />
+                <ImageView
+                    android:id="@+id/video_start_play"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:background="@mipmap/startplay" />
 
-                   <TextView
-                       android:id="@+id/video_connecting_tv"
-                       android:visibility="gone"
-                       android:layout_width="wrap_content"
-                       android:layout_height="wrap_content"
-                       android:text="@string/video_connecting"
-                       android:layout_centerInParent="true"
-                       android:textColor="@color/white"
-                       />
+                <TextView
+                    android:id="@+id/video_connecting_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="@string/video_connecting"
+                    android:textColor="@color/white"
+                    android:visibility="gone" />
 
 
-                    <ImageView
-                        android:visibility="gone"
-                        android:id="@+id/video_hang_up"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@mipmap/video_hang_up"
-                        android:layout_centerHorizontal="true"
-                        android:layout_alignParentBottom="true"
-                        android:layout_marginBottom="20dp"/>
+                <ImageView
+                    android:id="@+id/video_hang_up"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="20dp"
+                    android:background="@mipmap/video_hang_up"
+                    android:visibility="gone" />
 
             </RelativeLayout>
 
@@ -106,60 +99,38 @@
                 android:layout_width="match_parent"
                 android:layout_height="80dp"
                 android:background="#232323"
+                android:gravity="center"
                 android:orientation="horizontal"
-                android:visibility="visible">
+                android:visibility="gone">
 
 
-                <LinearLayout
+                <CheckBox
+                    android:id="@+id/cb_screen_shot"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center"
                     android:layout_weight="1"
-                    android:gravity="center_horizontal"
-                    android:orientation="vertical">
+                    android:background="@null"
+                    android:button="@null"
+                    android:drawableTop="@mipmap/video_screenshot"
+                    android:drawablePadding="10dp"
+                    android:gravity="center"
+                    android:text="@string/screenshot_name"
+                    android:textColor="#fff" />
 
-                    <ImageView
-                        android:id="@+id/tv_cat_device_power"
-                        android:layout_width="23dp"
-                        android:layout_height="22dp"
-                        android:background="@mipmap/screenshot"
-                        android:layout_marginTop="20dp"
-                        />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/dp_11"
-                        android:drawablePadding="@dimen/dp_9"
-                        android:gravity="center"
-                        android:textColor="@color/white"
-                        android:text="@string/screenshot_name" />
-                </LinearLayout>
-
-                <LinearLayout
+                <CheckBox
+                    android:id="@+id/cb_mute"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center"
                     android:layout_weight="1"
-                    android:gravity="center_horizontal"
-                    android:orientation="vertical">
-
-
-                    <ImageView
-                        android:layout_width="23dp"
-                        android:layout_height="22dp"
-                        android:background="@mipmap/mute"
-                        android:layout_marginTop="20dp"
-                        />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/dp_11"
-                        android:drawablePadding="@dimen/dp_9"
-                        android:gravity="center"
-                        android:textColor="@color/white"
-                        android:text="@string/mute_name" />
-
-                </LinearLayout>
+                    android:background="@null"
+                    android:button="@null"
+                    android:drawableTop="@drawable/cb_mute"
+                    android:drawablePadding="10dp"
+                    android:gravity="center"
+                    android:text="@string/mute_name"
+                    android:textColor="#fff" />
 
 
                 <LinearLayout
@@ -170,66 +141,40 @@
                     android:orientation="vertical">
 
                     <ImageView
-                        android:layout_width="45dp"
-                        android:layout_height="45dp"
+                        android:id="@+id/hangup"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:background="@mipmap/hangup"
-                        />
-
+                        android:gravity="center" />
                 </LinearLayout>
 
-
-                <LinearLayout
+                <CheckBox
+                    android:id="@+id/cb_hands_free"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center"
                     android:layout_weight="1"
-                    android:gravity="center_horizontal"
-                    android:orientation="vertical">
+                    android:background="@null"
+                    android:button="@null"
+                    android:drawableTop="@drawable/cb_voice"
+                    android:drawablePadding="10dp"
+                    android:gravity="center"
+                    android:text="@string/novoice"
+                    android:textColor="#fff" />
 
-
-                    <ImageView
-                        android:layout_width="23dp"
-                        android:layout_height="22dp"
-                        android:background="@mipmap/novoice"
-                        android:layout_marginTop="20dp"
-                        />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/dp_11"
-                        android:drawablePadding="@dimen/dp_9"
-                        android:gravity="center"
-                        android:textColor="@color/white"
-                        android:text="@string/novoice" />
-
-                </LinearLayout>
-
-
-                <LinearLayout
+                <CheckBox
+                    android:id="@+id/cb_screen_record"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center"
                     android:layout_weight="1"
-                    android:gravity="center_horizontal"
-                    android:orientation="vertical">
-
-
-                    <ImageView
-                        android:layout_width="23dp"
-                        android:layout_height="22dp"
-                        android:background="@mipmap/recording_video"
-                        android:layout_marginTop="20dp"
-                        />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/dp_11"
-                        android:drawablePadding="@dimen/dp_9"
-                        android:gravity="center"
-                        android:textColor="@color/white"
-                        android:text="@string/recording_name" />
-
-                </LinearLayout>
+                    android:background="@null"
+                    android:button="@null"
+                    android:drawableTop="@drawable/cb_recording"
+                    android:drawablePadding="10dp"
+                    android:gravity="center"
+                    android:text="@string/recording_name"
+                    android:textColor="#fff" />
 
 
             </LinearLayout>
@@ -242,50 +187,43 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            >
-
+            android:layout_weight="1">
 
             <com.yarolegovich.discretescrollview.DiscreteScrollView
                 android:id="@+id/forecast_city_picker"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:visibility="visible"/>
+                android:visibility="visible" />
 
             <LinearLayout
                 android:id="@+id/video_h_no_lock"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:visibility="gone"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:visibility="gone">
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@mipmap/lock_no"
-                    android:layout_marginTop="20dp"
                     android:layout_gravity="center_horizontal"
-                    />
+                    android:layout_marginTop="20dp"
+                    android:background="@mipmap/lock_no" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
                     android:layout_marginTop="@dimen/dp_11"
                     android:drawablePadding="@dimen/dp_9"
                     android:gravity="center"
-                    android:layout_gravity="center_horizontal"
-                    android:textColor="#ABABAB"
-                    android:text="@string/select_no_lock" />
+                    android:text="@string/select_no_lock"
+                    android:textColor="#ABABAB" />
             </LinearLayout>
 
 
         </RelativeLayout>
-
-
-
-
 
 
     </LinearLayout>

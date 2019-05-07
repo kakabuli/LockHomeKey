@@ -19,6 +19,7 @@ import com.kaadas.lock.mvp.mvpbase.BaseBleActivity;
 import com.kaadas.lock.mvp.presenter.FingerprintManagerPresenter;
 import com.kaadas.lock.mvp.view.IFingerprintManagerView;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
+import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.result.GetPasswordResult;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.NetUtil;
@@ -67,14 +68,16 @@ public class FingerprintManagerActivity extends BaseBleActivity<IFingerprintMana
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fingerprint_manager);
         ButterKnife.bind(this);
+        bleLockInfo = MyApplication.getInstance().getBleService().getBleLockInfo();
+        mPresenter.getAllPassword(bleLockInfo, false);
+        //进入默认鉴权
+        mPresenter.isAuth(bleLockInfo, false);
         tvContent.setText(getString(R.string.fingerprint));
         ivBack.setOnClickListener(this);
         tvSynchronizedRecord.setOnClickListener(this);
         llAdd.setOnClickListener(this);
         pageChange();
         initRecycleview();
-        bleLockInfo = MyApplication.getInstance().getBleService().getBleLockInfo();
-        list.add(new GetPasswordResult.DataBean.Fingerprint("fff", "fff", 1));
         initData();
         initRefresh();
     }
@@ -111,6 +114,7 @@ public class FingerprintManagerActivity extends BaseBleActivity<IFingerprintMana
     @Override
     protected void onResume() {
         super.onResume();
+        mPresenter.getAllPassword(bleLockInfo, false);
     }
 
     @Override
@@ -160,7 +164,9 @@ public class FingerprintManagerActivity extends BaseBleActivity<IFingerprintMana
                 if (isSync) {
                     ToastUtil.getInstance().showShort(R.string.is_sync_please_wait);
                 } else {
-                    //TODO 同步
+                    if (mPresenter.isAuth(bleLockInfo, true)) {
+                        mPresenter.syncPassword();
+                    }
                 }
                 break;
         }
@@ -202,7 +208,8 @@ public class FingerprintManagerActivity extends BaseBleActivity<IFingerprintMana
             isNotData = true;
         }
         if (pwdList.size() > 0) {
-            fingerprintManagerAdapter.notifyDataSetChanged();
+//            fingerprintManagerAdapter.notifyDataSetChanged();
+            initRecycleview();
         }
         pageChange();
     }
@@ -215,5 +222,29 @@ public class FingerprintManagerActivity extends BaseBleActivity<IFingerprintMana
     @Override
     public void onUpdate(List<GetPasswordResult.DataBean.Fingerprint> pwdList) {
 
+    }
+    @Override
+    public void onGetPasswordSuccess(GetPasswordResult result) {
+        refreshLayout.finishRefresh();
+        if (result.getData().getFingerprintList().size() == 0) {
+            isNotData = true;
+        } else {
+            isNotData = false;
+        }
+        list = result.getData().getFingerprintList();
+        if (result.getData().getFingerprintList().size() > 0) {
+            initRecycleview();
+        }
+        pageChange();
+    }
+    @Override
+    public void onGetPasswordFailedServer(BaseResult result) {
+        ToastUtil.getInstance().showShort(R.string.get_finger_failed);
+        refreshLayout.finishRefresh();
+    }
+    @Override
+    public void onGetPasswordFailed(Throwable throwable) {
+        ToastUtil.getInstance().showShort(R.string.get_finger_failed);
+        refreshLayout.finishRefresh();
     }
 }
