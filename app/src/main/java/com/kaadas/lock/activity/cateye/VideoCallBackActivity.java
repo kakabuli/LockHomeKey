@@ -40,6 +40,7 @@ public class VideoCallBackActivity extends AppCompatActivity implements View.OnC
     private FragmentTransaction transaction;
     RecordingFragment recordingFragment;
     SnapshotFragment1 snapshotFragment;
+    public static boolean isRunning = false;
 
     String gatewayId="GW01182510163";
     String deviceId="CH01191510002";
@@ -59,6 +60,7 @@ public class VideoCallBackActivity extends AppCompatActivity implements View.OnC
             args.putString(Constants.GATEWAY_ID,gatewayId);
         }
         initFragment();
+        isRunning = true;
 
 
 
@@ -75,6 +77,11 @@ public class VideoCallBackActivity extends AppCompatActivity implements View.OnC
 
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        isRunning = false;
+    }
 
     @Override
     public void onClick(View v) {

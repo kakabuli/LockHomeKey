@@ -13,6 +13,8 @@ public class Constants {
     //音频
     public static final String AUDIO="audio";
 
+    public final static int MEDIA_TYPE_VIDEO = 1;
+
     //设备id
     public static final String DEVICE_ID="device_id";
     //网关id

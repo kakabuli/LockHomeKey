@@ -13,6 +13,7 @@ import com.kaadas.lock.publiclibrary.linphone.linphone.linphone.PhoneBean;
 import com.kaadas.lock.publiclibrary.linphone.linphonenew.LinphoneManager;
 import com.kaadas.lock.publiclibrary.linphone.linphonenew.LinphoneService;
 import com.kaadas.lock.utils.FileUtils;
+import com.kaadas.lock.utils.LogUtils;
 
 import org.linphone.core.LinphoneCall;
 import org.linphone.core.LinphoneCallParams;
@@ -77,6 +78,7 @@ public class LinphoneHelper {
     }
 
     public static void addAutoAcceptCallBack(PhoneAutoAccept autoAccept) {
+        LogUtils.e("设置猫眼状态监听");
         LinphoneService.addAutoAccept(autoAccept);
     }
 

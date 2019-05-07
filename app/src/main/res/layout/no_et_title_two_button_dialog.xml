@@ -49,7 +49,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:textSize="@dimen/sp_13"
-            android:textColor="@color/dialog_text_color"
+            android:textColor="#1F96F7"
             android:text="@string/query"
             android:gravity="center"
             />

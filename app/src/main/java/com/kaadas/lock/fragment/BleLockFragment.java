@@ -90,6 +90,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle arguments = getArguments();
+
         bleLockInfo = (BleLockInfo) arguments.getSerializable(KeyConstants.BLE_LOCK_INFO);
         position = arguments.getInt(KeyConstants.FRAGMENT_POSITION);
         lockRunnable = new Runnable() {
