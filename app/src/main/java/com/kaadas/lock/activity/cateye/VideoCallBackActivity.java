@@ -38,6 +38,7 @@ public class VideoCallBackActivity extends AppCompatActivity implements View.OnC
     private FragmentTransaction transaction;
     RecordingFragment recordingFragment;
     SnapshotFragment1 snapshotFragment;
+    public static boolean isRunning = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +50,7 @@ public class VideoCallBackActivity extends AppCompatActivity implements View.OnC
         snapshotInformation.setOnClickListener(this);
         iv_back.setOnClickListener(this);
         initFragment();
+        isRunning = true;
 
     }
 
@@ -61,6 +63,11 @@ public class VideoCallBackActivity extends AppCompatActivity implements View.OnC
 
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        isRunning = false;
+    }
 
     @Override
     public void onClick(View v) {

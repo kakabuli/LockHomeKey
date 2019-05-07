@@ -785,6 +785,7 @@
     <string name="call_coming_answer">接听</string>
     <string name="video_must_record_5_seconds">视频最短需要录制5秒</string>
     <string name="screen_success">截图成功</string>
+    <string name="screen_failed">截图失败</string>
     <string name="lock_power">%1$s</string>
     <string name="password_yong_jiu_valid">密码永久有效</string>
     <string name="password_one_day_valid">密码24小时有效</string>
@@ -793,4 +794,8 @@
     <string name="password_once_valid">该密码一次性有效</string>
     <string name="get_finger_failed">获取指纹列表失败</string>
     <string name="get_card_failed">获取卡片列表失败</string>
+    <string name="call_time_out">呼叫超时</string>
+    <string name="call_failed">呼叫失败</string>
+    <string name="link_failed">连接失败</string>
+    <string name="call_failed_cat_eye_offline">呼叫失败，猫眼不在线</string>
 </resources>
