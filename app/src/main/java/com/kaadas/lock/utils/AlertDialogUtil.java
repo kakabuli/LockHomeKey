@@ -2,6 +2,7 @@ package com.kaadas.lock.utils;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.graphics.Color;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -64,6 +65,30 @@ public class AlertDialogUtil {
         tvContent.setText(content);
         return alertDialog;
     }
+    //没有标题，只有内容和一个按钮
+    public AlertDialog singleButtonNoTitleDialog(Context context, String content,String query,String queryColor ,ClickListener clickListener) {
+        View mView = LayoutInflater.from(context).inflate(R.layout.no_edit_singlebutton_dialog_no_title, null);
+        TextView tvContent = mView.findViewById(R.id.tv_content);
+        TextView tv_query = mView.findViewById(R.id.tv_button);
+        tvContent.setText(content);
+        tv_query.setText(query);
+        tv_query.setTextColor(Color.parseColor(queryColor));
+        AlertDialog alertDialog = AlertDialogUtil.getInstance().common(context, mView);
+
+        //确定
+        tv_query.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (clickListener != null) {
+                    clickListener.right();
+                }
+                alertDialog.dismiss();
+            }
+        });
+
+        return alertDialog;
+    }
+
 
     //2  no_edit_singleButton
     public void noEditSingleButtonDialog(Context context, String title, String content, String query, ClickListener clickListener) {
@@ -133,7 +158,7 @@ public class AlertDialogUtil {
     }
 
     //没有标题的对话框
-    public void noEditTitleTwoButtonDialog(Context context, String content, String left, String right, ClickListener clickListener) {
+    public void noEditTitleTwoButtonDialog(Context context, String content, String left, String right,String leftColor,String rightColor, ClickListener clickListener) {
         View mView = LayoutInflater.from(context).inflate(R.layout.no_et_title_two_button_dialog, null);
         TextView tvTitle = mView.findViewById(R.id.tv_hint);
         TextView tvContent = mView.findViewById(R.id.tv_content);
@@ -142,7 +167,9 @@ public class AlertDialogUtil {
         AlertDialog alertDialog = AlertDialogUtil.getInstance().common(context, mView);
         tvContent.setText(content);
         tv_cancel.setText(left);
+        tv_cancel.setTextColor(Color.parseColor(leftColor));
         tv_query.setText(right);
+        tv_query.setTextColor(Color.parseColor(rightColor));
         //取消
         tv_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -166,7 +193,7 @@ public class AlertDialogUtil {
     }
 
     //有标题的对话框
-    public void havaNoEditTwoButtonDialog(Context context, String title, String content, String left, String right, ClickListener clickListener) {
+    public void havaNoEditTwoButtonDialog(Context context, String title, String content, String left, String right, String rightColor,ClickListener clickListener) {
         View mView = LayoutInflater.from(context).inflate(R.layout.no_et_two_button_dialog, null);
         TextView tvTitle = mView.findViewById(R.id.tv_title);
         TextView tvContent = mView.findViewById(R.id.tv_content);
@@ -177,6 +204,7 @@ public class AlertDialogUtil {
         tvContent.setText(content);
         tv_cancel.setText(left);
         tv_query.setText(right);
+        tv_query.setTextColor(Color.parseColor(rightColor));
         //取消
         tv_cancel.setOnClickListener(new View.OnClickListener() {
             @Override

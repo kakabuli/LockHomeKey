@@ -309,4 +309,11 @@ public class StringUtil {
     public static String getEdittextContent(EditText et) {
         return et.getText().toString().trim();
     }
+
+    //每两个字符中间加空格
+    public static String getFileAddSpace(String replace) {
+        String regex = "(.{1})";
+        replace = replace.replaceAll(regex, "$1 ");
+        return replace;
+    }
 }

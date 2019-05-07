@@ -37,6 +37,8 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.constant.SpinnerStyle;
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
 import com.scwang.smartrefresh.layout.header.ClassicsHeader;
+import com.tencent.mm.opensdk.openapi.IWXAPI;
+import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 import com.uuzuche.lib_zxing.activity.ZXingLibrary;
 
 
@@ -70,15 +72,14 @@ public class MyApplication extends Application {
     private List<Activity> activities = new ArrayList<>();
     // APP_ID 替换为你的应用从官方网站申请到的合法appID
     private static final String APP_ID = "wx8e524a5da9bfdd78";
-    //数据库文件名称
-    private static final String DB_NAME = "xiaokai.db";
+
     // IWXAPI 是第三方app和微信通信的openApi接口
     protected MqttService mqttService;
     private BleService bleService;
     private Disposable allBindDeviceDisposable;
     private AllBindDevices allBindDevices;
     private String TAG = "凯迪仕";
-
+    private IWXAPI api;
     @Override
     public void onCreate() {
         super.onCreate();
@@ -93,8 +94,19 @@ public class MyApplication extends Application {
         listenerAppBackOrForge();
         //扫描二维码初始化
         ZXingLibrary.initDisplayOpinion(this);
-
         initMeme();
+        regToWx();
+    }
+
+    private void regToWx() {
+        // 通过WXAPIFactory工厂，获取IWXAPI的实例
+        api = WXAPIFactory.createWXAPI(this, APP_ID, true);
+        // 将应用的appId注册到微信
+        api.registerApp(APP_ID);
+    }
+
+    public IWXAPI getApi() {
+        return api;
     }
 
     private void initMeme() {

@@ -133,7 +133,7 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
         return "";
     }
 
-    //获取通知
+    //获取网关状态通知
     public void getPublishNotify() {
         disposable = MyApplication.getInstance().getMqttService().listenerNotifyData()
                 .subscribe(new Consumer<MqttData>() {
@@ -152,6 +152,12 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                 });
         compositeDisposable.add(disposable);
     }
+
+    //获取锁设备
+
+
+
+
 
     public void initLinphone() {
         if (!TextUtils.isEmpty(MyApplication.getInstance().getToken()) && !TextUtils.isEmpty(MyApplication.getInstance().getUid())) {
