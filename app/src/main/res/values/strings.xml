@@ -829,5 +829,7 @@
     <string name="ftp_login_fail">下载失败,FTP登录失败</string>
     <string name="ftp_exception">下载失败,FTP下载异常</string>
     <string name="cat_eye_no_ftp">猫眼上无该天的FTP快照</string>
+    <string name="go_next_activity_fail">图片下载失败！</string>
+    <string name="download_overtime">下载图片超时</string>
     <string name="is_open_lock">正在开门...</string>
 </resources>

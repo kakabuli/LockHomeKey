@@ -30,4 +30,7 @@ public class Constants {
     public static final String VIDEO_SUFFIX="video.h264";
     //音频后缀
     public static final String AUDIO_SUFFIX="audio.raw";
+
+    //下载的图片文件夹名字
+    public static final String DOWNLOAD_IMAGE_FOLDER_NAME="catEyeImages";
 }

@@ -611,4 +611,14 @@ public class MyApplication extends Application {
     public void setMediaPlayerActivity(boolean mediaPlayerActivity) {
         isMediaPlayerActivity = mediaPlayerActivity;
     }
+
+    private String[] downloadList;
+
+    public String[] getDownloadList() {
+        return downloadList;
+    }
+
+    public void setDownloadList(String[] downloadList) {
+        this.downloadList = downloadList;
+    }
 }
