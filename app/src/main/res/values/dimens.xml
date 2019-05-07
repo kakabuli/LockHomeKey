@@ -214,5 +214,6 @@
     <dimen name="sp_40">40sp</dimen>
     <dimen name="sp_41">41sp</dimen>
     <dimen name="sp_48">48sp</dimen>
-
+    <dimen name="date_unit_text_size">18sp</dimen>
+    <dimen name="picker_view_height">160dp</dimen>
 </resources>

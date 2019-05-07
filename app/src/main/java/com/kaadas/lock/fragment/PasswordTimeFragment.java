@@ -3,16 +3,15 @@ package com.kaadas.lock.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -40,7 +39,9 @@ import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.NetUtil;
 import com.kaadas.lock.utils.StringUtil;
 import com.kaadas.lock.utils.ToastUtil;
+import com.kaadas.lock.widget.CustomDatePicker;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,19 +54,21 @@ import butterknife.ButterKnife;
 
 public class PasswordTimeFragment extends BaseBleFragment<IAddTimePasswprdView, AddTimePasswordPresenter<IAddTimePasswprdView>>
         implements RadioGroup.OnCheckedChangeListener, View.OnClickListener, IAddTimePasswprdView, BaseQuickAdapter.OnItemClickListener {
-    @BindView(R.id.recycleview)
-    RecyclerView recyclerView;
-    @BindView(R.id.et_name)
-    EditText etName;
-    List<ShiXiaoNameBean> list = new ArrayList<>();
-    ShiXiaoNameAdapter shiXiaoNameAdapter;
-    View mView;
+    long startMilliseconds = 0;//开始毫秒数
+    long endMilliseconds = 0;//结束毫秒数
+    int timeStatus = 0;//时间策略
+    @BindView(R.id.pwd_manager_icon)
+    ImageView pwdManagerIcon;
     @BindView(R.id.et_password)
     EditText etPassword;
     @BindView(R.id.btn_random_generation)
     TextView btnRandomGeneration;
-    @BindView(R.id.btn_confirm_generation)
-    Button btnConfirmGeneration;
+    @BindView(R.id.pwd_manager_grant_iv)
+    ImageView pwdManagerGrantIv;
+    @BindView(R.id.et_name)
+    EditText etName;
+    @BindView(R.id.recycleview)
+    RecyclerView recycleview;
     @BindView(R.id.rb_one)
     RadioButton rbOne;
     @BindView(R.id.rb_two)
@@ -74,33 +77,67 @@ public class PasswordTimeFragment extends BaseBleFragment<IAddTimePasswprdView, 
     RadioButton rbThree;
     @BindView(R.id.rg)
     RadioGroup rg;
+    @BindView(R.id.ll_effective_time)
+    LinearLayout llEffectiveTime;
+    @BindView(R.id.ll_deadline)
+    LinearLayout llDeadline;
     @BindView(R.id.ll_custom)
     LinearLayout llCustom;
-    int timeStatus = 0;//时间策略
+    @BindView(R.id.btn_confirm_generation)
+    Button btnConfirmGeneration;
+    @BindView(R.id.tv_take_effect_date)
+    TextView tvTakeEffectDate;
+    @BindView(R.id.tv_take_effect_am_pm)
+    TextView tvTakeEffectAmPm;
+    @BindView(R.id.tv_take_effect_time)
+    TextView tvTakeEffectTime;
+    @BindView(R.id.tv_deadline_date)
+    TextView tvDeadlineDate;
+    @BindView(R.id.tv_deadline_am_pm)
+    TextView tvDeadlineAmPm;
+    @BindView(R.id.tv_deadline_time)
+    TextView tvDeadlineTime;
     private BleLockInfo bleLockInfo;
-    long startMilliseconds = 0;//开始毫秒数
-    long endMilliseconds = 0;//结束毫秒数
-    @Nullable
+    private String[] str1;
+    ShiXiaoNameAdapter shiXiaoNameAdapter;
+
+    public static PasswordTimeFragment newInstance() {
+        PasswordTimeFragment fragment = new PasswordTimeFragment();
+        return fragment;
+    }
+
+    private CustomDatePicker mTimerPicker;
+    private CustomDatePicker mTimerPicker1;
+    List<ShiXiaoNameBean> list = new ArrayList<>();
+
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        if (mView == null) {
-            mView = inflater.inflate(R.layout.fragment_password_time, container, false);
-        }
-        ButterKnife.bind(this, mView);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View mFragmentView = inflater.inflate(R.layout.fragment_password_time, container, false);
+        ButterKnife.bind(this, mFragmentView);
+        initTimerPicker();
+
+        rg.setOnCheckedChangeListener(this);
+        rg.check(R.id.rb_two);//默认选中24小时
+        llCustom.setVisibility(View.GONE);
+        timeStatus = KeyConstants.ONE_DAY;
+
+        llEffectiveTime.setOnClickListener(this);
+        llDeadline.setOnClickListener(this);
+        btnRandomGeneration.setOnClickListener(this);
+        btnConfirmGeneration.setOnClickListener(this);
+
+
         bleLockInfo = ((BluetoothUserPasswordAddActivity) getActivity()).getLockInfo();
         mPresenter.isAuth(bleLockInfo, false);
         initRecycleview();
-        btnRandomGeneration.setOnClickListener(this);
-        btnConfirmGeneration.setOnClickListener(this);
-        rg.setOnCheckedChangeListener(this);
-        return mView;
+        return mFragmentView;
+
     }
 
     @Override
     protected AddTimePasswordPresenter<IAddTimePasswprdView> createPresent() {
         return new AddTimePasswordPresenter<>();
     }
-
 
     private void initRecycleview() {
         list.add(new ShiXiaoNameBean(getString(R.string.father), false));
@@ -110,33 +147,48 @@ public class PasswordTimeFragment extends BaseBleFragment<IAddTimePasswprdView, 
         list.add(new ShiXiaoNameBean(getString(R.string.elder_sister), false));
         list.add(new ShiXiaoNameBean(getString(R.string.rests), false));
         shiXiaoNameAdapter = new ShiXiaoNameAdapter(list);
-        recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 6));
-        recyclerView.setAdapter(shiXiaoNameAdapter);
+        recycleview.setLayoutManager(new GridLayoutManager(getActivity(), 6));
+        recycleview.setAdapter(shiXiaoNameAdapter);
         shiXiaoNameAdapter.setOnItemClickListener(this);
     }
 
     @Override
-    public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-        for (int i = 0; i < list.size(); i++) {
-            list.get(i).setSelected(false);
+    public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
+
+        switch (checkedId) {
+            case R.id.rb_one:
+                llCustom.setVisibility(View.GONE);
+                timeStatus = KeyConstants.YONG_JIU;
+                break;
+            case R.id.rb_two:
+                llCustom.setVisibility(View.GONE);
+                timeStatus = KeyConstants.ONE_DAY;
+                break;
+            case R.id.rb_three:
+                timeStatus = KeyConstants.CUSTOM;
+                llCustom.setVisibility(View.VISIBLE);
+                setstartTime(System.currentTimeMillis());
+                setEndTime(System.currentTimeMillis() + 24 * 60 * 60 * 1000);
+                break;
         }
-        ShiXiaoNameBean shiXiaoNameBean = list.get(position);
-        String name = shiXiaoNameBean.getName();
-        etName.setText(name);
-        etName.setSelection(name.length());
-        list.get(position).setSelected(true);
-        shiXiaoNameAdapter.notifyDataSetChanged();
+
     }
 
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-    }
+    public void onClick(View view) {
+        switch (view.getId()) {
+            // 开始时间
+            case R.id.ll_effective_time:
+                LogUtils.d("davi mTimerPicker "+mTimerPicker);
+                // 日期格式为yyyy-MM-dd HH:mm
+                mTimerPicker.show(startcurrentTime);
+                break;
+            // 结束时间
+            case R.id.ll_deadline:
 
-    @Override
-    public void onClick(View v) {
-        Intent intent;
-        switch (v.getId()) {
+                mTimerPicker1.show(endcurrentTime);
+
+                break;
             case R.id.btn_random_generation:
                 String password = StringUtil.makeRandomPassword();
                 etPassword.setText(password);
@@ -210,30 +262,111 @@ public class PasswordTimeFragment extends BaseBleFragment<IAddTimePasswprdView, 
                         mPresenter.setPwd(strPassword, 4, nickName, startMilliseconds, endMilliseconds);
                     }
                 }
-
-
                 break;
         }
     }
+
     String startcurrentTime = DateFormatUtils.long2Str(System.currentTimeMillis(), true);
     String endcurrentTime = DateFormatUtils.long2Str(System.currentTimeMillis(), true);
-    @Override
-    public void onCheckedChanged(RadioGroup group, int checkedId) {
-        switch (checkedId) {
-            case R.id.rb_one:
-                llCustom.setVisibility(View.GONE);
-                timeStatus = KeyConstants.YONG_JIU;
-                break;
-            case R.id.rb_two:
-                llCustom.setVisibility(View.GONE);
-                timeStatus = KeyConstants.ONE_DAY;
-                break;
-            case R.id.rb_three:
-                timeStatus = KeyConstants.CUSTOM;
-                llCustom.setVisibility(View.VISIBLE);
-                break;
+
+    private void initTimerPicker() {
+        try {
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+            long after1 = formatter.parse("2019-02-14 15:30").getTime();
+            long after2 = formatter.parse("2020-02-14 15:30").getTime();
+            long diff = after2 - after1;
+
+            String beginTime = DateFormatUtils.long2Str(System.currentTimeMillis(), true);
+            String endTime = DateFormatUtils.long2Str((System.currentTimeMillis() + diff), true);
+
+            // 通过日期字符串初始化日期，格式请用：yyyy-MM-dd HH:mm
+            mTimerPicker = new CustomDatePicker(getActivity(), new CustomDatePicker.Callback() {
+                @Override
+                public void onTimeSelected(long timestamp) {
+                    setstartTime(timestamp);
+
+                }
+            }, beginTime, endTime);
+            // 允许点击屏幕或物理返回键关闭
+            mTimerPicker.setCancelable(true);
+            // 显示时和分
+            mTimerPicker.setCanShowPreciseTime(true);
+            // 允许循环滚动
+            mTimerPicker.setScrollLoop(false);
+            // 允许滚动动画
+            mTimerPicker.setCanShowAnim(true);
+
+
+            // 通过日期字符串初始化日期，格式请用：yyyy-MM-dd HH:mm
+            mTimerPicker1 = new CustomDatePicker(getActivity(), new CustomDatePicker.Callback() {
+                @Override
+                public void onTimeSelected(long timestamp) {
+                    setEndTime(timestamp);
+
+                }
+            }, beginTime, endTime);
+            // 允许点击屏幕或物理返回键关闭
+            mTimerPicker1.setCancelable(true);
+            // 显示时和分
+            mTimerPicker1.setCanShowPreciseTime(true);
+            // 允许循环滚动
+            mTimerPicker1.setScrollLoop(false);
+            // 允许滚动动画
+            mTimerPicker1.setCanShowAnim(true);
+        } catch (Exception e) {
+            Log.e("PasswordTimeFragment", e.getMessage());
         }
     }
+
+    private void setEndTime(long timestamp) {
+        //   mTvSelectedTime.setText(DateFormatUtils.long2Str(timestamp, true));
+        endMilliseconds = timestamp;
+        endcurrentTime = DateFormatUtils.long2Str(timestamp, true);
+        deadlineLine(endcurrentTime);
+        Log.e("PasswordTimeFragment", "选择的结束时间:" + endcurrentTime);
+    }
+
+    private void setstartTime(long timestamp) {
+        //   mTvSelectedTime.setText(DateFormatUtils.long2Str(timestamp, true));
+        startMilliseconds = timestamp;
+        startcurrentTime = DateFormatUtils.long2Str(timestamp, true);
+
+        takeEffectTimeProcess(startcurrentTime);
+        Log.e("denganzhi1", "选择的时间是:" + startcurrentTime);
+    }
+
+    private void deadlineLine(String endcurrentTime) {
+        String[] split = endcurrentTime.split(" ");
+        String date = split[0];
+        String[] time = split[1].split(":");
+        String hour = time[0];
+        String minute = time[1];
+        tvDeadlineDate.setText(date);
+        tvDeadlineTime.setText(hour+":"+minute);
+        if (Integer.parseInt(hour) > 12) {
+            tvDeadlineAmPm.setText(getString(R.string.pm));
+        } else {
+            tvDeadlineAmPm.setText(getString(R.string.am));
+        }
+
+    }
+
+    private void takeEffectTimeProcess(String fullTime) {
+        //2019-03-10 18:58
+        String[] split = fullTime.split(" ");
+        String date = split[0];
+        String[] time = split[1].split(":");
+        String hour = time[0];
+        String minute = time[1];
+        tvTakeEffectDate.setText(date);
+        tvTakeEffectTime.setText(hour+":"+minute);
+        if (Integer.parseInt(hour) > 12) {
+            tvTakeEffectAmPm.setText(getString(R.string.pm));
+        } else {
+            tvTakeEffectAmPm.setText(getString(R.string.am));
+        }
+    }
+
 
     @Override
     public void onSetUserTypeSuccess() {
@@ -259,6 +392,7 @@ public class PasswordTimeFragment extends BaseBleFragment<IAddTimePasswprdView, 
     public void onSetPasswordSuccess(AddPasswordBean.Password password) {
 
     }
+
 
     @Override
     public void onSetPasswordFailed(Throwable throwable) {
@@ -325,5 +459,27 @@ public class PasswordTimeFragment extends BaseBleFragment<IAddTimePasswprdView, 
     @Override
     public void onSyncPasswordFailed(Throwable throwable) {
         ToastUtil.getInstance().showLong(R.string.set_failed);
+    }
+
+    @Override
+    public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+        for (int i = 0; i < list.size(); i++) {
+            list.get(i).setSelected(false);
+        }
+        ShiXiaoNameBean shiXiaoNameBean = list.get(position);
+        String name = shiXiaoNameBean.getName();
+        etName.setText(name);
+        etName.setSelection(name.length());
+        etName.setFocusable(true);
+        etName.setFocusableInTouchMode(true);
+        etName.requestFocus();
+        list.get(position).setSelected(true);
+        shiXiaoNameAdapter.notifyDataSetChanged();
+
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
     }
 }

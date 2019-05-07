@@ -74,7 +74,10 @@ public class PasswordTemporaryFragment extends BaseBleFragment<IAddTempView, Add
         return mView;
 
     }
-
+    public static PasswordTemporaryFragment newInstance() {
+        PasswordTemporaryFragment fragment = new PasswordTemporaryFragment();
+        return fragment;
+    }
     @Override
     protected AddTempPresenter<IAddTempView> createPresent() {
         return new AddTempPresenter<>();

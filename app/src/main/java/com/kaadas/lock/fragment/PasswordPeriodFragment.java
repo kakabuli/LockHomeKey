@@ -4,15 +4,16 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -37,10 +38,14 @@ import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.NetUtil;
 import com.kaadas.lock.utils.StringUtil;
+import com.kaadas.lock.utils.TimeUtil;
 import com.kaadas.lock.utils.ToastUtil;
+import com.kaadas.lock.widget.CustomDatePicker;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
@@ -74,6 +79,18 @@ public class PasswordPeriodFragment extends BaseBleFragment<IPasswordLoopView, P
     String weekRule;
     @BindView(R.id.tv_rule_repeat)
     TextView tvRuleRepeat;
+    @BindView(R.id.ll_time)
+    LinearLayout llTime;
+    @BindView(R.id.pwd_manager_icon)
+    ImageView pwdManagerIcon;
+    @BindView(R.id.pwd_manager_grant_iv)
+    ImageView pwdManagerGrantIv;
+    @BindView(R.id.tv_start)
+    TextView tvStart;
+    @BindView(R.id.tv_end)
+    TextView tvEnd;
+    @BindView(R.id.tv_hint)
+    TextView tvHint;
     private int[] days;
     String strStart;//开始
     String strEnd;//结束
@@ -82,6 +99,11 @@ public class PasswordPeriodFragment extends BaseBleFragment<IPasswordLoopView, P
     private int startHour;
     private int endMin;
     private int endHour;
+    private CustomDatePicker mTimerPicker;
+    SimpleDateFormat formatter = new SimpleDateFormat("HH:mm");
+
+    String startcurrentTime = formatter.format(new Date());
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -93,14 +115,50 @@ public class PasswordPeriodFragment extends BaseBleFragment<IPasswordLoopView, P
         llRuleRepeat.setOnClickListener(this);
         btnConfirmGeneration.setOnClickListener(this);
         btnRandomGeneration.setOnClickListener(this);
+        tvStart.setOnClickListener(this);
+        tvEnd.setOnClickListener(this);
         initRecycleview();
+        initTimerPicker();
         return mView;
 
+    }
+
+    private void initTimerPicker() {
+        try {
+            long after1 = formatter.parse("00:00").getTime();
+            long after2 = formatter.parse("23:59").getTime();
+            long diff = after2 - after1;
+
+            String beginTime = formatter.format(new Date(System.currentTimeMillis()));
+            String endTime = formatter.format(new Date(System.currentTimeMillis() + diff));
+            // 通过日期字符串初始化日期，格式请用：yyyy-MM-dd HH:mm
+            mTimerPicker = new CustomDatePicker(getActivity(), new CustomDatePicker.Callback() {
+                @Override
+                public void onTimeSelected(long timestamp) {
+                    startcurrentTime = formatter.format(new Date(timestamp));
+                }
+            }, beginTime, endTime);
+            // 允许点击屏幕或物理返回键关闭
+            mTimerPicker.setCancelable(true);
+            // 显示时和分
+            mTimerPicker.setCanShowPreciseTime(true);
+            // 允许循环滚动
+            mTimerPicker.setScrollLoop(false);
+            // 允许滚动动画
+            mTimerPicker.setCanShowAnim(true);
+        } catch (Exception e) {
+            Log.e("denganzhi1", e.getMessage());
+        }
     }
 
     @Override
     protected PasswordLoopPresenter<IPasswordLoopView> createPresent() {
         return new PasswordLoopPresenter<>();
+    }
+
+    public static PasswordPeriodFragment newInstance() {
+        PasswordPeriodFragment fragment = new PasswordPeriodFragment();
+        return fragment;
     }
 
     private void initRecycleview() {
@@ -145,14 +203,14 @@ public class PasswordPeriodFragment extends BaseBleFragment<IPasswordLoopView, P
                 startActivityForResult(intent, REQUEST_CODE);
                 break;
             case R.id.btn_confirm_generation:
-                if (!NetUtil.isNetworkAvailable()){
+                if (!NetUtil.isNetworkAvailable()) {
                     ToastUtil.getInstance().showShort(R.string.please_have_net_add_pwd);
                     return;
                 }
                 String strPassword = etPassword.getText().toString().trim();
                 String nickName = etName.getText().toString().trim();
 
-                if (!StringUtil.randomJudge(strPassword)){
+                if (!StringUtil.randomJudge(strPassword)) {
                     ToastUtil.getInstance().showShort(R.string.random_verify_error);
                     return;
                 }
@@ -203,6 +261,57 @@ public class PasswordPeriodFragment extends BaseBleFragment<IPasswordLoopView, P
                 etPassword.setText(password);
                 etPassword.setSelection(password.length());
                 break;
+            case R.id.tv_start:
+                //开始
+                TimeUtil.getInstance().getHourMinute(getActivity(), new TimeUtil.TimeListener() {
+                    @Override
+                    public void time(String hour, String minute) {
+                        setStartTime(hour, minute);
+                    }
+                });
+                break;
+            case R.id.tv_end:
+                //结束
+                TimeUtil.getInstance().getHourMinute(getActivity(), new TimeUtil.TimeListener() {
+
+                    @Override
+                    public void time(String hour, String minute) {
+                        setEndTime(hour, minute);
+                    }
+                });
+                break;
+        }
+
+    }
+
+    private void setStartTime(String hour, String minute) {
+        strStart = hour + ":" + minute;
+        tvStart.setText(hour + ":" + minute);
+        startHour = Integer.parseInt(hour);
+        startMin = Integer.parseInt(minute);
+        hintText();
+    }
+
+    private void setEndTime(String hour, String minute) {
+        strEnd = hour + ":" + minute;
+        tvEnd.setText(hour + ":" + minute);
+        endHour = Integer.parseInt(hour);
+
+        endMin = Integer.parseInt(minute);
+        hintText();
+    }
+
+    /**
+     * 密码将于每天15：25至 16：30重复生效
+     * 密码将每周一 周二 周三 15：25至 16：30重复生效
+     */
+    public void hintText() {
+        if (TextUtils.isEmpty(strStart) || TextUtils.isEmpty(strEnd) || TextUtils.isEmpty(weekRule)) {
+            tvHint.setVisibility(View.INVISIBLE);
+        } else {
+            tvHint.setVisibility(View.VISIBLE);
+            String strHint = String.format(getString(R.string.week_hint), weekRule, strStart, strEnd);
+            tvHint.setText(strHint);
         }
     }
 
@@ -216,6 +325,7 @@ public class PasswordPeriodFragment extends BaseBleFragment<IPasswordLoopView, P
                 days = data.getIntArrayExtra(KeyConstants.DAY_MASK);
                 LogUtils.e("收到的周计划是   " + Arrays.toString(days));
                 tvRuleRepeat.setText(weekRule);
+                hintText();
             }
         }
     }
@@ -296,14 +406,14 @@ public class PasswordPeriodFragment extends BaseBleFragment<IPasswordLoopView, P
     @Override
     public void onUploadPwdFailed(Throwable throwable) {
         ToastUtil.getInstance().showShort(R.string.lock_set_success_please_sync);
-        startActivity(new Intent(getContext(),BluetoothPasswordManagerActivity.class));
+        startActivity(new Intent(getContext(), BluetoothPasswordManagerActivity.class));
         getActivity().finish();
     }
 
     @Override
     public void onUploadPwdFailedServer(BaseResult result) {
         ToastUtil.getInstance().showShort(R.string.lock_set_success_please_sync);
-        startActivity(new Intent(getContext(),BluetoothPasswordManagerActivity.class));
+        startActivity(new Intent(getContext(), BluetoothPasswordManagerActivity.class));
         getActivity().finish();
     }
 
