@@ -2,11 +2,13 @@ package com.kaadas.lock.activity.cateye;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.media.Image;
 import android.os.Build;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;

@@ -40,6 +40,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 /**
  * Created by David on 2019/4/22
@@ -58,12 +59,13 @@ public class BluetoothOpenLockRecordFragment extends BaseBleFragment<IOpenLockRe
     private BluetoothEquipmentDynamicActivity activity;
     private boolean isLoadingBleRecord;  //正在加载锁上数据
     private int currentPage = 1;   //当前的开锁记录时间
-
+    View view ;
+    private Unbinder unbinder;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = View.inflate(getActivity(), R.layout.fragment_bluetooth_open_lock_record, null);
-        ButterKnife.bind(this, view);
+         view = View.inflate(getActivity(), R.layout.fragment_bluetooth_open_lock_record, null);
+        unbinder= ButterKnife.bind(this, view);
         tvSynchronizedRecord.setOnClickListener(this);
         activity = (BluetoothEquipmentDynamicActivity) getActivity();
         bleLockInfo = activity.getBleDeviceInfo();
@@ -129,6 +131,8 @@ public class BluetoothOpenLockRecordFragment extends BaseBleFragment<IOpenLockRe
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        ((ViewGroup) view.getParent()).removeView(view);
+        unbinder.unbind();
     }
 
     @Override

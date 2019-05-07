@@ -5,6 +5,7 @@ import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.AllowCateyeJoinBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.BindGatewayBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.DeleteGatewayLockDeviceBean;
+import com.kaadas.lock.publiclibrary.mqtt.publishbean.FtpEnableBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.GetAllBindDeviceBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.GetBindGatewayListBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.GetDevicePowerBean;
@@ -262,6 +263,16 @@ public class MqttCommandFactory {
         return getMessage(lockLang,messageId);
 
     }
+
+
+    /**
+     * 删除设备
+     * @param gatewayId
+     * @param deviceId
+     * @param bustType
+     * @return
+     */
+
     public static MqttMessage deleteDevice(String gatewayId,String deviceId,String bustType){
         int messageId=getMessageId();
         DeleteGatewayLockDeviceBean.ParamsBean paramsBean=new DeleteGatewayLockDeviceBean.ParamsBean();
@@ -269,6 +280,20 @@ public class MqttCommandFactory {
         paramsBean.setDeviceId(deviceId);
         DeleteGatewayLockDeviceBean gatewayLockDeviceBean=new DeleteGatewayLockDeviceBean(MqttConstant.MSG_TYPE_REQUEST,MyApplication.getInstance().getUid(),messageId,gatewayId,gatewayId,MqttConstant.DELETE_GATEWAY_LOCK,paramsBean,"0",new DeleteGatewayLockDeviceBean.ReturnDataBean(),System.currentTimeMillis()+"");
         return getMessage(gatewayLockDeviceBean,messageId);
+    }
+
+    /**
+     * 唤醒FTP
+     * @param gatewayId
+     * @param deviceId
+     * @return
+     */
+    public static MqttMessage setEnableFTP(String gatewayId,String deviceId){
+        int messageId=getMessageId();
+
+        //(String msgtype, String userId, int msgId, String gwId, String deviceId, String func, ParamsBean params, String returnCode, ReturnDataBean returnData, String timestamp)
+        FtpEnableBean ftpEnableBean=new FtpEnableBean(MqttConstant.MSG_TYPE_REQUEST,MyApplication.getInstance().getUid(),messageId,gatewayId,deviceId,MqttConstant.SET_FTP_ENABLE,new FtpEnableBean.ParamsBean(),"0",new FtpEnableBean.ReturnDataBean(),System.currentTimeMillis()+"");
+        return getMessage(ftpEnableBean,messageId);
     }
 
 

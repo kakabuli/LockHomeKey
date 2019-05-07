@@ -46,12 +46,12 @@ public class BluetoothEquipmentDynamicActivity extends BaseBleActivity<IBleView,
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bluetooth_equipment_dynamic);
+        bleLockInfo = mPresenter.getBleLockInfo();
         ButterKnife.bind(this);
         ivBack.setOnClickListener(this);
         tvContent.setText(getString(R.string.device_dynamic));
         tvOpenLockRecord.setOnClickListener(this);
         tvWarnInformation.setOnClickListener(this);
-        bleLockInfo = mPresenter.getBleLockInfo();
         initFragment();
     }
 
