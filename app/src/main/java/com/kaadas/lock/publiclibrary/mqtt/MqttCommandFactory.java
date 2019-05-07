@@ -286,7 +286,7 @@ public class MqttCommandFactory {
      * 唤醒FTP
      * @param gatewayId
      * @param deviceId
-     * @return
+     * @returne
      */
     public static MqttMessage setEnableFTP(String gatewayId,String deviceId){
         int messageId=getMessageId();

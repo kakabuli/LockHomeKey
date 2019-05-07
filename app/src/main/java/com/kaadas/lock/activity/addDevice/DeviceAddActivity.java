@@ -191,7 +191,7 @@ public class DeviceAddActivity extends BaseActivity<DeviceZigBeeDetailView, Devi
             Intent addGateway = new Intent(this, AddGatewayFirstActivity.class);
             startActivity(addGateway);
         }else {
-            if (flag == true) {
+            if (flag==false) {
                 AlertDialogUtil.getInstance().havaNoEditTwoButtonDialog(this, getString(R.string.no_usable_gateway), getString(R.string.add_zigbee_device_first_pair_gateway), getString(R.string.cancel), getString(R.string.configuration), new AlertDialogUtil.ClickListener() {
                     @Override
                     public void left() {

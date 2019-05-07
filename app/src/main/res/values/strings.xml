@@ -791,4 +791,14 @@
     <string name="password_once_valid">该密码一次性有效</string>
     <string name="get_finger_failed">获取指纹列表失败</string>
     <string name="get_card_failed">获取卡片列表失败</string>
+    <string name="ftp_weak_up_fail">FTP唤醒失败</string>
+    <string name="data_get_loading">数据获取中...</string>
+    <string name="pull_refefresh_new_data">下拉刷新查看最新数据</string>
+    <string name="history_pir_no">快照不存在</string>
+    <string name="snap_select_data">请求选择日期</string>
+    <string name="pir_ftp_fail">下载失败,请检查SD卡状态</string>
+    <string name="ftp_connection_fail">下载失败,FTP连接失败</string>
+    <string name="ftp_login_fail">下载失败,FTP登录失败</string>
+    <string name="ftp_exception">下载失败,FTP下载异常</string>
+    <string name="cat_eye_no_ftp">猫眼上无该天的FTP快照</string>
 </resources>

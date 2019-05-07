@@ -47,6 +47,7 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -563,4 +564,34 @@ public class MyApplication extends Application {
         isVideoActivityRun = videoActivityRun;
     }
 
+    // 快照图片
+    private LinkedList<String> pirListImg;
+
+    public LinkedList<String> getPirListImg() {
+        return pirListImg;
+    }
+
+    public void setPirListImg(LinkedList<String> pirListImg) {
+        this.pirListImg = pirListImg;
+    }
+
+    boolean isPreviewActivity=false;
+
+    public boolean isPreviewActivity() {
+        return isPreviewActivity;
+    }
+
+    public void setPreviewActivity(boolean previewActivity) {
+        isPreviewActivity = previewActivity;
+    }
+
+    boolean isMediaPlayerActivity=false;
+
+    public boolean isMediaPlayerActivity() {
+        return isMediaPlayerActivity;
+    }
+
+    public void setMediaPlayerActivity(boolean mediaPlayerActivity) {
+        isMediaPlayerActivity = mediaPlayerActivity;
+    }
 }
