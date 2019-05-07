@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F2F2F2"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_40"
+        android:background="#FFFFFF"
+        >
+        <ImageView
+            android:id="@+id/back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/dp_16"
+            android:paddingRight="@dimen/dp_16"
+            android:paddingTop="@dimen/dp_5"
+            android:paddingBottom="@dimen/dp_5"
+            android:src="@mipmap/back_gray"
+            android:layout_centerVertical="true"
+            />
+        <TextView
+            android:id="@+id/head_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/user_password"
+            android:textSize="@dimen/sp_17"
+            android:textColor="#000000"
+            android:textStyle="bold"
+            />
+
+    </RelativeLayout>
+
+
+    <TextView
+        android:id="@+id/tv_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/dp_105"
+        android:text="密码将永久有效"
+        android:textColor="#999999"
+        android:textSize="@dimen/sp_12" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/dp_61"
+        android:text="* * * * * * * * *"
+        android:textColor="#999999"
+        android:textSize="@dimen/sp_18" />
+
+    <Button
+        android:id="@+id/btn_delete"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_44"
+        android:layout_marginLeft="@dimen/dp_88"
+        android:layout_marginTop="@dimen/dp_101"
+        android:layout_marginRight="@dimen/dp_88"
+        android:background="@drawable/retangle_ff3b30_22"
+        android:text="@string/delete_pwd"
+        android:textColor="#FFFFFF"
+        android:textSize="@dimen/dp_15" />
+
+
+
+</LinearLayout>

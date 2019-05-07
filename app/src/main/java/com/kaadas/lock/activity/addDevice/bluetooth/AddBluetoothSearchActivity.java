@@ -124,7 +124,7 @@ public class AddBluetoothSearchActivity extends BaseActivity<ISearchDeviceView, 
 
     //当没有搜索到蓝牙设备时，显示对话框。
     private void showNotScanDeviceDialog() {
-        AlertDialogUtil.getInstance().noEditTitleTwoButtonDialog(this, getResources().getString(R.string.no_find_connect_device), getResources().getString(R.string.cancel), getResources().getString(R.string.rescan), new AlertDialogUtil.ClickListener() {
+        AlertDialogUtil.getInstance().noEditTitleTwoButtonDialog(this, getResources().getString(R.string.no_find_connect_device), getResources().getString(R.string.cancel), getResources().getString(R.string.rescan),"#333333","#1F96F7", new AlertDialogUtil.ClickListener() {
             @Override
             public void left() {
 

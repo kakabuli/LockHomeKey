@@ -449,8 +449,21 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.device.gatewaylock.password.GatewayPasswordManagerActivity"
-            android:launchMode="singleTop"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.gatewaylock.password.old.GatewayLockDeletePasswordActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.gatewaylock.password.old.GatewayLockPasswordAddActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.gatewaylock.password.old.GatewayLockPasswordShareActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+
         <activity
             android:name=".activity.device.gatewaylock.password.GatewayPasswordManagerDetailActivity"
             android:launchMode="singleTop"
