@@ -5,6 +5,7 @@ import android.text.TextUtils;
 
 import com.google.gson.Gson;
 import com.kaadas.lock.MyApplication;
+import com.kaadas.lock.activity.cateye.VideoVActivity;
 import com.kaadas.lock.bean.HomeShowBean;
 import com.kaadas.lock.mvp.mvpbase.BlePresenter;
 import com.kaadas.lock.mvp.view.IMainActivityView;
@@ -28,6 +29,7 @@ import com.kaadas.lock.utils.SPUtils;
 import net.sdvn.cmapi.Device;
 
 import org.linphone.core.LinphoneCall;
+import org.linphone.mediastream.Log;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -193,7 +195,7 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                 public void incomingCall(LinphoneCall linphoneCall) {
                     //收到来电通知
                     LogUtils.e("Linphone  收到来电     ");
-                    if (MyApplication.getInstance().isVideoActivityRun()) {
+                    if (VideoVActivity.isRunning) {
                         LogUtils.e("Linphone  收到来电   VideoActivity已经运行  不出来  ");
                         return;
                     }
@@ -256,14 +258,15 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                     super.callConnected();
                     LogUtils.e("Linphone  通话连接成功   ");
                     // 视频通话默认免提，语音通话默认非免提
-                    LinphoneHelper.toggleSpeaker(true);
-                    // 所有通话默认非静音
-                    LinphoneHelper.toggleMicro(false);
+//                    LinphoneHelper.toggleSpeaker(true);
+//                    // 所有通话默认非静音
+//                    LinphoneHelper.toggleMicro(false);
                 }
 
                 @Override
                 public void callEnd() {
                     super.callEnd();
+
                     LogUtils.e("Linphone  通话结束   ");
                 }
             });
@@ -317,7 +320,7 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-
+                        LogUtils.e("登录米米网失败或者设备部在线");
                     }
                 });
     }
@@ -346,4 +349,9 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
         compositeDisposable.add(deviceChangeDisposable);
     }
 
+    @Override
+    public void detachView() {
+        super.detachView();
+        LinphoneHelper.deleteUser();
+    }
 }

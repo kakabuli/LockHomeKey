@@ -1363,18 +1363,18 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 //				}
 //			},2000);
 			//  Log.e("denganzhi1","响铃了");
-			  if(MyApplication.getInstance().isVideoActivityRun()){
-			  	 // App呼叫猫眼,不响应铃声
-				//  Log.e("denganzhi1","App呼叫猫眼.........");
-			  }else{
-			  	handler.postDelayed(new Runnable() {
-				@Override
-				public void run() {
-				//	Log.e("denganzhi1","响铃了");
-				//	startRinging();
-				}
-		    	},2000);
-			  }
+//			  if(MyApplication.getInstance().isVideoActivityRun()){
+//			  	 // App呼叫猫眼,不响应铃声
+//				//  Log.e("denganzhi1","App呼叫猫眼.........");
+//			  }else{
+//			  	handler.postDelayed(new Runnable() {
+//				@Override
+//				public void run() {
+//				//	Log.e("denganzhi1","响铃了");
+//				//	startRinging();
+//				}
+//		    	},2000);
+//			  }
              // startRinging();
         } else if (linphoneCall == ringingCall && isRinging) {
             //previous state was ringing, so stop ringing

@@ -7,13 +7,19 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.kaadas.lock.R;
+import com.kaadas.lock.publiclibrary.linphone.linphone.callback.PhoneAutoAccept;
+import com.kaadas.lock.publiclibrary.linphone.linphone.util.LinphoneHelper;
 import com.kaadas.lock.utils.KeyConstants;
+import com.kaadas.lock.utils.RingTools;
+
+import org.linphone.core.LinphoneCall;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -25,12 +31,6 @@ public class CallComingActivity extends AppCompatActivity implements View.OnClic
     LinearLayout call_coming_refuse_ll;
 
 
-    Handler handler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-        }
-    };
     @BindView(R.id.call_coming_title)
     TextView callComingTitle;
     @BindView(R.id.call_coming_img)
@@ -41,6 +41,7 @@ public class CallComingActivity extends AppCompatActivity implements View.OnClic
     ImageView tvCatDevicePower;
     @BindView(R.id.iv_accept_call)
     ImageView ivAcceptCall;
+    private RingTools ringTools;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,23 +60,25 @@ public class CallComingActivity extends AppCompatActivity implements View.OnClic
             getWindow().setStatusBarColor(Color.TRANSPARENT);
         }
 
-
+        ringTools = new RingTools(this);
+        ringTools.startRinging();
+        listenerCallStatus();
     }
 
     @Override
     public void onClick(View view) {
-        Intent intent ;
+        Intent intent;
         switch (view.getId()) {
             case R.id.call_coming_refuse_ll:
                 intent = new Intent();
                 intent.putExtra(KeyConstants.IS_ACCEPT_CALL, false);
-                setResult(RESULT_OK,intent);
+                setResult(RESULT_OK, intent);
                 finish();
                 break;
             case R.id.iv_accept_call:
                 intent = new Intent();
                 intent.putExtra(KeyConstants.IS_ACCEPT_CALL, true);
-                setResult(RESULT_OK,intent);
+                setResult(RESULT_OK, intent);
                 finish();
                 break;
         }
@@ -84,8 +87,48 @@ public class CallComingActivity extends AppCompatActivity implements View.OnClic
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        handler.removeCallbacksAndMessages(null);
+        ringTools.stopRinging();
     }
 
+
+    private static String Tag = "来电界面";
+
+    private void listenerCallStatus() {
+        LinphoneHelper.addAutoAcceptCallBack(new PhoneAutoAccept() {
+            @Override
+            public void incomingCall(LinphoneCall linphoneCall) {
+                Log.e(Tag, "猫眼  incomingCall.........");
+
+            }
+
+            @Override
+            public void callConnected() {
+                Log.e(Tag, "猫眼  callConnected.........");
+
+            }
+
+            @Override
+            public void callReleased() {
+                Log.e(Tag, "猫眼  callReleased.........");
+
+            }
+
+            @Override
+            public void callFinish() {
+                Log.e(Tag, "猫眼 callFinish.........");
+                Intent intent = new Intent();
+                intent.putExtra(KeyConstants.IS_ACCEPT_CALL, false);
+                setResult(RESULT_OK, intent);
+                finish();
+            }
+
+            @Override
+            public void Streaming() {
+                Log.e(Tag, "猫眼 Streaming.........");
+            }
+        });
+
+
+    }
 
 }

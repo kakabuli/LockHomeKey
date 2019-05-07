@@ -100,7 +100,7 @@
                       android:layout_width="23dp"
                       android:layout_height="22dp"
                       android:layout_marginTop="15dp"
-                      android:background="@mipmap/screenshot" />
+                      android:background="@mipmap/video_screenshot" />
 
                   <TextView
                       android:layout_width="wrap_content"
@@ -124,7 +124,7 @@
                   <ImageView
                       android:layout_width="23dp"
                       android:layout_height="22dp"
-                      android:background="@mipmap/mute"
+                      android:background="@mipmap/video_mute"
                       android:layout_marginTop="15dp"
                       />
 
@@ -168,7 +168,7 @@
                   <ImageView
                       android:layout_width="23dp"
                       android:layout_height="22dp"
-                      android:background="@mipmap/novoice"
+                      android:background="@mipmap/video_voice"
                       android:layout_marginTop="15dp"
                       />
 

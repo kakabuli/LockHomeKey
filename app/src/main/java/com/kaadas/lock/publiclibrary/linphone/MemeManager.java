@@ -153,7 +153,7 @@ public class MemeManager {
         return connectStatusChange;
     }
 
-    private void disconnectMeme(){
+    public void disconnectMeme(){
         CMAPI.getInstance().disconnect();
     }
 
@@ -171,8 +171,6 @@ public class MemeManager {
             return false;
         }
     }
-
-
 
     public String getCurrentAccount() {
         return currentAccount;
@@ -201,5 +199,13 @@ public class MemeManager {
             gwDeviceChange.onNext(devices);
         }
         return devices;
+    }
+
+    public String getDeviceIp(){
+        BaseInfo baseInfo = CMAPI.getInstance().getBaseInfo();
+        if (baseInfo != null) {
+          return    baseInfo.getVip();
+        }
+        return "";
     }
 }

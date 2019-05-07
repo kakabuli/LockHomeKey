@@ -12,4 +12,6 @@ public class Constants {
     public static final String VIDEO="video";
     //音频
     public static final String AUDIO="audio";
+
+    public final static int MEDIA_TYPE_VIDEO = 1;
 }

@@ -362,24 +362,6 @@ public class MyApplication extends Application {
     private PublishSubject<List<BleLockInfo>> bleLockInfoSubject = PublishSubject.create();
     List<BleLockInfo> bleLockInfos;
 
-
-    //通知到DeviceActivity   和HomeFragment  在添加设备成功和删除设备成功的时候都会调用此方法，但是调用的都是
-    public void setBleLockInfos(List<BleLockInfo> bleLockInfos) {
-        if (bleLockInfos != null) {
-            this.bleLockInfos = bleLockInfos;
-        }
-        bleLockInfoSubject.onNext(bleLockInfos);
-    }
-
-    public List<BleLockInfo> getDevices() {
-        return bleLockInfos;
-    }
-
-    public Observable<List<BleLockInfo>> onLoadDevice() {
-        return bleLockInfoSubject;
-    }
-
-
     /**
      * 设备变动
      */
@@ -477,7 +459,6 @@ public class MyApplication extends Application {
                 })
                 .timeout(10 * 1000, TimeUnit.MILLISECONDS)
                 .subscribe(new Consumer<MqttData>() {
-
                     @Override
                     public void accept(MqttData mqttData) throws Exception {
                         if (allBindDeviceDisposable != null && !allBindDeviceDisposable.isDisposed()) {
@@ -557,15 +538,5 @@ public class MyApplication extends Application {
         this.linphone_port = linphone_port;
     }
 
-
-    private boolean isVideoActivityRun = false;
-
-    public boolean isVideoActivityRun() {
-        return isVideoActivityRun;
-    }
-
-    public void setVideoActivityRun(boolean videoActivityRun) {
-        isVideoActivityRun = videoActivityRun;
-    }
 
 }

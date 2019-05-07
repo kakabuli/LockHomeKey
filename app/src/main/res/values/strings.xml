@@ -783,4 +783,6 @@
     <string name="call_coming_connecting">等待接听···</string>
     <string name="call_coming_refuse">拒绝</string>
     <string name="call_coming_answer">接听</string>
+    <string name="video_must_record_5_seconds">视频最短需要录制5秒</string>
+    <string name="screen_success">截图成功</string>
 </resources>
