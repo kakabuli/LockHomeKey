@@ -4,11 +4,13 @@ import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.google.gson.Gson;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.mvp.mvpbase.BasePresenter;
 import com.kaadas.lock.mvp.view.cateye.IVideoView;
 import com.kaadas.lock.publiclibrary.bean.CateEyeInfo;
 import com.kaadas.lock.publiclibrary.bean.GatewayInfo;
+import com.kaadas.lock.publiclibrary.bean.GwLockInfo;
 import com.kaadas.lock.publiclibrary.http.util.RxjavaHelper;
 import com.kaadas.lock.publiclibrary.linphone.MemeManager;
 import com.kaadas.lock.publiclibrary.linphone.linphone.callback.PhoneAutoAccept;
@@ -16,12 +18,15 @@ import com.kaadas.lock.publiclibrary.linphone.linphone.util.LinphoneHelper;
 import com.kaadas.lock.publiclibrary.linphone.linphone.util.Util;
 import com.kaadas.lock.publiclibrary.linphone.linphonenew.LinphoneManager;
 import com.kaadas.lock.publiclibrary.mqtt.MqttCommandFactory;
+import com.kaadas.lock.publiclibrary.mqtt.publishbean.OpenLockBean;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttConstant;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttData;
 import com.kaadas.lock.utils.Constants;
 import com.kaadas.lock.utils.CountUpTimer;
 import com.kaadas.lock.utils.FileUtils;
+import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.db.MediaFileDBDao;
 
 import net.sdvn.cmapi.Device;
@@ -55,6 +60,7 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
     private boolean wakeupSuccess;
     private CateEyeInfo currentCateEyeInfo;
     private boolean isConnected = false;
+    private Disposable openLockDisposable;
 
     public void init(Context context) {
         mMediaDBDao = MediaFileDBDao.getInstance(context);
@@ -241,13 +247,13 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
         //判断网关是否在线
 
         //判断猫眼是否在线
-       if ("offline".equals( cateEyeInfo.getServerInfo().getEvent_str())){
-           //猫眼离线状态
-            if (mViewRef.get()!=null){
+        if ("offline".equals(cateEyeInfo.getServerInfo().getEvent_str())) {
+            //猫眼离线状态
+            if (mViewRef.get() != null) {
                 mViewRef.get().onCatEyeOffline();
             }
-           return;
-       }
+            return;
+        }
         //meme网状态
         isCalling = true;
         GatewayInfo gatewayInfo = cateEyeInfo.getGatewayInfo();
@@ -472,10 +478,10 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
     private CountUpTimer countUpTimer = new CountUpTimer(1000) {
         @Override
         public void onTick(long millis) {
-            if (mViewRef.get()!=null){
+            if (mViewRef.get() != null) {
                 formatter.setTimeZone(TimeZone.getTimeZone("GMT+0"));
                 String time = formatter.format(new Date(millis));
-                LogUtils.e("通话时间为   " +time);
+                LogUtils.e("通话时间为   " + time);
                 mViewRef.get().callTimes(time);
             }
         }
@@ -485,9 +491,71 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
     /**
      * 开始计时
      */
-    private void startCountUp(){
+    private void startCountUp() {
         LogUtils.e("开始计时");
         countUpTimer.start();
+    }
+
+    public void openLock(GwLockInfo gwLockInfo) {
+        String deviceId = gwLockInfo.getServerInfo().getDeviceId();
+        String lockPwd = (String) SPUtils.get(KeyConstants.SAVA_LOCK_PWD + deviceId, "");
+        if (TextUtils.isEmpty(lockPwd)) { //密码为空
+            if (mViewRef.get() != null) {
+                mViewRef.get().inputPwd(gwLockInfo);
+            }
+        } else {
+
+            openLock(gwLockInfo.getGwID(), deviceId, lockPwd);
+        }
+    }
+
+    //开锁
+    public void openLock(String gatewayId, String deviceId, String pwd) {
+        toDisposable(openLockDisposable);
+        if (mViewRef.get() != null) {
+            mViewRef.get().startOpenLock();
+        }
+        if (mqttService != null) {
+            openLockDisposable = mqttService.mqttPublish(MqttConstant.getCallTopic(MyApplication.getInstance().getUid()), MqttCommandFactory.openLock(gatewayId, deviceId, "unlock", "pin", pwd))
+                    .timeout(10 * 1000, TimeUnit.MILLISECONDS)
+                    .filter(new Predicate<MqttData>() {
+                        @Override
+                        public boolean test(MqttData mqttData) throws Exception {
+                            if (MqttConstant.OPEN_LOCK.equals(mqttData.getFunc())) {
+                                return true;
+                            }
+                            return false;
+                        }
+                    })
+                    .compose(RxjavaHelper.observeOnMainThread())
+                    .subscribe(new Consumer<MqttData>() {
+                        @Override
+                        public void accept(MqttData mqttData) throws Exception {
+                            toDisposable(openLockDisposable);
+                            OpenLockBean openLockBean = new Gson().fromJson(mqttData.getPayload(), OpenLockBean.class);
+                            if ("200".equals(openLockBean.getReturnCode())) {
+                                SPUtils.put(KeyConstants.SAVA_LOCK_PWD + deviceId, pwd);
+                                if (mViewRef.get() != null) {
+                                    mViewRef.get().openLockSuccess();
+                                }
+                            } else {
+                                if (mViewRef.get() != null) {
+                                    mViewRef.get().openLockFailed(null);
+                                }
+                                SPUtils.remove(KeyConstants.SAVA_LOCK_PWD + deviceId );
+                            }
+                        }
+                    }, new Consumer<Throwable>() {
+                        @Override
+                        public void accept(Throwable throwable) throws Exception {
+                            //开锁异常
+                            if (mViewRef.get() != null) {
+                                mViewRef.get().openLockFailed(throwable);
+                            }
+                        }
+                    });
+            compositeDisposable.add(openLockDisposable);
+        }
     }
 
 }

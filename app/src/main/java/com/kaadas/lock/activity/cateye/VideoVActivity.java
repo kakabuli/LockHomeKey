@@ -1,6 +1,7 @@
 package com.kaadas.lock.activity.cateye;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -8,12 +9,15 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.text.InputType;
+import android.view.LayoutInflater;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -30,8 +34,11 @@ import com.kaadas.lock.publiclibrary.bean.CateEyeInfo;
 import com.kaadas.lock.publiclibrary.bean.GwLockInfo;
 import com.kaadas.lock.publiclibrary.linphone.MemeManager;
 import com.kaadas.lock.publiclibrary.linphone.linphone.util.LinphoneHelper;
+import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.SPUtils;
+import com.kaadas.lock.utils.StringUtil;
 import com.kaadas.lock.utils.ToastUtil;
 import com.kaadas.lock.utils.db.MediaFileDBDao;
 import com.yarolegovich.discretescrollview.DiscreteScrollView;
@@ -245,7 +252,8 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
             @Override
             public void onItemClickItemMethod(int position) {
                 if (selectPostion != -1 && position == selectPostion) {
-                    Toast.makeText(VideoVActivity.this, "点击了:" + position, Toast.LENGTH_SHORT).show();
+                    GwLockInfo gwLockInfo = gwLockInfos.get(position);
+                    mPresenter.openLock(gwLockInfo);
                 }
             }
         });
@@ -432,8 +440,61 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
     }
 
     @Override
+    public void inputPwd(GwLockInfo gwLockInfo) {
+        View mView = LayoutInflater.from(this).inflate(R.layout.have_edit_dialog, null);
+        TextView tvTitle = mView.findViewById(R.id.tv_title);
+        EditText editText = mView.findViewById(R.id.et_name);
+        editText.setInputType(InputType.TYPE_CLASS_NUMBER);
+        TextView tv_cancel = mView.findViewById(R.id.tv_left);
+        TextView tv_query = mView.findViewById(R.id.tv_right);
+        AlertDialog alertDialog = AlertDialogUtil.getInstance().common(this, mView);
+        tvTitle.setText(getString(R.string.input_open_lock_password));
+        tv_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+            }
+        });
+        tv_query.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String pwd = editText.getText().toString().trim();
+                if (!StringUtil.randomJudge(pwd)) {
+                    ToastUtil.getInstance().showShort(R.string.random_verify_error);
+                    return;
+                }
+                mPresenter.openLock(gwLockInfo.getGwID(),gwLockInfo.getServerInfo().getDeviceId() ,pwd);
+                alertDialog.dismiss();
+            }
+        });
+
+    }
+
+    @Override
+    public void openLockSuccess() {
+        ToastUtil.getInstance().showShort(R.string.open_lock_success);
+        hiddenLoading();
+    }
+
+    @Override
+    public void openLockFailed(Throwable throwable) {
+        ToastUtil.getInstance().showShort(R.string.open_lock_failed);
+        hiddenLoading();
+    }
+
+    @Override
+    public void startOpenLock() {
+        showLoading(getString(R.string.is_open_lock));
+    }
+
+    @Override
     public void onBackPressed() {
         LinphoneHelper.hangUp();
         super.onBackPressed();
     }
+
+
+
+
+
 }

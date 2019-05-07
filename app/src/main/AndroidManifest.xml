@@ -574,6 +574,7 @@
             android:screenOrientation="portrait"></activity>
         <activity
             android:name=".activity.cateye.VideoVActivity"
+            android:windowSoftInputMode = "adjustNothing"
             android:screenOrientation="portrait"></activity>
         <activity
             android:name=".activity.cateye.VideoHActivity"

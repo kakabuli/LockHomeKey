@@ -2,6 +2,7 @@ package com.kaadas.lock.mvp.view.cateye;
 
 import com.kaadas.lock.mvp.mvpbase.IBaseView;
 import com.kaadas.lock.publiclibrary.bean.CateEyeInfo;
+import com.kaadas.lock.publiclibrary.bean.GwLockInfo;
 
 public interface IVideoView extends IBaseView {
     /**
@@ -67,10 +68,28 @@ public interface IVideoView extends IBaseView {
      */
     void callTimes(String time);
 
-
-
     /**
      * 猫眼当前为离线状态
      */
     void onCatEyeOffline( );
+
+
+    /**
+     * 输入密码
+     */
+    void inputPwd(GwLockInfo gwLockInfo);
+
+    /**
+     * 开锁成功
+     */
+    void openLockSuccess();
+
+    /**
+     * 开锁失败
+     */
+    void openLockFailed(Throwable throwable);
+    /**
+     * 开始开锁
+     */
+    void startOpenLock( );
 }
