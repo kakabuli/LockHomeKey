@@ -143,6 +143,7 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
 
     //获取网关状态通知
     public void getPublishNotify() {
+
         disposable = MyApplication.getInstance().getMqttService().listenerNotifyData()
                 .subscribe(new Consumer<MqttData>() {
                     @Override

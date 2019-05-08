@@ -463,20 +463,6 @@
             android:name=".activity.device.gatewaylock.password.old.GatewayLockPasswordShareActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
-        <activity android:name=".activity.device.gatewaylock.stress.old.GatewayLockStressDetailActivity"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait" />
-        <activity android:name=".activity.device.gatewaylock.stress.old.GatewayLockStressDeleteActivity"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait" />
-        <activity android:name=".activity.device.gatewaylock.stress.old.GatewayLockStressAddActivity"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait" />
-
-        <activity android:name=".activity.device.gatewaylock.stress.old.GatewayLockStressShareActivity"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait" />
-
 
         <activity
             android:name=".activity.device.gatewaylock.password.GatewayPasswordManagerDetailActivity"
@@ -598,8 +584,13 @@
         <activity android:name=".activity.cateye.CallComingActivity"
             android:screenOrientation="portrait">
 
-             <!--<intent-filter>-->
-             <!--<action android:name="android.intent.action.MAIN" />-->
+
+
+        </activity>
+        <activity android:name=".activity.cateye.FtpDownLoadActivity">
+
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MAIN" />-->
 
 
              <!--<category android:name="android.intent.category.LAUNCHER" />-->
