@@ -18,6 +18,7 @@ import com.kaadas.lock.publiclibrary.linphone.linphone.util.LinphoneHelper;
 import com.kaadas.lock.publiclibrary.linphone.linphone.util.Util;
 import com.kaadas.lock.publiclibrary.linphone.linphonenew.LinphoneManager;
 import com.kaadas.lock.publiclibrary.mqtt.MqttCommandFactory;
+import com.kaadas.lock.publiclibrary.mqtt.eventbean.OpenLockNotifyBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.OpenLockBean;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttConstant;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttData;
@@ -61,6 +62,9 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
     private CateEyeInfo currentCateEyeInfo;
     private boolean isConnected = false;
     private Disposable openLockDisposable;
+    private String recordDeviceId;
+    private Disposable closeLockNotifyDisposable;
+    private Disposable lockCloseDisposable;
 
     public void init(Context context) {
         mMediaDBDao = MediaFileDBDao.getInstance(context);
@@ -194,15 +198,29 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
         }
     }
 
+    /**
+     * 删除临时存在的视频
+     */
+    public void deleteTempVideo() {
+        File oldFile = new File(Util.RECORD_VIDEO_PATH);
+        if (oldFile.exists()) {
+            oldFile.delete();
+        }
+    }
 
+    /**
+     * 录制视频
+     *
+     * @param isRecord 开始还是结束录制
+     * @param deviceId
+     */
     public void recordVideo(boolean isRecord, String deviceId) {
+        recordDeviceId = deviceId;
         if (isRecord) {
             if (!isRecoding) {
                 try {
-                    File oldFile = new File(Util.RECORD_VIDEO_PATH);
-                    if (oldFile.exists()) {
-                        oldFile.delete();
-                    }
+                    //开始录制之前需要删除临时视频  可能会崩溃
+                    deleteTempVideo();
                     LinphoneManager.getLc().getCurrentCall().startRecording();
                     isRecoding = true;
                     startRecordTime = System.currentTimeMillis();
@@ -242,10 +260,15 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
         mMediaDBDao.add(fileName, String.valueOf(createTime), type, path);
     }
 
+    public void hangup() {
+        if (isRecoding) { //挂断时，如果在录制视频，那么先保存视频
+            stopRecordVideo(recordDeviceId);
+        }
+        LinphoneHelper.hangUp();
+    }
 
     public void callCatEye(CateEyeInfo cateEyeInfo) {
         //判断网关是否在线
-
         //判断猫眼是否在线
         if ("offline".equals(cateEyeInfo.getServerInfo().getEvent_str())) {
             //猫眼离线状态
@@ -471,6 +494,7 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
         super.detachView();
         handler.removeCallbacks(timeoutRunnable);
         countUpTimer.stop();
+
     }
 
 
@@ -504,13 +528,12 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
                 mViewRef.get().inputPwd(gwLockInfo);
             }
         } else {
-
-            openLock(gwLockInfo.getGwID(), deviceId, lockPwd);
+            realOpenLock(gwLockInfo.getGwID(), deviceId, lockPwd);
         }
     }
 
     //开锁
-    public void openLock(String gatewayId, String deviceId, String pwd) {
+    public void realOpenLock(String gatewayId, String deviceId, String pwd) {
         toDisposable(openLockDisposable);
         if (mViewRef.get() != null) {
             mViewRef.get().startOpenLock();
@@ -535,14 +558,12 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
                             OpenLockBean openLockBean = new Gson().fromJson(mqttData.getPayload(), OpenLockBean.class);
                             if ("200".equals(openLockBean.getReturnCode())) {
                                 SPUtils.put(KeyConstants.SAVA_LOCK_PWD + deviceId, pwd);
-                                if (mViewRef.get() != null) {
-                                    mViewRef.get().openLockSuccess();
-                                }
+                                listenerLockOpen(deviceId);
                             } else {
                                 if (mViewRef.get() != null) {
                                     mViewRef.get().openLockFailed(null);
                                 }
-                                SPUtils.remove(KeyConstants.SAVA_LOCK_PWD + deviceId );
+                                SPUtils.remove(KeyConstants.SAVA_LOCK_PWD + deviceId);
                             }
                         }
                     }, new Consumer<Throwable>() {
@@ -558,4 +579,100 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
         }
     }
 
+
+    private void listenerLockOpen(String deviceId) {
+        if (mqttService != null) {
+            toDisposable(closeLockNotifyDisposable);
+            //表示锁已开
+            closeLockNotifyDisposable = mqttService.listenerDataBack()
+                    .filter(new Predicate<MqttData>() {
+                        @Override
+                        public boolean test(MqttData mqttData) throws Exception {
+                            if (mqttData.getFunc().equals(MqttConstant.GW_EVENT)) {
+                                OpenLockNotifyBean openLockNotifyBean = new Gson().fromJson(mqttData.getPayload(), OpenLockNotifyBean.class);
+                                int deviceCode = openLockNotifyBean.getEventparams().getDevecode();
+                                if ("kdszblock".equals(openLockNotifyBean.getDevtype())
+                                        && deviceId.equals(openLockNotifyBean.getDeviceId())) {
+                                    if (deviceCode == 2) {
+                                        //表示锁已开
+                                        return true;
+                                    }
+                                }
+                            }
+                            return false;
+                        }
+                    })
+                    .compose(RxjavaHelper.observeOnMainThread())
+                    .timeout(10 * 1000, TimeUnit.MILLISECONDS)
+                    .subscribe(new Consumer<MqttData>() {
+                        @Override
+                        public void accept(MqttData mqttData) throws Exception {
+                            toDisposable(closeLockNotifyDisposable);
+                            LogUtils.e("门锁打开上报");
+                            if (mViewRef.get() != null) {
+                                mViewRef.get().openLockSuccess();
+                            }
+                            listenerLockClose(deviceId);
+                        }
+                    }, new Consumer<Throwable>() {
+                        @Override
+                        public void accept(Throwable throwable) throws Exception {
+                            if (mViewRef.get() != null) {
+                                mViewRef.get().openLockFailed(throwable);
+                            }
+                        }
+                    });
+            compositeDisposable.add(closeLockNotifyDisposable);
+        }
+
+
+    }
+
+    private void listenerLockClose(String deviceId) {
+        if (mqttService != null) {
+            toDisposable(lockCloseDisposable);
+            //表示锁已开
+            //表示锁已经关闭
+            lockCloseDisposable = mqttService.listenerDataBack()
+                      .filter(new Predicate<MqttData>() {
+                          @Override
+                          public boolean test(MqttData mqttData) throws Exception {
+                              if (mqttData.getFunc().equals(MqttConstant.GW_EVENT)) {
+                                  OpenLockNotifyBean openLockNotifyBean = new Gson().fromJson(mqttData.getPayload(), OpenLockNotifyBean.class);
+                                  int deviceCode = openLockNotifyBean.getEventparams().getDevecode();
+                                  if ("kdszblock".equals(openLockNotifyBean.getDevtype())
+                                          && deviceId.equals(openLockNotifyBean.getDeviceId())) {
+                                      if (deviceCode == 10 || deviceCode == 1) {
+                                          //表示锁已经关闭
+                                          return true;
+                                      }
+                                  }
+                              }
+                              return false;
+                          }
+                      })
+                      .compose(RxjavaHelper.observeOnMainThread())
+                      .timeout(15 * 1000, TimeUnit.MILLISECONDS)
+                      .subscribe(new Consumer<MqttData>() {
+                          @Override
+                          public void accept(MqttData mqttData) throws Exception {
+                              toDisposable(lockCloseDisposable);
+                              LogUtils.e("门锁关闭 上报");
+                              //关门
+                              if (mViewRef.get() != null) {
+                                  mViewRef.get().lockCloseSuccess();
+                              }
+                          }
+                      }, new Consumer<Throwable>() {
+                          @Override
+                          public void accept(Throwable throwable) throws Exception {
+                              if (mViewRef.get() != null) {
+                                  mViewRef.get().lockCloseFailed();
+                              }
+                          }
+                      });
+            compositeDisposable.add(lockCloseDisposable);
+        }
+
+    }
 }

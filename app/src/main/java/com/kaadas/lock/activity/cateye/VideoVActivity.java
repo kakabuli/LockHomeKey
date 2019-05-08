@@ -4,7 +4,6 @@ import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -21,7 +20,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
@@ -37,10 +35,8 @@ import com.kaadas.lock.publiclibrary.linphone.linphone.util.LinphoneHelper;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
-import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.StringUtil;
 import com.kaadas.lock.utils.ToastUtil;
-import com.kaadas.lock.utils.db.MediaFileDBDao;
 import com.yarolegovich.discretescrollview.DiscreteScrollView;
 import com.yarolegovich.discretescrollview.transform.ScaleTransformer;
 
@@ -104,6 +100,8 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
     public static boolean isRunning = false;
     private String Tag = "猫眼通话界面 ";
     private static final int REQUEST_PERMISSION_REQUEST_CODE = 102;
+    private boolean isOpening; //正在开门
+    private boolean isClosing; //正在关门
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -204,7 +202,7 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
                 acceptCall();
             } else { //挂断
                 LogUtils.e("挂断了电话");
-                LinphoneHelper.hangUp();
+                mPresenter.hangup();
                 finish();
             }
         }
@@ -252,6 +250,16 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
             @Override
             public void onItemClickItemMethod(int position) {
                 if (selectPostion != -1 && position == selectPostion) {
+                    LogUtils.e("当前状态是   isOpening    " + isOpening+"   isClosing   "+isClosing);
+                    if (isOpening){
+                        ToastUtil.getInstance().showShort(R.string.is_opening_try_latter);
+                        return;
+                    }
+                    if (isClosing){
+                        ToastUtil.getInstance().showShort(R.string.lock_already_open);
+                        return;
+                    }
+                    LogUtils.e("执行开门  ");
                     GwLockInfo gwLockInfo = gwLockInfos.get(position);
                     mPresenter.openLock(gwLockInfo);
                 }
@@ -306,12 +314,12 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
                 startActivity(intent);
                 break;
             case R.id.iv_back:  //点击返回
-                LinphoneHelper.hangUp();
+                mPresenter.hangup();
                 finish();
                 break;
             case R.id.hangup:  //点击挂断
                 LogUtils.e("点击挂断");
-                LinphoneHelper.hangUp();
+                mPresenter.hangup();
                 finish();
                 break;
         }
@@ -463,7 +471,7 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
                     ToastUtil.getInstance().showShort(R.string.random_verify_error);
                     return;
                 }
-                mPresenter.openLock(gwLockInfo.getGwID(),gwLockInfo.getServerInfo().getDeviceId() ,pwd);
+                mPresenter.realOpenLock(gwLockInfo.getGwID(),gwLockInfo.getServerInfo().getDeviceId() ,pwd);
                 alertDialog.dismiss();
             }
         });
@@ -472,29 +480,40 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
 
     @Override
     public void openLockSuccess() {
+        isOpening = false;
+        isClosing = true;
+        LogUtils.e("当前状态是   isOpening    " + isOpening+"   isClosing   "+isClosing);
         ToastUtil.getInstance().showShort(R.string.open_lock_success);
         hiddenLoading();
     }
 
     @Override
     public void openLockFailed(Throwable throwable) {
+        isOpening = false;
         ToastUtil.getInstance().showShort(R.string.open_lock_failed);
         hiddenLoading();
     }
 
     @Override
     public void startOpenLock() {
+        isOpening = true;
         showLoading(getString(R.string.is_open_lock));
     }
 
     @Override
-    public void onBackPressed() {
-        LinphoneHelper.hangUp();
-        super.onBackPressed();
+    public void lockCloseSuccess() {
+        isClosing = false;
     }
 
+    @Override
+    public void lockCloseFailed() {
+        isClosing = false;
+    }
 
-
-
+    @Override
+    public void onBackPressed() {
+        mPresenter.hangup();
+        super.onBackPressed();
+    }
 
 }

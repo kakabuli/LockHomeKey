@@ -832,4 +832,6 @@
     <string name="go_next_activity_fail">图片下载失败！</string>
     <string name="download_overtime">下载图片超时</string>
     <string name="is_open_lock">正在开门...</string>
+    <string name="lock_already_open">门锁已打开</string>
+    <string name="is_opening_try_latter">正在开门，请稍后再试</string>
 </resources>

@@ -83,7 +83,6 @@ public interface IVideoView extends IBaseView {
      * 开锁成功
      */
     void openLockSuccess();
-
     /**
      * 开锁失败
      */
@@ -92,4 +91,13 @@ public interface IVideoView extends IBaseView {
      * 开始开锁
      */
     void startOpenLock( );
+    /**
+     * 关锁成功
+     */
+    void lockCloseSuccess( );
+    /**
+     * 关锁失败
+     */
+    void lockCloseFailed( );
+
 }
