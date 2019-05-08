@@ -31,7 +31,7 @@
                 android:textSize="@dimen/sp_17" />
         </RelativeLayout>
 
-
+<!--
         <TextView
             android:id="@+id/tv_type"
             android:layout_width="wrap_content"
@@ -40,7 +40,7 @@
             android:layout_marginTop="@dimen/dp_59"
             android:text="jfgjif"
             android:textColor="#FFFFFF"
-            android:textSize="@dimen/sp_15" />
+            android:textSize="@dimen/sp_15" />-->
 
         <RelativeLayout
             android:id="@+id/rl_icon"

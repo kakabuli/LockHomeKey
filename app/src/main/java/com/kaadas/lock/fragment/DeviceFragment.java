@@ -139,7 +139,7 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                 noDeviceLayout.setVisibility(View.GONE);
                 refresh.setVisibility(View.VISIBLE);
                 for (HomeShowBean homeShowBean:homeShowBeanList){
-                    LogUtils.e(homeShowBeanList.size()+"");
+                    LogUtils.e(homeShowBeanList.size()+"获取到大小     "+"获取到昵称  "+homeShowBean.getDeviceNickName());
                     getDifferentTypeDevice(homeShowBean);
                 }
                 if (deviceDetailAdapter!=null){
@@ -163,7 +163,6 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                 //猫眼设备
                 CateEyeInfo cateEyeInfo= (CateEyeInfo) showBean.getObject();
                 String eventStr=cateEyeInfo.getServerInfo().getEvent_str();
-
                 DeviceDetailBean catEye=new DeviceDetailBean();
                 catEye.setDeviceName(showBean.getDeviceNickName());
                 catEye.setEvent_str(eventStr);

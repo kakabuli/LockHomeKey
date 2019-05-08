@@ -130,4 +130,8 @@ public class MqttConstant {
     //唤醒FTP
     public static final String SET_FTP_ENABLE="setFtpEnable";
 
+    //获取猫眼信息
+    public static final String BASIC_INFO="basicInfo";
+
+
 }

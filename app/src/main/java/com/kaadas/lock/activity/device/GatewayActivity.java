@@ -12,10 +12,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.adapter.GatewayAdapter;
 import com.kaadas.lock.bean.DeviceDetailBean;
 import com.kaadas.lock.bean.GatewayDeviceDetailBean;
+import com.kaadas.lock.bean.HomeShowBean;
+import com.kaadas.lock.mvp.mvpbase.BaseActivity;
+import com.kaadas.lock.mvp.presenter.gatewaypresenter.GatewayPresenter;
+import com.kaadas.lock.mvp.view.gatewayView.GatewayView;
 import com.kaadas.lock.publiclibrary.bean.GatewayInfo;
 import com.kaadas.lock.utils.KeyConstants;
 
@@ -28,7 +33,7 @@ import butterknife.ButterKnife;
 /**
  * Created by David on 2019/4/25
  */
-public class GatewayActivity extends AppCompatActivity implements View.OnClickListener, BaseQuickAdapter.OnItemClickListener {
+public class GatewayActivity extends BaseActivity<GatewayView, GatewayPresenter<GatewayView>> implements View.OnClickListener, BaseQuickAdapter.OnItemClickListener {
     @BindView(R.id.iv_back)
     ImageView ivBack;
     @BindView(R.id.tv_content)
@@ -43,7 +48,7 @@ public class GatewayActivity extends AppCompatActivity implements View.OnClickLi
     @BindView(R.id.gateway_nick_name)
     TextView gatewayNickName;
 
-    private List<GatewayDeviceDetailBean> list = new ArrayList<>();
+
 
 
     @Override
@@ -52,8 +57,12 @@ public class GatewayActivity extends AppCompatActivity implements View.OnClickLi
         setContentView(R.layout.activity_gateway);
         ButterKnife.bind(this);
         initView();
-        initRecyclerview();
         initData();
+    }
+
+    @Override
+    protected GatewayPresenter<GatewayView> createPresent() {
+        return new GatewayPresenter<>();
     }
 
     private void initView() {
@@ -90,18 +99,14 @@ public class GatewayActivity extends AppCompatActivity implements View.OnClickLi
             }else{
                 changeGatewayStatus(false);
             }
+            List<HomeShowBean> homeShowBeans =mPresenter.getGatewayBindList(gatewayInfo.getServerInfo().getDeviceSN());
+            initRecyclerview(homeShowBeans);
         }
-
-
-
-
-
-
 
     }
 
-    private void initRecyclerview() {
-        gatewayAdapter = new GatewayAdapter(list);
+    private void initRecyclerview(List<HomeShowBean> homeShowBeans) {
+        gatewayAdapter = new GatewayAdapter(homeShowBeans);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(gatewayAdapter);
         gatewayAdapter.setOnItemClickListener(this);

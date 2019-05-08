@@ -291,6 +291,7 @@ public class AllBindDevices {
                     if (!isExistGateway && homeShowBean.getDeviceType() == HomeShowBean.TYPE_GATEWAY) {
                         //如果设备原来就存在，那么只替换服务器数据   其他数据不变
                         GatewayInfo gatewayInfo = (GatewayInfo) homeShowBean.getObject();
+
                         if (gwListBean.getDeviceSN().equals(gatewayInfo.getServerInfo().getDeviceSN())) {
                             isExistGateway = true;
                             gatewayInfo.setServerInfo(new ServerGatewayInfo(gwListBean));
@@ -321,8 +322,10 @@ public class AllBindDevices {
                                 if (cateEyeInfo.getGwID().equals(gwListBean.getDeviceSN())
                                         && cateEyeInfo.getServerInfo().getDeviceId().equals(serverGwDevice.getDeviceId())
                                         ) {
+                                    LogUtils.e(cateEyeInfo.getServerInfo().getNickName()+"值还没有改变");
                                     isExist = true;
                                     cateEyeInfo.setServerInfo(serverGwDevice);
+                                    LogUtils.e(cateEyeInfo.getServerInfo().getNickName()+"值发生改变");
                                     homeShowBeans.add(homeShowBean);
                                 }
                             }
@@ -337,11 +340,13 @@ public class AllBindDevices {
                             if (!isExist && homeShowBean.getDeviceType() == HomeShowBean.TYPE_GATEWAY_LOCK) {
                                 GwLockInfo gwLockInfo = (GwLockInfo) homeShowBean.getObject();
                                 //如果设备 网关Id 一致   且deviceId也一致   替换服务器数据
+                                LogUtils.e(gwLockInfo.getServerInfo().getNickName()+"值还没有改变");
                                 if (gwLockInfo.getGwID().equals(gwListBean.getDeviceSN())
                                         && gwLockInfo.getServerInfo().getDeviceId().equals(serverGwDevice.getDeviceId())
                                         ) {
                                     isExist = true;
                                     gwLockInfo.setServerInfo(serverGwDevice);
+                                    LogUtils.e(gwLockInfo.getServerInfo().getNickName()+"值发生改变");
                                     homeShowBeans.add(homeShowBean);
                                 }
                             }

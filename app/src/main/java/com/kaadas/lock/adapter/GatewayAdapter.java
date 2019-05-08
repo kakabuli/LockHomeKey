@@ -9,64 +9,59 @@ import com.chad.library.adapter.base.BaseViewHolder;
 import com.kaadas.lock.R;
 import com.kaadas.lock.bean.DeviceDetailBean;
 import com.kaadas.lock.bean.GatewayDeviceDetailBean;
+import com.kaadas.lock.bean.HomeShowBean;
+import com.kaadas.lock.publiclibrary.bean.CateEyeInfo;
+import com.kaadas.lock.publiclibrary.bean.GwLockInfo;
+import com.kaadas.lock.utils.BatteryView;
 import com.kaadas.lock.utils.KeyConstants;
 
 import java.util.List;
 
-public class GatewayAdapter extends BaseQuickAdapter<GatewayDeviceDetailBean, BaseViewHolder> {
+public class GatewayAdapter extends BaseQuickAdapter<HomeShowBean, BaseViewHolder> {
 
 
-    public GatewayAdapter(@Nullable List<GatewayDeviceDetailBean> data) {
+    public GatewayAdapter(@Nullable List<HomeShowBean> data) {
         super(R.layout.item_gateway_device, data);
     }
 
     @Override
-    protected void convert(BaseViewHolder helper, GatewayDeviceDetailBean item) {
-        int power = item.getPower();
-        helper.setText(R.id.device_name, item.getDeviceName());
+    protected void convert(BaseViewHolder helper, HomeShowBean item) {
+        helper.setText(R.id.device_name, item.getDeviceNickName());
         TextView tvDeviceStatus=helper.getView(R.id.tv_device_status);
-        boolean deviceStatus = item.isDeviceStatus();
-        String deviceType = item.getDeviceType();
+        int deviceType = item.getDeviceType();
         ImageView ivDeviceType=helper.getView(R.id.iv_device_type);
-        if (KeyConstants.CATEYE.equals(deviceType)){
+        BatteryView batteryView= helper.getView(R.id.horizontalBatteryView);
+        TextView powerView=helper.getView(R.id.device_power_text);
+        String deviceStatus="";
+        int power=0;
+        if (HomeShowBean.TYPE_CAT_EYE==deviceType){
             ivDeviceType.setImageResource(R.mipmap.cat_eye_icon);
-        }else if (KeyConstants.GATEWAY_LOCK.equals(deviceType)){
+            CateEyeInfo cateEyeInfo= (CateEyeInfo) item.getObject();
+            deviceStatus= cateEyeInfo.getServerInfo().getEvent_str();
+            power=cateEyeInfo.getPower();
+            batteryView.setPower(power);
+            powerView.setText(power+"");
+
+        }else if (HomeShowBean.TYPE_GATEWAY_LOCK==deviceType){
             ivDeviceType.setImageResource(R.mipmap.product_k9);
+            GwLockInfo gwLockInfo= (GwLockInfo) item.getObject();
+            deviceStatus= gwLockInfo.getServerInfo().getEvent_str();
+            power=gwLockInfo.getPower();
+            batteryView.setPower(power);
+            powerView.setText(power+"");
         }
-        if (deviceStatus) {
+
+        if ("online".equals(deviceStatus)) {
             helper.setImageResource(R.id.device_type_image, R.mipmap.wifi_connect);
             tvDeviceStatus.setText(R.string.online);
             tvDeviceStatus.setTextColor(mContext.getResources().getColor(R.color.c1F96F7));
+            batteryView.setColor(R.color.c25F290);
+
         } else {
             helper.setImageResource(R.id.device_type_image, R.mipmap.wifi_disconnect);
             tvDeviceStatus.setText(R.string.offline);
             tvDeviceStatus.setTextColor(mContext.getResources().getColor(R.color.c999999));
-        }
-        int imgResId = -1;
-        if (power != -1) {
-            if (power > 100) {
-                power = 100;
-            }
-            if (power <= 5) {
-                imgResId = R.mipmap.device_power_0;
-            } else if (power <= 20) {
-                imgResId = R.mipmap.device_power_20;
-            } else if (power <= 40) {
-                imgResId = R.mipmap.device_power_40;
-            } else if (power <= 60) {
-                imgResId = R.mipmap.device_power_60;
-                //        } else if (power <= 100) {
-            } else if (power <= 80) {
-                imgResId = R.mipmap.device_power_80;
-            } else {
-                imgResId = R.mipmap.device_power_100;
-            }
-        } else {
-            imgResId = R.mipmap.device_power_100;
-        }
-        if (imgResId != -1) {
-            helper.setImageResource(R.id.device_power_image, imgResId);
-            helper.setText(R.id.device_power_text, power + "%");
+            batteryView.setColor(R.color.cD6D6D6);
         }
 
 

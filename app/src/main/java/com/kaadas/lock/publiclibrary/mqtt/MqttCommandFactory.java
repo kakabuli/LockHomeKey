@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.AllowCateyeJoinBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.BindGatewayBean;
+import com.kaadas.lock.publiclibrary.mqtt.publishbean.CatEyeInfoBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.DeleteGatewayLockDeviceBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.FtpEnableBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.GetAllBindDeviceBean;
@@ -328,6 +329,22 @@ public class MqttCommandFactory {
                 gwId,messageId,MqttConstant.MSG_TYPE_REQUEST, paramsBean,0,returnDataBean,""+System.currentTimeMillis(),uid);
         return  getMessage(getGatewayLockInfoBean,messageId);
     }
+
+    /**
+     * 获取猫眼基本信息
+     * @param gatewayId
+     * @param deviceId
+     * @param uid
+     * @return
+     */
+
+   public static MqttMessage getCatEyeInfo(String gatewayId,String deviceId,String uid){
+       int messageId=getMessageId();
+       CatEyeInfoBean catEyeInfoBean=new CatEyeInfoBean(MqttConstant.MSG_TYPE_REQUEST,uid,messageId,gatewayId,deviceId,MqttConstant.BASIC_INFO,new CatEyeInfoBean.ParamsBean(),"0",new CatEyeInfoBean.ReturnDataBean(),System.currentTimeMillis()+"");
+       return getMessage(catEyeInfoBean,messageId);
+
+   }
+
 
 
 

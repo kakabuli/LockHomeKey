@@ -483,7 +483,6 @@ public class MyApplication extends Application {
             allBindDeviceDisposable.dispose();
         }
         allBindDeviceDisposable = mqttService.mqttPublish(MqttConstant.MQTT_REQUEST_APP, allBindDevice)
-                .compose(RxjavaHelper.observeOnMainThread())
                 .filter(new Predicate<MqttData>() {
                     @Override
                     public boolean test(MqttData mqttData) throws Exception {
@@ -491,6 +490,7 @@ public class MyApplication extends Application {
                     }
                 })
                 .timeout(10 * 1000, TimeUnit.MILLISECONDS)
+                .compose(RxjavaHelper.observeOnMainThread())
                 .subscribe(new Consumer<MqttData>() {
                     @Override
                     public void accept(MqttData mqttData) throws Exception {
