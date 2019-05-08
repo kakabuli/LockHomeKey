@@ -11,6 +11,8 @@ import com.kaadas.lock.publiclibrary.bean.GwLockInfo;
 import com.kaadas.lock.publiclibrary.bean.ServerGwDevice;
 import com.kaadas.lock.publiclibrary.bean.ServerGatewayInfo;
 import com.kaadas.lock.publiclibrary.http.result.ServerBleDevice;
+import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.SPUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -255,7 +257,7 @@ public class AllBindDevices {
     /**
      * 获取首页显示需要的对象，即除了网管之外的所有设备
      */
-    public List<HomeShowBean> getHomeShow(boolean showGateway) {
+    public List<HomeShowBean> getHomeShow() {
         ReturnDataBean returnData = getData();
         List<HomeShowBean> homeShowBeans = new ArrayList<>();
         List<ServerBleDevice> bleDevices = returnData.getDevList();
@@ -283,24 +285,27 @@ public class AllBindDevices {
         if (gwList != null) {
             for (ReturnDataBean.GwListBean gwListBean : gwList) {
                 //首页不显示网关
-                if (showGateway == true) {
-                    boolean isExist = false;
-                    for (HomeShowBean homeShowBean : MyApplication.getInstance().getHomeShowDevices()) {
-                        if (!isExist && homeShowBean.getDeviceType() == HomeShowBean.TYPE_GATEWAY) {
-                            //如果设备原来就存在，那么只替换服务器数据   其他数据不变
-                            GatewayInfo gatewayInfo = (GatewayInfo) homeShowBean.getObject();
-                            if (gwListBean.getDeviceSN().equals(gatewayInfo.getServerInfo().getDeviceSN())) {
-                                isExist = true;
-                                gatewayInfo.setServerInfo(new ServerGatewayInfo(gwListBean));
-                                homeShowBeans.add(homeShowBean);
-                            }
+                boolean isExistGateway = false;
+                GatewayInfo newGatewayInfo = null;
+                for (HomeShowBean homeShowBean : MyApplication.getInstance().getAllDevices()) {
+                    if (!isExistGateway && homeShowBean.getDeviceType() == HomeShowBean.TYPE_GATEWAY) {
+                        //如果设备原来就存在，那么只替换服务器数据   其他数据不变
+                        GatewayInfo gatewayInfo = (GatewayInfo) homeShowBean.getObject();
+                        if (gwListBean.getDeviceSN().equals(gatewayInfo.getServerInfo().getDeviceSN())) {
+                            isExistGateway = true;
+                            gatewayInfo.setServerInfo(new ServerGatewayInfo(gwListBean));
+                            homeShowBeans.add(homeShowBean);
                         }
                     }
-                    if (!isExist) {
-                        homeShowBeans.add(new HomeShowBean(HomeShowBean.TYPE_GATEWAY, gwListBean.getDeviceSN(), gwListBean.getDeviceNickName(), new GatewayInfo(new ServerGatewayInfo(gwListBean))));
-                    }
-
                 }
+                if (!isExistGateway) {
+                    newGatewayInfo = new GatewayInfo(new ServerGatewayInfo(gwListBean));
+                    String gatewayStatus = (String) SPUtils.get(newGatewayInfo.getServerInfo().getDeviceSN(), "");
+                    newGatewayInfo.setEvent_str(gatewayStatus);
+                    SPUtils.remove(newGatewayInfo.getServerInfo().getDeviceSN());
+                    homeShowBeans.add(new HomeShowBean(HomeShowBean.TYPE_GATEWAY, gwListBean.getDeviceSN(), gwListBean.getDeviceNickName(), newGatewayInfo));
+                }
+
                 List<ServerGwDevice> deviceList = gwListBean.getDeviceList();
                 for (ServerGwDevice serverGwDevice : deviceList) {
                     String nickName = serverGwDevice.getNickName();
@@ -318,16 +323,13 @@ public class AllBindDevices {
                                         ) {
                                     isExist = true;
                                     cateEyeInfo.setServerInfo(serverGwDevice);
-                                    cateEyeInfo.setGatewayInfo(new GatewayInfo(new ServerGatewayInfo(gwListBean)));
                                     homeShowBeans.add(homeShowBean);
                                 }
                             }
                         }
                         if (!isExist) {
-
-
                             CateEyeInfo cateEyeInfo = new CateEyeInfo(gwListBean.getDeviceSN(), serverGwDevice);
-                            cateEyeInfo.setGatewayInfo(new GatewayInfo(new ServerGatewayInfo(gwListBean)));
+                            cateEyeInfo.setGatewayInfo(newGatewayInfo);
                             homeShowBeans.add(new HomeShowBean(HomeShowBean.TYPE_CAT_EYE, serverGwDevice.getDeviceId(), nickName, cateEyeInfo));
                         }
                     } else {

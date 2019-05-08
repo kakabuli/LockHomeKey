@@ -470,6 +470,7 @@ public class MyApplication extends Application {
      *
      * @param isForce 是否强制刷新
      */
+    public boolean neverGetDevice = false;
     public void getAllDevicesByMqtt(boolean isForce) {
         if (!isForce) {
             if (allBindDevices != null) {
@@ -499,8 +500,7 @@ public class MyApplication extends Application {
                         String payload = mqttData.getPayload();
                         allBindDevices = new Gson().fromJson(payload, AllBindDevices.class);
                         if (allBindDevices != null) {
-                            homeShowDevices = allBindDevices.getHomeShow(true);
-                            LogUtils.e("获取到的首页设备个数是   "  +homeShowDevices.size() );
+                            homeShowDevices = allBindDevices.getHomeShow( );
                             getDevicesFromServer.onNext(allBindDevices);
                         }
                     }
@@ -514,7 +514,7 @@ public class MyApplication extends Application {
 
 
     public void setAllBindDevices(AllBindDevices allBindDevices) {
-        homeShowDevices = allBindDevices.getHomeShow(true);
+        homeShowDevices = allBindDevices.getHomeShow( );
         LogUtils.e("获取到的首页设备个数是   "  +homeShowDevices.size() );
         getDevicesFromServer.onNext(allBindDevices);
     }
