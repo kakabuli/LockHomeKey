@@ -831,10 +831,6 @@
     <string name="cat_eye_no_ftp">猫眼上无该天的FTP快照</string>
     <string name="go_next_activity_fail">图片下载失败！</string>
     <string name="download_overtime">下载图片超时</string>
-    <string name="data_loading">数据加载中……</string>
-    <string name="loading">加载中...</string>
-    <string name="video_download_fail">视频下载失败,请重新下载</string>
-    <string name="receive_pir_trigger_check_cateye_snapshot">收到pir触发,请查看猫眼快照</string>
     <string name="is_open_lock">正在开门...</string>
     <string name="pm">下午</string>
     <string name="am">上午</string>
@@ -856,4 +852,8 @@
     <string name="cat_mac_address">MAC地址</string>
     <string name="cat_t_version">T200版本</string>
     <string name="cat_mcu_version">MCU版本</string>
+    <string name="data_loading">数据加载中……</string>
+    <string name="loading">加载中...</string>
+    <string name="video_download_fail">视频下载失败,请重新下载</string>
+    <string name="receive_pir_trigger_check_cateye_snapshot">收到pir触发,请查看猫眼快照</string>
 </resources>
