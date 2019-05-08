@@ -762,7 +762,7 @@
     <string name="please_have_net_add_temp_pwd">请在有网络情况下添加临时密码！</string>
     <string name="please_have_net_add_forever_pwd">请在有网络情况下添加永久密码！</string>
     <string name="get_lock_lang">正在锁的语言状态，请稍后。。。</string>
-    <string name="hardware_version">硬件版本</string>
+
     <string name="screenshot_name">截屏</string>
     <string name="mute_name">静音</string>
     <string name="novoice">免提</string>
@@ -852,6 +852,12 @@
     <string name="cat_mac_address">MAC地址</string>
     <string name="cat_t_version">T200版本</string>
     <string name="cat_mcu_version">MCU版本</string>
+    <string name="hardware_version">硬件版本</string>
+    <string name="smart_check_set_fail">智能监测设置失败</string>
+    <string name="data_loading">数据加载中……</string>
+    <string name="loading">加载中...</string>
+    <string name="video_download_fail">视频下载失败,请重新下载</string>
+    <string name="receive_pir_trigger_check_cateye_snapshot">收到pir触发,请查看猫眼快照</string>
     <string name="normal">正常</string>
 
     <string name="back_lock_can_not_open">门锁反锁状态下请门内开锁</string>

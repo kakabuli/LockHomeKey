@@ -33,4 +33,20 @@ public class Constants {
 
     //下载的图片文件夹名字
     public static final String DOWNLOAD_IMAGE_FOLDER_NAME="catEyeImages";
+    //播放视频来源区分
+    public static final String PLAY_VIDEO_FLAG="playVideoFlag";  //猫眼视频
+    public static final String CAT_EYE_VIDEO="catEyeVideo";
+    //猫眼条目地址
+    public static final String CAT_EYE_URL="catEyeUrl";
+    public final static String MEDIA_PATH = "mediaPath";
+    //合成后的下载文件夹
+    public static final String COMPOUND_FOLDER="compoundVideos";
+    //合成后的视频格式
+    public static final String COMPOUND_VIDEO_FORMAT=".mp4";
+
+    //下载的音频文件夹名字
+    public static final String DOWNLOAD_AUDIO_FOLDER_NAME="catEyeAudios";
+    //下载的视频文件夹名字
+    public static final String DOWNLOAD_VIDEO_FOLDER_NAME="catEyeVideos";
+
 }

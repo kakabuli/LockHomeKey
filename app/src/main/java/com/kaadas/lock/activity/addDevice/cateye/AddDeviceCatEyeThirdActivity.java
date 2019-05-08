@@ -24,6 +24,7 @@ import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.mvp.presenter.deviceaddpresenter.AddCatEyePresenter;
 import com.kaadas.lock.mvp.view.deviceaddview.IAddCatEyeView;
 import com.kaadas.lock.publiclibrary.mqtt.eventbean.DeviceOnLineBean;
+import com.kaadas.lock.publiclibrary.mqtt.publishbean.CatEyeInfoBean;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 

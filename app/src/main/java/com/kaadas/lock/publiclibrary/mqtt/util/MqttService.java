@@ -6,13 +6,21 @@ import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
 import android.text.TextUtils;
+import android.util.Log;
+import android.widget.Toast;
 
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
+import com.kaadas.lock.bean.PirEventBus;
 import com.kaadas.lock.publiclibrary.mqtt.PublishResult;
+import com.kaadas.lock.utils.Constants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.NetUtil;
+import com.kaadas.lock.utils.SPUtils2;
 import com.kaadas.lock.utils.ToastUtil;
+import com.kaadas.lock.utils.ftp.FtpUtils;
+import com.kaadas.lock.utils.ftp.GeTui;
+import com.kaadas.lock.utils.greenDao.bean.HistoryInfo;
 
 import org.eclipse.paho.android.service.MqttAndroidClient;
 import org.eclipse.paho.client.mqttv3.DisconnectedBufferOptions;
@@ -23,8 +31,14 @@ import org.eclipse.paho.client.mqttv3.MqttCallbackExtended;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.File;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import io.reactivex.Observable;
 import io.reactivex.subjects.PublishSubject;
@@ -47,7 +61,7 @@ public class MqttService extends Service {
     private PublishSubject<Boolean> connectStateObservable = PublishSubject.create();
     private PublishSubject<PublishResult> publishObservable = PublishSubject.create();
     private PublishSubject<Boolean> disconnectObservable = PublishSubject.create();
-    private PublishSubject<MqttData> notifyDataObservable = PublishSubject.create();
+    private PublishSubject<MqttData>  notifyDataObservable = PublishSubject.create();
 
 
     /**
@@ -238,6 +252,18 @@ public class MqttService extends Service {
                 if (MqttConstant.GATEWAY_STATE.equals(mqttData.getFunc())) {
                     notifyDataObservable.onNext(mqttData);
                 }
+
+                if(MqttConstant.GATEWAY_EVENT_NOTIFY.equals(mqttData.getFunc())){
+                    int code = jsonObject.getInt("eventcode");
+                    JSONObject eventparams = jsonObject.getJSONObject("eventparams");
+                    if(code==2){
+                        String devetype = eventparams.getString("devetype");
+                        if(devetype.equals("pir")){
+                            executePirFunction(jsonObject,eventparams);
+                        }
+                    }
+                }
+
             }
 
             @Override
@@ -401,7 +427,59 @@ public class MqttService extends Service {
         }
 
     }
-
+    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    public void executePirFunction(JSONObject jsonObject,JSONObject eventparams){
+        try {
+            JSONObject devinfo = eventparams.getJSONObject("devinfo");
+            JSONObject params = devinfo.getJSONObject("params");
+            String gwId = jsonObject.getString("gwId");
+            String url = params.getString("url");
+            String deviceId = jsonObject.getString("deviceId");
+            //		String str="/sdap0/storage/orangecat-20190315/1552636453_picture.jpg";
+            int i= url.lastIndexOf("/");
+            String fileName = url.substring(i+1,url.length());
+            String remoteRootPath =  fileName.split("_")[0];
+            Long remoteRootPathMillisecond = Long.parseLong(remoteRootPath.split("_")[0]);
+            Date remoteRootDate= null;
+            try {
+                remoteRootDate = simpleDateFormat.parse(simpleDateFormat.format(new Date(remoteRootPathMillisecond*1000)));
+            } catch (ParseException e) {
+                e.printStackTrace();
+                Log.e(GeTui.VideoLog,"remoteRootDate异常...........");
+            }
+            Log.e(GeTui.VideoLog,"第一步:pir快照，下载地址url:"+url+" gwId网关Id:"+gwId+"保存时间:"+simpleDateFormat.format(remoteRootDate)+" deviceId:"+deviceId+" fileName:"+fileName);
+            Date today_date=null;
+            try {
+                today_date= simpleDateFormat.parse(simpleDateFormat.format(new Date()));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            HistoryInfo historyInfo=new HistoryInfo(null,deviceId,today_date,fileName);
+            long insertId = MyApplication.getInstance().getDaoWriteSession().getHistoryInfoDao().insert(historyInfo);
+            String key= deviceId+GeTui.CATEYE_KEY;
+            int catEyeCount= (int) SPUtils2.get(MyApplication.getInstance(),key,0);
+            catEyeCount++;
+            SPUtils2.put(MyApplication.getInstance(),key,catEyeCount);
+            PirEventBus pirEventBus=new PirEventBus(deviceId);
+            EventBus.getDefault().post(pirEventBus);
+            Log.e(GeTui.VideoLog,"insertId:"+insertId+"发送eventbus:"+pirEventBus);
+            String currentTimeFolder = FtpUtils.getCurrentDayFolder1(url);
+            String path = MyApplication.getInstance().getExternalFilesDir("").getAbsolutePath() + File.separator + Constants.DOWNLOAD_IMAGE_FOLDER_NAME+ File.separator + deviceId+File.separator+currentTimeFolder;
+            Log.e(GeTui.VideoLog,"路径是:"+path);
+            File file=new File(path);
+            if(!file.exists()){
+                boolean isMkdir= file.mkdir();
+                if(isMkdir){
+                    Log.e(GeTui.VideoLog,"MqttCallBack===>文件创建成功");
+                }else{
+                    Log.e(GeTui.VideoLog,"MqttCallBack===>文件创建成功");
+                }
+            }
+            Toast.makeText(MyApplication.getInstance(), MyApplication.getInstance().getString(R.string.receive_pir_trigger_check_cateye_snapshot), Toast.LENGTH_SHORT).show();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
 
 
 
