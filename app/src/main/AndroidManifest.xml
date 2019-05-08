@@ -341,7 +341,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.device.bluetooth.password.BluetoothPasswordManagerActivity"
-            android:launchMode="singleTop"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.device.bluetooth.password.BluetoothPasswordManagerDetailActivity"

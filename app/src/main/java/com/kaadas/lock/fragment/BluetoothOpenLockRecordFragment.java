@@ -240,10 +240,16 @@ public class BluetoothOpenLockRecordFragment extends BaseBleFragment<IOpenLockRe
             List<BluetoothItemRecordBean> itemList = new ArrayList<>();
             GetPasswordResult passwordResult = MyApplication.getInstance().getPasswordResults(bleLockInfo.getServerLockInfo().getLockName());
             String openLockType = getOpenLockType(passwordResult, record);
-            itemList.add(new BluetoothItemRecordBean(record.getUser_num(), openLockType, KeyConstants.BLUETOOTH_RECORD_COMMON,
-                    record.getOpen_time(), true, true));
 
+            String open_time = record.getOpen_time();
+            String[] split = open_time.split(" ");
+            String strRight=split[1];
+            String[] split1 = strRight.split(":");
+            String time=split1[0]+":"+split1[1];
+            itemList.add(new BluetoothItemRecordBean(record.getUser_num(), openLockType, KeyConstants.BLUETOOTH_RECORD_COMMON,
+                    time, true, true));
             list.add(new BluetoothRecordBean(titleTime, itemList, true));
+
         }
 
         bluetoothRecordAdapter.notifyDataSetChanged();

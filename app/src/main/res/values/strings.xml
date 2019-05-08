@@ -832,6 +832,14 @@
     <string name="go_next_activity_fail">图片下载失败！</string>
     <string name="download_overtime">下载图片超时</string>
     <string name="is_open_lock">正在开门...</string>
+    <string name="pm">下午</string>
+    <string name="am">上午</string>
+    <string name="title">请选择时间</string>
+    <string name="year">年</string>
+    <string name="month">月</string>
+    <string name="hour">时</string>
+    <string name="minute">分</string>
+    <string name="auth_time">授权时间</string>
     <string name="lock_already_open">门锁已打开</string>
     <string name="is_opening_try_latter">正在开门，请稍后再试</string>
 </resources>

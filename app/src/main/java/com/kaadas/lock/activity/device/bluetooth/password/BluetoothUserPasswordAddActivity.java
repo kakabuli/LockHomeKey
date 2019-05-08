@@ -72,9 +72,9 @@ public class BluetoothUserPasswordAddActivity extends AppCompatActivity implemen
         //添加Fragment
         // 这里可以从Activity中传递数据到Fragment中
         viewPager.setOffscreenPageLimit(3);
-        mFragments.add(new PasswordTimeFragment());
-        mFragments.add(new PasswordPeriodFragment());
-        mFragments.add(new PasswordTemporaryFragment());
+        mFragments.add(PasswordTimeFragment.newInstance());
+        mFragments.add(PasswordPeriodFragment.newInstance());
+        mFragments.add(PasswordTemporaryFragment.newInstance());
 
         //适配器
         mPagerAdapter = new ListFragmentPagerAdapter(getSupportFragmentManager(), mFragments);
