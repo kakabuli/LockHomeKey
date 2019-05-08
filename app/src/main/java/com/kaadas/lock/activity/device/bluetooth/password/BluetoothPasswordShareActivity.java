@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,7 +22,6 @@ import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
-import com.kaadas.lock.utils.StringUtil;
 import com.kaadas.lock.utils.ToastUtil;
 
 import butterknife.BindView;
@@ -56,6 +54,8 @@ public class BluetoothPasswordShareActivity extends BaseBleActivity<IPasswordDet
     TextView tvCopy;
     @BindView(R.id.iv_editor)
     ImageView ivEditor;
+    @BindView(R.id.tv_password)
+    TextView tvPassword;
     private int type;
     private BleLockInfo bleLockInfo;
     private String number;
@@ -64,32 +64,37 @@ public class BluetoothPasswordShareActivity extends BaseBleActivity<IPasswordDet
     int timeCeLue;
     String shiXiao;
     Intent intent;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bluetooth_password_share);
         ButterKnife.bind(this);
         bleLockInfo = mPresenter.getBleLockInfo();
-         intent = getIntent();
+        intent = getIntent();
         type = intent.getIntExtra(KeyConstants.TO_DETAIL_TYPE, 1);
         number = intent.getStringExtra(KeyConstants.TO_DETAIL_NUMBER);
         password = intent.getStringExtra(KeyConstants.TO_DETAIL_PASSWORD);
         nickName = intent.getStringExtra(KeyConstants.TO_DETAIL_NICKNAME);
         timeCeLue = intent.getIntExtra(KeyConstants.TIME_CE_LUE, 0);
+        tvPassword.setText(password);
         ivBack.setOnClickListener(this);
         tvContent.setText(getString(R.string.password_detail));
         ivEditor.setOnClickListener(this);
         btnDelete.setOnClickListener(this);
+        tvName.setText(nickName);
+        tvTime.setText(" " + DateUtils.getStrFromMillisecond2(System.currentTimeMillis()));
         initData();
     }
+
     private void initData() {
         switch (timeCeLue) {
             case KeyConstants.YONG_JIU:
-                shiXiao=getString(R.string.password_yong_jiu_valid);
+                shiXiao = getString(R.string.password_yong_jiu_valid);
                 tvNumber.setText(shiXiao);
                 break;
             case KeyConstants.ONE_DAY:
-                shiXiao=getString(R.string.password_one_day_valid);
+                shiXiao = getString(R.string.password_one_day_valid);
                 tvNumber.setText(shiXiao);
                 break;
             case KeyConstants.CUSTOM:
@@ -98,7 +103,7 @@ public class BluetoothPasswordShareActivity extends BaseBleActivity<IPasswordDet
                 String strStart = DateUtils.formatDetailTime(startTime);
                 String strEnd = DateUtils.formatDetailTime(endTime);
                 String content = getString(R.string.password_valid_shi_xiao) + "  " + strStart + "~" + strEnd;
-                shiXiao=content;
+                shiXiao = content;
                 tvNumber.setText(shiXiao);
                 break;
             case KeyConstants.PERIOD:
@@ -107,15 +112,16 @@ public class BluetoothPasswordShareActivity extends BaseBleActivity<IPasswordDet
                 String weekRules = intent.getStringExtra(KeyConstants.WEEK_REPEAT_DATA);
                 String strHint = String.format(getString(R.string.week_hint), weekRules,
                         strStart, strEnd);
-                shiXiao=strHint;
+                shiXiao = strHint;
                 tvNumber.setText(shiXiao);
                 break;
             case KeyConstants.TEMP:
-                shiXiao=getString(R.string.password_once_valid);
+                shiXiao = getString(R.string.password_once_valid);
                 tvNumber.setText(shiXiao);
                 break;
         }
     }
+
     @Override
     protected PasswordDetailPresenter<IPasswordDetailView> createPresent() {
         return new PasswordDetailPresenter<>();
@@ -132,6 +138,10 @@ public class BluetoothPasswordShareActivity extends BaseBleActivity<IPasswordDet
                 View mView = LayoutInflater.from(this).inflate(R.layout.have_edit_dialog, null);
                 TextView tvTitle = mView.findViewById(R.id.tv_title);
                 EditText editText = mView.findViewById(R.id.et_name);
+                if (nickName!=null){
+                    editText.setText(nickName);
+                    editText.setSelection(nickName.length());
+                }
                 TextView tv_cancel = mView.findViewById(R.id.tv_left);
                 TextView tv_query = mView.findViewById(R.id.tv_right);
                 AlertDialog alertDialog = AlertDialogUtil.getInstance().common(this, mView);
@@ -160,7 +170,7 @@ public class BluetoothPasswordShareActivity extends BaseBleActivity<IPasswordDet
                 });
                 break;
             case R.id.btn_delete:
-                AlertDialogUtil.getInstance().noEditTwoButtonDialog(this, getString(R.string.hint), getString(R.string.sure_delete_password), getString(R.string.cancel),getString(R.string.query) ,new AlertDialogUtil.ClickListener() {
+                AlertDialogUtil.getInstance().noEditTwoButtonDialog(this, getString(R.string.hint), getString(R.string.sure_delete_password), getString(R.string.cancel), getString(R.string.query), new AlertDialogUtil.ClickListener() {
                     @Override
                     public void left() {
 
@@ -169,7 +179,7 @@ public class BluetoothPasswordShareActivity extends BaseBleActivity<IPasswordDet
                     public void right() {
                         if (mPresenter.isAuth(bleLockInfo, true)) {
                             showLoading(getString(R.string.is_deleting));
-                            mPresenter.deletePwd(type, Integer.parseInt(number), 1,true);
+                            mPresenter.deletePwd(type, Integer.parseInt(number), 1, true);
                         }
                     }
                 });
@@ -193,7 +203,7 @@ public class BluetoothPasswordShareActivity extends BaseBleActivity<IPasswordDet
         Intent intent = new Intent();
         if (type == 1) {
             intent.setClass(this, BluetoothPasswordManagerActivity.class);
-        }else {
+        } else {
             //todo 跳转到临时密码管理页面
             intent.setClass(this, BluetoothPasswordManagerActivity.class);
         }
@@ -210,7 +220,7 @@ public class BluetoothPasswordShareActivity extends BaseBleActivity<IPasswordDet
 
     @Override
     public void onDeleteServerPwdFailedServer(BaseResult result) {
-        LogUtils.e("删除失败  " +result.toString());
+        LogUtils.e("删除失败  " + result.toString());
         ToastUtil.getInstance().showShort(R.string.delete_fialed);
         hiddenLoading();
     }

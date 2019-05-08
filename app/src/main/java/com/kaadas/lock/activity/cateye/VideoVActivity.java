@@ -1,49 +1,45 @@
 package com.kaadas.lock.activity.cateye;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
+import android.text.InputType;
+import android.view.LayoutInflater;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.adapter.ForecastAdapter;
 import com.kaadas.lock.bean.HomeShowBean;
+import com.kaadas.lock.mvp.mvpbase.BaseActivity;
+import com.kaadas.lock.mvp.presenter.cateye.VideoPresenter;
+import com.kaadas.lock.mvp.view.cateye.IVideoView;
 import com.kaadas.lock.publiclibrary.bean.CateEyeInfo;
 import com.kaadas.lock.publiclibrary.bean.GwLockInfo;
 import com.kaadas.lock.publiclibrary.linphone.MemeManager;
-import com.kaadas.lock.publiclibrary.linphone.linphone.callback.PhoneAutoAccept;
 import com.kaadas.lock.publiclibrary.linphone.linphone.util.LinphoneHelper;
-import com.kaadas.lock.publiclibrary.linphone.linphone.util.Util;
-import com.kaadas.lock.publiclibrary.linphone.linphonenew.LinphoneManager;
-import com.kaadas.lock.utils.Constants;
-import com.kaadas.lock.utils.FileUtils;
+import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.StringUtil;
 import com.kaadas.lock.utils.ToastUtil;
-import com.kaadas.lock.utils.db.MediaFileDBDao;
 import com.yarolegovich.discretescrollview.DiscreteScrollView;
 import com.yarolegovich.discretescrollview.transform.ScaleTransformer;
 
-import org.linphone.core.LinphoneCall;
-
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,10 +48,10 @@ import butterknife.ButterKnife;
 
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 
-public class VideoVActivity extends AppCompatActivity implements
+public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVideoView>> implements
         DiscreteScrollView.ScrollStateChangeListener<ForecastAdapter.ViewHolder>,
         DiscreteScrollView.OnItemChangedListener<ForecastAdapter.ViewHolder>,
-        View.OnClickListener, CompoundButton.OnCheckedChangeListener {
+        View.OnClickListener, CompoundButton.OnCheckedChangeListener, IVideoView {
 
     @BindView(R.id.forecast_city_picker)
     DiscreteScrollView cityPicker;
@@ -97,7 +93,6 @@ public class VideoVActivity extends AppCompatActivity implements
     CheckBox cbScreenRecord;
     private int selectPostion = -1;
 
-    Handler handler = new Handler();
     private CateEyeInfo cateEyeInfo;
     private boolean isCallIn;
     private List<GwLockInfo> gwLockInfos;
@@ -105,8 +100,8 @@ public class VideoVActivity extends AppCompatActivity implements
     public static boolean isRunning = false;
     private String Tag = "猫眼通话界面 ";
     private static final int REQUEST_PERMISSION_REQUEST_CODE = 102;
-    private long startRecordTime;
-    private MediaFileDBDao mMediaDBDao;
+    private boolean isOpening; //正在开门
+    private boolean isClosing; //正在关门
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,9 +118,7 @@ public class VideoVActivity extends AppCompatActivity implements
         initData();
         initView();
         requestPermissions();
-        listenerCallStatus();
-        initLinphone();
-        mMediaDBDao = MediaFileDBDao.getInstance(this);
+        mPresenter.init(this);
     }
 
     private void requestPermissions() {
@@ -149,40 +142,6 @@ public class VideoVActivity extends AppCompatActivity implements
     }
 
 
-    private void listenerCallStatus() {
-        LinphoneHelper.addAutoAcceptCallBack(new PhoneAutoAccept() {
-            @Override
-            public void incomingCall(LinphoneCall linphoneCall) {
-                Log.e(Tag, "猫眼  incomingCall.........");
-
-            }
-
-            @Override
-            public void callConnected() {
-                Log.e(Tag, "猫眼  callConnected.........");
-
-            }
-
-            @Override
-            public void callReleased() {
-                Log.e(Tag, "猫眼  callReleased.........");
-            }
-
-            @Override
-            public void callFinish() {
-                Log.e(Tag, "猫眼 callFinish.........");
-                finish();
-            }
-
-            @Override
-            public void Streaming() {
-                Log.e(Tag, "猫眼 Streaming.........");
-
-            }
-        });
-    }
-
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -199,8 +158,13 @@ public class VideoVActivity extends AppCompatActivity implements
     protected void onDestroy() {
         super.onDestroy();
         isRunning = false;
-        MemeManager.getInstance().disconnectMeme();
+        MemeManager.getInstance().videoActivityDisconnectMeme();
         LinphoneHelper.onDestroy();
+    }
+
+    @Override
+    protected VideoPresenter<IVideoView> createPresent() {
+        return new VideoPresenter<>();
     }
 
     private void initData() {
@@ -222,15 +186,7 @@ public class VideoVActivity extends AppCompatActivity implements
         if (isCallIn) {
             Intent intent = new Intent(this, CallComingActivity.class);
             startActivityForResult(intent, REQUEST_CODE_CALL_COMING);
-        } else { //此处呼叫出去的逻辑
-            callCatEye();
         }
-    }
-
-
-    //呼叫猫眼的逻辑
-    private void callCatEye() {
-
     }
 
     @Override
@@ -240,12 +196,13 @@ public class VideoVActivity extends AppCompatActivity implements
             boolean isAcceptCall = data.getBooleanExtra(KeyConstants.IS_ACCEPT_CALL, false);
             if (isAcceptCall) {  //接听
                 LogUtils.e("接听了电话");
+                mPresenter.listenerCallStatus();
                 String mDeviceIp = MemeManager.getInstance().getDeviceIp();
                 LinphoneHelper.acceptCall(mDeviceIp);
-                listenerCallStatus();
                 acceptCall();
             } else { //挂断
                 LogUtils.e("挂断了电话");
+                mPresenter.hangup();
                 finish();
             }
         }
@@ -293,7 +250,18 @@ public class VideoVActivity extends AppCompatActivity implements
             @Override
             public void onItemClickItemMethod(int position) {
                 if (selectPostion != -1 && position == selectPostion) {
-                    Toast.makeText(VideoVActivity.this, "点击了:" + position, Toast.LENGTH_SHORT).show();
+                    LogUtils.e("当前状态是   isOpening    " + isOpening+"   isClosing   "+isClosing);
+                    if (isOpening){
+                        ToastUtil.getInstance().showShort(R.string.is_opening_try_latter);
+                        return;
+                    }
+                    if (isClosing){
+                        ToastUtil.getInstance().showShort(R.string.lock_already_open);
+                        return;
+                    }
+                    LogUtils.e("执行开门  ");
+                    GwLockInfo gwLockInfo = gwLockInfos.get(position);
+                    mPresenter.openLock(gwLockInfo);
                 }
             }
         });
@@ -302,7 +270,6 @@ public class VideoVActivity extends AppCompatActivity implements
             cityPicker.setVisibility(View.GONE);
             video_h_no_lock.setVisibility(View.VISIBLE);
         }
-
         LinphoneHelper.setAndroidVideoWindow(new SurfaceView[]{video_v_surfaceview}, new SurfaceView[]{videoPreview});
     }
 
@@ -339,19 +306,20 @@ public class VideoVActivity extends AppCompatActivity implements
                 //呼叫
                 video_start_play.setVisibility(View.GONE);
                 video_connecting_tv.setVisibility(View.VISIBLE);
-                video_hang_up.setVisibility(View.VISIBLE);
+                video_hang_up.setVisibility(View.GONE);
+                mPresenter.callCatEye(cateEyeInfo);
                 break;
             case R.id.video_v_full: //全屏按钮
                 Intent intent = new Intent(VideoVActivity.this, VideoHActivity.class);
                 startActivity(intent);
                 break;
             case R.id.iv_back:  //点击返回
-                LinphoneHelper.hangUp();
+                mPresenter.hangup();
                 finish();
                 break;
             case R.id.hangup:  //点击挂断
                 LogUtils.e("点击挂断");
-                LinphoneHelper.hangUp();
+                mPresenter.hangup();
                 finish();
                 break;
         }
@@ -367,17 +335,14 @@ public class VideoVActivity extends AppCompatActivity implements
         switch (buttonView.getId()) {
             case R.id.cb_screen_shot: //截屏
                 LogUtils.e("截屏  " + isChecked);
-                toCapturePicture();
+                mPresenter.toCapturePicture(cateEyeInfo.getServerInfo().getDeviceId());
                 break;
             case R.id.cb_screen_record: //录屏
                 if (isChecked) { //开启录屏
-                    LogUtils.e("开启录屏");
-                    recordVideo(true);
+                    mPresenter.recordVideo(true, cateEyeInfo.getServerInfo().getDeviceId());
                 } else {  //结束录屏
-                    LogUtils.e("结束录屏");
-                    recordVideo(false);
+                    mPresenter.recordVideo(false, cateEyeInfo.getServerInfo().getDeviceId());
                 }
-
                 break;
             case R.id.cb_mute: //静音
                 if (isChecked) {  //开启静音
@@ -385,7 +350,6 @@ public class VideoVActivity extends AppCompatActivity implements
                 } else {  //关闭静音
                     LinphoneHelper.toggleMicro(false);
                 }
-
                 break;
             case R.id.cb_hands_free: //免提
                 if (isChecked) { //开启免提
@@ -398,80 +362,158 @@ public class VideoVActivity extends AppCompatActivity implements
         }
     }
 
-    private boolean isRecoding = false;
-    public void recordVideo(boolean isRecord) {
-        if (isRecord) {
-            if (!isRecoding){
-                try {
-                    File oldFile = new File(Util.RECORD_VIDEO_PATH);
-                    if (oldFile.exists()){
-                        oldFile.delete();
-                    }
-                    LinphoneManager.getLc().getCurrentCall().startRecording();
-                    isRecoding = true;
-                    startRecordTime = System.currentTimeMillis();
-                } catch (Exception e) {
-                    LogUtils.d("开启录屏失败 " + e);
+    private void callFailed() {
+        video_start_play.setVisibility(View.VISIBLE);
+        video_connecting_tv.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onCatEyeCallIn() {
+        //
+        Intent intent = new Intent(this, CallComingActivity.class);
+        startActivityForResult(intent, REQUEST_CODE_CALL_COMING);
+    }
+
+    @Override
+    public void loginMemeFailed() {
+        //登录meme网失败
+        ToastUtil.getInstance().showShort(R.string.link_failed);
+        callFailed();
+    }
+
+
+    @Override
+    public void onCallConnected() {
+        LogUtils.e("接通视频");
+        acceptCall();
+    }
+
+    @Override
+    public void onStreaming() {
+
+    }
+
+    @Override
+    public void onCallFinish() {
+
+    }
+
+    @Override
+    public void screenShotSuccess() {
+        ToastUtil.getInstance().showShort(R.string.screen_success);
+    }
+
+    @Override
+    public void screenShotFailed(Exception e) {
+        ToastUtil.getInstance().showShort(R.string.screen_failed);
+    }
+
+    @Override
+    public void recordTooShort() {
+        cbScreenRecord.setChecked(true);
+        ToastUtil.getInstance().showShort(R.string.video_must_record_5_seconds);
+    }
+
+    @Override
+    public void wakeupSuccess() {
+
+    }
+
+    @Override
+    public void wakeupFailed() {
+        //唤醒失败
+        ToastUtil.getInstance().showShort(R.string.call_failed);
+        callFailed();
+
+    }
+
+    @Override
+    public void waitCallTimeout() {
+        //等待猫眼呼叫35秒  没有呼叫过来
+        ToastUtil.getInstance().showShort(R.string.call_time_out);
+        callFailed();
+    }
+
+    @Override
+    public void callTimes(String time) {
+        if (video_play_time != null) {
+            video_play_time.setText(time + "");
+        }
+    }
+
+    @Override
+    public void onCatEyeOffline() {
+        //猫眼离线
+        ToastUtil.getInstance().showShort(R.string.call_failed_cat_eye_offline);
+    }
+
+    @Override
+    public void inputPwd(GwLockInfo gwLockInfo) {
+        View mView = LayoutInflater.from(this).inflate(R.layout.have_edit_dialog, null);
+        TextView tvTitle = mView.findViewById(R.id.tv_title);
+        EditText editText = mView.findViewById(R.id.et_name);
+        editText.setInputType(InputType.TYPE_CLASS_NUMBER);
+        TextView tv_cancel = mView.findViewById(R.id.tv_left);
+        TextView tv_query = mView.findViewById(R.id.tv_right);
+        AlertDialog alertDialog = AlertDialogUtil.getInstance().common(this, mView);
+        tvTitle.setText(getString(R.string.input_open_lock_password));
+        tv_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+            }
+        });
+        tv_query.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String pwd = editText.getText().toString().trim();
+                if (!StringUtil.randomJudge(pwd)) {
+                    ToastUtil.getInstance().showShort(R.string.random_verify_error);
+                    return;
                 }
+                mPresenter.realOpenLock(gwLockInfo.getGwID(),gwLockInfo.getServerInfo().getDeviceId() ,pwd);
+                alertDialog.dismiss();
             }
-        } else {
-            if (System.currentTimeMillis() - startRecordTime > 5 * 1000) {
-                stopRecordVideo();
-            } else {
-                cbScreenRecord.setChecked(true);
-                ToastUtil.getInstance().showShort(R.string.video_must_record_5_seconds);
-            }
-        }
-    }
-
-    public void  initLinphone(){
-        //设置麦克风不静音
-        LinphoneHelper.toggleMicro(false);
-        //默认关闭免提
-        LinphoneHelper.toggleSpeaker(false);
-
+        });
 
     }
 
-    private void stopRecordVideo() {
-        isRecoding = false;
-        LinphoneManager.getLc().getCurrentCall().stopRecording();
-        File oldFile = new File(Util.RECORD_VIDEO_PATH);
-        long timeMillis = System.currentTimeMillis();
-        FileUtils.createFolder(Util.VIDEO_DIR);
-        //文件名以设备id结尾以区分不同猫眼的回放视频
-        String newFilePath = Util.VIDEO_DIR + "/" + timeMillis + cateEyeInfo.getServerInfo().getDeviceId() + ".mkv";
-        File newFile = new File(newFilePath);
-        String fileName = newFile.getName();
-        if (oldFile.exists()){
-            oldFile.renameTo(newFile);
-        }
-        addVideoFile(fileName, String.valueOf(timeMillis), Constants.MEDIA_TYPE_VIDEO, newFile.getAbsolutePath());
+    @Override
+    public void openLockSuccess() {
+        isOpening = false;
+        isClosing = true;
+        LogUtils.e("当前状态是   isOpening    " + isOpening+"   isClosing   "+isClosing);
+        ToastUtil.getInstance().showShort(R.string.open_lock_success);
+        hiddenLoading();
     }
 
-    public void addVideoFile(String fileName, String createTime, int type, String path) {
-        mMediaDBDao.add(fileName, String.valueOf(createTime), type, path);
+    @Override
+    public void openLockFailed(Throwable throwable) {
+        isOpening = false;
+        ToastUtil.getInstance().showShort(R.string.open_lock_failed);
+        hiddenLoading();
     }
 
+    @Override
+    public void startOpenLock() {
+        isOpening = true;
+        showLoading(getString(R.string.is_open_lock));
+    }
 
-    public void toCapturePicture() {
-        String mPicturePath = null;
-        try {
-            long timeMillis = System.currentTimeMillis();
-            FileUtils.createFolder(Util.PICTURE_DIR);
-            String deviceId = cateEyeInfo.getServerInfo().getDeviceId();
-              mPicturePath = Util.PICTURE_DIR + "/" + timeMillis + deviceId + ".jpeg";
-            LinphoneManager.getLc().getCurrentCall().takeSnapshot(mPicturePath);
-            mMediaDBDao.add(timeMillis + deviceId + ".jpeg", String.valueOf(timeMillis), 2, mPicturePath);
-            ToastUtil.getInstance().showShort(R.string.screen_success);
-        } catch (Exception e) {
-            if (mPicturePath != null) {
-                File file = new File(mPicturePath);
-                if (file.exists()) {
-                    file.delete();
-                }
-            }
-        }
+    @Override
+    public void lockCloseSuccess() {
+        isClosing = false;
+    }
+
+    @Override
+    public void lockCloseFailed() {
+        isClosing = false;
+    }
+
+    @Override
+    public void onBackPressed() {
+        mPresenter.hangup();
+        super.onBackPressed();
     }
 
 }

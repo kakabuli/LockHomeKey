@@ -90,6 +90,7 @@ public class CallComingActivity extends AppCompatActivity implements View.OnClic
     protected void onDestroy() {
         super.onDestroy();
         ringTools.stopRinging();
+        LinphoneHelper.addAutoAcceptCallBack(null);
     }
 
 
@@ -129,7 +130,10 @@ public class CallComingActivity extends AppCompatActivity implements View.OnClic
                 Log.e(Tag, "猫眼 Streaming.........");
             }
         });
+    }
 
+    @Override
+    public void onBackPressed() {
 
     }
 

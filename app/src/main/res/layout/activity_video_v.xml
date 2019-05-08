@@ -103,7 +103,6 @@
                 android:orientation="horizontal"
                 android:visibility="gone">
 
-
                 <CheckBox
                     android:id="@+id/cb_screen_shot"
                     android:layout_width="0dp"
@@ -224,8 +223,6 @@
 
 
         </RelativeLayout>
-
-
     </LinearLayout>
 
 </LinearLayout>

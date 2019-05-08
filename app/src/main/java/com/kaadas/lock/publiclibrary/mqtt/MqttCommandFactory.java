@@ -19,6 +19,7 @@ import com.kaadas.lock.publiclibrary.mqtt.publishbean.OpenLockBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetJoinAllowBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetLockLang;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.UpdateDevNickNameBean;
+import com.kaadas.lock.publiclibrary.mqtt.publishbean.WakeupCameraBean;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttConstant;
 
 import org.eclipse.paho.client.mqttv3.MqttMessage;
@@ -286,7 +287,7 @@ public class MqttCommandFactory {
      * 唤醒FTP
      * @param gatewayId
      * @param deviceId
-     * @return
+     * @returne
      */
     public static MqttMessage setEnableFTP(String gatewayId,String deviceId){
         int messageId=getMessageId();
@@ -297,12 +298,36 @@ public class MqttCommandFactory {
     }
 
 
+    /**
+     * 获取网关锁信息
+     * @param gatewayId
+     * @param deviceId
+     * @return
+     */
     public static MqttMessage getGatewayLockInformation(String gatewayId,String deviceId){
         int messageId=getMessageId();
         GetGatewayLockInfoBean getGatewayLockInfoBean=new GetGatewayLockInfoBean(MqttConstant.MSG_TYPE_REQUEST,MyApplication.getInstance().getUid(),messageId,gatewayId,deviceId,MqttConstant.GET_LOCK_INFO,new GetGatewayLockInfoBean.ParamsBean(),"0",new GetGatewayLockInfoBean.ReturnDataBean(),System.currentTimeMillis()+"");
         return  getMessage(getGatewayLockInfoBean,messageId);
     }
 
+
+    /**
+     * 唤醒猫眼
+     * @param deviceId
+     * @param gwId
+     * @param uid
+     * @return
+     */
+    public static MqttMessage wakeupCamera( String deviceId,String gwId,String uid){
+        int messageId=getMessageId();
+        WakeupCameraBean.ReturnDataBean returnDataBean = new WakeupCameraBean.ReturnDataBean();
+        WakeupCameraBean.ParamsBean paramsBean = new WakeupCameraBean.ParamsBean();
+        //(String deviceId, String func, String gwId, int msgId, String msgtype, ParamsBean params, int returnCode, ReturnDataBean returnData, String timestamp, String userId) {
+
+        WakeupCameraBean getGatewayLockInfoBean=new WakeupCameraBean(deviceId,MqttConstant.WAKEUP_CAMERA,
+                gwId,messageId,MqttConstant.MSG_TYPE_REQUEST, paramsBean,0,returnDataBean,""+System.currentTimeMillis(),uid);
+        return  getMessage(getGatewayLockInfoBean,messageId);
+    }
 
 
 

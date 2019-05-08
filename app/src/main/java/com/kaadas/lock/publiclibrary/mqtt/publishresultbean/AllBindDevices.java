@@ -318,13 +318,17 @@ public class AllBindDevices {
                                         ) {
                                     isExist = true;
                                     cateEyeInfo.setServerInfo(serverGwDevice);
+                                    cateEyeInfo.setGatewayInfo(new GatewayInfo(new ServerGatewayInfo(gwListBean)));
                                     homeShowBeans.add(homeShowBean);
                                 }
                             }
                         }
                         if (!isExist) {
-                            homeShowBeans.add(new HomeShowBean(HomeShowBean.TYPE_CAT_EYE, serverGwDevice.getDeviceId(),
-                                    nickName, new CateEyeInfo(gwListBean.getDeviceSN(), serverGwDevice)));
+
+
+                            CateEyeInfo cateEyeInfo = new CateEyeInfo(gwListBean.getDeviceSN(), serverGwDevice);
+                            cateEyeInfo.setGatewayInfo(new GatewayInfo(new ServerGatewayInfo(gwListBean)));
+                            homeShowBeans.add(new HomeShowBean(HomeShowBean.TYPE_CAT_EYE, serverGwDevice.getDeviceId(), nickName, cateEyeInfo));
                         }
                     } else {
                         for (HomeShowBean homeShowBean : MyApplication.getInstance().getHomeShowDevices()) {
@@ -352,12 +356,6 @@ public class AllBindDevices {
         return homeShowBeans;
     }
 
-    /**
-     * 获取蓝牙设备列表
-     */
-    public List<ServerBleDevice> getBleDevices() {
-        return data.getDevList();
-    }
 
     /**
      * 获取猫眼列表

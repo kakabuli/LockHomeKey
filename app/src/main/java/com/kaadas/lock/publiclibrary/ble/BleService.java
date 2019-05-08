@@ -946,7 +946,7 @@ public class BleService extends Service {
                         public void run() {
                             super.run();
                             if (bluetoothLeScanner != null) {
-                                bluetoothLeScanner.startScan(newScanBleCallback);
+                                bluetoothLeScanner.stopScan(newScanBleCallback);
                                 handler.removeCallbacks(getRemoteDeviceRunnable);
                             }
                         }

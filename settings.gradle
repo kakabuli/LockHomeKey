@@ -1,1 +1,1 @@
-include ':app', ':imagepicker', ':linphoneLibrary'
+include ':app', ':imagepicker', ':linphoneLibrary', ':library:Common', ':library:WheelPicker'

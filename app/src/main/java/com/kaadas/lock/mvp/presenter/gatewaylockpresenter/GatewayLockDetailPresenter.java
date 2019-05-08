@@ -119,9 +119,6 @@ public class GatewayLockDetailPresenter<T> extends BasePresenter<GatewayLockDeta
             });
             compositeDisposable.add(closeLockNotifyDisposable);
         }
-
-
-
     }
 
 

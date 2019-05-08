@@ -22,9 +22,13 @@ import com.kaadas.lock.mvp.mvpbase.BaseBleActivity;
 import com.kaadas.lock.mvp.presenter.DeviceDetailPresenter;
 import com.kaadas.lock.mvp.view.IDeviceDetailView;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
+import com.kaadas.lock.publiclibrary.bean.ForeverPassword;
+import com.kaadas.lock.publiclibrary.http.result.GetPasswordResult;
 import com.kaadas.lock.publiclibrary.http.util.HttpUtils;
+import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
+import com.kaadas.lock.utils.StringUtil;
 import com.kaadas.lock.utils.ToastUtil;
 
 import net.sdvn.cmapi.util.LogUtils;
@@ -209,16 +213,16 @@ public class BluetoothLockFunctionActivity extends BaseBleActivity<IDeviceDetail
         tvBluetoothName.setText("jfjif");
         ivOne.setImageResource(R.mipmap.bluetooth_password);
         tvNameOne.setText(R.string.password);
-        tvNumberOne.setText(6 + getString(R.string.group));
+//        tvNumberOne.setText(6 + getString(R.string.group));
         ivTwo.setImageResource(R.mipmap.bluetooth_fingerprint);
         tvNameTwo.setText(R.string.fingerprint);
-        tvNumberTwo.setText(5 + getString(R.string.ge));
+//        tvNumberTwo.setText(5 + getString(R.string.ge));
         ivThree.setImageResource(R.mipmap.bluetooth_card);
         tvNameThree.setText(R.string.card);
-        tvNumberThree.setText(2 + getString(R.string.zhang));
+//        tvNumberThree.setText(2 + getString(R.string.zhang));
         ivFour.setImageResource(R.mipmap.bluetooth_share);
         tvNameFour.setText(R.string.device_share);
-        tvNumberFour.setText(2 + getString(R.string.people));
+//        tvNumberFour.setText(2 + getString(R.string.people));
         ivFive.setImageResource(R.mipmap.bluetooth_more);
         tvNameFive.setText(R.string.more);
     }
@@ -270,8 +274,6 @@ public class BluetoothLockFunctionActivity extends BaseBleActivity<IDeviceDetail
                 break;
             case R.id.tv_open_clock:
                 //开锁
-                lockStatus = KeyConstants.OPEN_LOCK_SUCCESS;
-                changLockStatus();
                 break;
         }
     }
@@ -355,5 +357,20 @@ public class BluetoothLockFunctionActivity extends BaseBleActivity<IDeviceDetail
     @Override
     public void onStateUpdate(int type) {
 
+    }
+
+    @Override
+    public void onGetPasswordSuccess(GetPasswordResult result) {
+        super.onGetPasswordSuccess(result);
+        GetPasswordResult.DataBean dataBean = result.getData();
+        List<GetPasswordResult.DataBean.Card> cardList = dataBean.getCardList();
+        tvNumberThree.setText(cardList.size() + getString(R.string.zhang));
+        List<GetPasswordResult.DataBean.Fingerprint> fingerprintList = dataBean.getFingerprintList();
+        tvNumberTwo.setText(fingerprintList.size() + getString(R.string.ge));
+        List<ForeverPassword> pwdList = dataBean.getPwdList();
+        tvNumberOne.setText(pwdList.size() + getString(R.string.group));
+        List<GetPasswordResult.DataBean.TempPassword> tempPwdList = dataBean.getTempPwdList();
+//        tvNumberFour.setText(2 + getString(R.string.people));
+        LogUtils.d("davi "+result.toString());
     }
 }

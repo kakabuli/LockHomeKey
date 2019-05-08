@@ -336,18 +336,12 @@ public final class LinphoneService extends Service {
                 }
                 if (state == LinphoneCall.State.IncomingReceived) {
                     boolean videoActivity = (boolean) SPUtils.get( "videoActivity", false);
-                    if (sPhoneCallback != null) {
-                        if (videoActivity) {
-                            if (mAutoAccept != null) {
-                                mAutoAccept.incomingCall(call);
-                            }
-                        } else {
-                            if (sPhoneCallback != null) {
-                                sPhoneCallback.incomingCall(call);
-                            }
-                        }
+                    if (mAutoAccept != null) {
+                        mAutoAccept.incomingCall(call);
                     }
-
+                    if (sPhoneCallback != null) {
+                        sPhoneCallback.incomingCall(call);
+                    }
                 }
                 if (state == State.Connected) {
                     if (sPhoneCallback != null) {
