@@ -306,4 +306,6 @@ public class KeyConstants {
     //密码编号管理
     public static final String ADD_PWD_ID="addPwdId";
 
+    public static final String ADD_STRESS_PWD_ID="addStressPwdId";
+
 }

@@ -814,4 +814,6 @@
     <string name="copy_success">复制成功</string>
     <string name="telephone_not_install_wechat">您的手机未安装微信</string>
     <string name="share_content">【凯迪仕智能】密码: %1$s。此密码只能用于凯迪仕智能锁验证开门，%2$s。</string>
+    <string name="get_stress_pwd_stop">正在获取胁迫密码，请稍后。。。</string>
+    <string name="get_stress_list_fail">获取胁迫密码列表失败</string>
 </resources>

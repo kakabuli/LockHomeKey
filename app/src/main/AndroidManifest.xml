@@ -463,6 +463,20 @@
             android:name=".activity.device.gatewaylock.password.old.GatewayLockPasswordShareActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
+        <activity android:name=".activity.device.gatewaylock.stress.old.GatewayLockStressDetailActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity android:name=".activity.device.gatewaylock.stress.old.GatewayLockStressDeleteActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity android:name=".activity.device.gatewaylock.stress.old.GatewayLockStressAddActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+
+        <activity android:name=".activity.device.gatewaylock.stress.old.GatewayLockStressShareActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+
 
         <activity
             android:name=".activity.device.gatewaylock.password.GatewayPasswordManagerDetailActivity"
@@ -595,6 +609,7 @@
 
 
         </activity>
+
     </application>
 
 </manifest>

@@ -133,6 +133,8 @@ public class AddZigbeeLockFourthActivity extends BaseActivity<IAddZigbeeLockView
         Intent successIntent=new Intent(this,AddZigbeeLockSuccessActivity.class);
         successIntent.putExtra(KeyConstants.GATEWAY_ID,gwId);
         successIntent.putExtra(KeyConstants.DEVICE_ID,deviceId);
+        //清除锁上的密码
+
         startActivity(successIntent);
         finish();
         LogUtils.e("设备添加成功");

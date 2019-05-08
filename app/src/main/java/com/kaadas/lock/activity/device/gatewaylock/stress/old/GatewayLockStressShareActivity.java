@@ -1,26 +1,23 @@
-package com.kaadas.lock.activity.device.gatewaylock.password.old;
+package com.kaadas.lock.activity.device.gatewaylock.stress.old;
 
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.device.gatewaylock.password.GatewayPasswordManagerActivity;
+import com.kaadas.lock.activity.device.gatewaylock.password.old.GatewayLockPasswordShareActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
-
 import com.kaadas.lock.mvp.presenter.gatewaylockpresenter.GatewayLockSharePresenter;
 import com.kaadas.lock.mvp.view.gatewaylockview.GatewayLockShareView;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.KeyConstants;
-import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.SPUtils2;
 import com.kaadas.lock.utils.SharedUtil;
 import com.kaadas.lock.utils.StringUtil;
@@ -30,7 +27,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class GatewayLockPasswordShareActivity extends BaseActivity<GatewayLockShareView,
+public class GatewayLockStressShareActivity extends BaseActivity<GatewayLockShareView,
         GatewayLockSharePresenter<GatewayLockShareView>>
         implements GatewayLockShareView {
 
@@ -46,6 +43,7 @@ public class GatewayLockPasswordShareActivity extends BaseActivity<GatewayLockSh
     TextView tvWeiXin;
     @BindView(R.id.tv_copy)
     TextView tvCopy;
+
     @BindView(R.id.tv_pwd_type)
     TextView tvPwdType;
 
@@ -75,16 +73,11 @@ public class GatewayLockPasswordShareActivity extends BaseActivity<GatewayLockSh
         deviceId = intent.getStringExtra(KeyConstants.DEVICE_ID);
         pwdId=intent.getStringExtra(KeyConstants.PWD_ID);
         pwdValue= intent.getStringExtra(KeyConstants.PWD_VALUE);
-        int pwdType=intent.getIntExtra(KeyConstants.PWD_TYPE,-1);
         if (pwdValue!=null){
-            String value=StringUtil.getFileAddSpace(pwdValue);
+            String value= StringUtil.getFileAddSpace(pwdValue);
             tvNumber.setText(value);
         }
-        if (pwdType==1){
-            tvPwdType.setText(getString(R.string.zigbee_pwd_perpetual));
-        }else if (pwdType==2){
-            tvPwdType.setText(getString(R.string.zigbee_pwd_temporary));
-        }
+        tvPwdType.setText(getString(R.string.stress_password));
     }
 
 
@@ -94,15 +87,15 @@ public class GatewayLockPasswordShareActivity extends BaseActivity<GatewayLockSh
         switch (view.getId()) {
             case R.id.back:
                 if (!TextUtils.isEmpty(pwdId)){
-                    Intent managerIntent=new Intent(GatewayLockPasswordShareActivity.this,GatewayPasswordManagerActivity.class);
-                    SPUtils2.put(this,KeyConstants.ADD_PWD_ID,pwdId);
+                    Intent managerIntent=new Intent(GatewayLockStressShareActivity.this, GatewayLockStressDetailActivity.class);
+                    SPUtils2.put(this,KeyConstants.ADD_STRESS_PWD_ID,pwdId);
                     startActivity(managerIntent);
                 }
                 break;
             case R.id.btn_delete:
                 if (!TextUtils.isEmpty(deviceId)&&!TextUtils.isEmpty(gatewayId)&&!TextUtils.isEmpty(pwdId)){
                     mPresenter.shareDeleteLockPwd(gatewayId,deviceId,pwdId);
-                    alertDialog=AlertDialogUtil.getInstance().noButtonDialog(this,getString(R.string.delete_be_being));
+                    alertDialog= AlertDialogUtil.getInstance().noButtonDialog(this,getString(R.string.delete_be_being));
                 }
                 break;
             case R.id.tv_short_message:
@@ -127,7 +120,7 @@ public class GatewayLockPasswordShareActivity extends BaseActivity<GatewayLockSh
     public void shareDeletePasswordSuccess(String pwdNum) {
         //删除锁密码成功
         alertDialog.dismiss();
-        Intent intent=new Intent(this, GatewayPasswordManagerActivity.class);
+        Intent intent=new Intent(this, GatewayLockStressDetailActivity.class);
         startActivity(intent);
     }
 

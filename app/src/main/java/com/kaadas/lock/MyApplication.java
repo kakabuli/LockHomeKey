@@ -498,8 +498,7 @@ public class MyApplication extends Application {
                         String payload = mqttData.getPayload();
                         allBindDevices = new Gson().fromJson(payload, AllBindDevices.class);
                         if (allBindDevices != null) {
-
-                            homeShowDevices = allBindDevices.getHomeShow(false);
+                            homeShowDevices = allBindDevices.getHomeShow(true);
                             LogUtils.e("获取到的首页设备个数是   "  +homeShowDevices.size() );
                             getDevicesFromServer.onNext(allBindDevices);
                         }
@@ -512,10 +511,29 @@ public class MyApplication extends Application {
                 });
     }
 
-    public List<HomeShowBean> getHomeShowDevices() {
-        return homeShowDevices;
+
+    public void setAllBindDevices(AllBindDevices allBindDevices) {
+        homeShowDevices = allBindDevices.getHomeShow(true);
+        LogUtils.e("获取到的首页设备个数是   "  +homeShowDevices.size() );
+        getDevicesFromServer.onNext(allBindDevices);
     }
 
+    public void setHomeShowDevices(List<HomeShowBean> homeShowDevices) {
+        this.homeShowDevices = homeShowDevices;
+    }
+
+    public List<HomeShowBean> getHomeShowDevices() {
+        List<HomeShowBean> tem = new ArrayList<>();
+        for (HomeShowBean homeShowBean :homeShowDevices){
+            if (homeShowBean.getDeviceType() != HomeShowBean.TYPE_GATEWAY){
+                tem.add(homeShowBean);
+            }
+        }
+        return tem;
+    }
+    public List<HomeShowBean> getAllDevices() {
+        return homeShowDevices;
+    }
 
     /**
      * 获取缓存的设备

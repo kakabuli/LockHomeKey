@@ -61,7 +61,6 @@ public class DevicePresenter<T> extends BasePresenter<IDeviceView> {
                 })
                 .timeout(10 * 1000, TimeUnit.MILLISECONDS)
                 .subscribe(new Consumer<MqttData>() {
-
                     @Override
                     public void accept(MqttData mqttData) throws Exception {
                         toDisposable(allBindDeviceDisposable);
@@ -69,25 +68,21 @@ public class DevicePresenter<T> extends BasePresenter<IDeviceView> {
                         AllBindDevices allBindDevices = new Gson().fromJson(payload, AllBindDevices.class);
                         if (allBindDevices!=null){
                             if ("200".equals(allBindDevices.getCode())){
-                                MyApplication.getInstance().getDevicesFromServer.onNext(allBindDevices);
+                                MyApplication.getInstance().setAllBindDevices(allBindDevices);
                                 //重新获取数据
-                                if (mViewRef.get()!=null){
-                                    mViewRef.get().deviceDataRefreshSuccess( allBindDevices);
-                                }
                             }else{
                                 if (mViewRef.get()!=null){
                                     mViewRef.get().deviceDataRefreshFail();
                                 }
                             }
-
-
                         }
-
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-
+                        if (mViewRef.get()!=null){
+                            mViewRef.get().deviceDataRefreshThrowable(throwable);
+                        }
                     }
                 });
         compositeDisposable.add(allBindDeviceDisposable);

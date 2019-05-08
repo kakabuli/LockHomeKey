@@ -284,7 +284,22 @@ public class AllBindDevices {
             for (ReturnDataBean.GwListBean gwListBean : gwList) {
                 //首页不显示网关
                 if (showGateway == true) {
-                    homeShowBeans.add(new HomeShowBean(HomeShowBean.TYPE_GATEWAY, gwListBean.getDeviceSN(), gwListBean.getDeviceNickName(), new GatewayInfo(new ServerGatewayInfo(gwListBean))));
+                    boolean isExist = false;
+                    for (HomeShowBean homeShowBean : MyApplication.getInstance().getHomeShowDevices()) {
+                        if (!isExist && homeShowBean.getDeviceType() == HomeShowBean.TYPE_GATEWAY) {
+                            //如果设备原来就存在，那么只替换服务器数据   其他数据不变
+                            GatewayInfo gatewayInfo = (GatewayInfo) homeShowBean.getObject();
+                            if (gwListBean.getDeviceSN().equals(gatewayInfo.getServerInfo().getDeviceSN())) {
+                                isExist = true;
+                                gatewayInfo.setServerInfo(new ServerGatewayInfo(gwListBean));
+                                homeShowBeans.add(homeShowBean);
+                            }
+                        }
+                    }
+                    if (!isExist) {
+                        homeShowBeans.add(new HomeShowBean(HomeShowBean.TYPE_GATEWAY, gwListBean.getDeviceSN(), gwListBean.getDeviceNickName(), new GatewayInfo(new ServerGatewayInfo(gwListBean))));
+                    }
+
                 }
                 List<ServerGwDevice> deviceList = gwListBean.getDeviceList();
                 for (ServerGwDevice serverGwDevice : deviceList) {

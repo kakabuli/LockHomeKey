@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.mvp.mvpbase.BasePresenter;
 import com.kaadas.lock.mvp.view.gatewaylockview.GatewayLockDeletePasswordView;
+import com.kaadas.lock.mvp.view.gatewaylockview.IGatewayLockDeleteStressPasswordView;
 import com.kaadas.lock.publiclibrary.http.util.RxjavaHelper;
 import com.kaadas.lock.publiclibrary.mqtt.MqttCommandFactory;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.LockPwdFuncBean;
@@ -17,7 +18,7 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Predicate;
 
-public class GatewayLockDeletePasswordPresenter<T> extends BasePresenter<GatewayLockDeletePasswordView> {
+public class GatewayLockDeleteStressPasswordPresenter<T> extends BasePresenter<IGatewayLockDeleteStressPasswordView> {
     private Disposable deleteLockPwdDdisposable;
         //删除用户密码
     public void gatewayLockDeletePwd(String gatewayId,String deviceId,String pwdNum){
