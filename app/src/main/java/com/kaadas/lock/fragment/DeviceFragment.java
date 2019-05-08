@@ -289,6 +289,7 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
             case 2:
                 //网关
                 Intent gatwayInfo=new Intent(getActivity(), GatewayActivity.class);
+                gatwayInfo.putExtra(KeyConstants.DEVICE_DETAIL_BEAN,deviceDetailBean);
                 startActivity(gatwayInfo);
                 break;
             case 3:
