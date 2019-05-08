@@ -86,7 +86,6 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
     private DeviceDetailAdapter deviceDetailAdapter;
 
     private List<DeviceDetailBean> mDeviceList=new ArrayList<>();
-    boolean bluetoothAuthorization = false;
     private  List<HomeShowBean> homeShowBeanList;
 
     @Override
@@ -104,7 +103,6 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
         deviceRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
         homeShowBeanList = MyApplication.getInstance().getAllDevices();
         initData(homeShowBeanList);
-
         initRefresh();
         return mView;
     }
@@ -142,15 +140,6 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                 refresh.setVisibility(View.VISIBLE);
                 for (HomeShowBean homeShowBean:homeShowBeanList){
                     LogUtils.e(homeShowBeanList.size()+"");
-                    if (homeShowBean.getDeviceType()==HomeShowBean.TYPE_GATEWAY){
-                            GatewayInfo gatewayInfo = (GatewayInfo) homeShowBean.getObject();
-                            //设置网关的状态
-                            String gatewayStatus = (String) SPUtils.get(gatewayInfo.getServerInfo().getDeviceSN(), "");
-                            if (!TextUtils.isEmpty(gatewayStatus)) {
-                                gatewayInfo.setEvent_str(gatewayStatus);
-                                SPUtils.remove(gatewayInfo.getServerInfo().getDeviceSN());
-                            }
-                    }
                     getDifferentTypeDevice(homeShowBean);
                 }
                 if (deviceDetailAdapter!=null){
@@ -242,7 +231,6 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                 mPresenter.refreshData();
             }
         });
-
     }
 
     @Override
