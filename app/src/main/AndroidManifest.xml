@@ -589,11 +589,8 @@
         <activity
             android:name=".activity.cateye.VideoVActivity"
             android:windowSoftInputMode = "adjustNothing"
+            android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"></activity>
-        <activity
-            android:name=".activity.cateye.VideoHActivity"
-            android:screenOrientation="landscape"
-            android:theme="@style/NoTitleFullscreen"></activity>
         <activity
             android:name=".activity.cateye.MediaPlayerActivity"
             android:screenOrientation="landscape"
