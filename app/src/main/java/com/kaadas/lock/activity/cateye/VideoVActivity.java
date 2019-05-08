@@ -3,12 +3,15 @@ package com.kaadas.lock.activity.cateye;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.text.InputType;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.SurfaceView;
 import android.view.View;
@@ -19,6 +22,7 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.kaadas.lock.MyApplication;
@@ -43,7 +47,6 @@ import com.yarolegovich.discretescrollview.transform.ScaleTransformer;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
@@ -53,46 +56,26 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
         DiscreteScrollView.OnItemChangedListener<ForecastAdapter.ViewHolder>,
         View.OnClickListener, CompoundButton.OnCheckedChangeListener, IVideoView {
 
-    @BindView(R.id.forecast_city_picker)
     DiscreteScrollView cityPicker;
-    @BindView(R.id.video_h_no_lock)
     LinearLayout video_h_no_lock;
-    @BindView(R.id.video_start_play)
     ImageView video_start_play;
-    @BindView(R.id.video_connecting_tv)
     TextView video_connecting_tv;
-    @BindView(R.id.video_hang_up)
     ImageView video_hang_up;
-    @BindView(R.id.video_h_footer)
-    LinearLayout video_h_footer;
-    @BindView(R.id.video_play_time)
     TextView video_play_time;
-    @BindView(R.id.video_v_full)
     ImageView video_v_go;
-    @BindView(R.id.iv_back)
     ImageView iv_back;
-    @BindView(R.id.video_v_surfaceview)
     SurfaceView video_v_surfaceview;
-
     ForecastAdapter forecastAdapter = null;
-    @BindView(R.id.tv_content)
-    TextView tvContent;
-    @BindView(R.id.iv_right)
-    ImageView ivRight;
-    @BindView(R.id.video_preview)
     SurfaceView videoPreview;
-    @BindView(R.id.hangup)
     ImageView hangup;
-    @BindView(R.id.cb_screen_shot)
     CheckBox cbScreenShot;
-    @BindView(R.id.cb_mute)
     CheckBox cbMute;
-    @BindView(R.id.cb_hands_free)
     CheckBox cbHandsFree;
-    @BindView(R.id.cb_screen_record)
     CheckBox cbScreenRecord;
-    private int selectPostion = -1;
+    TextView tvTitle;
 
+
+    private int selectPostion = -1;
     private CateEyeInfo cateEyeInfo;
     private boolean isCallIn;
     private List<GwLockInfo> gwLockInfos;
@@ -102,9 +85,25 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
     private static final int REQUEST_PERMISSION_REQUEST_CODE = 102;
     private boolean isOpening; //正在开门
     private boolean isClosing; //正在关门
+    private String saveIsOpening = "isOpening";  //是否正在开门
+    private String saveIsClosing = "isClosing";  //是否正在关门
+    private String saveIsConnected = "isConnected";
+    private String saveIsCalling = "isCalling";
+    private LinearLayout ll_video_control1;
+    private LinearLayout ll_video_control2;
+    private CheckBox cbScreenShot2;
+    private CheckBox cbMute2;
+    private CheckBox cbHandsFree2;
+    private CheckBox cbScreenRecord2;
+    private RelativeLayout rl_bottom;
+    private RelativeLayout rl_title_bar;
+    private boolean isLand; //是否横屏
+    private ImageView hangup2;
+    private String videoTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        LogUtils.e(Tag, "创建");
         super.onCreate(savedInstanceState);
         //设置屏幕常亮
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -115,11 +114,108 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
         setContentView(R.layout.activity_video_v);
         ButterKnife.bind(this);
         isRunning = true;
+        //找到View
+        findViewByOrientation();
+
         initData();
         initView();
         requestPermissions();
         mPresenter.init(this);
+
+        recoverData(savedInstanceState);
     }
+
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putBoolean(saveIsClosing, isClosing);
+        outState.putBoolean(saveIsOpening, isOpening);
+        outState.putBoolean(saveIsConnected, mPresenter.isConnected);
+        outState.putBoolean(saveIsCalling, mPresenter.isCalling);
+
+        super.onSaveInstanceState(outState);
+    }
+
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        int currentOrientation = newConfig.orientation;
+        if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) {  //横屏
+            isLand = true;
+
+            //根据竖屏时的状态显示
+            if (ll_video_control1.getVisibility() == View.VISIBLE){
+                ll_video_control2. setVisibility(View.VISIBLE);
+            }else {
+                ll_video_control2. setVisibility(View.GONE);
+            }
+            //隐藏 显示时间的View
+            video_play_time.setVisibility(View.GONE);
+            video_v_go.setImageResource(R.mipmap.video_to_portrait);
+            ll_video_control1.setVisibility(View.GONE);
+            rl_bottom .setVisibility(View.GONE);
+            rl_title_bar.setVisibility(View.GONE);
+        } else if (currentOrientation == Configuration.ORIENTATION_PORTRAIT) { //竖屏
+            isLand = false;
+            if (ll_video_control2.getVisibility() == View.VISIBLE){
+                ll_video_control1.setVisibility(View.VISIBLE);
+            }else {
+                ll_video_control1.setVisibility(View.GONE);
+            }
+            if (TextUtils.isEmpty(videoTime)){
+                //隐藏 显示时间的View
+                video_play_time.setVisibility(View.GONE);
+            }else {
+                //隐藏 显示时间的View
+                video_play_time.setVisibility(View.VISIBLE);
+            }
+
+            video_v_go.setImageResource(R.mipmap.video_full_screen);
+            ll_video_control2. setVisibility(View.GONE);
+            rl_bottom .setVisibility(View.VISIBLE);
+            rl_title_bar.setVisibility(View.VISIBLE);
+        }
+
+    }
+
+    private void recoverData(Bundle savedInstanceState) {
+        if (savedInstanceState != null) {
+            savedInstanceState.getBoolean("");
+        }
+    }
+
+    private void findViewByOrientation() {
+        cityPicker = findViewById(R.id.forecast_city_picker);
+        video_h_no_lock = findViewById(R.id.video_h_no_lock);
+        video_start_play = findViewById(R.id.video_start_play);
+        video_connecting_tv = findViewById(R.id.video_connecting_tv);
+        video_hang_up = findViewById(R.id.video_hang_up);
+        video_play_time = findViewById(R.id.video_play_time);
+        video_v_go = findViewById(R.id.video_v_full);
+        iv_back = findViewById(R.id.iv_back);
+        video_v_surfaceview = findViewById(R.id.video_v_surfaceview);
+        videoPreview = findViewById(R.id.video_preview);
+        hangup = findViewById(R.id.iv_hangup);
+        cbScreenShot = findViewById(R.id.cb_screen_shot);
+        cbMute = findViewById(R.id.cb_mute);
+        cbHandsFree = findViewById(R.id.cb_hands_free);
+        cbScreenRecord = findViewById(R.id.cb_screen_record);
+        tvTitle = findViewById(R.id.tv_title);
+
+        hangup2 = findViewById(R.id.iv_hangup2);
+        cbScreenShot2 = findViewById(R.id.cb_screen_shot2);
+        cbMute2 = findViewById(R.id.cb_mute2);
+        cbHandsFree2 = findViewById(R.id.cb_hands_free2);
+        cbScreenRecord2 = findViewById(R.id.cb_screen_record2);
+
+        ll_video_control1 = findViewById(R.id.ll_video_control1);
+        ll_video_control2 = findViewById(R.id.ll_video_control2);
+        rl_bottom = findViewById(R.id.rl_bottom);
+        rl_title_bar = findViewById(R.id.rl_title_bar);
+    }
+
 
     private void requestPermissions() {
         //Manifest.permission.RECORD_AUDIO
@@ -187,6 +283,7 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
             Intent intent = new Intent(this, CallComingActivity.class);
             startActivityForResult(intent, REQUEST_CODE_CALL_COMING);
         }
+
     }
 
     @Override
@@ -214,61 +311,89 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
     public void acceptCall() {
         video_connecting_tv.setVisibility(View.GONE);
         video_hang_up.setVisibility(View.GONE);
-        video_play_time.setVisibility(View.VISIBLE);
-        video_h_footer.setVisibility(View.VISIBLE);
+        if (isLand){
+            video_play_time.setVisibility(View.GONE);
+        }else { //竖屏的时候才显示
+            video_play_time.setVisibility(View.VISIBLE);
+        }
+
         video_v_surfaceview.setVisibility(View.VISIBLE);
         //播放按钮
         video_start_play.setVisibility(View.GONE);
         //接通了猫眼  显示视频控制界面
-        video_h_footer.setVisibility(View.VISIBLE);
+        if (isLand){
+            ll_video_control2.setVisibility(View.VISIBLE);
+        }else {
+            ll_video_control1.setVisibility(View.VISIBLE);
+        }
+
     }
 
     private void initView() {
         video_start_play.setOnClickListener(this);
         video_v_go.setOnClickListener(this);
-        iv_back.setOnClickListener(this);
-        cityPicker.setSlideOnFling(true);
-        forecastAdapter = new ForecastAdapter(gwLockInfos, this);
-        cityPicker.setAdapter(forecastAdapter);
-        cityPicker.addOnItemChangedListener(this);
-        cityPicker.addScrollStateChangeListener(this);
-        cityPicker.scrollToPosition(1);
-        cityPicker.setItemTransformer(new ScaleTransformer.Builder()
-                .setMinScale(0.8f)
-                .build());
-        cityPicker.setOffscreenItems(300);
-        cityPicker.setOverScrollEnabled(false);
+        if (iv_back != null) {
+            iv_back.setOnClickListener(this);
+        }
+        if (cityPicker != null) {
+            cityPicker.setSlideOnFling(true);
+            forecastAdapter = new ForecastAdapter(gwLockInfos, this);
+            cityPicker.setAdapter(forecastAdapter);
+            cityPicker.addOnItemChangedListener(this);
+            cityPicker.addScrollStateChangeListener(this);
+            cityPicker.scrollToPosition(1);
+            cityPicker.setItemTransformer(new ScaleTransformer.Builder()
+                    .setMinScale(0.8f)
+                    .build());
+            cityPicker.setOffscreenItems(300);
+            cityPicker.setOverScrollEnabled(false);
+            forecastAdapter.setOnItemClickItem(new ForecastAdapter.OnItemClickItem() {
+                @Override
+                public void onItemClickItemMethod(int position) {
+                    if (selectPostion != -1 && position == selectPostion) {
+                        LogUtils.e("当前状态是   isOpening    " + isOpening + "   isClosing   " + isClosing);
+                        if (isOpening) {
+                            ToastUtil.getInstance().showShort(R.string.is_opening_try_latter);
+                            return;
+                        }
+                        if (isClosing) {
+                            ToastUtil.getInstance().showShort(R.string.lock_already_open);
+                            return;
+                        }
+                        LogUtils.e("执行开门  ");
+                        GwLockInfo gwLockInfo = gwLockInfos.get(position);
+                        mPresenter.openLock(gwLockInfo);
+                    }
+                }
+            });
+            if (tvTitle != null) {
+                tvTitle.setText(cateEyeInfo.getServerInfo().getNickName());
+            }
+        }
+
 
         cbHandsFree.setOnCheckedChangeListener(this);
         cbMute.setOnCheckedChangeListener(this);
         cbScreenRecord.setOnCheckedChangeListener(this);
         cbScreenShot.setOnCheckedChangeListener(this);
         hangup.setOnClickListener(this);
-        video_h_footer.setVisibility(View.GONE);
 
-        forecastAdapter.setOnItemClickItem(new ForecastAdapter.OnItemClickItem() {
-            @Override
-            public void onItemClickItemMethod(int position) {
-                if (selectPostion != -1 && position == selectPostion) {
-                    LogUtils.e("当前状态是   isOpening    " + isOpening+"   isClosing   "+isClosing);
-                    if (isOpening){
-                        ToastUtil.getInstance().showShort(R.string.is_opening_try_latter);
-                        return;
-                    }
-                    if (isClosing){
-                        ToastUtil.getInstance().showShort(R.string.lock_already_open);
-                        return;
-                    }
-                    LogUtils.e("执行开门  ");
-                    GwLockInfo gwLockInfo = gwLockInfos.get(position);
-                    mPresenter.openLock(gwLockInfo);
-                }
-            }
-        });
+        cbHandsFree2.setOnCheckedChangeListener(this);
+        cbMute2.setOnCheckedChangeListener(this);
+        cbScreenRecord2.setOnCheckedChangeListener(this);
+        cbScreenShot2.setOnCheckedChangeListener(this);
+
+        hangup2.setOnClickListener(this);
+        ll_video_control1.setVisibility(View.GONE);
+        ll_video_control2.setVisibility(View.GONE);
 
         if (gwLockInfos.size() == 0) {
-            cityPicker.setVisibility(View.GONE);
-            video_h_no_lock.setVisibility(View.VISIBLE);
+            if (cityPicker != null) {
+                cityPicker.setVisibility(View.GONE);
+            }
+            if (video_h_no_lock != null) {
+                video_h_no_lock.setVisibility(View.VISIBLE);
+            }
         }
         LinphoneHelper.setAndroidVideoWindow(new SurfaceView[]{video_v_surfaceview}, new SurfaceView[]{videoPreview});
     }
@@ -295,6 +420,7 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
             @Nullable ForecastAdapter.ViewHolder newHolder) {
     }
 
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -310,18 +436,36 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
                 mPresenter.callCatEye(cateEyeInfo);
                 break;
             case R.id.video_v_full: //全屏按钮
-                Intent intent = new Intent(VideoVActivity.this, VideoHActivity.class);
-                startActivity(intent);
+                //
+                changeScreenOrientation();
                 break;
             case R.id.iv_back:  //点击返回
                 mPresenter.hangup();
                 finish();
                 break;
-            case R.id.hangup:  //点击挂断
+            case R.id.iv_hangup:  //点击挂断
+            case R.id.iv_hangup2:  //点击挂断
                 LogUtils.e("点击挂断");
                 mPresenter.hangup();
                 finish();
                 break;
+        }
+    }
+
+
+    /**
+     * 横竖屏切换
+     */
+    private void changeScreenOrientation() {
+        //获取用户当前屏幕的横竖位置
+        int currentOrientation = getResources().getConfiguration().orientation;
+        //判断并设置用户点击全屏/半屏按钮的显示逻辑
+        if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) {
+            //如果屏幕当前是横屏显示，则设置屏幕锁死为竖屏显示
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        } else if (currentOrientation == Configuration.ORIENTATION_PORTRAIT) {
+            //如果屏幕当前是竖屏显示，则设置屏幕锁死为横屏显示
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         }
     }
 
@@ -334,10 +478,12 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         switch (buttonView.getId()) {
             case R.id.cb_screen_shot: //截屏
+            case R.id.cb_screen_shot2: //截屏
                 LogUtils.e("截屏  " + isChecked);
                 mPresenter.toCapturePicture(cateEyeInfo.getServerInfo().getDeviceId());
                 break;
             case R.id.cb_screen_record: //录屏
+            case R.id.cb_screen_record2: //录屏
                 if (isChecked) { //开启录屏
                     mPresenter.recordVideo(true, cateEyeInfo.getServerInfo().getDeviceId());
                 } else {  //结束录屏
@@ -345,6 +491,7 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
                 }
                 break;
             case R.id.cb_mute: //静音
+            case R.id.cb_mute2: //静音
                 if (isChecked) {  //开启静音
                     LinphoneHelper.toggleMicro(true);
                 } else {  //关闭静音
@@ -352,13 +499,13 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
                 }
                 break;
             case R.id.cb_hands_free: //免提
+            case R.id.cb_hands_free2: //免提
                 if (isChecked) { //开启免提
                     LinphoneHelper.toggleSpeaker(true);
                 } else { //关闭免提
                     LinphoneHelper.toggleSpeaker(false);
                 }
                 break;
-
         }
     }
 
@@ -373,6 +520,7 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
         Intent intent = new Intent(this, CallComingActivity.class);
         startActivityForResult(intent, REQUEST_CODE_CALL_COMING);
     }
+
 
     @Override
     public void loginMemeFailed() {
@@ -430,12 +578,14 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
     @Override
     public void waitCallTimeout() {
         //等待猫眼呼叫35秒  没有呼叫过来
+
         ToastUtil.getInstance().showShort(R.string.call_time_out);
         callFailed();
     }
 
     @Override
     public void callTimes(String time) {
+        videoTime = time;
         if (video_play_time != null) {
             video_play_time.setText(time + "");
         }
@@ -471,7 +621,7 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
                     ToastUtil.getInstance().showShort(R.string.random_verify_error);
                     return;
                 }
-                mPresenter.realOpenLock(gwLockInfo.getGwID(),gwLockInfo.getServerInfo().getDeviceId() ,pwd);
+                mPresenter.realOpenLock(gwLockInfo.getGwID(), gwLockInfo.getServerInfo().getDeviceId(), pwd);
                 alertDialog.dismiss();
             }
         });
@@ -482,7 +632,7 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
     public void openLockSuccess() {
         isOpening = false;
         isClosing = true;
-        LogUtils.e("当前状态是   isOpening    " + isOpening+"   isClosing   "+isClosing);
+        LogUtils.e("当前状态是   isOpening    " + isOpening + "   isClosing   " + isClosing);
         ToastUtil.getInstance().showShort(R.string.open_lock_success);
         hiddenLoading();
     }

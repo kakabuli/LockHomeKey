@@ -56,11 +56,11 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
     private MediaFileDBDao mMediaDBDao;
     private long startRecordTime;
     private boolean isRecoding = false;
-    private boolean isCalling;  //正在呼叫猫眼
+    public boolean isCalling;  //正在呼叫猫眼
     private Disposable wakeupDisposable;
     private boolean wakeupSuccess;
     private CateEyeInfo currentCateEyeInfo;
-    private boolean isConnected = false;
+    public boolean isConnected = false;
     private Disposable openLockDisposable;
     private String recordDeviceId;
     private Disposable closeLockNotifyDisposable;
@@ -327,8 +327,8 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
                         return false;
                     }
                 })
-                .compose(RxjavaHelper.observeOnMainThread())
                 .timeout(5 * 1000, TimeUnit.MILLISECONDS)
+                .compose(RxjavaHelper.observeOnMainThread())
                 .subscribe(new Consumer<Boolean>() {
                     @Override
                     public void accept(Boolean aBoolean) throws Exception {
