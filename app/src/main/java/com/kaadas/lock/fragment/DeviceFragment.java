@@ -138,6 +138,10 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
             if (homeShowBeanList.size() > 0) {
                 noDeviceLayout.setVisibility(View.GONE);
                 refresh.setVisibility(View.VISIBLE);
+
+                for (HomeShowBean homeShowBean:homeShowBeanList){
+                    getDifferentTypeDevice(homeShowBean);
+                }
                 if (deviceDetailAdapter != null) {
                     deviceDetailAdapter.notifyDataSetChanged();
                 } else {
