@@ -61,6 +61,8 @@ public class BluetoothPasswordManagerActivity extends BaseBleActivity<IPasswordM
     List<ForeverPassword> list = new ArrayList<>();
     @BindView(R.id.refreshLayout)
     SmartRefreshLayout refreshLayout;
+    @BindView(R.id.iv_right)
+    ImageView ivRight;
     private BleLockInfo bleLockInfo;
     private boolean isSync = false; //是不是正在同步锁中的密码
 
@@ -213,6 +215,7 @@ public class BluetoothPasswordManagerActivity extends BaseBleActivity<IPasswordM
         LogUtils.e("密码管理   服务器数据更新   ");
         mPresenter.getAllPassword(bleLockInfo, false);
     }
+
     @Override
     public void onGetPasswordFailedServer(BaseResult result) {
 //        isNotPassword = true;
@@ -220,6 +223,7 @@ public class BluetoothPasswordManagerActivity extends BaseBleActivity<IPasswordM
         ToastUtil.getInstance().showShort(R.string.get_password_failed);
         refreshLayout.finishRefresh();
     }
+
     @Override
     public void onGetPasswordSuccess(GetPasswordResult result) {
         refreshLayout.finishRefresh();
@@ -249,6 +253,7 @@ public class BluetoothPasswordManagerActivity extends BaseBleActivity<IPasswordM
         }
 
     }
+
     @Override
     public void onGetPasswordFailed(Throwable throwable) {
         refreshLayout.finishRefresh();
