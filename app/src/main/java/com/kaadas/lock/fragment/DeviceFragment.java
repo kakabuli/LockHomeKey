@@ -61,7 +61,7 @@ import butterknife.Unbinder;
  * Created by asqw1 on 2018/3/14.
  */
 
-public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<IDeviceView>> implements BaseQuickAdapter.OnItemClickListener,IDeviceView {
+public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<IDeviceView>> implements BaseQuickAdapter.OnItemClickListener, IDeviceView {
     @BindView(R.id.no_device_image)
     ImageView noDeviceImage;
 
@@ -85,8 +85,8 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
 
     private DeviceDetailAdapter deviceDetailAdapter;
 
-    private List<DeviceDetailBean> mDeviceList=new ArrayList<>();
-    private  List<HomeShowBean> homeShowBeanList;
+    private List<DeviceDetailBean> mDeviceList = new ArrayList<>();
+    private List<HomeShowBean> homeShowBeanList;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -134,36 +134,32 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
 
     private void initData(List<HomeShowBean> homeShowBeanList) {
         mDeviceList.clear();
-        if (homeShowBeanList!=null){
-            if (homeShowBeanList.size()>0){
+        if (homeShowBeanList != null) {
+            if (homeShowBeanList.size() > 0) {
                 noDeviceLayout.setVisibility(View.GONE);
                 refresh.setVisibility(View.VISIBLE);
-                for (HomeShowBean homeShowBean:homeShowBeanList){
-                    LogUtils.e(homeShowBeanList.size()+"获取到大小     "+"获取到昵称  "+homeShowBean.getDeviceNickName());
-                    getDifferentTypeDevice(homeShowBean);
-                }
-                if (deviceDetailAdapter!=null){
+                if (deviceDetailAdapter != null) {
                     deviceDetailAdapter.notifyDataSetChanged();
-                }else{
+                } else {
                     initAdapter();
                 }
-            }else{
+            } else {
                 noDeviceLayout.setVisibility(View.VISIBLE);
                 refresh.setVisibility(View.GONE);
             }
-        }else{
+        } else {
             noDeviceLayout.setVisibility(View.VISIBLE);
             refresh.setVisibility(View.GONE);
         }
     }
 
     private void getDifferentTypeDevice(HomeShowBean showBean) {
-        switch (showBean.getDeviceType()){
+        switch (showBean.getDeviceType()) {
             case 0:
                 //猫眼设备
-                CateEyeInfo cateEyeInfo= (CateEyeInfo) showBean.getObject();
-                String eventStr=cateEyeInfo.getServerInfo().getEvent_str();
-                DeviceDetailBean catEye=new DeviceDetailBean();
+                CateEyeInfo cateEyeInfo = (CateEyeInfo) showBean.getObject();
+                String eventStr = cateEyeInfo.getServerInfo().getEvent_str();
+                DeviceDetailBean catEye = new DeviceDetailBean();
                 catEye.setDeviceName(showBean.getDeviceNickName());
                 catEye.setEvent_str(eventStr);
                 catEye.setType(showBean.getDeviceType());
@@ -174,10 +170,10 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                 break;
             case 1:
                 //网关锁
-                GwLockInfo lockInfo= (GwLockInfo) showBean.getObject();
-                String event=lockInfo.getServerInfo().getEvent_str();
+                GwLockInfo lockInfo = (GwLockInfo) showBean.getObject();
+                String event = lockInfo.getServerInfo().getEvent_str();
 
-                DeviceDetailBean lockBean=new DeviceDetailBean();
+                DeviceDetailBean lockBean = new DeviceDetailBean();
                 lockBean.setDeviceName(showBean.getDeviceNickName());
                 lockBean.setEvent_str(event);
                 lockBean.setType(showBean.getDeviceType());
@@ -187,9 +183,9 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                 break;
             case 2:
                 //网关
-                GatewayInfo gatewayInfo= (GatewayInfo) showBean.getObject();
-                ServerGatewayInfo serverGatewayInfo=gatewayInfo.getServerInfo();
-                DeviceDetailBean gatewayBean=new DeviceDetailBean();
+                GatewayInfo gatewayInfo = (GatewayInfo) showBean.getObject();
+                ServerGatewayInfo serverGatewayInfo = gatewayInfo.getServerInfo();
+                DeviceDetailBean gatewayBean = new DeviceDetailBean();
                 gatewayBean.setDeviceName(serverGatewayInfo.getDeviceNickName());
                 //网关无电量的设置
                 gatewayBean.setPower(0);
@@ -200,13 +196,13 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                 break;
             case 3:
                 //蓝牙锁
-                BleLockInfo bleLockInfo= (BleLockInfo) showBean.getObject();
-                DeviceDetailBean bluetoothBean=new DeviceDetailBean();
+                BleLockInfo bleLockInfo = (BleLockInfo) showBean.getObject();
+                DeviceDetailBean bluetoothBean = new DeviceDetailBean();
                 bluetoothBean.setDeviceName(bleLockInfo.getServerLockInfo().getLockNickName());
                 bluetoothBean.setType(showBean.getDeviceType());
-                if (bleLockInfo.isConnected()){
+                if (bleLockInfo.isConnected()) {
                     bluetoothBean.setEvent_str("online");
-                }else{
+                } else {
                     bluetoothBean.setEvent_str("offline");
                 }
                 bluetoothBean.setPower(bleLockInfo.getBattery());
@@ -215,7 +211,6 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                 break;
 
         }
-
 
 
     }
@@ -262,21 +257,21 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
         switch (deviceDetailBean.getType()) {
             case 0:
                 //猫眼
-                Intent  cateEyeInfoIntent=new Intent(getActivity(),CateyeFunctionActivity.class);
+                Intent cateEyeInfoIntent = new Intent(getActivity(), CateyeFunctionActivity.class);
                 CateEyeInfo cateEyeInfo = (CateEyeInfo) deviceDetailBean.getShowCurentBean();
                 cateEyeInfoIntent.putExtra(KeyConstants.CATE_INFO, cateEyeInfo);
                 startActivity(cateEyeInfoIntent);
                 break;
             case 1:
                 //网关锁
-                Intent gatewayLockintent=new Intent(getActivity(),GatewayLockFunctionActivity.class);
-                gatewayLockintent.putExtra(KeyConstants.DEVICE_DETAIL_BEAN,deviceDetailBean);
+                Intent gatewayLockintent = new Intent(getActivity(), GatewayLockFunctionActivity.class);
+                gatewayLockintent.putExtra(KeyConstants.DEVICE_DETAIL_BEAN, deviceDetailBean);
                 startActivity(gatewayLockintent);
                 break;
             case 2:
                 //网关
-                Intent gatwayInfo=new Intent(getActivity(), GatewayActivity.class);
-                gatwayInfo.putExtra(KeyConstants.DEVICE_DETAIL_BEAN,deviceDetailBean);
+                Intent gatwayInfo = new Intent(getActivity(), GatewayActivity.class);
+                gatwayInfo.putExtra(KeyConstants.DEVICE_DETAIL_BEAN, deviceDetailBean);
                 startActivity(gatwayInfo);
                 break;
             case 3:
@@ -303,16 +298,12 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
     @Override
     public void onDeviceRefresh(AllBindDevices allBindDevices) {
         //数据更新了
-        if (refresh!=null){
+        if (refresh != null) {
             refresh.finishRefresh();
         }
-        if (allBindDevices !=null){
-            homeShowBeanList = MyApplication.getInstance().getAllDevices();
-            initData(homeShowBeanList);
-        }else {
-            initData(null);
-        }
+        homeShowBeanList = MyApplication.getInstance().getAllDevices();
 
+        initData(homeShowBeanList);
     }
 
 /*    @Override

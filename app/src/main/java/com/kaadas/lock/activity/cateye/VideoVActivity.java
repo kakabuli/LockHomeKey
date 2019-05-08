@@ -85,10 +85,7 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
     private static final int REQUEST_PERMISSION_REQUEST_CODE = 102;
     private boolean isOpening; //正在开门
     private boolean isClosing; //正在关门
-    private String saveIsOpening = "isOpening";  //是否正在开门
-    private String saveIsClosing = "isClosing";  //是否正在关门
-    private String saveIsConnected = "isConnected";
-    private String saveIsCalling = "isCalling";
+
     private LinearLayout ll_video_control1;
     private LinearLayout ll_video_control2;
     private CheckBox cbScreenShot2;
@@ -124,18 +121,6 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
 
         recoverData(savedInstanceState);
     }
-
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        outState.putBoolean(saveIsClosing, isClosing);
-        outState.putBoolean(saveIsOpening, isOpening);
-        outState.putBoolean(saveIsConnected, mPresenter.isConnected);
-        outState.putBoolean(saveIsCalling, mPresenter.isCalling);
-
-        super.onSaveInstanceState(outState);
-    }
-
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {

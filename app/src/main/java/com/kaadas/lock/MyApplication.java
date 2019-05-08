@@ -13,6 +13,7 @@ import android.text.TextUtils;
 import com.google.gson.Gson;
 import com.kaadas.lock.activity.login.LoginActivity;
 import com.kaadas.lock.bean.HomeShowBean;
+import com.kaadas.lock.publiclibrary.bean.CateEyeInfo;
 import com.kaadas.lock.publiclibrary.linphone.MemeManager;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.publiclibrary.ble.BleService;
@@ -519,17 +520,17 @@ public class MyApplication extends Application {
         getDevicesFromServer.onNext(allBindDevices);
     }
 
-    public void setHomeShowDevices(List<HomeShowBean> homeShowDevices) {
-        this.homeShowDevices = homeShowDevices;
-    }
+
 
     public List<HomeShowBean> getHomeShowDevices() {
+
         List<HomeShowBean> tem = new ArrayList<>();
         for (HomeShowBean homeShowBean :homeShowDevices){
             if (homeShowBean.getDeviceType() != HomeShowBean.TYPE_GATEWAY){
                 tem.add(homeShowBean);
             }
         }
+
         return tem;
     }
     public List<HomeShowBean> getAllDevices() {

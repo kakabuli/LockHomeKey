@@ -271,6 +271,7 @@ public class AllBindDevices {
                         if (bleDevice.getMacLock().equals(bleLockInfo.getServerLockInfo().getMacLock())) {
                             isExist = true;
                             bleLockInfo.setServerLockInfo(bleDevice);
+                            homeShowBean.setDeviceNickName(bleDevice.getLockNickName());
                             homeShowBeans.add(homeShowBean);
                         }
                     }
@@ -291,10 +292,10 @@ public class AllBindDevices {
                     if (!isExistGateway && homeShowBean.getDeviceType() == HomeShowBean.TYPE_GATEWAY) {
                         //如果设备原来就存在，那么只替换服务器数据   其他数据不变
                         GatewayInfo gatewayInfo = (GatewayInfo) homeShowBean.getObject();
-
                         if (gwListBean.getDeviceSN().equals(gatewayInfo.getServerInfo().getDeviceSN())) {
                             isExistGateway = true;
                             gatewayInfo.setServerInfo(new ServerGatewayInfo(gwListBean));
+                            homeShowBean.setDeviceNickName( gwListBean.getDeviceNickName());
                             homeShowBeans.add(homeShowBean);
                         }
                     }
@@ -322,10 +323,13 @@ public class AllBindDevices {
                                 if (cateEyeInfo.getGwID().equals(gwListBean.getDeviceSN())
                                         && cateEyeInfo.getServerInfo().getDeviceId().equals(serverGwDevice.getDeviceId())
                                         ) {
+                                    LogUtils.e("猫眼已存在   刷新前的昵称是" +    cateEyeInfo.getServerInfo().getNickName()  );
                                     LogUtils.e(cateEyeInfo.getServerInfo().getNickName()+"值还没有改变");
                                     isExist = true;
                                     cateEyeInfo.setServerInfo(serverGwDevice);
                                     LogUtils.e(cateEyeInfo.getServerInfo().getNickName()+"值发生改变");
+                                    LogUtils.e("猫眼已存在   刷新后的昵称是" +    cateEyeInfo.getServerInfo().getNickName()  );
+                                    homeShowBean.setDeviceNickName(nickName);
                                     homeShowBeans.add(homeShowBean);
                                 }
                             }
@@ -334,7 +338,9 @@ public class AllBindDevices {
                             CateEyeInfo cateEyeInfo = new CateEyeInfo(gwListBean.getDeviceSN(), serverGwDevice);
                             cateEyeInfo.setGatewayInfo(newGatewayInfo);
                             homeShowBeans.add(new HomeShowBean(HomeShowBean.TYPE_CAT_EYE, serverGwDevice.getDeviceId(), nickName, cateEyeInfo));
+                            LogUtils.e("猫眼不存在   昵称是" +    cateEyeInfo.getServerInfo().getNickName()  );
                         }
+
                     } else {
                         for (HomeShowBean homeShowBean : MyApplication.getInstance().getHomeShowDevices()) {
                             if (!isExist && homeShowBean.getDeviceType() == HomeShowBean.TYPE_GATEWAY_LOCK) {
@@ -347,6 +353,7 @@ public class AllBindDevices {
                                     isExist = true;
                                     gwLockInfo.setServerInfo(serverGwDevice);
                                     LogUtils.e(gwLockInfo.getServerInfo().getNickName()+"值发生改变");
+                                    homeShowBean.setDeviceNickName(nickName);
                                     homeShowBeans.add(homeShowBean);
                                 }
                             }

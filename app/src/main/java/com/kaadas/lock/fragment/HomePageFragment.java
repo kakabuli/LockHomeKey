@@ -137,6 +137,7 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
     }
 
     public void initData(final List<HomeShowBean> devices) {
+
         if (devices == null) {
             hasDevice = false;
             changePage();
