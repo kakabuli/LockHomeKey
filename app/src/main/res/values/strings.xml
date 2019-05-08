@@ -854,4 +854,8 @@
     <string name="cat_mcu_version">MCU版本</string>
     <string name="hardware_version">硬件版本</string>
     <string name="smart_check_set_fail">智能监测设置失败</string>
+    <string name="data_loading">数据加载中……</string>
+    <string name="loading">加载中...</string>
+    <string name="video_download_fail">视频下载失败,请重新下载</string>
+    <string name="receive_pir_trigger_check_cateye_snapshot">收到pir触发,请查看猫眼快照</string>
 </resources>

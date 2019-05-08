@@ -29,6 +29,8 @@ import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.ToastUtil;
+import com.kaadas.lock.utils.greenDao.db.DaoManager;
+import com.kaadas.lock.utils.greenDao.db.DaoSession;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.DefaultRefreshFooterCreator;
 import com.scwang.smartrefresh.layout.api.DefaultRefreshHeaderCreator;
@@ -100,6 +102,8 @@ public class MyApplication extends Application {
         ZXingLibrary.initDisplayOpinion(this);
         initMeme();
         regToWx();
+        //配置数据库
+        setUpWriteDataBase();
     }
 
     private void regToWx() {
@@ -629,14 +633,14 @@ public class MyApplication extends Application {
     public void setMediaPlayerActivity(boolean mediaPlayerActivity) {
         isMediaPlayerActivity = mediaPlayerActivity;
     }
-
-    private String[] downloadList;
-
-    public String[] getDownloadList() {
-        return downloadList;
+    private static DaoSession daoWriteSession;
+    private DaoManager manager;
+    private void setUpWriteDataBase() {
+        manager=DaoManager.getInstance(this);
+        daoWriteSession=manager.getDaoSession();
+    }
+    public    DaoSession getDaoWriteSession(){
+        return daoWriteSession;
     }
 
-    public void setDownloadList(String[] downloadList) {
-        this.downloadList = downloadList;
-    }
 }
