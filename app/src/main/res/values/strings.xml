@@ -852,4 +852,8 @@
     <string name="cat_mac_address">MAC地址</string>
     <string name="cat_t_version">T200版本</string>
     <string name="cat_mcu_version">MCU版本</string>
+    <string name="normal">正常</string>
+
+    <string name="back_lock_can_not_open">门锁反锁状态下请门内开锁</string>
+    <string name="safe_mode_can_not_open">门锁安全模式下无权限开锁</string>
 </resources>

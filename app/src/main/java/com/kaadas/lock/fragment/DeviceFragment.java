@@ -301,27 +301,15 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
         if (refresh != null) {
             refresh.finishRefresh();
         }
-        homeShowBeanList = MyApplication.getInstance().getAllDevices();
-
-        initData(homeShowBeanList);
-    }
-
-/*    @Override
-    public void deviceDataRefreshSuccess(AllBindDevices allBindDevices) {
-        refresh.finishRefresh();
-        //刷新页面成功
-        if (mDeviceList!=null){
-            if (mDeviceList.size()>0){
-                mDeviceList.clear();
-            }
-            if (allBindDevices!=null){
-                List<HomeShowBean> homeShowBeanRefreshList= allBindDevices.getHomeShow(true);
-                initData(homeShowBeanRefreshList);
-            }
+        if (allBindDevices!=null){
+            homeShowBeanList = MyApplication.getInstance().getAllDevices();
+            initData(homeShowBeanList);
+        }else {
+            initData(null);
         }
 
+    }
 
-    }*/
 
     @Override
     public void deviceDataRefreshFail() {

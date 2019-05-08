@@ -534,6 +534,9 @@ public class MyApplication extends Application {
         return tem;
     }
     public List<HomeShowBean> getAllDevices() {
+        if (homeShowDevices!=null){
+            LogUtils.e("设备个数是   " + homeShowDevices.size());
+        }
         return homeShowDevices;
     }
 
