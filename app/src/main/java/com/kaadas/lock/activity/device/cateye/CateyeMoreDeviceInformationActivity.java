@@ -4,10 +4,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.kaadas.lock.R;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.CatEyeInfoBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.CatEyeInfoBeanResult;
@@ -58,8 +60,9 @@ public class CateyeMoreDeviceInformationActivity extends AppCompatActivity imple
 
     private void initData() {
         Intent intent = getIntent();
-        CatEyeInfoBeanResult catEyeInfo = (CatEyeInfoBeanResult) intent.getSerializableExtra(KeyConstants.GET_CAT_EYE_INFO);
-        if (catEyeInfo != null) {
+        String strCatEyeInfo =  intent.getStringExtra(KeyConstants.GET_CAT_EYE_INFO);
+        if (!TextUtils.isEmpty(strCatEyeInfo)) {
+            CatEyeInfoBeanResult catEyeInfo=new Gson().fromJson(strCatEyeInfo,CatEyeInfoBeanResult.class);
             tvSerialNumber.setText(catEyeInfo.getDeviceId());
             tvSoftVersion.setText(catEyeInfo.getReturnData().getSW());
             hardwareVersion.setText(catEyeInfo.getReturnData().getHW());

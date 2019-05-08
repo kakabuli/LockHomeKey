@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
+import com.kaadas.lock.activity.MainActivity;
 import com.kaadas.lock.activity.device.cateye.CateyeMoreDeviceInformationActivity;
 import com.kaadas.lock.activity.device.gatewaylock.more.GatewayMoreActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
@@ -79,11 +80,14 @@ public class CateyeMoreActivity extends BaseActivity<IGatEyeView, CatEyeMorePres
     private String gatewayId;
     private String deviceId;
 
-    private CatEyeInfoBeanResult returnCatEyeInfo;
+    private String returnCatEyeInfo;
     private LoadingDialog loadingDialog;
     //0表示正在获取，1表示已获取成功，2表示已获取失败
     private int  getCatInfoStatus=0;
     private CateEyeInfo cateEyeInfo;
+
+    private int pirEnable=0;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -185,17 +189,28 @@ public class CateyeMoreActivity extends BaseActivity<IGatEyeView, CatEyeMorePres
 
 
             case R.id.btn_delete:
-                AlertDialogUtil.getInstance().noEditTwoButtonDialog(this, getString(R.string.device_delete_dialog_head), getString(R.string.device_delete_dialog_content), getString(R.string.cancel), getString(R.string.query), new AlertDialogUtil.ClickListener() {
-                    @Override
-                    public void left() {
+                if (getCatInfoStatus==0){
+                    ToastUtil.getInstance().showShort(R.string.get_cateye_info_wait);
+                    return;
+                }else if (getCatInfoStatus==2){
+                    ToastUtil.getInstance().showShort(R.string.get_cateye_info_fail);
+                    return;
+                }else {
+                    AlertDialogUtil.getInstance().noEditTwoButtonDialog(this, getString(R.string.device_delete_dialog_head), getString(R.string.device_delete_dialog_content), getString(R.string.cancel), getString(R.string.query), new AlertDialogUtil.ClickListener() {
+                        @Override
+                        public void left() {
 
-                    }
+                        }
 
-                    @Override
-                    public void right() {
+                        @Override
+                        public void right() {
+                            if (gatewayId != null && deviceId != null) {
+                                mPresenter.deleteCatEye(gatewayId, deviceId, "net");
+                            }
+                        }
 
-                    }
-                });
+                    });
+                }
                 break;
             case R.id.rl_device_information:
                 if (getCatInfoStatus==0){
@@ -207,23 +222,29 @@ public class CateyeMoreActivity extends BaseActivity<IGatEyeView, CatEyeMorePres
                 }else {
                     if (returnCatEyeInfo!=null) {
                         Intent detailIntent = new Intent(this, CateyeMoreDeviceInformationActivity.class);
-                        detailIntent.putExtra(KeyConstants.GET_CAT_EYE_INFO,returnCatEyeInfo.getDeviceId());
-
+                        detailIntent.putExtra(KeyConstants.GET_CAT_EYE_INFO,returnCatEyeInfo);
                         startActivity(detailIntent);
                     }
                 }
                 break;
             case R.id.rl_smart_monitor:
-                if (smartMonitorStatus) {
-                    //打开状态 现在关闭
-                    ivSmartMonitor.setImageResource(R.mipmap.iv_close);
-                    SPUtils.put(KeyConstants.SMART_MONITOR_STATUS, false);
-                } else {
-                    //关闭状态 现在打开
-                    ivSmartMonitor.setImageResource(R.mipmap.iv_open);
-                    SPUtils.put(KeyConstants.SMART_MONITOR_STATUS, true);
+                if (getCatInfoStatus==0){
+                    ToastUtil.getInstance().showShort(R.string.get_cateye_info_wait);
+                    return;
+                }else if (getCatInfoStatus==2){
+                    ToastUtil.getInstance().showShort(R.string.get_cateye_info_fail);
+                    return;
+                }else if (pirEnable==1){
+                    if (!TextUtils.isEmpty(gatewayId)&&!TextUtils.isEmpty(deviceId)){
+                        mPresenter.setPirEnable(gatewayId,deviceId,MyApplication.getInstance().getUid(),0);
+                        loadingDialog.show("正在关闭智能监测");
+                    }
+                }else{
+                    if (!TextUtils.isEmpty(gatewayId)&&!TextUtils.isEmpty(deviceId)){
+                        mPresenter.setPirEnable(gatewayId,deviceId,MyApplication.getInstance().getUid(),1);
+                        loadingDialog.show("正在开启智能监测");
+                    }
                 }
-                smartMonitorStatus = !smartMonitorStatus;
                 break;
         }
     }
@@ -250,7 +271,7 @@ public class CateyeMoreActivity extends BaseActivity<IGatEyeView, CatEyeMorePres
     }
 
     @Override
-    public void getCatEyeInfoSuccess(CatEyeInfoBeanResult catEyeInfoBean) {
+    public void getCatEyeInfoSuccess(CatEyeInfoBeanResult catEyeInfoBean,String payload) {
 
         if (catEyeInfoBean != null) {
 
@@ -265,7 +286,7 @@ public class CateyeMoreActivity extends BaseActivity<IGatEyeView, CatEyeMorePres
             if (tvRingnumber != null) {
                 tvRingnumber.setText(returnDataBean.getBellCount()+"");//响铃次数
             }
-            int pirEnable = returnDataBean.getPirEnable(); //1未开启，0为关闭
+             pirEnable = returnDataBean.getPirEnable(); //1未开启，0为关闭
             if (ivSmartMonitor != null) {
                 if (pirEnable == 1) {
                     ivSmartMonitor.setImageResource(R.mipmap.iv_open);
@@ -276,7 +297,7 @@ public class CateyeMoreActivity extends BaseActivity<IGatEyeView, CatEyeMorePres
             if (tvResolution != null) {
                 tvResolution.setText(returnDataBean.getResolution());
             }
-            //returnCatEyeInfo = (CatEyeInfoBeanResult)catEyeInfoBean;
+            returnCatEyeInfo = payload;
             if (cateEyeInfo != null) {
                 cateEyeInfo.setPower(returnDataBean.getPower());
             }
@@ -301,34 +322,57 @@ public class CateyeMoreActivity extends BaseActivity<IGatEyeView, CatEyeMorePres
         getCatInfoStatus=2;
     }
 
-
     @Override
-    public void setSoundVolumeSuccess(int volume) {
+    public void setPirEnableSuccess(int status) {
+        //设置pir成功
+        if (loadingDialog!=null){
+            loadingDialog.dismiss();
+        }
+       if (ivSmartMonitor!=null) {
+           if (status == 1) {
+               ivSmartMonitor.setImageResource(R.mipmap.iv_open);
+           } else {
+               ivSmartMonitor.setImageResource(R.mipmap.iv_close);
+           }
+       }
 
     }
 
     @Override
-    public void setSoundVolumeFail() {
-
+    public void setPirEnableFail() {
+        //设置pir失败
+        if (loadingDialog!=null) {
+            loadingDialog.dismiss();
+        }
+        ToastUtil.getInstance().showShort(R.string.smart_check_set_fail);
     }
 
     @Override
-    public void setSoundVolumeThrowable(Throwable throwable) {
+    public void setPirEnableThrowable(Throwable throwable) {
+        //设置pir异常
+        if (loadingDialog!=null) {
+            loadingDialog.dismiss();
+        }
+        ToastUtil.getInstance().showShort(R.string.smart_check_set_fail);
 
     }
+
 
     @Override
     public void deleteDeviceSuccess() {
-
+        //删除成功
+        Intent intent=new Intent(this, MainActivity.class);
+        startActivity(intent);
+        finish();
     }
 
     @Override
     public void deleteDeviceFail() {
-
+        ToastUtil.getInstance().showShort(getString(R.string.delete_fialed));
     }
 
     @Override
     public void deleteDeviceThrowable(Throwable throwable) {
-
+        ToastUtil.getInstance().showShort(getString(R.string.delete_fialed));
     }
 }

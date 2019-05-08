@@ -19,6 +19,7 @@ import com.kaadas.lock.publiclibrary.mqtt.publishbean.LockPwdInfoBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.OpenLockBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetJoinAllowBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetLockLang;
+import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetPirEnableBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.UpdateDevNickNameBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.WakeupCameraBean;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttConstant;
@@ -149,9 +150,9 @@ public class MqttCommandFactory {
      * @return
      */
 
-    public static MqttMessage getDevicePower(String gatewayId,String deviceId){
+    public static MqttMessage getDevicePower(String gatewayId,String deviceId,String uid){
         int messageId = getMessageId();
-        GetDevicePowerBean getDevicePowerBean=new GetDevicePowerBean(MqttConstant.MSG_TYPE_REQUEST, MyApplication.getInstance().getUid(),messageId,gatewayId,deviceId,MqttConstant.GET_POWER,new GetDevicePowerBean.ParamsBean(),"0",new GetDevicePowerBean.ReturnDataBean(),System.currentTimeMillis()+"");
+        GetDevicePowerBean getDevicePowerBean=new GetDevicePowerBean(MqttConstant.MSG_TYPE_REQUEST,uid ,messageId,gatewayId,deviceId,MqttConstant.GET_POWER,new GetDevicePowerBean.ParamsBean(),"0",new GetDevicePowerBean.ReturnDataBean(),System.currentTimeMillis()+"");
         return  getMessage(getDevicePowerBean,messageId);
     }
 
@@ -345,6 +346,13 @@ public class MqttCommandFactory {
 
    }
 
+   public static MqttMessage setPirEnable(String gatewayId,String deivceId,String uid,int status){
+       int messageId=getMessageId();
+       SetPirEnableBean.ParamsBean paramsBean=new SetPirEnableBean.ParamsBean();
+       paramsBean.setPirStatus(status);
+       SetPirEnableBean setPirEnableBean=new SetPirEnableBean(MqttConstant.MSG_TYPE_REQUEST,uid,messageId,gatewayId,deivceId,MqttConstant.SET_PIR_ENABLE,paramsBean,"0",new SetPirEnableBean.ReturnDataBean(),System.currentTimeMillis()+"");
+       return getMessage(setPirEnableBean,messageId);
+   }
 
 
 

@@ -140,7 +140,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="@dimen/dp_16"
-            android:src="@mipmap/iv_open" />
+            android:src="@mipmap/iv_close" />
 
         <View
             android:layout_width="match_parent"
