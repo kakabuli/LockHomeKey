@@ -732,14 +732,14 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
     }
 
     private String getOpenLockType(GetPasswordResult passwordResults, OpenLockRecord record) {
-        String openLockType = record.getUser_num();
+        String nickName = record.getUser_num()+"";
         if (passwordResults != null) {
             switch (record.getOpen_type()) {
                 case BleUtil.PASSWORD:
                     List<ForeverPassword> pwdList = passwordResults.getData().getPwdList();
                     for (ForeverPassword password : pwdList) {
                         if (Integer.parseInt(password.getNum()) == Integer.parseInt(record.getUser_num())) {
-                            openLockType = password.getNickName();
+                            nickName = password.getNickName();
                         }
                     }
                     break;
@@ -747,7 +747,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
                     List<GetPasswordResult.DataBean.Fingerprint> fingerprints = passwordResults.getData().getFingerprintList();
                     for (GetPasswordResult.DataBean.Fingerprint password : fingerprints) {
                         if (Integer.parseInt(password.getNum()) == Integer.parseInt(record.getUser_num())) {
-                            openLockType = password.getNickName();
+                            nickName = password.getNickName();
                         }
                     }
                     break;
@@ -755,18 +755,18 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
                     List<GetPasswordResult.DataBean.Card> cards = passwordResults.getData().getCardList();
                     for (GetPasswordResult.DataBean.Card password : cards) {
                         if (Integer.parseInt(password.getNum()) == Integer.parseInt(record.getUser_num())) {
-                            openLockType = password.getNickName();
+                            nickName = password.getNickName();
                         }
                     }
                     break;
                 case BleUtil.PHONE:  //103
-                    openLockType = "App";
+                    nickName = "App";
                     break;
             }
         } else {
-            openLockType = record.getUser_num() + "";
+            nickName = record.getUser_num() + "";
         }
-        return openLockType;
+        return nickName;
     }
     private void groupData(List<OpenLockRecord> lockRecords) {
         list.clear();
@@ -781,7 +781,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
             long dayTime = openTime - openTime % (24 * 60 * 60 * 1000);  //获取那一天开始的时间戳
             List<BluetoothItemRecordBean> itemList = new ArrayList<>();
             GetPasswordResult passwordResult = MyApplication.getInstance().getPasswordResults(bleLockInfo.getServerLockInfo().getLockName());
-            String openLockType = getOpenLockType(passwordResult, record);
+            String nickName = getOpenLockType(passwordResult, record);
 
             String open_time = record.getOpen_time();
             String[] split = open_time.split(" ");
@@ -792,13 +792,13 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
             if (lastDayTime != dayTime) { //添加头
                 lastDayTime = dayTime;
                 titleTime = DateUtils.getDayTimeFromMillisecond(dayTime);
-                itemList.add(new BluetoothItemRecordBean(record.getUser_num(), openLockType, KeyConstants.BLUETOOTH_RECORD_COMMON,
+                itemList.add(new BluetoothItemRecordBean(nickName,record.getOpen_type(), KeyConstants.BLUETOOTH_RECORD_COMMON,
                         time, false, false));
                 list.add(new BluetoothRecordBean(titleTime, itemList, false));
             }else {
                 BluetoothRecordBean bluetoothRecordBean = list.get(list.size() - 1);
                 List<BluetoothItemRecordBean> bluetoothItemRecordBeanList = bluetoothRecordBean.getList();
-                bluetoothItemRecordBeanList.add(new BluetoothItemRecordBean(record.getUser_num(), openLockType, KeyConstants.BLUETOOTH_RECORD_COMMON,
+                bluetoothItemRecordBeanList.add(new BluetoothItemRecordBean(nickName,record.getOpen_type(), KeyConstants.BLUETOOTH_RECORD_COMMON,
                         time, false, false));
             }
 
