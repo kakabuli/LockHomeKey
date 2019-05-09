@@ -62,7 +62,6 @@ public class BleService extends Service {
     private BluetoothGattCharacteristic voiceChar;  // 设备音量信息
 
     private boolean isConnected = false;
-    private BleUtil bleUtil;
     private BluetoothGatt bluetoothGatt;
     private static final int heartInterval = 3 * 1000; //心跳间隔时间 毫秒
     private static final int sendInterval = 100;  //命令发送间隔时间 毫秒
@@ -121,27 +120,6 @@ public class BleService extends Service {
     private PublishSubject<ReadInfoBean> readSystemIDSubject = PublishSubject.create();
 
 
-    /**
-     * 读取Sn的
-     */
-    private PublishSubject<ReadInfoBean> readSNSubject = PublishSubject.create();
-
-    /**
-     * 读取电量的
-     */
-    private PublishSubject<ReadInfoBean> readElectricSubject = PublishSubject.create();
-
-
-    /**
-     * 读取蓝牙信息的
-     */
-    private PublishSubject<ReadInfoBean> readBleInfoSubject = PublishSubject.create();
-
-
-    /**
-     * 读取锁信息的
-     */
-    private PublishSubject<ReadInfoBean> readLockInfoSubject = PublishSubject.create();
     private Disposable disposable;
     private Runnable releaseRunnable1;
     private BluetoothGattCharacteristic lockStatusChar;
@@ -171,7 +149,6 @@ public class BleService extends Service {
         bluetoothLeScanner = bluetoothAdapter.getBluetoothLeScanner();
         scanSettings = new ScanSettings.Builder().setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY).build();
 
-        bleUtil = new BleUtil();
         registerBluetoothReceiver();
 
         bleIsEnable = bluetoothAdapter.isEnabled(); //蓝牙是否已开启
@@ -247,7 +224,7 @@ public class BleService extends Service {
      */
     public void release() {
         synchronized (this) {
-            connectStateSubject.onNext(new BleStateBean(false, bluetoothGatt == null ? null : bluetoothGatt.getDevice(), false));
+            connectStateSubject.onNext(new BleStateBean(false, bluetoothGatt == null ? null : bluetoothGatt.getDevice() ));
             if (bluetoothGatt != null) {
                 bluetoothGatt.disconnect();
                 boolean isRefresh = refreshBleCatch(bluetoothGatt);
@@ -310,7 +287,10 @@ public class BleService extends Service {
                 return;
             }
             //符合要求的设备
-            if (device.getName().startsWith("XK") || device.getName().contains("OAD")) {
+            if (device.getName().startsWith("XK")
+                    || device.getName().contains("KDS")
+
+                    ) {
                 deviceScanSubject.onNext(device);
             }
         }
@@ -388,7 +368,7 @@ public class BleService extends Service {
                 //断开连接  有时候是用户断开的  有时候是异常断开。
                 LogUtils.e("断开连接  ");
                 isConnected = false;
-                connectStateSubject.onNext(new BleStateBean(false, gatt == null ? null : gatt.getDevice(), false));
+                connectStateSubject.onNext(new BleStateBean(false, gatt == null ? null : gatt.getDevice() ));
                 release();
             }
         }
@@ -637,7 +617,6 @@ public class BleService extends Service {
         return readSystemIDSubject;
     }
 
-
     //读取硬件信息
     public Observable<ReadInfoBean> readHardware() {
         if (hardwareVersionChar != null && bluetoothGatt != null) {
@@ -647,7 +626,6 @@ public class BleService extends Service {
         }
         return readSystemIDSubject;
     }
-
 
     //蓝牙版本号
     public Observable<ReadInfoBean> readBleVersion() {
@@ -679,9 +657,6 @@ public class BleService extends Service {
 
     // 根据服务，去发现特征值
     public void discoverCharacteristic(BluetoothGatt gatt) {
-        boolean isNew = false;
-
-
         otaService = gatt.getService(UUID.fromString(BLeConstants.OAD_SERVICE));
         if (otaService != null) {  //OTA升级模式下的设备
             release();
@@ -692,11 +667,12 @@ public class BleService extends Service {
         }
 
         List<BluetoothGattService> gattServices = gatt.getServices();
+        //获取当前的模块版本号
+        int type = getTypeByServices(gattServices);
+
         for (BluetoothGattService gattService : gattServices) {
             List<BluetoothGattCharacteristic> gattCharacteristics = gattService.getCharacteristics();
             String serviceUUID = gattService.getUuid().toString();
-            Log.e("服务UUID", "uuidService:" + serviceUUID);
-
             for (final BluetoothGattCharacteristic characteristic : gattCharacteristics) {
                 String uuidChar = characteristic.getUuid().toString();
                 if (BLeConstants.UUID_SEND_SERVICE.equals(serviceUUID)) {
@@ -726,7 +702,6 @@ public class BleService extends Service {
 
                 ////////////////////蓝牙信息特征值//////////////////////////////
                 if (BLeConstants.UUID_MODE_CHAR.equalsIgnoreCase(uuidChar)) {  //蓝牙模块名称
-                    isNew = true;
                     modeChar = characteristic;
                 }
                 if (BLeConstants.UUID_LOCK_TYPE.equalsIgnoreCase(uuidChar)) {  //锁型号
@@ -755,9 +730,9 @@ public class BleService extends Service {
 
             }
         }
-        LogUtils.e("是否是新模块   " + isNew);
+        LogUtils.e("模块版本是   " + type);
         isConnected = true;
-        connectStateSubject.onNext(new BleStateBean(true, gatt.getDevice(), isNew));
+        connectStateSubject.onNext(new BleStateBean(true, gatt.getDevice() ));
         handler.postDelayed(sendHeart, heartInterval);
         LogUtils.e("连接成功  mac  " + gatt.getDevice().getAddress() + "  name  " + gatt.getDevice().getName());
         // 连接成功时需要读取大量数据
@@ -767,14 +742,43 @@ public class BleService extends Service {
         handler.post(sendHeart);
     }
 
+    private int getTypeByServices(List<BluetoothGattService> gattServices) {
+        boolean isFFD0 = false; //Ti的OTA重启服务
+        boolean is1802 = false; //P6的OTA重启服务
+        boolean isFFE1 = false; //最新版本才有的特征值UUID 2019年5月9日
+
+        for (BluetoothGattService gattService : gattServices) {
+            LogUtils.e("服务UUID  "+gattService.getUuid().toString());
+            if (gattService.getUuid().toString().equalsIgnoreCase(BLeConstants.OAD_RESET_TI_SERVICE)) {
+                isFFD0 = true;
+            }
+            if (gattService.getUuid().toString().equalsIgnoreCase(BLeConstants.OAD_RESET_P6_SERVICE)) {
+                is1802 = true;
+            }
+            for (BluetoothGattCharacteristic characteristic : gattService.getCharacteristics()) {
+                LogUtils.e("    特征UUID  "+characteristic.getUuid().toString());
+                if (characteristic.getUuid().toString().equalsIgnoreCase(BLeConstants.PROTOCOL_VERSION_CHAR)) {
+                    isFFE1 = true;
+                }
+            }
+        }
+
+        if (isFFE1) {
+            return BleUtil.BLE_VERSION_NEW2;
+        }
+        if (isFFD0 || is1802) {
+            return BleUtil.BLE_VERSION_NEW1;
+        }
+        return BleUtil.BLE_VERSION_OLD;
+    }
+
+
     public void sendCommand(byte[] command) {
         writeCommand(bluetoothGatt, mWritableCharacter, command);
     }
 
-
     /**
      * 发送数据
-     *
      * @param gatt
      * @param characteristic
      * @param command
@@ -840,11 +844,9 @@ public class BleService extends Service {
         }
     };
 
-
     public BleLockInfo getBleLockInfo() {
         return bleLockInfo;
     }
-
     public synchronized void setBleLockInfo(BleLockInfo currentBleDevice) {
         if (bleLockInfo != null && !bleLockInfo.getServerLockInfo().getLockName().equals(currentBleDevice.getServerLockInfo().getLockName())) {
             bleLockInfo.setAuth(false);
@@ -1004,7 +1006,7 @@ public class BleService extends Service {
                 LogUtils.e("获取到远程设备   " + remoteDevice.getAddress() + "   设备名是  " + remoteDevice.getName());
                 deviceScanSubject.onNext(remoteDevice);
             } else {
-                LogUtils.e("获取到远程设备   失败   "  );
+                LogUtils.e("获取到远程设备   失败   ");
                 handler.postDelayed(getRemoteDeviceRunnable, 1000);
             }
         }

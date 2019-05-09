@@ -7,7 +7,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.view.View;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
@@ -17,16 +16,16 @@ import com.kaadas.lock.activity.cateye.VideoVActivity;
 import com.kaadas.lock.fragment.DeviceFragment;
 import com.kaadas.lock.fragment.HomePageFragment;
 import com.kaadas.lock.fragment.PersonalCenterFragment;
-import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseBleActivity;
 import com.kaadas.lock.mvp.presenter.MainActivityPresenter;
 import com.kaadas.lock.mvp.view.IMainActivityView;
-import com.kaadas.lock.mvp.view.IMainView;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.publiclibrary.bean.CateEyeInfo;
 import com.kaadas.lock.utils.KeyConstants;
+import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.PermissionUtil;
 import com.kaadas.lock.utils.ToastUtil;
+import com.kaadas.lock.utils.greenDao.bean.ZigbeeEvent;
 import com.kaadas.lock.widget.NoScrollViewPager;
 
 import net.sdvn.cmapi.CMAPI;
@@ -99,7 +98,7 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
 
     @Override
     protected MainActivityPresenter<IMainActivityView> createPresent() {
-        return new MainActivityPresenter();
+        return new MainActivityPresenter<>();
     }
 
     public interface HomeSelectListener {
@@ -203,18 +202,40 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
     @Override
     public void onDeviceInBoot(BleLockInfo bleLockInfo) {
         //todo ota 处理
-  /*      Intent intent = new Intent();
-        intent.setClass(MainActivity.this, OTADialogActivity.class);
-        intent.putExtra(KeyConstants.BLE_DEVICE_INFO, bleLockInfo);
-        startActivity(intent);*/
     }
 
     @Override
     public void onCatEyeCallIn(CateEyeInfo cateEyeInfo) {
-        Intent intent = new Intent(this,VideoVActivity.class);
+        Intent intent = new Intent(this, VideoVActivity.class);
         intent.putExtra(KeyConstants.IS_CALL_IN, true);
         intent.putExtra(KeyConstants.CATE_INFO, cateEyeInfo);
         startActivity(intent);
+    }
+
+    @Override
+    public void onGwEvent(int eventType, String deviceId) {
+        String nickName = MyApplication.getInstance().getNickByDeviceId(deviceId);
+        String content = null;
+        switch (eventType) {
+            case ZigbeeEvent.EVENT_PIR:
+                content = String.format(getString(R.string.pir_notify), nickName);
+                break;
+            case ZigbeeEvent.EVENT_DOOR_BELL:
+//                content = String.format(getString(R.string.door_bell), nickName);
+//                ToastUtil.getInstance().showShort(content);
+                break;
+            case ZigbeeEvent.EVENT_HEAD_LOST:
+                content = String.format(getString(R.string.head_lost_notify), nickName);
+                break;
+            case ZigbeeEvent.EVENT_HOST_LOST:
+                content = String.format(getString(R.string.host_lost_notify), nickName);
+                break;
+            case ZigbeeEvent.EVENT_LOW_POWER:
+                content = String.format(getString(R.string.low_power_notify), nickName);
+                break;
+        }
+        ToastUtil.getInstance().showLong(content);
+        LogUtils.e("猫眼报警的内容为   " + content);
     }
 
     public NoScrollViewPager getViewPager() {

@@ -267,6 +267,22 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
 
     }
 
+/*    @Override
+    public void deviceDataRefreshSuccess(AllBindDevices allBindDevices) {
+        refresh.finishRefresh();
+        //刷新页面成功
+        if (mDeviceList!=null){
+            if (mDeviceList.size()>0){
+                mDeviceList.clear();
+            }
+            if (allBindDevices!=null){
+                List<HomeShowBean> homeShowBeanRefreshList= allBindDevices.getHomeShow(true);
+                initData(homeShowBeanRefreshList);
+            }
+        }
+
+
+    }*/
 
     @Override
     public void deviceDataRefreshFail() {

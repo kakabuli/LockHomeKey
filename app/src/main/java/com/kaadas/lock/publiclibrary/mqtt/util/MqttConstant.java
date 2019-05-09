@@ -130,8 +130,9 @@ public class MqttConstant {
     //唤醒FTP
     public static final String SET_FTP_ENABLE="setFtpEnable";
     //网关推送通知
-    public static String GATEWAY_EVENT_NOTIFY = "gwevent";
-
+    public static final  String GATEWAY_EVENT_NOTIFY = "gwevent";
+    //推送消息
+    public static final String EVENT = "event";
 
     //获取猫眼信息
     public static final String BASIC_INFO="basicInfo";

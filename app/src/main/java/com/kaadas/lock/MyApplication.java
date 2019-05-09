@@ -13,6 +13,7 @@ import android.text.TextUtils;
 import com.google.gson.Gson;
 import com.kaadas.lock.activity.login.LoginActivity;
 import com.kaadas.lock.bean.HomeShowBean;
+import com.kaadas.lock.publiclibrary.bean.CateEyeInfo;
 import com.kaadas.lock.publiclibrary.linphone.MemeManager;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.publiclibrary.ble.BleService;
@@ -137,7 +138,6 @@ public class MyApplication extends Application {
      */
     private void initBleService() {
         Intent intent = new Intent(this, BleService.class);
-//        startService(intent);
         bindService(intent, new ServiceConnection() {
 
             @Override
@@ -370,56 +370,6 @@ public class MyApplication extends Application {
         });
     }
 
-
-    /**
-     * 设备列表信息的监听
-     * 如果List<BleLockInfo>为空，那么认为是有数据更新，需要重新请求数据
-     * 如果List<BleLockInfo>不为空，那么认为已经请求到最新数据
-     * 所以此APP只有一个地方请求数据
-     */
-    private PublishSubject<List<BleLockInfo>> bleLockInfoSubject = PublishSubject.create();
-    List<BleLockInfo> bleLockInfos;
-
-
-    //通知到DeviceActivity   和HomeFragment  在添加设备成功和删除设备成功的时候都会调用此方法，但是调用的都是
-    public void setBleLockInfos(List<BleLockInfo> bleLockInfos) {
-        if (bleLockInfos != null) {
-            this.bleLockInfos = bleLockInfos;
-        }
-        bleLockInfoSubject.onNext(bleLockInfos);
-    }
-
-    public List<BleLockInfo> getDevices() {
-        return bleLockInfos;
-    }
-
-    public Observable<List<BleLockInfo>> onLoadDevice() {
-        return bleLockInfoSubject;
-    }
-
-
-    /**
-     * 设备变动
-     */
-    private PublishSubject<Boolean> deviceChange = PublishSubject.create();
-
-    public PublishSubject listenerDeviceChange() {
-        return deviceChange;
-    }
-
-    public void setDeviceChange() {
-        deviceChange.onNext(true);
-    }
-
-    public void deleteDevice(String deviceName) {
-        for (int i = 0; i < bleLockInfos.size(); i++) {
-            if (deviceName.equals(bleLockInfos.get(i).getServerLockInfo().getLockName())) {
-                bleLockInfos.remove(i);
-                bleLockInfoSubject.onNext(bleLockInfos);
-            }
-        }
-    }
-
     /**
      * 密码列表的存取
      */
@@ -475,6 +425,7 @@ public class MyApplication extends Application {
      * @param isForce 是否强制刷新
      */
     public boolean neverGetDevice = false;
+
     public void getAllDevicesByMqtt(boolean isForce) {
         if (!isForce) {
             if (allBindDevices != null) {
@@ -504,7 +455,7 @@ public class MyApplication extends Application {
                         String payload = mqttData.getPayload();
                         allBindDevices = new Gson().fromJson(payload, AllBindDevices.class);
                         if (allBindDevices != null) {
-                            homeShowDevices = allBindDevices.getHomeShow( );
+                            homeShowDevices = allBindDevices.getHomeShow();
                             getDevicesFromServer.onNext(allBindDevices);
                         }
                     }
@@ -518,26 +469,38 @@ public class MyApplication extends Application {
 
 
     public void setAllBindDevices(AllBindDevices allBindDevices) {
-        homeShowDevices = allBindDevices.getHomeShow( );
-        LogUtils.e("获取到的首页设备个数是   "  +homeShowDevices.size() );
+        homeShowDevices = allBindDevices.getHomeShow();
+        LogUtils.e("获取到的首页设备个数是   " + homeShowDevices.size());
         getDevicesFromServer.onNext(allBindDevices);
     }
 
-    public void setHomeShowDevices(List<HomeShowBean> homeShowDevices) {
-        this.homeShowDevices = homeShowDevices;
-    }
 
     public List<HomeShowBean> getHomeShowDevices() {
+
         List<HomeShowBean> tem = new ArrayList<>();
-        for (HomeShowBean homeShowBean :homeShowDevices){
-            if (homeShowBean.getDeviceType() != HomeShowBean.TYPE_GATEWAY){
+        for (HomeShowBean homeShowBean : homeShowDevices) {
+            if (homeShowBean.getDeviceType() != HomeShowBean.TYPE_GATEWAY) {
                 tem.add(homeShowBean);
             }
         }
+
         return tem;
     }
+
     public List<HomeShowBean> getAllDevices() {
+
         return homeShowDevices;
+    }
+
+
+    public String getNickByDeviceId(String deviceId) {
+        for (HomeShowBean homeShowBean : homeShowDevices) {
+            if (deviceId.equals(homeShowBean.getDeviceId())) {
+                return homeShowBean.getDeviceNickName();
+            }
+        }
+        return deviceId;
+
     }
 
     /**
@@ -614,7 +577,7 @@ public class MyApplication extends Application {
         this.pirListImg = pirListImg;
     }
 
-    boolean isPreviewActivity=false;
+    boolean isPreviewActivity = false;
 
     public boolean isPreviewActivity() {
         return isPreviewActivity;
@@ -624,7 +587,7 @@ public class MyApplication extends Application {
         isPreviewActivity = previewActivity;
     }
 
-    boolean isMediaPlayerActivity=false;
+    boolean isMediaPlayerActivity = false;
 
     public boolean isMediaPlayerActivity() {
         return isMediaPlayerActivity;
@@ -633,13 +596,16 @@ public class MyApplication extends Application {
     public void setMediaPlayerActivity(boolean mediaPlayerActivity) {
         isMediaPlayerActivity = mediaPlayerActivity;
     }
+
     private static DaoSession daoWriteSession;
     private DaoManager manager;
+
     private void setUpWriteDataBase() {
-        manager=DaoManager.getInstance(this);
-        daoWriteSession=manager.getDaoSession();
+        manager = DaoManager.getInstance(this);
+        daoWriteSession = manager.getDaoSession();
     }
-    public    DaoSession getDaoWriteSession(){
+
+    public DaoSession getDaoWriteSession() {
         return daoWriteSession;
     }
 

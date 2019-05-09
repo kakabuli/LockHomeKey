@@ -124,19 +124,13 @@ public class CateyeFunctionActivity extends BaseActivity<ICatEyeFunctionView, Ca
 
 
     public void changeOpenLockStatus(int status) {
-
-      /*  在线：“点击，查看门外”
-
-        离线：“设备已离线”*/
         switch (status) {
             case 1:
                 //猫眼在线
                 ivExternalBig.setVisibility(View.VISIBLE);
                 ivExternalBig.setImageResource(R.mipmap.bluetooth_lock_close_big_middle_icon);
                 ivExternalMiddle.setVisibility(View.GONE);
-//                ivExternalMiddle.setImageResource();
                 ivExternalSmall.setVisibility(View.GONE);
-//                ivExternalSmall.setImageResource();
                 ivInnerMiddle.setVisibility(View.VISIBLE);
                 ivInnerMiddle.setImageResource(R.mipmap.cateye_online);
                 ivInnerSmall.setVisibility(View.VISIBLE);
@@ -153,13 +147,10 @@ public class CateyeFunctionActivity extends BaseActivity<ICatEyeFunctionView, Ca
                 ivExternalBig.setVisibility(View.VISIBLE);
                 ivExternalBig.setImageResource(R.mipmap.bluetooth_no_connect_big_middle_icon);
                 ivExternalMiddle.setVisibility(View.GONE);
-//                ivExternalMiddle.setImageResource();
                 ivExternalSmall.setVisibility(View.GONE);
-//                ivExternalSmall.setImageResource();
                 ivInnerMiddle.setVisibility(View.VISIBLE);
                 ivInnerMiddle.setImageResource(R.mipmap.cateye_offline);
                 ivInnerSmall.setVisibility(View.INVISIBLE);
-//                ivInnerSmall.setImageResource();
                 tvInner.setVisibility(View.VISIBLE);
                 tvInner.setText(getString(R.string.device_has_offline));
                 tvInner.setTextColor(getResources().getColor(R.color.c14A6F5));

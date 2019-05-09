@@ -85,10 +85,7 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
     private static final int REQUEST_PERMISSION_REQUEST_CODE = 102;
     private boolean isOpening; //正在开门
     private boolean isClosing; //正在关门
-    private String saveIsOpening = "isOpening";  //是否正在开门
-    private String saveIsClosing = "isClosing";  //是否正在关门
-    private String saveIsConnected = "isConnected";
-    private String saveIsCalling = "isCalling";
+
     private LinearLayout ll_video_control1;
     private LinearLayout ll_video_control2;
     private CheckBox cbScreenShot2;
@@ -116,26 +113,11 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
         isRunning = true;
         //找到View
         findViewByOrientation();
-
         initData();
         initView();
         requestPermissions();
         mPresenter.init(this);
-
-        recoverData(savedInstanceState);
     }
-
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        outState.putBoolean(saveIsClosing, isClosing);
-        outState.putBoolean(saveIsOpening, isOpening);
-        outState.putBoolean(saveIsConnected, mPresenter.isConnected);
-        outState.putBoolean(saveIsCalling, mPresenter.isCalling);
-
-        super.onSaveInstanceState(outState);
-    }
-
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
@@ -180,11 +162,7 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
 
     }
 
-    private void recoverData(Bundle savedInstanceState) {
-        if (savedInstanceState != null) {
-            savedInstanceState.getBoolean("");
-        }
-    }
+
 
     private void findViewByOrientation() {
         cityPicker = findViewById(R.id.forecast_city_picker);
@@ -425,18 +403,12 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.video_start_play:  //点击呼叫
-                //判断网关是否在线
-                //判断猫眼是否在线
-                //登录meme网
-                //登陆成功
-                //呼叫
                 video_start_play.setVisibility(View.GONE);
                 video_connecting_tv.setVisibility(View.VISIBLE);
                 video_hang_up.setVisibility(View.GONE);
                 mPresenter.callCatEye(cateEyeInfo);
                 break;
             case R.id.video_v_full: //全屏按钮
-                //
                 changeScreenOrientation();
                 break;
             case R.id.iv_back:  //点击返回
@@ -516,7 +488,6 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
 
     @Override
     public void onCatEyeCallIn() {
-        //
         Intent intent = new Intent(this, CallComingActivity.class);
         startActivityForResult(intent, REQUEST_CODE_CALL_COMING);
     }
@@ -578,7 +549,6 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
     @Override
     public void waitCallTimeout() {
         //等待猫眼呼叫35秒  没有呼叫过来
-
         ToastUtil.getInstance().showShort(R.string.call_time_out);
         callFailed();
     }
