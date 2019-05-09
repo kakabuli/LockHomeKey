@@ -211,7 +211,7 @@ public class BindBlePresenter<T> extends BasePresenter<IBindBleView> {
                         }
                         isBind = true;  //解绑成功，进入绑定状态，重新走流程
                         listenerPwd2();
-                        MyApplication.getInstance().setDeviceChange();
+                        MyApplication.getInstance().getAllDevicesByMqtt(true);
                     }
 
                     @Override

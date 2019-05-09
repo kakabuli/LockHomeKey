@@ -857,9 +857,12 @@
     <string name="data_loading">数据加载中……</string>
     <string name="loading">加载中...</string>
     <string name="video_download_fail">视频下载失败,请重新下载</string>
-    <string name="receive_pir_trigger_check_cateye_snapshot">收到pir触发,请查看猫眼快照</string>
     <string name="normal">正常</string>
-
     <string name="back_lock_can_not_open">门锁反锁状态下请门内开锁</string>
     <string name="safe_mode_can_not_open">门锁安全模式下无权限开锁</string>
+    <string name="pir_notify">设备:%1$s,收到pir触发,请查看猫眼快照</string>
+    <string name="low_power_notify">设备:%1$s,低电量，请及时查看</string>
+    <string name="host_lost_notify">设备:%1$s,机身被拔，请及时查看</string>
+    <string name="head_lost_notify">设备:%1$s,猫头被拔,请及时查看</string>
+    <string name="door_bell">设备:%1$s,响铃,请及时查看</string>
 </resources>

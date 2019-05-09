@@ -263,7 +263,6 @@ public class MqttService extends Service {
                         }
                     }
                 }
-
             }
 
             @Override
@@ -425,8 +424,8 @@ public class MqttService extends Service {
             mqttClient = null;
             MyApplication.getInstance().tokenInvalid(false);
         }
-
     }
+
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
     public void executePirFunction(JSONObject jsonObject,JSONObject eventparams){
         try {
@@ -475,7 +474,7 @@ public class MqttService extends Service {
                     Log.e(GeTui.VideoLog,"MqttCallBack===>文件创建成功");
                 }
             }
-            Toast.makeText(MyApplication.getInstance(), MyApplication.getInstance().getString(R.string.receive_pir_trigger_check_cateye_snapshot), Toast.LENGTH_SHORT).show();
+            Toast.makeText(MyApplication.getInstance(), MyApplication.getInstance().getString(R.string.pir_notify), Toast.LENGTH_SHORT).show();
         } catch (JSONException e) {
             e.printStackTrace();
         }

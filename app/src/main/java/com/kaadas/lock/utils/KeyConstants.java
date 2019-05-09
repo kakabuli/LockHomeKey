@@ -313,4 +313,11 @@ public class KeyConstants {
     //获取猫眼信息
     public static final String GET_CAT_EYE_INFO="getCatEyeInfo";
 
+    //上报类型为猫眼
+    public static final String DEV_TYPE_CAT_EYE = "kdscateye";
+
+    /**
+     * 上报类型为网关锁
+     */
+    public static final String DEV_TYPE_LOCK= "kdszblock";
 }

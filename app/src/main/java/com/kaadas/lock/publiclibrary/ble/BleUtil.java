@@ -36,6 +36,10 @@ public class BleUtil {
     public static final String PHONE = "手机";
 
 
+    public static final int BLE_VERSION_OLD = 1; //最老的版本  老版本协议  功能只有开锁  开锁记录  电量
+    public static final int BLE_VERSION_NEW1 = 2;   //中间的版本  新版本协议   功能只有开锁  开锁记录  电量
+    public static final int BLE_VERSION_NEW2 = 3;   //最新的版本  最新的协议  全功能支持
+
 
 
     public static String getRealName(byte[] data) {
