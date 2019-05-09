@@ -12,6 +12,7 @@ import android.widget.Toast;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.bean.PirEventBus;
+import com.kaadas.lock.publiclibrary.mqtt.PowerResultBean;
 import com.kaadas.lock.publiclibrary.mqtt.PublishResult;
 import com.kaadas.lock.utils.Constants;
 import com.kaadas.lock.utils.LogUtils;
@@ -63,6 +64,8 @@ public class MqttService extends Service {
     private PublishSubject<Boolean> disconnectObservable = PublishSubject.create();
     private PublishSubject<MqttData>  notifyDataObservable = PublishSubject.create();
 
+    private PublishSubject<MqttData> powerDataObversable = PublishSubject.create();
+
 
     /**
      * 订阅状态
@@ -85,6 +88,15 @@ public class MqttService extends Service {
     public Observable<MqttData> listenerNotifyData() {
         return notifyDataObservable;
     }
+
+    /**
+     * 获取电量数据
+     * @return
+     */
+    public Observable<MqttData> getPowerData() {
+        return powerDataObversable;
+    }
+
 
     private  String userId;
     private  String token;
@@ -253,6 +265,11 @@ public class MqttService extends Service {
                     notifyDataObservable.onNext(mqttData);
                 }
 
+                if (MqttConstant.GET_POWER.equals(mqttData.getFunc())){
+                    powerDataObversable.onNext(mqttData);
+                }
+
+
                 if(MqttConstant.GATEWAY_EVENT_NOTIFY.equals(mqttData.getFunc())){
                     int code = jsonObject.getInt("eventcode");
                     JSONObject eventparams = jsonObject.getJSONObject("eventparams");
@@ -383,6 +400,8 @@ public class MqttService extends Service {
                         publishObservable.onNext(new PublishResult(false, asyncActionToken, mqttMessage));
                     }
                 });
+            }else{
+                mqttConnection();
             }
         } catch (MqttException e) {
             e.printStackTrace();

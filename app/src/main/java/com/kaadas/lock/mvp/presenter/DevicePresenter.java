@@ -136,7 +136,7 @@ public class DevicePresenter<T> extends BasePresenter<IDeviceView> {
                             if (powerBean != null && deviceId.equals(powerBean.getDeviceId())) {
                                 if ("200".equals(powerBean.getReturnCode())) {
                                     if (mViewRef.get() != null) {
-                                        mViewRef.get().getDevicePowerSuccess(gatewayId, deviceId, powerBean.getReturnData().getPower());
+                                        mViewRef.get().getDevicePowerSuccess(gatewayId, deviceId, powerBean.getReturnData().getPower(),powerBean.getTimestamp());
                                     }
                                 } else {
                                     if (mViewRef.get() != null) {

@@ -86,6 +86,7 @@ public class GatewayLockStressDeleteActivity extends BaseActivity<IGatewayLockDe
                         if (!TextUtils.isEmpty(gatewayId)&&!TextUtils.isEmpty(deviceId)&&!TextUtils.isEmpty(lockNumber)){
                             mPresenter.gatewayLockDeletePwd(gatewayId,deviceId,lockNumber);
                             alertDialog=AlertDialogUtil.getInstance().noButtonDialog(context,getString(R.string.delete_be_being));
+                            alertDialog.setCancelable(false);
                         }
                     }
                 });

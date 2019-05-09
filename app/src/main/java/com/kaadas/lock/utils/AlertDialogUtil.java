@@ -18,8 +18,6 @@ import com.kaadas.lock.R;
  */
 public class AlertDialogUtil {
     private static AlertDialogUtil alertDialogUtil = null;
-
-
     public static AlertDialogUtil getInstance() {
         if (alertDialogUtil == null) {
             alertDialogUtil = new AlertDialogUtil();
@@ -32,7 +30,7 @@ public class AlertDialogUtil {
     // 1 have_edit_dialog（存在输入框，两个按钮）2 no_button_dialog(只有内容的对话框)
     //3 no_edit_singleButton(没有输入框，只有一个按钮)4 no_et_dialog(没有输入框，有两个按钮)
     //由于有输入框这种需要不同的约束，所以不进行封装。
-    public AlertDialog common(Context context, View view) {
+    public AlertDialog  common(Context context, View view) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.MyDialog);
         AlertDialog dialog = builder.create();
         dialog.setCancelable(true);

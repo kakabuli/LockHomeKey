@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -136,5 +137,23 @@ public class GatewayLockStressShareActivity extends BaseActivity<GatewayLockShar
         //删除异常
         alertDialog.dismiss();
         AlertDialogUtil.getInstance().noButtonDialog(this,getString(R.string.delete_fialed));
+    }
+
+
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            return isCosumenBackKey();
+        }
+        return false;
+    }
+
+    private boolean isCosumenBackKey() {
+        if (!TextUtils.isEmpty(pwdId)){
+            Intent managerIntent=new Intent(GatewayLockStressShareActivity.this, GatewayLockStressDetailActivity.class);
+            SPUtils2.put(this,KeyConstants.ADD_STRESS_PWD_ID,pwdId);
+            startActivity(managerIntent);
+        }
+        return true;
     }
 }

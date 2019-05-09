@@ -40,7 +40,9 @@ import com.kaadas.lock.publiclibrary.bean.GatewayInfo;
 import com.kaadas.lock.publiclibrary.bean.GwLockInfo;
 import com.kaadas.lock.publiclibrary.bean.ServerGatewayInfo;
 
+import com.kaadas.lock.publiclibrary.mqtt.PowerResultBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.AllBindDevices;
+import com.kaadas.lock.publiclibrary.mqtt.util.MqttData;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.SPUtils;
@@ -56,6 +58,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+import io.reactivex.Observable;
+import io.reactivex.subjects.PublishSubject;
 
 /**
  * Created by asqw1 on 2018/3/14.
@@ -87,6 +91,9 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
 
     private List<HomeShowBean> mDeviceList=new ArrayList<>();
     private  List<HomeShowBean> homeShowBeanList;
+
+
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -276,7 +283,7 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
     }
 
     @Override
-    public void getDevicePowerSuccess(String gatewayId,String devciceId,int power) {
+    public void getDevicePowerSuccess(String gatewayId,String devciceId,int power,String timestamp) {
         LogUtils.e("设备SN"+devciceId+"设备电量"+power);
         if (mDeviceList!=null&&mDeviceList.size()>0) {
             for (HomeShowBean device : mDeviceList) {
@@ -285,12 +292,14 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                     if (device.getDeviceId().equals(devciceId)){
                         CateEyeInfo cateEyeInfo= (CateEyeInfo) device.getObject();
                         cateEyeInfo.setPower(power);
+                        cateEyeInfo.setPowerTimeStamp(timestamp);
                         deviceDetailAdapter.notifyDataSetChanged();
                     }
                  }else if (HomeShowBean.TYPE_GATEWAY_LOCK==device.getDeviceType()){
                     if (device.getDeviceId().equals(devciceId)){
                         GwLockInfo gwLockInfo= (GwLockInfo) device.getObject();
                         gwLockInfo.setPower(power);
+                        gwLockInfo.setPowerTimeStamp(timestamp);
                         deviceDetailAdapter.notifyDataSetChanged();
                     }
                 }
@@ -310,6 +319,8 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
     public void getDevicePowerThrowable(Throwable throwable) {
 
     }
+
+
 
 
 }

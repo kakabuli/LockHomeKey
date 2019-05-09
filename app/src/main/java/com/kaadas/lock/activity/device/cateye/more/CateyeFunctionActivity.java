@@ -14,6 +14,9 @@ import android.widget.TextView;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.cateye.VideoCallBackActivity;
 import com.kaadas.lock.activity.cateye.VideoVActivity;
+import com.kaadas.lock.mvp.mvpbase.BaseActivity;
+import com.kaadas.lock.mvp.presenter.cateye.CatEyeFunctionPresenter;
+import com.kaadas.lock.mvp.view.cateye.ICatEyeFunctionView;
 import com.kaadas.lock.publiclibrary.bean.CateEyeInfo;
 import com.kaadas.lock.utils.BatteryView;
 import com.kaadas.lock.utils.DateUtils;
@@ -25,7 +28,7 @@ import butterknife.ButterKnife;
 /**
  * Created by David on 2019/4/25
  */
-public class CateyeFunctionActivity extends AppCompatActivity implements View.OnClickListener {
+public class CateyeFunctionActivity extends BaseActivity<ICatEyeFunctionView, CatEyeFunctionPresenter<ICatEyeFunctionView>> implements View.OnClickListener,ICatEyeFunctionView {
     @BindView(R.id.iv_back)
     ImageView ivBack;
     @BindView(R.id.tv_name)
@@ -68,16 +71,27 @@ public class CateyeFunctionActivity extends AppCompatActivity implements View.On
         llLookBack.setOnClickListener(this);
         llMore.setOnClickListener(this);
         rlIcon.setOnClickListener(this);
-        changeOpenLockStatus(1);
+
         initData();
 
+    }
+
+    @Override
+    protected CatEyeFunctionPresenter<ICatEyeFunctionView> createPresent() {
+        return new CatEyeFunctionPresenter<>();
     }
 
     private void initData() {
         cateEyeInfo = (CateEyeInfo) getIntent().getSerializableExtra(KeyConstants.CATE_INFO);
         if (cateEyeInfo!=null){
             tvName.setText(cateEyeInfo.getServerInfo().getNickName());
-            dealWithPower(cateEyeInfo.getPower(),cateEyeInfo.getServerInfo().getEvent_str());
+            dealWithPower(cateEyeInfo.getPower(),cateEyeInfo.getServerInfo().getEvent_str(),cateEyeInfo.getPowerTimeStamp());
+            if ("online".equals(cateEyeInfo.getServerInfo().getEvent_str())){
+                changeOpenLockStatus(1);
+            }else{
+                changeOpenLockStatus(0);
+            }
+            mPresenter.getPowerData(cateEyeInfo.getGwID(),cateEyeInfo.getServerInfo().getDeviceId());
         }
 
 
@@ -158,7 +172,7 @@ public class CateyeFunctionActivity extends AppCompatActivity implements View.On
         }
     }
 
-    private void dealWithPower(int power, String eventStr) {
+    private void dealWithPower(int power, String eventStr,String timeStamp) {
         //电量：80%
         if (power > 100) {
             power = 100;
@@ -166,18 +180,24 @@ public class CateyeFunctionActivity extends AppCompatActivity implements View.On
         if (power < 0) {
             power = 0;
         }
-        ivPower.setPower(power);
-        if (eventStr.equals("online")) {
-            ivPower.setColor(R.color.c25F290);
-            ivPower.setBorderColor(R.color.white);
-        } else {
-            ivPower.setColor(R.color.cD6D6D6);
-            ivPower.setBorderColor(R.color.white);
+        if (ivPower!=null) {
+            ivPower.setPower(power);
+            if (eventStr.equals("online")) {
+                ivPower.setColor(R.color.c25F290);
+                ivPower.setBorderColor(R.color.white);
+            } else {
+                ivPower.setColor(R.color.cD6D6D6);
+                ivPower.setBorderColor(R.color.white);
+            }
         }
-
         //todo  读取电量时间
-        long readDeviceInfoTime = System.currentTimeMillis();
-        if (readDeviceInfoTime != -1) {
+        long readDeviceInfoTime=0;
+        if (timeStamp==null){
+            readDeviceInfoTime=System.currentTimeMillis();
+        }else {
+            readDeviceInfoTime= Long.parseLong(timeStamp);
+        }
+        if (readDeviceInfoTime != -1&&tvDate!=null) {
             if ((System.currentTimeMillis() - readDeviceInfoTime) < 60 * 60 * 1000) {
                 //小于一小时
                 tvDate.setText(getString(R.string.device_detail_power_date));
@@ -213,4 +233,18 @@ public class CateyeFunctionActivity extends AppCompatActivity implements View.On
 
     }
 
+    @Override
+    public void getPowerDataSuccess(String deviceId, int power, String timestamp) {
+        dealWithPower(power,"online",timestamp);
+    }
+
+    @Override
+    public void getPowerDataFail() {
+
+    }
+
+    @Override
+    public void getPowerThrowable() {
+
+    }
 }
