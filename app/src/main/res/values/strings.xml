@@ -663,10 +663,8 @@
     <string name="bell">铃声</string>
     <string name="ring_number">响铃次数</string>
     <string name="smart_monitor">智能监测</string>
-    <string name="video_resolution">视频分辨率</string>
     <string name="look_back">回放</string>
     <string name="connect_device">连接设备</string>
-
     <string name="delete_fialed">删除失败</string>
     <string name="lock_delete_success_please_sync">锁上删除成功，服务器删除失败，请同步！</string>
     <string name="modify_success">修改成功</string>
@@ -867,4 +865,15 @@
     <string name="host_lost_notify">设备:%1$s,机身被拔，请及时查看</string>
     <string name="head_lost_notify">设备:%1$s,猫头被拔,请及时查看</string>
     <string name="door_bell">设备:%1$s,响铃,请及时查看</string>
+    <string name="please_scan_kaadas_qrcode">请扫描凯迪仕产品二维码</string>
+    <string name="no_scan">无法扫描</string>
+    <string name="cancel_scan">取消扫描</string>
+    <string name="temporarily_closed">暂时未开放该功能</string>
+    <string name="once">1次</string>
+    <string name="twice">2次</string>
+    <string name="three">3次</string>
+    <string name="small_resolution">960×540</string>
+    <string name="large_resolution">1920×1080</string>
+    <string name="current_ring_number_no_change">当前响铃次数没有改变</string>
+    <string name="video_resolution">视频分辨率</string>
 </resources>

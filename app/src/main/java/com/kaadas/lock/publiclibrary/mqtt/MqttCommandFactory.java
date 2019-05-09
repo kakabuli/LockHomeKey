@@ -17,9 +17,11 @@ import com.kaadas.lock.publiclibrary.mqtt.publishbean.GetWifiBasicBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.LockPwdFuncBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.LockPwdInfoBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.OpenLockBean;
+import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetCatEyeBellCountBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetJoinAllowBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetLockLang;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetPirEnableBean;
+import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetVedioResBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.UpdateDevNickNameBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.WakeupCameraBean;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttConstant;
@@ -346,6 +348,14 @@ public class MqttCommandFactory {
 
    }
 
+    /**
+     * 设置智能监测
+     * @param gatewayId
+     * @param deivceId
+     * @param uid
+     * @param status
+     * @return
+     */
    public static MqttMessage setPirEnable(String gatewayId,String deivceId,String uid,int status){
        int messageId=getMessageId();
        SetPirEnableBean.ParamsBean paramsBean=new SetPirEnableBean.ParamsBean();
@@ -354,7 +364,37 @@ public class MqttCommandFactory {
        return getMessage(setPirEnableBean,messageId);
    }
 
+    /**
+     * 设置响铃次数
+     * @param gatewayId
+     * @param deviceId
+     * @param uid
+     * @param number
+     * @return
+     */
+    public static MqttMessage setCatEyeBellCount(String gatewayId,String deviceId,String uid,int number){
+        int messageId=getMessageId();
+        SetCatEyeBellCountBean.ParamsBean paramsBean=new SetCatEyeBellCountBean.ParamsBean();
+        paramsBean.setBellCount(number);
+        SetCatEyeBellCountBean setCatEyeBellCount=new SetCatEyeBellCountBean(MqttConstant.MSG_TYPE_REQUEST,uid,messageId,gatewayId,deviceId,MqttConstant.SET_BELL_COUNT,paramsBean,"0",new SetCatEyeBellCountBean.ReturnDataBean(),System.currentTimeMillis()+"");
+        return getMessage(setCatEyeBellCount,messageId);
+    }
 
+    /**
+     * 设置猫眼的分辨率
+     * @param gatewayId
+     * @param deviceId
+     * @param uid
+     * @param resolution
+     * @return
+     */
+    public static MqttMessage setVedioRes(String gatewayId,String deviceId,String uid,String resolution){
+        int messageId=getMessageId();
+        SetVedioResBean.ParamsBean paramsBean=new SetVedioResBean.ParamsBean();
+        paramsBean.setResolution(resolution);
+        SetVedioResBean setVedioResBean=new SetVedioResBean(MqttConstant.MSG_TYPE_REQUEST,uid,messageId,gatewayId,deviceId,MqttConstant.SET_VEDIO_RES,paramsBean,"0",new SetVedioResBean.ReturnDataBean(),System.currentTimeMillis()+"");
+        return getMessage(setVedioResBean,messageId);
+    }
 
 
     public static MqttMessage getMessage(Object o, int messageID) {

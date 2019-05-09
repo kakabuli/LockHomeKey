@@ -29,14 +29,12 @@ public class AddDeviceZigbeeLockNewFirstActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.device_bluetooth_first);
+        setContentView(R.layout.device_gateway_add_three);
         ButterKnife.bind(this);
-        initView();
+
     }
 
-    private void initView() {
-        headTitle.setText(getString(R.string.device_zigbee_new_add));
-    }
+
 
     @OnClick({R.id.back,R.id.help, R.id.button_next})
     public void onViewClicked(View view) {

@@ -27,6 +27,7 @@ import com.kaadas.lock.mvp.view.deviceaddview.DeviceZigBeeDetailView;
 import com.kaadas.lock.publiclibrary.bean.ServerGatewayInfo;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.ToastUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -147,7 +148,7 @@ public class DeviceAddActivity extends BaseActivity<DeviceZigBeeDetailView, Devi
                 startActivity(bluetoothIntent);
                 break;
             case R.id.scan:
-
+                ToastUtil.getInstance().showShort(R.string.temporarily_closed);
 
                 break;
             case R.id.gateway:
