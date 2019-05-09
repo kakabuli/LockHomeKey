@@ -5,13 +5,16 @@ import android.text.TextUtils;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.mvp.mvpbase.BlePresenter;
 import com.kaadas.lock.mvp.view.IBleLockView;
+import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.publiclibrary.ble.BleCommandFactory;
 import com.kaadas.lock.publiclibrary.ble.BleProtocolFailedException;
 import com.kaadas.lock.publiclibrary.ble.RetryWithTime;
+import com.kaadas.lock.publiclibrary.ble.bean.OpenLockRecord;
 import com.kaadas.lock.publiclibrary.ble.responsebean.BleDataBean;
 import com.kaadas.lock.publiclibrary.ble.responsebean.ReadInfoBean;
 import com.kaadas.lock.publiclibrary.http.XiaokaiNewServiceImp;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
+import com.kaadas.lock.publiclibrary.http.result.LockRecordResult;
 import com.kaadas.lock.publiclibrary.http.util.BaseObserver;
 import com.kaadas.lock.publiclibrary.http.util.RxjavaHelper;
 import com.kaadas.lock.utils.DateUtils;
@@ -21,6 +24,8 @@ import com.kaadas.lock.utils.NetUtil;
 import com.kaadas.lock.utils.Rsa;
 import com.kaadas.lock.utils.SPUtils;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
@@ -681,7 +686,69 @@ public class BleLockPresenter<T> extends BlePresenter<IBleLockView> {
                 });
         compositeDisposable.add(deviceStateChangeDisposable);
     }
+    private List<OpenLockRecord> serverRecords = new ArrayList<>();
+    private Disposable serverDisposable;
+    //获取全部的开锁记录
+    public void getOpenRecordFromServer(int pagenum,BleLockInfo bleLockInfo) {
+        if (pagenum == 1) {  //如果是获取第一页的数据，那么清楚所有的开锁记录
+            serverRecords.clear();
+        }
+        XiaokaiNewServiceImp.getLockRecord(bleLockInfo.getServerLockInfo().getLockName(),
+                MyApplication.getInstance().getUid(),
+                null,
+                pagenum + "")
+                .subscribe(new BaseObserver<LockRecordResult>() {
+                    @Override
+                    public void onSuccess(LockRecordResult lockRecordResult) {
+                        LogUtils.d("davi lockRecordResult "+lockRecordResult.toString());
+                        if (lockRecordResult.getData().size() == 0) {  //服务器没有数据  提示用户
+                            if (mViewRef.get() != null) {
+                                if (pagenum == 1) { //第一次获取数据就没有
+                                    mViewRef.get().onServerNoData();
+                                } else {
+//                                    mViewRef.get().noMoreData();
+                                }
+                                return;
+                            }
+                        }
+                        ///将服务器数据封装成用来解析的数据
+                        for (LockRecordResult.LockRecordServer record : lockRecordResult.getData()) {
+                            serverRecords.add(
+                                    new OpenLockRecord(
+                                            record.getUser_num(),
+                                            record.getOpen_type(),
+                                            record.getOpen_time(), -1
+                                    )
+                            );
+                        }
+                        if (mViewRef.get() != null) {
+                            mViewRef.get().onLoadServerRecord(serverRecords, pagenum);
+                        }
+                    }
 
+                    @Override
+                    public void onAckErrorCode(BaseResult baseResult) {
+                        LogUtils.e("获取 开锁记录  失败   " + baseResult.getMsg() + "  " + baseResult.getCode());
+                        if (mViewRef.get() != null) {  //
+                            mViewRef.get().onLoadServerRecordFailedServer(baseResult);
+                        }
+                    }
+
+                    @Override
+                    public void onFailed(Throwable throwable) {
+                        LogUtils.e("获取 开锁记录  失败   " + throwable.getMessage());
+                        if (mViewRef.get() != null) {
+                            mViewRef.get().onLoadServerRecordFailed(throwable);
+                        }
+                    }
+
+                    @Override
+                    public void onSubscribe1(Disposable d) {
+                        serverDisposable = d;
+                        compositeDisposable.add(serverDisposable);
+                    }
+                });
+    }
     @Override
     public void detachView() {
         super.detachView();
