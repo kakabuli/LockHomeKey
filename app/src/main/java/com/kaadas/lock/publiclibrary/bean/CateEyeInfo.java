@@ -9,11 +9,11 @@ public class CateEyeInfo  implements Serializable {
     //服务器返回的消息
     private ServerGwDevice serverInfo;
 
-    //是否在线
-    private boolean isOnLine;
-
     //电量
     private int power;
+
+    //请求电量的时间戳
+    private String powerTimeStamp;
 
     //网关信息
     private GatewayInfo gatewayInfo;
@@ -44,14 +44,6 @@ public class CateEyeInfo  implements Serializable {
         this.serverInfo = serverInfo;
     }
 
-    public boolean isOnLine() {
-        return isOnLine;
-    }
-
-    public void setOnLine(boolean onLine) {
-        isOnLine = onLine;
-    }
-
     public int getPower() {
         return power;
     }
@@ -66,5 +58,13 @@ public class CateEyeInfo  implements Serializable {
 
     public void setGatewayInfo(GatewayInfo gatewayInfo) {
         this.gatewayInfo = gatewayInfo;
+    }
+
+    public String getPowerTimeStamp() {
+        return powerTimeStamp;
+    }
+
+    public void setPowerTimeStamp(String powerTimeStamp) {
+        this.powerTimeStamp = powerTimeStamp;
     }
 }

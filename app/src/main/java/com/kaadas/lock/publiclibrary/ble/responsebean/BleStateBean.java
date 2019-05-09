@@ -9,12 +9,10 @@ import android.bluetooth.BluetoothDevice;
 public class BleStateBean {
     private boolean connected  = false;
     private BluetoothDevice device;
-    private boolean isNew;
 
-    public BleStateBean(boolean connectState, BluetoothDevice device, boolean isNew) {
+    public BleStateBean(boolean connectState, BluetoothDevice device ) {
         this.connected = connectState;
         this.device = device;
-        this.isNew = isNew;
     }
 
     public BleStateBean() {
@@ -36,11 +34,5 @@ public class BleStateBean {
         this.device = device;
     }
 
-    public boolean isNew() {
-        return isNew;
-    }
 
-    public void setNew(boolean aNew) {
-        isNew = aNew;
-    }
 }

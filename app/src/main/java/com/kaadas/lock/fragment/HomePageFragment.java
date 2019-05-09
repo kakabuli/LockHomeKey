@@ -137,6 +137,7 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
     }
 
     public void initData(final List<HomeShowBean> devices) {
+
         if (devices == null) {
             hasDevice = false;
             changePage();
@@ -360,7 +361,6 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
             rbHome3.setText(devices.get(endPosition).getDeviceNickName());
             realPositions.clear();
             for (int i = startPosition; i <= endPosition; i++) {
-                Log.e("下标是  ", "" + i);
                 realPositions.add(i);
             }
             if (devices.get(startPosition).getDeviceType() == HomeShowBean.TYPE_BLE_LOCK

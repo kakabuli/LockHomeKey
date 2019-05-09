@@ -209,10 +209,11 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
         //设置电量
         if(showBean!=null){
             GwLockInfo lockInfo= (GwLockInfo) showBean.getObject();
-            dealWithPower(lockInfo.getPower(),lockInfo.getServerInfo().getEvent_str());
+            dealWithPower(lockInfo.getPower(),lockInfo.getServerInfo().getEvent_str(),lockInfo.getPowerTimeStamp());
             tvName.setText(lockInfo.getServerInfo().getNickName());
             gatewayId=lockInfo.getGwID();
             deviceId=lockInfo.getServerInfo().getDeviceId();
+            mPresenter.getPowerData(lockInfo.getGwID(),lockInfo.getServerInfo().getDeviceId());
             mPresenter.closeLockNotify(deviceId);
         }
 
@@ -313,7 +314,7 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
 
 
 
-    private void dealWithPower(int power,String eventStr) {
+    private void dealWithPower(int power,String eventStr,String timeStamp) {
         //电量：80%
         if (power > 100) {
             power = 100;
@@ -322,19 +323,29 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
             power=0;
         }
         String lockPower = power + "%";
-        tvPower.setText(lockPower);
-        ivPower.setPower(power);
-        if (eventStr.equals("online")){
-            ivPower.setColor(R.color.c25F290);
-            ivPower.setBorderColor(R.color.white);
-        }else{
-            ivPower.setColor(R.color.cD6D6D6);
-            ivPower.setBorderColor(R.color.white);
+        if (tvPower!=null) {
+            tvPower.setText(lockPower);
         }
+        if (ivPower!=null) {
+            ivPower.setPower(power);
 
+            if (eventStr.equals("online")) {
+                ivPower.setColor(R.color.c25F290);
+                ivPower.setBorderColor(R.color.white);
+            } else {
+                ivPower.setColor(R.color.cD6D6D6);
+                ivPower.setBorderColor(R.color.white);
+            }
+        }
+        long readDeviceInfoTime=0;
+        if (timeStamp==null){
+            readDeviceInfoTime=System.currentTimeMillis();
+        }else {
+            readDeviceInfoTime= Long.parseLong(timeStamp);
+        }
         //todo  读取电量时间
-        long readDeviceInfoTime = System.currentTimeMillis();
-        if (readDeviceInfoTime != -1) {
+        if (readDeviceInfoTime != -1&&tvDate!=null) {
+            //60 * 60
             if ((System.currentTimeMillis() - readDeviceInfoTime) < 60 * 60 * 1000) {
                 //小于一小时
                 tvDate.setText(getString(R.string.device_detail_power_date));
@@ -418,6 +429,21 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
     @Override
     public void lockHasBeenThrowable(Throwable throwable) {
         LogUtils.e("门锁上报信息出现异常"+throwable.getMessage());
+    }
+
+    @Override
+    public void getPowerDataSuccess(String deviceId, int power, String timestamp) {
+        dealWithPower(power,"online",timestamp);
+    }
+
+    @Override
+    public void getPowerDataFail() {
+
+    }
+
+    @Override
+    public void getPowerThrowable() {
+
     }
 
     @Override

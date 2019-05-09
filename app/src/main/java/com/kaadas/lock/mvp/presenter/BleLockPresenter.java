@@ -40,7 +40,6 @@ public class BleLockPresenter<T> extends BlePresenter<IBleLockView> {
     private Disposable electricDisposable;
     private byte[] readLockNumberCommand;
     private String localPwd;
-    private Disposable serverAuthDisposable;
     private Disposable openLockDisposable;
     private Disposable getDeviceInfoDisposable;
     public int state5;
@@ -386,8 +385,6 @@ public class BleLockPresenter<T> extends BlePresenter<IBleLockView> {
         } else {
             type = "7";
         }
-
-        toDisposable(serverAuthDisposable);
         XiaokaiNewServiceImp.openLockAuth(bleLockInfo.getServerLockInfo().getLockName(),
                 bleLockInfo.getServerLockInfo().getIs_admin(),
                 type, MyApplication.getInstance().getUid())

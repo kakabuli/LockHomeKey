@@ -189,13 +189,6 @@ public class CateyeMoreActivity extends BaseActivity<IGatEyeView, CatEyeMorePres
 
 
             case R.id.btn_delete:
-                if (getCatInfoStatus==0){
-                    ToastUtil.getInstance().showShort(R.string.get_cateye_info_wait);
-                    return;
-                }else if (getCatInfoStatus==2){
-                    ToastUtil.getInstance().showShort(R.string.get_cateye_info_fail);
-                    return;
-                }else {
                     AlertDialogUtil.getInstance().noEditTwoButtonDialog(this, getString(R.string.device_delete_dialog_head), getString(R.string.device_delete_dialog_content), getString(R.string.cancel), getString(R.string.query), new AlertDialogUtil.ClickListener() {
                         @Override
                         public void left() {
@@ -210,7 +203,6 @@ public class CateyeMoreActivity extends BaseActivity<IGatEyeView, CatEyeMorePres
                         }
 
                     });
-                }
                 break;
             case R.id.rl_device_information:
                 if (getCatInfoStatus==0){

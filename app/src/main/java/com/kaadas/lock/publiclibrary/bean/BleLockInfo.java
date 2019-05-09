@@ -91,13 +91,6 @@ public class BleLockInfo implements Serializable {
     }
 
 
-    public boolean isNewMode() {
-        if (serverLockInfo.getLockName().startsWith("KDS") || serverLockInfo.getLockName().startsWith("kdslock")) {
-            return false;
-        } else {
-            return true;
-        }
-    }
 
     /**
      * 断开连接   初始化数据
@@ -110,7 +103,6 @@ public class BleLockInfo implements Serializable {
             battery = -1; //-1为吗，没有获取到电量信息
             isAuth = false; //是否鉴权
         }
-
     }
 
 

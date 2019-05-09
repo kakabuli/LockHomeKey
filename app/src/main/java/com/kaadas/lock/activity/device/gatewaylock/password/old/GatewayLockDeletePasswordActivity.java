@@ -97,6 +97,7 @@ public class GatewayLockDeletePasswordActivity extends BaseActivity<GatewayLockD
                         if (!TextUtils.isEmpty(gatewayId)&&!TextUtils.isEmpty(deviceId)&&!TextUtils.isEmpty(lockNumber)){
                             mPresenter.gatewayLockDeletePwd(gatewayId,deviceId,lockNumber);
                             alertDialog=AlertDialogUtil.getInstance().noButtonDialog(context,getString(R.string.delete_be_being));
+                            alertDialog.setCancelable(false);
                         }
                     }
                 });
@@ -136,6 +137,10 @@ public class GatewayLockDeletePasswordActivity extends BaseActivity<GatewayLockD
         }
         //删除异常
         ToastUtil.getInstance().showShort(getString(R.string.delete_fialed));
-
     }
+
+
+
+
+
 }

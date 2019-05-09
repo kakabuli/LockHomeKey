@@ -1,5 +1,6 @@
 package com.kaadas.lock.fragment;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -40,7 +41,9 @@ import com.kaadas.lock.publiclibrary.bean.GatewayInfo;
 import com.kaadas.lock.publiclibrary.bean.GwLockInfo;
 import com.kaadas.lock.publiclibrary.bean.ServerGatewayInfo;
 
+import com.kaadas.lock.publiclibrary.mqtt.PowerResultBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.AllBindDevices;
+import com.kaadas.lock.publiclibrary.mqtt.util.MqttData;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.SPUtils;
@@ -56,6 +59,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+import io.reactivex.Observable;
+import io.reactivex.subjects.PublishSubject;
 
 /**
  * Created by asqw1 on 2018/3/14.
@@ -87,6 +92,9 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
 
     private List<HomeShowBean> mDeviceList=new ArrayList<>();
     private  List<HomeShowBean> homeShowBeanList;
+
+
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -239,7 +247,7 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                     String model = bleLockInfo.getServerLockInfo().getModel();
                     impowerIntent.putExtra(KeyConstants.DEVICE_TYPE, model);
                     impowerIntent.putExtra(KeyConstants.BLE_DEVICE_INFO, bleLockInfo);
-                    startActivity(impowerIntent);
+                    startActivityForResult(impowerIntent,KeyConstants.GET_BLE_POWER);
                 }
                 break;
         }
@@ -276,7 +284,7 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
     }
 
     @Override
-    public void getDevicePowerSuccess(String gatewayId,String devciceId,int power) {
+    public void getDevicePowerSuccess(String gatewayId,String devciceId,int power,String timestamp) {
         LogUtils.e("设备SN"+devciceId+"设备电量"+power);
         if (mDeviceList!=null&&mDeviceList.size()>0) {
             for (HomeShowBean device : mDeviceList) {
@@ -285,13 +293,19 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                     if (device.getDeviceId().equals(devciceId)){
                         CateEyeInfo cateEyeInfo= (CateEyeInfo) device.getObject();
                         cateEyeInfo.setPower(power);
-                        deviceDetailAdapter.notifyDataSetChanged();
+                        cateEyeInfo.setPowerTimeStamp(timestamp);
+                        if (deviceDetailAdapter!=null) {
+                            deviceDetailAdapter.notifyDataSetChanged();
+                        }
                     }
                  }else if (HomeShowBean.TYPE_GATEWAY_LOCK==device.getDeviceType()){
                     if (device.getDeviceId().equals(devciceId)){
                         GwLockInfo gwLockInfo= (GwLockInfo) device.getObject();
                         gwLockInfo.setPower(power);
-                        deviceDetailAdapter.notifyDataSetChanged();
+                        gwLockInfo.setPowerTimeStamp(timestamp);
+                        if (deviceDetailAdapter!=null) {
+                            deviceDetailAdapter.notifyDataSetChanged();
+                        }
                     }
                 }
             }
@@ -310,6 +324,36 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
     public void getDevicePowerThrowable(Throwable throwable) {
 
     }
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode==KeyConstants.GET_BLE_POWER){
+            if (resultCode== Activity.RESULT_OK){
+                BleLockInfo getBle= (BleLockInfo) data.getSerializableExtra(KeyConstants.BLE_INTO);
+                if (getBle!=null&&mDeviceList!=null&&mDeviceList.size()>0){
+                    for (HomeShowBean device : mDeviceList) {
+                        //猫眼电量
+                        if (HomeShowBean.TYPE_BLE_LOCK==device.getDeviceType()){
+                            if (device.getDeviceId().equals(getBle.getServerLockInfo().getLockName())){
+                                BleLockInfo bleLockInfo= (BleLockInfo) device.getObject();
+                                bleLockInfo.setBattery(getBle.getBattery());
+                                if (deviceDetailAdapter!=null) {
+                                    deviceDetailAdapter.notifyDataSetChanged();
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+
+
+    }
+
+
 
 
 }

@@ -145,7 +145,7 @@ public class DeviceMorePresenter extends BlePresenter<IDeviceMoreView> {
                 }
                 bleLockInfo.getServerLockInfo().setLockNickName(lockNickName);
                 bleService.getBleLockInfo().getServerLockInfo().setLockNickName(lockNickName);
-                MyApplication.getInstance().setDeviceChange();
+                MyApplication.getInstance().getAllDevicesByMqtt(true);
             }
 
             @Override

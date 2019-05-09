@@ -12,6 +12,8 @@ public class GwLockInfo implements Serializable {
     //电量
     private int power;
 
+    //请求电量的时间戳
+    private String powerTimeStamp;
 
     public GwLockInfo() {
     }
@@ -43,5 +45,13 @@ public class GwLockInfo implements Serializable {
 
     public void setPower(int power) {
         this.power = power;
+    }
+
+    public String getPowerTimeStamp() {
+        return powerTimeStamp;
+    }
+
+    public void setPowerTimeStamp(String powerTimeStamp) {
+        this.powerTimeStamp = powerTimeStamp;
     }
 }

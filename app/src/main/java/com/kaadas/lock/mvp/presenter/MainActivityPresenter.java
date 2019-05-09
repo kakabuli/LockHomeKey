@@ -4,6 +4,7 @@ import android.text.TextUtils;
 
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.activity.cateye.VideoVActivity;
 import com.kaadas.lock.bean.HomeShowBean;
@@ -19,17 +20,20 @@ import com.kaadas.lock.publiclibrary.linphone.MemeManager;
 import com.kaadas.lock.publiclibrary.linphone.linphone.callback.PhoneCallback;
 import com.kaadas.lock.publiclibrary.linphone.linphone.callback.RegistrationCallback;
 import com.kaadas.lock.publiclibrary.linphone.linphone.util.LinphoneHelper;
+import com.kaadas.lock.publiclibrary.mqtt.eventbean.CatEyeEventBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.GetBindGatewayStatusResult;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttConstant;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttData;
+import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.Rsa;
 import com.kaadas.lock.utils.SPUtils;
+import com.kaadas.lock.utils.greenDao.bean.ZigbeeEvent;
 
 import net.sdvn.cmapi.Device;
 
+import org.json.JSONObject;
 import org.linphone.core.LinphoneCall;
-import org.linphone.mediastream.Log;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -49,10 +53,10 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
     private Disposable warringDisposable;
     private Disposable deviceInBootDisposable;
     private Disposable disposable;
-    private Disposable memeLoginDisposable;
     private Disposable memeDisposable;
     private Disposable deviceChangeDisposable;
     private CateEyeInfo callInCatEyeInfo;  //呼叫进来的猫眼信息
+    private Disposable catEyeEventDisposable;
 
     @Override
     public void authSuccess() {
@@ -64,7 +68,7 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
         super.attachView(view);
         //网关上线监听
         getPublishNotify();
-
+        listenCatEyeEvent();
         //设置警报提醒
         toDisposable(warringDisposable);
         warringDisposable = bleService.listeneDataChange()
@@ -143,7 +147,6 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
 
     //获取网关状态通知
     public void getPublishNotify() {
-
         disposable = MyApplication.getInstance().getMqttService().listenerNotifyData()
                 .subscribe(new Consumer<MqttData>() {
                     @Override
@@ -151,22 +154,22 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                         if (mqttData != null) {
                             if (MqttConstant.GATEWAY_STATE.equals(mqttData.getFunc())) {
                                 GetBindGatewayStatusResult gatewayStatusResult = new Gson().fromJson(mqttData.getPayload(), GetBindGatewayStatusResult.class);
-                                LogUtils.e("监听网关的状态"+gatewayStatusResult.getDevuuid());
+                                LogUtils.e("监听网关的状态" + gatewayStatusResult.getDevuuid());
                                 if (gatewayStatusResult != null) {
-                                    List<HomeShowBean> homeShowBeans=MyApplication.getInstance().getAllDevices();
-                                   if (homeShowBeans.size()>0) {
-                                       for (HomeShowBean homeShowBean : homeShowBeans) {
-                                           if (homeShowBean.getDeviceType() == HomeShowBean.TYPE_GATEWAY) {
-                                               GatewayInfo gatewayInfo = (GatewayInfo) homeShowBean.getObject();
-                                               if (gatewayInfo.getServerInfo().getDeviceSN().equals(gatewayStatusResult.getDevuuid())) {
-                                                   LogUtils.e("监听网关的状态" + gatewayStatusResult.getDevuuid());
-                                                   gatewayInfo.setEvent_str(gatewayStatusResult.getData().getState());
-                                               }
-                                           }
-                                       }
-                                   }else{
-                                       SPUtils.put(gatewayStatusResult.getDevuuid(),gatewayStatusResult.getData().getState());
-                                   }
+                                    List<HomeShowBean> homeShowBeans = MyApplication.getInstance().getAllDevices();
+                                    if (homeShowBeans.size() > 0) {
+                                        for (HomeShowBean homeShowBean : homeShowBeans) {
+                                            if (homeShowBean.getDeviceType() == HomeShowBean.TYPE_GATEWAY) {
+                                                GatewayInfo gatewayInfo = (GatewayInfo) homeShowBean.getObject();
+                                                if (gatewayInfo.getServerInfo().getDeviceSN().equals(gatewayStatusResult.getDevuuid())) {
+                                                    LogUtils.e("监听网关的状态" + gatewayStatusResult.getDevuuid());
+                                                    gatewayInfo.setEvent_str(gatewayStatusResult.getData().getState());
+                                                }
+                                            }
+                                        }
+                                    } else {
+                                        SPUtils.put(gatewayStatusResult.getDevuuid(), gatewayStatusResult.getData().getState());
+                                    }
                                 }
 
                             }
@@ -176,8 +179,81 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
         compositeDisposable.add(disposable);
     }
 
-    //获取锁设备
+    public void listenCatEyeEvent() {
+        toDisposable(catEyeEventDisposable);
+        catEyeEventDisposable = mqttService.listenerDataBack()
+                .compose(RxjavaHelper.observeOnMainThread())
+                .filter(new Predicate<MqttData>() {
+                    @Override
+                    public boolean test(MqttData mqttData) throws Exception {
+                        LogUtils.e("收到消息 1  " + mqttData.getPayload());
+                        if (MqttConstant.EVENT.equals(mqttData.getMsgtype())
+                                && MqttConstant.GW_EVENT.equals(mqttData.getFunc())) {
+                            return true;
+                        }
+                        return false;
+                    }
 
+                }).subscribe(new Consumer<MqttData>() {
+                    @Override
+                    public void accept(MqttData mqttData) throws Exception {
+                        JSONObject jsonObject = new JSONObject(mqttData.getPayload());
+                        String devtype = jsonObject.getString("devtype");
+
+                        if (TextUtils.isEmpty(devtype)) { //devtype为空   无法处理数据
+                            return;
+                        }
+                        /**
+                         * 猫眼信息上报
+                         */
+                        if (devtype.equals(KeyConstants.DEV_TYPE_CAT_EYE)) {
+                            CatEyeEventBean catEyeEventBean = new Gson().fromJson(mqttData.getPayload(), CatEyeEventBean.class);
+                            LogUtils.e("收到消息 5 getDevetype   " + catEyeEventBean.getEventparams().getDevetype());
+                            int eventType = -1;
+                            ZigbeeEvent zigbeeEvent = new ZigbeeEvent();
+                            zigbeeEvent.setDeviceId(catEyeEventBean.getDeviceId());
+                            zigbeeEvent.setDeviceType(ZigbeeEvent.DEVICE_CAT_EYE);
+                            zigbeeEvent.setEventTime(Long.parseLong(catEyeEventBean.getTimestamp()));
+                            if ("pir".equals(catEyeEventBean.getEventparams().getDevetype())) {
+                                eventType = ZigbeeEvent.EVENT_PIR;
+                            } else if ("headLost".equals(catEyeEventBean.getEventparams().getDevetype())) {
+                                eventType = ZigbeeEvent.EVENT_HEAD_LOST;
+//                        }else if ("doorBell".equals(catEyeEventBean.getEventparams().getDevetype())){
+//                            eventType = ZigbeeEvent.EVENT_DOOR_BELL;
+                            } else if ("lowPower".equals(catEyeEventBean.getEventparams().getDevetype())) {
+                                eventType = ZigbeeEvent.EVENT_LOW_POWER;
+                            } else if ("hostLost".equals(catEyeEventBean.getEventparams().getDevetype())) {
+                                eventType = ZigbeeEvent.EVENT_HOST_LOST;
+                            }
+
+                            if (eventType == -1) {
+                                return;
+                            }
+                            zigbeeEvent.setEventType(eventType);
+                            //   保存到数据库
+                            MyApplication.getInstance().getDaoWriteSession().getZigbeeEventDao().insert(zigbeeEvent);
+                            if (mViewRef.get() != null) {
+                                mViewRef.get().onGwEvent(eventType, catEyeEventBean.getDeviceId());
+                            }
+
+                            //网关锁信息上报
+                        }else if(KeyConstants.DEV_TYPE_LOCK.equals(devtype)){
+
+
+
+
+                        }
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        LogUtils.e("报警消息失败   " + throwable.getMessage());
+                    }
+                });
+        compositeDisposable.add(catEyeEventDisposable);
+    }
+
+    //获取锁设备
     public void initLinphone() {
         if (!TextUtils.isEmpty(MyApplication.getInstance().getToken()) && !TextUtils.isEmpty(MyApplication.getInstance().getUid())) {
             LinphoneHelper.setAccount(MyApplication.getInstance().getUid(), "12345678Bm", MqttConstant.LINPHONE_URL);
@@ -253,7 +329,7 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                                 && mePwd.equals(MemeManager.getInstance().getCurrentPassword())) {
                             //查看是否有设备在线   如果有  弹出来电框
                             if (MemeManager.getInstance().getGwDevices().size() > 0) {
-                                if (mViewRef.get()!=null){
+                                if (mViewRef.get() != null) {
                                     mViewRef.get().onCatEyeCallIn(callInCatEyeInfo);
                                 }
                             } else {  //本地登录了米米网账号且是当前猫眼的meme网昂好   但是没有本地设备在线  等待五秒
@@ -298,6 +374,7 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
 
     /**
      * 登录米米网
+     *
      * @param meUsername
      * @param mePwd
      */
@@ -329,7 +406,7 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                         }
                         if (aBoolean) { // 米米网登陆成功且网关在线
                             LogUtils.e("米米网  登陆成功   弹出来电框");
-                            if (mViewRef.get()!=null){
+                            if (mViewRef.get() != null) {
                                 mViewRef.get().onCatEyeCallIn(callInCatEyeInfo);
                             }
                         } else { //米米网登陆失败或者网关不在线   不做处理
@@ -345,7 +422,7 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
     }
 
 
-    private void listDeviceChange(){
+    private void listDeviceChange() {
         deviceChangeDisposable = MemeManager.getInstance().listDevicesChange()
                 .compose(RxjavaHelper.observeOnMainThread())
                 .timeout(5 * 1000, TimeUnit.MILLISECONDS)
@@ -353,8 +430,8 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                     @Override
                     public void accept(List<Device> devices) throws Exception {
                         toDisposable(deviceChangeDisposable);
-                        if (devices.size()>1){
-                            if (mViewRef.get()!=null){
+                        if (devices.size() > 1) {
+                            if (mViewRef.get() != null) {
                                 mViewRef.get().onCatEyeCallIn(callInCatEyeInfo);
                             }
                         }

@@ -120,6 +120,7 @@ public class GatewayLockStressAddActivity extends BaseActivity<IGatewayLockStres
                     mPresenter.addLockPwd(gatewayId,deviceId,"09",strForeverPassword);
                 }
                 takeEffect=AlertDialogUtil.getInstance().noButtonDialog(this,getString(R.string.take_effect_be_being));
+                takeEffect.setCancelable(false);
                 break;
         }
     }

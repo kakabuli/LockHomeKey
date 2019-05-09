@@ -68,7 +68,7 @@ public class DeviceDetailAdapter extends BaseQuickAdapter<HomeShowBean, BaseView
                     gwPower=0;
                 }
                 isWifiDevice(true,helper,gwLockInfo.getServerInfo().getEvent_str(),batteryView);
-                helper.setImageResource(R.id.device_image,R.mipmap.zigbee_lock);
+                helper.setImageResource(R.id.device_image,R.mipmap.default_zigbee_lock_icon);
                 batteryView.setPower(gwPower);
                 helper.setText(R.id.device_power_text,gwPower+"%");
                 textView.setText(gwLockInfo.getServerInfo().getNickName());
@@ -99,16 +99,12 @@ public class DeviceDetailAdapter extends BaseQuickAdapter<HomeShowBean, BaseView
                 }
 
                 isWifiDevice(false,helper,status,batteryView);
-                helper.setImageResource(R.id.device_image,R.mipmap.zigbee_lock);
+                helper.setImageResource(R.id.device_image,R.mipmap.default_zigbee_lock_icon);
                 batteryView.setPower(blePower);
                 helper.setText(R.id.device_power_text,blePower+"%");
                 textView.setText(bleLockInfo.getServerLockInfo().getLockNickName());
                 break;
-
-
         }
-
-
     }
 
     public void isWifiDevice(boolean flag,BaseViewHolder helper, String status,BatteryView batteryView){

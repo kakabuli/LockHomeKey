@@ -346,6 +346,12 @@ public class BluetoothLockFunctionActivity extends BaseBleActivity<IDeviceDetail
     public void onElectricUpdata(Integer electric) {
         if (bleLockInfo.getBattery() != -1) {
             dealWithPower(bleLockInfo.getBattery());
+            //删除成功
+            Intent intent = new Intent();
+            //把返回数据存入Intent
+            intent.putExtra(KeyConstants.BLE_INTO, bleLockInfo);
+            //设置返回数据
+            this.setResult(RESULT_OK, intent);
         }
     }
 

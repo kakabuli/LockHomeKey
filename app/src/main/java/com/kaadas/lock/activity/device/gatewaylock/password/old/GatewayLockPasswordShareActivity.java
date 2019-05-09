@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
+import com.kaadas.lock.activity.addDevice.DeviceBindGatewayListActivity;
 import com.kaadas.lock.activity.device.gatewaylock.password.GatewayPasswordManagerActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 
@@ -144,4 +146,22 @@ public class GatewayLockPasswordShareActivity extends BaseActivity<GatewayLockSh
         alertDialog.dismiss();
         AlertDialogUtil.getInstance().noButtonDialog(this,getString(R.string.delete_fialed));
     }
+
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            return isCosumenBackKey();
+        }
+        return false;
+    }
+
+    private boolean isCosumenBackKey() {
+        if (!TextUtils.isEmpty(pwdId)){
+            Intent managerIntent=new Intent(GatewayLockPasswordShareActivity.this,GatewayPasswordManagerActivity.class);
+            SPUtils2.put(this,KeyConstants.ADD_PWD_ID,pwdId);
+            startActivity(managerIntent);
+        }
+        return true;
+    }
+
 }

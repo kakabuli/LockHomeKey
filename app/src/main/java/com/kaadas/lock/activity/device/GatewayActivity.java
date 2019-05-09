@@ -21,8 +21,11 @@ import com.kaadas.lock.bean.HomeShowBean;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.mvp.presenter.gatewaypresenter.GatewayPresenter;
 import com.kaadas.lock.mvp.view.gatewayView.GatewayView;
+import com.kaadas.lock.publiclibrary.bean.CateEyeInfo;
 import com.kaadas.lock.publiclibrary.bean.GatewayInfo;
+import com.kaadas.lock.publiclibrary.bean.GwLockInfo;
 import com.kaadas.lock.utils.KeyConstants;
+import com.kaadas.lock.utils.LogUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +36,7 @@ import butterknife.ButterKnife;
 /**
  * Created by David on 2019/4/25
  */
-public class GatewayActivity extends BaseActivity<GatewayView, GatewayPresenter<GatewayView>> implements View.OnClickListener, BaseQuickAdapter.OnItemClickListener {
+public class GatewayActivity extends BaseActivity<GatewayView, GatewayPresenter<GatewayView>> implements View.OnClickListener, BaseQuickAdapter.OnItemClickListener,GatewayView {
     @BindView(R.id.iv_back)
     ImageView ivBack;
     @BindView(R.id.tv_content)
@@ -48,7 +51,7 @@ public class GatewayActivity extends BaseActivity<GatewayView, GatewayPresenter<
     @BindView(R.id.gateway_nick_name)
     TextView gatewayNickName;
 
-
+    private List<HomeShowBean> homeShowBeans;
 
 
     @Override
@@ -99,7 +102,8 @@ public class GatewayActivity extends BaseActivity<GatewayView, GatewayPresenter<
             }else{
                 changeGatewayStatus(false);
             }
-            List<HomeShowBean> homeShowBeans =mPresenter.getGatewayBindList(gatewayInfo.getServerInfo().getDeviceSN());
+            mPresenter.getPowerData(gatewayInfo.getServerInfo().getDeviceSN());
+            homeShowBeans =mPresenter.getGatewayBindList(gatewayInfo.getServerInfo().getDeviceSN());
             initRecyclerview(homeShowBeans);
         }
 
@@ -126,6 +130,50 @@ public class GatewayActivity extends BaseActivity<GatewayView, GatewayPresenter<
 
 
 
+
+    }
+
+    @Override
+    public void getPowerDataSuccess(String deviceId, int power) {
+        //获取到电量
+        LogUtils.e("设备名称   "+deviceId+"   电量   "+power);
+        if (homeShowBeans!=null&&homeShowBeans.size()>0){
+            for (HomeShowBean device:homeShowBeans){
+                //猫眼
+                if (HomeShowBean.TYPE_CAT_EYE==device.getDeviceType()){
+                    if (device.getDeviceId().equals(deviceId)){
+                        CateEyeInfo cateEyeInfo= (CateEyeInfo) device.getObject();
+                        cateEyeInfo.setPower(power);
+                        LogUtils.e("设置猫眼电量成功"+power);
+                        gatewayAdapter.notifyDataSetChanged();
+                    }
+                }
+                //网关锁
+                else if (HomeShowBean.TYPE_GATEWAY_LOCK==device.getDeviceType()){
+                    if (device.getDeviceId().equals(device)){
+                        GwLockInfo gwLockInfo= (GwLockInfo) device.getObject();
+                        gwLockInfo.setPower(power);
+                        LogUtils.e("设置zigbee电量成功"+power);
+                        gatewayAdapter.notifyDataSetChanged();
+                    }
+                }
+
+            }
+
+
+        }
+
+
+
+    }
+
+    @Override
+    public void getPowerDataFail() {
+
+    }
+
+    @Override
+    public void getPowerThrowable() {
 
     }
 }

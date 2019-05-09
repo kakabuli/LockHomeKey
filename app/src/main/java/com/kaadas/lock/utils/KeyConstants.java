@@ -269,6 +269,10 @@ public class KeyConstants {
 
     public static final int UPDATE_DEVICE_NAME_REQUEST_CODE=1003;
 
+    //传递蓝牙电量
+    public static final int GET_BLE_POWER=1004;
+
+
     /**
      * 传递蓝牙设备信息的Key
      */
@@ -323,4 +327,15 @@ public class KeyConstants {
     //获取猫眼信息
     public static final String GET_CAT_EYE_INFO="getCatEyeInfo";
 
+    //上报类型为猫眼
+    public static final String DEV_TYPE_CAT_EYE = "kdscateye";
+
+    /**
+     * 上报类型为网关锁
+     */
+    public static final String DEV_TYPE_LOCK= "kdszblock";
+
+
+    //蓝牙电量信息
+    public static final String BLE_INTO="bleInfo";
 }

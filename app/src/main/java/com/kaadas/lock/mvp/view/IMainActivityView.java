@@ -22,5 +22,11 @@ public interface IMainActivityView extends IBleView {
     void onCatEyeCallIn(CateEyeInfo cateEyeInfo);
 
 
+    /**
+     * 网关上报事件
+     * @param eventType   事件类型
+     * @param deviceId      设备Id
+     */
+    void onGwEvent(int eventType,String deviceId);
 
 }

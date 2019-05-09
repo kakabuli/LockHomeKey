@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.MainActivity;
+import com.kaadas.lock.activity.device.gatewaylock.password.old.GatewayLockDeletePasswordActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseBleActivity;
 import com.kaadas.lock.mvp.presenter.DeviceDetailPresenter;
 import com.kaadas.lock.mvp.view.IDeviceDetailView;
@@ -196,7 +197,14 @@ public class BluetoothLockAuthorizationActivity extends BaseBleActivity<IDeviceD
         }
         if (bleLockInfo.getBattery() != -1) {
             dealWithPower(bleLockInfo.getBattery());
+            //删除成功
+            Intent intent = new Intent();
+            //把返回数据存入Intent
+            intent.putExtra(KeyConstants.BLE_INTO, bleLockInfo);
+            //设置返回数据
+            this.setResult(RESULT_OK, intent);
         }
+
     }
 
 

@@ -21,5 +21,14 @@ public interface GatewayLockDetailView  extends IBaseView {
     //锁上报事件出现异常
     void lockHasBeenThrowable(Throwable throwable);
 
+    //获取电量的信息成功
+    void getPowerDataSuccess(String deviceId,int power,String timestamp);
+
+    //获取电量的信息失败
+    void getPowerDataFail();
+
+    //获取电量的信息异常
+    void getPowerThrowable();
+
 
 }

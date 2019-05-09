@@ -404,7 +404,7 @@ public interface IXiaoKaiNewService {
     /**
      * 开锁鉴权
      */
-
+    @POST(HttpUrlConstants.USER_OPEN_LOCK_AUTHORITY)
     Observable<BaseResult> openLockAuth(@Body RequestBody info);
 
 
