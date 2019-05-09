@@ -495,28 +495,6 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
      */
 
     public void getAllPassword(BleLockInfo bleLockInfo, boolean isForceServer) {
-//        if (MyApplication.getInstance().getPasswordResults(bleLockInfo.getServerLockInfo().getLockName()) != null && !isForceServer) {
-//            if (mViewRef.get() != null) {
-//                mViewRef.get().onGetPasswordSuccess(MyApplication.getInstance().getPasswordResults(bleLockInfo.getServerLockInfo().getLockName()));
-//            }
-//            return;
-//        }
-//        if (!NetUtil.isNetworkAvailable()) {
-//            List<GetPasswordDaoBean> getPasswordDaoBeanList = MyApplication.getInstance().getDaoSession().getGetPasswordDaoBeanDao().queryBuilder().list();
-//            for (GetPasswordDaoBean getPasswordDaoBean : getPasswordDaoBeanList) {
-//                GetPasswordResult getPasswordResult = GetPasswordUtil.readPassword(getPasswordDaoBean);
-//                String deviceName = bleLockInfo.getServerLockInfo().getLockName();
-//                String deviceNameDao = getPasswordDaoBean.getDeviceName();
-//                if (deviceName != null && deviceNameDao != null) {
-//                    if (deviceName.equals(deviceNameDao)) {
-//                        if (mViewRef.get() != null) {
-//                            mViewRef.get().onGetPasswordSuccess(getPasswordResult);
-//                        }
-//                    }
-//                }
-//            }
-//            return;
-//        }
         XiaokaiNewServiceImp.getPasswords(MyApplication.getInstance().getUid(), bleLockInfo.getServerLockInfo().getLockName(), 0)
                 .subscribe(new BaseObserver<GetPasswordResult>() {
                     @Override

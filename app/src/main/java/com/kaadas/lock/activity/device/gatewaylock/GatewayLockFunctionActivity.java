@@ -101,7 +101,7 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
     int lockStatus = -1;
     private String gatewayId;
     private String deviceId;
-    private DeviceDetailBean deviceDetailBean;
+    private HomeShowBean showBean;
     private boolean lockIsOpen=false;
     private Handler mHandler = new Handler();
 
@@ -205,12 +205,12 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
 
     private void initData() {
         Intent intent=getIntent();
-        deviceDetailBean= (DeviceDetailBean) intent.getSerializableExtra(KeyConstants.DEVICE_DETAIL_BEAN);
+        showBean= (HomeShowBean) intent.getSerializableExtra(KeyConstants.GATEWAY_LOCK_INFO);
         //设置电量
-        if(deviceDetailBean!=null){
-            dealWithPower(deviceDetailBean.getPower());
-            tvName.setText(deviceDetailBean.getDeviceName());
-            GwLockInfo lockInfo= (GwLockInfo) deviceDetailBean.getShowCurentBean();
+        if(showBean!=null){
+            GwLockInfo lockInfo= (GwLockInfo) showBean.getObject();
+            dealWithPower(lockInfo.getPower(),lockInfo.getServerInfo().getEvent_str());
+            tvName.setText(lockInfo.getServerInfo().getNickName());
             gatewayId=lockInfo.getGwID();
             deviceId=lockInfo.getServerInfo().getDeviceId();
             mPresenter.closeLockNotify(deviceId);
@@ -242,7 +242,7 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
                 break;
             case R.id.ll_three:
                 intent = new Intent(this, GatewayMoreActivity.class);
-                intent.putExtra(KeyConstants.DEVICE_DETAIL_BEAN,deviceDetailBean);
+                intent.putExtra(KeyConstants.GATEWAY_LOCK_INFO,showBean);
                 startActivityForResult(intent,KeyConstants.DEVICE_DETAIL_BEAN_NUM);
                 break;
 
@@ -313,7 +313,7 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
 
 
 
-    private void dealWithPower(int power) {
+    private void dealWithPower(int power,String eventStr) {
         //电量：80%
         if (power > 100) {
             power = 100;
@@ -324,8 +324,14 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
         String lockPower = power + "%";
         tvPower.setText(lockPower);
         ivPower.setPower(power);
-        ivPower.setColor(R.color.c25F290);
-        ivPower.setBorderColor(R.color.white);
+        if (eventStr.equals("online")){
+            ivPower.setColor(R.color.c25F290);
+            ivPower.setBorderColor(R.color.white);
+        }else{
+            ivPower.setColor(R.color.cD6D6D6);
+            ivPower.setBorderColor(R.color.white);
+        }
+
         //todo  读取电量时间
         long readDeviceInfoTime = System.currentTimeMillis();
         if (readDeviceInfoTime != -1) {
@@ -421,9 +427,6 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
             if (resultCode== Activity.RESULT_OK){
                 String name=data.getStringExtra(KeyConstants.NAME);
                 if (name!=null){
-                    if (deviceDetailBean!=null){
-                        deviceDetailBean.setDeviceName(name);
-                    }
                     if (tvName!=null) {
                         tvName.setText(name);
                     }

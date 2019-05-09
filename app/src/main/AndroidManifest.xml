@@ -43,6 +43,7 @@
     <uses-feature android:name="android.hardware.camera.autofocus" />
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission
         android:name="android.permission.READ_LOGS"
         tools:ignore="ProtectedPermissions" />
@@ -528,6 +529,25 @@
             android:name=".activity.device.gatewaylock.stress.GatewayStressPasswordAddActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.gatewaylock.stress.old.GatewayLockStressAddActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.gatewaylock.stress.old.GatewayLockStressDeleteActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".activity.device.gatewaylock.stress.old.GatewayLockStressDetailActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".activity.device.gatewaylock.stress.old.GatewayLockStressShareActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+
         <activity
             android:name=".activity.device.gatewaylock.stress.GatewayStressPasswordShareActivity"
             android:launchMode="singleTop"

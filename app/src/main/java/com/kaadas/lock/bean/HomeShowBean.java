@@ -2,7 +2,7 @@ package com.kaadas.lock.bean;
 
 import java.io.Serializable;
 
-public class HomeShowBean implements Serializable {
+public class  HomeShowBean implements Serializable {
 
     /**
      * 设备类型  猫眼

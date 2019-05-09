@@ -367,7 +367,7 @@ public class MqttService extends Service {
     //发布
     public Observable<MqttData> mqttPublish(String topic, MqttMessage mqttMessage) {
         try {
-            if (mqttClient!=null) {
+            if (mqttClient!=null&&mqttClient.isConnected()) {
                 mqttClient.publish(topic, mqttMessage, null, new IMqttActionListener() {
                     @Override
                     public void onSuccess(IMqttToken asyncActionToken) {

@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.home.BluetoothEquipmentDynamicActivity;
 import com.kaadas.lock.adapter.BluetoothWarnMessageAdapter;
@@ -19,8 +20,10 @@ import com.kaadas.lock.mvp.mvpbase.BaseBleFragment;
 import com.kaadas.lock.mvp.presenter.WarringRecordPresenter;
 import com.kaadas.lock.mvp.view.IWarringRecordView;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
+import com.kaadas.lock.publiclibrary.ble.bean.OpenLockRecord;
 import com.kaadas.lock.publiclibrary.ble.bean.WarringRecord;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
+import com.kaadas.lock.publiclibrary.http.result.GetPasswordResult;
 import com.kaadas.lock.publiclibrary.http.util.HttpUtils;
 import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
@@ -65,11 +68,12 @@ public class BluetoothWarnInformationFragment extends BaseBleFragment<IWarringRe
     private BleLockInfo bleLockInfo;
     View view;
     private Unbinder unbinder;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-         view = View.inflate(getActivity(), R.layout.fragment_bluetooth_warn_information, null);
-        unbinder= ButterKnife.bind(this, view);
+        view = View.inflate(getActivity(), R.layout.fragment_bluetooth_warn_information, null);
+        unbinder = ButterKnife.bind(this, view);
         tvSynchronizedRecord.setOnClickListener(this);
         activity = (BluetoothEquipmentDynamicActivity) getActivity();
         bleLockInfo = activity.getBleDeviceInfo();
@@ -141,8 +145,10 @@ public class BluetoothWarnInformationFragment extends BaseBleFragment<IWarringRe
     public void onLoadBleRecord(List<WarringRecord> warringRecords) {
         //获取到蓝牙的开锁记录
         list.clear();
-        long lastDayTime = 0;
         hiddenLoading();
+        groupData(warringRecords);
+    /*    long lastDayTime = 0;
+
         for (WarringRecord record : warringRecords) {
             //获取开锁时间的毫秒数
             long openTime = record.getWarningTime();
@@ -158,7 +164,7 @@ public class BluetoothWarnInformationFragment extends BaseBleFragment<IWarringRe
                     record.getWarningTime() + "", true, true));
 
             list.add(new BluetoothRecordBean(titleTime, itemList, true));
-        }
+        }*/
 
         bluetoothWarnMessageAdapter.notifyDataSetChanged();
         refreshLayout.setEnableLoadMore(false);
@@ -215,25 +221,7 @@ public class BluetoothWarnInformationFragment extends BaseBleFragment<IWarringRe
     public void onLoadServerRecord(List<WarringRecord> warringRecords, int page) {
         LogUtils.e("收到服务器数据  " + warringRecords.size());
         currentPage = page + 1;
-        list.clear();
-        long lastDayTime = 0;
-        for (WarringRecord record : warringRecords) {
-            //获取开锁时间的毫秒数
-            long openTime = record.getWarningTime();
-            long dayTime = openTime - openTime % (24 * 60 * 60 * 1000);  //获取那一天开始的时间戳
-            String titleTime = "";
-            if (lastDayTime != dayTime) { //添加头
-                lastDayTime = dayTime;
-                titleTime = DateUtils.getDayTimeFromMillisecond(dayTime);
-            }
-            List<BluetoothItemRecordBean> itemList = new ArrayList<>();
-            String content = getWarnMessageContent(record);
-            itemList.add(new BluetoothItemRecordBean(content, "", KeyConstants.BLUETOOTH_RECORD_WARN,
-                    record.getWarningTime() + "", true, true));
-
-            list.add(new BluetoothRecordBean(titleTime, itemList, true));
-        }
-
+        groupData(warringRecords);
         bluetoothWarnMessageAdapter.notifyDataSetChanged();
         if (page == 1) { //这时候是刷新
             refreshLayout.finishRefresh();
@@ -242,6 +230,60 @@ public class BluetoothWarnInformationFragment extends BaseBleFragment<IWarringRe
             refreshLayout.finishLoadMore();
         }
     }
+
+    private void groupData(List<WarringRecord> warringRecords) {
+        list.clear();
+        long lastDayTime = 0;
+        for (int i = 0; i < warringRecords.size(); i++) {
+            WarringRecord record = warringRecords.get(i);
+            //获取开锁时间的毫秒数
+            long openTime = record.getWarningTime();
+            long dayTime = openTime - openTime % (24 * 60 * 60 * 1000);  //获取那一天开始的时间戳
+            List<BluetoothItemRecordBean> itemList = new ArrayList<>();
+            String titleTime = "";
+            String content = getWarnMessageContent(record);
+            String open_time = DateUtils.getDateTimeFromMillisecond(record.getWarningTime());
+            String[] split = open_time.split(" ");
+            String strRight = split[1];
+            String[] split1 = strRight.split(":");
+            String time = split1[0] + ":" + split1[1];
+            if (lastDayTime != dayTime) { //添加头
+                lastDayTime = dayTime;
+                titleTime = DateUtils.getDayTimeFromMillisecond(dayTime);
+                itemList.add(new BluetoothItemRecordBean(content, "", KeyConstants.BLUETOOTH_RECORD_WARN,
+                        time, false, false));
+                list.add(new BluetoothRecordBean(titleTime, itemList, false));
+            }else {
+                BluetoothRecordBean bluetoothRecordBean = list.get(list.size() - 1);
+                List<BluetoothItemRecordBean> bluetoothItemRecordBeanList = bluetoothRecordBean.getList();
+                bluetoothItemRecordBeanList.add(new BluetoothItemRecordBean(content, "", KeyConstants.BLUETOOTH_RECORD_WARN,
+                        time, false, false));
+            }
+
+        }
+        for (int i = 0; i < list.size(); i++) {
+            BluetoothRecordBean bluetoothRecordBean = list.get(i);
+            List<BluetoothItemRecordBean> bluetoothRecordBeanList = bluetoothRecordBean.getList();
+
+            for (int j = 0; j < bluetoothRecordBeanList.size(); j++) {
+                BluetoothItemRecordBean bluetoothItemRecordBean = bluetoothRecordBeanList.get(j);
+
+                if (j == 0) {
+                    bluetoothItemRecordBean.setFirstData(true);
+                }
+                if (j == bluetoothRecordBeanList.size() - 1) {
+                    bluetoothItemRecordBean.setLastData(true);
+                }
+
+            }
+            if (i == list.size() - 1) {
+                bluetoothRecordBean.setLastData(true);
+            }
+
+
+        }
+    }
+
 
     @Override
     public void onLoadServerRecordFailed(Throwable throwable) {
@@ -298,7 +340,7 @@ public class BluetoothWarnInformationFragment extends BaseBleFragment<IWarringRe
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.tv_synchronized_record:
                 if (isLoadingBleRecord) { //如果正在加载锁上数据  不让用户再次点击
                     ToastUtil.getInstance().showShort(R.string.is_loading_lock_record);
