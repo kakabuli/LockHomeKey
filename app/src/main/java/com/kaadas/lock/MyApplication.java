@@ -483,7 +483,6 @@ public class MyApplication extends Application {
                 tem.add(homeShowBean);
             }
         }
-
         return tem;
     }
 
