@@ -151,8 +151,10 @@ public class BluetoothOpenLockRecordFragment extends BaseBleFragment<IOpenLockRe
     public void onLoadBleRecord(List<OpenLockRecord> lockRecords) {
         //获取到蓝牙的开锁记录
         list.clear();
-        long lastDayTime = 0;
         hiddenLoading();
+        groupData(lockRecords);
+  /*      long lastDayTime = 0;
+
         for (OpenLockRecord record : lockRecords) {
             //获取开锁时间的毫秒数
             long openTime = DateUtils.standardTimeChangeTimestamp(record.getOpen_time());
@@ -169,7 +171,7 @@ public class BluetoothOpenLockRecordFragment extends BaseBleFragment<IOpenLockRe
                     record.getOpen_time(), true, true));
 
             list.add(new BluetoothRecordBean(titleTime, itemList, true));
-        }
+        }*/
         bluetoothRecordAdapter.notifyDataSetChanged();
         refreshLayout.setEnableLoadMore(false);
     }
@@ -228,47 +230,7 @@ public class BluetoothOpenLockRecordFragment extends BaseBleFragment<IOpenLockRe
     public void onLoadServerRecord(List<OpenLockRecord> lockRecords, int page) {
         LogUtils.e("收到服务器数据  " + lockRecords.size());
         currentPage = page + 1;
-        list.clear();
-        long lastDayTime = 0;
-        for (OpenLockRecord record : lockRecords) {
-            //获取开锁时间的毫秒数
-            long openTime = DateUtils.standardTimeChangeTimestamp(record.getOpen_time());
-            long dayTime = openTime - openTime % (24 * 60 * 60 * 1000);  //获取那一天开始的时间戳
-            String titleTime = "";
-            if (lastDayTime != dayTime) { //添加头
-                lastDayTime = dayTime;
-                titleTime = DateUtils.getDayTimeFromMillisecond(dayTime);
-            }
-            List<BluetoothItemRecordBean> itemList = new ArrayList<>();
-            GetPasswordResult passwordResult = MyApplication.getInstance().getPasswordResults(bleLockInfo.getServerLockInfo().getLockName());
-            String openLockType = getOpenLockType(passwordResult, record);
-
-            String open_time = record.getOpen_time();
-            String[] split = open_time.split(" ");
-            String strRight=split[1];
-            String[] split1 = strRight.split(":");
-            String time=split1[0]+":"+split1[1];
-            itemList.add(new BluetoothItemRecordBean(record.getUser_num(), openLockType, KeyConstants.BLUETOOTH_RECORD_COMMON,
-                    time, true, true));
-            list.add(new BluetoothRecordBean(titleTime, itemList, true));
-
-        }
-
-        for (int i = 0; i < list.size(); i++) {
-            BluetoothRecordBean bluetoothRecordBean = list.get(i);
-            List<BluetoothItemRecordBean> bluetoothRecordBeanList = bluetoothRecordBean.getList();
-            for (int j = 0; j < bluetoothRecordBeanList.size(); j++) {
-                BluetoothItemRecordBean bluetoothItemRecordBean = bluetoothRecordBeanList.get(j);
-                if (j == 0) {
-                    bluetoothItemRecordBean.setFirstData(true);
-                }
-                if (j == bluetoothRecordBeanList.size() - 1) {
-                    bluetoothItemRecordBean.setLastData(true);
-                }
-            }
-
-
-        }
+        groupData(lockRecords);
         LogUtils.d("davi list " + list.toString());
         bluetoothRecordAdapter.notifyDataSetChanged();
         if (page == 1) { //这时候是刷新
@@ -278,6 +240,64 @@ public class BluetoothOpenLockRecordFragment extends BaseBleFragment<IOpenLockRe
             refreshLayout.finishLoadMore();
         }
     }
+
+    private void groupData(List<OpenLockRecord> lockRecords) {
+        list.clear();
+        long lastDayTime = 0;
+        for (int i = 0; i < lockRecords.size(); i++) {
+            OpenLockRecord record = lockRecords.get(i);
+            //获取开锁时间的毫秒数
+            long openTime = DateUtils.standardTimeChangeTimestamp(record.getOpen_time());
+            long dayTime = openTime - openTime % (24 * 60 * 60 * 1000);  //获取那一天开始的时间戳
+            List<BluetoothItemRecordBean> itemList = new ArrayList<>();
+            GetPasswordResult passwordResult = MyApplication.getInstance().getPasswordResults(bleLockInfo.getServerLockInfo().getLockName());
+            String openLockType = getOpenLockType(passwordResult, record);
+
+            String open_time = record.getOpen_time();
+            String[] split = open_time.split(" ");
+            String strRight = split[1];
+            String[] split1 = strRight.split(":");
+            String time = split1[0] + ":" + split1[1];
+            String titleTime = "";
+            if (lastDayTime != dayTime) { //添加头
+                lastDayTime = dayTime;
+                titleTime = DateUtils.getDayTimeFromMillisecond(dayTime);
+                itemList.add(new BluetoothItemRecordBean(record.getUser_num(), openLockType, KeyConstants.BLUETOOTH_RECORD_COMMON,
+                        time, false, false));
+                list.add(new BluetoothRecordBean(titleTime, itemList, false));
+            }else {
+                BluetoothRecordBean bluetoothRecordBean = list.get(list.size() - 1);
+                List<BluetoothItemRecordBean> bluetoothItemRecordBeanList = bluetoothRecordBean.getList();
+                bluetoothItemRecordBeanList.add(new BluetoothItemRecordBean(record.getUser_num(), openLockType, KeyConstants.BLUETOOTH_RECORD_COMMON,
+                        time, false, false));
+            }
+
+
+        }
+
+        for (int i = 0; i < list.size(); i++) {
+            BluetoothRecordBean bluetoothRecordBean = list.get(i);
+            List<BluetoothItemRecordBean> bluetoothRecordBeanList = bluetoothRecordBean.getList();
+
+            for (int j = 0; j < bluetoothRecordBeanList.size(); j++) {
+                BluetoothItemRecordBean bluetoothItemRecordBean = bluetoothRecordBeanList.get(j);
+
+                    if (j == 0) {
+                        bluetoothItemRecordBean.setFirstData(true);
+                    }
+                    if (j == bluetoothRecordBeanList.size() - 1) {
+                        bluetoothItemRecordBean.setLastData(true);
+                    }
+
+            }
+            if (i==list.size()-1){
+                bluetoothRecordBean.setLastData(true);
+            }
+
+
+        }
+    }
+
 
     @Override
     public void onLoadServerRecordFailed(Throwable throwable) {
