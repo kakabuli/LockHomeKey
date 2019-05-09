@@ -5,7 +5,7 @@
     android:background="#F2F2F2"
     android:orientation="vertical">
 
-
+    <include layout="@layout/head"></include>
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_44"

@@ -253,6 +253,15 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
                 case HomeShowBean.TYPE_GATEWAY: //网关
                     fragments.add(new MyFragment());
                     break;
+                case HomeShowBean.TYPE_OLD_BLE_LOCK: //老蓝牙锁
+                    OldBleLockFragment oldBleLockFragment = new OldBleLockFragment();
+                     bundle = new Bundle();
+                    bundle.putSerializable(KeyConstants.BLE_LOCK_INFO, (BleLockInfo) devices.get(i).getObject());
+                    bundle.putSerializable(KeyConstants.FRAGMENT_POSITION, i);
+                    oldBleLockFragment.setArguments(bundle);
+                    fragments.add(oldBleLockFragment);
+                    break;
+
             }
         }
 
