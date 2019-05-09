@@ -113,7 +113,6 @@ public class PreviewActivity extends BaseActivity<ISnapShotView, SnapPresenter<I
         Date remote_date0 = new Date(Long.parseLong(imageUrl.split("_")[0])*1000);
         String remote_time = simpleDateFormat0.format(remote_date0);
         remoteTimeFoler = "orangecat-"+ remote_time;
-
         imgPath =  MyApplication.getInstance().getExternalFilesDir("").getAbsolutePath() + File.separator + Constants.DOWNLOAD_IMAGE_FOLDER_NAME + File.separator + deviceId+File.separator+remoteTimeFoler+File.separator+imageUrl;
         File imgPathFile=new File(imgPath);
         Log.e(GeTui.VideoLog,"imagePath:"+imgPath+"文件是否存在:"+imgPathFile.exists()+"大小:"+imgPathFile.length());

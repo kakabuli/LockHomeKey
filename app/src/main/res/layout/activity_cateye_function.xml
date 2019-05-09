@@ -3,7 +3,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#F2F2F2"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -110,10 +112,14 @@
             android:layout_marginBottom="@dimen/dp_38"
             android:gravity="center">
 
-            <ImageView
+            <com.kaadas.lock.utils.BatteryView
                 android:id="@+id/iv_power"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_width="@dimen/dp_24"
+                android:layout_height="@dimen/dp_12"
+                app:batteryPower="60"
+                app:batteryColor="#25F290"
+                app:batteryOrientation="horizontal"
+                />
 
 
             <TextView

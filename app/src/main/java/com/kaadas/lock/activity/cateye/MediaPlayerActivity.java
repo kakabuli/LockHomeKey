@@ -316,7 +316,8 @@ public class MediaPlayerActivity extends BaseActivity<ISnapShotView, SnapPresent
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Toast.makeText(MediaPlayerActivity.this,getResources().getString(R.string.download_overtime),Toast.LENGTH_SHORT).show();
+                Toast.makeText(MediaPlayerActivity.this,getResources().getString(R.string.download_overtime_1),Toast.LENGTH_SHORT).show();
+                finish();
             }
         });
     }

@@ -530,6 +530,25 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".activity.device.gatewaylock.stress.old.GatewayLockStressAddActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.gatewaylock.stress.old.GatewayLockStressDeleteActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".activity.device.gatewaylock.stress.old.GatewayLockStressDetailActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".activity.device.gatewaylock.stress.old.GatewayLockStressShareActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+
+        <activity
             android:name=".activity.device.gatewaylock.stress.GatewayStressPasswordShareActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />

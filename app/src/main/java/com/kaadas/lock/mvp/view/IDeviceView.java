@@ -17,4 +17,13 @@ public interface IDeviceView extends IBaseView {
     //刷新页面异常
     void deviceDataRefreshThrowable(Throwable throwable);
 
+    //获取电量成功
+    void getDevicePowerSuccess(String gatewayId,String deviceId,int power);
+
+    //获取电量失败
+    void getDevicePowerFail();
+
+    //获取电量异常
+    void getDevicePowerThrowable(Throwable throwable);
+
 }

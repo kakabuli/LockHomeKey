@@ -18,6 +18,7 @@ import com.kaadas.lock.R;
 import com.kaadas.lock.activity.MainActivity;
 import com.kaadas.lock.activity.device.gatewaylock.GatewayDeviceInformationActivity;
 import com.kaadas.lock.bean.DeviceDetailBean;
+import com.kaadas.lock.bean.HomeShowBean;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.mvp.presenter.gatewaylockpresenter.GatewayLockMorePresenter;
 import com.kaadas.lock.mvp.view.gatewaylockview.GatewayLockMoreView;
@@ -69,7 +70,7 @@ public class GatewayMoreActivity extends BaseActivity<GatewayLockMoreView, Gatew
     @BindView(R.id.tv_device_name)
     TextView tvDeviceName;
 
-    private DeviceDetailBean deviceDetailBean;
+    private HomeShowBean showBean;
     private String gatewayId;
     private String deviceId;
     private GwLockInfo gwLockInfo;
@@ -102,10 +103,11 @@ public class GatewayMoreActivity extends BaseActivity<GatewayLockMoreView, Gatew
 
     private void initData() {
         Intent intent=getIntent();
-        deviceDetailBean= (DeviceDetailBean) intent.getSerializableExtra(KeyConstants.DEVICE_DETAIL_BEAN);
-        if (deviceDetailBean!=null){
-            tvDeviceName.setText(deviceDetailBean.getDeviceName());
-            gwLockInfo= (GwLockInfo) deviceDetailBean.getShowCurentBean();
+        showBean= (HomeShowBean) intent.getSerializableExtra(KeyConstants.GATEWAY_LOCK_INFO);
+        if (showBean!=null){
+
+            gwLockInfo= (GwLockInfo) showBean.getObject();
+            tvDeviceName.setText(gwLockInfo.getServerInfo().getNickName());
             gatewayId=gwLockInfo.getGwID();
             deviceId=gwLockInfo.getServerInfo().getDeviceId();
 

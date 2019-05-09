@@ -4,72 +4,116 @@ import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.support.annotation.Nullable;
 import android.view.View;
+import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.kaadas.lock.R;
 import com.kaadas.lock.bean.DeviceDetailBean;
+import com.kaadas.lock.bean.HomeShowBean;
+import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
+import com.kaadas.lock.publiclibrary.bean.CateEyeInfo;
+import com.kaadas.lock.publiclibrary.bean.GatewayInfo;
+import com.kaadas.lock.publiclibrary.bean.GwLockInfo;
 import com.kaadas.lock.utils.BatteryView;
 import com.kaadas.lock.utils.LogUtils;
 
 import java.util.List;
 
-public class DeviceDetailAdapter extends BaseQuickAdapter<DeviceDetailBean, BaseViewHolder> {
+public class DeviceDetailAdapter extends BaseQuickAdapter<HomeShowBean, BaseViewHolder> {
 
 
-    public DeviceDetailAdapter( @Nullable List<DeviceDetailBean> data) {
+    public DeviceDetailAdapter( @Nullable List<HomeShowBean> data) {
         super(R.layout.fragment_device_item, data);
     }
 
 
     @Override
-    protected void convert(BaseViewHolder helper, DeviceDetailBean item) {
-        int power=item.getPower();
-        LogUtils.e("显示电量",item.getDeviceName()+power);
-        if (power>100){
-            power=100;
-        }
-        if (power<0){
-            power=0;
-        }
+    protected void convert(BaseViewHolder helper, HomeShowBean item) {
         BatteryView batteryView= helper.getView(R.id.horizontalBatteryView);
-        helper.setText(R.id.device_name,item.getDeviceName());
-        //type 0 猫眼，1网关锁，2网关，3蓝牙
-        int type=item.getType();
-        if (type==2){
+        TextView textView=helper.getView(R.id.device_name);
+        helper.setText(R.id.device_name,item.getDeviceNickName());
+        if (HomeShowBean.TYPE_GATEWAY==item.getDeviceType()){
             //隐藏
             helper.getView(R.id.power_layout).setVisibility(View.GONE);
         }else{
             helper.getView(R.id.power_layout).setVisibility(View.VISIBLE);
         }
-        switch (type){
-            case 0:
-                isWifiDevice(true,helper,item,batteryView);
+
+        switch (item.getDeviceType()){
+            //猫眼
+            case HomeShowBean.TYPE_CAT_EYE:
+                CateEyeInfo cateEyeInfo= (CateEyeInfo) item.getObject();
+                int power = cateEyeInfo.getPower();
+                if (power>100){
+                    power=100;
+                }
+                if (power<0){
+                    power=0;
+                }
+                isWifiDevice(true,helper,cateEyeInfo.getServerInfo().getEvent_str(),batteryView);
                 helper.setImageResource(R.id.device_image,R.mipmap.cat_eye_icon);
                 batteryView.setPower(power);
-            break;
-            case 1:
-                isWifiDevice(true,helper,item,batteryView);
-                helper.setImageResource(R.id.device_image,R.mipmap.zigbee_lock);
-                batteryView.setPower(power);
+                helper.setText(R.id.device_power_text,power+"%");
+                textView.setText(cateEyeInfo.getServerInfo().getNickName());
                 break;
-            case 2:
-                isWifiDevice(true,helper,item,batteryView);
+            //网关锁
+            case HomeShowBean.TYPE_GATEWAY_LOCK:
+                GwLockInfo gwLockInfo= (GwLockInfo) item.getObject();
+                int gwPower =gwLockInfo.getPower();
+                if (gwPower>100){
+                    gwPower=100;
+                }
+                if (gwPower<0){
+                    gwPower=0;
+                }
+                isWifiDevice(true,helper,gwLockInfo.getServerInfo().getEvent_str(),batteryView);
+                helper.setImageResource(R.id.device_image,R.mipmap.zigbee_lock);
+                batteryView.setPower(gwPower);
+                helper.setText(R.id.device_power_text,gwPower+"%");
+                textView.setText(gwLockInfo.getServerInfo().getNickName());
+                break;
+            //网关
+            case HomeShowBean.TYPE_GATEWAY:
+                GatewayInfo gatewayInfo= (GatewayInfo) item.getObject();
+                isWifiDevice(true,helper,gatewayInfo.getEvent_str(),batteryView);
                 helper.setImageResource(R.id.device_image,R.mipmap.gateway_icon);
+                textView.setText(item.getDeviceNickName());
                 break;
-            case 3:
-                isWifiDevice(false,helper,item,batteryView);
+
+            //蓝牙
+            case HomeShowBean.TYPE_BLE_LOCK:
+                String status="";
+                BleLockInfo bleLockInfo= (BleLockInfo) item.getObject();
+                if (bleLockInfo.isConnected()){
+                    status="online";
+                }else{
+                    status="offline";
+                }
+                int blePower =bleLockInfo.getBattery();
+                if (blePower>100){
+                    blePower=100;
+                }
+                if (blePower<0){
+                    blePower=0;
+                }
+
+                isWifiDevice(false,helper,status,batteryView);
                 helper.setImageResource(R.id.device_image,R.mipmap.zigbee_lock);
-                batteryView.setPower(power);
+                batteryView.setPower(blePower);
+                helper.setText(R.id.device_power_text,blePower+"%");
+                textView.setText(bleLockInfo.getServerLockInfo().getLockNickName());
                 break;
+
+
         }
-       helper.setText(R.id.device_power_text,power+"%");
+
 
     }
 
-    public void isWifiDevice(boolean flag,BaseViewHolder helper, DeviceDetailBean item,BatteryView batteryView){
-            LogUtils.e(item.getEvent_str()+"==="+item.getDeviceName());
-            if ("online".equals(item.getEvent_str())) {
+    public void isWifiDevice(boolean flag,BaseViewHolder helper, String status,BatteryView batteryView){
+            LogUtils.e(status+"===");
+            if ("online".equals(status)) {
                 //在线
                 if(flag){
                     helper.setImageResource(R.id.device_type_image,R.mipmap.wifi_connect);

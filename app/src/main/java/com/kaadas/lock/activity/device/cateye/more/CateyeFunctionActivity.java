@@ -12,10 +12,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.kaadas.lock.R;
-import com.kaadas.lock.activity.cateye.CallComingActivity;
 import com.kaadas.lock.activity.cateye.VideoCallBackActivity;
 import com.kaadas.lock.activity.cateye.VideoVActivity;
 import com.kaadas.lock.publiclibrary.bean.CateEyeInfo;
+import com.kaadas.lock.utils.BatteryView;
 import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
 
@@ -47,8 +47,6 @@ public class CateyeFunctionActivity extends AppCompatActivity implements View.On
     RelativeLayout rlIcon;
     @BindView(R.id.tv_external)
     TextView tvExternal;
-    @BindView(R.id.iv_power)
-    ImageView ivPower;
     @BindView(R.id.tv_date)
     TextView tvDate;
     @BindView(R.id.ll_power)
@@ -57,6 +55,8 @@ public class CateyeFunctionActivity extends AppCompatActivity implements View.On
     LinearLayout llLookBack;
     @BindView(R.id.ll_more)
     LinearLayout llMore;
+    @BindView(R.id.iv_power)
+    BatteryView ivPower;
     private CateEyeInfo cateEyeInfo;
 
     @Override
@@ -69,9 +69,18 @@ public class CateyeFunctionActivity extends AppCompatActivity implements View.On
         llMore.setOnClickListener(this);
         rlIcon.setOnClickListener(this);
         changeOpenLockStatus(1);
-        dealWithPower(100);
+        initData();
+
+    }
+
+    private void initData() {
         cateEyeInfo = (CateEyeInfo) getIntent().getSerializableExtra(KeyConstants.CATE_INFO);
-        tvName.setText(cateEyeInfo.getServerInfo().getNickName());
+        if (cateEyeInfo!=null){
+            tvName.setText(cateEyeInfo.getServerInfo().getNickName());
+            dealWithPower(cateEyeInfo.getPower(),cateEyeInfo.getServerInfo().getEvent_str());
+        }
+
+
     }
 
     @Override
@@ -87,8 +96,8 @@ public class CateyeFunctionActivity extends AppCompatActivity implements View.On
                 break;
             case R.id.ll_more:
                 intent = new Intent(this, CateyeMoreActivity.class);
-                intent.putExtra(KeyConstants.CATE_INFO,cateEyeInfo);
-                startActivityForResult(intent,KeyConstants.UPDATE_DEVICE_NAME_REQUEST_CODE);
+                intent.putExtra(KeyConstants.CATE_INFO, cateEyeInfo);
+                startActivityForResult(intent, KeyConstants.UPDATE_DEVICE_NAME_REQUEST_CODE);
                 break;
             case R.id.rl_icon:
                 intent = new Intent(this, VideoVActivity.class);
@@ -149,31 +158,23 @@ public class CateyeFunctionActivity extends AppCompatActivity implements View.On
         }
     }
 
-    private void dealWithPower(int power) {
+    private void dealWithPower(int power, String eventStr) {
         //电量：80%
         if (power > 100) {
             power = 100;
         }
-        String lockPower = power + "%";
-        int imgResId = -1;
-//        tvPower.setText(lockPower);
-        if (power == 0) {
-            imgResId = R.mipmap.horization_power_0;
-        } else if (power <= 5) {
-            imgResId = R.mipmap.horization_power_1;
-        } else if (power <= 20) {
-            imgResId = R.mipmap.horization_power_2;
-        } else if (power <= 60) {
-            imgResId = R.mipmap.horization_power_3;
-        } else if (power <= 80) {
-            imgResId = R.mipmap.horization_power_4;
-//        } else if (power <= 100) {
+        if (power < 0) {
+            power = 0;
+        }
+        ivPower.setPower(power);
+        if (eventStr.equals("online")) {
+            ivPower.setColor(R.color.c25F290);
+            ivPower.setBorderColor(R.color.white);
         } else {
-            imgResId = R.mipmap.horization_power_5;
+            ivPower.setColor(R.color.cD6D6D6);
+            ivPower.setBorderColor(R.color.white);
         }
-        if (imgResId != -1) {
-            ivPower.setImageResource(imgResId);
-        }
+
         //todo  读取电量时间
         long readDeviceInfoTime = System.currentTimeMillis();
         if (readDeviceInfoTime != -1) {
@@ -189,18 +190,21 @@ public class CateyeFunctionActivity extends AppCompatActivity implements View.On
                 tvDate.setText(DateUtils.formatYearMonthDay(readDeviceInfoTime));
             }
         }
+
+
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode==KeyConstants.UPDATE_DEVICE_NAME_REQUEST_CODE){
-            if (resultCode== Activity.RESULT_OK){
-                String name=data.getStringExtra(KeyConstants.NAME);
-                if (name!=null){
-                    if (cateEyeInfo!=null){
+        if (requestCode == KeyConstants.UPDATE_DEVICE_NAME_REQUEST_CODE) {
+            if (resultCode == Activity.RESULT_OK) {
+                String name = data.getStringExtra(KeyConstants.NAME);
+                if (name != null) {
+                    if (cateEyeInfo != null) {
                         cateEyeInfo.getServerInfo().setNickName(name);
                     }
-                    if (tvName!=null) {
+                    if (tvName != null) {
                         tvName.setText(name);
                     }
                 }
