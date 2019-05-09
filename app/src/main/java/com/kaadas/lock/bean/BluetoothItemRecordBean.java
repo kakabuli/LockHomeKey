@@ -4,6 +4,21 @@ package com.kaadas.lock.bean;
  * Created by David on 2019/4/19
  */
 public class BluetoothItemRecordBean {
+    public BluetoothItemRecordBean() {
+    }
+
+    @Override
+    public String toString() {
+        return "BluetoothItemRecordBean{" +
+                "content='" + content + '\'' +
+                ", strRight='" + strRight + '\'' +
+                ", iconImg='" + iconImg + '\'' +
+                ", open_time='" + open_time + '\'' +
+                ", firstData=" + firstData +
+                ", lastData=" + lastData +
+                '}';
+    }
+
     private String content;//中间的数据
     private String strRight;//右边的数据
 

@@ -1,5 +1,6 @@
 package com.kaadas.lock.utils;
 
+import android.app.Activity;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
@@ -100,5 +101,24 @@ public class SharedUtil {
         ClipData mClipData = ClipData.newPlainText("Label", text);
         cm.setPrimaryClip(mClipData);
         ToastUtil.getInstance().showShort(R.string.copy_success);
+    }
+    /**
+     * 拨打电话
+     * */
+    public void callPhone(Activity activity,String phoneNum) {
+        Intent intent = new Intent(Intent.ACTION_DIAL);
+        Uri data = Uri.parse("tel:" + phoneNum);
+        intent.setData(data);
+        activity.startActivity(intent);
+    }
+    /**
+     * 网页跳转
+     * */
+    public void jumpWebsite(Activity activity,String website){
+        Intent intent = new Intent();
+        intent.setAction("android.intent.action.VIEW");
+        Uri content_url = Uri.parse(website);//此处填链接
+        intent.setData(content_url);
+        activity.startActivity(intent);
     }
 }

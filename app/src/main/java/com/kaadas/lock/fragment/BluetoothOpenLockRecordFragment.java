@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,13 +60,14 @@ public class BluetoothOpenLockRecordFragment extends BaseBleFragment<IOpenLockRe
     private BluetoothEquipmentDynamicActivity activity;
     private boolean isLoadingBleRecord;  //正在加载锁上数据
     private int currentPage = 1;   //当前的开锁记录时间
-    View view ;
+    View view;
     private Unbinder unbinder;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-         view = View.inflate(getActivity(), R.layout.fragment_bluetooth_open_lock_record, null);
-        unbinder= ButterKnife.bind(this, view);
+        view = View.inflate(getActivity(), R.layout.fragment_bluetooth_open_lock_record, null);
+        unbinder = ButterKnife.bind(this, view);
         tvSynchronizedRecord.setOnClickListener(this);
         activity = (BluetoothEquipmentDynamicActivity) getActivity();
         bleLockInfo = activity.getBleDeviceInfo();
@@ -252,6 +254,22 @@ public class BluetoothOpenLockRecordFragment extends BaseBleFragment<IOpenLockRe
 
         }
 
+        for (int i = 0; i < list.size(); i++) {
+            BluetoothRecordBean bluetoothRecordBean = list.get(i);
+            List<BluetoothItemRecordBean> bluetoothRecordBeanList = bluetoothRecordBean.getList();
+            for (int j = 0; j < bluetoothRecordBeanList.size(); j++) {
+                BluetoothItemRecordBean bluetoothItemRecordBean = bluetoothRecordBeanList.get(j);
+                if (j == 0) {
+                    bluetoothItemRecordBean.setFirstData(true);
+                }
+                if (j == bluetoothRecordBeanList.size() - 1) {
+                    bluetoothItemRecordBean.setLastData(true);
+                }
+            }
+
+
+        }
+        LogUtils.d("davi list " + list.toString());
         bluetoothRecordAdapter.notifyDataSetChanged();
         if (page == 1) { //这时候是刷新
             refreshLayout.finishRefresh();
@@ -317,21 +335,21 @@ public class BluetoothOpenLockRecordFragment extends BaseBleFragment<IOpenLockRe
 
     @Override
     public void onClick(View v) {
-    switch (v.getId()){
-        case R.id.tv_synchronized_record:
-            if (isLoadingBleRecord) { //如果正在加载锁上数据  不让用户再次点击
-                ToastUtil.getInstance().showShort(R.string.is_loading_lock_record);
-                return;
-            }
-            if (mPresenter.isAuth(bleLockInfo, true)) {
-                LogUtils.e("同步开锁记录");
-                mPresenter.getRecordFromBle();
-                list.clear();
-                if (bluetoothRecordAdapter != null) {
-                    bluetoothRecordAdapter.notifyDataSetChanged();
+        switch (v.getId()) {
+            case R.id.tv_synchronized_record:
+                if (isLoadingBleRecord) { //如果正在加载锁上数据  不让用户再次点击
+                    ToastUtil.getInstance().showShort(R.string.is_loading_lock_record);
+                    return;
                 }
-            }
-            break;
-    }
+                if (mPresenter.isAuth(bleLockInfo, true)) {
+                    LogUtils.e("同步开锁记录");
+                    mPresenter.getRecordFromBle();
+                    list.clear();
+                    if (bluetoothRecordAdapter != null) {
+                        bluetoothRecordAdapter.notifyDataSetChanged();
+                    }
+                }
+                break;
+        }
     }
 }

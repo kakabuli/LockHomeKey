@@ -368,8 +368,8 @@ public class BluetoothLockFunctionActivity extends BaseBleActivity<IDeviceDetail
         List<GetPasswordResult.DataBean.Fingerprint> fingerprintList = dataBean.getFingerprintList();
         tvNumberTwo.setText(fingerprintList.size() + getString(R.string.ge));
         List<ForeverPassword> pwdList = dataBean.getPwdList();
-        tvNumberOne.setText(pwdList.size() + getString(R.string.group));
         List<GetPasswordResult.DataBean.TempPassword> tempPwdList = dataBean.getTempPwdList();
+        tvNumberOne.setText((pwdList.size()+tempPwdList.size()) + getString(R.string.group));
 //        tvNumberFour.setText(2 + getString(R.string.people));
         LogUtils.d("davi "+result.toString());
     }
