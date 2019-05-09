@@ -35,6 +35,7 @@ import com.kaadas.lock.mvp.view.ISnapShotView;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.FtpEnable;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.GetBindGatewayListResult;
 import com.kaadas.lock.utils.Constants;
+import com.kaadas.lock.utils.PirConst;
 import com.kaadas.lock.utils.SPUtils2;
 import com.kaadas.lock.utils.ftp.FtpException;
 import com.kaadas.lock.utils.ftp.FtpUtils;
@@ -58,6 +59,7 @@ import com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -66,6 +68,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.TimeZone;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -105,6 +108,7 @@ public class SnapshotFragment1 extends CallBackBaseFragment<ISnapShotView, SnapP
     boolean isVisibleToUserTo=true;
     String today=null;
     Date today_date=null;
+    SimpleDateFormat simpleDateFormat0 = new SimpleDateFormat("yyyyMMdd");
 
     @Override
     protected SnapPresenter<ISnapShotView> createPresent() {
@@ -133,6 +137,7 @@ public class SnapshotFragment1 extends CallBackBaseFragment<ISnapShotView, SnapP
             deviceId = getArguments().getString(Constants.DEVICE_ID);
             gatewayId= getArguments().getString(Constants.GATEWAY_ID);
         }
+        simpleDateFormat0.setTimeZone(TimeZone.getTimeZone("GMT+0"));
     }
 
     @Override
@@ -493,7 +498,7 @@ public class SnapshotFragment1 extends CallBackBaseFragment<ISnapShotView, SnapP
         }
     };
 
-
+    String currentTimeFolder=null;
     /**
      * RecyclerView的Item的Menu点击监听。
      */
@@ -506,14 +511,68 @@ public class SnapshotFragment1 extends CallBackBaseFragment<ISnapShotView, SnapP
             int adapterPosition = menuBridge.getAdapterPosition(); // RecyclerView的Item的position。
             int menuPosition = menuBridge.getPosition(); // 菜单在RecyclerView的Item中的Position。
 
-            Toast.makeText(getActivity(), "list第" + adapterPosition + "; 右侧菜单第" + menuPosition, Toast.LENGTH_SHORT).show();
-
-
-
+         //   Toast.makeText(getActivity(), "list第" + adapterPosition + "; 右侧菜单第" + menuPosition, Toast.LENGTH_SHORT).show();
             int position = adapterPosition - history_rv_ff.getHeaderItemCount();
-            imageList.remove(position);
-            pirHistoryAdapter.notifyItemRemoved(position);
-            Toast.makeText(getActivity(), "现在的第" + position + "条被删除。", Toast.LENGTH_SHORT).show();
+
+            //Toast.makeText(getActivity(), "现在的第" + position + "条被删除。", Toast.LENGTH_SHORT).show();
+
+            try{
+                //1557313701_picture.jpg
+                String imageUrl = newimageList.get(position);
+                newimageList.remove(position);
+                Date remote_date0 = new Date(Long.parseLong(imageUrl.split("_")[0])*1000);
+                String remote_time = simpleDateFormat0.format(remote_date0);
+                currentTimeFolder = "orangecat-"+ remote_time;
+                int end  =imageUrl.lastIndexOf("_");
+                String imagePathTime= imageUrl.substring(0,end);
+//                catEyeSingleEntryAdapter.notifyItemRemoved(position);
+//                catEyeSingleEntryAdapter.notifyItemRangeChanged(position, currentPictuer.size() - position);
+//                Log.e("denganzhi3","positon:"+position);
+//                int start= imagePathName.lastIndexOf("/")+1;
+//                int end  =imagePathName.lastIndexOf("_");
+//                String imagePathTime= imagePathName.substring(start,end);  // 1554773091
+//                int start0= imagePathName.lastIndexOf("/");
+//                int start1=imagePathName.substring(0, start0).lastIndexOf("/");
+//                String currentTimeFolder= imagePathName.substring(0, start0).substring(start1+1, imagePathName.substring(0, start0).length());
+                //orangecat-20190409
+                String imagePath =  MyApplication.getInstance().getExternalFilesDir("").getAbsolutePath() + File.separator +Constants.DOWNLOAD_IMAGE_FOLDER_NAME + File.separator + deviceId+File.separator+currentTimeFolder+File.separator+imageUrl;
+                String audioPath =  MyApplication.getInstance().getExternalFilesDir("").getAbsolutePath() + File.separator +Constants.DOWNLOAD_AUDIO_FOLDER_NAME + File.separator + deviceId+File.separator+currentTimeFolder+File.separator+imagePathTime+"_audio.raw";
+                String h264Path =  MyApplication.getInstance().getExternalFilesDir("").getAbsolutePath() + File.separator +Constants.DOWNLOAD_VIDEO_FOLDER_NAME + File.separator + deviceId+File.separator+currentTimeFolder+File.separator+imagePathTime+"_video.h264";
+                String mp4Path =MyApplication.getInstance().getExternalFilesDir("").getAbsolutePath() + File.separator +Constants.COMPOUND_FOLDER + File.separator + deviceId+File.separator+currentTimeFolder+File.separator+imagePathTime+".mp4";
+                File imagefile= new File(imagePath);
+                File audiofile=new File(audioPath);
+                File h264file = new File(h264Path);
+                File mp4file = new File(mp4Path);
+                String item = imageList.get(position);
+                String item_key=item+ PirConst.IMG_DOWNLOAD_SUC;
+                SPUtils2.remove(getActivity(),item_key);
+                imageList.remove(position);
+
+                Log.e("denganzhi3","audiofile:"+imagefile.getAbsolutePath());
+                Log.e("denganzhi3","audiofile:"+audiofile.getAbsolutePath());
+                Log.e("denganzhi3","audiofile:"+h264file.getAbsolutePath());
+                Log.e("denganzhi3","h264file:"+mp4file.getAbsolutePath());
+                if(imagefile.exists()){
+                    Log.e("denganzhi3","图片存在");
+                    imagefile.delete();
+                }
+                if(audiofile.exists()){
+                    Log.e("denganzhi3","音频存在");
+                    audiofile.delete();
+                }
+                if(h264file.exists()){
+                    Log.e("denganzhi3","h264存在");
+                    h264file.delete();
+                }
+                if(mp4file.exists()){
+                    Log.e("denganzhi3","mp4存在");
+                    mp4file.delete();
+                }
+                }catch (Exception e){
+                //	Toast.makeText(getActivity(),getActivity().getResources().getString(R.string.delete_error),Toast.LENGTH_SHORT).show();
+                }
+
+                pirHistoryAdapter.notifyItemRemoved(position);
 
 //            if (direction == SwipeMenuRecyclerView.RIGHT_DIRECTION) {
 //                Toast.makeText(MainActivity.this, "list第" + adapterPosition + "; 右侧菜单第" + menuPosition, Toast.LENGTH_SHORT).show();

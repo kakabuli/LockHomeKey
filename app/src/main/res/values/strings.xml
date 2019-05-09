@@ -856,4 +856,5 @@
     <string name="loading">加载中...</string>
     <string name="video_download_fail">视频下载失败,请重新下载</string>
     <string name="receive_pir_trigger_check_cateye_snapshot">收到pir触发,请查看猫眼快照</string>
+    <string name="download_overtime_1">下载超时</string>
 </resources>
