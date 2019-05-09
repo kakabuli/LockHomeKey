@@ -242,7 +242,7 @@ public class BluetoothSharedDeviceManagementActivity extends BaseActivity<IBluet
                 String device_nickname = bleLockInfo.getServerLockInfo().getLockNickName();
                 String time = System.currentTimeMillis() + "";
                 List<String> items = new ArrayList<>();
-                mPresenter.addCommonUser(uid, phone, devmac, device_name, "", device_nickname, "3", time, items);
+                mPresenter.addCommonUser(uid, phone, devmac, device_name, System.currentTimeMillis()+"", device_nickname, "3", time, items);
             }
         }
     }

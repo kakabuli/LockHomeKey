@@ -61,6 +61,7 @@ public class FamilyMemberDetailActivity extends BaseActivity<IFamilyMemberDeatil
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_family_member_detail);
         ButterKnife.bind(this);
+        bleLockInfo = MyApplication.getInstance().getBleService().getBleLockInfo();
         ivBack.setOnClickListener(this);
         ivEditor.setOnClickListener(this);
         btnDelete.setOnClickListener(this);

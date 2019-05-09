@@ -6,6 +6,18 @@ import java.util.List;
  * Created by David on 2019/4/19
  */
 public class BluetoothRecordBean {
+    public BluetoothRecordBean() {
+    }
+
+    @Override
+    public String toString() {
+        return "BluetoothRecordBean{" +
+                "time='" + time + '\'' +
+                ", list=" + list +
+                ", lastData=" + lastData +
+                '}';
+    }
+
     public BluetoothRecordBean(String time, List<BluetoothItemRecordBean> list, boolean lastData) {
         this.time = time;
         this.list = list;
