@@ -282,6 +282,16 @@ public class KeyConstants {
      */
     public static final String CATE_INFO = "cateInfo";
 
+    /**
+     * 传递网关数据
+     */
+    public static final String GATEWAY_INFO = "gatewayInfo";
+
+    /**
+     * 传递网关锁数据
+     */
+    public static final String GATEWAY_LOCK_INFO = "gatewayLockInfo";
+
 
     /**
      *  是否是呼叫进来

@@ -40,7 +40,7 @@ public class GatewayAdapter extends BaseQuickAdapter<HomeShowBean, BaseViewHolde
             deviceStatus= cateEyeInfo.getServerInfo().getEvent_str();
             power=cateEyeInfo.getPower();
             batteryView.setPower(power);
-            powerView.setText(power+"");
+            powerView.setText(power+"%");
 
         }else if (HomeShowBean.TYPE_GATEWAY_LOCK==deviceType){
             ivDeviceType.setImageResource(R.mipmap.product_k9);
@@ -48,7 +48,7 @@ public class GatewayAdapter extends BaseQuickAdapter<HomeShowBean, BaseViewHolde
             deviceStatus= gwLockInfo.getServerInfo().getEvent_str();
             power=gwLockInfo.getPower();
             batteryView.setPower(power);
-            powerView.setText(power+"");
+            powerView.setText(power+"%");
         }
 
         if ("online".equals(deviceStatus)) {

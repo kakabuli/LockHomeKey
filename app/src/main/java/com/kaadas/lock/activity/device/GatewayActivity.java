@@ -90,9 +90,9 @@ public class GatewayActivity extends BaseActivity<GatewayView, GatewayPresenter<
 
     private void initData() {
         Intent intent = getIntent();
-        DeviceDetailBean deviceDetailBean = (DeviceDetailBean) intent.getSerializableExtra(KeyConstants.DEVICE_DETAIL_BEAN);
-        if (deviceDetailBean != null) {
-            GatewayInfo gatewayInfo = (GatewayInfo) deviceDetailBean.getShowCurentBean();
+        HomeShowBean homeShowBean = (HomeShowBean) intent.getSerializableExtra(KeyConstants.GATEWAY_INFO);
+        if (homeShowBean != null) {
+            GatewayInfo gatewayInfo = (GatewayInfo) homeShowBean.getObject();
             gatewayNickName.setText(gatewayInfo.getServerInfo().getDeviceNickName());
             if ("online".equals(gatewayInfo.getEvent_str())){
                 changeGatewayStatus(true);
@@ -123,6 +123,9 @@ public class GatewayActivity extends BaseActivity<GatewayView, GatewayPresenter<
 
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+
+
+
 
     }
 }
