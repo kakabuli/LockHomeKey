@@ -1,13 +1,10 @@
 package com.kaadas.lock.fragment;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Service;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Vibrator;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
@@ -25,12 +22,15 @@ import android.widget.TextView;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.home.BluetoothEquipmentDynamicActivity;
+import com.kaadas.lock.activity.home.OldBluetoothOpenLockRecordActivity;
 import com.kaadas.lock.adapter.BluetoothRecordAdapter;
 import com.kaadas.lock.bean.BluetoothItemRecordBean;
 import com.kaadas.lock.bean.BluetoothRecordBean;
 import com.kaadas.lock.mvp.mvpbase.BaseBleFragment;
 import com.kaadas.lock.mvp.presenter.BleLockPresenter;
+import com.kaadas.lock.mvp.presenter.OldBleLockPresenter;
 import com.kaadas.lock.mvp.view.IBleLockView;
+import com.kaadas.lock.mvp.view.IOldBleLockView;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.publiclibrary.bean.ForeverPassword;
 import com.kaadas.lock.publiclibrary.ble.BleProtocolFailedException;
@@ -40,9 +40,7 @@ import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.result.GetPasswordResult;
 import com.kaadas.lock.publiclibrary.http.util.HttpUtils;
 import com.kaadas.lock.utils.AlertDialogUtil;
-import com.kaadas.lock.utils.AnimatorUtil;
 import com.kaadas.lock.utils.DateUtils;
-import com.kaadas.lock.utils.DpPxConversion;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.PermissionUtil;
@@ -56,8 +54,8 @@ import java.util.concurrent.TimeoutException;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresenter<IBleLockView>>
-        implements View.OnClickListener, IBleLockView {
+public class OldBleLockFragment extends BaseBleFragment<IOldBleLockView, OldBleLockPresenter<IOldBleLockView>>
+        implements View.OnClickListener, IOldBleLockView {
 
     List<BluetoothRecordBean> list = new ArrayList<>();
     @BindView(R.id.recycleview)
@@ -76,16 +74,9 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
     TextView tvInner;
     @BindView(R.id.tv_external)
     TextView tvExternal;
-    @BindView(R.id.rl_device_dynamic)
-    RelativeLayout rlDeviceDynamic;
+
     @BindView(R.id.tv_more)
     TextView tvMore;
-    @BindView(R.id.create_time)
-    TextView createTime;
-    @BindView(R.id.rl_icon)
-    RelativeLayout rlIcon;
-    @BindView(R.id.tv_open_lock_times)
-    TextView tvOpenLockTimes;
     private BleLockInfo bleLockInfo;
     private boolean isOpening;
     private Runnable lockRunnable;
@@ -130,61 +121,18 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
         ButterKnife.bind(this, view);
         initRecycleView();
         changeOpenLockStatus(16);
-        rlDeviceDynamic.setOnClickListener(this);
         tvMore.setOnClickListener(this);
-        mPresenter.getOpenRecordFromServer(1,bleLockInfo);
+        mPresenter.getOpenRecordFromServer(1, bleLockInfo);
         initView();
         return view;
     }
 
-
-    //震动milliseconds毫秒
-    public static void vibrate(final Activity activity, long milliseconds) {
-        Vibrator vib = (Vibrator) activity.getSystemService(Service.VIBRATOR_SERVICE);
-        vib.vibrate(milliseconds);
-    }
-
     private void initView() {
-        long createTime = bleLockInfo.getServerLockInfo().getCreateTime();
-        //设置守护时间
-        long day = ((System.currentTimeMillis() / 1000 )- createTime) / (60 * 24 * 60);
-        this.createTime.setText(day + "");
+
         LogUtils.e("设备  HomeLockFragment  " + this);
+
         homeFragment = (HomePageFragment) getParentFragment();
 
-        rlIcon.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                if (isOpening) {
-                    LogUtils.e("长按  但是当前正在开锁状态   ");
-                    return false;
-                }
-                if (mPresenter.isAuth(bleLockInfo, true)) {
-                    if (bleLockInfo.getBackLock() == 0 || bleLockInfo.getSafeMode() == 1) {  //反锁状态下或者安全模式下  长按不操作
-                        if (bleLockInfo.getSafeMode() == 1) {
-                            ToastUtil.getInstance().showLong(R.string.safe_mode_can_not_open);
-                        } else if (bleLockInfo.getBackLock() == 0) {
-                            ToastUtil.getInstance().showLong(R.string.back_lock_can_not_open);
-                        }
-                        return false;
-                    }
-                    mPresenter.openLock();
-                }
-                vibrate(getActivity(), 150);
-                return false;
-            }
-        });
-        rlIcon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!isConnectingDevice && !bleLockInfo.isAuth()) {  //如果没有正在连接设备
-                    //连接设备
-                    mPresenter.attachView(BleLockFragment.this);
-                    mPresenter.isAuth(bleLockInfo, true);
-                    mPresenter.getAllPassword(bleLockInfo, false);
-                }
-            }
-        });
         //切换到当前页面
         listener = new HomePageFragment.ISelectChangeListener() {
             @Override
@@ -194,7 +142,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
                 } else {
                     LogUtils.e("切换到当前界面  设备 " + this + isCurrentFragment);
                     //切换到当前页面
-                    mPresenter.attachView(BleLockFragment.this);
+                    mPresenter.attachView(OldBleLockFragment.this);
                     if (isCurrentFragment) {
                         mPresenter.setBleLockInfo(bleLockInfo);
                         boolean auth = mPresenter.isAuth(bleLockInfo, true);
@@ -222,7 +170,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
             @Override
             public void onPageSelected(int i) {
                 if (i == position && homeFragment.isSelectHome) {
-                    mPresenter.attachView(BleLockFragment.this);
+                    mPresenter.attachView(OldBleLockFragment.this);
                     mPresenter.setBleLockInfo(bleLockInfo);
                     LogUtils.e(this + "   设置设备1  " + bleLockInfo.getServerLockInfo().toString());
                     mPresenter.isAuth(bleLockInfo, true);
@@ -259,8 +207,8 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
     }
 
     @Override
-    protected BleLockPresenter<IBleLockView> createPresent() {
-        return new BleLockPresenter<>();
+    protected OldBleLockPresenter<IOldBleLockView> createPresent() {
+        return new OldBleLockPresenter<>();
     }
 
     private void initRecycleView() {
@@ -272,7 +220,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
 //        itemList2.add(new BluetoothItemRecordBean("jff", "jfji", KeyConstants.BLUETOOTH_RECORD_COMMON, "fjjf", false, false));
 //        itemList2.add(new BluetoothItemRecordBean("jff", "jfji", KeyConstants.BLUETOOTH_RECORD_WARN, "fjjf", false, true));
 //        list.add(new BluetoothRecordBean("jfjfk", itemList2, true));
-         bluetoothRecordAdapter = new BluetoothRecordAdapter(list);
+        bluetoothRecordAdapter = new BluetoothRecordAdapter(list);
         recycleview.setLayoutManager(new LinearLayoutManager(getActivity()));
         recycleview.setAdapter(bluetoothRecordAdapter);
     }
@@ -283,9 +231,32 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
     }
 
     public void changeOpenLockStatus(int status) {
+/*      状态及文案显示： 关锁状态--开启中--锁已打开
+
+        状态1：手机蓝牙未打开
+
+        状态2：搜索门锁蓝牙....
+
+        状态.3：门锁不在有效范围内（一般两米）
+
+        状态（推拉）4： “已启动布防，长按开锁“
+
+        状态5 ：“安全模式”  长按不可APP开锁，提示
+
+            ““安全模式，无权限开门””
+
+        状态（推拉）6：“已反锁，请门内开锁”
+
+        状态8：“长按开锁”（表示关闭状态）
+
+        状态9：”开锁中....“
+
+        状态10：“锁已打开”.*/
+
         switch (status) {
             case 1:
                 //手机蓝牙未打开
+
 
                 break;
             case 2:
@@ -514,13 +485,9 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
     public void onClick(View v) {
         Intent intent;
         switch (v.getId()) {
-            case R.id.rl_device_dynamic:
-                intent = new Intent(getActivity(), BluetoothEquipmentDynamicActivity.class);
-                startActivity(intent);
-                break;
             case R.id.tv_more:
 
-                intent = new Intent(getActivity(), BluetoothEquipmentDynamicActivity.class);
+                intent = new Intent(getActivity(), OldBluetoothOpenLockRecordActivity.class);
                 startActivity(intent);
                 break;
         }
@@ -597,7 +564,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
 
     @Override
     public void onGetOpenNumberSuccess(int number) {
-        tvOpenLockTimes.setText(number + "");
+
     }
 
     @Override
@@ -757,7 +724,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
     }
 
     private String getOpenLockType(GetPasswordResult passwordResults, OpenLockRecord record) {
-        String nickName = record.getUser_num()+"";
+        String nickName = record.getUser_num() + "";
         if (passwordResults != null) {
             switch (record.getOpen_type()) {
                 case BleUtil.PASSWORD:
@@ -793,11 +760,12 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
         }
         return nickName;
     }
+
     private void groupData(List<OpenLockRecord> lockRecords) {
         list.clear();
         long lastDayTime = 0;
         for (int i = 0; i < lockRecords.size(); i++) {
-            if (i>=3){
+            if (i >= 3) {
                 break;
             }
             OpenLockRecord record = lockRecords.get(i);
@@ -817,13 +785,13 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
             if (lastDayTime != dayTime) { //添加头
                 lastDayTime = dayTime;
                 titleTime = DateUtils.getDayTimeFromMillisecond(dayTime);
-                itemList.add(new BluetoothItemRecordBean(nickName,record.getOpen_type(), KeyConstants.BLUETOOTH_RECORD_COMMON,
+                itemList.add(new BluetoothItemRecordBean(nickName, record.getOpen_type(), KeyConstants.BLUETOOTH_RECORD_COMMON,
                         time, false, false));
                 list.add(new BluetoothRecordBean(titleTime, itemList, false));
-            }else {
+            } else {
                 BluetoothRecordBean bluetoothRecordBean = list.get(list.size() - 1);
                 List<BluetoothItemRecordBean> bluetoothItemRecordBeanList = bluetoothRecordBean.getList();
-                bluetoothItemRecordBeanList.add(new BluetoothItemRecordBean(nickName,record.getOpen_type(), KeyConstants.BLUETOOTH_RECORD_COMMON,
+                bluetoothItemRecordBeanList.add(new BluetoothItemRecordBean(nickName, record.getOpen_type(), KeyConstants.BLUETOOTH_RECORD_COMMON,
                         time, false, false));
             }
 
@@ -845,7 +813,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
                 }
 
             }
-            if (i==list.size()-1){
+            if (i == list.size() - 1) {
                 bluetoothRecordBean.setLastData(true);
             }
 

@@ -24,6 +24,11 @@ public class  HomeShowBean implements Serializable {
      */
     public static final int TYPE_BLE_LOCK = 3;
 
+    /**
+     * 设备类型  老蓝牙锁
+     */
+    public static final int TYPE_OLD_BLE_LOCK = 4;
+
     //设备类型
     private int deviceType;
     // 设备唯一标识

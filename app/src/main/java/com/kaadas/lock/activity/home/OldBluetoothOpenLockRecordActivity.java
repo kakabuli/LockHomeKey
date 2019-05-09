@@ -1,23 +1,20 @@
-package com.kaadas.lock.fragment;
+package com.kaadas.lock.activity.home;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
-import com.kaadas.lock.activity.home.BluetoothEquipmentDynamicActivity;
 import com.kaadas.lock.adapter.BluetoothRecordAdapter;
 import com.kaadas.lock.bean.BluetoothItemRecordBean;
 import com.kaadas.lock.bean.BluetoothRecordBean;
-import com.kaadas.lock.mvp.mvpbase.BaseBleFragment;
+import com.kaadas.lock.mvp.mvpbase.BaseBleActivity;
 import com.kaadas.lock.mvp.presenter.OpenLockRecordPresenter;
 import com.kaadas.lock.mvp.view.IOpenLockRecordView;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
@@ -46,7 +43,7 @@ import butterknife.Unbinder;
 /**
  * Created by David on 2019/4/22
  */
-public class BluetoothOpenLockRecordFragment extends BaseBleFragment<IOpenLockRecordView, OpenLockRecordPresenter<IOpenLockRecordView>>
+public class OldBluetoothOpenLockRecordActivity extends BaseBleActivity<IOpenLockRecordView, OpenLockRecordPresenter<IOpenLockRecordView>>
         implements IOpenLockRecordView, View.OnClickListener {
     @BindView(R.id.recycleview)
     RecyclerView recycleview;
@@ -56,6 +53,12 @@ public class BluetoothOpenLockRecordFragment extends BaseBleFragment<IOpenLockRe
     SmartRefreshLayout refreshLayout;
     @BindView(R.id.tv_synchronized_record)
     TextView tvSynchronizedRecord;
+    @BindView(R.id.iv_back)
+    ImageView ivBack;
+    @BindView(R.id.tv_content)
+    TextView tvContent;
+    @BindView(R.id.iv_right)
+    ImageView ivRight;
     private BleLockInfo bleLockInfo;
     private BluetoothEquipmentDynamicActivity activity;
     private boolean isLoadingBleRecord;  //正在加载锁上数据
@@ -63,24 +66,18 @@ public class BluetoothOpenLockRecordFragment extends BaseBleFragment<IOpenLockRe
     View view;
     private Unbinder unbinder;
 
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view = View.inflate(getActivity(), R.layout.fragment_bluetooth_open_lock_record, null);
-        unbinder = ButterKnife.bind(this, view);
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.fragment_bluetooth_open_lock_record);
+        unbinder = ButterKnife.bind(this);
         tvSynchronizedRecord.setOnClickListener(this);
-        activity = (BluetoothEquipmentDynamicActivity) getActivity();
-        bleLockInfo = activity.getBleDeviceInfo();
+        ivBack.setOnClickListener(this);
+        tvContent.setText(R.string.equipment_dynamic);
+        bleLockInfo = mPresenter.getBleLockInfo();
         initRecycleView();
         initRefresh();
-        return view;
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
         mPresenter.getOpenRecordFromServer(1);
-
     }
 
 
@@ -90,22 +87,9 @@ public class BluetoothOpenLockRecordFragment extends BaseBleFragment<IOpenLockRe
     }
 
     private void initRecycleView() {
-    /*    List<BluetoothItemRecordBean> itemList1 = new ArrayList<>();
-        itemList1.add(new BluetoothItemRecordBean("jff", "jfji", KeyConstants.BLUETOOTH_RECORD_WARN, "fjjf", true, true));
-        list.add(new BluetoothRecordBean("jfjfk", itemList1, false));
-        List<BluetoothItemRecordBean> itemList2 = new ArrayList<>();
-        itemList2.add(new BluetoothItemRecordBean("jff", "jfji", KeyConstants.BLUETOOTH_RECORD_WARN, "fjjf", true, false));
-        itemList2.add(new BluetoothItemRecordBean("jff", "jfji", KeyConstants.BLUETOOTH_RECORD_COMMON, "fjjf", false, false));
-        itemList2.add(new BluetoothItemRecordBean("jff", "jfji", KeyConstants.BLUETOOTH_RECORD_WARN, "fjjf", false, true));
-        list.add(new BluetoothRecordBean("jfjfk", itemList2, false));
-        List<BluetoothItemRecordBean> itemList3 = new ArrayList<>();
-        itemList3.add(new BluetoothItemRecordBean("jff", "jfji", KeyConstants.BLUETOOTH_RECORD_WARN, "fjjf", true, false));
-        itemList3.add(new BluetoothItemRecordBean("jff", "jfji", KeyConstants.BLUETOOTH_RECORD_COMMON, "fjjf", false, false));
-        itemList3.add(new BluetoothItemRecordBean("jff", "jfji", KeyConstants.BLUETOOTH_RECORD_WARN, "fjjf", false, true));
-        list.add(new BluetoothRecordBean("jfjfk", itemList3, true))*/
-        ;
+
         bluetoothRecordAdapter = new BluetoothRecordAdapter(list);
-        recycleview.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recycleview.setLayoutManager(new LinearLayoutManager(this));
         recycleview.setAdapter(bluetoothRecordAdapter);
     }
 
@@ -131,11 +115,11 @@ public class BluetoothOpenLockRecordFragment extends BaseBleFragment<IOpenLockRe
     }
 
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        ((ViewGroup) view.getParent()).removeView(view);
+    protected void onDestroy() {
+        super.onDestroy();
         unbinder.unbind();
     }
+
 
     @Override
     public void onLoseRecord(List<Integer> numbers) {
@@ -177,7 +161,7 @@ public class BluetoothOpenLockRecordFragment extends BaseBleFragment<IOpenLockRe
     }
 
     private String getOpenLockType(GetPasswordResult passwordResults, OpenLockRecord record) {
-        String nickName = record.getUser_num()+"";
+        String nickName = record.getUser_num() + "";
         if (passwordResults != null) {
             switch (record.getOpen_type()) {
                 case BleUtil.PASSWORD:
@@ -262,13 +246,13 @@ public class BluetoothOpenLockRecordFragment extends BaseBleFragment<IOpenLockRe
             if (lastDayTime != dayTime) { //添加头
                 lastDayTime = dayTime;
                 titleTime = DateUtils.getDayTimeFromMillisecond(dayTime);
-                itemList.add(new BluetoothItemRecordBean(nickName,record.getOpen_type(), KeyConstants.BLUETOOTH_RECORD_COMMON,
+                itemList.add(new BluetoothItemRecordBean(nickName, record.getOpen_type(), KeyConstants.BLUETOOTH_RECORD_COMMON,
                         time, false, false));
                 list.add(new BluetoothRecordBean(titleTime, itemList, false));
-            }else {
+            } else {
                 BluetoothRecordBean bluetoothRecordBean = list.get(list.size() - 1);
                 List<BluetoothItemRecordBean> bluetoothItemRecordBeanList = bluetoothRecordBean.getList();
-                bluetoothItemRecordBeanList.add(new BluetoothItemRecordBean(nickName,record.getOpen_type(), KeyConstants.BLUETOOTH_RECORD_COMMON,
+                bluetoothItemRecordBeanList.add(new BluetoothItemRecordBean(nickName, record.getOpen_type(), KeyConstants.BLUETOOTH_RECORD_COMMON,
                         time, false, false));
             }
 
@@ -282,15 +266,15 @@ public class BluetoothOpenLockRecordFragment extends BaseBleFragment<IOpenLockRe
             for (int j = 0; j < bluetoothRecordBeanList.size(); j++) {
                 BluetoothItemRecordBean bluetoothItemRecordBean = bluetoothRecordBeanList.get(j);
 
-                    if (j == 0) {
-                        bluetoothItemRecordBean.setFirstData(true);
-                    }
-                    if (j == bluetoothRecordBeanList.size() - 1) {
-                        bluetoothItemRecordBean.setLastData(true);
-                    }
+                if (j == 0) {
+                    bluetoothItemRecordBean.setFirstData(true);
+                }
+                if (j == bluetoothRecordBeanList.size() - 1) {
+                    bluetoothItemRecordBean.setLastData(true);
+                }
 
             }
-            if (i==list.size()-1){
+            if (i == list.size() - 1) {
                 bluetoothRecordBean.setLastData(true);
             }
 
@@ -303,12 +287,12 @@ public class BluetoothOpenLockRecordFragment extends BaseBleFragment<IOpenLockRe
     public void onLoadServerRecordFailed(Throwable throwable) {
         //加载服务器开锁记录失败
         refreshLayout.finishRefresh();
-        ToastUtil.getInstance().showShort(HttpUtils.httpProtocolErrorCode(getActivity(), throwable));
+        ToastUtil.getInstance().showShort(HttpUtils.httpProtocolErrorCode(this, throwable));
     }
 
     @Override
     public void onLoadServerRecordFailedServer(BaseResult result) {
-        ToastUtil.getInstance().showShort(HttpUtils.httpErrorCode(getActivity(), result.getCode()));
+        ToastUtil.getInstance().showShort(HttpUtils.httpErrorCode(this, result.getCode()));
         refreshLayout.finishRefresh();
         refreshLayout.finishLoadMore();
     }
@@ -336,13 +320,13 @@ public class BluetoothOpenLockRecordFragment extends BaseBleFragment<IOpenLockRe
 
     @Override
     public void onUploadServerRecordFailed(Throwable throwable) {
-        ToastUtil.getInstance().showShort(HttpUtils.httpProtocolErrorCode(getActivity(), throwable));
+        ToastUtil.getInstance().showShort(HttpUtils.httpProtocolErrorCode(this, throwable));
         LogUtils.e("记录上传失败");
     }
 
     @Override
     public void onUploadServerRecordFailedServer(BaseResult result) {
-        ToastUtil.getInstance().showShort(HttpUtils.httpErrorCode(getActivity(), result.getCode()));
+        ToastUtil.getInstance().showShort(HttpUtils.httpErrorCode(this, result.getCode()));
     }
 
     @Override
@@ -369,6 +353,9 @@ public class BluetoothOpenLockRecordFragment extends BaseBleFragment<IOpenLockRe
                         bluetoothRecordAdapter.notifyDataSetChanged();
                     }
                 }
+                break;
+            case R.id.iv_back:
+                finish();
                 break;
         }
     }

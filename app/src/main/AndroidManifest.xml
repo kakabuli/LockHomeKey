@@ -510,6 +510,10 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
         <activity
+            android:name="com.kaadas.lock.activity.home.OldBluetoothOpenLockRecordActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".activity.device.gatewaylock.more.GatewayMoreActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
