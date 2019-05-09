@@ -214,7 +214,7 @@
     <string name="set_gesture_pattern">再次绘制手势密码</string>
     <string name="repaint_gesture_pattern">与上次绘制不一致，请重新绘制</string>
     <string name="set_again_gesture_pattern">请再次绘制手势密码</string>
-    <string name="least_four_again_input">最少链接4个点, 请重新输入</string>
+    <string name="least_four_again_input">最少连接4个点, 请重新输入</string>
     <string name="setting">设置</string>
     <string name="new_version">已是最新版本</string>
     <string name="confirm_log_out">确定退出登录?</string>
@@ -612,9 +612,9 @@
     <string name="synchronized_record">同步记录</string>
     <string name="bluetooth_no_connect">蓝牙未连接</string>
     <string name="equipment_out_of_range">设备不在有效范围内</string>
-    <string name="bluetooth_connecting">蓝牙链接中</string>
-    <string name="bluetooth_connect_success">蓝牙链接成功</string>
-    <string name="bluetooth_connect_fail">蓝牙链接失败</string>
+    <string name="bluetooth_connecting">蓝牙连接中</string>
+    <string name="bluetooth_connect_success">蓝牙连接成功</string>
+    <string name="bluetooth_connect_fail">蓝牙连接失败</string>
     <string name="long_press_open_lock">长按开锁</string>
     <string name="bu_fang_status">布防状态</string>
     <string name="double_lock_status">反锁状态</string>
@@ -762,7 +762,7 @@
     <string name="please_have_net_add_temp_pwd">请在有网络情况下添加临时密码！</string>
     <string name="please_have_net_add_forever_pwd">请在有网络情况下添加永久密码！</string>
     <string name="get_lock_lang">正在锁的语言状态，请稍后。。。</string>
-    <string name="hardware_version">硬件版本</string>
+
     <string name="screenshot_name">截屏</string>
     <string name="mute_name">静音</string>
     <string name="novoice">免提</string>
@@ -852,6 +852,8 @@
     <string name="cat_mac_address">MAC地址</string>
     <string name="cat_t_version">T200版本</string>
     <string name="cat_mcu_version">MCU版本</string>
+    <string name="hardware_version">硬件版本</string>
+    <string name="smart_check_set_fail">智能监测设置失败</string>
     <string name="data_loading">数据加载中……</string>
     <string name="loading">加载中...</string>
     <string name="video_download_fail">视频下载失败,请重新下载</string>

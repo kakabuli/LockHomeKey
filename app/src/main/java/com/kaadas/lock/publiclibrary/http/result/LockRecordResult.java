@@ -7,6 +7,14 @@ import java.util.List;
  * Describe
  */
 public class LockRecordResult extends BaseResult {
+    @Override
+    public String toString() {
+        return "LockRecordResult{" +
+                "code='" + code + '\'' +
+                ", msg='" + msg + '\'' +
+                ", data=" + data +
+                '}';
+    }
 
     /**
      * code : 200
@@ -54,6 +62,22 @@ public class LockRecordResult extends BaseResult {
     }
 
     public static class LockRecordServer {
+        @Override
+        public String toString() {
+            return "LockRecordServer{" +
+                    "_id='" + _id + '\'' +
+                    ", lockName='" + lockName + '\'' +
+                    ", lockNickName='" + lockNickName + '\'' +
+                    ", nickName='" + nickName + '\'' +
+                    ", open_purview='" + open_purview + '\'' +
+                    ", open_time='" + open_time + '\'' +
+                    ", open_type='" + open_type + '\'' +
+                    ", status=" + status +
+                    ", uname='" + uname + '\'' +
+                    ", user_num='" + user_num + '\'' +
+                    ", versionType='" + versionType + '\'' +
+                    '}';
+        }
 
         /**
          * _id : 5c7e0b5663301ce694eab6d6

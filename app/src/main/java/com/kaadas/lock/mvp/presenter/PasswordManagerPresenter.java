@@ -179,7 +179,7 @@ public class PasswordManagerPresenter<T> extends BlePresenter<IPasswordManagerVi
     }
 
     private void getAllpasswordNumber(int codeNumber, byte[] deValue) {
-        int passwordNumber = 5;  //永久密码的最大编号   小凯锁都是5个  0-5
+        int passwordNumber = 9;  //永久密码的最大编号   小凯锁都是5个  0-5
         //获取所有有秘钥的密码编号
         for (int index = 0; index * 8 < codeNumber; index++) {
             if (index > 13) {
@@ -212,8 +212,14 @@ public class PasswordManagerPresenter<T> extends BlePresenter<IPasswordManagerVi
         }
         List<AddPasswordBean.Password> passwords = new ArrayList<>();
         for (int i : numbers) {
-            String number = i < 10 ? "0" + i : "" + i;
-            passwords.add(new AddPasswordBean.Password(1, number, number, 1));
+            if (i>4){
+                String number = i < 10 ? "0" + i : "" + i;
+                passwords.add(new AddPasswordBean.Password(2, number, number, 1));
+            }else {
+                String number = i < 10 ? "0" + i : "" + i;
+                passwords.add(new AddPasswordBean.Password(1, number, number, 1));
+            }
+
         }
         XiaokaiNewServiceImp.addPassword(MyApplication.getInstance().getUid()
                 , bleLockInfo.getServerLockInfo().getLockName(), passwords)
@@ -261,8 +267,14 @@ public class PasswordManagerPresenter<T> extends BlePresenter<IPasswordManagerVi
         }
         List<DeletePasswordBean.DeletePassword> deletePasswords = new ArrayList<>();
         for (int i : numbers) {
-            String number = i < 10 ? "0" + i : "" + i;
-            deletePasswords.add(new DeletePasswordBean.DeletePassword(1, number));
+            if (i>4){
+                String number = i < 10 ? "0" + i : "" + i;
+                deletePasswords.add(new DeletePasswordBean.DeletePassword(2, number));
+            }else {
+                String number = i < 10 ? "0" + i : "" + i;
+                deletePasswords.add(new DeletePasswordBean.DeletePassword(1, number));
+            }
+
         }
         XiaokaiNewServiceImp.deletePassword(MyApplication.getInstance().getUid(), bleLockInfo.getServerLockInfo().getLockName(), deletePasswords)
                 .subscribe(new BaseObserver<BaseResult>() {
@@ -509,6 +521,13 @@ public class PasswordManagerPresenter<T> extends BlePresenter<IPasswordManagerVi
             return;
         }
         int id = bleNumber.get(position);
+
+        if (id>4){
+            position++;
+            searchUserType();
+            return;
+
+        }
         LogUtils.e("查询用户类型   " + id);
         //  查询秘钥
         byte[] searchCommand = BleCommandFactory.queryUserTypeCommand((byte) 0x01, (byte) id, bleLockInfo.getAuthKey());

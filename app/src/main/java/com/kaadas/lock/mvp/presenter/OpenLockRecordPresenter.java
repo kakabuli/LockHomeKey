@@ -111,6 +111,7 @@ public class OpenLockRecordPresenter<T> extends BlePresenter<IOpenLockRecordView
                 .subscribe(new BaseObserver<LockRecordResult>() {
                     @Override
                     public void onSuccess(LockRecordResult lockRecordResult) {
+                        LogUtils.d("davi lockRecordResult "+lockRecordResult.toString());
                         if (lockRecordResult.getData().size() == 0) {  //服务器没有数据  提示用户
                             if (mViewRef.get() != null) {
                                 if (pagenum == 1) { //第一次获取数据就没有

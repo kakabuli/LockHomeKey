@@ -87,7 +87,7 @@ public class BluetoothPasswordManagerDetailActivity extends BaseBleActivity<IPas
             tvNumber.setText(getString(R.string.password_yong_jiu_valid));
         } else {
             tvNumber.setVisibility(View.VISIBLE);
-            // 2时间段 3周期 4 24小时
+            // 2时间段 3周期 4 24小时 5 一次性密码
             if (password.getType() == 2 ) {  //时效密码
 //                tvPwdEnable.setText(DateUtils.getStrFromMillisecond2(password.getStartTime()) + "-" + DateUtils.getStrFromMillisecond2(password.getEndTime()));
 //                密码有效时效  2018/12/12  10：22~2018/12/24 10:22
@@ -106,6 +106,8 @@ public class BluetoothPasswordManagerDetailActivity extends BaseBleActivity<IPas
                 String strHint = String.format(getString(R.string.week_hint), weeks,
                         DateUtils.long2HourMin(password.getStartTime()), DateUtils.long2HourMin(password.getEndTime()));
                 tvNumber.setText(strHint);
+            }else if (password.getType()==5){
+                tvNumber.setText(R.string.temporary_password_used_once);
             }
         }
         tvTime.setText(DateUtils.secondToDate(createTime));

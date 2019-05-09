@@ -136,5 +136,8 @@ public class MqttConstant {
     //获取猫眼信息
     public static final String BASIC_INFO="basicInfo";
 
+    //设置Pir
+    public static final String SET_PIR_ENABLE="setPirEnable";
+
 
 }

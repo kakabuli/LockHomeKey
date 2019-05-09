@@ -26,6 +26,7 @@ public class DevicePresenter<T> extends BasePresenter<IDeviceView> {
     private Disposable listenerAllDevicesDisposable;
     private Disposable allBindDeviceDisposable;
     protected BleLockInfo bleLockInfo;
+
     @Override
     public void attachView(IDeviceView view) {
         super.attachView(view);
@@ -105,6 +106,13 @@ public class DevicePresenter<T> extends BasePresenter<IDeviceView> {
         this.bleLockInfo = bleLockInfo;
     }
 
+
+    //请求电量
+    public void getPower(){
+        if (mqttService!=null){
+
+        }
+    }
 
 
 

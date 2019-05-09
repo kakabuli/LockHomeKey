@@ -10,6 +10,7 @@ import com.kaadas.lock.publiclibrary.mqtt.MqttCommandFactory;
 import com.kaadas.lock.publiclibrary.mqtt.eventbean.DeleteDeviceLockBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.CatEyeInfoBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.GetSoundVolume;
+import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetPirEnableBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.CatEyeInfoBeanResult;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.UpdateDevNickNameResult;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttConstant;
@@ -30,9 +31,9 @@ import io.reactivex.functions.Predicate;
 public class CatEyeMorePresenter <T> extends BasePresenter<IGatEyeView> {
     private Disposable updateNameDisposable;
     private Disposable getCatEyeInfoDisposable;
-    private Disposable setLockSoundVolumeDisposable;
-    private Disposable deleteLockInfoDisposable;
-    private Disposable deleteReceiveDisposable;
+    private Disposable setPirEnableDisposable;
+    private Disposable deleteCatEyeDisposable;
+
 
     //修改昵称
     public void updateDeviceName(String devuuid, String deviceId, String nickName) {
@@ -92,7 +93,7 @@ public class CatEyeMorePresenter <T> extends BasePresenter<IGatEyeView> {
             getCatEyeInfoDisposable = mqttService
                     .mqttPublish(MqttConstant.getCallTopic(MyApplication.getInstance().getUid()), mqttMessage)
                     .compose(RxjavaHelper.observeOnMainThread())
-                    .timeout(10 * 1000, TimeUnit.MILLISECONDS)
+                    .timeout(15 * 1000, TimeUnit.MILLISECONDS)
                     .filter(new Predicate<MqttData>() {
                         @Override
                         public boolean test(MqttData mqttData) throws Exception {
@@ -111,7 +112,7 @@ public class CatEyeMorePresenter <T> extends BasePresenter<IGatEyeView> {
                             if (catEyeInfoBean != null) {
                                 if ("200".equals(catEyeInfoBean.getReturnCode())) {
                                     if (mViewRef.get() != null) {
-                                        mViewRef.get().getCatEyeInfoSuccess(catEyeInfoBean);
+                                        mViewRef.get().getCatEyeInfoSuccess(catEyeInfoBean,mqttData.getPayload());
                                     }
                                 } else {
                                     if (mViewRef.get() != null) {
@@ -135,18 +136,18 @@ public class CatEyeMorePresenter <T> extends BasePresenter<IGatEyeView> {
     }
 
     //设置音量
-    public void setSoundVolume(String gatewayId, String deviceId, int volume) {
-        toDisposable(setLockSoundVolumeDisposable);
+    public void setPirEnable(String gatewayId, String deviceId,String uid, int status) {
+        toDisposable(setPirEnableDisposable);
         if (mqttService != null) {
-            MqttMessage mqttMessage = MqttCommandFactory.setSoundVolume(gatewayId, deviceId, volume);
-            setLockSoundVolumeDisposable = mqttService
+            MqttMessage mqttMessage = MqttCommandFactory.setPirEnable(gatewayId, deviceId,uid,status);
+            setPirEnableDisposable = mqttService
                     .mqttPublish(MqttConstant.getCallTopic(MyApplication.getInstance().getUid()), mqttMessage)
                     .compose(RxjavaHelper.observeOnMainThread())
                     .timeout(10 * 1000, TimeUnit.MILLISECONDS)
                     .filter(new Predicate<MqttData>() {
                         @Override
                         public boolean test(MqttData mqttData) throws Exception {
-                            if (MqttConstant.SET_SOUND_VOLUME.equals(mqttData.getFunc())) {
+                            if (MqttConstant.SET_PIR_ENABLE.equals(mqttData.getFunc())) {
                                 return true;
                             }
                             return false;
@@ -155,16 +156,16 @@ public class CatEyeMorePresenter <T> extends BasePresenter<IGatEyeView> {
                     .subscribe(new Consumer<MqttData>() {
                         @Override
                         public void accept(MqttData mqttData) throws Exception {
-                            toDisposable(setLockSoundVolumeDisposable);
-                            GetSoundVolume getSoundVolume = new Gson().fromJson(mqttData.getPayload(), GetSoundVolume.class);
+                            toDisposable(setPirEnableDisposable);
+                            SetPirEnableBean getSoundVolume = new Gson().fromJson(mqttData.getPayload(), SetPirEnableBean.class);
                             if (getSoundVolume != null) {
                                 if ("200".equals(getSoundVolume.getReturnCode())) {
                                     if (mViewRef.get() != null) {
-                                        mViewRef.get().setSoundVolumeSuccess(getSoundVolume.getParams().getVolume());
+                                        mViewRef.get().setPirEnableSuccess(status);
                                     }
                                 } else {
                                     if (mViewRef.get() != null) {
-                                        mViewRef.get().setSoundVolumeFail();
+                                        mViewRef.get().setPirEnableFail();
                                     }
                                 }
                             }
@@ -173,21 +174,21 @@ public class CatEyeMorePresenter <T> extends BasePresenter<IGatEyeView> {
                         @Override
                         public void accept(Throwable throwable) throws Exception {
                             if (mViewRef.get() != null) {
-                                mViewRef.get().setSoundVolumeThrowable(throwable);
+                                mViewRef.get().setPirEnableThrowable(throwable);
                             }
                         }
                     });
 
-            compositeDisposable.add(setLockSoundVolumeDisposable);
+            compositeDisposable.add(setPirEnableDisposable);
         }
 
     }
-
-    public void deleteLock(String gatewayId, String deviceId, String bustType) {
-        toDisposable(deleteLockInfoDisposable);
+    //删除猫眼
+    public void deleteCatEye(String gatewayId, String deviceId, String bustType) {
+        toDisposable(deleteCatEyeDisposable);
         if (mqttService != null) {
             MqttMessage mqttMessage = MqttCommandFactory.deleteDevice(gatewayId, deviceId, bustType);
-            deleteLockInfoDisposable = mqttService
+            deleteCatEyeDisposable = mqttService
                     .mqttPublish(MqttConstant.getCallTopic(MyApplication.getInstance().getUid()), mqttMessage)
                     .compose(RxjavaHelper.observeOnMainThread())
                     .timeout(10 * 1000, TimeUnit.MILLISECONDS)
@@ -204,15 +205,14 @@ public class CatEyeMorePresenter <T> extends BasePresenter<IGatEyeView> {
                     .subscribe(new Consumer<MqttData>() {
                         @Override
                         public void accept(MqttData mqttData) throws Exception {
-                            toDisposable(deleteLockInfoDisposable);
+                            toDisposable(deleteCatEyeDisposable);
                             DeleteDeviceLockBean deleteGatewayLockDeviceBean = new Gson().fromJson(mqttData.getPayload(), DeleteDeviceLockBean.class);
                             if (deleteGatewayLockDeviceBean != null) {
-                                if ("kdszblock".equals(deleteGatewayLockDeviceBean.getDevtype()) && deleteGatewayLockDeviceBean.getEventparams().getEvent_str().equals("delete")) {
+                                LogUtils.e(deleteGatewayLockDeviceBean.getDevtype()+"删除猫眼"+deleteGatewayLockDeviceBean.getEventparams().getEvent_str());
+                                if ("kdscateye".equals(deleteGatewayLockDeviceBean.getDevtype()) && deleteGatewayLockDeviceBean.getEventparams().getEvent_str().equals("delete")&&deviceId.equals(deleteGatewayLockDeviceBean.getDeviceId())) {
                                     if (mViewRef.get() != null) {
                                         mViewRef.get().deleteDeviceSuccess();
                                         MyApplication.getInstance().getAllDevicesByMqtt(true);
-                                        //清除锁上的密码
-                                        SPUtils.remove(KeyConstants.SAVA_LOCK_PWD + deviceId);
                                     }
                                 } else {
                                     if (mViewRef.get() != null) {
@@ -230,7 +230,7 @@ public class CatEyeMorePresenter <T> extends BasePresenter<IGatEyeView> {
                         }
                     });
 
-            compositeDisposable.add(deleteLockInfoDisposable);
+            compositeDisposable.add(deleteCatEyeDisposable);
         }
     }
 }
