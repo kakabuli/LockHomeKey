@@ -9,6 +9,8 @@ public class GwLockInfo implements Serializable {
     //服务器返回的信息
     ServerGwDevice serverInfo;
 
+    //电量
+    private int power;
 
 
     public GwLockInfo() {
@@ -35,5 +37,11 @@ public class GwLockInfo implements Serializable {
         this.serverInfo = serverInfo;
     }
 
+    public int getPower() {
+        return power;
+    }
 
+    public void setPower(int power) {
+        this.power = power;
+    }
 }

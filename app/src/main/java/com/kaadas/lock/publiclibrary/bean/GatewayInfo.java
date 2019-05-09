@@ -9,11 +9,13 @@ public class GatewayInfo implements Serializable {
      */
     ServerGatewayInfo serverInfo;
 
+    /**
+     * 上线和离线状态
+     */
+    String event_str;
+
     public GatewayInfo() {
     }
-
-
-    int power;
 
     public GatewayInfo(ServerGatewayInfo serverInfo) {
         this.serverInfo = serverInfo;
@@ -27,11 +29,11 @@ public class GatewayInfo implements Serializable {
         this.serverInfo = serverInfo;
     }
 
-    public int getPower() {
-        return power;
+    public String getEvent_str() {
+        return event_str;
     }
 
-    public void setPower(int power) {
-        this.power = power;
+    public void setEvent_str(String event_str) {
+        this.event_str = event_str;
     }
 }

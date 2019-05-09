@@ -22,6 +22,7 @@ import com.kaadas.lock.activity.device.gatewaylock.more.GatewayMoreActivity;
 import com.kaadas.lock.activity.device.gatewaylock.password.GatewayPasswordManagerActivity;
 import com.kaadas.lock.activity.device.gatewaylock.share.GatewaySharedDeviceManagementActivity;
 import com.kaadas.lock.activity.device.gatewaylock.stress.GatewayStressPasswordManagerActivity;
+import com.kaadas.lock.activity.device.gatewaylock.stress.old.GatewayLockStressDetailActivity;
 import com.kaadas.lock.bean.BluetoothLockFunctionBean;
 import com.kaadas.lock.bean.DeviceDetailBean;
 import com.kaadas.lock.bean.HomeShowBean;
@@ -231,14 +232,20 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
                 startActivity(intent);
                 break;
             case R.id.ll_two:
-                intent = new Intent(this, GatewayStressPasswordManagerActivity.class);
-                startActivity(intent);
+                if (!TextUtils.isEmpty(gatewayId)&&!TextUtils.isEmpty(deviceId)){
+                    intent = new Intent(this, GatewayLockStressDetailActivity.class);
+                    intent.putExtra(KeyConstants.GATEWAY_ID,gatewayId);
+                    intent.putExtra(KeyConstants.DEVICE_ID,deviceId);
+                    startActivity(intent);
+                }
+
                 break;
             case R.id.ll_three:
                 intent = new Intent(this, GatewayMoreActivity.class);
                 intent.putExtra(KeyConstants.DEVICE_DETAIL_BEAN,deviceDetailBean);
                 startActivityForResult(intent,KeyConstants.DEVICE_DETAIL_BEAN_NUM);
                 break;
+
 
             case R.id.tv_open_clock:
                 //开锁

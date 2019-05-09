@@ -10,7 +10,9 @@ import com.kaadas.lock.publiclibrary.mqtt.eventbean.DeviceOnLineBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetJoinAllowBean;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttConstant;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttData;
+import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.SPUtils;
 
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
@@ -99,6 +101,7 @@ public class AddZigbeeLockPresenter<T> extends BasePresenter<IAddZigbeeLockView>
                                         LogUtils.e("添加网关成功");
                                         mViewRef.get().addZigbeeSuccess(deviceOnLineBean);
                                         MyApplication.getInstance().getAllDevicesByMqtt(true);
+                                        SPUtils.remove(KeyConstants.SAVA_LOCK_PWD+deviceOnLineBean.getDeviceId());
                                         toDisposable(addZigbeeEvent);
                                     }
 

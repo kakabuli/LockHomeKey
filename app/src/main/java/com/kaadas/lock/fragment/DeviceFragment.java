@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -85,8 +86,8 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
     private DeviceDetailAdapter deviceDetailAdapter;
 
     private List<DeviceDetailBean> mDeviceList=new ArrayList<>();
-    boolean bluetoothAuthorization = false;
     private  List<HomeShowBean> homeShowBeanList;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -100,11 +101,8 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
         }
         unbinder = ButterKnife.bind(this, mView);
         deviceRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
-        AllBindDevices allBindDevices = MyApplication.getInstance().getAllBindDevices();
-        if (allBindDevices != null) {
-            homeShowBeanList = allBindDevices.getHomeShow(true);
-            initData(homeShowBeanList);
-        }
+        homeShowBeanList = MyApplication.getInstance().getAllDevices();
+        initData(homeShowBeanList);
         initRefresh();
         return mView;
     }
@@ -141,7 +139,7 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                 noDeviceLayout.setVisibility(View.GONE);
                 refresh.setVisibility(View.VISIBLE);
                 for (HomeShowBean homeShowBean:homeShowBeanList){
-                    LogUtils.e(homeShowBeanList.size()+"");
+                    LogUtils.e(homeShowBeanList.size()+"获取到大小     "+"获取到昵称  "+homeShowBean.getDeviceNickName());
                     getDifferentTypeDevice(homeShowBean);
                 }
                 if (deviceDetailAdapter!=null){
@@ -165,7 +163,6 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                 //猫眼设备
                 CateEyeInfo cateEyeInfo= (CateEyeInfo) showBean.getObject();
                 String eventStr=cateEyeInfo.getServerInfo().getEvent_str();
-
                 DeviceDetailBean catEye=new DeviceDetailBean();
                 catEye.setDeviceName(showBean.getDeviceNickName());
                 catEye.setEvent_str(eventStr);
@@ -196,13 +193,7 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                 gatewayBean.setDeviceName(serverGatewayInfo.getDeviceNickName());
                 //网关无电量的设置
                 gatewayBean.setPower(0);
-                String status= (String) SPUtils.getProtect(serverGatewayInfo.getDeviceSN(),"");
-                LogUtils.e(status+"======"+serverGatewayInfo.getDeviceSN());
-                if (status.equals("online")){
-                    gatewayBean.setEvent_str("online");
-                }else if (status.equals("offline")){
-                    gatewayBean.setEvent_str("offline");
-                }
+                gatewayBean.setEvent_str(gatewayInfo.getEvent_str());
                 gatewayBean.setType(showBean.getDeviceType());
                 gatewayBean.setShowCurentBean(gatewayInfo);
                 mDeviceList.add(gatewayBean);
@@ -210,7 +201,6 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
             case 3:
                 //蓝牙锁
                 BleLockInfo bleLockInfo= (BleLockInfo) showBean.getObject();
-
                 DeviceDetailBean bluetoothBean=new DeviceDetailBean();
                 bluetoothBean.setDeviceName(bleLockInfo.getServerLockInfo().getLockNickName());
                 bluetoothBean.setType(showBean.getDeviceType());
@@ -219,8 +209,7 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                 }else{
                     bluetoothBean.setEvent_str("offline");
                 }
-
-                bluetoothBean.setPower(100);
+                bluetoothBean.setPower(bleLockInfo.getBattery());
                 bluetoothBean.setShowCurentBean(bleLockInfo);
                 mDeviceList.add(bluetoothBean);
                 break;
@@ -241,7 +230,6 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                 mPresenter.refreshData();
             }
         });
-
     }
 
     @Override
@@ -271,7 +259,6 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
         DeviceDetailBean deviceDetailBean = mDeviceList.get(position);
-        Intent intent;
         switch (deviceDetailBean.getType()) {
             case 0:
                 //猫眼
@@ -289,6 +276,7 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
             case 2:
                 //网关
                 Intent gatwayInfo=new Intent(getActivity(), GatewayActivity.class);
+                gatwayInfo.putExtra(KeyConstants.DEVICE_DETAIL_BEAN,deviceDetailBean);
                 startActivity(gatwayInfo);
                 break;
             case 3:
@@ -315,8 +303,11 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
     @Override
     public void onDeviceRefresh(AllBindDevices allBindDevices) {
         //数据更新了
+        if (refresh!=null){
+            refresh.finishRefresh();
+        }
         if (allBindDevices !=null){
-            homeShowBeanList = allBindDevices.getHomeShow(true);
+            homeShowBeanList = MyApplication.getInstance().getAllDevices();
             initData(homeShowBeanList);
         }else {
             initData(null);
@@ -324,7 +315,7 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
 
     }
 
-    @Override
+/*    @Override
     public void deviceDataRefreshSuccess(AllBindDevices allBindDevices) {
         refresh.finishRefresh();
         //刷新页面成功
@@ -339,7 +330,7 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
         }
 
 
-    }
+    }*/
 
     @Override
     public void deviceDataRefreshFail() {
@@ -349,7 +340,7 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
     }
 
     @Override
-    public void deviceDataRefreshThrowable() {
+    public void deviceDataRefreshThrowable(Throwable throwable) {
         //刷新页面异常
         refresh.finishRefresh();
         LogUtils.e("刷新页面异常");

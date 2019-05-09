@@ -29,6 +29,7 @@ import com.kaadas.lock.activity.cateye.PreviewActivity;
 import com.kaadas.lock.adapter.PirHistoryAdapter;
 import com.kaadas.lock.adapter.TimeAdapter;
 import com.kaadas.lock.bean.MyDate;
+import com.kaadas.lock.bean.PirEventBus;
 import com.kaadas.lock.mvp.presenter.SnapPresenter;
 import com.kaadas.lock.mvp.view.ISnapShotView;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.FtpEnable;
@@ -38,6 +39,8 @@ import com.kaadas.lock.utils.SPUtils2;
 import com.kaadas.lock.utils.ftp.FtpException;
 import com.kaadas.lock.utils.ftp.FtpUtils;
 import com.kaadas.lock.utils.ftp.GeTui;
+import com.kaadas.lock.utils.greenDao.bean.HistoryInfo;
+import com.kaadas.lock.utils.greenDao.db.HistoryInfoDao;
 import com.kaadas.lock.widget.GravityPopup;
 import com.kaadas.lock.widget.GravityPopup.HidePopup;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
@@ -55,6 +58,7 @@ import com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -96,8 +100,12 @@ public class SnapshotFragment1 extends CallBackBaseFragment<ISnapShotView, SnapP
     Dialog dialog=null;
     LinkedList<String> newimageList=null;
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    SimpleDateFormat simpleDateFormatToday = new SimpleDateFormat("yyyyMMdd");
     String lastDate=null;
     boolean isVisibleToUserTo=true;
+    String today=null;
+    Date today_date=null;
+
     @Override
     protected SnapPresenter<ISnapShotView> createPresent() {
         return new SnapPresenter();
@@ -139,39 +147,80 @@ public class SnapshotFragment1 extends CallBackBaseFragment<ISnapShotView, SnapP
                 break;
             case  R.id.pir_history_add_cancle:
                 pir_history_all_ll.setVisibility(View.GONE);
+                catEyeCount=0;
                 break;
             case  R.id.test_snap:
 
+                int selectDay= day;
+                if(selectDay<10){
+                    currentDate = year_tv.getText().toString()+ time_tv.getText().toString()+""+"0"+selectDay;
+                }else{
+                    currentDate = year_tv.getText().toString()+ time_tv.getText().toString()+selectDay;
+                }
+                Toast.makeText(getActivity(),currentDate,Toast.LENGTH_SHORT).show();
 
              // 唤醒FTP
            //     mPresenter.weakUpFTP(gatewayId,deviceId);
+                break;
+
+            case R.id.pir_history_all_ll:
+                if(!isFresh){
+                    pir_history_all_ll.setVisibility(View.GONE);
+                    catEyeCount=0;
+                    if(day<10){
+                        currentDate = year_tv.getText().toString()+ time_tv.getText().toString()+""+"0"+day;
+                    }else{
+                        currentDate = year_tv.getText().toString()+ time_tv.getText().toString()+day;
+                    }
+                    history_refreshLayout_ff.autoRefresh();
+                }
                 break;
         }
     }
 
     PirHistoryAdapter pirHistoryAdapter;
     List<String> imageList=new ArrayList<>();
-    int catEyeCount=-1;
+    int catEyeCount=0;
+    String key=null;
     private  void initPIR(){
         pir_history_add_cancle.setOnClickListener(this);
+        pir_history_all_ll.setOnClickListener(this);
         test_snap.setOnClickListener(this);
-        String format= String.format( getActivity().getResources().getString(R.string.pir_history_notic), catEyeCount);
-        pir_history_notic_tv.setText(format);
+        today= simpleDateFormatToday.format(new Date());
+        try {
+            today_date= simpleDateFormatToday.parse(today);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        key =deviceId+ GeTui.CATEYE_KEY;
+        catEyeCount= (int) SPUtils2.get(MyApplication.getInstance(),key,0);
+        if(catEyeCount!=0 && catEyeCount!=-1){
+            String format= String.format( getActivity().getResources().getString(R.string.pir_history_notic), catEyeCount);
+            pir_history_notic_tv.setText(format);
+            pir_history_all_ll.setVisibility(View.VISIBLE);
+            SPUtils2.remove(getActivity(),key);
+        }else{
+            pir_history_all_ll.setVisibility(View.GONE);
+        }
 
         for (int i=0;i<20;i++){
          //   imageList.add("2019-04-"+i+"12:34:23");
         }
-
 
      //   history_rv_ff.setSwipeItemClickListener(mItemClickListener); // RecyclerView Item点击监听。
         // 侧滑
         history_rv_ff.setSwipeMenuCreator(swipeMenuCreator);
         history_rv_ff.setSwipeMenuItemClickListener(mMenuItemClickListener);
 
+        history_refreshLayout_ff.setEnableLoadMore(false);
+        history_refreshLayout_ff.setEnableRefresh(true);
+
         pirHistoryAdapter = new PirHistoryAdapter(getActivity(),imageList);
         history_rv_ff.setLayoutManager(new LinearLayoutManager(getActivity()));
         history_rv_ff.setAdapter(pirHistoryAdapter);
 
+        showDataFirst();
 
         pirHistoryAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
@@ -203,6 +252,37 @@ public class SnapshotFragment1 extends CallBackBaseFragment<ISnapShotView, SnapP
                     refreshlayout.finishRefresh();
                     return;
                 }
+
+                if(currentDate.equals(today)){
+                    //	Toast.makeText(getActivity(),"今天",Toast.LENGTH_SHORT).show();
+                    List<HistoryInfo> historyInfos=MyApplication.getInstance().getDaoWriteSession().getHistoryInfoDao().
+                            queryBuilder().where(HistoryInfoDao.Properties.CreateDate.eq(today_date))
+                            .where(HistoryInfoDao.Properties.Device_id.eq(deviceId)).list();
+                    Log.e("denganzhi1","history-->result==>:"+historyInfos.toString());
+                    if(historyInfos!=null && historyInfos.size() > 0){
+                        if(newimageList==null){
+                            newimageList= new LinkedList<>();
+                        }
+                        MyApplication.getInstance().getDaoWriteSession().getHistoryInfoDao().queryBuilder()
+                                .where(HistoryInfoDao.Properties.CreateDate.eq(today_date))
+                                .where(HistoryInfoDao.Properties.Device_id.eq(deviceId))
+                                .buildDelete().executeDeleteWithoutDetachingEntities();
+
+                        for (int i= 0 ;i <  historyInfos.size() ; i++){
+                            String fileName= historyInfos.get(i).getFileName();
+                            //newimageList.add
+                            newimageList.addFirst(fileName);
+                        }
+                        showPirHistoryData();
+                        history_refreshLayout_ff.finishRefresh();
+
+                        String key= deviceId + currentDate.replace("-","");
+                        String json=new Gson().toJson(newimageList);
+                        SPUtils2.put(MyApplication.getInstance(),key,json);
+                        return;
+                    }
+                }
+
                 isFresh=true;
                 pir_history_all_ll.setVisibility(View.GONE);
                 catEyeCount=0;
@@ -283,12 +363,27 @@ public class SnapshotFragment1 extends CallBackBaseFragment<ISnapShotView, SnapP
             }
         }
         // 图片下载成功,并且拷贝成功
-        if(str.equals(GeTui.FTP_IMAGE_COPY)  && MyApplication.getInstance().isPreviewActivity()){
+        if(str.equals(GeTui.FTP_IMAGE_COPY)   /*&& MyApplication.getInstance().isPreviewActivity() */ ){
             Log.e(GeTui.VideoLog,"===================PirHistoryFragment=============");
             pirHistoryAdapter.notifyDataSetChanged();
         }
     }
 
+    // 收到EventBus Pir消息
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void imagePirSuccess(PirEventBus str) {
+        //	if(str.equals(GeTui.CATEYE_PIR)){
+        if(str!=null && str.getDeviceId().equals(deviceId)){
+            catEyeCount++;
+            if(catEyeCount!=0 && catEyeCount!=-1){
+                String format= String.format( getActivity().getResources().getString(R.string.pir_history_notic), catEyeCount);
+                pir_history_notic_tv.setText(format);
+                pir_history_all_ll.setVisibility(View.VISIBLE);
+                SPUtils2.remove(getActivity(),key);
+            }
+        }
+        //	}
+    }
 
     // 点击日期
     @Override
@@ -335,13 +430,15 @@ public class SnapshotFragment1 extends CallBackBaseFragment<ISnapShotView, SnapP
                 showPirHistoryData();
 
             }else{
-
+                mPresenter.weakUpFTP(gatewayId,deviceId);
             }
+        }else {
+                mPresenter.weakUpFTP(gatewayId,deviceId);
         }
 
         // 唤醒FTP
      //   mPresenter.weakUpFTP(gatewayId,deviceId);
-        Toast.makeText(getActivity(),currentDate,Toast.LENGTH_SHORT).show();
+     //   Toast.makeText(getActivity(),currentDate,Toast.LENGTH_SHORT).show();
     }
 
     /**
@@ -484,6 +581,31 @@ public class SnapshotFragment1 extends CallBackBaseFragment<ISnapShotView, SnapP
             if(imageList.size()==0){
                 Toast.makeText(getActivity(),getActivity().getResources().getString(R.string.history_pir_no),Toast.LENGTH_SHORT).show();
             }
+        }
+    }
+
+    private void showDataFirst(){
+        if(day<10){
+            currentDate = year_tv.getText().toString()+ time_tv.getText().toString()+""+"0"+day;
+        }else{
+            currentDate = year_tv.getText().toString()+ time_tv.getText().toString()+day;
+        }
+        String key= deviceId+currentDate+"";
+        String str0=(String) SPUtils2.get(MyApplication.getInstance(),key,"");
+        if(!TextUtils.isEmpty(str0)){
+            if(newimageList!= null && newimageList.size()>0){
+                newimageList.clear();
+            }
+            newimageList=new Gson().fromJson(str0, new TypeToken<LinkedList<String>>() {}.getType());
+            if(newimageList!=null && newimageList.size()>0){
+                if(dialog!=null){
+                    dialog.dismiss();
+                }
+                lastDate= currentDate;
+                showPirHistoryData();
+            }else{
+            }
+        }else{
         }
     }
 

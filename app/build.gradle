@@ -1,4 +1,13 @@
 apply plugin: 'com.android.application'
+apply plugin: 'org.greenrobot.greendao'
+
+
+greendao {
+    schemaVersion 1// 数据库版本号
+    daoPackage 'com.kaadas.lock.utils.greenDao.db'//自动生成的dao的包名，包名默认是entity所在的包；
+    targetGenDir 'src/main/java'//生成数据库文件的目录
+}
+
 
 android {
     compileSdkVersion 28
@@ -102,6 +111,8 @@ dependencies {
     implementation 'org.greenrobot:eventbus:3.1.1'
     //微信分享
     implementation 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:+'
+    implementation 'org.greenrobot:greendao:3.2.2'
+
     implementation project(':imagepicker')
     implementation project(':linphoneLibrary')
     implementation project(':library:WheelPicker')

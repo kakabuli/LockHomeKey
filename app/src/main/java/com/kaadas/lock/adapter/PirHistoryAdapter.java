@@ -58,16 +58,22 @@ public class PirHistoryAdapter extends BaseQuickAdapter<String, BaseViewHolder> 
 		//Log.e(PirConst.VideoLog,"item:"+item+ PirConst.IMG_DOWNLOAD_SUC+"  PirHistoryAdapter:"+imgPath);
 
 
-		if(!TextUtils.isEmpty(imgPath)){
-			Glide.with(mContext).load(imgPath)
+//		if(!TextUtils.isEmpty(imgPath)){
+//			Glide.with(mContext).load(imgPath)
+//				.error(R.mipmap.pir_history_item_default)
+//				.diskCacheStrategy(DiskCacheStrategy.NONE)
+//				.placeholder(R.mipmap.pir_history_item_default)
+//				.into((ImageView) helper.getView(R.id.pir_img_icon));
+//		}else{
+//			((ImageView)helper.getView(R.id.pir_img_icon))
+//				.setImageResource(R.mipmap.pir_history_item_default);
+//		}
+
+		Glide.with(mContext).load(imgPath)
 				.error(R.mipmap.pir_history_item_default)
 				.diskCacheStrategy(DiskCacheStrategy.NONE)
 				.placeholder(R.mipmap.pir_history_item_default)
 				.into((ImageView) helper.getView(R.id.pir_img_icon));
-		}else{
-			((ImageView)helper.getView(R.id.pir_img_icon))
-				.setImageResource(R.mipmap.pir_history_item_default);
-		}
 
 
 

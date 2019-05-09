@@ -576,27 +576,23 @@
         <activity
             android:name=".activity.cateye.VideoVActivity"
             android:windowSoftInputMode = "adjustNothing"
+            android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"></activity>
-        <activity
-            android:name=".activity.cateye.VideoHActivity"
-            android:screenOrientation="landscape"
-            android:theme="@style/NoTitleFullscreen"></activity>
         <activity
             android:name=".activity.cateye.MediaPlayerActivity"
             android:screenOrientation="landscape"
             android:theme="@style/NoTitleFullscreen"></activity>
         <activity android:name=".activity.cateye.CallComingActivity"
             android:screenOrientation="portrait">
+        </activity>
 
-             <!--<intent-filter>-->
-             <!--<action android:name="android.intent.action.MAIN" />-->
-
-
+        <activity android:name=".activity.cateye.FtpDownLoadActivity">
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MAIN" />-->
              <!--<category android:name="android.intent.category.LAUNCHER" />-->
              <!--</intent-filter>-->
-
-
         </activity>
+
     </application>
 
 </manifest>

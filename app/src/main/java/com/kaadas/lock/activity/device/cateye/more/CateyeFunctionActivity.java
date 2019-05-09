@@ -1,5 +1,6 @@
 package com.kaadas.lock.activity.device.cateye.more;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -29,8 +30,7 @@ public class CateyeFunctionActivity extends AppCompatActivity implements View.On
     ImageView ivBack;
     @BindView(R.id.tv_name)
     TextView tvName;
-    @BindView(R.id.tv_type)
-    TextView tvType;
+
     @BindView(R.id.iv_external_big)
     ImageView ivExternalBig;
     @BindView(R.id.iv_external_middle)
@@ -87,7 +87,8 @@ public class CateyeFunctionActivity extends AppCompatActivity implements View.On
                 break;
             case R.id.ll_more:
                 intent = new Intent(this, CateyeMoreActivity.class);
-                startActivity(intent);
+                intent.putExtra(KeyConstants.CATE_INFO,cateEyeInfo);
+                startActivityForResult(intent,KeyConstants.UPDATE_DEVICE_NAME_REQUEST_CODE);
                 break;
             case R.id.rl_icon:
                 intent = new Intent(this, VideoVActivity.class);
@@ -188,7 +189,24 @@ public class CateyeFunctionActivity extends AppCompatActivity implements View.On
                 tvDate.setText(DateUtils.formatYearMonthDay(readDeviceInfoTime));
             }
         }
-
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode==KeyConstants.UPDATE_DEVICE_NAME_REQUEST_CODE){
+            if (resultCode== Activity.RESULT_OK){
+                String name=data.getStringExtra(KeyConstants.NAME);
+                if (name!=null){
+                    if (cateEyeInfo!=null){
+                        cateEyeInfo.getServerInfo().setNickName(name);
+                    }
+                    if (tvName!=null) {
+                        tvName.setText(name);
+                    }
+                }
+            }
+        }
 
     }
+
 }

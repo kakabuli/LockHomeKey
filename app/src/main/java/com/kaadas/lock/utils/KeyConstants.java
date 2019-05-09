@@ -267,6 +267,8 @@ public class KeyConstants {
 
     public static final int ADD_PWD_REQUEST_CODE=1002;
 
+    public static final int UPDATE_DEVICE_NAME_REQUEST_CODE=1003;
+
     /**
      * 传递蓝牙设备信息的Key
      */
@@ -305,5 +307,10 @@ public class KeyConstants {
 
     //密码编号管理
     public static final String ADD_PWD_ID="addPwdId";
+    //添加胁迫密码编号
+    public static final String ADD_STRESS_PWD_ID="addStressPwdId";
+
+    //获取猫眼信息
+    public static final String GET_CAT_EYE_INFO="getCatEyeInfo";
 
 }

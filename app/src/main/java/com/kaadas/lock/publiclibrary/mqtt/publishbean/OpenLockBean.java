@@ -11,7 +11,7 @@ public class OpenLockBean implements Serializable {
      * msgId : 00001
      * gwId :
      * deviceId : devuuid
-     * func : openLock
+     * func : realOpenLock
      * params : {"optype":"lock/unlock","userid":"xxxxx","type":"rfid/pin","pin":"xxxxxxxx"}
      * returnCode : 200
      * returnData : {}

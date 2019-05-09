@@ -29,6 +29,8 @@ import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.ToastUtil;
+import com.kaadas.lock.utils.greenDao.db.DaoManager;
+import com.kaadas.lock.utils.greenDao.db.DaoSession;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.DefaultRefreshFooterCreator;
 import com.scwang.smartrefresh.layout.api.DefaultRefreshHeaderCreator;
@@ -100,6 +102,8 @@ public class MyApplication extends Application {
         ZXingLibrary.initDisplayOpinion(this);
         initMeme();
         regToWx();
+        //配置数据库
+        setUpWriteDataBase();
     }
 
     private void regToWx() {
@@ -470,6 +474,7 @@ public class MyApplication extends Application {
      *
      * @param isForce 是否强制刷新
      */
+    public boolean neverGetDevice = false;
     public void getAllDevicesByMqtt(boolean isForce) {
         if (!isForce) {
             if (allBindDevices != null) {
@@ -482,7 +487,6 @@ public class MyApplication extends Application {
             allBindDeviceDisposable.dispose();
         }
         allBindDeviceDisposable = mqttService.mqttPublish(MqttConstant.MQTT_REQUEST_APP, allBindDevice)
-                .compose(RxjavaHelper.observeOnMainThread())
                 .filter(new Predicate<MqttData>() {
                     @Override
                     public boolean test(MqttData mqttData) throws Exception {
@@ -490,6 +494,7 @@ public class MyApplication extends Application {
                     }
                 })
                 .timeout(10 * 1000, TimeUnit.MILLISECONDS)
+                .compose(RxjavaHelper.observeOnMainThread())
                 .subscribe(new Consumer<MqttData>() {
                     @Override
                     public void accept(MqttData mqttData) throws Exception {
@@ -499,9 +504,7 @@ public class MyApplication extends Application {
                         String payload = mqttData.getPayload();
                         allBindDevices = new Gson().fromJson(payload, AllBindDevices.class);
                         if (allBindDevices != null) {
-
-                            homeShowDevices = allBindDevices.getHomeShow(false);
-                            LogUtils.e("获取到的首页设备个数是   "  +homeShowDevices.size() );
+                            homeShowDevices = allBindDevices.getHomeShow( );
                             getDevicesFromServer.onNext(allBindDevices);
                         }
                     }
@@ -513,10 +516,29 @@ public class MyApplication extends Application {
                 });
     }
 
-    public List<HomeShowBean> getHomeShowDevices() {
-        return homeShowDevices;
+
+    public void setAllBindDevices(AllBindDevices allBindDevices) {
+        homeShowDevices = allBindDevices.getHomeShow( );
+        LogUtils.e("获取到的首页设备个数是   "  +homeShowDevices.size() );
+        getDevicesFromServer.onNext(allBindDevices);
     }
 
+    public void setHomeShowDevices(List<HomeShowBean> homeShowDevices) {
+        this.homeShowDevices = homeShowDevices;
+    }
+
+    public List<HomeShowBean> getHomeShowDevices() {
+        List<HomeShowBean> tem = new ArrayList<>();
+        for (HomeShowBean homeShowBean :homeShowDevices){
+            if (homeShowBean.getDeviceType() != HomeShowBean.TYPE_GATEWAY){
+                tem.add(homeShowBean);
+            }
+        }
+        return tem;
+    }
+    public List<HomeShowBean> getAllDevices() {
+        return homeShowDevices;
+    }
 
     /**
      * 获取缓存的设备
@@ -611,14 +633,14 @@ public class MyApplication extends Application {
     public void setMediaPlayerActivity(boolean mediaPlayerActivity) {
         isMediaPlayerActivity = mediaPlayerActivity;
     }
-
-    private String[] downloadList;
-
-    public String[] getDownloadList() {
-        return downloadList;
+    private static DaoSession daoWriteSession;
+    private DaoManager manager;
+    private void setUpWriteDataBase() {
+        manager=DaoManager.getInstance(this);
+        daoWriteSession=manager.getDaoSession();
+    }
+    public    DaoSession getDaoWriteSession(){
+        return daoWriteSession;
     }
 
-    public void setDownloadList(String[] downloadList) {
-        this.downloadList = downloadList;
-    }
 }

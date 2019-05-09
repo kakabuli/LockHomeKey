@@ -46,7 +46,6 @@ public class GatewayLockPasswordShareActivity extends BaseActivity<GatewayLockSh
     TextView tvWeiXin;
     @BindView(R.id.tv_copy)
     TextView tvCopy;
-
     @BindView(R.id.tv_pwd_type)
     TextView tvPwdType;
 

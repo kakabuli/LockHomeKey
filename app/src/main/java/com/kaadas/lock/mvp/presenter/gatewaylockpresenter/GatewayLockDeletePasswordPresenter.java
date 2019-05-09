@@ -41,13 +41,11 @@ public class GatewayLockDeletePasswordPresenter<T> extends BasePresenter<Gateway
                                              LogUtils.e("删除"+mqttData.getFunc());
                                              toDisposable(deleteLockPwdDdisposable);
                                              LockPwdFuncBean lockPwdFuncBean=new Gson().fromJson(mqttData.getPayload(),LockPwdFuncBean.class);
-                                             if ("200".equals(mqttData.getReturnCode())){
-                                                 if (lockPwdFuncBean.getReturnData().getStatus()==0){
+                                             if ("200".equals(mqttData.getReturnCode())&&lockPwdFuncBean.getReturnData().getStatus()==0){
                                                      //删除成功
                                                      if (mViewRef.get()!=null){
                                                          mViewRef.get().deleteLockPwdSuccess();
                                                      }
-                                                 }
                                              }else{
                                                  if (mViewRef.get()!=null){
                                                      mViewRef.get().deleteLockPwdFail();

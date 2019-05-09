@@ -12,6 +12,8 @@ import com.kaadas.lock.publiclibrary.mqtt.publishbean.GetSoundVolume;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.UpdateDevNickNameResult;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttConstant;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttData;
+import com.kaadas.lock.utils.KeyConstants;
+import com.kaadas.lock.utils.SPUtils;
 
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
@@ -254,6 +256,8 @@ public class GatewayLockMorePresenter<T> extends BasePresenter<GatewayLockMoreVi
                                     if (mViewRef.get()!=null){
                                         mViewRef.get().deleteDeviceSuccess();
                                         MyApplication.getInstance().getAllDevicesByMqtt(true);
+                                        //清除锁上的密码
+                                        SPUtils.remove(KeyConstants.SAVA_LOCK_PWD+deviceId);
                                     }
                                 }else{
                                     if (mViewRef.get()!=null){

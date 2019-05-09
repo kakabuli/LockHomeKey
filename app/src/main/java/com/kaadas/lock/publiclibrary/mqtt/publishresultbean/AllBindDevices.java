@@ -11,6 +11,8 @@ import com.kaadas.lock.publiclibrary.bean.GwLockInfo;
 import com.kaadas.lock.publiclibrary.bean.ServerGwDevice;
 import com.kaadas.lock.publiclibrary.bean.ServerGatewayInfo;
 import com.kaadas.lock.publiclibrary.http.result.ServerBleDevice;
+import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.SPUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -255,7 +257,7 @@ public class AllBindDevices {
     /**
      * 获取首页显示需要的对象，即除了网管之外的所有设备
      */
-    public List<HomeShowBean> getHomeShow(boolean showGateway) {
+    public List<HomeShowBean> getHomeShow() {
         ReturnDataBean returnData = getData();
         List<HomeShowBean> homeShowBeans = new ArrayList<>();
         List<ServerBleDevice> bleDevices = returnData.getDevList();
@@ -283,9 +285,28 @@ public class AllBindDevices {
         if (gwList != null) {
             for (ReturnDataBean.GwListBean gwListBean : gwList) {
                 //首页不显示网关
-                if (showGateway == true) {
-                    homeShowBeans.add(new HomeShowBean(HomeShowBean.TYPE_GATEWAY, gwListBean.getDeviceSN(), gwListBean.getDeviceNickName(), new GatewayInfo(new ServerGatewayInfo(gwListBean))));
+                boolean isExistGateway = false;
+                GatewayInfo newGatewayInfo = null;
+                for (HomeShowBean homeShowBean : MyApplication.getInstance().getAllDevices()) {
+                    if (!isExistGateway && homeShowBean.getDeviceType() == HomeShowBean.TYPE_GATEWAY) {
+                        //如果设备原来就存在，那么只替换服务器数据   其他数据不变
+                        GatewayInfo gatewayInfo = (GatewayInfo) homeShowBean.getObject();
+
+                        if (gwListBean.getDeviceSN().equals(gatewayInfo.getServerInfo().getDeviceSN())) {
+                            isExistGateway = true;
+                            gatewayInfo.setServerInfo(new ServerGatewayInfo(gwListBean));
+                            homeShowBeans.add(homeShowBean);
+                        }
+                    }
                 }
+                if (!isExistGateway) {
+                    newGatewayInfo = new GatewayInfo(new ServerGatewayInfo(gwListBean));
+                    String gatewayStatus = (String) SPUtils.get(newGatewayInfo.getServerInfo().getDeviceSN(), "");
+                    newGatewayInfo.setEvent_str(gatewayStatus);
+                    SPUtils.remove(newGatewayInfo.getServerInfo().getDeviceSN());
+                    homeShowBeans.add(new HomeShowBean(HomeShowBean.TYPE_GATEWAY, gwListBean.getDeviceSN(), gwListBean.getDeviceNickName(), newGatewayInfo));
+                }
+
                 List<ServerGwDevice> deviceList = gwListBean.getDeviceList();
                 for (ServerGwDevice serverGwDevice : deviceList) {
                     String nickName = serverGwDevice.getNickName();
@@ -301,18 +322,17 @@ public class AllBindDevices {
                                 if (cateEyeInfo.getGwID().equals(gwListBean.getDeviceSN())
                                         && cateEyeInfo.getServerInfo().getDeviceId().equals(serverGwDevice.getDeviceId())
                                         ) {
+                                    LogUtils.e(cateEyeInfo.getServerInfo().getNickName()+"值还没有改变");
                                     isExist = true;
                                     cateEyeInfo.setServerInfo(serverGwDevice);
-                                    cateEyeInfo.setGatewayInfo(new GatewayInfo(new ServerGatewayInfo(gwListBean)));
+                                    LogUtils.e(cateEyeInfo.getServerInfo().getNickName()+"值发生改变");
                                     homeShowBeans.add(homeShowBean);
                                 }
                             }
                         }
                         if (!isExist) {
-
-
                             CateEyeInfo cateEyeInfo = new CateEyeInfo(gwListBean.getDeviceSN(), serverGwDevice);
-                            cateEyeInfo.setGatewayInfo(new GatewayInfo(new ServerGatewayInfo(gwListBean)));
+                            cateEyeInfo.setGatewayInfo(newGatewayInfo);
                             homeShowBeans.add(new HomeShowBean(HomeShowBean.TYPE_CAT_EYE, serverGwDevice.getDeviceId(), nickName, cateEyeInfo));
                         }
                     } else {
@@ -320,11 +340,13 @@ public class AllBindDevices {
                             if (!isExist && homeShowBean.getDeviceType() == HomeShowBean.TYPE_GATEWAY_LOCK) {
                                 GwLockInfo gwLockInfo = (GwLockInfo) homeShowBean.getObject();
                                 //如果设备 网关Id 一致   且deviceId也一致   替换服务器数据
+                                LogUtils.e(gwLockInfo.getServerInfo().getNickName()+"值还没有改变");
                                 if (gwLockInfo.getGwID().equals(gwListBean.getDeviceSN())
                                         && gwLockInfo.getServerInfo().getDeviceId().equals(serverGwDevice.getDeviceId())
                                         ) {
                                     isExist = true;
                                     gwLockInfo.setServerInfo(serverGwDevice);
+                                    LogUtils.e(gwLockInfo.getServerInfo().getNickName()+"值发生改变");
                                     homeShowBeans.add(homeShowBean);
                                 }
                             }

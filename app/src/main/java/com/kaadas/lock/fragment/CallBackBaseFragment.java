@@ -170,6 +170,7 @@ public abstract class CallBackBaseFragment<T extends IBaseView, V
 
         if(day<7){  //当日日期小于7天涉及上到一个月
             MyDate myDate=new MyDate(day, weeks[week]);
+            myDate.setChecked(true);
             myDateList.add(myDate);
             for (int i = 1; i <= 6; i++) {
                 todayc.add(Calendar.DAY_OF_MONTH, -1);// 前一天
@@ -185,6 +186,9 @@ public abstract class CallBackBaseFragment<T extends IBaseView, V
         }else{  // 当日日期大于7天，不涉及到上一个月
             for (int i = day; i > 0; i--) {
                 MyDate myDate=new MyDate(i, weeks[week]);
+                if(i==day){
+                    myDate.setChecked(true);
+                }
                 week--;
                 if(week==-1){
                     week=6;
@@ -335,6 +339,13 @@ public abstract class CallBackBaseFragment<T extends IBaseView, V
         timeAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+
+                boolean isSelect= myDateList.get(0).isChecked();
+                if(isSelect){
+                    myDateList.get(0).setChecked(false);
+                    timeAdapter.notifyItemChanged(0);
+                  //  Toast.makeText(getActivity(),isSelect+"", Toast.LENGTH_LONG).show();
+                }
 
                 if(lastView!=null){
                     lastView.setBackgroundColor(Color.parseColor("#00FFFFFF"));

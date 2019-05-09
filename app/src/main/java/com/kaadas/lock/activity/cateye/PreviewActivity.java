@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -105,6 +106,7 @@ public class PreviewActivity extends BaseActivity<ISnapShotView, SnapPresenter<I
         imageUrl= getIntent().getStringExtra("imgUrl");  //1554945365_picture.jpg
         deviceId= getIntent().getStringExtra("deviceId");  //CH01183910018
         newImgUrl= getIntent().getStringExtra("newImgUrl");  //2019-04-11 09:16:05
+
         gatewayId= getIntent().getStringExtra("gatewayId");
         currentTimeFolder = "orangecat-"+ newImgUrl.split(" ")[0].replace("-","");  //orangecat-20190411
 
@@ -115,6 +117,12 @@ public class PreviewActivity extends BaseActivity<ISnapShotView, SnapPresenter<I
         imgPath =  MyApplication.getInstance().getExternalFilesDir("").getAbsolutePath() + File.separator + Constants.DOWNLOAD_IMAGE_FOLDER_NAME + File.separator + deviceId+File.separator+remoteTimeFoler+File.separator+imageUrl;
         File imgPathFile=new File(imgPath);
         Log.e(GeTui.VideoLog,"imagePath:"+imgPath+"文件是否存在:"+imgPathFile.exists()+"大小:"+imgPathFile.length());
+
+        String filepath= (String) SPUtils2.get(this,newImgUrl+GeTui.IMG_DOWNLOAD_SUC,"");
+        if(TextUtils.isEmpty(filepath)){
+            imgPathFile.delete();
+        }
+
         if(imgPathFile.exists() && imgPathFile.length()>10){
             Glide.with(this).load(imgPathFile).into(preview_img);
             preview_look_video.setVisibility(View.VISIBLE);
@@ -149,6 +157,10 @@ public class PreviewActivity extends BaseActivity<ISnapShotView, SnapPresenter<I
 //        }
 
         Log.e("bbbbbbb","有没有往下走了");
+
+        if(MyApplication.getInstance().isMediaPlayerActivity()){
+           return;
+        }
 
         if (Constants.IMAGE.equals(str)){
 //			LogUtils.d("davi 成功类型 "+str);
@@ -232,8 +244,12 @@ public class PreviewActivity extends BaseActivity<ISnapShotView, SnapPresenter<I
                 finish();
                 break;
             case R.id.preview_look_video:
-                Intent video_play_intent=new Intent(PreviewActivity.this,MediaPlayerActivity.class);
-                startActivity(video_play_intent);
+                Intent intent=new Intent(this, MediaPlayerActivity.class);
+                intent.putExtra(Constants.PLAY_VIDEO_FLAG,Constants.CAT_EYE_VIDEO);
+                intent.putExtra(Constants.CAT_EYE_URL,imgPath);
+                intent.putExtra(Constants.DEVICE_ID,deviceId);
+                intent.putExtra(Constants.GATEWAY_ID, gatewayId);
+                startActivity(intent);
                 break;
         }
     }
@@ -244,7 +260,6 @@ public class PreviewActivity extends BaseActivity<ISnapShotView, SnapPresenter<I
             EventBus.getDefault().unregister(this);
         }
         MyApplication.getInstance().setPreviewActivity(false);
-        MyApplication.getInstance().setDownloadList(null);
         super.onDestroy();
     }
 
@@ -266,12 +281,13 @@ public class PreviewActivity extends BaseActivity<ISnapShotView, SnapPresenter<I
         Log.e(GeTui.VideoLog,"PreviewActivity......."+catEyePath);
         downloadStr[0]=catEyePath;
         if(downloadStr!=null && downloadStr.length>0){
-
+            //(final String ftpCmdIp, final String ftpCmdPort, final String[] urlStr, final String deviceId, final String folderName,final String singleUrl)
+           FtpUtils.getInstance().downloadMultiFile(ftpCmdIp,ftpCmdPort,downloadStr,deviceId,Constants.DOWNLOAD_IMAGE_FOLDER_NAME,null);
         }else {
 
         }
         //sdap0/storage/orangecat-20190507/1557218820_picture.jpg
-        MyApplication.getInstance().setDownloadList(downloadStr);
+//        MyApplication.getInstance().setDownloadList(downloadStr);
     }
 
     @Override

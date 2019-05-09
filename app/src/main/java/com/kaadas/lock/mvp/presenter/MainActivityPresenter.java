@@ -62,7 +62,9 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
     @Override
     public void attachView(IMainActivityView view) {
         super.attachView(view);
+        //网关上线监听
         getPublishNotify();
+
         //设置警报提醒
         toDisposable(warringDisposable);
         warringDisposable = bleService.listeneDataChange()
@@ -141,6 +143,7 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
 
     //获取网关状态通知
     public void getPublishNotify() {
+
         disposable = MyApplication.getInstance().getMqttService().listenerNotifyData()
                 .subscribe(new Consumer<MqttData>() {
                     @Override
@@ -148,8 +151,22 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                         if (mqttData != null) {
                             if (MqttConstant.GATEWAY_STATE.equals(mqttData.getFunc())) {
                                 GetBindGatewayStatusResult gatewayStatusResult = new Gson().fromJson(mqttData.getPayload(), GetBindGatewayStatusResult.class);
+                                LogUtils.e("监听网关的状态"+gatewayStatusResult.getDevuuid());
                                 if (gatewayStatusResult != null) {
-                                    SPUtils.putProtect(gatewayStatusResult.getDevuuid(), gatewayStatusResult.getData().getState());
+                                    List<HomeShowBean> homeShowBeans=MyApplication.getInstance().getAllDevices();
+                                   if (homeShowBeans.size()>0) {
+                                       for (HomeShowBean homeShowBean : homeShowBeans) {
+                                           if (homeShowBean.getDeviceType() == HomeShowBean.TYPE_GATEWAY) {
+                                               GatewayInfo gatewayInfo = (GatewayInfo) homeShowBean.getObject();
+                                               if (gatewayInfo.getServerInfo().getDeviceSN().equals(gatewayStatusResult.getDevuuid())) {
+                                                   LogUtils.e("监听网关的状态" + gatewayStatusResult.getDevuuid());
+                                                   gatewayInfo.setEvent_str(gatewayStatusResult.getData().getState());
+                                               }
+                                           }
+                                       }
+                                   }else{
+                                       SPUtils.put(gatewayStatusResult.getDevuuid(),gatewayStatusResult.getData().getState());
+                                   }
                                 }
 
                             }
@@ -160,10 +177,6 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
     }
 
     //获取锁设备
-
-
-
-
 
     public void initLinphone() {
         if (!TextUtils.isEmpty(MyApplication.getInstance().getToken()) && !TextUtils.isEmpty(MyApplication.getInstance().getUid())) {
