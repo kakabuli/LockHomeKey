@@ -148,7 +148,7 @@ public class DevicePresenter<T> extends BasePresenter<IDeviceView> {
                                     }
                                 } else {
                                     if (mViewRef.get() != null) {
-                                        mViewRef.get().getDevicePowerFail();
+                                        mViewRef.get().getDevicePowerFail(gatewayId,deviceId);
                                     }
                                 }
                             }
@@ -177,22 +177,10 @@ public class DevicePresenter<T> extends BasePresenter<IDeviceView> {
                         public void accept(MqttData mqttData) throws Exception {
                             if (mqttData != null) {
                                 GetBindGatewayStatusResult gatewayStatusResult = new Gson().fromJson(mqttData.getPayload(), GetBindGatewayStatusResult.class);
-                                LogUtils.e("监听网关的状态" + gatewayStatusResult.getDevuuid());
-                                if (gatewayStatusResult != null) {
-                                    List<HomeShowBean> homeShowBeans = MyApplication.getInstance().getAllDevices();
-                                    if (homeShowBeans.size() > 0) {
-                                        for (HomeShowBean homeShowBean : homeShowBeans) {
-                                            if (homeShowBean.getDeviceType() == HomeShowBean.TYPE_GATEWAY) {
-                                                GatewayInfo gatewayInfo = (GatewayInfo) homeShowBean.getObject();
-                                                if (gatewayInfo.getServerInfo().getDeviceSN().equals(gatewayStatusResult.getDevuuid())) {
-                                                    LogUtils.e("监听网关的状态      " + gatewayStatusResult.getDevuuid());
-                                                    gatewayInfo.setEvent_str(gatewayInfo.getEvent_str());
-                                                    if (mViewRef.get() != null) {
-                                                        mViewRef.get().gatewayStatusChange();
-                                                    }
-                                                }
-                                            }
-                                        }
+                                LogUtils.e("监听网关的Device状态" + gatewayStatusResult.getDevuuid());
+                                if (gatewayStatusResult != null&&gatewayStatusResult.getData().getState()!=null) {
+                                    if (mViewRef.get() != null) {
+                                        mViewRef.get().gatewayStatusChange(gatewayStatusResult.getDevuuid(),gatewayStatusResult.getData().getState());
                                     }
                                 }
                             }
@@ -226,43 +214,9 @@ public class DevicePresenter<T> extends BasePresenter<IDeviceView> {
                         public void accept(MqttData mqttData) throws Exception {
                             DeviceOnLineBean deviceOnLineBean = new Gson().fromJson(mqttData.getPayload(), DeviceOnLineBean.class);
                             if (deviceOnLineBean!=null){
-                                List<HomeShowBean> homeShowBeans = MyApplication.getInstance().getAllDevices();
-                                if (homeShowBeans.size() > 0) {
-                                    for (HomeShowBean homeShowBean : homeShowBeans) {
-                                        if (deviceOnLineBean.getDeviceId().equals(homeShowBean.getDeviceId())) {
-                                            switch (homeShowBean.getDeviceType()) {
-                                                //猫眼上线
-                                                case HomeShowBean.TYPE_CAT_EYE:
-                                                    CateEyeInfo cateEyeInfo= (CateEyeInfo) homeShowBean.getObject();
-                                                    if (cateEyeInfo.getGwID().equals(deviceOnLineBean.getGwId())) {
-                                                        if ("online".equals(deviceOnLineBean.getEventparams().getEvent_str())) {
-                                                            cateEyeInfo.getServerInfo().setEvent_str("online");
-                                                        } else {
-                                                            cateEyeInfo.getServerInfo().setEvent_str("offline");
-                                                        }
-                                                        LogUtils.e("猫眼上线下线了   "+deviceOnLineBean.getEventparams().getEvent_str()+"猫眼的设备id  "+deviceOnLineBean.getDeviceId());
-                                                    }
-                                                    break;
-                                                //网关锁上线
-                                                case HomeShowBean.TYPE_GATEWAY_LOCK:
-                                                    GwLockInfo gwLockInfo= (GwLockInfo) homeShowBean.getObject();
-                                                    if (gwLockInfo.getGwID().equals(deviceOnLineBean.getGwId())) {
-                                                        if ("online".equals(deviceOnLineBean.getEventparams().getEvent_str())) {
-                                                            gwLockInfo.getServerInfo().setEvent_str("online");
-                                                        }else if ("offline".equals(deviceOnLineBean.getEventparams().getEvent_str())){
-                                                            gwLockInfo.getServerInfo().setEvent_str("offline");
-                                                        }
-
-                                                        LogUtils.e("网关锁上线下线了   "+deviceOnLineBean.getEventparams().getEvent_str()+"网关的设备id  "+deviceOnLineBean.getDeviceId());
-                                                    }
-                                                    break;
-                                            }
-                                        }
+                                if (mViewRef.get()!=null&&deviceOnLineBean.getEventparams().getEvent_str()!=null){
+                                        mViewRef.get().deviceStatusChange(deviceOnLineBean.getGwId(),deviceOnLineBean.getDeviceId(),deviceOnLineBean.getEventparams().getEvent_str());
                                     }
-                                    if (mViewRef.get()!=null){
-                                        mViewRef.get().deviceStatusChange();
-                                    }
-                                }
                             }
                         }
                     }, new Consumer<Throwable>() {

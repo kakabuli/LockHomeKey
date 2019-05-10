@@ -105,7 +105,7 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
     private boolean lockIsOpen=false;
     private Handler mHandler = new Handler();
 
-
+    private  GwLockInfo lockInfo;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -208,13 +208,18 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
         showBean= (HomeShowBean) intent.getSerializableExtra(KeyConstants.GATEWAY_LOCK_INFO);
         //设置电量
         if(showBean!=null){
-            GwLockInfo lockInfo= (GwLockInfo) showBean.getObject();
-            dealWithPower(lockInfo.getPower(),lockInfo.getServerInfo().getEvent_str(),lockInfo.getPowerTimeStamp());
-            tvName.setText(lockInfo.getServerInfo().getNickName());
-            gatewayId=lockInfo.getGwID();
-            deviceId=lockInfo.getServerInfo().getDeviceId();
-            mPresenter.getPowerData(lockInfo.getGwID(),lockInfo.getServerInfo().getDeviceId());
-            mPresenter.closeLockNotify(deviceId);
+            lockInfo= (GwLockInfo) showBean.getObject();
+            if (lockInfo!=null) {
+                dealWithPower(lockInfo.getPower(), lockInfo.getServerInfo().getEvent_str(), lockInfo.getPowerTimeStamp());
+                tvName.setText(lockInfo.getServerInfo().getNickName());
+                gatewayId = lockInfo.getGwID();
+                deviceId = lockInfo.getServerInfo().getDeviceId();
+                mPresenter.getPowerData(lockInfo.getGwID(), lockInfo.getServerInfo().getDeviceId());
+                mPresenter.closeLockNotify(deviceId);
+                mPresenter.listenerDeviceOnline();
+                mPresenter.getPublishNotify();
+
+            }
         }
 
     }
@@ -334,7 +339,7 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
                 ivPower.setBorderColor(R.color.white);
             } else {
                 ivPower.setColor(R.color.cD6D6D6);
-                ivPower.setBorderColor(R.color.white);
+                ivPower.setBorderColor(R.color.c949494);
             }
         }
         long readDeviceInfoTime=0;
@@ -437,13 +442,45 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
     }
 
     @Override
-    public void getPowerDataFail() {
-
+    public void getPowerDataFail(String deviceId,String timeStamp) {
+        if (lockInfo!=null){
+            if (lockInfo.getServerInfo().getDeviceId().equals(deviceId)){
+                lockInfo.setPowerTimeStamp(timeStamp);
+                dealWithPower(lockInfo.getPower(),"offline",lockInfo.getPowerTimeStamp());
+            }
+        }
     }
 
     @Override
     public void getPowerThrowable() {
 
+    }
+
+    @Override
+    public void gatewayStatusChange(String gatewayId, String eventStr) {
+        //网关上下线
+        if (lockInfo!=null){
+            if (lockInfo.getGwID().equals(gatewayId)){
+                //当前猫眼所属的网关是上下线的网关
+                //网关下线状态要跟着改变,网关上线时猫眼状态要等待猫眼通知才可以上线
+                if (eventStr.equals("offline")) {
+                    lockInfo.getServerInfo().setEvent_str(eventStr);
+                    dealWithPower(lockInfo.getPower(), eventStr, lockInfo.getPowerTimeStamp());
+                }
+            }
+        }
+    }
+
+    @Override
+    public void deviceStatusChange(String gatewayId, String deviceId, String eventStr) {
+        //猫眼上下线
+        if (lockInfo!=null){
+            //设备上下线为当的设备
+            if (lockInfo.getGwID().equals(gatewayId)&&lockInfo.getServerInfo().getDeviceId().equals(deviceId)){
+                lockInfo.getServerInfo().setEvent_str(eventStr);
+                dealWithPower(lockInfo.getPower(),eventStr,lockInfo.getPowerTimeStamp());
+            }
+        }
     }
 
     @Override

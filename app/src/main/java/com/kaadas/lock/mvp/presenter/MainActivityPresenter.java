@@ -168,7 +168,7 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                                                     GatewayInfo gatewayInfo = (GatewayInfo) homeShowBean.getObject();
                                                     if (gatewayInfo.getServerInfo().getDeviceSN().equals(gatewayStatusResult.getDevuuid())) {
                                                         LogUtils.e("监听网关的状态      " + gatewayStatusResult.getDevuuid());
-                                                        gatewayInfo.setEvent_str(gatewayInfo.getEvent_str());
+                                                        gatewayInfo.setEvent_str(gatewayStatusResult.getData().getState());
                                                        /* if ("online".equals(gatewayStatusResult.getData().getState())){
                                                             gatewayInfo.setEvent_str("online");
                                                         }else if ("offline".equals(gatewayStatusResult.getData().getState())){
@@ -191,74 +191,8 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
             compositeDisposable.add(disposable);
         }
     }
-/*
-    *//**
-     * 监听设备上线下线
-     *//*
-    public void listenerDeviceOnline() {
-        if (mqttService != null) {
-            toDisposable(listenerDeviceOnLineDisposable);
-            listenerDeviceOnLineDisposable = mqttService.listenerDataBack()
-                    .filter(new Predicate<MqttData>() {
-                        @Override
-                        public boolean test(MqttData mqttData) throws Exception {
-                            return mqttData.getFunc().equals(MqttConstant.GW_EVENT);
-                        }
-                    })
-                    .compose(RxjavaHelper.observeOnMainThread())
-                    .subscribe(new Consumer<MqttData>() {
-                        @Override
-                        public void accept(MqttData mqttData) throws Exception {
-                            DeviceOnLineBean deviceOnLineBean = new Gson().fromJson(mqttData.getPayload(), DeviceOnLineBean.class);
-                            if (deviceOnLineBean!=null){
-                                List<HomeShowBean> homeShowBeans = MyApplication.getInstance().getAllDevices();
-                                if (homeShowBeans.size() > 0) {
-                                    for (HomeShowBean homeShowBean : homeShowBeans) {
-                                        if (deviceOnLineBean.getDeviceId().equals(homeShowBean.getDeviceId())) {
-                                            switch (homeShowBean.getDeviceType()) {
-                                                //猫眼上线
-                                                case HomeShowBean.TYPE_CAT_EYE:
-                                                    CateEyeInfo cateEyeInfo= (CateEyeInfo) homeShowBean.getObject();
-                                                    if (cateEyeInfo.getGwID().equals(deviceOnLineBean.getGwId())) {
-                                                        if ("online".equals(deviceOnLineBean.getEventparams().getEvent_str())) {
-                                                            cateEyeInfo.getServerInfo().setEvent_str("online");
-                                                        } else {
-                                                            cateEyeInfo.getServerInfo().setEvent_str("offline");
-                                                        }
-                                                        LogUtils.e("猫眼上线下线了   "+deviceOnLineBean.getEventparams().getEvent_str()+"猫眼的设备id  "+deviceOnLineBean.getDeviceId());
-                                                    }
-                                                    break;
-                                                //网关锁上线
-                                                case HomeShowBean.TYPE_GATEWAY_LOCK:
-                                                    GwLockInfo gwLockInfo= (GwLockInfo) homeShowBean.getObject();
-                                                    if (gwLockInfo.getGwID().equals(deviceOnLineBean.getGwId())) {
-                                                        if ("online".equals(deviceOnLineBean.getEventparams().getEvent_str())) {
-                                                            gwLockInfo.getServerInfo().setEvent_str("online");
-                                                        }else if ("offline".equals(deviceOnLineBean.getEventparams().getEvent_str())){
-                                                            gwLockInfo.getServerInfo().setEvent_str("offline");
-                                                        }
 
-                                                        LogUtils.e("网关锁上线下线了   "+deviceOnLineBean.getEventparams().getEvent_str()+"网关的设备id  "+deviceOnLineBean.getDeviceId());
-                                                    }
-                                                    break;
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }, new Consumer<Throwable>() {
-                        @Override
-                        public void accept(Throwable throwable) throws Exception {
-                        }
-                    });
-            compositeDisposable.add(listenerDeviceOnLineDisposable);
-        }
-
-    }*/
-
-
-
+    //猫眼信息上报
     public void listenCatEyeEvent() {
         toDisposable(catEyeEventDisposable);
         catEyeEventDisposable = mqttService.listenerDataBack()
