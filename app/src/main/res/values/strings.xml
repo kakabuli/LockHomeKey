@@ -880,4 +880,7 @@
     <string name="no_video">没有视频</string>
     <string name="device_id_null">设备Id为空</string>
     <string name="push_transmission_data">收到一条透传测试消息</string>
+    <string name="cate_sleep">猫眼已经休眠</string>
+    <string name="mainactivity_permission_alert_msg">请前往应用信息下通知管理界面打开通知开关,否则推送信息无法到达</string>
+    <string name="mainactivity_permission_alert_title">应用通知开启</string>
 </resources>

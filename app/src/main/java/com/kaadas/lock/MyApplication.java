@@ -626,4 +626,29 @@ public class MyApplication extends Application {
     }
     // DemoPushService.class 自定义服务名称, 核心服务
     private Class userPushService = DemoPushService.class;
+
+    String currentGeTuiMimiUserName;
+    String currentGeTuiMImiPwd;
+
+    public String getCurrentGeTuiMimiUserName() {
+        return currentGeTuiMimiUserName;
+    }
+
+    public void setCurrentGeTuiMimiUserName(String currentGeTuiMimiUserName) {
+        this.currentGeTuiMimiUserName = currentGeTuiMimiUserName;
+    }
+    public String getCurrentGeTuiMImiPwd() {
+        return currentGeTuiMImiPwd;
+    }
+
+    public void setCurrentGeTuiMImiPwd(String currentGeTuiMImiPwd) {
+        this.currentGeTuiMImiPwd = currentGeTuiMImiPwd;
+    }
+    String sip_package_invite;
+    public String getSip_package_invite() {
+        return sip_package_invite;
+    }
+    public void setSip_package_invite(String sip_package_invite) {
+        this.sip_package_invite = sip_package_invite;
+    }
 }

@@ -23,7 +23,7 @@ import com.kaadas.lock.utils.ftp.GeTui;
  */
 public class DemoIntentService extends GTIntentService {
 
-    private static final String TAG = "denganzhi1";
+    private static final String TAG = "cid";
 
     /**
      * 为了观察透传数据变化.

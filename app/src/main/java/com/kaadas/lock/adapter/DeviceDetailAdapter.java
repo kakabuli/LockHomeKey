@@ -1,8 +1,15 @@
 package com.kaadas.lock.adapter;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
+import android.os.Build;
+import android.provider.Settings;
 import android.support.annotation.Nullable;
+import android.support.v4.app.NotificationManagerCompat;
+import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.TextView;
 
@@ -17,13 +24,15 @@ import com.kaadas.lock.publiclibrary.bean.GatewayInfo;
 import com.kaadas.lock.publiclibrary.bean.GwLockInfo;
 import com.kaadas.lock.utils.BatteryView;
 import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.Rom;
 
 import java.util.List;
 
 public class DeviceDetailAdapter extends BaseQuickAdapter<HomeShowBean, BaseViewHolder> {
 
 
-    public DeviceDetailAdapter( @Nullable List<HomeShowBean> data) {
+
+    public DeviceDetailAdapter(@Nullable List<HomeShowBean> data) {
         super(R.layout.fragment_device_item, data);
     }
 
@@ -56,6 +65,7 @@ public class DeviceDetailAdapter extends BaseQuickAdapter<HomeShowBean, BaseView
                 batteryView.setPower(power);
                 helper.setText(R.id.device_power_text,power+"%");
                 textView.setText(cateEyeInfo.getServerInfo().getNickName());
+
                 break;
             //网关锁
             case HomeShowBean.TYPE_GATEWAY_LOCK:

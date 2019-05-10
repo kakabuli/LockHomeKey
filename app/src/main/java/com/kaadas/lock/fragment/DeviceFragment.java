@@ -1,12 +1,17 @@
 package com.kaadas.lock.fragment;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import android.support.v4.app.NotificationManagerCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
@@ -46,7 +51,9 @@ import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.AllBindDevices;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttData;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.Rom;
 import com.kaadas.lock.utils.SPUtils;
+import com.kaadas.lock.utils.SPUtils2;
 import com.kaadas.lock.utils.ToastUtil;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
@@ -131,11 +138,28 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
 
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
+
     private void initAdapter() {
         if (mDeviceList != null) {
             deviceDetailAdapter = new DeviceDetailAdapter(mDeviceList);
             deviceRecycler.setAdapter(deviceDetailAdapter);
             deviceDetailAdapter.setOnItemClickListener(this);
+            for (int i=0;i<mDeviceList.size();i++){
+               if(HomeShowBean.TYPE_GATEWAY ==mDeviceList.get(i).getDeviceType()) {
+                   Object obj=mDeviceList.get(i).getObject();
+                   String gwid= mDeviceList.get(i).getDeviceId();
+                   if(obj instanceof GatewayInfo){
+                       GatewayInfo gatewayInfo=(GatewayInfo)obj;
+                       String meUsername= gatewayInfo.getServerInfo().getMeUsername();
+                       String mePwd= gatewayInfo.getServerInfo().getMePwd();
+                       SPUtils2.put(getActivity(),gwid,meUsername+"&"+mePwd);
+                   }
+               }
+            }
         }
 
     }
@@ -170,6 +194,45 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
         }else{
             noDeviceLayout.setVisibility(View.VISIBLE);
             refresh.setVisibility(View.GONE);
+        }
+        if(mDeviceList!=null){
+            for (int i=0;i<mDeviceList.size();i++){
+                HomeShowBean homeShowBean=mDeviceList.get(i);
+                if(HomeShowBean.TYPE_CAT_EYE==homeShowBean.getDeviceType()){
+                    boolean isFlag= NotificationManagerCompat.from(getActivity()).areNotificationsEnabled();
+                    if(  !isFlag && Rom.isOppo()){
+                        final AlertDialog.Builder normalDialog = new AlertDialog.Builder(getActivity());
+                        //	normalDialog.setIcon(R.drawable.icon_dialog);
+                        normalDialog.setTitle(getString(R.string.mainactivity_permission_alert_title));
+                        normalDialog.setMessage(getString(R.string.mainactivity_permission_alert_msg));
+                        normalDialog.setPositiveButton(getString(R.string.confirm),
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                            Intent intent  = new Intent();
+                                            intent.setAction(Settings.ACTION_APP_NOTIFICATION_SETTINGS);
+                                            intent.putExtra(Settings.EXTRA_APP_PACKAGE,"com.kaidishi.lock");
+                                            getActivity().startActivity(intent);
+                                        }
+                                    }
+                                });
+                        normalDialog.setNegativeButton(getActivity().getString(R.string.cancel),
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                }
+                                });
+                        // 显示
+                        AlertDialog dialog= normalDialog.create();
+                        dialog.setCanceledOnTouchOutside(false);
+                        dialog.show();
+                    }
+                    break;
+                }
+            }
         }
     }
 
