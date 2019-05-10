@@ -11,6 +11,7 @@ import android.os.IBinder;
 import android.text.TextUtils;
 
 import com.google.gson.Gson;
+import com.igexin.sdk.PushManager;
 import com.kaadas.lock.activity.login.LoginActivity;
 import com.kaadas.lock.bean.HomeShowBean;
 import com.kaadas.lock.publiclibrary.bean.CateEyeInfo;
@@ -32,6 +33,8 @@ import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.ToastUtil;
 import com.kaadas.lock.utils.greenDao.db.DaoManager;
 import com.kaadas.lock.utils.greenDao.db.DaoSession;
+import com.kaidishi.lock.service.DemoIntentService;
+import com.kaidishi.lock.service.DemoPushService;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.DefaultRefreshFooterCreator;
 import com.scwang.smartrefresh.layout.api.DefaultRefreshHeaderCreator;
@@ -105,6 +108,16 @@ public class MyApplication extends Application {
         regToWx();
         //配置数据库
         setUpWriteDataBase();
+        PushManager.getInstance().initialize(this, userPushService);
+        // 注册 intentService 后 PushDemoReceiver 无效, sdk 会使用 DemoIntentService 传递数据,
+        // AndroidManifest 对应保留一个即可(如果注册 DemoIntentService, 可以去掉 PushDemoReceiver, 如果注册了
+        // IntentService, 必须在 AndroidManifest 中声明)
+        PushManager.getInstance().registerPushIntentService(this, DemoIntentService.class);
+        // 应用未启动, 个推 service已经被唤醒,显示该时间段内离线消息
+//        if (DemoApplication.payloadData != null) {
+//            tLogView.append(DemoApplication.payloadData);
+//        }
+
     }
 
     private void regToWx() {
@@ -142,9 +155,11 @@ public class MyApplication extends Application {
 
             @Override
             public void onServiceConnected(ComponentName name, IBinder service) {
-                BleService.MyBinder binder = (BleService.MyBinder) service;
-                bleService = binder.getService();
-                LogUtils.e("服务启动成功    " + (bleService == null));
+                if(service instanceof  BleService.MyBinder){
+                    BleService.MyBinder binder = (BleService.MyBinder) service;
+                    bleService = binder.getService();
+                    LogUtils.e("服务启动成功    " + (bleService == null));
+                }
             }
 
             @Override
@@ -227,11 +242,13 @@ public class MyApplication extends Application {
         bindService(intent, new ServiceConnection() {
             @Override
             public void onServiceConnected(ComponentName name, IBinder service) {
-                MqttService.MyBinder binder = (MqttService.MyBinder) service;
-                mqttService = binder.getService();
-                LogUtils.e("attachView service启动" + (mqttService == null));
-                if (mqttService != null && !TextUtils.isEmpty(uid)) {
-                    //mqttService.mqttConnection();
+                if(service instanceof  MqttService.MyBinder){
+                    MqttService.MyBinder binder = (MqttService.MyBinder) service;
+                    mqttService = binder.getService();
+                    LogUtils.e("attachView service启动" + (mqttService == null));
+                    if (mqttService != null && !TextUtils.isEmpty(uid)) {
+                        //mqttService.mqttConnection();
+                    }
                 }
             }
 
@@ -607,5 +624,6 @@ public class MyApplication extends Application {
     public DaoSession getDaoWriteSession() {
         return daoWriteSession;
     }
-
+    // DemoPushService.class 自定义服务名称, 核心服务
+    private Class userPushService = DemoPushService.class;
 }

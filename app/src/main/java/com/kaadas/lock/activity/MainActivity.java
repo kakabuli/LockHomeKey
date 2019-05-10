@@ -10,6 +10,7 @@ import android.support.v4.view.ViewPager;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
+import com.igexin.sdk.PushManager;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.cateye.VideoVActivity;
@@ -27,6 +28,8 @@ import com.kaadas.lock.utils.PermissionUtil;
 import com.kaadas.lock.utils.ToastUtil;
 import com.kaadas.lock.utils.greenDao.bean.ZigbeeEvent;
 import com.kaadas.lock.widget.NoScrollViewPager;
+import com.kaidishi.lock.service.DemoIntentService;
+import com.kaidishi.lock.service.DemoPushService;
 
 import net.sdvn.cmapi.CMAPI;
 import net.sdvn.cmapi.ConnectionService;
@@ -72,7 +75,6 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
         fragments.add(new PersonalCenterFragment());
 
         instance = this;
-
         homeViewPager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager()) {
             @Override
             public Fragment getItem(int i) {
@@ -242,5 +244,5 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
 
         return homeViewPager;
     }
-
+    private Class userPushService = DemoPushService.class;
 }

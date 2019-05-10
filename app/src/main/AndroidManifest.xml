@@ -48,6 +48,13 @@
         android:name="android.permission.READ_LOGS"
         tools:ignore="ProtectedPermissions" />
 
+    <!-- iBeancon功能所需权限 -->
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <!-- 个推3.0电子围栏功能所需权限 -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
     <application
         android:name=".MyApplication"
         android:allowBackup="true"
@@ -618,13 +625,26 @@
             android:screenOrientation="portrait">
         </activity>
 
-        <activity android:name=".activity.cateye.FtpDownLoadActivity">
+        <activity android:name=".activity.cateye.FtpDownLoadActivity"
+            android:screenOrientation="portrait">
             <!--<intent-filter>-->
                 <!--<action android:name="android.intent.action.MAIN" />-->
              <!--<category android:name="android.intent.category.LAUNCHER" />-->
              <!--</intent-filter>-->
         </activity>
+        <activity android:name=".activity.cateye.RecordingPreviewActivity"
+            android:screenOrientation="portrait"></activity>
+        <!--&lt;!&ndash; 配置SDK核心服务 &ndash;&gt;-->
+        <!--&lt;!&ndash; process必须指定为":pushservice"，切勿随意更改 &ndash;&gt;-->
+        <service
+            android:name="com.kaidishi.lock.service.DemoPushService"
+            android:exported="true"
+            android:label="PushService"
+            android:process=":pushservice" />
 
+        <!-- 用户自定义服务继承自GTIntentService,作为SDK与APP桥梁服务,用来接收各种消息和命令回复 -->
+        <service android:name="com.kaidishi.lock.service.DemoIntentService"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
     </application>
 
 </manifest>
