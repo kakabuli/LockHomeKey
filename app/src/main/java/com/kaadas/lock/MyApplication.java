@@ -79,7 +79,7 @@ public class MyApplication extends Application {
     private String uid;
     private List<Activity> activities = new ArrayList<>();
     // APP_ID 替换为你的应用从官方网站申请到的合法appID
-    private static final String APP_ID = "wx8e524a5da9bfdd78";
+    private static final String APP_ID = "wxaa2df1f344ba0755";
 
     // IWXAPI 是第三方app和微信通信的openApi接口
     protected MqttService mqttService;

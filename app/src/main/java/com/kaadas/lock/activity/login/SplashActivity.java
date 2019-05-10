@@ -46,7 +46,7 @@ public class SplashActivity extends BaseActivity<ISplashView, SplashPresenter<IS
                 String pwd = CacheFloder.readHandPassword(ACache.get(MyApplication.getInstance()), MyApplication.getInstance().getUid() + "handPassword");
                 String fingerPwd = CacheFloder.readPhoneFingerPrint(ACache.get(MyApplication.getInstance()), MyApplication.getInstance().getUid() + "fingerStatus");
                 //一秒后判断当前是否登陆   如果登陆 跳转至首页   如果没有登陆  跳转至登陆界面
-                if (TextUtils.isEmpty(MyApplication.getInstance().getToken())) {  //没有登陆
+                if (TextUtils.isEmpty(MyApplication.getInstance().getToken())||TextUtils.isEmpty(MyApplication.getInstance().getUid())) {  //没有登陆
                     boolean showGuidePage = (boolean) SPUtils.getProtect(KeyConstants.SHOW_GUIDE_PAGE, false);
                     if (!showGuidePage) {
                         //第一次
