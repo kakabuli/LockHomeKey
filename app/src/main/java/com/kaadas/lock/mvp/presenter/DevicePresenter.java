@@ -2,21 +2,29 @@ package com.kaadas.lock.mvp.presenter;
 
 import com.google.gson.Gson;
 import com.kaadas.lock.MyApplication;
+import com.kaadas.lock.bean.HomeShowBean;
 import com.kaadas.lock.mvp.mvpbase.BasePresenter;
 import com.kaadas.lock.mvp.view.IDeviceView;
 import com.kaadas.lock.mvp.view.IHomeView;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
+import com.kaadas.lock.publiclibrary.bean.CateEyeInfo;
+import com.kaadas.lock.publiclibrary.bean.GatewayInfo;
+import com.kaadas.lock.publiclibrary.bean.GwLockInfo;
 import com.kaadas.lock.publiclibrary.http.result.ServerBleDevice;
 import com.kaadas.lock.publiclibrary.http.util.RxjavaHelper;
 import com.kaadas.lock.publiclibrary.mqtt.MqttCommandFactory;
+import com.kaadas.lock.publiclibrary.mqtt.eventbean.DeviceOnLineBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.GetDevicePowerBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.AllBindDevices;
+import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.GetBindGatewayStatusResult;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttConstant;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttData;
 import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.SPUtils;
 
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.disposables.Disposable;
@@ -28,8 +36,8 @@ public class DevicePresenter<T> extends BasePresenter<IDeviceView> {
     private Disposable allBindDeviceDisposable;
     protected BleLockInfo bleLockInfo;
     protected Disposable getPowerDisposable;
-
-
+    private Disposable listenerDeviceOnLineDisposable;
+    private Disposable listenerGatewayOnLine;
     @Override
     public void attachView(IDeviceView view) {
         super.attachView(view);
@@ -140,7 +148,7 @@ public class DevicePresenter<T> extends BasePresenter<IDeviceView> {
                                     }
                                 } else {
                                     if (mViewRef.get() != null) {
-                                        mViewRef.get().getDevicePowerFail();
+                                        mViewRef.get().getDevicePowerFail(gatewayId,deviceId);
                                     }
                                 }
                             }
@@ -158,6 +166,67 @@ public class DevicePresenter<T> extends BasePresenter<IDeviceView> {
 
     }
 
+    //获取网关状态通知
+    public void getPublishNotify() {
+        if (mqttService != null) {
+            toDisposable(listenerGatewayOnLine);
+            listenerGatewayOnLine = mqttService.listenerNotifyData()
+                    .compose(RxjavaHelper.observeOnMainThread())
+                    .subscribe(new Consumer<MqttData>() {
+                        @Override
+                        public void accept(MqttData mqttData) throws Exception {
+                            if (mqttData != null) {
+                                GetBindGatewayStatusResult gatewayStatusResult = new Gson().fromJson(mqttData.getPayload(), GetBindGatewayStatusResult.class);
+                                LogUtils.e("监听网关的Device状态" + gatewayStatusResult.getDevuuid());
+                                if (gatewayStatusResult != null&&gatewayStatusResult.getData().getState()!=null) {
+                                    if (mViewRef.get() != null) {
+                                        mViewRef.get().gatewayStatusChange(gatewayStatusResult.getDevuuid(),gatewayStatusResult.getData().getState());
+                                    }
+                                }
+                            }
+                        }
+                    }, new Consumer<Throwable>() {
+                        @Override
+                        public void accept(Throwable throwable) throws Exception {
+                            //网关状态发生异常
+                        }
+                    });
+            compositeDisposable.add(listenerGatewayOnLine);
+        }
+    }
 
+    /**
+     * 监听设备上线下线
+     */
+    public void listenerDeviceOnline() {
+        if (mqttService != null) {
+            toDisposable(listenerDeviceOnLineDisposable);
+            listenerDeviceOnLineDisposable = mqttService.listenerDataBack()
+                    .filter(new Predicate<MqttData>() {
+                        @Override
+                        public boolean test(MqttData mqttData) throws Exception {
+                            return mqttData.getFunc().equals(MqttConstant.GW_EVENT);
+                        }
+                    })
+                    .compose(RxjavaHelper.observeOnMainThread())
+                    .subscribe(new Consumer<MqttData>() {
+                        @Override
+                        public void accept(MqttData mqttData) throws Exception {
+                            DeviceOnLineBean deviceOnLineBean = new Gson().fromJson(mqttData.getPayload(), DeviceOnLineBean.class);
+                            if (deviceOnLineBean!=null){
+                                if (mViewRef.get()!=null&&deviceOnLineBean.getEventparams().getEvent_str()!=null){
+                                        mViewRef.get().deviceStatusChange(deviceOnLineBean.getGwId(),deviceOnLineBean.getDeviceId(),deviceOnLineBean.getEventparams().getEvent_str());
+                                    }
+                            }
+                        }
+                    }, new Consumer<Throwable>() {
+                        @Override
+                        public void accept(Throwable throwable) throws Exception {
+                        }
+                    });
+            compositeDisposable.add(listenerDeviceOnLineDisposable);
+        }
+
+    }
 
 }
