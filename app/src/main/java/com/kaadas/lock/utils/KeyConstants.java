@@ -335,7 +335,13 @@ public class KeyConstants {
      */
     public static final String DEV_TYPE_LOCK= "kdszblock";
 
-
     //蓝牙电量信息
     public static final String BLE_INTO="bleInfo";
+
+    //响铃次数
+    public static final String CAT_EYE_RING_NUMBER="catEyeRingNumber";
+
+    //分辨率
+    public static final String CAT_EYE_RESOLUTION="catEyeResolution";
+
 }

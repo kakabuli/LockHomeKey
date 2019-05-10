@@ -140,5 +140,10 @@ public class MqttConstant {
     //设置Pir
     public static final String SET_PIR_ENABLE="setPirEnable";
 
+    //设置响铃次数setBellCount
+    public static final String SET_BELL_COUNT="setBellCount";
+
+    //设置猫眼的分辨率setVedioRes
+    public static final String SET_VEDIO_RES="setVedioRes";
 
 }

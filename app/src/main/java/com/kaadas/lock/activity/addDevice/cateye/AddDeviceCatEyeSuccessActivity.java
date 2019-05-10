@@ -10,6 +10,7 @@ import android.widget.ImageView;
 
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.MainActivity;
+import com.kaadas.lock.activity.addDevice.DeviceBindGatewayListActivity;
 import com.kaadas.lock.utils.KeyConstants;
 
 import butterknife.BindView;
@@ -52,5 +53,11 @@ public class AddDeviceCatEyeSuccessActivity extends AppCompatActivity {
                 startActivity(saveIntent);
                 break;
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        startActivity(new Intent(this, MainActivity.class));
+
     }
 }

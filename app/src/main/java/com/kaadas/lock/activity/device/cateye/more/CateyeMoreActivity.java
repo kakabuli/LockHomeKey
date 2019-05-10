@@ -1,6 +1,7 @@
 package com.kaadas.lock.activity.device.cateye.more;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -87,12 +88,14 @@ public class CateyeMoreActivity extends BaseActivity<IGatEyeView, CatEyeMorePres
     private CateEyeInfo cateEyeInfo;
 
     private int pirEnable=0;
-
+    //private AlertDialog  deleteAlertDialog;
+    private Context context;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cateye_more);
         ButterKnife.bind(this);
+        context=this;
         initData();
         initView();
         initClick();
@@ -134,6 +137,8 @@ public class CateyeMoreActivity extends BaseActivity<IGatEyeView, CatEyeMorePres
         btnDelete.setOnClickListener(this);
         rlDeviceInformation.setOnClickListener(this);
         rlSmartMonitor.setOnClickListener(this);
+        rlRingNumber.setOnClickListener(this);//响铃次数
+        rlResolution.setOnClickListener(this);//分辨率
     }
 
     @Override
@@ -199,6 +204,7 @@ public class CateyeMoreActivity extends BaseActivity<IGatEyeView, CatEyeMorePres
                         public void right() {
                             if (gatewayId != null && deviceId != null) {
                                 mPresenter.deleteCatEye(gatewayId, deviceId, "net");
+                               // deleteAlertDialog=AlertDialogUtil.getInstance().noButtonDialog(context,getString(R.string.take_effect_be_being));
                             }
                         }
 
@@ -237,6 +243,49 @@ public class CateyeMoreActivity extends BaseActivity<IGatEyeView, CatEyeMorePres
                         loadingDialog.show("正在开启智能监测");
                     }
                 }
+                break;
+            case R.id.rl_ring_number:
+                //响铃次数
+                if (getCatInfoStatus==0){
+                    ToastUtil.getInstance().showShort(R.string.get_cateye_info_wait);
+                    return;
+                }else if (getCatInfoStatus==2){
+                    ToastUtil.getInstance().showShort(R.string.get_cateye_info_fail);
+                    return;
+                }else {
+                    String ring=tvRingnumber.getText().toString().trim();
+                    if (!TextUtils.isEmpty(ring)&&!TextUtils.isEmpty(gatewayId)&&!TextUtils.isEmpty(deviceId)) {
+                        Intent ringtIntent = new Intent(this, CatEyeRingNumberActivity.class);
+                        ringtIntent.putExtra(KeyConstants.CAT_EYE_RING_NUMBER,ring);
+                        ringtIntent.putExtra(KeyConstants.GATEWAY_ID,gatewayId);
+                        ringtIntent.putExtra(KeyConstants.DEVICE_ID,deviceId);
+                        startActivity(ringtIntent);
+                    }
+                }
+
+                break;
+            case R.id.rl_resolution:
+                //分辨率
+                //响铃次数
+                if (getCatInfoStatus==0){
+                    ToastUtil.getInstance().showShort(R.string.get_cateye_info_wait);
+                    return;
+                }else if (getCatInfoStatus==2){
+                    ToastUtil.getInstance().showShort(R.string.get_cateye_info_fail);
+                    return;
+                }else {
+                    String resolution=tvResolution.getText().toString().trim();
+                    if (!TextUtils.isEmpty(resolution)&&!TextUtils.isEmpty(gatewayId)&&!TextUtils.isEmpty(deviceId)) {
+                        Intent resolutionIntent = new Intent(this, CatEyeResolutionActivity.class);
+                        resolutionIntent.putExtra(KeyConstants.CAT_EYE_RESOLUTION,resolution);
+                        resolutionIntent.putExtra(KeyConstants.GATEWAY_ID,gatewayId);
+                        resolutionIntent.putExtra(KeyConstants.DEVICE_ID,deviceId);
+                        startActivity(resolutionIntent);
+                    }
+                }
+
+
+
                 break;
         }
     }

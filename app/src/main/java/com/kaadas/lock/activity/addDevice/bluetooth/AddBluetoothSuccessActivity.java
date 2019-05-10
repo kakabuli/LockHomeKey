@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -128,7 +129,7 @@ public class AddBluetoothSuccessActivity extends BaseActivity<IBindBleSuccessVie
     public void modifyDeviceNicknameSuccess() {
         ToastUtil.getInstance().showShort(R.string.save_success);
         //设置成功  跳转到设备列别界面
-        Intent intent = new Intent(this, DeviceAddActivity.class);
+        Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
         finish();
     }
@@ -142,5 +143,21 @@ public class AddBluetoothSuccessActivity extends BaseActivity<IBindBleSuccessVie
     public void modifyDeviceNicknameFail(BaseResult baseResult) {
         ToastUtil.getInstance().showShort(HttpUtils.httpErrorCode(this, baseResult.getCode()));
     }
+
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            return isCosumenBackKey();
+        }
+        return false;
+    }
+
+    private boolean isCosumenBackKey() {
+        Intent backIntent=new Intent(this, MainActivity.class);
+        startActivity(backIntent);
+        return true;
+    }
+
+
 
 }

@@ -48,8 +48,12 @@ public class AddGatewaySuccessActivity extends AppCompatActivity {
                 Intent deviceDetail=new Intent(this, MainActivity.class);
                 startActivity(deviceDetail);
                 finish();
-
                 break;
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        startActivity(new Intent(this, DeviceAddActivity.class));
     }
 }
