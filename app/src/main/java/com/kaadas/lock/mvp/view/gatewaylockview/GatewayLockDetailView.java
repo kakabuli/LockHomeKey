@@ -25,10 +25,14 @@ public interface GatewayLockDetailView  extends IBaseView {
     void getPowerDataSuccess(String deviceId,int power,String timestamp);
 
     //获取电量的信息失败
-    void getPowerDataFail();
+    void getPowerDataFail(String deviceId,String timeStamp);
 
     //获取电量的信息异常
     void getPowerThrowable();
 
+    //监听网关的状态
+    void  gatewayStatusChange(String gatewayId,String eventStr);
 
+    //监听设备的状态
+    void deviceStatusChange(String gatewayId,String deviceId,String eventStr);
 }

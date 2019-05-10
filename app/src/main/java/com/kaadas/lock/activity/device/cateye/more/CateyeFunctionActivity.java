@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.cateye.VideoCallBackActivity;
 import com.kaadas.lock.activity.cateye.VideoVActivity;
+import com.kaadas.lock.bean.HomeShowBean;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.mvp.presenter.cateye.CatEyeFunctionPresenter;
 import com.kaadas.lock.mvp.view.cateye.ICatEyeFunctionView;
@@ -21,6 +22,7 @@ import com.kaadas.lock.publiclibrary.bean.CateEyeInfo;
 import com.kaadas.lock.utils.BatteryView;
 import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
+import com.kaadas.lock.utils.LogUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -82,16 +84,17 @@ public class CateyeFunctionActivity extends BaseActivity<ICatEyeFunctionView, Ca
     }
 
     private void initData() {
-        cateEyeInfo = (CateEyeInfo) getIntent().getSerializableExtra(KeyConstants.CATE_INFO);
-        if (cateEyeInfo!=null){
-            tvName.setText(cateEyeInfo.getServerInfo().getNickName());
-            dealWithPower(cateEyeInfo.getPower(),cateEyeInfo.getServerInfo().getEvent_str(),cateEyeInfo.getPowerTimeStamp());
-            if ("online".equals(cateEyeInfo.getServerInfo().getEvent_str())){
-                changeOpenLockStatus(1);
-            }else{
-                changeOpenLockStatus(0);
+        HomeShowBean homeShowBean  = (HomeShowBean) getIntent().getSerializableExtra(KeyConstants.CATE_INFO);
+        if (homeShowBean!=null){
+            cateEyeInfo= (CateEyeInfo) homeShowBean.getObject();
+            if (cateEyeInfo!=null) {
+                tvName.setText(cateEyeInfo.getServerInfo().getNickName());
+                dealWithPower(cateEyeInfo.getPower(), cateEyeInfo.getServerInfo().getEvent_str(), cateEyeInfo.getPowerTimeStamp());
+                changeOpenLockStatus(cateEyeInfo.getServerInfo().getEvent_str());
+                mPresenter.getPowerData(cateEyeInfo.getGwID(), cateEyeInfo.getServerInfo().getDeviceId());
+                mPresenter.getPublishNotify();//监听网关
+                mPresenter.listenerDeviceOnline();//监听设备
             }
-            mPresenter.getPowerData(cateEyeInfo.getGwID(),cateEyeInfo.getServerInfo().getDeviceId());
         }
 
 
@@ -127,7 +130,14 @@ public class CateyeFunctionActivity extends BaseActivity<ICatEyeFunctionView, Ca
     }
 
 
-    public void changeOpenLockStatus(int status) {
+    public void changeOpenLockStatus(String eventStr) {
+        int status=0;
+        if ("online".equals(eventStr)){
+           status=1;
+        }else{
+           status=2;
+        }
+
         switch (status) {
             case 1:
                 //猫眼在线
@@ -182,7 +192,7 @@ public class CateyeFunctionActivity extends BaseActivity<ICatEyeFunctionView, Ca
                 ivPower.setBorderColor(R.color.white);
             } else {
                 ivPower.setColor(R.color.cD6D6D6);
-                ivPower.setBorderColor(R.color.white);
+                ivPower.setBorderColor(R.color.c949494);
             }
         }
         //todo  读取电量时间
@@ -231,10 +241,20 @@ public class CateyeFunctionActivity extends BaseActivity<ICatEyeFunctionView, Ca
     @Override
     public void getPowerDataSuccess(String deviceId, int power, String timestamp) {
         dealWithPower(power,"online",timestamp);
+        changeOpenLockStatus("online");
     }
 
     @Override
-    public void getPowerDataFail() {
+    public void getPowerDataFail(String deviceId,String timeStamp) {
+        //请求电量失败，证明离线
+        if (cateEyeInfo!=null){
+            if (cateEyeInfo.getServerInfo().getDeviceId().equals(deviceId)) {
+                cateEyeInfo.setPowerTimeStamp(timeStamp);
+                dealWithPower(cateEyeInfo.getPower(), "offline", cateEyeInfo.getPowerTimeStamp());
+                changeOpenLockStatus("offline");
+            }
+        }
+
 
     }
 
@@ -242,4 +262,36 @@ public class CateyeFunctionActivity extends BaseActivity<ICatEyeFunctionView, Ca
     public void getPowerThrowable() {
 
     }
+
+    @Override
+    public void gatewayStatusChange(String gatewayId, String eventStr) {
+        //网关上下线
+        if (cateEyeInfo!=null){
+            if (cateEyeInfo.getGwID().equals(gatewayId)){
+                //当前猫眼所属的网关是上下线的网关
+                //网关上下线状态要跟着改变
+                if ("offline".equals(eventStr)) {
+                    cateEyeInfo.getServerInfo().setEvent_str(eventStr);
+                    LogUtils.e(cateEyeInfo.getPower()+"离线时猫眼的电量是多少  ");
+                    dealWithPower(cateEyeInfo.getPower(), eventStr, cateEyeInfo.getPowerTimeStamp());
+                    changeOpenLockStatus(eventStr);
+                }
+            }
+        }
+    }
+
+    @Override
+    public void deviceStatusChange(String gatewayId, String deviceId, String eventStr) {
+        //猫眼上下线
+        if (cateEyeInfo!=null){
+            //设备上下线为当的设备
+            if (cateEyeInfo.getGwID().equals(gatewayId)&&cateEyeInfo.getServerInfo().getDeviceId().equals(deviceId)){
+                cateEyeInfo.getServerInfo().setEvent_str(eventStr);
+                dealWithPower(cateEyeInfo.getPower(),eventStr,cateEyeInfo.getPowerTimeStamp());
+                changeOpenLockStatus(eventStr);
+            }
+        }
+    }
+
+
 }
