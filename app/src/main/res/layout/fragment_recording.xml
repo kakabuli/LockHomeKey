@@ -7,22 +7,30 @@
     <include layout="@layout/time_select_header"></include>
 
 
+    <Button
+        android:id="@+id/recording_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="测试"
+        android:visibility="gone"
+        />
+
     <RelativeLayout
         android:id="@+id/recording_rl_root"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.scwang.smartrefresh.layout.SmartRefreshLayout
-            android:id="@+id/recording_refreshLayout_ff"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            >
-            <android.support.v7.widget.RecyclerView
+        <!--<com.scwang.smartrefresh.layout.SmartRefreshLayout-->
+            <!--android:id="@+id/recording_refreshLayout_ff"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--&gt;-->
+            <com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView
                 android:id="@+id/recording_rv_ff"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
-            </android.support.v7.widget.RecyclerView>
-        </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+            </com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView>
+        <!--</com.scwang.smartrefresh.layout.SmartRefreshLayout>-->
 
     </RelativeLayout>
 

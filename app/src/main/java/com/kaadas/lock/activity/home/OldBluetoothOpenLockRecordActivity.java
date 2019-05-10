@@ -69,7 +69,7 @@ public class OldBluetoothOpenLockRecordActivity extends BaseBleActivity<IOpenLoc
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_bluetooth_open_lock_record);
+        setContentView(R.layout.activity_old_bluetooth_open_lock_record);
         unbinder = ButterKnife.bind(this);
         tvSynchronizedRecord.setOnClickListener(this);
         ivBack.setOnClickListener(this);

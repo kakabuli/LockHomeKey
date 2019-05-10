@@ -105,7 +105,11 @@ public class CateyeFunctionActivity extends BaseActivity<ICatEyeFunctionView, Ca
                 finish();
                 break;
             case R.id.ll_look_back:
+                String gatewayId=cateEyeInfo.getGwID();
+                String deviceId=cateEyeInfo.getServerInfo().getDeviceId();
                 Intent intentVideo = new Intent(CateyeFunctionActivity.this, VideoCallBackActivity.class);
+                intentVideo.putExtra("gatewayId",gatewayId);
+                intentVideo.putExtra("deviceId",deviceId);
                 startActivity(intentVideo);
                 break;
             case R.id.ll_more:

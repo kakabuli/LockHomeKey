@@ -95,8 +95,7 @@ public class SnapshotFragment1 extends CallBackBaseFragment<ISnapShotView, SnapP
     SmartRefreshLayout history_refreshLayout_ff;
     @BindView(R.id.test_snap)
     Button test_snap;
-    String deviceId = "";
-    String gatewayId="";
+
     String ftpCmdPort="";//ftp端口
     String ftpCmdIp="";//ftpip
     boolean isFresh=false;
@@ -133,10 +132,7 @@ public class SnapshotFragment1 extends CallBackBaseFragment<ISnapShotView, SnapP
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            deviceId = getArguments().getString(Constants.DEVICE_ID);
-            gatewayId= getArguments().getString(Constants.GATEWAY_ID);
-        }
+
         simpleDateFormat0.setTimeZone(TimeZone.getTimeZone("GMT+0"));
     }
 
@@ -217,6 +213,7 @@ public class SnapshotFragment1 extends CallBackBaseFragment<ISnapShotView, SnapP
         // 侧滑
         history_rv_ff.setSwipeMenuCreator(swipeMenuCreator);
         history_rv_ff.setSwipeMenuItemClickListener(mMenuItemClickListener);
+
 
         history_refreshLayout_ff.setEnableLoadMore(false);
         history_refreshLayout_ff.setEnableRefresh(true);
@@ -506,6 +503,11 @@ public class SnapshotFragment1 extends CallBackBaseFragment<ISnapShotView, SnapP
         @Override
         public void onItemClick(SwipeMenuBridge menuBridge) {
             menuBridge.closeMenu();
+
+            if(isFresh){
+                Toast.makeText(getActivity(),getActivity().getResources().getString(R.string.data_get_loading),Toast.LENGTH_SHORT).show();
+                return;
+            }
 
             // int direction = menuBridge.getDirection(); // 左侧还是右侧菜单。
             int adapterPosition = menuBridge.getAdapterPosition(); // RecyclerView的Item的position。

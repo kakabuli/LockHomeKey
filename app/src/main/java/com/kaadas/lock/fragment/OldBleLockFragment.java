@@ -117,7 +117,7 @@ public class OldBleLockFragment extends BaseBleFragment<IOldBleLockView, OldBleL
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_ble_lock_layout, null);
+        View view = inflater.inflate(R.layout.fragment_old_ble_lock_layout, null);
         ButterKnife.bind(this, view);
         initRecycleView();
         changeOpenLockStatus(16);
