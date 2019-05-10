@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.kaadas.lock.R;
 import com.kaadas.lock.fragment.BluetoothOpenLockRecordFragment;
@@ -42,8 +43,11 @@ public class VideoCallBackActivity extends AppCompatActivity implements View.OnC
     SnapshotFragment1 snapshotFragment;
     public static boolean isRunning = false;
 
-    String gatewayId="GW01182510163";
-    String deviceId="CH01191510002";
+//    String gatewayId="GW01182510163";
+//    String deviceId="CH01191510002";
+    String gatewayId="";
+    String deviceId="";
+
     Bundle args = new Bundle();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,10 +58,13 @@ public class VideoCallBackActivity extends AppCompatActivity implements View.OnC
         videoRecording.setOnClickListener(this);
         snapshotInformation.setOnClickListener(this);
         iv_back.setOnClickListener(this);
-
+        gatewayId= getIntent().getStringExtra("gatewayId");
+        deviceId= getIntent().getStringExtra("deviceId");
         if(!TextUtils.isEmpty(deviceId) && !TextUtils.isEmpty(gatewayId)){
             args.putString(Constants.DEVICE_ID, deviceId);
             args.putString(Constants.GATEWAY_ID,gatewayId);
+        }else {
+            Toast.makeText(VideoCallBackActivity.this, getString(R.string.device_id_null), Toast.LENGTH_SHORT).show();
         }
         initFragment();
         isRunning = true;

@@ -23,6 +23,7 @@ import com.kaadas.lock.adapter.TimeAdapter;
 import com.kaadas.lock.bean.MyDate;
 import com.kaadas.lock.mvp.mvpbase.BasePresenter;
 import com.kaadas.lock.mvp.mvpbase.IBaseView;
+import com.kaadas.lock.utils.Constants;
 import com.kaadas.lock.utils.LoadingDialog;
 import com.kaadas.lock.widget.GravityPopup;
 
@@ -89,6 +90,8 @@ public abstract class CallBackBaseFragment<T extends IBaseView, V
     private LoadingDialog loadingDialog;
     private Handler bHandler = new Handler();
 
+    String deviceId = "";
+    String gatewayId="";
     /**
      * @param savedInstanceState
      */
@@ -100,6 +103,11 @@ public abstract class CallBackBaseFragment<T extends IBaseView, V
 
         if(!EventBus.getDefault().isRegistered(this)){
             EventBus.getDefault().register(this);
+        }
+
+        if (getArguments() != null) {
+            deviceId = getArguments().getString(Constants.DEVICE_ID);
+            gatewayId= getArguments().getString(Constants.GATEWAY_ID);
         }
     }
     /**

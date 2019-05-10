@@ -12,19 +12,24 @@ greendao {
 android {
     compileSdkVersion 28
     defaultConfig {
-        applicationId "com.kaadas.lock"
+        applicationId "com.kaidishi.lock"
         minSdkVersion 22
         targetSdkVersion 26
         versionCode 201904250
         versionName "3.0.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-
+        flavorDimensions "versionCode"
         multiDexEnabled true
         ndk { //设置支持的SO库架构（开发者可以根据需要，选择一个或多个平台的so）
             abiFilters "armeabi-v7a", "arm64-v8a", "x86"
         }
-
+        manifestPlaceholders = [
+                GETUI_APP_ID    : "5zODhkZOQd66zCoOgxX152",
+                GETUI_APP_KEY   : "2MYvnQfX4k7JHqC7KNaCuA",
+                GETUI_APP_SECRET: "dePIsxVaor6Dibp8YMs8TA",
+        ]
     }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -112,7 +117,7 @@ dependencies {
     //微信分享
     implementation 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:+'
     implementation 'org.greenrobot:greendao:3.2.2'
-
+    compile 'com.getui:sdk:2.13.0.0'
     implementation project(':imagepicker')
     implementation project(':linphoneLibrary')
     implementation project(':library:WheelPicker')

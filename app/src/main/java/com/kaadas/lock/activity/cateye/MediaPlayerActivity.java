@@ -150,7 +150,7 @@ public class MediaPlayerActivity extends BaseActivity<ISnapShotView, SnapPresent
     //播放操作
     private void playOperation() {
         if (filepath == null) {
-            Toast.makeText(this, "can't find video", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getResources().getString(R.string.no_video), Toast.LENGTH_SHORT).show();
             return;
         }
         mediaPlayer.setMediaPlayerFromUri(filepath);
