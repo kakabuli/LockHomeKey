@@ -6,11 +6,13 @@ import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.bean.DeviceDetailBean;
 import com.kaadas.lock.bean.GatewayDeviceDetailBean;
 import com.kaadas.lock.bean.HomeShowBean;
 import com.kaadas.lock.publiclibrary.bean.CateEyeInfo;
+import com.kaadas.lock.publiclibrary.bean.GatewayInfo;
 import com.kaadas.lock.publiclibrary.bean.GwLockInfo;
 import com.kaadas.lock.utils.BatteryView;
 import com.kaadas.lock.utils.KeyConstants;
@@ -34,18 +36,30 @@ public class GatewayAdapter extends BaseQuickAdapter<HomeShowBean, BaseViewHolde
         TextView powerView=helper.getView(R.id.device_power_text);
         String deviceStatus="";
         int power=0;
+
+        //猫眼
         if (HomeShowBean.TYPE_CAT_EYE==deviceType){
             ivDeviceType.setImageResource(R.mipmap.cat_eye_icon);
             CateEyeInfo cateEyeInfo= (CateEyeInfo) item.getObject();
-            deviceStatus= cateEyeInfo.getServerInfo().getEvent_str();
+            GatewayInfo  gatewayInfo=MyApplication.getInstance().getGatewayById(cateEyeInfo.getGwID());
+            if ("online".equals(gatewayInfo.getEvent_str())){
+                deviceStatus= cateEyeInfo.getServerInfo().getEvent_str();
+            }else{
+                deviceStatus="offline";
+            }
             power=cateEyeInfo.getPower();
             batteryView.setPower(power);
             powerView.setText(power+"%");
-
         }else if (HomeShowBean.TYPE_GATEWAY_LOCK==deviceType){
-            ivDeviceType.setImageResource(R.mipmap.product_k9);
+            //网关
+            ivDeviceType.setImageResource(R.mipmap.default_zigbee_lock_icon);
             GwLockInfo gwLockInfo= (GwLockInfo) item.getObject();
-            deviceStatus= gwLockInfo.getServerInfo().getEvent_str();
+            GatewayInfo  gatewayInfo=MyApplication.getInstance().getGatewayById(gwLockInfo.getGwID());
+            if ("online".equals(gatewayInfo.getEvent_str())){
+                deviceStatus= gwLockInfo.getServerInfo().getEvent_str();
+            }else{
+                deviceStatus="offline";
+            }
             power=gwLockInfo.getPower();
             batteryView.setPower(power);
             powerView.setText(power+"%");

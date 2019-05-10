@@ -170,6 +170,8 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
             if (homeShowBeanList.size()>0){
                 noDeviceLayout.setVisibility(View.GONE);
                 refresh.setVisibility(View.VISIBLE);
+                mPresenter.getPublishNotify();
+                mPresenter.listenerDeviceOnline();
                 for (HomeShowBean homeShowBean:homeShowBeanList){
                     LogUtils.e(homeShowBeanList.size()+"获取到大小     "+"获取到昵称  "+homeShowBean.getDeviceNickName());
                     //请求电量
@@ -279,8 +281,7 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
             case HomeShowBean.TYPE_CAT_EYE:
                 //猫眼
                 Intent  cateEyeInfoIntent=new Intent(getActivity(),CateyeFunctionActivity.class);
-                CateEyeInfo cateEyeInfo = (CateEyeInfo) deviceDetailBean.getObject();
-                cateEyeInfoIntent.putExtra(KeyConstants.CATE_INFO, cateEyeInfo);
+                cateEyeInfoIntent.putExtra(KeyConstants.CATE_INFO, deviceDetailBean);
                 startActivity(cateEyeInfoIntent);
                 break;
             case HomeShowBean.TYPE_GATEWAY_LOCK:
@@ -379,13 +380,120 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
     }
 
     @Override
-    public void getDevicePowerFail() {
+    public void getDevicePowerFail(String gatewayId,String deviceId) {
+        //获取电量失败
+        if (mDeviceList!=null&&mDeviceList.size()>0) {
+            for (HomeShowBean device : mDeviceList) {
+                //猫眼电量
+                if (HomeShowBean.TYPE_CAT_EYE==device.getDeviceType()){
+                    if (device.getDeviceId().equals(deviceId)){
+                        CateEyeInfo cateEyeInfo= (CateEyeInfo) device.getObject();
+                        cateEyeInfo.getServerInfo().setEvent_str("offline");
+                        if (deviceDetailAdapter!=null) {
+                            deviceDetailAdapter.notifyDataSetChanged();
+                        }
+                    }
+                }else if (HomeShowBean.TYPE_GATEWAY_LOCK==device.getDeviceType()){
+                    if (device.getDeviceId().equals(deviceId)){
+                        GwLockInfo gwLockInfo= (GwLockInfo) device.getObject();
+                        gwLockInfo.getServerInfo().setEvent_str("offline");
+                        if (deviceDetailAdapter!=null) {
+                            deviceDetailAdapter.notifyDataSetChanged();
+                        }
+                    }
+                }
+            }
+        }
 
     }
 
     @Override
     public void getDevicePowerThrowable(Throwable throwable) {
 
+    }
+
+    @Override
+    public void gatewayStatusChange(String gatewayId,String evnetStr) {
+        //网关状态发生改变
+        LogUtils.e("DeviceFragment网关状态发生改变");
+        if (mDeviceList!=null&&mDeviceList.size()>0) {
+            for (HomeShowBean device : mDeviceList) {
+                //网关
+                if (device.getDeviceType() == HomeShowBean.TYPE_GATEWAY) {
+                    GatewayInfo gatewayInfo = (GatewayInfo) device.getObject();
+                    if (gatewayInfo.getServerInfo().getDeviceSN().equals(gatewayId)) {
+                        LogUtils.e("监听网关Device的状态      " + gatewayId);
+                        gatewayInfo.setEvent_str(evnetStr);
+                        //获取网关下绑定的设备,把网关下的设备设置为离线.网关离线设备也离线
+                        if ("offline".equals(evnetStr)) {
+                            List<HomeShowBean> gatewayBindList = MyApplication.getInstance().getGatewayBindList(gatewayId);
+                            for (HomeShowBean gatewayBind : gatewayBindList) {
+                                switch (gatewayBind.getDeviceType()) {
+                                    //猫眼
+                                    case HomeShowBean.TYPE_CAT_EYE:
+                                        CateEyeInfo cateEyeInfo = (CateEyeInfo) gatewayBind.getObject();
+                                        cateEyeInfo.getServerInfo().setEvent_str("offline");
+                                        break;
+                                    //网关锁
+                                    case HomeShowBean.TYPE_GATEWAY_LOCK:
+                                        GwLockInfo gwLockInfo= (GwLockInfo) gatewayBind.getObject();
+                                        gwLockInfo.getServerInfo().setEvent_str("offline");
+                                        break;
+                                }
+                            }
+                        }
+                        if (deviceDetailAdapter!=null) {
+                            deviceDetailAdapter.notifyDataSetChanged();
+                        }
+                    }
+                }
+            }
+        }
+
+    }
+
+    @Override
+    public void deviceStatusChange(String gatewayId,String deviceId,String eventStr) {
+        //网关状态发生改变
+        LogUtils.e("DeviceFragment设备状态发生改变");
+        if (mDeviceList!=null&&mDeviceList.size()>0) {
+            for (HomeShowBean homeShowBean : mDeviceList) {
+                if (deviceId.equals(homeShowBean.getDeviceId())) {
+                    switch (homeShowBean.getDeviceType()) {
+                        //猫眼上线
+                        case HomeShowBean.TYPE_CAT_EYE:
+                            CateEyeInfo cateEyeInfo= (CateEyeInfo) homeShowBean.getObject();
+                            if (cateEyeInfo.getGwID().equals(gatewayId)) {
+                                if ("online".equals(eventStr)) {
+                                    cateEyeInfo.getServerInfo().setEvent_str("online");
+                                } else {
+                                    cateEyeInfo.getServerInfo().setEvent_str("offline");
+                                }
+                                if (deviceDetailAdapter!=null) {
+                                    deviceDetailAdapter.notifyDataSetChanged();
+                                }
+                                LogUtils.e("猫眼上线下线了   "+eventStr+"猫眼的设备id  "+deviceId);
+                            }
+                            break;
+                        //网关锁上线
+                        case HomeShowBean.TYPE_GATEWAY_LOCK:
+                            GwLockInfo gwLockInfo= (GwLockInfo) homeShowBean.getObject();
+                            if (gwLockInfo.getGwID().equals(gatewayId)) {
+                                if ("online".equals(eventStr)) {
+                                    gwLockInfo.getServerInfo().setEvent_str("online");
+                                }else if ("offline".equals(eventStr)){
+                                    gwLockInfo.getServerInfo().setEvent_str("offline");
+                                }
+                                if (deviceDetailAdapter!=null) {
+                                    deviceDetailAdapter.notifyDataSetChanged();
+                                }
+                                LogUtils.e("网关锁上线下线了   "+eventStr+"网关的设备id  "+deviceId);
+                            }
+                            break;
+                    }
+                }
+            }
+        }
     }
 
 

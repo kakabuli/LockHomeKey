@@ -7,7 +7,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,13 +15,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.kaadas.lock.R;
-import com.kaadas.lock.activity.home.BluetoothEquipmentDynamicActivity;
 import com.kaadas.lock.activity.home.GatewayEquipmentDynamicActivity;
 import com.kaadas.lock.adapter.BluetoothRecordAdapter;
 import com.kaadas.lock.bean.BluetoothItemRecordBean;
 import com.kaadas.lock.bean.BluetoothRecordBean;
 import com.kaadas.lock.utils.KeyConstants;
-import com.kaadas.lock.utils.LogUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,7 +51,11 @@ public class GatewayLockFragment extends Fragment implements View.OnClickListene
     TextView tvMore;
     @BindView(R.id.rl_device_dynamic)
     RelativeLayout rlDeviceDynamic;
-
+    @BindView(R.id.rl_has_data)
+    RelativeLayout rlHasData;
+    @BindView(R.id.tv_no_data)
+    TextView tvNoData;
+    boolean hasData;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -69,12 +70,12 @@ public class GatewayLockFragment extends Fragment implements View.OnClickListene
 
     private void initRecycleView() {
         List<BluetoothItemRecordBean> itemList1 = new ArrayList<>();
-        itemList1.add(new BluetoothItemRecordBean("jff","jfji", KeyConstants.BLUETOOTH_RECORD_WARN, "fjjf", true, true));
+        itemList1.add(new BluetoothItemRecordBean("jff", "jfji", KeyConstants.BLUETOOTH_RECORD_WARN, "fjjf", true, true));
         list.add(new BluetoothRecordBean("jfjfk", itemList1, false));
         List<BluetoothItemRecordBean> itemList2 = new ArrayList<>();
-        itemList2.add(new BluetoothItemRecordBean("jff","jfif", KeyConstants.BLUETOOTH_RECORD_WARN, "fjjf", true, false));
-        itemList2.add(new BluetoothItemRecordBean("jff","jfjf", KeyConstants.BLUETOOTH_RECORD_COMMON, "fjjf", false, false));
-        itemList2.add(new BluetoothItemRecordBean("jff","jfij", KeyConstants.BLUETOOTH_RECORD_WARN, "fjjf", false, true));
+        itemList2.add(new BluetoothItemRecordBean("jff", "jfif", KeyConstants.BLUETOOTH_RECORD_WARN, "fjjf", true, false));
+        itemList2.add(new BluetoothItemRecordBean("jff", "jfjf", KeyConstants.BLUETOOTH_RECORD_COMMON, "fjjf", false, false));
+        itemList2.add(new BluetoothItemRecordBean("jff", "jfij", KeyConstants.BLUETOOTH_RECORD_WARN, "fjjf", false, true));
         list.add(new BluetoothRecordBean("jfjfk", itemList2, true));
         BluetoothRecordAdapter bluetoothRecordAdapter = new BluetoothRecordAdapter(list);
         recycleview.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -84,6 +85,18 @@ public class GatewayLockFragment extends Fragment implements View.OnClickListene
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+    }
+
+    public void changePage() {
+        if (hasData) {
+            rlHasData.setVisibility(View.VISIBLE);
+            tvNoData.setVisibility(View.GONE);
+            rlHasData.setEnabled(false);
+        } else {
+            rlHasData.setVisibility(View.GONE);
+            tvNoData.setVisibility(View.VISIBLE);
+            rlHasData.setEnabled(true);
+        }
     }
 
     public void changeOpenLockStatus(int status) {
@@ -204,6 +217,7 @@ public class GatewayLockFragment extends Fragment implements View.OnClickListene
 
         }
     }
+
     @Override
     public void onClick(View v) {
         Intent intent;

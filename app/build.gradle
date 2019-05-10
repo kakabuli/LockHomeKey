@@ -12,7 +12,7 @@ greendao {
 android {
     compileSdkVersion 28
     defaultConfig {
-        applicationId "com.kaidishi.lock"
+        applicationId "com.kaadas.lock"
         minSdkVersion 22
         targetSdkVersion 26
         versionCode 201904250
@@ -40,7 +40,17 @@ android {
                 MEIZU_APP_KEY   : "6121ecee371449c2b536b58452d78cb8"
         ]
     }
-
+    //多渠道打包
+    productFlavors {
+        kaadas {
+            applicationId "com.kaidishi.lock"
+            buildConfigField('String', 'HTTP_HOST', '"https://app1.orangeiot.cn:8008"')
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "kaadas",
+                                    appname            : "@string/app_name"
+                                    , app_icon         : "@drawable/logo",
+                                    amapkey            : "18230744482cbb9f608cc3d1c1ef2e6d"]
+        }
+    }
     buildTypes {
         release {
             minifyEnabled false

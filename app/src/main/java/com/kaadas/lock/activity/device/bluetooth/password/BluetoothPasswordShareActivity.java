@@ -22,6 +22,7 @@ import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.SharedUtil;
 import com.kaadas.lock.utils.ToastUtil;
 
 import butterknife.BindView;
@@ -77,7 +78,11 @@ public class BluetoothPasswordShareActivity extends BaseBleActivity<IPasswordDet
         password = intent.getStringExtra(KeyConstants.TO_DETAIL_PASSWORD);
         nickName = intent.getStringExtra(KeyConstants.TO_DETAIL_NICKNAME);
         timeCeLue = intent.getIntExtra(KeyConstants.TIME_CE_LUE, 0);
-        tvPassword.setText(password);
+        String pwd = "";
+        for (char c : password.toCharArray()) {
+            pwd += " " + c;
+        }
+        tvPassword.setText(pwd);
         ivBack.setOnClickListener(this);
         tvContent.setText(getString(R.string.password_detail));
         ivEditor.setOnClickListener(this);
@@ -85,6 +90,9 @@ public class BluetoothPasswordShareActivity extends BaseBleActivity<IPasswordDet
         tvName.setText(nickName);
         tvTime.setText(" " + DateUtils.getStrFromMillisecond2(System.currentTimeMillis()));
         initData();
+        tvShortMessage.setOnClickListener(this);
+        tvWeiXin.setOnClickListener(this);
+        tvCopy.setOnClickListener(this);
     }
 
     private void initData() {
@@ -129,6 +137,7 @@ public class BluetoothPasswordShareActivity extends BaseBleActivity<IPasswordDet
 
     @Override
     public void onClick(View v) {
+        String message = String.format(getString(R.string.share_content), password,shiXiao);
         switch (v.getId()) {
             case R.id.iv_back:
                 finish();
@@ -183,6 +192,20 @@ public class BluetoothPasswordShareActivity extends BaseBleActivity<IPasswordDet
                         }
                     }
                 });
+                break;
+            case R.id.tv_short_message:
+                SharedUtil.getInstance().sendShortMessage(message,this);
+                break;
+            case R.id.tv_wei_xin:
+                if (SharedUtil.isWeixinAvilible(this)){
+                    SharedUtil.getInstance().sendWeiXin(message);
+                }else {
+                    ToastUtil.getInstance().showShort(R.string.telephone_not_install_wechat);
+                }
+
+                break;
+            case R.id.tv_copy:
+                SharedUtil.getInstance().copyTextToSystem(this, message);
                 break;
         }
     }

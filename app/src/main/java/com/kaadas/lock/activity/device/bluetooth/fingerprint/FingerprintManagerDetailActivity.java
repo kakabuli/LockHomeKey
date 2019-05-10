@@ -66,7 +66,7 @@ public class FingerprintManagerDetailActivity extends BaseBleActivity<IPasswordD
         if (createTime == 0) {
             createTime = System.currentTimeMillis()/1000;
         }
-        tvTime.setText(getString(R.string.authorization_time)+" "+DateUtils.secondToDate(createTime));
+        tvTime.setText(" "+DateUtils.secondToDate(createTime));
         tvName.setText(fingerprint.getNickName());
         tvNumber.setText(fingerprint.getNum()+" " + fingerprint.getNickName());
         mPresenter.isAuth(bleLockInfo, false);

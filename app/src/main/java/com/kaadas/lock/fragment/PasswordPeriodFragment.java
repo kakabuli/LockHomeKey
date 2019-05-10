@@ -34,6 +34,7 @@ import com.kaadas.lock.publiclibrary.http.postbean.AddPasswordBean;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.DateFormatUtils;
+import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.NetUtil;
@@ -119,10 +120,18 @@ public class PasswordPeriodFragment extends BaseBleFragment<IPasswordLoopView, P
         tvEnd.setOnClickListener(this);
         initRecycleview();
         initTimerPicker();
+        setEffectiveTime();
         return mView;
 
     }
-
+    private void setEffectiveTime() {
+        String startTime = DateUtils.currentLong2HourMin(System.currentTimeMillis());
+        String endTime = DateUtils.currentLong2HourMin(System.currentTimeMillis()+60*60*1000);
+        String[] startSplit = startTime.split(":");
+        String[] endSplit = endTime.split(":");
+        setStartTime(startSplit[0],startSplit[1]);
+        setEndTime(endSplit[0],endSplit[1]);
+    }
     private void initTimerPicker() {
         try {
             long after1 = formatter.parse("00:00").getTime();

@@ -48,6 +48,7 @@ public class DoorCardNearDoorActivity extends BaseActivity<IBleView, BlePresente
         setContentView(R.layout.activity_door_card_near_door);
         ButterKnife.bind(this);
         ivBack.setOnClickListener(this);
+        btn.setOnClickListener(this);
         tvContent.setText(R.string.add_door_card);
         bleLockInfo = MyApplication.getInstance().getBleService().getBleLockInfo();
         mPresenter.isAuth(bleLockInfo, true);
@@ -65,19 +66,17 @@ public class DoorCardNearDoorActivity extends BaseActivity<IBleView, BlePresente
 
     public void changeBluetoothStatus(){
         if (bluetoothConnectStatus==bluetoothConnectSuccess){
-            btn.setClickable(true);
-            btn.setOnClickListener(this);
+            btn.setEnabled(true);
             btn.setBackgroundResource(R.drawable.retangle_1f96f7_22);
             btn.setText(R.string.connect_success);
             btn.setVisibility(View.VISIBLE);
         }else if (bluetoothConnectStatus==bluetoothConnectFail){
-            btn.setClickable(true);
-            btn.setOnClickListener(this);
+            btn.setEnabled(true);
             btn.setBackgroundResource(R.drawable.retangle_ff3b30_22);
             btn.setText(R.string.connect_fail);
             btn.setVisibility(View.GONE);
         }else {
-            btn.setClickable(false);
+            btn.setEnabled(false);
             btn.setVisibility(View.GONE);
         }
     }
@@ -87,6 +86,20 @@ public class DoorCardNearDoorActivity extends BaseActivity<IBleView, BlePresente
         switch (v.getId()) {
             case R.id.iv_back:
                 finish();
+                break;
+            case R.id.btn:
+                if (bluetoothConnectStatus==bluetoothConnectSuccess){
+                    //跳转到添加界面
+                    Intent intent = new Intent(this, DoorCardIdentificationActivity.class);
+                    intent.putExtra(KeyConstants.BLE_DEVICE_INFO, bleLockInfo);
+                    startActivity(intent);
+                    finish();
+                }else if (bluetoothConnectStatus==bluetoothConnectFail){
+                    Intent intent = new Intent(this, DoorCardNoConnectOneActivity.class);
+                    intent.putExtra(KeyConstants.BLE_DEVICE_INFO, bleLockInfo);
+                    startActivity(intent);
+                    finish();
+                }
                 break;
 
         }
@@ -128,11 +141,9 @@ public class DoorCardNearDoorActivity extends BaseActivity<IBleView, BlePresente
     public void authResult(boolean isSuccess) {
         if (isSuccess) {
             LogUtils.e("鉴权成功");
-            //跳转到添加界面
-            Intent intent = new Intent(this, DoorCardIdentificationActivity.class);
-            intent.putExtra(KeyConstants.BLE_DEVICE_INFO, bleLockInfo);
-            startActivity(intent);
-            finish();
+            bluetoothConnectStatus=bluetoothConnectSuccess;
+            changeBluetoothStatus();
+
         } else {  //鉴权失败
 
         }
@@ -177,9 +188,7 @@ public class DoorCardNearDoorActivity extends BaseActivity<IBleView, BlePresente
      * 去手动绑定界面
      */
     public void toHandView() {
-        Intent intent = new Intent(this, DoorCardNoConnectOneActivity.class);
-        intent.putExtra(KeyConstants.BLE_DEVICE_INFO, bleLockInfo);
-        startActivity(intent);
-        finish();
+        bluetoothConnectStatus=bluetoothConnectFail;
+        changeBluetoothStatus();
     }
 }

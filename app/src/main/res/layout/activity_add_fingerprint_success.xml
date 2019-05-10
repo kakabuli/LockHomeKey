@@ -24,7 +24,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="@dimen/dp_26"
-            android:text="jfjfi"
             android:textColor="#999999"
             android:textSize="@dimen/sp_15" />
 

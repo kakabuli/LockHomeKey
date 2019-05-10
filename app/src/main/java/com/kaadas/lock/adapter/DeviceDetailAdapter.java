@@ -1,20 +1,14 @@
 package com.kaadas.lock.adapter;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Color;
-import android.os.Build;
-import android.provider.Settings;
 import android.support.annotation.Nullable;
-import android.support.v4.app.NotificationManagerCompat;
-import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.bean.DeviceDetailBean;
 import com.kaadas.lock.bean.HomeShowBean;
@@ -24,15 +18,13 @@ import com.kaadas.lock.publiclibrary.bean.GatewayInfo;
 import com.kaadas.lock.publiclibrary.bean.GwLockInfo;
 import com.kaadas.lock.utils.BatteryView;
 import com.kaadas.lock.utils.LogUtils;
-import com.kaadas.lock.utils.Rom;
 
 import java.util.List;
 
 public class DeviceDetailAdapter extends BaseQuickAdapter<HomeShowBean, BaseViewHolder> {
 
 
-
-    public DeviceDetailAdapter(@Nullable List<HomeShowBean> data) {
+    public DeviceDetailAdapter( @Nullable List<HomeShowBean> data) {
         super(R.layout.fragment_device_item, data);
     }
 
@@ -60,12 +52,21 @@ public class DeviceDetailAdapter extends BaseQuickAdapter<HomeShowBean, BaseView
                 if (power<0){
                     power=0;
                 }
-                isWifiDevice(true,helper,cateEyeInfo.getServerInfo().getEvent_str(),batteryView);
-                helper.setImageResource(R.id.device_image,R.mipmap.cat_eye_icon);
-                batteryView.setPower(power);
-                helper.setText(R.id.device_power_text,power+"%");
-                textView.setText(cateEyeInfo.getServerInfo().getNickName());
+                cateEyeInfo.getGwID();
 
+                //根据当前的网关id，找出网关状态,网关离线猫眼也离线，不管服务器传过来什么值
+                GatewayInfo catGatewayInfo=MyApplication.getInstance().getGatewayById(cateEyeInfo.getGwID());
+                if (catGatewayInfo!=null){
+                    if ("online".equals(catGatewayInfo.getEvent_str())){
+                        isWifiDevice(true,helper,cateEyeInfo.getServerInfo().getEvent_str(),batteryView);
+                    }else{
+                        isWifiDevice(true,helper,"offline",batteryView);
+                    }
+                    helper.setImageResource(R.id.device_image,R.mipmap.cat_eye_icon);
+                    batteryView.setPower(power);
+                    helper.setText(R.id.device_power_text,power+"%");
+                    textView.setText(cateEyeInfo.getServerInfo().getNickName());
+                }
                 break;
             //网关锁
             case HomeShowBean.TYPE_GATEWAY_LOCK:
@@ -77,11 +78,20 @@ public class DeviceDetailAdapter extends BaseQuickAdapter<HomeShowBean, BaseView
                 if (gwPower<0){
                     gwPower=0;
                 }
-                isWifiDevice(true,helper,gwLockInfo.getServerInfo().getEvent_str(),batteryView);
-                helper.setImageResource(R.id.device_image,R.mipmap.default_zigbee_lock_icon);
-                batteryView.setPower(gwPower);
-                helper.setText(R.id.device_power_text,gwPower+"%");
-                textView.setText(gwLockInfo.getServerInfo().getNickName());
+                //根据当前的网关id，找出网关状态,网关离线猫眼也离线，不管服务器传过来什么值
+                GatewayInfo lockGatewayInfo=MyApplication.getInstance().getGatewayById(gwLockInfo.getGwID());
+                if (lockGatewayInfo!=null) {
+                    if ("online".equals(lockGatewayInfo.getEvent_str())) {
+                        isWifiDevice(true, helper, gwLockInfo.getServerInfo().getEvent_str(), batteryView);
+                    } else {
+                        isWifiDevice(true, helper, "offline", batteryView);
+                    }
+                    isWifiDevice(true, helper, gwLockInfo.getServerInfo().getEvent_str(), batteryView);
+                    helper.setImageResource(R.id.device_image, R.mipmap.default_zigbee_lock_icon);
+                    batteryView.setPower(gwPower);
+                    helper.setText(R.id.device_power_text, gwPower + "%");
+                    textView.setText(gwLockInfo.getServerInfo().getNickName());
+                }
                 break;
             //网关
             case HomeShowBean.TYPE_GATEWAY:
