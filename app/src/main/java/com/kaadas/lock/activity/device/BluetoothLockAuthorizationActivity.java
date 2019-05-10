@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.MainActivity;
+import com.kaadas.lock.activity.device.bluetooth.BluetoothAuthorizationDeviceInformationActivity;
 import com.kaadas.lock.activity.device.gatewaylock.password.old.GatewayLockDeletePasswordActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseBleActivity;
 import com.kaadas.lock.mvp.presenter.DeviceDetailPresenter;
@@ -66,6 +67,7 @@ public class BluetoothLockAuthorizationActivity extends BaseBleActivity<IDeviceD
         bleLockInfo = mPresenter.getBleLockInfo();
         ivBack.setOnClickListener(this);
         tvOpenClock.setOnClickListener(this);
+        tvType.setText(getString(R.string.bluetooth_type) + bleLockInfo.getServerLockInfo().getModel());
         initView();
         initListener();
         mPresenter.getAllPassword(bleLockInfo);
@@ -234,7 +236,7 @@ public class BluetoothLockAuthorizationActivity extends BaseBleActivity<IDeviceD
                 changLockStatus();
                 break;
             case R.id.rl_device_information:
-                Intent intent = new Intent(this, BluetoothDeviceInformationActivity.class);
+                Intent intent = new Intent(this, BluetoothAuthorizationDeviceInformationActivity.class);
                 startActivity(intent);
                 break;
         }

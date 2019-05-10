@@ -66,7 +66,7 @@ public class AddFingerprintSuccessActivity extends BaseActivity<IAddFingerSucces
         tvContent.setText(getString(R.string.add_fingerprint));
         userNum = getIntent().getIntExtra(KeyConstants.USER_NUM, 0);
         bleLockInfo = MyApplication.getInstance().getBleService().getBleLockInfo();
-        tvSuccessPageNumber.setText("" + userNum);
+        tvSuccessPageNumber.setText("" + userNum+getString(R.string.fingerprint_collect_success));
         initRecycleview();
     }
 

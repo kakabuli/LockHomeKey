@@ -161,8 +161,8 @@ public class BluetoothMoreActivity extends BaseBleActivity<IDeviceMoreView, Devi
                 AlertDialog alertDialog = AlertDialogUtil.getInstance().common(this, mView);
                 tvTitle.setText(getString(R.string.input_device_name));
                 //获取到设备名称设置
-                editText.setText("");
-                editText.setSelection("".length());
+                editText.setText(deviceNickname);
+                editText.setSelection(deviceNickname.length());
                 editText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(16)});
                 tv_cancel.setOnClickListener(new View.OnClickListener() {
                     @Override

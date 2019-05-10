@@ -69,7 +69,7 @@ public class AddDoorCardSuccessActivity extends BaseActivity<IAddFingerSuccessVi
         initRecycleview();
         bleLockInfo = MyApplication.getInstance().getBleService().getBleLockInfo();
         userNum = getIntent().getIntExtra(KeyConstants.USER_NUM, 0);
-        tvSuccessPageNumber.setText("" + userNum);
+        tvSuccessPageNumber.setText("" + userNum+getString(R.string.card_add_success));
     }
 
     @Override

@@ -78,7 +78,11 @@ public class BluetoothPasswordShareActivity extends BaseBleActivity<IPasswordDet
         password = intent.getStringExtra(KeyConstants.TO_DETAIL_PASSWORD);
         nickName = intent.getStringExtra(KeyConstants.TO_DETAIL_NICKNAME);
         timeCeLue = intent.getIntExtra(KeyConstants.TIME_CE_LUE, 0);
-        tvPassword.setText(password);
+        String pwd = "";
+        for (char c : password.toCharArray()) {
+            pwd += " " + c;
+        }
+        tvPassword.setText(pwd);
         ivBack.setOnClickListener(this);
         tvContent.setText(getString(R.string.password_detail));
         ivEditor.setOnClickListener(this);
