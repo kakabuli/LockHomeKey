@@ -325,6 +325,28 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
 
     }
 
+    @Override
+    public void gatewayStatusChange() {
+        //网关状态发生改变
+        LogUtils.e("DeviceFragment网关状态发生改变");
+        if (mDeviceList!=null&&mDeviceList.size()>0) {
+            if (deviceDetailAdapter!=null) {
+                deviceDetailAdapter.notifyDataSetChanged();
+            }
+        }
+    }
+
+    @Override
+    public void deviceStatusChange() {
+        //网关状态发生改变
+        LogUtils.e("DeviceFragment设备状态发生改变");
+        if (mDeviceList!=null&&mDeviceList.size()>0) {
+            if (deviceDetailAdapter!=null) {
+                deviceDetailAdapter.notifyDataSetChanged();
+            }
+        }
+    }
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {

@@ -13,6 +13,7 @@ import com.kaadas.lock.mvp.view.IMainActivityView;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.publiclibrary.bean.CateEyeInfo;
 import com.kaadas.lock.publiclibrary.bean.GatewayInfo;
+import com.kaadas.lock.publiclibrary.bean.GwLockInfo;
 import com.kaadas.lock.publiclibrary.ble.BleUtil;
 import com.kaadas.lock.publiclibrary.ble.responsebean.BleDataBean;
 import com.kaadas.lock.publiclibrary.http.util.RxjavaHelper;
@@ -21,6 +22,7 @@ import com.kaadas.lock.publiclibrary.linphone.linphone.callback.PhoneCallback;
 import com.kaadas.lock.publiclibrary.linphone.linphone.callback.RegistrationCallback;
 import com.kaadas.lock.publiclibrary.linphone.linphone.util.LinphoneHelper;
 import com.kaadas.lock.publiclibrary.mqtt.eventbean.CatEyeEventBean;
+import com.kaadas.lock.publiclibrary.mqtt.eventbean.DeviceOnLineBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.GetBindGatewayStatusResult;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttConstant;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttData;
@@ -57,6 +59,7 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
     private Disposable deviceChangeDisposable;
     private CateEyeInfo callInCatEyeInfo;  //呼叫进来的猫眼信息
     private Disposable catEyeEventDisposable;
+    private Disposable listenerDeviceOnLineDisposable;
 
     @Override
     public void authSuccess() {
@@ -147,37 +150,114 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
 
     //获取网关状态通知
     public void getPublishNotify() {
-        disposable = MyApplication.getInstance().getMqttService().listenerNotifyData()
-                .subscribe(new Consumer<MqttData>() {
-                    @Override
-                    public void accept(MqttData mqttData) throws Exception {
-                        if (mqttData != null) {
-                            if (MqttConstant.GATEWAY_STATE.equals(mqttData.getFunc())) {
-                                GetBindGatewayStatusResult gatewayStatusResult = new Gson().fromJson(mqttData.getPayload(), GetBindGatewayStatusResult.class);
-                                LogUtils.e("监听网关的状态" + gatewayStatusResult.getDevuuid());
-                                if (gatewayStatusResult != null) {
-                                    List<HomeShowBean> homeShowBeans = MyApplication.getInstance().getAllDevices();
-                                    if (homeShowBeans.size() > 0) {
-                                        for (HomeShowBean homeShowBean : homeShowBeans) {
-                                            if (homeShowBean.getDeviceType() == HomeShowBean.TYPE_GATEWAY) {
-                                                GatewayInfo gatewayInfo = (GatewayInfo) homeShowBean.getObject();
-                                                if (gatewayInfo.getServerInfo().getDeviceSN().equals(gatewayStatusResult.getDevuuid())) {
-                                                    LogUtils.e("监听网关的状态" + gatewayStatusResult.getDevuuid());
-                                                    gatewayInfo.setEvent_str(gatewayStatusResult.getData().getState());
+        if (mqttService != null) {
+            disposable = mqttService.listenerNotifyData()
+                    .compose(RxjavaHelper.observeOnMainThread())
+                    .subscribe(new Consumer<MqttData>() {
+                        @Override
+                        public void accept(MqttData mqttData) throws Exception {
+                            if (mqttData != null) {
+                                if (MqttConstant.GATEWAY_STATE.equals(mqttData.getFunc())) {
+                                    GetBindGatewayStatusResult gatewayStatusResult = new Gson().fromJson(mqttData.getPayload(), GetBindGatewayStatusResult.class);
+                                    LogUtils.e("监听网关的状态" + gatewayStatusResult.getDevuuid());
+                                    if (gatewayStatusResult != null) {
+                                        List<HomeShowBean> homeShowBeans = MyApplication.getInstance().getAllDevices();
+                                        if (homeShowBeans.size() > 0) {
+                                            for (HomeShowBean homeShowBean : homeShowBeans) {
+                                                if (homeShowBean.getDeviceType() == HomeShowBean.TYPE_GATEWAY) {
+                                                    GatewayInfo gatewayInfo = (GatewayInfo) homeShowBean.getObject();
+                                                    if (gatewayInfo.getServerInfo().getDeviceSN().equals(gatewayStatusResult.getDevuuid())) {
+                                                        LogUtils.e("监听网关的状态      " + gatewayStatusResult.getDevuuid());
+                                                        gatewayInfo.setEvent_str(gatewayInfo.getEvent_str());
+                                                       /* if ("online".equals(gatewayStatusResult.getData().getState())){
+                                                            gatewayInfo.setEvent_str("online");
+                                                        }else if ("offline".equals(gatewayStatusResult.getData().getState())){
+                                                            //遍历网关下的设备
+                                                          List<HomeShowBean> bindListBean= MyApplication.getInstance().getGatewayBindList(gatewayInfo.getServerInfo().getDeviceSN());
+
+                                                        }*/
+                                                    }
                                                 }
                                             }
+                                        } else {
+                                            SPUtils.put(gatewayStatusResult.getDevuuid(), gatewayStatusResult.getData().getState());
                                         }
-                                    } else {
-                                        SPUtils.put(gatewayStatusResult.getDevuuid(), gatewayStatusResult.getData().getState());
                                     }
-                                }
 
+                                }
                             }
                         }
-                    }
-                });
-        compositeDisposable.add(disposable);
+                    });
+            compositeDisposable.add(disposable);
+        }
     }
+/*
+    *//**
+     * 监听设备上线下线
+     *//*
+    public void listenerDeviceOnline() {
+        if (mqttService != null) {
+            toDisposable(listenerDeviceOnLineDisposable);
+            listenerDeviceOnLineDisposable = mqttService.listenerDataBack()
+                    .filter(new Predicate<MqttData>() {
+                        @Override
+                        public boolean test(MqttData mqttData) throws Exception {
+                            return mqttData.getFunc().equals(MqttConstant.GW_EVENT);
+                        }
+                    })
+                    .compose(RxjavaHelper.observeOnMainThread())
+                    .subscribe(new Consumer<MqttData>() {
+                        @Override
+                        public void accept(MqttData mqttData) throws Exception {
+                            DeviceOnLineBean deviceOnLineBean = new Gson().fromJson(mqttData.getPayload(), DeviceOnLineBean.class);
+                            if (deviceOnLineBean!=null){
+                                List<HomeShowBean> homeShowBeans = MyApplication.getInstance().getAllDevices();
+                                if (homeShowBeans.size() > 0) {
+                                    for (HomeShowBean homeShowBean : homeShowBeans) {
+                                        if (deviceOnLineBean.getDeviceId().equals(homeShowBean.getDeviceId())) {
+                                            switch (homeShowBean.getDeviceType()) {
+                                                //猫眼上线
+                                                case HomeShowBean.TYPE_CAT_EYE:
+                                                    CateEyeInfo cateEyeInfo= (CateEyeInfo) homeShowBean.getObject();
+                                                    if (cateEyeInfo.getGwID().equals(deviceOnLineBean.getGwId())) {
+                                                        if ("online".equals(deviceOnLineBean.getEventparams().getEvent_str())) {
+                                                            cateEyeInfo.getServerInfo().setEvent_str("online");
+                                                        } else {
+                                                            cateEyeInfo.getServerInfo().setEvent_str("offline");
+                                                        }
+                                                        LogUtils.e("猫眼上线下线了   "+deviceOnLineBean.getEventparams().getEvent_str()+"猫眼的设备id  "+deviceOnLineBean.getDeviceId());
+                                                    }
+                                                    break;
+                                                //网关锁上线
+                                                case HomeShowBean.TYPE_GATEWAY_LOCK:
+                                                    GwLockInfo gwLockInfo= (GwLockInfo) homeShowBean.getObject();
+                                                    if (gwLockInfo.getGwID().equals(deviceOnLineBean.getGwId())) {
+                                                        if ("online".equals(deviceOnLineBean.getEventparams().getEvent_str())) {
+                                                            gwLockInfo.getServerInfo().setEvent_str("online");
+                                                        }else if ("offline".equals(deviceOnLineBean.getEventparams().getEvent_str())){
+                                                            gwLockInfo.getServerInfo().setEvent_str("offline");
+                                                        }
+
+                                                        LogUtils.e("网关锁上线下线了   "+deviceOnLineBean.getEventparams().getEvent_str()+"网关的设备id  "+deviceOnLineBean.getDeviceId());
+                                                    }
+                                                    break;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }, new Consumer<Throwable>() {
+                        @Override
+                        public void accept(Throwable throwable) throws Exception {
+                        }
+                    });
+            compositeDisposable.add(listenerDeviceOnLineDisposable);
+        }
+
+    }*/
+
+
 
     public void listenCatEyeEvent() {
         toDisposable(catEyeEventDisposable);
@@ -450,4 +530,5 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
         super.detachView();
         LinphoneHelper.deleteUser();
     }
+
 }

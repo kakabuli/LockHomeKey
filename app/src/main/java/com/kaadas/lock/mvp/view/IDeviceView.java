@@ -26,4 +26,10 @@ public interface IDeviceView extends IBaseView {
     //获取电量异常
     void getDevicePowerThrowable(Throwable throwable);
 
+    //网关状态改变
+    void gatewayStatusChange();
+
+    //设备状态改变
+    void deviceStatusChange();
+
 }

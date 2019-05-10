@@ -14,6 +14,8 @@ import com.google.gson.Gson;
 import com.kaadas.lock.activity.login.LoginActivity;
 import com.kaadas.lock.bean.HomeShowBean;
 import com.kaadas.lock.publiclibrary.bean.CateEyeInfo;
+import com.kaadas.lock.publiclibrary.bean.GatewayInfo;
+import com.kaadas.lock.publiclibrary.bean.GwLockInfo;
 import com.kaadas.lock.publiclibrary.linphone.MemeManager;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.publiclibrary.ble.BleService;
@@ -501,6 +503,37 @@ public class MyApplication extends Application {
         return deviceId;
 
     }
+    //根据网关id查找出网关
+    public GatewayInfo getGatewayById(String gatewayId){
+        for (HomeShowBean homeShowBean:homeShowDevices){
+            if (gatewayId.equals(homeShowBean.getDeviceId())){
+                return (GatewayInfo) homeShowBean.getObject();
+            }
+        }
+        return  null;
+    }
+
+    //遍历网关下的设备
+    public List<HomeShowBean> getGatewayBindList(String gatewayId){
+        //遍历绑定的网关设备
+        List<HomeShowBean> gatewayBindList=new ArrayList<>();
+            for (HomeShowBean homeShowBean:homeShowDevices) {
+                if (homeShowBean.getDeviceType() == HomeShowBean.TYPE_GATEWAY_LOCK) {
+                    GwLockInfo gwLockInfo = (GwLockInfo) homeShowBean.getObject();
+                    if (gwLockInfo.getGwID().equals(gatewayId)) {
+                        gatewayBindList.add(homeShowBean);
+                    }
+                } else if (homeShowBean.getDeviceType() == HomeShowBean.TYPE_CAT_EYE) {
+                    CateEyeInfo cateEyeInfo = (CateEyeInfo) homeShowBean.getObject();
+                    if (cateEyeInfo.getGwID().equals(gatewayId)) {
+                        gatewayBindList.add(homeShowBean);
+                    }
+                }
+            }
+            return gatewayBindList;
+
+    }
+
 
     /**
      * 获取缓存的设备

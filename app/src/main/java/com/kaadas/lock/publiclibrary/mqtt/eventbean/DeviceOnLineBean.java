@@ -16,6 +16,10 @@ public class DeviceOnLineBean {
      * timestamp : 134211111111
      */
 
+
+
+
+
     private String deviceId;
     private String devtype;
     private int eventcode;
