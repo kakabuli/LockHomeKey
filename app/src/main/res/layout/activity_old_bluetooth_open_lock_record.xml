@@ -5,6 +5,8 @@
     android:background="#F2F2F2"
     android:orientation="vertical">
 
+    <include layout="@layout/head"></include>
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_44"
@@ -40,10 +42,11 @@
         android:id="@+id/refreshLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycleview"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycleview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
     </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 
 </LinearLayout>
