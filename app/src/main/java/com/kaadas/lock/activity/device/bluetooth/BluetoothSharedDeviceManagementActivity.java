@@ -69,7 +69,6 @@ public class BluetoothSharedDeviceManagementActivity extends BaseActivity<IBluet
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bluetooth_shared_device_management);
         ButterKnife.bind(this);
-
         bluetoothSharedDeviceManagementAdapter = new BluetoothSharedDeviceManagementAdapter(list, R.layout.item_has_bluetooth_shared_device);
         recycleview.setLayoutManager(new LinearLayoutManager(this));
         recycleview.setAdapter(bluetoothSharedDeviceManagementAdapter);
@@ -242,7 +241,7 @@ public class BluetoothSharedDeviceManagementActivity extends BaseActivity<IBluet
                 String device_nickname = bleLockInfo.getServerLockInfo().getLockNickName();
                 String time = System.currentTimeMillis() + "";
                 List<String> items = new ArrayList<>();
-                mPresenter.addCommonUser(uid, phone, devmac, device_name, System.currentTimeMillis()+"", device_nickname, "3", time, items);
+                mPresenter.addCommonUser(uid, phone, devmac, device_name, System.currentTimeMillis() + "", device_nickname, "3", time, items);
             }
         }
     }

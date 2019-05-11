@@ -114,6 +114,7 @@ public class BluetoothLockFunctionActivity extends BaseBleActivity<IDeviceDetail
     int lockStatus = -1;
     private BleLockInfo bleLockInfo;
     private static final int TO_MORE_REQUEST_CODE = 101;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -133,6 +134,7 @@ public class BluetoothLockFunctionActivity extends BaseBleActivity<IDeviceDetail
     protected DeviceDetailPresenter<IDeviceDetailView> createPresent() {
         return new DeviceDetailPresenter();
     }
+
     @SuppressLint("SetTextI18n")
     private void showData() {
         //todo 等从锁中获取自动还是手动模式进行展示
@@ -148,6 +150,7 @@ public class BluetoothLockFunctionActivity extends BaseBleActivity<IDeviceDetail
 
 
     }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -277,19 +280,22 @@ public class BluetoothLockFunctionActivity extends BaseBleActivity<IDeviceDetail
                 break;
         }
     }
+
     @Override
     public void onSearchDeviceFailed(Throwable throwable) {
-        lockStatus=KeyConstants.DEVICE_OFFLINE;
+        lockStatus = KeyConstants.DEVICE_OFFLINE;
         changLockStatus();
     }
+
     @Override
     public void authResult(boolean isSuccess) {
         if (isSuccess) {
-            lockStatus=KeyConstants.OPEN_LOCK;
+            lockStatus = KeyConstants.OPEN_LOCK;
             changLockStatus();
         } else {
         }
     }
+
     private void dealWithPower(int power) {
         //电量：80%
         if (power > 100) {
@@ -333,6 +339,7 @@ public class BluetoothLockFunctionActivity extends BaseBleActivity<IDeviceDetail
 
 
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -342,6 +349,7 @@ public class BluetoothLockFunctionActivity extends BaseBleActivity<IDeviceDetail
             }
         }
     }
+
     @Override
     public void onElectricUpdata(Integer electric) {
         if (bleLockInfo.getBattery() != -1) {
@@ -375,8 +383,8 @@ public class BluetoothLockFunctionActivity extends BaseBleActivity<IDeviceDetail
         tvNumberTwo.setText(fingerprintList.size() + getString(R.string.ge));
         List<ForeverPassword> pwdList = dataBean.getPwdList();
         List<GetPasswordResult.DataBean.TempPassword> tempPwdList = dataBean.getTempPwdList();
-        tvNumberOne.setText((pwdList.size()+tempPwdList.size()) + getString(R.string.group));
+        tvNumberOne.setText((pwdList.size() + tempPwdList.size()) + getString(R.string.group));
 //        tvNumberFour.setText(2 + getString(R.string.people));
-        LogUtils.d("davi "+result.toString());
+        LogUtils.d("davi " + result.toString());
     }
 }

@@ -124,14 +124,16 @@ public class PasswordPeriodFragment extends BaseBleFragment<IPasswordLoopView, P
         return mView;
 
     }
+
     private void setEffectiveTime() {
         String startTime = DateUtils.currentLong2HourMin(System.currentTimeMillis());
-        String endTime = DateUtils.currentLong2HourMin(System.currentTimeMillis()+60*60*1000);
+        String endTime = DateUtils.currentLong2HourMin(System.currentTimeMillis() + 60 * 60 * 1000);
         String[] startSplit = startTime.split(":");
         String[] endSplit = endTime.split(":");
-        setStartTime(startSplit[0],startSplit[1]);
-        setEndTime(endSplit[0],endSplit[1]);
+        setStartTime(startSplit[0], startSplit[1]);
+        setEndTime(endSplit[0], endSplit[1]);
     }
+
     private void initTimerPicker() {
         try {
             long after1 = formatter.parse("00:00").getTime();

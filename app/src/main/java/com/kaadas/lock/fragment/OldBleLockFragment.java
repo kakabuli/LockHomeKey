@@ -776,11 +776,11 @@ public class OldBleLockFragment extends BaseBleFragment<IOldBleLockView, OldBleL
     }
 
     private void groupData(List<OpenLockRecord> lockRecords) {
-        if (lockRecords.size()>0){
-            hasData=true;
+        if (lockRecords.size() > 0) {
+            hasData = true;
             changePage();
-        }else {
-            hasData=false;
+        } else {
+            hasData = false;
             changePage();
         }
         list.clear();
