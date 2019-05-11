@@ -408,7 +408,7 @@ public interface IXiaoKaiNewService {
     Observable<BaseResult> openLockAuth(@Body RequestBody info);
 
 
-    @POST(HttpUrlConstants.upload_push_id)
+    @POST(HttpUrlConstants.UPLOAD_PUSH_ID)
     Observable<BaseResult> uploadPushId(@Body RequestBody info);
 
 }

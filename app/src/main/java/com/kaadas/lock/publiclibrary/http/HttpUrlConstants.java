@@ -265,4 +265,5 @@ public class HttpUrlConstants {
    */
   public static final String USER_OPEN_LOCK_AUTHORITY = BASE_URL + "adminlock/open/openLockAuth";
 
+  public static final String UPLOAD_PUSH_ID = BASE_URL + "user/upload/pushId";
 }
