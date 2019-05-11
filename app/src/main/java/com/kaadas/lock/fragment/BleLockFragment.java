@@ -272,7 +272,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
 //        itemList2.add(new BluetoothItemRecordBean("jff", "jfji", KeyConstants.BLUETOOTH_RECORD_COMMON, "fjjf", false, false));
 //        itemList2.add(new BluetoothItemRecordBean("jff", "jfji", KeyConstants.BLUETOOTH_RECORD_WARN, "fjjf", false, true));
 //        list.add(new BluetoothRecordBean("jfjfk", itemList2, true));
-         bluetoothRecordAdapter = new BluetoothRecordAdapter(list);
+        bluetoothRecordAdapter = new BluetoothRecordAdapter(list);
         recycleview.setLayoutManager(new LinearLayoutManager(getActivity()));
         recycleview.setAdapter(bluetoothRecordAdapter);
     }

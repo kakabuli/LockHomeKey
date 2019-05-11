@@ -880,4 +880,5 @@
     <string name="no_video">没有视频</string>
     <string name="device_id_null">设备Id为空</string>
     <string name="push_transmission_data">收到一条透传测试消息</string>
+    <string name="no_unlock_record">暂无开锁记录</string>
 </resources>

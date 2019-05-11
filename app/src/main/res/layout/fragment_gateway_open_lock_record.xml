@@ -4,12 +4,26 @@
     android:layout_height="match_parent"
     android:background="#F2F2F2"
     android:orientation="vertical">
-
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycleview"
+    <com.scwang.smartrefresh.layout.SmartRefreshLayout
+        android:id="@+id/refreshLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="match_parent">
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycleview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+
+    <TextView
+        android:id="@+id/no_have_record"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="@string/no_unlock_record"
+        android:textSize="@dimen/sp_15"
+        android:textColor="@color/black"
+        android:visibility="gone"
+        />
 
 
 </LinearLayout>

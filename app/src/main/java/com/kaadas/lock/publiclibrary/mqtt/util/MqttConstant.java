@@ -146,4 +146,7 @@ public class MqttConstant {
     //设置猫眼的分辨率setVedioRes
     public static final String SET_VEDIO_RES="setVedioRes";
 
+    //获取开锁记录
+    public static final String GET_OPEN_LOCK_RECORD="selectOpenLockRecord";
+
 }

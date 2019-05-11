@@ -442,14 +442,20 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                 BleLockInfo getBle= (BleLockInfo) data.getSerializableExtra(KeyConstants.BLE_INTO);
                 if (getBle!=null&&mDeviceList!=null&&mDeviceList.size()>0){
                     for (HomeShowBean device : mDeviceList) {
-                        //猫眼电量
+                        //蓝牙电量
                         if (HomeShowBean.TYPE_BLE_LOCK==device.getDeviceType()){
                             if (device.getDeviceId().equals(getBle.getServerLockInfo().getLockName())){
                                 BleLockInfo bleLockInfo= (BleLockInfo) device.getObject();
                                 bleLockInfo.setBattery(getBle.getBattery());
+                                if (getBle.isConnected()){
+                                    bleLockInfo.setConnected(true);
+                                }else{
+                                    bleLockInfo.setConnected(false);
+                                }
                                 if (deviceDetailAdapter!=null) {
                                     deviceDetailAdapter.notifyDataSetChanged();
                                 }
+
                             }
                         }
                     }
