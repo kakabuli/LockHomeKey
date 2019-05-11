@@ -889,4 +889,5 @@
     <string name="mainactivity_permission_alert_msg">请前往应用信息下通知管理界面打开通知开关,否则推送信息无法到达</string>
     <string name="mainactivity_permission_alert_title">应用通知开启</string>
     <string name="no_unlock_record">暂无开锁记录</string>
+    <string name="connection_server">连接服务器失败,请检查网络退出该页面重新进去</string>
 </resources>

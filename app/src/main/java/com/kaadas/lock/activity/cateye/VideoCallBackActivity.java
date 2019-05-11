@@ -17,12 +17,17 @@ import com.kaadas.lock.fragment.BluetoothWarnInformationFragment;
 import com.kaadas.lock.fragment.RecordingFragment;
 import com.kaadas.lock.fragment.SnapshotFragment;
 import com.kaadas.lock.fragment.SnapshotFragment1;
+import com.kaadas.lock.mvp.mvpbase.BaseActivity;
+import com.kaadas.lock.mvp.presenter.cateye.VideoCallBackPresenter;
+import com.kaadas.lock.mvp.view.cateye.IVedeoCallBack;
+import com.kaadas.lock.publiclibrary.linphone.MemeManager;
+import com.kaadas.lock.publiclibrary.linphone.linphone.util.LinphoneHelper;
 import com.kaadas.lock.utils.Constants;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class VideoCallBackActivity extends AppCompatActivity implements View.OnClickListener{
+public class VideoCallBackActivity extends BaseActivity<IVedeoCallBack,VideoCallBackPresenter<IVedeoCallBack>> implements View.OnClickListener,IVedeoCallBack{
 
     @BindView(R.id.tv_content)
     TextView tvContent;
@@ -47,6 +52,8 @@ public class VideoCallBackActivity extends AppCompatActivity implements View.OnC
 //    String deviceId="CH01191510002";
     String gatewayId="";
     String deviceId="";
+    String meUserName="";
+    String mePwd="";
 
     Bundle args = new Bundle();
     @Override
@@ -60,9 +67,13 @@ public class VideoCallBackActivity extends AppCompatActivity implements View.OnC
         iv_back.setOnClickListener(this);
         gatewayId= getIntent().getStringExtra("gatewayId");
         deviceId= getIntent().getStringExtra("deviceId");
+        meUserName= getIntent().getStringExtra(Constants.MEUSERNAME);
+        mePwd= getIntent().getStringExtra(Constants.MEPWD);
         if(!TextUtils.isEmpty(deviceId) && !TextUtils.isEmpty(gatewayId)){
             args.putString(Constants.DEVICE_ID, deviceId);
             args.putString(Constants.GATEWAY_ID,gatewayId);
+            args.putString(Constants.MEUSERNAME, meUserName);
+            args.putString(Constants.MEPWD,mePwd);
         }else {
             Toast.makeText(VideoCallBackActivity.this, getString(R.string.device_id_null), Toast.LENGTH_SHORT).show();
         }
@@ -70,6 +81,7 @@ public class VideoCallBackActivity extends AppCompatActivity implements View.OnC
         isRunning = true;
 
 
+        mPresenter.loginMeme(meUserName,mePwd);
 
 
     }
@@ -88,6 +100,12 @@ public class VideoCallBackActivity extends AppCompatActivity implements View.OnC
     protected void onDestroy() {
         super.onDestroy();
         isRunning = false;
+        MemeManager.getInstance().videoActivityDisconnectMeme();
+    }
+
+    @Override
+    protected VideoCallBackPresenter<IVedeoCallBack> createPresent() {
+        return new VideoCallBackPresenter();
     }
 
     @Override
@@ -147,4 +165,18 @@ public class VideoCallBackActivity extends AppCompatActivity implements View.OnC
 
 
     }
+
+    @Override
+    public void onCatEyeCallIn() {
+       // Toast.makeText(VideoCallBackActivity.this,"成功",Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void loginMemeFailed() {
+      //  Toast.makeText(VideoCallBackActivity.this,"失败",Toast.LENGTH_SHORT).show();
+        Toast.makeText(VideoCallBackActivity.this,getString(R.string.connection_server),Toast.LENGTH_SHORT).show();
+
+    }
+
+
 }
