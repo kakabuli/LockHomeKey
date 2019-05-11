@@ -3,6 +3,7 @@ package com.kaadas.lock.mvp.view;
 import com.kaadas.lock.mvp.mvpbase.IBleView;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.publiclibrary.bean.CateEyeInfo;
+import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 
 
 /**
@@ -28,5 +29,8 @@ public interface IMainActivityView extends IBleView {
      * @param deviceId      设备Id
      */
     void onGwEvent(int eventType,String deviceId);
+
+
+    void uploadpush(BaseResult baseResult);
 
 }

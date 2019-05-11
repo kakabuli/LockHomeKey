@@ -1,6 +1,8 @@
 package com.kaadas.lock.mvp.presenter;
 
+import android.content.Context;
 import android.text.TextUtils;
+import android.util.Log;
 
 
 import com.google.gson.Gson;
@@ -16,6 +18,9 @@ import com.kaadas.lock.publiclibrary.bean.GatewayInfo;
 import com.kaadas.lock.publiclibrary.bean.GwLockInfo;
 import com.kaadas.lock.publiclibrary.ble.BleUtil;
 import com.kaadas.lock.publiclibrary.ble.responsebean.BleDataBean;
+import com.kaadas.lock.publiclibrary.http.XiaokaiNewServiceImp;
+import com.kaadas.lock.publiclibrary.http.result.BaseResult;
+import com.kaadas.lock.publiclibrary.http.util.BaseObserver;
 import com.kaadas.lock.publiclibrary.http.util.RxjavaHelper;
 import com.kaadas.lock.publiclibrary.linphone.MemeManager;
 import com.kaadas.lock.publiclibrary.linphone.linphone.callback.PhoneCallback;
@@ -26,16 +31,21 @@ import com.kaadas.lock.publiclibrary.mqtt.eventbean.DeviceOnLineBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.GetBindGatewayStatusResult;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttConstant;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttData;
+import com.kaadas.lock.publiclibrary.mqtt.util.MqttService;
+import com.kaadas.lock.utils.Constants;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.Rsa;
 import com.kaadas.lock.utils.SPUtils;
+import com.kaadas.lock.utils.SPUtils2;
+import com.kaadas.lock.utils.ftp.GeTui;
 import com.kaadas.lock.utils.greenDao.bean.ZigbeeEvent;
 
 import net.sdvn.cmapi.Device;
 
 import org.json.JSONObject;
 import org.linphone.core.LinphoneCall;
+
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -458,6 +468,40 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                 });
         compositeDisposable.add(deviceChangeDisposable);
     }
+
+    public void uploadpushmethod(){
+        String uid= (String) SPUtils.get(SPUtils.UID,"");
+        String JpushId=(String) SPUtils2.get(MyApplication.getInstance(), GeTui.JPUSH_ID,"");
+        Log.e(GeTui.VideoLog,"uid:"+uid+" jpushid:"+JpushId);
+        //uploadPushId(String uid, String jpushId, int type)
+        if(!TextUtils.isEmpty(uid) && !TextUtils.isEmpty(JpushId)){
+            XiaokaiNewServiceImp.uploadPushId(uid,JpushId,2).subscribe(new BaseObserver<BaseResult>() {
+                @Override
+                public void onSuccess(BaseResult baseResult) {
+                    if (mViewRef != null) {
+                        mViewRef.get().uploadpush(baseResult);
+                    }
+                }
+
+                @Override
+                public void onAckErrorCode(BaseResult baseResult) {
+                    Log.e(GeTui.VideoLog,"pushid上传失败,服务返回:"+baseResult);
+                }
+
+                @Override
+                public void onFailed(Throwable throwable) {
+                    Log.e(GeTui.VideoLog,"pushid上传失败");
+                }
+
+                @Override
+                public void onSubscribe1(Disposable d) {
+                    compositeDisposable.add(d);
+                }
+            });
+        }
+    }
+
+
 
     @Override
     public void detachView() {

@@ -12,7 +12,7 @@ greendao {
 android {
     compileSdkVersion 28
     defaultConfig {
-        applicationId "com.kaidishi.lock"
+        applicationId "com.kaadas.lock"
         minSdkVersion 22
         targetSdkVersion 26
         versionCode 201904250
@@ -27,9 +27,30 @@ android {
                 GETUI_APP_ID    : "5zODhkZOQd66zCoOgxX152",
                 GETUI_APP_KEY   : "2MYvnQfX4k7JHqC7KNaCuA",
                 GETUI_APP_SECRET: "dePIsxVaor6Dibp8YMs8TA",
+
+                HUAWEI_APP_ID   : "100038281",
+
+                XIAOMI_APP_ID   : "2882303761517594031",
+                XIAOMI_APP_KEY  : "5931759473031",
+
+                OPPO_APP_KEY    : "d96Ms9tgI2gwkcc0g4K8gWocc",
+                OPPO_APP_SECRET : "24205939F1fedeF4a5734af4cAB30612",
+
+                MEIZU_APP_ID    : "118878",
+                MEIZU_APP_KEY   : "6121ecee371449c2b536b58452d78cb8"
         ]
     }
-
+    //多渠道打包
+    productFlavors {
+        kaadas {
+            applicationId "com.kaidishi.lock"
+            buildConfigField('String', 'HTTP_HOST', '"https://app1.orangeiot.cn:8008"')
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "kaadas",
+                                    appname            : "@string/app_name"
+                                    , app_icon         : "@drawable/logo",
+                                    amapkey            : "18230744482cbb9f608cc3d1c1ef2e6d"]
+        }
+    }
     buildTypes {
         release {
             minifyEnabled false
@@ -108,7 +129,6 @@ dependencies {
     implementation 'com.android.support:design:28.0.0'
     implementation project(path: ':linphoneLibrary')
     implementation(name: 'cmapi_v2_0_0', ext: 'aar')
-
     implementation 'com.github.razerdp:BasePopup:2.1.9'
     implementation 'com.bm.photoview:library:1.4.1'
     implementation 'com.yarolegovich:discrete-scrollview:1.4.9'
@@ -117,9 +137,13 @@ dependencies {
     //微信分享
     implementation 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:+'
     implementation 'org.greenrobot:greendao:3.2.2'
-    compile 'com.getui:sdk:2.13.0.0'
+    implementation 'com.getui:sdk:2.13.0.0'
     implementation project(':imagepicker')
     implementation project(':linphoneLibrary')
     implementation project(':library:WheelPicker')
     implementation project(':library:Common')
+    implementation 'com.getui:hwp:1.0.4'
+    implementation 'com.getui:xmp:1.0.3'
+    implementation files('libs/GetuiSDK-support-OPPO-1.0.2.jar')
+    implementation 'com.getui:mzp:1.0.7'
 }

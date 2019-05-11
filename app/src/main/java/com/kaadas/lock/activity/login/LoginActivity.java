@@ -21,9 +21,11 @@ import com.kaadas.lock.R;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.activity.choosecountry.CountryActivity;
 import com.kaadas.lock.mvp.presenter.LoginPresenter;
+import com.kaadas.lock.publiclibrary.http.XiaokaiNewServiceImp;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.util.HttpUtils;
 import com.kaadas.lock.utils.AlertDialogUtil;
+import com.kaadas.lock.utils.Constants;
 import com.kaadas.lock.utils.DetectionEmailPhone;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
@@ -287,6 +289,7 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter<ILogi
         hiddenLoading();
         LogUtils.e("登陆成功");
         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+        intent.putExtra(Constants.ISFROMLOGIN,true);
         startActivity(intent);
         finish();
     }

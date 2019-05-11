@@ -70,7 +70,7 @@ public class DoorCardManagerDetailActivity extends BaseBleActivity<IPasswordDeta
 
         tvName.setText(card.getNickName());
 
-        tvNumber.setText(card.getNum());
+        tvNumber.setText(card.getNum()+" "+card.getNickName());
         mPresenter.isAuth(bleLockInfo, true);
         ivBack.setOnClickListener(this);
         tvContent.setText(getString(R.string.door_card_detail));

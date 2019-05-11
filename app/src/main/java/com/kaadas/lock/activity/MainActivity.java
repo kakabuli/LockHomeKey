@@ -7,8 +7,11 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
+import android.util.Log;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import com.igexin.sdk.PushManager;
 import com.kaadas.lock.MyApplication;
@@ -22,10 +25,15 @@ import com.kaadas.lock.mvp.presenter.MainActivityPresenter;
 import com.kaadas.lock.mvp.view.IMainActivityView;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.publiclibrary.bean.CateEyeInfo;
+import com.kaadas.lock.publiclibrary.http.result.BaseResult;
+import com.kaadas.lock.utils.Constants;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.PermissionUtil;
+import com.kaadas.lock.utils.Rom;
+import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.ToastUtil;
+import com.kaadas.lock.utils.ftp.GeTui;
 import com.kaadas.lock.utils.greenDao.bean.ZigbeeEvent;
 import com.kaadas.lock.widget.NoScrollViewPager;
 import com.kaidishi.lock.service.DemoIntentService;
@@ -34,8 +42,15 @@ import com.kaidishi.lock.service.DemoPushService;
 import net.sdvn.cmapi.CMAPI;
 import net.sdvn.cmapi.ConnectionService;
 
+import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -95,6 +110,18 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
         //设置Linphone的监听
 
         mPresenter.initLinphone();
+
+        boolean isfromlogin= getIntent().getBooleanExtra(Constants.ISFROMLOGIN,false);
+        boolean ispush= (boolean) SPUtils.get(Constants.PUSHID,false);
+        Log.e(GeTui.VideoLog,"isfromlogin:"+isfromlogin);
+        if(isfromlogin){
+             mPresenter.uploadpushmethod();
+        }else if(!isfromlogin && !ispush){
+             Log.e(GeTui.VideoLog,"重新上传pushid.......");
+             mPresenter.uploadpushmethod();
+        }
+
+        startcallmethod();
 
     }
 
@@ -240,9 +267,75 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
         LogUtils.e("猫眼报警的内容为   " + content);
     }
 
+    @Override
+    public void uploadpush(BaseResult baseResult) {
+        String code= baseResult.getCode();
+        if(code.equals("200")){
+            Log.e(GeTui.VideoLog,"push上传成功");
+            SPUtils.put(Constants.PUSHID,true);
+        }else{
+            Log.e(GeTui.VideoLog,"push上传失败");
+        }
+    }
+
     public NoScrollViewPager getViewPager() {
 
         return homeViewPager;
     }
     private Class userPushService = DemoPushService.class;
+    Timer timer;
+    private void    startcallmethod() {
+        long startTime = 2500;
+        if (Rom.isFlyme()) {
+            startTime = 5000;
+        }
+        final String Tag1 = "sip_kaidishi";
+        if (timer == null) {
+            timer = new Timer();
+            timer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    int linphone_port = MyApplication.getInstance().getLinphone_port();
+                    String sip_pacage_invite = MyApplication.getInstance().getSip_package_invite();
+                    if (!TextUtils.isEmpty(sip_pacage_invite)) {
+                        if (linphone_port > 0) {
+                            timer.cancel();
+                            timer = null;
+                            try {
+                                //建立udp的服务
+                                DatagramSocket datagramSocket = new DatagramSocket();
+                                //准备数据，把数据封装到数据包中。
+                                //	String data = TestUdp.und_package;
+                                //创建了一个数据包
+                                InetAddress inetAddress = InetAddress.getLocalHost();
+                                String ipaddress = inetAddress.getHostAddress();
+                                DatagramPacket packet = new DatagramPacket(sip_pacage_invite.getBytes(), sip_pacage_invite.getBytes().length, inetAddress, linphone_port);
+                                //调用udp的服务发送数据包
+                                datagramSocket.send(packet);
+                                //关闭资源 ---实际上就是释放占用的端口号
+                                datagramSocket.close();
+                            } catch (SocketException e) {
+                                e.printStackTrace();
+                                Log.e(Tag1, "SocketException:" + e.getMessage());
+                            }  /* catch (UnknownHostException e) {
+								e.printStackTrace();
+								Log.e(Tag1,"UnknownHostException"+e.getMessage());
+							}  */ catch (IOException e) {
+                                e.printStackTrace();
+                                Log.e(Tag1, "IOException" + e.getMessage());
+                            }
+                        } else {
+                            Log.e(Tag1, "获取端口失败");
+                        }
+                        Log.e(Tag1, "获取的端口是:" + linphone_port);
+                    } else {
+                        Log.e(Tag1, "Sip数据包为空");
+                        timer.cancel();
+                        timer = null;
+                    }
+                }
+            }, startTime, 500);
+            // 2500
+        }
+    }
 }

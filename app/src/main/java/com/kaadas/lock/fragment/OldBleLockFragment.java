@@ -21,15 +21,12 @@ import android.widget.TextView;
 
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
-import com.kaadas.lock.activity.home.BluetoothEquipmentDynamicActivity;
 import com.kaadas.lock.activity.home.OldBluetoothOpenLockRecordActivity;
 import com.kaadas.lock.adapter.BluetoothRecordAdapter;
 import com.kaadas.lock.bean.BluetoothItemRecordBean;
 import com.kaadas.lock.bean.BluetoothRecordBean;
 import com.kaadas.lock.mvp.mvpbase.BaseBleFragment;
-import com.kaadas.lock.mvp.presenter.BleLockPresenter;
 import com.kaadas.lock.mvp.presenter.OldBleLockPresenter;
-import com.kaadas.lock.mvp.view.IBleLockView;
 import com.kaadas.lock.mvp.view.IOldBleLockView;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.publiclibrary.bean.ForeverPassword;
@@ -77,6 +74,10 @@ public class OldBleLockFragment extends BaseBleFragment<IOldBleLockView, OldBleL
 
     @BindView(R.id.tv_more)
     TextView tvMore;
+    @BindView(R.id.rl_has_data)
+    RelativeLayout rlHasData;
+    @BindView(R.id.tv_no_data)
+    TextView tvNoData;
     private BleLockInfo bleLockInfo;
     private boolean isOpening;
     private Runnable lockRunnable;
@@ -87,6 +88,7 @@ public class OldBleLockFragment extends BaseBleFragment<IOldBleLockView, OldBleL
     private boolean isCurrentFragment;
     private int position;
     BluetoothRecordAdapter bluetoothRecordAdapter;
+    boolean hasData;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -204,6 +206,18 @@ public class OldBleLockFragment extends BaseBleFragment<IOldBleLockView, OldBleL
             isCurrentFragment = false;
         }
 
+    }
+
+    public void changePage() {
+        if (hasData) {
+            rlHasData.setVisibility(View.VISIBLE);
+            tvNoData.setVisibility(View.GONE);
+            rlHasData.setEnabled(false);
+        } else {
+            rlHasData.setVisibility(View.GONE);
+            tvNoData.setVisibility(View.VISIBLE);
+            rlHasData.setEnabled(true);
+        }
     }
 
     @Override
@@ -762,6 +776,13 @@ public class OldBleLockFragment extends BaseBleFragment<IOldBleLockView, OldBleL
     }
 
     private void groupData(List<OpenLockRecord> lockRecords) {
+        if (lockRecords.size()>0){
+            hasData=true;
+            changePage();
+        }else {
+            hasData=false;
+            changePage();
+        }
         list.clear();
         long lastDayTime = 0;
         for (int i = 0; i < lockRecords.size(); i++) {

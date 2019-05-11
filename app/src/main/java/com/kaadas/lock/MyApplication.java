@@ -81,7 +81,7 @@ public class MyApplication extends Application {
     private String uid;
     private List<Activity> activities = new ArrayList<>();
     // APP_ID 替换为你的应用从官方网站申请到的合法appID
-    private static final String APP_ID = "wx8e524a5da9bfdd78";
+    private static final String APP_ID = "wxaa2df1f344ba0755";
 
     // IWXAPI 是第三方app和微信通信的openApi接口
     protected MqttService mqttService;
@@ -659,4 +659,29 @@ public class MyApplication extends Application {
     }
     // DemoPushService.class 自定义服务名称, 核心服务
     private Class userPushService = DemoPushService.class;
+
+    String currentGeTuiMimiUserName;
+    String currentGeTuiMImiPwd;
+
+    public String getCurrentGeTuiMimiUserName() {
+        return currentGeTuiMimiUserName;
+    }
+
+    public void setCurrentGeTuiMimiUserName(String currentGeTuiMimiUserName) {
+        this.currentGeTuiMimiUserName = currentGeTuiMimiUserName;
+    }
+    public String getCurrentGeTuiMImiPwd() {
+        return currentGeTuiMImiPwd;
+    }
+
+    public void setCurrentGeTuiMImiPwd(String currentGeTuiMImiPwd) {
+        this.currentGeTuiMImiPwd = currentGeTuiMImiPwd;
+    }
+    String sip_package_invite;
+    public String getSip_package_invite() {
+        return sip_package_invite;
+    }
+    public void setSip_package_invite(String sip_package_invite) {
+        this.sip_package_invite = sip_package_invite;
+    }
 }

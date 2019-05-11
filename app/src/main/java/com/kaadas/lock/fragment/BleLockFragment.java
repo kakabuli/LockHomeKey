@@ -40,9 +40,7 @@ import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.result.GetPasswordResult;
 import com.kaadas.lock.publiclibrary.http.util.HttpUtils;
 import com.kaadas.lock.utils.AlertDialogUtil;
-import com.kaadas.lock.utils.AnimatorUtil;
 import com.kaadas.lock.utils.DateUtils;
-import com.kaadas.lock.utils.DpPxConversion;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.PermissionUtil;
@@ -86,6 +84,10 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
     RelativeLayout rlIcon;
     @BindView(R.id.tv_open_lock_times)
     TextView tvOpenLockTimes;
+    @BindView(R.id.rl_has_data)
+    RelativeLayout rlHasData;
+    @BindView(R.id.tv_no_data)
+    TextView tvNoData;
     private BleLockInfo bleLockInfo;
     private boolean isOpening;
     private Runnable lockRunnable;
@@ -96,6 +98,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
     private boolean isCurrentFragment;
     private int position;
     BluetoothRecordAdapter bluetoothRecordAdapter;
+    boolean hasData;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -132,7 +135,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
         changeOpenLockStatus(16);
         rlDeviceDynamic.setOnClickListener(this);
         tvMore.setOnClickListener(this);
-        mPresenter.getOpenRecordFromServer(1,bleLockInfo);
+        mPresenter.getOpenRecordFromServer(1, bleLockInfo);
         initView();
         return view;
     }
@@ -147,7 +150,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
     private void initView() {
         long createTime = bleLockInfo.getServerLockInfo().getCreateTime();
         //设置守护时间
-        long day = ((System.currentTimeMillis() / 1000 )- createTime) / (60 * 24 * 60);
+        long day = ((System.currentTimeMillis() / 1000) - createTime) / (60 * 24 * 60);
         this.createTime.setText(day + "");
         LogUtils.e("设备  HomeLockFragment  " + this);
         homeFragment = (HomePageFragment) getParentFragment();
@@ -280,6 +283,18 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+    }
+
+    public void changePage() {
+        if (hasData) {
+            rlHasData.setVisibility(View.VISIBLE);
+            tvNoData.setVisibility(View.GONE);
+            rlHasData.setEnabled(false);
+        } else {
+            rlHasData.setVisibility(View.GONE);
+            tvNoData.setVisibility(View.VISIBLE);
+            rlHasData.setEnabled(true);
+        }
     }
 
     public void changeOpenLockStatus(int status) {
@@ -757,7 +772,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
     }
 
     private String getOpenLockType(GetPasswordResult passwordResults, OpenLockRecord record) {
-        String nickName = record.getUser_num()+"";
+        String nickName = record.getUser_num() + "";
         if (passwordResults != null) {
             switch (record.getOpen_type()) {
                 case BleUtil.PASSWORD:
@@ -793,11 +808,19 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
         }
         return nickName;
     }
+
     private void groupData(List<OpenLockRecord> lockRecords) {
+        if (lockRecords.size() > 0) {
+            hasData = true;
+            changePage();
+        } else {
+            hasData = false;
+            changePage();
+        }
         list.clear();
         long lastDayTime = 0;
         for (int i = 0; i < lockRecords.size(); i++) {
-            if (i>=3){
+            if (i >= 3) {
                 break;
             }
             OpenLockRecord record = lockRecords.get(i);
@@ -817,13 +840,13 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
             if (lastDayTime != dayTime) { //添加头
                 lastDayTime = dayTime;
                 titleTime = DateUtils.getDayTimeFromMillisecond(dayTime);
-                itemList.add(new BluetoothItemRecordBean(nickName,record.getOpen_type(), KeyConstants.BLUETOOTH_RECORD_COMMON,
+                itemList.add(new BluetoothItemRecordBean(nickName, record.getOpen_type(), KeyConstants.BLUETOOTH_RECORD_COMMON,
                         time, false, false));
                 list.add(new BluetoothRecordBean(titleTime, itemList, false));
-            }else {
+            } else {
                 BluetoothRecordBean bluetoothRecordBean = list.get(list.size() - 1);
                 List<BluetoothItemRecordBean> bluetoothItemRecordBeanList = bluetoothRecordBean.getList();
-                bluetoothItemRecordBeanList.add(new BluetoothItemRecordBean(nickName,record.getOpen_type(), KeyConstants.BLUETOOTH_RECORD_COMMON,
+                bluetoothItemRecordBeanList.add(new BluetoothItemRecordBean(nickName, record.getOpen_type(), KeyConstants.BLUETOOTH_RECORD_COMMON,
                         time, false, false));
             }
 
@@ -845,7 +868,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
                 }
 
             }
-            if (i==list.size()-1){
+            if (i == list.size() - 1) {
                 bluetoothRecordBean.setLastData(true);
             }
 

@@ -370,7 +370,7 @@
     <string name="open_lock_success">开锁成功</string>
     <string name="open_lock_failed">开锁失败</string>
     <string name="device_info">设备信息</string>
-    <string name="unit_type">设备信号</string>
+    <string name="unit_type">设备型号</string>
     <string name="lock_firmware_version">门锁固件版本</string>
     <string name="bluetooth_module_version">门锁蓝牙模块版本</string>
     <string name="family_member">家庭成员</string>
@@ -880,5 +880,13 @@
     <string name="no_video">没有视频</string>
     <string name="device_id_null">设备Id为空</string>
     <string name="push_transmission_data">收到一条透传测试消息</string>
+    <string name="no_door_record_please_synchronized">暂无门锁记录，请同步</string>
+    <string name="no_cateye_record_please_synchronized">暂无猫眼记录，请同步</string>
+    <string name="repeat_rules">重复规则</string>
+    <string name="fingerprint_collect_success">号指纹采集成功</string>
+    <string name="card_add_success">号卡添加成功</string>
+    <string name="cate_sleep">猫眼已经休眠</string>
+    <string name="mainactivity_permission_alert_msg">请前往应用信息下通知管理界面打开通知开关,否则推送信息无法到达</string>
+    <string name="mainactivity_permission_alert_title">应用通知开启</string>
     <string name="no_unlock_record">暂无开锁记录</string>
 </resources>

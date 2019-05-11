@@ -1,5 +1,6 @@
 package com.kaadas.lock.publiclibrary.http;
 
+import com.kaadas.lock.bean.PushBean;
 import com.kaadas.lock.bean.VersionBean;
 import com.kaadas.lock.publiclibrary.ble.bean.WarringRecord;
 import com.kaadas.lock.publiclibrary.http.postbean.AddDeviceBean;
@@ -791,4 +792,12 @@ public class XiaokaiNewServiceImp {
                 .compose(RxjavaHelper.observeOnMainThread())
                 ;
     }
+
+    public static Observable<BaseResult> uploadPushId(String uid, String jpushId, int type){
+        PushBean pushBean = new PushBean(uid,jpushId,type);
+        return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
+                .uploadPushId(new HttpUtils<PushBean>().getBody(pushBean))
+                .compose(RxjavaHelper.observeOnMainThread());
+    }
+
 }

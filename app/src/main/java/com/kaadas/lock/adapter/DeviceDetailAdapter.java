@@ -128,30 +128,30 @@ public class DeviceDetailAdapter extends BaseQuickAdapter<HomeShowBean, BaseView
     }
 
     public void isWifiDevice(boolean flag,BaseViewHolder helper, String status,BatteryView batteryView){
-            LogUtils.e(status+"===");
-            if ("online".equals(status)) {
-                //在线
-                if(flag){
-                    helper.setImageResource(R.id.device_type_image,R.mipmap.wifi_connect);
-                }else{
-                    helper.setImageResource(R.id.device_type_image,R.mipmap.bluetooth_connection);
-                }
-
-                helper.setText(R.id.device_type_text, R.string.online);
-                batteryView.setColor(R.color.c25F290);
-                helper.setTextColor(R.id.device_type_text, Color.parseColor("#1F96F7"));
-            } else {
-                //离线
-                if (flag){
-                    helper.setImageResource(R.id.device_type_image, R.mipmap.wifi_disconnect);
-                }else{
-                    helper.setImageResource(R.id.device_type_image,R.mipmap.bluetooth_disconnenction);
-                }
-                batteryView.setColor(R.color.cD6D6D6);
-                helper.setText(R.id.device_type_text, R.string.no_find_device);
-                helper.setTextColor(R.id.device_type_text, Color.parseColor("#999999"));
+        LogUtils.e(status+"===");
+        if ("online".equals(status)) {
+            //在线
+            if(flag){
+                helper.setImageResource(R.id.device_type_image,R.mipmap.wifi_connect);
+            }else{
+                helper.setImageResource(R.id.device_type_image,R.mipmap.bluetooth_connection);
             }
+
+            helper.setText(R.id.device_type_text, R.string.online);
+            batteryView.setColor(R.color.c25F290);
+            helper.setTextColor(R.id.device_type_text, Color.parseColor("#1F96F7"));
+        } else {
+            //离线
+            if (flag){
+                helper.setImageResource(R.id.device_type_image, R.mipmap.wifi_disconnect);
+            }else{
+                helper.setImageResource(R.id.device_type_image,R.mipmap.bluetooth_disconnenction);
+            }
+            batteryView.setColor(R.color.cD6D6D6);
+            helper.setText(R.id.device_type_text, R.string.no_find_device);
+            helper.setTextColor(R.id.device_type_text, Color.parseColor("#999999"));
         }
+    }
 
 
 

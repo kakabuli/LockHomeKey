@@ -49,4 +49,7 @@ public class Constants {
     //下载的视频文件夹名字
     public static final String DOWNLOAD_VIDEO_FOLDER_NAME="catEyeVideos";
 
+    public static final String ISFROMLOGIN="isfromlogin";
+    public static final String PUSHID="PUSHID";
+
 }

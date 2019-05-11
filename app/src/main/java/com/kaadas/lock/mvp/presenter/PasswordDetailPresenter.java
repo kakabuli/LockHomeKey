@@ -212,10 +212,6 @@ public class PasswordDetailPresenter<T> extends BlePresenter<IPasswordDetailView
                                 for (ForeverPassword p : passwordResults.getData().getPwdList()) {
                                     serverNumbers.add(Integer.parseInt(p.getNum()));
                                 }
-                            }
-                        } else if (serverType == 2) { //临时密码
-                            GetPasswordResult passwordResults = MyApplication.getInstance().getPasswordResults(bleLockInfo.getServerLockInfo().getLockName());
-                            if (passwordResults != null) {
                                 for (GetPasswordResult.DataBean.TempPassword p : passwordResults.getData().getTempPwdList()) {
                                     serverNumbers.add(Integer.parseInt(p.getNum()));
                                 }
@@ -238,15 +234,7 @@ public class PasswordDetailPresenter<T> extends BlePresenter<IPasswordDetailView
                         List<Integer> tempNumber = new ArrayList<>();
                         if (serverType == 1) { //永久密码
                             for (int num : bleNumber) {
-                                if (num >= 0 && num < 5) {
-                                    tempNumber.add(num);
-                                }
-                            }
-                            bleNumber.clear();
-                            bleNumber.addAll(tempNumber);
-                        } else if (serverType == 2) { //临时密码
-                            for (int num : bleNumber) {
-                                if (num >= 5 && num < 9) {
+                                if (num >= 0 && num < 9) {
                                     tempNumber.add(num);
                                 }
                             }
