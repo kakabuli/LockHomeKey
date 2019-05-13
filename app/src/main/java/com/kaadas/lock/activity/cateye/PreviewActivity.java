@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -55,7 +56,7 @@ public class PreviewActivity extends BaseActivity<ISnapShotView, SnapPresenter<I
     TextView loading_download_tv;  // 下载中
 
     @BindView(R.id.preview_reload_download_tv)
-    TextView preview_reload_download_tv;  // 重新下载
+    LinearLayout preview_reload_download_tv;  // 重新下载
 
 
     @BindView(R.id.history_loading_download_pb)
