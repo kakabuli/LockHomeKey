@@ -4,8 +4,9 @@ import android.text.TextUtils;
 
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.mvp.mvpbase.BlePresenter;
+import com.kaadas.lock.mvp.view.IBleLockDetailView;
 import com.kaadas.lock.mvp.view.IBleLockView;
-import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
+import com.kaadas.lock.mvp.view.IDeviceDetailView;
 import com.kaadas.lock.publiclibrary.ble.BleCommandFactory;
 import com.kaadas.lock.publiclibrary.ble.BleProtocolFailedException;
 import com.kaadas.lock.publiclibrary.ble.RetryWithTime;
@@ -14,7 +15,6 @@ import com.kaadas.lock.publiclibrary.ble.responsebean.BleDataBean;
 import com.kaadas.lock.publiclibrary.ble.responsebean.ReadInfoBean;
 import com.kaadas.lock.publiclibrary.http.XiaokaiNewServiceImp;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
-import com.kaadas.lock.publiclibrary.http.result.LockRecordResult;
 import com.kaadas.lock.publiclibrary.http.util.BaseObserver;
 import com.kaadas.lock.publiclibrary.http.util.RxjavaHelper;
 import com.kaadas.lock.utils.DateUtils;
@@ -35,7 +35,7 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.functions.Predicate;
 
-public class BleLockPresenter<T> extends MyOpenLockRecordPresenter<IBleLockView> {
+public class BleLockDetailPresenter<T> extends BlePresenter<IDeviceDetailView> {
     private Disposable openLockNumebrDisposable;
     private Disposable electricDisposable;
     private byte[] readLockNumberCommand;
@@ -339,7 +339,7 @@ public class BleLockPresenter<T> extends MyOpenLockRecordPresenter<IBleLockView>
                                 int number = (data[0] & 0xff) + ((data[1] & 0xff) << 8) + ((data[2] & 0xff) << 16) + ((data[3] & 0xff) << 24);
                                 LogUtils.e("开锁次数为   " + number);
                                 if (mViewRef.get() != null) {
-                                    mViewRef.get().onGetOpenNumberSuccess(number);
+//                                    mViewRef.get().onGetOpenNumberSuccess(number);
                                 }
                             }
                         }, new Consumer<Throwable>() {
@@ -347,7 +347,7 @@ public class BleLockPresenter<T> extends MyOpenLockRecordPresenter<IBleLockView>
                             public void accept(Throwable throwable) throws Exception {
                                 LogUtils.e("获取开锁次数失败 ");
                                 if (mViewRef.get() != null) {
-                                    mViewRef.get().onGetOpenNumberFailed(throwable);
+//                                    mViewRef.get().onGetOpenNumberFailed(throwable);
                                 }
                             }
                         });
@@ -544,7 +544,7 @@ public class BleLockPresenter<T> extends MyOpenLockRecordPresenter<IBleLockView>
 
 
     @Override
-    public void attachView(IBleLockView view) {
+    public void attachView(IDeviceDetailView view) {
         super.attachView(view);
         //设置警报提醒
         toDisposable(warringDisposable);
@@ -587,10 +587,10 @@ public class BleLockPresenter<T> extends MyOpenLockRecordPresenter<IBleLockView>
                         int state9 = (deValue[5] & 0b00000010) == 0b00000010 ? 1 : 0;   //安全模式上报
                         if (mViewRef.get() != null) {
                             if (state9 == 1) {
-                                mViewRef.get().onWarringUp(9);
+//                                mViewRef.get().onWarringUp(9);
                                 bleLockInfo.setSafeMode(1);
                             } else if (state6 == 1) {
-                                mViewRef.get().onWarringUp(6);
+//                                mViewRef.get().onWarringUp(6);
                             }
                         }
                         //收到报警  0.5秒后读取锁信息
@@ -670,7 +670,7 @@ public class BleLockPresenter<T> extends MyOpenLockRecordPresenter<IBleLockView>
                         LogUtils.e("收到服务返回的设备更新回调1111");
                         if (mViewRef.get() != null) {   //通知界面更新显示设备状态
                             LogUtils.e("收到服务返回的设备更新回调2222");
-                            mViewRef.get().onWarringUp(-1);
+//                            mViewRef.get().onWarringUp(-1);
                         }
                         //锁状态改变   读取锁信息
                         getDeviceInfo();

@@ -13,9 +13,9 @@ import com.igexin.sdk.GTServiceManager;
  * PushManager.getInstance().initialize(this.getApplicationContext(), userPushService), 其中
  * userPushService 为 用户自定义服务 即 DemoPushService.
  */
-public class DemoPushService extends Service {
+public class GeTuiPushService extends Service {
 
-    public static final String TAG = DemoPushService.class.getName();
+    public static final String TAG = GeTuiPushService.class.getName();
 
     @Override
     public void onCreate() {

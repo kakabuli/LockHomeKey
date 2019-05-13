@@ -177,7 +177,7 @@ public class BluetoothOpenLockRecordFragment extends BaseBleFragment<IOpenLockRe
     }
 
     private String getOpenLockType(GetPasswordResult passwordResults, OpenLockRecord record) {
-        String nickName = record.getUser_num()+"";
+        String nickName = record.getUser_num() + "";
         if (passwordResults != null) {
             switch (record.getOpen_type()) {
                 case BleUtil.PASSWORD:
@@ -262,13 +262,13 @@ public class BluetoothOpenLockRecordFragment extends BaseBleFragment<IOpenLockRe
             if (lastDayTime != dayTime) { //添加头
                 lastDayTime = dayTime;
                 titleTime = DateUtils.getDayTimeFromMillisecond(dayTime);
-                itemList.add(new BluetoothItemRecordBean(nickName,record.getOpen_type(), KeyConstants.BLUETOOTH_RECORD_COMMON,
+                itemList.add(new BluetoothItemRecordBean(nickName, record.getOpen_type(), KeyConstants.BLUETOOTH_RECORD_COMMON,
                         time, false, false));
                 list.add(new BluetoothRecordBean(titleTime, itemList, false));
-            }else {
+            } else {
                 BluetoothRecordBean bluetoothRecordBean = list.get(list.size() - 1);
                 List<BluetoothItemRecordBean> bluetoothItemRecordBeanList = bluetoothRecordBean.getList();
-                bluetoothItemRecordBeanList.add(new BluetoothItemRecordBean(nickName,record.getOpen_type(), KeyConstants.BLUETOOTH_RECORD_COMMON,
+                bluetoothItemRecordBeanList.add(new BluetoothItemRecordBean(nickName, record.getOpen_type(), KeyConstants.BLUETOOTH_RECORD_COMMON,
                         time, false, false));
             }
 
@@ -282,15 +282,15 @@ public class BluetoothOpenLockRecordFragment extends BaseBleFragment<IOpenLockRe
             for (int j = 0; j < bluetoothRecordBeanList.size(); j++) {
                 BluetoothItemRecordBean bluetoothItemRecordBean = bluetoothRecordBeanList.get(j);
 
-                    if (j == 0) {
-                        bluetoothItemRecordBean.setFirstData(true);
-                    }
-                    if (j == bluetoothRecordBeanList.size() - 1) {
-                        bluetoothItemRecordBean.setLastData(true);
-                    }
+                if (j == 0) {
+                    bluetoothItemRecordBean.setFirstData(true);
+                }
+                if (j == bluetoothRecordBeanList.size() - 1) {
+                    bluetoothItemRecordBean.setLastData(true);
+                }
 
             }
-            if (i==list.size()-1){
+            if (i == list.size() - 1) {
                 bluetoothRecordBean.setLastData(true);
             }
 

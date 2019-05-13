@@ -37,6 +37,7 @@ public class DeviceMorePresenter extends BlePresenter<IDeviceMoreView> {
                 .subscribe(new BaseObserver<BaseResult>() {
                     @Override
                     public void onSuccess(BaseResult result) {
+                        MyApplication.getInstance().getAllDevicesByMqtt(true);
                         if (mViewRef.get() != null) {
                             mViewRef.get().onDeleteDeviceSuccess();
                         }

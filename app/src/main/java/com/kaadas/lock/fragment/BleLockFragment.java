@@ -88,6 +88,8 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
     RelativeLayout rlHasData;
     @BindView(R.id.tv_no_data)
     TextView tvNoData;
+    @BindView(R.id.tv_synchronized_record)
+    TextView tvSynchronizedRecord;
     private BleLockInfo bleLockInfo;
     private boolean isOpening;
     private Runnable lockRunnable;
@@ -99,7 +101,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
     private int position;
     BluetoothRecordAdapter bluetoothRecordAdapter;
     boolean hasData;
-
+    private boolean isLoadingBleRecord;  //正在加载锁上数据
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -135,6 +137,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
         changeOpenLockStatus(16);
         rlDeviceDynamic.setOnClickListener(this);
         tvMore.setOnClickListener(this);
+        tvSynchronizedRecord.setOnClickListener(this);
         mPresenter.getOpenRecordFromServer(1, bleLockInfo);
         initView();
         return view;
@@ -540,6 +543,20 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
                 intent = new Intent(getActivity(), BluetoothEquipmentDynamicActivity.class);
                 startActivity(intent);
                 break;
+            case R.id.tv_synchronized_record:
+                if (isLoadingBleRecord) { //如果正在加载锁上数据  不让用户再次点击
+                    ToastUtil.getInstance().showShort(R.string.is_loading_lock_record);
+                    return;
+                }
+                if (mPresenter.isAuth(bleLockInfo, true)) {
+                    LogUtils.e("同步开锁记录");
+                    mPresenter.getRecordFromBle();
+                    list.clear();
+                    if (bluetoothRecordAdapter != null) {
+                        bluetoothRecordAdapter.notifyDataSetChanged();
+                    }
+                }
+                break;
         }
     }
 
@@ -879,6 +896,38 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
     }
 
     @Override
+    public void onLoseRecord(List<Integer> numbers) {
+
+    }
+
+    @Override
+    public void noData() {
+        ToastUtil.getInstance().showShort(R.string.lock_no_record);
+        hiddenLoading();
+    }
+
+    @Override
+    public void onLoadBleRecord(List<OpenLockRecord> lockRecords) {
+        //获取到蓝牙的开锁记录
+        list.clear();
+        hiddenLoading();
+        groupData(lockRecords);
+        bluetoothRecordAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onLoadBleRecordFinish(boolean isComplete) {
+        if (isComplete) {
+            ToastUtil.getInstance().showShort(R.string.get_record_ble_success);
+        } else {
+            ToastUtil.getInstance().showShort(R.string.get_record_failed_please_wait);
+            hiddenLoading();
+        }
+        //加载完了   设置正在加载数据
+        isLoadingBleRecord = false;
+    }
+
+    @Override
     public void onLoadServerRecord(List<OpenLockRecord> lockRecords, int page) {
         LogUtils.e("收到服务器数据  " + lockRecords.size());
 //        currentPage = page + 1;
@@ -895,17 +944,49 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
 
     @Override
     public void onLoadServerRecordFailed(Throwable throwable) {
-
+        //加载服务器开锁记录失败
+        ToastUtil.getInstance().showShort(HttpUtils.httpProtocolErrorCode(getActivity(), throwable));
     }
 
     @Override
     public void onLoadServerRecordFailedServer(BaseResult result) {
+        ToastUtil.getInstance().showShort(HttpUtils.httpErrorCode(getActivity(), result.getCode()));
 
     }
 
     @Override
     public void onServerNoData() {
+        //服务器没有开锁记录
+        ToastUtil.getInstance().showShort(R.string.server_no_data);
+    }
 
+    @Override
+    public void noMoreData() {
+        ToastUtil.getInstance().showShort(R.string.no_more_data);
+    }
+
+    @Override
+    public void onUploadServerRecordSuccess() {
+        LogUtils.e("记录上传成功");
+        ToastUtil.getInstance().showShort(R.string.lock_record_upload_success);
+    }
+
+    @Override
+    public void onUploadServerRecordFailed(Throwable throwable) {
+        ToastUtil.getInstance().showShort(HttpUtils.httpProtocolErrorCode(getActivity(), throwable));
+        LogUtils.e("记录上传失败");
+    }
+
+    @Override
+    public void onUploadServerRecordFailedServer(BaseResult result) {
+        ToastUtil.getInstance().showShort(HttpUtils.httpErrorCode(getActivity(), result.getCode()));
+    }
+
+    @Override
+    public void startBleRecord() {
+        //开始获取蓝牙记录，禁止掉下拉刷新和上拉加载更多
+        isLoadingBleRecord = true;
+        showLoading(getString(R.string.is_loading_lock_record));
     }
 
 

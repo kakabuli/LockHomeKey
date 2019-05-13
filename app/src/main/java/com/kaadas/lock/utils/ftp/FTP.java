@@ -478,13 +478,12 @@ public class FTP {
 
 					}
 				}
-
+				String key= deviceId+selectTime;
 				if(imageList.size()>0){
 					Collections.sort(imageList);
 					Collections.reverse(imageList);
 					MyApplication.getInstance().setPirListImg(imageList);
 					String json = new Gson().toJson(imageList);
-					String key= deviceId+selectTime;
 					SPUtils2.put(MyApplication.getInstance(),key,json);
 				}
 
@@ -533,7 +532,7 @@ public class FTP {
 					EventBus.getDefault().post(GeTui.FTP_LIST_SUC);
 					if(imageList!=null && imageList.size() > 0){
 						String json = new Gson().toJson(imageList);
-						String key= deviceId+selectTime;
+					//	String key= deviceId+selectTime;
 						SPUtils2.put(MyApplication.getInstance(),key,json);
 
 						Log.e("denganzhi5","Sp保存key:"+key+"json:"+json);
@@ -579,7 +578,7 @@ public class FTP {
 					EventBus.getDefault().post(GeTui.FTP_LIST_SUC);
 					if(imageList!=null && imageList.size() > 0){
 						String json = new Gson().toJson(imageList);
-						String key= deviceId+selectTime;
+					//	String key= deviceId+selectTime;
 						SPUtils2.put(MyApplication.getInstance(),key,json);
 
 						Log.e("denganzhi5","Sp保存key:"+key+"json:"+json);

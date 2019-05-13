@@ -1,17 +1,14 @@
 package com.kaadas.lock.mvp.view;
 
 import com.kaadas.lock.mvp.mvpbase.IBleView;
-import com.kaadas.lock.publiclibrary.ble.bean.OpenLockRecord;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 
-import java.util.List;
-
-public interface IOldBleLockView extends IMyOpenLockRecordView {
+public interface IBleLockDetailView extends IBleView {
 
     /**
      * 电量变化
      */
-    void onElectricUpdata(int power);
+//    void onElectricUpdata(int power);
 
     /**
      * 读取电量失败
@@ -22,13 +19,13 @@ public interface IOldBleLockView extends IMyOpenLockRecordView {
     /**
      * 获取到开锁次数
      */
-    void onGetOpenNumberSuccess(int number);
+//    void onGetOpenNumberSuccess(int number);
 
 
     /**
      * 获取开锁次数失败
      */
-    void onGetOpenNumberFailed(Throwable throwable);
+//    void onGetOpenNumberFailed(Throwable throwable);
 
 
     /**
@@ -90,7 +87,7 @@ public interface IOldBleLockView extends IMyOpenLockRecordView {
     /**
      * 有报警记录
      */
-    void onWarringUp(int type);
+//    void onWarringUp(int type);
 
 //    /**
 //     * 从服务器获取开锁记录   page 请求的是第几页数据

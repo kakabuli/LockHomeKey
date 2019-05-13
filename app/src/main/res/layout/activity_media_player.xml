@@ -2,8 +2,9 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:background="@color/white"
-    android:layout_height="match_parent">
+    android:background="#000"
+    android:layout_height="match_parent"
+    >
     <RelativeLayout
         android:id="@+id/rl_player_content"
         android:layout_centerInParent="true"
@@ -14,14 +15,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
-        <ImageButton
-            android:id="@+id/btn_close"
-            style="@style/Widget.ImageButton"
-            android:layout_alignEnd="@+id/relativeLayout"
-            android:layout_alignParentTop="true"
-            android:layout_marginTop="14dp"
-            android:background="@drawable/bg_circle_black_45"
-            android:src="@drawable/close_icon" />
+
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -73,5 +67,59 @@
                 android:textColor="@color/white" />
         </RelativeLayout>
     </RelativeLayout>
+
+
+    <LinearLayout
+        android:id="@+id/media_reload_download_tv"
+        android:clickable="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:visibility="gone"
+        android:orientation="vertical">
+
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@mipmap/reload_blue"
+            android:layout_gravity="center_horizontal"/>
+
+        <TextView
+            android:clickable="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:textSize="25dp"
+            android:textColor="@color/white"
+            android:text="@string/reload_download" />
+
+
+    </LinearLayout>
+
+
+    <ImageButton
+        android:id="@+id/btn_close"
+        style="@style/Widget.ImageButton"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="25dp"
+        android:layout_marginRight="25dp"
+        android:background="@drawable/bg_circle_black_45"
+        android:src="@drawable/close_icon" />
+
+
+   <!-- <ImageButton
+        android:id="@+id/btn_close2"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="25dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="25dp"
+        android:background="@mipmap/register_close"
+        android:visibility="gone"/>-->
 
 </RelativeLayout>

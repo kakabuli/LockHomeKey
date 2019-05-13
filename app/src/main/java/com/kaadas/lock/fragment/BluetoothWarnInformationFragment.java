@@ -253,7 +253,7 @@ public class BluetoothWarnInformationFragment extends BaseBleFragment<IWarringRe
                 itemList.add(new BluetoothItemRecordBean(content, "", KeyConstants.BLUETOOTH_RECORD_WARN,
                         time, false, false));
                 list.add(new BluetoothRecordBean(titleTime, itemList, false));
-            }else {
+            } else {
                 BluetoothRecordBean bluetoothRecordBean = list.get(list.size() - 1);
                 List<BluetoothItemRecordBean> bluetoothItemRecordBeanList = bluetoothRecordBean.getList();
                 bluetoothItemRecordBeanList.add(new BluetoothItemRecordBean(content, "", KeyConstants.BLUETOOTH_RECORD_WARN,

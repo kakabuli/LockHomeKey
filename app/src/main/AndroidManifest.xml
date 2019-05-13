@@ -648,13 +648,13 @@
         <!--&lt;!&ndash; 配置SDK核心服务 &ndash;&gt;-->
         <!--&lt;!&ndash; process必须指定为":pushservice"，切勿随意更改 &ndash;&gt;-->
         <service
-            android:name="com.kaidishi.lock.service.DemoPushService"
+            android:name="com.kaidishi.lock.service.GeTuiPushService"
             android:exported="true"
             android:label="PushService"
             android:process=":pushservice" />
 
         <!-- 用户自定义服务继承自GTIntentService,作为SDK与APP桥梁服务,用来接收各种消息和命令回复 -->
-        <service android:name="com.kaidishi.lock.service.DemoIntentService"
+        <service android:name="com.kaidishi.lock.service.GeTuiIntentService"
             android:permission="android.permission.BIND_JOB_SERVICE" />
         <!-- OPPO辅助 SDK -->
         <meta-data

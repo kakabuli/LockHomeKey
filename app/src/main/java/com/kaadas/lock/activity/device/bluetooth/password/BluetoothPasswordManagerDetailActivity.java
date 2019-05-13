@@ -35,7 +35,7 @@ import butterknife.ButterKnife;
  * Created by David
  */
 public class BluetoothPasswordManagerDetailActivity extends BaseBleActivity<IPasswordDetailView, PasswordDetailPresenter<IPasswordDetailView>>
-        implements View.OnClickListener, IPasswordDetailView  {
+        implements View.OnClickListener, IPasswordDetailView {
 
 
     @BindView(R.id.iv_back)
@@ -56,6 +56,7 @@ public class BluetoothPasswordManagerDetailActivity extends BaseBleActivity<IPas
     private AddPasswordBean.Password password;
     private long createTime;
     private String[] weekdays;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,7 +70,7 @@ public class BluetoothPasswordManagerDetailActivity extends BaseBleActivity<IPas
         password = (AddPasswordBean.Password) getIntent().getSerializableExtra(KeyConstants.TO_PWD_DETAIL);
         createTime = getIntent().getLongExtra(KeyConstants.CREATE_TIME, 0);
         if (createTime == 0) {
-            createTime = System.currentTimeMillis()/1000;
+            createTime = System.currentTimeMillis() / 1000;
         }
         mPresenter.isAuth(bleLockInfo, false);
         weekdays = new String[]{getString(R.string.week_day),
@@ -81,6 +82,7 @@ public class BluetoothPasswordManagerDetailActivity extends BaseBleActivity<IPas
                 getString(R.string.saturday)};
         initData();
     }
+
     private void initData() {
         String weeks = "";
         if (password.getType() == 1) { //永久密码
@@ -88,14 +90,14 @@ public class BluetoothPasswordManagerDetailActivity extends BaseBleActivity<IPas
         } else {
             tvNumber.setVisibility(View.VISIBLE);
             // 2时间段 3周期 4 24小时 5 一次性密码
-            if (password.getType() == 2 ) {  //时效密码
+            if (password.getType() == 2) {  //时效密码
 //                tvPwdEnable.setText(DateUtils.getStrFromMillisecond2(password.getStartTime()) + "-" + DateUtils.getStrFromMillisecond2(password.getEndTime()));
 //                密码有效时效  2018/12/12  10：22~2018/12/24 10:22
                 String startTime = DateUtils.formatDetailTime(password.getStartTime());
                 String endTime = DateUtils.formatDetailTime(password.getEndTime());
-                String content=getString(R.string.password_valid_shi_xiao)+"  "+startTime+"~"+endTime;
+                String content = getString(R.string.password_valid_shi_xiao) + "  " + startTime + "~" + endTime;
                 tvNumber.setText(content);
-            }else if (password.getType() == 4){ //24小时
+            } else if (password.getType() == 4) { //24小时
                 tvNumber.setText(getString(R.string.password_one_day_valid));
             } else if (password.getType() == 3) {  //周期密码
                 for (int i = 0; i < password.getItems().size(); i++) {
@@ -106,13 +108,14 @@ public class BluetoothPasswordManagerDetailActivity extends BaseBleActivity<IPas
                 String strHint = String.format(getString(R.string.week_hint), weeks,
                         DateUtils.long2HourMin(password.getStartTime()), DateUtils.long2HourMin(password.getEndTime()));
                 tvNumber.setText(strHint);
-            }else if (password.getType()==5){
+            } else if (password.getType() == 5) {
                 tvNumber.setText(R.string.temporary_password_used_once);
             }
         }
         tvTime.setText(DateUtils.secondToDate(createTime));
         tvName.setText(password.getNickName());
     }
+
     @Override
     protected PasswordDetailPresenter<IPasswordDetailView> createPresent() {
         return new PasswordDetailPresenter<>();
@@ -128,7 +131,7 @@ public class BluetoothPasswordManagerDetailActivity extends BaseBleActivity<IPas
                 View mView = LayoutInflater.from(this).inflate(R.layout.have_edit_dialog, null);
                 TextView tvTitle = mView.findViewById(R.id.tv_title);
                 EditText editText = mView.findViewById(R.id.et_name);
-                if (password.getNickName()!=null){
+                if (password.getNickName() != null) {
                     editText.setText(password.getNickName());
                     editText.setSelection(password.getNickName().length());
                 }
@@ -150,7 +153,7 @@ public class BluetoothPasswordManagerDetailActivity extends BaseBleActivity<IPas
                             ToastUtil.getInstance().showShort(R.string.nickname_verify_error);
                             return;
                         }
-                        if (StringUtil.judgeNicknameWhetherSame(password.getNickName(),name)){
+                        if (StringUtil.judgeNicknameWhetherSame(password.getNickName(), name)) {
                             ToastUtil.getInstance().showShort(R.string.nickname_not_modify);
                             alertDialog.dismiss();
                             return;

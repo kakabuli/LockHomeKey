@@ -178,8 +178,8 @@ public class BluetoothMoreActivity extends BaseBleActivity<IDeviceMoreView, Devi
                             ToastUtil.getInstance().showShort(R.string.nickname_verify_error);
                             return;
                         }
-                        if (deviceNickname!=null){
-                            if (deviceNickname.equals(name)){
+                        if (deviceNickname != null) {
+                            if (deviceNickname.equals(name)) {
                                 ToastUtil.getInstance().showShort(getString(R.string.device_nick_name_no_update));
                                 alertDialog.dismiss();
                                 return;
@@ -338,13 +338,13 @@ public class BluetoothMoreActivity extends BaseBleActivity<IDeviceMoreView, Devi
     @Override
     public void setVoiceSuccess(int voice) {
         hiddenLoading();
-        LogUtils.e("fjh",voice+"-----setVoiceSuccess");
-        if (voice==0){
-            silentModeStatus=true;
+        LogUtils.e("fjh", voice + "-----setVoiceSuccess");
+        if (voice == 0) {
+            silentModeStatus = true;
             ivSilentMode.setImageResource(R.mipmap.iv_open);
             ivSilentMode.setEnabled(true);
-        }else{
-            silentModeStatus=false;
+        } else {
+            silentModeStatus = false;
             ivSilentMode.setImageResource(R.mipmap.iv_close);
             ivSilentMode.setEnabled(true);
         }
@@ -355,13 +355,13 @@ public class BluetoothMoreActivity extends BaseBleActivity<IDeviceMoreView, Devi
     @Override
     public void setVoiceFailed(Throwable throwable, int voice) {
         hiddenLoading();
-        LogUtils.e("fjh",voice+"-----setVoiceFailed");
-        if (voice==0){
-            silentModeStatus=true;
+        LogUtils.e("fjh", voice + "-----setVoiceFailed");
+        if (voice == 0) {
+            silentModeStatus = true;
             ivSilentMode.setImageResource(R.mipmap.iv_open);
             ivSilentMode.setEnabled(true);
-        }else{
-            silentModeStatus=true;
+        } else {
+            silentModeStatus = true;
             ivSilentMode.setImageResource(R.mipmap.iv_close);
             ivSilentMode.setEnabled(true);
         }
