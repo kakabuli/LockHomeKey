@@ -20,6 +20,7 @@ import com.kaadas.lock.mvp.presenter.cateye.CatEyeFunctionPresenter;
 import com.kaadas.lock.mvp.view.cateye.ICatEyeFunctionView;
 import com.kaadas.lock.publiclibrary.bean.CateEyeInfo;
 import com.kaadas.lock.utils.BatteryView;
+import com.kaadas.lock.utils.Constants;
 import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
@@ -110,9 +111,13 @@ public class CateyeFunctionActivity extends BaseActivity<ICatEyeFunctionView, Ca
             case R.id.ll_look_back:
                 String gatewayId=cateEyeInfo.getGwID();
                 String deviceId=cateEyeInfo.getServerInfo().getDeviceId();
+                String meUserName = cateEyeInfo.getGatewayInfo().getServerInfo().getMeUsername();
+                String mePwd= cateEyeInfo.getGatewayInfo().getServerInfo().getMePwd();
                 Intent intentVideo = new Intent(CateyeFunctionActivity.this, VideoCallBackActivity.class);
                 intentVideo.putExtra("gatewayId",gatewayId);
                 intentVideo.putExtra("deviceId",deviceId);
+                intentVideo.putExtra(Constants.MEUSERNAME,meUserName);
+                intentVideo.putExtra(Constants.MEPWD,mePwd);
                 startActivity(intentVideo);
                 break;
             case R.id.ll_more:

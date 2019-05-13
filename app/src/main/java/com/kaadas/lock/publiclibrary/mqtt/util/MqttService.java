@@ -493,7 +493,7 @@ public class MqttService extends Service {
                     Log.e(GeTui.VideoLog,"MqttCallBack===>文件创建成功");
                 }
             }
-            Toast.makeText(MyApplication.getInstance(), MyApplication.getInstance().getString(R.string.pir_notify), Toast.LENGTH_SHORT).show();
+       //     Toast.makeText(MyApplication.getInstance(), MyApplication.getInstance().getString(R.string.pir_notify), Toast.LENGTH_SHORT).show();
         } catch (JSONException e) {
             e.printStackTrace();
         }

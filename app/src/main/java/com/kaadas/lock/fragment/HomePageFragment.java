@@ -25,6 +25,8 @@ import com.kaadas.lock.mvp.mvpbase.BaseFragment;
 import com.kaadas.lock.mvp.presenter.HomePreseneter;
 import com.kaadas.lock.mvp.view.IHomeView;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
+import com.kaadas.lock.publiclibrary.bean.GatewayInfo;
+import com.kaadas.lock.publiclibrary.bean.GwLockInfo;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.AllBindDevices;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
@@ -246,7 +248,12 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
                     fragments.add(bleLockFragment);
                     break;
                 case HomeShowBean.TYPE_GATEWAY_LOCK: //网关锁:
-                    fragments.add(new GatewayLockFragment());
+                    GatewayLockFragment gatewayLockFragment=new GatewayLockFragment();
+                    Bundle gwBundle = new Bundle();
+                    gwBundle.putSerializable(KeyConstants.GATEWAY_LOCK_INFO, (GwLockInfo) devices.get(i).getObject());
+                    gatewayLockFragment.setArguments(gwBundle);
+                    fragments.add(gatewayLockFragment);
+
                     break;
                 case HomeShowBean.TYPE_CAT_EYE: //猫眼:
                     fragments.add(new CatEyeFragment());

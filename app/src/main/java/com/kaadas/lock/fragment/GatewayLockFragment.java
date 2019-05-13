@@ -7,6 +7,8 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,12 +16,26 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
+import com.kaadas.lock.activity.home.BluetoothEquipmentDynamicActivity;
 import com.kaadas.lock.activity.home.GatewayEquipmentDynamicActivity;
 import com.kaadas.lock.adapter.BluetoothRecordAdapter;
 import com.kaadas.lock.bean.BluetoothItemRecordBean;
 import com.kaadas.lock.bean.BluetoothRecordBean;
+import com.kaadas.lock.mvp.mvpbase.BaseFragment;
+import com.kaadas.lock.mvp.presenter.gatewaylockpresenter.GatewayLockHomePresenter;
+import com.kaadas.lock.mvp.view.cateye.IGatEyeView;
+import com.kaadas.lock.mvp.view.gatewaylockview.IGatewayLockHomeView;
+import com.kaadas.lock.publiclibrary.bean.GatewayInfo;
+import com.kaadas.lock.publiclibrary.bean.GwLockInfo;
+import com.kaadas.lock.publiclibrary.ble.bean.OpenLockRecord;
+import com.kaadas.lock.publiclibrary.http.result.GetPasswordResult;
+import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.SelectOpenLockResultBean;
+import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
+import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.ToastUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,10 +43,12 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class GatewayLockFragment extends Fragment implements View.OnClickListener {
+public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, GatewayLockHomePresenter<IGatewayLockHomeView>> implements View.OnClickListener, IGatewayLockHomeView {
 
 
-    List<BluetoothRecordBean> list = new ArrayList<>();
+    List<BluetoothRecordBean> mOpenLockList = new ArrayList<>();
+
+
     @BindView(R.id.recycleview)
     RecyclerView recycleview;
     @BindView(R.id.iv_external_big)
@@ -51,52 +69,56 @@ public class GatewayLockFragment extends Fragment implements View.OnClickListene
     TextView tvMore;
     @BindView(R.id.rl_device_dynamic)
     RelativeLayout rlDeviceDynamic;
-    @BindView(R.id.rl_has_data)
-    RelativeLayout rlHasData;
-    @BindView(R.id.tv_no_data)
-    TextView tvNoData;
-    boolean hasData;
+
+    private GwLockInfo gatewayLockInfo;
+    private String gatewayId;
+    private String deviceId;
+    private  BluetoothRecordAdapter openLockRecordAdapter;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_gateway_lock_layout, null);
         ButterKnife.bind(this, view);
         initRecycleView();
+        initListener();
+        initData();
+
         changeOpenLockStatus(1);
-        tvMore.setOnClickListener(this);
-        rlDeviceDynamic.setOnClickListener(this);
+
         return view;
     }
 
+    @Override
+    protected GatewayLockHomePresenter<IGatewayLockHomeView> createPresent() {
+        return new GatewayLockHomePresenter<>();
+    }
+
+    private void initData() {
+        gatewayLockInfo= (GwLockInfo) getArguments().getSerializable(KeyConstants.GATEWAY_LOCK_INFO);
+        if (gatewayLockInfo!=null){
+            gatewayId=gatewayLockInfo.getGwID();
+            deviceId=gatewayLockInfo.getServerInfo().getDeviceId();
+            mPresenter.openGatewayLockRecord(gatewayId,deviceId,MyApplication.getInstance().getUid(),1,3);
+        }
+
+
+    }
+
+    private void initListener() {
+        tvMore.setOnClickListener(this);
+        rlDeviceDynamic.setOnClickListener(this);
+    }
+
+
     private void initRecycleView() {
-        List<BluetoothItemRecordBean> itemList1 = new ArrayList<>();
-        itemList1.add(new BluetoothItemRecordBean("jff", "jfji", KeyConstants.BLUETOOTH_RECORD_WARN, "fjjf", true, true));
-        list.add(new BluetoothRecordBean("jfjfk", itemList1, false));
-        List<BluetoothItemRecordBean> itemList2 = new ArrayList<>();
-        itemList2.add(new BluetoothItemRecordBean("jff", "jfif", KeyConstants.BLUETOOTH_RECORD_WARN, "fjjf", true, false));
-        itemList2.add(new BluetoothItemRecordBean("jff", "jfjf", KeyConstants.BLUETOOTH_RECORD_COMMON, "fjjf", false, false));
-        itemList2.add(new BluetoothItemRecordBean("jff", "jfij", KeyConstants.BLUETOOTH_RECORD_WARN, "fjjf", false, true));
-        list.add(new BluetoothRecordBean("jfjfk", itemList2, true));
-        BluetoothRecordAdapter bluetoothRecordAdapter = new BluetoothRecordAdapter(list);
+        openLockRecordAdapter= new BluetoothRecordAdapter(mOpenLockList);
         recycleview.setLayoutManager(new LinearLayoutManager(getActivity()));
-        recycleview.setAdapter(bluetoothRecordAdapter);
+        recycleview.setAdapter(openLockRecordAdapter);
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-    }
-
-    public void changePage() {
-        if (hasData) {
-            rlHasData.setVisibility(View.VISIBLE);
-            tvNoData.setVisibility(View.GONE);
-            rlHasData.setEnabled(false);
-        } else {
-            rlHasData.setVisibility(View.GONE);
-            tvNoData.setVisibility(View.VISIBLE);
-            rlHasData.setEnabled(true);
-        }
     }
 
     public void changeOpenLockStatus(int status) {
@@ -123,19 +145,14 @@ public class GatewayLockFragment extends Fragment implements View.OnClickListene
                 ivExternalBig.setVisibility(View.VISIBLE);
                 ivExternalBig.setImageResource(R.mipmap.bluetooth_no_connect_big_middle_icon);
                 ivExternalMiddle.setVisibility(View.GONE);
-//                ivExternalMiddle.setImageResource();
                 ivExternalSmall.setVisibility(View.GONE);
-//                ivExternalSmall.setImageResource();
                 ivInnerMiddle.setVisibility(View.VISIBLE);
                 ivInnerMiddle.setImageResource(R.mipmap.wifi_not_online);
                 ivInnerSmall.setVisibility(View.GONE);
-//                ivInnerSmall.setImageResource();
                 tvInner.setVisibility(View.VISIBLE);
                 tvInner.setText(getString(R.string.wifi_not_online));
                 tvInner.setTextColor(getResources().getColor(R.color.c14A6F5));
                 tvExternal.setVisibility(View.GONE);
-//                tvExternal.setTextColor();
-//                tvExternal.setText();
                 break;
             case 2:
 //     “已启动布防，长按开锁“
@@ -217,20 +234,107 @@ public class GatewayLockFragment extends Fragment implements View.OnClickListene
 
         }
     }
-
     @Override
     public void onClick(View v) {
         Intent intent;
         switch (v.getId()) {
             case R.id.rl_device_dynamic:
                 intent = new Intent(getActivity(), GatewayEquipmentDynamicActivity.class);
-                startActivity(intent);
+                if (!TextUtils.isEmpty(gatewayId)&&!TextUtils.isEmpty(deviceId)){
+                    intent.putExtra(KeyConstants.GATEWAY_ID,gatewayId);
+                    intent.putExtra(KeyConstants.DEVICE_ID,deviceId);
+                    startActivity(intent);
+                }
+
                 break;
             case R.id.tv_more:
-
                 intent = new Intent(getActivity(), GatewayEquipmentDynamicActivity.class);
-                startActivity(intent);
+                if (!TextUtils.isEmpty(gatewayId)&&!TextUtils.isEmpty(deviceId)){
+                    intent.putExtra(KeyConstants.GATEWAY_ID,gatewayId);
+                    intent.putExtra(KeyConstants.DEVICE_ID,deviceId);
+                    startActivity(intent);
+                }
+
                 break;
         }
+    }
+
+    private void groupData(List<SelectOpenLockResultBean.DataBean> mOpenLockRecordList) {
+        mOpenLockList.clear();
+        long lastDayTime = 0;
+        for (int i = 0; i < mOpenLockRecordList.size(); i++) {
+
+            SelectOpenLockResultBean.DataBean dataBean = mOpenLockRecordList.get(i);
+            //获取开锁时间的毫秒数
+            long openTime = Long.parseLong(dataBean.getOpen_time()); //开锁毫秒时间
+
+            long dayTime = openTime - openTime % (24 * 60 * 60 * 1000);//是不是同一天的对比
+
+            List<BluetoothItemRecordBean> itemList = new ArrayList<>();
+
+            String open_time = DateUtils.getDateTimeFromMillisecond(openTime);//将毫秒时间转换成功年月日时分秒的格式
+            String[] split = open_time.split(" ");
+
+            String strRight = split[1];
+            String[] split1 = strRight.split(":");
+
+            String time = split1[0] + ":" + split1[1];
+
+            String titleTime = "";
+            if (lastDayTime != dayTime) { //添加头
+                lastDayTime = dayTime;
+                titleTime = DateUtils.getDayTimeFromMillisecond(openTime); //转换成功顶部的时间
+                itemList.add(new BluetoothItemRecordBean(dataBean.getNickName(), dataBean.getOpen_type(), KeyConstants.BLUETOOTH_RECORD_COMMON,
+                        time, false, false));
+                mOpenLockList.add(new BluetoothRecordBean(titleTime, itemList, false));
+            } else {
+                BluetoothRecordBean bluetoothRecordBean = mOpenLockList.get(mOpenLockList.size() - 1);
+                List<BluetoothItemRecordBean> bluetoothItemRecordBeanList = bluetoothRecordBean.getList();
+                bluetoothItemRecordBeanList.add(new BluetoothItemRecordBean(dataBean.getNickName(), dataBean.getOpen_type(), KeyConstants.BLUETOOTH_RECORD_COMMON,
+                        time, false, false));
+            }
+
+        }
+
+        for (int i = 0; i < mOpenLockList.size(); i++) {
+            BluetoothRecordBean bluetoothRecordBean = mOpenLockList.get(i);
+            List<BluetoothItemRecordBean> bluetoothRecordBeanList = bluetoothRecordBean.getList();
+
+            for (int j = 0; j < bluetoothRecordBeanList.size(); j++) {
+                BluetoothItemRecordBean bluetoothItemRecordBean = bluetoothRecordBeanList.get(j);
+
+                if (j == 0) {
+                    bluetoothItemRecordBean.setFirstData(true);
+                }
+                if (j == bluetoothRecordBeanList.size() - 1) {
+                    bluetoothItemRecordBean.setLastData(true);
+                }
+
+            }
+            if (i == mOpenLockList.size() - 1) {
+                bluetoothRecordBean.setLastData(true);
+            }
+
+
+        }
+    }
+
+
+    @Override
+    public void getOpenLockRecordSuccess(List<SelectOpenLockResultBean.DataBean> mOpenLockRecordList) {
+        groupData(mOpenLockRecordList);
+        if (openLockRecordAdapter!=null){
+            openLockRecordAdapter.notifyDataSetChanged();
+        }
+    }
+
+    @Override
+    public void getOpenLockRecordFail() {
+        ToastUtil.getInstance().showShort(R.string.get_open_lock_record_fail);
+    }
+
+    @Override
+    public void getOpenLockRecordThrowable(Throwable throwable) {
+        ToastUtil.getInstance().showShort(R.string.get_open_lock_record_fail);
     }
 }

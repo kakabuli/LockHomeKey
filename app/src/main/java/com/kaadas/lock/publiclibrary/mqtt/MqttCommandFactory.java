@@ -17,6 +17,7 @@ import com.kaadas.lock.publiclibrary.mqtt.publishbean.GetWifiBasicBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.LockPwdFuncBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.LockPwdInfoBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.OpenLockBean;
+import com.kaadas.lock.publiclibrary.mqtt.publishbean.SelectOpenLockRecordBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetCatEyeBellCountBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetJoinAllowBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetLockLang;
@@ -395,6 +396,15 @@ public class MqttCommandFactory {
         SetVedioResBean setVedioResBean=new SetVedioResBean(MqttConstant.MSG_TYPE_REQUEST,uid,messageId,gatewayId,deviceId,MqttConstant.SET_VEDIO_RES,paramsBean,"0",new SetVedioResBean.ReturnDataBean(),System.currentTimeMillis()+"");
         return getMessage(setVedioResBean,messageId);
     }
+
+    public static MqttMessage selectOpenLockRecord(String gatewayId,String deviceId,String uid,int page,int pageNum){
+        int messageId=getMessageId();
+        SelectOpenLockRecordBean selectOpenLockRecordBean=new SelectOpenLockRecordBean(messageId,MqttConstant.GET_OPEN_LOCK_RECORD,uid,gatewayId,deviceId,page,pageNum);
+        return getMessage(selectOpenLockRecordBean,messageId);
+
+    }
+
+
 
 
     public static MqttMessage getMessage(Object o, int messageID) {
