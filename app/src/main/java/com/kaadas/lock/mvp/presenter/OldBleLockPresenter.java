@@ -36,7 +36,7 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.functions.Predicate;
 
-public class OldBleLockPresenter<T> extends BlePresenter<IOldBleLockView> {
+public class OldBleLockPresenter<T> extends MyOldOpenLockRecordPresenter<IOldBleLockView> {
     private Disposable openLockNumebrDisposable;
     private Disposable electricDisposable;
     private byte[] readLockNumberCommand;
