@@ -18,7 +18,6 @@ import com.kaadas.lock.publiclibrary.bean.CateEyeInfo;
 import com.kaadas.lock.publiclibrary.bean.GatewayInfo;
 import com.kaadas.lock.publiclibrary.bean.GwLockInfo;
 import com.kaadas.lock.publiclibrary.linphone.MemeManager;
-import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.publiclibrary.ble.BleService;
 import com.kaadas.lock.publiclibrary.http.result.GetPasswordResult;
 import com.kaadas.lock.publiclibrary.http.util.RetrofitServiceManager;
@@ -35,8 +34,8 @@ import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.ToastUtil;
 import com.kaadas.lock.utils.greenDao.db.DaoManager;
 import com.kaadas.lock.utils.greenDao.db.DaoSession;
-import com.kaidishi.lock.service.DemoIntentService;
-import com.kaidishi.lock.service.DemoPushService;
+import com.kaidishi.lock.service.GeTuiIntentService;
+import com.kaidishi.lock.service.GeTuiPushService;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.DefaultRefreshFooterCreator;
 import com.scwang.smartrefresh.layout.api.DefaultRefreshHeaderCreator;
@@ -114,7 +113,7 @@ public class MyApplication extends Application {
         // 注册 intentService 后 PushDemoReceiver 无效, sdk 会使用 DemoIntentService 传递数据,
         // AndroidManifest 对应保留一个即可(如果注册 DemoIntentService, 可以去掉 PushDemoReceiver, 如果注册了
         // IntentService, 必须在 AndroidManifest 中声明)
-        PushManager.getInstance().registerPushIntentService(this, DemoIntentService.class);
+        PushManager.getInstance().registerPushIntentService(this, GeTuiIntentService.class);
         // 应用未启动, 个推 service已经被唤醒,显示该时间段内离线消息
 //        if (DemoApplication.payloadData != null) {
 //            tLogView.append(DemoApplication.payloadData);
@@ -658,7 +657,7 @@ public class MyApplication extends Application {
         return daoWriteSession;
     }
     // DemoPushService.class 自定义服务名称, 核心服务
-    private Class userPushService = DemoPushService.class;
+    private Class userPushService = GeTuiPushService.class;
 
     String currentGeTuiMimiUserName;
     String currentGeTuiMImiPwd;

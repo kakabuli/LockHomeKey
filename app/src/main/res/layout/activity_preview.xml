@@ -27,7 +27,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:indeterminateTint="#FF4081"
+            android:indeterminateTint="@color/textcolor_content"
             />
 
         <TextView
@@ -85,16 +85,36 @@
         android:visibility="gone"
         android:clickable="true"/>-->
 
-    <TextView
+    <LinearLayout
         android:id="@+id/preview_reload_download_tv"
         android:clickable="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:textSize="30dp"
-        android:textColor="@color/textcolor_content"
         android:visibility="gone"
-        android:text="@string/reload_download" />
+        android:orientation="vertical">
+
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@mipmap/reload"
+            android:layout_gravity="center_horizontal"/>
+
+        <TextView
+            android:clickable="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:textSize="25dp"
+            android:textColor="@color/textcolor_content"
+            android:text="@string/reload_download" />
+
+
+    </LinearLayout>
+
+
 
 </RelativeLayout>

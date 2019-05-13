@@ -168,11 +168,40 @@ public class SnapshotFragment1 extends CallBackBaseFragment<ISnapShotView, SnapP
                 if(!isFresh){
                     pir_history_all_ll.setVisibility(View.GONE);
                     catEyeCount=0;
-                    if(day<10){
-                        currentDate = year_tv.getText().toString()+ time_tv.getText().toString()+""+"0"+day;
-                    }else{
-                        currentDate = year_tv.getText().toString()+ time_tv.getText().toString()+day;
+
+                    year_tv.setText(year+"");
+                    time_tv.setText(month+"");
+                    date_mPopupWindow.notifydatechangeMonth(current_year_month_length,true); //月份
+                    myDateList.clear();
+                    for (int i=0;i<current_month_date.size();i++){
+                        if(i==0){
+                            MyDate myDate= current_month_date.get(i);
+                            myDate.setChecked(true);
+                            myDateList.add(myDate);
+                            continue;
+                        }
+                        MyDate myDate2= current_month_date.get(i);
+                        myDate2.setChecked(false);
+                        myDateList.add(myDate2);
                     }
+                    timeAdapter.notifyDataSetChanged();
+
+                    if(month<10){
+                        currentDate = year+"0"+month;
+                    }else {
+                        currentDate = year+month+"";
+                    }
+                    if(day<10){
+                        currentDate = currentDate+"0"+day;
+                    }else{
+                        currentDate = currentDate+day;
+                    }
+//                    if(day<10){
+//                        currentDate = year_tv.getText().toString()+ time_tv.getText().toString()+""+"0"+day;
+//                    }else{
+//                        currentDate = year_tv.getText().toString()+ time_tv.getText().toString()+day;
+//                    }
+                    Log.e(GeTui.VideoLog,"currentDate:"+currentDate);
                     history_refreshLayout_ff.autoRefresh();
                 }
                 break;
@@ -415,10 +444,10 @@ public class SnapshotFragment1 extends CallBackBaseFragment<ISnapShotView, SnapP
         dialog.setCancelable(false);//点击返回键不消失
         String key= deviceId+currentDate+"";
         String str0=(String) SPUtils2.get(MyApplication.getInstance(),key,"");
-
         if(!TextUtils.isEmpty(str0)){
             if(newimageList!=null && newimageList.size()>0 && lastDate!=null  && lastDate.equals(currentDate)){
                 Toast.makeText(getActivity(),getActivity().getResources().getString(R.string.pull_refefresh_new_data),Toast.LENGTH_SHORT).show();
+                lastDate= currentDate;
             }
             if(newimageList!= null && newimageList.size()>0){
                 newimageList.clear();
@@ -428,7 +457,7 @@ public class SnapshotFragment1 extends CallBackBaseFragment<ISnapShotView, SnapP
                 if(dialog!=null){
                     dialog.dismiss();
                 }
-                lastDate= currentDate;
+               // lastDate= currentDate;
                 showPirHistoryData();
 
             }else{
@@ -437,7 +466,7 @@ public class SnapshotFragment1 extends CallBackBaseFragment<ISnapShotView, SnapP
         }else {
                 mPresenter.weakUpFTP(gatewayId,deviceId);
         }
-
+               lastDate= currentDate;
         // 唤醒FTP
      //   mPresenter.weakUpFTP(gatewayId,deviceId);
      //   Toast.makeText(getActivity(),currentDate,Toast.LENGTH_SHORT).show();
@@ -599,6 +628,9 @@ public class SnapshotFragment1 extends CallBackBaseFragment<ISnapShotView, SnapP
     @Override
     public void showFTPResultFail() {
       Toast.makeText(getActivity(),getResources().getString(R.string.ftp_weak_up_fail),Toast.LENGTH_SHORT).show();
+        if(dialog!=null){
+            dialog.dismiss();
+        }
     }
 
     @Override
