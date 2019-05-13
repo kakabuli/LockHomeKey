@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -67,7 +68,6 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
     private List<Integer> realPositions = new ArrayList<>();  //保存的实际position
     private List<HomeShowBean> devices = new ArrayList<>();
     private Unbinder bind;
-    private List<HomeShowBean> homeShow;
     boolean hasDevice = false;//是否有设备  默认没有设备
     private List<ISelectChangeListener> listeners = new ArrayList<>();
     private MainActivity activity;
@@ -139,19 +139,16 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
     }
 
     public void initData(final List<HomeShowBean> devices) {
-
         if (devices == null) {
             hasDevice = false;
             changePage();
             return;
         }
-
         if (devices.size() == 0) {
             hasDevice = false;
             changePage();
             return;
         }
-
         hasDevice = true;
         changePage();
         fragments = new ArrayList<>();
@@ -182,16 +179,13 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
             rbHome2.setText(devices.get(1).getDeviceNickName());
             realPositions.add(0);
             realPositions.add(1);
-
             if (devices.get(0).getDeviceType() == HomeShowBean.TYPE_BLE_LOCK
                     || devices.get(0).getDeviceType() == HomeShowBean.TYPE_GATEWAY_LOCK
                     ) {
                 rbHome1.setCompoundDrawablesRelativeWithIntrinsicBounds(null, getActivity().getDrawable(R.drawable.home_rb_lock_drawable), null, null);
             } else {
                 rbHome1.setCompoundDrawablesRelativeWithIntrinsicBounds(null, getActivity().getDrawable(R.drawable.home_rb_cat_eye_drawable), null, null);
-
             }
-
             if (devices.get(1).getDeviceType() == HomeShowBean.TYPE_BLE_LOCK
                     || devices.get(1).getDeviceType() == HomeShowBean.TYPE_GATEWAY_LOCK
                     ) {
@@ -240,15 +234,34 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
             //此处初始化Fragment
             switch (devices.get(i).getDeviceType()) {
                 case HomeShowBean.TYPE_BLE_LOCK: //蓝牙锁:
-                    BleLockFragment bleLockFragment = new BleLockFragment();
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable(KeyConstants.BLE_LOCK_INFO, (BleLockInfo) devices.get(i).getObject());
-                    bundle.putSerializable(KeyConstants.FRAGMENT_POSITION, i);
-                    bleLockFragment.setArguments(bundle);
-                    fragments.add(bleLockFragment);
+                    BleLockInfo bleLockInfo =   (BleLockInfo) devices.get(i).getObject();
+                    String bleVersion = bleLockInfo.getServerLockInfo().getBleVersion();
+                    boolean isOld = false;
+                    if (TextUtils.isEmpty(bleVersion)) {
+                        isOld = true;
+                    }else {
+                        if (! "3".equals(bleVersion)){
+                            isOld = true;
+                        }
+                    }
+                    if (isOld){  //是不是老蓝牙模块
+                        OldBleLockFragment oldBleLockFragment = new OldBleLockFragment();
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable(KeyConstants.BLE_LOCK_INFO, bleLockInfo);
+                        bundle.putSerializable(KeyConstants.FRAGMENT_POSITION, i);
+                        oldBleLockFragment.setArguments(bundle);
+                        fragments.add(oldBleLockFragment);
+                    }else {
+                        BleLockFragment bleLockFragment = new BleLockFragment();
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable(KeyConstants.BLE_LOCK_INFO, bleLockInfo);
+                        bundle.putSerializable(KeyConstants.FRAGMENT_POSITION, i);
+                        bleLockFragment.setArguments(bundle);
+                        fragments.add(bleLockFragment);
+                    }
                     break;
                 case HomeShowBean.TYPE_GATEWAY_LOCK: //网关锁:
-                    GatewayLockFragment gatewayLockFragment=new GatewayLockFragment();
+                    GatewayLockFragment gatewayLockFragment = new GatewayLockFragment();
                     Bundle gwBundle = new Bundle();
                     gwBundle.putSerializable(KeyConstants.GATEWAY_LOCK_INFO, (GwLockInfo) devices.get(i).getObject());
                     gatewayLockFragment.setArguments(gwBundle);
@@ -260,15 +273,6 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
                 case HomeShowBean.TYPE_GATEWAY: //网关
                     fragments.add(new MyFragment());
                     break;
-                case HomeShowBean.TYPE_OLD_BLE_LOCK: //老蓝牙锁
-                    OldBleLockFragment oldBleLockFragment = new OldBleLockFragment();
-                     bundle = new Bundle();
-                    bundle.putSerializable(KeyConstants.BLE_LOCK_INFO, (BleLockInfo) devices.get(i).getObject());
-                    bundle.putSerializable(KeyConstants.FRAGMENT_POSITION, i);
-                    oldBleLockFragment.setArguments(bundle);
-                    fragments.add(oldBleLockFragment);
-                    break;
-
             }
         }
 

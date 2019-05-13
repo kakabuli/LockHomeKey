@@ -179,7 +179,7 @@ public class PasswordTimeFragment extends BaseBleFragment<IAddTimePasswprdView, 
         switch (view.getId()) {
             // 开始时间
             case R.id.ll_effective_time:
-                LogUtils.d("davi mTimerPicker "+mTimerPicker);
+                LogUtils.d("davi mTimerPicker " + mTimerPicker);
                 // 日期格式为yyyy-MM-dd HH:mm
                 mTimerPicker.show(startcurrentTime);
                 break;
@@ -342,7 +342,7 @@ public class PasswordTimeFragment extends BaseBleFragment<IAddTimePasswprdView, 
         String hour = time[0];
         String minute = time[1];
         tvDeadlineDate.setText(date);
-        tvDeadlineTime.setText(hour+":"+minute);
+        tvDeadlineTime.setText(hour + ":" + minute);
         if (Integer.parseInt(hour) > 12) {
             tvDeadlineAmPm.setText(getString(R.string.pm));
         } else {
@@ -359,7 +359,7 @@ public class PasswordTimeFragment extends BaseBleFragment<IAddTimePasswprdView, 
         String hour = time[0];
         String minute = time[1];
         tvTakeEffectDate.setText(date);
-        tvTakeEffectTime.setText(hour+":"+minute);
+        tvTakeEffectTime.setText(hour + ":" + minute);
         if (Integer.parseInt(hour) > 12) {
             tvTakeEffectAmPm.setText(getString(R.string.pm));
         } else {

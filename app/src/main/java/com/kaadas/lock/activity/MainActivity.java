@@ -11,9 +11,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.Toast;
 
-import com.igexin.sdk.PushManager;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.cateye.VideoVActivity;
@@ -36,8 +34,7 @@ import com.kaadas.lock.utils.ToastUtil;
 import com.kaadas.lock.utils.ftp.GeTui;
 import com.kaadas.lock.utils.greenDao.bean.ZigbeeEvent;
 import com.kaadas.lock.widget.NoScrollViewPager;
-import com.kaidishi.lock.service.DemoIntentService;
-import com.kaidishi.lock.service.DemoPushService;
+import com.kaidishi.lock.service.GeTuiPushService;
 
 import net.sdvn.cmapi.CMAPI;
 import net.sdvn.cmapi.ConnectionService;
@@ -120,9 +117,7 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
              Log.e(GeTui.VideoLog,"重新上传pushid.......");
              mPresenter.uploadpushmethod();
         }
-
         startcallmethod();
-
     }
 
     @Override
@@ -191,7 +186,6 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         //  vpn  授权
-
         if (requestCode == REQUEST_CODE_VPN_SERVICE) {
             CMAPI.getInstance().onVpnPrepareResult(requestCode, resultCode);
         }
@@ -282,7 +276,7 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
 
         return homeViewPager;
     }
-    private Class userPushService = DemoPushService.class;
+    private Class userPushService = GeTuiPushService.class;
     Timer timer;
     private void    startcallmethod() {
         long startTime = 2500;

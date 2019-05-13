@@ -10,6 +10,7 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -63,6 +64,10 @@ public class MediaPlayerActivity extends BaseActivity<ISnapShotView, SnapPresent
     RelativeLayout player_content;
     @BindView(R.id.btn_close)
     ImageButton btn_close;
+    @BindView(R.id.media_reload_download_tv)
+    LinearLayout media_reload_download_tv;
+//    @BindView(R.id.btn_close2)
+//    ImageView btn_close2;
 
     String imageName="";//图片地址 /sdap0/storage/orangecat-20181102/1541140662_picture.jpg
     String deviceId="";//设备id
@@ -316,8 +321,12 @@ public class MediaPlayerActivity extends BaseActivity<ISnapShotView, SnapPresent
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                loadingDialog.dismiss();
+                media_reload_download_tv.setVisibility(View.VISIBLE);
+                player_content.setVisibility(View.GONE);
+           //     btn_close2.setVisibility(View.VISIBLE);
                 Toast.makeText(MediaPlayerActivity.this,getResources().getString(R.string.download_overtime_1),Toast.LENGTH_SHORT).show();
-                finish();
+              //  finish();
             }
         });
     }
@@ -352,30 +361,47 @@ public class MediaPlayerActivity extends BaseActivity<ISnapShotView, SnapPresent
              Log.e(GeTui.VideoLog,"MediaPlayerActivity==>Sockek异常.........:");
              Toast.makeText(this,getResources().getString(R.string.ftp_exception),Toast.LENGTH_SHORT).show();
              loadingDialog.dismiss();
+             media_reload_download_tv.setVisibility(View.VISIBLE);
+             player_content.setVisibility(View.GONE);
+        //     btn_close2.setVisibility(View.VISIBLE);
              //   finish();
          }else if(str.equals(GeTui.PIR_FTP_FAIL)){
              Toast.makeText(this,getResources().getString(R.string.pir_ftp_fail),Toast.LENGTH_SHORT).show();
              loadingDialog.dismiss();
+             media_reload_download_tv.setVisibility(View.VISIBLE);
+             player_content.setVisibility(View.GONE);
+        //     btn_close2.setVisibility(View.VISIBLE);
              //   finish();
          }else if(str.equals(GeTui.FTP_CONNECTION_FAIL)){
              Toast.makeText(this,getResources().getString(R.string.ftp_connection_fail),Toast.LENGTH_SHORT).show();
              loadingDialog.dismiss();
+             media_reload_download_tv.setVisibility(View.VISIBLE);
+             player_content.setVisibility(View.GONE);
+        //     btn_close2.setVisibility(View.VISIBLE);
              //   finish();
          }else if(str.equals(GeTui.FTP_LOGIN_FAIL)){
              Toast.makeText(this,getResources().getString(R.string.ftp_login_fail),Toast.LENGTH_SHORT).show();
              loadingDialog.dismiss();
-
+             media_reload_download_tv.setVisibility(View.VISIBLE);
+             player_content.setVisibility(View.GONE);
+         //    btn_close2.setVisibility(View.VISIBLE);
              //   finish();
          }else if(str.equals(GeTui.FTP_VIDEO_FAIL)){
              Toast.makeText(this,getResources().getString(R.string.video_download_fail),Toast.LENGTH_SHORT).show();
              loadingDialog.dismiss();
+             media_reload_download_tv.setVisibility(View.VISIBLE);
+             player_content.setVisibility(View.GONE);
+         //    btn_close2.setVisibility(View.VISIBLE);
          }else if(str.equals(GeTui.FTP_AUDIO_FAIL)){
              Toast.makeText(this,getResources().getString(R.string.video_download_fail),Toast.LENGTH_SHORT).show();
              loadingDialog.dismiss();
+             media_reload_download_tv.setVisibility(View.VISIBLE);
+             player_content.setVisibility(View.GONE);
+        //     btn_close2.setVisibility(View.VISIBLE);
          }
     }
 
-    @OnClick({R.id.btn_close, R.id.btn_play})
+    @OnClick({R.id.btn_close, R.id.btn_play,R.id.media_reload_download_tv})
     void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_close:
@@ -387,6 +413,13 @@ public class MediaPlayerActivity extends BaseActivity<ISnapShotView, SnapPresent
                 } else {
                     play();
                 }
+                break;
+            case R.id.media_reload_download_tv:
+                media_reload_download_tv.setVisibility(View.GONE);
+                player_content.setVisibility(View.VISIBLE);
+                loadingDialog.show(getString(R.string.loading));
+                mPresenter.weakUpFTP(gatewayId,deviceId);
+             //   btn_close2.setVisibility(View.GONE);
                 break;
         }
     }

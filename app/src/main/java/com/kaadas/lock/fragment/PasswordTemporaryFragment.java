@@ -59,6 +59,7 @@ public class PasswordTemporaryFragment extends BaseBleFragment<IAddTempView, Add
     @BindView(R.id.btn_confirm_generation)
     Button btnConfirmGeneration;
     private BleLockInfo bleLockInfo; //蓝牙设备信息
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -74,10 +75,12 @@ public class PasswordTemporaryFragment extends BaseBleFragment<IAddTempView, Add
         return mView;
 
     }
+
     public static PasswordTemporaryFragment newInstance() {
         PasswordTemporaryFragment fragment = new PasswordTemporaryFragment();
         return fragment;
     }
+
     @Override
     protected AddTempPresenter<IAddTempView> createPresent() {
         return new AddTempPresenter<>();

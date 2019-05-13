@@ -32,6 +32,7 @@ import org.greenrobot.eventbus.EventBus;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -69,8 +70,10 @@ public abstract class CallBackBaseFragment<T extends IBaseView, V
     TextView time_tv; // 年份
     String[] weeks = {"日","一","二","三","四","五","六"};
     List<MyDate> myDateList=new ArrayList<>();  //保存每个月数据
+
     List<String> current_year_month_length=new ArrayList<>();  //改年的月
-    List<MyDate> current_month_date=new ArrayList<>();   //保存改月数据
+    List<MyDate> current_month_date=new ArrayList<>();   //保存改月的日期
+
     SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
     Calendar todayc = Calendar.getInstance();
     View lastView=null;
@@ -144,7 +147,6 @@ public abstract class CallBackBaseFragment<T extends IBaseView, V
     public abstract View initView(LayoutInflater inflater, ViewGroup container);
 
     public abstract void initOtherFunction();
-
     public void initDatePicker(){
         year_select_ll.setOnClickListener(this);
         day_select_ll.setOnClickListener(this);
@@ -164,6 +166,8 @@ public abstract class CallBackBaseFragment<T extends IBaseView, V
         yearList.add(year+"");
         lastyear= year-1;
         yearList.add(lastyear+"");
+        Collections.reverse(yearList);
+
 
         currentyear= year;
 

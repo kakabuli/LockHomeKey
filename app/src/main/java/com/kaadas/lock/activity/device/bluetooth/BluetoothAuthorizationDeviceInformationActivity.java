@@ -39,8 +39,8 @@ public class BluetoothAuthorizationDeviceInformationActivity extends BaseBleActi
     RelativeLayout rlBluetoothModuleVersion;
     @BindView(R.id.tv_bluetooth_module_version)
     TextView tvBluetoothModuleVersion;
-    @BindView(R.id.tv_software_version)
-    TextView tvSoftwareVersion;
+    @BindView(R.id.tv_lock_software_version)
+    TextView tvLockSoftwareVersion;
     private BleLockInfo bleLockInfo;
 
     @Override
@@ -78,7 +78,11 @@ public class BluetoothAuthorizationDeviceInformationActivity extends BaseBleActi
 
     @Override
     public void SoftwareRevDataSuccess(String data) {
-        tvBluetoothModuleVersion.setText(data);
+        String[] split = data.split("_");
+        String strModuleHardwareVersion = split[0];
+        String strLockHardwareVersion = split[1];
+        tvLockSoftwareVersion.setText(strLockHardwareVersion);
+        tvBluetoothModuleVersion.setText(strModuleHardwareVersion);
     }
 
     @Override
@@ -88,7 +92,11 @@ public class BluetoothAuthorizationDeviceInformationActivity extends BaseBleActi
 
     @Override
     public void HardwareRevDataSuccess(String data) {
-        tvLockFirmwareVersion.setText(data);
+        String[] split = data.split("_");
+        String strModuleHardwareVersion = split[0];
+        String strLockHardwareVersion = split[1];
+//        tvBluetoothModuleVersion.setText(strModuleHardwareVersion);
+        tvLockFirmwareVersion.setText(strLockHardwareVersion);
     }
 
     @Override
@@ -118,7 +126,6 @@ public class BluetoothAuthorizationDeviceInformationActivity extends BaseBleActi
 
     @Override
     public void ModelNumberDataSuccess(String data) {
-        tvSoftwareVersion.setText(data);
         hiddenLoading();
     }
 

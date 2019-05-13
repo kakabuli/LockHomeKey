@@ -21,7 +21,7 @@ import com.kaadas.lock.utils.ftp.GeTui;
  * onReceiveOnlineState cid 离线上线通知 <br>
  * onReceiveCommandResult 各种事件处理回执 <br>
  */
-public class DemoIntentService extends GTIntentService {
+public class GeTuiIntentService extends GTIntentService {
 
     private static final String TAG = "cid";
 
@@ -30,7 +30,7 @@ public class DemoIntentService extends GTIntentService {
      */
     private static int cnt;
 
-    public DemoIntentService() {
+    public GeTuiIntentService() {
 
     }
 
