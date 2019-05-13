@@ -21,7 +21,7 @@ public interface IBleView extends IBaseView {
      * 如果连接成功
      */
     void onDeviceStateChange(boolean isConnected);
-
+    
 
     /**
      * 查找设备失败   如果异常类型为NotFondDeviceException

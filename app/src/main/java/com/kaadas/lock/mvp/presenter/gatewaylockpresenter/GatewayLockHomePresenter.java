@@ -41,11 +41,11 @@ public class GatewayLockHomePresenter<T> extends BasePresenter<IGatewayLockHomeV
                             toDisposable(openLockRecordDisposable);
                             SelectOpenLockResultBean selectOpenLockResultBean=new Gson().fromJson(mqttData.getPayload(),SelectOpenLockResultBean.class);
                             if ("200".equals(selectOpenLockResultBean.getCode())){
-                                if (mViewRef.get()!=null){
+                                if (mViewRef!=null&&mViewRef.get()!=null){
                                     mViewRef.get().getOpenLockRecordSuccess(selectOpenLockResultBean.getData());
                                 }
                             }else{
-                                if (mViewRef.get()!=null){
+                                if (mViewRef!=null&&mViewRef.get()!=null){
                                     mViewRef.get().getOpenLockRecordFail();
                                 }
                             }

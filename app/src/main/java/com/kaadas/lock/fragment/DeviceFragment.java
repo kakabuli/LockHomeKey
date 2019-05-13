@@ -38,7 +38,9 @@ import com.kaadas.lock.bean.DeviceDetailBean;
 import com.kaadas.lock.bean.HomeShowBean;
 import com.kaadas.lock.mvp.mvpbase.BaseFragment;
 
+import com.kaadas.lock.mvp.mvpbase.IBleView;
 import com.kaadas.lock.mvp.presenter.DevicePresenter;
+import com.kaadas.lock.mvp.view.IBleLockView;
 import com.kaadas.lock.mvp.view.IDeviceView;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.publiclibrary.bean.CateEyeInfo;
@@ -73,7 +75,7 @@ import io.reactivex.subjects.PublishSubject;
  * Created by asqw1 on 2018/3/14.
  */
 
-public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<IDeviceView>> implements BaseQuickAdapter.OnItemClickListener,IDeviceView {
+public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<IDeviceView>> implements BaseQuickAdapter.OnItemClickListener,IDeviceView{
     @BindView(R.id.no_device_image)
     ImageView noDeviceImage;
 
@@ -99,9 +101,6 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
 
     private List<HomeShowBean> mDeviceList=new ArrayList<>();
     private  List<HomeShowBean> homeShowBeanList;
-
-
-
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -305,7 +304,7 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                     String model = bleLockInfo.getServerLockInfo().getModel();
                     detailIntent.putExtra(KeyConstants.DEVICE_TYPE, model);
                     detailIntent.putExtra(KeyConstants.BLE_DEVICE_INFO, bleLockInfo);
-                    startActivity(detailIntent);
+                    startActivityForResult(detailIntent,KeyConstants.GET_BLE_POWER);
                 } else {
                     Intent impowerIntent = new Intent(getActivity(), BluetoothLockAuthorizationActivity.class);
                     String model = bleLockInfo.getServerLockInfo().getModel();
@@ -496,6 +495,20 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
         }
     }
 
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser==true){
+            //切换左右切换Fragment时，刷新页面
+            if (mDeviceList!=null&&mDeviceList.size()>0){
+                if (deviceDetailAdapter!=null){
+                    deviceDetailAdapter.notifyDataSetChanged();
+                }
+            }
+        }
+
+
+    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -525,10 +538,8 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                 }
             }
         }
-
-
-
     }
+
 
 
 

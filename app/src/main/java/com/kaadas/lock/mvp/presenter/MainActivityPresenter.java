@@ -28,6 +28,7 @@ import com.kaadas.lock.publiclibrary.linphone.linphone.callback.RegistrationCall
 import com.kaadas.lock.publiclibrary.linphone.linphone.util.LinphoneHelper;
 import com.kaadas.lock.publiclibrary.mqtt.eventbean.CatEyeEventBean;
 import com.kaadas.lock.publiclibrary.mqtt.eventbean.DeviceOnLineBean;
+import com.kaadas.lock.publiclibrary.mqtt.eventbean.GatewayLockAlarmEventBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.GetBindGatewayStatusResult;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttConstant;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttData;
@@ -39,6 +40,7 @@ import com.kaadas.lock.utils.Rsa;
 import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.SPUtils2;
 import com.kaadas.lock.utils.ftp.GeTui;
+import com.kaadas.lock.utils.greenDao.bean.GatewayLockAlarmEventDao;
 import com.kaadas.lock.utils.greenDao.bean.ZigbeeEvent;
 
 import net.sdvn.cmapi.Device;
@@ -160,6 +162,7 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
 
     //获取网关状态通知
     public void getPublishNotify() {
+        toDisposable(disposable);
         if (mqttService != null) {
             disposable = mqttService.listenerNotifyData()
                     .compose(RxjavaHelper.observeOnMainThread())
@@ -179,13 +182,6 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                                                     if (gatewayInfo.getServerInfo().getDeviceSN().equals(gatewayStatusResult.getDevuuid())) {
                                                         LogUtils.e("监听网关的状态      " + gatewayStatusResult.getDevuuid());
                                                         gatewayInfo.setEvent_str(gatewayStatusResult.getData().getState());
-                                                       /* if ("online".equals(gatewayStatusResult.getData().getState())){
-                                                            gatewayInfo.setEvent_str("online");
-                                                        }else if ("offline".equals(gatewayStatusResult.getData().getState())){
-                                                            //遍历网关下的设备
-                                                          List<HomeShowBean> bindListBean= MyApplication.getInstance().getGatewayBindList(gatewayInfo.getServerInfo().getDeviceSN());
-
-                                                        }*/
                                                     }
                                                 }
                                             }
@@ -223,7 +219,7 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                     public void accept(MqttData mqttData) throws Exception {
                         JSONObject jsonObject = new JSONObject(mqttData.getPayload());
                         String devtype = jsonObject.getString("devtype");
-
+                        String eventtype=jsonObject.getString("eventtype");
                         if (TextUtils.isEmpty(devtype)) { //devtype为空   无法处理数据
                             return;
                         }
@@ -259,13 +255,26 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                             if (mViewRef.get() != null) {
                                 mViewRef.get().onGwEvent(eventType, catEyeEventBean.getDeviceId());
                             }
-
                             //网关锁信息上报
                         }else if(KeyConstants.DEV_TYPE_LOCK.equals(devtype)){
-
-
-
-
+                            //保存告警信息
+                            if ("alarm".equals(eventtype)) {
+                                GatewayLockAlarmEventBean gatewayLockAlarmEventBean = new Gson().fromJson(mqttData.getPayload(), GatewayLockAlarmEventBean.class);
+                                if (gatewayLockAlarmEventBean.getEventparams() != null && gatewayLockAlarmEventBean.getEventparams().getAlarmCode() != 0 && gatewayLockAlarmEventBean.getEventparams().getClusterID() != 0) {
+                                    //保存到数据库
+                                    GatewayLockAlarmEventDao gatewayLockAlarmEventDao = new GatewayLockAlarmEventDao();
+                                    gatewayLockAlarmEventDao.setDeviceId(gatewayLockAlarmEventBean.getDeviceId()); //设备id
+                                    gatewayLockAlarmEventDao.setGatewayId(gatewayLockAlarmEventBean.getGwId()); //网关id
+                                    gatewayLockAlarmEventDao.setTimeStamp(gatewayLockAlarmEventBean.getTimestamp()); //时间戳
+                                    gatewayLockAlarmEventDao.setDevtype(gatewayLockAlarmEventBean.getDevtype()); //设备类型
+                                    gatewayLockAlarmEventDao.setAlarmCode(gatewayLockAlarmEventBean.getEventparams().getAlarmCode()); //报警代码
+                                    gatewayLockAlarmEventDao.setClusterID(gatewayLockAlarmEventBean.getEventparams().getClusterID()); //257 代表锁的信息;1 代表电量信息
+                                    gatewayLockAlarmEventDao.setEventcode(gatewayLockAlarmEventBean.getEventcode());
+                                    //插入到数据库
+                                    MyApplication.getInstance().getDaoWriteSession().getGatewayLockAlarmEventDaoDao().insert(gatewayLockAlarmEventDao);
+                                    LogUtils.e("上报锁告警信息了" + gatewayLockAlarmEventBean.getEventparams().getAlarmCode());
+                                }
+                            }
                         }
                     }
                 }, new Consumer<Throwable>() {
@@ -394,6 +403,7 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
         } else {
             LogUtils.e("登录linphone   失败   uid或者token为空   ");
         }
+
     }
 
     /**
@@ -447,6 +457,7 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
 
 
     private void listDeviceChange() {
+        toDisposable(deviceChangeDisposable);
         deviceChangeDisposable = MemeManager.getInstance().listDevicesChange()
                 .compose(RxjavaHelper.observeOnMainThread())
                 .timeout(5 * 1000, TimeUnit.MILLISECONDS)
@@ -502,11 +513,18 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
     }
 
 
-
     @Override
     public void detachView() {
         super.detachView();
         LinphoneHelper.deleteUser();
     }
+
+
+
+
+
+
+
+
 
 }

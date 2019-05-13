@@ -82,7 +82,7 @@ public class BatteryView extends View {
         paint.setStrokeWidth(0);
         paint.setStyle(Paint.Style.FILL);
         //画电池内矩形电量
-        float offset = (width - strokeWidth * 2) * mPower / 100.f;
+        float offset = (width - strokeWidth * 2) * (mPower+5) / 100.f;
         RectF r2 = new RectF(strokeWidth, strokeWidth, offset, height - strokeWidth);
         //根据电池电量决定电池内矩形电量颜色
         if (mColor==R.color.c999999){

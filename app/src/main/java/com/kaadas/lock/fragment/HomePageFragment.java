@@ -253,7 +253,6 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
                     gwBundle.putSerializable(KeyConstants.GATEWAY_LOCK_INFO, (GwLockInfo) devices.get(i).getObject());
                     gatewayLockFragment.setArguments(gwBundle);
                     fragments.add(gatewayLockFragment);
-
                     break;
                 case HomeShowBean.TYPE_CAT_EYE: //猫眼:
                     fragments.add(new CatEyeFragment());

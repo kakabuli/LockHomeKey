@@ -19,6 +19,7 @@ import com.kaadas.lock.activity.addDevice.bluetooth.AddBluetoothFirstActivity;
 import com.kaadas.lock.activity.addDevice.gateway.AddGatewayFirstActivity;
 import com.kaadas.lock.adapter.DeviceAddItemAdapter;
 import com.kaadas.lock.adapter.DeviceAddSelectItemAdapter;
+import com.kaadas.lock.bean.HomeShowBean;
 import com.kaadas.lock.bean.deviceAdd.AddSelectDeviceAddItemBean;
 import com.kaadas.lock.bean.deviceAdd.DeviceAddItemBean;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
@@ -36,7 +37,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class DeviceAddActivity extends BaseActivity<DeviceZigBeeDetailView, DeviceZigBeeDetailPresenter<DeviceZigBeeDetailView>> implements BaseQuickAdapter.OnItemClickListener,DeviceZigBeeDetailView  {
+public class DeviceAddActivity extends BaseActivity<DeviceZigBeeDetailView, DeviceZigBeeDetailPresenter<DeviceZigBeeDetailView>> implements BaseQuickAdapter.OnItemClickListener {
 
     @BindView(R.id.back)
     ImageView back;
@@ -75,7 +76,7 @@ public class DeviceAddActivity extends BaseActivity<DeviceZigBeeDetailView, Devi
     @Override
     protected void onStart() {
         super.onStart();
-        mPresenter.getGatewayBindList();
+
 
     }
 
@@ -122,6 +123,12 @@ public class DeviceAddActivity extends BaseActivity<DeviceZigBeeDetailView, Devi
             deviceAddSelectItemAdapter = new DeviceAddSelectItemAdapter(mDeviceList);
             deviceAddRecycler.setAdapter(deviceAddSelectItemAdapter);
             deviceAddSelectItemAdapter.setOnItemClickListener(this);
+        }
+        List<HomeShowBean> gatewayList= mPresenter.getGatewayBindList();
+        if (gatewayList!=null){
+            if (gatewayList.size()>0){
+                flag=true;
+            }
         }
     }
 
@@ -217,30 +224,6 @@ public class DeviceAddActivity extends BaseActivity<DeviceZigBeeDetailView, Devi
                 zigbeeIntent.putExtra("type", type);
                 startActivity(zigbeeIntent);
             }
-
-
         }
-    }
-
-    @Override
-    public void getGatewayBindList(List<ServerGatewayInfo> bindGatewayList) {
-        if (bindGatewayList.size()>0){
-            flag=true;
-        }
-    }
-
-    @Override
-    public void getGatewayBindFail() {
-        LogUtils.e("获取绑定的网关列表失败");
-    }
-
-    @Override
-    public void bindGatewayPublishFail(String fuc) {
-        LogUtils.e("获取绑定的网关列表发布失败");
-    }
-
-    @Override
-    public void getGatewayThrowable(Throwable throwable) {
-        LogUtils.e("获取绑定的网关列表异常");
     }
 }

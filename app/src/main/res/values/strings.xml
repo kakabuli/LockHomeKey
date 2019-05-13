@@ -890,4 +890,9 @@
     <string name="mainactivity_permission_alert_title">应用通知开启</string>
     <string name="no_unlock_record">暂无开锁记录</string>
     <string name="connection_server">连接服务器失败,请检查网络退出该页面重新进去</string>
+    <string name="no_lock_alarm">暂无预警信息</string>
+    <string name="lock_blocked">门锁堵转报警</string>
+    <string name="validation_failed_three_times">验证3次失败报警</string>
+    <string name="pick_proof">防撬报警</string>
+    <string name="stress_alarm">胁迫报警</string>
 </resources>
