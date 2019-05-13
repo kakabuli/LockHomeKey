@@ -154,7 +154,6 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
         this.createTime.setText(day + "");
         LogUtils.e("设备  HomeLockFragment  " + this);
         homeFragment = (HomePageFragment) getParentFragment();
-
         rlIcon.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
@@ -177,6 +176,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
                 return false;
             }
         });
+
         rlIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -209,6 +209,8 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
                         if (auth) {
                             mPresenter.getDeviceInfo();
                         }
+                    }else {
+
                     }
                 }
             }
@@ -515,7 +517,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
                 ivInnerSmall.setVisibility(View.VISIBLE);
                 ivInnerSmall.setImageResource(R.mipmap.bluetooth_lock_bu_fang_inner_small_icon);
                 tvInner.setVisibility(View.VISIBLE);
-                tvInner.setText(getString(R.string.long_press_open_lock));
+                tvInner.setText(getString(R.string.no_permission_unlock));
                 tvInner.setTextColor(getResources().getColor(R.color.cFEFEFE));
                 tvExternal.setVisibility(View.VISIBLE);
                 tvExternal.setTextColor(getResources().getColor(R.color.cC6F5FF));
@@ -704,7 +706,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
 
     @Override
     public void onSafeMode() {
-        changeOpenLockStatus(5);
+        changeOpenLockStatus(16);
     }
 
     @Override
@@ -957,7 +959,6 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
 
     private void onChangeInitView() {
         if (mPresenter.isAuth(bleLockInfo, true)) {
-            LogUtils.e("设备内容更新，  " + bleLockInfo.getBattery());
             LogUtils.e("锁状态改变1   反锁模式  " + bleLockInfo.getBackLock() + "  布防模式   " + bleLockInfo.getArmMode()
                     + "   安全模式  " + bleLockInfo.getSafeMode() + "   管理模式  " + bleLockInfo.getAdminMode()
                     + "   动/自动模式  " + bleLockInfo.getAutoMode());
@@ -967,7 +968,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
                 changeOpenLockStatus(6);
             }
             if (bleLockInfo.getSafeMode() == 1) {//安全模式
-                changeOpenLockStatus(5);
+                changeOpenLockStatus(16);
             }
             if (bleLockInfo.getArmMode() == 1) {//布防模式
                 changeOpenLockStatus(4);

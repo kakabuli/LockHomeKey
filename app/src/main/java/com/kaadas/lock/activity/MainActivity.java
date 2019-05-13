@@ -120,9 +120,7 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
              Log.e(GeTui.VideoLog,"重新上传pushid.......");
              mPresenter.uploadpushmethod();
         }
-
         startcallmethod();
-
     }
 
     @Override
@@ -191,7 +189,6 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         //  vpn  授权
-
         if (requestCode == REQUEST_CODE_VPN_SERVICE) {
             CMAPI.getInstance().onVpnPrepareResult(requestCode, resultCode);
         }

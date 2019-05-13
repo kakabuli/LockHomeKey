@@ -616,6 +616,7 @@
     <string name="bluetooth_connect_success">蓝牙连接成功</string>
     <string name="bluetooth_connect_fail">蓝牙连接失败</string>
     <string name="long_press_open_lock">长按开锁</string>
+    <string name="no_permission_unlock">无权限开锁</string>
     <string name="bu_fang_status">布防状态</string>
     <string name="double_lock_status">反锁状态</string>
     <string name="bluetooth_close_status">关闭状态</string>
