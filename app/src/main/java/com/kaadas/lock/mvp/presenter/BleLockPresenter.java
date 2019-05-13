@@ -35,7 +35,7 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.functions.Predicate;
 
-public class BleLockPresenter<T> extends BlePresenter<IBleLockView> {
+public class BleLockPresenter<T> extends MyOpenLockRecordPresenter<IBleLockView> {
     private Disposable openLockNumebrDisposable;
     private Disposable electricDisposable;
     private byte[] readLockNumberCommand;
@@ -686,7 +686,7 @@ public class BleLockPresenter<T> extends BlePresenter<IBleLockView> {
     private List<OpenLockRecord> serverRecords = new ArrayList<>();
     private Disposable serverDisposable;
     //获取全部的开锁记录
-    public void getOpenRecordFromServer(int pagenum,BleLockInfo bleLockInfo) {
+/*    public void getOpenRecordFromServer(int pagenum,BleLockInfo bleLockInfo) {
         if (pagenum == 1) {  //如果是获取第一页的数据，那么清楚所有的开锁记录
             serverRecords.clear();
         }
@@ -745,7 +745,7 @@ public class BleLockPresenter<T> extends BlePresenter<IBleLockView> {
                         compositeDisposable.add(serverDisposable);
                     }
                 });
-    }
+    }*/
     @Override
     public void detachView() {
         super.detachView();
