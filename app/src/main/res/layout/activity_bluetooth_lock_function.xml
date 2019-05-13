@@ -88,10 +88,10 @@
             android:layout_below="@id/ll_power"
             android:layout_marginLeft="@dimen/dp_200"
             android:layout_marginTop="@dimen/dp_34"
-            android:background="@mipmap/open_lock_bj"
+            android:background="@mipmap/has_been_locked_bj"
             android:gravity="center"
-            android:text="@string/click_lock"
-            android:textColor="#16B8FD"
+            android:text="@string/device_offline"
+            android:textColor="#149EF3"
             android:textSize="@dimen/sp_12" />
 
     </RelativeLayout>

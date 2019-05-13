@@ -5,6 +5,7 @@ import android.text.TextUtils;
 
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.mvp.mvpbase.BlePresenter;
+import com.kaadas.lock.mvp.view.IBleLockDetailView;
 import com.kaadas.lock.mvp.view.IDeviceDetailView;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.publiclibrary.ble.BleCommandFactory;
@@ -31,7 +32,7 @@ import io.reactivex.functions.Predicate;
  * Create By lxj  on 2019/2/27
  * Describe
  */
-public class DeviceDetailPresenter<T> extends BlePresenter<IDeviceDetailView> {
+public class DeviceDetailPresenter<T> extends BleLockDetailPresenter<IDeviceDetailView> {
     private Disposable electricDisposable;
     private Disposable getDeviceInfoDisposable;
     private Disposable deviceStateChangeDisposable;
@@ -203,7 +204,7 @@ public class DeviceDetailPresenter<T> extends BlePresenter<IDeviceDetailView> {
                     @Override
                     public void accept(BleDataBean bleDataBean) throws Exception {
                         if (mViewRef.get() != null) {   //通知界面更新显示设备状态
-                            mViewRef.get().onStateUpdate(-1);
+//                            mViewRef.get().onStateUpdate(-1);
                         }
                     }
                 }, new Consumer<Throwable>() {
