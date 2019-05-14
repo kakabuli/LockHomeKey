@@ -715,5 +715,31 @@ public class OldBleLockPresenter<T> extends MyOldOpenLockRecordPresenter<IOldBle
 
     ////////////////////////////////////////老模块获取电量逻辑/////////////////////////////////
 
-    public void getOldGetPower(){}
+    public void getOldGetPower(){
+        byte[] wakeUpFrame = OldBleCommandFactory.getWakeUpFrame();
+        byte[] getPower1 = OldBleCommandFactory.getPowerCommand();
+        byte[] getPower2 = OldBleCommandFactory.getEndFrame();
+
+        bleService.sendCommand(wakeUpFrame);
+        bleService.sendCommand(getPower1);
+        bleService.sendCommand(getPower2);
+
+    }
+
+    /**
+     * 获取电量的监听
+     */
+    public void receivePowerData(){
+//        bleService.listeneDataChange()
+//                .timeout(5*1000,TimeUnit.MILLISECONDS)
+//                .filter(new Predicate<BleDataBean>() {
+//                    @Override
+//                    public boolean test(BleDataBean bleDataBean) throws Exception {
+//                        return false;
+//                    }
+//                })
+//                .compose(RxjavaHelper.observeOnMainThread())
+
+
+    }
 }
