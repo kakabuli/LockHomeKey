@@ -117,7 +117,7 @@ public class RecordingFragment extends CallBackBaseFragment <IRecordingView, Rec
                 int mediaType = currentDateItem.get(position).getMediaType();
                 String name= currentDateItem.get(position).getName();
                 String path=currentDateItem.get(position).getPath();
-                SPUtils2.put(MyApplication.getInstance(),name,"looksuccess");
+                SPUtils2.put(MyApplication.getInstance(),name+Constants.RECORDINGTAG,"looksuccess");
                 //LinearLayout itemFather=(LinearLayout) view.getParent();
                 if(mediaType==2){
                     Intent intent=new Intent(getActivity(), RecordingPreviewActivity.class);
@@ -210,7 +210,7 @@ public class RecordingFragment extends CallBackBaseFragment <IRecordingView, Rec
 
     @Override
     public void deleteResult(Boolean isFlag) {
-            Toast.makeText(getActivity(),isFlag+"",Toast.LENGTH_SHORT).show();
+         //   Toast.makeText(getActivity(),isFlag+"",Toast.LENGTH_SHORT).show();
     }
 
     /**
@@ -280,7 +280,7 @@ public class RecordingFragment extends CallBackBaseFragment <IRecordingView, Rec
             //   Toast.makeText(getActivity(), "list第" + adapterPosition + "; 右侧菜单第" + menuPosition, Toast.LENGTH_SHORT).show();
             int position = adapterPosition - recording_rv_ff.getHeaderItemCount();
 
-            Toast.makeText(getActivity(), "现在的第" + position + "条被删除。", Toast.LENGTH_SHORT).show();
+           // Toast.makeText(getActivity(), "现在的第" + position + "条被删除。", Toast.LENGTH_SHORT).show();
 
             String name= currentDateItem.get(position).getName();
 
@@ -289,9 +289,8 @@ public class RecordingFragment extends CallBackBaseFragment <IRecordingView, Rec
             File file=new File(imagepath);
             file.delete();
 
-
             currentDateItem.remove(position);
-
+            SPUtils2.remove(getActivity(),name+Constants.RECORDINGTAG);
 
             recordingAdapter.notifyItemRemoved(position);
 

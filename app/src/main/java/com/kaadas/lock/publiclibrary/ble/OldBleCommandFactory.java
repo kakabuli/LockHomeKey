@@ -142,4 +142,15 @@ public class OldBleCommandFactory {
         oldModeKey.add(aesPaw9);
         oldModeKey.add(aesPaw10);
     }
+
+    /**
+     * 获取电量的指令
+     */
+
+    public static byte[] getPowerCommand(){
+        byte[] command = new byte[]{(byte) 0xf5, (byte) 0xc1, (byte) 0x00, (byte) 0x1c, (byte) 0xc1, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00,
+                (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00};
+        return command;
+    }
+
 }

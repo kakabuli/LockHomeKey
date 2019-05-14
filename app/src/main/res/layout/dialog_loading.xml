@@ -27,7 +27,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:indeterminateTint="#FF4081"
+                android:indeterminateTint="#242424"
                 />
 
             <TextView
@@ -36,7 +36,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/data_loading1"
-                android:textColor="@color/white"
+                android:textColor="#242424"
                 android:textSize="18sp"
                 android:layout_alignParentBottom="true"
                 />

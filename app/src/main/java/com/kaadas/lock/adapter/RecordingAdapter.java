@@ -13,7 +13,9 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
+import com.kaadas.lock.utils.Constants;
 import com.kaadas.lock.utils.PirConst;
+import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.SPUtils2;
 import com.kaadas.lock.utils.db.MediaItem;
 
@@ -43,7 +45,8 @@ public class RecordingAdapter extends BaseQuickAdapter<MediaItem, BaseViewHolder
         long currentTime= Long.parseLong(item.getCreateTime());
         String imgPath = item.getPath();
 
-
+        String key=item.getName()+ Constants.RECORDINGTAG;
+        String name= (String) SPUtils2.get(mContext,key,"");
 		helper.setText(R.id.pir_img_time, showFormater.format(new Date(currentTime)));
 
                  Glide.with(mContext).load(imgPath)
@@ -59,6 +62,12 @@ public class RecordingAdapter extends BaseQuickAdapter<MediaItem, BaseViewHolder
                      helper.getView(R.id.recording_play_icon).setVisibility(View.VISIBLE);
                  }
 
+
+        if(!TextUtils.isEmpty(name)){
+            helper.getView(R.id.pir_history_tv_cicle).setVisibility(View.INVISIBLE);
+        }else {
+            helper.getView(R.id.pir_history_tv_cicle).setVisibility(View.VISIBLE);
+        }
 
 		// helper.addOnClickListener(R.id.pir_img_rl);
 

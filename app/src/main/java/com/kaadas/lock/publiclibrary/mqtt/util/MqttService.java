@@ -446,6 +446,8 @@ public class MqttService extends Service {
     }
 
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    String lastkey="";
+    String currentkey="";
     public void executePirFunction(JSONObject jsonObject,JSONObject eventparams){
         try {
             JSONObject devinfo = eventparams.getJSONObject("devinfo");
@@ -472,6 +474,12 @@ public class MqttService extends Service {
             } catch (ParseException e) {
                 e.printStackTrace();
             }
+            currentkey= deviceId+fileName;
+            if(!TextUtils.isEmpty(lastkey)&& lastkey.equals(currentkey)){
+                lastkey=currentkey;
+                return;
+            }
+            lastkey=currentkey;
             HistoryInfo historyInfo=new HistoryInfo(null,deviceId,today_date,fileName);
             long insertId = MyApplication.getInstance().getDaoWriteSession().getHistoryInfoDao().insert(historyInfo);
             String key= deviceId+GeTui.CATEYE_KEY;
