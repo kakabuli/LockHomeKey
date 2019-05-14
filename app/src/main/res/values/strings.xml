@@ -400,7 +400,7 @@
     <string name="upgradeing">正在升级</string>
     <string name="finish">完成</string>
     <string name="device_zigbee_new_add">设备添加</string>
-    <string name="new_lock_connect_success">你的网关锁已联网成功</string>
+    <string name="new_lock_connect_success">你的猫眼套装已联网成功</string>
     <string name="check_phone_nework">请检查手机网络是否正常连接</string>
     <string name="add_new_lock_one">确保门锁已按引导进入配对状态</string>
     <string name="add_new_lock_two">确保手机蓝牙处于开启状态</string>
@@ -894,8 +894,23 @@
     <string name="lock_firware_version_number">门锁固件版本号</string>
     <string name="lock_software_version">门锁软件版本</string>
     <string name="no_lock_alarm">暂无预警信息</string>
+    <string name="no_catEye_alarm">暂无猫眼动态信息</string>
     <string name="lock_blocked">门锁堵转报警</string>
     <string name="validation_failed_three_times">验证3次失败报警</string>
     <string name="pick_proof">防撬报警</string>
     <string name="stress_alarm">胁迫报警</string>
+    <string name="pir_trigger">pir触发事件</string>
+    <string name="cat_head_is_drawn">猫头被拔事件</string>
+    <string name="diabolo">响铃事件</string>
+    <string name="cateye_low_power">低电量事件</string>
+    <string name="fuselage_is_drawn">机身被拔事件</string>
+    <string name="volume">铃声音量</string>
+    <string name="low">低</string>
+    <string name="centre">中</string>
+    <string name="high">高</string>
+    <string name="cat_eye_suit_fail_one">确保设备已安装并处于通电状态</string>
+    <string name="cat_eye_suit_fail_two">二维码绑定信息有误</string>
+    <string name="cat_eye_suit_fail_three">网关和设备信息核对不上</string>
+    <string name="cat_eye_suit_fail_remind">请逐一手动绑定，猫眼和门锁</string>
+    <string name="device_is_connecting">设备连接中...</string>
 </resources>

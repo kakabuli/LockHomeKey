@@ -37,9 +37,11 @@ import com.kaadas.lock.utils.BatteryView;
 import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.NotifyRefreshActivity;
 import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.StringUtil;
 import com.kaadas.lock.utils.ToastUtil;
+import com.kaadas.lock.utils.networkListenerutil.NetWorkChangReceiver;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,7 +55,7 @@ import static com.kaadas.lock.MyApplication.getInstance;
 /**
  * Created by David
  */
-public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailView, GatewayLockDetailPresenter<GatewayLockDetailView>> implements View.OnClickListener,GatewayLockDetailView{
+public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailView, GatewayLockDetailPresenter<GatewayLockDetailView>> implements View.OnClickListener,GatewayLockDetailView, NotifyRefreshActivity {
     @BindView(R.id.iv_back)
     ImageView ivBack;
     @BindView(R.id.tv_name)
@@ -114,9 +116,13 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
         initView();
         initData();
         initClick();
+        initListener();
 
 
+    }
 
+    private void initListener() {
+        NetWorkChangReceiver.setNotifyRefreshActivity(this);
     }
 
     @Override
@@ -497,5 +503,15 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
             }
         }
 
+    }
+
+    @Override
+    public void notifityActivity(boolean isRefresh) {
+        if (isRefresh){
+            if (lockInfo!=null){
+                dealWithPower(lockInfo.getPower(),"offline",lockInfo.getPowerTimeStamp());
+            }
+
+        }
     }
 }

@@ -15,5 +15,8 @@ public interface IGatewayLockHomeView extends IBaseView {
     //获取开锁记录异常
     void getOpenLockRecordThrowable(Throwable throwable);
 
+    //网络断开
+    void networkChangeSuccess();
+
 
 }

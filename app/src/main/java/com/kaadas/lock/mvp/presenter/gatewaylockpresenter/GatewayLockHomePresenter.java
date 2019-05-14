@@ -8,6 +8,7 @@ import com.kaadas.lock.publiclibrary.mqtt.MqttCommandFactory;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.SelectOpenLockResultBean;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttConstant;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttData;
+import com.kaadas.lock.utils.networkListenerutil.NetWorkChangReceiver;
 
 import java.util.concurrent.TimeUnit;
 
@@ -17,6 +18,7 @@ import io.reactivex.functions.Predicate;
 
 public class GatewayLockHomePresenter<T> extends BasePresenter<IGatewayLockHomeView> {
     private Disposable openLockRecordDisposable;
+    private Disposable networkChangeDisposable;
     //开锁记录
     public void openGatewayLockRecord(String gatewayId,String deviceId,String uid,int page,int pageNum){
         //
@@ -61,8 +63,22 @@ public class GatewayLockHomePresenter<T> extends BasePresenter<IGatewayLockHomeV
                     });
             compositeDisposable.add(openLockRecordDisposable);
         }
+    }
 
-
+    //网络变化通知
+    public void listenerNetworkChange(){
+        toDisposable(networkChangeDisposable);
+        networkChangeDisposable= NetWorkChangReceiver.notifyNetworkChange().subscribe(new Consumer<Boolean>() {
+            @Override
+            public void accept(Boolean aBoolean) throws Exception {
+                if (aBoolean){
+                    if (mViewRef!=null&&mViewRef.get()!=null){
+                        mViewRef.get().networkChangeSuccess();
+                    }
+                }
+            }
+        });
+        compositeDisposable.add(networkChangeDisposable);
     }
 
 

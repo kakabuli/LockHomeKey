@@ -17,6 +17,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.addDevice.bluetooth.AddBluetoothFirstActivity;
 import com.kaadas.lock.activity.addDevice.gateway.AddGatewayFirstActivity;
+import com.kaadas.lock.activity.addDevice.zigbeelocknew.AddDeviceZigbeelockNewScanActivity;
 import com.kaadas.lock.adapter.DeviceAddItemAdapter;
 import com.kaadas.lock.adapter.DeviceAddSelectItemAdapter;
 import com.kaadas.lock.bean.HomeShowBean;
@@ -155,7 +156,8 @@ public class DeviceAddActivity extends BaseActivity<DeviceZigBeeDetailView, Devi
                 startActivity(bluetoothIntent);
                 break;
             case R.id.scan:
-                ToastUtil.getInstance().showShort(R.string.temporarily_closed);
+                Intent zigbeeLockIntent=new Intent(this, AddDeviceZigbeelockNewScanActivity.class);
+                startActivity(zigbeeLockIntent);
 
                 break;
             case R.id.gateway:

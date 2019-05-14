@@ -73,7 +73,7 @@ public class MqttConstant {
     //1 绑定网关
     public static final String BIND_GATEWAY = "bindGatewayByUser";
     // 绑定咪咪网
-    public static final String REGISTER_MIMI_BIND="RegisterMemeAndBind";
+    public static final String REGISTER_MIMI_BIND="bindMeme";
 
     //2 获取网关列表
     public static final String GET_BIND_GATEWAY_LIST = "gatewayBindList";
@@ -150,5 +150,8 @@ public class MqttConstant {
 
     //获取开锁记录
     public static final String GET_OPEN_LOCK_RECORD="selectOpenLockRecord";
+
+    //设置猫眼的音量
+    public static final String SET_BELL_VOLUME="setBellVolume";
 
 }

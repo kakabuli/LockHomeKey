@@ -135,7 +135,7 @@ public class CatEyeMorePresenter <T> extends BasePresenter<IGatEyeView> {
 
     }
 
-    //设置音量
+    //设置智能监测
     public void setPirEnable(String gatewayId, String deviceId,String uid, int status) {
         toDisposable(setPirEnableDisposable);
         if (mqttService != null) {

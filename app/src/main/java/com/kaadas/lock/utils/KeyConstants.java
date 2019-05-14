@@ -344,4 +344,7 @@ public class KeyConstants {
     //分辨率
     public static final String CAT_EYE_RESOLUTION="catEyeResolution";
 
+    //铃声音量
+    public static final String CAT_EYE_VOLUME="catEyeVolume";
+
 }

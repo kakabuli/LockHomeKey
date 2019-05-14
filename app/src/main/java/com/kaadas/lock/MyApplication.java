@@ -549,6 +549,17 @@ public class MyApplication extends Application {
             return gatewayBindList;
 
     }
+    //所有网关
+    public List<GatewayInfo> getAllGateway(){
+        List<GatewayInfo> gatewayList=new ArrayList<>();
+        for (HomeShowBean homeShowBean:homeShowDevices){
+            if (homeShowBean.getDeviceType()==HomeShowBean.TYPE_GATEWAY){
+                gatewayList.add((GatewayInfo) homeShowBean.getObject());
+            }
+        }
+        return  gatewayList;
+    }
+
 
 
     /**

@@ -1,12 +1,10 @@
 package com.kaadas.lock.mvp.presenter;
 
-import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
 
 
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.activity.cateye.VideoVActivity;
 import com.kaadas.lock.bean.HomeShowBean;
@@ -15,7 +13,6 @@ import com.kaadas.lock.mvp.view.IMainActivityView;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.publiclibrary.bean.CateEyeInfo;
 import com.kaadas.lock.publiclibrary.bean.GatewayInfo;
-import com.kaadas.lock.publiclibrary.bean.GwLockInfo;
 import com.kaadas.lock.publiclibrary.ble.BleUtil;
 import com.kaadas.lock.publiclibrary.ble.responsebean.BleDataBean;
 import com.kaadas.lock.publiclibrary.http.XiaokaiNewServiceImp;
@@ -27,21 +24,18 @@ import com.kaadas.lock.publiclibrary.linphone.linphone.callback.PhoneCallback;
 import com.kaadas.lock.publiclibrary.linphone.linphone.callback.RegistrationCallback;
 import com.kaadas.lock.publiclibrary.linphone.linphone.util.LinphoneHelper;
 import com.kaadas.lock.publiclibrary.mqtt.eventbean.CatEyeEventBean;
-import com.kaadas.lock.publiclibrary.mqtt.eventbean.DeviceOnLineBean;
 import com.kaadas.lock.publiclibrary.mqtt.eventbean.GatewayLockAlarmEventBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.GetBindGatewayStatusResult;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttConstant;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttData;
-import com.kaadas.lock.publiclibrary.mqtt.util.MqttService;
-import com.kaadas.lock.utils.Constants;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.Rsa;
 import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.SPUtils2;
 import com.kaadas.lock.utils.ftp.GeTui;
+import com.kaadas.lock.utils.greenDao.bean.CatEyeEvent;
 import com.kaadas.lock.utils.greenDao.bean.GatewayLockAlarmEventDao;
-import com.kaadas.lock.utils.greenDao.bean.ZigbeeEvent;
 
 import net.sdvn.cmapi.Device;
 
@@ -223,6 +217,7 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                         if (TextUtils.isEmpty(devtype)) { //devtype为空   无法处理数据
                             return;
                         }
+                        // TODO: 2019/5/14 处理猫眼动态和锁上报的信息分别放在不同的表中
                         /**
                          * 猫眼信息上报
                          */
@@ -230,28 +225,28 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                             CatEyeEventBean catEyeEventBean = new Gson().fromJson(mqttData.getPayload(), CatEyeEventBean.class);
                             LogUtils.e("收到消息 5 getDevetype   " + catEyeEventBean.getEventparams().getDevetype());
                             int eventType = -1;
-                            ZigbeeEvent zigbeeEvent = new ZigbeeEvent();
-                            zigbeeEvent.setDeviceId(catEyeEventBean.getDeviceId());
-                            zigbeeEvent.setDeviceType(ZigbeeEvent.DEVICE_CAT_EYE);
-                            zigbeeEvent.setEventTime(Long.parseLong(catEyeEventBean.getTimestamp()));
+                            CatEyeEvent catEyeEvent = new CatEyeEvent();
+                            catEyeEvent.setDeviceId(catEyeEventBean.getDeviceId());
+                            catEyeEvent.setDeviceType(CatEyeEvent.DEVICE_CAT_EYE);
+                            catEyeEvent.setEventTime(Long.parseLong(catEyeEventBean.getTimestamp()));
                             if ("pir".equals(catEyeEventBean.getEventparams().getDevetype())) {
-                                eventType = ZigbeeEvent.EVENT_PIR;
+                                eventType = CatEyeEvent.EVENT_PIR;
                             } else if ("headLost".equals(catEyeEventBean.getEventparams().getDevetype())) {
-                                eventType = ZigbeeEvent.EVENT_HEAD_LOST;
+                                eventType = CatEyeEvent.EVENT_HEAD_LOST;
 //                        }else if ("doorBell".equals(catEyeEventBean.getEventparams().getDevetype())){
-//                            eventType = ZigbeeEvent.EVENT_DOOR_BELL;
+//                            eventType = CatEyeEvent.EVENT_DOOR_BELL;
                             } else if ("lowPower".equals(catEyeEventBean.getEventparams().getDevetype())) {
-                                eventType = ZigbeeEvent.EVENT_LOW_POWER;
+                                eventType = CatEyeEvent.EVENT_LOW_POWER;
                             } else if ("hostLost".equals(catEyeEventBean.getEventparams().getDevetype())) {
-                                eventType = ZigbeeEvent.EVENT_HOST_LOST;
+                                eventType = CatEyeEvent.EVENT_HOST_LOST;
                             }
-
                             if (eventType == -1) {
                                 return;
                             }
-                            zigbeeEvent.setEventType(eventType);
+                            catEyeEvent.setEventType(eventType);
+                            catEyeEvent.setGatewayId(catEyeEventBean.getGwId());
                             //   保存到数据库
-                            MyApplication.getInstance().getDaoWriteSession().getZigbeeEventDao().insert(zigbeeEvent);
+                            MyApplication.getInstance().getDaoWriteSession().getCatEyeEventDao().insert(catEyeEvent);
                             if (mViewRef.get() != null) {
                                 mViewRef.get().onGwEvent(eventType, catEyeEventBean.getDeviceId());
                             }

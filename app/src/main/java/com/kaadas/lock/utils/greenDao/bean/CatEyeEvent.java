@@ -6,7 +6,7 @@ import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Transient;
 
 @Entity
-public class ZigbeeEvent {
+public class CatEyeEvent {
     @Id(autoincrement = true)
     private Long id;
 
@@ -14,9 +14,12 @@ public class ZigbeeEvent {
 
     private String deviceId;  //设备Id
 
-    private int eventType; //时间类型
+    private String gatewayId; //网关ID
+
+    private int eventType; //事件类型
 
     private long eventTime; //事件触发的时间
+
     @Transient
     public final static int DEVICE_CAT_EYE = 1; //猫眼
     @Transient
@@ -29,30 +32,34 @@ public class ZigbeeEvent {
     public final static int EVENT_LOW_POWER = 104; //低电量
     @Transient
     public final static int EVENT_HOST_LOST = 105; //机身被拔
-    @Transient
-    public final static int DEVICE_GATEWAY = 2;  //网关
 
 
-    public final static int DEVICE_GW_LOCK = 3;   //网关锁
 
-    public final static int DEVICE_BLE_LOCK = 4;   //蓝牙锁
-
-
-    @Generated(hash = 1783476231)
-    public ZigbeeEvent(Long id, int deviceType, String deviceId, int eventType,
-            long eventTime) {
+    @Generated(hash = 2092442178)
+    public CatEyeEvent(Long id, int deviceType, String deviceId, String gatewayId,
+            int eventType, long eventTime) {
         this.id = id;
         this.deviceType = deviceType;
         this.deviceId = deviceId;
+        this.gatewayId = gatewayId;
         this.eventType = eventType;
         this.eventTime = eventTime;
     }
 
-    @Generated(hash = 1051241011)
-    public ZigbeeEvent() {
+    @Generated(hash = 526621215)
+    public CatEyeEvent() {
     }
 
-  
+
+
+    public String getGatewayId() {
+        return gatewayId;
+    }
+
+    public void setGatewayId(String gatewayId) {
+        this.gatewayId = gatewayId;
+    }
+
     public void setDeviceType(int deviceType) {
         this.deviceType = deviceType;
     }

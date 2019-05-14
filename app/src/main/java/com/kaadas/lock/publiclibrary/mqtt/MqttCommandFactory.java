@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.AllowCateyeJoinBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.BindGatewayBean;
+import com.kaadas.lock.publiclibrary.mqtt.publishbean.BindGatewayMemeBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.CatEyeInfoBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.DeleteGatewayLockDeviceBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.FtpEnableBean;
@@ -19,6 +20,7 @@ import com.kaadas.lock.publiclibrary.mqtt.publishbean.LockPwdInfoBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.OpenLockBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.SelectOpenLockRecordBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetCatEyeBellCountBean;
+import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetCatEyeBellVolume;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetJoinAllowBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetLockLang;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetPirEnableBean;
@@ -48,7 +50,7 @@ public class MqttCommandFactory {
      */
     public static MqttMessage bindGateway(String uid, String Sn) {
         int messageId = getMessageId();
-        BindGatewayBean bindGatewayBean = new BindGatewayBean(uid, MqttConstant.BIND_GATEWAY, Sn);
+        BindGatewayBean bindGatewayBean = new BindGatewayBean(messageId,uid, MqttConstant.BIND_GATEWAY, Sn);
         return getMessage(bindGatewayBean, messageId);
     }
 
@@ -58,10 +60,10 @@ public class MqttCommandFactory {
      * @param Sn
      * @return
      */
-    public static MqttMessage registerMemeAndBind(String uid,String Sn){
+    public static MqttMessage registerMemeAndBind(String uid,String gatewayId,String Sn){
         int messageId = getMessageId();
-        BindGatewayBean bindGatewayBean = new BindGatewayBean(uid, MqttConstant.REGISTER_MIMI_BIND, Sn);
-        return getMessage(bindGatewayBean, messageId);
+        BindGatewayMemeBean bindGatewayMemeBean = new BindGatewayMemeBean(messageId,MqttConstant.REGISTER_MIMI_BIND,uid, gatewayId, Sn);
+        return getMessage(bindGatewayMemeBean, messageId);
     }
 
 
@@ -396,6 +398,33 @@ public class MqttCommandFactory {
         SetVedioResBean setVedioResBean=new SetVedioResBean(MqttConstant.MSG_TYPE_REQUEST,uid,messageId,gatewayId,deviceId,MqttConstant.SET_VEDIO_RES,paramsBean,"0",new SetVedioResBean.ReturnDataBean(),System.currentTimeMillis()+"");
         return getMessage(setVedioResBean,messageId);
     }
+
+    /**
+     * 设置铃声音量
+     * @param gatewayId
+     * @param deviceId
+     * @param uid
+     * @param bellVolume
+     * @return
+     */
+
+    public static MqttMessage setBellVolume(String gatewayId,String deviceId,String uid,int bellVolume){
+        int messageId=getMessageId();
+        SetCatEyeBellVolume.ParamsBean paramsBean=new SetCatEyeBellVolume.ParamsBean();
+        paramsBean.setBellVolume(bellVolume);
+        SetCatEyeBellVolume setCatEyeBellVolume=new SetCatEyeBellVolume(MqttConstant.MSG_TYPE_REQUEST,uid,messageId,gatewayId,deviceId,MqttConstant.SET_BELL_VOLUME,paramsBean,"0",new SetCatEyeBellVolume.ReturnDataBean(),System.currentTimeMillis()+"");
+        return getMessage(setCatEyeBellVolume,messageId);
+    }
+
+    /**
+     * 开锁记录
+     * @param gatewayId
+     * @param deviceId
+     * @param uid
+     * @param page
+     * @param pageNum
+     * @return
+     */
 
     public static MqttMessage selectOpenLockRecord(String gatewayId,String deviceId,String uid,int page,int pageNum){
         int messageId=getMessageId();

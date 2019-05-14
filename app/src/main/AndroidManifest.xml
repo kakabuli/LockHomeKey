@@ -596,9 +596,41 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".activity.device.cateye.more.CatEyeVolumeActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".activity.device.GatewayActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
+
+
+        <activity
+            android:name=".activity.addDevice.zigbeelocknew.AddDeviceZigbeeLockNewFailActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.addDevice.zigbeelocknew.AddDeviceZigbeeLockNewFirstActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".activity.addDevice.zigbeelocknew.AddDeviceZigbeelockNewScanActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.addDevice.zigbeelocknew.AddDeviceZigbeeLockNewScanFailActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.addDevice.zigbeelocknew.AddDeviceZigbeeLockNewSecondActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.addDevice.zigbeelocknew.AddDeviceZigbeeLockNewSuccessActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+
 
         <service android:name=".publiclibrary.ble.BleService" />
         <service android:name=".publiclibrary.linphone.linphonenew.LinphoneService" />

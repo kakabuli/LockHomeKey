@@ -21,6 +21,7 @@ import com.kaadas.lock.publiclibrary.mqtt.util.MqttConstant;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttData;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.SPUtils;
+import com.kaadas.lock.utils.networkListenerutil.NetWorkChangReceiver;
 
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
@@ -38,6 +39,8 @@ public class DevicePresenter<T> extends BasePresenter<IDeviceView> {
     protected Disposable getPowerDisposable;
     private Disposable listenerDeviceOnLineDisposable;
     private Disposable listenerGatewayOnLine;
+    private Disposable networkChangeDisposable;
+
     @Override
     public void attachView(IDeviceView view) {
         super.attachView(view);
@@ -228,5 +231,21 @@ public class DevicePresenter<T> extends BasePresenter<IDeviceView> {
         }
 
     }
+    //网络变化通知
+    public void listenerNetworkChange(){
+        toDisposable(networkChangeDisposable);
+        networkChangeDisposable=NetWorkChangReceiver.notifyNetworkChange().subscribe(new Consumer<Boolean>() {
+            @Override
+            public void accept(Boolean aBoolean) throws Exception {
+                if (aBoolean){
+                    if (mViewRef!=null&&mViewRef.get()!=null){
+                        mViewRef.get().networkChangeSuccess();
+                    }
+                }
+            }
+        });
+        compositeDisposable.add(networkChangeDisposable);
+    }
+
 
 }
