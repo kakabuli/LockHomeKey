@@ -453,6 +453,14 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
         <activity
+            android:name="com.kaadas.lock.activity.device.oldbluetooth.OldBluetoothLockDetailActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.kaadas.lock.activity.device.oldbluetooth.OldBluetoothMoreActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".activity.home.GatewayEquipmentDynamicActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />

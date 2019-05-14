@@ -8,7 +8,7 @@ import com.kaadas.lock.publiclibrary.http.result.OTAResult;
 /**
  * Created by David on 2019/3/14
  */
-public interface IDeviceInfoView extends IBleView {
+public interface IOldDeviceInfoView extends IBleView {
     /**
      * 软件版本
      */
@@ -54,5 +54,18 @@ public interface IDeviceInfoView extends IBleView {
      */
     void needUpdate(OTAResult.UpdateFileInfo updateFileInfo);
 
+    /**
+     * 修改设备昵称成功
+     */
+    void modifyDeviceNicknameSuccess();
 
+    /**
+     * 修改昵称异常
+     */
+    void modifyDeviceNicknameError(Throwable throwable);
+
+    /**
+     * 修改昵称失败
+     */
+    void modifyDeviceNicknameFail(BaseResult baseResult);
 }

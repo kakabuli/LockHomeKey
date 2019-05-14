@@ -346,4 +346,10 @@ public class AddBluetoothSearchActivity extends BaseActivity<ISearchDeviceView, 
 
         }
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        hiddenLoading();
+    }
 }
