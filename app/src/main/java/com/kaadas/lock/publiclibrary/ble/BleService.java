@@ -72,8 +72,6 @@ public class BleService extends Service {
     private boolean bleIsEnable = false; //蓝牙是否已开启
     private long lastReceiveDataTime = 0;
     private static final long releaseTimeToBackground = 20 * 1000;
-
-
     /**
      * 蓝牙开关状态的监听
      */
@@ -130,9 +128,11 @@ public class BleService extends Service {
     private String currentMac;
     private int bleVersion;
 
+    public int getBleVersion(){
+        return bleVersion;
+    }
 
     public PublishSubject<BleDataBean> listeneDataChange() {
-
         return dataChangeSubject;
     }
 
@@ -364,7 +364,7 @@ public class BleService extends Service {
             if (newState == BluetoothGatt.STATE_CONNECTED) { //连接成功  此时还不算连接成功，等到发现服务且读取到所有特征值之后才算连接成功
                 gatt.discoverServices(); //发现服务
                 handler.removeCallbacks(releaseRunnable1);
-                handler.postDelayed(releaseRunnable1, 5000);
+                handler.postDelayed(releaseRunnable1, 10*1000);
             } else if (newState == BluetoothGatt.STATE_DISCONNECTED) { //断开连接
                 //断开连接  有时候是用户断开的  有时候是异常断开。
                 LogUtils.e("断开连接  ");
@@ -820,6 +820,9 @@ public class BleService extends Service {
         @Override
         public void run() {
             //上次发送的时间距离现在的时间大于等于3秒  直接发送
+            if (bleVersion == 1){
+                return;
+            }
             handler.removeCallbacks(sendHeart);
             if (System.currentTimeMillis() - lastReceiveDataTime > 10 * 1000) {  //如果上次接收的数据大于现在超过10每秒   那么认为蓝牙已经断开连接
                 release();  //主动直接断开连接

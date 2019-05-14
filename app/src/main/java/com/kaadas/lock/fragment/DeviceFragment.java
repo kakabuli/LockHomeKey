@@ -300,11 +300,20 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                 BleLockInfo bleLockInfo = (BleLockInfo) deviceDetailBean.getObject();
                 mPresenter.setBleLockInfo(bleLockInfo);
                 if (bleLockInfo.getServerLockInfo().getIs_admin() != null && bleLockInfo.getServerLockInfo().getIs_admin().equals("1")) {
-                    Intent detailIntent = new Intent(getActivity(), BluetoothLockFunctionActivity.class);
-                    String model = bleLockInfo.getServerLockInfo().getModel();
-                    detailIntent.putExtra(KeyConstants.DEVICE_TYPE, model);
-                    detailIntent.putExtra(KeyConstants.BLE_DEVICE_INFO, bleLockInfo);
-                    startActivityForResult(detailIntent,KeyConstants.GET_BLE_POWER);
+                    if ("3".equals(bleLockInfo.getServerLockInfo().getBleVersion())){
+                        Intent detailIntent = new Intent(getActivity(), BluetoothLockFunctionActivity.class);
+                        String model = bleLockInfo.getServerLockInfo().getModel();
+                        detailIntent.putExtra(KeyConstants.DEVICE_TYPE, model);
+                        detailIntent.putExtra(KeyConstants.BLE_DEVICE_INFO, bleLockInfo);
+                        startActivityForResult(detailIntent,KeyConstants.GET_BLE_POWER);
+                    }else { //TODO 跳转到老模块界面
+                        Intent detailIntent = new Intent(getActivity(), BluetoothLockFunctionActivity.class);
+                        String model = bleLockInfo.getServerLockInfo().getModel();
+                        detailIntent.putExtra(KeyConstants.DEVICE_TYPE, model);
+                        detailIntent.putExtra(KeyConstants.BLE_DEVICE_INFO, bleLockInfo);
+                        startActivityForResult(detailIntent,KeyConstants.GET_BLE_POWER);
+                    }
+
                 } else {
                     Intent impowerIntent = new Intent(getActivity(), BluetoothLockAuthorizationActivity.class);
                     String model = bleLockInfo.getServerLockInfo().getModel();
