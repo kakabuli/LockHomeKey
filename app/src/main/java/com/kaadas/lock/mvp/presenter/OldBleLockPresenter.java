@@ -9,6 +9,7 @@ import com.kaadas.lock.mvp.view.IOldBleLockView;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.publiclibrary.ble.BleCommandFactory;
 import com.kaadas.lock.publiclibrary.ble.BleProtocolFailedException;
+import com.kaadas.lock.publiclibrary.ble.BleUtil;
 import com.kaadas.lock.publiclibrary.ble.OldBleCommandFactory;
 import com.kaadas.lock.publiclibrary.ble.RetryWithTime;
 import com.kaadas.lock.publiclibrary.ble.bean.OpenLockRecord;
@@ -49,8 +50,9 @@ public class OldBleLockPresenter<T> extends MyOldOpenLockRecordPresenter<IOldBle
     private Disposable deviceStateChangeDisposable;
     private int bleVersion = 0; //蓝牙的版本
     private Disposable oldModeConfirmDisposable;
-    private Disposable oldModeResponseDisposable;
     private Disposable oldOpenStatusDisposable;
+    private Disposable oldPowerDisposable;
+    private Disposable oldRecordDisposable;
 
 
     @Override
@@ -58,7 +60,7 @@ public class OldBleLockPresenter<T> extends MyOldOpenLockRecordPresenter<IOldBle
         //
         bleVersion = bleService.getBleVersion();
         if (bleVersion == 1) {
-
+            getOldGetPower();
         } else { //如果是中间的蓝牙版本   读取电量
             readBattery();
         }
@@ -715,7 +717,7 @@ public class OldBleLockPresenter<T> extends MyOldOpenLockRecordPresenter<IOldBle
 
     ////////////////////////////////////////老模块获取电量逻辑/////////////////////////////////
 
-    public void getOldGetPower(){
+    public void getOldGetPower() {
         byte[] wakeUpFrame = OldBleCommandFactory.getWakeUpFrame();
         byte[] getPower1 = OldBleCommandFactory.getPowerCommand();
         byte[] getPower2 = OldBleCommandFactory.getEndFrame();
@@ -724,22 +726,168 @@ public class OldBleLockPresenter<T> extends MyOldOpenLockRecordPresenter<IOldBle
         bleService.sendCommand(getPower1);
         bleService.sendCommand(getPower2);
 
+        toDisposable(oldPowerDisposable);
+        oldPowerDisposable = bleService.listeneDataChange()
+                .timeout(5 * 1000, TimeUnit.MILLISECONDS)
+                .compose(RxjavaHelper.observeOnMainThread())
+                .subscribe(new Consumer<BleDataBean>() {
+                    @Override
+                    public void accept(BleDataBean bleDataBean) throws Exception {
+                        byte[] originalData = bleDataBean.getOriginalData();
+                        //电量的数据
+                        if ((originalData[0] & 0xff) == 0x5f && (originalData[4] & 0xff) == 0xc1) {
+                            int result = (originalData[5] & 0xff);
+                            if (result == 0x80) { //获取电量成功
+                                int power = originalData[7] & 0b01111111;
+                                if (bleLockInfo.getBattery() == -1) {   //没有获取过再重新获取   获取到电量  那么
+                                    bleLockInfo.setBattery(power);
+                                    bleLockInfo.setReadBatteryTime(System.currentTimeMillis());
+                                    LogUtils.e("读取电量成功   " + power);
+                                    if (mViewRef.get() != null) {  //读取电量成功
+                                        mViewRef.get().onElectricUpdata(power);
+                                    }
+                                }
+                            } else if (result == 0x81) {  //获取电量失败
+                                if (mViewRef.get() != null) {  //读取电量成功
+                                    mViewRef.get().onElectricUpdataFailed(new BleProtocolFailedException(0x81));
+                                }
+                            }
+                        }
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+
+                    }
+                });
+        compositeDisposable.add(oldPowerDisposable);
     }
+
 
     /**
-     * 获取电量的监听
+     * 同步开锁记录
      */
-    public void receivePowerData(){
-//        bleService.listeneDataChange()
-//                .timeout(5*1000,TimeUnit.MILLISECONDS)
-//                .filter(new Predicate<BleDataBean>() {
-//                    @Override
-//                    public boolean test(BleDataBean bleDataBean) throws Exception {
-//                        return false;
-//                    }
-//                })
-//                .compose(RxjavaHelper.observeOnMainThread())
-
-
+    public void syncRecord() {
+        if (bleService.getBleVersion() == 2 || bleService.getBleVersion() == 3) {
+            getRecordFromBle();
+        } else {
+            lockRecords = null;
+            retryTimes = 0;
+            total = 0;
+            LogUtils.e("发送数据1");
+            getOldModeRecord();
+        }
     }
+
+
+
+
+    public void getOldModeRecord() {
+        byte[] wakeUpFrame = OldBleCommandFactory.getWakeUpFrame();
+        byte[] openLockRecordCommand = OldBleCommandFactory.getOpenLockRecordCommand();
+        byte[] endFrame = OldBleCommandFactory.getEndFrame();
+        bleService.sendCommand(wakeUpFrame);
+        bleService.sendCommand(wakeUpFrame);
+        bleService.sendCommand(wakeUpFrame);
+        bleService.sendCommand(openLockRecordCommand);
+        bleService.sendCommand(endFrame);
+        retryTimes++;
+        toDisposable(oldRecordDisposable);
+        // TODO: 2019/5/14   老蓝牙模块   做简单的处理
+        oldRecordDisposable = bleService.listeneDataChange()
+                .timeout(10 * 1000, TimeUnit.MILLISECONDS)
+                .compose(RxjavaHelper.observeOnMainThread())
+                .subscribe(new Consumer<BleDataBean>() {
+                    @Override
+                    public void accept(BleDataBean bleDataBean) throws Exception {
+                        byte[] originalData = bleDataBean.getOriginalData();
+                        int zero = originalData[0] & 0xff;
+                        int four = originalData[4] & 0xff;
+                        int five = originalData[5] & 0xff;
+                        if (zero == 0x5f) {
+                            //5f80001c80000000000000000000000000000000
+                            if (four == 0x80) { //确认帧  不处理
+
+                                //0  1  2  3  4  5  6  7  8  9  10 11 12 13 14 15 16 17 18 19
+                                //5f 51 04 1c c3 80 64 00 02 09 ff ff 19 05 14 16 55 04 00 00
+                            } else if (four == 0xc3 && five == 0x80) { //数据
+                                OpenLockRecord openLockRecord = BleUtil.oldParseData(originalData);
+                                if (lockRecords == null) {
+                                    total = originalData[6] & 0xff;
+                                    LogUtils.e("记录总数为  " + total);
+                                    lockRecords = new OpenLockRecord[total];
+                                }
+                                lockRecords[openLockRecord.getIndex()] = openLockRecord;
+                                //5f4a041cc38264630100ffff1905051604020000
+                            } else if (four == 0xc3 && five == 0x82) {  //结束
+                                //结束了
+                                if (isFull() || retryTimes >= 3){
+                                    upLoadOpenRecord(bleLockInfo.getServerLockInfo().getLockName(), bleLockInfo.getServerLockInfo().getLockNickName(),
+                                            getRecordToServer(), MyApplication.getInstance().getUid());
+                                    toDisposable(oldRecordDisposable);
+                                    if (mViewRef.get() != null && lockRecords == null) {
+                                        mViewRef.get().onLoadBleRecordFinish(false);
+                                        return;
+                                    }
+                                    if (mViewRef.get() != null && lockRecords != null) {
+                                        mViewRef.get().onLoadBleRecordFinish(true);
+                                        mViewRef.get().onLoadBleRecord(getNotNullRecord());
+                                    }
+                                }else {
+                                    LogUtils.e("发送数据1");
+                                    getOldModeRecord();
+                                }
+                            }
+                        }
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        LogUtils.e("获取记录错误   " + throwable.getMessage());
+                        toDisposable(oldRecordDisposable);
+                        if (isFull() || retryTimes >= 3) {   //全部查询到了  或者查询了三次
+                            upLoadOpenRecord(bleLockInfo.getServerLockInfo().getLockName(), bleLockInfo.getServerLockInfo().getLockNickName(),
+                                    getRecordToServer(), MyApplication.getInstance().getUid());
+                            if (mViewRef.get() != null && lockRecords == null) {
+                                mViewRef.get().onLoadBleRecordFinish(false);
+                                return;
+                            }
+                            if (mViewRef.get() != null && lockRecords != null) {
+                                mViewRef.get().onLoadBleRecordFinish(true);
+                                mViewRef.get().onLoadBleRecord(getNotNullRecord());
+                            }
+                        }else {
+                            LogUtils.e("发送数据2");
+                            getOldModeRecord();
+                        }
+                    }
+                });
+        compositeDisposable.add(oldRecordDisposable);
+    }
+
+    public List<OpenLockRecord> getNotNullRecord() {
+        notNullRecord.clear();
+        if (lockRecords != null) {
+            for (int i = 0; i < lockRecords.length; i++) {
+                if (lockRecords[i] != null) {
+                    notNullRecord.add(lockRecords[i]);
+                }
+            }
+        }
+        return notNullRecord;
+    }
+
+    public boolean isFull() {
+        if(lockRecords == null){
+            return false;
+        }
+        for (OpenLockRecord openLockRecord : lockRecords) {
+            if (openLockRecord == null) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+
 }

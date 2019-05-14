@@ -128,7 +128,7 @@ public class BleService extends Service {
     private String currentMac;
     private int bleVersion;
 
-    public int getBleVersion(){
+    public int getBleVersion() {
         return bleVersion;
     }
 
@@ -364,7 +364,7 @@ public class BleService extends Service {
             if (newState == BluetoothGatt.STATE_CONNECTED) { //连接成功  此时还不算连接成功，等到发现服务且读取到所有特征值之后才算连接成功
                 gatt.discoverServices(); //发现服务
                 handler.removeCallbacks(releaseRunnable1);
-                handler.postDelayed(releaseRunnable1, 10*1000);
+                handler.postDelayed(releaseRunnable1, 10 * 1000);
             } else if (newState == BluetoothGatt.STATE_DISCONNECTED) { //断开连接
                 //断开连接  有时候是用户断开的  有时候是异常断开。
                 LogUtils.e("断开连接  ");
@@ -398,7 +398,8 @@ public class BleService extends Service {
             byte[] value = characteristic.getValue();
             LogUtils.e("收到数据  " + Rsa.bytesToHexString(value));
             //加密数据中的   开锁记录   报警记录    不要回确认帧    秘钥上报  需要逻辑层才回确认帧
-            if (value[0] == 1 && !((value[3] & 0xff) == 0x04) && !((value[3] & 0xff) == 0x14) && !(value[3] == 0x08)) {  //如果是加密数据  那么回确认帧
+            if (value[0] == 1 && !((value[3] & 0xff) == 0x04)
+                    && !((value[3] & 0xff) == 0x14) && !(value[3] == 0x08)  && bleVersion != 1) {  //如果是加密数据  那么回确认帧
                 sendCommand(BleCommandFactory.confirmCommand(value));
             }
 
@@ -741,7 +742,7 @@ public class BleService extends Service {
         connectSubject.onNext(true);  //连接成功  通知上层
         lastReceiveDataTime = System.currentTimeMillis();
         if (bleVersion != 1) {
-            LogUtils.e("发送心跳  "+"  版本号为  " + bleVersion);
+            LogUtils.e("发送心跳  " + "  版本号为  " + bleVersion);
             handler.post(sendHeart);
         }
     }
@@ -778,7 +779,9 @@ public class BleService extends Service {
 
 
     public void sendCommand(byte[] command) {
-        writeCommand(bluetoothGatt, mWritableCharacter, command);
+        synchronized (this) {
+            writeCommand(bluetoothGatt, mWritableCharacter, command);
+        }
     }
 
     /**
@@ -820,7 +823,7 @@ public class BleService extends Service {
         @Override
         public void run() {
             //上次发送的时间距离现在的时间大于等于3秒  直接发送
-            if (bleVersion == 1){
+            if (bleVersion == 1) {
                 return;
             }
             handler.removeCallbacks(sendHeart);

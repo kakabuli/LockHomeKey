@@ -153,4 +153,18 @@ public class OldBleCommandFactory {
         return command;
     }
 
+
+    /**
+     *  获取开锁记录的指令
+     */
+
+    public static byte[] getOpenLockRecordCommand(){
+        byte[] loadOpenRecord = new byte[]{
+                (byte) 0xf5, (byte) 0xc2, (byte) 0x01, (byte) 0x1c,
+                (byte) 0xc3, (byte) 0xff, (byte) 0x00, (byte) 0x00,
+                (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00,
+                (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00,
+                (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00};
+        return loadOpenRecord;
+    }
 }
