@@ -8,9 +8,21 @@ import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
 
 import com.kaadas.lock.MyApplication;
+import com.kaadas.lock.activity.device.GatewayActivity;
+import com.kaadas.lock.bean.HomeShowBean;
+import com.kaadas.lock.publiclibrary.bean.GatewayInfo;
+import com.kaadas.lock.publiclibrary.mqtt.util.MqttData;
 import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.NotifyRefreshActivity;
+
+import java.util.List;
+
+import io.reactivex.Observable;
+import io.reactivex.subjects.PublishSubject;
 
 public class NetWorkChangReceiver extends BroadcastReceiver {
+
+
     /**
      * 获取连接类型
      *
@@ -25,6 +37,18 @@ public class NetWorkChangReceiver extends BroadcastReceiver {
             connType = "WIFI网络";
         }
         return connType;
+    }
+
+    public static NotifyRefreshActivity notifityActivity;
+
+    public static void setNotifyRefreshActivity(NotifyRefreshActivity notifyRefreshActivity) {
+        notifityActivity = notifyRefreshActivity;
+    }
+
+    private static PublishSubject<Boolean> networkChangeObversable = PublishSubject.create();
+
+    public static Observable<Boolean> notifyNetworkChange(){
+        return networkChangeObversable;
     }
 
     @Override
@@ -55,10 +79,27 @@ public class NetWorkChangReceiver extends BroadcastReceiver {
                         }*/
                     }
                 } else {
+                    //把所有网关的状态设置为离线
+                   List<GatewayInfo> gatewayInfos= MyApplication.getInstance().getAllGateway();
+                   if (gatewayInfos!=null&&gatewayInfos.size()>0){
+                       for (GatewayInfo gatewayInfo:gatewayInfos){
+                           gatewayInfo.setEvent_str("offline");
+                       }
+                       if (notifityActivity!=null) {
+                           notifityActivity.notifityActivity(true);
+                       }
+                       networkChangeObversable.onNext(true);
+                       LogUtils.e("通知刷新页面");
+                   }
+
+
                     LogUtils.e("TAG", getConnectionType(info.getType()) + "断开");
                 }
             }
         }
+
+
+
     }
 }
 

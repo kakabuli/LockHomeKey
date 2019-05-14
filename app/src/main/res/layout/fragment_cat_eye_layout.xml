@@ -90,8 +90,6 @@
             android:layout_height="@dimen/dp_225"
             android:background="#F2F2F2"
             android:orientation="vertical">
-
-
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -193,7 +191,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:text=""
+                android:text="@string/normal"
                 android:textColor="#1F96F7"
                 android:textSize="@dimen/sp_22" />
 
@@ -202,7 +200,7 @@
         <ImageView
             android:id="@+id/iv_device_dynamic"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_gravity="center_vertical"
             android:padding="@dimen/dp_20"
             android:src="@mipmap/right" />

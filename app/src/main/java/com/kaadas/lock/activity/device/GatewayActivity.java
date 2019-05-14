@@ -26,6 +26,8 @@ import com.kaadas.lock.publiclibrary.bean.GatewayInfo;
 import com.kaadas.lock.publiclibrary.bean.GwLockInfo;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.NotifyRefreshActivity;
+import com.kaadas.lock.utils.networkListenerutil.NetWorkChangReceiver;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +38,7 @@ import butterknife.ButterKnife;
 /**
  * Created by David on 2019/4/25
  */
-public class GatewayActivity extends BaseActivity<GatewayView, GatewayPresenter<GatewayView>> implements View.OnClickListener, BaseQuickAdapter.OnItemClickListener,GatewayView {
+public class GatewayActivity extends BaseActivity<GatewayView, GatewayPresenter<GatewayView>> implements View.OnClickListener, BaseQuickAdapter.OnItemClickListener,GatewayView, NotifyRefreshActivity {
     @BindView(R.id.iv_back)
     ImageView ivBack;
     @BindView(R.id.tv_content)
@@ -61,6 +63,12 @@ public class GatewayActivity extends BaseActivity<GatewayView, GatewayPresenter<
         ButterKnife.bind(this);
         initView();
         initData();
+        initListener();
+    }
+
+    private void initListener() {
+        NetWorkChangReceiver.setNotifyRefreshActivity(this);
+
     }
 
     @Override
@@ -298,5 +306,12 @@ public class GatewayActivity extends BaseActivity<GatewayView, GatewayPresenter<
 
 
 
+    }
+
+    @Override
+    public void notifityActivity(boolean isRefresh) {
+        if (gatewayAdapter!=null) {
+            gatewayAdapter.notifyDataSetChanged();
+        }
     }
 }

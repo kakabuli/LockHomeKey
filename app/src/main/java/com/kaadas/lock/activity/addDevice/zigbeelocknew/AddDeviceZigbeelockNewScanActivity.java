@@ -61,7 +61,6 @@ public class AddDeviceZigbeelockNewScanActivity extends AppCompatActivity {
             }else{
                 Intent scanSuccessIntent=new Intent(context, AddDeviceZigbeeLockNewScanFailActivity.class);
                 startActivity(scanSuccessIntent);
-                ToastUtil.getInstance().showShort(getString(R.string.please_use_gateway_qr_code));
             }
 
         }

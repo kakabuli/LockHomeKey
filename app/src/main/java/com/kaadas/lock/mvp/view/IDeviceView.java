@@ -33,4 +33,7 @@ public interface IDeviceView extends IBaseView {
     //设备状态改变
     void deviceStatusChange(String gatewayId,String deviceId,String eventStr);
 
+    //网关断开
+    void networkChangeSuccess();
+
 }

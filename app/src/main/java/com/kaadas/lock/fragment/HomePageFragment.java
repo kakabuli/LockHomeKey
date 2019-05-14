@@ -26,11 +26,13 @@ import com.kaadas.lock.mvp.mvpbase.BaseFragment;
 import com.kaadas.lock.mvp.presenter.HomePreseneter;
 import com.kaadas.lock.mvp.view.IHomeView;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
+import com.kaadas.lock.publiclibrary.bean.CateEyeInfo;
 import com.kaadas.lock.publiclibrary.bean.GatewayInfo;
 import com.kaadas.lock.publiclibrary.bean.GwLockInfo;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.AllBindDevices;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.db.DBTableConfig;
 import com.kaadas.lock.widget.UnderLineRadioBtn;
 
 import java.util.ArrayList;
@@ -151,9 +153,9 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
         }
         hasDevice = true;
         changePage();
-        fragments = new ArrayList<>();
 
         realPositions.clear();
+
         if (devices.size() == 0) {
             rbHome1.setVisibility(View.GONE);
             rbHome2.setVisibility(View.GONE);
@@ -230,8 +232,12 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
             }
         }
 
+        if (fragments!=null){
+            fragments.clear();
+        }
         for (int i = 0; i < devices.size(); i++) {
             //此处初始化Fragment
+            LogUtils.e(devices.get(0).getDeviceType()+"设备类型是");
             switch (devices.get(i).getDeviceType()) {
                 case HomeShowBean.TYPE_BLE_LOCK: //蓝牙锁:
                     BleLockInfo bleLockInfo =   (BleLockInfo) devices.get(i).getObject();
@@ -268,7 +274,11 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
                     fragments.add(gatewayLockFragment);
                     break;
                 case HomeShowBean.TYPE_CAT_EYE: //猫眼:
-                    fragments.add(new CatEyeFragment());
+                    CatEyeFragment catEyeFragment = new CatEyeFragment();
+                    Bundle catEyeBundle = new Bundle();
+                    catEyeBundle.putSerializable(KeyConstants.CATE_INFO, (CateEyeInfo) devices.get(i).getObject());
+                    catEyeFragment.setArguments(catEyeBundle);
+                    fragments.add(catEyeFragment);
                     break;
                 case HomeShowBean.TYPE_GATEWAY: //网关
                     fragments.add(new MyFragment());
@@ -280,6 +290,7 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
         viewPager.setAdapter(new FragmentPagerAdapter(getChildFragmentManager()) {
             @Override
             public Fragment getItem(int i) {
+
                 return fragments.get(i);
             }
 

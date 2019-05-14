@@ -1,13 +1,17 @@
 package com.kaadas.lock.mvp.view.deviceaddview;
 
 import com.kaadas.lock.mvp.mvpbase.IBaseView;
+import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.BindGatewayResultBean;
+
+import java.util.List;
 
 public interface GatewayBindView extends IBaseView {
 
 
-    //绑定网关成功的数据
+    //绑定正常网关成功
     void bindGatewaySuccess(String deviceSN);
 
+    void bindGatewaySuitSuccess(String deviceSN, List<BindGatewayResultBean.DataBean.DeviceListBean> mDeviceList);
 
     //绑定网关失败
     void bindGatewayFail(String code,String msg);
