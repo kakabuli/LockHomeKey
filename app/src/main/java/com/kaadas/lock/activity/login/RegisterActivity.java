@@ -12,13 +12,16 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.kaadas.lock.R;
-import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.activity.choosecountry.CountryActivity;
+import com.kaadas.lock.activity.my.PersonalUserAgreementActivity;
+import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.mvp.presenter.RegisterPresenter;
+import com.kaadas.lock.mvp.view.IRegisterView;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.util.HttpUtils;
 import com.kaadas.lock.utils.AlertDialogUtil;
@@ -30,7 +33,6 @@ import com.kaadas.lock.utils.PhoneUtil;
 import com.kaadas.lock.utils.StringUtil;
 import com.kaadas.lock.utils.TimeUtils;
 import com.kaadas.lock.utils.ToastUtil;
-import com.kaadas.lock.mvp.view.IRegisterView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -75,6 +77,9 @@ public class RegisterActivity extends BaseActivity<IRegisterView, RegisterPresen
     String pwd;
     String countryName;
     String countryNumber;
+    @BindView(R.id.ll_user_protocol)
+    LinearLayout llUserProtocol;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,10 +88,10 @@ public class RegisterActivity extends BaseActivity<IRegisterView, RegisterPresen
         ivBack.setOnClickListener(this);
         btnRegister.setOnClickListener(this);
         tvGetVerification.setOnClickListener(this);
-        tvUserProtocol.setOnClickListener(this);
         ivPasswordStatus.setOnClickListener(this);
         rlCountryChoose.setOnClickListener(this);
         tvRegisterDefaultAgree.setOnClickListener(this);
+        llUserProtocol.setOnClickListener(this);
     }
 
     @Override
@@ -102,9 +107,7 @@ public class RegisterActivity extends BaseActivity<IRegisterView, RegisterPresen
             case R.id.tv_get_verification:
                 getVerification();
                 break;
-            case R.id.tv_user_protocol:
-                changeUserProtocolIcon();
-                break;
+
             case R.id.iv_password_status:
                 changePasswordStatus();
       /*          passwordHide = !passwordHide;
@@ -128,6 +131,10 @@ public class RegisterActivity extends BaseActivity<IRegisterView, RegisterPresen
             case R.id.tv_register_default_agree:
                 changeUserProtocolIcon();
                 break;
+            case R.id.ll_user_protocol:
+                Intent agreementIntent = new Intent(this, PersonalUserAgreementActivity.class);
+                startActivity(agreementIntent);
+                break;
         }
     }
 
@@ -148,14 +155,15 @@ public class RegisterActivity extends BaseActivity<IRegisterView, RegisterPresen
 
         }
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case 12:
                 if (resultCode == RESULT_OK) {
                     Bundle bundle = data.getExtras();
-                     countryName = bundle.getString("countryName");
-                     countryNumber = bundle.getString("countryNumber");
+                    countryName = bundle.getString("countryName");
+                    countryNumber = bundle.getString("countryNumber");
                     LogUtils.d("davi 选择的国家==" + countryName + " 区号==" + countryNumber);
                     tvAreaCode.setText(countryNumber);
                     tvCountry.setText(countryName);
@@ -213,7 +221,7 @@ public class RegisterActivity extends BaseActivity<IRegisterView, RegisterPresen
                 }
             }
             //倒计时状态更改
-            timeUtils = new TimeUtils(tvGetVerification,tvGetVerification);
+            timeUtils = new TimeUtils(tvGetVerification, tvGetVerification);
             timeUtils.RunTimer();
         } else {
             ToastUtil.getInstance().showShort(R.string.noNet);
@@ -247,10 +255,9 @@ public class RegisterActivity extends BaseActivity<IRegisterView, RegisterPresen
     }*/
 
 
-
     private void register() {
         if (NetUtil.isNetworkAvailable()) {
-              account = StringUtil.getEdittextContent(etAccount);
+            account = StringUtil.getEdittextContent(etAccount);
             if (TextUtils.isEmpty(account)) {
 //                ToastUtil.getInstance().showShort(R.string.input_telephone_or_rmail);
                 AlertDialogUtil.getInstance().noButtonSingleLineDialog(this, getString(R.string.account_message_not_empty));
@@ -262,7 +269,7 @@ public class RegisterActivity extends BaseActivity<IRegisterView, RegisterPresen
                 return;
             }
 
-             pwd = StringUtil.getEdittextContent(etPassword);
+            pwd = StringUtil.getEdittextContent(etPassword);
             if (StringUtil.judgeSpecialCharacter(pwd)) {
                 ToastUtil.getInstance().showShort(R.string.not_input_special_symbol);
                 return;
@@ -284,15 +291,15 @@ public class RegisterActivity extends BaseActivity<IRegisterView, RegisterPresen
                 }
                 showLoading("");
                 String countryCode = tvAreaCode.getText().toString().trim().replace("+", "");
-                telephoneRegister=true;
+                telephoneRegister = true;
                 mPresenter.registerByPhone(countryCode + account, pwd, code);
             } else {
                 LogUtils.e("邮箱注册：" + DetectionEmailPhone.getInstance().isEmail(account));
                 if (DetectionEmailPhone.getInstance().isEmail(account)) {
                     // sendEmailClick(phone);
                     showLoading("");
-                    telephoneRegister=false;
-                    mPresenter.registerByEmail(account,pwd,code);
+                    telephoneRegister = false;
+                    mPresenter.registerByEmail(account, pwd, code);
                 } else {
 //                    ToastUtil.getInstance().showShort( R.string.email_not_right);
                     AlertDialogUtil.getInstance().noButtonSingleLineDialog(this, getString(R.string.input_valid_telephone_or_email));
@@ -345,8 +352,6 @@ public class RegisterActivity extends BaseActivity<IRegisterView, RegisterPresen
     }*/
 
 
-
-
     @NonNull
     private String getEdittextContent(EditText et) {
         return et.getText().toString().trim();
@@ -378,10 +383,10 @@ public class RegisterActivity extends BaseActivity<IRegisterView, RegisterPresen
         LogUtils.e("注册成功");
         ToastUtil.getInstance().showLong(R.string.register_success);
         Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
-        intent.putExtra(KeyConstants.AREA_CODE,countryNumber);
-        intent.putExtra(KeyConstants.COUNTRY,countryName);
-        intent.putExtra(KeyConstants.ACCOUNT,account);
-        intent.putExtra(KeyConstants.PASSWORD,pwd);
+        intent.putExtra(KeyConstants.AREA_CODE, countryNumber);
+        intent.putExtra(KeyConstants.COUNTRY, countryName);
+        intent.putExtra(KeyConstants.ACCOUNT, account);
+        intent.putExtra(KeyConstants.PASSWORD, pwd);
         startActivity(intent);
 
         finish();
