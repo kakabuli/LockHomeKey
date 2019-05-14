@@ -133,6 +133,24 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter<ILogi
     protected void initData() {
         Intent intent = getIntent();
         if (intent != null) {
+            String areaCode = intent.getStringExtra(KeyConstants.AREA_CODE);
+            String country = intent.getStringExtra(KeyConstants.COUNTRY);
+            String account = intent.getStringExtra(KeyConstants.ACCOUNT);
+            String password = intent.getStringExtra(KeyConstants.PASSWORD);
+            if (!TextUtils.isEmpty(areaCode)){
+                tvAreaCode.setText(areaCode);
+            }
+            if (!TextUtils.isEmpty(country)){
+                tvCountry.setText(country);
+            }
+            if (!TextUtils.isEmpty(account)){
+                etAccount.setText(account);
+                etAccount.setSelection(account.length());
+            }
+            if (!TextUtils.isEmpty(password)){
+                etPassword.setText(password);
+                etPassword.setSelection(password.length());
+            }
             isShowDialog = intent.getBooleanExtra(KeyConstants.IS_SHOW_DIALOG, false);
         }
 

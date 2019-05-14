@@ -307,8 +307,8 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                         detailIntent.putExtra(KeyConstants.DEVICE_TYPE, model);
                         detailIntent.putExtra(KeyConstants.BLE_DEVICE_INFO, bleLockInfo);
                         startActivityForResult(detailIntent,KeyConstants.GET_BLE_POWER);
-                    }else { //TODO 跳转到老模块界面
-                        Intent detailIntent = new Intent(getActivity(), BluetoothLockFunctionActivity.class);
+                    }else {
+                        Intent detailIntent = new Intent(getActivity(), OldBluetoothLockDetailActivity.class);
                         String model = bleLockInfo.getServerLockInfo().getModel();
                         detailIntent.putExtra(KeyConstants.DEVICE_TYPE, model);
                         detailIntent.putExtra(KeyConstants.BLE_DEVICE_INFO, bleLockInfo);
