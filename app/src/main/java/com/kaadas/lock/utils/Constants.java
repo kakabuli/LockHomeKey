@@ -54,4 +54,8 @@ public class Constants {
 
     public static final String MEUSERNAME="meUserName";
     public static final String MEPWD="mePwd";
+
+    public static final String RECORDINGTAG="RECORDINGTAG";
+    public static final String ISRECORDINGFRAGMENT="RECORDINGTAG";
+
 }
