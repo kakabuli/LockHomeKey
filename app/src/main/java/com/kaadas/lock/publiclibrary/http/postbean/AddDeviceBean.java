@@ -33,6 +33,7 @@ public class AddDeviceBean {
         this.password1 = password1;
         this.password2 = password2;
         this.model = model;
+        this.bleVersion = bleVersion;
     }
 
     public String getBleVersion() {
