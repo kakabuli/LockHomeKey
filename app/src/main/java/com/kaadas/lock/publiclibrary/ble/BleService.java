@@ -72,8 +72,6 @@ public class BleService extends Service {
     private boolean bleIsEnable = false; //蓝牙是否已开启
     private long lastReceiveDataTime = 0;
     private static final long releaseTimeToBackground = 20 * 1000;
-
-
     /**
      * 蓝牙开关状态的监听
      */
@@ -130,9 +128,11 @@ public class BleService extends Service {
     private String currentMac;
     private int bleVersion;
 
+    public int getBleVersion(){
+        return bleVersion;
+    }
 
     public PublishSubject<BleDataBean> listeneDataChange() {
-
         return dataChangeSubject;
     }
 

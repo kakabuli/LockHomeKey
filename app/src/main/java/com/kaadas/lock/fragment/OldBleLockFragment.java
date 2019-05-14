@@ -1,10 +1,13 @@
 package com.kaadas.lock.fragment;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Service;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Vibrator;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
@@ -32,6 +35,7 @@ import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.publiclibrary.bean.ForeverPassword;
 import com.kaadas.lock.publiclibrary.ble.BleProtocolFailedException;
 import com.kaadas.lock.publiclibrary.ble.BleUtil;
+import com.kaadas.lock.publiclibrary.ble.OldBleCommandFactory;
 import com.kaadas.lock.publiclibrary.ble.bean.OpenLockRecord;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.result.GetPasswordResult;
@@ -79,6 +83,8 @@ public class OldBleLockFragment extends BaseBleFragment<IOldBleLockView, OldBleL
     TextView tvNoData;
     @BindView(R.id.tv_synchronized_record)
     TextView tvSynchronizedRecord;
+    @BindView(R.id.rl_icon)
+    RelativeLayout rlIcon;
     private BleLockInfo bleLockInfo;
     private boolean isOpening;
     private Runnable lockRunnable;
@@ -132,11 +138,8 @@ public class OldBleLockFragment extends BaseBleFragment<IOldBleLockView, OldBleL
     }
 
     private void initView() {
-
         LogUtils.e("设备  HomeLockFragment  " + this);
-
         homeFragment = (HomePageFragment) getParentFragment();
-
         //切换到当前页面
         listener = new HomePageFragment.ISelectChangeListener() {
             @Override
@@ -155,9 +158,7 @@ public class OldBleLockFragment extends BaseBleFragment<IOldBleLockView, OldBleL
                         mPresenter.getAllPassword(bleLockInfo, false);
                         isCurrentFragment = true;
                         onChangeInitView();
-                        if (auth) {
-                            mPresenter.getDeviceInfo();
-                        }
+
                     }
                 }
             }
@@ -208,6 +209,41 @@ public class OldBleLockFragment extends BaseBleFragment<IOldBleLockView, OldBleL
             isCurrentFragment = false;
         }
 
+
+        rlIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!isConnectingDevice && !bleLockInfo.isAuth()) {  //如果没有正在连接设备
+                    //连接设备
+                    mPresenter.attachView(OldBleLockFragment.this);
+                    mPresenter.isAuth(bleLockInfo, true);
+                    mPresenter.getAllPassword(bleLockInfo, false);
+                }
+            }
+        });
+
+        rlIcon.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                if (isOpening) {
+                    LogUtils.e("长按  但是当前正在开锁状态   ");
+                    return false;
+                }
+                if (mPresenter.isAuth(bleLockInfo, true)) {
+                    if (bleLockInfo.getBackLock() == 0 || bleLockInfo.getSafeMode() == 1) {  //反锁状态下或者安全模式下  长按不操作
+                        if (bleLockInfo.getSafeMode() == 1) {
+                            ToastUtil.getInstance().showLong(R.string.safe_mode_can_not_open);
+                        } else if (bleLockInfo.getBackLock() == 0) {
+                            ToastUtil.getInstance().showLong(R.string.back_lock_can_not_open);
+                        }
+                        return false;
+                    }
+                    mPresenter.openLock();
+                }
+                vibrate(getActivity(), 150);
+                return false;
+            }
+        });
     }
 
     public void changePage() {
@@ -469,6 +505,15 @@ public class OldBleLockFragment extends BaseBleFragment<IOldBleLockView, OldBleL
         }
     }
 
+
+
+    //震动milliseconds毫秒
+    public static void vibrate(final Activity activity, long milliseconds) {
+        Vibrator vib = (Vibrator) activity.getSystemService(Service.VIBRATOR_SERVICE);
+        vib.vibrate(milliseconds);
+    }
+
+
     @Override
     public void onStartSearchDevice() {
         LogUtils.e("开始搜索   ");
@@ -723,8 +768,6 @@ public class OldBleLockFragment extends BaseBleFragment<IOldBleLockView, OldBleL
                 bluetoothItemRecordBeanList.add(new BluetoothItemRecordBean(nickName, record.getOpen_type(), KeyConstants.BLUETOOTH_RECORD_COMMON,
                         time, false, false));
             }
-
-
         }
 
         for (int i = 0; i < list.size(); i++) {
@@ -785,16 +828,9 @@ public class OldBleLockFragment extends BaseBleFragment<IOldBleLockView, OldBleL
     @Override
     public void onLoadServerRecord(List<OpenLockRecord> lockRecords, int page) {
         LogUtils.e("收到服务器数据  " + lockRecords.size());
-//        currentPage = page + 1;
         groupData(lockRecords);
         LogUtils.d("davi list " + list.toString());
         bluetoothRecordAdapter.notifyDataSetChanged();
-//        if (page == 1) { //这时候是刷新
-//            refreshLayout.finishRefresh();
-//            refreshLayout.setEnableLoadMore(true);
-//        } else {
-//            refreshLayout.finishLoadMore();
-//        }
     }
 
     @Override

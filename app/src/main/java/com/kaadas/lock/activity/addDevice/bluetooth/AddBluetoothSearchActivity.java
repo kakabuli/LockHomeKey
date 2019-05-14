@@ -280,10 +280,11 @@ public class AddBluetoothSearchActivity extends BaseActivity<ISearchDeviceView, 
     }
 
     @Override
-    public void onConnectedAndIsOldMode(int version) {
+    public void onConnectedAndIsOldMode(int version,boolean isBind) {
         Intent nextIntent = new Intent(this, AddBluetoothSecondActivity.class);
 //        nextIntent.putExtra(KeyConstants.DEVICE_TYPE, type);  //传递设备类型过去
         nextIntent.putExtra(KeyConstants.BLE_VERSION, version);
+        nextIntent.putExtra(KeyConstants.IS_BIND, isBind);
         startActivity(nextIntent);
     }
 
