@@ -55,6 +55,9 @@ public class CatEyeFragment extends Fragment implements View.OnClickListener {
     @BindView(R.id.tv_no_data)
     TextView tvNoData;
     boolean hasData;
+    @BindView(R.id.iv_device_dynamic)
+    ImageView ivDeviceDynamic;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -64,6 +67,7 @@ public class CatEyeFragment extends Fragment implements View.OnClickListener {
         changeOpenLockStatus(1);
         tvMore.setOnClickListener(this);
         rlDeviceDynamic.setOnClickListener(this);
+        ivDeviceDynamic.setOnClickListener(this);
         return view;
     }
 
@@ -136,6 +140,7 @@ public class CatEyeFragment extends Fragment implements View.OnClickListener {
 
         }
     }
+
     public void changePage() {
         if (hasData) {
             rlHasData.setVisibility(View.VISIBLE);
@@ -147,11 +152,13 @@ public class CatEyeFragment extends Fragment implements View.OnClickListener {
             rlHasData.setEnabled(true);
         }
     }
+
     @Override
     public void onClick(View v) {
         Intent intent;
         switch (v.getId()) {
             case R.id.rl_device_dynamic:
+            case R.id.iv_device_dynamic:
                 intent = new Intent(getActivity(), CateyeEquipmentDynamicActivity.class);
                 startActivity(intent);
                 break;

@@ -191,7 +191,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:text="100"
                 android:textColor="#1F96F7"
                 android:textSize="20sp" />
 
@@ -225,7 +224,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:text="100"
                 android:textColor="#1F96F7"
                 android:textSize="20sp" />
 
@@ -266,6 +264,7 @@
         </RelativeLayout>
 
         <ImageView
+            android:id="@+id/iv_device_dynamic"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
