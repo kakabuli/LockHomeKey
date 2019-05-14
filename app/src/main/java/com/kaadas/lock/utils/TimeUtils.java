@@ -26,11 +26,13 @@ public class TimeUtils {
 	private int time = 60;
 	private Timer timer;
 	private TextView tvTime;
+	private TextView tvWidget;
 
-	
-	public TimeUtils(TextView tvTime) {
+
+	public TimeUtils(TextView tvTime,TextView tvWidget) {
 		super();
 		this.tvTime = tvTime;
+		this.tvWidget = tvWidget;
 	}
 	
 	
@@ -64,11 +66,13 @@ public class TimeUtils {
 						String verificationContent = String.format(MyApplication.getInstance().getString(R.string.get_verification_content), time+"");
 						tvTime.setText(verificationContent);
 						tvTime.setTextColor(MyApplication.getInstance().getResources().getColor(R.color.c999999));
+						tvWidget.setEnabled(false);
 //						tvTime.setVisibility(View.VISIBLE);
 					} else {
 						timer.cancel();
 						tvTime.setText(MyApplication.getInstance().getString(R.string.get_verification));
 						tvTime.setTextColor(MyApplication.getInstance().getResources().getColor(R.color.c1F96F7));
+						tvWidget.setEnabled(true);
 //						tvTime.setVisibility(View.GONE);
 					}
 					break;

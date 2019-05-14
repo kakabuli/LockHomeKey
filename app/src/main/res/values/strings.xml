@@ -899,4 +899,14 @@
     <string name="pick_proof">防撬报警</string>
     <string name="stress_alarm">胁迫报警</string>
     <string name="name_select_fail">查询失败</string>
+    <string name="pir_linger">pir徘徊</string>
+    <string name="pir_default">pir静默</string>
+    <string name="pir_hight">高</string>
+    <string name="pir_default_tile">PIR静默</string>
+    <string name="pir_default_cicle">PIR周期:</string>
+    <string name="pir_default_time">触发次数:</string>
+    <string name="pir_default_continue_time">持续时长:</string>
+    <string name="pir_default_unit_time">单位时间:</string>
+    <string name="pir_default_max_time">倍增最大次数:</string>
+    <string name="pir_default_default_method">启动静默策略:</string>
 </resources>

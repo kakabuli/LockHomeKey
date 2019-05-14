@@ -56,6 +56,7 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <!-- OPPO辅助 SDK -->
     <uses-permission android:name="com.coloros.mcs.permission.RECIEVE_MCS_MESSAGE" />
+
     <application
         android:name=".MyApplication"
         android:allowBackup="true"
@@ -66,10 +67,10 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".activity.MainActivity"
-            android:launchMode="singleTask"
-            android:windowSoftInputMode = "adjustNothing"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:screenOrientation="portrait" />
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustNothing" />
         <activity
             android:name=".activity.choosecountry.CountryActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
@@ -78,16 +79,22 @@
             android:screenOrientation="portrait" />
         <activity
             android:name="com.kaidishi.lock.WelcomeActivity"
-            android:launchMode="singleTop"
             android:exported="true"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait">
-            <intent-filter>
-                <category android:name="android.intent.category.DEFAULT" />
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-                <action android:name="android.intent.action.oppopush" />
-            </intent-filter>
+             <intent-filter>
+             <category android:name="android.intent.category.DEFAULT" />
+
+
+             <action android:name="android.intent.action.MAIN" />
+
+
+             <category android:name="android.intent.category.LAUNCHER" />
+
+
+             <action android:name="android.intent.action.oppopush" />
+             </intent-filter>
         </activity>
         <!-- 登录 -->
         <activity
@@ -361,13 +368,13 @@
             android:name=".activity.device.bluetooth.password.BluetoothUserPasswordAddActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".activity.device.bluetooth.password.CycleRulesActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.kaadas.lock.activity.device.bluetooth.BluetoothAuthorizationDeviceInformationActivity"
+            android:name=".activity.device.bluetooth.BluetoothAuthorizationDeviceInformationActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
         <activity
@@ -451,6 +458,14 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
         <activity
+            android:name="com.kaadas.lock.activity.device.oldbluetooth.OldBluetoothLockDetailActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.kaadas.lock.activity.device.oldbluetooth.OldBluetoothMoreActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".activity.home.GatewayEquipmentDynamicActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
@@ -478,7 +493,6 @@
             android:name=".activity.device.gatewaylock.password.old.GatewayLockPasswordShareActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".activity.device.gatewaylock.password.GatewayPasswordManagerDetailActivity"
             android:launchMode="singleTop"
@@ -524,7 +538,7 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.kaadas.lock.activity.home.OldBluetoothOpenLockRecordActivity"
+            android:name=".activity.home.OldBluetoothOpenLockRecordActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
         <activity
@@ -555,17 +569,14 @@
             android:name=".activity.device.gatewaylock.stress.old.GatewayLockStressDeleteActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".activity.device.gatewaylock.stress.old.GatewayLockStressDetailActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".activity.device.gatewaylock.stress.old.GatewayLockStressShareActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".activity.device.gatewaylock.stress.GatewayStressPasswordShareActivity"
             android:launchMode="singleTop"
@@ -590,7 +601,6 @@
             android:name=".activity.device.cateye.more.CatEyeResolutionActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".activity.device.cateye.more.CatEyeRingNumberActivity"
             android:launchMode="singleTask"
@@ -613,36 +623,30 @@
 
         <activity
             android:name=".activity.cateye.VideoCallBackActivity"
-            android:screenOrientation="portrait">
-
-        </activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.cateye.PreviewActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.cateye.VideoVActivity"
-            android:windowSoftInputMode = "adjustNothing"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustNothing" />
         <activity
             android:name=".activity.cateye.MediaPlayerActivity"
             android:screenOrientation="landscape"
-            android:theme="@style/NoTitleFullscreen"></activity>
-        <activity android:name=".activity.cateye.CallComingActivity"
-            android:screenOrientation="portrait">
-        </activity>
-
-        <activity android:name=".activity.cateye.FtpDownLoadActivity"
-            android:screenOrientation="portrait">
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.MAIN" />-->
-             <!--<category android:name="android.intent.category.LAUNCHER" />-->
-             <!--</intent-filter>-->
-        </activity>
-        <activity android:name=".activity.cateye.RecordingPreviewActivity"
+            android:theme="@style/NoTitleFullscreen" />
+        <activity
+            android:name=".activity.cateye.CallComingActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.cateye.FtpDownLoadActivity"
             android:screenOrientation="portrait"></activity>
-        <!--&lt;!&ndash; 配置SDK核心服务 &ndash;&gt;-->
-        <!--&lt;!&ndash; process必须指定为":pushservice"，切勿随意更改 &ndash;&gt;-->
+        <activity
+            android:name=".activity.cateye.RecordingPreviewActivity"
+            android:screenOrientation="portrait" />
+        <!-- &lt;!&ndash; 配置SDK核心服务 &ndash;&gt; -->
+        <!-- &lt;!&ndash; process必须指定为":pushservice"，切勿随意更改 &ndash;&gt; -->
         <service
             android:name="com.kaidishi.lock.service.GeTuiPushService"
             android:exported="true"
@@ -650,7 +654,8 @@
             android:process=":pushservice" />
 
         <!-- 用户自定义服务继承自GTIntentService,作为SDK与APP桥梁服务,用来接收各种消息和命令回复 -->
-        <service android:name="com.kaidishi.lock.service.GeTuiIntentService"
+        <service
+            android:name="com.kaidishi.lock.service.GeTuiIntentService"
             android:permission="android.permission.BIND_JOB_SERVICE" />
         <!-- OPPO辅助 SDK -->
         <meta-data
@@ -667,6 +672,10 @@
                 <action android:name="com.coloros.mcs.action.RECEIVE_MCS_MESSAGE" />
             </intent-filter>
         </service>
+
+        <activity android:name=".activity.device.cateye.more.SmartEyeActivity" android:screenOrientation="portrait">
+        </activity>
+        <activity android:name=".activity.device.cateye.more.CateDefaultActivity" android:screenOrientation="portrait"></activity>
     </application>
 
 </manifest>

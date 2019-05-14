@@ -344,4 +344,14 @@ public class KeyConstants {
     //分辨率
     public static final String CAT_EYE_RESOLUTION="catEyeResolution";
 
+    //账号
+    public static final String ACCOUNT="account";
+
+    //密码
+    public static final String PASSWORD="password";
+    //地区码
+    public static final String AREA_CODE="area_code";
+    //国家
+    public static final String COUNTRY="country";
+
 }

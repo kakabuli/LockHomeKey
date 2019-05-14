@@ -90,6 +90,8 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
     TextView tvNoData;
     @BindView(R.id.tv_synchronized_record)
     TextView tvSynchronizedRecord;
+    @BindView(R.id.iv_device_dynamic)
+    ImageView ivDeviceDynamic;
     private BleLockInfo bleLockInfo;
     private boolean isOpening;
     private Runnable lockRunnable;
@@ -102,6 +104,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
     BluetoothRecordAdapter bluetoothRecordAdapter;
     boolean hasData;
     private boolean isLoadingBleRecord;  //正在加载锁上数据
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -137,6 +140,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
         rlDeviceDynamic.setOnClickListener(this);
         tvMore.setOnClickListener(this);
         tvSynchronizedRecord.setOnClickListener(this);
+        ivDeviceDynamic.setOnClickListener(this);
         mPresenter.getOpenRecordFromServer(1, bleLockInfo);
         initView();
         return view;
@@ -211,7 +215,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
                         if (auth) {
                             mPresenter.getDeviceInfo();
                         }
-                    }else {
+                    } else {
 
                     }
                 }
@@ -534,6 +538,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
         Intent intent;
         switch (v.getId()) {
             case R.id.rl_device_dynamic:
+            case R.id.iv_device_dynamic:
                 intent = new Intent(getActivity(), BluetoothEquipmentDynamicActivity.class);
                 startActivity(intent);
                 break;
