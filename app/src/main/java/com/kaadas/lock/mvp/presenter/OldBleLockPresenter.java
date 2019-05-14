@@ -1,10 +1,10 @@
 package com.kaadas.lock.mvp.presenter;
 
+import android.os.Message;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.kaadas.lock.MyApplication;
-import com.kaadas.lock.mvp.mvpbase.BlePresenter;
-import com.kaadas.lock.mvp.view.IBleLockView;
 import com.kaadas.lock.mvp.view.IOldBleLockView;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.publiclibrary.ble.BleCommandFactory;
@@ -18,8 +18,8 @@ import com.kaadas.lock.publiclibrary.http.XiaokaiNewServiceImp;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.result.LockRecordResult;
 import com.kaadas.lock.publiclibrary.http.util.BaseObserver;
+import com.kaadas.lock.publiclibrary.http.util.OtherException;
 import com.kaadas.lock.publiclibrary.http.util.RxjavaHelper;
-import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.NetUtil;
@@ -28,7 +28,10 @@ import com.kaadas.lock.utils.SPUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
@@ -47,6 +50,7 @@ public class OldBleLockPresenter<T> extends MyOldOpenLockRecordPresenter<IOldBle
     private int bleVersion = 0; //蓝牙的版本
     private Disposable oldModeConfirmDisposable;
     private Disposable oldModeResponseDisposable;
+    private Disposable oldOpenStatusDisposable;
 
 
     @Override
@@ -114,7 +118,7 @@ public class OldBleLockPresenter<T> extends MyOldOpenLockRecordPresenter<IOldBle
             serverAuth();
         } else {  //没有网络
             if (bleService.getBleVersion() == 1) {  //如果没有网络，最老的模块直接开锁
-                oldOpenLockMethod("",false);
+                oldOpenLockMethod("", false);
                 return;
             }
             if (isAdmin) {  //是 管理员
@@ -146,8 +150,8 @@ public class OldBleLockPresenter<T> extends MyOldOpenLockRecordPresenter<IOldBle
                     @Override
                     public void onSuccess(BaseResult result) {
                         if ("200".equals(result.getCode())) {
-                            if (bleService.getBleVersion() == 1){
-                                oldOpenLockMethod("",false);
+                            if (bleService.getBleVersion() == 1) {
+                                oldOpenLockMethod("", false);
                                 return;
                             }
                             if ("1".equals(bleLockInfo.getServerLockInfo().getIs_admin())) { //如果是管理员  查看本地密码
@@ -187,78 +191,6 @@ public class OldBleLockPresenter<T> extends MyOldOpenLockRecordPresenter<IOldBle
                 });
     }
 
-    public void oldOpenLockMethod(String pwd, boolean isApp) {
-        byte[] wakeUpFrame = OldBleCommandFactory.getWakeUpFrame();
-        List<byte[]> openLockCommands = OldBleCommandFactory.getOpenLockCommands();
-        //连续发送三个指令   BleService中有自己的队列   每隔100ms发送一个数据
-        bleService.sendCommand(wakeUpFrame);
-        bleService.sendCommand(openLockCommands.get(0));
-        bleService.sendCommand(openLockCommands.get(1));
-        listenerOldModeConfirm();
-    }
-
-    /**
-     * 监听老模块的确认帧
-     */
-    private void listenerOldModeConfirm(){
-        toDisposable(oldModeConfirmDisposable);
-        oldModeConfirmDisposable = bleService.listeneDataChange()
-                .filter(new Predicate<BleDataBean>() {
-                    @Override
-                    public boolean test(BleDataBean bleDataBean) throws Exception {
-                        byte[] originalData = bleDataBean.getOriginalData();
-                        if (originalData[0] == 0x5f){
-                            return true;
-                        }
-                        return false;
-                    }
-                })
-                .timeout(5 * 1000, TimeUnit.MILLISECONDS)
-                .compose(RxjavaHelper.observeOnMainThread())
-                .subscribe(new Consumer<BleDataBean>() {
-                    @Override
-                    public void accept(BleDataBean bleDataBean) throws Exception {
-                        toDisposable(oldModeConfirmDisposable);
-                        LogUtils.e("收到开锁确认帧   " + Rsa.bytesToHexString(bleDataBean.getOriginalData()));
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-
-                    }
-                });
-        compositeDisposable.add(oldModeConfirmDisposable);
-    }
-
-    /**
-     * 监听老模块的应答帧
-     * 此处成功，才认为开锁成功
-     */
-    private void listenerOldModeResponse(){
-        toDisposable(oldModeResponseDisposable);
-        oldModeResponseDisposable = bleService.listeneDataChange()
-                .filter(new Predicate<BleDataBean>() {
-                    @Override
-                    public boolean test(BleDataBean bleDataBean) throws Exception {
-                        return false;
-                    }
-                })
-                .timeout(5 * 1000, TimeUnit.MILLISECONDS)
-                .compose(RxjavaHelper.observeOnMainThread())
-                .subscribe(new Consumer<BleDataBean>() {
-                    @Override
-                    public void accept(BleDataBean bleDataBean) throws Exception {
-
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-
-                    }
-                });
-        compositeDisposable.add(oldModeResponseDisposable);
-
-    }
 
     public void realOpenLock(String pwd, boolean isApp) {
         //如果是最老的模块   使用老的指令开锁
@@ -315,7 +247,6 @@ public class OldBleLockPresenter<T> extends MyOldOpenLockRecordPresenter<IOldBle
                 });
         compositeDisposable.add(openLockDisposable);
     }
-
 
     /**
      * 监听开锁上报
@@ -522,4 +453,267 @@ public class OldBleLockPresenter<T> extends MyOldOpenLockRecordPresenter<IOldBle
         super.detachView();
         handler.removeCallbacksAndMessages(null);
     }
+
+
+    //////////////////////老模块开锁逻辑///////////////////////////////
+    public void oldOpenLockMethod(String pwd, boolean isApp) {
+        openLockRunnable.run();
+    }
+
+    Runnable openLockRunnable = new Runnable() {
+        @Override
+        public void run() {
+            byte[] wakeUpFrame = OldBleCommandFactory.getWakeUpFrame();
+            List<byte[]> openLockCommands = OldBleCommandFactory.getOpenLockCommands();
+            //连续发送三个指令   BleService中有自己的队列   每隔100ms发送一个数据
+            bleService.sendCommand(wakeUpFrame);
+            bleService.sendCommand(openLockCommands.get(0));
+            bleService.sendCommand(openLockCommands.get(1));
+            listenerOldModeOpenLockData();
+            handler.postDelayed(this, 1000);
+        }
+    };
+
+    /**
+     * 监听老模块的确认帧
+     */
+
+    private void listenerOldModeOpenLockData() {
+        List<byte[]> openLockDataBack = new ArrayList<>();
+        toDisposable(oldModeConfirmDisposable);
+        oldModeConfirmDisposable = bleService.listeneDataChange()
+                .timeout(5 * 1000, TimeUnit.MILLISECONDS)
+                .compose(RxjavaHelper.observeOnMainThread())
+                .subscribe(new Consumer<BleDataBean>() {
+                    @Override
+                    public void accept(BleDataBean bleDataBean) throws Exception {
+                        openLockDataBack.add(bleDataBean.getOriginalData());
+                        if (openLockDataBack.size() >= 4) {
+                            parseOpenLockResponseTest(openLockDataBack);
+                            parseOpenLockResponse(openLockDataBack);
+                            toDisposable(oldModeConfirmDisposable);
+                            handler.removeCallbacks(openLockRunnable);
+                        }
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        handler.removeCallbacks(openLockRunnable);
+                        if (mViewRef.get() != null) {
+                            mViewRef.get().openLockFailed(new TimeoutException());
+                        }
+                    }
+                });
+        compositeDisposable.add(oldModeConfirmDisposable);
+    }
+
+    /**
+     * 监听老模块的应答帧
+     * 此处成功，才认为开锁成功
+     */
+
+    private void parseOpenLockResponseTest(List<byte[]> datas) {
+        for (byte[] data : datas) {
+            LogUtils.e("接收到的数据是  " + Rsa.bytesToHexString(data));
+        }
+        if (!(datas.get(0).length == 20 && datas.get(1).length == 12 && datas.get(2).length == 20 && datas.get(3).length == 12)) {
+            return;
+        }
+        byte[] temp = new byte[64];
+
+        byte[] data1 = datas.get(2);
+        byte[] data2 = datas.get(3);
+        System.arraycopy(data1, 0, temp, 32, data1.length);
+        System.arraycopy(data2, 0, temp, 52, data2.length);
+        for (int i = 0; i < 10; i++) {
+            byte[] key = OldBleCommandFactory.oldModeKey.get(i);
+            LogUtils.e("解密前的数据是   " + Rsa.bytesToHexString(temp));
+            byte[] decryptByte = Rsa.decrypt(temp, key);// 对返回的数据进行解密
+            LogUtils.e("解密后的数据是   " + Rsa.bytesToHexString(decryptByte));
+        }
+    }
+
+
+    // 开锁数据头
+    private void parseOpenLockResponse(List<byte[]> datas) {
+        if (!(datas.get(0).length == 20 && datas.get(1).length == 12 && datas.get(2).length == 20 && datas.get(3).length == 12)) {
+            if (mViewRef.get() != null) {
+                mViewRef.get().openLockFailed(new TimeoutException());
+            }
+            return;
+        }
+        byte[] receiveByte = new byte[64];
+
+        byte[] data1 = datas.get(2);
+        byte[] data2 = datas.get(3);
+        System.arraycopy(data1, 0, receiveByte, 32, data1.length);
+        System.arraycopy(data2, 0, receiveByte, 52, data2.length);
+
+        byte[] sendbyte = new byte[]{
+                (byte) 0xf5, (byte) 0x00, (byte) 0x00, (byte) 0x1c,
+                (byte) 0xc2, (byte) 0x02, (byte) 0x00, (byte) 0x00,
+                (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00,
+                (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00,
+                (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00,
+                (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00,
+                (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00,
+                (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00};
+
+        boolean bPaw = false;
+        // 总共有10组密码组
+        byte[] randomDecryptByte = null;
+        for (int i = 0; i < 10; i++) {
+            byte[] decryptByte = Rsa.decrypt(receiveByte, OldBleCommandFactory.oldModeKey.get(i));// 对返回的数据进行解密
+            LogUtils.e("解析之前的数据是   " + Rsa.bytesToHexString(receiveByte) + "   解析之后的数据是  " + Rsa.bytesToHexString(decryptByte));
+            if (decryptByte[32] == (byte) 0x5f) {// 判断第二个包的第一个字节是否是0x5f,如果是就解密对了
+                // 提取16位密钥随机数来再次解密
+                byte[] randomByte16 = new byte[16];
+                for (int i1 = 0; i1 < 16; i1++) {
+                    randomByte16[i1] = decryptByte[38 + i1];
+                }
+                // 16位密钥重新解密
+                for (int i2 = 0; i2 < 10; i2++) {
+                    randomDecryptByte = Rsa.decrypt(randomByte16, OldBleCommandFactory.oldModeKey.get(i2));// 解密
+                    short sendByteSum = 0;
+                    for (int i3 = 2; i3 < randomDecryptByte.length; i3++) {
+                        sendByteSum += Integer.parseInt(Integer.toHexString((randomDecryptByte[i3] & 0xFF)), 16);
+                    }
+                    byte[] bSend = new byte[2];
+                    bSend[0] = (byte) (sendByteSum >> 0);// 低字节
+                    bSend[1] = (byte) (sendByteSum >> 8);// 高字节
+                    if (randomDecryptByte[0] != bSend[0] || randomDecryptByte[1] != bSend[1]) {// 随机数错了
+                        continue;
+                    } else {// 随机数对了
+                        //鉴权成功
+                        bPaw = true;
+                        break;
+                    }
+                }
+                break;
+            } else {
+
+            }
+        }
+        if (!bPaw) {
+            return;
+        }
+        if (randomDecryptByte == null) {
+            return;
+        }
+        Random random = new Random();// 定义随机类
+        int result = random.nextInt(10);// 返回[0,10)集合中的整数，注意不包括10
+        byte[] randomEncryptByte = Rsa.encrypt2(randomDecryptByte, OldBleCommandFactory.oldModeKey.get(result));// 对获取的16位随机数进行加密数据
+        for (int i2 = 0; i2 < 16; i2++) {
+            sendbyte[i2 + 6] = randomEncryptByte[i2];
+        }
+        short sendByteSum = 0;
+        for (int i = 4; i < sendbyte.length; i++) {
+            sendByteSum += Integer.parseInt(Integer.toHexString((sendbyte[i] & 0xFF)), 16);
+        }
+        byte[] bSend = new byte[2];
+        bSend[0] = (byte) (sendByteSum >> 0);//低字节
+        bSend[1] = (byte) (sendByteSum >> 8);// 高字节
+        sendbyte[1] = bSend[0];
+        sendbyte[2] = bSend[1];
+        byte[] sendEncryptByte = Rsa.encrypt2(sendbyte, OldBleCommandFactory.oldModeKey.get(result));// 对发送的数据进行加密数据
+        final byte[] command1 = new byte[20];
+        final byte[] command2 = new byte[20];
+        for (int i = 0; i < 20; i++) {
+            command1[i] = sendEncryptByte[i];
+        }
+        for (int i = 0; i < 12; i++) {
+            command2[i] = sendEncryptByte[i + 20];
+        }
+        bleService.sendCommand(command1);
+        bleService.sendCommand(command2);
+        listenerOpenStatus();
+    }
+
+    /**
+     * 监听开锁情况
+     * f5da011cb1010767000019051414062747000000  开锁
+     * f575011cb1000000000019051414064038000000   关锁
+     */
+    public void listenerOpenStatus() {
+        toDisposable(oldOpenStatusDisposable);
+        oldOpenStatusDisposable = bleService.listeneDataChange()
+                .compose(RxjavaHelper.observeOnMainThread())
+                .filter(new Predicate<BleDataBean>() {
+                    @Override
+                    public boolean test(BleDataBean bleDataBean) throws Exception {
+                        byte[] originalData = bleDataBean.getOriginalData();
+                        if ((originalData[0] & 0xff) == 0xf5 && (originalData[4] & 0xff) == 0xb1) {
+                            return true;
+                        }
+                        return false;
+                    }
+                })
+                .timeout(5 * 1000, TimeUnit.MILLISECONDS)
+                .subscribe(new Consumer<BleDataBean>() {
+                    @Override
+                    public void accept(BleDataBean bleDataBean) throws Exception {
+                        byte[] originalData = bleDataBean.getOriginalData();
+                        if ((originalData[5] & 0xff) == 0x01) {  //老模块开门上报
+                            toDisposable(oldOpenStatusDisposable);
+                            listenerCloseStatus();
+                            if (mViewRef.get() != null) {
+                                mViewRef.get().openLockSuccess();
+                            }
+                        }
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        if (mViewRef.get() != null) {
+                            mViewRef.get().openLockFailed(throwable);
+                        }
+                    }
+                });
+        compositeDisposable.add(oldOpenStatusDisposable);
+    }
+
+
+    /**
+     * 监听关门状态
+     */
+    public void listenerCloseStatus() {
+        toDisposable(oldOpenStatusDisposable);
+        oldOpenStatusDisposable = bleService.listeneDataChange()
+                .filter(new Predicate<BleDataBean>() {
+                    @Override
+                    public boolean test(BleDataBean bleDataBean) throws Exception {
+                        byte[] originalData = bleDataBean.getOriginalData();
+                        if ((originalData[0] & 0xff) == 0xf5 && (originalData[4] & 0xff) == 0xb1) {
+                            return true;
+                        }
+                        return false;
+                    }
+                })
+                .timeout(15 * 1000, TimeUnit.MILLISECONDS)
+                .compose(RxjavaHelper.observeOnMainThread())
+                .subscribe(new Consumer<BleDataBean>() {
+                    @Override
+                    public void accept(BleDataBean bleDataBean) throws Exception {
+                        byte[] originalData = bleDataBean.getOriginalData();
+                        if ((originalData[5] & 0xff) == 0x00) {  //老模块关门上报
+                            toDisposable(oldOpenStatusDisposable);
+                            if (mViewRef.get() != null) {
+                                mViewRef.get().onLockLock();
+                            }
+                        }
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        if (mViewRef.get() != null) {
+                            mViewRef.get().onLockLock();
+                        }
+                    }
+                });
+        compositeDisposable.add(oldOpenStatusDisposable);
+    }
+
+    ////////////////////////////////////////老模块获取电量逻辑/////////////////////////////////
+
+    public void getOldGetPower(){}
 }
