@@ -57,7 +57,7 @@ public interface ISearchDeviceView extends IBaseView {
     /**
      * 连接成功   而且是最老的模块
      */
-    void onConnectedAndIsOldMode(int version);
+    void onConnectedAndIsOldMode(int version,boolean isBind);
 
     /**
      * 连接失败

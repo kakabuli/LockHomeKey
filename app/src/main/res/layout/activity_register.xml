@@ -273,10 +273,10 @@
                     android:textSize="@dimen/sp_12" />
 
                 <LinearLayout
+                    android:id="@+id/ll_user_protocol"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-
                     android:paddingBottom="@dimen/dp_21">
 
                     <TextView

@@ -225,7 +225,7 @@ public class WarringRecordPresenter<T> extends BlePresenter<IWarringRecordView> 
                             @Override
                             public void accept(BleDataBean bleDataBean) throws Exception {
                                 if (bleDataBean.isConfirm()) {
-                                    if (0x8b == bleDataBean.getPayload()[0]) {  //没有数据
+                                    if (0x8b == (bleDataBean.getPayload()[0]&0xff)) {  //没有数据
                                         if (mViewRef.get() != null) {
                                             mViewRef.get().noData();
                                         }

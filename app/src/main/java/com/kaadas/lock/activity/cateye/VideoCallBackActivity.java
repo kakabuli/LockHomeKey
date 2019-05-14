@@ -143,6 +143,7 @@ public class VideoCallBackActivity extends BaseActivity<IVedeoCallBack,VideoCall
                     fragmentTransaction.show(snapshotFragment);
                 } else {
                     snapshotFragment = new SnapshotFragment1();
+                    args.putBoolean(Constants.ISRECORDINGFRAGMENT,true);
                     snapshotFragment.setArguments(args);
                     fragmentTransaction.add(R.id.content, snapshotFragment);
                 }

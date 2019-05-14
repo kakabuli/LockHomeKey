@@ -185,10 +185,8 @@ public class Rsa {
 	 */
 	public static byte[] decrypt(byte[] content, byte[] password) {
 		try {
-			//SecretKeySpec key = new SecretKeySpec(password.getBytes(), "AES");
 			SecretKeySpec key = new SecretKeySpec(password, "AES");
 			Cipher cipher = Cipher.getInstance("AES/ECB/NoPadding");
-			// byte[] byteContent = content.getBytes("utf-8");
 			cipher.init(Cipher.DECRYPT_MODE, key);// 初始化
 			byte[] result = cipher.doFinal(content);
 			return result; //

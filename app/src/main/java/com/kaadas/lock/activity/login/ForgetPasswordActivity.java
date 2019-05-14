@@ -176,7 +176,7 @@ public class ForgetPasswordActivity extends BaseActivity<IResetPasswordView, Res
                 }
             }
             //倒计时状态更改
-            timeUtils = new TimeUtils(tvGetVerification);
+            timeUtils = new TimeUtils(tvGetVerification,tvGetVerification);
             timeUtils.RunTimer();
         } else {
             ToastUtil.getInstance().showShort(R.string.noNet);

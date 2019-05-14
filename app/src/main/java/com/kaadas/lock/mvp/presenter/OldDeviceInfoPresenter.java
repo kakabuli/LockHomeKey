@@ -4,6 +4,7 @@ package com.kaadas.lock.mvp.presenter;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.mvp.mvpbase.BlePresenter;
 import com.kaadas.lock.mvp.view.IDeviceInfoView;
+import com.kaadas.lock.mvp.view.IOldDeviceInfoView;
 import com.kaadas.lock.publiclibrary.ble.RetryWithTime;
 import com.kaadas.lock.publiclibrary.ble.responsebean.ReadInfoBean;
 import com.kaadas.lock.publiclibrary.http.XiaokaiNewServiceImp;
@@ -26,7 +27,7 @@ import io.reactivex.functions.Predicate;
 /**
  * Created by David on 2019/3/14
  */
-public class DeviceInfoPresenter extends BlePresenter<IDeviceInfoView> {
+public class OldDeviceInfoPresenter extends BlePresenter<IOldDeviceInfoView> {
     private Disposable readSerialNumberDisposable;
     private Disposable readModelNumberDisposable;
     private Disposable readFirmwareRevDisposable;
@@ -337,5 +338,37 @@ public class DeviceInfoPresenter extends BlePresenter<IDeviceInfoView> {
 
     }
 
+    public void modifyDeviceNickname(String devname, String user_id, String lockNickName) {
+        XiaokaiNewServiceImp.modifyLockNick(devname, user_id, lockNickName).subscribe(new BaseObserver<BaseResult>() {
+            @Override
+            public void onSuccess(BaseResult baseResult) {
+                if (mViewRef.get() != null) {
+                    mViewRef.get().modifyDeviceNicknameSuccess();
+                }
+                bleLockInfo.getServerLockInfo().setLockNickName(lockNickName);
+                bleService.getBleLockInfo().getServerLockInfo().setLockNickName(lockNickName);
+                MyApplication.getInstance().getAllDevicesByMqtt(true);
+            }
+
+            @Override
+            public void onAckErrorCode(BaseResult baseResult) {
+                if (mViewRef.get() != null) {
+                    mViewRef.get().modifyDeviceNicknameFail(baseResult);
+                }
+            }
+
+            @Override
+            public void onFailed(Throwable throwable) {
+                if (mViewRef.get() != null) {
+                    mViewRef.get().modifyDeviceNicknameError(throwable);
+                }
+            }
+
+            @Override
+            public void onSubscribe1(Disposable d) {
+                compositeDisposable.add(d);
+            }
+        });
+    }
 
 }

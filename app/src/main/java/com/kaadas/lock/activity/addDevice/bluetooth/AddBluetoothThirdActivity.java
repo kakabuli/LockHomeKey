@@ -52,6 +52,8 @@ public class AddBluetoothThirdActivity extends BaseActivity<IBindBleView, BindBl
         mPresenter.setPwd1(password1, isBind,version);
         ButterKnife.bind(this);
 
+        LogUtils.e("是否绑定流程   " + isBind);
+
         initView();
     }
 

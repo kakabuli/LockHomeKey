@@ -219,7 +219,7 @@ public class SearchDevicePresenter<T> extends BasePresenter<ISearchDeviceView> {
                                 readSn(bleStateBean.getBleVersion());
                             }else if (bleStateBean.getBleVersion() == 1){ //最老的模块，走老的流程
                                 if (mViewRef.get() != null) {
-                                    mViewRef.get().onConnectedAndIsOldMode(bleStateBean.getBleVersion());
+                                    mViewRef.get().onConnectedAndIsOldMode(bleStateBean.getBleVersion(),isBind);
                                 }
                             }
                         } else {
