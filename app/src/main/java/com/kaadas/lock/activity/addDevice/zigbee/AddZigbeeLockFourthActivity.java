@@ -117,11 +117,15 @@ public class AddZigbeeLockFourthActivity extends BaseActivity<IAddZigbeeLockView
     public void netInFail() {
         Intent failIntent=new Intent(this,AddZigbeeLockFailActivity.class);
         startActivity(failIntent);
+        finish();
         LogUtils.e("设备入网失败");
     }
 
     @Override
     public void netInThrowable() {
+        Intent failIntent=new Intent(this,AddZigbeeLockFailActivity.class);
+        startActivity(failIntent);
+        finish();
         LogUtils.e("设备入网异常");
     }
 
@@ -142,7 +146,11 @@ public class AddZigbeeLockFourthActivity extends BaseActivity<IAddZigbeeLockView
 
     @Override
     public void addZigbeeFail() {
-        LogUtils.e("设备添加失败");
+        Intent failIntent=new Intent(this,AddZigbeeLockFailActivity.class);
+        startActivity(failIntent);
+        finish();
+        LogUtils.e("设备添加异常");
+
     }
 
     @Override

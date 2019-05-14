@@ -36,8 +36,8 @@ public class AddBluetoothThirdActivity extends BaseActivity<IBindBleView, BindBl
     TextView tvNotice;
     private boolean isBind;
     private String password1;
-    private boolean bindSuccess;
     private String deviceName;
+    private int version;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -47,9 +47,12 @@ public class AddBluetoothThirdActivity extends BaseActivity<IBindBleView, BindBl
         Intent intent = getIntent();
         password1 = intent.getStringExtra(KeyConstants.PASSWORD1);
         isBind = intent.getBooleanExtra(KeyConstants.IS_BIND, true);
+        version = intent.getIntExtra(KeyConstants.BLE_VERSION,0);
         //pwd1设置给Presenter使用
-        mPresenter.setPwd1(password1, isBind);
+        mPresenter.setPwd1(password1, isBind,version);
         ButterKnife.bind(this);
+
+        LogUtils.e("是否绑定流程   " + isBind);
 
         initView();
     }
@@ -66,6 +69,7 @@ public class AddBluetoothThirdActivity extends BaseActivity<IBindBleView, BindBl
         } else {
             tvNotice.setText(R.string.device_add_third_content_exit_net);
         }
+        alreadyPairNetwork.setClickable(false);
         alreadyPairNetwork.setTextColor(Color.parseColor("#7f7f7f"));
     }
 
@@ -92,7 +96,6 @@ public class AddBluetoothThirdActivity extends BaseActivity<IBindBleView, BindBl
     public void onBindSuccess(String deviceName) {
         this.deviceName = deviceName;
         LogUtils.e("绑定成功   " + deviceName);
-        bindSuccess = true;
         alreadyPairNetwork.setTextColor(Color.parseColor("#1F96F7"));
         alreadyPairNetwork.setClickable(true);
     }

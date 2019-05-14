@@ -54,11 +54,14 @@ public interface ISearchDeviceView extends IBaseView {
      */
     void onConnectSuccess();
 
+    /**
+     * 连接成功   而且是最老的模块
+     */
+    void onConnectedAndIsOldMode(int version,boolean isBind);
 
     /**
      * 连接失败
      */
-
     void onConnectFailed();
 
     /**
@@ -82,7 +85,7 @@ public interface ISearchDeviceView extends IBaseView {
     /**
      * 获取pwd1成功
      */
-    void getPwd1Success(String pwd1, boolean isBind);
+    void getPwd1Success(String pwd1, boolean isBind,int version);
 
 
     /**

@@ -72,8 +72,6 @@ public class BleService extends Service {
     private boolean bleIsEnable = false; //蓝牙是否已开启
     private long lastReceiveDataTime = 0;
     private static final long releaseTimeToBackground = 20 * 1000;
-
-
     /**
      * 蓝牙开关状态的监听
      */
@@ -128,10 +126,13 @@ public class BleService extends Service {
     private BluetoothLeScanner bluetoothLeScanner;
     private ScanSettings scanSettings;
     private String currentMac;
+    private int bleVersion;
 
+    public int getBleVersion(){
+        return bleVersion;
+    }
 
     public PublishSubject<BleDataBean> listeneDataChange() {
-
         return dataChangeSubject;
     }
 
@@ -224,7 +225,7 @@ public class BleService extends Service {
      */
     public void release() {
         synchronized (this) {
-            connectStateSubject.onNext(new BleStateBean(false, bluetoothGatt == null ? null : bluetoothGatt.getDevice() ));
+            connectStateSubject.onNext(new BleStateBean(false, bluetoothGatt == null ? null : bluetoothGatt.getDevice(), -1));
             if (bluetoothGatt != null) {
                 bluetoothGatt.disconnect();
                 boolean isRefresh = refreshBleCatch(bluetoothGatt);
@@ -368,7 +369,7 @@ public class BleService extends Service {
                 //断开连接  有时候是用户断开的  有时候是异常断开。
                 LogUtils.e("断开连接  ");
                 isConnected = false;
-                connectStateSubject.onNext(new BleStateBean(false, gatt == null ? null : gatt.getDevice() ));
+                connectStateSubject.onNext(new BleStateBean(false, gatt == null ? null : gatt.getDevice(), -1));
                 release();
             }
         }
@@ -731,15 +732,18 @@ public class BleService extends Service {
             }
         }
         LogUtils.e("模块版本是   " + type);
+        bleVersion = type;
         isConnected = true;
-        connectStateSubject.onNext(new BleStateBean(true, gatt.getDevice() ));
-        handler.postDelayed(sendHeart, heartInterval);
+        connectStateSubject.onNext(new BleStateBean(true, gatt.getDevice(), type));
         LogUtils.e("连接成功  mac  " + gatt.getDevice().getAddress() + "  name  " + gatt.getDevice().getName());
         // 连接成功时需要读取大量数据
         openHighMode(true);
         connectSubject.onNext(true);  //连接成功  通知上层
         lastReceiveDataTime = System.currentTimeMillis();
-        handler.post(sendHeart);
+        if (bleVersion != 1) {
+            LogUtils.e("发送心跳  "+"  版本号为  " + bleVersion);
+            handler.post(sendHeart);
+        }
     }
 
     private int getTypeByServices(List<BluetoothGattService> gattServices) {
@@ -748,7 +752,7 @@ public class BleService extends Service {
         boolean isFFE1 = false; //最新版本才有的特征值UUID 2019年5月9日
 
         for (BluetoothGattService gattService : gattServices) {
-            LogUtils.e("服务UUID  "+gattService.getUuid().toString());
+            LogUtils.e("服务UUID  " + gattService.getUuid().toString());
             if (gattService.getUuid().toString().equalsIgnoreCase(BLeConstants.OAD_RESET_TI_SERVICE)) {
                 isFFD0 = true;
             }
@@ -756,7 +760,7 @@ public class BleService extends Service {
                 is1802 = true;
             }
             for (BluetoothGattCharacteristic characteristic : gattService.getCharacteristics()) {
-                LogUtils.e("    特征UUID  "+characteristic.getUuid().toString());
+                LogUtils.e("    特征UUID  " + characteristic.getUuid().toString());
                 if (characteristic.getUuid().toString().equalsIgnoreCase(BLeConstants.PROTOCOL_VERSION_CHAR)) {
                     isFFE1 = true;
                 }
@@ -779,6 +783,7 @@ public class BleService extends Service {
 
     /**
      * 发送数据
+     *
      * @param gatt
      * @param characteristic
      * @param command
@@ -847,6 +852,7 @@ public class BleService extends Service {
     public BleLockInfo getBleLockInfo() {
         return bleLockInfo;
     }
+
     public synchronized void setBleLockInfo(BleLockInfo currentBleDevice) {
         if (bleLockInfo != null && !bleLockInfo.getServerLockInfo().getLockName().equals(currentBleDevice.getServerLockInfo().getLockName())) {
             bleLockInfo.setAuth(false);

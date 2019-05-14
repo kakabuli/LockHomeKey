@@ -31,7 +31,6 @@ public class AddZigbeeLockPresenter<T> extends BasePresenter<IAddZigbeeLockView>
         if (mqttService!=null&&mqttService.getMqttClient()!=null&&mqttService.getMqttClient().isConnected()){
             MqttMessage mqttMessage = MqttCommandFactory.setJoinAllow(MyApplication.getInstance().getUid(),gatewayId,gatewayId);
             addZigbeeDisposable=mqttService.mqttPublish(MqttConstant.getCallTopic(MyApplication.getInstance().getUid()),mqttMessage)
-                    .compose(RxjavaHelper.observeOnMainThread())
                     .filter(new Predicate<MqttData>() {
                         @Override
                         public boolean test(MqttData mqttData) throws Exception {
@@ -42,7 +41,8 @@ public class AddZigbeeLockPresenter<T> extends BasePresenter<IAddZigbeeLockView>
                             return false;
                         }
                     })
-                    .timeout(10*1000, TimeUnit.MILLISECONDS)
+                    .compose(RxjavaHelper.observeOnMainThread())
+                    .timeout(30*1000, TimeUnit.MILLISECONDS)
                     .subscribe(new Consumer<MqttData>() {
                         @Override
                         public void accept(MqttData mqttData) throws Exception {
@@ -50,7 +50,6 @@ public class AddZigbeeLockPresenter<T> extends BasePresenter<IAddZigbeeLockView>
                             toDisposable(addZigbeeDisposable);
                             SetJoinAllowBean setJoinAllowBean=new Gson().fromJson(mqttData.getPayload(),SetJoinAllowBean.class);
                             if (setJoinAllowBean!=null){
-                                toDisposable(addZigbeeDisposable);
                                 if ("200".equals(setJoinAllowBean.getReturnCode())){
                                         if (mViewRef.get()!=null){
                                             mViewRef.get().netInSuccess();

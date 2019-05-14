@@ -21,12 +21,14 @@ public class DaoMaster extends AbstractDaoMaster {
 
     /** Creates underlying database table using DAOs. */
     public static void createAllTables(Database db, boolean ifNotExists) {
+        GatewayLockAlarmEventDaoDao.createTable(db, ifNotExists);
         HistoryInfoDao.createTable(db, ifNotExists);
         ZigbeeEventDao.createTable(db, ifNotExists);
     }
 
     /** Drops underlying database table using DAOs. */
     public static void dropAllTables(Database db, boolean ifExists) {
+        GatewayLockAlarmEventDaoDao.dropTable(db, ifExists);
         HistoryInfoDao.dropTable(db, ifExists);
         ZigbeeEventDao.dropTable(db, ifExists);
     }
@@ -47,6 +49,7 @@ public class DaoMaster extends AbstractDaoMaster {
 
     public DaoMaster(Database db) {
         super(db, SCHEMA_VERSION);
+        registerDaoClass(GatewayLockAlarmEventDaoDao.class);
         registerDaoClass(HistoryInfoDao.class);
         registerDaoClass(ZigbeeEventDao.class);
     }

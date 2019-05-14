@@ -295,11 +295,18 @@ public class GatewayPasswordManagerActivity extends BaseActivity<GatewayLockFunc
 
     @Override
     public void getLockInfoFail() {
+        if (loadingDialog!=null){
+            loadingDialog.dismiss();
+        }
+
         LogUtils.e("获取到锁信息失败   ");
     }
 
     @Override
     public void getLockInfoThrowable(Throwable throwable) {
+        if (loadingDialog!=null){
+            loadingDialog.dismiss();
+        }
         LogUtils.e("获取到锁信息异常   ");
     }
 

@@ -22,6 +22,16 @@ public class ServerBleDevice implements Serializable {
     private String password2;
     private String model;
     private long createTime;
+    private String bleVersion;
+
+    public String getBleVersion() {
+        return bleVersion;
+    }
+
+    public void setBleVersion(String bleVersion) {
+        this.bleVersion = bleVersion;
+    }
+
     public String get_id() {
         return _id;
     }

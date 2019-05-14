@@ -103,7 +103,6 @@ public class AddBluetoothSearchActivity extends BaseActivity<ISearchDeviceView, 
         mPresenter.detachView();
     }
 
-
     private void initView() {
         searchRecycler.setLayoutManager(new LinearLayoutManager(this));
         dividerItemDecoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
@@ -129,7 +128,6 @@ public class AddBluetoothSearchActivity extends BaseActivity<ISearchDeviceView, 
             public void left() {
 
             }
-
             @Override
             public void right() {
                 //重新搜索设备.
@@ -232,12 +230,12 @@ public class AddBluetoothSearchActivity extends BaseActivity<ISearchDeviceView, 
     }
 
     private void binding(BluetoothDevice device, Boolean bindFlag, String content) {
+        hiddenLoading();
         AlertDialogUtil.getInstance().noEditTwoButtonDialog(this, getString(R.string.hint), content, getString(R.string.cancel), getString(R.string.query), new AlertDialogUtil.ClickListener() {
             @Override
             public void left() {
-                hiddenLoading();
-            }
 
+            }
             @Override
             public void right() {
                 mPresenter.bindDevice(device, bindFlag);
@@ -282,6 +280,15 @@ public class AddBluetoothSearchActivity extends BaseActivity<ISearchDeviceView, 
     }
 
     @Override
+    public void onConnectedAndIsOldMode(int version,boolean isBind) {
+        Intent nextIntent = new Intent(this, AddBluetoothSecondActivity.class);
+//        nextIntent.putExtra(KeyConstants.DEVICE_TYPE, type);  //传递设备类型过去
+        nextIntent.putExtra(KeyConstants.BLE_VERSION, version);
+        nextIntent.putExtra(KeyConstants.IS_BIND, isBind);
+        startActivity(nextIntent);
+    }
+
+    @Override
     public void onConnectFailed() {
 //        showLoading(getString(R.string.connect_failed));
         hiddenLoading();
@@ -305,16 +312,20 @@ public class AddBluetoothSearchActivity extends BaseActivity<ISearchDeviceView, 
 //        showLoading(getString(R.string.read_pwd1));
     }
 
+
     @Override
-    public void getPwd1Success(String pwd1, boolean isBind) {
+    public void getPwd1Success(String pwd1, boolean isBind,int version) {
         LogUtils.e("获取到pwd1   传递给下一个界面" + pwd1);
         Intent nextIntent = new Intent(this, AddBluetoothSecondActivity.class);
 //        nextIntent.putExtra(KeyConstants.DEVICE_TYPE, type);  //传递设备类型过去
         nextIntent.putExtra(KeyConstants.PASSWORD1, pwd1);  //
         nextIntent.putExtra(KeyConstants.IS_BIND, isBind);
+        nextIntent.putExtra(KeyConstants.BLE_VERSION, version);
         startActivity(nextIntent);
         hiddenLoading();
     }
+
+
 
 
     @Override
