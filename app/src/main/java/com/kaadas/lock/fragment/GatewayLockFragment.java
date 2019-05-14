@@ -84,7 +84,7 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
         initRecycleView();
         initListener();
         initData();
-
+        changeOpenLockStatus(1);
         return view;
     }
 
@@ -255,7 +255,6 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
                     intent.putExtra(KeyConstants.DEVICE_ID,deviceId);
                     startActivity(intent);
                 }
-
                 break;
         }
     }
