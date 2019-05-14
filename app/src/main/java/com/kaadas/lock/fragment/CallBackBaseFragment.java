@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -18,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.adapter.TimeAdapter;
 import com.kaadas.lock.bean.MyDate;
@@ -25,6 +27,8 @@ import com.kaadas.lock.mvp.mvpbase.BasePresenter;
 import com.kaadas.lock.mvp.mvpbase.IBaseView;
 import com.kaadas.lock.utils.Constants;
 import com.kaadas.lock.utils.LoadingDialog;
+import com.kaadas.lock.utils.SPUtils2;
+import com.kaadas.lock.utils.ftp.GeTui;
 import com.kaadas.lock.widget.GravityPopup;
 
 import org.greenrobot.eventbus.EventBus;
@@ -89,12 +93,17 @@ public abstract class CallBackBaseFragment<T extends IBaseView, V
     int currentyear=-1;
     int currentMonth=-1;
 
+
     protected V mPresenter;
     private LoadingDialog loadingDialog;
     private Handler bHandler = new Handler();
 
     String deviceId = "";
     String gatewayId="";
+
+    String lastSelectMonth="";
+    String lastSelectYear="";
+    boolean snapShotFragment=false;
     /**
      * @param savedInstanceState
      */
@@ -111,6 +120,7 @@ public abstract class CallBackBaseFragment<T extends IBaseView, V
         if (getArguments() != null) {
             deviceId = getArguments().getString(Constants.DEVICE_ID);
             gatewayId= getArguments().getString(Constants.GATEWAY_ID);
+            snapShotFragment= getArguments().getBoolean(Constants.ISRECORDINGFRAGMENT);
         }
     }
     /**
@@ -147,6 +157,7 @@ public abstract class CallBackBaseFragment<T extends IBaseView, V
     public abstract View initView(LayoutInflater inflater, ViewGroup container);
 
     public abstract void initOtherFunction();
+    boolean isSnapShotFragment=false;
     public void initDatePicker(){
         year_select_ll.setOnClickListener(this);
         day_select_ll.setOnClickListener(this);
@@ -178,11 +189,29 @@ public abstract class CallBackBaseFragment<T extends IBaseView, V
             }
             dateList.add(is);
         }
-
-
+        String defaultCurrentDate=null;
+        if(month<10){
+            defaultCurrentDate= year+"0"+month;
+        }else {
+            defaultCurrentDate= year+month+"";
+        }
+        if(day<10){
+            defaultCurrentDate= defaultCurrentDate+"0"+day;
+        }else {
+            defaultCurrentDate=defaultCurrentDate+day;
+        }
+        String key= deviceId+defaultCurrentDate;
+        String str_d=(String) SPUtils2.get(MyApplication.getInstance(),key,"");
+        Log.e(GeTui.VideoLog,"isSnapShotFragment------>:"+snapShotFragment+" key:"+key+"  str0:"+str_d);
         if(day<7){  //当日日期小于7天涉及上到一个月
             MyDate myDate=new MyDate(day, weeks[week]);
-            myDate.setChecked(true);
+            if(!snapShotFragment){
+                myDate.setChecked(true);
+            }else {
+                if(!TextUtils.isEmpty(str_d)){
+                    myDate.setChecked(true);
+                }
+            }
             myDateList.add(myDate);
             for (int i = 1; i <= 6; i++) {
                 todayc.add(Calendar.DAY_OF_MONTH, -1);// 前一天
@@ -199,7 +228,13 @@ public abstract class CallBackBaseFragment<T extends IBaseView, V
             for (int i = day; i > 0; i--) {
                 MyDate myDate=new MyDate(i, weeks[week]);
                 if(i==day){
-                    myDate.setChecked(true);
+                    if(!snapShotFragment ){
+                        myDate.setChecked(true);
+                    }else {
+                        if(!TextUtils.isEmpty(str_d)){
+                            myDate.setChecked(true);
+                        }
+                    }
                 }
                 week--;
                 if(week==-1){
@@ -240,6 +275,20 @@ public abstract class CallBackBaseFragment<T extends IBaseView, V
 //                if(select_year==year){
 //                    return;
 //                }
+
+
+                // 2019
+                // 2018
+                if(lastSelectYear.equals("")){
+                    lastSelectYear= year+"";
+                }
+                if(select.equals(lastSelectYear)){
+                    lastSelectYear=select;
+                    mPopupWindow.dismiss();
+                    return;
+                }
+                lastSelectYear=select;
+
                 int month0= Integer.parseInt(time_tv.getText().toString());
                 //   int year0=  Integer.parseInt(year_tv.getText().toString());
                 int year0= Integer.parseInt(select);
@@ -293,11 +342,25 @@ public abstract class CallBackBaseFragment<T extends IBaseView, V
         mPopupWindow.setPopupGravity(gravity);
         mPopupWindow.setBackground(0);
 
+
         // 月份
         date_mPopupWindow = new GravityPopup(getActivity(),dateList);
         date_mPopupWindow.setHidePopup(new GravityPopup.HidePopup() {
             @Override
             public void hidepopupMethod(String select) {
+                // 5 月份
+                // 4 月份
+                if(lastSelectMonth.equals("")){
+                    lastSelectMonth= month+"";
+                }
+                if(select.equals(lastSelectMonth)){
+                    lastSelectMonth=select;
+                    date_mPopupWindow.dismiss();
+                    return;
+                }
+                lastSelectMonth=select;
+                Log.e(GeTui.VideoLog,"lastSelect:"+lastSelectMonth);
+
                 time_tv.setText(select);
                 date_mPopupWindow.dismiss();
 
@@ -352,11 +415,28 @@ public abstract class CallBackBaseFragment<T extends IBaseView, V
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
 
+//                for (int i=0;i<myDateList.size();i++){
+//                    boolean isSelect= myDateList.get(0).isChecked();
+//                    if(isSelect){
+//                        myDateList.get(i).setChecked(false);
+//                        timeAdapter.notifyItemChanged(position);
+//                    }
+//                }
+                int date_month=Integer.parseInt(time_tv.getText().toString());
+                String date_year =  year_tv.getText().toString();
+
+                if(date_month==month && date_year.equals(year+"")){
+
+                }else {
+                    Log.e(GeTui.VideoLog,"date_month:"+date_month+"month:"+month+" year:"+year+" date_year:"+date_year);
+                     for (int i=0;i<current_month_date.size();i++){
+                         current_month_date.get(i).setChecked(false);
+                    }
+                }
                 boolean isSelect= myDateList.get(0).isChecked();
                 if(isSelect){
                     myDateList.get(0).setChecked(false);
                     timeAdapter.notifyItemChanged(0);
-                  //  Toast.makeText(getActivity(),isSelect+"", Toast.LENGTH_LONG).show();
                 }
 
                 if(lastView!=null){
@@ -370,7 +450,7 @@ public abstract class CallBackBaseFragment<T extends IBaseView, V
                     lastBottom.setTextColor(Color.parseColor("#333333"));
                 }
 
-                if(lastPosition!=-1){
+                if(lastPosition!=-1 && lastPosition<myDateList.size()){
                     myDateList.get(lastPosition).setChecked(false);
                 }
 
