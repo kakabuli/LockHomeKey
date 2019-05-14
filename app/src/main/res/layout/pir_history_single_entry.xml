@@ -38,10 +38,6 @@
 
 
 
-
-
-
-
         <RelativeLayout
             android:id="@+id/pir_img_rl"
             android:layout_width="80dp"
