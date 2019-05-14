@@ -822,7 +822,7 @@
     <string name="data_get_loading">数据获取中...</string>
     <string name="pull_refefresh_new_data">下拉刷新查看最新数据</string>
     <string name="history_pir_no">快照不存在</string>
-    <string name="snap_select_data">请求选择日期</string>
+    <string name="snap_select_data">请选择日期</string>
     <string name="pir_ftp_fail">下载失败,请检查SD卡状态</string>
     <string name="ftp_connection_fail">下载失败,FTP连接失败</string>
     <string name="ftp_login_fail">下载失败,FTP登录失败</string>
@@ -898,4 +898,5 @@
     <string name="validation_failed_three_times">验证3次失败报警</string>
     <string name="pick_proof">防撬报警</string>
     <string name="stress_alarm">胁迫报警</string>
+    <string name="name_select_fail">查询失败</string>
 </resources>

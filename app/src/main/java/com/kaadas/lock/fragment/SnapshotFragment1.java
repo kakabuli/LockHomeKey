@@ -186,6 +186,8 @@ public class SnapshotFragment1 extends CallBackBaseFragment<ISnapShotView, SnapP
                     }
                     timeAdapter.notifyDataSetChanged();
 
+                    time_select_rl.scrollToPosition(0);
+
                     if(month<10){
                         currentDate = year+"0"+month;
                     }else {
@@ -421,11 +423,23 @@ public class SnapshotFragment1 extends CallBackBaseFragment<ISnapShotView, SnapP
     public void getPirData(int position) {
         super.getPirData(position);
         int selectDay= myDateList.get(position).getDay();
-        if(selectDay<10){
-            currentDate = year_tv.getText().toString()+ time_tv.getText().toString()+""+"0"+myDateList.get(position).getDay();
-        }else{
-            currentDate = year_tv.getText().toString()+ time_tv.getText().toString()+""+myDateList.get(position).getDay();
+        int selectMonth= Integer.parseInt(time_tv.getText().toString());
+
+        if(selectMonth==0 && selectDay==0){
+            Toast.makeText(getActivity(),getString(R.string.name_select_fail),Toast.LENGTH_LONG).show();
+            return;
         }
+        if(selectMonth < 10){
+            currentDate = year_tv.getText().toString()+"0"+selectMonth;
+        }else {
+            currentDate = year_tv.getText().toString()+selectMonth;
+        }
+        if(selectDay<10){
+            currentDate = currentDate+"0"+myDateList.get(position).getDay();
+        }else{
+            currentDate = currentDate+myDateList.get(position).getDay();
+        }
+
         pir_history_all_ll.setVisibility(View.GONE);
         catEyeCount=0;
         pir_history_all_ll.setVisibility(View.GONE);
@@ -443,6 +457,7 @@ public class SnapshotFragment1 extends CallBackBaseFragment<ISnapShotView, SnapP
         dialog.setCanceledOnTouchOutside(false);// 设置点击屏幕其他地方Dialog不消失
         dialog.setCancelable(false);//点击返回键不消失
         String key= deviceId+currentDate+"";
+        Log.e(GeTui.VideoLog,"key------->:"+key);
         String str0=(String) SPUtils2.get(MyApplication.getInstance(),key,"");
         if(!TextUtils.isEmpty(str0)){
             if(newimageList!=null && newimageList.size()>0 && lastDate!=null  && lastDate.equals(currentDate)){
@@ -577,8 +592,11 @@ public class SnapshotFragment1 extends CallBackBaseFragment<ISnapShotView, SnapP
                 String item = imageList.get(position);
                 String item_key=item+ PirConst.IMG_DOWNLOAD_SUC;
                 SPUtils2.remove(getActivity(),item_key);
+                SPUtils2.remove(getActivity(),item);
                 imageList.remove(position);
-
+                String key=deviceId+item.split(" ")[0].replace("-","");
+                String result= new Gson().toJson(newimageList);
+                SPUtils2.put(getActivity(),key,result);
                 Log.e("denganzhi3","audiofile:"+imagefile.getAbsolutePath());
                 Log.e("denganzhi3","audiofile:"+audiofile.getAbsolutePath());
                 Log.e("denganzhi3","audiofile:"+h264file.getAbsolutePath());
@@ -602,6 +620,8 @@ public class SnapshotFragment1 extends CallBackBaseFragment<ISnapShotView, SnapP
                 }catch (Exception e){
                 //	Toast.makeText(getActivity(),getActivity().getResources().getString(R.string.delete_error),Toast.LENGTH_SHORT).show();
                 }
+
+
 
                 pirHistoryAdapter.notifyItemRemoved(position);
 
@@ -697,8 +717,10 @@ public class SnapshotFragment1 extends CallBackBaseFragment<ISnapShotView, SnapP
                 lastDate= currentDate;
                 showPirHistoryData();
             }else{
+
             }
         }else{
+            Toast.makeText(getActivity(),getString(R.string.snap_select_data),Toast.LENGTH_LONG).show();
         }
     }
 
