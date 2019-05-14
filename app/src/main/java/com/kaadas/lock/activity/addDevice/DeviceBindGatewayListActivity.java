@@ -18,9 +18,11 @@ import com.kaadas.lock.activity.addDevice.cateye.AddDeviceCatEyeFirstActivity;
 import com.kaadas.lock.activity.addDevice.gateway.AddGatewayFirstActivity;
 import com.kaadas.lock.activity.addDevice.zigbee.AddZigbeeLockFirstActivity;
 import com.kaadas.lock.adapter.AddZigbeeBindGatewayAdapter;
+import com.kaadas.lock.bean.HomeShowBean;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.bean.deviceAdd.AddZigbeeBindGatewayBean;
 import com.kaadas.lock.mvp.presenter.deviceaddpresenter.DeviceGatewayBindListPresenter;
+import com.kaadas.lock.publiclibrary.bean.GatewayInfo;
 import com.kaadas.lock.publiclibrary.bean.ServerGatewayInfo;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.GetBindGatewayListResult;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.GwWiFiBaseInfo;
@@ -69,6 +71,7 @@ public class DeviceBindGatewayListActivity extends BaseActivity<DeviceGatewayBin
         Intent intent = getIntent();
         type = intent.getIntExtra("type", 0);
         initData();
+        initView();
     }
 
     @Override
@@ -77,16 +80,6 @@ public class DeviceBindGatewayListActivity extends BaseActivity<DeviceGatewayBin
 
     }
 
-    private void initRefresh() {
-        refresh.setEnableLoadMore(false);
-        refresh.setOnRefreshListener(new OnRefreshListener() {
-            @Override
-            public void onRefresh(@NonNull RefreshLayout refreshLayout) {
-                mPresenter.getBindGatewayList();
-            }
-        });
-
-    }
 
     @Override
     protected DeviceGatewayBindListPresenter<DeviceGatewayBindListView> createPresent() {
@@ -95,14 +88,27 @@ public class DeviceBindGatewayListActivity extends BaseActivity<DeviceGatewayBin
 
 
     private void initData() {
-        mPresenter.getBindGatewayList();
+     List<HomeShowBean> homeShowBeans=mPresenter.getGatewayBindList();
+     for (HomeShowBean homeShowBean:homeShowBeans){
+         AddZigbeeBindGatewayBean addZigbeeBindGatewayBean=new AddZigbeeBindGatewayBean();
+         GatewayInfo gatewayInfo= (GatewayInfo) homeShowBean.getObject();
+         addZigbeeBindGatewayBean.setNickName(gatewayInfo.getServerInfo().getDeviceNickName());
+         addZigbeeBindGatewayBean.setAdminId(gatewayInfo.getServerInfo().getAdminName());
+         addZigbeeBindGatewayBean.setGatewayId(gatewayInfo.getServerInfo().getDeviceSN());
+         addZigbeeBindGatewayBean.setSelect(false);
+         if ("offline".equals(gatewayInfo.getEvent_str())){
+             addZigbeeBindGatewayBean.setIsOnLine(0);
+         }else if ("online".equals(gatewayInfo.getEvent_str())){
+             addZigbeeBindGatewayBean.setIsOnLine(1);
+         }
+         mList.add(addZigbeeBindGatewayBean);
+     }
         mPresenter.getGatewayState();
     }
 
     private void initView() {
         recycler.setLayoutManager(new LinearLayoutManager(this));
-        if (mList != null&&mList.size()>0) {
-            initRefresh();
+        if (mList != null) {
             addZigbeeBindGatewayAdapter = new AddZigbeeBindGatewayAdapter(mList);
             recycler.setAdapter(addZigbeeBindGatewayAdapter);
             addZigbeeBindGatewayAdapter.setOnItemClickListener(this);
@@ -159,60 +165,7 @@ public class DeviceBindGatewayListActivity extends BaseActivity<DeviceGatewayBin
         addZigbeeBindGatewayAdapter.notifyDataSetChanged();
     }
 
-    @Override
-    public void getGatewayBindList(List<ServerGatewayInfo> bindGatewayList) {
-        LogUtils.e("getGatewayBindList","getGatewayBindList请求成功");
-        if (refresh!=null){
-            refresh.finishRefresh();
-        }
-            mList.clear();
-            if (bindGatewayList!=null&&bindGatewayList.size()>0){
-                for (ServerGatewayInfo bindGatewayItem:bindGatewayList){
-                    AddZigbeeBindGatewayBean addZigbeeBindGatewayBean=new AddZigbeeBindGatewayBean();
-                    addZigbeeBindGatewayBean.setNickName(bindGatewayItem.getDeviceNickName());
-                    addZigbeeBindGatewayBean.setAdminId(bindGatewayItem.getAdminName());
-                    addZigbeeBindGatewayBean.setGatewayId(bindGatewayItem.getDeviceSN());
-                    addZigbeeBindGatewayBean.setSelect(false);
-                    String status= (String) SPUtils.getProtect(bindGatewayItem.getDeviceSN(),"");
-                    if ("offline".equals(status)){
-                        addZigbeeBindGatewayBean.setIsOnLine(0);
-                    }else if ("online".equals(status)){
-                        addZigbeeBindGatewayBean.setIsOnLine(1);
-                    }
-                    mList.add(addZigbeeBindGatewayBean);
-                }
-                if (addZigbeeBindGatewayAdapter==null){
-                    initView();
-                }else{
-                    addZigbeeBindGatewayAdapter.notifyDataSetChanged();
-                }
-            }
-    }
 
-    @Override
-    public void getGatewayBindFail() {
-        LogUtils.e("获取网关列表失败");
-        if (refresh!=null){
-            refresh.finishRefresh();
-        }
-
-    }
-
-    @Override
-    public void bindGatewayPublishFail(String fuc) {
-        LogUtils.e("获取网关列表发布失败");
-        if (refresh!=null){
-            refresh.finishRefresh();
-        }
-    }
-
-    @Override
-    public void getGatewayThrowable(Throwable throwable) {
-        LogUtils.e("获取网关列表异常");
-        if (refresh!=null){
-            refresh.finishRefresh();
-        }
-    }
 
     @Override
     public void getGatewayStateSuccess(String deviceId,String gatewayState) {
@@ -220,11 +173,20 @@ public class DeviceBindGatewayListActivity extends BaseActivity<DeviceGatewayBin
        //通知网关状态改变了
         //需要修改
         if (mList!=null&&mList.size()>0){
-               for (AddZigbeeBindGatewayBean addZigbeeBindGatewayBean:mList){
-                    if (addZigbeeBindGatewayBean.getGatewayId().equals(deviceId)){
-                        mPresenter.getBindGatewayList();
-                    }
-               }
+             for (AddZigbeeBindGatewayBean addZigbeeBindGatewayBean:mList){
+                 if (gatewayState.equals(addZigbeeBindGatewayBean.getGatewayId())){
+                     if ("online".equals(gatewayState)){
+                         //在线
+                         addZigbeeBindGatewayBean.setIsOnLine(1);
+                     }else{
+                         //离线
+                         addZigbeeBindGatewayBean.setIsOnLine(0);
+                     }
+                 }
+             }
+             if (addZigbeeBindGatewayAdapter!=null) {
+                 addZigbeeBindGatewayAdapter.notifyDataSetChanged();
+             }
         }
     }
 

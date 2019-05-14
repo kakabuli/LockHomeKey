@@ -137,6 +137,7 @@ dependencies {
     //微信分享
     implementation 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:+'
     implementation 'org.greenrobot:greendao:3.2.2'
+    implementation 'net.zetetic:android-database-sqlcipher:3.4.0@aar'
     implementation 'com.getui:sdk:2.13.0.0'
     implementation project(':imagepicker')
     implementation project(':linphoneLibrary')

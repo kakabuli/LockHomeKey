@@ -96,8 +96,10 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
     private void initData() {
         gatewayLockInfo= (GwLockInfo) getArguments().getSerializable(KeyConstants.GATEWAY_LOCK_INFO);
         if (gatewayLockInfo!=null){
+            LogUtils.e(gatewayLockInfo.getGwID()+"网关ID是    ");
             gatewayId=gatewayLockInfo.getGwID();
             deviceId=gatewayLockInfo.getServerInfo().getDeviceId();
+            // TODO: 2019/5/13 刷新设备列表的时候又会重新请求一次。记得处理
             mPresenter.openGatewayLockRecord(gatewayId,deviceId,MyApplication.getInstance().getUid(),1,3);
         }
 
@@ -323,6 +325,7 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
     @Override
     public void getOpenLockRecordSuccess(List<SelectOpenLockResultBean.DataBean> mOpenLockRecordList) {
         groupData(mOpenLockRecordList);
+        LogUtils.e("请求到数据是。。。。"+mOpenLockRecordList.size());
         if (openLockRecordAdapter!=null){
             openLockRecordAdapter.notifyDataSetChanged();
         }

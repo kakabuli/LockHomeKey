@@ -128,6 +128,13 @@ public class GatewayEquipmentDynamicActivity extends AppCompatActivity implement
                     fragmentTransaction.show(gatewayWarnInformationFragment);
                 } else {
                     gatewayWarnInformationFragment = new GatewayWarnInformationFragment();
+                    if (!TextUtils.isEmpty(gatewaId)&&!TextUtils.isEmpty(deviceId)){
+                        Bundle gwBundle = new Bundle();
+                        gwBundle.putString(KeyConstants.GATEWAY_ID,gatewaId);
+                        gwBundle.putString(KeyConstants.DEVICE_ID,deviceId);
+                        gatewayWarnInformationFragment.setArguments(gwBundle);
+                    }
+
                     fragmentTransaction.add(R.id.content, gatewayWarnInformationFragment);
                 }
                 fragmentTransaction.commit();

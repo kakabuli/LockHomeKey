@@ -21,17 +21,26 @@ public class AddDeviceBean {
     private String password1;
     private String password2;
     private String model;
+    private String bleVersion;
 
     public AddDeviceBean() {
     }
 
-    public AddDeviceBean(String devmac, String devname, String user_id, String password1, String password2, String model) {
+    public AddDeviceBean(String devmac, String devname, String user_id, String password1, String password2, String model,String bleVersion) {
         this.devmac = devmac;
         this.devname = devname;
         this.user_id = user_id;
         this.password1 = password1;
         this.password2 = password2;
         this.model = model;
+    }
+
+    public String getBleVersion() {
+        return bleVersion;
+    }
+
+    public void setBleVersion(String bleVersion) {
+        this.bleVersion = bleVersion;
     }
 
     public String getModel() {

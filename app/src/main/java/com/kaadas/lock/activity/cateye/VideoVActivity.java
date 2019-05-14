@@ -261,7 +261,6 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
             Intent intent = new Intent(this, CallComingActivity.class);
             startActivityForResult(intent, REQUEST_CODE_CALL_COMING);
         }
-
     }
 
     @Override
