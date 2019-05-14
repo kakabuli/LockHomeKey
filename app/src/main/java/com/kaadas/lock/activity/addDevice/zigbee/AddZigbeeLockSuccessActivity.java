@@ -11,8 +11,6 @@ import android.widget.ImageView;
 
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.MainActivity;
-import com.kaadas.lock.activity.addDevice.DeviceBindGatewayListActivity;
-import com.kaadas.lock.activity.addDevice.DeviceZigBeeDetailActivity;
 import com.kaadas.lock.utils.KeyConstants;
 
 import butterknife.BindView;

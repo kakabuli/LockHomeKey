@@ -408,7 +408,7 @@ public class BluetoothLockFunctionActivity extends BaseBleActivity<IDeviceDetail
 
     @Override
     public void onElectricUpdata(Integer electric) {
-        if (bleLockInfo.getBattery() != -1) {
+        if (bleLockInfo!=null&&bleLockInfo.getBattery() != -1) {
             dealWithPower(bleLockInfo.getBattery());
             //删除成功
             Intent intent = new Intent();

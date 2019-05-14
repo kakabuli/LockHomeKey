@@ -87,6 +87,9 @@ public class GatewayOpenLockRecordFragment extends BaseFragment<IGatewayLockReco
         refreshLayout.setOnLoadMoreListener(new OnLoadMoreListener() {
             @Override
             public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
+                if (mOpenLockList!=null){
+                    mOpenLockList.clear();
+                }
                 if (!TextUtils.isEmpty(gatewayId)&&!TextUtils.isEmpty(deviceId)){
                     mPresenter.openGatewayLockRecord(gatewayId,deviceId,MyApplication.getInstance().getUid(),page,20);
                 }

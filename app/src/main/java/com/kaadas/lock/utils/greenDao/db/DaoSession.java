@@ -8,9 +8,11 @@ import org.greenrobot.greendao.database.Database;
 import org.greenrobot.greendao.identityscope.IdentityScopeType;
 import org.greenrobot.greendao.internal.DaoConfig;
 
+import com.kaadas.lock.utils.greenDao.bean.GatewayLockAlarmEventDao;
 import com.kaadas.lock.utils.greenDao.bean.HistoryInfo;
 import com.kaadas.lock.utils.greenDao.bean.ZigbeeEvent;
 
+import com.kaadas.lock.utils.greenDao.db.GatewayLockAlarmEventDaoDao;
 import com.kaadas.lock.utils.greenDao.db.HistoryInfoDao;
 import com.kaadas.lock.utils.greenDao.db.ZigbeeEventDao;
 
@@ -23,9 +25,11 @@ import com.kaadas.lock.utils.greenDao.db.ZigbeeEventDao;
  */
 public class DaoSession extends AbstractDaoSession {
 
+    private final DaoConfig gatewayLockAlarmEventDaoDaoConfig;
     private final DaoConfig historyInfoDaoConfig;
     private final DaoConfig zigbeeEventDaoConfig;
 
+    private final GatewayLockAlarmEventDaoDao gatewayLockAlarmEventDaoDao;
     private final HistoryInfoDao historyInfoDao;
     private final ZigbeeEventDao zigbeeEventDao;
 
@@ -33,22 +37,32 @@ public class DaoSession extends AbstractDaoSession {
             daoConfigMap) {
         super(db);
 
+        gatewayLockAlarmEventDaoDaoConfig = daoConfigMap.get(GatewayLockAlarmEventDaoDao.class).clone();
+        gatewayLockAlarmEventDaoDaoConfig.initIdentityScope(type);
+
         historyInfoDaoConfig = daoConfigMap.get(HistoryInfoDao.class).clone();
         historyInfoDaoConfig.initIdentityScope(type);
 
         zigbeeEventDaoConfig = daoConfigMap.get(ZigbeeEventDao.class).clone();
         zigbeeEventDaoConfig.initIdentityScope(type);
 
+        gatewayLockAlarmEventDaoDao = new GatewayLockAlarmEventDaoDao(gatewayLockAlarmEventDaoDaoConfig, this);
         historyInfoDao = new HistoryInfoDao(historyInfoDaoConfig, this);
         zigbeeEventDao = new ZigbeeEventDao(zigbeeEventDaoConfig, this);
 
+        registerDao(GatewayLockAlarmEventDao.class, gatewayLockAlarmEventDaoDao);
         registerDao(HistoryInfo.class, historyInfoDao);
         registerDao(ZigbeeEvent.class, zigbeeEventDao);
     }
     
     public void clear() {
+        gatewayLockAlarmEventDaoDaoConfig.clearIdentityScope();
         historyInfoDaoConfig.clearIdentityScope();
         zigbeeEventDaoConfig.clearIdentityScope();
+    }
+
+    public GatewayLockAlarmEventDaoDao getGatewayLockAlarmEventDaoDao() {
+        return gatewayLockAlarmEventDaoDao;
     }
 
     public HistoryInfoDao getHistoryInfoDao() {
