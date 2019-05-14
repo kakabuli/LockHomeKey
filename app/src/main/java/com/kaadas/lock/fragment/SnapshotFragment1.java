@@ -457,7 +457,7 @@ public class SnapshotFragment1 extends CallBackBaseFragment<ISnapShotView, SnapP
         dialog.setCanceledOnTouchOutside(false);// 设置点击屏幕其他地方Dialog不消失
         dialog.setCancelable(false);//点击返回键不消失
         String key= deviceId+currentDate+"";
-        Log.e(GeTui.VideoLog,"key------->:"+key);
+      //  Log.e(GeTui.VideoLog,"key------->:"+key);
         String str0=(String) SPUtils2.get(MyApplication.getInstance(),key,"");
         if(!TextUtils.isEmpty(str0)){
             if(newimageList!=null && newimageList.size()>0 && lastDate!=null  && lastDate.equals(currentDate)){
