@@ -12,6 +12,11 @@ public interface IOldBluetoothDeviceDetailView extends IOldBleLockDetailView {
 
     void onElectricUpdataFailed(Throwable throwable);
 
+    /**
+     * 获取到版本号
+     * @param version
+     */
+    void onBleVersionUpdate(int version);
 
 //    void onStateUpdate(int type);
 

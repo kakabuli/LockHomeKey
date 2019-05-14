@@ -314,7 +314,6 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                         detailIntent.putExtra(KeyConstants.BLE_DEVICE_INFO, bleLockInfo);
                         startActivityForResult(detailIntent,KeyConstants.GET_BLE_POWER);
                     }
-
                 } else {
                     Intent impowerIntent = new Intent(getActivity(), BluetoothLockAuthorizationActivity.class);
                     String model = bleLockInfo.getServerLockInfo().getModel();

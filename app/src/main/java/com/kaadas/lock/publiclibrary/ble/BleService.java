@@ -245,7 +245,7 @@ public class BleService extends Service {
             isConnected = false;
             bluetoothGatt = null;
             currentMac = null;
-
+            bleVersion = 0;
             handler.removeCallbacks(getRemoteDeviceRunnable);
             commands.clear();
             handler.removeCallbacks(sendHeart);

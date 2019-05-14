@@ -763,7 +763,7 @@ public class OldBleLockPresenter<T> extends MyOldOpenLockRecordPresenter<IOldBle
         compositeDisposable.add(oldPowerDisposable);
     }
 
-
+    /////////////////////////////////////////////////////////////////老模块开锁记录////////////////////////////////////////////////////////////
     /**
      * 同步开锁记录
      */
@@ -888,6 +888,10 @@ public class OldBleLockPresenter<T> extends MyOldOpenLockRecordPresenter<IOldBle
         }
         return true;
     }
+
+
+
+
 
 
 }
