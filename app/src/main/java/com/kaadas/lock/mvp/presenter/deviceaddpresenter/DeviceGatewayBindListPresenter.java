@@ -48,23 +48,25 @@ public class DeviceGatewayBindListPresenter<T> extends BasePresenter<DeviceGatew
 
     //获取通知
     public void getGatewayState() {
-        disposable = MyApplication.getInstance().getMqttService().listenerNotifyData()
-                .subscribe(new Consumer<MqttData>() {
-                    @Override
-                    public void accept(MqttData mqttData) throws Exception {
-                        if (mqttData != null) {
-                            if (MqttConstant.GATEWAY_STATE.equals(mqttData.getFunc())) {
-                                GetBindGatewayStatusResult gatewayStatusResult = new Gson().fromJson(mqttData.getPayload(), GetBindGatewayStatusResult.class);
-                                if (gatewayStatusResult != null) {
-                                    if (mViewRef.get() != null) {
-                                        mViewRef.get().getGatewayStateSuccess(gatewayStatusResult.getDevuuid(), gatewayStatusResult.getData().getState());
+        if (mqttService!=null) {
+            disposable = mqttService.listenerNotifyData()
+                    .subscribe(new Consumer<MqttData>() {
+                        @Override
+                        public void accept(MqttData mqttData) throws Exception {
+                            if (mqttData != null) {
+                                if (MqttConstant.GATEWAY_STATE.equals(mqttData.getFunc())) {
+                                    GetBindGatewayStatusResult gatewayStatusResult = new Gson().fromJson(mqttData.getPayload(), GetBindGatewayStatusResult.class);
+                                    if (gatewayStatusResult != null) {
+                                        if (mViewRef.get() != null) {
+                                            mViewRef.get().getGatewayStateSuccess(gatewayStatusResult.getDevuuid(), gatewayStatusResult.getData().getState());
+                                        }
                                     }
                                 }
                             }
                         }
-                    }
-                });
-        compositeDisposable.add(disposable);
+                    });
+            compositeDisposable.add(disposable);
+        }
     }
 
     //获取网关的wifi名称和网关的wifi密码

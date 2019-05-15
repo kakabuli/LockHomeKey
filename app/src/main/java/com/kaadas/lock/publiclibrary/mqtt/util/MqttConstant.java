@@ -152,4 +152,14 @@ public class MqttConstant {
     //设置猫眼的音量
     public static final String SET_BELL_VOLUME="setBellVolume";
 
+    //设置pir徘徊监测
+    public static final String SET_PIR_WANDER="setPirWander";
+
+    //获取静默参数
+    public static final String GET_PIR_SLIENT="getPirSilent";
+
+    //设置静默参数
+    public static final String SET_PIR_SLIENT="setPirSilent";
+
+
 }

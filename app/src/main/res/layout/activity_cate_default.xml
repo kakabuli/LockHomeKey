@@ -13,7 +13,7 @@
     <RelativeLayout
         android:id="@+id/rl_device_name"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="@dimen/dp_60"
         android:background="#FFFFFF">
 
         <TextView
@@ -26,13 +26,13 @@
             android:textSize="@dimen/sp_13" />
 
         <TextView
-            android:id="@+id/tv_device_name"
+            android:id="@+id/periodtime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="@dimen/dp_30"
-            android:text="10"
+            android:text=""
             android:drawablePadding="@dimen/dp_15"
             android:textColor="#999999"
             android:textSize="@dimen/sp_12" />
@@ -48,7 +48,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="@dimen/dp_60"
         android:background="#FFFFFF">
 
         <TextView
@@ -61,12 +61,13 @@
             android:textSize="@dimen/sp_13" />
 
         <TextView
+            android:id="@+id/threshold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="@dimen/dp_30"
-            android:text="10"
+            android:text=""
             android:drawablePadding="@dimen/dp_15"
             android:textColor="#999999"
             android:textSize="@dimen/sp_12" />
@@ -82,7 +83,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="@dimen/dp_60"
         android:background="#FFFFFF">
 
         <TextView
@@ -95,12 +96,13 @@
             android:textSize="@dimen/sp_13" />
 
         <TextView
+            android:id="@+id/protecttime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="@dimen/dp_30"
-            android:text="10"
+            android:text=""
             android:drawablePadding="@dimen/dp_15"
             android:textColor="#999999"
             android:textSize="@dimen/sp_12" />
@@ -115,7 +117,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="@dimen/dp_60"
         android:background="#FFFFFF">
 
         <TextView
@@ -128,12 +130,13 @@
             android:textSize="@dimen/sp_13" />
 
         <TextView
+            android:id="@+id/ust"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="@dimen/dp_30"
-            android:text="10"
+            android:text=""
             android:drawablePadding="@dimen/dp_15"
             android:textColor="#999999"
             android:textSize="@dimen/sp_12" />
@@ -149,7 +152,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="@dimen/dp_60"
         android:background="#FFFFFF">
 
         <TextView
@@ -162,12 +165,13 @@
             android:textSize="@dimen/sp_13" />
 
         <TextView
+            android:id="@+id/maxprohibition"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="@dimen/dp_30"
-            android:text="10"
+            android:text=""
             android:drawablePadding="@dimen/dp_15"
             android:textColor="#999999"
             android:textSize="@dimen/sp_12" />
@@ -182,7 +186,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="@dimen/dp_60"
         android:background="#FFFFFF">
 
         <TextView
@@ -232,7 +236,7 @@
 
 
         <Button
-            android:id="@+id/preview_look_video"
+            android:id="@+id/save"
             android:layout_width="200dp"
             android:layout_height="50dp"
             android:layout_gravity="center_horizontal"

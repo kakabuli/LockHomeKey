@@ -924,4 +924,16 @@
     <string name="pir_default_unit_time">单位时间:</string>
     <string name="pir_default_max_time">倍增最大次数:</string>
     <string name="pir_default_default_method">启动静默策略:</string>
+    <string name="no">无</string>
+    <string name="have">有</string>
+    <string name="next">次</string>
+    <string name="second_time">秒</string>
+    <string name="sd_card">SD卡</string>
+    <string name="please_insert_sd_card">未识别到SD卡，请断开猫眼电源插入SD卡！</string>
+    <string name="close_pir_enable">正在关闭智能监测。。。</string>
+    <string name="open_pir_enable">正在打开智能监测。。。</string>
+    <string name="get_pir_slient_param">正在获取静默参数，请稍后</string>
+    <string name="get_pir_slient_fail">获取pir静默参数失败</string>
+    <string name="please_input_legal_number">请输入1-60的数字</string>
+    <string name="parameter_not_empty">参数不能为空</string>
 </resources>

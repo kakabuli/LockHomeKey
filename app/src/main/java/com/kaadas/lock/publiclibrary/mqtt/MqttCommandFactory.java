@@ -13,6 +13,7 @@ import com.kaadas.lock.publiclibrary.mqtt.publishbean.GetBindGatewayListBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.GetDevicePowerBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.GetGatewayLockInfoBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.GetLockLang;
+import com.kaadas.lock.publiclibrary.mqtt.publishbean.GetPirSlientBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.GetSoundVolume;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.GetWifiBasicBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.LockPwdFuncBean;
@@ -24,6 +25,8 @@ import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetCatEyeBellVolume;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetJoinAllowBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetLockLang;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetPirEnableBean;
+import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetPirSlientBean;
+import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetPirWanderBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetVedioResBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.UpdateDevNickNameBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.WakeupCameraBean;
@@ -433,7 +436,60 @@ public class MqttCommandFactory {
 
     }
 
+    /**
+     * pir徘徊监测
+     * @param uid
+     * @param gatewayId
+     * @param deviceId
+     * @param wander
+     * @return
+     */
+    public static MqttMessage setPirWander(String uid,String gatewayId,String deviceId,String wander){
+        int messageId=getMessageId();
+        SetPirWanderBean.ParamsBean paramsBean=new SetPirWanderBean.ParamsBean();
+        paramsBean.setWander(wander);
+        SetPirWanderBean setPirWanderBean=new SetPirWanderBean(MqttConstant.MSG_TYPE_REQUEST,uid,messageId,gatewayId,deviceId,MqttConstant.SET_PIR_WANDER,paramsBean,"0",new SetPirWanderBean.ReturnDataBean(),System.currentTimeMillis()+"");
+        return getMessage(setPirWanderBean,messageId);
+    }
 
+    /**
+     * 获取静默参数
+     * @param uid
+     * @param gatewayId
+     * @param deviceId
+     * @return
+     */
+    public static MqttMessage getPirSlient(String uid,String gatewayId,String deviceId){
+        int messageId=getMessageId();
+        GetPirSlientBean getPirSlientBean=new GetPirSlientBean(MqttConstant.MSG_TYPE_REQUEST,uid,messageId,gatewayId,deviceId,MqttConstant.GET_PIR_SLIENT,"0",null,System.currentTimeMillis()+"");
+        return getMessage(getPirSlientBean,messageId);
+    }
+
+    /**
+     * 设置静默参数
+     * @param uid
+     * @param gatewayId
+     * @param deviceId
+     * @param ust
+     * @param enable
+     * @param maxprohibition
+     * @param periodtime
+     * @param protecttime
+     * @param threshold
+     * @return
+     */
+    public static MqttMessage setPirSlient(String uid,String gatewayId,String deviceId,int ust,int enable,int maxprohibition,int periodtime,int protecttime,int threshold){
+        int messageId=getMessageId();
+        SetPirSlientBean.ParamsBean paramsBean=new SetPirSlientBean.ParamsBean();
+        paramsBean.setUst(ust);
+        paramsBean.setEnable(enable);
+        paramsBean.setMaxprohibition(maxprohibition);
+        paramsBean.setPeriodtime(periodtime);
+        paramsBean.setProtecttime(protecttime);
+        paramsBean.setThreshold(threshold);
+        SetPirSlientBean setPirSlientBean=new SetPirSlientBean(MqttConstant.MSG_TYPE_REQUEST,uid,messageId,gatewayId,deviceId,MqttConstant.SET_PIR_SLIENT,paramsBean,"0",new SetPirSlientBean.ReturnDataBean(),System.currentTimeMillis()+"");
+        return getMessage(setPirSlientBean,messageId);
+    }
 
 
     public static MqttMessage getMessage(Object o, int messageID) {

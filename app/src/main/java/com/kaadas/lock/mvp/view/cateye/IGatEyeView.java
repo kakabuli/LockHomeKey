@@ -24,14 +24,6 @@ public interface IGatEyeView extends IBaseView {
     //获取猫眼信息异常
     void getCatEveThrowable(Throwable throwable);
 
-    //设置pir成功
-    void setPirEnableSuccess(int status);
-
-    //设备设置音量失败
-    void setPirEnableFail();
-
-    //设备设置音量异常
-    void setPirEnableThrowable(Throwable throwable);
 
     //设备删除成功
     void deleteDeviceSuccess();
