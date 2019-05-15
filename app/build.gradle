@@ -147,4 +147,6 @@ dependencies {
     implementation 'com.getui:xmp:1.0.3'
     implementation files('libs/GetuiSDK-support-OPPO-1.0.2.jar')
     implementation  'com.getui:mzp:1.0.7'
+    //选择器控件
+    implementation 'com.contrarywind:Android-PickerView:4.1.6'
 }

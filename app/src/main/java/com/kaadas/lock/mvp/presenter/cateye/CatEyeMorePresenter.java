@@ -135,54 +135,6 @@ public class CatEyeMorePresenter <T> extends BasePresenter<IGatEyeView> {
 
     }
 
-    //设置智能监测
-    public void setPirEnable(String gatewayId, String deviceId,String uid, int status) {
-        toDisposable(setPirEnableDisposable);
-        if (mqttService != null) {
-            MqttMessage mqttMessage = MqttCommandFactory.setPirEnable(gatewayId, deviceId,uid,status);
-            setPirEnableDisposable = mqttService
-                    .mqttPublish(MqttConstant.getCallTopic(MyApplication.getInstance().getUid()), mqttMessage)
-                    .timeout(10 * 1000, TimeUnit.MILLISECONDS)
-                    .compose(RxjavaHelper.observeOnMainThread())
-                    .filter(new Predicate<MqttData>() {
-                        @Override
-                        public boolean test(MqttData mqttData) throws Exception {
-                            if (MqttConstant.SET_PIR_ENABLE.equals(mqttData.getFunc())) {
-                                return true;
-                            }
-                            return false;
-                        }
-                    })
-                    .subscribe(new Consumer<MqttData>() {
-                        @Override
-                        public void accept(MqttData mqttData) throws Exception {
-                            toDisposable(setPirEnableDisposable);
-                            SetPirEnableBean getSoundVolume = new Gson().fromJson(mqttData.getPayload(), SetPirEnableBean.class);
-                            if (getSoundVolume != null) {
-                                if ("200".equals(getSoundVolume.getReturnCode())) {
-                                    if (mViewRef.get() != null) {
-                                        mViewRef.get().setPirEnableSuccess(status);
-                                    }
-                                } else {
-                                    if (mViewRef.get() != null) {
-                                        mViewRef.get().setPirEnableFail();
-                                    }
-                                }
-                            }
-                        }
-                    }, new Consumer<Throwable>() {
-                        @Override
-                        public void accept(Throwable throwable) throws Exception {
-                            if (mViewRef.get() != null) {
-                                mViewRef.get().setPirEnableThrowable(throwable);
-                            }
-                        }
-                    });
-
-            compositeDisposable.add(setPirEnableDisposable);
-        }
-
-    }
     //删除猫眼
     public void deleteCatEye(String gatewayId, String deviceId, String bustType) {
         toDisposable(deleteCatEyeDisposable);

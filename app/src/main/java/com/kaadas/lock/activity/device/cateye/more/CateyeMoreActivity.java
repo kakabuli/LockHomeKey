@@ -85,9 +85,14 @@ public class CateyeMoreActivity extends BaseActivity<IGatEyeView, CatEyeMorePres
     private int getCatInfoStatus = 0;
     private CateEyeInfo cateEyeInfo;
 
-    private int pirEnable = 0;
-    //private AlertDialog  deleteAlertDialog;
+    private AlertDialog  deleteAlertDialog;
     private Context context;
+
+    private int pirEnable=-1; //智能监测开关
+
+    private int sdStatus=-1; //sd卡状态
+
+    private String pirwander="";//pir徘徊监测
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -199,12 +204,12 @@ public class CateyeMoreActivity extends BaseActivity<IGatEyeView, CatEyeMorePres
                     public void left() {
 
                     }
-
                     @Override
                     public void right() {
                         if (gatewayId != null && deviceId != null) {
                             mPresenter.deleteCatEye(gatewayId, deviceId, "net");
-                            // deleteAlertDialog=AlertDialogUtil.getInstance().noButtonDialog(context,getString(R.string.take_effect_be_being));
+                            deleteAlertDialog=AlertDialogUtil.getInstance().noButtonDialog(context,getString(R.string.take_effect_be_being));
+                            deleteAlertDialog.setCancelable(false);
                         }
                     }
 
@@ -218,10 +223,10 @@ public class CateyeMoreActivity extends BaseActivity<IGatEyeView, CatEyeMorePres
                     ToastUtil.getInstance().showShort(R.string.get_cateye_info_fail);
                     return;
                 } else {
-                    if (returnCatEyeInfo != null) {
-                        Intent detailIntent = new Intent(this, CateyeMoreDeviceInformationActivity.class);
-                        detailIntent.putExtra(KeyConstants.GET_CAT_EYE_INFO, returnCatEyeInfo);
-                        startActivity(detailIntent);
+                    if (!TextUtils.isEmpty(returnCatEyeInfo)) {
+                            Intent detailIntent = new Intent(this, CateyeMoreDeviceInformationActivity.class);
+                            detailIntent.putExtra(KeyConstants.GET_CAT_EYE_INFO, returnCatEyeInfo);
+                            startActivity(detailIntent);
                     }
                 }
                 break;
@@ -232,15 +237,11 @@ public class CateyeMoreActivity extends BaseActivity<IGatEyeView, CatEyeMorePres
                 } else if (getCatInfoStatus == 2) {
                     ToastUtil.getInstance().showShort(R.string.get_cateye_info_fail);
                     return;
-                } else if (pirEnable == 1) {
-                    if (!TextUtils.isEmpty(gatewayId) && !TextUtils.isEmpty(deviceId)) {
-                        mPresenter.setPirEnable(gatewayId, deviceId, MyApplication.getInstance().getUid(), 0);
-                        loadingDialog.show("正在关闭智能监测");
-                    }
-                } else {
-                    if (!TextUtils.isEmpty(gatewayId) && !TextUtils.isEmpty(deviceId)) {
-                        mPresenter.setPirEnable(gatewayId, deviceId, MyApplication.getInstance().getUid(), 1);
-                        loadingDialog.show("正在开启智能监测");
+                }else{
+                    if (returnCatEyeInfo != null) {
+                        Intent smartEyeIntent = new Intent(this, SmartEyeActivity.class);
+                        smartEyeIntent.putExtra(KeyConstants.GET_CAT_EYE_INFO, returnCatEyeInfo);
+                        startActivity(smartEyeIntent);
                     }
                 }
                 break;
@@ -303,8 +304,6 @@ public class CateyeMoreActivity extends BaseActivity<IGatEyeView, CatEyeMorePres
                         startActivity(volumeIntent);
                     }
                 }
-
-
                 break;
         }
     }
@@ -346,14 +345,10 @@ public class CateyeMoreActivity extends BaseActivity<IGatEyeView, CatEyeMorePres
             if (tvRingnumber != null) {
                 tvRingnumber.setText(returnDataBean.getBellCount() + "");//响铃次数
             }
-           /* pirEnable = returnDataBean.getPirEnable(); //1未开启，0为关闭
-            if (ivSmartMonitor != null) {
-                if (pirEnable == 1) {
-                    ivSmartMonitor.setImageResource(R.mipmap.iv_open);
-                } else {
-                    ivSmartMonitor.setImageResource(R.mipmap.iv_close);
-                }
-            }*/
+            pirEnable=returnDataBean.getPirEnable();
+            sdStatus=returnDataBean.getSdStatus();
+            pirwander=returnDataBean.getPirWander();
+
             if (tvVolume!=null){
                 switch (returnDataBean.getBellVolume()){
                     case 1:
@@ -399,45 +394,14 @@ public class CateyeMoreActivity extends BaseActivity<IGatEyeView, CatEyeMorePres
         getCatInfoStatus = 2;
     }
 
-    @Override
-    public void setPirEnableSuccess(int status) {
-        //设置pir成功
-        if (loadingDialog != null) {
-            loadingDialog.dismiss();
-        }
-     /*   if (ivSmartMonitor != null) {
-            if (status == 1) {
-                ivSmartMonitor.setImageResource(R.mipmap.iv_open);
-            } else {
-                ivSmartMonitor.setImageResource(R.mipmap.iv_close);
-            }
-        }*/
-
-    }
-
-    @Override
-    public void setPirEnableFail() {
-        //设置pir失败
-        if (loadingDialog != null) {
-            loadingDialog.dismiss();
-        }
-        ToastUtil.getInstance().showShort(R.string.smart_check_set_fail);
-    }
-
-    @Override
-    public void setPirEnableThrowable(Throwable throwable) {
-        //设置pir异常
-        if (loadingDialog != null) {
-            loadingDialog.dismiss();
-        }
-        ToastUtil.getInstance().showShort(R.string.smart_check_set_fail);
-
-    }
 
 
     @Override
     public void deleteDeviceSuccess() {
         //删除成功
+        if (deleteAlertDialog!=null){
+            deleteAlertDialog.dismiss();
+        }
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
         finish();
@@ -445,11 +409,17 @@ public class CateyeMoreActivity extends BaseActivity<IGatEyeView, CatEyeMorePres
 
     @Override
     public void deleteDeviceFail() {
+        if (deleteAlertDialog!=null){
+            deleteAlertDialog.dismiss();
+        }
         ToastUtil.getInstance().showShort(getString(R.string.delete_fialed));
     }
 
     @Override
     public void deleteDeviceThrowable(Throwable throwable) {
+        if (deleteAlertDialog!=null){
+            deleteAlertDialog.dismiss();
+        }
         ToastUtil.getInstance().showShort(getString(R.string.delete_fialed));
     }
 }
