@@ -356,5 +356,8 @@ public class KeyConstants {
 
     //铃声音量
     public static final String CAT_EYE_VOLUME="catEyeVolume";
-
+    /**
+     * 锁型号
+     */
+    public static final String LOCK_MODEL = "lock_model";
 }
