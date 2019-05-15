@@ -1,6 +1,7 @@
 package com.kaadas.lock.mvp.view.gatewaylockview;
 
 import com.kaadas.lock.mvp.mvpbase.IBaseView;
+import com.kaadas.lock.publiclibrary.http.result.SwitchStatusResult;
 
 public interface GatewayLockMoreView extends IBaseView {
 
@@ -40,6 +41,13 @@ public interface GatewayLockMoreView extends IBaseView {
 
     //设备删除异常
     void deleteDeviceThrowable(Throwable throwable);
+
+
+    void getSwitchStatus(SwitchStatusResult switchStatusResult);
+    void getSwitchFail();
+
+    void updateSwitchStatus(SwitchStatusResult switchStatusResult);
+    void updateSwitchUpdateFail();
 
 
 

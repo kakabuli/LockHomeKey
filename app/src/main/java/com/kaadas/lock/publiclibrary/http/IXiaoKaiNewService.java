@@ -13,6 +13,7 @@ import com.kaadas.lock.publiclibrary.http.result.LoginResult;
 import com.kaadas.lock.publiclibrary.http.result.OTAResult;
 import com.kaadas.lock.publiclibrary.http.result.RegisterResult;
 import com.kaadas.lock.publiclibrary.http.result.SinglePasswordResult;
+import com.kaadas.lock.publiclibrary.http.result.SwitchStatusResult;
 import com.kaadas.lock.publiclibrary.http.result.UserNickResult;
 import com.kaadas.lock.publiclibrary.http.result.UserProtocolResult;
 import com.kaadas.lock.publiclibrary.http.result.UserProtocolVersionResult;
@@ -411,4 +412,21 @@ public interface IXiaoKaiNewService {
     @POST(HttpUrlConstants.UPLOAD_PUSH_ID)
     Observable<BaseResult> uploadPushId(@Body RequestBody info);
 
+
+    /**
+     * 获取控制个推开关
+     * @param info
+     * @return
+     */
+    @POST(HttpUrlConstants.GETPUSHSWITch)
+    Observable<SwitchStatusResult> getPushSwitch(@Body RequestBody info);
+
+
+    /**
+     * 修改个推开关状态
+     * @param info
+     * @return
+     */
+    @POST(HttpUrlConstants.UPDATEPUSHSWITch)
+    Observable<SwitchStatusResult> updatePushSwitch(@Body RequestBody info);
 }
