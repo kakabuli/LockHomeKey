@@ -1,6 +1,8 @@
 package com.kaadas.lock.mvp.view;
 
 
+import com.kaadas.lock.publiclibrary.http.result.BaseResult;
+
 /**
  * Create By lxj  on 2019/2/27
  * Describe
@@ -20,5 +22,9 @@ public interface IOldBluetoothDeviceDetailView extends IOldBleLockDetailView {
 
 //    void onStateUpdate(int type);
 
+    void onDeleteDeviceSuccess();
 
+    void onDeleteDeviceFailed(Throwable throwable);
+
+    void onDeleteDeviceFailedServer(BaseResult result);
 }

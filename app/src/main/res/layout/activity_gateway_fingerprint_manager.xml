@@ -5,9 +5,7 @@
     android:background="#F2F2F2"
     android:orientation="vertical">
 
-    <include
-        android:id="@+id/in_head"
-        layout="@layout/head"></include>
+    <include layout="@layout/head"></include>
 
 
     <RelativeLayout

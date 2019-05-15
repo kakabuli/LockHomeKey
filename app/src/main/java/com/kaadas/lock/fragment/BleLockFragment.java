@@ -22,6 +22,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.home.BluetoothEquipmentDynamicActivity;
@@ -121,7 +122,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
                     changeOpenLockStatus(6);
                 }
                 if (bleLockInfo.getSafeMode() == 1) {//安全模式
-                    changeOpenLockStatus(5);
+                    changeOpenLockStatus(16);
                 }
                 if (bleLockInfo.getArmMode() == 1) {//布防模式
                     changeOpenLockStatus(4);
@@ -274,14 +275,6 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
     }
 
     private void initRecycleView() {
-//        List<BluetoothItemRecordBean> itemList1 = new ArrayList<>();
-//        itemList1.add(new BluetoothItemRecordBean("jff", "jfjji", KeyConstants.BLUETOOTH_RECORD_WARN, "fjjf", true, true));
-//        list.add(new BluetoothRecordBean("jfjfk", itemList1, false));
-//        List<BluetoothItemRecordBean> itemList2 = new ArrayList<>();
-//        itemList2.add(new BluetoothItemRecordBean("jff", "jfji", KeyConstants.BLUETOOTH_RECORD_WARN, "fjjf", true, false));
-//        itemList2.add(new BluetoothItemRecordBean("jff", "jfji", KeyConstants.BLUETOOTH_RECORD_COMMON, "fjjf", false, false));
-//        itemList2.add(new BluetoothItemRecordBean("jff", "jfji", KeyConstants.BLUETOOTH_RECORD_WARN, "fjjf", false, true));
-//        list.add(new BluetoothRecordBean("jfjfk", itemList2, true));
         bluetoothRecordAdapter = new BluetoothRecordAdapter(list);
         recycleview.setLayoutManager(new LinearLayoutManager(getActivity()));
         recycleview.setAdapter(bluetoothRecordAdapter);
@@ -305,6 +298,9 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
     }
 
     public void changeOpenLockStatus(int status) {
+        if (!isAdded()){
+            return;
+        }
         switch (status) {
             case 1:
                 //手机蓝牙未打开
@@ -425,10 +421,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
                 ivInnerMiddle.setVisibility(View.VISIBLE);
                 ivInnerMiddle.setImageResource(R.mipmap.bluetooth_open_lock_success_niner_middle_icon);
                 ivInnerSmall.setVisibility(View.GONE);
-//                ivInnerSmall.setImageResource();
                 tvInner.setVisibility(View.GONE);
-//                tvInner.setText();
-//                tvInner.setTextColor();
                 tvExternal.setVisibility(View.VISIBLE);
                 tvExternal.setTextColor(getResources().getColor(R.color.cC6F5FF));
                 tvExternal.setText(getString(R.string.open_lock_success));
@@ -449,8 +442,6 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
                 tvInner.setText(getString(R.string.bluetooth_connect_success));
                 tvInner.setTextColor(getResources().getColor(R.color.c15A6F5));
                 tvExternal.setVisibility(View.GONE);
-//                tvExternal.setTextColor();
-//                tvExternal.setText();
                 break;
             case 12:
                 //蓝牙链接失败
@@ -532,6 +523,28 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
         }
     }
 
+    public void openLockAnimator(){
+        ivExternalBig.setVisibility(View.VISIBLE);
+//                ivExternalBig.setImageResource(R.mipmap.bluetooth_no_connect_big_icon);
+        Glide.with(getActivity()).load(R.drawable.bluetooth_no_connect_big_icon).into(ivExternalBig);
+        ivExternalMiddle.setVisibility(View.VISIBLE);
+//                ivExternalMiddle.setImageResource(R.mipmap.bluetooth_open_lock_middle_icon);
+        Glide.with(getActivity()).load(R.drawable.bluetooth_open_lock_middle_icon).into(ivExternalMiddle);
+        ivExternalSmall.setVisibility(View.VISIBLE);
+//                ivExternalSmall.setImageResource(R.mipmap.bluetooth_open_lock_small_icon);
+        Glide.with(getActivity()).load(R.drawable.bluetooth_open_lock_small_icon).into(ivExternalSmall);
+        ivInnerMiddle.setVisibility(View.VISIBLE);
+//                ivInnerMiddle.setImageResource(R.mipmap.bluetooth_open_lock_success_niner_middle_icon);
+        Glide.with(getActivity()).load(R.drawable.bluetooth_open_lock_success_niner_middle_icon).into(ivInnerMiddle);
+        ivInnerSmall.setVisibility(View.GONE);
+//                ivInnerSmall.setImageResource();
+        tvInner.setVisibility(View.GONE);
+//                tvInner.setText();
+//                tvInner.setTextColor();
+        tvExternal.setVisibility(View.VISIBLE);
+        tvExternal.setTextColor(getResources().getColor(R.color.cC6F5FF));
+        tvExternal.setText(getString(R.string.is_lock));
+    }
     @Override
     public void onClick(View v) {
         Intent intent;
@@ -586,15 +599,13 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
 
     @Override
     public void onSearchDeviceFailed(Throwable throwable) {
-        changeOpenLockStatus(3);
+        changeOpenLockStatus(13);
     }
 
     @Override
     public void onSearchDeviceSuccess() {
 
     }
-
-
     @Override
     public void onNeedRebind(int errorCode) {
         changeOpenLockStatus(11);
@@ -684,6 +695,9 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
         ToastUtil.getInstance().showShort(HttpUtils.httpProtocolErrorCode(getActivity(), throwable));
 
     }
+
+
+
 
     @Override
     public void authServerFailed(BaseResult baseResult) {

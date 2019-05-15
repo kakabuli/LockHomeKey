@@ -17,8 +17,10 @@ import com.kaadas.lock.publiclibrary.http.result.GetPasswordResult;
 import com.kaadas.lock.publiclibrary.http.util.BaseObserver;
 import com.kaadas.lock.publiclibrary.http.util.RxjavaHelper;
 import com.kaadas.lock.utils.DateUtils;
+import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.Rsa;
+import com.kaadas.lock.utils.SPUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -475,7 +477,48 @@ public class OldBluetoothDeviceDetailPresenter<T> extends OldBleLockDetailPresen
                   });
         compositeDisposable.add(oldCloseStatusDisposable);
     }
+    public void deleteDevice(String deviceName) {
+        XiaokaiNewServiceImp.deleteDevice(MyApplication.getInstance().getUid(), deviceName)
+                .subscribe(new BaseObserver<BaseResult>() {
+                    @Override
+                    public void onSuccess(BaseResult result) {
+                        MyApplication.getInstance().getAllDevicesByMqtt(true);
+                        if (mViewRef.get() != null) {
+                            mViewRef.get().onDeleteDeviceSuccess();
+                        }
+                        //todo 清除数据库的数据
+                        //清除消息免打扰
+                        SPUtils.remove(deviceName + SPUtils.MESSAGE_STATUS);
+                        //todo 清除保存的密码
+                        SPUtils.remove(KeyConstants.SAVE_PWD_HEARD + bleLockInfo.getServerLockInfo().getMacLock());
 
+                        //通知homeFragment  和  device刷新界面
+                        bleService.release();
+//                        MyApplication.getInstance().deleteDevice(deviceName);
+                        bleService.removeBleLockInfo();
+                    }
+
+                    @Override
+                    public void onAckErrorCode(BaseResult baseResult) {
+                        if (mViewRef.get() != null) {
+                            mViewRef.get().onDeleteDeviceFailedServer(baseResult);
+                        }
+                    }
+
+                    @Override
+                    public void onFailed(Throwable throwable) {
+                        if (mViewRef.get() != null) {
+                            mViewRef.get().onDeleteDeviceFailed(throwable);
+                        }
+                    }
+
+                    @Override
+                    public void onSubscribe1(Disposable d) {
+                        compositeDisposable.add(d);
+                    }
+                });
+
+    }
     ////////////////////////////////////////老模块获取电量逻辑/////////////////////////////////
 
 }
