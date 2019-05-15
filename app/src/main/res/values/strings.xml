@@ -9,7 +9,6 @@
     <string name="login">登录</string>
     <string name="have_you_account_symbol">您还没有账号？</string>
     <string name="register_now">立即注册</string>
-    <string name="input_number_letters">0123456789abcdefghigklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ</string>
     <string name="register">注册</string>
     <string name="get_verification">获取验证码</string>
     <string name="input_verification">请输入验证码</string>
@@ -24,7 +23,6 @@
     <string name="password_error">密码错误</string>
     <string name="affirm">确认</string>
     <string name="noNet">无网络,请先连接网络!</string>
-    <string name="email_not_right">邮箱不正确</string>
     <string name="more_then_ten_member">您已添加超过10个成员，\n请删除已有成员权限，再添加</string>
     <string name="dialog_confirm">确认</string>
     <string name="safe_mode_dialog">请去新增开锁方式，启动安全模式</string>
@@ -37,7 +35,6 @@
     <string name="input_valid_telephone_or_email">输入有效手机和邮箱</string>
     <string name="account_or_password_error">账户密码错误</string>
     <string name="account_message_not_empty">账户信息不能为空</string>
-    <string name="input_correct_verification_code">请输入正确验证码</string>
     <string name="home_page">首页</string>
     <string name="device">设备</string>
     <string name="mine">我的</string>
@@ -78,7 +75,6 @@
     <string name="not_manager">您不是设备管理员，无权限分享</string>
     <string name="password_only_number_and_letter_6_15">密码只能数字和字母组合，6-15位</string>
     <string name="data_not_map">数据不是映射关系</string>
-    <string name="not_login">没有登录</string>
     <string name="invalid_random_code">验证码无效</string>
     <string name="too_many_request">操作频繁，稍后再试</string>
     <string name="server_error">服务器出小差</string>
@@ -113,7 +109,6 @@
     <string name="production_fail">生产失败</string>
     <string name="resource_not_find">资源未找到</string>
     <string name="image_size_too_large">图片质量过大，无法上传</string>
-    <string name="device_name_cannot_empty">设备名称不能为空</string>
     <string name="nickname_modify_success">昵称修改成功</string>
     <string name="account_or_password_empty">账号或密码为空</string>
     <string name="modify_nickname_fail">修改昵称失败</string>
@@ -135,13 +130,6 @@
     <string name="device_power">电量</string>
     <string name="add_device">添加设备</string>
     <string name="device_zigbee">ZigBee</string>
-    <string name="bluetooth">蓝牙</string>
-    <string name="k7">Kaadas K7</string>
-    <string name="k8">Kaadas K8</string>
-    <string name="k9">Kaadas K9</string>
-    <string name="s8">Kaadas S8</string>
-    <string name="kx">Kaadas KX</string>
-    <string name="other">产品名称</string>
     <string name="gateway_light_setting">如何将指示灯设置常亮</string>
     <string name="add_gateway">添加网关</string>
     <string name="add_next">下一步</string>
@@ -149,9 +137,6 @@
     <string name="confirm_gateway_light_already">确认配网指示灯常亮</string>
     <string name="reset_key_two">（如指示灯处于其他状态，按复位键）</string>
     <string name="confirm_indicator_light">确认指示灯变亮</string>
-    <string name="select_add_wifi_info">请选择添加kaadas网关WiFi信息</string>
-    <string name="add_kaadaswifi">添加kaadasWiFi</string>
-    <string name="input_wifi_passwrod">请输入WiFi密码</string>
     <string name="go_bind">去绑定</string>
     <string name="wifi_is_connecting">正在连接kaadas网关WiFi中...</string>
     <string name="add_lock">添加门锁</string>
@@ -176,7 +161,6 @@
     <string name="bluetooth_pairing">正在配对中...</string>
     <string name="bluetooth_add_success">您已添加成功，取个名字吧！</string>
     <string name="input_or_select_name">手动输入或从下面已有名称选择</string>
-    <string name="go_to_bind">去绑定</string>
     <string name="save">保存</string>
     <string name="pair_fail">配对失败</string>
     <string name="bluetooth_fail_first">确保门锁已按引导进入配对状态</string>
@@ -184,12 +168,10 @@
     <string name="bluetooth_fail_three">确保手机配对时处于门锁周边</string>
     <string name="repair">重新配对</string>
     <string name="upload_hear">上传头像 </string>
-    <string name="personal_data">个人资料</string>
     <string name="head_portrait">头像</string>
     <string name="nickname">昵称</string>
     <string name="head_portrait_name">程序员艾伦斯</string>
     <string name="tel_num">手机号</string>
-    <string name="update_pwd">修改密码</string>
     <string name="select_photo_album">从手机相册中选择</string>
     <string name="zi_pai">拍照</string>
     <string name="no_data">没有数据</string>
@@ -222,7 +204,6 @@
     <string name="delete_cache_data">确定清除缓存？</string>
     <string name="version_num">版本更新</string>
     <string name="user_agreement">用户协议</string>
-    <string name="help_log">帮助日志</string>
     <string name="clear_cache">清除缓存</string>
     <string name="log_out">退出登录</string>
     <string name="current_version">当前版本</string>
@@ -273,11 +254,7 @@
     <string name="little_brother">小弟弟</string>
     <string name="sister">姐姐</string>
     <string name="rests">其他</string>
-    <string name="zigbee">ZigBee</string>
-    <string name="add_device_pair_gateway">添加设备前、请先配置kaadas网关</string>
     <string name="zigbee_gateway">ZigBee&#160;&#160;&#160;&#160;网关</string>
-    <string name="zigbee_cat_eye">Kaadas&#160;&#160;&#160;&#160;猫眼 </string>
-    <string name="kaadas_lock">凯迪仕智能锁</string>
     <string name="zigbee_bind_gateway">绑定网关</string>
     <string name="select_add_bind_gateway">选择添加设备将要绑定的网卡</string>
     <string name="admin">管理员：</string>
@@ -290,8 +267,6 @@
     <string name="gateway_offline">网关已经离线</string>
     <string name="select_bindgateway">请选择网关</string>
     <string name="device_zigbee_thrid_text">根据语音提示，按键 【4】进入拓展功能</string>
-    <string name="gateway_connect_success">网关连接成功</string>
-    <string name="add_zigbeelock">添加智能锁</string>
     <string name="in_gateway_success">入网成功</string>
     <string name="account_problem">账号问题</string>
     <string name="payment_problem">支付问题</string>
@@ -335,8 +310,6 @@
     <string name="no_add_zigbee_device">暂不添加了</string>
     <string name="gateway_bind_fail">连接失败！</string>
     <string name="device_gateway_first_text">该网络非kaadas网关</string>
-    <string name="device_gateway_second_text">WiFi密码是否正确</string>
-    <string name="device_gateway_third">检查网络</string>
     <string name="device_try">再试一下</string>
     <string name="connecting_zigbeelock">正在连接网关锁</string>
     <string name="connection_zigbeelock_success">恭喜，网关锁连接成功</string>
@@ -349,7 +322,6 @@
     <string name="card">卡片</string>
     <string name="zhang">张</string>
     <string name="device_share">设备共享</string>
-    <string name="people">人</string>
     <string name="more">更多</string>
     <string name="device_detail_power_date">(刚刚)</string>
     <string name="today">今天</string>
@@ -373,7 +345,6 @@
     <string name="unit_type">设备型号</string>
     <string name="lock_firmware_version">门锁固件版本</string>
     <string name="bluetooth_module_version">门锁蓝牙模块版本</string>
-    <string name="family_member">家庭成员</string>
     <string name="hao_de">好的</string>
     <string name="query_fail_requery">无网络时不能添加家庭成员</string>
     <string name="add_common_user_success">添加普通用户成功</string>
@@ -402,11 +373,7 @@
     <string name="device_zigbee_new_add">设备添加</string>
     <string name="new_lock_connect_success">你的猫眼套装已联网成功</string>
     <string name="check_phone_nework">请检查手机网络是否正常连接</string>
-    <string name="add_new_lock_one">确保门锁已按引导进入配对状态</string>
-    <string name="add_new_lock_two">确保手机蓝牙处于开启状态</string>
     <string name="device_connect_network_fail">设备联网失败</string>
-    <string name="reason">可能原因如下</string>
-    <string name="hand_bind">手动绑定</string>
     <string name="device_offline">设备离线</string>
     <string name="skip">跳过</string>
     <string name="smart_unlock">智能解锁</string>
@@ -433,7 +400,6 @@
     <string name="lock_language">门锁语言</string>
     <string name="please_use_gateway_qr_code">请使用Kaadas网关二维码</string>
     <string name="unbind_not_have_devicesn">无法绑定</string>
-    <string name="publish_message_fail">发布消息失败</string>
     <string name="gateway_already_bind">网关已经被绑定</string>
     <string name="input_device_name">请输入设备名称</string>
     <string name="device_nick_name_no_update">设备名称未修改</string>
@@ -467,7 +433,6 @@
         <item>临时</item>
     </string-array>
 
-    <string name="user_pwd_tip">提示:</string>
     <string name="user_pwd_time1">请打开手机蓝牙在门锁附近设置密码</string>
     <string name="user_pwd_time2">为确保您的安全，密码请自行保存，手机只显示名称</string>
     <string name="user_pwd_pwd">请输入6~12位数字密码</string>
@@ -477,7 +442,6 @@
     <string name="hours_24">24小时</string>
     <string name="custom">自定义</string>
     <string name="effective_time">生效时间</string>
-    <string name="afternoon">下午</string>
     <string name="end_time">截止时间</string>
     <string name="user_pwd_btn_ok">确定生成</string>
     <string name="elder_brother">哥哥</string>
@@ -562,32 +526,19 @@
     <string name="is_authing">正在鉴权</string>
 
 
-    <string name="check_bind_failed">查询绑定失败</string>
     <string name="is_checking_bind">正在查询设备是否绑定...</string>
     <string name="connect_failed_retry">连接设备失败，请重试</string>
-    <string name="unbind_failed">解绑失败...</string>
     <string name="is_sync_warring_record">正在同步报警记录，请稍后再试！</string>
     <string name="network_exception">网络异常</string>
-    <string name="synchronized_password_fail">同步临时密码失败</string>
-    <string name="check_bind_fail">检查绑定状态失败</string>
     <string name="scan_fail">搜索失败</string>
-    <string name="setting_fail">设置失败</string>
     <string name="get_lock_state_fail">获取门锁状态失败</string>
     <string name="being_get_device_information">正在获取设备信息</string>
-    <string name="in_synchronized_time">正在同步时间</string>
-    <string name="is_sync_time">正在同步时间</string>
-    <string name="is_connecting">正在连接设备</string>
-    <string name="am_hand_lock">AM手动上锁</string>
-    <string name="get_device_info_language">正在获取设备的语言信息，请稍后。。。</string>
     <string name="ble_not_test">蓝牙模块未经过厂测！</string>
 
     <string name="this_device_already_bind_reset">该设备已被其他用户绑定，请重置后绑定！</string>
     <string name="device_not_bind_to_bind">用户未绑定，是否进入绑定流程？</string>
     <string name="unbind_success_innet">解绑成功,请操作入网！</string>
     <string name="connect_out_of_date">连接超时</string>
-    <string name="connected_success_read_info">连接成功，读取蓝牙信息</string>
-    <string name="connect_failed">连接失败</string>
-    <string name="read_info_failed">读取蓝牙信息失败</string>
     <string name="connecting_ble">正在连接蓝牙</string>
     <string name="bind_failed">绑定失败</string>
 
@@ -639,7 +590,6 @@
     <string name="cateye_dynamic">猫眼动态</string>
     <string name="please_input_password_name">请输入密码名称</string>
     <string name="password_detail">密码详情</string>
-    <string name="safe_protection">安全布防</string>
     <string name="stress_warn">胁迫警告</string>
     <string name="sure_delete_password">确定删除密码吗？</string>
     <string name="connect_cateye_check_wifi">目前手机连接WiFi与所选网关不一致，请切换手机网络为所选网关</string>
@@ -648,7 +598,6 @@
     <string name="add">添加</string>
     <string name="device_add_zigbee">添加ZigBee设备</string>
     <string name="device_bluetooth">蓝牙设备</string>
-    <string name="device_add_bluetooth">添加蓝牙设备</string>
     <string name="software_version">软件版本</string>
     <string name="module_mark">MAC地址</string>
     <string name="bluetooth_version">蓝牙版本</string>
@@ -706,7 +655,6 @@
     <string name="recording_screen">录屏</string>
     <string name="snapshot">快照</string>
     <string name="img_loading1">图片努力加载中....</string>
-    <string name="watch_video">查看视频</string>
     <string name="reload_download">重新下载</string>
     <string name="pre_search_video">点击查看视频</string>
     <string name="pir_history_notic">新增%d条消息,点击刷新</string>
@@ -759,7 +707,6 @@
     <string name="set_temp_pwd_succcess">设置临时密码成功</string>
     <string name="sync_failed">同步秘钥失败</string>
     <string name="please_have_net_add_temp_pwd">请在有网络情况下添加临时密码！</string>
-    <string name="please_have_net_add_forever_pwd">请在有网络情况下添加永久密码！</string>
     <string name="get_lock_lang">正在锁的语言状态，请稍后。。。</string>
 
     <string name="screenshot_name">截屏</string>
@@ -772,7 +719,6 @@
     <string name="name_not_empty">输入值不能为空</string>
     <string name="be_beging_syc_lockinfo">正在同步锁信息，请稍后。。。</string>
     <string name="lock_has_bean_close">门锁已经打开</string>
-    <string name="for_the_moment_no_open">暂时无法开启，请稍后。。。</string>
     <string name="scan">扫一扫</string>
     <string name="add_device_before_pair_gateway">添加设备前，请先配置kaadas网关</string>
     <string name="gateway">网关</string>
@@ -793,7 +739,6 @@
     <string name="video_must_record_5_seconds">视频最短需要录制5秒</string>
     <string name="screen_success">截图成功</string>
     <string name="screen_failed">截图失败</string>
-    <string name="lock_power">%1$s</string>
     <string name="password_yong_jiu_valid">密码永久有效</string>
     <string name="password_one_day_valid">密码24小时有效</string>
     <string name="password_valid_shi_xiao">密码有效时效</string>
@@ -812,7 +757,6 @@
     <string name="be_beging_get_lock_pwd_no_add_pwd">正在获取密码列表，无法添加密码。</string>
     <string name="get_lock_pwd_throwable">密码列表获取异常，无法添加密码，请重新获取</string>
     <string name="add_lock_pwd_fail">添加密码失败</string>
-    <string name="add_lock_pwd_success">添加密码成功</string>
     <string name="no_find_network">没有检测到设备网络\n无法生成有效密码</string>
     <string name="take_effect_be_being">生效中。。。</string>
     <string name="copy_success">复制成功</string>
@@ -838,7 +782,6 @@
     <string name="month">月</string>
     <string name="hour">时</string>
     <string name="minute">分</string>
-    <string name="auth_time">授权时间</string>
     <string name="lock_already_open">门锁已打开</string>
     <string name="is_opening_try_latter">正在开门，请稍后再试</string>
     <string name="get_stress_pwd_stop">正在获取胁迫密码，请稍后。。。</string>
@@ -856,7 +799,6 @@
     <string name="data_loading">数据加载中……</string>
     <string name="loading">加载中...</string>
     <string name="video_download_fail">视频下载失败,请重新下载</string>
-    <string name="receive_pir_trigger_check_cateye_snapshot">收到pir触发,请查看猫眼快照</string>
     <string name="download_overtime_1">下载超时</string>
     <string name="normal">正常</string>
     <string name="back_lock_can_not_open">门锁反锁状态下请门内开锁</string>
@@ -865,11 +807,9 @@
     <string name="low_power_notify">设备:%1$s,低电量，请及时查看</string>
     <string name="host_lost_notify">设备:%1$s,机身被拔，请及时查看</string>
     <string name="head_lost_notify">设备:%1$s,猫头被拔,请及时查看</string>
-    <string name="door_bell">设备:%1$s,响铃,请及时查看</string>
     <string name="please_scan_kaadas_qrcode">请扫描凯迪仕产品二维码</string>
     <string name="no_scan">无法扫描</string>
     <string name="cancel_scan">取消扫描</string>
-    <string name="temporarily_closed">暂时未开放该功能</string>
     <string name="once">1次</string>
     <string name="twice">2次</string>
     <string name="three">3次</string>
@@ -916,7 +856,6 @@
     <string name="name_select_fail">查询失败</string>
     <string name="pir_linger">pir徘徊</string>
     <string name="pir_default">pir静默</string>
-    <string name="pir_hight">高</string>
     <string name="pir_default_tile">PIR静默</string>
     <string name="pir_default_cicle">PIR周期:</string>
     <string name="pir_default_time">触发次数:</string>
@@ -927,4 +866,17 @@
     <string name="get_swtich_status_fail">获取APP通知状态失败</string>
     <string name="update_swtich_status_fail">更新APP通知状态失败</string>
     <string name="get_nitification_status_fail">获取消息免打扰状态失败</string>
+    <string name="exit">再按一次退出程序</string>
+    <string name="no">无</string>
+    <string name="have">有</string>
+    <string name="next">次</string>
+    <string name="second_time">秒</string>
+    <string name="sd_card">SD卡</string>
+    <string name="please_insert_sd_card">未识别到SD卡，请断开猫眼电源插入SD卡！</string>
+    <string name="close_pir_enable">正在关闭智能监测。。。</string>
+    <string name="open_pir_enable">正在打开智能监测。。。</string>
+    <string name="get_pir_slient_param">正在获取静默参数，请稍后</string>
+    <string name="get_pir_slient_fail">获取pir静默参数失败</string>
+    <string name="please_input_legal_number">请输入1-60的数字</string>
+    <string name="parameter_not_empty">参数不能为空</string>
 </resources>

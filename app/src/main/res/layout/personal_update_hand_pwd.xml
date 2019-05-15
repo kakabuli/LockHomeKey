@@ -6,7 +6,6 @@
     android:orientation="vertical">
 
     <RelativeLayout
-        android:id="@+id/safe_mode_head"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_40"
         android:background="@color/device_item_background"
@@ -35,7 +34,6 @@
     </RelativeLayout>
 
     <LinearLayout
-        android:id="@+id/gesture_tip_layout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="2"

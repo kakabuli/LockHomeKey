@@ -47,7 +47,6 @@
             android:layout_gravity="center_horizontal"
             />
         <LinearLayout
-            android:id="@+id/remind_layout_one"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_75"
             android:layout_marginRight="@dimen/dp_15"
@@ -84,7 +83,6 @@
             android:layout_marginTop="@dimen/dp_29"
             />
         <LinearLayout
-            android:id="@+id/remind_layout_two"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_75"
             android:layout_marginRight="@dimen/dp_15"

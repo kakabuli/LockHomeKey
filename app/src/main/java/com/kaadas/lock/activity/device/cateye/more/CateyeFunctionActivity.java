@@ -152,36 +152,40 @@ public class CateyeFunctionActivity extends BaseActivity<ICatEyeFunctionView, Ca
         switch (status) {
             case 1:
                 //猫眼在线
-                ivExternalBig.setVisibility(View.VISIBLE);
-                ivExternalBig.setImageResource(R.mipmap.bluetooth_lock_close_big_middle_icon);
-                ivExternalMiddle.setVisibility(View.GONE);
-                ivExternalSmall.setVisibility(View.GONE);
-                ivInnerMiddle.setVisibility(View.VISIBLE);
-                ivInnerMiddle.setImageResource(R.mipmap.cateye_online);
-                ivInnerSmall.setVisibility(View.VISIBLE);
-                ivInnerSmall.setImageResource(R.mipmap.gate_lock_close_inner_small_icon);
-                tvInner.setVisibility(View.VISIBLE);
-                tvInner.setText(getString(R.string.click_outside_door));
-                tvInner.setTextColor(getResources().getColor(R.color.white));
-                tvExternal.setVisibility(View.VISIBLE);
-                tvExternal.setTextColor(getResources().getColor(R.color.cC6F5FF));
-                tvExternal.setText(getString(R.string.cateye_online));
+                if (ivExternalBig!=null&&ivExternalMiddle!=null&&ivExternalSmall!=null&&ivInnerMiddle!=null&&ivInnerSmall!=null&&tvInner!=null&&tvExternal!=null) {
+                    ivExternalBig.setVisibility(View.VISIBLE);
+                    ivExternalBig.setImageResource(R.mipmap.bluetooth_lock_close_big_middle_icon);
+                    ivExternalMiddle.setVisibility(View.GONE);
+                    ivExternalSmall.setVisibility(View.GONE);
+                    ivInnerMiddle.setVisibility(View.VISIBLE);
+                    ivInnerMiddle.setImageResource(R.mipmap.cateye_online);
+                    ivInnerSmall.setVisibility(View.VISIBLE);
+                    ivInnerSmall.setImageResource(R.mipmap.gate_lock_close_inner_small_icon);
+                    tvInner.setVisibility(View.VISIBLE);
+                    tvInner.setText(getString(R.string.click_outside_door));
+                    tvInner.setTextColor(getResources().getColor(R.color.white));
+                    tvExternal.setVisibility(View.VISIBLE);
+                    tvExternal.setTextColor(getResources().getColor(R.color.cC6F5FF));
+                    tvExternal.setText(getString(R.string.cateye_online));
+                }
                 break;
             case 2:
 //                设备已离线
-                ivExternalBig.setVisibility(View.VISIBLE);
-                ivExternalBig.setImageResource(R.mipmap.bluetooth_no_connect_big_middle_icon);
-                ivExternalMiddle.setVisibility(View.GONE);
-                ivExternalSmall.setVisibility(View.GONE);
-                ivInnerMiddle.setVisibility(View.VISIBLE);
-                ivInnerMiddle.setImageResource(R.mipmap.cateye_offline);
-                ivInnerSmall.setVisibility(View.INVISIBLE);
-                tvInner.setVisibility(View.VISIBLE);
-                tvInner.setText(getString(R.string.device_has_offline));
-                tvInner.setTextColor(getResources().getColor(R.color.c14A6F5));
-                tvExternal.setVisibility(View.VISIBLE);
-                tvExternal.setTextColor(getResources().getColor(R.color.cC6F5FF));
-                tvExternal.setText(getString(R.string.cateye_offline));
+                if (ivExternalBig!=null&&ivExternalMiddle!=null&&ivExternalSmall!=null&&ivInnerMiddle!=null&&ivInnerSmall!=null&&tvInner!=null&&tvExternal!=null) {
+                    ivExternalBig.setVisibility(View.VISIBLE);
+                    ivExternalBig.setImageResource(R.mipmap.bluetooth_no_connect_big_middle_icon);
+                    ivExternalMiddle.setVisibility(View.GONE);
+                    ivExternalSmall.setVisibility(View.GONE);
+                    ivInnerMiddle.setVisibility(View.VISIBLE);
+                    ivInnerMiddle.setImageResource(R.mipmap.cateye_offline);
+                    ivInnerSmall.setVisibility(View.INVISIBLE);
+                    tvInner.setVisibility(View.VISIBLE);
+                    tvInner.setText(getString(R.string.device_has_offline));
+                    tvInner.setTextColor(getResources().getColor(R.color.c14A6F5));
+                    tvExternal.setVisibility(View.VISIBLE);
+                    tvExternal.setTextColor(getResources().getColor(R.color.cC6F5FF));
+                    tvExternal.setText(getString(R.string.cateye_offline));
+                }
                 break;
 
 

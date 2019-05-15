@@ -162,6 +162,7 @@ public class CatEyeFragment extends BaseFragment<ICatEyeView, CatEyePresenter<IC
                 break;
             case 2:
 //                设备已离线
+                LogUtils.e("设置猫眼离线状态");
                 ivExternalBig.setVisibility(View.VISIBLE);
                 ivExternalBig.setImageResource(R.mipmap.bluetooth_no_connect_big_middle_icon);
                 ivExternalMiddle.setVisibility(View.GONE);
