@@ -36,6 +36,7 @@ import com.kaadas.lock.utils.db.DBTableConfig;
 import com.kaadas.lock.widget.UnderLineRadioBtn;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import butterknife.BindView;
@@ -286,6 +287,7 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
             }
         }
 
+        LogUtils.e("首页Fragment数据是   " + Arrays.toString(fragments.toArray()));
 
         viewPager.setAdapter(new FragmentPagerAdapter(getChildFragmentManager()) {
             @Override
