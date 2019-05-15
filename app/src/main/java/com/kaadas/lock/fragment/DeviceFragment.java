@@ -355,6 +355,9 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                         CateEyeInfo cateEyeInfo= (CateEyeInfo) device.getObject();
                         cateEyeInfo.setPower(power);
                         cateEyeInfo.setPowerTimeStamp(timestamp);
+                        if (cateEyeInfo.getServerInfo().getEvent_str().equals("offline")){
+                            cateEyeInfo.getServerInfo().setEvent_str("online");
+                        }
                         if (deviceDetailAdapter!=null) {
                             deviceDetailAdapter.notifyDataSetChanged();
                         }
@@ -362,6 +365,9 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                  }else if (HomeShowBean.TYPE_GATEWAY_LOCK==device.getDeviceType()){
                     if (device.getDeviceId().equals(devciceId)){
                         GwLockInfo gwLockInfo= (GwLockInfo) device.getObject();
+                        if (gwLockInfo.getServerInfo().getEvent_str().equals("offline")){
+                            gwLockInfo.getServerInfo().setEvent_str("online");
+                        }
                         gwLockInfo.setPower(power);
                         gwLockInfo.setPowerTimeStamp(timestamp);
                         if (deviceDetailAdapter!=null) {

@@ -1,43 +1,39 @@
 package com.kaadas.lock.fragment;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.InputType;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
-import com.kaadas.lock.activity.home.BluetoothEquipmentDynamicActivity;
 import com.kaadas.lock.activity.home.GatewayEquipmentDynamicActivity;
 import com.kaadas.lock.adapter.BluetoothRecordAdapter;
 import com.kaadas.lock.bean.BluetoothItemRecordBean;
 import com.kaadas.lock.bean.BluetoothRecordBean;
 import com.kaadas.lock.mvp.mvpbase.BaseFragment;
 import com.kaadas.lock.mvp.presenter.gatewaylockpresenter.GatewayLockHomePresenter;
-import com.kaadas.lock.mvp.view.cateye.IGatEyeView;
 import com.kaadas.lock.mvp.view.gatewaylockview.IGatewayLockHomeView;
-import com.kaadas.lock.publiclibrary.bean.GatewayInfo;
 import com.kaadas.lock.publiclibrary.bean.GwLockInfo;
-import com.kaadas.lock.publiclibrary.ble.bean.OpenLockRecord;
-import com.kaadas.lock.publiclibrary.http.result.GetPasswordResult;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.SelectOpenLockResultBean;
+import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
-import com.kaadas.lock.utils.NotifyRefreshActivity;
+import com.kaadas.lock.utils.StringUtil;
 import com.kaadas.lock.utils.ToastUtil;
-import com.kaadas.lock.utils.networkListenerutil.NetWorkChangReceiver;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,12 +41,10 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, GatewayLockHomePresenter<IGatewayLockHomeView>> implements View.OnClickListener, IGatewayLockHomeView {
+public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, GatewayLockHomePresenter<IGatewayLockHomeView>> implements View.OnClickListener, IGatewayLockHomeView, View.OnLongClickListener {
 
 
     List<BluetoothRecordBean> mOpenLockList = new ArrayList<>();
-
-
     @BindView(R.id.recycleview)
     RecyclerView recycleview;
     @BindView(R.id.iv_external_big)
@@ -71,11 +65,21 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
     TextView tvMore;
     @BindView(R.id.rl_device_dynamic)
     RelativeLayout rlDeviceDynamic;
+    @BindView(R.id.rl_icon)
+    RelativeLayout rlIcon;
+    @BindView(R.id.rl_has_data)
+    RelativeLayout rlHasData;
+    @BindView(R.id.tv_no_data)
+    TextView tvNoData;
+
 
     private GwLockInfo gatewayLockInfo;
     private String gatewayId;
     private String deviceId;
-    private  BluetoothRecordAdapter openLockRecordAdapter;
+    private BluetoothRecordAdapter openLockRecordAdapter;
+    private boolean isOpening = false;
+    private boolean isClosing = false;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -84,7 +88,6 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
         initRecycleView();
         initListener();
         initData();
-        changeOpenLockStatus(1);
         return view;
     }
 
@@ -94,12 +97,24 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
     }
 
     private void initData() {
-        gatewayLockInfo= (GwLockInfo) getArguments().getSerializable(KeyConstants.GATEWAY_LOCK_INFO);
-        if (gatewayLockInfo!=null){
-            LogUtils.e(gatewayLockInfo.getGwID()+"网关ID是    ");
-            gatewayId=gatewayLockInfo.getGwID();
-            deviceId=gatewayLockInfo.getServerInfo().getDeviceId();
-            mPresenter.openGatewayLockRecord(gatewayId,deviceId,MyApplication.getInstance().getUid(),1,3);
+        gatewayLockInfo = (GwLockInfo) getArguments().getSerializable(KeyConstants.GATEWAY_LOCK_INFO);
+        if (gatewayLockInfo != null) {
+            LogUtils.e(gatewayLockInfo.getGwID() + "网关ID是    ");
+            if ("online".equals(gatewayLockInfo.getServerInfo().getEvent_str())) {
+                //在线
+                changeOpenLockStatus(5);
+            } else {
+                changeOpenLockStatus(1);
+            }
+            gatewayId = gatewayLockInfo.getGwID();
+            deviceId = gatewayLockInfo.getServerInfo().getDeviceId();
+            mPresenter.listenerNetworkChange();//监听网络状态
+            if (!TextUtils.isEmpty(gatewayId) && !TextUtils.isEmpty(deviceId)) {
+                mPresenter.attachView(this);
+                mPresenter.openGatewayLockRecord(gatewayId, deviceId, MyApplication.getInstance().getUid(), 1, 3);
+            }else{
+                changePage(false);
+            }
         }
 
 
@@ -108,11 +123,12 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
     private void initListener() {
         tvMore.setOnClickListener(this);
         rlDeviceDynamic.setOnClickListener(this);
+        rlIcon.setOnLongClickListener(this);
     }
 
 
     private void initRecycleView() {
-        openLockRecordAdapter= new BluetoothRecordAdapter(mOpenLockList);
+        openLockRecordAdapter = new BluetoothRecordAdapter(mOpenLockList);
         recycleview.setLayoutManager(new LinearLayoutManager(getActivity()));
         recycleview.setAdapter(openLockRecordAdapter);
     }
@@ -123,7 +139,6 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
     }
 
     public void changeOpenLockStatus(int status) {
-
 /*        状态1.WiFi不在线
         状态（推拉）2： “已启动布防，长按开锁“
 
@@ -315,27 +330,41 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
 
         }
     }
+
+    public void changePage(boolean hasData) {
+        if (hasData) {
+            rlHasData.setVisibility(View.VISIBLE);
+            tvNoData.setVisibility(View.GONE);
+            rlHasData.setEnabled(false);
+        } else {
+            rlHasData.setVisibility(View.GONE);
+            tvNoData.setVisibility(View.VISIBLE);
+            rlHasData.setEnabled(true);
+        }
+    }
+
     @Override
     public void onClick(View v) {
         Intent intent;
         switch (v.getId()) {
             case R.id.rl_device_dynamic:
                 intent = new Intent(getActivity(), GatewayEquipmentDynamicActivity.class);
-                if (!TextUtils.isEmpty(gatewayId)&&!TextUtils.isEmpty(deviceId)){
-                    intent.putExtra(KeyConstants.GATEWAY_ID,gatewayId);
-                    intent.putExtra(KeyConstants.DEVICE_ID,deviceId);
+                if (!TextUtils.isEmpty(gatewayId) && !TextUtils.isEmpty(deviceId)) {
+                    intent.putExtra(KeyConstants.GATEWAY_ID, gatewayId);
+                    intent.putExtra(KeyConstants.DEVICE_ID, deviceId);
                     startActivity(intent);
                 }
 
                 break;
             case R.id.tv_more:
                 intent = new Intent(getActivity(), GatewayEquipmentDynamicActivity.class);
-                if (!TextUtils.isEmpty(gatewayId)&&!TextUtils.isEmpty(deviceId)){
-                    intent.putExtra(KeyConstants.GATEWAY_ID,gatewayId);
-                    intent.putExtra(KeyConstants.DEVICE_ID,deviceId);
+                if (!TextUtils.isEmpty(gatewayId) && !TextUtils.isEmpty(deviceId)) {
+                    intent.putExtra(KeyConstants.GATEWAY_ID, gatewayId);
+                    intent.putExtra(KeyConstants.DEVICE_ID, deviceId);
                     startActivity(intent);
                 }
                 break;
+
         }
     }
 
@@ -402,9 +431,14 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
 
     @Override
     public void getOpenLockRecordSuccess(List<SelectOpenLockResultBean.DataBean> mOpenLockRecordList) {
+        if (mOpenLockRecordList.size()>0){
+            changePage(true);
+        }else {
+            changePage(false);
+        }
         groupData(mOpenLockRecordList);
-        LogUtils.e("请求到数据是。。。。"+mOpenLockRecordList.size());
-        if (openLockRecordAdapter!=null){
+        LogUtils.e("请求到数据是。。。。" + mOpenLockRecordList.size());
+        if (openLockRecordAdapter != null) {
             openLockRecordAdapter.notifyDataSetChanged();
         }
     }
@@ -421,9 +455,127 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
 
     @Override
     public void networkChangeSuccess() {
-        if (openLockRecordAdapter!=null){
+        if (openLockRecordAdapter != null) {
             openLockRecordAdapter.notifyDataSetChanged();
+        }
+        changeOpenLockStatus(1);
+    }
+
+    @Override
+    public void gatewayStatusChange(String gatewayId, String eventStr) {
+        if (gatewayLockInfo != null) {
+            if (gatewayLockInfo.getGwID().equals(gatewayId)) {
+                //当前猫眼所属的网关是上下线的网关
+                //网关上下线状态要跟着改变
+                if ("offline".equals(eventStr)) {
+                    gatewayLockInfo.getServerInfo().setEvent_str(eventStr);
+                    changeOpenLockStatus(1);
+                }
+            }
         }
     }
 
+    @Override
+    public void deviceStatusChange(String gatewayId, String deviceId, String eventStr) {
+        if (gatewayLockInfo != null) {
+            //设备上下线为当的设备
+            if (gatewayLockInfo.getGwID().equals(gatewayId) && gatewayLockInfo.getServerInfo().getDeviceId().equals(deviceId)) {
+                gatewayLockInfo.getServerInfo().setEvent_str(eventStr);
+                if ("online".equals(eventStr)) {
+                    changeOpenLockStatus(5);
+                } else {
+                    changeOpenLockStatus(1);
+                }
+
+            }
+        }
+    }
+
+    @Override
+    public void inputPwd(GwLockInfo gwLockInfo) {
+        View mView = LayoutInflater.from(getActivity()).inflate(R.layout.have_edit_dialog, null);
+        TextView tvTitle = mView.findViewById(R.id.tv_title);
+        EditText editText = mView.findViewById(R.id.et_name);
+        editText.setInputType(InputType.TYPE_CLASS_NUMBER);
+        TextView tv_cancel = mView.findViewById(R.id.tv_left);
+        TextView tv_query = mView.findViewById(R.id.tv_right);
+        AlertDialog alertDialog = AlertDialogUtil.getInstance().common(getActivity(), mView);
+        tvTitle.setText(getString(R.string.input_open_lock_password));
+        tv_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+            }
+        });
+        tv_query.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String pwd = editText.getText().toString().trim();
+                if (!StringUtil.randomJudge(pwd)) {
+                    ToastUtil.getInstance().showShort(R.string.random_verify_error);
+                    return;
+                }
+                mPresenter.realOpenLock(gwLockInfo.getGwID(), gwLockInfo.getServerInfo().getDeviceId(), pwd);
+                alertDialog.dismiss();
+            }
+        });
+
+
+    }
+
+    @Override
+    public void openLockSuccess() {
+        isOpening = false;
+        isClosing = true;
+        LogUtils.e("当前状态是   isOpening    " + isOpening + "   isClosing   " + isClosing);
+        changeOpenLockStatus(7);
+
+    }
+
+    @Override
+    public void openLockFailed(Throwable throwable) {
+        isOpening = false;
+    }
+
+
+    @Override
+    public void startOpenLock() {
+        isOpening = true;
+        changeOpenLockStatus(6);
+    }
+
+    @Override
+    public void lockCloseSuccess() {
+        isClosing = false;
+        changeOpenLockStatus(5);
+    }
+
+    @Override
+    public void lockCloseFailed() {
+        isClosing = false;
+    }
+
+    @Override
+    public boolean onLongClick(View v) {
+        switch (v.getId()) {
+            case R.id.rl_icon:
+                if (gatewayLockInfo != null) {
+                    if (isOpening) {
+                        ToastUtil.getInstance().showShort(R.string.is_opening_try_latter);
+                        return true;
+                    }
+                    if (isClosing) {
+                        ToastUtil.getInstance().showShort(R.string.lock_already_open);
+                        return true;
+                    }
+                    if (mPresenter != null) {
+                        mPresenter.attachView(this);
+                        mPresenter.openLock(gatewayLockInfo);
+                    }
+
+                }
+                break;
+        }
+        return true;
+    }
 }
