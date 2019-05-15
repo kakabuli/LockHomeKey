@@ -24,6 +24,8 @@ import com.kaadas.lock.utils.Constants;
 import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.NotifyRefreshActivity;
+import com.kaadas.lock.utils.networkListenerutil.NetWorkChangReceiver;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -31,7 +33,7 @@ import butterknife.ButterKnife;
 /**
  * Created by David on 2019/4/25
  */
-public class CateyeFunctionActivity extends BaseActivity<ICatEyeFunctionView, CatEyeFunctionPresenter<ICatEyeFunctionView>> implements View.OnClickListener,ICatEyeFunctionView {
+public class CateyeFunctionActivity extends BaseActivity<ICatEyeFunctionView, CatEyeFunctionPresenter<ICatEyeFunctionView>> implements View.OnClickListener,ICatEyeFunctionView, NotifyRefreshActivity {
     @BindView(R.id.iv_back)
     ImageView ivBack;
     @BindView(R.id.tv_name)
@@ -70,13 +72,17 @@ public class CateyeFunctionActivity extends BaseActivity<ICatEyeFunctionView, Ca
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cateye_function);
         ButterKnife.bind(this);
+        initListener();
+        initData();
+
+    }
+
+    private void initListener() {
         ivBack.setOnClickListener(this);
         llLookBack.setOnClickListener(this);
         llMore.setOnClickListener(this);
         rlIcon.setOnClickListener(this);
-
-        initData();
-
+        NetWorkChangReceiver.setNotifyRefreshActivity(this);
     }
 
     @Override
@@ -299,4 +305,13 @@ public class CateyeFunctionActivity extends BaseActivity<ICatEyeFunctionView, Ca
     }
 
 
+    @Override
+    public void notifityActivity(boolean isRefresh) {
+        if (isRefresh){
+            if (cateEyeInfo!=null){
+                changeOpenLockStatus("offline");
+                dealWithPower(cateEyeInfo.getPower(), "offline", cateEyeInfo.getPowerTimeStamp());
+            }
+        }
+    }
 }

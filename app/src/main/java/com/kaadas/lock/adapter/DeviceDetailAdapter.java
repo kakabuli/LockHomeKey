@@ -86,7 +86,6 @@ public class DeviceDetailAdapter extends BaseQuickAdapter<HomeShowBean, BaseView
                     } else {
                         isWifiDevice(true, helper, "offline", batteryView);
                     }
-                    isWifiDevice(true, helper, gwLockInfo.getServerInfo().getEvent_str(), batteryView);
                     helper.setImageResource(R.id.device_image, R.mipmap.default_zigbee_lock_icon);
                     batteryView.setPower(gwPower);
                     helper.setText(R.id.device_power_text, gwPower + "%");

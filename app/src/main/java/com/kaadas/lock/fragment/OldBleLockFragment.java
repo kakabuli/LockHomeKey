@@ -129,7 +129,6 @@ public class OldBleLockFragment extends BaseBleFragment<IOldBleLockView, OldBleL
         View view = inflater.inflate(R.layout.fragment_old_ble_lock_layout, null);
         ButterKnife.bind(this, view);
         initRecycleView();
-        changeOpenLockStatus(16);
         tvMore.setOnClickListener(this);
         tvSynchronizedRecord.setOnClickListener(this);
         mPresenter.getOpenRecordFromServer(1, bleLockInfo);
@@ -178,7 +177,12 @@ public class OldBleLockFragment extends BaseBleFragment<IOldBleLockView, OldBleL
                     mPresenter.attachView(OldBleLockFragment.this);
                     mPresenter.setBleLockInfo(bleLockInfo);
                     LogUtils.e(this + "   设置设备1  " + bleLockInfo.getServerLockInfo().toString());
-                    mPresenter.isAuth(bleLockInfo, true);
+                    boolean auth = mPresenter.isAuth(bleLockInfo, true);
+                    if (auth){
+                        changeOpenLockStatus(8);
+                    }else {
+                        changeOpenLockStatus(12);
+                    }
                     mPresenter.getAllPassword(bleLockInfo, false);
                     isCurrentFragment = true;
                 } else {
@@ -218,6 +222,7 @@ public class OldBleLockFragment extends BaseBleFragment<IOldBleLockView, OldBleL
                     mPresenter.attachView(OldBleLockFragment.this);
                     mPresenter.isAuth(bleLockInfo, true);
                     mPresenter.getAllPassword(bleLockInfo, false);
+
                 }
             }
         });
@@ -481,7 +486,7 @@ public class OldBleLockFragment extends BaseBleFragment<IOldBleLockView, OldBleL
                 }
                 if (mPresenter.isAuth(bleLockInfo, true)) {
                     LogUtils.e("同步开锁记录");
-                    mPresenter.getRecordFromBle();
+                    mPresenter.syncRecord();
                     list.clear();
                     if (bluetoothRecordAdapter != null) {
                         bluetoothRecordAdapter.notifyDataSetChanged();
@@ -675,19 +680,7 @@ public class OldBleLockFragment extends BaseBleFragment<IOldBleLockView, OldBleL
 
     @Override
     public void onWarringUp(int type) {
-        if (type == 9) {     //安全模式
-            if (!isOpening) {
-                onChangeInitView();
-            }
-        } else if (type == 6) {
-            //发生恢复出厂设置
 
-        } else if (type == -1) {
-            //为type==-1时实际是锁状态发生改变
-            if (!isOpening) {
-                onChangeInitView();
-            }
-        }
     }
 
     private String getOpenLockType(GetPasswordResult passwordResults, OpenLockRecord record) {

@@ -9,13 +9,10 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,35 +26,27 @@ import com.kaadas.lock.R;
 import com.kaadas.lock.activity.addDevice.DeviceAddActivity;
 import com.kaadas.lock.activity.device.BluetoothLockAuthorizationActivity;
 import com.kaadas.lock.activity.device.BluetoothLockFunctionActivity;
-
 import com.kaadas.lock.activity.device.GatewayActivity;
 import com.kaadas.lock.activity.device.cateye.more.CateyeFunctionActivity;
 import com.kaadas.lock.activity.device.gatewaylock.GatewayLockFunctionActivity;
 import com.kaadas.lock.activity.device.oldbluetooth.OldBluetoothLockDetailActivity;
 import com.kaadas.lock.adapter.DeviceDetailAdapter;
-import com.kaadas.lock.bean.DeviceDetailBean;
 import com.kaadas.lock.bean.HomeShowBean;
 import com.kaadas.lock.mvp.mvpbase.BaseFragment;
-
-import com.kaadas.lock.mvp.mvpbase.IBleView;
 import com.kaadas.lock.mvp.presenter.DevicePresenter;
-import com.kaadas.lock.mvp.view.IBleLockView;
 import com.kaadas.lock.mvp.view.IDeviceView;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.publiclibrary.bean.CateEyeInfo;
 import com.kaadas.lock.publiclibrary.bean.GatewayInfo;
 import com.kaadas.lock.publiclibrary.bean.GwLockInfo;
-import com.kaadas.lock.publiclibrary.bean.ServerGatewayInfo;
-
-import com.kaadas.lock.publiclibrary.mqtt.PowerResultBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.AllBindDevices;
-import com.kaadas.lock.publiclibrary.mqtt.util.MqttData;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.NotifyRefreshActivity;
 import com.kaadas.lock.utils.Rom;
-import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.SPUtils2;
 import com.kaadas.lock.utils.ToastUtil;
+import com.kaadas.lock.utils.networkListenerutil.NetWorkChangReceiver;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
@@ -69,14 +58,12 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
-import io.reactivex.Observable;
-import io.reactivex.subjects.PublishSubject;
 
 /**
  * Created by asqw1 on 2018/3/14.
  */
 
-public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<IDeviceView>> implements BaseQuickAdapter.OnItemClickListener,IDeviceView{
+public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<IDeviceView>> implements BaseQuickAdapter.OnItemClickListener,IDeviceView {
     @BindView(R.id.no_device_image)
     ImageView noDeviceImage;
 
@@ -121,6 +108,7 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
         initRefresh();
         return mView;
     }
+
 
     @Override
     protected DevicePresenter<IDeviceView> createPresent() {
@@ -172,6 +160,7 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                 refresh.setVisibility(View.VISIBLE);
                 mPresenter.getPublishNotify();
                 mPresenter.listenerDeviceOnline();
+                mPresenter.listenerNetworkChange();
                 for (HomeShowBean homeShowBean:homeShowBeanList){
                     LogUtils.e(homeShowBeanList.size()+"获取到大小     "+"获取到昵称  "+homeShowBean.getDeviceNickName());
                     //请求电量
@@ -314,7 +303,6 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                         detailIntent.putExtra(KeyConstants.BLE_DEVICE_INFO, bleLockInfo);
                         startActivityForResult(detailIntent,KeyConstants.GET_BLE_POWER);
                     }
-
                 } else {
                     Intent impowerIntent = new Intent(getActivity(), BluetoothLockAuthorizationActivity.class);
                     String model = bleLockInfo.getServerLockInfo().getModel();
@@ -506,6 +494,15 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
     }
 
     @Override
+    public void networkChangeSuccess() {
+        //网络断开
+        if (deviceDetailAdapter!=null) {
+            deviceDetailAdapter.notifyDataSetChanged();
+        }
+
+    }
+
+    @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser==true){
@@ -549,9 +546,6 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
             }
         }
     }
-
-
-
 
 
 }

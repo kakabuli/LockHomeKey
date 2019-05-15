@@ -27,12 +27,14 @@ import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.utils.Constants;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.NotifyRefreshActivity;
 import com.kaadas.lock.utils.PermissionUtil;
 import com.kaadas.lock.utils.Rom;
 import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.ToastUtil;
 import com.kaadas.lock.utils.ftp.GeTui;
-import com.kaadas.lock.utils.greenDao.bean.ZigbeeEvent;
+import com.kaadas.lock.utils.greenDao.bean.CatEyeEvent;
+import com.kaadas.lock.utils.networkListenerutil.NetWorkChangReceiver;
 import com.kaadas.lock.widget.NoScrollViewPager;
 import com.kaidishi.lock.service.GeTuiPushService;
 
@@ -53,7 +55,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivityPresenter<IMainActivityView>>
-        implements ViewPager.OnPageChangeListener, IMainActivityView, RadioGroup.OnCheckedChangeListener {
+        implements ViewPager.OnPageChangeListener, IMainActivityView, RadioGroup.OnCheckedChangeListener{
     @BindView(R.id.rb_one)
     RadioButton rbOne;
     @BindView(R.id.rb_two)
@@ -124,6 +126,7 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
     protected MainActivityPresenter<IMainActivityView> createPresent() {
         return new MainActivityPresenter<>();
     }
+
 
     public interface HomeSelectListener {
         void onHomeSelectChange(boolean isSelect);
@@ -240,20 +243,20 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
         String nickName = MyApplication.getInstance().getNickByDeviceId(deviceId);
         String content = null;
         switch (eventType) {
-            case ZigbeeEvent.EVENT_PIR:
+            case CatEyeEvent.EVENT_PIR:
                 content = String.format(getString(R.string.pir_notify), nickName);
                 break;
-            case ZigbeeEvent.EVENT_DOOR_BELL:
+            case CatEyeEvent.EVENT_DOOR_BELL:
 //                content = String.format(getString(R.string.door_bell), nickName);
 //                ToastUtil.getInstance().showShort(content);
                 break;
-            case ZigbeeEvent.EVENT_HEAD_LOST:
+            case CatEyeEvent.EVENT_HEAD_LOST:
                 content = String.format(getString(R.string.head_lost_notify), nickName);
                 break;
-            case ZigbeeEvent.EVENT_HOST_LOST:
+            case CatEyeEvent.EVENT_HOST_LOST:
                 content = String.format(getString(R.string.host_lost_notify), nickName);
                 break;
-            case ZigbeeEvent.EVENT_LOW_POWER:
+            case CatEyeEvent.EVENT_LOW_POWER:
                 content = String.format(getString(R.string.low_power_notify), nickName);
                 break;
         }

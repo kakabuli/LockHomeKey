@@ -6,6 +6,8 @@ import com.kaadas.lock.mvp.mvpbase.BasePresenter;
 import com.kaadas.lock.publiclibrary.http.util.RxjavaHelper;
 import com.kaadas.lock.publiclibrary.mqtt.MqttCommandFactory;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.BindGatewayBeanResult;
+import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.BindGatewayResultBean;
+import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.BindMemeReuslt;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttConstant;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttData;
 import com.kaadas.lock.utils.LogUtils;
@@ -45,13 +47,19 @@ public class GatewayBindPresenter<T> extends BasePresenter<GatewayBindView> {
                     @Override
                     public void accept(MqttData mqttData) throws Exception {
                         LogUtils.e("绑定网关回调" + mqttData.getPayload());
-                        BindGatewayBeanResult bindGatewayResult = new Gson().fromJson(mqttData.getPayload(), BindGatewayBeanResult.class);
+                        BindGatewayResultBean bindGatewayResult = new Gson().fromJson(mqttData.getPayload(), BindGatewayResultBean.class);
                         LogUtils.e(bindGatewayResult.getFunc());
-                        if ("200".equals(bindGatewayResult.getCode())) {
+                        if ("200".equals(bindGatewayResult.getCode())&&bindGatewayResult.getData().getDeviceList()!=null&&bindGatewayResult.getData().getDeviceList().size()>0) {
+                            if (mViewRef.get()!=null){
+                                mViewRef.get().bindGatewaySuitSuccess(deviceSN,bindGatewayResult.getData().getDeviceList());
+                            }
+                        }else if ("200".equals(bindGatewayResult.getCode())){
                             if (mViewRef.get() != null) {
                                 mViewRef.get().bindGatewaySuccess(deviceSN);
                             }
-                        } else {
+                        }
+
+                        else {
                             if (mViewRef.get() != null) {
                                 mViewRef.get().bindGatewayFail(bindGatewayResult.getCode(), bindGatewayResult.getMsg());
                             }
@@ -70,9 +78,9 @@ public class GatewayBindPresenter<T> extends BasePresenter<GatewayBindView> {
     }
 
     //绑定咪咪网
-    public void bindMimi(String deviceSN) {
+    public void bindMimi(String deviceSN,String gatewayId) {
         toDisposable(bingMimiDisposable);
-        MqttMessage mqttMessage = MqttCommandFactory.registerMemeAndBind(MyApplication.getInstance().getUid(), deviceSN);
+        MqttMessage mqttMessage = MqttCommandFactory.registerMemeAndBind(MyApplication.getInstance().getUid(),gatewayId, deviceSN);
         bingMimiDisposable = mqttService.mqttPublish(MqttConstant.MQTT_REQUEST_APP, mqttMessage)
                 .compose(RxjavaHelper.observeOnMainThread())
                 .filter(new Predicate<MqttData>() {
@@ -90,16 +98,16 @@ public class GatewayBindPresenter<T> extends BasePresenter<GatewayBindView> {
                     @Override
                     public void accept(MqttData mqttData) throws Exception {
                         LogUtils.e("绑定咪咪回调" + mqttData.getPayload());
-                        BindGatewayBeanResult bindGatewayResult = new Gson().fromJson(mqttData.getPayload(), BindGatewayBeanResult.class);
-                        LogUtils.e(bindGatewayResult.getFunc());
-                        if ("200".equals(bindGatewayResult.getCode())) {
+                        BindMemeReuslt bindMemeReuslt = new Gson().fromJson(mqttData.getPayload(), BindMemeReuslt.class);
+                        LogUtils.e(bindMemeReuslt.getFunc());
+                        if ("200".equals(bindMemeReuslt.getCode())) {
                             if (mViewRef.get() != null) {
                                 mViewRef.get().bindMimiSuccess();
                                 MyApplication.getInstance().getAllDevicesByMqtt(true);
                             }
                         } else {
                             if (mViewRef.get() != null) {
-                                mViewRef.get().bindMimiFail(bindGatewayResult.getCode(), bindGatewayResult.getMsg());
+                                mViewRef.get().bindMimiFail(bindMemeReuslt.getCode(), bindMemeReuslt.getMsg());
                             }
                         }
                         toDisposable(bingMimiDisposable);

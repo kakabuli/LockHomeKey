@@ -107,6 +107,40 @@ public class BleUtil {
     }
 
 
+    public static OpenLockRecord oldParseData(byte[] data) {
+         //0  1  2  3  4  5  6  7  8  9  10 11 12 13 14 15 16 17 18 19
+        //5f 51 04 1c c3 80 64 00 02 09 ff ff 19 05 14 16 55 04 00 00
+        int openType1 = data[8] & 0xff;
+        int userNumber = data[9] & 0xff;
+        int index = data[7] & 0xff;
+        String year = Rsa.byteToHexString(data[12]);
+        String mouth = Rsa.byteToHexString(data[13]);
+        String day = Rsa.byteToHexString(data[14]);
+        String hour = Rsa.byteToHexString(data[15]);
+        String min = Rsa.byteToHexString(data[16]);
+        String second = Rsa.byteToHexString(data[17]);
+        //yyyy-MM-dd HH:mm:ss
+        String openTime = "20" + year + "-" + mouth + "-" + day + " " + hour + ":" + min + ":" + second;
+        String openType = "";
+        switch (openType1) {
+            case 1:
+                openType = PASSWORD;
+                break;
+            case 2:
+                openType = FINGERPRINT;
+                break;
+            case 3:
+                openType = RFID;
+                break;
+            default:
+                openType = PASSWORD;
+                break;
+        }
+        //String user_num, String open_type, String open_time, int index
+        OpenLockRecord openLockRecord = new OpenLockRecord(userNumber > 9 ? "" + userNumber : "0" + userNumber, openType,openTime,index);
+        return openLockRecord;
+    }
+
     /**
      * @param payload
      * @return
@@ -115,7 +149,8 @@ public class BleUtil {
 
     public static OpenLockRecord parseLockRecord(byte[] payload) {
         OpenLockRecord lockRecord;
-
+   //0  1  2  3  4  5  6  7  8  9  10 11 12 13 14 15 16 17 18 19
+  //5f 51 04 1c c3 80 64 00 02 09 ff ff 19 05 14 16 55 04 00 00
         byte[] openLockTime = new byte[4];
 
         System.arraycopy(payload, 6, openLockTime, 0, 4);

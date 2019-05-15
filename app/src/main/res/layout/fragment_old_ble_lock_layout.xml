@@ -128,7 +128,6 @@
 
                 <RelativeLayout
                     android:id="@+id/rl_has_data"
-                    android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 

@@ -10,14 +10,19 @@ import android.widget.ImageView;
 
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
+import com.kaadas.lock.activity.addDevice.zigbeelocknew.AddDeviceZigbeeLockNewFirstActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.mvp.presenter.deviceaddpresenter.GatewayBindPresenter;
+import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.BindGatewayResultBean;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttService;
+import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.NetUtil;
 import com.kaadas.lock.utils.ToastUtil;
 import com.kaadas.lock.mvp.view.deviceaddview.DeviceGatewayBindListView;
 import com.kaadas.lock.mvp.view.deviceaddview.GatewayBindView;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -77,7 +82,17 @@ public class AddGatewayThirdActivity extends BaseActivity<GatewayBindView, Gatew
 
     @Override
     public void bindGatewaySuccess(String deviceSN) {
-       mPresenter.bindMimi(deviceSN);
+       mPresenter.bindMimi(deviceSN,deviceSN);
+    }
+
+    @Override
+    public void bindGatewaySuitSuccess(String deviceSN, List<BindGatewayResultBean.DataBean.DeviceListBean> mDeviceList) {
+        //绑定套装成功
+        Intent intent=new Intent(this, AddDeviceZigbeeLockNewFirstActivity.class);
+         intent.putExtra(KeyConstants.GATEWAY_ID,deviceSN);
+        startActivity(intent);
+
+
     }
 
     @Override

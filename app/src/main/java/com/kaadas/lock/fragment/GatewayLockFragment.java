@@ -4,9 +4,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,19 +18,26 @@ import android.widget.TextView;
 
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
+import com.kaadas.lock.activity.home.BluetoothEquipmentDynamicActivity;
 import com.kaadas.lock.activity.home.GatewayEquipmentDynamicActivity;
 import com.kaadas.lock.adapter.BluetoothRecordAdapter;
 import com.kaadas.lock.bean.BluetoothItemRecordBean;
 import com.kaadas.lock.bean.BluetoothRecordBean;
 import com.kaadas.lock.mvp.mvpbase.BaseFragment;
 import com.kaadas.lock.mvp.presenter.gatewaylockpresenter.GatewayLockHomePresenter;
+import com.kaadas.lock.mvp.view.cateye.IGatEyeView;
 import com.kaadas.lock.mvp.view.gatewaylockview.IGatewayLockHomeView;
+import com.kaadas.lock.publiclibrary.bean.GatewayInfo;
 import com.kaadas.lock.publiclibrary.bean.GwLockInfo;
+import com.kaadas.lock.publiclibrary.ble.bean.OpenLockRecord;
+import com.kaadas.lock.publiclibrary.http.result.GetPasswordResult;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.SelectOpenLockResultBean;
 import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.NotifyRefreshActivity;
 import com.kaadas.lock.utils.ToastUtil;
+import com.kaadas.lock.utils.networkListenerutil.NetWorkChangReceiver;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,14 +71,11 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
     TextView tvMore;
     @BindView(R.id.rl_device_dynamic)
     RelativeLayout rlDeviceDynamic;
-    @BindView(R.id.iv_device_dynamic)
-    ImageView ivDeviceDynamic;
 
     private GwLockInfo gatewayLockInfo;
     private String gatewayId;
     private String deviceId;
-    private BluetoothRecordAdapter openLockRecordAdapter;
-
+    private  BluetoothRecordAdapter openLockRecordAdapter;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -78,9 +84,7 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
         initRecycleView();
         initListener();
         initData();
-
         changeOpenLockStatus(1);
-
         return view;
     }
 
@@ -90,13 +94,12 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
     }
 
     private void initData() {
-        gatewayLockInfo = (GwLockInfo) getArguments().getSerializable(KeyConstants.GATEWAY_LOCK_INFO);
-        if (gatewayLockInfo != null) {
-            LogUtils.e(gatewayLockInfo.getGwID() + "网关ID是    ");
-            gatewayId = gatewayLockInfo.getGwID();
-            deviceId = gatewayLockInfo.getServerInfo().getDeviceId();
-            // TODO: 2019/5/13 刷新设备列表的时候又会重新请求一次。记得处理
-            mPresenter.openGatewayLockRecord(gatewayId, deviceId, MyApplication.getInstance().getUid(), 1, 3);
+        gatewayLockInfo= (GwLockInfo) getArguments().getSerializable(KeyConstants.GATEWAY_LOCK_INFO);
+        if (gatewayLockInfo!=null){
+            LogUtils.e(gatewayLockInfo.getGwID()+"网关ID是    ");
+            gatewayId=gatewayLockInfo.getGwID();
+            deviceId=gatewayLockInfo.getServerInfo().getDeviceId();
+            mPresenter.openGatewayLockRecord(gatewayId,deviceId,MyApplication.getInstance().getUid(),1,3);
         }
 
 
@@ -105,12 +108,11 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
     private void initListener() {
         tvMore.setOnClickListener(this);
         rlDeviceDynamic.setOnClickListener(this);
-        ivDeviceDynamic.setOnClickListener(this);
     }
 
 
     private void initRecycleView() {
-        openLockRecordAdapter = new BluetoothRecordAdapter(mOpenLockList);
+        openLockRecordAdapter= new BluetoothRecordAdapter(mOpenLockList);
         recycleview.setLayoutManager(new LinearLayoutManager(getActivity()));
         recycleview.setAdapter(openLockRecordAdapter);
     }
@@ -233,29 +235,26 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
 
         }
     }
-
     @Override
     public void onClick(View v) {
         Intent intent;
         switch (v.getId()) {
             case R.id.rl_device_dynamic:
-            case R.id.iv_device_dynamic:
                 intent = new Intent(getActivity(), GatewayEquipmentDynamicActivity.class);
-                if (!TextUtils.isEmpty(gatewayId) && !TextUtils.isEmpty(deviceId)) {
-                    intent.putExtra(KeyConstants.GATEWAY_ID, gatewayId);
-                    intent.putExtra(KeyConstants.DEVICE_ID, deviceId);
+                if (!TextUtils.isEmpty(gatewayId)&&!TextUtils.isEmpty(deviceId)){
+                    intent.putExtra(KeyConstants.GATEWAY_ID,gatewayId);
+                    intent.putExtra(KeyConstants.DEVICE_ID,deviceId);
                     startActivity(intent);
                 }
 
                 break;
             case R.id.tv_more:
                 intent = new Intent(getActivity(), GatewayEquipmentDynamicActivity.class);
-                if (!TextUtils.isEmpty(gatewayId) && !TextUtils.isEmpty(deviceId)) {
-                    intent.putExtra(KeyConstants.GATEWAY_ID, gatewayId);
-                    intent.putExtra(KeyConstants.DEVICE_ID, deviceId);
+                if (!TextUtils.isEmpty(gatewayId)&&!TextUtils.isEmpty(deviceId)){
+                    intent.putExtra(KeyConstants.GATEWAY_ID,gatewayId);
+                    intent.putExtra(KeyConstants.DEVICE_ID,deviceId);
                     startActivity(intent);
                 }
-
                 break;
         }
     }
@@ -324,8 +323,8 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
     @Override
     public void getOpenLockRecordSuccess(List<SelectOpenLockResultBean.DataBean> mOpenLockRecordList) {
         groupData(mOpenLockRecordList);
-        LogUtils.e("请求到数据是。。。。" + mOpenLockRecordList.size());
-        if (openLockRecordAdapter != null) {
+        LogUtils.e("请求到数据是。。。。"+mOpenLockRecordList.size());
+        if (openLockRecordAdapter!=null){
             openLockRecordAdapter.notifyDataSetChanged();
         }
     }
@@ -339,4 +338,12 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
     public void getOpenLockRecordThrowable(Throwable throwable) {
         ToastUtil.getInstance().showShort(R.string.get_open_lock_record_fail);
     }
+
+    @Override
+    public void networkChangeSuccess() {
+        if (openLockRecordAdapter!=null){
+            openLockRecordAdapter.notifyDataSetChanged();
+        }
+    }
+
 }

@@ -4,9 +4,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,11 +15,19 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.kaadas.lock.R;
+import com.kaadas.lock.activity.cateye.VideoVActivity;
 import com.kaadas.lock.activity.home.CateyeEquipmentDynamicActivity;
 import com.kaadas.lock.adapter.BluetoothRecordAdapter;
 import com.kaadas.lock.bean.BluetoothItemRecordBean;
 import com.kaadas.lock.bean.BluetoothRecordBean;
+import com.kaadas.lock.mvp.mvpbase.BaseFragment;
+import com.kaadas.lock.mvp.presenter.cateye.CatEyePresenter;
+import com.kaadas.lock.mvp.view.cateye.ICatEyeView;
+import com.kaadas.lock.publiclibrary.bean.CateEyeInfo;
+import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
+import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.greenDao.bean.CatEyeEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,9 +35,9 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class CatEyeFragment extends Fragment implements View.OnClickListener {
+public class CatEyeFragment extends BaseFragment<ICatEyeView, CatEyePresenter<ICatEyeView>> implements View.OnClickListener, ICatEyeView {
 
-    List<BluetoothRecordBean> list = new ArrayList<>();
+    List<BluetoothRecordBean> mCatEyeInfoList = new ArrayList<>();
     @BindView(R.id.recycleview)
     RecyclerView recycleview;
     @BindView(R.id.iv_external_big)
@@ -54,33 +62,64 @@ public class CatEyeFragment extends Fragment implements View.OnClickListener {
     RelativeLayout rlHasData;
     @BindView(R.id.tv_no_data)
     TextView tvNoData;
-    boolean hasData;
-    @BindView(R.id.iv_device_dynamic)
-    ImageView ivDeviceDynamic;
+    @BindView(R.id.rl_icon)
+    RelativeLayout rlIcon;
+    private CateEyeInfo cateEyeInfo;
+    private String gatewayId;
+    private String deviceId;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_cat_eye_layout, null);
         ButterKnife.bind(this, view);
+        initData();
         initRecycleView();
-        changeOpenLockStatus(1);
-        tvMore.setOnClickListener(this);
-        rlDeviceDynamic.setOnClickListener(this);
-        ivDeviceDynamic.setOnClickListener(this);
+        initListener();
         return view;
     }
 
+    private void initListener() {
+        tvMore.setOnClickListener(this);
+        rlDeviceDynamic.setOnClickListener(this);
+        rlIcon.setOnClickListener(this);
+    }
+
+    @Override
+    protected CatEyePresenter<ICatEyeView> createPresent() {
+        return new CatEyePresenter<>();
+    }
+
+    private void initData() {
+        cateEyeInfo = (CateEyeInfo) getArguments().getSerializable(KeyConstants.CATE_INFO);
+        if (cateEyeInfo != null) {
+            LogUtils.e(cateEyeInfo.getGwID() + "网关ID是    ");
+            gatewayId = cateEyeInfo.getGwID();
+            deviceId = cateEyeInfo.getServerInfo().getDeviceId();
+            changeOpenLockStatus(cateEyeInfo.getServerInfo().getEvent_str());
+            mPresenter.getPublishNotify();
+            mPresenter.listenerDeviceOnline();
+            mPresenter.listenerNetworkChange();
+            if (!TextUtils.isEmpty(gatewayId) && !TextUtils.isEmpty(deviceId)) {
+                List<CatEyeEvent> catEyeEvents = mPresenter.getCatEyeDynamicInfo(0, 3, gatewayId, deviceId);
+                if (catEyeEvents != null) {
+                    if (catEyeEvents.size() > 0) {
+                        //获取猫眼动态数据成功
+                        LogUtils.e("访问数据库猫眼信息" + catEyeEvents.size());
+                        changePage(true);
+                        groupData(catEyeEvents);
+                    } else {
+                        changePage(false);
+                    }
+                } else {
+                    changePage(false);
+                }
+            }
+        }
+    }
+
     private void initRecycleView() {
-        List<BluetoothItemRecordBean> itemList1 = new ArrayList<>();
-        itemList1.add(new BluetoothItemRecordBean("jff", "jfj", KeyConstants.BLUETOOTH_RECORD_WARN, "fjjf", true, true));
-        list.add(new BluetoothRecordBean("jfjfk", itemList1, false));
-        List<BluetoothItemRecordBean> itemList2 = new ArrayList<>();
-        itemList2.add(new BluetoothItemRecordBean("jff", "jfji", KeyConstants.BLUETOOTH_RECORD_WARN, "fjjf", true, false));
-        itemList2.add(new BluetoothItemRecordBean("jff", "jfji", KeyConstants.BLUETOOTH_RECORD_COMMON, "fjjf", false, false));
-        itemList2.add(new BluetoothItemRecordBean("jff", "Jfjif", KeyConstants.BLUETOOTH_RECORD_WARN, "fjjf", false, true));
-        list.add(new BluetoothRecordBean("jfjfk", itemList2, false));
-        BluetoothRecordAdapter bluetoothRecordAdapter = new BluetoothRecordAdapter(list);
+        BluetoothRecordAdapter bluetoothRecordAdapter = new BluetoothRecordAdapter(mCatEyeInfoList);
         recycleview.setLayoutManager(new LinearLayoutManager(getActivity()));
         recycleview.setAdapter(bluetoothRecordAdapter);
     }
@@ -90,12 +129,16 @@ public class CatEyeFragment extends Fragment implements View.OnClickListener {
         super.onDestroyView();
     }
 
-    public void changeOpenLockStatus(int status) {
-
+    public void changeOpenLockStatus(String eventStr) {
+        int status = 0;
       /*  在线：“点击，查看门外”
 
         离线：“设备已离线”*/
-
+        if ("online".equals(eventStr)) {
+            status = 1;
+        } else {
+            status = 2;
+        }
 
         switch (status) {
             case 1:
@@ -141,7 +184,7 @@ public class CatEyeFragment extends Fragment implements View.OnClickListener {
         }
     }
 
-    public void changePage() {
+    public void changePage(boolean hasData) {
         if (hasData) {
             rlHasData.setVisibility(View.VISIBLE);
             tvNoData.setVisibility(View.GONE);
@@ -158,14 +201,147 @@ public class CatEyeFragment extends Fragment implements View.OnClickListener {
         Intent intent;
         switch (v.getId()) {
             case R.id.rl_device_dynamic:
-            case R.id.iv_device_dynamic:
                 intent = new Intent(getActivity(), CateyeEquipmentDynamicActivity.class);
+                intent.putExtra(KeyConstants.GATEWAY_ID, gatewayId);
+                intent.putExtra(KeyConstants.DEVICE_ID, deviceId);
                 startActivity(intent);
                 break;
             case R.id.tv_more:
                 intent = new Intent(getActivity(), CateyeEquipmentDynamicActivity.class);
+                intent.putExtra(KeyConstants.GATEWAY_ID, gatewayId);
+                intent.putExtra(KeyConstants.DEVICE_ID, deviceId);
                 startActivity(intent);
                 break;
+            case R.id.rl_icon:
+                intent = new Intent(getActivity(), VideoVActivity.class);
+                intent.putExtra(KeyConstants.IS_CALL_IN, false);
+                intent.putExtra(KeyConstants.CATE_INFO, cateEyeInfo);
+                startActivity(intent);
+                break;
+        }
+    }
+
+    @Override
+    public void gatewayStatusChange(String gatewayId, String eventStr) {
+        //网关上下线通知
+        //网关上下线
+        if (cateEyeInfo != null) {
+            if (cateEyeInfo.getGwID().equals(gatewayId)) {
+                //当前猫眼所属的网关是上下线的网关
+                //网关上下线状态要跟着改变
+                if ("offline".equals(eventStr)) {
+                    cateEyeInfo.getServerInfo().setEvent_str(eventStr);
+                    changeOpenLockStatus(cateEyeInfo.getServerInfo().getEvent_str());
+                    LogUtils.e(cateEyeInfo.getPower() + "离线时猫眼的电量是多少  ");
+                }
+            }
+        }
+
+    }
+
+    @Override
+    public void deviceStatusChange(String gatewayId, String deviceId, String eventStr) {
+        //设备上下线通知
+        if (cateEyeInfo != null) {
+            //设备上下线为当的设备
+            if (cateEyeInfo.getGwID().equals(gatewayId) && cateEyeInfo.getServerInfo().getDeviceId().equals(deviceId)) {
+                cateEyeInfo.getServerInfo().setEvent_str(eventStr);
+                changeOpenLockStatus(cateEyeInfo.getServerInfo().getEvent_str());
+            }
+        }
+
+    }
+
+    @Override
+    public void networkChangeSuccess() {
+        //网络断开
+        //
+        LogUtils.e("网关断开...");
+        changeOpenLockStatus("offline");
+    }
+
+
+    private void groupData(List<CatEyeEvent> catEyeEvents) {
+        mCatEyeInfoList.clear();
+        long lastDayTime = 0;
+        for (int i = 0; i < catEyeEvents.size(); i++) {
+            CatEyeEvent dataBean = catEyeEvents.get(i);
+            //获取开锁时间的毫秒数
+            long openTime = dataBean.getEventTime(); //开锁毫秒时间
+
+            long dayTime = openTime - openTime % (24 * 60 * 60 * 1000);//是不是同一天的对比
+
+            List<BluetoothItemRecordBean> itemList = new ArrayList<>();
+
+            String open_time = DateUtils.getDateTimeFromMillisecond(openTime);//将毫秒时间转换成功年月日时分秒的格式
+            String[] split = open_time.split(" ");
+
+            String strRight = split[1];
+            String[] split1 = strRight.split(":");
+
+            String time = split1[0] + ":" + split1[1];
+
+            String titleTime = "";
+            //257锁的信息
+            String catEyeAlramStr = "";
+            switch (dataBean.getEventType()) {
+                case CatEyeEvent.EVENT_PIR:    //PIR触发事件
+                    catEyeAlramStr = getString(R.string.pir_trigger);
+                    break;
+                case CatEyeEvent.EVENT_HEAD_LOST: //猫头被拔
+                    catEyeAlramStr = getString(R.string.cat_head_is_drawn);
+                    break;
+                case CatEyeEvent.EVENT_DOOR_BELL: //响铃事件
+                    catEyeAlramStr = getString(R.string.diabolo);
+                    break;
+                case CatEyeEvent.EVENT_LOW_POWER://低电量
+                    catEyeAlramStr = getString(R.string.cateye_low_power);
+                    break;
+                case CatEyeEvent.EVENT_HOST_LOST://机身被拔
+                    catEyeAlramStr = getString(R.string.fuselage_is_drawn);
+                    break;
+            }
+
+            if (lastDayTime != dayTime) { //添加头
+                lastDayTime = dayTime;
+                titleTime = DateUtils.getDayTimeFromMillisecond(openTime); //转换成功顶部的时间
+
+                if (!TextUtils.isEmpty(catEyeAlramStr)) {
+                    itemList.add(new BluetoothItemRecordBean(catEyeAlramStr, "", KeyConstants.BLUETOOTH_RECORD_WARN,
+                            time, false, false));
+                    mCatEyeInfoList.add(new BluetoothRecordBean(titleTime, itemList, false));
+                }
+            } else {
+                if (!TextUtils.isEmpty(catEyeAlramStr)) {
+                    BluetoothRecordBean bluetoothRecordBean = mCatEyeInfoList.get(mCatEyeInfoList.size() - 1);
+                    List<BluetoothItemRecordBean> bluetoothItemRecordBeanList = bluetoothRecordBean.getList();
+                    bluetoothItemRecordBeanList.add(new BluetoothItemRecordBean(catEyeAlramStr, "", KeyConstants.BLUETOOTH_RECORD_WARN,
+                            time, false, false));
+                }
+            }
+
+        }
+
+        for (int i = 0; i < mCatEyeInfoList.size(); i++) {
+            BluetoothRecordBean bluetoothRecordBean = mCatEyeInfoList.get(i);
+            List<BluetoothItemRecordBean> bluetoothRecordBeanList = bluetoothRecordBean.getList();
+
+            for (int j = 0; j < bluetoothRecordBeanList.size(); j++) {
+                BluetoothItemRecordBean bluetoothItemRecordBean = bluetoothRecordBeanList.get(j);
+
+                if (j == 0) {
+                    bluetoothItemRecordBean.setFirstData(true);
+                }
+                if (j == bluetoothRecordBeanList.size() - 1) {
+                    bluetoothItemRecordBean.setLastData(true);
+                }
+
+            }
+            if (i == mCatEyeInfoList.size() - 1) {
+                bluetoothRecordBean.setLastData(true);
+            }
+
+
         }
     }
 }

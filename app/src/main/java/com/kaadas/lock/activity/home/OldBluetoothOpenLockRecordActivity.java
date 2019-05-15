@@ -347,7 +347,7 @@ public class OldBluetoothOpenLockRecordActivity extends BaseBleActivity<IOpenLoc
                 }
                 if (mPresenter.isAuth(bleLockInfo, true)) {
                     LogUtils.e("同步开锁记录");
-                    mPresenter.getRecordFromBle();
+                    mPresenter.allSyncRecord();
                     list.clear();
                     if (bluetoothRecordAdapter != null) {
                         bluetoothRecordAdapter.notifyDataSetChanged();

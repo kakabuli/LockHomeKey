@@ -280,24 +280,26 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
         //meme网状态
         isCalling = true;
         GatewayInfo gatewayInfo = cateEyeInfo.getGatewayInfo();
-        String meUsername = gatewayInfo.getServerInfo().getMeUsername();
-        String mePwd = gatewayInfo.getServerInfo().getMePwd();
-        if (MemeManager.getInstance().isConnected()) { //meme网已经连接
-            //如果meme网登陆的账号密码为当前的账号密码，直接发起通信
-            if (meUsername.equals(MemeManager.getInstance().getCurrentAccount())
-                    && mePwd.equals(MemeManager.getInstance().getCurrentPassword())) {
-                //查看是否有设备在线   如果有  弹出来电框
-                if (MemeManager.getInstance().getGwDevices().size() > 0) {
-                    wakeupCatEye(cateEyeInfo);
-                } else {  //本地登录了米米网账号且是当前猫眼的meme网昂好   但是没有本地设备在线  等待五秒
-                    listDeviceChange(cateEyeInfo, false);
+        if (gatewayInfo!=null) {
+            String meUsername = gatewayInfo.getServerInfo().getMeUsername();
+            String mePwd = gatewayInfo.getServerInfo().getMePwd();
+            if (MemeManager.getInstance().isConnected()) { //meme网已经连接
+                //如果meme网登陆的账号密码为当前的账号密码，直接发起通信
+                if (meUsername.equals(MemeManager.getInstance().getCurrentAccount())
+                        && mePwd.equals(MemeManager.getInstance().getCurrentPassword())) {
+                    //查看是否有设备在线   如果有  弹出来电框
+                    if (MemeManager.getInstance().getGwDevices().size() > 0) {
+                        wakeupCatEye(cateEyeInfo);
+                    } else {  //本地登录了米米网账号且是当前猫眼的meme网昂好   但是没有本地设备在线  等待五秒
+                        listDeviceChange(cateEyeInfo, false);
+                    }
+                } else {  //本地登录的meme网账号不是呼叫进来猫眼的meme网账号   不处理
+                    MemeManager.getInstance().videoActivityDisconnectMeme();
+                    loginMeme(meUsername, mePwd, cateEyeInfo, false);
                 }
-            } else {  //本地登录的meme网账号不是呼叫进来猫眼的meme网账号   不处理
-                MemeManager.getInstance().videoActivityDisconnectMeme();
+            } else { //meme网没有连接
                 loginMeme(meUsername, mePwd, cateEyeInfo, false);
             }
-        } else { //meme网没有连接
-            loginMeme(meUsername, mePwd, cateEyeInfo, false);
         }
     }
 

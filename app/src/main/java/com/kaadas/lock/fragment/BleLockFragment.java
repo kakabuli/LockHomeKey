@@ -137,7 +137,6 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
         View view = inflater.inflate(R.layout.fragment_ble_lock_layout, null);
         ButterKnife.bind(this, view);
         initRecycleView();
-        changeOpenLockStatus(16);
         rlDeviceDynamic.setOnClickListener(this);
         tvMore.setOnClickListener(this);
         tvSynchronizedRecord.setOnClickListener(this);

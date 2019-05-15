@@ -354,4 +354,7 @@ public class KeyConstants {
     //国家
     public static final String COUNTRY="country";
 
+    //铃声音量
+    public static final String CAT_EYE_VOLUME="catEyeVolume";
+
 }
