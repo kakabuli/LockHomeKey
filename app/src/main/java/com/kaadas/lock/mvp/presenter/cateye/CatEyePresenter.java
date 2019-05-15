@@ -113,10 +113,8 @@ public class CatEyePresenter<T> extends BasePresenter<ICatEyeView> {
         networkCatEyeDisposable= NetWorkChangReceiver.notifyNetworkChange().subscribe(new Consumer<Boolean>() {
             @Override
             public void accept(Boolean aBoolean) throws Exception {
-                LogUtils.e("进不来");
                 if (aBoolean){
-                    if (mViewRef!=null&&mViewRef.get()!=null){
-                        LogUtils.e("有页面进来了");
+                    if (mViewRef.get()!=null){
                         mViewRef.get().networkChangeSuccess();
                     }
                 }

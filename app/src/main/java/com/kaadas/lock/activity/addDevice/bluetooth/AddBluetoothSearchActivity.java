@@ -1,6 +1,7 @@
 package com.kaadas.lock.activity.addDevice.bluetooth;
 
 import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.graphics.Path;
@@ -61,13 +62,11 @@ public class AddBluetoothSearchActivity extends BaseActivity<ISearchDeviceView, 
     @BindView(R.id.tv_is_searching)
     TextView tvIsSearching;
 
-    private Animation operatingAnim;
     private DeviceSearchAdapter deviceSearchAdapter;
 
-    private TranslateAnimation translateAnimation;
     private DividerItemDecoration dividerItemDecoration;
-    private ObjectAnimator traslateAnimator;
     private List<BluetoothDevice> mDevices;
+    private ObjectAnimator ivGreenObjectAnimator;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -77,11 +76,10 @@ public class AddBluetoothSearchActivity extends BaseActivity<ISearchDeviceView, 
         showRecycler(false);
         initView();
         initData();
-
     }
 
     private void initData() {
-//        startAnimation();
+        initAnimation();
         tvIsSearching.setVisibility(View.VISIBLE);
         mPresenter.searchDevices();
     }
@@ -140,30 +138,25 @@ public class AddBluetoothSearchActivity extends BaseActivity<ISearchDeviceView, 
 
     private void initAnimation() {
         Path path = new Path();
-        RectF rectF = new RectF(deviceAddSearch.getLeft(), deviceAddSearch.getTop(), deviceAddSearch.getRight(), deviceAddSearch.getBottom());
-        path.addOval(rectF, Path.Direction.CW);
-        traslateAnimator = ObjectAnimator.ofFloat(deviceAddSearch, "x", "y", path);
-        traslateAnimator.start();
+        path.addOval(-38, -38, 38, 38, Path.Direction.CW);
+        ivGreenObjectAnimator = ObjectAnimator.ofFloat(deviceAddSearch, View.TRANSLATION_X, View.TRANSLATION_Y, path);
+        ivGreenObjectAnimator.setDuration(2000).setRepeatCount(ValueAnimator.INFINITE);
+        ivGreenObjectAnimator.setRepeatMode(ValueAnimator.RESTART);
+        ivGreenObjectAnimator.start();
     }
 
-    /**
-     * 启动搜索图片的动画
-     */
-    private void startAnimation() {
-        if (operatingAnim != null) {
-            deviceAddSearch.startAnimation(operatingAnim);
-        }
-    }
 
     /**
      * 停止搜索图片
-     *
      * @param
      */
     private void stopAnimation() {
         deviceAddSearch.clearAnimation();
+        if (ivGreenObjectAnimator!=null){
+            ivGreenObjectAnimator.cancel();
+            ivGreenObjectAnimator.setupEndValues();
+        }
     }
-
 
     @OnClick({R.id.back, R.id.help, R.id.research})
     public void onViewClicked(View view) {
@@ -255,7 +248,8 @@ public class AddBluetoothSearchActivity extends BaseActivity<ISearchDeviceView, 
     @Override
     public void onStopScan() {
         stopAnimation();
-        tvIsSearching.setVisibility(View.GONE);
+        tvIsSearching.setVisibility(View.INVISIBLE);
+
         if (mDevices == null) {
             showRecycler(false);
             showNotScanDeviceDialog();

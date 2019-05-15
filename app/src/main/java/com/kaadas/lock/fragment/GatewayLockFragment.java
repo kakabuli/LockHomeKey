@@ -157,6 +157,22 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
                 break;
             case 2:
 //     “已启动布防，长按开锁“
+                ivExternalBig.setVisibility(View.VISIBLE);
+                ivExternalBig.setImageResource(R.mipmap.bluetooth_bu_fang_big_middle_icon);
+                ivExternalMiddle.setVisibility(View.GONE);
+//                ivExternalMiddle.setImageResource();
+                ivExternalSmall.setVisibility(View.GONE);
+//                ivExternalSmall.setImageResource();
+                ivInnerMiddle.setVisibility(View.VISIBLE);
+                ivInnerMiddle.setImageResource(R.mipmap.bluetooth_lock_safe_inner_midder_icon);
+                ivInnerSmall.setVisibility(View.VISIBLE);
+                ivInnerSmall.setImageResource(R.mipmap.gate_lock_close_inner_small_icon);
+                tvInner.setVisibility(View.VISIBLE);
+                tvInner.setText(getString(R.string.long_press_open_lock));
+                tvInner.setTextColor(getResources().getColor(R.color.white));
+                tvExternal.setVisibility(View.VISIBLE);
+                tvExternal.setTextColor(getResources().getColor(R.color.cC6F5FF));
+                tvExternal.setText(getString(R.string.bu_fang_status));
                 break;
             case 3:
 //                “安全模式”  长按不可APP开锁，提示
@@ -164,15 +180,79 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
                 break;
             case 4:
 //                “已反锁，请门内开锁”
+                ivExternalBig.setVisibility(View.VISIBLE);
+                ivExternalBig.setImageResource(R.mipmap.bluetooth_double_lock_big_middle_icon);
+                ivExternalMiddle.setVisibility(View.GONE);
+//                ivExternalMiddle.setImageResource();
+                ivExternalSmall.setVisibility(View.GONE);
+//                ivExternalSmall.setImageResource();
+                ivInnerMiddle.setVisibility(View.VISIBLE);
+                ivInnerMiddle.setImageResource(R.mipmap.bluetooth_lock_safe_inner_midder_icon);
+                ivInnerSmall.setVisibility(View.VISIBLE);
+                ivInnerSmall.setImageResource(R.mipmap.gate_lock_close_inner_small_icon);
+                tvInner.setVisibility(View.GONE);
+//                tvInner.setText();
+//                tvInner.setTextColor();
+                tvExternal.setVisibility(View.VISIBLE);
+                tvExternal.setTextColor(getResources().getColor(R.color.cC6F5FF));
+                tvExternal.setText(getString(R.string.double_lock_status));
                 break;
             case 5:
 //                “长按开锁”（表示关闭状态）
+                ivExternalBig.setVisibility(View.VISIBLE);
+                ivExternalBig.setImageResource(R.mipmap.bluetooth_no_connect_big_icon);
+                ivExternalMiddle.setVisibility(View.GONE);
+//                ivExternalMiddle.setImageResource();
+                ivExternalSmall.setVisibility(View.VISIBLE);
+                ivExternalSmall.setImageResource(R.mipmap.bluetooth_open_lock_small_icon);
+                ivInnerMiddle.setVisibility(View.VISIBLE);
+                ivInnerMiddle.setImageResource(R.mipmap.bluetooth_lock_safe_inner_midder_icon);
+                ivInnerSmall.setVisibility(View.VISIBLE);
+                ivInnerSmall.setImageResource(R.mipmap.gate_lock_close_inner_small_icon);
+                tvInner.setVisibility(View.VISIBLE);
+                tvInner.setText(R.string.long_press_open_lock);
+                tvInner.setTextColor(getResources().getColor(R.color.cF7FDFD));
+                tvExternal.setVisibility(View.VISIBLE);
+                tvExternal.setTextColor(getResources().getColor(R.color.cC6F5FF));
+                tvExternal.setText(getString(R.string.bluetooth_close_status));
                 break;
             case 6:
 //                ”开锁中....“
+                ivExternalBig.setVisibility(View.VISIBLE);
+                ivExternalBig.setImageResource(R.mipmap.bluetooth_no_connect_big_icon);
+                ivExternalMiddle.setVisibility(View.VISIBLE);
+                ivExternalMiddle.setImageResource(R.mipmap.bluetooth_open_lock_middle_icon);
+                ivExternalSmall.setVisibility(View.VISIBLE);
+                ivExternalSmall.setImageResource(R.mipmap.bluetooth_open_lock_small_icon);
+                ivInnerMiddle.setVisibility(View.VISIBLE);
+                ivInnerMiddle.setImageResource(R.mipmap.bluetooth_open_lock_success_niner_middle_icon);
+                ivInnerSmall.setVisibility(View.GONE);
+//                ivInnerSmall.setImageResource();
+                tvInner.setVisibility(View.GONE);
+//                tvInner.setText();
+//                tvInner.setTextColor();
+                tvExternal.setVisibility(View.VISIBLE);
+                tvExternal.setTextColor(getResources().getColor(R.color.cC6F5FF));
+                tvExternal.setText(getString(R.string.is_lock));
                 break;
             case 7:
 //                “锁已打开”.
+                ivExternalBig.setVisibility(View.VISIBLE);
+                ivExternalBig.setImageResource(R.mipmap.bluetooth_no_connect_big_icon);
+                ivExternalMiddle.setVisibility(View.VISIBLE);
+                ivExternalMiddle.setImageResource(R.mipmap.bluetooth_open_lock_middle_icon);
+                ivExternalSmall.setVisibility(View.VISIBLE);
+                ivExternalSmall.setImageResource(R.mipmap.bluetooth_open_lock_small_icon);
+                ivInnerMiddle.setVisibility(View.VISIBLE);
+                ivInnerMiddle.setImageResource(R.mipmap.bluetooth_open_lock_success_niner_middle_icon);
+                ivInnerSmall.setVisibility(View.GONE);
+//                ivInnerSmall.setImageResource();
+                tvInner.setVisibility(View.GONE);
+//                tvInner.setText();
+//                tvInner.setTextColor();
+                tvExternal.setVisibility(View.VISIBLE);
+                tvExternal.setTextColor(getResources().getColor(R.color.cC6F5FF));
+                tvExternal.setText(getString(R.string.open_lock_success));
                 break;
             case 8:
                 //WiFi连接中

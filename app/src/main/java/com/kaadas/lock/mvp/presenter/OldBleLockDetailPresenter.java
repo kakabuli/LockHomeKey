@@ -431,8 +431,13 @@ public class OldBleLockDetailPresenter<T> extends BlePresenter<IOldBluetoothDevi
 
 
     public void realOpenLock(String pwd, boolean isApp) {
+
         if (mViewRef.get() != null) {
             mViewRef.get().isOpeningLock();
+        }
+        if (bleService.getBleVersion() == 1){
+            //老版本开锁
+            return;
         }
         byte[] openLockCommand;
         if (isApp) {//如果是APP开锁

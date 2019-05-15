@@ -142,7 +142,6 @@ public class CatEyeMorePresenter <T> extends BasePresenter<IGatEyeView> {
             MqttMessage mqttMessage = MqttCommandFactory.deleteDevice(gatewayId, deviceId, bustType);
             deleteCatEyeDisposable = mqttService
                     .mqttPublish(MqttConstant.getCallTopic(MyApplication.getInstance().getUid()), mqttMessage)
-                    .compose(RxjavaHelper.observeOnMainThread())
                     .timeout(10 * 1000, TimeUnit.MILLISECONDS)
                     .filter(new Predicate<MqttData>() {
                         @Override
@@ -154,6 +153,7 @@ public class CatEyeMorePresenter <T> extends BasePresenter<IGatEyeView> {
                             return false;
                         }
                     })
+                    .compose(RxjavaHelper.observeOnMainThread())
                     .subscribe(new Consumer<MqttData>() {
                         @Override
                         public void accept(MqttData mqttData) throws Exception {

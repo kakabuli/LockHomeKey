@@ -1,6 +1,5 @@
 package com.kaadas.lock.activity.device;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -10,8 +9,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Vibrator;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -39,7 +38,6 @@ import com.kaadas.lock.publiclibrary.http.util.HttpUtils;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
-import com.kaadas.lock.utils.PermissionUtil;
 import com.kaadas.lock.utils.StringUtil;
 import com.kaadas.lock.utils.ToastUtil;
 
@@ -125,17 +123,22 @@ public class BluetoothLockFunctionActivity extends BaseBleActivity<IDeviceDetail
     @BindView(R.id.tv_open_clock)
     TextView tvOpenClock;
     int lockStatus = -1;
+    @BindView(R.id.iv_lock_icon)
+    ImageView ivLockIcon;
     private BleLockInfo bleLockInfo;
     private static final int TO_MORE_REQUEST_CODE = 101;
     private boolean isOpening = false;
     private Runnable lockRunnable;
     private boolean isConnectingDevice;
     private Handler handler = new Handler();
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bluetooth_lock_function);
         ButterKnife.bind(this);
+        Intent intent = getIntent();
+        changeLockIcon(intent);
         bleLockInfo = mPresenter.getBleLockInfo();
         ivBack.setOnClickListener(this);
         tvType.setText(getString(R.string.bluetooth_type) + bleLockInfo.getServerLockInfo().getModel());
@@ -162,6 +165,23 @@ public class BluetoothLockFunctionActivity extends BaseBleActivity<IDeviceDetail
             }
         };
 //        initRecycleview();
+    }
+
+    private void changeLockIcon(Intent intent) {
+        String model = intent.getStringExtra(KeyConstants.DEVICE_TYPE);
+        if (!TextUtils.isEmpty(model)){
+            if (model.contains("K7")){
+                ivLockIcon.setImageResource(R.mipmap.bluetooth_lock_k7);
+            }else if (model.contains("K8")){
+                ivLockIcon.setImageResource(R.mipmap.bluetooth_lock_k8);
+            }else if (model.contains("K9")){
+                ivLockIcon.setImageResource(R.mipmap.bluetooth_lock_k9);
+            } else if (model.contains("KX")){
+                ivLockIcon.setImageResource(R.mipmap.bluetooth_lock_kx);
+            }else if (model.contains("S8")){
+                ivLockIcon.setImageResource(R.mipmap.bluetooth_lock_s8);
+            }
+        }
     }
 
     @Override
@@ -313,7 +333,7 @@ public class BluetoothLockFunctionActivity extends BaseBleActivity<IDeviceDetail
                 //开锁
                 if (isOpening) {
                     LogUtils.e("长按  但是当前正在开锁状态   ");
-                    return ;
+                    return;
                 }
                 if (mPresenter.isAuth(bleLockInfo, true)) {
                     if (bleLockInfo.getBackLock() == 0 || bleLockInfo.getSafeMode() == 1) {  //反锁状态下或者安全模式下  长按不操作
@@ -322,7 +342,7 @@ public class BluetoothLockFunctionActivity extends BaseBleActivity<IDeviceDetail
                         } else if (bleLockInfo.getBackLock() == 0) {
                             ToastUtil.getInstance().showLong(R.string.back_lock_can_not_open);
                         }
-                        return ;
+                        return;
                     }
                     mPresenter.openLock();
                 }
@@ -330,11 +350,13 @@ public class BluetoothLockFunctionActivity extends BaseBleActivity<IDeviceDetail
                 break;
         }
     }
+
     //震动milliseconds毫秒
     public static void vibrate(final Activity activity, long milliseconds) {
         Vibrator vib = (Vibrator) activity.getSystemService(Service.VIBRATOR_SERVICE);
         vib.vibrate(milliseconds);
     }
+
     @Override
     public void onSearchDeviceFailed(Throwable throwable) {
         lockStatus = KeyConstants.DEVICE_OFFLINE;
@@ -408,7 +430,7 @@ public class BluetoothLockFunctionActivity extends BaseBleActivity<IDeviceDetail
 
     @Override
     public void onElectricUpdata(Integer electric) {
-        if (bleLockInfo!=null&&bleLockInfo.getBattery() != -1) {
+        if (bleLockInfo != null && bleLockInfo.getBattery() != -1) {
             dealWithPower(bleLockInfo.getBattery());
             //删除成功
             Intent intent = new Intent();
