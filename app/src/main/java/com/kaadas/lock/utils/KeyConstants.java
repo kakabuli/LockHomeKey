@@ -269,6 +269,25 @@ public class KeyConstants {
 
     public static final int UPDATE_DEVICE_NAME_REQUEST_CODE=1003;
 
+    //铃声
+    public static final int RING_NUMBER_REQUESET_CODE=1004;
+
+    //音量
+    public static final int VOLUME_REQUESET_CODE=1005;
+
+    //分辨率
+    public static final int RESOLUTION_REQUEST_CODE=1006;
+
+
+    //铃声次数
+    public static final String RIGH_NUMBER="ringNumber";
+
+    //音量
+    public static final String VOLUME_NUMBER="volumeNumber";
+
+    //分辨率
+    public static final String RESOLUTION_NUMBER="resolutionNumber";
+
     //传递蓝牙电量
     public static final int GET_BLE_POWER=1004;
 

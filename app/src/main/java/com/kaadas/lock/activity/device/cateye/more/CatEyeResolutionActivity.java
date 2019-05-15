@@ -124,6 +124,12 @@ public class CatEyeResolutionActivity extends BaseActivity<ICatEyeResolutionView
             alertDialog.dismiss();
         }
         currentResolution=resolution;
+        Intent intent = new Intent();
+        //把返回数据存入Intent
+        intent.putExtra(KeyConstants.RESOLUTION_NUMBER, resolution);
+        //设置返回数据
+        CatEyeResolutionActivity.this.setResult(RESULT_OK, intent);
+
     }
 
     @Override

@@ -142,6 +142,12 @@ public class CatEyeVolumeActivity extends BaseActivity<ICatEyeVolumeView, CatEye
             alertDialog.dismiss();
         }
         currentRingNumber = number;
+        Intent intent = new Intent();
+        //把返回数据存入Intent
+        intent.putExtra(KeyConstants.VOLUME_NUMBER, number);
+        //设置返回数据
+        CatEyeVolumeActivity.this.setResult(RESULT_OK, intent);
+
         ToastUtil.getInstance().showShort(R.string.set_success);
     }
 
