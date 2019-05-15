@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.kaadas.lock.R;
@@ -23,14 +24,20 @@ import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.mvp.presenter.gatewaylockpresenter.GatewayLockStressDetailPresenter;
 import com.kaadas.lock.mvp.view.gatewaylockview.IGatewayLockStressDetailView;
 import com.kaadas.lock.publiclibrary.bean.ForeverPassword;
+import com.kaadas.lock.publiclibrary.http.XiaokaiNewServiceImp;
 import com.kaadas.lock.publiclibrary.http.postbean.AddPasswordBean;
+import com.kaadas.lock.publiclibrary.http.result.SwitchStatusResult;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LoadingDialog;
 import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.Rom;
 import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.SPUtils2;
 import com.kaadas.lock.utils.ToastUtil;
+import com.kaadas.lock.utils.ftp.GeTui;
+
+import org.linphone.mediastream.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,7 +64,7 @@ public class GatewayLockStressDetailActivity extends BaseActivity<IGatewayLockSt
     RelativeLayout rlAppNotification;
 
     List<String> pwdList = new ArrayList<>();
-    boolean appNotificationStatus = true;
+    //boolean appNotificationStatus = true;
     GatewayLockStressPasswordAdapter gatewayLockStressPasswordAdapter;
     
     private LoadingDialog loadingDialog;
@@ -106,17 +113,14 @@ public class GatewayLockStressDetailActivity extends BaseActivity<IGatewayLockSt
         gatewayId=intent.getStringExtra(KeyConstants.GATEWAY_ID);
         deviceId=intent.getStringExtra(KeyConstants.DEVICE_ID);
 
-        appNotificationStatus = (boolean) SPUtils.get(KeyConstants.APP_NOTIFICATION_STATUS, true);
-        if (appNotificationStatus) {
-            ivAppNotification.setImageResource(R.mipmap.iv_open);
-        } else {
-            ivAppNotification.setImageResource(R.mipmap.iv_close);
-        }
+     //   appNotificationStatus = (boolean) SPUtils.get(KeyConstants.APP_NOTIFICATION_STATUS, true);
+
         if (gatewayId!=null&&deviceId!=null){
             //胁迫密码固定09编号
             mPresenter.getLockPwd(gatewayId,deviceId,"09");
             loadingDialog.show(getString(R.string.get_stress_pwd_stop));
         }
+          mPresenter.getPushSwitch();
 
     }
 
@@ -174,17 +178,26 @@ public class GatewayLockStressDetailActivity extends BaseActivity<IGatewayLockSt
                 }
                 break;
             case R.id.rl_app_notification:
+                isopenlockPushSwitch= !isopenlockPushSwitch;
+                mPresenter.updatePushSwitch(isopenlockPushSwitch);
+//                if(isopenlockPushSwitch){
+//                     // 打开状态
+//                    ivAppNotification.setImageResource(R.mipmap.iv_close);
+//                }else{
+//                    // 关闭状态
+//                    ivAppNotification.setImageResource(R.mipmap.iv_open);
+//                }
 
-                if (appNotificationStatus) {
-                    //打开状态 现在关闭
-                    ivAppNotification.setImageResource(R.mipmap.iv_close);
-                    SPUtils.put(KeyConstants.APP_NOTIFICATION_STATUS, false);
-                } else {
-                    //关闭状态 现在打开
-                    ivAppNotification.setImageResource(R.mipmap.iv_open);
-                    SPUtils.put(KeyConstants.APP_NOTIFICATION_STATUS, true);
-                }
-                appNotificationStatus = !appNotificationStatus;
+//                if (appNotificationStatus) {
+//                    //打开状态 现在关闭
+//                    ivAppNotification.setImageResource(R.mipmap.iv_close);
+//                    SPUtils.put(KeyConstants.APP_NOTIFICATION_STATUS, false);
+//                } else {
+//                    //关闭状态 现在打开
+//                    ivAppNotification.setImageResource(R.mipmap.iv_open);
+//                    SPUtils.put(KeyConstants.APP_NOTIFICATION_STATUS, true);
+//                }
+//                appNotificationStatus = !appNotificationStatus;
                 break;
         }
     }
@@ -235,6 +248,46 @@ public class GatewayLockStressDetailActivity extends BaseActivity<IGatewayLockSt
         ToastUtil.getInstance().showShort(R.string.get_stress_list_fail);
         LogUtils.e("获取胁迫密码异常   "+throwable.getMessage());
     }
+    boolean isopenlockPushSwitch=true;
+    @Override
+    public void getSwitchStatus(SwitchStatusResult switchStatusResult) {
+        Log.e(GeTui.VideoLog,"switchStatusResult:"+switchStatusResult);
+       // Toast.makeText(this,switchStatusResult.toString(), Toast.LENGTH_LONG).show();
+        if(switchStatusResult.getCode().equals("200")){
+          isopenlockPushSwitch= switchStatusResult.getData().isOpenlockPushSwitch();
+            if (isopenlockPushSwitch) {
+                ivAppNotification.setImageResource(R.mipmap.iv_open);
+            } else {
+                ivAppNotification.setImageResource(R.mipmap.iv_close);
+            }
+        }
+    }
+
+    @Override
+    public void getSwitchFail() {
+          Toast.makeText(this,getString(R.string.get_swtich_status_fail),Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void updateSwitchStatus(SwitchStatusResult switchStatusResult) {
+        Log.e(GeTui.VideoLog,"更新以后状态是:"+switchStatusResult);
+                if(isopenlockPushSwitch){
+                     // 打开状态
+                    ivAppNotification.setImageResource(R.mipmap.iv_open);
+                }else{
+                    // 关闭状态
+                    ivAppNotification.setImageResource(R.mipmap.iv_close);
+                }
+    }
+
+    @Override
+    public void updateSwitchUpdateFail() {
+          isopenlockPushSwitch= !isopenlockPushSwitch;
+          Toast.makeText(this,getString(R.string.update_swtich_status_fail),Toast.LENGTH_SHORT).show();
+
+    }
+
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -247,9 +300,6 @@ public class GatewayLockStressDetailActivity extends BaseActivity<IGatewayLockSt
                 }
             }
         }
-
-
-
     }
 
 }

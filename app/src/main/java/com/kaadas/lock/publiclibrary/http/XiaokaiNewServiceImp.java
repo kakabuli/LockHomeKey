@@ -1,6 +1,8 @@
 package com.kaadas.lock.publiclibrary.http;
 
 import com.kaadas.lock.bean.PushBean;
+import com.kaadas.lock.bean.PushSwitch;
+import com.kaadas.lock.bean.PushSwitchBean;
 import com.kaadas.lock.bean.VersionBean;
 import com.kaadas.lock.publiclibrary.ble.bean.WarringRecord;
 import com.kaadas.lock.publiclibrary.http.postbean.AddDeviceBean;
@@ -49,6 +51,7 @@ import com.kaadas.lock.publiclibrary.http.result.LoginResult;
 import com.kaadas.lock.publiclibrary.http.result.OTAResult;
 import com.kaadas.lock.publiclibrary.http.result.RegisterResult;
 import com.kaadas.lock.publiclibrary.http.result.SinglePasswordResult;
+import com.kaadas.lock.publiclibrary.http.result.SwitchStatusResult;
 import com.kaadas.lock.publiclibrary.http.result.UserNickResult;
 import com.kaadas.lock.publiclibrary.http.result.UserProtocolResult;
 import com.kaadas.lock.publiclibrary.http.result.UserProtocolVersionResult;
@@ -683,7 +686,7 @@ public class XiaokaiNewServiceImp {
                 .compose(RxjavaHelper.observeOnMainThread());
     }
 
-    ;
+
 
 
     /**
@@ -800,4 +803,21 @@ public class XiaokaiNewServiceImp {
                 .compose(RxjavaHelper.observeOnMainThread());
     }
 
+
+    public static Observable<SwitchStatusResult> getPushSwitch(String uid){
+        PushSwitch pushSwitch = new PushSwitch(uid);
+        return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
+                .getPushSwitch(new HttpUtils<PushSwitch>().getBody(pushSwitch))
+                .compose(RxjavaHelper.observeOnMainThread())
+                ;
+    }
+
+
+    public static Observable<SwitchStatusResult> updatePushSwitch(String uid,boolean openlockPushSwitch){
+        PushSwitchBean pushSwitchBean = new PushSwitchBean(uid,openlockPushSwitch);
+        return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
+                .updatePushSwitch(new HttpUtils<PushSwitchBean>().getBody(pushSwitchBean))
+                .compose(RxjavaHelper.observeOnMainThread())
+                ;
+    }
 }

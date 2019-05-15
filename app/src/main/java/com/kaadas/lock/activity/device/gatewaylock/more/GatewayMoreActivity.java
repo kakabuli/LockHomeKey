@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputFilter;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -13,6 +14,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.MainActivity;
@@ -23,6 +25,7 @@ import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.mvp.presenter.gatewaylockpresenter.GatewayLockMorePresenter;
 import com.kaadas.lock.mvp.view.gatewaylockview.GatewayLockMoreView;
 import com.kaadas.lock.publiclibrary.bean.GwLockInfo;
+import com.kaadas.lock.publiclibrary.http.result.SwitchStatusResult;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LoadingDialog;
@@ -30,6 +33,7 @@ import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.StringUtil;
 import com.kaadas.lock.utils.ToastUtil;
+import com.kaadas.lock.utils.ftp.GeTui;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -63,7 +67,7 @@ public class GatewayMoreActivity extends BaseActivity<GatewayLockMoreView, Gatew
     RelativeLayout rlCheckFirmwareUpdate;*/
     @BindView(R.id.btn_delete)
     Button btnDelete;
-    boolean messageFreeStatus;
+  //  boolean messageFreeStatus;
     boolean amAutoLockStatus;
     boolean silentModeStatus;
     String name;
@@ -115,12 +119,12 @@ public class GatewayMoreActivity extends BaseActivity<GatewayLockMoreView, Gatew
 
 
         //todo 获取到设备名字时,key都加上设备名字
-        messageFreeStatus = (boolean) SPUtils.get(KeyConstants.MESSAGE_FREE_STATUS, true);
-        if (messageFreeStatus) {
-            ivMessageFree.setImageResource(R.mipmap.iv_open);
-        } else {
-            ivMessageFree.setImageResource(R.mipmap.iv_close);
-        }
+//        messageFreeStatus = (boolean) SPUtils.get(KeyConstants.MESSAGE_FREE_STATUS, true);
+//        if (messageFreeStatus) {
+//            ivMessageFree.setImageResource(R.mipmap.iv_open);
+//        } else {
+//            ivMessageFree.setImageResource(R.mipmap.iv_close);
+//        }
 
         if (gatewayId!=null&&deviceId!=null){
             if (loadingDialog!=null){
@@ -129,6 +133,8 @@ public class GatewayMoreActivity extends BaseActivity<GatewayLockMoreView, Gatew
             }
 
         }
+
+        mPresenter.getPushSwitch();
     }
 
     private void initClick() {
@@ -192,16 +198,20 @@ public class GatewayMoreActivity extends BaseActivity<GatewayLockMoreView, Gatew
                 });
                 break;
             case R.id.rl_message_free:
-                if (messageFreeStatus) {
-                    //打开状态 现在关闭
-                    ivMessageFree.setImageResource(R.mipmap.iv_close);
-                    SPUtils.put(KeyConstants.MESSAGE_FREE_STATUS, false);
-                } else {
-                    //关闭状态 现在打开
-                    ivMessageFree.setImageResource(R.mipmap.iv_open);
-                    SPUtils.put(KeyConstants.MESSAGE_FREE_STATUS, true);
-                }
-                messageFreeStatus = !messageFreeStatus;
+//                if (messageFreeStatus) {
+//                    //打开状态 现在关闭
+//                    ivMessageFree.setImageResource(R.mipmap.iv_close);
+//                    SPUtils.put(KeyConstants.MESSAGE_FREE_STATUS, false);
+//                } else {
+//                    //关闭状态 现在打开
+//                    ivMessageFree.setImageResource(R.mipmap.iv_open);
+//                    SPUtils.put(KeyConstants.MESSAGE_FREE_STATUS, true);
+//                }
+//                messageFreeStatus = !messageFreeStatus;
+
+                isopenlockPushSwitch= !isopenlockPushSwitch;
+                mPresenter.updatePushSwitch(isopenlockPushSwitch);
+
                 break;
             case R.id.rl_door_lock_language_switch:
                 intent = new Intent(this, GatewayLockLanguageSettingActivity.class);
@@ -357,5 +367,39 @@ public class GatewayMoreActivity extends BaseActivity<GatewayLockMoreView, Gatew
     @Override
     public void deleteDeviceThrowable(Throwable throwable) {
         LogUtils.e("删除异常   "+throwable.getMessage());
+    }
+    boolean isopenlockPushSwitch=true;
+    @Override
+    public void getSwitchStatus(SwitchStatusResult switchStatusResult) {
+        Log.e(GeTui.VideoLog,"switchStatusResult:"+switchStatusResult);
+        // Toast.makeText(this,switchStatusResult.toString(), Toast.LENGTH_LONG).show();
+        if(switchStatusResult.getCode().equals("200")){
+            isopenlockPushSwitch= switchStatusResult.getData().isOpenlockPushSwitch();
+            if (isopenlockPushSwitch) {
+                ivMessageFree.setImageResource(R.mipmap.iv_open);
+            } else {
+                ivMessageFree.setImageResource(R.mipmap.iv_close);
+            }
+        }
+    }
+    @Override
+    public void getSwitchFail() {
+        Toast.makeText(this,getString(R.string.get_nitification_status_fail),Toast.LENGTH_SHORT).show();
+    }
+    @Override
+    public void updateSwitchStatus(SwitchStatusResult switchStatusResult) {
+        Log.e(GeTui.VideoLog,"更新以后状态是:"+switchStatusResult);
+        if(isopenlockPushSwitch){
+            // 打开状态
+            ivMessageFree.setImageResource(R.mipmap.iv_open);
+        }else{
+            // 关闭状态
+            ivMessageFree.setImageResource(R.mipmap.iv_close);
+        }
+    }
+    @Override
+    public void updateSwitchUpdateFail() {
+        isopenlockPushSwitch= !isopenlockPushSwitch;
+        Toast.makeText(this,getString(R.string.update_swtich_status_fail),Toast.LENGTH_SHORT).show();
     }
 }

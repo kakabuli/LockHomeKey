@@ -200,7 +200,6 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                 .filter(new Predicate<MqttData>() {
                     @Override
                     public boolean test(MqttData mqttData) throws Exception {
-                        LogUtils.e("收到消息 1  " + mqttData.getPayload());
                         if (MqttConstant.EVENT.equals(mqttData.getMsgtype())
                                 && MqttConstant.GW_EVENT.equals(mqttData.getFunc())) {
                             return true;

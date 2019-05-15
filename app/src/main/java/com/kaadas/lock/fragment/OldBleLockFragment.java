@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -132,6 +133,7 @@ public class OldBleLockFragment extends BaseBleFragment<IOldBleLockView, OldBleL
         tvMore.setOnClickListener(this);
         tvSynchronizedRecord.setOnClickListener(this);
         mPresenter.getOpenRecordFromServer(1, bleLockInfo);
+        changeOpenLockStatus(12);
         initView();
         return view;
     }
@@ -279,8 +281,22 @@ public class OldBleLockFragment extends BaseBleFragment<IOldBleLockView, OldBleL
         super.onDestroyView();
     }
 
-    public void changeOpenLockStatus(int status) {
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        LogUtils.e("Fragment    onAttach");
+    }
 
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        LogUtils.e("Fragment    onDetach");
+    }
+
+    public void changeOpenLockStatus(int status) {
+        if (!isAdded()){
+            return;
+        }
         switch (status) {
             case 1:
                 //手机蓝牙未打开
@@ -324,7 +340,6 @@ public class OldBleLockFragment extends BaseBleFragment<IOldBleLockView, OldBleL
             case 5:
                 //“安全模式”  长按不可APP开锁，提示
                 //            ““安全模式，无权限开门””
-
                 break;
             case 6:
                 //“已反锁，请门内开锁”
@@ -527,7 +542,7 @@ public class OldBleLockFragment extends BaseBleFragment<IOldBleLockView, OldBleL
 
     @Override
     public void onSearchDeviceFailed(Throwable throwable) {
-        changeOpenLockStatus(3);
+        changeOpenLockStatus(13);
     }
 
     @Override
