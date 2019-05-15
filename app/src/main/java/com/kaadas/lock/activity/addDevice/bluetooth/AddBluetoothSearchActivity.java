@@ -145,7 +145,6 @@ public class AddBluetoothSearchActivity extends BaseActivity<ISearchDeviceView, 
         ivGreenObjectAnimator.start();
     }
 
-
     /**
      * 停止搜索图片
      * @param
@@ -180,7 +179,6 @@ public class AddBluetoothSearchActivity extends BaseActivity<ISearchDeviceView, 
     @Override
     public void onItemClickListener(View view, int position, BluetoothDevice device) {
         //添加设备
-
         if (NetUtil.isNetworkAvailable()) {
             mPresenter.checkBind(device);
             showLoading(getString(R.string.is_checking_bind));
