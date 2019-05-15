@@ -45,7 +45,6 @@
         android:gravity="center">
 
         <TextView
-            android:id="@+id/tv_delete"
             android:layout_width="@dimen/dp_45"
             android:layout_height="@dimen/dp_45"
             android:background="@drawable/my_message_delete_bj"

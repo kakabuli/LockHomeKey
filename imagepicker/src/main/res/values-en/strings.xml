@@ -11,7 +11,6 @@
     <string name="ip_origin">Original image</string>
     <string name="ip_origin_size">Original image(%1$s)</string>
     <string name="ip_play_camera">Taking pictures</string>
-    <string name="no_photo">A total of 0 zhang</string>
     <string name="select">choose</string>
     <string name="not_allow_sd_warring">Permission is disabled and local images cannot be selected</string>
     <string name="not_allow_camera_warring">Permission is denied to open the camera</string>
@@ -25,6 +24,5 @@
     <string name="ip_all_images">All images</string>
     <string name="ip_complete">complete</string>
     <string name="ip_photo_crop">Image cropping</string>
-    <string name="photograph">photograph</string>
 
 </resources>

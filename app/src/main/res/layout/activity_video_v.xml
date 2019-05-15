@@ -40,7 +40,6 @@
         android:layout_weight="1">
 
         <RelativeLayout
-            android:id="@+id/rl_video"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/video_color">

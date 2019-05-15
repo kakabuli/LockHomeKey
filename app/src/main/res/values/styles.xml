@@ -55,12 +55,6 @@
         <item name="android:windowExitAnimation">@anim/slide_out_bottom</item>
     </style>
 
-    <style name="SwitchTheme">
-        <item name="colorControlActivated">#1F96F7</item>
-        <item name="colorSwitchThumbNormal">#FFFFFFFF</item>
-        <item name="android:colorForeground">#BFBFBF</item>
-    </style>
-
 
     <!-- 低栏RadioButton的样式 -->
     <style name="BottomTabStyle">
@@ -95,11 +89,6 @@
         <item name="android:scaleType">centerInside</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-    </style>
-
-    <style name="AppTheme.NoTitle_FullScreen"> <!--自定义主题名称-->
-        <item name="android:windowNoTitle">true</item>
-        <item name="android:windowFullscreen">true</item>
     </style>
 
     <style name="NoTitleFullscreen"   parent="Theme.AppCompat.Light.NoActionBar">
