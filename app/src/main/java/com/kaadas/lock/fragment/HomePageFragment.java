@@ -319,12 +319,10 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
         } else {
             adapter.notifyDataSetChanged();
         }
-
         if (devices.size() > 0) {
             viewPager.setCurrentItem(0);
             rbHome1.setChecked(true);
         }
-
         rbHome1.setScaleY((float) 1);
         rbHome1.setScaleX((float) 1);
         rbHome2.setScaleY((float) 0.85);
