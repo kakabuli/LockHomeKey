@@ -29,6 +29,14 @@
                 android:layout_centerInParent="true"
                 android:textColor="#FFFFFF"
                 android:textSize="@dimen/sp_17" />
+            <ImageView
+                android:id="@+id/iv_delete"
+                android:padding="@dimen/dp_17"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/old_bluetooth_delete"/>
 
         </RelativeLayout>
 

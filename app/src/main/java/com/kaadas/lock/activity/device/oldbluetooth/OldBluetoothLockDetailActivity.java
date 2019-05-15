@@ -10,7 +10,6 @@ import android.os.Handler;
 import android.os.Vibrator;
 import android.support.annotation.Nullable;
 import android.text.InputType;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -20,11 +19,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.kaadas.lock.R;
-import com.kaadas.lock.activity.device.bluetooth.BluetoothAuthorizationDeviceInformationActivity;
+import com.kaadas.lock.activity.MainActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseBleActivity;
-import com.kaadas.lock.mvp.presenter.DeviceDetailPresenter;
 import com.kaadas.lock.mvp.presenter.OldBluetoothDeviceDetailPresenter;
-import com.kaadas.lock.mvp.view.IDeviceDetailView;
 import com.kaadas.lock.mvp.view.IOldBluetoothDeviceDetailView;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.publiclibrary.ble.BleProtocolFailedException;
@@ -67,6 +64,8 @@ public class OldBluetoothLockDetailActivity extends BaseBleActivity<IOldBluetoot
     LinearLayout llPower;
     @BindView(R.id.rl_device_information)
     RelativeLayout rlDeviceInformation;
+    @BindView(R.id.iv_delete)
+    ImageView ivDelete;
     private String type;
     private BleLockInfo bleLockInfo;
     private boolean isX5 = false;
@@ -100,7 +99,7 @@ public class OldBluetoothLockDetailActivity extends BaseBleActivity<IOldBluetoot
         };
 
         if (mPresenter.getBleVersion() != 2) {
-            rlDeviceInformation.setVisibility(View.GONE);
+            rlDeviceInformation.setVisibility(View.INVISIBLE);
         } else {
             rlDeviceInformation.setVisibility(View.VISIBLE);
         }
@@ -157,6 +156,7 @@ public class OldBluetoothLockDetailActivity extends BaseBleActivity<IOldBluetoot
 
     private void initListener() {
         rlDeviceInformation.setOnClickListener(this);
+        ivDelete.setOnClickListener(this);
     }
 
 
@@ -233,10 +233,35 @@ public class OldBluetoothLockDetailActivity extends BaseBleActivity<IOldBluetoot
     @Override
     public void onBleVersionUpdate(int version) {
         if (version != 2) {
-            rlDeviceInformation.setVisibility(View.GONE);
+            rlDeviceInformation.setVisibility(View.INVISIBLE);
         } else {
             rlDeviceInformation.setVisibility(View.VISIBLE);
         }
+    }
+
+    @Override
+    public void onDeleteDeviceSuccess() {
+        ToastUtil.getInstance().showLong(R.string.delete_success);
+        hiddenLoading();
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    @Override
+    public void onDeleteDeviceFailed(Throwable throwable) {
+        LogUtils.e("删除失败   " + throwable.getMessage());
+        ToastUtil.getInstance().showShort(HttpUtils.httpProtocolErrorCode(this, throwable));
+//        ToastUtil.getInstance().showLong(R.string.delete_fialed);
+        hiddenLoading();
+    }
+
+    @Override
+    public void onDeleteDeviceFailedServer(BaseResult result) {
+        LogUtils.e("删除失败   " + result.toString());
+        String httpErrorCode = HttpUtils.httpErrorCode(this, result.getCode());
+        ToastUtil.getInstance().showLong(httpErrorCode);
+        hiddenLoading();
     }
 
     @Override
@@ -358,6 +383,20 @@ public class OldBluetoothLockDetailActivity extends BaseBleActivity<IOldBluetoot
             case R.id.rl_device_information:
                 Intent intent = new Intent(this, OldBluetoothMoreActivity.class);
                 startActivity(intent);
+                break;
+            case R.id.iv_delete:
+                AlertDialogUtil.getInstance().noEditTwoButtonDialog(this, getString(R.string.device_delete_dialog_head), getString(R.string.device_delete_dialog_content), getString(R.string.cancel), getString(R.string.query), new AlertDialogUtil.ClickListener() {
+                    @Override
+                    public void left() {
+
+                    }
+
+                    @Override
+                    public void right() {
+                        showLoading(getString(R.string.is_deleting));
+                        mPresenter.deleteDevice(bleLockInfo.getServerLockInfo().getLockName());
+                    }
+                });
                 break;
         }
     }

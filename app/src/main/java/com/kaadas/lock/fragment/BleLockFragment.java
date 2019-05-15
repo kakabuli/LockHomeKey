@@ -22,6 +22,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.home.BluetoothEquipmentDynamicActivity;
@@ -532,6 +533,28 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
         }
     }
 
+    public void openLockAnimator(){
+        ivExternalBig.setVisibility(View.VISIBLE);
+//                ivExternalBig.setImageResource(R.mipmap.bluetooth_no_connect_big_icon);
+        Glide.with(getActivity()).load(R.drawable.bluetooth_no_connect_big_icon).into(ivExternalBig);
+        ivExternalMiddle.setVisibility(View.VISIBLE);
+//                ivExternalMiddle.setImageResource(R.mipmap.bluetooth_open_lock_middle_icon);
+        Glide.with(getActivity()).load(R.drawable.bluetooth_open_lock_middle_icon).into(ivExternalMiddle);
+        ivExternalSmall.setVisibility(View.VISIBLE);
+//                ivExternalSmall.setImageResource(R.mipmap.bluetooth_open_lock_small_icon);
+        Glide.with(getActivity()).load(R.drawable.bluetooth_open_lock_small_icon).into(ivExternalSmall);
+        ivInnerMiddle.setVisibility(View.VISIBLE);
+//                ivInnerMiddle.setImageResource(R.mipmap.bluetooth_open_lock_success_niner_middle_icon);
+        Glide.with(getActivity()).load(R.drawable.bluetooth_open_lock_success_niner_middle_icon).into(ivInnerMiddle);
+        ivInnerSmall.setVisibility(View.GONE);
+//                ivInnerSmall.setImageResource();
+        tvInner.setVisibility(View.GONE);
+//                tvInner.setText();
+//                tvInner.setTextColor();
+        tvExternal.setVisibility(View.VISIBLE);
+        tvExternal.setTextColor(getResources().getColor(R.color.cC6F5FF));
+        tvExternal.setText(getString(R.string.is_lock));
+    }
     @Override
     public void onClick(View v) {
         Intent intent;
@@ -684,6 +707,9 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
         ToastUtil.getInstance().showShort(HttpUtils.httpProtocolErrorCode(getActivity(), throwable));
 
     }
+
+
+
 
     @Override
     public void authServerFailed(BaseResult baseResult) {
