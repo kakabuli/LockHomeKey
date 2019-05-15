@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.util.Log;
@@ -76,6 +77,7 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
     private MainActivity activity;
     private int currentPosition;
     public boolean isSelectHome = true;
+    private FragmentPagerAdapter adapter;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -141,7 +143,7 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
         }
     }
 
-    public void initData(final List<HomeShowBean> devices) {
+    public synchronized void initData(final List<HomeShowBean> devices) {
         if (devices == null) {
             hasDevice = false;
             changePage();
@@ -233,32 +235,32 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
             }
         }
 
-        if (fragments!=null){
+        if (fragments != null) {
             fragments.clear();
         }
         for (int i = 0; i < devices.size(); i++) {
             //此处初始化Fragment
-            LogUtils.e(devices.get(0).getDeviceType()+"设备类型是");
+            LogUtils.e(devices.get(0).getDeviceType() + "设备类型是");
             switch (devices.get(i).getDeviceType()) {
                 case HomeShowBean.TYPE_BLE_LOCK: //蓝牙锁:
-                    BleLockInfo bleLockInfo =   (BleLockInfo) devices.get(i).getObject();
+                    BleLockInfo bleLockInfo = (BleLockInfo) devices.get(i).getObject();
                     String bleVersion = bleLockInfo.getServerLockInfo().getBleVersion();
                     boolean isOld = false;
                     if (TextUtils.isEmpty(bleVersion)) {
                         isOld = true;
-                    }else {
-                        if (! "3".equals(bleVersion)){
+                    } else {
+                        if (!"3".equals(bleVersion)) {
                             isOld = true;
                         }
                     }
-                    if (isOld){  //是不是老蓝牙模块
+                    if (isOld) {  //是不是老蓝牙模块
                         OldBleLockFragment oldBleLockFragment = new OldBleLockFragment();
                         Bundle bundle = new Bundle();
                         bundle.putSerializable(KeyConstants.BLE_LOCK_INFO, bleLockInfo);
                         bundle.putSerializable(KeyConstants.FRAGMENT_POSITION, i);
                         oldBleLockFragment.setArguments(bundle);
                         fragments.add(oldBleLockFragment);
-                    }else {
+                    } else {
                         BleLockFragment bleLockFragment = new BleLockFragment();
                         Bundle bundle = new Bundle();
                         bundle.putSerializable(KeyConstants.BLE_LOCK_INFO, bleLockInfo);
@@ -287,20 +289,36 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
             }
         }
 
+
         LogUtils.e("首页Fragment数据是   " + Arrays.toString(fragments.toArray()));
 
-        viewPager.setAdapter(new FragmentPagerAdapter(getChildFragmentManager()) {
-            @Override
-            public Fragment getItem(int i) {
+        if (adapter == null) {
+            adapter = new FragmentPagerAdapter(getChildFragmentManager()) {
+                @Override
+                public Fragment getItem(int i) {
+                    return fragments.get(i);
+                }
 
-                return fragments.get(i);
-            }
+                @Override
+                public long getItemId(int position) {
+                    int hashCode = fragments.get(position).hashCode();
+                    return hashCode;
+                }
 
-            @Override
-            public int getCount() {
-                return fragments.size();
-            }
-        });
+                @Override
+                public int getItemPosition(@NonNull Object object) {
+                    return POSITION_NONE;
+                }
+
+                @Override
+                public int getCount() {
+                    return fragments.size();
+                }
+            };
+            viewPager.setAdapter(adapter);
+        } else {
+            adapter.notifyDataSetChanged();
+        }
 
         if (devices.size() > 0) {
             viewPager.setCurrentItem(0);

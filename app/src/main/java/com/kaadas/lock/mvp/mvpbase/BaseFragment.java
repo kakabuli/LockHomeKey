@@ -62,6 +62,7 @@ public abstract class BaseFragment<T extends IBaseView, V
     @Override
     public void onDetach() {
         super.onDetach();
+        mPresenter.detachView();
     }
 
     /**
