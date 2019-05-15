@@ -13,14 +13,14 @@
         android:layout_gravity="center"
         android:gravity="center"
         android:orientation="vertical"
-        android:weightSum="9" >
+         >
 
         <LinearLayout
             android:paddingBottom="@dimen/dp_40"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_gravity="center"
-            android:layout_weight="6"
+            android:layout_weight="1.65"
             android:gravity="center"
             android:orientation="vertical">
 
@@ -33,7 +33,7 @@
                     android:id="@+id/iv_external_big"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@mipmap/bluetooth_safe_external_middle_icon" />
+                     />
 
                 <ImageView
                     android:id="@+id/iv_external_middle"
@@ -78,7 +78,7 @@
                 android:layout_below="@id/rl_icon"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="@dimen/dp_18"
-                android:text="关闭状态"
+                android:text=""
                 android:textColor="#C6F5FF"
                 android:textSize="@dimen/sp_10" />
 
@@ -87,7 +87,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="3"
+            android:layout_weight="1"
             android:background="#F2F2F2">
 
 
@@ -171,7 +171,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.7"
+        app:layout_constraintVertical_bias="0.64"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_80"
         android:layout_marginRight="15dp"
