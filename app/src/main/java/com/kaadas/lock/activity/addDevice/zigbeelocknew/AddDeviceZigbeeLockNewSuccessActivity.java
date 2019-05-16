@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import com.kaadas.lock.R;
+import com.kaadas.lock.activity.MainActivity;
 import com.kaadas.lock.activity.addDevice.DeviceAddHelpActivity;
 
 import butterknife.BindView;
@@ -41,7 +42,8 @@ public class AddDeviceZigbeeLockNewSuccessActivity extends AppCompatActivity {
                 startActivity(helpIntent);
                 break;
             case R.id.button_next:
-
+                Intent finishIntent=new Intent(this, MainActivity.class);
+                startActivity(finishIntent);
                 break;
         }
     }

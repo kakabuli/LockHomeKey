@@ -57,7 +57,22 @@ public class NetWorkChangReceiver extends BroadcastReceiver {
             int wifiState = intent.getIntExtra(WifiManager.EXTRA_WIFI_STATE, 0);
             LogUtils.e("TAG", "wifiState:" + wifiState);
             switch (wifiState) {
+                //网络
                 case WifiManager.WIFI_STATE_DISABLED:
+                    //把所有网关的状态设置为离线
+                    List<GatewayInfo> gatewayInfos= MyApplication.getInstance().getAllGateway();
+                    if (gatewayInfos!=null&&gatewayInfos.size()>0){
+                        for (GatewayInfo gatewayInfo:gatewayInfos){
+                            gatewayInfo.setEvent_str("offline");
+                        }
+                        if (notifityActivity!=null) {
+                            notifityActivity.notifityActivity(true);
+                        }
+                        networkChangeObversable.onNext(true);
+                        LogUtils.e("通知刷新页面");
+                    }
+
+
                     break;
                 case WifiManager.WIFI_STATE_DISABLING:
                     break;
@@ -78,28 +93,11 @@ public class NetWorkChangReceiver extends BroadcastReceiver {
                             }
                         }*/
                     }
-                } else {
-                    //把所有网关的状态设置为离线
-                   List<GatewayInfo> gatewayInfos= MyApplication.getInstance().getAllGateway();
-                   if (gatewayInfos!=null&&gatewayInfos.size()>0){
-                       for (GatewayInfo gatewayInfo:gatewayInfos){
-                           gatewayInfo.setEvent_str("offline");
-                       }
-                       if (notifityActivity!=null) {
-                           notifityActivity.notifityActivity(true);
-                       }
-                       networkChangeObversable.onNext(true);
-                       LogUtils.e("通知刷新页面");
-                   }
-
-
+                }else {
                     LogUtils.e("TAG", getConnectionType(info.getType()) + "断开");
                 }
+                }
             }
-        }
-
-
-
     }
 }
 

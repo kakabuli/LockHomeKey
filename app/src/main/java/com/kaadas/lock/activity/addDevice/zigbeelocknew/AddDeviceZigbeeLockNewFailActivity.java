@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.kaadas.lock.R;
+import com.kaadas.lock.activity.addDevice.DeviceAddActivity;
 import com.kaadas.lock.activity.addDevice.DeviceAddHelpActivity;
 
 import butterknife.BindView;
@@ -32,13 +33,15 @@ public class AddDeviceZigbeeLockNewFailActivity extends AppCompatActivity {
     @OnClick({R.id.button_again, R.id.hand_bind})
     public void onViewClicked(View view) {
         switch (view.getId()) {
-
             case R.id.button_again:
+                Intent intent=new Intent(this,AddDeviceZigbeelockNewScanActivity.class);
+                startActivity(intent);
                 //再来一次
                 break;
             case R.id.hand_bind:
                 //退出
-
+                Intent outIntent=new Intent(this, DeviceAddActivity.class);
+                startActivity(outIntent);
                 break;
         }
     }

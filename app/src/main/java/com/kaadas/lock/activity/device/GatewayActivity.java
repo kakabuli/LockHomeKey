@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -14,9 +13,8 @@ import android.widget.TextView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
+import com.kaadas.lock.activity.MainActivity;
 import com.kaadas.lock.adapter.GatewayAdapter;
-import com.kaadas.lock.bean.DeviceDetailBean;
-import com.kaadas.lock.bean.GatewayDeviceDetailBean;
 import com.kaadas.lock.bean.HomeShowBean;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.mvp.presenter.gatewaypresenter.GatewayPresenter;
@@ -29,16 +27,16 @@ import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.NotifyRefreshActivity;
 import com.kaadas.lock.utils.networkListenerutil.NetWorkChangReceiver;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by David on 2019/4/25
  */
-public class GatewayActivity extends BaseActivity<GatewayView, GatewayPresenter<GatewayView>> implements View.OnClickListener, BaseQuickAdapter.OnItemClickListener,GatewayView, NotifyRefreshActivity {
+public class GatewayActivity extends BaseActivity<GatewayView, GatewayPresenter<GatewayView>> implements View.OnClickListener, BaseQuickAdapter.OnItemClickListener, GatewayView, NotifyRefreshActivity {
     @BindView(R.id.iv_back)
     ImageView ivBack;
     @BindView(R.id.tv_content)
@@ -52,10 +50,15 @@ public class GatewayActivity extends BaseActivity<GatewayView, GatewayPresenter<
     TextView tvGatewayStatus;
     @BindView(R.id.gateway_nick_name)
     TextView gatewayNickName;
+    @BindView(R.id.unbindGateway)
+    TextView unbindGateway;
+    @BindView(R.id.testunbindGateway)
+    TextView testunbindGateway;
 
     private List<HomeShowBean> homeShowBeans;
-    private boolean gatewayOnline=false;
+    private boolean gatewayOnline = false;
     private GatewayInfo gatewayInfo;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,10 +85,10 @@ public class GatewayActivity extends BaseActivity<GatewayView, GatewayPresenter<
     }
 
     private void changeGatewayStatus(String eventStr) {
-        if ("online".equals(eventStr)){
-            gatewayOnline=true;
-        }else{
-            gatewayOnline=false;
+        if ("online".equals(eventStr)) {
+            gatewayOnline = true;
+        } else {
+            gatewayOnline = false;
         }
         if (gatewayOnline) {
             tvGatewayStatus.setText(R.string.online);
@@ -108,8 +111,8 @@ public class GatewayActivity extends BaseActivity<GatewayView, GatewayPresenter<
         Intent intent = getIntent();
         HomeShowBean homeShowBean = (HomeShowBean) intent.getSerializableExtra(KeyConstants.GATEWAY_INFO);
         if (homeShowBean != null) {
-            gatewayInfo= (GatewayInfo) homeShowBean.getObject();
-            if (gatewayInfo!=null) {
+            gatewayInfo = (GatewayInfo) homeShowBean.getObject();
+            if (gatewayInfo != null) {
                 gatewayNickName.setText(gatewayInfo.getServerInfo().getDeviceNickName());
                 changeGatewayStatus(gatewayInfo.getEvent_str());
                 mPresenter.getPowerData(gatewayInfo.getServerInfo().getDeviceSN());
@@ -142,18 +145,16 @@ public class GatewayActivity extends BaseActivity<GatewayView, GatewayPresenter<
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
 
 
-
-
     }
 
     @Override
     public void getPowerDataSuccess(String deviceId, int power) {
         //获取到电量
-        LogUtils.e("设备名称   "+deviceId+"   电量   "+power);
-        if (homeShowBeans!=null&&homeShowBeans.size()>0){
-            for (HomeShowBean device:homeShowBeans){
+        LogUtils.e("设备名称   " + deviceId + "   电量   " + power);
+        if (homeShowBeans != null && homeShowBeans.size() > 0) {
+            for (HomeShowBean device : homeShowBeans) {
                 //猫眼
-                if (HomeShowBean.TYPE_CAT_EYE==device.getDeviceType()){
+                if (HomeShowBean.TYPE_CAT_EYE == device.getDeviceType()) {
                     if (device.getDeviceId().equals(deviceId)) {
                         CateEyeInfo cateEyeInfo = (CateEyeInfo) device.getObject();
                         cateEyeInfo.setPower(power);
@@ -164,12 +165,12 @@ public class GatewayActivity extends BaseActivity<GatewayView, GatewayPresenter<
                     }
                 }
                 //网关锁
-                else if (HomeShowBean.TYPE_GATEWAY_LOCK==device.getDeviceType()){
-                    if (device.getDeviceId().equals(device)){
-                        GwLockInfo gwLockInfo= (GwLockInfo) device.getObject();
+                else if (HomeShowBean.TYPE_GATEWAY_LOCK == device.getDeviceType()) {
+                    if (device.getDeviceId().equals(device)) {
+                        GwLockInfo gwLockInfo = (GwLockInfo) device.getObject();
                         gwLockInfo.setPower(power);
-                        LogUtils.e("设置zigbee电量成功"+power);
-                        if (gatewayAdapter!=null){
+                        LogUtils.e("设置zigbee电量成功" + power);
+                        if (gatewayAdapter != null) {
                             gatewayAdapter.notifyDataSetChanged();
                         }
                     }
@@ -181,31 +182,30 @@ public class GatewayActivity extends BaseActivity<GatewayView, GatewayPresenter<
         }
 
 
-
     }
 
     @Override
-    public void getPowerDataFail(String gatewayId,String deviceId) {
+    public void getPowerDataFail(String gatewayId, String deviceId) {
         //获取电量失败
-        if (homeShowBeans!=null&&homeShowBeans.size()>0) {
+        if (homeShowBeans != null && homeShowBeans.size() > 0) {
             for (HomeShowBean device : homeShowBeans) {
                 //猫眼电量
-                if (HomeShowBean.TYPE_CAT_EYE==device.getDeviceType()){
-                    if (device.getDeviceId().equals(deviceId)){
-                        CateEyeInfo cateEyeInfo= (CateEyeInfo) device.getObject();
-                        if ("online".equals(cateEyeInfo.getServerInfo().getEvent_str())){
+                if (HomeShowBean.TYPE_CAT_EYE == device.getDeviceType()) {
+                    if (device.getDeviceId().equals(deviceId)) {
+                        CateEyeInfo cateEyeInfo = (CateEyeInfo) device.getObject();
+                        if ("online".equals(cateEyeInfo.getServerInfo().getEvent_str())) {
                             cateEyeInfo.getServerInfo().setEvent_str("offline");
-                            if (gatewayAdapter!=null) {
+                            if (gatewayAdapter != null) {
                                 gatewayAdapter.notifyDataSetChanged();
                             }
                         }
                     }
-                }else if (HomeShowBean.TYPE_GATEWAY_LOCK==device.getDeviceType()){
-                    if (device.getDeviceId().equals(deviceId)){
-                        GwLockInfo gwLockInfo= (GwLockInfo) device.getObject();
-                        if ("online".equals(gwLockInfo.getServerInfo().getEvent_str())){
+                } else if (HomeShowBean.TYPE_GATEWAY_LOCK == device.getDeviceType()) {
+                    if (device.getDeviceId().equals(deviceId)) {
+                        GwLockInfo gwLockInfo = (GwLockInfo) device.getObject();
+                        if ("online".equals(gwLockInfo.getServerInfo().getEvent_str())) {
                             gwLockInfo.getServerInfo().setEvent_str("offline");
-                            if (gatewayAdapter!=null) {
+                            if (gatewayAdapter != null) {
                                 gatewayAdapter.notifyDataSetChanged();
                             }
                         }
@@ -227,15 +227,15 @@ public class GatewayActivity extends BaseActivity<GatewayView, GatewayPresenter<
         //网关状态发生改变
         LogUtils.e("GatewayActivity网关状态发生改变");
         //当前网关
-        LogUtils.e("改变网关id是  "+gatewayId+"当前的网关id是  "+gatewayInfo.getServerInfo().getDeviceSN());
-        if (gatewayInfo!=null){
-            if (gatewayInfo.getServerInfo().getDeviceSN().equals(gatewayId)){
+        LogUtils.e("改变网关id是  " + gatewayId + "当前的网关id是  " + gatewayInfo.getServerInfo().getDeviceSN());
+        if (gatewayInfo != null) {
+            if (gatewayInfo.getServerInfo().getDeviceSN().equals(gatewayId)) {
                 LogUtils.e("监听网关Device的状态      " + gatewayId);
                 gatewayInfo.setEvent_str(eventStr);
                 changeGatewayStatus(eventStr);
                 //获取网关下绑定的设备,把网关下的设备设置为离线.网关离线设备也离线
                 if ("offline".equals(eventStr)) {
-                    if (homeShowBeans!=null&&homeShowBeans.size()>0) {
+                    if (homeShowBeans != null && homeShowBeans.size() > 0) {
                         for (HomeShowBean gatewayBind : homeShowBeans) {
                             switch (gatewayBind.getDeviceType()) {
                                 //猫眼
@@ -252,51 +252,51 @@ public class GatewayActivity extends BaseActivity<GatewayView, GatewayPresenter<
                         }
                     }
                 }
-                if (gatewayAdapter!=null){
+                if (gatewayAdapter != null) {
                     gatewayAdapter.notifyDataSetChanged();
                 }
             }
         }
 
-        }
+    }
 
 
     @Override
     public void deviceStatusChange(String gatewayId, String deviceId, String eventStr) {
 //网关状态发生改变
         LogUtils.e("Gateway设备状态发生改变");
-        if (homeShowBeans!=null&&homeShowBeans.size()>0) {
+        if (homeShowBeans != null && homeShowBeans.size() > 0) {
             for (HomeShowBean homeShowBean : homeShowBeans) {
                 if (deviceId.equals(homeShowBean.getDeviceId())) {
                     switch (homeShowBean.getDeviceType()) {
                         //猫眼上线
                         case HomeShowBean.TYPE_CAT_EYE:
-                            CateEyeInfo cateEyeInfo= (CateEyeInfo) homeShowBean.getObject();
+                            CateEyeInfo cateEyeInfo = (CateEyeInfo) homeShowBean.getObject();
                             if (cateEyeInfo.getGwID().equals(gatewayId)) {
                                 if ("online".equals(eventStr)) {
                                     cateEyeInfo.getServerInfo().setEvent_str("online");
                                 } else {
                                     cateEyeInfo.getServerInfo().setEvent_str("offline");
                                 }
-                                if (gatewayAdapter!=null) {
+                                if (gatewayAdapter != null) {
                                     gatewayAdapter.notifyDataSetChanged();
                                 }
-                                LogUtils.e("猫眼上线下线了   "+eventStr+"猫眼的设备id  "+deviceId);
+                                LogUtils.e("猫眼上线下线了   " + eventStr + "猫眼的设备id  " + deviceId);
                             }
                             break;
                         //网关锁上线
                         case HomeShowBean.TYPE_GATEWAY_LOCK:
-                            GwLockInfo gwLockInfo= (GwLockInfo) homeShowBean.getObject();
+                            GwLockInfo gwLockInfo = (GwLockInfo) homeShowBean.getObject();
                             if (gwLockInfo.getGwID().equals(gatewayId)) {
                                 if ("online".equals(eventStr)) {
                                     gwLockInfo.getServerInfo().setEvent_str("online");
-                                }else if ("offline".equals(eventStr)){
+                                } else if ("offline".equals(eventStr)) {
                                     gwLockInfo.getServerInfo().setEvent_str("offline");
                                 }
-                                if (gatewayAdapter!=null) {
+                                if (gatewayAdapter != null) {
                                     gatewayAdapter.notifyDataSetChanged();
                                 }
-                                LogUtils.e("网关锁上线下线了   "+eventStr+"网关的设备id  "+deviceId);
+                                LogUtils.e("网关锁上线下线了   " + eventStr + "网关的设备id  " + deviceId);
                             }
                             break;
                     }
@@ -305,13 +305,65 @@ public class GatewayActivity extends BaseActivity<GatewayView, GatewayPresenter<
         }
 
 
+    }
+
+    @Override
+    public void unbindGatewaySuccess() {
+        //解绑成功
+        Intent intent=new Intent(this, MainActivity.class);
+        startActivity(intent);
+    }
+
+    @Override
+    public void unbindGatewayFail() {
+
+    }
+
+    @Override
+    public void unbindGatewayThrowable(Throwable throwable) {
+
+    }
+
+    @Override
+    public void unbindTestGatewaySuccess() {
+        //解绑成功
+        Intent intent=new Intent(this, MainActivity.class);
+        startActivity(intent);
+    }
+
+    @Override
+    public void unbindTestGatewayFail() {
+
+    }
+
+    @Override
+    public void unbindTestGatewayThrowable(Throwable throwable) {
 
     }
 
     @Override
     public void notifityActivity(boolean isRefresh) {
-        if (gatewayAdapter!=null) {
+        if (gatewayAdapter != null) {
             gatewayAdapter.notifyDataSetChanged();
+        }
+    }
+
+    @OnClick({R.id.unbindGateway, R.id.testunbindGateway})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            //解绑网关
+            case R.id.unbindGateway:
+                if (gatewayInfo!=null) {
+                    mPresenter.unBindGateway(MyApplication.getInstance().getUid(), gatewayInfo.getServerInfo().getDeviceSN());
+                }
+                break;
+
+            //测试解绑网关
+            case R.id.testunbindGateway:
+                if (gatewayInfo!=null){
+                    mPresenter.testUnbindGateway(MyApplication.getInstance().getUid(),gatewayInfo.getServerInfo().getDeviceSN(),gatewayInfo.getServerInfo().getDeviceSN());
+                }
+                break;
         }
     }
 }
