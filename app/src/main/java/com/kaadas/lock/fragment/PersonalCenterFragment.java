@@ -23,6 +23,8 @@ import com.kaadas.lock.activity.my.PersonalUpdateHeadDataActivity;
 import com.kaadas.lock.activity.my.UserFeedbackActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseFragment;
 import com.kaadas.lock.mvp.presenter.MyFragmentPresenter;
+import com.kaadas.lock.publiclibrary.http.result.BaseResult;
+import com.kaadas.lock.publiclibrary.http.result.UserNickResult;
 import com.kaadas.lock.utils.BitmapUtil;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
@@ -105,6 +107,10 @@ public class PersonalCenterFragment extends BaseFragment<IMyFragmentView, MyFrag
         String userName = (String) SPUtils.get(SPUtils.USERNAME, "");
         if (!TextUtils.isEmpty(userName)) {
             headPortraitName.setText(userName);
+        }else {
+            //获取昵称
+            String uid = (String) SPUtils.get(SPUtils.UID, "");
+            mPresenter.getUserName(uid);
         }
         String photoPath = (String) SPUtils.get(KeyConstants.HEAD_PATH, "");
         if ("".equals(photoPath)) {
@@ -179,6 +185,25 @@ public class PersonalCenterFragment extends BaseFragment<IMyFragmentView, MyFrag
     public void downloadPhotoError(Throwable e) {
 //        ToastUtil.getInstance().showShort( HttpUtils.httpProtocolErrorCode(getActivity(),e));
 
+    }
+
+    @Override
+    public void getNicknameSuccess(UserNickResult userNickResult) {
+        String nickName = userNickResult.getData().getNickName();
+        SPUtils.put(SPUtils.USERNAME, nickName);
+        headPortraitName.setText(nickName);
+    }
+
+    @Override
+    public void getNicknameFail(BaseResult baseResult) {
+        String account = (String) SPUtils.get(SPUtils.PHONEN, "");
+        headPortraitName.setText(account);
+    }
+
+    @Override
+    public void getNicknameError(Throwable throwable) {
+        String account = (String) SPUtils.get(SPUtils.PHONEN, "");
+        headPortraitName.setText(account);
     }
 
     @Override
