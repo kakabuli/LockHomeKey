@@ -717,6 +717,15 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
         changeOpenLockStatus(10);
         handler.removeCallbacks(lockRunnable);
         handler.postDelayed(lockRunnable, 15 * 1000);  //十秒后退出开门状态
+/*        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                changeOpenLockStatus(10);
+                handler.removeCallbacks(lockRunnable);
+                handler.postDelayed(lockRunnable, 15 * 1000);  //十秒后退出开门状态
+            }
+        },3000);*/
+
     }
 
     @Override
@@ -736,6 +745,21 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
             ToastUtil.getInstance().showShort(getString(R.string.open_lock_failed));
         }
         lockRunnable.run();
+/*        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (throwable instanceof TimeoutException) {
+                    ToastUtil.getInstance().showShort(getString(R.string.open_lock_failed));
+                } else if (throwable instanceof BleProtocolFailedException) {
+                    BleProtocolFailedException bleProtocolFailedException = (BleProtocolFailedException) throwable;
+                    ToastUtil.getInstance().showShort(getString(R.string.open_lock_failed));
+                } else {
+                    ToastUtil.getInstance().showShort(getString(R.string.open_lock_failed));
+                }
+                lockRunnable.run();
+            }
+        },3000);*/
+
     }
 
     @Override
