@@ -71,8 +71,6 @@ public class NetWorkChangReceiver extends BroadcastReceiver {
                         networkChangeObversable.onNext(true);
                         LogUtils.e("通知刷新页面");
                     }
-
-
                     break;
                 case WifiManager.WIFI_STATE_DISABLING:
                     break;

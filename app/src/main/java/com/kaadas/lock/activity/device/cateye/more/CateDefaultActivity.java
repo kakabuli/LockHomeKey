@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -17,6 +18,7 @@ import com.kaadas.lock.mvp.view.cateye.ICatEyeDefaultView;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.GetPirSlientBean;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LoadingDialog;
+import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.ToastUtil;
 
 import butterknife.BindView;
@@ -27,27 +29,28 @@ public class CateDefaultActivity extends BaseActivity<ICatEyeDefaultView, CatEye
     TextView tv_content;
     @BindView(R.id.iv_default_monitor)
     ImageView iv_default_monitor;
-    @BindView(R.id.periodtime)
-    TextView periodtime;
-    @BindView(R.id.threshold)
-    TextView threshold;
-    @BindView(R.id.protecttime)
-    TextView protecttime;
-    @BindView(R.id.ust)
-    TextView ust;
-    @BindView(R.id.maxprohibition)
-    TextView maxprohibition;
     @BindView(R.id.rl_device_name)
     RelativeLayout rlDeviceName;
     @BindView(R.id.save)
     Button save;
     @BindView(R.id.iv_back)
     ImageView ivBack;
+    @BindView(R.id.periodtime)
+    EditText periodtime;
+    @BindView(R.id.threshold)
+    EditText threshold;
+    @BindView(R.id.protecttime)
+    EditText protecttime;
+    @BindView(R.id.ust)
+    EditText ust;
+    @BindView(R.id.maxprohibition)
+    EditText maxprohibition;
+
     private String gatewayId;
     private String deviceId;
     private LoadingDialog loadingDialog;
 
-    private int enable = -1;
+    private int enable = 0;
     private boolean getPirEnableFlag = false;
 
     @Override
@@ -95,12 +98,13 @@ public class CateDefaultActivity extends BaseActivity<ICatEyeDefaultView, CatEye
                 break;
             case R.id.iv_default_monitor:
                 //关闭Enable
+                LogUtils.e("点击了。。。。。"+enable);
                 if (enable == 1) {
                     enable = 0;
-                    iv_default_monitor.setBackgroundResource(R.mipmap.iv_close);
+                    iv_default_monitor.setImageResource(R.mipmap.iv_close);
                 } else {
                     enable = 1;
-                    iv_default_monitor.setBackgroundResource(R.mipmap.iv_open);
+                    iv_default_monitor.setImageResource(R.mipmap.iv_open);
                 }
                 break;
             case R.id.save:
@@ -108,7 +112,6 @@ public class CateDefaultActivity extends BaseActivity<ICatEyeDefaultView, CatEye
                     ToastUtil.getInstance().showShort(getString(R.string.get_pir_slient_fail));
                     return;
                 }
-
                 String periodtimeStr = periodtime.getText().toString().trim();
                 String thresholdStr = threshold.getText().toString().trim();
                 String protecttimeStr = protecttime.getText().toString().trim();
@@ -159,19 +162,30 @@ public class CateDefaultActivity extends BaseActivity<ICatEyeDefaultView, CatEye
             loadingDialog.dismiss();
         }
         if (periodtime != null) {
-            periodtime.setText(dataBean.getPeriodtime() + "");
+            String perStr = dataBean.getPeriodtime() + "";
+            periodtime.setText(perStr);
+            periodtime.setSelection(perStr.length());
         }
         if (threshold != null) {
-            threshold.setText(dataBean.getThreshold() + "");
+            String thresholdStr = dataBean.getThreshold() + "";
+            threshold.setText(thresholdStr);
+            threshold.setSelection(thresholdStr.length());
         }
         if (protecttime != null) {
-            protecttime.setText(dataBean.getProtecttime() + "");
+            String protecttimeStr=dataBean.getProtecttime() + "";
+            protecttime.setText(protecttimeStr);
+            protecttime.setSelection(protecttimeStr.length());
         }
         if (ust != null) {
-            ust.setText(dataBean.getUst() + "");
+            String ustStr=dataBean.getUst() + "";
+            ust.setText(ustStr);
+            ust.setSelection(ust.length());
         }
         if (maxprohibition != null) {
-            maxprohibition.setText(dataBean.getMaxprohibition() + "");
+            String maxprohibitionStr=dataBean.getMaxprohibition() + "";
+            maxprohibition.setText(maxprohibitionStr);
+            maxprohibition.setSelection(maxprohibitionStr.length());
+
         }
         if (iv_default_monitor != null) {
             if (dataBean.getEnable() == 1) {
@@ -191,7 +205,6 @@ public class CateDefaultActivity extends BaseActivity<ICatEyeDefaultView, CatEye
         if (loadingDialog != null) {
             loadingDialog.dismiss();
         }
-
         ToastUtil.getInstance().showShort(R.string.get_pir_slient_fail);
     }
 
@@ -210,6 +223,7 @@ public class CateDefaultActivity extends BaseActivity<ICatEyeDefaultView, CatEye
         if (loadingDialog != null) {
             loadingDialog.dismiss();
         }
+        ToastUtil.getInstance().showShort(getString(R.string.set_success));
     }
 
     @Override

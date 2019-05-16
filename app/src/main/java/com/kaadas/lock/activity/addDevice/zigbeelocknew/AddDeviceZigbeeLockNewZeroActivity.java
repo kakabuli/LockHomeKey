@@ -85,10 +85,11 @@ public class AddDeviceZigbeeLockNewZeroActivity  extends BaseActivity<GatewayBin
     }
 
     @Override
-    public void bindGatewaySuitSuccess(String deviceSN, List<BindGatewayResultBean.DataBean.DeviceListBean> mDeviceList) {
+    public void bindGatewaySuitSuccess(String deviceSN, List<BindGatewayResultBean.DataBean.DeviceListBean> mDeviceList,boolean isbindMeMe) {
         //绑定套装成功
         Intent intent = new Intent(this, AddDeviceZigbeeLockNewFirstActivity.class);
         intent.putExtra(KeyConstants.GATEWAY_ID, deviceSN);
+        intent.putExtra(KeyConstants.IS_BIND_MEME,isbindMeMe);
         startActivity(intent);
 
 
@@ -107,7 +108,7 @@ public class AddDeviceZigbeeLockNewZeroActivity  extends BaseActivity<GatewayBin
             startActivity(cancelBind);
             finish();
         } else {
-            Intent failIntent = new Intent(this, AddGatewayFailActivity.class);
+            Intent failIntent = new Intent(this, AddDeviceZigbeeLockNewScanFailActivity.class);
             failIntent.putExtra("code", code);
             failIntent.putExtra("msg", msg);
             startActivity(failIntent);
@@ -118,7 +119,7 @@ public class AddDeviceZigbeeLockNewZeroActivity  extends BaseActivity<GatewayBin
     @Override
     public void bindGatewayThrowable(Throwable throwable) {
         LogUtils.e("绑定网关异常" + throwable);
-        Intent failIntent = new Intent(this, AddGatewayFailActivity.class);
+        Intent failIntent = new Intent(this, AddDeviceZigbeeLockNewScanFailActivity.class);
         startActivity(failIntent);
         finish();
     }

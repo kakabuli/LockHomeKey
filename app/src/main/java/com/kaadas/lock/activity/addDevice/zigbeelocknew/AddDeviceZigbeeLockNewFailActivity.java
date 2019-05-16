@@ -45,4 +45,10 @@ public class AddDeviceZigbeeLockNewFailActivity extends AppCompatActivity {
                 break;
         }
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        startActivity(new Intent(this,DeviceAddActivity.class));
+    }
 }

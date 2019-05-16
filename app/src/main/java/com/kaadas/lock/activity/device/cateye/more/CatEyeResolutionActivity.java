@@ -71,7 +71,7 @@ public class CatEyeResolutionActivity extends BaseActivity<ICatEyeResolutionView
     }
 
     private void checkResolution(String resolution) {
-        if ("1920x1080".equals(resolution)){
+        if ("1280x720".equals(resolution)){
             onceImg.setChecked(true);
         }else if ("960x540".equals(resolution)){
             twiceImg.setChecked(true);
@@ -97,7 +97,7 @@ public class CatEyeResolutionActivity extends BaseActivity<ICatEyeResolutionView
             case R.id.once_layout:
                 onceImg.setChecked(true);
                 twiceImg.setChecked(false);
-                selectResolution="1920x1080";
+                selectResolution="1280x720";
                 break;
             case R.id.twice_layout:
                 onceImg.setChecked(false);
@@ -129,6 +129,7 @@ public class CatEyeResolutionActivity extends BaseActivity<ICatEyeResolutionView
         intent.putExtra(KeyConstants.RESOLUTION_NUMBER, resolution);
         //设置返回数据
         CatEyeResolutionActivity.this.setResult(RESULT_OK, intent);
+        ToastUtil.getInstance().showShort(getString(R.string.set_success));
 
     }
 
@@ -139,7 +140,7 @@ public class CatEyeResolutionActivity extends BaseActivity<ICatEyeResolutionView
         }
         if (currentResolution!=null&&onceImg!=null&&twiceImg!=null) {
             selectResolution=currentResolution;
-            if ("1920x1080".equals(currentResolution)) {
+            if ("1280x720".equals(currentResolution)) {
                 onceImg.setChecked(true);
                 twiceImg.setChecked(false);
             } else if ("960x540".equals(currentResolution)) {
@@ -156,7 +157,7 @@ public class CatEyeResolutionActivity extends BaseActivity<ICatEyeResolutionView
             alertDialog.dismiss();
         }
         if (currentResolution!=null&&onceImg!=null&&twiceImg!=null) {
-            if ("1920x1080".equals(currentResolution)) {
+            if ("1280x720".equals(currentResolution)) {
                 onceImg.setChecked(true);
                 twiceImg.setChecked(false);
             } else if ("960x540".equals(currentResolution)) {

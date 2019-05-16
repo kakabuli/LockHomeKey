@@ -52,7 +52,7 @@ public class CatEyeVolumeActivity extends BaseActivity<ICatEyeVolumeView, CatEye
     @BindView(R.id.btn_save)
     Button btnSave;
     private String volume;
-    private int selectRingNumber = 0;
+    private int selectRingNumber = -1;
     private int currentRingNumber = 0;
     private String gatewayId;
     private String deviceId;
@@ -91,7 +91,7 @@ public class CatEyeVolumeActivity extends BaseActivity<ICatEyeVolumeView, CatEye
             currentRingNumber = 2;
         } else if (getString(R.string.high).equals(ring)) {
             threeImg.setChecked(true);
-            currentRingNumber = 3;
+            currentRingNumber = 0;
         }
     }
 
@@ -122,11 +122,11 @@ public class CatEyeVolumeActivity extends BaseActivity<ICatEyeVolumeView, CatEye
                 break;
 
             case R.id.btn_save:
-                if (selectRingNumber == currentRingNumber || selectRingNumber == 0) {
+                if (selectRingNumber == currentRingNumber||selectRingNumber==-1) {
                     ToastUtil.getInstance().showShort(R.string.current_ring_number_no_change);
                     return;
                 }
-                if (selectRingNumber != 0 && !TextUtils.isEmpty(gatewayId) && !TextUtils.isEmpty(deviceId)) {
+                if (selectRingNumber != -1 && !TextUtils.isEmpty(gatewayId) && !TextUtils.isEmpty(deviceId)) {
                     mPresenter.setVolume(gatewayId, deviceId, MyApplication.getInstance().getUid(), selectRingNumber);
                     alertDialog = AlertDialogUtil.getInstance().noButtonDialog(this, getString(R.string.take_effect_be_being));
                     alertDialog.setCancelable(false);
