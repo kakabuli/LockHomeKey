@@ -77,7 +77,7 @@ public class CateDefaultActivity extends BaseActivity<ICatEyeDefaultView, CatEye
         gatewayId = intent.getStringExtra(KeyConstants.GATEWAY_ID);
         deviceId = intent.getStringExtra(KeyConstants.DEVICE_ID);
         if (!TextUtils.isEmpty(gatewayId) && !TextUtils.isEmpty(deviceId)) {
-            mPresenter.getPirSlient(MyApplication.getInstance().getUid(), gatewayId, deviceId);
+            mPresenter.getPirSlient(MyApplication.getInstance().getUid(), gatewayId, gatewayId);
             loadingDialog.show(getString(R.string.get_pir_slient_param));
         }
     }
@@ -146,7 +146,7 @@ public class CateDefaultActivity extends BaseActivity<ICatEyeDefaultView, CatEye
                     return;
                 }
                 loadingDialog.show(getString(R.string.take_effect_be_being));
-                mPresenter.setPirSlient(MyApplication.getInstance().getUid(), gatewayId, deviceId, ustInt, enable, maxprohibitionInt, periodtimeInt, protecttimeInt, thresholdInt);
+                mPresenter.setPirSlient(MyApplication.getInstance().getUid(), gatewayId, gatewayId, ustInt, enable, maxprohibitionInt, periodtimeInt, protecttimeInt, thresholdInt);
                 break;
         }
 
