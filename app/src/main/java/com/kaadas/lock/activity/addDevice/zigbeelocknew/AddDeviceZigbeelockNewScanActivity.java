@@ -53,7 +53,7 @@ public class AddDeviceZigbeelockNewScanActivity extends AppCompatActivity {
             if (result.contains("SN-")&&result.contains("MAC-")&&result.contains(" ")){
                 String[] strs=result.split(" ");
                 String deviceSN=strs[0].replace("SN-","");
-                Intent scanSuccessIntent=new Intent(context,AddGatewayThirdActivity.class);
+                Intent scanSuccessIntent=new Intent(context,AddDeviceZigbeeLockNewZeroActivity.class);
                 scanSuccessIntent.putExtra("deviceSN",deviceSN);
                 LogUtils.e("设备SN是   " + deviceSN);
                 startActivity(scanSuccessIntent);

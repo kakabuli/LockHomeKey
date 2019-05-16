@@ -23,6 +23,7 @@ public class CatEyeDefaultPresenter<T> extends BasePresenter<ICatEyeDefaultView>
     //获取静默参数
     public void getPirSlient(String uid,String gatewayId,String deviceId){
         if (mqttService!=null){
+            toDisposable(getPirSlientDisposable);
             getPirSlientDisposable=mqttService.mqttPublish(MqttConstant.getCallTopic(uid), MqttCommandFactory.getPirSlient(uid,gatewayId,deviceId))
                     .filter(new Predicate<MqttData>() {
                         @Override
@@ -38,6 +39,7 @@ public class CatEyeDefaultPresenter<T> extends BasePresenter<ICatEyeDefaultView>
                     .subscribe(new Consumer<MqttData>() {
                         @Override
                         public void accept(MqttData mqttData) throws Exception {
+                            toDisposable(getPirSlientDisposable);
                             GetPirSlientBean getPirSlientBean=new Gson().fromJson(mqttData.getPayload(),GetPirSlientBean.class);
                             if (getPirSlientBean!=null){
                                 if ("200".equals(getPirSlientBean.getReturnCode())){
@@ -60,12 +62,14 @@ public class CatEyeDefaultPresenter<T> extends BasePresenter<ICatEyeDefaultView>
                             }
                         }
                     });
+            compositeDisposable.add(getPirSlientDisposable);
         }
     }
 
     //设置静默参数
         public void setPirSlient(String uid,String gatewayId,String deviceId,int ust,int enable,int maxprohibition,int periodtime,int protecttime,int threshold){
-            if (mqttService!=null){
+        if (mqttService!=null){
+            toDisposable(setPirSlientDisposable);
                 setPirSlientDisposable =mqttService.mqttPublish(MqttConstant.getCallTopic(uid), MqttCommandFactory.setPirSlient(uid,gatewayId,deviceId,ust,enable,maxprohibition,periodtime,protecttime,threshold))
                         .filter(new Predicate<MqttData>() {
                             @Override
@@ -81,6 +85,7 @@ public class CatEyeDefaultPresenter<T> extends BasePresenter<ICatEyeDefaultView>
                         .subscribe(new Consumer<MqttData>() {
                             @Override
                             public void accept(MqttData mqttData) throws Exception {
+                                toDisposable(setPirSlientDisposable);
                                 SetPirSlientBean setPirSlientBean=new Gson().fromJson(mqttData.getPayload(),SetPirSlientBean.class);
                                 if (setPirSlientBean!=null){
                                     if ("200".equals(setPirSlientBean.getReturnCode())){
@@ -104,6 +109,7 @@ public class CatEyeDefaultPresenter<T> extends BasePresenter<ICatEyeDefaultView>
                             }
                         });
             }
+            compositeDisposable.add(setPirSlientDisposable);
         }
 
 

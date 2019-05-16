@@ -51,15 +51,17 @@ public class GatewayBindPresenter<T> extends BasePresenter<GatewayBindView> {
                         LogUtils.e(bindGatewayResult.getFunc());
                         if ("200".equals(bindGatewayResult.getCode())&&bindGatewayResult.getData().getDeviceList()!=null&&bindGatewayResult.getData().getDeviceList().size()>0) {
                             if (mViewRef.get()!=null){
-                                mViewRef.get().bindGatewaySuitSuccess(deviceSN,bindGatewayResult.getData().getDeviceList());
+                                if (bindGatewayResult.getData().getMeBindState()==1){
+                                    mViewRef.get().bindGatewaySuitSuccess(deviceSN,bindGatewayResult.getData().getDeviceList(),true);
+                                }else{
+                                    mViewRef.get().bindGatewaySuitSuccess(deviceSN,bindGatewayResult.getData().getDeviceList(),false);
+                                }
                             }
                         }else if ("200".equals(bindGatewayResult.getCode())){
                             if (mViewRef.get() != null) {
                                 mViewRef.get().bindGatewaySuccess(deviceSN);
                             }
-                        }
-
-                        else {
+                        } else {
                             if (mViewRef.get() != null) {
                                 mViewRef.get().bindGatewayFail(bindGatewayResult.getCode(), bindGatewayResult.getMsg());
                             }

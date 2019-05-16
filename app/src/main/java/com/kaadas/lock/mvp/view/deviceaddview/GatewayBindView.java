@@ -11,7 +11,7 @@ public interface GatewayBindView extends IBaseView {
     //绑定正常网关成功
     void bindGatewaySuccess(String deviceSN);
 
-    void bindGatewaySuitSuccess(String deviceSN, List<BindGatewayResultBean.DataBean.DeviceListBean> mDeviceList);
+    void bindGatewaySuitSuccess(String deviceSN, List<BindGatewayResultBean.DataBean.DeviceListBean> mDeviceList,boolean isbindMeMe);
 
     //绑定网关失败
     void bindGatewayFail(String code,String msg);

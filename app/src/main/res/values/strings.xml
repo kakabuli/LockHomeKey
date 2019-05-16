@@ -814,7 +814,7 @@
     <string name="twice">2次</string>
     <string name="three">3次</string>
     <string name="small_resolution">960×540</string>
-    <string name="large_resolution">1920×1080</string>
+    <string name="large_resolution">1280×720</string>
     <string name="current_ring_number_no_change">当前响铃次数没有改变</string>
     <string name="video_resolution">视频分辨率</string>
     <string name="screen_img">截图</string>

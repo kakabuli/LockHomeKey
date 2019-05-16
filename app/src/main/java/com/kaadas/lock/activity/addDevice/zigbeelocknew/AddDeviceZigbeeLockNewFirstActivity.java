@@ -45,8 +45,15 @@ public class AddDeviceZigbeeLockNewFirstActivity extends BaseActivity<AddDeviceC
     private void initData() {
         Intent intent=getIntent();
         gatewayId=intent.getStringExtra(KeyConstants.GATEWAY_ID);
-        if (!TextUtils.isEmpty(gatewayId)){
-            mPresenter.bindMimi(gatewayId,gatewayId);
+        boolean isBindMeme=intent.getBooleanExtra(KeyConstants.IS_BIND_MEME,false);
+        if (isBindMeme){
+            Intent successIntent = new Intent(this, AddDeviceZigbeeLockNewSuccessActivity.class);
+            startActivity(successIntent);
+            finish();
+        }else {
+            if (!TextUtils.isEmpty(gatewayId)) {
+                mPresenter.bindMimi(gatewayId, gatewayId);
+            }
         }
     }
 
@@ -82,6 +89,10 @@ public class AddDeviceZigbeeLockNewFirstActivity extends BaseActivity<AddDeviceC
 
     @Override
     public void bindMimiThrowable(Throwable throwable) {
-
+        Intent successIntent = new Intent(this, AddDeviceZigbeeLockNewFailActivity.class);
+        startActivity(successIntent);
+        finish();
     }
+
+
 }

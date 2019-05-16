@@ -49,8 +49,8 @@ public class PirHistoryAdapter extends BaseQuickAdapter<String, BaseViewHolder> 
 
 
 
-		helper.setText(R.id.pir_img_time, item.split(" ")[1]);
-
+		//helper.setText(R.id.pir_img_time, item.split(" ")[1]);
+		helper.setText(R.id.pir_img_time, item);
 
 		// helper.addOnClickListener(R.id.pir_img_rl);
 

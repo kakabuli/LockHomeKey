@@ -395,6 +395,7 @@ public class FTP {
 			}
 			if (mFTPClient != null) {
 				currentPath = remotePath;//初始化当前流量
+				MyApplication.getInstance().setPirListImg(null);
 				boolean isCurrentFlag=mFTPClient.changeWorkingDirectory(currentPath);
 				Log.e(GeTui.VideoLog,"=====================================================================isCurrentFlag:"+isCurrentFlag);
 				if(!isCurrentFlag){

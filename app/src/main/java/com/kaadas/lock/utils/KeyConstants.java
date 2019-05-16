@@ -379,4 +379,7 @@ public class KeyConstants {
      * 锁型号
      */
     public static final String LOCK_MODEL = "lock_model";
+
+    //是否绑定了咪咪网
+    public static final String IS_BIND_MEME="isbindMeme";
 }

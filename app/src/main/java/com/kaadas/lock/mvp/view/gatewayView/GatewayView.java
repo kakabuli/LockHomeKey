@@ -18,4 +18,24 @@ public interface GatewayView extends IBaseView {
     //设备状态变化
     void deviceStatusChange(String gatewayId,String deviceId,String eventStr);
 
+    //解绑网关成功
+    void unbindGatewaySuccess();
+
+    //解绑网关失败
+    void unbindGatewayFail();
+
+    //解绑网关异常
+    void unbindGatewayThrowable(Throwable throwable);
+
+    //解绑测试网关成功
+    void unbindTestGatewaySuccess();
+
+    //解绑测试网关失败
+    void unbindTestGatewayFail();
+
+    //解绑测试网关异常
+    void unbindTestGatewayThrowable(Throwable throwable);
+
+
+
 }

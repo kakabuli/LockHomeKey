@@ -28,6 +28,7 @@ import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetPirEnableBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetPirSlientBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetPirWanderBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetVedioResBean;
+import com.kaadas.lock.publiclibrary.mqtt.publishbean.UnBindGatewayBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.UpdateDevNickNameBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.WakeupCameraBean;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttConstant;
@@ -490,6 +491,32 @@ public class MqttCommandFactory {
         SetPirSlientBean setPirSlientBean=new SetPirSlientBean(MqttConstant.MSG_TYPE_REQUEST,uid,messageId,gatewayId,deviceId,MqttConstant.SET_PIR_SLIENT,paramsBean,"0",new SetPirSlientBean.ReturnDataBean(),System.currentTimeMillis()+"");
         return getMessage(setPirSlientBean,messageId);
     }
+
+    /**
+     * 解绑网关
+     * @param uid
+     * @param gatewayId
+     * @return
+     */
+    public static MqttMessage unBindGateway(String uid,String gatewayId){
+        int messageId=getMessageId();
+        UnBindGatewayBean unBindGatewayBean=new UnBindGatewayBean(messageId,uid,MqttConstant.UNBIND_GATEWAY,gatewayId);
+        return getMessage(unBindGatewayBean,messageId);
+    }
+
+    /**
+     * 解绑测试网关
+     * @param uid
+     * @param gatewayId
+     * @param devuuid
+     * @return
+     */
+    public static MqttMessage unBindTestGateway(String uid,String gatewayId,String devuuid){
+        int messageId=getMessageId();
+        UnBindGatewayBean unBindTestGatewayBean=new UnBindGatewayBean(messageId,uid,gatewayId,MqttConstant.UNBIND_TEST_GATEWAY,devuuid);
+        return getMessage(unBindTestGatewayBean,messageId);
+    }
+
 
 
     public static MqttMessage getMessage(Object o, int messageID) {

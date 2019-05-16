@@ -1,4 +1,4 @@
-package com.kaadas.lock.activity.addDevice.gateway;
+package com.kaadas.lock.activity.addDevice.zigbeelocknew;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,19 +8,18 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
-import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
-import com.kaadas.lock.activity.addDevice.zigbeelocknew.AddDeviceZigbeeLockNewFirstActivity;
+import com.kaadas.lock.activity.addDevice.gateway.AddGatewayFailActivity;
+import com.kaadas.lock.activity.addDevice.gateway.AddGatewaySuccessActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.mvp.presenter.deviceaddpresenter.GatewayBindPresenter;
+import com.kaadas.lock.mvp.view.deviceaddview.DeviceGatewayBindListView;
+import com.kaadas.lock.mvp.view.deviceaddview.GatewayBindView;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.BindGatewayResultBean;
-import com.kaadas.lock.publiclibrary.mqtt.util.MqttService;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.NetUtil;
 import com.kaadas.lock.utils.ToastUtil;
-import com.kaadas.lock.mvp.view.deviceaddview.DeviceGatewayBindListView;
-import com.kaadas.lock.mvp.view.deviceaddview.GatewayBindView;
 
 import java.util.List;
 
@@ -28,7 +27,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class AddGatewayThirdActivity extends BaseActivity<GatewayBindView, GatewayBindPresenter<GatewayBindView>> implements GatewayBindView {
+public class AddDeviceZigbeeLockNewZeroActivity  extends BaseActivity<GatewayBindView, GatewayBindPresenter<GatewayBindView>> implements GatewayBindView {
+
     @BindView(R.id.back)
     ImageView back;
     @BindView(R.id.cancel_bind)
@@ -42,7 +42,6 @@ public class AddGatewayThirdActivity extends BaseActivity<GatewayBindView, Gatew
         ButterKnife.bind(this);
         Intent scanIntent = getIntent();
         deviceSN = scanIntent.getStringExtra("deviceSN");
-
         initView();
     }
 
@@ -82,15 +81,15 @@ public class AddGatewayThirdActivity extends BaseActivity<GatewayBindView, Gatew
 
     @Override
     public void bindGatewaySuccess(String deviceSN) {
-       mPresenter.bindMimi(deviceSN,deviceSN);
+        mPresenter.bindMimi(deviceSN, deviceSN);
     }
 
     @Override
     public void bindGatewaySuitSuccess(String deviceSN, List<BindGatewayResultBean.DataBean.DeviceListBean> mDeviceList,boolean isbindMeMe) {
         //绑定套装成功
-        Intent intent=new Intent(this, AddDeviceZigbeeLockNewFirstActivity.class);
-         intent.putExtra(KeyConstants.GATEWAY_ID,deviceSN);
-         intent.putExtra(KeyConstants.IS_BIND_MEME,isbindMeMe);
+        Intent intent = new Intent(this, AddDeviceZigbeeLockNewFirstActivity.class);
+        intent.putExtra(KeyConstants.GATEWAY_ID, deviceSN);
+        intent.putExtra(KeyConstants.IS_BIND_MEME,isbindMeMe);
         startActivity(intent);
 
 
@@ -109,7 +108,7 @@ public class AddGatewayThirdActivity extends BaseActivity<GatewayBindView, Gatew
             startActivity(cancelBind);
             finish();
         } else {
-            Intent failIntent = new Intent(this, AddGatewayFailActivity.class);
+            Intent failIntent = new Intent(this, AddDeviceZigbeeLockNewScanFailActivity.class);
             failIntent.putExtra("code", code);
             failIntent.putExtra("msg", msg);
             startActivity(failIntent);
@@ -119,9 +118,8 @@ public class AddGatewayThirdActivity extends BaseActivity<GatewayBindView, Gatew
 
     @Override
     public void bindGatewayThrowable(Throwable throwable) {
-
         LogUtils.e("绑定网关异常" + throwable);
-        Intent failIntent = new Intent(this, AddGatewayFailActivity.class);
+        Intent failIntent = new Intent(this, AddDeviceZigbeeLockNewScanFailActivity.class);
         startActivity(failIntent);
         finish();
     }
