@@ -47,7 +47,6 @@ public class AddDeviceCatEyeSuitPresenter<T> extends BasePresenter<AddDeviceCatE
                         if ("200".equals(bindMemeReuslt.getCode())) {
                             if (mViewRef.get() != null) {
                                 mViewRef.get().bindMimiSuccess();
-                                MyApplication.getInstance().getAllDevicesByMqtt(true);
                             }
                         } else {
                             if (mViewRef.get() != null) {

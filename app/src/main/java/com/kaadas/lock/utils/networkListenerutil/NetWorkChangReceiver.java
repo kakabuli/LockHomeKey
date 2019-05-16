@@ -59,6 +59,30 @@ public class NetWorkChangReceiver extends BroadcastReceiver {
             switch (wifiState) {
                 //网络
                 case WifiManager.WIFI_STATE_DISABLED:
+
+                    break;
+                case WifiManager.WIFI_STATE_DISABLING:
+                    break;
+            }
+        }
+        // 监听网络连接，包括wifi和移动数据的打开和关闭,以及连接上可用的连接都会接到监听
+        if (ConnectivityManager.CONNECTIVITY_ACTION.equals(intent.getAction())) {
+            //获取联网状态的NetworkInfo对象
+            NetworkInfo info = intent.getParcelableExtra(ConnectivityManager.EXTRA_NETWORK_INFO);
+            if (info != null) {
+                //如果当前的网络连接成功并且网络连接可用
+                if (NetworkInfo.State.CONNECTED == info.getState()) {
+                    if (info.isAvailable()) {
+                        if (info.getType() == ConnectivityManager.TYPE_WIFI || info.getType() == ConnectivityManager.TYPE_MOBILE) {
+                            LogUtils.e("TAG", getConnectionType(info.getType()) + "连上");
+                       /* if(MyApplication.getInstance().getMqttService()!=null){
+                            if (MyApplication.getInstance().getMqttService().getMqttClient()==null||!MyApplication.getInstance().getMqttService().getMqttClient().isConnected()){
+                                MyApplication.getInstance().getMqttService().mqttConnection();
+                            }
+                        }*/
+                        }
+                    }
+                }else {
                     //把所有网关的状态设置为离线
                     List<GatewayInfo> gatewayInfos= MyApplication.getInstance().getAllGateway();
                     if (gatewayInfos!=null&&gatewayInfos.size()>0){
@@ -71,27 +95,6 @@ public class NetWorkChangReceiver extends BroadcastReceiver {
                         networkChangeObversable.onNext(true);
                         LogUtils.e("通知刷新页面");
                     }
-                    break;
-                case WifiManager.WIFI_STATE_DISABLING:
-                    break;
-            }
-        }
-        // 监听网络连接，包括wifi和移动数据的打开和关闭,以及连接上可用的连接都会接到监听
-        if (ConnectivityManager.CONNECTIVITY_ACTION.equals(intent.getAction())) {
-            //获取联网状态的NetworkInfo对象
-            NetworkInfo info = intent.getParcelableExtra(ConnectivityManager.EXTRA_NETWORK_INFO);
-            if (info != null) {
-                //如果当前的网络连接成功并且网络连接可用
-                if (NetworkInfo.State.CONNECTED == info.getState() && info.isAvailable()) {
-                    if (info.getType() == ConnectivityManager.TYPE_WIFI || info.getType() == ConnectivityManager.TYPE_MOBILE) {
-                        LogUtils.e("TAG", getConnectionType(info.getType()) + "连上");
-                       /* if(MyApplication.getInstance().getMqttService()!=null){
-                            if (MyApplication.getInstance().getMqttService().getMqttClient()==null||!MyApplication.getInstance().getMqttService().getMqttClient().isConnected()){
-                                MyApplication.getInstance().getMqttService().mqttConnection();
-                            }
-                        }*/
-                    }
-                }else {
                     LogUtils.e("TAG", getConnectionType(info.getType()) + "断开");
                 }
                 }
