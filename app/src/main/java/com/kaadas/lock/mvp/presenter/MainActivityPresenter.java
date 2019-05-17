@@ -69,7 +69,6 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
     private Disposable deviceChangeDisposable;
     private CateEyeInfo callInCatEyeInfo;  //呼叫进来的猫眼信息
     private Disposable catEyeEventDisposable;
-    private Disposable listenerDeviceOnLineDisposable;
 
     @Override
     public void authSuccess() {

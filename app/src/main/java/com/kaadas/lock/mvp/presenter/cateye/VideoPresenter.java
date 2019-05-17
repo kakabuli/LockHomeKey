@@ -52,7 +52,7 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
 
     private Disposable memeDisposable;
     private Disposable deviceChangeDisposable;
-    private static String Tag = "视频界面";
+    private static String Tag = "猫眼通话界面";
     private MediaFileDBDao mMediaDBDao;
     private long startRecordTime;
     private boolean isRecoding = false;
@@ -81,7 +81,6 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
         LinphoneHelper.addAutoAcceptCallBack(new PhoneAutoAccept() {
             @Override
             public void incomingCall(LinphoneCall linphoneCall) {
-
                 //猫眼的设备Id
                 String catEyeDeviceId = linphoneCall.getRemoteAddress().getUserName();
                 CateEyeInfo callInCatEyeInfo = null;
@@ -98,9 +97,9 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
                     GatewayInfo gatewayInfo = null;
                     List<CateEyeInfo> cateEyes = MyApplication.getInstance().getAllBindDevices().getCateEyes();
                     for (CateEyeInfo cateEyeInfo : cateEyes) {
-                        LogUtils.e("猫眼的  getDeviceId  " + cateEyeInfo.getServerInfo().getDeviceId());
+                        LogUtils.e(Tag,"猫眼的  getDeviceId  " + cateEyeInfo.getServerInfo().getDeviceId());
                         if (catEyeDeviceId.equalsIgnoreCase(cateEyeInfo.getServerInfo().getDeviceId())) {
-                            LogUtils.e("获取到网关Id为  " + cateEyeInfo.getGwID());
+                            LogUtils.e(Tag,"获取到网关Id为  " + cateEyeInfo.getGwID());
                             gwId = cateEyeInfo.getGwID();
                             gatewayInfo = cateEyeInfo.getGatewayInfo();
                             callInCatEyeInfo = cateEyeInfo;
@@ -161,6 +160,7 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
                 if (mViewRef.get() != null) {
                     mViewRef.get().onCallFinish();
                 }
+                stopCountUp();
                 MemeManager.getInstance().videoActivityDisconnectMeme();
             }
 
@@ -280,7 +280,7 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
         //meme网状态
         isCalling = true;
         GatewayInfo gatewayInfo = cateEyeInfo.getGatewayInfo();
-        if (gatewayInfo!=null) {
+        if (gatewayInfo != null) {
             String meUsername = gatewayInfo.getServerInfo().getMeUsername();
             String mePwd = gatewayInfo.getServerInfo().getMePwd();
             if (MemeManager.getInstance().isConnected()) { //meme网已经连接
@@ -322,7 +322,7 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
                 new BiFunction<Boolean, List<Device>, Boolean>() {
                     @Override
                     public Boolean apply(Boolean aBoolean, List<Device> devices) throws Exception {
-                        LogUtils.e("米米网登陆成功  且网关在线");
+                        LogUtils.e(Tag,"米米网登陆成功  且网关在线");
                         if (aBoolean && devices.size() > 0) { //米米网登陆成功且网关在线  正常到此处，那么都应该是成功的
                             return true;
                         }
@@ -339,7 +339,7 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
                         }
                         if (!isCallIn) {
                             if (aBoolean) { // 米米网登陆成功且网关在线
-                                LogUtils.e("米米网  登陆成功   呼叫猫眼");
+                                LogUtils.e(Tag,"米米网  登陆成功   呼叫猫眼");
                                 wakeupCatEye(cateEyeInfo);
                             } else { //米米网登陆失败或者网关不在线
                                 if (mViewRef.get() != null) {
@@ -350,7 +350,7 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
                             }
                         } else { //米米网登录成功的话   通知界面   有电话呼叫过来  弹出对话框
                             if (aBoolean) { // 米米网登陆成功且网关在线
-                                LogUtils.e("米米网  登陆成功   呼叫猫眼");
+                                LogUtils.e(Tag,"米米网  登陆成功   呼叫猫眼");
                                 if (mViewRef.get() != null) {
                                     mViewRef.get().onCatEyeCallIn();
                                 }
@@ -366,7 +366,7 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        LogUtils.e("登录米米网失败或者设备不在线");
+                        LogUtils.e(Tag,"登录米米网失败或者设备不在线");
                         if (!isCallIn) {
                             if (mViewRef.get() != null) {
                                 mViewRef.get().loginMemeFailed();
@@ -395,7 +395,7 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
                         toDisposable(deviceChangeDisposable);
                         if (devices.size() > 1) {
                             if (!isCallIn) {
-                                LogUtils.e("米米网  登陆成功   呼叫猫眼");
+                                LogUtils.e(Tag,"米米网  登陆成功   呼叫猫眼");
                                 wakeupCatEye(cateEyeInfo);
                             } else {
                                 if (mViewRef.get() != null) {
@@ -430,7 +430,7 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
         MqttMessage mqttMessage = MqttCommandFactory.wakeupCamera(cateEyeInfo.getServerInfo().getDeviceId(), cateEyeInfo.getGwID(), MyApplication.getInstance().getUid());
         waitCall();
         long start = System.currentTimeMillis();
-        LogUtils.e("唤醒猫眼   ");
+        LogUtils.e(Tag,"唤醒猫眼   ");
         wakeupSuccess = true;
         currentCateEyeInfo = cateEyeInfo;
         wakeupDisposable = mqttService.mqttPublish(MqttConstant.getCallTopic(MyApplication.getInstance().getUid()), mqttMessage)
@@ -450,13 +450,13 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
                     public void accept(MqttData mqttData) throws Exception {
                         toDisposable(wakeupDisposable);
                         if ("200".equals(mqttData.getReturnCode())) {
-                            LogUtils.e("唤醒猫眼成功");
+                            LogUtils.e(Tag,"唤醒猫眼成功");
                             if (mViewRef.get() != null) {
                                 mViewRef.get().wakeupSuccess();
                             }
                         } else {
                             //407  猫眼离线  猫眼唤醒失败
-                            LogUtils.e("唤醒猫眼失败   " + mqttData.getReturnCode() + "   耗时  " + (System.currentTimeMillis() - start));
+                            LogUtils.e(Tag,"唤醒猫眼失败   " + mqttData.getReturnCode() + "   耗时  " + (System.currentTimeMillis() - start));
                             if (mViewRef.get() != null && !isConnected) {
                                 mViewRef.get().wakeupFailed();
                             }
@@ -474,6 +474,7 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
                         wakeupSuccess = false;
                     }
                 });
+        compositeDisposable.add(wakeupDisposable);
     }
 
     private Runnable timeoutRunnable = new Runnable() {
@@ -493,9 +494,10 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
 
     @Override
     public void detachView() {
-        super.detachView();
         handler.removeCallbacks(timeoutRunnable);
         countUpTimer.stop();
+        LinphoneHelper.addAutoAcceptCallBack(null);
+        super.detachView();
 
     }
 
@@ -504,10 +506,9 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
     private CountUpTimer countUpTimer = new CountUpTimer(1000) {
         @Override
         public void onTick(long millis) {
-            if (mViewRef.get() != null) {
+            if (mViewRef != null && mViewRef.get() != null) {
                 formatter.setTimeZone(TimeZone.getTimeZone("GMT+0"));
                 String time = formatter.format(new Date(millis));
-                LogUtils.e("通话时间为   " + time);
                 mViewRef.get().callTimes(time);
             }
         }
@@ -518,8 +519,18 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
      * 开始计时
      */
     private void startCountUp() {
-        LogUtils.e("开始计时");
         countUpTimer.start();
+    }
+
+    /**
+     * 停止计时
+     */
+    private void stopCountUp() {
+        if (countUpTimer != null) {
+            LogUtils.e(Tag, "停止计时");
+            countUpTimer.stop();
+        }
+
     }
 
     public void openLock(GwLockInfo gwLockInfo) {
@@ -611,7 +622,7 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
                         @Override
                         public void accept(MqttData mqttData) throws Exception {
                             toDisposable(closeLockNotifyDisposable);
-                            LogUtils.e("门锁打开上报");
+                            LogUtils.e(Tag,"门锁打开上报");
                             if (mViewRef.get() != null) {
                                 mViewRef.get().openLockSuccess();
                             }
@@ -636,43 +647,43 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
             //表示锁已开
             //表示锁已经关闭
             lockCloseDisposable = mqttService.listenerDataBack()
-                      .filter(new Predicate<MqttData>() {
-                          @Override
-                          public boolean test(MqttData mqttData) throws Exception {
-                              if (mqttData.getFunc().equals(MqttConstant.GW_EVENT)) {
-                                  OpenLockNotifyBean openLockNotifyBean = new Gson().fromJson(mqttData.getPayload(), OpenLockNotifyBean.class);
-                                  int deviceCode = openLockNotifyBean.getEventparams().getDevecode();
-                                  if ("kdszblock".equals(openLockNotifyBean.getDevtype())
-                                          && deviceId.equals(openLockNotifyBean.getDeviceId())) {
-                                      if (deviceCode == 10 || deviceCode == 1) {
-                                          //表示锁已经关闭
-                                          return true;
-                                      }
-                                  }
-                              }
-                              return false;
-                          }
-                      })
-                      .compose(RxjavaHelper.observeOnMainThread())
-                      .timeout(30* 1000, TimeUnit.MILLISECONDS)
-                      .subscribe(new Consumer<MqttData>() {
-                          @Override
-                          public void accept(MqttData mqttData) throws Exception {
-                              toDisposable(lockCloseDisposable);
-                              LogUtils.e("门锁关闭 上报");
-                              //关门
-                              if (mViewRef.get() != null) {
-                                  mViewRef.get().lockCloseSuccess();
-                              }
-                          }
-                      }, new Consumer<Throwable>() {
-                          @Override
-                          public void accept(Throwable throwable) throws Exception {
-                              if (mViewRef.get() != null) {
-                                  mViewRef.get().lockCloseFailed();
-                              }
-                          }
-                      });
+                    .filter(new Predicate<MqttData>() {
+                        @Override
+                        public boolean test(MqttData mqttData) throws Exception {
+                            if (mqttData.getFunc().equals(MqttConstant.GW_EVENT)) {
+                                OpenLockNotifyBean openLockNotifyBean = new Gson().fromJson(mqttData.getPayload(), OpenLockNotifyBean.class);
+                                int deviceCode = openLockNotifyBean.getEventparams().getDevecode();
+                                if ("kdszblock".equals(openLockNotifyBean.getDevtype())
+                                        && deviceId.equals(openLockNotifyBean.getDeviceId())) {
+                                    if (deviceCode == 10 || deviceCode == 1) {
+                                        //表示锁已经关闭
+                                        return true;
+                                    }
+                                }
+                            }
+                            return false;
+                        }
+                    })
+                    .compose(RxjavaHelper.observeOnMainThread())
+                    .timeout(30 * 1000, TimeUnit.MILLISECONDS)
+                    .subscribe(new Consumer<MqttData>() {
+                        @Override
+                        public void accept(MqttData mqttData) throws Exception {
+                            toDisposable(lockCloseDisposable);
+                            LogUtils.e(Tag,"门锁关闭 上报");
+                            //关门
+                            if (mViewRef.get() != null) {
+                                mViewRef.get().lockCloseSuccess();
+                            }
+                        }
+                    }, new Consumer<Throwable>() {
+                        @Override
+                        public void accept(Throwable throwable) throws Exception {
+                            if (mViewRef.get() != null) {
+                                mViewRef.get().lockCloseFailed();
+                            }
+                        }
+                    });
             compositeDisposable.add(lockCloseDisposable);
         }
 
