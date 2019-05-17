@@ -322,6 +322,7 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                 public void incomingCall(LinphoneCall linphoneCall) {
                     //收到来电通知
                     LogUtils.e("Linphone  收到来电     ");
+                    Log.e(GeTui.VideoLog,"  Linphone  收到来电");
                     if (VideoVActivity.isRunning) {
                         LogUtils.e("Linphone  收到来电   VideoActivity已经运行  不出来  ");
                         return;
@@ -355,6 +356,7 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                         //如果账号或者密码有一个为空  直接退出
                         return;
                     }
+                    Log.e(GeTui.VideoLog,"MainActivityPresenter--> next..."+meUsername+" "+mePwd);
                     if (MemeManager.getInstance().isConnected()) { //meme网已经连接
                         //如果meme网登陆的账号密码为当前的账号密码，直接发起通信
                         if (meUsername.equals(MemeManager.getInstance().getCurrentAccount())
@@ -371,6 +373,7 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
 
                         }
                     } else { //meme网没有连接
+                        Log.e(GeTui.VideoLog,"MainPresenter------>登录 mimi");
                         loginMeme(meUsername, mePwd);
                     }
                 }
@@ -424,6 +427,7 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                     public Boolean apply(Boolean aBoolean, List<Device> devices) throws Exception {
                         LogUtils.e("米米网登陆成功  且网关在线");
                         if (aBoolean && devices.size() > 0) { //米米网登陆成功且网关在线  正常到此处，那么都应该是成功的
+                            Log.e(GeTui.VideoLog,"米米网登陆成功  且网关在线");
                             return true;
                         }
                         return false;
@@ -439,6 +443,7 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                         }
                         if (aBoolean) { // 米米网登陆成功且网关在线
                             LogUtils.e("米米网  登陆成功   弹出来电框");
+                            Log.e(GeTui.VideoLog,"米米网  登陆成功   弹出来电框");
                             if (mViewRef.get() != null) {
                                 mViewRef.get().onCatEyeCallIn(callInCatEyeInfo);
                             }
