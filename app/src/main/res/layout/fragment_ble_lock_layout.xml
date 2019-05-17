@@ -131,6 +131,7 @@
                     android:id="@+id/rl_has_data"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_marginTop="@dimen/dp_113"
                     android:visibility="gone">
 
                     <android.support.v7.widget.RecyclerView
