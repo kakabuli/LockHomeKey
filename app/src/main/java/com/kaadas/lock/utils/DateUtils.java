@@ -63,7 +63,7 @@ public class DateUtils {
 		}
 
 	}
-	//标准时间转换成时间戳
+	//标准时间转换成时间戳 2019-04-02 09:13:57
 	public static long  standardTimeChangeTimestamp(String time){
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date date = null;

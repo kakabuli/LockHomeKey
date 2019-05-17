@@ -209,7 +209,6 @@ public class DeviceAddActivity extends BaseActivity<DeviceZigBeeDetailView, Devi
                     public void left() {
 
                     }
-
                     @Override
                     public void right() {
                         //跳转到配置网关添加的流程

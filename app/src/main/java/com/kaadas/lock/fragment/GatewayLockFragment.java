@@ -71,6 +71,8 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
     RelativeLayout rlHasData;
     @BindView(R.id.tv_no_data)
     TextView tvNoData;
+    @BindView(R.id.create_time)
+    TextView createTime;
 
 
     private GwLockInfo gatewayLockInfo;
@@ -112,9 +114,20 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
             if (!TextUtils.isEmpty(gatewayId) && !TextUtils.isEmpty(deviceId)) {
                 mPresenter.attachView(this);
                 mPresenter.openGatewayLockRecord(gatewayId, deviceId, MyApplication.getInstance().getUid(), 1, 3);
-            }else{
+            } else {
                 changePage(false);
             }
+            String time=gatewayLockInfo.getServerInfo().getTime();
+            LogUtils.e(time+"网关时间");
+            if (!TextUtils.isEmpty(time)){
+                long saveTime=DateUtils.standardTimeChangeTimestamp(time)/1000;
+                //设置守护时间
+                long day = ((System.currentTimeMillis() / 1000) - saveTime) / (60 * 24 * 60);
+                this.createTime.setText(day + "");
+            }else{
+                createTime.setText("0");
+            }
+
         }
 
 
@@ -431,9 +444,9 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
 
     @Override
     public void getOpenLockRecordSuccess(List<SelectOpenLockResultBean.DataBean> mOpenLockRecordList) {
-        if (mOpenLockRecordList.size()>0){
+        if (mOpenLockRecordList.size() > 0) {
             changePage(true);
-        }else {
+        } else {
             changePage(false);
         }
         groupData(mOpenLockRecordList);
