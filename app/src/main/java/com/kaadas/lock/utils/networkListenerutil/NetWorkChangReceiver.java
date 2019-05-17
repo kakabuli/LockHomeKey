@@ -88,11 +88,11 @@ public class NetWorkChangReceiver extends BroadcastReceiver {
                     for (GatewayInfo gatewayInfo:gatewayInfos){
                         gatewayInfo.setEvent_str("offline");
                     }
-                    if (notifityActivity!=null) {
-                        notifityActivity.notifityActivity(true);
-                    }
-                    networkChangeObversable.onNext(true);
                 }
+                if (notifityActivity!=null) {
+                    notifityActivity.notifityActivity(true);
+                }
+                networkChangeObversable.onNext(true);
             }
 
     }

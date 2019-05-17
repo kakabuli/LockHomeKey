@@ -229,10 +229,18 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter<ILogi
                 return;
             }
 
-            //密码错误
-            if (!StringUtil.passwordJudge(pwd)) {
+
+            if (StringUtil.isNumeric(phone)) {
+                if (!PhoneUtil.isMobileNO(phone)) {
+//                    ToastUtil.getInstance().showShort(R.string.phone_not_right);
+                    // 账户密码错误 请输入正确验证码 调用这个方法传入对应的内容就可以
+                    AlertDialogUtil.getInstance().noButtonSingleLineDialog(this, getString(R.string.input_valid_telephone_or_email));
+                    return;
+                } else {
+                    //密码错误
+                    if (!StringUtil.passwordJudge(pwd)) {
 //                ToastUtil.getInstance().showShort(R.string.password_judgment);
-                AlertDialogUtil.getInstance().noEditSingleButtonDialog(this, getString(R.string.hint), getString(R.string.password_error), getString(R.string.affirm), new AlertDialogUtil.ClickListener() {
+          /*      AlertDialogUtil.getInstance().noEditSingleButtonDialog(this, getString(R.string.hint), getString(R.string.password_error), getString(R.string.affirm), new AlertDialogUtil.ClickListener() {
                     @Override
                     public void left() {
 
@@ -242,20 +250,15 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter<ILogi
                     public void right() {
 
                     }
-                });
-                return;
-            }
-            if (StringUtil.isNumeric(phone)) {
-                if (!PhoneUtil.isMobileNO(phone)) {
-//                    ToastUtil.getInstance().showShort(R.string.phone_not_right);
-                    // 账户密码错误 请输入正确验证码 调用这个方法传入对应的内容就可以
-                    AlertDialogUtil.getInstance().noButtonSingleLineDialog(this, getString(R.string.input_valid_telephone_or_email));
-                    return;
-                } else {
+                });*/
+                        AlertDialogUtil.getInstance().noButtonSingleLineDialog(this, getString(R.string.account_password_error));
+                        return;
+                    }
 //                    String countryCode = tvAreaCode.getText().toString().trim().replace("+", "");
 //                    phoneLogin(countryCode + phone, pwd);
-                    showLoading("");
+                    showLoading(getString(R.string.login_in));
                     String countryCode = tvAreaCode.getText().toString().trim().replace("+", "");
+                    btnLogin.setBackgroundResource(R.drawable.login_button_shape_check);
                     mPresenter.loginByPhone(countryCode + phone, pwd, phone);
                 }
             } else {
@@ -264,7 +267,25 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter<ILogi
                     AlertDialogUtil.getInstance().noButtonSingleLineDialog(this, getString(R.string.input_valid_telephone_or_email));
                     return;
                 } else {
-                    showLoading("");
+                    //密码错误
+                    if (!StringUtil.passwordJudge(pwd)) {
+//                ToastUtil.getInstance().showShort(R.string.password_judgment);
+          /*      AlertDialogUtil.getInstance().noEditSingleButtonDialog(this, getString(R.string.hint), getString(R.string.password_error), getString(R.string.affirm), new AlertDialogUtil.ClickListener() {
+                    @Override
+                    public void left() {
+
+                    }
+
+                    @Override
+                    public void right() {
+
+                    }
+                });*/
+                        AlertDialogUtil.getInstance().noButtonSingleLineDialog(this, getString(R.string.account_password_error));
+                        return;
+                    }
+                    showLoading(getString(R.string.login_in));
+                    btnLogin.setBackgroundResource(R.drawable.login_button_shape_check);
                     mPresenter.loginByEmail(phone, pwd);
                 }
             }
@@ -314,12 +335,14 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter<ILogi
 
     @Override
     public void onLoginFailed(Throwable e) {
+        btnLogin.setBackgroundResource(R.drawable.login_button_shape);
         hiddenLoading();
         ToastUtil.getInstance().showShort(HttpUtils.httpProtocolErrorCode(this, e));
     }
 
     @Override
     public void onLoginFailedServer(BaseResult result) {
+        btnLogin.setBackgroundResource(R.drawable.login_button_shape);
         hiddenLoading();
         ToastUtil.getInstance().showShort(HttpUtils.httpErrorCode(this, result.getCode()));
 

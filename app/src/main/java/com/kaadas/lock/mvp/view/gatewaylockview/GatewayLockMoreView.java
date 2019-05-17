@@ -49,6 +49,24 @@ public interface GatewayLockMoreView extends IBaseView {
     void updateSwitchStatus(SwitchStatusResult switchStatusResult);
     void updateSwitchUpdateFail();
 
+    //设置AM成功
+    void setAMSuccess(int autoRelockTime);
 
+    //设置AM失败
+    void setAMFail(String code);
+
+    //设置AM异常
+    void setAMThrowable(Throwable throwable);
+
+
+
+    //获取AM成功
+    void getAMSuccess(int autoRelockTime);
+
+    //获取布防失败
+    void getAMFail(String code);
+
+    //获取布防异常
+    void getAMThrowable(Throwable throwable);
 
 }

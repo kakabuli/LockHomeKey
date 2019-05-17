@@ -13,7 +13,9 @@ import com.kaadas.lock.publiclibrary.http.util.RxjavaHelper;
 import com.kaadas.lock.publiclibrary.mqtt.MqttCommandFactory;
 import com.kaadas.lock.publiclibrary.mqtt.eventbean.DeleteDeviceLockBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.DeleteGatewayLockDeviceBean;
+import com.kaadas.lock.publiclibrary.mqtt.publishbean.GetAMBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.GetSoundVolume;
+import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetAMBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.UpdateDevNickNameResult;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttConstant;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttData;
@@ -36,8 +38,8 @@ public class GatewayLockMorePresenter<T> extends BasePresenter<GatewayLockMoreVi
     private Disposable setLockSoundVolumeDisposable;
     private Disposable deleteLockInfoDisposable;
     private Disposable deleteReceiveDisposable;
-
-
+    private Disposable setAMDisposable;
+    private Disposable getAMDisposable;
     //修改昵称
     public void updateZigbeeLockName(String devuuid,String deviceId,String nickName ){
         toDisposable(updateNameDisposable);
@@ -349,4 +351,92 @@ public class GatewayLockMorePresenter<T> extends BasePresenter<GatewayLockMoreVi
             });
         }
     }
+
+    //设置AM
+    public void setAM(String uid,String gatewayId,String deviceId,int autoRelockTime){
+        if (mqttService!=null){
+            toDisposable(setAMDisposable);
+            setAMDisposable=mqttService.mqttPublish(MqttConstant.getCallTopic(uid), MqttCommandFactory.setAM(uid,gatewayId,deviceId,autoRelockTime))
+                    .filter(new Predicate<MqttData>() {
+                        @Override
+                        public boolean test(MqttData mqttData) throws Exception {
+                            if (MqttConstant.SET_AM.equals(mqttData.getFunc())){
+                                return true;
+                            }
+                            return false;
+                        }
+                    })
+                    .compose(RxjavaHelper.observeOnMainThread())
+                    .timeout(10*1000, TimeUnit.MILLISECONDS)
+                    .subscribe(new Consumer<MqttData>() {
+                        @Override
+                        public void accept(MqttData mqttData) throws Exception {
+                            toDisposable(setAMDisposable);
+                            SetAMBean setAMBean=new Gson().fromJson(mqttData.getPayload(),SetAMBean.class);
+                            if ("200".equals(setAMBean.getReturnCode())){
+                                if (mViewRef.get()!=null){
+                                    mViewRef.get().setAMSuccess(autoRelockTime);
+                                }
+                            }else{
+                                if (mViewRef.get()!=null){
+                                    mViewRef.get().setAMFail(setAMBean.getReturnCode());
+                                }
+                            }
+                        }
+                    }, new Consumer<Throwable>() {
+                        @Override
+                        public void accept(Throwable throwable) throws Exception {
+                            if (mViewRef.get()!=null){
+                                mViewRef.get().setAMThrowable(throwable);
+                            }
+                        }
+                    });
+            compositeDisposable.add(setAMDisposable);
+        }
+    }
+
+    //获取AM
+    public void getAm(String uid,String gatewayId,String deviceId){
+        if (mqttService!=null){
+            toDisposable(getAMDisposable);
+            getAMDisposable=mqttService.mqttPublish(MqttConstant.getCallTopic(uid), MqttCommandFactory.getAM(uid,gatewayId,deviceId))
+                    .filter(new Predicate<MqttData>() {
+                        @Override
+                        public boolean test(MqttData mqttData) throws Exception {
+                            if (MqttConstant.GET_AM.equals(mqttData.getFunc())){
+                                return true;
+                            }
+                            return false;
+                        }
+                    })
+                    .compose(RxjavaHelper.observeOnMainThread())
+                    .timeout(10*1000, TimeUnit.MILLISECONDS)
+                    .subscribe(new Consumer<MqttData>() {
+                        @Override
+                        public void accept(MqttData mqttData) throws Exception {
+                            toDisposable(getAMDisposable);
+                            GetAMBean getAMBean=new Gson().fromJson(mqttData.getPayload(),GetAMBean.class);
+                            if ("200".equals(getAMBean.getReturnCode())){
+                                if (mViewRef.get()!=null){
+                                    mViewRef.get().getAMSuccess(getAMBean.getReturnData().getAutoRelockTime());
+                                }
+                            }else{
+                                if (mViewRef.get()!=null){
+                                    mViewRef.get().getAMFail(getAMBean.getReturnCode());
+                                }
+                            }
+                        }
+                    }, new Consumer<Throwable>() {
+                        @Override
+                        public void accept(Throwable throwable) throws Exception {
+                            if (mViewRef.get()!=null){
+                                mViewRef.get().getAMThrowable(throwable);
+                            }
+                        }
+                    });
+            compositeDisposable.add(getAMDisposable);
+        }
+    }
+
+
 }

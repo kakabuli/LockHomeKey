@@ -87,7 +87,7 @@ public class LinphoneHelper {
     /**
      * 登录到 SIP 服务器
      */
-    public static void login() {
+    public static void  login() {
 
         new Thread(new Runnable() {
             @Override

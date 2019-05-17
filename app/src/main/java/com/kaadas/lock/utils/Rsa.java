@@ -315,7 +315,17 @@ public class Rsa {
 		transitionByte[0]=b[3];
 		return transitionByte;
 	}
-
+	/**
+	 * 将byte转换为一个长度为8的byte数组，数组每个值代表bit
+	 */
+	public static byte[] byteToBit(byte b) {
+		byte[] array = new byte[8];
+		for (int i = 7; i >= 0; i--) {
+			array[i] = (byte)(b & 1);
+			b = (byte) (b >> 1);
+		}
+		return array;
+	}
 
 }
 

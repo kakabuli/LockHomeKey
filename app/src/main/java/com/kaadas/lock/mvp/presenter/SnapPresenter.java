@@ -49,7 +49,7 @@ public class SnapPresenter<T> extends BasePresenter<ISnapShotView> {
                         return isFilter;
                     }
                 })
-                .timeout(15 * 1000, TimeUnit.MILLISECONDS)
+                .timeout(25 * 1000, TimeUnit.MILLISECONDS)
                 .subscribe(new Consumer<MqttData>() {
 
                     @Override

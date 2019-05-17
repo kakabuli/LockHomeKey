@@ -147,6 +147,8 @@ public class DeviceBindGatewayListActivity extends BaseActivity<DeviceGatewayBin
 
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+        boolean currentFlag=mList.get(position).isSelect();
+
         for (int i = 0; i < mList.size(); i++) {
             mList.get(i).setSelect(false);
         }
@@ -156,7 +158,12 @@ public class DeviceBindGatewayListActivity extends BaseActivity<DeviceGatewayBin
             ToastUtil.getInstance().showShort(getString(R.string.gateway_offline));
             return;
         }
-        mList.get(position).setSelect(true);
+        if (currentFlag){
+            mList.get(position).setSelect(false);
+        }else{
+            mList.get(position).setSelect(true);
+        }
+
         addZigbeeBindGatewayAdapter.notifyDataSetChanged();
     }
 
