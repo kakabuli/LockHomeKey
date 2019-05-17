@@ -123,8 +123,8 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
              Log.e(GeTui.VideoLog,"重新上传pushid.......");
              mPresenter.uploadpushmethod();
         }
-        startcallmethod();
         registerNetwork();
+        startcallmethod();
     }
 
     @Override
@@ -237,6 +237,7 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
 
     @Override
     public void onCatEyeCallIn(CateEyeInfo cateEyeInfo) {
+        Log.e(GeTui.VideoLog,"MainActivity---->跳入=====>VideoVActivity");
         Intent intent = new Intent(this, VideoVActivity.class);
         intent.putExtra(KeyConstants.IS_CALL_IN, true);
         intent.putExtra(KeyConstants.CATE_INFO, cateEyeInfo);
@@ -299,6 +300,8 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
                 public void run() {
                     int linphone_port = MyApplication.getInstance().getLinphone_port();
                     String sip_pacage_invite = MyApplication.getInstance().getSip_package_invite();
+                    Log.e(GeTui.VideoLog,"port:"+linphone_port);
+                    Log.e(GeTui.VideoLog,"sip_pacage_invite:"+sip_pacage_invite);
                     if (!TextUtils.isEmpty(sip_pacage_invite)) {
                         if (linphone_port > 0) {
                             timer.cancel();
