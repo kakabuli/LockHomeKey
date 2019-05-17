@@ -51,6 +51,7 @@
             android:textColor="#333333"
             android:textSize="@dimen/sp_15"
             android:layout_marginRight="@dimen/dp_60"
+            android:visibility="gone"
             />
         <TextView
             android:id="@+id/testunbindGateway"
@@ -61,7 +62,7 @@
             android:text="测试"
             android:textColor="#333333"
             android:textSize="@dimen/sp_15"
-
+            android:visibility="gone"
             />
 
 

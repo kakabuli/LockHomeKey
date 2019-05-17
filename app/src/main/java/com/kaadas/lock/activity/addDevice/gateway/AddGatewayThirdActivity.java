@@ -51,6 +51,7 @@ public class AddGatewayThirdActivity extends BaseActivity<GatewayBindView, Gatew
             ToastUtil.getInstance().showShort(getString(R.string.unbind_not_have_devicesn));
             return;
         }
+
         if (NetUtil.isNetworkAvailable()) {
             LogUtils.e("deviceSN    " + deviceSN);
             mPresenter.bindGateway(deviceSN);
@@ -82,7 +83,9 @@ public class AddGatewayThirdActivity extends BaseActivity<GatewayBindView, Gatew
 
     @Override
     public void bindGatewaySuccess(String deviceSN) {
-       mPresenter.bindMimi(deviceSN,deviceSN);
+        Intent successIntent = new Intent(this, AddGatewaySuccessActivity.class);
+        startActivity(successIntent);
+        finish();
     }
 
     @Override
@@ -92,8 +95,6 @@ public class AddGatewayThirdActivity extends BaseActivity<GatewayBindView, Gatew
          intent.putExtra(KeyConstants.GATEWAY_ID,deviceSN);
          intent.putExtra(KeyConstants.IS_BIND_MEME,isbindMeMe);
         startActivity(intent);
-
-
     }
 
     @Override
@@ -118,8 +119,15 @@ public class AddGatewayThirdActivity extends BaseActivity<GatewayBindView, Gatew
     }
 
     @Override
-    public void bindGatewayThrowable(Throwable throwable) {
+    public void bindGatewaySuitFail(String code, String msg) {
+        //绑定套装失败
+        Intent intent = new Intent(this, AddDeviceZigbeeLockNewFirstActivity.class);
+        intent.putExtra(KeyConstants.GATEWAY_ID, "");
+        startActivity(intent);
+    }
 
+    @Override
+    public void bindGatewayThrowable(Throwable throwable) {
         LogUtils.e("绑定网关异常" + throwable);
         Intent failIntent = new Intent(this, AddGatewayFailActivity.class);
         startActivity(failIntent);
@@ -128,25 +136,16 @@ public class AddGatewayThirdActivity extends BaseActivity<GatewayBindView, Gatew
 
     @Override
     public void bindMimiSuccess() {
-        Intent successIntent = new Intent(this, AddGatewaySuccessActivity.class);
-        startActivity(successIntent);
-        finish();
+        LogUtils.e("绑定咪咪网成功");
     }
 
     @Override
     public void bindMimiFail(String code, String msg) {
-        Intent failIntent = new Intent(this, AddGatewayFailActivity.class);
-        failIntent.putExtra("code", code);
-        failIntent.putExtra("msg", msg);
-        startActivity(failIntent);
-        finish();
+        LogUtils.e("绑定咪咪网失败");
     }
 
     @Override
     public void bindMimiThrowable(Throwable throwable) {
-        LogUtils.e("绑定mimi异常" + throwable);
-        Intent failIntent = new Intent(this, AddGatewayFailActivity.class);
-        startActivity(failIntent);
-        finish();
+        LogUtils.e("绑定咪咪网异常");
     }
 }

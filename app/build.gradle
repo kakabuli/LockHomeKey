@@ -3,7 +3,7 @@ apply plugin: 'org.greenrobot.greendao'
 
 
 greendao {
-    schemaVersion 3// 数据库版本号
+    schemaVersion 4// 数据库版本号
     daoPackage 'com.kaadas.lock.utils.greenDao.db'//自动生成的dao的包名，包名默认是entity所在的包；
     targetGenDir 'src/main/java'//生成数据库文件的目录
 }

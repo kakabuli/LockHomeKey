@@ -10,10 +10,21 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
+import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
+import com.kaadas.lock.publiclibrary.bean.CateEyeInfo;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.CatEyeInfoBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.CatEyeInfoBeanResult;
+import com.kaadas.lock.utils.Constants;
 import com.kaadas.lock.utils.KeyConstants;
+import com.kaadas.lock.utils.ftp.GeTui;
+import com.kaadas.lock.utils.greenDao.bean.CateEyeInfoBase;
+import com.kaadas.lock.utils.greenDao.db.CateEyeInfoBaseDao;
+import com.kaadas.lock.utils.greenDao.db.DaoSession;
+
+import org.linphone.mediastream.Log;
+
+import java.security.Key;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -46,7 +57,6 @@ public class CateyeMoreDeviceInformationActivity extends AppCompatActivity imple
     TextView tvIpAddress;
     @BindView(R.id.tv_cat_wifi)
     TextView tvCatWifi;
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,7 +65,6 @@ public class CateyeMoreDeviceInformationActivity extends AppCompatActivity imple
         initData();
         initView();
         initListener();
-
     }
 
     private void initData() {
@@ -72,6 +81,18 @@ public class CateyeMoreDeviceInformationActivity extends AppCompatActivity imple
             tvIpAddress.setText(catEyeInfo.getReturnData().getIpaddr());
             tvCatWifi.setText(catEyeInfo.getReturnData().getWifiStrength()+"");
 
+        }else {
+            String jsonBase = getIntent().getStringExtra(KeyConstants.GET_CAT_EYE_INFO_BASE);
+            CateEyeInfoBase cateEyeInfoBase = new Gson().fromJson(jsonBase, CateEyeInfoBase.class);
+            Log.e(GeTui.VideoLog,"cateEyeInfoBase:"+cateEyeInfoBase);
+            tvSerialNumber.setText(cateEyeInfoBase.getDeviceId());
+            tvSoftVersion.setText(cateEyeInfoBase.getSW());
+            hardwareVersion.setText(cateEyeInfoBase.getHW());
+            catMcuVersion.setText(cateEyeInfoBase.getMCU());
+            tvCatTVersion.setText(cateEyeInfoBase.getT200());
+            catMacAddress.setText(cateEyeInfoBase.getMacaddr());
+            tvIpAddress.setText(cateEyeInfoBase.getIpaddr());
+            tvCatWifi.setText(cateEyeInfoBase.getWifiStrength()+"");
         }
 
 

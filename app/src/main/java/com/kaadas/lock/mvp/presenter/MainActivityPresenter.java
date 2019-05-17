@@ -1,5 +1,8 @@
 package com.kaadas.lock.mvp.presenter;
 
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
+import android.net.wifi.WifiManager;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -36,6 +39,7 @@ import com.kaadas.lock.utils.SPUtils2;
 import com.kaadas.lock.utils.ftp.GeTui;
 import com.kaadas.lock.utils.greenDao.bean.CatEyeEvent;
 import com.kaadas.lock.utils.greenDao.bean.GatewayLockAlarmEventDao;
+import com.kaadas.lock.utils.networkListenerutil.NetWorkChangReceiver;
 
 import net.sdvn.cmapi.Device;
 
@@ -65,7 +69,6 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
     private Disposable deviceChangeDisposable;
     private CateEyeInfo callInCatEyeInfo;  //呼叫进来的猫眼信息
     private Disposable catEyeEventDisposable;
-    private Disposable listenerDeviceOnLineDisposable;
 
     @Override
     public void authSuccess() {
@@ -104,7 +107,7 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                         MyApplication.getInstance().getBleService().getBleLockInfo().setSafeMode(state9);
                         if (!TextUtils.isEmpty(nickNameByDeviceName)) {
                             String warringContent = BleUtil.parseWarring(MyApplication.getInstance(), deValue, nickNameByDeviceName);
-                            if (mViewRef.get() != null) {
+                            if (mViewRef.get() != null && !TextUtils.isEmpty(warringContent)) {
                                 mViewRef.get().onWarringUp(warringContent);
                             }
                         } else {
@@ -169,7 +172,8 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                                     LogUtils.e("监听网关的状态" + gatewayStatusResult.getDevuuid());
                                     if (gatewayStatusResult != null) {
                                         List<HomeShowBean> homeShowBeans = MyApplication.getInstance().getAllDevices();
-                                        if (homeShowBeans.size() > 0) {
+                                        SPUtils.put(gatewayStatusResult.getDevuuid(), gatewayStatusResult.getData().getState());
+                                       /* if (homeShowBeans.size() > 0) {
                                             for (HomeShowBean homeShowBean : homeShowBeans) {
                                                 if (homeShowBean.getDeviceType() == HomeShowBean.TYPE_GATEWAY) {
                                                     GatewayInfo gatewayInfo = (GatewayInfo) homeShowBean.getObject();
@@ -180,8 +184,8 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                                                 }
                                             }
                                         } else {
-                                            SPUtils.put(gatewayStatusResult.getDevuuid(), gatewayStatusResult.getData().getState());
-                                        }
+
+                                        }*/
                                     }
 
                                 }
@@ -212,7 +216,7 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                     public void accept(MqttData mqttData) throws Exception {
                         JSONObject jsonObject = new JSONObject(mqttData.getPayload());
                         String devtype = jsonObject.getString("devtype");
-                        String eventtype=jsonObject.getString("eventtype");
+                        String eventtype = jsonObject.getString("eventtype");
                         if (TextUtils.isEmpty(devtype)) { //devtype为空   无法处理数据
                             return;
                         }
@@ -250,7 +254,7 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                                 mViewRef.get().onGwEvent(eventType, catEyeEventBean.getDeviceId());
                             }
                             //网关锁信息上报
-                        }else if(KeyConstants.DEV_TYPE_LOCK.equals(devtype)){
+                        } else if (KeyConstants.DEV_TYPE_LOCK.equals(devtype)) {
                             //保存告警信息
                             if ("alarm".equals(eventtype)) {
                                 GatewayLockAlarmEventBean gatewayLockAlarmEventBean = new Gson().fromJson(mqttData.getPayload(), GatewayLockAlarmEventBean.class);
@@ -317,6 +321,7 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                 public void incomingCall(LinphoneCall linphoneCall) {
                     //收到来电通知
                     LogUtils.e("Linphone  收到来电     ");
+                    Log.e(GeTui.VideoLog,"  Linphone  收到来电");
                     if (VideoVActivity.isRunning) {
                         LogUtils.e("Linphone  收到来电   VideoActivity已经运行  不出来  ");
                         return;
@@ -350,6 +355,7 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                         //如果账号或者密码有一个为空  直接退出
                         return;
                     }
+                    Log.e(GeTui.VideoLog,"MainActivityPresenter--> next..."+meUsername+" "+mePwd);
                     if (MemeManager.getInstance().isConnected()) { //meme网已经连接
                         //如果meme网登陆的账号密码为当前的账号密码，直接发起通信
                         if (meUsername.equals(MemeManager.getInstance().getCurrentAccount())
@@ -366,6 +372,7 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
 
                         }
                     } else { //meme网没有连接
+                        Log.e(GeTui.VideoLog,"MainPresenter------>登录 mimi");
                         loginMeme(meUsername, mePwd);
                     }
                 }
@@ -419,6 +426,7 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                     public Boolean apply(Boolean aBoolean, List<Device> devices) throws Exception {
                         LogUtils.e("米米网登陆成功  且网关在线");
                         if (aBoolean && devices.size() > 0) { //米米网登陆成功且网关在线  正常到此处，那么都应该是成功的
+                            Log.e(GeTui.VideoLog,"米米网登陆成功  且网关在线");
                             return true;
                         }
                         return false;
@@ -434,6 +442,7 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                         }
                         if (aBoolean) { // 米米网登陆成功且网关在线
                             LogUtils.e("米米网  登陆成功   弹出来电框");
+                            Log.e(GeTui.VideoLog,"米米网  登陆成功   弹出来电框");
                             if (mViewRef.get() != null) {
                                 mViewRef.get().onCatEyeCallIn(callInCatEyeInfo);
                             }
@@ -474,13 +483,13 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
         compositeDisposable.add(deviceChangeDisposable);
     }
 
-    public void uploadpushmethod(){
-        String uid= (String) SPUtils.get(SPUtils.UID,"");
-        String JpushId=(String) SPUtils2.get(MyApplication.getInstance(), GeTui.JPUSH_ID,"");
-        Log.e(GeTui.VideoLog,"uid:"+uid+" jpushid:"+JpushId);
+    public void uploadpushmethod() {
+        String uid = (String) SPUtils.get(SPUtils.UID, "");
+        String JpushId = (String) SPUtils2.get(MyApplication.getInstance(), GeTui.JPUSH_ID, "");
+        Log.e(GeTui.VideoLog, "uid:" + uid + " jpushid:" + JpushId);
         //uploadPushId(String uid, String jpushId, int type)
-        if(!TextUtils.isEmpty(uid) && !TextUtils.isEmpty(JpushId)){
-            XiaokaiNewServiceImp.uploadPushId(uid,JpushId,2).subscribe(new BaseObserver<BaseResult>() {
+        if (!TextUtils.isEmpty(uid) && !TextUtils.isEmpty(JpushId)) {
+            XiaokaiNewServiceImp.uploadPushId(uid, JpushId, 2).subscribe(new BaseObserver<BaseResult>() {
                 @Override
                 public void onSuccess(BaseResult baseResult) {
                     if (mViewRef != null) {
@@ -490,12 +499,12 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
 
                 @Override
                 public void onAckErrorCode(BaseResult baseResult) {
-                    Log.e(GeTui.VideoLog,"pushid上传失败,服务返回:"+baseResult);
+                    Log.e(GeTui.VideoLog, "pushid上传失败,服务返回:" + baseResult);
                 }
 
                 @Override
                 public void onFailed(Throwable throwable) {
-                    Log.e(GeTui.VideoLog,"pushid上传失败");
+                    Log.e(GeTui.VideoLog, "pushid上传失败");
                 }
 
                 @Override
@@ -511,14 +520,9 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
     public void detachView() {
         super.detachView();
         LinphoneHelper.deleteUser();
+        bleService.release();
     }
 
-
-
-
-
-
-
-
-
 }
+
+

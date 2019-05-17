@@ -1,6 +1,9 @@
 package com.kaadas.lock.fragment;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -9,11 +12,13 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
-import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
+import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -28,12 +33,10 @@ import com.kaadas.lock.mvp.presenter.HomePreseneter;
 import com.kaadas.lock.mvp.view.IHomeView;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.publiclibrary.bean.CateEyeInfo;
-import com.kaadas.lock.publiclibrary.bean.GatewayInfo;
 import com.kaadas.lock.publiclibrary.bean.GwLockInfo;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.AllBindDevices;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
-import com.kaadas.lock.utils.db.DBTableConfig;
 import com.kaadas.lock.widget.UnderLineRadioBtn;
 
 import java.util.ArrayList;
@@ -55,19 +58,15 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
     LinearLayout llHasDevice;
     @BindView(R.id.btn_add_device)
     Button btnAddDevice;
-    ArrayList<String> radioButtonList = new ArrayList<>();
-    @BindView(R.id.rb_home1)
-    UnderLineRadioBtn rbHome1;
-    @BindView(R.id.rb_home2)
-    UnderLineRadioBtn rbHome2;
-    @BindView(R.id.rb_home3)
-    UnderLineRadioBtn rbHome3;
+
     @BindView(R.id.rg_home)
-    RadioGroup rgHome;
+    RadioGroup mRadioGroup;
     @BindView(R.id.vp_home)
     ViewPager viewPager;
     @BindView(R.id.ll_no_device)
     LinearLayout llNoDevice;
+    @BindView(R.id.sc_title)
+    HorizontalScrollView scTitle;
     private List<Fragment> fragments = new ArrayList<>();
     private List<Integer> realPositions = new ArrayList<>();  //保存的实际position
     private List<HomeShowBean> devices = new ArrayList<>();
@@ -78,6 +77,7 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
     private int currentPosition;
     public boolean isSelectHome = true;
     private FragmentPagerAdapter adapter;
+    private int currentIndex;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -121,7 +121,28 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
         changePage();
         devices = MyApplication.getInstance().getHomeShowDevices();
         initData(devices);
+        getScrollViewWidth();
         return view;
+    }
+
+    private void getScrollViewWidth() {
+        scTitle.getViewTreeObserver().addOnGlobalLayoutListener(
+                new ViewTreeObserver.OnGlobalLayoutListener() {
+                    @Override
+                    public void onGlobalLayout() {
+                        if (scTitle.getWidth() > 0) {
+                            int childCount = mRadioGroup.getChildCount();
+                            for (int i = 0; i < childCount; i++) {
+                                RadioButton radioButton = (RadioButton) mRadioGroup.getChildAt(i);
+                                if (childCount >2){
+                                    radioButton.setLayoutParams(new LinearLayout.LayoutParams((scTitle.getWidth() / 3), LinearLayout.LayoutParams.WRAP_CONTENT ));
+                                }else {
+                                    radioButton.setLayoutParams(new LinearLayout.LayoutParams((scTitle.getWidth() / childCount), LinearLayout.LayoutParams.WRAP_CONTENT ));
+                                }
+                            }
+                        }
+                    }
+                });
     }
 
     @Override
@@ -159,90 +180,25 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
 
         realPositions.clear();
 
-        if (devices.size() == 0) {
-            rbHome1.setVisibility(View.GONE);
-            rbHome2.setVisibility(View.GONE);
-            rbHome3.setVisibility(View.GONE);
-        } else if (devices.size() == 1) {
-            rbHome1.setVisibility(View.VISIBLE);
-            rbHome2.setVisibility(View.GONE);
-            rbHome3.setVisibility(View.GONE);
-            rbHome1.setText(devices.get(0).getDeviceNickName());
-            realPositions.add(0);
-            if (devices.get(0).getDeviceType() == HomeShowBean.TYPE_BLE_LOCK
-                    || devices.get(0).getDeviceType() == HomeShowBean.TYPE_GATEWAY_LOCK
-                    ) {
-                rbHome1.setCompoundDrawablesRelativeWithIntrinsicBounds(null, getActivity().getDrawable(R.drawable.home_rb_lock_drawable), null, null);
-            } else {
-                rbHome1.setCompoundDrawablesRelativeWithIntrinsicBounds(null, getActivity().getDrawable(R.drawable.home_rb_cat_eye_drawable), null, null);
-            }
-        } else if (devices.size() == 2) {
-            rbHome1.setVisibility(View.VISIBLE);
-            rbHome2.setVisibility(View.VISIBLE);
-            rbHome3.setVisibility(View.GONE);
-            rbHome1.setText(devices.get(0).getDeviceNickName());
-            rbHome2.setText(devices.get(1).getDeviceNickName());
-            realPositions.add(0);
-            realPositions.add(1);
-            if (devices.get(0).getDeviceType() == HomeShowBean.TYPE_BLE_LOCK
-                    || devices.get(0).getDeviceType() == HomeShowBean.TYPE_GATEWAY_LOCK
-                    ) {
-                rbHome1.setCompoundDrawablesRelativeWithIntrinsicBounds(null, getActivity().getDrawable(R.drawable.home_rb_lock_drawable), null, null);
-            } else {
-                rbHome1.setCompoundDrawablesRelativeWithIntrinsicBounds(null, getActivity().getDrawable(R.drawable.home_rb_cat_eye_drawable), null, null);
-            }
-            if (devices.get(1).getDeviceType() == HomeShowBean.TYPE_BLE_LOCK
-                    || devices.get(1).getDeviceType() == HomeShowBean.TYPE_GATEWAY_LOCK
-                    ) {
-                rbHome2.setCompoundDrawablesRelativeWithIntrinsicBounds(null, getActivity().getDrawable(R.drawable.home_rb_lock_drawable), null, null);
-            } else {
-                rbHome2.setCompoundDrawablesRelativeWithIntrinsicBounds(null, getActivity().getDrawable(R.drawable.home_rb_cat_eye_drawable), null, null);
-            }
-        } else {
-            rbHome1.setVisibility(View.VISIBLE);
-            rbHome2.setVisibility(View.VISIBLE);
-            rbHome3.setVisibility(View.VISIBLE);
-            rbHome1.setText(devices.get(0).getDeviceNickName());
-            rbHome2.setText(devices.get(1).getDeviceNickName());
-            rbHome3.setText(devices.get(2).getDeviceNickName());
-            realPositions.add(0);
-            realPositions.add(1);
-            realPositions.add(2);
-
-            if (devices.get(0).getDeviceType() == HomeShowBean.TYPE_BLE_LOCK
-                    || devices.get(0).getDeviceType() == HomeShowBean.TYPE_GATEWAY_LOCK
-                    ) {
-                rbHome1.setCompoundDrawablesRelativeWithIntrinsicBounds(null, getActivity().getDrawable(R.drawable.home_rb_lock_drawable), null, null);
-            } else {
-                rbHome1.setCompoundDrawablesRelativeWithIntrinsicBounds(null, getActivity().getDrawable(R.drawable.home_rb_cat_eye_drawable), null, null);
-            }
-
-            if (devices.get(1).getDeviceType() == HomeShowBean.TYPE_BLE_LOCK
-                    || devices.get(1).getDeviceType() == HomeShowBean.TYPE_GATEWAY_LOCK
-                    ) {
-                rbHome2.setCompoundDrawablesRelativeWithIntrinsicBounds(null, getActivity().getDrawable(R.drawable.home_rb_lock_drawable), null, null);
-            } else {
-                rbHome2.setCompoundDrawablesRelativeWithIntrinsicBounds(null, getActivity().getDrawable(R.drawable.home_rb_cat_eye_drawable), null, null);
-            }
-
-            if (devices.get(2).getDeviceType() == HomeShowBean.TYPE_BLE_LOCK
-                    || devices.get(2).getDeviceType() == HomeShowBean.TYPE_GATEWAY_LOCK
-                    ) {
-                rbHome3.setCompoundDrawablesRelativeWithIntrinsicBounds(null, getActivity().getDrawable(R.drawable.home_rb_lock_drawable), null, null);
-            } else {
-                rbHome3.setCompoundDrawablesRelativeWithIntrinsicBounds(null, getActivity().getDrawable(R.drawable.home_rb_cat_eye_drawable), null, null);
-
-            }
-        }
-
         if (fragments != null) {
             fragments.clear();
         }
+        mRadioGroup.removeAllViews();
+        //parentItemArr为商品类别对象集合
         for (int i = 0; i < devices.size(); i++) {
-            //此处初始化Fragment
-            LogUtils.e(devices.get(0).getDeviceType() + "设备类型是");
-            switch (devices.get(i).getDeviceType()) {
-                case HomeShowBean.TYPE_BLE_LOCK: //蓝牙锁:
+            //添加radiobutton及设置参数(方便动态加载radiobutton)
+            UnderLineRadioBtn rb = new UnderLineRadioBtn(getContext());
+            //根据下标获取商品类别对象
+            HomeShowBean homeShowBean = devices.get(i);
+
+            rb.setText(homeShowBean.getDeviceNickName());
+            rb.setTextSize(13);
+            rb.setGravity(Gravity.CENTER);
+            //设置图片   根据类型不同显示不同的图片
+
+            switch (homeShowBean.getDeviceType()) {
+                case HomeShowBean.TYPE_BLE_LOCK:
+                    rb.setCompoundDrawablesRelativeWithIntrinsicBounds(null, getContext().getDrawable(R.drawable.home_rb_lock_drawable), null, null);
                     BleLockInfo bleLockInfo = (BleLockInfo) devices.get(i).getObject();
                     String bleVersion = bleLockInfo.getServerLockInfo().getBleVersion();
                     boolean isOld = false;
@@ -269,25 +225,51 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
                         fragments.add(bleLockFragment);
                     }
                     break;
-                case HomeShowBean.TYPE_GATEWAY_LOCK: //网关锁:
-                    GatewayLockFragment gatewayLockFragment = new GatewayLockFragment();
-                    Bundle gwBundle = new Bundle();
-                    gwBundle.putSerializable(KeyConstants.GATEWAY_LOCK_INFO, (GwLockInfo) devices.get(i).getObject());
-                    gatewayLockFragment.setArguments(gwBundle);
-                    fragments.add(gatewayLockFragment);
-                    break;
-                case HomeShowBean.TYPE_CAT_EYE: //猫眼:
+                case HomeShowBean.TYPE_CAT_EYE:
+                    rb.setCompoundDrawablesRelativeWithIntrinsicBounds(null, getContext().getDrawable(R.drawable.home_rb_cat_eye_drawable), null, null);
                     CatEyeFragment catEyeFragment = new CatEyeFragment();
                     Bundle catEyeBundle = new Bundle();
                     catEyeBundle.putSerializable(KeyConstants.CATE_INFO, (CateEyeInfo) devices.get(i).getObject());
                     catEyeFragment.setArguments(catEyeBundle);
                     fragments.add(catEyeFragment);
                     break;
-                case HomeShowBean.TYPE_GATEWAY: //网关
-                    fragments.add(new MyFragment());
+                case HomeShowBean.TYPE_GATEWAY_LOCK:
+                    rb.setCompoundDrawablesRelativeWithIntrinsicBounds(null, getContext().getDrawable(R.drawable.home_rb_lock_drawable), null, null);
+                    GatewayLockFragment gatewayLockFragment = new GatewayLockFragment();
+                    Bundle gwBundle = new Bundle();
+                    gwBundle.putSerializable(KeyConstants.GATEWAY_LOCK_INFO, (GwLockInfo) devices.get(i).getObject());
+                    gatewayLockFragment.setArguments(gwBundle);
+                    fragments.add(gatewayLockFragment);
                     break;
             }
+            //根据需要设置显示初始标签的个数，这里显示3个
+            if (devices.size()>2){
+                rb.setLayoutParams(new LinearLayout.LayoutParams((scTitle.getWidth() / 3), LinearLayout.LayoutParams.WRAP_CONTENT ));
+            }else {
+                rb.setLayoutParams(new LinearLayout.LayoutParams((scTitle.getWidth() / devices.size()), LinearLayout.LayoutParams.WRAP_CONTENT ));
+            }
+
+            //设置背景为透明
+            rb.setBackgroundResource(R.color.color_trans);
+            //设置文字超过范围显示....
+            rb.setEllipsize(TextUtils.TruncateAt.END);
+            rb.setLineRadius(0);
+            //设置下划线的高度
+            rb.setLineHeight_ulb(4);
+            //设置图片和文字之间的距离
+            rb.setCompoundDrawablePadding(12);
+            //设置边距
+            rb.setPadding(0, 10, 0, 10);
+            //**原生radiobutton是有小圆点的，要去掉圆点而且最好按以下设置，设置为null的话在4.x.x版本上依然会出现**
+            rb.setButtonDrawable(new ColorDrawable(Color.TRANSPARENT));
+            //向radiogroup中添加radiobutton
+            mRadioGroup.addView(rb);
         }
+
+        viewPager.setCurrentItem(0);
+        viewPager.setOffscreenPageLimit(5);
+        UnderLineRadioBtn radioBtn = (UnderLineRadioBtn) mRadioGroup.getChildAt(0);
+        radioBtn.setChecked(true);
 
 
         LogUtils.e("首页Fragment数据是   " + Arrays.toString(fragments.toArray()));
@@ -319,135 +301,49 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
         } else {
             adapter.notifyDataSetChanged();
         }
-        if (devices.size() > 0) {
-            viewPager.setCurrentItem(0);
-            rbHome1.setChecked(true);
-        }
-        rbHome1.setScaleY((float) 1);
-        rbHome1.setScaleX((float) 1);
-        rbHome2.setScaleY((float) 0.85);
-        rbHome2.setScaleX((float) 0.85);
-        rbHome3.setScaleY((float) 0.85);
-        rbHome3.setScaleX((float) 0.85);
 
-        rgHome.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+        mRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                int realPosition = 0;
-                switch (checkedId) {
-                    case R.id.rb_home1:
-                        realPosition = realPositions.get(0);
-                        break;
-                    case R.id.rb_home2:
-                        realPosition = realPositions.get(1);
-                        break;
-                    case R.id.rb_home3:
-                        realPosition = realPositions.get(2);
-                        break;
-                }
-                resetRadioButton(realPosition);
+
             }
         });
 
 
+        mRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                int RadiobuttonId = group.getCheckedRadioButtonId();
+                //获取radiobutton对象
+                RadioButton bt = (RadioButton) group.findViewById(RadiobuttonId);
+                //获取单个对象中的位置
+                int index = group.indexOfChild(bt);
+                //设置滚动位置，可使点击radiobutton时，将该radiobutton移动至第二位置
+                scTitle.smoothScrollTo(bt.getLeft() - (int) (scTitle.getWidth() / 3), 0);
+                currentIndex = index;
+                //根据点击的radiobutton跳转至不同webview界面
+                viewPager.setCurrentItem(index);
+            }
+        });
+
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
-            public void onPageScrolled(int i, float v, int i1) {
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
             }
 
             @Override
             public void onPageSelected(int position) {
-                currentPosition = position;
-                resetRadioButton(position);
+                RadioButton radioButton = (RadioButton) mRadioGroup.getChildAt(position);
+                radioButton.setChecked(true);
             }
 
             @Override
-            public void onPageScrollStateChanged(int i) {
+            public void onPageScrollStateChanged(int state) {
 
             }
         });
-    }
-
-    public void resetRadioButton(int realPosition) {
-        int startPosition = 0;
-        int endPosition = 0;
-        int selectPosition = 0;
-        if (realPosition == 0 || realPosition == 1) {  //如果是第一
-            startPosition = 0;
-            if (realPosition == devices.size() - 1) { //如果是最后一个的话
-                endPosition = realPosition;
-            } else {
-                endPosition = 2;
-            }
-            selectPosition = realPosition;
-        } else {
-            startPosition = realPosition - 1;
-            selectPosition = 1;
-            if (realPosition == devices.size() - 1) {//如果是最后一个的话
-                startPosition = realPosition - 2;
-                endPosition = realPosition;
-                selectPosition = 2;
-            } else {
-                endPosition = realPosition + 1;
-            }
-        }
-
-        //设置radioButton的标题
-        if (devices.size() > 3) {
-            rbHome1.setText(devices.get(startPosition).getDeviceNickName());
-            rbHome2.setText(devices.get(startPosition + 1).getDeviceNickName());
-            rbHome3.setText(devices.get(endPosition).getDeviceNickName());
-            realPositions.clear();
-            for (int i = startPosition; i <= endPosition; i++) {
-                realPositions.add(i);
-            }
-            if (devices.get(startPosition).getDeviceType() == HomeShowBean.TYPE_BLE_LOCK
-                    || devices.get(startPosition).getDeviceType() == HomeShowBean.TYPE_GATEWAY_LOCK
-                    ) {
-                rbHome1.setCompoundDrawablesRelativeWithIntrinsicBounds(null, getActivity().getDrawable(R.drawable.home_rb_lock_drawable), null, null);
-            } else {
-                rbHome1.setCompoundDrawablesRelativeWithIntrinsicBounds(null, getActivity().getDrawable(R.drawable.home_rb_cat_eye_drawable), null, null);
-            }
-
-            if (devices.get(startPosition + 1).getDeviceType() == HomeShowBean.TYPE_BLE_LOCK
-                    || devices.get(startPosition + 1).getDeviceType() == HomeShowBean.TYPE_GATEWAY_LOCK
-                    ) {
-                rbHome2.setCompoundDrawablesRelativeWithIntrinsicBounds(null, getActivity().getDrawable(R.drawable.home_rb_lock_drawable), null, null);
-            } else {
-                rbHome2.setCompoundDrawablesRelativeWithIntrinsicBounds(null, getActivity().getDrawable(R.drawable.home_rb_cat_eye_drawable), null, null);
-            }
-
-            if (devices.get(endPosition).getDeviceType() == HomeShowBean.TYPE_BLE_LOCK
-                    || devices.get(endPosition).getDeviceType() == HomeShowBean.TYPE_GATEWAY_LOCK
-                    ) {
-                rbHome3.setCompoundDrawablesRelativeWithIntrinsicBounds(null, getActivity().getDrawable(R.drawable.home_rb_lock_drawable), null, null);
-            } else {
-                rbHome3.setCompoundDrawablesRelativeWithIntrinsicBounds(null, getActivity().getDrawable(R.drawable.home_rb_cat_eye_drawable), null, null);
-
-            }
-        }
-        //
-        RadioButton radioButton = (RadioButton) rgHome.getChildAt(selectPosition);
-        radioButton.setChecked(true);
-        viewPager.setCurrentItem(realPosition);
-        currentPosition = realPosition;
-        rbHome1.setScaleY((float) 0.85);
-        rbHome1.setScaleX((float) 0.85);
-        rbHome2.setScaleY((float) 0.85);
-        rbHome2.setScaleX((float) 0.85);
-        rbHome3.setScaleY((float) 0.85);
-        rbHome3.setScaleX((float) 0.85);
-        if (selectPosition == 0) {
-            rbHome1.setScaleY((float) 1);
-            rbHome1.setScaleX((float) 1);
-        } else if (selectPosition == 1) {
-            rbHome2.setScaleY((float) 1);
-            rbHome2.setScaleX((float) 1);
-        } else if (selectPosition == 2) {
-            rbHome3.setScaleY((float) 1);
-            rbHome3.setScaleX((float) 1);
-        }
     }
 
     @Override

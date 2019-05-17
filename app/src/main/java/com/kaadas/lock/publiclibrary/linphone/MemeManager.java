@@ -5,10 +5,12 @@ import android.util.Log;
 
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.SPUtils;
+import com.kaadas.lock.utils.ftp.GeTui;
 
 import net.sdvn.cmapi.BaseInfo;
 import net.sdvn.cmapi.CMAPI;
 import net.sdvn.cmapi.Device;
+import net.sdvn.cmapi.Network;
 import net.sdvn.cmapi.RealtimeInfo;
 import net.sdvn.cmapi.global.Constants;
 import net.sdvn.cmapi.protocal.ConnectStatusListener;
@@ -25,7 +27,7 @@ import io.reactivex.subjects.PublishSubject;
 public class MemeManager {
 
     public static MemeManager instance;
-    private static String TAG = "米米网 ";
+    public static String TAG = "米米网 ";
     private static final int BUILD_VPN_REQUEST = 101;
     private String currentAccount;
     private String currentPassword;
@@ -108,6 +110,12 @@ public class MemeManager {
         @Override
         public void onConnected() {
             Log.e(TAG, "咪咪网登陆成功.....   " + "  获取网络信息  " + CMAPI.getInstance().getBaseInfo().getVip());
+            List<Network> networksList = new ArrayList<>();
+            networksList.addAll(CMAPI.getInstance().getNetworkList());
+            Log.e(GeTui.VideoLog,"MyApplication davi mimi networksList "+networksList.toString());
+            Log.e(GeTui.VideoLog,"MyApplication davi mimi networksList:"+networksList.size());
+            Log.e(GeTui.VideoLog,"MyApplication davi mimi networksList "+networksList.toString());
+
         }
 
         @Override

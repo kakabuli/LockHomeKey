@@ -21,10 +21,10 @@ public class MqttConstant {
       public static final String MQTT_BASE_URL = "tcp://test.juziwulian.com:1883";//测试服务器
 
 
-       public static final String LINPHONE_URL = "sip-kaadas.juziwulian.com:5061";//正式sip
+   //    public static final String LINPHONE_URL = "sip-kaadas.juziwulian.com:5061";//正式sip
      // public static String LINPHONE_URL = "192.168.3.180:5061";   // 本地sip
      //  public static String LINPHONE_URL = "47.106.94.189:5061";   // 测试sip
-       //public static final String LINPHONE_URL = "test.juziwulian.com:5061";//测试sip
+         public static final String LINPHONE_URL = "test.juziwulian.com:5061";//测试sip
 
     public static final String  MQTT_REQUEST_APP = "/request/app/func";
 
@@ -167,5 +167,17 @@ public class MqttConstant {
 
     //解绑测试网关
     public static final String UNBIND_TEST_GATEWAY="testUnBindGateway";
+
+    //设置布防
+    public static final String SET_ARM_LOCKED="setArmLocked";
+
+    //设置AM
+    public static final String SET_AM="setAM";
+
+    //获取布防
+    public static final String GET_ALRAM_LOCK="getArmLocked";
+
+    //获取AM
+    public static final String GET_AM="getAM";
 
 }

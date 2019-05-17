@@ -67,4 +67,6 @@ public class CateEyeInfo  implements Serializable {
     public void setPowerTimeStamp(String powerTimeStamp) {
         this.powerTimeStamp = powerTimeStamp;
     }
+
+
 }

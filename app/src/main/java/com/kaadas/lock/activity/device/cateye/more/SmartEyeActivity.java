@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -29,6 +30,8 @@ import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.ToastUtil;
+import com.kaadas.lock.utils.ftp.GeTui;
+import com.kaadas.lock.utils.greenDao.bean.CateEyeInfoBase;
 
 import java.util.ArrayList;
 
@@ -78,7 +81,7 @@ public class SmartEyeActivity extends BaseActivity<ISmartEyeView, SmartEyePresen
 
     private int pirEnable=-1;
 
-
+    CateEyeInfoBase cateEyeInfoBase=null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,8 +89,14 @@ public class SmartEyeActivity extends BaseActivity<ISmartEyeView, SmartEyePresen
         ButterKnife.bind(this);
         context=this;
         initListener();
+
+        String jsonBase = getIntent().getStringExtra(KeyConstants.GET_CAT_EYE_INFO_BASE);
+        cateEyeInfoBase = new Gson().fromJson(jsonBase, CateEyeInfoBase.class);
+        Log.e(GeTui.VideoLog,"SmartEyeActivity==>cateEyeInfoBase:"+cateEyeInfoBase);
         initData();
         initOptionPicker();
+
+
     }
 
     @Override
@@ -106,7 +115,14 @@ public class SmartEyeActivity extends BaseActivity<ISmartEyeView, SmartEyePresen
                 gatewayId=catEyeInfo.getGwId();
                 deviceId=catEyeInfo.getDeviceId();
                 pirEnable=catEyeInfo.getReturnData().getPirEnable();
+            }else {
             }
+        }else {
+            sd= cateEyeInfoBase.getSdStatus();
+            pir= cateEyeInfoBase.getPirWander();
+            gatewayId= cateEyeInfoBase.getGwid();
+            deviceId= cateEyeInfoBase.getDeviceId();
+            pirEnable= cateEyeInfoBase.getPirEnable();
         }
         if (sdStatus!=null&&pirWander!=null&&iv_smart_monitor!=null) {
             if (sd == 1) {
@@ -129,6 +145,8 @@ public class SmartEyeActivity extends BaseActivity<ISmartEyeView, SmartEyePresen
             if (!TextUtils.isEmpty(pir)){
                 String str=pir.replace(",","/");
                 pirWander.setText(str);
+            }else {
+                rl_smart_linger.setVisibility(View.GONE);
             }
         }
         setData();

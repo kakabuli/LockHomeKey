@@ -35,4 +35,23 @@ public interface GatewayLockDetailView  extends IBaseView {
 
     //监听设备的状态
     void deviceStatusChange(String gatewayId,String deviceId,String eventStr);
+
+    //设置布防成功
+    void setArmLockedSuccess(int operatingMode);
+
+    //设置布防失败
+    void setArmLockedFail(String code);
+
+    //设置布防异常
+    void setArmLockedThrowable(Throwable throwable);
+
+    //获取布防成功
+    void getArmLockedSuccess(int operatingMode);
+
+    //获取布防失败
+    void getArmLockedFail(String code);
+
+    //获取布防异常
+    void getArmLockedThrowable(Throwable throwable);
+
 }

@@ -399,20 +399,12 @@ public final class LinphoneService extends Service {
                         }
                     }
 
-
-//                    Intent missedCallNotifIntent = new Intent(LinphoneService.this, incomingReceivedActivity);
-//                    missedCallNotifIntent.putExtra("GoToHistory", true);
-//                    PendingIntent intent = PendingIntent.getActivity(LinphoneService.this, 0, missedCallNotifIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-//                    Notification notif = Compatibility.createMissedCallNotification(instance, "missed_calls_notif_title", "body", intent);
-                    //        notifyWrapper(MISSED_NOTIF_ID, notif);
-                    //		Log.e("denganzhi2","差值:"+(System.currentTimeMillis()-MyApplication.getInstance().getIsComingTime()));
                     if (System.currentTimeMillis() - MyApplication.getInstance().getIsComingTime() < 25 * 1000) {
                         // 屏幕亮了
                         handler.postDelayed(new Runnable() {
                             @Override
                             public void run() {
                                 Toast.makeText(LinphoneService.this, getResources().getString(R.string.return_code_409), Toast.LENGTH_SHORT).show();
-
                                 //设备正忙
                             }
                         }, 800);
@@ -420,14 +412,6 @@ public final class LinphoneService extends Service {
 
                 }
 
-//				if (state == State.StreamsRunning) {
-//					// Workaround bug current call seems to be updated after state changed to streams running
-//					if (getResources().getBoolean(R.bool.enable_call_notification))
-//						refreshIncallIcon(call);
-//				} else {
-//					if (getResources().getBoolean(R.bool.enable_call_notification))
-//						refreshIncallIcon(LinphoneManager.getLc().getCurrentCall());
-//				}
             }
 
             @Override

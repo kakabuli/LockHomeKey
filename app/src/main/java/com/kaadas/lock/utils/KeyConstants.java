@@ -382,4 +382,9 @@ public class KeyConstants {
 
     //是否绑定了咪咪网
     public static final String IS_BIND_MEME="isbindMeme";
+
+
+    //获取猫眼信息
+    public static final String GET_CAT_EYE_INFO_BASE="GET_CAT_EYE_INFO_BASE";
+
 }

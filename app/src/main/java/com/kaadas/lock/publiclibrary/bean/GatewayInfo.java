@@ -11,6 +11,8 @@ public class GatewayInfo implements Serializable {
 
     /**
      * 上线和离线状态
+     * online  在线
+     * offline 离线
      */
     String event_str;
 

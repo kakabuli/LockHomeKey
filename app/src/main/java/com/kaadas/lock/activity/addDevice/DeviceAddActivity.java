@@ -14,6 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.addDevice.bluetooth.AddBluetoothFirstActivity;
 import com.kaadas.lock.activity.addDevice.gateway.AddGatewayFirstActivity;
@@ -27,6 +28,7 @@ import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.mvp.presenter.deviceaddpresenter.DeviceZigBeeDetailPresenter;
 import com.kaadas.lock.mvp.view.deviceaddview.DeviceZigBeeDetailView;
 import com.kaadas.lock.publiclibrary.bean.ServerGatewayInfo;
+import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.AllBindDevices;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.ToastUtil;
@@ -38,7 +40,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class DeviceAddActivity extends BaseActivity<DeviceZigBeeDetailView, DeviceZigBeeDetailPresenter<DeviceZigBeeDetailView>> implements BaseQuickAdapter.OnItemClickListener {
+public class DeviceAddActivity extends BaseActivity<DeviceZigBeeDetailView, DeviceZigBeeDetailPresenter<DeviceZigBeeDetailView>> implements BaseQuickAdapter.OnItemClickListener,DeviceZigBeeDetailView{
 
     @BindView(R.id.back)
     ImageView back;
@@ -207,7 +209,6 @@ public class DeviceAddActivity extends BaseActivity<DeviceZigBeeDetailView, Devi
                     public void left() {
 
                     }
-
                     @Override
                     public void right() {
                         //跳转到配置网关添加的流程
@@ -227,5 +228,19 @@ public class DeviceAddActivity extends BaseActivity<DeviceZigBeeDetailView, Devi
                 startActivity(zigbeeIntent);
             }
         }
+    }
+
+    @Override
+    public void onDeviceRefresh(AllBindDevices allBindDevices) {
+        if (allBindDevices!=null){
+            LogUtils.e("添加设备加入网关");
+            List<HomeShowBean> gatewayList= mPresenter.getGatewayBindList();
+            if (gatewayList!=null){
+                if (gatewayList.size()>0){
+                    flag=true;
+                }
+            }
+        }
+
     }
 }

@@ -358,6 +358,7 @@ public class SnapshotFragment1 extends CallBackBaseFragment<ISnapShotView, SnapP
                     imageList.clear();
                     showPirHistoryData();
                 }else{
+                    showPirNoHistoryData();
                     Toast.makeText(getActivity(),getActivity().getResources().getString(R.string.ftp_connection_fail),Toast.LENGTH_SHORT).show();
                 }
 
@@ -652,6 +653,9 @@ public class SnapshotFragment1 extends CallBackBaseFragment<ISnapShotView, SnapP
         if(dialog!=null){
             dialog.dismiss();
         }
+        if(!isFresh){
+            showPirNoHistoryData();
+        }
     }
 
     @Override
@@ -664,9 +668,17 @@ public class SnapshotFragment1 extends CallBackBaseFragment<ISnapShotView, SnapP
                     dialog.dismiss();
                 }
                 history_refreshLayout_ff.finishRefresh();
+                if(!isFresh){
+                    showPirNoHistoryData();
+                }
                 isFresh=false;
             }
         });
+    }
+
+    private void showPirNoHistoryData(){
+        imageList.clear();
+        pirHistoryAdapter.notifyDataSetChanged();
     }
 
     private void showPirHistoryData(){

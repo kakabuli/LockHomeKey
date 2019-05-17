@@ -2,6 +2,7 @@ package com.kaadas.lock.activity;
 
 
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -75,7 +76,8 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
     private static final int REQUEST_CODE_VPN_SERVICE = 11;
 
     public boolean isSelectHome = true;
-
+    private NetWorkChangReceiver netWorkChangReceiver;
+    private boolean isRegistered=false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setContentView(R.layout.activity_main);
@@ -121,6 +123,7 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
              Log.e(GeTui.VideoLog,"重新上传pushid.......");
              mPresenter.uploadpushmethod();
         }
+        registerNetwork();
         startcallmethod();
     }
 
@@ -234,6 +237,7 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
 
     @Override
     public void onCatEyeCallIn(CateEyeInfo cateEyeInfo) {
+        Log.e(GeTui.VideoLog,"MainActivity---->跳入=====>VideoVActivity");
         Intent intent = new Intent(this, VideoVActivity.class);
         intent.putExtra(KeyConstants.IS_CALL_IN, true);
         intent.putExtra(KeyConstants.CATE_INFO, cateEyeInfo);
@@ -296,6 +300,8 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
                 public void run() {
                     int linphone_port = MyApplication.getInstance().getLinphone_port();
                     String sip_pacage_invite = MyApplication.getInstance().getSip_package_invite();
+                    Log.e(GeTui.VideoLog,"port:"+linphone_port);
+                    Log.e(GeTui.VideoLog,"sip_pacage_invite:"+sip_pacage_invite);
                     if (!TextUtils.isEmpty(sip_pacage_invite)) {
                         if (linphone_port > 0) {
                             timer.cancel();
@@ -351,5 +357,24 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
             return true;
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    //注册网络状态监听广播
+    private void registerNetwork(){
+        netWorkChangReceiver = new NetWorkChangReceiver();
+        IntentFilter filter = new IntentFilter();
+        registerReceiver(netWorkChangReceiver, filter);
+        isRegistered = true;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (isRegistered){
+            if (netWorkChangReceiver!=null){
+                unregisterReceiver(netWorkChangReceiver);
+            }
+        }
+
     }
 }
