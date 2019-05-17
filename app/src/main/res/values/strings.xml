@@ -879,4 +879,5 @@
     <string name="get_pir_slient_fail">获取pir静默参数失败</string>
     <string name="please_input_legal_number">请输入1-60的数字</string>
     <string name="parameter_not_empty">参数不能为空</string>
+    <string name="refresh_geteway">请刷新网关</string>
 </resources>
