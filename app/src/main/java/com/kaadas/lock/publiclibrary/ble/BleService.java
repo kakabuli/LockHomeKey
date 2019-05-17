@@ -399,7 +399,7 @@ public class BleService extends Service {
             LogUtils.e("收到数据  " + Rsa.bytesToHexString(value));
             //加密数据中的   开锁记录   报警记录    不要回确认帧    秘钥上报  需要逻辑层才回确认帧
             if (value[0] == 1 && !((value[3] & 0xff) == 0x04)
-                    && !((value[3] & 0xff) == 0x14) && !(value[3] == 0x08)  && bleVersion != 1) {  //如果是加密数据  那么回确认帧
+                    && !((value[3] & 0xff) == 0x14) && !(value[3] == 0x08) && bleVersion != 1) {  //如果是加密数据  那么回确认帧
                 sendCommand(BleCommandFactory.confirmCommand(value));
             }
 
@@ -794,12 +794,13 @@ public class BleService extends Service {
     public void writeCommand(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, byte[] command) {
         //此次发送数据的时间和上次发送数据的时间间隔  小于预定的时间间隔
         //将此命令添加进commands集合  再延时 离最小间隔时间的差发送
-        if (System.currentTimeMillis() - lastSendTime < sendInterval) {
-            commands.add(command);
-            handler.postDelayed(sendCommandRannble, sendInterval - (System.currentTimeMillis() - lastSendTime));
-            return;
+        if ((System.currentTimeMillis() - lastSendTime >= 0)) {
+            if (System.currentTimeMillis() - lastSendTime < sendInterval) {
+                commands.add(command);
+                handler.postDelayed(sendCommandRannble, sendInterval - (System.currentTimeMillis() - lastSendTime));
+                return;
+            }
         }
-
         handler.removeCallbacks(sendHeart);
         handler.postDelayed(sendHeart, heartInterval);
         lastSendTime = System.currentTimeMillis();

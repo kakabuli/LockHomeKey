@@ -336,6 +336,9 @@ public class MyApplication extends Application {
         if (!TextUtils.isEmpty(phone)) {
             SPUtils.put(SPUtils.PHONEN, phone);
         }
+        //清除内存中缓存的数据
+        bleService.release();
+        homeShowDevices.clear();
         MyApplication.getInstance().initTokenAndUid();
         //清除数据库数据
         for (Activity activity : activities) {

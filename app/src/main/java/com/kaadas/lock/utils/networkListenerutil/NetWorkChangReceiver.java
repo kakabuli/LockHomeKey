@@ -23,7 +23,6 @@ import io.reactivex.subjects.PublishSubject;
 
 public class NetWorkChangReceiver extends BroadcastReceiver {
 
-
     /**
      * 获取连接类型
      *

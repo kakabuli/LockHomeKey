@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.MainActivity;
@@ -30,6 +31,10 @@ import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LoadingDialog;
 import com.kaadas.lock.utils.StringUtil;
 import com.kaadas.lock.utils.ToastUtil;
+import com.kaadas.lock.utils.greenDao.bean.CateEyeInfoBase;
+import com.kaadas.lock.utils.greenDao.db.CateEyeInfoBaseDao;
+import com.kaadas.lock.utils.greenDao.db.DaoSession;
+import com.kaadas.lock.utils.greenDao.db.HistoryInfoDao;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -94,17 +99,37 @@ public class CateyeMoreActivity extends BaseActivity<IGatEyeView, CatEyeMorePres
     private int sdStatus=-1; //sd卡状态
 
     private String pirwander="";//pir徘徊监测
-
+    CateEyeInfoBase cateEyeInfoBase=null;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cateye_more);
         ButterKnife.bind(this);
         context = this;
+        daoSession = MyApplication.getInstance().getDaoWriteSession();
         initData();
         initView();
         initClick();
+        cateEyeInfoBase= daoSession.getCateEyeInfoBaseDao().queryBuilder()
+                .where(CateEyeInfoBaseDao.Properties.DeviceId.eq(deviceId)).build()
+                .unique();
+        if(cateEyeInfoBase!=null){
+            tvBell.setText(getString(R.string.the_tinkle_of_bells) + cateEyeInfoBase.getCurBellNum());//设置铃声值
+                switch (cateEyeInfoBase.getBellVolume()){
+                    case 1:
+                        tvVolume.setText(getString(R.string.low));
+                        break;
+                    case 2:
+                        tvVolume.setText(getString(R.string.centre));
+                        break;
 
+                    case 0:
+                        tvVolume.setText(getString(R.string.high));
+                        break;
+                }
+            tvRingnumber.setText(cateEyeInfoBase.getBellCount() + "");//响铃次数
+            tvResolution.setText(cateEyeInfoBase.getResolution());
+        }
     }
 
     @Override
@@ -221,6 +246,13 @@ public class CateyeMoreActivity extends BaseActivity<IGatEyeView, CatEyeMorePres
                     ToastUtil.getInstance().showShort(R.string.get_cateye_info_wait);
                     return;
                 } else if (getCatInfoStatus == 2) {
+                    if(cateEyeInfoBase!=null){
+                        Intent detailIntent = new Intent(this, CateyeMoreDeviceInformationActivity.class);
+                        String jsonBase = new Gson().toJson(cateEyeInfoBase);
+                        detailIntent.putExtra(KeyConstants.GET_CAT_EYE_INFO_BASE, jsonBase);
+                        startActivity(detailIntent);
+                        return;
+                    }
                     ToastUtil.getInstance().showShort(R.string.get_cateye_info_fail);
                     return;
                 } else {
@@ -236,6 +268,14 @@ public class CateyeMoreActivity extends BaseActivity<IGatEyeView, CatEyeMorePres
                     ToastUtil.getInstance().showShort(R.string.get_cateye_info_wait);
                     return;
                 } else if (getCatInfoStatus == 2) {
+                    if(cateEyeInfoBase!=null){
+                        Intent smartEyeIntent = new Intent(this, SmartEyeActivity.class);
+                        String jsonBase = new Gson().toJson(cateEyeInfoBase);
+                        smartEyeIntent.putExtra(KeyConstants.GET_CAT_EYE_INFO, returnCatEyeInfo);
+                        smartEyeIntent.putExtra(KeyConstants.GET_CAT_EYE_INFO_BASE, jsonBase);
+                        startActivity(smartEyeIntent);
+                        return;
+                    }
                     ToastUtil.getInstance().showShort(R.string.get_cateye_info_fail);
                     return;
                 }else{
@@ -329,7 +369,7 @@ public class CateyeMoreActivity extends BaseActivity<IGatEyeView, CatEyeMorePres
     public void updateDevNickNameThrowable(Throwable throwable) {
         ToastUtil.getInstance().showShort(getString(R.string.update_nickname_fail));
     }
-
+    private DaoSession daoSession;
     @Override
     public void getCatEyeInfoSuccess(CatEyeInfoBeanResult catEyeInfoBean, String payload) {
 
@@ -374,6 +414,44 @@ public class CateyeMoreActivity extends BaseActivity<IGatEyeView, CatEyeMorePres
                 cateEyeInfo.setPower(returnDataBean.getPower());
             }
             getCatInfoStatus = 1;
+
+
+//            CateEyeInfoBase cateEyeInfoBase= daoSession.getCateEyeInfoBaseDao().queryBuilder()
+//                    .where(CateEyeInfoBaseDao.Properties.DeviceId.eq(deviceId)).build()
+//                    .unique();
+            if(cateEyeInfoBase==null){
+                cateEyeInfoBase =new CateEyeInfoBase(null, returnDataBean.getCurBellNum(),
+                        returnDataBean.getBellVolume(), returnDataBean.getBellCount(),
+                        returnDataBean.getResolution(),
+                        deviceId, returnDataBean.getSW(),
+                        returnDataBean.getHW(),
+                        returnDataBean.getMCU(),
+                        returnDataBean.getT200(),
+                        returnDataBean.getMacaddr(),
+                        returnDataBean.getIpaddr(),
+                        returnDataBean.getWifiStrength(),
+                        returnDataBean.getPirEnable(),
+                        returnDataBean.getPirWander(),
+                        returnDataBean.getSdStatus());
+                daoSession.getCateEyeInfoBaseDao().insertOrReplace(cateEyeInfoBase);
+            }else {
+                 cateEyeInfoBase.setBellVolume(returnDataBean.getCurBellNum());
+                 cateEyeInfoBase.setBellVolume(returnDataBean.getBellVolume());
+                 cateEyeInfoBase.setBellCount( returnDataBean.getBellCount());
+                 cateEyeInfoBase.setResolution(returnDataBean.getResolution());
+                 cateEyeInfoBase.setDeviceId(deviceId);
+                 cateEyeInfoBase.setSW(returnDataBean.getSW());
+                 cateEyeInfoBase.setHW(returnDataBean.getHW());
+                 cateEyeInfoBase.setMCU(returnDataBean.getMCU());
+                 cateEyeInfoBase.setT200(returnDataBean.getT200());
+                 cateEyeInfoBase.setMacaddr(returnDataBean.getMacaddr());
+                 cateEyeInfoBase.setIpaddr(returnDataBean.getIpaddr());
+                 cateEyeInfoBase.setWifiStrength(returnDataBean.getWifiStrength());
+                 cateEyeInfoBase.setPirEnable(returnDataBean.getPirEnable());
+                 cateEyeInfoBase.setPirWander(returnDataBean.getPirWander());
+                 cateEyeInfoBase.setSdStatus(returnDataBean.getSdStatus());
+                daoSession.getCateEyeInfoBaseDao().insertOrReplace(cateEyeInfoBase);
+            }
         }
     }
 

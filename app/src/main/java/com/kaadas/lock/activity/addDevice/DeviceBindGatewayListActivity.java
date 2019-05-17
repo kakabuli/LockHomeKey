@@ -2,7 +2,6 @@ package com.kaadas.lock.activity.addDevice;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,7 +12,7 @@ import android.widget.ImageView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.kaadas.lock.R;
-import com.kaadas.lock.activity.addDevice.cateye.AddDeviceCatEyeCheckWifi;
+import com.kaadas.lock.activity.addDevice.cateye.AddDeviceCatEyeCheckWifiActivity;
 import com.kaadas.lock.activity.addDevice.cateye.AddDeviceCatEyeFirstActivity;
 import com.kaadas.lock.activity.addDevice.gateway.AddGatewayFirstActivity;
 import com.kaadas.lock.activity.addDevice.zigbee.AddZigbeeLockFirstActivity;
@@ -23,8 +22,6 @@ import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.bean.deviceAdd.AddZigbeeBindGatewayBean;
 import com.kaadas.lock.mvp.presenter.deviceaddpresenter.DeviceGatewayBindListPresenter;
 import com.kaadas.lock.publiclibrary.bean.GatewayInfo;
-import com.kaadas.lock.publiclibrary.bean.ServerGatewayInfo;
-import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.GetBindGatewayListResult;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.GwWiFiBaseInfo;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
@@ -34,8 +31,6 @@ import com.kaadas.lock.utils.ToastUtil;
 import com.kaadas.lock.mvp.view.deviceaddview.DeviceGatewayBindListView;
 import com.kaadas.lock.utils.handPwdUtil.Constants;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
-import com.scwang.smartrefresh.layout.api.RefreshLayout;
-import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -205,7 +200,7 @@ public class DeviceBindGatewayListActivity extends BaseActivity<DeviceGatewayBin
             LogUtils.e("获取到的WiFi名称是    " + wifiName+"  网关的WiFi名称是  "+ssid+"   ");
             if (TextUtils.isEmpty(wifiName)){//如果获取到的WiFi名称是空的话
                 LogUtils.e("获取到的WiFi名称是    为空" );
-                Intent wifiIntent=new Intent(this, AddDeviceCatEyeCheckWifi.class);
+                Intent wifiIntent=new Intent(this, AddDeviceCatEyeCheckWifiActivity.class);
                 wifiIntent.putExtra(KeyConstants.GW_WIFI_SSID, ssid);
                 wifiIntent.putExtra(KeyConstants.GW_WIFI_PWD, pwd);
                 wifiIntent.putExtra(KeyConstants.GW_SN, zigbeeBindGatewayBeanSelect.getGatewayId());
@@ -220,7 +215,7 @@ public class DeviceBindGatewayListActivity extends BaseActivity<DeviceGatewayBin
                     catEyeIntent.putExtra(KeyConstants.GW_SN, zigbeeBindGatewayBeanSelect.getGatewayId());
                     startActivity(catEyeIntent);
                 }else {
-                    Intent wifiIntent=new Intent(this, AddDeviceCatEyeCheckWifi.class);
+                    Intent wifiIntent=new Intent(this, AddDeviceCatEyeCheckWifiActivity.class);
                     wifiIntent.putExtra(KeyConstants.GW_WIFI_SSID, ssid);
                     wifiIntent.putExtra(KeyConstants.GW_WIFI_PWD, pwd);
                     wifiIntent.putExtra(KeyConstants.GW_SN, zigbeeBindGatewayBeanSelect.getGatewayId());
@@ -228,7 +223,7 @@ public class DeviceBindGatewayListActivity extends BaseActivity<DeviceGatewayBin
                 }
             }
         }else{
-            Intent wifiIntent=new Intent(this, AddDeviceCatEyeCheckWifi.class);
+            Intent wifiIntent=new Intent(this, AddDeviceCatEyeCheckWifiActivity.class);
             wifiIntent.putExtra(KeyConstants.GW_WIFI_SSID, ssid);
             wifiIntent.putExtra(KeyConstants.GW_WIFI_PWD, pwd);
             wifiIntent.putExtra(KeyConstants.GW_SN, zigbeeBindGatewayBeanSelect.getGatewayId());
