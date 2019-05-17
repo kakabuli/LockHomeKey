@@ -1,5 +1,8 @@
 package com.kaadas.lock.mvp.presenter;
 
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
+import android.net.wifi.WifiManager;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -36,6 +39,7 @@ import com.kaadas.lock.utils.SPUtils2;
 import com.kaadas.lock.utils.ftp.GeTui;
 import com.kaadas.lock.utils.greenDao.bean.CatEyeEvent;
 import com.kaadas.lock.utils.greenDao.bean.GatewayLockAlarmEventDao;
+import com.kaadas.lock.utils.networkListenerutil.NetWorkChangReceiver;
 
 import net.sdvn.cmapi.Device;
 
@@ -169,7 +173,8 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                                     LogUtils.e("监听网关的状态" + gatewayStatusResult.getDevuuid());
                                     if (gatewayStatusResult != null) {
                                         List<HomeShowBean> homeShowBeans = MyApplication.getInstance().getAllDevices();
-                                        if (homeShowBeans.size() > 0) {
+                                        SPUtils.put(gatewayStatusResult.getDevuuid(), gatewayStatusResult.getData().getState());
+                                       /* if (homeShowBeans.size() > 0) {
                                             for (HomeShowBean homeShowBean : homeShowBeans) {
                                                 if (homeShowBean.getDeviceType() == HomeShowBean.TYPE_GATEWAY) {
                                                     GatewayInfo gatewayInfo = (GatewayInfo) homeShowBean.getObject();
@@ -180,8 +185,8 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                                                 }
                                             }
                                         } else {
-                                            SPUtils.put(gatewayStatusResult.getDevuuid(), gatewayStatusResult.getData().getState());
-                                        }
+
+                                        }*/
                                     }
 
                                 }
@@ -511,14 +516,9 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
     public void detachView() {
         super.detachView();
         LinphoneHelper.deleteUser();
+        bleService.release();
+    }
+
     }
 
 
-
-
-
-
-
-
-
-}

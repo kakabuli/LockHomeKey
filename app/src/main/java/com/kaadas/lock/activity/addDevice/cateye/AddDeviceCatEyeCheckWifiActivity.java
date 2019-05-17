@@ -1,6 +1,11 @@
 package com.kaadas.lock.activity.addDevice.cateye;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -13,12 +18,13 @@ import com.kaadas.lock.R;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.NetUtil;
+import com.kaadas.lock.utils.networkListenerutil.NetWorkChangReceiver;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class AddDeviceCatEyeCheckWifi extends AppCompatActivity {
+public class AddDeviceCatEyeCheckWifiActivity extends AppCompatActivity {
     @BindView(R.id.back)
     ImageView back;
     @BindView(R.id.button_switch_wifi)
@@ -26,6 +32,8 @@ public class AddDeviceCatEyeCheckWifi extends AppCompatActivity {
     private String ssid;
     private String pwd;
     private String gwId;
+    private BroadcastReceiver netWorkChangReceiver;
+    private String Tag = "检查WiFi";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -35,6 +43,29 @@ public class AddDeviceCatEyeCheckWifi extends AppCompatActivity {
         pwd = getIntent().getStringExtra(KeyConstants.GW_WIFI_PWD);
         gwId = getIntent().getStringExtra(KeyConstants.GW_SN);
         ButterKnife.bind(this);
+        initListener();
+    }
+
+    private void initListener() {
+        netWorkChangReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                String wifiName = NetUtil.getWifiName().replaceAll("\"","");
+                LogUtils.e("获取到的WiFi名称是   " + wifiName );
+                if (!TextUtils.isEmpty(wifiName) && wifiName.equals(ssid)) {
+                    Intent catEyeIntent = new Intent(AddDeviceCatEyeCheckWifiActivity.this, AddDeviceCatEyeFirstActivity.class);
+                    catEyeIntent.putExtra(KeyConstants.GW_WIFI_SSID, ssid);
+                    catEyeIntent.putExtra(KeyConstants.GW_WIFI_PWD, pwd);
+                    catEyeIntent.putExtra(KeyConstants.GW_SN, gwId);
+                    startActivity(catEyeIntent);
+                }
+            }
+        };
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION);
+        filter.addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION);
+        filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(netWorkChangReceiver, filter);
     }
 
     @OnClick({R.id.back, R.id.button_switch_wifi})
@@ -54,15 +85,16 @@ public class AddDeviceCatEyeCheckWifi extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        LogUtils.e("onStart");
+        LogUtils.e(Tag,"onStart");
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         //todo  检查当前WiFi与网关WiFi是否一致  一致则跳转添加猫眼扫描界面   否则不做逻辑
-        LogUtils.e("onResume");
-        String wifiName = NetUtil.getWifiName();
+        LogUtils.e( Tag,"onResume   "  + ssid);
+        String wifiName = NetUtil.getWifiName().replaceAll("\"","");
+        LogUtils.e("获取到的WiFi名称是   " + wifiName );
         if (!TextUtils.isEmpty(wifiName) && wifiName.equals(ssid)) {
             Intent catEyeIntent = new Intent(this, AddDeviceCatEyeFirstActivity.class);
             catEyeIntent.putExtra(KeyConstants.GW_WIFI_SSID, ssid);
@@ -72,10 +104,15 @@ public class AddDeviceCatEyeCheckWifi extends AppCompatActivity {
         }
     }
 
+
+
+
+
+
     @Override
     protected void onPause() {
         super.onPause();
-        LogUtils.e("onPause");
+        LogUtils.e( Tag,"onPause");
     }
 
 
@@ -89,12 +126,13 @@ public class AddDeviceCatEyeCheckWifi extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        LogUtils.e("onStop");
     }
 
     @Override
     protected void onDestroy() {
+        if (netWorkChangReceiver!=null){
+            unregisterReceiver(netWorkChangReceiver);
+        }
         super.onDestroy();
-        LogUtils.e("onDestroy");
     }
 }

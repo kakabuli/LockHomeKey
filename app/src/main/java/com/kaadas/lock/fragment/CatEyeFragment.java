@@ -257,7 +257,6 @@ public class CatEyeFragment extends BaseFragment<ICatEyeView, CatEyePresenter<IC
     public void networkChangeSuccess() {
         //网络断开
         //
-        LogUtils.e("网关断开...");
         changeOpenLockStatus("offline");
     }
 

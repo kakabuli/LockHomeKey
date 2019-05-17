@@ -134,8 +134,11 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
                             int childCount = mRadioGroup.getChildCount();
                             for (int i = 0; i < childCount; i++) {
                                 RadioButton radioButton = (RadioButton) mRadioGroup.getChildAt(i);
-                                radioButton.setLayoutParams(new LinearLayout.LayoutParams((scTitle.getWidth() / 3), LinearLayout.LayoutParams.WRAP_CONTENT));
-                            }
+                                if (childCount >2){
+                                    radioButton.setLayoutParams(new LinearLayout.LayoutParams((scTitle.getWidth() / 3), LinearLayout.LayoutParams.WRAP_CONTENT ));
+                                }else {
+                                    radioButton.setLayoutParams(new LinearLayout.LayoutParams((scTitle.getWidth() / childCount), LinearLayout.LayoutParams.WRAP_CONTENT ));
+                                }                            }
                         }
                     }
                 });
@@ -179,6 +182,7 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
         if (fragments != null) {
             fragments.clear();
         }
+        mRadioGroup.removeAllViews();
         //parentItemArr为商品类别对象集合
         for (int i = 0; i < devices.size(); i++) {
             //添加radiobutton及设置参数(方便动态加载radiobutton)
@@ -237,9 +241,13 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
                     fragments.add(gatewayLockFragment);
                     break;
             }
-            int totalWidth = scTitle.getWidth();
             //根据需要设置显示初始标签的个数，这里显示3个
-            rb.setLayoutParams(new LinearLayout.LayoutParams((int) (totalWidth / 3), LinearLayout.LayoutParams.WRAP_CONTENT));
+            if (devices.size()>2){
+                rb.setLayoutParams(new LinearLayout.LayoutParams((scTitle.getWidth() / 3), LinearLayout.LayoutParams.WRAP_CONTENT ));
+            }else {
+                rb.setLayoutParams(new LinearLayout.LayoutParams((scTitle.getWidth() / devices.size()), LinearLayout.LayoutParams.WRAP_CONTENT ));
+            }
+
             //设置背景为透明
             rb.setBackgroundResource(R.color.color_trans);
             //设置文字超过范围显示....
@@ -253,7 +261,6 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
             rb.setPadding(0, 10, 0, 10);
             //**原生radiobutton是有小圆点的，要去掉圆点而且最好按以下设置，设置为null的话在4.x.x版本上依然会出现**
             rb.setButtonDrawable(new ColorDrawable(Color.TRANSPARENT));
-
             //向radiogroup中添加radiobutton
             mRadioGroup.addView(rb);
         }

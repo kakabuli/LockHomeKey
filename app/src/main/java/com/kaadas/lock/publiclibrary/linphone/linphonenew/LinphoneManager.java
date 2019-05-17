@@ -17,6 +17,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 package com.kaadas.lock.publiclibrary.linphone.linphonenew;
+
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.BroadcastReceiver;
@@ -170,10 +171,10 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
     public String wizardLoginViewDomain = null;
 
     private static List<LinphoneChatMessage.LinphoneChatMessageListener> simpleListeners = new ArrayList<LinphoneChatMessage.LinphoneChatMessageListener>();
-	private Timer regTimer;
+    private Timer regTimer;
 
 
-	public static void addListener(LinphoneChatMessage.LinphoneChatMessageListener listener) {
+    public static void addListener(LinphoneChatMessage.LinphoneChatMessageListener listener) {
         if (!simpleListeners.contains(listener)) {
             simpleListeners.add(listener);
         }
@@ -224,10 +225,9 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
         mR = c.getResources();
         mPendingChatFileMessage = new ArrayList<LinphoneChatMessage>();
         startLibLinphone(c);
-		instance = this;
+        instance = this;
 //		instance.initOpenH264DownloadHelper();
-		mPrefs.setIncTimeout(30);
-
+        mPrefs.setIncTimeout(30);
         H264Helper.setH264Mode(H264Helper.MODE_AUTO, getLc());
     }
 
@@ -281,19 +281,6 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
         routeAudioToSpeakerHelper(false);
     }
 
-//    public synchronized static final LinphoneManager createAndStart(Context c) {
-//        if (instance != null)
-////            throw new RuntimeException("Linphone Manager is already initialized");
-//
-//        instance = new LinphoneManager(c);
-//        instance.startLibLinphone(c);
-////		instance.initOpenH264DownloadHelper();
-//
-//        H264Helper.setH264Mode(H264Helper.MODE_AUTO, getLc());
-//
-//
-//        return instance;
-//    }
 
     public void addDownloadMessagePending(LinphoneChatMessage message) {
         synchronized (mPendingChatFileMessage) {
@@ -435,18 +422,15 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 
         if (sExited) {
             return null;
-//            throw new RuntimeException("Linphone Manager was already destroyed. "
-//                    + "Better use getLcIfManagerNotDestroyedOrNull and check returned value");
         }
         return null;
-//        throw new RuntimeException("Linphone Manager should be created before accessed");
     }
 
     public static synchronized final LinphoneCore getLc() {
         try {
             return getInstance().mLc;
         } catch (Exception e) {
-             LogUtils.e("LinphoneManager:"+e.toString());
+            LogUtils.e("LinphoneManager:" + e.toString());
         }
         return null;
     }
@@ -454,7 +438,8 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
     public String getLPConfigXsdPath() {
         return mLPConfigXsd;
     }
-//拨号呼叫调用
+
+    //拨号呼叫调用
     public void newOutgoingCall(AddressType address) {
         String to = address.getText().toString();
         newOutgoingCall(to, address.getDisplayedName());
@@ -524,10 +509,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
             if (androidCamera.frontFacing == useFrontCam)
                 camId = androidCamera.id;
         }
-        //此处报空指针异常
-//		if (   LinphoneManager.getLc()!=null){
-			LinphoneManager.getLc().setVideoDevice(camId);
-//		}
+        LinphoneManager.getLc().setVideoDevice(camId);
 
     }
 
@@ -705,9 +687,9 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
                         @Override
                         public void run() {
                             if (mLc != null) {
-                            	//最为关键的主循环方法，应用程序应该经常调用它，因为它在后台会完成多件事情，
-								// 如接收SIP指令，注册，认证，超时检测等，它必须要运行在LihpnoCore其它的方法所运行的线程里，
-								// 说白了就是要保证LinphoneCore的方法运行在一至的线程里，不然就出错了。
+                                //最为关键的主循环方法，应用程序应该经常调用它，因为它在后台会完成多件事情，
+                                // 如接收SIP指令，注册，认证，超时检测等，它必须要运行在LihpnoCore其它的方法所运行的线程里，
+                                // 说白了就是要保证LinphoneCore的方法运行在一至的线程里，不然就出错了。
                                 mLc.iterate();
                             }
                         }
@@ -717,24 +699,24 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
             /*use schedule instead of scheduleAtFixedRate to avoid iterate from being call in burst after cpu wake up*/
             mTimer = new Timer("Linphone scheduler");
             mTimer.schedule(lTask, 0, 20);
-			TimerTask mTask = new TimerTask() {
-				@Override
-				public void run() {
-					UIThreadDispatcher.dispatch(new Runnable() {
-						@Override
-						public void run() {
-							Log.e("linphoneManager","davi 服务运行中 mLc "+mLc);
-							if (mLc != null) {
-								mLc.refreshRegisters();
-							}
-						}
-					});
-				}
-			};
-			/*use schedule instead of scheduleAtFixedRate to avoid iterate from being call in burst after cpu wake up*/
-			regTimer = new Timer("Linphone sip register");
+            TimerTask mTask = new TimerTask() {
+                @Override
+                public void run() {
+                    UIThreadDispatcher.dispatch(new Runnable() {
+                        @Override
+                        public void run() {
+                            Log.e("linphoneManager", "davi 服务运行中 mLc " + mLc);
+                            if (mLc != null) {
+                                mLc.refreshRegisters();
+                            }
+                        }
+                    });
+                }
+            };
+            /*use schedule instead of scheduleAtFixedRate to avoid iterate from being call in burst after cpu wake up*/
+            regTimer = new Timer("Linphone sip register");
 //			regTimer.schedule(mTask, 5000, 10000);
-		} catch (Exception e) {
+        } catch (Exception e) {
             Log.e("linphoneManager", e.toString() + "Cannot start linphone");
         }
     }
@@ -1024,7 +1006,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
         BluetoothManagerDestroy();
         try {
             mTimer.cancel();
-			regTimer.cancel();
+            regTimer.cancel();
             mLc.destroy();
         } catch (RuntimeException e) {
             Log.e("linphoneManager", e.toString());
@@ -1304,18 +1286,18 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
         }
     }
 
-//注册状态
+    //注册状态
     public void registrationState(final LinphoneCore lc, final LinphoneProxyConfig proxy, final RegistrationState registrationState, final String message) {
         Log.i("linphoneManager", "New registration state [" + registrationState + "]");
 
     }
 
-    Handler handler=new Handler(){
-		@Override
-		public void handleMessage(Message msg) {
-			super.handleMessage(msg);
-		}
-	};
+    Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+        }
+    };
 
     public Context getContext() {
         try {
@@ -1362,7 +1344,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 //					startRinging();
 //				}
 //			},2000);
-			//  Log.e("denganzhi1","响铃了");
+            //  Log.e("denganzhi1","响铃了");
 //			  if(MyApplication.getInstance().isVideoActivityRun()){
 //			  	 // App呼叫猫眼,不响应铃声
 //				//  Log.e("denganzhi1","App呼叫猫眼.........");
@@ -1375,14 +1357,14 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 //				}
 //		    	},2000);
 //			  }
-             // startRinging();
+            // startRinging();
         } else if (linphoneCall == ringingCall && isRinging) {
             //previous state was ringing, so stop ringing
-        //    stopRinging();
+            //    stopRinging();
         }
 
         if (state == State.Connected) {
-         //   stopRinging();
+            //   stopRinging();
             if (mLc.getCallsNb() == 1) {
                 //It is for incoming calls, because outgoing calls enter MODE_IN_COMMUNICATION immediately when they start.
                 //However, incoming call first use the MODE_RINGING to play the local ring.
@@ -1400,8 +1382,8 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
         }
 
         if (state == State.CallEnd || state == State.Error) {
-	//		Toast.makeText(mServiceContext,mServiceContext.getResources().getString(R.string.return_code_409),Toast.LENGTH_SHORT).show();
-			Log.e("denganzhi1","manager===>call=========》End..........."+State.CallEnd+"    State.Error:"+State.Error);
+            //		Toast.makeText(mServiceContext,mServiceContext.getResources().getString(R.string.return_code_409),Toast.LENGTH_SHORT).show();
+            Log.e("denganzhi1", "manager===>call=========》End..........." + State.CallEnd + "    State.Error:" + State.Error);
             if (mLc.getCallsNb() == 0) {
                 //Disabling proximity sensor
                 enableProximitySensing(false);
@@ -1445,37 +1427,26 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 
         if (state == LinphoneCall.State.CallReleased) {
             Log.e("howard", "call CallReleased");
-         //   stopRinging();
+            //   stopRinging();
             handler.postDelayed(new Runnable() {
-				@Override
-				public void run() {
-				//	stopRinging();
-				}
-			},1500);
+                @Override
+                public void run() {
+                    //	stopRinging();
+                }
+            }, 1500);
 
             handler.postDelayed(new Runnable() {
-				@Override
-				public void run() {
-				//	stopRinging();
-				}
-			},2500);
+                @Override
+                public void run() {
+                    //	stopRinging();
+                }
+            }, 2500);
 
-			com.kaadas.lock.publiclibrary.linphone.linphone.util.LinphoneUtils.getInstance().hangUp();
+            com.kaadas.lock.publiclibrary.linphone.linphone.util.LinphoneUtils.getInstance().hangUp();
         }
     }
 
-    public void startBluetooth() {
-//		if (BluetoothManager.getInstance().isBluetoothHeadsetAvailable()) {
-//			BluetoothManager.getInstance().routeAudioToBluetooth();
-//		}
-    }
 
-    //    protected void onIncomingReceived() {
-//        //wakeup linphone
-//        startActivity(new Intent()
-//                .setClass(mServiceContext, MainActivity.class)
-//                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
-//    }
     public void callStatsUpdated(final LinphoneCore lc, final LinphoneCall call, final LinphoneCallStats stats) {
     }
 
@@ -1601,20 +1572,20 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
         isRinging = true;
     }
 
-    public    void stopRingingMimi(){
-		if (mRingerPlayer != null) {
-			mRingerPlayer.stop();
-			mRingerPlayer.release();
-			mRingerPlayer = null;
-		}
-		if (mVibrator != null) {
-			mVibrator.cancel();
-		}
-		if (Hacks.needGalaxySAudioHack())
-			mAudioManager.setMode(AudioManager.MODE_NORMAL);
+    public void stopRingingMimi() {
+        if (mRingerPlayer != null) {
+            mRingerPlayer.stop();
+            mRingerPlayer.release();
+            mRingerPlayer = null;
+        }
+        if (mVibrator != null) {
+            mVibrator.cancel();
+        }
+        if (Hacks.needGalaxySAudioHack())
+            mAudioManager.setMode(AudioManager.MODE_NORMAL);
 
-		isRinging = false;
-	}
+        isRinging = false;
+    }
 
     private synchronized void stopRinging() {
         if (mRingerPlayer != null) {
@@ -1769,33 +1740,9 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 
         LinphonePreferences.instance().setLinkPopupTime(String.valueOf(newDate));
 
-//		final Dialog dialog = LinphoneActivity.instance().displayDialog(String.format(getString(R.string.link_account_popup), LinphoneManager.getLc().getDefaultProxyConfig().getAddress().asStringUriOnly()));
-//		Button delete = (Button) dialog.findViewById(R.id.delete_button);
-//		delete.setText(getString(R.string.link));
-//		Button cancel = (Button) dialog.findViewById(R.id.cancel);
-//		cancel.setText(getString(R.string.maybe_later));
-//
-//		delete.setOnClickListener(new View.OnClickListener() {
-//			@Override
-//			public void onClick(View view) {
-//				Intent assistant = new Intent();
-//				assistant.setClass(LinphoneActivity.instance(), AssistantActivity.class);
-//				assistant.putExtra("LinkPhoneNumber", true);
-//				assistant.putExtra("LinkPhoneNumberAsk", true);
-//				mServiceContext.startActivity(assistant);
-//				dialog.dismiss();
-//			}
-//		});
 
         LinphonePreferences.instance().setLinkPopupTime(String.valueOf(newDate));
 
-//		cancel.setOnClickListener(new View.OnClickListener() {
-//			@Override
-//			public void onClick(View view) {
-//				dialog.dismiss();
-//			}
-//		});
-//		dialog.show();
     }
 
     public void setDozeModeEnabled(boolean b) {
@@ -1814,25 +1761,6 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
         callGsmON = on;
     }
 
-    @SuppressWarnings("serial")
-//	public static class LinphoneConfigException extends LinphoneException {
-//
-//		public LinphoneConfigException() {
-//			super();
-//		}
-//
-//		public LinphoneConfigException(String detailMessage, Throwable throwable) {
-//			super(detailMessage, throwable);
-//		}
-//
-//		public LinphoneConfigException(String detailMessage) {
-//			super(detailMessage);
-//		}
-//
-//		public LinphoneConfigException(Throwable throwable) {
-//			super(throwable);
-//		}
-//	}
 
     @Override
     public void notifyReceived(LinphoneCore lc, LinphoneCall call,

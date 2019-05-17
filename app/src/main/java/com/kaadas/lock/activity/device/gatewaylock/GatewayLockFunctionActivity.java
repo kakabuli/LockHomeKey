@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
+import com.kaadas.lock.activity.device.gatewaylock.demo.GatewayLockSettingActivity;
 import com.kaadas.lock.activity.device.gatewaylock.more.GatewayMoreActivity;
 import com.kaadas.lock.activity.device.gatewaylock.password.GatewayPasswordManagerActivity;
 import com.kaadas.lock.activity.device.gatewaylock.share.GatewaySharedDeviceManagementActivity;
@@ -256,6 +257,11 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
                 intent = new Intent(this, GatewayMoreActivity.class);
                 intent.putExtra(KeyConstants.GATEWAY_LOCK_INFO,showBean);
                 startActivityForResult(intent,KeyConstants.DEVICE_DETAIL_BEAN_NUM);
+              /*  intent=new Intent(this, GatewayLockSettingActivity.class);
+                intent.putExtra(KeyConstants.GATEWAY_ID,gatewayId);
+                intent.putExtra(KeyConstants.DEVICE_ID,deviceId);
+                startActivity(intent);*/
+
                 break;
 
 

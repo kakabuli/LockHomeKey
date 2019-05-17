@@ -168,4 +168,16 @@ public class MqttConstant {
     //解绑测试网关
     public static final String UNBIND_TEST_GATEWAY="testUnBindGateway";
 
+    //设置布防
+    public static final String SET_ARM_LOCKED="setArmLocked";
+
+    //设置AM
+    public static final String SET_AM="setAM";
+
+    //获取布防
+    public static final String GET_ALRAM_LOCK="getArmLocked";
+
+    //获取AM
+    public static final String GET_AM="getAM";
+
 }

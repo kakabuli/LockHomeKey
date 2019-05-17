@@ -442,7 +442,7 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                 if (device.getDeviceType() == HomeShowBean.TYPE_GATEWAY) {
                     GatewayInfo gatewayInfo = (GatewayInfo) device.getObject();
                     if (gatewayInfo.getServerInfo().getDeviceSN().equals(gatewayId)) {
-                        LogUtils.e("监听网关Device的状态      " + gatewayId);
+                        LogUtils.e("监听网关Device的状态      " + gatewayId+"连接状态"+evnetStr);
                         gatewayInfo.setEvent_str(evnetStr);
                         //获取网关下绑定的设备,把网关下的设备设置为离线.网关离线设备也离线
                         if ("offline".equals(evnetStr)) {

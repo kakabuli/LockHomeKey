@@ -8,7 +8,9 @@ import com.kaadas.lock.publiclibrary.mqtt.publishbean.BindGatewayMemeBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.CatEyeInfoBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.DeleteGatewayLockDeviceBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.FtpEnableBean;
+import com.kaadas.lock.publiclibrary.mqtt.publishbean.GetAMBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.GetAllBindDeviceBean;
+import com.kaadas.lock.publiclibrary.mqtt.publishbean.GetArmLockedBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.GetBindGatewayListBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.GetDevicePowerBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.GetGatewayLockInfoBean;
@@ -20,6 +22,8 @@ import com.kaadas.lock.publiclibrary.mqtt.publishbean.LockPwdFuncBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.LockPwdInfoBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.OpenLockBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.SelectOpenLockRecordBean;
+import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetAMBean;
+import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetArmLockedBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetCatEyeBellCountBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetCatEyeBellVolume;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetJoinAllowBean;
@@ -516,6 +520,65 @@ public class MqttCommandFactory {
         UnBindGatewayBean unBindTestGatewayBean=new UnBindGatewayBean(messageId,uid,gatewayId,MqttConstant.UNBIND_TEST_GATEWAY,devuuid);
         return getMessage(unBindTestGatewayBean,messageId);
     }
+
+
+    /**
+     * 设置布防
+     * @param deviceId
+     * @param gatewayId
+     * @param operatingMode
+     * @param uid
+     * @return
+     */
+    public static MqttMessage setArmLocked(String deviceId,String gatewayId,int operatingMode,String uid){
+        int messageId=getMessageId();
+        SetArmLockedBean.ParamsBean paramsBean=new SetArmLockedBean.ParamsBean();
+        paramsBean.setOperatingMode(operatingMode);
+        SetArmLockedBean setArmLockedBean=new SetArmLockedBean(deviceId,MqttConstant.SET_ARM_LOCKED,gatewayId,messageId,MqttConstant.MSG_TYPE_REQUEST,paramsBean,"0",new SetArmLockedBean.ReturnDataBean(),System.currentTimeMillis()+"",uid);
+        return  getMessage(setArmLockedBean,messageId);
+    }
+
+    /**
+     * 设置AM
+     * @param uid
+     * @param gatewayId
+     * @param deviceId
+     * @param autoRelockTime
+     * @return
+     */
+    public static MqttMessage setAM(String uid,String gatewayId,String deviceId,int autoRelockTime){
+        int messageId=getMessageId();
+        SetAMBean.ParamsBean paramsBean=new SetAMBean.ParamsBean();
+        paramsBean.setAutoRelockTime(autoRelockTime);
+        SetAMBean setAMBean=new SetAMBean(MqttConstant.MSG_TYPE_REQUEST,uid,messageId,gatewayId,deviceId,MqttConstant.SET_AM,paramsBean,"200",new SetAMBean.ReturnDataBean(),System.currentTimeMillis()+"");
+        return  getMessage(setAMBean,messageId);
+    }
+    /**
+     * 获取布防
+     * @param uid
+     * @param gatewayId
+     * @param deviceId
+     * @return
+     */
+    public static  MqttMessage getArmLocked(String uid,String gatewayId,String deviceId){
+        int messageId=getMessageId();
+        GetArmLockedBean getArmLockedBean=new GetArmLockedBean(MqttConstant.MSG_TYPE_REQUEST,uid,messageId,gatewayId,deviceId,MqttConstant.GET_ALRAM_LOCK,new GetArmLockedBean.ParamsBean(),"0",new GetArmLockedBean.ReturnDataBean(),System.currentTimeMillis()+"");
+        return getMessage(getArmLockedBean,messageId);
+    }
+
+    /**
+     * 获取布防
+     * @param uid
+     * @param gatewayId
+     * @param deviceId
+     * @return
+     */
+    public static MqttMessage getAM(String uid,String gatewayId,String deviceId){
+        int messageId=getMessageId();
+        GetAMBean getAMBean=new GetAMBean(MqttConstant.MSG_TYPE_REQUEST,uid,messageId,gatewayId,deviceId,MqttConstant.GET_AM,new GetAMBean.ParamsBean(),"0",new GetAMBean.ReturnDataBean(),System.currentTimeMillis()+"");
+        return getMessage(getAMBean,messageId);
+    }
+
 
 
 
