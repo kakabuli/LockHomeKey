@@ -880,4 +880,5 @@
     <string name="please_input_legal_number">请输入1-60的数字</string>
     <string name="parameter_not_empty">参数不能为空</string>
     <string name="account_password_error">账户密码错误</string>
+    <string name="login_in">登录中...</string>
 </resources>
