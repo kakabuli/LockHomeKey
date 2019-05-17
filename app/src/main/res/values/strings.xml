@@ -351,7 +351,7 @@
     <string name="share_user">共享用户</string>
     <string name="no_user">暂无用户</string>
     <string name="user_manage">用户管理</string>
-    <string name="input_other_telephone_or_account">请输入对方的手机账号</string>
+    <string name="input_other_telephone_or_account">请输入对方的手机或账号</string>
     <string name="add_family_member_hint">授权给对应账号或手机号用户，启用APP控制</string>
     <string name="add_user">添加用户</string>
     <string name="no_add_my">不能添加自己</string>
