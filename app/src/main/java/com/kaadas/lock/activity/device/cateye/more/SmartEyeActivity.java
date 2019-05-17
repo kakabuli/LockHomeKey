@@ -129,6 +129,8 @@ public class SmartEyeActivity extends BaseActivity<ISmartEyeView, SmartEyePresen
             if (!TextUtils.isEmpty(pir)){
                 String str=pir.replace(",","/");
                 pirWander.setText(str);
+            }else {
+                rl_smart_linger.setVisibility(View.GONE);
             }
         }
         setData();
