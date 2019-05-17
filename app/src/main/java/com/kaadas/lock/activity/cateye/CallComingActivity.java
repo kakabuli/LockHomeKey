@@ -67,11 +67,13 @@ public class CallComingActivity extends AppCompatActivity implements View.OnClic
         listenerCallStatus();
     }
 
+
     @Override
     public void onClick(View view) {
         Intent intent;
         switch (view.getId()) {
             case R.id.call_coming_refuse_ll:
+                LinphoneHelper.addAutoAcceptCallBack(null);
                 ringTools.stopRinging();
                 intent = new Intent();
                 intent.putExtra(KeyConstants.IS_ACCEPT_CALL, false);
@@ -79,6 +81,7 @@ public class CallComingActivity extends AppCompatActivity implements View.OnClic
                 finish();
                 break;
             case R.id.iv_accept_call:
+                LinphoneHelper.addAutoAcceptCallBack(null);
                 ringTools.stopRinging();
                 intent = new Intent();
                 intent.putExtra(KeyConstants.IS_ACCEPT_CALL, true);
@@ -90,8 +93,7 @@ public class CallComingActivity extends AppCompatActivity implements View.OnClic
 
     @Override
     protected void onDestroy() {
-
-        LinphoneHelper.addAutoAcceptCallBack(null);
+        ringTools.stopRinging();
         super.onDestroy();
     }
 
@@ -115,7 +117,6 @@ public class CallComingActivity extends AppCompatActivity implements View.OnClic
             @Override
             public void callReleased() {
                 Log.e(Tag, "猫眼  callReleased.........");
-
             }
 
             @Override

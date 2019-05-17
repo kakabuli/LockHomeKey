@@ -81,6 +81,7 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
         LinphoneHelper.addAutoAcceptCallBack(new PhoneAutoAccept() {
             @Override
             public void incomingCall(LinphoneCall linphoneCall) {
+                Log.e(Tag, "猫眼   incomingCall1 ");
                 //猫眼的设备Id
                 String catEyeDeviceId = linphoneCall.getRemoteAddress().getUserName();
                 CateEyeInfo callInCatEyeInfo = null;
@@ -91,7 +92,6 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
                     LinphoneHelper.acceptCall(deviceIp);
                     handler.removeCallbacks(timeoutRunnable);
                 } else {
-
                     Log.e(Tag, "猫眼   incomingCall2.........");
                     String gwId = "";
                     GatewayInfo gatewayInfo = null;
@@ -485,6 +485,8 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
             if (mViewRef.get() != null) {
                 mViewRef.get().waitCallTimeout();
             }
+
+            MemeManager.getInstance().videoActivityDisconnectMeme();
         }
     };
 

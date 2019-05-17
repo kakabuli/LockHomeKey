@@ -31,6 +31,7 @@ public class LinphoneHelper {
     private static AndroidVideoWindowImpl mAndroidVideoWindow;
     private static SurfaceView mRenderingView, mPreviewView;
     private static LinphoneCallStats callVideoStats;
+
     /**
      * 开启服务LinphoneService
      *
@@ -50,6 +51,7 @@ public class LinphoneHelper {
 
     /**
      * 设置 sip 账户信息
+     *
      * @param username sip 账户
      * @param password 密码
      * @param serverIP sip 服务器
@@ -78,7 +80,7 @@ public class LinphoneHelper {
     }
 
     public static void addAutoAcceptCallBack(PhoneAutoAccept autoAccept) {
-        LogUtils.e("设置猫眼状态监听");
+        LogUtils.e("设置猫眼状态监听   autoAccept=" + (autoAccept == null));
         LinphoneService.addAutoAccept(autoAccept);
     }
 
@@ -101,7 +103,8 @@ public class LinphoneHelper {
             }
         }).start();
     }
-    public static void deleteUser(){
+
+    public static void deleteUser() {
         deleteUserToServer();
     }
 
@@ -139,7 +142,7 @@ public class LinphoneHelper {
         Log.e("howard", "acceptCall deviceIp " + deviceIp);
         if (linphoneCall != null && linphoneCore != null) {
             LinphoneCallParams params = linphoneCore.createCallParams(linphoneCall);
-			FileUtils.createFolder(Util.VIDEO_DIR);
+            FileUtils.createFolder(Util.VIDEO_DIR);
             params.setRecordFile(Util.RECORD_VIDEO_PATH);
             if (deviceIp != null) {
                 linphoneCore.setDeviceIp(deviceIp);
@@ -183,6 +186,7 @@ public class LinphoneHelper {
 
     /**
      * 切换静音
+     *
      * @param isMicMuted 是否静音
      */
     public static void toggleMicro(boolean isMicMuted) {
@@ -204,6 +208,7 @@ public class LinphoneHelper {
     public static void setVideoSizeByName(String value) {
         LinphoneUtils.getInstance().setVideoSizeByName(value);
     }
+
     /**
      * 旋转视频
      *
@@ -214,10 +219,12 @@ public class LinphoneHelper {
             mAndroidVideoWindow.setDisplayRotation(r);
         }
     }
+
     /**
      * 切换免提
+     *
      * @param isSpeakerEnabled 是否免提
-	 *                         是否外放
+     *                         是否外放
      */
     public static void toggleSpeaker(boolean isSpeakerEnabled) {
         LinphoneUtils.getInstance().toggleSpeaker(isSpeakerEnabled);
@@ -260,10 +267,10 @@ public class LinphoneHelper {
      * 登录 SIP 服务器
      */
     private static void loginToServer() {
-            if (mUsername == null || mPassword == null || mServerIP == null) {
-                throw new RuntimeException("The sip account is not configured.");
-            }
-            LinphoneUtils.getInstance().registerUserAuth(mUsername, mPassword, mServerIP);
+        if (mUsername == null || mPassword == null || mServerIP == null) {
+            throw new RuntimeException("The sip account is not configured.");
+        }
+        LinphoneUtils.getInstance().registerUserAuth(mUsername, mPassword, mServerIP);
     }
 
     private static void deleteUserToServer() {
@@ -282,13 +289,14 @@ public class LinphoneHelper {
 
     public static float getReceivedFramerate() {
         LinphoneCall call;
-        call= LinphoneManager.getLc().getCurrentCall();
-        if(call != null) {
-            LinphoneCallParams remoteParams =call.getCurrentParams();
+        call = LinphoneManager.getLc().getCurrentCall();
+        if (call != null) {
+            LinphoneCallParams remoteParams = call.getCurrentParams();
             if (remoteParams != null) return remoteParams.getReceivedFramerate();
         }
         return 0;
     }
+
     /**
      * 设置 SurfaceView
      *
@@ -328,19 +336,19 @@ public class LinphoneHelper {
      * onResume
      */
     public static void onResume() {
-    	try{
-			if (mRenderingView != null) {
-				((GLSurfaceView) mRenderingView).onResume();
-			}
+        try {
+            if (mRenderingView != null) {
+                ((GLSurfaceView) mRenderingView).onResume();
+            }
 
-			if (mAndroidVideoWindow != null) {
-				synchronized (mAndroidVideoWindow) {
-					LinphoneManager.getLc().setVideoWindow(mAndroidVideoWindow);
-				}
-			}
-		}catch (Exception e){
+            if (mAndroidVideoWindow != null) {
+                synchronized (mAndroidVideoWindow) {
+                    LinphoneManager.getLc().setVideoWindow(mAndroidVideoWindow);
+                }
+            }
+        } catch (Exception e) {
 
-		}
+        }
     }
 
     /**
@@ -378,12 +386,12 @@ public class LinphoneHelper {
     }
 
     private static void setVideoWindow(Object o) {
-    	try{
-    		if(LinphoneManager.getLc()!=null)
-			LinphoneManager.getLc().setVideoWindow(o);
-		}catch (Exception e){
+        try {
+            if (LinphoneManager.getLc() != null)
+                LinphoneManager.getLc().setVideoWindow(o);
+        } catch (Exception e) {
 
-		}
+        }
     }
 
     private static void removeVideoWindow() {
@@ -392,7 +400,8 @@ public class LinphoneHelper {
             linphoneCore.setVideoWindow(null);
         }
     }
-//设置当前用户视频流到SurfaceView 当中
+
+    //设置当前用户视频流到SurfaceView 当中
     private static void setPreviewWindow(Object o) {
         LinphoneManager.getLc().setPreviewWindow(o);
     }
@@ -422,29 +431,33 @@ public class LinphoneHelper {
 //        return 0.0f;
 //    }
 
-	public static float getStatus(int type){
-    	try {
-			if(LinphoneManager.getLc()!=null){
-				LinphoneCall linphoneCall = LinphoneManager.getLc().getCurrentCall();
-				if (linphoneCall != null){
-					if(type ==1){callVideoStats=linphoneCall.getVideoStats();}else{
-						callVideoStats=linphoneCall.getAudioStats();
-					}
+    public static float getStatus(int type) {
+        try {
+            if (LinphoneManager.getLc() != null) {
+                LinphoneCall linphoneCall = LinphoneManager.getLc().getCurrentCall();
+                if (linphoneCall != null) {
+                    if (type == 1) {
+                        callVideoStats = linphoneCall.getVideoStats();
+                    } else {
+                        callVideoStats = linphoneCall.getAudioStats();
+                    }
 
-					return callVideoStats.getLocalLossRate();
-				}
-			}
-		}catch (Exception e){
+                    return callVideoStats.getLocalLossRate();
+                }
+            }
+        } catch (Exception e) {
 
-		}
-	     	return 0.0f;
-	}
+        }
+        return 0.0f;
+    }
 
-    public static float getTotalLossRate(int type){
+    public static float getTotalLossRate(int type) {
         LinphoneCall linphoneCall = LinphoneManager.getLc().getCurrentCall();
-        if (linphoneCall != null){
-            if(type ==1){callVideoStats=linphoneCall.getVideoStats();}else{
-                callVideoStats=linphoneCall.getAudioStats();
+        if (linphoneCall != null) {
+            if (type == 1) {
+                callVideoStats = linphoneCall.getVideoStats();
+            } else {
+                callVideoStats = linphoneCall.getAudioStats();
             }
 
             return callVideoStats.getTotalLossRate();
