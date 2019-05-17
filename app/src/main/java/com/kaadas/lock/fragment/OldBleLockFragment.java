@@ -159,7 +159,6 @@ public class OldBleLockFragment extends BaseBleFragment<IOldBleLockView, OldBleL
                         mPresenter.getAllPassword(bleLockInfo, false);
                         isCurrentFragment = true;
                         onChangeInitView();
-
                     }
                 }
             }
