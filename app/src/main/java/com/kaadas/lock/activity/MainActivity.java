@@ -2,6 +2,7 @@ package com.kaadas.lock.activity;
 
 
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -75,7 +76,8 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
     private static final int REQUEST_CODE_VPN_SERVICE = 11;
 
     public boolean isSelectHome = true;
-
+    private NetWorkChangReceiver netWorkChangReceiver;
+    private boolean isRegistered=false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setContentView(R.layout.activity_main);
@@ -122,6 +124,7 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
              mPresenter.uploadpushmethod();
         }
         startcallmethod();
+        registerNetwork();
     }
 
     @Override
@@ -351,5 +354,24 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
             return true;
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    //注册网络状态监听广播
+    private void registerNetwork(){
+        netWorkChangReceiver = new NetWorkChangReceiver();
+        IntentFilter filter = new IntentFilter();
+        registerReceiver(netWorkChangReceiver, filter);
+        isRegistered = true;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (isRegistered){
+            if (netWorkChangReceiver!=null){
+                unregisterReceiver(netWorkChangReceiver);
+            }
+        }
+
     }
 }

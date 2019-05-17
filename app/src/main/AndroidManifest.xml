@@ -516,6 +516,12 @@
             android:name=".activity.device.gatewaylock.card.GatewayDoorCardManagerActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
+
+
+        <activity
+            android:name=".activity.device.gatewaylock.demo.GatewayLockSettingActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.device.gatewaylock.card.GatewayDoorCardManagerDetailActivity"
             android:launchMode="singleTop"

@@ -41,15 +41,6 @@ public abstract class BaseActivity<T extends IBaseView, V
         mPresenter = createPresent();
         mPresenter.attachView((T) this);
         MyApplication.getInstance().addActivity(this);
-
-        //注册网络状态监听广播
-        netWorkChangReceiver = new NetWorkChangReceiver();
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION);
-        filter.addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION);
-        filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
-        registerReceiver(netWorkChangReceiver, filter);
-        isRegistered = true;
     }
 
 
@@ -67,10 +58,6 @@ public abstract class BaseActivity<T extends IBaseView, V
         //销毁时，删除回调，防止内存泄漏
         bHandler.removeCallbacksAndMessages(null);
         MyApplication.getInstance().removeActivity(this);
-        //解绑
-        if (isRegistered) {
-            unregisterReceiver(netWorkChangReceiver);
-        }
         unbinder.unbind();
         super.onDestroy();
     }

@@ -51,6 +51,7 @@ public class AddGatewayThirdActivity extends BaseActivity<GatewayBindView, Gatew
             ToastUtil.getInstance().showShort(getString(R.string.unbind_not_have_devicesn));
             return;
         }
+
         if (NetUtil.isNetworkAvailable()) {
             LogUtils.e("deviceSN    " + deviceSN);
             mPresenter.bindGateway(deviceSN);
