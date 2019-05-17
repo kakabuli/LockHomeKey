@@ -8,15 +8,15 @@ import org.greenrobot.greendao.database.Database;
 import org.greenrobot.greendao.identityscope.IdentityScopeType;
 import org.greenrobot.greendao.internal.DaoConfig;
 
-import com.kaadas.lock.utils.greenDao.bean.CatEyeEvent;
 import com.kaadas.lock.utils.greenDao.bean.GatewayLockAlarmEventDao;
 import com.kaadas.lock.utils.greenDao.bean.HistoryInfo;
+import com.kaadas.lock.utils.greenDao.bean.CatEyeEvent;
 import com.kaadas.lock.utils.greenDao.bean.CateEyeInfoBase;
 import com.kaadas.lock.utils.greenDao.bean.PirDefault;
 
-import com.kaadas.lock.utils.greenDao.db.CatEyeEventDao;
 import com.kaadas.lock.utils.greenDao.db.GatewayLockAlarmEventDaoDao;
 import com.kaadas.lock.utils.greenDao.db.HistoryInfoDao;
+import com.kaadas.lock.utils.greenDao.db.CatEyeEventDao;
 import com.kaadas.lock.utils.greenDao.db.CateEyeInfoBaseDao;
 import com.kaadas.lock.utils.greenDao.db.PirDefaultDao;
 
@@ -29,15 +29,15 @@ import com.kaadas.lock.utils.greenDao.db.PirDefaultDao;
  */
 public class DaoSession extends AbstractDaoSession {
 
-    private final DaoConfig catEyeEventDaoConfig;
     private final DaoConfig gatewayLockAlarmEventDaoDaoConfig;
     private final DaoConfig historyInfoDaoConfig;
+    private final DaoConfig catEyeEventDaoConfig;
     private final DaoConfig cateEyeInfoBaseDaoConfig;
     private final DaoConfig pirDefaultDaoConfig;
 
-    private final CatEyeEventDao catEyeEventDao;
     private final GatewayLockAlarmEventDaoDao gatewayLockAlarmEventDaoDao;
     private final HistoryInfoDao historyInfoDao;
+    private final CatEyeEventDao catEyeEventDao;
     private final CateEyeInfoBaseDao cateEyeInfoBaseDao;
     private final PirDefaultDao pirDefaultDao;
 
@@ -45,14 +45,14 @@ public class DaoSession extends AbstractDaoSession {
             daoConfigMap) {
         super(db);
 
-        catEyeEventDaoConfig = daoConfigMap.get(CatEyeEventDao.class).clone();
-        catEyeEventDaoConfig.initIdentityScope(type);
-
         gatewayLockAlarmEventDaoDaoConfig = daoConfigMap.get(GatewayLockAlarmEventDaoDao.class).clone();
         gatewayLockAlarmEventDaoDaoConfig.initIdentityScope(type);
 
         historyInfoDaoConfig = daoConfigMap.get(HistoryInfoDao.class).clone();
         historyInfoDaoConfig.initIdentityScope(type);
+
+        catEyeEventDaoConfig = daoConfigMap.get(CatEyeEventDao.class).clone();
+        catEyeEventDaoConfig.initIdentityScope(type);
 
         cateEyeInfoBaseDaoConfig = daoConfigMap.get(CateEyeInfoBaseDao.class).clone();
         cateEyeInfoBaseDaoConfig.initIdentityScope(type);
@@ -60,29 +60,25 @@ public class DaoSession extends AbstractDaoSession {
         pirDefaultDaoConfig = daoConfigMap.get(PirDefaultDao.class).clone();
         pirDefaultDaoConfig.initIdentityScope(type);
 
-        catEyeEventDao = new CatEyeEventDao(catEyeEventDaoConfig, this);
         gatewayLockAlarmEventDaoDao = new GatewayLockAlarmEventDaoDao(gatewayLockAlarmEventDaoDaoConfig, this);
         historyInfoDao = new HistoryInfoDao(historyInfoDaoConfig, this);
+        catEyeEventDao = new CatEyeEventDao(catEyeEventDaoConfig, this);
         cateEyeInfoBaseDao = new CateEyeInfoBaseDao(cateEyeInfoBaseDaoConfig, this);
         pirDefaultDao = new PirDefaultDao(pirDefaultDaoConfig, this);
 
-        registerDao(CatEyeEvent.class, catEyeEventDao);
         registerDao(GatewayLockAlarmEventDao.class, gatewayLockAlarmEventDaoDao);
         registerDao(HistoryInfo.class, historyInfoDao);
+        registerDao(CatEyeEvent.class, catEyeEventDao);
         registerDao(CateEyeInfoBase.class, cateEyeInfoBaseDao);
         registerDao(PirDefault.class, pirDefaultDao);
     }
     
     public void clear() {
-        catEyeEventDaoConfig.clearIdentityScope();
         gatewayLockAlarmEventDaoDaoConfig.clearIdentityScope();
         historyInfoDaoConfig.clearIdentityScope();
+        catEyeEventDaoConfig.clearIdentityScope();
         cateEyeInfoBaseDaoConfig.clearIdentityScope();
         pirDefaultDaoConfig.clearIdentityScope();
-    }
-
-    public CatEyeEventDao getCatEyeEventDao() {
-        return catEyeEventDao;
     }
 
     public GatewayLockAlarmEventDaoDao getGatewayLockAlarmEventDaoDao() {
@@ -91,6 +87,10 @@ public class DaoSession extends AbstractDaoSession {
 
     public HistoryInfoDao getHistoryInfoDao() {
         return historyInfoDao;
+    }
+
+    public CatEyeEventDao getCatEyeEventDao() {
+        return catEyeEventDao;
     }
 
     public CateEyeInfoBaseDao getCateEyeInfoBaseDao() {
