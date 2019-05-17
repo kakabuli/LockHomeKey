@@ -179,7 +179,6 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
         if (fragments != null) {
             fragments.clear();
         }
-        devices.addAll(devices);
         //parentItemArr为商品类别对象集合
         for (int i = 0; i < devices.size(); i++) {
             //添加radiobutton及设置参数(方便动态加载radiobutton)
