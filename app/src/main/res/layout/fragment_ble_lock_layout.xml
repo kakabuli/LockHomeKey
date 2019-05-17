@@ -83,7 +83,8 @@
 
         </LinearLayout>
 
-        <RelativeLayout
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
@@ -131,7 +132,7 @@
                     android:id="@+id/rl_has_data"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginTop="@dimen/dp_113"
+                    android:layout_marginTop="@dimen/dp_18"
                     android:visibility="gone">
 
                     <android.support.v7.widget.RecyclerView
@@ -162,7 +163,7 @@
                     android:textSize="@dimen/sp_12"
                     android:visibility="gone" />
             </RelativeLayout>
-        </RelativeLayout>
+        </LinearLayout>
     </LinearLayout>
 
     <LinearLayout
