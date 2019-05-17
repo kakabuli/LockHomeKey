@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.View;
 
 import com.kaadas.lock.R;
+import com.kaadas.lock.utils.LogUtils;
 
 
 /**
@@ -28,13 +29,13 @@ public class UnderLineRadioBtn extends AppCompatRadioButton {
     /*-------------内部需要使用的值-------------*/
     private Paint mLinePaint;
     // 控件本身宽高
-    private int   mWidth, mHeight;
+    private int mWidth, mHeight;
     // 如果没有Button的情况下，线会合文字贴在一起，这里可以加一点空隙
-    private       float mSpaceHeight       = 0f;
-    private final int   COLOR_202020       = Color.parseColor("#202020");
-    private final int   COLOR_FF1819       = Color.parseColor("#FF1819");
+    private float mSpaceHeight = 0f;
+    private final int COLOR_202020 = Color.parseColor("#202020");
+    private final int COLOR_FF1819 = Color.parseColor("#FF1819");
     // 内部的默认状态文字、下划线颜色
-    private final int   DEFAULT_TEXT_COLOR = COLOR_202020, DEFAULT_LINE_COLOR = COLOR_202020;
+    private final int DEFAULT_TEXT_COLOR = COLOR_202020, DEFAULT_LINE_COLOR = COLOR_202020;
     // 内部的选中状态文字、下划线颜色
     private final int CHECK_TEXT_COLOR = COLOR_FF1819, CHECK_LINE_COLOR = COLOR_FF1819;
     /*-------------内部需要使用的值-------------*/
@@ -118,14 +119,20 @@ public class UnderLineRadioBtn extends AppCompatRadioButton {
 
     @Override
     protected void onDraw(Canvas canvas) {
+
         super.onDraw(canvas);
         // 在super.onDraw(canvas)后绘制，有关绘制顺序可查看：https://hencoder.com/ui-1-5/，感谢扔物线大佬
 
         if (mTextCheckColor != -0x001 && mTextDefaultColor != -0x001) {
             setTextColor(isChecked() ? mTextCheckColor : mTextDefaultColor);
         }
+        if (isChecked()) {
+            setTextColor(Color.parseColor("#FFFFFF"));
+        } else {
+            setTextColor(Color.parseColor("#AAFFFFFF"));
+        }
 
-//        Log.e("下划线高度是 ", "onDraw" + mLineHeight);
+        Log.e("下划线高度是 ", "onDraw" + mLineHeight);
 
         // 线的高度小于、等于0，不绘制线了
         if (mLineHeight <= 0)
@@ -140,10 +147,8 @@ public class UnderLineRadioBtn extends AppCompatRadioButton {
         //开始画线
         //1、计算线的起点和终点
         TextPaint textPaint = getPaint();
-        int textPaintWidth = (int) textPaint.measureText(getText().toString().trim());
 
-
-        mLineWidth = textPaintWidth;
+        mLineWidth = (int) textPaint.measureText(getText().toString().trim());
         float left, top = mHeight - mLineHeight, right, bottom = mHeight;
         if (mLineWidth < mWidth) {
             //线的宽度比控件本身宽度小，那要让线居中，所以要进行计算
@@ -154,8 +159,13 @@ public class UnderLineRadioBtn extends AppCompatRadioButton {
             left = 0f;
             right = mLineWidth;
         }
-        //2、设置线的颜色
-        mLinePaint.setColor(isChecked() ? mLineCheckColor : mLineDefaultColor);
+        //2、设置线的颜色  颜色写死
+        if (isChecked()) {
+            mLinePaint.setColor(Color.parseColor("#FFFFFF"));
+        } else {
+            mLinePaint.setColor(Color.parseColor("#00000000"));
+        }
+//        mLinePaint.setColor(isChecked() ? mLineCheckColor : mLineDefaultColor);
         //3、绘制
         if (mLineRadius > 0) {
             //画圆角矩形
@@ -246,9 +256,27 @@ public class UnderLineRadioBtn extends AppCompatRadioButton {
         postInvalidate();
     }
 
+    /**
+     * 设置线的高度
+     */
+    public void setLineHeight_ulb(float lineHeight) {
+        mLineHeight = lineHeight;
+        postInvalidate();
+    }
+
     @Override
     public void setChecked(boolean checked) {
         super.setChecked(checked);
+        if (isChecked()) {
+            setScaleX((float) 1);
+            setScaleY((float) 1);
+            setAlpha((float) 1);
+        } else {
+            setScaleX((float) 0.8);
+            setScaleY((float) 0.8);
+            setAlpha((float) 0.8);
+        }
+        LogUtils.e("设置选中");
         postInvalidate();
     }
 }
