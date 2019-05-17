@@ -40,6 +40,7 @@ public class CateEyeInfoBaseDao extends AbstractDao<CateEyeInfoBase, Long> {
         public final static Property PirEnable = new Property(13, int.class, "pirEnable", false, "PIR_ENABLE");
         public final static Property PirWander = new Property(14, String.class, "pirWander", false, "PIR_WANDER");
         public final static Property SdStatus = new Property(15, int.class, "sdStatus", false, "SD_STATUS");
+        public final static Property Gwid = new Property(16, String.class, "gwid", false, "GWID");
     }
 
 
@@ -70,7 +71,8 @@ public class CateEyeInfoBaseDao extends AbstractDao<CateEyeInfoBase, Long> {
                 "\"WIFI_STRENGTH\" INTEGER NOT NULL ," + // 12: wifiStrength
                 "\"PIR_ENABLE\" INTEGER NOT NULL ," + // 13: pirEnable
                 "\"PIR_WANDER\" TEXT," + // 14: pirWander
-                "\"SD_STATUS\" INTEGER NOT NULL );"); // 15: sdStatus
+                "\"SD_STATUS\" INTEGER NOT NULL ," + // 15: sdStatus
+                "\"GWID\" TEXT);"); // 16: gwid
     }
 
     /** Drops the underlying database table. */
@@ -138,6 +140,11 @@ public class CateEyeInfoBaseDao extends AbstractDao<CateEyeInfoBase, Long> {
             stmt.bindString(15, pirWander);
         }
         stmt.bindLong(16, entity.getSdStatus());
+ 
+        String gwid = entity.getGwid();
+        if (gwid != null) {
+            stmt.bindString(17, gwid);
+        }
     }
 
     @Override
@@ -199,6 +206,11 @@ public class CateEyeInfoBaseDao extends AbstractDao<CateEyeInfoBase, Long> {
             stmt.bindString(15, pirWander);
         }
         stmt.bindLong(16, entity.getSdStatus());
+ 
+        String gwid = entity.getGwid();
+        if (gwid != null) {
+            stmt.bindString(17, gwid);
+        }
     }
 
     @Override
@@ -224,7 +236,8 @@ public class CateEyeInfoBaseDao extends AbstractDao<CateEyeInfoBase, Long> {
             cursor.getInt(offset + 12), // wifiStrength
             cursor.getInt(offset + 13), // pirEnable
             cursor.isNull(offset + 14) ? null : cursor.getString(offset + 14), // pirWander
-            cursor.getInt(offset + 15) // sdStatus
+            cursor.getInt(offset + 15), // sdStatus
+            cursor.isNull(offset + 16) ? null : cursor.getString(offset + 16) // gwid
         );
         return entity;
     }
@@ -247,6 +260,7 @@ public class CateEyeInfoBaseDao extends AbstractDao<CateEyeInfoBase, Long> {
         entity.setPirEnable(cursor.getInt(offset + 13));
         entity.setPirWander(cursor.isNull(offset + 14) ? null : cursor.getString(offset + 14));
         entity.setSdStatus(cursor.getInt(offset + 15));
+        entity.setGwid(cursor.isNull(offset + 16) ? null : cursor.getString(offset + 16));
      }
     
     @Override

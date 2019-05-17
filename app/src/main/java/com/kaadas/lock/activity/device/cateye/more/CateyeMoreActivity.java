@@ -432,7 +432,8 @@ public class CateyeMoreActivity extends BaseActivity<IGatEyeView, CatEyeMorePres
                         returnDataBean.getWifiStrength(),
                         returnDataBean.getPirEnable(),
                         returnDataBean.getPirWander(),
-                        returnDataBean.getSdStatus());
+                        returnDataBean.getSdStatus(),
+                        gatewayId);
                 daoSession.getCateEyeInfoBaseDao().insertOrReplace(cateEyeInfoBase);
             }else {
                  cateEyeInfoBase.setBellVolume(returnDataBean.getCurBellNum());
@@ -450,6 +451,7 @@ public class CateyeMoreActivity extends BaseActivity<IGatEyeView, CatEyeMorePres
                  cateEyeInfoBase.setPirEnable(returnDataBean.getPirEnable());
                  cateEyeInfoBase.setPirWander(returnDataBean.getPirWander());
                  cateEyeInfoBase.setSdStatus(returnDataBean.getSdStatus());
+                 cateEyeInfoBase.setGwid(gatewayId);
                 daoSession.getCateEyeInfoBaseDao().insertOrReplace(cateEyeInfoBase);
             }
         }

@@ -5,11 +5,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.cateye.VideoCallBackActivity;
@@ -122,6 +124,10 @@ public class CateyeFunctionActivity extends BaseActivity<ICatEyeFunctionView, Ca
                 Intent intentVideo = new Intent(CateyeFunctionActivity.this, VideoCallBackActivity.class);
                 intentVideo.putExtra("gatewayId",gatewayId);
                 intentVideo.putExtra("deviceId",deviceId);
+                if(TextUtils.isEmpty(meUserName) || TextUtils.isEmpty(mePwd)){
+                    Toast.makeText(CateyeFunctionActivity.this,getString(R.string.refresh_geteway),Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 intentVideo.putExtra(Constants.MEUSERNAME,meUserName);
                 intentVideo.putExtra(Constants.MEPWD,mePwd);
                 startActivity(intentVideo);
