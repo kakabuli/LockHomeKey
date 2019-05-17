@@ -176,7 +176,6 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
 
         realPositions.clear();
 
-
         if (fragments != null) {
             fragments.clear();
         }
@@ -246,10 +245,7 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
             rb.setBackgroundResource(R.color.color_trans);
             //设置文字超过范围显示....
             rb.setEllipsize(TextUtils.TruncateAt.END);
-            //设置下划线颜色           //设置下划线默认为透明
-            rb.setLineCheckColor(Color.WHITE);
             rb.setLineRadius(0);
-//            rb.setLineDefaultColor(Color.TRANSPARENT);
             //设置下划线的高度
             rb.setLineHeight_ulb(4);
             //设置图片和文字之间的距离
