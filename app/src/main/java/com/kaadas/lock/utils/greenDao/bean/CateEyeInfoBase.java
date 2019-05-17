@@ -32,9 +32,10 @@ public class CateEyeInfoBase{
     int pirEnable;   // 智能监测开关
     String pirWander;  // pir徘徊
     int sdStatus;  // sd卡状态,是否有sd卡
+    String gwid;
 
-    @Generated(hash = 1262331721)
-    public CateEyeInfoBase(Long id, int curBellNum, int bellVolume, int bellCount, String resolution, String deviceId, String SW, String HW, String MCU, String T200, String macaddr, String ipaddr, int wifiStrength, int pirEnable, String pirWander, int sdStatus) {
+    @Generated(hash = 1930281601)
+    public CateEyeInfoBase(Long id, int curBellNum, int bellVolume, int bellCount, String resolution, String deviceId, String SW, String HW, String MCU, String T200, String macaddr, String ipaddr, int wifiStrength, int pirEnable, String pirWander, int sdStatus, String gwid) {
         this.id = id;
         this.curBellNum = curBellNum;
         this.bellVolume = bellVolume;
@@ -51,6 +52,7 @@ public class CateEyeInfoBase{
         this.pirEnable = pirEnable;
         this.pirWander = pirWander;
         this.sdStatus = sdStatus;
+        this.gwid = gwid;
     }
 
     public CateEyeInfoBase() {
@@ -182,6 +184,14 @@ public class CateEyeInfoBase{
 
     public void setSdStatus(int sdStatus) {
         this.sdStatus = sdStatus;
+    }
+
+    public String getGwid() {
+        return gwid;
+    }
+
+    public void setGwid(String gwid) {
+        this.gwid = gwid;
     }
 
     @Override

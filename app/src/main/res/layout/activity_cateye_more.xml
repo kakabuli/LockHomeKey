@@ -220,8 +220,8 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="@dimen/dp_16"
-            android:drawableRight="@mipmap/right"
             android:drawablePadding="@dimen/dp_15"
+            android:drawableRight="@mipmap/right"
             android:textColor="#999999"
             android:textSize="@dimen/sp_12" />
 

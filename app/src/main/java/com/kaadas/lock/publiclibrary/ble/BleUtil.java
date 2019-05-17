@@ -3,6 +3,7 @@ package com.kaadas.lock.publiclibrary.ble;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.TextUtils;
 
 
 import com.kaadas.lock.MyApplication;
@@ -39,7 +40,6 @@ public class BleUtil {
     public static final int BLE_VERSION_OLD = 1; //最老的版本  老版本协议  功能只有开锁  开锁记录  电量
     public static final int BLE_VERSION_NEW1 = 2;   //中间的版本  新版本协议   功能只有开锁  开锁记录  电量
     public static final int BLE_VERSION_NEW2 = 3;   //最新的版本  最新的协议  全功能支持
-
 
 
     public static String getRealName(byte[] data) {
@@ -108,7 +108,7 @@ public class BleUtil {
 
 
     public static OpenLockRecord oldParseData(byte[] data) {
-         //0  1  2  3  4  5  6  7  8  9  10 11 12 13 14 15 16 17 18 19
+        //0  1  2  3  4  5  6  7  8  9  10 11 12 13 14 15 16 17 18 19
         //5f 51 04 1c c3 80 64 00 02 09 ff ff 19 05 14 16 55 04 00 00
         int openType1 = data[8] & 0xff;
         int userNumber = data[9] & 0xff;
@@ -137,7 +137,7 @@ public class BleUtil {
                 break;
         }
         //String user_num, String open_type, String open_time, int index
-        OpenLockRecord openLockRecord = new OpenLockRecord(userNumber > 9 ? "" + userNumber : "0" + userNumber, openType,openTime,index);
+        OpenLockRecord openLockRecord = new OpenLockRecord(userNumber > 9 ? "" + userNumber : "0" + userNumber, openType, openTime, index);
         return openLockRecord;
     }
 
@@ -149,8 +149,8 @@ public class BleUtil {
 
     public static OpenLockRecord parseLockRecord(byte[] payload) {
         OpenLockRecord lockRecord;
-   //0  1  2  3  4  5  6  7  8  9  10 11 12 13 14 15 16 17 18 19
-  //5f 51 04 1c c3 80 64 00 02 09 ff ff 19 05 14 16 55 04 00 00
+        //0  1  2  3  4  5  6  7  8  9  10 11 12 13 14 15 16 17 18 19
+        //5f 51 04 1c c3 80 64 00 02 09 ff ff 19 05 14 16 55 04 00 00
         byte[] openLockTime = new byte[4];
 
         System.arraycopy(payload, 6, openLockTime, 0, 4);
@@ -202,7 +202,8 @@ public class BleUtil {
                 }
                 break;
         }
-        lockRecord = new OpenLockRecord((payload[5] & 0xff) + "", openType, openDoorTime, (payload[1]) & 0xff);
+        int number = (payload[5] & 0xff);
+        lockRecord = new OpenLockRecord(number > 9 ? number + "" : "0" + number, openType, openDoorTime, (payload[1]) & 0xff);
         return lockRecord;
     }
 
@@ -226,63 +227,67 @@ public class BleUtil {
 
 
     public static String parseWarring(Context context, byte[] payload, String nickName) {
+        String head = MyApplication.getInstance().getString(R.string.device) + " " + nickName + " ";
         StringBuffer buffer = new StringBuffer();
 
-        LogUtils.e("收到报警信息   " + Integer.toBinaryString(payload[4]&0xff)+"   " + Integer.toBinaryString(payload[5]&0xff) );
-        buffer.append(MyApplication.getInstance().getString(R.string.device) + " "+nickName + " ");
+        LogUtils.e("收到报警信息   " + Integer.toBinaryString(payload[4] & 0xff) + "   " + Integer.toBinaryString(payload[5] & 0xff));
 
         int state0 = (payload[4] & 0b00000001) == 0b00000001 ? 1 : 0;
         if (state0 == 1) {
-            buffer.append(context.getString(R.string.warring_low_power)+ " ");
+            buffer.append(context.getString(R.string.warring_low_power) + " ");
         }
         int state1 = (payload[4] & 0b00000010) == 0b00000010 ? 1 : 0;
         if (state1 == 1) {
-            buffer.append(context.getString(R.string.warring_lock)+ " ");
+            buffer.append(context.getString(R.string.warring_lock) + " ");
         }
         int state2 = (payload[4] & 0b00000100) == 0b00000100 ? 1 : 0;
         if (state2 == 1) {
-            buffer= new StringBuffer();
-            buffer.append(context.getString(R.string.open_door_fail_many_time)+ " ");
+            buffer = new StringBuffer();
+            buffer.append(context.getString(R.string.open_door_fail_many_time) + " ");
         }
         int state3 = (payload[4] & 0b00001000) == 0b00001000 ? 1 : 0;
         if (state3 == 1) {
-            buffer.append(context.getString(R.string.warring_defence)+ " ");
+            buffer.append(context.getString(R.string.warring_defence) + " ");
         }
 
         int state4 = (payload[4] & 0b00010000) == 0b00010000 ? 1 : 0;
         if (state4 == 1) {
-            buffer.append(context.getString(R.string.warring_temp_exception)+ " ");
+            buffer.append(context.getString(R.string.warring_temp_exception) + " ");
         }
         int state5 = (payload[4] & 0b00100000) == 0b00100000 ? 1 : 0;
         if (state5 == 1) {
-            buffer.append(context.getString(R.string.warring_force)+ " ");  //todo 此处需要提示吗
+            buffer.append(context.getString(R.string.warring_force) + " ");  //todo 此处需要提示吗
         }
 
         int state6 = (payload[4] & 0b01000000) == 0b01000000 ? 1 : 0;
         if (state6 == 1) {
-            buffer.append(context.getString(R.string.warring_reset)+ " ");
+            buffer.append(context.getString(R.string.warring_reset) + " ");
         }
 
         int state7 = (payload[4] & 0b10000000) == 0b10000000 ? 1 : 0;
         if (state7 == 1) {
-            buffer.append(context.getString(R.string.warring_force_open)+ " ");
+            buffer.append(context.getString(R.string.warring_force_open) + " ");
         }
 
         int state8 = (payload[5] & 0b00000001) == 0b00000001 ? 1 : 0;
         if (state8 == 1) {
-            buffer.append(context.getString(R.string.warring_key_remain)+ " ");
+            buffer.append(context.getString(R.string.warring_key_remain) + " ");
         }
 
         int state9 = (payload[5] & 0b00000010) == 0b00000010 ? 1 : 0;
         if (state9 == 1) {
-            buffer.append(context.getString(R.string.warring_safe)+ " ");
+            buffer.append(context.getString(R.string.warring_safe) + " ");
         }
 
         int state10 = (payload[5] & 0b00000100) == 0b00000100 ? 1 : 0;
         if (state10 == 1) {
-            buffer.append(context.getString(R.string.warring_unlock)+ " ");
+            buffer.append(context.getString(R.string.warring_unlock) + " ");
         }
-        return buffer.toString();
+
+        if (TextUtils.isEmpty(buffer.toString())){
+            return null;
+        }
+        return head +  buffer.toString();
     }
 
 

@@ -668,6 +668,7 @@
             android:name=".activity.cateye.PreviewActivity"
             android:screenOrientation="portrait" />
         <activity
+            android:launchMode="singleTask"
             android:name=".activity.cateye.VideoVActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"

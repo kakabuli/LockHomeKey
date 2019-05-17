@@ -69,7 +69,6 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
     private Disposable deviceChangeDisposable;
     private CateEyeInfo callInCatEyeInfo;  //呼叫进来的猫眼信息
     private Disposable catEyeEventDisposable;
-    private Disposable listenerDeviceOnLineDisposable;
 
     @Override
     public void authSuccess() {
@@ -108,7 +107,7 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                         MyApplication.getInstance().getBleService().getBleLockInfo().setSafeMode(state9);
                         if (!TextUtils.isEmpty(nickNameByDeviceName)) {
                             String warringContent = BleUtil.parseWarring(MyApplication.getInstance(), deValue, nickNameByDeviceName);
-                            if (mViewRef.get() != null) {
+                            if (mViewRef.get() != null && !TextUtils.isEmpty(warringContent)) {
                                 mViewRef.get().onWarringUp(warringContent);
                             }
                         } else {
@@ -217,7 +216,7 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                     public void accept(MqttData mqttData) throws Exception {
                         JSONObject jsonObject = new JSONObject(mqttData.getPayload());
                         String devtype = jsonObject.getString("devtype");
-                        String eventtype=jsonObject.getString("eventtype");
+                        String eventtype = jsonObject.getString("eventtype");
                         if (TextUtils.isEmpty(devtype)) { //devtype为空   无法处理数据
                             return;
                         }
@@ -255,7 +254,7 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                                 mViewRef.get().onGwEvent(eventType, catEyeEventBean.getDeviceId());
                             }
                             //网关锁信息上报
-                        }else if(KeyConstants.DEV_TYPE_LOCK.equals(devtype)){
+                        } else if (KeyConstants.DEV_TYPE_LOCK.equals(devtype)) {
                             //保存告警信息
                             if ("alarm".equals(eventtype)) {
                                 GatewayLockAlarmEventBean gatewayLockAlarmEventBean = new Gson().fromJson(mqttData.getPayload(), GatewayLockAlarmEventBean.class);
@@ -479,13 +478,13 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
         compositeDisposable.add(deviceChangeDisposable);
     }
 
-    public void uploadpushmethod(){
-        String uid= (String) SPUtils.get(SPUtils.UID,"");
-        String JpushId=(String) SPUtils2.get(MyApplication.getInstance(), GeTui.JPUSH_ID,"");
-        Log.e(GeTui.VideoLog,"uid:"+uid+" jpushid:"+JpushId);
+    public void uploadpushmethod() {
+        String uid = (String) SPUtils.get(SPUtils.UID, "");
+        String JpushId = (String) SPUtils2.get(MyApplication.getInstance(), GeTui.JPUSH_ID, "");
+        Log.e(GeTui.VideoLog, "uid:" + uid + " jpushid:" + JpushId);
         //uploadPushId(String uid, String jpushId, int type)
-        if(!TextUtils.isEmpty(uid) && !TextUtils.isEmpty(JpushId)){
-            XiaokaiNewServiceImp.uploadPushId(uid,JpushId,2).subscribe(new BaseObserver<BaseResult>() {
+        if (!TextUtils.isEmpty(uid) && !TextUtils.isEmpty(JpushId)) {
+            XiaokaiNewServiceImp.uploadPushId(uid, JpushId, 2).subscribe(new BaseObserver<BaseResult>() {
                 @Override
                 public void onSuccess(BaseResult baseResult) {
                     if (mViewRef != null) {
@@ -495,12 +494,12 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
 
                 @Override
                 public void onAckErrorCode(BaseResult baseResult) {
-                    Log.e(GeTui.VideoLog,"pushid上传失败,服务返回:"+baseResult);
+                    Log.e(GeTui.VideoLog, "pushid上传失败,服务返回:" + baseResult);
                 }
 
                 @Override
                 public void onFailed(Throwable throwable) {
-                    Log.e(GeTui.VideoLog,"pushid上传失败");
+                    Log.e(GeTui.VideoLog, "pushid上传失败");
                 }
 
                 @Override
@@ -519,6 +518,6 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
         bleService.release();
     }
 
-    }
+}
 
 
