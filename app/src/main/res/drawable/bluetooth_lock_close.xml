@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animation-list xmlns:android="http://schemas.android.com/apk/res/android"
+    android:oneshot="true">
+    <item android:drawable="@drawable/bluetooth_lock_close_13" android:duration="72" />
+    <item android:drawable="@drawable/bluetooth_lock_close_14" android:duration="72" />
+    <item android:drawable="@drawable/bluetooth_lock_close_15" android:duration="72" />
+    <item android:drawable="@drawable/bluetooth_lock_close_16" android:duration="72" />
+    <item android:drawable="@drawable/bluetooth_lock_close_17" android:duration="72" />
+    <item android:drawable="@drawable/bluetooth_lock_close_18" android:duration="72" />
+    <item android:drawable="@drawable/bluetooth_lock_close_19" android:duration="72" />
+    <item android:drawable="@drawable/bluetooth_lock_close_20" android:duration="72" />
+    <item android:drawable="@drawable/bluetooth_lock_close_21" android:duration="72" />
+    <item android:drawable="@drawable/bluetooth_lock_close_22" android:duration="72" />
+    <item android:drawable="@drawable/bluetooth_lock_close_23" android:duration="72" />
+    <item android:drawable="@drawable/bluetooth_lock_close_24" android:duration="72" />
+    <item android:drawable="@drawable/bluetooth_lock_close_25" android:duration="72" />
+    <item android:drawable="@drawable/bluetooth_lock_close_26" android:duration="72" />
+    <item android:drawable="@drawable/bluetooth_lock_close_27" android:duration="72" />
+
+
+
+
+
+</animation-list>
+

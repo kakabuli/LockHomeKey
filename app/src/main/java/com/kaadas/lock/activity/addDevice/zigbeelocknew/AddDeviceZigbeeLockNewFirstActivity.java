@@ -17,6 +17,7 @@ import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.mvp.presenter.deviceaddpresenter.AddDeviceCatEyeSuitPresenter;
 import com.kaadas.lock.mvp.view.deviceaddview.AddDeviceCatEyeSuitView;
 import com.kaadas.lock.utils.KeyConstants;
+import com.kaadas.lock.utils.LogUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -51,9 +52,18 @@ public class AddDeviceZigbeeLockNewFirstActivity extends BaseActivity<AddDeviceC
             startActivity(successIntent);
             finish();
         }else {
-            if (!TextUtils.isEmpty(gatewayId)) {
-                mPresenter.bindMimi(gatewayId, gatewayId);
-            }
+          if (!TextUtils.isEmpty(gatewayId)){
+              mPresenter.bindMimi(gatewayId,gatewayId);
+              Intent successIntent = new Intent(this, AddDeviceZigbeeLockNewSuccessActivity.class);
+              startActivity(successIntent);
+              finish();
+
+          }else{
+                //绑定套装失败
+              Intent successIntent = new Intent(this, AddDeviceZigbeeLockNewFailActivity.class);
+              startActivity(successIntent);
+              finish();
+          }
         }
     }
 
@@ -75,23 +85,17 @@ public class AddDeviceZigbeeLockNewFirstActivity extends BaseActivity<AddDeviceC
 
     @Override
     public void bindMimiSuccess() {
-        Intent successIntent = new Intent(this, AddDeviceZigbeeLockNewSuccessActivity.class);
-        startActivity(successIntent);
-        finish();
+        LogUtils.e("绑定咪咪网成功");
     }
 
     @Override
     public void bindMimiFail(String code, String msg) {
-        Intent successIntent = new Intent(this, AddDeviceZigbeeLockNewFailActivity.class);
-        startActivity(successIntent);
-        finish();
+        LogUtils.e("绑定咪咪网失败");
     }
 
     @Override
     public void bindMimiThrowable(Throwable throwable) {
-        Intent successIntent = new Intent(this, AddDeviceZigbeeLockNewFailActivity.class);
-        startActivity(successIntent);
-        finish();
+        LogUtils.e("绑定咪咪网异常");
     }
 
 
