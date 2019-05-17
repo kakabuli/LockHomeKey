@@ -879,4 +879,7 @@
     <string name="get_pir_slient_fail">获取pir静默参数失败</string>
     <string name="please_input_legal_number">请输入1-60的数字</string>
     <string name="parameter_not_empty">参数不能为空</string>
+    <string name="current_net_not_enable">当前网络不可用</string>
+    <string name="cat_eye_offline">猫眼不在线，请稍后再试！</string>
+    <string name="gw_offline">网关不在线，请稍后再试！</string>
 </resources>

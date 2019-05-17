@@ -13,7 +13,6 @@ public class NetUtil {
 	
 	/**
 	 * 检测当的网络是否可用
-	 *
 	 * @return true 表示网络可用
 	 */
 	public static boolean isNetworkAvailable() {
