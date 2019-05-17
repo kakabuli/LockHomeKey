@@ -164,13 +164,30 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                 for (HomeShowBean homeShowBean:homeShowBeanList){
                     LogUtils.e(homeShowBeanList.size()+"获取到大小     "+"获取到昵称  "+homeShowBean.getDeviceNickName());
                     //请求电量
-                        if (HomeShowBean.TYPE_GATEWAY_LOCK==homeShowBean.getDeviceType()){
+                    switch (homeShowBean.getDeviceType()){
+                        case HomeShowBean.TYPE_GATEWAY_LOCK:
+                            //网关锁
                             GwLockInfo gwLockInfo= (GwLockInfo) homeShowBean.getObject();
                             mPresenter.getPower(gwLockInfo.getGwID(),gwLockInfo.getServerInfo().getDeviceId(),MyApplication.getInstance().getUid());
-                        }else if (HomeShowBean.TYPE_CAT_EYE==homeShowBean.getDeviceType()){
+                            break;
+                        case HomeShowBean.TYPE_CAT_EYE:
+                            //猫眼
                             CateEyeInfo cateEyeInfo= (CateEyeInfo) homeShowBean.getObject();
                             mPresenter.getPower(cateEyeInfo.getGwID(),cateEyeInfo.getServerInfo().getDeviceId(),MyApplication.getInstance().getUid());
-                        }
+                            break;
+                        case HomeShowBean.TYPE_GATEWAY:
+                            //网关
+                            GatewayInfo gatewayInfo= (GatewayInfo) homeShowBean.getObject();
+                            //咪咪网未绑定
+                            if (gatewayInfo.getServerInfo().getMeBindState()!=1){
+                                //需要绑定咪咪网
+                                String deviceSN=gatewayInfo.getServerInfo().getDeviceSN();
+                                mPresenter.bindMimi(deviceSN,deviceSN);
+                            }
+
+                            break;
+                    }
+
                     mDeviceList.add(homeShowBean);
                 }
                 if (deviceDetailAdapter!=null){
@@ -355,6 +372,9 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                         CateEyeInfo cateEyeInfo= (CateEyeInfo) device.getObject();
                         cateEyeInfo.setPower(power);
                         cateEyeInfo.setPowerTimeStamp(timestamp);
+                        if (cateEyeInfo.getServerInfo().getEvent_str().equals("offline")){
+                            cateEyeInfo.getServerInfo().setEvent_str("online");
+                        }
                         if (deviceDetailAdapter!=null) {
                             deviceDetailAdapter.notifyDataSetChanged();
                         }
@@ -362,6 +382,9 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                  }else if (HomeShowBean.TYPE_GATEWAY_LOCK==device.getDeviceType()){
                     if (device.getDeviceId().equals(devciceId)){
                         GwLockInfo gwLockInfo= (GwLockInfo) device.getObject();
+                        if (gwLockInfo.getServerInfo().getEvent_str().equals("offline")){
+                            gwLockInfo.getServerInfo().setEvent_str("online");
+                        }
                         gwLockInfo.setPower(power);
                         gwLockInfo.setPowerTimeStamp(timestamp);
                         if (deviceDetailAdapter!=null) {
@@ -500,6 +523,22 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
             deviceDetailAdapter.notifyDataSetChanged();
         }
 
+    }
+
+    @Override
+    public void bindMimiSuccess(String deviceSN) {
+        //绑定咪咪网成功
+        LogUtils.e("咪咪绑定注册成功");
+    }
+
+    @Override
+    public void bindMimiFail(String code, String msg) {
+        LogUtils.e("咪咪绑定注册失败"+code+"咪咪绑定失败原因"+msg);
+    }
+
+    @Override
+    public void bindMimiThrowable(Throwable throwable) {
+        LogUtils.e("咪咪绑定异常");
     }
 
     @Override

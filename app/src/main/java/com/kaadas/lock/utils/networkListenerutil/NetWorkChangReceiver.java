@@ -57,7 +57,9 @@ public class NetWorkChangReceiver extends BroadcastReceiver {
             int wifiState = intent.getIntExtra(WifiManager.EXTRA_WIFI_STATE, 0);
             LogUtils.e("TAG", "wifiState:" + wifiState);
             switch (wifiState) {
+                //网络
                 case WifiManager.WIFI_STATE_DISABLED:
+
                     break;
                 case WifiManager.WIFI_STATE_DISABLING:
                     break;
@@ -69,37 +71,34 @@ public class NetWorkChangReceiver extends BroadcastReceiver {
             NetworkInfo info = intent.getParcelableExtra(ConnectivityManager.EXTRA_NETWORK_INFO);
             if (info != null) {
                 //如果当前的网络连接成功并且网络连接可用
-                if (NetworkInfo.State.CONNECTED == info.getState() && info.isAvailable()) {
-                    if (info.getType() == ConnectivityManager.TYPE_WIFI || info.getType() == ConnectivityManager.TYPE_MOBILE) {
-                        LogUtils.e("TAG", getConnectionType(info.getType()) + "连上");
+                if (NetworkInfo.State.CONNECTED == info.getState()) {
+                    if (info.isAvailable()) {
+                        if (info.getType() == ConnectivityManager.TYPE_WIFI || info.getType() == ConnectivityManager.TYPE_MOBILE) {
+                            LogUtils.e("TAG", getConnectionType(info.getType()) + "连上");
                        /* if(MyApplication.getInstance().getMqttService()!=null){
                             if (MyApplication.getInstance().getMqttService().getMqttClient()==null||!MyApplication.getInstance().getMqttService().getMqttClient().isConnected()){
                                 MyApplication.getInstance().getMqttService().mqttConnection();
                             }
                         }*/
+                        }
                     }
-                } else {
+                }else {
                     //把所有网关的状态设置为离线
-                   List<GatewayInfo> gatewayInfos= MyApplication.getInstance().getAllGateway();
-                   if (gatewayInfos!=null&&gatewayInfos.size()>0){
-                       for (GatewayInfo gatewayInfo:gatewayInfos){
-                           gatewayInfo.setEvent_str("offline");
-                       }
-                       if (notifityActivity!=null) {
-                           notifityActivity.notifityActivity(true);
-                       }
-                       networkChangeObversable.onNext(true);
-                       LogUtils.e("通知刷新页面");
-                   }
-
-
+                    List<GatewayInfo> gatewayInfos= MyApplication.getInstance().getAllGateway();
+                    if (gatewayInfos!=null&&gatewayInfos.size()>0){
+                        for (GatewayInfo gatewayInfo:gatewayInfos){
+                            gatewayInfo.setEvent_str("offline");
+                        }
+                        if (notifityActivity!=null) {
+                            notifityActivity.notifityActivity(true);
+                        }
+                        networkChangeObversable.onNext(true);
+                        LogUtils.e("通知刷新页面");
+                    }
                     LogUtils.e("TAG", getConnectionType(info.getType()) + "断开");
                 }
+                }
             }
-        }
-
-
-
     }
 }
 

@@ -41,7 +41,30 @@
             android:textColor="#333333"
             android:textSize="@dimen/sp_15" />
 
-         />
+        <TextView
+            android:id="@+id/unbindGateway"
+            android:layout_alignParentRight="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="解绑网关"
+            android:textColor="#333333"
+            android:textSize="@dimen/sp_15"
+            android:layout_marginRight="@dimen/dp_60"
+            />
+        <TextView
+            android:id="@+id/testunbindGateway"
+            android:layout_alignParentRight="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="测试"
+            android:textColor="#333333"
+            android:textSize="@dimen/sp_15"
+
+            />
+
+
     </RelativeLayout>
 
     <TextView

@@ -540,6 +540,8 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
         if (mViewRef.get() != null) {
             mViewRef.get().startOpenLock();
         }
+        listenerLockOpen(deviceId);
+        listenerLockClose(deviceId);
         if (mqttService != null) {
             openLockDisposable = mqttService.mqttPublish(MqttConstant.getCallTopic(MyApplication.getInstance().getUid()), MqttCommandFactory.openLock(gatewayId, deviceId, "unlock", "pin", pwd))
                     .timeout(10 * 1000, TimeUnit.MILLISECONDS)
@@ -560,7 +562,6 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
                             OpenLockBean openLockBean = new Gson().fromJson(mqttData.getPayload(), OpenLockBean.class);
                             if ("200".equals(openLockBean.getReturnCode())) {
                                 SPUtils.put(KeyConstants.SAVA_LOCK_PWD + deviceId, pwd);
-                                listenerLockOpen(deviceId);
                             } else {
                                 if (mViewRef.get() != null) {
                                     mViewRef.get().openLockFailed(null);
@@ -614,7 +615,6 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
                             if (mViewRef.get() != null) {
                                 mViewRef.get().openLockSuccess();
                             }
-                            listenerLockClose(deviceId);
                         }
                     }, new Consumer<Throwable>() {
                         @Override
@@ -654,7 +654,7 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
                           }
                       })
                       .compose(RxjavaHelper.observeOnMainThread())
-                      .timeout(15 * 1000, TimeUnit.MILLISECONDS)
+                      .timeout(30* 1000, TimeUnit.MILLISECONDS)
                       .subscribe(new Consumer<MqttData>() {
                           @Override
                           public void accept(MqttData mqttData) throws Exception {

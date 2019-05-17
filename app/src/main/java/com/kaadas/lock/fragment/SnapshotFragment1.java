@@ -353,7 +353,8 @@ public class SnapshotFragment1 extends CallBackBaseFragment<ISnapShotView, SnapP
                 isFresh=false;
 
                 newimageList= MyApplication.getInstance().getPirListImg();
-                if(newimageList.size()>0){
+                Log.e(GeTui.VideoLog,"newImageList=========>:"+newimageList);
+                if(newimageList!=null && newimageList.size()>0){
                     imageList.clear();
                     showPirHistoryData();
                 }else{

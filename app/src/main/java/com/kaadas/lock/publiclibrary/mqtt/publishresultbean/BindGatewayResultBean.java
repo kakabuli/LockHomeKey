@@ -127,6 +127,7 @@ public class BindGatewayResultBean implements Serializable {
         private String adminuid;
         private String adminName;
         private String adminNickname;
+        private int  meBindState;
         private List<DeviceListBean> deviceList;
 
         public String get_id() {
@@ -151,6 +152,14 @@ public class BindGatewayResultBean implements Serializable {
 
         public void setUid(String uid) {
             this.uid = uid;
+        }
+
+        public int getMeBindState() {
+            return meBindState;
+        }
+
+        public void setMeBindState(int meBindState) {
+            this.meBindState = meBindState;
         }
 
         public String getAdminuid() {

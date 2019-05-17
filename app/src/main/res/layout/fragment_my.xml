@@ -31,7 +31,6 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="@dimen/dp_105"
-                android:text="@string/strong_strong_guardian"
                 android:textColor="#FFFFFF"
                 android:textSize="@dimen/sp_17" />
 

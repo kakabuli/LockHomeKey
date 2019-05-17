@@ -1,5 +1,6 @@
 package com.kaadas.lock.activity.device.cateye.more;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -260,14 +261,14 @@ public class CateyeMoreActivity extends BaseActivity<IGatEyeView, CatEyeMorePres
                         ringtIntent.putExtra(KeyConstants.CAT_EYE_RING_NUMBER, ring);
                         ringtIntent.putExtra(KeyConstants.GATEWAY_ID, gatewayId);
                         ringtIntent.putExtra(KeyConstants.DEVICE_ID, deviceId);
-                        startActivity(ringtIntent);
+                        startActivityForResult(ringtIntent,KeyConstants.RING_NUMBER_REQUESET_CODE);
+                        //startActivity(ringtIntent);
                     }
                 }
 
                 break;
             case R.id.rl_resolution:
                 //分辨率
-                //响铃次数
                 if (getCatInfoStatus == 0) {
                     ToastUtil.getInstance().showShort(R.string.get_cateye_info_wait);
                     return;
@@ -281,13 +282,13 @@ public class CateyeMoreActivity extends BaseActivity<IGatEyeView, CatEyeMorePres
                         resolutionIntent.putExtra(KeyConstants.CAT_EYE_RESOLUTION, resolution);
                         resolutionIntent.putExtra(KeyConstants.GATEWAY_ID, gatewayId);
                         resolutionIntent.putExtra(KeyConstants.DEVICE_ID, deviceId);
-                        startActivity(resolutionIntent);
+                        startActivityForResult(resolutionIntent,KeyConstants.RESOLUTION_REQUEST_CODE);
                     }
                 }
                 break;
                 //音量
             case R.id.rl_volume:
-                //响铃次数
+                //音量
                 if (getCatInfoStatus == 0) {
                     ToastUtil.getInstance().showShort(R.string.get_cateye_info_wait);
                     return;
@@ -301,7 +302,7 @@ public class CateyeMoreActivity extends BaseActivity<IGatEyeView, CatEyeMorePres
                         volumeIntent.putExtra(KeyConstants.CAT_EYE_VOLUME, volume);
                         volumeIntent.putExtra(KeyConstants.GATEWAY_ID, gatewayId);
                         volumeIntent.putExtra(KeyConstants.DEVICE_ID, deviceId);
-                        startActivity(volumeIntent);
+                        startActivityForResult(volumeIntent,KeyConstants.VOLUME_REQUESET_CODE);
                     }
                 }
                 break;
@@ -421,5 +422,52 @@ public class CateyeMoreActivity extends BaseActivity<IGatEyeView, CatEyeMorePres
             deleteAlertDialog.dismiss();
         }
         ToastUtil.getInstance().showShort(getString(R.string.delete_fialed));
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        //铃声设置成功的返回
+        if (requestCode==KeyConstants.RING_NUMBER_REQUESET_CODE){
+            if (resultCode== Activity.RESULT_OK){
+             int ringNumber= data.getIntExtra(KeyConstants.RIGH_NUMBER,0);
+             if (tvRingnumber!=null){
+                 tvRingnumber.setText(ringNumber+"");
+              }
+            }
+        }
+        //音量
+        if (requestCode==KeyConstants.VOLUME_REQUESET_CODE){
+            if (resultCode== Activity.RESULT_OK){
+                int volumeNumber= data.getIntExtra(KeyConstants.VOLUME_NUMBER,-1);
+                if (tvVolume!=null){
+                    switch (volumeNumber){
+                        case 1:
+                            tvVolume.setText(getString(R.string.low));
+                            break;
+                        case 2:
+                            tvVolume.setText(getString(R.string.centre));
+                            break;
+
+                        case 0:
+                            tvVolume.setText(getString(R.string.high));
+                            break;
+                    }
+
+                }
+            }
+        }
+
+        //分辨率
+        if (requestCode==KeyConstants.RESOLUTION_REQUEST_CODE){
+            if (resultCode== Activity.RESULT_OK){
+                String resolution= data.getStringExtra(KeyConstants.RESOLUTION_NUMBER);
+                if (tvResolution!=null){
+                    tvResolution.setText(resolution);
+                }
+            }
+        }
+
+
     }
 }

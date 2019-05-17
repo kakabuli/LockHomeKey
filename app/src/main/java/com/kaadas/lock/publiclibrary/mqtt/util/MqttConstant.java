@@ -21,11 +21,10 @@ public class MqttConstant {
       public static final String MQTT_BASE_URL = "tcp://test.juziwulian.com:1883";//测试服务器
 
 
-     //   public static final String LINPHONE_URL = "sip-kaadas.juziwulian.com:5061";//正式sip
-//        public static final String LINPHONE_URL = "sip-kaadas.juziwulian.com:5061";//正式sip
+       public static final String LINPHONE_URL = "sip-kaadas.juziwulian.com:5061";//正式sip
      // public static String LINPHONE_URL = "192.168.3.180:5061";   // 本地sip
      //  public static String LINPHONE_URL = "47.106.94.189:5061";   // 测试sip
-       public static final String LINPHONE_URL = "test.juziwulian.com:5061";//测试sip
+       //public static final String LINPHONE_URL = "test.juziwulian.com:5061";//测试sip
 
     public static final String  MQTT_REQUEST_APP = "/request/app/func";
 
@@ -73,7 +72,7 @@ public class MqttConstant {
     //1 绑定网关
     public static final String BIND_GATEWAY = "bindGatewayByUser";
     // 绑定咪咪网
-    public static final String REGISTER_MIMI_BIND="bindMeme";
+    public static final String REGISTER_MIMI_BIND="RegisterMemeAndBind";
 
     //2 获取网关列表
     public static final String GET_BIND_GATEWAY_LIST = "gatewayBindList";
@@ -163,5 +162,10 @@ public class MqttConstant {
     //设置静默参数
     public static final String SET_PIR_SLIENT="setPirSilent";
 
+    //解绑网关
+    public static final String UNBIND_GATEWAY="unbindGateway";
+
+    //解绑测试网关
+    public static final String UNBIND_TEST_GATEWAY="testUnBindGateway";
 
 }

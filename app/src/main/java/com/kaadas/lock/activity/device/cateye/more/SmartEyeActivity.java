@@ -251,9 +251,11 @@ public class SmartEyeActivity extends BaseActivity<ISmartEyeView, SmartEyePresen
                             //打开了智能监测，需要关闭
                             mPresenter.setPirEnable(gatewayId,deviceId,MyApplication.getInstance().getUid(),0);
                             pirEnableAlertDialog=AlertDialogUtil.getInstance().noButtonDialog(context,getString(R.string.close_pir_enable));
+                            pirEnableAlertDialog.setCancelable(false);
                         }else{
                             mPresenter.setPirEnable(gatewayId,deviceId,MyApplication.getInstance().getUid(),1);
                             pirEnableAlertDialog=AlertDialogUtil.getInstance().noButtonDialog(context,getString(R.string.open_pir_enable));
+                            pirEnableAlertDialog.setCancelable(false);
                         }
                     }
                 }

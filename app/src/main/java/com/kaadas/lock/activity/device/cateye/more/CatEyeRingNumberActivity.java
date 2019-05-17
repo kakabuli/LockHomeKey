@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
+import com.kaadas.lock.activity.device.gatewaylock.password.old.GatewayLockDeletePasswordActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.mvp.presenter.cateye.CatEyeRingNumberPresenter;
 import com.kaadas.lock.mvp.view.cateye.ICatEyeRingNumberView;
@@ -138,6 +139,11 @@ public class CatEyeRingNumberActivity extends BaseActivity<ICatEyeRingNumberView
            alertDialog.dismiss();
        }
         currentRingNumber=number;
+        Intent intent = new Intent();
+        //把返回数据存入Intent
+        intent.putExtra(KeyConstants.RIGH_NUMBER, number);
+        //设置返回数据
+        CatEyeRingNumberActivity.this.setResult(RESULT_OK, intent);
        ToastUtil.getInstance().showShort(R.string.set_success);
     }
 

@@ -51,17 +51,27 @@ public class GatewayBindPresenter<T> extends BasePresenter<GatewayBindView> {
                         LogUtils.e(bindGatewayResult.getFunc());
                         if ("200".equals(bindGatewayResult.getCode())&&bindGatewayResult.getData().getDeviceList()!=null&&bindGatewayResult.getData().getDeviceList().size()>0) {
                             if (mViewRef.get()!=null){
-                                mViewRef.get().bindGatewaySuitSuccess(deviceSN,bindGatewayResult.getData().getDeviceList());
+                                if (bindGatewayResult.getData().getMeBindState()==1){
+                                    mViewRef.get().bindGatewaySuitSuccess(deviceSN,bindGatewayResult.getData().getDeviceList(),true);
+                                }else{
+                                    mViewRef.get().bindGatewaySuitSuccess(deviceSN,bindGatewayResult.getData().getDeviceList(),false);
+                                }
+                                MyApplication.getInstance().getAllDevicesByMqtt(true);
                             }
                         }else if ("200".equals(bindGatewayResult.getCode())){
                             if (mViewRef.get() != null) {
                                 mViewRef.get().bindGatewaySuccess(deviceSN);
+                                bindMimi(deviceSN,deviceSN);
+                                MyApplication.getInstance().getAllDevicesByMqtt(true);
                             }
-                        }
-
-                        else {
+                        } else {
                             if (mViewRef.get() != null) {
-                                mViewRef.get().bindGatewayFail(bindGatewayResult.getCode(), bindGatewayResult.getMsg());
+                                if (bindGatewayResult.getData().getDeviceList()!=null&&bindGatewayResult.getData().getDeviceList().size()>0){
+                                    mViewRef.get().bindGatewaySuitFail(bindGatewayResult.getCode(), bindGatewayResult.getMsg());
+                                }else{
+                                    mViewRef.get().bindGatewayFail(bindGatewayResult.getCode(), bindGatewayResult.getMsg());
+                                }
+
                             }
                         }
                         toDisposable(bindGatewayDisposable);
@@ -103,7 +113,6 @@ public class GatewayBindPresenter<T> extends BasePresenter<GatewayBindView> {
                         if ("200".equals(bindMemeReuslt.getCode())) {
                             if (mViewRef.get() != null) {
                                 mViewRef.get().bindMimiSuccess();
-                                MyApplication.getInstance().getAllDevicesByMqtt(true);
                             }
                         } else {
                             if (mViewRef.get() != null) {

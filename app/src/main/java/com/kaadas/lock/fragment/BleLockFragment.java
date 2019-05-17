@@ -5,6 +5,8 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Service;
 import android.content.Intent;
+import android.graphics.drawable.AnimationDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Vibrator;
@@ -22,6 +24,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.home.BluetoothEquipmentDynamicActivity;
@@ -373,12 +376,13 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
                 break;
             case 8:
                 //“长按开锁”（表示关闭状态）
-                ivExternalBig.setVisibility(View.VISIBLE);
+//                closeLockAnimator();
+               ivExternalBig.setVisibility(View.VISIBLE);
                 ivExternalBig.setImageResource(R.mipmap.bluetooth_no_connect_big_icon);
-                ivExternalMiddle.setVisibility(View.GONE);
-//                ivExternalMiddle.setImageResource();
-                ivExternalSmall.setVisibility(View.VISIBLE);
-                ivExternalSmall.setImageResource(R.mipmap.bluetooth_open_lock_small_icon);
+                ivExternalMiddle.setVisibility(View.VISIBLE);
+                ivExternalMiddle.setImageResource(R.mipmap.bluetooth_open_lock_small_icon);
+                ivExternalSmall.setVisibility(View.GONE);
+//                ivExternalSmall.setImageResource(R.mipmap.bluetooth_open_lock_small_icon);
                 ivInnerMiddle.setVisibility(View.VISIBLE);
                 ivInnerMiddle.setImageResource(R.mipmap.bluetooth_lock_safe_inner_midder_icon);
                 ivInnerSmall.setVisibility(View.VISIBLE);
@@ -392,6 +396,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
                 break;
             case 9:
                 //”开锁中....“
+//                openLockAnimator();
                 ivExternalBig.setVisibility(View.VISIBLE);
                 ivExternalBig.setImageResource(R.mipmap.bluetooth_no_connect_big_icon);
                 ivExternalMiddle.setVisibility(View.VISIBLE);
@@ -414,9 +419,9 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
                 ivExternalBig.setVisibility(View.VISIBLE);
                 ivExternalBig.setImageResource(R.mipmap.bluetooth_no_connect_big_icon);
                 ivExternalMiddle.setVisibility(View.VISIBLE);
-                ivExternalMiddle.setImageResource(R.mipmap.bluetooth_open_lock_middle_icon);
-                ivExternalSmall.setVisibility(View.VISIBLE);
-                ivExternalSmall.setImageResource(R.mipmap.bluetooth_open_lock_small_icon);
+                ivExternalMiddle.setImageResource(R.mipmap.open_lock_middle_78);
+                ivExternalSmall.setVisibility(View.GONE);
+//                ivExternalSmall.setImageResource(R.mipmap.bluetooth_open_lock_small_icon);
                 ivInnerMiddle.setVisibility(View.VISIBLE);
                 ivInnerMiddle.setImageResource(R.mipmap.bluetooth_open_lock_success_niner_middle_icon);
                 ivInnerSmall.setVisibility(View.GONE);
@@ -519,6 +524,84 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
                 tvExternal.setText(getString(R.string.safe_status));
                 break;
 
+        }
+    }
+    AnimationDrawable openLockBig;
+    AnimationDrawable openLockMiddle;
+    AnimationDrawable openLockSmall;
+    AnimationDrawable closeLock;
+    public void openLockAnimator(){
+        ivExternalBig.setVisibility(View.VISIBLE);
+        ivExternalBig.setImageResource(R.drawable.open_lock_big);
+        ivExternalMiddle.setVisibility(View.VISIBLE);
+        ivExternalMiddle.setImageResource(R.drawable.open_lock_middle);
+        ivExternalSmall.setVisibility(View.GONE);
+//        ivExternalSmall.setImageResource(R.mipmap.bluetooth_open_lock_small_icon);
+        ivInnerMiddle.setVisibility(View.VISIBLE);
+        ivInnerMiddle.setImageResource(R.drawable.open_lock_small);
+        ivInnerSmall.setVisibility(View.GONE);
+//                ivInnerSmall.setImageResource();
+        tvInner.setVisibility(View.GONE);
+//                tvInner.setText();
+//                tvInner.setTextColor();
+        tvExternal.setVisibility(View.VISIBLE);
+        tvExternal.setTextColor(getResources().getColor(R.color.cC6F5FF));
+        tvExternal.setText(getString(R.string.is_lock));
+
+         openLockBig = (AnimationDrawable) ivExternalBig.getDrawable();
+         openLockMiddle = (AnimationDrawable) ivExternalMiddle.getDrawable();
+         openLockSmall = (AnimationDrawable) ivInnerMiddle.getDrawable();
+         if (openLockBig!=null){
+             openLockBig.start();
+         }
+        if (openLockMiddle!=null){
+            openLockMiddle.start();
+        }
+        if (openLockSmall!=null){
+            openLockSmall.start();
+        }
+
+    }
+    public void closeLockAnimator(){
+        ivExternalBig.setVisibility(View.VISIBLE);
+        ivExternalBig.setImageResource(R.mipmap.bluetooth_no_connect_big_icon);
+        ivExternalMiddle.setVisibility(View.VISIBLE);
+        ivExternalMiddle.setImageResource(R.mipmap.bluetooth_open_lock_small_icon);
+        ivExternalSmall.setVisibility(View.GONE);
+//                ivExternalSmall.setImageResource(R.mipmap.bluetooth_open_lock_small_icon);
+        ivInnerMiddle.setVisibility(View.VISIBLE);
+        ivInnerMiddle.setImageResource(R.drawable.bluetooth_lock_close);
+        ivInnerSmall.setVisibility(View.VISIBLE);
+        ivInnerSmall.setImageResource(R.mipmap.bluetooth_lock_bu_fang_inner_small_icon);
+        tvInner.setVisibility(View.VISIBLE);
+        tvInner.setText(R.string.long_press_open_lock);
+        tvInner.setTextColor(getResources().getColor(R.color.cF7FDFD));
+        tvExternal.setVisibility(View.VISIBLE);
+        tvExternal.setTextColor(getResources().getColor(R.color.cC6F5FF));
+        tvExternal.setText(getString(R.string.bluetooth_close_status));
+         closeLock  = (AnimationDrawable) ivInnerSmall.getDrawable();
+        if (closeLock!=null){
+            closeLock.start();
+        }
+    }
+
+    public void stopCloseLockAnimator() {
+        if (closeLock!=null){
+            closeLock.stop();
+        }
+    }
+    public void stopOpenLockAnimator() {
+        if (openLockBig!=null){
+            openLockBig.stop();
+            ivExternalBig.setBackground(null);
+        }
+        if (openLockMiddle!=null){
+            openLockMiddle.stop();
+            ivExternalMiddle.setBackground(null);
+        }
+        if (openLockSmall!=null){
+            openLockSmall.stop();
+            ivInnerMiddle.setBackground(null);
         }
     }
 
@@ -673,6 +756,9 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
 
     }
 
+
+
+
     @Override
     public void authServerFailed(BaseResult baseResult) {
 
@@ -681,22 +767,32 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
 
     @Override
     public void isOpeningLock() {
-
+        openLockAnimator();
         isOpening = true;
-        changeOpenLockStatus(9);
+//        changeOpenLockStatus(9);
     }
 
     @Override
     public void openLockSuccess() {
+        stopOpenLockAnimator();
         changeOpenLockStatus(10);
         handler.removeCallbacks(lockRunnable);
         handler.postDelayed(lockRunnable, 15 * 1000);  //十秒后退出开门状态
+
+
     }
 
     @Override
     public void onLockLock() {  //关门
-        handler.removeCallbacks(lockRunnable);
-        lockRunnable.run();
+        closeLockAnimator();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                handler.removeCallbacks(lockRunnable);
+                lockRunnable.run();
+            }
+        },1000);
+
     }
 
     @Override
@@ -710,6 +806,9 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
             ToastUtil.getInstance().showShort(getString(R.string.open_lock_failed));
         }
         lockRunnable.run();
+        stopOpenLockAnimator();
+
+
     }
 
     @Override

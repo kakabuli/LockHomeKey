@@ -26,8 +26,8 @@ import java.util.List;
 
 public class RecordingAdapter extends BaseQuickAdapter<MediaItem, BaseViewHolder> {
 
-    //SimpleDateFormat showFormater = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//UTC时间格式
-    SimpleDateFormat showFormater = new SimpleDateFormat("HH:mm:ss");//UTC时间格式
+    SimpleDateFormat showFormater = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//UTC时间格式
+   // SimpleDateFormat showFormater = new SimpleDateFormat("HH:mm:ss");//UTC时间格式
     public RecordingAdapter() {
         super(R.layout.recording_single_entry);
     }

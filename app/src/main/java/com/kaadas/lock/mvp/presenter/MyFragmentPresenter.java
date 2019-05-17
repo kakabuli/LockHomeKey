@@ -6,6 +6,9 @@ import android.graphics.BitmapFactory;
 
 import com.kaadas.lock.mvp.mvpbase.BasePresenter;
 import com.kaadas.lock.publiclibrary.http.XiaokaiNewServiceImp;
+import com.kaadas.lock.publiclibrary.http.result.BaseResult;
+import com.kaadas.lock.publiclibrary.http.result.UserNickResult;
+import com.kaadas.lock.publiclibrary.http.util.BaseObserver;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.mvp.view.IMyFragmentView;
 
@@ -109,7 +112,35 @@ public class MyFragmentPresenter<T> extends BasePresenter<IMyFragmentView> {
         });*/
     }
 
+    //获取用户名称
+    public void   getUserName(String uid){
+        XiaokaiNewServiceImp.getUserNick(uid).subscribe(new BaseObserver<UserNickResult>() {
+            @Override
+            public void onSuccess(UserNickResult userNickResult) {
+                if (mViewRef.get()!=null){
+                        mViewRef.get().getNicknameSuccess(userNickResult);
+                }
+            }
+            @Override
+            public void onAckErrorCode(BaseResult baseResult) {
+                if (mViewRef.get()!=null){
+                    mViewRef.get().getNicknameFail(baseResult);
+                }
+            }
 
+            @Override
+            public void onFailed(Throwable throwable) {
+                if (mViewRef.get()!=null){
+                    mViewRef.get().getNicknameError(throwable);
+                }
+            }
+
+            @Override
+            public void onSubscribe1(Disposable d) {
+                compositeDisposable.add(d);
+            }
+        });
+    }
 
 
 }

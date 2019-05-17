@@ -17,6 +17,7 @@ import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.mvp.presenter.deviceaddpresenter.AddDeviceCatEyeSuitPresenter;
 import com.kaadas.lock.mvp.view.deviceaddview.AddDeviceCatEyeSuitView;
 import com.kaadas.lock.utils.KeyConstants;
+import com.kaadas.lock.utils.LogUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -45,8 +46,24 @@ public class AddDeviceZigbeeLockNewFirstActivity extends BaseActivity<AddDeviceC
     private void initData() {
         Intent intent=getIntent();
         gatewayId=intent.getStringExtra(KeyConstants.GATEWAY_ID);
-        if (!TextUtils.isEmpty(gatewayId)){
-            mPresenter.bindMimi(gatewayId,gatewayId);
+        boolean isBindMeme=intent.getBooleanExtra(KeyConstants.IS_BIND_MEME,false);
+        if (isBindMeme){
+            Intent successIntent = new Intent(this, AddDeviceZigbeeLockNewSuccessActivity.class);
+            startActivity(successIntent);
+            finish();
+        }else {
+          if (!TextUtils.isEmpty(gatewayId)){
+              mPresenter.bindMimi(gatewayId,gatewayId);
+              Intent successIntent = new Intent(this, AddDeviceZigbeeLockNewSuccessActivity.class);
+              startActivity(successIntent);
+              finish();
+
+          }else{
+                //绑定套装失败
+              Intent successIntent = new Intent(this, AddDeviceZigbeeLockNewFailActivity.class);
+              startActivity(successIntent);
+              finish();
+          }
         }
     }
 
@@ -68,20 +85,18 @@ public class AddDeviceZigbeeLockNewFirstActivity extends BaseActivity<AddDeviceC
 
     @Override
     public void bindMimiSuccess() {
-        Intent successIntent = new Intent(this, AddDeviceZigbeeLockNewSuccessActivity.class);
-        startActivity(successIntent);
-        finish();
+        LogUtils.e("绑定咪咪网成功");
     }
 
     @Override
     public void bindMimiFail(String code, String msg) {
-        Intent successIntent = new Intent(this, AddDeviceZigbeeLockNewFailActivity.class);
-        startActivity(successIntent);
-        finish();
+        LogUtils.e("绑定咪咪网失败");
     }
 
     @Override
     public void bindMimiThrowable(Throwable throwable) {
-
+        LogUtils.e("绑定咪咪网异常");
     }
+
+
 }

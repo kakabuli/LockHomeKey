@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animation-list xmlns:android="http://schemas.android.com/apk/res/android"
+    android:oneshot="false">
+    <item android:drawable="@drawable/open_lock_middle_1" android:duration="40" />
+    <item android:drawable="@drawable/open_lock_middle_2" android:duration="40" />
+    <item android:drawable="@drawable/open_lock_middle_3" android:duration="40" />
+    <item android:drawable="@drawable/open_lock_middle_4" android:duration="40" />
+    <item android:drawable="@drawable/open_lock_middle_5" android:duration="40" />
+    <item android:drawable="@drawable/open_lock_middle_6" android:duration="40" />
+    <item android:drawable="@drawable/open_lock_middle_7" android:duration="40" />
+    <item android:drawable="@drawable/open_lock_middle_8" android:duration="40" />
+    <item android:drawable="@drawable/open_lock_middle_9" android:duration="40" />
+    <item android:drawable="@drawable/open_lock_middle_10" android:duration="40" />
+    <item android:drawable="@drawable/open_lock_middle_11" android:duration="40" />
+    <item android:drawable="@drawable/open_lock_middle_12" android:duration="40" />
+    <item android:drawable="@drawable/open_lock_middle_13" android:duration="40" />
+    <item android:drawable="@drawable/open_lock_middle_14" android:duration="40" />
+    <item android:drawable="@drawable/open_lock_middle_15" android:duration="40" />
+    <item android:drawable="@drawable/open_lock_middle_16" android:duration="40" />
+    <item android:drawable="@drawable/open_lock_middle_17" android:duration="40" />
+    <item android:drawable="@drawable/open_lock_middle_18" android:duration="40" />
+    <item android:drawable="@drawable/open_lock_middle_19" android:duration="40" />
+    <item android:drawable="@drawable/open_lock_middle_20" android:duration="40" />
+    <item android:drawable="@drawable/open_lock_middle_21" android:duration="40" />
+    <item android:drawable="@drawable/open_lock_middle_22" android:duration="40" />
+    <item android:drawable="@drawable/open_lock_middle_23" android:duration="40" />
+    <item android:drawable="@drawable/open_lock_middle_24" android:duration="40" />
+    <item android:drawable="@drawable/open_lock_middle_25" android:duration="40" />
+    <item android:drawable="@drawable/open_lock_middle_26" android:duration="40" />
+    <item android:drawable="@drawable/open_lock_middle_27" android:duration="40" />
+    <item android:drawable="@drawable/open_lock_middle_28" android:duration="40" />
+    <item android:drawable="@drawable/open_lock_middle_29" android:duration="40" />
+    <item android:drawable="@drawable/open_lock_middle_30" android:duration="40" />
+    <item android:drawable="@drawable/open_lock_middle_31" android:duration="40" />
+    <item android:drawable="@drawable/open_lock_middle_32" android:duration="40" />
+    <item android:drawable="@drawable/open_lock_middle_33" android:duration="40" />
+    <item android:drawable="@drawable/open_lock_middle_34" android:duration="40" />
+    <item android:drawable="@drawable/open_lock_middle_35" android:duration="40" />
+    <item android:drawable="@drawable/open_lock_middle_36" android:duration="40" />
+    <item android:drawable="@drawable/open_lock_middle_37" android:duration="40" />
+    <item android:drawable="@drawable/open_lock_middle_38" android:duration="40" />
+    <item android:drawable="@drawable/open_lock_middle_39" android:duration="40" />
+    <item android:drawable="@drawable/open_lock_middle_40" android:duration="40" />
+    <item android:drawable="@drawable/open_lock_middle_41" android:duration="40" />
+    <item android:drawable="@drawable/open_lock_middle_42" android:duration="40" />
+    <item android:drawable="@drawable/open_lock_middle_43" android:duration="40" />
+    <item android:drawable="@drawable/open_lock_middle_44" android:duration="40" />
+    <item android:drawable="@drawable/open_lock_middle_45" android:duration="40" />
+    <item android:drawable="@drawable/open_lock_middle_46" android:duration="40" />
+    <item android:drawable="@drawable/open_lock_middle_47" android:duration="40" />
+    <item android:drawable="@drawable/open_lock_middle_48" android:duration="40" />
+    <item android:drawable="@drawable/open_lock_middle_49" android:duration="40" />
+    <item android:drawable="@drawable/open_lock_middle_50" android:duration="40" />
+    <item android:drawable="@drawable/open_lock_middle_51" android:duration="40" />
+    <item android:drawable="@drawable/open_lock_middle_52" android:duration="40" />
+    <item android:drawable="@drawable/open_lock_middle_53" android:duration="40" />
+    <item android:drawable="@drawable/open_lock_middle_54" android:duration="40" />
+    <item android:drawable="@drawable/open_lock_middle_55" android:duration="40" />
+    <item android:drawable="@drawable/open_lock_middle_56" android:duration="40" />
+    <item android:drawable="@drawable/open_lock_middle_57" android:duration="40" />
+    <item android:drawable="@drawable/open_lock_middle_58" android:duration="40" />
+    <item android:drawable="@drawable/open_lock_middle_59" android:duration="40" />
+    <item android:drawable="@drawable/open_lock_middle_60" android:duration="40" />
+    <item android:drawable="@drawable/open_lock_middle_61" android:duration="40" />
+    <item android:drawable="@drawable/open_lock_middle_62" android:duration="40" />
+    <item android:drawable="@drawable/open_lock_middle_63" android:duration="40" />
+    <item android:drawable="@drawable/open_lock_middle_64" android:duration="40" />
+    <item android:drawable="@drawable/open_lock_middle_65" android:duration="40" />
+    <item android:drawable="@drawable/open_lock_middle_66" android:duration="40" />
+    <item android:drawable="@drawable/open_lock_middle_67" android:duration="40" />
+    <item android:drawable="@drawable/open_lock_middle_68" android:duration="40" />
+    <item android:drawable="@drawable/open_lock_middle_69" android:duration="40" />
+    <item android:drawable="@drawable/open_lock_middle_70" android:duration="40" />
+    <item android:drawable="@drawable/open_lock_middle_71" android:duration="40" />
+    <item android:drawable="@drawable/open_lock_middle_72" android:duration="40" />
+    <item android:drawable="@drawable/open_lock_middle_73" android:duration="40" />
+    <item android:drawable="@drawable/open_lock_middle_74" android:duration="40" />
+    <item android:drawable="@drawable/open_lock_middle_75" android:duration="40" />
+    <item android:drawable="@drawable/open_lock_middle_76" android:duration="40" />
+    <item android:drawable="@drawable/open_lock_middle_77" android:duration="40" />
+    <item android:drawable="@drawable/open_lock_middle_78" android:duration="40" />
+
+
+
+</animation-list>
+

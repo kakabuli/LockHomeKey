@@ -36,4 +36,11 @@ public interface IDeviceView extends IBaseView {
     //网关断开
     void networkChangeSuccess();
 
+    //绑定咪咪网成功
+   void bindMimiSuccess(String deviceSN);
+
+   void bindMimiFail(String code,String msg);
+
+   void bindMimiThrowable(Throwable throwable);
+
 }
