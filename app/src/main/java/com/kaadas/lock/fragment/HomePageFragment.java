@@ -138,7 +138,8 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
                                     radioButton.setLayoutParams(new LinearLayout.LayoutParams((scTitle.getWidth() / 3), LinearLayout.LayoutParams.WRAP_CONTENT ));
                                 }else {
                                     radioButton.setLayoutParams(new LinearLayout.LayoutParams((scTitle.getWidth() / childCount), LinearLayout.LayoutParams.WRAP_CONTENT ));
-                                }                            }
+                                }
+                            }
                         }
                     }
                 });

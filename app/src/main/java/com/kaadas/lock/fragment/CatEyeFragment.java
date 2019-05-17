@@ -64,6 +64,8 @@ public class CatEyeFragment extends BaseFragment<ICatEyeView, CatEyePresenter<IC
     TextView tvNoData;
     @BindView(R.id.rl_icon)
     RelativeLayout rlIcon;
+    @BindView(R.id.create_time)
+    TextView createTime;
     private CateEyeInfo cateEyeInfo;
     private String gatewayId;
     private String deviceId;
@@ -115,6 +117,17 @@ public class CatEyeFragment extends BaseFragment<ICatEyeView, CatEyePresenter<IC
                     changePage(false);
                 }
             }
+            String time=cateEyeInfo.getServerInfo().getTime();
+            LogUtils.e(time+"猫眼时间");
+            if (!TextUtils.isEmpty(time)){
+                long saveTime=DateUtils.standardTimeChangeTimestamp(time)/1000;
+                //设置守护时间
+                long day = ((System.currentTimeMillis() / 1000) - saveTime) / (60 * 24 * 60);
+                this.createTime.setText(day + "");
+            }else{
+                createTime.setText("0");
+            }
+
         }
     }
 

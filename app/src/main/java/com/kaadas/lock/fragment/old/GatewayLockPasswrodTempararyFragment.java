@@ -116,17 +116,7 @@ public class GatewayLockPasswrodTempararyFragment extends BaseFragment<GatewayLo
                 break;
             case R.id.btn_confirm_generation:
                 if (!NetUtil.isNetworkAvailable()) {
-                    AlertDialogUtil.getInstance().singleButtonNoTitleDialog(getActivity(), getString(R.string.no_find_network), getString(R.string.confirm), "#1F96F7", new AlertDialogUtil.ClickListener() {
-                        @Override
-                        public void left() {
-
-                        }
-
-                        @Override
-                        public void right() {
-
-                        }
-                    });
+                    AlertDialogUtil.getInstance().noButtonDialog(getActivity(),getString(R.string.no_find_network));
                     return;
                 }
                 String strForeverPassword = etPassword.getText().toString().trim();

@@ -8,8 +8,10 @@ import com.kaadas.lock.publiclibrary.http.util.RxjavaHelper;
 import com.kaadas.lock.publiclibrary.mqtt.MqttCommandFactory;
 import com.kaadas.lock.publiclibrary.mqtt.eventbean.DeviceOnLineBean;
 import com.kaadas.lock.publiclibrary.mqtt.eventbean.OpenLockNotifyBean;
+import com.kaadas.lock.publiclibrary.mqtt.publishbean.GetArmLockedBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.GetDevicePowerBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.OpenLockBean;
+import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetArmLockedBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.GetBindGatewayStatusResult;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttConstant;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttData;
@@ -31,6 +33,9 @@ public class GatewayLockDetailPresenter<T> extends BasePresenter<GatewayLockDeta
     private Disposable getPowerDataDisposable;
     private Disposable listenerGatewayOnLine;
     private Disposable listenerDeviceOnLineDisposable;
+    private Disposable setArmLockDisposable;
+    private Disposable getArmLockDisposable;
+
     //开锁
     public void openLock(String gatewayId,String deviceId,String pwd){
         toDisposable(openLockDisposable);
@@ -237,6 +242,94 @@ public class GatewayLockDetailPresenter<T> extends BasePresenter<GatewayLockDeta
         }
 
     }
+
+    //设置布防
+    public void setArmLocked(String uid,String gatewayId,String deviceId,int operatingMode){
+        if (mqttService!=null){
+            toDisposable(setArmLockDisposable);
+            setArmLockDisposable=mqttService.mqttPublish(MqttConstant.getCallTopic(uid), MqttCommandFactory.setArmLocked(deviceId,gatewayId,operatingMode,uid))
+                    .filter(new Predicate<MqttData>() {
+                        @Override
+                        public boolean test(MqttData mqttData) throws Exception {
+                            if (MqttConstant.SET_ARM_LOCKED.equals(mqttData.getFunc())){
+                                return true;
+                            }
+                            return false;
+                        }
+                    })
+                    .compose(RxjavaHelper.observeOnMainThread())
+                    .timeout(10*1000, TimeUnit.MILLISECONDS)
+                    .subscribe(new Consumer<MqttData>() {
+                        @Override
+                        public void accept(MqttData mqttData) throws Exception {
+                            toDisposable(setArmLockDisposable);
+                            SetArmLockedBean setArmLockedBean=new Gson().fromJson(mqttData.getPayload(),SetArmLockedBean.class);
+                            if ("200".equals(setArmLockedBean.getReturnCode())){
+                                if (mViewRef.get()!=null){
+                                    mViewRef.get().setArmLockedSuccess(operatingMode);
+                                }
+                            }else{
+                                if (mViewRef.get()!=null){
+                                    mViewRef.get().setArmLockedFail(setArmLockedBean.getReturnCode());
+                                }
+                            }
+                        }
+                    }, new Consumer<Throwable>() {
+                        @Override
+                        public void accept(Throwable throwable) throws Exception {
+                            if (mViewRef.get()!=null){
+                                mViewRef.get().setArmLockedThrowable(throwable);
+                            }
+                        }
+                    });
+            compositeDisposable.add(setArmLockDisposable);
+        }
+    }
+
+//获取布防
+    public void getArmLocked(String uid,String gatewayId,String deviceId){
+        if (mqttService!=null){
+            toDisposable(getArmLockDisposable);
+            getArmLockDisposable=mqttService.mqttPublish(MqttConstant.getCallTopic(uid), MqttCommandFactory.getArmLocked(uid,gatewayId,deviceId))
+                    .filter(new Predicate<MqttData>() {
+                        @Override
+                        public boolean test(MqttData mqttData) throws Exception {
+                            if (MqttConstant.GET_ALRAM_LOCK.equals(mqttData.getFunc())){
+                                return true;
+                            }
+                            return false;
+                        }
+                    })
+                    .compose(RxjavaHelper.observeOnMainThread())
+                    .timeout(10*1000, TimeUnit.MILLISECONDS)
+                    .subscribe(new Consumer<MqttData>() {
+                        @Override
+                        public void accept(MqttData mqttData) throws Exception {
+                            toDisposable(getArmLockDisposable);
+                            GetArmLockedBean getArmLockedBean=new Gson().fromJson(mqttData.getPayload(),GetArmLockedBean.class);
+                            if ("200".equals(getArmLockedBean.getReturnCode())){
+                                if (mViewRef.get()!=null){
+                                    mViewRef.get().getArmLockedSuccess(getArmLockedBean.getReturnData().getOperatingMode());
+                                }
+                            }else{
+                                if (mViewRef.get()!=null){
+                                    mViewRef.get().getArmLockedFail(getArmLockedBean.getReturnCode());
+                                }
+                            }
+                        }
+                    }, new Consumer<Throwable>() {
+                        @Override
+                        public void accept(Throwable throwable) throws Exception {
+                            if (mViewRef.get()!=null){
+                                mViewRef.get().getArmLockedThrowable(throwable);
+                            }
+                        }
+                    });
+            compositeDisposable.add(getArmLockDisposable);
+        }
+    }
+
+
 
 
 

@@ -144,6 +144,77 @@
                 android:background="#F2F2F2"></View>
         </RelativeLayout>
 
+        <RelativeLayout
+            android:id="@+id/four_layout"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_75">
+
+            <TextView
+                android:id="@+id/four"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/dp_26"
+                android:text="@string/four"
+                android:textColor="#333333"
+                android:textSize="@dimen/sp_15" />
+
+            <CheckBox
+                android:id="@+id/four_img"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/dp_17"
+                android:button="@drawable/language_selector"
+                android:clickable="false" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_1"
+                android:layout_alignParentBottom="true"
+                android:layout_marginLeft="@dimen/dp_20"
+                android:background="#F2F2F2"></View>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/five_layout"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_75">
+
+            <TextView
+                android:id="@+id/five"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/dp_26"
+                android:text="@string/five"
+                android:textColor="#333333"
+                android:textSize="@dimen/sp_15" />
+
+            <CheckBox
+                android:id="@+id/five_img"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/dp_17"
+                android:button="@drawable/language_selector"
+                android:clickable="false" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_1"
+                android:layout_alignParentBottom="true"
+                android:layout_marginLeft="@dimen/dp_20"
+                android:background="#F2F2F2"></View>
+        </RelativeLayout>
+
+
+
+
+
+
 
 
         <TextView

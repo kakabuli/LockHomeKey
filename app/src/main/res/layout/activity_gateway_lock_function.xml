@@ -119,7 +119,7 @@
                         android:textSize="@dimen/sp_12" />
                 </LinearLayout>
 
-               <!-- <ImageView
+                <ImageView
                     android:id="@+id/iv_safe_protection"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -132,7 +132,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/safe_protection"
                     android:textColor="#FFFFFF"
-                    android:textSize="@dimen/sp_11" />-->
+                    android:textSize="@dimen/sp_11" />
             </LinearLayout>
 
 
