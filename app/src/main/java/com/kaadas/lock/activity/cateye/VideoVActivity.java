@@ -230,10 +230,12 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         isRunning = false;
         MemeManager.getInstance().videoActivityDisconnectMeme();
         LinphoneHelper.onDestroy();
+        super.onDestroy();
+        LogUtils.e(Tag,"界面被销毁");
+
     }
 
     @Override
@@ -269,13 +271,13 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
         if (resultCode == RESULT_OK && requestCode == REQUEST_CODE_CALL_COMING) { //来电界面回调
             boolean isAcceptCall = data.getBooleanExtra(KeyConstants.IS_ACCEPT_CALL, false);
             if (isAcceptCall) {  //接听
-                LogUtils.e("接听了电话");
+                LogUtils.e(Tag,"接听了电话");
                 mPresenter.listenerCallStatus();
                 String mDeviceIp = MemeManager.getInstance().getDeviceIp();
                 LinphoneHelper.acceptCall(mDeviceIp);
                 acceptCall();
             } else { //挂断
-                LogUtils.e("挂断了电话");
+                LogUtils.e(Tag,"挂断了电话");
                 mPresenter.hangup();
                 finish();
             }
@@ -328,7 +330,7 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
                 @Override
                 public void onItemClickItemMethod(int position) {
                     if (selectPostion != -1 && position == selectPostion) {
-                        LogUtils.e("当前状态是   isOpening    " + isOpening + "   isClosing   " + isClosing);
+                        LogUtils.e(Tag,"当前状态是   isOpening    " + isOpening + "   isClosing   " + isClosing);
                         if (isOpening) {
                             ToastUtil.getInstance().showShort(R.string.is_opening_try_latter);
                             return;
@@ -337,7 +339,7 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
                             ToastUtil.getInstance().showShort(R.string.lock_already_open);
                             return;
                         }
-                        LogUtils.e("执行开门  ");
+                        LogUtils.e(Tag,"执行开门  ");
                         GwLockInfo gwLockInfo = gwLockInfos.get(position);
                         mPresenter.openLock(gwLockInfo);
                     }
@@ -430,7 +432,7 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
                 break;
             case R.id.iv_hangup:  //点击挂断
             case R.id.iv_hangup2:  //点击挂断
-                LogUtils.e("点击挂断");
+                LogUtils.e(Tag,"点击挂断");
                 mPresenter.hangup();
                 finish();
                 break;
@@ -464,7 +466,7 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
         switch (buttonView.getId()) {
             case R.id.cb_screen_shot: //截屏
             case R.id.cb_screen_shot2: //截屏
-                LogUtils.e("截屏  " + isChecked);
+                LogUtils.e(Tag,"截屏  " + isChecked);
                 mPresenter.toCapturePicture(cateEyeInfo.getServerInfo().getDeviceId());
                 break;
             case R.id.cb_screen_record: //录屏
@@ -516,18 +518,19 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
 
     @Override
     public void onCallConnected() {
-        LogUtils.e("接通视频");
+        LogUtils.e(Tag,"接通视频");
         acceptCall();
     }
 
     @Override
     public void onStreaming() {
-
+        LogUtils.e(Tag,"有数据流");
     }
 
     @Override
     public void onCallFinish() {
-
+        LogUtils.e(Tag,"通话结束");
+        finish();
     }
 
     @Override
@@ -615,7 +618,7 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
     public void openLockSuccess() {
         isOpening = false;
         isClosing = true;
-        LogUtils.e("当前状态是   isOpening    " + isOpening + "   isClosing   " + isClosing);
+        LogUtils.e(Tag,"当前状态是   isOpening    " + isOpening + "   isClosing   " + isClosing);
         ToastUtil.getInstance().showShort(R.string.open_lock_success);
         hiddenLoading();
     }

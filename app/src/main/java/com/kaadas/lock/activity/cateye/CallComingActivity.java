@@ -72,12 +72,14 @@ public class CallComingActivity extends AppCompatActivity implements View.OnClic
         Intent intent;
         switch (view.getId()) {
             case R.id.call_coming_refuse_ll:
+                ringTools.stopRinging();
                 intent = new Intent();
                 intent.putExtra(KeyConstants.IS_ACCEPT_CALL, false);
                 setResult(RESULT_OK, intent);
                 finish();
                 break;
             case R.id.iv_accept_call:
+                ringTools.stopRinging();
                 intent = new Intent();
                 intent.putExtra(KeyConstants.IS_ACCEPT_CALL, true);
                 setResult(RESULT_OK, intent);
@@ -88,9 +90,9 @@ public class CallComingActivity extends AppCompatActivity implements View.OnClic
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
-        ringTools.stopRinging();
+
         LinphoneHelper.addAutoAcceptCallBack(null);
+        super.onDestroy();
     }
 
 
