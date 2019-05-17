@@ -6,18 +6,12 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
-
 import com.kaadas.lock.MyApplication;
-import com.kaadas.lock.activity.device.GatewayActivity;
-import com.kaadas.lock.bean.HomeShowBean;
 import com.kaadas.lock.publiclibrary.bean.GatewayInfo;
-import com.kaadas.lock.publiclibrary.mqtt.util.MqttData;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.NetUtil;
 import com.kaadas.lock.utils.NotifyRefreshActivity;
-
 import java.util.List;
-
 import io.reactivex.Observable;
 import io.reactivex.subjects.PublishSubject;
 
@@ -25,7 +19,6 @@ public class NetWorkChangReceiver extends BroadcastReceiver {
 
     /**
      * 获取连接类型
-     *
      * @param type
      * @return
      */

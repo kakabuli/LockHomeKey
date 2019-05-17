@@ -130,6 +130,9 @@ public class AddDeviceCatEyeCheckWifiActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
+        if (netWorkChangReceiver!=null){
+            unregisterReceiver(netWorkChangReceiver);
+        }
         super.onDestroy();
     }
 }

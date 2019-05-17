@@ -39,6 +39,7 @@ import com.kaadas.lock.publiclibrary.linphone.linphone.util.LinphoneHelper;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.NetUtil;
 import com.kaadas.lock.utils.StringUtil;
 import com.kaadas.lock.utils.ToastUtil;
 import com.yarolegovich.discretescrollview.DiscreteScrollView;
@@ -128,40 +129,39 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
             isLand = true;
 
             //根据竖屏时的状态显示
-            if (ll_video_control1.getVisibility() == View.VISIBLE){
-                ll_video_control2. setVisibility(View.VISIBLE);
-            }else {
-                ll_video_control2. setVisibility(View.GONE);
+            if (ll_video_control1.getVisibility() == View.VISIBLE) {
+                ll_video_control2.setVisibility(View.VISIBLE);
+            } else {
+                ll_video_control2.setVisibility(View.GONE);
             }
             //隐藏 显示时间的View
             video_play_time.setVisibility(View.GONE);
             video_v_go.setImageResource(R.mipmap.video_to_portrait);
             ll_video_control1.setVisibility(View.GONE);
-            rl_bottom .setVisibility(View.GONE);
+            rl_bottom.setVisibility(View.GONE);
             rl_title_bar.setVisibility(View.GONE);
         } else if (currentOrientation == Configuration.ORIENTATION_PORTRAIT) { //竖屏
             isLand = false;
-            if (ll_video_control2.getVisibility() == View.VISIBLE){
+            if (ll_video_control2.getVisibility() == View.VISIBLE) {
                 ll_video_control1.setVisibility(View.VISIBLE);
-            }else {
+            } else {
                 ll_video_control1.setVisibility(View.GONE);
             }
-            if (TextUtils.isEmpty(videoTime)){
+            if (TextUtils.isEmpty(videoTime)) {
                 //隐藏 显示时间的View
                 video_play_time.setVisibility(View.GONE);
-            }else {
+            } else {
                 //隐藏 显示时间的View
                 video_play_time.setVisibility(View.VISIBLE);
             }
 
             video_v_go.setImageResource(R.mipmap.video_full_screen);
-            ll_video_control2. setVisibility(View.GONE);
-            rl_bottom .setVisibility(View.VISIBLE);
+            ll_video_control2.setVisibility(View.GONE);
+            rl_bottom.setVisibility(View.VISIBLE);
             rl_title_bar.setVisibility(View.VISIBLE);
         }
 
     }
-
 
 
     private void findViewByOrientation() {
@@ -288,9 +288,9 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
     public void acceptCall() {
         video_connecting_tv.setVisibility(View.GONE);
         video_hang_up.setVisibility(View.GONE);
-        if (isLand){
+        if (isLand) {
             video_play_time.setVisibility(View.GONE);
-        }else { //竖屏的时候才显示
+        } else { //竖屏的时候才显示
             video_play_time.setVisibility(View.VISIBLE);
         }
 
@@ -298,9 +298,9 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
         //播放按钮
         video_start_play.setVisibility(View.GONE);
         //接通了猫眼  显示视频控制界面
-        if (isLand){
+        if (isLand) {
             ll_video_control2.setVisibility(View.VISIBLE);
-        }else {
+        } else {
             ll_video_control1.setVisibility(View.VISIBLE);
         }
 
@@ -402,6 +402,20 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.video_start_play:  //点击呼叫
+                if (!NetUtil.isNetworkAvailable()) {
+                    ToastUtil.getInstance().showLong(R.string.current_net_not_enable);
+                    return;
+                }
+                //网关不在线
+                if (!"online".equals(cateEyeInfo.getGatewayInfo().getEvent_str())) {
+                    ToastUtil.getInstance().showLong(R.string.gw_offline);
+                    return;
+                }
+                //猫眼设备不在线
+                if (!"online".equals(cateEyeInfo.getServerInfo().getEvent_str())) {
+                    ToastUtil.getInstance().showLong(R.string.cat_eye_offline);
+                    return;
+                }
                 video_start_play.setVisibility(View.GONE);
                 video_connecting_tv.setVisibility(View.VISIBLE);
                 video_hang_up.setVisibility(View.GONE);
