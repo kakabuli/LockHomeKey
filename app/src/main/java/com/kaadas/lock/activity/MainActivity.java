@@ -237,7 +237,7 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
 
     @Override
     public void onCatEyeCallIn(CateEyeInfo cateEyeInfo) {
-        Log.e(GeTui.VideoLog,"MainActivity---->跳入=====>VideoVActivity");
+        Log.e(GeTui.VideoLog,"MainActivity---->跳入=====>VideoVActivity:"+cateEyeInfo);
         Intent intent = new Intent(this, VideoVActivity.class);
         intent.putExtra(KeyConstants.IS_CALL_IN, true);
         intent.putExtra(KeyConstants.CATE_INFO, cateEyeInfo);
