@@ -896,4 +896,10 @@
     <string name="login_in">登录中...</string>
     <string name="four">4次</string>
     <string name="five">5次</string>
+    <string name="fail">失败</string>
+    <string name="field_error">某个字段错误</string>
+    <string name="time_out">超时</string>
+    <string name="command_is_execute">命令正在执行（TSN重复）</string>
+    <string name="check_error">校验错误</string>
+    <string name="lock_receive_command_but_nothing">锁接收到命令，但无结果返回</string>
 </resources>

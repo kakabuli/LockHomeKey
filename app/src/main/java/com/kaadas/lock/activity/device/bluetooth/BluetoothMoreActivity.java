@@ -397,8 +397,39 @@ public class BluetoothMoreActivity extends BaseBleActivity<IDeviceMoreView, Devi
     }
 
     @Override
-    public void setAutoLockailed(Throwable throwable, boolean isOpen) {
+    public void setAutoLockFailed(byte b) {
+        hiddenLoading();
+        String strError="";
+        switch (b){
+            case (byte) (0x01):
+                strError=getString(R.string.fail);
+                break;
+            case (byte) (0x85):
+                strError=getString(R.string.field_error);
+                break;
+            case (byte) (0x94):
+                strError=getString(R.string.time_out);
+                break;
+            case (byte) (0x9A):
+                strError=getString(R.string.command_is_execute);
+                break;
+            case (byte) (0xC2):
+                strError=getString(R.string.check_error);
+                break;
+            case (byte) (0xFF):
+                strError=getString(R.string.lock_receive_command_but_nothing);
+                break;
+
+        }
+        ToastUtil.getInstance().showShort(strError);
+    }
+
+
+    @Override
+    public void setAutoLockError(Throwable throwable) {
         hiddenLoading();
         ToastUtil.getInstance().showShort(throwable.toString()+"");
     }
+
+
 }

@@ -31,6 +31,10 @@ import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.ToastUtil;
+import com.kaadas.lock.utils.greenDao.bean.CatEyeEvent;
+import com.kaadas.lock.utils.greenDao.bean.DBOpenLockRecord;
+import com.kaadas.lock.utils.greenDao.db.CateEyeInfoBaseDao;
+import com.kaadas.lock.utils.greenDao.db.DaoSession;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
@@ -62,11 +66,21 @@ public class BluetoothOpenLockRecordFragment extends BaseBleFragment<IOpenLockRe
     private int currentPage = 1;   //当前的开锁记录时间
     View view;
     private Unbinder unbinder;
-
+//    DaoSession daoSession;
+//    List<DBOpenLockRecord> dbList;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = View.inflate(getActivity(), R.layout.fragment_bluetooth_open_lock_record, null);
+/*         daoSession = MyApplication.getInstance().getDaoWriteSession();
+         dbList = daoSession.queryBuilder(DBOpenLockRecord.class).list();
+        List<OpenLockRecord> openLockRecordList=new ArrayList<>();
+        for (int i=0;i<dbList.size();i++){
+            DBOpenLockRecord dbOpenLockRecord = dbList.get(i);
+            OpenLockRecord openLockRecord=new OpenLockRecord(dbOpenLockRecord.getUser_num(),dbOpenLockRecord.getOpen_type(),dbOpenLockRecord.getOpen_time(),dbOpenLockRecord.getIndex());
+            openLockRecordList.add(openLockRecord);
+        }
+        groupData(openLockRecordList);*/
         unbinder = ButterKnife.bind(this, view);
         tvSynchronizedRecord.setOnClickListener(this);
         activity = (BluetoothEquipmentDynamicActivity) getActivity();
@@ -150,7 +164,6 @@ public class BluetoothOpenLockRecordFragment extends BaseBleFragment<IOpenLockRe
     @Override
     public void onLoadBleRecord(List<OpenLockRecord> lockRecords) {
         //获取到蓝牙的开锁记录
-        list.clear();
         hiddenLoading();
         groupData(lockRecords);
   /*      long lastDayTime = 0;
@@ -174,6 +187,12 @@ public class BluetoothOpenLockRecordFragment extends BaseBleFragment<IOpenLockRe
         }*/
         bluetoothRecordAdapter.notifyDataSetChanged();
         refreshLayout.setEnableLoadMore(false);
+    }
+
+    private void combineDataBaseData(List<OpenLockRecord> lockRecords) {
+        List<DBOpenLockRecord> combineList=new ArrayList<>();
+        for (int i=0;i<lockRecords.size();i++){
+        }
     }
 
     private String getOpenLockType(GetPasswordResult passwordResults, OpenLockRecord record) {
