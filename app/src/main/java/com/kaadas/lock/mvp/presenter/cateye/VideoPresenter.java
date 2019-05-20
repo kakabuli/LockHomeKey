@@ -29,6 +29,7 @@ import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.db.MediaFileDBDao;
+import com.kaadas.lock.utils.ftp.GeTui;
 
 import net.sdvn.cmapi.Device;
 
@@ -141,6 +142,7 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
             @Override
             public void callConnected() {
                 Log.e(Tag, "猫眼1  callConnected.........");
+                Log.e(GeTui.VideoLog,"VideoPresenter==>incomingCalll....");
                 startCountUp();
                 isConnected = true;
                 if (mViewRef.get() != null) {
@@ -151,11 +153,13 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
 
             @Override
             public void callReleased() {
+                Log.e(GeTui.VideoLog,"VideoPresenter==>callReleased....");
                 Log.e(Tag, "猫眼  callReleased.........");
             }
 
             @Override
             public void callFinish() {
+
                 Log.e(Tag, "猫眼 callFinish.........");
                 if (mViewRef.get() != null) {
                     mViewRef.get().onCallFinish();
@@ -166,6 +170,7 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
 
             @Override
             public void Streaming() {
+                Log.e(GeTui.VideoLog,"VideoPresenter==>Streaming....");
                 Log.e(Tag, "猫眼 Streaming.........");
 
             }

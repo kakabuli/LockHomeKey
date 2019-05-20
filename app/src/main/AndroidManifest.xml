@@ -82,18 +82,18 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait">
 
-             <intent-filter>
-             <category android:name="android.intent.category.DEFAULT" />
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT" />
 
 
-             <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN" />
 
 
-             <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER" />
 
 
-             <action android:name="android.intent.action.oppopush" />
-             </intent-filter>
+                <action android:name="android.intent.action.oppopush" />
+            </intent-filter>
         </activity>
         <!-- 登录 -->
         <activity
@@ -457,11 +457,11 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.kaadas.lock.activity.device.oldbluetooth.OldBluetoothLockDetailActivity"
+            android:name=".activity.device.oldbluetooth.OldBluetoothLockDetailActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.kaadas.lock.activity.device.oldbluetooth.OldBluetoothMoreActivity"
+            android:name=".activity.device.oldbluetooth.OldBluetoothMoreActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
         <activity
@@ -516,8 +516,6 @@
             android:name=".activity.device.gatewaylock.card.GatewayDoorCardManagerActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
-
-
         <activity
             android:name=".activity.device.gatewaylock.demo.GatewayLockSettingActivity"
             android:launchMode="singleTask"
@@ -618,8 +616,6 @@
             android:name=".activity.device.GatewayActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
-
-
         <activity
             android:name=".activity.addDevice.zigbeelocknew.AddDeviceZigbeeLockNewFailActivity"
             android:launchMode="singleTask"
@@ -628,7 +624,6 @@
             android:name=".activity.addDevice.zigbeelocknew.AddDeviceZigbeeLockNewFirstActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".activity.addDevice.zigbeelocknew.AddDeviceZigbeelockNewScanActivity"
             android:launchMode="singleTask"
@@ -668,9 +663,9 @@
             android:name=".activity.cateye.PreviewActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:launchMode="singleTask"
             android:name=".activity.cateye.VideoVActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustNothing" />
         <activity
@@ -682,7 +677,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.cateye.FtpDownLoadActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.cateye.RecordingPreviewActivity"
             android:screenOrientation="portrait" />
@@ -714,9 +709,12 @@
             </intent-filter>
         </service>
 
-        <activity android:name=".activity.device.cateye.more.SmartEyeActivity" android:screenOrientation="portrait">
-        </activity>
-        <activity android:name=".activity.device.cateye.more.CateDefaultActivity" android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activity.device.cateye.more.SmartEyeActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activity.device.cateye.more.CateDefaultActivity"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>
