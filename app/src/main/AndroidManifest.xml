@@ -247,7 +247,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.addDevice.zigbee.AddZigbeeLockFourthActivity"
-            android:launchMode="singleTop"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.addDevice.zigbee.AddZigbeeLockFifthActivity"
@@ -616,6 +616,11 @@
             android:name=".activity.device.GatewayActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.GatewaySettingActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+
         <activity
             android:name=".activity.addDevice.zigbeelocknew.AddDeviceZigbeeLockNewFailActivity"
             android:launchMode="singleTask"
