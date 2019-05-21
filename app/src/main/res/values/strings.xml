@@ -939,4 +939,5 @@
     <string name="delete_password">删除密码</string>
     <string name="delete_fingerprint">删除指纹</string>
     <string name="delete_card">删除门卡</string>
+    <string name="input_correct_verification_code">请输入正确验证码</string>
 </resources>

@@ -265,7 +265,8 @@ public class RegisterActivity extends BaseActivity<IRegisterView, RegisterPresen
             }
             String code = StringUtil.getEdittextContent(etVerification);
             if (TextUtils.isEmpty(code) || code.length() != 6) {
-                ToastUtil.getInstance().showShort(R.string.verification_verify_error);
+//                ToastUtil.getInstance().showShort(R.string.verification_verify_error);
+                AlertDialogUtil.getInstance().noButtonSingleLineDialog(this, getString(R.string.input_correct_verification_code));
                 return;
             }
 
@@ -412,7 +413,12 @@ public class RegisterActivity extends BaseActivity<IRegisterView, RegisterPresen
     @Override
     public void registerFailedServer(BaseResult result) {
         hiddenLoading();
-        ToastUtil.getInstance().showShort(HttpUtils.httpErrorCode(this, result.getCode()));
+        if ("445".equals(result.getCode())){
+            AlertDialogUtil.getInstance().noButtonSingleLineDialog(this, getString(R.string.input_correct_verification_code));
+        }else {
+            ToastUtil.getInstance().showShort(HttpUtils.httpErrorCode(this, result.getCode()));
+        }
+
 
     }
 }
