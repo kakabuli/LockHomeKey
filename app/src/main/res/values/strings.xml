@@ -902,4 +902,7 @@
     <string name="command_is_execute">命令正在执行（TSN重复）</string>
     <string name="check_error">校验错误</string>
     <string name="lock_receive_command_but_nothing">锁接收到命令，但无结果返回</string>
+    <string name="delete_password">删除密码</string>
+    <string name="delete_fingerprint">删除指纹</string>
+    <string name="delete_card">删除门卡</string>
 </resources>
