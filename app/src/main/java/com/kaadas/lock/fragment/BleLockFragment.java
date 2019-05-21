@@ -32,6 +32,7 @@ import com.kaadas.lock.bean.BluetoothRecordBean;
 import com.kaadas.lock.mvp.mvpbase.BaseBleFragment;
 import com.kaadas.lock.mvp.presenter.BleLockPresenter;
 import com.kaadas.lock.mvp.view.IBleLockView;
+import com.kaadas.lock.mvp.view.IFamilyMemberDeatilView;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.publiclibrary.bean.ForeverPassword;
 import com.kaadas.lock.publiclibrary.ble.BleProtocolFailedException;
@@ -892,19 +893,25 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
             switch (record.getOpen_type()) {
                 case BleUtil.PASSWORD:
                     List<ForeverPassword> pwdList = passwordResults.getData().getPwdList();
-                    for (ForeverPassword password : pwdList) {
-                        if (Integer.parseInt(password.getNum()) == Integer.parseInt(record.getUser_num())) {
-                            nickName = password.getNickName();
+                    if (pwdList!=null&&pwdList.size()>0){
+                        for (ForeverPassword password : pwdList) {
+                            if (Integer.parseInt(password.getNum()) == Integer.parseInt(record.getUser_num())) {
+                                nickName = password.getNickName();
+                            }
                         }
                     }
+
                     break;
                 case BleUtil.FINGERPRINT:
                     List<GetPasswordResult.DataBean.Fingerprint> fingerprints = passwordResults.getData().getFingerprintList();
-                    for (GetPasswordResult.DataBean.Fingerprint password : fingerprints) {
-                        if (Integer.parseInt(password.getNum()) == Integer.parseInt(record.getUser_num())) {
-                            nickName = password.getNickName();
+                    if (fingerprints!=null&&fingerprints.size()>0){
+                        for (GetPasswordResult.DataBean.Fingerprint password : fingerprints) {
+                            if (Integer.parseInt(password.getNum()) == Integer.parseInt(record.getUser_num())) {
+                                nickName = password.getNickName();
+                            }
                         }
                     }
+
                     break;
                 case BleUtil.RFID:  //卡片
                     List<GetPasswordResult.DataBean.Card> cards = passwordResults.getData().getCardList();
