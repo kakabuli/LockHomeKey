@@ -97,7 +97,6 @@ public class PersonalSystemSettingActivity extends BaseActivity<ISystemSettingVi
             case R.id.user_agreement_layout:
                 Intent agreementIntent = new Intent(this, PersonalUserAgreementActivity.class);
                 startActivity(agreementIntent);
-
                 break;
 
             case R.id.clear_cache_layout:
@@ -130,11 +129,13 @@ public class PersonalSystemSettingActivity extends BaseActivity<ISystemSettingVi
         AlertDialogUtil.getInstance().noEditTwoButtonDialog(this, getString(R.string.hint), getString(R.string.confirm_log_out), getString(R.string.cancel), getString(R.string.query), new AlertDialogUtil.ClickListener() {
             @Override
             public void left() {
+
             }
 
             @Override
             public void right() {
                 mPresenter.loginOut();
+                MyApplication.getInstance().tokenInvalid(false);
                 //清除缓存数据，关闭会话。
 //                MyApplication.getInstance().setRemoveDBData();
 //                MyApplication.getInstance().getDaoSession().clear();

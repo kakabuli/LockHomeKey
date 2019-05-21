@@ -20,28 +20,28 @@ public class SystemSettingPresenter<T> extends BasePresenter<ISystemSettingView>
                 .subscribe(new BaseObserver<BaseResult>() {
                     @Override
                     public void onSuccess(BaseResult result) {
-                        if (mViewRef.get() != null) {
-                            mViewRef.get().onLoginOutSuccess();
-                        }
+//                        if (mViewRef.get() != null) {
+//                            mViewRef.get().onLoginOutSuccess();
+//                        }
                     }
 
                     @Override
                     public void onAckErrorCode(BaseResult baseResult) {
-                        if (mViewRef.get() != null) {
-                            mViewRef.get().onLoginOutFailedServer(baseResult);
-                        }
+//                        if (mViewRef.get() != null) {
+//                            mViewRef.get().onLoginOutFailedServer(baseResult);
+//                        }
                     }
 
                     @Override
                     public void onFailed(Throwable throwable) {
-                        if (mViewRef.get() != null) {
-                            mViewRef.get().onLoginOutFailed(throwable);
-                        }
+//                        if (mViewRef.get() != null) {
+//                            mViewRef.get().onLoginOutFailed(throwable);
+//                        }
                     }
 
                     @Override
                     public void onSubscribe1(Disposable d) {
-                        compositeDisposable.add(d);
+//                        compositeDisposable.add(d);
                     }
                 });
     }

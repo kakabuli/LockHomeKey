@@ -22,6 +22,7 @@ import com.kaadas.lock.publiclibrary.ble.BleService;
 import com.kaadas.lock.publiclibrary.http.result.GetPasswordResult;
 import com.kaadas.lock.publiclibrary.http.util.RetrofitServiceManager;
 import com.kaadas.lock.publiclibrary.http.util.RxjavaHelper;
+import com.kaadas.lock.publiclibrary.linphone.linphone.util.LinphoneHelper;
 import com.kaadas.lock.publiclibrary.linphone.linphonenew.LinphoneService;
 import com.kaadas.lock.publiclibrary.mqtt.MqttCommandFactory;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.AllBindDevices;
@@ -355,6 +356,11 @@ public class MyApplication extends Application {
                 activity.finish();
             }
         }
+        //退出linphone
+        LinphoneHelper.deleteUser();
+        //退出meme网
+        MemeManager.getInstance().videoActivityDisconnectMeme();
+
     }
 
 
