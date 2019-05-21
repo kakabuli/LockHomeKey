@@ -45,7 +45,7 @@ public interface IXiaoKaiNewService {
      * @return
      */
     @POST(HttpUrlConstants.REGISTER_BY_PHONE)
-    Observable<RegisterResult> registerByPhone(@Body RequestBody info);
+    Observable<RegisterResult>  registerByPhone(@Body RequestBody info);
 
     /**
      * 通过邮箱注册

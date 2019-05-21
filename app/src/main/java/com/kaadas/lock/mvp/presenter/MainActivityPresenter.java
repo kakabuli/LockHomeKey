@@ -331,6 +331,7 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                     //获取linphone的地址
                     String linphoneSn = linphoneCall.getRemoteAddress().getUserName();
                     LogUtils.e("Linphone   呼叫过来的linphoneSn   " + linphoneSn);
+                    Log.e(GeTui.VideoLog,"  linphoneSn:"+linphoneSn);
                     String gwId = "";
                     GatewayInfo gatewayInfo = null;
                     List<CateEyeInfo> cateEyes = MyApplication.getInstance().getAllBindDevices().getCateEyes();

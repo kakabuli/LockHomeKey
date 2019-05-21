@@ -36,13 +36,8 @@ import butterknife.OnClick;
 /**
  * Created by David on 2019/4/25
  */
-public class GatewayActivity extends BaseActivity<GatewayView, GatewayPresenter<GatewayView>> implements View.OnClickListener, BaseQuickAdapter.OnItemClickListener, GatewayView, NotifyRefreshActivity {
-    @BindView(R.id.iv_back)
-    ImageView ivBack;
-    @BindView(R.id.tv_content)
-    TextView tvContent;
-    @BindView(R.id.iv_right)
-    ImageView ivRight;
+public class GatewayActivity extends BaseActivity<GatewayView, GatewayPresenter<GatewayView>> implements  BaseQuickAdapter.OnItemClickListener, GatewayView, NotifyRefreshActivity {
+
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
     GatewayAdapter gatewayAdapter;
@@ -54,6 +49,10 @@ public class GatewayActivity extends BaseActivity<GatewayView, GatewayPresenter<
     TextView unbindGateway;
     @BindView(R.id.testunbindGateway)
     TextView testunbindGateway;
+    @BindView(R.id.back)
+    ImageView back;
+    @BindView(R.id.see_more)
+    ImageView seeMore;
 
     private List<HomeShowBean> homeShowBeans;
     private boolean gatewayOnline = false;
@@ -80,8 +79,7 @@ public class GatewayActivity extends BaseActivity<GatewayView, GatewayPresenter<
     }
 
     private void initView() {
-        tvContent.setText(R.string.my_device);
-        ivBack.setOnClickListener(this);
+
     }
 
     private void changeGatewayStatus(String eventStr) {
@@ -132,14 +130,6 @@ public class GatewayActivity extends BaseActivity<GatewayView, GatewayPresenter<
         gatewayAdapter.setOnItemClickListener(this);
     }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.iv_back:
-                finish();
-                break;
-        }
-    }
 
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
@@ -310,7 +300,7 @@ public class GatewayActivity extends BaseActivity<GatewayView, GatewayPresenter<
     @Override
     public void unbindGatewaySuccess() {
         //解绑成功
-        Intent intent=new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
 
@@ -327,7 +317,7 @@ public class GatewayActivity extends BaseActivity<GatewayView, GatewayPresenter<
     @Override
     public void unbindTestGatewaySuccess() {
         //解绑成功
-        Intent intent=new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
 
@@ -348,22 +338,32 @@ public class GatewayActivity extends BaseActivity<GatewayView, GatewayPresenter<
         }
     }
 
-    @OnClick({R.id.unbindGateway, R.id.testunbindGateway})
+    @OnClick({R.id.unbindGateway, R.id.testunbindGateway,R.id.back, R.id.see_more})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             //解绑网关
             case R.id.unbindGateway:
-                if (gatewayInfo!=null) {
+                if (gatewayInfo != null) {
                     mPresenter.unBindGateway(MyApplication.getInstance().getUid(), gatewayInfo.getServerInfo().getDeviceSN());
                 }
                 break;
 
             //测试解绑网关
             case R.id.testunbindGateway:
-                if (gatewayInfo!=null){
-                    mPresenter.testUnbindGateway(MyApplication.getInstance().getUid(),gatewayInfo.getServerInfo().getDeviceSN(),gatewayInfo.getServerInfo().getDeviceSN());
+                if (gatewayInfo != null) {
+                    mPresenter.testUnbindGateway(MyApplication.getInstance().getUid(), gatewayInfo.getServerInfo().getDeviceSN(), gatewayInfo.getServerInfo().getDeviceSN());
                 }
+                break;
+            case R.id.back:
+                 finish();
+                break;
+            case R.id.see_more:
+                Intent intent=new Intent(this,GatewaySettingActivity.class);
+                intent.putExtra(KeyConstants.GATEWAY_ID,gatewayInfo.getServerInfo().getDeviceSN());
+                startActivity(intent);
                 break;
         }
     }
+
+
 }

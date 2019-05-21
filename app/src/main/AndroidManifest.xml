@@ -247,7 +247,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.addDevice.zigbee.AddZigbeeLockFourthActivity"
-            android:launchMode="singleTop"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.addDevice.zigbee.AddZigbeeLockFifthActivity"
@@ -617,6 +617,11 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".activity.device.GatewaySettingActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+
+        <activity
             android:name=".activity.addDevice.zigbeelocknew.AddDeviceZigbeeLockNewFailActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
@@ -674,6 +679,7 @@
             android:theme="@style/NoTitleFullscreen" />
         <activity
             android:name=".activity.cateye.CallComingActivity"
+            android:theme="@style/dialogstyle"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.cateye.FtpDownLoadActivity"
