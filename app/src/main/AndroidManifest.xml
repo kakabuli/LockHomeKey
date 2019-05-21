@@ -679,6 +679,7 @@
             android:theme="@style/NoTitleFullscreen" />
         <activity
             android:name=".activity.cateye.CallComingActivity"
+            android:theme="@style/dialogstyle"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.cateye.FtpDownLoadActivity"

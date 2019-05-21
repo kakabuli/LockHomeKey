@@ -96,8 +96,7 @@ public class AndroidVideoWindowImpl {
 		// register callback for rendering surface events
 		if (mVideoRenderingView != null) {
 			mVideoRenderingView.getHolder().addCallback(new Callback() {
-				public void surfaceChanged(SurfaceHolder holder, int format,
-				                           int width, int height) {
+				public void surfaceChanged(SurfaceHolder holder, int format,int width, int height) {
 					Log.e("howard","Video display surface is being changed.");
 					if (!useGLrendering) {
 						synchronized (AndroidVideoWindowImpl.this) {
@@ -113,7 +112,6 @@ public class AndroidVideoWindowImpl {
 				public void surfaceCreated(SurfaceHolder holder) {
 					Log.e("howard","Video display surface created");
 				}
-
 				public void surfaceDestroyed(SurfaceHolder holder) {
 					if (!useGLrendering) {
 						synchronized (AndroidVideoWindowImpl.this) {
