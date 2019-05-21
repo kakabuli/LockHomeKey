@@ -271,6 +271,7 @@ public class LinphoneHelper {
             throw new RuntimeException("The sip account is not configured.");
         }
         LinphoneUtils.getInstance().registerUserAuth(mUsername, mPassword, mServerIP);
+
     }
 
     private static void deleteUserToServer() {

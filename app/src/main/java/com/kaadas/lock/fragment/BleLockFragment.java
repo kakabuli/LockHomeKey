@@ -129,9 +129,9 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
                 if (bleLockInfo.getArmMode() == 1) {//布防模式
                     changeOpenLockStatus(4);
                 }
-                if (bleLockInfo.getBackLock() == 0 ||bleLockInfo.getSafeMode() == 1|| bleLockInfo.getArmMode() == 1){
+                if (bleLockInfo.getBackLock() == 0 || bleLockInfo.getSafeMode() == 1 || bleLockInfo.getArmMode() == 1) {
                     tvDeviceStatus.setText(getString(R.string.no_normal));
-                }else {
+                } else {
                     tvDeviceStatus.setText(getString(R.string.normal));
                 }
             }
@@ -163,7 +163,11 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
     private void initView() {
         long createTime = bleLockInfo.getServerLockInfo().getCreateTime();
         //设置守护时间
-        long day = ((System.currentTimeMillis() / 1000) - createTime) / (60 * 24 * 60);
+        long time = (System.currentTimeMillis() / 1000) - createTime;
+        long day = 0;
+        if (time>0){
+            day = ((System.currentTimeMillis() / 1000) - createTime) / (60 * 24 * 60);
+        }
         this.createTime.setText(day + "");
         LogUtils.e("设备  HomeLockFragment  " + this);
         homeFragment = (HomePageFragment) getParentFragment();
@@ -1147,9 +1151,9 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
             if (bleLockInfo.getArmMode() == 1) {//布防模式
                 changeOpenLockStatus(4);
             }
-            if (bleLockInfo.getBackLock() == 0 ||bleLockInfo.getSafeMode() == 1|| bleLockInfo.getArmMode() == 1){
+            if (bleLockInfo.getBackLock() == 0 || bleLockInfo.getSafeMode() == 1 || bleLockInfo.getArmMode() == 1) {
                 tvDeviceStatus.setText(getString(R.string.no_normal));
-            }else {
+            } else {
                 tvDeviceStatus.setText(getString(R.string.normal));
             }
         }
