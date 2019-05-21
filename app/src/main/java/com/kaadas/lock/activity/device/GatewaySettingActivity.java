@@ -121,7 +121,7 @@ public class GatewaySettingActivity extends BaseActivity<GatewaySettingView, Gat
 
         GatewaySettingItemBean gatewaySettingItemBeanTen=new GatewaySettingItemBean();
         gatewaySettingItemBeanTen.setTitle(getString(R.string.gateway_coordinator_channel));
-        gatewaySettingItemBeanTen.setSetting(false);
+        gatewaySettingItemBeanTen.setSetting(true);
 
         gatewaySettingItemBeans.add(gatewaySettingItemBeanOne);
         gatewaySettingItemBeans.add(gatewaySettingItemBeanTwo);
@@ -178,9 +178,22 @@ public class GatewaySettingActivity extends BaseActivity<GatewaySettingView, Gat
                 finish();
                 break;
             case R.id.btn_delete:
-                if (!TextUtils.isEmpty(gatewayId)){
-                    mPresenter.unBindGateway(MyApplication.getInstance().getUid(),gatewayId);
-                }
+                AlertDialogUtil.getInstance().noEditTwoButtonDialog(this, getString(R.string.device_delete_dialog_head), getString(R.string.device_delete_dialog_content), getString(R.string.cancel), getString(R.string.query), new AlertDialogUtil.ClickListener() {
+                    @Override
+                    public void left() {
+
+                    }
+
+                    @Override
+                    public void right() {
+                        if (gatewayId != null) {
+                            mPresenter.unBindGateway(MyApplication.getInstance().getUid(),gatewayId);
+                        }
+
+                    }
+                });
+
+
                 break;
         }
     }
@@ -331,8 +344,8 @@ public class GatewaySettingActivity extends BaseActivity<GatewaySettingView, Gat
                 TextView tv_left_channel= mViewChannel.findViewById(R.id.tv_left);
                 TextView tv_right_channel= mViewChannel.findViewById(R.id.tv_right);
                 AlertDialog alertDialogChannel = AlertDialogUtil.getInstance().common(this, mViewChannel);
-                tvTitleChannel.setText(getString(R.string.update_wifi_pwd));
-                tvContentChannel.setText(getString(R.string.update_wifi_pwd_need_rebind_cateye));
+                tvTitleChannel.setText(getString(R.string.setting_channel));
+                tvContentChannel.setText(getString(R.string.setting_channel_need_bind_lock));
                 tv_left_channel.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -344,7 +357,7 @@ public class GatewaySettingActivity extends BaseActivity<GatewaySettingView, Gat
                     public void onClick(View v) {
                         String channel = editTextChannel.getText().toString().trim();
                         int channelInt=0;
-                        if (TextUtils.isEmpty(channel)){
+                        if (!TextUtils.isEmpty(channel)){
                              channelInt=Integer.parseInt(channel);
                         }
                         if (TextUtils.isEmpty(channel)){
@@ -365,7 +378,6 @@ public class GatewaySettingActivity extends BaseActivity<GatewaySettingView, Gat
                         alertDialogChannel.dismiss();
                     }
                 });
-
 
 
                 break;

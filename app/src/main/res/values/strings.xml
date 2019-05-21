@@ -936,5 +936,7 @@
     <string name="range_channel">信道范围 11~26</string>
     <string name="channel_not_null">信道不能为空</string>
     <string name="channel_not_update">信道未修改</string>
-
+    <string name="setting_channel">设置网关协调器通道</string>
+    <string name="setting_channel_need_bind_lock">设置网关协调器通道后，需重新绑定门\n锁和猫眼</string>
+    <string name="the_gateway_have_bind">该网关已经被绑定</string>
 </resources>
