@@ -15,9 +15,11 @@ import com.kaadas.lock.publiclibrary.mqtt.publishbean.GetBindGatewayListBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.GetDevicePowerBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.GetGatewayLockInfoBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.GetLockLang;
+import com.kaadas.lock.publiclibrary.mqtt.publishbean.GetNetBasicBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.GetPirSlientBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.GetSoundVolume;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.GetWifiBasicBean;
+import com.kaadas.lock.publiclibrary.mqtt.publishbean.GetZbChannelBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.LockPwdFuncBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.LockPwdInfoBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.OpenLockBean;
@@ -28,10 +30,13 @@ import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetCatEyeBellCountBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetCatEyeBellVolume;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetJoinAllowBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetLockLang;
+import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetNetBasicBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetPirEnableBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetPirSlientBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetPirWanderBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetVedioResBean;
+import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetWiFiBasic;
+import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetZBChannel;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.UnBindGatewayBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.UpdateDevNickNameBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.WakeupCameraBean;
@@ -579,7 +584,85 @@ public class MqttCommandFactory {
         return getMessage(getAMBean,messageId);
     }
 
+    /**
+     * 网络设置基本信息
+     * @param uid
+     * @param gatewayId
+     * @param deviceId
+     * @return
+     */
+    public static  MqttMessage getNetBasic(String uid,String gatewayId,String deviceId){
+        int messageId=getMessageId();
+        GetNetBasicBean getNetBasicBean =new GetNetBasicBean(MqttConstant.MSG_TYPE_REQUEST,uid,messageId,gatewayId,deviceId,MqttConstant.GET_NET_BASIC, new GetNetBasicBean.ParamsBean(),"0",new GetNetBasicBean.ReturnDataBean(),System.currentTimeMillis()+"");
+        return getMessage(getNetBasicBean,messageId);
+    }
 
+    /**
+     * 网关协调器信道获取
+     * @param uid
+     * @param gatewayId
+     * @param deviceId
+     * @return
+     */
+    public static MqttMessage getZbChannel(String uid,String gatewayId,String deviceId){
+        int messageId=getMessageId();
+        GetZbChannelBean getZbChannelBean=new GetZbChannelBean(MqttConstant.MSG_TYPE_REQUEST,uid,messageId,gatewayId,deviceId,MqttConstant.GET_ZB_Channel,"0",new GetZbChannelBean.ReturnDataBean(),System.currentTimeMillis()+"");
+        return getMessage(getZbChannelBean,messageId);
+    }
+
+    /**
+     * wifi_无线设置
+     * @param uid
+     * @param gatewayId
+     * @param deviceId
+     * @param ssid
+     * @param pwd
+     * @param encryption
+     * @return
+     */
+    public static MqttMessage setWiFiBasic(String uid,String gatewayId,String deviceId,String ssid,String pwd,String encryption){
+        int messageId=getMessageId();
+        SetWiFiBasic.ParamsBean paramsBean=new SetWiFiBasic.ParamsBean();
+        paramsBean.setSsid(ssid);
+        paramsBean.setPwd(pwd);
+        paramsBean.setEncryption(encryption);
+        SetWiFiBasic setWiFiBasic=new SetWiFiBasic(MqttConstant.MSG_TYPE_REQUEST,uid,messageId,gatewayId,deviceId,MqttConstant.SET_WIFI_BASIC,paramsBean,"0",new SetWiFiBasic.ReturnDataBean(),System.currentTimeMillis()+"");
+        return getMessage(setWiFiBasic,messageId);
+    }
+
+    /**
+     * 网络设置
+     * @param uid
+     * @param gatewayId
+     * @param deviceId
+     * @param lanIp
+     * @param lanNetmask
+     * @return
+     */
+    public static MqttMessage setNetBasic(String uid,String gatewayId,String deviceId,String lanIp,String lanNetmask){
+        int messageId=getMessageId();
+        SetNetBasicBean.ParamsBean paramsBean=new SetNetBasicBean.ParamsBean();
+        paramsBean.setLanIp(lanIp);
+        paramsBean.setLanNetmask(lanNetmask);
+        SetNetBasicBean setNetBasicBean=new SetNetBasicBean(MqttConstant.MSG_TYPE_REQUEST,uid,messageId,gatewayId,deviceId,MqttConstant.SET_NET_BASIC,paramsBean,"0",new SetNetBasicBean.ReturnDataBean(),System.currentTimeMillis()+"");
+        return getMessage(setNetBasicBean,messageId);
+    }
+
+    /**
+     * 网关协调器信道设置
+     * @param uid
+     * @param gatewayId
+     * @param deviceId
+     * @param channel
+     * @return
+     */
+    public static MqttMessage setZBChannel(String uid,String gatewayId,String deviceId,String channel){
+        int messageId=getMessageId();
+        SetZBChannel.ParamsBean paramsBean=new SetZBChannel.ParamsBean();
+        paramsBean.setChannel(channel);
+        SetZBChannel setZBChannel=new SetZBChannel(MqttConstant.MSG_TYPE_REQUEST,uid,messageId,gatewayId,deviceId,MqttConstant.SET_ZB_CHANNEL,paramsBean,"0",new SetZBChannel.ReturnDataBean(),System.currentTimeMillis()+"");
+        return getMessage(setZBChannel,messageId);
+    }
 
 
     public static MqttMessage getMessage(Object o, int messageID) {

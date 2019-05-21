@@ -908,9 +908,11 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
                     break;
                 case BleUtil.RFID:  //卡片
                     List<GetPasswordResult.DataBean.Card> cards = passwordResults.getData().getCardList();
-                    for (GetPasswordResult.DataBean.Card password : cards) {
-                        if (Integer.parseInt(password.getNum()) == Integer.parseInt(record.getUser_num())) {
-                            nickName = password.getNickName();
+                    if (cards!=null&&cards.size()>0){
+                        for (GetPasswordResult.DataBean.Card password : cards) {
+                            if (Integer.parseInt(password.getNum()) == Integer.parseInt(record.getUser_num())) {
+                                nickName = password.getNickName();
+                            }
                         }
                     }
                     break;

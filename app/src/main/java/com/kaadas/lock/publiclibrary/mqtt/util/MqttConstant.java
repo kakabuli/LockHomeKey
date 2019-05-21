@@ -180,4 +180,18 @@ public class MqttConstant {
     //获取AM
     public static final String GET_AM="getAM";
 
+    //获取网络设置基本信息
+    public static final String GET_NET_BASIC="getNetBasic";
+
+    //网关协调器信道获取
+    public static final String GET_ZB_Channel="getZbChannel";
+
+    //设置wifi
+    public static final String SET_WIFI_BASIC="setWiFiBasic";
+
+    //网络设置
+    public static final String SET_NET_BASIC="setNetBasic";
+
+    //网关协调器信道设置
+    public static final String SET_ZB_CHANNEL="setZbChannel";
 }
