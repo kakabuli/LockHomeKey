@@ -127,8 +127,10 @@ public class DeviceMorePresenter extends BlePresenter<IDeviceMoreView> {
                         if (mViewRef.get() != null) {
                             mViewRef.get().getVoice(voice);
                         }
-                         int openLock=Rsa.byteToBit(deValue[8])[7];
-                        boolean isOpen=openLock==0?true:false;
+                        byte[] bytes = Rsa.byteToBit(deValue[4]);
+                        int openLock=bytes[7];
+//                        0：手动 1：自动
+                        boolean isOpen=openLock==1?true:false;
                         if (mViewRef.get() != null) {
                             mViewRef.get().getAutoLock(isOpen);
                         }
@@ -252,14 +254,22 @@ public class DeviceMorePresenter extends BlePresenter<IDeviceMoreView> {
                     @Override
                     public void accept(BleDataBean bleDataBean) throws Exception {
 //                        byte[] deValue = Rsa.decrypt(bleDataBean.getPayload(), bleLockInfo.getAuthKey());
-                        byte b = bleDataBean.getPayload()[2];
+                        byte b = bleDataBean.getPayload()[0];
+                     /*   0x00	成功
+                        0x01	失败
+                        0x85	某个字段错误
+                        0x94	超时
+                        0x9A	命令正在执行（TSN重复）
+                        0xC2	校验错误
+                        0xFF	锁接收到命令，但无结果返回*/
+
                         if (0==b){
                             if (mViewRef.get() != null) {
-                                mViewRef.get().setAutoLockSuccess(true);
+                                mViewRef.get().setAutoLockSuccess(isOpen);
                             }
-                        }else if (1==b){
+                        }else {
                             if (mViewRef.get() != null) {
-                                mViewRef.get().setAutoLockSuccess(false);
+                                mViewRef.get().setAutoLockFailed(b);
                             }
                         }
                      /*   if (bleDataBean.isConfirm() && bleDataBean.getPayload()[0] == 0) { //设置成功
@@ -278,7 +288,7 @@ public class DeviceMorePresenter extends BlePresenter<IDeviceMoreView> {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
                         if (mViewRef.get() != null) {
-                            mViewRef.get().setAutoLockailed(throwable, isOpen);
+                            mViewRef.get().setAutoLockError(throwable);
                         }
                     }
                 });
