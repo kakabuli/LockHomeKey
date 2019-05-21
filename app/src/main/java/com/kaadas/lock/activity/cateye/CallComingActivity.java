@@ -8,9 +8,12 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -65,13 +68,30 @@ public class CallComingActivity extends AppCompatActivity implements View.OnClic
         ringTools = new RingTools(this);
         ringTools.startRinging();
         listenerCallStatus();
+
+
+        //设置窗口对齐屏幕宽度
+        Window win = this.getWindow();
+        win.getDecorView().setPadding(0, 0, 0, 0);
+        win.getDecorView().setScaleX((float) 1);
+        win.getDecorView().setScaleY((float) 1);
+
+        WindowManager.LayoutParams lp = win.getAttributes();
+        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+        lp.height = WindowManager.LayoutParams.MATCH_PARENT;
+        lp.gravity = Gravity.CENTER;//设置对话框置顶显示
+        win.setAttributes(lp);
+        //设置点击外部空白处可以关闭Activity
+        this.setFinishOnTouchOutside(true);
     }
+
 
     @Override
     public void onClick(View view) {
         Intent intent;
         switch (view.getId()) {
             case R.id.call_coming_refuse_ll:
+                LinphoneHelper.addAutoAcceptCallBack(null);
                 ringTools.stopRinging();
                 intent = new Intent();
                 intent.putExtra(KeyConstants.IS_ACCEPT_CALL, false);
@@ -79,6 +99,7 @@ public class CallComingActivity extends AppCompatActivity implements View.OnClic
                 finish();
                 break;
             case R.id.iv_accept_call:
+                LinphoneHelper.addAutoAcceptCallBack(null);
                 ringTools.stopRinging();
                 intent = new Intent();
                 intent.putExtra(KeyConstants.IS_ACCEPT_CALL, true);
@@ -90,8 +111,7 @@ public class CallComingActivity extends AppCompatActivity implements View.OnClic
 
     @Override
     protected void onDestroy() {
-
-        LinphoneHelper.addAutoAcceptCallBack(null);
+        ringTools.stopRinging();
         super.onDestroy();
     }
 
@@ -115,7 +135,6 @@ public class CallComingActivity extends AppCompatActivity implements View.OnClic
             @Override
             public void callReleased() {
                 Log.e(Tag, "猫眼  callReleased.........");
-
             }
 
             @Override

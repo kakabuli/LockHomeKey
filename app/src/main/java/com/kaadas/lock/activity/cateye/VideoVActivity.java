@@ -12,6 +12,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.text.InputType;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.SurfaceView;
 import android.view.View;
@@ -42,6 +43,7 @@ import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.NetUtil;
 import com.kaadas.lock.utils.StringUtil;
 import com.kaadas.lock.utils.ToastUtil;
+import com.kaadas.lock.utils.ftp.GeTui;
 import com.yarolegovich.discretescrollview.DiscreteScrollView;
 import com.yarolegovich.discretescrollview.transform.ScaleTransformer;
 
@@ -274,6 +276,7 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
                 LogUtils.e(Tag,"接听了电话");
                 mPresenter.listenerCallStatus();
                 String mDeviceIp = MemeManager.getInstance().getDeviceIp();
+                Log.e(GeTui.VideoLog,"接听电话:"+mDeviceIp);
                 LinphoneHelper.acceptCall(mDeviceIp);
                 acceptCall();
             } else { //挂断

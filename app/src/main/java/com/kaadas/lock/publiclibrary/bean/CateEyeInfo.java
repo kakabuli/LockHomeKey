@@ -69,4 +69,14 @@ public class CateEyeInfo  implements Serializable {
     }
 
 
+    @Override
+    public String toString() {
+        return "CateEyeInfo{" +
+                "gwID='" + gwID + '\'' +
+                ", serverInfo=" + serverInfo +
+                ", power=" + power +
+                ", powerTimeStamp='" + powerTimeStamp + '\'' +
+                ", gatewayInfo=" + gatewayInfo +
+                '}';
+    }
 }

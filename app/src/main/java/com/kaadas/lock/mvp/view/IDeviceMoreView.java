@@ -42,5 +42,16 @@ public interface IDeviceMoreView extends IBleView {
 
     void setVoiceFailed(Throwable throwable, int voice);
 
+    /**
+     * 获取是否开启自动关门
+     */
 
+    void getAutoLock(boolean isOpen);
+
+
+    void setAutoLockSuccess(boolean isOpen);
+
+    void setAutoLockFailed( byte b);
+
+    void setAutoLockError(Throwable throwable);
 }

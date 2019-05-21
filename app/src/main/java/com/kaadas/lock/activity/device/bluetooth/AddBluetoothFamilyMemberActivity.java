@@ -13,9 +13,13 @@ import android.widget.TextView;
 
 
 import com.kaadas.lock.R;
+import com.kaadas.lock.utils.AlertDialogUtil;
+import com.kaadas.lock.utils.DetectionEmailPhone;
 import com.kaadas.lock.utils.KeyConstants;
+import com.kaadas.lock.utils.NetUtil;
 import com.kaadas.lock.utils.PhoneUtil;
 import com.kaadas.lock.utils.SPUtils;
+import com.kaadas.lock.utils.StringUtil;
 import com.kaadas.lock.utils.ToastUtil;
 
 import butterknife.BindView;
@@ -56,25 +60,48 @@ public class AddBluetoothFamilyMemberActivity extends AppCompatActivity implemen
                 String phone = etTelephone.getText().toString().trim();
                 String myPhone = (String) SPUtils.get(SPUtils.PHONEN, "");
 
-                if (TextUtils.isEmpty(phone)) {
-                    ToastUtil.getInstance().showShort(R.string.phone_number_con_not_empty);
-                    return;
-                }
                 if (myPhone != null) {
                     if (myPhone.equals(phone)) {
                         ToastUtil.getInstance().showShort(R.string.no_add_my);
                         return;
                     }
                 }
+                if (NetUtil.isNetworkAvailable()) {
+                    if (TextUtils.isEmpty(phone)) {
+//                ToastUtil.getInstance().showShort(R.string.input_telephone_or_rmail);
+                        AlertDialogUtil.getInstance().noButtonSingleLineDialog(this, getString(R.string.account_message_not_empty));
+                        return;
+                    }
 
-                if (!PhoneUtil.isMobileNO(phone)) {
-                    ToastUtil.getInstance().showShort(R.string.phone_not_right);
-                    return;
+
+                    if (StringUtil.isNumeric(phone)) {
+                        if (!PhoneUtil.isMobileNO(phone)) {
+                            // 账户密码错误 请输入正确验证码 调用这个方法传入对应的内容就可以
+                            AlertDialogUtil.getInstance().noButtonSingleLineDialog(this, getString(R.string.input_valid_telephone_or_email));
+                            return;
+                        } else {
+                            Intent intent = new Intent();
+                            intent.putExtra(KeyConstants.AUTHORIZATION_TELEPHONE, "86" + phone);
+                            setResult(RESULT_OK, intent);
+                            finish();
+                        }
+                    } else {
+                        if (!DetectionEmailPhone.isEmail(phone)) {
+//                    ToastUtil.getInstance().showShort(R.string.email_not_right);
+                            AlertDialogUtil.getInstance().noButtonSingleLineDialog(this, getString(R.string.input_valid_telephone_or_email));
+                            return;
+                        } else {
+                            Intent intent = new Intent();
+                            intent.putExtra(KeyConstants.AUTHORIZATION_TELEPHONE, phone);
+                            setResult(RESULT_OK, intent);
+                            finish();
+                        }
+                    }
+
+                } else {
+                    ToastUtil.getInstance().showShort(R.string.noNet);
                 }
-                Intent intent = new Intent();
-                intent.putExtra(KeyConstants.AUTHORIZATION_TELEPHONE, "86" + phone);
-                setResult(RESULT_OK, intent);
-                finish();
+
                 break;
         }
     }

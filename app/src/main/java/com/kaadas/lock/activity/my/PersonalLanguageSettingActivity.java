@@ -19,8 +19,11 @@ import android.widget.TextView;
 import com.kaadas.lock.activity.MainActivity;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
+import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.cachefloder.ACache;
 import com.kaadas.lock.utils.cachefloder.CacheFloder;
+
+import net.sdvn.cmapi.util.LogUtils;
 
 import java.util.Locale;
 
@@ -75,7 +78,7 @@ public class PersonalLanguageSettingActivity extends AppCompatActivity implement
     }
 
     private void initData() {
-        //checkLag();
+        checkLag();
     }
 
     @OnClick({R.id.zh_layout, R.id.rl_tranitional_chinese, R.id.en_layout, R.id.thai_layout, R.id.language_confirm})
@@ -88,6 +91,7 @@ public class PersonalLanguageSettingActivity extends AppCompatActivity implement
                 thaiImg.setChecked(false);
                 cbCt.setChecked(false);
                 languageCurrent = "zh";
+                SPUtils.putProtect( "lag", "zh");
                 break;
             case R.id.rl_tranitional_chinese:
                 //繁体中文
@@ -96,6 +100,7 @@ public class PersonalLanguageSettingActivity extends AppCompatActivity implement
                 enImg.setChecked(false);
                 thaiImg.setChecked(false);
                 languageCurrent = "tw";
+                SPUtils.putProtect( "lag", "tw");
                 break;
             case R.id.en_layout:
                 zhImg.setChecked(false);
@@ -103,16 +108,19 @@ public class PersonalLanguageSettingActivity extends AppCompatActivity implement
                 thaiImg.setChecked(false);
                 cbCt.setChecked(false);
                 languageCurrent = "en";
+                SPUtils.putProtect( "lag", "en");
                 break;
             case R.id.thai_layout:
                 zhImg.setChecked(false);
                 enImg.setChecked(false);
                 thaiImg.setChecked(true);
                 cbCt.setChecked(false);
-                languageCurrent = "tai";
+                languageCurrent = "th";
+                SPUtils.putProtect( "lag", "th");
                 break;
             case R.id.language_confirm:
                 if (!TextUtils.isEmpty(languageCurrent)) {
+//                    SPUtils.putProtect( "checklag", true);
                     switchLanguage(languageCurrent);
                     Intent intent = new Intent(this, MainActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -136,7 +144,28 @@ public class PersonalLanguageSettingActivity extends AppCompatActivity implement
         DisplayMetrics dm = resources.getDisplayMetrics();
         if (language.equals("zh")) {
             config.locale = Locale.SIMPLIFIED_CHINESE;
-        } else if (language.equals("tai")) {
+        } else if (language.equals("tw")) {
+            config.locale = Locale.TAIWAN;
+        } else if (language.equals("th")) {
+            config.locale = new Locale("th");
+        } else {
+            config.locale = Locale.ENGLISH;
+        }
+        resources.updateConfiguration(config, dm);
+        //保存设置语言的类型
+        SPUtils.putProtect("language", language);
+    }
+
+ /*   protected void switchLanguage(String language) {
+        //设置应用语言类型
+        Resources resources = getResources();
+        Configuration config = resources.getConfiguration();
+        DisplayMetrics dm = resources.getDisplayMetrics();
+        if (language.equals("zh")) {
+            config.locale = Locale.SIMPLIFIED_CHINESE;
+        } else if (language.equals("tw")) {
+            config.locale = Locale.TAIWAN;
+        }  else if (language.equals("tai")) {
             config.locale = new Locale("th");
         } else {
             config.locale = Locale.ENGLISH;
@@ -144,10 +173,10 @@ public class PersonalLanguageSettingActivity extends AppCompatActivity implement
         resources.updateConfiguration(config, dm);
         //保存设置语言的类型
         CacheFloder.writeLanguage(ACache.get(MyApplication.getInstance()), MyApplication.getInstance().getUid() + "language", language);
-    }
+    }*/
 
 
-    private void checkLag() {
+  /*  private void checkLag() {
         //是否设置过语言
         String language = CacheFloder.readLanguage(ACache.get(MyApplication.getInstance()), MyApplication.getInstance().getUid() + "language");
         if (TextUtils.isEmpty(language)) {
@@ -157,16 +186,19 @@ public class PersonalLanguageSettingActivity extends AppCompatActivity implement
                 zhImg.setChecked(true);
                 enImg.setChecked(false);
                 thaiImg.setChecked(false);
+                cbCt.setChecked(false);
                 CacheFloder.writeLanguage(ACache.get(MyApplication.getInstance()), MyApplication.getInstance().getUid() + "language", "zh");
             } else if (localeLanguage.endsWith("tai")) {
                 zhImg.setChecked(false);
                 enImg.setChecked(false);
                 thaiImg.setChecked(true);
+                cbCt.setChecked(false);
                 CacheFloder.writeLanguage(ACache.get(MyApplication.getInstance()), MyApplication.getInstance().getUid() + "language", "tai");
             } else {
                 zhImg.setChecked(false);
                 enImg.setChecked(true);
                 thaiImg.setChecked(false);
+                cbCt.setChecked(false);
                 CacheFloder.writeLanguage(ACache.get(MyApplication.getInstance()), MyApplication.getInstance().getUid() + "language", "en");
             }
         } else {
@@ -174,18 +206,82 @@ public class PersonalLanguageSettingActivity extends AppCompatActivity implement
                 zhImg.setChecked(true);
                 enImg.setChecked(false);
                 thaiImg.setChecked(false);
+                cbCt.setChecked(false);
             } else if (language.equals("tai")) {
                 zhImg.setChecked(false);
                 enImg.setChecked(false);
                 thaiImg.setChecked(true);
+                cbCt.setChecked(false);
             } else {
                 zhImg.setChecked(false);
                 enImg.setChecked(true);
                 thaiImg.setChecked(false);
+                cbCt.setChecked(false);
+            }
+        }
+    }*/
+
+    private void checkLag() {
+        //是否设置过语言
+        boolean checklag = (Boolean) SPUtils.getProtect( "checklag", false);
+        if (!checklag) {
+            Locale locale = getResources().getConfiguration().locale;
+            String language = locale.getLanguage();
+            LogUtils.d("davi local  "+locale.toLanguageTag());
+            if (locale.equals( Locale.SIMPLIFIED_CHINESE)) { //简体中文
+                zhImg.setChecked(true);
+                enImg.setChecked(false);
+                thaiImg.setChecked(false);
+                cbCt.setChecked(false);
+                SPUtils.putProtect("lag", "zh");
+            } else if (locale.equals( Locale.TAIWAN)) { //繁体中文
+                zhImg.setChecked(false);
+                enImg.setChecked(false);
+                thaiImg.setChecked(false);
+                cbCt.setChecked(true);
+                SPUtils.putProtect( "lag", "tw");
+            } else if (language.endsWith("th")) {
+                zhImg.setChecked(false);
+                enImg.setChecked(false);
+                thaiImg.setChecked(true);
+                cbCt.setChecked(false);
+                SPUtils.putProtect( "lag", "th");
+            } else {
+                zhImg.setChecked(false);
+                enImg.setChecked(true);
+                thaiImg.setChecked(false);
+                cbCt.setChecked(false);
+                SPUtils.putProtect( "lag", "en");
+            }
+        } else {
+            String lag = (String) SPUtils.getProtect( "lag", "");
+            if (lag.equals("zh")) {
+                zhImg.setChecked(true);
+                enImg.setChecked(false);
+                thaiImg.setChecked(false);
+                cbCt.setChecked(false);
+                SPUtils.putProtect( "lag", "zh");
+            } else if (lag.equals("en")) {
+                zhImg.setChecked(false);
+                enImg.setChecked(true);
+                thaiImg.setChecked(false);
+                cbCt.setChecked(false);
+                SPUtils.putProtect( "lag", "en");
+            } else if (lag.equals("tw")) {
+                zhImg.setChecked(false);
+                enImg.setChecked(false);
+                thaiImg.setChecked(false);
+                cbCt.setChecked(true);
+                SPUtils.putProtect( "lag", "tw");
+            } else if (lag.equals("th")) {
+                zhImg.setChecked(false);
+                enImg.setChecked(false);
+                thaiImg.setChecked(true);
+                cbCt.setChecked(false);
+                SPUtils.putProtect("lag", "th");
             }
         }
     }
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {

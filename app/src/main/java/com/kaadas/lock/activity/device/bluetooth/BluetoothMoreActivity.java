@@ -115,12 +115,12 @@ public class BluetoothMoreActivity extends BaseBleActivity<IDeviceMoreView, Devi
         //todo 获取到设备名字时,key都加上设备名字
 
 
-        amAutoLockStatus = (boolean) SPUtils.get(KeyConstants.AM_AUTO_LOCK_STATUS, false);
-        if (amAutoLockStatus) {
+//        amAutoLockStatus = (boolean) SPUtils.get(KeyConstants.AM_AUTO_LOCK_STATUS, false);
+     /*   if (amAutoLockStatus) {
             ivAm.setImageResource(R.mipmap.iv_open);
         } else {
             ivAm.setImageResource(R.mipmap.iv_close);
-        }
+        }*/
 
 /*        silentModeStatus = (boolean) SPUtils.get(KeyConstants.SILENT_MODE_STATUS, false);
         if (silentModeStatus) {
@@ -216,12 +216,16 @@ public class BluetoothMoreActivity extends BaseBleActivity<IDeviceMoreView, Devi
             case R.id.rl_am:
                 if (amAutoLockStatus) {
                     //打开状态 现在关闭
-                    ivAm.setImageResource(R.mipmap.iv_close);
-                    SPUtils.put(KeyConstants.AM_AUTO_LOCK_STATUS, false);
+                    mPresenter.setAutoLock(false);
+                    showLoading("");
+
+//                    SPUtils.put(KeyConstants.AM_AUTO_LOCK_STATUS, false);
                 } else {
                     //关闭状态 现在打开
-                    ivAm.setImageResource(R.mipmap.iv_open);
-                    SPUtils.put(KeyConstants.AM_AUTO_LOCK_STATUS, true);
+                    mPresenter.setAutoLock(true);
+                    showLoading("");
+
+//                    SPUtils.put(KeyConstants.AM_AUTO_LOCK_STATUS, true);
                 }
                 amAutoLockStatus = !amAutoLockStatus;
                 break;
@@ -368,4 +372,64 @@ public class BluetoothMoreActivity extends BaseBleActivity<IDeviceMoreView, Devi
         //0失败，代表打开静音失败
         ToastUtil.getInstance().showLong(getString(R.string.set_failed));
     }
+
+    @Override
+    public void getAutoLock(boolean isOpen) {
+        if (isOpen) {
+            amAutoLockStatus=true;
+            ivAm.setImageResource(R.mipmap.iv_open);
+        } else {
+            amAutoLockStatus=false;
+            ivAm.setImageResource(R.mipmap.iv_close);
+        }
+    }
+
+    @Override
+    public void setAutoLockSuccess(boolean isOpen) {
+        hiddenLoading();
+        if (isOpen) {
+            amAutoLockStatus=true;
+            ivAm.setImageResource(R.mipmap.iv_open);
+        } else {
+            amAutoLockStatus=false;
+            ivAm.setImageResource(R.mipmap.iv_close);
+        }
+    }
+
+    @Override
+    public void setAutoLockFailed(byte b) {
+        hiddenLoading();
+        String strError="";
+        switch (b){
+            case (byte) (0x01):
+                strError=getString(R.string.fail);
+                break;
+            case (byte) (0x85):
+                strError=getString(R.string.field_error);
+                break;
+            case (byte) (0x94):
+                strError=getString(R.string.time_out);
+                break;
+            case (byte) (0x9A):
+                strError=getString(R.string.command_is_execute);
+                break;
+            case (byte) (0xC2):
+                strError=getString(R.string.check_error);
+                break;
+            case (byte) (0xFF):
+                strError=getString(R.string.lock_receive_command_but_nothing);
+                break;
+
+        }
+        ToastUtil.getInstance().showShort(strError);
+    }
+
+
+    @Override
+    public void setAutoLockError(Throwable throwable) {
+        hiddenLoading();
+        ToastUtil.getInstance().showShort(throwable.toString()+"");
+    }
+
+
 }

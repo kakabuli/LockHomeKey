@@ -31,6 +31,7 @@ public class DeviceMorePresenter extends BlePresenter<IDeviceMoreView> {
 
     private Disposable getDeviceInfoDisposable;
     private Disposable voiceDisposable;
+    private Disposable autoLockDisposable;
 
     public void deleteDevice(String deviceName) {
         XiaokaiNewServiceImp.deleteDevice(MyApplication.getInstance().getUid(), deviceName)
@@ -126,6 +127,13 @@ public class DeviceMorePresenter extends BlePresenter<IDeviceMoreView> {
                         if (mViewRef.get() != null) {
                             mViewRef.get().getVoice(voice);
                         }
+                        byte[] bytes = Rsa.byteToBit(deValue[4]);
+                        int openLock=bytes[7];
+//                        0：手动 1：自动
+                        boolean isOpen=openLock==1?true:false;
+                        if (mViewRef.get() != null) {
+                            mViewRef.get().getAutoLock(isOpen);
+                        }
                         //如果获取锁信息成功，那么直接获取开锁次数
                     }
                 }, new Consumer<Throwable>() {
@@ -218,5 +226,73 @@ public class DeviceMorePresenter extends BlePresenter<IDeviceMoreView> {
         compositeDisposable.add(voiceDisposable);
     }
 
+    /**
+     * 自动关门
+     *
+     * 0x00：开启
+     * 0x01：关闭
+     */
+    public void setAutoLock(boolean isOpen) {
+        byte[] command;
+        if (isOpen){
+             command = BleCommandFactory.setLockParamsCommand((byte) 0x04, new byte[]{(byte) 0}, bleLockInfo.getAuthKey());
+        }else {
+             command = BleCommandFactory.setLockParamsCommand((byte) 0x04, new byte[]{(byte) 1}, bleLockInfo.getAuthKey());
+        }
+
+        bleService.sendCommand(command);
+        toDisposable(autoLockDisposable);
+        autoLockDisposable = bleService.listeneDataChange()
+                .filter(new Predicate<BleDataBean>() {
+                    @Override
+                    public boolean test(BleDataBean bleDataBean) throws Exception {
+                        return command[1] == bleDataBean.getTsn();
+                    }
+                })
+                .compose(RxjavaHelper.observeOnMainThread())
+                .subscribe(new Consumer<BleDataBean>() {
+                    @Override
+                    public void accept(BleDataBean bleDataBean) throws Exception {
+//                        byte[] deValue = Rsa.decrypt(bleDataBean.getPayload(), bleLockInfo.getAuthKey());
+                        byte b = bleDataBean.getPayload()[0];
+                     /*   0x00	成功
+                        0x01	失败
+                        0x85	某个字段错误
+                        0x94	超时
+                        0x9A	命令正在执行（TSN重复）
+                        0xC2	校验错误
+                        0xFF	锁接收到命令，但无结果返回*/
+
+                        if (0==b){
+                            if (mViewRef.get() != null) {
+                                mViewRef.get().setAutoLockSuccess(isOpen);
+                            }
+                        }else {
+                            if (mViewRef.get() != null) {
+                                mViewRef.get().setAutoLockFailed(b);
+                            }
+                        }
+                     /*   if (bleDataBean.isConfirm() && bleDataBean.getPayload()[0] == 0) { //设置成功
+                            if (mViewRef.get() != null) {
+                                mViewRef.get().setAutoLockSuccess(isOpen);
+                            }
+                        } else {  //设置失败
+                            if (mViewRef.get() != null) {
+                                mViewRef.get().setAutoLockailed(new BleProtocolFailedException(0xff & bleDataBean.getPayload()[0]), isOpen);
+                            }
+                        }*/
+
+                        toDisposable(autoLockDisposable);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        if (mViewRef.get() != null) {
+                            mViewRef.get().setAutoLockError(throwable);
+                        }
+                    }
+                });
+        compositeDisposable.add(autoLockDisposable);
+    }
 
 }

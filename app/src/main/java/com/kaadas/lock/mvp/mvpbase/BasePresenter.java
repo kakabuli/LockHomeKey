@@ -23,6 +23,7 @@ public class BasePresenter<T extends IBaseView> {
     protected CompositeDisposable compositeDisposable = new CompositeDisposable();
     public MqttService mqttService;
     protected BleService bleService = MyApplication.getInstance().getBleService();
+
     public BasePresenter() {
         if (mqttService == null) {
             mqttService = MyApplication.getInstance().getMqttService();
@@ -41,6 +42,9 @@ public class BasePresenter<T extends IBaseView> {
     protected boolean isAttach = false;
 
     public void attachView(T view) {
+        if (bleService == null) {
+            bleService = MyApplication.getInstance().getBleService();
+        }
         mViewRef = new WeakReference<T>(view);
         isAttach = true;
     }
