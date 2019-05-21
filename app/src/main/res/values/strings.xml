@@ -939,4 +939,7 @@
     <string name="setting_channel">设置网关协调器通道</string>
     <string name="setting_channel_need_bind_lock">设置网关协调器通道后，需重新绑定门\n锁和猫眼</string>
     <string name="the_gateway_have_bind">该网关已经被绑定</string>
+    <string name="delete_password">删除密码</string>
+    <string name="delete_fingerprint">删除指纹</string>
+    <string name="delete_card">删除门卡</string>
 </resources>
