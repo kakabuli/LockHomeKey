@@ -902,4 +902,7 @@
     <string name="command_is_execute">命令正在执行（TSN重复）</string>
     <string name="check_error">校验错误</string>
     <string name="lock_receive_command_but_nothing">锁接收到命令，但无结果返回</string>
+    <string name="bar_code">条形码</string>
+    <string name="bar_code_scan_qr_failed">条形码识别失败</string>
+    <string name="please_bar_code_in">请将条形码放入框内</string>
 </resources>

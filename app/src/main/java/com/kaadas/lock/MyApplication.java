@@ -697,4 +697,11 @@ public class MyApplication extends Application {
     public void setSip_package_invite(String sip_package_invite) {
         this.sip_package_invite = sip_package_invite;
     }
+    int pirEnableStates=1;
+    public int getPirEnableStates() {
+        return pirEnableStates;
+    }
+    public void setPirEnableStates(int pirEnableStates) {
+        this.pirEnableStates = pirEnableStates;
+    }
 }

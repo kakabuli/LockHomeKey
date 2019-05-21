@@ -90,13 +90,19 @@ public class SmartEyeActivity extends BaseActivity<ISmartEyeView, SmartEyePresen
         context=this;
         initListener();
 
+        int pirEnableStates=MyApplication.getInstance().getPirEnableStates();
         String jsonBase = getIntent().getStringExtra(KeyConstants.GET_CAT_EYE_INFO_BASE);
         cateEyeInfoBase = new Gson().fromJson(jsonBase, CateEyeInfoBase.class);
         Log.e(GeTui.VideoLog,"SmartEyeActivity==>cateEyeInfoBase:"+cateEyeInfoBase);
         initData();
         initOptionPicker();
-
-
+        if(pirEnableStates==2){
+            pirEnable=1;
+            iv_smart_monitor.setImageResource(R.mipmap.iv_open);
+        }else  if(pirEnableStates==3){
+            pirEnable=0;
+            iv_smart_monitor.setImageResource(R.mipmap.iv_close);
+        }
     }
 
     @Override
@@ -338,8 +344,13 @@ public class SmartEyeActivity extends BaseActivity<ISmartEyeView, SmartEyePresen
         }
         if (status==1){
             iv_smart_monitor.setImageResource(R.mipmap.iv_open);
+            pirEnable=1;
+            MyApplication.getInstance().setPirEnableStates(2);
+
         }else{
             iv_smart_monitor.setImageResource(R.mipmap.iv_close);
+            pirEnable=0;
+            MyApplication.getInstance().setPirEnableStates(3);
         }
 
     }

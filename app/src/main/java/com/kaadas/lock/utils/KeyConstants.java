@@ -387,4 +387,6 @@ public class KeyConstants {
     //获取猫眼信息
     public static final String GET_CAT_EYE_INFO_BASE="GET_CAT_EYE_INFO_BASE";
 
+    public static final String BAR_CODE="BAR_CODE";
+
 }

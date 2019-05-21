@@ -81,16 +81,12 @@
             android:exported="true"
             android:launchMode="singleTop"
             android:screenOrientation="portrait">
-
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />
 
-
                 <action android:name="android.intent.action.MAIN" />
 
-
                 <category android:name="android.intent.category.LAUNCHER" />
-
 
                 <action android:name="android.intent.action.oppopush" />
             </intent-filter>
@@ -674,8 +670,8 @@
             android:theme="@style/NoTitleFullscreen" />
         <activity
             android:name=".activity.cateye.CallComingActivity"
-            android:theme="@style/dialogstyle"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/dialogstyle" />
         <activity
             android:name=".activity.cateye.FtpDownLoadActivity"
             android:screenOrientation="portrait" />
@@ -712,10 +708,16 @@
 
         <activity
             android:name=".activity.device.cateye.more.SmartEyeActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.device.cateye.more.CateDefaultActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.addDevice.zigbeelocknew.ProductActivationScanActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity android:name=".activity.my.BarCodeActivity"
+            android:screenOrientation="portrait"></activity>
     </application>
 
 </manifest>
