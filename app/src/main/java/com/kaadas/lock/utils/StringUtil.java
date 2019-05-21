@@ -316,4 +316,19 @@ public class StringUtil {
         replace = replace.replaceAll(regex, "$1 ");
         return replace;
     }
+
+    //是否是局域网ip
+    public static  boolean isInner(String ip)
+    {
+        String reg = "(127[.]0[.]0[.]1)|"
+                + "(localhost)|"
+                + "(10[.]\\d{1,3}[.]\\d{1,3}[.]\\d{1,3})|"
+                + "(172[.]((1[6-9])|(2\\d)|(3[01]))[.]\\d{1,3}[.]\\d{1,3})|"
+                + "(192[.]168[.]\\d{1,3}[.]\\d{1,3})";
+        Pattern p = Pattern.compile(reg);
+        Matcher matcher = p.matcher(ip);
+        return matcher.find();
+    }
+
+
 }

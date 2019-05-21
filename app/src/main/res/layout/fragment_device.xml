@@ -42,7 +42,7 @@
          android:id="@+id/no_device_image"
          android:layout_width="wrap_content"
          android:layout_height="wrap_content"
-         android:src="@mipmap/no_device"
+         android:src="@mipmap/no_equipment"
          android:layout_marginTop="@dimen/dp_84"
          android:layout_centerHorizontal="true"
          />

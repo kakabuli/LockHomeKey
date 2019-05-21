@@ -72,11 +72,11 @@ public class DeviceDetailAdapter extends BaseQuickAdapter<HomeShowBean, BaseView
             case HomeShowBean.TYPE_GATEWAY_LOCK:
                 GwLockInfo gwLockInfo= (GwLockInfo) item.getObject();
                 int gwPower =gwLockInfo.getPower();
-                if (gwPower>100){
-                    gwPower=100;
-                }
-                if (gwPower<0){
-                    gwPower=0;
+                int gatewayLockPower=0;
+                if (gwPower<=0){
+                    gatewayLockPower=0;
+                }else{
+                    gatewayLockPower=gwPower/2;//网关锁电量需要除2
                 }
                 //根据当前的网关id，找出网关状态,网关离线猫眼也离线，不管服务器传过来什么值
                 GatewayInfo lockGatewayInfo=MyApplication.getInstance().getGatewayById(gwLockInfo.getGwID());
@@ -87,8 +87,8 @@ public class DeviceDetailAdapter extends BaseQuickAdapter<HomeShowBean, BaseView
                         isWifiDevice(true, helper, "offline", batteryView);
                     }
                     helper.setImageResource(R.id.device_image, R.mipmap.default_zigbee_lock_icon);
-                    batteryView.setPower(gwPower);
-                    helper.setText(R.id.device_power_text, gwPower + "%");
+                    batteryView.setPower(gatewayLockPower);
+                    helper.setText(R.id.device_power_text, gatewayLockPower + "%");
                     textView.setText(gwLockInfo.getServerInfo().getNickName());
                 }
                 break;
@@ -104,24 +104,43 @@ public class DeviceDetailAdapter extends BaseQuickAdapter<HomeShowBean, BaseView
             case HomeShowBean.TYPE_BLE_LOCK:
                 String status="";
                 BleLockInfo bleLockInfo= (BleLockInfo) item.getObject();
-                if (bleLockInfo.isConnected()){
-                    status="online";
-                }else{
-                    status="offline";
-                }
-                int blePower =bleLockInfo.getBattery();
-                if (blePower>100){
-                    blePower=100;
-                }
-                if (blePower<0){
-                    blePower=0;
-                }
+                if (bleLockInfo!=null) {
+                    if (bleLockInfo.isConnected()) {
+                        status = "online";
+                    } else {
+                        status = "offline";
+                    }
+                    int blePower = bleLockInfo.getBattery();
+                    if (blePower > 100) {
+                        blePower = 100;
+                    }
+                    if (blePower < 0) {
+                        blePower = 0;
+                    }
 
-                isWifiDevice(false,helper,status,batteryView);
-                helper.setImageResource(R.id.device_image,R.mipmap.default_zigbee_lock_icon);
-                batteryView.setPower(blePower);
-                helper.setText(R.id.device_power_text,blePower+"%");
-                textView.setText(bleLockInfo.getServerLockInfo().getLockNickName());
+                    isWifiDevice(false, helper, status, batteryView);
+                    String model = bleLockInfo.getServerLockInfo().getModel();
+                    if (model.contains("K7")){
+                        helper.setImageResource(R.id.device_image, R.mipmap.k7);
+                    }else if (model.contains("K8")){
+                        helper.setImageResource(R.id.device_image, R.mipmap.k8);
+                    }else if (model.contains("K9")){
+                        helper.setImageResource(R.id.device_image, R.mipmap.k9);
+                    }else if (model.contains("KX")){
+                        helper.setImageResource(R.id.device_image, R.mipmap.kx);
+                    }else if (model.contains("QZ012")){
+                        helper.setImageResource(R.id.device_image, R.mipmap.qz012);
+                    }else if (model.contains("QZ013")){
+                        helper.setImageResource(R.id.device_image, R.mipmap.qz013);
+                    }else if (model.contains("S8")){
+                        helper.setImageResource(R.id.device_image, R.mipmap.s8);
+                    }else{
+                        helper.setImageResource(R.id.device_image, R.mipmap.default_zigbee_lock_icon);
+                    }
+                    batteryView.setPower(blePower);
+                    helper.setText(R.id.device_power_text, blePower + "%");
+                    textView.setText(bleLockInfo.getServerLockInfo().getLockNickName());
+                }
                 break;
         }
     }

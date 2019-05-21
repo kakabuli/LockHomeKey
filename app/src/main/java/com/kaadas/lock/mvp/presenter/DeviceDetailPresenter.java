@@ -48,7 +48,6 @@ public class DeviceDetailPresenter<T> extends BleLockDetailPresenter<IDeviceDeta
                 .subscribe(new BaseObserver<GetPasswordResult>() {
                     @Override
                     public void onSuccess(GetPasswordResult getPasswordResult) {
-                        // TODO: 2019/3/6   永久密码  需要做缓存 付积辉--已做
                         if (mViewRef.get() != null) {
                             mViewRef.get().onGetPasswordSuccess(getPasswordResult);
                         }

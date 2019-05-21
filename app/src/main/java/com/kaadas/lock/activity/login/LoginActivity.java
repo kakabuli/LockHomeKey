@@ -344,7 +344,12 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter<ILogi
     public void onLoginFailedServer(BaseResult result) {
         btnLogin.setBackgroundResource(R.drawable.login_button_shape);
         hiddenLoading();
-        ToastUtil.getInstance().showShort(HttpUtils.httpErrorCode(this, result.getCode()));
+        if ("101".equals(result.getCode())){
+            AlertDialogUtil.getInstance().noButtonSingleLineDialog(this, getString(R.string.account_password_error));
+        }else {
+            ToastUtil.getInstance().showShort(HttpUtils.httpErrorCode(this, result.getCode()));
+        }
+
 
     }
 

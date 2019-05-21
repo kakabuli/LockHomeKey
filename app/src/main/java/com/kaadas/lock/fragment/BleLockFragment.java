@@ -32,6 +32,7 @@ import com.kaadas.lock.bean.BluetoothRecordBean;
 import com.kaadas.lock.mvp.mvpbase.BaseBleFragment;
 import com.kaadas.lock.mvp.presenter.BleLockPresenter;
 import com.kaadas.lock.mvp.view.IBleLockView;
+import com.kaadas.lock.mvp.view.IFamilyMemberDeatilView;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.publiclibrary.bean.ForeverPassword;
 import com.kaadas.lock.publiclibrary.ble.BleProtocolFailedException;
@@ -129,9 +130,9 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
                 if (bleLockInfo.getArmMode() == 1) {//布防模式
                     changeOpenLockStatus(4);
                 }
-                if (bleLockInfo.getBackLock() == 0 ||bleLockInfo.getSafeMode() == 1|| bleLockInfo.getArmMode() == 1){
+                if (bleLockInfo.getBackLock() == 0 || bleLockInfo.getSafeMode() == 1 || bleLockInfo.getArmMode() == 1) {
                     tvDeviceStatus.setText(getString(R.string.no_normal));
-                }else {
+                } else {
                     tvDeviceStatus.setText(getString(R.string.normal));
                 }
             }
@@ -163,7 +164,11 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
     private void initView() {
         long createTime = bleLockInfo.getServerLockInfo().getCreateTime();
         //设置守护时间
-        long day = ((System.currentTimeMillis() / 1000) - createTime) / (60 * 24 * 60);
+        long time = (System.currentTimeMillis() / 1000) - createTime;
+        long day = 0;
+        if (time>0){
+            day = ((System.currentTimeMillis() / 1000) - createTime) / (60 * 24 * 60);
+        }
         this.createTime.setText(day + "");
         LogUtils.e("设备  HomeLockFragment  " + this);
         homeFragment = (HomePageFragment) getParentFragment();
@@ -892,25 +897,33 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
             switch (record.getOpen_type()) {
                 case BleUtil.PASSWORD:
                     List<ForeverPassword> pwdList = passwordResults.getData().getPwdList();
-                    for (ForeverPassword password : pwdList) {
-                        if (Integer.parseInt(password.getNum()) == Integer.parseInt(record.getUser_num())) {
-                            nickName = password.getNickName();
+                    if (pwdList!=null&&pwdList.size()>0){
+                        for (ForeverPassword password : pwdList) {
+                            if (Integer.parseInt(password.getNum()) == Integer.parseInt(record.getUser_num())) {
+                                nickName = password.getNickName();
+                            }
                         }
                     }
+
                     break;
                 case BleUtil.FINGERPRINT:
                     List<GetPasswordResult.DataBean.Fingerprint> fingerprints = passwordResults.getData().getFingerprintList();
-                    for (GetPasswordResult.DataBean.Fingerprint password : fingerprints) {
-                        if (Integer.parseInt(password.getNum()) == Integer.parseInt(record.getUser_num())) {
-                            nickName = password.getNickName();
+                    if (fingerprints!=null&&fingerprints.size()>0){
+                        for (GetPasswordResult.DataBean.Fingerprint password : fingerprints) {
+                            if (Integer.parseInt(password.getNum()) == Integer.parseInt(record.getUser_num())) {
+                                nickName = password.getNickName();
+                            }
                         }
                     }
+
                     break;
                 case BleUtil.RFID:  //卡片
                     List<GetPasswordResult.DataBean.Card> cards = passwordResults.getData().getCardList();
-                    for (GetPasswordResult.DataBean.Card password : cards) {
-                        if (Integer.parseInt(password.getNum()) == Integer.parseInt(record.getUser_num())) {
-                            nickName = password.getNickName();
+                    if (cards!=null&&cards.size()>0){
+                        for (GetPasswordResult.DataBean.Card password : cards) {
+                            if (Integer.parseInt(password.getNum()) == Integer.parseInt(record.getUser_num())) {
+                                nickName = password.getNickName();
+                            }
                         }
                     }
                     break;
@@ -1147,9 +1160,9 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
             if (bleLockInfo.getArmMode() == 1) {//布防模式
                 changeOpenLockStatus(4);
             }
-            if (bleLockInfo.getBackLock() == 0 ||bleLockInfo.getSafeMode() == 1|| bleLockInfo.getArmMode() == 1){
+            if (bleLockInfo.getBackLock() == 0 || bleLockInfo.getSafeMode() == 1 || bleLockInfo.getArmMode() == 1) {
                 tvDeviceStatus.setText(getString(R.string.no_normal));
-            }else {
+            } else {
                 tvDeviceStatus.setText(getString(R.string.normal));
             }
         }
