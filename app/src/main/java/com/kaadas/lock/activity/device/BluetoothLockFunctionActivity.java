@@ -270,13 +270,13 @@ public class BluetoothLockFunctionActivity extends BaseBleActivity<IDeviceDetail
         tvBluetoothName.setText("jfjif");
         ivOne.setImageResource(R.mipmap.bluetooth_password);
         tvNameOne.setText(R.string.password);
-//        tvNumberOne.setText(6 + getString(R.string.group));
+        tvNumberOne.setText(0 + getString(R.string.group));
         ivTwo.setImageResource(R.mipmap.bluetooth_fingerprint);
         tvNameTwo.setText(R.string.fingerprint);
-//        tvNumberTwo.setText(5 + getString(R.string.ge));
+        tvNumberTwo.setText(0 + getString(R.string.ge));
         ivThree.setImageResource(R.mipmap.bluetooth_card);
         tvNameThree.setText(R.string.card);
-//        tvNumberThree.setText(2 + getString(R.string.zhang));
+        tvNumberThree.setText(0 + getString(R.string.zhang));
         ivFour.setImageResource(R.mipmap.bluetooth_share);
         tvNameFour.setText(R.string.device_share);
 //        tvNumberFour.setText(2 + getString(R.string.people));

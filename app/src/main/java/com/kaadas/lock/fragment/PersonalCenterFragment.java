@@ -14,6 +14,8 @@ import android.widget.TextView;
 
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
+import com.kaadas.lock.activity.addDevice.zigbeelocknew.AddDeviceZigbeelockNewScanActivity;
+import com.kaadas.lock.activity.addDevice.zigbeelocknew.ProductActivationScanActivity;
 import com.kaadas.lock.activity.my.AboutUsActivity;
 import com.kaadas.lock.activity.my.PersonalFAQActivity;
 import com.kaadas.lock.activity.my.PersonalMessageActivity;
@@ -66,6 +68,8 @@ public class PersonalCenterFragment extends BaseFragment<IMyFragmentView, MyFrag
     TextView headPortraitName;
     @BindView(R.id.rl_user_feedback)
     RelativeLayout rlUserFeedback;
+    @BindView(R.id.product_activition)
+    RelativeLayout product_activition;
 
     private View mPersonlCenterView;
     private Bitmap changeBitmap;
@@ -131,7 +135,7 @@ public class PersonalCenterFragment extends BaseFragment<IMyFragmentView, MyFrag
         unbinder.unbind();
     }
 
-    @OnClick({R.id.message_layout, R.id.security_setting_layout, R.id.faq_layout, R.id.system_setting_layout, R.id.about_xk_layout, R.id.head_second})
+    @OnClick({R.id.message_layout, R.id.security_setting_layout, R.id.faq_layout, R.id.system_setting_layout, R.id.about_xk_layout, R.id.head_second,R.id.product_activition})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.message_layout:
@@ -157,6 +161,10 @@ public class PersonalCenterFragment extends BaseFragment<IMyFragmentView, MyFrag
             case R.id.head_second:
                 Intent updateHeadData = new Intent(getActivity(), PersonalUpdateHeadDataActivity.class);
                 startActivity(updateHeadData);
+                break;
+            case R.id.product_activition:
+                Intent zigbeeLockIntent=new Intent(getActivity(), ProductActivationScanActivity.class);
+                startActivity(zigbeeLockIntent);
                 break;
         }
     }

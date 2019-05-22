@@ -390,4 +390,9 @@ public class KeyConstants {
     //获取第一次进入锁密码
     public static final String FIRST_IN_GATEWAY_LOCK="firstInGatewayLock";
 
+    public static final String BAR_CODE="BAR_CODE";
+    //蓝牙更多界面过来的
+    public static final String BLUETOOTH_MORE_PAGE="bluetooth_more_page";
+    //来源
+    public static final String SOURCE="source";
 }
