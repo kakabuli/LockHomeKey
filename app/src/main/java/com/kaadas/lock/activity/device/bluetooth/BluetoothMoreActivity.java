@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.MainActivity;
+import com.kaadas.lock.activity.addDevice.bluetooth.OtaUpgradeActivity;
 import com.kaadas.lock.activity.device.BluetoothDeviceInformationActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseBleActivity;
 import com.kaadas.lock.mvp.presenter.DeviceMorePresenter;
@@ -263,6 +264,8 @@ public class BluetoothMoreActivity extends BaseBleActivity<IDeviceMoreView, Devi
                 startActivity(intent);
                 break;
             case R.id.rl_check_firmware_update:
+                intent=new Intent(this,OtaUpgradeActivity.class);
+                startActivity(intent);
                 break;
             case R.id.btn_delete:
                 AlertDialogUtil.getInstance().noEditTwoButtonDialog(this, getString(R.string.device_delete_dialog_head), getString(R.string.device_delete_dialog_content), getString(R.string.cancel), getString(R.string.query), new AlertDialogUtil.ClickListener() {
