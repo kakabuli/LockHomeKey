@@ -487,7 +487,7 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
     public void uploadpushmethod() {
         String uid = (String) SPUtils.get(SPUtils.UID, "");
         String JpushId = (String) SPUtils2.get(MyApplication.getInstance(), GeTui.JPUSH_ID, "");
-        Log.e(GeTui.VideoLog, "uid:" + uid + " jpushid:" + JpushId);
+        Log.e(GeTui.VideoLog, "uid:" + uid + " jpushid:" + JpushId+" token:"+MyApplication.getInstance().getToken());
         //uploadPushId(String uid, String jpushId, int type)
         if (!TextUtils.isEmpty(uid) && !TextUtils.isEmpty(JpushId)) {
             XiaokaiNewServiceImp.uploadPushId(uid, JpushId, 2).subscribe(new BaseObserver<BaseResult>() {

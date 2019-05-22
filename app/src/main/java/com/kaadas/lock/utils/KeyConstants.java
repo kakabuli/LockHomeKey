@@ -386,6 +386,8 @@ public class KeyConstants {
 
     //获取猫眼信息
     public static final String GET_CAT_EYE_INFO_BASE="GET_CAT_EYE_INFO_BASE";
+
+    public static final String BAR_CODE="BAR_CODE";
     //蓝牙更多界面过来的
     public static final String BLUETOOTH_MORE_PAGE="bluetooth_more_page";
     //来源

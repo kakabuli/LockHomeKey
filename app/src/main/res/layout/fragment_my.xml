@@ -71,10 +71,12 @@
         </RelativeLayout>
 
         <RelativeLayout
+            android:id="@+id/product_activition"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginTop="10dp"
             android:layout_weight="1"
+            android:clickable="true"
             android:background="#FFFFFF">
 
             <TextView

@@ -119,4 +119,12 @@
     <dimen name="sp_24">24sp</dimen>
     <dimen name="date_unit_text_size">18sp</dimen>
     <dimen name="picker_view_height">160dp</dimen>
+
+    <dimen name="small">5dp</dimen>
+    <dimen name="medium">10dp</dimen>
+    <dimen name="normal">15dp</dimen>
+    <dimen name="large">20dp</dimen>
+    <dimen name="xlarge">25dp</dimen>
+    <dimen name="xxlarge">30dp</dimen>
+    <dimen name="text_size_15">15sp</dimen>
 </resources>
