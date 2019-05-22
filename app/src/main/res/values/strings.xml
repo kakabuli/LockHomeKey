@@ -838,10 +838,11 @@
     <string name="no_lock_alarm">暂无预警信息</string>
     <string name="no_catEye_alarm">暂无猫眼动态信息</string>
     <string name="lock_blocked">门锁堵转报警</string>
-    <string name="validation_failed_three_times">验证3次失败报警</string>
+    <string name="validation_failed_three_times">系统被锁定报警</string>
     <string name="pick_proof">防撬报警</string>
     <string name="stress_alarm">胁迫报警</string>
     <string name="pir_trigger">pir触发事件</string>
+    <string name="low_power_alarm">低电量报警</string>
     <string name="cat_head_is_drawn">猫头被拔事件</string>
     <string name="diabolo">响铃事件</string>
     <string name="cateye_low_power">低电量事件</string>
@@ -942,4 +943,8 @@
     <string name="delete_password">删除密码</string>
     <string name="delete_fingerprint">删除指纹</string>
     <string name="delete_card">删除门卡</string>
+    <string name="get_gateway_lock_pwd_waiting">正在获取密码列表，请稍后。。。</string>
+    <string name="permanent_validity">永久有效</string>
+    <string name="permanent_once_validity">临时有效</string>
+    <string name="lock_resect">门锁重置报警</string>
 </resources>

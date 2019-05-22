@@ -408,7 +408,7 @@ public class MqttService extends Service {
         return onReceiverDataObservable;
     }
 
-    //断开连接
+    //mqtt先断开，后退出http
     public void mqttDisconnect() {
         LogUtils.e("mqttDisconnect", "正在断开连接");
         if (mqttClient == null) {
@@ -443,6 +443,46 @@ public class MqttService extends Service {
             mqttClient = null;
             MyApplication.getInstance().tokenInvalid(false);
         }
+    }
+
+    //http退出，mqtt断开
+    public void  httpMqttDisconnect(){
+        LogUtils.e("mqttDisconnect", "正在断开连接");
+        if (mqttClient == null) {
+            LogUtils.e("mqttClient为空");
+            return;
+        }
+        if (mqttClient.isConnected()) {
+            try {
+                //退出登录
+                mqttClient.disconnect(null, new IMqttActionListener() {
+                    @Override
+                    public void onSuccess(IMqttToken asyncActionToken) {
+                        mqttClient.unregisterResources();
+                        mqttClient = null;
+                        LogUtils.e("mqttDisconnect", "断开连接成功");
+                        disconnectObservable.onNext(true);
+                    }
+
+                    @Override
+                    public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
+                        disconnectObservable.onNext(false);
+                    }
+                });
+            } catch (MqttException e) {
+                e.printStackTrace();
+            }
+        } else {
+            //被挤出
+            disconnectObservable.onNext(true);
+            mqttClient.unregisterResources();
+            mqttClient = null;
+        }
+
+
+
+
+
     }
 
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");

@@ -180,6 +180,9 @@ public class GatewayWarnInformationFragment extends BaseFragment<GatewayLockAlra
                     case 0:    //门锁堵转报警
                         alarmStr=getString(R.string.lock_blocked);
                         break;
+                    case 1:
+                        alarmStr=getString(R.string.lock_resect);
+                        break;
                     case 4:
                         alarmStr=getString(R.string.validation_failed_three_times);
                         break;
@@ -188,6 +191,13 @@ public class GatewayWarnInformationFragment extends BaseFragment<GatewayLockAlra
                         break;
                     case 9:
                         alarmStr=getString(R.string.stress_alarm);
+                        break;
+                }
+                //电量
+            }else if (dataBean.getClusterID()==1){
+                switch (dataBean.getAlarmCode()){
+                    case 16:
+                        alarmStr=getString(R.string.low_power_alarm);
                         break;
                 }
             }

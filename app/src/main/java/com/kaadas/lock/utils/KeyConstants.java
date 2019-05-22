@@ -387,4 +387,7 @@ public class KeyConstants {
     //获取猫眼信息
     public static final String GET_CAT_EYE_INFO_BASE="GET_CAT_EYE_INFO_BASE";
 
+    //获取第一次进入锁密码
+    public static final String FIRST_IN_GATEWAY_LOCK="firstInGatewayLock";
+
 }

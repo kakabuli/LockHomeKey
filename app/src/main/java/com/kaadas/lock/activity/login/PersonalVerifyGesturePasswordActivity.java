@@ -76,8 +76,10 @@ public class PersonalVerifyGesturePasswordActivity extends AppCompatActivity {
                         //重新登录
                         //todo 清除数据，未做！
                         //1清除手势密码缓存的数据
-                        /*   ACache.get(MyApplication.getInstance()).remove(MyApplication.getInstance().getUid()+"handPassword");*/
                         MyApplication.getInstance().tokenInvalid(false);
+                        if (MyApplication.getInstance().getMqttService()!=null){
+                            MyApplication.getInstance().getMqttService().httpMqttDisconnect();
+                        }
                         Intent intent = new Intent(PersonalVerifyGesturePasswordActivity.this, LoginActivity.class);
                         startActivity(intent);
 
