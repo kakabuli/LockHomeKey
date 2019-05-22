@@ -1065,6 +1065,8 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
 
     @Override
     public void onServerNoData() {
+        hasData = false;
+        changePage();
         //服务器没有开锁记录
         ToastUtil.getInstance().showShort(R.string.server_no_data);
     }

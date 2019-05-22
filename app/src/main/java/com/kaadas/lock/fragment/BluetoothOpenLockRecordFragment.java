@@ -343,6 +343,7 @@ public class BluetoothOpenLockRecordFragment extends BaseBleFragment<IOpenLockRe
 
     @Override
     public void onServerNoData() {
+
         //服务器没有开锁记录
         refreshLayout.finishRefresh();
         refreshLayout.setEnableLoadMore(false);  //服务器没有数据时，不让上拉加载更多
