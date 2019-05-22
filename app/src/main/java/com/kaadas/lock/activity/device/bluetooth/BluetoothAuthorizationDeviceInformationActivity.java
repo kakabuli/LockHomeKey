@@ -41,6 +41,10 @@ public class BluetoothAuthorizationDeviceInformationActivity extends BaseBleActi
     TextView tvBluetoothModuleVersion;
     @BindView(R.id.tv_lock_software_version)
     TextView tvLockSoftwareVersion;
+    @BindView(R.id.tv_zigbee_module_version)
+    TextView tvZigbeeModuleVersion;
+    @BindView(R.id.rl_zigbee_module_version)
+    RelativeLayout rlZigbeeModuleVersion;
     private BleLockInfo bleLockInfo;
 
     @Override
@@ -78,7 +82,7 @@ public class BluetoothAuthorizationDeviceInformationActivity extends BaseBleActi
 
     @Override
     public void SoftwareRevDataSuccess(String data) {
-        String[] split = data.split("_");
+        String[] split = data.split("-");
         String strModuleHardwareVersion = split[0];
         String strLockHardwareVersion = split[1];
         tvLockSoftwareVersion.setText(strLockHardwareVersion);
@@ -92,7 +96,7 @@ public class BluetoothAuthorizationDeviceInformationActivity extends BaseBleActi
 
     @Override
     public void HardwareRevDataSuccess(String data) {
-        String[] split = data.split("_");
+        String[] split = data.split("-");
         String strModuleHardwareVersion = split[0];
         String strLockHardwareVersion = split[1];
 //        tvBluetoothModuleVersion.setText(strModuleHardwareVersion);

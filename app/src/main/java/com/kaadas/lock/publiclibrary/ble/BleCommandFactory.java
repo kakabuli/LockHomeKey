@@ -149,6 +149,14 @@ public class BleCommandFactory {
      * @return
      *
      */
+    public static byte[] setLockParamsCommand(byte number, byte[] valueArray, int length,byte[] key) {
+        byte cmd = 0x06;
+        byte[] payload = new byte[16]; //负载数据
+        payload[0] = number;
+        payload[1] = (byte) length;
+        System.arraycopy(valueArray, 0, payload, 2, length);
+        return groupPackage(cmd, payload, key);
+    }
     public static byte[] setLockParamsCommand(byte number, byte[] valueArray, byte[] key) {
         byte cmd = 0x06;
         byte[] payload = new byte[16]; //负载数据

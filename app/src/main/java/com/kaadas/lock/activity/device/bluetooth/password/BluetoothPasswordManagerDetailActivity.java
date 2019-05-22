@@ -158,7 +158,13 @@ public class BluetoothPasswordManagerDetailActivity extends BaseBleActivity<IPas
                             alertDialog.dismiss();
                             return;
                         }
-                        mPresenter.updateNick(1, password.getNum(), name);
+
+                        if (5==password.getType()) {
+                            mPresenter.updateNick(2, password.getNum(), name);
+                        }else {
+                            mPresenter.updateNick(1, password.getNum(), name);
+                        }
+
                         alertDialog.dismiss();
                     }
                 });

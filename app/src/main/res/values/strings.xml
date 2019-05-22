@@ -833,7 +833,7 @@
     <string name="mainactivity_permission_alert_title">应用通知开启</string>
     <string name="no_unlock_record">暂无开锁记录</string>
     <string name="connection_server">连接服务器失败,请检查网络退出该页面重新进去</string>
-    <string name="lock_firware_version_number">门锁固件版本号</string>
+    <string name="lock_firware_version_number">门锁固件版本</string>
     <string name="lock_software_version">门锁软件版本</string>
     <string name="no_lock_alarm">暂无预警信息</string>
     <string name="no_catEye_alarm">暂无猫眼动态信息</string>

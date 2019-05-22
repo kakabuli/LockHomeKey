@@ -128,7 +128,7 @@ public class DeviceMorePresenter extends BlePresenter<IDeviceMoreView> {
                             mViewRef.get().getVoice(voice);
                         }
                         byte[] bytes = Rsa.byteToBit(deValue[4]);
-                        int openLock=bytes[7];
+                        int openLock=bytes[0];
 //                        0：手动 1：自动
                         boolean isOpen=openLock==1?true:false;
                         if (mViewRef.get() != null) {

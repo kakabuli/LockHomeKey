@@ -227,7 +227,6 @@ public class BluetoothMoreActivity extends BaseBleActivity<IDeviceMoreView, Devi
 
 //                    SPUtils.put(KeyConstants.AM_AUTO_LOCK_STATUS, true);
                 }
-                amAutoLockStatus = !amAutoLockStatus;
                 break;
             case R.id.rl_door_lock_language_switch:
                 intent = new Intent(this, BluetoothLockLanguageSettingActivity.class);
@@ -258,8 +257,9 @@ public class BluetoothMoreActivity extends BaseBleActivity<IDeviceMoreView, Devi
                 silentModeStatus = !silentModeStatus;*/
                 break;
             case R.id.rl_device_information:
-                intent = new Intent(this, BluetoothDeviceInformationActivity.class);
-                intent.putExtra(KeyConstants.BLE_DEVICE_INFO, bleLockInfo);
+                intent = new Intent(this, BluetoothAuthorizationDeviceInformationActivity.class);
+//                intent.putExtra(KeyConstants.BLE_DEVICE_INFO, bleLockInfo);
+//                intent.putExtra(KeyConstants.SOURCE,KeyConstants.BLUETOOTH_MORE_PAGE);
                 startActivity(intent);
                 break;
             case R.id.rl_check_firmware_update:
@@ -394,6 +394,7 @@ public class BluetoothMoreActivity extends BaseBleActivity<IDeviceMoreView, Devi
             amAutoLockStatus=false;
             ivAm.setImageResource(R.mipmap.iv_close);
         }
+        amAutoLockStatus = !amAutoLockStatus;
     }
 
     @Override
