@@ -616,7 +616,6 @@
             android:name=".activity.device.GatewaySettingActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".activity.addDevice.zigbeelocknew.AddDeviceZigbeeLockNewFailActivity"
             android:launchMode="singleTask"
@@ -721,8 +720,12 @@
             android:name=".activity.addDevice.zigbeelocknew.ProductActivationScanActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
-        <activity android:name=".activity.my.BarCodeActivity"
-            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activity.my.BarCodeActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".activity.addDevice.bluetooth.OtaUpgradeActivity"
+            android:screenOrientation="portrait" >
+        </activity>
     </application>
 
 </manifest>

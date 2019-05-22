@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.kaadas.lock.activity.addDevice.bluetooth.OtaUpgradeActivity"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/preview_header"
+        layout="@layout/head" />
+
+
+
+    <com.kaadas.lock.widget.CircleProgress
+        android:id="@+id/circle_progress_bar2"
+        android:layout_width="165dp"
+        android:layout_height="330dp"
+        android:layout_gravity="center_horizontal"
+        app:antiAlias="true"
+        app:arcWidth="@dimen/medium"
+        app:bgArcColor="#D1D1D2"
+        app:bgArcWidth="@dimen/medium"
+        app:hintSize="@dimen/text_size_15"
+        app:maxValue="100"
+        app:startAngle="135"
+        app:sweepAngle="270"
+        app:unit="loading..."
+        app:unitSize="@dimen/text_size_15"
+        app:value="0"
+        app:valueSize="30sp" />
+
+
+
+    <com.kaadas.lock.widget.OtaMutiProgress
+        android:id="@+id/mutiprogree_ota"
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:layout_marginTop="@dimen/dp_8"
+        app:nodesNum="4"
+        app:nodeRadius="@dimen/dp_6"
+        app:processingLineColor="#70BFFA"
+        app:unprogressingDrawable="@mipmap/circle_unselect_icon"
+        app:progressingDrawable="@mipmap/circle_select_icon"
+        app:progresFailDrawable="@mipmap/circle_unselect_icon"
+        app:progresSuccDrawable="@mipmap/circle_select_icon"
+        android:layout_marginLeft="@dimen/dp_34"
+        android:layout_marginRight="@dimen/dp_50"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_25"
+        android:layout_marginLeft="@dimen/dp_10"
+        android:layout_marginRight="@dimen/dp_34"
+        android:orientation="horizontal"
+        >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/download"
+            android:textColor="#ff2b2f50"
+            android:textSize="@dimen/sp_13"
+            android:layout_weight="1"
+            android:gravity="center"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/in_upgarde_status"
+            android:textColor="#ff2b2f50"
+            android:textSize="@dimen/sp_13"
+            android:layout_weight="1"
+            android:gravity="center"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/upgradeing"
+            android:textColor="#ff2b2f50"
+            android:textSize="@dimen/sp_13"
+            android:layout_weight="1"
+            android:gravity="center"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/ota_finish"
+            android:textColor="#ff2b2f50"
+            android:textSize="@dimen/sp_13"
+            android:layout_weight="1"
+            android:gravity="center"
+            />
+
+    </LinearLayout>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <Button
+            android:id="@+id/start_upgrade"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_50"
+            android:background="@drawable/go_and_buy"
+            android:layout_marginRight="@dimen/dp_45"
+            android:layout_marginLeft="@dimen/dp_45"
+            android:layout_centerInParent="true"
+            android:text="@string/start_upgarde"
+            android:textColor="#ffffffff"
+            android:textSize="@dimen/sp_16"
+            />
+
+
+
+    </RelativeLayout>
+
+
+</LinearLayout>
