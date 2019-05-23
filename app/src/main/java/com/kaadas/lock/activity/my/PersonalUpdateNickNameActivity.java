@@ -98,6 +98,7 @@ public class PersonalUpdateNickNameActivity extends BaseActivity<IPersonalUpdate
                         ToastUtil.getInstance().showShort(R.string.nickname_verify_error);
                         return;
                     }
+
                     if (editText.equals(userName)) {
                         ToastUtil.getInstance().showShort(R.string.nickname_repeat);
                         return;

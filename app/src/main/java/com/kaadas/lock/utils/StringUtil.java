@@ -234,7 +234,7 @@ public class StringUtil {
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-        if (length > 16) {
+        if (length > 50) {
             return false;
         }
         return true;
