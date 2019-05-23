@@ -39,6 +39,9 @@ public class PersonalMessagePresenter<T> extends BasePresenter<IPersonalMessageV
                     if ("444".equals(getMessageResult.getCode())) { //Token过期
                         LogUtils.e("token过期   " + Thread.currentThread().getName());
                         MyApplication.getInstance().tokenInvalid(true);
+                        if (mqttService!=null){
+                            mqttService.httpMqttDisconnect();
+                        }
                     }else {
                         if (mViewRef != null) {
                             mViewRef.get().getMessageFail(getMessageResult);

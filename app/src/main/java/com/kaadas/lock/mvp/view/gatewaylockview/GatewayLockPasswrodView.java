@@ -2,7 +2,7 @@ package com.kaadas.lock.mvp.view.gatewaylockview;
 
 import com.kaadas.lock.mvp.mvpbase.IBaseView;
 
-public interface GatewayLockPasswrodView extends IBaseView {
+public interface  GatewayLockPasswrodView extends IBaseView {
     //添加密码成功
     void addLockPwdSuccess(String pwdId,String pwdValue);
 

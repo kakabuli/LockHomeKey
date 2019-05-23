@@ -363,18 +363,18 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
 
     private void dealWithPower(int power, String eventStr, String timeStamp) {
         //电量：80%
-        if (power > 100) {
-            power = 100;
-        }
         if (power < 0) {
             power = 0;
         }
-        String lockPower = power + "%";
+        int mPower=power/2;
+
+
+        String lockPower = mPower + "%";
         if (tvPower != null) {
             tvPower.setText(lockPower);
         }
         if (ivPower != null) {
-            ivPower.setPower(power);
+            ivPower.setPower(mPower);
 
             if (eventStr.equals("online")) {
                 ivPower.setColor(R.color.c25F290);

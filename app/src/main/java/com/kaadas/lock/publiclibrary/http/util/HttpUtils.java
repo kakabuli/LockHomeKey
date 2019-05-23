@@ -234,6 +234,9 @@ public class HttpUtils<T> {
             if (otherException.getResponse().getCode() == 444) { //Token过期
                 LogUtils.e("token过期   " + Thread.currentThread().getName());
                 MyApplication.getInstance().tokenInvalid(true);
+                if (MyApplication.getInstance().getMqttService()!=null){
+                    MyApplication.getInstance().getMqttService().httpMqttDisconnect();
+                }
             } else {
                 errorMsg = activity.getString(R.string.server_back_exception) + ((OtherException) e).getResponse().toString();
             }

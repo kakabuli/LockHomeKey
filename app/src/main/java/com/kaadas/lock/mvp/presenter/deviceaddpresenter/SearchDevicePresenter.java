@@ -149,6 +149,9 @@ public class SearchDevicePresenter<T> extends BasePresenter<ISearchDeviceView> {
                             }
                         } else if ("444".equals(stringResponse.body().getCode())) {
                             MyApplication.getInstance().tokenInvalid(true);
+                            if (mqttService!=null){
+                                mqttService.httpMqttDisconnect();
+                            }
                             return;
                         } else {
                             if (mViewRef != null) {
@@ -163,6 +166,9 @@ public class SearchDevicePresenter<T> extends BasePresenter<ISearchDeviceView> {
                             OtherException exception = (OtherException) e;
                             if (exception.getResponse().getCode() == 444) {
                                 MyApplication.getInstance().tokenInvalid(true);
+                                if (mqttService!=null){
+                                    mqttService.httpMqttDisconnect();
+                                }
                                 return;
                             }
                         }

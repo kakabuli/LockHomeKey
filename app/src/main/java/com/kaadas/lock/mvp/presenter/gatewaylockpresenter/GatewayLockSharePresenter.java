@@ -10,6 +10,8 @@ import com.kaadas.lock.publiclibrary.mqtt.publishbean.LockPwdFuncBean;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttConstant;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttData;
 import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.greenDao.bean.GatewayLockPwd;
+import com.kaadas.lock.utils.greenDao.db.GatewayLockPwdDao;
 
 import org.linphone.mediastream.Log;
 
@@ -49,6 +51,7 @@ public class GatewayLockSharePresenter<T> extends BasePresenter<GatewayLockShare
                                     //删除成功
                                     if (mViewRef.get()!=null){
                                         mViewRef.get().shareDeletePasswordSuccess(pwdNum);
+                                        deleteOnePwd(gatewayId,deviceId,MyApplication.getInstance().getUid(),pwdNum);
                                     }
                                 }
                             }else{
@@ -72,6 +75,13 @@ public class GatewayLockSharePresenter<T> extends BasePresenter<GatewayLockShare
 
     }
 
-
+    //删除某个数据
+    private void deleteOnePwd(String gatewayId,String deviceId,String uid,String num) {
+        GatewayLockPwdDao gatewayLockPwdDao=MyApplication.getInstance().getDaoWriteSession().getGatewayLockPwdDao();
+        GatewayLockPwd gatewayLockPwd=gatewayLockPwdDao.queryBuilder().where(GatewayLockPwdDao.Properties.GatewayId.eq(gatewayId), GatewayLockPwdDao.Properties.DeviceId.eq(deviceId),GatewayLockPwdDao.Properties.Uid.eq(uid),GatewayLockPwdDao.Properties.Num.eq(num)).unique();
+        if (gatewayLockPwd!=null){
+            gatewayLockPwdDao.delete(gatewayLockPwd);
+        }
+    }
 
 }

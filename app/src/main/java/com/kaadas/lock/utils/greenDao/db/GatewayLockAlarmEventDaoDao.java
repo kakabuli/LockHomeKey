@@ -24,7 +24,7 @@ public class GatewayLockAlarmEventDaoDao extends AbstractDao<GatewayLockAlarmEve
      * Can be used for QueryBuilder and for referencing column names.
      */
     public static class Properties {
-        public final static Property Id = new Property(0, long.class, "id", true, "_id");
+        public final static Property Id = new Property(0, Long.class, "id", true, "_id");
         public final static Property GatewayId = new Property(1, String.class, "gatewayId", false, "GATEWAY_ID");
         public final static Property DeviceId = new Property(2, String.class, "deviceId", false, "DEVICE_ID");
         public final static Property TimeStamp = new Property(3, String.class, "timeStamp", false, "TIME_STAMP");
@@ -47,7 +47,7 @@ public class GatewayLockAlarmEventDaoDao extends AbstractDao<GatewayLockAlarmEve
     public static void createTable(Database db, boolean ifNotExists) {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"GATEWAY_LOCK_ALARM_EVENT_DAO\" (" + //
-                "\"_id\" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL ," + // 0: id
+                "\"_id\" INTEGER PRIMARY KEY AUTOINCREMENT ," + // 0: id
                 "\"GATEWAY_ID\" TEXT," + // 1: gatewayId
                 "\"DEVICE_ID\" TEXT," + // 2: deviceId
                 "\"TIME_STAMP\" TEXT," + // 3: timeStamp
@@ -66,7 +66,11 @@ public class GatewayLockAlarmEventDaoDao extends AbstractDao<GatewayLockAlarmEve
     @Override
     protected final void bindValues(DatabaseStatement stmt, GatewayLockAlarmEventDao entity) {
         stmt.clearBindings();
-        stmt.bindLong(1, entity.getId());
+ 
+        Long id = entity.getId();
+        if (id != null) {
+            stmt.bindLong(1, id);
+        }
  
         String gatewayId = entity.getGatewayId();
         if (gatewayId != null) {
@@ -95,7 +99,11 @@ public class GatewayLockAlarmEventDaoDao extends AbstractDao<GatewayLockAlarmEve
     @Override
     protected final void bindValues(SQLiteStatement stmt, GatewayLockAlarmEventDao entity) {
         stmt.clearBindings();
-        stmt.bindLong(1, entity.getId());
+ 
+        Long id = entity.getId();
+        if (id != null) {
+            stmt.bindLong(1, id);
+        }
  
         String gatewayId = entity.getGatewayId();
         if (gatewayId != null) {
@@ -123,13 +131,13 @@ public class GatewayLockAlarmEventDaoDao extends AbstractDao<GatewayLockAlarmEve
 
     @Override
     public Long readKey(Cursor cursor, int offset) {
-        return cursor.getLong(offset + 0);
+        return cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0);
     }    
 
     @Override
     public GatewayLockAlarmEventDao readEntity(Cursor cursor, int offset) {
         GatewayLockAlarmEventDao entity = new GatewayLockAlarmEventDao( //
-            cursor.getLong(offset + 0), // id
+            cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
             cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // gatewayId
             cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // deviceId
             cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // timeStamp
@@ -143,7 +151,7 @@ public class GatewayLockAlarmEventDaoDao extends AbstractDao<GatewayLockAlarmEve
      
     @Override
     public void readEntity(Cursor cursor, GatewayLockAlarmEventDao entity, int offset) {
-        entity.setId(cursor.getLong(offset + 0));
+        entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
         entity.setGatewayId(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
         entity.setDeviceId(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
         entity.setTimeStamp(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
@@ -170,7 +178,7 @@ public class GatewayLockAlarmEventDaoDao extends AbstractDao<GatewayLockAlarmEve
 
     @Override
     public boolean hasKey(GatewayLockAlarmEventDao entity) {
-        throw new UnsupportedOperationException("Unsupported for entities with a non-null key");
+        return entity.getId() != null;
     }
 
     @Override
