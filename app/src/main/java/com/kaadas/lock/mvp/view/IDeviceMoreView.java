@@ -54,4 +54,7 @@ public interface IDeviceMoreView extends IBleView {
     void setAutoLockFailed( byte b);
 
     void setAutoLockError(Throwable throwable);
+
+    void onStateUpdate(int type);
+
 }

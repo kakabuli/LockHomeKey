@@ -115,7 +115,7 @@ public class MyOpenLockRecordPresenter<T> extends BlePresenter<IBleLockView> {
                     public void onSuccess(LockRecordResult lockRecordResult) {
                         LogUtils.d("davi lockRecordResult "+lockRecordResult.toString());
                         if (lockRecordResult.getData().size() == 0) {  //服务器没有数据  提示用户
-                            if (mViewRef.get() != null) {
+                            if (mViewRef!=null&&mViewRef.get() != null) {
                                 if (pagenum == 1) { //第一次获取数据就没有
                                     mViewRef.get().onServerNoData();
                                 } else {
@@ -134,7 +134,7 @@ public class MyOpenLockRecordPresenter<T> extends BlePresenter<IBleLockView> {
                                     )
                             );
                         }
-                        if (mViewRef.get() != null) {
+                        if (mViewRef!=null&&mViewRef.get() != null) {
                             mViewRef.get().onLoadServerRecord(serverRecords, pagenum);
                         }
                     }
@@ -142,7 +142,7 @@ public class MyOpenLockRecordPresenter<T> extends BlePresenter<IBleLockView> {
                     @Override
                     public void onAckErrorCode(BaseResult baseResult) {
                         LogUtils.e("获取 开锁记录  失败   " + baseResult.getMsg() + "  " + baseResult.getCode());
-                        if (mViewRef.get() != null) {  //
+                        if (mViewRef!=null&&mViewRef.get() != null) {  //
                             mViewRef.get().onLoadServerRecordFailedServer(baseResult);
                         }
                     }
@@ -150,7 +150,7 @@ public class MyOpenLockRecordPresenter<T> extends BlePresenter<IBleLockView> {
                     @Override
                     public void onFailed(Throwable throwable) {
                         LogUtils.e("获取 开锁记录  失败   " + throwable.getMessage());
-                        if (mViewRef.get() != null) {
+                        if (mViewRef!=null&&mViewRef.get() != null) {
                             mViewRef.get().onLoadServerRecordFailed(throwable);
                         }
                     }
