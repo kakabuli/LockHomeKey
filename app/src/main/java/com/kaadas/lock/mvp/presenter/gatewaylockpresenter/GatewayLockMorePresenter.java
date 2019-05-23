@@ -22,9 +22,14 @@ import com.kaadas.lock.publiclibrary.mqtt.util.MqttData;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.ftp.GeTui;
+import com.kaadas.lock.utils.greenDao.bean.GatewayLockAlarmEventDao;
+import com.kaadas.lock.utils.greenDao.bean.GatewayLockPwd;
+import com.kaadas.lock.utils.greenDao.db.GatewayLockAlarmEventDaoDao;
+import com.kaadas.lock.utils.greenDao.db.GatewayLockPwdDao;
 
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observer;
@@ -267,6 +272,12 @@ public class GatewayLockMorePresenter<T> extends BasePresenter<GatewayLockMoreVi
                                         MyApplication.getInstance().getAllDevicesByMqtt(true);
                                         //清除锁上的密码
                                         SPUtils.remove(KeyConstants.SAVA_LOCK_PWD+deviceId);
+                                        //清除数据库当前锁的全部密码
+                                        String uid=MyApplication.getInstance().getUid();
+                                        deleteAllPwd(gatewayId,deviceId,uid);
+                                        SPUtils.remove(KeyConstants.FIRST_IN_GATEWAY_LOCK+ uid+deviceId);
+                                        //清除报警记录
+                                        deleteAllAram(gatewayId,deviceId);
                                     }
                                 }else{
                                     if (mViewRef.get()!=null){
@@ -435,6 +446,27 @@ public class GatewayLockMorePresenter<T> extends BasePresenter<GatewayLockMoreVi
                         }
                     });
             compositeDisposable.add(getAMDisposable);
+        }
+    }
+
+    //删除该锁的所有密码
+    private void deleteAllPwd(String gatewayId,String deviceId,String uid){
+        GatewayLockPwdDao gatewayLockPwdDao=MyApplication.getInstance().getDaoWriteSession().getGatewayLockPwdDao();
+        List<GatewayLockPwd> gatewayLockPwdList=gatewayLockPwdDao.queryBuilder().where(GatewayLockPwdDao.Properties.GatewayId.eq(gatewayId), GatewayLockPwdDao.Properties.DeviceId.eq(deviceId),GatewayLockPwdDao.Properties.Uid.eq(uid)).list();
+        if (gatewayLockPwdList!=null&&gatewayLockPwdList.size()>0){
+            for (GatewayLockPwd gatewayLockPwd:gatewayLockPwdList){
+                gatewayLockPwdDao.delete(gatewayLockPwd);
+            }
+        }
+    }
+
+    private void deleteAllAram(String gatewayId,String deviceId){
+        GatewayLockAlarmEventDaoDao gatewayLockAlarmEventDaoDao=MyApplication.getInstance().getDaoWriteSession().getGatewayLockAlarmEventDaoDao();
+        List<GatewayLockAlarmEventDao> gatewayLockAlarmEventDaoList=gatewayLockAlarmEventDaoDao.queryBuilder().where(GatewayLockAlarmEventDaoDao.Properties.GatewayId.eq(gatewayId), GatewayLockAlarmEventDaoDao.Properties.DeviceId.eq(deviceId)).list();
+        if (gatewayLockAlarmEventDaoList!=null&&gatewayLockAlarmEventDaoList.size()>0){
+            for (GatewayLockAlarmEventDao gatewayLockAlarmEventDao:gatewayLockAlarmEventDaoList){
+                gatewayLockAlarmEventDaoDao.delete(gatewayLockAlarmEventDao);
+            }
         }
     }
 

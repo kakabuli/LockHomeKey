@@ -1,14 +1,12 @@
 package com.kaadas.lock.mvp.presenter;
 
-import android.content.IntentFilter;
-import android.net.ConnectivityManager;
-import android.net.wifi.WifiManager;
+import android.content.Intent;
 import android.text.TextUtils;
 import android.util.Log;
 
-
 import com.google.gson.Gson;
 import com.kaadas.lock.MyApplication;
+import com.kaadas.lock.activity.MainActivity;
 import com.kaadas.lock.activity.cateye.VideoVActivity;
 import com.kaadas.lock.bean.HomeShowBean;
 import com.kaadas.lock.mvp.mvpbase.BlePresenter;
@@ -28,6 +26,7 @@ import com.kaadas.lock.publiclibrary.linphone.linphone.callback.RegistrationCall
 import com.kaadas.lock.publiclibrary.linphone.linphone.util.LinphoneHelper;
 import com.kaadas.lock.publiclibrary.mqtt.eventbean.CatEyeEventBean;
 import com.kaadas.lock.publiclibrary.mqtt.eventbean.GatewayLockAlarmEventBean;
+import com.kaadas.lock.publiclibrary.mqtt.eventbean.GatewayLockInfoEventBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.GetBindGatewayStatusResult;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttConstant;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttData;
@@ -39,13 +38,14 @@ import com.kaadas.lock.utils.SPUtils2;
 import com.kaadas.lock.utils.ftp.GeTui;
 import com.kaadas.lock.utils.greenDao.bean.CatEyeEvent;
 import com.kaadas.lock.utils.greenDao.bean.GatewayLockAlarmEventDao;
-import com.kaadas.lock.utils.networkListenerutil.NetWorkChangReceiver;
+import com.kaadas.lock.utils.greenDao.bean.GatewayLockPwd;
+import com.kaadas.lock.utils.greenDao.db.GatewayLockAlarmEventDaoDao;
+import com.kaadas.lock.utils.greenDao.db.GatewayLockPwdDao;
 
 import net.sdvn.cmapi.Device;
 
 import org.json.JSONObject;
 import org.linphone.core.LinphoneCall;
-
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -266,12 +266,54 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                                     gatewayLockAlarmEventDao.setTimeStamp(gatewayLockAlarmEventBean.getTimestamp()); //时间戳
                                     gatewayLockAlarmEventDao.setDevtype(gatewayLockAlarmEventBean.getDevtype()); //设备类型
                                     gatewayLockAlarmEventDao.setAlarmCode(gatewayLockAlarmEventBean.getEventparams().getAlarmCode()); //报警代码
+                                    if (gatewayLockAlarmEventBean.getEventparams().getAlarmCode()==1){
+                                        //锁重置
+                                        String gatewayId=gatewayLockAlarmEventBean.getGwId();
+                                        String deviceId=gatewayLockAlarmEventBean.getDeviceId();
+                                        MyApplication.getInstance().getAllDevicesByMqtt(true);
+                                        //删除锁的全部密码
+                                        deleteAllPwd(gatewayId,deviceId,MyApplication.getInstance().getUid());
+
+                                    }
                                     gatewayLockAlarmEventDao.setClusterID(gatewayLockAlarmEventBean.getEventparams().getClusterID()); //257 代表锁的信息;1 代表电量信息
                                     gatewayLockAlarmEventDao.setEventcode(gatewayLockAlarmEventBean.getEventcode());
+
                                     //插入到数据库
-                                    MyApplication.getInstance().getDaoWriteSession().getGatewayLockAlarmEventDaoDao().insert(gatewayLockAlarmEventDao);
-                                    LogUtils.e("上报锁告警信息了" + gatewayLockAlarmEventBean.getEventparams().getAlarmCode());
+                                    if (!checkTimeSame(gatewayLockAlarmEventBean.getTimestamp())){
+                                        MyApplication.getInstance().getDaoWriteSession().getGatewayLockAlarmEventDaoDao().insert(gatewayLockAlarmEventDao);
+                                        LogUtils.e("上报锁告警信息了" + gatewayLockAlarmEventBean.getEventparams().getAlarmCode());
+                                    }
+
                                 }
+                            }else if ("info".equals(eventtype)){
+                                GatewayLockInfoEventBean gatewayLockInfoEventBean=new Gson().fromJson(mqttData.getPayload(),GatewayLockInfoEventBean.class);
+                                String gatewayId=gatewayLockInfoEventBean.getGwId();
+                                String deviceId=gatewayLockInfoEventBean.getDeviceId();
+                                String uid=MyApplication.getInstance().getUid();
+                                String  eventParmDeveType=gatewayLockInfoEventBean.getEventparams().getDevetype();
+                                int num=gatewayLockInfoEventBean.getEventparams().getUserID();
+                                int  devecode=gatewayLockInfoEventBean.getEventparams().getDevecode();
+                                int pin=gatewayLockInfoEventBean.getEventparams().getPin();
+                                if (eventParmDeveType.equals("lockprom")&&devecode==2&&pin==255){
+                                    //添加单个密码
+                                    //删除密码
+                                    deleteOnePwd(gatewayId,deviceId,uid,"0"+num);
+                                    //添加
+                                    AddOnePwd(gatewayId,deviceId,uid,"0"+num);
+                                }else if (eventParmDeveType.equals("lockprom")&&devecode==3&&num==255&&pin==255){
+                                    //全部删除
+                                    deleteAllPwd(gatewayId,deviceId,uid);
+                                }else if (eventParmDeveType.equals("lockprom")&&devecode==3&&pin==255){
+                                    //删除单个密码
+                                    deleteOnePwd(gatewayId,deviceId,uid,"0"+num);
+                                }else if (eventParmDeveType.equals("lockop")&&devecode==2&&pin==255){
+                                    //使用一次性开锁密码
+                                    if (num>4&&num<=8){
+                                        deleteOnePwd(gatewayId,deviceId,uid,"0"+num);
+                                    }
+
+                                }
+
                             }
                         }
                     }
@@ -517,6 +559,9 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
     }
 
 
+
+
+
     @Override
     public void detachView() {
         super.detachView();
@@ -524,6 +569,62 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
         bleService.release();
     }
 
+
+    //添加某个
+    private void AddOnePwd(String gatewayId,String deviceId,String uid,String num) {
+        GatewayLockPwdDao gatewayLockPwdDao=MyApplication.getInstance().getDaoWriteSession().getGatewayLockPwdDao();
+        GatewayLockPwd gatewayLockPwd=new GatewayLockPwd();
+        gatewayLockPwd.setUid(uid);
+        gatewayLockPwd.setNum(num);
+        gatewayLockPwd.setStatus(1);
+        gatewayLockPwd.setName("");
+        gatewayLockPwd.setGatewayId(gatewayId);
+        gatewayLockPwd.setDeviceId(deviceId);
+        Integer keyInt=Integer.parseInt(num);
+        //用于zigbee锁是根据编号识别是永久密码，临时密码，还是胁迫密码
+        if(keyInt<=4){
+            gatewayLockPwd.setTime(1);
+        }else if (keyInt<=8&&keyInt>4){
+            gatewayLockPwd.setTime(2);
+        }else if (keyInt==9){
+            gatewayLockPwd.setTime(3);
+        }
+        if (gatewayLockPwdDao!=null){
+            gatewayLockPwdDao.insert(gatewayLockPwd);
+        }
+
+
+    }
+
+    //删除某个数据
+    private void deleteOnePwd(String gatewayId,String deviceId,String uid,String num) {
+        GatewayLockPwdDao gatewayLockPwdDao=MyApplication.getInstance().getDaoWriteSession().getGatewayLockPwdDao();
+        GatewayLockPwd gatewayLockPwd=gatewayLockPwdDao.queryBuilder().where(GatewayLockPwdDao.Properties.GatewayId.eq(gatewayId), GatewayLockPwdDao.Properties.DeviceId.eq(deviceId),GatewayLockPwdDao.Properties.Uid.eq(uid),GatewayLockPwdDao.Properties.Num.eq(num)).unique();
+        if (gatewayLockPwd!=null){
+            gatewayLockPwdDao.delete(gatewayLockPwd);
+        }
+    }
+
+    //删除该锁的所有密码
+    private void deleteAllPwd(String gatewayId,String deviceId,String uid){
+        GatewayLockPwdDao gatewayLockPwdDao=MyApplication.getInstance().getDaoWriteSession().getGatewayLockPwdDao();
+        List<GatewayLockPwd> gatewayLockPwdList=gatewayLockPwdDao.queryBuilder().where(GatewayLockPwdDao.Properties.GatewayId.eq(gatewayId), GatewayLockPwdDao.Properties.DeviceId.eq(deviceId),GatewayLockPwdDao.Properties.Uid.eq(uid)).list();
+        if (gatewayLockPwdList!=null&&gatewayLockPwdList.size()>0){
+            for (GatewayLockPwd gatewayLockPwd:gatewayLockPwdList){
+                gatewayLockPwdDao.delete(gatewayLockPwd);
+            }
+        }
+    }
+
+    //去掉时间戳相同
+    public boolean checkTimeSame(String time){
+        GatewayLockAlarmEventDaoDao gatewayLockAlarmEventDaoDao=MyApplication.getInstance().getDaoWriteSession().queryBuilder(GatewayLockAlarmEventDaoDao.class).where(GatewayLockAlarmEventDaoDao.Properties.TimeStamp.eq(time)).unique();
+        if (gatewayLockAlarmEventDaoDao != null) {
+            return true;
+        }
+        return false;
+
+    }
 }
 
 

@@ -9,7 +9,7 @@ import org.greenrobot.greendao.annotation.Generated;
 @Entity
 public class GatewayLockAlarmEventDao {
     @Id(autoincrement = true)
-    private long id;
+    private Long id;
     private String gatewayId; //网关id
     private String deviceId; //设备id
     private String timeStamp; //上报的时间
@@ -18,8 +18,10 @@ public class GatewayLockAlarmEventDao {
     private int clusterID; //  257 代表锁的信息;1 代表电量信息
     private int eventcode;
 
-    @Generated(hash = 139495952)
-    public GatewayLockAlarmEventDao(long id, String gatewayId, String deviceId,
+
+
+    @Generated(hash = 1149457319)
+    public GatewayLockAlarmEventDao(Long id, String gatewayId, String deviceId,
             String timeStamp, String devtype, int alarmCode, int clusterID,
             int eventcode) {
         this.id = id;
@@ -36,11 +38,13 @@ public class GatewayLockAlarmEventDao {
     public GatewayLockAlarmEventDao() {
     }
 
-    public long getId() {
+
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

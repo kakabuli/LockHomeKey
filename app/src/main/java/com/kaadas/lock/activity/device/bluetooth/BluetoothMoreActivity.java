@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.MainActivity;
+import com.kaadas.lock.activity.addDevice.bluetooth.OtaUpgradeActivity;
 import com.kaadas.lock.activity.device.BluetoothDeviceInformationActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseBleActivity;
 import com.kaadas.lock.mvp.presenter.DeviceMorePresenter;
@@ -227,7 +228,6 @@ public class BluetoothMoreActivity extends BaseBleActivity<IDeviceMoreView, Devi
 
 //                    SPUtils.put(KeyConstants.AM_AUTO_LOCK_STATUS, true);
                 }
-                amAutoLockStatus = !amAutoLockStatus;
                 break;
             case R.id.rl_door_lock_language_switch:
                 intent = new Intent(this, BluetoothLockLanguageSettingActivity.class);
@@ -258,11 +258,14 @@ public class BluetoothMoreActivity extends BaseBleActivity<IDeviceMoreView, Devi
                 silentModeStatus = !silentModeStatus;*/
                 break;
             case R.id.rl_device_information:
-                intent = new Intent(this, BluetoothDeviceInformationActivity.class);
-                intent.putExtra(KeyConstants.BLE_DEVICE_INFO, bleLockInfo);
+                intent = new Intent(this, BluetoothAuthorizationDeviceInformationActivity.class);
+//                intent.putExtra(KeyConstants.BLE_DEVICE_INFO, bleLockInfo);
+//                intent.putExtra(KeyConstants.SOURCE,KeyConstants.BLUETOOTH_MORE_PAGE);
                 startActivity(intent);
                 break;
             case R.id.rl_check_firmware_update:
+                intent=new Intent(this,OtaUpgradeActivity.class);
+                startActivity(intent);
                 break;
             case R.id.btn_delete:
                 AlertDialogUtil.getInstance().noEditTwoButtonDialog(this, getString(R.string.device_delete_dialog_head), getString(R.string.device_delete_dialog_content), getString(R.string.cancel), getString(R.string.query), new AlertDialogUtil.ClickListener() {
@@ -394,6 +397,7 @@ public class BluetoothMoreActivity extends BaseBleActivity<IDeviceMoreView, Devi
             amAutoLockStatus=false;
             ivAm.setImageResource(R.mipmap.iv_close);
         }
+        amAutoLockStatus = !amAutoLockStatus;
     }
 
     @Override

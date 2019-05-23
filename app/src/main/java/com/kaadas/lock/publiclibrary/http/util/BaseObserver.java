@@ -70,6 +70,10 @@ public abstract class BaseObserver<T> implements Observer<T>, Disposable {
             if ("444".equals(result.getCode())) { //Token过期
                 LogUtils.e("token过期   " + Thread.currentThread().getName());
                 MyApplication.getInstance().tokenInvalid(true);
+                //退出mqtt
+                if (MyApplication.getInstance().getMqttService()!=null){
+                    MyApplication.getInstance().getMqttService().httpMqttDisconnect();
+                }
             }else {
                 onAckErrorCode(result);
             }
@@ -97,6 +101,9 @@ public abstract class BaseObserver<T> implements Observer<T>, Disposable {
             if (otherException.getResponse().getCode() == 444) { //Token过期
                 LogUtils.e("token过期   " + Thread.currentThread().getName());
                 MyApplication.getInstance().tokenInvalid(true);
+                if (MyApplication.getInstance().getMqttService()!=null) {
+                    MyApplication.getInstance().getMqttService().httpMqttDisconnect();
+                }
             }
             errorMsg = "服务器返回异常" + ((OtherException) e).getResponse().toString();
         } else if (e instanceof SocketTimeoutException) { //连接超时

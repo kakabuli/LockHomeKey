@@ -12,6 +12,8 @@ import com.kaadas.lock.publiclibrary.mqtt.publishbean.OpenLockBean;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttConstant;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttData;
 import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.greenDao.bean.GatewayLockPwd;
+import com.kaadas.lock.utils.greenDao.db.GatewayLockPwdDao;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,8 +36,6 @@ public class GatewayLockFunctionPresenter<T> extends BasePresenter<GatewayLockFu
         toDisposable(getLockPwdDisposable);
         if (mqttService!=null){
             getLockPwdDisposable=mqttService.mqttPublish(MqttConstant.getCallTopic(MyApplication.getInstance().getUid()),MqttCommandFactory.lockPwdFunc(gatewayId,deviceId,"get","pin",pwdId,""))
-                                 .compose(RxjavaHelper.observeOnMainThread())
-                                 .timeout(20*1000, TimeUnit.MILLISECONDS)
                                  .filter(new Predicate<MqttData>() {
                                      @Override
                                      public boolean test(MqttData mqttData) throws Exception {
@@ -46,6 +46,8 @@ public class GatewayLockFunctionPresenter<T> extends BasePresenter<GatewayLockFu
 
                                      }
                                  })
+                                 .compose(RxjavaHelper.observeOnMainThread())
+                                 .timeout(40*1000,TimeUnit.MILLISECONDS)
                                  .subscribe(new Consumer<MqttData>() {
                                      @Override
                                      public void accept(MqttData mqttData) throws Exception {
@@ -58,13 +60,16 @@ public class GatewayLockFunctionPresenter<T> extends BasePresenter<GatewayLockFu
                                              }
                                              if (map.size()==pwdNum){
                                                  if (mViewRef.get()!=null){
+                                                     deleteDBData(MyApplication.getInstance().getUid(),gatewayId,deviceId);
                                                      mViewRef.get().getLockSuccess(map);
+                                                     map.clear();
                                                      toDisposable(getLockPwdDisposable);
                                                  }
                                              }
                                          }else{
                                              if (mViewRef.get()!=null){
                                                  mViewRef.get().getLockFail();
+                                                 map.clear();
                                              }
                                          }
                                      }
@@ -73,14 +78,23 @@ public class GatewayLockFunctionPresenter<T> extends BasePresenter<GatewayLockFu
                                      public void accept(Throwable throwable) throws Exception {
                                         if (mViewRef.get()!=null){
                                             mViewRef.get().getLockThrowable(throwable);
+                                            map.clear();
                                         }
                                      }
                                  });
-
             compositeDisposable.add(getLockPwdDisposable);
         }
-
-
+    }
+    //删除数据库信息
+    private void deleteDBData(String uid,String gatewayId,String deviceId) {
+        //清除当前数据库的数据
+        GatewayLockPwdDao gatewayLockPwdDao=MyApplication.getInstance().getDaoWriteSession().getGatewayLockPwdDao();
+        List<GatewayLockPwd> gatewayLockPwds=gatewayLockPwdDao.queryBuilder().where(GatewayLockPwdDao.Properties.DeviceId.eq(deviceId),GatewayLockPwdDao.Properties.GatewayId.eq(gatewayId),GatewayLockPwdDao.Properties.Uid.eq(uid)).list();
+        if (gatewayLockPwds!=null&&gatewayLockPwds.size()>0){
+            for (GatewayLockPwd gatewayLockPwd:gatewayLockPwds){
+                gatewayLockPwdDao.delete(gatewayLockPwd);
+            }
+        }
     }
 
     //获取锁密码和RFID基本信息

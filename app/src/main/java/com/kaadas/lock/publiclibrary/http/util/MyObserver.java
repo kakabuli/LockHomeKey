@@ -109,6 +109,9 @@ public abstract class MyObserver<T> implements Observer<BaseResponse<String>>, D
             if (otherException.getResponse().getCode() == 444 ){ //Token过期
                 LogUtils.e("token过期   "+ Thread.currentThread().getName());
                 MyApplication.getInstance().tokenInvalid(true);
+                if (MyApplication.getInstance().getMqttService()!=null){
+                    MyApplication.getInstance().getMqttService().httpMqttDisconnect();
+                }
             }
             errorMsg = "服务器返回异常"+((OtherException) e).getResponse().toString();
         } else if (e instanceof SocketTimeoutException) { //连接超时
