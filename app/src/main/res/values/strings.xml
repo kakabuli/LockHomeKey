@@ -958,4 +958,5 @@
     <string name="ota_fail">升级失败</string>
     <string name="ota_fail_reply">锁OTA升级失败，是否需要重试？</string>
     <string name="input_correct_verification_code">请输入正确验证码</string>
+    <string name="ota_update_loading">正在升级，请勿操作！</string>
 </resources>
