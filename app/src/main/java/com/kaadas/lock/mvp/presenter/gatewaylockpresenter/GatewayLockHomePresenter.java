@@ -11,8 +11,10 @@ import com.kaadas.lock.publiclibrary.http.util.RxjavaHelper;
 import com.kaadas.lock.publiclibrary.mqtt.MqttCommandFactory;
 import com.kaadas.lock.publiclibrary.mqtt.eventbean.DeviceOnLineBean;
 import com.kaadas.lock.publiclibrary.mqtt.eventbean.OpenLockNotifyBean;
+import com.kaadas.lock.publiclibrary.mqtt.publishbean.GetLockRecordTotal;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.OpenLockBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.GetBindGatewayStatusResult;
+import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.GetLockRecordTotalResult;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.SelectOpenLockResultBean;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttConstant;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttData;
@@ -36,6 +38,8 @@ public class GatewayLockHomePresenter<T> extends BasePresenter<IGatewayLockHomeV
     private Disposable openLockDisposable;
     private Disposable closeLockNotifyDisposable;
     private Disposable lockCloseDisposable;
+    private Disposable getLockRecordTotalDisposable;
+
 
     //开锁记录
     public void openGatewayLockRecord(String gatewayId,String deviceId,String uid,int page,int pageNum){
@@ -326,6 +330,54 @@ public class GatewayLockHomePresenter<T> extends BasePresenter<IGatewayLockHomeV
 
     }
 
+
+    //获取开锁记录总次数
+    public void getGatewayLockOpenRecord(String uid,String gatewayId,String deviceId){
+        if (mqttService!=null){
+            toDisposable(getLockRecordTotalDisposable);
+            getLockRecordTotalDisposable=mqttService.mqttPublish(MqttConstant.MQTT_REQUEST_APP, MqttCommandFactory.getGatewayLockTotal(uid,gatewayId,deviceId))
+                    .filter(new Predicate<MqttData>() {
+                        @Override
+                        public boolean test(MqttData mqttData) throws Exception {
+                            if (mqttData.getFunc().equals(MqttConstant.COUNT_OPEN_LOCK_RECORD)){
+                                return  true;
+                            }
+
+                            return false;
+                        }
+                    })
+                    .timeout(10*1000, TimeUnit.MILLISECONDS)
+                    .compose(RxjavaHelper.observeOnMainThread())
+                    .subscribe(new Consumer<MqttData>() {
+                        @Override
+                        public void accept(MqttData mqttData) throws Exception {
+                            toDisposable(getLockRecordTotalDisposable);
+                            GetLockRecordTotalResult getLockRecordTotalResult=new Gson().fromJson(mqttData.getPayload(), GetLockRecordTotalResult.class);
+                            if ("200".equals(getLockRecordTotalResult.getCode())){
+                                if (mViewRef!=null&&mViewRef.get()!=null){
+                                    mViewRef.get().getLockRecordTotalSuccess(getLockRecordTotalResult.getData().getCount());
+                                }
+                            }else{
+                                if (mViewRef!=null&&mViewRef.get()!=null){
+                                    mViewRef.get().getLockRecordTotalFail();
+                                }
+                            }
+                        }
+                    }, new Consumer<Throwable>() {
+                        @Override
+                        public void accept(Throwable throwable) throws Exception {
+                            if (mViewRef.get()!=null){
+                                mViewRef.get().getLockRecordTotalThrowable(throwable);
+                            }
+                        }
+                    });
+            compositeDisposable.add(getLockRecordTotalDisposable);
+        }
+
+
+
+
+    }
 
 
 

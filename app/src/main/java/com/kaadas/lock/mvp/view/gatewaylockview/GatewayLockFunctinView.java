@@ -27,4 +27,19 @@ public interface GatewayLockFunctinView extends IBaseView {
    //获取锁的密码信息异常
     void getLockInfoThrowable(Throwable throwable);
 
+    //单个添加
+    void addOnePwdLock(String pwdId);
+
+    //单个删除
+    void deleteOnePwdLock(String pwdId);
+
+    //全部删除
+    void deleteAllPwdLock();
+
+    //使用一次性密码
+    void useSingleUse(String pwdId);
+
+
+
+
 }

@@ -73,6 +73,12 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
     TextView tvNoData;
     @BindView(R.id.create_time)
     TextView createTime;
+    @BindView(R.id.device_state)
+    TextView deviceState;
+    @BindView(R.id.tv_open_lock_times)
+    TextView tvOpenLockTimes;
+    @BindView(R.id.iv_device_dynamic)
+    ImageView ivDeviceDynamic;
 
 
     private GwLockInfo gatewayLockInfo;
@@ -105,8 +111,10 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
             if ("online".equals(gatewayLockInfo.getServerInfo().getEvent_str())) {
                 //在线
                 changeOpenLockStatus(5);
+                deviceState.setText(getString(R.string.online));
             } else {
                 changeOpenLockStatus(1);
+                deviceState.setText(getString(R.string.offline));
             }
             gatewayId = gatewayLockInfo.getGwID();
             deviceId = gatewayLockInfo.getServerInfo().getDeviceId();
@@ -114,17 +122,18 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
             if (!TextUtils.isEmpty(gatewayId) && !TextUtils.isEmpty(deviceId)) {
                 mPresenter.attachView(this);
                 mPresenter.openGatewayLockRecord(gatewayId, deviceId, MyApplication.getInstance().getUid(), 1, 3);
+                mPresenter.getGatewayLockOpenRecord(MyApplication.getInstance().getUid(),gatewayId,deviceId);//开锁次数
             } else {
                 changePage(false);
             }
-            String time=gatewayLockInfo.getServerInfo().getTime();
-            LogUtils.e(time+"网关时间");
-            if (!TextUtils.isEmpty(time)){
-                long saveTime=DateUtils.standardTimeChangeTimestamp(time)/1000;
+            String time = gatewayLockInfo.getServerInfo().getTime();
+            LogUtils.e(time + "网关时间");
+            if (!TextUtils.isEmpty(time)) {
+                long saveTime = DateUtils.standardTimeChangeTimestamp(time) / 1000;
                 //设置守护时间
                 long day = ((System.currentTimeMillis() / 1000) - saveTime) / (60 * 24 * 60);
                 this.createTime.setText(day + "");
-            }else{
+            } else {
                 createTime.setText("0");
             }
 
@@ -458,11 +467,13 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
 
     @Override
     public void getOpenLockRecordFail() {
+        changePage(false);
         ToastUtil.getInstance().showShort(R.string.get_open_lock_record_fail);
     }
 
     @Override
     public void getOpenLockRecordThrowable(Throwable throwable) {
+        changePage(false);
         ToastUtil.getInstance().showShort(R.string.get_open_lock_record_fail);
     }
 
@@ -472,6 +483,9 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
             openLockRecordAdapter.notifyDataSetChanged();
         }
         changeOpenLockStatus(1);
+        if (deviceState != null) {
+            deviceState.setText(getString(R.string.offline));
+        }
     }
 
     @Override
@@ -483,6 +497,9 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
                 if ("offline".equals(eventStr)) {
                     gatewayLockInfo.getServerInfo().setEvent_str(eventStr);
                     changeOpenLockStatus(1);
+                    if (deviceState != null) {
+                        deviceState.setText(getString(R.string.offline));
+                    }
                 }
             }
         }
@@ -496,8 +513,14 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
                 gatewayLockInfo.getServerInfo().setEvent_str(eventStr);
                 if ("online".equals(eventStr)) {
                     changeOpenLockStatus(5);
+                    if (deviceState != null) {
+                        deviceState.setText(getString(R.string.online));
+                    }
                 } else {
                     changeOpenLockStatus(1);
+                    if (deviceState != null) {
+                        deviceState.setText(getString(R.string.offline));
+                    }
                 }
 
             }
@@ -566,6 +589,28 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
     @Override
     public void lockCloseFailed() {
         isClosing = false;
+    }
+
+    @Override
+    public void getLockRecordTotalSuccess(int count) {
+        if (tvOpenLockTimes!=null){
+            tvOpenLockTimes.setText(count+"");
+        }
+
+    }
+
+    @Override
+    public void getLockRecordTotalFail() {
+        if (tvOpenLockTimes!=null){
+            tvOpenLockTimes.setText("0");
+        }
+    }
+
+    @Override
+    public void getLockRecordTotalThrowable(Throwable throwable) {
+        if (tvOpenLockTimes!=null){
+            tvOpenLockTimes.setText("0");
+        }
     }
 
     @Override

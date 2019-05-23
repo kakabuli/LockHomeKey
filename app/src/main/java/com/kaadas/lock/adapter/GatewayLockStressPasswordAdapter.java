@@ -26,7 +26,9 @@ public class GatewayLockStressPasswordAdapter extends BaseQuickAdapter<String, B
 
     @Override
     protected void convert(BaseViewHolder helper, String item) {
-
         helper.setText(R.id.tv_nick,item);
+        if (item.equals("09")){
+            helper.setText(R.id.tv_time,R.string.stress_password);
+        }
     }
 }

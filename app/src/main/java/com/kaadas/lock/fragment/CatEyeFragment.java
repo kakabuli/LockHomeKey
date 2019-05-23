@@ -66,6 +66,8 @@ public class CatEyeFragment extends BaseFragment<ICatEyeView, CatEyePresenter<IC
     RelativeLayout rlIcon;
     @BindView(R.id.create_time)
     TextView createTime;
+    @BindView(R.id.device_state)
+    TextView deviceState;
     private CateEyeInfo cateEyeInfo;
     private String gatewayId;
     private String deviceId;
@@ -117,14 +119,14 @@ public class CatEyeFragment extends BaseFragment<ICatEyeView, CatEyePresenter<IC
                     changePage(false);
                 }
             }
-            String time=cateEyeInfo.getServerInfo().getTime();
-            LogUtils.e(time+"猫眼时间");
-            if (!TextUtils.isEmpty(time)){
-                long saveTime=DateUtils.standardTimeChangeTimestamp(time)/1000;
+            String time = cateEyeInfo.getServerInfo().getTime();
+            LogUtils.e(time + "猫眼时间");
+            if (!TextUtils.isEmpty(time)) {
+                long saveTime = DateUtils.standardTimeChangeTimestamp(time) / 1000;
                 //设置守护时间
                 long day = ((System.currentTimeMillis() / 1000) - saveTime) / (60 * 24 * 60);
                 this.createTime.setText(day + "");
-            }else{
+            } else {
                 createTime.setText("0");
             }
 
@@ -149,8 +151,14 @@ public class CatEyeFragment extends BaseFragment<ICatEyeView, CatEyePresenter<IC
         离线：“设备已离线”*/
         if ("online".equals(eventStr)) {
             status = 1;
+            if (deviceState!=null){
+                deviceState.setText(getString(R.string.online));
+            }
         } else {
             status = 2;
+            if (deviceState!=null){
+                deviceState.setText(getString(R.string.offline));
+            }
         }
 
         switch (status) {

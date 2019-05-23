@@ -279,7 +279,8 @@ public class GatewaySettingActivity extends BaseActivity<GatewaySettingView, Gat
                     }
                 });
                 break;
-            case 4|6:
+            case 4:
+            case 6:
                 //配置局域网
                 View mPairLan = LayoutInflater.from(this).inflate(R.layout.have_two_et_dialog, null);
                 TextView tvTitleLan = mPairLan.findViewById(R.id.tv_title);

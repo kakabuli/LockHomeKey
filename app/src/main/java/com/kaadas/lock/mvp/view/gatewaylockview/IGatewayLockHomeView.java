@@ -41,15 +41,22 @@ public interface IGatewayLockHomeView extends IBaseView {
     /**
      * 开始开锁
      */
-    void startOpenLock( );
+    void startOpenLock();
     /**
      * 关锁成功
      */
-    void lockCloseSuccess( );
+    void lockCloseSuccess();
     /**
      * 关锁失败
      */
-    void lockCloseFailed( );
+    void lockCloseFailed();
 
+    //获取开锁守护次数成功
+    void getLockRecordTotalSuccess(int count);
 
+    //获取开锁守护次数失败
+    void getLockRecordTotalFail();
+
+    //获取开锁守护次数异常
+    void getLockRecordTotalThrowable(Throwable throwable);
 }
