@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface IGatewayLockHomeView extends IBaseView {
     //获取开锁记录成功
-    void getOpenLockRecordSuccess(List<SelectOpenLockResultBean.DataBean> mOpenLockRecordList);
+    void getOpenLockRecordSuccess(List<SelectOpenLockResultBean.DataBean> mOpenLockRecordList,String deviceId);
 
     //获取开锁记录失败
     void getOpenLockRecordFail();

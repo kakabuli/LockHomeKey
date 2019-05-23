@@ -40,6 +40,11 @@ public class GatewayLockHomePresenter<T> extends BasePresenter<IGatewayLockHomeV
     private Disposable lockCloseDisposable;
     private Disposable getLockRecordTotalDisposable;
 
+    @Override
+    public void attachView(IGatewayLockHomeView view) {
+        super.attachView(view);
+
+    }
 
     //开锁记录
     public void openGatewayLockRecord(String gatewayId,String deviceId,String uid,int page,int pageNum){
@@ -66,7 +71,7 @@ public class GatewayLockHomePresenter<T> extends BasePresenter<IGatewayLockHomeV
                             SelectOpenLockResultBean selectOpenLockResultBean=new Gson().fromJson(mqttData.getPayload(),SelectOpenLockResultBean.class);
                             if ("200".equals(selectOpenLockResultBean.getCode())){
                                 if (mViewRef!=null&&mViewRef.get()!=null){
-                                    mViewRef.get().getOpenLockRecordSuccess(selectOpenLockResultBean.getData());
+                                    mViewRef.get().getOpenLockRecordSuccess(selectOpenLockResultBean.getData(),selectOpenLockResultBean.getDeviceId());
                                 }
                             }else{
                                 if (mViewRef!=null&&mViewRef.get()!=null){

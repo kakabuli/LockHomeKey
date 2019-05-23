@@ -25,6 +25,7 @@ import com.kaadas.lock.bean.BluetoothItemRecordBean;
 import com.kaadas.lock.bean.BluetoothRecordBean;
 import com.kaadas.lock.mvp.mvpbase.BaseFragment;
 import com.kaadas.lock.mvp.presenter.gatewaylockpresenter.GatewayLockHomePresenter;
+import com.kaadas.lock.mvp.view.IFingerprintManagerView;
 import com.kaadas.lock.mvp.view.gatewaylockview.IGatewayLockHomeView;
 import com.kaadas.lock.publiclibrary.bean.GwLockInfo;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.SelectOpenLockResultBean;
@@ -79,8 +80,6 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
     TextView tvOpenLockTimes;
     @BindView(R.id.iv_device_dynamic)
     ImageView ivDeviceDynamic;
-
-
     private GwLockInfo gatewayLockInfo;
     private String gatewayId;
     private String deviceId;
@@ -96,8 +95,10 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
         initRecycleView();
         initListener();
         initData();
+        LogUtils.e("fragment onCreateView");
         return view;
     }
+
 
     @Override
     protected GatewayLockHomePresenter<IGatewayLockHomeView> createPresent() {
@@ -106,12 +107,14 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
 
     private void initData() {
         gatewayLockInfo = (GwLockInfo) getArguments().getSerializable(KeyConstants.GATEWAY_LOCK_INFO);
+        LogUtils.e("fragment gatewayId"+gatewayLockInfo.getGwID()+"fragment device Id"  +gatewayLockInfo.getServerInfo().getDeviceId());
         if (gatewayLockInfo != null) {
             LogUtils.e(gatewayLockInfo.getGwID() + "网关ID是    ");
             if ("online".equals(gatewayLockInfo.getServerInfo().getEvent_str())) {
                 //在线
                 changeOpenLockStatus(5);
                 deviceState.setText(getString(R.string.online));
+
             } else {
                 changeOpenLockStatus(1);
                 deviceState.setText(getString(R.string.offline));
@@ -119,13 +122,6 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
             gatewayId = gatewayLockInfo.getGwID();
             deviceId = gatewayLockInfo.getServerInfo().getDeviceId();
             mPresenter.listenerNetworkChange();//监听网络状态
-            if (!TextUtils.isEmpty(gatewayId) && !TextUtils.isEmpty(deviceId)) {
-                mPresenter.attachView(this);
-                mPresenter.openGatewayLockRecord(gatewayId, deviceId, MyApplication.getInstance().getUid(), 1, 3);
-                mPresenter.getGatewayLockOpenRecord(MyApplication.getInstance().getUid(),gatewayId,deviceId);//开锁次数
-            } else {
-                changePage(false);
-            }
             String time = gatewayLockInfo.getServerInfo().getTime();
             LogUtils.e(time + "网关时间");
             if (!TextUtils.isEmpty(time)) {
@@ -153,6 +149,31 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
         openLockRecordAdapter = new BluetoothRecordAdapter(mOpenLockList);
         recycleview.setLayoutManager(new LinearLayoutManager(getActivity()));
         recycleview.setAdapter(openLockRecordAdapter);
+
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        LogUtils.e("fragment onStart");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        LogUtils.e("fragment OnResume");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        LogUtils.e("fragment onPause");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        LogUtils.e("fragment onStop");
     }
 
     @Override
@@ -452,16 +473,21 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
 
 
     @Override
-    public void getOpenLockRecordSuccess(List<SelectOpenLockResultBean.DataBean> mOpenLockRecordList) {
-        if (mOpenLockRecordList.size() > 0) {
-            changePage(true);
-        } else {
-            changePage(false);
-        }
-        groupData(mOpenLockRecordList);
-        LogUtils.e("请求到数据是。。。。" + mOpenLockRecordList.size());
-        if (openLockRecordAdapter != null) {
-            openLockRecordAdapter.notifyDataSetChanged();
+    public void getOpenLockRecordSuccess(List<SelectOpenLockResultBean.DataBean> mOpenLockRecordList,String devId) {
+        LogUtils.e("请求到的数据是"+devId);
+        if (gatewayId!=null&&deviceId!=null) {
+            if (deviceId.equals(devId)) {
+                if (mOpenLockRecordList.size() > 0) {
+                    changePage(true);
+                } else {
+                    changePage(false);
+                }
+                groupData(mOpenLockRecordList);
+                LogUtils.e("请求到数据是。。。。" + mOpenLockRecordList.size());
+                if (openLockRecordAdapter != null) {
+                    openLockRecordAdapter.notifyDataSetChanged();
+                }
+            }
         }
     }
 
@@ -635,5 +661,32 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
                 break;
         }
         return true;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+          if (getUserVisibleHint()){
+            if (!TextUtils.isEmpty(gatewayId) && !TextUtils.isEmpty(deviceId)) {
+                mPresenter.openGatewayLockRecord(gatewayId, deviceId, MyApplication.getInstance().getUid(), 1, 3);
+                mPresenter.getGatewayLockOpenRecord(MyApplication.getInstance().getUid(), gatewayId, deviceId);//开锁次数
+            } else {
+                changePage(false);
+            }
+            }
+
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (!TextUtils.isEmpty(gatewayId) && !TextUtils.isEmpty(deviceId)) {
+            if (tvOpenLockTimes!=null){
+                tvOpenLockTimes.setText("0");
+            }
+            mPresenter.openGatewayLockRecord(gatewayId, deviceId, MyApplication.getInstance().getUid(), 1, 3);
+            mPresenter.getGatewayLockOpenRecord(MyApplication.getInstance().getUid(), gatewayId, deviceId);//开锁次数
+        }
+
     }
 }
