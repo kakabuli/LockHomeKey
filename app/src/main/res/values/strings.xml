@@ -178,7 +178,7 @@
     <string name="personal_center">个人中心</string>
     <string name="update_nick_name">修改昵称成功</string>
     <string name="nickname_repeat">昵称重复,请重新输入</string>
-    <string name="nickname_verify_error">请输入16位以内的字符</string>
+    <string name="nickname_verify_error">请输入50位以内的字符</string>
     <string name="nickname_not_empty">昵称不能为空</string>
     <string name="modify_nickname">修改昵称</string>
     <string name="nickName_not_empty">昵称不能为空</string>
@@ -958,4 +958,5 @@
     <string name="ota_fail">升级失败</string>
     <string name="ota_fail_reply">锁OTA升级失败，是否需要重试？</string>
     <string name="input_correct_verification_code">请输入正确验证码</string>
+    <string name="ota_update_loading">正在升级，请勿操作！</string>
 </resources>

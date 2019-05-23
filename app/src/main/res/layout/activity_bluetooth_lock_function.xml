@@ -36,26 +36,30 @@
             android:layout_height="0dp"
             android:layout_weight="4"
             android:gravity="center">
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_height="match_parent"
+                >
+
                 <ImageView
+                    android:layout_centerHorizontal="true"
                     android:id="@+id/iv_lock_icon"
-                    android:layout_gravity="center_horizontal"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@mipmap/gateway_lock_icon" />
+                    android:src="@mipmap/bluetooth_lock_k7" />
                 <TextView
                     android:id="@+id/tv_type"
                     android:layout_gravity="center_horizontal"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/bluetooth_type"
                     android:textColor="#FFFFFF"
+                    android:layout_centerHorizontal="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginBottom="@dimen/dp_18"
+                    android:text=""
                     android:textSize="@dimen/sp_14"
-                    android:layout_marginTop="@dimen/dp_18"/>
-            </LinearLayout>
+                    />
+            </RelativeLayout>
 
         </LinearLayout>
 
