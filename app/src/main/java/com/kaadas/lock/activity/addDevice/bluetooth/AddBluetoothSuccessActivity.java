@@ -24,6 +24,7 @@ import com.kaadas.lock.mvp.presenter.deviceaddpresenter.BindBleSuccessPresenter;
 import com.kaadas.lock.mvp.view.deviceaddview.IBindBleSuccessView;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.util.HttpUtils;
+import com.kaadas.lock.utils.EditTextWatcher;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.ToastUtil;
 
@@ -59,6 +60,11 @@ public class AddBluetoothSuccessActivity extends BaseActivity<IBindBleSuccessVie
         deviceName = getIntent().getStringExtra(KeyConstants.DEVICE_NAME);
         initData();
         initView();
+        initListener();
+    }
+
+    private void initListener() {
+        inputName.addTextChangedListener(new EditTextWatcher(this,null,inputName,50));
     }
 
     @Override
