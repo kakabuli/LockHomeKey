@@ -62,7 +62,6 @@ public class BLeConstants {
      *  蓝牙锁型号（特征值2A26）：包含DB2字符串，则密码数最大为20.
      *  锁型号，ASCII，“xxxxxxxVx.xx”
      *  出厂默认值：xxxxxVx.x
-     *
      *  此特征值区分不同的锁
      */
     public static final String UUID_LOCK_TYPE = "00002a26-0000-1000-8000-00805f9b34fb";
@@ -135,7 +134,10 @@ public class BLeConstants {
     /**
      * 进入boot模式才会有的服务
      */
-
-    public static final String OAD_SERVICE = "f000ffc0-0451-4000-b000-000000000000";    // OTA 模式下才有的服务UUID
+    public static final String TI_OAD_SERVICE = "f000ffc0-0451-4000-b000-000000000000";    // TI OTA 模式下才有的服务UUID
+    /**
+     * 进入boot模式才会有的服务
+     */
+    public static final String P6_OAD_SERVICE = "00060000-f8ce-11e4-abf4-0002a5d5c51b";;    //P6 OTA 模式下才有的服务UUID
 
 }

@@ -723,7 +723,7 @@
         <activity
             android:name=".activity.my.BarCodeActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".activity.addDevice.bluetooth.OtaUpgradeActivity"
+        <activity android:name=".publiclibrary.ota.ti.TiOtaUpgradeActivity"
             android:screenOrientation="portrait" >
         </activity>
     </application>

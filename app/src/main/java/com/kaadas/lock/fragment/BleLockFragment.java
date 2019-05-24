@@ -498,16 +498,12 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
                 ivExternalBig.setVisibility(View.VISIBLE);
                 ivExternalBig.setImageResource(R.mipmap.bluetooth_bu_fang_big_middle_icon);
                 ivExternalMiddle.setVisibility(View.GONE);
-//                ivExternalMiddle.setImageResource();
                 ivExternalSmall.setVisibility(View.GONE);
-//                ivExternalSmall.setImageResource();
                 ivInnerMiddle.setVisibility(View.VISIBLE);
                 ivInnerMiddle.setImageResource(R.mipmap.bluetooth_bu_fang_inner_middle_icon);
                 ivInnerSmall.setVisibility(View.VISIBLE);
                 ivInnerSmall.setImageResource(R.mipmap.bluetooth_lock_bu_fang_inner_small_icon);
                 tvInner.setVisibility(View.GONE);
-//                tvInner.setText(getString();
-//                tvInner.setTextColor();
                 tvExternal.setVisibility(View.VISIBLE);
                 tvExternal.setTextColor(getResources().getColor(R.color.cC6F5FF));
                 tvExternal.setText(getString(R.string.bu_fang_status));
@@ -519,7 +515,6 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
                 ivExternalMiddle.setVisibility(View.VISIBLE);
                 ivExternalMiddle.setImageResource(R.mipmap.bluetooth_safe_external_middle_icon);
                 ivExternalSmall.setVisibility(View.GONE);
-//                ivExternalSmall.setImageResource();
                 ivInnerMiddle.setVisibility(View.VISIBLE);
                 ivInnerMiddle.setImageResource(R.mipmap.bluetooth_lock_safe_inner_midder_icon);
                 ivInnerSmall.setVisibility(View.VISIBLE);
@@ -757,8 +752,9 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
                     ToastUtil.getInstance().showShort(R.string.random_verify_error);
                     return;
                 }
-                mPresenter.realOpenLock(name, false);
                 alertDialog.dismiss();
+                mPresenter.realOpenLock(name, false);
+
             }
         });
     }

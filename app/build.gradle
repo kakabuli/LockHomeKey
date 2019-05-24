@@ -20,8 +20,9 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         flavorDimensions "versionCode"
         multiDexEnabled true
-        ndk { //设置支持的SO库架构（开发者可以根据需要，选择一个或多个平台的so）
-            abiFilters "armeabi-v7a", "arm64-v8a", "x86"
+        ndk { //设置支持的SO库架构（开发者可以根据需要，选择一个或多个平台的so） 去掉对X86的手机So的支持
+//            abiFilters "armeabi-v7a", "arm64-v8a", "x86"
+            abiFilters "armeabi-v7a", "arm64-v8a"
         }
         manifestPlaceholders = [
                 GETUI_APP_ID    : "5zODhkZOQd66zCoOgxX152",
@@ -146,4 +147,7 @@ dependencies {
     implementation 'com.getui:mzp:1.0.7'
     //选择器控件
     implementation 'com.contrarywind:Android-PickerView:4.1.6'
+
+    //文件下载的SDK
+    implementation 'com.liulishuo.filedownloader:library:1.7.6'
 }

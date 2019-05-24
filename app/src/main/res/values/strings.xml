@@ -958,4 +958,18 @@
     <string name="ota_fail">升级失败</string>
     <string name="ota_fail_reply">锁OTA升级失败，是否需要重试？</string>
     <string name="input_correct_verification_code">请输入正确验证码</string>
+    <string name="check_update_failed">检查版本信息失败，请稍后再试！</string>
+    <string name="data_params_error">数据参数不对</string>
+    <string name="sn_error">Sn格式不正确</string>
+    <string name="hava_ble_new_version">检测到新蓝牙版本，是否升级？</string>
+    <string name="update_success">升级完成，设备正在重启！</string>
+    <string name="image_not_match">镜像不匹配，请重试！</string>
+    <string name="update_failed_please_retry">升级过程中断开，请靠近后重试</string>
+
+    <!--   P6 OTA 升级  -->
+    <string name="ota_alert_invalid_file">Invalid or corrupted file</string>
+    <string name="alert_message_ota_error">Firmware update canceled\nError: </string>
+    <string name="alert_message_silicon_id_error">Error: The SiliconID or SiliconRev does not match</string>
+    <string name="alert_message_verify_application_error">Error: Verification failed for the programmed application</string>
+
 </resources>

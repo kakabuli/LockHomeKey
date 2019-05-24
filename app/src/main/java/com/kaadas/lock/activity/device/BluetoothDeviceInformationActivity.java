@@ -1,9 +1,7 @@
 package com.kaadas.lock.activity.device;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -11,17 +9,12 @@ import android.widget.TextView;
 
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
-import com.kaadas.lock.activity.device.bluetooth.BluetoothLockOTAUpgradeActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseBleActivity;
 import com.kaadas.lock.mvp.presenter.DeviceInfoPresenter;
 import com.kaadas.lock.mvp.view.IDeviceInfoView;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.publiclibrary.http.result.OTAResult;
-import com.kaadas.lock.publiclibrary.ota.OtaConstants;
 import com.kaadas.lock.utils.AlertDialogUtil;
-import com.kaadas.lock.utils.KeyConstants;
-import com.kaadas.lock.utils.LogUtils;
-import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.ToastUtil;
 
 import butterknife.BindView;

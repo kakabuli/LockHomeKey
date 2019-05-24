@@ -521,6 +521,12 @@ public class BluetoothLockFunctionActivity extends BaseBleActivity<IDeviceDetail
     }
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        handler.removeCallbacks(lockRunnable);
+    }
+
+    @Override
     public void onSafeMode() {
 
     }
