@@ -31,7 +31,13 @@
                 android:layout_centerInParent="true"
                 android:textColor="#FFFFFF"
                 android:text="壮壮家的门锁"
-                android:textSize="@dimen/sp_17" />
+                android:textSize="@dimen/sp_17"
+                android:singleLine="true"
+                android:ellipsize="end"
+                android:layout_marginRight="@dimen/dp_30"
+                android:layout_marginLeft="@dimen/dp_50"
+
+                />
         </RelativeLayout>
 
         <LinearLayout

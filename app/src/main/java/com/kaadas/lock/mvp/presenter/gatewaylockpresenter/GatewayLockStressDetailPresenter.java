@@ -64,8 +64,10 @@ public class GatewayLockStressDetailPresenter<T> extends BasePresenter<IGatewayL
                                 if (mViewRef.get()!=null){
                                     mViewRef.get().getStressPwdSuccess(lockPwdFuncBean.getReturnData().getStatus());
                                     String uid=MyApplication.getInstance().getUid();
-                                    deleteOnePwd(gatewayId,deviceId,uid,"09");
-                                    addOnePwd(gatewayId,deviceId,MyApplication.getInstance().getUid(),"09",lockPwdFuncBean.getReturnData().getStatus());
+                                    if (lockPwdFuncBean.getReturnData().getStatus()==1){
+                                        deleteOnePwd(gatewayId,deviceId,uid,"09");
+                                        addOnePwd(gatewayId,deviceId,MyApplication.getInstance().getUid(),"09",lockPwdFuncBean.getReturnData().getStatus());
+                                    }
                                 }
                             }else{
                                 if (mViewRef.get()!=null){

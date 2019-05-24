@@ -6,11 +6,15 @@ import com.kaadas.lock.mvp.mvpbase.BlePresenter;
 import com.kaadas.lock.mvp.view.IDeviceMoreView;
 import com.kaadas.lock.publiclibrary.ble.BleCommandFactory;
 import com.kaadas.lock.publiclibrary.ble.BleProtocolFailedException;
+import com.kaadas.lock.publiclibrary.ble.RetryWithTime;
 import com.kaadas.lock.publiclibrary.ble.responsebean.BleDataBean;
+import com.kaadas.lock.publiclibrary.ble.responsebean.ReadInfoBean;
 import com.kaadas.lock.publiclibrary.http.XiaokaiNewServiceImp;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
+import com.kaadas.lock.publiclibrary.http.result.OTAResult;
 import com.kaadas.lock.publiclibrary.http.util.BaseObserver;
 import com.kaadas.lock.publiclibrary.http.util.RxjavaHelper;
+import com.kaadas.lock.publiclibrary.rxutils.TimeOutException;
 import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
@@ -19,8 +23,11 @@ import com.kaadas.lock.utils.SPUtils;
 
 import java.util.concurrent.TimeUnit;
 
+import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
 import io.reactivex.functions.Predicate;
 
 /**
@@ -32,6 +39,10 @@ public class DeviceMorePresenter extends BlePresenter<IDeviceMoreView> {
     private Disposable getDeviceInfoDisposable;
     private Disposable voiceDisposable;
     private Disposable autoLockDisposable;
+    private Disposable readSerialNumberDisposable;
+    private Disposable otaDisposable;
+    private Disposable readSoftwareRevDisposable;
+
     private Disposable deviceStateChangeDisposable;
     public void deleteDevice(String deviceName) {
         XiaokaiNewServiceImp.deleteDevice(MyApplication.getInstance().getUid(), deviceName)
@@ -128,9 +139,9 @@ public class DeviceMorePresenter extends BlePresenter<IDeviceMoreView> {
                             mViewRef.get().getVoice(voice);
                         }
                         byte[] bytes = Rsa.byteToBit(deValue[4]);
-                        int openLock=bytes[0];
+                        int openLock = bytes[0];
 //                        0：手动 1：自动
-                        boolean isOpen=openLock==1?true:false;
+                        boolean isOpen = openLock == 1 ? true : false;
                         if (mViewRef.get() != null) {
                             mViewRef.get().getAutoLock(isOpen);
                         }
@@ -228,16 +239,15 @@ public class DeviceMorePresenter extends BlePresenter<IDeviceMoreView> {
 
     /**
      * 自动关门
-     *
      * 0x00：开启
      * 0x01：关闭
      */
     public void setAutoLock(boolean isOpen) {
         byte[] command;
-        if (isOpen){
-             command = BleCommandFactory.setLockParamsCommand((byte) 0x04, new byte[]{(byte) 0}, bleLockInfo.getAuthKey());
-        }else {
-             command = BleCommandFactory.setLockParamsCommand((byte) 0x04, new byte[]{(byte) 1}, bleLockInfo.getAuthKey());
+        if (isOpen) {
+            command = BleCommandFactory.setLockParamsCommand((byte) 0x04, new byte[]{(byte) 0}, bleLockInfo.getAuthKey());
+        } else {
+            command = BleCommandFactory.setLockParamsCommand((byte) 0x04, new byte[]{(byte) 1}, bleLockInfo.getAuthKey());
         }
 
         bleService.sendCommand(command);
@@ -253,7 +263,6 @@ public class DeviceMorePresenter extends BlePresenter<IDeviceMoreView> {
                 .subscribe(new Consumer<BleDataBean>() {
                     @Override
                     public void accept(BleDataBean bleDataBean) throws Exception {
-//                        byte[] deValue = Rsa.decrypt(bleDataBean.getPayload(), bleLockInfo.getAuthKey());
                         byte b = bleDataBean.getPayload()[0];
                      /*   0x00	成功
                         0x01	失败
@@ -262,26 +271,15 @@ public class DeviceMorePresenter extends BlePresenter<IDeviceMoreView> {
                         0x9A	命令正在执行（TSN重复）
                         0xC2	校验错误
                         0xFF	锁接收到命令，但无结果返回*/
-
-                        if (0==b){
+                        if (0 == b) {
                             if (mViewRef.get() != null) {
                                 mViewRef.get().setAutoLockSuccess(isOpen);
                             }
-                        }else {
+                        } else {
                             if (mViewRef.get() != null) {
                                 mViewRef.get().setAutoLockFailed(b);
                             }
                         }
-                     /*   if (bleDataBean.isConfirm() && bleDataBean.getPayload()[0] == 0) { //设置成功
-                            if (mViewRef.get() != null) {
-                                mViewRef.get().setAutoLockSuccess(isOpen);
-                            }
-                        } else {  //设置失败
-                            if (mViewRef.get() != null) {
-                                mViewRef.get().setAutoLockailed(new BleProtocolFailedException(0xff & bleDataBean.getPayload()[0]), isOpen);
-                            }
-                        }*/
-
                         toDisposable(autoLockDisposable);
                     }
                 }, new Consumer<Throwable>() {
@@ -293,6 +291,132 @@ public class DeviceMorePresenter extends BlePresenter<IDeviceMoreView> {
                     }
                 });
         compositeDisposable.add(autoLockDisposable);
+    }
+
+    public void readSerialNumber() {
+        toDisposable(readSerialNumberDisposable);
+        readSerialNumberDisposable = Observable.just(0)
+                .flatMap(new Function<Integer, ObservableSource<ReadInfoBean>>() {
+                    @Override
+                    public ObservableSource<ReadInfoBean> apply(Integer integer) throws Exception {
+                        return bleService.readSN(500);
+                    }
+                })
+                .filter(new Predicate<ReadInfoBean>() {
+                    @Override
+                    public boolean test(ReadInfoBean readInfoBean) throws Exception {
+                        if (readInfoBean.type == ReadInfoBean.TYPE_SN) {
+                            return true;
+                        }
+                        return false;
+                    }
+                })
+                .timeout(2000, TimeUnit.MILLISECONDS)         //2秒没有读取到SerialNumber  则认为超时
+                .retryWhen(new RetryWithTime(2, 0))
+                .compose(RxjavaHelper.observeOnMainThread())
+                .subscribe(new Consumer<ReadInfoBean>() {
+                    @Override
+                    public void accept(ReadInfoBean readInfoBean) throws Exception {
+                        LogUtils.e("读取SerialNumber成功 " + readInfoBean.data);  //进行下一步
+                        bleLockInfo.setSerialNumber((String) readInfoBean.data);
+                        if (mViewRef.get() != null) {
+                            mViewRef.get().readSnSuccess((String) readInfoBean.data);
+                        }
+                        toDisposable(readSerialNumberDisposable);
+                        readSoftwareRev((String) readInfoBean.data);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        LogUtils.e(" 读取SerialNumber失败  " + (throwable instanceof TimeOutException) + "   " + throwable.getMessage());
+                        if (mViewRef.get() != null) {
+                            mViewRef.get().readInfoFailed(throwable);
+                        }
+                    }
+                });
+
+        compositeDisposable.add(readSerialNumberDisposable);
+    }
+
+
+    private void readSoftwareRev(String sn) {
+        toDisposable(readSoftwareRevDisposable);
+        readSoftwareRevDisposable = Observable.just(0)
+                .flatMap(new Function<Integer, ObservableSource<ReadInfoBean>>() {
+                    @Override
+                    public ObservableSource<ReadInfoBean> apply(Integer integer) throws Exception {
+                        return bleService.readBleVersion();
+                    }
+                })
+                .filter(new Predicate<ReadInfoBean>() {
+                    @Override
+                    public boolean test(ReadInfoBean readInfoBean) throws Exception {
+                        if (readInfoBean.type == ReadInfoBean.TYPE_BLEINFO) {
+                            return true;
+                        }
+                        return false;
+                    }
+                })
+                .timeout(2000, TimeUnit.MILLISECONDS)         //2秒没有读取到SoftwareRev  则认为超时
+                .retryWhen(new RetryWithTime(2, 0))
+                .compose(RxjavaHelper.observeOnMainThread())
+                .subscribe(new Consumer<ReadInfoBean>() {
+                    @Override
+                    public void accept(ReadInfoBean readInfoBean) throws Exception {
+                        LogUtils.e(" 读取SoftwareRev成功 " + readInfoBean.data);  //进行下一步
+                        bleLockInfo.setSoftware((String) readInfoBean.data);
+                        if (mViewRef.get() != null) {
+                            String version = (String) readInfoBean.data;
+                            if (version.contains("-")) {
+                                String[] split = version.split("-");
+                                if (split.length > 0) {
+                                    version = split[0];
+                                }
+                            }
+                            mViewRef.get().readVersionSuccess(version);
+                            checkOtaInfo(sn, version);
+                        }
+                        toDisposable(readSoftwareRevDisposable);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        LogUtils.e(" 读取SoftwareRev失败  " + (throwable instanceof TimeOutException) + "   " + throwable.getMessage());
+                        if (mViewRef.get() != null) {
+                            mViewRef.get().readInfoFailed(throwable);
+                        }
+                    }
+                });
+        compositeDisposable.add(readSoftwareRevDisposable);
+    }
+
+
+    public void checkOtaInfo(String SN, String version) {
+        //请求成功
+        otaDisposable = XiaokaiNewServiceImp.getOtaInfo(1, SN, version)
+                .subscribe(new Consumer<OTAResult>() {
+                    @Override
+                    public void accept(OTAResult otaResult) throws Exception {
+                        if ("200".equals(otaResult.getCode())) {
+                            //请求成功
+                            if (mViewRef.get() != null) {
+                                mViewRef.get().needUpdate(otaResult.getData(),SN,version);
+                            }
+                        } else {
+                            if (mViewRef.get() != null) {
+                                mViewRef.get().notNeedUpdate(otaResult.getCode());
+                            }
+                        }
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        if (mViewRef.get() != null) {
+                            mViewRef.get().readInfoFailed(throwable);
+                        }
+                    }
+                });
+        compositeDisposable.add(otaDisposable);
     }
 
     @Override

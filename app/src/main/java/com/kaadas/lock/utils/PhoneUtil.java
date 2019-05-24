@@ -22,7 +22,7 @@ public class PhoneUtil {
      * 判断手机格式是否正确
      */
     public static boolean isMobileNO(String mobiles) {
-        Pattern p = Pattern.compile("^((13[0-9])|(15[^4,\\D])|(17[0-9])|(18[0-9]))\\d{8}$");
+        Pattern p = Pattern.compile("^0?(13|14|15|16|17|18|19)[0-9]{9}$");
         //新加所有18段 17段
         Matcher m = p.matcher(mobiles);
         return m.matches();
