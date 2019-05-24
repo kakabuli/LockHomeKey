@@ -142,7 +142,6 @@ public class CatEyeMorePresenter <T> extends BasePresenter<IGatEyeView> {
             MqttMessage mqttMessage = MqttCommandFactory.deleteDevice(gatewayId, deviceId, bustType);
             deleteCatEyeDisposable = mqttService
                     .mqttPublish(MqttConstant.getCallTopic(MyApplication.getInstance().getUid()), mqttMessage)
-                    .timeout(10 * 1000, TimeUnit.MILLISECONDS)
                     .filter(new Predicate<MqttData>() {
                         @Override
                         public boolean test(MqttData mqttData) throws Exception {
@@ -154,6 +153,7 @@ public class CatEyeMorePresenter <T> extends BasePresenter<IGatEyeView> {
                         }
                     })
                     .compose(RxjavaHelper.observeOnMainThread())
+                    .timeout(10 * 1000, TimeUnit.MILLISECONDS)
                     .subscribe(new Consumer<MqttData>() {
                         @Override
                         public void accept(MqttData mqttData) throws Exception {
@@ -162,12 +162,12 @@ public class CatEyeMorePresenter <T> extends BasePresenter<IGatEyeView> {
                             if (deleteGatewayLockDeviceBean != null) {
                                 LogUtils.e(deleteGatewayLockDeviceBean.getDevtype()+"删除猫眼"+deleteGatewayLockDeviceBean.getEventparams().getEvent_str());
                                 if ("kdscateye".equals(deleteGatewayLockDeviceBean.getDevtype()) && deleteGatewayLockDeviceBean.getEventparams().getEvent_str().equals("delete")&&deviceId.equals(deleteGatewayLockDeviceBean.getDeviceId())) {
-                                    if (mViewRef.get() != null) {
+                                    if (mViewRef!=null && mViewRef.get() != null) {
                                         mViewRef.get().deleteDeviceSuccess();
                                         MyApplication.getInstance().getAllDevicesByMqtt(true);
                                     }
                                 } else {
-                                    if (mViewRef.get() != null) {
+                                    if (mViewRef!=null && mViewRef.get() != null) {
                                         mViewRef.get().deleteDeviceFail();
                                     }
                                 }
@@ -176,7 +176,7 @@ public class CatEyeMorePresenter <T> extends BasePresenter<IGatEyeView> {
                     }, new Consumer<Throwable>() {
                         @Override
                         public void accept(Throwable throwable) throws Exception {
-                            if (mViewRef.get() != null) {
+                            if (mViewRef!=null && mViewRef.get() != null) {
                                 mViewRef.get().deleteDeviceThrowable(throwable);
                             }
                         }
