@@ -34,6 +34,7 @@ import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.mvp.presenter.cateye.VideoPresenter;
 import com.kaadas.lock.mvp.view.cateye.IVideoView;
 import com.kaadas.lock.publiclibrary.bean.CateEyeInfo;
+import com.kaadas.lock.publiclibrary.bean.GatewayInfo;
 import com.kaadas.lock.publiclibrary.bean.GwLockInfo;
 import com.kaadas.lock.publiclibrary.linphone.MemeManager;
 import com.kaadas.lock.publiclibrary.linphone.linphone.util.LinphoneHelper;
@@ -411,8 +412,16 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
                     ToastUtil.getInstance().showLong(R.string.current_net_not_enable);
                     return;
                 }
+                List<GatewayInfo> allGateway = MyApplication.getInstance().getAllGateway();
+                GatewayInfo gatewayInfo = null;
+                for (GatewayInfo info:allGateway){
+                    if ( cateEyeInfo.getGwID().equals(info.getServerInfo().getDeviceSN())){
+                        gatewayInfo = info;
+                        break;
+                    }
+                }
                 //网关不在线
-                if (!"online".equals(cateEyeInfo.getGatewayInfo().getEvent_str())) {
+                if (gatewayInfo!=null && !"online".equals(gatewayInfo.getEvent_str())) {
                     ToastUtil.getInstance().showLong(R.string.gw_offline);
                     return;
                 }

@@ -102,7 +102,13 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
                         if (catEyeDeviceId.equalsIgnoreCase(cateEyeInfo.getServerInfo().getDeviceId())) {
                             LogUtils.e(Tag,"获取到网关Id为  " + cateEyeInfo.getGwID());
                             gwId = cateEyeInfo.getGwID();
-                            gatewayInfo = cateEyeInfo.getGatewayInfo();
+                            List<GatewayInfo> allGateway = MyApplication.getInstance().getAllGateway();
+                            for (GatewayInfo info:allGateway){
+                                if ( cateEyeInfo.getGwID().equals(info.getServerInfo().getDeviceSN())){
+                                    gatewayInfo = info;
+                                    break;
+                                }
+                            }
                             callInCatEyeInfo = cateEyeInfo;
                         }
                     }
@@ -284,7 +290,14 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
         }
         //meme网状态
         isCalling = true;
-        GatewayInfo gatewayInfo = cateEyeInfo.getGatewayInfo();
+        List<GatewayInfo> allGateway = MyApplication.getInstance().getAllGateway();
+        GatewayInfo gatewayInfo = null;
+        for (GatewayInfo info:allGateway){
+            if ( cateEyeInfo.getGwID().equals(info.getServerInfo().getDeviceSN())){
+                gatewayInfo = info;
+                break;
+            }
+        }
         if (gatewayInfo != null) {
             String meUsername = gatewayInfo.getServerInfo().getMeUsername();
             String mePwd = gatewayInfo.getServerInfo().getMePwd();

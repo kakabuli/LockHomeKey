@@ -13,6 +13,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.cateye.VideoCallBackActivity;
 import com.kaadas.lock.activity.cateye.VideoVActivity;
@@ -21,6 +22,7 @@ import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.mvp.presenter.cateye.CatEyeFunctionPresenter;
 import com.kaadas.lock.mvp.view.cateye.ICatEyeFunctionView;
 import com.kaadas.lock.publiclibrary.bean.CateEyeInfo;
+import com.kaadas.lock.publiclibrary.bean.GatewayInfo;
 import com.kaadas.lock.utils.BatteryView;
 import com.kaadas.lock.utils.Constants;
 import com.kaadas.lock.utils.DateUtils;
@@ -28,6 +30,8 @@ import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.NotifyRefreshActivity;
 import com.kaadas.lock.utils.networkListenerutil.NetWorkChangReceiver;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -119,8 +123,21 @@ public class CateyeFunctionActivity extends BaseActivity<ICatEyeFunctionView, Ca
             case R.id.ll_look_back:
                 String gatewayId=cateEyeInfo.getGwID();
                 String deviceId=cateEyeInfo.getServerInfo().getDeviceId();
-                String meUserName = cateEyeInfo.getGatewayInfo().getServerInfo().getMeUsername();
-                String mePwd= cateEyeInfo.getGatewayInfo().getServerInfo().getMePwd();
+
+                List<GatewayInfo> allGateway = MyApplication.getInstance().getAllGateway();
+                GatewayInfo gatewayInfo = null;
+                for (GatewayInfo info:allGateway){
+                    if ( cateEyeInfo.getGwID().equals(info.getServerInfo().getDeviceSN())){
+                        gatewayInfo = info;
+                        break;
+                    }
+                }
+                if(gatewayInfo== null){
+                    Toast.makeText(CateyeFunctionActivity.this,getString(R.string.refresh_geteway),Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                String meUserName = gatewayInfo.getServerInfo().getMeUsername();
+                String mePwd= gatewayInfo.getServerInfo().getMePwd();
                 Intent intentVideo = new Intent(CateyeFunctionActivity.this, VideoCallBackActivity.class);
                 intentVideo.putExtra("gatewayId",gatewayId);
                 intentVideo.putExtra("deviceId",deviceId);
