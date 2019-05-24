@@ -46,6 +46,7 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.constant.SpinnerStyle;
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
 import com.scwang.smartrefresh.layout.header.ClassicsHeader;
+import com.tencent.bugly.crashreport.CrashReport;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 import com.uuzuche.lib_zxing.activity.ZXingLibrary;
@@ -97,6 +98,7 @@ public class MyApplication extends Application {
         super.onCreate();
         LogUtils.e("attachView  App启动 ");
         instance = this;
+        CrashReport.initCrashReport(getApplicationContext(), "3ac95f5a71", true);
         initBleService();
         initMqttService();//启动MqttService
         initLinphoneService();
