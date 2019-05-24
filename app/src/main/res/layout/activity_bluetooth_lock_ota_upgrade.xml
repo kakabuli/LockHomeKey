@@ -54,7 +54,6 @@
             app:processingLineColor="#70BFFA"
             app:progresFailDrawable="@mipmap/ota_circle_grey"
             app:progresSuccDrawable="@mipmap/ota_circle_blue"
-
             app:progressingDrawable="@mipmap/ota_circle_blue"
             app:unprogressingDrawable="@mipmap/ota_circle_grey" />
 

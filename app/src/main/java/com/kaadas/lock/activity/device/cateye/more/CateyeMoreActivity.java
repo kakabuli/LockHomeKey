@@ -27,6 +27,7 @@ import com.kaadas.lock.mvp.view.cateye.IGatEyeView;
 import com.kaadas.lock.publiclibrary.bean.CateEyeInfo;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.CatEyeInfoBeanResult;
 import com.kaadas.lock.utils.AlertDialogUtil;
+import com.kaadas.lock.utils.EditTextWatcher;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LoadingDialog;
 import com.kaadas.lock.utils.StringUtil;
@@ -192,7 +193,7 @@ public class CateyeMoreActivity extends BaseActivity<IGatEyeView, CatEyeMorePres
                 String deviceNickname = tvDeviceName.getText().toString().trim();
                 editText.setText(deviceNickname);
                 editText.setSelection(deviceNickname.length());
-                editText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(16)});
+                editText.addTextChangedListener(new EditTextWatcher(this,null,editText,50));
                 tv_cancel.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -203,8 +204,8 @@ public class CateyeMoreActivity extends BaseActivity<IGatEyeView, CatEyeMorePres
                     @Override
                     public void onClick(View v) {
                         name = editText.getText().toString().trim();
-                        if (!StringUtil.nicknameJudge(name)) {
-                            ToastUtil.getInstance().showShort(R.string.nickname_verify_error);
+                        if (TextUtils.isEmpty(name)){
+                            ToastUtil.getInstance().showShort(getString(R.string.device_name_cannot_be_empty));
                             return;
                         }
                         //todo 判断名称是否修改
@@ -232,7 +233,8 @@ public class CateyeMoreActivity extends BaseActivity<IGatEyeView, CatEyeMorePres
                     }
                     @Override
                     public void right() {
-                        if (gatewayId != null && deviceId != null) {
+                      //  if (gatewayId != null && deviceId != null) {
+                        if (!TextUtils.isEmpty(gatewayId) &&  !TextUtils.isEmpty(deviceId)) {
                             mPresenter.deleteCatEye(gatewayId, deviceId, "net");
                             deleteAlertDialog=AlertDialogUtil.getInstance().noButtonDialog(context,getString(R.string.take_effect_be_being));
                             deleteAlertDialog.setCancelable(false);

@@ -55,7 +55,7 @@ public class GatewayOpenLockRecordFragment extends BaseFragment<IGatewayLockReco
     private String deviceId;
     private BluetoothRecordAdapter openLockRecordAdapter;
     private int page=1;
-
+    private int lastPage=0;
 
     @Nullable
     @Override
@@ -76,6 +76,7 @@ public class GatewayOpenLockRecordFragment extends BaseFragment<IGatewayLockReco
             public void onRefresh(@NonNull RefreshLayout refreshLayout) {
                 if (!TextUtils.isEmpty(gatewayId)&&!TextUtils.isEmpty(deviceId)){
                     page=1;
+                    lastPage=0;
                     if (mOpenLockList!=null){
                         mOpenLockList.clear();
                     }
@@ -87,11 +88,12 @@ public class GatewayOpenLockRecordFragment extends BaseFragment<IGatewayLockReco
         refreshLayout.setOnLoadMoreListener(new OnLoadMoreListener() {
             @Override
             public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
-                if (mOpenLockList!=null){
-                    mOpenLockList.clear();
-                }
                 if (!TextUtils.isEmpty(gatewayId)&&!TextUtils.isEmpty(deviceId)){
-                    mPresenter.openGatewayLockRecord(gatewayId,deviceId,MyApplication.getInstance().getUid(),page,20);
+                    if (lastPage==0){
+                        mPresenter.openGatewayLockRecord(gatewayId,deviceId,MyApplication.getInstance().getUid(),page,20);
+                    }else{
+                        refreshLayout.finishLoadMore();
+                    }
                 }
             }
         });
@@ -153,11 +155,13 @@ public class GatewayOpenLockRecordFragment extends BaseFragment<IGatewayLockReco
     public void getOpenLockRecordSuccess(List<SelectOpenLockResultBean.DataBean> mOpenLockRecordList) {
         //获取开锁记录成功
         LogUtils.e("获取到开锁记录多少条  " + mOpenLockRecordList.size());
-        if (mOpenLockRecordList.size()==0){
+        if (mOpenLockRecordList.size()==0&&page==1){
             changeView(false);
         }
       if (mOpenLockRecordList.size()==20){
           page++;
+      }else{
+        lastPage=page+1;
       }
         groupData(mOpenLockRecordList);
         if (openLockRecordAdapter != null) {

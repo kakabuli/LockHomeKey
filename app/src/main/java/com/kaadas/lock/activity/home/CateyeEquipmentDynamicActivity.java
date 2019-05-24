@@ -55,7 +55,7 @@ public class CateyeEquipmentDynamicActivity extends BaseActivity<ICateyeDynamicV
     private String deviceId;
     private int page=0;
     private BluetoothRecordAdapter catEyeAlarmAdapter;
-
+    private int lastPage=0;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,11 +89,12 @@ public class CateyeEquipmentDynamicActivity extends BaseActivity<ICateyeDynamicV
         refreshLayout.setOnLoadMoreListener(new OnLoadMoreListener() {
             @Override
             public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
-                if (mCatEyeInfoList != null) {
-                    mCatEyeInfoList.clear();
-                }
-                if (!TextUtils.isEmpty(gatewayId) && !TextUtils.isEmpty(deviceId)) {
-                    mPresenter.getCatEyeDynamicInfo(page, 20, gatewayId, deviceId);
+                if (lastPage==0) {
+                    if (!TextUtils.isEmpty(gatewayId) && !TextUtils.isEmpty(deviceId)) {
+                        mPresenter.getCatEyeDynamicInfo(page, 20, gatewayId, deviceId);
+                    }
+                }else{
+                    refreshLayout.finishLoadMore();
                 }
             }
         });
@@ -229,11 +230,13 @@ public class CateyeEquipmentDynamicActivity extends BaseActivity<ICateyeDynamicV
     public void getCateyeDynamicSuccess(List<CatEyeEvent> catEyeEvent) {
         //获取开锁记录成功
         LogUtils.e("获取到预警记录多少条  " + catEyeEvent.size());
-        if (catEyeEvent.size() == 0) {
+        if (catEyeEvent.size() == 0&&page==0) {
             changeView(false);
         }
         if (catEyeEvent.size() == 20) {
             page++;
+        }else{
+            lastPage=page+1;
         }
         groupData(catEyeEvent);
         if (catEyeAlarmAdapter != null) {

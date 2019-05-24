@@ -194,4 +194,7 @@ public class MqttConstant {
 
     //网关协调器信道设置
     public static final String SET_ZB_CHANNEL="setZbChannel";
+
+    //获取守护次数
+    public static final String COUNT_OPEN_LOCK_RECORD="countOpenLockRecord";
 }
