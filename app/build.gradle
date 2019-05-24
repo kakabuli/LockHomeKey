@@ -1,11 +1,17 @@
 apply plugin: 'com.android.application'
 apply plugin: 'org.greenrobot.greendao'
-
+apply plugin: 'bugly'   //添加bugly的符号表
 
 greendao {
     schemaVersion 5// 数据库版本号
     daoPackage 'com.kaadas.lock.utils.greenDao.db'//自动生成的dao的包名，包名默认是entity所在的包；
     targetGenDir 'src/main/java'//生成数据库文件的目录
+}
+
+bugly {
+    appId = "3ac95f5a71"
+    appKey = "acc5719a-eb16-4bbb-90c9-d3c5d90934bd"
+    debug = true
 }
 
 
@@ -150,4 +156,6 @@ dependencies {
 
     //文件下载的SDK
     implementation 'com.liulishuo.filedownloader:library:1.7.6'
+    implementation 'com.tencent.bugly:crashreport:latest.release' //其中latest.release指代最新Bugly SDK版本号，也可以指定明确的版本号，例如2.1.9
+    implementation 'com.tencent.bugly:nativecrashreport:latest.release' //其中latest.release指代最新Bugly NDK版本号，也可以指定明确的版本号，例如3.0
 }
