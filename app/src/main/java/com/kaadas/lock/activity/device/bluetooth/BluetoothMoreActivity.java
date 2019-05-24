@@ -16,14 +16,16 @@ import android.widget.TextView;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.MainActivity;
-import com.kaadas.lock.activity.addDevice.bluetooth.OtaUpgradeActivity;
-import com.kaadas.lock.activity.device.BluetoothDeviceInformationActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseBleActivity;
 import com.kaadas.lock.mvp.presenter.DeviceMorePresenter;
 import com.kaadas.lock.mvp.view.IDeviceMoreView;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
+import com.kaadas.lock.publiclibrary.http.result.OTAResult;
 import com.kaadas.lock.publiclibrary.http.util.HttpUtils;
+import com.kaadas.lock.publiclibrary.ota.p6.P6OtaUpgradeActivity;
+import com.kaadas.lock.publiclibrary.ota.OtaConstants;
+import com.kaadas.lock.publiclibrary.ota.ti.TiOtaUpgradeActivity;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
@@ -114,21 +116,6 @@ public class BluetoothMoreActivity extends BaseBleActivity<IDeviceMoreView, Devi
         }
 
         //todo 获取到设备名字时,key都加上设备名字
-
-
-//        amAutoLockStatus = (boolean) SPUtils.get(KeyConstants.AM_AUTO_LOCK_STATUS, false);
-     /*   if (amAutoLockStatus) {
-            ivAm.setImageResource(R.mipmap.iv_open);
-        } else {
-            ivAm.setImageResource(R.mipmap.iv_close);
-        }*/
-
-/*        silentModeStatus = (boolean) SPUtils.get(KeyConstants.SILENT_MODE_STATUS, false);
-        if (silentModeStatus) {
-            ivSilentMode.setImageResource(R.mipmap.iv_open);
-        } else {
-            ivSilentMode.setImageResource(R.mipmap.iv_close);
-        }*/
     }
 
     private void initClick() {
@@ -246,26 +233,16 @@ public class BluetoothMoreActivity extends BaseBleActivity<IDeviceMoreView, Devi
                     showLoading(getString(R.string.is_setting));
                 }
 
-  /*              if (silentModeStatus) {
-                    //打开状态 现在关闭
-                    ivSilentMode.setImageResource(R.mipmap.iv_close);
-                    SPUtils.put(KeyConstants.SILENT_MODE_STATUS, false);
-                } else {
-                    //关闭状态 现在打开
-                    ivSilentMode.setImageResource(R.mipmap.iv_open);
-                    SPUtils.put(KeyConstants.SILENT_MODE_STATUS, true);
-                }
-                silentModeStatus = !silentModeStatus;*/
                 break;
             case R.id.rl_device_information:
                 intent = new Intent(this, BluetoothAuthorizationDeviceInformationActivity.class);
-//                intent.putExtra(KeyConstants.BLE_DEVICE_INFO, bleLockInfo);
-//                intent.putExtra(KeyConstants.SOURCE,KeyConstants.BLUETOOTH_MORE_PAGE);
                 startActivity(intent);
                 break;
             case R.id.rl_check_firmware_update:
-                intent=new Intent(this,OtaUpgradeActivity.class);
-                startActivity(intent);
+                LogUtils.e("");
+                if (mPresenter.isAuth(bleLockInfo, true)) {
+                    mPresenter.readSerialNumber();
+                }
                 break;
             case R.id.btn_delete:
                 AlertDialogUtil.getInstance().noEditTwoButtonDialog(this, getString(R.string.device_delete_dialog_head), getString(R.string.device_delete_dialog_content), getString(R.string.cancel), getString(R.string.query), new AlertDialogUtil.ClickListener() {
@@ -332,7 +309,6 @@ public class BluetoothMoreActivity extends BaseBleActivity<IDeviceMoreView, Devi
 
     @Override
     public void getVoice(int voice) {
-        LogUtils.e("fjh", voice + "-----getVoice");
         if (voice == 0) {
             silentModeStatus = true;
             ivSilentMode.setImageResource(R.mipmap.iv_open);
@@ -345,7 +321,6 @@ public class BluetoothMoreActivity extends BaseBleActivity<IDeviceMoreView, Devi
     @Override
     public void setVoiceSuccess(int voice) {
         hiddenLoading();
-        LogUtils.e("fjh", voice + "-----setVoiceSuccess");
         if (voice == 0) {
             silentModeStatus = true;
             ivSilentMode.setImageResource(R.mipmap.iv_open);
@@ -355,14 +330,12 @@ public class BluetoothMoreActivity extends BaseBleActivity<IDeviceMoreView, Devi
             ivSilentMode.setImageResource(R.mipmap.iv_close);
             ivSilentMode.setEnabled(true);
         }
-
         ToastUtil.getInstance().showLong(getString(R.string.set_success));
     }
 
     @Override
     public void setVoiceFailed(Throwable throwable, int voice) {
         hiddenLoading();
-        LogUtils.e("fjh", voice + "-----setVoiceFailed");
         if (voice == 0) {
             silentModeStatus = true;
             ivSilentMode.setImageResource(R.mipmap.iv_open);
@@ -379,10 +352,10 @@ public class BluetoothMoreActivity extends BaseBleActivity<IDeviceMoreView, Devi
     @Override
     public void getAutoLock(boolean isOpen) {
         if (isOpen) {
-            amAutoLockStatus=true;
+            amAutoLockStatus = true;
             ivAm.setImageResource(R.mipmap.iv_open);
         } else {
-            amAutoLockStatus=false;
+            amAutoLockStatus = false;
             ivAm.setImageResource(R.mipmap.iv_close);
         }
     }
@@ -391,10 +364,10 @@ public class BluetoothMoreActivity extends BaseBleActivity<IDeviceMoreView, Devi
     public void setAutoLockSuccess(boolean isOpen) {
         hiddenLoading();
         if (isOpen) {
-            amAutoLockStatus=true;
+            amAutoLockStatus = true;
             ivAm.setImageResource(R.mipmap.iv_open);
         } else {
-            amAutoLockStatus=false;
+            amAutoLockStatus = false;
             ivAm.setImageResource(R.mipmap.iv_close);
         }
         amAutoLockStatus = !amAutoLockStatus;
@@ -403,25 +376,25 @@ public class BluetoothMoreActivity extends BaseBleActivity<IDeviceMoreView, Devi
     @Override
     public void setAutoLockFailed(byte b) {
         hiddenLoading();
-        String strError="";
-        switch (b){
+        String strError = "";
+        switch (b) {
             case (byte) (0x01):
-                strError=getString(R.string.fail);
+                strError = getString(R.string.fail);
                 break;
             case (byte) (0x85):
-                strError=getString(R.string.field_error);
+                strError = getString(R.string.field_error);
                 break;
             case (byte) (0x94):
-                strError=getString(R.string.time_out);
+                strError = getString(R.string.time_out);
                 break;
             case (byte) (0x9A):
-                strError=getString(R.string.command_is_execute);
+                strError = getString(R.string.command_is_execute);
                 break;
             case (byte) (0xC2):
-                strError=getString(R.string.check_error);
+                strError = getString(R.string.check_error);
                 break;
             case (byte) (0xFF):
-                strError=getString(R.string.lock_receive_command_but_nothing);
+                strError = getString(R.string.lock_receive_command_but_nothing);
                 break;
 
         }
@@ -432,7 +405,89 @@ public class BluetoothMoreActivity extends BaseBleActivity<IDeviceMoreView, Devi
     @Override
     public void setAutoLockError(Throwable throwable) {
         hiddenLoading();
-        ToastUtil.getInstance().showShort(throwable.toString()+"");
+        ToastUtil.getInstance().showShort(throwable.toString() + "");
+    }
+
+    @Override
+    public void readSnSuccess(String sn) {
+
+    }
+
+    @Override
+    public void readInfoFailed(Throwable throwable) {
+        ToastUtil.getInstance().showLong(getString(R.string.check_update_failed));
+    }
+
+    @Override
+    public void readVersionSuccess(String version) {
+
+    }
+
+    @Override
+    public void needUpdate(OTAResult.UpdateFileInfo updateFileInfo, String Sn, String version) {
+        if (bleLockInfo.getBleType() == 1){ //Ti升级
+
+        }else if (bleLockInfo.getBleType() == 2 ){  //P6升级
+
+        }
+        else {
+
+            ToastUtil.getInstance().showLong(getString(R.string.check_update_failed));
+        }
+        Intent intent = new Intent(this, TiOtaUpgradeActivity.class);
+        startActivity(intent);
+        AlertDialogUtil.getInstance().noEditTwoButtonDialog(this, getString(R.string.hint)
+                , getString(R.string.hava_ble_new_version), getString(R.string.cancel), getString(R.string.confirm), new AlertDialogUtil.ClickListener() {
+                    @Override
+                    public void left() {
+
+                    }
+                    @Override
+                    public void right() {
+
+                        SPUtils.put(KeyConstants.DEVICE_SN + bleLockInfo.getServerLockInfo().getMacLock(), Sn);
+                        SPUtils.put(KeyConstants.BLE_VERSION + bleLockInfo.getServerLockInfo().getMacLock(), version);
+                        LogUtils.e("升级的版本信息是   " + Sn);
+                        MyApplication.getInstance().getBleService().release();
+                        Intent intent = new Intent();
+                        intent.putExtra(OtaConstants.fileName, "Kaadas_" + updateFileInfo.getFileVersion() + "_" + updateFileInfo.getFileMd5() + ".bin");
+                        intent.putExtra(OtaConstants.bindUrl, updateFileInfo.getFileUrl());
+                        intent.putExtra(OtaConstants.deviceMac, bleLockInfo.getServerLockInfo().getMacLock());
+                        intent.putExtra(OtaConstants.password1, bleLockInfo.getServerLockInfo().getPassword1());
+                        intent.putExtra(OtaConstants.password2, bleLockInfo.getServerLockInfo().getPassword2());
+                        if (bleLockInfo.getBleType() == 1){ //Ti升级
+                            intent.setClass(BluetoothMoreActivity.this, TiOtaUpgradeActivity.class);
+                        }else if (bleLockInfo.getBleType() == 2 ){  //P6升级
+                            intent.setClass(BluetoothMoreActivity.this, P6OtaUpgradeActivity.class);
+                        }
+                        //还未完善   不跳转
+//                        startActivity(intent);
+                    }
+                }
+        );
+    }
+
+    @Override
+    public void notNeedUpdate(String errorCode) {
+        if ("401".equals(errorCode)) {  //数据参数不对
+            ToastUtil.getInstance().showLong(getString(R.string.data_params_error));
+        } else if ("102".equals(errorCode)) { //SN格式不正确
+            ToastUtil.getInstance().showLong(R.string.sn_error);
+        } else if ("210".equals(errorCode)) { //查无结果
+            //当前已是最新版本
+            AlertDialogUtil.getInstance().noEditSingleButtonDialog(this, getString(R.string.hint)
+                    , getString(R.string.already_newest_version), getString(R.string.confirm), new AlertDialogUtil.ClickListener() {
+                        @Override
+                        public void left() {
+
+                        }
+
+                        @Override
+                        public void right() {
+
+                        }
+                    });
+        }
     }
 
     @Override

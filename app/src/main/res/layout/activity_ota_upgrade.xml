@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.kaadas.lock.activity.addDevice.bluetooth.OtaUpgradeActivity"
+    tools:context="com.kaadas.lock.publiclibrary.ota.ti.TiOtaUpgradeActivity"
     android:orientation="vertical">
 
     <include

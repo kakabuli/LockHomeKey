@@ -122,11 +122,12 @@ public class BleService extends Service {
     private Runnable releaseRunnable1;
     private BluetoothGattCharacteristic lockStatusChar;
     private BluetoothGattCharacteristic lockFunChar;
-    private BluetoothGattService otaService;
+    private BluetoothGattService tiotaService;
     private BluetoothLeScanner bluetoothLeScanner;
     private ScanSettings scanSettings;
     private String currentMac;
     private int bleVersion;
+    private BluetoothGattService p6otaService;
 
     public int getBleVersion() {
         return bleVersion;
@@ -194,6 +195,7 @@ public class BleService extends Service {
                         }, new Consumer<Throwable>() {
                             @Override
                             public void accept(Throwable throwable) throws Exception {
+
                             }
                         }
                 );
@@ -396,7 +398,7 @@ public class BleService extends Service {
         public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
             super.onCharacteristicChanged(gatt, characteristic);
             byte[] value = characteristic.getValue();
-            LogUtils.e("收到数据  " + Rsa.bytesToHexString(value));
+            LogUtils.e("收到数据 Service  " + Rsa.bytesToHexString(value));
             //加密数据中的   开锁记录   报警记录    不要回确认帧    秘钥上报  需要逻辑层才回确认帧
             if (value[0] == 1 && !((value[3] & 0xff) == 0x04)
                     && !((value[3] & 0xff) == 0x14) && !(value[3] == 0x08) && bleVersion != 1) {  //如果是加密数据  那么回确认帧
@@ -656,21 +658,29 @@ public class BleService extends Service {
         return readSystemIDSubject;
     }
 
-
     // 根据服务，去发现特征值
     public void discoverCharacteristic(BluetoothGatt gatt) {
-        otaService = gatt.getService(UUID.fromString(BLeConstants.OAD_SERVICE));
-        if (otaService != null) {  //OTA升级模式下的设备
+        List<BluetoothGattService> gattServices = gatt.getServices();
+        //获取当前的模块版本号   以及蓝牙平台
+        int type = getTypeByServices(gattServices);
+        //
+        tiotaService = gatt.getService(UUID.fromString(BLeConstants.TI_OAD_SERVICE));
+        if (tiotaService != null) {  //OTA升级模式下的设备
             release();
             if (bleLockInfo != null) {
+                bleLockInfo.setBleType(1);
                 deviceInBootSubject.onNext(bleLockInfo);
             }
             return;
         }
-
-        List<BluetoothGattService> gattServices = gatt.getServices();
-        //获取当前的模块版本号
-        int type = getTypeByServices(gattServices);
+        if (p6otaService != null) {
+            release();
+            if (bleLockInfo != null) {
+                bleLockInfo.setBleType(2);
+                deviceInBootSubject.onNext(bleLockInfo);
+            }
+            return;
+        }
 
         for (BluetoothGattService gattService : gattServices) {
             List<BluetoothGattCharacteristic> gattCharacteristics = gattService.getCharacteristics();
@@ -730,6 +740,7 @@ public class BleService extends Service {
                     lockStatusChar = characteristic;
                 }
 
+
             }
         }
         LogUtils.e("模块版本是   " + type);
@@ -756,9 +767,15 @@ public class BleService extends Service {
             LogUtils.e("服务UUID  " + gattService.getUuid().toString());
             if (gattService.getUuid().toString().equalsIgnoreCase(BLeConstants.OAD_RESET_TI_SERVICE)) {
                 isFFD0 = true;
+                if (bleLockInfo!=null){
+                    bleLockInfo.setBleType(1);
+                }
             }
             if (gattService.getUuid().toString().equalsIgnoreCase(BLeConstants.OAD_RESET_P6_SERVICE)) {
                 is1802 = true;
+                if (bleLockInfo!=null){
+                    bleLockInfo.setBleType(2);
+                }
             }
             for (BluetoothGattCharacteristic characteristic : gattService.getCharacteristics()) {
                 LogUtils.e("    特征UUID  " + characteristic.getUuid().toString());
@@ -771,7 +788,7 @@ public class BleService extends Service {
         if (isFFE1) {
             return BleUtil.BLE_VERSION_NEW2;
         }
-        if (isFFD0 || is1802) {
+        if (isFFD0 ) {
             return BleUtil.BLE_VERSION_NEW1;
         }
         return BleUtil.BLE_VERSION_OLD;
@@ -983,7 +1000,6 @@ public class BleService extends Service {
 
     /**
      * 设备正在boot模式
-     *
      * @return
      */
     public Observable<BleLockInfo> onDeviceStateInBoot() {
