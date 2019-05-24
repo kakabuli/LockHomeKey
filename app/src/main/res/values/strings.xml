@@ -975,4 +975,10 @@
     <string name="alert_message_silicon_id_error">Error: The SiliconID or SiliconRev does not match</string>
     <string name="alert_message_verify_application_error">Error: Verification failed for the programmed application</string>
 
+    <string name="lock_blocked_notify">设备:%1$s,门锁堵转，请及时查看</string>
+    <string name="lock_resect_notify">设备:%1$s,门锁被重置,请及时查看</string>
+    <string name="lock_system_notify">设备:%1$s,门锁系统被锁定，请及时查看</string>
+    <string name="lock_pick_proof_notify">设备:%1$s,防撬启动，请及时查看</string>
+    <string name="lock_stress_alarm_notify">设备:%1$s,胁迫报警启动，请及时查看</string>
+
 </resources>
