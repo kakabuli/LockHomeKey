@@ -28,6 +28,7 @@ import com.kaadas.lock.mvp.view.gatewaylockview.GatewayLockMoreView;
 import com.kaadas.lock.publiclibrary.bean.GwLockInfo;
 import com.kaadas.lock.publiclibrary.http.result.SwitchStatusResult;
 import com.kaadas.lock.utils.AlertDialogUtil;
+import com.kaadas.lock.utils.EditTextWatcher;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LoadingDialog;
 import com.kaadas.lock.utils.LogUtils;
@@ -178,7 +179,7 @@ public class GatewayMoreActivity extends BaseActivity<GatewayLockMoreView, Gatew
                 String deviceNickname = tvDeviceName.getText().toString().trim();
                 editText.setText(deviceNickname);
                 editText.setSelection(deviceNickname.length());
-                editText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(16)});
+                editText.addTextChangedListener(new EditTextWatcher(this,null,editText,50));
                 tv_cancel.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -189,11 +190,12 @@ public class GatewayMoreActivity extends BaseActivity<GatewayLockMoreView, Gatew
                     @Override
                     public void onClick(View v) {
                         name = editText.getText().toString().trim();
-                        if (!StringUtil.nicknameJudge(name)) {
-                            ToastUtil.getInstance().showShort(R.string.nickname_verify_error);
-                            return;
-                        }
                         //todo 判断名称是否修改
+                            if (TextUtils.isEmpty(name)){
+                                ToastUtil.getInstance().showShort(getString(R.string.device_name_cannot_be_empty));
+                                return;
+                            }
+
                         if (deviceNickname != null) {
                             if (deviceNickname.equals(name)) {
                                 ToastUtil.getInstance().showShort(getString(R.string.device_nick_name_no_update));

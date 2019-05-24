@@ -38,8 +38,8 @@
         android:background="#FFF"
         android:textSize="@dimen/sp_12"
         android:paddingLeft="@dimen/dp_6"
-        android:digits="0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-"
-        android:maxLength="20"
+        android:digits="0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        android:singleLine="true"
         />
 
     <TextView

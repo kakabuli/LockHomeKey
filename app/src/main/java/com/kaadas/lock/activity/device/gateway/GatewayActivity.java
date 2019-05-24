@@ -1,4 +1,4 @@
-package com.kaadas.lock.activity.device;
+package com.kaadas.lock.activity.device.gateway;
 
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -358,7 +358,7 @@ public class GatewayActivity extends BaseActivity<GatewayView, GatewayPresenter<
                  finish();
                 break;
             case R.id.see_more:
-                Intent intent=new Intent(this,GatewaySettingActivity.class);
+                Intent intent=new Intent(this, GatewaySettingActivity.class);
                 intent.putExtra(KeyConstants.GATEWAY_ID,gatewayInfo.getServerInfo().getDeviceSN());
                 startActivity(intent);
                 break;

@@ -175,7 +175,7 @@ public class GatewayWarnInformationFragment extends BaseFragment<GatewayLockAlra
             String time = split1[0] + ":" + split1[1];
 
             String titleTime = "";
-            //257锁的信息
+            //257锁的信息\\
             String alarmStr="";
             if (dataBean.getClusterID()==257){
                 switch (dataBean.getAlarmCode()){

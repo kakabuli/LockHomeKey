@@ -121,10 +121,10 @@ public class GatewayLockStressDetailActivity extends BaseActivity<IGatewayLockSt
         if (gatewayId != null && deviceId != null) {
             //胁迫密码固定09编号
             //查找本地数据是否有编号09
-            GatewayLockPwd gatewayLockPwd = MyApplication.getInstance().getDaoWriteSession().queryBuilder(GatewayLockPwd.class).where(GatewayLockPwdDao.Properties.Num.eq("09")).unique();
-            if (gatewayLockPwd != null) {
+            List<GatewayLockPwd> gatewayLockPwd = MyApplication.getInstance().getDaoWriteSession().queryBuilder(GatewayLockPwd.class).where(GatewayLockPwdDao.Properties.Num.eq("09"),GatewayLockPwdDao.Properties.GatewayId.eq(gatewayId),GatewayLockPwdDao.Properties.DeviceId.eq(deviceId)).list();
+            if (gatewayLockPwd != null&&gatewayLockPwd.size()==1) {
                 isAddLockPwd = 2;
-                if (gatewayLockPwd.getStatus() == 1) {
+                if (gatewayLockPwd.get(0).getStatus() == 1) {
                     pwdList.add("09");
                     gatewayLockStressPasswordAdapter.notifyDataSetChanged();
                     passwordPageChange(true);

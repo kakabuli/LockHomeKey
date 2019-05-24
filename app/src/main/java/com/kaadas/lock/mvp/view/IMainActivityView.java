@@ -33,4 +33,6 @@ public interface IMainActivityView extends IBleView {
 
     void uploadpush(BaseResult baseResult);
 
+    void onGwLockEvent(int alarmCode,int clusterID,String deviceId);
+
 }

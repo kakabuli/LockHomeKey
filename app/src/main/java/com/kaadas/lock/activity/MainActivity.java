@@ -281,6 +281,44 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
         }
     }
 
+    @Override
+    public void onGwLockEvent(int alarmCode, int clusterID, String deviceId) {
+        String str="";
+        String nickName = MyApplication.getInstance().getNickByDeviceId(deviceId);
+        if (clusterID==257){
+            switch (alarmCode){
+                case 0:    //门锁堵转报警
+                    str=String.format(getString(R.string.lock_blocked_notify),nickName);
+                    ToastUtil.getInstance().showShort(str);
+                    break;
+                case 1:
+                    str=String.format(getString(R.string.lock_resect_notify),nickName);
+                    ToastUtil.getInstance().showShort(str);
+                    break;
+                case 4:
+                    str=String.format(getString(R.string.lock_system_notify),nickName);
+                    ToastUtil.getInstance().showShort(str);
+                    break;
+                case 6:
+                    str=String.format(getString(R.string.lock_pick_proof_notify),nickName);
+                    ToastUtil.getInstance().showShort(str);
+                    break;
+                case 9:
+                    str=String.format(getString(R.string.lock_stress_alarm_notify),nickName);
+                    ToastUtil.getInstance().showShort(str);
+                    break;
+            }
+            //电量
+        }else if (clusterID==1){
+            switch (alarmCode){
+                case 16:
+                    str=String.format(getString(R.string.low_power_notify),nickName);
+                    ToastUtil.getInstance().showShort(str);
+                    break;
+            }
+        }
+    }
+
     public NoScrollViewPager getViewPager() {
 
         return homeViewPager;

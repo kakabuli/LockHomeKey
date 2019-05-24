@@ -259,27 +259,34 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                                 GatewayLockAlarmEventBean gatewayLockAlarmEventBean = new Gson().fromJson(mqttData.getPayload(), GatewayLockAlarmEventBean.class);
                                 if (gatewayLockAlarmEventBean.getEventparams() != null && gatewayLockAlarmEventBean.getEventparams().getAlarmCode() != 0 && gatewayLockAlarmEventBean.getEventparams().getClusterID() != 0) {
                                     //保存到数据库
+                                    int alarmCode=gatewayLockAlarmEventBean.getEventparams().getAlarmCode();
+                                    String deviceId=gatewayLockAlarmEventBean.getDeviceId();
+                                    int clusterID=gatewayLockAlarmEventBean.getEventparams().getClusterID();
+
                                     GatewayLockAlarmEventDao gatewayLockAlarmEventDao = new GatewayLockAlarmEventDao();
-                                    gatewayLockAlarmEventDao.setDeviceId(gatewayLockAlarmEventBean.getDeviceId()); //设备id
+                                    gatewayLockAlarmEventDao.setDeviceId(deviceId); //设备id
                                     gatewayLockAlarmEventDao.setGatewayId(gatewayLockAlarmEventBean.getGwId()); //网关id
                                     gatewayLockAlarmEventDao.setTimeStamp(gatewayLockAlarmEventBean.getTimestamp()); //时间戳
                                     gatewayLockAlarmEventDao.setDevtype(gatewayLockAlarmEventBean.getDevtype()); //设备类型
-                                    gatewayLockAlarmEventDao.setAlarmCode(gatewayLockAlarmEventBean.getEventparams().getAlarmCode()); //报警代码
-                                    if (gatewayLockAlarmEventBean.getEventparams().getAlarmCode()==1){
+                                    gatewayLockAlarmEventDao.setAlarmCode(alarmCode); //报警代码
+                                    if (alarmCode==1&&clusterID==257){
                                         //锁重置
                                         String gatewayId=gatewayLockAlarmEventBean.getGwId();
-                                        String deviceId=gatewayLockAlarmEventBean.getDeviceId();
                                         MyApplication.getInstance().getAllDevicesByMqtt(true);
                                         //删除锁的全部密码
                                         deleteAllPwd(gatewayId,deviceId,MyApplication.getInstance().getUid());
 
                                     }
-                                    gatewayLockAlarmEventDao.setClusterID(gatewayLockAlarmEventBean.getEventparams().getClusterID()); //257 代表锁的信息;1 代表电量信息
+                                    gatewayLockAlarmEventDao.setClusterID(clusterID); //257 代表锁的信息;1 代表电量信息
                                     gatewayLockAlarmEventDao.setEventcode(gatewayLockAlarmEventBean.getEventcode());
 
                                     //插入到数据库
                                     if (!checkSame(gatewayLockAlarmEventBean.getTimestamp(),gatewayLockAlarmEventBean.getEventparams().getAlarmCode())){
                                         MyApplication.getInstance().getDaoWriteSession().getGatewayLockAlarmEventDaoDao().insert(gatewayLockAlarmEventDao);
+                                        if (mViewRef.get() != null) {
+                                            mViewRef.get().onGwLockEvent(alarmCode, clusterID,deviceId);
+                                        }
+
                                     }
 
                                 }

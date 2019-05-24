@@ -609,11 +609,11 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.device.GatewayActivity"
+            android:name=".activity.device.gateway.GatewayActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.device.GatewaySettingActivity"
+            android:name=".activity.device.gateway.GatewaySettingActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity

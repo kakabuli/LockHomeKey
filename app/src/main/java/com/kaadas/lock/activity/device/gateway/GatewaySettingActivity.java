@@ -1,4 +1,4 @@
-package com.kaadas.lock.activity.device;
+package com.kaadas.lock.activity.device.gateway;
 
 import android.app.AlertDialog;
 import android.content.Intent;
@@ -9,6 +9,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.InputFilter;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -31,6 +32,7 @@ import com.kaadas.lock.publiclibrary.mqtt.publishbean.GetNetBasicBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.GetZbChannelBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.GwWiFiBaseInfo;
 import com.kaadas.lock.utils.AlertDialogUtil;
+import com.kaadas.lock.utils.EditTextWatcher;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LoadingDialog;
 import com.kaadas.lock.utils.StringUtil;
@@ -100,7 +102,7 @@ public class GatewaySettingActivity extends BaseActivity<GatewaySettingView, Gat
 
         GatewaySettingItemBean gatewaySettingItemBeanFive=new GatewaySettingItemBean();
         gatewaySettingItemBeanFive.setTitle(getString(R.string.gateway_setting_lan_ip));
-        gatewaySettingItemBeanFive.setSetting(true);
+        gatewaySettingItemBeanFive.setSetting(false);
 
         GatewaySettingItemBean gatewaySettingItemBeanSix=new GatewaySettingItemBean();
         gatewaySettingItemBeanSix.setTitle(getString(R.string.gateway_setting_wan_ip));
@@ -109,7 +111,7 @@ public class GatewaySettingActivity extends BaseActivity<GatewaySettingView, Gat
 
         GatewaySettingItemBean gatewaySettingItemBeanSeven=new GatewaySettingItemBean();
         gatewaySettingItemBeanSeven.setTitle(getString(R.string.gateway_setting_lan_subnet_mask));
-        gatewaySettingItemBeanSeven.setSetting(true);
+        gatewaySettingItemBeanSeven.setSetting(false);
 
         GatewaySettingItemBean gatewaySettingItemBeanEight=new GatewaySettingItemBean();
         gatewaySettingItemBeanEight.setTitle(getString(R.string.gateway_setting_wan_subnet_mask));
@@ -209,6 +211,7 @@ public class GatewaySettingActivity extends BaseActivity<GatewaySettingView, Gat
                 EditText editText = mView.findViewById(R.id.et_name);
                 editText.setText(wifiName);
                 editText.setHint(getString(R.string.please_input_wifi_name));
+                editText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(32)});
                 if (wifiName!=null){
                     editText.setSelection(wifiName.length());
                 }
@@ -248,6 +251,8 @@ public class GatewaySettingActivity extends BaseActivity<GatewaySettingView, Gat
                 EditText editTextPwd = mViewPwd.findViewById(R.id.et_name);
                 editTextPwd.setText(wifiPwd);
                 editTextPwd.setHint(getString(R.string.please_input_wifi_pwd));
+                editTextPwd.addTextChangedListener(new EditTextWatcher(this,null,editTextPwd,63));
+                editTextPwd.setFilters(new InputFilter[]{new InputFilter.LengthFilter(63)});
                 if (wifiPwd!=null){
                     editTextPwd.setSelection(wifiPwd.length());
                 }
@@ -266,20 +271,24 @@ public class GatewaySettingActivity extends BaseActivity<GatewaySettingView, Gat
                     @Override
                     public void onClick(View v) {
                         String pwd = editTextPwd.getText().toString().trim();
+
                         if (TextUtils.isEmpty(pwd)){
                             ToastUtil.getInstance().showShort(R.string.wifi_pwd_not_null);
                             return;
                         }else if (wifiPwd.equals(pwd)){
                             ToastUtil.getInstance().showShort(R.string.wifi_pwd_no_update);
                             return;
-                        }else{
+                        }else if (wifiPwd.length()<8){
+                            ToastUtil.getInstance().showShort(R.string.wifi_password_length);
+                            return;
+                        } else{
                             mPresenter.setWiFi(MyApplication.getInstance().getUid(),gatewayId,gatewayId,encryption,wifiName,pwd);
                         }
                         alertDialogPwd.dismiss();
                     }
                 });
                 break;
-            case 4:
+           /* case 4:
             case 6:
                 //配置局域网
                 View mPairLan = LayoutInflater.from(this).inflate(R.layout.have_two_et_dialog, null);
@@ -328,7 +337,7 @@ public class GatewaySettingActivity extends BaseActivity<GatewaySettingView, Gat
                         alertDialogLan.dismiss();
                     }
                 });
-                break;
+                break;*/
             case 9:
                 //配置
                 View mViewChannel = LayoutInflater.from(this).inflate(R.layout.have_one_et_dialog, null);

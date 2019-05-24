@@ -959,6 +959,8 @@
     <string name="ota_fail_reply">锁OTA升级失败，是否需要重试？</string>
     <string name="input_correct_verification_code">请输入正确验证码</string>
     <string name="ota_update_loading">正在升级，请勿操作！</string>
+    <string name="device_name_cannot_be_empty">设备名称不能为空</string>
+    <string name="wifi_password_length">WiFi密码长度8~63位</string>
     <string name="check_update_failed">检查版本信息失败，请稍后再试！</string>
     <string name="data_params_error">数据参数不对</string>
     <string name="sn_error">Sn格式不正确</string>
@@ -972,5 +974,11 @@
     <string name="alert_message_ota_error">Firmware update canceled\nError: </string>
     <string name="alert_message_silicon_id_error">Error: The SiliconID or SiliconRev does not match</string>
     <string name="alert_message_verify_application_error">Error: Verification failed for the programmed application</string>
+
+    <string name="lock_blocked_notify">设备:%1$s,门锁堵转，请及时查看</string>
+    <string name="lock_resect_notify">设备:%1$s,门锁被重置,请及时查看</string>
+    <string name="lock_system_notify">设备:%1$s,门锁系统被锁定，请及时查看</string>
+    <string name="lock_pick_proof_notify">设备:%1$s,防撬启动，请及时查看</string>
+    <string name="lock_stress_alarm_notify">设备:%1$s,胁迫报警启动，请及时查看</string>
 
 </resources>
