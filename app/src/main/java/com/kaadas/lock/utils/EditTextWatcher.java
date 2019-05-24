@@ -29,6 +29,7 @@ public class EditTextWatcher implements TextWatcher {
         this.watcher = watcher;
         this.len = len > 0 ? len : 0;
         this.chinaLen=len/3;
+
     }
 
 
@@ -52,7 +53,6 @@ public class EditTextWatcher implements TextWatcher {
                         if (bytes.length <=len) {
                             break;
                         }else{
-
                             String message = String.format(context.getString(R.string.input_name_max), len+"",chinaLen+"");
                             ToastUtil.getInstance().showShort(message);
                         }

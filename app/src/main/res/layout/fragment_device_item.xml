@@ -31,7 +31,11 @@
             android:text="@string/lockNickName"
             android:textColor="#ff333333"
             android:textSize="@dimen/sp_15"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:layout_marginRight="@dimen/dp_20"
+            />
 
         <LinearLayout
             android:id="@+id/power_layout"
