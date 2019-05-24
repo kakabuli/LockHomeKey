@@ -139,6 +139,18 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
         };
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mPresenter.attachView(this);
+        mPresenter.getOpenRecordFromServer(1, bleLockInfo);
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -149,7 +161,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
         tvMore.setOnClickListener(this);
         tvSynchronizedRecord.setOnClickListener(this);
         ivDeviceDynamic.setOnClickListener(this);
-        mPresenter.getOpenRecordFromServer(1, bleLockInfo);
+//        mPresenter.getOpenRecordFromServer(1, bleLockInfo);
         initView();
         return view;
     }

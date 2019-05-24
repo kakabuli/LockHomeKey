@@ -107,7 +107,6 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
     private String gatewayId;
     private String deviceId;
     private HomeShowBean showBean;
-    private boolean lockIsOpen = false;
     private Handler mHandler = new Handler();
 
     private GwLockInfo lockInfo;
@@ -284,24 +283,13 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
                 String lockPwd = (String) SPUtils.get(KeyConstants.SAVA_LOCK_PWD + deviceId, "");
                 if (TextUtils.isEmpty(lockPwd)) {
                     //密码为空
-                    if (lockIsOpen) {
-                        //门锁已经打开
-                        ToastUtil.getInstance().showShort(R.string.lock_has_bean_close);
-                        return;
-                    } else {
                         showPwdDialog();
-                    }
                 } else {
-                    if (lockIsOpen) {
-                        //门锁已经打开
-                        ToastUtil.getInstance().showShort(R.string.lock_has_bean_close);
-                        return;
-                    } else {
                         mPresenter.openLock(gatewayId, deviceId, lockPwd);
                         lockStatus = KeyConstants.IS_LOCKING;
                         changLockStatus(lockStatus);
                         tvOpenClock.setClickable(false);
-                    }
+
                 }
 
                 break;
@@ -462,7 +450,6 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
     @Override
     public void lockHasBeenClose() {
         //门锁已经关闭
-        lockIsOpen = false;
         lockStatus = KeyConstants.OPEN_LOCK;
         changLockStatus(lockStatus);
     }
@@ -470,7 +457,6 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
     @Override
     public void lockHasBeenOpen() {
         //门锁已经打开
-        lockIsOpen = true;
     }
 
     @Override

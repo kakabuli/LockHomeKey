@@ -43,6 +43,7 @@ public class DeviceMorePresenter extends BlePresenter<IDeviceMoreView> {
     private Disposable otaDisposable;
     private Disposable readSoftwareRevDisposable;
 
+    private Disposable deviceStateChangeDisposable;
     public void deleteDevice(String deviceName) {
         XiaokaiNewServiceImp.deleteDevice(MyApplication.getInstance().getUid(), deviceName)
                 .subscribe(new BaseObserver<BaseResult>() {
@@ -418,4 +419,26 @@ public class DeviceMorePresenter extends BlePresenter<IDeviceMoreView> {
         compositeDisposable.add(otaDisposable);
     }
 
+    @Override
+    public void attachView(IDeviceMoreView view) {
+        super.attachView(view);
+        toDisposable(deviceStateChangeDisposable);
+        //通知界面更新显示设备状态
+        deviceStateChangeDisposable = bleService.listenerDeviceStateChange()
+                .compose(RxjavaHelper.observeOnMainThread())
+                .subscribe(new Consumer<BleDataBean>() {
+                    @Override
+                    public void accept(BleDataBean bleDataBean) throws Exception {
+                        if (mViewRef.get() != null) {   //通知界面更新显示设备状态
+                            mViewRef.get().onStateUpdate(-1);
+                        }
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        LogUtils.e("监听设备状态改变出错   " + throwable.toString());
+                    }
+                });
+        compositeDisposable.add(deviceStateChangeDisposable);
+    }
 }

@@ -490,5 +490,21 @@ public class BluetoothMoreActivity extends BaseBleActivity<IDeviceMoreView, Devi
         }
     }
 
+    @Override
+    public void onStateUpdate(int type) {
+        if (bleLockInfo.getAutoMode() == 0) {
+            //手动
+            amAutoLockStatus=false;
+            ivAm.setImageResource(R.mipmap.iv_close);
+        } else if (bleLockInfo.getAutoMode() == 1){
+            //自动
+            amAutoLockStatus=true;
+            ivAm.setImageResource(R.mipmap.iv_open);
+        }
+
+
+
+    }
+
 
 }

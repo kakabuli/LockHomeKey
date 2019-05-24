@@ -200,10 +200,11 @@
                 android:textSize="@dimen/sp_12" />
 
             <TextView
+                android:id="@+id/device_state"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:text="@string/normal"
+                android:text="@string/online"
                 android:textColor="#1F96F7"
                 android:textSize="20sp" />
 

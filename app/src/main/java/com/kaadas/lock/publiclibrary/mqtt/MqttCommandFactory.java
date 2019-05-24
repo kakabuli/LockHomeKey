@@ -15,6 +15,7 @@ import com.kaadas.lock.publiclibrary.mqtt.publishbean.GetBindGatewayListBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.GetDevicePowerBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.GetGatewayLockInfoBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.GetLockLang;
+import com.kaadas.lock.publiclibrary.mqtt.publishbean.GetLockRecordTotal;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.GetNetBasicBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.GetPirSlientBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.GetSoundVolume;
@@ -662,6 +663,20 @@ public class MqttCommandFactory {
         paramsBean.setChannel(channel);
         SetZBChannel setZBChannel=new SetZBChannel(MqttConstant.MSG_TYPE_REQUEST,uid,messageId,gatewayId,deviceId,MqttConstant.SET_ZB_CHANNEL,paramsBean,"0",new SetZBChannel.ReturnDataBean(),System.currentTimeMillis()+"");
         return getMessage(setZBChannel,messageId);
+    }
+
+    /**
+     * 获取守护次数
+     * @param uid
+     * @param gatewayId
+     * @param deviceId
+     * @return
+     */
+
+    public static MqttMessage getGatewayLockTotal(String uid,String gatewayId,String deviceId){
+        int messageId=getMessageId();
+        GetLockRecordTotal getLockRecordTotal=new GetLockRecordTotal(messageId,MqttConstant.COUNT_OPEN_LOCK_RECORD,uid,gatewayId,deviceId);
+        return getMessage(getLockRecordTotal,messageId);
     }
 
 

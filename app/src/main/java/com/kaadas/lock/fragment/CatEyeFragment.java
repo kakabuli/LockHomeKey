@@ -66,6 +66,8 @@ public class CatEyeFragment extends BaseFragment<ICatEyeView, CatEyePresenter<IC
     RelativeLayout rlIcon;
     @BindView(R.id.create_time)
     TextView createTime;
+    @BindView(R.id.device_state)
+    TextView deviceState;
     private CateEyeInfo cateEyeInfo;
     private String gatewayId;
     private String deviceId;
@@ -102,29 +104,15 @@ public class CatEyeFragment extends BaseFragment<ICatEyeView, CatEyePresenter<IC
             mPresenter.getPublishNotify();
             mPresenter.listenerDeviceOnline();
             mPresenter.listenerNetworkChange();
-            if (!TextUtils.isEmpty(gatewayId) && !TextUtils.isEmpty(deviceId)) {
-                List<CatEyeEvent> catEyeEvents = mPresenter.getCatEyeDynamicInfo(0, 3, gatewayId, deviceId);
-                if (catEyeEvents != null) {
-                    if (catEyeEvents.size() > 0) {
-                        //获取猫眼动态数据成功
-                        LogUtils.e("访问数据库猫眼信息" + catEyeEvents.size());
-                        changePage(true);
-                        groupData(catEyeEvents);
-                    } else {
-                        changePage(false);
-                    }
-                } else {
-                    changePage(false);
-                }
-            }
-            String time=cateEyeInfo.getServerInfo().getTime();
-            LogUtils.e(time+"猫眼时间");
-            if (!TextUtils.isEmpty(time)){
-                long saveTime=DateUtils.standardTimeChangeTimestamp(time)/1000;
+
+            String time = cateEyeInfo.getServerInfo().getTime();
+            LogUtils.e(time + "猫眼时间");
+            if (!TextUtils.isEmpty(time)) {
+                long saveTime = DateUtils.standardTimeChangeTimestamp(time) / 1000;
                 //设置守护时间
                 long day = ((System.currentTimeMillis() / 1000) - saveTime) / (60 * 24 * 60);
                 this.createTime.setText(day + "");
-            }else{
+            } else {
                 createTime.setText("0");
             }
 
@@ -149,8 +137,14 @@ public class CatEyeFragment extends BaseFragment<ICatEyeView, CatEyePresenter<IC
         离线：“设备已离线”*/
         if ("online".equals(eventStr)) {
             status = 1;
+            if (deviceState!=null){
+                deviceState.setText(getString(R.string.online));
+            }
         } else {
             status = 2;
+            if (deviceState!=null){
+                deviceState.setText(getString(R.string.offline));
+            }
         }
 
         switch (status) {
@@ -193,8 +187,6 @@ public class CatEyeFragment extends BaseFragment<ICatEyeView, CatEyePresenter<IC
                 tvExternal.setTextColor(getResources().getColor(R.color.cC6F5FF));
                 tvExternal.setText(getString(R.string.cateye_offline));
                 break;
-
-
         }
     }
 
@@ -273,6 +265,27 @@ public class CatEyeFragment extends BaseFragment<ICatEyeView, CatEyePresenter<IC
         changeOpenLockStatus("offline");
     }
 
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        if (getUserVisibleHint()) {
+            if (!TextUtils.isEmpty(gatewayId) && !TextUtils.isEmpty(deviceId)) {
+                List<CatEyeEvent> catEyeEvents = mPresenter.getCatEyeDynamicInfo(0, 3, gatewayId, deviceId);
+                if (catEyeEvents != null) {
+                    if (catEyeEvents.size() > 0) {
+                        //获取猫眼动态数据成功
+                        LogUtils.e("访问数据库猫眼信息" + catEyeEvents.size());
+                        changePage(true);
+                        groupData(catEyeEvents);
+                    } else {
+                        changePage(false);
+                    }
+                } else {
+                    changePage(false);
+                }
+            }
+        }
+    }
 
     private void groupData(List<CatEyeEvent> catEyeEvents) {
         mCatEyeInfoList.clear();
@@ -355,6 +368,26 @@ public class CatEyeFragment extends BaseFragment<ICatEyeView, CatEyePresenter<IC
             }
 
 
+        }
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (!TextUtils.isEmpty(gatewayId) && !TextUtils.isEmpty(deviceId)) {
+            List<CatEyeEvent> catEyeEvents = mPresenter.getCatEyeDynamicInfo(0, 3, gatewayId, deviceId);
+            if (catEyeEvents != null) {
+                if (catEyeEvents.size() > 0) {
+                    //获取猫眼动态数据成功
+                    LogUtils.e("访问数据库猫眼信息" + catEyeEvents.size());
+                    changePage(true);
+                    groupData(catEyeEvents);
+                } else {
+                    changePage(false);
+                }
+            }else{
+                changePage(false);
+            }
         }
     }
 }

@@ -60,7 +60,7 @@ public class GatewayWarnInformationFragment extends BaseFragment<GatewayLockAlra
     private String deviceId;
     private BluetoothRecordAdapter lockAlarmdAdapter;
     private int page=0;
-
+    private int lastPage=0;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -95,12 +95,14 @@ public class GatewayWarnInformationFragment extends BaseFragment<GatewayLockAlra
         refreshLayout.setOnLoadMoreListener(new OnLoadMoreListener() {
             @Override
             public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
-                if (mOpenLockList!=null){
-                    mOpenLockList.clear();
+                if (lastPage==0){
+                    if (!TextUtils.isEmpty(gatewayId)&&!TextUtils.isEmpty(deviceId)){
+                        mPresenter.getLockAlarm(page,20,gatewayId,deviceId);
+                    }
+                }else{
+                    refreshLayout.finishLoadMore();
                 }
-                if (!TextUtils.isEmpty(gatewayId)&&!TextUtils.isEmpty(deviceId)){
-                    mPresenter.getLockAlarm(page,20,gatewayId,deviceId);
-                }
+
             }
         });
 
@@ -250,11 +252,13 @@ public class GatewayWarnInformationFragment extends BaseFragment<GatewayLockAlra
     public void getLockAlarmSuccess(List<GatewayLockAlarmEventDao> alarmEventDaoList) {
         //获取开锁记录成功
         LogUtils.e("获取到预警记录多少条  " + alarmEventDaoList.size());
-        if (alarmEventDaoList.size()==0){
+        if (alarmEventDaoList.size()==0&&page==0){
             changeView(false);
         }
         if (alarmEventDaoList.size()==20){
             page++;
+        }else{
+            lastPage=page+1;
         }
         groupData(alarmEventDaoList);
         if (lockAlarmdAdapter != null) {

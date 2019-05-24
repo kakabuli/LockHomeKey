@@ -12,11 +12,16 @@
         layout="@layout/head" />
 
 
-
+ <LinearLayout
+     android:layout_width="wrap_content"
+     android:layout_height="wrap_content"
+     android:layout_gravity="center_horizontal"
+     android:orientation="vertical"
+     >
     <com.kaadas.lock.widget.CircleProgress
         android:id="@+id/circle_progress_bar2"
         android:layout_width="165dp"
-        android:layout_height="330dp"
+        android:layout_height="200dp"
         android:layout_gravity="center_horizontal"
         app:antiAlias="true"
         app:arcWidth="@dimen/medium"
@@ -28,16 +33,28 @@
         app:sweepAngle="270"
         app:unit="loading..."
         app:unitSize="@dimen/text_size_15"
+        android:layout_marginTop="50dp"
         app:value="0"
         app:valueSize="30sp" />
 
+     <TextView
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:text="@string/ota_update_loading"
+         android:layout_gravity="center_horizontal"
+         android:textColor="#333333"
+         android:textStyle="bold"
+         />
+
+
+ </LinearLayout>
 
 
     <com.kaadas.lock.widget.OtaMutiProgress
         android:id="@+id/mutiprogree_ota"
         android:layout_width="match_parent"
         android:layout_height="20dp"
-        android:layout_marginTop="@dimen/dp_8"
+        android:layout_marginTop="60dp"
         app:nodesNum="4"
         app:nodeRadius="@dimen/dp_6"
         app:processingLineColor="#70BFFA"
@@ -52,7 +69,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dp_25"
+        android:layout_marginTop="@dimen/dp_20"
         android:layout_marginLeft="@dimen/dp_10"
         android:layout_marginRight="@dimen/dp_34"
         android:orientation="horizontal"

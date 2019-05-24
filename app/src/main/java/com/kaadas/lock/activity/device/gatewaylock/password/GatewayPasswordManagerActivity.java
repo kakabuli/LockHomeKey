@@ -226,13 +226,13 @@ public class GatewayPasswordManagerActivity extends BaseActivity<GatewayLockFunc
         gatewayId = intent.getStringExtra(KeyConstants.GATEWAY_ID);
         deviceId = intent.getStringExtra(KeyConstants.DEVICE_ID);
         userId=MyApplication.getInstance().getUid();
+        mPresenter.getLockPwdInfoEvent();
         //第一次进入该页面,由于锁上重置，删除，添加无法知道当前锁的信息所以只有第一次进入需要判断
         if (!TextUtils.isEmpty(userId)){
             int firstIn= (int) SPUtils.get(KeyConstants.FIRST_IN_GATEWAY_LOCK+userId+deviceId,1);
             //第一次进入
             if (firstIn==1){
                 getPwd();
-                SPUtils.put(KeyConstants.FIRST_IN_GATEWAY_LOCK+ userId+deviceId,2);
             }else{
                 //读取数据库信息
                 isAddLockPwd=2;
@@ -241,14 +241,19 @@ public class GatewayPasswordManagerActivity extends BaseActivity<GatewayLockFunc
                 if (gatewayLockPwds!=null&&gatewayLockPwds.size()>0){
                     mList.clear();
                     for (GatewayLockPwd gatewayLockPwd:gatewayLockPwds){
-                        mList.add(gatewayLockPwd.getNum());
+                        if (!gatewayLockPwd.getNum().equals("09")){
+                            mList.add(gatewayLockPwd.getNum());
+                        }
                     }
-                    passwordPageChange(true);
-                    gatewayLockPasswordAdapter.notifyDataSetChanged();
+                    if (mList!=null&&mList.size()>0){
+                        passwordPageChange(true);
+                        gatewayLockPasswordAdapter.notifyDataSetChanged();
+                    }else{
+                        passwordPageChange(false);
+                    }
                 }else{
                     passwordPageChange(false);
                 }
-
 
             }
         }
@@ -283,7 +288,9 @@ public class GatewayPasswordManagerActivity extends BaseActivity<GatewayLockFunc
         loadingDialog.dismiss();
         LogUtils.e(map.size() + "map集合大小");
         isAddLockPwd = 2;
+        SPUtils.put(KeyConstants.FIRST_IN_GATEWAY_LOCK+ userId+deviceId,2);
          if (map.size() > 0) {
+             mList.clear();
             for (String key : map.keySet()) {
                 GatewayLockPwd gatewayLockPwd=new GatewayLockPwd();
                 gatewayLockPwd.setDeviceId(deviceId);
@@ -362,6 +369,67 @@ public class GatewayPasswordManagerActivity extends BaseActivity<GatewayLockFunc
             loadingDialog.dismiss();
         }
         LogUtils.e("获取到锁信息异常   ");
+    }
+
+    @Override
+    public void addOnePwdLock(String pwdId) {
+        if (mList!=null){
+            mList.add(pwdId);
+        }
+        if (gatewayLockPasswordAdapter!=null){
+            gatewayLockPasswordAdapter.notifyDataSetChanged();
+        }
+        if (mList.size()==1){
+            passwordPageChange(true);
+        }
+
+
+    }
+
+    @Override
+    public void deleteOnePwdLock(String pwdId) {
+        if (mList!=null&&mList.size()>0){
+            if (mList.contains(pwdId)){
+                mList.remove(pwdId);
+            }
+
+        }
+        if (gatewayLockPasswordAdapter!=null){
+            gatewayLockPasswordAdapter.notifyDataSetChanged();
+        }
+        if (mList.size()==0){
+            passwordPageChange(false);
+        }
+
+    }
+
+    @Override
+    public void deleteAllPwdLock() {
+        if (mList!=null&&mList.size()>0){
+            mList.clear();
+        }
+        if (gatewayLockPasswordAdapter!=null){
+            passwordPageChange(false);
+            gatewayLockPasswordAdapter.notifyDataSetChanged();
+        }
+    }
+
+    @Override
+    public void useSingleUse(String pwdId) {
+        if (mList!=null&&mList.size()>0){
+            if (mList.contains(pwdId)){
+                mList.remove(pwdId);
+            }
+
+        }
+        if (gatewayLockPasswordAdapter!=null){
+            gatewayLockPasswordAdapter.notifyDataSetChanged();
+        }
+        if (mList.size()==0){
+            passwordPageChange(false);
+        }
+
+
     }
 
     @Override

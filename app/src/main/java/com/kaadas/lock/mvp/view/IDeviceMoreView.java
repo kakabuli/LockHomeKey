@@ -83,4 +83,7 @@ public interface IDeviceMoreView extends IBleView {
 
 
 
+
+    void onStateUpdate(int type);
+
 }

@@ -200,7 +200,6 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
     public void listenCatEyeEvent() {
         toDisposable(catEyeEventDisposable);
         catEyeEventDisposable = mqttService.listenerDataBack()
-                .compose(RxjavaHelper.observeOnMainThread())
                 .filter(new Predicate<MqttData>() {
                     @Override
                     public boolean test(MqttData mqttData) throws Exception {
@@ -210,8 +209,9 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                         }
                         return false;
                     }
-
-                }).subscribe(new Consumer<MqttData>() {
+                })
+                .compose(RxjavaHelper.observeOnMainThread())
+                .subscribe(new Consumer<MqttData>() {
                     @Override
                     public void accept(MqttData mqttData) throws Exception {
                         JSONObject jsonObject = new JSONObject(mqttData.getPayload());
@@ -226,7 +226,6 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                          */
                         if (devtype.equals(KeyConstants.DEV_TYPE_CAT_EYE)) {
                             CatEyeEventBean catEyeEventBean = new Gson().fromJson(mqttData.getPayload(), CatEyeEventBean.class);
-                            LogUtils.e("收到消息 5 getDevetype   " + catEyeEventBean.getEventparams().getDevetype());
                             int eventType = -1;
                             CatEyeEvent catEyeEvent = new CatEyeEvent();
                             catEyeEvent.setDeviceId(catEyeEventBean.getDeviceId());
@@ -279,9 +278,8 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                                     gatewayLockAlarmEventDao.setEventcode(gatewayLockAlarmEventBean.getEventcode());
 
                                     //插入到数据库
-                                    if (!checkTimeSame(gatewayLockAlarmEventBean.getTimestamp())){
+                                    if (!checkSame(gatewayLockAlarmEventBean.getTimestamp(),gatewayLockAlarmEventBean.getEventparams().getAlarmCode())){
                                         MyApplication.getInstance().getDaoWriteSession().getGatewayLockAlarmEventDaoDao().insert(gatewayLockAlarmEventDao);
-                                        LogUtils.e("上报锁告警信息了" + gatewayLockAlarmEventBean.getEventparams().getAlarmCode());
                                     }
 
                                 }
@@ -300,20 +298,22 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                                     deleteOnePwd(gatewayId,deviceId,uid,"0"+num);
                                     //添加
                                     AddOnePwd(gatewayId,deviceId,uid,"0"+num);
+                                    LogUtils.e("单个添加");
                                 }else if (eventParmDeveType.equals("lockprom")&&devecode==3&&num==255&&pin==255){
                                     //全部删除
                                     deleteAllPwd(gatewayId,deviceId,uid);
+                                    LogUtils.e("全部删除");
                                 }else if (eventParmDeveType.equals("lockprom")&&devecode==3&&pin==255){
                                     //删除单个密码
                                     deleteOnePwd(gatewayId,deviceId,uid,"0"+num);
+                                    LogUtils.e("删除单个密码");
                                 }else if (eventParmDeveType.equals("lockop")&&devecode==2&&pin==255){
                                     //使用一次性开锁密码
                                     if (num>4&&num<=8){
                                         deleteOnePwd(gatewayId,deviceId,uid,"0"+num);
                                     }
-
+                                    LogUtils.e("使用一次性开锁");
                                 }
-
                             }
                         }
                     }
@@ -617,13 +617,12 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
     }
 
     //去掉时间戳相同
-    public boolean checkTimeSame(String time){
-        GatewayLockAlarmEventDaoDao gatewayLockAlarmEventDaoDao=MyApplication.getInstance().getDaoWriteSession().queryBuilder(GatewayLockAlarmEventDaoDao.class).where(GatewayLockAlarmEventDaoDao.Properties.TimeStamp.eq(time)).unique();
-        if (gatewayLockAlarmEventDaoDao != null) {
+    public boolean checkSame(String time,int alarmCode){
+        GatewayLockAlarmEventDao gatewayLockAlarmEventDao=MyApplication.getInstance().getDaoWriteSession().queryBuilder(GatewayLockAlarmEventDao.class).where(GatewayLockAlarmEventDaoDao.Properties.TimeStamp.eq(time),GatewayLockAlarmEventDaoDao.Properties.AlarmCode.eq(alarmCode)).unique();
+        if (gatewayLockAlarmEventDao != null) {
             return true;
         }
         return false;
-
     }
 }
 

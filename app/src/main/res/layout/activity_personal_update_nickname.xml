@@ -32,7 +32,6 @@
             android:layout_marginLeft="@dimen/dp_15"
             android:background="@null"
             android:ellipsize="end"
-            android:maxLength="16"
             android:singleLine="true"
             android:textColorHint="#8E8E93"
             android:textColor="#8E8E93"
