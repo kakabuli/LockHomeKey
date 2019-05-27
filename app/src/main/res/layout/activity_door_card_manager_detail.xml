@@ -67,6 +67,7 @@
                 android:textColor="#999999"
                 android:singleLine="true"
                 android:ellipsize="end"
+                android:gravity="center"
                 android:textSize="@dimen/sp_17" />
 
             <ImageView
