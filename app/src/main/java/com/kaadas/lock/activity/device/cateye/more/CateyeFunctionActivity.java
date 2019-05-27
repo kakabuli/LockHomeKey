@@ -136,8 +136,14 @@ public class CateyeFunctionActivity extends BaseActivity<ICatEyeFunctionView, Ca
                     Toast.makeText(CateyeFunctionActivity.this,getString(R.string.refresh_geteway),Toast.LENGTH_SHORT).show();
                     return;
                 }
-                String meUserName = gatewayInfo.getServerInfo().getMeUsername();
-                String mePwd= gatewayInfo.getServerInfo().getMePwd();
+                String meUserName=null;
+                String mePwd=null;
+                try {
+                    meUserName=gatewayInfo.getServerInfo().getMeUsername();
+                    mePwd=gatewayInfo.getServerInfo().getMePwd();
+                }catch (Exception e){
+
+                }
                 Intent intentVideo = new Intent(CateyeFunctionActivity.this, VideoCallBackActivity.class);
                 intentVideo.putExtra("gatewayId",gatewayId);
                 intentVideo.putExtra("deviceId",deviceId);
