@@ -10,17 +10,17 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_marginLeft="@dimen/dp_16"
-        android:text="jfjf"
         android:textColor="#333333"
         android:textSize="@dimen/sp_15" />
 
     <TextView
         android:id="@+id/tv_nick"
-        android:layout_width="wrap_content"
+        android:layout_width="@dimen/dp_200"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_marginLeft="@dimen/dp_46"
-        android:text="jfjf"
+        android:singleLine="true"
+        android:ellipsize="end"
         android:textColor="#333333"
         android:textSize="@dimen/sp_17" />
 
