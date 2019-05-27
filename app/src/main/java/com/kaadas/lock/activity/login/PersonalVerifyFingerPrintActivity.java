@@ -180,7 +180,7 @@ public class PersonalVerifyFingerPrintActivity extends BaseActivity<IPersonalVer
                 startActivity(registerIntent);
                 if (bottomMenuDialog != null) {
                     bottomMenuDialog.dismiss();
-                    finish();
+//                    finish();
                 }
             }
         });
