@@ -70,6 +70,8 @@ public class BleLockInfo implements Serializable {
         this.serverLockInfo = serverLockInfo;
     }
 
+
+
     public ServerBleDevice getServerLockInfo() {
         return serverLockInfo;
     }

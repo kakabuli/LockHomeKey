@@ -503,6 +503,10 @@ public class MyApplication extends Application {
         getDevicesFromServer.onNext(allBindDevices);
     }
 
+    public void setHomeshowDevice(List<HomeShowBean> homeshowDeviceList){
+        homeShowDevices=homeshowDeviceList;
+    }
+
 
     public List<HomeShowBean> getHomeShowDevices() {
 
@@ -516,7 +520,7 @@ public class MyApplication extends Application {
     }
 
     public List<HomeShowBean> getAllDevices() {
-
+        LogUtils.e(homeShowDevices.size()+"总的设备列表数据");
         return homeShowDevices;
     }
 

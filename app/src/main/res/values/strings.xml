@@ -982,4 +982,6 @@
     <string name="lock_stress_alarm_notify">设备:%1$s,胁迫报警启动，请及时查看</string>
     <string name="current_volume_no_change">当前铃声音量没有改变</string>
     <string name="current_resolution_no_change">当前视频分辨率没有改变</string>
+    <string name="wifi_alreade_offline">WiFi已离线</string>
+
 </resources>

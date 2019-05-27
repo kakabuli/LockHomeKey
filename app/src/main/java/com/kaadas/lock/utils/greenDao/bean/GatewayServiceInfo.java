@@ -1,10 +1,19 @@
-package com.kaadas.lock.publiclibrary.bean;
+package com.kaadas.lock.utils.greenDao.bean;
 
-import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.AllBindDevices;
+import org.greenrobot.greendao.annotation.Entity;
+import org.greenrobot.greendao.annotation.Id;
 
-import java.io.Serializable;
+import androidx.annotation.IntDef;
+import org.greenrobot.greendao.annotation.Generated;
+import org.greenrobot.greendao.annotation.Index;
 
-public class ServerGatewayInfo implements Serializable {
+/**
+ * 服务器的网关信息
+ */
+@Entity
+public class GatewayServiceInfo {
+    @Id
+    private String deviceIdUid;
     private String deviceSN;
     private String deviceNickName;
     private String adminuid;
@@ -14,22 +23,37 @@ public class ServerGatewayInfo implements Serializable {
     private String meUsername;
     private String mePwd;
     private int meBindState;
+    private String uid;
 
-    public ServerGatewayInfo() {
+    @Generated(hash = 546772347)
+    public GatewayServiceInfo(String deviceIdUid, String deviceSN,
+            String deviceNickName, String adminuid, String adminName,
+            String adminNickname, int isAdmin, String meUsername, String mePwd,
+            int meBindState, String uid) {
+        this.deviceIdUid = deviceIdUid;
+        this.deviceSN = deviceSN;
+        this.deviceNickName = deviceNickName;
+        this.adminuid = adminuid;
+        this.adminName = adminName;
+        this.adminNickname = adminNickname;
+        this.isAdmin = isAdmin;
+        this.meUsername = meUsername;
+        this.mePwd = mePwd;
+        this.meBindState = meBindState;
+        this.uid = uid;
     }
 
-    public ServerGatewayInfo(AllBindDevices.ReturnDataBean.GwListBean gwListBean) {
-        deviceSN = gwListBean.getDeviceSN();
-        deviceNickName = gwListBean.getDeviceNickName();
-        adminuid = gwListBean.getAdminuid();
-        adminName = gwListBean.getAdminName();
-        adminNickname = gwListBean.getAdminNickname();
-        isAdmin = gwListBean.getIsAdmin();
-        meUsername = gwListBean.getMeUsername();
-        mePwd = gwListBean.getMePwd();
-        meBindState = gwListBean.getMeBindState();
+    @Generated(hash = 426171648)
+    public GatewayServiceInfo() {
     }
 
+    public String getDeviceIdUid() {
+        return deviceIdUid;
+    }
+
+    public void setDeviceIdUid(String deviceIdUid) {
+        this.deviceIdUid = deviceIdUid;
+    }
 
     public String getDeviceSN() {
         return deviceSN;
@@ -103,15 +127,11 @@ public class ServerGatewayInfo implements Serializable {
         this.meBindState = meBindState;
     }
 
-    public ServerGatewayInfo(String deviceSN, String deviceNickName, String adminuid, String adminName, String adminNickname, int isAdmin, String meUsername, String mePwd, int meBindState) {
-        this.deviceSN = deviceSN;
-        this.deviceNickName = deviceNickName;
-        this.adminuid = adminuid;
-        this.adminName = adminName;
-        this.adminNickname = adminNickname;
-        this.isAdmin = isAdmin;
-        this.meUsername = meUsername;
-        this.mePwd = mePwd;
-        this.meBindState = meBindState;
+    public String getUid() {
+        return this.uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 }
