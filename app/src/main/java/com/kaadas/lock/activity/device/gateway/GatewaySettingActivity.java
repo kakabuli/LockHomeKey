@@ -35,8 +35,11 @@ import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.EditTextWatcher;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LoadingDialog;
+import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.StringUtil;
 import com.kaadas.lock.utils.ToastUtil;
+import com.kaadas.lock.utils.greenDao.bean.GatewayBaseInfo;
+import com.kaadas.lock.utils.greenDao.db.GatewayBaseInfoDao;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,7 +66,8 @@ public class GatewaySettingActivity extends BaseActivity<GatewaySettingView, Gat
     private String networkLan;
     private String networkMask;
     private String zbChannel;
-
+    private GatewayBaseInfo gatewayBaseInfo=new GatewayBaseInfo();
+    private String uid;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -154,17 +158,41 @@ public class GatewaySettingActivity extends BaseActivity<GatewaySettingView, Gat
     private void initGatewayData() {
         Intent intent=getIntent();
         gatewayId=intent.getStringExtra(KeyConstants.GATEWAY_ID);
+        uid=MyApplication.getInstance().getUid();
         if (!TextUtils.isEmpty(gatewayId)){
+            //先读取数据库
+            GatewayBaseInfo gatewayBaseInfo=MyApplication.getInstance().getDaoWriteSession().getGatewayBaseInfoDao().queryBuilder().where(GatewayBaseInfoDao.Properties.DeviceIdUid.eq(gatewayId+uid)).unique();
+            setGatewayBaseInfo(gatewayBaseInfo);
+
             mPresenter.getNetBasic(MyApplication.getInstance().getUid(),gatewayId,gatewayId);
-            mPresenter.getGatewayWifiPwd(gatewayId);
-            mPresenter.getZbChannel(MyApplication.getInstance().getUid(),gatewayId,gatewayId);
             loadingDialog.show(getString(R.string.get_gateway_info_waitting));
         }
 
     }
 
+    private void setGatewayBaseInfo(GatewayBaseInfo gatewayBaseInfo) {
+        //网关
+        gatewaySettingItemBeans.get(0).setContent(gatewayBaseInfo.getGatewayId());
+        //固件版本号
+        gatewaySettingItemBeans.get(1).setContent(gatewayBaseInfo.getSW());
+        //局域网ip
+        gatewaySettingItemBeans.get(4).setContent(gatewayBaseInfo.getLanIp());
+        //广域网ip
+        gatewaySettingItemBeans.get(5).setContent(gatewayBaseInfo.getWanIp());
+        //局域网子网掩码
+        gatewaySettingItemBeans.get(6).setContent(gatewayBaseInfo.getLanNetmask());
+        //广域网子网掩码
+        gatewaySettingItemBeans.get(7).setContent(gatewayBaseInfo.getWanNetmask());
+        //网关广域网接入方式
+        gatewaySettingItemBeans.get(8).setContent(gatewayBaseInfo.getWanType());
+        gatewaySettingItemBeans.get(2).setContent(gatewayBaseInfo.getSsid());
+        gatewaySettingItemBeans.get(3).setContent(gatewayBaseInfo.getPwd());
+        gatewaySettingItemBeans.get(9).setContent(gatewayBaseInfo.getChannel());
+        if (gatewaySettingAdapter!=null){
+            gatewaySettingAdapter.notifyDataSetChanged();
+        }
 
-
+    }
 
 
     @Override
@@ -396,10 +424,9 @@ public class GatewaySettingActivity extends BaseActivity<GatewaySettingView, Gat
 
     @Override
     public void getNetBasicSuccess(GetNetBasicBean basicBean) {
+        mPresenter.getGatewayWifiPwd(gatewayId);
         //获取到
-        if (loadingDialog!=null){
-            loadingDialog.dismiss();
-        }
+
         if (gatewaySettingItemBeans!=null&&gatewaySettingItemBeans.size()>0){
            GetNetBasicBean.ReturnDataBean returnDataBean= basicBean.getReturnData();
             //网关
@@ -419,10 +446,20 @@ public class GatewaySettingActivity extends BaseActivity<GatewaySettingView, Gat
             //网关广域网接入方式
             gatewaySettingItemBeans.get(8).setContent(returnDataBean.getWanType());
 
+            gatewayBaseInfo.setGatewayId(basicBean.getGwId());
+            gatewayBaseInfo.setDeviceIdUid(basicBean.getGwId()+uid);
+            gatewayBaseInfo.setSW(returnDataBean.getSW());
+            gatewayBaseInfo.setLanIp(returnDataBean.getLanIp());
+            gatewayBaseInfo.setWanIp(returnDataBean.getWanIp());
+            gatewayBaseInfo.setLanNetmask(returnDataBean.getLanNetmask());
+            gatewayBaseInfo.setWanNetmask(returnDataBean.getWanNetmask());
+            gatewayBaseInfo.setWanType(returnDataBean.getWanType());
+            gatewayBaseInfo.setUid(uid);
         }
         if (gatewaySettingAdapter!=null){
             gatewaySettingAdapter.notifyDataSetChanged();
         }
+
 
     }
 
@@ -444,9 +481,7 @@ public class GatewaySettingActivity extends BaseActivity<GatewaySettingView, Gat
 
     @Override
     public void onGetWifiInfoSuccess(GwWiFiBaseInfo wiFiBaseInfo) {
-        if (loadingDialog!=null){
-            loadingDialog.dismiss();
-        }
+        mPresenter.getZbChannel(MyApplication.getInstance().getUid(),gatewayId,gatewayId);
         if (gatewaySettingItemBeans!=null&&gatewaySettingItemBeans.size()>0){
             GwWiFiBaseInfo.ReturnDataBean gwWiFiBaseInfo=wiFiBaseInfo.getReturnData();
             gatewaySettingItemBeans.get(2).setContent(gwWiFiBaseInfo.getSsid());
@@ -454,6 +489,9 @@ public class GatewaySettingActivity extends BaseActivity<GatewaySettingView, Gat
             encryption=gwWiFiBaseInfo.getEncryption();
             wifiName=gwWiFiBaseInfo.getSsid();
             wifiPwd=gwWiFiBaseInfo.getPwd();
+            gatewayBaseInfo.setEncryption(encryption);
+            gatewayBaseInfo.setSsid(wifiName);
+            gatewayBaseInfo.setPwd(wifiPwd);
         }
         if (gatewaySettingAdapter!=null){
             gatewaySettingAdapter.notifyDataSetChanged();
@@ -484,10 +522,12 @@ public class GatewaySettingActivity extends BaseActivity<GatewaySettingView, Gat
         if (gatewaySettingItemBeans!=null&&gatewaySettingItemBeans.size()>0){
             gatewaySettingItemBeans.get(9).setContent(getZbChannelBean.getReturnData().getChannel());
             zbChannel=getZbChannelBean.getReturnData().getChannel();
+            gatewayBaseInfo.setChannel(zbChannel);
         }
         if (gatewaySettingAdapter!=null){
             gatewaySettingAdapter.notifyDataSetChanged();
         }
+        MyApplication.getInstance().getDaoWriteSession().insertOrReplace(gatewayBaseInfo);
     }
 
     @Override
@@ -503,11 +543,14 @@ public class GatewaySettingActivity extends BaseActivity<GatewaySettingView, Gat
         if (loadingDialog!=null){
             loadingDialog.dismiss();
         }
-        ToastUtil.getInstance().showShort(R.string.get_zb_channel_fail);
+        LogUtils.e(throwable.getMessage());
+        ToastUtil.getInstance().showShort(throwable.getMessage());
     }
 
     @Override
     public void unbindGatewaySuccess() {
+        //清除数据库
+        MyApplication.getInstance().getDaoWriteSession().getGatewayBaseInfoDao().deleteByKey(gatewayId+uid);
         //解绑成功
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);

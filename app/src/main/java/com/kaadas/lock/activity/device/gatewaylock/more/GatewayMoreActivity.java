@@ -118,12 +118,10 @@ public class GatewayMoreActivity extends BaseActivity<GatewayLockMoreView, Gatew
         Intent intent = getIntent();
         showBean = (HomeShowBean) intent.getSerializableExtra(KeyConstants.GATEWAY_LOCK_INFO);
         if (showBean != null) {
-
             gwLockInfo = (GwLockInfo) showBean.getObject();
             tvDeviceName.setText(gwLockInfo.getServerInfo().getNickName());
             gatewayId = gwLockInfo.getGwID();
             deviceId = gwLockInfo.getServerInfo().getDeviceId();
-
         }
 
 
@@ -335,16 +333,22 @@ public class GatewayMoreActivity extends BaseActivity<GatewayLockMoreView, Gatew
             silentModeStatus = true;
             flagSoundVolume = true;
         }
-        if (!TextUtils.isEmpty(gatewayId) && !TextUtils.isEmpty(deviceId)) {
-            mPresenter.getAm(MyApplication.getInstance().getUid(), gatewayId, deviceId);
+        if (loadingDialog!=null){
+            loadingDialog.dismiss();
         }
+       /* if (!TextUtils.isEmpty(gatewayId) && !TextUtils.isEmpty(deviceId)) {
+            mPresenter.getAm(MyApplication.getInstance().getUid(), gatewayId, deviceId);
+        }*/
 
     }
 
     @Override
     public void getSoundVolumeFail() {
-        if (!TextUtils.isEmpty(gatewayId) && !TextUtils.isEmpty(deviceId)) {
+      /*  if (!TextUtils.isEmpty(gatewayId) && !TextUtils.isEmpty(deviceId)) {
             mPresenter.getAm(MyApplication.getInstance().getUid(), gatewayId, deviceId);
+        }*/
+        if (loadingDialog!=null){
+            loadingDialog.dismiss();
         }
         ToastUtil.getInstance().showShort(R.string.get_sound_volume_fail);
 
@@ -352,8 +356,11 @@ public class GatewayMoreActivity extends BaseActivity<GatewayLockMoreView, Gatew
 
     @Override
     public void getSoundVolumeThrowable(Throwable throwable) {
-        if (!TextUtils.isEmpty(gatewayId) && !TextUtils.isEmpty(deviceId)) {
+      /*  if (!TextUtils.isEmpty(gatewayId) && !TextUtils.isEmpty(deviceId)) {
             mPresenter.getAm(MyApplication.getInstance().getUid(), gatewayId, deviceId);
+        }*/
+        if (loadingDialog!=null){
+            loadingDialog.dismiss();
         }
         ToastUtil.getInstance().showShort(R.string.get_sound_volume_fail);
         LogUtils.e("获取音量异常   " + throwable.getMessage());

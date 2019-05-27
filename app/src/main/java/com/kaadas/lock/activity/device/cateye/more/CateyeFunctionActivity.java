@@ -117,10 +117,17 @@ public class CateyeFunctionActivity extends BaseActivity<ICatEyeFunctionView, Ca
                 finish();
                 break;
             case R.id.ll_look_back:
-                String gatewayId=cateEyeInfo.getGwID();
-                String deviceId=cateEyeInfo.getServerInfo().getDeviceId();
-                String meUserName = cateEyeInfo.getGatewayInfo().getServerInfo().getMeUsername();
-                String mePwd= cateEyeInfo.getGatewayInfo().getServerInfo().getMePwd();
+                String gatewayId=null;
+                String deviceId=null;
+                String meUserName=null;
+                String mePwd=null;
+                try{
+                     gatewayId=cateEyeInfo.getGwID();
+                     deviceId=cateEyeInfo.getServerInfo().getDeviceId();
+                     meUserName= cateEyeInfo.getGatewayInfo().getServerInfo().getMeUsername();
+                     mePwd= cateEyeInfo.getGatewayInfo().getServerInfo().getMePwd();
+                }catch (Exception e){
+                }
                 Intent intentVideo = new Intent(CateyeFunctionActivity.this, VideoCallBackActivity.class);
                 intentVideo.putExtra("gatewayId",gatewayId);
                 intentVideo.putExtra("deviceId",deviceId);

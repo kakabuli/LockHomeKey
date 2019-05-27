@@ -66,16 +66,16 @@ public class DevicePresenter<T> extends BasePresenter<IDeviceView> {
     //刷新页面
     public void refreshData() {
         if (mqttService != null) {
-            MqttMessage allBindDevice = MqttCommandFactory.getAllBindDevice(MyApplication.getInstance().getUid());
             toDisposable(allBindDeviceDisposable);
+            MqttMessage allBindDevice = MqttCommandFactory.getAllBindDevice(MyApplication.getInstance().getUid());
             allBindDeviceDisposable = mqttService.mqttPublish(MqttConstant.MQTT_REQUEST_APP, allBindDevice)
-                    .compose(RxjavaHelper.observeOnMainThread())
                     .filter(new Predicate<MqttData>() {
                         @Override
                         public boolean test(MqttData mqttData) throws Exception {
                             return mqttData.getFunc().equalsIgnoreCase(MqttConstant.GET_ALL_BIND_DEVICE);
                         }
                     })
+                    .compose(RxjavaHelper.observeOnMainThread())
                     .timeout(10 * 1000, TimeUnit.MILLISECONDS)
                     .subscribe(new Consumer<MqttData>() {
                         @Override

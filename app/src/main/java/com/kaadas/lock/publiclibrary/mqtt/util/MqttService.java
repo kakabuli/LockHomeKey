@@ -139,8 +139,10 @@ public class MqttService extends Service {
         //允许同时发送几条消息（未收到broker确认信息）
         connOpts.setMaxInflight(MqttConstant.MQTT_MAX_INFLIGHT);
         //用户的id,和token
-        connOpts.setUserName(user_id);
-        connOpts.setPassword(user_token.toCharArray());
+        if (!TextUtils.isEmpty(user_id)&&!TextUtils.isEmpty(user_token)) {
+            connOpts.setUserName(user_id);
+            connOpts.setPassword(user_token.toCharArray());
+        }
         return connOpts;
     }
 

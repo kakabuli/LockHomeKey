@@ -52,7 +52,7 @@ public interface IGatewayLockHomeView extends IBaseView {
     void lockCloseFailed();
 
     //获取开锁守护次数成功
-    void getLockRecordTotalSuccess(int count);
+    void getLockRecordTotalSuccess(int count,String deviceId);
 
     //获取开锁守护次数失败
     void getLockRecordTotalFail();

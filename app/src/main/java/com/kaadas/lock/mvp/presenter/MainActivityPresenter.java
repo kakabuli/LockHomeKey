@@ -14,10 +14,15 @@ import com.kaadas.lock.mvp.view.IMainActivityView;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.publiclibrary.bean.CateEyeInfo;
 import com.kaadas.lock.publiclibrary.bean.GatewayInfo;
+import com.kaadas.lock.publiclibrary.bean.GwLockInfo;
+import com.kaadas.lock.publiclibrary.bean.ServerGatewayInfo;
+import com.kaadas.lock.publiclibrary.bean.ServerGwDevice;
 import com.kaadas.lock.publiclibrary.ble.BleUtil;
 import com.kaadas.lock.publiclibrary.ble.responsebean.BleDataBean;
 import com.kaadas.lock.publiclibrary.http.XiaokaiNewServiceImp;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
+import com.kaadas.lock.publiclibrary.http.result.ServerBleDevice;
+import com.kaadas.lock.publiclibrary.http.result.ServerDevice;
 import com.kaadas.lock.publiclibrary.http.util.BaseObserver;
 import com.kaadas.lock.publiclibrary.http.util.RxjavaHelper;
 import com.kaadas.lock.publiclibrary.linphone.MemeManager;
@@ -36,9 +41,14 @@ import com.kaadas.lock.utils.Rsa;
 import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.SPUtils2;
 import com.kaadas.lock.utils.ftp.GeTui;
+import com.kaadas.lock.utils.greenDao.bean.BleLockServiceInfo;
 import com.kaadas.lock.utils.greenDao.bean.CatEyeEvent;
+import com.kaadas.lock.utils.greenDao.bean.CatEyeServiceInfo;
 import com.kaadas.lock.utils.greenDao.bean.GatewayLockAlarmEventDao;
 import com.kaadas.lock.utils.greenDao.bean.GatewayLockPwd;
+import com.kaadas.lock.utils.greenDao.bean.GatewayLockServiceInfo;
+import com.kaadas.lock.utils.greenDao.bean.GatewayServiceInfo;
+import com.kaadas.lock.utils.greenDao.db.DaoSession;
 import com.kaadas.lock.utils.greenDao.db.GatewayLockAlarmEventDaoDao;
 import com.kaadas.lock.utils.greenDao.db.GatewayLockPwdDao;
 
@@ -47,6 +57,7 @@ import net.sdvn.cmapi.Device;
 import org.json.JSONObject;
 import org.linphone.core.LinphoneCall;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -78,6 +89,7 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
     @Override
     public void attachView(IMainActivityView view) {
         super.attachView(view);
+        setHomeShowBean();
         //网关上线监听
         getPublishNotify();
         listenCatEyeEvent();
@@ -176,7 +188,7 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                                        /* if (homeShowBeans.size() > 0) {
                                             for (HomeShowBean homeShowBean : homeShowBeans) {
                                                 if (homeShowBean.getDeviceType() == HomeShowBean.TYPE_GATEWAY) {
-                                                    GatewayInfo gatewayInfo = (GatewayInfo) homeShowBean.getObject();
+                                                    GatewayServiceInfo gatewayInfo = (GatewayServiceInfo) homeShowBean.getObject();
                                                     if (gatewayInfo.getServerInfo().getDeviceSN().equals(gatewayStatusResult.getDevuuid())) {
                                                         LogUtils.e("监听网关的状态      " + gatewayStatusResult.getDevuuid());
                                                         gatewayInfo.setEvent_str(gatewayStatusResult.getData().getState());
@@ -286,7 +298,6 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                                         if (mViewRef.get() != null) {
                                             mViewRef.get().onGwLockEvent(alarmCode, clusterID,deviceId);
                                         }
-
                                     }
 
                                 }
@@ -631,6 +642,68 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
         }
         return false;
     }
+
+    //设置HomeShowBean
+    public void setHomeShowBean(){
+        DaoSession daoSession=MyApplication.getInstance().getDaoWriteSession();
+        List<HomeShowBean> homeShowBeans=new ArrayList<>();
+        //获取蓝牙
+        List<BleLockServiceInfo> bleLockList=daoSession.getBleLockServiceInfoDao().queryBuilder().list();
+        if (bleLockList!=null&&bleLockList.size()>0){
+            for (BleLockServiceInfo bleDevice:bleLockList){
+                ServerBleDevice serverBleDevice=new ServerBleDevice();
+                serverBleDevice.setAuto_lock(bleDevice.getAuto_lock());
+                serverBleDevice.setCenter_latitude(bleDevice.getCenter_latitude());
+                serverBleDevice.setCenter_longitude(bleDevice.getCenter_longitude());
+                serverBleDevice.setCircle_radius(bleDevice.getCircle_radius());
+                serverBleDevice.setLockName(bleDevice.getLockName());
+                serverBleDevice.setLockNickName(bleDevice.getLockNickName());
+                serverBleDevice.setMacLock(bleDevice.getMacLock());
+                serverBleDevice.setIs_admin(bleDevice.getIs_admin());
+                serverBleDevice.setModel(bleDevice.getModel());
+                serverBleDevice.setOpen_purview(bleDevice.getOpen_purview());
+                serverBleDevice.setPassword1(bleDevice.getPassword1());
+                serverBleDevice.setPassword2(bleDevice.getPassword2());
+                BleLockInfo bleLockInfo = new BleLockInfo(serverBleDevice);
+                homeShowBeans.add(new HomeShowBean(HomeShowBean.TYPE_BLE_LOCK, bleDevice.getLockName(), bleDevice.getLockNickName(),bleLockInfo ));
+            }
+        }
+        //获取网关
+      List<GatewayServiceInfo> gatewayServiceInfoList= daoSession.getGatewayServiceInfoDao().queryBuilder().list();
+      if (gatewayServiceInfoList!=null&&gatewayServiceInfoList.size()>0){
+          for (GatewayServiceInfo gatewayServiceInfo:gatewayServiceInfoList){
+              GatewayInfo newGatewayInfo = new GatewayInfo(new ServerGatewayInfo(gatewayServiceInfo.getDeviceSN(),gatewayServiceInfo.getDeviceNickName(),gatewayServiceInfo.getAdminuid(),gatewayServiceInfo.getAdminName(),gatewayServiceInfo.getAdminNickname(),gatewayServiceInfo.getIsAdmin(),gatewayServiceInfo.getMeUsername(),gatewayServiceInfo.getMePwd(),gatewayServiceInfo.getMeBindState()));
+              homeShowBeans.add(new HomeShowBean(HomeShowBean.TYPE_GATEWAY, gatewayServiceInfo.getDeviceSN(), gatewayServiceInfo.getDeviceNickName(), newGatewayInfo));
+          }
+      }
+
+      //获取网关锁
+      List<GatewayLockServiceInfo> gatewayLockList=daoSession.getGatewayLockServiceInfoDao().queryBuilder().list();
+      if (gatewayLockList!=null&&gatewayLockList.size()>0){
+          for (GatewayLockServiceInfo gwLock:gatewayLockList){
+              GwLockInfo gwLockInfo=new GwLockInfo(gwLock.getGatewayId(),new ServerGwDevice(gwLock.getSW(),gwLock.getDeviceId(),gwLock.getDevice_type(),gwLock.getEvent_str(),gwLock.getIpaddr(),gwLock.getMacaddr(),gwLock.getNickName(),gwLock.getTime()));
+              homeShowBeans.add(new HomeShowBean(HomeShowBean.TYPE_GATEWAY_LOCK, gwLock.getDeviceId(),
+                      gwLock.getNickName(), gwLockInfo));
+          }
+      }
+
+      //获取猫眼
+      List<CatEyeServiceInfo> catEyeServiceList=daoSession.getCatEyeServiceInfoDao().queryBuilder().list();
+      if (catEyeServiceList!=null&&catEyeServiceList.size()>0){
+          for (CatEyeServiceInfo catEyeService:catEyeServiceList){
+              CateEyeInfo cateEyeInfo=new CateEyeInfo(catEyeService.getGatewayId(),new ServerGwDevice(catEyeService.getSW(),catEyeService.getDeviceId(),catEyeService.getDevice_type(),catEyeService.getEvent_str(),catEyeService.getIpaddr(),catEyeService.getMacaddr(),catEyeService.getNickName(),catEyeService.getTime()));
+              homeShowBeans.add(new HomeShowBean(HomeShowBean.TYPE_CAT_EYE, catEyeService.getDeviceId(),
+                      catEyeService.getNickName(), cateEyeInfo));
+          }
+      }
+        MyApplication.getInstance().setHomeshowDevice(homeShowBeans);
+    }
+
+
+
+
+
+
 }
 
 

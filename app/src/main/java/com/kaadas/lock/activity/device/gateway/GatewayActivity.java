@@ -141,6 +141,10 @@ public class GatewayActivity extends BaseActivity<GatewayView, GatewayPresenter<
     public void getPowerDataSuccess(String deviceId, int power) {
         //获取到电量
         LogUtils.e("设备名称   " + deviceId + "   电量   " + power);
+        if (power<0){
+            power=0;
+        }
+
         if (homeShowBeans != null && homeShowBeans.size() > 0) {
             for (HomeShowBean device : homeShowBeans) {
                 //猫眼
@@ -158,7 +162,7 @@ public class GatewayActivity extends BaseActivity<GatewayView, GatewayPresenter<
                 else if (HomeShowBean.TYPE_GATEWAY_LOCK == device.getDeviceType()) {
                     if (device.getDeviceId().equals(device)) {
                         GwLockInfo gwLockInfo = (GwLockInfo) device.getObject();
-                        gwLockInfo.setPower(power);
+                        gwLockInfo.setPower(power/2);
                         LogUtils.e("设置zigbee电量成功" + power);
                         if (gatewayAdapter != null) {
                             gatewayAdapter.notifyDataSetChanged();

@@ -135,11 +135,12 @@ public class PersonalSystemSettingActivity extends BaseActivity<ISystemSettingVi
             @Override
             public void right() {
                 mPresenter.loginOut();
-                MyApplication.getInstance().tokenInvalid(false);
                 //退出mqtt
                 if (MyApplication.getInstance().getMqttService()!=null){
                     MyApplication.getInstance().getMqttService().httpMqttDisconnect();
                 }
+                MyApplication.getInstance().tokenInvalid(false);
+
                 //清除缓存数据，关闭会话。
 //                MyApplication.getInstance().setRemoveDBData();
 //                MyApplication.getInstance().getDaoSession().clear();
