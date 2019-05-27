@@ -323,12 +323,8 @@ public class AllBindDevices {
                                 if (cateEyeInfo.getGwID().equals(gwListBean.getDeviceSN())
                                         && cateEyeInfo.getServerInfo().getDeviceId().equals(serverGwDevice.getDeviceId())
                                         ) {
-                                    LogUtils.e("猫眼已存在   刷新前的昵称是" +    cateEyeInfo.getServerInfo().getNickName()  );
-                                    LogUtils.e(cateEyeInfo.getServerInfo().getNickName()+"值还没有改变");
                                     isExist = true;
                                     cateEyeInfo.setServerInfo(serverGwDevice);
-                                    LogUtils.e(cateEyeInfo.getServerInfo().getNickName()+"值发生改变");
-                                    LogUtils.e("猫眼已存在   刷新后的昵称是" +    cateEyeInfo.getServerInfo().getNickName()  );
                                     homeShowBean.setDeviceNickName(nickName);
                                     homeShowBeans.add(homeShowBean);
                                 }

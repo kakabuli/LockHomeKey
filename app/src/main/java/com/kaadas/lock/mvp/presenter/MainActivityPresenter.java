@@ -400,7 +400,13 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                         if (linphoneSn.equalsIgnoreCase(cateEyeInfo.getServerInfo().getDeviceId())) {
                             LogUtils.e("获取到网关Id为  " + cateEyeInfo.getGwID());
                             gwId = cateEyeInfo.getGwID();
-                            gatewayInfo = cateEyeInfo.getGatewayInfo();
+                            List<GatewayInfo> allGateway = MyApplication.getInstance().getAllGateway();
+                            for (GatewayInfo info:allGateway){
+                                if ( cateEyeInfo.getGwID().equals(info.getServerInfo().getDeviceSN())){
+                                    gatewayInfo = info;
+                                    break;
+                                }
+                            }
                             callInCatEyeInfo = cateEyeInfo;
                         }
                     }

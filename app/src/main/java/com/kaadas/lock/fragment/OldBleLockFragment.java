@@ -132,10 +132,16 @@ public class OldBleLockFragment extends BaseBleFragment<IOldBleLockView, OldBleL
         initRecycleView();
         tvMore.setOnClickListener(this);
         tvSynchronizedRecord.setOnClickListener(this);
-        mPresenter.getOpenRecordFromServer(1, bleLockInfo);
         changeOpenLockStatus(12);
         initView();
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mPresenter.attachView(this);
+        mPresenter.getOpenRecordFromServer(1, bleLockInfo);
     }
 
     private void initView() {
@@ -852,12 +858,12 @@ public class OldBleLockFragment extends BaseBleFragment<IOldBleLockView, OldBleL
     @Override
     public void onLoadServerRecordFailed(Throwable throwable) {
         //加载服务器开锁记录失败
-        ToastUtil.getInstance().showShort(HttpUtils.httpProtocolErrorCode(getActivity(), throwable));
+//        ToastUtil.getInstance().showShort(HttpUtils.httpProtocolErrorCode(getActivity(), throwable));
     }
 
     @Override
     public void onLoadServerRecordFailedServer(BaseResult result) {
-        ToastUtil.getInstance().showShort(HttpUtils.httpErrorCode(getActivity(), result.getCode()));
+//        ToastUtil.getInstance().showShort(HttpUtils.httpErrorCode(getActivity(), result.getCode()));
     }
 
     @Override
@@ -865,29 +871,29 @@ public class OldBleLockFragment extends BaseBleFragment<IOldBleLockView, OldBleL
         hasData = false;
         changePage();
         //服务器没有开锁记录
-        ToastUtil.getInstance().showShort(R.string.server_no_data);
+//        ToastUtil.getInstance().showShort(R.string.server_no_data);
     }
 
     @Override
     public void noMoreData() {
-        ToastUtil.getInstance().showShort(R.string.no_more_data);
+//        ToastUtil.getInstance().showShort(R.string.no_more_data);
     }
 
     @Override
     public void onUploadServerRecordSuccess() {
         LogUtils.e("记录上传成功");
-        ToastUtil.getInstance().showShort(R.string.lock_record_upload_success);
+//        ToastUtil.getInstance().showShort(R.string.lock_record_upload_success);
     }
 
     @Override
     public void onUploadServerRecordFailed(Throwable throwable) {
-        ToastUtil.getInstance().showShort(HttpUtils.httpProtocolErrorCode(getActivity(), throwable));
+//        ToastUtil.getInstance().showShort(HttpUtils.httpProtocolErrorCode(getActivity(), throwable));
         LogUtils.e("记录上传失败");
     }
 
     @Override
     public void onUploadServerRecordFailedServer(BaseResult result) {
-        ToastUtil.getInstance().showShort(HttpUtils.httpErrorCode(getActivity(), result.getCode()));
+//        ToastUtil.getInstance().showShort(HttpUtils.httpErrorCode(getActivity(), result.getCode()));
     }
 
     @Override

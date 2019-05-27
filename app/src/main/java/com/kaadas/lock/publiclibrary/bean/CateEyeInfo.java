@@ -52,9 +52,6 @@ public class CateEyeInfo  implements Serializable {
         this.power = power;
     }
 
-    public GatewayInfo getGatewayInfo() {
-        return gatewayInfo;
-    }
 
     public void setGatewayInfo(GatewayInfo gatewayInfo) {
         this.gatewayInfo = gatewayInfo;
