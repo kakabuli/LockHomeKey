@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.mvp.presenter.gatewaylockpresenter.GatewayLockInformationPresenter;
@@ -17,6 +18,9 @@ import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LoadingDialog;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.ToastUtil;
+import com.kaadas.lock.utils.greenDao.bean.GatewayLockBaseInfo;
+import com.kaadas.lock.utils.greenDao.db.DaoSession;
+import com.kaadas.lock.utils.greenDao.db.GatewayLockBaseInfoDao;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -52,7 +56,8 @@ public class GatewayDeviceInformationActivity extends BaseActivity<GatewayLockIn
     private String gatewayId;
     private String deviceId;
     private LoadingDialog loadingDialog;
-
+    private String uid;
+    private DaoSession daoSession;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,13 +72,30 @@ public class GatewayDeviceInformationActivity extends BaseActivity<GatewayLockIn
         Intent intent=getIntent();
         gatewayId=intent.getStringExtra(KeyConstants.GATEWAY_ID);
         deviceId=intent.getStringExtra(KeyConstants.DEVICE_ID);
+        uid=MyApplication.getInstance().getUid();
+        daoSession=MyApplication.getInstance().getDaoWriteSession();
         if (gatewayId!=null&&deviceId!=null){
             if (loadingDialog!=null){
+                //先读取数据库数据
+                GatewayLockBaseInfo gatewayLockBaseInfo=daoSession.getGatewayLockBaseInfoDao().queryBuilder().where(GatewayLockBaseInfoDao.Properties.DeviceId.eq(deviceId),GatewayLockBaseInfoDao.Properties.GatewayId.eq(gatewayId),GatewayLockBaseInfoDao.Properties.Uid.eq(uid)).unique();
+                if (gatewayLockBaseInfo!=null){
+                    setGatewayLockBase(gatewayLockBaseInfo);
+                }
                 loadingDialog.show(getString(R.string.get_lock_info_later_on));
                 mPresenter.getGatewayLockInfo(gatewayId,deviceId);
             }
 
         }
+    }
+
+    private void setGatewayLockBase(GatewayLockBaseInfo gatewayLockBaseInfo) {
+        tvSerialNumber.setText(gatewayLockBaseInfo.getModel());//序列号
+        tvDeviceModel.setText(gatewayLockBaseInfo.getLinkquality());//链路信号
+        tvLockFirmwareVersion.setText(gatewayLockBaseInfo.getFirmware());//固件版本号
+        tvSoftwareVersion.setText(gatewayLockBaseInfo.getSwversion());//软件版本号
+        tvHardwareVersion.setText(gatewayLockBaseInfo.getHwversion());//硬件版本号
+        tvModuleMark.setText(gatewayLockBaseInfo.getMacaddr());
+
     }
 
     @Override
@@ -102,6 +124,19 @@ public class GatewayDeviceInformationActivity extends BaseActivity<GatewayLockIn
             tvSoftwareVersion.setText(returnDataBean.getSwversion());//软件版本号
             tvHardwareVersion.setText(returnDataBean.getHwversion());//硬件版本号
             tvModuleMark.setText(returnDataBean.getMacaddr());
+            GatewayLockBaseInfo gatewayLockBaseInfo=new GatewayLockBaseInfo();
+            gatewayLockBaseInfo.setDeviceId(deviceId);
+            gatewayLockBaseInfo.setDeviceUId(deviceId+uid);
+            gatewayLockBaseInfo.setFirmware(returnDataBean.getFirmware());
+            gatewayLockBaseInfo.setGatewayId(gatewayId);
+            gatewayLockBaseInfo.setHwversion(returnDataBean.getHwversion());
+            gatewayLockBaseInfo.setLinkquality(returnDataBean.getLinkquality());
+            gatewayLockBaseInfo.setMacaddr(returnDataBean.getMacaddr());
+            gatewayLockBaseInfo.setManufact(returnDataBean.getManufact());
+            gatewayLockBaseInfo.setModel(returnDataBean.getModel());
+            gatewayLockBaseInfo.setSwversion(returnDataBean.getSwversion());
+            gatewayLockBaseInfo.setUid(uid);
+            daoSession.insertOrReplace(gatewayLockBaseInfo);
         }
     }
 

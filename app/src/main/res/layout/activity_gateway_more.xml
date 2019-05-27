@@ -284,7 +284,7 @@
 
         <Button
             android:id="@+id/btn_delete"
-            android:layout_width="match_parent"
+            android:layout_width="244dp"
             android:layout_height="@dimen/dp_44"
             android:layout_marginLeft="@dimen/dp_88"
             android:layout_marginRight="@dimen/dp_88"
