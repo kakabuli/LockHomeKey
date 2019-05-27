@@ -9,6 +9,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.kaadas.lock.R;
+import com.kaadas.lock.activity.addDevice.DeviceAddActivity;
+import com.kaadas.lock.activity.addDevice.DeviceBindGatewayListActivity;
 import com.kaadas.lock.utils.KeyConstants;
 
 import butterknife.BindView;
@@ -40,7 +42,8 @@ public class AddDeviceCatEyeFirstActivity extends AppCompatActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.back:
-                finish();
+               Intent intent=new Intent(this, DeviceBindGatewayListActivity.class);
+               startActivity(intent);
                 break;
             case R.id.scan_catEye:
                 Intent scanIntent = new Intent(this, AddDeviceCatEyeScanActivity.class);

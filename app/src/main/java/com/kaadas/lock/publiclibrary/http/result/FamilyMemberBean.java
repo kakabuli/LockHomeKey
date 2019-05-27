@@ -60,7 +60,7 @@ public class FamilyMemberBean implements Serializable{
     public static class DataBean implements Serializable {
         @Override
         public String toString() {
-            return "GatewayInfo{" +
+            return "GatewayServiceInfo{" +
                     "_id='" + _id + '\'' +
                     ", adminname='" + adminname + '\'' +
                     ", uname='" + uname + '\'' +

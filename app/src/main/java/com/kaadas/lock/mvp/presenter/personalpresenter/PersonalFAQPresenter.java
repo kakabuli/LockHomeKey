@@ -65,12 +65,10 @@ public class PersonalFAQPresenter<T> extends BasePresenter<IPersonalFAQView> {
                 } else {
                     if ("444".equals(getFAQResult.getCode())) { //Token过期
                         LogUtils.e("token过期   " + Thread.currentThread().getName());
-                        MyApplication.getInstance().tokenInvalid(true);
                         if (mqttService!=null){
                             mqttService.httpMqttDisconnect();
                         }
-
-
+                        MyApplication.getInstance().tokenInvalid(true);
                     }else {
                         if (mViewRef != null) {
                             mViewRef.get().getFAQFail(getFAQResult);

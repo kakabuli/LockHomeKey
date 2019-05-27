@@ -1,6 +1,7 @@
 package com.kaadas.lock.fragment;
 
 import android.content.Intent;
+import android.net.Network;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -27,6 +28,7 @@ import com.kaadas.lock.publiclibrary.bean.CateEyeInfo;
 import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.NetUtil;
 import com.kaadas.lock.utils.greenDao.bean.CatEyeEvent;
 
 import java.util.ArrayList;
@@ -100,11 +102,14 @@ public class CatEyeFragment extends BaseFragment<ICatEyeView, CatEyePresenter<IC
             LogUtils.e(cateEyeInfo.getGwID() + "网关ID是    ");
             gatewayId = cateEyeInfo.getGwID();
             deviceId = cateEyeInfo.getServerInfo().getDeviceId();
-            changeOpenLockStatus(cateEyeInfo.getServerInfo().getEvent_str());
-            mPresenter.getPublishNotify();
-            mPresenter.listenerDeviceOnline();
-            mPresenter.listenerNetworkChange();
-
+            if (NetUtil.isNetworkAvailable()) {
+                changeOpenLockStatus(cateEyeInfo.getServerInfo().getEvent_str());
+            }else{
+                changeOpenLockStatus("offline");
+            }
+                mPresenter.getPublishNotify();
+                mPresenter.listenerDeviceOnline();
+                mPresenter.listenerNetworkChange();
             String time = cateEyeInfo.getServerInfo().getTime();
             LogUtils.e(time + "猫眼时间");
             if (!TextUtils.isEmpty(time)) {
@@ -374,19 +379,28 @@ public class CatEyeFragment extends BaseFragment<ICatEyeView, CatEyePresenter<IC
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        if (!TextUtils.isEmpty(gatewayId) && !TextUtils.isEmpty(deviceId)) {
-            List<CatEyeEvent> catEyeEvents = mPresenter.getCatEyeDynamicInfo(0, 3, gatewayId, deviceId);
-            if (catEyeEvents != null) {
-                if (catEyeEvents.size() > 0) {
-                    //获取猫眼动态数据成功
-                    LogUtils.e("访问数据库猫眼信息" + catEyeEvents.size());
-                    changePage(true);
-                    groupData(catEyeEvents);
+        if (isVisibleToUser) {
+            if(cateEyeInfo!=null){
+                if (NetUtil.isNetworkAvailable()){
+                    changeOpenLockStatus(cateEyeInfo.getServerInfo().getEvent_str());
+                }else{
+                    changeOpenLockStatus("offline");
+                }
+            }
+            if (!TextUtils.isEmpty(gatewayId) && !TextUtils.isEmpty(deviceId)) {
+                List<CatEyeEvent> catEyeEvents = mPresenter.getCatEyeDynamicInfo(0, 3, gatewayId, deviceId);
+                if (catEyeEvents != null) {
+                    if (catEyeEvents.size() > 0) {
+                        //获取猫眼动态数据成功
+                        LogUtils.e("访问数据库猫眼信息" + catEyeEvents.size());
+                        changePage(true);
+                        groupData(catEyeEvents);
+                    } else {
+                        changePage(false);
+                    }
                 } else {
                     changePage(false);
                 }
-            }else{
-                changePage(false);
             }
         }
     }

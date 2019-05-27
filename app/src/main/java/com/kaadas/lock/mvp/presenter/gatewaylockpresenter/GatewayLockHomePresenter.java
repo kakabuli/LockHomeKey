@@ -360,7 +360,7 @@ public class GatewayLockHomePresenter<T> extends BasePresenter<IGatewayLockHomeV
                             GetLockRecordTotalResult getLockRecordTotalResult=new Gson().fromJson(mqttData.getPayload(), GetLockRecordTotalResult.class);
                             if ("200".equals(getLockRecordTotalResult.getCode())){
                                 if (mViewRef!=null&&mViewRef.get()!=null){
-                                    mViewRef.get().getLockRecordTotalSuccess(getLockRecordTotalResult.getData().getCount());
+                                    mViewRef.get().getLockRecordTotalSuccess(getLockRecordTotalResult.getData().getCount(),getLockRecordTotalResult.getDeviceId());
                                 }
                             }else{
                                 if (mViewRef!=null&&mViewRef.get()!=null){

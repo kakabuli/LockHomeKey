@@ -33,6 +33,7 @@ import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.NetUtil;
 import com.kaadas.lock.utils.StringUtil;
 import com.kaadas.lock.utils.ToastUtil;
 
@@ -86,7 +87,7 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
     private BluetoothRecordAdapter openLockRecordAdapter;
     private boolean isOpening = false;
     private boolean isClosing = false;
-
+    private int statusFlag=0;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -110,12 +111,17 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
         LogUtils.e("fragment gatewayId"+gatewayLockInfo.getGwID()+"fragment device Id"  +gatewayLockInfo.getServerInfo().getDeviceId());
         if (gatewayLockInfo != null) {
             LogUtils.e(gatewayLockInfo.getGwID() + "网关ID是    ");
-            if ("online".equals(gatewayLockInfo.getServerInfo().getEvent_str())) {
-                //在线
-                changeOpenLockStatus(5);
-                deviceState.setText(getString(R.string.online));
+            if (NetUtil.isNetworkAvailable()) {
+                if ("online".equals(gatewayLockInfo.getServerInfo().getEvent_str())) {
+                    //在线
+                    changeOpenLockStatus(5);
+                    deviceState.setText(getString(R.string.online));
 
-            } else {
+                } else {
+                    changeOpenLockStatus(1);
+                    deviceState.setText(getString(R.string.offline));
+                }
+            }else{
                 changeOpenLockStatus(1);
                 deviceState.setText(getString(R.string.offline));
             }
@@ -196,8 +202,8 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
         状态6：”开锁中....“
 
         状态7：“锁已打开”.*/
-
-
+       /* if (ivExternalBig!=null&&ivExternalMiddle!=null&&ivExternalSmall!=null&&ivInnerMiddle!=null&&ivExternalSmall!=null&&tvInner!=null&&tvExternal!=null){*/
+        statusFlag=status;
         switch (status) {
             case 1:
                 //wifi不在线
@@ -370,9 +376,9 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
 //                tvExternal.setText();
                 break;
 
-
         }
-    }
+        }
+//  }
 
     public void changePage(boolean hasData) {
         if (hasData) {
@@ -505,12 +511,12 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
 
     @Override
     public void networkChangeSuccess() {
-        if (openLockRecordAdapter != null) {
-            openLockRecordAdapter.notifyDataSetChanged();
-        }
         changeOpenLockStatus(1);
         if (deviceState != null) {
             deviceState.setText(getString(R.string.offline));
+        }
+        if (openLockRecordAdapter != null) {
+            openLockRecordAdapter.notifyDataSetChanged();
         }
     }
 
@@ -618,9 +624,12 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
     }
 
     @Override
-    public void getLockRecordTotalSuccess(int count) {
+    public void getLockRecordTotalSuccess(int count,String devId) {
+        LogUtils.e("开锁记录总次数是"+count+"设备id"+devId);
         if (tvOpenLockTimes!=null){
-            tvOpenLockTimes.setText(count+"");
+            if (deviceId.equals(devId)){
+                tvOpenLockTimes.setText(count+"");
+            }
         }
 
     }
@@ -644,6 +653,10 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
         switch (v.getId()) {
             case R.id.rl_icon:
                 if (gatewayLockInfo != null) {
+                    if (statusFlag==1){
+                        ToastUtil.getInstance().showShort(R.string.wifi_alreade_offline);
+                        return true;
+                    }
                     if (isOpening) {
                         ToastUtil.getInstance().showShort(R.string.is_opening_try_latter);
                         return true;
@@ -656,7 +669,6 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
                         mPresenter.attachView(this);
                         mPresenter.openLock(gatewayLockInfo);
                     }
-
                 }
                 break;
         }
@@ -667,25 +679,50 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
           if (getUserVisibleHint()){
-            if (!TextUtils.isEmpty(gatewayId) && !TextUtils.isEmpty(deviceId)) {
-                mPresenter.openGatewayLockRecord(gatewayId, deviceId, MyApplication.getInstance().getUid(), 1, 3);
-                mPresenter.getGatewayLockOpenRecord(MyApplication.getInstance().getUid(), gatewayId, deviceId);//开锁次数
-            } else {
+            if (NetUtil.isNetworkAvailable()){
+                if (!TextUtils.isEmpty(gatewayId) && !TextUtils.isEmpty(deviceId)) {
+                    mPresenter.openGatewayLockRecord(gatewayId, deviceId, MyApplication.getInstance().getUid(), 1, 3);
+                    mPresenter.getGatewayLockOpenRecord(MyApplication.getInstance().getUid(), gatewayId, deviceId);//开锁次数
+                } else {
+                    changePage(false);
+                }
+            }else{
                 changePage(false);
             }
-            }
+          }
 
     }
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        if (!TextUtils.isEmpty(gatewayId) && !TextUtils.isEmpty(deviceId)) {
-            if (tvOpenLockTimes!=null){
-                tvOpenLockTimes.setText("0");
+        if (isVisibleToUser) {
+            if (gatewayLockInfo!=null) {
+                if (NetUtil.isNetworkAvailable()) {
+                    if ("online".equals(gatewayLockInfo.getServerInfo().getEvent_str())) {
+                        //在线
+                        changeOpenLockStatus(5);
+                        if (deviceState != null) {
+                            deviceState.setText(getString(R.string.online));
+                        }
+                    } else {
+                        changeOpenLockStatus(1);
+                        if (deviceState != null) {
+                            deviceState.setText(getString(R.string.offline));
+                        }
+                    }
+                }else{
+                    LogUtils.e("离线状态");
+                    changeOpenLockStatus(1);
+                    if (deviceState != null) {
+                        deviceState.setText(getString(R.string.offline));
+                    }
+                }
             }
-            mPresenter.openGatewayLockRecord(gatewayId, deviceId, MyApplication.getInstance().getUid(), 1, 3);
-            mPresenter.getGatewayLockOpenRecord(MyApplication.getInstance().getUid(), gatewayId, deviceId);//开锁次数
+            if (!TextUtils.isEmpty(gatewayId) && !TextUtils.isEmpty(deviceId)) {
+                mPresenter.openGatewayLockRecord(gatewayId, deviceId, MyApplication.getInstance().getUid(), 1, 3);
+                mPresenter.getGatewayLockOpenRecord(MyApplication.getInstance().getUid(), gatewayId, deviceId);//开锁次数
+            }
         }
 
     }

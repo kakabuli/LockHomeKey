@@ -1,5 +1,6 @@
 package com.kaadas.lock.fragment;
 
+import android.net.Network;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -23,7 +24,11 @@ import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.SelectOpenLockResult
 import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.NetUtil;
 import com.kaadas.lock.utils.ToastUtil;
+import com.kaadas.lock.utils.greenDao.bean.GatewayLockRecord;
+import com.kaadas.lock.utils.greenDao.db.DaoSession;
+import com.kaadas.lock.utils.greenDao.db.GatewayLockRecordDao;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
@@ -65,7 +70,6 @@ public class GatewayOpenLockRecordFragment extends BaseFragment<IGatewayLockReco
         initRecycleView();
         initData();
         initRefresh();
-
         return view;
     }
 
@@ -81,6 +85,7 @@ public class GatewayOpenLockRecordFragment extends BaseFragment<IGatewayLockReco
                         mOpenLockList.clear();
                     }
                     mPresenter.openGatewayLockRecord(gatewayId,deviceId,MyApplication.getInstance().getUid(),1,20);
+                    refreshLayout.finishRefresh(5*1000);
                 }
             }
         });
@@ -91,6 +96,7 @@ public class GatewayOpenLockRecordFragment extends BaseFragment<IGatewayLockReco
                 if (!TextUtils.isEmpty(gatewayId)&&!TextUtils.isEmpty(deviceId)){
                     if (lastPage==0){
                         mPresenter.openGatewayLockRecord(gatewayId,deviceId,MyApplication.getInstance().getUid(),page,20);
+                        refreshLayout.finishRefresh(5*1000);
                     }else{
                         refreshLayout.finishLoadMore();
                     }
@@ -107,9 +113,14 @@ public class GatewayOpenLockRecordFragment extends BaseFragment<IGatewayLockReco
             gatewayId = bundle.getString(KeyConstants.GATEWAY_ID);
             deviceId = bundle.getString(KeyConstants.DEVICE_ID);
         }
-        if (!TextUtils.isEmpty(gatewayId) && !TextUtils.isEmpty(deviceId)) {
-            mPresenter.openGatewayLockRecord(gatewayId, deviceId, MyApplication.getInstance().getUid(), 1, 20);
+        if (NetUtil.isNetworkAvailable()){
+            if (!TextUtils.isEmpty(gatewayId) && !TextUtils.isEmpty(deviceId)) {
+                mPresenter.openGatewayLockRecord(gatewayId, deviceId, MyApplication.getInstance().getUid(), 1, 20);
+            }
+        }else{
+            changeView(false);
         }
+
     }
 
     @Override
@@ -155,14 +166,37 @@ public class GatewayOpenLockRecordFragment extends BaseFragment<IGatewayLockReco
     public void getOpenLockRecordSuccess(List<SelectOpenLockResultBean.DataBean> mOpenLockRecordList) {
         //获取开锁记录成功
         LogUtils.e("获取到开锁记录多少条  " + mOpenLockRecordList.size());
+        String uid=MyApplication.getInstance().getUid();
         if (mOpenLockRecordList.size()==0&&page==1){
             changeView(false);
+        } else if (page==1){
+            //保存到数据库
+        DaoSession daoSession= MyApplication.getInstance().getDaoWriteSession();
+        //清空数据库
+        daoSession.getGatewayLockRecordDao().queryBuilder().where(GatewayLockRecordDao.Properties.Uid.eq(MyApplication.getInstance().getUid())).buildDelete().executeDeleteWithoutDetachingEntities();
+        //只保留二十条数据
+            for (SelectOpenLockResultBean.DataBean dataBean:mOpenLockRecordList){
+                GatewayLockRecord gatewayLockRecord=new GatewayLockRecord();
+                gatewayLockRecord.setDeviceId(deviceId);
+                gatewayLockRecord.setDeviceIdUid(deviceId+uid);
+                gatewayLockRecord.setGatewayId(gatewayId);
+                gatewayLockRecord.setLockName(dataBean.getLockName());
+                gatewayLockRecord.setLockNickName(dataBean.getLockNickName());
+                gatewayLockRecord.setOpen_purview(dataBean.getOpen_purview());
+                gatewayLockRecord.setNickName(dataBean.getNickName());
+                gatewayLockRecord.setOpen_time(dataBean.getOpen_time());
+                gatewayLockRecord.setOpen_type(dataBean.getOpen_type());
+                gatewayLockRecord.setUname(dataBean.getUname());
+                gatewayLockRecord.setVersionType(dataBean.getVersionType());
+                gatewayLockRecord.setUid(uid);
+                daoSession.getGatewayLockRecordDao().insertOrReplace(gatewayLockRecord);
+            }
         }
-      if (mOpenLockRecordList.size()==20){
-          page++;
-      }else{
-        lastPage=page+1;
-      }
+          if (mOpenLockRecordList.size()==20){
+              page++;
+          }else{
+            lastPage=page+1;
+          }
         groupData(mOpenLockRecordList);
         if (openLockRecordAdapter != null) {
             openLockRecordAdapter.notifyDataSetChanged();
@@ -181,7 +215,7 @@ public class GatewayOpenLockRecordFragment extends BaseFragment<IGatewayLockReco
             refreshLayout.finishLoadMore();
         }
         ToastUtil.getInstance().showShort(R.string.get_open_lock_record_fail);
-        changeView(true);
+        changeView(false);
     }
 
     @Override
@@ -192,7 +226,7 @@ public class GatewayOpenLockRecordFragment extends BaseFragment<IGatewayLockReco
         }
         LogUtils.e("获取开锁记录异常  网关锁");
         ToastUtil.getInstance().showShort(R.string.get_open_lock_record_fail);
-        changeView(true);
+        changeView(false);
     }
 
     private void groupData(List<SelectOpenLockResultBean.DataBean> mOpenLockRecordList) {
