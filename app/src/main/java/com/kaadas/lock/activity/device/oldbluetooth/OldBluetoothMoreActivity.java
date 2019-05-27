@@ -103,7 +103,7 @@ public class OldBluetoothMoreActivity extends BaseBleActivity<IOldDeviceInfoView
                 //获取到设备名称设置
                 editText.setText(deviceNickname);
                 editText.setSelection(deviceNickname.length());
-                editText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(16)});
+                editText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(50)});
                 tv_cancel.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

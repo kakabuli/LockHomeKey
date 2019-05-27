@@ -216,7 +216,7 @@ public class BluetoothLockFunctionActivity extends BaseBleActivity<IDeviceDetail
         //todo 等从锁中获取自动还是手动模式进行展示
 //        tvLockMode.setText();
         //默认为手动模式
-        if (mPresenter.isAuth(bleLockInfo, true)) {
+        if (mPresenter.isAuth(bleLockInfo, false)) {
             authResult(true);
             if (bleLockInfo.getBattery() != -1) {
                 dealWithPower(bleLockInfo.getBattery());
