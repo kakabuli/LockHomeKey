@@ -106,7 +106,7 @@ public class CatEyeResolutionActivity extends BaseActivity<ICatEyeResolutionView
                 break;
             case R.id.btn_save:
                 if (currentResolution.equals(selectResolution)||TextUtils.isEmpty(selectResolution)){
-                    ToastUtil.getInstance().showShort(R.string.current_ring_number_no_change);
+                    ToastUtil.getInstance().showShort(R.string.current_resolution_no_change);
                     return;
                 }
                 if (!TextUtils.isEmpty(gatewayId)&&!TextUtils.isEmpty(deviceId)){

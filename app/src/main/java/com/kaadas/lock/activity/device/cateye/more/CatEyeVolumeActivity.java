@@ -123,7 +123,7 @@ public class CatEyeVolumeActivity extends BaseActivity<ICatEyeVolumeView, CatEye
 
             case R.id.btn_save:
                 if (selectRingNumber == currentRingNumber||selectRingNumber==-1) {
-                    ToastUtil.getInstance().showShort(R.string.current_ring_number_no_change);
+                    ToastUtil.getInstance().showShort(R.string.current_volume_no_change);
                     return;
                 }
                 if (selectRingNumber != -1 && !TextUtils.isEmpty(gatewayId) && !TextUtils.isEmpty(deviceId)) {
