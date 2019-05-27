@@ -25,9 +25,9 @@ public class DaoMaster extends AbstractDaoMaster {
         CatEyeEventDao.createTable(db, ifNotExists);
         DBOpenLockRecordDao.createTable(db, ifNotExists);
         GatewayLockAlarmEventDaoDao.createTable(db, ifNotExists);
+        GatewayLockPwdDao.createTable(db, ifNotExists);
         HistoryInfoDao.createTable(db, ifNotExists);
         PirDefaultDao.createTable(db, ifNotExists);
-        GatewayLockPwdDao.createTable(db, ifNotExists);
     }
 
     /** Drops underlying database table using DAOs. */
@@ -36,9 +36,9 @@ public class DaoMaster extends AbstractDaoMaster {
         CatEyeEventDao.dropTable(db, ifExists);
         DBOpenLockRecordDao.dropTable(db, ifExists);
         GatewayLockAlarmEventDaoDao.dropTable(db, ifExists);
+        GatewayLockPwdDao.dropTable(db, ifExists);
         HistoryInfoDao.dropTable(db, ifExists);
         PirDefaultDao.dropTable(db, ifExists);
-        GatewayLockPwdDao.dropTable(db, ifExists);
     }
 
     /**
@@ -61,9 +61,9 @@ public class DaoMaster extends AbstractDaoMaster {
         registerDaoClass(CatEyeEventDao.class);
         registerDaoClass(DBOpenLockRecordDao.class);
         registerDaoClass(GatewayLockAlarmEventDaoDao.class);
+        registerDaoClass(GatewayLockPwdDao.class);
         registerDaoClass(HistoryInfoDao.class);
         registerDaoClass(PirDefaultDao.class);
-        registerDaoClass(GatewayLockPwdDao.class);
     }
 
     public DaoSession newSession() {

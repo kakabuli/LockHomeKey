@@ -141,7 +141,7 @@ public class BluetoothLockFunctionActivity extends BaseBleActivity<IDeviceDetail
         changeLockIcon(intent);
         bleLockInfo = mPresenter.getBleLockInfo();
         ivBack.setOnClickListener(this);
-        tvType.setText(getString(R.string.bluetooth_type) + bleLockInfo.getServerLockInfo().getModel());
+        showLockType();
         initData();
         initClick();
         showData();
@@ -165,6 +165,28 @@ public class BluetoothLockFunctionActivity extends BaseBleActivity<IDeviceDetail
             }
         };
 //        initRecycleview();
+    }
+
+    private void showLockType() {
+        String lockType = bleLockInfo.getServerLockInfo().getModel();
+        if (lockType.contains("K9S")){
+            lockType="K9S";
+        }else if (lockType.contains("K8S")){
+            lockType="K8S";
+        }else if (lockType.contains("K7S")){
+            lockType="K7S";
+        }else if (lockType.contains("S8")){
+            lockType="S8";
+        }else if (lockType.contains("KX")){
+            lockType="KX";
+        }else if (lockType.contains("K9")){
+            lockType="K9";
+        }else if (lockType.contains("K8")){
+            lockType="K8";
+        }else if (lockType.contains("K7")){
+            lockType="K7";
+        }
+        tvType.setText(getString(R.string.bluetooth_type) + lockType);
     }
 
     private void changeLockIcon(Intent intent) {

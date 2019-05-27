@@ -539,7 +539,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
                 tvExternal.setTextColor(getResources().getColor(R.color.cC6F5FF));
                 tvExternal.setText(getString(R.string.safe_status));
                 break;
-      /*      case 17:
+   /*         case 17:
                 isOpeningLock();
                 break;
             case 18:
@@ -643,7 +643,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
                 startActivity(intent);
                 break;
             case R.id.tv_synchronized_record:
-   /*             if(true){
+       /*         if(true){
 
                    Random random=new Random();
                     int i = random.nextInt(6);
