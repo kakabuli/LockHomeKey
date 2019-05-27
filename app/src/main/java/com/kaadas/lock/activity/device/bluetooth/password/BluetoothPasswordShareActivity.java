@@ -169,6 +169,10 @@ public class BluetoothPasswordShareActivity extends BaseBleActivity<IPasswordDet
                             ToastUtil.getInstance().showShort(R.string.name_not_empty);
                             return;
                         }
+                        if (name.equals(nickName)){
+                            ToastUtil.getInstance().showShort(R.string.nickname_not_modify);
+                            return;
+                        }
                         if (tvName != null) {
                             tvName.setText(name);
                             showLoading(getString(R.string.is_setting));

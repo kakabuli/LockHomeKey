@@ -169,7 +169,7 @@ public class PersonalVerifyFingerPrintActivity extends BaseActivity<IPersonalVer
                 startActivity(loginIntent);
                 if (bottomMenuDialog != null) {
                     bottomMenuDialog.dismiss();
-                    finish();
+//                    finish();
                 }
             }
         });
@@ -180,7 +180,7 @@ public class PersonalVerifyFingerPrintActivity extends BaseActivity<IPersonalVer
                 startActivity(registerIntent);
                 if (bottomMenuDialog != null) {
                     bottomMenuDialog.dismiss();
-                    finish();
+//                    finish();
                 }
             }
         });
@@ -217,7 +217,7 @@ public class PersonalVerifyFingerPrintActivity extends BaseActivity<IPersonalVer
 
         @Override
         public void onAuthenticationError(int errorCode, CharSequence errString) {
-            ToastUtil.getInstance().showShort(R.string.fingerprint_fail);
+//            ToastUtil.getInstance().showShort(R.string.fingerprint_fail);
         }
 
         @Override

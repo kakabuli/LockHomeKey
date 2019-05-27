@@ -81,8 +81,10 @@ public class UserFeedbackActivity extends BaseActivity<IUserFeedbackView, UserFe
                     String text = et.getText().toString().trim();
                     if (text.length()>=8){
                         mPresenter.userFeedback(MyApplication.getInstance().getUid(),text);
-                    }else {
+                    }else if (text.length()>0){
                         ToastUtil.getInstance().showShort(R.string.feedback_little);
+                    }else {
+                        ToastUtil.getInstance().showShort(R.string.enter_feedback);
                     }
 
                 } else {

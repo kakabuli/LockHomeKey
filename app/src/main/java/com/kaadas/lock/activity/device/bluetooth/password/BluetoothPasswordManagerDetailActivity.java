@@ -56,7 +56,6 @@ public class BluetoothPasswordManagerDetailActivity extends BaseBleActivity<IPas
     private AddPasswordBean.Password password;
     private long createTime;
     private String[] weekdays;
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -183,7 +182,11 @@ public class BluetoothPasswordManagerDetailActivity extends BaseBleActivity<IPas
                             //确认删除
                             if (mPresenter.isAuth(bleLockInfo, true)) {
                                 showLoading(getString(R.string.is_deleting));
-                                mPresenter.deletePwd(1, Integer.parseInt(password.getNum()), 1, true);
+                                if (password.getType() == 5){
+                                    mPresenter.deletePwd(2, Integer.parseInt(password.getNum()), 1, true);
+                                }else {
+                                    mPresenter.deletePwd(2, Integer.parseInt(password.getNum()), 1, true);
+                                }
                             }
                         }
                     });
