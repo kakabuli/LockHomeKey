@@ -163,7 +163,7 @@ public class GatewaySettingActivity extends BaseActivity<GatewaySettingView, Gat
         uid=MyApplication.getInstance().getUid();
         if (!TextUtils.isEmpty(gatewayId)){
             //先读取数据库
-            GatewayBaseInfo gatewayBaseInfo=MyApplication.getInstance().getDaoWriteSession().getGatewayBaseInfoDao().queryBuilder().where(GatewayBaseInfoDao.Properties.GatewayId.eq(gatewayId), GatewayLockBaseInfoDao.Properties.Uid.eq(uid)).unique();
+            GatewayBaseInfo gatewayBaseInfo=MyApplication.getInstance().getDaoWriteSession().getGatewayBaseInfoDao().queryBuilder().where(GatewayBaseInfoDao.Properties.GatewayId.eq(gatewayId), GatewayBaseInfoDao.Properties.Uid.eq(uid)).unique();
             if (gatewayBaseInfo!=null){
                 setGatewayBaseInfo(gatewayBaseInfo);
             }

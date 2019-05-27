@@ -48,9 +48,13 @@ import com.kaadas.lock.utils.greenDao.bean.GatewayLockAlarmEventDao;
 import com.kaadas.lock.utils.greenDao.bean.GatewayLockPwd;
 import com.kaadas.lock.utils.greenDao.bean.GatewayLockServiceInfo;
 import com.kaadas.lock.utils.greenDao.bean.GatewayServiceInfo;
+import com.kaadas.lock.utils.greenDao.db.BleLockServiceInfoDao;
+import com.kaadas.lock.utils.greenDao.db.CatEyeServiceInfoDao;
 import com.kaadas.lock.utils.greenDao.db.DaoSession;
 import com.kaadas.lock.utils.greenDao.db.GatewayLockAlarmEventDaoDao;
 import com.kaadas.lock.utils.greenDao.db.GatewayLockPwdDao;
+import com.kaadas.lock.utils.greenDao.db.GatewayLockServiceInfoDao;
+import com.kaadas.lock.utils.greenDao.db.GatewayServiceInfoDao;
 
 import net.sdvn.cmapi.Device;
 
@@ -652,9 +656,10 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
     //设置HomeShowBean
     public void setHomeShowBean(){
         DaoSession daoSession=MyApplication.getInstance().getDaoWriteSession();
+        String uid=MyApplication.getInstance().getUid();
         List<HomeShowBean> homeShowBeans=new ArrayList<>();
         //获取蓝牙
-        List<BleLockServiceInfo> bleLockList=daoSession.getBleLockServiceInfoDao().queryBuilder().list();
+        List<BleLockServiceInfo> bleLockList=daoSession.getBleLockServiceInfoDao().queryBuilder().where(BleLockServiceInfoDao.Properties.Uid.eq(uid)).list();
         if (bleLockList!=null&&bleLockList.size()>0){
             for (BleLockServiceInfo bleDevice:bleLockList){
                 ServerBleDevice serverBleDevice=new ServerBleDevice();
@@ -675,7 +680,7 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
             }
         }
         //获取网关
-      List<GatewayServiceInfo> gatewayServiceInfoList= daoSession.getGatewayServiceInfoDao().queryBuilder().list();
+      List<GatewayServiceInfo> gatewayServiceInfoList= daoSession.getGatewayServiceInfoDao().queryBuilder().where(GatewayServiceInfoDao.Properties.Uid.eq(uid)).list();
       if (gatewayServiceInfoList!=null&&gatewayServiceInfoList.size()>0){
           for (GatewayServiceInfo gatewayServiceInfo:gatewayServiceInfoList){
               GatewayInfo newGatewayInfo = new GatewayInfo(new ServerGatewayInfo(gatewayServiceInfo.getDeviceSN(),gatewayServiceInfo.getDeviceNickName(),gatewayServiceInfo.getAdminuid(),gatewayServiceInfo.getAdminName(),gatewayServiceInfo.getAdminNickname(),gatewayServiceInfo.getIsAdmin(),gatewayServiceInfo.getMeUsername(),gatewayServiceInfo.getMePwd(),gatewayServiceInfo.getMeBindState()));
@@ -684,7 +689,7 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
       }
 
       //获取网关锁
-      List<GatewayLockServiceInfo> gatewayLockList=daoSession.getGatewayLockServiceInfoDao().queryBuilder().list();
+      List<GatewayLockServiceInfo> gatewayLockList=daoSession.getGatewayLockServiceInfoDao().queryBuilder().where(GatewayLockServiceInfoDao.Properties.Uid.eq(uid)).list();
       if (gatewayLockList!=null&&gatewayLockList.size()>0){
           for (GatewayLockServiceInfo gwLock:gatewayLockList){
               GwLockInfo gwLockInfo=new GwLockInfo(gwLock.getGatewayId(),new ServerGwDevice(gwLock.getSW(),gwLock.getDeviceId(),gwLock.getDevice_type(),gwLock.getEvent_str(),gwLock.getIpaddr(),gwLock.getMacaddr(),gwLock.getNickName(),gwLock.getTime()));
@@ -694,7 +699,7 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
       }
 
       //获取猫眼
-      List<CatEyeServiceInfo> catEyeServiceList=daoSession.getCatEyeServiceInfoDao().queryBuilder().list();
+      List<CatEyeServiceInfo> catEyeServiceList=daoSession.getCatEyeServiceInfoDao().queryBuilder().where(CatEyeServiceInfoDao.Properties.Uid.eq(uid)).list();
       if (catEyeServiceList!=null&&catEyeServiceList.size()>0){
           for (CatEyeServiceInfo catEyeService:catEyeServiceList){
               CateEyeInfo cateEyeInfo=new CateEyeInfo(catEyeService.getGatewayId(),new ServerGwDevice(catEyeService.getSW(),catEyeService.getDeviceId(),catEyeService.getDevice_type(),catEyeService.getEvent_str(),catEyeService.getIpaddr(),catEyeService.getMacaddr(),catEyeService.getNickName(),catEyeService.getTime()));
