@@ -3,7 +3,7 @@ apply plugin: 'org.greenrobot.greendao'
 apply plugin: 'bugly'   //添加bugly的符号表
 
 greendao {
-    schemaVersion 5// 数据库版本号
+    schemaVersion 6// 数据库版本号
     daoPackage 'com.kaadas.lock.utils.greenDao.db'//自动生成的dao的包名，包名默认是entity所在的包；
     targetGenDir 'src/main/java'//生成数据库文件的目录
 }
