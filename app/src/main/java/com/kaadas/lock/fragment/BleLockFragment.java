@@ -51,6 +51,7 @@ import com.kaadas.lock.utils.ToastUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.TimeoutException;
 
 import butterknife.BindView;
@@ -424,7 +425,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
                 ivExternalSmall.setVisibility(View.VISIBLE);
                 ivExternalSmall.setImageResource(R.mipmap.bluetooth_open_lock_small_icon);
                 ivInnerMiddle.setVisibility(View.VISIBLE);
-                ivInnerMiddle.setImageResource(R.mipmap.bluetooth_open_lock_success_niner_middle_icon);
+                ivInnerMiddle.setImageResource(R.mipmap.bluetooth_lock_safe_inner_midder_icon);
                 ivInnerSmall.setVisibility(View.GONE);
 //                ivInnerSmall.setImageResource();
                 tvInner.setVisibility(View.GONE);
@@ -538,6 +539,12 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
                 tvExternal.setTextColor(getResources().getColor(R.color.cC6F5FF));
                 tvExternal.setText(getString(R.string.safe_status));
                 break;
+   /*         case 17:
+                isOpeningLock();
+                break;
+            case 18:
+                onLockLock();
+                break;*/
 
         }
     }
@@ -597,7 +604,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
         tvExternal.setVisibility(View.VISIBLE);
         tvExternal.setTextColor(getResources().getColor(R.color.cC6F5FF));
         tvExternal.setText(getString(R.string.bluetooth_close_status));
-        closeLock = (AnimationDrawable) ivInnerSmall.getDrawable();
+        closeLock = (AnimationDrawable) ivInnerMiddle.getDrawable();
         if (closeLock != null) {
             closeLock.start();
         }
@@ -612,15 +619,12 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
     public void stopOpenLockAnimator() {
         if (openLockBig != null) {
             openLockBig.stop();
-            ivExternalBig.setBackground(null);
         }
         if (openLockMiddle != null) {
             openLockMiddle.stop();
-            ivExternalMiddle.setBackground(null);
         }
         if (openLockSmall != null) {
             openLockSmall.stop();
-            ivInnerMiddle.setBackground(null);
         }
     }
 
@@ -639,6 +643,15 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
                 startActivity(intent);
                 break;
             case R.id.tv_synchronized_record:
+       /*         if(true){
+
+                   Random random=new Random();
+                    int i = random.nextInt(6);
+                     i=i+13;
+                    LogUtils.d("davi 状态 "+i);
+                    changeOpenLockStatus(i);
+                    return;
+                }*/
                 if (isLoadingBleRecord) { //如果正在加载锁上数据  不让用户再次点击
                     ToastUtil.getInstance().showShort(R.string.is_loading_lock_record);
                     return;
@@ -1062,12 +1075,12 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
     @Override
     public void onLoadServerRecordFailed(Throwable throwable) {
         //加载服务器开锁记录失败
-        ToastUtil.getInstance().showShort(HttpUtils.httpProtocolErrorCode(getActivity(), throwable));
+//        ToastUtil.getInstance().showShort(HttpUtils.httpProtocolErrorCode(getActivity(), throwable));
     }
 
     @Override
     public void onLoadServerRecordFailedServer(BaseResult result) {
-        ToastUtil.getInstance().showShort(HttpUtils.httpErrorCode(getActivity(), result.getCode()));
+//        ToastUtil.getInstance().showShort(HttpUtils.httpErrorCode(getActivity(), result.getCode()));
 
     }
 
@@ -1076,29 +1089,29 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
         hasData = false;
         changePage();
         //服务器没有开锁记录
-        ToastUtil.getInstance().showShort(R.string.server_no_data);
+//        ToastUtil.getInstance().showShort(R.string.server_no_data);
     }
 
     @Override
     public void noMoreData() {
-        ToastUtil.getInstance().showShort(R.string.no_more_data);
+//        ToastUtil.getInstance().showShort(R.string.no_more_data);
     }
 
     @Override
     public void onUploadServerRecordSuccess() {
         LogUtils.e("记录上传成功");
-        ToastUtil.getInstance().showShort(R.string.lock_record_upload_success);
+//        ToastUtil.getInstance().showShort(R.string.lock_record_upload_success);
     }
 
     @Override
     public void onUploadServerRecordFailed(Throwable throwable) {
-        ToastUtil.getInstance().showShort(HttpUtils.httpProtocolErrorCode(getActivity(), throwable));
+//        ToastUtil.getInstance().showShort(HttpUtils.httpProtocolErrorCode(getActivity(), throwable));
         LogUtils.e("记录上传失败");
     }
 
     @Override
     public void onUploadServerRecordFailedServer(BaseResult result) {
-        ToastUtil.getInstance().showShort(HttpUtils.httpErrorCode(getActivity(), result.getCode()));
+//        ToastUtil.getInstance().showShort(HttpUtils.httpErrorCode(getActivity(), result.getCode()));
     }
 
     @Override

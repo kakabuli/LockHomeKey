@@ -236,10 +236,10 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
                 mPresenter.listenerDeviceOnline();
                 mPresenter.getPublishNotify();
 
-                //布防模式
+                /*//布防模式
                 if (!TextUtils.isEmpty(gatewayId)&&!TextUtils.isEmpty(deviceId)){
                     mPresenter.getArmLocked(MyApplication.getInstance().getUid(),gatewayId,deviceId);
-                }
+                }*/
             }
         }
 

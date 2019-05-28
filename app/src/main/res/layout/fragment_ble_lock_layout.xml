@@ -160,7 +160,7 @@
                     android:text="@string/no_door_record_please_synchronized"
                     android:textColor="#999999"
                     android:textSize="@dimen/sp_12"
-                    android:visibility="gone" />
+                     />
             </RelativeLayout>
         </LinearLayout>
     </LinearLayout>

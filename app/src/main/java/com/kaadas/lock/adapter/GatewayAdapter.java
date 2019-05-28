@@ -61,8 +61,9 @@ public class GatewayAdapter extends BaseQuickAdapter<HomeShowBean, BaseViewHolde
                 deviceStatus="offline";
             }
             power=gwLockInfo.getPower();
-            batteryView.setPower(power);
-            powerView.setText(power+"%");
+            int realPower=power/2;
+            batteryView.setPower(realPower);
+            powerView.setText(realPower+"%");
         }
 
         if ("online".equals(deviceStatus)) {

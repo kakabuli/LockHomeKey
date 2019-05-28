@@ -989,4 +989,8 @@
     <string name="isupdating_can_not_back">正在升级，请勿操作！</string>
     <string name="update_failed">升级出错！</string>
     <string name="is_check_vle_version">正在检测蓝牙版本信息！</string>
+    <string name="current_volume_no_change">当前铃声音量没有改变</string>
+    <string name="current_resolution_no_change">当前视频分辨率没有改变</string>
+    <string name="wifi_alreade_offline">WiFi已离线</string>
+    <string name="enter_feedback">请输入反馈信息</string>
 </resources>

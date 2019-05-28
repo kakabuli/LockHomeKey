@@ -39,12 +39,25 @@ import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.publiclibrary.bean.CateEyeInfo;
 import com.kaadas.lock.publiclibrary.bean.GatewayInfo;
 import com.kaadas.lock.publiclibrary.bean.GwLockInfo;
+import com.kaadas.lock.publiclibrary.bean.ServerGatewayInfo;
+import com.kaadas.lock.publiclibrary.bean.ServerGwDevice;
+import com.kaadas.lock.publiclibrary.http.result.ServerBleDevice;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.AllBindDevices;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.NetUtil;
 import com.kaadas.lock.utils.Rom;
 import com.kaadas.lock.utils.SPUtils2;
 import com.kaadas.lock.utils.ToastUtil;
+import com.kaadas.lock.utils.greenDao.bean.BleLockServiceInfo;
+import com.kaadas.lock.utils.greenDao.bean.CatEyeServiceInfo;
+import com.kaadas.lock.utils.greenDao.bean.GatewayLockServiceInfo;
+import com.kaadas.lock.utils.greenDao.bean.GatewayServiceInfo;
+import com.kaadas.lock.utils.greenDao.db.BleLockServiceInfoDao;
+import com.kaadas.lock.utils.greenDao.db.CatEyeServiceInfoDao;
+import com.kaadas.lock.utils.greenDao.db.DaoSession;
+import com.kaadas.lock.utils.greenDao.db.GatewayLockServiceInfoDao;
+import com.kaadas.lock.utils.greenDao.db.GatewayServiceInfoDao;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
@@ -147,60 +160,104 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                }
             }
         }
-
     }
 
     private void initData(List<HomeShowBean> homeShowBeanList) {
         mDeviceList.clear();
-        if (homeShowBeanList!=null){
-            if (homeShowBeanList.size()>0){
-                noDeviceLayout.setVisibility(View.GONE);
-                refresh.setVisibility(View.VISIBLE);
-                mPresenter.getPublishNotify();
-                mPresenter.listenerDeviceOnline();
-                mPresenter.listenerNetworkChange();
-                for (HomeShowBean homeShowBean:homeShowBeanList){
-                    LogUtils.e(homeShowBeanList.size()+"获取到大小     "+"获取到昵称  "+homeShowBean.getDeviceNickName());
-                    //请求电量
-                    switch (homeShowBean.getDeviceType()){
-                        case HomeShowBean.TYPE_GATEWAY_LOCK:
-                            //网关锁
-                            GwLockInfo gwLockInfo= (GwLockInfo) homeShowBean.getObject();
-                            mPresenter.getPower(gwLockInfo.getGwID(),gwLockInfo.getServerInfo().getDeviceId(),MyApplication.getInstance().getUid());
-                            break;
-                        case HomeShowBean.TYPE_CAT_EYE:
-                            //猫眼
-                            CateEyeInfo cateEyeInfo= (CateEyeInfo) homeShowBean.getObject();
-                            mPresenter.getPower(cateEyeInfo.getGwID(),cateEyeInfo.getServerInfo().getDeviceId(),MyApplication.getInstance().getUid());
-                            break;
-                        case HomeShowBean.TYPE_GATEWAY:
-                            //网关
-                            GatewayInfo gatewayInfo= (GatewayInfo) homeShowBean.getObject();
-                            //咪咪网未绑定
-                            if (gatewayInfo.getServerInfo().getMeBindState()!=1){
-                                //需要绑定咪咪网
-                                String deviceSN=gatewayInfo.getServerInfo().getDeviceSN();
-                                mPresenter.bindMimi(deviceSN,deviceSN);
-                            }
+            if (homeShowBeanList != null) {
+                if (homeShowBeanList.size() > 0) {
+                    DaoSession daoSession = MyApplication.getInstance().getDaoWriteSession();
+                    String uid = MyApplication.getInstance().getUid();
+                    noDeviceLayout.setVisibility(View.GONE);
+                    refresh.setVisibility(View.VISIBLE);
+                    mPresenter.getPublishNotify();
+                    mPresenter.listenerDeviceOnline();
+                    mPresenter.listenerNetworkChange();
+                    //清除数据库,可能存在用户在其他手机删除了设备，但是服务器已经没有该设备，所以会造成本地数据库误差
+                    daoSession.getGatewayServiceInfoDao().queryBuilder().where(GatewayServiceInfoDao.Properties.Uid.eq(uid)).buildDelete().executeDeleteWithoutDetachingEntities();
+                    daoSession.getGatewayLockServiceInfoDao().queryBuilder().where(GatewayLockServiceInfoDao.Properties.Uid.eq(uid)).buildDelete().executeDeleteWithoutDetachingEntities();
+                    daoSession.getCatEyeServiceInfoDao().queryBuilder().where(CatEyeServiceInfoDao.Properties.Uid.eq(uid)).buildDelete().executeDeleteWithoutDetachingEntities();
+                    daoSession.getBleLockServiceInfoDao().queryBuilder().where(BleLockServiceInfoDao.Properties.Uid.eq(uid)).buildDelete().executeDeleteWithoutDetachingEntities();
+                    for (HomeShowBean homeShowBean : homeShowBeanList) {
+                        LogUtils.e(homeShowBeanList.size() + "获取到大小     " + "获取到昵称  " + homeShowBean.getDeviceNickName());
+                        //请求电量
+                        switch (homeShowBean.getDeviceType()) {
+                            case HomeShowBean.TYPE_GATEWAY_LOCK:
+                                //网关锁
+                                GwLockInfo gwLockInfo = (GwLockInfo) homeShowBean.getObject();
+                                mPresenter.getPower(gwLockInfo.getGwID(), gwLockInfo.getServerInfo().getDeviceId(), MyApplication.getInstance().getUid());
+                                //插入数据库
+                                ServerGwDevice gwLock = gwLockInfo.getServerInfo();
+                                String deviceId = gwLock.getDeviceId();
+                                GatewayLockServiceInfo gatewayLockServiceInfo = new GatewayLockServiceInfo(deviceId + uid, gwLock.getDeviceId(), gwLock.getSW(), gwLock.getDevice_type(), gwLock.getEvent_str(), gwLock.getIpaddr(), gwLock.getMacaddr(), gwLock.getNickName(), gwLock.getTime(), gwLockInfo.getGwID(), uid);
+                                daoSession.insertOrReplace(gatewayLockServiceInfo);
 
-                            break;
+                                break;
+                            case HomeShowBean.TYPE_CAT_EYE:
+                                //猫眼
+                                CateEyeInfo cateEyeInfo = (CateEyeInfo) homeShowBean.getObject();
+                                //请求电量
+                                mPresenter.getPower(cateEyeInfo.getGwID(), cateEyeInfo.getServerInfo().getDeviceId(), MyApplication.getInstance().getUid());
+                                //插入数据库
+                                ServerGwDevice gwDevice = cateEyeInfo.getServerInfo();
+                                String catDeviceId = gwDevice.getDeviceId();
+                                CatEyeServiceInfo catEyeServiceInfo = new CatEyeServiceInfo(catDeviceId + uid, gwDevice.getDeviceId(), gwDevice.getSW(), gwDevice.getDevice_type(), gwDevice.getEvent_str(), gwDevice.getIpaddr(), gwDevice.getMacaddr(), gwDevice.getNickName(), gwDevice.getTime(), cateEyeInfo.getGwID(), uid);
+                                daoSession.insertOrReplace(catEyeServiceInfo);
+                                break;
+                            case HomeShowBean.TYPE_GATEWAY:
+                                //网关
+                                GatewayInfo gatewayInfo = (GatewayInfo) homeShowBean.getObject();
+                                LogUtils.e("网关信息进入");
+                                ServerGatewayInfo serverGatewayInfo = gatewayInfo.getServerInfo();
+                                String deviceSn = serverGatewayInfo.getDeviceSN();
+                                //插入数据库
+                                GatewayServiceInfo gatewayServiceInfo = new GatewayServiceInfo(deviceSn + uid, serverGatewayInfo.getDeviceSN(), serverGatewayInfo.getDeviceNickName(), serverGatewayInfo.getAdminuid(), serverGatewayInfo.getAdminName(), serverGatewayInfo.getAdminNickname(), serverGatewayInfo.getIsAdmin(), serverGatewayInfo.getMeUsername(), serverGatewayInfo.getMePwd(), serverGatewayInfo.getMeBindState(), uid);
+                                daoSession.getGatewayServiceInfoDao().insertOrReplace(gatewayServiceInfo);
+                                //咪咪网未绑定
+                                if (gatewayInfo.getServerInfo().getMeBindState() != 1) {
+                                    //需要绑定咪咪网
+                                    String deviceSN = gatewayInfo.getServerInfo().getDeviceSN();
+                                    mPresenter.bindMimi(deviceSN, deviceSN);
+                                }
+                                break;
+                            case HomeShowBean.TYPE_BLE_LOCK:
+                                //蓝牙锁
+                                BleLockInfo bleLockInfo = (BleLockInfo) homeShowBean.getObject();
+                                ServerBleDevice serverBleDevice = bleLockInfo.getServerLockInfo();
+                                if (serverBleDevice != null) {
+                                    BleLockServiceInfo bleLockServiceInfo = new BleLockServiceInfo();
+                                    bleLockServiceInfo.setLockName(serverBleDevice.getLockName());
+                                    bleLockServiceInfo.setLockNickName(serverBleDevice.getLockNickName());
+                                    bleLockServiceInfo.setMacLock(serverBleDevice.getMacLock());
+                                    bleLockServiceInfo.setOpen_purview(serverBleDevice.getOpen_purview());
+                                    bleLockServiceInfo.setIs_admin(serverBleDevice.getIs_admin());
+                                    bleLockServiceInfo.setCenter_latitude(serverBleDevice.getCenter_latitude());
+                                    bleLockServiceInfo.setCenter_longitude(serverBleDevice.getCenter_longitude());
+                                    bleLockServiceInfo.setCircle_radius(serverBleDevice.getCircle_radius());
+                                    bleLockServiceInfo.setAuto_lock(serverBleDevice.getAuto_lock());
+                                    bleLockServiceInfo.setPassword1(serverBleDevice.getPassword1());
+                                    bleLockServiceInfo.setPassword2(serverBleDevice.getPassword2());
+                                    bleLockServiceInfo.setModel(serverBleDevice.getModel());
+                                    daoSession.insertOrReplace(bleLockServiceInfo);
+                                }
+                                break;
+                        }
+
+                        mDeviceList.add(homeShowBean);
                     }
-
-                    mDeviceList.add(homeShowBean);
+                    if (deviceDetailAdapter != null) {
+                        deviceDetailAdapter.notifyDataSetChanged();
+                    } else {
+                        initAdapter();
+                    }
+                } else {
+                    noDeviceLayout.setVisibility(View.VISIBLE);
+                    refresh.setVisibility(View.GONE);
                 }
-                if (deviceDetailAdapter!=null){
-                    deviceDetailAdapter.notifyDataSetChanged();
-                }else{
-                    initAdapter();
-                }
-            }else{
+            } else {
                 noDeviceLayout.setVisibility(View.VISIBLE);
                 refresh.setVisibility(View.GONE);
             }
-        }else{
-            noDeviceLayout.setVisibility(View.VISIBLE);
-            refresh.setVisibility(View.GONE);
-        }
         if(mDeviceList!=null){
             for (int i=0;i<mDeviceList.size();i++){
                 HomeShowBean homeShowBean=mDeviceList.get(i);
@@ -250,6 +307,7 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
             public void onRefresh(@NonNull RefreshLayout refreshLayout) {
                 //刷新页面
                 mPresenter.refreshData();
+                refreshLayout.finishRefresh(8*1000);
             }
         });
     }

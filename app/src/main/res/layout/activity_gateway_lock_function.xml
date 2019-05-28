@@ -131,14 +131,18 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/dp_20"
                     android:padding="@dimen/dp_10"
-                    android:src="@mipmap/iv_close" />
+                    android:src="@mipmap/iv_close"
+                    android:visibility="gone"
+                    />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/safe_protection"
                     android:textColor="#FFFFFF"
-                    android:textSize="@dimen/sp_11" />
+                    android:textSize="@dimen/sp_11"
+                    android:visibility="gone"
+                    />
             </LinearLayout>
 
 

@@ -121,8 +121,7 @@ public class CateyeFunctionActivity extends BaseActivity<ICatEyeFunctionView, Ca
                 finish();
                 break;
             case R.id.ll_look_back:
-                String gatewayId=cateEyeInfo.getGwID();
-                String deviceId=cateEyeInfo.getServerInfo().getDeviceId();
+
 
                 List<GatewayInfo> allGateway = MyApplication.getInstance().getAllGateway();
                 GatewayInfo gatewayInfo = null;
@@ -136,8 +135,18 @@ public class CateyeFunctionActivity extends BaseActivity<ICatEyeFunctionView, Ca
                     Toast.makeText(CateyeFunctionActivity.this,getString(R.string.refresh_geteway),Toast.LENGTH_SHORT).show();
                     return;
                 }
-                String meUserName = gatewayInfo.getServerInfo().getMeUsername();
-                String mePwd= gatewayInfo.getServerInfo().getMePwd();
+                String meUserName=null;
+                String mePwd=null;
+                String gatewayId=null;
+                String deviceId=null;
+                try {
+                    deviceId=cateEyeInfo.getServerInfo().getDeviceId();
+                    gatewayId=cateEyeInfo.getGwID();
+                    meUserName=gatewayInfo.getServerInfo().getMeUsername();
+                    mePwd=gatewayInfo.getServerInfo().getMePwd();
+                }catch (Exception e){
+
+                }
                 Intent intentVideo = new Intent(CateyeFunctionActivity.this, VideoCallBackActivity.class);
                 intentVideo.putExtra("gatewayId",gatewayId);
                 intentVideo.putExtra("deviceId",deviceId);

@@ -141,7 +141,7 @@ public class BluetoothLockFunctionActivity extends BaseBleActivity<IDeviceDetail
         changeLockIcon(intent);
         bleLockInfo = mPresenter.getBleLockInfo();
         ivBack.setOnClickListener(this);
-        tvType.setText(getString(R.string.bluetooth_type) + bleLockInfo.getServerLockInfo().getModel());
+        showLockType();
         initData();
         initClick();
         showData();
@@ -180,6 +180,28 @@ public class BluetoothLockFunctionActivity extends BaseBleActivity<IDeviceDetail
         mPresenter.detachView();
     }
 
+    private void showLockType() {
+        String lockType = bleLockInfo.getServerLockInfo().getModel();
+        if (lockType.contains("K9S")){
+            lockType="K9S";
+        }else if (lockType.contains("K8S")){
+            lockType="K8S";
+        }else if (lockType.contains("K7S")){
+            lockType="K7S";
+        }else if (lockType.contains("S8")){
+            lockType="S8";
+        }else if (lockType.contains("KX")){
+            lockType="KX";
+        }else if (lockType.contains("K9")){
+            lockType="K9";
+        }else if (lockType.contains("K8")){
+            lockType="K8";
+        }else if (lockType.contains("K7")){
+            lockType="K7";
+        }
+        tvType.setText(getString(R.string.bluetooth_type) + lockType);
+    }
+
     private void changeLockIcon(Intent intent) {
         String model = intent.getStringExtra(KeyConstants.DEVICE_TYPE);
         if (!TextUtils.isEmpty(model)){
@@ -207,7 +229,7 @@ public class BluetoothLockFunctionActivity extends BaseBleActivity<IDeviceDetail
         //todo 等从锁中获取自动还是手动模式进行展示
 //        tvLockMode.setText();
         //默认为手动模式
-        if (mPresenter.isAuth(bleLockInfo, true)) {
+        if (mPresenter.isAuth(bleLockInfo, false)) {
             authResult(true);
             if (bleLockInfo.getBattery() != -1) {
                 dealWithPower(bleLockInfo.getBattery());
@@ -388,7 +410,6 @@ public class BluetoothLockFunctionActivity extends BaseBleActivity<IDeviceDetail
     }
 
     private void dealWithPower(int power) {
-        LogUtils.e("电量刷新");
         //电量：80%
         if (power > 100) {
             power = 100;

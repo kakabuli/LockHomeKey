@@ -86,4 +86,19 @@ public class ServerGwDevice implements Serializable {
     public void setTime(String time) {
         this.time = time;
     }
+
+
+    public ServerGwDevice(String SW, String deviceId, String device_type, String event_str, String ipaddr, String macaddr, String nickName, String time) {
+        this.SW = SW;
+        this.deviceId = deviceId;
+        this.device_type = device_type;
+        this.event_str = event_str;
+        this.ipaddr = ipaddr;
+        this.macaddr = macaddr;
+        this.nickName = nickName;
+        this.time = time;
+    }
+
+    public ServerGwDevice() {
+    }
 }
