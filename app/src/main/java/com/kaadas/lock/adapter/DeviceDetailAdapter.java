@@ -173,7 +173,7 @@ public class DeviceDetailAdapter extends BaseQuickAdapter<HomeShowBean, BaseView
                 helper.setImageResource(R.id.device_type_image,R.mipmap.bluetooth_disconnenction);
             }
             batteryView.setColor(R.color.cD6D6D6);
-            helper.setText(R.id.device_type_text, R.string.no_find_device);
+            helper.setText(R.id.device_type_text, R.string.offline);
             helper.setTextColor(R.id.device_type_text, Color.parseColor("#999999"));
         }
     }

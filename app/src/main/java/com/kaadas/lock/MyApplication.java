@@ -343,6 +343,11 @@ public class MyApplication extends Application {
         bleService.release();
         homeShowDevices.clear();
         MyApplication.getInstance().initTokenAndUid();
+
+        //退出linphone
+        LinphoneHelper.deleteUser();
+        //退出meme网
+        MemeManager.getInstance().videoActivityDisconnectMeme();
         //清除数据库数据
         for (Activity activity : activities) {
             if (activity != null) {
@@ -358,10 +363,7 @@ public class MyApplication extends Application {
                 activity.finish();
             }
         }
-        //退出linphone
-        LinphoneHelper.deleteUser();
-        //退出meme网
-        MemeManager.getInstance().videoActivityDisconnectMeme();
+
 
     }
 
