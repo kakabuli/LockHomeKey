@@ -74,7 +74,7 @@ public class DoorCardNearDoorActivity extends BaseActivity<IBleView, BlePresente
             btn.setEnabled(true);
             btn.setBackgroundResource(R.drawable.retangle_ff3b30_22);
             btn.setText(R.string.connect_fail);
-            btn.setVisibility(View.GONE);
+            btn.setVisibility(View.VISIBLE);
         }else {
             btn.setEnabled(false);
             btn.setVisibility(View.GONE);
