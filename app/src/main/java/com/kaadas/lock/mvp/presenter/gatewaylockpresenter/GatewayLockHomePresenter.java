@@ -224,7 +224,8 @@ public class GatewayLockHomePresenter<T> extends BasePresenter<IGatewayLockHomeV
                                 LogUtils.e("开锁成功");
                             } else {
                                 if (mViewRef.get() != null) {
-                                    mViewRef.get().openLockFailed(null);
+                                    mViewRef.get().openLockFailed();
+
                                 }
                                 SPUtils.remove(KeyConstants.SAVA_LOCK_PWD + deviceId);
                             }
@@ -234,7 +235,7 @@ public class GatewayLockHomePresenter<T> extends BasePresenter<IGatewayLockHomeV
                         public void accept(Throwable throwable) throws Exception {
                             //开锁异常
                             if (mViewRef.get() != null) {
-                                mViewRef.get().openLockFailed(throwable);
+                                mViewRef.get().getOpenLockRecordThrowable(throwable);
                             }
                         }
                     });
@@ -283,7 +284,7 @@ public class GatewayLockHomePresenter<T> extends BasePresenter<IGatewayLockHomeV
                         @Override
                         public void accept(Throwable throwable) throws Exception {
                             if (mViewRef.get() != null) {
-                                mViewRef.get().openLockFailed(throwable);
+                                mViewRef.get().openLockThrowable(throwable);
                             }
                         }
                     });

@@ -527,8 +527,14 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
             if (gatewayLockInfo.getGwID().equals(gatewayId)) {
                 //当前猫眼所属的网关是上下线的网关
                 //网关上下线状态要跟着改变
-                if ("offline".equals(eventStr)) {
-                    gatewayLockInfo.getServerInfo().setEvent_str(eventStr);
+                if ("online".equals(eventStr)) {
+                    gatewayLockInfo.getServerInfo().setEvent_str("online");
+                    changeOpenLockStatus(5);
+                    if (deviceState != null) {
+                        deviceState.setText(getString(R.string.normal));
+                    }
+                }else{
+                    gatewayLockInfo.getServerInfo().setEvent_str("offline");
                     changeOpenLockStatus(1);
                     if (deviceState != null) {
                         deviceState.setText(getString(R.string.offline));
@@ -605,10 +611,15 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
     }
 
     @Override
-    public void openLockFailed(Throwable throwable) {
+    public void openLockFailed() {
         isOpening = false;
+        changeOpenLockStatus(5);
     }
 
+    @Override
+    public void openLockThrowable(Throwable throwable) {
+        isOpening = false;
+    }
 
     @Override
     public void startOpenLock() {
