@@ -18,5 +18,7 @@ public interface ICatEyeFunctionView extends IBaseView {
     //监听设备上下线
     void deviceStatusChange(String gatewayId,String deviceId,String eventStr);
 
+    //监听网络变化
+    void networkChangeSuccess();
 
 }

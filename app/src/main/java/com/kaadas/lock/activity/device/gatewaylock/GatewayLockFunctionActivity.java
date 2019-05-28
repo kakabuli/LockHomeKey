@@ -32,6 +32,7 @@ import com.kaadas.lock.utils.BatteryView;
 import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.NetUtil;
 import com.kaadas.lock.utils.NotifyRefreshActivity;
 import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.StringUtil;
@@ -48,7 +49,7 @@ import butterknife.OnClick;
 /**
  * Created by David
  */
-public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailView, GatewayLockDetailPresenter<GatewayLockDetailView>> implements View.OnClickListener, GatewayLockDetailView, NotifyRefreshActivity {
+public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailView, GatewayLockDetailPresenter<GatewayLockDetailView>> implements View.OnClickListener, GatewayLockDetailView {
     @BindView(R.id.iv_back)
     ImageView ivBack;
     @BindView(R.id.tv_name)
@@ -117,7 +118,7 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
     private boolean getArmLockSuccess=false; //是否获取布防成功
 
     private int armLock=0;
-
+    private String flagEvent="";
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -132,7 +133,7 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
     }
 
     private void initListener() {
-        NetWorkChangReceiver.setNotifyRefreshActivity(this);
+
     }
 
     @Override
@@ -227,7 +228,12 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
         if (showBean != null) {
             lockInfo = (GwLockInfo) showBean.getObject();
             if (lockInfo != null) {
-                dealWithPower(lockInfo.getPower(), lockInfo.getServerInfo().getEvent_str(), lockInfo.getPowerTimeStamp());
+                if (NetUtil.isNetworkAvailable()){
+                    dealWithPower(lockInfo.getPower(), lockInfo.getServerInfo().getEvent_str(), lockInfo.getPowerTimeStamp());
+                }else{
+                    dealWithPower(lockInfo.getPower(), "offline", lockInfo.getPowerTimeStamp());
+                }
+
                 tvName.setText(lockInfo.getServerInfo().getNickName());
                 gatewayId = lockInfo.getGwID();
                 deviceId = lockInfo.getServerInfo().getDeviceId();
@@ -235,7 +241,7 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
                 mPresenter.closeLockNotify(deviceId);
                 mPresenter.listenerDeviceOnline();
                 mPresenter.getPublishNotify();
-
+                mPresenter.listenerNetworkChange();
                 /*//布防模式
                 if (!TextUtils.isEmpty(gatewayId)&&!TextUtils.isEmpty(deviceId)){
                     mPresenter.getArmLocked(MyApplication.getInstance().getUid(),gatewayId,deviceId);
@@ -281,7 +287,10 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
                 //开锁
                 //对话框
                 String lockPwd = (String) SPUtils.get(KeyConstants.SAVA_LOCK_PWD + deviceId, "");
-                if (TextUtils.isEmpty(lockPwd)) {
+                if (flagEvent.equals("offline")){
+                    ToastUtil.getInstance().showShort(getString(R.string.wifi_alreade_offline));
+                    return;
+                }else if (TextUtils.isEmpty(lockPwd)) {
                     //密码为空
                         showPwdDialog();
                 } else {
@@ -289,7 +298,6 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
                         lockStatus = KeyConstants.IS_LOCKING;
                         changLockStatus(lockStatus);
                         tvOpenClock.setClickable(false);
-
                 }
 
                 break;
@@ -350,20 +358,18 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
 
 
     private void dealWithPower(int power, String eventStr, String timeStamp) {
+        flagEvent=eventStr;
         //电量：80%
         if (power < 0) {
             power = 0;
         }
         int mPower=power/2;
-
-
         String lockPower = mPower + "%";
         if (tvPower != null) {
             tvPower.setText(lockPower);
         }
         if (ivPower != null) {
             ivPower.setPower(mPower);
-
             if (eventStr.equals("online")) {
                 ivPower.setColor(R.color.c25F290);
                 ivPower.setBorderColor(R.color.white);
@@ -501,7 +507,6 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
 
     @Override
     public void deviceStatusChange(String gatewayId, String deviceId, String eventStr) {
-        //猫眼上下线
         if (lockInfo != null) {
             //设备上下线为当的设备
             if (lockInfo.getGwID().equals(gatewayId) && lockInfo.getServerInfo().getDeviceId().equals(deviceId)) {
@@ -577,6 +582,13 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
     }
 
     @Override
+    public void networkChangeSuccess() {
+        if (lockInfo != null) {
+            dealWithPower(lockInfo.getPower(), "offline", lockInfo.getPowerTimeStamp());
+        }
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == KeyConstants.DEVICE_DETAIL_BEAN_NUM) {
@@ -592,14 +604,5 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
 
     }
 
-    @Override
-    public void notifityActivity(boolean isRefresh) {
-        if (isRefresh) {
-            if (lockInfo != null) {
-                dealWithPower(lockInfo.getPower(), "offline", lockInfo.getPowerTimeStamp());
-            }
-
-        }
-    }
 
 }

@@ -143,7 +143,7 @@ public class CatEyeFragment extends BaseFragment<ICatEyeView, CatEyePresenter<IC
         if ("online".equals(eventStr)) {
             status = 1;
             if (deviceState!=null){
-                deviceState.setText(getString(R.string.online));
+                deviceState.setText(getString(R.string.normal));
             }
         } else {
             status = 2;

@@ -18,6 +18,7 @@ import com.kaadas.lock.publiclibrary.mqtt.util.MqttConstant;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttData;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttService;
 import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.networkListenerutil.NetWorkChangReceiver;
 
 
 import java.util.ArrayList;
@@ -35,7 +36,7 @@ public class GatewayPresenter<T> extends BasePresenter<GatewayView> {
    private Disposable listenerDeviceOnLineDisposable;
    private Disposable unbindGatewayDisposable;
    private Disposable unbindTestGatewayDisposable;
-
+   private Disposable networkChangeDisposable;
 
     //遍历绑定的网关设备
     public List<HomeShowBean> getGatewayBindList(String gatewayID){
@@ -256,6 +257,22 @@ public class GatewayPresenter<T> extends BasePresenter<GatewayView> {
 
         }
         compositeDisposable.add(unbindTestGatewayDisposable);
+    }
+
+    //网络变化通知
+    public void listenerNetworkChange(){
+        toDisposable(networkChangeDisposable);
+        networkChangeDisposable= NetWorkChangReceiver.notifyNetworkChange().subscribe(new Consumer<Boolean>() {
+            @Override
+            public void accept(Boolean aBoolean) throws Exception {
+                if (aBoolean){
+                    if (mViewRef!=null&&mViewRef.get()!=null){
+                        mViewRef.get().networkChangeSuccess();
+                    }
+                }
+            }
+        });
+        compositeDisposable.add(networkChangeDisposable);
     }
 
 

@@ -485,6 +485,7 @@ public class MyApplication extends Application {
                         allBindDevices = new Gson().fromJson(payload, AllBindDevices.class);
                         if (allBindDevices != null) {
                             homeShowDevices = allBindDevices.getHomeShow();
+                            LogUtils.e("设备更新  application");
                             getDevicesFromServer.onNext(allBindDevices);
                         }
                     }

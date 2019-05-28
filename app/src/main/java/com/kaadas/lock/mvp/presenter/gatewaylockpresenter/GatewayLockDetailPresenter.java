@@ -19,6 +19,7 @@ import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.SPUtils2;
+import com.kaadas.lock.utils.networkListenerutil.NetWorkChangReceiver;
 
 import java.util.concurrent.TimeUnit;
 
@@ -35,6 +36,7 @@ public class GatewayLockDetailPresenter<T> extends BasePresenter<GatewayLockDeta
     private Disposable listenerDeviceOnLineDisposable;
     private Disposable setArmLockDisposable;
     private Disposable getArmLockDisposable;
+    private Disposable networkChangeDisposable;
 
     //开锁
     public void openLock(String gatewayId,String deviceId,String pwd){
@@ -330,7 +332,21 @@ public class GatewayLockDetailPresenter<T> extends BasePresenter<GatewayLockDeta
     }
 
 
-
+    //网络变化通知
+    public void listenerNetworkChange(){
+        toDisposable(networkChangeDisposable);
+        networkChangeDisposable= NetWorkChangReceiver.notifyNetworkChange().subscribe(new Consumer<Boolean>() {
+            @Override
+            public void accept(Boolean aBoolean) throws Exception {
+                if (aBoolean){
+                    if (mViewRef!=null&&mViewRef.get()!=null){
+                        mViewRef.get().networkChangeSuccess();
+                    }
+                }
+            }
+        });
+        compositeDisposable.add(networkChangeDisposable);
+    }
 
 
 
