@@ -993,4 +993,5 @@
     <string name="current_resolution_no_change">当前视频分辨率没有改变</string>
     <string name="wifi_alreade_offline">WiFi已离线</string>
     <string name="enter_feedback">请输入反馈信息</string>
+    <string name="not_connected">未连接</string>
 </resources>

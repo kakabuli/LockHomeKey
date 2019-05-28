@@ -175,6 +175,8 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
     }
 
     private void initView() {
+
+        tvDeviceStatus.setText(getString(R.string.not_connected));
         long createTime = bleLockInfo.getServerLockInfo().getCreateTime();
         //设置守护时间
         long time = (System.currentTimeMillis() / 1000) - createTime;
@@ -326,6 +328,15 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
         if (!isAdded()) {
             return;
         }
+        if (bleLockInfo.isConnected()){
+            if (bleLockInfo.isLockStatusException()) {
+                tvDeviceStatus.setText(getString(R.string.no_normal));
+            } else {
+                tvDeviceStatus.setText(getString(R.string.normal));
+            }
+        }else {
+            tvDeviceStatus.setText(getString(R.string.not_connected));
+        }
         switch (status) {
             case 1:
                 //手机蓝牙未打开
@@ -336,30 +347,21 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
                 ivExternalBig.setVisibility(View.VISIBLE);
                 ivExternalBig.setImageResource(R.mipmap.bluetooth_no_connect_big_middle_icon);
                 ivExternalMiddle.setVisibility(View.GONE);
-//                ivExternalMiddle.setImageResource();
                 ivExternalSmall.setVisibility(View.GONE);
-//                ivExternalSmall.setImageResource();
                 ivInnerMiddle.setVisibility(View.VISIBLE);
                 ivInnerMiddle.setImageResource(R.mipmap.bluetooth_connecting_inner_middle_icon);
                 ivInnerSmall.setVisibility(View.GONE);
-//                ivInnerSmall.setImageResource();
                 tvInner.setVisibility(View.VISIBLE);
                 tvInner.setText(getString(R.string.bluetooth_connecting));
                 tvInner.setTextColor(getResources().getColor(R.color.c15A6F5));
                 tvExternal.setVisibility(View.GONE);
-                break;
-            case 3:
-                //门锁不在有效范围内（一般两米）
-
                 break;
             case 4:
                 //“已启动布防，长按开锁“
                 ivExternalBig.setVisibility(View.VISIBLE);
                 ivExternalBig.setImageResource(R.mipmap.bluetooth_bu_fang_big_middle_icon);
                 ivExternalMiddle.setVisibility(View.GONE);
-//                ivExternalMiddle.setImageResource();
                 ivExternalSmall.setVisibility(View.GONE);
-//                ivExternalSmall.setImageResource();
                 ivInnerMiddle.setVisibility(View.VISIBLE);
                 ivInnerMiddle.setImageResource(R.mipmap.bluetooth_lock_safe_inner_midder_icon);
                 ivInnerSmall.setVisibility(View.VISIBLE);
@@ -371,39 +373,28 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
                 tvExternal.setTextColor(getResources().getColor(R.color.cC6F5FF));
                 tvExternal.setText(getString(R.string.bu_fang_status));
                 break;
-            case 5:
-                //“安全模式”  长按不可APP开锁，提示
-                //            ““安全模式，无权限开门””
-
-                break;
             case 6:
                 //“已反锁，请门内开锁”
                 ivExternalBig.setVisibility(View.VISIBLE);
                 ivExternalBig.setImageResource(R.mipmap.bluetooth_double_lock_big_middle_icon);
                 ivExternalMiddle.setVisibility(View.GONE);
-//                ivExternalMiddle.setImageResource();
                 ivExternalSmall.setVisibility(View.GONE);
-//                ivExternalSmall.setImageResource();
                 ivInnerMiddle.setVisibility(View.VISIBLE);
                 ivInnerMiddle.setImageResource(R.mipmap.bluetooth_lock_safe_inner_midder_icon);
                 ivInnerSmall.setVisibility(View.VISIBLE);
                 ivInnerSmall.setImageResource(R.mipmap.bluetooth_lock_bu_fang_inner_small_icon);
                 tvInner.setVisibility(View.GONE);
-//                tvInner.setText();
-//                tvInner.setTextColor();
                 tvExternal.setVisibility(View.VISIBLE);
                 tvExternal.setTextColor(getResources().getColor(R.color.cC6F5FF));
                 tvExternal.setText(getString(R.string.double_lock_status));
                 break;
             case 8:
                 //“长按开锁”（表示关闭状态）
-//                closeLockAnimator();
                 ivExternalBig.setVisibility(View.VISIBLE);
                 ivExternalBig.setImageResource(R.mipmap.bluetooth_no_connect_big_icon);
                 ivExternalMiddle.setVisibility(View.VISIBLE);
                 ivExternalMiddle.setImageResource(R.mipmap.bluetooth_open_lock_small_icon);
                 ivExternalSmall.setVisibility(View.GONE);
-//                ivExternalSmall.setImageResource(R.mipmap.bluetooth_open_lock_small_icon);
                 ivInnerMiddle.setVisibility(View.VISIBLE);
                 ivInnerMiddle.setImageResource(R.mipmap.bluetooth_lock_safe_inner_midder_icon);
                 ivInnerSmall.setVisibility(View.VISIBLE);
@@ -427,10 +418,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
                 ivInnerMiddle.setVisibility(View.VISIBLE);
                 ivInnerMiddle.setImageResource(R.mipmap.bluetooth_lock_safe_inner_midder_icon);
                 ivInnerSmall.setVisibility(View.GONE);
-//                ivInnerSmall.setImageResource();
                 tvInner.setVisibility(View.GONE);
-//                tvInner.setText();
-//                tvInner.setTextColor();
                 tvExternal.setVisibility(View.VISIBLE);
                 tvExternal.setTextColor(getResources().getColor(R.color.cC6F5FF));
                 tvExternal.setText(getString(R.string.is_lock));
@@ -442,7 +430,6 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
                 ivExternalMiddle.setVisibility(View.VISIBLE);
                 ivExternalMiddle.setImageResource(R.mipmap.open_lock_middle_78);
                 ivExternalSmall.setVisibility(View.GONE);
-//                ivExternalSmall.setImageResource(R.mipmap.bluetooth_open_lock_small_icon);
                 ivInnerMiddle.setVisibility(View.VISIBLE);
                 ivInnerMiddle.setImageResource(R.mipmap.bluetooth_open_lock_success_niner_middle_icon);
                 ivInnerSmall.setVisibility(View.GONE);
@@ -456,13 +443,10 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
                 ivExternalBig.setVisibility(View.VISIBLE);
                 ivExternalBig.setImageResource(R.mipmap.bluetooth_no_connect_big_middle_icon);
                 ivExternalMiddle.setVisibility(View.GONE);
-//                ivExternalMiddle.setImageResource();
                 ivExternalSmall.setVisibility(View.GONE);
-//                ivExternalSmall.setImageResource();
                 ivInnerMiddle.setVisibility(View.VISIBLE);
                 ivInnerMiddle.setImageResource(R.mipmap.bluetooth_connect_success);
                 ivInnerSmall.setVisibility(View.GONE);
-//                ivInnerSmall.setImageResource();
                 tvInner.setVisibility(View.VISIBLE);
                 tvInner.setText(getString(R.string.bluetooth_connect_success));
                 tvInner.setTextColor(getResources().getColor(R.color.c15A6F5));
@@ -473,9 +457,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
                 ivExternalBig.setVisibility(View.VISIBLE);
                 ivExternalBig.setImageResource(R.mipmap.bluetooth_no_connect_big_middle_icon);
                 ivExternalMiddle.setVisibility(View.GONE);
-//                ivExternalMiddle.setImageResource();
                 ivExternalSmall.setVisibility(View.GONE);
-//                ivExternalSmall.setImageResource();
                 ivInnerMiddle.setVisibility(View.VISIBLE);
                 ivInnerMiddle.setImageResource(R.mipmap.bluetooth_connect_fail);
                 ivInnerSmall.setVisibility(View.GONE);
@@ -484,21 +466,16 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
                 tvInner.setText(getString(R.string.bluetooth_connect_fail));
                 tvInner.setTextColor(getResources().getColor(R.color.c15A6F5));
                 tvExternal.setVisibility(View.GONE);
-//                tvExternal.setTextColor();
-//                tvExternal.setText();
                 break;
             case 13:
                 //手机蓝牙未链接
                 ivExternalBig.setVisibility(View.VISIBLE);
                 ivExternalBig.setImageResource(R.mipmap.bluetooth_no_connect_big_middle_icon);
                 ivExternalMiddle.setVisibility(View.GONE);
-//                ivExternalMiddle.setImageResource();
                 ivExternalSmall.setVisibility(View.GONE);
-//                ivExternalSmall.setImageResource();
                 ivInnerMiddle.setVisibility(View.VISIBLE);
                 ivInnerMiddle.setImageResource(R.mipmap.bluetooth_noconnect_inner_middle_icon);
                 ivInnerSmall.setVisibility(View.GONE);
-//                ivInnerSmall.setImageResource();
                 tvInner.setVisibility(View.VISIBLE);
                 tvInner.setText(getString(R.string.bluetooth_no_connect));
                 tvInner.setTextColor(getResources().getColor(R.color.c14A6F5));
@@ -539,13 +516,6 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
                 tvExternal.setTextColor(getResources().getColor(R.color.cC6F5FF));
                 tvExternal.setText(getString(R.string.safe_status));
                 break;
-   /*         case 17:
-                isOpeningLock();
-                break;
-            case 18:
-                onLockLock();
-                break;*/
-
         }
     }
 
@@ -713,18 +683,14 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
         }
     }
 
-
     @Override
     public void onElectricUpdata(int power) {
-        int imgResId = -1;
-
 
     }
 
     @Override
     public void onElectricUpdataFailed(Throwable throwable) {
-//        ToastUtil.getInstance().showShort(HttpUtils.httpProtocolErrorCode(getActivity(), throwable));
-//        ToastUtil.getInstance().showShort(getText(R.string.not_power_was_received) + " " + throwable.toString());
+
     }
 
     @Override
@@ -858,9 +824,20 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
         changeOpenLockStatus(6);
     }
 
+
+    /**
+     *
+     * @param type  -1为锁状态改变   -2  为了更新正常异常状态
+     */
     @Override
     public void onWarringUp(int type) {
-
+        if (type == -1) {
+            //为type==-1时实际是锁状态发生改变
+            if (!isOpening) {
+                onChangeInitView();
+            }
+            return;
+        }
         /**
          * bit0：低电量报警
          * =0：无低电量报警
@@ -903,13 +880,16 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
             }
         } else if (type == 6) {
             //发生恢复出厂设置
-
-        } else if (type == -1) {
-            //为type==-1时实际是锁状态发生改变
-            if (!isOpening) {
-                onChangeInitView();
-            }
+            //设置守护次数为0
+            tvOpenLockTimes.setText("0");
         }
+
+        if (bleLockInfo.isLockStatusException()) {
+            tvDeviceStatus.setText(getString(R.string.no_normal));
+        } else {
+            tvDeviceStatus.setText(getString(R.string.normal));
+        }
+
     }
 
     private String getOpenLockType(GetPasswordResult passwordResults, OpenLockRecord record) {
@@ -1167,9 +1147,6 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
         changeOpenLockStatus(12);
     }
 
-    ;
-
-
     private void onChangeInitView() {
         if (mPresenter.isAuth(bleLockInfo, true)) {
             changeOpenLockStatus(8);  //鉴权成功之后没有特殊状态
@@ -1183,7 +1160,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
             if (bleLockInfo.getArmMode() == 1) {//布防模式
                 changeOpenLockStatus(4);
             }
-            if (bleLockInfo.getBackLock() == 0 || bleLockInfo.getSafeMode() == 1 || bleLockInfo.getArmMode() == 1) {
+            if (bleLockInfo.isLockStatusException()) {
                 tvDeviceStatus.setText(getString(R.string.no_normal));
             } else {
                 tvDeviceStatus.setText(getString(R.string.normal));

@@ -504,13 +504,14 @@ public class BluetoothLeService extends Service {
     public static void exchangeGattMtu(int mtu) {
         int retry = 5;
         boolean status = false;
+        //请求mtu时,
+        Utils.setIntSharedPreference(mContext, Constants.PREF_MTU_NEGOTIATED, 20);
         while ((false == status) && retry > 0) {
             status = mBluetoothGatt.requestMtu(mtu);
             retry--;
             Log.e("设置mtu", "  " + status);
         }
     }
-
     private final IBinder mBinder = new LocalBinder();
     /**
      * Flag to check the mBound status
