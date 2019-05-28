@@ -72,6 +72,19 @@ import java.util.concurrent.Semaphore;
  */
 public class BluetoothLeService extends Service {
 
+    //错误三次
+    public static final String ERROR_TAG_ERROR_THREE = "ERROR_TAG_ERROR_THREE";
+    //OTA最后校验错误
+    public static final String ERROR_TAG_APP_CHECK_ERROR = "ERROR_TAG_APP_CHECK_ERROR";
+    //OTA读取文件错误
+    public static final String ERROR_TAG_FILE_ERROR = "ERROR_TAG_FILE_ERROR";
+    //OTA写入开始指令错误
+    public static final String ERROR_TAG_START_COMAMND = "ERROR_TAG_START_COMAMND";
+    //OTA写入开始指令错误
+    public static final String ERROR_TAG_RESPONSE_TIMEOUT = "ERROR_TAG_RESPONSE_TIMEOUT";
+    //OTA写入开始指令错误
+    public static final String ERROR_TAG_NOT_FOUND = "ERROR_TAG_NOT_FOUND";
+
     /**
      * GATT Status constants
      */
@@ -195,7 +208,6 @@ public class BluetoothLeService extends Service {
                 }
                 broadcastConnectionUpdate(intentAction);
                 Log.e(TAG, "断开连接");
-                handler.removeCallbacks(disconnectedRunnable);
                 systemIDChar = null;
                 resetChar = null;
                 writeChar = null;
@@ -230,8 +242,8 @@ public class BluetoothLeService extends Service {
                 broadcastConnectionUpdate(ACTION_GATT_SERVICES_DISCOVERED);
 
             } else {
-                Log.e(TAG, "成功发现服务");
-                pairDevice();
+                Log.e(TAG, "失败发现服务");
+//                pairDevice();
                 broadcastConnectionUpdate(ACTION_GATT_SERVICE_DISCOVERY_UNSUCCESSFUL);
                 disconnect();
             }
@@ -252,7 +264,7 @@ public class BluetoothLeService extends Service {
                 Log.e(TAG, "onDescriptorWrite  写入失败");
                 if (status == BluetoothGatt.GATT_INSUFFICIENT_AUTHENTICATION
                         || status == BluetoothGatt.GATT_INSUFFICIENT_ENCRYPTION) {
-                    pairDevice(); // TODO: Android automatically pairs in this case
+//                    pairDevice(); // TODO: Android automatically pairs in this case
                     sendExplicitBroadcastIntent(mContext, new Intent(ACTION_GATT_INSUFFICIENT_ENCRYPTION));
                 } else {
                     sendExplicitBroadcastIntent(mContext, new Intent(ACTION_WRITE_FAILED));
@@ -382,18 +394,23 @@ public class BluetoothLeService extends Service {
                                 super.run();
                                 try {
                                     Thread.sleep(200);
-                                    writeCharacteristicGattDb(resetChar,new byte[]{1});
+                                    if (resetChar!=null){
+                                        writeCharacteristicGattDb(resetChar,new byte[]{1});
+                                    }
                                     Thread.sleep(200);
-                                    writeCharacteristicGattDb(resetChar,new byte[]{1});
+                                    if (resetChar!=null){
+                                        writeCharacteristicGattDb(resetChar,new byte[]{1});
+                                    }
                                     Thread.sleep(200);
-                                    writeCharacteristicGattDb(resetChar,new byte[]{1});
+                                    if (resetChar!=null){
+                                        writeCharacteristicGattDb(resetChar,new byte[]{1});
+                                    }
                                 } catch (InterruptedException e) {
                                     e.printStackTrace();
                                 }
                             }
                         }.start();
                         isAuthing = false;
-                        handler.postDelayed(disconnectedRunnable, 1000);
                     }
                 }
             }
@@ -420,6 +437,7 @@ public class BluetoothLeService extends Service {
      */
 
     public static void getPwd3(byte[] systemId16) {
+        Log.e(TAG, "密码1   "+ password1+ " 密码2 : " + password2 );
         byte[] authCommand = BleCommandFactory.getAuthCommand(password1, password2, systemId16);
         Log.e(TAG, "发送鉴权  " + " isWrite: " + Rsa.bytesToHexString(authCommand));
         if (writeChar != null) {
@@ -452,6 +470,17 @@ public class BluetoothLeService extends Service {
                 }
                 if (characteristic.getUuid().toString().equals(OTA_CHARACTERISTIC)) {  //APP->蓝牙写数据的特征值
                     isAuthing = false;
+                }
+                if (characteristic.getUuid().toString().equals(UUID_NOTIFY_CHAR)) {  //APP->蓝牙写数据的特征值
+                    boolean isNotify = mBluetoothGatt.setCharacteristicNotification(characteristic, true);
+                    Log.e(TAG, "开启蓝牙->APP   通知  " + isNotify);
+                    if (isNotify) {
+                        for (BluetoothGattDescriptor dp : characteristic.getDescriptors()) {
+                            //开启设备的写功能，开启之后才能接收到设备发送过来的数据
+                            dp.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
+                            mBluetoothGatt.writeDescriptor(dp);
+                        }
+                    }
                 }
             }
         }
@@ -600,8 +629,6 @@ public class BluetoothLeService extends Service {
         //接收password3
         //p1+p3组成鉴权帧  加密发送1过去
         //进入boot模式
-
-
     }
 
     public static boolean discoverServices() {
@@ -618,21 +645,14 @@ public class BluetoothLeService extends Service {
         synchronized (mGattCallback) {
             Log.e("写入升级数据1", Rsa.bytesToHexString(value));
             writeOTABootLoaderCommand(characteristic, value);
-            handler.removeCallbacks(disconnectedRunnable);
             if (isExitBootloaderCmd) {
                 mOtaExitBootloaderCmdInProgress = true;
             } else {
-                handler.postDelayed(disconnectedRunnable, 1000);
             }
         }
     }
 
-    public static Runnable disconnectedRunnable = new Runnable() {
-        @Override
-        public void run() {
-            disconnect();
-        }
-    };
+
 
     public static void writeOTABootLoaderCommand(BluetoothGattCharacteristic characteristic, byte[] value) {
         writeOTABootLoaderCommandNoResponse(characteristic, value);
@@ -718,8 +738,7 @@ public class BluetoothLeService extends Service {
      * @param byteArray
      */
     public static void writeCharacteristicGattDb(BluetoothGattCharacteristic characteristic, byte[] byteArray) {
-
-        if (mBluetoothAdapter == null || mBluetoothGatt == null) {
+        if (mBluetoothAdapter == null || mBluetoothGatt == null ) {
             return;
         } else {
             characteristic.setValue(byteArray);
@@ -790,45 +809,6 @@ public class BluetoothLeService extends Service {
         }
     }
 
-    public static boolean getBondedState() {
-        BluetoothDevice device = getRemoteDevice();
-        return device.getBondState() == BluetoothDevice.BOND_BONDED;
-    }
-
-    public static boolean getBondedState(BluetoothDevice device) {
-        return device.getBondState() == BluetoothDevice.BOND_BONDED;
-    }
-
-    public static boolean pairDevice() {
-        return pairDevice(mBluetoothGatt.getDevice());
-    }
-
-    public static boolean pairDevice(BluetoothDevice device) {
-        try {
-            // TODO: use BluetoothDevice.createBond() public method
-            Boolean rv = (Boolean) invokeBluetoothDeviceMethod(device, "createBond");
-            Logger.i("Pair status: " + rv);
-            return rv;
-        } catch (Exception e) {
-            Logger.e("Pair: exception: " + e.getMessage());
-            return false;
-        }
-    }
-
-    public static boolean unpairDevice() {
-        return unpairDevice(mBluetoothGatt.getDevice());
-    }
-
-    public static boolean unpairDevice(BluetoothDevice device) {
-        try {
-            Boolean rv = (Boolean) invokeBluetoothDeviceMethod(device, "removeBond");
-            Logger.i("Un-Pair status: " + rv);
-            return rv;
-        } catch (Exception e) {
-            Logger.e("Un-Pair: exception: " + e.getMessage());
-            return false;
-        }
-    }
 
     private static Object invokeBluetoothDeviceMethod(BluetoothDevice dev, String methodName, Object... args) throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
         Class c = dev.getClass();

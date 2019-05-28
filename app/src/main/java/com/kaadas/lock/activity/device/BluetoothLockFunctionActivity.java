@@ -167,6 +167,19 @@ public class BluetoothLockFunctionActivity extends BaseBleActivity<IDeviceDetail
 //        initRecycleview();
     }
 
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mPresenter.attachView(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mPresenter.detachView();
+    }
+
     private void changeLockIcon(Intent intent) {
         String model = intent.getStringExtra(KeyConstants.DEVICE_TYPE);
         if (!TextUtils.isEmpty(model)){
@@ -375,6 +388,7 @@ public class BluetoothLockFunctionActivity extends BaseBleActivity<IDeviceDetail
     }
 
     private void dealWithPower(int power) {
+        LogUtils.e("电量刷新");
         //电量：80%
         if (power > 100) {
             power = 100;

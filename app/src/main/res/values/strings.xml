@@ -980,5 +980,13 @@
     <string name="lock_system_notify">设备:%1$s,门锁系统被锁定，请及时查看</string>
     <string name="lock_pick_proof_notify">设备:%1$s,防撬启动，请及时查看</string>
     <string name="lock_stress_alarm_notify">设备:%1$s,胁迫报警启动，请及时查看</string>
-
+    <string name="down_failed">下载出错</string>
+    <string name="please_near_lock">没有搜索到设备，请在锁附近操作</string>
+    <string name="get_update_info_failed">获取本地升级信息失败</string>
+    <string name="oad_content">设备 %1$s 正在OTA模式，是否前往升级？</string>
+    <string name="net_exception_tryagain">网络异常，请稍后再试！</string>
+    <string name="get_server_update_info_failed">获取服务端升级信息失败，请稍后再试！</string>
+    <string name="isupdating_can_not_back">正在升级，请勿操作！</string>
+    <string name="update_failed">升级出错！</string>
+    <string name="is_check_vle_version">正在检测蓝牙版本信息！</string>
 </resources>

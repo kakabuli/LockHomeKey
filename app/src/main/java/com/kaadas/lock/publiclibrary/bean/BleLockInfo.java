@@ -34,6 +34,7 @@ public class BleLockInfo implements Serializable {
     private long readBatteryTime = -1;
     private int supportBackLock = -1;
     private int bleType = -1;  //蓝牙的平台    1 Ti平台    2 P6平台
+    private boolean lockStatusException = false;
 
     public String getSerialNumber() {
         return SerialNumber;
@@ -62,6 +63,15 @@ public class BleLockInfo implements Serializable {
         adminMode = -1;
         readBatteryTime = -1;
         supportBackLock = -1;
+        lockStatusException = false;
+    }
+
+    public boolean isLockStatusException() {
+        return lockStatusException;
+    }
+
+    public void setLockStatusException(boolean lockStatusException) {
+        this.lockStatusException = lockStatusException;
     }
 
     private ServerBleDevice serverLockInfo;
@@ -195,7 +205,6 @@ public class BleLockInfo implements Serializable {
     public void setSoftware(String software) {
         this.software = software;
     }
-
 
     public int getVoice() {
         return voice;

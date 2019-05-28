@@ -140,7 +140,7 @@ public class BluetoothMoreActivity extends BaseBleActivity<IDeviceMoreView, Devi
                 finish();
                 break;
             case R.id.rl_device_name:
-                //设备名字
+
                 View mView = LayoutInflater.from(this).inflate(R.layout.have_edit_dialog, null);
                 TextView tvTitle = mView.findViewById(R.id.tv_title);
                 EditText editText = mView.findViewById(R.id.et_name);
@@ -239,10 +239,25 @@ public class BluetoothMoreActivity extends BaseBleActivity<IDeviceMoreView, Devi
                 startActivity(intent);
                 break;
             case R.id.rl_check_firmware_update:
+
                 LogUtils.e("");
+                showLoading(getString(R.string.is_check_vle_version));
                 if (mPresenter.isAuth(bleLockInfo, true)) {
                     mPresenter.readSerialNumber();
                 }
+//                intent = new Intent();
+//                intent.putExtra(OtaConstants.fileName, "008.cyacd2");
+//                intent.putExtra(OtaConstants.bindUrl, "http://47.106.94.189/otaFiles/5b4453fdf4bb41f680e62a3337c8b206?filename=OTA_M0_K9S_T1.01.008.cyacd2");
+//                intent.putExtra(OtaConstants.deviceMac, bleLockInfo.getServerLockInfo().getMacLock());
+//                intent.putExtra(OtaConstants.password1, bleLockInfo.getServerLockInfo().getPassword1());
+//                intent.putExtra(OtaConstants.password2, bleLockInfo.getServerLockInfo().getPassword2());
+//                if (bleLockInfo.getBleType() == 1){ //Ti升级
+//                    intent.setClass(BluetoothMoreActivity.this, TiOtaUpgradeActivity.class);
+//                }else if (bleLockInfo.getBleType() == 2 ){  //P6升级
+//                    intent.setClass(BluetoothMoreActivity.this, P6OtaUpgradeActivity.class);
+//                }
+//                mPresenter.release();
+//                startActivity(intent);
                 break;
             case R.id.btn_delete:
                 AlertDialogUtil.getInstance().noEditTwoButtonDialog(this, getString(R.string.device_delete_dialog_head), getString(R.string.device_delete_dialog_content), getString(R.string.cancel), getString(R.string.query), new AlertDialogUtil.ClickListener() {
@@ -259,6 +274,18 @@ public class BluetoothMoreActivity extends BaseBleActivity<IDeviceMoreView, Devi
                 });
                 break;
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mPresenter.attachView(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mPresenter.detachView();
     }
 
     @Override
@@ -416,6 +443,7 @@ public class BluetoothMoreActivity extends BaseBleActivity<IDeviceMoreView, Devi
     @Override
     public void readInfoFailed(Throwable throwable) {
         ToastUtil.getInstance().showLong(getString(R.string.check_update_failed));
+        hiddenLoading();
     }
 
     @Override
@@ -425,43 +453,41 @@ public class BluetoothMoreActivity extends BaseBleActivity<IDeviceMoreView, Devi
 
     @Override
     public void needUpdate(OTAResult.UpdateFileInfo updateFileInfo, String Sn, String version) {
-        if (bleLockInfo.getBleType() == 1){ //Ti升级
+        hiddenLoading();
+        if (bleLockInfo.getBleType() == 1) { //Ti升级
 
-        }else if (bleLockInfo.getBleType() == 2 ){  //P6升级
+        } else if (bleLockInfo.getBleType() == 2) {  //P6升级
 
-        }
-        else {
-
+        } else {
             ToastUtil.getInstance().showLong(getString(R.string.check_update_failed));
         }
-        Intent intent = new Intent(this, TiOtaUpgradeActivity.class);
-        startActivity(intent);
         AlertDialogUtil.getInstance().noEditTwoButtonDialog(this, getString(R.string.hint)
                 , getString(R.string.hava_ble_new_version), getString(R.string.cancel), getString(R.string.confirm), new AlertDialogUtil.ClickListener() {
                     @Override
                     public void left() {
 
                     }
+
                     @Override
                     public void right() {
-
                         SPUtils.put(KeyConstants.DEVICE_SN + bleLockInfo.getServerLockInfo().getMacLock(), Sn);
                         SPUtils.put(KeyConstants.BLE_VERSION + bleLockInfo.getServerLockInfo().getMacLock(), version);
-                        LogUtils.e("升级的版本信息是   " + Sn);
+                        LogUtils.e("升级的版本信息是   " + Sn + "   下载链接是   " + updateFileInfo.getFileUrl());
                         MyApplication.getInstance().getBleService().release();
                         Intent intent = new Intent();
-                        intent.putExtra(OtaConstants.fileName, "Kaadas_" + updateFileInfo.getFileVersion() + "_" + updateFileInfo.getFileMd5() + ".bin");
                         intent.putExtra(OtaConstants.bindUrl, updateFileInfo.getFileUrl());
                         intent.putExtra(OtaConstants.deviceMac, bleLockInfo.getServerLockInfo().getMacLock());
                         intent.putExtra(OtaConstants.password1, bleLockInfo.getServerLockInfo().getPassword1());
                         intent.putExtra(OtaConstants.password2, bleLockInfo.getServerLockInfo().getPassword2());
-                        if (bleLockInfo.getBleType() == 1){ //Ti升级
+                        if (bleLockInfo.getBleType() == 1) { //Ti升级
+                            intent.putExtra(OtaConstants.fileName, "Kaadas_" + updateFileInfo.getFileVersion() + "_" + updateFileInfo.getFileMd5() + ".bin");
                             intent.setClass(BluetoothMoreActivity.this, TiOtaUpgradeActivity.class);
-                        }else if (bleLockInfo.getBleType() == 2 ){  //P6升级
+                        } else if (bleLockInfo.getBleType() == 2) {  //P6升级
+                            intent.putExtra(OtaConstants.fileName, "Kaadas_" + updateFileInfo.getFileVersion() + "_" + updateFileInfo.getFileMd5() + ".cyacd2");
                             intent.setClass(BluetoothMoreActivity.this, P6OtaUpgradeActivity.class);
                         }
                         //还未完善   不跳转
-//                        startActivity(intent);
+                        startActivity(intent);
                     }
                 }
         );
@@ -494,14 +520,13 @@ public class BluetoothMoreActivity extends BaseBleActivity<IDeviceMoreView, Devi
     public void onStateUpdate(int type) {
         if (bleLockInfo.getAutoMode() == 0) {
             //手动
-            amAutoLockStatus=false;
+            amAutoLockStatus = false;
             ivAm.setImageResource(R.mipmap.iv_close);
-        } else if (bleLockInfo.getAutoMode() == 1){
+        } else if (bleLockInfo.getAutoMode() == 1) {
             //自动
-            amAutoLockStatus=true;
+            amAutoLockStatus = true;
             ivAm.setImageResource(R.mipmap.iv_open);
         }
-
 
 
     }

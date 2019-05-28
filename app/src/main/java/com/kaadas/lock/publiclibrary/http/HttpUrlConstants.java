@@ -258,7 +258,7 @@ public class HttpUrlConstants {
   /**
    * OTA  升级  API地址
    */
-  public static final String OTA_INFO_URL = "http://test.juziwulian.com:9000/api/otaUpgrade/check";
+  public static final String OTA_INFO_URL = "http://test.juziwulian.com:9111/api/otaUpgrade/check";
 
   /**
    * 用户开锁鉴权

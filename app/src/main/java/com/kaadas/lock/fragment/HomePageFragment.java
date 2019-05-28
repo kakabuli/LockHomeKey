@@ -103,7 +103,6 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
                     }
                 }
             }
-
             @Override
             public void onPageScrollStateChanged(int i) {
 
@@ -252,6 +251,7 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
             //设置背景为透明
             rb.setBackgroundResource(R.color.color_trans);
             //设置文字超过范围显示....
+            rb.setSingleLine(true);
             rb.setEllipsize(TextUtils.TruncateAt.END);
             rb.setLineRadius(0);
             //设置下划线的高度
