@@ -21,36 +21,36 @@ public class DaoMaster extends AbstractDaoMaster {
 
     /** Creates underlying database table using DAOs. */
     public static void createAllTables(Database db, boolean ifNotExists) {
+        BleLockServiceInfoDao.createTable(db, ifNotExists);
         CateEyeInfoBaseDao.createTable(db, ifNotExists);
         CatEyeEventDao.createTable(db, ifNotExists);
+        CatEyeServiceInfoDao.createTable(db, ifNotExists);
         DBOpenLockRecordDao.createTable(db, ifNotExists);
+        GatewayBaseInfoDao.createTable(db, ifNotExists);
         GatewayLockAlarmEventDaoDao.createTable(db, ifNotExists);
         GatewayLockPwdDao.createTable(db, ifNotExists);
-        HistoryInfoDao.createTable(db, ifNotExists);
-        PirDefaultDao.createTable(db, ifNotExists);
-        BleLockServiceInfoDao.createTable(db, ifNotExists);
-        CatEyeServiceInfoDao.createTable(db, ifNotExists);
-        GatewayBaseInfoDao.createTable(db, ifNotExists);
         GatewayLockRecordDao.createTable(db, ifNotExists);
         GatewayLockServiceInfoDao.createTable(db, ifNotExists);
         GatewayServiceInfoDao.createTable(db, ifNotExists);
+        HistoryInfoDao.createTable(db, ifNotExists);
+        PirDefaultDao.createTable(db, ifNotExists);
     }
 
     /** Drops underlying database table using DAOs. */
     public static void dropAllTables(Database db, boolean ifExists) {
+        BleLockServiceInfoDao.dropTable(db, ifExists);
         CateEyeInfoBaseDao.dropTable(db, ifExists);
         CatEyeEventDao.dropTable(db, ifExists);
+        CatEyeServiceInfoDao.dropTable(db, ifExists);
         DBOpenLockRecordDao.dropTable(db, ifExists);
+        GatewayBaseInfoDao.dropTable(db, ifExists);
         GatewayLockAlarmEventDaoDao.dropTable(db, ifExists);
         GatewayLockPwdDao.dropTable(db, ifExists);
-        HistoryInfoDao.dropTable(db, ifExists);
-        PirDefaultDao.dropTable(db, ifExists);
-        BleLockServiceInfoDao.dropTable(db, ifExists);
-        CatEyeServiceInfoDao.dropTable(db, ifExists);
-        GatewayBaseInfoDao.dropTable(db, ifExists);
         GatewayLockRecordDao.dropTable(db, ifExists);
         GatewayLockServiceInfoDao.dropTable(db, ifExists);
         GatewayServiceInfoDao.dropTable(db, ifExists);
+        HistoryInfoDao.dropTable(db, ifExists);
+        PirDefaultDao.dropTable(db, ifExists);
     }
 
     /**
@@ -69,19 +69,19 @@ public class DaoMaster extends AbstractDaoMaster {
 
     public DaoMaster(Database db) {
         super(db, SCHEMA_VERSION);
+        registerDaoClass(BleLockServiceInfoDao.class);
         registerDaoClass(CateEyeInfoBaseDao.class);
         registerDaoClass(CatEyeEventDao.class);
+        registerDaoClass(CatEyeServiceInfoDao.class);
         registerDaoClass(DBOpenLockRecordDao.class);
+        registerDaoClass(GatewayBaseInfoDao.class);
         registerDaoClass(GatewayLockAlarmEventDaoDao.class);
         registerDaoClass(GatewayLockPwdDao.class);
-        registerDaoClass(HistoryInfoDao.class);
-        registerDaoClass(PirDefaultDao.class);
-        registerDaoClass(BleLockServiceInfoDao.class);
-        registerDaoClass(CatEyeServiceInfoDao.class);
-        registerDaoClass(GatewayBaseInfoDao.class);
         registerDaoClass(GatewayLockRecordDao.class);
         registerDaoClass(GatewayLockServiceInfoDao.class);
         registerDaoClass(GatewayServiceInfoDao.class);
+        registerDaoClass(HistoryInfoDao.class);
+        registerDaoClass(PirDefaultDao.class);
     }
 
     public DaoSession newSession() {
