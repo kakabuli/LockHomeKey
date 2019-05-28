@@ -54,6 +54,11 @@ public class DaoSession extends AbstractDaoSession {
     private final DaoConfig dBOpenLockRecordDaoConfig;
     private final DaoConfig gatewayBaseInfoDaoConfig;
     private final DaoConfig gatewayLockAlarmEventDaoDaoConfig;
+    private final DaoConfig gatewayLockBaseInfoDaoConfig;
+    private final DaoConfig gatewayLockPwdDaoConfig;
+    private final DaoConfig gatewayLockRecordDaoConfig;
+    private final DaoConfig gatewayLockServiceInfoDaoConfig;
+    private final DaoConfig gatewayServiceInfoDaoConfig;
     private final DaoConfig historyInfoDaoConfig;
     private final DaoConfig pirDefaultDaoConfig;
 
@@ -164,7 +169,10 @@ public class DaoSession extends AbstractDaoSession {
         gatewayServiceInfoDaoConfig.clearIdentityScope();
         historyInfoDaoConfig.clearIdentityScope();
         pirDefaultDaoConfig.clearIdentityScope();
-        gatewayLockPwdDaoConfig.clearIdentityScope();
+    }
+
+    public BleLockServiceInfoDao getBleLockServiceInfoDao() {
+        return bleLockServiceInfoDao;
     }
 
     public CateEyeInfoBaseDao getCateEyeInfoBaseDao() {
@@ -173,6 +181,10 @@ public class DaoSession extends AbstractDaoSession {
 
     public CatEyeEventDao getCatEyeEventDao() {
         return catEyeEventDao;
+    }
+
+    public CatEyeServiceInfoDao getCatEyeServiceInfoDao() {
+        return catEyeServiceInfoDao;
     }
 
     public DBOpenLockRecordDao getDBOpenLockRecordDao() {
