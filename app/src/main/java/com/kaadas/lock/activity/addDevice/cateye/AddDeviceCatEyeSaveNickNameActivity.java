@@ -25,6 +25,9 @@ import com.kaadas.lock.utils.EditTextWatcher;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.ToastUtil;
+import com.kaadas.lock.utils.ftp.GeTui;
+
+import org.linphone.mediastream.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -128,6 +131,7 @@ public class AddDeviceCatEyeSaveNickNameActivity  extends BaseActivity<AddZigbee
             case R.id.save:
                 //保存
                 String name=inputName.getText().toString().trim();
+                Log.e(GeTui.VideoLog,"name:"+name);
                 if (TextUtils.isEmpty(name)){
                     ToastUtil.getInstance().showShort(getString(R.string.nickname_not_null));
                     return;
