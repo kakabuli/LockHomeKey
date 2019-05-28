@@ -36,6 +36,7 @@ public interface GatewayView extends IBaseView {
     //解绑测试网关异常
     void unbindTestGatewayThrowable(Throwable throwable);
 
-
+    //监听网络变化
+    void networkChangeSuccess();
 
 }

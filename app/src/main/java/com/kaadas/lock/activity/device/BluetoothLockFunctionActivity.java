@@ -167,6 +167,19 @@ public class BluetoothLockFunctionActivity extends BaseBleActivity<IDeviceDetail
 //        initRecycleview();
     }
 
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mPresenter.attachView(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mPresenter.detachView();
+    }
+
     private void showLockType() {
         String lockType = bleLockInfo.getServerLockInfo().getModel();
         if (lockType.contains("K9S")){

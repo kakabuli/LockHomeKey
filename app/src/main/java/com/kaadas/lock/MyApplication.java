@@ -453,7 +453,6 @@ public class MyApplication extends Application {
      *
      * @param isForce 是否强制刷新
      */
-    public boolean neverGetDevice = false;
 
     public void getAllDevicesByMqtt(boolean isForce) {
         if (!isForce) {
@@ -485,6 +484,7 @@ public class MyApplication extends Application {
                         allBindDevices = new Gson().fromJson(payload, AllBindDevices.class);
                         if (allBindDevices != null) {
                             homeShowDevices = allBindDevices.getHomeShow();
+                            LogUtils.e("设备更新  application");
                             getDevicesFromServer.onNext(allBindDevices);
                         }
                     }

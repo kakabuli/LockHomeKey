@@ -30,6 +30,7 @@ import com.kaadas.lock.publiclibrary.linphone.linphone.callback.PhoneCallback;
 import com.kaadas.lock.publiclibrary.linphone.linphone.callback.RegistrationCallback;
 import com.kaadas.lock.publiclibrary.linphone.linphone.util.LinphoneHelper;
 import com.kaadas.lock.publiclibrary.mqtt.eventbean.CatEyeEventBean;
+import com.kaadas.lock.publiclibrary.mqtt.eventbean.DeleteDeviceLockBean;
 import com.kaadas.lock.publiclibrary.mqtt.eventbean.GatewayLockAlarmEventBean;
 import com.kaadas.lock.publiclibrary.mqtt.eventbean.GatewayLockInfoEventBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.GetBindGatewayStatusResult;
@@ -48,9 +49,13 @@ import com.kaadas.lock.utils.greenDao.bean.GatewayLockAlarmEventDao;
 import com.kaadas.lock.utils.greenDao.bean.GatewayLockPwd;
 import com.kaadas.lock.utils.greenDao.bean.GatewayLockServiceInfo;
 import com.kaadas.lock.utils.greenDao.bean.GatewayServiceInfo;
+import com.kaadas.lock.utils.greenDao.db.BleLockServiceInfoDao;
+import com.kaadas.lock.utils.greenDao.db.CatEyeServiceInfoDao;
 import com.kaadas.lock.utils.greenDao.db.DaoSession;
 import com.kaadas.lock.utils.greenDao.db.GatewayLockAlarmEventDaoDao;
 import com.kaadas.lock.utils.greenDao.db.GatewayLockPwdDao;
+import com.kaadas.lock.utils.greenDao.db.GatewayLockServiceInfoDao;
+import com.kaadas.lock.utils.greenDao.db.GatewayServiceInfoDao;
 
 import net.sdvn.cmapi.Device;
 
@@ -153,8 +158,8 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                     }
                 });
         compositeDisposable.add(deviceInBootDisposable);
-
     }
+
 
     public String getNickNameByDeviceName(String name) {
         List<HomeShowBean> homeShowDevices = MyApplication.getInstance().getHomeShowDevices();
@@ -198,8 +203,8 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                                         } else {
 
                                         }*/
-                                    }
 
+                                    }
                                 }
                             }
                         }
@@ -229,7 +234,7 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                         JSONObject jsonObject = new JSONObject(mqttData.getPayload());
                         String devtype = jsonObject.getString("devtype");
                         String eventtype = jsonObject.getString("eventtype");
-                        if (TextUtils.isEmpty(devtype)) { //devtype为空   无法处理数据
+                        if (TextUtils.isEmpty(devtype)){ //devtype为空   无法处理数据
                             return;
                         }
                         // TODO: 2019/5/14 处理猫眼动态和锁上报的信息分别放在不同的表中
@@ -300,7 +305,20 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                                         }
                                     }
 
+                                }else {
+                                    DeleteDeviceLockBean deleteGatewayLockDeviceBean=new Gson().fromJson(mqttData.getPayload(),DeleteDeviceLockBean.class);
+                                    if (deleteGatewayLockDeviceBean!=null){
+                                        if ("zigbee".equals(deleteGatewayLockDeviceBean.getEventparams().getDevice_type())&&deleteGatewayLockDeviceBean.getEventparams().getEvent_str().equals("delete")){
+                                            refreshData(deleteGatewayLockDeviceBean.getGwId(),deleteGatewayLockDeviceBean.getDeviceId());
+
+                                        }
+                                    }
+
+
                                 }
+
+
+
                             }else if ("info".equals(eventtype)){
                                 GatewayLockInfoEventBean gatewayLockInfoEventBean=new Gson().fromJson(mqttData.getPayload(),GatewayLockInfoEventBean.class);
                                 String gatewayId=gatewayLockInfoEventBean.getGwId();
@@ -329,8 +347,9 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                                     //使用一次性开锁密码
                                     if (num>4&&num<=8){
                                         deleteOnePwd(gatewayId,deviceId,uid,"0"+num);
+                                        LogUtils.e("使用一次性开锁");
                                     }
-                                    LogUtils.e("使用一次性开锁");
+                                    LogUtils.e("开锁上报");
                                 }
                             }
                         }
@@ -344,8 +363,14 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
         compositeDisposable.add(catEyeEventDisposable);
     }
 
-    //获取锁设备
-    public void initLinphone() {
+    private void refreshData(String gatewayId,String deviceId) {
+        GatewayInfo gatewayInfo=MyApplication.getInstance().getGatewayById(gatewayId);
+        if (gatewayInfo!=null){
+            MyApplication.getInstance().getAllDevicesByMqtt(true);
+                }
+    }
+
+   public void initLinphone() {
         if (!TextUtils.isEmpty(MyApplication.getInstance().getToken()) && !TextUtils.isEmpty(MyApplication.getInstance().getUid())) {
             LinphoneHelper.setAccount(MyApplication.getInstance().getUid(), "12345678Bm", MqttConstant.LINPHONE_URL);
             LogUtils.e("设置LinPhone  监听  ");
@@ -652,9 +677,10 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
     //设置HomeShowBean
     public void setHomeShowBean(){
         DaoSession daoSession=MyApplication.getInstance().getDaoWriteSession();
+        String uid=MyApplication.getInstance().getUid();
         List<HomeShowBean> homeShowBeans=new ArrayList<>();
         //获取蓝牙
-        List<BleLockServiceInfo> bleLockList=daoSession.getBleLockServiceInfoDao().queryBuilder().list();
+        List<BleLockServiceInfo> bleLockList=daoSession.getBleLockServiceInfoDao().queryBuilder().where(BleLockServiceInfoDao.Properties.Uid.eq(uid)).list();
         if (bleLockList!=null&&bleLockList.size()>0){
             for (BleLockServiceInfo bleDevice:bleLockList){
                 ServerBleDevice serverBleDevice=new ServerBleDevice();
@@ -675,7 +701,7 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
             }
         }
         //获取网关
-      List<GatewayServiceInfo> gatewayServiceInfoList= daoSession.getGatewayServiceInfoDao().queryBuilder().list();
+      List<GatewayServiceInfo> gatewayServiceInfoList= daoSession.getGatewayServiceInfoDao().queryBuilder().where(GatewayServiceInfoDao.Properties.Uid.eq(uid)).list();
       if (gatewayServiceInfoList!=null&&gatewayServiceInfoList.size()>0){
           for (GatewayServiceInfo gatewayServiceInfo:gatewayServiceInfoList){
               GatewayInfo newGatewayInfo = new GatewayInfo(new ServerGatewayInfo(gatewayServiceInfo.getDeviceSN(),gatewayServiceInfo.getDeviceNickName(),gatewayServiceInfo.getAdminuid(),gatewayServiceInfo.getAdminName(),gatewayServiceInfo.getAdminNickname(),gatewayServiceInfo.getIsAdmin(),gatewayServiceInfo.getMeUsername(),gatewayServiceInfo.getMePwd(),gatewayServiceInfo.getMeBindState()));
@@ -684,7 +710,7 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
       }
 
       //获取网关锁
-      List<GatewayLockServiceInfo> gatewayLockList=daoSession.getGatewayLockServiceInfoDao().queryBuilder().list();
+      List<GatewayLockServiceInfo> gatewayLockList=daoSession.getGatewayLockServiceInfoDao().queryBuilder().where(GatewayLockServiceInfoDao.Properties.Uid.eq(uid)).list();
       if (gatewayLockList!=null&&gatewayLockList.size()>0){
           for (GatewayLockServiceInfo gwLock:gatewayLockList){
               GwLockInfo gwLockInfo=new GwLockInfo(gwLock.getGatewayId(),new ServerGwDevice(gwLock.getSW(),gwLock.getDeviceId(),gwLock.getDevice_type(),gwLock.getEvent_str(),gwLock.getIpaddr(),gwLock.getMacaddr(),gwLock.getNickName(),gwLock.getTime()));
@@ -694,7 +720,7 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
       }
 
       //获取猫眼
-      List<CatEyeServiceInfo> catEyeServiceList=daoSession.getCatEyeServiceInfoDao().queryBuilder().list();
+      List<CatEyeServiceInfo> catEyeServiceList=daoSession.getCatEyeServiceInfoDao().queryBuilder().where(CatEyeServiceInfoDao.Properties.Uid.eq(uid)).list();
       if (catEyeServiceList!=null&&catEyeServiceList.size()>0){
           for (CatEyeServiceInfo catEyeService:catEyeServiceList){
               CateEyeInfo cateEyeInfo=new CateEyeInfo(catEyeService.getGatewayId(),new ServerGwDevice(catEyeService.getSW(),catEyeService.getDeviceId(),catEyeService.getDevice_type(),catEyeService.getEvent_str(),catEyeService.getIpaddr(),catEyeService.getMacaddr(),catEyeService.getNickName(),catEyeService.getTime()));

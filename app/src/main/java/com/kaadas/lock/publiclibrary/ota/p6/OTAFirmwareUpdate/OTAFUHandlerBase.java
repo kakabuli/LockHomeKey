@@ -37,6 +37,7 @@ import android.bluetooth.BluetoothGattCharacteristic;
 import android.content.Context;
 import android.util.Log;
 
+import com.kaadas.lock.publiclibrary.ota.p6.BluetoothLeService;
 import com.kaadas.lock.publiclibrary.ota.p6.IUpdateStatusListener;
 
 public abstract class OTAFUHandlerBase implements OTAFUHandler {
@@ -48,14 +49,13 @@ public abstract class OTAFUHandlerBase implements OTAFUHandler {
 
     protected final BluetoothGattCharacteristic mOtaCharacteristic;
     protected final String mFilepath;
-    private final OTAFUHandlerCallback mParent;
+    protected final OTAFUHandlerCallback mParent;
     protected boolean mPrepareFileWriteEnabled = true;
     protected int mProgressBarPosition;
     protected byte mActiveApp; //Dual-App Bootloader Active Application ID
     protected long mSecurityKey;
     protected Activity mActivity;
     protected IUpdateStatusListener listener;
-
 
 
     public OTAFUHandlerBase(Activity activity, IUpdateStatusListener listener,
@@ -91,8 +91,8 @@ public abstract class OTAFUHandlerBase implements OTAFUHandler {
      */
     protected void showProgress(int fileStatus, float fileLineNos, float totalLines) {
         Log.e("进度改变  ", "当前进度   " + fileLineNos + "   总数  " + totalLines);
-        if (listener!=null){
-            listener.onProcessChange((int)fileLineNos,(int)totalLines);
+        if (listener != null) {
+            listener.onProcessChange((int) fileLineNos, (int) totalLines);
             return;
         }
 
@@ -100,9 +100,6 @@ public abstract class OTAFUHandlerBase implements OTAFUHandler {
 
 
 
-    protected void showErrorDialogMessage(String errorMessage, final boolean stayOnPage) {
-        mParent.showErrorDialogMessage(errorMessage, stayOnPage);
-    }
 
 
     protected String storeAndReturnDeviceAddress() {

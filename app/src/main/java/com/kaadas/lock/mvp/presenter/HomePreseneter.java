@@ -10,6 +10,7 @@ import com.kaadas.lock.publiclibrary.mqtt.publishbean.GetDevicePowerBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.AllBindDevices;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttConstant;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttData;
+import com.kaadas.lock.utils.LogUtils;
 
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
@@ -33,6 +34,7 @@ public class HomePreseneter<T> extends BasePresenter<IHomeView> {
                 .subscribe(new Consumer<AllBindDevices>() {
                     @Override
                     public void accept(AllBindDevices allBindDevices) throws Exception {
+                        LogUtils.e("设备更新   homePresenter");
                         if (mViewRef.get()!=null){
                             mViewRef.get().onDeviceRefresh(allBindDevices);
                         }

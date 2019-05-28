@@ -39,7 +39,9 @@ import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.StringUtil;
 import com.kaadas.lock.utils.ToastUtil;
 import com.kaadas.lock.utils.greenDao.bean.GatewayBaseInfo;
+import com.kaadas.lock.utils.greenDao.bean.GatewayLockBaseInfo;
 import com.kaadas.lock.utils.greenDao.db.GatewayBaseInfoDao;
+import com.kaadas.lock.utils.greenDao.db.GatewayLockBaseInfoDao;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -161,9 +163,10 @@ public class GatewaySettingActivity extends BaseActivity<GatewaySettingView, Gat
         uid=MyApplication.getInstance().getUid();
         if (!TextUtils.isEmpty(gatewayId)){
             //先读取数据库
-            GatewayBaseInfo gatewayBaseInfo=MyApplication.getInstance().getDaoWriteSession().getGatewayBaseInfoDao().queryBuilder().where(GatewayBaseInfoDao.Properties.DeviceIdUid.eq(gatewayId+uid)).unique();
-            setGatewayBaseInfo(gatewayBaseInfo);
-
+            GatewayBaseInfo gatewayBaseInfo=MyApplication.getInstance().getDaoWriteSession().getGatewayBaseInfoDao().queryBuilder().where(GatewayBaseInfoDao.Properties.GatewayId.eq(gatewayId), GatewayBaseInfoDao.Properties.Uid.eq(uid)).unique();
+            if (gatewayBaseInfo!=null){
+                setGatewayBaseInfo(gatewayBaseInfo);
+            }
             mPresenter.getNetBasic(MyApplication.getInstance().getUid(),gatewayId,gatewayId);
             loadingDialog.show(getString(R.string.get_gateway_info_waitting));
         }

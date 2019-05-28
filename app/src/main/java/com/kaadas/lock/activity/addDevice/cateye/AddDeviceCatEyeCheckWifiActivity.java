@@ -101,6 +101,7 @@ public class AddDeviceCatEyeCheckWifiActivity extends AppCompatActivity {
             catEyeIntent.putExtra(KeyConstants.GW_WIFI_PWD, pwd);
             catEyeIntent.putExtra(KeyConstants.GW_SN, gwId);
             startActivity(catEyeIntent);
+            finish();
         }
     }
 

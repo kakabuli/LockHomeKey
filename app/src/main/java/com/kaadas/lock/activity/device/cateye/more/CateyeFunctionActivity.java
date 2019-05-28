@@ -28,6 +28,7 @@ import com.kaadas.lock.utils.Constants;
 import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.NetUtil;
 import com.kaadas.lock.utils.NotifyRefreshActivity;
 import com.kaadas.lock.utils.networkListenerutil.NetWorkChangReceiver;
 
@@ -39,12 +40,11 @@ import butterknife.ButterKnife;
 /**
  * Created by David on 2019/4/25
  */
-public class CateyeFunctionActivity extends BaseActivity<ICatEyeFunctionView, CatEyeFunctionPresenter<ICatEyeFunctionView>> implements View.OnClickListener,ICatEyeFunctionView, NotifyRefreshActivity {
+public class CateyeFunctionActivity extends BaseActivity<ICatEyeFunctionView, CatEyeFunctionPresenter<ICatEyeFunctionView>> implements View.OnClickListener,ICatEyeFunctionView{
     @BindView(R.id.iv_back)
     ImageView ivBack;
     @BindView(R.id.tv_name)
     TextView tvName;
-
     @BindView(R.id.iv_external_big)
     ImageView ivExternalBig;
     @BindView(R.id.iv_external_middle)
@@ -88,7 +88,6 @@ public class CateyeFunctionActivity extends BaseActivity<ICatEyeFunctionView, Ca
         llLookBack.setOnClickListener(this);
         llMore.setOnClickListener(this);
         rlIcon.setOnClickListener(this);
-        NetWorkChangReceiver.setNotifyRefreshActivity(this);
     }
 
     @Override
@@ -102,11 +101,17 @@ public class CateyeFunctionActivity extends BaseActivity<ICatEyeFunctionView, Ca
             cateEyeInfo= (CateEyeInfo) homeShowBean.getObject();
             if (cateEyeInfo!=null) {
                 tvName.setText(cateEyeInfo.getServerInfo().getNickName());
-                dealWithPower(cateEyeInfo.getPower(), cateEyeInfo.getServerInfo().getEvent_str(), cateEyeInfo.getPowerTimeStamp());
-                changeOpenLockStatus(cateEyeInfo.getServerInfo().getEvent_str());
+                if (NetUtil.isNetworkAvailable()) {
+                    dealWithPower(cateEyeInfo.getPower(), cateEyeInfo.getServerInfo().getEvent_str(), cateEyeInfo.getPowerTimeStamp());
+                    changeOpenLockStatus(cateEyeInfo.getServerInfo().getEvent_str());
+                }else{
+                    dealWithPower(cateEyeInfo.getPower(), "offline", cateEyeInfo.getPowerTimeStamp());
+                    changeOpenLockStatus("offline");
+                }
                 mPresenter.getPowerData(cateEyeInfo.getGwID(), cateEyeInfo.getServerInfo().getDeviceId());
                 mPresenter.getPublishNotify();//监听网关
                 mPresenter.listenerDeviceOnline();//监听设备
+                mPresenter.listenerNetworkChange();//监听网络变化
             }
         }
 
@@ -340,14 +345,12 @@ public class CateyeFunctionActivity extends BaseActivity<ICatEyeFunctionView, Ca
         }
     }
 
-
     @Override
-    public void notifityActivity(boolean isRefresh) {
-        if (isRefresh){
-            if (cateEyeInfo!=null){
-                changeOpenLockStatus("offline");
-                dealWithPower(cateEyeInfo.getPower(), "offline", cateEyeInfo.getPowerTimeStamp());
-            }
+    public void networkChangeSuccess() {
+        if (cateEyeInfo!=null){
+            changeOpenLockStatus("offline");
+            dealWithPower(cateEyeInfo.getPower(), "offline", cateEyeInfo.getPowerTimeStamp());
         }
     }
+
 }

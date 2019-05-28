@@ -1,6 +1,8 @@
 package com.kaadas.lock.mvp.presenter;
 
 
+import android.text.TextUtils;
+
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.mvp.mvpbase.BlePresenter;
 import com.kaadas.lock.mvp.view.IDeviceMoreView;
@@ -293,6 +295,10 @@ public class DeviceMorePresenter extends BlePresenter<IDeviceMoreView> {
         compositeDisposable.add(autoLockDisposable);
     }
 
+    public void release(){
+        bleService.release();
+    }
+
     public void readSerialNumber() {
         toDisposable(readSerialNumberDisposable);
         readSerialNumberDisposable = Observable.just(0)
@@ -365,17 +371,19 @@ public class DeviceMorePresenter extends BlePresenter<IDeviceMoreView> {
                     public void accept(ReadInfoBean readInfoBean) throws Exception {
                         LogUtils.e(" 读取SoftwareRev成功 " + readInfoBean.data);  //进行下一步
                         bleLockInfo.setSoftware((String) readInfoBean.data);
-                        if (mViewRef.get() != null) {
-                            String version = (String) readInfoBean.data;
-                            if (version.contains("-")) {
-                                String[] split = version.split("-");
-                                if (split.length > 0) {
-                                    version = split[0];
-                                }
+                        String version = (String) readInfoBean.data;
+                        if (version.contains("-")) {
+                            String[] split = version.split("-");
+                            if (split.length > 0) {
+                                version = split[0];
                             }
-                            mViewRef.get().readVersionSuccess(version);
-                            checkOtaInfo(sn, version);
                         }
+                        if (mViewRef.get() != null) {
+                            mViewRef.get().readVersionSuccess(version);
+                        }
+                        //                            // TODO: 2019/5/28    测试
+                            checkOtaInfo(sn, version);
+//                        checkOtaInfo("BT02191410009", "10.1.007");
                         toDisposable(readSoftwareRevDisposable);
                     }
                 }, new Consumer<Throwable>() {
@@ -397,7 +405,11 @@ public class DeviceMorePresenter extends BlePresenter<IDeviceMoreView> {
                 .subscribe(new Consumer<OTAResult>() {
                     @Override
                     public void accept(OTAResult otaResult) throws Exception {
-                        if ("200".equals(otaResult.getCode())) {
+                        String fileUrl = otaResult.getData().getFileUrl();
+                        if ("200".equals(otaResult.getCode()) && !TextUtils.isEmpty(fileUrl)) {
+                            if (!fileUrl.startsWith("http://")){
+                                otaResult.getData().setFileUrl("http://"+fileUrl);
+                            }
                             //请求成功
                             if (mViewRef.get() != null) {
                                 mViewRef.get().needUpdate(otaResult.getData(),SN,version);

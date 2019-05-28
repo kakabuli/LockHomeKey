@@ -3,6 +3,7 @@ package com.kaadas.lock.adapter;
 import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
@@ -33,7 +34,13 @@ public class DeviceDetailAdapter extends BaseQuickAdapter<HomeShowBean, BaseView
     protected void convert(BaseViewHolder helper, HomeShowBean item) {
         BatteryView batteryView= helper.getView(R.id.horizontalBatteryView);
         TextView textView=helper.getView(R.id.device_name);
-        helper.setText(R.id.device_name,item.getDeviceNickName());
+        LogUtils.e("设备昵称"+item.getDeviceNickName());
+        if (!TextUtils.isEmpty(item.getDeviceNickName())){
+            helper.setText(R.id.device_name,item.getDeviceNickName());
+        }else{
+            helper.setText(R.id.device_name,item.getDeviceId());
+        }
+
         if (HomeShowBean.TYPE_GATEWAY==item.getDeviceType()){
             //隐藏
             helper.getView(R.id.power_layout).setVisibility(View.GONE);

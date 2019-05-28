@@ -21,10 +21,8 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.kaadas.lock.R;
@@ -37,8 +35,13 @@ import com.kaadas.lock.publiclibrary.ota.p6.OTAFirmwareUpdate.OTAFUHandler;
 import com.kaadas.lock.publiclibrary.ota.p6.OTAFirmwareUpdate.OTAFUHandlerCallback;
 import com.kaadas.lock.publiclibrary.ota.p6.OTAFirmwareUpdate.OTAFUHandler_v1;
 import com.kaadas.lock.utils.AlertDialogUtil;
+import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.ToastUtil;
 import com.kaadas.lock.widget.CircleProgress;
 import com.kaadas.lock.widget.OtaMutiProgress;
+import com.liulishuo.filedownloader.BaseDownloadTask;
+import com.liulishuo.filedownloader.FileDownloadListener;
+import com.liulishuo.filedownloader.FileDownloader;
 
 import java.io.File;
 import java.io.PrintWriter;
@@ -46,7 +49,6 @@ import java.io.StringWriter;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -60,13 +62,23 @@ public class P6OtaUpgradeActivity extends AppCompatActivity implements View.OnCl
     @BindView(R.id.circle_progress_bar2)
     CircleProgress mCircleProgress2;
     @BindView(R.id.mutiprogree_ota)
-    OtaMutiProgress mutiprogree;
+    OtaMutiProgress mutiProgress;
     @BindView(R.id.start_upgrade)
     Button start_upgrade;
-    int j = 1;
+    @BindView(R.id.warring)
+    TextView warring;
+    private Intent gattServiceIntent;
+    //    private String fileCompletePath;
+    private String path;
+    private String fileName;
+    private String binDownUrl;
+    private String mac;
+    private String password1;
+    private String password2;
+    private String filePath;
+    private boolean isUpdating;
 
     private static final String TAG = "OTA升级";
-    private Button search_ble;
     private BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
     private BluetoothLeScanner bluetoothLeScanner;
     private OTAFUHandler mOTAFUHandler = DUMMY_HANDLER;//Initializing to DUMMY_HANDLER to avoid NPEs
@@ -114,24 +126,13 @@ public class P6OtaUpgradeActivity extends AppCompatActivity implements View.OnCl
             }
         }
     };
-    private Intent gattServiceIntent;
-    //    private String fileCompletePath;
-    private BluetoothDevice currentDevice;
-    private String path;
-    private String fileName;
-    private String binDownUrl;
-    private String mac;
-    private String password1;
-    private String password2;
-    private String filePath;
-
 
     private void processOTAStatus(Intent intent) {
         /**
          * Shared preference to hold the state of the bootloader
          */
         Log.e("收到数据  ", " action 为 " + intent.getAction());
-        final String bootloaderState = Utils.getStringSharedPreference(this, Constants.PREF_BOOTLOADER_STATE);
+        final String bootloaderState = Utils.getStringSharedPreference(this, Constants.PREF_BOOTLOADER_STATE + BluetoothLeService.mBluetoothDeviceAddress);
         final String action = intent.getAction();
         final Bundle extras = intent.getExtras();
         if (action.equals(BluetoothAdapter.ACTION_STATE_CHANGED)) {
@@ -142,7 +143,7 @@ public class P6OtaUpgradeActivity extends AppCompatActivity implements View.OnCl
             }
         }
         if (BluetoothLeService.ACTION_GATT_CONNECTED.equals(action)) {  //连接成功
-            Log.e(TAG, "连接成功");
+            Log.e(TAG, "连接成功  发现服务");
             BluetoothLeService.discoverServices();
             Utils.setIntSharedPreference(P6OtaUpgradeActivity.this, Constants.PREF_PROGRAM_ROW_START_POS + BluetoothLeService.mBluetoothDeviceAddress, 0);
             handler.postDelayed(disconnectedRunnable, 5 * 1000);  //如果五秒之内没有发现服务，那么断开连接
@@ -170,15 +171,6 @@ public class P6OtaUpgradeActivity extends AppCompatActivity implements View.OnCl
             parseService(supportedGattServices);
         } else if (BluetoothLeService.ACTION_OTA_STATUS_V1.equals(action)) {
             mOTAFUHandler.processOTAStatus(bootloaderState, extras);
-        } else if (action.equals(BluetoothDevice.ACTION_BOND_STATE_CHANGED)) {
-            final int state = intent.getIntExtra(BluetoothDevice.EXTRA_BOND_STATE, BluetoothDevice.ERROR);
-            if (state == BluetoothDevice.BOND_BONDING) {
-                Log.e("绑定通知", "BOND_BONDING");
-            } else if (state == BluetoothDevice.BOND_BONDED) {
-                Log.e("绑定通知", "BOND_BONDED");
-            } else if (state == BluetoothDevice.BOND_NONE) {
-                Log.e("绑定通知", "BOND_NONE");
-            }
         }
     }
 
@@ -194,34 +186,23 @@ public class P6OtaUpgradeActivity extends AppCompatActivity implements View.OnCl
                     }
                 }
             }, 100);
-            final boolean bondedState = BluetoothLeService.getBondedState();
-            Log.e(TAG, "当前配对状态为0  " + bondedState);
             Runnable r = new Runnable() {
                 @Override
                 public void run() {
                     startUpgrade(otaChar);
+                    mutiProgress.setCurrNodeNO(2, true);
                 }
             };
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    if (BluetoothLeService.getBondedState()) {
-                        Log.e("已经配对", "已经配对");
-                    } else {
-                        boolean b = BluetoothLeService.pairDevice();
-                        Log.e("没有配对", "没有配对");
-                    }
-                }
-            }, 50);
-            handler.postDelayed(r, 1000);
+            handler.postDelayed(r, 500);
             return;
         }
 
         for (BluetoothGattService service : bluetoothGattServices) {
             for (final BluetoothGattCharacteristic characteristic : service.getCharacteristics()) {
                 if (characteristic.getUuid().toString().equalsIgnoreCase(UPDATE_CHAR_UUID)) {
-                    BluetoothLeService.authAndWriteRestCommand(password1,password2);
-                    Utils.setStringSharedPreference(P6OtaUpgradeActivity.this, Constants.PREF_BOOTLOADER_STATE, "Default");
+                    BluetoothLeService.authAndWriteRestCommand(password1, password2);
+                    mutiProgress.setCurrNodeNO(1, true);
+                    Utils.setStringSharedPreference(P6OtaUpgradeActivity.this, Constants.PREF_BOOTLOADER_STATE + BluetoothLeService.mBluetoothDeviceAddress, "Default");
                     Utils.setIntSharedPreference(P6OtaUpgradeActivity.this, Constants.PREF_PROGRAM_ROW_NO + BluetoothLeService.mBluetoothDeviceAddress, 0);
                     Utils.setIntSharedPreference(P6OtaUpgradeActivity.this, Constants.PREF_PROGRAM_ROW_START_POS + BluetoothLeService.mBluetoothDeviceAddress, 0);
                     return;
@@ -238,95 +219,178 @@ public class P6OtaUpgradeActivity extends AppCompatActivity implements View.OnCl
         gattServiceIntent = new Intent(getApplicationContext(), BluetoothLeService.class);
         startService(gattServiceIntent);
         BluetoothLeService.registerBroadcastReceiver(this, mGattOTAStatusReceiver, Utils.makeGattUpdateIntentFilter());
-
-
+        bluetoothLeScanner = bluetoothAdapter.getBluetoothLeScanner();
         ButterKnife.bind(this);
-
+        FileDownloader.setup(this);
 
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         path = getExternalFilesDir("").getAbsolutePath() + File.separator + "binFile";
         OtaUtils.createFolder(path);
         Intent intent = getIntent();
-        if (intent != null) {
             fileName = intent.getStringExtra(OtaConstants.fileName);
             binDownUrl = intent.getStringExtra(OtaConstants.bindUrl);
+            LogUtils.e("获取到的URL是   " +binDownUrl );
             mac = intent.getStringExtra(OtaConstants.deviceMac);
             password1 = intent.getStringExtra(OtaConstants.password1);
             password2 = intent.getStringExtra(OtaConstants.password2);
             filePath = path + "/" + fileName;
-        }
+//            filePath = "/storage/emulated/0/CySmart/OTA_M0_K9S_T1.01.008.cyacd2";
 
         tv_content.setText(getResources().getString(R.string.ota_lock_upgrade));
         iv_back.setOnClickListener(this);
-        mCircleProgress2.setOnClickListener(this);
         start_upgrade.setOnClickListener(this);
-        mutiprogree.setCurrNodeNO(0, false);
-
-
-        search_ble.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                BluetoothLeService.disconnect();
-                scanDevices();
-            }
-        });
-        scanDevices();
+        mutiProgress.setCurrNodeNO(0, false);
+        warring.setVisibility(View.INVISIBLE);
     }
 
-    int cicleProgress = 0;
+
+    @Override
+    public void onBackPressed() {
+        if (isUpdating){
+            ToastUtil.getInstance().showLong(R.string.isupdating_can_not_back);
+        }else {
+            finish();
+        }
+    }
 
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.iv_back:
-                finish();
+                if (isUpdating){
+                   ToastUtil.getInstance().showLong(R.string.isupdating_can_not_back);
+                }else {
+                    finish();
+                }
+
                 break;
             case R.id.circle_progress_bar2:
-                cicleProgress = cicleProgress + 10;
-                if (cicleProgress > 100) {
-                    cicleProgress = 100;
-                }
-                mCircleProgress2.setValue(cicleProgress);
+
                 break;
             case R.id.start_upgrade:
-                if (j == 1) {
-                    j = 0;
-                    AlertDialogUtil.getInstance().noEditSingleButtonDialog(this, getString(R.string.good_for_you), getString(R.string.ota_good_for_you), getString(R.string.hao_de), new AlertDialogUtil.ClickListener() {
-                        @Override
-                        public void left() {
-
-                        }
-
-                        @Override
-                        public void right() {
-
-                        }
-                    });
-                } else {
-                    j = 1;
-                    AlertDialogUtil.getInstance().noEditTwoButtonDialog(this, getString(R.string.ota_fail), getString(R.string.ota_fail_reply),
-                            getString(R.string.cancel), getString(R.string.query), new AlertDialogUtil.ClickListener() {
-                                @Override
-                                public void left() {
-
-                                }
-                                @Override
-                                public void right() {
-
-                                }
-                            });
-                }
+                isUpdating = true;
+                downBinNew(binDownUrl, filePath);
+                mutiProgress.setCurrNodeNO(0, true);
+                warring.setVisibility(View.VISIBLE);
                 break;
         }
     }
 
-    public   Runnable disconnectedRunnable = new Runnable() {
+
+    public void downBinNew(String url, String path) {
+        start_upgrade.setClickable(false);
+        LogUtils.e("开始下载  下载链接  " + url + "   保存地址  " + path);
+        File file = new File(path);
+        if (file.exists()) {
+            Log.e(TAG, "文件已存在，不再下载");
+            mutiProgress.setCurrNodeNO(1, false);
+            mCircleProgress2.setValue(50);
+            scanDevices();
+            return;
+        }
+        FileDownloader.getImpl().create(url)
+                .setPath(path)
+                .setForceReDownload(true)
+                .setListener(new FileDownloadListener() {
+                    //等待
+                    @Override
+                    protected void pending(BaseDownloadTask task, int soFarBytes, int totalBytes) {
+                        LogUtils.e("开始下载   ");
+                    }
+
+                    //下载进度回调
+                    @Override
+                    protected void progress(BaseDownloadTask task, int soFarBytes, int totalBytes) {
+                        LogUtils.e("下载进度   " + soFarBytes);
+                        mCircleProgress2.setValue(soFarBytes / totalBytes * 50);
+                    }
+
+                    //完成下载
+                    @Override
+                    protected void completed(BaseDownloadTask task) {
+                        LogUtils.e("下载成功");
+                        mutiProgress.setCurrNodeNO(1, false);
+                        mCircleProgress2.setValue(50);
+                        scanDevices();
+                    }
+
+                    //暂停
+                    @Override
+                    protected void paused(BaseDownloadTask task, int soFarBytes, int totalBytes) {
+
+                    }
+
+                    //下载出错
+                    @Override
+                    protected void error(BaseDownloadTask task, Throwable e) {
+                        LogUtils.e("下载出错  " + e.getMessage());
+                        ToastUtil.getInstance().showLong(R.string.down_failed);
+                        mutiProgress.setCurrNodeNO(0, false);
+                        mCircleProgress2.setValue(0);
+                        otaFailed("");
+                    }
+
+                    //已存在相同下载
+                    @Override
+                    protected void warn(BaseDownloadTask task) {
+                        LogUtils.e("已存在   任务");
+                    }
+                }).start();
+    }
+
+    private void otaSuccess() {
+        mutiProgress.setCurrNodeNO(3, true);
+        AlertDialogUtil.getInstance().noEditSingleButtonDialog(this, getString(R.string.good_for_you), getString(R.string.ota_good_for_you), getString(R.string.hao_de), new AlertDialogUtil.ClickListener() {
+            @Override
+            public void left() {
+                finish();
+            }
+
+            @Override
+            public void right() {
+                finish();
+            }
+        });
+    }
+
+    private void otaFailed(String tag) {
+        if (isFinishing()) {
+            return;
+        }
+        start_upgrade.setClickable(true);
+        isUpdating = false;
+        AlertDialogUtil.getInstance().noEditTwoButtonDialog(this, getString(R.string.ota_fail), getString(R.string.ota_fail_reply),
+                getString(R.string.cancel), getString(R.string.query), new AlertDialogUtil.ClickListener() {
+                    @Override
+                    public void left() {
+                        finish();
+                    }
+
+                    @Override
+                    public void right() {
+                        mutiProgress.setCurrNodeNO(0, false);
+                        mCircleProgress2.setValue(0);
+                        downBinNew(binDownUrl, filePath);
+                    }
+                });
+    }
+
+    public Runnable disconnectedRunnable = new Runnable() {
         @Override
         public void run() {
             BluetoothLeService.disconnect();
         }
     };
 
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        stopService(gattServiceIntent);
+        if (mGattOTAStatusReceiver != null) {
+            unregisterReceiver(mGattOTAStatusReceiver);
+        }
+    }
 
     public void scanDevices() {
         BluetoothLeService.disconnect();
@@ -340,6 +404,8 @@ public class P6OtaUpgradeActivity extends AppCompatActivity implements View.OnCl
         @Override
         public void run() {
             bluetoothLeScanner.stopScan(newScanBleCallback);
+            ToastUtil.getInstance().showLong(R.string.please_near_lock);
+            otaFailed(BluetoothLeService.ERROR_TAG_NOT_FOUND);
         }
     };
 
@@ -350,18 +416,19 @@ public class P6OtaUpgradeActivity extends AppCompatActivity implements View.OnCl
         public void onBatchScanResults(List<ScanResult> results) {
 
         }
+
         public void onScanResult(int callbackType, ScanResult result) {
             final BluetoothDevice device = result.getDevice();
             if (device.getName() == null) {
                 return;
             }
             if (device.getAddress().equals(mac)) {
-                stopScanRunnable.run();
+                bluetoothLeScanner.stopScan(newScanBleCallback);
+                handler.removeCallbacks(stopScanRunnable);
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         Log.e(TAG, "连接设备");
-                        handler.removeCallbacks(stopScanRunnable);
                         BluetoothLeService.connect(device, P6OtaUpgradeActivity.this);
                     }
                 }, 1000);
@@ -370,6 +437,7 @@ public class P6OtaUpgradeActivity extends AppCompatActivity implements View.OnCl
             }
             Log.e(TAG, "搜索到设备" + device.getName());
         }
+
         public void onScanFailed(int errorCode) {
             Log.e(TAG, "已经启动了扫描设备    " + errorCode);
         }
@@ -406,7 +474,8 @@ public class P6OtaUpgradeActivity extends AppCompatActivity implements View.OnCl
 
     public void startUpgrade(BluetoothGattCharacteristic updateChar) {
         Log.e(TAG, "开始升级   " + updateChar.getUuid());
-        mOTAFUHandler = createOTAFUHandler(updateChar,filePath  );
+        //todo 测试地址
+        mOTAFUHandler = createOTAFUHandler(updateChar, filePath);
         new Thread() {
             @Override
             public void run() {
@@ -415,6 +484,7 @@ public class P6OtaUpgradeActivity extends AppCompatActivity implements View.OnCl
             }
         }.start();
     }
+
     @Nullable
     private OTAFUHandler createOTAFUHandler(BluetoothGattCharacteristic otaCharacteristic, String filepath) {
         File file = new File(filepath);
@@ -433,6 +503,7 @@ public class P6OtaUpgradeActivity extends AppCompatActivity implements View.OnCl
         @Override
         public void onProcessChange(float currentLine, float totalLine) {
             Log.e(TAG, "进度改变1   " + (currentLine / totalLine) * 100);
+            mCircleProgress2.setValue(50 + ((currentLine / totalLine) * 50));
         }
 
         @Override
@@ -461,15 +532,17 @@ public class P6OtaUpgradeActivity extends AppCompatActivity implements View.OnCl
         @Override
         public void otaEndBootloader() {
             Log.e(TAG, "写入完成数据   ");
-            Utils.setStringSharedPreference(P6OtaUpgradeActivity.this, Constants.PREF_BOOTLOADER_STATE, "Default");
+            Utils.setStringSharedPreference(P6OtaUpgradeActivity.this, Constants.PREF_BOOTLOADER_STATE + BluetoothLeService.mBluetoothDeviceAddress, "Default");
             Utils.setIntSharedPreference(P6OtaUpgradeActivity.this, Constants.PREF_PROGRAM_ROW_NO + BluetoothLeService.mBluetoothDeviceAddress, 0);
             Utils.setIntSharedPreference(P6OtaUpgradeActivity.this, Constants.PREF_PROGRAM_ROW_START_POS + BluetoothLeService.mBluetoothDeviceAddress, 0);
             isComplete = true;
+            otaSuccess();
         }
 
         @Override
         public void upgradeCompleted() {
             Log.e(TAG, "更新完成   ");
+
         }
 
         @Override
@@ -486,9 +559,10 @@ public class P6OtaUpgradeActivity extends AppCompatActivity implements View.OnCl
 
     private OTAFUHandlerCallback callback = new OTAFUHandlerCallback() {
         @Override
-        public void showErrorDialogMessage(String errorMessage, boolean stayOnPage) {
-            Log.e(TAG, "错误消息   " + errorMessage);
-            //发生错误小时
+        public void showErrorDialogMessage(String tag, String errorMessage, boolean stayOnPage) {
+            Log.e(TAG, "  tag  " + tag + "  错误消息  " + errorMessage);
+            //发生错误
+            otaFailed(tag);
         }
 
         @Override
@@ -511,6 +585,7 @@ public class P6OtaUpgradeActivity extends AppCompatActivity implements View.OnCl
     private void requestPermission() {
         ActivityCompat.requestPermissions(this, new String[]{
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.READ_EXTERNAL_STORAGE,
                 Manifest.permission.ACCESS_COARSE_LOCATION
         }, 1);
     }

@@ -133,6 +133,7 @@ public class OTAFirmwareWrite_v1 {
         BluetoothLeService.writeOTABootLoaderCommand(mOtaCharacteristic, commandBytes);
     }
 
+
     public void OTASendDataCmd(byte checkSumType, byte[] data) {
         int idx = 0;
         final int dataLength = data.length;

@@ -275,7 +275,6 @@ public class BleService extends Service {
 
     }
 
-
     /**
      * 新版搜索到蓝牙的回调
      */
@@ -292,13 +291,13 @@ public class BleService extends Service {
             //符合要求的设备
             if (device.getName().startsWith("XK")
                     || device.getName().contains("KDS")
-
-                    ) {
+                    || device.getName().contains("KdsLock")) {
                 deviceScanSubject.onNext(device);
             }
         }
 
         public void onScanFailed(int errorCode) {
+
 
         }
     };
@@ -673,6 +672,7 @@ public class BleService extends Service {
             }
             return;
         }
+        p6otaService = gatt.getService(UUID.fromString(BLeConstants.P6_OAD_SERVICE));
         if (p6otaService != null) {
             release();
             if (bleLockInfo != null) {
@@ -687,12 +687,12 @@ public class BleService extends Service {
             String serviceUUID = gattService.getUuid().toString();
             for (final BluetoothGattCharacteristic characteristic : gattCharacteristics) {
                 String uuidChar = characteristic.getUuid().toString();
-                if (BLeConstants.UUID_SEND_SERVICE.equals(serviceUUID)) {
+                if (BLeConstants.UUID_SEND_SERVICE.equalsIgnoreCase(serviceUUID)) {
                     mWritableCharacter = characteristic;
                 }
-                if (BLeConstants.UUID_NOTIFY_SERVICE.equals(serviceUUID)) {
+                if (BLeConstants.UUID_NOTIFY_CHAR.equalsIgnoreCase(characteristic.getUuid().toString())) {
                     boolean isNotify = gatt.setCharacteristicNotification(characteristic, true);
-                    Log.e("walter", "读特征值 uuidChar = " + serviceUUID + " 通知的特征是否成功==" + isNotify);
+                    Log.e("开启通知", "读特征值 uuidChar = " + serviceUUID  );
                     if (isNotify) {
                         for (BluetoothGattDescriptor dp : characteristic.getDescriptors()) {
                             //开启设备的写功能，开启之后才能接收到设备发送过来的数据
@@ -1035,7 +1035,7 @@ public class BleService extends Service {
                 LogUtils.e("获取到远程设备   " + remoteDevice.getAddress() + "   设备名是  " + remoteDevice.getName());
                 deviceScanSubject.onNext(remoteDevice);
             } else {
-                LogUtils.e("获取到远程设备   失败   ");
+                //LogUtils.e("获取到远程设备   失败   ");
                 handler.postDelayed(getRemoteDeviceRunnable, 1000);
             }
         }

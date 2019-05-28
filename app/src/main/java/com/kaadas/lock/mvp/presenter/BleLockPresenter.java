@@ -170,7 +170,6 @@ public class BleLockPresenter<T> extends MyOpenLockRecordPresenter<IBleLockView>
                         getOpenLockNumber();
                     }
                 });
-
         compositeDisposable.add(getDeviceInfoDisposable);
     }
 
@@ -581,21 +580,22 @@ public class BleLockPresenter<T> extends MyOpenLockRecordPresenter<IBleLockView>
 
                         int state7 = (deValue[4] & 0b10000000) == 0b10000000 ? 1 : 0;  //手动模式/自动模式
                         state8 = (deValue[5] & 0b00000001) == 0b00000001 ? 1 : 0;
-                        state8 = (deValue[5] & 0b00000001) == 0b00000001 ? 1 : 0;
 
                         int state6 = (deValue[4] & 0b01000000) == 0b01000000 ? 1 : 0;   //恢复出厂设置
                         int state9 = (deValue[5] & 0b00000010) == 0b00000010 ? 1 : 0;   //安全模式上报
+                        bleLockInfo.setLockStatusException(true);
                         if (mViewRef.get() != null) {
                             if (state9 == 1) {
                                 mViewRef.get().onWarringUp(9);
                                 bleLockInfo.setSafeMode(1);
                             } else if (state6 == 1) {
                                 mViewRef.get().onWarringUp(6);
+                            }else {
+                                mViewRef.get().onWarringUp(-2);
                             }
                         }
                         //收到报警  0.5秒后读取锁信息
                         getDeviceInfo();
-
                     }
                 }, new Consumer<Throwable>() {
                     @Override
@@ -667,9 +667,7 @@ public class BleLockPresenter<T> extends MyOpenLockRecordPresenter<IBleLockView>
                 .subscribe(new Consumer<BleDataBean>() {
                     @Override
                     public void accept(BleDataBean bleDataBean) throws Exception {
-                        LogUtils.e("收到服务返回的设备更新回调1111");
                         if (mViewRef.get() != null) {   //通知界面更新显示设备状态
-                            LogUtils.e("收到服务返回的设备更新回调2222");
                             mViewRef.get().onWarringUp(-1);
                         }
                         //锁状态改变   读取锁信息
@@ -683,69 +681,7 @@ public class BleLockPresenter<T> extends MyOpenLockRecordPresenter<IBleLockView>
                 });
         compositeDisposable.add(deviceStateChangeDisposable);
     }
-    private List<OpenLockRecord> serverRecords = new ArrayList<>();
-    private Disposable serverDisposable;
-    //获取全部的开锁记录
-/*    public void getOpenRecordFromServer(int pagenum,BleLockInfo bleLockInfo) {
-        if (pagenum == 1) {  //如果是获取第一页的数据，那么清楚所有的开锁记录
-            serverRecords.clear();
-        }
-        XiaokaiNewServiceImp.getLockRecord(bleLockInfo.getServerLockInfo().getLockName(),
-                MyApplication.getInstance().getUid(),
-                null,
-                pagenum + "")
-                .subscribe(new BaseObserver<LockRecordResult>() {
-                    @Override
-                    public void onSuccess(LockRecordResult lockRecordResult) {
-                        LogUtils.d("davi lockRecordResult "+lockRecordResult.toString());
-                        if (lockRecordResult.getData().size() == 0) {  //服务器没有数据  提示用户
-                            if (mViewRef.get() != null) {
-                                if (pagenum == 1) { //第一次获取数据就没有
-                                    mViewRef.get().onServerNoData();
-                                } else {
-//                                    mViewRef.get().noMoreData();
-                                }
-                                return;
-                            }
-                        }
-                        ///将服务器数据封装成用来解析的数据
-                        for (LockRecordResult.LockRecordServer record : lockRecordResult.getData()) {
-                            serverRecords.add(
-                                    new OpenLockRecord(
-                                            record.getUser_num(),
-                                            record.getOpen_type(),
-                                            record.getOpen_time(), -1
-                                    )
-                            );
-                        }
-                        if (mViewRef.get() != null) {
-                            mViewRef.get().onLoadServerRecord(serverRecords, pagenum);
-                        }
-                    }
 
-                    @Override
-                    public void onAckErrorCode(BaseResult baseResult) {
-                        LogUtils.e("获取 开锁记录  失败   " + baseResult.getMsg() + "  " + baseResult.getCode());
-                        if (mViewRef.get() != null) {  //
-                            mViewRef.get().onLoadServerRecordFailedServer(baseResult);
-                        }
-                    }
-
-                    @Override
-                    public void onFailed(Throwable throwable) {
-                        LogUtils.e("获取 开锁记录  失败   " + throwable.getMessage());
-                        if (mViewRef.get() != null) {
-                            mViewRef.get().onLoadServerRecordFailed(throwable);
-                        }
-                    }
-
-                    @Override
-                    public void onSubscribe1(Disposable d) {
-                        serverDisposable = d;
-                        compositeDisposable.add(serverDisposable);
-                    }
-                });
-    }*/
     @Override
     public void detachView() {
         super.detachView();

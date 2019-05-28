@@ -238,6 +238,7 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                                     bleLockServiceInfo.setPassword1(serverBleDevice.getPassword1());
                                     bleLockServiceInfo.setPassword2(serverBleDevice.getPassword2());
                                     bleLockServiceInfo.setModel(serverBleDevice.getModel());
+                                    bleLockServiceInfo.setUid(uid);
                                     daoSession.insertOrReplace(bleLockServiceInfo);
                                 }
                                 break;
@@ -530,7 +531,7 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
 
     @Override
     public void deviceStatusChange(String gatewayId,String deviceId,String eventStr) {
-        //网关状态发生改变
+        //设备状态发生改变
         LogUtils.e("DeviceFragment设备状态发生改变");
         if (mDeviceList!=null&&mDeviceList.size()>0) {
             for (HomeShowBean homeShowBean : mDeviceList) {
