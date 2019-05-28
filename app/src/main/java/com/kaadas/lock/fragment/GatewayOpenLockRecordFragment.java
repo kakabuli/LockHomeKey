@@ -252,7 +252,18 @@ public class GatewayOpenLockRecordFragment extends BaseFragment<IGatewayLockReco
             if (lastDayTime != dayTime) { //添加头
                 lastDayTime = dayTime;
                 titleTime = DateUtils.getDayTimeFromMillisecond(openTime); //转换成功顶部的时间
-                itemList.add(new BluetoothItemRecordBean(dataBean.getNickName(), dataBean.getOpen_type(), KeyConstants.BLUETOOTH_RECORD_COMMON,
+                String name="";
+                try {
+                    long nickName=Long.parseLong(dataBean.getNickName());
+                    if (nickName>0&&nickName<9){
+                        name=getString(R.string.standard_password_door);
+                    }
+
+                }catch (Exception e){
+
+                }
+
+                itemList.add(new BluetoothItemRecordBean(name, dataBean.getOpen_type(), KeyConstants.BLUETOOTH_RECORD_COMMON,
                         time, false, false));
                 mOpenLockList.add(new BluetoothRecordBean(titleTime, itemList, false));
             } else {

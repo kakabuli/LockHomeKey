@@ -59,4 +59,8 @@ public interface IGatewayLockHomeView extends IBaseView {
 
     //获取开锁守护次数异常
     void getLockRecordTotalThrowable(Throwable throwable);
+
+    //获取开锁上报
+    void getLockEvent(String gatewayId,String deviceId);
+
 }

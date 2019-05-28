@@ -54,4 +54,7 @@ public interface GatewayLockDetailView  extends IBaseView {
     //获取布防异常
     void getArmLockedThrowable(Throwable throwable);
 
+    //获取网络变化
+    void networkChangeSuccess();
+
 }

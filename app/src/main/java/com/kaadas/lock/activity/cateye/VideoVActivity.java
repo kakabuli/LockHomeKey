@@ -345,7 +345,16 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
                         }
                         LogUtils.e(Tag,"执行开门  ");
                         GwLockInfo gwLockInfo = gwLockInfos.get(position);
-                        mPresenter.openLock(gwLockInfo);
+                        if (gwLockInfo.getServerInfo().getEvent_str().equals("offline")){
+                            ToastUtil.getInstance().showShort(getString(R.string.wifi_alreade_offline));
+                            return;
+                        }
+                        if (NetUtil.isNetworkAvailable()){
+                            mPresenter.openLock(gwLockInfo);
+                        }else{
+                            ToastUtil.getInstance().showShort(getString(R.string.wifi_alreade_offline));
+                            return;
+                        }
                     }
                 }
             });

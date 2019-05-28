@@ -30,6 +30,7 @@ import com.kaadas.lock.publiclibrary.linphone.linphone.callback.PhoneCallback;
 import com.kaadas.lock.publiclibrary.linphone.linphone.callback.RegistrationCallback;
 import com.kaadas.lock.publiclibrary.linphone.linphone.util.LinphoneHelper;
 import com.kaadas.lock.publiclibrary.mqtt.eventbean.CatEyeEventBean;
+import com.kaadas.lock.publiclibrary.mqtt.eventbean.DeleteDeviceLockBean;
 import com.kaadas.lock.publiclibrary.mqtt.eventbean.GatewayLockAlarmEventBean;
 import com.kaadas.lock.publiclibrary.mqtt.eventbean.GatewayLockInfoEventBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.GetBindGatewayStatusResult;
@@ -157,8 +158,8 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                     }
                 });
         compositeDisposable.add(deviceInBootDisposable);
-
     }
+
 
     public String getNickNameByDeviceName(String name) {
         List<HomeShowBean> homeShowDevices = MyApplication.getInstance().getHomeShowDevices();
@@ -202,8 +203,8 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                                         } else {
 
                                         }*/
-                                    }
 
+                                    }
                                 }
                             }
                         }
@@ -233,7 +234,7 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                         JSONObject jsonObject = new JSONObject(mqttData.getPayload());
                         String devtype = jsonObject.getString("devtype");
                         String eventtype = jsonObject.getString("eventtype");
-                        if (TextUtils.isEmpty(devtype)) { //devtype为空   无法处理数据
+                        if (TextUtils.isEmpty(devtype)){ //devtype为空   无法处理数据
                             return;
                         }
                         // TODO: 2019/5/14 处理猫眼动态和锁上报的信息分别放在不同的表中
@@ -304,7 +305,20 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                                         }
                                     }
 
+                                }else {
+                                    DeleteDeviceLockBean deleteGatewayLockDeviceBean=new Gson().fromJson(mqttData.getPayload(),DeleteDeviceLockBean.class);
+                                    if (deleteGatewayLockDeviceBean!=null){
+                                        if ("zigbee".equals(deleteGatewayLockDeviceBean.getEventparams().getDevice_type())&&deleteGatewayLockDeviceBean.getEventparams().getEvent_str().equals("delete")){
+                                            refreshData(deleteGatewayLockDeviceBean.getGwId(),deleteGatewayLockDeviceBean.getDeviceId());
+
+                                        }
+                                    }
+
+
                                 }
+
+
+
                             }else if ("info".equals(eventtype)){
                                 GatewayLockInfoEventBean gatewayLockInfoEventBean=new Gson().fromJson(mqttData.getPayload(),GatewayLockInfoEventBean.class);
                                 String gatewayId=gatewayLockInfoEventBean.getGwId();
@@ -333,8 +347,9 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                                     //使用一次性开锁密码
                                     if (num>4&&num<=8){
                                         deleteOnePwd(gatewayId,deviceId,uid,"0"+num);
+                                        LogUtils.e("使用一次性开锁");
                                     }
-                                    LogUtils.e("使用一次性开锁");
+                                    LogUtils.e("开锁上报");
                                 }
                             }
                         }
@@ -348,8 +363,14 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
         compositeDisposable.add(catEyeEventDisposable);
     }
 
-    //获取锁设备
-    public void initLinphone() {
+    private void refreshData(String gatewayId,String deviceId) {
+        GatewayInfo gatewayInfo=MyApplication.getInstance().getGatewayById(gatewayId);
+        if (gatewayInfo!=null){
+            MyApplication.getInstance().getAllDevicesByMqtt(true);
+                }
+    }
+
+   public void initLinphone() {
         if (!TextUtils.isEmpty(MyApplication.getInstance().getToken()) && !TextUtils.isEmpty(MyApplication.getInstance().getUid())) {
             LinphoneHelper.setAccount(MyApplication.getInstance().getUid(), "12345678Bm", MqttConstant.LINPHONE_URL);
             LogUtils.e("设置LinPhone  监听  ");

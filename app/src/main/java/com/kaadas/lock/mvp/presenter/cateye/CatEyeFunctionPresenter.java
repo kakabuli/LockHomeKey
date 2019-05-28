@@ -10,6 +10,7 @@ import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.GetBindGatewayStatus
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttConstant;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttData;
 import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.networkListenerutil.NetWorkChangReceiver;
 
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
@@ -20,6 +21,7 @@ public class CatEyeFunctionPresenter<T> extends BasePresenter<ICatEyeFunctionVie
     private Disposable  getPowerDataDisposable;
     private Disposable  listenerGatewayOnLine;
     private Disposable  listenerDeviceOnLineDisposable;
+    private Disposable networkChangeDisposable;
     //监听电量的变化
     public void getPowerData(String gatewayId,String deviceId){
         LogUtils.e("进入获取电量。。。");
@@ -127,6 +129,22 @@ public class CatEyeFunctionPresenter<T> extends BasePresenter<ICatEyeFunctionVie
             compositeDisposable.add(listenerDeviceOnLineDisposable);
         }
 
+    }
+
+    //网络变化通知
+    public void listenerNetworkChange(){
+        toDisposable(networkChangeDisposable);
+        networkChangeDisposable= NetWorkChangReceiver.notifyNetworkChange().subscribe(new Consumer<Boolean>() {
+            @Override
+            public void accept(Boolean aBoolean) throws Exception {
+                if (aBoolean){
+                    if (mViewRef!=null&&mViewRef.get()!=null){
+                        mViewRef.get().networkChangeSuccess();
+                    }
+                }
+            }
+        });
+        compositeDisposable.add(networkChangeDisposable);
     }
 
 

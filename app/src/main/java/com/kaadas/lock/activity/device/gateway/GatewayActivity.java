@@ -36,7 +36,7 @@ import butterknife.OnClick;
 /**
  * Created by David on 2019/4/25
  */
-public class GatewayActivity extends BaseActivity<GatewayView, GatewayPresenter<GatewayView>> implements  BaseQuickAdapter.OnItemClickListener, GatewayView, NotifyRefreshActivity {
+public class GatewayActivity extends BaseActivity<GatewayView, GatewayPresenter<GatewayView>> implements  BaseQuickAdapter.OnItemClickListener, GatewayView{
 
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
@@ -69,7 +69,6 @@ public class GatewayActivity extends BaseActivity<GatewayView, GatewayPresenter<
     }
 
     private void initListener() {
-        NetWorkChangReceiver.setNotifyRefreshActivity(this);
 
     }
 
@@ -116,6 +115,7 @@ public class GatewayActivity extends BaseActivity<GatewayView, GatewayPresenter<
                 mPresenter.getPowerData(gatewayInfo.getServerInfo().getDeviceSN());
                 mPresenter.getPublishNotify();
                 mPresenter.listenerDeviceOnline();
+                mPresenter.listenerNetworkChange();
                 homeShowBeans = mPresenter.getGatewayBindList(gatewayInfo.getServerInfo().getDeviceSN());
                 initRecyclerview(homeShowBeans);
             }
@@ -336,11 +336,13 @@ public class GatewayActivity extends BaseActivity<GatewayView, GatewayPresenter<
     }
 
     @Override
-    public void notifityActivity(boolean isRefresh) {
+    public void networkChangeSuccess() {
         if (gatewayAdapter != null) {
             gatewayAdapter.notifyDataSetChanged();
         }
     }
+
+
 
     @OnClick({R.id.unbindGateway, R.id.testunbindGateway,R.id.back, R.id.see_more})
     public void onViewClicked(View view) {

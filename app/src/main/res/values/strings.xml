@@ -404,7 +404,7 @@
     <string name="input_device_name">请输入设备名称</string>
     <string name="device_nick_name_no_update">设备名称未修改</string>
     <string name="device_delete_dialog_head">确认删除设备？</string>
-    <string name="device_delete_dialog_content">删除设备后,\n将设备恢复出厂设置/清除锁内数据</string>
+    <string name="device_delete_dialog_content">删除设备后,\n将设备恢复出厂设置/清除猫眼数据</string>
     <string name="pwd_manager_syn">密码同步</string>
     <string name="synchroniztion">同步</string>
     <string name="week_day">周日</string>
@@ -991,7 +991,7 @@
     <string name="is_check_vle_version">正在检测蓝牙版本信息！</string>
     <string name="current_volume_no_change">当前铃声音量没有改变</string>
     <string name="current_resolution_no_change">当前视频分辨率没有改变</string>
-    <string name="wifi_alreade_offline">WiFi已离线</string>
+    <string name="wifi_alreade_offline">WiFi不在线</string>
     <string name="enter_feedback">请输入反馈信息</string>
-    <string name="not_connected">未连接</string>
+    <string name="standard_password_door">标准密码开门</string>
 </resources>

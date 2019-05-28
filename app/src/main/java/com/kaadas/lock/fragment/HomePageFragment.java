@@ -356,7 +356,7 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
     @Override
     public void onDeviceRefresh(AllBindDevices allBindDevices) {
         devices = MyApplication.getInstance().getHomeShowDevices();
-        LogUtils.e("首页  设备个数是   " + devices.size());
+        LogUtils.e("首页  设备个数是    " + devices.size());
         initData(devices);
     }
 

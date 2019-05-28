@@ -9,7 +9,10 @@ import com.kaadas.lock.mvp.view.gatewaylockview.IGatewayLockHomeView;
 import com.kaadas.lock.publiclibrary.bean.GwLockInfo;
 import com.kaadas.lock.publiclibrary.http.util.RxjavaHelper;
 import com.kaadas.lock.publiclibrary.mqtt.MqttCommandFactory;
+import com.kaadas.lock.publiclibrary.mqtt.eventbean.CatEyeEventBean;
 import com.kaadas.lock.publiclibrary.mqtt.eventbean.DeviceOnLineBean;
+import com.kaadas.lock.publiclibrary.mqtt.eventbean.GatewayLockAlarmEventBean;
+import com.kaadas.lock.publiclibrary.mqtt.eventbean.GatewayLockInfoEventBean;
 import com.kaadas.lock.publiclibrary.mqtt.eventbean.OpenLockNotifyBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.GetLockRecordTotal;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.OpenLockBean;
@@ -21,7 +24,11 @@ import com.kaadas.lock.publiclibrary.mqtt.util.MqttData;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.SPUtils;
+import com.kaadas.lock.utils.greenDao.bean.CatEyeEvent;
+import com.kaadas.lock.utils.greenDao.bean.GatewayLockAlarmEventDao;
 import com.kaadas.lock.utils.networkListenerutil.NetWorkChangReceiver;
+
+import org.json.JSONObject;
 
 import java.util.concurrent.TimeUnit;
 
@@ -39,6 +46,7 @@ public class GatewayLockHomePresenter<T> extends BasePresenter<IGatewayLockHomeV
     private Disposable closeLockNotifyDisposable;
     private Disposable lockCloseDisposable;
     private Disposable getLockRecordTotalDisposable;
+    private Disposable openLockEventDisposable;
 
     @Override
     public void attachView(IGatewayLockHomeView view) {
@@ -378,13 +386,55 @@ public class GatewayLockHomePresenter<T> extends BasePresenter<IGatewayLockHomeV
                     });
             compositeDisposable.add(getLockRecordTotalDisposable);
         }
-
-
-
-
     }
 
-
-
-
+    //监听开锁上报
+    public void listenGaEvent() {
+        toDisposable(openLockEventDisposable);
+        openLockEventDisposable = mqttService.listenerDataBack()
+                .filter(new Predicate<MqttData>() {
+                    @Override
+                    public boolean test(MqttData mqttData) throws Exception {
+                        if (MqttConstant.EVENT.equals(mqttData.getMsgtype())
+                                && MqttConstant.GW_EVENT.equals(mqttData.getFunc())) {
+                            return true;
+                        }
+                        return false;
+                    }
+                })
+                .compose(RxjavaHelper.observeOnMainThread())
+                .subscribe(new Consumer<MqttData>() {
+                    @Override
+                    public void accept(MqttData mqttData) throws Exception {
+                        JSONObject jsonObject = new JSONObject(mqttData.getPayload());
+                        String devtype = jsonObject.getString("devtype");
+                        String eventtype = jsonObject.getString("eventtype");
+                        if (TextUtils.isEmpty(devtype)) { //devtype为空   无法处理数据
+                            return;
+                        }
+                        if (KeyConstants.DEV_TYPE_LOCK.equals(devtype)) {
+                                if ("info".equals(eventtype)) {
+                                    GatewayLockInfoEventBean gatewayLockInfoEventBean = new Gson().fromJson(mqttData.getPayload(), GatewayLockInfoEventBean.class);
+                                    String eventParmDeveType = gatewayLockInfoEventBean.getEventparams().getDevetype();
+                                    int devecode = gatewayLockInfoEventBean.getEventparams().getDevecode();
+                                    int pin = gatewayLockInfoEventBean.getEventparams().getPin();
+                                    String gatewayId=gatewayLockInfoEventBean.getGwId();
+                                    String deviceId=gatewayLockInfoEventBean.getDeviceId();
+                                    if (eventParmDeveType.equals("lockop") && devecode == 2 && pin == 255) {
+                                        if (mViewRef!=null&&mViewRef.get()!=null){
+                                            mViewRef.get().getLockEvent(gatewayId,deviceId);
+                                        }
+                                    }
+                                }
+                        }
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        LogUtils.e("报警消息失败   " + throwable.getMessage());
+                    }
+                });
+        compositeDisposable.add(openLockEventDisposable);
+    }
 }
+
