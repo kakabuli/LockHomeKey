@@ -129,6 +129,8 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
             deviceId = gatewayLockInfo.getServerInfo().getDeviceId();
             mPresenter.listenerNetworkChange();//监听网络状态
             mPresenter.listenGaEvent();//锁上报
+            mPresenter.getPublishNotify();//网关上线
+            mPresenter.listenerDeviceOnline();//设备上线下线
             String time = gatewayLockInfo.getServerInfo().getTime();
             LogUtils.e(time + "网关时间");
             if (!TextUtils.isEmpty(time)) {
