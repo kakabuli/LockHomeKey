@@ -16,7 +16,6 @@ public interface IMainActivityView extends IBleView {
 
     void onDeviceInBoot(BleLockInfo bleLockInfo);
 
-
     /**
      * 猫眼呼叫进来  且米米网登录成功
      */

@@ -236,7 +236,7 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
                             mViewRef.get().onDeviceStateChange(bleStateBean.isConnected());
                         }
                         if (bleStateBean.isConnected()) {
-                            if (bleService.getBleVersion() ==1 ){ //如果是最老的模块  直接算是鉴权成功
+                            if (bleService.getBleVersion() ==1 && bleLockInfo.getBleType()==1 ){ //如果是最老的模块  直接算是鉴权成功
                                 if (bleStateBean.isConnected() && bleService.getCurrentDevice() != null &&
                                         bleService.getCurrentDevice().getAddress().equals(
                                                 bleLockInfo.getServerLockInfo().getMacLock())) {

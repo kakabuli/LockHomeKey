@@ -97,7 +97,7 @@ public class OTAResponseReceiver_v1 extends BroadcastReceiver {
         this.mContext = context;
         if (BluetoothLeService.ACTION_OTA_DATA_AVAILABLE_V1.equals(action)) {
             byte[] respBytes = intent.getByteArrayExtra(Constants.EXTRA_BYTE_VALUE);
-            String stringSharedPreference = Utils.getStringSharedPreference(mContext, Constants.PREF_BOOTLOADER_STATE);
+            String stringSharedPreference = Utils.getStringSharedPreference(mContext, Constants.PREF_BOOTLOADER_STATE+ BluetoothLeService.mBluetoothDeviceAddress);
             if (stringSharedPreference.equalsIgnoreCase("" + BootLoaderCommands_v1.ENTER_BOOTLOADER)) {
                 parseEnterBootLoaderCmdResponse(respBytes);
             } else if (stringSharedPreference.equalsIgnoreCase("" + BootLoaderCommands_v1.SET_APP_METADATA)) {
@@ -240,7 +240,6 @@ public class OTAResponseReceiver_v1 extends BroadcastReceiver {
     }
 
     private void broadCastErrors(int errorKey) {
-        BluetoothLeService.disconnect();
         switch (errorKey) {
             case CASE_ERR_FILE:
                 Logger.i("CYRET_ERR_FILE");

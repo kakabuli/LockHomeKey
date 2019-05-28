@@ -14,10 +14,10 @@ import android.bluetooth.le.ScanResult;
 import android.bluetooth.le.ScanSettings;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -31,6 +31,7 @@ import com.kaadas.lock.publiclibrary.ota.OtaConstants;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.Rsa;
+import com.kaadas.lock.utils.ToastUtil;
 import com.kaadas.lock.widget.CircleProgress;
 import com.kaadas.lock.widget.OtaMutiProgress;
 import com.liulishuo.filedownloader.BaseDownloadTask;
@@ -52,10 +53,12 @@ public class TiOtaUpgradeActivity extends AppCompatActivity implements View.OnCl
     @BindView(R.id.circle_progress_bar2)
     CircleProgress mCircleProgress2;
     @BindView(R.id.mutiprogree_ota)
-    OtaMutiProgress mutiprogree;
+    OtaMutiProgress mutiProgress;
     @BindView(R.id.start_upgrade)
     Button start_upgrade;
     int j = 1;
+    @BindView(R.id.warring)
+    TextView warring;
     private BluetoothGattCharacteristic systemIDChar;
     static private final String TAG = "OTA  升级";
     TIOADEoadClient client;
@@ -92,6 +95,7 @@ public class TiOtaUpgradeActivity extends AppCompatActivity implements View.OnCl
     private BluetoothGattService otaService;
     private BluetoothLeScanner bluetoothLeScanner;
     private ScanSettings scanSettings;
+    private boolean isUpdating;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,6 +103,7 @@ public class TiOtaUpgradeActivity extends AppCompatActivity implements View.OnCl
         setContentView(R.layout.activity_ota_upgrade);
         ButterKnife.bind(this);
 
+        warring.setVisibility(View.INVISIBLE);
 
         bluetoothLeScanner = BluetoothAdapter.getDefaultAdapter().getBluetoothLeScanner();
         scanSettings = new ScanSettings.Builder().setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY).build();
@@ -107,7 +112,7 @@ public class TiOtaUpgradeActivity extends AppCompatActivity implements View.OnCl
         iv_back.setOnClickListener(this);
         mCircleProgress2.setOnClickListener(this);
         start_upgrade.setOnClickListener(this);
-        mutiprogree.setCurrNodeNO(0, false);
+        mutiProgress.setCurrNodeNO(0, false);
 
 
         requestPermission();
@@ -129,7 +134,7 @@ public class TiOtaUpgradeActivity extends AppCompatActivity implements View.OnCl
         filePath = PATH + "/" + fileName;
 
 
-        mutiprogree.setCurrNodeNO(0, false);
+        mutiProgress.setCurrNodeNO(0, false);
 //        downBinNew(binDownUrl, filePath);
 
     }
@@ -172,7 +177,7 @@ public class TiOtaUpgradeActivity extends AppCompatActivity implements View.OnCl
                     confirmCommand[1] = value[1];
                     characteristic.setValue(confirmCommand);
                     gatt.writeCharacteristic(characteristic);
-                    sendUpdateCommand();
+                    sendOtaCommand();
                 }
             }
         }
@@ -213,7 +218,6 @@ public class TiOtaUpgradeActivity extends AppCompatActivity implements View.OnCl
         @Override
         public void onServicesDiscovered(BluetoothGatt gatt, int status) {
             super.onServicesDiscovered(gatt, status);
-
             for (BluetoothGattService service : gatt.getServices()) {
                 Log.e(TAG, "服务UUID   " + service.getUuid().toString());
                 for (BluetoothGattCharacteristic characteristic : service.getCharacteristics()) {
@@ -287,20 +291,38 @@ public class TiOtaUpgradeActivity extends AppCompatActivity implements View.OnCl
 
 
     @Override
+    public void onBackPressed() {
+        if (isUpdating) {
+            ToastUtil.getInstance().showLong(R.string.isupdating_can_not_back);
+        } else {
+            finish();
+        }
+    }
+
+    @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.iv_back:
-                finish();
+                if (isUpdating) {
+                    ToastUtil.getInstance().showLong(R.string.isupdating_can_not_back);
+                } else {
+                    finish();
+                }
                 break;
             case R.id.circle_progress_bar2:
+
                 break;
             case R.id.start_upgrade:
-
+                isUpdating = true;
+                mutiProgress.setCurrNodeNO(0, true);
+                downBinNew(binDownUrl, filePath);
+                warring.setVisibility(View.VISIBLE);
                 break;
         }
     }
 
-    private void updateSuccess() {
+    private void otasuccess() {
+        isUpdating = false;
         AlertDialogUtil.getInstance().noEditSingleButtonDialog(this, getString(R.string.good_for_you), getString(R.string.ota_good_for_you), getString(R.string.hao_de), new AlertDialogUtil.ClickListener() {
             @Override
             public void left() {
@@ -314,7 +336,8 @@ public class TiOtaUpgradeActivity extends AppCompatActivity implements View.OnCl
         });
     }
 
-    private void updateFailed() {
+    private void otaFailed(String tag) {
+        isUpdating = false;
         AlertDialogUtil.getInstance().noEditTwoButtonDialog(this, getString(R.string.ota_fail), getString(R.string.ota_fail_reply),
                 getString(R.string.cancel), getString(R.string.query), new AlertDialogUtil.ClickListener() {
                     @Override
@@ -335,7 +358,8 @@ public class TiOtaUpgradeActivity extends AppCompatActivity implements View.OnCl
         if (file.exists()) {
             Log.e(TAG, "文件已存在，不再下载");
             downSuccess = true;
-            mutiprogree.setCurrNodeNO(1, true);
+            mutiProgress.setCurrNodeNO(1, false);
+            mCircleProgress2.setValue(50);
             searchDeviceByMacAndConnect();
             return;
         }
@@ -353,6 +377,7 @@ public class TiOtaUpgradeActivity extends AppCompatActivity implements View.OnCl
                     @Override
                     protected void progress(BaseDownloadTask task, int soFarBytes, int totalBytes) {
                         LogUtils.e("下载进度   " + (soFarBytes * 1.0 / 1.0 * totalBytes) * 100);
+                        mCircleProgress2.setValue(soFarBytes / totalBytes * 50);
                     }
 
                     //完成下载
@@ -360,7 +385,8 @@ public class TiOtaUpgradeActivity extends AppCompatActivity implements View.OnCl
                     protected void completed(BaseDownloadTask task) {
                         LogUtils.e("下载成功");
                         downSuccess = true;
-                        mutiprogree.setCurrNodeNO(1, true);
+                        mutiProgress.setCurrNodeNO(1, false);
+                        mCircleProgress2.setValue(50);
                         searchDeviceByMacAndConnect();
                     }
 
@@ -374,7 +400,10 @@ public class TiOtaUpgradeActivity extends AppCompatActivity implements View.OnCl
                     @Override
                     protected void error(BaseDownloadTask task, Throwable e) {
                         LogUtils.e("下载出错  " + e.getMessage());
-
+                        ToastUtil.getInstance().showLong(R.string.down_failed);
+                        mutiProgress.setCurrNodeNO(0, false);
+                        mCircleProgress2.setValue(0);
+                        otaFailed("");
                     }
 
                     //已存在相同下载
@@ -385,7 +414,7 @@ public class TiOtaUpgradeActivity extends AppCompatActivity implements View.OnCl
                 }).start();
     }
 
-    public boolean sendUpdateCommand() {
+    public boolean sendOtaCommand() {
         Log.e(TAG, "发送升级  " + " isWrite: ");
         if (resetChar != null) {
             resetChar.setValue(new byte[]{1});
@@ -477,7 +506,7 @@ public class TiOtaUpgradeActivity extends AppCompatActivity implements View.OnCl
         handler.post(new Runnable() {
             @Override
             public void run() {
-                mutiprogree.setCurrNodeNO(2, false);
+                mutiProgress.setCurrNodeNO(2, false);
             }
         });
 
@@ -489,9 +518,9 @@ public class TiOtaUpgradeActivity extends AppCompatActivity implements View.OnCl
                     @Override
                     public void run() {
                         Log.d(TAG, "Progress update : " + percent + "%");
-                        mutiprogree.setCurrNodeNO(2, false);
+                        mutiProgress.setCurrNodeNO(2, true);
                         //设置进度条
-                        mCircleProgress2.setValue(percent);
+                        mCircleProgress2.setValue(50 + (percent / 2));
                     }
                 });
             }
@@ -500,50 +529,44 @@ public class TiOtaUpgradeActivity extends AppCompatActivity implements View.OnCl
             public void oadStatusUpdate(TIOADEoadDefinitions.oadStatusEnumeration status) {
                 Log.d(TAG, "OAD Status update  OTA升级  状态改变   " + status);
                 final TIOADEoadDefinitions.oadStatusEnumeration finalStatus = status;
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        LogUtils.e("状态改变   " + TIOADEoadDefinitions.oadStatusEnumerationGetDescriptiveString(finalStatus));
-                    }
-                });
+                LogUtils.e("状态改变   " + TIOADEoadDefinitions.oadStatusEnumerationGetDescriptiveString(finalStatus));
 
                 if (finalStatus == TIOADEoadDefinitions.oadStatusEnumeration.tiOADClientReady) {
                     //设备已经准备好    //在此处查看设备
                     client.start(filePath);
-                }
-
-                if (finalStatus == TIOADEoadDefinitions.oadStatusEnumeration.tiOADClientFileIsNotForDevice) {
+                } else if (finalStatus == TIOADEoadDefinitions.oadStatusEnumeration.tiOADClientFileIsNotForDevice) {
                     //升级镜像与设备部匹配
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            updateFailed();
+                            otaFailed("镜像不匹配");
                             Toast.makeText(TiOtaUpgradeActivity.this, getString(R.string.image_not_match), Toast.LENGTH_SHORT).show();
                         }
                     });
-                }
-                if (finalStatus == TIOADEoadDefinitions.oadStatusEnumeration.tiOADClientCompleteFeedbackOK) {
+                } else if (finalStatus == TIOADEoadDefinitions.oadStatusEnumeration.tiOADClientCompleteFeedbackOK) {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            mutiprogree.setCurrNodeNO(3, true);
+                            mutiProgress.setCurrNodeNO(3, true);
                             if (client != null) {
                                 client.release();
                                 client.abortProgramming();
                             }
+                            otasuccess();
                             Toast.makeText(TiOtaUpgradeActivity.this, getString(R.string.update_success), Toast.LENGTH_SHORT).show();
-                            finish();
                         }
                     });
-                }
-                if (finalStatus == TIOADEoadDefinitions.oadStatusEnumeration.tiOADClientCompleteDeviceDisconnectedDuringProgramming) {
+                } else if (finalStatus == TIOADEoadDefinitions.oadStatusEnumeration.tiOADClientCompleteDeviceDisconnectedDuringProgramming) {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            updateFailed();
+                            otaFailed("升级中断");
                             Toast.makeText(TiOtaUpgradeActivity.this, getString(R.string.update_failed_please_retry), Toast.LENGTH_SHORT).show();
                         }
                     });
+                } else {
+                    Toast.makeText(TiOtaUpgradeActivity.this, getString(R.string.update_failed), Toast.LENGTH_SHORT).show();
+                    otaFailed("升级失败  " + finalStatus);
                 }
             }
         });

@@ -27,6 +27,7 @@ import com.kaadas.lock.mvp.view.IMainActivityView;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.publiclibrary.bean.CateEyeInfo;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
+import com.kaadas.lock.publiclibrary.ota.OTADialogActivity;
 import com.kaadas.lock.utils.Constants;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
@@ -233,6 +234,11 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
     @Override
     public void onDeviceInBoot(BleLockInfo bleLockInfo) {
         //todo ota 处理
+        Intent intent = new Intent();
+        intent.setClass(MainActivity.this, OTADialogActivity.class);
+        intent.putExtra(KeyConstants.BLE_DEVICE_INFO, bleLockInfo);
+        startActivity(intent);
+
     }
 
     @Override

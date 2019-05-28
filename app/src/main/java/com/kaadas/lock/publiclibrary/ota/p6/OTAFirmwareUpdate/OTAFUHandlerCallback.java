@@ -36,7 +36,7 @@ import android.content.Context;
 
 public interface OTAFUHandlerCallback {
 
-     void showErrorDialogMessage(String errorMessage, final boolean stayOnPage);
+     void showErrorDialogMessage(String tag,String errorMessage, final boolean stayOnPage);
 
      String saveAndReturnDeviceAddress();
 

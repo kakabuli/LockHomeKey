@@ -170,7 +170,6 @@ public class BleLockPresenter<T> extends MyOpenLockRecordPresenter<IBleLockView>
                         getOpenLockNumber();
                     }
                 });
-
         compositeDisposable.add(getDeviceInfoDisposable);
     }
 
