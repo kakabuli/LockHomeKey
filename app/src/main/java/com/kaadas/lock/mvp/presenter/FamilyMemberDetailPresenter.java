@@ -80,5 +80,39 @@ public class FamilyMemberDetailPresenter<T> extends BasePresenter<IFamilyMemberD
         });
     }
 
+    /**
+     * 获取关联时间
+     */
+/*    public void getAuthorizationTime (String ndId, String userNickName) {
+
+        XiaokaiNewServiceImp.modifyCommonUserNickname(ndId, userNickName).subscribe(new BaseObserver<BaseResult>() {
+            @Override
+            public void onSuccess(BaseResult baseResult) {
+                if (mViewRef != null) {
+                    mViewRef.get().modifyCommonUserNicknameSuccess(baseResult);
+                }
+            }
+
+            @Override
+            public void onAckErrorCode(BaseResult baseResult) {
+                if (mViewRef != null) {
+                    mViewRef.get().modifyCommonUserNicknameFail(baseResult);
+                }
+            }
+
+            @Override
+            public void onFailed(Throwable throwable) {
+                if (mViewRef != null) {
+                    mViewRef.get().modifyCommonUserNicknameError(throwable);
+                }
+            }
+
+            @Override
+            public void onSubscribe1(Disposable d) {
+                compositeDisposable.add(d);
+            }
+        });
+    }*/
+
 
 }

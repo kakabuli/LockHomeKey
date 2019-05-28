@@ -72,10 +72,14 @@ public class FamilyMemberDetailActivity extends BaseActivity<IFamilyMemberDeatil
         tvName.setText(dataBean.getUnickname());
         long createTime = dataBean.getCreateTime();
         if (createTime == 0) {
+            getAuthorizationTime();
             createTime = System.currentTimeMillis() / 1000;
         }
         String time = DateUtils.secondToDate(createTime);
         tvTime.setText(time);
+    }
+
+    private void getAuthorizationTime() {
     }
 
     @Override

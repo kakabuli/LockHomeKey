@@ -185,7 +185,7 @@ public class BluetoothPasswordManagerDetailActivity extends BaseBleActivity<IPas
                                 if (password.getType() == 5){
                                     mPresenter.deletePwd(2, Integer.parseInt(password.getNum()), 1, true);
                                 }else {
-                                    mPresenter.deletePwd(2, Integer.parseInt(password.getNum()), 1, true);
+                                    mPresenter.deletePwd(1, Integer.parseInt(password.getNum()), 1, true);
                                 }
                             }
                         }

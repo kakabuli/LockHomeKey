@@ -12,9 +12,9 @@ import com.kaadas.lock.utils.greenDao.bean.CateEyeInfoBase;
 import com.kaadas.lock.utils.greenDao.bean.CatEyeEvent;
 import com.kaadas.lock.utils.greenDao.bean.DBOpenLockRecord;
 import com.kaadas.lock.utils.greenDao.bean.GatewayLockAlarmEventDao;
+import com.kaadas.lock.utils.greenDao.bean.GatewayLockPwd;
 import com.kaadas.lock.utils.greenDao.bean.HistoryInfo;
 import com.kaadas.lock.utils.greenDao.bean.PirDefault;
-import com.kaadas.lock.utils.greenDao.bean.GatewayLockPwd;
 import com.kaadas.lock.utils.greenDao.bean.BleLockServiceInfo;
 import com.kaadas.lock.utils.greenDao.bean.CatEyeServiceInfo;
 import com.kaadas.lock.utils.greenDao.bean.GatewayBaseInfo;
@@ -26,9 +26,9 @@ import com.kaadas.lock.utils.greenDao.db.CateEyeInfoBaseDao;
 import com.kaadas.lock.utils.greenDao.db.CatEyeEventDao;
 import com.kaadas.lock.utils.greenDao.db.DBOpenLockRecordDao;
 import com.kaadas.lock.utils.greenDao.db.GatewayLockAlarmEventDaoDao;
+import com.kaadas.lock.utils.greenDao.db.GatewayLockPwdDao;
 import com.kaadas.lock.utils.greenDao.db.HistoryInfoDao;
 import com.kaadas.lock.utils.greenDao.db.PirDefaultDao;
-import com.kaadas.lock.utils.greenDao.db.GatewayLockPwdDao;
 import com.kaadas.lock.utils.greenDao.db.BleLockServiceInfoDao;
 import com.kaadas.lock.utils.greenDao.db.CatEyeServiceInfoDao;
 import com.kaadas.lock.utils.greenDao.db.GatewayBaseInfoDao;
@@ -49,9 +49,9 @@ public class DaoSession extends AbstractDaoSession {
     private final DaoConfig catEyeEventDaoConfig;
     private final DaoConfig dBOpenLockRecordDaoConfig;
     private final DaoConfig gatewayLockAlarmEventDaoDaoConfig;
+    private final DaoConfig gatewayLockPwdDaoConfig;
     private final DaoConfig historyInfoDaoConfig;
     private final DaoConfig pirDefaultDaoConfig;
-    private final DaoConfig gatewayLockPwdDaoConfig;
     private final DaoConfig bleLockServiceInfoDaoConfig;
     private final DaoConfig catEyeServiceInfoDaoConfig;
     private final DaoConfig gatewayBaseInfoDaoConfig;
@@ -63,9 +63,9 @@ public class DaoSession extends AbstractDaoSession {
     private final CatEyeEventDao catEyeEventDao;
     private final DBOpenLockRecordDao dBOpenLockRecordDao;
     private final GatewayLockAlarmEventDaoDao gatewayLockAlarmEventDaoDao;
+    private final GatewayLockPwdDao gatewayLockPwdDao;
     private final HistoryInfoDao historyInfoDao;
     private final PirDefaultDao pirDefaultDao;
-    private final GatewayLockPwdDao gatewayLockPwdDao;
     private final BleLockServiceInfoDao bleLockServiceInfoDao;
     private final CatEyeServiceInfoDao catEyeServiceInfoDao;
     private final GatewayBaseInfoDao gatewayBaseInfoDao;
@@ -89,14 +89,14 @@ public class DaoSession extends AbstractDaoSession {
         gatewayLockAlarmEventDaoDaoConfig = daoConfigMap.get(GatewayLockAlarmEventDaoDao.class).clone();
         gatewayLockAlarmEventDaoDaoConfig.initIdentityScope(type);
 
+        gatewayLockPwdDaoConfig = daoConfigMap.get(GatewayLockPwdDao.class).clone();
+        gatewayLockPwdDaoConfig.initIdentityScope(type);
+
         historyInfoDaoConfig = daoConfigMap.get(HistoryInfoDao.class).clone();
         historyInfoDaoConfig.initIdentityScope(type);
 
         pirDefaultDaoConfig = daoConfigMap.get(PirDefaultDao.class).clone();
         pirDefaultDaoConfig.initIdentityScope(type);
-
-        gatewayLockPwdDaoConfig = daoConfigMap.get(GatewayLockPwdDao.class).clone();
-        gatewayLockPwdDaoConfig.initIdentityScope(type);
 
         bleLockServiceInfoDaoConfig = daoConfigMap.get(BleLockServiceInfoDao.class).clone();
         bleLockServiceInfoDaoConfig.initIdentityScope(type);
@@ -120,9 +120,9 @@ public class DaoSession extends AbstractDaoSession {
         catEyeEventDao = new CatEyeEventDao(catEyeEventDaoConfig, this);
         dBOpenLockRecordDao = new DBOpenLockRecordDao(dBOpenLockRecordDaoConfig, this);
         gatewayLockAlarmEventDaoDao = new GatewayLockAlarmEventDaoDao(gatewayLockAlarmEventDaoDaoConfig, this);
+        gatewayLockPwdDao = new GatewayLockPwdDao(gatewayLockPwdDaoConfig, this);
         historyInfoDao = new HistoryInfoDao(historyInfoDaoConfig, this);
         pirDefaultDao = new PirDefaultDao(pirDefaultDaoConfig, this);
-        gatewayLockPwdDao = new GatewayLockPwdDao(gatewayLockPwdDaoConfig, this);
         bleLockServiceInfoDao = new BleLockServiceInfoDao(bleLockServiceInfoDaoConfig, this);
         catEyeServiceInfoDao = new CatEyeServiceInfoDao(catEyeServiceInfoDaoConfig, this);
         gatewayBaseInfoDao = new GatewayBaseInfoDao(gatewayBaseInfoDaoConfig, this);
@@ -134,9 +134,9 @@ public class DaoSession extends AbstractDaoSession {
         registerDao(CatEyeEvent.class, catEyeEventDao);
         registerDao(DBOpenLockRecord.class, dBOpenLockRecordDao);
         registerDao(GatewayLockAlarmEventDao.class, gatewayLockAlarmEventDaoDao);
+        registerDao(GatewayLockPwd.class, gatewayLockPwdDao);
         registerDao(HistoryInfo.class, historyInfoDao);
         registerDao(PirDefault.class, pirDefaultDao);
-        registerDao(GatewayLockPwd.class, gatewayLockPwdDao);
         registerDao(BleLockServiceInfo.class, bleLockServiceInfoDao);
         registerDao(CatEyeServiceInfo.class, catEyeServiceInfoDao);
         registerDao(GatewayBaseInfo.class, gatewayBaseInfoDao);
@@ -150,9 +150,9 @@ public class DaoSession extends AbstractDaoSession {
         catEyeEventDaoConfig.clearIdentityScope();
         dBOpenLockRecordDaoConfig.clearIdentityScope();
         gatewayLockAlarmEventDaoDaoConfig.clearIdentityScope();
+        gatewayLockPwdDaoConfig.clearIdentityScope();
         historyInfoDaoConfig.clearIdentityScope();
         pirDefaultDaoConfig.clearIdentityScope();
-        gatewayLockPwdDaoConfig.clearIdentityScope();
         bleLockServiceInfoDaoConfig.clearIdentityScope();
         catEyeServiceInfoDaoConfig.clearIdentityScope();
         gatewayBaseInfoDaoConfig.clearIdentityScope();
@@ -177,16 +177,16 @@ public class DaoSession extends AbstractDaoSession {
         return gatewayLockAlarmEventDaoDao;
     }
 
+    public GatewayLockPwdDao getGatewayLockPwdDao() {
+        return gatewayLockPwdDao;
+    }
+
     public HistoryInfoDao getHistoryInfoDao() {
         return historyInfoDao;
     }
 
     public PirDefaultDao getPirDefaultDao() {
         return pirDefaultDao;
-    }
-
-    public GatewayLockPwdDao getGatewayLockPwdDao() {
-        return gatewayLockPwdDao;
     }
 
     public BleLockServiceInfoDao getBleLockServiceInfoDao() {

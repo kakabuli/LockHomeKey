@@ -25,9 +25,9 @@ public class DaoMaster extends AbstractDaoMaster {
         CatEyeEventDao.createTable(db, ifNotExists);
         DBOpenLockRecordDao.createTable(db, ifNotExists);
         GatewayLockAlarmEventDaoDao.createTable(db, ifNotExists);
+        GatewayLockPwdDao.createTable(db, ifNotExists);
         HistoryInfoDao.createTable(db, ifNotExists);
         PirDefaultDao.createTable(db, ifNotExists);
-        GatewayLockPwdDao.createTable(db, ifNotExists);
         BleLockServiceInfoDao.createTable(db, ifNotExists);
         CatEyeServiceInfoDao.createTable(db, ifNotExists);
         GatewayBaseInfoDao.createTable(db, ifNotExists);
@@ -42,9 +42,9 @@ public class DaoMaster extends AbstractDaoMaster {
         CatEyeEventDao.dropTable(db, ifExists);
         DBOpenLockRecordDao.dropTable(db, ifExists);
         GatewayLockAlarmEventDaoDao.dropTable(db, ifExists);
+        GatewayLockPwdDao.dropTable(db, ifExists);
         HistoryInfoDao.dropTable(db, ifExists);
         PirDefaultDao.dropTable(db, ifExists);
-        GatewayLockPwdDao.dropTable(db, ifExists);
         BleLockServiceInfoDao.dropTable(db, ifExists);
         CatEyeServiceInfoDao.dropTable(db, ifExists);
         GatewayBaseInfoDao.dropTable(db, ifExists);
@@ -73,9 +73,9 @@ public class DaoMaster extends AbstractDaoMaster {
         registerDaoClass(CatEyeEventDao.class);
         registerDaoClass(DBOpenLockRecordDao.class);
         registerDaoClass(GatewayLockAlarmEventDaoDao.class);
+        registerDaoClass(GatewayLockPwdDao.class);
         registerDaoClass(HistoryInfoDao.class);
         registerDaoClass(PirDefaultDao.class);
-        registerDaoClass(GatewayLockPwdDao.class);
         registerDaoClass(BleLockServiceInfoDao.class);
         registerDaoClass(CatEyeServiceInfoDao.class);
         registerDaoClass(GatewayBaseInfoDao.class);
