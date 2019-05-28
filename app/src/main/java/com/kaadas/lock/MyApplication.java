@@ -455,7 +455,6 @@ public class MyApplication extends Application {
      *
      * @param isForce 是否强制刷新
      */
-    public boolean neverGetDevice = false;
 
     public void getAllDevicesByMqtt(boolean isForce) {
         if (!isForce) {

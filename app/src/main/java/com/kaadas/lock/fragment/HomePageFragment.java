@@ -119,9 +119,54 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
         hasDevice = false;
         changePage();
         devices = MyApplication.getInstance().getHomeShowDevices();
+        initView();
         initData(devices);
         getScrollViewWidth();
         return view;
+    }
+
+    private void initView() {
+
+        viewPager.setOffscreenPageLimit(5);
+        mRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                int RadiobuttonId = group.getCheckedRadioButtonId();
+                //获取radiobutton对象
+                RadioButton bt = (RadioButton) group.findViewById(RadiobuttonId);
+                //获取单个对象中的位置
+                int index = group.indexOfChild(bt);
+                //设置滚动位置，可使点击radiobutton时，将该radiobutton移动至第二位置
+                scTitle.smoothScrollTo(bt.getLeft() - (int) (scTitle.getWidth() / 3), 0);
+                currentIndex = index;
+                //根据点击的radiobutton跳转至不同webview界面
+                viewPager.setCurrentItem(index);
+            }
+        });
+
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                RadioButton radioButton = (RadioButton) mRadioGroup.getChildAt(position);
+                radioButton.setChecked(true);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+        mRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+
+            }
+        });
     }
 
     private void getScrollViewWidth() {
@@ -251,7 +296,8 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
             //设置背景为透明
             rb.setBackgroundResource(R.color.color_trans);
             //设置文字超过范围显示....
-            rb.setSingleLine(true);
+            rb.setLines(1);
+//            rb.setSingleLine(true);
             rb.setEllipsize(TextUtils.TruncateAt.END);
             rb.setLineRadius(0);
             //设置下划线的高度
@@ -266,14 +312,8 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
             mRadioGroup.addView(rb);
         }
 
-        viewPager.setCurrentItem(0);
-        viewPager.setOffscreenPageLimit(5);
-        UnderLineRadioBtn radioBtn = (UnderLineRadioBtn) mRadioGroup.getChildAt(0);
-        radioBtn.setChecked(true);
-
-
         LogUtils.e("首页Fragment数据是   " + Arrays.toString(fragments.toArray()));
-
+        viewPager.removeAllViews();
         if (adapter == null) {
             adapter = new FragmentPagerAdapter(getChildFragmentManager()) {
                 @Override
@@ -300,50 +340,12 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
             viewPager.setAdapter(adapter);
         } else {
             adapter.notifyDataSetChanged();
+            LogUtils.e("首页Fragment数据是     adapter.notifyDataSetChanged();" );
         }
 
-        mRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-
-            }
-        });
-
-
-        mRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                int RadiobuttonId = group.getCheckedRadioButtonId();
-                //获取radiobutton对象
-                RadioButton bt = (RadioButton) group.findViewById(RadiobuttonId);
-                //获取单个对象中的位置
-                int index = group.indexOfChild(bt);
-                //设置滚动位置，可使点击radiobutton时，将该radiobutton移动至第二位置
-                scTitle.smoothScrollTo(bt.getLeft() - (int) (scTitle.getWidth() / 3), 0);
-                currentIndex = index;
-                //根据点击的radiobutton跳转至不同webview界面
-                viewPager.setCurrentItem(index);
-            }
-        });
-
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                RadioButton radioButton = (RadioButton) mRadioGroup.getChildAt(position);
-                radioButton.setChecked(true);
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
+        viewPager.setCurrentItem(0);
+        UnderLineRadioBtn radioBtn = (UnderLineRadioBtn) mRadioGroup.getChildAt(0);
+        radioBtn.setChecked(true);
     }
 
     @Override
