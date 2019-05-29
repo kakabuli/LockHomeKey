@@ -259,6 +259,9 @@ public class AllBindDevices {
      */
     public List<HomeShowBean> getHomeShow() {
         ReturnDataBean returnData = getData();
+        if (returnData==null){
+            return null;
+        }
         List<HomeShowBean> homeShowBeans = new ArrayList<>();
         List<ServerBleDevice> bleDevices = returnData.getDevList();
         if (bleDevices != null) {

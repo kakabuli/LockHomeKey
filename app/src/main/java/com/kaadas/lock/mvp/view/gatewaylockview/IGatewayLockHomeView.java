@@ -37,7 +37,14 @@ public interface IGatewayLockHomeView extends IBaseView {
     /**
      * 开锁失败
      */
-    void openLockFailed(Throwable throwable);
+    void openLockFailed();
+
+    /**
+     * 开锁异常
+     * @param throwable
+     */
+    void openLockThrowable(Throwable throwable);
+
     /**
      * 开始开锁
      */
@@ -63,4 +70,10 @@ public interface IGatewayLockHomeView extends IBaseView {
     //获取开锁上报
     void getLockEvent(String gatewayId,String deviceId);
 
+    //获取电量信息
+    void getPowerSuccess(String gatewayId,String deviceId);
+
+    void getPowerFail(String gwId,String devId);
+
+    void getPowerThrowable();
 }

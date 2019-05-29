@@ -137,7 +137,7 @@ public class PersonalSystemSettingActivity extends BaseActivity<ISystemSettingVi
                 mPresenter.loginOut();
                 //退出mqtt
                 if (MyApplication.getInstance().getMqttService()!=null){
-                    MyApplication.getInstance().getMqttService().httpMqttDisconnect();
+                  MyApplication.getInstance().getMqttService().httpMqttDisconnect();
                 }
                 MyApplication.getInstance().tokenInvalid(false);
 
@@ -150,9 +150,7 @@ public class PersonalSystemSettingActivity extends BaseActivity<ISystemSettingVi
 
     @Override
     public void onLoginOutSuccess() {
-      /*  MyApplication.getInstance().tokenInvalid(false);*/
-        //断开mqtt
-        MyApplication.getInstance().getMqttService().mqttDisconnect();
+
     }
 
     @Override

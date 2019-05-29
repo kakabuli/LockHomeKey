@@ -343,6 +343,11 @@ public class MyApplication extends Application {
         bleService.release();
         homeShowDevices.clear();
         MyApplication.getInstance().initTokenAndUid();
+
+        //退出linphone
+        LinphoneHelper.deleteUser();
+        //退出meme网
+        MemeManager.getInstance().videoActivityDisconnectMeme();
         //清除数据库数据
         for (Activity activity : activities) {
             if (activity != null) {
@@ -358,10 +363,7 @@ public class MyApplication extends Application {
                 activity.finish();
             }
         }
-        //退出linphone
-        LinphoneHelper.deleteUser();
-        //退出meme网
-        MemeManager.getInstance().videoActivityDisconnectMeme();
+
 
     }
 
@@ -482,6 +484,10 @@ public class MyApplication extends Application {
                         }
                         String payload = mqttData.getPayload();
                         allBindDevices = new Gson().fromJson(payload, AllBindDevices.class);
+
+                        long serverCurrentTime = Long.parseLong(allBindDevices.getTimestamp());
+                        SPUtils.put(KeyConstants.SERVER_CURRENT_TIME,serverCurrentTime);
+
                         if (allBindDevices != null) {
                             homeShowDevices = allBindDevices.getHomeShow();
                             LogUtils.e("设备更新  application");
@@ -520,7 +526,6 @@ public class MyApplication extends Application {
     }
 
     public List<HomeShowBean> getAllDevices() {
-        LogUtils.e(homeShowDevices.size()+"总的设备列表数据");
         return homeShowDevices;
     }
 

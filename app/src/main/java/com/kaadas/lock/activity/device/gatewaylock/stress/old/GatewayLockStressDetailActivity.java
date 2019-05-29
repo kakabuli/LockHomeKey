@@ -136,7 +136,7 @@ public class GatewayLockStressDetailActivity extends BaseActivity<IGatewayLockSt
                 loadingDialog.show(getString(R.string.get_stress_pwd_stop));
             }
         }
-        mPresenter.getPushSwitch();
+        //mPresenter.getPushSwitch();
 
     }
 

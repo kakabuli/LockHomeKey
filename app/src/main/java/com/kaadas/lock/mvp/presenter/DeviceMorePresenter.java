@@ -22,6 +22,7 @@ import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.Rsa;
 import com.kaadas.lock.utils.SPUtils;
+import com.kaadas.lock.utils.ToastUtil;
 
 import java.util.concurrent.TimeUnit;
 
@@ -46,6 +47,7 @@ public class DeviceMorePresenter extends BlePresenter<IDeviceMoreView> {
     private Disposable readSoftwareRevDisposable;
 
     private Disposable deviceStateChangeDisposable;
+
     public void deleteDevice(String deviceName) {
         XiaokaiNewServiceImp.deleteDevice(MyApplication.getInstance().getUid(), deviceName)
                 .subscribe(new BaseObserver<BaseResult>() {
@@ -295,7 +297,7 @@ public class DeviceMorePresenter extends BlePresenter<IDeviceMoreView> {
         compositeDisposable.add(autoLockDisposable);
     }
 
-    public void release(){
+    public void release() {
         bleService.release();
     }
 
@@ -382,7 +384,13 @@ public class DeviceMorePresenter extends BlePresenter<IDeviceMoreView> {
                             mViewRef.get().readVersionSuccess(version);
                         }
                         //                            // TODO: 2019/5/28    测试
-                            checkOtaInfo(sn, version);
+                        LogUtils.e("获取到的版本号是   " + version);
+                        if (version.length() >= 9) {
+                            version = version.substring(1, 9);
+                        }
+//                        ToastUtil.getInstance().showLong("获取到的版本号是   " + version+"  获取到SN是  " + sn);
+//                        checkOtaInfo(sn, version);
+                        checkOtaInfo(sn, version);
 //                        checkOtaInfo("BT02191410009", "10.1.007");
                         toDisposable(readSoftwareRevDisposable);
                     }
@@ -405,14 +413,16 @@ public class DeviceMorePresenter extends BlePresenter<IDeviceMoreView> {
                 .subscribe(new Consumer<OTAResult>() {
                     @Override
                     public void accept(OTAResult otaResult) throws Exception {
-                        String fileUrl = otaResult.getData().getFileUrl();
-                        if ("200".equals(otaResult.getCode()) && !TextUtils.isEmpty(fileUrl)) {
-                            if (!fileUrl.startsWith("http://")){
-                                otaResult.getData().setFileUrl("http://"+fileUrl);
+
+                        LogUtils.e("检查OTA升级数据   " + otaResult.toString());
+                        if ("200".equals(otaResult.getCode())  ) {
+                            String fileUrl = otaResult.getData().getFileUrl();
+                            if (!fileUrl.startsWith("http://")) {
+                                otaResult.getData().setFileUrl("http://" + fileUrl);
                             }
                             //请求成功
                             if (mViewRef.get() != null) {
-                                mViewRef.get().needUpdate(otaResult.getData(),SN,version);
+                                mViewRef.get().needUpdate(otaResult.getData(), SN, version);
                             }
                         } else {
                             if (mViewRef.get() != null) {
@@ -426,6 +436,7 @@ public class DeviceMorePresenter extends BlePresenter<IDeviceMoreView> {
                         if (mViewRef.get() != null) {
                             mViewRef.get().readInfoFailed(throwable);
                         }
+                        LogUtils.e("检查OTA升级数据 失败  " + throwable.getMessage());
                     }
                 });
         compositeDisposable.add(otaDisposable);

@@ -34,7 +34,6 @@ public class DeviceDetailAdapter extends BaseQuickAdapter<HomeShowBean, BaseView
     protected void convert(BaseViewHolder helper, HomeShowBean item) {
         BatteryView batteryView= helper.getView(R.id.horizontalBatteryView);
         TextView textView=helper.getView(R.id.device_name);
-        LogUtils.e("设备昵称"+item.getDeviceNickName());
         if (!TextUtils.isEmpty(item.getDeviceNickName())){
             helper.setText(R.id.device_name,item.getDeviceNickName());
         }else{
@@ -173,7 +172,7 @@ public class DeviceDetailAdapter extends BaseQuickAdapter<HomeShowBean, BaseView
                 helper.setImageResource(R.id.device_type_image,R.mipmap.bluetooth_disconnenction);
             }
             batteryView.setColor(R.color.cD6D6D6);
-            helper.setText(R.id.device_type_text, R.string.no_find_device);
+            helper.setText(R.id.device_type_text, R.string.offline);
             helper.setTextColor(R.id.device_type_text, Color.parseColor("#999999"));
         }
     }

@@ -1,7 +1,6 @@
 package com.kaadas.lock.publiclibrary.mqtt.publishbean;
 
 public class GetAllBindDeviceBean {
-
     /**
      * msgId : 123456
      * msgtype : request

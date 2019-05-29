@@ -313,7 +313,6 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
         }
 
         LogUtils.e("首页Fragment数据是   " + Arrays.toString(fragments.toArray()));
-        viewPager.removeAllViews();
         if (adapter == null) {
             adapter = new FragmentPagerAdapter(getChildFragmentManager()) {
                 @Override

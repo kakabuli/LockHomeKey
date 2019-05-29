@@ -54,7 +54,6 @@ public class OldBleLockPresenter<T> extends MyOldOpenLockRecordPresenter<IOldBle
     private Disposable oldPowerDisposable;
     private Disposable oldRecordDisposable;
 
-
     @Override
     public void authSuccess() {
         //
@@ -361,28 +360,6 @@ public class OldBleLockPresenter<T> extends MyOldOpenLockRecordPresenter<IOldBle
                     }
                 });
         compositeDisposable.add(upLockDisposable);
-
-
-        toDisposable(deviceStateChangeDisposable);
-        deviceStateChangeDisposable = bleService.listenerDeviceStateChange()
-                .compose(RxjavaHelper.observeOnMainThread())
-                .subscribe(new Consumer<BleDataBean>() {
-                    @Override
-                    public void accept(BleDataBean bleDataBean) throws Exception {
-                        LogUtils.e("收到服务返回的设备更新回调1111");
-                        if (mViewRef.get() != null) {   //通知界面更新显示设备状态
-                            LogUtils.e("收到服务返回的设备更新回调2222");
-                            mViewRef.get().onWarringUp(-1);
-                        }
-                        //锁状态改变   读取锁信息
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        LogUtils.e("监听设备状态改变出错   " + throwable.toString());
-                    }
-                });
-        compositeDisposable.add(deviceStateChangeDisposable);
     }
 
     private List<OpenLockRecord> serverRecords = new ArrayList<>();

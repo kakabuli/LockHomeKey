@@ -20,6 +20,7 @@ import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.BindMemeReuslt;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.GetBindGatewayStatusResult;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttConstant;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttData;
+import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.networkListenerutil.NetWorkChangReceiver;
@@ -87,6 +88,8 @@ public class DevicePresenter<T> extends BasePresenter<IDeviceView> {
                                 if ("200".equals(allBindDevices.getCode())) {
                                     MyApplication.getInstance().setAllBindDevices(allBindDevices);
                                     //重新获取数据
+                                    long serverCurrentTime = Long.parseLong(allBindDevices.getTimestamp());
+                                    SPUtils.put(KeyConstants.SERVER_CURRENT_TIME,serverCurrentTime);
                                 } else {
                                     if (mViewRef.get() != null) {
                                         mViewRef.get().deviceDataRefreshFail();

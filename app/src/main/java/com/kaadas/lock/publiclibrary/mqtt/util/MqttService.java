@@ -209,7 +209,6 @@ public class MqttService extends Service {
 
             @Override
             public void connectionLost(Throwable cause) {
-                LogUtils.e("connectionLost", "连接丢失需要重连");
                 //连接丢失
                 if (null == cause) {
                     return;
@@ -218,11 +217,14 @@ public class MqttService extends Service {
                 LogUtils.e("connectionLost", "连接丢失需要重连");
                 String userId = MyApplication.getInstance().getUid();
                 String userToken = MyApplication.getInstance().getToken();
+                LogUtils.e(userId+"用户id"+"用户tonken"+userToken);
                 if (TextUtils.isEmpty(userId) || TextUtils.isEmpty(userToken)) {
                     LogUtils.e("connectionLost", "用户id或者token为空无法重连");
                     return;
                 }
-                MyApplication.getInstance().getMqttService().mqttConnection();
+                    MyApplication.getInstance().getMqttService().mqttConnection();
+
+
             }
 
             @Override
@@ -412,17 +414,23 @@ public class MqttService extends Service {
 
     //mqtt先断开，后退出http
     public void mqttDisconnect() {
-        LogUtils.e("mqttDisconnect", "正在断开连接");
+        String token= MyApplication.getInstance().getToken();
+        reconnectionNum = 10;
         if (mqttClient == null) {
             LogUtils.e("mqttClient为空");
             return;
         }
+        if (TextUtils.isEmpty(token)){
+            return;
+        }
+
         if (mqttClient.isConnected()) {
             try {
                 //退出登录
                 mqttClient.disconnect(null, new IMqttActionListener() {
                     @Override
                     public void onSuccess(IMqttToken asyncActionToken) {
+                        LogUtils.e("正在断开连接正常情况");
                         mqttClient.unregisterResources();
                         mqttClient = null;
                         MyApplication.getInstance().tokenInvalid(false);
@@ -432,6 +440,7 @@ public class MqttService extends Service {
 
                     @Override
                     public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
+                        LogUtils.e("正在断开连接失败");
                         disconnectObservable.onNext(false);
                     }
                 });
@@ -440,26 +449,33 @@ public class MqttService extends Service {
             }
         } else {
             //被挤出
-            disconnectObservable.onNext(true);
-            mqttClient.unregisterResources();
-            mqttClient = null;
-            MyApplication.getInstance().tokenInvalid(false);
+                LogUtils.e("正在断开连接被挤出");
+                disconnectObservable.onNext(true);
+                mqttClient.unregisterResources();
+                mqttClient = null;
+                MyApplication.getInstance().tokenInvalid(false);
         }
     }
 
     //http退出，mqtt断开
-    public void  httpMqttDisconnect(){
-        LogUtils.e("mqttDisconnect", "正在断开连接");
+    public void httpMqttDisconnect(){
+        String token= MyApplication.getInstance().getToken();
+        reconnectionNum = 10;
         if (mqttClient == null) {
             LogUtils.e("mqttClient为空");
             return;
         }
+        if (TextUtils.isEmpty(token)){
+            return;
+        }
+
         if (mqttClient.isConnected()) {
             try {
                 //退出登录
                 mqttClient.disconnect(null, new IMqttActionListener() {
                     @Override
                     public void onSuccess(IMqttToken asyncActionToken) {
+                        LogUtils.e("正在断开连接正常情况");
                         mqttClient.unregisterResources();
                         mqttClient = null;
                         LogUtils.e("mqttDisconnect", "断开连接成功");
@@ -468,6 +484,7 @@ public class MqttService extends Service {
 
                     @Override
                     public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
+                        LogUtils.e("正在断开连接失败");
                         disconnectObservable.onNext(false);
                     }
                 });
@@ -476,12 +493,11 @@ public class MqttService extends Service {
             }
         } else {
             //被挤出
+            LogUtils.e("正在断开连接被挤出");
             disconnectObservable.onNext(true);
             mqttClient.unregisterResources();
             mqttClient = null;
         }
-
-
 
 
 
