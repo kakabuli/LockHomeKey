@@ -14,8 +14,8 @@ public class HttpUrlConstants {
  /**
   * OTA  升级  API地址
   */
-// public static final String OTA_INFO_URL = "http://test.juziwulian.com:9111/api/otaUpgrade/check";  //正式OTA服务器
- public static final String OTA_INFO_URL = "http://47.106.83.60:9111/api/otaUpgrade/check";  //测试OTA服务器
+ public static final String OTA_INFO_URL = "http://test.juziwulian.com:9111/api/otaUpgrade/check";  //正式OTA服务器
+// public static final String OTA_INFO_URL = "http://47.106.83.60:9111/api/otaUpgrade/check";  //测试OTA服务器
 
     ////////////////////////////////////////2019年2月27日15:02:43  小凯新加接口////////////////
 

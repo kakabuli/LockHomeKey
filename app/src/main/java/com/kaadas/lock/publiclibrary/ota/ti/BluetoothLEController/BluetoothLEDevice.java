@@ -308,7 +308,7 @@ public class BluetoothLEDevice {
         @Override
         public void onServicesDiscovered(BluetoothGatt gatt, int status) {
             super.onServicesDiscovered(gatt, status);
-            Log.e(TAG,"Device " + gatt.getDevice().getAddress().toString() + " SERVICES DISCOVERED" + "Status" + status);
+            Log.e(TAG,"Device " + gatt.getDevice().getAddress().toString() + " SERVICES DISCOVERED  " + "  Status  " + status);
             if (status != BluetoothGatt.GATT_SUCCESS) {
                 Log.d(TAG,"Device " + gatt.getDevice().getAddress().toString() + "Service Discovery FAILED !");
                 return;

@@ -270,6 +270,10 @@ public class P6OtaUpgradeActivity extends AppCompatActivity implements View.OnCl
 
                 break;
             case R.id.start_upgrade:
+                if (isUpdating){
+                    ToastUtil.getInstance().showLong(R.string.isupdating_can_not_back);
+                    break;
+                }
                 isUpdating = true;
                 downBinNew(binDownUrl, filePath);
                 mutiProgress.setCurrNodeNO(0, true);
@@ -280,7 +284,7 @@ public class P6OtaUpgradeActivity extends AppCompatActivity implements View.OnCl
 
 
     public void downBinNew(String url, String path) {
-        start_upgrade.setClickable(false);
+
         LogUtils.e("开始下载  下载链接  " + url + "   保存地址  " + path);
         File file = new File(path);
         if (file.exists()) {
@@ -359,7 +363,6 @@ public class P6OtaUpgradeActivity extends AppCompatActivity implements View.OnCl
         if (isFinishing()) {
             return;
         }
-        start_upgrade.setClickable(true);
         isUpdating = false;
         AlertDialogUtil.getInstance().noEditTwoButtonDialog(this, getString(R.string.ota_fail), getString(R.string.ota_fail_reply),
                 getString(R.string.cancel), getString(R.string.query), new AlertDialogUtil.ClickListener() {

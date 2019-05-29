@@ -55,6 +55,11 @@ public interface IOldDeviceInfoView extends IBleView {
     void needUpdate(OTAResult.UpdateFileInfo updateFileInfo);
 
     /**
+     * 需要升级
+     */
+    void checkInfoFailed(String errorCode);
+
+    /**
      * 修改设备昵称成功
      */
     void modifyDeviceNicknameSuccess();

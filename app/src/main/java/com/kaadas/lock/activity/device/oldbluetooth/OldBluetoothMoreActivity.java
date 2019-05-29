@@ -1,9 +1,11 @@
 package com.kaadas.lock.activity.device.oldbluetooth;
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.InputFilter;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -13,6 +15,7 @@ import android.widget.TextView;
 
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
+import com.kaadas.lock.activity.device.bluetooth.BluetoothMoreActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseBleActivity;
 import com.kaadas.lock.mvp.presenter.DeviceInfoPresenter;
 import com.kaadas.lock.mvp.presenter.OldDeviceInfoPresenter;
@@ -22,7 +25,13 @@ import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.result.OTAResult;
 import com.kaadas.lock.publiclibrary.http.util.HttpUtils;
+import com.kaadas.lock.publiclibrary.ota.OtaConstants;
+import com.kaadas.lock.publiclibrary.ota.p6.P6OtaUpgradeActivity;
+import com.kaadas.lock.publiclibrary.ota.ti.TiOtaUpgradeActivity;
 import com.kaadas.lock.utils.AlertDialogUtil;
+import com.kaadas.lock.utils.KeyConstants;
+import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.StringUtil;
 import com.kaadas.lock.utils.ToastUtil;
 
@@ -57,6 +66,8 @@ public class OldBluetoothMoreActivity extends BaseBleActivity<IOldDeviceInfoView
     private BleLockInfo bleLockInfo;
     String deviceNickname;//设备名称
     String name;
+    private String sn;
+    private String version;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -88,8 +99,18 @@ public class OldBluetoothMoreActivity extends BaseBleActivity<IOldDeviceInfoView
                 finish();
                 break;
             case R.id.rl_bluetooth_module_version:
-                mPresenter.checkOtaInfo(tvSerialNumber.getText().toString().trim(),
-                        tvBluetoothModuleVersion.getText().toString().replace("V", ""));
+                showLoading(getString(R.string.is_check_vle_version));
+                sn = tvSerialNumber.getText().toString().trim();
+                version = tvBluetoothModuleVersion.getText().toString().replace("V", "");
+                if (TextUtils.isEmpty(sn)|| TextUtils.isEmpty(version)){
+                    ToastUtil.getInstance().showLong(R.string.get_device_info);
+                    if (mPresenter.isAuth(bleLockInfo,true)){
+                        mPresenter.getBluetoothDeviceInformation();
+                    }
+                    return;
+                }
+//                sn = "BT02191410009";
+                mPresenter.checkOtaInfo(sn, version);
                 break;
             case R.id.rl_device_name:
                 //设备名字
@@ -138,9 +159,15 @@ public class OldBluetoothMoreActivity extends BaseBleActivity<IOldDeviceInfoView
 
     @Override
     public void SoftwareRevDataSuccess(String data) {
-        String[] split = data.split("-");
-        String strModuleHardwareVersion = split[0];
-        String strLockHardwareVersion = split[1];
+        String strModuleHardwareVersion = "";
+        String strLockHardwareVersion = "";
+        if (data.contains("-")){
+            String[] split = data.split("-");
+            strModuleHardwareVersion = split[0];
+            strLockHardwareVersion = split[1];
+        }else {
+            strModuleHardwareVersion = data;
+        }
         tvLockSoftwareVersion.setText(strLockHardwareVersion);
         tvBluetoothModuleVersion.setText(strModuleHardwareVersion);
     }
@@ -215,31 +242,72 @@ public class OldBluetoothMoreActivity extends BaseBleActivity<IOldDeviceInfoView
     @Override
     public void needUpdate(OTAResult.UpdateFileInfo updateFileInfo) {
         //todo 蓝牙升级
-     /*   AlertDialogUtil.getInstance().noEditTwoButtonDialog(this, getString(R.string.hint)
+        hiddenLoading();
+        if (bleLockInfo.getBleType() == 1) { //Ti升级
+
+        } else if (bleLockInfo.getBleType() == 2) {  //P6升级
+
+        } else {
+            ToastUtil.getInstance().showLong(getString(R.string.check_update_failed));
+        }
+        AlertDialogUtil.getInstance().noEditTwoButtonDialog(this, getString(R.string.hint)
                 , getString(R.string.hava_ble_new_version), getString(R.string.cancel), getString(R.string.confirm), new AlertDialogUtil.ClickListener() {
                     @Override
                     public void left() {
-
 
                     }
 
                     @Override
                     public void right() {
-                        SPUtils.put(KeyConstants.DEVICE_SN + bleLockInfo.getServerLockInfo().getMacLock(), tvSerialNumber.getText().toString().trim());
-                        SPUtils.put(KeyConstants.BLE_VERSION + bleLockInfo.getServerLockInfo().getMacLock(), tvBluetoothModuleVersion.getText().toString().replace("V", ""));
-                        LogUtils.e("升级的文件信息   " + updateFileInfo.toString());
+                        SPUtils.put(KeyConstants.DEVICE_SN + bleLockInfo.getServerLockInfo().getMacLock(), sn);
+                        SPUtils.put(KeyConstants.BLE_VERSION + bleLockInfo.getServerLockInfo().getMacLock(), version);
+                        LogUtils.e("升级的版本信息是   " + sn + "   下载链接是   " + updateFileInfo.getFileUrl());
                         MyApplication.getInstance().getBleService().release();
                         Intent intent = new Intent();
-                        intent.putExtra(OtaConstants.fileName, "XiaoKai_" + updateFileInfo.getFileVersion() + ".bin");
                         intent.putExtra(OtaConstants.bindUrl, updateFileInfo.getFileUrl());
                         intent.putExtra(OtaConstants.deviceMac, bleLockInfo.getServerLockInfo().getMacLock());
                         intent.putExtra(OtaConstants.password1, bleLockInfo.getServerLockInfo().getPassword1());
                         intent.putExtra(OtaConstants.password2, bleLockInfo.getServerLockInfo().getPassword2());
-                        intent.setClass(BluetoothDeviceInformationActivity.this, DeviceOtaUpgradeActivity.class);
+                        if (bleLockInfo.getBleType() == 1) { //Ti升级
+                            intent.putExtra(OtaConstants.fileName, "Kaadas_" + updateFileInfo.getFileVersion() + "_" + updateFileInfo.getFileMd5() + ".bin");
+                            intent.setClass(OldBluetoothMoreActivity.this, TiOtaUpgradeActivity.class);
+                        } else if (bleLockInfo.getBleType() == 2) {  //P6升级
+                            intent.putExtra(OtaConstants.fileName, "Kaadas_" + updateFileInfo.getFileVersion() + "_" + updateFileInfo.getFileMd5() + ".cyacd2");
+                            intent.setClass(OldBluetoothMoreActivity.this, P6OtaUpgradeActivity.class);
+                        }
+                        //还未完善   不跳转
                         startActivity(intent);
                     }
                 }
-        );*/
+        );
+
+
+    }
+
+    @Override
+    public void checkInfoFailed(String errorCode) {
+        hiddenLoading();
+        if ("401".equals(errorCode)) {  //数据参数不对
+            ToastUtil.getInstance().showLong(getString(R.string.data_params_error));
+        } else if ("102".equals(errorCode)) { //SN格式不正确
+            ToastUtil.getInstance().showLong(R.string.sn_error);
+        } else if ("210".equals(errorCode)) { //查无结果
+            //当前已是最新版本
+            AlertDialogUtil.getInstance().noEditSingleButtonDialog(this, getString(R.string.hint)
+                    , getString(R.string.already_newest_version), getString(R.string.confirm), new AlertDialogUtil.ClickListener() {
+                        @Override
+                        public void left() {
+
+                        }
+
+                        @Override
+                        public void right() {
+
+                        }
+                    });
+        }else {
+            ToastUtil.getInstance().showLong(getString(R.string.check_update_failed));
+        }
     }
 
     @Override

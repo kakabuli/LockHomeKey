@@ -251,7 +251,6 @@ public class OldDeviceInfoPresenter extends BlePresenter<IOldDeviceInfoView> {
 
                             }
                         });
-
         compositeDisposable.add(readSerialNumberDisposable);
     }
 
@@ -309,13 +308,18 @@ public class OldDeviceInfoPresenter extends BlePresenter<IOldDeviceInfoView> {
 
 
     public void checkOtaInfo(String SN, String version) {
-        otaDisposable = XiaokaiNewServiceImp.getOtaInfo(2, SN, version)
+        otaDisposable = XiaokaiNewServiceImp.getOtaInfo(1, SN, version)
                 .subscribe(new Consumer<OTAResult>() {
                     @Override
                     public void accept(OTAResult otaResult) throws Exception {
                         if ("200".equals(otaResult.getCode())) {
                             //请求成功
                             if (mViewRef.get() != null) {
+
+                                String fileUrl = otaResult.getData().getFileUrl();
+                                if (!fileUrl.startsWith("http://")) {
+                                    otaResult.getData().setFileUrl("http://" + fileUrl);
+                                }
                                 mViewRef.get().needUpdate(otaResult.getData());
                             }
                         } else if ("402".equals(otaResult.getCode())) {
@@ -323,13 +327,17 @@ public class OldDeviceInfoPresenter extends BlePresenter<IOldDeviceInfoView> {
                                 mViewRef.get().noUpdateConfig();
                             }
                         } else {
-
+                            if (mViewRef.get() != null) {
+                                mViewRef.get().checkInfoFailed(otaResult.getCode());
+                            }
                         }
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-
+                        if (mViewRef.get() != null) {
+                            mViewRef.get().checkInfoFailed("");
+                        }
                     }
                 });
 
