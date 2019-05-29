@@ -34,7 +34,6 @@ public class DeviceDetailAdapter extends BaseQuickAdapter<HomeShowBean, BaseView
     protected void convert(BaseViewHolder helper, HomeShowBean item) {
         BatteryView batteryView= helper.getView(R.id.horizontalBatteryView);
         TextView textView=helper.getView(R.id.device_name);
-        LogUtils.e("设备昵称"+item.getDeviceNickName());
         if (!TextUtils.isEmpty(item.getDeviceNickName())){
             helper.setText(R.id.device_name,item.getDeviceNickName());
         }else{

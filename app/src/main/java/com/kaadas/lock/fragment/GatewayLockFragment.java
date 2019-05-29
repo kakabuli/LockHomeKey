@@ -132,6 +132,7 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
             mPresenter.listenGaEvent();//锁上报
             mPresenter.getPublishNotify();//网关上线
             mPresenter.listenerDeviceOnline();//设备上线下线
+            mPresenter.getPower();
             String time = gatewayLockInfo.getServerInfo().getTime();
             LogUtils.e(time + "网关时间");
             if (!TextUtils.isEmpty(time)) {
@@ -539,12 +540,14 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
 
     @Override
     public void networkChangeSuccess() {
-        changeOpenLockStatus(1);
-        if (deviceState != null) {
-            deviceState.setText(getString(R.string.offline));
-        }
-        if (openLockRecordAdapter != null) {
-            openLockRecordAdapter.notifyDataSetChanged();
+        if (statusFlag!=1) {
+            changeOpenLockStatus(1);
+            if (deviceState != null) {
+                deviceState.setText(getString(R.string.offline));
+            }
+            if (openLockRecordAdapter != null) {
+                openLockRecordAdapter.notifyDataSetChanged();
+            }
         }
     }
 
@@ -699,6 +702,43 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
                 mPresenter.getGatewayLockOpenRecord(MyApplication.getInstance().getUid(), gatewayId, deviceId);//开锁次数
             }
         }
+    }
+
+    @Override
+    public void getPowerSuccess(String gwId, String devId) {
+        if (gatewayId.equals(gwId)&&deviceId.equals(devId)){
+            if (statusFlag!=5){
+                gatewayLockInfo.getServerInfo().setEvent_str("online");
+                changeOpenLockStatus(5);
+                if (deviceState != null) {
+                    deviceState.setText(getString(R.string.normal));
+                }
+            }
+
+        }
+
+    }
+
+    @Override
+    public void getPowerFail(String gwId,String devId) {
+        if (gatewayId.equals(gwId)&&deviceId.equals(devId)){
+            if (statusFlag!=1){
+                gatewayLockInfo.getServerInfo().setEvent_str("offline");
+                changeOpenLockStatus(1);
+                if (deviceState != null) {
+                    deviceState.setText(getString(R.string.offline));
+                }
+            }
+
+        }
+
+
+
+    }
+
+    @Override
+    public void getPowerThrowable() {
+
     }
 
     @Override

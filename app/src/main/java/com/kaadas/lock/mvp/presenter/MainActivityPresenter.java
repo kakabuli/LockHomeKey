@@ -267,7 +267,7 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                             //   保存到数据库
                             MyApplication.getInstance().getDaoWriteSession().getCatEyeEventDao().insert(catEyeEvent);
                             if (mViewRef.get() != null) {
-                                mViewRef.get().onGwEvent(eventType, catEyeEventBean.getDeviceId());
+                                mViewRef.get().onGwEvent(eventType, catEyeEventBean.getDeviceId(),catEyeEventBean.getGwId());
                             }
                             //网关锁信息上报
                         } else if (KeyConstants.DEV_TYPE_LOCK.equals(devtype)) {
@@ -278,6 +278,7 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                                     //保存到数据库
                                     int alarmCode=gatewayLockAlarmEventBean.getEventparams().getAlarmCode();
                                     String deviceId=gatewayLockAlarmEventBean.getDeviceId();
+                                    String gatewayId=gatewayLockAlarmEventBean.getGwId();
                                     int clusterID=gatewayLockAlarmEventBean.getEventparams().getClusterID();
 
                                     GatewayLockAlarmEventDao gatewayLockAlarmEventDao = new GatewayLockAlarmEventDao();
@@ -288,7 +289,6 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                                     gatewayLockAlarmEventDao.setAlarmCode(alarmCode); //报警代码
                                     if (alarmCode==1&&clusterID==257){
                                         //锁重置
-                                        String gatewayId=gatewayLockAlarmEventBean.getGwId();
                                         MyApplication.getInstance().getAllDevicesByMqtt(true);
                                         //删除锁的全部密码
                                         deleteAllPwd(gatewayId,deviceId,MyApplication.getInstance().getUid());
@@ -301,7 +301,7 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                                     if (!checkSame(gatewayLockAlarmEventBean.getTimestamp(),gatewayLockAlarmEventBean.getEventparams().getAlarmCode())){
                                         MyApplication.getInstance().getDaoWriteSession().getGatewayLockAlarmEventDaoDao().insert(gatewayLockAlarmEventDao);
                                         if (mViewRef.get() != null) {
-                                            mViewRef.get().onGwLockEvent(alarmCode, clusterID,deviceId);
+                                            mViewRef.get().onGwLockEvent(alarmCode, clusterID,deviceId,gatewayId);
                                         }
                                     }
 

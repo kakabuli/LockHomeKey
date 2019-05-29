@@ -70,4 +70,10 @@ public interface IGatewayLockHomeView extends IBaseView {
     //获取开锁上报
     void getLockEvent(String gatewayId,String deviceId);
 
+    //获取电量信息
+    void getPowerSuccess(String gatewayId,String deviceId);
+
+    void getPowerFail(String gwId,String devId);
+
+    void getPowerThrowable();
 }
