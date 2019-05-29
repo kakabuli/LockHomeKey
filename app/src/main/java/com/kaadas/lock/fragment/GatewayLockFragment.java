@@ -34,6 +34,7 @@ import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.NetUtil;
+import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.StringUtil;
 import com.kaadas.lock.utils.ToastUtil;
 
@@ -137,8 +138,9 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
             LogUtils.e(time + "网关时间");
             if (!TextUtils.isEmpty(time)) {
                 long saveTime = DateUtils.standardTimeChangeTimestamp(time) / 1000;
+                long serverTime = (long) SPUtils.get(KeyConstants.SERVER_CURRENT_TIME, Long.parseLong("0"));
                 //设置守护时间
-                long day = ((System.currentTimeMillis() / 1000) - saveTime) / (60 * 24 * 60);
+                long day = ((serverTime / 1000) - saveTime) / (60 * 24 * 60);
                 this.createTime.setText(day + "");
             } else {
                 createTime.setText("0");
