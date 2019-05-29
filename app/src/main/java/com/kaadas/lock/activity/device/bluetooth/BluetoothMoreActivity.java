@@ -202,19 +202,21 @@ public class BluetoothMoreActivity extends BaseBleActivity<IDeviceMoreView, Devi
 
                 break;
             case R.id.rl_am:
-                if (amAutoLockStatus) {
-                    //打开状态 现在关闭
-                    mPresenter.setAutoLock(false);
-                    showLoading("");
-
-//                    SPUtils.put(KeyConstants.AM_AUTO_LOCK_STATUS, false);
-                } else {
-                    //关闭状态 现在打开
-                    mPresenter.setAutoLock(true);
-                    showLoading("");
-
-//                    SPUtils.put(KeyConstants.AM_AUTO_LOCK_STATUS, true);
-                }
+                ToastUtil.getInstance().showLong(R.string.please_lock_countrol);
+//                return;
+//                if (amAutoLockStatus) {
+//                    //打开状态 现在关闭
+//                    mPresenter.setAutoLock(false);
+//                    showLoading("");
+//
+////                    SPUtils.put(KeyConstants.AM_AUTO_LOCK_STATUS, false);
+//                } else {
+//                    //关闭状态 现在打开
+//                    mPresenter.setAutoLock(true);
+//                    showLoading("");
+//
+////                    SPUtils.put(KeyConstants.AM_AUTO_LOCK_STATUS, true);
+//                }
                 break;
             case R.id.rl_door_lock_language_switch:
                 intent = new Intent(this, BluetoothLockLanguageSettingActivity.class);
