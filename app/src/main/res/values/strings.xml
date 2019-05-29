@@ -994,6 +994,18 @@
     <string name="wifi_alreade_offline">WiFi不在线</string>
     <string name="enter_feedback">请输入反馈信息</string>
     <string name="standard_password_door">标准密码开门</string>
+    <string name="app_open_lock">APP开门</string>
+    <string name="admin_open_lock">管理密码开门</string>
+    <string name="visitor_opne_lock">访客密码开门</string>
+    <string name="disposable_open_lock">一次性开门</string>
+    <string name="mechanical_key_open_lock">机械钥匙开门</string>
+    <string name="remote_control_open_lock">遥控开门</string>
+    <string name="one_key_open_lock">一键开门</string>
     <string name="not_connected">未连接</string>
-
+    <string name="keypad_open_lock">密码开锁</string>
+    <string name="rf_open_lock">App开锁</string>
+    <string name="manual_open_lock">机械开锁</string>
+    <string name="rfid_open_lock">卡片开锁</string>
+    <string name="fingerprint_open_lock">指纹开锁</string>
+    <string name="indeterminate">其他方式开锁</string>
 </resources>

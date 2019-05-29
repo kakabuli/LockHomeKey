@@ -26,6 +26,7 @@ import com.kaadas.lock.mvp.presenter.MainActivityPresenter;
 import com.kaadas.lock.mvp.view.IMainActivityView;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.publiclibrary.bean.CateEyeInfo;
+import com.kaadas.lock.publiclibrary.bean.GatewayInfo;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.ota.OTADialogActivity;
 import com.kaadas.lock.utils.Constants;
@@ -251,29 +252,32 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
     }
 
     @Override
-    public void onGwEvent(int eventType, String deviceId) {
-        String nickName = MyApplication.getInstance().getNickByDeviceId(deviceId);
-        String content = null;
-        switch (eventType) {
-            case CatEyeEvent.EVENT_PIR:
-                content = String.format(getString(R.string.pir_notify), nickName);
-                break;
-            case CatEyeEvent.EVENT_DOOR_BELL:
+    public void onGwEvent(int eventType, String deviceId,String gatewayId) {
+        GatewayInfo gatewayInfo= MyApplication.getInstance().getGatewayById(gatewayId);
+        if (gatewayInfo!=null) {
+            String nickName = MyApplication.getInstance().getNickByDeviceId(deviceId);
+            String content = null;
+            switch (eventType) {
+                case CatEyeEvent.EVENT_PIR:
+                    content = String.format(getString(R.string.pir_notify), nickName);
+                    break;
+                case CatEyeEvent.EVENT_DOOR_BELL:
 //                content = String.format(getString(R.string.door_bell), nickName);
 //                ToastUtil.getInstance().showShort(content);
-                break;
-            case CatEyeEvent.EVENT_HEAD_LOST:
-                content = String.format(getString(R.string.head_lost_notify), nickName);
-                break;
-            case CatEyeEvent.EVENT_HOST_LOST:
-                content = String.format(getString(R.string.host_lost_notify), nickName);
-                break;
-            case CatEyeEvent.EVENT_LOW_POWER:
-                content = String.format(getString(R.string.low_power_notify), nickName);
-                break;
+                    break;
+                case CatEyeEvent.EVENT_HEAD_LOST:
+                    content = String.format(getString(R.string.head_lost_notify), nickName);
+                    break;
+                case CatEyeEvent.EVENT_HOST_LOST:
+                    content = String.format(getString(R.string.host_lost_notify), nickName);
+                    break;
+                case CatEyeEvent.EVENT_LOW_POWER:
+                    content = String.format(getString(R.string.low_power_notify), nickName);
+                    break;
+            }
+            ToastUtil.getInstance().showLong(content);
+            LogUtils.e("猫眼报警的内容为   " + content);
         }
-        ToastUtil.getInstance().showLong(content);
-        LogUtils.e("猫眼报警的内容为   " + content);
     }
 
     @Override
@@ -288,43 +292,45 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
     }
 
     @Override
-    public void onGwLockEvent(int alarmCode, int clusterID, String deviceId) {
-        String str="";
-        String nickName = MyApplication.getInstance().getNickByDeviceId(deviceId);
-        if (clusterID==257){
-            switch (alarmCode){
-                case 0:    //门锁堵转报警
-                    str=String.format(getString(R.string.lock_blocked_notify),nickName);
-                    ToastUtil.getInstance().showShort(str);
-                    break;
-                case 1:
-                    str=String.format(getString(R.string.lock_resect_notify),nickName);
-                    ToastUtil.getInstance().showShort(str);
-                    break;
-                case 4:
-                    str=String.format(getString(R.string.lock_system_notify),nickName);
-                    ToastUtil.getInstance().showShort(str);
-                    break;
-                case 6:
-                    str=String.format(getString(R.string.lock_pick_proof_notify),nickName);
-                    ToastUtil.getInstance().showShort(str);
-                    break;
-                case 9:
-                    str=String.format(getString(R.string.lock_stress_alarm_notify),nickName);
-                    ToastUtil.getInstance().showShort(str);
-                    break;
-            }
-            //电量
-        }else if (clusterID==1){
-            switch (alarmCode){
-                case 16:
-                    str=String.format(getString(R.string.low_power_notify),nickName);
-                    ToastUtil.getInstance().showShort(str);
-                    break;
+    public void onGwLockEvent(int alarmCode, int clusterID, String deviceId,String gatewayId) {
+        GatewayInfo gatewayInfo = MyApplication.getInstance().getGatewayById(gatewayId);
+        if (gatewayInfo != null) {
+            String str = "";
+            String nickName = MyApplication.getInstance().getNickByDeviceId(deviceId);
+            if (clusterID == 257) {
+                switch (alarmCode) {
+                    case 0:    //门锁堵转报警
+                        str = String.format(getString(R.string.lock_blocked_notify), nickName);
+                        ToastUtil.getInstance().showShort(str);
+                        break;
+                    case 1:
+                        str = String.format(getString(R.string.lock_resect_notify), nickName);
+                        ToastUtil.getInstance().showShort(str);
+                        break;
+                    case 4:
+                        str = String.format(getString(R.string.lock_system_notify), nickName);
+                        ToastUtil.getInstance().showShort(str);
+                        break;
+                    case 6:
+                        str = String.format(getString(R.string.lock_pick_proof_notify), nickName);
+                        ToastUtil.getInstance().showShort(str);
+                        break;
+                    case 9:
+                        str = String.format(getString(R.string.lock_stress_alarm_notify), nickName);
+                        ToastUtil.getInstance().showShort(str);
+                        break;
+                }
+                //电量
+            } else if (clusterID == 1) {
+                switch (alarmCode) {
+                    case 16:
+                        str = String.format(getString(R.string.low_power_notify), nickName);
+                        ToastUtil.getInstance().showShort(str);
+                        break;
+                }
             }
         }
     }
-
     public NoScrollViewPager getViewPager() {
 
         return homeViewPager;

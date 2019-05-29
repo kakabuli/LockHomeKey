@@ -124,11 +124,15 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
             }else{
                 changeOpenLockStatus(1);
                 deviceState.setText(getString(R.string.offline));
+                changePage(false);
             }
             gatewayId = gatewayLockInfo.getGwID();
             deviceId = gatewayLockInfo.getServerInfo().getDeviceId();
             mPresenter.listenerNetworkChange();//监听网络状态
             mPresenter.listenGaEvent();//锁上报
+            mPresenter.getPublishNotify();//网关上线
+            mPresenter.listenerDeviceOnline();//设备上线下线
+            mPresenter.getPower();
             String time = gatewayLockInfo.getServerInfo().getTime();
             LogUtils.e(time + "网关时间");
             if (!TextUtils.isEmpty(time)) {
@@ -440,16 +444,40 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
             String time = split1[0] + ":" + split1[1];
 
             String titleTime = "";
+            String name="";
+            String openType="";
+            switch (dataBean.getOpen_type()){
+                case "0":
+                    openType=getString(R.string.keypad_open_lock);
+                    break;
+                case "1":
+                    openType=getString(R.string.rf_open_lock);
+                    break;
+                case "2":
+                    openType=getString(R.string.manual_open_lock);
+                    break;
+                case "3":
+                    openType=getString(R.string.rfid_open_lock);
+                    break;
+                case "4":
+                    openType=getString(R.string.fingerprint_open_lock);
+                    break;
+                case "255":
+                    openType=getString(R.string.indeterminate);
+                    break;
+            }
+
+
             if (lastDayTime != dayTime) { //添加头
                 lastDayTime = dayTime;
                 titleTime = DateUtils.getDayTimeFromMillisecond(openTime); //转换成功顶部的时间
-                itemList.add(new BluetoothItemRecordBean(dataBean.getNickName(), dataBean.getOpen_type(), KeyConstants.BLUETOOTH_RECORD_COMMON,
+                itemList.add(new BluetoothItemRecordBean(name, openType, KeyConstants.BLUETOOTH_RECORD_COMMON,
                         time, false, false));
                 mOpenLockList.add(new BluetoothRecordBean(titleTime, itemList, false));
             } else {
                 BluetoothRecordBean bluetoothRecordBean = mOpenLockList.get(mOpenLockList.size() - 1);
                 List<BluetoothItemRecordBean> bluetoothItemRecordBeanList = bluetoothRecordBean.getList();
-                bluetoothItemRecordBeanList.add(new BluetoothItemRecordBean(dataBean.getNickName(), dataBean.getOpen_type(), KeyConstants.BLUETOOTH_RECORD_COMMON,
+                bluetoothItemRecordBeanList.add(new BluetoothItemRecordBean(name, openType, KeyConstants.BLUETOOTH_RECORD_COMMON,
                         time, false, false));
             }
 
@@ -512,12 +540,14 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
 
     @Override
     public void networkChangeSuccess() {
-        changeOpenLockStatus(1);
-        if (deviceState != null) {
-            deviceState.setText(getString(R.string.offline));
-        }
-        if (openLockRecordAdapter != null) {
-            openLockRecordAdapter.notifyDataSetChanged();
+        if (statusFlag!=1) {
+            changeOpenLockStatus(1);
+            if (deviceState != null) {
+                deviceState.setText(getString(R.string.offline));
+            }
+            if (openLockRecordAdapter != null) {
+                openLockRecordAdapter.notifyDataSetChanged();
+            }
         }
     }
 
@@ -527,8 +557,14 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
             if (gatewayLockInfo.getGwID().equals(gatewayId)) {
                 //当前猫眼所属的网关是上下线的网关
                 //网关上下线状态要跟着改变
-                if ("offline".equals(eventStr)) {
-                    gatewayLockInfo.getServerInfo().setEvent_str(eventStr);
+                if ("online".equals(eventStr)) {
+                    gatewayLockInfo.getServerInfo().setEvent_str("online");
+                    changeOpenLockStatus(5);
+                    if (deviceState != null) {
+                        deviceState.setText(getString(R.string.normal));
+                    }
+                }else{
+                    gatewayLockInfo.getServerInfo().setEvent_str("offline");
                     changeOpenLockStatus(1);
                     if (deviceState != null) {
                         deviceState.setText(getString(R.string.offline));
@@ -605,10 +641,15 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
     }
 
     @Override
-    public void openLockFailed(Throwable throwable) {
+    public void openLockFailed() {
         isOpening = false;
+        changeOpenLockStatus(5);
     }
 
+    @Override
+    public void openLockThrowable(Throwable throwable) {
+        isOpening = false;
+    }
 
     @Override
     public void startOpenLock() {
@@ -661,6 +702,43 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
                 mPresenter.getGatewayLockOpenRecord(MyApplication.getInstance().getUid(), gatewayId, deviceId);//开锁次数
             }
         }
+    }
+
+    @Override
+    public void getPowerSuccess(String gwId, String devId) {
+        if (gatewayId.equals(gwId)&&deviceId.equals(devId)){
+            if (statusFlag!=5){
+                gatewayLockInfo.getServerInfo().setEvent_str("online");
+                changeOpenLockStatus(5);
+                if (deviceState != null) {
+                    deviceState.setText(getString(R.string.normal));
+                }
+            }
+
+        }
+
+    }
+
+    @Override
+    public void getPowerFail(String gwId,String devId) {
+        if (gatewayId.equals(gwId)&&deviceId.equals(devId)){
+            if (statusFlag!=1){
+                gatewayLockInfo.getServerInfo().setEvent_str("offline");
+                changeOpenLockStatus(1);
+                if (deviceState != null) {
+                    deviceState.setText(getString(R.string.offline));
+                }
+            }
+
+        }
+
+
+
+    }
+
+    @Override
+    public void getPowerThrowable() {
+
     }
 
     @Override

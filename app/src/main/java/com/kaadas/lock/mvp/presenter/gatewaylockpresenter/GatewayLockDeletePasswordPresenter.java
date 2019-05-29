@@ -35,8 +35,8 @@ public class GatewayLockDeletePasswordPresenter<T> extends BasePresenter<Gateway
                                              return false;
                                          }
                                      })
-                                     .compose(RxjavaHelper.observeOnMainThread())
                                      .timeout(20*1000, TimeUnit.MILLISECONDS)
+                                     .compose(RxjavaHelper.observeOnMainThread())
                                      .subscribe(new Consumer<MqttData>() {
                                          @Override
                                          public void accept(MqttData mqttData) throws Exception {
