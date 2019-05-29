@@ -18,8 +18,8 @@ import java.lang.ref.SoftReference;
  * Created by David on 2019/5/29
  */
 public class AnimationsContainer {
-    public int FPS = 40;  // 每秒播放帧数，fps = 1/t，t-动画两帧时间间隔
-    private int resId = R.array.open_lock_big; //图片资源
+    public int FPS ;  // 每秒播放帧数，fps = 1/t，t-动画两帧时间间隔
+    private int resId ; //图片资源
     private Context mContext = MyApplication.getInstance().getApplicationContext();
     // 单例
     private static AnimationsContainer mInstance;

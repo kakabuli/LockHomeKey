@@ -570,15 +570,15 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
         ivExternalBig.setVisibility(View.VISIBLE);
 //        ivExternalBig.setImageResource(R.drawable.open_lock_big);
          //优化后的帧动画
-            openLockBig = AnimationsContainer.getInstance(R.array.open_lock_big, 40).createProgressDialogAnim(ivExternalBig);
+            openLockBig = AnimationsContainer.getInstance(R.array.open_lock_big, 26).createProgressDialogAnim(ivExternalBig);
         ivExternalMiddle.setVisibility(View.VISIBLE);
 //        ivExternalMiddle.setImageResource(R.drawable.open_lock_middle);
-        openLockMiddle= AnimationsContainer.getInstance(R.array.open_lock_middle, 40).createProgressDialogAnim(ivExternalMiddle);
+        openLockMiddle= AnimationsContainer.getInstance(R.array.open_lock_middle, 26).createProgressDialogAnim(ivExternalMiddle);
         ivExternalSmall.setVisibility(View.GONE);
 //        ivExternalSmall.setImageResource(R.mipmap.bluetooth_open_lock_small_icon);
         ivInnerMiddle.setVisibility(View.VISIBLE);
 //        ivInnerMiddle.setImageResource(R.drawable.open_lock_small);
-        openLockSmall= AnimationsContainer.getInstance(R.array.open_lock_small, 40).createProgressDialogAnim(ivInnerMiddle);
+        openLockSmall= AnimationsContainer.getInstance(R.array.open_lock_small, 26).createProgressDialogAnim(ivInnerMiddle);
         ivInnerSmall.setVisibility(View.GONE);
 //                ivInnerSmall.setImageResource();
         tvInner.setVisibility(View.GONE);
@@ -613,7 +613,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
 //                ivExternalSmall.setImageResource(R.mipmap.bluetooth_open_lock_small_icon);
         ivInnerMiddle.setVisibility(View.VISIBLE);
 //        ivInnerMiddle.setImageResource(R.drawable.bluetooth_lock_close);
-        closeLock = AnimationsContainer.getInstance(R.array.bluetooth_lock_close, 72).createProgressDialogAnim(ivInnerMiddle);
+        closeLock = AnimationsContainer.getInstance(R.array.bluetooth_lock_close, 14).createProgressDialogAnim(ivInnerMiddle);
         ivInnerSmall.setVisibility(View.VISIBLE);
         ivInnerSmall.setImageResource(R.mipmap.bluetooth_lock_bu_fang_inner_small_icon);
         tvInner.setVisibility(View.VISIBLE);
@@ -841,9 +841,11 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
     @Override
     public void onLockLock() {  //关门
         closeLockAnimator();
+        LogUtils.d("davi 关锁 "+System.currentTimeMillis());
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
+                LogUtils.d("davi 停止关锁 "+System.currentTimeMillis());
                 stopCloseLockAnimator();
                 handler.removeCallbacks(lockRunnable);
                 lockRunnable.run();
