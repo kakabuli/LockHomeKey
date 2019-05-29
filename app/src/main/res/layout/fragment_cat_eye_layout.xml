@@ -206,7 +206,7 @@
                 android:layout_centerInParent="true"
                 android:text="@string/normal"
                 android:textColor="#1F96F7"
-                android:textSize="20sp" />
+                android:textSize="18sp" />
 
         </RelativeLayout>
 
