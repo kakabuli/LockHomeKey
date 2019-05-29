@@ -86,6 +86,7 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
     private String gatewayId;
     private String deviceId;
     private BluetoothRecordAdapter openLockRecordAdapter;
+    private HomePageFragment.ISelectChangeListener iSelectChangeListener;
     private boolean isOpening = false;
     private boolean isClosing = false;
     private int statusFlag=0;
@@ -141,7 +142,11 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
                 long serverTime = (long) SPUtils.get(KeyConstants.SERVER_CURRENT_TIME, Long.parseLong("0"));
                 //设置守护时间
                 long day = ((serverTime / 1000) - saveTime) / (60 * 24 * 60);
-                this.createTime.setText(day + "");
+                if (day>0){
+                    this.createTime.setText(day + "");
+                }else{
+                    createTime.setText("0");
+                }
             } else {
                 createTime.setText("0");
             }
@@ -155,6 +160,15 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
         tvMore.setOnClickListener(this);
         rlDeviceDynamic.setOnClickListener(this);
         rlIcon.setOnLongClickListener(this);
+        iSelectChangeListener= new HomePageFragment.ISelectChangeListener() {
+            @Override
+            public void onSelectChange(boolean isSelect) {
+                //选择到当前页面
+                if (isSelect){
+                    initData();
+                }
+            }
+        };
     }
 
 
