@@ -1008,4 +1008,5 @@
     <string name="rfid_open_lock">卡片开锁</string>
     <string name="fingerprint_open_lock">指纹开锁</string>
     <string name="indeterminate">其他方式开锁</string>
+    <string name="please_lock_countrol">请在门锁端操作</string>
 </resources>
