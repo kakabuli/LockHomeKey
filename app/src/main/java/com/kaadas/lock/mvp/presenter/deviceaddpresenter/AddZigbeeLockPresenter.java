@@ -101,6 +101,7 @@ public class AddZigbeeLockPresenter<T> extends BasePresenter<IAddZigbeeLockView>
                                         mViewRef.get().addZigbeeSuccess(deviceOnLineBean);
                                         MyApplication.getInstance().getAllDevicesByMqtt(true);
                                         SPUtils.remove(KeyConstants.SAVA_LOCK_PWD+deviceOnLineBean.getDeviceId());
+                                        SPUtils.remove(KeyConstants.FIRST_IN_GATEWAY_LOCK+MyApplication.getInstance().getUid()+deviceOnLineBean.getDeviceId());
                                         toDisposable(addZigbeeEvent);
                                     }
 

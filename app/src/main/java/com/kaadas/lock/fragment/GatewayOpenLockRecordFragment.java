@@ -249,30 +249,80 @@ public class GatewayOpenLockRecordFragment extends BaseFragment<IGatewayLockReco
             String time = split1[0] + ":" + split1[1];
 
             String titleTime = "";
+            String name="";
+            String openType="";
+          /*  try {*/
+           /*     int  nickName=Integer.parseInt(dataBean.getNickName());
+                if (nickName>=0&&nickName<=9){
+                    name=getString(R.string.standard_password_door)+nickName;
+                }else{
+                    switch (nickName){
+                        case 103: //APP开门
+                            name=getString(R.string.app_open_lock)+nickName;
+                            break;
+                        case 254:
+                            name=getString(R.string.admin_open_lock)+nickName;
+                            break;
+                        case 253:
+                            name=getString(R.string.visitor_opne_lock)+nickName;
+                            break;
+                        case 252:
+                            name=getString(R.string.disposable_open_lock)+nickName;
+                            break;
+                        case 100:
+                            name=getString(R.string.mechanical_key_open_lock)+nickName;
+                            break;
+                        case 101:
+                            name=getString(R.string.remote_control_open_lock)+nickName;
+                            break;
+                        case 102:
+                            name=getString(R.string.one_key_open_lock)+nickName;
+                            break;
+                        case 65535: //锁的问题。锁端说改了。不会出现这个
+                            name=getString(R.string.one_key_open_lock)+nickName;
+                            break;
+                    }
+                }
+
+            }catch (Exception e){
+
+            }*/
+
+            switch (dataBean.getOpen_type()){
+                case "0":
+                    openType=getString(R.string.keypad_open_lock);
+                    break;
+                case "1":
+                    openType=getString(R.string.rf_open_lock);
+                    break;
+                case "2":
+                    openType=getString(R.string.manual_open_lock);
+                    break;
+                case "3":
+                    openType=getString(R.string.rfid_open_lock);
+                    break;
+                case "4":
+                    openType=getString(R.string.fingerprint_open_lock);
+                    break;
+                case "255":
+                    openType=getString(R.string.indeterminate);
+                    break;
+            }
+
+
             if (lastDayTime != dayTime) { //添加头
                 lastDayTime = dayTime;
                 titleTime = DateUtils.getDayTimeFromMillisecond(openTime); //转换成功顶部的时间
-                String name="";
-                try {
-                    long nickName=Long.parseLong(dataBean.getNickName());
-                    if (nickName>0&&nickName<9){
-                        name=getString(R.string.standard_password_door);
-                    }
-
-                }catch (Exception e){
-
-                }
-
-                itemList.add(new BluetoothItemRecordBean(name, dataBean.getOpen_type(), KeyConstants.BLUETOOTH_RECORD_COMMON,
+                LogUtils.e("开锁记录昵称"+dataBean.getNickName());
+                itemList.add(new BluetoothItemRecordBean(name, openType, KeyConstants.BLUETOOTH_RECORD_COMMON,
                         time, false, false));
                 mOpenLockList.add(new BluetoothRecordBean(titleTime, itemList, false));
             } else {
                 BluetoothRecordBean bluetoothRecordBean = mOpenLockList.get(mOpenLockList.size() - 1);
                 List<BluetoothItemRecordBean> bluetoothItemRecordBeanList = bluetoothRecordBean.getList();
-                bluetoothItemRecordBeanList.add(new BluetoothItemRecordBean(dataBean.getNickName(), dataBean.getOpen_type(), KeyConstants.BLUETOOTH_RECORD_COMMON,
+                bluetoothItemRecordBeanList.add(new BluetoothItemRecordBean(name, openType, KeyConstants.BLUETOOTH_RECORD_COMMON,
                         time, false, false));
             }
-
         }
 
         for (int i = 0; i < mOpenLockList.size(); i++) {

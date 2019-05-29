@@ -105,6 +105,7 @@ public class GatewayLockPasswordShareActivity extends BaseActivity<GatewayLockSh
                 if (!TextUtils.isEmpty(deviceId)&&!TextUtils.isEmpty(gatewayId)&&!TextUtils.isEmpty(pwdId)){
                     mPresenter.shareDeleteLockPwd(gatewayId,deviceId,pwdId);
                     alertDialog=AlertDialogUtil.getInstance().noButtonDialog(this,getString(R.string.delete_be_being));
+                    alertDialog.setCancelable(false);
                 }
                 break;
             case R.id.tv_short_message:
