@@ -42,10 +42,12 @@ import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.result.GetPasswordResult;
 import com.kaadas.lock.publiclibrary.http.util.HttpUtils;
 import com.kaadas.lock.utils.AlertDialogUtil;
+import com.kaadas.lock.utils.AnimationsContainer;
 import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.PermissionUtil;
+import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.StringUtil;
 import com.kaadas.lock.utils.ToastUtil;
 
@@ -113,15 +115,55 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+    }
+
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (!mPresenter.isAttach()) {
+            mPresenter.attachView(this);
+        }
+        mPresenter.getOpenRecordFromServer(1, bleLockInfo);
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        LogUtils.e("蓝牙界面   onDetach  " + this);
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
         Bundle arguments = getArguments();
         bleLockInfo = (BleLockInfo) arguments.getSerializable(KeyConstants.BLE_LOCK_INFO);
+        LogUtils.e("蓝牙界面   onCreateView   获取到的设备是否是空  " + (bleLockInfo == null));
         position = arguments.getInt(KeyConstants.FRAGMENT_POSITION);
         lockRunnable = new Runnable() {
             @Override
             public void run() {
                 LogUtils.e(" 首页锁状态  反锁状态   " + bleLockInfo.getBackLock() + "    安全模式    " + bleLockInfo.getSafeMode() + "   布防模式   " + bleLockInfo.getArmMode());
                 isOpening = false;
-                changeOpenLockStatus(8);
+                if (bleLockInfo.isConnected()) {
+                    changeOpenLockStatus(8);
+                } else {
+                    changeOpenLockStatus(13);
+                }
+
                 if (bleLockInfo.getBackLock() == 0) {  //等于0时是反锁状态
                     changeOpenLockStatus(6);
                 }
@@ -138,24 +180,9 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
                 }
             }
         };
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        mPresenter.attachView(this);
-        mPresenter.getOpenRecordFromServer(1, bleLockInfo);
-    }
-
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_ble_lock_layout, null);
+        LogUtils.e("蓝牙界面   onCreateView  " + this);
+        LogUtils.e("蓝牙界面   onCreateView  " + bleLockInfo.getServerLockInfo().toString());
         ButterKnife.bind(this, view);
         initRecycleView();
         rlDeviceDynamic.setOnClickListener(this);
@@ -175,14 +202,14 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
     }
 
     private void initView() {
-
         tvDeviceStatus.setText(getString(R.string.not_connected));
         long createTime = bleLockInfo.getServerLockInfo().getCreateTime();
+        long serverTime = (long) SPUtils.get(KeyConstants.SERVER_CURRENT_TIME, Long.parseLong("0"));
         //设置守护时间
-        long time = (System.currentTimeMillis() / 1000) - createTime;
+        long time = (serverTime / 1000) - createTime;
         long day = 0;
-        if (time>0){
-            day = ((System.currentTimeMillis() / 1000) - createTime) / (60 * 24 * 60);
+        if (time > 0) {
+            day = ((serverTime / 1000) - createTime) / (60 * 24 * 60);
         }
         this.createTime.setText(day + "");
         LogUtils.e("设备  HomeLockFragment  " + this);
@@ -193,6 +220,9 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
                 if (isOpening) {
                     LogUtils.e("长按  但是当前正在开锁状态   ");
                     return false;
+                }
+                if (mPresenter.getBleLockInfo() == null && bleLockInfo != null) {
+                    mPresenter.setBleLockInfo(bleLockInfo);
                 }
                 if (mPresenter.isAuth(bleLockInfo, true)) {
                     if (bleLockInfo.getBackLock() == 0 || bleLockInfo.getSafeMode() == 1) {  //反锁状态下或者安全模式下  长按不操作
@@ -215,7 +245,10 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
             public void onClick(View v) {
                 if (!isConnectingDevice && !bleLockInfo.isAuth()) {  //如果没有正在连接设备
                     //连接设备
-                    mPresenter.attachView(BleLockFragment.this);
+                    if (!mPresenter.isAttach()) {
+                        mPresenter.attachView(BleLockFragment.this);
+                    }
+                    LogUtils.e(this + "   设置设备66  " + bleLockInfo.getServerLockInfo().toString());
                     mPresenter.isAuth(bleLockInfo, true);
                     mPresenter.getAllPassword(bleLockInfo, false);
                 }
@@ -230,7 +263,9 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
                 } else {
                     LogUtils.e("切换到当前界面  设备 " + this + isCurrentFragment);
                     //切换到当前页面
-                    mPresenter.attachView(BleLockFragment.this);
+                    if (!mPresenter.isAttach()) {
+                        mPresenter.attachView(BleLockFragment.this);
+                    }
                     if (isCurrentFragment) {
                         mPresenter.setBleLockInfo(bleLockInfo);
                         boolean auth = mPresenter.isAuth(bleLockInfo, true);
@@ -259,13 +294,17 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
 
             @Override
             public void onPageSelected(int i) {
-                if (i == position && homeFragment.isSelectHome) {
-                    mPresenter.attachView(BleLockFragment.this);
-                    mPresenter.setBleLockInfo(bleLockInfo);
-                    LogUtils.e(this + "   设置设备1  " + bleLockInfo.getServerLockInfo().toString());
-                    mPresenter.isAuth(bleLockInfo, true);
-                    mPresenter.getAllPassword(bleLockInfo, false);
+                if (i == position) {
                     isCurrentFragment = true;
+                    if (homeFragment.isSelectHome) {
+                        if (!mPresenter.isAttach()) {
+                            mPresenter.attachView(BleLockFragment.this);
+                        }
+                        mPresenter.setBleLockInfo(bleLockInfo);
+                        LogUtils.e(this + "   设置设备1  " + bleLockInfo.getServerLockInfo().toString());
+                        mPresenter.isAuth(bleLockInfo, true);
+                        mPresenter.getAllPassword(bleLockInfo, false);
+                    }
                 } else {
                     mPresenter.detachView();
                     isCurrentFragment = false;
@@ -279,7 +318,9 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
         });
         LogUtils.e("设备position " + position + "    " + homeFragment.getCurrentPosition() + "     " + homeFragment.isSelectHome);
         if (position == 0 && position == homeFragment.getCurrentPosition() && homeFragment.isSelectHome) {
-            mPresenter.attachView(this);
+            if (!mPresenter.isAttach()) {
+                mPresenter.attachView(BleLockFragment.this);
+            }
             mPresenter.setBleLockInfo(bleLockInfo);
             mPresenter.isAuth(bleLockInfo, true);
             LogUtils.e(this + "  设置设备3  " + bleLockInfo.getServerLockInfo().toString());
@@ -293,7 +334,6 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
         } else {
             isCurrentFragment = false;
         }
-
     }
 
     @Override
@@ -310,6 +350,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        LogUtils.e("蓝牙界面   onDestroyView  " + this);
     }
 
     public void changePage() {
@@ -325,16 +366,16 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
     }
 
     public void changeOpenLockStatus(int status) {
-        if (!isAdded()) {
-            return;
-        }
-        if (bleLockInfo.isConnected()){
+//        if (!isAdded()) {
+//            return;
+//        }
+        if (bleLockInfo.isConnected()) {
             if (bleLockInfo.isLockStatusException()) {
                 tvDeviceStatus.setText(getString(R.string.no_normal));
             } else {
                 tvDeviceStatus.setText(getString(R.string.normal));
             }
-        }else {
+        } else {
             tvDeviceStatus.setText(getString(R.string.not_connected));
         }
         switch (status) {
@@ -354,7 +395,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
                 tvInner.setVisibility(View.VISIBLE);
                 tvInner.setText(getString(R.string.bluetooth_connecting));
                 tvInner.setTextColor(getResources().getColor(R.color.c15A6F5));
-                tvExternal.setVisibility(View.GONE);
+                tvExternal.setVisibility(View.INVISIBLE);
                 break;
             case 4:
                 //“已启动布防，长按开锁“
@@ -450,7 +491,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
                 tvInner.setVisibility(View.VISIBLE);
                 tvInner.setText(getString(R.string.bluetooth_connect_success));
                 tvInner.setTextColor(getResources().getColor(R.color.c15A6F5));
-                tvExternal.setVisibility(View.GONE);
+                tvExternal.setVisibility(View.INVISIBLE);
                 break;
             case 12:
                 //蓝牙链接失败
@@ -465,7 +506,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
                 tvInner.setVisibility(View.VISIBLE);
                 tvInner.setText(getString(R.string.bluetooth_connect_fail));
                 tvInner.setTextColor(getResources().getColor(R.color.c15A6F5));
-                tvExternal.setVisibility(View.GONE);
+                tvExternal.setVisibility(View.INVISIBLE);
                 break;
             case 13:
                 //手机蓝牙未链接
@@ -519,12 +560,15 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
         }
     }
 
-    AnimationDrawable openLockBig;
+   /* AnimationDrawable openLockBig;
     AnimationDrawable openLockMiddle;
-    AnimationDrawable openLockSmall;
-    AnimationDrawable closeLock;
-
-    public void openLockAnimator() {
+    AnimationDrawable openLockSmall;*/
+//    AnimationDrawable closeLock;
+    /**
+     * 开锁动画
+     * */
+/*    public void openLockAnimator() {
+        LogUtils.d("davi 开始1 "+System.currentTimeMillis());
         ivExternalBig.setVisibility(View.VISIBLE);
         ivExternalBig.setImageResource(R.drawable.open_lock_big);
         ivExternalMiddle.setVisibility(View.VISIBLE);
@@ -545,6 +589,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
         openLockBig = (AnimationDrawable) ivExternalBig.getDrawable();
         openLockMiddle = (AnimationDrawable) ivExternalMiddle.getDrawable();
         openLockSmall = (AnimationDrawable) ivInnerMiddle.getDrawable();
+        LogUtils.d("davi 开始2 "+System.currentTimeMillis());
         if (openLockBig != null) {
             openLockBig.start();
         }
@@ -554,9 +599,51 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
         if (openLockSmall != null) {
             openLockSmall.start();
         }
+        LogUtils.d("davi 开始3 "+System.currentTimeMillis());
+    }*/
+    AnimationsContainer.FramesSequenceAnimation openLockBig;
+    AnimationsContainer.FramesSequenceAnimation openLockMiddle;
+    AnimationsContainer.FramesSequenceAnimation openLockSmall;
+    AnimationsContainer.FramesSequenceAnimation closeLock;
+    public void openLockAnimator() {
+        LogUtils.d("davi 开始新1 "+System.currentTimeMillis());
+        ivExternalBig.setVisibility(View.VISIBLE);
+//        ivExternalBig.setImageResource(R.drawable.open_lock_big);
+         //优化后的帧动画
+            openLockBig = AnimationsContainer.getInstance(R.array.open_lock_big, 26).createProgressDialogAnim(ivExternalBig);
+        ivExternalMiddle.setVisibility(View.VISIBLE);
+//        ivExternalMiddle.setImageResource(R.drawable.open_lock_middle);
+        openLockMiddle= AnimationsContainer.getInstance(R.array.open_lock_middle, 26).createProgressDialogAnim(ivExternalMiddle);
+        ivExternalSmall.setVisibility(View.GONE);
+//        ivExternalSmall.setImageResource(R.mipmap.bluetooth_open_lock_small_icon);
+        ivInnerMiddle.setVisibility(View.VISIBLE);
+//        ivInnerMiddle.setImageResource(R.drawable.open_lock_small);
+        openLockSmall= AnimationsContainer.getInstance(R.array.open_lock_small, 26).createProgressDialogAnim(ivInnerMiddle);
+        ivInnerSmall.setVisibility(View.GONE);
+//                ivInnerSmall.setImageResource();
+        tvInner.setVisibility(View.GONE);
+//                tvInner.setText();
+//                tvInner.setTextColor();
+        tvExternal.setVisibility(View.VISIBLE);
+        tvExternal.setTextColor(getResources().getColor(R.color.cC6F5FF));
+        tvExternal.setText(getString(R.string.is_lock));
 
+
+        LogUtils.d("davi 开始新2 "+System.currentTimeMillis());
+        if (openLockBig != null) {
+            openLockBig.start();
+        }
+        if (openLockMiddle != null) {
+            openLockMiddle.start();
+        }
+        if (openLockSmall != null) {
+            openLockSmall.start();
+        }
+        LogUtils.d("davi 开始新3 "+System.currentTimeMillis());
     }
-
+    /**
+     * 关锁动画
+     * */
     public void closeLockAnimator() {
         ivExternalBig.setVisibility(View.VISIBLE);
         ivExternalBig.setImageResource(R.mipmap.bluetooth_no_connect_big_icon);
@@ -565,7 +652,8 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
         ivExternalSmall.setVisibility(View.GONE);
 //                ivExternalSmall.setImageResource(R.mipmap.bluetooth_open_lock_small_icon);
         ivInnerMiddle.setVisibility(View.VISIBLE);
-        ivInnerMiddle.setImageResource(R.drawable.bluetooth_lock_close);
+//        ivInnerMiddle.setImageResource(R.drawable.bluetooth_lock_close);
+        closeLock = AnimationsContainer.getInstance(R.array.bluetooth_lock_close, 14).createProgressDialogAnim(ivInnerMiddle);
         ivInnerSmall.setVisibility(View.VISIBLE);
         ivInnerSmall.setImageResource(R.mipmap.bluetooth_lock_bu_fang_inner_small_icon);
         tvInner.setVisibility(View.VISIBLE);
@@ -574,18 +662,21 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
         tvExternal.setVisibility(View.VISIBLE);
         tvExternal.setTextColor(getResources().getColor(R.color.cC6F5FF));
         tvExternal.setText(getString(R.string.bluetooth_close_status));
-        closeLock = (AnimationDrawable) ivInnerMiddle.getDrawable();
         if (closeLock != null) {
             closeLock.start();
         }
     }
-
+    /**
+     * 停止关锁动画
+     * */
     public void stopCloseLockAnimator() {
         if (closeLock != null) {
             closeLock.stop();
         }
     }
-
+    /**
+     * 停止开锁动画
+     * */
     public void stopOpenLockAnimator() {
         if (openLockBig != null) {
             openLockBig.stop();
@@ -744,6 +835,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
                     return;
                 }
                 alertDialog.dismiss();
+                LogUtils.d("davi 准备 "+System.currentTimeMillis());
                 mPresenter.realOpenLock(name, false);
 
             }
@@ -772,10 +864,16 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
 
     @Override
     public void openLockSuccess() {
-        stopOpenLockAnimator();
-        changeOpenLockStatus(10);
-        handler.removeCallbacks(lockRunnable);
-        handler.postDelayed(lockRunnable, 15 * 1000);  //十秒后退出开门状态
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                stopOpenLockAnimator();
+                changeOpenLockStatus(10);
+                handler.removeCallbacks(lockRunnable);
+                handler.postDelayed(lockRunnable, 15 * 1000);  //十秒后退出开门状态
+            }
+        },3000);
+
 
 
     }
@@ -783,9 +881,12 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
     @Override
     public void onLockLock() {  //关门
         closeLockAnimator();
+        LogUtils.d("davi 关锁 "+System.currentTimeMillis());
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
+                LogUtils.d("davi 停止关锁 "+System.currentTimeMillis());
+                stopCloseLockAnimator();
                 handler.removeCallbacks(lockRunnable);
                 lockRunnable.run();
             }
@@ -795,16 +896,22 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
 
     @Override
     public void openLockFailed(Throwable throwable) {
-        if (throwable instanceof TimeoutException) {
-            ToastUtil.getInstance().showShort(getString(R.string.open_lock_failed));
-        } else if (throwable instanceof BleProtocolFailedException) {
-            BleProtocolFailedException bleProtocolFailedException = (BleProtocolFailedException) throwable;
-            ToastUtil.getInstance().showShort(getString(R.string.open_lock_failed));
-        } else {
-            ToastUtil.getInstance().showShort(getString(R.string.open_lock_failed));
-        }
-        lockRunnable.run();
-        stopOpenLockAnimator();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (throwable instanceof TimeoutException) {
+                    ToastUtil.getInstance().showShort(getString(R.string.open_lock_failed));
+                } else if (throwable instanceof BleProtocolFailedException) {
+                    BleProtocolFailedException bleProtocolFailedException = (BleProtocolFailedException) throwable;
+                    ToastUtil.getInstance().showShort(getString(R.string.open_lock_failed));
+                } else {
+                    ToastUtil.getInstance().showShort(getString(R.string.open_lock_failed));
+                }
+                lockRunnable.run();
+                stopOpenLockAnimator();
+            }
+        },3000);
+
 
 
     }
@@ -826,8 +933,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
 
 
     /**
-     *
-     * @param type  -1为锁状态改变   -2  为了更新正常异常状态
+     * @param type -1为锁状态改变   -2  为了更新正常异常状态
      */
     @Override
     public void onWarringUp(int type) {
@@ -898,7 +1004,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
             switch (record.getOpen_type()) {
                 case BleUtil.PASSWORD:
                     List<ForeverPassword> pwdList = passwordResults.getData().getPwdList();
-                    if (pwdList!=null&&pwdList.size()>0){
+                    if (pwdList != null && pwdList.size() > 0) {
                         for (ForeverPassword password : pwdList) {
                             if (Integer.parseInt(password.getNum()) == Integer.parseInt(record.getUser_num())) {
                                 nickName = password.getNickName();
@@ -909,7 +1015,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
                     break;
                 case BleUtil.FINGERPRINT:
                     List<GetPasswordResult.DataBean.Fingerprint> fingerprints = passwordResults.getData().getFingerprintList();
-                    if (fingerprints!=null&&fingerprints.size()>0){
+                    if (fingerprints != null && fingerprints.size() > 0) {
                         for (GetPasswordResult.DataBean.Fingerprint password : fingerprints) {
                             if (Integer.parseInt(password.getNum()) == Integer.parseInt(record.getUser_num())) {
                                 nickName = password.getNickName();
@@ -920,7 +1026,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
                     break;
                 case BleUtil.RFID:  //卡片
                     List<GetPasswordResult.DataBean.Card> cards = passwordResults.getData().getCardList();
-                    if (cards!=null&&cards.size()>0){
+                    if (cards != null && cards.size() > 0) {
                         for (GetPasswordResult.DataBean.Card password : cards) {
                             if (Integer.parseInt(password.getNum()) == Integer.parseInt(record.getUser_num())) {
                                 nickName = password.getNickName();

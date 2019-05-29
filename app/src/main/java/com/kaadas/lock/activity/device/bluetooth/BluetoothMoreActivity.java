@@ -202,19 +202,21 @@ public class BluetoothMoreActivity extends BaseBleActivity<IDeviceMoreView, Devi
 
                 break;
             case R.id.rl_am:
-                if (amAutoLockStatus) {
-                    //打开状态 现在关闭
-                    mPresenter.setAutoLock(false);
-                    showLoading("");
-
-//                    SPUtils.put(KeyConstants.AM_AUTO_LOCK_STATUS, false);
-                } else {
-                    //关闭状态 现在打开
-                    mPresenter.setAutoLock(true);
-                    showLoading("");
-
-//                    SPUtils.put(KeyConstants.AM_AUTO_LOCK_STATUS, true);
-                }
+                ToastUtil.getInstance().showLong(R.string.please_lock_countrol);
+//                return;
+//                if (amAutoLockStatus) {
+//                    //打开状态 现在关闭
+//                    mPresenter.setAutoLock(false);
+//                    showLoading("");
+//
+////                    SPUtils.put(KeyConstants.AM_AUTO_LOCK_STATUS, false);
+//                } else {
+//                    //关闭状态 现在打开
+//                    mPresenter.setAutoLock(true);
+//                    showLoading("");
+//
+////                    SPUtils.put(KeyConstants.AM_AUTO_LOCK_STATUS, true);
+//                }
                 break;
             case R.id.rl_door_lock_language_switch:
                 intent = new Intent(this, BluetoothLockLanguageSettingActivity.class);
@@ -239,7 +241,6 @@ public class BluetoothMoreActivity extends BaseBleActivity<IDeviceMoreView, Devi
                 startActivity(intent);
                 break;
             case R.id.rl_check_firmware_update:
-
                 LogUtils.e("");
                 showLoading(getString(R.string.is_check_vle_version));
                 if (mPresenter.isAuth(bleLockInfo, true)) {
@@ -495,6 +496,7 @@ public class BluetoothMoreActivity extends BaseBleActivity<IDeviceMoreView, Devi
 
     @Override
     public void notNeedUpdate(String errorCode) {
+        hiddenLoading();
         if ("401".equals(errorCode)) {  //数据参数不对
             ToastUtil.getInstance().showLong(getString(R.string.data_params_error));
         } else if ("102".equals(errorCode)) { //SN格式不正确

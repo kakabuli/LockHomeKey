@@ -164,8 +164,7 @@ public class BindBlePresenter<T> extends BasePresenter<IBindBleView> {
                 byte[] bytes = bleDataBean.getOriginalData();
                 byte[] password_2de = Rsa.decrypt(payload, password_1);
 
-                LogUtils.e("获取到秘钥上报数据   " + Rsa.bytesToHexString(bleDataBean.getOriginalData()) +
-                        "  解密后的数据是   " + Rsa.bytesToHexString(password_2de));
+                LogUtils.e("获取到秘钥上报数据   " + Rsa.bytesToHexString(bleDataBean.getOriginalData()) + "  解密后的数据是   " + Rsa.bytesToHexString(password_2de));
 
                 byte checkNum = 0;
                 for (int i = 0; i < password_2de.length; i++) {

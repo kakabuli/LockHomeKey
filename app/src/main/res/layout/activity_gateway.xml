@@ -49,7 +49,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="@dimen/dp_49"
-        android:src="@mipmap/gateway_img_icon" />
+        android:src="@mipmap/gateway_detail_lock" />
 
     <RelativeLayout
         android:layout_width="match_parent"

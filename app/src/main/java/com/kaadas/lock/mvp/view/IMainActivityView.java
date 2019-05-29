@@ -27,11 +27,11 @@ public interface IMainActivityView extends IBleView {
      * @param eventType   事件类型
      * @param deviceId      设备Id
      */
-    void onGwEvent(int eventType,String deviceId);
+    void onGwEvent(int eventType,String deviceId,String gatewayId);
 
 
     void uploadpush(BaseResult baseResult);
 
-    void onGwLockEvent(int alarmCode,int clusterID,String deviceId);
+    void onGwLockEvent(int alarmCode,int clusterID,String deviceId,String gatewayId);
 
 }

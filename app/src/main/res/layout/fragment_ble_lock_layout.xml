@@ -76,7 +76,7 @@
                 android:layout_below="@id/rl_icon"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="@dimen/dp_18"
-                android:text=""
+                android:text="   "
                 android:textColor="#C6F5FF"
                 android:textSize="@dimen/sp_10" />
 

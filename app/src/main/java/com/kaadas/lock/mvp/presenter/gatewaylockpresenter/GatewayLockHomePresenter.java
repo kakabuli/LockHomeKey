@@ -14,6 +14,7 @@ import com.kaadas.lock.publiclibrary.mqtt.eventbean.DeviceOnLineBean;
 import com.kaadas.lock.publiclibrary.mqtt.eventbean.GatewayLockAlarmEventBean;
 import com.kaadas.lock.publiclibrary.mqtt.eventbean.GatewayLockInfoEventBean;
 import com.kaadas.lock.publiclibrary.mqtt.eventbean.OpenLockNotifyBean;
+import com.kaadas.lock.publiclibrary.mqtt.publishbean.GetDevicePowerBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.GetLockRecordTotal;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.OpenLockBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.GetBindGatewayStatusResult;
@@ -41,12 +42,12 @@ public class GatewayLockHomePresenter<T> extends BasePresenter<IGatewayLockHomeV
     private Disposable networkChangeDisposable;
     private Disposable  listenerGatewayOnLine;
     private Disposable  listenerDeviceOnLineDisposable;
-
     private Disposable openLockDisposable;
     private Disposable closeLockNotifyDisposable;
     private Disposable lockCloseDisposable;
     private Disposable getLockRecordTotalDisposable;
     private Disposable openLockEventDisposable;
+    private Disposable getPowerDisposable;
 
     @Override
     public void attachView(IGatewayLockHomeView view) {
@@ -437,5 +438,50 @@ public class GatewayLockHomePresenter<T> extends BasePresenter<IGatewayLockHomeV
                 });
         compositeDisposable.add(openLockEventDisposable);
     }
+
+    //监听请求电量
+    public void getPower(){
+        toDisposable(getPowerDisposable);
+        getPowerDisposable = mqttService.listenerDataBack()
+                .filter(new Predicate<MqttData>() {
+                    @Override
+                    public boolean test(MqttData mqttData) throws Exception {
+                        if (MqttConstant.GET_POWER.equals(mqttData.getFunc())) {
+                            return true;
+                        }
+                        return false;
+                    }
+                })
+                .compose(RxjavaHelper.observeOnMainThread())
+                .subscribe(new Consumer<MqttData>() {
+                    @Override
+                    public void accept(MqttData mqttData) throws Exception {
+                        String payload = mqttData.getPayload();
+                        GetDevicePowerBean powerBean = new Gson().fromJson(payload, GetDevicePowerBean.class);
+                        if (powerBean != null) {
+                            if ("200".equals(powerBean.getReturnCode())) {
+                                if (mViewRef.get() != null) {
+                                    mViewRef.get().getPowerSuccess(powerBean.getGwId(), powerBean.getDeviceId());
+                                }
+                            } else {
+                                if (mViewRef.get() != null) {
+                                    mViewRef.get().getPowerFail(powerBean.getGwId(),powerBean.getDeviceId());
+                                }
+                            }
+                        }
+
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        if (mViewRef.get()!=null){
+                            mViewRef.get().getPowerThrowable();
+                        }
+                    }
+                });
+        compositeDisposable.add(getPowerDisposable);
+    }
+
+
 }
 

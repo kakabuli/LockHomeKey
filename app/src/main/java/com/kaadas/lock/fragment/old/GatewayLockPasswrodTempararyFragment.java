@@ -149,6 +149,7 @@ public class GatewayLockPasswrodTempararyFragment extends BaseFragment<GatewayLo
                 LogUtils.e("添加密码的编号   "+addPwdIdList.get(p));
                 mPresenter.addLockPwd(gatewayId,deviceId,addPwdIdList.get(p),strForeverPassword);
                 takeEffect=AlertDialogUtil.getInstance().noButtonDialog(getActivity(),getString(R.string.take_effect_be_being));
+                takeEffect.setCancelable(false);
                 break;
             }
         } else {

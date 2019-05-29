@@ -3,18 +3,14 @@ package com.kaadas.lock.mvp.presenter;
 import android.text.TextUtils;
 
 import com.kaadas.lock.MyApplication;
-import com.kaadas.lock.mvp.mvpbase.BlePresenter;
 import com.kaadas.lock.mvp.view.IBleLockView;
-import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.publiclibrary.ble.BleCommandFactory;
 import com.kaadas.lock.publiclibrary.ble.BleProtocolFailedException;
 import com.kaadas.lock.publiclibrary.ble.RetryWithTime;
-import com.kaadas.lock.publiclibrary.ble.bean.OpenLockRecord;
 import com.kaadas.lock.publiclibrary.ble.responsebean.BleDataBean;
 import com.kaadas.lock.publiclibrary.ble.responsebean.ReadInfoBean;
 import com.kaadas.lock.publiclibrary.http.XiaokaiNewServiceImp;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
-import com.kaadas.lock.publiclibrary.http.result.LockRecordResult;
 import com.kaadas.lock.publiclibrary.http.util.BaseObserver;
 import com.kaadas.lock.publiclibrary.http.util.RxjavaHelper;
 import com.kaadas.lock.utils.DateUtils;
@@ -24,8 +20,6 @@ import com.kaadas.lock.utils.NetUtil;
 import com.kaadas.lock.utils.Rsa;
 import com.kaadas.lock.utils.SPUtils;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
@@ -61,6 +55,8 @@ public class BleLockPresenter<T> extends MyOpenLockRecordPresenter<IBleLockView>
             getDeviceInfo();
         }
     }
+
+
 
     public void getDeviceInfo() {
         byte[] command = BleCommandFactory.syncLockInfoCommand(bleLockInfo.getAuthKey());
@@ -456,12 +452,12 @@ public class BleLockPresenter<T> extends MyOpenLockRecordPresenter<IBleLockView>
                     public void accept(BleDataBean bleDataBean) throws Exception {  //开锁成功
                         if (bleDataBean.getOriginalData()[0] == 0 && bleDataBean.getPayload()[0] == 0) { //加密标志  0x01    且负载数据第一个是  0
                             //开锁返回确认帧     如果成功  保存密码    那么监听开锁上报   以开锁上报为准   开锁上报  五秒超时
-                            LogUtils.e("开锁成功   " + Rsa.bytesToHexString(bleDataBean.getPayload()));
+                            LogUtils.e("开锁成功 1  " + Rsa.bytesToHexString(bleDataBean.getPayload()));
                             //开锁成功  保存密码
                             SPUtils.put(KeyConstants.SAVE_PWD_HEARD + bleLockInfo.getServerLockInfo().getMacLock(), pwd);
                             listenerOpenLockUp();
                         } else {  //开锁失败
-                            LogUtils.e("开锁失败   " + Rsa.bytesToHexString(bleDataBean.getPayload()));
+                            LogUtils.e("开锁失败 2  " + Rsa.bytesToHexString(bleDataBean.getPayload()));
                             if (mViewRef.get() != null) {
                                 mViewRef.get().openLockFailed(new BleProtocolFailedException(0xff & bleDataBean.getOriginalData()[0]));
                             }
@@ -473,6 +469,7 @@ public class BleLockPresenter<T> extends MyOpenLockRecordPresenter<IBleLockView>
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
+                        LogUtils.e("开锁失败 3  " + throwable.getMessage());
                         if (mViewRef.get() != null) {
                             mViewRef.get().openLockFailed(throwable);
                         }
@@ -531,6 +528,7 @@ public class BleLockPresenter<T> extends MyOpenLockRecordPresenter<IBleLockView>
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
+                        LogUtils.e("开锁失败   " + throwable.getMessage());
                         if (mViewRef.get() != null) {
                             mViewRef.get().openLockFailed(throwable);
                         }
@@ -546,6 +544,7 @@ public class BleLockPresenter<T> extends MyOpenLockRecordPresenter<IBleLockView>
     public void attachView(IBleLockView view) {
         super.attachView(view);
         //设置警报提醒
+        LogUtils.e("蓝牙界面   attachView " + this +"    "  );
         toDisposable(warringDisposable);
         warringDisposable = bleService.listeneDataChange()
                 .filter(new Predicate<BleDataBean>() {
@@ -682,13 +681,16 @@ public class BleLockPresenter<T> extends MyOpenLockRecordPresenter<IBleLockView>
         compositeDisposable.add(deviceStateChangeDisposable);
     }
 
+
     @Override
     public void detachView() {
         super.detachView();
-
+        LogUtils.e("蓝牙界面   detachView " + this + "   " );
         handler.removeCallbacksAndMessages(null);
     }
 
-
+    public boolean isAttach(){
+        return isAttach;
+    }
 
 }

@@ -269,7 +269,6 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-
                         LogUtils.e("监听连接状态发生异常   " + throwable.getMessage());
                     }
                 });

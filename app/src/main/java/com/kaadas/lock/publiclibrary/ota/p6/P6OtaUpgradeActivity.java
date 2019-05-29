@@ -25,6 +25,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.publiclibrary.ota.OtaConstants;
 import com.kaadas.lock.publiclibrary.ota.OtaUtils;
@@ -144,6 +145,7 @@ public class P6OtaUpgradeActivity extends AppCompatActivity implements View.OnCl
         }
         if (BluetoothLeService.ACTION_GATT_CONNECTED.equals(action)) {  //连接成功
             Log.e(TAG, "连接成功  发现服务");
+            handler.removeCallbacks(disconnectedRunnable);
             BluetoothLeService.discoverServices();
             Utils.setIntSharedPreference(P6OtaUpgradeActivity.this, Constants.PREF_PROGRAM_ROW_START_POS + BluetoothLeService.mBluetoothDeviceAddress, 0);
             handler.postDelayed(disconnectedRunnable, 5 * 1000);  //如果五秒之内没有发现服务，那么断开连接
@@ -368,6 +370,7 @@ public class P6OtaUpgradeActivity extends AppCompatActivity implements View.OnCl
 
                     @Override
                     public void right() {
+                        isUpdating = true;
                         mutiProgress.setCurrNodeNO(0, false);
                         mCircleProgress2.setValue(0);
                         downBinNew(binDownUrl, filePath);
@@ -393,6 +396,7 @@ public class P6OtaUpgradeActivity extends AppCompatActivity implements View.OnCl
     }
 
     public void scanDevices() {
+        MyApplication.getInstance().getBleService().release();
         BluetoothLeService.disconnect();
         ScanSettings scanSettings = new ScanSettings.Builder().setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY).build();
         bluetoothLeScanner.startScan(null, scanSettings, newScanBleCallback);
@@ -429,6 +433,7 @@ public class P6OtaUpgradeActivity extends AppCompatActivity implements View.OnCl
                     @Override
                     public void run() {
                         Log.e(TAG, "连接设备");
+                        handler.postDelayed(disconnectedRunnable, 10 * 1000);
                         BluetoothLeService.connect(device, P6OtaUpgradeActivity.this);
                     }
                 }, 1000);
@@ -536,6 +541,7 @@ public class P6OtaUpgradeActivity extends AppCompatActivity implements View.OnCl
             Utils.setIntSharedPreference(P6OtaUpgradeActivity.this, Constants.PREF_PROGRAM_ROW_NO + BluetoothLeService.mBluetoothDeviceAddress, 0);
             Utils.setIntSharedPreference(P6OtaUpgradeActivity.this, Constants.PREF_PROGRAM_ROW_START_POS + BluetoothLeService.mBluetoothDeviceAddress, 0);
             isComplete = true;
+            isUpdating = false;
             otaSuccess();
         }
 

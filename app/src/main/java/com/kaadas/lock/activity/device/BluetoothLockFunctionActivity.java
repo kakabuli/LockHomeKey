@@ -182,24 +182,28 @@ public class BluetoothLockFunctionActivity extends BaseBleActivity<IDeviceDetail
 
     private void showLockType() {
         String lockType = bleLockInfo.getServerLockInfo().getModel();
-        if (lockType.contains("K9S")){
+        if (lockType.startsWith("K9S")){
             lockType="K9S";
-        }else if (lockType.contains("K8S")){
+        }else if (lockType.startsWith("K8S")){
             lockType="K8S";
-        }else if (lockType.contains("K7S")){
+        }else if (lockType.startsWith("K7S")){
             lockType="K7S";
-        }else if (lockType.contains("S8")){
+        }else if (lockType.startsWith("S8")){
             lockType="S8";
-        }else if (lockType.contains("KX")){
+        }else if (lockType.startsWith("KX")){
             lockType="KX";
-        }else if (lockType.contains("K9")){
+        }else if (lockType.startsWith("K9")){
             lockType="K9";
-        }else if (lockType.contains("K8")){
+        }else if (lockType.startsWith("K8")){
             lockType="K8";
-        }else if (lockType.contains("K7")){
+        }else if (lockType.startsWith("K7")){
             lockType="K7";
+        }else {
+            lockType="";
         }
-        tvType.setText(getString(R.string.bluetooth_type) + lockType);
+        if (!TextUtils.isEmpty(lockType)){
+            tvType.setText(getString(R.string.bluetooth_type) + lockType);
+        }
     }
 
     private void changeLockIcon(Intent intent) {
