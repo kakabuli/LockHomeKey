@@ -446,7 +446,6 @@ public class BleService extends Service {
                     int b3 = value[5] & 0xff; //主版本号
 
                     LogUtils.e("读取到蓝牙版本信息  " + new String(value));
-                    LogUtils.e("读取到蓝牙版本信息  V" + M + "." + m1 + "" + m2 + "" + b1 + "" + b2 + "" + b3);
                     readSystemIDSubject.onNext(new ReadInfoBean(ReadInfoBean.TYPE_BLEINFO, new String(characteristic.getValue())));
                     break;
                 case BLeConstants.UUID_MODE_CHAR:
@@ -634,7 +633,12 @@ public class BleService extends Service {
     public Observable<ReadInfoBean> readBleVersion() {
         if (bleVersionChar != null && bluetoothGatt != null) {
             LogUtils.e("蓝牙版本号-》Ble");
-            bluetoothGatt.readCharacteristic(bleVersionChar);
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    bluetoothGatt.readCharacteristic(bleVersionChar);
+                }
+            }, 500);
         }
         return readSystemIDSubject;
     }

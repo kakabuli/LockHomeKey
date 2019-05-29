@@ -239,7 +239,6 @@ public class BluetoothMoreActivity extends BaseBleActivity<IDeviceMoreView, Devi
                 startActivity(intent);
                 break;
             case R.id.rl_check_firmware_update:
-
                 LogUtils.e("");
                 showLoading(getString(R.string.is_check_vle_version));
                 if (mPresenter.isAuth(bleLockInfo, true)) {
@@ -495,6 +494,7 @@ public class BluetoothMoreActivity extends BaseBleActivity<IDeviceMoreView, Devi
 
     @Override
     public void notNeedUpdate(String errorCode) {
+        hiddenLoading();
         if ("401".equals(errorCode)) {  //数据参数不对
             ToastUtil.getInstance().showLong(getString(R.string.data_params_error));
         } else if ("102".equals(errorCode)) { //SN格式不正确

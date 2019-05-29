@@ -190,20 +190,6 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                                     if (gatewayStatusResult != null) {
                                         List<HomeShowBean> homeShowBeans = MyApplication.getInstance().getAllDevices();
                                         SPUtils.put(gatewayStatusResult.getDevuuid(), gatewayStatusResult.getData().getState());
-                                       /* if (homeShowBeans.size() > 0) {
-                                            for (HomeShowBean homeShowBean : homeShowBeans) {
-                                                if (homeShowBean.getDeviceType() == HomeShowBean.TYPE_GATEWAY) {
-                                                    GatewayServiceInfo gatewayInfo = (GatewayServiceInfo) homeShowBean.getObject();
-                                                    if (gatewayInfo.getServerInfo().getDeviceSN().equals(gatewayStatusResult.getDevuuid())) {
-                                                        LogUtils.e("监听网关的状态      " + gatewayStatusResult.getDevuuid());
-                                                        gatewayInfo.setEvent_str(gatewayStatusResult.getData().getState());
-                                                    }
-                                                }
-                                            }
-                                        } else {
-
-                                        }*/
-
                                     }
                                 }
                             }

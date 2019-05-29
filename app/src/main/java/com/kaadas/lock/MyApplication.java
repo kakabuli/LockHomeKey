@@ -482,6 +482,10 @@ public class MyApplication extends Application {
                         }
                         String payload = mqttData.getPayload();
                         allBindDevices = new Gson().fromJson(payload, AllBindDevices.class);
+
+                        long serverCurrentTime = Long.parseLong(allBindDevices.getTimestamp());
+                        SPUtils.put(KeyConstants.SERVER_CURRENT_TIME,serverCurrentTime);
+
                         if (allBindDevices != null) {
                             homeShowDevices = allBindDevices.getHomeShow();
                             LogUtils.e("设备更新  application");
@@ -520,7 +524,6 @@ public class MyApplication extends Application {
     }
 
     public List<HomeShowBean> getAllDevices() {
-        LogUtils.e(homeShowDevices.size()+"总的设备列表数据");
         return homeShowDevices;
     }
 
