@@ -64,7 +64,7 @@ public class BleService extends Service {
     private boolean isConnected = false;
     private BluetoothGatt bluetoothGatt;
     private static final int heartInterval = 3 * 1000; //心跳间隔时间 毫秒
-    private static final int sendInterval = 100;  //命令发送间隔时间 毫秒
+    private static final int sendInterval = 150;  //命令发送间隔时间 毫秒
     private BluetoothDevice currentDevice;  //当前连接的设备
     private List<byte[]> commands = new ArrayList<>();
     private long lastSendTime = 0;   //上次发送的指令的时间

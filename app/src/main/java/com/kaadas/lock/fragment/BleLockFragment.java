@@ -173,10 +173,14 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
                 if (bleLockInfo.getArmMode() == 1) {//布防模式
                     changeOpenLockStatus(4);
                 }
-                if (bleLockInfo.isLockStatusException()) {
-                    tvDeviceStatus.setText(getString(R.string.no_normal));
+                if (bleLockInfo.isConnected()) {
+                    if (bleLockInfo.isLockStatusException()) {
+                        tvDeviceStatus.setText(getString(R.string.no_normal));
+                    } else {
+                        tvDeviceStatus.setText(getString(R.string.normal));
+                    }
                 } else {
-                    tvDeviceStatus.setText(getString(R.string.normal));
+                    tvDeviceStatus.setText(getString(R.string.not_connected));
                 }
             }
         };
@@ -710,11 +714,20 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
         switch (v.getId()) {
             case R.id.rl_device_dynamic:
             case R.id.iv_device_dynamic:
+                bleLockInfo.setLockStatusException(false);
+                if (bleLockInfo.isConnected()) {
+                    if (bleLockInfo.isLockStatusException()) {
+                        tvDeviceStatus.setText(getString(R.string.no_normal));
+                    } else {
+                        tvDeviceStatus.setText(getString(R.string.normal));
+                    }
+                } else {
+                    tvDeviceStatus.setText(getString(R.string.not_connected));
+                }
                 intent = new Intent(getActivity(), BluetoothEquipmentDynamicActivity.class);
                 startActivity(intent);
                 break;
             case R.id.tv_more:
-
                 intent = new Intent(getActivity(), BluetoothEquipmentDynamicActivity.class);
                 startActivity(intent);
                 break;
@@ -1002,10 +1015,14 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
             //设置守护次数为0
             tvOpenLockTimes.setText("0");
         }
-        if (bleLockInfo.isLockStatusException()) {
-            tvDeviceStatus.setText(getString(R.string.no_normal));
+        if (bleLockInfo.isConnected()) {
+            if (bleLockInfo.isLockStatusException()) {
+                tvDeviceStatus.setText(getString(R.string.no_normal));
+            } else {
+                tvDeviceStatus.setText(getString(R.string.normal));
+            }
         } else {
-            tvDeviceStatus.setText(getString(R.string.normal));
+            tvDeviceStatus.setText(getString(R.string.not_connected));
         }
     }
 
@@ -1277,10 +1294,14 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
             if (bleLockInfo.getArmMode() == 1) {//布防模式
                 changeOpenLockStatus(4);
             }
-            if (bleLockInfo.isLockStatusException()) {
-                tvDeviceStatus.setText(getString(R.string.no_normal));
+            if (bleLockInfo.isConnected()) {
+                if (bleLockInfo.isLockStatusException()) {
+                    tvDeviceStatus.setText(getString(R.string.no_normal));
+                } else {
+                    tvDeviceStatus.setText(getString(R.string.normal));
+                }
             } else {
-                tvDeviceStatus.setText(getString(R.string.normal));
+                tvDeviceStatus.setText(getString(R.string.not_connected));
             }
         }
     }
