@@ -23,12 +23,14 @@ import com.kaadas.lock.publiclibrary.linphone.linphone.callback.PhoneAutoAccept;
 import com.kaadas.lock.publiclibrary.linphone.linphone.util.LinphoneHelper;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.RingTools;
+import com.kaadas.lock.utils.ftp.GeTui;
 
 import org.linphone.core.LinphoneCall;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import retrofit2.http.GET;
 
 public class CallComingActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -111,6 +113,7 @@ public class CallComingActivity extends AppCompatActivity implements View.OnClic
 
     @Override
     protected void onDestroy() {
+        Log.e(Tag,"CallComing.........Ondestroy");
         ringTools.stopRinging();
         super.onDestroy();
     }
@@ -140,6 +143,9 @@ public class CallComingActivity extends AppCompatActivity implements View.OnClic
             @Override
             public void callFinish() {
                 Log.e(Tag, "猫眼 callFinish.........");
+                if(ringTools!=null){
+                    ringTools.stopRinging();
+                }
                 Intent intent = new Intent();
                 intent.putExtra(KeyConstants.IS_ACCEPT_CALL, false);
                 setResult(RESULT_OK, intent);
