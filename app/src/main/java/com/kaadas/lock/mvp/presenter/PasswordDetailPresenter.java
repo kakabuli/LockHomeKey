@@ -20,6 +20,7 @@ import com.kaadas.lock.utils.Rsa;
 
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -176,7 +177,7 @@ public class PasswordDetailPresenter<T> extends BlePresenter<IPasswordDetailView
      */
 
     public void getNumber(int serverType, int serverNumber, int blePwdType, boolean isDetail) {
-
+        LogUtils.e("服务器数据是   serverNumber   " + serverNumber);
 
         byte[] command = BleCommandFactory.syncLockPasswordCommand((byte) blePwdType, bleLockInfo.getAuthKey());
         bleService.sendCommand(command);
@@ -204,6 +205,7 @@ public class PasswordDetailPresenter<T> extends BlePresenter<IPasswordDetailView
                         int codeNumber = deValue[2] & 0xff;
                         LogUtils.e("秘钥的帧数是  " + index + " 秘钥类型是  " + codeType + "  秘钥总数是   " + codeNumber);
                         List<Integer> bleNumber = getAllpasswordNumber(blePwdType, deValue);
+                        LogUtils.e("同步的秘钥列表是   " + Arrays.toString(bleNumber.toArray()));
                         List<Integer> serverNumbers = new ArrayList<>();
                         List<Integer> morePwd = new ArrayList<>();
                         if (serverType == 1) { //普通密码
@@ -234,7 +236,7 @@ public class PasswordDetailPresenter<T> extends BlePresenter<IPasswordDetailView
                         List<Integer> tempNumber = new ArrayList<>();
                         if (serverType == 1) { //永久密码
                             for (int num : bleNumber) {
-                                if (num >= 0 && num < 9) {
+                                if (num >= 0 && num < 10) {
                                     tempNumber.add(num);
                                 }
                             }
