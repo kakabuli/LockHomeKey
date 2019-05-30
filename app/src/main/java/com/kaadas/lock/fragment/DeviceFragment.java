@@ -502,7 +502,24 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                         gatewayInfo.setEvent_str(evnetStr);
                         //获取网关下绑定的设备,把网关下的设备设置为离线.网关离线设备也离线
                         if ("offline".equals(evnetStr)) {
-                            List<HomeShowBean> gatewayBindList = MyApplication.getInstance().getGatewayBindList(gatewayId);
+                            switch (device.getDeviceType()) {
+                                //猫眼
+                                case HomeShowBean.TYPE_CAT_EYE:
+                                    CateEyeInfo cateEyeInfo = (CateEyeInfo) device.getObject();
+                                    if (cateEyeInfo.getGwID().equals(gatewayId)){
+                                        cateEyeInfo.getServerInfo().setEvent_str("offline");
+                                    }
+                                    break;
+                                //网关锁
+                                case HomeShowBean.TYPE_GATEWAY_LOCK:
+                                    GwLockInfo gwLockInfo = (GwLockInfo) device.getObject();
+                                    if (gwLockInfo.getGwID().equals(gatewayId)){
+                                        gwLockInfo.getServerInfo().setEvent_str("offline");
+                                    }
+                                    break;
+                            }
+
+                            /*List<HomeShowBean> gatewayBindList = MyApplication.getInstance().getGatewayBindList(gatewayId);
                             for (HomeShowBean gatewayBind : gatewayBindList) {
                                 switch (gatewayBind.getDeviceType()) {
                                     //猫眼
@@ -516,7 +533,10 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                                         gwLockInfo.getServerInfo().setEvent_str("offline");
                                         break;
                                 }
-                            }
+                            }*/
+
+
+
                         }
                         if (deviceDetailAdapter != null) {
                             deviceDetailAdapter.notifyDataSetChanged();

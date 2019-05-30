@@ -360,7 +360,7 @@ public class BleService extends Service {
         @Override
         public void onConnectionStateChange(final BluetoothGatt gatt, int status, int newState) {
             super.onConnectionStateChange(gatt, status, newState);
-            LogUtils.e("蓝牙设备连接状态发生改变 当前状态是  " + newState);
+            LogUtils.e("蓝牙设备连接状态发生改变    当前状态是  " + newState);
             if (newState == BluetoothGatt.STATE_CONNECTED) { //连接成功  此时还不算连接成功，等到发现服务且读取到所有特征值之后才算连接成功
                 gatt.discoverServices(); //发现服务
                 handler.removeCallbacks(notDiscoverServerReleaseRunnbale);
@@ -383,9 +383,12 @@ public class BleService extends Service {
         public void onServicesDiscovered(BluetoothGatt gatt, int status) {
             super.onServicesDiscovered(gatt, status);
             LogUtils.e("发现服务    " + gatt.getServices().size());
-            handler.removeCallbacks(notDiscoverServerReleaseRunnbale);  //清除
-            discoverCharacteristic(gatt);
-
+            if ((!(gatt == null)) && gatt.getServices().size() > 0) {
+                handler.removeCallbacks(notDiscoverServerReleaseRunnbale);  //清除
+                discoverCharacteristic(gatt);
+            } else {
+                release();
+            }
         }
 
         /**
@@ -830,6 +833,10 @@ public class BleService extends Service {
             if (gatt != null) {
                 boolean isWrite = gatt.writeCharacteristic(characteristic);
                 LogUtils.e("发送数据  " + Rsa.bytesToHexString(command) + " isWrite: " + isWrite + "时间 " + System.currentTimeMillis());
+//                if (!isWrite){
+//                    commands.add(0,command);
+//                    handler.postDelayed(sendCommandRannble, sendInterval - (System.currentTimeMillis() - lastSendTime));
+//                }
             } else {
                 LogUtils.e("Ble 发送数据   Gatt为空");
                 release();  //此处为空  断开连接
@@ -865,16 +872,15 @@ public class BleService extends Service {
 
     private Runnable sendCommandRannble = new Runnable() {
         @Override
-        public void run() {
-            synchronized (BleService.class) {
-                if (commands.size() > 0) { //如果指令集合中有数据，那么直接发送数据 且移除此次发送的数据
-                    sendCommand(commands.get(0));
-                    commands.remove(0);
-                }
-                if (commands.size() > 0) {  //如果还有指令  继续发送
-                    handler.removeCallbacks(sendCommandRannble);
-                    handler.postDelayed(sendCommandRannble, sendInterval);
-                }
+        public synchronized void run() {
+            if (commands.size() > 0) { //如果指令集合中有数据，那么直接发送数据 且移除此次发送的数据
+                sendCommand(commands.get(0));
+                commands.remove(0);
+            }
+            if (commands.size() > 0) {  //如果还有指令  继续发送
+                handler.removeCallbacks(sendCommandRannble);
+                handler.postDelayed(sendCommandRannble, sendInterval);
+
             }
         }
     };

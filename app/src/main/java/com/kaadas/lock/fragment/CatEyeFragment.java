@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.cateye.VideoVActivity;
 import com.kaadas.lock.activity.home.CateyeEquipmentDynamicActivity;
@@ -24,6 +25,7 @@ import com.kaadas.lock.mvp.mvpbase.BaseFragment;
 import com.kaadas.lock.mvp.presenter.cateye.CatEyePresenter;
 import com.kaadas.lock.mvp.view.cateye.ICatEyeView;
 import com.kaadas.lock.publiclibrary.bean.CateEyeInfo;
+import com.kaadas.lock.publiclibrary.bean.GatewayInfo;
 import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
@@ -116,10 +118,21 @@ public class CatEyeFragment extends BaseFragment<ICatEyeView, CatEyePresenter<IC
             LogUtils.e(cateEyeInfo.getGwID() + "网关ID是    ");
             gatewayId = cateEyeInfo.getGwID();
             deviceId = cateEyeInfo.getServerInfo().getDeviceId();
-            if (NetUtil.isNetworkAvailable()) {
-                changeOpenLockStatus(cateEyeInfo.getServerInfo().getEvent_str());
-            } else {
-                changeOpenLockStatus("offline");
+            if (!TextUtils.isEmpty(gatewayId)) {
+                GatewayInfo gatewayInfo = MyApplication.getInstance().getGatewayById(gatewayId);
+                if (gatewayInfo != null) {
+                        if (NetUtil.isNetworkAvailable()) {
+                            changeOpenLockStatus(cateEyeInfo.getServerInfo().getEvent_str());
+                            if (gatewayInfo.getEvent_str()!=null){
+                                if (gatewayInfo.getEvent_str().equals("offline")) {
+                                    changeOpenLockStatus("offline");
+                                }
+                            }
+                        } else {
+                            changeOpenLockStatus("offline");
+                        }
+
+                }
             }
             mPresenter.getPublishNotify();
             mPresenter.listenerDeviceOnline();
@@ -408,6 +421,14 @@ public class CatEyeFragment extends BaseFragment<ICatEyeView, CatEyePresenter<IC
             if (cateEyeInfo != null) {
                 if (NetUtil.isNetworkAvailable()) {
                     changeOpenLockStatus(cateEyeInfo.getServerInfo().getEvent_str());
+                    GatewayInfo gatewayInfo = MyApplication.getInstance().getGatewayById(gatewayId);
+                    if (gatewayInfo!=null) {
+                        if (gatewayInfo.getEvent_str() != null) {
+                            if (gatewayInfo.getEvent_str().equals("offline")) {
+                                changeOpenLockStatus("offline");
+                            }
+                        }
+                    }
                 } else {
                     changeOpenLockStatus("offline");
                 }

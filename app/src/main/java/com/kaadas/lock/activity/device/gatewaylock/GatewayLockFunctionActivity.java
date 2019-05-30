@@ -26,6 +26,7 @@ import com.kaadas.lock.bean.HomeShowBean;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.mvp.presenter.gatewaylockpresenter.GatewayLockDetailPresenter;
 import com.kaadas.lock.mvp.view.gatewaylockview.GatewayLockDetailView;
+import com.kaadas.lock.publiclibrary.bean.GatewayInfo;
 import com.kaadas.lock.publiclibrary.bean.GwLockInfo;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.BatteryView;
@@ -228,14 +229,28 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
         if (showBean != null) {
             lockInfo = (GwLockInfo) showBean.getObject();
             if (lockInfo != null) {
-                if (NetUtil.isNetworkAvailable()){
-                    dealWithPower(lockInfo.getPower(), lockInfo.getServerInfo().getEvent_str(), lockInfo.getPowerTimeStamp());
-                }else{
-                    dealWithPower(lockInfo.getPower(), "offline", lockInfo.getPowerTimeStamp());
+                gatewayId = lockInfo.getGwID();
+                if (!TextUtils.isEmpty(gatewayId)) {
+                    GatewayInfo gatewayInfo = MyApplication.getInstance().getGatewayById(gatewayId);
+                    if (gatewayInfo != null) {
+                          if (NetUtil.isNetworkAvailable()) {
+                                dealWithPower(lockInfo.getPower(), lockInfo.getServerInfo().getEvent_str(), lockInfo.getPowerTimeStamp());
+                            if (gatewayInfo.getEvent_str()!=null){
+                                if (gatewayInfo.getEvent_str().equals("offline")) {
+                                    dealWithPower(lockInfo.getPower(), "offline", lockInfo.getPowerTimeStamp());
+                                }
+                            }
+                          } else {
+                            dealWithPower(lockInfo.getPower(), "offline", lockInfo.getPowerTimeStamp());
+                        }
+                    }
+                }
+                if (!TextUtils.isEmpty(lockInfo.getServerInfo().getNickName())){
+                    tvName.setText(lockInfo.getServerInfo().getNickName());
+                }else {
+                    tvName.setText(lockInfo.getServerInfo().getDeviceId());
                 }
 
-                tvName.setText(lockInfo.getServerInfo().getNickName());
-                gatewayId = lockInfo.getGwID();
                 deviceId = lockInfo.getServerInfo().getDeviceId();
                 mPresenter.getPowerData(lockInfo.getGwID(), lockInfo.getServerInfo().getDeviceId());
                 mPresenter.closeLockNotify(deviceId);

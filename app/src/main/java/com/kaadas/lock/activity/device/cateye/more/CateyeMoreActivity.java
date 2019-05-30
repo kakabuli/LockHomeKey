@@ -153,7 +153,11 @@ public class CateyeMoreActivity extends BaseActivity<IGatEyeView, CatEyeMorePres
         loadingDialog = LoadingDialog.getInstance(this);
         Intent intent = getIntent();
         cateEyeInfo = (CateEyeInfo) intent.getSerializableExtra(KeyConstants.CATE_INFO);
-        deviceName = cateEyeInfo.getServerInfo().getNickName();
+        if (!TextUtils.isEmpty(cateEyeInfo.getServerInfo().getNickName())){
+            deviceName = cateEyeInfo.getServerInfo().getNickName();
+        }else{
+            deviceName=cateEyeInfo.getServerInfo().getDeviceId();
+        }
         gatewayId = cateEyeInfo.getGwID();
         deviceId = cateEyeInfo.getServerInfo().getDeviceId();
         if (!TextUtils.isEmpty(gatewayId) && !TextUtils.isEmpty(deviceId)) {

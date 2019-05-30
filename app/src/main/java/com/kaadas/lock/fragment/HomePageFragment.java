@@ -376,6 +376,9 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
         listeners.add(listener);
     }
 
+    public void removeListener(ISelectChangeListener listener) {
+        listeners.remove(listener);
+    }
     public interface ISelectChangeListener {
         void onSelectChange(boolean isSelect);
     }
