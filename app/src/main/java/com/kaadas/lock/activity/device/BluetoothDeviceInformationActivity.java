@@ -85,11 +85,16 @@ public class BluetoothDeviceInformationActivity extends BaseBleActivity<IDeviceI
 
     @Override
     public void HardwareRevDataSuccess(String data) {
-        String[] split = data.split("-");
-        String strModuleHardwareVersion = split[0];
-        String strLockHardwareVersion = split[1];
-        tvBluetoothModuleVersion.setText(strModuleHardwareVersion);
-        tvLockFirmwareVersion.setText(strLockHardwareVersion);
+        if (data.contains("-")){
+            String[] split = data.split("-");
+            String strModuleHardwareVersion = split[0];
+            String strLockHardwareVersion = split[1];
+            tvBluetoothModuleVersion.setText(strModuleHardwareVersion);
+            tvLockFirmwareVersion.setText(strLockHardwareVersion);
+        }else {
+            tvBluetoothModuleVersion.setText(data);
+        }
+
     }
 
     @Override
