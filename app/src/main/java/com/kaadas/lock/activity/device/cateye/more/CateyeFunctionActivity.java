@@ -71,6 +71,8 @@ public class CateyeFunctionActivity extends BaseActivity<ICatEyeFunctionView, Ca
     LinearLayout llMore;
     @BindView(R.id.iv_power)
     BatteryView ivPower;
+    @BindView(R.id.iv_number)
+    TextView iv_number;
     private CateEyeInfo cateEyeInfo;
 
     @Override
@@ -239,6 +241,7 @@ public class CateyeFunctionActivity extends BaseActivity<ICatEyeFunctionView, Ca
         }
         if (ivPower!=null) {
             ivPower.setPower(power);
+            iv_number.setText(power+"%");
             if (eventStr.equals("online")) {
                 ivPower.setColor(R.color.c25F290);
                 ivPower.setBorderColor(R.color.white);

@@ -139,8 +139,10 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
             LogUtils.e(time + "网关时间");
             if (!TextUtils.isEmpty(time)) {
                 long saveTime = DateUtils.standardTimeChangeTimestamp(time) / 1000;
+                LogUtils.e("zigb守护时间"+saveTime);
                 long serverTime = (long) SPUtils.get(KeyConstants.SERVER_CURRENT_TIME, Long.parseLong("0"));
                 //设置守护时间
+                LogUtils.e("zigb守护时间"+saveTime+"服务器时间"+serverTime/1000);
                 long day = ((serverTime / 1000) - saveTime) / (60 * 24 * 60);
                 if (day>0){
                     this.createTime.setText(day + "");
@@ -160,6 +162,7 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
         tvMore.setOnClickListener(this);
         rlDeviceDynamic.setOnClickListener(this);
         rlIcon.setOnLongClickListener(this);
+        ivDeviceDynamic.setOnClickListener(this);
         iSelectChangeListener= new HomePageFragment.ISelectChangeListener() {
             @Override
             public void onSelectChange(boolean isSelect) {
@@ -424,7 +427,15 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
                     intent.putExtra(KeyConstants.DEVICE_ID, deviceId);
                     startActivity(intent);
                 }
-
+                break;
+            case R.id.iv_device_dynamic:
+                //箭头
+                intent = new Intent(getActivity(), GatewayEquipmentDynamicActivity.class);
+                if (!TextUtils.isEmpty(gatewayId) && !TextUtils.isEmpty(deviceId)) {
+                    intent.putExtra(KeyConstants.GATEWAY_ID, gatewayId);
+                    intent.putExtra(KeyConstants.DEVICE_ID, deviceId);
+                    startActivity(intent);
+                }
                 break;
             case R.id.tv_more:
                 intent = new Intent(getActivity(), GatewayEquipmentDynamicActivity.class);
@@ -665,6 +676,10 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
     @Override
     public void openLockThrowable(Throwable throwable) {
         isOpening = false;
+        if (!TextUtils.isEmpty(deviceId)){
+            SPUtils.remove(KeyConstants.SAVA_LOCK_PWD + deviceId);
+        }
+        changeOpenLockStatus(5);
     }
 
     @Override

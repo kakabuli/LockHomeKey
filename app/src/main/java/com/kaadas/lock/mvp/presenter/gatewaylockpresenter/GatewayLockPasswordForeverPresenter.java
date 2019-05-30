@@ -37,7 +37,7 @@ public class GatewayLockPasswordForeverPresenter <T> extends BasePresenter<Gatew
                                           return false;
                                       }
                                   })
-                                  .timeout(10*1000, TimeUnit.MILLISECONDS)
+                                  .timeout(20*1000, TimeUnit.MILLISECONDS)
                                   .compose(RxjavaHelper.observeOnMainThread())
                                   .subscribe(new Consumer<MqttData>() {
                                       @Override

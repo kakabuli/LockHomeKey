@@ -118,10 +118,11 @@ public class CateyeMoreActivity extends BaseActivity<IGatEyeView, CatEyeMorePres
             tvBell.setText(getString(R.string.the_tinkle_of_bells) + cateEyeInfoBase.getCurBellNum());//设置铃声值
                 switch (cateEyeInfoBase.getBellVolume()){
                     case 1:
-                        tvVolume.setText(getString(R.string.low));
+                        tvVolume.setText(getString(R.string.centre));
                         break;
                     case 2:
-                        tvVolume.setText(getString(R.string.centre));
+
+                        tvVolume.setText(getString(R.string.low));
                         break;
 
                     case 0:
@@ -339,6 +340,11 @@ public class CateyeMoreActivity extends BaseActivity<IGatEyeView, CatEyeMorePres
                     return;
                 } else {
                     String volume = tvVolume.getText().toString().trim();
+                    if(volume.equals("中")){
+                        volume="低";
+                    }else  if(volume.equals("低")){
+                        volume="中";
+                    }
                     if (!TextUtils.isEmpty(volume) && !TextUtils.isEmpty(gatewayId) && !TextUtils.isEmpty(deviceId)) {
                         Intent volumeIntent = new Intent(this, CatEyeVolumeActivity.class);
                         volumeIntent.putExtra(KeyConstants.CAT_EYE_VOLUME, volume);
@@ -395,10 +401,11 @@ public class CateyeMoreActivity extends BaseActivity<IGatEyeView, CatEyeMorePres
             if (tvVolume!=null){
                 switch (returnDataBean.getBellVolume()){
                     case 1:
-                        tvVolume.setText(getString(R.string.low));
+                        tvVolume.setText(getString(R.string.centre));
                         break;
                     case 2:
-                        tvVolume.setText(getString(R.string.centre));
+                        tvVolume.setText(getString(R.string.low));
+
                         break;
 
                     case 0:
@@ -525,10 +532,12 @@ public class CateyeMoreActivity extends BaseActivity<IGatEyeView, CatEyeMorePres
                 if (tvVolume!=null){
                     switch (volumeNumber){
                         case 1:
-                            tvVolume.setText(getString(R.string.low));
+                            tvVolume.setText(getString(R.string.centre));
+                        //    tvVolume.setText(getString(R.string.low));
                             break;
                         case 2:
-                            tvVolume.setText(getString(R.string.centre));
+
+                            tvVolume.setText(getString(R.string.low));
                             break;
 
                         case 0:
