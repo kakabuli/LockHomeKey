@@ -154,7 +154,8 @@ public class BluetoothLockFunctionActivity extends BaseBleActivity<IDeviceDetail
                 lockStatus = KeyConstants.OPEN_LOCK;
                 changLockStatus();
                 if (bleLockInfo.getBackLock() == 0) {  //等于0时是反锁状态
-
+//                    lockStatus = KeyConstants.HAS_BEEN_LOCKED;
+//                    changLockStatus();
                 }
                 if (bleLockInfo.getSafeMode() == 1) {//安全模式
 
@@ -182,12 +183,29 @@ public class BluetoothLockFunctionActivity extends BaseBleActivity<IDeviceDetail
 
     private void showLockType() {
         String lockType = bleLockInfo.getServerLockInfo().getModel();
-        if (lockType.startsWith("K9S")){
+       /* if (lockType.startsWith("K9S")){
             lockType="K9S";
         }else if (lockType.startsWith("K8S")){
             lockType="K8S";
         }else if (lockType.startsWith("K7S")){
             lockType="K7S";
+        }else if (lockType.startsWith("S8")){
+            lockType="S8";
+        }else if (lockType.startsWith("KX")){
+            lockType="KX";
+        }else if (lockType.startsWith("K9")){
+            lockType="K9";
+        }else if (lockType.startsWith("K8")){
+            lockType="K8";
+        }else if (lockType.startsWith("K7")){
+            lockType="K7";
+        }else {
+            lockType="";
+        }*/
+        if (lockType.startsWith("QZ012")){
+            lockType="QZ012";
+        }else if (lockType.startsWith("QZ013")){
+            lockType="QZ013";
         }else if (lockType.startsWith("S8")){
             lockType="S8";
         }else if (lockType.startsWith("KX")){
@@ -219,6 +237,10 @@ public class BluetoothLockFunctionActivity extends BaseBleActivity<IDeviceDetail
                 ivLockIcon.setImageResource(R.mipmap.bluetooth_lock_kx);
             }else if (model.contains("S8")){
                 ivLockIcon.setImageResource(R.mipmap.bluetooth_lock_s8);
+            }else if (model.contains("QZ013")){
+                ivLockIcon.setImageResource(R.mipmap.bluetooth_lock_qz013);
+            }else if (model.contains("QZ012")){
+                ivLockIcon.setImageResource(R.mipmap.bluetooth_lock_qz012);
             }
         }
     }
@@ -577,7 +599,8 @@ public class BluetoothLockFunctionActivity extends BaseBleActivity<IDeviceDetail
 
     @Override
     public void onBackLock() {
-
+//        lockStatus = KeyConstants.HAS_BEEN_LOCKED;
+//        changLockStatus();
     }
 
 
