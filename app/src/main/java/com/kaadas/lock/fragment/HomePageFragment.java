@@ -126,11 +126,11 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
     }
 
     private void initView() {
-
         viewPager.setOffscreenPageLimit(5);
         mRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
+
                 int RadiobuttonId = group.getCheckedRadioButtonId();
                 //获取radiobutton对象
                 RadioButton bt = (RadioButton) group.findViewById(RadiobuttonId);
@@ -138,6 +138,7 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
                 int index = group.indexOfChild(bt);
                 //设置滚动位置，可使点击radiobutton时，将该radiobutton移动至第二位置
                 scTitle.smoothScrollTo(bt.getLeft() - (int) (scTitle.getWidth() / 3), 0);
+                LogUtils.e("位置改变");
                 currentIndex = index;
                 //根据点击的radiobutton跳转至不同webview界面
                 viewPager.setCurrentItem(index);
@@ -161,12 +162,7 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
 
             }
         });
-        mRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
 
-            }
-        });
     }
 
     private void getScrollViewWidth() {

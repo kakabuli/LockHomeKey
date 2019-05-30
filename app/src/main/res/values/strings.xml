@@ -1009,6 +1009,7 @@
     <string name="fingerprint_open_lock">指纹开锁</string>
     <string name="indeterminate">其他方式开锁</string>
     <string name="please_lock_countrol">请在门锁端操作</string>
+    <string name="get_device_info">正在获取设备信息...</string>
     <string name="lock_already_offline">门锁已离线</string>
     <string name="cat_eye_pair_fail">猫眼连接失败！</string>
     <string name="pair_device_out_time">设备连接超时</string>

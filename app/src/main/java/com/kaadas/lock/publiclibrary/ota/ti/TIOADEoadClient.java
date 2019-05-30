@@ -8,8 +8,12 @@ import android.content.Context;
 import android.net.Uri;
 import android.util.Log;
 
+import com.kaadas.lock.publiclibrary.ota.p6.CommonUtils.Logger;
 import com.kaadas.lock.publiclibrary.ota.ti.BluetoothLEController.BluetoothLEDevice;
+import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.Rsa;
+
+import java.lang.reflect.Method;
 
 
 /**
@@ -381,10 +385,30 @@ public class TIOADEoadClient {
 
     public void release(){
         if (oadDevice!=null &&  oadDevice.g!=null){
+            refreshDeviceCache(oadDevice.g);
             oadDevice.g.disconnect();
             oadDevice.g.close();
         }
     }
+
+    /**
+     * Method to clear the device cache
+     *
+     * @param gatt
+     * @return boolean
+     */
+    public   boolean refreshDeviceCache(BluetoothGatt gatt) {
+        try {
+            Method refresh = gatt.getClass().getMethod("refresh");
+            if (refresh != null) {
+                return (Boolean) refresh.invoke(gatt);
+            }
+        } catch (Exception ex) {
+            Logger.i("An exception occurred while refreshing device");
+        }
+        return false;
+    }
+
 
     public boolean setCharacteristicsAndCheckEOAD() {
         for (BluetoothGattService service : oadDevice.g.getServices()) {
@@ -536,6 +560,7 @@ public class TIOADEoadClient {
 
         @Override
         public void mtuValueChanged(int mtu) {
+            LogUtils.e("mtu 改变   " + mtu);
             myMTU = mtu;
         }
     };
