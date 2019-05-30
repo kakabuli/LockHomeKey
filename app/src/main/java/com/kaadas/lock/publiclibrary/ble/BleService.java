@@ -866,15 +866,17 @@ public class BleService extends Service {
     private Runnable sendCommandRannble = new Runnable() {
         @Override
         public void run() {
-            synchronized (BleService.class) {
+
                 if (commands.size() > 0) { //如果指令集合中有数据，那么直接发送数据 且移除此次发送的数据
+                    synchronized (BleService.class) {
                     sendCommand(commands.get(0));
                     commands.remove(0);
+                    }
                 }
                 if (commands.size() > 0) {  //如果还有指令  继续发送
                     handler.removeCallbacks(sendCommandRannble);
                     handler.postDelayed(sendCommandRannble, sendInterval);
-                }
+
             }
         }
     };
