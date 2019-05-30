@@ -86,7 +86,14 @@ public interface IVideoView extends IBaseView {
     /**
      * 开锁失败
      */
-    void openLockFailed(Throwable throwable);
+    void openLockFailed();
+
+    /**
+     * 开锁异常
+     * @param throwable
+     */
+    void openLockThrowable(Throwable throwable);
+
     /**
      * 开始开锁
      */

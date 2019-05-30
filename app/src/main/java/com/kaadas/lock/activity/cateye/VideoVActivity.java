@@ -42,6 +42,7 @@ import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.NetUtil;
+import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.StringUtil;
 import com.kaadas.lock.utils.ToastUtil;
 import com.kaadas.lock.utils.ftp.GeTui;
@@ -645,12 +646,18 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
     }
 
     @Override
-    public void openLockFailed(Throwable throwable) {
+    public void openLockThrowable(Throwable throwable) {
         isOpening = false;
         ToastUtil.getInstance().showShort(R.string.open_lock_failed);
         hiddenLoading();
     }
 
+    @Override
+    public void openLockFailed() {
+        isOpening = false;
+        ToastUtil.getInstance().showShort(R.string.open_lock_failed);
+        hiddenLoading();
+    }
     @Override
     public void startOpenLock() {
         isOpening = true;

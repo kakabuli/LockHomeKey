@@ -162,6 +162,7 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
         tvMore.setOnClickListener(this);
         rlDeviceDynamic.setOnClickListener(this);
         rlIcon.setOnLongClickListener(this);
+        ivDeviceDynamic.setOnClickListener(this);
         iSelectChangeListener= new HomePageFragment.ISelectChangeListener() {
             @Override
             public void onSelectChange(boolean isSelect) {
@@ -426,7 +427,15 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
                     intent.putExtra(KeyConstants.DEVICE_ID, deviceId);
                     startActivity(intent);
                 }
-
+                break;
+            case R.id.iv_device_dynamic:
+                //箭头
+                intent = new Intent(getActivity(), GatewayEquipmentDynamicActivity.class);
+                if (!TextUtils.isEmpty(gatewayId) && !TextUtils.isEmpty(deviceId)) {
+                    intent.putExtra(KeyConstants.GATEWAY_ID, gatewayId);
+                    intent.putExtra(KeyConstants.DEVICE_ID, deviceId);
+                    startActivity(intent);
+                }
                 break;
             case R.id.tv_more:
                 intent = new Intent(getActivity(), GatewayEquipmentDynamicActivity.class);
@@ -667,6 +676,10 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
     @Override
     public void openLockThrowable(Throwable throwable) {
         isOpening = false;
+        if (!TextUtils.isEmpty(deviceId)){
+            SPUtils.remove(KeyConstants.SAVA_LOCK_PWD + deviceId);
+        }
+        changeOpenLockStatus(5);
     }
 
     @Override
