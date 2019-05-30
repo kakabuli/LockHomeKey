@@ -159,12 +159,6 @@ public class DoorCardManagerActivity extends BaseBleActivity<ICardManagerView, C
                     intent.putExtra(KeyConstants.BLE_DEVICE_INFO, bleLockInfo);
                     startActivity(intent);
                 }
-
-/*//                intent = new Intent(this, DoorCardNearDoorActivity.class);
-//                intent = new Intent(this, DoorCardConnectFailActivity.class);
-                intent = new Intent(this, DoorCardConnectSuccessActivity.class);
-                intent.putExtra(KeyConstants.BLE_DEVICE_INFO, bleLockInfo);
-                startActivity(intent);*/
                 break;
 
             case R.id.tv_synchronized_record:

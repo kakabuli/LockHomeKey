@@ -335,7 +335,6 @@ public class P6OtaUpgradeActivity extends AppCompatActivity implements View.OnCl
                         mCircleProgress2.setValue(0);
                         otaFailed("");
                     }
-
                     //已存在相同下载
                     @Override
                     protected void warn(BaseDownloadTask task) {

@@ -140,7 +140,9 @@ public class OldBleLockFragment extends BaseBleFragment<IOldBleLockView, OldBleL
     @Override
     public void onResume() {
         super.onResume();
-        mPresenter.attachView(this);
+        if (!mPresenter.isAttach()) {
+            mPresenter.attachView(this);
+        }
         mPresenter.getOpenRecordFromServer(1, bleLockInfo);
     }
 
@@ -152,9 +154,11 @@ public class OldBleLockFragment extends BaseBleFragment<IOldBleLockView, OldBleL
             @Override
             public void onSelectChange(boolean isSelect) {
                 if (!isSelect) {
-                    mPresenter.detachView();
+                    if (mPresenter.isAttach()) {
+                        mPresenter.detachView();
+                    }
                 } else {
-                    LogUtils.e("切换到当前界面  设备 " + this + isCurrentFragment);
+                    LogUtils.e("切换到当前界面  设备2 " + this + isCurrentFragment);
                     //切换到当前页面
                     mPresenter.attachView(OldBleLockFragment.this);
                     if (isCurrentFragment) {
@@ -177,23 +181,26 @@ public class OldBleLockFragment extends BaseBleFragment<IOldBleLockView, OldBleL
             public void onPageScrolled(int i, float v, int i1) {
 
             }
-
             @Override
             public void onPageSelected(int i) {
-                if (i == position && homeFragment.isSelectHome) {
-                    mPresenter.attachView(OldBleLockFragment.this);
-                    mPresenter.setBleLockInfo(bleLockInfo);
-                    LogUtils.e(this + "   设置设备1  " + bleLockInfo.getServerLockInfo().toString());
-                    boolean auth = mPresenter.isAuth(bleLockInfo, true);
-                    if (auth){
-                        changeOpenLockStatus(8);
-                    }else {
-                        changeOpenLockStatus(12);
+                if (i == position ) {
+                    if (homeFragment.isSelectHome){
+                        mPresenter.attachView(OldBleLockFragment.this);
+                        mPresenter.setBleLockInfo(bleLockInfo);
+                        LogUtils.e(this + "   设置设备1  " + bleLockInfo.getServerLockInfo().toString());
+                        boolean auth = mPresenter.isAuth(bleLockInfo, true);
+                        if (auth) {
+                            changeOpenLockStatus(8);
+                        } else {
+                            changeOpenLockStatus(12);
+                        }
+                        mPresenter.getAllPassword(bleLockInfo, false);
                     }
-                    mPresenter.getAllPassword(bleLockInfo, false);
                     isCurrentFragment = true;
                 } else {
-                    mPresenter.detachView();
+                    if (mPresenter.isAttach()) {
+                        mPresenter.detachView();
+                    }
                     isCurrentFragment = false;
                 }
             }
@@ -205,13 +212,18 @@ public class OldBleLockFragment extends BaseBleFragment<IOldBleLockView, OldBleL
         });
         LogUtils.e("设备position " + position + "    " + homeFragment.getCurrentPosition() + "     " + homeFragment.isSelectHome);
         if (position == 0 && position == homeFragment.getCurrentPosition() && homeFragment.isSelectHome) {
-            mPresenter.attachView(this);
+            if (!mPresenter.isAttach()) {
+                mPresenter.attachView(this);
+            }
             mPresenter.setBleLockInfo(bleLockInfo);
             mPresenter.isAuth(bleLockInfo, true);
             LogUtils.e(this + "  设置设备3  " + bleLockInfo.getServerLockInfo().toString());
             mPresenter.getAllPassword(bleLockInfo, false);
         } else {
-            mPresenter.detachView();
+            if (mPresenter.isAttach()) {
+                mPresenter.detachView();
+            }
+
         }
 
         if (position == 0 && position == homeFragment.getCurrentPosition()) {
@@ -299,7 +311,7 @@ public class OldBleLockFragment extends BaseBleFragment<IOldBleLockView, OldBleL
     }
 
     public void changeOpenLockStatus(int status) {
-        if (!isAdded()){
+        if (!isAdded()) {
             return;
         }
         switch (status) {
@@ -531,7 +543,6 @@ public class OldBleLockFragment extends BaseBleFragment<IOldBleLockView, OldBleL
     }
 
 
-
     //震动milliseconds毫秒
     public static void vibrate(final Activity activity, long milliseconds) {
         Vibrator vib = (Vibrator) activity.getSystemService(Service.VIBRATOR_SERVICE);
@@ -709,7 +720,7 @@ public class OldBleLockFragment extends BaseBleFragment<IOldBleLockView, OldBleL
             switch (record.getOpen_type()) {
                 case BleUtil.PASSWORD:
                     List<ForeverPassword> pwdList = passwordResults.getData().getPwdList();
-                    if (pwdList!=null&&pwdList.size()>0){
+                    if (pwdList != null && pwdList.size() > 0) {
                         for (ForeverPassword password : pwdList) {
                             if (Integer.parseInt(password.getNum()) == Integer.parseInt(record.getUser_num())) {
                                 nickName = password.getNickName();
@@ -720,7 +731,7 @@ public class OldBleLockFragment extends BaseBleFragment<IOldBleLockView, OldBleL
                     break;
                 case BleUtil.FINGERPRINT:
                     List<GetPasswordResult.DataBean.Fingerprint> fingerprints = passwordResults.getData().getFingerprintList();
-                    if (fingerprints!=null&&fingerprints.size()>0){
+                    if (fingerprints != null && fingerprints.size() > 0) {
                         for (GetPasswordResult.DataBean.Fingerprint password : fingerprints) {
                             if (Integer.parseInt(password.getNum()) == Integer.parseInt(record.getUser_num())) {
                                 nickName = password.getNickName();
@@ -731,7 +742,7 @@ public class OldBleLockFragment extends BaseBleFragment<IOldBleLockView, OldBleL
                     break;
                 case BleUtil.RFID:  //卡片
                     List<GetPasswordResult.DataBean.Card> cards = passwordResults.getData().getCardList();
-                    if (cards!=null&&cards.size()>0){
+                    if (cards != null && cards.size() > 0) {
                         for (GetPasswordResult.DataBean.Card password : cards) {
                             if (Integer.parseInt(password.getNum()) == Integer.parseInt(record.getUser_num())) {
                                 nickName = password.getNickName();

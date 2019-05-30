@@ -261,7 +261,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
                 if (!isSelect) {
                     mPresenter.detachView();
                 } else {
-                    LogUtils.e("切换到当前界面  设备 " + this + isCurrentFragment);
+                    LogUtils.e("切换到当前界面  设备1 " + this + isCurrentFragment);
                     //切换到当前页面
                     if (!mPresenter.isAttach()) {
                         mPresenter.attachView(BleLockFragment.this);
