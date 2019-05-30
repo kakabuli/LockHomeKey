@@ -233,8 +233,11 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
                 }else{
                     dealWithPower(lockInfo.getPower(), "offline", lockInfo.getPowerTimeStamp());
                 }
-
-                tvName.setText(lockInfo.getServerInfo().getNickName());
+                if (!TextUtils.isEmpty(lockInfo.getServerInfo().getNickName())){
+                    tvName.setText(lockInfo.getServerInfo().getNickName());
+                }else {
+                    tvName.setText(lockInfo.getServerInfo().getDeviceId());
+                }
                 gatewayId = lockInfo.getGwID();
                 deviceId = lockInfo.getServerInfo().getDeviceId();
                 mPresenter.getPowerData(lockInfo.getGwID(), lockInfo.getServerInfo().getDeviceId());

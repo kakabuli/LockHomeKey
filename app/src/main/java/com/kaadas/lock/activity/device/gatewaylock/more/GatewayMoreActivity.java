@@ -119,7 +119,11 @@ public class GatewayMoreActivity extends BaseActivity<GatewayLockMoreView, Gatew
         showBean = (HomeShowBean) intent.getSerializableExtra(KeyConstants.GATEWAY_LOCK_INFO);
         if (showBean != null) {
             gwLockInfo = (GwLockInfo) showBean.getObject();
-            tvDeviceName.setText(gwLockInfo.getServerInfo().getNickName());
+            if (!TextUtils.isEmpty(gwLockInfo.getServerInfo().getNickName())){
+                tvDeviceName.setText(gwLockInfo.getServerInfo().getNickName());
+            }else{
+                tvDeviceName.setText(gwLockInfo.getServerInfo().getDeviceId());
+            }
             gatewayId = gwLockInfo.getGwID();
             deviceId = gwLockInfo.getServerInfo().getDeviceId();
         }

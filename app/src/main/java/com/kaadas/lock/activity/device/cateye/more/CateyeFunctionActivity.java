@@ -102,7 +102,12 @@ public class CateyeFunctionActivity extends BaseActivity<ICatEyeFunctionView, Ca
         if (homeShowBean!=null){
             cateEyeInfo= (CateEyeInfo) homeShowBean.getObject();
             if (cateEyeInfo!=null) {
-                tvName.setText(cateEyeInfo.getServerInfo().getNickName());
+                if (!TextUtils.isEmpty(cateEyeInfo.getServerInfo().getNickName())){
+                    tvName.setText(cateEyeInfo.getServerInfo().getNickName());
+                }else{
+                    tvName.setText(cateEyeInfo.getServerInfo().getDeviceId());
+                }
+
                 if (NetUtil.isNetworkAvailable()) {
                     dealWithPower(cateEyeInfo.getPower(), cateEyeInfo.getServerInfo().getEvent_str(), cateEyeInfo.getPowerTimeStamp());
                     changeOpenLockStatus(cateEyeInfo.getServerInfo().getEvent_str());
@@ -128,8 +133,6 @@ public class CateyeFunctionActivity extends BaseActivity<ICatEyeFunctionView, Ca
                 finish();
                 break;
             case R.id.ll_look_back:
-
-
                 List<GatewayInfo> allGateway = MyApplication.getInstance().getAllGateway();
                 GatewayInfo gatewayInfo = null;
                 for (GatewayInfo info:allGateway){
