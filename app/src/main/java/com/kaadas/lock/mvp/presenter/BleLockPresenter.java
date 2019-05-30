@@ -561,10 +561,6 @@ public class BleLockPresenter<T> extends MyOpenLockRecordPresenter<IBleLockView>
                             LogUtils.e("收到报警记录，但是鉴权帧为空");
                             return;
                         }
-//                        if (!bleLockInfo.getServerLockInfo().getDevmac().equals(bleDataBean.getDevice().getAddress())) {
-//                            //查看报警记录是不是对应当前的设备
-//                            return;
-//                        }
                         bleDataBean.getDevice().getName();
                         bleDataBean.getCmd();
                         byte[] deValue = Rsa.decrypt(bleDataBean.getPayload(), MyApplication.getInstance().getBleService().getBleLockInfo().getAuthKey());

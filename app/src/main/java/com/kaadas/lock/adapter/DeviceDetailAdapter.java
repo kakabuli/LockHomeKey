@@ -34,12 +34,6 @@ public class DeviceDetailAdapter extends BaseQuickAdapter<HomeShowBean, BaseView
     protected void convert(BaseViewHolder helper, HomeShowBean item) {
         BatteryView batteryView= helper.getView(R.id.horizontalBatteryView);
         TextView textView=helper.getView(R.id.device_name);
-        if (!TextUtils.isEmpty(item.getDeviceNickName())){
-            helper.setText(R.id.device_name,item.getDeviceNickName());
-        }else{
-            helper.setText(R.id.device_name,item.getDeviceId());
-        }
-
         if (HomeShowBean.TYPE_GATEWAY==item.getDeviceType()){
             //隐藏
             helper.getView(R.id.power_layout).setVisibility(View.GONE);
@@ -71,7 +65,12 @@ public class DeviceDetailAdapter extends BaseQuickAdapter<HomeShowBean, BaseView
                     helper.setImageResource(R.id.device_image,R.mipmap.cat_eye_icon);
                     batteryView.setPower(power);
                     helper.setText(R.id.device_power_text,power+"%");
-                    textView.setText(cateEyeInfo.getServerInfo().getNickName());
+                    if (!TextUtils.isEmpty(cateEyeInfo.getServerInfo().getDeviceId())){
+                        textView.setText(cateEyeInfo.getServerInfo().getNickName());
+                    }else{
+                        textView.setText(cateEyeInfo.getServerInfo().getDeviceId());
+                    }
+
                 }
                 break;
             //网关锁
@@ -95,7 +94,13 @@ public class DeviceDetailAdapter extends BaseQuickAdapter<HomeShowBean, BaseView
                     helper.setImageResource(R.id.device_image, R.mipmap.default_zigbee_lock_icon);
                     batteryView.setPower(gatewayLockPower);
                     helper.setText(R.id.device_power_text, gatewayLockPower + "%");
-                    textView.setText(gwLockInfo.getServerInfo().getNickName());
+                    if (!TextUtils.isEmpty(gwLockInfo.getServerInfo().getNickName())){
+                        textView.setText(gwLockInfo.getServerInfo().getNickName());
+                    }else{
+                        textView.setText(gwLockInfo.getServerInfo().getDeviceId());
+                    }
+
+
                 }
                 break;
             //网关

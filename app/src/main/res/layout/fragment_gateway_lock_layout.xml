@@ -166,6 +166,8 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:text="0"
+                android:singleLine="true"
+                android:ellipsize="end"
                 android:textColor="#1F96F7"
                 android:textSize="20sp" />
 
@@ -200,6 +202,8 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:text="0"
+                android:singleLine="true"
+                android:ellipsize="end"
                 android:textColor="#1F96F7"
                 android:textSize="20sp" />
 
@@ -235,6 +239,8 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:text="@string/normal"
+                android:singleLine="true"
+                android:ellipsize="end"
                 android:textColor="#1F96F7"
                 android:textSize="20sp" />
 

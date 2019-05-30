@@ -1,6 +1,7 @@
 package com.kaadas.lock.adapter;
 
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -28,7 +29,8 @@ public class GatewayAdapter extends BaseQuickAdapter<HomeShowBean, BaseViewHolde
 
     @Override
     protected void convert(BaseViewHolder helper, HomeShowBean item) {
-        helper.setText(R.id.device_name, item.getDeviceNickName());
+        /*helper.setText(R.id.device_name, item.getDeviceNickName());*/
+        TextView textView=helper.getView(R.id.device_name);
         TextView tvDeviceStatus=helper.getView(R.id.tv_device_status);
         int deviceType = item.getDeviceType();
         ImageView ivDeviceType=helper.getView(R.id.iv_device_type);
@@ -50,6 +52,11 @@ public class GatewayAdapter extends BaseQuickAdapter<HomeShowBean, BaseViewHolde
             power=cateEyeInfo.getPower();
             batteryView.setPower(power);
             powerView.setText(power+"%");
+            if (!TextUtils.isEmpty(cateEyeInfo.getServerInfo().getDeviceId())){
+                textView.setText(cateEyeInfo.getServerInfo().getNickName());
+            }else{
+                textView.setText(cateEyeInfo.getServerInfo().getDeviceId());
+            }
         }else if (HomeShowBean.TYPE_GATEWAY_LOCK==deviceType){
             //网关
             ivDeviceType.setImageResource(R.mipmap.default_zigbee_lock_icon);
@@ -64,6 +71,11 @@ public class GatewayAdapter extends BaseQuickAdapter<HomeShowBean, BaseViewHolde
             int realPower=power/2;
             batteryView.setPower(realPower);
             powerView.setText(realPower+"%");
+            if (!TextUtils.isEmpty(gwLockInfo.getServerInfo().getNickName())){
+                textView.setText(gwLockInfo.getServerInfo().getNickName());
+            }else{
+                textView.setText(gwLockInfo.getServerInfo().getDeviceId());
+            }
         }
 
         if ("online".equals(deviceStatus)) {

@@ -228,6 +228,7 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
                             bleLockInfo.setConnected(bleStateBean.isConnected());
                         }
                         if (mViewRef.get() != null && isNotify) {
+                            mViewRef.get().onEndConnectDevice(bleStateBean.isConnected());
                             mViewRef.get().onDeviceStateChange(bleStateBean.isConnected());
                         }
                         if (bleStateBean.isConnected()) {
@@ -333,6 +334,7 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
                 mViewRef.get().authResult(false);
                 mViewRef.get().onEndConnectDevice(false);
             }
+            bleService.release();
             return;
         }
         toDisposable(getPwd3Dispose);
