@@ -107,13 +107,24 @@ public class CateyeFunctionActivity extends BaseActivity<ICatEyeFunctionView, Ca
                 }else{
                     tvName.setText(cateEyeInfo.getServerInfo().getDeviceId());
                 }
+                if (!TextUtils.isEmpty(cateEyeInfo.getGwID())) {
+                    GatewayInfo gatewayInfo = MyApplication.getInstance().getGatewayById(cateEyeInfo.getGwID());
+                    if (gatewayInfo != null) {
+                        if (NetUtil.isNetworkAvailable()) {
+                            dealWithPower(cateEyeInfo.getPower(), cateEyeInfo.getServerInfo().getEvent_str(), cateEyeInfo.getPowerTimeStamp());
+                            changeOpenLockStatus(cateEyeInfo.getServerInfo().getEvent_str());
+                            if (gatewayInfo.getEvent_str()!=null){
+                                if (gatewayInfo.getEvent_str().equals("offline")) {
+                                    dealWithPower(cateEyeInfo.getPower(), "offline", cateEyeInfo.getPowerTimeStamp());
+                                    changeOpenLockStatus("offline");
+                                }
+                            }
 
-                if (NetUtil.isNetworkAvailable()) {
-                    dealWithPower(cateEyeInfo.getPower(), cateEyeInfo.getServerInfo().getEvent_str(), cateEyeInfo.getPowerTimeStamp());
-                    changeOpenLockStatus(cateEyeInfo.getServerInfo().getEvent_str());
-                }else{
-                    dealWithPower(cateEyeInfo.getPower(), "offline", cateEyeInfo.getPowerTimeStamp());
-                    changeOpenLockStatus("offline");
+                        } else {
+                            dealWithPower(cateEyeInfo.getPower(), "offline", cateEyeInfo.getPowerTimeStamp());
+                            changeOpenLockStatus("offline");
+                        }
+                    }
                 }
                 mPresenter.getPowerData(cateEyeInfo.getGwID(), cateEyeInfo.getServerInfo().getDeviceId());
                 mPresenter.getPublishNotify();//监听网关
