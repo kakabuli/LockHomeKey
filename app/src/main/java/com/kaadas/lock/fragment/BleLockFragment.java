@@ -111,6 +111,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
     BluetoothRecordAdapter bluetoothRecordAdapter;
     boolean hasData;
     private boolean isLoadingBleRecord;  //正在加载锁上数据
+    private boolean isDestroy = false;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -133,7 +134,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
     @Override
     public void onResume() {
         super.onResume();
-        if (!mPresenter.isAttach()) {
+        if (!mPresenter.isAttach()&& !isDestroy) {
             mPresenter.attachView(this);
         }
         mPresenter.getOpenRecordFromServer(1, bleLockInfo);
@@ -172,7 +173,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
                 if (bleLockInfo.getArmMode() == 1) {//布防模式
                     changeOpenLockStatus(4);
                 }
-                if (bleLockInfo.getBackLock() == 0 || bleLockInfo.getSafeMode() == 1 || bleLockInfo.getArmMode() == 1) {
+                if (bleLockInfo.isLockStatusException()) {
                     tvDeviceStatus.setText(getString(R.string.no_normal));
                 } else {
                     tvDeviceStatus.setText(getString(R.string.normal));
@@ -220,7 +221,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
                     LogUtils.e("长按  但是当前正在开锁状态   ");
                     return false;
                 }
-                if (mPresenter.getBleLockInfo() == null && bleLockInfo != null) {
+                if (mPresenter.getBleLockInfo() == null && bleLockInfo != null && !isDestroy) {
                     mPresenter.setBleLockInfo(bleLockInfo);
                 }
                 if (mPresenter.isAuth(bleLockInfo, true)) {
@@ -244,7 +245,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
             public void onClick(View v) {
                 if (!isConnectingDevice && !bleLockInfo.isAuth()) {  //如果没有正在连接设备
                     //连接设备
-                    if (!mPresenter.isAttach()) {
+                    if (!mPresenter.isAttach()&& !isDestroy) {
                         mPresenter.attachView(BleLockFragment.this);
                     }
                     LogUtils.e(this + "   设置设备66  " + bleLockInfo.getServerLockInfo().toString());
@@ -262,17 +263,17 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
                 } else {
                     LogUtils.e("切换到当前界面  设备1 " + this + isCurrentFragment);
                     //切换到当前页面
-                    if (!mPresenter.isAttach()) {
+                    if (!mPresenter.isAttach() && !isDestroy) {
                         mPresenter.attachView(BleLockFragment.this);
                     }
-                    if (isCurrentFragment) {
+                    if (isCurrentFragment && !isDestroy) {
                         mPresenter.setBleLockInfo(bleLockInfo);
+                        onChangeInitView();
                         boolean auth = mPresenter.isAuth(bleLockInfo, true);
                         LogUtils.e("切换到当前界面   设备" + auth);
                         LogUtils.e(this + "   设置设备2  " + bleLockInfo.getServerLockInfo().toString());
                         mPresenter.getAllPassword(bleLockInfo, false);
                         isCurrentFragment = true;
-                        onChangeInitView();
                         if (auth) {
                             mPresenter.getDeviceInfo();
                         }
@@ -294,12 +295,16 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
             @Override
             public void onPageSelected(int i) {
                 if (i == position) {
-                    isCurrentFragment = true;
-                    if (homeFragment.isSelectHome) {
-                        if (!mPresenter.isAttach()) {
+                    if (!isDestroy){
+                        isCurrentFragment = true;
+                    }
+                    if (homeFragment.isSelectHome && !isDestroy) {
+                        if (!mPresenter.isAttach() ) {
                             mPresenter.attachView(BleLockFragment.this);
                         }
+
                         mPresenter.setBleLockInfo(bleLockInfo);
+                        onChangeInitView();
                         LogUtils.e(this + "   设置设备1  " + bleLockInfo.getServerLockInfo().toString());
                         mPresenter.isAuth(bleLockInfo, true);
                         mPresenter.getAllPassword(bleLockInfo, false);
@@ -316,11 +321,12 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
             }
         });
         LogUtils.e("设备position " + position + "    " + homeFragment.getCurrentPosition() + "     " + homeFragment.isSelectHome);
-        if (position == 0 && position == homeFragment.getCurrentPosition() && homeFragment.isSelectHome) {
-            if (!mPresenter.isAttach()) {
+        if (position == 0 && position == homeFragment.getCurrentPosition() && homeFragment.isSelectHome && !isDestroy ) {
+            if (!mPresenter.isAttach() ) {
                 mPresenter.attachView(BleLockFragment.this);
             }
             mPresenter.setBleLockInfo(bleLockInfo);
+            onChangeInitView();
             mPresenter.isAuth(bleLockInfo, true);
             LogUtils.e(this + "  设置设备3  " + bleLockInfo.getServerLockInfo().toString());
             mPresenter.getAllPassword(bleLockInfo, false);
@@ -349,10 +355,16 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        homeFragment.removeListener(listener);
+        listener = null;
         LogUtils.e("蓝牙界面   onDestroyView  " + this);
+        isDestroy = true;
     }
 
     public void changePage() {
+        if (!isAdded()) {
+            return;
+        }
         if (hasData) {
             rlHasData.setVisibility(View.VISIBLE);
             tvNoData.setVisibility(View.GONE);
@@ -365,9 +377,9 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
     }
 
     public void changeOpenLockStatus(int status) {
-//        if (!isAdded()) {
-//            return;
-//        }
+        if (!isAdded()) {
+            return;
+        }
         if (bleLockInfo.isConnected()) {
             if (bleLockInfo.isLockStatusException()) {
                 tvDeviceStatus.setText(getString(R.string.no_normal));
@@ -565,7 +577,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
 //    AnimationDrawable closeLock;
     /**
      * 开锁动画
-     * */
+     */
 /*    public void openLockAnimator() {
         LogUtils.d("davi 开始1 "+System.currentTimeMillis());
         ivExternalBig.setVisibility(View.VISIBLE);
@@ -604,20 +616,21 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
     AnimationsContainer.FramesSequenceAnimation openLockMiddle;
     AnimationsContainer.FramesSequenceAnimation openLockSmall;
     AnimationsContainer.FramesSequenceAnimation closeLock;
+
     public void openLockAnimator() {
-        LogUtils.d("davi 开始新1 "+System.currentTimeMillis());
+        LogUtils.d("davi 开始新1 " + System.currentTimeMillis());
         ivExternalBig.setVisibility(View.VISIBLE);
 //        ivExternalBig.setImageResource(R.drawable.open_lock_big);
-         //优化后的帧动画
-            openLockBig = AnimationsContainer.getInstance(R.array.open_lock_big, 26).createProgressDialogAnim(ivExternalBig);
+        //优化后的帧动画
+        openLockBig = AnimationsContainer.getInstance(R.array.open_lock_big, 26).createProgressDialogAnim(ivExternalBig);
         ivExternalMiddle.setVisibility(View.VISIBLE);
 //        ivExternalMiddle.setImageResource(R.drawable.open_lock_middle);
-        openLockMiddle= AnimationsContainer.getInstance(R.array.open_lock_middle, 26).createProgressDialogAnim(ivExternalMiddle);
+        openLockMiddle = AnimationsContainer.getInstance(R.array.open_lock_middle, 26).createProgressDialogAnim(ivExternalMiddle);
         ivExternalSmall.setVisibility(View.GONE);
 //        ivExternalSmall.setImageResource(R.mipmap.bluetooth_open_lock_small_icon);
         ivInnerMiddle.setVisibility(View.VISIBLE);
 //        ivInnerMiddle.setImageResource(R.drawable.open_lock_small);
-        openLockSmall= AnimationsContainer.getInstance(R.array.open_lock_small, 26).createProgressDialogAnim(ivInnerMiddle);
+        openLockSmall = AnimationsContainer.getInstance(R.array.open_lock_small, 26).createProgressDialogAnim(ivInnerMiddle);
         ivInnerSmall.setVisibility(View.GONE);
 //                ivInnerSmall.setImageResource();
         tvInner.setVisibility(View.GONE);
@@ -628,7 +641,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
         tvExternal.setText(getString(R.string.is_lock));
 
 
-        LogUtils.d("davi 开始新2 "+System.currentTimeMillis());
+        LogUtils.d("davi 开始新2 " + System.currentTimeMillis());
         if (openLockBig != null) {
             openLockBig.start();
         }
@@ -638,11 +651,12 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
         if (openLockSmall != null) {
             openLockSmall.start();
         }
-        LogUtils.d("davi 开始新3 "+System.currentTimeMillis());
+        LogUtils.d("davi 开始新3 " + System.currentTimeMillis());
     }
+
     /**
      * 关锁动画
-     * */
+     */
     public void closeLockAnimator() {
         ivExternalBig.setVisibility(View.VISIBLE);
         ivExternalBig.setImageResource(R.mipmap.bluetooth_no_connect_big_icon);
@@ -665,17 +679,19 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
             closeLock.start();
         }
     }
+
     /**
      * 停止关锁动画
-     * */
+     */
     public void stopCloseLockAnimator() {
         if (closeLock != null) {
             closeLock.stop();
         }
     }
+
     /**
      * 停止开锁动画
-     * */
+     */
     public void stopOpenLockAnimator() {
         if (openLockBig != null) {
             openLockBig.stop();
@@ -834,7 +850,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
                     return;
                 }
                 alertDialog.dismiss();
-                LogUtils.d("davi 准备 "+System.currentTimeMillis());
+                LogUtils.d("davi 准备 " + System.currentTimeMillis());
                 mPresenter.realOpenLock(name, false);
 
             }
@@ -871,8 +887,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
                 handler.removeCallbacks(lockRunnable);
                 handler.postDelayed(lockRunnable, 15 * 1000);  //十秒后退出开门状态
             }
-        },3000);
-
+        }, 3000);
 
 
     }
@@ -880,11 +895,11 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
     @Override
     public void onLockLock() {  //关门
         closeLockAnimator();
-        LogUtils.d("davi 关锁 "+System.currentTimeMillis());
+        LogUtils.d("davi 关锁 " + System.currentTimeMillis());
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                LogUtils.d("davi 停止关锁 "+System.currentTimeMillis());
+                LogUtils.d("davi 停止关锁 " + System.currentTimeMillis());
                 stopCloseLockAnimator();
                 handler.removeCallbacks(lockRunnable);
                 lockRunnable.run();
@@ -909,8 +924,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
                 lockRunnable.run();
                 stopOpenLockAnimator();
             }
-        },3000);
-
+        }, 3000);
 
 
     }
@@ -988,13 +1002,11 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
             //设置守护次数为0
             tvOpenLockTimes.setText("0");
         }
-
         if (bleLockInfo.isLockStatusException()) {
             tvDeviceStatus.setText(getString(R.string.no_normal));
         } else {
             tvDeviceStatus.setText(getString(R.string.normal));
         }
-
     }
 
     private String getOpenLockType(GetPasswordResult passwordResults, OpenLockRecord record) {

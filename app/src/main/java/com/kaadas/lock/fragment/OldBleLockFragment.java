@@ -98,6 +98,7 @@ public class OldBleLockFragment extends BaseBleFragment<IOldBleLockView, OldBleL
     BluetoothRecordAdapter bluetoothRecordAdapter;
     boolean hasData;
     private boolean isLoadingBleRecord;  //正在加载锁上数据
+    private boolean isDestroy = false;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -140,7 +141,7 @@ public class OldBleLockFragment extends BaseBleFragment<IOldBleLockView, OldBleL
     @Override
     public void onResume() {
         super.onResume();
-        if (!mPresenter.isAttach()) {
+        if (!mPresenter.isAttach() &&!isDestroy) {
             mPresenter.attachView(this);
         }
         mPresenter.getOpenRecordFromServer(1, bleLockInfo);
@@ -160,16 +161,21 @@ public class OldBleLockFragment extends BaseBleFragment<IOldBleLockView, OldBleL
                 } else {
                     LogUtils.e("切换到当前界面  设备2 " + this + isCurrentFragment);
                     //切换到当前页面
-                    mPresenter.attachView(OldBleLockFragment.this);
-                    if (isCurrentFragment) {
-                        mPresenter.setBleLockInfo(bleLockInfo);
-                        boolean auth = mPresenter.isAuth(bleLockInfo, true);
-                        LogUtils.e("切换到当前界面   设备" + auth);
-                        LogUtils.e(this + "   设置设备2  " + bleLockInfo.getServerLockInfo().toString());
-                        mPresenter.getAllPassword(bleLockInfo, false);
-                        isCurrentFragment = true;
-                        onChangeInitView();
+                    if (!isDestroy ){
+                        if (!mPresenter.isAttach()){
+                            mPresenter.attachView(OldBleLockFragment.this);
+                        }
+                        if (isCurrentFragment) {
+                            mPresenter.setBleLockInfo(bleLockInfo);
+                            boolean auth = mPresenter.isAuth(bleLockInfo, true);
+                            LogUtils.e("切换到当前界面   设备" + auth);
+                            LogUtils.e(this + "   设置设备2  " + bleLockInfo.getServerLockInfo().toString());
+                            mPresenter.getAllPassword(bleLockInfo, false);
+                            isCurrentFragment = true;
+                            onChangeInitView();
+                        }
                     }
+
                 }
             }
         };
@@ -183,8 +189,8 @@ public class OldBleLockFragment extends BaseBleFragment<IOldBleLockView, OldBleL
             }
             @Override
             public void onPageSelected(int i) {
-                if (i == position ) {
-                    if (homeFragment.isSelectHome){
+                if (i == position  ) {
+                    if (homeFragment.isSelectHome && !isDestroy){
                         mPresenter.attachView(OldBleLockFragment.this);
                         mPresenter.setBleLockInfo(bleLockInfo);
                         LogUtils.e(this + "   设置设备1  " + bleLockInfo.getServerLockInfo().toString());
@@ -211,8 +217,8 @@ public class OldBleLockFragment extends BaseBleFragment<IOldBleLockView, OldBleL
             }
         });
         LogUtils.e("设备position " + position + "    " + homeFragment.getCurrentPosition() + "     " + homeFragment.isSelectHome);
-        if (position == 0 && position == homeFragment.getCurrentPosition() && homeFragment.isSelectHome) {
-            if (!mPresenter.isAttach()) {
+        if (position == 0 && position == homeFragment.getCurrentPosition() && homeFragment.isSelectHome &&!isDestroy) {
+            if (!mPresenter.isAttach() ) {
                 mPresenter.attachView(this);
             }
             mPresenter.setBleLockInfo(bleLockInfo);
@@ -236,7 +242,7 @@ public class OldBleLockFragment extends BaseBleFragment<IOldBleLockView, OldBleL
         rlIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!isConnectingDevice && !bleLockInfo.isAuth()) {  //如果没有正在连接设备
+                if (!isConnectingDevice && !bleLockInfo.isAuth() && !isDestroy) {  //如果没有正在连接设备
                     //连接设备
                     mPresenter.attachView(OldBleLockFragment.this);
                     mPresenter.isAuth(bleLockInfo, true);
@@ -296,6 +302,8 @@ public class OldBleLockFragment extends BaseBleFragment<IOldBleLockView, OldBleL
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        isDestroy = true;
+        homeFragment.removeListener(listener);
     }
 
     @Override
