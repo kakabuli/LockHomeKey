@@ -14,7 +14,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:src="@mipmap/gateway_img_icon"
+        android:src="@mipmap/gateway_detail_lock"
         android:layout_marginLeft="@dimen/dp_26"
         />
     <LinearLayout

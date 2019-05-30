@@ -64,7 +64,7 @@
     <string name="user_repeat_register">用户重复注册</string>
     <string name="not_show_verification">不需要显示验证码</string>
     <string name="mqtt_server_connect_fail">mqtt server connect fail</string>
-    <string name="virification_error">验证码错误</string>
+    <string name="virification_error">查无该用户</string>
     <string name="device_repeat_register">设备重复注册</string>
     <string name="user_not_exist">用户不存在</string>
     <string name="fu_quan_user_not_find">要赋权用户没找到！</string>

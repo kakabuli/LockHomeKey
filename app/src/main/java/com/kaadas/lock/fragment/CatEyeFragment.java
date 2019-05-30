@@ -38,7 +38,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class CatEyeFragment extends BaseFragment<ICatEyeView, CatEyePresenter<ICatEyeView>> implements View.OnClickListener, ICatEyeView {
+public class CatEyeFragment extends BaseFragment<ICatEyeView, CatEyePresenter<ICatEyeView>> implements View.OnClickListener, ICatEyeView{
 
     List<BluetoothRecordBean> mCatEyeInfoList = new ArrayList<>();
     @BindView(R.id.recycleview)
@@ -72,6 +72,7 @@ public class CatEyeFragment extends BaseFragment<ICatEyeView, CatEyePresenter<IC
     @BindView(R.id.device_state)
     TextView deviceState;
     private CateEyeInfo cateEyeInfo;
+    private HomePageFragment.ISelectChangeListener iSelectChangeListener;
     private String gatewayId;
     private String deviceId;
 
@@ -83,6 +84,7 @@ public class CatEyeFragment extends BaseFragment<ICatEyeView, CatEyePresenter<IC
         initData();
         initRecycleView();
         initListener();
+
         return view;
     }
 
@@ -90,6 +92,15 @@ public class CatEyeFragment extends BaseFragment<ICatEyeView, CatEyePresenter<IC
         tvMore.setOnClickListener(this);
         rlDeviceDynamic.setOnClickListener(this);
         rlIcon.setOnClickListener(this);
+        iSelectChangeListener=new HomePageFragment.ISelectChangeListener() {
+            @Override
+            public void onSelectChange(boolean isSelect) {
+                if (isSelect){
+                    initData();
+                }
+
+            }
+        };
     }
 
     @Override
@@ -118,7 +129,11 @@ public class CatEyeFragment extends BaseFragment<ICatEyeView, CatEyePresenter<IC
                 long serverTime = (long) SPUtils.get(KeyConstants.SERVER_CURRENT_TIME, Long.parseLong("0"));
                 //设置守护时间
                 long day = ((serverTime / 1000) - saveTime) / (60 * 24 * 60);
-                this.createTime.setText(day + "");
+                if (day>0){
+                    this.createTime.setText(day + "");
+                }else{
+                    this.createTime.setText("0");
+                }
             } else {
                 createTime.setText("0");
             }
@@ -406,4 +421,7 @@ public class CatEyeFragment extends BaseFragment<ICatEyeView, CatEyePresenter<IC
             }
         }
     }
+
+
+
 }
