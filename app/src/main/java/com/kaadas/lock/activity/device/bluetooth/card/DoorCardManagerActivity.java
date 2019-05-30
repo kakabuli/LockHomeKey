@@ -77,12 +77,17 @@ public class DoorCardManagerActivity extends BaseBleActivity<ICardManagerView, C
         tvSynchronizedRecord.setOnClickListener(this);
         llAdd.setOnClickListener(this);
         pageChange();
-        mPresenter.getAllPassword(bleLockInfo, false);
         //进入默认鉴权
         mPresenter.isAuth(bleLockInfo, false);
         initRecycleview();
         initData();
         initRefresh();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mPresenter.getAllPassword(bleLockInfo, false);
     }
 
     private void initRefresh() {
