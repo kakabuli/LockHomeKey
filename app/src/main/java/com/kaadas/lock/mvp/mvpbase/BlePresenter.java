@@ -79,10 +79,8 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
     public boolean isAuth(BleLockInfo bleLockInfo, boolean isUser) {
         this.isNotify = isUser;
         //如果service中有设备  且不为空  且是当前设备
-        if (bleService.getBleLockInfo() != null
-                && bleService.getCurrentDevice() != null
-                && bleService.getCurrentDevice().getAddress().equals(this.bleLockInfo.getServerLockInfo().getMacLock())
-                ) {
+        if (bleService.getBleLockInfo() != null  && bleService.getCurrentDevice() != null
+             && bleService.getCurrentDevice().getAddress().equals(this.bleLockInfo.getServerLockInfo().getMacLock())) {
             if (this.bleLockInfo.isAuth()) {  //如果已经鉴权   不管
                 return true;
             }
@@ -131,8 +129,6 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
     /**
      * 搜索设备  连接设备  读取SystemId  鉴权
      */
-
-
     @Override
     public void detachView() {
         super.detachView();
@@ -141,9 +137,7 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
 
     public void connectDevice() {
         //开始连接蓝牙
-        bleService.release();
         handler.removeCallbacks(releaseRunnable);
-
         if (ContextCompat.checkSelfPermission(MyApplication.getInstance(), Manifest.permission.ACCESS_COARSE_LOCATION) != PERMISSION_GRANTED) {
             //没有定位权限
             if (mViewRef.get() != null && isNotify) {
@@ -201,6 +195,7 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
                 .subscribe(new Consumer<Boolean>() {
                     @Override
                     public void accept(Boolean aBoolean) throws Exception {
+                        handler.removeCallbacks(releaseRunnable);
                         if (mViewRef.get() != null) {
                             mViewRef.get().onEndConnectDevice(false);
                         }
@@ -226,7 +221,7 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
                     @Override
                     public void accept(BleStateBean bleStateBean) throws Exception {
                         //连接状态改变之后   就不自动release连接了
-                        LogUtils.e("设备状态改变   bleLockInfo   "  +(bleLockInfo == null) );
+                        LogUtils.e("设备状态改变   bleLockInfo为空   "  +(bleLockInfo == null) +"   连接状态   "+bleStateBean.isConnected() );
                         handler.removeCallbacks(releaseRunnable);
 
                         if (bleLockInfo!=null){
@@ -252,8 +247,7 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
                             }else {
                                 //连接成功   直接鉴权
                                 if (bleStateBean.isConnected() && bleService.getCurrentDevice() != null &&
-                                        bleService.getCurrentDevice().getAddress().equals(
-                                                bleLockInfo.getServerLockInfo().getMacLock())) {
+                                        bleService.getCurrentDevice().getAddress().equals(bleLockInfo.getServerLockInfo().getMacLock())) {
                                     readSystemId();
                                 }
                             }
@@ -552,7 +546,7 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
             if (mViewRef.get() != null) {
                 mViewRef.get().onEndConnectDevice(false);
             }
-            bleService.release();
+            bleService.release();  //连接蓝牙时的延时断开蓝牙连接
         }
     };
 

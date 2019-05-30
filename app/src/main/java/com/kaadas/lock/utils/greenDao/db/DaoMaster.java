@@ -28,13 +28,13 @@ public class DaoMaster extends AbstractDaoMaster {
         DBOpenLockRecordDao.createTable(db, ifNotExists);
         GatewayBaseInfoDao.createTable(db, ifNotExists);
         GatewayLockAlarmEventDaoDao.createTable(db, ifNotExists);
-        GatewayLockBaseInfoDao.createTable(db, ifNotExists);
         GatewayLockPwdDao.createTable(db, ifNotExists);
         GatewayLockRecordDao.createTable(db, ifNotExists);
         GatewayLockServiceInfoDao.createTable(db, ifNotExists);
         GatewayServiceInfoDao.createTable(db, ifNotExists);
         HistoryInfoDao.createTable(db, ifNotExists);
         PirDefaultDao.createTable(db, ifNotExists);
+        GatewayLockBaseInfoDao.createTable(db, ifNotExists);
     }
 
     /** Drops underlying database table using DAOs. */
@@ -46,13 +46,13 @@ public class DaoMaster extends AbstractDaoMaster {
         DBOpenLockRecordDao.dropTable(db, ifExists);
         GatewayBaseInfoDao.dropTable(db, ifExists);
         GatewayLockAlarmEventDaoDao.dropTable(db, ifExists);
-        GatewayLockBaseInfoDao.dropTable(db, ifExists);
         GatewayLockPwdDao.dropTable(db, ifExists);
         GatewayLockRecordDao.dropTable(db, ifExists);
         GatewayLockServiceInfoDao.dropTable(db, ifExists);
         GatewayServiceInfoDao.dropTable(db, ifExists);
         HistoryInfoDao.dropTable(db, ifExists);
         PirDefaultDao.dropTable(db, ifExists);
+        GatewayLockBaseInfoDao.dropTable(db, ifExists);
     }
 
     /**
@@ -78,13 +78,13 @@ public class DaoMaster extends AbstractDaoMaster {
         registerDaoClass(DBOpenLockRecordDao.class);
         registerDaoClass(GatewayBaseInfoDao.class);
         registerDaoClass(GatewayLockAlarmEventDaoDao.class);
-        registerDaoClass(GatewayLockBaseInfoDao.class);
         registerDaoClass(GatewayLockPwdDao.class);
         registerDaoClass(GatewayLockRecordDao.class);
         registerDaoClass(GatewayLockServiceInfoDao.class);
         registerDaoClass(GatewayServiceInfoDao.class);
         registerDaoClass(HistoryInfoDao.class);
         registerDaoClass(PirDefaultDao.class);
+        registerDaoClass(GatewayLockBaseInfoDao.class);
     }
 
     public DaoSession newSession() {

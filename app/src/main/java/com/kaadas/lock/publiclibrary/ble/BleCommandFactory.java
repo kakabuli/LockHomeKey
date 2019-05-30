@@ -456,7 +456,11 @@ public class BleCommandFactory {
             checkSum += payload[i];
         }
         LogUtils.e("加密前 " + Rsa.bytesToHexString(payload) + "key是  " + Rsa.bytesToHexString(key));
-        tempBuff = Rsa.encryptAES(payload, key);
+        if (key!=null){
+            tempBuff = Rsa.encryptAES(payload, key);
+        }else {
+            tempBuff = payload;
+        }
         //设置数据头  是加密的
         dataFrame[0] = 1;
         dataFrame[1] = getTSN();

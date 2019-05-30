@@ -261,7 +261,7 @@ public class BluetoothMoreActivity extends BaseBleActivity<IDeviceMoreView, Devi
 //                startActivity(intent);
                 break;
             case R.id.btn_delete:
-                AlertDialogUtil.getInstance().noEditTwoButtonDialog(this, getString(R.string.device_delete_dialog_head), getString(R.string.device_delete_dialog_content), getString(R.string.cancel), getString(R.string.query), new AlertDialogUtil.ClickListener() {
+                AlertDialogUtil.getInstance().noEditTwoButtonDialog(this, getString(R.string.device_delete_dialog_head), getString(R.string.device_delete_lock_dialog_content), getString(R.string.cancel), getString(R.string.query), new AlertDialogUtil.ClickListener() {
                     @Override
                     public void left() {
 
@@ -468,13 +468,12 @@ public class BluetoothMoreActivity extends BaseBleActivity<IDeviceMoreView, Devi
                     public void left() {
 
                     }
-
                     @Override
                     public void right() {
                         SPUtils.put(KeyConstants.DEVICE_SN + bleLockInfo.getServerLockInfo().getMacLock(), Sn);
                         SPUtils.put(KeyConstants.BLE_VERSION + bleLockInfo.getServerLockInfo().getMacLock(), version);
                         LogUtils.e("升级的版本信息是   " + Sn + "   下载链接是   " + updateFileInfo.getFileUrl());
-                        MyApplication.getInstance().getBleService().release();
+                        MyApplication.getInstance().getBleService().release();  //进入ota模式之前  需要断开连接
                         Intent intent = new Intent();
                         intent.putExtra(OtaConstants.bindUrl, updateFileInfo.getFileUrl());
                         intent.putExtra(OtaConstants.deviceMac, bleLockInfo.getServerLockInfo().getMacLock());

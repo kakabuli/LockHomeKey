@@ -65,6 +65,11 @@ public class OldBleLockPresenter<T> extends MyOldOpenLockRecordPresenter<IOldBle
         }
     }
 
+
+    public boolean isAttach(){
+        return isAttach;
+    }
+
     private void readBattery() {
         toDisposable(electricDisposable);
         electricDisposable =
@@ -321,7 +326,7 @@ public class OldBleLockPresenter<T> extends MyOldOpenLockRecordPresenter<IOldBle
                 .subscribe(new Consumer<BleDataBean>() {
                     @Override
                     public void accept(BleDataBean bleDataBean) throws Exception {
-                        if (MyApplication.getInstance().getBleService().getBleLockInfo().getAuthKey() == null || MyApplication.getInstance().getBleService().getBleLockInfo().getAuthKey().length == 0) {
+                        if (!MyApplication.getInstance().getBleService().getBleLockInfo().isAuth() ||MyApplication.getInstance().getBleService().getBleLockInfo().getAuthKey() == null || MyApplication.getInstance().getBleService().getBleLockInfo().getAuthKey().length == 0) {
                             LogUtils.e("收到锁状态改变，但是鉴权帧为空");
                             return;
                         }
