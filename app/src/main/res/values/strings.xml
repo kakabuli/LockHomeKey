@@ -1010,4 +1010,10 @@
     <string name="indeterminate">其他方式开锁</string>
     <string name="please_lock_countrol">请在门锁端操作</string>
     <string name="get_device_info">正在获取设备信息...</string>
+    <string name="lock_already_offline">门锁已离线</string>
+    <string name="cat_eye_pair_fail">猫眼连接失败！</string>
+    <string name="pair_device_out_time">设备连接超时</string>
+    <string name="network_connection_fail">网络原因连接失败</string>
+    <string name="scan_cateye_fail_no_qcode">扫描失败，非Kaadas猫眼二维码！</string>
+    <string name="rescancateye">是否继续扫描</string>
 </resources>

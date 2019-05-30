@@ -73,9 +73,9 @@ public class AddDeviceCatEyeScanActivity extends AppCompatActivity {
                 finish();
 
             }else{
-                Intent scanSuccessIntent=new Intent(AddDeviceCatEyeScanActivity.this,AddGatewaySecondActivity.class);
+                Intent scanSuccessIntent=new Intent(AddDeviceCatEyeScanActivity.this,AddDeviceCatEyeScanFailActivity.class);
                 startActivity(scanSuccessIntent);
-                ToastUtil.getInstance().showShort(R.string.please_scan_cateye_qrcode);
+                //ToastUtil.getInstance().showShort(R.string.please_scan_cateye_qrcode);
             }
 
 
