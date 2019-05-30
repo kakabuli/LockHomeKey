@@ -47,11 +47,10 @@ public class BleLockInfo implements Serializable {
     /**
      * 重置设备信息
      */
-    public void rease() {
+    public void release() {
         isConnected = false;
         battery = -1; //-1为吗，没有获取到电量信息
         isAuth = false; //是否鉴权
-        authKey = null;  //是否鉴权
         voice = -1;  // 音量   默认值为-1  表示没有获取到   0表示静音，非0表示不是静音
         safeMode = -1; //安全模式  0不启用或不支持   1已启动
         armMode = -1;  //布防模式 0不启用或不支持   1已启动

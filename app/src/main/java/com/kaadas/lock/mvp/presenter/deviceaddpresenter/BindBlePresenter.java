@@ -248,7 +248,7 @@ public class BindBlePresenter<T> extends BasePresenter<IBindBleView> {
         /**
          * 退出界面时  将蓝牙解除连接
          */
-        bleService.release();
+        bleService.release();  //绑定蓝牙界面
     }
 
     public void bindDevice(String pwd1, String pwd2, String model, String bleVersion) {
@@ -265,7 +265,7 @@ public class BindBlePresenter<T> extends BasePresenter<IBindBleView> {
                             handler.postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
-                                    bleService.release();
+                                    bleService.release();//绑定蓝牙界面
                                     MyApplication.getInstance().getAllDevicesByMqtt(true);
                                 }
                             }, 500);
@@ -273,7 +273,7 @@ public class BindBlePresenter<T> extends BasePresenter<IBindBleView> {
                             if (mViewRef.get() != null) {
                                 mViewRef.get().onBindSuccess(bleService.getCurrentDevice().getName());
                             }
-                            bleService.release();
+                            bleService.release();//绑定蓝牙界面
                             MyApplication.getInstance().getAllDevicesByMqtt(true);
                         }
                     }

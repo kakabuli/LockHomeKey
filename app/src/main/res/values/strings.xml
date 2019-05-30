@@ -405,6 +405,7 @@
     <string name="device_nick_name_no_update">设备名称未修改</string>
     <string name="device_delete_dialog_head">确认删除设备？</string>
     <string name="device_delete_dialog_content">删除设备后,\n将设备恢复出厂设置/清除猫眼数据</string>
+    <string name="device_delete_lock_dialog_content">删除设备后,\n将设备恢复出厂设置/清除锁内数据</string>
     <string name="pwd_manager_syn">密码同步</string>
     <string name="synchroniztion">同步</string>
     <string name="week_day">周日</string>
@@ -573,10 +574,10 @@
     <string name="bluetooth_close_status">关闭状态</string>
     <string name="is_lock">正在开锁</string>
     <string name="safe_status">安全状态</string>
-    <string name="wifi_not_online">WiFi不在线</string>
-    <string name="wifi_connecting">WiFi连接中</string>
-    <string name="wifi_connect_success">WiFi连接成功</string>
-    <string name="wifi_connect_fail">WiFi连接失败</string>
+    <string name="wifi_not_online">设备不在线</string>
+    <string name="wifi_connecting">设备连接中</string>
+    <string name="wifi_connect_success">设备连接成功</string>
+    <string name="wifi_connect_fail">设备连接失败</string>
     <string name="click_outside_door">点击查看门外</string>
     <string name="cateye_online">猫眼在线</string>
     <string name="device_has_offline">设备已离线</string>
@@ -991,7 +992,7 @@
     <string name="is_check_vle_version">正在检测蓝牙版本信息！</string>
     <string name="current_volume_no_change">当前铃声音量没有改变</string>
     <string name="current_resolution_no_change">当前视频分辨率没有改变</string>
-    <string name="wifi_alreade_offline">WiFi不在线</string>
+    <string name="wifi_alreade_offline">设备不在线</string>
     <string name="enter_feedback">请输入反馈信息</string>
     <string name="standard_password_door">标准密码开门</string>
     <string name="app_open_lock">APP开门</string>

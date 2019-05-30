@@ -119,7 +119,11 @@ public class GatewayMoreActivity extends BaseActivity<GatewayLockMoreView, Gatew
         showBean = (HomeShowBean) intent.getSerializableExtra(KeyConstants.GATEWAY_LOCK_INFO);
         if (showBean != null) {
             gwLockInfo = (GwLockInfo) showBean.getObject();
-            tvDeviceName.setText(gwLockInfo.getServerInfo().getNickName());
+            if (!TextUtils.isEmpty(gwLockInfo.getServerInfo().getNickName())){
+                tvDeviceName.setText(gwLockInfo.getServerInfo().getNickName());
+            }else{
+                tvDeviceName.setText(gwLockInfo.getServerInfo().getDeviceId());
+            }
             gatewayId = gwLockInfo.getGwID();
             deviceId = gwLockInfo.getServerInfo().getDeviceId();
         }
@@ -282,7 +286,7 @@ public class GatewayMoreActivity extends BaseActivity<GatewayLockMoreView, Gatew
                 break;
 
             case R.id.btn_delete:
-                AlertDialogUtil.getInstance().noEditTwoButtonDialog(this, getString(R.string.device_delete_dialog_head), getString(R.string.device_delete_dialog_content), getString(R.string.cancel), getString(R.string.query), new AlertDialogUtil.ClickListener() {
+                AlertDialogUtil.getInstance().noEditTwoButtonDialog(this, getString(R.string.device_delete_dialog_head), getString(R.string.device_delete_lock_dialog_content), getString(R.string.cancel), getString(R.string.query), new AlertDialogUtil.ClickListener() {
                     @Override
                     public void left() {
 

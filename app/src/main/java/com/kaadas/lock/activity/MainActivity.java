@@ -239,7 +239,6 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
         intent.setClass(MainActivity.this, OTADialogActivity.class);
         intent.putExtra(KeyConstants.BLE_DEVICE_INFO, bleLockInfo);
         startActivity(intent);
-
     }
 
     @Override

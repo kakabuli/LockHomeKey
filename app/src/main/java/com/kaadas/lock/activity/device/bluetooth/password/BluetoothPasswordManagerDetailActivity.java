@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -110,6 +111,9 @@ public class BluetoothPasswordManagerDetailActivity extends BaseBleActivity<IPas
             } else if (password.getType() == 5) {
                 tvNumber.setText(R.string.temporary_password_used_once);
             }
+            if ("09".equals(password.getNum())){
+                tvNumber.setText(R.string.stress_password);
+            }
         }
         tvTime.setText(DateUtils.secondToDate(createTime));
         tvName.setText(password.getNickName());
@@ -157,7 +161,7 @@ public class BluetoothPasswordManagerDetailActivity extends BaseBleActivity<IPas
                             alertDialog.dismiss();
                             return;
                         }
-
+//                        mPresenter.updateNick(password.getPwdType(), password.getNum(), name);
                         if (5==password.getType()) {
                             mPresenter.updateNick(2, password.getNum(), name);
                         }else {
@@ -182,6 +186,9 @@ public class BluetoothPasswordManagerDetailActivity extends BaseBleActivity<IPas
                             //确认删除
                             if (mPresenter.isAuth(bleLockInfo, true)) {
                                 showLoading(getString(R.string.is_deleting));
+                    /*            if (password.getPwdType()!=-1){
+                                    mPresenter.deletePwd(password.getPwdType(), Integer.parseInt(password.getNum()), 1, true);
+                                }*/
                                 if (password.getType() == 5){
                                     mPresenter.deletePwd(2, Integer.parseInt(password.getNum()), 1, true);
                                 }else {

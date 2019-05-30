@@ -104,14 +104,15 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                 .filter(new Predicate<BleDataBean>() {
                     @Override
                     public boolean test(BleDataBean bleDataBean) throws Exception {
-                        return bleDataBean.getCmd() == 0x07;
+                        //最新的蓝牙模块才有报警提示
+                        return bleDataBean.getCmd() == 0x07 && MyApplication.getInstance().getBleService().getBleVersion() == 3;
                     }
                 })
                 .compose(RxjavaHelper.observeOnMainThread())
                 .subscribe(new Consumer<BleDataBean>() {
                     @Override
                     public void accept(BleDataBean bleDataBean) throws Exception {
-                        if (MyApplication.getInstance().getBleService().getBleLockInfo().getAuthKey() == null || MyApplication.getInstance().getBleService().getBleLockInfo().getAuthKey().length == 0) {
+                        if (!MyApplication.getInstance().getBleService().getBleLockInfo().isAuth() || MyApplication.getInstance().getBleService().getBleLockInfo().getAuthKey() == null || MyApplication.getInstance().getBleService().getBleLockInfo().getAuthKey().length == 0) {
                             LogUtils.e("收到报警记录，但是鉴权帧为空");
                             return;
                         }
@@ -220,7 +221,7 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                         JSONObject jsonObject = new JSONObject(mqttData.getPayload());
                         String devtype = jsonObject.getString("devtype");
                         String eventtype = jsonObject.getString("eventtype");
-                        if (TextUtils.isEmpty(devtype)){ //devtype为空   无法处理数据
+                        if (TextUtils.isEmpty(devtype)) { //devtype为空   无法处理数据
                             return;
                         }
                         // TODO: 2019/5/14 处理猫眼动态和锁上报的信息分别放在不同的表中
@@ -253,7 +254,7 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                             //   保存到数据库
                             MyApplication.getInstance().getDaoWriteSession().getCatEyeEventDao().insert(catEyeEvent);
                             if (mViewRef.get() != null) {
-                                mViewRef.get().onGwEvent(eventType, catEyeEventBean.getDeviceId(),catEyeEventBean.getGwId());
+                                mViewRef.get().onGwEvent(eventType, catEyeEventBean.getDeviceId(), catEyeEventBean.getGwId());
                             }
                             //网关锁信息上报
                         } else if (KeyConstants.DEV_TYPE_LOCK.equals(devtype)) {
@@ -262,10 +263,10 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                                 GatewayLockAlarmEventBean gatewayLockAlarmEventBean = new Gson().fromJson(mqttData.getPayload(), GatewayLockAlarmEventBean.class);
                                 if (gatewayLockAlarmEventBean.getEventparams() != null && gatewayLockAlarmEventBean.getEventparams().getAlarmCode() != 0 && gatewayLockAlarmEventBean.getEventparams().getClusterID() != 0) {
                                     //保存到数据库
-                                    int alarmCode=gatewayLockAlarmEventBean.getEventparams().getAlarmCode();
-                                    String deviceId=gatewayLockAlarmEventBean.getDeviceId();
-                                    String gatewayId=gatewayLockAlarmEventBean.getGwId();
-                                    int clusterID=gatewayLockAlarmEventBean.getEventparams().getClusterID();
+                                    int alarmCode = gatewayLockAlarmEventBean.getEventparams().getAlarmCode();
+                                    String deviceId = gatewayLockAlarmEventBean.getDeviceId();
+                                    String gatewayId = gatewayLockAlarmEventBean.getGwId();
+                                    int clusterID = gatewayLockAlarmEventBean.getEventparams().getClusterID();
 
                                     GatewayLockAlarmEventDao gatewayLockAlarmEventDao = new GatewayLockAlarmEventDao();
                                     gatewayLockAlarmEventDao.setDeviceId(deviceId); //设备id
@@ -273,29 +274,29 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                                     gatewayLockAlarmEventDao.setTimeStamp(gatewayLockAlarmEventBean.getTimestamp()); //时间戳
                                     gatewayLockAlarmEventDao.setDevtype(gatewayLockAlarmEventBean.getDevtype()); //设备类型
                                     gatewayLockAlarmEventDao.setAlarmCode(alarmCode); //报警代码
-                                    if (alarmCode==1&&clusterID==257){
+                                    if (alarmCode == 1 && clusterID == 257) {
                                         //锁重置
                                         MyApplication.getInstance().getAllDevicesByMqtt(true);
                                         //删除锁的全部密码
-                                        deleteAllPwd(gatewayId,deviceId,MyApplication.getInstance().getUid());
+                                        deleteAllPwd(gatewayId, deviceId, MyApplication.getInstance().getUid());
 
                                     }
                                     gatewayLockAlarmEventDao.setClusterID(clusterID); //257 代表锁的信息;1 代表电量信息
                                     gatewayLockAlarmEventDao.setEventcode(gatewayLockAlarmEventBean.getEventcode());
 
                                     //插入到数据库
-                                    if (!checkSame(gatewayLockAlarmEventBean.getTimestamp(),gatewayLockAlarmEventBean.getEventparams().getAlarmCode())){
+                                    if (!checkSame(gatewayLockAlarmEventBean.getTimestamp(), gatewayLockAlarmEventBean.getEventparams().getAlarmCode())) {
                                         MyApplication.getInstance().getDaoWriteSession().getGatewayLockAlarmEventDaoDao().insert(gatewayLockAlarmEventDao);
                                         if (mViewRef.get() != null) {
-                                            mViewRef.get().onGwLockEvent(alarmCode, clusterID,deviceId,gatewayId);
+                                            mViewRef.get().onGwLockEvent(alarmCode, clusterID, deviceId, gatewayId);
                                         }
                                     }
 
-                                }else {
-                                    DeleteDeviceLockBean deleteGatewayLockDeviceBean=new Gson().fromJson(mqttData.getPayload(),DeleteDeviceLockBean.class);
-                                    if (deleteGatewayLockDeviceBean!=null){
-                                        if ("zigbee".equals(deleteGatewayLockDeviceBean.getEventparams().getDevice_type())&&deleteGatewayLockDeviceBean.getEventparams().getEvent_str().equals("delete")){
-                                            refreshData(deleteGatewayLockDeviceBean.getGwId(),deleteGatewayLockDeviceBean.getDeviceId());
+                                } else {
+                                    DeleteDeviceLockBean deleteGatewayLockDeviceBean = new Gson().fromJson(mqttData.getPayload(), DeleteDeviceLockBean.class);
+                                    if (deleteGatewayLockDeviceBean != null) {
+                                        if ("zigbee".equals(deleteGatewayLockDeviceBean.getEventparams().getDevice_type()) && deleteGatewayLockDeviceBean.getEventparams().getEvent_str().equals("delete")) {
+                                            refreshData(deleteGatewayLockDeviceBean.getGwId(), deleteGatewayLockDeviceBean.getDeviceId());
 
                                         }
                                     }
@@ -304,35 +305,34 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                                 }
 
 
-
-                            }else if ("info".equals(eventtype)){
-                                GatewayLockInfoEventBean gatewayLockInfoEventBean=new Gson().fromJson(mqttData.getPayload(),GatewayLockInfoEventBean.class);
-                                String gatewayId=gatewayLockInfoEventBean.getGwId();
-                                String deviceId=gatewayLockInfoEventBean.getDeviceId();
-                                String uid=MyApplication.getInstance().getUid();
-                                String  eventParmDeveType=gatewayLockInfoEventBean.getEventparams().getDevetype();
-                                int num=gatewayLockInfoEventBean.getEventparams().getUserID();
-                                int  devecode=gatewayLockInfoEventBean.getEventparams().getDevecode();
-                                int pin=gatewayLockInfoEventBean.getEventparams().getPin();
-                                if (eventParmDeveType.equals("lockprom")&&devecode==2&&pin==255){
+                            } else if ("info".equals(eventtype)) {
+                                GatewayLockInfoEventBean gatewayLockInfoEventBean = new Gson().fromJson(mqttData.getPayload(), GatewayLockInfoEventBean.class);
+                                String gatewayId = gatewayLockInfoEventBean.getGwId();
+                                String deviceId = gatewayLockInfoEventBean.getDeviceId();
+                                String uid = MyApplication.getInstance().getUid();
+                                String eventParmDeveType = gatewayLockInfoEventBean.getEventparams().getDevetype();
+                                int num = gatewayLockInfoEventBean.getEventparams().getUserID();
+                                int devecode = gatewayLockInfoEventBean.getEventparams().getDevecode();
+                                int pin = gatewayLockInfoEventBean.getEventparams().getPin();
+                                if (eventParmDeveType.equals("lockprom") && devecode == 2 && pin == 255) {
                                     //添加单个密码
                                     //删除密码
-                                    deleteOnePwd(gatewayId,deviceId,uid,"0"+num);
+                                    deleteOnePwd(gatewayId, deviceId, uid, "0" + num);
                                     //添加
-                                    AddOnePwd(gatewayId,deviceId,uid,"0"+num);
+                                    AddOnePwd(gatewayId, deviceId, uid, "0" + num);
                                     LogUtils.e("单个添加");
-                                }else if (eventParmDeveType.equals("lockprom")&&devecode==3&&num==255&&pin==255){
+                                } else if (eventParmDeveType.equals("lockprom") && devecode == 3 && num == 255 && pin == 255) {
                                     //全部删除
-                                    deleteAllPwd(gatewayId,deviceId,uid);
+                                    deleteAllPwd(gatewayId, deviceId, uid);
                                     LogUtils.e("全部删除");
-                                }else if (eventParmDeveType.equals("lockprom")&&devecode==3&&pin==255){
+                                } else if (eventParmDeveType.equals("lockprom") && devecode == 3 && pin == 255) {
                                     //删除单个密码
-                                    deleteOnePwd(gatewayId,deviceId,uid,"0"+num);
+                                    deleteOnePwd(gatewayId, deviceId, uid, "0" + num);
                                     LogUtils.e("删除单个密码");
-                                }else if (eventParmDeveType.equals("lockop")&&devecode==2&&pin==255){
+                                } else if (eventParmDeveType.equals("lockop") && devecode == 2 && pin == 255) {
                                     //使用一次性开锁密码
-                                    if (num>4&&num<=8){
-                                        deleteOnePwd(gatewayId,deviceId,uid,"0"+num);
+                                    if (num > 4 && num <= 8) {
+                                        deleteOnePwd(gatewayId, deviceId, uid, "0" + num);
                                         LogUtils.e("使用一次性开锁");
                                     }
                                     LogUtils.e("开锁上报");
@@ -349,14 +349,14 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
         compositeDisposable.add(catEyeEventDisposable);
     }
 
-    private void refreshData(String gatewayId,String deviceId) {
-        GatewayInfo gatewayInfo=MyApplication.getInstance().getGatewayById(gatewayId);
-        if (gatewayInfo!=null){
+    private void refreshData(String gatewayId, String deviceId) {
+        GatewayInfo gatewayInfo = MyApplication.getInstance().getGatewayById(gatewayId);
+        if (gatewayInfo != null) {
             MyApplication.getInstance().getAllDevicesByMqtt(true);
-                }
+        }
     }
 
-   public void initLinphone() {
+    public void initLinphone() {
         if (!TextUtils.isEmpty(MyApplication.getInstance().getToken()) && !TextUtils.isEmpty(MyApplication.getInstance().getUid())) {
             LinphoneHelper.setAccount(MyApplication.getInstance().getUid(), "12345678Bm", MqttConstant.LINPHONE_URL);
             LogUtils.e("设置LinPhone  监听  ");
@@ -392,7 +392,7 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                 public void incomingCall(LinphoneCall linphoneCall) {
                     //收到来电通知
                     LogUtils.e("Linphone  收到来电     ");
-                    Log.e(GeTui.VideoLog,"  Linphone  收到来电");
+                    Log.e(GeTui.VideoLog, "  Linphone  收到来电");
                     if (VideoVActivity.isRunning) {
                         LogUtils.e("Linphone  收到来电   VideoActivity已经运行  不出来  ");
                         return;
@@ -402,7 +402,7 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                     //获取linphone的地址
                     String linphoneSn = linphoneCall.getRemoteAddress().getUserName();
                     LogUtils.e("Linphone   呼叫过来的linphoneSn   " + linphoneSn);
-                    Log.e(GeTui.VideoLog,"  linphoneSn:"+linphoneSn);
+                    Log.e(GeTui.VideoLog, "  linphoneSn:" + linphoneSn);
                     String gwId = "";
                     GatewayInfo gatewayInfo = null;
                     List<CateEyeInfo> cateEyes = MyApplication.getInstance().getAllBindDevices().getCateEyes();
@@ -412,8 +412,8 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                             LogUtils.e("获取到网关Id为  " + cateEyeInfo.getGwID());
                             gwId = cateEyeInfo.getGwID();
                             List<GatewayInfo> allGateway = MyApplication.getInstance().getAllGateway();
-                            for (GatewayInfo info:allGateway){
-                                if ( cateEyeInfo.getGwID().equals(info.getServerInfo().getDeviceSN())){
+                            for (GatewayInfo info : allGateway) {
+                                if (cateEyeInfo.getGwID().equals(info.getServerInfo().getDeviceSN())) {
                                     gatewayInfo = info;
                                     break;
                                 }
@@ -433,7 +433,7 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                         //如果账号或者密码有一个为空  直接退出
                         return;
                     }
-                    Log.e(GeTui.VideoLog,"MainActivityPresenter--> next..."+meUsername+" "+mePwd);
+                    Log.e(GeTui.VideoLog, "MainActivityPresenter--> next..." + meUsername + " " + mePwd);
                     if (MemeManager.getInstance().isConnected()) { //meme网已经连接
                         //如果meme网登陆的账号密码为当前的账号密码，直接发起通信
                         if (meUsername.equals(MemeManager.getInstance().getCurrentAccount())
@@ -450,7 +450,7 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
 
                         }
                     } else { //meme网没有连接
-                        Log.e(GeTui.VideoLog,"MainPresenter------>登录 mimi");
+                        Log.e(GeTui.VideoLog, "MainPresenter------>登录 mimi");
                         loginMeme(meUsername, mePwd);
                     }
                 }
@@ -504,7 +504,7 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                     public Boolean apply(Boolean aBoolean, List<Device> devices) throws Exception {
                         LogUtils.e("米米网登陆成功  且网关在线");
                         if (aBoolean && devices.size() > 0) { //米米网登陆成功且网关在线  正常到此处，那么都应该是成功的
-                            Log.e(GeTui.VideoLog,"米米网登陆成功  且网关在线");
+                            Log.e(GeTui.VideoLog, "米米网登陆成功  且网关在线");
                             return true;
                         }
                         return false;
@@ -520,7 +520,7 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                         }
                         if (aBoolean) { // 米米网登陆成功且网关在线
                             LogUtils.e("米米网  登陆成功   弹出来电框");
-                            Log.e(GeTui.VideoLog,"米米网  登陆成功   弹出来电框");
+                            Log.e(GeTui.VideoLog, "米米网  登陆成功   弹出来电框");
                             if (mViewRef.get() != null) {
                                 mViewRef.get().onCatEyeCallIn(callInCatEyeInfo);
                             }
@@ -564,7 +564,7 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
     public void uploadpushmethod() {
         String uid = (String) SPUtils.get(SPUtils.UID, "");
         String JpushId = (String) SPUtils2.get(MyApplication.getInstance(), GeTui.JPUSH_ID, "");
-        Log.e(GeTui.VideoLog, "uid:" + uid + " jpushid:" + JpushId+" token:"+MyApplication.getInstance().getToken());
+        Log.e(GeTui.VideoLog, "uid:" + uid + " jpushid:" + JpushId + " token:" + MyApplication.getInstance().getToken());
         //uploadPushId(String uid, String jpushId, int type)
         if (!TextUtils.isEmpty(uid) && !TextUtils.isEmpty(JpushId)) {
             XiaokaiNewServiceImp.uploadPushId(uid, JpushId, 2).subscribe(new BaseObserver<BaseResult>() {
@@ -594,9 +594,6 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
     }
 
 
-
-
-
     @Override
     public void detachView() {
         super.detachView();
@@ -606,25 +603,25 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
 
 
     //添加某个
-    private void AddOnePwd(String gatewayId,String deviceId,String uid,String num) {
-        GatewayLockPwdDao gatewayLockPwdDao=MyApplication.getInstance().getDaoWriteSession().getGatewayLockPwdDao();
-        GatewayLockPwd gatewayLockPwd=new GatewayLockPwd();
+    private void AddOnePwd(String gatewayId, String deviceId, String uid, String num) {
+        GatewayLockPwdDao gatewayLockPwdDao = MyApplication.getInstance().getDaoWriteSession().getGatewayLockPwdDao();
+        GatewayLockPwd gatewayLockPwd = new GatewayLockPwd();
         gatewayLockPwd.setUid(uid);
         gatewayLockPwd.setNum(num);
         gatewayLockPwd.setStatus(1);
         gatewayLockPwd.setName("");
         gatewayLockPwd.setGatewayId(gatewayId);
         gatewayLockPwd.setDeviceId(deviceId);
-        Integer keyInt=Integer.parseInt(num);
+        Integer keyInt = Integer.parseInt(num);
         //用于zigbee锁是根据编号识别是永久密码，临时密码，还是胁迫密码
-        if(keyInt<=4){
+        if (keyInt <= 4) {
             gatewayLockPwd.setTime(1);
-        }else if (keyInt<=8&&keyInt>4){
+        } else if (keyInt <= 8 && keyInt > 4) {
             gatewayLockPwd.setTime(2);
-        }else if (keyInt==9){
+        } else if (keyInt == 9) {
             gatewayLockPwd.setTime(3);
         }
-        if (gatewayLockPwdDao!=null){
+        if (gatewayLockPwdDao != null) {
             gatewayLockPwdDao.insert(gatewayLockPwd);
         }
 
@@ -632,28 +629,28 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
     }
 
     //删除某个数据
-    private void deleteOnePwd(String gatewayId,String deviceId,String uid,String num) {
-        GatewayLockPwdDao gatewayLockPwdDao=MyApplication.getInstance().getDaoWriteSession().getGatewayLockPwdDao();
-        GatewayLockPwd gatewayLockPwd=gatewayLockPwdDao.queryBuilder().where(GatewayLockPwdDao.Properties.GatewayId.eq(gatewayId), GatewayLockPwdDao.Properties.DeviceId.eq(deviceId),GatewayLockPwdDao.Properties.Uid.eq(uid),GatewayLockPwdDao.Properties.Num.eq(num)).unique();
-        if (gatewayLockPwd!=null){
+    private void deleteOnePwd(String gatewayId, String deviceId, String uid, String num) {
+        GatewayLockPwdDao gatewayLockPwdDao = MyApplication.getInstance().getDaoWriteSession().getGatewayLockPwdDao();
+        GatewayLockPwd gatewayLockPwd = gatewayLockPwdDao.queryBuilder().where(GatewayLockPwdDao.Properties.GatewayId.eq(gatewayId), GatewayLockPwdDao.Properties.DeviceId.eq(deviceId), GatewayLockPwdDao.Properties.Uid.eq(uid), GatewayLockPwdDao.Properties.Num.eq(num)).unique();
+        if (gatewayLockPwd != null) {
             gatewayLockPwdDao.delete(gatewayLockPwd);
         }
     }
 
     //删除该锁的所有密码
-    private void deleteAllPwd(String gatewayId,String deviceId,String uid){
-        GatewayLockPwdDao gatewayLockPwdDao=MyApplication.getInstance().getDaoWriteSession().getGatewayLockPwdDao();
-        List<GatewayLockPwd> gatewayLockPwdList=gatewayLockPwdDao.queryBuilder().where(GatewayLockPwdDao.Properties.GatewayId.eq(gatewayId), GatewayLockPwdDao.Properties.DeviceId.eq(deviceId),GatewayLockPwdDao.Properties.Uid.eq(uid)).list();
-        if (gatewayLockPwdList!=null&&gatewayLockPwdList.size()>0){
-            for (GatewayLockPwd gatewayLockPwd:gatewayLockPwdList){
+    private void deleteAllPwd(String gatewayId, String deviceId, String uid) {
+        GatewayLockPwdDao gatewayLockPwdDao = MyApplication.getInstance().getDaoWriteSession().getGatewayLockPwdDao();
+        List<GatewayLockPwd> gatewayLockPwdList = gatewayLockPwdDao.queryBuilder().where(GatewayLockPwdDao.Properties.GatewayId.eq(gatewayId), GatewayLockPwdDao.Properties.DeviceId.eq(deviceId), GatewayLockPwdDao.Properties.Uid.eq(uid)).list();
+        if (gatewayLockPwdList != null && gatewayLockPwdList.size() > 0) {
+            for (GatewayLockPwd gatewayLockPwd : gatewayLockPwdList) {
                 gatewayLockPwdDao.delete(gatewayLockPwd);
             }
         }
     }
 
     //去掉时间戳相同
-    public boolean checkSame(String time,int alarmCode){
-        GatewayLockAlarmEventDao gatewayLockAlarmEventDao=MyApplication.getInstance().getDaoWriteSession().queryBuilder(GatewayLockAlarmEventDao.class).where(GatewayLockAlarmEventDaoDao.Properties.TimeStamp.eq(time),GatewayLockAlarmEventDaoDao.Properties.AlarmCode.eq(alarmCode)).unique();
+    public boolean checkSame(String time, int alarmCode) {
+        GatewayLockAlarmEventDao gatewayLockAlarmEventDao = MyApplication.getInstance().getDaoWriteSession().queryBuilder(GatewayLockAlarmEventDao.class).where(GatewayLockAlarmEventDaoDao.Properties.TimeStamp.eq(time), GatewayLockAlarmEventDaoDao.Properties.AlarmCode.eq(alarmCode)).unique();
         if (gatewayLockAlarmEventDao != null) {
             return true;
         }
@@ -661,15 +658,15 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
     }
 
     //设置HomeShowBean
-    public void setHomeShowBean(){
-        DaoSession daoSession=MyApplication.getInstance().getDaoWriteSession();
-        String uid=MyApplication.getInstance().getUid();
-        List<HomeShowBean> homeShowBeans=new ArrayList<>();
+    public void setHomeShowBean() {
+        DaoSession daoSession = MyApplication.getInstance().getDaoWriteSession();
+        String uid = MyApplication.getInstance().getUid();
+        List<HomeShowBean> homeShowBeans = new ArrayList<>();
         //获取蓝牙
-        List<BleLockServiceInfo> bleLockList=daoSession.getBleLockServiceInfoDao().queryBuilder().where(BleLockServiceInfoDao.Properties.Uid.eq(uid)).list();
-        if (bleLockList!=null&&bleLockList.size()>0){
-            for (BleLockServiceInfo bleDevice:bleLockList){
-                ServerBleDevice serverBleDevice=new ServerBleDevice();
+        List<BleLockServiceInfo> bleLockList = daoSession.getBleLockServiceInfoDao().queryBuilder().where(BleLockServiceInfoDao.Properties.Uid.eq(uid)).list();
+        if (bleLockList != null && bleLockList.size() > 0) {
+            for (BleLockServiceInfo bleDevice : bleLockList) {
+                ServerBleDevice serverBleDevice = new ServerBleDevice();
                 serverBleDevice.setAuto_lock(bleDevice.getAuto_lock());
                 serverBleDevice.setCenter_latitude(bleDevice.getCenter_latitude());
                 serverBleDevice.setCenter_longitude(bleDevice.getCenter_longitude());
@@ -683,43 +680,39 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                 serverBleDevice.setPassword1(bleDevice.getPassword1());
                 serverBleDevice.setPassword2(bleDevice.getPassword2());
                 BleLockInfo bleLockInfo = new BleLockInfo(serverBleDevice);
-                homeShowBeans.add(new HomeShowBean(HomeShowBean.TYPE_BLE_LOCK, bleDevice.getLockName(), bleDevice.getLockNickName(),bleLockInfo ));
+                homeShowBeans.add(new HomeShowBean(HomeShowBean.TYPE_BLE_LOCK, bleDevice.getLockName(), bleDevice.getLockNickName(), bleLockInfo));
             }
         }
         //获取网关
-      List<GatewayServiceInfo> gatewayServiceInfoList= daoSession.getGatewayServiceInfoDao().queryBuilder().where(GatewayServiceInfoDao.Properties.Uid.eq(uid)).list();
-      if (gatewayServiceInfoList!=null&&gatewayServiceInfoList.size()>0){
-          for (GatewayServiceInfo gatewayServiceInfo:gatewayServiceInfoList){
-              GatewayInfo newGatewayInfo = new GatewayInfo(new ServerGatewayInfo(gatewayServiceInfo.getDeviceSN(),gatewayServiceInfo.getDeviceNickName(),gatewayServiceInfo.getAdminuid(),gatewayServiceInfo.getAdminName(),gatewayServiceInfo.getAdminNickname(),gatewayServiceInfo.getIsAdmin(),gatewayServiceInfo.getMeUsername(),gatewayServiceInfo.getMePwd(),gatewayServiceInfo.getMeBindState()));
-              homeShowBeans.add(new HomeShowBean(HomeShowBean.TYPE_GATEWAY, gatewayServiceInfo.getDeviceSN(), gatewayServiceInfo.getDeviceNickName(), newGatewayInfo));
-          }
-      }
+        List<GatewayServiceInfo> gatewayServiceInfoList = daoSession.getGatewayServiceInfoDao().queryBuilder().where(GatewayServiceInfoDao.Properties.Uid.eq(uid)).list();
+        if (gatewayServiceInfoList != null && gatewayServiceInfoList.size() > 0) {
+            for (GatewayServiceInfo gatewayServiceInfo : gatewayServiceInfoList) {
+                GatewayInfo newGatewayInfo = new GatewayInfo(new ServerGatewayInfo(gatewayServiceInfo.getDeviceSN(), gatewayServiceInfo.getDeviceNickName(), gatewayServiceInfo.getAdminuid(), gatewayServiceInfo.getAdminName(), gatewayServiceInfo.getAdminNickname(), gatewayServiceInfo.getIsAdmin(), gatewayServiceInfo.getMeUsername(), gatewayServiceInfo.getMePwd(), gatewayServiceInfo.getMeBindState()));
+                homeShowBeans.add(new HomeShowBean(HomeShowBean.TYPE_GATEWAY, gatewayServiceInfo.getDeviceSN(), gatewayServiceInfo.getDeviceNickName(), newGatewayInfo));
+            }
+        }
 
-      //获取网关锁
-      List<GatewayLockServiceInfo> gatewayLockList=daoSession.getGatewayLockServiceInfoDao().queryBuilder().where(GatewayLockServiceInfoDao.Properties.Uid.eq(uid)).list();
-      if (gatewayLockList!=null&&gatewayLockList.size()>0){
-          for (GatewayLockServiceInfo gwLock:gatewayLockList){
-              GwLockInfo gwLockInfo=new GwLockInfo(gwLock.getGatewayId(),new ServerGwDevice(gwLock.getSW(),gwLock.getDeviceId(),gwLock.getDevice_type(),gwLock.getEvent_str(),gwLock.getIpaddr(),gwLock.getMacaddr(),gwLock.getNickName(),gwLock.getTime()));
-              homeShowBeans.add(new HomeShowBean(HomeShowBean.TYPE_GATEWAY_LOCK, gwLock.getDeviceId(),
-                      gwLock.getNickName(), gwLockInfo));
-          }
-      }
+        //获取网关锁
+        List<GatewayLockServiceInfo> gatewayLockList = daoSession.getGatewayLockServiceInfoDao().queryBuilder().where(GatewayLockServiceInfoDao.Properties.Uid.eq(uid)).list();
+        if (gatewayLockList != null && gatewayLockList.size() > 0) {
+            for (GatewayLockServiceInfo gwLock : gatewayLockList) {
+                GwLockInfo gwLockInfo = new GwLockInfo(gwLock.getGatewayId(), new ServerGwDevice(gwLock.getSW(), gwLock.getDeviceId(), gwLock.getDevice_type(), gwLock.getEvent_str(), gwLock.getIpaddr(), gwLock.getMacaddr(), gwLock.getNickName(), gwLock.getTime()));
+                homeShowBeans.add(new HomeShowBean(HomeShowBean.TYPE_GATEWAY_LOCK, gwLock.getDeviceId(),
+                        gwLock.getNickName(), gwLockInfo));
+            }
+        }
 
-      //获取猫眼
-      List<CatEyeServiceInfo> catEyeServiceList=daoSession.getCatEyeServiceInfoDao().queryBuilder().where(CatEyeServiceInfoDao.Properties.Uid.eq(uid)).list();
-      if (catEyeServiceList!=null&&catEyeServiceList.size()>0){
-          for (CatEyeServiceInfo catEyeService:catEyeServiceList){
-              CateEyeInfo cateEyeInfo=new CateEyeInfo(catEyeService.getGatewayId(),new ServerGwDevice(catEyeService.getSW(),catEyeService.getDeviceId(),catEyeService.getDevice_type(),catEyeService.getEvent_str(),catEyeService.getIpaddr(),catEyeService.getMacaddr(),catEyeService.getNickName(),catEyeService.getTime()));
-              homeShowBeans.add(new HomeShowBean(HomeShowBean.TYPE_CAT_EYE, catEyeService.getDeviceId(),
-                      catEyeService.getNickName(), cateEyeInfo));
-          }
-      }
+        //获取猫眼
+        List<CatEyeServiceInfo> catEyeServiceList = daoSession.getCatEyeServiceInfoDao().queryBuilder().where(CatEyeServiceInfoDao.Properties.Uid.eq(uid)).list();
+        if (catEyeServiceList != null && catEyeServiceList.size() > 0) {
+            for (CatEyeServiceInfo catEyeService : catEyeServiceList) {
+                CateEyeInfo cateEyeInfo = new CateEyeInfo(catEyeService.getGatewayId(), new ServerGwDevice(catEyeService.getSW(), catEyeService.getDeviceId(), catEyeService.getDevice_type(), catEyeService.getEvent_str(), catEyeService.getIpaddr(), catEyeService.getMacaddr(), catEyeService.getNickName(), catEyeService.getTime()));
+                homeShowBeans.add(new HomeShowBean(HomeShowBean.TYPE_CAT_EYE, catEyeService.getDeviceId(),
+                        catEyeService.getNickName(), cateEyeInfo));
+            }
+        }
         MyApplication.getInstance().setHomeshowDevice(homeShowBeans);
     }
-
-
-
-
 
 
 }
