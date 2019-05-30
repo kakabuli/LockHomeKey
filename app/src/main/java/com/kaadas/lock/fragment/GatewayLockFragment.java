@@ -139,8 +139,10 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
             LogUtils.e(time + "网关时间");
             if (!TextUtils.isEmpty(time)) {
                 long saveTime = DateUtils.standardTimeChangeTimestamp(time) / 1000;
+                LogUtils.e("zigb守护时间"+saveTime);
                 long serverTime = (long) SPUtils.get(KeyConstants.SERVER_CURRENT_TIME, Long.parseLong("0"));
                 //设置守护时间
+                LogUtils.e("zigb守护时间"+saveTime+"服务器时间"+serverTime/1000);
                 long day = ((serverTime / 1000) - saveTime) / (60 * 24 * 60);
                 if (day>0){
                     this.createTime.setText(day + "");
