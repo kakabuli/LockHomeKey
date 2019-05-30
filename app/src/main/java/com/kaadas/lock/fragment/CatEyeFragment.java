@@ -1,7 +1,6 @@
 package com.kaadas.lock.fragment;
 
 import android.content.Intent;
-import android.net.Network;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -38,7 +37,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class CatEyeFragment extends BaseFragment<ICatEyeView, CatEyePresenter<ICatEyeView>> implements View.OnClickListener, ICatEyeView{
+public class CatEyeFragment extends BaseFragment<ICatEyeView, CatEyePresenter<ICatEyeView>> implements View.OnClickListener, ICatEyeView {
 
     List<BluetoothRecordBean> mCatEyeInfoList = new ArrayList<>();
     @BindView(R.id.recycleview)
@@ -71,6 +70,8 @@ public class CatEyeFragment extends BaseFragment<ICatEyeView, CatEyePresenter<IC
     TextView createTime;
     @BindView(R.id.device_state)
     TextView deviceState;
+    @BindView(R.id.iv_device_dynamic)
+    ImageView ivDeviceDynamic;
     private CateEyeInfo cateEyeInfo;
     private HomePageFragment.ISelectChangeListener iSelectChangeListener;
     private String gatewayId;
@@ -92,10 +93,11 @@ public class CatEyeFragment extends BaseFragment<ICatEyeView, CatEyePresenter<IC
         tvMore.setOnClickListener(this);
         rlDeviceDynamic.setOnClickListener(this);
         rlIcon.setOnClickListener(this);
-        iSelectChangeListener=new HomePageFragment.ISelectChangeListener() {
+        ivDeviceDynamic.setOnClickListener(this);
+        iSelectChangeListener = new HomePageFragment.ISelectChangeListener() {
             @Override
             public void onSelectChange(boolean isSelect) {
-                if (isSelect){
+                if (isSelect) {
                     initData();
                 }
 
@@ -116,12 +118,12 @@ public class CatEyeFragment extends BaseFragment<ICatEyeView, CatEyePresenter<IC
             deviceId = cateEyeInfo.getServerInfo().getDeviceId();
             if (NetUtil.isNetworkAvailable()) {
                 changeOpenLockStatus(cateEyeInfo.getServerInfo().getEvent_str());
-            }else{
+            } else {
                 changeOpenLockStatus("offline");
             }
-                mPresenter.getPublishNotify();
-                mPresenter.listenerDeviceOnline();
-                mPresenter.listenerNetworkChange();
+            mPresenter.getPublishNotify();
+            mPresenter.listenerDeviceOnline();
+            mPresenter.listenerNetworkChange();
             String time = cateEyeInfo.getServerInfo().getTime();
             LogUtils.e(time + "猫眼时间");
             if (!TextUtils.isEmpty(time)) {
@@ -129,9 +131,9 @@ public class CatEyeFragment extends BaseFragment<ICatEyeView, CatEyePresenter<IC
                 long serverTime = (long) SPUtils.get(KeyConstants.SERVER_CURRENT_TIME, Long.parseLong("0"));
                 //设置守护时间
                 long day = ((serverTime / 1000) - saveTime) / (60 * 24 * 60);
-                if (day>0){
+                if (day > 0) {
                     this.createTime.setText(day + "");
-                }else{
+                } else {
                     this.createTime.setText("0");
                 }
             } else {
@@ -159,12 +161,12 @@ public class CatEyeFragment extends BaseFragment<ICatEyeView, CatEyePresenter<IC
         离线：“设备已离线”*/
         if ("online".equals(eventStr)) {
             status = 1;
-            if (deviceState!=null){
+            if (deviceState != null) {
                 deviceState.setText(getString(R.string.normal));
             }
         } else {
             status = 2;
-            if (deviceState!=null){
+            if (deviceState != null) {
                 deviceState.setText(getString(R.string.offline));
             }
         }
@@ -229,6 +231,12 @@ public class CatEyeFragment extends BaseFragment<ICatEyeView, CatEyePresenter<IC
         Intent intent;
         switch (v.getId()) {
             case R.id.rl_device_dynamic:
+                intent = new Intent(getActivity(), CateyeEquipmentDynamicActivity.class);
+                intent.putExtra(KeyConstants.GATEWAY_ID, gatewayId);
+                intent.putExtra(KeyConstants.DEVICE_ID, deviceId);
+                startActivity(intent);
+                break;
+            case R.id.iv_device_dynamic:
                 intent = new Intent(getActivity(), CateyeEquipmentDynamicActivity.class);
                 intent.putExtra(KeyConstants.GATEWAY_ID, gatewayId);
                 intent.putExtra(KeyConstants.DEVICE_ID, deviceId);
@@ -397,10 +405,10 @@ public class CatEyeFragment extends BaseFragment<ICatEyeView, CatEyePresenter<IC
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser) {
-            if(cateEyeInfo!=null){
-                if (NetUtil.isNetworkAvailable()){
+            if (cateEyeInfo != null) {
+                if (NetUtil.isNetworkAvailable()) {
                     changeOpenLockStatus(cateEyeInfo.getServerInfo().getEvent_str());
-                }else{
+                } else {
                     changeOpenLockStatus("offline");
                 }
             }
@@ -421,7 +429,6 @@ public class CatEyeFragment extends BaseFragment<ICatEyeView, CatEyePresenter<IC
             }
         }
     }
-
 
 
 }

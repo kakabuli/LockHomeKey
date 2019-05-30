@@ -62,7 +62,6 @@ public class CardManagerPresenter<T> extends BlePresenter<ICardManagerView> {
                 return true;
             }
         }
-        bleService.release();
         return false;
     }
 

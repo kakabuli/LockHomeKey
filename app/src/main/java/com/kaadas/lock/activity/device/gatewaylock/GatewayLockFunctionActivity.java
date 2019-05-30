@@ -118,7 +118,7 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
     private boolean getArmLockSuccess=false; //是否获取布防成功
 
     private int armLock=0;
-    private String flagEvent="";
+    private int flagEvent=0;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -287,8 +287,8 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
                 //开锁
                 //对话框
                 String lockPwd = (String) SPUtils.get(KeyConstants.SAVA_LOCK_PWD + deviceId, "");
-                if (flagEvent.equals("offline")){
-                    ToastUtil.getInstance().showShort(getString(R.string.wifi_alreade_offline));
+                if (flagEvent==1){
+                    ToastUtil.getInstance().showShort(getString(R.string.lock_already_offline));
                     return;
                 }else if (TextUtils.isEmpty(lockPwd)) {
                     //密码为空
@@ -358,7 +358,6 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
 
 
     private void dealWithPower(int power, String eventStr, String timeStamp) {
-        flagEvent=eventStr;
         //电量：80%
         if (power < 0) {
             power = 0;
@@ -373,9 +372,11 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
             if (eventStr.equals("online")) {
                 ivPower.setColor(R.color.c25F290);
                 ivPower.setBorderColor(R.color.white);
+                flagEvent=0;
             } else {
                 ivPower.setColor(R.color.cD6D6D6);
                 ivPower.setBorderColor(R.color.c949494);
+                flagEvent=1;
             }
         }
         long readDeviceInfoTime = 0;

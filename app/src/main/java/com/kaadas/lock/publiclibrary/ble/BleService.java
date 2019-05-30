@@ -119,7 +119,7 @@ public class BleService extends Service {
 
 
     private Disposable disposable;
-    private Runnable releaseRunnable1;
+    private Runnable notDiscoverServerReleaseRunnbale;
     private BluetoothGattCharacteristic lockStatusChar;
     private BluetoothGattCharacteristic lockFunChar;
     private BluetoothGattService tiotaService;
@@ -169,13 +169,13 @@ public class BleService extends Service {
         notDiscoverService.compose(RxjavaHelper.observeOnMainThread());
 
         //连接成功  5秒后如果没有获取到服务和UUID  断开重连
-        releaseRunnable1 = new Runnable() { //连接成功  1秒后如果没有获取到服务和UUID  断开重连
+        notDiscoverServerReleaseRunnbale = new Runnable() { //连接成功  1秒后如果没有获取到服务和UUID  断开重连
             @Override
             public void run() {
                 if (!isConnected) {
                     //没有发现服务的回调。
                     notDiscoverService.onNext(true);
-                    release();
+                    release();  //10秒没有发现服务
                 }
             }
         };
@@ -236,7 +236,7 @@ public class BleService extends Service {
                 isConnected = false;
             }
             if (bleLockInfo != null) {
-                bleLockInfo.rease();
+                bleLockInfo.release();
             }
             currentDevice = null;
             mWritableCharacter = null; //朝设备写数据的特征值
@@ -253,7 +253,7 @@ public class BleService extends Service {
             handler.removeCallbacks(sendHeart);
             handler.removeCallbacks(sendCommandRannble);
             handler.removeCallbacks(releaseRunnable);
-            handler.removeCallbacks(releaseRunnable1);
+            handler.removeCallbacks(notDiscoverServerReleaseRunnbale);
         }
     }
 
@@ -344,12 +344,11 @@ public class BleService extends Service {
      * 连接设备
      */
     public PublishSubject<Boolean> connectDeviceByDevice(final BluetoothDevice device) {
-        release();
+        release();  //连接设备之前先断开连接   初始化数据
         currentDevice = device;
         bluetoothGatt = currentDevice.connectGatt(BleService.this, false, bluetoothGattCallback);
         return connectSubject;
     }
-
 
     private BluetoothGattCallback bluetoothGattCallback = new BluetoothGattCallback() {
         /**
@@ -364,14 +363,14 @@ public class BleService extends Service {
             LogUtils.e("蓝牙设备连接状态发生改变 当前状态是  " + newState);
             if (newState == BluetoothGatt.STATE_CONNECTED) { //连接成功  此时还不算连接成功，等到发现服务且读取到所有特征值之后才算连接成功
                 gatt.discoverServices(); //发现服务
-                handler.removeCallbacks(releaseRunnable1);
-                handler.postDelayed(releaseRunnable1, 10 * 1000);
+                handler.removeCallbacks(notDiscoverServerReleaseRunnbale);
+                handler.postDelayed(notDiscoverServerReleaseRunnbale, 10 * 1000);
             } else if (newState == BluetoothGatt.STATE_DISCONNECTED) { //断开连接
                 //断开连接  有时候是用户断开的  有时候是异常断开。
                 LogUtils.e("断开连接  ");
                 isConnected = false;
                 connectStateSubject.onNext(new BleStateBean(false, gatt == null ? null : gatt.getDevice(), -1));
-                release();
+                release(); //断开连接，初始化数据
             }
         }
 
@@ -384,6 +383,7 @@ public class BleService extends Service {
         public void onServicesDiscovered(BluetoothGatt gatt, int status) {
             super.onServicesDiscovered(gatt, status);
             LogUtils.e("发现服务    " + gatt.getServices().size());
+            handler.removeCallbacks(notDiscoverServerReleaseRunnbale);  //清除
             discoverCharacteristic(gatt);
 
         }
@@ -669,7 +669,7 @@ public class BleService extends Service {
         //
         tiotaService = gatt.getService(UUID.fromString(BLeConstants.TI_OAD_SERVICE));
         if (tiotaService != null) {  //OTA升级模式下的设备
-            release();
+            release();  //OTA模式下  断开连接
             if (bleLockInfo != null) {
                 bleLockInfo.setBleType(1);
                 deviceInBootSubject.onNext(bleLockInfo);
@@ -678,7 +678,7 @@ public class BleService extends Service {
         }
         p6otaService = gatt.getService(UUID.fromString(BLeConstants.P6_OAD_SERVICE));
         if (p6otaService != null) {
-            release();
+            release(); //OTA模式下  断开连接
             if (bleLockInfo != null) {
                 bleLockInfo.setBleType(2);
                 deviceInBootSubject.onNext(bleLockInfo);
@@ -696,7 +696,7 @@ public class BleService extends Service {
                 }
                 if (BLeConstants.UUID_NOTIFY_CHAR.equalsIgnoreCase(characteristic.getUuid().toString())) {
                     boolean isNotify = gatt.setCharacteristicNotification(characteristic, true);
-                    Log.e("开启通知", "读特征值 uuidChar = " + serviceUUID  );
+                    Log.e("开启通知", "读特征值 uuidChar = " + serviceUUID);
                     if (isNotify) {
                         for (BluetoothGattDescriptor dp : characteristic.getDescriptors()) {
                             //开启设备的写功能，开启之后才能接收到设备发送过来的数据
@@ -771,13 +771,13 @@ public class BleService extends Service {
             LogUtils.e("服务UUID  " + gattService.getUuid().toString());
             if (gattService.getUuid().toString().equalsIgnoreCase(BLeConstants.OAD_RESET_TI_SERVICE)) {
                 isFFD0 = true;
-                if (bleLockInfo!=null){
+                if (bleLockInfo != null) {
                     bleLockInfo.setBleType(1);
                 }
             }
             if (gattService.getUuid().toString().equalsIgnoreCase(BLeConstants.OAD_RESET_P6_SERVICE)) {
                 is1802 = true;
-                if (bleLockInfo!=null){
+                if (bleLockInfo != null) {
                     bleLockInfo.setBleType(2);
                 }
             }
@@ -792,7 +792,7 @@ public class BleService extends Service {
         if (isFFE1) {
             return BleUtil.BLE_VERSION_NEW2;
         }
-        if (isFFD0 ) {
+        if (isFFD0) {
             return BleUtil.BLE_VERSION_NEW1;
         }
         return BleUtil.BLE_VERSION_OLD;
@@ -859,20 +859,22 @@ public class BleService extends Service {
     private Runnable releaseRunnable = new Runnable() {
         @Override
         public void run() {
-            release();
+            release();   //后台20秒断开连接
         }
     };
 
     private Runnable sendCommandRannble = new Runnable() {
         @Override
-        public synchronized void run() {
-            if (commands.size() > 0) { //如果指令集合中有数据，那么直接发送数据 且移除此次发送的数据
-                sendCommand(commands.get(0));
-                commands.remove(0);
-            }
-            if (commands.size() > 0) {  //如果还有指令  继续发送
-                handler.removeCallbacks(sendCommandRannble);
-                handler.postDelayed(sendCommandRannble, sendInterval);
+        public void run() {
+            synchronized (BleService.class) {
+                if (commands.size() > 0) { //如果指令集合中有数据，那么直接发送数据 且移除此次发送的数据
+                    sendCommand(commands.get(0));
+                    commands.remove(0);
+                }
+                if (commands.size() > 0) {  //如果还有指令  继续发送
+                    handler.removeCallbacks(sendCommandRannble);
+                    handler.postDelayed(sendCommandRannble, sendInterval);
+                }
             }
         }
     };
@@ -1004,6 +1006,7 @@ public class BleService extends Service {
 
     /**
      * 设备正在boot模式
+     *
      * @return
      */
     public Observable<BleLockInfo> onDeviceStateInBoot() {

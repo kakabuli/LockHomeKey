@@ -275,6 +275,10 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".activity.addDevice.cateye.AddDeviceCatEyeScanFailActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".activity.addDevice.cateye.AddDeviceCatEyeSecondActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />

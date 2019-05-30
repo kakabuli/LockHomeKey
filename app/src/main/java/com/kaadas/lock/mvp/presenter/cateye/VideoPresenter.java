@@ -595,7 +595,7 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
                                 SPUtils.put(KeyConstants.SAVA_LOCK_PWD + deviceId, pwd);
                             } else {
                                 if (mViewRef.get() != null) {
-                                    mViewRef.get().openLockFailed(null);
+                                    mViewRef.get().openLockFailed();
                                 }
                                 SPUtils.remove(KeyConstants.SAVA_LOCK_PWD + deviceId);
                             }
@@ -605,7 +605,8 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
                         public void accept(Throwable throwable) throws Exception {
                             //开锁异常
                             if (mViewRef.get() != null) {
-                                mViewRef.get().openLockFailed(throwable);
+                                SPUtils.remove(KeyConstants.SAVA_LOCK_PWD + deviceId);
+                                mViewRef.get().openLockThrowable(throwable);
                             }
                         }
                     });
@@ -651,7 +652,8 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
                         @Override
                         public void accept(Throwable throwable) throws Exception {
                             if (mViewRef.get() != null) {
-                                mViewRef.get().openLockFailed(throwable);
+                                SPUtils.remove(KeyConstants.SAVA_LOCK_PWD + deviceId);
+                                mViewRef.get().openLockThrowable(throwable);
                             }
                         }
                     });
