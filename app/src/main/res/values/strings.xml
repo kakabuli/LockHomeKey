@@ -573,10 +573,10 @@
     <string name="bluetooth_close_status">关闭状态</string>
     <string name="is_lock">正在开锁</string>
     <string name="safe_status">安全状态</string>
-    <string name="wifi_not_online">WiFi不在线</string>
-    <string name="wifi_connecting">WiFi连接中</string>
-    <string name="wifi_connect_success">WiFi连接成功</string>
-    <string name="wifi_connect_fail">WiFi连接失败</string>
+    <string name="wifi_not_online">设备不在线</string>
+    <string name="wifi_connecting">设备连接中</string>
+    <string name="wifi_connect_success">设备连接成功</string>
+    <string name="wifi_connect_fail">设备连接失败</string>
     <string name="click_outside_door">点击查看门外</string>
     <string name="cateye_online">猫眼在线</string>
     <string name="device_has_offline">设备已离线</string>
