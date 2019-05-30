@@ -421,6 +421,14 @@ public class CatEyeFragment extends BaseFragment<ICatEyeView, CatEyePresenter<IC
             if (cateEyeInfo != null) {
                 if (NetUtil.isNetworkAvailable()) {
                     changeOpenLockStatus(cateEyeInfo.getServerInfo().getEvent_str());
+                    GatewayInfo gatewayInfo = MyApplication.getInstance().getGatewayById(gatewayId);
+                    if (gatewayInfo!=null) {
+                        if (gatewayInfo.getEvent_str() != null) {
+                            if (gatewayInfo.getEvent_str().equals("offline")) {
+                                changeOpenLockStatus("offline");
+                            }
+                        }
+                    }
                 } else {
                     changeOpenLockStatus("offline");
                 }

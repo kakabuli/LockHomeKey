@@ -114,23 +114,24 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
         LogUtils.e("fragment gatewayId"+gatewayLockInfo.getGwID()+"fragment device Id"  +gatewayLockInfo.getServerInfo().getDeviceId());
         if (gatewayLockInfo != null) {
             gatewayId = gatewayLockInfo.getGwID();
+            deviceId = gatewayLockInfo.getServerInfo().getDeviceId();
             if (!TextUtils.isEmpty(gatewayId)) {
                 GatewayInfo gatewayInfo = MyApplication.getInstance().getGatewayById(gatewayId);
                 if (NetUtil.isNetworkAvailable()) {
-                        if ("online".equals(gatewayLockInfo.getServerInfo().getEvent_str())) {
-                            //在线
-                            changeOpenLockStatus(5);
-                            deviceState.setText(getString(R.string.normal));
-                        } else {
-                            changeOpenLockStatus(1);
-                            deviceState.setText(getString(R.string.offline));
-                        }
-                     if (gatewayInfo.getEvent_str()!=null) {
-                         if (gatewayInfo.getEvent_str().equals("offline")) {
-                             changeOpenLockStatus(1);
-                             deviceState.setText(getString(R.string.offline));
-                         }
-                     }
+                            if ("online".equals(gatewayLockInfo.getServerInfo().getEvent_str())) {
+                                //在线
+                                changeOpenLockStatus(5);
+                                deviceState.setText(getString(R.string.normal));
+                            } else {
+                                changeOpenLockStatus(1);
+                                deviceState.setText(getString(R.string.offline));
+                            }
+                            if (gatewayInfo.getEvent_str() != null) {
+                                if (gatewayInfo.getEvent_str().equals("offline")) {
+                                    changeOpenLockStatus(1);
+                                    deviceState.setText(getString(R.string.offline));
+                                }
+                            }
 
                 } else {
                         changeOpenLockStatus(1);
@@ -138,8 +139,6 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
                         changePage(false);
                     }
             }
-
-            deviceId = gatewayLockInfo.getServerInfo().getDeviceId();
             mPresenter.listenerNetworkChange();//监听网络状态
             mPresenter.listenGaEvent();//锁上报
             mPresenter.getPublishNotify();//网关上线
@@ -837,13 +836,18 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
                     if ("online".equals(gatewayLockInfo.getServerInfo().getEvent_str())) {
                         //在线
                         changeOpenLockStatus(5);
-                        if (deviceState != null) {
-                            deviceState.setText(getString(R.string.normal));
-                        }
+                        deviceState.setText(getString(R.string.normal));
                     } else {
                         changeOpenLockStatus(1);
-                        if (deviceState != null) {
-                            deviceState.setText(getString(R.string.offline));
+                        deviceState.setText(getString(R.string.offline));
+                    }
+                    GatewayInfo gatewayInfo = MyApplication.getInstance().getGatewayById(gatewayId);
+                    if (gatewayInfo!=null) {
+                        if (gatewayInfo.getEvent_str() != null) {
+                            if (gatewayInfo.getEvent_str().equals("offline")) {
+                                changeOpenLockStatus(1);
+                                deviceState.setText(getString(R.string.offline));
+                            }
                         }
                     }
                 }else{
