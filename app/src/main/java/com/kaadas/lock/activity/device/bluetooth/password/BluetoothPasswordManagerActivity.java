@@ -184,10 +184,21 @@ public class BluetoothPasswordManagerActivity extends BaseBleActivity<IPasswordM
         } else {
             isNotPassword = true;
         }
+        processType(list);
         passwordPageChange();
 //        bluetoothPasswordAdapter.notifyDataSetChanged();
         initRecycleview();
         LogUtils.e("收到  同步的锁的密码   " + list.toString());
+    }
+
+    private void processType(List<ForeverPassword> pwdList) {
+        for (int i=0;i<pwdList.size();i++){
+            ForeverPassword foreverpassword = pwdList.get(i);
+            String num = foreverpassword.getNum();
+            if ("05".equals(num)||"06".equals(num)||"07".equals(num)||"08".equals(num)){
+                foreverpassword.setType(5);
+            }
+        }
     }
 
     @Override
@@ -201,6 +212,7 @@ public class BluetoothPasswordManagerActivity extends BaseBleActivity<IPasswordM
             bluetoothPasswordAdapter.notifyDataSetChanged();
         }
         list = pwdList;
+        processType(list);
         isNotPassword = false;
         passwordPageChange();
     }
@@ -256,10 +268,11 @@ public class BluetoothPasswordManagerActivity extends BaseBleActivity<IPasswordM
             foreverPassword.setNum(tempPassword.getNum());
             foreverPassword.setNickName(tempPassword.getNickName());
             foreverPassword.setCreateTime(tempPassword.getCreateTime());
-            foreverPassword.setType(5);
+//            foreverPassword.setType(5);
             list.add(foreverPassword);
 
         }
+        processType(list);
         LogUtils.e("获取到的结果，    " + result.getData().getPwdList().toString());
         initRecycleview();
         if (result.getData().getPwdList().size() > 0) {

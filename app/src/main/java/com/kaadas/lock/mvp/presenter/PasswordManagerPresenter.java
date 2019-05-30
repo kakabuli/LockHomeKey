@@ -212,13 +212,21 @@ public class PasswordManagerPresenter<T> extends BlePresenter<IPasswordManagerVi
         }
         List<AddPasswordBean.Password> passwords = new ArrayList<>();
         for (int i : numbers) {
-            if (i>4){
+            if (i>4&&i<9){
                 String number = i < 10 ? "0" + i : "" + i;
                 passwords.add(new AddPasswordBean.Password(2, number, number, 1));
             }else {
                 String number = i < 10 ? "0" + i : "" + i;
                 passwords.add(new AddPasswordBean.Password(1, number, number, 1));
             }
+         /*   if (i>4){
+                String number = i < 10 ? "0" + i : "" + i;
+                passwords.add(new AddPasswordBean.Password(2, number, number, 1));
+            }else {
+                String number = i < 10 ? "0" + i : "" + i;
+                passwords.add(new AddPasswordBean.Password(1, number, number, 1));
+            }*/
+
 
         }
         XiaokaiNewServiceImp.addPassword(MyApplication.getInstance().getUid()
