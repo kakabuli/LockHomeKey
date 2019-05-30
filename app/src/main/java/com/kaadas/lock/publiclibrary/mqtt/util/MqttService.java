@@ -142,6 +142,7 @@ public class MqttService extends Service {
         if (!TextUtils.isEmpty(user_id)&&!TextUtils.isEmpty(user_token)) {
             connOpts.setUserName(user_id);
             connOpts.setPassword(user_token.toCharArray());
+            LogUtils.e("Mqtt设置token"+user_token+"     connopt"+connOpts.getPassword());
         }
         return connOpts;
     }
@@ -162,18 +163,7 @@ public class MqttService extends Service {
         token= MyApplication.getInstance().getToken();
         //TODO: 2019/4/25  此处为空   应该重新读取一下本地文件，延时100ms吧，如果再读取不到？直接退出   mqtt不能不登录的  不登录  这个APP就废了
         if (TextUtils.isEmpty(userId) || TextUtils.isEmpty(token)) {
-            //重新再次读取本地文件
-            Runnable reconncetRunnable = new Runnable() {
-                @Override
-                public void run() {
-                    userId=MyApplication.getInstance().getUid();
-                    token=MyApplication.getInstance().getToken();
-                    if (TextUtils.isEmpty(userId)||TextUtils.isEmpty(token)){
-                        mqttDisconnect();
-                    }
-                }
-            };
-            mHandler.postDelayed(reconncetRunnable, 100);
+           return;
         }
         //
 
@@ -186,8 +176,9 @@ public class MqttService extends Service {
             LogUtils.e("mqttConnection", "mqtt已连接");
             return;
         }
-        //设置mqtt参数
-        LogUtils.e("设置参数  userId  " + userId + "  token  " + token);
+
+
+
         MqttConnectOptions mqttConnectOptions = connectOption(userId, token);
         //设置回调
         mqttClient.setCallback(new MqttCallbackExtended() {
@@ -304,7 +295,7 @@ public class MqttService extends Service {
                 public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
                     //可能出现无权连接（5）---用户在其他手机登录
                     if (reconnectionNum > 0) {
-                        LogUtils.e("mqtt连接", "连接失败1     " + exception.toString());
+                        LogUtils.e("mqtt连接", "连接失败1     " + exception.toString()+"token是"+token+"用户名"+userId);
                         MqttExceptionHandle.onFail(MqttExceptionHandle.ConnectException, asyncActionToken, exception);
                         if (exception.toString().equals("无权连接 (5)")) {
                             // TODO: 2019/4/1  该用户在其他手机登录(清除所有数据）---暂时未处理

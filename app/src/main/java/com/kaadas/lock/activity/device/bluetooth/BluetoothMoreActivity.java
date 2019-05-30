@@ -515,6 +515,8 @@ public class BluetoothMoreActivity extends BaseBleActivity<IDeviceMoreView, Devi
 
                         }
                     });
+        }else {
+            ToastUtil.getInstance().showLong(getString(R.string.check_update_failed));
         }
     }
 

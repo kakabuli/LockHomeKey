@@ -36,7 +36,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/dp_63"
-        android:src="@mipmap/add_gateway_success"
+        android:src="@mipmap/be_beging_connect_suit_cateye"
         android:layout_gravity="center"
         />
     <TextView

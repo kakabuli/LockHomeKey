@@ -232,10 +232,10 @@ public class OldBluetoothLockDetailActivity extends BaseBleActivity<IOldBluetoot
 
     @Override
     public void onBleVersionUpdate(int version) {
-        if (version != 2) {
-            rlDeviceInformation.setVisibility(View.INVISIBLE);
-        } else {
+        if (version != 1) {
             rlDeviceInformation.setVisibility(View.VISIBLE);
+        } else {
+            rlDeviceInformation.setVisibility(View.INVISIBLE);
         }
     }
 
