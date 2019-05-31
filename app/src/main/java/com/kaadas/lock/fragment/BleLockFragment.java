@@ -443,9 +443,9 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
             case 8:
                 //“长按开锁”（表示关闭状态）
                 ivExternalBig.setVisibility(View.VISIBLE);
-                ivExternalBig.setImageResource(R.mipmap.bluetooth_no_connect_big_icon);
-                ivExternalMiddle.setVisibility(View.VISIBLE);
-                ivExternalMiddle.setImageResource(R.mipmap.bluetooth_open_lock_small_icon);
+                ivExternalBig.setImageResource(R.mipmap.bluetooth_lock_close_big_middle_icon  );
+                ivExternalMiddle.setVisibility(View.GONE);
+//                ivExternalMiddle.setImageResource();
                 ivExternalSmall.setVisibility(View.GONE);
                 ivInnerMiddle.setVisibility(View.VISIBLE);
                 ivInnerMiddle.setImageResource(R.mipmap.bluetooth_lock_safe_inner_midder_icon);
@@ -659,9 +659,9 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
      */
     public void closeLockAnimator() {
         ivExternalBig.setVisibility(View.VISIBLE);
-        ivExternalBig.setImageResource(R.mipmap.bluetooth_no_connect_big_icon);
-        ivExternalMiddle.setVisibility(View.VISIBLE);
-        ivExternalMiddle.setImageResource(R.mipmap.bluetooth_open_lock_small_icon);
+        ivExternalBig.setImageResource(R.mipmap.bluetooth_lock_close_big_middle_icon  );
+        ivExternalMiddle.setVisibility(View.GONE);
+//        ivExternalMiddle.setImageResource(R.mipmap.);
         ivExternalSmall.setVisibility(View.GONE);
 //                ivExternalSmall.setImageResource(R.mipmap.bluetooth_open_lock_small_icon);
         ivInnerMiddle.setVisibility(View.VISIBLE);

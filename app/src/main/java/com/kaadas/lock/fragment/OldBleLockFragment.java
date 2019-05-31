@@ -384,10 +384,10 @@ public class OldBleLockFragment extends BaseBleFragment<IOldBleLockView, OldBleL
             case 8:
                 //“长按开锁”（表示关闭状态）
                 ivExternalBig.setVisibility(View.VISIBLE);
-                ivExternalBig.setImageResource(R.mipmap.bluetooth_no_connect_big_icon);
+                ivExternalBig.setImageResource(R.mipmap.bluetooth_lock_close_big_middle_icon  );
                 ivExternalMiddle.setVisibility(View.GONE);
-                ivExternalSmall.setVisibility(View.VISIBLE);
-                ivExternalSmall.setImageResource(R.mipmap.bluetooth_open_lock_small_icon);
+                ivExternalSmall.setVisibility(View.GONE);
+//                ivExternalSmall.setImageResource();
                 ivInnerMiddle.setVisibility(View.VISIBLE);
                 ivInnerMiddle.setImageResource(R.mipmap.bluetooth_lock_safe_inner_midder_icon);
                 ivInnerSmall.setVisibility(View.VISIBLE);
