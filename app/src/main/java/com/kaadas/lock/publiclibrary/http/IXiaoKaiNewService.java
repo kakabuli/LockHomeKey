@@ -409,7 +409,11 @@ public interface IXiaoKaiNewService {
     @POST(HttpUrlConstants.USER_OPEN_LOCK_AUTHORITY)
     Observable<BaseResult> openLockAuth(@Body RequestBody info);
 
-
+    /**
+     * 上传PushId
+     * @param info
+     * @return
+     */
     @POST(HttpUrlConstants.UPLOAD_PUSH_ID)
     Observable<BaseResult> uploadPushId(@Body RequestBody info);
 
@@ -419,7 +423,7 @@ public interface IXiaoKaiNewService {
      * @param info
      * @return
      */
-    @POST(HttpUrlConstants.GETPUSHSWITch)
+    @POST(HttpUrlConstants.GET_PUSH_SWITch)
     Observable<SwitchStatusResult> getPushSwitch(@Body RequestBody info);
 
 
@@ -428,7 +432,7 @@ public interface IXiaoKaiNewService {
      * @param info
      * @return
      */
-    @POST(HttpUrlConstants.UPDATEPUSHSWITch)
+    @POST(HttpUrlConstants.UPDATE_PUSH_SWITch)
     Observable<SwitchStatusResult> updatePushSwitch(@Body RequestBody info);
 
 
