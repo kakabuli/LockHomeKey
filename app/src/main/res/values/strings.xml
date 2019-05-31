@@ -1019,4 +1019,5 @@
     <string name="rescancateye">是否继续扫描</string>
     <string name="not_empty">设备名不能为空</string>
     <string name="is_saving_name">正在保存设备名称</string>
+    <string name="update_ble_version_failed">上传模块信息失败，请稍后再试</string>
 </resources>

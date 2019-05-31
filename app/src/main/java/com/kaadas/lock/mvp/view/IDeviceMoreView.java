@@ -80,10 +80,20 @@ public interface IDeviceMoreView extends IBleView {
      */
     void notNeedUpdate(String errorCode );
 
-
-
-
-
+    /**
+     * @param type
+     */
     void onStateUpdate(int type);
+
+    /**
+     * 更新软件版本失败，错误码
+     */
+    void onUpdateSoftFailed(Throwable throwable);
+
+    /**
+     * 更新软件版本失败，服务器返回
+     */
+    void onUpdateSoftFailedServer(BaseResult baseResult);
+
 
 }

@@ -530,9 +530,17 @@ public class BluetoothMoreActivity extends BaseBleActivity<IDeviceMoreView, Devi
             amAutoLockStatus = true;
             ivAm.setImageResource(R.mipmap.iv_open);
         }
-
-
     }
 
+    @Override
+    public void onUpdateSoftFailed(Throwable throwable) {
+        hiddenLoading();
+        LogUtils.e(getString(R.string.update_ble_version_failed));
+    }
 
+    @Override
+    public void onUpdateSoftFailedServer(BaseResult baseResult) {
+        hiddenLoading();
+        LogUtils.e(getString(R.string.update_ble_version_failed));
+    }
 }
