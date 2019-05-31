@@ -46,12 +46,14 @@
 
     <TextView
         android:id="@+id/tv_content"
-        android:layout_width="wrap_content"
+        android:layout_width="@dimen/dp_100"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_marginLeft="@dimen/dp_110"
         android:layout_marginRight="@dimen/dp_50"
-        android:text=""
+        android:singleLine="true"
+        android:ellipsize="end"
+
         android:textColor="#999999"
         android:textSize="@dimen/sp_12" />
     <TextView
@@ -61,7 +63,6 @@
         android:layout_centerVertical="true"
         android:layout_alignParentRight="true"
         android:layout_marginRight="@dimen/dp_98"
-        android:text=""
         android:textColor="#999999"
         android:textSize="@dimen/sp_12" />
 </RelativeLayout>
