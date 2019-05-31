@@ -23,6 +23,8 @@ public class ServerBleDevice implements Serializable {
     private String model;
     private long createTime;
     private String bleVersion;
+    private String softwareVersion;
+    private String deviceSN;
 
     public String getBleVersion() {
         return bleVersion;
@@ -133,12 +135,23 @@ public class ServerBleDevice implements Serializable {
     }
 
     public void setModel(String model) {
-        if (model.startsWith("X5")){
-            model="X5";
-        }else{
-            model="T5";
-        }
         this.model = model;
+    }
+
+    public String getSoftwareVersion() {
+        return softwareVersion;
+    }
+
+    public void setSoftwareVersion(String softwareVersion) {
+        this.softwareVersion = softwareVersion;
+    }
+
+    public String getDeviceSN() {
+        return deviceSN;
+    }
+
+    public void setDeviceSN(String deviceSN) {
+        this.deviceSN = deviceSN;
     }
 
     public long getCreateTime() {

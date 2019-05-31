@@ -393,7 +393,15 @@ public class DeviceMorePresenter extends BlePresenter<IDeviceMoreView> {
 //                        checkOtaInfo(sn, version);
 
 
-                        uploadBleSoftware(sn, version);
+                        String serverBleVersion = bleLockInfo.getServerLockInfo().getSoftwareVersion();
+                        String deviceSN = bleLockInfo.getServerLockInfo().getDeviceSN();
+                        LogUtils.e("服务器数据是  serverBleVersion " + serverBleVersion+"  deviceSN  "+deviceSN);
+                        if (version.equals(serverBleVersion) && sn.equals(deviceSN)){
+                            checkOtaInfo(sn, version);
+                        }else {
+                            uploadBleSoftware(sn, version);
+                        }
+
 //                        checkOtaInfo("BT02191410009", "10.1.007");
                         toDisposable(readSoftwareRevDisposable);
                     }

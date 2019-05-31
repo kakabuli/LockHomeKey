@@ -1253,7 +1253,6 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
         if (!isSuccess) {
             changeOpenLockStatus(12);
         }
-
     }
 
     @Override
