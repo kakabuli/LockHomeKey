@@ -31,9 +31,13 @@ import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.NetUtil;
 import com.kaadas.lock.utils.SPUtils;
+import com.kaadas.lock.utils.ftp.GeTui;
 import com.kaadas.lock.utils.greenDao.bean.CatEyeEvent;
 
+import org.linphone.mediastream.Log;
+
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import butterknife.BindView;
@@ -390,7 +394,7 @@ public class CatEyeFragment extends BaseFragment<ICatEyeView, CatEyePresenter<IC
             }
 
         }
-
+         Collections.reverse(mCatEyeInfoList);
         for (int i = 0; i < mCatEyeInfoList.size(); i++) {
             BluetoothRecordBean bluetoothRecordBean = mCatEyeInfoList.get(i);
             List<BluetoothItemRecordBean> bluetoothRecordBeanList = bluetoothRecordBean.getList();

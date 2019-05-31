@@ -15,9 +15,13 @@ import com.kaadas.lock.bean.BluetoothItemRecordBean;
 import com.kaadas.lock.bean.BluetoothRecordBean;
 import com.kaadas.lock.publiclibrary.ble.bean.OpenLockRecord;
 import com.kaadas.lock.publiclibrary.http.result.FamilyMemberBean;
+import com.kaadas.lock.utils.ftp.GeTui;
 
+
+import org.linphone.mediastream.Log;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -45,6 +49,7 @@ public class BluetoothRecordAdapter extends BaseQuickAdapter<BluetoothRecordBean
         }
         RecyclerView recyclerView = helper.getView(R.id.item_recycleview);
         List<BluetoothItemRecordBean> data = bean.getList();
+        Log.e(GeTui.VideoLog,"数据是.....:"+data);
         BluetoothItemRecordAdapter bluetoothItemRecordAdapter = new BluetoothItemRecordAdapter(data);
         recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         recyclerView.setAdapter(bluetoothItemRecordAdapter);
