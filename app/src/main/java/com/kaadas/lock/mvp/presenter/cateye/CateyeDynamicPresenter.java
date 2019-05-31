@@ -18,7 +18,7 @@ public class CateyeDynamicPresenter<T> extends BasePresenter<ICateyeDynamicView>
     public void getCatEyeDynamicInfo(int page,int pageNum,String gatewayId,String deviceId){
         //获取数据库的门锁报警信息
             LogUtils.e("访问数据库的门锁信息");
-        List<CatEyeEvent> catEyeEventsList=MyApplication.getInstance().getDaoWriteSession().queryBuilder(CatEyeEvent.class).orderDesc(CatEyeEventDao.Properties.Id).offset(page * pageNum).limit(pageNum).list();
+        List<CatEyeEvent> catEyeEventsList=MyApplication.getInstance().getDaoWriteSession().queryBuilder(CatEyeEvent.class).orderDesc(CatEyeEventDao.Properties.EventTime).offset(page * pageNum).limit(pageNum).list();
              /*= MyApplication.getInstance().getDaoWriteSession().queryBuilder(CatEyeEvent.class);*/
             if(catEyeEventsList!=null&&catEyeEventsList.size()>0){
                 for (CatEyeEvent catEyeEvent:catEyeEventsList) {
