@@ -84,7 +84,6 @@ public class P6OtaUpgradeActivity extends AppCompatActivity implements View.OnCl
     private BluetoothLeScanner bluetoothLeScanner;
     private OTAFUHandler mOTAFUHandler = DUMMY_HANDLER;//Initializing to DUMMY_HANDLER to avoid NPEs
     private Handler handler = new Handler();
-    boolean isComplete = false;
 
     /**
      * 进入boot模式的ServiceUUID
@@ -148,14 +147,15 @@ public class P6OtaUpgradeActivity extends AppCompatActivity implements View.OnCl
             handler.removeCallbacks(disconnectedRunnable);
             BluetoothLeService.discoverServices();
             Utils.setIntSharedPreference(P6OtaUpgradeActivity.this, Constants.PREF_PROGRAM_ROW_START_POS + BluetoothLeService.mBluetoothDeviceAddress, 0);
-            handler.postDelayed(disconnectedRunnable, 5 * 1000);  //如果五秒之内没有发现服务，那么断开连接
+            handler.postDelayed(disconnectedRunnable, 10 * 1000);  //如果五秒之内没有发现服务，那么断开连接
         } else if (BluetoothLeService.ACTION_GATT_DISCONNECTED.equals(action)) {  //断开连接
             Log.e(TAG, "断开连接");
             BluetoothLeService.refreshDeviceCache(BluetoothLeService.getmBluetoothGatt());
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    if (!isComplete) {
+                    //没有完成  并且正在升级的过程中，断开连接继续连接
+                    if (   isUpdating) {
                         scanDevices();
                     }
                 }
@@ -383,6 +383,7 @@ public class P6OtaUpgradeActivity extends AppCompatActivity implements View.OnCl
     public Runnable disconnectedRunnable = new Runnable() {
         @Override
         public void run() {
+            otaFailed("连接失败");
             BluetoothLeService.disconnect();
         }
     };
@@ -542,7 +543,8 @@ public class P6OtaUpgradeActivity extends AppCompatActivity implements View.OnCl
             Utils.setStringSharedPreference(P6OtaUpgradeActivity.this, Constants.PREF_BOOTLOADER_STATE + BluetoothLeService.mBluetoothDeviceAddress, "Default");
             Utils.setIntSharedPreference(P6OtaUpgradeActivity.this, Constants.PREF_PROGRAM_ROW_NO + BluetoothLeService.mBluetoothDeviceAddress, 0);
             Utils.setIntSharedPreference(P6OtaUpgradeActivity.this, Constants.PREF_PROGRAM_ROW_START_POS + BluetoothLeService.mBluetoothDeviceAddress, 0);
-            isComplete = true;
+            Utils.setIntSharedPreference(P6OtaUpgradeActivity.this, Constants.PREF_PROGRAM_ROW_NO_OLD + BluetoothLeService.mBluetoothDeviceAddress, 0);
+            Utils.setIntSharedPreference(P6OtaUpgradeActivity.this, Constants.PREF_PROGRAM_ROW_START_POS_OLD + BluetoothLeService.mBluetoothDeviceAddress, 0);
             isUpdating = false;
             otaSuccess();
         }
