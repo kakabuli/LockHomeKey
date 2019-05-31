@@ -7,10 +7,8 @@ package com.kaadas.lock.publiclibrary.http.temp;
 public class HttpConstants {
 
     /*******************************************************/
-    //public static final String BASE_URL = "https://app.xiaokai.com:8090/";//小凯正式服务器
-   //    public static final String BASE_URL = "https://app-kaadas.juziwulian.com:34000/";//凯迪仕正式服务器
-//    public static final String BASE_URL = "https://47.107.175.212:8090/";//小凯测试服务器
-      public static final String BASE_URL = "https://test.juziwulian.com:8090/";//凯迪仕测试服务器
+       public static final String BASE_URL = "https://app-kaadas.juziwulian.com:34000/";//凯迪仕正式服务器
+//      public static final String BASE_URL = "https://test.juziwulian.com:8090/";//凯迪仕测试服务器
 
     /**
      * linphone的地址

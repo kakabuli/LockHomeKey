@@ -10,10 +10,11 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_weight="3"
         android:background="#FFFFFF">
 
         <RadioGroup
+            android:visibility="gone"
             android:id="@+id/rg"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -57,15 +58,15 @@
                 android:textColor="@drawable/user_feedback_type_text_slector"
                 android:textSize="@dimen/sp_15" />
         </RadioGroup>
-
+       <!-- android:layout_marginTop="@dimen/dp_74"-->
         <EditText
             android:id="@+id/et"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginLeft="@dimen/dp_17"
-            android:layout_marginTop="@dimen/dp_74"
             android:layout_marginRight="@dimen/dp_17"
             android:background="@null"
+            android:paddingTop="@dimen/dp_24"
             android:gravity="top"
             android:hint="@string/user_feedback_hint"
             android:lineSpacingExtra="@dimen/dp_8"
@@ -89,7 +90,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_weight="5">
 
         <Button
             android:id="@+id/btn_submit"

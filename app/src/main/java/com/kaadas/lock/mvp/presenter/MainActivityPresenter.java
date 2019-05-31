@@ -18,6 +18,7 @@ import com.kaadas.lock.publiclibrary.bean.GwLockInfo;
 import com.kaadas.lock.publiclibrary.bean.ServerGatewayInfo;
 import com.kaadas.lock.publiclibrary.bean.ServerGwDevice;
 import com.kaadas.lock.publiclibrary.ble.BleUtil;
+import com.kaadas.lock.publiclibrary.ble.bean.NewVersionBean;
 import com.kaadas.lock.publiclibrary.ble.responsebean.BleDataBean;
 import com.kaadas.lock.publiclibrary.http.XiaokaiNewServiceImp;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
@@ -85,6 +86,7 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
     private Disposable deviceChangeDisposable;
     private CateEyeInfo callInCatEyeInfo;  //呼叫进来的猫眼信息
     private Disposable catEyeEventDisposable;
+    private Disposable listerBleVersionDisposable;
 
     @Override
     public void authSuccess() {
@@ -94,6 +96,7 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
     @Override
     public void attachView(IMainActivityView view) {
         super.attachView(view);
+        listerBleVersion();
         setHomeShowBean();
         //网关上线监听
         getPublishNotify();
@@ -159,6 +162,53 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                     }
                 });
         compositeDisposable.add(deviceInBootDisposable);
+    }
+
+    private void listerBleVersion() {
+        toDisposable(listerBleVersionDisposable);
+        listerBleVersionDisposable = bleService.listenBleVersionUpdate()
+                .subscribe(new Consumer<NewVersionBean>() {
+                    @Override
+                    public void accept(NewVersionBean newVersionBean) throws Exception {
+                        updateBleVersion(newVersionBean.getDevname(), newVersionBean.getBleVersion());
+
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+
+
+                    }
+                });
+        compositeDisposable.add(listerBleVersionDisposable);
+
+    }
+
+    public void updateBleVersion(String deviceNam, String version) {
+        XiaokaiNewServiceImp.updateBleVersion(deviceNam, MyApplication.getInstance().getUid(), version)
+                .subscribe(new BaseObserver<BaseResult>() {
+                    @Override
+                    public void onSuccess(BaseResult baseResult) {
+                        LogUtils.e("更新版本号成功   " + baseResult.toString());
+                    }
+
+                    @Override
+                    public void onAckErrorCode(BaseResult baseResult) {
+                        LogUtils.e("更新版本号失败   " + baseResult.toString());
+                    }
+
+                    @Override
+                    public void onFailed(Throwable throwable) {
+                        LogUtils.e("更新版本号失败   " + throwable.getMessage());
+                    }
+
+                    @Override
+                    public void onSubscribe1(Disposable d) {
+                        compositeDisposable.add(d);
+                    }
+                });
+
+
     }
 
 
