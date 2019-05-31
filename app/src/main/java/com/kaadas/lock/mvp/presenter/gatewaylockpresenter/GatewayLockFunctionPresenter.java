@@ -114,20 +114,20 @@ public class GatewayLockFunctionPresenter<T> extends BasePresenter<GatewayLockFu
         toDisposable(getLockPwdInfoDisposable);
         if (mqttService!=null){
             getLockPwdInfoDisposable=mqttService.mqttPublish(MqttConstant.getCallTopic(MyApplication.getInstance().getUid()),MqttCommandFactory.getLockPwdInfo(gatewayId,deviceId))
-                                     .compose(RxjavaHelper.observeOnMainThread())
+                                        .filter(new Predicate<MqttData>() {
+                                            @Override
+                                            public boolean test(MqttData mqttData) throws Exception {
+                                                if (mqttData!=null){
+                                                    if (MqttConstant.LOCK_PWD_INFO.equals(mqttData.getFunc())){
+                                                        return true;
+                                                    }
+                                                }
+                                                return false;
+                                            }
+                                        })
                                      .timeout(10*1000,TimeUnit.MILLISECONDS)
-                                     .filter(new Predicate<MqttData>() {
-                                         @Override
-                                         public boolean test(MqttData mqttData) throws Exception {
-                                             if (mqttData!=null){
-                                                 if (MqttConstant.LOCK_PWD_INFO.equals(mqttData.getFunc())){
-                                                     return true;
-                                                 }
-                                             }
-                                             return false;
-                                         }
-                                     })
-                                    .subscribe(new Consumer<MqttData>() {
+                                     .compose(RxjavaHelper.observeOnMainThread())
+                                     .subscribe(new Consumer<MqttData>() {
                                         @Override
                                         public void accept(MqttData mqttData) throws Exception {
                                                 toDisposable(getLockPwdInfoDisposable);
