@@ -17,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_gravity="center"
-            android:layout_weight="1.65"
+            android:layout_weight="33"
             android:gravity="center"
             android:orientation="vertical"
             android:paddingBottom="@dimen/dp_40">
@@ -29,13 +29,13 @@
 
                 <ImageView
                     android:id="@+id/iv_external_big"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_width="179dp"
+                    android:layout_height="179dp" />
 
                 <ImageView
                     android:id="@+id/iv_external_middle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="142dp"
+                    android:layout_height="142dp"
                     android:layout_centerInParent="true" />
 
                 <ImageView
@@ -53,8 +53,8 @@
 
                 <ImageView
                     android:id="@+id/iv_inner_middle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
                     android:layout_centerInParent="true" />
 
                 <TextView
@@ -84,7 +84,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_weight="20"
             android:background="#F2F2F2">
 
 
@@ -149,7 +149,7 @@
         <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1">
+            android:layout_weight="20">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -185,7 +185,7 @@
         <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1">
+            android:layout_weight="20">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -222,7 +222,7 @@
             android:id="@+id/rl_device_dynamic"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1">
+            android:layout_weight="20">
 
             <TextView
                 android:layout_width="wrap_content"

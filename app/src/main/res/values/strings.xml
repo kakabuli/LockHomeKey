@@ -33,7 +33,7 @@
     <string name="password_judgment">必须同时存在字母和数字,并且在6-12位</string>
     <string name="agree_user_protocol">请同意用户协议</string>
     <string name="input_valid_telephone_or_email">请输入有效手机号或邮箱</string>
-    <string name="account_or_password_error">账户密码错误</string>
+    <string name="account_or_password_error">账户或密码错误</string>
     <string name="account_message_not_empty">账户信息不能为空</string>
     <string name="home_page">首页</string>
     <string name="device">设备</string>
@@ -896,7 +896,7 @@
     <string name="get_aram_lock">正在获取布防模式</string>
     <string name="get_arm_lock_fail">获取布防模式失败</string>
     <string name="the_lock_no_support_func">该锁暂时不支持该功能</string>
-    <string name="account_password_error">账户密码错误</string>
+    <string name="account_password_error">账户或密码错误</string>
     <string name="login_in">登录中...</string>
     <string name="fail">失败</string>
     <string name="field_error">某个字段错误</string>

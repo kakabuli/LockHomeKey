@@ -20,10 +20,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.kaadas.lock.R;
+import com.kaadas.lock.activity.MainActivity;
 import com.kaadas.lock.activity.device.bluetooth.BluetoothAuthorizationDeviceInformationActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseBleActivity;
 import com.kaadas.lock.mvp.presenter.DeviceDetailPresenter;
+import com.kaadas.lock.mvp.presenter.OldBluetoothDeviceDetailPresenter;
 import com.kaadas.lock.mvp.view.IDeviceDetailView;
+import com.kaadas.lock.mvp.view.IOldBluetoothDeviceDetailView;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.publiclibrary.ble.BleProtocolFailedException;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
@@ -44,7 +47,7 @@ import butterknife.ButterKnife;
 /**
  * Created by David on 2019/4/10
  */
-public class BluetoothLockAuthorizationActivity extends BaseBleActivity<IDeviceDetailView, DeviceDetailPresenter<IDeviceDetailView>> implements IDeviceDetailView, View.OnClickListener {
+public class BluetoothLockAuthorizationActivity extends BaseBleActivity<IOldBluetoothDeviceDetailView, OldBluetoothDeviceDetailPresenter<IOldBluetoothDeviceDetailView>> implements IOldBluetoothDeviceDetailView, View.OnClickListener {
 
 
     @BindView(R.id.iv_back)
@@ -67,6 +70,8 @@ public class BluetoothLockAuthorizationActivity extends BaseBleActivity<IDeviceD
     RelativeLayout rlDeviceInformation;
     @BindView(R.id.iv_lock_icon)
     ImageView ivLockIcon;
+    @BindView(R.id.iv_delete)
+    ImageView ivDelete;
     private String type;
     private BleLockInfo bleLockInfo;
     private boolean isX5 = false;
@@ -86,6 +91,7 @@ public class BluetoothLockAuthorizationActivity extends BaseBleActivity<IDeviceD
         bleLockInfo = mPresenter.getBleLockInfo();
         ivBack.setOnClickListener(this);
         tvOpenClock.setOnClickListener(this);
+        ivDelete.setOnClickListener(this);
 //        tvType.setText(getString(R.string.bluetooth_type) + bleLockInfo.getServerLockInfo().getModel());
         showLockType();
         initView();
@@ -110,29 +116,31 @@ public class BluetoothLockAuthorizationActivity extends BaseBleActivity<IDeviceD
             }
         };
     }
+
     private void showLockType() {
         String lockType = bleLockInfo.getServerLockInfo().getModel();
-        if (lockType.startsWith("QZ012")){
-            lockType="QZ012";
-        }else if (lockType.startsWith("QZ013")){
-            lockType="QZ013";
-        }else if (lockType.startsWith("S8")){
-            lockType="S8";
-        }else if (lockType.startsWith("KX")){
-            lockType="KX";
-        }else if (lockType.startsWith("K9")){
-            lockType="K9";
-        }else if (lockType.startsWith("K8")){
-            lockType="K8";
-        }else if (lockType.startsWith("K7")){
-            lockType="K7";
-        }else {
-            lockType="";
+        if (lockType.startsWith("QZ012")) {
+            lockType = "QZ012";
+        } else if (lockType.startsWith("QZ013")) {
+            lockType = "QZ013";
+        } else if (lockType.startsWith("S8")) {
+            lockType = "S8";
+        } else if (lockType.startsWith("KX")) {
+            lockType = "KX";
+        } else if (lockType.startsWith("K9")) {
+            lockType = "K9";
+        } else if (lockType.startsWith("K8")) {
+            lockType = "K8";
+        } else if (lockType.startsWith("K7")) {
+            lockType = "K7";
+        } else {
+            lockType = "";
         }
-        if (!TextUtils.isEmpty(lockType)){
+        if (!TextUtils.isEmpty(lockType)) {
             tvType.setText(getString(R.string.bluetooth_type) + lockType);
         }
     }
+
     private void changeLockIcon(Intent intent) {
         String model = intent.getStringExtra(KeyConstants.DEVICE_TYPE);
  /*       if (!TextUtils.isEmpty(model)) {
@@ -148,20 +156,20 @@ public class BluetoothLockAuthorizationActivity extends BaseBleActivity<IDeviceD
                 ivLockIcon.setImageResource(R.mipmap.bluetooth_authorization_lock_s8);
             }
         }*/
-        if (!TextUtils.isEmpty(model)){
-            if (model.contains("K7")){
+        if (!TextUtils.isEmpty(model)) {
+            if (model.contains("K7")) {
                 ivLockIcon.setImageResource(R.mipmap.bluetooth_lock_k7);
-            }else if (model.contains("K8")){
+            } else if (model.contains("K8")) {
                 ivLockIcon.setImageResource(R.mipmap.bluetooth_lock_k8);
-            }else if (model.contains("K9")){
+            } else if (model.contains("K9")) {
                 ivLockIcon.setImageResource(R.mipmap.bluetooth_lock_k9);
-            } else if (model.contains("KX")){
+            } else if (model.contains("KX")) {
                 ivLockIcon.setImageResource(R.mipmap.bluetooth_lock_kx);
-            }else if (model.contains("S8")){
+            } else if (model.contains("S8")) {
                 ivLockIcon.setImageResource(R.mipmap.bluetooth_lock_s8);
-            }else if (model.contains("QZ013")){
+            } else if (model.contains("QZ013")) {
                 ivLockIcon.setImageResource(R.mipmap.bluetooth_lock_qz013);
-            }else if (model.contains("QZ012")){
+            } else if (model.contains("QZ012")) {
                 ivLockIcon.setImageResource(R.mipmap.bluetooth_lock_qz012);
             }
         }
@@ -178,8 +186,8 @@ public class BluetoothLockAuthorizationActivity extends BaseBleActivity<IDeviceD
     }
 
     @Override
-    protected DeviceDetailPresenter<IDeviceDetailView> createPresent() {
-        return new DeviceDetailPresenter();
+    protected OldBluetoothDeviceDetailPresenter<IOldBluetoothDeviceDetailView> createPresent() {
+        return new OldBluetoothDeviceDetailPresenter();
     }
 
     @Override
@@ -312,6 +320,36 @@ public class BluetoothLockAuthorizationActivity extends BaseBleActivity<IDeviceD
     }
 
     @Override
+    public void onBleVersionUpdate(int version) {
+
+    }
+
+    @Override
+    public void onDeleteDeviceSuccess() {
+        ToastUtil.getInstance().showLong(R.string.delete_success);
+        hiddenLoading();
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    @Override
+    public void onDeleteDeviceFailed(Throwable throwable) {
+        LogUtils.e("删除失败   " + throwable.getMessage());
+        ToastUtil.getInstance().showShort(HttpUtils.httpProtocolErrorCode(this, throwable));
+//        ToastUtil.getInstance().showLong(R.string.delete_fialed);
+        hiddenLoading();
+    }
+
+    @Override
+    public void onDeleteDeviceFailedServer(BaseResult result) {
+        LogUtils.e("删除失败   " + result.toString());
+        String httpErrorCode = HttpUtils.httpErrorCode(this, result.getCode());
+        ToastUtil.getInstance().showLong(httpErrorCode);
+        hiddenLoading();
+    }
+
+    @Override
     public void notAdminMustHaveNet() {
         ToastUtil.getInstance().showLong(R.string.not_admin_must_have_net);
     }
@@ -430,6 +468,20 @@ public class BluetoothLockAuthorizationActivity extends BaseBleActivity<IDeviceD
             case R.id.rl_device_information:
                 Intent intent = new Intent(this, BluetoothAuthorizationDeviceInformationActivity.class);
                 startActivity(intent);
+                break;
+            case R.id.iv_delete:
+                AlertDialogUtil.getInstance().noEditTwoButtonDialog(this, getString(R.string.device_delete_dialog_head), getString(R.string.device_delete_lock_dialog_content), getString(R.string.cancel), getString(R.string.query), new AlertDialogUtil.ClickListener() {
+                    @Override
+                    public void left() {
+
+                    }
+
+                    @Override
+                    public void right() {
+                        showLoading(getString(R.string.is_deleting));
+                        mPresenter.deleteDevice(bleLockInfo.getServerLockInfo().getLockName());
+                    }
+                });
                 break;
         }
     }

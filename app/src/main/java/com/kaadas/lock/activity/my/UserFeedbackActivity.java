@@ -77,7 +77,7 @@ public class UserFeedbackActivity extends BaseActivity<IUserFeedbackView, UserFe
                 break;
             case R.id.btn_submit:
                 //todo 后续等待服务器更改服务器接口
-                if (messageType != 0) {
+//                if (messageType != 0) {
                     String text = et.getText().toString().trim();
                     if (text.length()>=8){
                         mPresenter.userFeedback(MyApplication.getInstance().getUid(),text);
@@ -87,9 +87,9 @@ public class UserFeedbackActivity extends BaseActivity<IUserFeedbackView, UserFe
                         ToastUtil.getInstance().showShort(R.string.enter_feedback);
                     }
 
-                } else {
-                    ToastUtil.getInstance().showShort(R.string.select_feedback_type);
-                }
+//                } else {
+//                    ToastUtil.getInstance().showShort(R.string.select_feedback_type);
+//                }
                 break;
         }
     }
