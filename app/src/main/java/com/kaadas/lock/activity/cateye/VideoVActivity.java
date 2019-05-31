@@ -484,11 +484,13 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
     }
 
     @Override
-    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+    public void onCheckedChanged(CompoundButton buttonView,final boolean isChecked) {
         switch (buttonView.getId()) {
             case R.id.cb_screen_shot: //截屏
             case R.id.cb_screen_shot2: //截屏
                 LogUtils.e(Tag,"截屏  " + isChecked);
+                cbScreenShot.setChecked(isChecked);
+                cbScreenShot2.setChecked(isChecked);
                 mPresenter.toCapturePicture(cateEyeInfo.getServerInfo().getDeviceId());
                 break;
             case R.id.cb_screen_record: //录屏
@@ -498,6 +500,8 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
                 } else {  //结束录屏
                     mPresenter.recordVideo(false, cateEyeInfo.getServerInfo().getDeviceId());
                 }
+                cbScreenRecord.setChecked(isChecked);
+                cbScreenRecord2.setChecked(isChecked);
                 break;
             case R.id.cb_mute: //静音
             case R.id.cb_mute2: //静音
@@ -506,6 +510,8 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
                 } else {  //关闭静音
                     LinphoneHelper.toggleMicro(false);
                 }
+                cbMute.setChecked(isChecked);
+                cbMute2.setChecked(isChecked);
                 break;
             case R.id.cb_hands_free: //免提
             case R.id.cb_hands_free2: //免提
@@ -514,6 +520,8 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
                 } else { //关闭免提
                     LinphoneHelper.toggleSpeaker(false);
                 }
+                cbHandsFree.setChecked(isChecked);
+                cbHandsFree2.setChecked(isChecked);
                 break;
         }
     }
