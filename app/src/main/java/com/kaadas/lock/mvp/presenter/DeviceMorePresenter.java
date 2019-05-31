@@ -449,8 +449,6 @@ public class DeviceMorePresenter extends BlePresenter<IDeviceMoreView> {
 
             }
         });
-
-
     }
 
 

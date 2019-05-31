@@ -73,4 +73,14 @@ public interface IOldDeviceInfoView extends IBleView {
      * 修改昵称失败
      */
     void modifyDeviceNicknameFail(BaseResult baseResult);
+
+
+    /**
+     *上传设备信息服务器失败
+     */
+    void onUpdateSoftFailedServer(BaseResult baseResult);
+    /**
+     *上传设备信息网络问题
+     */
+    void onUpdateSoftFailed(Throwable throwable);
 }
