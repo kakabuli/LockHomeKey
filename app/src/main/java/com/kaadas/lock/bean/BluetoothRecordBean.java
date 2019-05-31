@@ -51,4 +51,6 @@ public class BluetoothRecordBean {
     public void setList(List<BluetoothItemRecordBean> list) {
         this.list = list;
     }
+
+
 }

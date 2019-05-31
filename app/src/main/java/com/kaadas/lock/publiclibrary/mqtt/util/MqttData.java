@@ -92,4 +92,17 @@ public class MqttData {
         }
         return false;
     }
+
+    @Override
+    public String toString() {
+        return "MqttData{" +
+                "func='" + func + '\'' +
+                ", topic='" + topic + '\'' +
+                ", payload='" + payload + '\'' +
+                ", mqttMessage=" + mqttMessage +
+                ", messageId=" + messageId +
+                ", returnCode='" + returnCode + '\'' +
+                ", msgtype='" + msgtype + '\'' +
+                '}';
+    }
 }

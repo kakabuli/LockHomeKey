@@ -467,6 +467,7 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
                     @Override
                     public void accept(MqttData mqttData) throws Exception {
                         toDisposable(wakeupDisposable);
+                        Log.e(Tag,"唤醒猫眼:"+mqttData.toString());
                         if ("200".equals(mqttData.getReturnCode())) {
                             LogUtils.e(Tag,"唤醒猫眼成功");
                             if (mViewRef.get() != null) {
