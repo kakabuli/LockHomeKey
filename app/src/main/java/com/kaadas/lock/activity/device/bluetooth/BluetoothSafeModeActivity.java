@@ -90,16 +90,6 @@ public class BluetoothSafeModeActivity extends BaseBleActivity<ISafeModeView, Sa
                 }
                 showLoading(getString(R.string.is_setting));
 
-     /*           if (safeModeStatus) {
-                    //打开状态 现在关闭
-                    ivSafeMode.setImageResource(R.mipmap.iv_close);
-                    SPUtils.put(KeyConstants.SAFE_MODE_STATUS, false);
-                } else {
-                    //关闭状态 现在打开
-                    ivSafeMode.setImageResource(R.mipmap.iv_open);
-                    SPUtils.put(KeyConstants.SAFE_MODE_STATUS, true);
-                }
-                safeModeStatus = !safeModeStatus;*/
                 break;
         }
     }
@@ -136,7 +126,7 @@ public class BluetoothSafeModeActivity extends BaseBleActivity<ISafeModeView, Sa
 
     @Override
     public void onGetStateFailed(Throwable throwable) {
-        ToastUtil.getInstance().showShort(getString(R.string.get_lock_state_fail) + HttpUtils.httpProtocolErrorCode(this, throwable));
+        ToastUtil.getInstance().showShort(getString(R.string.get_lock_state_fail) );
         LogUtils.e("获取门锁状态失败   " + throwable.getMessage());
     }
 

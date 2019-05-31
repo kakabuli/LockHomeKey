@@ -402,13 +402,18 @@ public interface IXiaoKaiNewService {
     @POST(HttpUrlConstants.OTA_INFO_URL)
     Observable<OTAResult> getOtaInfo(@Body RequestBody info);
 
+
     /**
      * 开锁鉴权
      */
     @POST(HttpUrlConstants.USER_OPEN_LOCK_AUTHORITY)
     Observable<BaseResult> openLockAuth(@Body RequestBody info);
 
-
+    /**
+     * 上传PushId
+     * @param info
+     * @return
+     */
     @POST(HttpUrlConstants.UPLOAD_PUSH_ID)
     Observable<BaseResult> uploadPushId(@Body RequestBody info);
 
@@ -418,7 +423,7 @@ public interface IXiaoKaiNewService {
      * @param info
      * @return
      */
-    @POST(HttpUrlConstants.GETPUSHSWITch)
+    @POST(HttpUrlConstants.GET_PUSH_SWITch)
     Observable<SwitchStatusResult> getPushSwitch(@Body RequestBody info);
 
 
@@ -427,6 +432,25 @@ public interface IXiaoKaiNewService {
      * @param info
      * @return
      */
-    @POST(HttpUrlConstants.UPDATEPUSHSWITch)
+    @POST(HttpUrlConstants.UPDATE_PUSH_SWITch)
     Observable<SwitchStatusResult> updatePushSwitch(@Body RequestBody info);
+
+
+
+
+    /**
+     * 上传版本号和SN到服务器
+     */
+    @POST(HttpUrlConstants.UPDATE_SOFTWARE_VERSION)
+    Observable<BaseResult> updateSoftwareVersion(@Body RequestBody info);
+
+
+
+
+    /**
+     * 上传版本号和SN到服务器
+     */
+    @POST(HttpUrlConstants.UPDATE_BLE_VERSION)
+    Observable<BaseResult> updateBleVersion(@Body RequestBody info);
+
 }

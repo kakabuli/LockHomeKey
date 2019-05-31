@@ -307,7 +307,44 @@ public class OldDeviceInfoPresenter extends BlePresenter<IOldDeviceInfoView> {
     }
 
 
+
+    public void uploadBleSoftware(String sn,String version){
+        XiaokaiNewServiceImp.updateSoftwareVersion(
+                bleLockInfo.getServerLockInfo().getLockName(), MyApplication.getInstance().getUid()
+                , version, sn
+        ).subscribe(new BaseObserver<BaseResult>() {
+            @Override
+            public void onSuccess(BaseResult baseResult) {
+                LogUtils.e("上传蓝牙信息成功");
+                checkOtaInfo(sn,version);
+            }
+
+            @Override
+            public void onAckErrorCode(BaseResult baseResult) {
+                LogUtils.e(" 上传蓝牙软件信息失败  " +  baseResult.getCode());
+                if (mViewRef.get() != null) {
+                    mViewRef.get().onUpdateSoftFailedServer(baseResult);
+                }
+            }
+
+            @Override
+            public void onFailed(Throwable throwable) {
+                if (mViewRef.get() != null) {
+                    mViewRef.get().onUpdateSoftFailed(throwable);
+                }
+            }
+
+            @Override
+            public void onSubscribe1(Disposable d) {
+
+            }
+        });
+    }
+
     public void checkOtaInfo(String SN, String version) {
+
+
+
         otaDisposable = XiaokaiNewServiceImp.getOtaInfo(1, SN, version)
                 .subscribe(new Consumer<OTAResult>() {
                     @Override

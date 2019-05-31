@@ -1,6 +1,7 @@
 package com.kaadas.lock.activity.device.bluetooth.fingerprint;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -29,6 +30,7 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import butterknife.BindView;
@@ -202,6 +204,9 @@ public class FingerprintManagerActivity extends BaseBleActivity<IFingerprintMana
     @Override
     public void onSyncPasswordSuccess(List<GetPasswordResult.DataBean.Fingerprint> pwdList) {
         list = pwdList;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            list.sort(Comparator.naturalOrder());
+        }
         if (pwdList.size() > 0) {
             isNotData = false;
         } else {
@@ -232,6 +237,9 @@ public class FingerprintManagerActivity extends BaseBleActivity<IFingerprintMana
             isNotData = false;
         }
         list = result.getData().getFingerprintList();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            list.sort(Comparator.naturalOrder());
+        }
         if (result.getData().getFingerprintList().size() > 0) {
             initRecycleview();
         }

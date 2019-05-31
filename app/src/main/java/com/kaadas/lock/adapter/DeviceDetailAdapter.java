@@ -65,7 +65,7 @@ public class DeviceDetailAdapter extends BaseQuickAdapter<HomeShowBean, BaseView
                     helper.setImageResource(R.id.device_image,R.mipmap.cat_eye_icon);
                     batteryView.setPower(power);
                     helper.setText(R.id.device_power_text,power+"%");
-                    if (!TextUtils.isEmpty(cateEyeInfo.getServerInfo().getDeviceId())){
+                    if (!TextUtils.isEmpty(cateEyeInfo.getServerInfo().getNickName())){
                         textView.setText(cateEyeInfo.getServerInfo().getNickName());
                     }else{
                         textView.setText(cateEyeInfo.getServerInfo().getDeviceId());
@@ -145,7 +145,11 @@ public class DeviceDetailAdapter extends BaseQuickAdapter<HomeShowBean, BaseView
                         helper.setImageResource(R.id.device_image, R.mipmap.qz013);
                     }else if (model.contains("S8")){
                         helper.setImageResource(R.id.device_image, R.mipmap.s8);
-                    }else{
+                    }else if (model.contains("V6")) {
+                        helper.setImageResource(R.id.device_image, R.mipmap.v6);
+                    }else if (model.contains("V7")) {
+                        helper.setImageResource(R.id.device_image, R.mipmap.v7);
+                    } else{
                         helper.setImageResource(R.id.device_image, R.mipmap.default_zigbee_lock_icon);
                     }
                     batteryView.setPower(blePower);

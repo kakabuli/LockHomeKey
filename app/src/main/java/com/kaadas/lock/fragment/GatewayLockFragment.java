@@ -681,6 +681,7 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
     public void openLockFailed() {
         isOpening = false;
         changeOpenLockStatus(5);
+        ToastUtil.getInstance().showShort(getString(R.string.open_lock_fail));
     }
 
     @Override
@@ -690,6 +691,7 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
             SPUtils.remove(KeyConstants.SAVA_LOCK_PWD + deviceId);
         }
         changeOpenLockStatus(5);
+        ToastUtil.getInstance().showShort(getString(R.string.open_lock_fail));
     }
 
     @Override

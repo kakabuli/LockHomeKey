@@ -26,6 +26,7 @@ import android.widget.Toast;
 
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
+import com.kaadas.lock.publiclibrary.ble.bean.NewVersionBean;
 import com.kaadas.lock.publiclibrary.ble.responsebean.BleDataBean;
 import com.kaadas.lock.publiclibrary.ble.responsebean.BleStateBean;
 import com.kaadas.lock.publiclibrary.ble.responsebean.ReadInfoBean;
@@ -64,7 +65,7 @@ public class BleService extends Service {
     private boolean isConnected = false;
     private BluetoothGatt bluetoothGatt;
     private static final int heartInterval = 3 * 1000; //心跳间隔时间 毫秒
-    private static final int sendInterval = 100;  //命令发送间隔时间 毫秒
+    private static final int sendInterval = 150;  //命令发送间隔时间 毫秒
     private BluetoothDevice currentDevice;  //当前连接的设备
     private List<byte[]> commands = new ArrayList<>();
     private long lastSendTime = 0;   //上次发送的指令的时间
@@ -100,10 +101,16 @@ public class BleService extends Service {
 
     private PublishSubject<Boolean> connectSubject = PublishSubject.create();
 
+
+    /**
+     * 是否需要更新BleVersion的被观察者
+     */
+
+    private PublishSubject<NewVersionBean> needUpdateBleVersionSubject = PublishSubject.create();
+
     /**
      * 设备状态改变的监听
      */
-
     private PublishSubject<BleDataBean> deviceStateSubject = PublishSubject.create();
     /**
      * 设备状态改变的监听
@@ -263,6 +270,10 @@ public class BleService extends Service {
         }
     }
 
+
+    public Observable<NewVersionBean> listenBleVersionUpdate(){
+        return needUpdateBleVersionSubject;
+    }
 
     public void openHighMode(boolean isOpen) {
         if (bluetoothGatt != null) {
@@ -759,8 +770,22 @@ public class BleService extends Service {
         openHighMode(true);
         connectSubject.onNext(true);  //连接成功  通知上层
         lastReceiveDataTime = System.currentTimeMillis();
-        if (bleVersion != 1) {
-            LogUtils.e("发送心跳  " + "  版本号为  " + bleVersion);
+        ////////////////////////////////       检查版本是否需要更新        /////////////////////////////
+        String sVersion = bleLockInfo.getServerLockInfo().getBleVersion();
+        int iVersion = 0;
+        if (!TextUtils.isEmpty(sVersion)){  //蓝牙型号为空
+            iVersion = Integer.parseInt(sVersion);
+        }
+        if (bleVersion>iVersion){
+            //获取到的版本大于服务器版本，更新服务器的版本号
+            LogUtils.e("发现新的版本  新的版本是 "+bleVersion + "   就的版本是 " + iVersion);
+            NewVersionBean newVersionBean = new NewVersionBean(bleLockInfo.getServerLockInfo().getLockName(), bleVersion + "");
+            needUpdateBleVersionSubject.onNext(newVersionBean);
+        }
+        ////////////////////////////////       检查服务器版本和当前版本是否一致  如果不一致        /////////////////////////////
+
+        if (this.bleVersion != 1) {
+            LogUtils.e("发送心跳  " + "  版本号为  " + this.bleVersion);
             handler.post(sendHeart);
         }
     }
