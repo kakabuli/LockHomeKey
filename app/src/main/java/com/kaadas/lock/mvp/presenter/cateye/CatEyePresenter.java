@@ -11,6 +11,7 @@ import com.kaadas.lock.publiclibrary.mqtt.util.MqttConstant;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttData;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.greenDao.bean.CatEyeEvent;
+import com.kaadas.lock.utils.greenDao.db.CatEyeEventDao;
 import com.kaadas.lock.utils.networkListenerutil.NetWorkChangReceiver;
 
 import java.util.ArrayList;
@@ -95,7 +96,7 @@ public class CatEyePresenter<T> extends BasePresenter<ICatEyeView> {
         //获取数据库的门锁报警信息
         LogUtils.e("访问数据库的猫眼信息");
         catEyeInfo.clear();
-        List<CatEyeEvent> catEyeEventsList = MyApplication.getInstance().getDaoWriteSession().queryBuilder(CatEyeEvent.class).offset(page * pageNum).limit(pageNum).list();
+        List<CatEyeEvent> catEyeEventsList=MyApplication.getInstance().getDaoWriteSession().queryBuilder(CatEyeEvent.class).orderDesc(CatEyeEventDao.Properties.Id).offset(page * pageNum).limit(pageNum).list();
         if(catEyeEventsList!=null&&catEyeEventsList.size()>0){
             for (CatEyeEvent catEyeEvent:catEyeEventsList) {
                 if (gatewayId.equals(catEyeEvent.getGatewayId())&&deviceId.equals(catEyeEvent.getDeviceId())){
