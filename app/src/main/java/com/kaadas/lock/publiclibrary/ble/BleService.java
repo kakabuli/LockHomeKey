@@ -331,6 +331,7 @@ public class BleService extends Service {
      * @return
      */
     public Observable<BluetoothDevice> getDeviceByMac(String mac) {
+        release();
         currentMac = mac;
         handler.postDelayed(getRemoteDeviceRunnable, 6000);
         return scanBleDevice(true)
@@ -347,8 +348,6 @@ public class BleService extends Service {
                         }
                     }
                 });
-
-
     }
 
     /**
