@@ -1017,4 +1017,5 @@
     <string name="network_connection_fail">网络原因连接失败</string>
     <string name="scan_cateye_fail_no_qcode">扫描失败，非Kaadas猫眼二维码！</string>
     <string name="rescancateye">是否继续扫描</string>
+    <string name="get_lock_pwd_list_fail">获取密码列表失败</string>
 </resources>

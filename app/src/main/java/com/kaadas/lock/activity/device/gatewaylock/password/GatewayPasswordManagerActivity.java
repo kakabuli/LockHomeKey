@@ -343,7 +343,7 @@ public class GatewayPasswordManagerActivity extends BaseActivity<GatewayLockFunc
     public void getLockThrowable(Throwable throwable) {
         LogUtils.e("获取开锁密码异常   " + throwable.getMessage());
         loadingDialog.dismiss();
-        ToastUtil.getInstance().showShort("获取密码列表失败");
+        ToastUtil.getInstance().showShort(R.string.get_lock_pwd_list_fail);
         passwordPageChange(false);
         isAddLockPwd = 1;
     }
@@ -363,7 +363,7 @@ public class GatewayPasswordManagerActivity extends BaseActivity<GatewayLockFunc
         if (loadingDialog != null) {
             loadingDialog.dismiss();
         }
-        passwordPageChange(false);
+        //passwordPageChange(false);
         ToastUtil.getInstance().showShort(getString(R.string.get_lock_info_fail));
         LogUtils.e("获取到锁信息失败   ");
     }
@@ -373,7 +373,7 @@ public class GatewayPasswordManagerActivity extends BaseActivity<GatewayLockFunc
         if (loadingDialog != null) {
             loadingDialog.dismiss();
         }
-        passwordPageChange(false);
+        //passwordPageChange(false);
         ToastUtil.getInstance().showShort(getString(R.string.get_lock_info_fail));
         LogUtils.e("获取到锁信息异常   ");
     }
