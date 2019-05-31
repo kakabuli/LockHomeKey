@@ -124,7 +124,7 @@ public class AddBluetoothSearchActivity extends BaseActivity<ISearchDeviceView, 
         AlertDialogUtil.getInstance().noEditTitleTwoButtonDialog(this, getResources().getString(R.string.no_find_connect_device), getResources().getString(R.string.cancel), getResources().getString(R.string.rescan),"#333333","#1F96F7", new AlertDialogUtil.ClickListener() {
             @Override
             public void left() {
-
+                finish();
             }
             @Override
             public void right() {

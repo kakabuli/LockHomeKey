@@ -1,6 +1,7 @@
 package com.kaadas.lock.activity.device.bluetooth.password;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -31,6 +32,7 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import butterknife.BindView;
@@ -179,6 +181,9 @@ public class BluetoothPasswordManagerActivity extends BaseBleActivity<IPasswordM
     @Override
     public void onSyncPasswordSuccess(List<ForeverPassword> pwdList) {
         list = pwdList;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            list.sort(Comparator.naturalOrder());
+        }
         if (list.size() > 0) {
             isNotPassword = false;
         } else {
@@ -212,6 +217,9 @@ public class BluetoothPasswordManagerActivity extends BaseBleActivity<IPasswordM
             bluetoothPasswordAdapter.notifyDataSetChanged();
         }
         list = pwdList;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            list.sort(Comparator.naturalOrder());
+        }
         processType(list);
         isNotPassword = false;
         passwordPageChange();
@@ -261,6 +269,9 @@ public class BluetoothPasswordManagerActivity extends BaseBleActivity<IPasswordM
             return;
         }
         list = result.getData().getPwdList();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            list.sort(Comparator.naturalOrder());
+        }
         List<GetPasswordResult.DataBean.TempPassword> tempPwdList = result.getData().getTempPwdList();
         for (int i=0;i<tempPwdList.size();i++){
             GetPasswordResult.DataBean.TempPassword tempPassword = tempPwdList.get(i);

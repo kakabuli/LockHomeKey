@@ -172,7 +172,17 @@ public class GetPasswordResult  extends BaseResult  {
             }
         }
 
-        public static class TempPassword implements Serializable {
+        public static class TempPassword implements Serializable,Comparable<TempPassword>  {
+
+            @Override
+            public int compareTo(TempPassword o) {
+                int iNum = Integer.parseInt(num );
+                int iNum2 = Integer.parseInt(o.getNum());
+                if (iNum<iNum2){
+                    return -1;
+                }
+                return 1;
+            }
             /**
              * num : 01
              * nickName : 指纹密码1
@@ -217,7 +227,17 @@ public class GetPasswordResult  extends BaseResult  {
             }
         }
 
-        public static class Fingerprint implements Serializable {
+        public static class Fingerprint implements Serializable,Comparable<Fingerprint> {
+
+            @Override
+            public int compareTo(Fingerprint o) {
+                int iNum = Integer.parseInt(num );
+                int iNum2 = Integer.parseInt(o.getNum());
+                if (iNum<iNum2){
+                    return -1;
+                }
+                return 1;
+            }
             /**
              * num : 01
              * nickName : 指纹密码1
@@ -262,7 +282,18 @@ public class GetPasswordResult  extends BaseResult  {
             }
         }
 
-        public static class Card implements Serializable{
+        public static class Card implements Serializable,Comparable<Card>{
+
+
+            @Override
+            public int compareTo(Card o) {
+                int iNum = Integer.parseInt(num );
+                int iNum2 = Integer.parseInt(o.getNum());
+                if (iNum<iNum2){
+                    return -1;
+                }
+                return 1;
+            }
             /**
              * num : 01
              * nickName : 卡片密码1
