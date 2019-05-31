@@ -178,7 +178,6 @@ public class PasswordDetailPresenter<T> extends BlePresenter<IPasswordDetailView
 
     public void getNumber(int serverType, int serverNumber, int blePwdType, boolean isDetail) {
         LogUtils.e("服务器数据是   serverNumber   " + serverNumber);
-
         byte[] command = BleCommandFactory.syncLockPasswordCommand((byte) blePwdType, bleLockInfo.getAuthKey());
         bleService.sendCommand(command);
         toDisposable(syncPwdDisposable);
@@ -195,7 +194,12 @@ public class PasswordDetailPresenter<T> extends BlePresenter<IPasswordDetailView
                     @Override
                     public void accept(BleDataBean bleDataBean) throws Exception {
                         toDisposable(syncPwdDisposable);
-                        if (bleDataBean.getOriginalData()[0] == 0) {
+                        byte[] originalData = bleDataBean.getOriginalData();
+                        if (originalData[0] == 0) {
+                            LogUtils.e("同步锁上的编号失败    不加密的数据   收到的数据为   " + Rsa.bytesToHexString(originalData));
+                            if (mViewRef.get() != null) {
+                                mViewRef.get().onGetLockNumberFailed(new BleProtocolFailedException(originalData[4]&0xff));
+                            }
                             return;
                         }
                         byte[] deValue = Rsa.decrypt(bleDataBean.getPayload(), bleLockInfo.getAuthKey());
@@ -262,8 +266,6 @@ public class PasswordDetailPresenter<T> extends BlePresenter<IPasswordDetailView
                                 return;
                             }
                         }
-//                        isLockHaveThisNumber = false;
-//                        deleteMore(morePwd, serverType);
 
                         if (mViewRef.get() != null) {
                             mViewRef.get().onLockNoThisNumber();
@@ -272,6 +274,7 @@ public class PasswordDetailPresenter<T> extends BlePresenter<IPasswordDetailView
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
+                        LogUtils.e("同步锁上的编号失败    " + throwable.getMessage());
                         if (mViewRef.get() != null) {
                             mViewRef.get().onGetLockNumberFailed(throwable);
                         }
@@ -350,7 +353,5 @@ public class PasswordDetailPresenter<T> extends BlePresenter<IPasswordDetailView
                         compositeDisposable.add(d);
                     }
                 });
-
-
     }
 }

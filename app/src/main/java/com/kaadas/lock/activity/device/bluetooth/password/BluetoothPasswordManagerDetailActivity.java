@@ -261,12 +261,14 @@ public class BluetoothPasswordManagerDetailActivity extends BaseBleActivity<IPas
 
     @Override
     public void onLockNoThisNumber() {
+        hiddenLoading();
         ToastUtil.getInstance().showLong(R.string.lock_no_this_password);
         finish();
     }
 
     @Override
     public void onGetLockNumberFailed(Throwable throwable) {
+        hiddenLoading();
         ToastUtil.getInstance().showLong(R.string.get_lock_password_failed);
         finish();
     }

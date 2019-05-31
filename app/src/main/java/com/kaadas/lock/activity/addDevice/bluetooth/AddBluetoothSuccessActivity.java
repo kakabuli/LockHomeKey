@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
@@ -26,6 +27,7 @@ import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.util.HttpUtils;
 import com.kaadas.lock.utils.EditTextWatcher;
 import com.kaadas.lock.utils.KeyConstants;
+import com.kaadas.lock.utils.StringUtil;
 import com.kaadas.lock.utils.ToastUtil;
 
 import java.util.ArrayList;
@@ -64,7 +66,7 @@ public class AddBluetoothSuccessActivity extends BaseActivity<IBindBleSuccessVie
     }
 
     private void initListener() {
-        inputName.addTextChangedListener(new EditTextWatcher(this,null,inputName,50));
+        inputName.addTextChangedListener(new EditTextWatcher(this, null, inputName, 50));
     }
 
     @Override
@@ -126,6 +128,17 @@ public class AddBluetoothSuccessActivity extends BaseActivity<IBindBleSuccessVie
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.save:
+                String name = inputName.getText().toString().trim();
+                if (TextUtils.isEmpty(name)) {
+                    ToastUtil.getInstance().showShort(R.string.not_empty);
+                    return;
+                }
+                if (!StringUtil.nicknameJudge(name)) {
+                    ToastUtil.getInstance().showShort(R.string.nickname_verify_error);
+                    return;
+                }
+
+                showLoading(getString(R.string.is_saving_name));
                 mPresenter.modifyDeviceNickname(deviceName, MyApplication.getInstance().getUid(), inputName.getText().toString().trim());
                 break;
         }
@@ -133,6 +146,7 @@ public class AddBluetoothSuccessActivity extends BaseActivity<IBindBleSuccessVie
 
     @Override
     public void modifyDeviceNicknameSuccess() {
+        hiddenLoading();
         ToastUtil.getInstance().showShort(R.string.save_success);
         //设置成功  跳转到设备列别界面
         Intent intent = new Intent(this, MainActivity.class);
@@ -142,11 +156,13 @@ public class AddBluetoothSuccessActivity extends BaseActivity<IBindBleSuccessVie
 
     @Override
     public void modifyDeviceNicknameError(Throwable throwable) {
+        hiddenLoading();
         ToastUtil.getInstance().showShort(HttpUtils.httpProtocolErrorCode(this, throwable));
     }
 
     @Override
     public void modifyDeviceNicknameFail(BaseResult baseResult) {
+        hiddenLoading();
         ToastUtil.getInstance().showShort(HttpUtils.httpErrorCode(this, baseResult.getCode()));
     }
 
@@ -159,11 +175,9 @@ public class AddBluetoothSuccessActivity extends BaseActivity<IBindBleSuccessVie
     }
 
     private boolean isCosumenBackKey() {
-        Intent backIntent=new Intent(this, MainActivity.class);
+        Intent backIntent = new Intent(this, MainActivity.class);
         startActivity(backIntent);
         return true;
     }
-
-
 
 }
