@@ -168,11 +168,15 @@ public class GatewayPasswordManagerActivity extends BaseActivity<GatewayLockFunc
     public void passwordPageChange(boolean havePwd) {
 
         if (havePwd) {
-            llHasData.setVisibility(View.VISIBLE);
-            tvNoUser.setVisibility(View.GONE);
+            if (llHasData!=null&&tvNoUser!=null){
+                llHasData.setVisibility(View.VISIBLE);
+                tvNoUser.setVisibility(View.GONE);
+            }
         } else {
-            llHasData.setVisibility(View.GONE);
-            tvNoUser.setVisibility(View.VISIBLE);
+            if (llHasData!=null&&tvNoUser!=null){
+                llHasData.setVisibility(View.GONE);
+                tvNoUser.setVisibility(View.VISIBLE);
+            }
         }
     }
 
@@ -359,7 +363,8 @@ public class GatewayPasswordManagerActivity extends BaseActivity<GatewayLockFunc
         if (loadingDialog != null) {
             loadingDialog.dismiss();
         }
-
+        passwordPageChange(false);
+        ToastUtil.getInstance().showShort(getString(R.string.get_lock_info_fail));
         LogUtils.e("获取到锁信息失败   ");
     }
 
@@ -368,6 +373,8 @@ public class GatewayPasswordManagerActivity extends BaseActivity<GatewayLockFunc
         if (loadingDialog != null) {
             loadingDialog.dismiss();
         }
+        passwordPageChange(false);
+        ToastUtil.getInstance().showShort(getString(R.string.get_lock_info_fail));
         LogUtils.e("获取到锁信息异常   ");
     }
 

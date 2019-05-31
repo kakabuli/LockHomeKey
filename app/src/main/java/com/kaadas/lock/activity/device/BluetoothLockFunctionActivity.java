@@ -145,7 +145,6 @@ public class BluetoothLockFunctionActivity extends BaseBleActivity<IDeviceDetail
         initData();
         initClick();
         showData();
-        mPresenter.getAllPassword(bleLockInfo);
         lockRunnable = new Runnable() {
             @Override
             public void run() {
@@ -173,6 +172,7 @@ public class BluetoothLockFunctionActivity extends BaseBleActivity<IDeviceDetail
     protected void onStart() {
         super.onStart();
         mPresenter.attachView(this);
+        mPresenter.getAllPassword(bleLockInfo);
     }
 
     @Override
