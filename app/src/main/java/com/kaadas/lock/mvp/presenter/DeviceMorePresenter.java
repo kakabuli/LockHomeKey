@@ -8,6 +8,7 @@ import com.kaadas.lock.mvp.mvpbase.BlePresenter;
 import com.kaadas.lock.mvp.view.IDeviceMoreView;
 import com.kaadas.lock.publiclibrary.ble.BleCommandFactory;
 import com.kaadas.lock.publiclibrary.ble.BleProtocolFailedException;
+import com.kaadas.lock.publiclibrary.ble.BleService;
 import com.kaadas.lock.publiclibrary.ble.RetryWithTime;
 import com.kaadas.lock.publiclibrary.ble.responsebean.BleDataBean;
 import com.kaadas.lock.publiclibrary.ble.responsebean.ReadInfoBean;
@@ -390,7 +391,17 @@ public class DeviceMorePresenter extends BlePresenter<IDeviceMoreView> {
                         }
 //                        ToastUtil.getInstance().showLong("获取到的版本号是   " + version+"  获取到SN是  " + sn);
 //                        checkOtaInfo(sn, version);
-                        checkOtaInfo(sn, version);
+
+
+                        String serverBleVersion = bleLockInfo.getServerLockInfo().getSoftwareVersion();
+                        String deviceSN = bleLockInfo.getServerLockInfo().getDeviceSN();
+                        LogUtils.e("服务器数据是  serverBleVersion " + serverBleVersion+"  deviceSN  "+deviceSN);
+                        if (version.equals(serverBleVersion) && sn.equals(deviceSN)){
+                            checkOtaInfo(sn, version);
+                        }else {
+                            uploadBleSoftware(sn, version);
+                        }
+
 //                        checkOtaInfo("BT02191410009", "10.1.007");
                         toDisposable(readSoftwareRevDisposable);
                     }
@@ -405,6 +416,41 @@ public class DeviceMorePresenter extends BlePresenter<IDeviceMoreView> {
                 });
         compositeDisposable.add(readSoftwareRevDisposable);
     }
+
+
+    public void uploadBleSoftware(String sn,String version){
+        XiaokaiNewServiceImp.updateSoftwareVersion(
+                bleLockInfo.getServerLockInfo().getLockName(), MyApplication.getInstance().getUid()
+                , version, sn
+        ).subscribe(new BaseObserver<BaseResult>() {
+            @Override
+            public void onSuccess(BaseResult baseResult) {
+                LogUtils.e("上传蓝牙信息成功");
+                checkOtaInfo(sn,version);
+            }
+
+            @Override
+            public void onAckErrorCode(BaseResult baseResult) {
+                LogUtils.e(" 上传蓝牙软件信息失败  " +  baseResult.getCode());
+                if (mViewRef.get() != null) {
+                    mViewRef.get().onUpdateSoftFailedServer(baseResult);
+                }
+            }
+
+            @Override
+            public void onFailed(Throwable throwable) {
+                if (mViewRef.get() != null) {
+                    mViewRef.get().onUpdateSoftFailed(throwable);
+                }
+            }
+
+            @Override
+            public void onSubscribe1(Disposable d) {
+
+            }
+        });
+    }
+
 
 
     public void checkOtaInfo(String SN, String version) {

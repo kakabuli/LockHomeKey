@@ -37,15 +37,16 @@ public class BleLockServiceInfo {
     private String password2;
     private String model;
     private String uid;
+    private String softwareVersion;
+    private String deviceSN;
 
 
-
-    @Generated(hash = 566262832)
+    @Generated(hash = 348777680)
     public BleLockServiceInfo(Long id, String lockName, String lockNickName,
             String macLock, String open_purview, String is_admin,
             String center_latitude, String center_longitude, String circle_radius,
             String auto_lock, String password1, String password2, String model,
-            String uid) {
+            String uid, String softwareVersion, String deviceSN) {
         this.id = id;
         this.lockName = lockName;
         this.lockNickName = lockNickName;
@@ -60,11 +61,15 @@ public class BleLockServiceInfo {
         this.password2 = password2;
         this.model = model;
         this.uid = uid;
+        this.softwareVersion = softwareVersion;
+        this.deviceSN = deviceSN;
     }
 
     @Generated(hash = 2041412345)
     public BleLockServiceInfo() {
     }
+
+
 
 
 
@@ -178,5 +183,21 @@ public class BleLockServiceInfo {
 
     public void setUid(String uid) {
         this.uid = uid;
+    }
+
+    public String getSoftwareVersion() {
+        return softwareVersion;
+    }
+
+    public void setSoftwareVersion(String softwareVersion) {
+        this.softwareVersion = softwareVersion;
+    }
+
+    public String getDeviceSN() {
+        return deviceSN;
+    }
+
+    public void setDeviceSN(String deviceSN) {
+        this.deviceSN = deviceSN;
     }
 }

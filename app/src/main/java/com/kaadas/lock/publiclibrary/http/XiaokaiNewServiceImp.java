@@ -36,6 +36,8 @@ import com.kaadas.lock.publiclibrary.http.postbean.ResetDeviceBean;
 import com.kaadas.lock.publiclibrary.http.postbean.SearchUSerBean;
 import com.kaadas.lock.publiclibrary.http.postbean.SendEmailBean;
 import com.kaadas.lock.publiclibrary.http.postbean.SendMessageBean;
+import com.kaadas.lock.publiclibrary.http.postbean.UpdateBleVersionBean;
+import com.kaadas.lock.publiclibrary.http.postbean.UpdateSoftwareVersionBean;
 import com.kaadas.lock.publiclibrary.http.postbean.UploadAppRecordBean;
 import com.kaadas.lock.publiclibrary.http.postbean.UploadBinRecordBean;
 import com.kaadas.lock.publiclibrary.http.postbean.UploadWarringRecordBean;
@@ -97,6 +99,7 @@ public class XiaokaiNewServiceImp {
                 .compose(RxjavaHelper.observeOnMainThread())
                 ;
     }
+
     /**
      * 通过手机号注册
      * name	    是	String	邮箱
@@ -128,6 +131,7 @@ public class XiaokaiNewServiceImp {
                 .compose(RxjavaHelper.observeOnMainThread())
                 ;
     }
+
     /**
      * 通过邮箱登陆
      * 参数名	必选	类型	说明
@@ -143,6 +147,7 @@ public class XiaokaiNewServiceImp {
                 .compose(RxjavaHelper.observeOnMainThread())
                 ;
     }
+
     /**
      * 忘记密码
      * 参数名	必选	类型	说明
@@ -248,15 +253,17 @@ public class XiaokaiNewServiceImp {
                 .compose(RxjavaHelper.observeOnMainThread())
                 ;
     }
+
     /**
      * 删除设备的普通用户
      */
     public static Observable<BaseResult> deleteDeviceNormalUser(String adminid, String dev_username, String devname) {
         DeleteDeviceNormalUserBean deleteDeviceNormalUserBean = new DeleteDeviceNormalUserBean(adminid, dev_username, devname);
-      return   RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
+        return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
                 .deleteDeviceNormalUser(new HttpUtils<DeleteDeviceNormalUserBean>().getBody(deleteDeviceNormalUserBean))
                 .compose(RxjavaHelper.observeOnMainThread());
     }
+
     /**
      * 获取用户协议版本
      *
@@ -297,11 +304,11 @@ public class XiaokaiNewServiceImp {
      *
      * @return
      */
-    public static Observable<BaseResult> addDevice(String devmac, String devname, String user_id, String password1, String password2,String deviceModel,String bleVersion) {
-        AddDeviceBean addDeviceBean = new AddDeviceBean(devmac, devname, user_id, password1, password2,deviceModel,bleVersion);
+    public static Observable<BaseResult> addDevice(String devmac, String devname, String user_id, String password1, String password2, String deviceModel, String bleVersion) {
+        AddDeviceBean addDeviceBean = new AddDeviceBean(devmac, devname, user_id, password1, password2, deviceModel, bleVersion);
         return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
                 .addDevice(new HttpUtils<AddDeviceBean>().getBody(addDeviceBean))
-                .compose(RxjavaHelper.observeOnMainThread())  ;
+                .compose(RxjavaHelper.observeOnMainThread());
     }
 
     /**
@@ -455,6 +462,7 @@ public class XiaokaiNewServiceImp {
      * uid	    是	    String	管理员用户ID
      * devName	是	    String	设备唯一编号
      * pwdType	是	    String	密钥类型：0所有密码 1永久密码 2临时密码 3指纹密码 4卡片密码
+     *
      * @return
      */
     public static Observable<GetPasswordResult> getPasswords(String uid, String devName, int pwdType) {
@@ -472,6 +480,7 @@ public class XiaokaiNewServiceImp {
      * pwdType	是	String	密钥类型：1永久密码 2临时密码 3指纹密码 4卡片密码
      * num	是	String	密钥编号
      * nickName	是	String	密钥昵称
+     *
      * @return
      */
 
@@ -479,7 +488,7 @@ public class XiaokaiNewServiceImp {
         GetSinglePasswordBean getSinglePasswordBean = new GetSinglePasswordBean(uid, devName, pwdType, num);
         return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
                 .getSinglePassword(new HttpUtils<GetSinglePasswordBean>().getBody(getSinglePasswordBean))
-                .compose(RxjavaHelper.observeOnMainThread()) ;
+                .compose(RxjavaHelper.observeOnMainThread());
     }
 
     ////////////////////////////////////////////用户管理////////////////////////////////////////////////
@@ -508,21 +517,23 @@ public class XiaokaiNewServiceImp {
                 ;
 
     }
+
     /**
      * 更改普通用户昵称
      *
-     * @param ndId        用户-设备关联ID
+     * @param ndId         用户-设备关联ID
      * @param userNickName 用户昵称
      * @return
      */
     public static Observable<BaseResult>
-    modifyCommonUserNickname(String ndId,String userNickName) {
-        ModifyCommonUserNicknameBean modifyCommonUserNicknameBean=new ModifyCommonUserNicknameBean(ndId,userNickName);
+    modifyCommonUserNickname(String ndId, String userNickName) {
+        ModifyCommonUserNicknameBean modifyCommonUserNicknameBean = new ModifyCommonUserNicknameBean(ndId, userNickName);
         return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
                 .modifyCommonUserNickname(new HttpUtils<ModifyCommonUserNicknameBean>().getBody(modifyCommonUserNicknameBean))
                 .compose(RxjavaHelper.observeOnMainThread())
                 ;
     }
+
     /**
      * 删除普通用户
      * 参数名	        必选	类型	说明
@@ -620,8 +631,6 @@ public class XiaokaiNewServiceImp {
     }
 
 
-
-
     /**
      * 获取预警记录
      * 参数名	必选	类型	说明
@@ -655,6 +664,7 @@ public class XiaokaiNewServiceImp {
                 ;
 
     }
+
     /**
      * 发送邮箱验证码
      * 参数名	必选	类型	说明
@@ -687,13 +697,11 @@ public class XiaokaiNewServiceImp {
     }
 
 
-
-
     /**
      * 下载头像
      */
     public static Observable<ResponseBody> downloadUserHead(String uid) {
-      return   RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
+        return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
                 .downloadUserHead(uid)
                 .subscribeOn(Schedulers.io());
 //                .compose(RxjavaHelper.observeOnMainThread())
@@ -726,8 +734,8 @@ public class XiaokaiNewServiceImp {
     /**
      * 删除系统消息
      */
-    public static Observable<DeleteMessageResult> deleteMessage(String uid, String mid){
-        DeleteMessageBean messageBean=new DeleteMessageBean(uid,mid);
+    public static Observable<DeleteMessageResult> deleteMessage(String uid, String mid) {
+        DeleteMessageBean messageBean = new DeleteMessageBean(uid, mid);
         return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
                 .deleteMessage(new HttpUtils<DeleteMessageBean>().getBody(messageBean))
                 .subscribeOn(Schedulers.io())
@@ -737,8 +745,8 @@ public class XiaokaiNewServiceImp {
     /**
      * 查询帮助日志
      */
-    public static Observable<GetHelpLogResult> getHelpLog(String uid, int page){
-        GetHelpLogBean helpLogBean=new GetHelpLogBean(uid,page);
+    public static Observable<GetHelpLogResult> getHelpLog(String uid, int page) {
+        GetHelpLogBean helpLogBean = new GetHelpLogBean(uid, page);
         return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
                 .getHelpLog(new HttpUtils<GetHelpLogBean>().getBody(helpLogBean))
                 .subscribeOn(Schedulers.io())
@@ -748,7 +756,7 @@ public class XiaokaiNewServiceImp {
     /**
      * 请求App版本
      */
-    public static Observable<VersionBean> getAppVersion(){
+    public static Observable<VersionBean> getAppVersion() {
         return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
                 .getAppVersion()
                 .subscribeOn(Schedulers.io())
@@ -756,18 +764,19 @@ public class XiaokaiNewServiceImp {
     }
 
     /**
-     * @param customer	是	int	客户：1凯迪仕 2小凯 3桔子物联 4飞利浦
-     * @param deviceName	是	String	设备唯一编号
-     * @param version	否	String	当前版本号
+     * @param customer   是	int	客户：1凯迪仕 2小凯 3桔子物联 4飞利浦
+     * @param deviceName 是	String	设备唯一编号
+     * @param version    否	String	当前版本号
      * @return
      */
-    public static Observable<OTAResult> getOtaInfo(int customer, String deviceName, String version){
-        OTABean helpLogBean=new OTABean( customer,  deviceName,  version);
+    public static Observable<OTAResult> getOtaInfo(int customer, String deviceName, String version) {
+        OTABean helpLogBean = new OTABean(customer, deviceName, version);
         return RetrofitServiceManager.getNoTokenInstance().create(IXiaoKaiNewService.class)
                 .getOtaInfo(new HttpUtils<OTABean>().getBody(helpLogBean))
                 .subscribeOn(Schedulers.io())
                 .compose(RxjavaHelper.observeOnMainThread());
     }
+
     /**
      * 上报预警记录
      * 参数名	    必选	类型	说明
@@ -788,7 +797,7 @@ public class XiaokaiNewServiceImp {
 
     }
 
-    public static Observable<BaseResult> openLockAuth(String devname, String is_admin, String open_type, String user_id){
+    public static Observable<BaseResult> openLockAuth(String devname, String is_admin, String open_type, String user_id) {
         OpenLockAuth openLockAuth = new OpenLockAuth(devname, is_admin, open_type, user_id);
         return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
                 .openLockAuth(new HttpUtils<OpenLockAuth>().getBody(openLockAuth))
@@ -796,15 +805,15 @@ public class XiaokaiNewServiceImp {
                 ;
     }
 
-    public static Observable<BaseResult> uploadPushId(String uid, String jpushId, int type){
-        PushBean pushBean = new PushBean(uid,jpushId,type);
+    public static Observable<BaseResult> uploadPushId(String uid, String jpushId, int type) {
+        PushBean pushBean = new PushBean(uid, jpushId, type);
         return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
                 .uploadPushId(new HttpUtils<PushBean>().getBody(pushBean))
                 .compose(RxjavaHelper.observeOnMainThread());
     }
 
 
-    public static Observable<SwitchStatusResult> getPushSwitch(String uid){
+    public static Observable<SwitchStatusResult> getPushSwitch(String uid) {
         PushSwitch pushSwitch = new PushSwitch(uid);
         return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
                 .getPushSwitch(new HttpUtils<PushSwitch>().getBody(pushSwitch))
@@ -813,10 +822,43 @@ public class XiaokaiNewServiceImp {
     }
 
 
-    public static Observable<SwitchStatusResult> updatePushSwitch(String uid,boolean openlockPushSwitch){
-        PushSwitchBean pushSwitchBean = new PushSwitchBean(uid,openlockPushSwitch);
+    public static Observable<SwitchStatusResult> updatePushSwitch(String uid, boolean openlockPushSwitch) {
+        PushSwitchBean pushSwitchBean = new PushSwitchBean(uid, openlockPushSwitch);
         return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
                 .updatePushSwitch(new HttpUtils<PushSwitchBean>().getBody(pushSwitchBean))
+                .compose(RxjavaHelper.observeOnMainThread())
+                ;
+    }
+
+
+    /**
+     * 更新蓝牙的版本信息
+     * @param devname  设备名
+     * @param user_id
+     * @param softwareVersion    蓝牙软件版本号
+     * @param deviceSN   蓝牙的SN
+     * @return
+     */
+    public static Observable<BaseResult> updateSoftwareVersion(String devname, String user_id, String softwareVersion, String deviceSN) {
+        UpdateSoftwareVersionBean updateSoftwareVersionBean = new UpdateSoftwareVersionBean(devname, user_id, softwareVersion, deviceSN, "");
+        return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
+                .updateSoftwareVersion(new HttpUtils<UpdateSoftwareVersionBean>().getBody(updateSoftwareVersionBean))
+                .compose(RxjavaHelper.observeOnMainThread())
+                ;
+    }
+
+
+    /**
+     * 更新蓝牙的版本号
+     * @param devname
+     * @param user_id
+     * @param bleVersion
+     * @return
+     */
+    public static Observable<BaseResult> updateBleVersion(String devname, String user_id, String bleVersion) {
+        UpdateBleVersionBean updateSoftwareVersionBean = new UpdateBleVersionBean(devname, user_id, bleVersion);
+        return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
+                .updateBleVersion(new HttpUtils<UpdateBleVersionBean>().getBody(updateSoftwareVersionBean))
                 .compose(RxjavaHelper.observeOnMainThread())
                 ;
     }

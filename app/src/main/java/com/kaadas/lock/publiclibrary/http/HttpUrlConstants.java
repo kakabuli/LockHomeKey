@@ -8,14 +8,14 @@ public class HttpUrlConstants {
     //public static final String BASE_URL = "https://app.xiaokai.com:8090/";//小凯正式服务器
 //     public static final String BASE_URL = "https://app-kaadas.juziwulian.com:34000/";//凯迪仕正式服务器
     //public static final String BASE_URL = "https://47.107.175.212:8090/";//小凯测试服务器
-   public static final String BASE_URL = "https://test.juziwulian.com:8090/";//凯迪仕测试服务器
+    public static final String BASE_URL = "https://test.juziwulian.com:8090/";//凯迪仕测试服务器
 
 
- /**
-  * OTA  升级  API地址
-  */
+    /**
+     * OTA  升级  API地址
+     */
 // public static final String OTA_INFO_URL = "http://test.juziwulian.com:9111/api/otaUpgrade/check";  //正式OTA服务器
- public static final String OTA_INFO_URL = "http://47.106.83.60:9111/api/otaUpgrade/check";  //测试OTA服务器
+    public static final String OTA_INFO_URL = "http://47.106.83.60:9111/api/otaUpgrade/check";  //测试OTA服务器
 
     ////////////////////////////////////////2019年2月27日15:02:43  小凯新加接口////////////////
 
@@ -188,22 +188,22 @@ public class HttpUrlConstants {
     /**
      * 常见问题列表
      */
-    public static final String FAQ_LIST=BASE_URL+"FAQ/list/";
+    public static final String FAQ_LIST = BASE_URL + "FAQ/list/";
 
     /**
-     *消息列表
+     * 消息列表
      */
-    public static final String SYSTEM_MESSAGE=BASE_URL+"systemMessage/list";
+    public static final String SYSTEM_MESSAGE = BASE_URL + "systemMessage/list";
 
     /**
      * 删除消息列表
      */
-    public static final String SYSTEM_MESSAGE_DELETE=BASE_URL+"systemMessage/delete";
+    public static final String SYSTEM_MESSAGE_DELETE = BASE_URL + "systemMessage/delete";
 
     /**
      * 查询日志列表
      */
-    public static final String SYSTEM_HELP_LOG=BASE_URL+"errHelpLog/list";
+    public static final String SYSTEM_HELP_LOG = BASE_URL + "errHelpLog/list";
 
 
     //////////////////////////////////////开门记录///////////////////////////////////////////////
@@ -223,7 +223,6 @@ public class HttpUrlConstants {
      * 获取开门记录
      */
     public static final String GET_LOCK_RECORD = BASE_URL + "openlock/downloadopenlocklist";
-
 
 
     ////////////////////////////////////////////预警记录////////////////////////////////////////////
@@ -259,18 +258,30 @@ public class HttpUrlConstants {
     /**
      * App版本信息地址
      */
-    public static final String GET_APP_VERSION="http://s.kaadas.com:8989/cfg/SoftMgr/app.json";
+    public static final String GET_APP_VERSION = "http://s.kaadas.com:8989/cfg/SoftMgr/app.json";
 
 
+    /**
+     * 用户开锁鉴权
+     */
+    public static final String USER_OPEN_LOCK_AUTHORITY = BASE_URL + "adminlock/open/openLockAuth";
 
-  /**
-   * 用户开锁鉴权
-   */
-  public static final String USER_OPEN_LOCK_AUTHORITY = BASE_URL + "adminlock/open/openLockAuth";
+    public static final String UPLOAD_PUSH_ID = BASE_URL + "user/upload/pushId";
 
-  public static final String UPLOAD_PUSH_ID = BASE_URL + "user/upload/pushId";
+    public static final String GET_PUSH_SWITch = BASE_URL + "user/get/getPushSwitch";
+    public static final String UPDATE_PUSH_SWITch = BASE_URL + "user/edit/postPushSwitch";
 
-  public static final String GET_PUSH_SWITch = BASE_URL + "user/get/getPushSwitch";
-  public static final String UPDATE_PUSH_SWITch = BASE_URL + "user/edit/postPushSwitch";
+
+    /**
+     * OTA之前  上传当前设备SN和版本号
+     */
+    public static final String UPDATE_SOFTWARE_VERSION = BASE_URL + "adminlock/reg/updateSoftwareVersion";
+
+
+    /**
+     * 修改蓝牙版本
+     */
+    public static final String UPDATE_BLE_VERSION = BASE_URL + "adminlock/reg/updateBleVersion";
+
 
 }

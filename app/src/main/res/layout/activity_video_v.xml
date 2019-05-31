@@ -69,7 +69,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_marginTop="15dp"
                 android:layout_marginRight="15dp"
-                android:background="@mipmap/video_full_screen" />
+                android:src="@mipmap/video_full_screen" />
 
 
             <TextView

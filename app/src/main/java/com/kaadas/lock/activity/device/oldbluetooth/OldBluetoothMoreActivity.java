@@ -110,7 +110,7 @@ public class OldBluetoothMoreActivity extends BaseBleActivity<IOldDeviceInfoView
                     return;
                 }
 //                sn = "BT02191410009";
-                mPresenter.checkOtaInfo(sn, version);
+                mPresenter.uploadBleSoftware(sn, version);
                 break;
             case R.id.rl_device_name:
                 //设备名字
@@ -329,6 +329,18 @@ public class OldBluetoothMoreActivity extends BaseBleActivity<IOldDeviceInfoView
     public void modifyDeviceNicknameFail(BaseResult baseResult) {
         hiddenLoading();
         ToastUtil.getInstance().showLong(HttpUtils.httpErrorCode(this, baseResult.getCode()));
+    }
+
+    @Override
+    public void onUpdateSoftFailed(Throwable throwable) {
+        hiddenLoading();
+        LogUtils.e(getString(R.string.update_ble_version_failed));
+    }
+
+    @Override
+    public void onUpdateSoftFailedServer(BaseResult baseResult) {
+        hiddenLoading();
+        LogUtils.e(getString(R.string.update_ble_version_failed));
     }
 
     @Override

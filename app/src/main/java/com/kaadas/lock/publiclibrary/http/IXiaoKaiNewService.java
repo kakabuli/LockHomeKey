@@ -402,6 +402,7 @@ public interface IXiaoKaiNewService {
     @POST(HttpUrlConstants.OTA_INFO_URL)
     Observable<OTAResult> getOtaInfo(@Body RequestBody info);
 
+
     /**
      * 开锁鉴权
      */
@@ -433,4 +434,23 @@ public interface IXiaoKaiNewService {
      */
     @POST(HttpUrlConstants.UPDATE_PUSH_SWITch)
     Observable<SwitchStatusResult> updatePushSwitch(@Body RequestBody info);
+
+
+
+
+    /**
+     * 上传版本号和SN到服务器
+     */
+    @POST(HttpUrlConstants.UPDATE_SOFTWARE_VERSION)
+    Observable<BaseResult> updateSoftwareVersion(@Body RequestBody info);
+
+
+
+
+    /**
+     * 上传版本号和SN到服务器
+     */
+    @POST(HttpUrlConstants.UPDATE_BLE_VERSION)
+    Observable<BaseResult> updateBleVersion(@Body RequestBody info);
+
 }

@@ -48,10 +48,21 @@ public class OTADialogActivity extends BaseActivity<IOtaView, OtaPresenter<IOtaV
         String content = String.format(getString(R.string.oad_content), bleLockInfo.getServerLockInfo().getLockNickName());
         tvContent.setText(content);
 
-        sn = (String) SPUtils.get(KeyConstants.DEVICE_SN + bleLockInfo.getServerLockInfo().getMacLock(), "");
-        version = (String) SPUtils.get(KeyConstants.BLE_VERSION + bleLockInfo.getServerLockInfo().getMacLock(), "");
-        LogUtils.e("获取版本号的KEy  " + sn);
-        LogUtils.e("获取版本号是  " + version);
+
+
+        sn = bleLockInfo.getServerLockInfo().getDeviceSN();
+        version = bleLockInfo.getServerLockInfo().getSoftwareVersion();
+
+        LogUtils.e("获取版本号的KEy  server  " + sn);
+        LogUtils.e("获取版本号是 server " + version);
+
+        if (TextUtils.isEmpty(sn) || TextUtils.isEmpty(version)){
+            sn = (String) SPUtils.get(KeyConstants.DEVICE_SN + bleLockInfo.getServerLockInfo().getMacLock(), "");
+            version = (String) SPUtils.get(KeyConstants.BLE_VERSION + bleLockInfo.getServerLockInfo().getMacLock(), "");
+
+            LogUtils.e("获取版本号的KEy  local  " + sn);
+            LogUtils.e("获取版本号是 local " + version);
+        }
 
         tvRight.setOnClickListener(new View.OnClickListener() {
             @Override

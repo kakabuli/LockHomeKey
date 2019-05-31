@@ -8,7 +8,7 @@ import java.util.Objects;
  * Create By lxj  on 2019/3/7
  * Describe
  */
-public class ForeverPassword implements Serializable {
+public class ForeverPassword implements Serializable,Comparable<ForeverPassword> {
     /**
      * num	String	密钥编号
      * nickName	String	密钥昵称
@@ -130,5 +130,15 @@ public class ForeverPassword implements Serializable {
                 ", endTime=" + endTime +
                 ", items=" + items +
                 '}';
+    }
+
+    @Override
+    public int compareTo(ForeverPassword o) {
+        int iNum = Integer.parseInt(num );
+        int iNum2 = Integer.parseInt(o.getNum());
+        if (iNum<iNum2){
+            return -1;
+        }
+        return 1;
     }
 }
