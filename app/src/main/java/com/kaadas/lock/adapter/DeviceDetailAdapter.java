@@ -65,7 +65,7 @@ public class DeviceDetailAdapter extends BaseQuickAdapter<HomeShowBean, BaseView
                     helper.setImageResource(R.id.device_image,R.mipmap.cat_eye_icon);
                     batteryView.setPower(power);
                     helper.setText(R.id.device_power_text,power+"%");
-                    if (!TextUtils.isEmpty(cateEyeInfo.getServerInfo().getDeviceId())){
+                    if (!TextUtils.isEmpty(cateEyeInfo.getServerInfo().getNickName())){
                         textView.setText(cateEyeInfo.getServerInfo().getNickName());
                     }else{
                         textView.setText(cateEyeInfo.getServerInfo().getDeviceId());
