@@ -13,6 +13,8 @@ import android.widget.TextView;
 
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
+import com.kaadas.lock.activity.login.LoginActivity;
+import com.kaadas.lock.activity.login.PersonalVerifyGesturePasswordActivity;
 import com.kaadas.lock.utils.cachefloder.ACache;
 import com.kaadas.lock.utils.cachefloder.CacheFloder;
 import com.kaadas.lock.utils.handPwdUtil.GestureContentView;
@@ -34,7 +36,8 @@ public class PersonalUpdateVerifyGesturePwd extends AppCompatActivity {
     ImageView gesturePwdBack;
 
     private GestureContentView mGestureContentView;
-
+    //输入错误剩余次数
+    private int residueCount = 5;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -63,13 +66,35 @@ public class PersonalUpdateVerifyGesturePwd extends AppCompatActivity {
 
                 @Override
                 public void checkedFail() {
-                    mGestureContentView.clearDrawlineState(1300L);
+     /*               mGestureContentView.clearDrawlineState(1300L);
                     String text = getResources().getString(R.string.hand_pwd_drraw_the_ailure);
                     mTextTip.setText(Html
                             .fromHtml("<font color='#DB392B'>" + text + "</font>"));
                     // 左右移动动画
                     Animation shakeAnimation = AnimationUtils.loadAnimation(PersonalUpdateVerifyGesturePwd.this, R.anim.shake);
-                    mTextTip.startAnimation(shakeAnimation);
+                    mTextTip.startAnimation(shakeAnimation);*/
+
+                    residueCount--;
+                    if (residueCount > 0) {
+                        mGestureContentView.clearDrawlineState(1300L);
+                        String text = getResources().getString(R.string.resume_load) + residueCount + getResources().getString(R.string.second);
+                        mTextTip.setText(Html
+                                .fromHtml("<font color='#DB392B'>" + text + "</font>"));
+                        // 左右移动动画
+                        Animation shakeAnimation = AnimationUtils.loadAnimation(PersonalUpdateVerifyGesturePwd.this, R.anim.shake);
+                        mTextTip.startAnimation(shakeAnimation);
+                    } else {
+                        //重新登录
+                        //todo 清除数据，未做！
+                        //1清除手势密码缓存的数据
+                        if (MyApplication.getInstance().getMqttService()!=null){
+                            MyApplication.getInstance().getMqttService().httpMqttDisconnect();
+                        }
+                        MyApplication.getInstance().tokenInvalid(false);
+                        Intent intent = new Intent(PersonalUpdateVerifyGesturePwd.this, LoginActivity.class);
+                        startActivity(intent);
+
+                    }
                 }
             });
         }
