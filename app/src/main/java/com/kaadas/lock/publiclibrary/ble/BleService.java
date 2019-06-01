@@ -135,6 +135,7 @@ public class BleService extends Service {
     private String currentMac;
     private int bleVersion;
     private BluetoothGattService p6otaService;
+    private BluetoothGattCharacteristic notifyChar;
 
     public int getBleVersion() {
         return bleVersion;
@@ -234,7 +235,9 @@ public class BleService extends Service {
      */
     public void release() {
         synchronized (this) {
-            connectStateSubject.onNext(new BleStateBean(false, bluetoothGatt == null ? null : bluetoothGatt.getDevice(), -1));
+            if (isConnected) {
+                connectStateSubject.onNext(new BleStateBean(false, bluetoothGatt == null ? null : bluetoothGatt.getDevice(), -1));
+            }
             if (bluetoothGatt != null) {
                 bluetoothGatt.disconnect();
                 boolean isRefresh = refreshBleCatch(bluetoothGatt);
@@ -245,6 +248,7 @@ public class BleService extends Service {
             if (bleLockInfo != null) {
                 bleLockInfo.release();
             }
+            notifyChar = null;
             currentDevice = null;
             mWritableCharacter = null; //朝设备写数据的特征值
             batteryChar = null;     //电量信息的特征值  读取
@@ -271,7 +275,7 @@ public class BleService extends Service {
     }
 
 
-    public Observable<NewVersionBean> listenBleVersionUpdate(){
+    public Observable<NewVersionBean> listenBleVersionUpdate() {
         return needUpdateBleVersionSubject;
     }
 
@@ -331,7 +335,7 @@ public class BleService extends Service {
      * @return
      */
     public Observable<BluetoothDevice> getDeviceByMac(String mac) {
-        release();
+
         currentMac = mac;
         handler.postDelayed(getRemoteDeviceRunnable, 6000);
         return scanBleDevice(true)
@@ -710,6 +714,7 @@ public class BleService extends Service {
                 if (BLeConstants.UUID_NOTIFY_CHAR.equalsIgnoreCase(characteristic.getUuid().toString())) {
                     boolean isNotify = gatt.setCharacteristicNotification(characteristic, true);
                     Log.e("开启通知", "读特征值 uuidChar = " + serviceUUID);
+                    notifyChar = characteristic;
                     if (isNotify) {
                         for (BluetoothGattDescriptor dp : characteristic.getDescriptors()) {
                             //开启设备的写功能，开启之后才能接收到设备发送过来的数据
@@ -756,10 +761,10 @@ public class BleService extends Service {
                 if (uuidChar.equalsIgnoreCase(BLeConstants.UUID_LOCK_STATUS)) { //锁状态特征值
                     lockStatusChar = characteristic;
                 }
-
-
             }
         }
+
+
         LogUtils.e("模块版本是   " + type);
         bleVersion = type;
         isConnected = true;
@@ -772,17 +777,37 @@ public class BleService extends Service {
         ////////////////////////////////       检查版本是否需要更新        /////////////////////////////
         String sVersion = bleLockInfo.getServerLockInfo().getBleVersion();
         int iVersion = 0;
-        if (!TextUtils.isEmpty(sVersion)){  //蓝牙型号为空
+        if (!TextUtils.isEmpty(sVersion)) {  //蓝牙型号为空
             iVersion = Integer.parseInt(sVersion);
         }
-        if (bleVersion>iVersion){
+
+        //如果写入数据的特征值和通知的特征值为空  那么断开连接
+        if (mWritableCharacter == null || notifyChar == null) {
+            release();
+            return;
+        }
+
+        //如果蓝牙版本是2或者3   但是需要使用的特征值为空   直接断开连接
+        if ((iVersion == 2 || iVersion == 3) && (systemIDChar == null || batteryChar == null || snChar == null ||
+                modeChar == null || lockTypeChar == null || hardwareVersionChar == null
+                || bleVersionChar == null || bleVersionChar == null
+        )) {
+            release();
+            return;
+        }
+        //如果服务器的版本大于读取到的版本号  而且当前版本号为1   断开连接
+        if (iVersion>bleVersion && bleVersion ==1){
+            release();
+            return;
+        }
+
+        if (bleVersion > iVersion) {
             //获取到的版本大于服务器版本，更新服务器的版本号
-            LogUtils.e("发现新的版本  新的版本是 "+bleVersion + "   就的版本是 " + iVersion);
+            LogUtils.e("发现新的版本  新的版本是 " + bleVersion + "   就的版本是 " + iVersion);
             NewVersionBean newVersionBean = new NewVersionBean(bleLockInfo.getServerLockInfo().getLockName(), bleVersion + "");
             needUpdateBleVersionSubject.onNext(newVersionBean);
         }
         ////////////////////////////////       检查服务器版本和当前版本是否一致  如果不一致        /////////////////////////////
-
         if (this.bleVersion != 1) {
             LogUtils.e("发送心跳  " + "  版本号为  " + this.bleVersion);
             handler.post(sendHeart);

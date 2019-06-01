@@ -159,7 +159,7 @@ public class OldBleLockFragment extends BaseBleFragment<IOldBleLockView, OldBleL
                         mPresenter.detachView();
                     }
                 } else {
-                    LogUtils.e("切换到当前界面  设备2 " + this + isCurrentFragment);
+                    LogUtils.e("切换到当前界面  设备22  isdestroy  " + isDestroy + this + isCurrentFragment);
                     //切换到当前页面
                     if (!isDestroy ){
                         if (!mPresenter.isAttach()){
@@ -168,7 +168,7 @@ public class OldBleLockFragment extends BaseBleFragment<IOldBleLockView, OldBleL
                         if (isCurrentFragment) {
                             mPresenter.setBleLockInfo(bleLockInfo);
                             boolean auth = mPresenter.isAuth(bleLockInfo, true);
-                            LogUtils.e("切换到当前界面   设备" + auth);
+                            LogUtils.e("切换到当前界面 12  设备 isdestroy  " + isDestroy+ auth);
                             LogUtils.e(this + "   设置设备2  " + bleLockInfo.getServerLockInfo().toString());
                             mPresenter.getAllPassword(bleLockInfo, false);
                             isCurrentFragment = true;
