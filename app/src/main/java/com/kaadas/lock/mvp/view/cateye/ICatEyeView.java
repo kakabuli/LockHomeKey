@@ -14,4 +14,7 @@ public interface ICatEyeView extends IBaseView {
 
     //网关断开的变化
     void networkChangeSuccess();
+
+    //猫眼上报信息
+    void catEyeEventSuccess();
 }

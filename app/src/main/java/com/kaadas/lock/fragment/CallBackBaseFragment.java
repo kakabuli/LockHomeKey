@@ -215,12 +215,12 @@ public abstract class CallBackBaseFragment<T extends IBaseView, V
             myDateList.add(myDate);
             for (int i = 1; i <= 6; i++) {
                 todayc.add(Calendar.DAY_OF_MONTH, -1);// 前一天
-                day= todayc.get(Calendar.DAY_OF_MONTH);
+               int newday= todayc.get(Calendar.DAY_OF_MONTH);
                 week--;
                 if(week==-1){
                     week=6;
                 }
-                myDate=new MyDate(day, weeks[week]);
+                myDate=new MyDate(newday, weeks[week]);
                 myDateList.add(myDate);
                 System.out.println("day==>"+day+"week:"+weeks[week]);
             }

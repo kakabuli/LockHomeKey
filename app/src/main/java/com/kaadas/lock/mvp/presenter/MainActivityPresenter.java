@@ -348,11 +348,7 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
 
                                         }
                                     }
-
-
                                 }
-
-
                             } else if ("info".equals(eventtype)) {
                                 GatewayLockInfoEventBean gatewayLockInfoEventBean = new Gson().fromJson(mqttData.getPayload(), GatewayLockInfoEventBean.class);
                                 String gatewayId = gatewayLockInfoEventBean.getGwId();

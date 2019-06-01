@@ -29,6 +29,7 @@ import com.kaadas.lock.utils.Constants;
 import com.kaadas.lock.utils.PirConst;
 import com.kaadas.lock.utils.SPUtils2;
 import com.kaadas.lock.utils.db.MediaItem;
+import com.kaadas.lock.utils.ftp.GeTui;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenu;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuBridge;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuCreator;
@@ -195,6 +196,7 @@ public class RecordingFragment extends CallBackBaseFragment <IRecordingView, Rec
             String name = mediaItem.getName();
         //    long selectItem= Long.parseLong(name.split("_")[0]);
             long nextDay = currentTimeStamp+86400000;
+            Log.e(GeTui.VideoLog,"selectItemTime:"+selectItemTime+" currentTimeStamp:"+currentTimeStamp);
             if(selectItemTime>=currentTimeStamp && selectItemTime < nextDay) {
                 if (name.contains(deviceId)) {
                    currentDateItem.add(mediaItem);

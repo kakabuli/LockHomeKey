@@ -36,6 +36,8 @@ import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.StringUtil;
 import com.kaadas.lock.utils.ToastUtil;
 import com.kaadas.lock.utils.ftp.GeTui;
+import com.kaadas.lock.utils.greenDao.db.DaoSession;
+import com.kaadas.lock.utils.greenDao.db.GatewayLockServiceInfoDao;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -412,6 +414,9 @@ public class GatewayMoreActivity extends BaseActivity<GatewayLockMoreView, Gatew
     @Override
     public void deleteDeviceSuccess() {
         //删除成功
+       DaoSession daoSession= MyApplication.getInstance().getDaoWriteSession();
+       String uid=MyApplication.getInstance().getUid();
+        daoSession.getGatewayLockServiceInfoDao().queryBuilder().where(GatewayLockServiceInfoDao.Properties.Uid.eq(uid)).buildDelete().executeDeleteWithoutDetachingEntities();
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
         finish();

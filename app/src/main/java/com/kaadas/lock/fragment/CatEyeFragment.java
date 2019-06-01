@@ -82,7 +82,7 @@ public class CatEyeFragment extends BaseFragment<ICatEyeView, CatEyePresenter<IC
     private HomePageFragment.ISelectChangeListener iSelectChangeListener;
     private String gatewayId;
     private String deviceId;
-
+    private BluetoothRecordAdapter bluetoothRecordAdapter;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -141,6 +141,7 @@ public class CatEyeFragment extends BaseFragment<ICatEyeView, CatEyePresenter<IC
             mPresenter.getPublishNotify();
             mPresenter.listenerDeviceOnline();
             mPresenter.listenerNetworkChange();
+            mPresenter.listenCatEyeEvent();
             String time = cateEyeInfo.getServerInfo().getTime();
             LogUtils.e(time + "猫眼时间");
             if (!TextUtils.isEmpty(time)) {
@@ -161,7 +162,7 @@ public class CatEyeFragment extends BaseFragment<ICatEyeView, CatEyePresenter<IC
     }
 
     private void initRecycleView() {
-        BluetoothRecordAdapter bluetoothRecordAdapter = new BluetoothRecordAdapter(mCatEyeInfoList);
+        bluetoothRecordAdapter = new BluetoothRecordAdapter(mCatEyeInfoList);
         recycleview.setLayoutManager(new LinearLayoutManager(getActivity()));
         recycleview.setAdapter(bluetoothRecordAdapter);
     }
@@ -313,6 +314,31 @@ public class CatEyeFragment extends BaseFragment<ICatEyeView, CatEyePresenter<IC
     }
 
     @Override
+    public void catEyeEventSuccess() {
+        if (!TextUtils.isEmpty(gatewayId) && !TextUtils.isEmpty(deviceId)) {
+            List<CatEyeEvent> catEyeEvents = mPresenter.getCatEyeDynamicInfo(0, 3, gatewayId, deviceId);
+            if (catEyeEvents != null) {
+                if (catEyeEvents.size() > 0) {
+                    //获取猫眼动态数据成功
+                    LogUtils.e("首页猫眼触发数据" + catEyeEvents.size()+"猫眼时间"+catEyeEvents.get(0).getEventTime());
+                    changePage(true);
+                    groupData(catEyeEvents);
+                } else {
+                    changePage(false);
+                }
+            } else {
+                changePage(false);
+            }
+            if (bluetoothRecordAdapter!=null){
+                bluetoothRecordAdapter.notifyDataSetChanged();
+            }
+
+        }
+
+
+    }
+
+    @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         if (getUserVisibleHint()) {
@@ -449,6 +475,10 @@ public class CatEyeFragment extends BaseFragment<ICatEyeView, CatEyePresenter<IC
                     }
                 } else {
                     changePage(false);
+                }
+
+                if (bluetoothRecordAdapter!=null){
+                    bluetoothRecordAdapter.notifyDataSetChanged();
                 }
             }
         }
