@@ -73,6 +73,7 @@ public class AddZigbeeLockFourthActivity extends BaseActivity<IAddZigbeeLockView
     public void onViewClicked() {
         Intent backIntent=new Intent(this, DeviceBindGatewayListActivity.class);
         startActivity(backIntent);
+        finish();
     }
     /**
      * 初始化动画
@@ -178,6 +179,7 @@ public class AddZigbeeLockFourthActivity extends BaseActivity<IAddZigbeeLockView
     private boolean isCosumenBackKey() {
         Intent backIntent=new Intent(this, DeviceBindGatewayListActivity.class);
         startActivity(backIntent);
+        finish();
         return true;
     }
 

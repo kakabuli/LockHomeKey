@@ -38,6 +38,7 @@ public class AddZigbeeLockFailActivity extends AppCompatActivity {
             case R.id.back:
                 Intent backIntent=new Intent(this, DeviceBindGatewayListActivity.class);
                 startActivity(backIntent);
+                finish();
                 break;
             case R.id.button_reconnection:
                 Intent reconnectionIntent=new Intent(this, DeviceBindGatewayListActivity.class);
@@ -46,6 +47,7 @@ public class AddZigbeeLockFailActivity extends AppCompatActivity {
             case R.id.button_out:
                 Intent outIntent=new Intent(this, DeviceAddActivity.class);
                 startActivity(outIntent);
+                finish();
                 break;
         }
     }
@@ -61,6 +63,7 @@ public class AddZigbeeLockFailActivity extends AppCompatActivity {
     private boolean isCosumenBackKey() {
         Intent backIntent=new Intent(this, DeviceBindGatewayListActivity.class);
         startActivity(backIntent);
+        finish();
         return true;
     }
 }
