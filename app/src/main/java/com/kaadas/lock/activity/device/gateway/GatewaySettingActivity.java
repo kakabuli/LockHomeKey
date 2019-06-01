@@ -1,6 +1,7 @@
 package com.kaadas.lock.activity.device.gateway;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -70,11 +71,14 @@ public class GatewaySettingActivity extends BaseActivity<GatewaySettingView, Gat
     private String zbChannel;
     private GatewayBaseInfo gatewayBaseInfo=new GatewayBaseInfo();
     private String uid;
+    private AlertDialog deleteDialog;
+    private Context context;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gateway_setting);
         ButterKnife.bind(this);
+        context=this;
         initView();
         initRecycler();
         initData();
@@ -211,7 +215,7 @@ public class GatewaySettingActivity extends BaseActivity<GatewaySettingView, Gat
                 finish();
                 break;
             case R.id.btn_delete:
-                AlertDialogUtil.getInstance().noEditTwoButtonDialog(this, getString(R.string.device_delete_dialog_head), getString(R.string.device_delete_dialog_content), getString(R.string.cancel), getString(R.string.query), new AlertDialogUtil.ClickListener() {
+                AlertDialogUtil.getInstance().noEditTwoButtonDialog(this, getString(R.string.device_delete_dialog_head), getString(R.string.device_delete_gateway_dialog_content), getString(R.string.cancel), getString(R.string.query), new AlertDialogUtil.ClickListener() {
                     @Override
                     public void left() {
 
@@ -221,6 +225,8 @@ public class GatewaySettingActivity extends BaseActivity<GatewaySettingView, Gat
                     public void right() {
                         if (gatewayId != null) {
                             mPresenter.unBindGateway(MyApplication.getInstance().getUid(),gatewayId);
+                            deleteDialog=AlertDialogUtil.getInstance().noButtonDialog(context,getString(R.string.delete_be_being));
+                            deleteDialog.setCancelable(false);
                         }
 
                     }
@@ -552,6 +558,9 @@ public class GatewaySettingActivity extends BaseActivity<GatewaySettingView, Gat
 
     @Override
     public void unbindGatewaySuccess() {
+        if (deleteDialog!=null){
+            deleteDialog.dismiss();
+        }
         //清除数据库
         MyApplication.getInstance().getDaoWriteSession().getGatewayBaseInfoDao().deleteByKey(gatewayId+uid);
         //解绑成功
@@ -561,11 +570,17 @@ public class GatewaySettingActivity extends BaseActivity<GatewaySettingView, Gat
 
     @Override
     public void unbindGatewayFail() {
+        if (deleteDialog!=null){
+            deleteDialog.dismiss();
+        }
         ToastUtil.getInstance().showShort(getString(R.string.delete_fialed));
     }
 
     @Override
     public void unbindGatewayThrowable(Throwable throwable) {
+        if (deleteDialog!=null){
+            deleteDialog.dismiss();
+        }
         ToastUtil.getInstance().showShort(getString(R.string.delete_fialed));
     }
 
