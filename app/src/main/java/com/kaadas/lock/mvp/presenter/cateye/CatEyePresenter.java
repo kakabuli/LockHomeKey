@@ -1,18 +1,26 @@
 package com.kaadas.lock.mvp.presenter.cateye;
 
+
+import android.os.Handler;
+import android.text.TextUtils;
+
 import com.google.gson.Gson;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.mvp.mvpbase.BasePresenter;
 import com.kaadas.lock.mvp.view.cateye.ICatEyeView;
 import com.kaadas.lock.publiclibrary.http.util.RxjavaHelper;
+import com.kaadas.lock.publiclibrary.mqtt.eventbean.CatEyeEventBean;
 import com.kaadas.lock.publiclibrary.mqtt.eventbean.DeviceOnLineBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.GetBindGatewayStatusResult;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttConstant;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttData;
+import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.greenDao.bean.CatEyeEvent;
 import com.kaadas.lock.utils.greenDao.db.CatEyeEventDao;
 import com.kaadas.lock.utils.networkListenerutil.NetWorkChangReceiver;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +33,8 @@ public class CatEyePresenter<T> extends BasePresenter<ICatEyeView> {
     private Disposable  listenerGatewayOnLine;
     private Disposable  listenerDeviceOnLineDisposable;
     private Disposable  networkCatEyeDisposable;
+    private Disposable catEyeEventDisposable;
+    private Handler mHandler = new Handler();
     //获取网关状态通知
     public void getPublishNotify() {
 
@@ -125,5 +135,50 @@ public class CatEyePresenter<T> extends BasePresenter<ICatEyeView> {
     }
 
 
+    public void listenCatEyeEvent() {
+        toDisposable(catEyeEventDisposable);
+        catEyeEventDisposable = mqttService.listenerDataBack()
+                .filter(new Predicate<MqttData>() {
+                    @Override
+                    public boolean test(MqttData mqttData) throws Exception {
+                        if (MqttConstant.EVENT.equals(mqttData.getMsgtype())
+                                && MqttConstant.GW_EVENT.equals(mqttData.getFunc())) {
+                            return true;
+                        }
+                        return false;
+                    }
+                })
+                .compose(RxjavaHelper.observeOnMainThread())
+                .subscribe(new Consumer<MqttData>() {
+                    @Override
+                    public void accept(MqttData mqttData) throws Exception {
+                        JSONObject jsonObject = new JSONObject(mqttData.getPayload());
+                        String devtype = jsonObject.getString("devtype");
+                        if (TextUtils.isEmpty(devtype)) { //devtype为空   无法处理数据
+                            return;
+                        }
+                        // TODO: 2019/5/14 处理猫眼动态和锁上报的信息分别放在不同的表中
+                        /**
+                         * 猫眼信息上报
+                         */
+                        if (devtype.equals(KeyConstants.DEV_TYPE_CAT_EYE)) {
+                            if (mViewRef.get()!=null){
+                                //两秒后进行重连
+                                Runnable reconncetRunnable = new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        mViewRef.get().catEyeEventSuccess();
+                                        LogUtils.e("访问数据猫眼信息");
+                                    }
+                                };
+                                mHandler.postDelayed(reconncetRunnable, 3000);
+
+                            }
+                        }
+                    }
+                });
+        compositeDisposable.add(catEyeEventDisposable);
+
+    }
 
 }

@@ -41,9 +41,11 @@ import com.kaadas.lock.utils.StringUtil;
 import com.kaadas.lock.utils.ToastUtil;
 import com.kaadas.lock.utils.greenDao.bean.GatewayBaseInfo;
 import com.kaadas.lock.utils.greenDao.bean.GatewayLockBaseInfo;
+import com.kaadas.lock.utils.greenDao.db.CatEyeServiceInfoDao;
 import com.kaadas.lock.utils.greenDao.db.DaoSession;
 import com.kaadas.lock.utils.greenDao.db.GatewayBaseInfoDao;
 import com.kaadas.lock.utils.greenDao.db.GatewayLockBaseInfoDao;
+import com.kaadas.lock.utils.greenDao.db.GatewayLockServiceInfoDao;
 import com.kaadas.lock.utils.greenDao.db.GatewayServiceInfoDao;
 
 import java.util.ArrayList;
@@ -566,7 +568,10 @@ public class GatewaySettingActivity extends BaseActivity<GatewaySettingView, Gat
         //清除数据库
         DaoSession daoSession=MyApplication.getInstance().getDaoWriteSession();
         daoSession.getGatewayBaseInfoDao().deleteByKey(gatewayId+uid);
-        daoSession.getGatewayServiceInfoDao().queryBuilder().where(GatewayServiceInfoDao.Properties.Uid.eq(uid)).buildDelete().executeDeleteWithoutDetachingEntities();
+        daoSession.getGatewayServiceInfoDao().queryBuilder().where(GatewayServiceInfoDao.Properties.Uid.eq(uid)).buildDelete().executeDeleteWithoutDetachingEntities();//网关
+        daoSession.getGatewayLockServiceInfoDao().queryBuilder().where(GatewayLockServiceInfoDao.Properties.Uid.eq(uid)).buildDelete().executeDeleteWithoutDetachingEntities();//网关锁
+        daoSession.getCatEyeServiceInfoDao().queryBuilder().where(CatEyeServiceInfoDao.Properties.Uid.eq(uid)).buildDelete().executeDeleteWithoutDetachingEntities();//猫眼
+
         //解绑成功
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
