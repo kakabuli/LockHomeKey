@@ -40,6 +40,7 @@ public class BleLockServiceInfoDao extends AbstractDao<BleLockServiceInfo, Long>
         public final static Property Uid = new Property(13, String.class, "uid", false, "UID");
         public final static Property SoftwareVersion = new Property(14, String.class, "softwareVersion", false, "SOFTWARE_VERSION");
         public final static Property DeviceSN = new Property(15, String.class, "deviceSN", false, "DEVICE_SN");
+        public final static Property BleVersion = new Property(16, String.class, "bleVersion", false, "BLE_VERSION");
     }
 
 
@@ -70,7 +71,8 @@ public class BleLockServiceInfoDao extends AbstractDao<BleLockServiceInfo, Long>
                 "\"MODEL\" TEXT," + // 12: model
                 "\"UID\" TEXT," + // 13: uid
                 "\"SOFTWARE_VERSION\" TEXT," + // 14: softwareVersion
-                "\"DEVICE_SN\" TEXT);"); // 15: deviceSN
+                "\"DEVICE_SN\" TEXT," + // 15: deviceSN
+                "\"BLE_VERSION\" TEXT);"); // 16: bleVersion
     }
 
     /** Drops the underlying database table. */
@@ -162,6 +164,11 @@ public class BleLockServiceInfoDao extends AbstractDao<BleLockServiceInfo, Long>
         if (deviceSN != null) {
             stmt.bindString(16, deviceSN);
         }
+ 
+        String bleVersion = entity.getBleVersion();
+        if (bleVersion != null) {
+            stmt.bindString(17, bleVersion);
+        }
     }
 
     @Override
@@ -247,6 +254,11 @@ public class BleLockServiceInfoDao extends AbstractDao<BleLockServiceInfo, Long>
         if (deviceSN != null) {
             stmt.bindString(16, deviceSN);
         }
+ 
+        String bleVersion = entity.getBleVersion();
+        if (bleVersion != null) {
+            stmt.bindString(17, bleVersion);
+        }
     }
 
     @Override
@@ -272,7 +284,8 @@ public class BleLockServiceInfoDao extends AbstractDao<BleLockServiceInfo, Long>
             cursor.isNull(offset + 12) ? null : cursor.getString(offset + 12), // model
             cursor.isNull(offset + 13) ? null : cursor.getString(offset + 13), // uid
             cursor.isNull(offset + 14) ? null : cursor.getString(offset + 14), // softwareVersion
-            cursor.isNull(offset + 15) ? null : cursor.getString(offset + 15) // deviceSN
+            cursor.isNull(offset + 15) ? null : cursor.getString(offset + 15), // deviceSN
+            cursor.isNull(offset + 16) ? null : cursor.getString(offset + 16) // bleVersion
         );
         return entity;
     }
@@ -295,6 +308,7 @@ public class BleLockServiceInfoDao extends AbstractDao<BleLockServiceInfo, Long>
         entity.setUid(cursor.isNull(offset + 13) ? null : cursor.getString(offset + 13));
         entity.setSoftwareVersion(cursor.isNull(offset + 14) ? null : cursor.getString(offset + 14));
         entity.setDeviceSN(cursor.isNull(offset + 15) ? null : cursor.getString(offset + 15));
+        entity.setBleVersion(cursor.isNull(offset + 16) ? null : cursor.getString(offset + 16));
      }
     
     @Override

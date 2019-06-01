@@ -60,7 +60,7 @@ public class MqttConstant {
     }
 
 
-    public static String getCallTopic(String userId) {
+    public static String  getCallTopic(String userId) {
         return "/" + userId + "/rpc/call";
     }
 

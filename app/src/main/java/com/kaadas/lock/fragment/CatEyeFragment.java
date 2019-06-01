@@ -394,7 +394,6 @@ public class CatEyeFragment extends BaseFragment<ICatEyeView, CatEyePresenter<IC
             }
 
         }
-         Collections.reverse(mCatEyeInfoList);
         for (int i = 0; i < mCatEyeInfoList.size(); i++) {
             BluetoothRecordBean bluetoothRecordBean = mCatEyeInfoList.get(i);
             List<BluetoothItemRecordBean> bluetoothRecordBeanList = bluetoothRecordBean.getList();

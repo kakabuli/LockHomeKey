@@ -9,16 +9,19 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.hisilicon.hisilink.MessageSend;
 import com.hisilicon.hisilink.OnlineReciever;
 import com.hisilicon.hisilink.WiFiAdmin;
 import com.hisilicon.hisilinkapi.HisiLibApi;
 import com.kaadas.lock.R;
+import com.kaadas.lock.activity.MainActivity;
 import com.kaadas.lock.activity.addDevice.DeviceBindGatewayListActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.mvp.presenter.deviceaddpresenter.AddCatEyePresenter;
@@ -63,6 +66,7 @@ public class AddDeviceCatEyeThirdActivity extends BaseActivity<IAddCatEyeView, A
     static {
         System.loadLibrary("HisiLink");
     }
+    boolean isback=true;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -83,22 +87,41 @@ public class AddDeviceCatEyeThirdActivity extends BaseActivity<IAddCatEyeView, A
         //上线消息
 
         mPresenter.startJoin(deviceMac, deviceSN, gwId, SSID, pwd);
+        isback=false;
     }
 
 
     @OnClick(R.id.back)
     public void onViewClicked() {
-        startActivity(new Intent(AddDeviceCatEyeThirdActivity.this,DeviceBindGatewayListActivity.class));
-        finish();
+        if(isback){
+            startActivity(new Intent(AddDeviceCatEyeThirdActivity.this,DeviceBindGatewayListActivity.class));
+            finish();
+        }else {
+            Toast.makeText(this,getResources().getString(R.string.add_network_cateye),Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     @Override
-    public void onBackPressed() {
-        startActivity(new Intent(AddDeviceCatEyeThirdActivity.this,DeviceBindGatewayListActivity.class));
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+          if(isback){
+              finish();
+          }else {
+              Toast.makeText(this,getResources().getString(R.string.add_network_cateye),Toast.LENGTH_SHORT).show();
+              return true;
+          }
+        }
+        return super.onKeyDown(keyCode, event);
     }
+//    @Override
+//    public void onBackPressed() {
+//        startActivity(new Intent(AddDeviceCatEyeThirdActivity.this,DeviceBindGatewayListActivity.class));
+//    }
 
     //猫眼配置结果
     private void pairCatEyeResult(Boolean flag) {
+        isback=true;
         if (flag) {
             if (!TextUtils.isEmpty(gatewayId)&&!TextUtils.isEmpty(deviceId)){
                 Intent successIntent = new Intent(this, AddDeviceCatEyeSuccessActivity.class);

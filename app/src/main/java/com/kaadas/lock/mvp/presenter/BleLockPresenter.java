@@ -215,81 +215,8 @@ public class BleLockPresenter<T> extends MyOpenLockRecordPresenter<IBleLockView>
     }
 
 
-    private void readLockFun() {
-        toDisposable(electricDisposable);
-        electricDisposable =
-                Observable.just(0)
-                        .flatMap(new Function<Integer, ObservableSource<ReadInfoBean>>() {
-                            @Override
-                            public ObservableSource<ReadInfoBean> apply(Integer integer) throws Exception {
-                                return bleService.readLockFun(100);
-                            }
-                        })
-                        .filter(new Predicate<ReadInfoBean>() {
-                            @Override
-                            public boolean test(ReadInfoBean readInfoBean) throws Exception {
-                                return readInfoBean.type == ReadInfoBean.TYPE_LOCK_FUN;
-                            }
-                        })
-                        .timeout(2000, TimeUnit.MILLISECONDS)
-                        .compose(RxjavaHelper.observeOnMainThread())
-                        .retryWhen(new RetryWithTime(1, 0))  //读取三次电量   如果没有读取到电量的话
-                        .subscribe(new Consumer<ReadInfoBean>() {
-                            @Override
-                            public void accept(ReadInfoBean readInfoBean) throws Exception {
-                                LogUtils.e("读取到锁支持功能    " + Rsa.bytesToHexString((byte[]) readInfoBean.data));
-                                toDisposable(electricDisposable);
-                                readLockStatus();
-                            }
-                        }, new Consumer<Throwable>() {
-                            @Override
-                            public void accept(Throwable throwable) throws Exception {
-                                LogUtils.e("读取到锁支持功能失败   " + throwable.getMessage());
-
-                                readLockStatus();
-                            }
-                        });
-        compositeDisposable.add(electricDisposable);
-    }
 
 
-    private void readLockStatus() {
-        toDisposable(electricDisposable);
-        electricDisposable =
-                Observable.just(0)
-                        .flatMap(new Function<Integer, ObservableSource<ReadInfoBean>>() {
-                            @Override
-                            public ObservableSource<ReadInfoBean> apply(Integer integer) throws Exception {
-                                return bleService.readLockStatus(100);
-                            }
-                        })
-                        .filter(new Predicate<ReadInfoBean>() {
-                            @Override
-                            public boolean test(ReadInfoBean readInfoBean) throws Exception {
-                                return readInfoBean.type == ReadInfoBean.TYPE_LOCK_STATUS;
-                            }
-                        })
-                        .timeout(1000, TimeUnit.MILLISECONDS)
-                        .compose(RxjavaHelper.observeOnMainThread())
-                        .retryWhen(new RetryWithTime(2, 0))  //读取三次电量   如果没有读取到电量的话
-                        .subscribe(new Consumer<ReadInfoBean>() {
-                            @Override
-                            public void accept(ReadInfoBean readInfoBean) throws Exception {
-                                LogUtils.e("读取到锁状态成功   " + Rsa.bytesToHexString((byte[]) readInfoBean.data));
-                                getOpenLockNumber();
-                            }
-                        }, new Consumer<Throwable>() {
-                            @Override
-                            public void accept(Throwable throwable) throws Exception {
-                                LogUtils.e("读取到锁状态失败   " + throwable.getMessage());
-                                if (mViewRef.get() != null) {  //读取电量失败
-                                    mViewRef.get().onElectricUpdataFailed(throwable);
-                                }
-                                getOpenLockNumber();
-                            }
-                        });
-        compositeDisposable.add(electricDisposable);
-    }
 
 
     /**
