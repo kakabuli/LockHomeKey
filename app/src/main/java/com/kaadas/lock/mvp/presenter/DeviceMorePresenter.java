@@ -24,6 +24,8 @@ import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.Rsa;
 import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.ToastUtil;
+import com.kaadas.lock.utils.greenDao.db.BleLockServiceInfoDao;
+import com.kaadas.lock.utils.greenDao.db.DaoSession;
 
 import java.util.concurrent.TimeUnit;
 
@@ -68,6 +70,10 @@ public class DeviceMorePresenter extends BlePresenter<IDeviceMoreView> {
                         bleService.release();
 //                        MyApplication.getInstance().deleteDevice(deviceName);
                         bleService.removeBleLockInfo();
+                        ///删除缓存的消息
+                        DaoSession daoSession = MyApplication.getInstance().getDaoWriteSession();
+                        BleLockServiceInfoDao bleLockServiceInfoDao = daoSession.getBleLockServiceInfoDao();
+                        bleLockServiceInfoDao.queryBuilder().where(BleLockServiceInfoDao.Properties.LockName.eq(bleLockInfo.getServerLockInfo().getLockName())).buildDelete().executeDeleteWithoutDetachingEntities();
                     }
 
                     @Override

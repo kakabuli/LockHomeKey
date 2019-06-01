@@ -181,11 +181,11 @@ public class PasswordManagerPresenter<T> extends BlePresenter<IPasswordManagerVi
     private void getAllpasswordNumber(int codeNumber, byte[] deValue) {
         int passwordNumber = 10;  //永久密码的最大编号   小凯锁都是5个  0-5
         //获取所有有秘钥的密码编号
-        for (int index = 0; index * 8 < codeNumber; index++) {
+        for (int index = 0; index * 8 < passwordNumber; index++) {
             if (index > 13) {
                 return;
             }
-            for (int j = 0; j < 8 && index * 8 + j < codeNumber; j++) {
+            for (int j = 0; j < 8 && index * 8 + j < passwordNumber; j++) {
                 if (((deValue[3 + index] & temp[j])) == temp[j] && index * 8 + j < passwordNumber) {
                     bleNumber.add(index * 8 + j);
                 }
