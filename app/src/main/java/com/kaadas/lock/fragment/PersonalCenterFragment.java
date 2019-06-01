@@ -171,7 +171,7 @@ public class PersonalCenterFragment extends BaseFragment<IMyFragmentView, MyFrag
 
     private void showImage(String photoPath) {
         if ("".equals(photoPath)) {
-            ivPhoto.setImageDrawable(getResources().getDrawable(R.mipmap.default_head));
+            ivPhoto.setImageDrawable(getResources().getDrawable(R.mipmap.default_head_1));
         } else {
             int degree = BitmapUtil.readPictureDegree(photoPath);
             changeBitmap = BitmapUtil.ratio(photoPath, 720, 720);
@@ -180,12 +180,14 @@ public class PersonalCenterFragment extends BaseFragment<IMyFragmentView, MyFrag
              */
             Bitmap newbitmap = BitmapUtil.rotaingImageView(degree, changeBitmap);
             ivPhoto.setImageBitmap(newbitmap);
+            ivPhoto.setBackgroundResource(R.drawable.head_circle_bj);
         }
     }
 
     @Override
     public void downloadPhoto(Bitmap bitmap) {
         ivPhoto.setImageBitmap(bitmap);
+        ivPhoto.setBackgroundResource(R.drawable.head_circle_bj);
         StorageUtil.getInstance().saveServerPhoto(bitmap);
     }
 
