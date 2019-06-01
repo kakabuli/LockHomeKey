@@ -77,7 +77,6 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
     private int currentPosition;
     public boolean isSelectHome = true;
     private FragmentPagerAdapter adapter;
-    private int currentIndex;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -139,7 +138,6 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
                 //设置滚动位置，可使点击radiobutton时，将该radiobutton移动至第二位置
                 scTitle.smoothScrollTo(bt.getLeft() - (int) (scTitle.getWidth() / 3), 0);
                 LogUtils.e("位置改变");
-                currentIndex = index;
                 //根据点击的radiobutton跳转至不同webview界面
                 viewPager.setCurrentItem(index);
             }
@@ -210,11 +208,7 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
             changePage();
             return;
         }
-        if (devices.size() == 0) {
-            hasDevice = false;
-            changePage();
-            return;
-        }
+
         hasDevice = true;
         changePage();
 
@@ -337,7 +331,11 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
             adapter.notifyDataSetChanged();
             LogUtils.e("首页Fragment数据是     adapter.notifyDataSetChanged();" );
         }
-
+        if (devices.size() == 0) {
+            hasDevice = false;
+            changePage();
+            return;
+        }
         viewPager.setCurrentItem(0);
         UnderLineRadioBtn radioBtn = (UnderLineRadioBtn) mRadioGroup.getChildAt(0);
         radioBtn.setChecked(true);

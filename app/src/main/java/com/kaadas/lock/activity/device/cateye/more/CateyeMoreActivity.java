@@ -241,7 +241,7 @@ public class CateyeMoreActivity extends BaseActivity<IGatEyeView, CatEyeMorePres
                       //  if (gatewayId != null && deviceId != null) {
                         if (!TextUtils.isEmpty(gatewayId) &&  !TextUtils.isEmpty(deviceId)) {
                             mPresenter.deleteCatEye(gatewayId, deviceId, "net");
-                            deleteAlertDialog=AlertDialogUtil.getInstance().noButtonDialog(context,getString(R.string.take_effect_be_being));
+                            deleteAlertDialog=AlertDialogUtil.getInstance().noButtonDialog(context,getString(R.string.delete_be_being));
                             deleteAlertDialog.setCancelable(false);
                         }
                     }

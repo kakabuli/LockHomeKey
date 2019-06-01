@@ -1,6 +1,7 @@
 package com.kaadas.lock.activity.device.gatewaylock.more;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -92,12 +93,15 @@ public class GatewayMoreActivity extends BaseActivity<GatewayLockMoreView, Gatew
     private boolean flagAM= false;
 
     private int autoRelock=0;
+    private AlertDialog deleteDialog;
+    private Context context;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gateway_more);
         ButterKnife.bind(this);
+        context=this;
         initView();
         initData();
         initClick();
@@ -296,6 +300,8 @@ public class GatewayMoreActivity extends BaseActivity<GatewayLockMoreView, Gatew
                     public void right() {
                         if (gatewayId != null && deviceId != null) {
                             mPresenter.deleteLock(gatewayId, deviceId, "zigbee");
+                            deleteDialog=AlertDialogUtil.getInstance().noButtonDialog(context,getString(R.string.delete_be_being));
+                            deleteDialog.setCancelable(false);
                         }
 
                     }
@@ -409,16 +415,26 @@ public class GatewayMoreActivity extends BaseActivity<GatewayLockMoreView, Gatew
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
         finish();
+        if (deleteDialog!=null){
+            deleteDialog.dismiss();
+        }
     }
 
     @Override
     public void deleteDeviceFail() {
+        if (deleteDialog!=null){
+            deleteDialog.dismiss();
+        }
         //删除失败
         ToastUtil.getInstance().showShort(getString(R.string.delete_fialed));
     }
 
     @Override
     public void deleteDeviceThrowable(Throwable throwable) {
+        if (deleteDialog!=null){
+            deleteDialog.dismiss();
+        }
+        ToastUtil.getInstance().showShort(getString(R.string.delete_fialed));
         LogUtils.e("删除异常   " + throwable.getMessage());
     }
 

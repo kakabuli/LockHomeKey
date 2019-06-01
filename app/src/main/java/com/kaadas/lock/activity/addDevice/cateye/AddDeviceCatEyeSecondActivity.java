@@ -59,6 +59,8 @@ public class AddDeviceCatEyeSecondActivity extends BaseActivity<IAddCatEyeSecond
         deviceMac = getIntent().getStringExtra(KeyConstants.DEVICE_MAC);
         gwId = getIntent().getStringExtra(KeyConstants.GW_SN);
 
+
+        LogUtils.e("猫眼入网数据   SSID  " + SSID+"  pwd  "+pwd + "   deviceSN  " +deviceSN+" deviceMac   " +deviceMac+"   gwId "+gwId);
         ButterKnife.bind(this);
     }
 
