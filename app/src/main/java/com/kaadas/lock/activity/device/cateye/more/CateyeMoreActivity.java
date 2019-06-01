@@ -33,6 +33,7 @@ import com.kaadas.lock.utils.LoadingDialog;
 import com.kaadas.lock.utils.StringUtil;
 import com.kaadas.lock.utils.ToastUtil;
 import com.kaadas.lock.utils.greenDao.bean.CateEyeInfoBase;
+import com.kaadas.lock.utils.greenDao.db.CatEyeServiceInfoDao;
 import com.kaadas.lock.utils.greenDao.db.CateEyeInfoBaseDao;
 import com.kaadas.lock.utils.greenDao.db.DaoSession;
 import com.kaadas.lock.utils.greenDao.db.HistoryInfoDao;
@@ -493,6 +494,8 @@ public class CateyeMoreActivity extends BaseActivity<IGatEyeView, CatEyeMorePres
     @Override
     public void deleteDeviceSuccess() {
         //删除成功
+        String uid=MyApplication.getInstance().getUid();
+        daoSession.getCatEyeServiceInfoDao().queryBuilder().where(CatEyeServiceInfoDao.Properties.Uid.eq(uid)).buildDelete().executeDeleteWithoutDetachingEntities();
         if (deleteAlertDialog!=null){
             deleteAlertDialog.dismiss();
         }

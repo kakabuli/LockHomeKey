@@ -41,8 +41,8 @@ public class AddZigbeeLockPresenter<T> extends BasePresenter<IAddZigbeeLockView>
                             return false;
                         }
                     })
-                    .compose(RxjavaHelper.observeOnMainThread())
                     .timeout(30*1000, TimeUnit.MILLISECONDS)
+                    .compose(RxjavaHelper.observeOnMainThread())
                     .subscribe(new Consumer<MqttData>() {
                         @Override
                         public void accept(MqttData mqttData) throws Exception {
@@ -87,8 +87,8 @@ public class AddZigbeeLockPresenter<T> extends BasePresenter<IAddZigbeeLockView>
                             return mqttData.getFunc().equals(MqttConstant.GW_EVENT);
                         }
                     })
-                    .compose(RxjavaHelper.observeOnMainThread())
                     .timeout(120*1000,TimeUnit.MILLISECONDS)
+                    .compose(RxjavaHelper.observeOnMainThread())
                     .subscribe(new Consumer<MqttData>() {
                         @Override
                         public void accept(MqttData mqttData) throws Exception {
