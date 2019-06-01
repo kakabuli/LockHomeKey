@@ -572,7 +572,8 @@
     <string name="no_permission_unlock">无权限开锁</string>
     <string name="bu_fang_status">布防状态</string>
     <string name="double_lock_status">反锁状态</string>
-    <string name="bluetooth_close_status">关闭状态</string>
+    <string name="bluetooth_close_status"></string>
+    <!--<string name="bluetooth_close_status">关闭状态</string>-->
     <string name="is_lock">正在开锁</string>
     <string name="safe_status">安全状态</string>
     <string name="wifi_not_online">设备不在线</string>

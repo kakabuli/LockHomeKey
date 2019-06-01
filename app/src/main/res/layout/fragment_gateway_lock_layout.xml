@@ -69,9 +69,10 @@
             </RelativeLayout>
 
             <TextView
+                android:gravity="center"
+                android:layout_height="18dp"
                 android:id="@+id/tv_external"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:layout_below="@id/rl_icon"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="@dimen/dp_18"
