@@ -61,6 +61,7 @@ public class GatewayWarnInformationFragment extends BaseFragment<GatewayLockAlra
     private BluetoothRecordAdapter lockAlarmdAdapter;
     private int page=0;
     private int lastPage=0;
+    private List<GatewayLockAlarmEventDao> alarmList=new ArrayList<>();
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -87,6 +88,10 @@ public class GatewayWarnInformationFragment extends BaseFragment<GatewayLockAlra
                     if (mOpenLockList!=null){
                         mOpenLockList.clear();
                     }
+                    if (alarmList!=null){
+                        alarmList.clear();
+                    }
+
                    mPresenter.getLockAlarm(0,20,gatewayId,deviceId);
                 }
             }
@@ -123,12 +128,10 @@ public class GatewayWarnInformationFragment extends BaseFragment<GatewayLockAlra
 
 
     private void initRecycleView() {
-
         if (mOpenLockList != null) {
             lockAlarmdAdapter = new BluetoothRecordAdapter(mOpenLockList);
             recycleview.setLayoutManager(new LinearLayoutManager(getActivity()));
             recycleview.setAdapter(lockAlarmdAdapter);
-
         }
     }
 
@@ -156,6 +159,9 @@ public class GatewayWarnInformationFragment extends BaseFragment<GatewayLockAlra
     }
 
     private void groupData(List<GatewayLockAlarmEventDao> alarmEventDaoList) {
+        if (mOpenLockList!=null){
+            mOpenLockList.clear();
+        }
         long lastDayTime = 0;
         for (int i = 0; i < alarmEventDaoList.size(); i++) {
             GatewayLockAlarmEventDao dataBean = alarmEventDaoList.get(i);
@@ -260,7 +266,8 @@ public class GatewayWarnInformationFragment extends BaseFragment<GatewayLockAlra
         }else{
             lastPage=page+1;
         }
-        groupData(alarmEventDaoList);
+        alarmList.addAll(alarmEventDaoList);
+        groupData(alarmList);
         if (lockAlarmdAdapter != null) {
             lockAlarmdAdapter.notifyDataSetChanged();
         }
