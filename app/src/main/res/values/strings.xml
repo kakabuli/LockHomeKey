@@ -1021,4 +1021,5 @@
     <string name="is_saving_name">正在保存设备名称</string>
     <string name="update_ble_version_failed">上传模块信息失败，请稍后再试</string>
     <string name="get_lock_pwd_list_fail">获取密码列表失败</string>
+    <string name="add_network_cateye">配网中,请稍等....</string>
 </resources>
