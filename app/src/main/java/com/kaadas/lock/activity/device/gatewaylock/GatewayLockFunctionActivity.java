@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.text.InputFilter;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -343,6 +344,7 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
         TextView tvTitle = mView.findViewById(R.id.tv_title);
         EditText editText = mView.findViewById(R.id.et_name);
         editText.setInputType(InputType.TYPE_CLASS_NUMBER);
+        editText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(12)});
         TextView tv_cancel = mView.findViewById(R.id.tv_left);
         TextView tv_query = mView.findViewById(R.id.tv_right);
         AlertDialog alertDialog = AlertDialogUtil.getInstance().common(this, mView);
