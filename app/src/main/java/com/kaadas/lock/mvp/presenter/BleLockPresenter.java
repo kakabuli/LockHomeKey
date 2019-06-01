@@ -170,8 +170,7 @@ public class BleLockPresenter<T> extends MyOpenLockRecordPresenter<IBleLockView>
 
     private void readBattery() {
         toDisposable(electricDisposable);
-        electricDisposable =
-                Observable.just(0)
+        electricDisposable =  Observable.just(0)
                         .flatMap(new Function<Integer, ObservableSource<ReadInfoBean>>() {
                             @Override
                             public ObservableSource<ReadInfoBean> apply(Integer integer) throws Exception {
