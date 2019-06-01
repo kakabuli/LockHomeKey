@@ -15,10 +15,12 @@ import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.login.LoginActivity;
 import com.kaadas.lock.activity.login.PersonalVerifyGesturePasswordActivity;
+import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.cachefloder.ACache;
 import com.kaadas.lock.utils.cachefloder.CacheFloder;
 import com.kaadas.lock.utils.handPwdUtil.GestureContentView;
 import com.kaadas.lock.utils.handPwdUtil.GestureDrawline;
+import com.lzy.imagepicker.ImagePicker;
 
 
 import butterknife.BindView;
@@ -38,13 +40,16 @@ public class PersonalUpdateVerifyGesturePwd extends AppCompatActivity {
     private GestureContentView mGestureContentView;
     //输入错误剩余次数
     private int residueCount = 5;
-
+    String source;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.update_verify_hand_pwd);
         ButterKnife.bind(this);
         initView();
+        Intent intent = getIntent();
+         source = intent.getStringExtra(KeyConstants.SOURCE);
+
     }
 
     private void initView() {
@@ -59,9 +64,18 @@ public class PersonalUpdateVerifyGesturePwd extends AppCompatActivity {
 
                 @Override
                 public void checkedSuccess() {
-                    finish();
-                    Intent intent = new Intent(PersonalUpdateVerifyGesturePwd.this, PersonalUpdateGesturePwdActivity.class);
-                    startActivity(intent);
+                    if ("PersonalSecuritySettingActivity".equals(source)){
+                        Intent intent = new Intent();
+                        //把返回数据存入Intent
+                        //设置返回数据
+                        setResult(RESULT_OK, intent);
+                        finish();
+                    }else {
+                        finish();
+                        Intent intent = new Intent(PersonalUpdateVerifyGesturePwd.this, PersonalUpdateGesturePwdActivity.class);
+                        startActivity(intent);
+                    }
+
                 }
 
                 @Override
