@@ -102,10 +102,10 @@ public class BluetoothLockAuthorizationActivity extends BaseBleActivity<IOldBlue
             public void run() {
                 LogUtils.e(" 首页锁状态  反锁状态   " + bleLockInfo.getBackLock() + "    安全模式    " + bleLockInfo.getSafeMode() + "   布防模式   " + bleLockInfo.getArmMode());
                 isOpening = false;
-                lockStatus = KeyConstants.OPEN_LOCK;
-                changLockStatus();
+//                lockStatus = KeyConstants.OPEN_LOCK;
+                changLockStatus(0);
                 if (bleLockInfo.getBackLock() == 0) {  //等于0时是反锁状态
-
+                    changLockStatus(2);
                 }
                 if (bleLockInfo.getSafeMode() == 1) {//安全模式
 
@@ -271,6 +271,7 @@ public class BluetoothLockAuthorizationActivity extends BaseBleActivity<IOldBlue
 
     @Override
     public void onSearchDeviceFailed(Throwable throwable) {
+        changLockStatus(1);
     }
 
     @Override
@@ -280,11 +281,11 @@ public class BluetoothLockAuthorizationActivity extends BaseBleActivity<IOldBlue
     @Override
     public void authResult(boolean isSuccess) {
         if (isSuccess) {
-            lockStatus = KeyConstants.OPEN_LOCK;
-            changLockStatus();
+//            lockStatus = KeyConstants.OPEN_LOCK;
+            changLockStatus(0);
         } else {
-            lockStatus = KeyConstants.DEVICE_OFFLINE;
-            changLockStatus();
+//            lockStatus = KeyConstants.DEVICE_OFFLINE;
+            changLockStatus(1);
         }
     }
 
@@ -397,10 +398,12 @@ public class BluetoothLockAuthorizationActivity extends BaseBleActivity<IOldBlue
     @Override
     public void isOpeningLock() {
         isOpening = true;
+        changLockStatus(3);
     }
 
     @Override
     public void openLockSuccess() {
+        changLockStatus(4);
         handler.removeCallbacks(lockRunnable);
         handler.postDelayed(lockRunnable, 15 * 1000);  //十秒后退出开门状态
     }
@@ -413,6 +416,7 @@ public class BluetoothLockAuthorizationActivity extends BaseBleActivity<IOldBlue
 
     @Override
     public void openLockFailed(Throwable throwable) {
+        changLockStatus(5);
         if (throwable instanceof TimeoutException) {
             ToastUtil.getInstance().showShort(getString(R.string.open_lock_failed));
         } else if (throwable instanceof BleProtocolFailedException) {
@@ -421,7 +425,7 @@ public class BluetoothLockAuthorizationActivity extends BaseBleActivity<IOldBlue
         } else {
             ToastUtil.getInstance().showShort(getString(R.string.open_lock_failed));
         }
-        lockRunnable.run();
+        handler.postDelayed(lockRunnable,3000);
     }
 
     @Override
@@ -436,7 +440,7 @@ public class BluetoothLockAuthorizationActivity extends BaseBleActivity<IOldBlue
 
     @Override
     public void onBackLock() {
-
+        changLockStatus(2);
     }
 
 
@@ -458,6 +462,7 @@ public class BluetoothLockAuthorizationActivity extends BaseBleActivity<IOldBlue
                             ToastUtil.getInstance().showLong(R.string.safe_mode_can_not_open);
                         } else if (bleLockInfo.getBackLock() == 0) {
                             ToastUtil.getInstance().showLong(R.string.back_lock_can_not_open);
+                            changLockStatus(2);
                         }
                         return;
                     }
@@ -492,46 +497,56 @@ public class BluetoothLockAuthorizationActivity extends BaseBleActivity<IOldBlue
         vib.vibrate(milliseconds);
     }
 
-    public void changLockStatus() {
-        switch (lockStatus) {
-            case KeyConstants.OPEN_LOCK:
+    public void changLockStatus(int state) {
+        switch (state) {
+//            case KeyConstants.OPEN_LOCK:
+            case 0:
                 //可以开锁
                 tvOpenClock.setEnabled(true);
                 tvOpenClock.setText(R.string.click_lock);
                 tvOpenClock.setTextColor(getResources().getColor(R.color.c16B8FD));
                 tvOpenClock.setBackgroundResource(R.mipmap.open_lock_bj);
                 break;
-            case KeyConstants.DEVICE_OFFLINE:
+//            case KeyConstants.DEVICE_OFFLINE:
+            case 1:
                 //设备离线
                 tvOpenClock.setEnabled(false);
                 tvOpenClock.setText(getString(R.string.device_offline));
                 tvOpenClock.setTextColor(getResources().getColor(R.color.c149EF3));
                 tvOpenClock.setBackgroundResource(R.mipmap.has_been_locked_bj);
                 break;
-      /*      case KeyConstants.HAS_BEEN_LOCKED:
+//            case KeyConstants.HAS_BEEN_LOCKED:
+            case 2:
                 //已反锁
+                tvOpenClock.setEnabled(false);
                 tvOpenClock.setText(getString(R.string.has_been_locked));
                 tvOpenClock.setTextColor(getResources().getColor(R.color.c149EF3));
                 tvOpenClock.setBackgroundResource(R.mipmap.has_been_locked_bj);
                 break;
-            case KeyConstants.IS_LOCKING:
+//            case KeyConstants.IS_LOCKING:
+            case 3:
                 //正在开锁中
+                tvOpenClock.setEnabled(false);
                 tvOpenClock.setText(getString(R.string.is_locking));
                 tvOpenClock.setTextColor(getResources().getColor(R.color.white));
                 tvOpenClock.setBackgroundResource(R.mipmap.is_locking_bj);
                 break;
-            case KeyConstants.OPEN_LOCK_SUCCESS:
+//            case KeyConstants.OPEN_LOCK_SUCCESS:
+            case 4:
                 //开锁成功
+                tvOpenClock.setEnabled(false);
                 tvOpenClock.setText(getString(R.string.open_lock_success));
                 tvOpenClock.setTextColor(getResources().getColor(R.color.white));
                 tvOpenClock.setBackgroundResource(R.mipmap.open_lock_success_bj);
                 break;
-            case KeyConstants.OPEN_LOCK_FAILED:
+//            case KeyConstants.OPEN_LOCK_FAILED:
+            case 5:
                 //开锁失败
+                tvOpenClock.setEnabled(false);
                 tvOpenClock.setText(getString(R.string.open_lock_failed));
                 tvOpenClock.setTextColor(getResources().getColor(R.color.white));
                 tvOpenClock.setBackgroundResource(R.mipmap.open_lock_fail_bj);
-                break;*/
+                break;
         }
     }
 

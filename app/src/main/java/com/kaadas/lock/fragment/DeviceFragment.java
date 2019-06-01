@@ -243,7 +243,7 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
 
                                 bleLockServiceInfo.setDeviceSN(serverBleDevice.getDeviceSN());
                                 bleLockServiceInfo.setSoftwareVersion(serverBleDevice.getSoftwareVersion());
-
+                                bleLockServiceInfo.setBleVersion(serverBleDevice.getBleVersion());
                                 bleLockServiceInfo.setUid(uid);
                                 daoSession.insertOrReplace(bleLockServiceInfo);
                             }

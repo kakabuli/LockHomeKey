@@ -248,8 +248,8 @@ public class GatewayLockMorePresenter<T> extends BasePresenter<GatewayLockMoreVi
             MqttMessage mqttMessage= MqttCommandFactory.deleteDevice(gatewayId,deviceId,bustType);
             deleteLockInfoDisposable=mqttService
                     .mqttPublish(MqttConstant.getCallTopic(MyApplication.getInstance().getUid()),mqttMessage)
-                    .compose(RxjavaHelper.observeOnMainThread())
                     .timeout(10*1000, TimeUnit.MILLISECONDS)
+                    .compose(RxjavaHelper.observeOnMainThread())
                     .filter(new Predicate<MqttData>() {
                         @Override
                         public boolean test(MqttData mqttData) throws Exception {

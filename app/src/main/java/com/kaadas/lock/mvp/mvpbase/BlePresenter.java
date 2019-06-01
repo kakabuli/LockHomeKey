@@ -145,7 +145,7 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
             }
             return;
         }
-
+        bleService.release();
         if (mViewRef.get() != null && isNotify) {
             mViewRef.get().onStartConnectDevice();
         }

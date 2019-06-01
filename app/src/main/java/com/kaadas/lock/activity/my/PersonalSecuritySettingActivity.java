@@ -1,5 +1,6 @@
 package com.kaadas.lock.activity.my;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import com.kaadas.lock.R;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.mvp.presenter.personalpresenter.PersonalSecuritySettingPresenter;
 import com.kaadas.lock.utils.AlertDialogUtil;
+import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.ToastUtil;
 import com.kaadas.lock.utils.cachefloder.ACache;
 import com.kaadas.lock.utils.cachefloder.CacheFloder;
@@ -185,11 +187,11 @@ public class PersonalSecuritySettingActivity extends BaseActivity<IPersonalSecur
                     Intent open = new Intent(this, PersonalUpdateGesturePwdActivity.class);
                     startActivity(open);
                 } else {
-                    //关闭
-                    //清除缓存手势密码数据
-                    ivOpenHandPwd.setImageResource(R.mipmap.iv_close);
-                    ACache.get(MyApplication.getInstance()).remove(MyApplication.getInstance().getUid() + "handPassword");
-                    securitySettingSwitchText.setText(R.string.open_hand_pwd);
+                    Intent personalUpdateVerifyIntent = new Intent(this, PersonalUpdateVerifyGesturePwd.class);
+                    personalUpdateVerifyIntent.putExtra(KeyConstants.SOURCE,"PersonalSecuritySettingActivity");
+                    startActivityForResult(personalUpdateVerifyIntent,100);
+
+
                 }
                 break;
             case R.id.rl_open_touch_id:
@@ -210,6 +212,20 @@ public class PersonalSecuritySettingActivity extends BaseActivity<IPersonalSecur
                     ACache.get(MyApplication.getInstance()).remove(MyApplication.getInstance().getUid() + "fingerStatus");
                 }
                 break;
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == Activity.RESULT_OK) {
+            if (100==requestCode){
+//关闭
+                //清除缓存手势密码数据
+                ivOpenHandPwd.setImageResource(R.mipmap.iv_close);
+                ACache.get(MyApplication.getInstance()).remove(MyApplication.getInstance().getUid() + "handPassword");
+                securitySettingSwitchText.setText(R.string.open_hand_pwd);
+            }
         }
     }
 }

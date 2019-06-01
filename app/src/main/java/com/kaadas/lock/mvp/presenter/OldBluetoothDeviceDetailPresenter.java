@@ -21,6 +21,8 @@ import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.Rsa;
 import com.kaadas.lock.utils.SPUtils;
+import com.kaadas.lock.utils.greenDao.db.BleLockServiceInfoDao;
+import com.kaadas.lock.utils.greenDao.db.DaoSession;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -496,6 +498,12 @@ public class OldBluetoothDeviceDetailPresenter<T> extends OldBleLockDetailPresen
                         bleService.release();
 //                        MyApplication.getInstance().deleteDevice(deviceName);
                         bleService.removeBleLockInfo();
+
+                        //删除数据库缓存数据
+                        DaoSession daoSession = MyApplication.getInstance().getDaoWriteSession();
+                        BleLockServiceInfoDao bleLockServiceInfoDao = daoSession.getBleLockServiceInfoDao();
+                        bleLockServiceInfoDao.queryBuilder().where(BleLockServiceInfoDao.Properties.LockName.eq(bleLockInfo.getServerLockInfo().getLockName())).buildDelete().executeDeleteWithoutDetachingEntities();
+
                     }
 
                     @Override
