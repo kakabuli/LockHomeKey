@@ -197,6 +197,8 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
         ll_video_control2 = findViewById(R.id.ll_video_control2);
         rl_bottom = findViewById(R.id.rl_bottom);
         rl_title_bar = findViewById(R.id.rl_title_bar);
+
+        video_v_go.setVisibility(View.GONE);
     }
 
 
@@ -312,6 +314,7 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
             ll_video_control1.setVisibility(View.VISIBLE);
         }
 
+        video_v_go.setVisibility(View.VISIBLE);
     }
 
     private void initView() {
@@ -380,6 +383,7 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
         hangup2.setOnClickListener(this);
         ll_video_control1.setVisibility(View.GONE);
         ll_video_control2.setVisibility(View.GONE);
+        video_v_go.setVisibility(View.GONE);
 
         if (gwLockInfos.size() == 0) {
             if (cityPicker != null) {
