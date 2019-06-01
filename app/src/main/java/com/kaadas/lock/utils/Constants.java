@@ -58,4 +58,7 @@ public class Constants {
     public static final String RECORDINGTAG="RECORDINGTAG";
     public static final String ISRECORDINGFRAGMENT="RECORDINGTAG";
 
+    // oppo权限是否打开
+    public static final String IS_VOVO_OPEN="IS_VOVO_OPEN";
+
 }

@@ -830,8 +830,8 @@
     <string name="fingerprint_collect_success">号指纹采集成功</string>
     <string name="card_add_success">号卡添加成功</string>
     <string name="cate_sleep">猫眼已经休眠</string>
-    <string name="mainactivity_permission_alert_msg">请前往应用信息下通知管理界面打开通知开关,否则推送信息无法到达</string>
-    <string name="mainactivity_permission_alert_title">应用通知开启</string>
+    <string name="mainactivity_permission_alert_msg">请前往应用信息设置界面中打开通知开关，后台弹出界面开关,否则猫眼呼叫功能无法使用</string>
+    <string name="mainactivity_permission_alert_title">应用权限开关开启</string>
     <string name="no_unlock_record">暂无开锁记录</string>
     <string name="connection_server">连接服务器失败,请检查网络退出该页面重新进去</string>
     <string name="lock_firware_version_number">门锁固件版本</string>
