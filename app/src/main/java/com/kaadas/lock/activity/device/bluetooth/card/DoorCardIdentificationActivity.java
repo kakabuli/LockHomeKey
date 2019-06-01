@@ -96,11 +96,11 @@ public class DoorCardIdentificationActivity extends BaseBleActivity<IAddCardEndV
          * 0xFF	锁接收到命令，但无结果返回
          */
         //默认为设置失败
-        String errorCause = getString(R.string.set_pinger_failed);
+        String errorCause = getString(R.string.set_door_card_failed);
         if (throwable instanceof BleProtocolFailedException) {
             BleProtocolFailedException protocolFailedException = (BleProtocolFailedException) throwable;
             if (protocolFailedException.getErrorCode() == 0x87) {  //密码编号已存在
-                errorCause = getString(R.string.finger_set_success);
+                errorCause = getString(R.string.finger_door_card_success);
             }
         } else if (throwable instanceof TimeoutException) {
             errorCause = getString(R.string.set_failed_tineout);

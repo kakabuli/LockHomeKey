@@ -628,7 +628,9 @@
     <string name="sync_finger_failed">同步指纹失败</string>
     <string name="finger_full_and_delete_exist_code">指纹库已满，请删除已有码库再添加</string>
     <string name="set_pinger_failed">设置指纹失败</string>
+    <string name="set_door_card_failed">设置门卡失败</string>
     <string name="finger_set_success">设置指纹失败，密码编号已存在，请同步后再试！</string>
+    <string name="finger_door_card_success">设置门卡失败，密码编号已存在，请同步后再试！</string>
     <string name="set_failed_tineout">设置失败，超时！请手动添加！</string>
     <string name="lock_set_success_please_sync">锁上设置成功，上传失败，请同步</string>
     <string name="set_finger_failed_number">设置指纹失败，获取锁上编号失败！</string>
