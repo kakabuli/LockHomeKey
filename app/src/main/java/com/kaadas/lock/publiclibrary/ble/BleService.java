@@ -796,7 +796,7 @@ public class BleService extends Service {
             return;
         }
         //如果服务器的版本大于读取到的版本号  而且当前版本号为1   断开连接
-        if (iVersion>bleVersion && bleVersion ==1){
+        if (iVersion > bleVersion && bleVersion == 1) {
             release();
             return;
         }
@@ -924,7 +924,11 @@ public class BleService extends Service {
         public synchronized void run() {
             if (commands.size() > 0) { //如果指令集合中有数据，那么直接发送数据 且移除此次发送的数据
                 sendCommand(commands.get(0));
-                commands.remove(0);
+                try {
+                    commands.remove(0);
+                } catch (Exception e) {
+                    LogUtils.e("BleService 中报错  " + e.getMessage());
+                }
             }
             if (commands.size() > 0) {  //如果还有指令  继续发送
                 handler.removeCallbacks(sendCommandRannble);
