@@ -166,6 +166,7 @@ public class OldBleLockFragment extends BaseBleFragment<IOldBleLockView, OldBleL
                             mPresenter.attachView(OldBleLockFragment.this);
                         }
                         if (isCurrentFragment) {
+                            LogUtils.e("setBleLockInfo    12   ");
                             mPresenter.setBleLockInfo(bleLockInfo);
                             boolean auth = mPresenter.isAuth(bleLockInfo, true);
                             LogUtils.e("切换到当前界面 12  设备 isdestroy  " + isDestroy+ auth);
@@ -192,6 +193,7 @@ public class OldBleLockFragment extends BaseBleFragment<IOldBleLockView, OldBleL
                 if (i == position  ) {
                     if (homeFragment.isSelectHome && !isDestroy){
                         mPresenter.attachView(OldBleLockFragment.this);
+                        LogUtils.e("setBleLockInfo    13   ");
                         mPresenter.setBleLockInfo(bleLockInfo);
                         LogUtils.e(this + "   设置设备1  " + bleLockInfo.getServerLockInfo().toString());
                         boolean auth = mPresenter.isAuth(bleLockInfo, true);
@@ -221,6 +223,8 @@ public class OldBleLockFragment extends BaseBleFragment<IOldBleLockView, OldBleL
             if (!mPresenter.isAttach() ) {
                 mPresenter.attachView(this);
             }
+
+            LogUtils.e("setBleLockInfo    14   ");
             mPresenter.setBleLockInfo(bleLockInfo);
             mPresenter.isAuth(bleLockInfo, true);
             LogUtils.e(this + "  设置设备3  " + bleLockInfo.getServerLockInfo().toString());

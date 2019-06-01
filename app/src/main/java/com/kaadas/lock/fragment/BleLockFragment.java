@@ -134,7 +134,10 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
     @Override
     public void onResume() {
         super.onResume();
-        if (!mPresenter.isAttach()&& !isDestroy) {
+
+        if (!mPresenter.isAttach()&& !isDestroy&& homeFragment.isSelectHome ) {
+//        if (!mPresenter.isAttach()&& !isDestroy ) {
+            LogUtils.e("attachView   4");
             mPresenter.attachView(this);
         }
         mPresenter.getOpenRecordFromServer(1, bleLockInfo);
@@ -226,6 +229,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
                     return false;
                 }
                 if (mPresenter.getBleLockInfo() == null && bleLockInfo != null && !isDestroy) {
+                    LogUtils.e("setBleLockInfo    11   ");
                     mPresenter.setBleLockInfo(bleLockInfo);
                 }
                 if (mPresenter.isAuth(bleLockInfo, true)) {
@@ -250,6 +254,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
                 if (!isConnectingDevice && !bleLockInfo.isAuth()) {  //如果没有正在连接设备
                     //连接设备
                     if (!mPresenter.isAttach()&& !isDestroy) {
+                        LogUtils.e("attachView   5");
                         mPresenter.attachView(BleLockFragment.this);
                     }
                     LogUtils.e(this + "   设置设备66  " + bleLockInfo.getServerLockInfo().toString());
@@ -268,9 +273,11 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
                     LogUtils.e("切换到当前界面  设备11  isdestroy  " + isDestroy + this + isCurrentFragment);
                     //切换到当前页面
                     if (!mPresenter.isAttach() && !isDestroy) {
+                        LogUtils.e("attachView   1");
                         mPresenter.attachView(BleLockFragment.this);
                     }
                     if (isCurrentFragment && !isDestroy) {
+                        LogUtils.e("setBleLockInfo    55   ");
                         mPresenter.setBleLockInfo(bleLockInfo);
                         onChangeInitView();
                         boolean auth = mPresenter.isAuth(bleLockInfo, true);
@@ -304,9 +311,10 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
                     }
                     if (homeFragment.isSelectHome && !isDestroy) {
                         if (!mPresenter.isAttach() ) {
+                            LogUtils.e("attachView   2");
                             mPresenter.attachView(BleLockFragment.this);
                         }
-
+                        LogUtils.e("setBleLockInfo    22  ");
                         mPresenter.setBleLockInfo(bleLockInfo);
                         onChangeInitView();
                         LogUtils.e(this + "   设置设备1  " + bleLockInfo.getServerLockInfo().toString());
@@ -327,8 +335,11 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
         LogUtils.e("设备position " + position + "    " + homeFragment.getCurrentPosition() + "     " + homeFragment.isSelectHome);
         if (position == 0 && position == homeFragment.getCurrentPosition() && homeFragment.isSelectHome && !isDestroy ) {
             if (!mPresenter.isAttach() ) {
+                LogUtils.e("attachView   3");
                 mPresenter.attachView(BleLockFragment.this);
             }
+
+            LogUtils.e("setBleLockInfo    33   ");
             mPresenter.setBleLockInfo(bleLockInfo);
             onChangeInitView();
             mPresenter.isAuth(bleLockInfo, true);
