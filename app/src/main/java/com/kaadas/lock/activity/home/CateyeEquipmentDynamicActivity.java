@@ -56,6 +56,7 @@ public class CateyeEquipmentDynamicActivity extends BaseActivity<ICateyeDynamicV
     private int page=0;
     private BluetoothRecordAdapter catEyeAlarmAdapter;
     private int lastPage=0;
+    private  List<CatEyeEvent> mCatEyeList=new ArrayList<>();
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,6 +81,9 @@ public class CateyeEquipmentDynamicActivity extends BaseActivity<ICateyeDynamicV
                     page = 0;
                     if (mCatEyeInfoList != null) {
                         mCatEyeInfoList.clear();
+                    }
+                    if (mCatEyeList!=null){
+                        mCatEyeList.clear();
                     }
                     mPresenter.getCatEyeDynamicInfo(0, 20, gatewayId, deviceId);
                 }
@@ -144,6 +148,10 @@ public class CateyeEquipmentDynamicActivity extends BaseActivity<ICateyeDynamicV
 
 
     private void groupData(List<CatEyeEvent> catEyeEvents) {
+        if (mCatEyeInfoList!=null){
+            mCatEyeInfoList.clear();
+        }
+
         long lastDayTime = 0;
         for (int i = 0; i < catEyeEvents.size(); i++) {
             CatEyeEvent dataBean = catEyeEvents.get(i);
@@ -238,7 +246,8 @@ public class CateyeEquipmentDynamicActivity extends BaseActivity<ICateyeDynamicV
         }else{
             lastPage=page+1;
         }
-        groupData(catEyeEvent);
+        mCatEyeList.addAll(catEyeEvent);
+        groupData(mCatEyeList);
         if (catEyeAlarmAdapter != null) {
             catEyeAlarmAdapter.notifyDataSetChanged();
         }
