@@ -406,6 +406,7 @@
     <string name="device_delete_dialog_head">确认删除设备？</string>
     <string name="device_delete_dialog_content">删除设备后,\n将设备恢复出厂设置/清除猫眼数据</string>
     <string name="device_delete_lock_dialog_content">删除设备后,\n将设备恢复出厂设置/清除锁内数据</string>
+    <string name="device_delete_gateway_dialog_content">删除设备后,\n将清除所有网关数据</string>
     <string name="pwd_manager_syn">密码同步</string>
     <string name="synchroniztion">同步</string>
     <string name="week_day">周日</string>

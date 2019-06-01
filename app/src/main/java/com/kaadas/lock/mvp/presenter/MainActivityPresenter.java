@@ -317,7 +317,6 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                                     String deviceId = gatewayLockAlarmEventBean.getDeviceId();
                                     String gatewayId = gatewayLockAlarmEventBean.getGwId();
                                     int clusterID = gatewayLockAlarmEventBean.getEventparams().getClusterID();
-
                                     GatewayLockAlarmEventDao gatewayLockAlarmEventDao = new GatewayLockAlarmEventDao();
                                     gatewayLockAlarmEventDao.setDeviceId(deviceId); //设备id
                                     gatewayLockAlarmEventDao.setGatewayId(gatewayLockAlarmEventBean.getGwId()); //网关id
@@ -333,7 +332,6 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                                     }
                                     gatewayLockAlarmEventDao.setClusterID(clusterID); //257 代表锁的信息;1 代表电量信息
                                     gatewayLockAlarmEventDao.setEventcode(gatewayLockAlarmEventBean.getEventcode());
-
                                     //插入到数据库
                                     if (!checkSame(gatewayLockAlarmEventBean.getTimestamp(), gatewayLockAlarmEventBean.getEventparams().getAlarmCode())) {
                                         MyApplication.getInstance().getDaoWriteSession().getGatewayLockAlarmEventDaoDao().insert(gatewayLockAlarmEventDao);
