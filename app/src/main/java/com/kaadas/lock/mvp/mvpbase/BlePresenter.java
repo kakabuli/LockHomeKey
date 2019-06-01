@@ -419,6 +419,7 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
                              * 读取电量  读取SN？  读取
                              */
                             authSuccess();
+                            toDisposable(getPwd3Dispose);
                         }
                     }
                 }, new Consumer<Throwable>() {

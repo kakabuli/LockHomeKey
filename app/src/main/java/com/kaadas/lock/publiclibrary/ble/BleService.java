@@ -420,13 +420,17 @@ public class BleService extends Service {
                     && !((value[3] & 0xff) == 0x14) && !(value[3] == 0x08) && bleVersion != 1) {  //如果是加密数据  那么回确认帧
                 sendCommand(BleCommandFactory.confirmCommand(value));
             }
-
+            if ((value[0] & 0xff) == 0 && (value[4] & 0xff) == 0xc2) {
+                release();
+                return;
+            }
             lastReceiveDataTime = System.currentTimeMillis();
             BleDataBean bleDataBean = new BleDataBean(value[3], value[1], value);
             bleDataBean.setDevice(gatt.getDevice());
             if (value[0] == 1 && value[3] == 0x05) {  //锁状态改变的数据
                 onLockStateCahnge(bleDataBean);
             }
+
             dataChangeSubject.onNext(bleDataBean);
         }
 
