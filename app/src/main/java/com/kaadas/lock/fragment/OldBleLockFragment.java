@@ -42,6 +42,7 @@ import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.result.GetPasswordResult;
 import com.kaadas.lock.publiclibrary.http.util.HttpUtils;
 import com.kaadas.lock.utils.AlertDialogUtil;
+import com.kaadas.lock.utils.AnimationsContainer;
 import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
@@ -675,35 +676,147 @@ public class OldBleLockFragment extends BaseBleFragment<IOldBleLockView, OldBleL
 
     @Override
     public void isOpeningLock() {
-
+        openLockAnimator();
         isOpening = true;
-        changeOpenLockStatus(9);
+//        changeOpenLockStatus(9);
+    }
+    AnimationsContainer.FramesSequenceAnimation openLockBig;
+    AnimationsContainer.FramesSequenceAnimation openLockMiddle;
+    AnimationsContainer.FramesSequenceAnimation openLockSmall;
+    AnimationsContainer.FramesSequenceAnimation closeLock;
+    public void openLockAnimator() {
+        LogUtils.d("davi 开始新1 " + System.currentTimeMillis());
+        ivExternalBig.setVisibility(View.VISIBLE);
+//        ivExternalBig.setImageResource(R.drawable.open_lock_big);
+        //优化后的帧动画
+        openLockBig = AnimationsContainer.getInstance(R.array.open_lock_big, 26).createProgressDialogAnim(ivExternalBig);
+        ivExternalMiddle.setVisibility(View.VISIBLE);
+//        ivExternalMiddle.setImageResource(R.drawable.open_lock_middle);
+        openLockMiddle = AnimationsContainer.getInstance(R.array.open_lock_middle, 26).createProgressDialogAnim(ivExternalMiddle);
+        ivExternalSmall.setVisibility(View.GONE);
+//        ivExternalSmall.setImageResource(R.mipmap.bluetooth_open_lock_small_icon);
+        ivInnerMiddle.setVisibility(View.VISIBLE);
+//        ivInnerMiddle.setImageResource(R.drawable.open_lock_small);
+        openLockSmall = AnimationsContainer.getInstance(R.array.open_lock_small, 26).createProgressDialogAnim(ivInnerMiddle);
+        ivInnerSmall.setVisibility(View.GONE);
+//                ivInnerSmall.setImageResource();
+        tvInner.setVisibility(View.GONE);
+//                tvInner.setText();
+//                tvInner.setTextColor();
+        tvExternal.setVisibility(View.VISIBLE);
+        tvExternal.setTextColor(getResources().getColor(R.color.cC6F5FF));
+        tvExternal.setText(getString(R.string.is_lock));
+
+
+        LogUtils.d("davi 开始新2 " + System.currentTimeMillis());
+        if (openLockBig != null) {
+            openLockBig.start();
+        }
+        if (openLockMiddle != null) {
+            openLockMiddle.start();
+        }
+        if (openLockSmall != null) {
+            openLockSmall.start();
+        }
+        LogUtils.d("davi 开始新3 " + System.currentTimeMillis());
     }
 
+    /**
+     * 关锁动画
+     */
+    public void closeLockAnimator() {
+        ivExternalBig.setVisibility(View.VISIBLE);
+        ivExternalBig.setImageResource(R.mipmap.bluetooth_lock_close_big_middle_icon  );
+        ivExternalMiddle.setVisibility(View.GONE);
+//        ivExternalMiddle.setImageResource(R.mipmap.);
+        ivExternalSmall.setVisibility(View.GONE);
+//                ivExternalSmall.setImageResource(R.mipmap.bluetooth_open_lock_small_icon);
+        ivInnerMiddle.setVisibility(View.VISIBLE);
+//        ivInnerMiddle.setImageResource(R.drawable.bluetooth_lock_close);
+        closeLock = AnimationsContainer.getInstance(R.array.bluetooth_lock_close, 14).createProgressDialogAnim(ivInnerMiddle);
+        ivInnerSmall.setVisibility(View.VISIBLE);
+        ivInnerSmall.setImageResource(R.mipmap.bluetooth_lock_bu_fang_inner_small_icon);
+        tvInner.setVisibility(View.VISIBLE);
+        tvInner.setText(R.string.long_press_open_lock);
+        tvInner.setTextColor(getResources().getColor(R.color.cF7FDFD));
+        tvExternal.setVisibility(View.VISIBLE);
+        tvExternal.setTextColor(getResources().getColor(R.color.cC6F5FF));
+        tvExternal.setText(getString(R.string.bluetooth_close_status));
+        if (closeLock != null) {
+            closeLock.start();
+        }
+    }
+
+    /**
+     * 停止关锁动画
+     */
+    public void stopCloseLockAnimator() {
+        if (closeLock != null) {
+            closeLock.stop();
+        }
+    }
+
+    /**
+     * 停止开锁动画
+     */
+    public void stopOpenLockAnimator() {
+        if (openLockBig != null) {
+            openLockBig.stop();
+        }
+        if (openLockMiddle != null) {
+            openLockMiddle.stop();
+        }
+        if (openLockSmall != null) {
+            openLockSmall.stop();
+        }
+    }
     @Override
     public void openLockSuccess() {
-        changeOpenLockStatus(10);
-        handler.removeCallbacks(lockRunnable);
-        handler.postDelayed(lockRunnable, 15 * 1000);  //十秒后退出开门状态
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                stopOpenLockAnimator();
+                changeOpenLockStatus(10);
+                handler.removeCallbacks(lockRunnable);
+                handler.postDelayed(lockRunnable, 15 * 1000);  //十秒后退出开门状态
+            }
+        }, 3000);
+
     }
 
     @Override
     public void onLockLock() {  //关门
-        handler.removeCallbacks(lockRunnable);
-        lockRunnable.run();
+        closeLockAnimator();
+        LogUtils.d("davi 关锁 " + System.currentTimeMillis());
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                LogUtils.d("davi 停止关锁 " + System.currentTimeMillis());
+                stopCloseLockAnimator();
+                handler.removeCallbacks(lockRunnable);
+                lockRunnable.run();
+            }
+        }, 1000);
+
     }
 
     @Override
     public void openLockFailed(Throwable throwable) {
-        if (throwable instanceof TimeoutException) {
-            ToastUtil.getInstance().showShort(getString(R.string.open_lock_failed));
-        } else if (throwable instanceof BleProtocolFailedException) {
-            BleProtocolFailedException bleProtocolFailedException = (BleProtocolFailedException) throwable;
-            ToastUtil.getInstance().showShort(getString(R.string.open_lock_failed));
-        } else {
-            ToastUtil.getInstance().showShort(getString(R.string.open_lock_failed));
-        }
-        lockRunnable.run();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (throwable instanceof TimeoutException) {
+                    ToastUtil.getInstance().showShort(getString(R.string.open_lock_failed));
+                } else if (throwable instanceof BleProtocolFailedException) {
+                    BleProtocolFailedException bleProtocolFailedException = (BleProtocolFailedException) throwable;
+                    ToastUtil.getInstance().showShort(getString(R.string.open_lock_failed));
+                } else {
+                    ToastUtil.getInstance().showShort(getString(R.string.open_lock_failed));
+                }
+                lockRunnable.run();
+                stopOpenLockAnimator();
+            }
+        }, 3000);
     }
 
     @Override

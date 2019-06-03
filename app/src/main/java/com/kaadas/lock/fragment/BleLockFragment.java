@@ -903,7 +903,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
 
     @Override
     public void openLockSuccess() {
-        new Handler().postDelayed(new Runnable() {
+        handler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 stopOpenLockAnimator();
@@ -920,7 +920,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
     public void onLockLock() {  //关门
         closeLockAnimator();
         LogUtils.d("davi 关锁 " + System.currentTimeMillis());
-        new Handler().postDelayed(new Runnable() {
+        handler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 LogUtils.d("davi 停止关锁 " + System.currentTimeMillis());
@@ -934,7 +934,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
 
     @Override
     public void openLockFailed(Throwable throwable) {
-        new Handler().postDelayed(new Runnable() {
+        handler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 if (throwable instanceof TimeoutException) {
