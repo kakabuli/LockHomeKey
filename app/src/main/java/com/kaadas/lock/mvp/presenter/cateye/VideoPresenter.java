@@ -1,6 +1,8 @@
 package com.kaadas.lock.mvp.presenter.cateye;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -42,6 +44,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Handler;
 
 import io.reactivex.Observable;
 import io.reactivex.disposables.Disposable;
@@ -66,8 +69,10 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
     private String recordDeviceId;
     private Disposable closeLockNotifyDisposable;
     private Disposable lockCloseDisposable;
+    private Context mContext;
 
     public void init(Context context) {
+        this.mContext=context;
         mMediaDBDao = MediaFileDBDao.getInstance(context);
         //设置麦克风不静音
         LinphoneHelper.toggleMicro(false);
@@ -183,7 +188,6 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
         });
     }
 
-
     public void toCapturePicture(String deviceId) {
         String mPicturePath = null;
         try {
@@ -194,6 +198,9 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
             mMediaDBDao.add(timeMillis + deviceId + ".jpeg", String.valueOf(timeMillis), 2, mPicturePath);
             if (mViewRef.get() != null) {
                 mViewRef.get().screenShotSuccess();
+            }
+            if(mViewRef!=null && mViewRef.get() !=null){
+                mViewRef.get().screenShotSuccessPath(mPicturePath);
             }
 
         } catch (Exception e) {
@@ -476,8 +483,9 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
                         } else {
                             //407  猫眼离线  猫眼唤醒失败
                             LogUtils.e(Tag,"唤醒猫眼失败   " + mqttData.getReturnCode() + "   耗时  " + (System.currentTimeMillis() - start));
-                            if (mViewRef.get() != null && !isConnected) {
-                                mViewRef.get().wakeupFailed();
+                            if (mViewRef!=null && mViewRef.get() != null && !isConnected) {
+                              //  mViewRef.get().wakeupFailed();
+                                mViewRef.get().wakeupFailedStateCode(mqttData.getReturnCode());
                             }
                             wakeupSuccess = false;
                             handler.removeCallbacks(timeoutRunnable);

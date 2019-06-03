@@ -34,6 +34,10 @@ public interface IVideoView extends IBaseView {
      * 截图成功
      */
     void screenShotSuccess();
+    /**
+     * 截图成功刷新图库
+     */
+    void screenShotSuccessPath(String filePath);
 
     /**
      * 截图失败
@@ -54,6 +58,11 @@ public interface IVideoView extends IBaseView {
      * 唤醒猫眼失败
      */
     void wakeupFailed();
+
+    /**
+     * 唤醒猫眼失败
+     */
+    void wakeupFailedStateCode(String code);
 
 
     /**
