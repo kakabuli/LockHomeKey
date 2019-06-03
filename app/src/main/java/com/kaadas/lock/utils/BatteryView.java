@@ -89,8 +89,10 @@ public class BatteryView extends View {
             paint.setColor(getResources().getColor(R.color.c999999));
         }else if (mColor==R.color.c25F290){
             paint.setColor(getResources().getColor(R.color.c25F290));
+        }else if (mColor==R.color.cFF3B30){
+            paint.setColor(getResources().getColor(R.color.cFF3B30));
         }
-        LogUtils.e(mColor+"mColor");
+        //LogUtils.e(mColor+"mColor");
         canvas.drawRect(r2, paint);
         //画电池头
         RectF r3 = new RectF(width - strokeWidth, height * 0.25f, width, height * 0.75f);
@@ -136,7 +138,7 @@ public class BatteryView extends View {
     public void setPower(int power) {
         this.mPower = power;
         if (mPower < 0) {
-            mPower = 100;
+            mPower = 0;
         }
         invalidate();//刷新VIEW
     }

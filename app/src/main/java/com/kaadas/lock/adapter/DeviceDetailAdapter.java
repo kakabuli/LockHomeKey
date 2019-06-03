@@ -58,9 +58,9 @@ public class DeviceDetailAdapter extends BaseQuickAdapter<HomeShowBean, BaseView
                 GatewayInfo catGatewayInfo=MyApplication.getInstance().getGatewayById(cateEyeInfo.getGwID());
                 if (catGatewayInfo!=null){
                     if ("online".equals(catGatewayInfo.getEvent_str())){
-                        isWifiDevice(true,helper,cateEyeInfo.getServerInfo().getEvent_str(),batteryView);
+                        isWifiDevice(true,helper,cateEyeInfo.getServerInfo().getEvent_str(),batteryView,power);
                     }else{
-                        isWifiDevice(true,helper,"offline",batteryView);
+                        isWifiDevice(true,helper,"offline",batteryView,power);
                     }
                     helper.setImageResource(R.id.device_image,R.mipmap.cat_eye_icon);
                     batteryView.setPower(power);
@@ -87,9 +87,9 @@ public class DeviceDetailAdapter extends BaseQuickAdapter<HomeShowBean, BaseView
                 GatewayInfo lockGatewayInfo=MyApplication.getInstance().getGatewayById(gwLockInfo.getGwID());
                 if (lockGatewayInfo!=null) {
                     if ("online".equals(lockGatewayInfo.getEvent_str())) {
-                        isWifiDevice(true, helper, gwLockInfo.getServerInfo().getEvent_str(), batteryView);
+                        isWifiDevice(true, helper, gwLockInfo.getServerInfo().getEvent_str(), batteryView,gatewayLockPower);
                     } else {
-                        isWifiDevice(true, helper, "offline", batteryView);
+                        isWifiDevice(true, helper, "offline", batteryView,gatewayLockPower);
                     }
                     helper.setImageResource(R.id.device_image, R.mipmap.default_zigbee_lock_icon);
                     batteryView.setPower(gatewayLockPower);
@@ -106,7 +106,7 @@ public class DeviceDetailAdapter extends BaseQuickAdapter<HomeShowBean, BaseView
             //网关
             case HomeShowBean.TYPE_GATEWAY:
                 GatewayInfo gatewayInfo= (GatewayInfo) item.getObject();
-                isWifiDevice(true,helper,gatewayInfo.getEvent_str(),batteryView);
+                isWifiDevice(true,helper,gatewayInfo.getEvent_str(),batteryView,0);
                 helper.setImageResource(R.id.device_image,R.mipmap.gateway_icon);
                 textView.setText(item.getDeviceNickName());
                 break;
@@ -129,7 +129,7 @@ public class DeviceDetailAdapter extends BaseQuickAdapter<HomeShowBean, BaseView
                         blePower = 0;
                     }
 
-                    isWifiDevice(false, helper, status, batteryView);
+                    isWifiDevice(false, helper, status, batteryView,blePower);
                     String model = bleLockInfo.getServerLockInfo().getModel();
                     if (model.contains("K7")){
                         helper.setImageResource(R.id.device_image, R.mipmap.k7);
@@ -160,7 +160,7 @@ public class DeviceDetailAdapter extends BaseQuickAdapter<HomeShowBean, BaseView
         }
     }
 
-    public void isWifiDevice(boolean flag,BaseViewHolder helper, String status,BatteryView batteryView){
+    public void isWifiDevice(boolean flag,BaseViewHolder helper, String status,BatteryView batteryView,int pw){
         LogUtils.e(status+"===");
         if ("online".equals(status)) {
             //在线
@@ -169,9 +169,12 @@ public class DeviceDetailAdapter extends BaseQuickAdapter<HomeShowBean, BaseView
             }else{
                 helper.setImageResource(R.id.device_type_image,R.mipmap.bluetooth_connection);
             }
-
             helper.setText(R.id.device_type_text, R.string.online);
-            batteryView.setColor(R.color.c25F290);
+            if (pw<=20){
+                batteryView.setColor(R.color.cFF3B30);
+            }else{
+                batteryView.setColor(R.color.c25F290);
+            }
             helper.setTextColor(R.id.device_type_text, Color.parseColor("#1F96F7"));
         } else {
             //离线

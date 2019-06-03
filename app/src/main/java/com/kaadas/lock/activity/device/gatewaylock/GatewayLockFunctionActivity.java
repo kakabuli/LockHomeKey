@@ -387,8 +387,13 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
         if (ivPower != null) {
             ivPower.setPower(mPower);
             if (eventStr.equals("online")) {
-                ivPower.setColor(R.color.c25F290);
-                ivPower.setBorderColor(R.color.white);
+                if (mPower<=20){
+                    ivPower.setColor(R.color.cFF3B30);
+                    ivPower.setBorderColor(R.color.white);
+                }else{
+                    ivPower.setColor(R.color.c25F290);
+                    ivPower.setBorderColor(R.color.white);
+                }
                 flagEvent=0;
             } else {
                 ivPower.setColor(R.color.cD6D6D6);
