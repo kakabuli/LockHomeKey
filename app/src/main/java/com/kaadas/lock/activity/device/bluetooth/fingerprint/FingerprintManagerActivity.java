@@ -122,7 +122,6 @@ public class FingerprintManagerActivity extends BaseBleActivity<IFingerprintMana
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
         Intent intent = new Intent(this, FingerprintManagerDetailActivity.class);
-        intent.putExtra(KeyConstants.BLE_DEVICE_INFO, bleLockInfo);
         intent.putExtra(KeyConstants.PASSWORD_NICK, list.get(position));
         startActivity(intent);
     }
@@ -152,11 +151,9 @@ public class FingerprintManagerActivity extends BaseBleActivity<IFingerprintMana
                 }
                 if (!mPresenter.isAuthAndNoConnect(bleLockInfo)) {  //指纹特有的   只查看是否鉴权，不连接
                     intent = new Intent(this, FingerprintLinkBluetoothActivity.class);
-                    intent.putExtra(KeyConstants.BLE_DEVICE_INFO, bleLockInfo);
                     startActivity(intent);
                 } else {
                     intent = new Intent(this, FingerprintCollectionActivity.class);
-                    intent.putExtra(KeyConstants.BLE_DEVICE_INFO, bleLockInfo);
                     startActivity(intent);
                 }
                 break;
