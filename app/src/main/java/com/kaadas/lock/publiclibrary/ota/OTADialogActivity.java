@@ -73,7 +73,9 @@ public class OTADialogActivity extends BaseActivity<IOtaView, OtaPresenter<IOtaV
                     return;
                 }
                 //获取版本信息
+
                 mPresenter.checkOtaInfo(sn,version);
+//                mPresenter.checkOtaInfo(sn,"1.01.007");
 
                 MyApplication.getInstance().getBleService().release();
 

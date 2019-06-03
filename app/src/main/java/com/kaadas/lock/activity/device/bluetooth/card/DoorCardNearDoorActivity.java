@@ -91,12 +91,10 @@ public class DoorCardNearDoorActivity extends BaseActivity<IBleView, BlePresente
                 if (bluetoothConnectStatus==bluetoothConnectSuccess){
                     //跳转到添加界面
                     Intent intent = new Intent(this, DoorCardIdentificationActivity.class);
-                    intent.putExtra(KeyConstants.BLE_DEVICE_INFO, bleLockInfo);
                     startActivity(intent);
                     finish();
                 }else if (bluetoothConnectStatus==bluetoothConnectFail){
                     Intent intent = new Intent(this, DoorCardNoConnectOneActivity.class);
-                    intent.putExtra(KeyConstants.BLE_DEVICE_INFO, bleLockInfo);
                     startActivity(intent);
                     finish();
                 }

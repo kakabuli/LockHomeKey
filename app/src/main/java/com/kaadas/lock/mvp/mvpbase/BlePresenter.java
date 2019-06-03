@@ -402,8 +402,9 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
                             System.arraycopy(serverPsw1, 0, encryptKey, 0, serverPsw1.length);
                             System.arraycopy(pwd3, 0, encryptKey, serverPsw1.length, pwd3.length);
                             bleLockInfo.setAuth(true);
+                            LogUtils.e("鉴权成功   鉴权的Key是  " + Rsa.bytesToHexString(encryptKey));
                             bleLockInfo.setAuthKey(encryptKey);
-                            LogUtils.e("鉴权成功  ");
+
                             syncLockTime();
                             //鉴权成功    取消延时断开的任务
                             handler.removeCallbacks(releaseRunnable);
@@ -419,6 +420,7 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
                              * 读取电量  读取SN？  读取
                              */
                             authSuccess();
+                            toDisposable(getPwd3Dispose);
                         }
                     }
                 }, new Consumer<Throwable>() {
