@@ -127,7 +127,6 @@ public class BluetoothSharedDeviceManagementActivity extends BaseActivity<IBluet
         BluetoothSharedDeviceBean.DataBean dataBean = list.get(position);
         Intent intent = new Intent(this, FamilyMemberDetailActivity.class);
         intent.putExtra(KeyConstants.COMMON_FAMILY_MEMBER_DATA, dataBean);
-        intent.putExtra(KeyConstants.BLE_DEVICE_INFO, bleLockInfo);
         startActivity(intent);
     }
 

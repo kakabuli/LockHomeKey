@@ -133,7 +133,6 @@ public class AddDoorCardSuccessActivity extends BaseActivity<IAddFingerSuccessVi
         //保存成功.
         hiddenLoading();
         Intent intent = new Intent(this, DoorCardManagerActivity.class);
-        intent.putExtra(KeyConstants.BLE_DEVICE_INFO, bleLockInfo);
         startActivity(intent);
         finish();
     }

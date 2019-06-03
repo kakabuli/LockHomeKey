@@ -341,6 +341,7 @@ public class MyApplication extends Application {
         }
         //清除内存中缓存的数据
         bleService.release();
+        bleService.removeBleLockInfo();
         homeShowDevices.clear();
         MyApplication.getInstance().initTokenAndUid();
 

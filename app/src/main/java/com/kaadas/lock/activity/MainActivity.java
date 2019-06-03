@@ -237,7 +237,7 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
         //todo ota 处理
         Intent intent = new Intent();
         intent.setClass(MainActivity.this, OTADialogActivity.class);
-        intent.putExtra(KeyConstants.BLE_DEVICE_INFO, bleLockInfo);
+        intent.putExtra(KeyConstants.BLE_DEVICE_INFO, bleLockInfo);  //需要使用
         startActivity(intent);
     }
 

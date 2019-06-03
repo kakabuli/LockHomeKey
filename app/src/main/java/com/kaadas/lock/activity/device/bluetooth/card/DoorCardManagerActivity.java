@@ -129,7 +129,6 @@ public class DoorCardManagerActivity extends BaseBleActivity<ICardManagerView, C
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
         Intent intent = new Intent(this, DoorCardManagerDetailActivity.class);
-        intent.putExtra(KeyConstants.BLE_DEVICE_INFO, bleLockInfo);
         intent.putExtra(KeyConstants.TO_PWD_DETAIL, list.get(position));
         startActivity(intent);
     }
@@ -159,11 +158,9 @@ public class DoorCardManagerActivity extends BaseBleActivity<ICardManagerView, C
                 }
                 if (!mPresenter.isAuthAndNoConnect(bleLockInfo)) {
                     intent = new Intent(this, DoorCardNearDoorActivity.class);
-                    intent.putExtra(KeyConstants.BLE_DEVICE_INFO, bleLockInfo);
                     startActivity(intent);
                 } else {
                     intent = new Intent(this, DoorCardIdentificationActivity.class);
-                    intent.putExtra(KeyConstants.BLE_DEVICE_INFO, bleLockInfo);
                     startActivity(intent);
                 }
                 break;

@@ -168,7 +168,6 @@ public class DoorCardManagerDetailActivity extends BaseBleActivity<IPasswordDeta
         LogUtils.e("删除服务器密码");
         hiddenLoading();
         Intent intent = new Intent(this, DoorCardManagerActivity.class);
-        intent.putExtra(KeyConstants.BLE_DEVICE_INFO, bleLockInfo);
         startActivity(intent);
         finish();
     }

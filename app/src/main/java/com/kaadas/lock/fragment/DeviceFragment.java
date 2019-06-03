@@ -414,20 +414,17 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                         Intent detailIntent = new Intent(getActivity(), BluetoothLockFunctionActivity.class);
                         String model = bleLockInfo.getServerLockInfo().getModel();
                         detailIntent.putExtra(KeyConstants.DEVICE_TYPE, model);
-                        detailIntent.putExtra(KeyConstants.BLE_DEVICE_INFO, bleLockInfo);
                         startActivityForResult(detailIntent, KeyConstants.GET_BLE_POWER);
                     } else {
                         Intent detailIntent = new Intent(getActivity(), OldBluetoothLockDetailActivity.class);
                         String model = bleLockInfo.getServerLockInfo().getModel();
                         detailIntent.putExtra(KeyConstants.DEVICE_TYPE, model);
-                        detailIntent.putExtra(KeyConstants.BLE_DEVICE_INFO, bleLockInfo);
                         startActivityForResult(detailIntent, KeyConstants.GET_BLE_POWER);
                     }
                 } else {
                     Intent impowerIntent = new Intent(getActivity(), BluetoothLockAuthorizationActivity.class);
                     String model = bleLockInfo.getServerLockInfo().getModel();
                     impowerIntent.putExtra(KeyConstants.DEVICE_TYPE, model);
-                    impowerIntent.putExtra(KeyConstants.BLE_DEVICE_INFO, bleLockInfo);
                     startActivityForResult(impowerIntent, KeyConstants.GET_BLE_POWER);
                 }
                 break;
