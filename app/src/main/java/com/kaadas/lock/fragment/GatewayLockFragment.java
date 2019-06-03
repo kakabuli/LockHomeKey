@@ -705,6 +705,7 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
 
     @Override
     public void openLockThrowable(Throwable throwable) {
+        stopOpenLockAnimator();
         isOpening = false;
         if (!TextUtils.isEmpty(deviceId)){
             SPUtils.remove(KeyConstants.SAVA_LOCK_PWD + deviceId);
@@ -724,8 +725,6 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
     AnimationsContainer.FramesSequenceAnimation openLockSmall;
     AnimationsContainer.FramesSequenceAnimation closeLock;
     public void openLockAnimator() {
-
-
         LogUtils.d("davi 开始新1 " + System.currentTimeMillis());
         ivExternalBig.setVisibility(View.VISIBLE);
 //        ivExternalBig.setImageResource(R.drawable.open_lock_big);
