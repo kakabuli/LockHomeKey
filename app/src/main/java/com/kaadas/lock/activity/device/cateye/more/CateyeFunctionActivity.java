@@ -257,8 +257,14 @@ public class CateyeFunctionActivity extends BaseActivity<ICatEyeFunctionView, Ca
             ivPower.setPower(power);
             iv_number.setText(power+"%");
             if (eventStr.equals("online")) {
-                ivPower.setColor(R.color.c25F290);
-                ivPower.setBorderColor(R.color.white);
+                if (power<=20){
+                    ivPower.setColor(R.color.cFF3B30);
+                    ivPower.setBorderColor(R.color.white);
+                }else{
+                    ivPower.setColor(R.color.c25F290);
+                    ivPower.setBorderColor(R.color.white);
+                }
+
             } else {
                 ivPower.setColor(R.color.cD6D6D6);
                 ivPower.setBorderColor(R.color.c949494);

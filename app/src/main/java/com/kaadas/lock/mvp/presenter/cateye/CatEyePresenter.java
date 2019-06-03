@@ -167,12 +167,13 @@ public class CatEyePresenter<T> extends BasePresenter<ICatEyeView> {
                                 Runnable reconncetRunnable = new Runnable() {
                                     @Override
                                     public void run() {
-                                        mViewRef.get().catEyeEventSuccess();
-                                        LogUtils.e("访问数据猫眼信息");
+                                        if (mViewRef!=null&&mViewRef.get()!=null){
+                                            mViewRef.get().catEyeEventSuccess();
+                                            LogUtils.e("访问数据猫眼信息");
+                                        }
                                     }
                                 };
-                                mHandler.postDelayed(reconncetRunnable, 3000);
-
+                                mHandler.postDelayed(reconncetRunnable, 2000);
                             }
                         }
                     }

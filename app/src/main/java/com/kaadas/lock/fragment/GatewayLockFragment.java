@@ -3,6 +3,7 @@ package com.kaadas.lock.fragment;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -32,6 +33,7 @@ import com.kaadas.lock.publiclibrary.bean.GatewayInfo;
 import com.kaadas.lock.publiclibrary.bean.GwLockInfo;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.SelectOpenLockResultBean;
 import com.kaadas.lock.utils.AlertDialogUtil;
+import com.kaadas.lock.utils.AnimationsContainer;
 import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
@@ -92,6 +94,7 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
     private boolean isOpening = false;
     private boolean isClosing = false;
     private int statusFlag=0;
+    private Handler handler = new Handler();
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -669,25 +672,40 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
 
     @Override
     public void openLockSuccess() {
-        isOpening = false;
-        isClosing = true;
-        LogUtils.e("当前状态是   isOpening    " + isOpening + "   isClosing   " + isClosing);
-        changeOpenLockStatus(7);
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                stopOpenLockAnimator();
+                isOpening = false;
+                isClosing = true;
+                LogUtils.e("当前状态是   isOpening    " + isOpening + "   isClosing   " + isClosing);
+                changeOpenLockStatus(7);
       /*  if (!TextUtils.isEmpty(gatewayId) && !TextUtils.isEmpty(deviceId)) {
             mPresenter.openGatewayLockRecord(gatewayId, deviceId, MyApplication.getInstance().getUid(), 1, 3);
             mPresenter.getGatewayLockOpenRecord(MyApplication.getInstance().getUid(), gatewayId, deviceId);//开锁次数
         }*/
+            }
+        },3000);
+
     }
 
     @Override
     public void openLockFailed() {
-        isOpening = false;
-        changeOpenLockStatus(5);
-        ToastUtil.getInstance().showShort(getString(R.string.open_lock_fail));
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                stopOpenLockAnimator();
+                isOpening = false;
+                changeOpenLockStatus(5);
+                ToastUtil.getInstance().showShort(getString(R.string.open_lock_fail));
+            }
+        },3000);
+
     }
 
     @Override
     public void openLockThrowable(Throwable throwable) {
+        stopOpenLockAnimator();
         isOpening = false;
         if (!TextUtils.isEmpty(deviceId)){
             SPUtils.remove(KeyConstants.SAVA_LOCK_PWD + deviceId);
@@ -699,13 +717,110 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
     @Override
     public void startOpenLock() {
         isOpening = true;
-        changeOpenLockStatus(6);
+        openLockAnimator();
+//        changeOpenLockStatus(6);
+    }
+    AnimationsContainer.FramesSequenceAnimation openLockBig;
+    AnimationsContainer.FramesSequenceAnimation openLockMiddle;
+    AnimationsContainer.FramesSequenceAnimation openLockSmall;
+    AnimationsContainer.FramesSequenceAnimation closeLock;
+    public void openLockAnimator() {
+        LogUtils.d("davi 开始新1 " + System.currentTimeMillis());
+        ivExternalBig.setVisibility(View.VISIBLE);
+//        ivExternalBig.setImageResource(R.drawable.open_lock_big);
+        //优化后的帧动画
+        openLockBig = AnimationsContainer.getInstance(R.array.open_lock_big, 26).createProgressDialogAnim(ivExternalBig);
+        ivExternalMiddle.setVisibility(View.VISIBLE);
+//        ivExternalMiddle.setImageResource(R.drawable.open_lock_middle);
+        openLockMiddle = AnimationsContainer.getInstance(R.array.open_lock_middle, 26).createProgressDialogAnim(ivExternalMiddle);
+        ivExternalSmall.setVisibility(View.GONE);
+//        ivExternalSmall.setImageResource(R.mipmap.bluetooth_open_lock_small_icon);
+        ivInnerMiddle.setVisibility(View.VISIBLE);
+//        ivInnerMiddle.setImageResource(R.drawable.open_lock_small);
+        openLockSmall = AnimationsContainer.getInstance(R.array.open_lock_small, 26).createProgressDialogAnim(ivInnerMiddle);
+        ivInnerSmall.setVisibility(View.GONE);
+//                ivInnerSmall.setImageResource();
+        tvInner.setVisibility(View.GONE);
+//                tvInner.setText();
+//                tvInner.setTextColor();
+        tvExternal.setVisibility(View.VISIBLE);
+        tvExternal.setTextColor(getResources().getColor(R.color.cC6F5FF));
+        tvExternal.setText(getString(R.string.is_lock));
+
+
+        LogUtils.d("davi 开始新2 " + System.currentTimeMillis());
+        if (openLockBig != null) {
+            openLockBig.start();
+        }
+        if (openLockMiddle != null) {
+            openLockMiddle.start();
+        }
+        if (openLockSmall != null) {
+            openLockSmall.start();
+        }
+        LogUtils.d("davi 开始新3 " + System.currentTimeMillis());
     }
 
+    /**
+     * 停止开锁动画
+     */
+    public void stopOpenLockAnimator() {
+        if (openLockBig != null) {
+            openLockBig.stop();
+        }
+        if (openLockMiddle != null) {
+            openLockMiddle.stop();
+        }
+        if (openLockSmall != null) {
+            openLockSmall.stop();
+        }
+    }
+    /**
+     * 关锁动画
+     */
+    public void closeLockAnimator() {
+        ivExternalBig.setVisibility(View.VISIBLE);
+        ivExternalBig.setImageResource(R.mipmap.bluetooth_lock_close_big_middle_icon  );
+        ivExternalMiddle.setVisibility(View.GONE);
+//        ivExternalMiddle.setImageResource(R.mipmap.);
+        ivExternalSmall.setVisibility(View.GONE);
+//                ivExternalSmall.setImageResource(R.mipmap.bluetooth_open_lock_small_icon);
+        ivInnerMiddle.setVisibility(View.VISIBLE);
+//        ivInnerMiddle.setImageResource(R.drawable.bluetooth_lock_close);
+        closeLock = AnimationsContainer.getInstance(R.array.bluetooth_lock_close, 14).createProgressDialogAnim(ivInnerMiddle);
+        ivInnerSmall.setVisibility(View.VISIBLE);
+        ivInnerSmall.setImageResource(R.mipmap.gate_lock_close_inner_small_icon);
+        tvInner.setVisibility(View.VISIBLE);
+        tvInner.setText(R.string.long_press_open_lock);
+        tvInner.setTextColor(getResources().getColor(R.color.cF7FDFD));
+        tvExternal.setVisibility(View.VISIBLE);
+        tvExternal.setTextColor(getResources().getColor(R.color.cC6F5FF));
+        tvExternal.setText(getString(R.string.bluetooth_close_status));
+        if (closeLock != null) {
+            closeLock.start();
+        }
+    }
+
+    /**
+     * 停止关锁动画
+     */
+    public void stopCloseLockAnimator() {
+        if (closeLock != null) {
+            closeLock.stop();
+        }
+    }
     @Override
     public void lockCloseSuccess() {
-        isClosing = false;
-        changeOpenLockStatus(5);
+        closeLockAnimator();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                stopCloseLockAnimator();
+                isClosing = false;
+                changeOpenLockStatus(5);
+            }
+        },1000);
+
     }
 
     @Override
