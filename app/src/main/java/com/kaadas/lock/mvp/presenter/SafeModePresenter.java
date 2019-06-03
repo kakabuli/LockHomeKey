@@ -10,6 +10,7 @@ import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.Rsa;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -209,9 +210,12 @@ public class SafeModePresenter<T> extends BlePresenter<ISafeModeView> {
                         int codeType = deValue[1] & 0xff;
                         int codeNumber = deValue[2] & 0xff;
                         LogUtils.e("秘钥的帧数是  " + index + " 秘钥类型是  " + codeType + "  秘钥总数是   " + codeNumber);
-                        if (getAllpasswordNumber(type, deValue) > 0) {
+                        int allpasswordNumber = getAllpasswordNumber(type, deValue);
+                        LogUtils.e("秘钥总数是   " + allpasswordNumber);
+                        if (allpasswordNumber > 0) {
                             typeNumber++;
                         }
+
                         if (type == 1) {
                             getNumber(2, isOpen);
                         } else if (type == 2) {
@@ -259,9 +263,9 @@ public class SafeModePresenter<T> extends BlePresenter<ISafeModeView> {
             codeNumber = 100;
         }
         //获取所有有秘钥的密码编号
-        for (int index = 0; index * 8 < codeNumber; index++) {
+        for (int index = 0; index < deValue.length; index++) {
             for (int j = 0; j < 8 && index * 8 + j < codeNumber; j++) {
-                if (((deValue[3 + index] & temp[j])) == temp[j] && index * 8 + j < 9) {
+                if (((deValue[3 + index] & temp[j])) == temp[j] ) {
                     bleNumber.add(index * 8 + j);
                 }
                 if (index * 8 + j >= codeNumber) {  //
@@ -269,6 +273,8 @@ public class SafeModePresenter<T> extends BlePresenter<ISafeModeView> {
                 }
             }
         }
+
+        LogUtils.e("获取的秘钥是   " + Arrays.toString(bleNumber.toArray()));
         return bleNumber.size();
     }
 

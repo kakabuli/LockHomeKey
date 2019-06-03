@@ -124,7 +124,6 @@ public class FingerprintCollectionActivity extends BaseBleActivity<IAddFingerpri
     @Override
     public void onUploadFingerSuccess(int number) {
         Intent intent = new Intent(this, AddFingerprintSuccessActivity.class);
-        intent.putExtra(KeyConstants.BLE_DEVICE_INFO, bleLockInfo);
         intent.putExtra(KeyConstants.USER_NUM, number);
         startActivity(intent);
         finish();

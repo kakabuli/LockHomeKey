@@ -62,6 +62,7 @@ public class BleLockInfo implements Serializable {
         adminMode = -1;
         readBatteryTime = -1;
         supportBackLock = -1;
+        authKey = null;
         lockStatusException = false;
     }
 

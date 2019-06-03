@@ -118,7 +118,6 @@ public class DoorCardIdentificationActivity extends BaseBleActivity<IAddCardEndV
     @Override
     public void onUploadPasswordNickSuccess(String nickName, String number, String Password) {
         Intent intent = new Intent(this, AddDoorCardSuccessActivity.class);
-        intent.putExtra(KeyConstants.BLE_DEVICE_INFO, bleLockInfo);
         intent.putExtra(KeyConstants.USER_NUM, Integer.parseInt(number));
         startActivity(intent);
         finish();

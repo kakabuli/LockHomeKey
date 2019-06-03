@@ -126,7 +126,6 @@ public class BluetoothPasswordManagerActivity extends BaseBleActivity<IPasswordM
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
         Intent intent = new Intent(this, BluetoothPasswordManagerDetailActivity.class);
-        intent.putExtra(KeyConstants.BLE_DEVICE_INFO, bleLockInfo);
         String num = list.get(position).getNum();
         int pwdType=-1;
         if ("00".equals(num)||"01".equals(num)||"02".equals(num)||"03".equals(num)||"09".equals(num)){
@@ -160,7 +159,6 @@ public class BluetoothPasswordManagerActivity extends BaseBleActivity<IPasswordM
                 break;
             case R.id.ll_add_password:
                 intent = new Intent(this, BluetoothUserPasswordAddActivity.class);
-                intent.putExtra(KeyConstants.BLE_DEVICE_INFO, bleLockInfo);
                 startActivity(intent);
                 break;
 

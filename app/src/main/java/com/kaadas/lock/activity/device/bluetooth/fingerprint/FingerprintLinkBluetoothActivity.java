@@ -109,7 +109,6 @@ public class FingerprintLinkBluetoothActivity extends BaseActivity<IAddPringerpr
             LogUtils.e("鉴权成功");
             //跳转到添加界面
             Intent intent = new Intent(this, FingerprintCollectionActivity.class);
-            intent.putExtra(KeyConstants.BLE_DEVICE_INFO, bleLockInfo);
             startActivity(intent);
             finish();
         } else {  //鉴权失败
@@ -156,7 +155,6 @@ public class FingerprintLinkBluetoothActivity extends BaseActivity<IAddPringerpr
      */
     public void toHandView() {
         Intent intent = new Intent(this, FingerprintNoConnectBluetoothOneActivity.class);
-        intent.putExtra(KeyConstants.BLE_DEVICE_INFO, bleLockInfo);
         startActivity(intent);
         finish();
     }
