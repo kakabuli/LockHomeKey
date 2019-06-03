@@ -826,6 +826,7 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
     @Override
     public void lockCloseFailed() {
         isClosing = false;
+        changeOpenLockStatus(5);
     }
 
     @Override
