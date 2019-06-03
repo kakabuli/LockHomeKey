@@ -61,7 +61,7 @@ public class GatewayOpenLockRecordFragment extends BaseFragment<IGatewayLockReco
     private BluetoothRecordAdapter openLockRecordAdapter;
     private int page=1;
     private int lastPage=0;
-
+    private List<SelectOpenLockResultBean.DataBean> openLockRecordList=new ArrayList<>();
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -83,6 +83,9 @@ public class GatewayOpenLockRecordFragment extends BaseFragment<IGatewayLockReco
                     lastPage=0;
                     if (mOpenLockList!=null){
                         mOpenLockList.clear();
+                    }
+                    if (openLockRecordList!=null){
+                        openLockRecordList.clear();
                     }
                     mPresenter.openGatewayLockRecord(gatewayId,deviceId,MyApplication.getInstance().getUid(),1,20);
                     refreshLayout.finishRefresh(5*1000);
@@ -197,7 +200,8 @@ public class GatewayOpenLockRecordFragment extends BaseFragment<IGatewayLockReco
           }else{
             lastPage=page+1;
           }
-        groupData(mOpenLockRecordList);
+        openLockRecordList.addAll(mOpenLockRecordList);
+        groupData(openLockRecordList);
         if (openLockRecordAdapter != null) {
             openLockRecordAdapter.notifyDataSetChanged();
         }
@@ -230,6 +234,9 @@ public class GatewayOpenLockRecordFragment extends BaseFragment<IGatewayLockReco
     }
 
     private void groupData(List<SelectOpenLockResultBean.DataBean> mOpenLockRecordList) {
+        if (mOpenLockList!=null){
+            mOpenLockList.clear();
+        }
         long lastDayTime = 0;
         for (int i = 0; i < mOpenLockRecordList.size(); i++) {
             SelectOpenLockResultBean.DataBean dataBean = mOpenLockRecordList.get(i);
