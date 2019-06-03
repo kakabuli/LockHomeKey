@@ -58,7 +58,9 @@
             <org.linphone.mediastream.video.display.GL2JNIView
                 android:id="@+id/video_v_surfaceview"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true" />
 
 
             <ImageView
@@ -110,6 +112,39 @@
                 android:layout_marginBottom="20dp"
                 android:background="@mipmap/video_hang_up"
                 android:visibility="gone" />
+
+
+            <LinearLayout
+                android:id="@+id/ll_lossrate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_toEndOf="@+id/video_preview"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:visibility="visible">
+
+                <TextView
+                    android:id="@+id/tv_videolossrate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textColor="@color/green"></TextView>
+
+                <TextView
+                    android:id="@+id/tv_audiolossrate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textColor="@color/green"></TextView>
+
+                <TextView
+                    android:id="@+id/tv_framerate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textColor="@color/green"></TextView>
+            </LinearLayout>
 
         </RelativeLayout>
 

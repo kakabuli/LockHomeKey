@@ -16,14 +16,16 @@
         <RelativeLayout
             android:id="@+id/rl_language_setting"
             android:layout_width="wrap_content"
-            android:layout_height="@dimen/dp_75">
+            android:layout_height="@dimen/dp_75"
+            android:visibility="gone"
+            >
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="@dimen/dp_16"
-                android:text="语言设置"
+                android:text="@string/language_setting"
                 android:textColor="#333333"
                 android:textSize="@dimen/sp_15" />
 
