@@ -1026,4 +1026,6 @@
     <string name="update_ble_version_failed">上传模块信息失败，请稍后再试</string>
     <string name="get_lock_pwd_list_fail">获取密码列表失败</string>
     <string name="add_network_cateye">配网中,请稍等....</string>
+    <string name="call_cateye_timeout">唤醒猫眼超时</string>
+    <string name="call_cateye_working">设备正忙</string>
 </resources>

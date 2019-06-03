@@ -5,9 +5,11 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -53,6 +55,8 @@ import com.kaadas.lock.utils.ftp.GeTui;
 import com.yarolegovich.discretescrollview.DiscreteScrollView;
 import com.yarolegovich.discretescrollview.transform.ScaleTransformer;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
@@ -287,6 +291,7 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
         if(timer!=null){
             timer.cancel();
         }
+        fileHander.removeCallbacksAndMessages(null);
 
     }
 
@@ -539,8 +544,8 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
             case R.id.cb_screen_shot: //截屏
             case R.id.cb_screen_shot2: //截屏
                 LogUtils.e(Tag,"截屏  " + isChecked);
-                cbScreenShot.setChecked(isChecked);
-                cbScreenShot2.setChecked(isChecked);
+//                cbScreenShot.setChecked(isChecked);
+//                cbScreenShot2.setChecked(isChecked);
                 mPresenter.toCapturePicture(cateEyeInfo.getServerInfo().getDeviceId());
                 break;
             case R.id.cb_screen_record: //录屏
@@ -576,9 +581,20 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
         }
     }
 
+     Handler callFaiedHandler=new Handler(){
+         @Override
+         public void handleMessage(Message msg) {
+             super.handleMessage(msg);
+         }
+     };
     private void callFailed() {
-        video_start_play.setVisibility(View.VISIBLE);
-        video_connecting_tv.setVisibility(View.GONE);
+        callFaiedHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                video_start_play.setVisibility(View.VISIBLE);
+                video_connecting_tv.setVisibility(View.GONE);
+            }
+        });
     }
 
     @Override
@@ -619,6 +635,39 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
         Toast.makeText(VideoVActivity.this,getString(R.string.screen_success),Toast.LENGTH_SHORT).show();
     }
 
+    Handler fileHander=new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+        }
+    };
+    @Override
+    public void screenShotSuccessPath(String filePath) {
+        if(!TextUtils.isEmpty(filePath)){
+            fileHander.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    File file=new File(filePath);
+                    if(file.exists()){
+                        Log.e(GeTui.VideoLog,"imagePath:"+file.getAbsolutePath());
+                        try {
+                            String path =file.getAbsolutePath();
+                            String name=path.substring(path.lastIndexOf("/")+1,path.length());
+                            MediaStore.Images.Media.insertImage(getContentResolver(), path, name, name);//插入图库
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+                        Uri uri = Uri.fromFile(file);
+                        intent.setData(uri);
+                        sendBroadcast(intent);
+                        //这个广播的目的就是更新图库，发了这个广播进入相册就可以找到你保存的图片了！，记得要传你更新的file哦
+                    }
+                }
+            },1000);
+        }
+    }
+
     @Override
     public void screenShotFailed(Exception e) {
        // ToastUtil.getInstance().showShort(R.string.screen_failed);
@@ -642,6 +691,19 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
         ToastUtil.getInstance().showShort(R.string.call_failed);
         callFailed();
 
+    }
+
+    @Override
+    public void wakeupFailedStateCode(String code) {
+
+        if(!TextUtils.isEmpty(code) && code.equals("407")){
+            Toast.makeText(VideoVActivity.this,getString(R.string.call_cateye_timeout),Toast.LENGTH_SHORT).show();
+        }else if(!TextUtils.isEmpty(code) && code.equals("409")){
+            Toast.makeText(VideoVActivity.this,getString(R.string.call_cateye_working),Toast.LENGTH_SHORT).show();
+        }else {
+            Toast.makeText(VideoVActivity.this,getString(R.string.call_failed)+":"+code,Toast.LENGTH_SHORT).show();
+        }
+        callFailed();
     }
 
     @Override
