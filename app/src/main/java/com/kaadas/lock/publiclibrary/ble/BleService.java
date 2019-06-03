@@ -279,12 +279,12 @@ public class BleService extends Service {
         return needUpdateBleVersionSubject;
     }
 
-    public void openHighMode(boolean isOpen) {
-        if (bluetoothGatt != null) {
+    public void openHighMode(BluetoothGatt gatt, boolean isOpen) {
+        if (gatt != null) {
             if (isOpen) {
-                bluetoothGatt.requestConnectionPriority(BluetoothGatt.CONNECTION_PRIORITY_HIGH);  //开启高功耗
+                gatt.requestConnectionPriority(BluetoothGatt.CONNECTION_PRIORITY_HIGH);  //开启高功耗
             } else {
-                bluetoothGatt.requestConnectionPriority(BluetoothGatt.CONNECTION_PRIORITY_LOW_POWER);  //开启低功耗
+                gatt.requestConnectionPriority(BluetoothGatt.CONNECTION_PRIORITY_LOW_POWER);  //开启低功耗
             }
         }
 
@@ -768,21 +768,37 @@ public class BleService extends Service {
             }
         }
 
-
         LogUtils.e("模块版本是   " + type);
         bleVersion = type;
         isConnected = true;
-        connectStateSubject.onNext(new BleStateBean(true, gatt.getDevice(), type));
-        LogUtils.e("连接成功  mac  " + gatt.getDevice().getAddress() + "  name  " + gatt.getDevice().getName());
-        // 连接成功时需要读取大量数据
-        openHighMode(true);
-        connectSubject.onNext(true);  //连接成功  通知上层
-        lastReceiveDataTime = System.currentTimeMillis();
         ////////////////////////////////       检查版本是否需要更新        /////////////////////////////
-        String sVersion = bleLockInfo.getServerLockInfo().getBleVersion();
-        int iVersion = 0;
-        if (!TextUtils.isEmpty(sVersion)) {  //蓝牙型号为空
-            iVersion = Integer.parseInt(sVersion);
+        if (bleLockInfo != null) {
+            String sVersion = bleLockInfo.getServerLockInfo().getBleVersion();
+            int iVersion = 0;
+            if (!TextUtils.isEmpty(sVersion)) {  //蓝牙型号为空
+                iVersion = Integer.parseInt(sVersion);
+            }
+
+            //如果蓝牙版本是2或者3   但是需要使用的特征值为空   直接断开连接
+            if ((iVersion == 2 || iVersion == 3) && (systemIDChar == null || batteryChar == null || snChar == null ||
+                    modeChar == null || lockTypeChar == null || hardwareVersionChar == null
+                    || bleVersionChar == null || bleVersionChar == null
+            )) {
+                release();
+                return;
+            }
+            //如果服务器的版本大于读取到的版本号  而且当前版本号为1   断开连接
+            if (iVersion > bleVersion && bleVersion == 1) {
+                release();
+                return;
+            }
+
+            if (bleVersion > iVersion) {
+                //获取到的版本大于服务器版本，更新服务器的版本号
+                LogUtils.e("发现新的版本  新的版本是 " + bleVersion + "   就的版本是 " + iVersion);
+                NewVersionBean newVersionBean = new NewVersionBean(bleLockInfo.getServerLockInfo().getLockName(), bleVersion + "");
+                needUpdateBleVersionSubject.onNext(newVersionBean);
+            }
         }
 
         //如果写入数据的特征值和通知的特征值为空  那么断开连接
@@ -791,26 +807,12 @@ public class BleService extends Service {
             return;
         }
 
-        //如果蓝牙版本是2或者3   但是需要使用的特征值为空   直接断开连接
-        if ((iVersion == 2 || iVersion == 3) && (systemIDChar == null || batteryChar == null || snChar == null ||
-                modeChar == null || lockTypeChar == null || hardwareVersionChar == null
-                || bleVersionChar == null || bleVersionChar == null
-        )) {
-            release();
-            return;
-        }
-        //如果服务器的版本大于读取到的版本号  而且当前版本号为1   断开连接
-        if (iVersion > bleVersion && bleVersion == 1) {
-            release();
-            return;
-        }
-
-        if (bleVersion > iVersion) {
-            //获取到的版本大于服务器版本，更新服务器的版本号
-            LogUtils.e("发现新的版本  新的版本是 " + bleVersion + "   就的版本是 " + iVersion);
-            NewVersionBean newVersionBean = new NewVersionBean(bleLockInfo.getServerLockInfo().getLockName(), bleVersion + "");
-            needUpdateBleVersionSubject.onNext(newVersionBean);
-        }
+        connectStateSubject.onNext(new BleStateBean(true, gatt.getDevice(), type));
+        LogUtils.e("连接成功  mac  " + gatt.getDevice().getAddress() + "  name  " + gatt.getDevice().getName());
+        // 连接成功时需要读取大量数据
+        openHighMode(gatt, true);
+        connectSubject.onNext(true);  //连接成功  通知上层
+        lastReceiveDataTime = System.currentTimeMillis();
         ////////////////////////////////       检查服务器版本和当前版本是否一致  如果不一致        /////////////////////////////
         if (this.bleVersion != 1) {
             LogUtils.e("发送心跳  " + "  版本号为  " + this.bleVersion);
@@ -952,6 +954,7 @@ public class BleService extends Service {
             bleLockInfo.setConnected(false);
         }
         this.bleLockInfo = currentBleDevice;
+        LogUtils.e("设置设备信息   " + bleLockInfo);
     }
 
     public void removeBleLockInfo() {

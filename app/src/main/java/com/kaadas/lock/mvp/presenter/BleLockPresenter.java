@@ -407,6 +407,7 @@ public class BleLockPresenter<T> extends MyOpenLockRecordPresenter<IBleLockView>
      * 监听开锁上报
      */
     public void listenerOpenLockUp() {
+        LogUtils.e("监听开锁上报   ");
         toDisposable(listenerOpenLockUpDisposable);
         listenerOpenLockUpDisposable = bleService.listeneDataChange()
                 .filter(new Predicate<BleDataBean>() {
@@ -420,6 +421,7 @@ public class BleLockPresenter<T> extends MyOpenLockRecordPresenter<IBleLockView>
                 .subscribe(new Consumer<BleDataBean>() {
                     @Override
                     public void accept(BleDataBean bleDataBean) throws Exception {
+                        LogUtils.e("监听0x05上报   ");
                         if (MyApplication.getInstance().getBleService().getBleLockInfo().getAuthKey() == null || MyApplication.getInstance().getBleService().getBleLockInfo().getAuthKey().length == 0) {
                             LogUtils.e("收到报警记录，但是鉴权帧为空");
                             return;
@@ -433,6 +435,7 @@ public class BleLockPresenter<T> extends MyOpenLockRecordPresenter<IBleLockView>
                             if (value2 == 1) {
 
                             } else if (value2 == 2) {   //开锁
+                                LogUtils.e("收到开锁上报");
                                 if (mViewRef.get() != null) {
                                     mViewRef.get().openLockSuccess();
                                 }

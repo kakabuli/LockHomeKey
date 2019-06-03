@@ -461,6 +461,8 @@ public class DeviceMorePresenter extends BlePresenter<IDeviceMoreView> {
 
     public void checkOtaInfo(String SN, String version) {
         //请求成功
+        //todo 测试版本号写死
+//        otaDisposable = XiaokaiNewServiceImp.getOtaInfo(1, SN, "1.01.007")
         otaDisposable = XiaokaiNewServiceImp.getOtaInfo(1, SN, version)
                 .subscribe(new Consumer<OTAResult>() {
                     @Override
