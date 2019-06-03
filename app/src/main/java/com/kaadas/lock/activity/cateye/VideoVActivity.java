@@ -26,6 +26,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
@@ -570,12 +571,14 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
 
     @Override
     public void screenShotSuccess() {
-        ToastUtil.getInstance().showShort(R.string.screen_success);
+       // ToastUtil.getInstance().showShort(R.string.screen_success);
+        Toast.makeText(VideoVActivity.this,getString(R.string.screen_success),Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void screenShotFailed(Exception e) {
-        ToastUtil.getInstance().showShort(R.string.screen_failed);
+       // ToastUtil.getInstance().showShort(R.string.screen_failed);
+        Toast.makeText(VideoVActivity.this,getString(R.string.screen_failed),Toast.LENGTH_SHORT).show();
     }
 
     @Override
