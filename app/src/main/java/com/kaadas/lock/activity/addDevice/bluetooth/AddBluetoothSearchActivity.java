@@ -1,11 +1,13 @@
 package com.kaadas.lock.activity.addDevice.bluetooth;
 
+import android.Manifest;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.graphics.Path;
 import android.graphics.RectF;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -31,6 +33,7 @@ import com.kaadas.lock.mvp.view.deviceaddview.ISearchDeviceView;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.util.HttpUtils;
 import com.kaadas.lock.utils.AlertDialogUtil;
+import com.kaadas.lock.utils.GpsUtil;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.NetUtil;
@@ -72,6 +75,18 @@ public class AddBluetoothSearchActivity extends BaseActivity<ISearchDeviceView, 
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.device_bluetooth_search);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            int i=checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION);
+            if (i==-1){
+                if (!shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_COARSE_LOCATION)){
+                    ToastUtil.getInstance().showShort(getString(R.string.aler_no_entry_location));
+                    finish();
+                    return;
+                }
+            }
+        }
+
         ButterKnife.bind(this);
         showRecycler(false);
         initView();
@@ -79,9 +94,14 @@ public class AddBluetoothSearchActivity extends BaseActivity<ISearchDeviceView, 
     }
 
     private void initData() {
-        initAnimation();
-        tvIsSearching.setVisibility(View.VISIBLE);
-        mPresenter.searchDevices();
+        //获取数据
+        if (GpsUtil.isOPen(this)){
+            initAnimation();
+            tvIsSearching.setVisibility(View.VISIBLE);
+            mPresenter.searchDevices();
+        }else {
+            ToastUtil.getInstance().showLong(R.string.check_phone_not_open_gps_please_open);
+        }
     }
 
     @Override
@@ -168,9 +188,14 @@ public class AddBluetoothSearchActivity extends BaseActivity<ISearchDeviceView, 
                 startActivity(helpIntent);
                 break;
             case R.id.research:
-                initAnimation();
-                tvIsSearching.setVisibility(View.VISIBLE);
-                mPresenter.searchDevices();
+                //获取数据
+                if (GpsUtil.isOPen(this)){
+                    initAnimation();
+                    tvIsSearching.setVisibility(View.VISIBLE);
+                    mPresenter.searchDevices();
+                }else {
+                    ToastUtil.getInstance().showLong(R.string.check_phone_not_open_gps_please_open);
+                }
                 break;
         }
     }
@@ -185,7 +210,6 @@ public class AddBluetoothSearchActivity extends BaseActivity<ISearchDeviceView, 
         } else {
             ToastUtil.getInstance().showShort(R.string.noNet);
         }
-
     }
 
     @Override

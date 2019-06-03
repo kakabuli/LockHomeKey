@@ -451,7 +451,7 @@ public class BleService extends Service {
                     LogUtils.e("读取到SN  " + new String(characteristic.getValue()));
                     readSystemIDSubject.onNext(new ReadInfoBean(ReadInfoBean.TYPE_SN, new String(characteristic.getValue())));
                 case BLeConstants.UUID_SYSTEMID_CHAR: //SystemId:
-                    LogUtils.e("读取到systemId  " + new String(characteristic.getValue()));
+                    LogUtils.e("读取到systemId  " + Rsa.bytesToHexString(characteristic.getValue()));
                     readSystemIDSubject.onNext(new ReadInfoBean(ReadInfoBean.TYPE_SYSTEMID, characteristic.getValue()));
                     break;
                 case BLeConstants.UUID_BATTERY_CHAR: //电量 0
