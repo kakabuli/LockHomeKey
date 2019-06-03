@@ -43,7 +43,7 @@ import com.kaadas.lock.utils.greenDao.db.PirDefaultDao;
 /**
  * {@inheritDoc}
  * 
- * @see AbstractDaoSession
+ * @see org.greenrobot.greendao.AbstractDaoSession
  */
 public class DaoSession extends AbstractDaoSession {
 

@@ -1,6 +1,7 @@
 package com.kaadas.lock.adapter;
 
 import android.support.annotation.Nullable;
+import android.view.View;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
@@ -10,6 +11,8 @@ import com.kaadas.lock.publiclibrary.bean.ForeverPassword;
 import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.LogUtils;
 
+
+import org.linphone.mediastream.Log;
 
 import java.util.Arrays;
 import java.util.List;
@@ -38,6 +41,14 @@ public class BluetoothPasswordAdapter extends BaseQuickAdapter<ForeverPassword, 
 
     @Override
     protected void convert(BaseViewHolder helper, ForeverPassword bean) {
+        int itemCount = getItemCount();
+        int pos=helper.getPosition();
+        LogUtils.d("davi itemCount "+itemCount+"----------pos "+pos);
+        if (pos==itemCount-1){
+           View view= helper.getView(R.id.my_view);
+            view.setVisibility(View.GONE);
+        }
+
         if (bean.getItems() != null) {
             LogUtils.e("周计划是     " + Arrays.toString(bean.getItems().toArray()));
         }
