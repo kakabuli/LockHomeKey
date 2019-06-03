@@ -44,4 +44,7 @@
     <color name="c949494">#949494</color>
     <color name="color_trans">#00000000</color>
     <color name="cEAE9E9">#EAE9E9</color>
+
+    <!-- 深绿色 -->
+    <color name="green">#49B21D</color>
 </resources>

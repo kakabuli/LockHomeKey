@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -53,6 +55,8 @@ import com.yarolegovich.discretescrollview.transform.ScaleTransformer;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import butterknife.ButterKnife;
 
@@ -104,7 +108,20 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
     private boolean isLand; //是否横屏
     private ImageView hangup2;
     private String videoTime;
-
+    TextView mTvLossratev;
+    TextView mTvLossratea;
+    private TextView mTvframerate;
+    Task task = null;
+    private Handler mHandler2 = new Handler() {
+        public void handleMessage(Message msg) {
+            if (msg.what == 2) {
+                mTvLossratev.setText("video loss rate " + LinphoneHelper.getStatus(1) + "(" + LinphoneHelper.getTotalLossRate(1) + ")");
+                mTvLossratea.setText("audio loss rate " + LinphoneHelper.getStatus(0) + "(" + LinphoneHelper.getTotalLossRate(0) + ")");
+                mTvframerate.setText("frame rate " + LinphoneHelper.getReceivedFramerate());
+            }
+        }
+    };
+    Timer timer = new Timer();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         LogUtils.e(Tag, "创建");
@@ -124,6 +141,25 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
         initView();
         requestPermissions();
         mPresenter.init(this);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        task = new Task();
+        LogUtils.d("davi task " + task);
+        timer.schedule(task, 0, 1000);
+    }
+
+    class Task extends TimerTask {
+
+        @Override
+        public void run() {
+            // 需要做的事:发送消息
+            Message message = new Message();
+            message.what = 2;
+            mHandler2.sendMessage(message);
+        }
     }
 
     @Override
@@ -200,6 +236,10 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
         rl_title_bar = findViewById(R.id.rl_title_bar);
 
         video_v_go.setVisibility(View.GONE);
+
+        mTvLossratev = (TextView) findViewById(R.id.tv_videolossrate);
+        mTvLossratea = (TextView) findViewById(R.id.tv_audiolossrate);
+        mTvframerate = (TextView) findViewById(R.id.tv_framerate);
     }
 
 
@@ -243,6 +283,10 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
         LinphoneHelper.onDestroy();
         super.onDestroy();
         LogUtils.e(Tag,"界面被销毁");
+        mHandler2.removeCallbacksAndMessages(null);
+        if(timer!=null){
+            timer.cancel();
+        }
 
     }
 
