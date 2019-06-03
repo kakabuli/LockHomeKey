@@ -38,7 +38,7 @@ public class GatewayAdapter extends BaseQuickAdapter<HomeShowBean, BaseViewHolde
         TextView powerView=helper.getView(R.id.device_power_text);
         String deviceStatus="";
         int power=0;
-
+        int realPw=0;
         //猫眼
         if (HomeShowBean.TYPE_CAT_EYE==deviceType){
             ivDeviceType.setImageResource(R.mipmap.cat_eye_icon);
@@ -50,6 +50,7 @@ public class GatewayAdapter extends BaseQuickAdapter<HomeShowBean, BaseViewHolde
                 deviceStatus="offline";
             }
             power=cateEyeInfo.getPower();
+            realPw=power;
             batteryView.setPower(power);
             powerView.setText(power+"%");
             if (!TextUtils.isEmpty(cateEyeInfo.getServerInfo().getDeviceId())){
@@ -69,6 +70,7 @@ public class GatewayAdapter extends BaseQuickAdapter<HomeShowBean, BaseViewHolde
             }
             power=gwLockInfo.getPower();
             int realPower=power/2;
+            realPw=realPower;
             batteryView.setPower(realPower);
             powerView.setText(realPower+"%");
             if (!TextUtils.isEmpty(gwLockInfo.getServerInfo().getNickName())){
@@ -82,7 +84,12 @@ public class GatewayAdapter extends BaseQuickAdapter<HomeShowBean, BaseViewHolde
             helper.setImageResource(R.id.device_type_image, R.mipmap.wifi_connect);
             tvDeviceStatus.setText(R.string.online);
             tvDeviceStatus.setTextColor(mContext.getResources().getColor(R.color.c1F96F7));
-            batteryView.setColor(R.color.c25F290);
+            if (realPw<=20){
+                batteryView.setColor(R.color.cFF3B30);
+            }else{
+                batteryView.setColor(R.color.c25F290);
+            }
+
 
         } else {
             helper.setImageResource(R.id.device_type_image, R.mipmap.wifi_disconnect);

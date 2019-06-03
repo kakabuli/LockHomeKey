@@ -32,6 +32,7 @@ import com.kaadas.lock.publiclibrary.ble.BleProtocolFailedException;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.util.HttpUtils;
 import com.kaadas.lock.utils.AlertDialogUtil;
+import com.kaadas.lock.utils.BatteryView;
 import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.StringUtil;
@@ -59,7 +60,7 @@ public class BluetoothLockAuthorizationActivity extends BaseBleActivity<IOldBlue
     @BindView(R.id.tv_open_clock)
     TextView tvOpenClock;
     @BindView(R.id.iv_power)
-    ImageView ivPower;
+    BatteryView ivPower;
     @BindView(R.id.tv_power)
     TextView tvPower;
     @BindView(R.id.tv_date)
@@ -555,10 +556,24 @@ public class BluetoothLockAuthorizationActivity extends BaseBleActivity<IOldBlue
         if (power > 100) {
             power = 100;
         }
+        if (power<0){
+            power=0;
+        }
         String lockPower = power + "%";
-        int imgResId = -1;
         tvPower.setText(lockPower);
-        if (power == 0) {
+        if (ivPower != null) {
+            ivPower.setPower(power);
+            if (power<=20){
+                ivPower.setColor(R.color.cFF3B30);
+                ivPower.setBorderColor(R.color.white);
+            }else{
+                ivPower.setColor(R.color.c25F290);
+                ivPower.setBorderColor(R.color.white);
+            }
+        }
+
+
+      /*  if (power == 0) {
             imgResId = R.mipmap.horization_power_0;
         } else if (power <= 5) {
             imgResId = R.mipmap.horization_power_1;
@@ -574,7 +589,7 @@ public class BluetoothLockAuthorizationActivity extends BaseBleActivity<IOldBlue
         }
         if (imgResId != -1) {
             ivPower.setImageResource(imgResId);
-        }
+        }*/
         //todo  读取电量时间
         long readDeviceInfoTime = System.currentTimeMillis();
         if (readDeviceInfoTime != -1) {

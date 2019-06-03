@@ -36,6 +36,7 @@ import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.result.GetPasswordResult;
 import com.kaadas.lock.publiclibrary.http.util.HttpUtils;
 import com.kaadas.lock.utils.AlertDialogUtil;
+import com.kaadas.lock.utils.BatteryView;
 import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.StringUtil;
@@ -61,7 +62,7 @@ public class BluetoothLockFunctionActivity extends BaseBleActivity<IDeviceDetail
     @BindView(R.id.tv_type)
     TextView tvType;
     @BindView(R.id.iv_power)
-    ImageView ivPower;//电量图片
+    BatteryView ivPower;//电量图片
     @BindView(R.id.tv_power)
     TextView tvPower;//电量大小
     @BindView(R.id.tv_date)
@@ -451,10 +452,24 @@ public class BluetoothLockFunctionActivity extends BaseBleActivity<IDeviceDetail
         if (power > 100) {
             power = 100;
         }
+        if (power < 0) {
+            power = 0;
+        }
         String lockPower = power + "%";
-        int imgResId = -1;
         tvPower.setText(lockPower);
-        if (power == 0) {
+        //电量：80%
+        if (ivPower != null) {
+            ivPower.setPower(power);
+            if (power<=20){
+                    ivPower.setColor(R.color.cFF3B30);
+                    ivPower.setBorderColor(R.color.white);
+                }else{
+                    ivPower.setColor(R.color.c25F290);
+                    ivPower.setBorderColor(R.color.white);
+                }
+        }
+
+        /*if (power == 0) {
             imgResId = R.mipmap.horization_power_0;
         } else if (power <= 5) {
             imgResId = R.mipmap.horization_power_1;
@@ -470,7 +485,7 @@ public class BluetoothLockFunctionActivity extends BaseBleActivity<IDeviceDetail
         }
         if (imgResId != -1) {
             ivPower.setImageResource(imgResId);
-        }
+        }*/
         //todo  读取电量时间
         long readDeviceInfoTime = System.currentTimeMillis();
         if (readDeviceInfoTime != -1) {
