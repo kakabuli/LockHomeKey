@@ -124,7 +124,13 @@ public class BluetoothLockAuthorizationActivity extends BaseBleActivity<IOldBlue
             lockType = "QZ012";
         } else if (lockType.startsWith("QZ013")) {
             lockType = "QZ013";
-        } else if (lockType.startsWith("S8")) {
+        }else if (lockType.startsWith("S8C")){
+            lockType="S8C";
+        } else if (lockType.startsWith("V6")){
+            lockType="V6";
+        } else if (lockType.startsWith("V7")){
+            lockType="V7";
+        }  else if (lockType.startsWith("S8")) {
             lockType = "S8";
         } else if (lockType.startsWith("KX")) {
             lockType = "KX";
@@ -166,7 +172,13 @@ public class BluetoothLockAuthorizationActivity extends BaseBleActivity<IOldBlue
                 ivLockIcon.setImageResource(R.mipmap.bluetooth_lock_k9);
             } else if (model.contains("KX")) {
                 ivLockIcon.setImageResource(R.mipmap.bluetooth_lock_kx);
-            } else if (model.contains("S8")) {
+            }else if (model.contains("S8C")){
+                ivLockIcon.setImageResource(R.mipmap.bluetooth_lock_s8);
+            }else if (model.contains("V6")){
+                ivLockIcon.setImageResource(R.mipmap.bluetooth_lock_v6);
+            }else if (model.contains("V7")){
+                ivLockIcon.setImageResource(R.mipmap.bluetooth_lock_v7);
+            }  else if (model.contains("S8")) {
                 ivLockIcon.setImageResource(R.mipmap.bluetooth_lock_s8);
             } else if (model.contains("QZ013")) {
                 ivLockIcon.setImageResource(R.mipmap.bluetooth_lock_qz013);
