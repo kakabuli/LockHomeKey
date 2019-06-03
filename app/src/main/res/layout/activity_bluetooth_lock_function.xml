@@ -13,7 +13,7 @@
         android:layout_height="0dp"
         android:layout_weight="3.7"
         android:orientation="vertical"
-        android:background="@drawable/background_gradient">
+        android:background="@drawable/background_gradient_large_small">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -63,7 +63,7 @@
                     android:textColor="#FFFFFF"
                     android:layout_centerHorizontal="true"
                     android:layout_alignParentBottom="true"
-                    android:layout_marginBottom="@dimen/dp_18"
+                    android:layout_marginBottom="@dimen/dp_12"
                     android:text=""
                     android:textSize="@dimen/sp_14"
                     />
