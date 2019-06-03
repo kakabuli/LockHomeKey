@@ -414,7 +414,14 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
                 }
             });
             if (tvTitle != null) {
-                tvTitle.setText(cateEyeInfo.getServerInfo().getNickName());
+                if(!TextUtils.isEmpty(cateEyeInfo.getServerInfo().getNickName())){
+                    tvTitle.setText(cateEyeInfo.getServerInfo().getNickName());
+                }else {
+                    tvTitle.setText(cateEyeInfo.getServerInfo().getDeviceId());
+                }
+
+
+
             }
         }
 
