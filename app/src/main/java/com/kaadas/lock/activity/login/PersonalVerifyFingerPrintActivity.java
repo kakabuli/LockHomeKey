@@ -65,7 +65,7 @@ public class PersonalVerifyFingerPrintActivity extends BaseActivity<IPersonalVer
 
     private final String mAlias = "touch_id_key";//用于获取加密key
     private TranslateAnimation translateAnimation;
-
+    String source;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -75,6 +75,8 @@ public class PersonalVerifyFingerPrintActivity extends BaseActivity<IPersonalVer
         ButterKnife.bind(this);
         initView();
         initData();
+        Intent intent = getIntent();
+         source = intent.getStringExtra(KeyConstants.SOURCE);
     }
 
     private void initData() {
@@ -209,10 +211,18 @@ public class PersonalVerifyFingerPrintActivity extends BaseActivity<IPersonalVer
     private FingerprintManager.AuthenticationCallback callback = new FingerprintManager.AuthenticationCallback() {
         @Override
         public void onAuthenticationSucceeded(FingerprintManager.AuthenticationResult result) {
-            Intent successIntent = new Intent(mContext, MainActivity.class);
-            startActivity(successIntent);
-            ToastUtil.getInstance().showShort(R.string.fingerprint_success);
-            finish();
+            if ("PersonalSecuritySettingActivity".equals(source)){
+                Intent intent = new Intent();
+                //把返回数据存入Intent
+                //设置返回数据
+                setResult(RESULT_OK, intent);
+                finish();
+            }else {
+                Intent successIntent = new Intent(mContext, MainActivity.class);
+                startActivity(successIntent);
+                ToastUtil.getInstance().showShort(R.string.fingerprint_success);
+                finish();
+            }
         }
 
         @Override

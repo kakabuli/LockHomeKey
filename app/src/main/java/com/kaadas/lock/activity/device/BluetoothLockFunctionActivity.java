@@ -298,6 +298,9 @@ public class BluetoothLockFunctionActivity extends BaseBleActivity<IDeviceDetail
     }
 
     public void changLockStatus(int state) {
+        if (isFinishing()){
+            return;
+        }
         switch (state) {
 //            case KeyConstants.OPEN_LOCK:
             case 0:
@@ -644,15 +647,28 @@ public class BluetoothLockFunctionActivity extends BaseBleActivity<IDeviceDetail
     @Override
     public void onGetPasswordSuccess(GetPasswordResult result) {
         super.onGetPasswordSuccess(result);
-        GetPasswordResult.DataBean dataBean = result.getData();
-        List<GetPasswordResult.DataBean.Card> cardList = dataBean.getCardList();
-        tvNumberThree.setText(cardList.size() + getString(R.string.zhang));
-        List<GetPasswordResult.DataBean.Fingerprint> fingerprintList = dataBean.getFingerprintList();
-        tvNumberTwo.setText(fingerprintList.size() + getString(R.string.ge));
-        List<ForeverPassword> pwdList = dataBean.getPwdList();
-        List<GetPasswordResult.DataBean.TempPassword> tempPwdList = dataBean.getTempPwdList();
-        tvNumberOne.setText((pwdList.size() + tempPwdList.size()) + getString(R.string.group));
+        if (result!=null){
+            GetPasswordResult.DataBean dataBean = result.getData();
+            if (dataBean!=null){
+                List<GetPasswordResult.DataBean.Card> cardList = dataBean.getCardList();
+                if (cardList!=null){
+                    tvNumberThree.setText(cardList.size() + getString(R.string.zhang));
+                }
+
+                List<GetPasswordResult.DataBean.Fingerprint> fingerprintList = dataBean.getFingerprintList();
+                if (fingerprintList!=null){
+                    tvNumberTwo.setText(fingerprintList.size() + getString(R.string.ge));
+                }
+                List<ForeverPassword> pwdList = dataBean.getPwdList();
+                List<GetPasswordResult.DataBean.TempPassword> tempPwdList = dataBean.getTempPwdList();
+                if (tempPwdList!=null){
+                    tvNumberOne.setText((pwdList.size() + tempPwdList.size()) + getString(R.string.group));
+                }
 //        tvNumberFour.setText(2 + getString(R.string.people));
-        LogUtils.d("davi " + result.toString());
+                LogUtils.d("davi " + result.toString());
+            }
+
+        }
+
     }
 }

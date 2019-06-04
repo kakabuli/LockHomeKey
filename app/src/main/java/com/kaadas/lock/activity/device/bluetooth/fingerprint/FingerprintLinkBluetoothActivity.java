@@ -150,6 +150,12 @@ public class FingerprintLinkBluetoothActivity extends BaseActivity<IAddPringerpr
     public void noPermissions() {
 
     }
+
+    @Override
+    public void noOpenGps() {
+
+    }
+
     /**
      * 去手动绑定界面
      */

@@ -511,6 +511,9 @@ public class BluetoothLockAuthorizationActivity extends BaseBleActivity<IOldBlue
     }
 
     public void changLockStatus(int state) {
+        if (isFinishing()){
+            return;
+        }
         switch (state) {
 //            case KeyConstants.OPEN_LOCK:
             case 0:

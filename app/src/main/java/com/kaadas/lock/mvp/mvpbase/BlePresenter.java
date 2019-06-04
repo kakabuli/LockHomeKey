@@ -18,6 +18,7 @@ import com.kaadas.lock.publiclibrary.http.result.ServerBleDevice;
 import com.kaadas.lock.publiclibrary.http.util.BaseObserver;
 import com.kaadas.lock.publiclibrary.http.util.RxjavaHelper;
 import com.kaadas.lock.publiclibrary.rxutils.TimeOutException;
+import com.kaadas.lock.utils.GpsUtil;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.Rsa;
 
@@ -140,8 +141,18 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
         handler.removeCallbacks(releaseRunnable);
         if (ContextCompat.checkSelfPermission(MyApplication.getInstance(), Manifest.permission.ACCESS_COARSE_LOCATION) != PERMISSION_GRANTED) {
             //没有定位权限
-            if (mViewRef.get() != null && isNotify) {
+            if (mViewRef.get() != null  ) {
                 mViewRef.get().noPermissions();
+                mViewRef.get().onEndConnectDevice(false);
+            }
+            return;
+        }
+
+        if (!GpsUtil.isOPen(MyApplication.getInstance())) {
+            //没打开GPS
+            if (mViewRef.get() != null ) {
+                mViewRef.get().noOpenGps();
+                mViewRef.get().onEndConnectDevice(false);
             }
             return;
         }

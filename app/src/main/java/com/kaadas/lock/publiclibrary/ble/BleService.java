@@ -304,7 +304,7 @@ public class BleService extends Service {
                 return;
             }
             //符合要求的设备
-            if (device.getName().startsWith("XK")
+            if (  device.getName().startsWith("Bootloader")
                     || device.getName().contains("KDS")
                     || device.getName().contains("KdsLock")) {
                 deviceScanSubject.onNext(device);
@@ -335,7 +335,6 @@ public class BleService extends Service {
      * @return
      */
     public Observable<BluetoothDevice> getDeviceByMac(String mac) {
-
         currentMac = mac;
         handler.postDelayed(getRemoteDeviceRunnable, 6000);
         return scanBleDevice(true)

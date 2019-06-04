@@ -1042,4 +1042,7 @@
     <string name="app_open">App开锁</string>
     <string name="one_key_open">一键开启开锁</string>
     <string name="unknown_open">不确定</string>
+    <string name="input_passwords">输入密码</string>
+    <string name="try_again">再试一次</string>
+    <string name="verify_and_turn_on_touch_id">验证并开启Touch ID</string>
 </resources>

@@ -1158,7 +1158,8 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
     @Override
     public void noData() {
         ToastUtil.getInstance().showShort(R.string.lock_no_record);
-        hiddenLoading();
+        hiddenLoading();//加载完了   设置正在加载数据
+        isLoadingBleRecord = false;
     }
 
     @Override
@@ -1289,6 +1290,14 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
         PermissionUtil.getInstance().requestPermission(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, getActivity());
         ToastUtil.getInstance().showLong(R.string.please_allow_ble_permission);
         changeOpenLockStatus(12);
+    }
+
+    /**
+     * 没有打开GPS 提示
+     */
+    @Override
+    public void noOpenGps(){
+        ToastUtil.getInstance().showLong(R.string.check_phone_not_open_gps_please_open);
     }
 
     private void onChangeInitView() {
