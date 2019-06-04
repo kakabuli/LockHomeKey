@@ -104,4 +104,13 @@ public abstract class BaseBleFragment<T extends IBleView, V extends BlePresenter
         PermissionUtil.getInstance().requestPermission(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, getActivity());
         ToastUtil.getInstance().showLong(R.string.please_allow_ble_permission);
     };
+
+
+    /**
+     * 没有打开GPS 提示
+     */
+    @Override
+    public void noOpenGps(){
+        ToastUtil.getInstance().showLong(R.string.check_phone_not_open_gps_please_open);
+    }
 }

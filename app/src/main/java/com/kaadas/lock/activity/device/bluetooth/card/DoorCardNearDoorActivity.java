@@ -182,6 +182,11 @@ public class DoorCardNearDoorActivity extends BaseActivity<IBleView, BlePresente
 
     }
 
+    @Override
+    public void noOpenGps() {
+
+    }
+
     /**
      * 去手动绑定界面
      */
