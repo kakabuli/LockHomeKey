@@ -416,7 +416,7 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                         if (lockType.startsWith("V6")||lockType.startsWith("V7")){
                             Intent detailIntent = new Intent(getActivity(), BluetoothLockFunctionV6V7Activity.class);
                             String model = bleLockInfo.getServerLockInfo().getModel();
-                            detailIntent.putExtra(KeyConstants.DEVICE_TYPE, model);
+                            detailIntent.putExtra(KeyConstants. DEVICE_TYPE, model);
                             startActivityForResult(detailIntent, KeyConstants.GET_BLE_POWER);
                         }else {
                             Intent detailIntent = new Intent(getActivity(), BluetoothLockFunctionActivity.class);
