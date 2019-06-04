@@ -319,9 +319,11 @@ public class GatewaySettingActivity extends BaseActivity<GatewaySettingView, Gat
                         }else if (wifiPwd.equals(pwd)){
                             ToastUtil.getInstance().showShort(R.string.wifi_pwd_no_update);
                             return;
-                        }else if (wifiPwd.length()<8){
+                        }else if (pwd.length()<8){
                             ToastUtil.getInstance().showShort(R.string.wifi_password_length);
                             return;
+                        }else if (pwd.length()>63){
+                            ToastUtil.getInstance().showShort(R.string.wifi_password_length);
                         } else{
                             mPresenter.setWiFi(MyApplication.getInstance().getUid(),gatewayId,gatewayId,encryption,wifiName,pwd);
                         }
