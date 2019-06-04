@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.kaadas.lock.activity.MainActivity;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
+import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 import com.kaadas.lock.utils.cachefloder.ACache;
 import com.kaadas.lock.utils.cachefloder.CacheFloder;
 import com.kaadas.lock.utils.handPwdUtil.GestureContentView;
@@ -22,7 +23,7 @@ import com.kaadas.lock.utils.handPwdUtil.GestureDrawline;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class PersonalVerifyGesturePasswordActivity extends AppCompatActivity {
+public class PersonalVerifyGesturePasswordActivity extends BaseAddToApplicationActivity {
 
 
     @BindView(R.id.text_tip)

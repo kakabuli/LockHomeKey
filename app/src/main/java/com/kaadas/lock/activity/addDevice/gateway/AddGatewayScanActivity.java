@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
 
 import com.kaadas.lock.R;
+import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.ToastUtil;
 import com.uuzuche.lib_zxing.activity.CaptureFragment;
@@ -18,7 +19,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class AddGatewayScanActivity extends AppCompatActivity {
+public class AddGatewayScanActivity extends BaseAddToApplicationActivity {
     @BindView(R.id.back)
     ImageView back;
     private CaptureFragment captureFragment;

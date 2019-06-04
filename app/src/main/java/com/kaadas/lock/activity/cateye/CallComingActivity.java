@@ -19,6 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.kaadas.lock.R;
+import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 import com.kaadas.lock.publiclibrary.linphone.linphone.callback.PhoneAutoAccept;
 import com.kaadas.lock.publiclibrary.linphone.linphone.util.LinphoneHelper;
 import com.kaadas.lock.utils.KeyConstants;
@@ -32,7 +33,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import retrofit2.http.GET;
 
-public class CallComingActivity extends AppCompatActivity implements View.OnClickListener {
+public class CallComingActivity extends BaseAddToApplicationActivity implements View.OnClickListener {
 
     @BindView(R.id.call_coming_refuse_ll)
     LinearLayout call_coming_refuse_ll;

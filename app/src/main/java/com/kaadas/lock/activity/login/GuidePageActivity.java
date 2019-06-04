@@ -11,6 +11,7 @@ import com.kaadas.lock.R;
 import com.kaadas.lock.fragment.GuidePageOneFragment;
 import com.kaadas.lock.fragment.GuidePageThreeFragment;
 import com.kaadas.lock.fragment.GuidePageTwoFragment;
+import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +22,7 @@ import butterknife.ButterKnife;
 /**
  * Created by David on 2019/4/15
  */
-public class GuidePageActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener {
+public class GuidePageActivity extends BaseAddToApplicationActivity implements ViewPager.OnPageChangeListener {
     @BindView(R.id.view_pager)
     ViewPager viewPager;
     private List<Fragment> fragments;

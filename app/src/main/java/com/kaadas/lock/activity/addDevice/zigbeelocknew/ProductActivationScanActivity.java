@@ -12,6 +12,7 @@ import android.widget.ImageView;
 
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.my.BarCodeActivity;
+import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.SPUtils;
@@ -26,7 +27,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class ProductActivationScanActivity extends AppCompatActivity {
+public class ProductActivationScanActivity extends BaseAddToApplicationActivity {
     @BindView(R.id.back)
     ImageView back;
     private CaptureFragment captureFragment;

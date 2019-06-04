@@ -5,11 +5,12 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
 import com.kaadas.lock.R;
+import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 
 /**
  * Created by David on 2019/4/11
  */
-public class BluetoothLockOTAUpgradeActivity extends AppCompatActivity {
+public class BluetoothLockOTAUpgradeActivity extends BaseAddToApplicationActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

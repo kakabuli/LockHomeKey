@@ -16,6 +16,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.kaadas.lock.R;
 import com.kaadas.lock.adapter.GatewayStressFingerprintAdapter;
 import com.kaadas.lock.adapter.GatewayStressPasswordAdapter;
+import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 import com.kaadas.lock.publiclibrary.bean.ForeverPassword;
 import com.kaadas.lock.publiclibrary.http.postbean.AddPasswordBean;
 import com.kaadas.lock.publiclibrary.http.result.GetPasswordResult;
@@ -32,7 +33,7 @@ import butterknife.ButterKnife;
 /**
  * Created by David
  */
-public class GatewayStressPasswordManagerActivity extends AppCompatActivity
+public class GatewayStressPasswordManagerActivity extends BaseAddToApplicationActivity
         implements View.OnClickListener {
     @BindView(R.id.iv_back)
     ImageView ivBack;//返回

@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.kaadas.lock.R;
+import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.StringUtil;
 import com.kaadas.lock.utils.ToastUtil;
@@ -22,7 +23,7 @@ import butterknife.ButterKnife;
 /**
  * Created by David
  */
-public class GatewayStressWarnDetailActivity extends AppCompatActivity implements View.OnClickListener {
+public class GatewayStressWarnDetailActivity extends BaseAddToApplicationActivity implements View.OnClickListener {
 
 
     @BindView(R.id.iv_back)

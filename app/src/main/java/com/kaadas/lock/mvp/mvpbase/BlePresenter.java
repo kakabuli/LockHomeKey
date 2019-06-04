@@ -359,10 +359,8 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
                 .filter(new Predicate<BleDataBean>() {
                     @Override
                     public boolean test(BleDataBean bleDataBean) throws Exception {
-                        if (authCommand[1] == bleDataBean.getTsn()) {
-                            LogUtils.e("  鉴权确认帧  " + Rsa.bytesToHexString(bleDataBean.getPayload()));
-                        }
                         if (bleDataBean.getCmd() == 0x08 || authCommand[1] == bleDataBean.getTsn()) {
+                            LogUtils.e("  鉴权确认帧  " + Rsa.bytesToHexString(bleDataBean.getPayload()));
                             return true;
                         }
                         return false;
@@ -379,6 +377,7 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
                                     mViewRef.get().onNeedRebind(bleDataBean.getPayload()[1] & 0xff);
                                     mViewRef.get().onEndConnectDevice(false);
                                 }
+                                bleService.release();
                                 toDisposable(getPwd3Dispose);
                             }
                             return;

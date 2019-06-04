@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
+import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 import com.kaadas.lock.publiclibrary.bean.CateEyeInfo;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.CatEyeInfoBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.CatEyeInfoBeanResult;
@@ -33,7 +34,7 @@ import butterknife.OnClick;
 /**
  * Created by David
  */
-public class CateyeMoreDeviceInformationActivity extends AppCompatActivity implements View.OnClickListener {
+public class CateyeMoreDeviceInformationActivity extends BaseAddToApplicationActivity implements View.OnClickListener {
 
     @BindView(R.id.iv_back)
     ImageView ivBack;

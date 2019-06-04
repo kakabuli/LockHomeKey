@@ -20,6 +20,7 @@ import com.bumptech.glide.Glide;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
+import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 import com.kaadas.lock.mvp.presenter.SnapPresenter;
 import com.kaadas.lock.mvp.view.ISnapShotView;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.FtpEnable;
@@ -41,7 +42,7 @@ import java.util.TimeZone;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class RecordingPreviewActivity extends AppCompatActivity implements  View.OnClickListener{
+public class RecordingPreviewActivity extends BaseAddToApplicationActivity implements  View.OnClickListener{
 
     @BindView(R.id.recording_preview_img)
     PhotoView recording_preview_img;

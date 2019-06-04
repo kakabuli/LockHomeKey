@@ -18,6 +18,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.kaadas.lock.R;
+import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 import com.kaadas.lock.utils.SPUtils;
 
 import java.util.ArrayList;
@@ -32,7 +33,7 @@ import butterknife.ButterKnife;
 /**
  * Created by ty on 2017/6/3.
  */
-public class CountryActivity extends AppCompatActivity implements View.OnClickListener {
+public class CountryActivity extends BaseAddToApplicationActivity implements View.OnClickListener {
 
     String TAG = "CountryActivity";
     private List<CountrySortModel> mAllCountryList;

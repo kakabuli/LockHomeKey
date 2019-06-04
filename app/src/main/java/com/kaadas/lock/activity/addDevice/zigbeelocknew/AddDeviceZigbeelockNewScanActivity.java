@@ -12,6 +12,7 @@ import com.kaadas.lock.R;
 import com.kaadas.lock.activity.addDevice.gateway.AddGatewaySecondActivity;
 import com.kaadas.lock.activity.addDevice.gateway.AddGatewayThirdActivity;
 import com.kaadas.lock.activity.addDevice.zigbee.AddZigbeeLockFailActivity;
+import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.ToastUtil;
 import com.uuzuche.lib_zxing.activity.CaptureFragment;
@@ -21,7 +22,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class AddDeviceZigbeelockNewScanActivity extends AppCompatActivity {
+public class AddDeviceZigbeelockNewScanActivity extends BaseAddToApplicationActivity {
     @BindView(R.id.back)
     ImageView back;
     private CaptureFragment captureFragment;

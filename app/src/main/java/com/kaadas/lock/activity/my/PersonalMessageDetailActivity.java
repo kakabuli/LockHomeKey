@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.kaadas.lock.R;
+import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
 
@@ -16,7 +17,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class PersonalMessageDetailActivity extends AppCompatActivity implements View.OnClickListener {
+public class PersonalMessageDetailActivity extends BaseAddToApplicationActivity implements View.OnClickListener {
 
     @BindView(R.id.iv_back)
     ImageView ivBack;

@@ -9,13 +9,14 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.kaadas.lock.R;
+import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 
-public class AddGatewaySecondActivity extends AppCompatActivity {
+public class AddGatewaySecondActivity extends BaseAddToApplicationActivity {
 
     @BindView(R.id.back)
     ImageView back;

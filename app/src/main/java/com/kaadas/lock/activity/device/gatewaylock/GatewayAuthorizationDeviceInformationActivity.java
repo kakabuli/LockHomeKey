@@ -9,11 +9,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.kaadas.lock.R;
+import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class GatewayAuthorizationDeviceInformationActivity extends AppCompatActivity implements View.OnClickListener {
+public class GatewayAuthorizationDeviceInformationActivity extends BaseAddToApplicationActivity implements View.OnClickListener {
 
 
     @BindView(R.id.iv_back)

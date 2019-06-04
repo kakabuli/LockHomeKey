@@ -8,12 +8,13 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.kaadas.lock.R;
+import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class AddBluetoothPairActivity extends AppCompatActivity {
+public class AddBluetoothPairActivity extends BaseAddToApplicationActivity {
     @BindView(R.id.cancel)
     ImageView cancel;
 

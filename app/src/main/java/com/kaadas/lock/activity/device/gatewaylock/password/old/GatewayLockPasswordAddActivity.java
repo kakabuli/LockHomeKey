@@ -16,6 +16,7 @@ import com.flyco.tablayout.SlidingTabLayout;
 import com.kaadas.lock.R;
 import com.kaadas.lock.fragment.old.GatewayLockPasswordForeverFragment;
 import com.kaadas.lock.fragment.old.GatewayLockPasswrodTempararyFragment;
+import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 
@@ -26,7 +27,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class GatewayLockPasswordAddActivity extends AppCompatActivity implements View.OnClickListener {
+public class GatewayLockPasswordAddActivity extends BaseAddToApplicationActivity implements View.OnClickListener {
     @BindView(R.id.viewpager)
     ViewPager viewPager;
     @BindView(R.id.sliding_tab_layout)
