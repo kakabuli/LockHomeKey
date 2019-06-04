@@ -1031,4 +1031,7 @@
     <string name="call_cateye_working">设备正忙</string>
     <string name="check_phone_not_open_gps_please_open">检测到手机未打开GPS，请打开GPS以搜索蓝牙设备</string>
     <string name="open_gps_wifi">检测到手机未打开GPS，请打开GPS以检测手机WiFi名称</string>
+    <string name="input_passwords">输入密码</string>
+    <string name="try_again">再试一次</string>
+    <string name="verify_and_turn_on_touch_id">验证并开启Touch ID</string>
 </resources>
