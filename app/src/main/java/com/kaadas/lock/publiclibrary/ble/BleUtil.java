@@ -124,17 +124,33 @@ public class BleUtil {
         String openType = "";
         switch (openType1) {
             case 1:
-                openType = PASSWORD;
+                openType = PASSWORD;  //密码
                 break;
             case 2:
-                openType = FINGERPRINT;
+                openType = FINGERPRINT;  //指纹
                 break;
             case 3:
-                openType = RFID;
+                openType = RFID;  //卡片
                 break;
-            default:
-                openType = PASSWORD;
+            case 4: //机械钥匙
+                openType = MANUAL;
                 break;
+            case 5://遥控开门
+                openType = RF;
+                break;
+            case 6:  //一键开启
+                openType = "06";
+                break;
+            case 7: //APP 开启
+                openType = PHONE;
+                break;
+            case 8:  //人脸
+                openType = FACE_RECOGNITION;
+                break;
+            case 9:  //静脉
+                openType = FINGER_VEIN;
+                break;
+
         }
         //String user_num, String open_type, String open_time, int index
         OpenLockRecord openLockRecord = new OpenLockRecord(userNumber > 9 ? "" + userNumber : "0" + userNumber, openType, openTime, index);
