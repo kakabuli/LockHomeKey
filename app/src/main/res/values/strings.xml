@@ -1040,4 +1040,6 @@
     <string name="finger_vein_open">静脉开锁</string>
     <string name="face_recognition_open">人脸开锁</string>
     <string name="app_open">App开锁</string>
+    <string name="one_key_open">一键开启开锁</string>
+    <string name="unknown_open">不确定</string>
 </resources>

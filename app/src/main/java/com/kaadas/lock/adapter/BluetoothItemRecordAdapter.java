@@ -75,6 +75,12 @@ public class BluetoothItemRecordAdapter extends BaseQuickAdapter<BluetoothItemRe
             case BleUtil.PHONE://= "手机";  break;
                 strRight = mContext.getString(R.string.app_open);
                 break;
+            case BleUtil.ONE_KEY_OPEN:
+                strRight = mContext.getString(R.string.one_key_open);
+                break;
+            case BleUtil.UNKNOWN_OPEN:
+                strRight =  mContext.getString(R.string.unknown_open);
+                break;
         }
         // 机械开锁/APP开锁/自动开锁/密码开锁/门卡开锁/指纹开锁
         if (!TextUtils.isEmpty(strRight)) {

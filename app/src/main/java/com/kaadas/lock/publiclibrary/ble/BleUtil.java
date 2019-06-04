@@ -35,6 +35,8 @@ public class BleUtil {
     public static final String FINGER_VEIN = "静脉";
     public static final String FACE_RECOGNITION = "人脸";
     public static final String PHONE = "手机";
+    public static final String ONE_KEY_OPEN = "一键开启";
+    public static final String UNKNOWN_OPEN = "不确定";
 
 
     public static final int BLE_VERSION_OLD = 1; //最老的版本  老版本协议  功能只有开锁  开锁记录  电量
@@ -139,7 +141,7 @@ public class BleUtil {
                 openType = RF;
                 break;
             case 6:  //一键开启
-                openType = "06";
+                openType = ONE_KEY_OPEN;
                 break;
             case 7: //APP 开启
                 openType = PHONE;
@@ -149,6 +151,9 @@ public class BleUtil {
                 break;
             case 9:  //静脉
                 openType = FINGER_VEIN;
+                break;
+            default:
+                openType = UNKNOWN_OPEN;
                 break;
 
         }
@@ -215,6 +220,8 @@ public class BleUtil {
             default:
                 if ((payload[5] & 0xff) == 103) {
                     openType = PHONE;
+                }else {
+                    openType = UNKNOWN_OPEN;
                 }
                 break;
         }
@@ -300,10 +307,10 @@ public class BleUtil {
             buffer.append(context.getString(R.string.warring_unlock) + " ");
         }
 
-        if (TextUtils.isEmpty(buffer.toString())){
+        if (TextUtils.isEmpty(buffer.toString())) {
             return null;
         }
-        return head +  buffer.toString();
+        return head + buffer.toString();
     }
 
 
