@@ -72,15 +72,6 @@ public class BluetoothOpenLockRecordFragment extends BaseBleFragment<IOpenLockRe
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = View.inflate(getActivity(), R.layout.fragment_bluetooth_open_lock_record, null);
-/*         daoSession = MyApplication.getInstance().getDaoWriteSession();
-         dbList = daoSession.queryBuilder(DBOpenLockRecord.class).list();
-        List<OpenLockRecord> openLockRecordList=new ArrayList<>();
-        for (int i=0;i<dbList.size();i++){
-            DBOpenLockRecord dbOpenLockRecord = dbList.get(i);
-            OpenLockRecord openLockRecord=new OpenLockRecord(dbOpenLockRecord.getUser_num(),dbOpenLockRecord.getOpen_type(),dbOpenLockRecord.getOpen_time(),dbOpenLockRecord.getIndex());
-            openLockRecordList.add(openLockRecord);
-        }
-        groupData(openLockRecordList);*/
         unbinder = ButterKnife.bind(this, view);
         tvSynchronizedRecord.setOnClickListener(this);
         activity = (BluetoothEquipmentDynamicActivity) getActivity();
@@ -104,20 +95,6 @@ public class BluetoothOpenLockRecordFragment extends BaseBleFragment<IOpenLockRe
     }
 
     private void initRecycleView() {
-    /*    List<BluetoothItemRecordBean> itemList1 = new ArrayList<>();
-        itemList1.add(new BluetoothItemRecordBean("jff", "jfji", KeyConstants.BLUETOOTH_RECORD_WARN, "fjjf", true, true));
-        list.add(new BluetoothRecordBean("jfjfk", itemList1, false));
-        List<BluetoothItemRecordBean> itemList2 = new ArrayList<>();
-        itemList2.add(new BluetoothItemRecordBean("jff", "jfji", KeyConstants.BLUETOOTH_RECORD_WARN, "fjjf", true, false));
-        itemList2.add(new BluetoothItemRecordBean("jff", "jfji", KeyConstants.BLUETOOTH_RECORD_COMMON, "fjjf", false, false));
-        itemList2.add(new BluetoothItemRecordBean("jff", "jfji", KeyConstants.BLUETOOTH_RECORD_WARN, "fjjf", false, true));
-        list.add(new BluetoothRecordBean("jfjfk", itemList2, false));
-        List<BluetoothItemRecordBean> itemList3 = new ArrayList<>();
-        itemList3.add(new BluetoothItemRecordBean("jff", "jfji", KeyConstants.BLUETOOTH_RECORD_WARN, "fjjf", true, false));
-        itemList3.add(new BluetoothItemRecordBean("jff", "jfji", KeyConstants.BLUETOOTH_RECORD_COMMON, "fjjf", false, false));
-        itemList3.add(new BluetoothItemRecordBean("jff", "jfji", KeyConstants.BLUETOOTH_RECORD_WARN, "fjjf", false, true));
-        list.add(new BluetoothRecordBean("jfjfk", itemList3, true))*/
-        ;
         bluetoothRecordAdapter = new BluetoothRecordAdapter(list);
         recycleview.setLayoutManager(new LinearLayoutManager(getActivity()));
         recycleview.setAdapter(bluetoothRecordAdapter);
@@ -166,25 +143,6 @@ public class BluetoothOpenLockRecordFragment extends BaseBleFragment<IOpenLockRe
         //获取到蓝牙的开锁记录
         hiddenLoading();
         groupData(lockRecords);
-  /*      long lastDayTime = 0;
-
-        for (OpenLockRecord record : lockRecords) {
-            //获取开锁时间的毫秒数
-            long openTime = DateUtils.standardTimeChangeTimestamp(record.getOpen_time());
-            long dayTime = openTime - openTime % (24 * 60 * 60 * 1000);  //获取那一天开始的时间戳
-            String titleTime = "";
-            if (lastDayTime != dayTime) { //添加头
-                lastDayTime = dayTime;
-                titleTime = DateUtils.getDayTimeFromMillisecond(dayTime);
-            }
-            List<BluetoothItemRecordBean> itemList = new ArrayList<>();
-            GetPasswordResult passwordResult = MyApplication.getInstance().getPasswordResults(bleLockInfo.getServerLockInfo().getLockName());
-            String openLockType = getOpenLockType(passwordResult, record);
-            itemList.add(new BluetoothItemRecordBean(record.getUser_num(), openLockType, KeyConstants.BLUETOOTH_RECORD_COMMON,
-                    record.getOpen_time(), true, true));
-
-            list.add(new BluetoothRecordBean(titleTime, itemList, true));
-        }*/
         bluetoothRecordAdapter.notifyDataSetChanged();
         refreshLayout.setEnableLoadMore(false);
     }
@@ -192,6 +150,7 @@ public class BluetoothOpenLockRecordFragment extends BaseBleFragment<IOpenLockRe
     private void combineDataBaseData(List<OpenLockRecord> lockRecords) {
         List<DBOpenLockRecord> combineList=new ArrayList<>();
         for (int i=0;i<lockRecords.size();i++){
+
         }
     }
 

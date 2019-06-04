@@ -35,6 +35,8 @@ public class BleUtil {
     public static final String FINGER_VEIN = "静脉";
     public static final String FACE_RECOGNITION = "人脸";
     public static final String PHONE = "手机";
+    public static final String ONE_KEY_OPEN = "一键开启";
+    public static final String UNKNOWN_OPEN = "不确定";
 
 
     public static final int BLE_VERSION_OLD = 1; //最老的版本  老版本协议  功能只有开锁  开锁记录  电量
@@ -124,17 +126,36 @@ public class BleUtil {
         String openType = "";
         switch (openType1) {
             case 1:
-                openType = PASSWORD;
+                openType = PASSWORD;  //密码
                 break;
             case 2:
-                openType = FINGERPRINT;
+                openType = FINGERPRINT;  //指纹
                 break;
             case 3:
-                openType = RFID;
+                openType = RFID;  //卡片
+                break;
+            case 4: //机械钥匙
+                openType = MANUAL;
+                break;
+            case 5://遥控开门
+                openType = RF;
+                break;
+            case 6:  //一键开启
+                openType = ONE_KEY_OPEN;
+                break;
+            case 7: //APP 开启
+                openType = PHONE;
+                break;
+            case 8:  //人脸
+                openType = FACE_RECOGNITION;
+                break;
+            case 9:  //静脉
+                openType = FINGER_VEIN;
                 break;
             default:
-                openType = PASSWORD;
+                openType = UNKNOWN_OPEN;
                 break;
+
         }
         //String user_num, String open_type, String open_time, int index
         OpenLockRecord openLockRecord = new OpenLockRecord(userNumber > 9 ? "" + userNumber : "0" + userNumber, openType, openTime, index);
@@ -199,6 +220,8 @@ public class BleUtil {
             default:
                 if ((payload[5] & 0xff) == 103) {
                     openType = PHONE;
+                }else {
+                    openType = UNKNOWN_OPEN;
                 }
                 break;
         }
@@ -284,10 +307,10 @@ public class BleUtil {
             buffer.append(context.getString(R.string.warring_unlock) + " ");
         }
 
-        if (TextUtils.isEmpty(buffer.toString())){
+        if (TextUtils.isEmpty(buffer.toString())) {
             return null;
         }
-        return head +  buffer.toString();
+        return head + buffer.toString();
     }
 
 
