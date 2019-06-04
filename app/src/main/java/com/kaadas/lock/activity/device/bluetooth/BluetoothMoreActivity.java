@@ -541,4 +541,8 @@ public class BluetoothMoreActivity extends BaseBleActivity<IDeviceMoreView, Devi
         hiddenLoading();
         LogUtils.e(getString(R.string.update_ble_version_failed));
     }
+
+    @Override
+    public void onDeviceStateChange(boolean isConnected) {  //设备连接状态改变   连接成功时提示正在鉴权，连接失败时直接提示用户
+    }
 }
