@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.kaadas.lock.R;
 import com.kaadas.lock.adapter.GatewayFingerprintManagerAdapter;
+import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 import com.kaadas.lock.publiclibrary.http.result.GetPasswordResult;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.NetUtil;
@@ -28,7 +29,7 @@ import butterknife.ButterKnife;
 /**
  * Created by David
  */
-public class GatewayFingerprintManagerActivity extends AppCompatActivity
+public class GatewayFingerprintManagerActivity extends BaseAddToApplicationActivity
         implements BaseQuickAdapter.OnItemClickListener, View.OnClickListener {
     @BindView(R.id.iv_back)
     ImageView ivBack;//返回

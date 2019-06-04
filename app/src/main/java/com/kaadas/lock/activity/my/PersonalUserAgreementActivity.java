@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.kaadas.lock.R;
 import com.kaadas.lock.adapter.PersonalUserAgreementAdapter;
 import com.kaadas.lock.bean.PersonalUserAgreementBean;
+import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +20,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class PersonalUserAgreementActivity extends AppCompatActivity implements View.OnClickListener {
+public class PersonalUserAgreementActivity extends BaseAddToApplicationActivity implements View.OnClickListener {
 
 
     @BindView(R.id.personal_user_agreement_recycler)

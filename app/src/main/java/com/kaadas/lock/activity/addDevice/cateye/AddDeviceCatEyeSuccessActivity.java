@@ -11,13 +11,14 @@ import android.widget.ImageView;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.MainActivity;
 import com.kaadas.lock.activity.addDevice.DeviceBindGatewayListActivity;
+import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 import com.kaadas.lock.utils.KeyConstants;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class AddDeviceCatEyeSuccessActivity extends AppCompatActivity {
+public class AddDeviceCatEyeSuccessActivity extends BaseAddToApplicationActivity {
     @BindView(R.id.back)
     ImageView back;
     @BindView(R.id.button_next)

@@ -17,6 +17,7 @@ import com.kaadas.lock.R;
 import com.kaadas.lock.fragment.PasswordPeriodFragment;
 import com.kaadas.lock.fragment.PasswordTemporaryFragment;
 import com.kaadas.lock.fragment.PasswordTimeFragment;
+import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 
 
@@ -28,7 +29,7 @@ import butterknife.ButterKnife;
 /**
  * Created by David
  */
-public class BluetoothUserPasswordAddActivity extends AppCompatActivity implements View.OnClickListener {
+public class BluetoothUserPasswordAddActivity extends BaseAddToApplicationActivity implements View.OnClickListener {
 
 
     @BindView(R.id.viewpager)

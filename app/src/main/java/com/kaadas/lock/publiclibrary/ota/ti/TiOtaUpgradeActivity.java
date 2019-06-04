@@ -26,6 +26,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kaadas.lock.R;
+import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 import com.kaadas.lock.publiclibrary.ble.BleCommandFactory;
 import com.kaadas.lock.publiclibrary.ota.OtaConstants;
 import com.kaadas.lock.utils.AlertDialogUtil;
@@ -45,7 +46,7 @@ import java.util.UUID;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class TiOtaUpgradeActivity extends AppCompatActivity implements View.OnClickListener {
+public class TiOtaUpgradeActivity extends BaseAddToApplicationActivity implements View.OnClickListener {
     @BindView(R.id.tv_content)
     TextView tv_content;
     @BindView(R.id.iv_back)

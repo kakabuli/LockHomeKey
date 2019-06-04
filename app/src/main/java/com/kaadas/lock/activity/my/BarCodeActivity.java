@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.kaadas.lock.R;
+import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.ToastUtil;
 import com.kaadas.lock.utils.ftp.GeTui;
@@ -18,7 +19,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class BarCodeActivity extends AppCompatActivity implements View.OnClickListener {
+public class BarCodeActivity extends BaseAddToApplicationActivity implements View.OnClickListener {
 
     String bar_url="";
     @BindView(R.id.tv_content)

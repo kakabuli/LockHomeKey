@@ -15,16 +15,19 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import com.kaadas.lock.R;
+import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
+import com.kaadas.lock.utils.GpsUtil;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.NetUtil;
+import com.kaadas.lock.utils.ToastUtil;
 import com.kaadas.lock.utils.networkListenerutil.NetWorkChangReceiver;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class AddDeviceCatEyeCheckWifiActivity extends AppCompatActivity {
+public class AddDeviceCatEyeCheckWifiActivity extends BaseAddToApplicationActivity {
     @BindView(R.id.back)
     ImageView back;
     @BindView(R.id.button_switch_wifi)
@@ -93,16 +96,22 @@ public class AddDeviceCatEyeCheckWifiActivity extends AppCompatActivity {
         super.onResume();
         //todo  检查当前WiFi与网关WiFi是否一致  一致则跳转添加猫眼扫描界面   否则不做逻辑
         LogUtils.e( Tag,"onResume   "  + ssid);
-        String wifiName = NetUtil.getWifiName().replaceAll("\"","");
-        LogUtils.e("获取到的WiFi名称是   " + wifiName );
-        if (!TextUtils.isEmpty(wifiName) && wifiName.equals(ssid)) {
-            Intent catEyeIntent = new Intent(this, AddDeviceCatEyeFirstActivity.class);
-            catEyeIntent.putExtra(KeyConstants.GW_WIFI_SSID, ssid);
-            catEyeIntent.putExtra(KeyConstants.GW_WIFI_PWD, pwd);
-            catEyeIntent.putExtra(KeyConstants.GW_SN, gwId);
-            startActivity(catEyeIntent);
-            finish();
+
+        if (GpsUtil.isOPen(this)){
+            String wifiName = NetUtil.getWifiName().replaceAll("\"","");
+            LogUtils.e("获取到的WiFi名称是   " + wifiName );
+            if (!TextUtils.isEmpty(wifiName) && wifiName.equals(ssid)) {
+                Intent catEyeIntent = new Intent(this, AddDeviceCatEyeFirstActivity.class);
+                catEyeIntent.putExtra(KeyConstants.GW_WIFI_SSID, ssid);
+                catEyeIntent.putExtra(KeyConstants.GW_WIFI_PWD, pwd);
+                catEyeIntent.putExtra(KeyConstants.GW_SN, gwId);
+                startActivity(catEyeIntent);
+                finish();
+            }
+        }else {
+            ToastUtil.getInstance().showLong(R.string.open_gps_wifi);
         }
+
     }
 
 

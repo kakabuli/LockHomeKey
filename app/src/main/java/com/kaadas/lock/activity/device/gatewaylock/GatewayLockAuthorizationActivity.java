@@ -11,6 +11,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.kaadas.lock.R;
+import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
 
@@ -20,7 +21,7 @@ import butterknife.ButterKnife;
 /**
  * Created by David
  */
-public class GatewayLockAuthorizationActivity extends AppCompatActivity implements View.OnClickListener {
+public class GatewayLockAuthorizationActivity extends BaseAddToApplicationActivity implements View.OnClickListener {
     @BindView(R.id.iv_back)
     ImageView ivBack;
     @BindView(R.id.tv_name)

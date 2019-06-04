@@ -11,6 +11,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.kaadas.lock.R;
+import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 import com.kaadas.lock.utils.SharedUtil;
 
 import butterknife.BindView;
@@ -19,7 +20,7 @@ import butterknife.ButterKnife;
 /**
  * Created by David on 2019/4/9
  */
-public class AboutUsActivity extends AppCompatActivity implements View.OnClickListener {
+public class AboutUsActivity extends BaseAddToApplicationActivity implements View.OnClickListener {
     @BindView(R.id.iv_back)
     ImageView ivBack;
     @BindView(R.id.tv_content)

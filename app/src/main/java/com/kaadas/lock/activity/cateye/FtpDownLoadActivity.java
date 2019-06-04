@@ -5,9 +5,10 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.kaadas.lock.R;
+import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 import com.kaidishi.lock.util.g711mux;
 
-public class FtpDownLoadActivity extends AppCompatActivity {
+public class FtpDownLoadActivity extends BaseAddToApplicationActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

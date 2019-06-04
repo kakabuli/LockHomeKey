@@ -10,12 +10,13 @@ import android.widget.ImageView;
 
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.addDevice.DeviceAddHelpActivity;
+import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class AddZigbeeLockFifthActivity  extends AppCompatActivity {
+public class AddZigbeeLockFifthActivity  extends BaseAddToApplicationActivity {
     @BindView(R.id.back)
     ImageView back;
     @BindView(R.id.help)

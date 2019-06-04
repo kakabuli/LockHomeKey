@@ -11,12 +11,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.kaadas.lock.R;
+import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class AddGatewayFirstActivity extends AppCompatActivity {
+public class AddGatewayFirstActivity extends BaseAddToApplicationActivity {
     @BindView(R.id.back)
     ImageView back;
     @BindView(R.id.add_device_background)

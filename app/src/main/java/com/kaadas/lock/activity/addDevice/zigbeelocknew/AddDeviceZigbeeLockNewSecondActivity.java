@@ -12,12 +12,13 @@ import android.widget.TextView;
 
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.addDevice.gateway.AddGatewayLightActivity;
+import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class AddDeviceZigbeeLockNewSecondActivity extends AppCompatActivity {
+public class AddDeviceZigbeeLockNewSecondActivity extends BaseAddToApplicationActivity {
     @BindView(R.id.back)
     ImageView back;
     @BindView(R.id.head_title)

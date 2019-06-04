@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.kaadas.lock.R;
+import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -15,7 +16,7 @@ import butterknife.ButterKnife;
 /**
  * Created by David
  */
-public class GatewayLockDeviceInformationActivity extends AppCompatActivity implements View.OnClickListener {
+public class GatewayLockDeviceInformationActivity extends BaseAddToApplicationActivity implements View.OnClickListener {
     @BindView(R.id.iv_back)
     ImageView ivBack;
     @BindView(R.id.tv_content)

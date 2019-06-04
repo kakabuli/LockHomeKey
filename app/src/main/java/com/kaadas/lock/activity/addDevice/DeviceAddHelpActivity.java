@@ -6,12 +6,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
 
 import com.kaadas.lock.R;
+import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class DeviceAddHelpActivity extends AppCompatActivity {
+public class DeviceAddHelpActivity extends BaseAddToApplicationActivity {
 
     @BindView(R.id.back)
     ImageView back;

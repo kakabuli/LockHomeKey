@@ -15,6 +15,7 @@ import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.login.LoginActivity;
 import com.kaadas.lock.activity.login.PersonalVerifyGesturePasswordActivity;
+import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.cachefloder.ACache;
 import com.kaadas.lock.utils.cachefloder.CacheFloder;
@@ -27,7 +28,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class PersonalUpdateVerifyGesturePwd extends AppCompatActivity {
+public class PersonalUpdateVerifyGesturePwd extends BaseAddToApplicationActivity {
     @BindView(R.id.text_tip)
     TextView mTextTip;
 

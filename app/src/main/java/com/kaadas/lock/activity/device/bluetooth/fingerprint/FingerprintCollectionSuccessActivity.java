@@ -16,6 +16,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.kaadas.lock.R;
 import com.kaadas.lock.adapter.ShiXiaoNameAdapter;
 import com.kaadas.lock.bean.ShiXiaoNameBean;
+import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +28,7 @@ import butterknife.ButterKnife;
  * Created by David on 2019/4/18
  */
 //TODO 这个不用
-public class FingerprintCollectionSuccessActivity extends AppCompatActivity implements View.OnClickListener, BaseQuickAdapter.OnItemClickListener {
+public class FingerprintCollectionSuccessActivity extends BaseAddToApplicationActivity implements View.OnClickListener, BaseQuickAdapter.OnItemClickListener {
     @BindView(R.id.iv_back)
     ImageView ivBack;
     @BindView(R.id.tv_content)

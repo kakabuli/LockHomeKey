@@ -27,6 +27,7 @@ import android.widget.TextView;
 
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
+import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 import com.kaadas.lock.publiclibrary.ota.OtaConstants;
 import com.kaadas.lock.publiclibrary.ota.OtaUtils;
 import com.kaadas.lock.publiclibrary.ota.p6.CommonUtils.Constants;
@@ -55,7 +56,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class P6OtaUpgradeActivity extends AppCompatActivity implements View.OnClickListener {
+public class P6OtaUpgradeActivity extends BaseAddToApplicationActivity implements View.OnClickListener {
     @BindView(R.id.tv_content)
     TextView tv_content;
     @BindView(R.id.iv_back)

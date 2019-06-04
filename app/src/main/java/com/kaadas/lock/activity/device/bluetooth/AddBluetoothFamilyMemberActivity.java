@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 
 import com.kaadas.lock.R;
+import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.DetectionEmailPhone;
 import com.kaadas.lock.utils.KeyConstants;
@@ -28,7 +29,7 @@ import butterknife.ButterKnife;
 /**
  * Created by David
  */
-public class AddBluetoothFamilyMemberActivity extends AppCompatActivity implements View.OnClickListener {
+public class AddBluetoothFamilyMemberActivity extends BaseAddToApplicationActivity implements View.OnClickListener {
     @BindView(R.id.iv_back)
     ImageView ivBack;
     @BindView(R.id.tv_content)

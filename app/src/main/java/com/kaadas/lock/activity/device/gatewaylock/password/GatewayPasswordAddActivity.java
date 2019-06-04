@@ -16,6 +16,7 @@ import com.kaadas.lock.R;
 import com.kaadas.lock.fragment.GatewayPasswordPeriodFragment;
 import com.kaadas.lock.fragment.GatewayPasswordTemporaryFragment;
 import com.kaadas.lock.fragment.GatewayPasswordTimeFragment;
+import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +27,7 @@ import butterknife.ButterKnife;
 /**
  * Created by David
  */
-public class GatewayPasswordAddActivity extends AppCompatActivity implements View.OnClickListener {
+public class GatewayPasswordAddActivity extends BaseAddToApplicationActivity implements View.OnClickListener {
 
 
     @BindView(R.id.viewpager)

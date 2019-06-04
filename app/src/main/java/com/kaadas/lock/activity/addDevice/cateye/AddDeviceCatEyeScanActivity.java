@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.addDevice.gateway.AddGatewaySecondActivity;
 import com.kaadas.lock.activity.addDevice.gateway.AddGatewayThirdActivity;
+import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.ToastUtil;
@@ -20,7 +21,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class AddDeviceCatEyeScanActivity extends AppCompatActivity {
+public class AddDeviceCatEyeScanActivity extends BaseAddToApplicationActivity {
     @BindView(R.id.back)
     ImageView back;
     private CaptureFragment captureFragment;

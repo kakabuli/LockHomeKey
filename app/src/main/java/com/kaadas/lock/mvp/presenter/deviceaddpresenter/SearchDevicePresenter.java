@@ -209,33 +209,38 @@ public class SearchDevicePresenter<T> extends BasePresenter<ISearchDeviceView> {
         if (mViewRef.get() != null) {
             mViewRef.get().onConnecting();
         }
-        bindDisposable = bleService.subscribeDeviceConnectState()
-                .compose(RxjavaHelper.observeOnMainThread())
-                .subscribe(new Consumer<BleStateBean>() {
-                    @Override
-                    public void accept(BleStateBean bleStateBean) throws Exception {
-                        toDisposable(bindDisposable);
-                        if (bleStateBean.isConnected()) {
-                            LogUtils.e(SearchDevicePresenter.class.getName() + "连接成功");
-                            if (bleStateBean.getBleVersion() == 2 || bleStateBean.getBleVersion() ==3) {
-                                if (mViewRef.get() != null) {
-                                    mViewRef.get().onConnectSuccess();
+        try{
+            bindDisposable = bleService.subscribeDeviceConnectState()
+                    .compose(RxjavaHelper.observeOnMainThread())
+                    .subscribe(new Consumer<BleStateBean>() {
+                        @Override
+                        public void accept(BleStateBean bleStateBean) throws Exception {
+                            toDisposable(bindDisposable);
+                            if (bleStateBean.isConnected()) {
+                                LogUtils.e(SearchDevicePresenter.class.getName() + "连接成功");
+                                if (bleStateBean.getBleVersion() == 2 || bleStateBean.getBleVersion() ==3) {
+                                    if (mViewRef.get() != null) {
+                                        mViewRef.get().onConnectSuccess();
+                                    }
+                                    readSnTimes = 0;  //初始化读取SN的次数
+                                    readSn(bleStateBean.getBleVersion());
+                                }else if (bleStateBean.getBleVersion() == 1){ //最老的模块，走老的流程
+                                    if (mViewRef.get() != null) {
+                                        mViewRef.get().onConnectedAndIsOldMode(bleStateBean.getBleVersion(),isBind);
+                                    }
                                 }
-                                readSnTimes = 0;  //初始化读取SN的次数
-                                readSn(bleStateBean.getBleVersion());
-                            }else if (bleStateBean.getBleVersion() == 1){ //最老的模块，走老的流程
-                                if (mViewRef.get() != null) {
-                                    mViewRef.get().onConnectedAndIsOldMode(bleStateBean.getBleVersion(),isBind);
-                                }
+                            } else {
+                                connectTimes++;
+                                LogUtils.e(SearchDevicePresenter.class.getName() + "绑定界面连接失败");
+                                bindDevice(device, isBind);
                             }
-                        } else {
-                            connectTimes++;
-                            LogUtils.e(SearchDevicePresenter.class.getName() + "绑定界面连接失败");
-                            bindDevice(device, isBind);
                         }
-                    }
-                });
-        compositeDisposable.add(bindDisposable);
+                    });
+            compositeDisposable.add(bindDisposable);
+        }catch (Exception e){
+
+        }
+
     }
 
 

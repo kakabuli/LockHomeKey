@@ -10,12 +10,13 @@ import android.widget.Button;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.addDevice.DeviceAddActivity;
 import com.kaadas.lock.activity.addDevice.DeviceAddHelpActivity;
+import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class AddDeviceZigbeeLockNewFailActivity extends AppCompatActivity {
+public class AddDeviceZigbeeLockNewFailActivity extends BaseAddToApplicationActivity {
 
 
     @BindView(R.id.button_again)

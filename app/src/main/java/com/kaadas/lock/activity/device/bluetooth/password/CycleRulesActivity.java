@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.kaadas.lock.R;
+import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 import com.kaadas.lock.utils.KeyConstants;
 
 import butterknife.BindView;
@@ -20,7 +21,7 @@ import butterknife.ButterKnife;
 /**
  * Created by David
  */
-public class CycleRulesActivity extends AppCompatActivity implements CompoundButton.OnCheckedChangeListener, View.OnClickListener {
+public class CycleRulesActivity extends BaseAddToApplicationActivity implements CompoundButton.OnCheckedChangeListener, View.OnClickListener {
 
     @BindView(R.id.iv_back)
     ImageView ivBack;

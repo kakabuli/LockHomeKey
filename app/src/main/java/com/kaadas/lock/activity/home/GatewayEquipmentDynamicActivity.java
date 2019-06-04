@@ -17,6 +17,7 @@ import com.kaadas.lock.fragment.BluetoothOpenLockRecordFragment;
 import com.kaadas.lock.fragment.BluetoothWarnInformationFragment;
 import com.kaadas.lock.fragment.GatewayOpenLockRecordFragment;
 import com.kaadas.lock.fragment.GatewayWarnInformationFragment;
+import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 import com.kaadas.lock.publiclibrary.bean.GwLockInfo;
 import com.kaadas.lock.utils.KeyConstants;
 
@@ -26,7 +27,7 @@ import butterknife.ButterKnife;
 /**
  * Created by David on 2019/4/22
  */
-public class GatewayEquipmentDynamicActivity extends AppCompatActivity implements View.OnClickListener {
+public class GatewayEquipmentDynamicActivity extends BaseAddToApplicationActivity implements View.OnClickListener {
     @BindView(R.id.iv_back)
     ImageView ivBack;
     @BindView(R.id.tv_content)
