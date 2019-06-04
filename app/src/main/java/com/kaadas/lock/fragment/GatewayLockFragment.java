@@ -696,7 +696,13 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
             public void run() {
                 stopOpenLockAnimator();
                 isOpening = false;
-                changeOpenLockStatus(5);
+                if (gatewayLockInfo!=null){
+                    if (gatewayLockInfo.getServerInfo().getEvent_str().equals("offline")){
+                        changeOpenLockStatus(1);
+                    }else{
+                        changeOpenLockStatus(5);
+                    }
+                }
                 ToastUtil.getInstance().showShort(getString(R.string.open_lock_fail));
             }
         },3000);
@@ -710,7 +716,13 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
         if (!TextUtils.isEmpty(deviceId)){
             SPUtils.remove(KeyConstants.SAVA_LOCK_PWD + deviceId);
         }
-        changeOpenLockStatus(5);
+        if (gatewayLockInfo!=null){
+            if (gatewayLockInfo.getServerInfo().getEvent_str().equals("offline")){
+                changeOpenLockStatus(1);
+            }else{
+                changeOpenLockStatus(5);
+            }
+        }
         ToastUtil.getInstance().showShort(getString(R.string.open_lock_fail));
     }
 
@@ -817,7 +829,13 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
             public void run() {
                 stopCloseLockAnimator();
                 isClosing = false;
-                changeOpenLockStatus(5);
+                if (gatewayLockInfo!=null){
+                    if (gatewayLockInfo.getServerInfo().getEvent_str().equals("offline")){
+                        changeOpenLockStatus(1);
+                    }else{
+                        changeOpenLockStatus(5);
+                    }
+                }
             }
         },1000);
 
@@ -826,7 +844,13 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
     @Override
     public void lockCloseFailed() {
         isClosing = false;
-        changeOpenLockStatus(5);
+        if (gatewayLockInfo!=null){
+            if (gatewayLockInfo.getServerInfo().getEvent_str().equals("offline")){
+                changeOpenLockStatus(1);
+            }else{
+                changeOpenLockStatus(5);
+            }
+        }
     }
 
     @Override

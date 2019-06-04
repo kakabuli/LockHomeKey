@@ -295,6 +295,14 @@ public class CateyeFunctionActivity extends BaseActivity<ICatEyeFunctionView, Ca
     }
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (getIntent()!=null){
+            getIntent().removeExtra(KeyConstants.CATE_INFO);
+        }
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == KeyConstants.UPDATE_DEVICE_NAME_REQUEST_CODE) {

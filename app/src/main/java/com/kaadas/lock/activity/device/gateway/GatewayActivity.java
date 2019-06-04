@@ -371,5 +371,11 @@ public class GatewayActivity extends BaseActivity<GatewayView, GatewayPresenter<
         }
     }
 
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (getIntent()!=null){
+            getIntent().removeExtra(KeyConstants.GATEWAY_INFO);
+        }
+    }
 }
