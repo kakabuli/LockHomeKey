@@ -1158,7 +1158,8 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
     @Override
     public void noData() {
         ToastUtil.getInstance().showShort(R.string.lock_no_record);
-        hiddenLoading();
+        hiddenLoading();//加载完了   设置正在加载数据
+        isLoadingBleRecord = false;
     }
 
     @Override

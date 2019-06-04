@@ -75,6 +75,9 @@ public class GatewayLockAuthorizationActivity extends AppCompatActivity implemen
     }
 
     public void changLockStatus() {
+        if (isFinishing()){
+            return;
+        }
         switch (lockStatus) {
             case KeyConstants.OPEN_LOCK:
                 //可以开锁

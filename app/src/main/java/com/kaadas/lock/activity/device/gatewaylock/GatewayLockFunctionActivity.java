@@ -168,6 +168,9 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
     }
 
     public void changLockStatus(int lockStatus) {
+        if (isFinishing()){
+            return;
+        }
         switch (lockStatus) {
             case KeyConstants.OPEN_LOCK:
                 //可以开锁
