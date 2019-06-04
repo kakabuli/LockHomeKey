@@ -287,6 +287,13 @@ public class OTAFUHandler_v1 extends OTAFUHandlerBase {
                     if (listener != null) {
                         listener.otaEndBootloader();
                     }
+
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            BluetoothLeService.disconnect();
+                        }
+                    }, 1000);
                 } else {
                     showErrorDialogMessage(BluetoothLeService.ERROR_TAG_APP_CHECK_ERROR, "写入完成校验错误", false);
                 }
