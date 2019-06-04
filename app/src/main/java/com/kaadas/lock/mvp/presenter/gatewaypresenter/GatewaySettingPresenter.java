@@ -52,8 +52,8 @@ public class GatewaySettingPresenter<T> extends BasePresenter<GatewaySettingView
                             }
                         }
                     })
-                    .compose(RxjavaHelper.observeOnMainThread())
                     .timeout(10 * 1000, TimeUnit.MILLISECONDS)
+                    .compose(RxjavaHelper.observeOnMainThread())
                     .subscribe(new Consumer<MqttData>() {
                         @Override
                         public void accept(MqttData mqttData) throws Exception {
@@ -96,8 +96,8 @@ public class GatewaySettingPresenter<T> extends BasePresenter<GatewaySettingView
                             return mqttData.isThisRequest(wiFiBasic.getId(),   MqttConstant.GET_WIFI_BASIC );
                         }
                     })
-                    .compose(RxjavaHelper.observeOnMainThread())
                     .timeout(10 * 1000, TimeUnit.MILLISECONDS)
+                    .compose(RxjavaHelper.observeOnMainThread())
                     .subscribe(new Consumer<MqttData>() {
                         @Override
                         public void accept(MqttData mqttData) throws Exception {
@@ -142,8 +142,8 @@ public class GatewaySettingPresenter<T> extends BasePresenter<GatewaySettingView
                             }
                         }
                     })
-                    .compose(RxjavaHelper.observeOnMainThread())
                     .timeout(10 * 1000, TimeUnit.MILLISECONDS)
+                    .compose(RxjavaHelper.observeOnMainThread())
                     .subscribe(new Consumer<MqttData>() {
                         @Override
                         public void accept(MqttData mqttData) throws Exception {
@@ -230,8 +230,8 @@ public class GatewaySettingPresenter<T> extends BasePresenter<GatewaySettingView
                             return false;
                         }
                     })
-                    .compose(RxjavaHelper.observeOnMainThread())
                     .timeout(10*1000, TimeUnit.MILLISECONDS)
+                    .compose(RxjavaHelper.observeOnMainThread())
                     .subscribe(new Consumer<MqttData>() {
                         @Override
                         public void accept(MqttData mqttData) throws Exception {

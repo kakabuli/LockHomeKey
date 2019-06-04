@@ -612,6 +612,14 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
     }
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (getIntent()!=null){
+            getIntent().removeExtra(KeyConstants.GATEWAY_LOCK_INFO);
+        }
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == KeyConstants.DEVICE_DETAIL_BEAN_NUM) {
