@@ -1,6 +1,7 @@
 package com.kaadas.lock.adapter;
 
 import android.support.annotation.Nullable;
+import android.view.View;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
@@ -24,6 +25,12 @@ public class FingerprintManagerAdapter extends BaseQuickAdapter<GetPasswordResul
 
     @Override
     protected void convert(BaseViewHolder helper, GetPasswordResult.DataBean.Fingerprint bean) {
+        int itemCount = getItemCount();
+        int pos=helper.getPosition();
+        if (pos==itemCount-1){
+            View view= helper.getView(R.id.my_view);
+            view.setVisibility(View.GONE);
+        }
         helper.setText(R.id.tv_num, bean.getNum());
         helper.setText(R.id.tv_nick, bean.getNickName());
     }

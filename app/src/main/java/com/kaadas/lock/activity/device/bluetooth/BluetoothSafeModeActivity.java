@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.device.BluetoothLockFunctionActivity;
+import com.kaadas.lock.activity.device.BluetoothLockFunctionV6V7Activity;
 import com.kaadas.lock.mvp.mvpbase.BaseBleActivity;
 import com.kaadas.lock.mvp.presenter.SafeModePresenter;
 import com.kaadas.lock.mvp.view.ISafeModeView;
@@ -141,10 +142,19 @@ public class BluetoothSafeModeActivity extends BaseBleActivity<ISafeModeView, Sa
 
             @Override
             public void right() {
-                Intent intent = new Intent();
-                intent.setClass(BluetoothSafeModeActivity.this, BluetoothLockFunctionActivity.class);
-                startActivity(intent);
-                finish();
+                String lockType = bleLockInfo.getServerLockInfo().getModel();
+                if (lockType.startsWith("V6")||lockType.startsWith("V7")){
+                    Intent intent = new Intent();
+                    intent.setClass(BluetoothSafeModeActivity.this, BluetoothLockFunctionV6V7Activity.class);
+                    startActivity(intent);
+                    finish();
+                }else {
+                    Intent intent = new Intent();
+                    intent.setClass(BluetoothSafeModeActivity.this, BluetoothLockFunctionActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+
             }
         });
     }

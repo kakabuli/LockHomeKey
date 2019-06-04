@@ -54,7 +54,7 @@ import butterknife.ButterKnife;
 /**
  * Created by David on 2019/4/10
  */
-public class BluetoothLockFunctionActivity extends BaseBleActivity<IDeviceDetailView, DeviceDetailPresenter<IDeviceDetailView>> implements IDeviceDetailView, View.OnClickListener {
+public class BluetoothLockFunctionV6V7Activity extends BaseBleActivity<IDeviceDetailView, DeviceDetailPresenter<IDeviceDetailView>> implements IDeviceDetailView, View.OnClickListener {
     @BindView(R.id.iv_back)
     ImageView ivBack;
     @BindView(R.id.tv_bluetooth_name)
@@ -136,7 +136,7 @@ public class BluetoothLockFunctionActivity extends BaseBleActivity<IDeviceDetail
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_bluetooth_lock_function);
+        setContentView(R.layout.activity_bluetooth_lock_function_v6v7);
         ButterKnife.bind(this);
         Intent intent = getIntent();
         changeLockIcon(intent);
@@ -358,9 +358,9 @@ public class BluetoothLockFunctionActivity extends BaseBleActivity<IDeviceDetail
         ivTwo.setImageResource(R.mipmap.bluetooth_fingerprint);
         tvNameTwo.setText(R.string.fingerprint);
         tvNumberTwo.setText(0 + getString(R.string.ge));
-        ivThree.setImageResource(R.mipmap.bluetooth_card);
-        tvNameThree.setText(R.string.card);
-        tvNumberThree.setText(0 + getString(R.string.zhang));
+//        ivThree.setImageResource(R.mipmap.bluetooth_card);
+//        tvNameThree.setText(R.string.card);
+//        tvNumberThree.setText(0 + getString(R.string.zhang));
         ivFour.setImageResource(R.mipmap.bluetooth_share);
         tvNameFour.setText(R.string.device_share);
 //        tvNumberFour.setText(2 + getString(R.string.people));
@@ -397,8 +397,8 @@ public class BluetoothLockFunctionActivity extends BaseBleActivity<IDeviceDetail
                 startActivity(intent);
                 break;
             case R.id.ll_three:
-                intent = new Intent(this, DoorCardManagerActivity.class);
-                startActivity(intent);
+//                intent = new Intent(this, DoorCardManagerActivity.class);
+//                startActivity(intent);
                 break;
             case R.id.ll_four:
                 intent = new Intent(this, BluetoothSharedDeviceManagementActivity.class);
@@ -645,8 +645,8 @@ public class BluetoothLockFunctionActivity extends BaseBleActivity<IDeviceDetail
     public void onGetPasswordSuccess(GetPasswordResult result) {
         super.onGetPasswordSuccess(result);
         GetPasswordResult.DataBean dataBean = result.getData();
-        List<GetPasswordResult.DataBean.Card> cardList = dataBean.getCardList();
-        tvNumberThree.setText(cardList.size() + getString(R.string.zhang));
+//        List<GetPasswordResult.DataBean.Card> cardList = dataBean.getCardList();
+//        tvNumberThree.setText(cardList.size() + getString(R.string.zhang));
         List<GetPasswordResult.DataBean.Fingerprint> fingerprintList = dataBean.getFingerprintList();
         tvNumberTwo.setText(fingerprintList.size() + getString(R.string.ge));
         List<ForeverPassword> pwdList = dataBean.getPwdList();

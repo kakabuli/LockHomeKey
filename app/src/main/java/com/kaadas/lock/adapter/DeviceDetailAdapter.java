@@ -131,25 +131,28 @@ public class DeviceDetailAdapter extends BaseQuickAdapter<HomeShowBean, BaseView
 
                     isWifiDevice(false, helper, status, batteryView,blePower);
                     String model = bleLockInfo.getServerLockInfo().getModel();
-                    if (model.contains("K7")){
+                    if (model.startsWith("K7")){
                         helper.setImageResource(R.id.device_image, R.mipmap.k7);
-                    }else if (model.contains("K8")){
+                    }else if (model.startsWith("K8")){
                         helper.setImageResource(R.id.device_image, R.mipmap.k8);
-                    }else if (model.contains("K9")){
+                    }else if (model.startsWith("K9")){
                         helper.setImageResource(R.id.device_image, R.mipmap.k9);
-                    }else if (model.contains("KX")){
+                    }else if (model.startsWith("KX")){
                         helper.setImageResource(R.id.device_image, R.mipmap.kx);
-                    }else if (model.contains("QZ012")){
+                    }else if (model.startsWith("QZ012")){
                         helper.setImageResource(R.id.device_image, R.mipmap.qz012);
-                    }else if (model.contains("QZ013")){
+                    }else if (model.startsWith("QZ013")){
                         helper.setImageResource(R.id.device_image, R.mipmap.qz013);
-                    }else if (model.contains("S8")){
+                    }else if (model.startsWith("S8")){
                         helper.setImageResource(R.id.device_image, R.mipmap.s8);
-                    }else if (model.contains("V6")) {
+                    }else if (model.startsWith("V6")) {
                         helper.setImageResource(R.id.device_image, R.mipmap.v6);
-                    }else if (model.contains("V7")) {
+                    }else if (model.startsWith("V7")) {
                         helper.setImageResource(R.id.device_image, R.mipmap.v7);
-                    } else{
+                    }else if (model.startsWith("S8C")){
+                        helper.setImageResource(R.id.device_image, R.mipmap.s8);
+                    }
+                    else{
                         helper.setImageResource(R.id.device_image, R.mipmap.default_zigbee_lock_icon);
                     }
                     batteryView.setPower(blePower);

@@ -26,6 +26,7 @@ import com.kaadas.lock.R;
 import com.kaadas.lock.activity.addDevice.DeviceAddActivity;
 import com.kaadas.lock.activity.device.BluetoothLockAuthorizationActivity;
 import com.kaadas.lock.activity.device.BluetoothLockFunctionActivity;
+import com.kaadas.lock.activity.device.BluetoothLockFunctionV6V7Activity;
 import com.kaadas.lock.activity.device.gateway.GatewayActivity;
 import com.kaadas.lock.activity.device.cateye.more.CateyeFunctionActivity;
 import com.kaadas.lock.activity.device.gatewaylock.GatewayLockFunctionActivity;
@@ -411,10 +412,19 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                 mPresenter.setBleLockInfo(bleLockInfo);
                 if (bleLockInfo.getServerLockInfo().getIs_admin() != null && bleLockInfo.getServerLockInfo().getIs_admin().equals("1")) {
                     if ("3".equals(bleLockInfo.getServerLockInfo().getBleVersion())) {
-                        Intent detailIntent = new Intent(getActivity(), BluetoothLockFunctionActivity.class);
-                        String model = bleLockInfo.getServerLockInfo().getModel();
-                        detailIntent.putExtra(KeyConstants.DEVICE_TYPE, model);
-                        startActivityForResult(detailIntent, KeyConstants.GET_BLE_POWER);
+                        String lockType = bleLockInfo.getServerLockInfo().getModel();
+                        if (lockType.startsWith("V6")||lockType.startsWith("V7")){
+                            Intent detailIntent = new Intent(getActivity(), BluetoothLockFunctionV6V7Activity.class);
+                            String model = bleLockInfo.getServerLockInfo().getModel();
+                            detailIntent.putExtra(KeyConstants.DEVICE_TYPE, model);
+                            startActivityForResult(detailIntent, KeyConstants.GET_BLE_POWER);
+                        }else {
+                            Intent detailIntent = new Intent(getActivity(), BluetoothLockFunctionActivity.class);
+                            String model = bleLockInfo.getServerLockInfo().getModel();
+                            detailIntent.putExtra(KeyConstants.DEVICE_TYPE, model);
+                            startActivityForResult(detailIntent, KeyConstants.GET_BLE_POWER);
+                        }
+
                     } else {
                         Intent detailIntent = new Intent(getActivity(), OldBluetoothLockDetailActivity.class);
                         String model = bleLockInfo.getServerLockInfo().getModel();

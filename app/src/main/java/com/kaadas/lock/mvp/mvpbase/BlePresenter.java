@@ -215,6 +215,7 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
     public void listenerConnectState() {
         //连接成功   直接鉴权
         toDisposable(disposable1);
+        try{
         disposable1 = bleService.subscribeDeviceConnectState()
                 .compose(RxjavaHelper.observeOnMainThread())
                 .subscribe(new Consumer<BleStateBean>() {
@@ -268,6 +269,9 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
                     }
                 });
         compositeDisposable.add(disposable1);
+        }catch (Exception e){
+
+        }
     }
 
 
