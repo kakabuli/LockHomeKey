@@ -94,6 +94,9 @@ public interface IBleView extends IBaseView {
      * 没有权限
      */
     void noPermissions();
-
+    /**
+     * 没有打开Gps
+     */
+    void noOpenGps();
 
 }

@@ -1086,8 +1086,13 @@ public class OldBleLockFragment extends BaseBleFragment<IOldBleLockView, OldBleL
         changeOpenLockStatus(12);
     }
 
-    ;
-
+    /**
+     * 没有打开GPS 提示
+     */
+    @Override
+    public void noOpenGps(){
+        ToastUtil.getInstance().showLong(R.string.check_phone_not_open_gps_please_open);
+    }
 
     private void onChangeInitView() {
         if (mPresenter.isAuth(bleLockInfo, true)) {

@@ -168,19 +168,19 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
     private void initData(List<HomeShowBean> homeShowBeanList) {
         mDeviceList.clear();
         if (homeShowBeanList != null) {
+            DaoSession daoSession = MyApplication.getInstance().getDaoWriteSession();
+            String uid = MyApplication.getInstance().getUid();
+            //清除数据库,可能存在用户在其他手机删除了设备，但是服务器已经没有该设备，所以会造成本地数据库误差
+            daoSession.getGatewayServiceInfoDao().queryBuilder().where(GatewayServiceInfoDao.Properties.Uid.eq(uid)).buildDelete().executeDeleteWithoutDetachingEntities();
+            daoSession.getGatewayLockServiceInfoDao().queryBuilder().where(GatewayLockServiceInfoDao.Properties.Uid.eq(uid)).buildDelete().executeDeleteWithoutDetachingEntities();
+            daoSession.getCatEyeServiceInfoDao().queryBuilder().where(CatEyeServiceInfoDao.Properties.Uid.eq(uid)).buildDelete().executeDeleteWithoutDetachingEntities();
+            daoSession.getBleLockServiceInfoDao().queryBuilder().where(BleLockServiceInfoDao.Properties.Uid.eq(uid)).buildDelete().executeDeleteWithoutDetachingEntities();
             if (homeShowBeanList.size() > 0) {
-                DaoSession daoSession = MyApplication.getInstance().getDaoWriteSession();
-                String uid = MyApplication.getInstance().getUid();
                 noDeviceLayout.setVisibility(View.GONE);
                 refresh.setVisibility(View.VISIBLE);
                 mPresenter.getPublishNotify();
                 mPresenter.listenerDeviceOnline();
                 mPresenter.listenerNetworkChange();
-                //清除数据库,可能存在用户在其他手机删除了设备，但是服务器已经没有该设备，所以会造成本地数据库误差
-                daoSession.getGatewayServiceInfoDao().queryBuilder().where(GatewayServiceInfoDao.Properties.Uid.eq(uid)).buildDelete().executeDeleteWithoutDetachingEntities();
-                daoSession.getGatewayLockServiceInfoDao().queryBuilder().where(GatewayLockServiceInfoDao.Properties.Uid.eq(uid)).buildDelete().executeDeleteWithoutDetachingEntities();
-                daoSession.getCatEyeServiceInfoDao().queryBuilder().where(CatEyeServiceInfoDao.Properties.Uid.eq(uid)).buildDelete().executeDeleteWithoutDetachingEntities();
-                daoSession.getBleLockServiceInfoDao().queryBuilder().where(BleLockServiceInfoDao.Properties.Uid.eq(uid)).buildDelete().executeDeleteWithoutDetachingEntities();
                 for (HomeShowBean homeShowBean : homeShowBeanList) {
                     LogUtils.e(homeShowBeanList.size() + "获取到大小     " + "获取到昵称  " + homeShowBean.getDeviceNickName());
                     //请求电量
@@ -300,12 +300,12 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                         AlertDialog dialog = normalDialog.create();
                         dialog.setCanceledOnTouchOutside(false);
                         dialog.show();
-                    }else if(Rom.isVivo() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.N){
-                        boolean isVivoOpen= (boolean) SPUtils.get(Constants.IS_VOVO_OPEN,false);
-                        if(isVivoOpen){
-                            return;
-                        }
-                        SPUtils.put(Constants.IS_VOVO_OPEN,true);
+                    }else if(!isFlag && Rom.isVivo() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.N){
+                     //   boolean isVivoOpen= (boolean) SPUtils.get(Constants.IS_VOVO_OPEN,false);
+//                        if(isVivoOpen){
+//                            return;
+//                        }
+                //        SPUtils.put(Constants.IS_VOVO_OPEN,true);
                         final AlertDialog.Builder normalDialog = new AlertDialog.Builder(getActivity());
                         //	normalDialog.setIcon(R.drawable.icon_dialog);
                         normalDialog.setTitle(getString(R.string.mainactivity_permission_alert_title));
@@ -416,7 +416,7 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                         if (lockType.startsWith("V6")||lockType.startsWith("V7")){
                             Intent detailIntent = new Intent(getActivity(), BluetoothLockFunctionV6V7Activity.class);
                             String model = bleLockInfo.getServerLockInfo().getModel();
-                            detailIntent.putExtra(KeyConstants.DEVICE_TYPE, model);
+                            detailIntent.putExtra(KeyConstants. DEVICE_TYPE, model);
                             startActivityForResult(detailIntent, KeyConstants.GET_BLE_POWER);
                         }else {
                             Intent detailIntent = new Intent(getActivity(), BluetoothLockFunctionActivity.class);
