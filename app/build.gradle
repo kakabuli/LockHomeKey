@@ -22,7 +22,7 @@ android {
         minSdkVersion 22
         targetSdkVersion 26
         versionCode 201906031
-        versionName "3.1.0"
+        versionName "3.1.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         flavorDimensions "versionCode"
         multiDexEnabled true
