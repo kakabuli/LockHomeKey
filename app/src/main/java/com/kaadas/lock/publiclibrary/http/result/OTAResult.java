@@ -81,4 +81,13 @@ public class OTAResult {
                     '}';
         }
     }
+
+    @Override
+    public String toString() {
+        return "OTAResult{" +
+                "msg='" + msg + '\'' +
+                ", code='" + code + '\'' +
+                ", data=" + data +
+                '}';
+    }
 }

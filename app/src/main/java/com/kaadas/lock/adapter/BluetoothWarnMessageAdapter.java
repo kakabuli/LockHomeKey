@@ -40,7 +40,7 @@ public class BluetoothWarnMessageAdapter extends BaseQuickAdapter<BluetoothRecor
         }
         RecyclerView recyclerView = helper.getView(R.id.item_recycleview);
         List<BluetoothItemRecordBean> data = bean.getList();
-        BluetoothItemRecordAdapter bluetoothItemRecordAdapter = new BluetoothItemRecordAdapter(data);
+        BluetoothItemRecordAdapter bluetoothItemRecordAdapter = new BluetoothItemRecordAdapter(R.layout.item_item_warn_record,data);
         recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         recyclerView.setAdapter(bluetoothItemRecordAdapter);
         helper.getView(R.id.view_line).setVisibility(bean.isLastData() == true ? View.INVISIBLE : View.VISIBLE);
