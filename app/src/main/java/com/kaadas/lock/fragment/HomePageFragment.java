@@ -168,7 +168,7 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
                 new ViewTreeObserver.OnGlobalLayoutListener() {
                     @Override
                     public void onGlobalLayout() {
-                        if (scTitle.getWidth() > 0) {
+                        if (scTitle!=null&&scTitle.getWidth() > 0) {
                             int childCount = mRadioGroup.getChildCount();
                             for (int i = 0; i < childCount; i++) {
                                 RadioButton radioButton = (RadioButton) mRadioGroup.getChildAt(i);

@@ -690,7 +690,7 @@
     <string name="close_silence">正在关闭静音模式</string>
     <string name="open_slience">正在开启静音模式</string>
     <string name="get_lock_info_fail">获取锁信息失败</string>
-    <string name="get_lock_info_later_on">正在获取锁的进行信息，请稍后。。。</string>
+    <string name="get_lock_info_later_on">正在获取锁的设备信息，请稍后。。。</string>
     <string name="input_open_lock_password">请输入开锁密码</string>
     <string name="no_find_device">未找到设备</string>
     <string name="lock_no_record">锁上还没有开锁记录！</string>
@@ -1045,4 +1045,5 @@
     <string name="input_passwords">输入密码</string>
     <string name="try_again">再试一次</string>
     <string name="verify_and_turn_on_touch_id">验证并开启Touch ID</string>
+    <string name="please_open_ble">蓝牙未打开，请打开蓝牙！</string>
 </resources>

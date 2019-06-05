@@ -23,8 +23,8 @@ public class GatewayLockInformationPresenter<T> extends BasePresenter<GatewayLoc
         toDisposable(getLockInfoDisposable);
         if (mqttService!=null){
             getLockInfoDisposable=mqttService.mqttPublish(MqttConstant.getCallTopic(MyApplication.getInstance().getUid()), MqttCommandFactory.getGatewayLockInformation(gatewayId,deviceId))
-                    .compose(RxjavaHelper.observeOnMainThread())
                     .timeout(10*1000, TimeUnit.MILLISECONDS)
+                    .compose(RxjavaHelper.observeOnMainThread())
                     .filter(new Predicate<MqttData>() {
                         @Override
                         public boolean test(MqttData mqttData) throws Exception {
@@ -53,8 +53,8 @@ public class GatewayLockInformationPresenter<T> extends BasePresenter<GatewayLoc
                     }, new Consumer<Throwable>() {
                         @Override
                         public void accept(Throwable throwable) throws Exception {
-                            mViewRef.get().getLockInfoThrowable(throwable);
                             if (mViewRef.get()!=null){
+                                mViewRef.get().getLockInfoThrowable(throwable);
                             }
                         }
                     });

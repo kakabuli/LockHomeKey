@@ -18,6 +18,8 @@ import com.kaadas.lock.R;
  */
 public class AlertDialogUtil {
     private static AlertDialogUtil alertDialogUtil = null;
+    private AlertDialog dialog;
+
     public static AlertDialogUtil getInstance() {
         if (alertDialogUtil == null) {
             alertDialogUtil = new AlertDialogUtil();
@@ -32,7 +34,7 @@ public class AlertDialogUtil {
     //由于有输入框这种需要不同的约束，所以不进行封装。
     public AlertDialog  common(Context context, View view) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.MyDialog);
-        AlertDialog dialog = builder.create();
+        dialog = builder.create();
         dialog.setCancelable(true);
         dialog.show();
         Window window = dialog.getWindow();

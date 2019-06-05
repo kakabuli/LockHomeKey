@@ -26,7 +26,7 @@ public class SPUtils {
     //token
     public static final String TOKEN = "token";
     //uid
-    public static final String UID = "uid";
+    public static final String UID = "user_id";
     //phone
     public static final String PHONEN="phone";
     //username
