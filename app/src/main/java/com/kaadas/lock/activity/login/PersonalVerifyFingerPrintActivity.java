@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.os.CancellationSignal;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.TranslateAnimation;
@@ -30,10 +31,13 @@ import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.BitmapUtil;
 import com.kaadas.lock.utils.EncryUtils;
 import com.kaadas.lock.utils.KeyConstants;
+import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.StorageUtil;
 import com.kaadas.lock.utils.ToastUtil;
 import com.kaadas.lock.mvp.view.personalview.IPersonalVerifyFingerPrintView;
+import com.kaadas.lock.utils.cachefloder.ACache;
+import com.kaadas.lock.utils.cachefloder.CacheFloder;
 import com.kaadas.lock.widget.BottomMenuDialog;
 import com.kaadas.lock.widget.CircleImageView;
 
@@ -60,13 +64,11 @@ public class PersonalVerifyFingerPrintActivity extends BaseActivity<IPersonalVer
     private Context mContext;
     private Bitmap changeBitmap;
     private FingerprintManager mFingerprintManager;
-    ;
     private CancellationSignal mCancellationSignal;//用于取消指纹识别
 
     private final String mAlias = "touch_id_key";//用于获取加密key
     private TranslateAnimation translateAnimation;
-    String source;
-
+    private AlertDialog alertDialog;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,8 +77,6 @@ public class PersonalVerifyFingerPrintActivity extends BaseActivity<IPersonalVer
         ButterKnife.bind(this);
         initView();
         initData();
-        Intent intent = getIntent();
-         source = intent.getStringExtra(KeyConstants.SOURCE);
     }
 
     private void initData() {
@@ -126,15 +126,33 @@ public class PersonalVerifyFingerPrintActivity extends BaseActivity<IPersonalVer
             showImage(photoPath);
         }
         setImageAnimation();
-
+        initDialog();
     }
+
+    private void initDialog() {
+        LogUtils.e("显示对话框");
+        if (alertDialog!=null&&!alertDialog.isShowing()){
+            alertDialog.show();
+        }else {
+            View mView = LayoutInflater.from(this).inflate(R.layout.personal_fingerprint_security, null);
+            TextView mFingerCancel = mView.findViewById(R.id.finger_cancel);
+            alertDialog = AlertDialogUtil.getInstance().common(this, mView);
+            alertDialog.setCancelable(false);
+            mFingerCancel.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    alertDialog.dismiss();
+                }
+            });
+        }
+    }
+
 
     private void setImageAnimation() {
         //摇摆
         translateAnimation = new TranslateAnimation(0f, 20f, 0, 0);
         translateAnimation.setDuration(100);
         fingeprintImg.setAnimation(translateAnimation);
-
 
     }
 
@@ -164,6 +182,25 @@ public class PersonalVerifyFingerPrintActivity extends BaseActivity<IPersonalVer
     //展示头像对话框
     private void showMoreDialog() {
         dialogBuilder = new BottomMenuDialog.Builder(this);
+        String code = CacheFloder.readHandPassword(ACache.get(MyApplication.getInstance()), MyApplication.getInstance().getUid() + "handPassword");
+       //手势密码
+        if (!TextUtils.isEmpty(code)) {
+            dialogBuilder.addMenu(R.string.hand_pwd, new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent loginIntent = new Intent(mContext, PersonalVerifyGesturePasswordActivity.class);
+                    startActivity(loginIntent);
+                    if (bottomMenuDialog != null) {
+                        bottomMenuDialog.dismiss();
+                        if (mCancellationSignal!=null){
+                            mCancellationSignal.cancel();
+                        }
+                        finish();
+                    }
+                }
+            });
+        }
+        //密码登录
         dialogBuilder.addMenu(R.string.pwd_select, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -171,10 +208,14 @@ public class PersonalVerifyFingerPrintActivity extends BaseActivity<IPersonalVer
                 startActivity(loginIntent);
                 if (bottomMenuDialog != null) {
                     bottomMenuDialog.dismiss();
-//                    finish();
+                    if (mCancellationSignal!=null){
+                        mCancellationSignal.cancel();
+                    }
+                    finish();
                 }
             }
         });
+        //切换注册页面
         dialogBuilder.addMenu(R.string.select_register, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -182,7 +223,10 @@ public class PersonalVerifyFingerPrintActivity extends BaseActivity<IPersonalVer
                 startActivity(registerIntent);
                 if (bottomMenuDialog != null) {
                     bottomMenuDialog.dismiss();
-//                    finish();
+                    if (mCancellationSignal!=null){
+                        mCancellationSignal.cancel();
+                    }
+                    finish();
                 }
             }
         });
@@ -211,28 +255,43 @@ public class PersonalVerifyFingerPrintActivity extends BaseActivity<IPersonalVer
     private FingerprintManager.AuthenticationCallback callback = new FingerprintManager.AuthenticationCallback() {
         @Override
         public void onAuthenticationSucceeded(FingerprintManager.AuthenticationResult result) {
-            if ("PersonalSecuritySettingActivity".equals(source)){
-                Intent intent = new Intent();
-                //把返回数据存入Intent
-                //设置返回数据
-                setResult(RESULT_OK, intent);
-                finish();
-            }else {
-                Intent successIntent = new Intent(mContext, MainActivity.class);
-                startActivity(successIntent);
-                ToastUtil.getInstance().showShort(R.string.fingerprint_success);
-                finish();
+            if (alertDialog!=null){
+                alertDialog.dismiss();
             }
+            Intent successIntent = new Intent(mContext, MainActivity.class);
+            startActivity(successIntent);
+            ToastUtil.getInstance().showShort(R.string.fingerprint_success);
+            finish();
         }
 
         @Override
         public void onAuthenticationError(int errorCode, CharSequence errString) {
-//            ToastUtil.getInstance().showShort(R.string.fingerprint_fail);
+            LogUtils.e("指纹识别码错误"+errorCode);
+            if (alertDialog!=null){
+                alertDialog.dismiss();
+            }
+            if (errorCode==7){
+                AlertDialogUtil.getInstance().noEditSingleButtonDialog(mContext, getString(R.string.app_name), getString(R.string.touch_id_call_limited), getString(R.string.confirm), new AlertDialogUtil.ClickListener() {
+                    @Override
+                    public void left() {
+
+                    }
+
+                    @Override
+                    public void right() {
+
+                    }
+                });
+            }
+
         }
 
         @Override
         public void onAuthenticationHelp(int helpCode, CharSequence helpString) {
             //指纹验证失败，可再验，可能手指过脏，或者移动过快等原因。
+            if (alertDialog!=null){
+                alertDialog.dismiss();
+            }
             if (translateAnimation != null && fingeprintImg != null) {
                 fingeprintImg.startAnimation(translateAnimation);
             }
@@ -242,6 +301,10 @@ public class PersonalVerifyFingerPrintActivity extends BaseActivity<IPersonalVer
         @Override
         public void onAuthenticationFailed() {
             //指纹验证失败，指纹识别失败，可再验，该指纹不是系统录入的指纹。
+            if (alertDialog!=null){
+                alertDialog.dismiss();
+            }
+
             if (translateAnimation != null && fingeprintImg != null) {
                 fingeprintImg.startAnimation(translateAnimation);
             }
@@ -262,5 +325,15 @@ public class PersonalVerifyFingerPrintActivity extends BaseActivity<IPersonalVer
 //        ToastUtil.getInstance().showShort( HttpUtils.httpProtocolErrorCode(this,e));
     }
 
+    private long lastClickBackTime = 0;
+    @Override
+    public void onBackPressed() {
+        if (System.currentTimeMillis() - lastClickBackTime > 2000) {
+            lastClickBackTime = System.currentTimeMillis();
+            ToastUtil.getInstance().showLong(R.string.exit);
+        } else {
+            System.exit(0);
+        }
+    }
 
 }

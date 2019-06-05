@@ -22,11 +22,18 @@ import java.util.List;
 
 
 public class BluetoothItemRecordAdapter extends BaseQuickAdapter<BluetoothItemRecordBean, BaseViewHolder> {
-
+    public BluetoothItemRecordAdapter(int layoutResId, @Nullable List<BluetoothItemRecordBean> data) {
+        super(layoutResId, data);
+    }
 
     public BluetoothItemRecordAdapter(@Nullable List<BluetoothItemRecordBean> data) {
-        super(R.layout.item_item_bluetooth_record, data);
+        super(data);
     }
+
+//
+//    public BluetoothItemRecordAdapter(@Nullable List<BluetoothItemRecordBean> data) {
+//        super(R.layout.item_item_bluetooth_record, data);
+//    }
 
 
     @Override
