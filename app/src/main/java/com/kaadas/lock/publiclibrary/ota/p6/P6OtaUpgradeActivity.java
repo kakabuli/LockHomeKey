@@ -37,6 +37,7 @@ import com.kaadas.lock.publiclibrary.ota.p6.OTAFirmwareUpdate.OTAFUHandler;
 import com.kaadas.lock.publiclibrary.ota.p6.OTAFirmwareUpdate.OTAFUHandlerCallback;
 import com.kaadas.lock.publiclibrary.ota.p6.OTAFirmwareUpdate.OTAFUHandler_v1;
 import com.kaadas.lock.utils.AlertDialogUtil;
+import com.kaadas.lock.utils.GpsUtil;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.ToastUtil;
 import com.kaadas.lock.widget.CircleProgress;
@@ -294,6 +295,7 @@ public class P6OtaUpgradeActivity extends BaseAddToApplicationActivity implement
             mCircleProgress2.setValue(50);
             scanDevices();
             return;
+//            file.delete();
         }
         FileDownloader.getImpl().create(url)
                 .setPath(path)
@@ -400,6 +402,19 @@ public class P6OtaUpgradeActivity extends BaseAddToApplicationActivity implement
     }
 
     public void scanDevices() {
+        BluetoothAdapter defaultAdapter = BluetoothAdapter.getDefaultAdapter();
+        if (!defaultAdapter.isEnabled()){
+            ToastUtil.getInstance().showLong(R.string.please_open_ble);
+            defaultAdapter.enable();
+            isUpdating = false;
+        }
+
+        if (!GpsUtil.isOPen(this)){
+            isUpdating = false;
+            ToastUtil.getInstance().showLong(getString(R.string.check_phone_not_open_gps_please_open));
+            return;
+        }
+
         MyApplication.getInstance().getBleService().release();
         BluetoothLeService.disconnect();
         ScanSettings scanSettings = new ScanSettings.Builder().setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY).build();

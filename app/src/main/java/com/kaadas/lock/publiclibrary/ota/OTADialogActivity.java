@@ -75,7 +75,7 @@ public class OTADialogActivity extends BaseActivity<IOtaView, OtaPresenter<IOtaV
                 //获取版本信息
 
                 mPresenter.checkOtaInfo(sn,version);
-//                mPresenter.checkOtaInfo(sn,"1.01.007");
+//                mPresenter.checkOtaInfo("K901192210013","1.01.007");
 
                 MyApplication.getInstance().getBleService().release();
 
@@ -119,8 +119,9 @@ public class OTADialogActivity extends BaseActivity<IOtaView, OtaPresenter<IOtaV
     @Override
     public void onGetOtaInfoSuccess(OTAResult.UpdateFileInfo updateFileInfo) {
         MyApplication.getInstance().getBleService().release();
+        LogUtils.e("下载链接是   " +updateFileInfo.getFileUrl() );
         Intent intent = new Intent();
-        intent.putExtra(OtaConstants.fileName, "XiaoKai_" + updateFileInfo.getFileVersion() + ".bin");
+        intent.putExtra(OtaConstants.bindUrl, updateFileInfo.getFileUrl());
         intent.putExtra(OtaConstants.deviceMac, bleLockInfo.getServerLockInfo().getMacLock());
         intent.putExtra(OtaConstants.password1, bleLockInfo.getServerLockInfo().getPassword1());
         intent.putExtra(OtaConstants.password2, bleLockInfo.getServerLockInfo().getPassword2());

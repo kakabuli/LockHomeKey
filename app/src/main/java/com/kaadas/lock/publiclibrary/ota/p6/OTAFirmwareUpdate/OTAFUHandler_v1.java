@@ -49,6 +49,7 @@ import com.kaadas.lock.publiclibrary.ota.p6.CommonUtils.ConvertUtils;
 import com.kaadas.lock.publiclibrary.ota.p6.CommonUtils.Utils;
 import com.kaadas.lock.publiclibrary.ota.p6.IUpdateStatusListener;
 import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.Rsa;
 
 import java.io.File;
 import java.util.Arrays;
@@ -114,6 +115,7 @@ public class OTAFUHandler_v1 extends OTAFUHandlerBase {
         this.mActiveApp = headerRow.mAppId;
 
         //Send Enter Bootloader command
+        LogUtils.e("  文件数据是2    mProductId  " + Rsa.bytesToHexString(headerRow.mProductId) +"    mAppId    "  + Rsa.byteToHexString(mActiveApp)+"   mCheckSumType " +Rsa.byteToHexString(mCheckSumType));
         mOtaFirmwareWrite.OTAEnterBootLoaderCmd(mCheckSumType, headerRow.mProductId);
         postTimeout();
         handler.postDelayed(timeOutRunnable, 2 * 1000);
@@ -150,6 +152,7 @@ public class OTAFUHandler_v1 extends OTAFUHandlerBase {
                 Utils.setIntSharedPreference(getmActivity(), Constants.PREF_PROGRAM_ROW_START_POS + BluetoothLeService.mBluetoothDeviceAddress, 0);
                 Utils.setIntSharedPreference(getmActivity(), Constants.PREF_PROGRAM_ROW_NO + BluetoothLeService.mBluetoothDeviceAddress, nowRowNum);
                 Utils.setStringSharedPreference(getmActivity(), Constants.PREF_BOOTLOADER_STATE + BluetoothLeService.mBluetoothDeviceAddress, "" + BootLoaderCommands_v1.ENTER_BOOTLOADER);
+                LogUtils.e("  文件数据是1    mProductId  " + Rsa.bytesToHexString(headerRow.mProductId) +"    mAppId    "  + Rsa.byteToHexString(mActiveApp)+"   mCheckSumType " +Rsa.byteToHexString(mCheckSumType));
                 mOtaFirmwareWrite.OTAEnterBootLoaderCmd(mCheckSumType, headerRow.mProductId);
                 postTimeout();
             }

@@ -401,15 +401,15 @@ public class DeviceMorePresenter extends BlePresenter<IDeviceMoreView> {
 
                         String serverBleVersion = bleLockInfo.getServerLockInfo().getSoftwareVersion();
                         String deviceSN = bleLockInfo.getServerLockInfo().getDeviceSN();
-                        LogUtils.e("服务器数据是  serverBleVersion " + serverBleVersion+"  deviceSN  "+deviceSN);
+                        LogUtils.e("服务器数据是  serverBleVersion " + serverBleVersion+"  deviceSN  "+deviceSN +"  本地数据是  sn " + sn+"  version " +version);
                         if (version.equals(serverBleVersion) && sn.equals(deviceSN)){
                             checkOtaInfo(sn, version);
                         }else {
                             uploadBleSoftware(sn, version);
                         }
 
-//                        checkOtaInfo("BT02191410009", "10.1.007");
-                        toDisposable(readSoftwareRevDisposable);
+//                        checkOtaInfo(sn, "10.1.007");
+//                        toDisposable(readSoftwareRevDisposable);
                     }
                 }, new Consumer<Throwable>() {
                     @Override
@@ -462,7 +462,7 @@ public class DeviceMorePresenter extends BlePresenter<IDeviceMoreView> {
     public void checkOtaInfo(String SN, String version) {
         //请求成功
         //todo 测试版本号写死
-//        otaDisposable = XiaokaiNewServiceImp.getOtaInfo(1, SN, "1.01.007")
+//        otaDisposable = XiaokaiNewServiceImp.getOtaInfo(1, "K901192210013", "1.01.007")
         otaDisposable = XiaokaiNewServiceImp.getOtaInfo(1, SN, version)
                 .subscribe(new Consumer<OTAResult>() {
                     @Override

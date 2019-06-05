@@ -656,7 +656,9 @@ public class BleService extends Service {
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    bluetoothGatt.readCharacteristic(bleVersionChar);
+                    if (bleVersionChar!=null){
+                        bluetoothGatt.readCharacteristic(bleVersionChar);
+                    }
                 }
             }, 500);
         }
