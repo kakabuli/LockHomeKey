@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import com.kaadas.lock.mvp.mvpbase.BasePresenter;
 import com.kaadas.lock.publiclibrary.http.XiaokaiNewServiceImp;
 import com.kaadas.lock.publiclibrary.http.result.OTAResult;
+import com.kaadas.lock.utils.LogUtils;
 
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
@@ -20,11 +21,15 @@ public class OtaPresenter<T> extends BasePresenter<IOtaView> {
                 .subscribe(new Consumer<OTAResult>() {
                     @Override
                     public void accept(OTAResult otaResult) throws Exception {
-                        String fileUrl = otaResult.getData().getFileUrl();
-                        if ("200".equals(otaResult.getCode()) &&!TextUtils.isEmpty(fileUrl)) {
+                        LogUtils.e("服务器数据是   " + otaResult.toString());
+
+                        if ("200".equals(otaResult.getCode()) ) {
                             //请求成功
-                            if (!fileUrl.startsWith("http://")){
-                                otaResult.getData().setFileUrl("http://"+fileUrl);
+                            String fileUrl = otaResult.getData().getFileUrl();
+                            if (!TextUtils.isEmpty(fileUrl)){
+                                if (!fileUrl.startsWith("http://")){
+                                    otaResult.getData().setFileUrl("http://"+fileUrl);
+                                }
                             }
                             if (mViewRef.get() != null) {
                                 mViewRef.get().onGetOtaInfoSuccess(otaResult.getData());
@@ -38,7 +43,10 @@ public class OtaPresenter<T> extends BasePresenter<IOtaView> {
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        mViewRef.get().onFailed(throwable);
+                        LogUtils.e("异常检查版本   " +throwable.getMessage() );
+                        if (mViewRef.get()!=null){
+                            mViewRef.get().onFailed(throwable);
+                        }
                     }
                 });
 

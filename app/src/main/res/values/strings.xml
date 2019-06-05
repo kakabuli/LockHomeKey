@@ -1042,4 +1042,5 @@
     <string name="app_open">App开锁</string>
     <string name="one_key_open">一键开启开锁</string>
     <string name="unknown_open">不确定</string>
+    <string name="please_open_ble">蓝牙未打开，请打开蓝牙！</string>
 </resources>
