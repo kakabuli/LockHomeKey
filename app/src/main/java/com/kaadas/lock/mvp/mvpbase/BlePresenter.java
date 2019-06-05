@@ -166,6 +166,9 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
         if (mViewRef.get() != null && isNotify) {
             mViewRef.get().onStartSearchDevice();
         }
+        if (bleLockInfo==null){
+            return;
+        }
 
         disposable = bleService.getDeviceByMac(this.bleLockInfo.getServerLockInfo().getMacLock())
                 .timeout(10 * 1000, TimeUnit.MILLISECONDS)

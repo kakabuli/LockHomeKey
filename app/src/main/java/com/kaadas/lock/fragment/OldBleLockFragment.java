@@ -144,12 +144,12 @@ public class OldBleLockFragment extends BaseBleFragment<IOldBleLockView, OldBleL
         super.onResume();
         if (!mPresenter.isAttach() &&!isDestroy) {
             mPresenter.attachView(this);
-        }
-        boolean auth = mPresenter.isAuth(bleLockInfo, true);
-        if (auth) {
-            changeOpenLockStatus(8);
-        } else {
+            boolean auth = mPresenter.isAuth(bleLockInfo, true);
+            if (auth) {
+                changeOpenLockStatus(8);
+            } else {
 //            changeOpenLockStatus(12);
+            }
         }
         mPresenter.getOpenRecordFromServer(1, bleLockInfo);
     }

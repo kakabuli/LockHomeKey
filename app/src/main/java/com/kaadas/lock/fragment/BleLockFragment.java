@@ -744,7 +744,6 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
                 break;
             case R.id.tv_synchronized_record:
        /*         if(true){
-
                    Random random=new Random();
                     int i = random.nextInt(6);
                      i=i+13;

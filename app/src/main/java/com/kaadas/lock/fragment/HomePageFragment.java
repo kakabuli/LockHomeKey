@@ -102,6 +102,7 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
                     }
                 }
             }
+
             @Override
             public void onPageScrollStateChanged(int i) {
 
@@ -125,7 +126,7 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
     }
 
     private void initView() {
-        viewPager.setOffscreenPageLimit(5);
+        viewPager.setOffscreenPageLimit(3);
         mRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -168,14 +169,14 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
                 new ViewTreeObserver.OnGlobalLayoutListener() {
                     @Override
                     public void onGlobalLayout() {
-                        if (scTitle!=null&&scTitle.getWidth() > 0) {
+                        if (scTitle != null && scTitle.getWidth() > 0) {
                             int childCount = mRadioGroup.getChildCount();
                             for (int i = 0; i < childCount; i++) {
                                 RadioButton radioButton = (RadioButton) mRadioGroup.getChildAt(i);
-                                if (childCount >2){
-                                    radioButton.setLayoutParams(new LinearLayout.LayoutParams((scTitle.getWidth() / 3), LinearLayout.LayoutParams.WRAP_CONTENT ));
-                                }else {
-                                    radioButton.setLayoutParams(new LinearLayout.LayoutParams((scTitle.getWidth() / childCount), LinearLayout.LayoutParams.WRAP_CONTENT ));
+                                if (childCount > 2) {
+                                    radioButton.setLayoutParams(new LinearLayout.LayoutParams((scTitle.getWidth() / 3), LinearLayout.LayoutParams.WRAP_CONTENT));
+                                } else {
+                                    radioButton.setLayoutParams(new LinearLayout.LayoutParams((scTitle.getWidth() / childCount), LinearLayout.LayoutParams.WRAP_CONTENT));
                                 }
                             }
                         }
@@ -277,10 +278,10 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
                     break;
             }
             //根据需要设置显示初始标签的个数，这里显示3个
-            if (devices.size()>2){
-                rb.setLayoutParams(new LinearLayout.LayoutParams((scTitle.getWidth() / 3), LinearLayout.LayoutParams.WRAP_CONTENT ));
-            }else {
-                rb.setLayoutParams(new LinearLayout.LayoutParams((scTitle.getWidth() / devices.size()), LinearLayout.LayoutParams.WRAP_CONTENT ));
+            if (devices.size() > 2) {
+                rb.setLayoutParams(new LinearLayout.LayoutParams((scTitle.getWidth() / 3), LinearLayout.LayoutParams.WRAP_CONTENT));
+            } else {
+                rb.setLayoutParams(new LinearLayout.LayoutParams((scTitle.getWidth() / devices.size()), LinearLayout.LayoutParams.WRAP_CONTENT));
             }
 
             //设置背景为透明
@@ -329,7 +330,7 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
             viewPager.setAdapter(adapter);
         } else {
             adapter.notifyDataSetChanged();
-            LogUtils.e("首页Fragment数据是     adapter.notifyDataSetChanged();" );
+            LogUtils.e("首页Fragment数据是     adapter.notifyDataSetChanged();");
         }
         if (devices.size() == 0) {
             hasDevice = false;
@@ -377,6 +378,7 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
     public void removeListener(ISelectChangeListener listener) {
         listeners.remove(listener);
     }
+
     public interface ISelectChangeListener {
         void onSelectChange(boolean isSelect);
     }
