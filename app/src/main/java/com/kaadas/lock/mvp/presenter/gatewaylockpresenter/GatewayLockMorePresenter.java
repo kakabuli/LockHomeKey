@@ -52,8 +52,8 @@ public class GatewayLockMorePresenter<T> extends BasePresenter<GatewayLockMoreVi
             MqttMessage mqttMessage= MqttCommandFactory.updateDeviceNickName(MyApplication.getInstance().getUid(),devuuid,deviceId,nickName);
             updateNameDisposable=mqttService
                     .mqttPublish(MqttConstant.PUBLISH_TO_SERVER,mqttMessage)
-                    .compose(RxjavaHelper.observeOnMainThread())
                     .timeout(10*1000, TimeUnit.MILLISECONDS)
+                    .compose(RxjavaHelper.observeOnMainThread())
                     .filter(new Predicate<MqttData>() {
                         @Override
                         public boolean test(MqttData mqttData) throws Exception {
@@ -102,8 +102,8 @@ public class GatewayLockMorePresenter<T> extends BasePresenter<GatewayLockMoreVi
             MqttMessage mqttMessage= MqttCommandFactory.getSoundVolume(gatewayId,deviceId);
             getLockSoundVolumeDisposable=mqttService
                     .mqttPublish(MqttConstant.getCallTopic(MyApplication.getInstance().getUid()),mqttMessage)
-                    .compose(RxjavaHelper.observeOnMainThread())
                     .timeout(10*1000, TimeUnit.MILLISECONDS)
+                    .compose(RxjavaHelper.observeOnMainThread())
                     .filter(new Predicate<MqttData>() {
                         @Override
                         public boolean test(MqttData mqttData) throws Exception {
@@ -151,8 +151,8 @@ public class GatewayLockMorePresenter<T> extends BasePresenter<GatewayLockMoreVi
             MqttMessage mqttMessage= MqttCommandFactory.setSoundVolume(gatewayId,deviceId,volume);
             setLockSoundVolumeDisposable=mqttService
                     .mqttPublish(MqttConstant.getCallTopic(MyApplication.getInstance().getUid()),mqttMessage)
-                    .compose(RxjavaHelper.observeOnMainThread())
                     .timeout(10*1000, TimeUnit.MILLISECONDS)
+                    .compose(RxjavaHelper.observeOnMainThread())
                     .filter(new Predicate<MqttData>() {
                         @Override
                         public boolean test(MqttData mqttData) throws Exception {
@@ -377,8 +377,8 @@ public class GatewayLockMorePresenter<T> extends BasePresenter<GatewayLockMoreVi
                             return false;
                         }
                     })
-                    .compose(RxjavaHelper.observeOnMainThread())
                     .timeout(10*1000, TimeUnit.MILLISECONDS)
+                    .compose(RxjavaHelper.observeOnMainThread())
                     .subscribe(new Consumer<MqttData>() {
                         @Override
                         public void accept(MqttData mqttData) throws Exception {
@@ -420,8 +420,8 @@ public class GatewayLockMorePresenter<T> extends BasePresenter<GatewayLockMoreVi
                             return false;
                         }
                     })
-                    .compose(RxjavaHelper.observeOnMainThread())
                     .timeout(10*1000, TimeUnit.MILLISECONDS)
+                    .compose(RxjavaHelper.observeOnMainThread())
                     .subscribe(new Consumer<MqttData>() {
                         @Override
                         public void accept(MqttData mqttData) throws Exception {
