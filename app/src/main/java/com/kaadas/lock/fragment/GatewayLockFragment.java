@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.bottomappbar.BottomAppBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.InputFilter;
@@ -672,36 +673,34 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
 
     @Override
     public void openLockSuccess() {
+        isOpening = false;
+        isClosing = true;
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 stopOpenLockAnimator();
-                isOpening = false;
-                isClosing = true;
-                LogUtils.e("当前状态是   isOpening    " + isOpening + "   isClosing   " + isClosing);
                 changeOpenLockStatus(7);
-      /*  if (!TextUtils.isEmpty(gatewayId) && !TextUtils.isEmpty(deviceId)) {
-            mPresenter.openGatewayLockRecord(gatewayId, deviceId, MyApplication.getInstance().getUid(), 1, 3);
-            mPresenter.getGatewayLockOpenRecord(MyApplication.getInstance().getUid(), gatewayId, deviceId);//开锁次数
-        }*/
             }
         },3000);
+
+
 
     }
 
     @Override
     public void openLockFailed() {
+        isOpening = false;
+        isClosing=false;
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 stopOpenLockAnimator();
-                isOpening = false;
-                if (gatewayLockInfo!=null){
-                    if (gatewayLockInfo.getServerInfo().getEvent_str().equals("offline")){
-                        changeOpenLockStatus(1);
-                    }else{
-                        changeOpenLockStatus(5);
-                    }
+                if (deviceState != null) {
+                   if (deviceState.getText().equals(getString(R.string.offline))){
+                       changeOpenLockStatus(1);
+                   }else{
+                       changeOpenLockStatus(5);
+                   }
                 }
                 ToastUtil.getInstance().showShort(getString(R.string.open_lock_fail));
             }
@@ -713,11 +712,12 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
     public void openLockThrowable(Throwable throwable) {
         stopOpenLockAnimator();
         isOpening = false;
+        isClosing=false;
         if (!TextUtils.isEmpty(deviceId)){
             SPUtils.remove(KeyConstants.SAVA_LOCK_PWD + deviceId);
         }
-        if (gatewayLockInfo!=null){
-            if (gatewayLockInfo.getServerInfo().getEvent_str().equals("offline")){
+        if (deviceState != null) {
+            if (deviceState.getText().equals(getString(R.string.offline))){
                 changeOpenLockStatus(1);
             }else{
                 changeOpenLockStatus(5);
@@ -729,38 +729,31 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
     @Override
     public void startOpenLock() {
         isOpening = true;
+        isClosing= false;
         openLockAnimator();
 //        changeOpenLockStatus(6);
     }
+
+
     AnimationsContainer.FramesSequenceAnimation openLockBig;
     AnimationsContainer.FramesSequenceAnimation openLockMiddle;
     AnimationsContainer.FramesSequenceAnimation openLockSmall;
     AnimationsContainer.FramesSequenceAnimation closeLock;
     public void openLockAnimator() {
-        LogUtils.d("davi 开始新1 " + System.currentTimeMillis());
         ivExternalBig.setVisibility(View.VISIBLE);
-//        ivExternalBig.setImageResource(R.drawable.open_lock_big);
         //优化后的帧动画
         openLockBig = AnimationsContainer.getInstance(R.array.open_lock_big, 26).createProgressDialogAnim(ivExternalBig);
         ivExternalMiddle.setVisibility(View.VISIBLE);
-//        ivExternalMiddle.setImageResource(R.drawable.open_lock_middle);
         openLockMiddle = AnimationsContainer.getInstance(R.array.open_lock_middle, 26).createProgressDialogAnim(ivExternalMiddle);
         ivExternalSmall.setVisibility(View.GONE);
-//        ivExternalSmall.setImageResource(R.mipmap.bluetooth_open_lock_small_icon);
         ivInnerMiddle.setVisibility(View.VISIBLE);
-//        ivInnerMiddle.setImageResource(R.drawable.open_lock_small);
         openLockSmall = AnimationsContainer.getInstance(R.array.open_lock_small, 26).createProgressDialogAnim(ivInnerMiddle);
         ivInnerSmall.setVisibility(View.GONE);
-//                ivInnerSmall.setImageResource();
         tvInner.setVisibility(View.GONE);
-//                tvInner.setText();
-//                tvInner.setTextColor();
         tvExternal.setVisibility(View.VISIBLE);
         tvExternal.setTextColor(getResources().getColor(R.color.cC6F5FF));
         tvExternal.setText(getString(R.string.is_lock));
 
-
-        LogUtils.d("davi 开始新2 " + System.currentTimeMillis());
         if (openLockBig != null) {
             openLockBig.start();
         }
@@ -770,7 +763,6 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
         if (openLockSmall != null) {
             openLockSmall.start();
         }
-        LogUtils.d("davi 开始新3 " + System.currentTimeMillis());
     }
 
     /**
@@ -824,13 +816,13 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
     @Override
     public void lockCloseSuccess() {
         closeLockAnimator();
+        isClosing = false;
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 stopCloseLockAnimator();
-                isClosing = false;
-                if (gatewayLockInfo!=null){
-                    if (gatewayLockInfo.getServerInfo().getEvent_str().equals("offline")){
+                if (deviceState != null) {
+                    if (deviceState.getText().equals(getString(R.string.offline))){
                         changeOpenLockStatus(1);
                     }else{
                         changeOpenLockStatus(5);
@@ -844,8 +836,8 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
     @Override
     public void lockCloseFailed() {
         isClosing = false;
-        if (gatewayLockInfo!=null){
-            if (gatewayLockInfo.getServerInfo().getEvent_str().equals("offline")){
+        if (deviceState != null) {
+            if (deviceState.getText().equals(getString(R.string.offline))){
                 changeOpenLockStatus(1);
             }else{
                 changeOpenLockStatus(5);

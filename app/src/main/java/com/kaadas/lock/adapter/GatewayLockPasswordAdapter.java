@@ -19,12 +19,12 @@ public class GatewayLockPasswordAdapter extends BaseQuickAdapter<String, BaseVie
 
     @Override
     protected void convert(BaseViewHolder helper, String item) {
-        int itemCount = getItemCount();
+      /*  int itemCount = getItemCount();
         int pos=helper.getPosition();
         if (pos==itemCount-1){
             View view= helper.getView(R.id.my_view);
             view.setVisibility(View.GONE);
-        }
+        }*/
         helper.setText(R.id.tv_num,item);
         int num=Integer.parseInt(item);
         if (num<=4){

@@ -226,7 +226,6 @@ public class GatewayLockHomePresenter<T> extends BasePresenter<IGatewayLockHomeV
                             } else {
                                 if (mViewRef.get() != null) {
                                     mViewRef.get().openLockFailed();
-
                                 }
                                 SPUtils.remove(KeyConstants.SAVA_LOCK_PWD + deviceId);
                             }
@@ -440,6 +439,11 @@ public class GatewayLockHomePresenter<T> extends BasePresenter<IGatewayLockHomeV
         compositeDisposable.add(openLockEventDisposable);
     }
 
+
+
+
+
+
     //监听请求电量
     public void getPower(){
         toDisposable(getPowerDisposable);
@@ -482,6 +486,8 @@ public class GatewayLockHomePresenter<T> extends BasePresenter<IGatewayLockHomeV
                 });
         compositeDisposable.add(getPowerDisposable);
     }
+
+
 
 
 }
