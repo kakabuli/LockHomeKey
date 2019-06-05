@@ -122,6 +122,7 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
             deviceId = gatewayLockInfo.getServerInfo().getDeviceId();
             if (!TextUtils.isEmpty(gatewayId)) {
                 GatewayInfo gatewayInfo = MyApplication.getInstance().getGatewayById(gatewayId);
+                mPresenter.lockClose(deviceId);
                 if (NetUtil.isNetworkAvailable()) {
                             if ("online".equals(gatewayLockInfo.getServerInfo().getEvent_str())) {
                                 //在线
@@ -696,11 +697,14 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
             public void run() {
                 stopOpenLockAnimator();
                 if (deviceState != null) {
-                   if (deviceState.getText().equals(getString(R.string.offline))){
+                    String state=deviceState.getText().toString().trim();
+                   if (state.equals(getString(R.string.offline))){
                        changeOpenLockStatus(1);
                    }else{
                        changeOpenLockStatus(5);
                    }
+                }else{
+                    changeOpenLockStatus(5);
                 }
                 ToastUtil.getInstance().showShort(getString(R.string.open_lock_fail));
             }
@@ -717,11 +721,14 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
             SPUtils.remove(KeyConstants.SAVA_LOCK_PWD + deviceId);
         }
         if (deviceState != null) {
-            if (deviceState.getText().equals(getString(R.string.offline))){
+            String state=deviceState.getText().toString().trim();
+            if (state.equals(getString(R.string.offline))){
                 changeOpenLockStatus(1);
             }else{
                 changeOpenLockStatus(5);
             }
+        }else{
+            changeOpenLockStatus(5);
         }
         ToastUtil.getInstance().showShort(getString(R.string.open_lock_fail));
     }
@@ -822,7 +829,8 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
             public void run() {
                 stopCloseLockAnimator();
                 if (deviceState != null) {
-                    if (deviceState.getText().equals(getString(R.string.offline))){
+                    String state=deviceState.getText().toString().trim();
+                    if (state.equals(getString(R.string.offline))){
                         changeOpenLockStatus(1);
                     }else{
                         changeOpenLockStatus(5);
@@ -837,7 +845,8 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
     public void lockCloseFailed() {
         isClosing = false;
         if (deviceState != null) {
-            if (deviceState.getText().equals(getString(R.string.offline))){
+            String state=deviceState.getText().toString().trim();
+            if (state.equals(getString(R.string.offline))){
                 changeOpenLockStatus(1);
             }else{
                 changeOpenLockStatus(5);
@@ -916,6 +925,17 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
     @Override
     public void getPowerThrowable() {
 
+    }
+
+    @Override
+    public void closeLockSuccess() {
+        //关锁成功
+        isClosing = false;
+    }
+
+    @Override
+    public void closeLockThrowable() {
+        isClosing = false;
     }
 
     @Override

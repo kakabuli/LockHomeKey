@@ -76,4 +76,11 @@ public interface IGatewayLockHomeView extends IBaseView {
     void getPowerFail(String gwId,String devId);
 
     void getPowerThrowable();
+
+    //监听关锁
+    void closeLockSuccess();
+
+    //监听关锁异常
+    void closeLockThrowable();
+
 }

@@ -48,6 +48,7 @@ public class GatewayLockHomePresenter<T> extends BasePresenter<IGatewayLockHomeV
     private Disposable getLockRecordTotalDisposable;
     private Disposable openLockEventDisposable;
     private Disposable getPowerDisposable;
+    private Disposable closeDisposable;
 
     @Override
     public void attachView(IGatewayLockHomeView view) {
@@ -200,8 +201,8 @@ public class GatewayLockHomePresenter<T> extends BasePresenter<IGatewayLockHomeV
         if (mViewRef.get() != null) {
             mViewRef.get().startOpenLock();
         }
-        listenerLockOpen(deviceId);
         listenerLockClose(deviceId);
+        listenerLockOpen(deviceId);
         if (mqttService != null) {
             openLockDisposable = mqttService.mqttPublish(MqttConstant.getCallTopic(MyApplication.getInstance().getUid()), MqttCommandFactory.openLock(gatewayId, deviceId, "unlock", "pin", pwd))
                     .filter(new Predicate<MqttData>() {
@@ -487,6 +488,53 @@ public class GatewayLockHomePresenter<T> extends BasePresenter<IGatewayLockHomeV
         compositeDisposable.add(getPowerDisposable);
     }
 
+
+    public void lockClose(String deviceId) {
+        if (mqttService != null) {
+            toDisposable(closeDisposable);
+            //表示锁已开
+            //表示锁已经关闭
+            closeDisposable = mqttService.listenerDataBack()
+                    .filter(new Predicate<MqttData>() {
+                        @Override
+                        public boolean test(MqttData mqttData) throws Exception {
+                            if (mqttData.getFunc().equals(MqttConstant.GW_EVENT)) {
+                                OpenLockNotifyBean openLockNotifyBean = new Gson().fromJson(mqttData.getPayload(), OpenLockNotifyBean.class);
+                                int deviceCode = openLockNotifyBean.getEventparams().getDevecode();
+                                LogUtils.e("进入关闭");
+                                if ("kdszblock".equals(openLockNotifyBean.getDevtype())
+                                        && deviceId.equals(openLockNotifyBean.getDeviceId())) {
+                                    if (deviceCode == 10 || deviceCode == 1) {
+                                        //表示锁已经关闭
+                                        LogUtils.e("");
+                                        return true;
+                                    }
+                                }
+                            }
+                            return false;
+                        }
+                    })
+                    .compose(RxjavaHelper.observeOnMainThread())
+                    .subscribe(new Consumer<MqttData>() {
+                        @Override
+                        public void accept(MqttData mqttData) throws Exception {
+                            //关门
+                            if (mViewRef.get() != null) {
+                                mViewRef.get().closeLockSuccess();
+                            }
+                        }
+                    }, new Consumer<Throwable>() {
+                        @Override
+                        public void accept(Throwable throwable) throws Exception {
+                            if (mViewRef.get() != null) {
+                                mViewRef.get().closeLockThrowable();
+                            }
+                        }
+                    });
+            compositeDisposable.add(closeDisposable);
+        }
+
+    }
 
 
 
