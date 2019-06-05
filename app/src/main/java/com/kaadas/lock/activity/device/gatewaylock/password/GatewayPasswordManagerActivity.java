@@ -381,7 +381,9 @@ public class GatewayPasswordManagerActivity extends BaseActivity<GatewayLockFunc
     @Override
     public void addOnePwdLock(String pwdId) {
         if (mList!=null){
-            mList.add(pwdId);
+            if (!pwdId.equals("09")){
+                mList.add(pwdId);
+            }
         }
         if (gatewayLockPasswordAdapter!=null){
             gatewayLockPasswordAdapter.notifyDataSetChanged();
