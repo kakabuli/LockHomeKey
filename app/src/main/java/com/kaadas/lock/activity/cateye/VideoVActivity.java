@@ -48,6 +48,7 @@ import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.NetUtil;
+import com.kaadas.lock.utils.RecordTools;
 import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.StringUtil;
 import com.kaadas.lock.utils.ToastUtil;
@@ -502,6 +503,11 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
                     ToastUtil.getInstance().showLong(R.string.cat_eye_offline);
                     return;
                 }
+
+                if(!RecordTools.validateMicAvailability()){  //打开
+                    return;
+                }
+
                 video_start_play.setVisibility(View.GONE);
                 video_connecting_tv.setVisibility(View.VISIBLE);
                 video_hang_up.setVisibility(View.GONE);

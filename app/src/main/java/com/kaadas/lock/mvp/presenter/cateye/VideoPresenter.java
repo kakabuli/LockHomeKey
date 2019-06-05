@@ -5,9 +5,11 @@ import android.content.Intent;
 import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.kaadas.lock.MyApplication;
+import com.kaadas.lock.R;
 import com.kaadas.lock.mvp.mvpbase.BasePresenter;
 import com.kaadas.lock.mvp.view.cateye.IVideoView;
 import com.kaadas.lock.publiclibrary.bean.CateEyeInfo;
@@ -29,6 +31,7 @@ import com.kaadas.lock.utils.CountUpTimer;
 import com.kaadas.lock.utils.FileUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.RecordTools;
 import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.db.MediaFileDBDao;
 import com.kaadas.lock.utils.ftp.GeTui;
@@ -87,6 +90,10 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
         LinphoneHelper.addAutoAcceptCallBack(new PhoneAutoAccept() {
             @Override
             public void incomingCall(LinphoneCall linphoneCall) {
+                if(!RecordTools.validateMicAvailability()){  //打开
+                    Toast.makeText(mContext,mContext.getString(R.string.cateye_call_record),Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 Log.e(Tag, "猫眼   incomingCall1 ");
                 //猫眼的设备Id
                 String catEyeDeviceId = linphoneCall.getRemoteAddress().getUserName();

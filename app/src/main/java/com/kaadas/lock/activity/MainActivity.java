@@ -330,6 +330,12 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
             }
         }
     }
+
+    @Override
+    public void callError() {
+          Toast.makeText(this,getString(R.string.cateye_call_record),Toast.LENGTH_LONG).show();
+    }
+
     public NoScrollViewPager getViewPager() {
 
         return homeViewPager;
@@ -400,8 +406,9 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
                 Toast.makeText(this, R.string.exit, Toast.LENGTH_SHORT).show();
                 mExitTime = System.currentTimeMillis();
             } else {
-                MainActivity.this.finish();
-                System.exit(0);
+//                MainActivity.this.finish();
+//                System.exit(0);
+                  moveTaskToBack(true);
             }
             return true;
         }

@@ -1049,4 +1049,6 @@
     <string name="hand_pwd">手势密码</string>
     <string name="touch_id_call_limited">Touch ID验证错误次数超限\n请使用其他登录方式</string>
     <string name="please_open_ble">蓝牙未打开，请打开蓝牙！</string>
+    <string name="cateye_call_record">猫眼来电呼叫失败,请关闭麦克风</string>
+    <string name="ble_mode">蓝牙模块</string>
 </resources>

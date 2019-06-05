@@ -145,6 +145,12 @@ public class OldBleLockFragment extends BaseBleFragment<IOldBleLockView, OldBleL
         if (!mPresenter.isAttach() &&!isDestroy) {
             mPresenter.attachView(this);
         }
+        boolean auth = mPresenter.isAuth(bleLockInfo, true);
+        if (auth) {
+            changeOpenLockStatus(8);
+        } else {
+//            changeOpenLockStatus(12);
+        }
         mPresenter.getOpenRecordFromServer(1, bleLockInfo);
     }
 
@@ -170,6 +176,11 @@ public class OldBleLockFragment extends BaseBleFragment<IOldBleLockView, OldBleL
                             LogUtils.e("setBleLockInfo    12   ");
                             mPresenter.setBleLockInfo(bleLockInfo);
                             boolean auth = mPresenter.isAuth(bleLockInfo, true);
+                            if (auth) {
+                                changeOpenLockStatus(8);
+                            } else {
+//                                changeOpenLockStatus(12);
+                            }
                             LogUtils.e("切换到当前界面 12  设备 isdestroy  " + isDestroy+ auth);
                             LogUtils.e(this + "   设置设备2  " + bleLockInfo.getServerLockInfo().toString());
                             mPresenter.getAllPassword(bleLockInfo, false);
@@ -201,7 +212,7 @@ public class OldBleLockFragment extends BaseBleFragment<IOldBleLockView, OldBleL
                         if (auth) {
                             changeOpenLockStatus(8);
                         } else {
-                            changeOpenLockStatus(12);
+//                            changeOpenLockStatus(12);
                         }
                         mPresenter.getAllPassword(bleLockInfo, false);
                     }
@@ -227,7 +238,12 @@ public class OldBleLockFragment extends BaseBleFragment<IOldBleLockView, OldBleL
 
             LogUtils.e("setBleLockInfo    14   ");
             mPresenter.setBleLockInfo(bleLockInfo);
-            mPresenter.isAuth(bleLockInfo, true);
+            boolean auth = mPresenter.isAuth(bleLockInfo, true);
+            if (auth) {
+                changeOpenLockStatus(8);
+            } else {
+//                changeOpenLockStatus(12);
+            }
             LogUtils.e(this + "  设置设备3  " + bleLockInfo.getServerLockInfo().toString());
             mPresenter.getAllPassword(bleLockInfo, false);
         } else {
