@@ -78,7 +78,9 @@ public class WelcomeActivity extends BaseActivity<ISplashView, SplashPresenter<I
                     finish();
                 } else if (!TextUtils.isEmpty(pwd)) {
                     //存在手势密码
-                    startActivity(new Intent(WelcomeActivity.this, PersonalVerifyGesturePasswordActivity.class));
+                    Intent intent = new Intent(WelcomeActivity.this, PersonalVerifyGesturePasswordActivity.class);
+                    intent.putExtra(KeyConstants.SOURCE,"WelcomeActivity");
+                    startActivity(intent);
                     finish();
                 } else {
                     startActivity(new Intent(WelcomeActivity.this, MainActivity.class));

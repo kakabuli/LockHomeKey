@@ -289,6 +289,14 @@ public class OldBleLockDetailPresenter<T> extends BlePresenter<IOldBluetoothDevi
         if (NetUtil.isNetworkAvailable()) {  //有网络
             serverAuth();
         } else {  //没有网络
+            //读取到蓝牙模块信号，且蓝牙型号是 rgbt1761或者Rgbt1761D  不用带密码开门  使用APP开门指令
+            if (!TextUtils.isEmpty(bleLockInfo.getModeNumber()) &&
+                    ( "Rgbt1761".equalsIgnoreCase(bleLockInfo.getModeNumber())||
+                            "Rgbt1761D".equalsIgnoreCase(bleLockInfo.getModeNumber()))){
+                realOpenLock("",true);
+                return;
+            }
+
             if (isAdmin) {  //是 管理员
                 if (mViewRef.get() != null) {
                     mViewRef.get().inputPwd();
@@ -318,6 +326,14 @@ public class OldBleLockDetailPresenter<T> extends BlePresenter<IOldBluetoothDevi
                     @Override
                     public void onSuccess(BaseResult result) {
                         if ("200".equals(result.getCode())) {
+                            //读取到蓝牙模块信号，且蓝牙型号是 rgbt1761或者Rgbt1761D  不用带密码开门  使用APP开门指令
+                            if (!TextUtils.isEmpty(bleLockInfo.getModeNumber()) &&
+                                    ( "Rgbt1761".equalsIgnoreCase(bleLockInfo.getModeNumber())||
+                                            "Rgbt1761D".equalsIgnoreCase(bleLockInfo.getModeNumber()))){
+                                realOpenLock("",true);
+                                return;
+                            }
+
                             if ("1".equals(bleLockInfo.getServerLockInfo().getIs_admin())) { //如果是管理员  查看本地密码
                                 localPwd = (String) SPUtils.get(KeyConstants.SAVE_PWD_HEARD + bleLockInfo.getServerLockInfo().getMacLock(), "");
                                 if (TextUtils.isEmpty(localPwd)) { //如果用户密码为空

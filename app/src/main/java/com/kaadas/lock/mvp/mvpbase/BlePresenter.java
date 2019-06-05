@@ -3,6 +3,7 @@ package com.kaadas.lock.mvp.mvpbase;
 import android.Manifest;
 import android.bluetooth.BluetoothDevice;
 import android.support.v4.content.ContextCompat;
+import android.text.TextUtils;
 
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
@@ -49,6 +50,7 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
     private boolean isNotify = false;  //是不是用户点击时的自动连接   用户点击时的连接才通知到View层  否则在后台静默连接并鉴权
     private Disposable disposable1;
     private Disposable notDiscoverServiceDisposable;
+    private Disposable readModelNumberDisposable;
 
     public void setBleLockInfo(BleLockInfo bleLockInfo) {
         //如果service中有bleLockInfo  并且deviceName一致，就不重新设置。
@@ -252,6 +254,7 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
                                         bleLockInfo.setAuth(bleStateBean.isConnected());
                                     }
                                     authSuccess();
+                                    oldBleSyncTime();
                                     if (mViewRef.get() != null) {
                                         mViewRef.get().authResult(true);
                                         mViewRef.get().onEndConnectDevice(true);
@@ -283,6 +286,13 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
         }catch (Exception e){
 
         }
+    }
+
+    private void oldBleSyncTime() {
+        // TODO: 2019/6/5    透传模块无此功能
+
+
+
     }
 
 
@@ -434,6 +444,8 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
                              * 读取电量  读取SN？  读取
                              */
                             authSuccess();
+                            //鉴权成功  立马读取模块代码
+                            readModelNumber();
                             toDisposable(getPwd3Dispose);
                         }
                     }
@@ -507,7 +519,59 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
                 }
             }, 100);
         }
+    }
 
+
+    /**
+     * 鉴权   鉴权成功，读取蓝牙模块数据
+     */
+    private void readModelNumber() {
+        if (!TextUtils.isEmpty(bleLockInfo.getModeNumber())){
+            LogUtils.e("已经存在蓝牙模块型号信息  不再读取   ");
+            return;
+        }
+
+        if ( bleService.getBleVersion() != 2){
+            LogUtils.e("蓝牙模块不是2  不读取蓝牙型号信息   ");
+            return;
+        }
+
+        toDisposable(readModelNumberDisposable);
+        readModelNumberDisposable = Observable.just(0)
+                .flatMap(new Function<Integer, ObservableSource<ReadInfoBean>>() {
+                    @Override
+                    public ObservableSource<ReadInfoBean> apply(Integer integer) throws Exception {
+                        return bleService.readModeName();
+                    }
+                })
+                .filter(new Predicate<ReadInfoBean>() {
+                    @Override
+                    public boolean test(ReadInfoBean readInfoBean) throws Exception {
+                        if (readInfoBean.type == ReadInfoBean.TYPE_MODE) {
+                            return true;
+                        }
+                        return false;
+                    }
+                })
+                .timeout(1000, TimeUnit.MILLISECONDS)         //2秒没有读取到ModelNumber  则认为超时
+                .retryWhen(new RetryWithTime(2, 0))
+                .compose(RxjavaHelper.observeOnMainThread())
+                .subscribe(new Consumer<ReadInfoBean>() {
+                    @Override
+                    public void accept(ReadInfoBean readInfoBean) throws Exception {
+                        LogUtils.e("鉴权成功   读取蓝牙模块型号  成功  " + readInfoBean.data);  //进行下一步
+                        bleLockInfo.setModeNumber((String) readInfoBean.data);
+                        toDisposable(readModelNumberDisposable);
+
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        LogUtils.e(" 鉴权成功   读取蓝牙模块型号  失败  " + (throwable instanceof TimeOutException) + "   " + throwable.getMessage());
+
+                    }
+                });
+        compositeDisposable.add(readModelNumberDisposable);
     }
 
 
