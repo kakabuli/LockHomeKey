@@ -189,6 +189,7 @@
     <string name="please_open_hand_pwd">请开启手势密码</string>
     <string name="update_hand_pwd">更改手势密码</string>
     <string name="open_touch_id">开启Touch ID</string>
+    <string name="close_touch_id">关闭Touch ID</string>
     <string name="kaadas_touch_id">“凯迪仕”的触控ID</string>
     <string name="verify_telephone_fingerprint">通过Home键验证已有手机指纹</string>
     <string name="hand_pwd_drraw_the_ailure">绘制错误，请重新绘制</string>
@@ -1045,4 +1046,6 @@
     <string name="input_passwords">输入密码</string>
     <string name="try_again">再试一次</string>
     <string name="verify_and_turn_on_touch_id">验证并开启Touch ID</string>
+    <string name="hand_pwd">手势密码</string>
+    <string name="touch_id_call_limited">Touch ID验证错误次数超限\n请使用其他登录方式</string>
 </resources>
