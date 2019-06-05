@@ -136,6 +136,7 @@ public class BluetoothOpenLockRecordFragment extends BaseBleFragment<IOpenLockRe
     public void noData() {
         ToastUtil.getInstance().showShort(R.string.lock_no_record);
         hiddenLoading();
+        isLoadingBleRecord = false;
     }
 
     @Override

@@ -129,6 +129,7 @@ public class OldBluetoothOpenLockRecordActivity extends BaseBleActivity<IOpenLoc
     public void noData() {
         ToastUtil.getInstance().showShort(R.string.lock_no_record);
         hiddenLoading();
+        isLoadingBleRecord = false;
     }
 
     @Override

@@ -300,12 +300,12 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                         AlertDialog dialog = normalDialog.create();
                         dialog.setCanceledOnTouchOutside(false);
                         dialog.show();
-                    }else if(Rom.isVivo() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.N){
-                        boolean isVivoOpen= (boolean) SPUtils.get(Constants.IS_VOVO_OPEN,false);
-                        if(isVivoOpen){
-                            return;
-                        }
-                        SPUtils.put(Constants.IS_VOVO_OPEN,true);
+                    }else if(!isFlag && Rom.isVivo() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.N){
+                     //   boolean isVivoOpen= (boolean) SPUtils.get(Constants.IS_VOVO_OPEN,false);
+//                        if(isVivoOpen){
+//                            return;
+//                        }
+                //        SPUtils.put(Constants.IS_VOVO_OPEN,true);
                         final AlertDialog.Builder normalDialog = new AlertDialog.Builder(getActivity());
                         //	normalDialog.setIcon(R.drawable.icon_dialog);
                         normalDialog.setTitle(getString(R.string.mainactivity_permission_alert_title));
