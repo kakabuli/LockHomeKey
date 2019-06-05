@@ -53,6 +53,7 @@ public class OldBleLockPresenter<T> extends MyOldOpenLockRecordPresenter<IOldBle
     private Disposable oldOpenStatusDisposable;
     private Disposable oldPowerDisposable;
     private Disposable oldRecordDisposable;
+    private Disposable syncTimeDisposable1;
 
     @Override
     public void authSuccess() {
@@ -115,6 +116,10 @@ public class OldBleLockPresenter<T> extends MyOldOpenLockRecordPresenter<IOldBle
         compositeDisposable.add(electricDisposable);
     }
 
+
+
+
+
     /**
      * 开锁
      */
@@ -125,6 +130,13 @@ public class OldBleLockPresenter<T> extends MyOldOpenLockRecordPresenter<IOldBle
         } else {  //没有网络
             if (bleService.getBleVersion() == 1) {  //如果没有网络，最老的模块直接开锁
                 oldOpenLockMethod("", false);
+                return;
+            }
+            //读取到蓝牙模块信号，且蓝牙型号是 rgbt1761或者Rgbt1761D  不用带密码开门  使用APP开门指令
+            if (!TextUtils.isEmpty(bleLockInfo.getModeNumber()) &&
+                    ( "Rgbt1761".equalsIgnoreCase(bleLockInfo.getModeNumber())||
+                            "Rgbt1761D".equalsIgnoreCase(bleLockInfo.getModeNumber()))){
+                realOpenLock("",true);
                 return;
             }
             if (isAdmin) {  //是 管理员
@@ -158,6 +170,13 @@ public class OldBleLockPresenter<T> extends MyOldOpenLockRecordPresenter<IOldBle
                         if ("200".equals(result.getCode())) {
                             if (bleService.getBleVersion() == 1) {
                                 oldOpenLockMethod("", false);
+                                return;
+                            }
+                            //读取到蓝牙模块信号，且蓝牙型号是 rgbt1761或者Rgbt1761D  不用带密码开门  使用APP开门指令
+                            if (!TextUtils.isEmpty(bleLockInfo.getModeNumber()) &&
+                                    ( "Rgbt1761".equalsIgnoreCase(bleLockInfo.getModeNumber())||
+                                            "Rgbt1761D".equalsIgnoreCase(bleLockInfo.getModeNumber()))){
+                                realOpenLock("",true);
                                 return;
                             }
                             if ("1".equals(bleLockInfo.getServerLockInfo().getIs_admin())) { //如果是管理员  查看本地密码
@@ -229,12 +248,12 @@ public class OldBleLockPresenter<T> extends MyOldOpenLockRecordPresenter<IOldBle
                     public void accept(BleDataBean bleDataBean) throws Exception {  //开锁成功
                         if (bleDataBean.getOriginalData()[0] == 0 && bleDataBean.getPayload()[0] == 0) { //加密标志  0x01    且负载数据第一个是  0
                             //开锁返回确认帧     如果成功  保存密码    那么监听开锁上报   以开锁上报为准   开锁上报  五秒超时
-                            LogUtils.e("开锁成功   " + Rsa.bytesToHexString(bleDataBean.getPayload()));
+                            LogUtils.e("开锁成功123   " + Rsa.bytesToHexString(bleDataBean.getPayload()));
                             //开锁成功  保存密码
                             SPUtils.put(KeyConstants.SAVE_PWD_HEARD + bleLockInfo.getServerLockInfo().getMacLock(), pwd);
                             listenerOpenLockUp();
                         } else {  //开锁失败
-                            LogUtils.e("开锁失败   " + Rsa.bytesToHexString(bleDataBean.getPayload()));
+                            LogUtils.e("开锁失败123   " + Rsa.bytesToHexString(bleDataBean.getPayload()));
                             if (mViewRef.get() != null) {
                                 mViewRef.get().openLockFailed(new BleProtocolFailedException(0xff & bleDataBean.getOriginalData()[0]));
                             }

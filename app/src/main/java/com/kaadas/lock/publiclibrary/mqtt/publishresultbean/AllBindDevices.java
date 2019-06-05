@@ -276,7 +276,9 @@ public class AllBindDevices {
                             bleLockInfo.setServerLockInfo(bleDevice);
                             homeShowBean.setDeviceNickName(bleDevice.getLockNickName());
                             homeShowBeans.add(homeShowBean);
+
                         }
+                        LogUtils.e("设备已存在  是否连接 " + bleLockInfo.isConnected());
                     }
                 }
                 if (!isExist) {

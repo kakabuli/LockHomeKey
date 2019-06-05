@@ -1046,4 +1046,5 @@
     <string name="try_again">再试一次</string>
     <string name="verify_and_turn_on_touch_id">验证并开启Touch ID</string>
     <string name="please_open_ble">蓝牙未打开，请打开蓝牙！</string>
+    <string name="ble_mode">蓝牙模块</string>
 </resources>
