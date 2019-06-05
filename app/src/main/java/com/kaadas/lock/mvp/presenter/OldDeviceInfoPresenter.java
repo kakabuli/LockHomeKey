@@ -76,7 +76,7 @@ public class OldDeviceInfoPresenter extends BlePresenter<IOldDeviceInfoView> {
                         .subscribe(new Consumer<ReadInfoBean>() {
                             @Override
                             public void accept(ReadInfoBean readInfoBean) throws Exception {
-                                readHardwareRev();
+                                readFirmwareRev();
                                 LogUtils.e(" davi 读取SoftwareRev成功 " + readInfoBean.data);  //进行下一步
                                 bleLockInfo.setSoftware((String) readInfoBean.data);
                                 if (mViewRef.get() != null) {
@@ -87,7 +87,7 @@ public class OldDeviceInfoPresenter extends BlePresenter<IOldDeviceInfoView> {
                         }, new Consumer<Throwable>() {
                             @Override
                             public void accept(Throwable throwable) throws Exception {
-                                readHardwareRev();
+                                readFirmwareRev();
                                 LogUtils.e(" davi 读取SoftwareRev失败  " + (throwable instanceof TimeOutException) + "   " + throwable.getMessage());
                                 if (mViewRef.get() != null) {
                                     mViewRef.get().SoftwareRevDataError(throwable);

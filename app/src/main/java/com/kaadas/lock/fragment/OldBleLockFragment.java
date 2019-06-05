@@ -142,16 +142,14 @@ public class OldBleLockFragment extends BaseBleFragment<IOldBleLockView, OldBleL
     @Override
     public void onResume() {
         super.onResume();
-        if (!mPresenter.isAttach() &&!isDestroy) {
+        if (!mPresenter.isAttach() &&!isDestroy && homeFragment.isSelectHome) {
             mPresenter.attachView(this);
-            boolean auth = mPresenter.isAuth(bleLockInfo, true);
-            if (auth) {
+            mPresenter.setBleLockInfo(bleLockInfo);
+            if (bleLockInfo!=null&&bleLockInfo.isConnected()){
                 changeOpenLockStatus(8);
-            } else {
-//            changeOpenLockStatus(12);
             }
+            mPresenter.getOpenRecordFromServer(1, bleLockInfo);
         }
-        mPresenter.getOpenRecordFromServer(1, bleLockInfo);
     }
 
     private void initView() {
@@ -234,6 +232,7 @@ public class OldBleLockFragment extends BaseBleFragment<IOldBleLockView, OldBleL
         if (position == 0 && position == homeFragment.getCurrentPosition() && homeFragment.isSelectHome &&!isDestroy) {
             if (!mPresenter.isAttach() ) {
                 mPresenter.attachView(this);
+                mPresenter.setBleLockInfo(bleLockInfo);
             }
 
             LogUtils.e("setBleLockInfo    14   ");

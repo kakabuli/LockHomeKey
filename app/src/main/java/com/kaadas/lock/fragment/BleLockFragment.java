@@ -139,6 +139,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
 //        if (!mPresenter.isAttach()&& !isDestroy ) {
             LogUtils.e("attachView   4");
             mPresenter.attachView(this);
+            mPresenter.setBleLockInfo(bleLockInfo);
         }
         mPresenter.getOpenRecordFromServer(1, bleLockInfo);
     }
