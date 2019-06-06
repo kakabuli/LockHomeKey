@@ -44,6 +44,7 @@ import com.kaadas.lock.utils.ToastUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -225,6 +226,8 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
     }
 
     public void changeOpenLockStatus(int status) {
+//        stopOpenLockAnimator();
+//        stopCloseLockAnimator();
 /*        状态1.WiFi不在线
         状态（推拉）2： “已启动布防，长按开锁“
 
@@ -412,6 +415,18 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
 //                tvExternal.setTextColor();
 //                tvExternal.setText();
                 break;
+    /*        case 11:
+                openLockAnimator();
+                break;
+            case 12:
+                stopOpenLockAnimator();
+                break;
+            case 13:
+                closeLockAnimator();
+                break;
+            case 14:
+                stopCloseLockAnimator();
+                break;*/
 
         }
         }
@@ -434,6 +449,14 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
         Intent intent;
         switch (v.getId()) {
             case R.id.rl_device_dynamic:
+             /*   if(true){
+
+                    Random random=new Random();
+                    int i = random.nextInt(15);
+                    LogUtils.d("davi 状态 "+i);
+                    changeOpenLockStatus(i);
+                    return;
+                }*/
                 intent = new Intent(getActivity(), GatewayEquipmentDynamicActivity.class);
                 if (!TextUtils.isEmpty(gatewayId) && !TextUtils.isEmpty(deviceId)) {
                     intent.putExtra(KeyConstants.GATEWAY_ID, gatewayId);
