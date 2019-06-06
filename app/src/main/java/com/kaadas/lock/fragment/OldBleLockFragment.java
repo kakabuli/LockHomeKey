@@ -339,6 +339,8 @@ public class OldBleLockFragment extends BaseBleFragment<IOldBleLockView, OldBleL
     }
 
     public void changeOpenLockStatus(int status) {
+//        stopOpenLockAnimator();
+//        stopCloseLockAnimator();
         if (!isAdded()) {
             return;
         }

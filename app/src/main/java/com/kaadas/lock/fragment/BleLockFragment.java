@@ -393,6 +393,8 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
     }
 
     public void changeOpenLockStatus(int status) {
+//        stopOpenLockAnimator();
+//        stopCloseLockAnimator();
         if (!isAdded()) {
             return;
         }
