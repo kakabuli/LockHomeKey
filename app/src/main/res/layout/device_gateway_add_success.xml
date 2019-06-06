@@ -45,7 +45,7 @@
         android:orientation="horizontal"
         android:gravity="center_vertical"
         android:background="@drawable/remind_background"
-        android:layout_marginTop="@dimen/dp_150"
+        android:layout_marginTop="@dimen/dp_110"
         android:layout_marginRight="@dimen/dp_15"
         android:layout_marginLeft="@dimen/dp_15"
         >

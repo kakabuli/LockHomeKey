@@ -424,7 +424,7 @@ public class MqttService extends Service {
                         LogUtils.e("正在断开连接正常情况");
                         mqttClient.unregisterResources();
                         mqttClient = null;
-                        MyApplication.getInstance().tokenInvalid(false);
+                        MyApplication.getInstance().tokenInvalid(true);
                         LogUtils.e("mqttDisconnect", "断开连接成功");
                         disconnectObservable.onNext(true);
                     }
@@ -444,7 +444,7 @@ public class MqttService extends Service {
                 disconnectObservable.onNext(true);
                 mqttClient.unregisterResources();
                 mqttClient = null;
-                MyApplication.getInstance().tokenInvalid(false);
+                MyApplication.getInstance().tokenInvalid(true);
         }
     }
 

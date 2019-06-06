@@ -387,6 +387,7 @@ public class P6OtaUpgradeActivity extends BaseAddToApplicationActivity implement
         @Override
         public void run() {
             otaFailed("连接失败");
+            bluetoothLeScanner.stopScan(newScanBleCallback);
             BluetoothLeService.disconnect();
         }
     };
