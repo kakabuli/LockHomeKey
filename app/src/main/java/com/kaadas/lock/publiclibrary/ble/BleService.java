@@ -434,7 +434,7 @@ public class BleService extends Service {
                     public void run() {  //延时20毫秒发送开锁状态
                         dataChangeSubject.onNext(bleDataBean);
                     }
-                }, 20);
+                }, 10);
             }else {  //直接朝下面发送
                 dataChangeSubject.onNext(bleDataBean);
             }
