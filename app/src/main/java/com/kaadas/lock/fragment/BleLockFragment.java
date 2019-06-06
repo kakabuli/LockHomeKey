@@ -139,6 +139,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
 //        if (!mPresenter.isAttach()&& !isDestroy ) {
             LogUtils.e("attachView   4");
             mPresenter.attachView(this);
+            mPresenter.setBleLockInfo(bleLockInfo);
         }
         mPresenter.getOpenRecordFromServer(1, bleLockInfo);
     }
@@ -746,7 +747,6 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
                 break;
             case R.id.tv_synchronized_record:
        /*         if(true){
-
                    Random random=new Random();
                     int i = random.nextInt(6);
                      i=i+13;

@@ -66,7 +66,8 @@ public class BluetoothOpenLockRecordFragment extends BaseBleFragment<IOpenLockRe
     private int currentPage = 1;   //当前的开锁记录时间
     View view;
     private Unbinder unbinder;
-//    DaoSession daoSession;
+
+    //    DaoSession daoSession;
 //    List<DBOpenLockRecord> dbList;
     @Nullable
     @Override
@@ -149,8 +150,8 @@ public class BluetoothOpenLockRecordFragment extends BaseBleFragment<IOpenLockRe
     }
 
     private void combineDataBaseData(List<OpenLockRecord> lockRecords) {
-        List<DBOpenLockRecord> combineList=new ArrayList<>();
-        for (int i=0;i<lockRecords.size();i++){
+        List<DBOpenLockRecord> combineList = new ArrayList<>();
+        for (int i = 0; i < lockRecords.size(); i++) {
 
         }
     }
@@ -161,18 +162,17 @@ public class BluetoothOpenLockRecordFragment extends BaseBleFragment<IOpenLockRe
             switch (record.getOpen_type()) {
                 case BleUtil.PASSWORD:
                     List<ForeverPassword> pwdList = passwordResults.getData().getPwdList();
-                    if (pwdList!=null&&pwdList.size()>0){
+                    if (pwdList != null && pwdList.size() > 0) {
                         for (ForeverPassword password : pwdList) {
                             if (Integer.parseInt(password.getNum()) == Integer.parseInt(record.getUser_num())) {
                                 nickName = password.getNickName();
                             }
                         }
                     }
-
                     break;
                 case BleUtil.FINGERPRINT:
                     List<GetPasswordResult.DataBean.Fingerprint> fingerprints = passwordResults.getData().getFingerprintList();
-                    if (fingerprints!=null&&fingerprints.size()>0){
+                    if (fingerprints != null && fingerprints.size() > 0) {
                         for (GetPasswordResult.DataBean.Fingerprint password : fingerprints) {
                             if (Integer.parseInt(password.getNum()) == Integer.parseInt(record.getUser_num())) {
                                 nickName = password.getNickName();
@@ -183,14 +183,13 @@ public class BluetoothOpenLockRecordFragment extends BaseBleFragment<IOpenLockRe
                     break;
                 case BleUtil.RFID:  //卡片
                     List<GetPasswordResult.DataBean.Card> cards = passwordResults.getData().getCardList();
-                    if (cards!=null&&cards.size()>0){
+                    if (cards != null && cards.size() > 0) {
                         for (GetPasswordResult.DataBean.Card password : cards) {
                             if (Integer.parseInt(password.getNum()) == Integer.parseInt(record.getUser_num())) {
                                 nickName = password.getNickName();
                             }
                         }
                     }
-
                     break;
                 case BleUtil.PHONE:  //103
                     nickName = "App";

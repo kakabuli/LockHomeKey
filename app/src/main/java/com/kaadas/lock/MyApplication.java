@@ -459,7 +459,7 @@ public class MyApplication extends Application {
 
     public void getAllDevicesByMqtt(boolean isForce) {
         if (!isForce) {
-            if (allBindDevices != null) {
+            if (allBindDevices != null ) {
                 getDevicesFromServer.onNext(allBindDevices);
                 return;
             }
@@ -514,9 +514,7 @@ public class MyApplication extends Application {
         homeShowDevices=homeshowDeviceList;
     }
 
-
     public List<HomeShowBean> getHomeShowDevices() {
-
         List<HomeShowBean> tem = new ArrayList<>();
         for (HomeShowBean homeShowBean : homeShowDevices) {
             if (homeShowBean.getDeviceType() != HomeShowBean.TYPE_GATEWAY) {

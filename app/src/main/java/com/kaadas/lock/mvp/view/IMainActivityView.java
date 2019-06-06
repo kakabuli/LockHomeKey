@@ -34,4 +34,7 @@ public interface IMainActivityView extends IBleView {
 
     void onGwLockEvent(int alarmCode,int clusterID,String deviceId,String gatewayId);
 
+
+    void callError();
+
 }

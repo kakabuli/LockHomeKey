@@ -1,6 +1,8 @@
 package com.kaadas.lock.mvp.presenter;
 
 
+import android.text.TextUtils;
+
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.mvp.mvpbase.BlePresenter;
 import com.kaadas.lock.mvp.view.IDeviceInfoView;
@@ -74,7 +76,7 @@ public class OldDeviceInfoPresenter extends BlePresenter<IOldDeviceInfoView> {
                         .subscribe(new Consumer<ReadInfoBean>() {
                             @Override
                             public void accept(ReadInfoBean readInfoBean) throws Exception {
-                                readHardwareRev();
+                                readFirmwareRev();
                                 LogUtils.e(" davi 读取SoftwareRev成功 " + readInfoBean.data);  //进行下一步
                                 bleLockInfo.setSoftware((String) readInfoBean.data);
                                 if (mViewRef.get() != null) {
@@ -85,13 +87,12 @@ public class OldDeviceInfoPresenter extends BlePresenter<IOldDeviceInfoView> {
                         }, new Consumer<Throwable>() {
                             @Override
                             public void accept(Throwable throwable) throws Exception {
-                                readHardwareRev();
+                                readFirmwareRev();
                                 LogUtils.e(" davi 读取SoftwareRev失败  " + (throwable instanceof TimeOutException) + "   " + throwable.getMessage());
                                 if (mViewRef.get() != null) {
                                     mViewRef.get().SoftwareRevDataError(throwable);
                                 }
                                 //读取SoftwareRev失败
-
                             }
                         });
 
@@ -255,13 +256,19 @@ public class OldDeviceInfoPresenter extends BlePresenter<IOldDeviceInfoView> {
     }
 
     /**
-     * 鉴权  延时三秒读取数据  如果失败   那么重试三次
+     * 鉴权
      */
     private void readModelNumber() {
         LogUtils.e("设备连接成功     ");
         //发现服务之后不能立即读取特征值数据  需要延时500ms以上（魅族）
         //一秒没有读取到ModelNumber  则认为超时
         //超时然后重试
+        if (bleLockInfo != null && !TextUtils.isEmpty(bleLockInfo.getModeNumber())) {
+            if (mViewRef.get() != null) {
+                mViewRef.get().ModelNumberDataSuccess(bleLockInfo.getModeNumber());
+            }
+            return;
+        }
         toDisposable(readModelNumberDisposable);
         readModelNumberDisposable =
                 Observable.just(0)
@@ -302,13 +309,11 @@ public class OldDeviceInfoPresenter extends BlePresenter<IOldDeviceInfoView> {
                                 }
                             }
                         });
-
         compositeDisposable.add(readModelNumberDisposable);
     }
 
 
-
-    public void uploadBleSoftware(String sn,String version){
+    public void uploadBleSoftware(String sn, String version) {
         XiaokaiNewServiceImp.updateSoftwareVersion(
                 bleLockInfo.getServerLockInfo().getLockName(), MyApplication.getInstance().getUid()
                 , version, sn
@@ -316,12 +321,12 @@ public class OldDeviceInfoPresenter extends BlePresenter<IOldDeviceInfoView> {
             @Override
             public void onSuccess(BaseResult baseResult) {
                 LogUtils.e("上传蓝牙信息成功");
-                checkOtaInfo(sn,version);
+                checkOtaInfo(sn, version);
             }
 
             @Override
             public void onAckErrorCode(BaseResult baseResult) {
-                LogUtils.e(" 上传蓝牙软件信息失败  " +  baseResult.getCode());
+                LogUtils.e(" 上传蓝牙软件信息失败  " + baseResult.getCode());
                 if (mViewRef.get() != null) {
                     mViewRef.get().onUpdateSoftFailedServer(baseResult);
                 }
@@ -342,7 +347,6 @@ public class OldDeviceInfoPresenter extends BlePresenter<IOldDeviceInfoView> {
     }
 
     public void checkOtaInfo(String SN, String version) {
-
 
 
         otaDisposable = XiaokaiNewServiceImp.getOtaInfo(1, SN, version)

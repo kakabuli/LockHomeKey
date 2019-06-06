@@ -3,16 +3,15 @@ package com.kaadas.lock.activity.login;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
-import com.kaadas.lock.activity.MainActivity;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
+import com.kaadas.lock.activity.MainActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.ToastUtil;
@@ -20,7 +19,6 @@ import com.kaadas.lock.utils.cachefloder.ACache;
 import com.kaadas.lock.utils.cachefloder.CacheFloder;
 import com.kaadas.lock.utils.handPwdUtil.GestureContentView;
 import com.kaadas.lock.utils.handPwdUtil.GestureDrawline;
-
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

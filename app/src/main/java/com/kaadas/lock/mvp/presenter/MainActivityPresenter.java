@@ -3,6 +3,7 @@ package com.kaadas.lock.mvp.presenter;
 import android.content.Intent;
 import android.text.TextUtils;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.kaadas.lock.MyApplication;
@@ -39,6 +40,7 @@ import com.kaadas.lock.publiclibrary.mqtt.util.MqttConstant;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttData;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.RecordTools;
 import com.kaadas.lock.utils.Rsa;
 import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.SPUtils2;
@@ -439,6 +441,12 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                     Log.e(GeTui.VideoLog, "  Linphone  收到来电");
                     if (VideoVActivity.isRunning) {
                         LogUtils.e("Linphone  收到来电   VideoActivity已经运行  不出来  ");
+                        return;
+                    }
+                    if(!RecordTools.validateMicAvailability()){  //打开
+                        if (mViewRef!=null && mViewRef.get() != null) {
+                            mViewRef.get().callError();
+                        }
                         return;
                     }
                     //设置呼叫进来的时间

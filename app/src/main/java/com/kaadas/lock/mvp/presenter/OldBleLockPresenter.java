@@ -53,6 +53,7 @@ public class OldBleLockPresenter<T> extends MyOldOpenLockRecordPresenter<IOldBle
     private Disposable oldOpenStatusDisposable;
     private Disposable oldPowerDisposable;
     private Disposable oldRecordDisposable;
+    private Disposable syncTimeDisposable1;
 
     @Override
     public void authSuccess() {
@@ -66,7 +67,7 @@ public class OldBleLockPresenter<T> extends MyOldOpenLockRecordPresenter<IOldBle
     }
 
 
-    public boolean isAttach(){
+    public boolean isAttach() {
         return isAttach;
     }
 
@@ -115,6 +116,7 @@ public class OldBleLockPresenter<T> extends MyOldOpenLockRecordPresenter<IOldBle
         compositeDisposable.add(electricDisposable);
     }
 
+
     /**
      * 开锁
      */
@@ -125,6 +127,13 @@ public class OldBleLockPresenter<T> extends MyOldOpenLockRecordPresenter<IOldBle
         } else {  //没有网络
             if (bleService.getBleVersion() == 1) {  //如果没有网络，最老的模块直接开锁
                 oldOpenLockMethod("", false);
+                return;
+            }
+            //读取到蓝牙模块信号，且蓝牙型号是 rgbt1761或者Rgbt1761D  不用带密码开门  使用APP开门指令
+            if (!TextUtils.isEmpty(bleLockInfo.getModeNumber()) &&
+                    ("Rgbt1761".equalsIgnoreCase(bleLockInfo.getModeNumber()) ||
+                            "Rgbt1761D".equalsIgnoreCase(bleLockInfo.getModeNumber()))) {
+                realOpenLock("", true);
                 return;
             }
             if (isAdmin) {  //是 管理员
@@ -158,6 +167,13 @@ public class OldBleLockPresenter<T> extends MyOldOpenLockRecordPresenter<IOldBle
                         if ("200".equals(result.getCode())) {
                             if (bleService.getBleVersion() == 1) {
                                 oldOpenLockMethod("", false);
+                                return;
+                            }
+                            //读取到蓝牙模块信号，且蓝牙型号是 rgbt1761或者Rgbt1761D  不用带密码开门  使用APP开门指令
+                            if (!TextUtils.isEmpty(bleLockInfo.getModeNumber()) &&
+                                    ("Rgbt1761".equalsIgnoreCase(bleLockInfo.getModeNumber()) ||
+                                            "Rgbt1761D".equalsIgnoreCase(bleLockInfo.getModeNumber()))) {
+                                realOpenLock("", true);
                                 return;
                             }
                             if ("1".equals(bleLockInfo.getServerLockInfo().getIs_admin())) { //如果是管理员  查看本地密码
@@ -229,12 +245,12 @@ public class OldBleLockPresenter<T> extends MyOldOpenLockRecordPresenter<IOldBle
                     public void accept(BleDataBean bleDataBean) throws Exception {  //开锁成功
                         if (bleDataBean.getOriginalData()[0] == 0 && bleDataBean.getPayload()[0] == 0) { //加密标志  0x01    且负载数据第一个是  0
                             //开锁返回确认帧     如果成功  保存密码    那么监听开锁上报   以开锁上报为准   开锁上报  五秒超时
-                            LogUtils.e("开锁成功   " + Rsa.bytesToHexString(bleDataBean.getPayload()));
+                            LogUtils.e("开锁成功123   " + Rsa.bytesToHexString(bleDataBean.getPayload()));
                             //开锁成功  保存密码
                             SPUtils.put(KeyConstants.SAVE_PWD_HEARD + bleLockInfo.getServerLockInfo().getMacLock(), pwd);
                             listenerOpenLockUp();
                         } else {  //开锁失败
-                            LogUtils.e("开锁失败   " + Rsa.bytesToHexString(bleDataBean.getPayload()));
+                            LogUtils.e("开锁失败123   " + Rsa.bytesToHexString(bleDataBean.getPayload()));
                             if (mViewRef.get() != null) {
                                 mViewRef.get().openLockFailed(new BleProtocolFailedException(0xff & bleDataBean.getOriginalData()[0]));
                             }
@@ -314,6 +330,9 @@ public class OldBleLockPresenter<T> extends MyOldOpenLockRecordPresenter<IOldBle
     public void attachView(IOldBleLockView view) {
         super.attachView(view);
         //设置警报提醒
+        if (bleService == null) {
+            return;
+        }
         toDisposable(upLockDisposable);
         upLockDisposable = bleService.listeneDataChange()
                 .filter(new Predicate<BleDataBean>() {
@@ -326,7 +345,7 @@ public class OldBleLockPresenter<T> extends MyOldOpenLockRecordPresenter<IOldBle
                 .subscribe(new Consumer<BleDataBean>() {
                     @Override
                     public void accept(BleDataBean bleDataBean) throws Exception {
-                        if (!MyApplication.getInstance().getBleService().getBleLockInfo().isAuth() ||MyApplication.getInstance().getBleService().getBleLockInfo().getAuthKey() == null || MyApplication.getInstance().getBleService().getBleLockInfo().getAuthKey().length == 0) {
+                        if (!MyApplication.getInstance().getBleService().getBleLockInfo().isAuth() || MyApplication.getInstance().getBleService().getBleLockInfo().getAuthKey() == null || MyApplication.getInstance().getBleService().getBleLockInfo().getAuthKey().length == 0) {
                             LogUtils.e("收到锁状态改变，但是鉴权帧为空");
                             return;
                         }
@@ -342,7 +361,7 @@ public class OldBleLockPresenter<T> extends MyOldOpenLockRecordPresenter<IOldBle
                                     mViewRef.get().onLockLock();
                                 }
                             } else if (value2 == 2) {   //开锁
-                                LogUtils.e("开锁成功   " + Rsa.bytesToHexString(bleDataBean.getPayload()));
+                                LogUtils.e("开锁成功111   " + Rsa.bytesToHexString(bleDataBean.getPayload()));
                                 if (mViewRef.get() != null) {
                                     mViewRef.get().openLockSuccess();
                                 }
@@ -384,7 +403,7 @@ public class OldBleLockPresenter<T> extends MyOldOpenLockRecordPresenter<IOldBle
                     public void onSuccess(LockRecordResult lockRecordResult) {
                         LogUtils.d("davi lockRecordResult " + lockRecordResult.toString());
                         if (lockRecordResult.getData().size() == 0) {  //服务器没有数据  提示用户
-                            if (mViewRef.get() != null) {
+                            if (mViewRef != null && mViewRef.get() != null) {
                                 if (pagenum == 1) { //第一次获取数据就没有
                                     mViewRef.get().onServerNoData();
                                 } else {
@@ -426,8 +445,7 @@ public class OldBleLockPresenter<T> extends MyOldOpenLockRecordPresenter<IOldBle
 
                     @Override
                     public void onSubscribe1(Disposable d) {
-                        serverDisposable = d;
-                        compositeDisposable.add(serverDisposable);
+                        compositeDisposable.add(d);
                     }
                 });
     }
@@ -746,6 +764,7 @@ public class OldBleLockPresenter<T> extends MyOldOpenLockRecordPresenter<IOldBle
     }
 
     /////////////////////////////////////////////////////////////////老模块开锁记录////////////////////////////////////////////////////////////
+
     /**
      * 同步开锁记录
      */
@@ -760,8 +779,6 @@ public class OldBleLockPresenter<T> extends MyOldOpenLockRecordPresenter<IOldBle
             getOldModeRecord();
         }
     }
-
-
 
 
     public void getOldModeRecord() {
@@ -803,7 +820,7 @@ public class OldBleLockPresenter<T> extends MyOldOpenLockRecordPresenter<IOldBle
                                 //5f4a041cc38264630100ffff1905051604020000
                             } else if (four == 0xc3 && five == 0x82) {  //结束
                                 //结束了
-                                if (isFull() || retryTimes >= 3){
+                                if (isFull() || retryTimes >= 3) {
                                     upLoadOpenRecord(bleLockInfo.getServerLockInfo().getLockName(), bleLockInfo.getServerLockInfo().getLockNickName(),
                                             getRecordToServer(), MyApplication.getInstance().getUid());
                                     toDisposable(oldRecordDisposable);
@@ -815,7 +832,7 @@ public class OldBleLockPresenter<T> extends MyOldOpenLockRecordPresenter<IOldBle
                                         mViewRef.get().onLoadBleRecordFinish(true);
                                         mViewRef.get().onLoadBleRecord(getNotNullRecord());
                                     }
-                                }else {
+                                } else {
                                     LogUtils.e("发送数据1");
                                     getOldModeRecord();
                                 }
@@ -838,7 +855,7 @@ public class OldBleLockPresenter<T> extends MyOldOpenLockRecordPresenter<IOldBle
                                 mViewRef.get().onLoadBleRecordFinish(true);
                                 mViewRef.get().onLoadBleRecord(getNotNullRecord());
                             }
-                        }else {
+                        } else {
                             LogUtils.e("发送数据2");
                             getOldModeRecord();
                         }
@@ -860,7 +877,7 @@ public class OldBleLockPresenter<T> extends MyOldOpenLockRecordPresenter<IOldBle
     }
 
     public boolean isFull() {
-        if(lockRecords == null){
+        if (lockRecords == null) {
             return false;
         }
         for (OpenLockRecord openLockRecord : lockRecords) {
@@ -870,10 +887,6 @@ public class OldBleLockPresenter<T> extends MyOldOpenLockRecordPresenter<IOldBle
         }
         return true;
     }
-
-
-
-
 
 
 }

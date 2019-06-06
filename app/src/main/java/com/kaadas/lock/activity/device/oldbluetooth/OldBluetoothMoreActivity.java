@@ -15,11 +15,8 @@ import android.widget.TextView;
 
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
-import com.kaadas.lock.activity.device.bluetooth.BluetoothMoreActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseBleActivity;
-import com.kaadas.lock.mvp.presenter.DeviceInfoPresenter;
 import com.kaadas.lock.mvp.presenter.OldDeviceInfoPresenter;
-import com.kaadas.lock.mvp.view.IDeviceInfoView;
 import com.kaadas.lock.mvp.view.IOldDeviceInfoView;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
@@ -63,6 +60,8 @@ public class OldBluetoothMoreActivity extends BaseBleActivity<IOldDeviceInfoView
     TextView tvDeviceName;
     @BindView(R.id.rl_device_name)
     RelativeLayout rlDeviceName;
+    @BindView(R.id.ble_mode)
+    TextView bleMode;
     private BleLockInfo bleLockInfo;
     String deviceNickname;//设备名称
     String name;
@@ -85,6 +84,7 @@ public class OldBluetoothMoreActivity extends BaseBleActivity<IOldDeviceInfoView
         rlDeviceName.setOnClickListener(this);
         tvContent.setText(R.string.device_info);
         rlBluetoothModuleVersion.setOnClickListener(this);
+
     }
 
     @Override
@@ -102,9 +102,9 @@ public class OldBluetoothMoreActivity extends BaseBleActivity<IOldDeviceInfoView
                 showLoading(getString(R.string.is_check_vle_version));
                 sn = tvSerialNumber.getText().toString().trim();
                 version = tvBluetoothModuleVersion.getText().toString().replace("V", "");
-                if (TextUtils.isEmpty(sn)|| TextUtils.isEmpty(version)){
+                if (TextUtils.isEmpty(sn) || TextUtils.isEmpty(version)) {
                     ToastUtil.getInstance().showLong(R.string.get_device_info);
-                    if (mPresenter.isAuth(bleLockInfo,true)){
+                    if (mPresenter.isAuth(bleLockInfo, true)) {
                         mPresenter.getBluetoothDeviceInformation();
                     }
                     return;
@@ -161,11 +161,11 @@ public class OldBluetoothMoreActivity extends BaseBleActivity<IOldDeviceInfoView
     public void SoftwareRevDataSuccess(String data) {
         String strModuleHardwareVersion = "";
         String strLockHardwareVersion = "";
-        if (data.contains("-")){
+        if (data.contains("-")) {
             String[] split = data.split("-");
             strModuleHardwareVersion = split[0];
             strLockHardwareVersion = split[1];
-        }else {
+        } else {
             strModuleHardwareVersion = data;
         }
         tvLockSoftwareVersion.setText(strLockHardwareVersion);
@@ -213,6 +213,7 @@ public class OldBluetoothMoreActivity extends BaseBleActivity<IOldDeviceInfoView
 
     @Override
     public void ModelNumberDataSuccess(String data) {
+        bleMode.setText(data);
         hiddenLoading();
     }
 
@@ -305,7 +306,7 @@ public class OldBluetoothMoreActivity extends BaseBleActivity<IOldDeviceInfoView
 
                         }
                     });
-        }else {
+        } else {
             ToastUtil.getInstance().showLong(getString(R.string.check_update_failed));
         }
     }
