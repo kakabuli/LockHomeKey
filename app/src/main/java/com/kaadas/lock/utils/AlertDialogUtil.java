@@ -139,20 +139,21 @@ public class AlertDialogUtil {
         tv_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                alertDialog.dismiss();
                 if (clickListener != null) {
                     clickListener.left();
                 }
-                alertDialog.dismiss();
+
             }
         });
         //确定
         tv_query.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                alertDialog.dismiss();
                 if (clickListener != null) {
                     clickListener.right();
                 }
-                alertDialog.dismiss();
             }
         });
     }
