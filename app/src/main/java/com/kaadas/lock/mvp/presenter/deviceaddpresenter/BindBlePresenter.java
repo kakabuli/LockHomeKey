@@ -76,8 +76,8 @@ public class BindBlePresenter<T> extends BasePresenter<IBindBleView> {
                     public boolean test(BleDataBean bleDataBean) throws Exception {
                         byte[] originalData = bleDataBean.getOriginalData();
                         // f5b0001cb0000000000000000000000000000000  老模块入网数据
-                        return (originalData[0] & 0xFF) == 0xf5 && ((originalData[1] & 0xff) == 0xb0 ||(originalData[1] & 0xff) == 0xb1 )
-                                && (originalData[2] & 0xff) == 0x00 &&(originalData[3] & 0xff) == 0x1c
+                        return (originalData[0] & 0xFF) == 0xf5 && ((originalData[1] & 0xff) == 0xb0 || (originalData[1] & 0xff) == 0xb1)
+                                && (originalData[2] & 0xff) == 0x00 && (originalData[3] & 0xff) == 0x1c
                                 && (originalData[4] & 0xff) == 0xb0;
                     }
                 })
@@ -88,12 +88,12 @@ public class BindBlePresenter<T> extends BasePresenter<IBindBleView> {
                         //收到入网数据
                         byte[] originalData = bleDataBean.getOriginalData();
                         LogUtils.e("收到最老的锁入网数据");
-                        if (isBind &&(originalData[5] & 0xff) == 0x00){ //绑定
-                            sendConfirmData(version,isBind);
+                        if (isBind && (originalData[5] & 0xff) == 0x00) { //绑定
+                            sendConfirmData(version, isBind);
                             toDisposable(inNetNotifyDisposable);
-                        }else  {
-                            if ((originalData[5] & 0xff) == 0x01){  //解绑
-                                sendConfirmData(version,isBind);
+                        } else {
+                            if ((originalData[5] & 0xff) == 0x01) {  //解绑
+                                sendConfirmData(version, isBind);
                                 toDisposable(inNetNotifyDisposable);
                             }
                         }
@@ -105,7 +105,7 @@ public class BindBlePresenter<T> extends BasePresenter<IBindBleView> {
     /**
      * 发送三个数据
      */
-    public void sendConfirmData(int bleVersion,boolean isBind){
+    public void sendConfirmData(int bleVersion, boolean isBind) {
         //确认帧第一针
         bleService.sendCommand(OldBleCommandFactory.getInNetConfirm(true));
         /**
@@ -115,9 +115,9 @@ public class BindBlePresenter<T> extends BasePresenter<IBindBleView> {
             @Override
             public void run() {
                 bleService.sendCommand(OldBleCommandFactory.getEndFrame());
-                if (isBind){
+                if (isBind) {
                     bindDevice(null, null, null, bleVersion + "");
-                }else {
+                } else {
                     unbindDevice(bleVersion);
                 }
 
@@ -129,7 +129,7 @@ public class BindBlePresenter<T> extends BasePresenter<IBindBleView> {
     /**
      * 发送三个数据
      */
-    public void sendResponseData(boolean isSuccess){
+    public void sendResponseData(boolean isSuccess) {
         //唤醒数据
 //        bleService.sendCommand(OldBleCommandFactory.getWakeUpFrame());
         //确认帧第一针
@@ -298,6 +298,7 @@ public class BindBlePresenter<T> extends BasePresenter<IBindBleView> {
                             mViewRef.get().onBindFailed(throwable);
                         }
                     }
+
                     @Override
                     public void onSubscribe1(Disposable d) {
                         compositeDisposable.add(d);
@@ -320,7 +321,7 @@ public class BindBlePresenter<T> extends BasePresenter<IBindBleView> {
                         if (bleVersion == 1) {
                             sendResponseData(true);
                             listenerInNetNotify(bleVersion);
-                        }else {
+                        } else {
                             listenerPwd2(bleVersion);
                         }
                     }
