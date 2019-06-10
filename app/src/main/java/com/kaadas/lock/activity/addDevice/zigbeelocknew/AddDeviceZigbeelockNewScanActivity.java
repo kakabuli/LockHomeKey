@@ -51,7 +51,7 @@ public class AddDeviceZigbeelockNewScanActivity extends BaseAddToApplicationActi
         @Override
         public void onAnalyzeSuccess(Bitmap mBitmap, String result) {
             LogUtils.e("result",result);
-            if (result.contains("SN-")&&result.contains("MAC-")&&result.contains(" ")){
+            if (result.contains("SN-GW")&&result.contains("MAC-")&&result.contains(" ")){
                 String[] strs=result.split(" ");
                 String deviceSN=strs[0].replace("SN-","");
                 Intent scanSuccessIntent=new Intent(context,AddDeviceZigbeeLockNewZeroActivity.class);

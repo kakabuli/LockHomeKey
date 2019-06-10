@@ -60,7 +60,7 @@ public class AddDeviceCatEyeScanActivity extends BaseAddToApplicationActivity {
         @Override
         public void onAnalyzeSuccess(Bitmap mBitmap, String result) {
             LogUtils.e("扫描结果是   " + result);
-            if (result.contains("SN-")&&result.contains("MAC-")&&result.contains(" ")){
+            if (result.contains("SN-CH")&&result.contains("MAC-")&&result.contains(" ")){
                 String[] strs=result.split(" ");
                 String deviceSN=strs[0].replace("SN-","");
                 String deviceMac=strs[1].replace("MAC-","");
