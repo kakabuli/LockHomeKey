@@ -299,17 +299,11 @@ public class OldBleLockPresenter<T> extends MyOldOpenLockRecordPresenter<IOldBle
                             if (value2 == 1) {
 
                             } else if (value2 == 2) {   //开锁
+
                                 if (mViewRef.get() != null) {
                                     mViewRef.get().openLockSuccess();
                                 }
-                                //延时1秒读取开锁次数   直接读可能失败
-                                handler.postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        if (isAttach) {
-                                        }
-                                    }
-                                }, 500);
+                                LogUtils.e("收到开锁成功确认帧之后   再收到开锁上报数据  ");
                                 toDisposable(listenerOpenLockUpDisposable);
                             }
                         }
@@ -373,7 +367,7 @@ public class OldBleLockPresenter<T> extends MyOldOpenLockRecordPresenter<IOldBle
                                             syncLockTime();
                                         }
                                     }
-                                }, 500);
+                                }, 1000);
                             }
                         }
                     }
@@ -776,6 +770,9 @@ public class OldBleLockPresenter<T> extends MyOldOpenLockRecordPresenter<IOldBle
             retryTimes = 0;
             total = 0;
             LogUtils.e("发送数据1");
+            if (mViewRef.get() != null) {
+                mViewRef.get().startBleRecord();
+            }
             getOldModeRecord();
         }
     }

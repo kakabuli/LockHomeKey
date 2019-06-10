@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
@@ -27,7 +28,7 @@ import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.ToastUtil;
 import com.kaadas.lock.utils.ftp.GeTui;
 
-import org.linphone.mediastream.Log;
+
 
 import java.util.ArrayList;
 import java.util.List;

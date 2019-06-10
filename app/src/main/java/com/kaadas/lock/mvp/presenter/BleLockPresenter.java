@@ -462,14 +462,15 @@ public class BleLockPresenter<T> extends MyOpenLockRecordPresenter<IBleLockView>
                     }
                 });
         compositeDisposable.add(listenerOpenLockUpDisposable);
-
-
     }
 
 
     @Override
     public void attachView(IBleLockView view) {
         super.attachView(view);
+        if (bleService == null){
+            return;
+        }
         //设置警报提醒
         LogUtils.e("蓝牙界面   attachView " + this +"    "  );
         toDisposable(warringDisposable);

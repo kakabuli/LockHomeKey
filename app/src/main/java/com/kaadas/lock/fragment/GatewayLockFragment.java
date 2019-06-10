@@ -45,6 +45,7 @@ import com.kaadas.lock.utils.ToastUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -227,6 +228,8 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
     }
 
     public void changeOpenLockStatus(int status) {
+        stopOpenLockAnimator();
+        stopCloseLockAnimator();
 /*        状态1.WiFi不在线
         状态（推拉）2： “已启动布防，长按开锁“
 
@@ -414,6 +417,18 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
 //                tvExternal.setTextColor();
 //                tvExternal.setText();
                 break;
+    /*        case 11:
+                openLockAnimator();
+                break;
+            case 12:
+                stopOpenLockAnimator();
+                break;
+            case 13:
+                closeLockAnimator();
+                break;
+            case 14:
+                stopCloseLockAnimator();
+                break;*/
 
         }
         }
@@ -436,6 +451,14 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
         Intent intent;
         switch (v.getId()) {
             case R.id.rl_device_dynamic:
+             /*   if(true){
+
+                    Random random=new Random();
+                    int i = random.nextInt(15);
+                    LogUtils.d("davi 状态 "+i);
+                    changeOpenLockStatus(i);
+                    return;
+                }*/
                 intent = new Intent(getActivity(), GatewayEquipmentDynamicActivity.class);
                 if (!TextUtils.isEmpty(gatewayId) && !TextUtils.isEmpty(deviceId)) {
                     intent.putExtra(KeyConstants.GATEWAY_ID, gatewayId);
@@ -749,12 +772,18 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
     public void openLockAnimator() {
         ivExternalBig.setVisibility(View.VISIBLE);
         //优化后的帧动画
-        openLockBig = AnimationsContainer.getInstance(R.array.open_lock_big, 26).createProgressDialogAnim(ivExternalBig);
+        if (openLockBig==null){
+            openLockBig = AnimationsContainer.getInstance(R.array.open_lock_big, 26).createProgressDialogAnim(ivExternalBig);
+        }
         ivExternalMiddle.setVisibility(View.VISIBLE);
-        openLockMiddle = AnimationsContainer.getInstance(R.array.open_lock_middle, 26).createProgressDialogAnim(ivExternalMiddle);
+        if (openLockMiddle==null){
+            openLockMiddle = AnimationsContainer.getInstance(R.array.open_lock_middle, 26).createProgressDialogAnim(ivExternalMiddle);
+        }
         ivExternalSmall.setVisibility(View.GONE);
         ivInnerMiddle.setVisibility(View.VISIBLE);
-        openLockSmall = AnimationsContainer.getInstance(R.array.open_lock_small, 26).createProgressDialogAnim(ivInnerMiddle);
+        if (openLockSmall==null){
+            openLockSmall = AnimationsContainer.getInstance(R.array.open_lock_small, 26).createProgressDialogAnim(ivInnerMiddle);
+        }
         ivInnerSmall.setVisibility(View.GONE);
         tvInner.setVisibility(View.GONE);
         tvExternal.setVisibility(View.VISIBLE);
@@ -798,7 +827,9 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
 //                ivExternalSmall.setImageResource(R.mipmap.bluetooth_open_lock_small_icon);
         ivInnerMiddle.setVisibility(View.VISIBLE);
 //        ivInnerMiddle.setImageResource(R.drawable.bluetooth_lock_close);
-        closeLock = AnimationsContainer.getInstance(R.array.bluetooth_lock_close, 14).createProgressDialogAnim(ivInnerMiddle);
+        if (closeLock==null){
+            closeLock = AnimationsContainer.getInstance(R.array.bluetooth_lock_close, 14).createProgressDialogAnim(ivInnerMiddle);
+        }
         ivInnerSmall.setVisibility(View.VISIBLE);
         ivInnerSmall.setImageResource(R.mipmap.gate_lock_close_inner_small_icon);
         tvInner.setVisibility(View.VISIBLE);

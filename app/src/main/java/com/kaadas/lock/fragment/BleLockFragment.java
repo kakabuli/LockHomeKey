@@ -393,6 +393,8 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
     }
 
     public void changeOpenLockStatus(int status) {
+        stopOpenLockAnimator();
+        stopCloseLockAnimator();
         if (!isAdded()) {
             return;
         }
@@ -638,15 +640,21 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
         ivExternalBig.setVisibility(View.VISIBLE);
 //        ivExternalBig.setImageResource(R.drawable.open_lock_big);
         //优化后的帧动画
-        openLockBig = AnimationsContainer.getInstance(R.array.open_lock_big, 26).createProgressDialogAnim(ivExternalBig);
+        if (openLockBig==null){
+            openLockBig = AnimationsContainer.getInstance(R.array.open_lock_big, 26).createProgressDialogAnim(ivExternalBig);
+        }
         ivExternalMiddle.setVisibility(View.VISIBLE);
 //        ivExternalMiddle.setImageResource(R.drawable.open_lock_middle);
-        openLockMiddle = AnimationsContainer.getInstance(R.array.open_lock_middle, 26).createProgressDialogAnim(ivExternalMiddle);
+        if (openLockMiddle==null){
+            openLockMiddle = AnimationsContainer.getInstance(R.array.open_lock_middle, 26).createProgressDialogAnim(ivExternalMiddle);
+        }
         ivExternalSmall.setVisibility(View.GONE);
 //        ivExternalSmall.setImageResource(R.mipmap.bluetooth_open_lock_small_icon);
         ivInnerMiddle.setVisibility(View.VISIBLE);
 //        ivInnerMiddle.setImageResource(R.drawable.open_lock_small);
-        openLockSmall = AnimationsContainer.getInstance(R.array.open_lock_small, 26).createProgressDialogAnim(ivInnerMiddle);
+        if (openLockSmall==null){
+            openLockSmall = AnimationsContainer.getInstance(R.array.open_lock_small, 26).createProgressDialogAnim(ivInnerMiddle);
+        }
         ivInnerSmall.setVisibility(View.GONE);
 //                ivInnerSmall.setImageResource();
         tvInner.setVisibility(View.GONE);
@@ -682,7 +690,9 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
 //                ivExternalSmall.setImageResource(R.mipmap.bluetooth_open_lock_small_icon);
         ivInnerMiddle.setVisibility(View.VISIBLE);
 //        ivInnerMiddle.setImageResource(R.drawable.bluetooth_lock_close);
-        closeLock = AnimationsContainer.getInstance(R.array.bluetooth_lock_close, 14).createProgressDialogAnim(ivInnerMiddle);
+        if (closeLock==null){
+            closeLock = AnimationsContainer.getInstance(R.array.bluetooth_lock_close, 14).createProgressDialogAnim(ivInnerMiddle);
+        }
         ivInnerSmall.setVisibility(View.VISIBLE);
         ivInnerSmall.setImageResource(R.mipmap.bluetooth_lock_bu_fang_inner_small_icon);
         tvInner.setVisibility(View.VISIBLE);

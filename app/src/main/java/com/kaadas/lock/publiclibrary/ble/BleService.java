@@ -304,7 +304,7 @@ public class BleService extends Service {
                 return;
             }
             //符合要求的设备
-            if (  device.getName().startsWith("Bootloader")
+            if (device.getName().startsWith("Bootloader")
                     || device.getName().contains("KDS")
                     || device.getName().contains("XK")
                     || device.getName().contains("KdsLock")) {
@@ -429,9 +429,15 @@ public class BleService extends Service {
             bleDataBean.setDevice(gatt.getDevice());
             if (value[0] == 1 && value[3] == 0x05) {  //锁状态改变的数据
                 onLockStateCahnge(bleDataBean);
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {  //延时20毫秒发送开锁状态
+                        dataChangeSubject.onNext(bleDataBean);
+                    }
+                }, 10);
+            }else {  //直接朝下面发送
+                dataChangeSubject.onNext(bleDataBean);
             }
-
-            dataChangeSubject.onNext(bleDataBean);
         }
 
 
@@ -657,7 +663,7 @@ public class BleService extends Service {
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    if (bleVersionChar!=null){
+                    if (bleVersionChar != null) {
                         bluetoothGatt.readCharacteristic(bleVersionChar);
                     }
                 }
