@@ -1051,4 +1051,13 @@
     <string name="please_open_ble">蓝牙未打开，请打开蓝牙！</string>
     <string name="cateye_call_record">猫眼来电呼叫失败,请关闭麦克风</string>
     <string name="ble_mode">蓝牙模块</string>
+    <string name="select_updata_method">请选择更新方式</string>
+    <string name="xiaomi_market">小米应用市场</string>
+    <string name="huawei_market">华为应用市场</string>
+    <string name="oppo_market">OPPO应用市场</string>
+    <string name="tengxun_market">应用宝</string>
+    <string name="google_market">Play 商店</string>
+    <string name="vivo_market">vivo应用市场</string>
+    <string name="isforce">请务必升级到最新版本</string>
+    <string name="update_toast">版本%s已经发布</string>
 </resources>
