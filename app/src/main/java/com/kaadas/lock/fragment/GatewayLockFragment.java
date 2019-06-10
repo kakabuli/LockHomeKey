@@ -125,21 +125,20 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
                 GatewayInfo gatewayInfo = MyApplication.getInstance().getGatewayById(gatewayId);
                 mPresenter.lockClose(deviceId);
                 if (NetUtil.isNetworkAvailable()) {
-                            if ("online".equals(gatewayLockInfo.getServerInfo().getEvent_str())) {
-                                //在线
-                                changeOpenLockStatus(5);
-                                deviceState.setText(getString(R.string.normal));
-                            } else {
-                                changeOpenLockStatus(1);
-                                deviceState.setText(getString(R.string.offline));
-                            }
-                            if (gatewayInfo.getEvent_str() != null) {
-                                if (gatewayInfo.getEvent_str().equals("offline")) {
-                                    changeOpenLockStatus(1);
-                                    deviceState.setText(getString(R.string.offline));
-                                }
-                            }
-
+                    if ("online".equals(gatewayLockInfo.getServerInfo().getEvent_str())) {
+                        //在线
+                        changeOpenLockStatus(5);
+                        deviceState.setText(getString(R.string.normal));
+                    } else {
+                        changeOpenLockStatus(1);
+                        deviceState.setText(getString(R.string.offline));
+                    }
+                    if (gatewayInfo.getEvent_str() != null) {
+                        if (gatewayInfo.getEvent_str().equals("offline")) {
+                            changeOpenLockStatus(1);
+                            deviceState.setText(getString(R.string.offline));
+                        }
+                    }
                 } else {
                         changeOpenLockStatus(1);
                         deviceState.setText(getString(R.string.offline));
