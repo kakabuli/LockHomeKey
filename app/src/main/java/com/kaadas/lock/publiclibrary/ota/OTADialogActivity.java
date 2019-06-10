@@ -57,8 +57,8 @@ public class OTADialogActivity extends BaseActivity<IOtaView, OtaPresenter<IOtaV
         LogUtils.e("获取版本号是 server " + version);
 
         if (TextUtils.isEmpty(sn) || TextUtils.isEmpty(version)){
-            sn = (String) SPUtils.get(KeyConstants.DEVICE_SN + bleLockInfo.getServerLockInfo().getMacLock(), "");
-            version = (String) SPUtils.get(KeyConstants.BLE_VERSION + bleLockInfo.getServerLockInfo().getMacLock(), "");
+            sn = (String) SPUtils.get(KeyConstants.DEVICE_SN + bleLockInfo.getServerLockInfo().getMacLock(), ""); //Key
+            version = (String) SPUtils.get(KeyConstants.BLE_VERSION + bleLockInfo.getServerLockInfo().getMacLock(), ""); //Key
 
             LogUtils.e("获取版本号的KEy  local  " + sn);
             LogUtils.e("获取版本号是 local " + version);
@@ -122,7 +122,7 @@ public class OTADialogActivity extends BaseActivity<IOtaView, OtaPresenter<IOtaV
         LogUtils.e("下载链接是   " +updateFileInfo.getFileUrl() );
         Intent intent = new Intent();
         intent.putExtra(OtaConstants.bindUrl, updateFileInfo.getFileUrl());
-        intent.putExtra(OtaConstants.deviceMac, bleLockInfo.getServerLockInfo().getMacLock());
+        intent.putExtra(OtaConstants.deviceMac, bleLockInfo.getServerLockInfo().getMacLock());  //升级
         intent.putExtra(OtaConstants.password1, bleLockInfo.getServerLockInfo().getPassword1());
         intent.putExtra(OtaConstants.password2, bleLockInfo.getServerLockInfo().getPassword2());
         if (bleLockInfo.getBleType()==1){

@@ -335,20 +335,33 @@ public class BleService extends Service {
      * @param mac
      * @return
      */
-    public Observable<BluetoothDevice> getDeviceByMac(String mac) {
-        currentMac = mac;
-        handler.postDelayed(getRemoteDeviceRunnable, 6000);
+    public Observable<BluetoothDevice> getDeviceByMacOrName(String mac,String name) {
+        boolean isBluetoothAddress = BluetoothAdapter.checkBluetoothAddress(mac);
+        if (isBluetoothAddress){  //mac地址符合 MAC地址的格式才获取远程设备
+            currentMac = mac;
+            handler.postDelayed(getRemoteDeviceRunnable, 6000);
+        }
         return scanBleDevice(true)
                 .filter(new Predicate<BluetoothDevice>() {
                     @Override
                     public boolean test(BluetoothDevice device) throws Exception {
                         LogUtils.e("搜索到设备   " + device.getName() + "    mac  " + device.getAddress() + "  本地地址是  " + mac);
-                        if (device.getAddress().equals(mac)) {
-                            LogUtils.e("搜索成功   " + device.getName() + "    mac  " + device.getAddress() + "  本地地址是  " + mac);
-                            scanBleDevice(false);
-                            return true;
-                        } else {
-                            return false;
+                        if (!isBluetoothAddress){
+                            if (device.getName().equals(name)) {
+                                LogUtils.e("搜索成功   " + device.getName() + "    mac  " + device.getAddress() + "  本地地址是  " + mac);
+                                scanBleDevice(false);
+                                return true;
+                            } else {
+                                return false;
+                            }
+                        }else {
+                            if (device.getAddress().equals(mac)) {
+                                LogUtils.e("搜索成功   " + device.getName() + "    mac  " + device.getAddress() + "  本地地址是  " + mac);
+                                scanBleDevice(false);
+                                return true;
+                            } else {
+                                return false;
+                            }
                         }
                     }
                 });
@@ -942,12 +955,12 @@ public class BleService extends Service {
                     commands.remove(0);
                 } catch (Exception e) {
                     LogUtils.e("BleService 中报错  " + e.getMessage());
+                    handler.removeCallbacks(sendCommandRannble);
                 }
             }
             if (commands.size() > 0) {  //如果还有指令  继续发送
                 handler.removeCallbacks(sendCommandRannble);
                 handler.postDelayed(sendCommandRannble, sendInterval);
-
             }
         }
     };

@@ -235,7 +235,7 @@ public class BluetoothSharedDeviceManagementActivity extends BaseActivity<IBluet
                 if (bleLockInfo == null) {
                     return;
                 }
-                String devmac = bleLockInfo.getServerLockInfo().getMacLock();
+                String devmac = bleLockInfo.getServerLockInfo().getMacLock();   // 添加用户
                 String device_name = bleLockInfo.getServerLockInfo().getLockName();
                 String device_nickname = bleLockInfo.getServerLockInfo().getLockNickName();
                 String time = System.currentTimeMillis() + "";

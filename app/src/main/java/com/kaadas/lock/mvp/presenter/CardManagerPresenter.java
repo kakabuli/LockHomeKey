@@ -56,7 +56,7 @@ public class CardManagerPresenter<T> extends BlePresenter<ICardManagerView> {
         this.bleLockInfo = bleLockInfo;
         //如果service中有设备  且不为空  且是当前设备
         if (bleService.getBleLockInfo() != null && bleService.getCurrentDevice() != null
-                && bleService.getCurrentDevice().getAddress().equals(bleLockInfo.getServerLockInfo().getMacLock())) {
+                && bleService.getCurrentDevice().getName().equals(bleLockInfo.getServerLockInfo().getLockName())) {
             if (bleLockInfo.isAuth()) {  //如果已经鉴权   不管
                 LogUtils.e("服务中的数据是   " + bleLockInfo.isAuth());
                 return true;

@@ -150,11 +150,7 @@ public class FamilyMemberDetailActivity extends BaseActivity<IFamilyMemberDeatil
                         if (bleLockInfo == null) {
                             return;
                         }
-                        String devmac = bleLockInfo.getServerLockInfo().getMacLock();
-                        String device_name = bleLockInfo.getServerLockInfo().getLockName();
-                        String device_nickname = data;
-                        String time = dataBean.getCreateTime() + "";
-                        List<String> items = dataBean.getItems();
+
                         mPresenter.modifyCommonUserNickname(dataBean.get_id(), data);
                         alertDialog.dismiss();
                     }
