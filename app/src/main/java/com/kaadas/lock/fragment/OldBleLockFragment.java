@@ -148,8 +148,8 @@ public class OldBleLockFragment extends BaseBleFragment<IOldBleLockView, OldBleL
             if (bleLockInfo!=null&&bleLockInfo.isConnected()){
                 changeOpenLockStatus(8);
             }
-            mPresenter.getOpenRecordFromServer(1, bleLockInfo);
         }
+        mPresenter.getOpenRecordFromServer(1, bleLockInfo);
     }
 
     private void initView() {

@@ -240,7 +240,6 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
                             //连接状态改变之后   就不自动release连接了
                             LogUtils.e("设备状态改变   bleLockInfo为空   " + (bleLockInfo == null) + "   连接状态   " + bleStateBean.isConnected());
                             handler.removeCallbacks(releaseRunnable);
-
                             if (bleLockInfo != null) {
                                 bleLockInfo.setConnected(bleStateBean.isConnected());
                             }
@@ -249,7 +248,12 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
                                 mViewRef.get().onDeviceStateChange(bleStateBean.isConnected());
                             }
                             if (bleStateBean.isConnected()) {
-                                if (bleService.getBleVersion() == 1 && bleLockInfo.getBleType() == 1) { //如果是最老的模块  直接算是鉴权成功
+                                String bleVersion = bleLockInfo.getServerLockInfo().getBleVersion();
+                                int version = 0;
+                                if (!TextUtils.isEmpty(bleVersion)){
+                                    version = Integer.parseInt(bleVersion);
+                                }
+                                if (bleService.getBleVersion() == 1 && version<=1 ) { //如果是最老的模块  直接算是鉴权成功
                                     if (bleStateBean.isConnected() && bleService.getCurrentDevice() != null &&
                                             bleService.getCurrentDevice().getAddress().equals(
                                                     bleLockInfo.getServerLockInfo().getMacLock())) {
