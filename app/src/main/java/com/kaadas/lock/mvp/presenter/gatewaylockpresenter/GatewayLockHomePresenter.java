@@ -234,10 +234,10 @@ public class GatewayLockHomePresenter<T> extends BasePresenter<IGatewayLockHomeV
                     }, new Consumer<Throwable>() {
                         @Override
                         public void accept(Throwable throwable) throws Exception {
-                            //开锁异常
+                           /* //开锁异常
                             if (mViewRef.get() != null) {
                                 mViewRef.get().openLockThrowable(throwable);
-                            }
+                            }*/
                         }
                     });
             compositeDisposable.add(openLockDisposable);

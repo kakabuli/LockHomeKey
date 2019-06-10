@@ -753,6 +753,7 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
             changeOpenLockStatus(5);
         }
         ToastUtil.getInstance().showShort(getString(R.string.open_lock_fail));
+        LogUtils.e("开锁异常");
     }
 
     @Override
