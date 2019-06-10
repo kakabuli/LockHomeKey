@@ -382,7 +382,7 @@ public class BleLockDetailPresenter<T> extends BlePresenter<IDeviceDetailView> {
                     public void accept(BleDataBean bleDataBean) throws Exception {  //开锁成功
                         if (bleDataBean.getOriginalData()[0] == 0 && bleDataBean.getPayload()[0] == 0) { //加密标志  0x01    且负载数据第一个是  0
                             //开锁返回确认帧     如果成功  保存密码    那么监听开锁上报   以开锁上报为准   开锁上报  五秒超时
-                            LogUtils.e("开锁成功   " + Rsa.bytesToHexString(bleDataBean.getPayload()));
+                            LogUtils.e("开锁成功 7  " + Rsa.bytesToHexString(bleDataBean.getPayload()));
                             //开锁成功  保存密码
                             SPUtils.put(KeyConstants.SAVE_PWD_HEARD + bleLockInfo.getServerLockInfo().getMacLock(), pwd);
                             listenerOpenLockUp();
@@ -560,7 +560,7 @@ public class BleLockDetailPresenter<T> extends BlePresenter<IDeviceDetailView> {
                                 }
                                 getOpenLockNumber();
                             } else if (value2 == 2) {   //开锁
-                                LogUtils.e("开锁成功   " + Rsa.bytesToHexString(bleDataBean.getPayload()));
+                                LogUtils.e("开锁成功  8 " + Rsa.bytesToHexString(bleDataBean.getPayload()));
                                 if (mViewRef.get() != null) {
                                     mViewRef.get().openLockSuccess();
                                 }

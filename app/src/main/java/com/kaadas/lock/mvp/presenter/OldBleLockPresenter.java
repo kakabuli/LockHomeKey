@@ -770,6 +770,9 @@ public class OldBleLockPresenter<T> extends MyOldOpenLockRecordPresenter<IOldBle
             retryTimes = 0;
             total = 0;
             LogUtils.e("发送数据1");
+            if (mViewRef.get() != null) {
+                mViewRef.get().startBleRecord();
+            }
             getOldModeRecord();
         }
     }

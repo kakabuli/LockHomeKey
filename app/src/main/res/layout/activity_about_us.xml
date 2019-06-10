@@ -6,20 +6,21 @@
     android:orientation="vertical">
 
     <include layout="@layout/head"></include>
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@mipmap/about_us_bj"
         android:orientation="vertical">
-
-        <LinearLayout
+        <ScrollView
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="5"
+            android:layout_weight="6"
+            >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:gravity="center_horizontal"
             android:orientation="vertical">
-
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -34,12 +35,13 @@
                 android:layout_marginRight="@dimen/dp_16"
                 android:lineSpacingExtra="@dimen/dp_8"
                 android:text="@string/about_us_content" />
-        </LinearLayout>
 
+
+        </LinearLayout>
+        </ScrollView>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginBottom="@dimen/dp_39"
             android:layout_weight="4"
             android:background="#FFFFFF"
             android:orientation="vertical">
@@ -205,5 +207,9 @@
 
             </RelativeLayout>
         </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.4"></View>
     </LinearLayout>
 </LinearLayout>
