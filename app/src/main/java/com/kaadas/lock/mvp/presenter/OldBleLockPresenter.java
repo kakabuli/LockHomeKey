@@ -388,60 +388,66 @@ public class OldBleLockPresenter<T> extends MyOldOpenLockRecordPresenter<IOldBle
         if (pagenum == 1) {  //如果是获取第一页的数据，那么清楚所有的开锁记录
             serverRecords.clear();
         }
-        XiaokaiNewServiceImp.getLockRecord(bleLockInfo.getServerLockInfo().getLockName(),
-                MyApplication.getInstance().getUid(),
-                null,
-                pagenum + "")
-                .subscribe(new BaseObserver<LockRecordResult>() {
-                    @Override
-                    public void onSuccess(LockRecordResult lockRecordResult) {
-                        LogUtils.d("davi lockRecordResult " + lockRecordResult.toString());
-                        if (lockRecordResult.getData().size() == 0) {  //服务器没有数据  提示用户
-                            if (mViewRef != null && mViewRef.get() != null) {
-                                if (pagenum == 1) { //第一次获取数据就没有
-                                    mViewRef.get().onServerNoData();
-                                } else {
+        try {
+
+
+            XiaokaiNewServiceImp.getLockRecord(bleLockInfo.getServerLockInfo().getLockName(),
+                    MyApplication.getInstance().getUid(),
+                    null,
+                    pagenum + "")
+                    .subscribe(new BaseObserver<LockRecordResult>() {
+                        @Override
+                        public void onSuccess(LockRecordResult lockRecordResult) {
+                            LogUtils.d("davi lockRecordResult " + lockRecordResult.toString());
+                            if (lockRecordResult.getData().size() == 0) {  //服务器没有数据  提示用户
+                                if (mViewRef != null && mViewRef.get() != null) {
+                                    if (pagenum == 1) { //第一次获取数据就没有
+                                        mViewRef.get().onServerNoData();
+                                    } else {
 //                                    mViewRef.get().noMoreData();
+                                    }
+                                    return;
                                 }
-                                return;
+                            }
+                            ///将服务器数据封装成用来解析的数据
+                            for (LockRecordResult.LockRecordServer record : lockRecordResult.getData()) {
+                                serverRecords.add(
+                                        new OpenLockRecord(
+                                                record.getUser_num(),
+                                                record.getOpen_type(),
+                                                record.getOpen_time(), -1
+                                        )
+                                );
+                            }
+                            if (mViewRef != null && mViewRef.get() != null) {
+                                mViewRef.get().onLoadServerRecord(serverRecords, pagenum);
                             }
                         }
-                        ///将服务器数据封装成用来解析的数据
-                        for (LockRecordResult.LockRecordServer record : lockRecordResult.getData()) {
-                            serverRecords.add(
-                                    new OpenLockRecord(
-                                            record.getUser_num(),
-                                            record.getOpen_type(),
-                                            record.getOpen_time(), -1
-                                    )
-                            );
-                        }
-                        if (mViewRef != null && mViewRef.get() != null) {
-                            mViewRef.get().onLoadServerRecord(serverRecords, pagenum);
-                        }
-                    }
 
-                    @Override
-                    public void onAckErrorCode(BaseResult baseResult) {
-                        LogUtils.e("获取 开锁记录  失败   " + baseResult.getMsg() + "  " + baseResult.getCode());
-                        if (mViewRef != null && mViewRef.get() != null) {  //
-                            mViewRef.get().onLoadServerRecordFailedServer(baseResult);
+                        @Override
+                        public void onAckErrorCode(BaseResult baseResult) {
+                            LogUtils.e("获取 开锁记录  失败   " + baseResult.getMsg() + "  " + baseResult.getCode());
+                            if (mViewRef != null && mViewRef.get() != null) {  //
+                                mViewRef.get().onLoadServerRecordFailedServer(baseResult);
+                            }
                         }
-                    }
 
-                    @Override
-                    public void onFailed(Throwable throwable) {
-                        LogUtils.e("获取 开锁记录  失败   " + throwable.getMessage());
-                        if (mViewRef != null && mViewRef.get() != null) {
-                            mViewRef.get().onLoadServerRecordFailed(throwable);
+                        @Override
+                        public void onFailed(Throwable throwable) {
+                            LogUtils.e("获取 开锁记录  失败   " + throwable.getMessage());
+                            if (mViewRef != null && mViewRef.get() != null) {
+                                mViewRef.get().onLoadServerRecordFailed(throwable);
+                            }
                         }
-                    }
 
-                    @Override
-                    public void onSubscribe1(Disposable d) {
-                        compositeDisposable.add(d);
-                    }
-                });
+                        @Override
+                        public void onSubscribe1(Disposable d) {
+                            compositeDisposable.add(d);
+                        }
+                    });
+        } catch (Exception e) {
+            LogUtils.e("从服务器获取开锁记录失败   " + e.getMessage());
+        }
     }
 
     @Override
