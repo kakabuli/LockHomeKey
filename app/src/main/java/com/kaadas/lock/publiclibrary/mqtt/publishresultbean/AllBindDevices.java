@@ -271,7 +271,7 @@ public class AllBindDevices {
                     if (!isExist && homeShowBean.getDeviceType() == HomeShowBean.TYPE_BLE_LOCK) {
                         //如果设备原来就存在，那么只替换服务器数据   其他数据不变
                         BleLockInfo bleLockInfo = (BleLockInfo) homeShowBean.getObject();
-                        if (bleDevice.getMacLock().equals(bleLockInfo.getServerLockInfo().getMacLock())) {
+                        if (bleDevice.getMacLock().equals(bleLockInfo.getServerLockInfo().getMacLock())) { //是否是同一个设备
                             isExist = true;
                             bleLockInfo.setServerLockInfo(bleDevice);
                             homeShowBean.setDeviceNickName(bleDevice.getLockNickName());

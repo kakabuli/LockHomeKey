@@ -468,13 +468,13 @@ public class BluetoothMoreActivity extends BaseBleActivity<IDeviceMoreView, Devi
                     }
                     @Override
                     public void right() {
-                        SPUtils.put(KeyConstants.DEVICE_SN + bleLockInfo.getServerLockInfo().getMacLock(), Sn);
-                        SPUtils.put(KeyConstants.BLE_VERSION + bleLockInfo.getServerLockInfo().getMacLock(), version);
+                        SPUtils.put(KeyConstants.DEVICE_SN + bleLockInfo.getServerLockInfo().getMacLock(), Sn);    //Key
+                        SPUtils.put(KeyConstants.BLE_VERSION + bleLockInfo.getServerLockInfo().getMacLock(), version); //Key
                         LogUtils.e("升级的版本信息是   " + Sn + "   下载链接是   " + updateFileInfo.getFileUrl());
                         MyApplication.getInstance().getBleService().release();  //进入ota模式之前  需要断开连接
                         Intent intent = new Intent();
                         intent.putExtra(OtaConstants.bindUrl, updateFileInfo.getFileUrl());
-                        intent.putExtra(OtaConstants.deviceMac, bleLockInfo.getServerLockInfo().getMacLock());
+                        intent.putExtra(OtaConstants.deviceMac, bleLockInfo.getServerLockInfo().getMacLock()); //升级
                         intent.putExtra(OtaConstants.password1, bleLockInfo.getServerLockInfo().getPassword1());
                         intent.putExtra(OtaConstants.password2, bleLockInfo.getServerLockInfo().getPassword2());
                         if (bleLockInfo.getBleType() == 1) { //Ti升级

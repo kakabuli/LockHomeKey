@@ -312,7 +312,7 @@ public class BleLockPresenter<T> extends MyOpenLockRecordPresenter<IBleLockView>
                     public void onSuccess(BaseResult result) {
                         if ("200".equals(result.getCode())) {
                             if ("1".equals(bleLockInfo.getServerLockInfo().getIs_admin())) { //如果是管理员  查看本地密码
-                                localPwd = (String) SPUtils.get(KeyConstants.SAVE_PWD_HEARD + bleLockInfo.getServerLockInfo().getMacLock(), "");
+                                localPwd = (String) SPUtils.get(KeyConstants.SAVE_PWD_HEARD + bleLockInfo.getServerLockInfo().getMacLock(), ""); //Key
                                 if (TextUtils.isEmpty(localPwd)) { //如果用户密码为空
                                     if (mViewRef.get() != null) {
                                         mViewRef.get().inputPwd();

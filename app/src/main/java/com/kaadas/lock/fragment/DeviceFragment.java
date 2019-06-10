@@ -231,7 +231,7 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                                 BleLockServiceInfo bleLockServiceInfo = new BleLockServiceInfo();
                                 bleLockServiceInfo.setLockName(serverBleDevice.getLockName());
                                 bleLockServiceInfo.setLockNickName(serverBleDevice.getLockNickName());
-                                bleLockServiceInfo.setMacLock(serverBleDevice.getMacLock());
+                                bleLockServiceInfo.setMacLock(serverBleDevice.getMacLock());  //缓存
                                 bleLockServiceInfo.setOpen_purview(serverBleDevice.getOpen_purview());
                                 bleLockServiceInfo.setIs_admin(serverBleDevice.getIs_admin());
                                 bleLockServiceInfo.setCenter_latitude(serverBleDevice.getCenter_latitude());

@@ -725,7 +725,7 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                 serverBleDevice.setCircle_radius(bleDevice.getCircle_radius());
                 serverBleDevice.setLockName(bleDevice.getLockName());
                 serverBleDevice.setLockNickName(bleDevice.getLockNickName());
-                serverBleDevice.setMacLock(bleDevice.getMacLock());
+                serverBleDevice.setMacLock(bleDevice.getMacLock()); //设置值
                 serverBleDevice.setIs_admin(bleDevice.getIs_admin());
                 serverBleDevice.setModel(bleDevice.getModel());
                 serverBleDevice.setOpen_purview(bleDevice.getOpen_purview());
