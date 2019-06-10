@@ -25,7 +25,7 @@ public interface IDeviceView extends IBaseView {
     void getDevicePowerFail(String gatewayId,String deviceId);
 
     //获取电量异常
-    void getDevicePowerThrowable(Throwable throwable);
+    void getDevicePowerThrowable(String gatewayId, String deviceId);
 
     //网关状态改变
     void gatewayStatusChange(String gatewayId,String eventStr);

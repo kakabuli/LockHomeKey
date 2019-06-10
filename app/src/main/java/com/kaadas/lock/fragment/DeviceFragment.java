@@ -536,8 +536,30 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
     }
 
     @Override
-    public void getDevicePowerThrowable(Throwable throwable) {
-
+    public void getDevicePowerThrowable(String gatewayId, String deviceId) {
+        //获取电量失败
+        if (mDeviceList != null && mDeviceList.size() > 0) {
+            for (HomeShowBean device : mDeviceList) {
+                //猫眼电量
+                if (HomeShowBean.TYPE_CAT_EYE == device.getDeviceType()) {
+                    if (device.getDeviceId().equals(deviceId)) {
+                        CateEyeInfo cateEyeInfo = (CateEyeInfo) device.getObject();
+                        cateEyeInfo.getServerInfo().setEvent_str("offline");
+                        if (deviceDetailAdapter != null) {
+                            deviceDetailAdapter.notifyDataSetChanged();
+                        }
+                    }
+                } else if (HomeShowBean.TYPE_GATEWAY_LOCK == device.getDeviceType()) {
+                    if (device.getDeviceId().equals(deviceId)) {
+                        GwLockInfo gwLockInfo = (GwLockInfo) device.getObject();
+                        gwLockInfo.getServerInfo().setEvent_str("offline");
+                        if (deviceDetailAdapter != null) {
+                            deviceDetailAdapter.notifyDataSetChanged();
+                        }
+                    }
+                }
+            }
+        }
     }
 
     @Override
@@ -571,24 +593,6 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                                     break;
                             }
 
-                            /*List<HomeShowBean> gatewayBindList = MyApplication.getInstance().getGatewayBindList(gatewayId);
-                            for (HomeShowBean gatewayBind : gatewayBindList) {
-                                switch (gatewayBind.getDeviceType()) {
-                                    //猫眼
-                                    case HomeShowBean.TYPE_CAT_EYE:
-                                        CateEyeInfo cateEyeInfo = (CateEyeInfo) gatewayBind.getObject();
-                                        cateEyeInfo.getServerInfo().setEvent_str("offline");
-                                        break;
-                                    //网关锁
-                                    case HomeShowBean.TYPE_GATEWAY_LOCK:
-                                        GwLockInfo gwLockInfo = (GwLockInfo) gatewayBind.getObject();
-                                        gwLockInfo.getServerInfo().setEvent_str("offline");
-                                        break;
-                                }
-                            }*/
-
-
-
                         }
                         if (deviceDetailAdapter != null) {
                             deviceDetailAdapter.notifyDataSetChanged();
@@ -611,7 +615,7 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                         //猫眼上线
                         case HomeShowBean.TYPE_CAT_EYE:
                             CateEyeInfo cateEyeInfo = (CateEyeInfo) homeShowBean.getObject();
-                            if (cateEyeInfo.getGwID().equals(gatewayId)) {
+                            if (cateEyeInfo.getGwID().equals(gatewayId)&&cateEyeInfo.getServerInfo().getDeviceId().equals(deviceId)) {
                                 if ("online".equals(eventStr)) {
                                     cateEyeInfo.getServerInfo().setEvent_str("online");
                                 } else {
@@ -626,7 +630,7 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                         //网关锁上线
                         case HomeShowBean.TYPE_GATEWAY_LOCK:
                             GwLockInfo gwLockInfo = (GwLockInfo) homeShowBean.getObject();
-                            if (gwLockInfo.getGwID().equals(gatewayId)) {
+                            if (gwLockInfo.getGwID().equals(gatewayId)&&gwLockInfo.getServerInfo().getDeviceId().equals(deviceId)) {
                                 if ("online".equals(eventStr)) {
                                     gwLockInfo.getServerInfo().setEvent_str("online");
                                 } else if ("offline".equals(eventStr)) {
