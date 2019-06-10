@@ -238,6 +238,21 @@ public class DoorCardManagerActivity extends BaseBleActivity<ICardManagerView, C
     @Override
     public void onGetPasswordSuccess(GetPasswordResult result) {
         refreshLayout.finishRefresh();
+        if (result == null ){
+            isNotData = true;
+            pageChange();
+            return;
+        }
+        if (result.getData() == null ){
+            isNotData = true;
+            pageChange();
+            return;
+        }
+        if (result.getData().getCardList() == null ){
+            isNotData = true;
+            pageChange();
+            return;
+        }
         if (result.getData().getCardList().size() == 0) {
             isNotData = true;
         } else {
