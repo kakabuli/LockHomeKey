@@ -16,7 +16,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="5"
+            android:layout_weight="6"
             android:gravity="center_horizontal"
             android:orientation="vertical">
 
@@ -39,7 +39,6 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginBottom="@dimen/dp_39"
             android:layout_weight="4"
             android:background="#FFFFFF"
             android:orientation="vertical">
@@ -205,5 +204,9 @@
 
             </RelativeLayout>
         </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.4"></View>
     </LinearLayout>
 </LinearLayout>

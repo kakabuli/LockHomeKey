@@ -476,7 +476,7 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
                     }
                 })
                 .compose(RxjavaHelper.observeOnMainThread())
-                .timeout(25 * 1000, TimeUnit.MILLISECONDS)
+                .timeout(60 * 1000, TimeUnit.MILLISECONDS)
                 .subscribe(new Consumer<MqttData>() {
                     @Override
                     public void accept(MqttData mqttData) throws Exception {
