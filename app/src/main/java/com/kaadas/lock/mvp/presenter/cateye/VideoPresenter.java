@@ -419,8 +419,8 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
      */
     private void listDeviceChange(CateEyeInfo cateEyeInfo, boolean isCallIn) {
         deviceChangeDisposable = MemeManager.getInstance().listDevicesChange()
-                .compose(RxjavaHelper.observeOnMainThread())
                 .timeout(5 * 1000, TimeUnit.MILLISECONDS)
+                .compose(RxjavaHelper.observeOnMainThread())
                 .subscribe(new Consumer<List<Device>>() {
                     @Override
                     public void accept(List<Device> devices) throws Exception {
@@ -475,8 +475,8 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
                         return false;
                     }
                 })
-                .compose(RxjavaHelper.observeOnMainThread())
                 .timeout(60 * 1000, TimeUnit.MILLISECONDS)
+                .compose(RxjavaHelper.observeOnMainThread())
                 .subscribe(new Consumer<MqttData>() {
                     @Override
                     public void accept(MqttData mqttData) throws Exception {
@@ -653,8 +653,8 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
                             return false;
                         }
                     })
-                    .compose(RxjavaHelper.observeOnMainThread())
                     .timeout(10 * 1000, TimeUnit.MILLISECONDS)
+                    .compose(RxjavaHelper.observeOnMainThread())
                     .subscribe(new Consumer<MqttData>() {
                         @Override
                         public void accept(MqttData mqttData) throws Exception {
@@ -702,8 +702,8 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
                             return false;
                         }
                     })
-                    .compose(RxjavaHelper.observeOnMainThread())
                     .timeout(30 * 1000, TimeUnit.MILLISECONDS)
+                    .compose(RxjavaHelper.observeOnMainThread())
                     .subscribe(new Consumer<MqttData>() {
                         @Override
                         public void accept(MqttData mqttData) throws Exception {

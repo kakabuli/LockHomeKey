@@ -88,8 +88,8 @@ public class OldBleLockPresenter<T> extends MyOldOpenLockRecordPresenter<IOldBle
                             }
                         })
                         .timeout(1000, TimeUnit.MILLISECONDS)
-                        .compose(RxjavaHelper.observeOnMainThread())
                         .retryWhen(new RetryWithTime(2, 0))  //读取三次电量   如果没有读取到电量的话
+                        .compose(RxjavaHelper.observeOnMainThread())
                         .subscribe(new Consumer<ReadInfoBean>() {
                             @Override
                             public void accept(ReadInfoBean readInfoBean) throws Exception {

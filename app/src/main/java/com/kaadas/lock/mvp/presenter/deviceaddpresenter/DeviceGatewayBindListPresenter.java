@@ -81,8 +81,8 @@ public class DeviceGatewayBindListPresenter<T> extends BasePresenter<DeviceGatew
                             return mqttData.isThisRequest(wiFiBasic.getId(),   MqttConstant.GET_WIFI_BASIC );
                         }
                     })
-                    .compose(RxjavaHelper.observeOnMainThread())
                     .timeout(10 * 1000, TimeUnit.MILLISECONDS)
+                    .compose(RxjavaHelper.observeOnMainThread())
                     .subscribe(new Consumer<MqttData>() {
                         @Override
                         public void accept(MqttData mqttData) throws Exception {

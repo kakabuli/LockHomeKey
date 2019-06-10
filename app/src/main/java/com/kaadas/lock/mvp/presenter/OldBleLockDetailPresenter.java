@@ -222,10 +222,6 @@ public class OldBleLockDetailPresenter<T> extends BlePresenter<IOldBluetoothDevi
     }
 
 
-
-
-
-
     /**
      * 获取开锁次数
      */
@@ -291,9 +287,9 @@ public class OldBleLockDetailPresenter<T> extends BlePresenter<IOldBluetoothDevi
         } else {  //没有网络
             //读取到蓝牙模块信号，且蓝牙型号是 rgbt1761或者Rgbt1761D  不用带密码开门  使用APP开门指令
             if (!TextUtils.isEmpty(bleLockInfo.getModeNumber()) &&
-                    ( "Rgbt1761".equalsIgnoreCase(bleLockInfo.getModeNumber())||
-                            "Rgbt1761D".equalsIgnoreCase(bleLockInfo.getModeNumber()))){
-                realOpenLock("",true);
+                    ("Rgbt1761".equalsIgnoreCase(bleLockInfo.getModeNumber()) ||
+                            "Rgbt1761D".equalsIgnoreCase(bleLockInfo.getModeNumber()))) {
+                realOpenLock("", true);
                 return;
             }
 
@@ -328,9 +324,9 @@ public class OldBleLockDetailPresenter<T> extends BlePresenter<IOldBluetoothDevi
                         if ("200".equals(result.getCode())) {
                             //读取到蓝牙模块信号，且蓝牙型号是 rgbt1761或者Rgbt1761D  不用带密码开门  使用APP开门指令
                             if (!TextUtils.isEmpty(bleLockInfo.getModeNumber()) &&
-                                    ( "Rgbt1761".equalsIgnoreCase(bleLockInfo.getModeNumber())||
-                                            "Rgbt1761D".equalsIgnoreCase(bleLockInfo.getModeNumber()))){
-                                realOpenLock("",true);
+                                    ("Rgbt1761".equalsIgnoreCase(bleLockInfo.getModeNumber()) ||
+                                            "Rgbt1761D".equalsIgnoreCase(bleLockInfo.getModeNumber()))) {
+                                realOpenLock("", true);
                                 return;
                             }
 
@@ -378,7 +374,7 @@ public class OldBleLockDetailPresenter<T> extends BlePresenter<IOldBluetoothDevi
         if (mViewRef.get() != null) {
             mViewRef.get().isOpeningLock();
         }
-        if (bleService.getBleVersion() == 1){
+        if (bleService.getBleVersion() == 1) {
             //老版本开锁
             return;
         }
