@@ -228,6 +228,22 @@ public class FingerprintManagerActivity extends BaseBleActivity<IFingerprintMana
     @Override
     public void onGetPasswordSuccess(GetPasswordResult result) {
         refreshLayout.finishRefresh();
+        if (result == null ){
+            isNotData = true;
+            pageChange();
+            return;
+        }
+        if (result.getData() == null ){
+            isNotData = true;
+            pageChange();
+            return;
+        }
+
+        if (result.getData().getFingerprintList() == null ){
+            isNotData = true;
+            pageChange();
+            return;
+        }
         if (result.getData().getFingerprintList().size() == 0) {
             isNotData = true;
         } else {
