@@ -23,7 +23,6 @@ import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.kaadas.lock.Manifest;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.cateye.VideoVActivity;
@@ -153,7 +152,7 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
         upgradePresenter.getUpgreadJson(new UpgradePresenter.IUpgradePresenter() {
             @Override
             public void ShowUpgradePresenterSuccess(String jsonPresenterResult) {
-                Log.e(GeTui.VideoLog,jsonPresenterResult);
+             //   Log.e(GeTui.VideoLog,jsonPresenterResult);
                  if(!TextUtils.isEmpty(jsonPresenterResult)){
                      UpgradeBean upgradeBean=new Gson().fromJson(jsonPresenterResult,UpgradeBean.class);
                      try {
