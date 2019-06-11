@@ -789,7 +789,7 @@ public class BleService extends Service {
             }
         }
 
-        LogUtils.e("模块版本是   " + type);
+        LogUtils.e("模块版本是   " + type+"   ");
         bleVersion = type;
         isConnected = true;
         ////////////////////////////////       检查版本是否需要更新        /////////////////////////////
