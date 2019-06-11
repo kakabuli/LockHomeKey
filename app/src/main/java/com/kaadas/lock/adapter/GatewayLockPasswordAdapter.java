@@ -8,18 +8,18 @@ import com.chad.library.adapter.base.BaseViewHolder;
 import com.kaadas.lock.R;
 import com.kaadas.lock.publiclibrary.bean.ForeverPassword;
 
+import org.linphone.mediastream.Log;
+
 import java.util.List;
 
 public class GatewayLockPasswordAdapter extends BaseQuickAdapter<String, BaseViewHolder> {
-    int count=0;
+
 
     public GatewayLockPasswordAdapter( @Nullable List<String> data) {
         super(R.layout.item_gateway_password, data);
-        if (data!=null&&data.size()>0){
-            count=data.size();
-        }
     }
 
+    int i=0;
     @Override
     protected void convert(BaseViewHolder helper, String item) {
         helper.setText(R.id.tv_num,item);
@@ -29,10 +29,16 @@ public class GatewayLockPasswordAdapter extends BaseQuickAdapter<String, BaseVie
         }else{
             helper.setText(R.id.tv_time,R.string.permanent_once_validity);
         }
-        int position=helper.getAdapterPosition();
-        if (count==position){
-            helper.setGone(R.id.my_view,true);
+        i++;
+        if(getData()!=null && getData().size()==i){
+            helper.getView(R.id.my_view).setVisibility(View.GONE);
+            i=0;
+        }else {
+            helper.getView(R.id.my_view).setVisibility(View.VISIBLE);
         }
+
+
+
 
     }
 }
