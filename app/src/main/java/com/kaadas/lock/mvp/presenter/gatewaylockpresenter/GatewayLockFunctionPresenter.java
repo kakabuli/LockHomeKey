@@ -58,8 +58,8 @@ public class GatewayLockFunctionPresenter<T> extends BasePresenter<GatewayLockFu
 
                                      }
                                  })
-                                 .compose(RxjavaHelper.observeOnMainThread())
                                  .timeout(40*1000,TimeUnit.MILLISECONDS)
+                                 .compose(RxjavaHelper.observeOnMainThread())
                                  .subscribe(new Consumer<MqttData>() {
                                      @Override
                                      public void accept(MqttData mqttData) throws Exception {

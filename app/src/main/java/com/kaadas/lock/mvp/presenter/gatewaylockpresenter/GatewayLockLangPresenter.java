@@ -26,8 +26,8 @@ public class GatewayLockLangPresenter<T> extends BasePresenter<GatewayLockLangVi
         toDisposable(getLangDisposable);
         if (mqttService!=null){
             getLangDisposable=mqttService.mqttPublish(MqttConstant.getCallTopic(MyApplication.getInstance().getUid()), MqttCommandFactory.getLockLang(gatewayId,deviceId))
-                    .compose(RxjavaHelper.observeOnMainThread())
                     .timeout(10*1000, TimeUnit.MILLISECONDS)
+                    .compose(RxjavaHelper.observeOnMainThread())
                     .filter(new Predicate<MqttData>() {
                         @Override
                         public boolean test(MqttData mqttData) throws Exception {
@@ -70,8 +70,8 @@ public class GatewayLockLangPresenter<T> extends BasePresenter<GatewayLockLangVi
         toDisposable(setLangDisposable);
         if (mqttService!=null){
             setLangDisposable=mqttService.mqttPublish(MqttConstant.getCallTopic(MyApplication.getInstance().getUid()), MqttCommandFactory.setLockLang(gatewayId,deviceId,lang))
-                    .compose(RxjavaHelper.observeOnMainThread())
                     .timeout(10*1000, TimeUnit.MILLISECONDS)
+                    .compose(RxjavaHelper.observeOnMainThread())
                     .filter(new Predicate<MqttData>() {
                         @Override
                         public boolean test(MqttData mqttData) throws Exception {
