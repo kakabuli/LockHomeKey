@@ -257,8 +257,7 @@ public class GatewayLockHomePresenter<T> extends BasePresenter<IGatewayLockHomeV
                                 OpenLockNotifyBean openLockNotifyBean = new Gson().fromJson(mqttData.getPayload(), OpenLockNotifyBean.class);
                                 int deviceCode = openLockNotifyBean.getEventparams().getDevecode();
                                 LogUtils.e("要进入开锁了");
-                                if ("kdszblock".equals(openLockNotifyBean.getDevtype())
-                                        && deviceId.equals(openLockNotifyBean.getDeviceId())) {
+                                if ("kdszblock".equals(openLockNotifyBean.getDevtype())&& deviceId.equals(openLockNotifyBean.getDeviceId())) {
                                     if (deviceCode == 2) {
                                         //表示锁已开
                                         LogUtils.e("已经开锁了");
