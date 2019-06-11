@@ -555,6 +555,6 @@ public class OldBluetoothLockDetailActivity extends BaseBleActivity<IOldBluetoot
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        handler.removeCallbacksAndMessages(lockRunnable);
+        handler.removeCallbacks(lockRunnable);
     }
 }

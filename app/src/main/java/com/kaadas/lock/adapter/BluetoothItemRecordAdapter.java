@@ -93,7 +93,6 @@ public class BluetoothItemRecordAdapter extends BaseQuickAdapter<BluetoothItemRe
         if (!TextUtils.isEmpty(strRight)) {
             tvRight.setText(strRight);
         }
-
     }
 
 

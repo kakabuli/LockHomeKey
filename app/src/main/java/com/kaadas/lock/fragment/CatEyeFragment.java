@@ -162,7 +162,7 @@ public class CatEyeFragment extends BaseFragment<ICatEyeView, CatEyePresenter<IC
     }
 
     private void initRecycleView() {
-        bluetoothRecordAdapter = new BluetoothRecordAdapter(mCatEyeInfoList);
+        bluetoothRecordAdapter = new BluetoothRecordAdapter(mCatEyeInfoList); //猫眼
         recycleview.setLayoutManager(new LinearLayoutManager(getActivity()));
         recycleview.setAdapter(bluetoothRecordAdapter);
     }

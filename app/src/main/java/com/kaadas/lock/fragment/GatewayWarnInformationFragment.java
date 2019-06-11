@@ -129,7 +129,7 @@ public class GatewayWarnInformationFragment extends BaseFragment<GatewayLockAlra
 
     private void initRecycleView() {
         if (mOpenLockList != null) {
-            lockAlarmdAdapter = new BluetoothRecordAdapter(mOpenLockList);
+            lockAlarmdAdapter = new BluetoothRecordAdapter(mOpenLockList); //网管所报警界面
             recycleview.setLayoutManager(new LinearLayoutManager(getActivity()));
             recycleview.setAdapter(lockAlarmdAdapter);
         }

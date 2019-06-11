@@ -191,7 +191,7 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
 
 
     private void initRecycleView() {
-        openLockRecordAdapter = new BluetoothRecordAdapter(mOpenLockList);
+        openLockRecordAdapter = new BluetoothRecordAdapter(mOpenLockList); //网关
         recycleview.setLayoutManager(new LinearLayoutManager(getActivity()));
         recycleview.setAdapter(openLockRecordAdapter);
 

@@ -31,10 +31,7 @@ import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.ToastUtil;
-import com.kaadas.lock.utils.greenDao.bean.CatEyeEvent;
 import com.kaadas.lock.utils.greenDao.bean.DBOpenLockRecord;
-import com.kaadas.lock.utils.greenDao.db.CateEyeInfoBaseDao;
-import com.kaadas.lock.utils.greenDao.db.DaoSession;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
@@ -230,36 +227,28 @@ public class BluetoothOpenLockRecordFragment extends BaseBleFragment<IOpenLockRe
 
     private void groupData(List<OpenLockRecord> lockRecords) {
         list.clear();
-        long lastDayTime = 0;
+        String lastTimeHead = "";
         for (int i = 0; i < lockRecords.size(); i++) {
             OpenLockRecord record = lockRecords.get(i);
             //获取开锁时间的毫秒数
-            long openTime = DateUtils.standardTimeChangeTimestamp(record.getOpen_time());
-            long dayTime = openTime - openTime % (24 * 60 * 60 * 1000);  //获取那一天开始的时间戳
-            List<BluetoothItemRecordBean> itemList = new ArrayList<>();
+            String timeHead = record.getOpen_time().substring(0, 10);
+            String hourSecond = record.getOpen_time().substring(11, 16);
+
             GetPasswordResult passwordResult = MyApplication.getInstance().getPasswordResults(bleLockInfo.getServerLockInfo().getLockName());
             String nickName = getOpenLockType(passwordResult, record);
 
-            String open_time = record.getOpen_time();
-            String[] split = open_time.split(" ");
-            String strRight = split[1];
-            String[] split1 = strRight.split(":");
-            String time = split1[0] + ":" + split1[1];
-            String titleTime = "";
-            if (lastDayTime != dayTime) { //添加头
-                lastDayTime = dayTime;
-                titleTime = DateUtils.getDayTimeFromMillisecond(dayTime);
+            if (!timeHead.equals(lastTimeHead)) { //添加头
+                lastTimeHead = timeHead;
+                List<BluetoothItemRecordBean> itemList = new ArrayList<>();
                 itemList.add(new BluetoothItemRecordBean(nickName, record.getOpen_type(), KeyConstants.BLUETOOTH_RECORD_COMMON,
-                        time, false, false));
-                list.add(new BluetoothRecordBean(titleTime, itemList, false));
+                        hourSecond, false, false));
+                list.add(new BluetoothRecordBean(timeHead, itemList, false));
             } else {
                 BluetoothRecordBean bluetoothRecordBean = list.get(list.size() - 1);
                 List<BluetoothItemRecordBean> bluetoothItemRecordBeanList = bluetoothRecordBean.getList();
                 bluetoothItemRecordBeanList.add(new BluetoothItemRecordBean(nickName, record.getOpen_type(), KeyConstants.BLUETOOTH_RECORD_COMMON,
-                        time, false, false));
+                        hourSecond, false, false));
             }
-
-
         }
 
         for (int i = 0; i < list.size(); i++) {
@@ -280,8 +269,6 @@ public class BluetoothOpenLockRecordFragment extends BaseBleFragment<IOpenLockRe
             if (i == list.size() - 1) {
                 bluetoothRecordBean.setLastData(true);
             }
-
-
         }
     }
 

@@ -122,7 +122,7 @@ public class CateyeEquipmentDynamicActivity extends BaseActivity<ICateyeDynamicV
     private void initRecycleView() {
 
         if (mCatEyeInfoList != null) {
-            catEyeAlarmAdapter = new BluetoothRecordAdapter(mCatEyeInfoList);
+            catEyeAlarmAdapter = new BluetoothRecordAdapter(mCatEyeInfoList);  //猫眼
             recycleview.setLayoutManager(new LinearLayoutManager(this));
             recycleview.setAdapter(catEyeAlarmAdapter);
 
