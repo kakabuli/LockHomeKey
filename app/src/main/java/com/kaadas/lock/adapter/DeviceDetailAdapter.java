@@ -57,10 +57,10 @@ public class DeviceDetailAdapter extends BaseQuickAdapter<HomeShowBean, BaseView
                 //根据当前的网关id，找出网关状态,网关离线猫眼也离线，不管服务器传过来什么值
                 GatewayInfo catGatewayInfo=MyApplication.getInstance().getGatewayById(cateEyeInfo.getGwID());
                 if (catGatewayInfo!=null){
-                    if ("online".equals(catGatewayInfo.getEvent_str())){
-                        isWifiDevice(true,helper,cateEyeInfo.getServerInfo().getEvent_str(),batteryView,power);
-                    }else{
+                    if ("offline".equals(catGatewayInfo.getEvent_str())){
                         isWifiDevice(true,helper,"offline",batteryView,power);
+                    }else{
+                        isWifiDevice(true,helper,cateEyeInfo.getServerInfo().getEvent_str(),batteryView,power);
                     }
                     helper.setImageResource(R.id.device_image,R.mipmap.cat_eye_icon);
                     batteryView.setPower(power);
@@ -86,10 +86,10 @@ public class DeviceDetailAdapter extends BaseQuickAdapter<HomeShowBean, BaseView
                 //根据当前的网关id，找出网关状态,网关离线猫眼也离线，不管服务器传过来什么值
                 GatewayInfo lockGatewayInfo=MyApplication.getInstance().getGatewayById(gwLockInfo.getGwID());
                 if (lockGatewayInfo!=null) {
-                    if ("online".equals(lockGatewayInfo.getEvent_str())) {
-                        isWifiDevice(true, helper, gwLockInfo.getServerInfo().getEvent_str(), batteryView,gatewayLockPower);
-                    } else {
+                    if ("offline".equals(lockGatewayInfo.getEvent_str())) {
                         isWifiDevice(true, helper, "offline", batteryView,gatewayLockPower);
+                    } else {
+                        isWifiDevice(true, helper, gwLockInfo.getServerInfo().getEvent_str(), batteryView,gatewayLockPower);
                     }
                     helper.setImageResource(R.id.device_image, R.mipmap.default_zigbee_lock_icon);
                     batteryView.setPower(gatewayLockPower);

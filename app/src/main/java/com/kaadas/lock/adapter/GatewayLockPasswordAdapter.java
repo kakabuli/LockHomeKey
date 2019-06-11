@@ -11,26 +11,27 @@ import com.kaadas.lock.publiclibrary.bean.ForeverPassword;
 import java.util.List;
 
 public class GatewayLockPasswordAdapter extends BaseQuickAdapter<String, BaseViewHolder> {
-
+    int count=0;
 
     public GatewayLockPasswordAdapter( @Nullable List<String> data) {
         super(R.layout.item_gateway_password, data);
+        if (data!=null&&data.size()>0){
+            count=data.size();
+        }
     }
 
     @Override
     protected void convert(BaseViewHolder helper, String item) {
-      /*  int itemCount = getItemCount();
-        int pos=helper.getPosition();
-        if (pos==itemCount-1){
-            View view= helper.getView(R.id.my_view);
-            view.setVisibility(View.GONE);
-        }*/
         helper.setText(R.id.tv_num,item);
         int num=Integer.parseInt(item);
         if (num<=4){
             helper.setText(R.id.tv_time,R.string.permanent_validity);
         }else{
             helper.setText(R.id.tv_time,R.string.permanent_once_validity);
+        }
+        int position=helper.getAdapterPosition();
+        if (count==position){
+            helper.setGone(R.id.my_view,true);
         }
 
     }
