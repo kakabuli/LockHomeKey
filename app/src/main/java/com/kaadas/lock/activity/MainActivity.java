@@ -153,7 +153,7 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
         upgradePresenter.getUpgreadJson(new UpgradePresenter.IUpgradePresenter() {
             @Override
             public void ShowUpgradePresenterSuccess(String jsonPresenterResult) {
-                Log.e(GeTui.VideoLog,jsonPresenterResult);
+             //   Log.e(GeTui.VideoLog,jsonPresenterResult);
                  if(!TextUtils.isEmpty(jsonPresenterResult)){
                      UpgradeBean upgradeBean=new Gson().fromJson(jsonPresenterResult,UpgradeBean.class);
                      try {

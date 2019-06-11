@@ -1060,4 +1060,5 @@
     <string name="vivo_market">vivo应用市场</string>
     <string name="isforce">请务必升级到最新版本</string>
     <string name="update_toast">版本%s已经发布</string>
+    <string name="video_destory_time">视频组件销毁中,请稍后再点击</string>
 </resources>

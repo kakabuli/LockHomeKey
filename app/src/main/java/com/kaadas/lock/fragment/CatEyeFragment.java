@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
@@ -267,13 +268,19 @@ public class CatEyeFragment extends BaseFragment<ICatEyeView, CatEyePresenter<IC
                 startActivity(intent);
                 break;
             case R.id.rl_icon:
-                intent = new Intent(getActivity(), VideoVActivity.class);
-                intent.putExtra(KeyConstants.IS_CALL_IN, false);
-                intent.putExtra(KeyConstants.CATE_INFO, cateEyeInfo);
-                startActivity(intent);
+                if(VideoVActivity.isRunning){
+                    Toast.makeText(getActivity(),getString(R.string.video_destory_time),Toast.LENGTH_SHORT).show();
+                }else {
+                    intent = new Intent(getActivity(), VideoVActivity.class);
+                    intent.putExtra(KeyConstants.IS_CALL_IN, false);
+                    intent.putExtra(KeyConstants.CATE_INFO, cateEyeInfo);
+                    startActivity(intent);
+                }
+
                 break;
         }
     }
+
 
     @Override
     public void gatewayStatusChange(String gatewayId, String eventStr) {
