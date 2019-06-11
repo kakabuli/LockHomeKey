@@ -152,24 +152,16 @@ public class CateyeEquipmentDynamicActivity extends BaseActivity<ICateyeDynamicV
             mCatEyeInfoList.clear();
         }
 
-        long lastDayTime = 0;
+        String lastDayTime = "";
         for (int i = 0; i < catEyeEvents.size(); i++) {
             CatEyeEvent dataBean = catEyeEvents.get(i);
             //获取开锁时间的毫秒数
             long openTime = dataBean.getEventTime(); //开锁毫秒时间
-
-            long dayTime = openTime - openTime % (24 * 60 * 60 * 1000);//是不是同一天的对比
-
             List<BluetoothItemRecordBean> itemList = new ArrayList<>();
 
             String open_time = DateUtils.getDateTimeFromMillisecond(openTime);//将毫秒时间转换成功年月日时分秒的格式
-            String[] split = open_time.split(" ");
-
-            String strRight = split[1];
-            String[] split1 = strRight.split(":");
-
-            String time = split1[0] + ":" + split1[1];
-
+            String timeHead = open_time.substring(0, 10);
+            String hourSecond = open_time.substring(11, 16);
             String titleTime = "";
             //257锁的信息
             String catEyeAlramStr = "";
@@ -191,13 +183,13 @@ public class CateyeEquipmentDynamicActivity extends BaseActivity<ICateyeDynamicV
                         break;
                 }
 
-            if (lastDayTime != dayTime) { //添加头
-                lastDayTime = dayTime;
+            if (!timeHead.equals(lastDayTime)) { //添加头
+                lastDayTime = timeHead;
                 titleTime = DateUtils.getDayTimeFromMillisecond(openTime); //转换成功顶部的时间
 
                 if (!TextUtils.isEmpty(catEyeAlramStr)) {
                     itemList.add(new BluetoothItemRecordBean(catEyeAlramStr, "", KeyConstants.BLUETOOTH_RECORD_WARN,
-                            time, false, false));
+                            hourSecond, false, false));
                     mCatEyeInfoList.add(new BluetoothRecordBean(titleTime, itemList, false));
                 }
             } else {
@@ -205,7 +197,7 @@ public class CateyeEquipmentDynamicActivity extends BaseActivity<ICateyeDynamicV
                     BluetoothRecordBean bluetoothRecordBean = mCatEyeInfoList.get(mCatEyeInfoList.size() - 1);
                     List<BluetoothItemRecordBean> bluetoothItemRecordBeanList = bluetoothRecordBean.getList();
                     bluetoothItemRecordBeanList.add(new BluetoothItemRecordBean(catEyeAlramStr, "", KeyConstants.BLUETOOTH_RECORD_WARN,
-                            time, false, false));
+                            hourSecond, false, false));
                 }
             }
 
