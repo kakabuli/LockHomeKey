@@ -358,12 +358,14 @@ public class AddBluetoothSearchActivity extends BaseActivity<ISearchDeviceView, 
 
     @Override
     public void notice419() {
+        hiddenLoading();
         ToastUtil.getInstance().showLong(R.string.ble_not_test);
     }
 
     @Override
     public void onCheckBindFailedServer(String code) {
-        ToastUtil.getInstance().showLong(R.string.connect_failed_retry);
+        hiddenLoading();
+        ToastUtil.getInstance().showLong(R.string.network_exception);
     }
 
     @Override
