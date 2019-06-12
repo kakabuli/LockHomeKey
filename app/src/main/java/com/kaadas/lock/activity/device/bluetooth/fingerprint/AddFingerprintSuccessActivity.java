@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -68,8 +70,30 @@ public class AddFingerprintSuccessActivity extends BaseActivity<IAddFingerSucces
         bleLockInfo = MyApplication.getInstance().getBleService().getBleLockInfo();
         tvSuccessPageNumber.setText("" + userNum+getString(R.string.fingerprint_collect_success));
         initRecycleview();
+        initMonitor();
     }
+    private void initMonitor() {
+        etFingerprintName.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                for (int i = 0; i < list.size(); i++) {
+                    list.get(i).setSelected(false);
+                }
+                shiXiaoNameAdapter.notifyDataSetChanged();
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+    }
     @Override
     protected AddFingerSuccessPresenter<IAddFingerSuccessView> createPresent() {
         return new AddFingerSuccessPresenter<>();

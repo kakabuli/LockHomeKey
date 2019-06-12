@@ -108,12 +108,12 @@
                 android:layout_marginRight="@dimen/dp_16"
                 android:src="@mipmap/right" />
 
-            <View
+           <!-- <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dp_1"
                 android:layout_alignParentBottom="true"
                 android:layout_marginLeft="@dimen/dp_20"
-                android:background="#F2F2F2"></View>
+                android:background="#F2F2F2"></View>-->
         </RelativeLayout>
 
 
