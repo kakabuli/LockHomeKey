@@ -39,6 +39,7 @@ import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.BatteryView;
 import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
+import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.StringUtil;
 import com.kaadas.lock.utils.ToastUtil;
 
@@ -174,6 +175,8 @@ public class BluetoothLockFunctionActivity extends BaseBleActivity<IDeviceDetail
         super.onStart();
         mPresenter.attachView(this);
         mPresenter.getAllPassword(bleLockInfo);
+        int userManageNumber = (int) SPUtils.getProtect(KeyConstants.USER_MANAGE_NUMBER, 0);
+        tvNumberFour.setText(userManageNumber + getString(R.string.people));
     }
 
     @Override
@@ -366,7 +369,7 @@ public class BluetoothLockFunctionActivity extends BaseBleActivity<IDeviceDetail
         tvNumberThree.setText(0 + getString(R.string.zhang));
         ivFour.setImageResource(R.mipmap.bluetooth_share);
         tvNameFour.setText(R.string.device_share);
-//        tvNumberFour.setText(2 + getString(R.string.people));
+        tvNumberFour.setText(0 + getString(R.string.people));
         ivFive.setImageResource(R.mipmap.bluetooth_more);
         tvNameFive.setText(R.string.more);
     }

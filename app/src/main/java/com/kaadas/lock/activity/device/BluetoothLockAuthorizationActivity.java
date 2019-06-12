@@ -627,6 +627,6 @@ public class BluetoothLockAuthorizationActivity extends BaseBleActivity<IOldBlue
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        handler.removeCallbacks(lockRunnable);
+        handler.removeCallbacksAndMessages(null);
     }
 }

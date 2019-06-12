@@ -397,4 +397,6 @@ public class KeyConstants {
     public static final String SOURCE="source";
     //保存服务器的时间的Key  毫秒数
     public static final String SERVER_CURRENT_TIME = "Server_Current_time";
+    //用户管理个数
+    public static final String USER_MANAGE_NUMBER="user_manage_number";
 }

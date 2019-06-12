@@ -6,6 +6,8 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -53,8 +55,30 @@ public class FingerprintCollectionSuccessActivity extends BaseAddToApplicationAc
         btnSave.setOnClickListener(this);
         tvContent.setText(R.string.add_fingerprint);
         initRecycleview();
+        initMonitor();
     }
+    private void initMonitor() {
+        etName.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                for (int i = 0; i < list.size(); i++) {
+                    list.get(i).setSelected(false);
+                }
+                shiXiaoNameAdapter.notifyDataSetChanged();
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+    }
     private void initRecycleview() {
         list.add(new ShiXiaoNameBean(getString(R.string.father), false));
         list.add(new ShiXiaoNameBean(getString(R.string.mother), false));
