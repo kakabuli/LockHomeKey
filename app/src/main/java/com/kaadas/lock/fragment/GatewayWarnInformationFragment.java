@@ -278,10 +278,17 @@ public class GatewayWarnInformationFragment extends BaseFragment<GatewayLockAlra
 
     @Override
     public void getLockAlarmFail() {
-        if (refreshLayout!=null){
-            refreshLayout.finishRefresh();
-            refreshLayout.finishLoadMore();
+        if (page==0){
+            if (refreshLayout!=null){
+                refreshLayout.finishRefresh();
+                refreshLayout.finishLoadMore();
+            }
+            changeView(false);
+        }else{
+            if (refreshLayout!=null){
+                refreshLayout.finishRefresh();
+                refreshLayout.finishLoadMore();
+            }
         }
-        changeView(false);
     }
 }
