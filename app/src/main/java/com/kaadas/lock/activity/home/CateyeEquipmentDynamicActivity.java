@@ -254,11 +254,19 @@ public class CateyeEquipmentDynamicActivity extends BaseActivity<ICateyeDynamicV
 
     @Override
     public void getCateyeDynamicFail() {
-        if (refreshLayout != null) {
-            refreshLayout.finishRefresh();
-            refreshLayout.finishLoadMore();
+        if (page==0){
+            if (refreshLayout != null) {
+                refreshLayout.finishRefresh();
+                refreshLayout.finishLoadMore();
+            }
+            changeView(false);
+        }else{
+            if (refreshLayout != null) {
+                refreshLayout.finishRefresh();
+                refreshLayout.finishLoadMore();
+            }
         }
-        changeView(false);
+
     }
 
     @OnClick(R.id.back)

@@ -98,6 +98,10 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
     @Override
     public void attachView(IMainActivityView view) {
         super.attachView(view);
+        //网关上线监听
+        getPublishNotify();
+        setHomeShowBean();
+        listenCatEyeEvent();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -105,10 +109,6 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                     bleService = MyApplication.getInstance().getBleService();
                 }
                 listerBleVersion();
-                setHomeShowBean();
-                //网关上线监听
-                getPublishNotify();
-                listenCatEyeEvent();
                 //设置警报提醒
                 toDisposable(warringDisposable);
                 warringDisposable = bleService.listeneDataChange()

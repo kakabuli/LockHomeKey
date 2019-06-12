@@ -22,17 +22,20 @@ public class BluetoothSharedDeviceManagementAdapter extends BaseQuickAdapter<Blu
     public BluetoothSharedDeviceManagementAdapter(@Nullable List<BluetoothSharedDeviceBean.DataBean> data, int layoutId) {
         super(layoutId, data);
     }
-
+    int i=0;
     @Override
     protected void convert(BaseViewHolder helper, BluetoothSharedDeviceBean.DataBean bean) {
-        int itemCount = getItemCount();
-        int pos=helper.getPosition();
-        if (pos==itemCount-1){
-            View view= helper.getView(R.id.my_view);
-            view.setVisibility(View.GONE);
-        }
         helper.setText(R.id.tv_serial_number, bean.getOpen_purview());
         helper.setText(R.id.tv_num, bean.getUnickname());
+        i++;
+        if(getData()!=null && getData().size()==i){
+            helper.getView(R.id.my_view).setVisibility(View.GONE);
+            i=0;
+        }else {
+            helper.getView(R.id.my_view).setVisibility(View.VISIBLE);
+        }
+
+
     }
 
 

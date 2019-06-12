@@ -306,7 +306,6 @@ public class GatewayLockHomePresenter<T> extends BasePresenter<IGatewayLockHomeV
                             if (mqttData.getFunc().equals(MqttConstant.GW_EVENT)) {
                                 OpenLockNotifyBean openLockNotifyBean = new Gson().fromJson(mqttData.getPayload(), OpenLockNotifyBean.class);
                                 int deviceCode = openLockNotifyBean.getEventparams().getDevecode();
-                                LogUtils.e("进入关闭");
                                 if ("kdszblock".equals(openLockNotifyBean.getDevtype())
                                         && deviceId.equals(openLockNotifyBean.getDeviceId())) {
                                     if (deviceCode == 10 || deviceCode == 1) {
@@ -499,7 +498,6 @@ public class GatewayLockHomePresenter<T> extends BasePresenter<IGatewayLockHomeV
                             if (mqttData.getFunc().equals(MqttConstant.GW_EVENT)) {
                                 OpenLockNotifyBean openLockNotifyBean = new Gson().fromJson(mqttData.getPayload(), OpenLockNotifyBean.class);
                                 int deviceCode = openLockNotifyBean.getEventparams().getDevecode();
-                                LogUtils.e("进入关闭");
                                 if ("kdszblock".equals(openLockNotifyBean.getDevtype())
                                         && deviceId.equals(openLockNotifyBean.getDeviceId())) {
                                     if (deviceCode == 10 || deviceCode == 1) {

@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -130,8 +132,32 @@ public class PasswordTimeFragment extends BaseBleFragment<IAddTimePasswprdView, 
         bleLockInfo = ((BluetoothUserPasswordAddActivity) getActivity()).getLockInfo();
         mPresenter.isAuth(bleLockInfo, false);
         initRecycleview();
+        initMonitor();
         return mFragmentView;
 
+    }
+    private void initMonitor() {
+        etName.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    LogUtils.d("davi 改变了 onTextChanged");
+                    for (int i = 0; i < list.size(); i++) {
+                        list.get(i).setSelected(false);
+                    }
+                    shiXiaoNameAdapter.notifyDataSetChanged();
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
     }
 
     @Override

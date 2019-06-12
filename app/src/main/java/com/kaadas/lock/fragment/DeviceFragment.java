@@ -52,6 +52,7 @@ import com.kaadas.lock.utils.Rom;
 import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.SPUtils2;
 import com.kaadas.lock.utils.ToastUtil;
+import com.kaadas.lock.utils.ftp.GeTui;
 import com.kaadas.lock.utils.greenDao.bean.BleLockServiceInfo;
 import com.kaadas.lock.utils.greenDao.bean.CatEyeServiceInfo;
 import com.kaadas.lock.utils.greenDao.bean.GatewayLockServiceInfo;
@@ -64,6 +65,8 @@ import com.kaadas.lock.utils.greenDao.db.GatewayServiceInfoDao;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+
+import org.linphone.mediastream.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -271,7 +274,7 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                 HomeShowBean homeShowBean = mDeviceList.get(i);
                 if (HomeShowBean.TYPE_CAT_EYE == homeShowBean.getDeviceType()) { //有网关
                     boolean isFlag = NotificationManagerCompat.from(getActivity()).areNotificationsEnabled();
-                    if (!isFlag && Rom.isOppo()) {
+                    if (!isFlag && Rom.isOppo() && !MyApplication.getInstance().isPopDialog()) {
                         final AlertDialog.Builder normalDialog = new AlertDialog.Builder(getActivity());
                         //	normalDialog.setIcon(R.drawable.icon_dialog);
                         normalDialog.setTitle(getString(R.string.mainactivity_permission_alert_title));
@@ -283,9 +286,20 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                                         dialog.dismiss();
                                         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                                             Intent intent = new Intent();
-                                            intent.setAction(Settings.ACTION_APP_NOTIFICATION_SETTINGS);
-                                            intent.putExtra(Settings.EXTRA_APP_PACKAGE, "com.kaidishi.lock");
-                                            getActivity().startActivity(intent);
+                                        //    intent.setAction(Settings.ACTION_APP_NOTIFICATION_SETTINGS);
+//                                            intent.setAction(Settings.ACTION_APPLICATION_SETTINGS);
+//                                            intent.putExtra(Settings.EXTRA_APP_PACKAGE, "com.kaidishi.lock");
+//                                            getActivity().startActivity(intent);
+
+                                            if (Build.VERSION.SDK_INT >= 9) {
+                                                intent.setAction("android.settings.APPLICATION_DETAILS_SETTINGS");
+                                                intent.setData(Uri.fromParts("package", "com.kaidishi.lock", null));
+                                            } else if (Build.VERSION.SDK_INT <= 8) {
+                                                intent.setAction(Intent.ACTION_VIEW);
+                                                intent.setClassName("com.android.settings", "com.android.setting.InstalledAppDetails");
+                                                intent.putExtra("com.android.settings.ApplicationPkgName","com.kaidishi.lock");
+                                            }
+                                            startActivity(intent);
                                         }
                                     }
                                 });
@@ -293,14 +307,19 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                                 new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
+                                        Log.e(GeTui.VideoLog,"dialog.dismiss..........");
                                         dialog.dismiss();
                                     }
                                 });
                         // 显示
                         AlertDialog dialog = normalDialog.create();
                         dialog.setCanceledOnTouchOutside(false);
-                        dialog.show();
-                    }else if(!isFlag && Rom.isVivo() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.N){
+                        if(!dialog.isShowing()){
+                            Log.e(GeTui.VideoLog,"dialog.show..........");
+                            dialog.show();
+                            MyApplication.getInstance().setPopDialog(true);
+                        }
+                    }else if(!isFlag && Rom.isVivo() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.N &&!MyApplication.getInstance().isPopDialog()){
                      //   boolean isVivoOpen= (boolean) SPUtils.get(Constants.IS_VOVO_OPEN,false);
 //                        if(isVivoOpen){
 //                            return;
@@ -339,7 +358,10 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                         // 显示
                         AlertDialog dialog = normalDialog.create();
                         dialog.setCanceledOnTouchOutside(false);
-                        dialog.show();
+                        if(!dialog.isShowing()){
+                            dialog.show();
+                            MyApplication.getInstance().setPopDialog(true);
+                        }
                     }
                     break;
                 }
