@@ -124,10 +124,12 @@ public class GatewayPasswordManagerActivity extends BaseActivity<GatewayLockFunc
         if (mList != null) {
             String pwdValue = (String) SPUtils2.get(this, KeyConstants.ADD_PWD_ID, "");
             if (!TextUtils.isEmpty(pwdValue)) {
-                mList.add(pwdValue);
-                gatewayLockPasswordAdapter.notifyDataSetChanged();
-                passwordPageChange(true);
-                SPUtils2.remove(this, KeyConstants.ADD_PWD_ID);
+                if (!mList.contains(pwdValue)){
+                    mList.add(pwdValue);
+                    gatewayLockPasswordAdapter.notifyDataSetChanged();
+                    passwordPageChange(true);
+                    SPUtils2.remove(this, KeyConstants.ADD_PWD_ID);
+                }
             }
         }
     }
@@ -365,6 +367,7 @@ public class GatewayPasswordManagerActivity extends BaseActivity<GatewayLockFunc
         if (loadingDialog != null) {
             loadingDialog.dismiss();
         }
+        isAddLockPwd=1;
         //passwordPageChange(false);
         ToastUtil.getInstance().showShort(getString(R.string.get_lock_info_fail));
         LogUtils.e("获取到锁信息失败   ");
@@ -375,6 +378,7 @@ public class GatewayPasswordManagerActivity extends BaseActivity<GatewayLockFunc
         if (loadingDialog != null) {
             loadingDialog.dismiss();
         }
+        isAddLockPwd=1;
         //passwordPageChange(false);
         ToastUtil.getInstance().showShort(getString(R.string.get_lock_info_fail));
         LogUtils.e("获取到锁信息异常   ");
@@ -423,6 +427,7 @@ public class GatewayPasswordManagerActivity extends BaseActivity<GatewayLockFunc
             passwordPageChange(false);
             gatewayLockPasswordAdapter.notifyDataSetChanged();
         }
+
     }
 
     @Override

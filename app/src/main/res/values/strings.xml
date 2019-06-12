@@ -761,7 +761,7 @@
     <string name="delete_pwd">删除密码</string>
     <string name="delete_be_being">删除中。。。</string>
     <string name="be_beging_get_lock_pwd_no_add_pwd">正在获取密码列表，无法添加密码。</string>
-    <string name="get_lock_pwd_throwable">密码列表获取异常，无法添加密码，请重新获取</string>
+    <string name="get_lock_pwd_throwable">密码列表获取失败，无法添加密码，请重新获取</string>
     <string name="add_lock_pwd_fail">添加密码失败</string>
     <string name="no_find_network">没有检测到设备网络\n无法生成有效密码</string>
     <string name="take_effect_be_being">生效中。。。</string>
