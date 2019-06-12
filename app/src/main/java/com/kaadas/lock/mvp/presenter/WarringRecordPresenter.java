@@ -229,6 +229,7 @@ public class WarringRecordPresenter<T> extends BlePresenter<IWarringRecordView> 
                                         if (mViewRef.get() != null) {
                                             mViewRef.get().noData();
                                         }
+                                        toDisposable(disposable);
                                     }
                                     return;
                                 }
