@@ -24,6 +24,7 @@ import com.kaadas.lock.publiclibrary.http.util.HttpUtils;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.NetUtil;
+import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.ToastUtil;
 import com.kaadas.lock.mvp.view.IBluetoothSharedDeviceManagementView;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
@@ -181,6 +182,9 @@ public class BluetoothSharedDeviceManagementActivity extends BaseActivity<IBluet
         refreshLayout.finishRefresh();
         querySuccess = true;
         List<BluetoothSharedDeviceBean.DataBean> dataBeanList = bluetoothSharedDeviceBean.getData();
+        if (dataBeanList !=null){
+            SPUtils.putProtect(KeyConstants.USER_MANAGE_NUMBER,dataBeanList.size() );
+        }
         if (dataBeanList.size() > 0) {
             list.clear();
             list.addAll(dataBeanList);
