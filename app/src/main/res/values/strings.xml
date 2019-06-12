@@ -536,7 +536,7 @@
     <string name="scan_fail">搜索失败</string>
     <string name="get_lock_state_fail">获取门锁状态失败</string>
     <string name="being_get_device_information">正在获取设备信息</string>
-    <string name="ble_not_test">蓝牙模块未经过厂测！</string>
+    <string name="ble_not_test">蓝牙模块未经过产测！</string>
 
     <string name="this_device_already_bind_reset">该设备已被其他用户绑定，请重置后绑定！</string>
     <string name="device_not_bind_to_bind">用户未绑定，是否进入绑定流程？</string>
