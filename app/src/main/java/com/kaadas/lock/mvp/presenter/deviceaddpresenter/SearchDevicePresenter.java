@@ -298,29 +298,22 @@ public class SearchDevicePresenter<T> extends BasePresenter<ISearchDeviceView> {
                         LogUtils.e("根据SN 获取pwd1    " + getPwdBySnResult.getData().getPassword1());
                         if ("200".equals(getPwdBySnResult.getCode())) { //获取pwd1成功
                             pwd1 = getPwdBySnResult.getData().getPassword1();
-                        } else { //如果没有请求道pwd1  拿设备MAc地址解析成pwd1
-                            byte[] bPwd1 = device.getAddress().replace(":", "").getBytes();
-//                            System.arraycopy(bPwd1, 0, password_1, 0, bPwd1.length);
-                            pwd1 = device.getAddress().replace(":", "");
-
-                            bPwd1 = device.getAddress().replace(":", "").getBytes();
-                            System.arraycopy(bPwd1, 0, password_1, 0, bPwd1.length);
-                            pwd1 = Rsa.bytesToHexString(bPwd1);
-                        }
-                        if (mViewRef.get() != null) {
-                            mViewRef.get().getPwd1Success(pwd1, isBind,version);
+                            if (mViewRef.get() != null) {
+                                mViewRef.get().getPwd1Success(pwd1, isBind,version);
+                            }
                         }
                     }
 
                     @Override
                     public void onAckErrorCode(BaseResult baseResult) {
+                        LogUtils.e("获取pwd1失败 "+baseResult.getCode());
                         if ("419".equals(baseResult.getCode())) {  //此SN在服务器没有找到
                             LogUtils.e("获取pwd1失败   服务器没有该SN  将Mac地址转换成pwd");
                             bPwd1 = device.getAddress().replace(":", "").getBytes();
                             System.arraycopy(bPwd1, 0, password_1, 0, bPwd1.length);
                             pwd1 = Rsa.bytesToHexString(bPwd1);
                             if (mViewRef.get() != null) {
-                                mViewRef.get().getPwd1Success(pwd1, isBind,version);
+//                                mViewRef.get().getPwd1Success(pwd1, isBind,version);
                                 mViewRef.get().notice419();
                             }
                             return;

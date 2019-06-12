@@ -426,6 +426,7 @@ public class GatewayLockHomePresenter<T> extends BasePresenter<IGatewayLockHomeV
                                         }
                                     }
                                 }
+
                         }
                     }
                 }, new Consumer<Throwable>() {

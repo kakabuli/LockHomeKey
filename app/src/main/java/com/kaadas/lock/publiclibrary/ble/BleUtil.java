@@ -307,6 +307,21 @@ public class BleUtil {
             buffer.append(context.getString(R.string.warring_unlock) + " ");
         }
 
+        int state11 = (payload[5] & 0b00001000) == 0b00001000 ? 1 : 0;
+        if (state11 == 1) {
+            buffer.append(context.getString(R.string.warrning_open) + " ");
+        }
+
+        int state12 = (payload[5] & 0b00010000) == 0b00010000 ? 1 : 0;
+        if (state12 == 1) {
+            buffer.append(context.getString(R.string.warrning_lock_block) + " ");
+        }
+
+        int state13 = (payload[5] & 0b00100000) == 0b00100000 ? 1 : 0;
+        if (state13 == 1) {
+            buffer.append(context.getString(R.string.warrning_machine_key_open) + " ");
+        }
+
         if (TextUtils.isEmpty(buffer.toString())) {
             return null;
         }

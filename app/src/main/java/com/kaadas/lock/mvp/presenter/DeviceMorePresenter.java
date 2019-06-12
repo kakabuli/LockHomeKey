@@ -387,6 +387,7 @@ public class DeviceMorePresenter extends BlePresenter<IDeviceMoreView> {
                                 version = split[0];
                             }
                         }
+                        toDisposable(readSoftwareRevDisposable);
                         if (mViewRef.get() != null) {
                             mViewRef.get().readVersionSuccess(version);
                         }

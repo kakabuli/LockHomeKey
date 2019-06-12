@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -70,8 +72,30 @@ public class AddDoorCardSuccessActivity extends BaseActivity<IAddFingerSuccessVi
         bleLockInfo = MyApplication.getInstance().getBleService().getBleLockInfo();
         userNum = getIntent().getIntExtra(KeyConstants.USER_NUM, 0);
         tvSuccessPageNumber.setText("" + userNum+getString(R.string.card_add_success));
+        initMonitor();
     }
+    private void initMonitor() {
+        etDoorCardName.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                for (int i = 0; i < list.size(); i++) {
+                    list.get(i).setSelected(false);
+                }
+                shiXiaoNameAdapter.notifyDataSetChanged();
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+    }
     @Override
     protected AddFingerSuccessPresenter<IAddFingerSuccessView> createPresent() {
         return new AddFingerSuccessPresenter<>();

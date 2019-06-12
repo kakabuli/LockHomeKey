@@ -906,7 +906,23 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
 
     @Override
     public void getLockEvent(String gwId, String devId) {
-
+        if (gatewayLockInfo!=null&&deviceId.equals(devId)&&gatewayId.equals(gatewayId)) {
+            isOpening = false;
+            isClosing = true;
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    stopOpenLockAnimator();
+                    changeOpenLockStatus(7);
+                    String nickName = gatewayLockInfo.getServerInfo().getNickName();
+                    if (!TextUtils.isEmpty(nickName)) {
+                        ToastUtil.getInstance().showShort(nickName + ":" + getString(R.string.lock_already_open));
+                    } else {
+                        ToastUtil.getInstance().showShort(devId + ":" + getString(R.string.lock_already_open));
+                    }
+                }
+            }, 3000);
+        }
         if (!TextUtils.isEmpty(gatewayId) && !TextUtils.isEmpty(deviceId)) {
             if (gatewayId.equals(gwId)&&deviceId.equals(devId)) {
                 mPresenter.openGatewayLockRecord(gatewayId, deviceId, MyApplication.getInstance().getUid(), 1, 3);
@@ -955,7 +971,23 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
     @Override
     public void closeLockSuccess() {
         //关锁成功
+        closeLockAnimator();
         isClosing = false;
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                stopCloseLockAnimator();
+                if (deviceState != null) {
+                    String state=deviceState.getText().toString().trim();
+                    if (state.equals(getString(R.string.offline))){
+                        changeOpenLockStatus(1);
+                    }else{
+                        changeOpenLockStatus(5);
+                    }
+                }
+            }
+        },1000);
+
     }
 
     @Override

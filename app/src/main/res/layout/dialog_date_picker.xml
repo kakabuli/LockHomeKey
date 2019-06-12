@@ -110,7 +110,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="@string/day"
+            android:text="@string/ri"
             android:textColor="@color/date_picker_text_dark"
             android:textSize="@dimen/date_unit_text_size" />
 

@@ -125,7 +125,7 @@
                 android:layout_alignParentRight="true"
                 android:textSize="@dimen/sp_15"
                 android:textColor="#8E8E93"
-                android:text="17512016666"
+                android:text=""
 
                 />
         </RelativeLayout>

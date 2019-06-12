@@ -97,11 +97,13 @@ public class GatewayLockStressDetailActivity extends BaseActivity<IGatewayLockSt
         if (pwdList != null) {
             String pwdId = (String) SPUtils2.get(this, KeyConstants.ADD_STRESS_PWD_ID, "");
             if (!TextUtils.isEmpty(pwdId)) {
-                pwdList.clear();
-                pwdList.add(pwdId);
-                gatewayLockStressPasswordAdapter.notifyDataSetChanged();
-                passwordPageChange(true);
-                SPUtils2.remove(this, KeyConstants.ADD_STRESS_PWD_ID);
+                if (!pwdList.contains(pwdId)){
+                    pwdList.clear();
+                    pwdList.add(pwdId);
+                    gatewayLockStressPasswordAdapter.notifyDataSetChanged();
+                    passwordPageChange(true);
+                    SPUtils2.remove(this, KeyConstants.ADD_STRESS_PWD_ID);
+                }
             }
         }
     }

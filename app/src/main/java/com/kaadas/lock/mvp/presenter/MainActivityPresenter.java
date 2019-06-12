@@ -264,6 +264,7 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
     //猫眼信息上报
     public void listenCatEyeEvent() {
         toDisposable(catEyeEventDisposable);
+        if (mqttService!=null){
         catEyeEventDisposable = mqttService.listenerDataBack()
                 .filter(new Predicate<MqttData>() {
                     @Override
@@ -402,6 +403,7 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                     }
                 });
         compositeDisposable.add(catEyeEventDisposable);
+    }
     }
 
     private void refreshData(String gatewayId, String deviceId) {
