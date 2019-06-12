@@ -1063,4 +1063,7 @@
     <string name="video_destory_time">视频组件销毁中,请稍后再点击</string>
     <string name="people">人</string>
     <string name="ri" >日</string>
+    <string name="warrning_open">防拆报警</string>
+    <string name="warrning_lock_block">门锁堵转报警</string>
+    <string name="warrning_machine_key_open">机械钥匙开锁报警</string>
 </resources>
