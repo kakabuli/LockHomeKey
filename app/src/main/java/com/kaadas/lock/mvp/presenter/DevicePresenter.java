@@ -163,7 +163,7 @@ public class DevicePresenter<T> extends BasePresenter<IDeviceView> {
                         @Override
                         public void accept(Throwable throwable) throws Exception {
                             if (mViewRef.get() != null) {
-                                mViewRef.get().getDevicePowerThrowable(throwable);
+                                mViewRef.get().getDevicePowerThrowable(gatewayId,deviceId);
                             }
                         }
                     });

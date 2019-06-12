@@ -129,7 +129,7 @@ public class GatewayWarnInformationFragment extends BaseFragment<GatewayLockAlra
 
     private void initRecycleView() {
         if (mOpenLockList != null) {
-            lockAlarmdAdapter = new BluetoothRecordAdapter(mOpenLockList);
+            lockAlarmdAdapter = new BluetoothRecordAdapter(mOpenLockList); //网管所报警界面
             recycleview.setLayoutManager(new LinearLayoutManager(getActivity()));
             recycleview.setAdapter(lockAlarmdAdapter);
         }
@@ -162,7 +162,7 @@ public class GatewayWarnInformationFragment extends BaseFragment<GatewayLockAlra
         if (mOpenLockList!=null){
             mOpenLockList.clear();
         }
-        long lastDayTime = 0;
+        String lastDayTime = "";
         for (int i = 0; i < alarmEventDaoList.size(); i++) {
             GatewayLockAlarmEventDao dataBean = alarmEventDaoList.get(i);
             //获取开锁时间的毫秒数
@@ -173,12 +173,8 @@ public class GatewayWarnInformationFragment extends BaseFragment<GatewayLockAlra
             List<BluetoothItemRecordBean> itemList = new ArrayList<>();
 
             String open_time = DateUtils.getDateTimeFromMillisecond(openTime);//将毫秒时间转换成功年月日时分秒的格式
-            String[] split = open_time.split(" ");
-
-            String strRight = split[1];
-            String[] split1 = strRight.split(":");
-
-            String time = split1[0] + ":" + split1[1];
+            String timeHead = open_time.substring(0, 10);
+            String hourSecond = open_time.substring(11, 16);
 
             String titleTime = "";
             //257锁的信息\\
@@ -209,13 +205,13 @@ public class GatewayWarnInformationFragment extends BaseFragment<GatewayLockAlra
                         break;
                 }
             }
-            if (lastDayTime != dayTime) { //添加头
-                lastDayTime = dayTime;
+            if (!timeHead.equals(lastDayTime)) { //添加头
+                lastDayTime = timeHead;
                 titleTime = DateUtils.getDayTimeFromMillisecond(openTime); //转换成功顶部的时间
 
                 if (!TextUtils.isEmpty(alarmStr)) {
                     itemList.add(new BluetoothItemRecordBean(alarmStr, "", KeyConstants.BLUETOOTH_RECORD_WARN,
-                            time, false, false));
+                            hourSecond, false, false));
                     alarmStr=null;
                     mOpenLockList.add(new BluetoothRecordBean(titleTime, itemList, false));
                 }
@@ -224,7 +220,7 @@ public class GatewayWarnInformationFragment extends BaseFragment<GatewayLockAlra
                     BluetoothRecordBean bluetoothRecordBean = mOpenLockList.get(mOpenLockList.size() - 1);
                     List<BluetoothItemRecordBean> bluetoothItemRecordBeanList = bluetoothRecordBean.getList();
                     bluetoothItemRecordBeanList.add(new BluetoothItemRecordBean(alarmStr, "", KeyConstants.BLUETOOTH_RECORD_WARN,
-                            time, false, false));
+                            hourSecond, false, false));
                     alarmStr=null;
                 }
             }
@@ -282,10 +278,17 @@ public class GatewayWarnInformationFragment extends BaseFragment<GatewayLockAlra
 
     @Override
     public void getLockAlarmFail() {
-        if (refreshLayout!=null){
-            refreshLayout.finishRefresh();
-            refreshLayout.finishLoadMore();
+        if (page==0){
+            if (refreshLayout!=null){
+                refreshLayout.finishRefresh();
+                refreshLayout.finishLoadMore();
+            }
+            changeView(false);
+        }else{
+            if (refreshLayout!=null){
+                refreshLayout.finishRefresh();
+                refreshLayout.finishLoadMore();
+            }
         }
-        changeView(false);
     }
 }

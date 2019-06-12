@@ -51,25 +51,25 @@ public class OldBluetoothDeviceDetailPresenter<T> extends OldBleLockDetailPresen
 
     @Override
     public void authSuccess() {
-        if (bleService.getBleVersion() == 2 || bleService.getBleVersion()==3){
+        if (bleService.getBleVersion() == 2 || bleService.getBleVersion() == 3) {
             readBattery();
-        }else {
+        } else {
             getOldGetPower();
         }
-        if (mViewRef.get()!=null){
+        if (mViewRef.get() != null) {
             mViewRef.get().onBleVersionUpdate(bleService.getBleVersion());
         }
     }
 
-    public int getBleVersion(){
+    public int getBleVersion() {
         return bleService.getBleVersion();
     }
 
 
-    public void getPower(){
-        if (bleService.getBleVersion() == 2 || bleService.getBleVersion()==3){
+    public void getPower() {
+        if (bleService.getBleVersion() == 2 || bleService.getBleVersion() == 3) {
             readBattery();
-        }else {
+        } else {
             getOldGetPower();
         }
     }
@@ -109,13 +109,10 @@ public class OldBluetoothDeviceDetailPresenter<T> extends OldBleLockDetailPresen
     }
 
 
-
     @Override
     public void attachView(IOldBluetoothDeviceDetailView view) {
         super.attachView(view);
     }
-
-
 
 
     private void readBattery() {
@@ -161,7 +158,6 @@ public class OldBluetoothDeviceDetailPresenter<T> extends OldBleLockDetailPresen
                 });
         compositeDisposable.add(electricDisposable);
     }
-
 
 
     ////////////////////////////////////////老模块获取电量逻辑/////////////////////////////////
@@ -212,8 +208,8 @@ public class OldBluetoothDeviceDetailPresenter<T> extends OldBleLockDetailPresen
         compositeDisposable.add(oldPowerDisposable);
     }
 
-    public void currentOpenLock(){
-        if (bleService.getBleVersion() == 1){
+    public void currentOpenLock() {
+        if (bleService.getBleVersion() == 1) {
             oldOpenLockMethod();
         } else {
             openLock();
@@ -403,38 +399,38 @@ public class OldBluetoothDeviceDetailPresenter<T> extends OldBleLockDetailPresen
     public void listenerOpenStatus() {
         toDisposable(oldOpenStatusDisposable);
         oldOpenStatusDisposable = bleService.listeneDataChange()
-                  .compose(RxjavaHelper.observeOnMainThread())
-                  .filter(new Predicate<BleDataBean>() {
-                      @Override
-                      public boolean test(BleDataBean bleDataBean) throws Exception {
-                          byte[] originalData = bleDataBean.getOriginalData();
-                          if ((originalData[0] & 0xff) == 0xf5 && (originalData[4] & 0xff) == 0xb1) {
-                              return true;
-                          }
-                          return false;
-                      }
-                  })
-                  .timeout(5 * 1000, TimeUnit.MILLISECONDS)
-                  .subscribe(new Consumer<BleDataBean>() {
-                      @Override
-                      public void accept(BleDataBean bleDataBean) throws Exception {
-                          byte[] originalData = bleDataBean.getOriginalData();
-                          if ((originalData[5] & 0xff) == 0x01) {  //老模块开门上报
-                              toDisposable(oldOpenStatusDisposable);
-                              listenerCloseStatus();
-                              if (mViewRef.get() != null) {
-                                  mViewRef.get().openLockSuccess();
-                              }
-                          }
-                      }
-                  }, new Consumer<Throwable>() {
-                      @Override
-                      public void accept(Throwable throwable) throws Exception {
-                          if (mViewRef.get() != null) {
-                              mViewRef.get().openLockFailed(throwable);
-                          }
-                      }
-                  });
+                .filter(new Predicate<BleDataBean>() {
+                    @Override
+                    public boolean test(BleDataBean bleDataBean) throws Exception {
+                        byte[] originalData = bleDataBean.getOriginalData();
+                        if ((originalData[0] & 0xff) == 0xf5 && (originalData[4] & 0xff) == 0xb1) {
+                            return true;
+                        }
+                        return false;
+                    }
+                })
+                .timeout(5 * 1000, TimeUnit.MILLISECONDS)
+                .compose(RxjavaHelper.observeOnMainThread())
+                .subscribe(new Consumer<BleDataBean>() {
+                    @Override
+                    public void accept(BleDataBean bleDataBean) throws Exception {
+                        byte[] originalData = bleDataBean.getOriginalData();
+                        if ((originalData[5] & 0xff) == 0x01) {  //老模块开门上报
+                            toDisposable(oldOpenStatusDisposable);
+                            listenerCloseStatus();
+                            if (mViewRef.get() != null) {
+                                mViewRef.get().openLockSuccess();
+                            }
+                        }
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        if (mViewRef.get() != null) {
+                            mViewRef.get().openLockFailed(throwable);
+                        }
+                    }
+                });
         compositeDisposable.add(oldOpenStatusDisposable);
     }
 
@@ -446,39 +442,40 @@ public class OldBluetoothDeviceDetailPresenter<T> extends OldBleLockDetailPresen
         toDisposable(oldCloseStatusDisposable);
         //老模块关门上报
         oldCloseStatusDisposable = bleService.listeneDataChange()
-                  .filter(new Predicate<BleDataBean>() {
-                      @Override
-                      public boolean test(BleDataBean bleDataBean) throws Exception {
-                          byte[] originalData = bleDataBean.getOriginalData();
-                          if ((originalData[0] & 0xff) == 0xf5 && (originalData[4] & 0xff) == 0xb1) {
-                              return true;
-                          }
-                          return false;
-                      }
-                  })
-                  .timeout(15 * 1000, TimeUnit.MILLISECONDS)
-                  .compose(RxjavaHelper.observeOnMainThread())
-                  .subscribe(new Consumer<BleDataBean>() {
-                      @Override
-                      public void accept(BleDataBean bleDataBean) throws Exception {
-                          byte[] originalData = bleDataBean.getOriginalData();
-                          if ((originalData[5] & 0xff) == 0x00) {  //老模块关门上报
-                              toDisposable(oldCloseStatusDisposable);
-                              if (mViewRef.get() != null) {
-                                  mViewRef.get().onLockLock();
-                              }
-                          }
-                      }
-                  }, new Consumer<Throwable>() {
-                      @Override
-                      public void accept(Throwable throwable) throws Exception {
-                          if (mViewRef.get() != null) {
-                              mViewRef.get().onLockLock();
-                          }
-                      }
-                  });
+                .filter(new Predicate<BleDataBean>() {
+                    @Override
+                    public boolean test(BleDataBean bleDataBean) throws Exception {
+                        byte[] originalData = bleDataBean.getOriginalData();
+                        if ((originalData[0] & 0xff) == 0xf5 && (originalData[4] & 0xff) == 0xb1) {
+                            return true;
+                        }
+                        return false;
+                    }
+                })
+                .timeout(15 * 1000, TimeUnit.MILLISECONDS)
+                .compose(RxjavaHelper.observeOnMainThread())
+                .subscribe(new Consumer<BleDataBean>() {
+                    @Override
+                    public void accept(BleDataBean bleDataBean) throws Exception {
+                        byte[] originalData = bleDataBean.getOriginalData();
+                        if ((originalData[5] & 0xff) == 0x00) {  //老模块关门上报
+                            toDisposable(oldCloseStatusDisposable);
+                            if (mViewRef.get() != null) {
+                                mViewRef.get().onLockLock();
+                            }
+                        }
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        if (mViewRef.get() != null) {
+                            mViewRef.get().onLockLock();
+                        }
+                    }
+                });
         compositeDisposable.add(oldCloseStatusDisposable);
     }
+
     public void deleteDevice(String deviceName) {
         XiaokaiNewServiceImp.deleteDevice(MyApplication.getInstance().getUid(), deviceName)
                 .subscribe(new BaseObserver<BaseResult>() {
@@ -492,7 +489,7 @@ public class OldBluetoothDeviceDetailPresenter<T> extends OldBleLockDetailPresen
                         //清除消息免打扰
                         SPUtils.remove(deviceName + SPUtils.MESSAGE_STATUS);
                         //todo 清除保存的密码
-                        SPUtils.remove(KeyConstants.SAVE_PWD_HEARD + bleLockInfo.getServerLockInfo().getMacLock());
+                        SPUtils.remove(KeyConstants.SAVE_PWD_HEARD + bleLockInfo.getServerLockInfo().getMacLock()); //Key
 
                         //通知homeFragment  和  device刷新界面
                         bleService.release();

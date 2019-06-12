@@ -255,17 +255,23 @@ public class BluetoothPasswordManagerActivity extends BaseBleActivity<IPasswordM
         if (isSync) {
             return;
         }
-        if (result == null) {
+
+        if (result == null ){
+            isNotPassword = true;
+            passwordPageChange();
+            return;
+        }
+        if (result.getData() == null ){
+            isNotPassword = true;
+            passwordPageChange();
+            return;
+        }
+        if (result.getData().getPwdList() == null ){
             isNotPassword = true;
             passwordPageChange();
             return;
         }
 
-        if (result.getData().getPwdList() == null) {
-            isNotPassword = true;
-            passwordPageChange();
-            return;
-        }
         list = result.getData().getPwdList();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             list.sort(Comparator.naturalOrder());

@@ -318,7 +318,7 @@ public class BleLockDetailPresenter<T> extends BlePresenter<IDeviceDetailView> {
                     public void onSuccess(BaseResult result) {
                         if ("200".equals(result.getCode())) {
                             if ("1".equals(bleLockInfo.getServerLockInfo().getIs_admin())) { //如果是管理员  查看本地密码
-                                localPwd = (String) SPUtils.get(KeyConstants.SAVE_PWD_HEARD + bleLockInfo.getServerLockInfo().getMacLock(), "");
+                                localPwd = (String) SPUtils.get(KeyConstants.SAVE_PWD_HEARD + bleLockInfo.getServerLockInfo().getMacLock(), "");  // //Key
                                 if (TextUtils.isEmpty(localPwd)) { //如果用户密码为空
                                     if (mViewRef.get() != null) {
                                         mViewRef.get().inputPwd();
@@ -384,7 +384,7 @@ public class BleLockDetailPresenter<T> extends BlePresenter<IDeviceDetailView> {
                             //开锁返回确认帧     如果成功  保存密码    那么监听开锁上报   以开锁上报为准   开锁上报  五秒超时
                             LogUtils.e("开锁成功 7  " + Rsa.bytesToHexString(bleDataBean.getPayload()));
                             //开锁成功  保存密码
-                            SPUtils.put(KeyConstants.SAVE_PWD_HEARD + bleLockInfo.getServerLockInfo().getMacLock(), pwd);
+                            SPUtils.put(KeyConstants.SAVE_PWD_HEARD + bleLockInfo.getServerLockInfo().getMacLock(), pwd); //Key
                             listenerOpenLockUp();
                         } else {  //开锁失败
                             LogUtils.e("开锁失败   " + Rsa.bytesToHexString(bleDataBean.getPayload()));
@@ -392,7 +392,7 @@ public class BleLockDetailPresenter<T> extends BlePresenter<IDeviceDetailView> {
                                 mViewRef.get().openLockFailed(new BleProtocolFailedException(0xff & bleDataBean.getOriginalData()[0]));
                             }
                             //开锁失败  清除密码
-                            SPUtils.remove(KeyConstants.SAVE_PWD_HEARD + bleLockInfo.getServerLockInfo().getMacLock());
+                            SPUtils.remove(KeyConstants.SAVE_PWD_HEARD + bleLockInfo.getServerLockInfo().getMacLock()); //Key
                         }
                         toDisposable(openLockDisposable);
                     }

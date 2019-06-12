@@ -31,8 +31,8 @@ public class CatEyeRingNumberPresenter<T> extends BasePresenter<ICatEyeRingNumbe
                                             return false;
                                         }
                                     })
-                                    .compose(RxjavaHelper.observeOnMainThread())
                                     .timeout(10*1000, TimeUnit.MILLISECONDS)
+                                    .compose(RxjavaHelper.observeOnMainThread())
                                     .subscribe(new Consumer<MqttData>() {
                                         @Override
                                         public void accept(MqttData mqttData) throws Exception {

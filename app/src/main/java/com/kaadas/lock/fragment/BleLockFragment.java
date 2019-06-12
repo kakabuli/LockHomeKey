@@ -135,7 +135,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
     public void onResume() {
         super.onResume();
 
-        if (!mPresenter.isAttach()&& !isDestroy&& homeFragment.isSelectHome ) {
+        if (!mPresenter.isAttach() && !isDestroy && homeFragment.isSelectHome) {
 //        if (!mPresenter.isAttach()&& !isDestroy ) {
             LogUtils.e("attachView   4");
             mPresenter.attachView(this);
@@ -254,7 +254,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
             public void onClick(View v) {
                 if (!isConnectingDevice && !bleLockInfo.isAuth()) {  //如果没有正在连接设备
                     //连接设备
-                    if (!mPresenter.isAttach()&& !isDestroy) {
+                    if (!mPresenter.isAttach() && !isDestroy) {
                         LogUtils.e("attachView   5");
                         mPresenter.attachView(BleLockFragment.this);
                     }
@@ -307,11 +307,11 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
             @Override
             public void onPageSelected(int i) {
                 if (i == position) {
-                    if (!isDestroy){
+                    if (!isDestroy) {
                         isCurrentFragment = true;
                     }
                     if (homeFragment.isSelectHome && !isDestroy) {
-                        if (!mPresenter.isAttach() ) {
+                        if (!mPresenter.isAttach()) {
                             LogUtils.e("attachView   2");
                             mPresenter.attachView(BleLockFragment.this);
                         }
@@ -334,8 +334,8 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
             }
         });
         LogUtils.e("设备position " + position + "    " + homeFragment.getCurrentPosition() + "     " + homeFragment.isSelectHome);
-        if (position == 0 && position == homeFragment.getCurrentPosition() && homeFragment.isSelectHome && !isDestroy ) {
-            if (!mPresenter.isAttach() ) {
+        if (position == 0 && position == homeFragment.getCurrentPosition() && homeFragment.isSelectHome && !isDestroy) {
+            if (!mPresenter.isAttach()) {
                 LogUtils.e("attachView   3");
                 mPresenter.attachView(BleLockFragment.this);
             }
@@ -461,7 +461,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
             case 8:
                 //“长按开锁”（表示关闭状态）
                 ivExternalBig.setVisibility(View.VISIBLE);
-                ivExternalBig.setImageResource(R.mipmap.bluetooth_lock_close_big_middle_icon  );
+                ivExternalBig.setImageResource(R.mipmap.bluetooth_lock_close_big_middle_icon);
                 ivExternalMiddle.setVisibility(View.GONE);
 //                ivExternalMiddle.setImageResource();
                 ivExternalSmall.setVisibility(View.GONE);
@@ -640,19 +640,19 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
         ivExternalBig.setVisibility(View.VISIBLE);
 //        ivExternalBig.setImageResource(R.drawable.open_lock_big);
         //优化后的帧动画
-        if (openLockBig==null){
+        if (openLockBig == null) {
             openLockBig = AnimationsContainer.getInstance(R.array.open_lock_big, 26).createProgressDialogAnim(ivExternalBig);
         }
         ivExternalMiddle.setVisibility(View.VISIBLE);
 //        ivExternalMiddle.setImageResource(R.drawable.open_lock_middle);
-        if (openLockMiddle==null){
+        if (openLockMiddle == null) {
             openLockMiddle = AnimationsContainer.getInstance(R.array.open_lock_middle, 26).createProgressDialogAnim(ivExternalMiddle);
         }
         ivExternalSmall.setVisibility(View.GONE);
 //        ivExternalSmall.setImageResource(R.mipmap.bluetooth_open_lock_small_icon);
         ivInnerMiddle.setVisibility(View.VISIBLE);
 //        ivInnerMiddle.setImageResource(R.drawable.open_lock_small);
-        if (openLockSmall==null){
+        if (openLockSmall == null) {
             openLockSmall = AnimationsContainer.getInstance(R.array.open_lock_small, 26).createProgressDialogAnim(ivInnerMiddle);
         }
         ivInnerSmall.setVisibility(View.GONE);
@@ -683,14 +683,14 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
      */
     public void closeLockAnimator() {
         ivExternalBig.setVisibility(View.VISIBLE);
-        ivExternalBig.setImageResource(R.mipmap.bluetooth_lock_close_big_middle_icon  );
+        ivExternalBig.setImageResource(R.mipmap.bluetooth_lock_close_big_middle_icon);
         ivExternalMiddle.setVisibility(View.GONE);
 //        ivExternalMiddle.setImageResource(R.mipmap.);
         ivExternalSmall.setVisibility(View.GONE);
 //                ivExternalSmall.setImageResource(R.mipmap.bluetooth_open_lock_small_icon);
         ivInnerMiddle.setVisibility(View.VISIBLE);
 //        ivInnerMiddle.setImageResource(R.drawable.bluetooth_lock_close);
-        if (closeLock==null){
+        if (closeLock == null) {
             closeLock = AnimationsContainer.getInstance(R.array.bluetooth_lock_close, 14).createProgressDialogAnim(ivInnerMiddle);
         }
         ivInnerSmall.setVisibility(View.VISIBLE);
@@ -1110,7 +1110,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
             OpenLockRecord record = lockRecords.get(i);
             //获取开锁时间的毫秒数
             long openTime = DateUtils.standardTimeChangeTimestamp(record.getOpen_time());
-            long dayTime = openTime - openTime % (24 * 60 * 60 * 1000);  //获取那一天开始的时间戳
+            long dayTime = openTime - openTime % (24 * 60 * 60 * 1000);  //获取那一天开始的时间戳  86400000‬
             List<BluetoothItemRecordBean> itemList = new ArrayList<>();
             GetPasswordResult passwordResult = MyApplication.getInstance().getPasswordResults(bleLockInfo.getServerLockInfo().getLockName());
             String nickName = getOpenLockType(passwordResult, record);
@@ -1306,7 +1306,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
      * 没有打开GPS 提示
      */
     @Override
-    public void noOpenGps(){
+    public void noOpenGps() {
         ToastUtil.getInstance().showLong(R.string.check_phone_not_open_gps_please_open);
     }
 

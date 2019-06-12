@@ -260,13 +260,13 @@ public class OldBluetoothMoreActivity extends BaseBleActivity<IOldDeviceInfoView
 
                     @Override
                     public void right() {
-                        SPUtils.put(KeyConstants.DEVICE_SN + bleLockInfo.getServerLockInfo().getMacLock(), sn);
-                        SPUtils.put(KeyConstants.BLE_VERSION + bleLockInfo.getServerLockInfo().getMacLock(), version);
+                        SPUtils.put(KeyConstants.DEVICE_SN + bleLockInfo.getServerLockInfo().getMacLock(), sn);  //Key
+                        SPUtils.put(KeyConstants.BLE_VERSION + bleLockInfo.getServerLockInfo().getMacLock(), version); //Key
                         LogUtils.e("升级的版本信息是   " + sn + "   下载链接是   " + updateFileInfo.getFileUrl());
                         MyApplication.getInstance().getBleService().release();
                         Intent intent = new Intent();
                         intent.putExtra(OtaConstants.bindUrl, updateFileInfo.getFileUrl());
-                        intent.putExtra(OtaConstants.deviceMac, bleLockInfo.getServerLockInfo().getMacLock());
+                        intent.putExtra(OtaConstants.deviceMac, bleLockInfo.getServerLockInfo().getMacLock()); //Key
                         intent.putExtra(OtaConstants.password1, bleLockInfo.getServerLockInfo().getPassword1());
                         intent.putExtra(OtaConstants.password2, bleLockInfo.getServerLockInfo().getPassword2());
                         if (bleLockInfo.getBleType() == 1) { //Ti升级

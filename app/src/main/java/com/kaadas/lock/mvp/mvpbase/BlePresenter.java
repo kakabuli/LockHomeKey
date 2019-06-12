@@ -83,7 +83,7 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
         this.isNotify = isUser;
         //如果service中有设备  且不为空  且是当前设备
         if (bleService.getBleLockInfo() != null && bleService.getCurrentDevice() != null
-                && bleService.getCurrentDevice().getAddress().equals(this.bleLockInfo.getServerLockInfo().getMacLock())) {
+                && bleService.getCurrentDevice().getName().equals(this.bleLockInfo.getServerLockInfo().getLockName())) {
             if (this.bleLockInfo.isAuth()) {  //如果已经鉴权   不管
                 return true;
             }
@@ -170,7 +170,7 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
             return;
         }
 
-        disposable = bleService.getDeviceByMac(this.bleLockInfo.getServerLockInfo().getMacLock())
+        disposable = bleService.getDeviceByMacOrName(this.bleLockInfo.getServerLockInfo().getMacLock(),this.bleLockInfo.getServerLockInfo().getLockName())  //搜索设备
                 .timeout(10 * 1000, TimeUnit.MILLISECONDS)
                 .compose(RxjavaHelper.observeOnMainThread())
                 .subscribe(new Consumer<BluetoothDevice>() {
@@ -240,7 +240,6 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
                             //连接状态改变之后   就不自动release连接了
                             LogUtils.e("设备状态改变   bleLockInfo为空   " + (bleLockInfo == null) + "   连接状态   " + bleStateBean.isConnected());
                             handler.removeCallbacks(releaseRunnable);
-
                             if (bleLockInfo != null) {
                                 bleLockInfo.setConnected(bleStateBean.isConnected());
                             }
@@ -249,10 +248,14 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
                                 mViewRef.get().onDeviceStateChange(bleStateBean.isConnected());
                             }
                             if (bleStateBean.isConnected()) {
-                                if (bleService.getBleVersion() == 1 && bleLockInfo.getBleType() == 1) { //如果是最老的模块  直接算是鉴权成功
+                                String bleVersion = bleLockInfo.getServerLockInfo().getBleVersion();
+                                int version = 0;
+                                if (!TextUtils.isEmpty(bleVersion)){
+                                    version = Integer.parseInt(bleVersion);
+                                }
+                                if (bleService.getBleVersion() == 1 && version<=1 ) { //如果是最老的模块  直接算是鉴权成功
                                     if (bleStateBean.isConnected() && bleService.getCurrentDevice() != null &&
-                                            bleService.getCurrentDevice().getAddress().equals(
-                                                    bleLockInfo.getServerLockInfo().getMacLock())) {
+                                            bleService.getCurrentDevice().getName().equals(bleLockInfo.getServerLockInfo().getLockName())) {
                                         if (bleLockInfo != null) {
                                             bleLockInfo.setAuth(bleStateBean.isConnected());
                                         }
@@ -266,13 +269,13 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
                                 } else {
                                     //连接成功   直接鉴权
                                     if (bleStateBean.isConnected() && bleService.getCurrentDevice() != null &&
-                                            bleService.getCurrentDevice().getAddress().equals(bleLockInfo.getServerLockInfo().getMacLock())) {
+                                            bleService.getCurrentDevice().getName().equals(bleLockInfo.getServerLockInfo().getLockName())) {
                                         readSystemId();
                                     }
                                 }
                                 bleService.scanBleDevice(false);   //连接成功   停止搜索
                             } else if (!bleStateBean.isConnected() && bleService.getCurrentDevice() != null &&
-                                    bleService.getCurrentDevice().getAddress().equals(bleLockInfo.getServerLockInfo().getMacLock())) {
+                                    bleService.getCurrentDevice().getName().equals(bleLockInfo.getServerLockInfo().getLockName())) {
                                 if (mViewRef.get() != null && isNotify) {
                                     mViewRef.get().onEndConnectDevice(false);
                                     LogUtils.e("设备连接失败");

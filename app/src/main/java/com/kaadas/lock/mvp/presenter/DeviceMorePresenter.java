@@ -64,7 +64,7 @@ public class DeviceMorePresenter extends BlePresenter<IDeviceMoreView> {
                         //清除消息免打扰
                         SPUtils.remove(deviceName + SPUtils.MESSAGE_STATUS);
                         //todo 清除保存的密码
-                        SPUtils.remove(KeyConstants.SAVE_PWD_HEARD + bleLockInfo.getServerLockInfo().getMacLock());
+                        SPUtils.remove(KeyConstants.SAVE_PWD_HEARD + bleLockInfo.getServerLockInfo().getMacLock()); //Key
 
                         //通知homeFragment  和  device刷新界面
                         bleService.release();

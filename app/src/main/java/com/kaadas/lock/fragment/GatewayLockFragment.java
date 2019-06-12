@@ -125,21 +125,20 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
                 GatewayInfo gatewayInfo = MyApplication.getInstance().getGatewayById(gatewayId);
                 mPresenter.lockClose(deviceId);
                 if (NetUtil.isNetworkAvailable()) {
-                            if ("online".equals(gatewayLockInfo.getServerInfo().getEvent_str())) {
-                                //在线
-                                changeOpenLockStatus(5);
-                                deviceState.setText(getString(R.string.normal));
-                            } else {
-                                changeOpenLockStatus(1);
-                                deviceState.setText(getString(R.string.offline));
-                            }
-                            if (gatewayInfo.getEvent_str() != null) {
-                                if (gatewayInfo.getEvent_str().equals("offline")) {
-                                    changeOpenLockStatus(1);
-                                    deviceState.setText(getString(R.string.offline));
-                                }
-                            }
-
+                    if ("online".equals(gatewayLockInfo.getServerInfo().getEvent_str())) {
+                        //在线
+                        changeOpenLockStatus(5);
+                        deviceState.setText(getString(R.string.normal));
+                    } else {
+                        changeOpenLockStatus(1);
+                        deviceState.setText(getString(R.string.offline));
+                    }
+                    if (gatewayInfo.getEvent_str() != null) {
+                        if (gatewayInfo.getEvent_str().equals("offline")) {
+                            changeOpenLockStatus(1);
+                            deviceState.setText(getString(R.string.offline));
+                        }
+                    }
                 } else {
                         changeOpenLockStatus(1);
                         deviceState.setText(getString(R.string.offline));
@@ -192,7 +191,7 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
 
 
     private void initRecycleView() {
-        openLockRecordAdapter = new BluetoothRecordAdapter(mOpenLockList);
+        openLockRecordAdapter = new BluetoothRecordAdapter(mOpenLockList); //网关
         recycleview.setLayoutManager(new LinearLayoutManager(getActivity()));
         recycleview.setAdapter(openLockRecordAdapter);
 
@@ -489,24 +488,18 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
 
     private void groupData(List<SelectOpenLockResultBean.DataBean> mOpenLockRecordList) {
         mOpenLockList.clear();
-        long lastDayTime = 0;
+        String lastDayTime = "";
         for (int i = 0; i < mOpenLockRecordList.size(); i++) {
 
             SelectOpenLockResultBean.DataBean dataBean = mOpenLockRecordList.get(i);
             //获取开锁时间的毫秒数
             long openTime = Long.parseLong(dataBean.getOpen_time()); //开锁毫秒时间
-
-            long dayTime = openTime - openTime % (24 * 60 * 60 * 1000);//是不是同一天的对比
-
+            
             List<BluetoothItemRecordBean> itemList = new ArrayList<>();
 
             String open_time = DateUtils.getDateTimeFromMillisecond(openTime);//将毫秒时间转换成功年月日时分秒的格式
-            String[] split = open_time.split(" ");
-
-            String strRight = split[1];
-            String[] split1 = strRight.split(":");
-
-            String time = split1[0] + ":" + split1[1];
+            String timeHead = open_time.substring(0, 10);
+            String hourSecond = open_time.substring(11, 16);
 
             String titleTime = "";
             String name="";
@@ -533,17 +526,17 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
             }
 
 
-            if (lastDayTime != dayTime) { //添加头
-                lastDayTime = dayTime;
+            if (!timeHead.equals(lastDayTime)) { //添加头
+                lastDayTime = timeHead;
                 titleTime = DateUtils.getDayTimeFromMillisecond(openTime); //转换成功顶部的时间
                 itemList.add(new BluetoothItemRecordBean(name, openType, KeyConstants.BLUETOOTH_RECORD_COMMON,
-                        time, false, false));
+                        hourSecond, false, false));
                 mOpenLockList.add(new BluetoothRecordBean(titleTime, itemList, false));
             } else {
                 BluetoothRecordBean bluetoothRecordBean = mOpenLockList.get(mOpenLockList.size() - 1);
                 List<BluetoothItemRecordBean> bluetoothItemRecordBeanList = bluetoothRecordBean.getList();
                 bluetoothItemRecordBeanList.add(new BluetoothItemRecordBean(name, openType, KeyConstants.BLUETOOTH_RECORD_COMMON,
-                        time, false, false));
+                        hourSecond, false, false));
             }
 
         }
@@ -754,6 +747,7 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
             changeOpenLockStatus(5);
         }
         ToastUtil.getInstance().showShort(getString(R.string.open_lock_fail));
+        LogUtils.e("开锁异常");
     }
 
     @Override

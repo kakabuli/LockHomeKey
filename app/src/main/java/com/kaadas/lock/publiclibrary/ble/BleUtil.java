@@ -314,4 +314,14 @@ public class BleUtil {
     }
 
 
+    public static boolean isMac(String mac){
+        if (TextUtils.isEmpty(mac)){
+            return false;
+        }
+
+
+
+        return false;
+    }
+
 }

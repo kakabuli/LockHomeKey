@@ -196,6 +196,7 @@ public class SearchDevicePresenter<T> extends BasePresenter<ISearchDeviceView> {
 
 
     public void bindDevice(BluetoothDevice device, boolean isBind) {
+        LogUtils.e("开始绑定");
         this.isBind = isBind;
         this.device = device;
         if (connectTimes > 2) {
@@ -205,6 +206,7 @@ public class SearchDevicePresenter<T> extends BasePresenter<ISearchDeviceView> {
             return;
         }
         // 连接
+        bleService.removeBleLockInfo();
         bleService.connectDeviceByDevice(device);
         if (mViewRef.get() != null) {
             mViewRef.get().onConnecting();

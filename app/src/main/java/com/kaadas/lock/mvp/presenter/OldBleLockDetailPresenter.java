@@ -222,10 +222,6 @@ public class OldBleLockDetailPresenter<T> extends BlePresenter<IOldBluetoothDevi
     }
 
 
-
-
-
-
     /**
      * 获取开锁次数
      */
@@ -291,9 +287,9 @@ public class OldBleLockDetailPresenter<T> extends BlePresenter<IOldBluetoothDevi
         } else {  //没有网络
             //读取到蓝牙模块信号，且蓝牙型号是 rgbt1761或者Rgbt1761D  不用带密码开门  使用APP开门指令
             if (!TextUtils.isEmpty(bleLockInfo.getModeNumber()) &&
-                    ( "Rgbt1761".equalsIgnoreCase(bleLockInfo.getModeNumber())||
-                            "Rgbt1761D".equalsIgnoreCase(bleLockInfo.getModeNumber()))){
-                realOpenLock("",true);
+                    ("Rgbt1761".equalsIgnoreCase(bleLockInfo.getModeNumber()) ||
+                            "Rgbt1761D".equalsIgnoreCase(bleLockInfo.getModeNumber()))) {
+                realOpenLock("", true);
                 return;
             }
 
@@ -328,14 +324,14 @@ public class OldBleLockDetailPresenter<T> extends BlePresenter<IOldBluetoothDevi
                         if ("200".equals(result.getCode())) {
                             //读取到蓝牙模块信号，且蓝牙型号是 rgbt1761或者Rgbt1761D  不用带密码开门  使用APP开门指令
                             if (!TextUtils.isEmpty(bleLockInfo.getModeNumber()) &&
-                                    ( "Rgbt1761".equalsIgnoreCase(bleLockInfo.getModeNumber())||
-                                            "Rgbt1761D".equalsIgnoreCase(bleLockInfo.getModeNumber()))){
-                                realOpenLock("",true);
+                                    ("Rgbt1761".equalsIgnoreCase(bleLockInfo.getModeNumber()) ||
+                                            "Rgbt1761D".equalsIgnoreCase(bleLockInfo.getModeNumber()))) {
+                                realOpenLock("", true);
                                 return;
                             }
 
                             if ("1".equals(bleLockInfo.getServerLockInfo().getIs_admin())) { //如果是管理员  查看本地密码
-                                localPwd = (String) SPUtils.get(KeyConstants.SAVE_PWD_HEARD + bleLockInfo.getServerLockInfo().getMacLock(), "");
+                                localPwd = (String) SPUtils.get(KeyConstants.SAVE_PWD_HEARD + bleLockInfo.getServerLockInfo().getMacLock(), "");  //Key
                                 if (TextUtils.isEmpty(localPwd)) { //如果用户密码为空
                                     if (mViewRef.get() != null) {
                                         mViewRef.get().inputPwd();
@@ -378,7 +374,7 @@ public class OldBleLockDetailPresenter<T> extends BlePresenter<IOldBluetoothDevi
         if (mViewRef.get() != null) {
             mViewRef.get().isOpeningLock();
         }
-        if (bleService.getBleVersion() == 1){
+        if (bleService.getBleVersion() == 1) {
             //老版本开锁
             return;
         }
@@ -406,7 +402,7 @@ public class OldBleLockDetailPresenter<T> extends BlePresenter<IOldBluetoothDevi
                             //开锁返回确认帧     如果成功  保存密码    那么监听开锁上报   以开锁上报为准   开锁上报  五秒超时
                             LogUtils.e("开锁成功3  " + Rsa.bytesToHexString(bleDataBean.getPayload()));
                             //开锁成功  保存密码
-                            SPUtils.put(KeyConstants.SAVE_PWD_HEARD + bleLockInfo.getServerLockInfo().getMacLock(), pwd);
+                            SPUtils.put(KeyConstants.SAVE_PWD_HEARD + bleLockInfo.getServerLockInfo().getMacLock(), pwd); //Key
                             listenerOpenLockUp();
                         } else {  //开锁失败
                             LogUtils.e("开锁失败 4  " + Rsa.bytesToHexString(bleDataBean.getPayload()));
@@ -414,7 +410,7 @@ public class OldBleLockDetailPresenter<T> extends BlePresenter<IOldBluetoothDevi
                                 mViewRef.get().openLockFailed(new BleProtocolFailedException(0xff & bleDataBean.getOriginalData()[0]));
                             }
                             //开锁失败  清除密码
-                            SPUtils.remove(KeyConstants.SAVE_PWD_HEARD + bleLockInfo.getServerLockInfo().getMacLock());
+                            SPUtils.remove(KeyConstants.SAVE_PWD_HEARD + bleLockInfo.getServerLockInfo().getMacLock()); //Key
                         }
                         toDisposable(openLockDisposable);
                     }

@@ -271,7 +271,7 @@ public class AllBindDevices {
                     if (!isExist && homeShowBean.getDeviceType() == HomeShowBean.TYPE_BLE_LOCK) {
                         //如果设备原来就存在，那么只替换服务器数据   其他数据不变
                         BleLockInfo bleLockInfo = (BleLockInfo) homeShowBean.getObject();
-                        if (bleDevice.getMacLock().equals(bleLockInfo.getServerLockInfo().getMacLock())) {
+                        if (bleDevice.getMacLock().equals(bleLockInfo.getServerLockInfo().getMacLock())) { //是否是同一个设备
                             isExist = true;
                             bleLockInfo.setServerLockInfo(bleDevice);
                             homeShowBean.setDeviceNickName(bleDevice.getLockNickName());
@@ -297,22 +297,26 @@ public class AllBindDevices {
                     if (!isExistGateway && homeShowBean.getDeviceType() == HomeShowBean.TYPE_GATEWAY) {
                         //如果设备原来就存在，那么只替换服务器数据   其他数据不变
                         GatewayInfo gatewayInfo = (GatewayInfo) homeShowBean.getObject();
+                        LogUtils.e("gatewayInfo网关状态  "+gatewayInfo.getEvent_str());
+                        LogUtils.e("网关id "+gatewayInfo.getServerInfo().getDeviceSN());
                         if (gwListBean.getDeviceSN().equals(gatewayInfo.getServerInfo().getDeviceSN())) {
                             isExistGateway = true;
                             gatewayInfo.setServerInfo(new ServerGatewayInfo(gwListBean));
                             homeShowBean.setDeviceNickName( gwListBean.getDeviceNickName());
                             homeShowBeans.add(homeShowBean);
                         }
+
                     }
                 }
                 if (!isExistGateway) {
                     newGatewayInfo = new GatewayInfo(new ServerGatewayInfo(gwListBean));
+                    LogUtils.e("网关状态SN"+newGatewayInfo.getServerInfo().getDeviceSN());
                     String gatewayStatus = (String) SPUtils.get(newGatewayInfo.getServerInfo().getDeviceSN(), "");
                     newGatewayInfo.setEvent_str(gatewayStatus);
+                    LogUtils.e("newGatewayInfo网关状态   "+newGatewayInfo.getEvent_str()+ "网关状态"+gatewayStatus);
                     SPUtils.remove(newGatewayInfo.getServerInfo().getDeviceSN());
                     homeShowBeans.add(new HomeShowBean(HomeShowBean.TYPE_GATEWAY, gwListBean.getDeviceSN(), gwListBean.getDeviceNickName(), newGatewayInfo));
                 }
-
                 List<ServerGwDevice> deviceList = gwListBean.getDeviceList();
                 for (ServerGwDevice serverGwDevice : deviceList) {
                     String nickName = serverGwDevice.getNickName();

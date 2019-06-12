@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -114,6 +115,7 @@ public class GatewayPasswordManagerActivity extends BaseActivity<GatewayLockFunc
         recycleview.setAdapter(gatewayLockPasswordAdapter);
         gatewayLockPasswordAdapter.setOnItemClickListener(this);
         tvSynchronizedRecord.setOnClickListener(this);
+
     }
 
     @Override

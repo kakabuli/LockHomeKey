@@ -60,8 +60,8 @@ public class PasswordDetailPresenter<T> extends BlePresenter<IPasswordDetailView
                         return clearPasswordCommand[1] == bleDataBean.getTsn();
                     }
                 })
-                .compose(RxjavaHelper.observeOnMainThread())
                 .timeout(5 * 1000, TimeUnit.MILLISECONDS)
+                .compose(RxjavaHelper.observeOnMainThread())
                 .subscribe(new Consumer<BleDataBean>() {
                     @Override
                     public void accept(BleDataBean bleDataBean) throws Exception {

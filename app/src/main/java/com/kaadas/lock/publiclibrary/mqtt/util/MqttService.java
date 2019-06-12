@@ -257,6 +257,7 @@ public class MqttService extends Service {
 
                 onReceiverDataObservable.onNext(mqttData);
                 if (MqttConstant.GATEWAY_STATE.equals(mqttData.getFunc())) {
+                    LogUtils.e("网关状态上报");
                     notifyDataObservable.onNext(mqttData);
                 }
 

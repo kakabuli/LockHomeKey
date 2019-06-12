@@ -1,8 +1,14 @@
 package com.kaadas.lock.activity;
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.ActivityInfo;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -11,18 +17,22 @@ import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.View;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.cateye.VideoVActivity;
+import com.kaadas.lock.bean.UpgradeBean;
 import com.kaadas.lock.fragment.DeviceFragment;
 import com.kaadas.lock.fragment.HomePageFragment;
 import com.kaadas.lock.fragment.PersonalCenterFragment;
 import com.kaadas.lock.mvp.mvpbase.BaseBleActivity;
 import com.kaadas.lock.mvp.presenter.MainActivityPresenter;
+import com.kaadas.lock.mvp.presenter.UpgradePresenter;
 import com.kaadas.lock.mvp.view.IMainActivityView;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.publiclibrary.bean.CateEyeInfo;
@@ -40,11 +50,15 @@ import com.kaadas.lock.utils.ToastUtil;
 import com.kaadas.lock.utils.ftp.GeTui;
 import com.kaadas.lock.utils.greenDao.bean.CatEyeEvent;
 import com.kaadas.lock.utils.networkListenerutil.NetWorkChangReceiver;
+import com.kaadas.lock.widget.BottomMenuSelectMarketDialog;
 import com.kaadas.lock.widget.NoScrollViewPager;
 import com.kaidishi.lock.service.GeTuiPushService;
 
 import net.sdvn.cmapi.CMAPI;
 import net.sdvn.cmapi.ConnectionService;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -52,6 +66,7 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -80,6 +95,7 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
     public boolean isSelectHome = true;
     private NetWorkChangReceiver netWorkChangReceiver;
     private boolean isRegistered=false;
+    UpgradePresenter upgradePresenter=null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setContentView(R.layout.activity_main);
@@ -127,6 +143,98 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
         }
         registerNetwork();
         startcallmethod();
+        String sip_pacage_invite = MyApplication.getInstance().getSip_package_invite();
+        if(!TextUtils.isEmpty(sip_pacage_invite)){
+            return;
+        }
+        initPackages(this);
+        upgradePresenter=new UpgradePresenter();
+        upgradePresenter.getUpgreadJson(new UpgradePresenter.IUpgradePresenter() {
+            @Override
+            public void ShowUpgradePresenterSuccess(String jsonPresenterResult) {
+             //   Log.e(GeTui.VideoLog,jsonPresenterResult);
+                 if(!TextUtils.isEmpty(jsonPresenterResult)){
+                     UpgradeBean upgradeBean=new Gson().fromJson(jsonPresenterResult,UpgradeBean.class);
+                     try {
+                         PackageManager manager =getPackageManager();
+                         PackageInfo packageInfo = manager.getPackageInfo(getPackageName(), 0);
+                         int cuurentversioncode= packageInfo.versionCode;
+                         String versionname=packageInfo.versionName;
+                         int servercode= Integer.parseInt(upgradeBean.getVersionCode());
+                         boolean isPrompt = Boolean.parseBoolean(upgradeBean.getIsPrompt()); //是否提示用户升级
+                         boolean isForced = Boolean.parseBoolean(upgradeBean.getIsForced()); //是否强制升级
+                         if(isPrompt){
+                             if(servercode > cuurentversioncode){
+                                 SelectMarket(isForced,upgradeBean);
+                             }
+                         }
+                         Log.e(GeTui.VideoLog,"currentCode:"+cuurentversioncode+" servercode:"+upgradeBean.getVersionCode());
+
+                     } catch (PackageManager.NameNotFoundException e) {
+                         e.printStackTrace();
+                     }catch (Exception e){
+                         e.printStackTrace();
+                     }
+
+                 }else {
+                     Log.e(GeTui.VideoLog,"update.....获取数据为null");
+                 }
+            }
+
+            @Override
+            public void ShowUpgradePresenterFail() {
+                Log.e(GeTui.VideoLog,"update.....fail.......失败");
+            }
+        });
+
+    }
+    private static List<String> packages;
+    private BottomMenuSelectMarketDialog bottomMenuDialog;
+    public void SelectMarket(boolean isforce,UpgradeBean upgradeBean) {
+        BottomMenuSelectMarketDialog.Builder dialogBuilder = new BottomMenuSelectMarketDialog.Builder(this);
+        for (final String pkg : packages) {
+            String menu = getNameByPackage(pkg);
+            dialogBuilder.setVersionStr(upgradeBean.getVersionName());
+            dialogBuilder.addMenu(menu, new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (bottomMenuDialog != null) {
+                        drumpMarket(pkg);
+                        bottomMenuDialog.dismiss();
+                    }
+                }
+            });
+        }
+
+        dialogBuilder.setCancelListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                Message message = new Message();
+//                message.what = 2;
+//                mHandler.sendMessage(message);
+                if(isforce){
+                    Toast.makeText(MainActivity.this,getString(R.string.isforce),Toast.LENGTH_SHORT).show();
+                }else {
+                    bottomMenuDialog.dismiss();
+                }
+
+            }
+        });
+
+//        if (versionBean.getIsForced()) {
+//            dialogBuilder.goneCancel();
+//        }
+        bottomMenuDialog = dialogBuilder.create();
+        bottomMenuDialog.setCancelable(false);
+        bottomMenuDialog.show();
+    }
+    private void drumpMarket(String packageName) {
+        Log.e(GeTui.VideoLog,"跳入的市场是:"+packageName);
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        Uri uri = Uri.parse("market://details?id=" + getPackageName());//app包名
+        intent.setData(uri);
+        intent.setPackage(packageName);//应用市场包名
+        startActivity(intent);
     }
 
     @Override
@@ -421,6 +529,82 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
         IntentFilter filter = new IntentFilter();
         registerReceiver(netWorkChangReceiver, filter);
         isRegistered = true;
+    }
+    public static final String[] supportMarket = new String[]{
+            "com.xiaomi.market",
+            "com.huawei.appmarket",
+            "com.oppo.market",
+            "com.tencent.android.qqdownloader",
+            "com.android.vending",
+            "com.bbk.appstore",
+    };
+    /**
+     * 获取APP支持的且手机安装的应用市场列表
+     *
+     * @param context
+     * @return
+     */
+    public static List<String> initPackages(Context context) {
+        ArrayList<String> pkgs = new ArrayList<>();
+        if (context == null)
+            return pkgs;
+        Intent intent = new Intent();
+        intent.setAction("android.intent.action.VIEW");
+        intent.addCategory(Intent.CATEGORY_DEFAULT);
+        intent.setData(Uri.parse("market://details?id="));
+        PackageManager pm = context.getPackageManager();
+        // 通过queryIntentActivities获取ResolveInfo对象
+        List<ResolveInfo> infos = pm.queryIntentActivities(intent,
+                0);
+        if (infos == null || infos.size() == 0)
+            return pkgs;
+        int size = infos.size();
+        for (int i = 0; i < size; i++) {
+            String pkgName = "";
+            try {
+                ActivityInfo activityInfo = infos.get(i).activityInfo;
+                pkgName = activityInfo.packageName;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            if (!TextUtils.isEmpty(pkgName))
+                pkgs.add(pkgName);
+        }
+
+        packages = new ArrayList<>();
+
+        List<String> temp = Arrays.asList(supportMarket);
+        for (String s : pkgs) {
+            if (temp.contains(s)) {
+                packages.add(s);
+            }
+        }
+        return packages;
+    }
+
+    //com.xiaomi.market 小米应用商店
+    //com.huawei.appmarket 华为应用商店
+    //com.oppo.market OPPO应用商店
+    //com.tencent.android.qqdownloader 腾讯应用宝
+    //com.android.vending    Google player
+    //com.bbk.appstore		vivo应用商店
+
+    private String getNameByPackage(String pkg) {
+        if (pkg.equals(supportMarket[0])) {
+            return getString(R.string.xiaomi_market);
+        } else if (pkg.equals(supportMarket[1])) {
+            return getString(R.string.huawei_market);
+
+        } else if (pkg.equals(supportMarket[2])) {
+            return getString(R.string.oppo_market);
+        } else if (pkg.equals(supportMarket[3])) {
+            return getString(R.string.tengxun_market);
+        } else if (pkg.equals(supportMarket[4])) {
+            return getString(R.string.google_market);
+        } else if (pkg.equals(supportMarket[5])) {
+            return getString(R.string.vivo_market);
+        }
+        return "";
     }
 
     @Override

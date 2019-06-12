@@ -24,7 +24,6 @@ public class CatEyeFunctionPresenter<T> extends BasePresenter<ICatEyeFunctionVie
     private Disposable networkChangeDisposable;
     //监听电量的变化
     public void getPowerData(String gatewayId,String deviceId){
-        LogUtils.e("进入获取电量。。。");
         if (mqttService!=null){
             getPowerDataDisposable=mqttService.getPowerData()
                     .filter(new Predicate<MqttData>() {

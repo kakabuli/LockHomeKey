@@ -148,8 +148,8 @@ public class OldBleLockFragment extends BaseBleFragment<IOldBleLockView, OldBleL
             if (bleLockInfo!=null&&bleLockInfo.isConnected()){
                 changeOpenLockStatus(8);
             }
-            mPresenter.getOpenRecordFromServer(1, bleLockInfo);
         }
+        mPresenter.getOpenRecordFromServer(1, bleLockInfo);
     }
 
     private void initView() {
@@ -314,7 +314,7 @@ public class OldBleLockFragment extends BaseBleFragment<IOldBleLockView, OldBleL
     }
 
     private void initRecycleView() {
-        bluetoothRecordAdapter = new BluetoothRecordAdapter(list);
+        bluetoothRecordAdapter = new BluetoothRecordAdapter(list);  //老蓝牙锁界面
         recycleview.setLayoutManager(new LinearLayoutManager(getActivity()));
         recycleview.setAdapter(bluetoothRecordAdapter);
     }

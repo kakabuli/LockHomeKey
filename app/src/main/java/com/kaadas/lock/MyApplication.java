@@ -720,4 +720,11 @@ public class MyApplication extends Application {
     public void setPirEnableStates(int pirEnableStates) {
         this.pirEnableStates = pirEnableStates;
     }
+    boolean isPopDialog=false;
+    public boolean isPopDialog() {
+        return isPopDialog;
+    }
+    public void setPopDialog(boolean popDialog) {
+        isPopDialog = popDialog;
+    }
 }

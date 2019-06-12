@@ -49,7 +49,7 @@ public class FingerprintManagerPresenter<T> extends BlePresenter<IFingerprintMan
     public boolean isAuthAndNoConnect(BleLockInfo bleLockInfo) {
         if (bleService.getBleLockInfo() != null
                 && bleService.getCurrentDevice() != null
-                && bleService.getCurrentDevice().getAddress().equals(bleLockInfo.getServerLockInfo().getMacLock())
+                && bleService.getCurrentDevice().getName().equals(bleLockInfo.getServerLockInfo().getLockName())
                 ) {
             if (bleLockInfo.isAuth()) {  //如果已经鉴权   不管
                 LogUtils.e("服务中的数据是   " + bleLockInfo.isAuth());
