@@ -366,9 +366,14 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
             bleService.release();
             return;
         }
+        byte[] bSystemId = (byte[]) readInfoBean.data;
+        if (bSystemId ==null){
+            bleService.release();
+            return;
+        }
         toDisposable(getPwd3Dispose);
         systemId16 = new byte[16];  //读取到SystemId
-        byte[] bSystemId = (byte[]) readInfoBean.data;
+
         System.arraycopy(bSystemId, 0, systemId16, 0, bSystemId.length);
         LogUtils.e("密码1是   " + bleLockInfo.getServerLockInfo().getPassword1() + "  密码2是  " + bleLockInfo.getServerLockInfo().getPassword2());
         if (bleService != null) {  //开始鉴权

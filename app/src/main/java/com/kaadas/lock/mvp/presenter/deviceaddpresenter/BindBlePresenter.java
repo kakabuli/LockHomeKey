@@ -248,7 +248,7 @@ public class BindBlePresenter<T> extends BasePresenter<IBindBleView> {
         /**
          * 退出界面时  将蓝牙解除连接
          */
-        bleService.release();  //绑定蓝牙界面
+//        bleService.release();  //绑定蓝牙界面
     }
 
     public void bindDevice(String pwd1, String pwd2, String model, String bleVersion) {
