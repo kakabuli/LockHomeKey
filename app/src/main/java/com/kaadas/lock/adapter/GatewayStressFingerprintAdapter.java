@@ -24,7 +24,9 @@ public class GatewayStressFingerprintAdapter extends BaseQuickAdapter<GetPasswor
 
     @Override
     protected void convert(BaseViewHolder helper, GetPasswordResult.DataBean.Fingerprint bean) {
-        int itemCount = getItemCount();
+        List<GetPasswordResult.DataBean.Fingerprint> data = getData();
+        int itemCount=data.size();
+//        int itemCount = getItemCount();
         int pos=helper.getPosition();
         if (pos==itemCount-1){
             View view= helper.getView(R.id.my_view);

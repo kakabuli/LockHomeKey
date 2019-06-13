@@ -42,6 +42,17 @@ public class GetPasswordResult  extends BaseResult  {
     }
 
     public static class DataBean {
+        @Override
+        public String toString() {
+            return "DataBean{" +
+                    "_id='" + _id + '\'' +
+                    ", pwdList=" + pwdList +
+                    ", tempPwdList=" + tempPwdList +
+                    ", fingerprintList=" + fingerprintList +
+                    ", cardList=" + cardList +
+                    '}';
+        }
+
         /**
          * _id : 5c76326914fd2110c84df474
          * pwdList : [{"num":"12","nickName":"mima12","createTime":1551785021,"type":1,"startTime":1551774543,"endTime":1551774543,"items":["1","3","6"]}]
@@ -173,6 +184,14 @@ public class GetPasswordResult  extends BaseResult  {
         }
 
         public static class TempPassword implements Serializable,Comparable<TempPassword>  {
+            @Override
+            public String toString() {
+                return "TempPassword{" +
+                        "num='" + num + '\'' +
+                        ", nickName='" + nickName + '\'' +
+                        ", createTime=" + createTime +
+                        '}';
+            }
 
             @Override
             public int compareTo(TempPassword o) {
