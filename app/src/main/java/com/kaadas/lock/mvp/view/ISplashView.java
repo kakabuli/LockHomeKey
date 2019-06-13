@@ -10,4 +10,10 @@ public interface ISplashView extends IBaseView {
 
     void getVersionFail();
 
+    //蓝牙服务启动成功和mqtt服务启动成功
+    void serviceConnectSuccess();
+
+    //蓝牙服务启动失败获取mqtt服务器启动失败
+    void serviceConnectThrowable();
+
 }
