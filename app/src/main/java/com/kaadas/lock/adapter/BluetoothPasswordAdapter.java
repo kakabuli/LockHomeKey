@@ -49,6 +49,9 @@ public class BluetoothPasswordAdapter extends BaseQuickAdapter<ForeverPassword, 
         if (pos==itemCount-1){
            View view= helper.getView(R.id.my_view);
             view.setVisibility(View.GONE);
+        }else {
+            View view= helper.getView(R.id.my_view);
+            view.setVisibility(View.VISIBLE);
         }
 
         if (bean.getItems() != null) {

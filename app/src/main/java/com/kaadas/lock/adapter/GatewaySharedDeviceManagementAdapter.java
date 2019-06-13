@@ -31,6 +31,9 @@ public class GatewaySharedDeviceManagementAdapter extends BaseQuickAdapter<Bluet
         if (pos==itemCount-1){
             View view= helper.getView(R.id.my_view);
             view.setVisibility(View.GONE);
+        }else {
+            View view= helper.getView(R.id.my_view);
+            view.setVisibility(View.VISIBLE);
         }
         helper.setText(R.id.tv_serial_number, bean.getOpen_purview());
         helper.setText(R.id.tv_num, bean.getUnickname());

@@ -31,6 +31,9 @@ public class GatewayDoorCardManagerAdapter extends BaseQuickAdapter<GetPasswordR
         if (pos==itemCount-1){
             View view= helper.getView(R.id.my_view);
             view.setVisibility(View.GONE);
+        }else {
+            View view= helper.getView(R.id.my_view);
+            view.setVisibility(View.VISIBLE);
         }
         helper.setText(R.id.tv_num, bean.getNum());
         helper.setText(R.id.tv_nick, bean.getNickName());
