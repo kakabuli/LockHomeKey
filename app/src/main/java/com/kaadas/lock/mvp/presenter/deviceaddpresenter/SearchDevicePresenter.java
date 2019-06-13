@@ -117,6 +117,7 @@ public class SearchDevicePresenter<T> extends BasePresenter<ISearchDeviceView> {
         handler.removeCallbacks(stopScanLe);
         if (bleService != null) { //停止扫描设备
             bleService.scanBleDevice(false);
+            bleService.release();
             if (mViewRef != null) {
                 mViewRef.get().onStopScan();
             }
@@ -314,7 +315,9 @@ public class SearchDevicePresenter<T> extends BasePresenter<ISearchDeviceView> {
                             pwd1 = Rsa.bytesToHexString(bPwd1);
                             if (mViewRef.get() != null) {
 //                                mViewRef.get().getPwd1Success(pwd1, isBind,version);
+                                bleService.release();
                                 mViewRef.get().notice419();
+
                             }
                             return;
                         } else {

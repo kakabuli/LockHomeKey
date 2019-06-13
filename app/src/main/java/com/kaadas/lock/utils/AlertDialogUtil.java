@@ -118,6 +118,39 @@ public class AlertDialogUtil {
         });
     }
 
+
+    //2  不能隐藏的
+    public void noEditSingleCanNotDismissButtonDialog(Context context, String title, String content, String query, ClickListener clickListener) {
+        View mView = LayoutInflater.from(context).inflate(R.layout.no_edit_singlebutton_dialog, null);
+        TextView tvTitle = mView.findViewById(R.id.tv_title);
+        TextView tvContent = mView.findViewById(R.id.tv_content);
+        TextView tv_query = mView.findViewById(R.id.tv_button);
+        AlertDialog alertDialog = AlertDialogUtil.getInstance().common(context, mView);
+        alertDialog.setCancelable(false);
+        if ("".equals(title)) {
+            tvTitle.setVisibility(View.GONE);
+        } else {
+            tvTitle.setText(title);
+            tvTitle.setVisibility(View.VISIBLE);
+        }
+
+        tvContent.setText(content);
+        tv_query.setText(query);
+        //确定
+        tv_query.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+                if (clickListener != null) {
+                    clickListener.right();
+                }
+
+            }
+        });
+    }
+
+
+
     //no_et_dialog
     public void noEditTwoButtonDialog(Context context, String title, String content, String left, String right, ClickListener clickListener) {
         View mView = LayoutInflater.from(context).inflate(R.layout.no_et_dialog, null);

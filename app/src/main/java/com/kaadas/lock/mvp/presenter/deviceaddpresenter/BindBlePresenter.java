@@ -7,6 +7,7 @@ import com.kaadas.lock.publiclibrary.ble.BleCommandFactory;
 import com.kaadas.lock.publiclibrary.ble.OldBleCommandFactory;
 import com.kaadas.lock.publiclibrary.ble.RetryWithTime;
 import com.kaadas.lock.publiclibrary.ble.responsebean.BleDataBean;
+import com.kaadas.lock.publiclibrary.ble.responsebean.BleStateBean;
 import com.kaadas.lock.publiclibrary.ble.responsebean.ReadInfoBean;
 import com.kaadas.lock.publiclibrary.http.XiaokaiNewServiceImp;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
@@ -248,7 +249,7 @@ public class BindBlePresenter<T> extends BasePresenter<IBindBleView> {
         /**
          * 退出界面时  将蓝牙解除连接
          */
-        bleService.release();  //绑定蓝牙界面
+//        bleService.release();  //绑定蓝牙界面
     }
 
     public void bindDevice(String pwd1, String pwd2, String model, String bleVersion) {
@@ -352,6 +353,29 @@ public class BindBlePresenter<T> extends BasePresenter<IBindBleView> {
                         compositeDisposable.add(d);
                     }
                 });
+    }
+
+
+    private Disposable listenConnectStateDisposable;
+
+    public void listenConnectState() {
+        toDisposable(listenConnectStateDisposable);
+        listenConnectStateDisposable = bleService.subscribeDeviceConnectState()
+                .compose(RxjavaHelper.observeOnMainThread())
+                .subscribe(new Consumer<BleStateBean>() {
+                    @Override
+                    public void accept(BleStateBean bleStateBean) throws Exception {
+                        if (mViewRef.get()!=null){
+                            mViewRef.get().onDeviceStateChange(bleStateBean.isConnected());
+                        }
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+
+                    }
+                });
+        compositeDisposable.add(listenConnectStateDisposable);
     }
 
 

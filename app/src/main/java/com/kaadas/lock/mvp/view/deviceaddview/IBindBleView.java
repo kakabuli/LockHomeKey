@@ -63,4 +63,7 @@ public interface IBindBleView extends IBaseView {
      * 读取锁型号成功
      */
     void readLockTypeSucces();
+
+
+    void  onDeviceStateChange(boolean isConnected);
 }
