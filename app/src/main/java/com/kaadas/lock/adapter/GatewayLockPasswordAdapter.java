@@ -19,9 +19,9 @@ public class GatewayLockPasswordAdapter extends BaseQuickAdapter<String, BaseVie
         super(R.layout.item_gateway_password, data);
     }
 
-    int i=0;
     @Override
     protected void convert(BaseViewHolder helper, String item) {
+        int position = helper.getPosition();
         helper.setText(R.id.tv_num,item);
         int num=Integer.parseInt(item);
         if (num<=4){
@@ -29,10 +29,8 @@ public class GatewayLockPasswordAdapter extends BaseQuickAdapter<String, BaseVie
         }else{
             helper.setText(R.id.tv_time,R.string.permanent_once_validity);
         }
-        i++;
-        if(getData()!=null && getData().size()==i){
+        if(getData()!=null && getData().size()==position+1){
             helper.getView(R.id.my_view).setVisibility(View.GONE);
-            i=0;
         }else {
             helper.getView(R.id.my_view).setVisibility(View.VISIBLE);
         }

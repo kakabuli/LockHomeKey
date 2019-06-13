@@ -137,7 +137,7 @@ public class BluetoothWarnInformationFragment extends BaseBleFragment<IWarringRe
 
     @Override
     public void noData() {
-        ToastUtil.getInstance().showShort(R.string.lock_no_record);
+        ToastUtil.getInstance().showShort(R.string.lock_no_warn_message);
         hiddenLoading();
         isLoadingBleRecord = false;
     }
@@ -234,31 +234,31 @@ public class BluetoothWarnInformationFragment extends BaseBleFragment<IWarringRe
 
     private void groupData(List<WarringRecord> warringRecords) {
         list.clear();
-        long lastDayTime = 0;
+        String lastTimeHead = "";
         for (int i = 0; i < warringRecords.size(); i++) {
             WarringRecord record = warringRecords.get(i);
             //获取开锁时间的毫秒数
             long openTime = record.getWarningTime();
-            long dayTime = openTime - openTime % (24 * 60 * 60 * 1000);  //获取那一天开始的时间戳
+            String sOpenTime = DateUtils.getDateTimeFromMillisecond(openTime);
+            String timeHead = sOpenTime.substring(0, 10);
+            String hourSecond = sOpenTime.substring(11, 16);
+
+
             List<BluetoothItemRecordBean> itemList = new ArrayList<>();
-            String titleTime = "";
+
             String content = getWarnMessageContent(record);
-            String open_time = DateUtils.getDateTimeFromMillisecond(record.getWarningTime());
-            String[] split = open_time.split(" ");
-            String strRight = split[1];
-            String[] split1 = strRight.split(":");
-            String time = split1[0] + ":" + split1[1];
-            if (lastDayTime != dayTime) { //添加头
-                lastDayTime = dayTime;
-                titleTime = DateUtils.getDayTimeFromMillisecond(dayTime);
+
+            if (!timeHead.equals(lastTimeHead)) { //添加头
+                lastTimeHead = timeHead;
+
                 itemList.add(new BluetoothItemRecordBean(content, "", KeyConstants.BLUETOOTH_RECORD_WARN,
-                        time, false, false));
-                list.add(new BluetoothRecordBean(titleTime, itemList, false));
+                        hourSecond, false, false));
+                list.add(new BluetoothRecordBean(timeHead, itemList, false));
             } else {
                 BluetoothRecordBean bluetoothRecordBean = list.get(list.size() - 1);
                 List<BluetoothItemRecordBean> bluetoothItemRecordBeanList = bluetoothRecordBean.getList();
                 bluetoothItemRecordBeanList.add(new BluetoothItemRecordBean(content, "", KeyConstants.BLUETOOTH_RECORD_WARN,
-                        time, false, false));
+                        hourSecond, false, false));
             }
 
         }

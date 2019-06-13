@@ -27,11 +27,16 @@ public class GatewayLockStressPasswordAdapter extends BaseQuickAdapter<String, B
 
     @Override
     protected void convert(BaseViewHolder helper, String item) {
-        int itemCount = getItemCount();
+        List<String> data = getData();
+        int itemCount=data.size();
+//        int itemCount = getItemCount();
         int pos=helper.getPosition();
         if (pos==itemCount-1){
             View view= helper.getView(R.id.my_view);
             view.setVisibility(View.GONE);
+        }else {
+            View view= helper.getView(R.id.my_view);
+            view.setVisibility(View.VISIBLE);
         }
         helper.setText(R.id.tv_nick,item);
         if (item.equals("09")){

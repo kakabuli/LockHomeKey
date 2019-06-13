@@ -408,57 +408,64 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
 
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-        HomeShowBean deviceDetailBean = mDeviceList.get(position);
-        switch (deviceDetailBean.getDeviceType()) {
-            case HomeShowBean.TYPE_CAT_EYE:
-                //猫眼
-                Intent cateEyeInfoIntent = new Intent(getActivity(), CateyeFunctionActivity.class);
-                cateEyeInfoIntent.putExtra(KeyConstants.CATE_INFO, deviceDetailBean);
-                startActivity(cateEyeInfoIntent);
-                break;
-            case HomeShowBean.TYPE_GATEWAY_LOCK:
-                //网关锁
-                Intent gatewayLockintent = new Intent(getActivity(), GatewayLockFunctionActivity.class);
-                gatewayLockintent.putExtra(KeyConstants.GATEWAY_LOCK_INFO, deviceDetailBean);
-                startActivity(gatewayLockintent);
-                break;
-            case HomeShowBean.TYPE_GATEWAY:
-                //网关
-                Intent gatwayInfo = new Intent(getActivity(), GatewayActivity.class);
-                gatwayInfo.putExtra(KeyConstants.GATEWAY_INFO, deviceDetailBean);
-                startActivity(gatwayInfo);
-                break;
-            case HomeShowBean.TYPE_BLE_LOCK:
-                //蓝牙
-                BleLockInfo bleLockInfo = (BleLockInfo) deviceDetailBean.getObject();
-                mPresenter.setBleLockInfo(bleLockInfo);
-                if (bleLockInfo.getServerLockInfo().getIs_admin() != null && bleLockInfo.getServerLockInfo().getIs_admin().equals("1")) {
-                    if ("3".equals(bleLockInfo.getServerLockInfo().getBleVersion())) {
-                        String lockType = bleLockInfo.getServerLockInfo().getModel();
-                        if (lockType.startsWith("V6")||lockType.startsWith("V7")){
-                            Intent detailIntent = new Intent(getActivity(), BluetoothLockFunctionV6V7Activity.class);
+        if (mDeviceList!=null) {
+            if (mDeviceList.size()>position) {
+                LogUtils.e("设备总和  "+mDeviceList.size()+"位置  "+position);
+                HomeShowBean deviceDetailBean = mDeviceList.get(position);
+                switch (deviceDetailBean.getDeviceType()) {
+                    case HomeShowBean.TYPE_CAT_EYE:
+                        //猫眼
+                        Intent cateEyeInfoIntent = new Intent(getActivity(), CateyeFunctionActivity.class);
+                        cateEyeInfoIntent.putExtra(KeyConstants.CATE_INFO, deviceDetailBean);
+                        startActivity(cateEyeInfoIntent);
+                        break;
+                    case HomeShowBean.TYPE_GATEWAY_LOCK:
+                        //网关锁
+                        Intent gatewayLockintent = new Intent(getActivity(), GatewayLockFunctionActivity.class);
+                        gatewayLockintent.putExtra(KeyConstants.GATEWAY_LOCK_INFO, deviceDetailBean);
+                        startActivity(gatewayLockintent);
+                        break;
+                    case HomeShowBean.TYPE_GATEWAY:
+                        //网关
+                        Intent gatwayInfo = new Intent(getActivity(), GatewayActivity.class);
+                        gatwayInfo.putExtra(KeyConstants.GATEWAY_INFO, deviceDetailBean);
+                        startActivity(gatwayInfo);
+                        break;
+                    case HomeShowBean.TYPE_BLE_LOCK:
+                        //蓝牙
+                        BleLockInfo bleLockInfo = (BleLockInfo) deviceDetailBean.getObject();
+                        mPresenter.setBleLockInfo(bleLockInfo);
+                        if (bleLockInfo.getServerLockInfo().getIs_admin() != null && bleLockInfo.getServerLockInfo().getIs_admin().equals("1")) {
+                            if ("3".equals(bleLockInfo.getServerLockInfo().getBleVersion())) {
+                                String lockType = bleLockInfo.getServerLockInfo().getModel();
+                                if (lockType.startsWith("V6") || lockType.startsWith("V7")) {
+                                    Intent detailIntent = new Intent(getActivity(), BluetoothLockFunctionV6V7Activity.class);
+                                    String model = bleLockInfo.getServerLockInfo().getModel();
+                                    detailIntent.putExtra(KeyConstants.DEVICE_TYPE, model);
+                                    startActivityForResult(detailIntent, KeyConstants.GET_BLE_POWER);
+                                } else {
+                                    Intent detailIntent = new Intent(getActivity(), BluetoothLockFunctionActivity.class);
+                                    String model = bleLockInfo.getServerLockInfo().getModel();
+                                    detailIntent.putExtra(KeyConstants.DEVICE_TYPE, model);
+                                    startActivityForResult(detailIntent, KeyConstants.GET_BLE_POWER);
+                                }
+                            } else {
+                                Intent detailIntent = new Intent(getActivity(), OldBluetoothLockDetailActivity.class);
+                                String model = bleLockInfo.getServerLockInfo().getModel();
+                                detailIntent.putExtra(KeyConstants.DEVICE_TYPE, model);
+                                startActivityForResult(detailIntent, KeyConstants.GET_BLE_POWER);
+                            }
+                        } else {
+                            Intent impowerIntent = new Intent(getActivity(), BluetoothLockAuthorizationActivity.class);
                             String model = bleLockInfo.getServerLockInfo().getModel();
-                            detailIntent.putExtra(KeyConstants. DEVICE_TYPE, model);
-                            startActivityForResult(detailIntent, KeyConstants.GET_BLE_POWER);
-                        }else {
-                            Intent detailIntent = new Intent(getActivity(), BluetoothLockFunctionActivity.class);
-                            String model = bleLockInfo.getServerLockInfo().getModel();
-                            detailIntent.putExtra(KeyConstants.DEVICE_TYPE, model);
-                            startActivityForResult(detailIntent, KeyConstants.GET_BLE_POWER);
+                            impowerIntent.putExtra(KeyConstants.DEVICE_TYPE, model);
+                            startActivityForResult(impowerIntent, KeyConstants.GET_BLE_POWER);
                         }
-                    } else {
-                        Intent detailIntent = new Intent(getActivity(), OldBluetoothLockDetailActivity.class);
-                        String model = bleLockInfo.getServerLockInfo().getModel();
-                        detailIntent.putExtra(KeyConstants.DEVICE_TYPE, model);
-                        startActivityForResult(detailIntent, KeyConstants.GET_BLE_POWER);
-                    }
-                } else {
-                    Intent impowerIntent = new Intent(getActivity(), BluetoothLockAuthorizationActivity.class);
-                    String model = bleLockInfo.getServerLockInfo().getModel();
-                    impowerIntent.putExtra(KeyConstants.DEVICE_TYPE, model);
-                    startActivityForResult(impowerIntent, KeyConstants.GET_BLE_POWER);
+                        break;
                 }
-                break;
+            }else{
+                ToastUtil.getInstance().showShort(R.string.please_refresh_page_get_newdata);
+            }
         }
     }
 

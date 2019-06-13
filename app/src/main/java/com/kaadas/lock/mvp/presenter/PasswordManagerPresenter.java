@@ -107,6 +107,8 @@ public class PasswordManagerPresenter<T> extends BlePresenter<IPasswordManagerVi
                         LogUtils.e("秘钥的帧数是  " + index + " 秘钥类型是  " + codeType + "  秘钥总数是   " + codeNumber);
                         getAllpasswordNumber(codeNumber, deValue);
                         LogUtils.e("秘钥列表为   " + Arrays.toString(bleNumber.toArray()));
+                        LogUtils.e(" 服务器数据 "+passwordResults.getData());
+                        LogUtils.e("服务器密码列表   " + pwdList);
                         //获取到编号
                         showList.clear();
                         morePwd.clear();
@@ -238,7 +240,7 @@ public class PasswordManagerPresenter<T> extends BlePresenter<IPasswordManagerVi
 //                        if (mViewRef.get() != null) {
 //                            mViewRef.get().onUpLoadSuccess( );
 //                        }
-                        MyApplication.getInstance().passwordChangeListener().onNext(true);
+                        getAllPassword(bleLockInfo,true);
                     }
 
                     @Override
@@ -275,7 +277,7 @@ public class PasswordManagerPresenter<T> extends BlePresenter<IPasswordManagerVi
         }
         List<DeletePasswordBean.DeletePassword> deletePasswords = new ArrayList<>();
         for (int i : numbers) {
-            if (i>4){
+            if (i>4&&i<9){
                 String number = i < 10 ? "0" + i : "" + i;
                 deletePasswords.add(new DeletePasswordBean.DeletePassword(2, number));
             }else {
@@ -289,7 +291,7 @@ public class PasswordManagerPresenter<T> extends BlePresenter<IPasswordManagerVi
                     @Override
                     public void onSuccess(BaseResult result) {
                         LogUtils.e("删除秘钥 到成功   " + result.toString());
-                        MyApplication.getInstance().passwordChangeListener().onNext(true);
+                        getAllPassword(bleLockInfo,true);
                     }
 
                     @Override
@@ -339,7 +341,7 @@ public class PasswordManagerPresenter<T> extends BlePresenter<IPasswordManagerVi
                     @Override
                     public void onSuccess(BaseResult result) {
                         LogUtils.e("上传密码添加成功  ");
-                        MyApplication.getInstance().passwordChangeListener().onNext(true);
+                        getAllPassword(bleLockInfo,true);
                     }
 
                     @Override
@@ -350,7 +352,7 @@ public class PasswordManagerPresenter<T> extends BlePresenter<IPasswordManagerVi
                     @Override
                     public void onFailed(Throwable throwable) {
                         LogUtils.e("上传密码失败  ");
-                        MyApplication.getInstance().passwordChangeListener().onNext(true);
+                        getAllPassword(bleLockInfo,true);
                     }
 
                     @Override

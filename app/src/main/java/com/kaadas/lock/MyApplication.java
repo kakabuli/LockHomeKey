@@ -92,7 +92,7 @@ public class MyApplication extends Application {
     private String TAG = "凯迪仕";
     private IWXAPI api;
     private List<HomeShowBean> homeShowDevices = new ArrayList<>();
-
+    private int listService=0;
     @Override
     public void onCreate() {
         super.onCreate();
@@ -162,7 +162,12 @@ public class MyApplication extends Application {
                 if(service instanceof  BleService.MyBinder){
                     BleService.MyBinder binder = (BleService.MyBinder) service;
                     bleService = binder.getService();
-                    LogUtils.e("服务启动成功    " + (bleService == null));
+                    listService++;
+                    getServiceConnected.onNext(listService);
+                    if (listService==2){
+                        listService=0;
+                    }
+                    LogUtils.e("服务启动成功    " + (bleService == null)+"当前服务中编号是多少 "+listService);
                 }
             }
 
@@ -249,10 +254,12 @@ public class MyApplication extends Application {
                 if(service instanceof  MqttService.MyBinder){
                     MqttService.MyBinder binder = (MqttService.MyBinder) service;
                     mqttService = binder.getService();
-                    LogUtils.e("attachView service启动" + (mqttService == null));
-                    if (mqttService != null && !TextUtils.isEmpty(uid)) {
-                        //mqttService.mqttConnection();
+                    listService++;
+                    getServiceConnected.onNext(listService);
+                    if (listService==2){
+                        listService=0;
                     }
+                    LogUtils.e("attachView service启动" + (mqttService == null)+"当前服务中编号是多少  "+listService);
                 }
             }
 
@@ -599,6 +606,16 @@ public class MyApplication extends Application {
      */
     public Observable<AllBindDevices> listenerAllDevices() {
         return getDevicesFromServer;
+    }
+
+    /**
+     * 监听蓝牙服务是否启动成功和mqtt服务是否启动成功
+     *
+     */
+    public PublishSubject<Integer> getServiceConnected=PublishSubject.create();
+
+    public Observable<Integer> listenerServiceConnect(){
+        return getServiceConnected;
     }
 
 

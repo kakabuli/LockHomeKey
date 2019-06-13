@@ -7,6 +7,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.kaadas.lock.R;
 import com.kaadas.lock.publiclibrary.http.result.BluetoothSharedDeviceBean;
+import com.kaadas.lock.utils.LogUtils;
 
 
 import java.util.List;
@@ -22,15 +23,18 @@ public class BluetoothSharedDeviceManagementAdapter extends BaseQuickAdapter<Blu
     public BluetoothSharedDeviceManagementAdapter(@Nullable List<BluetoothSharedDeviceBean.DataBean> data, int layoutId) {
         super(layoutId, data);
     }
-    int i=0;
     @Override
     protected void convert(BaseViewHolder helper, BluetoothSharedDeviceBean.DataBean bean) {
-        helper.setText(R.id.tv_serial_number, bean.getOpen_purview());
+        int position = helper.getPosition();
+        String number="";
+        if (position<10){
+            number="0"+position;
+        }
+        helper.setText(R.id.tv_serial_number, number);
         helper.setText(R.id.tv_num, bean.getUnickname());
-        i++;
-        if(getData()!=null && getData().size()==i){
+        LogUtils.d("davi getData().size() "+getData().size()+"  position  "+position);
+        if(getData()!=null && getData().size()==position+1){
             helper.getView(R.id.my_view).setVisibility(View.GONE);
-            i=0;
         }else {
             helper.getView(R.id.my_view).setVisibility(View.VISIBLE);
         }
