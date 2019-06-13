@@ -16,6 +16,7 @@ import com.kaadas.lock.mvp.presenter.deviceaddpresenter.BindBlePresenter;
 import com.kaadas.lock.mvp.view.deviceaddview.IBindBleView;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.util.HttpUtils;
+import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.ToastUtil;
@@ -38,6 +39,7 @@ public class AddBluetoothThirdActivity extends BaseActivity<IBindBleView, BindBl
     private String password1;
     private String deviceName;
     private int version;
+    private boolean bindSuccess = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -50,6 +52,7 @@ public class AddBluetoothThirdActivity extends BaseActivity<IBindBleView, BindBl
         version = intent.getIntExtra(KeyConstants.BLE_VERSION,0);
         //pwd1设置给Presenter使用
         mPresenter.setPwd1(password1, isBind,version);
+        mPresenter.listenConnectState();
         ButterKnife.bind(this);
 
         LogUtils.e("是否绑定流程   " + isBind);
@@ -81,9 +84,7 @@ public class AddBluetoothThirdActivity extends BaseActivity<IBindBleView, BindBl
                 finish();
                 break;
             case R.id.already_pair_network:
-                Intent pairIntent = new Intent(this, AddBluetoothSuccessActivity.class);
-                pairIntent.putExtra(KeyConstants.DEVICE_NAME, deviceName);
-                startActivity(pairIntent);
+
                 break;
             case R.id.help:
                 Intent intent = new Intent(this, DeviceAddHelpActivity.class);
@@ -94,10 +95,16 @@ public class AddBluetoothThirdActivity extends BaseActivity<IBindBleView, BindBl
 
     @Override
     public void onBindSuccess(String deviceName) {
+        bindSuccess = true;
         this.deviceName = deviceName;
         LogUtils.e("绑定成功   " + deviceName);
-        alreadyPairNetwork.setTextColor(Color.parseColor("#1F96F7"));
-        alreadyPairNetwork.setClickable(true);
+//        alreadyPairNetwork.setTextColor(Color.parseColor("#1F96F7"));
+//        alreadyPairNetwork.setClickable(true);
+
+        Intent pairIntent = new Intent(this, AddBluetoothSuccessActivity.class);
+        pairIntent.putExtra(KeyConstants.DEVICE_NAME, deviceName);
+        startActivity(pairIntent);
+
     }
 
     @Override
@@ -147,4 +154,28 @@ public class AddBluetoothThirdActivity extends BaseActivity<IBindBleView, BindBl
     public void readLockTypeSucces() {
 
     }
+
+    @Override
+    public void onDeviceStateChange(boolean isConnected) {  //设备连接状态改变   连接成功时提示正在鉴权，连接失败时直接提示用户
+        if (bindSuccess){
+            return;
+        }
+        if (!isConnected)  {
+            //Context context, String title, String content, String query, ClickListener clickListener
+            AlertDialogUtil.getInstance().noEditSingleCanNotDismissButtonDialog(AddBluetoothThirdActivity.this, getString(R.string.hint), getString(R.string.ble_disconnected_please_retry), getString(R.string.confirm), new AlertDialogUtil.ClickListener() {
+                @Override
+                public void left() {
+                    finish();
+                    startActivity(new Intent(AddBluetoothThirdActivity.this,AddBluetoothSearchActivity.class));
+                }
+
+                @Override
+                public void right() {
+                    finish();
+                    startActivity(new Intent(AddBluetoothThirdActivity.this,AddBluetoothSearchActivity.class));
+                }
+            });
+        }
+    }
+
 }

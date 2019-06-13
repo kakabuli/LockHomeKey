@@ -1067,4 +1067,5 @@
     <string name="warrning_lock_block">门锁堵转报警</string>
     <string name="warrning_machine_key_open">机械钥匙开锁报警</string>
     <string name="get_version_code_fail">获取版本号失败</string>
+    <string name="ble_disconnected_please_retry">设备蓝牙已断开，无法绑定，重新搜索</string>
 </resources>
