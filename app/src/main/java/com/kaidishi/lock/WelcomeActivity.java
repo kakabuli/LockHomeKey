@@ -26,6 +26,7 @@ import com.kaadas.lock.publiclibrary.ble.BleService;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttService;
 import com.kaadas.lock.utils.CheckLanguageUtil;
 import com.kaadas.lock.utils.KeyConstants;
+import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.NetUtil;
 import com.kaadas.lock.utils.Rom;
 import com.kaadas.lock.utils.SPUtils;
@@ -45,51 +46,57 @@ public class WelcomeActivity extends BaseActivity<ISplashView, SplashPresenter<I
     private int mVersionCode;
     private String mVersionName;
     String Tag="sip_kaidishi";
-
+    private long currentTime=0;
+    private long remainTime=0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         CheckLanguageUtil.getInstance().checkLag();//语言
         initData();
-
         executeGeTui();
-
-
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                String pwd = CacheFloder.readHandPassword(ACache.get(MyApplication.getInstance()), MyApplication.getInstance().getUid() + "handPassword");
-                String fingerPwd = CacheFloder.readPhoneFingerPrint(ACache.get(MyApplication.getInstance()), MyApplication.getInstance().getUid() + "fingerStatus");
-                //一秒后判断当前是否登陆   如果登陆 跳转至首页   如果没有登陆  跳转至登陆界面
-                if (TextUtils.isEmpty(MyApplication.getInstance().getToken())) {  //没有登陆
-                    boolean showGuidePage = (boolean) SPUtils.getProtect(KeyConstants.SHOW_GUIDE_PAGE, false);
-                    if (!showGuidePage) {
-                        //第一次
-                        SPUtils.putProtect(KeyConstants.SHOW_GUIDE_PAGE, true);
-                        startActivity(new Intent(WelcomeActivity.this, GuidePageActivity.class));
+        MqttService mqttService=MyApplication.getInstance().getMqttService();
+        BleService bleService=MyApplication.getInstance().getBleService();
+        if (mqttService!=null&&bleService!=null){
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    String pwd = CacheFloder.readHandPassword(ACache.get(MyApplication.getInstance()), MyApplication.getInstance().getUid() + "handPassword");
+                    String fingerPwd = CacheFloder.readPhoneFingerPrint(ACache.get(MyApplication.getInstance()), MyApplication.getInstance().getUid() + "fingerStatus");
+                    //一秒后判断当前是否登陆   如果登陆 跳转至首页   如果没有登陆  跳转至登陆界面
+                    if (TextUtils.isEmpty(MyApplication.getInstance().getToken())) {  //没有登陆
+                        boolean showGuidePage = (boolean) SPUtils.getProtect(KeyConstants.SHOW_GUIDE_PAGE, false);
+                        if (!showGuidePage) {
+                            //第一次
+                            SPUtils.putProtect(KeyConstants.SHOW_GUIDE_PAGE, true);
+                            startActivity(new Intent(WelcomeActivity.this, GuidePageActivity.class));
+                            finish();
+                        } else {
+                            startActivity(new Intent(WelcomeActivity.this, LoginActivity.class));
+                            finish();
+                        }
+                    } else if (!TextUtils.isEmpty(fingerPwd)) {
+                        //存在指纹密码
+                        startActivity(new Intent(WelcomeActivity.this, PersonalVerifyFingerPrintActivity.class));
+                        finish();
+                    } else if (!TextUtils.isEmpty(pwd)) {
+                        //存在手势密码
+                        Intent intent = new Intent(WelcomeActivity.this, PersonalVerifyGesturePasswordActivity.class);
+                        intent.putExtra(KeyConstants.SOURCE,"WelcomeActivity");
+                        startActivity(intent);
                         finish();
                     } else {
-                        startActivity(new Intent(WelcomeActivity.this, LoginActivity.class));
+                        startActivity(new Intent(WelcomeActivity.this, MainActivity.class));
                         finish();
                     }
-                } else if (!TextUtils.isEmpty(fingerPwd)) {
-                    //存在指纹密码
-                    startActivity(new Intent(WelcomeActivity.this, PersonalVerifyFingerPrintActivity.class));
-                    finish();
-                } else if (!TextUtils.isEmpty(pwd)) {
-                    //存在手势密码
-                    Intent intent = new Intent(WelcomeActivity.this, PersonalVerifyGesturePasswordActivity.class);
-                    intent.putExtra(KeyConstants.SOURCE,"WelcomeActivity");
-                    startActivity(intent);
-                    finish();
-                } else {
-                    startActivity(new Intent(WelcomeActivity.this, MainActivity.class));
-                    finish();
-                }
 
-            }
-        }, 3 * 1000);
+                }
+            }, 3 * 1000);
+        }else{
+            LogUtils.e("监听蓝牙和mqtt服务");
+            mPresenter.listenerServiceConnect();
+            currentTime=System.currentTimeMillis();
+        }
     }
 
     @Override
@@ -131,6 +138,83 @@ public class WelcomeActivity extends BaseActivity<ISplashView, SplashPresenter<I
     @Override
     public void getVersionFail() {
 
+    }
+
+    @Override
+    public void serviceConnectSuccess() {
+        currentTime=System.currentTimeMillis()-currentTime;
+        remainTime=3*1000-currentTime;
+        if (remainTime<0){
+            remainTime=0;
+        }
+        LogUtils.e("当前是多少时间   "+currentTime+"剩余多少时间   "+remainTime);
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                String pwd = CacheFloder.readHandPassword(ACache.get(MyApplication.getInstance()), MyApplication.getInstance().getUid() + "handPassword");
+                String fingerPwd = CacheFloder.readPhoneFingerPrint(ACache.get(MyApplication.getInstance()), MyApplication.getInstance().getUid() + "fingerStatus");
+                //一秒后判断当前是否登陆   如果登陆 跳转至首页   如果没有登陆  跳转至登陆界面
+                if (TextUtils.isEmpty(MyApplication.getInstance().getToken())) {  //没有登陆
+                    boolean showGuidePage = (boolean) SPUtils.getProtect(KeyConstants.SHOW_GUIDE_PAGE, false);
+                    if (!showGuidePage) {
+                        //第一次
+                        SPUtils.putProtect(KeyConstants.SHOW_GUIDE_PAGE, true);
+                        startActivity(new Intent(WelcomeActivity.this, GuidePageActivity.class));
+                        finish();
+                    } else {
+                        startActivity(new Intent(WelcomeActivity.this, LoginActivity.class));
+                        finish();
+                    }
+                } else if (!TextUtils.isEmpty(fingerPwd)) {
+                    //存在指纹密码
+                    startActivity(new Intent(WelcomeActivity.this, PersonalVerifyFingerPrintActivity.class));
+                    finish();
+                } else if (!TextUtils.isEmpty(pwd)) {
+                    //存在手势密码
+                    Intent intent = new Intent(WelcomeActivity.this, PersonalVerifyGesturePasswordActivity.class);
+                    intent.putExtra(KeyConstants.SOURCE,"WelcomeActivity");
+                    startActivity(intent);
+                    finish();
+                } else {
+                    startActivity(new Intent(WelcomeActivity.this, MainActivity.class));
+                    finish();
+                }
+
+
+            }
+        }, remainTime);
+    }
+
+    @Override
+    public void serviceConnectThrowable() {
+        String pwd = CacheFloder.readHandPassword(ACache.get(MyApplication.getInstance()), MyApplication.getInstance().getUid() + "handPassword");
+        String fingerPwd = CacheFloder.readPhoneFingerPrint(ACache.get(MyApplication.getInstance()), MyApplication.getInstance().getUid() + "fingerStatus");
+        //一秒后判断当前是否登陆   如果登陆 跳转至首页   如果没有登陆  跳转至登陆界面
+        if (TextUtils.isEmpty(MyApplication.getInstance().getToken())) {  //没有登陆
+            boolean showGuidePage = (boolean) SPUtils.getProtect(KeyConstants.SHOW_GUIDE_PAGE, false);
+            if (!showGuidePage) {
+                //第一次
+                SPUtils.putProtect(KeyConstants.SHOW_GUIDE_PAGE, true);
+                startActivity(new Intent(WelcomeActivity.this, GuidePageActivity.class));
+                finish();
+            } else {
+                startActivity(new Intent(WelcomeActivity.this, LoginActivity.class));
+                finish();
+            }
+        } else if (!TextUtils.isEmpty(fingerPwd)) {
+            //存在指纹密码
+            startActivity(new Intent(WelcomeActivity.this, PersonalVerifyFingerPrintActivity.class));
+            finish();
+        } else if (!TextUtils.isEmpty(pwd)) {
+            //存在手势密码
+            Intent intent = new Intent(WelcomeActivity.this, PersonalVerifyGesturePasswordActivity.class);
+            intent.putExtra(KeyConstants.SOURCE,"WelcomeActivity");
+            startActivity(intent);
+            finish();
+        } else {
+            startActivity(new Intent(WelcomeActivity.this, MainActivity.class));
+            finish();
+        }
     }
 
     @Override
