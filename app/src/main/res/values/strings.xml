@@ -28,6 +28,9 @@
     <string name="safe_mode_dialog">请去新增开锁方式，启动安全模式</string>
     <string name="cancel">取消</string>
     <string name="query">确认</string>
+
+
+
     <string name="get_verification_content">重新获取(%1$s)</string>
     <string name="verification_verify_error">请输入六位验证码</string>
     <string name="password_judgment">必须同时存在字母和数字,并且在6-12位</string>
@@ -1067,4 +1070,5 @@
     <string name="warrning_lock_block">门锁堵转报警</string>
     <string name="warrning_machine_key_open">机械钥匙开锁报警</string>
     <string name="get_version_code_fail">获取版本号失败</string>
+    <string name="please_refresh_page_get_newdata">请刷新页面,获取最新数据！</string>
 </resources>
