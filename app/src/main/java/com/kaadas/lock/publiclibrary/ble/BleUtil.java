@@ -322,6 +322,9 @@ public class BleUtil {
             buffer.append(context.getString(R.string.warrning_machine_key_open) + " ");
         }
 
+
+        LogUtils.e("收到报警信息   " + buffer.toString());
+
         if (TextUtils.isEmpty(buffer.toString())) {
             return null;
         }
