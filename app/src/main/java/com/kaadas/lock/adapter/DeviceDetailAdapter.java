@@ -116,7 +116,7 @@ public class DeviceDetailAdapter extends BaseQuickAdapter<HomeShowBean, BaseView
                 String status="";
                 BleLockInfo bleLockInfo= (BleLockInfo) item.getObject();
                 if (bleLockInfo!=null) {
-                    if (bleLockInfo.isConnected()) {
+                    if (bleLockInfo.isAuth()) {
                         status = "online";
                     } else {
                         status = "offline";

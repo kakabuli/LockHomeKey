@@ -15,7 +15,7 @@ public class ToastUtil {
 
     private ToastUtil(Context context) {
         this.context = context;
-        mToast = Toast.makeText(context.getApplicationContext(), null, Toast.LENGTH_SHORT);
+        mToast = Toast.makeText(context, null, Toast.LENGTH_LONG);
     }
 
     public static void init(Context context) {
