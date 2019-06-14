@@ -246,7 +246,7 @@ public class GatewayMoreActivity extends BaseActivity<GatewayLockMoreView, Gatew
                         //打开状态 现在关闭
                         loadingDialog.show(getString(R.string.close_silence));
                         if (gatewayId != null && deviceId != null) {
-                            mPresenter.setSoundVolume(gatewayId, deviceId, 2);
+                            mPresenter.setSoundVolume(gatewayId, deviceId, 1);
                         }
                     } else {
                         //关闭状态 现在打开
