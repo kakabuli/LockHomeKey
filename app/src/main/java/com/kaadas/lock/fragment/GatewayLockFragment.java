@@ -133,10 +133,12 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
                         changeOpenLockStatus(1);
                         deviceState.setText(getString(R.string.offline));
                     }
-                    if (gatewayInfo.getEvent_str() != null) {
-                        if (gatewayInfo.getEvent_str().equals("offline")) {
-                            changeOpenLockStatus(1);
-                            deviceState.setText(getString(R.string.offline));
+                    if(gatewayInfo!=null){
+                        if (gatewayInfo.getEvent_str() != null) {
+                            if (gatewayInfo.getEvent_str().equals("offline")) {
+                                changeOpenLockStatus(1);
+                                deviceState.setText(getString(R.string.offline));
+                            }
                         }
                     }
                 } else {

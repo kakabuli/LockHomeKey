@@ -44,10 +44,12 @@ public class GatewayAdapter extends BaseQuickAdapter<HomeShowBean, BaseViewHolde
             ivDeviceType.setImageResource(R.mipmap.cat_eye_icon);
             CateEyeInfo cateEyeInfo= (CateEyeInfo) item.getObject();
             GatewayInfo  gatewayInfo=MyApplication.getInstance().getGatewayById(cateEyeInfo.getGwID());
-            if ("online".equals(gatewayInfo.getEvent_str())){
-                deviceStatus= cateEyeInfo.getServerInfo().getEvent_str();
-            }else{
-                deviceStatus="offline";
+            if (gatewayInfo!=null) {
+                if ("online".equals(gatewayInfo.getEvent_str())) {
+                    deviceStatus = cateEyeInfo.getServerInfo().getEvent_str();
+                } else {
+                    deviceStatus = "offline";
+                }
             }
             power=cateEyeInfo.getPower();
             realPw=power;
@@ -63,10 +65,12 @@ public class GatewayAdapter extends BaseQuickAdapter<HomeShowBean, BaseViewHolde
             ivDeviceType.setImageResource(R.mipmap.default_zigbee_lock_icon);
             GwLockInfo gwLockInfo= (GwLockInfo) item.getObject();
             GatewayInfo  gatewayInfo=MyApplication.getInstance().getGatewayById(gwLockInfo.getGwID());
-            if ("online".equals(gatewayInfo.getEvent_str())){
-                deviceStatus= gwLockInfo.getServerInfo().getEvent_str();
-            }else{
-                deviceStatus="offline";
+            if (gatewayInfo!=null) {
+                if ("online".equals(gatewayInfo.getEvent_str())) {
+                    deviceStatus = gwLockInfo.getServerInfo().getEvent_str();
+                } else {
+                    deviceStatus = "offline";
+                }
             }
             power=gwLockInfo.getPower();
             int realPower=power/2;

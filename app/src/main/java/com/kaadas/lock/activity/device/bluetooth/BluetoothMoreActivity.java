@@ -83,6 +83,11 @@ public class BluetoothMoreActivity extends BaseBleActivity<IDeviceMoreView, Devi
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bluetooth_more);
+        Intent intent = getIntent();
+        String source = intent.getStringExtra(KeyConstants.SOURCE);
+        if ("BluetoothLockFunctionV6V7Activity".equals(source)){
+           rlAm.setVisibility(View.GONE);
+        }
         bleLockInfo = mPresenter.getBleLockInfo();
         ButterKnife.bind(this);
         initClick();
