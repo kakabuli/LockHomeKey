@@ -268,6 +268,7 @@ public class OldBleLockFragment extends BaseBleFragment<IOldBleLockView, OldBleL
                 if (!isConnectingDevice && !bleLockInfo.isAuth() && !isDestroy) {  //如果没有正在连接设备
                     //连接设备
                     mPresenter.attachView(OldBleLockFragment.this);
+                    mPresenter.setBleLockInfo(bleLockInfo);
                     mPresenter.isAuth(bleLockInfo, true);
                     mPresenter.getAllPassword(bleLockInfo, false);
 
