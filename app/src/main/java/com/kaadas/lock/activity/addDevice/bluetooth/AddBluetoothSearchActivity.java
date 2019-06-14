@@ -253,7 +253,7 @@ public class AddBluetoothSearchActivity extends BaseActivity<ISearchDeviceView, 
             }
             @Override
             public void right() {
-                mPresenter.bindDevice(device, bindFlag);
+                mPresenter.bindDeviceInit(device, bindFlag);
                 showLoading(getString(R.string.connecting_ble));
             }
         });

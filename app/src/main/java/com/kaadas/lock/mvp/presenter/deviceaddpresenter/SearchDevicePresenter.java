@@ -196,6 +196,11 @@ public class SearchDevicePresenter<T> extends BasePresenter<ISearchDeviceView> {
     private int connectTimes = 0;
 
 
+    public void bindDeviceInit(BluetoothDevice device, boolean isBind) {
+        connectTimes = 0;
+        bindDevice(device, isBind);
+    }
+
     public void bindDevice(BluetoothDevice device, boolean isBind) {
         LogUtils.e("开始绑定");
         this.isBind = isBind;
