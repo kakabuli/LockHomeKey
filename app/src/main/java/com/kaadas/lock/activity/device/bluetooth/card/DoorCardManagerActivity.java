@@ -84,11 +84,17 @@ public class DoorCardManagerActivity extends BaseBleActivity<ICardManagerView, C
         initRecycleview();
         initData();
         initRefresh();
+        mPresenter.getAllPassword(bleLockInfo, false);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
         mPresenter.getAllPassword(bleLockInfo, false);
     }
 

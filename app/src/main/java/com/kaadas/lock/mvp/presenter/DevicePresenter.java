@@ -76,8 +76,8 @@ public class DevicePresenter<T> extends BasePresenter<IDeviceView> {
                             return mqttData.getFunc().equalsIgnoreCase(MqttConstant.GET_ALL_BIND_DEVICE);
                         }
                     })
-                    .compose(RxjavaHelper.observeOnMainThread())
                     .timeout(10 * 1000, TimeUnit.MILLISECONDS)
+                    .compose(RxjavaHelper.observeOnMainThread())
                     .subscribe(new Consumer<MqttData>() {
                         @Override
                         public void accept(MqttData mqttData) throws Exception {

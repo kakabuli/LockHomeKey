@@ -1,15 +1,23 @@
 package com.kaadas.lock.mvp.presenter;
 
+import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.mvp.mvpbase.BasePresenter;
 import com.kaadas.lock.bean.VersionBean;
 import com.kaadas.lock.publiclibrary.http.XiaokaiNewServiceImp;
 import com.kaadas.lock.mvp.view.ISplashView;
+import com.kaadas.lock.publiclibrary.http.util.RxjavaHelper;
 
+
+import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 
 public class SplashPresenter<T> extends BasePresenter<ISplashView> {
+
+    private Disposable listenerServiceDisposable;
+
 
     //请求App的版本信息
     public void getAppVersion() {
@@ -40,4 +48,32 @@ public class SplashPresenter<T> extends BasePresenter<ISplashView> {
         });
     }
 
+    //监听蓝牙服务启动成功和Mqtt服务启动成功
+    public void listenerServiceConnect() {
+        toDisposable(listenerServiceDisposable);
+        listenerServiceDisposable = MyApplication.getInstance()
+                .listenerServiceConnect()
+                .timeout(6*1000, TimeUnit.MILLISECONDS)
+                .compose(RxjavaHelper.observeOnMainThread())
+                .subscribe(new Consumer<Integer>() {
+            @Override
+            public void accept(Integer integer) throws Exception {
+                if (integer==2){
+                    toDisposable(listenerServiceDisposable);
+                    if (mViewRef!=null&&mViewRef.get()!=null){
+                        mViewRef.get().serviceConnectSuccess();
+                    }
+
+                }
+            }
+        }, new Consumer<Throwable>() {
+            @Override
+            public void accept(Throwable throwable) throws Exception {
+                if (mViewRef!=null&&mViewRef.get()!=null){
+                    mViewRef.get().serviceConnectThrowable();
+                }
+            }
+        });
+        compositeDisposable.add(listenerServiceDisposable);
+    }
 }

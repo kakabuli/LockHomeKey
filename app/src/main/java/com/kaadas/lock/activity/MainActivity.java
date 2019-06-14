@@ -38,6 +38,7 @@ import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.publiclibrary.bean.CateEyeInfo;
 import com.kaadas.lock.publiclibrary.bean.GatewayInfo;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
+import com.kaadas.lock.publiclibrary.mqtt.util.MqttService;
 import com.kaadas.lock.publiclibrary.ota.OTADialogActivity;
 import com.kaadas.lock.utils.Constants;
 import com.kaadas.lock.utils.KeyConstants;
@@ -103,8 +104,11 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
         ButterKnife.bind(this);
         PermissionUtil.getInstance().requestPermission(PermissionUtil.getInstance().permission, this);
         rg.setOnCheckedChangeListener(this);
-        if (MyApplication.getInstance().getMqttService().getMqttClient() == null || !MyApplication.getInstance().getMqttService().getMqttClient().isConnected()) {
-            MyApplication.getInstance().getMqttService().mqttConnection(); //连接mqtt
+        MqttService mqttService=MyApplication.getInstance().getMqttService();
+        if (mqttService!=null) {
+            if (mqttService.getMqttClient() == null || !mqttService.getMqttClient().isConnected()) {
+                MyApplication.getInstance().getMqttService().mqttConnection(); //连接mqtt
+            }
         }
         fragments.add(new HomePageFragment());
         fragments.add(new DeviceFragment());
@@ -337,7 +341,8 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
 
     @Override
     public void onWarringUp(String warringContent) {
-        ToastUtil.getInstance().showLong(warringContent);
+        Toast.makeText(MyApplication.getInstance(),warringContent,Toast.LENGTH_LONG).show();
+//        ToastUtil.getInstance().showLong(warringContent);
     }
 
     @Override

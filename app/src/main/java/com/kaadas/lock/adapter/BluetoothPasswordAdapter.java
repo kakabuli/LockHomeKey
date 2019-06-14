@@ -41,12 +41,17 @@ public class BluetoothPasswordAdapter extends BaseQuickAdapter<ForeverPassword, 
 
     @Override
     protected void convert(BaseViewHolder helper, ForeverPassword bean) {
-        int itemCount = getItemCount();
+        List<ForeverPassword> data = getData();
+//        int itemCount = getItemCount();
+        int itemCount=data.size();
         int pos=helper.getPosition();
         LogUtils.d("davi itemCount "+itemCount+"----------pos "+pos);
         if (pos==itemCount-1){
            View view= helper.getView(R.id.my_view);
             view.setVisibility(View.GONE);
+        }else {
+            View view= helper.getView(R.id.my_view);
+            view.setVisibility(View.VISIBLE);
         }
 
         if (bean.getItems() != null) {
