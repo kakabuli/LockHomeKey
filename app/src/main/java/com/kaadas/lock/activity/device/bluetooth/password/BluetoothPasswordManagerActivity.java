@@ -273,9 +273,6 @@ public class BluetoothPasswordManagerActivity extends BaseBleActivity<IPasswordM
         }
 
         list = result.getData().getPwdList();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            list.sort(Comparator.naturalOrder());
-        }
         List<GetPasswordResult.DataBean.TempPassword> tempPwdList = result.getData().getTempPwdList();
         for (int i=0;i<tempPwdList.size();i++){
             GetPasswordResult.DataBean.TempPassword tempPassword = tempPwdList.get(i);
@@ -287,6 +284,10 @@ public class BluetoothPasswordManagerActivity extends BaseBleActivity<IPasswordM
             list.add(foreverPassword);
 
         }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            list.sort(Comparator.naturalOrder());
+        }
+
         processType(list);
         LogUtils.e("获取到的结果，    " + result.getData().getPwdList().toString());
         initRecycleview();
