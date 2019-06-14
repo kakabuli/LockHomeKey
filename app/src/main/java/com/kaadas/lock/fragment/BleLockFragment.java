@@ -162,7 +162,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
             public void run() {
                 LogUtils.e(" 首页锁状态  反锁状态   " + bleLockInfo.getBackLock() + "    安全模式    " + bleLockInfo.getSafeMode() + "   布防模式   " + bleLockInfo.getArmMode());
                 isOpening = false;
-                if (bleLockInfo.isConnected()) {
+                if (bleLockInfo.isAuth()) {
                     changeOpenLockStatus(8);
                 } else {
                     changeOpenLockStatus(13);
@@ -177,7 +177,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
                 if (bleLockInfo.getArmMode() == 1) {//布防模式
                     changeOpenLockStatus(4);
                 }
-                if (bleLockInfo.isConnected()) {
+                if (bleLockInfo.isAuth()) {
                     if (bleLockInfo.isLockStatusException()) {
                         tvDeviceStatus.setText(getString(R.string.no_normal));
                     } else {
@@ -270,6 +270,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
             public void onSelectChange(boolean isSelect) {
                 if (!isSelect) {
                     mPresenter.detachView();
+                    isOpening = false;
                 } else {
                     LogUtils.e("切换到当前界面  设备11  isdestroy  " + isDestroy + this + isCurrentFragment);
                     //切换到当前页面
@@ -324,6 +325,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
                     }
                 } else {
                     mPresenter.detachView();
+                    isOpening = false;
                     isCurrentFragment = false;
                 }
             }
@@ -348,6 +350,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
             mPresenter.getAllPassword(bleLockInfo, false);
         } else {
             mPresenter.detachView();
+            isOpening = false;
         }
 
         if (position == 0 && position == homeFragment.getCurrentPosition()) {
@@ -398,7 +401,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
         if (!isAdded()) {
             return;
         }
-        if (bleLockInfo.isConnected()) {
+        if (bleLockInfo.isAuth()) {
             if (bleLockInfo.isLockStatusException()) {
                 tvDeviceStatus.setText(getString(R.string.no_normal));
             } else {
@@ -737,7 +740,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
             case R.id.rl_device_dynamic:
             case R.id.iv_device_dynamic:
                 bleLockInfo.setLockStatusException(false);
-                if (bleLockInfo.isConnected()) {
+                if (bleLockInfo.isAuth()) {
                     if (bleLockInfo.isLockStatusException()) {
                         tvDeviceStatus.setText(getString(R.string.no_normal));
                     } else {

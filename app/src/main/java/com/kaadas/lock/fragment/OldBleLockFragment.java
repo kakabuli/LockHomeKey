@@ -162,6 +162,7 @@ public class OldBleLockFragment extends BaseBleFragment<IOldBleLockView, OldBleL
                 if (!isSelect) {
                     if (mPresenter.isAttach()) {
                         mPresenter.detachView();
+                        isOpening = false;
                     }
                 } else {
                     LogUtils.e("切换到当前界面  设备22  isdestroy  " + isDestroy + this + isCurrentFragment);
@@ -218,6 +219,7 @@ public class OldBleLockFragment extends BaseBleFragment<IOldBleLockView, OldBleL
                 } else {
                     if (mPresenter.isAttach()) {
                         mPresenter.detachView();
+                        isOpening = false;
                     }
                     isCurrentFragment = false;
                 }
@@ -248,6 +250,7 @@ public class OldBleLockFragment extends BaseBleFragment<IOldBleLockView, OldBleL
         } else {
             if (mPresenter.isAttach()) {
                 mPresenter.detachView();
+                isOpening = false;
             }
 
         }

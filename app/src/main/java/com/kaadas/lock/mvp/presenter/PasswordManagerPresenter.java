@@ -421,6 +421,8 @@ public class PasswordManagerPresenter<T> extends BlePresenter<IPasswordManagerVi
                                 }
                             }
 
+                            LogUtils.e("查询到的周计划是   "+id+"   " + Arrays.toString(strWeeks));
+
                             //周期密码
                             showList.get(position).setType(3);
                             showList.get(position).setItems(Arrays.asList(strWeeks));
