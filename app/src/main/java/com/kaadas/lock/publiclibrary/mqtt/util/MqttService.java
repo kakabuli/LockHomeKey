@@ -191,11 +191,15 @@ public class MqttService extends Service {
                 disconnectedBufferOptions.setBufferSize(100);
                 disconnectedBufferOptions.setPersistBuffer(false);
                 disconnectedBufferOptions.setDeleteOldestMessages(false);
-                mqttClient.setBufferOpts(disconnectedBufferOptions);
-                //连接成功之后订阅主题
-                mqttSubscribe(mqttClient, MqttConstant.getSubscribeTopic(userId), 2);
-                reconnectionNum = 10;
-                connectStateObservable.onNext(true);
+                if (mqttClient!=null){
+                    if (disconnectedBufferOptions!=null){
+                        mqttClient.setBufferOpts(disconnectedBufferOptions);
+                    }
+                    //连接成功之后订阅主题
+                    mqttSubscribe(mqttClient, MqttConstant.getSubscribeTopic(userId), 2);
+                    reconnectionNum = 10;
+                    connectStateObservable.onNext(true);
+                }
             }
 
             @Override
