@@ -140,6 +140,12 @@ public class SearchDevicePresenter<T> extends BasePresenter<ISearchDeviceView> {
 
                     @Override
                     public void onNext(Response<CheckBindResult> stringResponse) {
+                        if (stringResponse.body() == null){
+                            if (mViewRef != null) {
+                                mViewRef.get().checkBindFailed();
+                            }
+                            return;
+                        }
                         if ("202".equals(stringResponse.body().getCode())) {
                             if (mViewRef != null) {
                                 mViewRef.get().onAlreadyBind(device);

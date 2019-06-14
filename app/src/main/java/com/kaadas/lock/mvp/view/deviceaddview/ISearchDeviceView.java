@@ -107,7 +107,10 @@ public interface ISearchDeviceView extends IBaseView {
      * 获取是否绑定  服务器返回失败
      */
     void onCheckBindFailedServer(String code);
-
+    /**
+     * 检查绑定失败   网络异常
+     */
+    void checkBindFailed( );
 
 
 }

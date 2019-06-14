@@ -88,7 +88,7 @@
     <string name="upload_file_fail">上传文件失败</string>
     <string name="verification_send_too_many">验证码发送次数过多，稍后再试</string>
     <string name="register_memenet_fail">register memenet fail</string>
-    <string name="logout_fail">登出失败</string>
+    <string name="logout_fail">退出失败 </string>
     <string name="add_device_fail">添加设备失败</string>
     <string name="operation_fail">操作失败</string>
     <string name="open_lock_fail">开锁失败！</string>
@@ -1070,4 +1070,5 @@
     <string name="get_version_code_fail">获取版本号失败</string>
     <string name="ble_disconnected_please_retry">设备蓝牙已断开，无法绑定，重新搜索</string>
     <string name="please_refresh_page_get_newdata">请刷新页面,获取最新数据！</string>
+    <string name="is_login_out">正在退出...</string>
 </resources>

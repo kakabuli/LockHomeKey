@@ -153,32 +153,31 @@ public class PersonalSystemSettingActivity extends BaseActivity<ISystemSettingVi
             @Override
             public void right() {
                 mPresenter.loginOut();
-                //退出mqtt
-                if (MyApplication.getInstance().getMqttService()!=null){
-                  MyApplication.getInstance().getMqttService().httpMqttDisconnect();
-                }
-                MyApplication.getInstance().tokenInvalid(false);
-
-                //清除缓存数据，关闭会话。
-//                MyApplication.getInstance().setRemoveDBData();
-//                MyApplication.getInstance().getDaoSession().clear();
+                showLoading(getString(R.string.is_login_out));
             }
         });
     }
 
     @Override
     public void onLoginOutSuccess() {
-
+        hiddenLoading();
+        //退出mqtt
+        if (MyApplication.getInstance().getMqttService()!=null){
+            MyApplication.getInstance().getMqttService().httpMqttDisconnect();
+        }
+        MyApplication.getInstance().tokenInvalid(false);
     }
 
     @Override
     public void onLoginOutFailed(Throwable throwable) {
+        hiddenLoading();
         ToastUtil.getInstance().showShort(getString(R.string.logout_fail) + HttpUtils.httpProtocolErrorCode(this, throwable));
         LogUtils.e("退出失败  " + throwable.getMessage());
     }
 
     @Override
     public void onLoginOutFailedServer(BaseResult result) {
+        hiddenLoading();
         ToastUtil.getInstance().showShort(getString(R.string.logout_fail) + HttpUtils.httpErrorCode(this, result.getCode()));
         LogUtils.e("退出失败  " + result.getMsg());
     }
