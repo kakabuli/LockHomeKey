@@ -116,9 +116,16 @@ public class DevicePresenter<T> extends BasePresenter<IDeviceView> {
                 && bleService.getBleLockInfo().getServerLockInfo().getLockName().equals(bleLockInfo.getServerLockInfo().getLockName())) {
             ServerBleDevice serviceLockInfo = bleService.getBleLockInfo().getServerLockInfo();
             ServerBleDevice serverLockInfo = bleLockInfo.getServerLockInfo();
-            if (serverLockInfo.getPassword1().equals(serviceLockInfo.getPassword1()) && serverLockInfo.getPassword2().equals(serviceLockInfo.getPassword2())) {
-                LogUtils.e("进来了  设备  数据一致   " + bleService.getBleLockInfo().getServerLockInfo().toString());
-                return;
+            if (serverLockInfo.getPassword1() != null && serverLockInfo.getPassword2() != null) {
+                if (serverLockInfo.getPassword1().equals(serviceLockInfo.getPassword1()) && serverLockInfo.getPassword2().equals(serviceLockInfo.getPassword2())) {
+                    LogUtils.e("进来了  设备  数据一致   " + bleService.getBleLockInfo().getServerLockInfo().toString());
+                    return;
+                }
+            } else {
+                if ((serviceLockInfo.getPassword1() == null && serverLockInfo.getPassword1() == null) &&(serviceLockInfo.getPassword2() == null && serverLockInfo.getPassword2() == null) ) {
+                    LogUtils.e("进来了 密码为空 设备  数据一致   " + bleService.getBleLockInfo().getServerLockInfo().toString());
+                    return;
+                }
             }
         }
         bleService.setBleLockInfo(bleLockInfo);

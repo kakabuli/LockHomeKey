@@ -126,7 +126,7 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
     }
 
     private void initView() {
-        viewPager.setOffscreenPageLimit(3);
+//        viewPager.setOffscreenPageLimit(3);
         mRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -138,9 +138,15 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
                 int index = group.indexOfChild(bt);
                 //设置滚动位置，可使点击radiobutton时，将该radiobutton移动至第二位置
                 scTitle.smoothScrollTo(bt.getLeft() - (int) (scTitle.getWidth() / 3), 0);
-                LogUtils.e("位置改变");
+
                 //根据点击的radiobutton跳转至不同webview界面
-                viewPager.setCurrentItem(index);
+                if (viewPager.getCurrentItem()  != index){
+                    LogUtils.e("位置改变 1 getCurrentItem " + viewPager.getCurrentItem() + "  index  "+index);
+                    viewPager.setCurrentItem(index);
+                }else{
+                    LogUtils.e("位置改变 2  不需要设置  getCurrentItem " + viewPager.getCurrentItem() + "  index  "+index);
+                }
+
             }
         });
 
@@ -230,7 +236,6 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
             rb.setTextSize(13);
             rb.setGravity(Gravity.CENTER);
             //设置图片   根据类型不同显示不同的图片
-
             switch (homeShowBean.getDeviceType()) {
                 case HomeShowBean.TYPE_BLE_LOCK:
                     rb.setCompoundDrawablesRelativeWithIntrinsicBounds(null, getContext().getDrawable(R.drawable.home_rb_lock_drawable), null, null);
@@ -337,9 +342,11 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
             changePage();
             return;
         }
-        viewPager.setCurrentItem(0);
+
+
         UnderLineRadioBtn radioBtn = (UnderLineRadioBtn) mRadioGroup.getChildAt(0);
         radioBtn.setChecked(true);
+
     }
 
     @Override

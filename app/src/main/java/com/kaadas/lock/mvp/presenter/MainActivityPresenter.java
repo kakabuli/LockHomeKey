@@ -102,96 +102,99 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
         getPublishNotify();
         setHomeShowBean();
         listenCatEyeEvent();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (bleService == null){
-                    bleService = MyApplication.getInstance().getBleService();
-                }
-                listerBleVersion();
-                //设置警报提醒
-                toDisposable(warringDisposable);
-                warringDisposable = bleService.listeneDataChange()
-                        .filter(new Predicate<BleDataBean>() {
-                            @Override
-                            public boolean test(BleDataBean bleDataBean) throws Exception {
-                                //最新的蓝牙模块才有报警提示
-                                return bleDataBean.getCmd() == 0x07 && MyApplication.getInstance().getBleService().getBleVersion() == 3;
-                            }
-                        })
-                        .compose(RxjavaHelper.observeOnMainThread())
-                        .subscribe(new Consumer<BleDataBean>() {
-                            @Override
-                            public void accept(BleDataBean bleDataBean) throws Exception {
-                                if (!MyApplication.getInstance().getBleService().getBleLockInfo().isAuth() || MyApplication.getInstance().getBleService().getBleLockInfo().getAuthKey() == null || MyApplication.getInstance().getBleService().getBleLockInfo().getAuthKey().length == 0) {
-                                    LogUtils.e("收到报警记录，但是鉴权帧为空");
-                                    return;
-                                }
-                                bleDataBean.getDevice().getName();
-                                bleDataBean.getCmd();
-                                byte[] deValue = Rsa.decrypt(bleDataBean.getPayload(), MyApplication.getInstance().getBleService().getBleLockInfo().getAuthKey());
-                                LogUtils.e("收到报警上报    " + Rsa.toHexString(deValue));
-                                String nickNameByDeviceName = getNickNameByDeviceName(bleDataBean.getDevice().getName());
-                                int state9 = (deValue[5] & 0b00000010) == 0b00000010 ? 1 : 0;
-                                MyApplication.getInstance().getBleService().getBleLockInfo().setSafeMode(state9);
-                                if (!TextUtils.isEmpty(nickNameByDeviceName)) {
-                                    String warringContent = BleUtil.parseWarring(MyApplication.getInstance(), deValue, nickNameByDeviceName);
-                                    if (mViewRef.get() != null && !TextUtils.isEmpty(warringContent)) {
-                                        mViewRef.get().onWarringUp(warringContent);
-                                    }
-                                } else {
-                                    LogUtils.e("收到报警记录，但是缓存信息中没有该设备  ");
-                                }
-                            }
-                        }, new Consumer<Throwable>() {
-                            @Override
-                            public void accept(Throwable throwable) throws Exception {
 
-                            }
-                        });
-                compositeDisposable.add(warringDisposable);
+        listerBleVersion();
 
 
-                toDisposable(deviceInBootDisposable);
-                deviceInBootDisposable = bleService.onDeviceStateInBoot()
-                        .compose(RxjavaHelper.observeOnMainThread())
-                        .subscribe(new Consumer<BleLockInfo>() {
-                            @Override
-                            public void accept(BleLockInfo bleLockInfo) throws Exception {
-                                LogUtils.e("设备  正在升级模式   " + bleLockInfo.getServerLockInfo().toString());
-                                if (mViewRef.get() != null) {
-                                    mViewRef.get().onDeviceInBoot(bleLockInfo);
-                                }
-                            }
-                        }, new Consumer<Throwable>() {
-                            @Override
-                            public void accept(Throwable throwable) throws Exception {
-                                LogUtils.e("设备   正在升级模式   监听失败    " + bleLockInfo.getServerLockInfo().toString());
-                            }
-                        });
-                compositeDisposable.add(deviceInBootDisposable);
-            }
-        }, 1000);
+
+
     }
 
+
+
+
     private void listerBleVersion() {
-        toDisposable(listerBleVersionDisposable);
-        listerBleVersionDisposable = bleService.listenBleVersionUpdate()
-                .subscribe(new Consumer<NewVersionBean>() {
-                    @Override
-                    public void accept(NewVersionBean newVersionBean) throws Exception {
-                        updateBleVersion(newVersionBean.getDevname(), newVersionBean.getBleVersion());
+        //监听是否有新版本
+        if (bleService!=null){
+            toDisposable(listerBleVersionDisposable);
+            listerBleVersionDisposable = bleService.listenBleVersionUpdate()
+                    .subscribe(new Consumer<NewVersionBean>() {
+                        @Override
+                        public void accept(NewVersionBean newVersionBean) throws Exception {
+                            updateBleVersion(newVersionBean.getDevname(), newVersionBean.getBleVersion());
 
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
+                        }
+                    }, new Consumer<Throwable>() {
+                        @Override
+                        public void accept(Throwable throwable) throws Exception {
 
 
-                    }
-                });
-        compositeDisposable.add(listerBleVersionDisposable);
+                        }
+                    });
+            compositeDisposable.add(listerBleVersionDisposable);
 
+            //设置警报提醒
+            toDisposable(warringDisposable);
+            warringDisposable = bleService.listeneDataChange()
+                    .filter(new Predicate<BleDataBean>() {
+                        @Override
+                        public boolean test(BleDataBean bleDataBean) throws Exception {
+                            //最新的蓝牙模块才有报警提示
+                            return bleDataBean.getCmd() == 0x07 && MyApplication.getInstance().getBleService().getBleVersion() == 3;
+                        }
+                    })
+                    .compose(RxjavaHelper.observeOnMainThread())
+                    .subscribe(new Consumer<BleDataBean>() {
+                        @Override
+                        public void accept(BleDataBean bleDataBean) throws Exception {
+                            if (!MyApplication.getInstance().getBleService().getBleLockInfo().isAuth() || MyApplication.getInstance().getBleService().getBleLockInfo().getAuthKey() == null || MyApplication.getInstance().getBleService().getBleLockInfo().getAuthKey().length == 0) {
+                                LogUtils.e("收到报警记录，但是鉴权帧为空");
+                                return;
+                            }
+                            bleDataBean.getDevice().getName();
+                            bleDataBean.getCmd();
+                            byte[] deValue = Rsa.decrypt(bleDataBean.getPayload(), MyApplication.getInstance().getBleService().getBleLockInfo().getAuthKey());
+                            LogUtils.e("收到报警上报    " + Rsa.toHexString(deValue));
+                            String nickNameByDeviceName = getNickNameByDeviceName(bleDataBean.getDevice().getName());
+                            int state9 = (deValue[5] & 0b00000010) == 0b00000010 ? 1 : 0;
+                            MyApplication.getInstance().getBleService().getBleLockInfo().setSafeMode(state9);
+                            if (!TextUtils.isEmpty(nickNameByDeviceName)) {
+                                String warringContent = BleUtil.parseWarring(MyApplication.getInstance(), deValue, nickNameByDeviceName);
+                                if (mViewRef.get() != null && !TextUtils.isEmpty(warringContent)) {
+                                    mViewRef.get().onWarringUp(warringContent);
+                                }
+                            } else {
+                                LogUtils.e("收到报警记录，但是缓存信息中没有该设备  ");
+                            }
+                        }
+                    }, new Consumer<Throwable>() {
+                        @Override
+                        public void accept(Throwable throwable) throws Exception {
+
+                        }
+                    });
+            compositeDisposable.add(warringDisposable);
+
+            //监听是否是boot模式
+            toDisposable(deviceInBootDisposable);
+            deviceInBootDisposable = bleService.onDeviceStateInBoot()
+                    .compose(RxjavaHelper.observeOnMainThread())
+                    .subscribe(new Consumer<BleLockInfo>() {
+                        @Override
+                        public void accept(BleLockInfo bleLockInfo) throws Exception {
+                            LogUtils.e("设备  正在升级模式   " + bleLockInfo.getServerLockInfo().toString());
+                            if (mViewRef.get() != null) {
+                                mViewRef.get().onDeviceInBoot(bleLockInfo);
+                            }
+                        }
+                    }, new Consumer<Throwable>() {
+                        @Override
+                        public void accept(Throwable throwable) throws Exception {
+                            LogUtils.e("设备   正在升级模式   监听失败    " + bleLockInfo.getServerLockInfo().toString());
+                        }
+                    });
+            compositeDisposable.add(deviceInBootDisposable);
+        }
     }
 
 
@@ -218,8 +221,6 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                         compositeDisposable.add(d);
                     }
                 });
-
-
     }
 
 

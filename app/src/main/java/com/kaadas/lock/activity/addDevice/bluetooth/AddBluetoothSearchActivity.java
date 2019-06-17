@@ -253,7 +253,7 @@ public class AddBluetoothSearchActivity extends BaseActivity<ISearchDeviceView, 
             }
             @Override
             public void right() {
-                mPresenter.bindDevice(device, bindFlag);
+                mPresenter.bindDeviceInit(device, bindFlag);
                 showLoading(getString(R.string.connecting_ble));
             }
         });
@@ -364,6 +364,12 @@ public class AddBluetoothSearchActivity extends BaseActivity<ISearchDeviceView, 
 
     @Override
     public void onCheckBindFailedServer(String code) {
+        hiddenLoading();
+        ToastUtil.getInstance().showLong(R.string.network_exception);
+    }
+
+    @Override
+    public void checkBindFailed() {
         hiddenLoading();
         ToastUtil.getInstance().showLong(R.string.network_exception);
     }

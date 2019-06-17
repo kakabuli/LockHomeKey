@@ -140,6 +140,12 @@ public class SearchDevicePresenter<T> extends BasePresenter<ISearchDeviceView> {
 
                     @Override
                     public void onNext(Response<CheckBindResult> stringResponse) {
+                        if (stringResponse.body() == null){
+                            if (mViewRef != null) {
+                                mViewRef.get().checkBindFailed();
+                            }
+                            return;
+                        }
                         if ("202".equals(stringResponse.body().getCode())) {
                             if (mViewRef != null) {
                                 mViewRef.get().onAlreadyBind(device);
@@ -195,6 +201,11 @@ public class SearchDevicePresenter<T> extends BasePresenter<ISearchDeviceView> {
 
     private int connectTimes = 0;
 
+
+    public void bindDeviceInit(BluetoothDevice device, boolean isBind) {
+        connectTimes = 0;
+        bindDevice(device, isBind);
+    }
 
     public void bindDevice(BluetoothDevice device, boolean isBind) {
         LogUtils.e("开始绑定");

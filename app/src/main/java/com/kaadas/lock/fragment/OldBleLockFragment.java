@@ -142,7 +142,7 @@ public class OldBleLockFragment extends BaseBleFragment<IOldBleLockView, OldBleL
     @Override
     public void onResume() {
         super.onResume();
-        if (!mPresenter.isAttach() &&!isDestroy && homeFragment.isSelectHome) {
+        if (!mPresenter.isAttach() &&!isDestroy && homeFragment.isSelectHome && isCurrentFragment) {
             mPresenter.attachView(this);
             mPresenter.setBleLockInfo(bleLockInfo);
             if (bleLockInfo!=null&&bleLockInfo.isConnected()){
@@ -268,6 +268,7 @@ public class OldBleLockFragment extends BaseBleFragment<IOldBleLockView, OldBleL
                 if (!isConnectingDevice && !bleLockInfo.isAuth() && !isDestroy) {  //如果没有正在连接设备
                     //连接设备
                     mPresenter.attachView(OldBleLockFragment.this);
+                    mPresenter.setBleLockInfo(bleLockInfo);
                     mPresenter.isAuth(bleLockInfo, true);
                     mPresenter.getAllPassword(bleLockInfo, false);
 

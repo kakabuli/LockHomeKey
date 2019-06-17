@@ -37,6 +37,7 @@ public class AddBluetoothSecondActivity extends BaseActivity<IBindBleSecondView,
     private boolean isBind;
     private String password1;
     private int version;
+    private static final int NEXT_ACTIVITY_CODE = 333;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -69,16 +70,24 @@ public class AddBluetoothSecondActivity extends BaseActivity<IBindBleSecondView,
                 nextIntent.putExtra(KeyConstants.PASSWORD1, password1);
                 nextIntent.putExtra(KeyConstants.IS_BIND, isBind);
                 nextIntent.putExtra(KeyConstants.BLE_VERSION, version);
-                startActivity(nextIntent);
+                startActivityForResult(nextIntent,NEXT_ACTIVITY_CODE);
                 break;
             case R.id.help:
                 Intent intent=new Intent(this, DeviceAddHelpActivity.class);
                 startActivity(intent);
-
                 break;
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode ==NEXT_ACTIVITY_CODE && resultCode == RESULT_OK ){
+            if (data != null) {
+                isBind = data.getBooleanExtra(KeyConstants.IS_BIND,true);
+            }
+        }
+    }
 
     @Override
     public void onDeviceStateChange(boolean isConnected) {  //设备连接状态改变   连接成功时提示正在鉴权，连接失败时直接提示用户

@@ -56,13 +56,21 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
         //如果service中有bleLockInfo  并且deviceName一致，就不重新设置。
         LogUtils.e("设置的  设备信息为    " + (this.bleLockInfo == null) + "   " + bleLockInfo.getServerLockInfo().toString());
         this.bleLockInfo = bleLockInfo;
+
         if (bleService.getBleLockInfo() != null
                 && bleService.getBleLockInfo().getServerLockInfo().getLockName().equals(bleLockInfo.getServerLockInfo().getLockName())) {
             ServerBleDevice serviceLockInfo = bleService.getBleLockInfo().getServerLockInfo();
             ServerBleDevice serverLockInfo = bleLockInfo.getServerLockInfo();
-            if (serverLockInfo.getPassword1().equals(serviceLockInfo.getPassword1()) && serverLockInfo.getPassword2().equals(serviceLockInfo.getPassword2())) {
-                LogUtils.e("进来了  设备  数据一致   " + bleService.getBleLockInfo().getServerLockInfo().toString());
-                return;
+            if (serverLockInfo.getPassword1() != null && serverLockInfo.getPassword2() != null) {
+                if (serverLockInfo.getPassword1().equals(serviceLockInfo.getPassword1()) && serverLockInfo.getPassword2().equals(serviceLockInfo.getPassword2())) {
+                    LogUtils.e("进来了  设备  数据一致   " + bleService.getBleLockInfo().getServerLockInfo().toString());
+                    return;
+                }
+            } else {
+                if ((serviceLockInfo.getPassword1() == null && serverLockInfo.getPassword1() == null) &&(serviceLockInfo.getPassword2() == null && serverLockInfo.getPassword2() == null) ) {
+                    LogUtils.e("进来了  密码为空  设备  数据一致   " + bleService.getBleLockInfo().getServerLockInfo().toString());
+                    return;
+                }
             }
         }
         bleService.setBleLockInfo(bleLockInfo);
@@ -170,7 +178,7 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
             return;
         }
 
-        disposable = bleService.getDeviceByMacOrName(this.bleLockInfo.getServerLockInfo().getMacLock(),this.bleLockInfo.getServerLockInfo().getLockName())  //搜索设备
+        disposable = bleService.getDeviceByMacOrName(this.bleLockInfo.getServerLockInfo().getMacLock(), this.bleLockInfo.getServerLockInfo().getLockName())  //搜索设备
                 .timeout(10 * 1000, TimeUnit.MILLISECONDS)
                 .compose(RxjavaHelper.observeOnMainThread())
                 .subscribe(new Consumer<BluetoothDevice>() {
@@ -250,10 +258,10 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
                             if (bleStateBean.isConnected()) {
                                 String bleVersion = bleLockInfo.getServerLockInfo().getBleVersion();
                                 int version = 0;
-                                if (!TextUtils.isEmpty(bleVersion)){
+                                if (!TextUtils.isEmpty(bleVersion)) {
                                     version = Integer.parseInt(bleVersion);
                                 }
-                                if (bleService.getBleVersion() == 1 && version<=1 ) { //如果是最老的模块  直接算是鉴权成功
+                                if (bleService.getBleVersion() == 1 && version <= 1) { //如果是最老的模块  直接算是鉴权成功
                                     if (bleStateBean.isConnected() && bleService.getCurrentDevice() != null &&
                                             bleService.getCurrentDevice().getName().equals(bleLockInfo.getServerLockInfo().getLockName())) {
                                         if (bleLockInfo != null) {
@@ -367,7 +375,7 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
             return;
         }
         byte[] bSystemId = (byte[]) readInfoBean.data;
-        if (bSystemId ==null){
+        if (bSystemId == null) {
             bleService.release();
             return;
         }

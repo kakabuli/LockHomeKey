@@ -302,6 +302,11 @@ public class BleLockInfo implements Serializable {
                 ", doorState=" + doorState +
                 ", backLock=" + backLock +
                 ", readDeviceInfoTime=" + readDeviceInfoTime +
+                ", adminMode=" + adminMode +
+                ", readBatteryTime=" + readBatteryTime +
+                ", supportBackLock=" + supportBackLock +
+                ", bleType=" + bleType +
+                ", lockStatusException=" + lockStatusException +
                 ", serverLockInfo=" + serverLockInfo +
                 '}';
     }
