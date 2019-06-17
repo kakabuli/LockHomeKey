@@ -150,6 +150,7 @@ public class MqttService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        System.exit(0);
         LogUtils.e("mqtt", "MqttService为空");
     }
 

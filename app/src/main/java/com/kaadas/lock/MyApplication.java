@@ -49,7 +49,7 @@ import com.scwang.smartrefresh.layout.header.ClassicsHeader;
 import com.tencent.bugly.crashreport.CrashReport;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
-import com.uuzuche.lib_zxing.activity.ZXingLibrary;
+/*import com.uuzuche.lib_zxing.activity.ZXingLibrary;*/
 
 
 import net.sdvn.cmapi.CMAPI;
@@ -107,7 +107,7 @@ public class MyApplication extends Application {
         initTokenAndUid();  //获取本地UUID
         listenerAppBackOrForge();
         //扫描二维码初始化
-        ZXingLibrary.initDisplayOpinion(this);
+       /* ZXingLibrary.initDisplayOpinion(this);*/
         initMeme();
         regToWx();
         //配置数据库

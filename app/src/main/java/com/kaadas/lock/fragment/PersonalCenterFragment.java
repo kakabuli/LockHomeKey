@@ -14,9 +14,12 @@ import android.widget.TextView;
 
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
+import com.kaadas.lock.activity.addDevice.gateway.AddGatewaySecondActivity;
+import com.kaadas.lock.activity.addDevice.gateway.AddGatewayThirdActivity;
 import com.kaadas.lock.activity.addDevice.zigbeelocknew.AddDeviceZigbeelockNewScanActivity;
 import com.kaadas.lock.activity.addDevice.zigbeelocknew.ProductActivationScanActivity;
 import com.kaadas.lock.activity.my.AboutUsActivity;
+import com.kaadas.lock.activity.my.BarCodeActivity;
 import com.kaadas.lock.activity.my.PersonalFAQActivity;
 import com.kaadas.lock.activity.my.PersonalMessageActivity;
 import com.kaadas.lock.activity.my.PersonalSecuritySettingActivity;
@@ -33,12 +36,16 @@ import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.StorageUtil;
 import com.kaadas.lock.mvp.view.IMyFragmentView;
+import com.kaadas.lock.utils.ToastUtil;
 import com.kaadas.lock.widget.CircleImageView;
+import com.king.zxing.Intents;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+
+import static android.app.Activity.RESULT_OK;
 
 
 /**
@@ -164,7 +171,7 @@ public class PersonalCenterFragment extends BaseFragment<IMyFragmentView, MyFrag
                 break;
             case R.id.product_activition:
                 Intent zigbeeLockIntent=new Intent(getActivity(), ProductActivationScanActivity.class);
-                startActivity(zigbeeLockIntent);
+                startActivityForResult(zigbeeLockIntent,KeyConstants.SCANPRODUCT_REQUEST_CODE);
                 break;
         }
     }
@@ -225,5 +232,41 @@ public class PersonalCenterFragment extends BaseFragment<IMyFragmentView, MyFrag
                 startActivity(intent);
                 break;
         }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode == RESULT_OK && data!=null){
+            switch (requestCode){
+                case KeyConstants.SCANPRODUCT_REQUEST_CODE:
+                    String result = data.getStringExtra(Intents.Scan.RESULT);
+                    LogUtils.e(result+"     产品激活");
+                    if(result.contains(" ")){
+                        result=result.replace(" ","%20");
+                    }
+                    String bar_url="http://s.kaadas.com:8989/extFun/regWeb.asp?uiFrm=2&id=" + result+"&telnum=";
+//                    +"&telnum=18988780718&mail=8618988780718&nickname=8618988780718";
+
+                    //获取手机号码
+                    String phone = (String) SPUtils.get(SPUtils.PHONEN, "");
+                    if (!TextUtils.isEmpty(phone)) {
+                        bar_url= bar_url+phone+"&mail=";
+                    }
+                    String userName = (String) SPUtils.get(SPUtils.USERNAME, "");
+                    if (!TextUtils.isEmpty(userName)) {
+                        bar_url=bar_url+userName+"&nickname="+userName;
+                    }
+                    Intent intent=new Intent(getActivity(), BarCodeActivity.class);
+                    intent.putExtra(KeyConstants.BAR_CODE,bar_url);
+                    startActivity(intent);
+
+                    //     String bar_url="http://s.kaadas.com:8989/extFun/regWeb.asp?uiFrm=2&id=SN-GW01183810798%20MAC-90:F2:78:70:0F:33&telnum=18988780718&mail=8618988780718&nickname=8618988780718";
+
+                    break;
+            }
+
+        }
+
     }
 }

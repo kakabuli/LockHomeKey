@@ -18,6 +18,10 @@ import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.addDevice.bluetooth.AddBluetoothFirstActivity;
 import com.kaadas.lock.activity.addDevice.gateway.AddGatewayFirstActivity;
+import com.kaadas.lock.activity.addDevice.gateway.AddGatewaySecondActivity;
+import com.kaadas.lock.activity.addDevice.gateway.AddGatewayThirdActivity;
+import com.kaadas.lock.activity.addDevice.zigbeelocknew.AddDeviceZigbeeLockNewScanFailActivity;
+import com.kaadas.lock.activity.addDevice.zigbeelocknew.AddDeviceZigbeeLockNewZeroActivity;
 import com.kaadas.lock.activity.addDevice.zigbeelocknew.AddDeviceZigbeelockNewScanActivity;
 import com.kaadas.lock.adapter.DeviceAddItemAdapter;
 import com.kaadas.lock.adapter.DeviceAddSelectItemAdapter;
@@ -30,8 +34,10 @@ import com.kaadas.lock.mvp.view.deviceaddview.DeviceZigBeeDetailView;
 import com.kaadas.lock.publiclibrary.bean.ServerGatewayInfo;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.AllBindDevices;
 import com.kaadas.lock.utils.AlertDialogUtil;
+import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.ToastUtil;
+import com.king.zxing.Intents;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -159,8 +165,7 @@ public class DeviceAddActivity extends BaseActivity<DeviceZigBeeDetailView, Devi
                 break;
             case R.id.scan:
                 Intent zigbeeLockIntent=new Intent(this, AddDeviceZigbeelockNewScanActivity.class);
-                startActivity(zigbeeLockIntent);
-
+                startActivityForResult(zigbeeLockIntent, KeyConstants.SCANGATEWAYNEW_REQUEST_CODE);
                 break;
             case R.id.gateway:
                 gateway.setBackgroundColor(Color.parseColor("#FFFFFF"));
@@ -240,6 +245,33 @@ public class DeviceAddActivity extends BaseActivity<DeviceZigBeeDetailView, Devi
                     flag=true;
                 }
             }
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode == RESULT_OK && data!=null){
+            switch (requestCode){
+                case KeyConstants.SCANGATEWAYNEW_REQUEST_CODE:
+                    String result = data.getStringExtra(Intents.Scan.RESULT);
+                    LogUtils.e("扫描结果是   " + result);
+                    if (result.contains("SN-GW")&&result.contains("MAC-")&&result.contains(" ")){
+                        String[] strs=result.split(" ");
+                        String deviceSN=strs[0].replace("SN-","");
+                        Intent scanSuccessIntent=new Intent(DeviceAddActivity.this, AddDeviceZigbeeLockNewZeroActivity.class);
+                        scanSuccessIntent.putExtra("deviceSN",deviceSN);
+                        LogUtils.e("设备SN是   " + deviceSN);
+                        startActivity(scanSuccessIntent);
+                        finish();
+                    }else{
+                        Intent scanSuccessIntent=new Intent(DeviceAddActivity.this, AddDeviceZigbeeLockNewScanFailActivity.class);
+                        startActivity(scanSuccessIntent);
+                        finish();
+                    }
+                    break;
+            }
+
         }
 
     }

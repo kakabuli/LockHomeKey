@@ -7,12 +7,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.addDevice.DeviceAddActivity;
 import com.kaadas.lock.activity.addDevice.DeviceBindGatewayListActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 import com.kaadas.lock.utils.KeyConstants;
+import com.kaadas.lock.utils.LogUtils;
+import com.king.zxing.Intents;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -27,7 +30,6 @@ public class AddDeviceCatEyeFirstActivity extends BaseAddToApplicationActivity {
     private String pwd;
     private String ssid;
     private String gwId;
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,14 +50,41 @@ public class AddDeviceCatEyeFirstActivity extends BaseAddToApplicationActivity {
                 break;
             case R.id.scan_catEye:
                 Intent scanIntent = new Intent(this, AddDeviceCatEyeScanActivity.class);
-                scanIntent.putExtra(KeyConstants.GW_WIFI_SSID, ssid);
-                scanIntent.putExtra(KeyConstants.GW_WIFI_PWD, pwd);
-                scanIntent.putExtra(KeyConstants.GW_SN, gwId);
-                startActivity(scanIntent);
+                startActivityForResult(scanIntent,KeyConstants.SCANCATEYE_REQUEST_CODE);
                 break;
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode == RESULT_OK && data!=null){
+            switch (requestCode){
+                case KeyConstants.SCANCATEYE_REQUEST_CODE:
+                    String result = data.getStringExtra(Intents.Scan.RESULT);
+                    LogUtils.e("扫描结果是   " + result);
+                    if (result.contains("SN-CH")&&result.contains("MAC-")&&result.contains(" ")){
+                        String[] strs=result.split(" ");
+                        String deviceSN=strs[0].replace("SN-","");
+                        String deviceMac=strs[1].replace("MAC-","");
+                        Intent successIntent=new Intent(AddDeviceCatEyeFirstActivity.this,AddDeviceCatEyeSecondActivity.class);
+                        successIntent.putExtra(KeyConstants.GW_WIFI_SSID, ssid);
+                        successIntent.putExtra(KeyConstants.GW_WIFI_PWD, pwd);
+                        successIntent.putExtra(KeyConstants.DEVICE_SN,deviceSN);
+                        successIntent.putExtra(KeyConstants.DEVICE_MAC,deviceMac);
+                        successIntent.putExtra(KeyConstants.GW_SN,gwId);
+                        startActivity(successIntent);
+                        finish();
 
+                    }else{
+                        Intent scanSuccessIntent=new Intent(AddDeviceCatEyeFirstActivity.this,AddDeviceCatEyeScanFailActivity.class);
+                        startActivity(scanSuccessIntent);
+                        //ToastUtil.getInstance().showShort(R.string.please_scan_cateye_qrcode);
+                    }
+                    break;
+            }
 
+        }
+
+    }
 }
