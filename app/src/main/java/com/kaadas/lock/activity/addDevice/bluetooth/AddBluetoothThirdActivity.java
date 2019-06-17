@@ -76,11 +76,21 @@ public class AddBluetoothThirdActivity extends BaseActivity<IBindBleView, BindBl
         alreadyPairNetwork.setTextColor(Color.parseColor("#7f7f7f"));
     }
 
+    @Override
+    public void onBackPressed() {
+        Intent result = new Intent();
+        result.putExtra(KeyConstants.IS_BIND, mPresenter.isBind());
+        setResult(RESULT_OK,result);
+        super.onBackPressed();
+    }
 
     @OnClick({R.id.back, R.id.already_pair_network, R.id.help})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.back:
+                Intent result = new Intent();
+                result.putExtra(KeyConstants.IS_BIND, mPresenter.isBind());
+                setResult(RESULT_OK,result);
                 finish();
                 break;
             case R.id.already_pair_network:
@@ -132,7 +142,6 @@ public class AddBluetoothThirdActivity extends BaseActivity<IBindBleView, BindBl
     public void onUnbindSuccess() {
         tvNotice.setText(R.string.device_add_third_content_in_net);
         ToastUtil.getInstance().showShort(R.string.unbind_success_innet);
-
     }
 
     @Override

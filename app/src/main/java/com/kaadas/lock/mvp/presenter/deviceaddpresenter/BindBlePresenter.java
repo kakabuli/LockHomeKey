@@ -130,6 +130,26 @@ public class BindBlePresenter<T> extends BasePresenter<IBindBleView> {
     /**
      * 发送三个数据
      */
+    public void sendExitNetResponseData(boolean isSuccess) {
+        //唤醒数据
+//        bleService.sendCommand(OldBleCommandFactory.getWakeUpFrame());
+        //确认帧第一针
+        bleService.sendCommand(OldBleCommandFactory.getInNetResponse(isSuccess));
+
+        /**
+         * 确认帧第二帧
+         */
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                bleService.sendCommand(OldBleCommandFactory.getEndFrame());
+            }
+        }, 100);
+    }
+
+    /**
+     * 发送三个数据
+     */
     public void sendResponseData(boolean isSuccess) {
         //唤醒数据
 //        bleService.sendCommand(OldBleCommandFactory.getWakeUpFrame());
@@ -320,7 +340,7 @@ public class BindBlePresenter<T> extends BasePresenter<IBindBleView> {
 
                         MyApplication.getInstance().getAllDevicesByMqtt(true);
                         if (bleVersion == 1) {
-                            sendResponseData(true);
+                            sendExitNetResponseData(true);
                             listenerInNetNotify(bleVersion);
                         } else {
                             listenerPwd2(bleVersion);
@@ -333,7 +353,7 @@ public class BindBlePresenter<T> extends BasePresenter<IBindBleView> {
                             mViewRef.get().onUnbindFailedServer(baseResult);
                         }
                         if (bleVersion == 1) {
-                            sendResponseData(false);
+                            sendExitNetResponseData(false);
                         }
                     }
 
@@ -344,7 +364,7 @@ public class BindBlePresenter<T> extends BasePresenter<IBindBleView> {
                             mViewRef.get().onUnbindFailed(throwable);
                         }
                         if (bleVersion == 1) {
-                            sendResponseData(false);
+                            sendExitNetResponseData(false);
                         }
                     }
 
@@ -356,6 +376,10 @@ public class BindBlePresenter<T> extends BasePresenter<IBindBleView> {
     }
 
 
+    public boolean isBind() {
+        return isBind;
+    }
+
     private Disposable listenConnectStateDisposable;
 
     public void listenConnectState() {
@@ -365,7 +389,7 @@ public class BindBlePresenter<T> extends BasePresenter<IBindBleView> {
                 .subscribe(new Consumer<BleStateBean>() {
                     @Override
                     public void accept(BleStateBean bleStateBean) throws Exception {
-                        if (mViewRef.get()!=null){
+                        if (mViewRef.get() != null) {
                             mViewRef.get().onDeviceStateChange(bleStateBean.isConnected());
                         }
                     }
