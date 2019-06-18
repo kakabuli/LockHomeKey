@@ -153,15 +153,22 @@ public class P6OtaUpgradeActivity extends BaseAddToApplicationActivity implement
         } else if (BluetoothLeService.ACTION_GATT_DISCONNECTED.equals(action)) {  //断开连接
             Log.e(TAG, "断开连接");
             BluetoothLeService.refreshDeviceCache(BluetoothLeService.getmBluetoothGatt());
-            handler.postDelayed(new Runnable() {
+            new Thread(){
                 @Override
                 public void run() {
+                    super.run();
                     //没有完成  并且正在升级的过程中，断开连接继续连接
-                    if (   isUpdating) {
-                        scanDevices();
+                    try {
+                        Thread.sleep(500);
+                        if (isUpdating) {
+                            scanDevices();
+                        }
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
                     }
+
                 }
-            }, 500);
+            }.start();
         } else if (BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED.equals(action)) { //发现服务
             Log.e(TAG, "发现服务");
             List<BluetoothGattService> supportedGattServices = BluetoothLeService.getSupportedGattServices();
@@ -405,9 +412,13 @@ public class P6OtaUpgradeActivity extends BaseAddToApplicationActivity implement
     public void scanDevices() {
         BluetoothAdapter defaultAdapter = BluetoothAdapter.getDefaultAdapter();
         if (!defaultAdapter.isEnabled()){
+            LogUtils.e("蓝牙未打开");
             ToastUtil.getInstance().showLong(R.string.please_open_ble);
-            defaultAdapter.enable();
+            if (isUpdating){
+                finish();
+            }
             isUpdating = false;
+            return;
         }
 
         if (!GpsUtil.isOPen(this)){

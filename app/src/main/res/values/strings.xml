@@ -969,6 +969,7 @@
     <string name="device_name_cannot_be_empty">设备名称不能为空</string>
     <string name="wifi_password_length">WiFi密码长度8~63位</string>
     <string name="check_update_failed">检查版本信息失败，请稍后再试！</string>
+    <string name="check_update_failed2">检查版本信息失败，请稍后再试！！！</string>
     <string name="data_params_error">数据参数不对</string>
     <string name="sn_error">Sn格式不正确</string>
     <string name="hava_ble_new_version">检测到新蓝牙版本，是否升级？</string>
@@ -1049,7 +1050,7 @@
     <string name="verify_and_turn_on_touch_id">验证并开启Touch ID</string>
     <string name="hand_pwd">手势密码</string>
     <string name="touch_id_call_limited">Touch ID验证错误次数超限\n请使用其他登录方式</string>
-    <string name="please_open_ble">蓝牙未打开，请打开蓝牙！</string>
+    <string name="please_open_ble">升级失败，蓝牙未打开，请打开蓝牙！</string>
     <string name="cateye_call_record">猫眼来电呼叫失败,请关闭麦克风</string>
     <string name="ble_mode">蓝牙模块</string>
     <string name="select_updata_method">请选择更新方式</string>
