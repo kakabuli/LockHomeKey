@@ -31,10 +31,13 @@ import com.kaadas.lock.publiclibrary.linphone.MemeManager;
 import com.kaadas.lock.publiclibrary.linphone.linphone.callback.PhoneCallback;
 import com.kaadas.lock.publiclibrary.linphone.linphone.callback.RegistrationCallback;
 import com.kaadas.lock.publiclibrary.linphone.linphone.util.LinphoneHelper;
+import com.kaadas.lock.publiclibrary.mqtt.MqttCommandFactory;
 import com.kaadas.lock.publiclibrary.mqtt.eventbean.CatEyeEventBean;
 import com.kaadas.lock.publiclibrary.mqtt.eventbean.DeleteDeviceLockBean;
 import com.kaadas.lock.publiclibrary.mqtt.eventbean.GatewayLockAlarmEventBean;
 import com.kaadas.lock.publiclibrary.mqtt.eventbean.GatewayLockInfoEventBean;
+import com.kaadas.lock.publiclibrary.mqtt.publishbean.GatewayComfirmOtaResultBean;
+import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.GatewayOtaNotifyBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.GetBindGatewayStatusResult;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttConstant;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttData;
@@ -62,6 +65,7 @@ import com.kaadas.lock.utils.greenDao.db.GatewayServiceInfoDao;
 
 import net.sdvn.cmapi.Device;
 
+import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.json.JSONObject;
 import org.linphone.core.LinphoneCall;
 
@@ -89,7 +93,8 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
     private CateEyeInfo callInCatEyeInfo;  //呼叫进来的猫眼信息
     private Disposable catEyeEventDisposable;
     private Disposable listerBleVersionDisposable;
-
+    private Disposable listenerGatewayOtaDisposable;
+    private Disposable comfirmGatewayOtaDisposable;
     @Override
     public void authSuccess() {
 
@@ -101,16 +106,48 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
         //网关上线监听
         getPublishNotify();
         setHomeShowBean();
+        //监听猫眼锁的报警信息
         listenCatEyeEvent();
-
         listerBleVersion();
+        //监听网关ota升级
+        listenGatewayOTA();
 
 
 
 
     }
 
+    /**
+     * 监听网关ota升级通知
+     */
+    private void listenGatewayOTA() {
+        if (mqttService!=null){
+            toDisposable(listenerGatewayOtaDisposable);
+            listenerGatewayOtaDisposable=mqttService.listenerDataBack()
+                    .compose(RxjavaHelper.observeOnMainThread())
+                    .subscribe(new Consumer<MqttData>() {
+                        @Override
+                        public void accept(MqttData mqttData) throws Exception {
+                            if (mqttData != null) {
+                                if (MqttConstant.NOTIFY_GATEWAY_OTA.equals(mqttData.getFunc())) {
+                                    //接收到网关ota升级
+                                    GatewayOtaNotifyBean gatewayOtaNotifyBean = new Gson().fromJson(mqttData.getPayload(), GatewayOtaNotifyBean.class);
+                                    if (mViewRef.get()!=null){
+                                        mViewRef.get().gatewayNotifyOtaSuccess(gatewayOtaNotifyBean);
+                                    }
 
+                                }
+                            }
+                        }
+                    }, new Consumer<Throwable>() {
+                        @Override
+                        public void accept(Throwable throwable) throws Exception {
+
+                        }
+                    });
+            compositeDisposable.add(listenerGatewayOtaDisposable);
+        }
+    }
 
 
     private void listerBleVersion() {
@@ -778,6 +815,7 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
         }
         MyApplication.getInstance().setHomeshowDevice(homeShowBeans);
     }
+
 
 
 }

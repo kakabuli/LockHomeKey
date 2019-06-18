@@ -1,6 +1,7 @@
 package com.kaadas.lock.publiclibrary.mqtt;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.AllowCateyeJoinBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.BindGatewayBean;
@@ -8,6 +9,7 @@ import com.kaadas.lock.publiclibrary.mqtt.publishbean.BindGatewayMemeBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.CatEyeInfoBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.DeleteGatewayLockDeviceBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.FtpEnableBean;
+import com.kaadas.lock.publiclibrary.mqtt.publishbean.GatewayComfirmOtaUpgradeBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.GetAMBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.GetAllBindDeviceBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.GetArmLockedBean;
@@ -41,7 +43,9 @@ import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetZBChannel;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.UnBindGatewayBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.UpdateDevNickNameBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.WakeupCameraBean;
+import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.GatewayOtaNotifyBean;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttConstant;
+import com.kaadas.lock.utils.LogUtils;
 
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
@@ -679,9 +683,28 @@ public class MqttCommandFactory {
         return getMessage(getLockRecordTotal,messageId);
     }
 
+    /**
+     * 网关确认ota升级
+     * @param notifyBean
+     * @param uid
+     * @return
+     */
+    public static MqttMessage gatewayOtaUpgrade(GatewayOtaNotifyBean notifyBean,String uid){
+        int messageId=getMessageId();
+        GatewayOtaNotifyBean.ParamsBean notifyParamsBean=notifyBean.getParams();
+        LogUtils.e("ota升级地址"+notifyParamsBean.getFileUrl());
+        GatewayComfirmOtaUpgradeBean.ParamsBean paramsBean=new GatewayComfirmOtaUpgradeBean.ParamsBean(notifyParamsBean.getModelCode(),notifyParamsBean.getChildCode(),notifyParamsBean.getFileUrl(),notifyParamsBean.getSW(),notifyParamsBean.getFileMd5(),notifyParamsBean.getFileLen(),notifyParamsBean.getOtaType(),1,notifyParamsBean.getDeviceList());
+        GatewayComfirmOtaUpgradeBean otaUpgradeBean=new GatewayComfirmOtaUpgradeBean(MqttConstant.CONFIRM_GATEWAY_OTA,notifyBean.getGwId(),notifyBean.getDeviceId(),System.currentTimeMillis(),messageId,uid,uid,paramsBean);
+        LogUtils.e("ota升级地址"+paramsBean.getFileUrl());
+        return getMe(otaUpgradeBean,messageId);
+    }
+
+
+
 
     public static MqttMessage getMessage(Object o, int messageID) {
         String payload = new Gson().toJson(o);
+        LogUtils.e(payload+"ota升级地址");
         MqttMessage mqttMessage = new MqttMessage();
         mqttMessage.setQos(2);
         mqttMessage.setRetained(false);
@@ -689,4 +712,17 @@ public class MqttCommandFactory {
         mqttMessage.setPayload(payload.getBytes());
         return mqttMessage;
     }
+    public static MqttMessage getMe(Object o, int messageID) {
+        GsonBuilder gb =new GsonBuilder();
+        gb.disableHtmlEscaping();
+        String payload=gb.create().toJson(o);
+        LogUtils.e(payload+"ota升级地址");
+        MqttMessage mqttMessage = new MqttMessage();
+        mqttMessage.setQos(2);
+        mqttMessage.setRetained(false);
+        mqttMessage.setId(messageID);
+        mqttMessage.setPayload(payload.getBytes());
+        return mqttMessage;
+    }
+
 }
