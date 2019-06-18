@@ -43,6 +43,7 @@ public class AddGatewaySuccessActivity extends BaseAddToApplicationActivity {
             case R.id.button_add_zigbee:
                 Intent deviceAddZigbee=new Intent(this, DeviceAddActivity.class);
                 startActivity(deviceAddZigbee);
+                finish();
                 break;
             case R.id.button_stop:
                 Intent deviceDetail=new Intent(this, MainActivity.class);
@@ -55,5 +56,6 @@ public class AddGatewaySuccessActivity extends BaseAddToApplicationActivity {
     @Override
     public void onBackPressed() {
         startActivity(new Intent(this, DeviceAddActivity.class));
+        finish();
     }
 }

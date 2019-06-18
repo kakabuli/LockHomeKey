@@ -10,6 +10,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.widget.ImageView;
 
+import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.my.BarCodeActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
@@ -18,8 +19,9 @@ import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.ToastUtil;
 import com.kaadas.lock.utils.ftp.GeTui;
-import com.uuzuche.lib_zxing.activity.CaptureFragment;
-import com.uuzuche.lib_zxing.activity.CodeUtils;
+import com.king.zxing.CaptureActivity;
+/*import com.uuzuche.lib_zxing.activity.CaptureFragment;
+import com.uuzuche.lib_zxing.activity.CodeUtils;*/
 
 
 
@@ -27,20 +29,19 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class ProductActivationScanActivity extends BaseAddToApplicationActivity {
+public class ProductActivationScanActivity extends CaptureActivity {
     @BindView(R.id.back)
     ImageView back;
-    private CaptureFragment captureFragment;
-    private Context context;
+
+    @Override
+    public int getLayoutId() {
+        return R.layout.product_activation_scan_qrcode;
+    }
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.product_activation_scan_qrcode);
-        context=this;
-        captureFragment = new CaptureFragment();
-        CodeUtils.setFragmentArgs(captureFragment,R.layout.bar_code_scan_qrcode);
-        captureFragment.setAnalyzeCallback(analyzeCallback);
-        getSupportFragmentManager().beginTransaction().replace(R.id.scan_layout, captureFragment).commit();
+        MyApplication.getInstance().addActivity(this);
         ButterKnife.bind(this);
     }
 
@@ -49,9 +50,16 @@ public class ProductActivationScanActivity extends BaseAddToApplicationActivity 
         finish();
     }
 
-    /**
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        MyApplication.getInstance().removeActivity(this);
+    }
+
+    /*
+    *//**
      * 二维码解析回调函数
-     */
+     *//*
     CodeUtils.AnalyzeCallback analyzeCallback = new CodeUtils.AnalyzeCallback() {
         @Override
         public void onAnalyzeSuccess(Bitmap mBitmap, String result) {
@@ -84,5 +92,5 @@ public class ProductActivationScanActivity extends BaseAddToApplicationActivity 
         public void onAnalyzeFailed() {
             ToastUtil.getInstance().showShort(getString(R.string.bar_code_scan_qr_failed));
         }
-    };
+    };*/
 }
