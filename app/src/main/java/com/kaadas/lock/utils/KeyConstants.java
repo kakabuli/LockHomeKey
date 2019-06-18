@@ -27,6 +27,11 @@ public class KeyConstants {
     public static final String PASSWORD1 = "password1";
 
     /**
+     * 密码1
+     */
+    public static final String BLE_DEVICE_SN = "deviceSN";
+
+    /**
      * 是否绑定
      */
     public static final String IS_BIND = "isBind";

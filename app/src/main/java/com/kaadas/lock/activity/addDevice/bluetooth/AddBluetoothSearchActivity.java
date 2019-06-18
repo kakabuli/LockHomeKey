@@ -330,13 +330,14 @@ public class AddBluetoothSearchActivity extends BaseActivity<ISearchDeviceView, 
 
 
     @Override
-    public void getPwd1Success(String pwd1, boolean isBind,int version) {
-        LogUtils.e("获取到pwd1   传递给下一个界面" + pwd1);
+    public void getPwd1Success(String pwd1, boolean isBind,int version,String DeviceSn) {
+        LogUtils.e("获取到pwd1   传递给下一个界面" + pwd1+"  SN " + DeviceSn);
         Intent nextIntent = new Intent(this, AddBluetoothSecondActivity.class);
 //        nextIntent.putExtra(KeyConstants.DEVICE_TYPE, type);  //传递设备类型过去
         nextIntent.putExtra(KeyConstants.PASSWORD1, pwd1);  //
         nextIntent.putExtra(KeyConstants.IS_BIND, isBind);
         nextIntent.putExtra(KeyConstants.BLE_VERSION, version);
+        nextIntent.putExtra(KeyConstants.BLE_DEVICE_SN, DeviceSn);
         startActivity(nextIntent);
         hiddenLoading();
     }
