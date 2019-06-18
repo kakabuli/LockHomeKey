@@ -693,7 +693,7 @@ public class MqttCommandFactory {
         int messageId=getMessageId();
         GatewayOtaNotifyBean.ParamsBean notifyParamsBean=notifyBean.getParams();
         LogUtils.e("ota升级地址"+notifyParamsBean.getFileUrl());
-        GatewayComfirmOtaUpgradeBean.ParamsBean paramsBean=new GatewayComfirmOtaUpgradeBean.ParamsBean(notifyParamsBean.getModelCode(),notifyParamsBean.getChildCode(),notifyParamsBean.getFileUrl(),notifyParamsBean.getSW(),notifyParamsBean.getFileMd5(),notifyParamsBean.getFileLen(),notifyParamsBean.getOtaType(),1,notifyParamsBean.getDeviceList());
+        GatewayComfirmOtaUpgradeBean.ParamsBean paramsBean=new GatewayComfirmOtaUpgradeBean.ParamsBean(notifyParamsBean.getModelCode(),notifyParamsBean.getChildCode(),notifyParamsBean.getFileUrl(),notifyParamsBean.getSW(),notifyParamsBean.getFileMd5(),notifyParamsBean.getFileLen(),notifyParamsBean.getOtaType(),1,notifyParamsBean.getDeviceList(),notifyParamsBean.getDevNum());
         GatewayComfirmOtaUpgradeBean otaUpgradeBean=new GatewayComfirmOtaUpgradeBean(MqttConstant.CONFIRM_GATEWAY_OTA,notifyBean.getGwId(),notifyBean.getDeviceId(),System.currentTimeMillis(),messageId,uid,uid,paramsBean);
         LogUtils.e("ota升级地址"+paramsBean.getFileUrl());
         return getMe(otaUpgradeBean,messageId);

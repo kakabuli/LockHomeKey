@@ -102,7 +102,7 @@ public class GatewayOtaNotifyBean implements Serializable {
         private String modelCode;
         private int otaType;
         private List<String> deviceList;
-
+        private String devNum;
         public String getSW() {
             return SW;
         }
@@ -165,6 +165,15 @@ public class GatewayOtaNotifyBean implements Serializable {
 
         public void setDeviceList(List<String> deviceList) {
             this.deviceList = deviceList;
+        }
+
+
+        public String getDevNum() {
+            return devNum;
+        }
+
+        public void setDevNum(String devNum) {
+            this.devNum = devNum;
         }
     }
 }

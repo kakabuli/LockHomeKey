@@ -112,7 +112,7 @@ public class GatewayComfirmOtaUpgradeBean implements Serializable {
         private int otaType;
         private int type;
         private List<String> deviceList;
-
+        private String devNum;
         public String getModelCode() {
             return modelCode;
         }
@@ -185,7 +185,15 @@ public class GatewayComfirmOtaUpgradeBean implements Serializable {
             this.deviceList = deviceList;
         }
 
-        public ParamsBean(String modelCode, String childCode, String fileUrl, String SW, String fileMd5, int fileLen, int otaType, int type, List<String> deviceList) {
+        public String getDevNum() {
+            return devNum;
+        }
+
+        public void setDevNum(String devNum) {
+            this.devNum = devNum;
+        }
+
+        public ParamsBean(String modelCode, String childCode, String fileUrl, String SW, String fileMd5, int fileLen, int otaType, int type, List<String> deviceList, String devNum) {
             this.modelCode = modelCode;
             this.childCode = childCode;
             this.fileUrl = fileUrl;
@@ -195,6 +203,7 @@ public class GatewayComfirmOtaUpgradeBean implements Serializable {
             this.otaType = otaType;
             this.type = type;
             this.deviceList = deviceList;
+            this.devNum = devNum;
         }
     }
 
