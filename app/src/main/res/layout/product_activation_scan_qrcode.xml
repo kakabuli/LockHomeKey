@@ -1,15 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="#000"
-    android:orientation="vertical"
-    >
-    <RelativeLayout
+    android:orientation="vertical">
+    <FrameLayout
+        android:id="@+id/scan_layout"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_40"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
         >
+
+
+        <SurfaceView
+            android:id="@+id/surfaceView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            />
+        <com.king.zxing.ViewfinderView
+            android:id="@+id/viewfinderView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:frameWidth="250dp"
+            app:frameHeight="250dp"
+            app:frameColor="#EAE9E9"
+            app:cornerColor="#149BF3"
+            app:laserColor="#1488D4"
+            app:labelText="@string/please_bar_code_in"
+            app:labelTextLocation="bottom"
+            app:labelTextColor="@color/white"
+            app:labelTextSize="@dimen/sp_15"
+            app:maskColor="@color/black"
+            />
         <ImageView
             android:id="@+id/back"
             android:layout_width="wrap_content"
@@ -19,21 +42,21 @@
             android:paddingTop="@dimen/dp_5"
             android:paddingBottom="@dimen/dp_5"
             android:src="@mipmap/white_back"
-            android:layout_centerVertical="true"
+            android:layout_marginTop="@dimen/dp_10"
             />
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
             android:text="@string/bar_code"
             android:textSize="@dimen/sp_17"
             android:textColor="#FFF"
             android:textStyle="bold"
+            android:gravity="center_horizontal"
+            android:layout_marginTop="@dimen/dp_10"
             />
-    </RelativeLayout>
-  <FrameLayout
-      android:id="@+id/scan_layout"
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"></FrameLayout>
+
+    </FrameLayout>
+
+
 
 </LinearLayout>

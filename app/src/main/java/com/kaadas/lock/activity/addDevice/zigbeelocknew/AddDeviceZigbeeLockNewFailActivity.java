@@ -11,6 +11,9 @@ import com.kaadas.lock.R;
 import com.kaadas.lock.activity.addDevice.DeviceAddActivity;
 import com.kaadas.lock.activity.addDevice.DeviceAddHelpActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
+import com.kaadas.lock.utils.KeyConstants;
+import com.kaadas.lock.utils.LogUtils;
+import com.king.zxing.Intents;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -36,7 +39,7 @@ public class AddDeviceZigbeeLockNewFailActivity extends BaseAddToApplicationActi
         switch (view.getId()) {
             case R.id.button_again:
                 Intent intent=new Intent(this,AddDeviceZigbeelockNewScanActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent,KeyConstants.SCANGATEWAYNEW_REQUEST_CODE);
                 //再来一次
                 break;
             case R.id.hand_bind:
@@ -51,5 +54,32 @@ public class AddDeviceZigbeeLockNewFailActivity extends BaseAddToApplicationActi
     public void onBackPressed() {
         super.onBackPressed();
         startActivity(new Intent(this,DeviceAddActivity.class));
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode == RESULT_OK && data!=null){
+            switch (requestCode){
+                case KeyConstants.SCANGATEWAYNEW_REQUEST_CODE:
+                    String result = data.getStringExtra(Intents.Scan.RESULT);
+                    LogUtils.e("扫描结果是   " + result);
+                    if (result.contains("SN-GW")&&result.contains("MAC-")&&result.contains(" ")){
+                        String[] strs=result.split(" ");
+                        String deviceSN=strs[0].replace("SN-","");
+                        Intent scanSuccessIntent=new Intent(AddDeviceZigbeeLockNewFailActivity.this, AddDeviceZigbeeLockNewZeroActivity.class);
+                        scanSuccessIntent.putExtra("deviceSN",deviceSN);
+                        LogUtils.e("设备SN是   " + deviceSN);
+                        startActivity(scanSuccessIntent);
+                        finish();
+                    }else{
+                        Intent scanSuccessIntent=new Intent(AddDeviceZigbeeLockNewFailActivity.this, AddDeviceZigbeeLockNewScanFailActivity.class);
+                        startActivity(scanSuccessIntent);
+                        finish();
+                    }
+                    break;
+            }
+
+        }
     }
 }

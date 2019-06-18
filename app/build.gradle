@@ -127,7 +127,7 @@ dependencies {
     implementation 'org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.1.1'
     implementation 'org.eclipse.paho:org.eclipse.paho.android.service:1.1.1'
     //zxing
-    implementation 'cn.yipianfengye.android:zxing-library:2.2'
+    implementation 'com.king.zxing:zxing-lite:1.1.1'
     implementation 'com.android.support:design:28.0.0'
     //linphone库
     implementation project(path: ':linphoneLibrary')

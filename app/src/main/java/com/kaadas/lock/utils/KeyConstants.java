@@ -278,6 +278,18 @@ public class KeyConstants {
     //分辨率
     public static final int RESOLUTION_REQUEST_CODE=1006;
 
+    //扫描猫眼跳转
+    public static final int SCANCATEYE_REQUEST_CODE=1007;
+
+    //扫描网关的跳转
+    public static final int SCANGATEWAY_REQUEST_CODE=1008;
+
+    //使用扫一扫页面跳转
+    public static final int SCANGATEWAYNEW_REQUEST_CODE=1009;
+
+    //产品激活
+    public static final int SCANPRODUCT_REQUEST_CODE=1010;
+
 
     //铃声次数
     public static final String RIGH_NUMBER="ringNumber";

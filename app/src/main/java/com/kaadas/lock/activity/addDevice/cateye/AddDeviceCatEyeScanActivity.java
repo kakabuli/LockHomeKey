@@ -1,61 +1,51 @@
 package com.kaadas.lock.activity.addDevice.cateye;
-
-import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
 
+import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
-import com.kaadas.lock.activity.addDevice.gateway.AddGatewaySecondActivity;
-import com.kaadas.lock.activity.addDevice.gateway.AddGatewayThirdActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 import com.kaadas.lock.utils.KeyConstants;
-import com.kaadas.lock.utils.LogUtils;
-import com.kaadas.lock.utils.ToastUtil;
-import com.uuzuche.lib_zxing.activity.CaptureFragment;
-import com.uuzuche.lib_zxing.activity.CodeUtils;
+import com.king.zxing.CaptureActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class AddDeviceCatEyeScanActivity extends BaseAddToApplicationActivity {
+public class AddDeviceCatEyeScanActivity extends CaptureActivity {
     @BindView(R.id.back)
     ImageView back;
-    private CaptureFragment captureFragment;
-    private String ssid;
-    private String pwd;
-    private String gwId;
+
+    @Override
+    public int getLayoutId() {
+        return R.layout.device_scan_qrcode;
+    }
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.device_scan_qrcode);
-
-        ssid = getIntent().getStringExtra(KeyConstants.GW_WIFI_SSID);
-        pwd = getIntent().getStringExtra(KeyConstants.GW_WIFI_PWD);
-        gwId = getIntent().getStringExtra(KeyConstants.GW_SN);
-
-        captureFragment = new CaptureFragment();
-        CodeUtils.setFragmentArgs(captureFragment,R.layout.my_scan_qrcode);
-        captureFragment.setAnalyzeCallback(analyzeCallback);
-        getSupportFragmentManager().beginTransaction().replace(R.id.scan_layout, captureFragment).commit();
-
-
-
+        MyApplication.getInstance().addActivity(this);
         ButterKnife.bind(this);
     }
+
+
 
     @OnClick(R.id.back)
     public void onViewClicked() {
         finish();
     }
 
-    /**
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        MyApplication.getInstance().removeActivity(this);
+    }
+
+    /*  *//**
      * 二维码解析回调函数
-     */
+     *//*
     CodeUtils.AnalyzeCallback analyzeCallback = new CodeUtils.AnalyzeCallback() {
         @Override
         public void onAnalyzeSuccess(Bitmap mBitmap, String result) {
@@ -88,7 +78,7 @@ public class AddDeviceCatEyeScanActivity extends BaseAddToApplicationActivity {
             ToastUtil.getInstance().showShort(getString(R.string.scan_qr_failed));
         }
     };
-
+*/
 
 
 
