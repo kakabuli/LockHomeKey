@@ -448,12 +448,12 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
                             LogUtils.e("鉴权成功   鉴权的Key是  " + Rsa.bytesToHexString(encryptKey));
                             bleLockInfo.setAuthKey(encryptKey);
 
-                            syncLockTime();
                             //鉴权成功    取消延时断开的任务
                             handler.removeCallbacks(releaseRunnable);
                             //鉴权成功  停止搜索
                             bleService.scanBleDevice(false);  //连接成功   停止搜索
                             bleService.sendCommand(BleCommandFactory.confirmCommand(bleDataBean.getOriginalData()));
+                            syncLockTime();
                             if (mViewRef.get() != null) {
                                 mViewRef.get().authResult(true);
                                 mViewRef.get().onEndConnectDevice(true);
