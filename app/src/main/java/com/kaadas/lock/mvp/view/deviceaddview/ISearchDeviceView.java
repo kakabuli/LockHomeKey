@@ -85,7 +85,7 @@ public interface ISearchDeviceView extends IBaseView {
     /**
      * 获取pwd1成功
      */
-    void getPwd1Success(String pwd1, boolean isBind,int version);
+    void getPwd1Success(String pwd1, boolean isBind,int version,String deviceSN);
 
 
     /**

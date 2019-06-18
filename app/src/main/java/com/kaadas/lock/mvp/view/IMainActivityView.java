@@ -4,6 +4,7 @@ import com.kaadas.lock.mvp.mvpbase.IBleView;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.publiclibrary.bean.CateEyeInfo;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
+import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.GatewayOtaNotifyBean;
 
 
 /**
@@ -36,5 +37,8 @@ public interface IMainActivityView extends IBleView {
 
 
     void callError();
+
+    //网关ota升级通知
+    void gatewayNotifyOtaSuccess(GatewayOtaNotifyBean notifyBean);
 
 }

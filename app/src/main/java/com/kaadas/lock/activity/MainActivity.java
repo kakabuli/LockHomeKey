@@ -1,6 +1,7 @@
 package com.kaadas.lock.activity;
 
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -38,8 +39,11 @@ import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.publiclibrary.bean.CateEyeInfo;
 import com.kaadas.lock.publiclibrary.bean.GatewayInfo;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
+import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.GatewayOtaNotifyBean;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttService;
 import com.kaadas.lock.publiclibrary.ota.OTADialogActivity;
+import com.kaadas.lock.publiclibrary.ota.gatewayota.GatewayOTADialogActivity;
+import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.Constants;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
@@ -448,6 +452,19 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
     public void callError() {
           Toast.makeText(this,getString(R.string.cateye_call_record),Toast.LENGTH_LONG).show();
     }
+
+    @Override
+    public void gatewayNotifyOtaSuccess(GatewayOtaNotifyBean notifyBean) {
+        LogUtils.e("网关ota升级通知 gatewayNotifyOtaSuccess");
+        //网关ota升级通知
+        Intent intent = new Intent();
+        intent.setClass(MainActivity.this, GatewayOTADialogActivity.class);
+        intent.putExtra(KeyConstants.GATEWAY_OTA_UPGRADE,notifyBean);
+        startActivity(intent);
+    }
+
+
+
 
     public NoScrollViewPager getViewPager() {
 
