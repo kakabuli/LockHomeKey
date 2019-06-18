@@ -118,7 +118,6 @@ public class OTAFUHandler_v1 extends OTAFUHandlerBase {
         LogUtils.e("  文件数据是2    mProductId  " + Rsa.bytesToHexString(headerRow.mProductId) +"    mAppId    "  + Rsa.byteToHexString(mActiveApp)+"   mCheckSumType " +Rsa.byteToHexString(mCheckSumType));
         mOtaFirmwareWrite.OTAEnterBootLoaderCmd(mCheckSumType, headerRow.mProductId);
         postTimeout();
-        handler.postDelayed(timeOutRunnable, 2 * 1000);
         // 升级状态    执行Enter引导加载程序命令
         if (listener != null) {
             listener.otaEnterBootloader();
@@ -129,6 +128,7 @@ public class OTAFUHandler_v1 extends OTAFUHandlerBase {
     public void processOTAStatus(String status, Bundle extras) {
         if (extras.containsKey(Constants.EXTRA_ERROR_OTA)) {
             handler.removeCallbacks(timeOutRunnable);
+            Log.e(TAG, "移除数据超时    EXTRA_ERROR_OTA " );
             String errorMessage = extras.getString(Constants.EXTRA_ERROR_OTA);
             Log.e(TAG, "升级错误  " + errorMessage);
             //todo 升级错误时的回调
@@ -158,6 +158,7 @@ public class OTAFUHandler_v1 extends OTAFUHandlerBase {
             }
         } else if (status.equalsIgnoreCase("" + BootLoaderCommands_v1.ENTER_BOOTLOADER)) {
             handler.removeCallbacks(timeOutRunnable);
+            Log.e(TAG, "移除数据超时    ENTER_BOOTLOADER " );
             if (extras.containsKey(Constants.EXTRA_SILICON_ID) && extras.containsKey(Constants.EXTRA_SILICON_REV)) {
                 OTAFlashRowModel_v1.Header headerRow = (OTAFlashRowModel_v1.Header) mFileContents.get(CustomFileReader_v1.KEY_HEADER).get(0);
                 byte[] siliconIdReceived = extras.getByteArray(Constants.EXTRA_SILICON_ID);
@@ -181,6 +182,7 @@ public class OTAFUHandler_v1 extends OTAFUHandlerBase {
             }
         } else if (status.equalsIgnoreCase("" + BootLoaderCommands_v1.SET_APP_METADATA)) {
             handler.removeCallbacks(timeOutRunnable);
+            Log.e(TAG, "移除数据超时    SET_APP_METADATA " );
             List<OTAFlashRowModel_v1> dataRows = mFileContents.get(CustomFileReader_v1.KEY_DATA);
             //获取行号
             int rowNum = Utils.getIntSharedPreference(getmActivity(), Constants.PREF_PROGRAM_ROW_NO + BluetoothLeService.mBluetoothDeviceAddress);
@@ -194,6 +196,7 @@ public class OTAFUHandler_v1 extends OTAFUHandlerBase {
             }
         } else if (status.equalsIgnoreCase("" + BootLoaderCommands_v1.SET_EIV)) {
             handler.removeCallbacks(timeOutRunnable);
+            Log.e(TAG, "移除数据超时    SET_EIV " );
             //获取行号
             int rowNum = Utils.getIntSharedPreference(getmActivity(), Constants.PREF_PROGRAM_ROW_NO + BluetoothLeService.mBluetoothDeviceAddress);
             rowNum++;//Increment row number
@@ -232,16 +235,19 @@ public class OTAFUHandler_v1 extends OTAFUHandlerBase {
             }
         } else if (status.equalsIgnoreCase("" + BootLoaderCommands_v1.SEND_DATA)) {
             handler.removeCallbacks(timeOutRunnable);
+            Log.e(TAG, "移除数据超时    SEND_DATA " );
             int rowNum = Utils.getIntSharedPreference(getmActivity(), Constants.PREF_PROGRAM_ROW_NO + BluetoothLeService.mBluetoothDeviceAddress);
             Log.e("OTA升级", "发送数据5 writeData   " + status);
             writeData(rowNum);//Program data row
         } else if (status.equalsIgnoreCase("" + BootLoaderCommands_v1.SEND_DATA_WITHOUT_RESPONSE)) {
             handler.removeCallbacks(timeOutRunnable);
+            Log.e(TAG, "移除数据超时    SEND_DATA_WITHOUT_RESPONSE " );
             int rowNum = Utils.getIntSharedPreference(getmActivity(), Constants.PREF_PROGRAM_ROW_NO + BluetoothLeService.mBluetoothDeviceAddress);
             Log.e("OTA升级", "发送数据6 writeData   " + status);
             writeData(rowNum);//Program data row
         } else if (status.equalsIgnoreCase("" + BootLoaderCommands_v1.PROGRAM_DATA)) {
             handler.removeCallbacks(timeOutRunnable);
+            Log.e(TAG, "移除数据超时    PROGRAM_DATA " );
             int rowNum = Utils.getIntSharedPreference(getmActivity(), Constants.PREF_PROGRAM_ROW_NO + BluetoothLeService.mBluetoothDeviceAddress);
             rowNum++;//Increment row number
             List<OTAFlashRowModel_v1> dataRows = mFileContents.get(CustomFileReader_v1.KEY_DATA);
@@ -280,6 +286,7 @@ public class OTAFUHandler_v1 extends OTAFUHandlerBase {
             }
         } else if (status.equalsIgnoreCase("" + BootLoaderCommands_v1.VERIFY_APP)) {
             handler.removeCallbacks(timeOutRunnable);
+            Log.e(TAG, "移除数据超时    VERIFY_APP " );
             if (extras.containsKey(Constants.EXTRA_VERIFY_APP_STATUS)) {
                 byte statusReceived = extras.getByte(Constants.EXTRA_VERIFY_APP_STATUS);
                 if (statusReceived == 1) {
@@ -301,8 +308,9 @@ public class OTAFUHandler_v1 extends OTAFUHandlerBase {
                     showErrorDialogMessage(BluetoothLeService.ERROR_TAG_APP_CHECK_ERROR, "写入完成校验错误", false);
                 }
             }
-        } else if (status.equalsIgnoreCase("" + BootLoaderCommands_v1.EXIT_BOOTLOADER)) {
+        } else if (status.equalsIgnoreCase("" + BootLoaderCommands_v1.EXIT_BOOTLOADER)) {  //此处不会走，因为Exit_bootloader没有返回值
             handler.removeCallbacks(timeOutRunnable);
+            Log.e(TAG, "移除数据超时    EXIT_BOOTLOADER " );
             Log.e(TAG, "升级成功，退出");
             BluetoothDevice device = BluetoothLeService.getRemoteDevice();
             //  升级成功

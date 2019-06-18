@@ -660,8 +660,12 @@ public class BluetoothLeService extends Service {
     }
 
     private static void writeOTABootLoaderCommandNoResponse(BluetoothGattCharacteristic characteristic, byte[] value) {
-        if (mBluetoothAdapter == null || mBluetoothGatt == null) {
+        if (mBluetoothAdapter == null || mBluetoothGatt == null ) {
             Log.e(TAG, "mBluetoothAdapter 或者 mBluetoothGatt 为空");
+            return;
+        }
+        if (!mBluetoothAdapter.enable()){
+            Log.e(TAG, "蓝牙未打开不发送数据");
             return;
         }
         final int mtuValue;
