@@ -86,6 +86,12 @@
                 android:layout_marginRight="@dimen/dp_24"
                 />
     </LinearLayout>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="@dimen/dp_57"
+            android:background="#EAE9E9"
+            />
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_75"

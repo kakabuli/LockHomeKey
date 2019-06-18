@@ -1071,4 +1071,8 @@
     <string name="ble_disconnected_please_retry">设备蓝牙已断开，无法绑定，重新搜索</string>
     <string name="please_refresh_page_get_newdata">请刷新页面,获取最新数据！</string>
     <string name="is_login_out">正在退出...</string>
+    <string name="gateway_ota_upgrade">OTA升级</string>
+    <string name="have_new_gateway_version">有新版本发布</string>
+    <string name="gateway_upgrade_now">:正在升级中，请注意观察网关设备变化</string>
+    <string name="gateway_upgade_fail">:该设备暂时无法升级</string>
 </resources>
