@@ -37,8 +37,11 @@ import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.StorageUtil;
 import com.kaadas.lock.mvp.view.IMyFragmentView;
 import com.kaadas.lock.utils.ToastUtil;
+import com.kaadas.lock.utils.ftp.GeTui;
 import com.kaadas.lock.widget.CircleImageView;
 import com.king.zxing.Intents;
+
+import org.linphone.mediastream.Log;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -257,6 +260,7 @@ public class PersonalCenterFragment extends BaseFragment<IMyFragmentView, MyFrag
                     if (!TextUtils.isEmpty(userName)) {
                         bar_url=bar_url+userName+"&nickname="+userName;
                     }
+                    Log.e(GeTui.VideoLog,"finally->result:"+bar_url);
                     Intent intent=new Intent(getActivity(), BarCodeActivity.class);
                     intent.putExtra(KeyConstants.BAR_CODE,bar_url);
                     startActivity(intent);

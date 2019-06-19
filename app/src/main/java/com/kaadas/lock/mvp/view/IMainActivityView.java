@@ -21,7 +21,7 @@ public interface IMainActivityView extends IBleView {
      * 猫眼呼叫进来  且米米网登录成功
      */
     void onCatEyeCallIn(CateEyeInfo cateEyeInfo);
-
+    void onCatEyeCallFail();
 
     /**
      * 网关上报事件

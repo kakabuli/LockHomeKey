@@ -193,7 +193,7 @@ public class OldBluetoothMoreActivity extends BaseBleActivity<IOldDeviceInfoView
 
     @Override
     public void FirmwareRevDataSuccess(String data) {
-        tvDeviceModel.setText(data);
+        tvDeviceModel.setText(StringUtil.getSubstringFive(data));
     }
 
     @Override

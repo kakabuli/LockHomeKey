@@ -15,6 +15,7 @@ import com.kaadas.lock.mvp.view.IDeviceInfoView;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.publiclibrary.http.result.OTAResult;
 import com.kaadas.lock.utils.AlertDialogUtil;
+import com.kaadas.lock.utils.StringUtil;
 import com.kaadas.lock.utils.ToastUtil;
 
 import butterknife.BindView;
@@ -104,7 +105,7 @@ public class BluetoothDeviceInformationActivity extends BaseBleActivity<IDeviceI
 
     @Override
     public void FirmwareRevDataSuccess(String data) {
-        tvDeviceModel.setText(data);
+        tvDeviceModel.setText(StringUtil.getSubstringFive(data));
     }
 
     @Override

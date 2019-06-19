@@ -3,6 +3,8 @@ package com.kaadas.lock.utils;
 import android.text.TextUtils;
 import android.widget.EditText;
 
+import com.kaadas.lock.R;
+
 import java.io.UnsupportedEncodingException;
 import java.util.Random;
 import java.util.regex.Matcher;
@@ -329,6 +331,18 @@ public class StringUtil {
         Matcher matcher = p.matcher(ip);
         return matcher.find();
     }
-
+    /**
+     * 大于5位则保留5位
+     * 小于5位则直接显示
+     * */
+    public static String getSubstringFive(String str){
+        String data="";
+        if (str.length()>5){
+           data= str.substring(0,5);
+        }else {
+            data=str;
+        }
+        return data;
+    }
 
 }
