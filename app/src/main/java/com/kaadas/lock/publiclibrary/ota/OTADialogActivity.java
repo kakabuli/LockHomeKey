@@ -1,5 +1,6 @@
 package com.kaadas.lock.publiclibrary.ota;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -97,7 +98,9 @@ public class OTADialogActivity extends BaseActivity<IOtaView, OtaPresenter<IOtaV
         win.getDecorView().setScaleY((float) 0.96);
 
         WindowManager.LayoutParams lp = win.getAttributes();
-        lp.width = WindowManager.LayoutParams.WRAP_CONTENT;
+        WindowManager wm = (WindowManager)getSystemService(Context.WINDOW_SERVICE);
+        int width = wm.getDefaultDisplay().getWidth();
+        lp.width = (int) (width*0.9);
         lp.height = WindowManager.LayoutParams.MATCH_PARENT;
         lp.gravity = Gravity.CENTER;//设置对话框置顶显示
         win.setAttributes(lp);

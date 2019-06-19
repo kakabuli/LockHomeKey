@@ -463,7 +463,8 @@ public class BluetoothMoreActivity extends BaseBleActivity<IDeviceMoreView, Devi
         } else if (bleLockInfo.getBleType() == 2) {  //P6升级
 
         } else {
-            ToastUtil.getInstance().showLong(getString(R.string.check_update_failed));
+            ToastUtil.getInstance().showLong(getString(R.string.check_update_failed2));
+            return;
         }
         AlertDialogUtil.getInstance().noEditTwoButtonDialog(this, getString(R.string.hint)
                 , getString(R.string.hava_ble_new_version), getString(R.string.cancel), getString(R.string.confirm), new AlertDialogUtil.ClickListener() {

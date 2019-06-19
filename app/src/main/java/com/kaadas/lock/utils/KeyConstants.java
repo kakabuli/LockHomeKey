@@ -27,6 +27,11 @@ public class KeyConstants {
     public static final String PASSWORD1 = "password1";
 
     /**
+     * 密码1
+     */
+    public static final String BLE_DEVICE_SN = "deviceSN";
+
+    /**
      * 是否绑定
      */
     public static final String IS_BIND = "isBind";
@@ -411,4 +416,6 @@ public class KeyConstants {
     public static final String SERVER_CURRENT_TIME = "Server_Current_time";
     //用户管理个数
     public static final String USER_MANAGE_NUMBER="user_manage_number";
+    //网关ota升级
+    public static final String GATEWAY_OTA_UPGRADE="gateway_ota_upgrade";
 }

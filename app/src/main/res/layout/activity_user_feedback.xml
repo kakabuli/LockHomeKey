@@ -66,11 +66,13 @@
             android:layout_marginLeft="@dimen/dp_12"
             android:layout_marginRight="@dimen/dp_12"
             android:background="@null"
-            android:paddingTop="@dimen/dp_24"
+            android:scrollbars="none"
             android:gravity="top"
             android:hint="@string/user_feedback_hint"
             android:lineSpacingExtra="@dimen/dp_8"
             android:maxLength="300"
+            android:paddingTop="@dimen/dp_24"
+            android:layout_marginBottom="@dimen/dp_40"
             android:textColorHint="#8E8E93"
             android:textSize="@dimen/sp_12" />
 

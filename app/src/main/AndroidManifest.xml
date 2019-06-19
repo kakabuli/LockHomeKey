@@ -755,7 +755,11 @@
 
         <activity
             android:name=".publiclibrary.ota.OTADialogActivity"
-            android:theme="@style/dialogstyle" />
+            android:theme="@style/gatewayDialog" />
+
+        <activity
+            android:name=".publiclibrary.ota.gatewayota.GatewayOTADialogActivity"
+            android:theme="@style/gatewayDialog" />
     </application>
 
 </manifest>

@@ -311,7 +311,7 @@ public class SearchDevicePresenter<T> extends BasePresenter<ISearchDeviceView> {
                         if ("200".equals(getPwdBySnResult.getCode())) { //获取pwd1成功
                             pwd1 = getPwdBySnResult.getData().getPassword1();
                             if (mViewRef.get() != null) {
-                                mViewRef.get().getPwd1Success(pwd1, isBind,version);
+                                mViewRef.get().getPwd1Success(pwd1, isBind,version,sn);
                             }
                         }
                     }

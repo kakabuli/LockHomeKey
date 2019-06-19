@@ -52,7 +52,7 @@ public class BindBlePresenter<T> extends BasePresenter<IBindBleView> {
     private Disposable inNetNotifyDisposable;
 
 
-    public void setPwd1(String pwd1, boolean isBind, int version) {
+    public void setPwd1(String pwd1, boolean isBind, int version,String deviceSn) {
         LogUtils.e("密码1是   " + pwd1);
         this.isBind = isBind;
         this.pwd1 = pwd1;
@@ -65,7 +65,7 @@ public class BindBlePresenter<T> extends BasePresenter<IBindBleView> {
             bPwd1 = Rsa.hex2byte(pwd1);
             LogUtils.e("获取的密码1是   " + Rsa.bytesToHexString(bPwd1));
             System.arraycopy(bPwd1, 0, password_1, 0, bPwd1.length);
-            listenerPwd2(version);
+            listenerPwd2(version, deviceSn);
         }
     }
 
@@ -117,9 +117,9 @@ public class BindBlePresenter<T> extends BasePresenter<IBindBleView> {
             public void run() {
                 bleService.sendCommand(OldBleCommandFactory.getEndFrame());
                 if (isBind) {
-                    bindDevice(null, null, null, bleVersion + "");
+                    bindDevice(null, null, null, bleVersion + "","");
                 } else {
-                    unbindDevice(bleVersion);
+                    unbindDevice(bleVersion,"");
                 }
 
             }
@@ -171,7 +171,7 @@ public class BindBlePresenter<T> extends BasePresenter<IBindBleView> {
     }
 
 
-    public void listenerPwd2(int version) {
+    public void listenerPwd2(int version,String deviceSn) {
         pwd2Disposable = bleService.listeneDataChange().filter(new Predicate<BleDataBean>() {
             @Override
             public boolean test(BleDataBean bleDataBean) throws Exception {
@@ -207,7 +207,7 @@ public class BindBlePresenter<T> extends BasePresenter<IBindBleView> {
                     pwd2 = Rsa.bytesToHexString(pswd2);  //转换pwd2为字符串
                     inNetConfirmFrame = BleCommandFactory.confirmCommand(bytes);
                     bleService.sendCommand(inNetConfirmFrame);
-                    readLockType(pwd1, pwd2, version);
+                    readLockType(pwd1, pwd2, version,deviceSn);
                     toDisposable(pwd2Disposable);
                 } else {  //解绑的逻辑
                     if (bytes[2] != checkNum || password_2de[0] != 0x03) { //0x03是解绑的秘钥上报  且校验和校验失败  正常情况是不会发生这种问题的
@@ -218,7 +218,7 @@ public class BindBlePresenter<T> extends BasePresenter<IBindBleView> {
                         mViewRef.get().onReceiveUnbind();
                     }
                     bleService.sendCommand(BleCommandFactory.confirmCommand(bytes));
-                    unbindDevice(version);
+                    unbindDevice(version,deviceSn);
                     toDisposable(pwd2Disposable);
                 }
             }
@@ -226,7 +226,7 @@ public class BindBlePresenter<T> extends BasePresenter<IBindBleView> {
         compositeDisposable.add(pwd2Disposable);
     }
 
-    public void readLockType(String pwd1, String pwd2, int version) {
+    public void readLockType(String pwd1, String pwd2, int version,String deviceSn) {
         toDisposable(readLockTypeDisposable);
         readLockTypeDisposable = bleService.readLockType(500)
                 .compose(RxjavaHelper.observeOnMainThread())
@@ -249,7 +249,7 @@ public class BindBlePresenter<T> extends BasePresenter<IBindBleView> {
                         String mode = (String) readInfoBean.data;
                         LogUtils.e("收到锁型号   " + mode);
 
-                        bindDevice(pwd1, pwd2, mode, version + "");
+                        bindDevice(pwd1, pwd2, mode, version + "",deviceSn);
                     }
                 }, new Consumer<Throwable>() {
                     @Override
@@ -272,9 +272,9 @@ public class BindBlePresenter<T> extends BasePresenter<IBindBleView> {
 //        bleService.release();  //绑定蓝牙界面
     }
 
-    public void bindDevice(String pwd1, String pwd2, String model, String bleVersion) {
+    public void bindDevice(String pwd1, String pwd2, String model, String bleVersion,String deviceSn) {
         XiaokaiNewServiceImp.addDevice(bleService.getCurrentDevice().getAddress(), bleService.getCurrentDevice().getName(),
-                MyApplication.getInstance().getUid(), pwd1, pwd2, model, bleVersion)
+                MyApplication.getInstance().getUid(), pwd1, pwd2, model, bleVersion,deviceSn)
                 .subscribe(new BaseObserver<BaseResult>() {
                     @Override
                     public void onSuccess(BaseResult result) {
@@ -327,7 +327,7 @@ public class BindBlePresenter<T> extends BasePresenter<IBindBleView> {
                 });
     }
 
-    private void unbindDevice(int bleVersion) {
+    private void unbindDevice(int bleVersion,String deviceSn) {
         XiaokaiNewServiceImp.resetDevice(MyApplication.getInstance().getUid(), bleService.getCurrentDevice().getName())
                 .subscribe(new BaseObserver<BaseResult>() {
                     @Override
@@ -343,7 +343,7 @@ public class BindBlePresenter<T> extends BasePresenter<IBindBleView> {
                             sendExitNetResponseData(true);
                             listenerInNetNotify(bleVersion);
                         } else {
-                            listenerPwd2(bleVersion);
+                            listenerPwd2(bleVersion,deviceSn);
                         }
                     }
 

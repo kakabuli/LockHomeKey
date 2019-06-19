@@ -197,4 +197,11 @@ public class MqttConstant {
 
     //获取守护次数
     public static final String COUNT_OPEN_LOCK_RECORD="countOpenLockRecord";
+
+    //获取网关ota升级通知
+    public static final String NOTIFY_GATEWAY_OTA="otaApprovate";
+
+    //网关ota升级确认
+    public static final String CONFIRM_GATEWAY_OTA="otaApprovateResult";
+
 }
