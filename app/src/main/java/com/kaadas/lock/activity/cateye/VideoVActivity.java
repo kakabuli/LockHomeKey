@@ -283,6 +283,7 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
 
     @Override
     protected void onDestroy() {
+        Log.e(GeTui.VideoLog,"VideoVActivity......onDestory.....");
         isRunning = false;
         MemeManager.getInstance().videoActivityDisconnectMeme();
         LinphoneHelper.onDestroy();
@@ -503,11 +504,12 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
                     ToastUtil.getInstance().showLong(R.string.cat_eye_offline);
                     return;
                 }
-
+                Log.e(GeTui.VideoLog,"maikefeng:"+!RecordTools.validateMicAvailability());
                 if(!RecordTools.validateMicAvailability()){  //打开
+                    Log.e(GeTui.VideoLog,"result2");
                     return;
                 }
-
+                Log.e(GeTui.VideoLog,"result");
                 video_start_play.setVisibility(View.GONE);
                 video_connecting_tv.setVisibility(View.VISIBLE);
                 video_hang_up.setVisibility(View.GONE);

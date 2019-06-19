@@ -148,10 +148,12 @@ public class MemeManager {
         currentAccount = meAccount;
         currentPassword = mePassword;
         LogUtils.e(TAG, "登录米米网   账号  " + currentAccount + "  密码  " + currentPassword);
+        Log.e(GeTui.VideoLog, "MemeManager==>登录米米网   账号  " + currentAccount + "  密码  " + currentPassword);
         CMAPI.getInstance().login(context, meAccount, mePassword, BUILD_VPN_REQUEST, new ResultListener() {
             @Override
             public void onError(int errorCode) {
                 LogUtils.e(TAG, "登录错误   " + errorCode);
+                Log.e(GeTui.VideoLog,"登录错误   " + errorCode);
                 connectStatusChange.onNext(false);
             }
         });

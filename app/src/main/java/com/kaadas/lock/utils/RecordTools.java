@@ -25,17 +25,23 @@ public class RecordTools {
                 available = false;
 
             }
-            Log.e(GeTui.VideoLog,"recorder state:"+recorder.getRecordingState()+"");
+            Log.e(GeTui.VideoLog,"before recorder state:"+recorder.getRecordingState()+"");
             recorder.startRecording();
+            Log.e(GeTui.VideoLog,"after recorder state:"+recorder.getRecordingState()+"");
             if(recorder.getRecordingState() != AudioRecord.RECORDSTATE_RECORDING){
                 recorder.stop();
                 available = false;
 
             }
             recorder.stop();
-        } finally{
+        } catch (Exception e){
+            Log.e(GeTui.VideoLog,"recorder->Exception:"+e);
+            available=true;
+        }finally{
+            Log.e(GeTui.VideoLog,"finally ==> recorder state:"+recorder.getRecordingState()+" ");
             recorder.release();
-            recorder = null;
+//            recorder = null;
+//            available=true;
         }
 
         return available;
