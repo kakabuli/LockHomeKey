@@ -84,6 +84,7 @@ public class CatEyeFragment extends BaseFragment<ICatEyeView, CatEyePresenter<IC
     private String gatewayId;
     private String deviceId;
     private BluetoothRecordAdapter bluetoothRecordAdapter;
+    private HomePageFragment homePageFragment;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -101,15 +102,15 @@ public class CatEyeFragment extends BaseFragment<ICatEyeView, CatEyePresenter<IC
         rlDeviceDynamic.setOnClickListener(this);
         rlIcon.setOnClickListener(this);
         ivDeviceDynamic.setOnClickListener(this);
-        iSelectChangeListener = new HomePageFragment.ISelectChangeListener() {
+        iSelectChangeListener=new HomePageFragment.ISelectChangeListener() {
             @Override
             public void onSelectChange(boolean isSelect) {
-                if (isSelect) {
-                    initData();
+                if (isSelect){
+                    changeStatus();
                 }
-
             }
         };
+        homePageFragment.listenerSelect(iSelectChangeListener);
     }
 
     @Override
@@ -119,6 +120,7 @@ public class CatEyeFragment extends BaseFragment<ICatEyeView, CatEyePresenter<IC
 
     private void initData() {
         cateEyeInfo = (CateEyeInfo) getArguments().getSerializable(KeyConstants.CATE_INFO);
+        homePageFragment= (HomePageFragment) getParentFragment();
         if (cateEyeInfo != null) {
             LogUtils.e(cateEyeInfo.getGwID() + "网关ID是    ");
             gatewayId = cateEyeInfo.getGwID();
@@ -443,6 +445,27 @@ public class CatEyeFragment extends BaseFragment<ICatEyeView, CatEyePresenter<IC
 
         }
     }
+    private void changeStatus(){
+
+        if (cateEyeInfo != null) {
+            if (NetUtil.isNetworkAvailable()) {
+                String evetStr=cateEyeInfo.getServerInfo().getEvent_str();
+                changeOpenLockStatus(evetStr);
+                LogUtils.e("当前猫眼的状态首页切换   "+evetStr);
+                GatewayInfo gatewayInfo = MyApplication.getInstance().getGatewayById(gatewayId);
+                if (gatewayInfo!=null) {
+                    if (gatewayInfo.getEvent_str() != null) {
+                        if (gatewayInfo.getEvent_str().equals("offline")) {
+                            changeOpenLockStatus("offline");
+                        }
+                    }
+                }
+            } else {
+                changeOpenLockStatus("offline");
+            }
+        }
+    }
+
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
@@ -450,7 +473,9 @@ public class CatEyeFragment extends BaseFragment<ICatEyeView, CatEyePresenter<IC
         if (isVisibleToUser) {
             if (cateEyeInfo != null) {
                 if (NetUtil.isNetworkAvailable()) {
-                    changeOpenLockStatus(cateEyeInfo.getServerInfo().getEvent_str());
+                    String eve=cateEyeInfo.getServerInfo().getEvent_str();
+                    changeOpenLockStatus(eve);
+                    LogUtils.e("当前猫眼的状态Fragment切换   "+eve);
                     GatewayInfo gatewayInfo = MyApplication.getInstance().getGatewayById(gatewayId);
                     if (gatewayInfo!=null) {
                         if (gatewayInfo.getEvent_str() != null) {
