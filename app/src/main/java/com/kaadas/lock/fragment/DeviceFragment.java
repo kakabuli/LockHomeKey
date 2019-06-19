@@ -13,6 +13,7 @@ import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -438,17 +439,20 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                         if (bleLockInfo.getServerLockInfo().getIs_admin() != null && bleLockInfo.getServerLockInfo().getIs_admin().equals("1")) {
                             if ("3".equals(bleLockInfo.getServerLockInfo().getBleVersion())) {
                                 String lockType = bleLockInfo.getServerLockInfo().getModel();
-                                if (lockType.startsWith("V6") || lockType.startsWith("V7")) {
-                                    Intent detailIntent = new Intent(getActivity(), BluetoothLockFunctionV6V7Activity.class);
-                                    String model = bleLockInfo.getServerLockInfo().getModel();
-                                    detailIntent.putExtra(KeyConstants.DEVICE_TYPE, model);
-                                    startActivityForResult(detailIntent, KeyConstants.GET_BLE_POWER);
-                                } else {
-                                    Intent detailIntent = new Intent(getActivity(), BluetoothLockFunctionActivity.class);
-                                    String model = bleLockInfo.getServerLockInfo().getModel();
-                                    detailIntent.putExtra(KeyConstants.DEVICE_TYPE, model);
-                                    startActivityForResult(detailIntent, KeyConstants.GET_BLE_POWER);
+                                if (!TextUtils.isEmpty(lockType)){
+                                    if (lockType.startsWith("V6") || lockType.startsWith("V7")||lockType.startsWith("S100")) {
+                                        Intent detailIntent = new Intent(getActivity(), BluetoothLockFunctionV6V7Activity.class);
+                                        String model = bleLockInfo.getServerLockInfo().getModel();
+                                        detailIntent.putExtra(KeyConstants.DEVICE_TYPE, model);
+                                        startActivityForResult(detailIntent, KeyConstants.GET_BLE_POWER);
+                                    } else {
+                                        Intent detailIntent = new Intent(getActivity(), BluetoothLockFunctionActivity.class);
+                                        String model = bleLockInfo.getServerLockInfo().getModel();
+                                        detailIntent.putExtra(KeyConstants.DEVICE_TYPE, model);
+                                        startActivityForResult(detailIntent, KeyConstants.GET_BLE_POWER);
+                                    }
                                 }
+
                             } else {
                                 Intent detailIntent = new Intent(getActivity(), OldBluetoothLockDetailActivity.class);
                                 String model = bleLockInfo.getServerLockInfo().getModel();
