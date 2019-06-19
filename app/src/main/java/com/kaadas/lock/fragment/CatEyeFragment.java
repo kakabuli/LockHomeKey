@@ -110,7 +110,9 @@ public class CatEyeFragment extends BaseFragment<ICatEyeView, CatEyePresenter<IC
                 }
             }
         };
-        homePageFragment.listenerSelect(iSelectChangeListener);
+        if (homePageFragment!=null){
+            homePageFragment.listenerSelect(iSelectChangeListener);
+        }
     }
 
     @Override
