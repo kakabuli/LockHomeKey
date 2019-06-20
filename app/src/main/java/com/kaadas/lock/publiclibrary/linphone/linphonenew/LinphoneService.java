@@ -46,6 +46,7 @@ import android.widget.Toast;
 
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
+import com.kaadas.lock.activity.cateye.VideoVActivity;
 import com.kaadas.lock.publiclibrary.linphone.linphone.VideoActivity;
 import com.kaadas.lock.publiclibrary.linphone.linphone.callback.PhoneAutoAccept;
 import com.kaadas.lock.publiclibrary.linphone.linphone.callback.PhoneCallback;
@@ -55,6 +56,8 @@ import com.kaadas.lock.publiclibrary.linphone.linphone.linphone.LinphoneContact;
 import com.kaadas.lock.publiclibrary.linphone.linphonenew.compatibility.Compatibility;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.SPUtils;
+import com.kaadas.lock.utils.ftp.GeTui;
+
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCall;
 import org.linphone.core.LinphoneCall.State;
@@ -399,7 +402,9 @@ public final class LinphoneService extends Service {
                         }
                     }
 
-                    if (System.currentTimeMillis() - MyApplication.getInstance().getIsComingTime() < 25 * 1000) {
+                    long diff=System.currentTimeMillis() - MyApplication.getInstance().getIsComingTime();
+                    Log.e(GeTui.VideoLog,"LinphoneService...."+diff);
+                    if (diff < 25 * 1000 && VideoVActivity.isRunning) {
                         // 屏幕亮了
                         handler.postDelayed(new Runnable() {
                             @Override
