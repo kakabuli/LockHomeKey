@@ -1,5 +1,6 @@
 package com.kaadas.lock.mvp.presenter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
@@ -669,9 +670,18 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                     public void accept(Throwable throwable) throws Exception {
                         LogUtils.e("登录米米网失败或者设备部在线");
                         Log.e(GeTui.VideoLog,"登录米米网失败或者设备部在线:"+throwable.getMessage());
-                        if(mViewRef!=null && mViewRef.get()!=null){
-                            Log.e(GeTui.VideoLog,"MainAcvitiyPresenter===>失败");
-                            mViewRef.get().onCatEyeCallFail();
+//                        if(mViewRef!=null && mViewRef.get()!=null){
+//                            Log.e(GeTui.VideoLog,"MainAcvitiyPresenter===>失败");
+//                            mViewRef.get().onCatEyeCallFail();
+//                        }
+                         if(mContext instanceof Activity){
+                            Activity mainActivity= (Activity)mContext;
+                            mainActivity.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(mContext,mContext.getString(R.string.video_connection_fail),Toast.LENGTH_LONG).show();
+                                }
+                            });
                         }
                     }
                 });

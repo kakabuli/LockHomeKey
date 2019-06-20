@@ -1077,5 +1077,5 @@
     <string name="gateway_upgrade_now">:正在升级中，请注意观察网关设备变化</string>
     <string name="gateway_upgade_fail">:该设备暂时无法升级</string>
     <string name="video_desotry">来电呼叫失败，视频组件销毁中</string>
-    <string name="video_connection_fail">通道建立失败</string>
+    <string name="video_connection_fail">猫眼呼叫来电失败,通道建立失败</string>
 </resources>
