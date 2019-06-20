@@ -230,7 +230,7 @@ public class BluetoothLockFunctionActivity extends BaseBleActivity<IDeviceDetail
             lockType="";
         }*/
         if (!TextUtils.isEmpty(lockType)){
-            tvType.setText(getString(R.string.bluetooth_type) + StringUtil.getSubstringFive(lockType));
+            tvType.setText( StringUtil.getSubstringFive(lockType));
         }
     }
 
