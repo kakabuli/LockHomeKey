@@ -194,7 +194,7 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                             GwLockInfo gwLockInfo = (GwLockInfo) homeShowBean.getObject();
                             if (gwLockInfo!=null){
                                 GatewayInfo gate= MyApplication.getInstance().getGatewayById(gwLockInfo.getGwID());
-                                if (gate!=null&&gate.getEvent_str().equals("offline")){
+                                if (gate!=null&&gate.getEvent_str()!=null&&gate.getEvent_str().equals("offline")){
                                     gwLockInfo.getServerInfo().setEvent_str("offline");
                                 }
                             }
@@ -211,7 +211,7 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                             CateEyeInfo cateEyeInfo = (CateEyeInfo) homeShowBean.getObject();
                             if (cateEyeInfo!=null){
                                 GatewayInfo gat= MyApplication.getInstance().getGatewayById(cateEyeInfo.getGwID());
-                                if (gat!=null&&gat.getEvent_str().equals("offline")){
+                                if (gat!=null&&gat.getEvent_str()!=null&&gat.getEvent_str().equals("offline")){
                                     cateEyeInfo.getServerInfo().setEvent_str("offline");
                                 }
                             }
