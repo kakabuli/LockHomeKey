@@ -86,6 +86,7 @@ public class MemeManager {
             for (Device device1 : deviceList) {
                 LogUtils.e(TAG, "  设备状态变化     设备类型  " + device1.getDevClass() + "  设备状态  " + device1.getStatus() + "  设备Ip " + device1.getVip());
             }
+            Log.e(GeTui.VideoLog,"EventObserver==>getGwDevices");
             getGwDevices();
         }
 
@@ -114,7 +115,6 @@ public class MemeManager {
             networksList.addAll(CMAPI.getInstance().getNetworkList());
             Log.e(GeTui.VideoLog,"MyApplication davi mimi networksList "+networksList.toString());
             Log.e(GeTui.VideoLog,"MyApplication davi mimi networksList:"+networksList.size());
-            Log.e(GeTui.VideoLog,"MyApplication davi mimi networksList "+networksList.toString());
 
         }
 
@@ -131,6 +131,7 @@ public class MemeManager {
         @Override
         public void onEstablished() {
             Log.e(TAG, "(启动VPN通道完成-) onEstablished (-已连接)");
+            Log.e(GeTui.VideoLog,"ConnectStatusListener==>Establish,调用getGwDevice方法");
             connectStatusChange.onNext(true);
             getGwDevices();
         }
@@ -140,6 +141,7 @@ public class MemeManager {
         public void onDisconnected(int reason) {
             //连接断开时回调
             Log.e(TAG, "onDisconnected (-断开连接)   " + reason);
+            Log.e(GeTui.VideoLog,"ConnectStatusListener==>onDisconnected");
         }
     };
 
@@ -148,7 +150,7 @@ public class MemeManager {
         currentAccount = meAccount;
         currentPassword = mePassword;
         LogUtils.e(TAG, "登录米米网   账号  " + currentAccount + "  密码  " + currentPassword);
-        Log.e(GeTui.VideoLog, "MemeManager==>登录米米网   账号  " + currentAccount + "  密码  " + currentPassword);
+        Log.e(GeTui.VideoLog, "调用登陆咪咪网api==>MemeManager==>登录米米网   账号  " + currentAccount + "  密码  " + currentPassword);
         CMAPI.getInstance().login(context, meAccount, mePassword, BUILD_VPN_REQUEST, new ResultListener() {
             @Override
             public void onError(int errorCode) {
@@ -193,7 +195,7 @@ public class MemeManager {
         return gwDeviceChange;
     }
 
-    public List<Device> getGwDevices() {
+    public List<Device>  getGwDevices() {
         List<Device> devices = new ArrayList<>();
         List<Device> deviceList = CMAPI.getInstance().getDevices();
         for (Device device : deviceList) {
@@ -201,6 +203,7 @@ public class MemeManager {
                 devices.add(device);
             }
         }
+        Log.e(GeTui.VideoLog,"MemeManager=>getGwDevice==>"+devices);
         if (devices.size() > 0) {
             LogUtils.e(TAG, "网关设备在线   " + devices.size());
             gwDeviceChange.onNext(devices);

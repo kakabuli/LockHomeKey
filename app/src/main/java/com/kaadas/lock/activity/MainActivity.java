@@ -494,6 +494,8 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
         long startTime = 2500;
         if (Rom.isFlyme()) {
             startTime = 5000;
+        }else if(Rom.isMiui()){
+            startTime=3500;
         }
         final String Tag1 = "sip_kaidishi";
         if (timer == null) {
