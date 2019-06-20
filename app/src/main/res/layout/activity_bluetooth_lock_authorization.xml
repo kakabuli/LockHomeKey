@@ -52,7 +52,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="@dimen/dp_36"
-            android:text="@string/bluetooth_type"
             android:textColor="#FFFFFF"
             android:textSize="@dimen/sp_12" />
 

@@ -50,7 +50,7 @@ public class GatewayLockAuthorizationActivity extends BaseAddToApplicationActivi
         ButterKnife.bind(this);
         ivBack.setOnClickListener(this);
         tvOpenClock.setOnClickListener(this);
-        tvType.setText(getString(R.string.bluetooth_type) + " ");
+        tvType.setText( " ");
         tvName.setText("jfjif");
         rlDeviceInformation.setOnClickListener(this);
         dealWithPower(100);
