@@ -160,6 +160,7 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
             public void onPageSelected(int position) {
                 RadioButton radioButton = (RadioButton) mRadioGroup.getChildAt(position);
                 radioButton.setChecked(true);
+
             }
 
             @Override

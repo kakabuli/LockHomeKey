@@ -323,8 +323,14 @@ public class CateyeFunctionActivity extends BaseActivity<ICatEyeFunctionView, Ca
 
     @Override
     public void getPowerDataSuccess(String deviceId, int power, String timestamp) {
-        dealWithPower(power,"online",timestamp);
-        changeOpenLockStatus("online");
+        if (cateEyeInfo!=null){
+            if (cateEyeInfo.getServerInfo().getDeviceId().equals(deviceId)) {
+                String eventStr = cateEyeInfo.getServerInfo().getEvent_str();
+                dealWithPower(power, eventStr, timestamp);
+                changeOpenLockStatus(eventStr);
+            }
+        }
+
     }
 
     @Override
@@ -333,8 +339,9 @@ public class CateyeFunctionActivity extends BaseActivity<ICatEyeFunctionView, Ca
         if (cateEyeInfo!=null){
             if (cateEyeInfo.getServerInfo().getDeviceId().equals(deviceId)) {
                 cateEyeInfo.setPowerTimeStamp(timeStamp);
-                dealWithPower(cateEyeInfo.getPower(), "offline", cateEyeInfo.getPowerTimeStamp());
-                changeOpenLockStatus("offline");
+                String event=cateEyeInfo.getServerInfo().getEvent_str();
+                dealWithPower(cateEyeInfo.getPower(), event, cateEyeInfo.getPowerTimeStamp());
+                changeOpenLockStatus(event);
             }
         }
 

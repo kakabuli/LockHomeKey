@@ -609,7 +609,7 @@ public class BleLockPresenter<T> extends MyOpenLockRecordPresenter<IBleLockView>
     @Override
     public void detachView() {
         super.detachView();
-        LogUtils.e("蓝牙界面   detachView " + this + "   " );
+       // LogUtils.e("蓝牙界面   detachView " + this + "   " );
         handler.removeCallbacksAndMessages(null);
     }
 

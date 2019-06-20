@@ -104,6 +104,7 @@ public class OldBleLockFragment extends BaseBleFragment<IOldBleLockView, OldBleL
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        isDestroy = false;
         Bundle arguments = getArguments();
         bleLockInfo = (BleLockInfo) arguments.getSerializable(KeyConstants.BLE_LOCK_INFO);
         position = arguments.getInt(KeyConstants.FRAGMENT_POSITION);
@@ -142,6 +143,7 @@ public class OldBleLockFragment extends BaseBleFragment<IOldBleLockView, OldBleL
     @Override
     public void onResume() {
         super.onResume();
+        isDestroy = false;
         if (!mPresenter.isAttach() &&!isDestroy && homeFragment.isSelectHome && isCurrentFragment) {
             mPresenter.attachView(this);
             mPresenter.setBleLockInfo(bleLockInfo);

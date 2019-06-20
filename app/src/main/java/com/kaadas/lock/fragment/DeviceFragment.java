@@ -192,6 +192,12 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                         case HomeShowBean.TYPE_GATEWAY_LOCK:
                             //网关锁
                             GwLockInfo gwLockInfo = (GwLockInfo) homeShowBean.getObject();
+                            if (gwLockInfo!=null){
+                                GatewayInfo gate= MyApplication.getInstance().getGatewayById(gwLockInfo.getGwID());
+                                if (gate!=null&&gate.getEvent_str().equals("offline")){
+                                    gwLockInfo.getServerInfo().setEvent_str("offline");
+                                }
+                            }
                             mPresenter.getPower(gwLockInfo.getGwID(), gwLockInfo.getServerInfo().getDeviceId(), MyApplication.getInstance().getUid());
                             //插入数据库
                             ServerGwDevice gwLock = gwLockInfo.getServerInfo();
@@ -203,6 +209,13 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                         case HomeShowBean.TYPE_CAT_EYE:
                             //猫眼
                             CateEyeInfo cateEyeInfo = (CateEyeInfo) homeShowBean.getObject();
+                            if (cateEyeInfo!=null){
+                                GatewayInfo gat= MyApplication.getInstance().getGatewayById(cateEyeInfo.getGwID());
+                                if (gat!=null&&gat.getEvent_str().equals("offline")){
+                                    cateEyeInfo.getServerInfo().setEvent_str("offline");
+                                }
+                            }
+
                             //请求电量
                             mPresenter.getPower(cateEyeInfo.getGwID(), cateEyeInfo.getServerInfo().getDeviceId(), MyApplication.getInstance().getUid());
                             //插入数据库
@@ -514,9 +527,9 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                         CateEyeInfo cateEyeInfo = (CateEyeInfo) device.getObject();
                         cateEyeInfo.setPower(power);
                         cateEyeInfo.setPowerTimeStamp(timestamp);
-                        if (cateEyeInfo.getServerInfo().getEvent_str().equals("offline")) {
+                        /*if (cateEyeInfo.getServerInfo().getEvent_str().equals("offline")) {
                             cateEyeInfo.getServerInfo().setEvent_str("online");
-                        }
+                        }*/
                         if (deviceDetailAdapter != null) {
                             deviceDetailAdapter.notifyDataSetChanged();
                         }
@@ -524,9 +537,9 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                 } else if (HomeShowBean.TYPE_GATEWAY_LOCK == device.getDeviceType()) {
                     if (device.getDeviceId().equals(devciceId)) {
                         GwLockInfo gwLockInfo = (GwLockInfo) device.getObject();
-                        if (gwLockInfo.getServerInfo().getEvent_str().equals("offline")) {
+                       /* if (gwLockInfo.getServerInfo().getEvent_str().equals("offline")) {
                             gwLockInfo.getServerInfo().setEvent_str("online");
-                        }
+                        }*/
                         gwLockInfo.setPower(power);
                         gwLockInfo.setPowerTimeStamp(timestamp);
                         if (deviceDetailAdapter != null) {
@@ -542,7 +555,7 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
 
     @Override
     public void getDevicePowerFail(String gatewayId, String deviceId) {
-        //获取电量失败
+     /*   //获取电量失败
         if (mDeviceList != null && mDeviceList.size() > 0) {
             for (HomeShowBean device : mDeviceList) {
                 //猫眼电量
@@ -564,13 +577,13 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                     }
                 }
             }
-        }
+        }*/
 
     }
 
     @Override
     public void getDevicePowerThrowable(String gatewayId, String deviceId) {
-        //获取电量失败
+        /*//获取电量失败
         if (mDeviceList != null && mDeviceList.size() > 0) {
             for (HomeShowBean device : mDeviceList) {
                 //猫眼电量
@@ -592,7 +605,7 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                     }
                 }
             }
-        }
+        }*/
     }
 
     @Override
