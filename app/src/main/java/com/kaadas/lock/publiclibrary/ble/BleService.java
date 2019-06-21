@@ -25,6 +25,7 @@ import android.widget.Toast;
 
 
 import com.kaadas.lock.MyApplication;
+import com.kaadas.lock.R;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.publiclibrary.ble.bean.NewVersionBean;
 import com.kaadas.lock.publiclibrary.ble.responsebean.BleDataBean;
@@ -152,7 +153,7 @@ public class BleService extends Service {
         if (bluetoothAdapter == null) {
             //不支持
             //设备不支持蓝牙    此种情况很少出现
-            ToastUtil.getInstance().showLong("设备不支持蓝牙，请切换设备");
+            ToastUtil.getInstance().showLong(R.string.device_no_support_ble);
             return;
         }
 
@@ -1003,12 +1004,12 @@ public class BleService extends Service {
             int blueState = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, 0);
             switch (blueState) {
                 case BluetoothAdapter.STATE_OFF:
-                    Toast.makeText(context, "蓝牙已关闭", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, getString(R.string.ble_already_close), Toast.LENGTH_SHORT).show();
                     bleIsEnable = false;
                     bleOpenStateSubject.onNext(false);
                     break;
                 case BluetoothAdapter.STATE_ON:
-                    Toast.makeText(context, "蓝牙已开启", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, getString(R.string.ble_already_open), Toast.LENGTH_SHORT).show();
                     bleOpenStateSubject.onNext(true);
                     bleIsEnable = true;
                     scanLeDevice(true);

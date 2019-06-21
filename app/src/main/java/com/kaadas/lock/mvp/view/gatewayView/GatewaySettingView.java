@@ -69,4 +69,13 @@ public interface GatewaySettingView extends IBaseView {
     //设置信道异常
     void setZbChannelThrowable(Throwable throwable);
 
+    //解绑测试网关成功
+    void unbindTestGatewaySuccess();
+
+    //解绑测试网关失败
+    void unbindTestGatewayFail();
+
+    //解绑测试网关异常
+    void unbindTestGatewayThrowable(Throwable throwable);
+
 }

@@ -35,7 +35,7 @@ public class GatewaySettingPresenter<T> extends BasePresenter<GatewaySettingView
     private Disposable wifiSettingDisposable;
     private Disposable setNetBasicDisposable;
     private Disposable setZBChannelDisposable;
-
+    private Disposable unbindTestGatewayDisposable;
     // 获取网络设置基本信息
     public void getNetBasic(String uid,String gatewayId,String deviceId){
         MqttMessage netBasic = MqttCommandFactory.getNetBasic(uid, gatewayId, deviceId);
@@ -215,6 +215,55 @@ public class GatewaySettingPresenter<T> extends BasePresenter<GatewaySettingView
             compositeDisposable.add(unbindGatewayDisposable);
         }
     }
+
+    //测试解绑网关
+    public void testUnbindGateway(String uid,String gatewayId,String devuuid){
+        if (mqttService!=null){
+            toDisposable(unbindTestGatewayDisposable);
+            unbindTestGatewayDisposable=mqttService.mqttPublish(MqttConstant.MQTT_REQUEST_APP,MqttCommandFactory.unBindTestGateway(uid,gatewayId,devuuid))
+                    .filter(new Predicate<MqttData>() {
+                        @Override
+                        public boolean test(MqttData mqttData) throws Exception {
+                            if (MqttConstant.UNBIND_TEST_GATEWAY.equals(mqttData.getFunc())){
+                                return true;
+                            }
+                            return false;
+                        }
+                    })
+                    .timeout(10*1000,TimeUnit.MILLISECONDS)
+                    .compose(RxjavaHelper.observeOnMainThread())
+                    .subscribe(new Consumer<MqttData>() {
+                        @Override
+                        public void accept(MqttData mqttData) throws Exception {
+                            toDisposable(unbindTestGatewayDisposable);
+                            UnBindGatewayBean unBindGatewayBean=new Gson().fromJson(mqttData.getPayload(),UnBindGatewayBean.class);
+                            if ("200".equals(unBindGatewayBean.getCode())){
+                                if (mViewRef.get()!=null){
+                                    mViewRef.get().unbindTestGatewaySuccess();
+                                    MyApplication.getInstance().getAllDevicesByMqtt(true);
+                                }
+                            }else{
+                                if (mViewRef.get()!=null){
+                                    mViewRef.get().unbindTestGatewayFail();
+                                }
+                            }
+                        }
+                    }, new Consumer<Throwable>() {
+                        @Override
+                        public void accept(Throwable throwable) throws Exception {
+                            if (mViewRef.get()!=null){
+                                mViewRef.get().unbindTestGatewayThrowable(throwable);
+                            }
+                        }
+                    });
+
+        }
+        compositeDisposable.add(unbindTestGatewayDisposable);
+    }
+
+
+
+
 
     //设置wifi名称
     public void setWiFi(String uid,String gatewayId,String deviceId,String encryption,String name,String pwd){

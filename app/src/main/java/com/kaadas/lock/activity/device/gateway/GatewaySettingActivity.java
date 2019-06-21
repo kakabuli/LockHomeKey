@@ -228,7 +228,8 @@ public class GatewaySettingActivity extends BaseActivity<GatewaySettingView, Gat
                     @Override
                     public void right() {
                         if (gatewayId != null) {
-                            mPresenter.unBindGateway(MyApplication.getInstance().getUid(),gatewayId);
+                            mPresenter.unBindGateway(MyApplication.getInstance().getUid(),gatewayId);//正常解绑
+                            //mPresenter.testUnbindGateway(MyApplication.getInstance().getUid(),gatewayId,gatewayId); //测试解绑
                             deleteDialog=AlertDialogUtil.getInstance().noButtonDialog(context,getString(R.string.delete_be_being));
                             deleteDialog.setCancelable(false);
                         }
@@ -664,5 +665,38 @@ public class GatewaySettingActivity extends BaseActivity<GatewaySettingView, Gat
     @Override
     public void setZbChannelThrowable(Throwable throwable) {
         ToastUtil.getInstance().showShort(R.string.set_failed);
+    }
+
+    @Override
+    public void unbindTestGatewaySuccess() {
+        if (deleteDialog!=null){
+            deleteDialog.dismiss();
+        }
+        //清除数据库
+        DaoSession daoSession=MyApplication.getInstance().getDaoWriteSession();
+        daoSession.getGatewayBaseInfoDao().deleteByKey(gatewayId+uid);
+        daoSession.getGatewayServiceInfoDao().queryBuilder().where(GatewayServiceInfoDao.Properties.Uid.eq(uid)).buildDelete().executeDeleteWithoutDetachingEntities();//网关
+        daoSession.getGatewayLockServiceInfoDao().queryBuilder().where(GatewayLockServiceInfoDao.Properties.Uid.eq(uid)).buildDelete().executeDeleteWithoutDetachingEntities();//网关锁
+        daoSession.getCatEyeServiceInfoDao().queryBuilder().where(CatEyeServiceInfoDao.Properties.Uid.eq(uid)).buildDelete().executeDeleteWithoutDetachingEntities();//猫眼
+
+        //解绑成功
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+    }
+
+    @Override
+    public void unbindTestGatewayFail() {
+        if (deleteDialog!=null){
+            deleteDialog.dismiss();
+        }
+        ToastUtil.getInstance().showShort(getString(R.string.delete_fialed));
+    }
+
+    @Override
+    public void unbindTestGatewayThrowable(Throwable throwable) {
+        if (deleteDialog!=null){
+            deleteDialog.dismiss();
+        }
+        ToastUtil.getInstance().showShort(getString(R.string.delete_fialed));
     }
 }

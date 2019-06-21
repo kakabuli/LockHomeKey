@@ -11,6 +11,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -247,8 +248,9 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
 
     @Override
     protected MainActivityPresenter<IMainActivityView> createPresent() {
-        return new MainActivityPresenter<>();
+        return new MainActivityPresenter<>(this);
     }
+
 
 
     public interface HomeSelectListener {
@@ -281,6 +283,7 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
     protected void onStart() {
         super.onStart();
         isOnBackground = false;
+        mPresenter.isFontShow();
     }
 
     public static final boolean isInstanciated() {
@@ -294,6 +297,11 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
         throw new RuntimeException("LinphoneActivity not instantiated yet");
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mPresenter.noIsFont();
+    }
 
     //检查vpn授权
     public void checkVpnService() {
@@ -365,6 +373,16 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
         intent.putExtra(KeyConstants.IS_CALL_IN, true);
         intent.putExtra(KeyConstants.CATE_INFO, cateEyeInfo);
         startActivity(intent);
+    }
+
+    @Override
+    public void onCatEyeCallFail() {
+        new Handler().post(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(MainActivity.this,getString(R.string.video_connection_fail),Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     @Override
@@ -476,6 +494,8 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
         long startTime = 2500;
         if (Rom.isFlyme()) {
             startTime = 5000;
+        }else if(Rom.isMiui()){
+            startTime=3500;
         }
         final String Tag1 = "sip_kaidishi";
         if (timer == null) {

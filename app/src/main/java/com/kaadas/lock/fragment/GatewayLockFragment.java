@@ -151,7 +151,7 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
             mPresenter.listenGaEvent();//锁上报
             mPresenter.getPublishNotify();//网关上线
             mPresenter.listenerDeviceOnline();//设备上线下线
-            mPresenter.getPower();
+            //mPresenter.getPower();
             String time = gatewayLockInfo.getServerInfo().getTime();
             LogUtils.e(time + "网关时间");
             if (!TextUtils.isEmpty(time)) {
@@ -927,7 +927,8 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
         }
         if (!TextUtils.isEmpty(gatewayId) && !TextUtils.isEmpty(deviceId)) {
             if (gatewayId.equals(gwId)&&deviceId.equals(devId)) {
-                mPresenter.openGatewayLockRecord(gatewayId, deviceId, MyApplication.getInstance().getUid(), 1, 3);
+                mPresenter.
+                        openGatewayLockRecord(gatewayId, deviceId, MyApplication.getInstance().getUid(), 1, 3);
                 mPresenter.getGatewayLockOpenRecord(MyApplication.getInstance().getUid(), gatewayId, deviceId);//开锁次数
             }
         }
@@ -935,7 +936,7 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
 
     @Override
     public void getPowerSuccess(String gwId, String devId) {
-        if (gatewayId.equals(gwId)&&deviceId.equals(devId)){
+       /* if (gatewayId.equals(gwId)&&deviceId.equals(devId)){
             if (statusFlag!=5){
                 gatewayLockInfo.getServerInfo().setEvent_str("online");
                 changeOpenLockStatus(5);
@@ -944,13 +945,13 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
                 }
             }
 
-        }
+        }*/
 
     }
 
     @Override
     public void getPowerFail(String gwId,String devId) {
-        if (gatewayId.equals(gwId)&&deviceId.equals(devId)){
+        /*if (gatewayId.equals(gwId)&&deviceId.equals(devId)){
             if (statusFlag!=1){
                 gatewayLockInfo.getServerInfo().setEvent_str("offline");
                 changeOpenLockStatus(1);
@@ -959,7 +960,7 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
                 }
             }
 
-        }
+        }*/
 
 
 
@@ -1045,8 +1046,9 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        if (isVisibleToUser) {
+        if (getUserVisibleHint()&&isVisibleToUser) {
             if (gatewayLockInfo!=null) {
+                mPresenter.attachView(this);
                 if (NetUtil.isNetworkAvailable()) {
                     if ("online".equals(gatewayLockInfo.getServerInfo().getEvent_str())) {
                         //在线
@@ -1074,9 +1076,12 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
                 }
             }
             if (NetUtil.isNetworkAvailable()) {
-                if (!TextUtils.isEmpty(gatewayId) && !TextUtils.isEmpty(deviceId)) {
-                    mPresenter.openGatewayLockRecord(gatewayId, deviceId, MyApplication.getInstance().getUid(), 1, 3);
-                    mPresenter.getGatewayLockOpenRecord(MyApplication.getInstance().getUid(), gatewayId, deviceId);//开锁次数
+                if (gatewayLockInfo!=null) {
+                    if (!TextUtils.isEmpty(gatewayId) && !TextUtils.isEmpty(deviceId)) {
+                        LogUtils.e("请求开锁记录   网关id  " + gatewayId + " 设备ID" + deviceId);
+                        mPresenter.openGatewayLockRecord(gatewayId, deviceId, MyApplication.getInstance().getUid(), 1, 3);
+                        mPresenter.getGatewayLockOpenRecord(MyApplication.getInstance().getUid(), gatewayId, deviceId);//开锁次数
+                    }
                 }
             }
         }

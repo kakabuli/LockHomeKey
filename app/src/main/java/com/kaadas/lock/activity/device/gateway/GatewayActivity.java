@@ -180,7 +180,7 @@ public class GatewayActivity extends BaseActivity<GatewayView, GatewayPresenter<
 
     @Override
     public void getPowerDataFail(String gatewayId, String deviceId) {
-        //获取电量失败
+       /* //获取电量失败
         if (homeShowBeans != null && homeShowBeans.size() > 0) {
             for (HomeShowBean device : homeShowBeans) {
                 //猫眼电量
@@ -206,7 +206,7 @@ public class GatewayActivity extends BaseActivity<GatewayView, GatewayPresenter<
                     }
                 }
             }
-        }
+        }*/
 
 
     }

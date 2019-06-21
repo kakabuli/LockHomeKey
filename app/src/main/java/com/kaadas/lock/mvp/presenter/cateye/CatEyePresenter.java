@@ -84,7 +84,7 @@ public class CatEyePresenter<T> extends BasePresenter<ICatEyeView> {
                         public void accept(MqttData mqttData) throws Exception {
                             DeviceOnLineBean deviceOnLineBean = new Gson().fromJson(mqttData.getPayload(), DeviceOnLineBean.class);
                             if (deviceOnLineBean!=null){
-                                if (mViewRef.get()!=null&&deviceOnLineBean.getEventparams().getEvent_str()!=null){
+                                if (mViewRef!=null&&mViewRef.get()!=null&&deviceOnLineBean.getEventparams().getEvent_str()!=null){
                                     mViewRef.get().deviceStatusChange(deviceOnLineBean.getGwId(),deviceOnLineBean.getDeviceId(),deviceOnLineBean.getEventparams().getEvent_str());
                                 }
                             }
@@ -137,49 +137,50 @@ public class CatEyePresenter<T> extends BasePresenter<ICatEyeView> {
 
     public void listenCatEyeEvent() {
         toDisposable(catEyeEventDisposable);
-        catEyeEventDisposable = mqttService.listenerDataBack()
-                .filter(new Predicate<MqttData>() {
-                    @Override
-                    public boolean test(MqttData mqttData) throws Exception {
-                        if (MqttConstant.EVENT.equals(mqttData.getMsgtype())
-                                && MqttConstant.GW_EVENT.equals(mqttData.getFunc())) {
-                            return true;
+        if (mqttService!=null) {
+            catEyeEventDisposable = mqttService.listenerDataBack()
+                    .filter(new Predicate<MqttData>() {
+                        @Override
+                        public boolean test(MqttData mqttData) throws Exception {
+                            if (MqttConstant.EVENT.equals(mqttData.getMsgtype())
+                                    && MqttConstant.GW_EVENT.equals(mqttData.getFunc())) {
+                                return true;
+                            }
+                            return false;
                         }
-                        return false;
-                    }
-                })
-                .compose(RxjavaHelper.observeOnMainThread())
-                .subscribe(new Consumer<MqttData>() {
-                    @Override
-                    public void accept(MqttData mqttData) throws Exception {
-                        JSONObject jsonObject = new JSONObject(mqttData.getPayload());
-                        String devtype = jsonObject.getString("devtype");
-                        if (TextUtils.isEmpty(devtype)) { //devtype为空   无法处理数据
-                            return;
-                        }
-                        // TODO: 2019/5/14 处理猫眼动态和锁上报的信息分别放在不同的表中
-                        /**
-                         * 猫眼信息上报
-                         */
-                        if (devtype.equals(KeyConstants.DEV_TYPE_CAT_EYE)) {
-                            if (mViewRef.get()!=null){
-                                //两秒后进行重连
-                                Runnable reconncetRunnable = new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        if (mViewRef!=null&&mViewRef.get()!=null){
-                                            mViewRef.get().catEyeEventSuccess();
-                                            LogUtils.e("访问数据猫眼信息");
+                    })
+                    .compose(RxjavaHelper.observeOnMainThread())
+                    .subscribe(new Consumer<MqttData>() {
+                        @Override
+                        public void accept(MqttData mqttData) throws Exception {
+                            JSONObject jsonObject = new JSONObject(mqttData.getPayload());
+                            String devtype = jsonObject.getString("devtype");
+                            if (TextUtils.isEmpty(devtype)) { //devtype为空   无法处理数据
+                                return;
+                            }
+                            // TODO: 2019/5/14 处理猫眼动态和锁上报的信息分别放在不同的表中
+                            /**
+                             * 猫眼信息上报
+                             */
+                            if (devtype.equals(KeyConstants.DEV_TYPE_CAT_EYE)) {
+                                if (mViewRef!=null&&mViewRef.get() != null) {
+                                    //两秒后进行重连
+                                    Runnable reconncetRunnable = new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            if (mViewRef != null && mViewRef.get() != null) {
+                                                mViewRef.get().catEyeEventSuccess();
+                                                LogUtils.e("访问数据猫眼信息");
+                                            }
                                         }
-                                    }
-                                };
-                                mHandler.postDelayed(reconncetRunnable, 2000);
+                                    };
+                                    mHandler.postDelayed(reconncetRunnable, 2000);
+                                }
                             }
                         }
-                    }
-                });
-        compositeDisposable.add(catEyeEventDisposable);
-
+                    });
+            compositeDisposable.add(catEyeEventDisposable);
+        }
     }
 
 }

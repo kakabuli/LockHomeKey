@@ -13,6 +13,7 @@ import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -191,6 +192,12 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                         case HomeShowBean.TYPE_GATEWAY_LOCK:
                             //网关锁
                             GwLockInfo gwLockInfo = (GwLockInfo) homeShowBean.getObject();
+                            if (gwLockInfo!=null){
+                                GatewayInfo gate= MyApplication.getInstance().getGatewayById(gwLockInfo.getGwID());
+                                if (gate!=null&&gate.getEvent_str()!=null&&gate.getEvent_str().equals("offline")){
+                                    gwLockInfo.getServerInfo().setEvent_str("offline");
+                                }
+                            }
                             mPresenter.getPower(gwLockInfo.getGwID(), gwLockInfo.getServerInfo().getDeviceId(), MyApplication.getInstance().getUid());
                             //插入数据库
                             ServerGwDevice gwLock = gwLockInfo.getServerInfo();
@@ -202,6 +209,13 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                         case HomeShowBean.TYPE_CAT_EYE:
                             //猫眼
                             CateEyeInfo cateEyeInfo = (CateEyeInfo) homeShowBean.getObject();
+                            if (cateEyeInfo!=null){
+                                GatewayInfo gat= MyApplication.getInstance().getGatewayById(cateEyeInfo.getGwID());
+                                if (gat!=null&&gat.getEvent_str()!=null&&gat.getEvent_str().equals("offline")){
+                                    cateEyeInfo.getServerInfo().setEvent_str("offline");
+                                }
+                            }
+
                             //请求电量
                             mPresenter.getPower(cateEyeInfo.getGwID(), cateEyeInfo.getServerInfo().getDeviceId(), MyApplication.getInstance().getUid());
                             //插入数据库
@@ -438,17 +452,20 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                         if (bleLockInfo.getServerLockInfo().getIs_admin() != null && bleLockInfo.getServerLockInfo().getIs_admin().equals("1")) {
                             if ("3".equals(bleLockInfo.getServerLockInfo().getBleVersion())) {
                                 String lockType = bleLockInfo.getServerLockInfo().getModel();
-                                if (lockType.startsWith("V6") || lockType.startsWith("V7")) {
-                                    Intent detailIntent = new Intent(getActivity(), BluetoothLockFunctionV6V7Activity.class);
-                                    String model = bleLockInfo.getServerLockInfo().getModel();
-                                    detailIntent.putExtra(KeyConstants.DEVICE_TYPE, model);
-                                    startActivityForResult(detailIntent, KeyConstants.GET_BLE_POWER);
-                                } else {
-                                    Intent detailIntent = new Intent(getActivity(), BluetoothLockFunctionActivity.class);
-                                    String model = bleLockInfo.getServerLockInfo().getModel();
-                                    detailIntent.putExtra(KeyConstants.DEVICE_TYPE, model);
-                                    startActivityForResult(detailIntent, KeyConstants.GET_BLE_POWER);
+                                if (!TextUtils.isEmpty(lockType)){
+                                    if (lockType.startsWith("V6") || lockType.startsWith("V7")||lockType.startsWith("S100")) {
+                                        Intent detailIntent = new Intent(getActivity(), BluetoothLockFunctionV6V7Activity.class);
+                                        String model = bleLockInfo.getServerLockInfo().getModel();
+                                        detailIntent.putExtra(KeyConstants.DEVICE_TYPE, model);
+                                        startActivityForResult(detailIntent, KeyConstants.GET_BLE_POWER);
+                                    } else {
+                                        Intent detailIntent = new Intent(getActivity(), BluetoothLockFunctionActivity.class);
+                                        String model = bleLockInfo.getServerLockInfo().getModel();
+                                        detailIntent.putExtra(KeyConstants.DEVICE_TYPE, model);
+                                        startActivityForResult(detailIntent, KeyConstants.GET_BLE_POWER);
+                                    }
                                 }
+
                             } else {
                                 Intent detailIntent = new Intent(getActivity(), OldBluetoothLockDetailActivity.class);
                                 String model = bleLockInfo.getServerLockInfo().getModel();
@@ -510,9 +527,9 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                         CateEyeInfo cateEyeInfo = (CateEyeInfo) device.getObject();
                         cateEyeInfo.setPower(power);
                         cateEyeInfo.setPowerTimeStamp(timestamp);
-                        if (cateEyeInfo.getServerInfo().getEvent_str().equals("offline")) {
+                        /*if (cateEyeInfo.getServerInfo().getEvent_str().equals("offline")) {
                             cateEyeInfo.getServerInfo().setEvent_str("online");
-                        }
+                        }*/
                         if (deviceDetailAdapter != null) {
                             deviceDetailAdapter.notifyDataSetChanged();
                         }
@@ -520,9 +537,9 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                 } else if (HomeShowBean.TYPE_GATEWAY_LOCK == device.getDeviceType()) {
                     if (device.getDeviceId().equals(devciceId)) {
                         GwLockInfo gwLockInfo = (GwLockInfo) device.getObject();
-                        if (gwLockInfo.getServerInfo().getEvent_str().equals("offline")) {
+                       /* if (gwLockInfo.getServerInfo().getEvent_str().equals("offline")) {
                             gwLockInfo.getServerInfo().setEvent_str("online");
-                        }
+                        }*/
                         gwLockInfo.setPower(power);
                         gwLockInfo.setPowerTimeStamp(timestamp);
                         if (deviceDetailAdapter != null) {
@@ -538,7 +555,7 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
 
     @Override
     public void getDevicePowerFail(String gatewayId, String deviceId) {
-        //获取电量失败
+     /*   //获取电量失败
         if (mDeviceList != null && mDeviceList.size() > 0) {
             for (HomeShowBean device : mDeviceList) {
                 //猫眼电量
@@ -560,13 +577,13 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                     }
                 }
             }
-        }
+        }*/
 
     }
 
     @Override
     public void getDevicePowerThrowable(String gatewayId, String deviceId) {
-        //获取电量失败
+        /*//获取电量失败
         if (mDeviceList != null && mDeviceList.size() > 0) {
             for (HomeShowBean device : mDeviceList) {
                 //猫眼电量
@@ -588,7 +605,7 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                     }
                 }
             }
-        }
+        }*/
     }
 
     @Override

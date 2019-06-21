@@ -120,7 +120,7 @@ public class BluetoothLockAuthorizationActivity extends BaseBleActivity<IOldBlue
 
     private void showLockType() {
         String lockType = bleLockInfo.getServerLockInfo().getModel();
-        if (lockType.startsWith("QZ012")) {
+   /*     if (lockType.startsWith("QZ012")) {
             lockType = "QZ012";
         } else if (lockType.startsWith("QZ013")) {
             lockType = "QZ013";
@@ -142,9 +142,9 @@ public class BluetoothLockAuthorizationActivity extends BaseBleActivity<IOldBlue
             lockType = "K7";
         } else {
             lockType = "";
-        }
+        }*/
         if (!TextUtils.isEmpty(lockType)) {
-            tvType.setText(getString(R.string.bluetooth_type) + lockType);
+            tvType.setText(StringUtil.getSubstringFive(lockType));
         }
     }
 
@@ -176,7 +176,7 @@ public class BluetoothLockAuthorizationActivity extends BaseBleActivity<IOldBlue
                 ivLockIcon.setImageResource(R.mipmap.bluetooth_lock_s8);
             }else if (model.contains("V6")){
                 ivLockIcon.setImageResource(R.mipmap.bluetooth_lock_v6);
-            }else if (model.contains("V7")){
+            }else if (model.contains("V7")||model.contains("S100")){
                 ivLockIcon.setImageResource(R.mipmap.bluetooth_lock_v7);
             }  else if (model.contains("S8")) {
                 ivLockIcon.setImageResource(R.mipmap.bluetooth_lock_s8);

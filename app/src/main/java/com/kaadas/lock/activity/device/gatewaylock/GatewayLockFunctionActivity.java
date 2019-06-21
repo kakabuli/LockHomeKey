@@ -498,7 +498,12 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
 
     @Override
     public void getPowerDataSuccess(String deviceId, int power, String timestamp) {
-        dealWithPower(power, "online", timestamp);
+        if (lockInfo!=null){
+            if (lockInfo.getServerInfo().getDeviceId().equals(deviceId)){
+                dealWithPower(power, lockInfo.getServerInfo().getEvent_str(), timestamp);
+            }
+        }
+
     }
 
     @Override
@@ -506,7 +511,7 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
         if (lockInfo != null) {
             if (lockInfo.getServerInfo().getDeviceId().equals(deviceId)) {
                 lockInfo.setPowerTimeStamp(timeStamp);
-                dealWithPower(lockInfo.getPower(), "offline", lockInfo.getPowerTimeStamp());
+                dealWithPower(lockInfo.getPower(), lockInfo.getServerInfo().getEvent_str(), lockInfo.getPowerTimeStamp());
             }
         }
     }

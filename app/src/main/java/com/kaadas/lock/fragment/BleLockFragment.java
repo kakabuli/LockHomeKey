@@ -116,7 +116,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        isDestroy = false;
     }
 
     @Override
@@ -134,7 +134,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
     @Override
     public void onResume() {
         super.onResume();
-
+        isDestroy = false;
         if (!mPresenter.isAttach() && !isDestroy && homeFragment.isSelectHome && isCurrentFragment) {
 //        if (!mPresenter.isAttach()&& !isDestroy ) {
             LogUtils.e("attachView   4");
@@ -308,6 +308,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
 
             @Override
             public void onPageSelected(int i) {
+                LogUtils.e("设备切换   当前index   " + i + "  position  " + position +"   "+homeFragment.isSelectHome+"   homeFragment.isSelectHome ");
                 if (i == position) {
                     if (!isDestroy) {
                         isCurrentFragment = true;
@@ -321,7 +322,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
                         mPresenter.setBleLockInfo(bleLockInfo);
                         onChangeInitView();
                         LogUtils.e(this + "   设置设备1  " + bleLockInfo.getServerLockInfo().toString());
-                        mPresenter.isAuth(bleLockInfo, true);
+//                        mPresenter.isAuth(bleLockInfo, true);
                         mPresenter.getAllPassword(bleLockInfo, false);
                     }
                 } else {
@@ -380,6 +381,8 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
         LogUtils.e("蓝牙界面   onDestroyView  " + this);
         isDestroy = true;
     }
+
+
 
     public void changePage() {
         if (!isAdded()) {
@@ -1311,7 +1314,10 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
     }
 
     private void onChangeInitView() {
+
+        LogUtils.e("设备状态   1");
         if (mPresenter.isAuth(bleLockInfo, true)) {
+            LogUtils.e("设备状态   2");
             changeOpenLockStatus(8);  //鉴权成功之后没有特殊状态
             onElectricUpdata(bleLockInfo.getBattery());
             if (bleLockInfo.getBackLock() == 0) {  //等于0时是反锁状态
