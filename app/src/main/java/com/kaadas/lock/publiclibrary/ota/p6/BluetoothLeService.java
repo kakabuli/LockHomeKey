@@ -134,7 +134,7 @@ public class BluetoothLeService extends Service {
     public static final int MTU_DEFAULT = 20;//MIN_MTU(23) - 3
     public static final int MTU_NUM_BYTES_TO_SUBTRACT = 3;//3 bytes need to be subtracted
     private static final String TAG = "蓝牙Service";
-    public static Semaphore writeSemaphore = new Semaphore(1);
+//    public static Semaphore writeSemaphore = new Semaphore(1);
 
     public static final String DEVICE_SYSTEM_ID = "00002a23-0000-1000-8000-00805f9b34fb"; //SystemID 特征值UUID
 
@@ -326,7 +326,7 @@ public class BluetoothLeService extends Service {
             }
             if (characteristic.getUuid().toString().equalsIgnoreCase(OTA_CHARACTERISTIC)) {
                 Logger.v("Release semaphore2");
-                writeSemaphore.release();
+//                writeSemaphore.release();
             }
         }
 
@@ -680,12 +680,12 @@ public class BluetoothLeService extends Service {
         int localLength = 0;
         byte[] localValue = new byte[mtuValue];
         do {
-            try {
-                Logger.v("Acquire semaphore");
-                writeSemaphore.acquire();
-            } catch (InterruptedException ie) {
-                ie.printStackTrace();
-            }
+//            try {
+//                Logger.v("Acquire semaphore");
+////                writeSemaphore.acquire();
+//            } catch (InterruptedException ie) {
+//                ie.printStackTrace();
+//            }
 
             if (totalLength >= mtuValue) {
                 for (int i = 0; i < mtuValue; i++) {
@@ -729,7 +729,7 @@ public class BluetoothLeService extends Service {
             } else {
                 Log.e(TAG, "发布消息失败");
                 Logger.v("Release semaphore1");
-                writeSemaphore.release();
+//                writeSemaphore.release();
                 Logger.v("writeOTABootLoaderCommand failed!");
             }
         } while (totalLength > 0);

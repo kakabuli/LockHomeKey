@@ -11,7 +11,6 @@ public class MqttConstant {
 
     //米米网参数
     public final static String APP_ID = "AIB1EITFX0DB75MCUIZR";
-    public final static String APP_KEY = "MDXD51LH6NG5M7FP2AGN";
     public final static String PARTERN_ID = "HQQ8H3HJGJ2KPQJ7NXZY";
     public final static int  DC_TEST = 6750465;
 
