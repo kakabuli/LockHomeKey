@@ -78,7 +78,7 @@ public class BleLockPresenter<T> extends MyOpenLockRecordPresenter<IBleLockView>
                             return;
                         }
                         byte[] deValue = Rsa.decrypt(bleDataBean.getPayload(), bleLockInfo.getAuthKey());
-                        LogUtils.e("门锁信息的数据是   源数据是  "+Rsa.bytesToHexString(bleDataBean.getOriginalData())+"    解密后的数据是    " + Rsa.bytesToHexString(deValue));
+                        LogUtils.e("门锁信息的数据是   源数据是  " + Rsa.bytesToHexString(bleDataBean.getOriginalData()) + "    解密后的数据是    " + Rsa.bytesToHexString(deValue));
                         byte lockState = deValue[4]; //第五个字节为锁状态信息
                         /**
                          * 门锁状态
@@ -131,7 +131,7 @@ public class BleLockPresenter<T> extends MyOpenLockRecordPresenter<IBleLockView>
                         if (bleLockInfo.getBattery() == -1) {   //没有获取过再重新获取   获取到电量  那么
                             bleLockInfo.setBattery(battery);
                             bleLockInfo.setReadBatteryTime(System.currentTimeMillis());
-                            if (mViewRef.get() != null) {
+                            if (mViewRef != null && mViewRef.get() != null) {
                                 mViewRef.get().onElectricUpdata(battery);
                             }
                         }
@@ -143,9 +143,9 @@ public class BleLockPresenter<T> extends MyOpenLockRecordPresenter<IBleLockView>
 
                         LogUtils.e("锁上时间为    " + lockTime);
                         toDisposable(getDeviceInfoDisposable);
-                        if (mViewRef.get() != null) {
-                            LogUtils.e("设置锁状态  反锁状态   " + bleLockInfo.getBackLock()+"    安全模式    "+bleLockInfo.getSafeMode()+"   布防模式   "+bleLockInfo.getArmMode());
-                            if (state2 == 0 && bleLockInfo.getSupportBackLock() == 1 ) {  //等于0时是反锁状态
+                        if (mViewRef != null && mViewRef.get() != null) {
+                            LogUtils.e("设置锁状态  反锁状态   " + bleLockInfo.getBackLock() + "    安全模式    " + bleLockInfo.getSafeMode() + "   布防模式   " + bleLockInfo.getArmMode());
+                            if (state2 == 0 && bleLockInfo.getSupportBackLock() == 1) {  //等于0时是反锁状态
                                 mViewRef.get().onBackLock();
                             }
                             if (state5 == 1) {//安全模式
@@ -170,53 +170,49 @@ public class BleLockPresenter<T> extends MyOpenLockRecordPresenter<IBleLockView>
 
     private void readBattery() {
         toDisposable(electricDisposable);
-        electricDisposable =  Observable.just(0)
-                        .flatMap(new Function<Integer, ObservableSource<ReadInfoBean>>() {
-                            @Override
-                            public ObservableSource<ReadInfoBean> apply(Integer integer) throws Exception {
-                                return bleService.readBattery();
+        electricDisposable = Observable.just(0)
+                .flatMap(new Function<Integer, ObservableSource<ReadInfoBean>>() {
+                    @Override
+                    public ObservableSource<ReadInfoBean> apply(Integer integer) throws Exception {
+                        return bleService.readBattery();
+                    }
+                })
+                .filter(new Predicate<ReadInfoBean>() {
+                    @Override
+                    public boolean test(ReadInfoBean readInfoBean) throws Exception {
+                        return readInfoBean.type == ReadInfoBean.TYPE_BATTERY;
+                    }
+                })
+                .timeout(1000, TimeUnit.MILLISECONDS)
+                .compose(RxjavaHelper.observeOnMainThread())
+                .retryWhen(new RetryWithTime(2, 0))  //读取三次电量   如果没有读取到电量的话
+                .subscribe(new Consumer<ReadInfoBean>() {
+                    @Override
+                    public void accept(ReadInfoBean readInfoBean) throws Exception {
+                        LogUtils.e("读取电量成功    " + (Integer) readInfoBean.data);
+                        Integer battery = (Integer) readInfoBean.data;
+                        if (bleLockInfo.getBattery() == -1) {   //没有获取过再重新获取   获取到电量  那么
+                            bleLockInfo.setBattery(battery);
+                            bleLockInfo.setReadBatteryTime(System.currentTimeMillis());
+                            if (mViewRef != null && mViewRef.get() != null) {  //读取电量成功
+                                mViewRef.get().onElectricUpdata(battery);
                             }
-                        })
-                        .filter(new Predicate<ReadInfoBean>() {
-                            @Override
-                            public boolean test(ReadInfoBean readInfoBean) throws Exception {
-                                return readInfoBean.type == ReadInfoBean.TYPE_BATTERY;
-                            }
-                        })
-                        .timeout(1000, TimeUnit.MILLISECONDS)
-                        .compose(RxjavaHelper.observeOnMainThread())
-                        .retryWhen(new RetryWithTime(2, 0))  //读取三次电量   如果没有读取到电量的话
-                        .subscribe(new Consumer<ReadInfoBean>() {
-                            @Override
-                            public void accept(ReadInfoBean readInfoBean) throws Exception {
-                                LogUtils.e("读取电量成功    " + (Integer) readInfoBean.data);
-                                Integer battery = (Integer) readInfoBean.data;
-                                if (bleLockInfo.getBattery() == -1) {   //没有获取过再重新获取   获取到电量  那么
-                                    bleLockInfo.setBattery(battery);
-                                    bleLockInfo.setReadBatteryTime(System.currentTimeMillis());
-                                    if (mViewRef.get() != null) {  //读取电量成功
-                                        mViewRef.get().onElectricUpdata(battery);
-                                    }
-                                }
-                                toDisposable(electricDisposable);
-                                getDeviceInfo();
-                            }
-                        }, new Consumer<Throwable>() {
-                            @Override
-                            public void accept(Throwable throwable) throws Exception {
-                                LogUtils.e("读取电量失败   " + throwable.getMessage());
-                                if (mViewRef.get() != null) {  //读取电量失败
-                                    mViewRef.get().onElectricUpdataFailed(throwable);
-                                }
-                                getDeviceInfo();
-                            }
-                        });
+                        }
+                        toDisposable(electricDisposable);
+                        getDeviceInfo();
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        LogUtils.e("读取电量失败   " + throwable.getMessage());
+                        if (mViewRef != null && mViewRef.get() != null) {  //读取电量失败
+                            mViewRef.get().onElectricUpdataFailed(throwable);
+                        }
+                        getDeviceInfo();
+                    }
+                });
         compositeDisposable.add(electricDisposable);
     }
-
-
-
-
 
 
     /**
@@ -257,7 +253,7 @@ public class BleLockPresenter<T> extends MyOpenLockRecordPresenter<IBleLockView>
                                 LogUtils.e("开锁次数的数据是   " + Rsa.toHexString(data));
                                 int number = (data[0] & 0xff) + ((data[1] & 0xff) << 8) + ((data[2] & 0xff) << 16) + ((data[3] & 0xff) << 24);
                                 LogUtils.e("开锁次数为   " + number);
-                                if (mViewRef.get() != null) {
+                                if (mViewRef != null && mViewRef.get() != null) {
                                     mViewRef.get().onGetOpenNumberSuccess(number);
                                 }
                             }
@@ -265,7 +261,7 @@ public class BleLockPresenter<T> extends MyOpenLockRecordPresenter<IBleLockView>
                             @Override
                             public void accept(Throwable throwable) throws Exception {
                                 LogUtils.e("获取开锁次数失败 ");
-                                if (mViewRef.get() != null) {
+                                if (mViewRef != null && mViewRef.get() != null) {
                                     mViewRef.get().onGetOpenNumberFailed(throwable);
                                 }
                             }
@@ -283,11 +279,11 @@ public class BleLockPresenter<T> extends MyOpenLockRecordPresenter<IBleLockView>
             serverAuth();
         } else {  //没有网络
             if (isAdmin) {  //是 管理员
-                if (mViewRef.get() != null) {
+                if (mViewRef != null && mViewRef.get() != null) {
                     mViewRef.get().inputPwd();
                 }
             } else { //不是管理员
-                if (mViewRef.get() != null) {
+                if (mViewRef != null && mViewRef.get() != null) {
                     mViewRef.get().notAdminMustHaveNet();
                 }
             }
@@ -314,7 +310,7 @@ public class BleLockPresenter<T> extends MyOpenLockRecordPresenter<IBleLockView>
                             if ("1".equals(bleLockInfo.getServerLockInfo().getIs_admin())) { //如果是管理员  查看本地密码
                                 localPwd = (String) SPUtils.get(KeyConstants.SAVE_PWD_HEARD + bleLockInfo.getServerLockInfo().getMacLock(), ""); //Key
                                 if (TextUtils.isEmpty(localPwd)) { //如果用户密码为空
-                                    if (mViewRef.get() != null) {
+                                    if (mViewRef != null && mViewRef.get() != null) {
                                         mViewRef.get().inputPwd();
                                     }
                                 } else {
@@ -329,14 +325,14 @@ public class BleLockPresenter<T> extends MyOpenLockRecordPresenter<IBleLockView>
                     @Override
                     public void onAckErrorCode(BaseResult baseResult) {
                         //785 鉴权失败  没有这把锁   803 当前时间没有权限
-                        if (mViewRef.get() != null) {
+                        if (mViewRef != null && mViewRef.get() != null) {
                             mViewRef.get().authServerFailed(baseResult);
                         }
                     }
 
                     @Override
                     public void onFailed(Throwable throwable) {
-                        if (mViewRef.get() != null) {
+                        if (mViewRef != null && mViewRef.get() != null) {
                             mViewRef.get().authFailed(throwable);
                         }
                     }
@@ -351,6 +347,9 @@ public class BleLockPresenter<T> extends MyOpenLockRecordPresenter<IBleLockView>
 
 
     public void realOpenLock(String pwd, boolean isApp) {
+        if (mViewRef == null) {
+            return;
+        }
         if (mViewRef.get() != null) {
             mViewRef.get().isOpeningLock();
         }
@@ -382,7 +381,7 @@ public class BleLockPresenter<T> extends MyOpenLockRecordPresenter<IBleLockView>
                             listenerOpenLockUp();
                         } else {  //开锁失败
                             LogUtils.e("开锁失败 2  " + Rsa.bytesToHexString(bleDataBean.getPayload()));
-                            if (mViewRef.get() != null) {
+                            if (mViewRef != null && mViewRef.get() != null) {
                                 mViewRef.get().openLockFailed(new BleProtocolFailedException(0xff & bleDataBean.getOriginalData()[0]));
                             }
                             //开锁失败  清除密码
@@ -394,7 +393,7 @@ public class BleLockPresenter<T> extends MyOpenLockRecordPresenter<IBleLockView>
                     @Override
                     public void accept(Throwable throwable) throws Exception {
                         LogUtils.e("开锁失败 3  " + throwable.getMessage());
-                        if (mViewRef.get() != null) {
+                        if (mViewRef != null && mViewRef.get() != null) {
                             mViewRef.get().openLockFailed(throwable);
                         }
                     }
@@ -436,7 +435,7 @@ public class BleLockPresenter<T> extends MyOpenLockRecordPresenter<IBleLockView>
 
                             } else if (value2 == 2) {   //开锁
                                 LogUtils.e("收到开锁上报");
-                                if (mViewRef.get() != null) {
+                                if (mViewRef != null && mViewRef.get() != null) {
                                     mViewRef.get().openLockSuccess();
                                 }
                                 //延时1秒读取开锁次数   直接读可能失败
@@ -456,7 +455,7 @@ public class BleLockPresenter<T> extends MyOpenLockRecordPresenter<IBleLockView>
                     @Override
                     public void accept(Throwable throwable) throws Exception {
                         LogUtils.e("开锁失败   " + throwable.getMessage());
-                        if (mViewRef.get() != null) {
+                        if (mViewRef != null && mViewRef.get() != null) {
                             mViewRef.get().openLockFailed(throwable);
                         }
                     }
@@ -468,11 +467,11 @@ public class BleLockPresenter<T> extends MyOpenLockRecordPresenter<IBleLockView>
     @Override
     public void attachView(IBleLockView view) {
         super.attachView(view);
-        if (bleService == null){
+        if (bleService == null) {
             return;
         }
         //设置警报提醒
-        LogUtils.e("蓝牙界面   attachView " + this +"    "  );
+        LogUtils.e("蓝牙界面   attachView " + this + "    ");
         toDisposable(warringDisposable);
         warringDisposable = bleService.listeneDataChange()
                 .filter(new Predicate<BleDataBean>() {
@@ -507,13 +506,13 @@ public class BleLockPresenter<T> extends MyOpenLockRecordPresenter<IBleLockView>
                         int state6 = (deValue[4] & 0b01000000) == 0b01000000 ? 1 : 0;   //恢复出厂设置
                         int state9 = (deValue[5] & 0b00000010) == 0b00000010 ? 1 : 0;   //安全模式上报
                         bleLockInfo.setLockStatusException(true);
-                        if (mViewRef.get() != null) {
+                        if (mViewRef != null && mViewRef.get() != null) {
                             if (state9 == 1) {
                                 mViewRef.get().onWarringUp(9);
                                 bleLockInfo.setSafeMode(1);
                             } else if (state6 == 1) {
                                 mViewRef.get().onWarringUp(6);
-                            }else {
+                            } else {
                                 mViewRef.get().onWarringUp(-2);
                             }
                         }
@@ -553,13 +552,13 @@ public class BleLockPresenter<T> extends MyOpenLockRecordPresenter<IBleLockView>
                         if (value0 == 1) {  //上锁
                             if (value2 == 1) {
                                 LogUtils.e("上锁成功  ");
-                                if (mViewRef.get() != null) {
+                                if (mViewRef != null && mViewRef.get() != null) {
                                     mViewRef.get().onLockLock();
                                 }
                                 getOpenLockNumber();
                             } else if (value2 == 2) {   //开锁
                                 LogUtils.e("开锁成功   " + Rsa.bytesToHexString(bleDataBean.getPayload()));
-                                if (mViewRef.get() != null) {
+                                if (mViewRef != null && mViewRef.get() != null) {
                                     mViewRef.get().openLockSuccess();
                                 }
                                 getOpenLockNumber();
@@ -590,7 +589,7 @@ public class BleLockPresenter<T> extends MyOpenLockRecordPresenter<IBleLockView>
                 .subscribe(new Consumer<BleDataBean>() {
                     @Override
                     public void accept(BleDataBean bleDataBean) throws Exception {
-                        if (mViewRef.get() != null) {   //通知界面更新显示设备状态
+                        if (mViewRef != null && mViewRef.get() != null) {   //通知界面更新显示设备状态
                             mViewRef.get().onWarringUp(-1);
                         }
                         //锁状态改变   读取锁信息
@@ -609,11 +608,11 @@ public class BleLockPresenter<T> extends MyOpenLockRecordPresenter<IBleLockView>
     @Override
     public void detachView() {
         super.detachView();
-       // LogUtils.e("蓝牙界面   detachView " + this + "   " );
+        // LogUtils.e("蓝牙界面   detachView " + this + "   " );
         handler.removeCallbacksAndMessages(null);
     }
 
-    public boolean isAttach(){
+    public boolean isAttach() {
         return isAttach;
     }
 

@@ -1060,7 +1060,7 @@ public class BleService extends Service {
                                 Thread.sleep(100);
                                 //扫描需要延时吗
                                 bluetoothLeScanner.startScan(null, scanSettings, newScanBleCallback);
-                            } catch (InterruptedException e) {
+                            } catch (Exception e ) {
                                 e.printStackTrace();
                             }
                         }
@@ -1104,8 +1104,9 @@ public class BleService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        System.exit(0);
         LogUtils.e("BleService被杀死   ");
+        System.exit(0);
+
     }
 
 
