@@ -1081,4 +1081,5 @@
     <string name="ble_already_open">蓝牙已开启</string>
     <string name="device_no_support_ble">设备不支持蓝牙，请切换设备</string>
     <string name="video_connection_fail">猫眼呼叫来电失败,通道建立失败</string>
+    <string name="low_power_warring">低电量无法OTA,请更换电池</string>
 </resources>
