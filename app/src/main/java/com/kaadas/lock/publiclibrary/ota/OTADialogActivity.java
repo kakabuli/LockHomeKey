@@ -135,8 +135,9 @@ public class OTADialogActivity extends BaseActivity<IOtaView, OtaPresenter<IOtaV
             intent.putExtra(OtaConstants.fileName, "Kaadas_" + updateFileInfo.getFileVersion() + "_" + updateFileInfo.getFileMd5()+ ".cyacd2");
             intent.setClass(OTADialogActivity.this, P6OtaUpgradeActivity.class);
         }
-        startActivity(intent);
         finish();
+        startActivity(intent);
+
     }
 
     @Override

@@ -58,6 +58,7 @@ public class WelcomeActivity extends BaseActivity<ISplashView, SplashPresenter<I
         MqttService mqttService=MyApplication.getInstance().getMqttService();
         BleService bleService=MyApplication.getInstance().getBleService();
         if (mqttService!=null&&bleService!=null){
+            LogUtils.e("蓝牙和mqttService不为空");
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {

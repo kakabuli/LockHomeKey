@@ -150,8 +150,10 @@ public class MqttService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        System.exit(0);
         LogUtils.e("mqtt", "MqttService为空");
+        //System.exit(0); 退出并没finish activity 因此增加了这一步
+        MyApplication.getInstance().removeAllActivity();
+        System.exit(0);
     }
 
     public MqttAndroidClient getMqttClient() {

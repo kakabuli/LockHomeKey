@@ -1062,7 +1062,7 @@
     <string name="vivo_market">vivo应用市场</string>
     <string name="isforce">请务必升级到最新版本</string>
     <string name="update_toast">版本%s已经发布</string>
-    <string name="video_destory_time">视频组件销毁中,请稍后再点击</string>
+    <string name="video_destory_time">App准备中，请3秒后再试</string>
     <string name="people">人</string>
     <string name="ri" >日</string>
     <string name="warrning_open">防拆报警</string>
@@ -1076,7 +1076,7 @@
     <string name="have_new_gateway_version">有新版本发布</string>
     <string name="gateway_upgrade_now">:正在升级中，请注意观察网关设备变化</string>
     <string name="gateway_upgade_fail">:该设备暂时无法升级</string>
-    <string name="video_desotry">来电呼叫失败，视频组件销毁中</string>
+    <string name="video_desotry">来电呼叫失败，App准备中</string>
     <string name="ble_already_close">蓝牙已关闭</string>
     <string name="ble_already_open">蓝牙已开启</string>
     <string name="device_no_support_ble">设备不支持蓝牙，请切换设备</string>
