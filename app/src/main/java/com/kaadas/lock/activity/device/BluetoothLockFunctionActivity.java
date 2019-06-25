@@ -133,7 +133,7 @@ public class BluetoothLockFunctionActivity extends BaseBleActivity<IDeviceDetail
     private Runnable lockRunnable;
     private boolean isConnectingDevice;
     private Handler handler = new Handler();
-
+    String lockType;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -186,7 +186,7 @@ public class BluetoothLockFunctionActivity extends BaseBleActivity<IDeviceDetail
     }
 
     private void showLockType() {
-        String lockType = bleLockInfo.getServerLockInfo().getModel();
+         lockType = bleLockInfo.getServerLockInfo().getModel();
        /* if (lockType.startsWith("K9S")){
             lockType="K9S";
         }else if (lockType.startsWith("K8S")){
@@ -412,6 +412,9 @@ public class BluetoothLockFunctionActivity extends BaseBleActivity<IDeviceDetail
                 break;
             case R.id.ll_five:
                 intent = new Intent(this, BluetoothMoreActivity.class);
+                if (lockType.startsWith("S8")){
+                    intent.putExtra(KeyConstants.SOURCE,"BluetoothLockFunctionV6V7Activity");
+                }
                 startActivityForResult(intent, TO_MORE_REQUEST_CODE);
                 break;
             case R.id.tv_open_clock:

@@ -412,7 +412,7 @@ public class BluetoothLockFunctionV6V7Activity extends BaseBleActivity<IDeviceDe
                 break;
             case R.id.ll_five:
                 intent = new Intent(this, BluetoothMoreActivity.class);
-                intent.putExtra(KeyConstants.SOURCE,"BluetoothLockFunctionV6V7Activity");
+                intent.putExtra(KeyConstants.SOURCE,"BluetoothLockFunctionV6V7Activity");//a-m模式隐藏标记
                 startActivityForResult(intent, TO_MORE_REQUEST_CODE);
                 break;
             case R.id.tv_open_clock:
