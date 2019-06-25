@@ -9,7 +9,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="7"
+        android:layout_weight="2.7"
         android:orientation="vertical">
 
         <RelativeLayout
@@ -122,33 +122,64 @@
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
-
-    <RelativeLayout
-        android:id="@+id/rl_device_information"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:background="#fff"
-        android:visibility="invisible">
+        android:background="#F2F2F2"
+        android:paddingTop="@dimen/dp_25"
+        android:paddingBottom="@dimen/dp_25"
+        android:paddingLeft="@dimen/dp_10"
+        android:paddingRight="@dimen/dp_10"
+        android:orientation="horizontal">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="@dimen/dp_26"
-            android:drawableLeft="@mipmap/old_bluetooth_detail_more"
-            android:drawablePadding="@dimen/dp_22"
-            android:gravity="center_vertical"
-            android:text="@string/more"
-            android:textColor="#333333"
-            android:textSize="@dimen/sp_13" />
+        <RelativeLayout
+            android:id="@+id/rl_device_share"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="#fff"
+            >
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="@dimen/dp_16"
-            android:src="@mipmap/right" />
-    </RelativeLayout>
+            <TextView
+                android:layout_centerInParent="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/dp_26"
+                android:drawableTop="@mipmap/old_bluetooth_share_icon"
+                android:drawablePadding="@dimen/dp_12"
+                android:gravity="center_vertical"
+                android:text="@string/device_share"
+                android:textColor="#333333"
+                android:textSize="@dimen/sp_14" />
+
+
+        </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/rl_device_information"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="#fff"
+            android:visibility="gone"
+            >
+
+            <TextView
+                android:layout_centerInParent="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/dp_26"
+                android:drawableTop="@mipmap/old_bluetooth_detail_more"
+                android:drawablePadding="@dimen/dp_22"
+                android:gravity="center_vertical"
+                android:text="@string/more"
+                android:textColor="#333333"
+                android:textSize="@dimen/sp_14" />
+
+
+        </RelativeLayout>
+    </LinearLayout>
+
 </LinearLayout>

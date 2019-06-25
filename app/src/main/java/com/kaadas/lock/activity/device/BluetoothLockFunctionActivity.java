@@ -175,7 +175,7 @@ public class BluetoothLockFunctionActivity extends BaseBleActivity<IDeviceDetail
         super.onStart();
         mPresenter.attachView(this);
         mPresenter.getAllPassword(bleLockInfo);
-        int userManageNumber = (int) SPUtils.getProtect(KeyConstants.USER_MANAGE_NUMBER, 0);
+        int userManageNumber = (int) SPUtils.getProtect(KeyConstants.USER_MANAGE_NUMBER+""+bleLockInfo.getServerLockInfo().getLockName(), 0);
         tvNumberFour.setText(userManageNumber + getString(R.string.people));
     }
 
