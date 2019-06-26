@@ -126,7 +126,6 @@ public class DeviceMorePresenter extends BlePresenter<IDeviceMoreView> {
                 .subscribe(new Consumer<BleDataBean>() {
                     @Override
                     public void accept(BleDataBean bleDataBean) throws Exception {
-
                         if (bleDataBean.isConfirm()) {
                             return;
                         }
@@ -134,11 +133,13 @@ public class DeviceMorePresenter extends BlePresenter<IDeviceMoreView> {
                         byte[] deValue = Rsa.decrypt(bleDataBean.getPayload(), bleLockInfo.getAuthKey());
                         byte lockState = deValue[4]; //第五个字节为锁状态信息
 
-
                         int voice = deValue[8] & 0xff;  //是否是静音模式 0静音  1有声音
                         LogUtils.e("获取到音量   " + voice);
                         String lang = new String(new byte[]{deValue[9], deValue[10]});  //语言设置
                         int battery = deValue[11] & 0xff; //电量
+                        if (bleLockInfo.getBattery()!=-1){
+                            bleLockInfo.setBattery(battery);
+                        }
                         byte[] time = new byte[]{deValue[12], deValue[13], deValue[14], deValue[15]};  //锁的时间
                         long time1 = Rsa.bytes2Int(time);
                         //开门时间秒

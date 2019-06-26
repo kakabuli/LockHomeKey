@@ -474,6 +474,10 @@ public class BluetoothMoreActivity extends BaseBleActivity<IDeviceMoreView, Devi
                     }
                     @Override
                     public void right() {
+                        if (bleLockInfo.getBattery()<20){
+                            ToastUtil.getInstance().showLong(R.string.low_power_warring);
+                            return;
+                        }
                         SPUtils.put(KeyConstants.DEVICE_SN + bleLockInfo.getServerLockInfo().getMacLock(), Sn);    //Key
                         SPUtils.put(KeyConstants.BLE_VERSION + bleLockInfo.getServerLockInfo().getMacLock(), version); //Key
                         LogUtils.e("升级的版本信息是   " + Sn + "   下载链接是   " + updateFileInfo.getFileUrl());
@@ -539,13 +543,13 @@ public class BluetoothMoreActivity extends BaseBleActivity<IDeviceMoreView, Devi
     @Override
     public void onUpdateSoftFailed(Throwable throwable) {
         hiddenLoading();
-        LogUtils.e(getString(R.string.update_ble_version_failed));
+        ToastUtil.getInstance().showLong(getString(R.string.update_ble_version_failed));
     }
 
     @Override
     public void onUpdateSoftFailedServer(BaseResult baseResult) {
         hiddenLoading();
-        LogUtils.e(getString(R.string.update_ble_version_failed));
+        ToastUtil.getInstance().showLong(getString(R.string.update_ble_version_failed));
     }
 
     @Override

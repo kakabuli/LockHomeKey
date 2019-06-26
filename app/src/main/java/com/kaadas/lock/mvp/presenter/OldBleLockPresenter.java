@@ -98,7 +98,7 @@ public class OldBleLockPresenter<T> extends MyOldOpenLockRecordPresenter<IOldBle
                                 if (bleLockInfo.getBattery() == -1) {   //没有获取过再重新获取   获取到电量  那么
                                     bleLockInfo.setBattery(battery);
                                     bleLockInfo.setReadBatteryTime(System.currentTimeMillis());
-                                    if (mViewRef.get() != null) {  //读取电量成功
+                                    if (mViewRef != null && mViewRef.get() != null) {  //读取电量成功
                                         mViewRef.get().onElectricUpdata(battery);
                                     }
                                 }
@@ -108,7 +108,7 @@ public class OldBleLockPresenter<T> extends MyOldOpenLockRecordPresenter<IOldBle
                             @Override
                             public void accept(Throwable throwable) throws Exception {
                                 LogUtils.e("读取电量失败   " + throwable.getMessage());
-                                if (mViewRef.get() != null) {  //读取电量失败
+                                if (mViewRef != null && mViewRef.get() != null) {  //读取电量失败
                                     mViewRef.get().onElectricUpdataFailed(throwable);
                                 }
                             }
@@ -137,11 +137,11 @@ public class OldBleLockPresenter<T> extends MyOldOpenLockRecordPresenter<IOldBle
                 return;
             }
             if (isAdmin) {  //是 管理员
-                if (mViewRef.get() != null) {
+                if (mViewRef != null && mViewRef.get() != null) {
                     mViewRef.get().inputPwd();
                 }
             } else { //不是管理员
-                if (mViewRef.get() != null) {
+                if (mViewRef != null && mViewRef.get() != null) {
                     mViewRef.get().notAdminMustHaveNet();
                 }
             }
@@ -179,7 +179,7 @@ public class OldBleLockPresenter<T> extends MyOldOpenLockRecordPresenter<IOldBle
                             if ("1".equals(bleLockInfo.getServerLockInfo().getIs_admin())) { //如果是管理员  查看本地密码
                                 localPwd = (String) SPUtils.get(KeyConstants.SAVE_PWD_HEARD + bleLockInfo.getServerLockInfo().getMacLock(), ""); //Key
                                 if (TextUtils.isEmpty(localPwd)) { //如果用户密码为空
-                                    if (mViewRef.get() != null) {
+                                    if (mViewRef != null && mViewRef.get() != null) {
                                         mViewRef.get().inputPwd();
                                     }
                                 } else {
@@ -194,14 +194,14 @@ public class OldBleLockPresenter<T> extends MyOldOpenLockRecordPresenter<IOldBle
                     @Override
                     public void onAckErrorCode(BaseResult baseResult) {
                         //785 鉴权失败  没有这把锁   803 当前时间没有权限
-                        if (mViewRef.get() != null) {
+                        if (mViewRef != null && mViewRef.get() != null) {
                             mViewRef.get().authServerFailed(baseResult);
                         }
                     }
 
                     @Override
                     public void onFailed(Throwable throwable) {
-                        if (mViewRef.get() != null) {
+                        if (mViewRef != null && mViewRef.get() != null) {
                             mViewRef.get().authFailed(throwable);
                         }
                     }
@@ -216,7 +216,7 @@ public class OldBleLockPresenter<T> extends MyOldOpenLockRecordPresenter<IOldBle
 
     public void realOpenLock(String pwd, boolean isApp) {
         //如果是最老的模块   使用老的指令开锁
-        if (mViewRef.get() != null) {
+        if (mViewRef != null && mViewRef.get() != null) {
             mViewRef.get().isOpeningLock();
         }
         if (bleService.getBleVersion() == 1) {
@@ -251,7 +251,7 @@ public class OldBleLockPresenter<T> extends MyOldOpenLockRecordPresenter<IOldBle
                             listenerOpenLockUp();
                         } else {  //开锁失败
                             LogUtils.e("开锁失败123   " + Rsa.bytesToHexString(bleDataBean.getPayload()));
-                            if (mViewRef.get() != null) {
+                            if (mViewRef != null && mViewRef.get() != null) {
                                 mViewRef.get().openLockFailed(new BleProtocolFailedException(0xff & bleDataBean.getOriginalData()[0]));
                             }
                             //开锁失败  清除密码
@@ -262,7 +262,7 @@ public class OldBleLockPresenter<T> extends MyOldOpenLockRecordPresenter<IOldBle
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        if (mViewRef.get() != null) {
+                        if (mViewRef != null && mViewRef.get() != null) {
                             mViewRef.get().openLockFailed(throwable);
                         }
                     }
@@ -300,7 +300,7 @@ public class OldBleLockPresenter<T> extends MyOldOpenLockRecordPresenter<IOldBle
 
                             } else if (value2 == 2) {   //开锁
 
-                                if (mViewRef.get() != null) {
+                                if (mViewRef != null && mViewRef.get() != null) {
                                     mViewRef.get().openLockSuccess();
                                 }
                                 LogUtils.e("收到开锁成功确认帧之后   再收到开锁上报数据  ");
@@ -311,7 +311,7 @@ public class OldBleLockPresenter<T> extends MyOldOpenLockRecordPresenter<IOldBle
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        if (mViewRef.get() != null) {
+                        if (mViewRef != null && mViewRef.get() != null) {
                             mViewRef.get().openLockFailed(throwable);
                         }
                     }
@@ -351,12 +351,12 @@ public class OldBleLockPresenter<T> extends MyOldOpenLockRecordPresenter<IOldBle
                         if (value0 == 1) {  //上锁
                             if (value2 == 1) {
                                 LogUtils.e("上锁成功  ");
-                                if (mViewRef.get() != null) {
+                                if (mViewRef != null && mViewRef.get() != null) {
                                     mViewRef.get().onLockLock();
                                 }
                             } else if (value2 == 2) {   //开锁
                                 LogUtils.e("开锁成功111   " + Rsa.bytesToHexString(bleDataBean.getPayload()));
-                                if (mViewRef.get() != null) {
+                                if (mViewRef != null && mViewRef.get() != null) {
                                     mViewRef.get().openLockSuccess();
                                 }
                                 //延时1秒读取开锁次数   直接读可能失败
@@ -501,7 +501,7 @@ public class OldBleLockPresenter<T> extends MyOldOpenLockRecordPresenter<IOldBle
                     @Override
                     public void accept(Throwable throwable) throws Exception {
                         handler.removeCallbacks(openLockRunnable);
-                        if (mViewRef.get() != null) {
+                        if (mViewRef != null && mViewRef.get() != null) {
                             mViewRef.get().openLockFailed(new TimeoutException());
                         }
                     }
@@ -539,7 +539,7 @@ public class OldBleLockPresenter<T> extends MyOldOpenLockRecordPresenter<IOldBle
     // 开锁数据头
     private void parseOpenLockResponse(List<byte[]> datas) {
         if (!(datas.get(0).length == 20 && datas.get(1).length == 12 && datas.get(2).length == 20 && datas.get(3).length == 12)) {
-            if (mViewRef.get() != null) {
+            if (mViewRef != null && mViewRef.get() != null) {
                 mViewRef.get().openLockFailed(new TimeoutException());
             }
             return;
@@ -658,7 +658,7 @@ public class OldBleLockPresenter<T> extends MyOldOpenLockRecordPresenter<IOldBle
                         if ((originalData[5] & 0xff) == 0x01) {  //老模块开门上报
                             toDisposable(oldOpenStatusDisposable);
                             listenerCloseStatus();
-                            if (mViewRef.get() != null) {
+                            if (mViewRef != null && mViewRef.get() != null) {
                                 mViewRef.get().openLockSuccess();
                             }
                         }
@@ -666,7 +666,7 @@ public class OldBleLockPresenter<T> extends MyOldOpenLockRecordPresenter<IOldBle
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        if (mViewRef.get() != null) {
+                        if (mViewRef != null && mViewRef.get() != null) {
                             mViewRef.get().openLockFailed(throwable);
                         }
                     }
@@ -699,7 +699,7 @@ public class OldBleLockPresenter<T> extends MyOldOpenLockRecordPresenter<IOldBle
                         byte[] originalData = bleDataBean.getOriginalData();
                         if ((originalData[5] & 0xff) == 0x00) {  //老模块关门上报
                             toDisposable(oldOpenStatusDisposable);
-                            if (mViewRef.get() != null) {
+                            if (mViewRef != null && mViewRef.get() != null) {
                                 mViewRef.get().onLockLock();
                             }
                         }
@@ -707,7 +707,7 @@ public class OldBleLockPresenter<T> extends MyOldOpenLockRecordPresenter<IOldBle
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        if (mViewRef.get() != null) {
+                        if (mViewRef != null && mViewRef.get() != null) {
                             mViewRef.get().onLockLock();
                         }
                     }
@@ -743,12 +743,12 @@ public class OldBleLockPresenter<T> extends MyOldOpenLockRecordPresenter<IOldBle
                                     bleLockInfo.setBattery(power);
                                     bleLockInfo.setReadBatteryTime(System.currentTimeMillis());
                                     LogUtils.e("读取电量成功   " + power);
-                                    if (mViewRef.get() != null) {  //读取电量成功
+                                    if (mViewRef != null && mViewRef.get() != null) {  //读取电量成功
                                         mViewRef.get().onElectricUpdata(power);
                                     }
                                 }
                             } else if (result == 0x81) {  //获取电量失败
-                                if (mViewRef.get() != null) {  //读取电量成功
+                                if (mViewRef != null && mViewRef.get() != null) {  //读取电量成功
                                     mViewRef.get().onElectricUpdataFailed(new BleProtocolFailedException(0x81));
                                 }
                             }
@@ -776,7 +776,7 @@ public class OldBleLockPresenter<T> extends MyOldOpenLockRecordPresenter<IOldBle
             retryTimes = 0;
             total = 0;
             LogUtils.e("发送数据1");
-            if (mViewRef.get() != null) {
+            if (mViewRef != null && mViewRef.get() != null) {
                 mViewRef.get().startBleRecord();
             }
             getOldModeRecord();
