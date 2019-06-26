@@ -51,11 +51,14 @@ public class LinphoneUtils {
     }
 
     private LinphoneUtils() {
+        try{
         mLinphoneCore = LinphoneManager.getLc();
         mLinphoneCore.enableEchoCancellation(true);
         mLinphoneCore.enableEchoLimiter(true);
         mLinphoneCore.enableDnsSrv(true);
         //mLinphoneCore.setDnsServers(null);
+        }catch (Exception e) {
+        }
     }
 
     /**
