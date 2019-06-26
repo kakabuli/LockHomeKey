@@ -183,7 +183,7 @@ public class BluetoothSharedDeviceManagementActivity extends BaseActivity<IBluet
         querySuccess = true;
         List<BluetoothSharedDeviceBean.DataBean> dataBeanList = bluetoothSharedDeviceBean.getData();
         if (dataBeanList !=null){
-            SPUtils.putProtect(KeyConstants.USER_MANAGE_NUMBER,dataBeanList.size() );
+            SPUtils.putProtect(KeyConstants.USER_MANAGE_NUMBER+""+bleLockInfo.getServerLockInfo().getLockName(),dataBeanList.size() );
         }
         if (dataBeanList.size() > 0) {
             list.clear();

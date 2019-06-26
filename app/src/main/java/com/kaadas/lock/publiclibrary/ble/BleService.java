@@ -1105,8 +1105,8 @@ public class BleService extends Service {
     public void onDestroy() {
         super.onDestroy();
         LogUtils.e("BleService被杀死   ");
+        MyApplication.getInstance().removeAllActivity();
         System.exit(0);
-
     }
 
 
@@ -1137,5 +1137,4 @@ public class BleService extends Service {
             }
         }
     };
-
 }

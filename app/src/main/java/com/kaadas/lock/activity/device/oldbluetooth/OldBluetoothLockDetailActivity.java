@@ -20,6 +20,7 @@ import android.widget.TextView;
 
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.MainActivity;
+import com.kaadas.lock.activity.device.bluetooth.BluetoothSharedDeviceManagementActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseBleActivity;
 import com.kaadas.lock.mvp.presenter.OldBluetoothDeviceDetailPresenter;
 import com.kaadas.lock.mvp.view.IOldBluetoothDeviceDetailView;
@@ -67,6 +68,13 @@ public class OldBluetoothLockDetailActivity extends BaseBleActivity<IOldBluetoot
     RelativeLayout rlDeviceInformation;
     @BindView(R.id.iv_delete)
     ImageView ivDelete;
+    @BindView(R.id.rl_device_share)
+    RelativeLayout rlDeviceShare;
+    @BindView(R.id.ll_bluetooth_18)
+    LinearLayout llBluetooth18;
+    @BindView(R.id.rl_bluetooth_17)
+    RelativeLayout rlBluetooth17;
+
     private String type;
     private BleLockInfo bleLockInfo;
     private boolean isX5 = false;
@@ -110,9 +118,22 @@ public class OldBluetoothLockDetailActivity extends BaseBleActivity<IOldBluetoot
         };
 
         if (mPresenter.getBleVersion() != 2) {
-            rlDeviceInformation.setVisibility(View.INVISIBLE);
+//            rlDeviceInformation.setVisibility(View.GONE);
+            changeBluetoothFunction(17);
         } else {
-            rlDeviceInformation.setVisibility(View.VISIBLE);
+//            rlDeviceInformation.setVisibility(View.VISIBLE);
+            changeBluetoothFunction(18);
+        }
+    }
+
+
+    private void changeBluetoothFunction(int bluetoothType) {
+        if (17 == bluetoothType) {
+            llBluetooth18.setVisibility(View.GONE);
+            rlBluetooth17.setVisibility(View.VISIBLE);
+        }else if (18==bluetoothType){
+            llBluetooth18.setVisibility(View.VISIBLE);
+            rlBluetooth17.setVisibility(View.GONE);
         }
     }
 
@@ -167,6 +188,8 @@ public class OldBluetoothLockDetailActivity extends BaseBleActivity<IOldBluetoot
 
     private void initListener() {
         rlDeviceInformation.setOnClickListener(this);
+        rlBluetooth17.setOnClickListener(this);
+        rlDeviceShare.setOnClickListener(this);
         ivDelete.setOnClickListener(this);
     }
 
@@ -245,9 +268,11 @@ public class OldBluetoothLockDetailActivity extends BaseBleActivity<IOldBluetoot
     @Override
     public void onBleVersionUpdate(int version) {
         if (version != 1) {
-            rlDeviceInformation.setVisibility(View.VISIBLE);
+//            rlDeviceInformation.setVisibility(View.VISIBLE);
+            changeBluetoothFunction(18);
         } else {
-            rlDeviceInformation.setVisibility(View.INVISIBLE);
+//            rlDeviceInformation.setVisibility(View.GONE);
+            changeBluetoothFunction(17);
         }
     }
 
@@ -351,7 +376,7 @@ public class OldBluetoothLockDetailActivity extends BaseBleActivity<IOldBluetoot
         } else {
             ToastUtil.getInstance().showShort(getString(R.string.open_lock_failed));
         }
-        handler.postDelayed(lockRunnable,3000);
+        handler.postDelayed(lockRunnable, 3000);
     }
 
     @Override
@@ -400,6 +425,11 @@ public class OldBluetoothLockDetailActivity extends BaseBleActivity<IOldBluetoot
                 Intent intent = new Intent(this, OldBluetoothMoreActivity.class);
                 startActivity(intent);
                 break;
+            case R.id.rl_device_share:
+            case R.id.rl_bluetooth_17:
+                intent = new Intent(this, BluetoothSharedDeviceManagementActivity.class);
+                startActivity(intent);
+                break;
             case R.id.iv_delete:
                 AlertDialogUtil.getInstance().noEditTwoButtonDialog(this, getString(R.string.device_delete_dialog_head), getString(R.string.device_delete_lock_dialog_content), getString(R.string.cancel), getString(R.string.query), new AlertDialogUtil.ClickListener() {
                     @Override
@@ -424,7 +454,7 @@ public class OldBluetoothLockDetailActivity extends BaseBleActivity<IOldBluetoot
     }
 
     public void changLockStatus(int state) {
-        if (isFinishing()){
+        if (isFinishing()) {
             return;
         }
         switch (state) {
@@ -484,18 +514,18 @@ public class OldBluetoothLockDetailActivity extends BaseBleActivity<IOldBluetoot
         if (power > 100) {
             power = 100;
         }
-        if (power<0){
-            power=0;
+        if (power < 0) {
+            power = 0;
         }
 
         String lockPower = power + "%";
         tvPower.setText(lockPower);
         if (ivPower != null) {
             ivPower.setPower(power);
-            if (power<=20){
+            if (power <= 20) {
                 ivPower.setColor(R.color.cFF3B30);
                 ivPower.setBorderColor(R.color.white);
-            }else{
+            } else {
                 ivPower.setColor(R.color.c25F290);
                 ivPower.setBorderColor(R.color.white);
             }
@@ -544,11 +574,13 @@ public class OldBluetoothLockDetailActivity extends BaseBleActivity<IOldBluetoot
 
     private void showMoreItem() {
         if (hasMoreItem) {
-            rlDeviceInformation.setVisibility(View.VISIBLE);
-            rlDeviceInformation.setEnabled(true);
+//            rlDeviceInformation.setVisibility(View.VISIBLE);
+//            rlDeviceInformation.setEnabled(true);
+            changeBluetoothFunction(18);
         } else {
-            rlDeviceInformation.setVisibility(View.INVISIBLE);
-            rlDeviceInformation.setEnabled(false);
+//            rlDeviceInformation.setVisibility(View.GONE);
+//            rlDeviceInformation.setEnabled(false);
+            changeBluetoothFunction(17);
         }
     }
 

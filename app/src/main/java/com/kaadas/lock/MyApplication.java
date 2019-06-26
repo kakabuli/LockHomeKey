@@ -454,7 +454,17 @@ public class MyApplication extends Application {
     public void onTerminate() {
         super.onTerminate();
         //程序终止时
+        LogUtils.e("程序终止了");
+    }
 
+    //清除所有与的Actvity
+    public void  removeAllActivity(){
+        LogUtils.e("清除所有的Activity");
+        for (Activity activity : activities) {
+            if (activity != null) {
+                activity.finish();
+            }
+        }
     }
 
 
