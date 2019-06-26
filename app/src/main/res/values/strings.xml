@@ -130,10 +130,10 @@
     <string name="device_power">电量</string>
     <string name="add_device">添加设备</string>
     <string name="device_zigbee">ZigBee</string>
-    <string name="gateway_light_setting">如何将指示灯设置常亮</string>
+    <string name="gateway_light_setting">指示灯处于其它状态？</string>
     <string name="add_gateway">添加网关</string>
     <string name="add_next">下一步</string>
-    <string name="gateway_light_confirm">网线连接路由器LAN和网关WAN，接通电源,确认指示灯常亮</string>
+    <string name="gateway_light_confirm">网线连接路由器LAN和网关WAN,\n接通电源,确认指示灯常亮</string>
     <string name="confirm_gateway_light_already">确认配网指示灯常亮</string>
     <string name="reset_key_two">（如指示灯处于其他状态，按复位键）</string>
     <string name="confirm_indicator_light">确认指示灯变亮</string>
@@ -297,8 +297,8 @@
     <string name="submit_success">提交成功</string>
     <string name="feedback_little">反馈内容太少</string>
     <string name="pair_network">配置网络</string>
-    <string name="pairing_network">按猫眼上的配网按钮听到正在配置网络</string>
-    <string name="connecting_cateye">正在连接猫眼</string>
+    <string name="pairing_network">配置网络\n按猫眼上的配网按钮听到正在配置网络</string>
+    <string name="connecting_cateye">正在连接猫眼···</string>
     <string name="about_two_minute">大约需要两分钟</string>
     <string name="connection_cateye_success">恭喜，猫眼连接成功</string>
     <string name="connet_cateye_fail">未能连接成功</string>
@@ -312,7 +312,7 @@
     <string name="gateway_bind_fail">连接失败！</string>
     <string name="device_gateway_first_text">该网络非kaadas网关</string>
     <string name="device_try">再试一下</string>
-    <string name="connecting_zigbeelock">正在连接网关锁</string>
+    <string name="connecting_zigbeelock">正在连接网关锁···</string>
     <string name="connection_zigbeelock_success">恭喜，网关锁连接成功</string>
     <string name="bluetooth_type">型号：</string>
     <string name="nothing">（无）</string>
@@ -1081,4 +1081,21 @@
     <string name="ble_already_open">蓝牙已开启</string>
     <string name="device_no_support_ble">设备不支持蓝牙，请切换设备</string>
     <string name="video_connection_fail">猫眼呼叫来电失败,通道建立失败</string>
+    <string name="add_device_lock">添加智能锁</string>
+    <string name="select_lock_type">选择门锁类型</string>
+    <string name="bluetooth_lock">蓝牙锁</string>
+    <string name="zigbee_lock">网关锁</string>
+    <string name="first">第一步</string>
+    <string name="the_second_step">第二步</string>
+    <string name="the_third_step">第三步</string>
+    <string name="make_sure_the_door_lock_is_installed">确保门锁安装好，并装上电池</string>
+    <string name="lock_second">触摸按键区唤醒面板\n先按“*”两次，再输入管理密码，按“#”确认\n语音提示：“已进入管理模式”</string>
+    <string name="zigbee_lock_third">根据语音提示，按键 【4】进入拓展功能</string>
+    <string name="how_to_reset">如何重置</string>
+    <string name="how_to_reset_steps">请使用针插入重置孔3S左右,\n直到黄灯闪烁后松开，即重置成功</string>
+    <string name="scan_gatewy_behind_qrcode">扫描网关后面二维码</string>
+    <string name="how_to_add_cateye_first">打开猫眼后盖二维码进行扫描</string>
+    <string name="second_steps_pair_gateway">第二步</string>
+    <string name="your_cayeye_pair_success">您的猫眼套装已联网成功</string>
+
 </resources>

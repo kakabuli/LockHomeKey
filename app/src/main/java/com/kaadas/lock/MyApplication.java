@@ -564,6 +564,15 @@ public class MyApplication extends Application {
         }
         return  null;
     }
+    //根据设备id查找出设备
+    public GwLockInfo getGatewayLockById(String deviceId){
+        for (HomeShowBean homeShowBean:homeShowDevices){
+            if (deviceId.equals(homeShowBean.getDeviceId())){
+                return (GwLockInfo) homeShowBean.getObject();
+            }
+        }
+        return  null;
+    }
 
     //遍历网关下的设备
     public List<HomeShowBean> getGatewayBindList(String gatewayId){

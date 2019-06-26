@@ -3,7 +3,6 @@ package com.kaadas.lock.activity.addDevice.zigbee;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -18,7 +17,6 @@ import android.widget.ImageView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.MainActivity;
-import com.kaadas.lock.activity.addDevice.DeviceBindGatewayListActivity;
 import com.kaadas.lock.adapter.AddBluetoothPairSuccessAdapter;
 import com.kaadas.lock.bean.deviceAdd.AddBluetoothPairSuccessBean;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
@@ -36,7 +34,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class AddZigbeeLockSuccessSaveActivity extends BaseActivity<AddZigbeeLockSuccessSaveView, AddZigbeeLockSuccessSavePresenter<AddZigbeeLockSuccessSaveView>> implements BaseQuickAdapter.OnItemClickListener,AddZigbeeLockSuccessSaveView {
+public class AddZigbeeLockSuccessSaveActivity extends BaseActivity<AddZigbeeLockSuccessSaveView, AddZigbeeLockSuccessSavePresenter<AddZigbeeLockSuccessSaveView>> implements BaseQuickAdapter.OnItemClickListener, AddZigbeeLockSuccessSaveView {
 
 
     @BindView(R.id.input_name)
@@ -47,6 +45,8 @@ public class AddZigbeeLockSuccessSaveActivity extends BaseActivity<AddZigbeeLock
     Button save;
     @BindView(R.id.lock)
     ImageView lock;
+    @BindView(R.id.back)
+    ImageView back;
 
     private List<AddBluetoothPairSuccessBean> mList;
 
@@ -65,6 +65,7 @@ public class AddZigbeeLockSuccessSaveActivity extends BaseActivity<AddZigbeeLock
         initListener();
         initMonitor();
     }
+
     private void initMonitor() {
         inputName.addTextChangedListener(new TextWatcher() {
             @Override
@@ -87,13 +88,14 @@ public class AddZigbeeLockSuccessSaveActivity extends BaseActivity<AddZigbeeLock
             }
         });
     }
+
     @Override
     protected AddZigbeeLockSuccessSavePresenter<AddZigbeeLockSuccessSaveView> createPresent() {
         return new AddZigbeeLockSuccessSavePresenter<>();
     }
 
     private void initListener() {
-        inputName.addTextChangedListener(new EditTextWatcher(this,null,inputName,50));
+        inputName.addTextChangedListener(new EditTextWatcher(this, null, inputName, 50));
     }
 
     private void initData() {
@@ -111,9 +113,9 @@ public class AddZigbeeLockSuccessSaveActivity extends BaseActivity<AddZigbeeLock
         mList.add(sister);
         mList.add(other);
 
-        Intent intent=getIntent();
-        deviceId=intent.getStringExtra(KeyConstants.DEVICE_ID);
-        gatewayId=intent.getStringExtra(KeyConstants.GATEWAY_ID);
+        Intent intent = getIntent();
+        deviceId = intent.getStringExtra(KeyConstants.DEVICE_ID);
+        gatewayId = intent.getStringExtra(KeyConstants.GATEWAY_ID);
     }
 
     private void initView() {
@@ -146,19 +148,23 @@ public class AddZigbeeLockSuccessSaveActivity extends BaseActivity<AddZigbeeLock
     }
 
 
-    @OnClick(R.id.save)
+    @OnClick({R.id.save,R.id.back})
     public void onViewClicked(View view) {
         switch (view.getId()) {
+            case R.id.back:
+                Intent backIntent = new Intent(this, MainActivity.class);
+                startActivity(backIntent);
+                break;
             case R.id.save:
                 //保存
-                String name=inputName.getText().toString().trim();
-                if (TextUtils.isEmpty(name)){
+                String name = inputName.getText().toString().trim();
+                if (TextUtils.isEmpty(name)) {
                     ToastUtil.getInstance().showShort(getString(R.string.nickname_not_null));
                     return;
                 }
-                if (!TextUtils.isEmpty(deviceId)&&!TextUtils.isEmpty(gatewayId)){
-                    mPresenter.updateZigbeeLockName(gatewayId,deviceId,name);
-                }else{
+                if (!TextUtils.isEmpty(deviceId) && !TextUtils.isEmpty(gatewayId)) {
+                    mPresenter.updateZigbeeLockName(gatewayId, deviceId, name);
+                } else {
                     ToastUtil.getInstance().showShort(R.string.gateway_or_device_null);
                 }
 
@@ -176,14 +182,14 @@ public class AddZigbeeLockSuccessSaveActivity extends BaseActivity<AddZigbeeLock
     }
 
     private boolean isCosumenBackKey() {
-        Intent backIntent=new Intent(this, MainActivity.class);
+        Intent backIntent = new Intent(this, MainActivity.class);
         startActivity(backIntent);
         return true;
     }
 
     @Override
     public void updateDevNickNameSuccess() {
-        Intent backIntent=new Intent(this, MainActivity.class);
+        Intent backIntent = new Intent(this, MainActivity.class);
         startActivity(backIntent);
     }
 
@@ -194,6 +200,8 @@ public class AddZigbeeLockSuccessSaveActivity extends BaseActivity<AddZigbeeLock
 
     @Override
     public void updateDevNickNameThrowable(Throwable throwable) {
-        LogUtils.e("修改名称出现异常"+throwable.getMessage());
+        LogUtils.e("修改名称出现异常" + throwable.getMessage());
     }
+
+
 }

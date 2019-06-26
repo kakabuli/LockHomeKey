@@ -224,14 +224,15 @@ public class GatewayLockHomePresenter<T> extends BasePresenter<IGatewayLockHomeV
                         public void accept(MqttData mqttData) throws Exception {
                             toDisposable(openLockDisposable);
                             OpenLockBean openLockBean = new Gson().fromJson(mqttData.getPayload(), OpenLockBean.class);
-                            if ("200".equals(openLockBean.getReturnCode())) {
+                            if ("200".equals(openLockBean.getReturnCode())&&openLockBean.getDeviceId().equals(deviceId)) {
                                 SPUtils.put(KeyConstants.SAVA_LOCK_PWD + deviceId, pwd);
                                 LogUtils.e("开锁成功");
                             } else {
-                                if (mViewRef!=null&&mViewRef.get() != null) {
+                                if (mViewRef!=null&&mViewRef.get() != null&&openLockBean.getDeviceId().equals(deviceId)) {
                                     mViewRef.get().openLockFailed();
+                                    SPUtils.remove(KeyConstants.SAVA_LOCK_PWD + deviceId);
                                 }
-                                SPUtils.remove(KeyConstants.SAVA_LOCK_PWD + deviceId);
+
                             }
                         }
                     }, new Consumer<Throwable>() {

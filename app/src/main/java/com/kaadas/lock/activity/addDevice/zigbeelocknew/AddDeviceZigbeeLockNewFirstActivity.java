@@ -31,9 +31,6 @@ public class AddDeviceZigbeeLockNewFirstActivity extends BaseActivity<AddDeviceC
     RelativeLayout headLayout;
     @BindView(R.id.cancel_bind)
     Button cancelBind;
-    @BindView(R.id.remind_layout)
-    LinearLayout remindLayout;
-
     private String gatewayId;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
