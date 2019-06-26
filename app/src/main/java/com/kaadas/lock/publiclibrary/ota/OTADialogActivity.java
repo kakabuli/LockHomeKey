@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
@@ -115,7 +116,18 @@ public class OTADialogActivity extends BaseActivity<IOtaView, OtaPresenter<IOtaV
 
     @Override
     public void onFailedServer(OTAResult result) {
-        ToastUtil.getInstance().showLong(R.string.get_server_update_info_failed);
+        //401	String	数据参数不对
+        //102	String	SN格式不正确
+        //210	String	查无结果
+        if ("401".equals(result.getCode())){ //数据参数不对
+            Toast.makeText(this,getString(R.string.data_parameter_incorrect),Toast.LENGTH_LONG).show();
+        }else if ("102".equals(result.getCode())){ //SN格式不正确
+            Toast.makeText(this,getString(R.string.sn_error),Toast.LENGTH_LONG).show();
+        }else if ("210".equals(result.getCode())){//查无结果
+            Toast.makeText(this,getString(R.string.new_version),Toast.LENGTH_LONG).show();
+        }else {
+            Toast.makeText(this, result.getMsg()+" "+result.getCode(),Toast.LENGTH_LONG).show();
+        }
         finish();
     }
 

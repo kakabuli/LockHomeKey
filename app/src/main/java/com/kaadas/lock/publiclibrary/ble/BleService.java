@@ -1060,7 +1060,7 @@ public class BleService extends Service {
                                 Thread.sleep(100);
                                 //扫描需要延时吗
                                 bluetoothLeScanner.startScan(null, scanSettings, newScanBleCallback);
-                            } catch (InterruptedException e) {
+                            } catch (Exception e ) {
                                 e.printStackTrace();
                             }
                         }
