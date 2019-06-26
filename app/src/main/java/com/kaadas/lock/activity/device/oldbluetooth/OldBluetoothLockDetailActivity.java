@@ -70,6 +70,11 @@ public class OldBluetoothLockDetailActivity extends BaseBleActivity<IOldBluetoot
     ImageView ivDelete;
     @BindView(R.id.rl_device_share)
     RelativeLayout rlDeviceShare;
+    @BindView(R.id.ll_bluetooth_18)
+    LinearLayout llBluetooth18;
+    @BindView(R.id.rl_bluetooth_17)
+    RelativeLayout rlBluetooth17;
+
     private String type;
     private BleLockInfo bleLockInfo;
     private boolean isX5 = false;
@@ -113,9 +118,22 @@ public class OldBluetoothLockDetailActivity extends BaseBleActivity<IOldBluetoot
         };
 
         if (mPresenter.getBleVersion() != 2) {
-            rlDeviceInformation.setVisibility(View.GONE);
+//            rlDeviceInformation.setVisibility(View.GONE);
+            changeBluetoothFunction(17);
         } else {
-            rlDeviceInformation.setVisibility(View.VISIBLE);
+//            rlDeviceInformation.setVisibility(View.VISIBLE);
+            changeBluetoothFunction(18);
+        }
+    }
+
+
+    private void changeBluetoothFunction(int bluetoothType) {
+        if (17 == bluetoothType) {
+            llBluetooth18.setVisibility(View.GONE);
+            rlBluetooth17.setVisibility(View.VISIBLE);
+        }else if (18==bluetoothType){
+            llBluetooth18.setVisibility(View.VISIBLE);
+            rlBluetooth17.setVisibility(View.GONE);
         }
     }
 
@@ -170,6 +188,7 @@ public class OldBluetoothLockDetailActivity extends BaseBleActivity<IOldBluetoot
 
     private void initListener() {
         rlDeviceInformation.setOnClickListener(this);
+        rlBluetooth17.setOnClickListener(this);
         rlDeviceShare.setOnClickListener(this);
         ivDelete.setOnClickListener(this);
     }
@@ -249,9 +268,11 @@ public class OldBluetoothLockDetailActivity extends BaseBleActivity<IOldBluetoot
     @Override
     public void onBleVersionUpdate(int version) {
         if (version != 1) {
-            rlDeviceInformation.setVisibility(View.VISIBLE);
+//            rlDeviceInformation.setVisibility(View.VISIBLE);
+            changeBluetoothFunction(18);
         } else {
-            rlDeviceInformation.setVisibility(View.GONE);
+//            rlDeviceInformation.setVisibility(View.GONE);
+            changeBluetoothFunction(17);
         }
     }
 
@@ -405,6 +426,7 @@ public class OldBluetoothLockDetailActivity extends BaseBleActivity<IOldBluetoot
                 startActivity(intent);
                 break;
             case R.id.rl_device_share:
+            case R.id.rl_bluetooth_17:
                 intent = new Intent(this, BluetoothSharedDeviceManagementActivity.class);
                 startActivity(intent);
                 break;
@@ -552,11 +574,13 @@ public class OldBluetoothLockDetailActivity extends BaseBleActivity<IOldBluetoot
 
     private void showMoreItem() {
         if (hasMoreItem) {
-            rlDeviceInformation.setVisibility(View.VISIBLE);
-            rlDeviceInformation.setEnabled(true);
+//            rlDeviceInformation.setVisibility(View.VISIBLE);
+//            rlDeviceInformation.setEnabled(true);
+            changeBluetoothFunction(18);
         } else {
-            rlDeviceInformation.setVisibility(View.GONE);
-            rlDeviceInformation.setEnabled(false);
+//            rlDeviceInformation.setVisibility(View.GONE);
+//            rlDeviceInformation.setEnabled(false);
+            changeBluetoothFunction(17);
         }
     }
 
