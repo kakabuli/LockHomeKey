@@ -6,7 +6,14 @@
     android:orientation="vertical">
 
     <include layout="@layout/head"></include>
-
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/door_card_identification_hints"
+        android:textSize="@dimen/sp_17"
+        android:textColor="#333333"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/dp_72"/>
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -22,7 +29,7 @@
 
     </RelativeLayout>
 
-    <RelativeLayout
+<!--    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="3">
@@ -42,5 +49,5 @@
             android:textColor="#333333"
             android:textSize="@dimen/sp_13" />
 
-    </RelativeLayout>
+    </RelativeLayout>-->
 </LinearLayout>

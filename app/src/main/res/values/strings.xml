@@ -1081,4 +1081,15 @@
     <string name="ble_already_open">蓝牙已开启</string>
     <string name="device_no_support_ble">设备不支持蓝牙，请切换设备</string>
     <string name="video_connection_fail">猫眼呼叫来电失败,通道建立失败</string>
+    <string name="door_card_identification_hints">将门卡靠近识别区直到"嘀"一声"添加成功"</string>
+    <string name="first_step">第一步</string>
+    <string name="door_card_first_hint">手机没有和门锁连接成功,您可以在门锁操作进行添加\n触摸按键区域唤醒面板\n先按“*”两次,再输入管理密码,按“#”确认;\n语音提示:“已进入管理模式”。</string>
+    <string name="second_step">第二步</string>
+    <string name="door_card_second_hint">按照语音提示,点击对应数字选项,进入门卡添加</string>
+    <string name="three_step">第三步</string>
+    <string name="pairint_progress">正在配对中···</string>
+    <string name="turn_on_bluetooth_near_door_lock">(请打开手机蓝牙，靠近门锁附近)</string>
+    <string name="fingerprint_collect_hint">请找到门锁指纹采集位置,按照语音\n提示将要录制指纹手指触摸</string>
+    <string name="fingerprint_second_hint">按照语音提示，点击对应数字选项，进入指纹添加</string>
+    <string name="fingerprint_three_hint">请找到门锁指纹采集位置\n按照语音提示将要手指触摸进行采集</string>
 </resources>
