@@ -1,26 +1,18 @@
 package com.kaadas.lock.publiclibrary.http.temp;
 
+import com.kaadas.lock.publiclibrary.http.HttpUrlConstants;
+
 /**
  * Create By lxj  on 2019/1/8
  * Describe
  */
 public class HttpConstants {
 
-    /*******************************************************/
-       public static final String BASE_URL = "https://app-kaadas.juziwulian.com:34000/";//凯迪仕正式服务器
-//      public static final String BASE_URL = "https://test.juziwulian.com:8090/";//凯迪仕测试服务器
+    public static final String BASE_URL = HttpUrlConstants.BASE_URL;
 
     /**
-     * linphone的地址
-     */
-    public static final String LINPHONE_URL = "sip-kaadas.juziwulian.com:5061";//正式sip
-    /**
      * 获取短信验证码 get
-     * <p>
-     * /
      * public static final String SEND_MSG = BASE_URL+"sms/sendSmsTokenByTX";
-     * <p>
-     * <p>
      * /**
      * 获取国际短信验证码 get
      */

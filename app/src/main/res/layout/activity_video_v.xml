@@ -320,8 +320,33 @@
     <RelativeLayout
         android:id="@+id/rl_bottom"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_weight="1">
+
+        <LinearLayout
+            android:id="@+id/cat_eye_offline"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:src="@mipmap/cat_eye_offline_bg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:gravity="center"
+                android:textColor="#999999"
+                android:layout_marginTop="15dp"
+                android:textSize="12sp"
+                android:text="@string/cat_eye_offfline_please_check_net"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
 
         <com.yarolegovich.discretescrollview.DiscreteScrollView
             android:id="@+id/forecast_city_picker"
@@ -329,6 +354,8 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:visibility="visible" />
+
+
 
         <LinearLayout
             android:id="@+id/video_h_no_lock"

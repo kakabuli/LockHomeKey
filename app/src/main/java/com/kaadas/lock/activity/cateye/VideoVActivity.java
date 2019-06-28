@@ -44,6 +44,7 @@ import com.kaadas.lock.publiclibrary.bean.GatewayInfo;
 import com.kaadas.lock.publiclibrary.bean.GwLockInfo;
 import com.kaadas.lock.publiclibrary.linphone.MemeManager;
 import com.kaadas.lock.publiclibrary.linphone.linphone.util.LinphoneHelper;
+import com.kaadas.lock.publiclibrary.mqtt.eventbean.DeviceOnLineBean;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
@@ -127,6 +128,8 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
         }
     };
     Timer timer = new Timer();
+    private LinearLayout cat_eye_offline;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         LogUtils.e(Tag, "创建");
@@ -146,6 +149,8 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
         initView();
         requestPermissions();
         mPresenter.init(this);
+        mPresenter.listenerDeviceOnline();
+        mPresenter.listenerNetworkChange();
     }
 
     @Override
@@ -174,7 +179,6 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
         int currentOrientation = newConfig.orientation;
         if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) {  //横屏
             isLand = true;
-
             //根据竖屏时的状态显示
             if (ll_video_control1.getVisibility() == View.VISIBLE) {
                 ll_video_control2.setVisibility(View.VISIBLE);
@@ -207,11 +211,27 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
             rl_bottom.setVisibility(View.VISIBLE);
             rl_title_bar.setVisibility(View.VISIBLE);
         }
+    }
+
+    public void catEyeStateChange(){
+        if (NetUtil.isNetworkAvailable()){
+            if ("online".equals(cateEyeInfo.getServerInfo().getEvent_str())){ //猫眼在线
+                cat_eye_offline.setVisibility(View.GONE);
+                cityPicker.setVisibility(View.VISIBLE);
+            }else { //猫眼离线
+                cat_eye_offline.setVisibility(View.VISIBLE);
+                cityPicker.setVisibility(View.GONE);
+            }
+        }else {
+            cat_eye_offline.setVisibility(View.VISIBLE);
+            cityPicker.setVisibility(View.GONE);
+        }
 
     }
 
 
     private void findViewByOrientation() {
+        cat_eye_offline = findViewById(R.id.cat_eye_offline);
         cityPicker = findViewById(R.id.forecast_city_picker);
         video_h_no_lock = findViewById(R.id.video_h_no_lock);
         video_start_play = findViewById(R.id.video_start_play);
@@ -322,6 +342,7 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
             Intent intent = new Intent(this, CallComingActivity.class);
             startActivityForResult(intent, REQUEST_CODE_CALL_COMING);
         }
+        catEyeStateChange();
     }
 
     @Override
@@ -810,6 +831,20 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
     @Override
     public void lockCloseFailed() {
         isClosing = false;
+    }
+
+    @Override
+    public void deviceStatusChange(DeviceOnLineBean deviceOnLineBean) {
+        //设备状态改变  根据猫眼状态   更新界面
+        if (cateEyeInfo.getServerInfo().getDeviceId().equals(deviceOnLineBean.getDeviceId())){
+            cateEyeInfo.getServerInfo().setEvent_str(deviceOnLineBean.getEventparams().getEvent_str());
+        }
+        catEyeStateChange();
+    }
+
+    @Override
+    public void netWorkChange(boolean isEnable) {
+        catEyeStateChange();
     }
 
     @Override

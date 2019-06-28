@@ -25,7 +25,7 @@ public interface ISearchDeviceView extends IBaseView {
      * 设备已被绑定
      * @param device
      */
-    void onAlreadyBind(BluetoothDevice device);
+    void onAlreadyBind(BluetoothDevice device,String uName);
 
     /**
      * 设备没被绑定
