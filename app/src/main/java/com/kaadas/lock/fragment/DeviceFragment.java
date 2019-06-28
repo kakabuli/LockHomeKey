@@ -29,6 +29,7 @@ import com.kaadas.lock.activity.device.BluetoothLockFunctionActivity;
 import com.kaadas.lock.activity.device.BluetoothLockFunctionV6V7Activity;
 import com.kaadas.lock.activity.device.gateway.GatewayActivity;
 import com.kaadas.lock.activity.device.cateye.more.CateyeFunctionActivity;
+import com.kaadas.lock.activity.device.gatewaylock.GatewayLockAuthorizeFunctionActivity;
 import com.kaadas.lock.activity.device.gatewaylock.GatewayLockFunctionActivity;
 import com.kaadas.lock.activity.device.oldbluetooth.OldBluetoothLockDetailActivity;
 import com.kaadas.lock.adapter.DeviceDetailAdapter;
@@ -192,6 +193,8 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                                 GatewayInfo gate= MyApplication.getInstance().getGatewayById(gwLockInfo.getGwID());
                                 if (gate!=null&&gate.getEvent_str()!=null&&gate.getEvent_str().equals("offline")){
                                     gwLockInfo.getServerInfo().setEvent_str("offline");
+                                }else if (gate!=null&&gate.getEvent_str()==null){
+                                    gwLockInfo.getServerInfo().setEvent_str("offline");
                                 }
                             }
                             mPresenter.getPower(gwLockInfo.getGwID(), gwLockInfo.getServerInfo().getDeviceId(), MyApplication.getInstance().getUid());
@@ -208,6 +211,8 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                             if (cateEyeInfo!=null){
                                 GatewayInfo gat= MyApplication.getInstance().getGatewayById(cateEyeInfo.getGwID());
                                 if (gat!=null&&gat.getEvent_str()!=null&&gat.getEvent_str().equals("offline")){
+                                    cateEyeInfo.getServerInfo().setEvent_str("offline");
+                                }else if (gat!=null&&gat.getEvent_str()==null){
                                     cateEyeInfo.getServerInfo().setEvent_str("offline");
                                 }
                             }
@@ -430,10 +435,22 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                         startActivity(cateEyeInfoIntent);
                         break;
                     case HomeShowBean.TYPE_GATEWAY_LOCK:
-                        //网关锁
-                        Intent gatewayLockintent = new Intent(getActivity(), GatewayLockFunctionActivity.class);
-                        gatewayLockintent.putExtra(KeyConstants.GATEWAY_LOCK_INFO, deviceDetailBean);
-                        startActivity(gatewayLockintent);
+
+                       GwLockInfo lockInfo = (GwLockInfo) deviceDetailBean.getObject();
+                       GatewayInfo gw=MyApplication.getInstance().getGatewayById(lockInfo.getGwID());
+                       if (gw.getServerInfo().getIsAdmin()==1){
+                           //网关锁
+                           Intent gatewayLockintent = new Intent(getActivity(), GatewayLockFunctionActivity.class);
+                           gatewayLockintent.putExtra(KeyConstants.GATEWAY_LOCK_INFO, deviceDetailBean);
+                           startActivity(gatewayLockintent);
+                       }else{
+                           //授权锁
+                           //网关锁
+                           Intent gatewayLockintent = new Intent(getActivity(), GatewayLockAuthorizeFunctionActivity.class);
+                           gatewayLockintent.putExtra(KeyConstants.GATEWAY_LOCK_INFO, deviceDetailBean);
+                           startActivity(gatewayLockintent);
+                       }
+
                         break;
                     case HomeShowBean.TYPE_GATEWAY:
                         //网关

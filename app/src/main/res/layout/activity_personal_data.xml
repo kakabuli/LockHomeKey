@@ -43,6 +43,7 @@
                 android:layout_height="@dimen/dp_51"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="@dimen/dp_39"
+
                 android:layout_alignParentRight="true"
                 android:src="@mipmap/default_head" />
             <View

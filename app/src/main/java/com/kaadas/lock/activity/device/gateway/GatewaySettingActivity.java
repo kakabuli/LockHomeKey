@@ -77,6 +77,7 @@ public class GatewaySettingActivity extends BaseActivity<GatewaySettingView, Gat
     private String uid;
     private AlertDialog deleteDialog;
     private Context context;
+    private int isAdmin;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -97,6 +98,10 @@ public class GatewaySettingActivity extends BaseActivity<GatewaySettingView, Gat
 
 
     private void initData() {
+        Intent intent=getIntent();
+        gatewayId=intent.getStringExtra(KeyConstants.GATEWAY_ID);
+        isAdmin=intent.getIntExtra(KeyConstants.IS_ADMIN,0);
+
         GatewaySettingItemBean gatewaySettingItemBeanOne=new GatewaySettingItemBean();
         gatewaySettingItemBeanOne.setTitle(getString(R.string.gateway_setting));
         gatewaySettingItemBeanOne.setSetting(false);
@@ -107,11 +112,19 @@ public class GatewaySettingActivity extends BaseActivity<GatewaySettingView, Gat
 
         GatewaySettingItemBean gatewaySettingItemBeanThree=new GatewaySettingItemBean();
         gatewaySettingItemBeanThree.setTitle(getString(R.string.gateway_setting_wifi_name));
-        gatewaySettingItemBeanThree.setSetting(true);
-
+        if (isAdmin==1){
+            gatewaySettingItemBeanThree.setSetting(true);
+        }else{
+            gatewaySettingItemBeanThree.setSetting(false);
+        }
         GatewaySettingItemBean gatewaySettingItemBeanFour=new GatewaySettingItemBean();
         gatewaySettingItemBeanFour.setTitle(getString(R.string.gateway_setting_wifi_pwd));
-        gatewaySettingItemBeanFour.setSetting(true);
+        if (isAdmin==1){
+            gatewaySettingItemBeanFour.setSetting(true);
+        }else{
+            gatewaySettingItemBeanFour.setSetting(false);
+        }
+
 
 
         GatewaySettingItemBean gatewaySettingItemBeanFive=new GatewaySettingItemBean();
@@ -137,7 +150,12 @@ public class GatewaySettingActivity extends BaseActivity<GatewaySettingView, Gat
 
         GatewaySettingItemBean gatewaySettingItemBeanTen=new GatewaySettingItemBean();
         gatewaySettingItemBeanTen.setTitle(getString(R.string.gateway_coordinator_channel));
-        gatewaySettingItemBeanTen.setSetting(true);
+        if (isAdmin==1){
+            gatewaySettingItemBeanTen.setSetting(true);
+        }else{
+            gatewaySettingItemBeanTen.setSetting(false);
+        }
+
 
         gatewaySettingItemBeans.add(gatewaySettingItemBeanOne);
         gatewaySettingItemBeans.add(gatewaySettingItemBeanTwo);
@@ -166,8 +184,7 @@ public class GatewaySettingActivity extends BaseActivity<GatewaySettingView, Gat
     }
 
     private void initGatewayData() {
-        Intent intent=getIntent();
-        gatewayId=intent.getStringExtra(KeyConstants.GATEWAY_ID);
+
         uid=MyApplication.getInstance().getUid();
         if (!TextUtils.isEmpty(gatewayId)){
             //先读取数据库
@@ -244,94 +261,95 @@ public class GatewaySettingActivity extends BaseActivity<GatewaySettingView, Gat
 
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-        switch (position){
-            case 2:
-                //wifi名称
-                View mView = LayoutInflater.from(this).inflate(R.layout.have_one_et_dialog, null);
-                TextView tvTitle = mView.findViewById(R.id.tv_title);
-                TextView tvContent=mView.findViewById(R.id.tv_content);
-                EditText editText = mView.findViewById(R.id.et_name);
-                editText.setText(wifiName);
-                editText.setHint(getString(R.string.please_input_wifi_name));
-                editText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(32)});
-                if (wifiName!=null){
-                    editText.setSelection(wifiName.length());
-                }
-                TextView tv_cancel = mView.findViewById(R.id.tv_left);
-                TextView tv_query = mView.findViewById(R.id.tv_right);
-                AlertDialog alertDialog = AlertDialogUtil.getInstance().common(this, mView);
-                tvTitle.setText(getString(R.string.update_wifi_name));
-                tvContent.setText(getString(R.string.update_wifi_name_need_rebind_cateye));
-                tv_cancel.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        alertDialog.dismiss();
+        if (isAdmin == 1) {
+            switch (position) {
+                case 2:
+                    //wifi名称
+                    View mView = LayoutInflater.from(this).inflate(R.layout.have_one_et_dialog, null);
+                    TextView tvTitle = mView.findViewById(R.id.tv_title);
+                    TextView tvContent = mView.findViewById(R.id.tv_content);
+                    EditText editText = mView.findViewById(R.id.et_name);
+                    editText.setText(wifiName);
+                    editText.setHint(getString(R.string.please_input_wifi_name));
+                    editText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(32)});
+                    if (wifiName != null) {
+                        editText.setSelection(wifiName.length());
                     }
-                });
-                tv_query.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        String name = editText.getText().toString().trim();
-                        if (TextUtils.isEmpty(name)){
-                            ToastUtil.getInstance().showShort(R.string.wifi_name_not_null);
-                            return;
-                        }else if (wifiName.equals(name)){
-                            ToastUtil.getInstance().showShort(R.string.wifi_name_no_update);
-                            return;
-                        }else{
-                            mPresenter.setWiFi(MyApplication.getInstance().getUid(),gatewayId,gatewayId,encryption,name,wifiPwd);
+                    TextView tv_cancel = mView.findViewById(R.id.tv_left);
+                    TextView tv_query = mView.findViewById(R.id.tv_right);
+                    AlertDialog alertDialog = AlertDialogUtil.getInstance().common(this, mView);
+                    tvTitle.setText(getString(R.string.update_wifi_name));
+                    tvContent.setText(getString(R.string.update_wifi_name_need_rebind_cateye));
+                    tv_cancel.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            alertDialog.dismiss();
                         }
-                        alertDialog.dismiss();
+                    });
+                    tv_query.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            String name = editText.getText().toString().trim();
+                            if (TextUtils.isEmpty(name)) {
+                                ToastUtil.getInstance().showShort(R.string.wifi_name_not_null);
+                                return;
+                            } else if (wifiName.equals(name)) {
+                                ToastUtil.getInstance().showShort(R.string.wifi_name_no_update);
+                                return;
+                            } else {
+                                mPresenter.setWiFi(MyApplication.getInstance().getUid(), gatewayId, gatewayId, encryption, name, wifiPwd);
+                            }
+                            alertDialog.dismiss();
+                        }
+                    });
+                    break;
+                case 3:
+                    //wifi密码
+                    View mViewPwd = LayoutInflater.from(this).inflate(R.layout.have_one_et_dialog, null);
+                    TextView tvTitlePwd = mViewPwd.findViewById(R.id.tv_title);
+                    TextView tvContentPwd = mViewPwd.findViewById(R.id.tv_content);
+                    EditText editTextPwd = mViewPwd.findViewById(R.id.et_name);
+                    editTextPwd.setText(wifiPwd);
+                    editTextPwd.setHint(getString(R.string.please_input_wifi_pwd));
+                    editTextPwd.addTextChangedListener(new EditTextWatcher(this, null, editTextPwd, 63));
+                    editTextPwd.setFilters(new InputFilter[]{new InputFilter.LengthFilter(63)});
+                    if (wifiPwd != null) {
+                        editTextPwd.setSelection(wifiPwd.length());
                     }
-                });
-                break;
-            case 3:
-                //wifi密码
-                View mViewPwd = LayoutInflater.from(this).inflate(R.layout.have_one_et_dialog, null);
-                TextView tvTitlePwd = mViewPwd.findViewById(R.id.tv_title);
-                TextView tvContentPwd=mViewPwd.findViewById(R.id.tv_content);
-                EditText editTextPwd = mViewPwd.findViewById(R.id.et_name);
-                editTextPwd.setText(wifiPwd);
-                editTextPwd.setHint(getString(R.string.please_input_wifi_pwd));
-                editTextPwd.addTextChangedListener(new EditTextWatcher(this,null,editTextPwd,63));
-                editTextPwd.setFilters(new InputFilter[]{new InputFilter.LengthFilter(63)});
-                if (wifiPwd!=null){
-                    editTextPwd.setSelection(wifiPwd.length());
-                }
-                TextView tv_left= mViewPwd.findViewById(R.id.tv_left);
-                TextView tv_right= mViewPwd.findViewById(R.id.tv_right);
-                AlertDialog alertDialogPwd = AlertDialogUtil.getInstance().common(this, mViewPwd);
-                tvTitlePwd.setText(getString(R.string.update_wifi_pwd));
-                tvContentPwd.setText(getString(R.string.update_wifi_pwd_need_rebind_cateye));
-                tv_left.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        alertDialogPwd.dismiss();
-                    }
-                });
-                tv_right.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        String pwd = editTextPwd.getText().toString().trim();
+                    TextView tv_left = mViewPwd.findViewById(R.id.tv_left);
+                    TextView tv_right = mViewPwd.findViewById(R.id.tv_right);
+                    AlertDialog alertDialogPwd = AlertDialogUtil.getInstance().common(this, mViewPwd);
+                    tvTitlePwd.setText(getString(R.string.update_wifi_pwd));
+                    tvContentPwd.setText(getString(R.string.update_wifi_pwd_need_rebind_cateye));
+                    tv_left.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            alertDialogPwd.dismiss();
+                        }
+                    });
+                    tv_right.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            String pwd = editTextPwd.getText().toString().trim();
 
-                        if (TextUtils.isEmpty(pwd)){
-                            ToastUtil.getInstance().showShort(R.string.wifi_pwd_not_null);
-                            return;
-                        }else if (wifiPwd.equals(pwd)){
-                            ToastUtil.getInstance().showShort(R.string.wifi_pwd_no_update);
-                            return;
-                        }else if (pwd.length()<8){
-                            ToastUtil.getInstance().showShort(R.string.wifi_password_length);
-                            return;
-                        }else if (pwd.length()>63){
-                            ToastUtil.getInstance().showShort(R.string.wifi_password_length);
-                        } else{
-                            mPresenter.setWiFi(MyApplication.getInstance().getUid(),gatewayId,gatewayId,encryption,wifiName,pwd);
+                            if (TextUtils.isEmpty(pwd)) {
+                                ToastUtil.getInstance().showShort(R.string.wifi_pwd_not_null);
+                                return;
+                            } else if (wifiPwd.equals(pwd)) {
+                                ToastUtil.getInstance().showShort(R.string.wifi_pwd_no_update);
+                                return;
+                            } else if (pwd.length() < 8) {
+                                ToastUtil.getInstance().showShort(R.string.wifi_password_length);
+                                return;
+                            } else if (pwd.length() > 63) {
+                                ToastUtil.getInstance().showShort(R.string.wifi_password_length);
+                            } else {
+                                mPresenter.setWiFi(MyApplication.getInstance().getUid(), gatewayId, gatewayId, encryption, wifiName, pwd);
+                            }
+                            alertDialogPwd.dismiss();
                         }
-                        alertDialogPwd.dismiss();
-                    }
-                });
-                break;
+                    });
+                    break;
            /* case 4:
             case 6:
                 //配置局域网
@@ -382,59 +400,60 @@ public class GatewaySettingActivity extends BaseActivity<GatewaySettingView, Gat
                     }
                 });
                 break;*/
-            case 9:
-                //配置
-                View mViewChannel = LayoutInflater.from(this).inflate(R.layout.have_one_et_dialog, null);
-                TextView tvTitleChannel = mViewChannel.findViewById(R.id.tv_title);
-                TextView tvContentChannel=mViewChannel.findViewById(R.id.tv_content);
-                EditText editTextChannel = mViewChannel.findViewById(R.id.et_name);
-                editTextChannel.setText(zbChannel);
-                editTextChannel.setHint(getString(R.string.range_channel));
-                editTextChannel.setInputType(InputType.TYPE_CLASS_NUMBER);
-                editTextChannel.setMaxEms(2);
-                if (zbChannel!=null){
-                    editTextChannel.setSelection(zbChannel.length());
-                }
-                TextView tv_left_channel= mViewChannel.findViewById(R.id.tv_left);
-                TextView tv_right_channel= mViewChannel.findViewById(R.id.tv_right);
-                AlertDialog alertDialogChannel = AlertDialogUtil.getInstance().common(this, mViewChannel);
-                tvTitleChannel.setText(getString(R.string.setting_channel));
-                tvContentChannel.setText(getString(R.string.setting_channel_need_bind_lock));
-                tv_left_channel.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        alertDialogChannel.dismiss();
+                case 9:
+                    //配置
+                    View mViewChannel = LayoutInflater.from(this).inflate(R.layout.have_one_et_dialog, null);
+                    TextView tvTitleChannel = mViewChannel.findViewById(R.id.tv_title);
+                    TextView tvContentChannel = mViewChannel.findViewById(R.id.tv_content);
+                    EditText editTextChannel = mViewChannel.findViewById(R.id.et_name);
+                    editTextChannel.setText(zbChannel);
+                    editTextChannel.setHint(getString(R.string.range_channel));
+                    editTextChannel.setInputType(InputType.TYPE_CLASS_NUMBER);
+                    editTextChannel.setMaxEms(2);
+                    if (zbChannel != null) {
+                        editTextChannel.setSelection(zbChannel.length());
                     }
-                });
-                tv_right_channel.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        String channel = editTextChannel.getText().toString().trim();
-                        int channelInt=0;
-                        if (!TextUtils.isEmpty(channel)){
-                             channelInt=Integer.parseInt(channel);
+                    TextView tv_left_channel = mViewChannel.findViewById(R.id.tv_left);
+                    TextView tv_right_channel = mViewChannel.findViewById(R.id.tv_right);
+                    AlertDialog alertDialogChannel = AlertDialogUtil.getInstance().common(this, mViewChannel);
+                    tvTitleChannel.setText(getString(R.string.setting_channel));
+                    tvContentChannel.setText(getString(R.string.setting_channel_need_bind_lock));
+                    tv_left_channel.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            alertDialogChannel.dismiss();
                         }
-                        if (TextUtils.isEmpty(channel)){
-                            ToastUtil.getInstance().showShort(R.string.channel_not_null);
-                            return;
-                        }else if (zbChannel.equals(channel)){
-                            ToastUtil.getInstance().showShort(R.string.channel_not_update);
-                            return;
-                        }else if (channelInt<11){
-                            ToastUtil.getInstance().showShort(R.string.range_channel);
-                            return;
-                        }else if (channelInt>26){
-                            ToastUtil.getInstance().showShort(R.string.range_channel);
-                            return;
-                        }else{
-                            mPresenter.setZbChannel(MyApplication.getInstance().getUid(),gatewayId,gatewayId,channel);
+                    });
+                    tv_right_channel.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            String channel = editTextChannel.getText().toString().trim();
+                            int channelInt = 0;
+                            if (!TextUtils.isEmpty(channel)) {
+                                channelInt = Integer.parseInt(channel);
+                            }
+                            if (TextUtils.isEmpty(channel)) {
+                                ToastUtil.getInstance().showShort(R.string.channel_not_null);
+                                return;
+                            } else if (zbChannel.equals(channel)) {
+                                ToastUtil.getInstance().showShort(R.string.channel_not_update);
+                                return;
+                            } else if (channelInt < 11) {
+                                ToastUtil.getInstance().showShort(R.string.range_channel);
+                                return;
+                            } else if (channelInt > 26) {
+                                ToastUtil.getInstance().showShort(R.string.range_channel);
+                                return;
+                            } else {
+                                mPresenter.setZbChannel(MyApplication.getInstance().getUid(), gatewayId, gatewayId, channel);
+                            }
+                            alertDialogChannel.dismiss();
                         }
-                        alertDialogChannel.dismiss();
-                    }
-                });
+                    });
 
 
-                break;
+                    break;
+            }
         }
     }
 

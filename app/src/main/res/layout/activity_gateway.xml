@@ -44,9 +44,10 @@
                 android:paddingBottom="@dimen/dp_5"
                 android:src="@mipmap/see_more_white"
                 android:layout_centerVertical="true"
-                android:layout_toLeftOf="@+id/share"
+                android:layout_alignParentRight="true"
                 />
             <ImageView
+                android:visibility="invisible"
                 android:id="@+id/share"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -127,22 +128,56 @@
 
 
         </LinearLayout>
-
-
-
     </LinearLayout>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/dp_15"
-        android:layout_marginTop="@dimen/dp_17"
-        android:text="@string/connect_device"
-        android:textColor="#999999"
-        android:textSize="@dimen/sp_12" />
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerView"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dp_8"></android.support.v7.widget.RecyclerView>
+        android:layout_height="match_parent">
+        <TextView
+            android:id="@+id/con_device"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dp_15"
+            android:layout_marginTop="@dimen/dp_17"
+            android:text="@string/connect_device"
+            android:textColor="#999999"
+            android:textSize="@dimen/sp_12" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_13"
+            android:layout_below="@+id/con_device"
+
+            >
+        </android.support.v7.widget.RecyclerView>
+        <LinearLayout
+            android:id="@+id/no_device_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            >
+            <ImageView
+                android:id="@+id/no_device_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/gateway_below_no_device"
+                android:layout_centerInParent="true"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/no_linkage_device"
+                android:textColor="#ff999999"
+                android:textSize="@dimen/sp_12"
+                android:layout_marginTop="@dimen/dp_16"
+
+                />
+        </LinearLayout>
+
+
+    </RelativeLayout>
+
 </LinearLayout>

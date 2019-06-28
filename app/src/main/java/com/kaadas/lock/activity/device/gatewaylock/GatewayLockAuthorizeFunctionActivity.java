@@ -20,9 +20,7 @@ import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.device.gatewaylock.more.GatewayMoreActivity;
 import com.kaadas.lock.activity.device.gatewaylock.password.GatewayPasswordManagerActivity;
-import com.kaadas.lock.activity.device.gatewaylock.share.GatewayLockSharedActivity;
 import com.kaadas.lock.activity.device.gatewaylock.stress.old.GatewayLockStressDetailActivity;
-import com.kaadas.lock.adapter.ForecastAdapter;
 import com.kaadas.lock.bean.BluetoothLockFunctionBean;
 import com.kaadas.lock.bean.HomeShowBean;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
@@ -36,23 +34,20 @@ import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.NetUtil;
-import com.kaadas.lock.utils.NotifyRefreshActivity;
 import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.StringUtil;
 import com.kaadas.lock.utils.ToastUtil;
-import com.kaadas.lock.utils.networkListenerutil.NetWorkChangReceiver;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 /**
  * Created by David
  */
-public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailView, GatewayLockDetailPresenter<GatewayLockDetailView>> implements View.OnClickListener, GatewayLockDetailView {
+public class GatewayLockAuthorizeFunctionActivity extends BaseActivity<GatewayLockDetailView, GatewayLockDetailPresenter<GatewayLockDetailView>> implements View.OnClickListener, GatewayLockDetailView {
     @BindView(R.id.iv_back)
     ImageView ivBack;
     @BindView(R.id.tv_name)
@@ -123,7 +118,7 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_gateway_lock_function);
+        setContentView(R.layout.activity_gateway_lock_authorize_function);
         ButterKnife.bind(this);
         initView();
         initData();
@@ -147,15 +142,8 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
         ivOne.setImageResource(R.mipmap.bluetooth_password);
         tvNameOne.setText(R.string.password);
         //设备共享
-        ivTwo.setImageResource(R.mipmap.share_icon);
-        tvNameTwo.setText(R.string.device_share);
-
-        //胁迫警告
-        ivThree.setImageResource(R.mipmap.stress_warn_icon);
-        tvNameThree.setText(R.string.stress_warn);
-        //更多
-        ivFour.setImageResource(R.mipmap.bluetooth_more);
-        tvNameFour.setText(R.string.more);
+        ivTwo.setImageResource(R.mipmap.device_information_icon);
+        tvNameTwo.setText(R.string.device_information);
 
     }
 
@@ -163,8 +151,6 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
         ivBack.setOnClickListener(this);
         llOne.setOnClickListener(this);
         llTwo.setOnClickListener(this);
-        llThree.setOnClickListener(this);
-        llFour.setOnClickListener(this);
         tvOpenClock.setOnClickListener(this);
         ivSafeProtection.setOnClickListener(this);
     }
@@ -287,31 +273,13 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
                 startActivity(intent);
                 break;
             case R.id.ll_two:
-               //设备分享
-                intent = new Intent(this, GatewayLockSharedActivity.class);
+               //设备信息
+                intent = new Intent(this, GatewayDeviceInformationActivity.class);
                 intent.putExtra(KeyConstants.GATEWAY_ID, gatewayId);
                 intent.putExtra(KeyConstants.DEVICE_ID, deviceId);
                 startActivity(intent);
                 break;
 
-            case R.id.ll_three:
-                //胁迫警告
-                if (!TextUtils.isEmpty(gatewayId) && !TextUtils.isEmpty(deviceId)) {
-                    intent = new Intent(this, GatewayLockStressDetailActivity.class);
-                    intent.putExtra(KeyConstants.GATEWAY_ID, gatewayId);
-                    intent.putExtra(KeyConstants.DEVICE_ID, deviceId);
-                    startActivity(intent);
-                }
-
-                break;
-
-            case R.id.ll_four:
-                //更多
-                intent = new Intent(this, GatewayMoreActivity.class);
-                intent.putExtra(KeyConstants.GATEWAY_LOCK_INFO, showBean);
-                startActivityForResult(intent, KeyConstants.DEVICE_DETAIL_BEAN_NUM);
-
-                break;
             case R.id.tv_open_clock:
                 //开锁
                 //对话框
