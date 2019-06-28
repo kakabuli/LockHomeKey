@@ -33,8 +33,8 @@ public class AddBluetoothThirdActivity extends BaseActivity<IBindBleView, BindBl
     Button alreadyPairNetwork;
     @BindView(R.id.help)
     ImageView help;
-    @BindView(R.id.tv_notice)
-    TextView tvNotice;
+   /* @BindView(R.id.tv_notice)
+    TextView tvNotice;*/
     private boolean isBind;
     private String password1;
     private String deviceName;
@@ -69,11 +69,11 @@ public class AddBluetoothThirdActivity extends BaseActivity<IBindBleView, BindBl
 
 
     private void initView() {
-        if (isBind) {
+   /*     if (isBind) {
             tvNotice.setText(R.string.device_add_third_content_in_net);
         } else {
             tvNotice.setText(R.string.device_add_third_content_exit_net);
-        }
+        }*/
         alreadyPairNetwork.setClickable(false);
         alreadyPairNetwork.setTextColor(Color.parseColor("#7f7f7f"));
     }
@@ -142,7 +142,7 @@ public class AddBluetoothThirdActivity extends BaseActivity<IBindBleView, BindBl
 
     @Override
     public void onUnbindSuccess() {
-        tvNotice.setText(R.string.device_add_third_content_in_net);
+       /* tvNotice.setText(R.string.device_add_third_content_in_net);*/
         ToastUtil.getInstance().showShort(R.string.unbind_success_innet);
     }
 

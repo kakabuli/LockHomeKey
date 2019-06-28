@@ -1,13 +1,12 @@
 package com.kaadas.lock.activity.addDevice.gateway;
 
 import android.content.Intent;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.kaadas.lock.R;
@@ -24,8 +23,6 @@ public class AddGatewayFirstActivity extends BaseAddToApplicationActivity {
     ImageView addDeviceBackground;
     @BindView(R.id.setting)
     TextView setting;
-    @BindView(R.id.remind_layout)
-    LinearLayout remindLayout;
     @BindView(R.id.button_next)
     Button buttonNext;
 
@@ -34,6 +31,11 @@ public class AddGatewayFirstActivity extends BaseAddToApplicationActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.device_gateway_add);
         ButterKnife.bind(this);
+        initView();
+    }
+
+    private void initView() {
+        setting.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG );
     }
 
     @OnClick({R.id.back, R.id.setting, R.id.button_next})

@@ -17,6 +17,7 @@ import butterknife.ButterKnife;
 
 /**
  * Created by David on 2019/4/18
+ * 没使用
  */
 public class DoorCardConnectFailActivity extends BaseAddToApplicationActivity implements View.OnClickListener {
     @BindView(R.id.iv_back)

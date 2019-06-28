@@ -366,6 +366,7 @@
             android:visibility="gone">
 
             <ImageView
+                android:id="@+id/video_cateye_img"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
@@ -373,6 +374,7 @@
                 android:background="@mipmap/lock_no" />
 
             <TextView
+                android:id="@+id/video_cateye_noinfo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"

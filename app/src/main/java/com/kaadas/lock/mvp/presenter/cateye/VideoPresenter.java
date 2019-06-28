@@ -89,7 +89,7 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
         listenerCallStatus();
     }
 
-
+    public static  boolean isConnectedEye=false;
     public void listenerCallStatus() {
         LinphoneHelper.addAutoAcceptCallBack(new PhoneAutoAccept() {
             @Override
@@ -194,7 +194,7 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
             public void Streaming() {
                 Log.e(GeTui.VideoLog, "VideoPresenter==>Streaming....");
                 Log.e(Tag, "猫眼 Streaming.........");
-
+                isConnectedEye=true;
             }
         });
     }

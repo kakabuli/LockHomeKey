@@ -118,6 +118,10 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
     TextView mTvLossratea;
     private TextView mTvframerate;
     Task task = null;
+
+    ImageView video_cateye_img;
+    TextView video_cateye_noinfo;
+
     private Handler mHandler2 = new Handler() {
         public void handleMessage(Message msg) {
             if (msg.what == 2) {
@@ -265,6 +269,10 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
         mTvLossratev = (TextView) findViewById(R.id.tv_videolossrate);
         mTvLossratea = (TextView) findViewById(R.id.tv_audiolossrate);
         mTvframerate = (TextView) findViewById(R.id.tv_framerate);
+
+        video_cateye_img = findViewById(R.id.video_cateye_img);
+
+        video_cateye_noinfo = findViewById(R.id.video_cateye_noinfo);
     }
 
 
@@ -396,6 +404,7 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
         if (iv_back != null) {
             iv_back.setOnClickListener(this);
         }
+
         if (cityPicker != null) {
             cityPicker.setSlideOnFling(true);
             forecastAdapter = new ForecastAdapter(gwLockInfos, this);
@@ -413,6 +422,12 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
                 public void onItemClickItemMethod(int position) {
                     if (selectPostion != -1 && position == selectPostion) {
                         LogUtils.e(Tag,"当前状态是   isOpening    " + isOpening + "   isClosing   " + isClosing);
+
+                        if(!mPresenter.isConnectedEye){
+                            Toast.makeText(VideoVActivity.this,R.string.cateye_call_no,Toast.LENGTH_LONG).show();
+                            return;
+                        }
+
                         if (isOpening) {
                             ToastUtil.getInstance().showShort(R.string.is_opening_try_latter);
                             return;
@@ -474,6 +489,30 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
             }
         }
         LinphoneHelper.setAndroidVideoWindow(new SurfaceView[]{video_v_surfaceview}, new SurfaceView[]{videoPreview});
+
+
+        List<GatewayInfo> allGateway = MyApplication.getInstance().getAllGateway();
+        GatewayInfo gatewayInfo = null;
+        for (GatewayInfo info:allGateway){
+            if ( cateEyeInfo.getGwID().equals(info.getServerInfo().getDeviceSN())){
+                gatewayInfo = info;
+                break;
+            }
+        }
+        //网关不在线
+        if (gatewayInfo!=null && !"online".equals(gatewayInfo.getEvent_str())) {
+            cityPicker.setVisibility(View.GONE);
+            video_cateye_img.setBackground(getDrawable(R.mipmap.video_cateye_noonline));
+            video_cateye_noinfo.setText(R.string.video_cateye_noonline);
+            return;
+        }
+        //猫眼设备不在线
+        if (!"online".equals(cateEyeInfo.getServerInfo().getEvent_str())) {
+            cityPicker.setVisibility(View.GONE);
+            video_cateye_img.setBackground(getDrawable(R.mipmap.video_cateye_noonline));
+            video_cateye_noinfo.setText(R.string.video_cateye_noonline);
+            return;
+        }
     }
 
     @Override

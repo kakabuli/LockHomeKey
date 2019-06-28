@@ -3,7 +3,6 @@ package com.kaadas.lock.activity.addDevice.bluetooth;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -19,7 +18,6 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.MainActivity;
-import com.kaadas.lock.activity.addDevice.DeviceAddActivity;
 import com.kaadas.lock.adapter.AddBluetoothPairSuccessAdapter;
 import com.kaadas.lock.bean.deviceAdd.AddBluetoothPairSuccessBean;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
@@ -50,6 +48,8 @@ public class AddBluetoothSuccessActivity extends BaseActivity<IBindBleSuccessVie
     Button save;
     @BindView(R.id.lock)
     ImageView lock;
+    @BindView(R.id.back)
+    ImageView back;
 
     private List<AddBluetoothPairSuccessBean> mList;
 
@@ -67,6 +67,7 @@ public class AddBluetoothSuccessActivity extends BaseActivity<IBindBleSuccessVie
         initListener();
         initMonitor();
     }
+
     private void initMonitor() {
         inputName.addTextChangedListener(new TextWatcher() {
             @Override
@@ -89,6 +90,7 @@ public class AddBluetoothSuccessActivity extends BaseActivity<IBindBleSuccessVie
             }
         });
     }
+
     private void initListener() {
         inputName.addTextChangedListener(new EditTextWatcher(this, null, inputName, 50));
     }
@@ -148,9 +150,13 @@ public class AddBluetoothSuccessActivity extends BaseActivity<IBindBleSuccessVie
         mAdapter.notifyDataSetChanged();
     }
 
-    @OnClick(R.id.save)
+    @OnClick({R.id.save,R.id.back})
     public void onViewClicked(View view) {
         switch (view.getId()) {
+            case R.id.back:
+                Intent backIntent = new Intent(this, MainActivity.class);
+                startActivity(backIntent);
+                break;
             case R.id.save:
                 String name = inputName.getText().toString().trim();
                 if (TextUtils.isEmpty(name)) {
@@ -204,4 +210,7 @@ public class AddBluetoothSuccessActivity extends BaseActivity<IBindBleSuccessVie
         return true;
     }
 
+    @OnClick()
+    public void onViewClicked() {
+    }
 }
