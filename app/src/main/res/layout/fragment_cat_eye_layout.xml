@@ -38,7 +38,8 @@
                     android:id="@+id/iv_external_middle"
                     android:layout_width="142dp"
                     android:layout_height="142dp"
-                    android:layout_centerInParent="true" />
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true" />
 
                 <ImageView
                     android:id="@+id/iv_external_small"
@@ -64,7 +65,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginTop="@dimen/dp_111"
+                    android:layout_marginTop="@dimen/dp_100"
                     android:text="jjfikfj"
                     android:textColor="#FEFEFE"
                     android:textSize="@dimen/sp_11" />
