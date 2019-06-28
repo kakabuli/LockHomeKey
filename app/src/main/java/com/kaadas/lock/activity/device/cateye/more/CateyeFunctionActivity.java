@@ -185,10 +185,14 @@ public class CateyeFunctionActivity extends BaseActivity<ICatEyeFunctionView, Ca
                 startActivityForResult(intent, KeyConstants.UPDATE_DEVICE_NAME_REQUEST_CODE);
                 break;
             case R.id.rl_icon:
-                intent = new Intent(this, VideoVActivity.class);
-                intent.putExtra(KeyConstants.IS_CALL_IN, false);
-                intent.putExtra(KeyConstants.CATE_INFO, cateEyeInfo);
-                startActivity(intent);
+                if(VideoVActivity.isRunning){
+                    Toast.makeText(CateyeFunctionActivity.this,getString(R.string.video_destory_time),Toast.LENGTH_SHORT).show();
+                }else {
+                    intent = new Intent(this, VideoVActivity.class);
+                    intent.putExtra(KeyConstants.IS_CALL_IN, false);
+                    intent.putExtra(KeyConstants.CATE_INFO, cateEyeInfo);
+                    startActivity(intent);
+                }
                 break;
         }
     }

@@ -3,13 +3,12 @@ package com.kaadas.lock.activity.addDevice.zigbeelocknew;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.addDevice.DeviceAddActivity;
-import com.kaadas.lock.activity.addDevice.DeviceAddHelpActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
@@ -26,6 +25,8 @@ public class AddDeviceZigbeeLockNewFailActivity extends BaseAddToApplicationActi
     Button buttonAgain;
     @BindView(R.id.hand_bind)
     Button handBind;
+    @BindView(R.id.back)
+    ImageView back;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -34,17 +35,20 @@ public class AddDeviceZigbeeLockNewFailActivity extends BaseAddToApplicationActi
         ButterKnife.bind(this);
     }
 
-    @OnClick({R.id.button_again, R.id.hand_bind})
+    @OnClick({R.id.button_again, R.id.hand_bind,R.id.back})
     public void onViewClicked(View view) {
         switch (view.getId()) {
+            case R.id.back:
+                startActivity(new Intent(this, DeviceAddActivity.class));
+                break;
             case R.id.button_again:
-                Intent intent=new Intent(this,AddDeviceZigbeelockNewScanActivity.class);
-                startActivityForResult(intent,KeyConstants.SCANGATEWAYNEW_REQUEST_CODE);
+                Intent intent = new Intent(this, AddDeviceZigbeelockNewScanActivity.class);
+                startActivityForResult(intent, KeyConstants.SCANGATEWAYNEW_REQUEST_CODE);
                 //再来一次
                 break;
             case R.id.hand_bind:
                 //退出
-                Intent outIntent=new Intent(this, DeviceAddActivity.class);
+                Intent outIntent = new Intent(this, DeviceAddActivity.class);
                 startActivity(outIntent);
                 break;
         }
@@ -53,27 +57,27 @@ public class AddDeviceZigbeeLockNewFailActivity extends BaseAddToApplicationActi
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        startActivity(new Intent(this,DeviceAddActivity.class));
+        startActivity(new Intent(this, DeviceAddActivity.class));
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode == RESULT_OK && data!=null){
-            switch (requestCode){
+        if (resultCode == RESULT_OK && data != null) {
+            switch (requestCode) {
                 case KeyConstants.SCANGATEWAYNEW_REQUEST_CODE:
                     String result = data.getStringExtra(Intents.Scan.RESULT);
                     LogUtils.e("扫描结果是   " + result);
-                    if (result.contains("SN-GW")&&result.contains("MAC-")&&result.contains(" ")){
-                        String[] strs=result.split(" ");
-                        String deviceSN=strs[0].replace("SN-","");
-                        Intent scanSuccessIntent=new Intent(AddDeviceZigbeeLockNewFailActivity.this, AddDeviceZigbeeLockNewZeroActivity.class);
-                        scanSuccessIntent.putExtra("deviceSN",deviceSN);
+                    if (result.contains("SN-GW") && result.contains("MAC-") && result.contains(" ")) {
+                        String[] strs = result.split(" ");
+                        String deviceSN = strs[0].replace("SN-", "");
+                        Intent scanSuccessIntent = new Intent(AddDeviceZigbeeLockNewFailActivity.this, AddDeviceZigbeeLockNewZeroActivity.class);
+                        scanSuccessIntent.putExtra("deviceSN", deviceSN);
                         LogUtils.e("设备SN是   " + deviceSN);
                         startActivity(scanSuccessIntent);
                         finish();
-                    }else{
-                        Intent scanSuccessIntent=new Intent(AddDeviceZigbeeLockNewFailActivity.this, AddDeviceZigbeeLockNewScanFailActivity.class);
+                    } else {
+                        Intent scanSuccessIntent = new Intent(AddDeviceZigbeeLockNewFailActivity.this, AddDeviceZigbeeLockNewScanFailActivity.class);
                         startActivity(scanSuccessIntent);
                         finish();
                     }
@@ -82,4 +86,6 @@ public class AddDeviceZigbeeLockNewFailActivity extends BaseAddToApplicationActi
 
         }
     }
+
+
 }

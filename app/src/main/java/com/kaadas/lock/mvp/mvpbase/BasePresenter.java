@@ -26,10 +26,10 @@ public class BasePresenter<T extends IBaseView> {
 
     public BasePresenter() {
         if (mqttService == null) {
-            LogUtils.e("MqttService  为空   异常情况  " + (MyApplication.getInstance().getMqttService() == null));
+            LogUtils.e("mqttService  为空   异常情况  " + (MyApplication.getInstance().getMqttService() == null));
             mqttService = MyApplication.getInstance().getMqttService();
         }
-        if (bleService == null) {
+        if (bleService == null ) {
             LogUtils.e("bleService  为空   异常情况  " + (MyApplication.getInstance().getBleService() == null));
             bleService = MyApplication.getInstance().getBleService();
         }

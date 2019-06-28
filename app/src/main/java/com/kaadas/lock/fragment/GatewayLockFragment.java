@@ -908,7 +908,7 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
 
     @Override
     public void getLockEvent(String gwId, String devId) {
-        if (gatewayLockInfo!=null&&deviceId.equals(devId)&&gatewayId.equals(gatewayId)) {
+        if (gatewayLockInfo!=null&&deviceId.equals(devId)&&gwId.equals(gatewayId)) {
             isOpening = false;
             isClosing = true;
             handler.postDelayed(new Runnable() {

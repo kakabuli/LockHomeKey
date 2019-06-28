@@ -9,7 +9,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_40"
-        android:background="#FFFFFF"
+        android:background="#f8f8f8"
         >
         <ImageView
             android:id="@+id/back"

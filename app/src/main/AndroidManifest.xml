@@ -117,10 +117,6 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.addDevice.DeviceAddActivity"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".activity.my.PersonalUpdateHeadDataActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
@@ -202,6 +198,10 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.addDevice.DeviceAddHelpActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.addDevice.DeviceAddActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
@@ -642,10 +642,6 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.addDevice.zigbeelocknew.AddDeviceZigbeeLockNewScanFailActivity"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activity.addDevice.zigbeelocknew.AddDeviceZigbeeLockNewSecondActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity

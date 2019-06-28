@@ -89,16 +89,16 @@ public class GatewayActivity extends BaseActivity<GatewayView, GatewayPresenter<
         }
         if (gatewayOnline) {
             tvGatewayStatus.setText(R.string.online);
-            tvGatewayStatus.setTextColor(getResources().getColor(R.color.c1F96F7));
+            tvGatewayStatus.setTextColor(getResources().getColor(R.color.c068AEC));
             Drawable drawableLeft = getResources().getDrawable(
-                    R.mipmap.wifi_connect);
+                    R.mipmap.gateway_online);
             tvGatewayStatus.setCompoundDrawablesWithIntrinsicBounds(drawableLeft,
                     null, null, null);
         } else {
             tvGatewayStatus.setText(R.string.offline);
-            tvGatewayStatus.setTextColor(getResources().getColor(R.color.c999999));
+            tvGatewayStatus.setTextColor(getResources().getColor(R.color.c7CD2FF));
             Drawable drawableLeft = getResources().getDrawable(
-                    R.mipmap.wifi_disconnect);
+                    R.mipmap.gateway_offline_gateway);
             tvGatewayStatus.setCompoundDrawablesWithIntrinsicBounds(drawableLeft,
                     null, null, null);
         }
@@ -128,6 +128,7 @@ public class GatewayActivity extends BaseActivity<GatewayView, GatewayPresenter<
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(gatewayAdapter);
         gatewayAdapter.setOnItemClickListener(this);
+
     }
 
 

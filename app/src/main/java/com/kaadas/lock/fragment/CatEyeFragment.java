@@ -198,15 +198,16 @@ public class CatEyeFragment extends BaseFragment<ICatEyeView, CatEyePresenter<IC
             case 1:
                 //猫眼在线
                 ivExternalBig.setVisibility(View.VISIBLE);
-                ivExternalBig.setImageResource(R.mipmap.bluetooth_lock_close_big_middle_icon);
+                ivExternalBig.setImageResource(R.mipmap.bluetooth_lock_close_big_middle_icon_back);
                 ivExternalMiddle.setVisibility(View.GONE);
 //                ivExternalMiddle.setImageResource();
                 ivExternalSmall.setVisibility(View.GONE);
 //                ivExternalSmall.setImageResource();
                 ivInnerMiddle.setVisibility(View.VISIBLE);
-                ivInnerMiddle.setImageResource(R.mipmap.cateye_online);
+                ivInnerMiddle.setImageResource(R.mipmap.cateye_online_back);
                 ivInnerSmall.setVisibility(View.VISIBLE);
                 ivInnerSmall.setImageResource(R.mipmap.gate_lock_close_inner_small_icon);
+                ivInnerSmall.setVisibility(View.GONE);
                 tvInner.setVisibility(View.VISIBLE);
                 tvInner.setText(getString(R.string.click_outside_door));
                 tvInner.setTextColor(getResources().getColor(R.color.white));

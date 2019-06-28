@@ -60,7 +60,7 @@ public class AddDeviceCatEyeSaveNickNameActivity  extends BaseActivity<AddZigbee
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.bluetooth_add_success);
+        setContentView(R.layout.cateye_add_success);
         ButterKnife.bind(this);
         initData();
         initView();
