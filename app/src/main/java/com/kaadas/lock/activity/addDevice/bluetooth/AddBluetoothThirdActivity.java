@@ -33,8 +33,8 @@ public class AddBluetoothThirdActivity extends BaseActivity<IBindBleView, BindBl
     Button alreadyPairNetwork;
     @BindView(R.id.help)
     ImageView help;
-   /* @BindView(R.id.tv_notice)
-    TextView tvNotice;*/
+    @BindView(R.id.tv_notice)
+    TextView tvNotice;
     private boolean isBind;
     private String password1;
     private String deviceName;
@@ -50,10 +50,10 @@ public class AddBluetoothThirdActivity extends BaseActivity<IBindBleView, BindBl
         Intent intent = getIntent();
         password1 = intent.getStringExtra(KeyConstants.PASSWORD1);
         isBind = intent.getBooleanExtra(KeyConstants.IS_BIND, true);
-        version = intent.getIntExtra(KeyConstants.BLE_VERSION,0);
-        sn = intent.getStringExtra(KeyConstants.BLE_DEVICE_SN );
+        version = intent.getIntExtra(KeyConstants.BLE_VERSION, 0);
+        sn = intent.getStringExtra(KeyConstants.BLE_DEVICE_SN);
         //pwd1设置给Presenter使用
-        mPresenter.setPwd1(password1, isBind,version,sn);
+        mPresenter.setPwd1(password1, isBind, version, sn);
         mPresenter.listenConnectState();
         ButterKnife.bind(this);
 
@@ -69,11 +69,11 @@ public class AddBluetoothThirdActivity extends BaseActivity<IBindBleView, BindBl
 
 
     private void initView() {
-   /*     if (isBind) {
+        if (isBind) {
             tvNotice.setText(R.string.device_add_third_content_in_net);
         } else {
             tvNotice.setText(R.string.device_add_third_content_exit_net);
-        }*/
+        }
         alreadyPairNetwork.setClickable(false);
         alreadyPairNetwork.setTextColor(Color.parseColor("#7f7f7f"));
     }
@@ -82,7 +82,7 @@ public class AddBluetoothThirdActivity extends BaseActivity<IBindBleView, BindBl
     public void onBackPressed() {
         Intent result = new Intent();
         result.putExtra(KeyConstants.IS_BIND, mPresenter.isBind());
-        setResult(RESULT_OK,result);
+        setResult(RESULT_OK, result);
         super.onBackPressed();
     }
 
@@ -92,7 +92,7 @@ public class AddBluetoothThirdActivity extends BaseActivity<IBindBleView, BindBl
             case R.id.back:
                 Intent result = new Intent();
                 result.putExtra(KeyConstants.IS_BIND, mPresenter.isBind());
-                setResult(RESULT_OK,result);
+                setResult(RESULT_OK, result);
                 finish();
                 break;
             case R.id.already_pair_network:
@@ -142,7 +142,7 @@ public class AddBluetoothThirdActivity extends BaseActivity<IBindBleView, BindBl
 
     @Override
     public void onUnbindSuccess() {
-       /* tvNotice.setText(R.string.device_add_third_content_in_net);*/
+        tvNotice.setText(R.string.device_add_third_content_in_net);
         ToastUtil.getInstance().showShort(R.string.unbind_success_innet);
     }
 
@@ -168,22 +168,22 @@ public class AddBluetoothThirdActivity extends BaseActivity<IBindBleView, BindBl
 
     @Override
     public void onDeviceStateChange(boolean isConnected) {  //设备连接状态改变   连接成功时提示正在鉴权，连接失败时直接提示用户
-        if (bindSuccess){
+        if (bindSuccess) {
             return;
         }
-        if (!isConnected)  {
+        if (!isConnected) {
             //Context context, String title, String content, String query, ClickListener clickListener
             AlertDialogUtil.getInstance().noEditSingleCanNotDismissButtonDialog(AddBluetoothThirdActivity.this, getString(R.string.hint), getString(R.string.ble_disconnected_please_retry), getString(R.string.confirm), new AlertDialogUtil.ClickListener() {
                 @Override
                 public void left() {
                     finish();
-                    startActivity(new Intent(AddBluetoothThirdActivity.this,AddBluetoothSearchActivity.class));
+                    startActivity(new Intent(AddBluetoothThirdActivity.this, AddBluetoothSearchActivity.class));
                 }
 
                 @Override
                 public void right() {
                     finish();
-                    startActivity(new Intent(AddBluetoothThirdActivity.this,AddBluetoothSearchActivity.class));
+                    startActivity(new Intent(AddBluetoothThirdActivity.this, AddBluetoothSearchActivity.class));
                 }
             });
         }
