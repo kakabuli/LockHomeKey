@@ -491,28 +491,28 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
         LinphoneHelper.setAndroidVideoWindow(new SurfaceView[]{video_v_surfaceview}, new SurfaceView[]{videoPreview});
 
 
-        List<GatewayInfo> allGateway = MyApplication.getInstance().getAllGateway();
-        GatewayInfo gatewayInfo = null;
-        for (GatewayInfo info:allGateway){
-            if ( cateEyeInfo.getGwID().equals(info.getServerInfo().getDeviceSN())){
-                gatewayInfo = info;
-                break;
-            }
-        }
-        //网关不在线
-        if (gatewayInfo!=null && !"online".equals(gatewayInfo.getEvent_str())) {
-            cityPicker.setVisibility(View.GONE);
-            video_cateye_img.setBackground(getDrawable(R.mipmap.video_cateye_noonline));
-            video_cateye_noinfo.setText(R.string.video_cateye_noonline);
-            return;
-        }
-        //猫眼设备不在线
-        if (!"online".equals(cateEyeInfo.getServerInfo().getEvent_str())) {
-            cityPicker.setVisibility(View.GONE);
-            video_cateye_img.setBackground(getDrawable(R.mipmap.video_cateye_noonline));
-            video_cateye_noinfo.setText(R.string.video_cateye_noonline);
-            return;
-        }
+//        List<GatewayInfo> allGateway = MyApplication.getInstance().getAllGateway();
+//        GatewayInfo gatewayInfo = null;
+//        for (GatewayInfo info:allGateway){
+//            if ( cateEyeInfo.getGwID().equals(info.getServerInfo().getDeviceSN())){
+//                gatewayInfo = info;
+//                break;
+//            }
+//        }
+//        //网关不在线
+//        if (gatewayInfo!=null && !"online".equals(gatewayInfo.getEvent_str())) {
+//            cityPicker.setVisibility(View.GONE);
+//            video_cateye_img.setBackground(getDrawable(R.mipmap.video_cateye_noonline));
+//            video_cateye_noinfo.setText(R.string.video_cateye_noonline);
+//            return;
+//        }
+//        //猫眼设备不在线
+//        if (!"online".equals(cateEyeInfo.getServerInfo().getEvent_str())) {
+//            cityPicker.setVisibility(View.GONE);
+//            video_cateye_img.setBackground(getDrawable(R.mipmap.video_cateye_noonline));
+//            video_cateye_noinfo.setText(R.string.video_cateye_noonline);
+//            return;
+//        }
     }
 
     @Override
