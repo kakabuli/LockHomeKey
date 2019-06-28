@@ -18,6 +18,7 @@ import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.device.gatewaylock.password.old.GatewayLockDeletePasswordActivity;
 import com.kaadas.lock.activity.device.gatewaylock.password.old.GatewayLockPasswordAddActivity;
+import com.kaadas.lock.activity.device.gatewaylock.password.old.GatewayLockTempararyPwdAddActivity;
 import com.kaadas.lock.adapter.GatewayLockPasswordAdapter;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.mvp.presenter.gatewaylockpresenter.GatewayLockFunctionPresenter;
@@ -199,13 +200,32 @@ public class GatewayPasswordManagerActivity extends BaseActivity<GatewayLockFunc
                     ToastUtil.getInstance().showShort(R.string.get_lock_pwd_throwable);
                     return;
                 } else if (isAddLockPwd == 2) {
+                    //减一主要是扣除09
                     if (mList != null && mList.size() < maxPwdId - 1) {
-                        //减一主要是扣除09
-                        intent = new Intent(this, GatewayLockPasswordAddActivity.class);
-                        intent.putExtra(KeyConstants.LOCK_PWD_LIST, (Serializable) mList);
-                        intent.putExtra(KeyConstants.GATEWAY_ID, gatewayId);
-                        intent.putExtra(KeyConstants.DEVICE_ID, deviceId);
-                        startActivity(intent);
+                        List<String> temparayList=new ArrayList<>();
+                        temparayList.add("05");
+                        temparayList.add("06");
+                        temparayList.add("07");
+                        temparayList.add("08");
+                        if (mList.containsAll(temparayList)){
+                            AlertDialogUtil.getInstance().singleButtonNoTitleDialog(this, getString(R.string.password_full_and_delete_exist_code), getString(R.string.hao_de), "#1F96F7", new AlertDialogUtil.ClickListener() {
+                                @Override
+                                public void left() {
+
+                                }
+
+                                @Override
+                                public void right() {
+
+                                }
+                            });
+                        }else{
+                            intent = new Intent(this, GatewayLockTempararyPwdAddActivity.class);
+                            intent.putExtra(KeyConstants.LOCK_PWD_LIST, (Serializable) mList);
+                            intent.putExtra(KeyConstants.GATEWAY_ID, gatewayId);
+                            intent.putExtra(KeyConstants.DEVICE_ID, deviceId);
+                            startActivity(intent);
+                        }
                     } else {
                         AlertDialogUtil.getInstance().singleButtonNoTitleDialog(this, getString(R.string.password_full_and_delete_exist_code), getString(R.string.hao_de), "#1F96F7", new AlertDialogUtil.ClickListener() {
                             @Override

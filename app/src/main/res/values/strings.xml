@@ -574,6 +574,7 @@
     <string name="bu_fang_status">布防状态</string>
     <string name="double_lock_status">反锁状态</string>
     <string name="bluetooth_close_status"></string>
+    <string name="gateway_close_status">关闭状态</string>
     <!--<string name="bluetooth_close_status">关闭状态</string>-->
     <string name="is_lock">正在开锁</string>
     <string name="safe_status">安全状态</string>
@@ -1082,7 +1083,6 @@
     <string name="device_no_support_ble">设备不支持蓝牙，请切换设备</string>
     <string name="video_connection_fail">猫眼呼叫来电失败,通道建立失败</string>
     <string name="low_power_warring">低电量无法OTA,请更换电池</string>
-    <string name="cat_eye_offfline_please_check_net">猫眼开小差啦，请检查网络!</string>
     <string name="add_device_lock">添加智能锁</string>
     <string name="select_lock_type">选择门锁类型</string>
     <string name="bluetooth_lock">蓝牙锁</string>
@@ -1099,6 +1099,11 @@
     <string name="how_to_add_cateye_first">打开猫眼后盖二维码进行扫描</string>
     <string name="second_steps_pair_gateway">第二步</string>
     <string name="your_cayeye_pair_success">您的猫眼套装已联网成功</string>
+    <string name="add_common_user_fail">添加普通用户失败</string>
+    <string name="no_linkage_device">暂无联动设备！</string>
+    <string name="this_operation_does_not_support_unlocking">本操作不支持开锁，请设置临时密码开锁</string>
+    <string name="add_temporary_pwd">添加临时密码</string>
+    <string name="get_share_user_fail">查找分享用户失败</string>
     <string name="video_cateye_noonline">猫眼开小差啦，请检查网络！</string>
     <string name="cateye_call_no">必须猫眼呼叫通才可以开锁</string>
     <string name="door_card_identification_hints">将门卡靠近识别区直到"嘀"一声"添加成功"</string>
@@ -1112,4 +1117,5 @@
     <string name="fingerprint_collect_hint">请找到门锁指纹采集位置,按照语音\n提示将要录制指纹手指触摸</string>
     <string name="fingerprint_second_hint">按照语音提示，点击对应数字选项，进入指纹添加</string>
     <string name="fingerprint_three_hint">请找到门锁指纹采集位置\n按照语音提示将要手指触摸进行采集</string>
+    <string name="cat_eye_offfline_please_check_net">猫眼开小差啦，请检查网络!</string>
 </resources>

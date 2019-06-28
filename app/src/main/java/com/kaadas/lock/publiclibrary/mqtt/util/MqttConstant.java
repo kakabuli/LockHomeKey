@@ -200,4 +200,9 @@ public class MqttConstant {
     //网关ota升级确认
     public static final String CONFIRM_GATEWAY_OTA="otaApprovateResult";
 
+    //分享设备
+    public static final String SHARE_DEVICE="shareDevice";
+
+    //分享的用户
+    public static final String SHARE_USER_LIST="shareUserList";
 }

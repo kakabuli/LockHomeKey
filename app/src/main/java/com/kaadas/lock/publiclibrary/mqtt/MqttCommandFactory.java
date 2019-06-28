@@ -8,6 +8,8 @@ import com.kaadas.lock.publiclibrary.mqtt.publishbean.BindGatewayBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.BindGatewayMemeBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.CatEyeInfoBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.DeleteGatewayLockDeviceBean;
+import com.kaadas.lock.publiclibrary.mqtt.publishbean.DeviceShareBean;
+import com.kaadas.lock.publiclibrary.mqtt.publishbean.DeviceShareUserBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.FtpEnableBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.GatewayComfirmOtaUpgradeBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.GetAMBean;
@@ -699,7 +701,36 @@ public class MqttCommandFactory {
         return getMe(otaUpgradeBean,messageId);
     }
 
+    /**
+     * 分享和删除分享用户
+     * @param type
+     * @param gatewayId
+     * @param deviceId
+     * @param uid
+     * @param shareUser
+     * @param userName
+     * @param shareFlag
+     * @return
+     */
+    public static MqttMessage shareDevice(int type,String gatewayId,String deviceId,String uid,String shareUser,String userName,int shareFlag){
+        int messageId=getMessageId();
+        DeviceShareBean shareBean=new DeviceShareBean(messageId,MqttConstant.SHARE_DEVICE,type,gatewayId,deviceId,uid,shareUser,userName,shareFlag);
+        return getMessage(shareBean,messageId);
+    }
 
+    /**
+     * 查找分享用户的列表
+     * @param gatewayId
+     * @param deviceId
+     * @param adminId
+     * @return
+     */
+
+    public static MqttMessage getShareUser(String gatewayId,String deviceId,String adminId){
+        int messageId=getMessageId();
+        DeviceShareUserBean shareUserBean=new DeviceShareUserBean(messageId,MqttConstant.MSG_TYPE_REQUEST,MqttConstant.SHARE_USER_LIST,gatewayId,deviceId,adminId);
+        return getMessage(shareUserBean,messageId);
+    }
 
 
     public static MqttMessage getMessage(Object o, int messageID) {

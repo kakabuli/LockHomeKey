@@ -129,6 +129,8 @@ public class KeyConstants {
      * 普通家庭成员数据
      */
     public static final String COMMON_FAMILY_MEMBER_DATA = "common_family_member_data";
+
+    public static final String GATEWAY_SHARE_USER = "gateway_share_user";
     /**
      * 时间策略key值
      */
@@ -226,6 +228,10 @@ public class KeyConstants {
 
     //网关的id
     public static final String GATEWAY_ID="gatewayId";
+
+    //是否是管理员
+    public static final String IS_ADMIN="isadmin";
+
 
     //设备的id
     public static final String DEVICE_ID="deviceId";

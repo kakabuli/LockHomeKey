@@ -88,11 +88,14 @@ public class BindBlePresenter<T> extends BasePresenter<IBindBleView> {
                     public void accept(BleDataBean bleDataBean) throws Exception {
                         //收到入网数据
                         byte[] originalData = bleDataBean.getOriginalData();
-                        LogUtils.e("收到最老的锁入网数据");
-                        if (isBind && (originalData[5] & 0xff) == 0x00) { //绑定
-                            sendConfirmData(version, isBind);
-                            toDisposable(inNetNotifyDisposable);
-                        } else {
+                        LogUtils.e("收到最老的锁入网数据" + Rsa.bytesToHexString(originalData));
+                        if (isBind){
+                            if ((originalData[5] & 0xff) == 0x00) { //绑定
+                                sendConfirmData(version, isBind);
+                                toDisposable(inNetNotifyDisposable);
+                            }
+                        }else {
+                            //f5 b1 00 1c b0 01 0000000000000000000000000000
                             if ((originalData[5] & 0xff) == 0x01) {  //解绑
                                 sendConfirmData(version, isBind);
                                 toDisposable(inNetNotifyDisposable);
