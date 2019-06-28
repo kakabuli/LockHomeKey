@@ -155,5 +155,31 @@ public class DeviceOnLineBean {
         public void setMacaddr(String macaddr) {
             this.macaddr = macaddr;
         }
+
+        @Override
+        public String toString() {
+            return "EventparamsBean{" +
+                    "SW='" + SW + '\'' +
+                    ", device_type='" + device_type + '\'' +
+                    ", event_str='" + event_str + '\'' +
+                    ", macaddr='" + macaddr + '\'' +
+                    '}';
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "DeviceOnLineBean{" +
+                "deviceId='" + deviceId + '\'' +
+                ", devtype='" + devtype + '\'' +
+                ", eventcode=" + eventcode +
+                ", eventparams=" + eventparams +
+                ", eventtype='" + eventtype + '\'' +
+                ", func='" + func + '\'' +
+                ", gwId='" + gwId + '\'' +
+                ", msgid='" + msgid + '\'' +
+                ", msgtype='" + msgtype + '\'' +
+                ", timestamp='" + timestamp + '\'' +
+                '}';
     }
 }
