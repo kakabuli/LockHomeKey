@@ -211,13 +211,14 @@ public class CateyeFunctionActivity extends BaseActivity<ICatEyeFunctionView, Ca
                 //猫眼在线
                 if (ivExternalBig!=null&&ivExternalMiddle!=null&&ivExternalSmall!=null&&ivInnerMiddle!=null&&ivInnerSmall!=null&&tvInner!=null&&tvExternal!=null) {
                     ivExternalBig.setVisibility(View.VISIBLE);
-                    ivExternalBig.setImageResource(R.mipmap.bluetooth_lock_close_big_middle_icon);
+                    ivExternalBig.setImageResource(R.mipmap.bluetooth_lock_close_big_middle_icon_back);
                     ivExternalMiddle.setVisibility(View.GONE);
                     ivExternalSmall.setVisibility(View.GONE);
                     ivInnerMiddle.setVisibility(View.VISIBLE);
                     ivInnerMiddle.setImageResource(R.mipmap.cateye_online);
                     ivInnerSmall.setVisibility(View.VISIBLE);
                     ivInnerSmall.setImageResource(R.mipmap.gate_lock_close_inner_small_icon);
+                    ivInnerSmall.setVisibility(View.GONE);
                     tvInner.setVisibility(View.VISIBLE);
                     tvInner.setText(getString(R.string.click_outside_door));
                     tvInner.setTextColor(getResources().getColor(R.color.white));
@@ -230,7 +231,7 @@ public class CateyeFunctionActivity extends BaseActivity<ICatEyeFunctionView, Ca
 //                设备已离线
                 if (ivExternalBig!=null&&ivExternalMiddle!=null&&ivExternalSmall!=null&&ivInnerMiddle!=null&&ivInnerSmall!=null&&tvInner!=null&&tvExternal!=null) {
                     ivExternalBig.setVisibility(View.VISIBLE);
-                    ivExternalBig.setImageResource(R.mipmap.bluetooth_no_connect_big_middle_icon);
+                    ivExternalBig.setImageResource(R.mipmap.bluetooth_lock_close_big_middle_icon_noline_back);
                     ivExternalMiddle.setVisibility(View.GONE);
                     ivExternalSmall.setVisibility(View.GONE);
                     ivInnerMiddle.setVisibility(View.VISIBLE);

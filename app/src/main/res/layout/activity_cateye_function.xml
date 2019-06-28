@@ -51,8 +51,8 @@
 
         <RelativeLayout
             android:id="@+id/rl_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="180dp"
+            android:layout_height="180dp"
             android:layout_centerInParent="true">
 
             <ImageView
@@ -83,14 +83,16 @@
                 android:id="@+id/iv_inner_middle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true" />
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="60dp" />
 
             <TextView
                 android:id="@+id/tv_inner"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="@dimen/dp_111"
+                android:layout_below="@id/iv_inner_middle"
+                android:layout_marginTop="15dp"
                 android:text="jjfikfj"
                 android:textColor="#FEFEFE"
                 android:textSize="@dimen/sp_11" />
