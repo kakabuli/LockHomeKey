@@ -133,6 +133,7 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
     };
     Timer timer = new Timer();
     private LinearLayout cat_eye_offline;
+    private RelativeLayout cat_eye_online;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -221,14 +222,14 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
         if (NetUtil.isNetworkAvailable()){
             if ("online".equals(cateEyeInfo.getServerInfo().getEvent_str())){ //猫眼在线
                 cat_eye_offline.setVisibility(View.GONE);
-                cityPicker.setVisibility(View.VISIBLE);
+                cat_eye_online.setVisibility(View.VISIBLE);
             }else { //猫眼离线
                 cat_eye_offline.setVisibility(View.VISIBLE);
-                cityPicker.setVisibility(View.GONE);
+                cat_eye_online.setVisibility(View.GONE);
             }
         }else {
             cat_eye_offline.setVisibility(View.VISIBLE);
-            cityPicker.setVisibility(View.GONE);
+            cat_eye_online.setVisibility(View.GONE);
         }
 
     }
@@ -236,6 +237,8 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
 
     private void findViewByOrientation() {
         cat_eye_offline = findViewById(R.id.cat_eye_offline);
+        cat_eye_online = findViewById(R.id.cat_eye_online);
+
         cityPicker = findViewById(R.id.forecast_city_picker);
         video_h_no_lock = findViewById(R.id.video_h_no_lock);
         video_start_play = findViewById(R.id.video_start_play);
