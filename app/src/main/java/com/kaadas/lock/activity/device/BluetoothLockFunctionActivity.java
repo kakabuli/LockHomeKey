@@ -257,6 +257,8 @@ public class BluetoothLockFunctionActivity extends BaseBleActivity<IDeviceDetail
                 ivLockIcon.setImageResource(R.mipmap.bluetooth_lock_qz013);
             }else if (model.contains("QZ012")){
                 ivLockIcon.setImageResource(R.mipmap.bluetooth_lock_qz012);
+            }else if (model.contains("K8-T")){
+                ivLockIcon.setImageResource(R.mipmap.bluetooth_lock_k8_t);
             }
         }
     }
@@ -412,7 +414,7 @@ public class BluetoothLockFunctionActivity extends BaseBleActivity<IDeviceDetail
                 break;
             case R.id.ll_five:
                 intent = new Intent(this, BluetoothMoreActivity.class);
-                if (lockType.startsWith("S8")){
+                if (lockType.startsWith("S8")||lockType.startsWith("V6")||lockType.startsWith("V7")||lockType.startsWith("S100")){
                     intent.putExtra(KeyConstants.SOURCE,"BluetoothLockFunctionV6V7Activity");
                 }
                 startActivityForResult(intent, TO_MORE_REQUEST_CODE);
