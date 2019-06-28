@@ -320,41 +320,77 @@
     <RelativeLayout
         android:id="@+id/rl_bottom"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_weight="1">
 
-        <com.yarolegovich.discretescrollview.DiscreteScrollView
-            android:id="@+id/forecast_city_picker"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:visibility="visible" />
-
         <LinearLayout
-            android:id="@+id/video_h_no_lock"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:id="@+id/cat_eye_offline"
             android:layout_centerInParent="true"
+            android:gravity="center"
             android:orientation="vertical"
-            android:visibility="gone">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
             <ImageView
+                android:src="@mipmap/cat_eye_offline_bg"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="20dp"
-                android:background="@mipmap/lock_no" />
+                android:layout_height="wrap_content" />
 
             <TextView
+                android:gravity="center"
+                android:textColor="#999999"
+                android:layout_marginTop="15dp"
+                android:textSize="12sp"
+                android:text="@string/cat_eye_offfline_please_check_net"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+
+        <RelativeLayout
+            android:id="@+id/cat_eye_online"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+
+            <com.yarolegovich.discretescrollview.DiscreteScrollView
+                android:id="@+id/forecast_city_picker"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:visibility="visible" />
+
+
+
+            <LinearLayout
+                android:id="@+id/video_h_no_lock"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="@dimen/dp_11"
-                android:drawablePadding="@dimen/dp_9"
-                android:gravity="center"
-                android:text="@string/select_no_lock"
-                android:textColor="#ABABAB" />
-        </LinearLayout>
+                android:layout_centerInParent="true"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <ImageView
+                    android:id="@+id/video_cateye_img"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="20dp"
+                    android:background="@mipmap/lock_no" />
+
+                <TextView
+                    android:id="@+id/video_cateye_noinfo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/dp_11"
+                    android:drawablePadding="@dimen/dp_9"
+                    android:gravity="center"
+                    android:text="@string/select_no_lock"
+                    android:textColor="#ABABAB" />
+            </LinearLayout>
+        </RelativeLayout>
 
     </RelativeLayout>
 

@@ -54,6 +54,7 @@ import butterknife.ButterKnife;
 
 /**
  * Created by David on 2019/4/10
+ * 没有卡片功能
  */
 public class BluetoothLockFunctionV6V7Activity extends BaseBleActivity<IDeviceDetailView, DeviceDetailPresenter<IDeviceDetailView>> implements IDeviceDetailView, View.OnClickListener {
     @BindView(R.id.iv_back)
@@ -133,7 +134,7 @@ public class BluetoothLockFunctionV6V7Activity extends BaseBleActivity<IDeviceDe
     private Runnable lockRunnable;
     private boolean isConnectingDevice;
     private Handler handler = new Handler();
-
+    String lockType;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -186,7 +187,7 @@ public class BluetoothLockFunctionV6V7Activity extends BaseBleActivity<IDeviceDe
     }
 
     private void showLockType() {
-        String lockType = bleLockInfo.getServerLockInfo().getModel();
+         lockType = bleLockInfo.getServerLockInfo().getModel();
        /* if (lockType.startsWith("K9S")){
             lockType="K9S";
         }else if (lockType.startsWith("K8S")){
@@ -257,6 +258,8 @@ public class BluetoothLockFunctionV6V7Activity extends BaseBleActivity<IDeviceDe
                 ivLockIcon.setImageResource(R.mipmap.bluetooth_lock_qz013);
             }else if (model.contains("QZ012")){
                 ivLockIcon.setImageResource(R.mipmap.bluetooth_lock_qz012);
+            }else if (model.contains("K8-T")){
+                ivLockIcon.setImageResource(R.mipmap.bluetooth_lock_k8_t);
             }
         }
     }
@@ -357,7 +360,7 @@ public class BluetoothLockFunctionV6V7Activity extends BaseBleActivity<IDeviceDe
     }
 
     private void initData() {
-        tvBluetoothName.setText("jfjif");
+        tvBluetoothName.setText("");
         ivOne.setImageResource(R.mipmap.bluetooth_password);
         tvNameOne.setText(R.string.password);
         tvNumberOne.setText(0 + getString(R.string.group));
@@ -412,7 +415,9 @@ public class BluetoothLockFunctionV6V7Activity extends BaseBleActivity<IDeviceDe
                 break;
             case R.id.ll_five:
                 intent = new Intent(this, BluetoothMoreActivity.class);
-                intent.putExtra(KeyConstants.SOURCE,"BluetoothLockFunctionV6V7Activity");//a-m模式隐藏标记
+                if (lockType.startsWith("S8")||lockType.startsWith("V6")||lockType.startsWith("V7")||lockType.startsWith("S100")){
+                    intent.putExtra(KeyConstants.SOURCE,"BluetoothLockFunctionV6V7Activity");//a-m模式隐藏标记
+                }
                 startActivityForResult(intent, TO_MORE_REQUEST_CODE);
                 break;
             case R.id.tv_open_clock:

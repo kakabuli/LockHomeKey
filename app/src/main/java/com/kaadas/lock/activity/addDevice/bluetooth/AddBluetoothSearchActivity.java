@@ -15,6 +15,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
@@ -235,8 +236,53 @@ public class AddBluetoothSearchActivity extends BaseActivity<ISearchDeviceView, 
     }
 
     @Override
-    public void onAlreadyBind(BluetoothDevice device) {
-        binding(device, false, getResources().getString(R.string.this_device_already_bind_reset));
+    public void onAlreadyBind(BluetoothDevice device,String uName) {
+        String name = "";
+        if (TextUtils.isEmpty(uName)){
+            if (uName.contains("@")){ //邮箱用户
+                //123456@qq.com
+                int index = uName.indexOf("@");
+                String head = uName.substring(0,index);
+                if (head.length()>3){
+                    name = head.substring(0, 3) + "***" + uName.substring(index, uName.length());
+                }else {
+//                name = head+"***"+uName.substring(index,uName.length());
+                    name = uName;
+                }
+            }else { //手机用户
+                if (uName.length()>=11){
+                    name = uName.substring(uName.length() - 11, uName.length() - 8) + "***" + uName.substring(uName.length() - 3, uName.length());
+                }else {
+                    name = uName;
+                }
+            }
+        }
+
+        binding(device, false,  String.format(getResources().getString(R.string.this_device_already_bind_reset),name ));
+    }
+
+    public static void main (String[] args){
+        String uName = "1567539907";
+        String name = "";
+        if (uName.contains("@")){ //邮箱用户
+            //123456@qq.com
+            int index = uName.indexOf("@");
+            String head = uName.substring(0,index);
+            if (head.length()>3){
+                name = head.substring(0, 3) + "***" + uName.substring(index, uName.length());
+            }else {
+//                name = head+"***"+uName.substring(index,uName.length());
+                name = uName;
+            }
+        }else { //手机用户
+            if (uName.length()>=11){
+                name = uName.substring(uName.length() - 11, uName.length() - 8) + "***" + uName.substring(uName.length() - 3, uName.length());
+            }else {
+                name = uName;
+            }
+
+        }
+        System.out.println(name);
     }
 
     @Override

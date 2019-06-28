@@ -23,7 +23,7 @@
                 android:layout_width="@dimen/dp_71"
                 android:layout_height="@dimen/dp_71"
                 android:layout_centerVertical="true"
-                android:src="@mipmap/default_head_1"
+                android:src="@mipmap/default_head"
                 />
 
             <TextView

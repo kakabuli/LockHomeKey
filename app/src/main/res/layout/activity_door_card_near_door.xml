@@ -19,14 +19,29 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:src="@mipmap/fingerprint_link_bluetooth_icon" />
-
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="@dimen/dp_61"
-            android:text="@string/connecting_door_lock" />
+            android:textSize="@dimen/sp_17"
+            android:textColor="#999999"
+            android:text="@string/pairint_progress" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/sp_11"
+            android:textColor="#999999"
+            android:layout_marginTop="@dimen/dp_11"
+            android:text="@string/turn_on_bluetooth_near_door_lock"/>
+    </LinearLayout>
     </RelativeLayout>
 
     <RelativeLayout
@@ -35,6 +50,7 @@
         android:layout_weight="3">
 
         <TextView
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_75"
             android:layout_marginLeft="@dimen/dp_15"

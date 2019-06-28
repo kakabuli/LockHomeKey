@@ -3,6 +3,7 @@ package com.kaadas.lock.mvp.view.cateye;
 import com.kaadas.lock.mvp.mvpbase.IBaseView;
 import com.kaadas.lock.publiclibrary.bean.CateEyeInfo;
 import com.kaadas.lock.publiclibrary.bean.GwLockInfo;
+import com.kaadas.lock.publiclibrary.mqtt.eventbean.DeviceOnLineBean;
 
 public interface IVideoView extends IBaseView {
     /**
@@ -116,4 +117,16 @@ public interface IVideoView extends IBaseView {
      */
     void lockCloseFailed( );
 
+    /**
+     * 有设备状态改变
+     */
+
+    void deviceStatusChange(DeviceOnLineBean deviceOnLineBean);
+
+
+    /**
+     * 手机网络改变
+     */
+
+    void netWorkChange(boolean isEnable);
 }

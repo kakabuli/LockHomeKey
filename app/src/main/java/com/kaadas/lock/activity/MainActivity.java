@@ -569,6 +569,9 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
     private void registerNetwork(){
         netWorkChangReceiver = new NetWorkChangReceiver();
         IntentFilter filter = new IntentFilter();
+        filter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
+        filter.addAction("android.net.wifi.WIFI_STATE_CHANGED");
+        filter.addAction("android.net.wifi.STATE_CHANGE");
         registerReceiver(netWorkChangReceiver, filter);
         isRegistered = true;
     }

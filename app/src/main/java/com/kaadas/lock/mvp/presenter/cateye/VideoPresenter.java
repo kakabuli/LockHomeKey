@@ -22,6 +22,7 @@ import com.kaadas.lock.publiclibrary.linphone.linphone.util.LinphoneHelper;
 import com.kaadas.lock.publiclibrary.linphone.linphone.util.Util;
 import com.kaadas.lock.publiclibrary.linphone.linphonenew.LinphoneManager;
 import com.kaadas.lock.publiclibrary.mqtt.MqttCommandFactory;
+import com.kaadas.lock.publiclibrary.mqtt.eventbean.DeviceOnLineBean;
 import com.kaadas.lock.publiclibrary.mqtt.eventbean.OpenLockNotifyBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.OpenLockBean;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttConstant;
@@ -35,6 +36,7 @@ import com.kaadas.lock.utils.RecordTools;
 import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.db.MediaFileDBDao;
 import com.kaadas.lock.utils.ftp.GeTui;
+import com.kaadas.lock.utils.networkListenerutil.NetWorkChangReceiver;
 
 import net.sdvn.cmapi.Device;
 
@@ -73,9 +75,11 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
     private Disposable closeLockNotifyDisposable;
     private Disposable lockCloseDisposable;
     private Context mContext;
+    private Disposable listenerDeviceOnLineDisposable;
+    private Disposable networkChangeDisposable;
 
     public void init(Context context) {
-        this.mContext=context;
+        this.mContext = context;
         mMediaDBDao = MediaFileDBDao.getInstance(context);
         //设置麦克风不静音
         LinphoneHelper.toggleMicro(false);
@@ -85,13 +89,13 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
         listenerCallStatus();
     }
 
-
+    public static  boolean isConnectedEye=false;
     public void listenerCallStatus() {
         LinphoneHelper.addAutoAcceptCallBack(new PhoneAutoAccept() {
             @Override
             public void incomingCall(LinphoneCall linphoneCall) {
-                if(!RecordTools.validateMicAvailability()){  //打开
-                    Toast.makeText(mContext,mContext.getString(R.string.cateye_call_record),Toast.LENGTH_SHORT).show();
+                if (!RecordTools.validateMicAvailability()) {  //打开
+                    Toast.makeText(mContext, mContext.getString(R.string.cateye_call_record), Toast.LENGTH_SHORT).show();
                     return;
                 }
                 Log.e(Tag, "猫眼   incomingCall1 ");
@@ -110,13 +114,13 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
                     GatewayInfo gatewayInfo = null;
                     List<CateEyeInfo> cateEyes = MyApplication.getInstance().getAllBindDevices().getCateEyes();
                     for (CateEyeInfo cateEyeInfo : cateEyes) {
-                        LogUtils.e(Tag,"猫眼的  getDeviceId  " + cateEyeInfo.getServerInfo().getDeviceId());
+                        LogUtils.e(Tag, "猫眼的  getDeviceId  " + cateEyeInfo.getServerInfo().getDeviceId());
                         if (catEyeDeviceId.equalsIgnoreCase(cateEyeInfo.getServerInfo().getDeviceId())) {
-                            LogUtils.e(Tag,"获取到网关Id为  " + cateEyeInfo.getGwID());
+                            LogUtils.e(Tag, "获取到网关Id为  " + cateEyeInfo.getGwID());
                             gwId = cateEyeInfo.getGwID();
                             List<GatewayInfo> allGateway = MyApplication.getInstance().getAllGateway();
-                            for (GatewayInfo info:allGateway){
-                                if ( cateEyeInfo.getGwID().equals(info.getServerInfo().getDeviceSN())){
+                            for (GatewayInfo info : allGateway) {
+                                if (cateEyeInfo.getGwID().equals(info.getServerInfo().getDeviceSN())) {
                                     gatewayInfo = info;
                                     break;
                                 }
@@ -160,7 +164,7 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
             @Override
             public void callConnected() {
                 Log.e(Tag, "猫眼1  callConnected.........");
-                Log.e(GeTui.VideoLog,"VideoPresenter==>incomingCalll....");
+                Log.e(GeTui.VideoLog, "VideoPresenter==>incomingCalll....");
                 startCountUp();
                 isConnected = true;
                 if (mViewRef.get() != null) {
@@ -171,7 +175,7 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
 
             @Override
             public void callReleased() {
-                Log.e(GeTui.VideoLog,"VideoPresenter==>callReleased....");
+                Log.e(GeTui.VideoLog, "VideoPresenter==>callReleased....");
                 Log.e(Tag, "猫眼  callReleased.........");
             }
 
@@ -188,9 +192,9 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
 
             @Override
             public void Streaming() {
-                Log.e(GeTui.VideoLog,"VideoPresenter==>Streaming....");
+                Log.e(GeTui.VideoLog, "VideoPresenter==>Streaming....");
                 Log.e(Tag, "猫眼 Streaming.........");
-
+                isConnectedEye=true;
             }
         });
     }
@@ -206,7 +210,7 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
             if (mViewRef.get() != null) {
                 mViewRef.get().screenShotSuccess();
             }
-            if(mViewRef!=null && mViewRef.get() !=null){
+            if (mViewRef != null && mViewRef.get() != null) {
                 mViewRef.get().screenShotSuccessPath(mPicturePath);
             }
 
@@ -306,8 +310,8 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
         isCalling = true;
         List<GatewayInfo> allGateway = MyApplication.getInstance().getAllGateway();
         GatewayInfo gatewayInfo = null;
-        for (GatewayInfo info:allGateway){
-            if ( cateEyeInfo.getGwID().equals(info.getServerInfo().getDeviceSN())){
+        for (GatewayInfo info : allGateway) {
+            if (cateEyeInfo.getGwID().equals(info.getServerInfo().getDeviceSN())) {
                 gatewayInfo = info;
                 break;
             }
@@ -354,7 +358,7 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
                 new BiFunction<Boolean, List<Device>, Boolean>() {
                     @Override
                     public Boolean apply(Boolean aBoolean, List<Device> devices) throws Exception {
-                        LogUtils.e(Tag,"米米网登陆成功  且网关在线");
+                        LogUtils.e(Tag, "米米网登陆成功  且网关在线");
                         if (aBoolean && devices.size() > 0) { //米米网登陆成功且网关在线  正常到此处，那么都应该是成功的
                             return true;
                         }
@@ -371,7 +375,7 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
                         }
                         if (!isCallIn) {
                             if (aBoolean) { // 米米网登陆成功且网关在线
-                                LogUtils.e(Tag,"米米网  登陆成功   呼叫猫眼");
+                                LogUtils.e(Tag, "米米网  登陆成功   呼叫猫眼");
                                 wakeupCatEye(cateEyeInfo);
                             } else { //米米网登陆失败或者网关不在线
                                 if (mViewRef.get() != null) {
@@ -382,7 +386,7 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
                             }
                         } else { //米米网登录成功的话   通知界面   有电话呼叫过来  弹出对话框
                             if (aBoolean) { // 米米网登陆成功且网关在线
-                                LogUtils.e(Tag,"米米网  登陆成功   呼叫猫眼");
+                                LogUtils.e(Tag, "米米网  登陆成功   呼叫猫眼");
                                 if (mViewRef.get() != null) {
                                     mViewRef.get().onCatEyeCallIn();
                                 }
@@ -398,7 +402,7 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        LogUtils.e(Tag,"登录米米网失败或者设备不在线");
+                        LogUtils.e(Tag, "登录米米网失败或者设备不在线");
                         if (!isCallIn) {
                             if (mViewRef.get() != null) {
                                 mViewRef.get().loginMemeFailed();
@@ -427,7 +431,7 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
                         toDisposable(deviceChangeDisposable);
                         if (devices.size() > 1) {
                             if (!isCallIn) {
-                                LogUtils.e(Tag,"米米网  登陆成功   呼叫猫眼");
+                                LogUtils.e(Tag, "米米网  登陆成功   呼叫猫眼");
                                 wakeupCatEye(cateEyeInfo);
                             } else {
                                 if (mViewRef.get() != null) {
@@ -462,7 +466,7 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
         MqttMessage mqttMessage = MqttCommandFactory.wakeupCamera(cateEyeInfo.getServerInfo().getDeviceId(), cateEyeInfo.getGwID(), MyApplication.getInstance().getUid());
         waitCall();
         long start = System.currentTimeMillis();
-        LogUtils.e(Tag,"唤醒猫眼   ");
+        LogUtils.e(Tag, "唤醒猫眼   ");
         wakeupSuccess = true;
         currentCateEyeInfo = cateEyeInfo;
         wakeupDisposable = mqttService.mqttPublish(MqttConstant.getCallTopic(MyApplication.getInstance().getUid()), mqttMessage)
@@ -481,17 +485,17 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
                     @Override
                     public void accept(MqttData mqttData) throws Exception {
                         toDisposable(wakeupDisposable);
-                        Log.e(Tag,"唤醒猫眼:"+mqttData.toString());
+                        Log.e(Tag, "唤醒猫眼:" + mqttData.toString());
                         if ("200".equals(mqttData.getReturnCode())) {
-                            LogUtils.e(Tag,"唤醒猫眼成功");
-                            if (mViewRef!=null && mViewRef.get() != null) {
+                            LogUtils.e(Tag, "唤醒猫眼成功");
+                            if (mViewRef != null && mViewRef.get() != null) {
                                 mViewRef.get().wakeupSuccess();
                             }
                         } else {
                             //407  猫眼离线  猫眼唤醒失败
-                            LogUtils.e(Tag,"唤醒猫眼失败   " + mqttData.getReturnCode() + "   耗时  " + (System.currentTimeMillis() - start));
-                            if (mViewRef!=null && mViewRef.get() != null && !isConnected) {
-                              //  mViewRef.get().wakeupFailed();
+                            LogUtils.e(Tag, "唤醒猫眼失败   " + mqttData.getReturnCode() + "   耗时  " + (System.currentTimeMillis() - start));
+                            if (mViewRef != null && mViewRef.get() != null && !isConnected) {
+                                //  mViewRef.get().wakeupFailed();
                                 mViewRef.get().wakeupFailedStateCode(mqttData.getReturnCode());
                             }
                             wakeupSuccess = false;
@@ -659,7 +663,7 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
                         @Override
                         public void accept(MqttData mqttData) throws Exception {
                             toDisposable(closeLockNotifyDisposable);
-                            LogUtils.e(Tag,"门锁打开上报");
+                            LogUtils.e(Tag, "门锁打开上报");
                             if (mViewRef.get() != null) {
                                 mViewRef.get().openLockSuccess();
                             }
@@ -708,7 +712,7 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
                         @Override
                         public void accept(MqttData mqttData) throws Exception {
                             toDisposable(lockCloseDisposable);
-                            LogUtils.e(Tag,"门锁关闭 上报");
+                            LogUtils.e(Tag, "门锁关闭 上报");
                             //关门
                             if (mViewRef.get() != null) {
                                 mViewRef.get().lockCloseSuccess();
@@ -724,6 +728,57 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
                     });
             compositeDisposable.add(lockCloseDisposable);
         }
+    }
 
+
+    /**
+     * 监听设备上线下线
+     */
+    public void listenerDeviceOnline() {
+        if (mqttService != null) {
+            toDisposable(listenerDeviceOnLineDisposable);
+            listenerDeviceOnLineDisposable = mqttService.listenerDataBack()
+                    .filter(new Predicate<MqttData>() {
+                        @Override
+                        public boolean test(MqttData mqttData) throws Exception {
+                            return mqttData.getFunc().equals(MqttConstant.GW_EVENT);
+                        }
+                    })
+                    .compose(RxjavaHelper.observeOnMainThread())
+                    .subscribe(new Consumer<MqttData>() {
+                        @Override
+                        public void accept(MqttData mqttData) throws Exception {
+                            DeviceOnLineBean deviceOnLineBean = new Gson().fromJson(mqttData.getPayload(), DeviceOnLineBean.class);
+                            if (deviceOnLineBean != null) {
+                                LogUtils.e("设备上下线    " + deviceOnLineBean.toString());
+                                if (mViewRef.get() != null && deviceOnLineBean.getEventparams().getEvent_str() != null) {
+                                    mViewRef.get().deviceStatusChange(deviceOnLineBean);
+                                }
+                            }
+                        }
+                    }, new Consumer<Throwable>() {
+                        @Override
+                        public void accept(Throwable throwable) throws Exception {
+                        }
+                    });
+            compositeDisposable.add(listenerDeviceOnLineDisposable);
+        }
+    }
+
+
+    //网络变化通知
+    public void listenerNetworkChange() {
+        LogUtils.e("监听网络变化");
+        toDisposable(networkChangeDisposable);
+        networkChangeDisposable = NetWorkChangReceiver.notifyNetworkChange().subscribe(new Consumer<Boolean>() {
+            @Override
+            public void accept(Boolean aBoolean) throws Exception {
+                LogUtils.e("监听网络变化");
+                if (mViewRef != null && mViewRef.get() != null) {
+                    mViewRef.get().netWorkChange(aBoolean);
+                }
+            }
+        });
+        compositeDisposable.add(networkChangeDisposable);
     }
 }

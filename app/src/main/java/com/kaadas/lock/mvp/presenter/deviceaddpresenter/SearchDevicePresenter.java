@@ -148,7 +148,11 @@ public class SearchDevicePresenter<T> extends BasePresenter<ISearchDeviceView> {
                         }
                         if ("202".equals(stringResponse.body().getCode())) {
                             if (mViewRef != null) {
-                                mViewRef.get().onAlreadyBind(device);
+                                if (stringResponse.body().getData()!=null){
+                                    mViewRef.get().onAlreadyBind(device,stringResponse.body().getData().getAdminname());
+                                }else {
+                                    mViewRef.get().onAlreadyBind(device,"");
+                                }
                             }
                         } else if ("201".equals(stringResponse.body().getCode())) {
                             if (mViewRef != null) {

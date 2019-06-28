@@ -15,14 +15,11 @@ public class MqttConstant {
     public final static int  DC_TEST = 6750465;
 
 
-    //public static final String MQTT_BASE_URL = "tcp://192.168.3.180:1883";//本地服务器
-      //public static final String MQTT_BASE_URL = "tcp://mqtt-kaadas.juziwulian.com:1883";//正式服务器
-      public static final String MQTT_BASE_URL = "tcp://test.juziwulian.com:1883";//测试服务器
+      public static final String MQTT_BASE_URL = "tcp://mqtt-kaadas.juziwulian.com:1883";//正式服务器
+//      public static final String MQTT_BASE_URL = "tcp://test.juziwulian.com:1883";//测试服务器
 
 
        public static final String LINPHONE_URL = "sip-kaadas.juziwulian.com:5061";//正式sip
-     // public static String LINPHONE_URL = "192.168.3.180:5061";   // 本地sip
-     //  public static String LINPHONE_URL = "47.106.94.189:5061";   // 测试sip
 //          public static final String LINPHONE_URL = "test.juziwulian.com:5061";//测试sip
 
     public static final String  MQTT_REQUEST_APP = "/request/app/func";

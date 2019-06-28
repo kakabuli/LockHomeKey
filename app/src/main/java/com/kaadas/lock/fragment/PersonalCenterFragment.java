@@ -181,7 +181,7 @@ public class PersonalCenterFragment extends BaseFragment<IMyFragmentView, MyFrag
 
     private void showImage(String photoPath) {
         if ("".equals(photoPath)) {
-            ivPhoto.setImageDrawable(getResources().getDrawable(R.mipmap.default_head_1));
+            ivPhoto.setImageDrawable(getResources().getDrawable(R.mipmap.default_head));
         } else {
             int degree = BitmapUtil.readPictureDegree(photoPath);
             changeBitmap = BitmapUtil.ratio(photoPath, 720, 720);
