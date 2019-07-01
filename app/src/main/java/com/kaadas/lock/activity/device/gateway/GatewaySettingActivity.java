@@ -24,6 +24,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.MainActivity;
+import com.kaadas.lock.activity.device.gatewaylock.more.GatewayMoreActivity;
 import com.kaadas.lock.adapter.GatewaySettingAdapter;
 import com.kaadas.lock.bean.GatewaySettingItemBean;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
@@ -37,6 +38,7 @@ import com.kaadas.lock.utils.EditTextWatcher;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LoadingDialog;
 import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.StringUtil;
 import com.kaadas.lock.utils.ToastUtil;
 import com.kaadas.lock.utils.greenDao.bean.GatewayBaseInfo;
@@ -47,6 +49,8 @@ import com.kaadas.lock.utils.greenDao.db.GatewayBaseInfoDao;
 import com.kaadas.lock.utils.greenDao.db.GatewayLockBaseInfoDao;
 import com.kaadas.lock.utils.greenDao.db.GatewayLockServiceInfoDao;
 import com.kaadas.lock.utils.greenDao.db.GatewayServiceInfoDao;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -78,6 +82,8 @@ public class GatewaySettingActivity extends BaseActivity<GatewaySettingView, Gat
     private AlertDialog deleteDialog;
     private Context context;
     private int isAdmin;
+    private String gatewayNickName;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -101,6 +107,14 @@ public class GatewaySettingActivity extends BaseActivity<GatewaySettingView, Gat
         Intent intent=getIntent();
         gatewayId=intent.getStringExtra(KeyConstants.GATEWAY_ID);
         isAdmin=intent.getIntExtra(KeyConstants.IS_ADMIN,0);
+        gatewayNickName= intent.getStringExtra(KeyConstants.GATEWAY_NICKNAME);
+        GatewaySettingItemBean gatewaySettingItemBeanNewOne=new GatewaySettingItemBean();
+        gatewaySettingItemBeanNewOne.setTitle(getString(R.string.gateway_setting_name));
+        if (isAdmin==1){
+            gatewaySettingItemBeanNewOne.setSetting(true);
+        }else{
+            gatewaySettingItemBeanNewOne.setSetting(false);
+        }
 
         GatewaySettingItemBean gatewaySettingItemBeanOne=new GatewaySettingItemBean();
         gatewaySettingItemBeanOne.setTitle(getString(R.string.gateway_setting));
@@ -156,7 +170,7 @@ public class GatewaySettingActivity extends BaseActivity<GatewaySettingView, Gat
             gatewaySettingItemBeanTen.setSetting(false);
         }
 
-
+        gatewaySettingItemBeans.add(gatewaySettingItemBeanNewOne);
         gatewaySettingItemBeans.add(gatewaySettingItemBeanOne);
         gatewaySettingItemBeans.add(gatewaySettingItemBeanTwo);
         gatewaySettingItemBeans.add(gatewaySettingItemBeanThree);
@@ -199,23 +213,29 @@ public class GatewaySettingActivity extends BaseActivity<GatewaySettingView, Gat
     }
 
     private void setGatewayBaseInfo(GatewayBaseInfo gatewayBaseInfo) {
+        if (TextUtils.isEmpty(gatewayNickName)){
+            gatewaySettingItemBeans.get(0).setContent(gatewayBaseInfo.getGatewayName());
+        }else{
+            //网关名称
+            gatewaySettingItemBeans.get(0).setContent(gatewayNickName);
+        }
         //网关
-        gatewaySettingItemBeans.get(0).setContent(gatewayBaseInfo.getGatewayId());
+        gatewaySettingItemBeans.get(1).setContent(gatewayBaseInfo.getGatewayId());
         //固件版本号
-        gatewaySettingItemBeans.get(1).setContent(gatewayBaseInfo.getSW());
+        gatewaySettingItemBeans.get(2).setContent(gatewayBaseInfo.getSW());
         //局域网ip
-        gatewaySettingItemBeans.get(4).setContent(gatewayBaseInfo.getLanIp());
+        gatewaySettingItemBeans.get(5).setContent(gatewayBaseInfo.getLanIp());
         //广域网ip
-        gatewaySettingItemBeans.get(5).setContent(gatewayBaseInfo.getWanIp());
+        gatewaySettingItemBeans.get(6).setContent(gatewayBaseInfo.getWanIp());
         //局域网子网掩码
-        gatewaySettingItemBeans.get(6).setContent(gatewayBaseInfo.getLanNetmask());
+        gatewaySettingItemBeans.get(7).setContent(gatewayBaseInfo.getLanNetmask());
         //广域网子网掩码
-        gatewaySettingItemBeans.get(7).setContent(gatewayBaseInfo.getWanNetmask());
+        gatewaySettingItemBeans.get(8).setContent(gatewayBaseInfo.getWanNetmask());
         //网关广域网接入方式
-        gatewaySettingItemBeans.get(8).setContent(gatewayBaseInfo.getWanType());
-        gatewaySettingItemBeans.get(2).setContent(gatewayBaseInfo.getSsid());
-        gatewaySettingItemBeans.get(3).setContent(gatewayBaseInfo.getPwd());
-        gatewaySettingItemBeans.get(9).setContent(gatewayBaseInfo.getChannel());
+        gatewaySettingItemBeans.get(9).setContent(gatewayBaseInfo.getWanType());
+        gatewaySettingItemBeans.get(3).setContent(gatewayBaseInfo.getSsid());
+        gatewaySettingItemBeans.get(4).setContent(gatewayBaseInfo.getPwd());
+        gatewaySettingItemBeans.get(10).setContent(gatewayBaseInfo.getChannel());
         if (gatewaySettingAdapter!=null){
             gatewaySettingAdapter.notifyDataSetChanged();
         }
@@ -236,23 +256,50 @@ public class GatewaySettingActivity extends BaseActivity<GatewaySettingView, Gat
                 finish();
                 break;
             case R.id.btn_delete:
-                AlertDialogUtil.getInstance().noEditTwoButtonDialog(this, getString(R.string.device_delete_dialog_head), getString(R.string.device_delete_gateway_dialog_content), getString(R.string.cancel), getString(R.string.query), new AlertDialogUtil.ClickListener() {
-                    @Override
-                    public void left() {
+                    AlertDialogUtil.getInstance().noEditTwoButtonDialog(this, getString(R.string.device_delete_dialog_head), getString(R.string.device_delete_gateway_dialog_content), getString(R.string.cancel), getString(R.string.query), new AlertDialogUtil.ClickListener() {
+                        @Override
+                        public void left() {
 
-                    }
-
-                    @Override
-                    public void right() {
-                        if (gatewayId != null) {
-                            mPresenter.unBindGateway(MyApplication.getInstance().getUid(),gatewayId);//正常解绑
-                            //mPresenter.testUnbindGateway(MyApplication.getInstance().getUid(),gatewayId,gatewayId); //测试解绑
-                            deleteDialog=AlertDialogUtil.getInstance().noButtonDialog(context,getString(R.string.delete_be_being));
-                            deleteDialog.setCancelable(false);
                         }
 
-                    }
-                });
+                        @Override
+                        public void right() {
+                            if (gatewayId != null) {
+                                mPresenter.unBindGateway(MyApplication.getInstance().getUid(), gatewayId);//正常解绑
+                                //mPresenter.testUnbindGateway(MyApplication.getInstance().getUid(),gatewayId,gatewayId); //测试解绑
+                                deleteDialog = AlertDialogUtil.getInstance().noButtonDialog(context, getString(R.string.delete_be_being));
+                                deleteDialog.setCancelable(false);
+                            }
+
+                        }
+                    });
+                /*else{
+                    //取消分享
+                    AlertDialogUtil.getInstance().noEditTwoButtonDialog(this, getString(R.string.device_delete_dialog_head), getString(R.string.device_delete_gateway_dialog_content), getString(R.string.cancel), getString(R.string.query), new AlertDialogUtil.ClickListener() {
+                        @Override
+                        public void left() {
+
+                        }
+                        @Override
+                        public void right() {
+                            if (gatewayId != null) {
+                                String phone= (String) SPUtils.get(SPUtils.PHONEN,"");
+                                if (!TextUtils.isEmpty(phone)&&!TextUtils.isEmpty(gatewayId)&&!TextUtils.isEmpty(uid)){
+                                    mPresenter.deleteShareDevice(1,gatewayId,"",uid,"86"+phone,"",2);//正常解绑
+                                    deleteDialog = AlertDialogUtil.getInstance().noButtonDialog(context, getString(R.string.delete_be_being));
+                                    deleteDialog.setCancelable(false);
+                                }
+
+                            }
+
+                        }
+                    });
+
+
+
+
+
+                }*/
 
 
                 break;
@@ -263,7 +310,53 @@ public class GatewaySettingActivity extends BaseActivity<GatewaySettingView, Gat
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
         if (isAdmin == 1) {
             switch (position) {
-                case 2:
+                case 0:
+                    //设备名字
+                    View mUpdateView = LayoutInflater.from(this).inflate(R.layout.have_edit_dialog, null);
+                    TextView tvUpdateTitle = mUpdateView.findViewById(R.id.tv_title);
+                    EditText editUpdateText = mUpdateView.findViewById(R.id.et_name);
+                    TextView tv_updatecancel = mUpdateView.findViewById(R.id.tv_left);
+                    TextView tv_updatequery = mUpdateView.findViewById(R.id.tv_right);
+                    AlertDialog alertUpdateDialog = AlertDialogUtil.getInstance().common(this, mUpdateView);
+                    tvUpdateTitle.setText(getString(R.string.input_device_name));
+                    //获取到设备名称设置
+                    editUpdateText.setText(gatewayNickName);
+                    editUpdateText.setSelection(gatewayNickName.length());
+                    editUpdateText.addTextChangedListener(new EditTextWatcher(this,null,editUpdateText,50));
+                    tv_updatecancel.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            alertUpdateDialog.dismiss();
+                        }
+                    });
+                    tv_updatequery.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            String nickname = editUpdateText.getText().toString().trim();
+                            //todo 判断名称是否修改
+                            if (TextUtils.isEmpty(nickname)){
+                                ToastUtil.getInstance().showShort(getString(R.string.device_name_cannot_be_empty));
+                                return;
+                            }
+
+                            if (gatewayNickName != null) {
+                                if (gatewayNickName.equals(nickname)) {
+                                    ToastUtil.getInstance().showShort(getString(R.string.device_nick_name_no_update));
+                                    alertUpdateDialog.dismiss();
+                                    return;
+                                }
+                            }
+                            if (gatewayId != null) {
+                                mPresenter.updateGatewayName(gatewayId, MyApplication.getInstance().getUid(), nickname);
+                            }
+                            alertUpdateDialog.dismiss();
+                        }
+                    });
+
+
+                    break;
+
+                case 3:
                     //wifi名称
                     View mView = LayoutInflater.from(this).inflate(R.layout.have_one_et_dialog, null);
                     TextView tvTitle = mView.findViewById(R.id.tv_title);
@@ -303,7 +396,7 @@ public class GatewaySettingActivity extends BaseActivity<GatewaySettingView, Gat
                         }
                     });
                     break;
-                case 3:
+                case 4:
                     //wifi密码
                     View mViewPwd = LayoutInflater.from(this).inflate(R.layout.have_one_et_dialog, null);
                     TextView tvTitlePwd = mViewPwd.findViewById(R.id.tv_title);
@@ -400,7 +493,7 @@ public class GatewaySettingActivity extends BaseActivity<GatewaySettingView, Gat
                     }
                 });
                 break;*/
-                case 9:
+                case 10:
                     //配置
                     View mViewChannel = LayoutInflater.from(this).inflate(R.layout.have_one_et_dialog, null);
                     TextView tvTitleChannel = mViewChannel.findViewById(R.id.tv_title);
@@ -464,22 +557,24 @@ public class GatewaySettingActivity extends BaseActivity<GatewaySettingView, Gat
 
         if (gatewaySettingItemBeans!=null&&gatewaySettingItemBeans.size()>0){
            GetNetBasicBean.ReturnDataBean returnDataBean= basicBean.getReturnData();
+            //网关名称
+             gatewaySettingItemBeans.get(0).setContent(gatewayNickName);
             //网关
-            gatewaySettingItemBeans.get(0).setContent(basicBean.getGwId());
+            gatewaySettingItemBeans.get(1).setContent(basicBean.getGwId());
             //固件版本号
-            gatewaySettingItemBeans.get(1).setContent(returnDataBean.getSW());
+            gatewaySettingItemBeans.get(2).setContent(returnDataBean.getSW());
             //局域网ip
-            gatewaySettingItemBeans.get(4).setContent(returnDataBean.getLanIp());
+            gatewaySettingItemBeans.get(5).setContent(returnDataBean.getLanIp());
             networkLan=returnDataBean.getLanIp();
             //广域网ip
-            gatewaySettingItemBeans.get(5).setContent(returnDataBean.getWanIp());
+            gatewaySettingItemBeans.get(6).setContent(returnDataBean.getWanIp());
             //局域网子网掩码
-            gatewaySettingItemBeans.get(6).setContent(returnDataBean.getLanNetmask());
+            gatewaySettingItemBeans.get(7).setContent(returnDataBean.getLanNetmask());
             networkMask=returnDataBean.getLanNetmask();
             //广域网子网掩码
-            gatewaySettingItemBeans.get(7).setContent(returnDataBean.getWanNetmask());
+            gatewaySettingItemBeans.get(8).setContent(returnDataBean.getWanNetmask());
             //网关广域网接入方式
-            gatewaySettingItemBeans.get(8).setContent(returnDataBean.getWanType());
+            gatewaySettingItemBeans.get(9).setContent(returnDataBean.getWanType());
 
             gatewayBaseInfo.setGatewayId(basicBean.getGwId());
             gatewayBaseInfo.setDeviceIdUid(basicBean.getGwId()+uid);
@@ -519,8 +614,8 @@ public class GatewaySettingActivity extends BaseActivity<GatewaySettingView, Gat
         mPresenter.getZbChannel(MyApplication.getInstance().getUid(),gatewayId,gatewayId);
         if (gatewaySettingItemBeans!=null&&gatewaySettingItemBeans.size()>0){
             GwWiFiBaseInfo.ReturnDataBean gwWiFiBaseInfo=wiFiBaseInfo.getReturnData();
-            gatewaySettingItemBeans.get(2).setContent(gwWiFiBaseInfo.getSsid());
-            gatewaySettingItemBeans.get(3).setContent(gwWiFiBaseInfo.getPwd());
+            gatewaySettingItemBeans.get(3).setContent(gwWiFiBaseInfo.getSsid());
+            gatewaySettingItemBeans.get(4).setContent(gwWiFiBaseInfo.getPwd());
             encryption=gwWiFiBaseInfo.getEncryption();
             wifiName=gwWiFiBaseInfo.getSsid();
             wifiPwd=gwWiFiBaseInfo.getPwd();
@@ -555,7 +650,7 @@ public class GatewaySettingActivity extends BaseActivity<GatewaySettingView, Gat
             loadingDialog.dismiss();
         }
         if (gatewaySettingItemBeans!=null&&gatewaySettingItemBeans.size()>0){
-            gatewaySettingItemBeans.get(9).setContent(getZbChannelBean.getReturnData().getChannel());
+            gatewaySettingItemBeans.get(10).setContent(getZbChannelBean.getReturnData().getChannel());
             zbChannel=getZbChannelBean.getReturnData().getChannel();
             gatewayBaseInfo.setChannel(zbChannel);
         }
@@ -618,8 +713,8 @@ public class GatewaySettingActivity extends BaseActivity<GatewaySettingView, Gat
     @Override
     public void setWifiSuccess(String name,String pwd) {
         if (gatewaySettingItemBeans!=null&&gatewaySettingItemBeans.size()>0){
-            gatewaySettingItemBeans.get(2).setContent(name);
-            gatewaySettingItemBeans.get(3).setContent(pwd);
+            gatewaySettingItemBeans.get(3).setContent(name);
+            gatewaySettingItemBeans.get(4).setContent(pwd);
             wifiName=name;
             wifiPwd=pwd;
         }
@@ -642,8 +737,8 @@ public class GatewaySettingActivity extends BaseActivity<GatewaySettingView, Gat
     @Override
     public void setNetLanSuccess(String ip,String mask) {
         if (gatewaySettingItemBeans!=null&&gatewaySettingItemBeans.size()>0){
-            gatewaySettingItemBeans.get(4).setContent(ip);
-            gatewaySettingItemBeans.get(6).setContent(mask);
+            gatewaySettingItemBeans.get(5).setContent(ip);
+            gatewaySettingItemBeans.get(7).setContent(mask);
             networkLan=ip;
             networkMask=mask;
         }
@@ -667,7 +762,7 @@ public class GatewaySettingActivity extends BaseActivity<GatewaySettingView, Gat
     @Override
     public void setZbChannelSuccess(String channel) {
         if (gatewaySettingItemBeans!=null&&gatewaySettingItemBeans.size()>0){
-            gatewaySettingItemBeans.get(9).setContent(channel);
+            gatewaySettingItemBeans.get(10).setContent(channel);
             zbChannel=channel;
         }
         if (gatewaySettingAdapter!=null){
@@ -717,5 +812,65 @@ public class GatewaySettingActivity extends BaseActivity<GatewaySettingView, Gat
             deleteDialog.dismiss();
         }
         ToastUtil.getInstance().showShort(getString(R.string.delete_fialed));
+    }
+
+    @Override
+    public void deleteShareUserSuccess() {
+        if (deleteDialog!=null){
+            deleteDialog.dismiss();
+        }
+        //清除数据库
+        DaoSession daoSession=MyApplication.getInstance().getDaoWriteSession();
+        daoSession.getGatewayBaseInfoDao().deleteByKey(gatewayId+uid);
+        daoSession.getGatewayServiceInfoDao().queryBuilder().where(GatewayServiceInfoDao.Properties.Uid.eq(uid)).buildDelete().executeDeleteWithoutDetachingEntities();//网关
+        daoSession.getGatewayLockServiceInfoDao().queryBuilder().where(GatewayLockServiceInfoDao.Properties.Uid.eq(uid)).buildDelete().executeDeleteWithoutDetachingEntities();//网关锁
+        daoSession.getCatEyeServiceInfoDao().queryBuilder().where(CatEyeServiceInfoDao.Properties.Uid.eq(uid)).buildDelete().executeDeleteWithoutDetachingEntities();//猫眼
+
+        //解绑成功
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+    }
+
+    @Override
+    public void deleteShareUserFail() {
+        if (deleteDialog!=null){
+            deleteDialog.dismiss();
+        }
+        ToastUtil.getInstance().showShort(getString(R.string.delete_fialed));
+    }
+
+    @Override
+    public void deleteShareUserThrowable() {
+        if (deleteDialog!=null){
+            deleteDialog.dismiss();
+        }
+        ToastUtil.getInstance().showShort(getString(R.string.delete_fialed));
+    }
+
+    @Override
+    public void updateDevNickNameSuccess(String nickName) {
+        if (gatewaySettingItemBeans!=null&&gatewaySettingItemBeans.size()>0){
+            gatewaySettingItemBeans.get(0).setContent(nickName);
+            gatewayNickName=nickName;
+        }
+        if (gatewaySettingAdapter!=null){
+            gatewaySettingAdapter.notifyDataSetChanged();
+        }
+        Intent intent = new Intent();
+        //把返回数据存入Intent
+        intent.putExtra(KeyConstants.GATEWAY_NICKNAME, nickName);
+        //设置返回数据
+        GatewaySettingActivity.this.setResult(RESULT_OK, intent);
+        ToastUtil.getInstance().showShort(R.string.set_success);
+    }
+
+    @Override
+    public void updateDevNickNameFail() {
+        ToastUtil.getInstance().showShort(R.string.set_failed);
+    }
+
+    @Override
+    public void updateDevNickNameThrowable(Throwable throwable) {
+        ToastUtil.getInstance().showShort(R.string.set_failed);
     }
 }

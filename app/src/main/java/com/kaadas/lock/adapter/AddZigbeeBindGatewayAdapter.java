@@ -2,6 +2,9 @@ package com.kaadas.lock.adapter;
 
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
@@ -36,12 +39,23 @@ public class AddZigbeeBindGatewayAdapter extends BaseQuickAdapter<AddZigbeeBindG
            helper.setImageResource(R.id.gateway_img,R.mipmap.gateway_detail_lock);
            helper.setTextColor(R.id.gateway_online_text, ContextCompat.getColor(MyApplication.getInstance(),R.color.c1F96F7));
         }
-
-        if (item.isSelect()){
-            helper.setImageResource(R.id.gateway_select,R.mipmap.choose_yes);
+        if (item.getIsAdmin()==1){
+            ImageView imageView=helper.getView(R.id.gateway_select);
+            imageView.setVisibility(View.VISIBLE);
+            TextView textView=helper.getView(R.id.gateway_authorization);
+            textView.setVisibility(View.INVISIBLE);
+            if (item.isSelect()){
+                helper.setImageResource(R.id.gateway_select,R.mipmap.choose_yes);
+            }else{
+                helper.setImageResource(R.id.gateway_select,R.mipmap.choose_no);
+            }
         }else{
-            helper.setImageResource(R.id.gateway_select,R.mipmap.choose_no);
+            ImageView imageView=helper.getView(R.id.gateway_select);
+            imageView.setVisibility(View.INVISIBLE);
+            TextView textView=helper.getView(R.id.gateway_authorization);
+            textView.setVisibility(View.VISIBLE);
         }
+
 
 
     }

@@ -6,7 +6,7 @@ package com.kaadas.lock.utils;
  * 各种常量Key的静态类
  * 每个Key都需要注释有什么作用
  */
-public class KeyConstants {
+public class   KeyConstants {
     /**
      * Intent 传递值的常量Key
      */
@@ -228,6 +228,8 @@ public class KeyConstants {
 
     //网关的id
     public static final String GATEWAY_ID="gatewayId";
+    //网关的昵称
+    public static final String GATEWAY_NICKNAME="gatewayNickName";
 
     //是否是管理员
     public static final String IS_ADMIN="isadmin";
@@ -301,6 +303,8 @@ public class KeyConstants {
     //产品激活
     public static final int SCANPRODUCT_REQUEST_CODE=1010;
 
+    //网关昵称修改
+    public static final int GATEWAY_NICK_NAME=1011;
 
     //铃声次数
     public static final String RIGH_NUMBER="ringNumber";
