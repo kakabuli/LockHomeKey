@@ -35,6 +35,16 @@ public class BleLockInfo implements Serializable {
     private int supportBackLock = -1;
     private int bleType = -1;  //蓝牙的平台    1 Ti平台    2 P6平台
     private boolean lockStatusException = false;  //锁是否异常  即是否有报警信息
+    private int openNumbers = 0;   //开门次数
+
+
+    public int getOpenNumbers() {
+        return openNumbers;
+    }
+
+    public void setOpenNumbers(int openNumbers) {
+        this.openNumbers = openNumbers;
+    }
 
     public String getSerialNumber() {
         return SerialNumber;

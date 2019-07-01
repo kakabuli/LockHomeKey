@@ -22,7 +22,7 @@ import io.reactivex.disposables.Disposable;
 public class BasePresenter<T extends IBaseView> {
     public Handler handler = new Handler(Looper.getMainLooper());
     protected CompositeDisposable compositeDisposable = new CompositeDisposable();
-    public MqttService mqttService;
+    public MqttService mqttService = MyApplication.getInstance().getMqttService();
     protected BleService bleService = MyApplication.getInstance().getBleService();
 
     public BasePresenter() {
@@ -36,7 +36,6 @@ public class BasePresenter<T extends IBaseView> {
 //            MyApplication.getInstance().reStartApp();
         }
     }
-
 
 
     /**

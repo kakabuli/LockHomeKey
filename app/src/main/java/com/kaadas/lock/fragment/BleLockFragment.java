@@ -140,6 +140,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
             LogUtils.e("attachView   4");
             mPresenter.attachView(this);
             mPresenter.setBleLockInfo(bleLockInfo);
+            lockRunnable.run();
         }
         mPresenter.getOpenRecordFromServer(1, bleLockInfo);
     }
@@ -167,7 +168,6 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
                 } else {
                     changeOpenLockStatus(13);
                 }
-
                 if (bleLockInfo.getBackLock() == 0) {  //等于0时是反锁状态
                     changeOpenLockStatus(6);
                 }
@@ -282,6 +282,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
                     if (isCurrentFragment && !isDestroy) {
                         LogUtils.e("setBleLockInfo    55   ");
                         mPresenter.setBleLockInfo(bleLockInfo);
+                        lockRunnable.run();
                         onChangeInitView();
                         boolean auth = mPresenter.isAuth(bleLockInfo, true);
                         LogUtils.e("切换到当前界面   设备 isdestroy  " + isDestroy + auth);
@@ -320,6 +321,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
                         }
                         LogUtils.e("setBleLockInfo    22  ");
                         mPresenter.setBleLockInfo(bleLockInfo);
+                        lockRunnable.run();
                         onChangeInitView();
                         LogUtils.e(this + "   设置设备1  " + bleLockInfo.getServerLockInfo().toString());
 //                        mPresenter.isAuth(bleLockInfo, true);
@@ -346,6 +348,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
 
             LogUtils.e("setBleLockInfo    33   ");
             mPresenter.setBleLockInfo(bleLockInfo);
+            lockRunnable.run();
             onChangeInitView();
             mPresenter.isAuth(bleLockInfo, true);
             LogUtils.e(this + "  设置设备3  " + bleLockInfo.getServerLockInfo().toString());
@@ -412,9 +415,13 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
             } else {
                 tvDeviceStatus.setText(getString(R.string.normal));
             }
+            if (bleLockInfo.getOpenNumbers()>0){
+                tvOpenLockTimes.setText(""+bleLockInfo.getOpenNumbers());
+            }
         } else {
             tvDeviceStatus.setText(getString(R.string.not_connected));
         }
+
         switch (status) {
             case 1:
                 //手机蓝牙未打开
@@ -1315,7 +1322,6 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
     }
 
     private void onChangeInitView() {
-
         LogUtils.e("设备状态   1");
         if (mPresenter.isAuth(bleLockInfo, true)) {
             LogUtils.e("设备状态   2");
@@ -1330,6 +1336,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
             if (bleLockInfo.getArmMode() == 1) {//布防模式
                 changeOpenLockStatus(4);
             }
+            //
             if (bleLockInfo.isConnected()) {
                 if (bleLockInfo.isLockStatusException()) {
                     tvDeviceStatus.setText(getString(R.string.no_normal));

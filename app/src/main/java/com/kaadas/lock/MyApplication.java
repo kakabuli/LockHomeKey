@@ -184,6 +184,7 @@ public class MyApplication extends Application {
     }
 
     public BleService getBleService() {
+
         return bleService;
     }
 
