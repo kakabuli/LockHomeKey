@@ -1044,6 +1044,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
         } else if (type == 6) {
             //发生恢复出厂设置
             //设置守护次数为0
+            LogUtils.e("恢复出厂设置");
             tvOpenLockTimes.setText("0");
         }
         if (bleLockInfo.isConnected()) {

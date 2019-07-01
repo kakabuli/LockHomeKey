@@ -1,5 +1,6 @@
 package com.kaadas.lock.mvp.mvpbase;
 
+import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
 
@@ -29,11 +30,14 @@ public class BasePresenter<T extends IBaseView> {
             LogUtils.e("mqttService  为空   异常情况  " + (MyApplication.getInstance().getMqttService() == null));
             mqttService = MyApplication.getInstance().getMqttService();
         }
-        if (bleService == null ) {
+        if (bleService == null) {
             LogUtils.e("bleService  为空   异常情况  " + (MyApplication.getInstance().getBleService() == null));
             bleService = MyApplication.getInstance().getBleService();
+//            MyApplication.getInstance().reStartApp();
         }
     }
+
+
 
     /**
      * 弱引用

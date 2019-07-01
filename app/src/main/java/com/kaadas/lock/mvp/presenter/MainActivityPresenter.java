@@ -126,10 +126,6 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
         listerBleVersion();
         //监听网关ota升级
         listenGatewayOTA();
-
-
-
-
     }
 
     /**
@@ -831,6 +827,16 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                 serverBleDevice.setOpen_purview(bleDevice.getOpen_purview());
                 serverBleDevice.setPassword1(bleDevice.getPassword1());
                 serverBleDevice.setPassword2(bleDevice.getPassword2());
+
+                serverBleDevice.setBleVersion(bleDevice.getBleVersion());
+
+                serverBleDevice.setModel(bleDevice.getModel());
+
+                serverBleDevice.setDeviceSN(bleDevice.getDeviceSN());
+                serverBleDevice.setSoftwareVersion(bleDevice.getSoftwareVersion());
+                serverBleDevice.setBleVersion(bleDevice.getBleVersion());
+                serverBleDevice.setCreateTime(bleDevice.getCreateTime());
+
                 BleLockInfo bleLockInfo = new BleLockInfo(serverBleDevice);
                 homeShowBeans.add(new HomeShowBean(HomeShowBean.TYPE_BLE_LOCK, bleDevice.getLockName(), bleDevice.getLockNickName(), bleLockInfo));
             }

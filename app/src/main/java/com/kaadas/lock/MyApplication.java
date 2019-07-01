@@ -1,11 +1,14 @@
 package com.kaadas.lock;
 
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.Application;
+import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.text.TextUtils;
@@ -92,7 +95,8 @@ public class MyApplication extends Application {
     private String TAG = "凯迪仕";
     private IWXAPI api;
     private List<HomeShowBean> homeShowDevices = new ArrayList<>();
-    private int listService=0;
+    private int listService = 0;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -107,7 +111,7 @@ public class MyApplication extends Application {
         initTokenAndUid();  //获取本地UUID
         listenerAppBackOrForge();
         //扫描二维码初始化
-       /* ZXingLibrary.initDisplayOpinion(this);*/
+        /* ZXingLibrary.initDisplayOpinion(this);*/
         initMeme();
         regToWx();
         //配置数据库
@@ -159,15 +163,15 @@ public class MyApplication extends Application {
 
             @Override
             public void onServiceConnected(ComponentName name, IBinder service) {
-                if(service instanceof  BleService.MyBinder){
+                if (service instanceof BleService.MyBinder) {
                     BleService.MyBinder binder = (BleService.MyBinder) service;
                     bleService = binder.getService();
                     listService++;
                     getServiceConnected.onNext(listService);
-                    if (listService==2){
-                        listService=0;
+                    if (listService == 2) {
+                        listService = 0;
                     }
-                    LogUtils.e("服务启动成功    " + (bleService == null)+"当前服务中编号是多少 "+listService);
+                    LogUtils.e("服务启动成功    " + (bleService == null) + "当前服务中编号是多少 " + listService);
                 }
             }
 
@@ -251,15 +255,15 @@ public class MyApplication extends Application {
         bindService(intent, new ServiceConnection() {
             @Override
             public void onServiceConnected(ComponentName name, IBinder service) {
-                if(service instanceof  MqttService.MyBinder){
+                if (service instanceof MqttService.MyBinder) {
                     MqttService.MyBinder binder = (MqttService.MyBinder) service;
                     mqttService = binder.getService();
                     listService++;
                     getServiceConnected.onNext(listService);
-                    if (listService==2){
-                        listService=0;
+                    if (listService == 2) {
+                        listService = 0;
                     }
-                    LogUtils.e("attachView service启动" + (mqttService == null)+"当前服务中编号是多少  "+listService);
+                    LogUtils.e("attachView service启动" + (mqttService == null) + "当前服务中编号是多少  " + listService);
                 }
             }
 
@@ -458,7 +462,7 @@ public class MyApplication extends Application {
     }
 
     //清除所有与的Actvity
-    public void  removeAllActivity(){
+    public void removeAllActivity() {
         LogUtils.e("清除所有的Activity");
         for (Activity activity : activities) {
             if (activity != null) {
@@ -476,7 +480,7 @@ public class MyApplication extends Application {
 
     public void getAllDevicesByMqtt(boolean isForce) {
         if (!isForce) {
-            if (allBindDevices != null ) {
+            if (allBindDevices != null) {
                 getDevicesFromServer.onNext(allBindDevices);
                 return;
             }
@@ -504,7 +508,7 @@ public class MyApplication extends Application {
                         allBindDevices = new Gson().fromJson(payload, AllBindDevices.class);
 
                         long serverCurrentTime = Long.parseLong(allBindDevices.getTimestamp());
-                        SPUtils.put(KeyConstants.SERVER_CURRENT_TIME,serverCurrentTime);
+                        SPUtils.put(KeyConstants.SERVER_CURRENT_TIME, serverCurrentTime);
 
                         if (allBindDevices != null) {
                             homeShowDevices = allBindDevices.getHomeShow();
@@ -527,8 +531,8 @@ public class MyApplication extends Application {
         getDevicesFromServer.onNext(allBindDevices);
     }
 
-    public void setHomeshowDevice(List<HomeShowBean> homeshowDeviceList){
-        homeShowDevices=homeshowDeviceList;
+    public void setHomeshowDevice(List<HomeShowBean> homeshowDeviceList) {
+        homeShowDevices = homeshowDeviceList;
     }
 
     public List<HomeShowBean> getHomeShowDevices() {
@@ -555,56 +559,58 @@ public class MyApplication extends Application {
         return deviceId;
 
     }
+
     //根据网关id查找出网关
-    public GatewayInfo getGatewayById(String gatewayId){
-        for (HomeShowBean homeShowBean:homeShowDevices){
-            if (gatewayId.equals(homeShowBean.getDeviceId())){
+    public GatewayInfo getGatewayById(String gatewayId) {
+        for (HomeShowBean homeShowBean : homeShowDevices) {
+            if (gatewayId.equals(homeShowBean.getDeviceId())) {
                 return (GatewayInfo) homeShowBean.getObject();
             }
         }
-        return  null;
+        return null;
     }
+
     //根据设备id查找出设备
-    public GwLockInfo getGatewayLockById(String deviceId){
-        for (HomeShowBean homeShowBean:homeShowDevices){
-            if (deviceId.equals(homeShowBean.getDeviceId())){
+    public GwLockInfo getGatewayLockById(String deviceId) {
+        for (HomeShowBean homeShowBean : homeShowDevices) {
+            if (deviceId.equals(homeShowBean.getDeviceId())) {
                 return (GwLockInfo) homeShowBean.getObject();
             }
         }
-        return  null;
+        return null;
     }
 
     //遍历网关下的设备
-    public List<HomeShowBean> getGatewayBindList(String gatewayId){
+    public List<HomeShowBean> getGatewayBindList(String gatewayId) {
         //遍历绑定的网关设备
-        List<HomeShowBean> gatewayBindList=new ArrayList<>();
-            for (HomeShowBean homeShowBean:homeShowDevices) {
-                if (homeShowBean.getDeviceType() == HomeShowBean.TYPE_GATEWAY_LOCK) {
-                    GwLockInfo gwLockInfo = (GwLockInfo) homeShowBean.getObject();
-                    if (gwLockInfo.getGwID().equals(gatewayId)) {
-                        gatewayBindList.add(homeShowBean);
-                    }
-                } else if (homeShowBean.getDeviceType() == HomeShowBean.TYPE_CAT_EYE) {
-                    CateEyeInfo cateEyeInfo = (CateEyeInfo) homeShowBean.getObject();
-                    if (cateEyeInfo.getGwID().equals(gatewayId)) {
-                        gatewayBindList.add(homeShowBean);
-                    }
+        List<HomeShowBean> gatewayBindList = new ArrayList<>();
+        for (HomeShowBean homeShowBean : homeShowDevices) {
+            if (homeShowBean.getDeviceType() == HomeShowBean.TYPE_GATEWAY_LOCK) {
+                GwLockInfo gwLockInfo = (GwLockInfo) homeShowBean.getObject();
+                if (gwLockInfo.getGwID().equals(gatewayId)) {
+                    gatewayBindList.add(homeShowBean);
+                }
+            } else if (homeShowBean.getDeviceType() == HomeShowBean.TYPE_CAT_EYE) {
+                CateEyeInfo cateEyeInfo = (CateEyeInfo) homeShowBean.getObject();
+                if (cateEyeInfo.getGwID().equals(gatewayId)) {
+                    gatewayBindList.add(homeShowBean);
                 }
             }
-            return gatewayBindList;
+        }
+        return gatewayBindList;
 
     }
+
     //所有网关
-    public List<GatewayInfo> getAllGateway(){
-        List<GatewayInfo> gatewayList=new ArrayList<>();
-        for (HomeShowBean homeShowBean:homeShowDevices){
-            if (homeShowBean.getDeviceType()==HomeShowBean.TYPE_GATEWAY){
+    public List<GatewayInfo> getAllGateway() {
+        List<GatewayInfo> gatewayList = new ArrayList<>();
+        for (HomeShowBean homeShowBean : homeShowDevices) {
+            if (homeShowBean.getDeviceType() == HomeShowBean.TYPE_GATEWAY) {
                 gatewayList.add((GatewayInfo) homeShowBean.getObject());
             }
         }
-        return  gatewayList;
+        return gatewayList;
     }
-
 
 
     /**
@@ -629,11 +635,10 @@ public class MyApplication extends Application {
 
     /**
      * 监听蓝牙服务是否启动成功和mqtt服务是否启动成功
-     *
      */
-    public PublishSubject<Integer> getServiceConnected=PublishSubject.create();
+    public PublishSubject<Integer> getServiceConnected = PublishSubject.create();
 
-    public Observable<Integer> listenerServiceConnect(){
+    public Observable<Integer> listenerServiceConnect() {
         return getServiceConnected;
     }
 
@@ -722,6 +727,7 @@ public class MyApplication extends Application {
     public DaoSession getDaoWriteSession() {
         return daoWriteSession;
     }
+
     // DemoPushService.class 自定义服务名称, 核心服务
     private Class userPushService = GeTuiPushService.class;
 
@@ -735,6 +741,7 @@ public class MyApplication extends Application {
     public void setCurrentGeTuiMimiUserName(String currentGeTuiMimiUserName) {
         this.currentGeTuiMimiUserName = currentGeTuiMimiUserName;
     }
+
     public String getCurrentGeTuiMImiPwd() {
         return currentGeTuiMImiPwd;
     }
@@ -742,25 +749,46 @@ public class MyApplication extends Application {
     public void setCurrentGeTuiMImiPwd(String currentGeTuiMImiPwd) {
         this.currentGeTuiMImiPwd = currentGeTuiMImiPwd;
     }
+
     String sip_package_invite;
+
     public String getSip_package_invite() {
         return sip_package_invite;
     }
+
     public void setSip_package_invite(String sip_package_invite) {
         this.sip_package_invite = sip_package_invite;
     }
-    int pirEnableStates=1;
+
+    int pirEnableStates = 1;
+
     public int getPirEnableStates() {
         return pirEnableStates;
     }
+
     public void setPirEnableStates(int pirEnableStates) {
         this.pirEnableStates = pirEnableStates;
     }
-    boolean isPopDialog=false;
+
+    boolean isPopDialog = false;
+
     public boolean isPopDialog() {
         return isPopDialog;
     }
+
     public void setPopDialog(boolean popDialog) {
         isPopDialog = popDialog;
     }
+
+
+    public void reStartApp() {
+        Intent intent = getBaseContext().getPackageManager().getLaunchIntentForPackage(getBaseContext().getPackageName());
+        PendingIntent restartIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, PendingIntent.FLAG_ONE_SHOT);
+        AlarmManager mgr = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+        mgr.set(AlarmManager.RTC, System.currentTimeMillis() , restartIntent); // 1秒钟后重启应用
+        System.exit(0);
+    }
 }
+
+
+
