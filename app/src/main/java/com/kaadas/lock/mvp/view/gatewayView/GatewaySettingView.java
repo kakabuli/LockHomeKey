@@ -78,4 +78,23 @@ public interface GatewaySettingView extends IBaseView {
     //解绑测试网关异常
     void unbindTestGatewayThrowable(Throwable throwable);
 
+    //刪除分享用戶成功
+    void  deleteShareUserSuccess();
+
+    //刪除分享用戶失敗
+    void deleteShareUserFail();
+
+    //删除分享用户异常
+    void deleteShareUserThrowable();
+
+    //网关下设备名称修改成功
+    void updateDevNickNameSuccess(String name);
+
+    //网关下设备名称修改失败
+    void updateDevNickNameFail();
+
+    //网关下设备名称异常
+    void updateDevNickNameThrowable(Throwable throwable);
+
+
 }

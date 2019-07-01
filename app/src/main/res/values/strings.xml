@@ -912,6 +912,7 @@
     <string name="check_error">校验错误</string>
     <string name="lock_receive_command_but_nothing">锁接收到命令，但无结果返回</string>
     <string name="gateway_info">网关信息</string>
+    <string name="gateway_setting_name">网关名称:</string>
     <string name="gateway_setting">网关:</string>
     <string name="gateway_setting_firmware_version">固件版本号：</string>
     <string name="gateway_setting_wifi_name">WiFi名称：</string>
@@ -1095,7 +1096,7 @@
     <string name="zigbee_lock_third">根据语音提示，按键 【4】进入拓展功能</string>
     <string name="how_to_reset">如何重置</string>
     <string name="how_to_reset_steps">请使用针插入重置孔3S左右,\n直到黄灯闪烁后松开，即重置成功</string>
-    <string name="scan_gatewy_behind_qrcode">扫描网关后面二维码</string>
+    <string name="scan_gatewy_behind_qrcode">请使用针插入重置孔5~10S</string>
     <string name="how_to_add_cateye_first">打开猫眼后盖二维码进行扫描</string>
     <string name="second_steps_pair_gateway">第二步</string>
     <string name="your_cayeye_pair_success">您的猫眼套装已联网成功</string>
@@ -1118,4 +1119,6 @@
     <string name="fingerprint_second_hint">按照语音提示，点击对应数字选项，进入指纹添加</string>
     <string name="fingerprint_three_hint">请找到门锁指纹采集位置\n按照语音提示将要手指触摸进行采集</string>
     <string name="cat_eye_offfline_please_check_net">猫眼开小差啦，请检查网络!</string>
+    <string name="gateway_is_authorization">网关是授权网关</string>
+    <string name="authorization_gateway">（授权网关）</string>
 </resources>

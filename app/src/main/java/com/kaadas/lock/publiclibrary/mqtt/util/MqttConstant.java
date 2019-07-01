@@ -205,4 +205,7 @@ public class MqttConstant {
 
     //分享的用户
     public static final String SHARE_USER_LIST="shareUserList";
+
+    //修改网关昵称
+    public static final String UPDATE_GATEWAY_NICK_NAME="updateGwNickName";
 }

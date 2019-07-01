@@ -91,6 +91,7 @@ public class DeviceBindGatewayListActivity extends BaseActivity<DeviceGatewayBin
          addZigbeeBindGatewayBean.setAdminId(gatewayInfo.getServerInfo().getAdminName());
          addZigbeeBindGatewayBean.setGatewayId(gatewayInfo.getServerInfo().getDeviceSN());
          addZigbeeBindGatewayBean.setSelect(false);
+         addZigbeeBindGatewayBean.setIsAdmin(gatewayInfo.getServerInfo().getIsAdmin());
          if ("offline".equals(gatewayInfo.getEvent_str())){
              addZigbeeBindGatewayBean.setIsOnLine(0);
          }else if ("online".equals(gatewayInfo.getEvent_str())){
@@ -157,6 +158,9 @@ public class DeviceBindGatewayListActivity extends BaseActivity<DeviceGatewayBin
         if (zigbeeBindGatewayBeanSelect.getIsOnLine() == 0) {
             ToastUtil.getInstance().showShort(getString(R.string.gateway_offline));
             return;
+        }
+        if (zigbeeBindGatewayBeanSelect.getIsAdmin()!=1){
+            ToastUtil.getInstance().showShort(R.string.gateway_is_authorization);
         }
         if (currentFlag){
             mList.get(position).setSelect(false);

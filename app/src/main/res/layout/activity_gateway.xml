@@ -99,6 +99,8 @@
                 android:ellipsize="end"
                 android:layout_gravity="center"
                 android:layout_marginTop="@dimen/dp_15"
+                android:layout_marginRight="@dimen/dp_20"
+                android:layout_marginLeft="@dimen/dp_20"
 
                 />
 
