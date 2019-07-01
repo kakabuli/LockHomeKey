@@ -1,5 +1,6 @@
 package com.kaadas.lock.mvp.mvpbase;
 
+import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
 
@@ -21,7 +22,7 @@ import io.reactivex.disposables.Disposable;
 public class BasePresenter<T extends IBaseView> {
     public Handler handler = new Handler(Looper.getMainLooper());
     protected CompositeDisposable compositeDisposable = new CompositeDisposable();
-    public MqttService mqttService;
+    public MqttService mqttService = MyApplication.getInstance().getMqttService();
     protected BleService bleService = MyApplication.getInstance().getBleService();
 
     public BasePresenter() {
@@ -29,11 +30,13 @@ public class BasePresenter<T extends IBaseView> {
             LogUtils.e("mqttService  为空   异常情况  " + (MyApplication.getInstance().getMqttService() == null));
             mqttService = MyApplication.getInstance().getMqttService();
         }
-        if (bleService == null ) {
+        if (bleService == null) {
             LogUtils.e("bleService  为空   异常情况  " + (MyApplication.getInstance().getBleService() == null));
             bleService = MyApplication.getInstance().getBleService();
+//            MyApplication.getInstance().reStartApp();
         }
     }
+
 
     /**
      * 弱引用

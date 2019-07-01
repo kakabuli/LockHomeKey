@@ -164,7 +164,7 @@ public class ServerBleDevice implements Serializable {
 
     @Override
     public String toString() {
-        return "ServerDevices{" +
+        return "ServerBleDevice{" +
                 "_id='" + _id + '\'' +
                 ", lockName='" + lockName + '\'' +
                 ", lockNickName='" + lockNickName + '\'' +
@@ -179,6 +179,9 @@ public class ServerBleDevice implements Serializable {
                 ", password2='" + password2 + '\'' +
                 ", model='" + model + '\'' +
                 ", createTime=" + createTime +
+                ", bleVersion='" + bleVersion + '\'' +
+                ", softwareVersion='" + softwareVersion + '\'' +
+                ", deviceSN='" + deviceSN + '\'' +
                 '}';
     }
 }

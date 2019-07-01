@@ -56,24 +56,31 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
         //如果service中有bleLockInfo  并且deviceName一致，就不重新设置。
         LogUtils.e("设置的  设备信息为    " + (this.bleLockInfo == null) + "   " + bleLockInfo.getServerLockInfo().toString());
         this.bleLockInfo = bleLockInfo;
+        if (bleService == null) { //判断
+            if (MyApplication.getInstance().getBleService() == null) {
+                return;
+            } else {
+                bleService = MyApplication.getInstance().getBleService(); //判断
+            }
+        }
 
-        if (bleService.getBleLockInfo() != null
-                && bleService.getBleLockInfo().getServerLockInfo().getLockName().equals(bleLockInfo.getServerLockInfo().getLockName())) {
-            ServerBleDevice serviceLockInfo = bleService.getBleLockInfo().getServerLockInfo();
+        if (bleService.getBleLockInfo() != null  //1
+                && bleService.getBleLockInfo().getServerLockInfo().getLockName().equals(bleLockInfo.getServerLockInfo().getLockName())) { //1
+            ServerBleDevice serviceLockInfo = bleService.getBleLockInfo().getServerLockInfo(); //1
             ServerBleDevice serverLockInfo = bleLockInfo.getServerLockInfo();
             if (serverLockInfo.getPassword1() != null && serverLockInfo.getPassword2() != null) {
                 if (serverLockInfo.getPassword1().equals(serviceLockInfo.getPassword1()) && serverLockInfo.getPassword2().equals(serviceLockInfo.getPassword2())) {
-                    LogUtils.e("进来了  设备  数据一致   " + bleService.getBleLockInfo().getServerLockInfo().toString());
+                    LogUtils.e("进来了  设备  数据一致   " + bleService.getBleLockInfo().getServerLockInfo().toString()); //1
                     return;
                 }
             } else {
-                if ((serviceLockInfo.getPassword1() == null && serverLockInfo.getPassword1() == null) &&(serviceLockInfo.getPassword2() == null && serverLockInfo.getPassword2() == null) ) {
-                    LogUtils.e("进来了  密码为空  设备  数据一致   " + bleService.getBleLockInfo().getServerLockInfo().toString());
+                if ((serviceLockInfo.getPassword1() == null && serverLockInfo.getPassword1() == null) && (serviceLockInfo.getPassword2() == null && serverLockInfo.getPassword2() == null)) {
+                    LogUtils.e("进来了  密码为空  设备  数据一致   " + bleService.getBleLockInfo().getServerLockInfo().toString()); //1
                     return;
                 }
             }
         }
-        bleService.setBleLockInfo(bleLockInfo);
+        bleService.setBleLockInfo(bleLockInfo); //1
         this.bleLockInfo = bleLockInfo;
     }
 
@@ -88,10 +95,17 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
      * @param bleLockInfo
      */
     public boolean isAuth(BleLockInfo bleLockInfo, boolean isUser) {
+        if (bleService == null) { //判断
+            if (MyApplication.getInstance().getBleService() == null) {
+                return false;
+            } else {
+                bleService = MyApplication.getInstance().getBleService(); //判断
+            }
+        }
         this.isNotify = isUser;
         //如果service中有设备  且不为空  且是当前设备
-        if (bleService.getBleLockInfo() != null && bleService.getCurrentDevice() != null
-                && bleService.getCurrentDevice().getName().equals(this.bleLockInfo.getServerLockInfo().getLockName())) {
+        if (bleService.getBleLockInfo() != null && bleService.getCurrentDevice() != null  //1
+                && bleService.getCurrentDevice().getName().equals(this.bleLockInfo.getServerLockInfo().getLockName())) { //1
             if (this.bleLockInfo.isAuth()) {  //如果已经鉴权   不管
                 return true;
             }
@@ -112,6 +126,13 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
      * @return
      */
     public boolean getBleOpenState(BleLockInfo bleLockInfo) {
+        if (bleService == null) { //判断
+            if (MyApplication.getInstance().getBleService() == null) {
+                return false;
+            } else {
+                bleService = MyApplication.getInstance().getBleService(); //判断
+            }
+        }
         boolean isEnable = bleService.isBleIsEnable();
         if (mViewRef.get() != null && isNotify) {
             mViewRef.get().onBleOpenStateChange(isEnable);
@@ -147,6 +168,13 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
     }
 
     public void connectDevice() {
+        if (bleService == null) { //判断
+            if (MyApplication.getInstance().getBleService() == null) {
+                return;
+            } else {
+                bleService = MyApplication.getInstance().getBleService(); //判断
+            }
+        }
         //开始连接蓝牙
         handler.removeCallbacks(releaseRunnable);
         if (ContextCompat.checkSelfPermission(MyApplication.getInstance(), Manifest.permission.ACCESS_COARSE_LOCATION) != PERMISSION_GRANTED) {
@@ -166,7 +194,7 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
             }
             return;
         }
-        bleService.release();
+        bleService.release();  //1
         if (mViewRef.get() != null && isNotify) {
             mViewRef.get().onStartConnectDevice();
         }
@@ -178,7 +206,7 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
             return;
         }
 
-        disposable = bleService.getDeviceByMacOrName(this.bleLockInfo.getServerLockInfo().getMacLock(), this.bleLockInfo.getServerLockInfo().getLockName())  //搜索设备
+        disposable = bleService.getDeviceByMacOrName(this.bleLockInfo.getServerLockInfo().getMacLock(), this.bleLockInfo.getServerLockInfo().getLockName())  //搜索设备  1
                 .timeout(10 * 1000, TimeUnit.MILLISECONDS)
                 .compose(RxjavaHelper.observeOnMainThread())
                 .subscribe(new Consumer<BluetoothDevice>() {
@@ -186,9 +214,9 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
                     public void accept(BluetoothDevice device) throws Exception {
                         LogUtils.e("查找设备成功   " + device.getName());
                         toDisposable(disposable);
-                        bleService.connectDeviceByDevice(device);
+                        bleService.connectDeviceByDevice(device);  //1
                         listenerConnectState();
-                        bleService.scanBleDevice(false);  //连接成功   停止搜索
+                        bleService.scanBleDevice(false);  //连接成功   停止搜索  1
                         //开始连接设备   如果10秒内没有连接状态的回调，段开连接
                         if (mViewRef.get() != null) {
                             mViewRef.get().onSearchDeviceSuccess();
@@ -206,7 +234,7 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
                             mViewRef.get().onEndConnectDevice(false);
                             mViewRef.get().onSearchDeviceFailed(throwable);
                         }
-                        bleService.scanBleDevice(false);
+                        bleService.scanBleDevice(false);  //1
                     }
                 });
         compositeDisposable.add(disposable);
@@ -214,7 +242,7 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
 
     public void notDiscoverServiceListener() {
         toDisposable(notDiscoverServiceDisposable);
-        notDiscoverServiceDisposable = bleService.listenerDiscoverService()
+        notDiscoverServiceDisposable = bleService.listenerDiscoverService()  //1
                 .compose(RxjavaHelper.observeOnMainThread())
                 .subscribe(new Consumer<Boolean>() {
                     @Override
@@ -237,10 +265,17 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
      * 监听蓝牙设备连接状态   如果设备连接成功   那么就鉴权，如果失败，通知用户更新
      */
     public void listenerConnectState() {
+        if (bleService == null) { //判断
+            if (MyApplication.getInstance().getBleService() == null) {
+                return;
+            } else {
+                bleService = MyApplication.getInstance().getBleService(); //判断
+            }
+        }
         //连接成功   直接鉴权
         toDisposable(disposable1);
         try {
-            disposable1 = bleService.subscribeDeviceConnectState()
+            disposable1 = bleService.subscribeDeviceConnectState()  //1
                     .compose(RxjavaHelper.observeOnMainThread())
                     .subscribe(new Consumer<BleStateBean>() {
                         @Override
@@ -261,9 +296,9 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
                                 if (!TextUtils.isEmpty(bleVersion)) {
                                     version = Integer.parseInt(bleVersion);
                                 }
-                                if (bleService.getBleVersion() == 1 && version <= 1) { //如果是最老的模块  直接算是鉴权成功
-                                    if (bleStateBean.isConnected() && bleService.getCurrentDevice() != null &&
-                                            bleService.getCurrentDevice().getName().equals(bleLockInfo.getServerLockInfo().getLockName())) {
+                                if (bleService.getBleVersion() == 1 && version <= 1) { //如果是最老的模块  直接算是鉴权成功  1
+                                    if (bleStateBean.isConnected() && bleService.getCurrentDevice() != null &&  //1
+                                            bleService.getCurrentDevice().getName().equals(bleLockInfo.getServerLockInfo().getLockName())) {  //1
                                         if (bleLockInfo != null) {
                                             bleLockInfo.setAuth(bleStateBean.isConnected());
                                         }
@@ -317,13 +352,20 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
         //发现服务之后不能立即读取特征值数据  需要延时500ms以上（魅族）
         //一秒没有读取到SystemId  则认为超时
         //超时然后重试
+        if (bleService == null) { //判断
+            if (MyApplication.getInstance().getBleService() == null) {
+                return;
+            } else {
+                bleService = MyApplication.getInstance().getBleService(); //判断
+            }
+        }
         toDisposable(readSystemIdDisposable);
         readSystemIdDisposable =
                 Observable.just(0)
                         .flatMap(new Function<Integer, ObservableSource<ReadInfoBean>>() {
                             @Override
                             public ObservableSource<ReadInfoBean> apply(Integer integer) throws Exception {
-                                return bleService.readSystemId(500);
+                                return bleService.readSystemId(500);  //1
                             }
                         })
                         .filter(new Predicate<ReadInfoBean>() {
@@ -366,17 +408,25 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
      * @param readInfoBean
      */
     public void getPwd3(ReadInfoBean readInfoBean) {
+        if (bleService == null) { //判断
+            if (MyApplication.getInstance().getBleService() == null) {
+                return;
+            } else {
+                bleService = MyApplication.getInstance().getBleService(); //判断
+            }
+        }
+
         if (getPwd3Times >= 3) {
             if (mViewRef.get() != null && isNotify) {
                 mViewRef.get().authResult(false);
                 mViewRef.get().onEndConnectDevice(false);
             }
-            bleService.release();
+            bleService.release();  //1
             return;
         }
         byte[] bSystemId = (byte[]) readInfoBean.data;
         if (bSystemId == null) {
-            bleService.release();
+            bleService.release(); //2
             return;
         }
         toDisposable(getPwd3Dispose);
@@ -387,7 +437,7 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
         if (bleService != null) {  //开始鉴权
             authCommand = BleCommandFactory.getAuthCommand(bleLockInfo.getServerLockInfo().getPassword1(),
                     bleLockInfo.getServerLockInfo().getPassword2(), systemId16);
-            bleService.sendCommand(authCommand);
+            bleService.sendCommand(authCommand); //4
         }
 
         /**
@@ -395,7 +445,7 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
          * 收到返回的鉴权确认帧  查看是否鉴权成功
          * 如果鉴权成功
          */
-        getPwd3Dispose = bleService.listeneDataChange()
+        getPwd3Dispose = bleService.listeneDataChange() //1
                 .filter(new Predicate<BleDataBean>() {
                     @Override
                     public boolean test(BleDataBean bleDataBean) throws Exception {
@@ -417,7 +467,7 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
                                     mViewRef.get().onNeedRebind(bleDataBean.getPayload()[1] & 0xff);
                                     mViewRef.get().onEndConnectDevice(false);
                                 }
-                                bleService.release();
+                                bleService.release();//1
                                 toDisposable(getPwd3Dispose);
                             }
                             return;
@@ -451,8 +501,8 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
                             //鉴权成功    取消延时断开的任务
                             handler.removeCallbacks(releaseRunnable);
                             //鉴权成功  停止搜索
-                            bleService.scanBleDevice(false);  //连接成功   停止搜索
-                            bleService.sendCommand(BleCommandFactory.confirmCommand(bleDataBean.getOriginalData()));
+                            bleService.scanBleDevice(false);  //连接成功   停止搜索//1
+                            bleService.sendCommand(BleCommandFactory.confirmCommand(bleDataBean.getOriginalData()));//1
                             syncLockTime();
                             if (mViewRef.get() != null) {
                                 mViewRef.get().authResult(true);
@@ -489,12 +539,21 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
 
     public void syncLockTime() {
         //如果全局设备信息为空   但是service不为空  且service里面的全局信息为空   直接退出
-        if (bleLockInfo == null && bleService!=null && bleService.getBleLockInfo() ==null){
+
+        if (bleService == null) { //判断
+            if (MyApplication.getInstance().getBleService() == null) {
+                return;
+            } else {
+                bleService = MyApplication.getInstance().getBleService(); //判断
+            }
+        }
+
+        if (bleLockInfo == null && bleService != null && bleService.getBleLockInfo() == null) { //1
             return;
         }
         //如果全局设备信息为空   从服务器中获取
-        if (bleLockInfo == null ){
-            bleLockInfo = bleService.getBleLockInfo();
+        if (bleLockInfo == null) {
+            bleLockInfo = bleService.getBleLockInfo();//1
         }
         if (bleLockInfo != null && (!bleLockInfo.isConnected() || !bleLockInfo.isAuth())) {
             return;
@@ -504,8 +563,8 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
         byte[] time = Rsa.int2BytesArray((int) (System.currentTimeMillis() / 1000) - BleCommandFactory.defineTime);
 
         byte[] command = BleCommandFactory.setLockParamsCommand((byte) 0x03, time, bleLockInfo.getAuthKey());
-        bleService.sendCommand(command);
-        syncTimeDisposable1 = bleService.listeneDataChange().filter(new Predicate<BleDataBean>() {
+        bleService.sendCommand(command);//1
+        syncTimeDisposable1 = bleService.listeneDataChange().filter(new Predicate<BleDataBean>() {//1
             @Override
             public boolean test(BleDataBean bleDataBean) throws Exception {
                 return command[1] == bleDataBean.getTsn();
@@ -534,8 +593,17 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
         super.attachView(view);
         listenerConnectState();
         // TODO: 2019/3/15 会出现空指针
+
+        if (bleService == null) { //判断
+            if (MyApplication.getInstance().getBleService() == null) {
+                return;
+            } else {
+                bleService = MyApplication.getInstance().getBleService(); //判断
+            }
+        }
+
         if (bleService != null) {
-            bleLockInfo = bleService.getBleLockInfo();
+            bleLockInfo = bleService.getBleLockInfo();//1
         } else {
             handler.postDelayed(new Runnable() {
                 @Override
@@ -553,12 +621,19 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
      * 鉴权   鉴权成功，读取蓝牙模块数据
      */
     private void readModelNumber() {
+        if (bleService == null) { //判断
+            if (MyApplication.getInstance().getBleService() == null) {
+                return;
+            } else {
+                bleService = MyApplication.getInstance().getBleService(); //判断
+            }
+        }
         if (!TextUtils.isEmpty(bleLockInfo.getModeNumber())) {
             LogUtils.e("已经存在蓝牙模块型号信息  不再读取   ");
             return;
         }
 
-        if (bleService.getBleVersion() != 2) {
+        if (bleService.getBleVersion() != 2) { //1
             LogUtils.e("蓝牙模块不是2  不读取蓝牙型号信息   ");
             return;
         }
@@ -568,7 +643,7 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
                 .flatMap(new Function<Integer, ObservableSource<ReadInfoBean>>() {
                     @Override
                     public ObservableSource<ReadInfoBean> apply(Integer integer) throws Exception {
-                        return bleService.readModeName();
+                        return bleService.readModeName(); //1
                     }
                 })
                 .filter(new Predicate<ReadInfoBean>() {
@@ -653,7 +728,14 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
             if (mViewRef.get() != null) {
                 mViewRef.get().onEndConnectDevice(false);
             }
-            bleService.release();  //连接蓝牙时的延时断开蓝牙连接
+            if (bleService == null) { //判断
+                if (MyApplication.getInstance().getBleService() == null) {
+                    return;
+                } else {
+                    bleService = MyApplication.getInstance().getBleService();
+                }
+            }
+            bleService.release();  //连接蓝牙时的延时断开蓝牙连接  1
         }
     };
 

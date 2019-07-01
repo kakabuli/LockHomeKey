@@ -40,20 +40,16 @@ public class BleLockServiceInfo {
     private String softwareVersion;
     private String deviceSN;
     private String bleVersion;
+    private long createTime;
 
 
-
-
-
-
-
-    @Generated(hash = 159772907)
+    @Generated(hash = 1423746401)
     public BleLockServiceInfo(Long id, String lockName, String lockNickName,
             String macLock, String open_purview, String is_admin,
             String center_latitude, String center_longitude, String circle_radius,
             String auto_lock, String password1, String password2, String model,
-            String uid, String softwareVersion, String deviceSN,
-            String bleVersion) {
+            String uid, String softwareVersion, String deviceSN, String bleVersion,
+            long createTime) {
         this.id = id;
         this.lockName = lockName;
         this.lockNickName = lockNickName;
@@ -71,6 +67,7 @@ public class BleLockServiceInfo {
         this.softwareVersion = softwareVersion;
         this.deviceSN = deviceSN;
         this.bleVersion = bleVersion;
+        this.createTime = createTime;
     }
 
     @Generated(hash = 2041412345)
@@ -78,10 +75,13 @@ public class BleLockServiceInfo {
     }
 
 
+    public long getCreateTime() {
+        return createTime;
+    }
 
-
-
-
+    public void setCreateTime(long createTime) {
+        this.createTime = createTime;
+    }
 
     public Long getId() {
         return id;
