@@ -17,6 +17,7 @@ public class GatewayBaseInfo {
     private String wanNetmask;
     private String wanType;
     private String channel; //信道
+    private String gatewayName;
 
     /**
      * encryption : wpa/wpa2/wep/none
@@ -29,11 +30,12 @@ public class GatewayBaseInfo {
 
     private String uid;
 
-    @Generated(hash = 1237664054)
+
+    @Generated(hash = 1529942923)
     public GatewayBaseInfo(String deviceIdUid, String gatewayId, String SW,
             String znpVersion, String lanIp, String lanNetmask, String wanIp,
-            String wanNetmask, String wanType, String channel, String encryption,
-            String pwd, String ssid, String uid) {
+            String wanNetmask, String wanType, String channel, String gatewayName,
+            String encryption, String pwd, String ssid, String uid) {
         this.deviceIdUid = deviceIdUid;
         this.gatewayId = gatewayId;
         this.SW = SW;
@@ -44,6 +46,7 @@ public class GatewayBaseInfo {
         this.wanNetmask = wanNetmask;
         this.wanType = wanType;
         this.channel = channel;
+        this.gatewayName = gatewayName;
         this.encryption = encryption;
         this.pwd = pwd;
         this.ssid = ssid;
@@ -53,6 +56,7 @@ public class GatewayBaseInfo {
     @Generated(hash = 1089470700)
     public GatewayBaseInfo() {
     }
+
 
     public String getDeviceIdUid() {
         return deviceIdUid;
@@ -164,5 +168,13 @@ public class GatewayBaseInfo {
 
     public void setUid(String uid) {
         this.uid = uid;
+    }
+
+    public String getGatewayName() {
+        return gatewayName;
+    }
+
+    public void setGatewayName(String gatewayName) {
+        this.gatewayName = gatewayName;
     }
 }

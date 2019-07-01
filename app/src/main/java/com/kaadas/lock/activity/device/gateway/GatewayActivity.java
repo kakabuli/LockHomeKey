@@ -1,5 +1,6 @@
 package com.kaadas.lock.activity.device.gateway;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -390,9 +391,10 @@ public class GatewayActivity extends BaseActivity<GatewayView, GatewayPresenter<
             case R.id.see_more:
                 //基本信息
                 Intent intent = new Intent(this, GatewaySettingActivity.class);
+                intent.putExtra(KeyConstants.GATEWAY_NICKNAME,gatewayInfo.getServerInfo().getDeviceNickName());
                 intent.putExtra(KeyConstants.GATEWAY_ID, gatewayInfo.getServerInfo().getDeviceSN());
                 intent.putExtra(KeyConstants.IS_ADMIN,gatewayInfo.getServerInfo().getIsAdmin());
-                startActivity(intent);
+                startActivityForResult(intent, KeyConstants.GATEWAY_NICK_NAME);
                 break;
             case R.id.share:
                /* //分享
@@ -412,4 +414,18 @@ public class GatewayActivity extends BaseActivity<GatewayView, GatewayPresenter<
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == KeyConstants.GATEWAY_NICK_NAME) {
+            if (resultCode == Activity.RESULT_OK) {
+                String name = data.getStringExtra(KeyConstants.GATEWAY_NICKNAME);
+                if (name != null) {
+                    if (gatewayNickName != null) {
+                        gatewayNickName.setText(name);
+                    }
+                }
+            }
+        }
+    }
 }

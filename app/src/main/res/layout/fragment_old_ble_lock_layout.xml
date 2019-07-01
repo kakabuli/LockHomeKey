@@ -29,6 +29,7 @@
                 android:layout_height="wrap_content" >
 
                 <ImageView
+                    android:src="@mipmap/bluetooth_no_connect_big_middle_icon"
                     android:id="@+id/iv_external_big"
                     android:layout_width="179dp"
                     android:layout_height="179dp"
@@ -54,18 +55,21 @@
                     android:layout_marginTop="@dimen/dp_40" />
 
                 <ImageView
+                    android:src="@mipmap/bluetooth_connect_fail"
                     android:id="@+id/iv_inner_middle"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_centerInParent="true" />
 
                 <TextView
+                    android:textColor="#15A6F5"
+                    android:text="@string/bluetooth_connect_fail"
                     android:id="@+id/tv_inner"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="@dimen/dp_111"
-                    android:textColor="#FEFEFE"
+
                     android:textSize="@dimen/sp_11" />
             </RelativeLayout>
 

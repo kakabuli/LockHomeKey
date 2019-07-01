@@ -44,6 +44,7 @@ import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetWiFiBasic;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetZBChannel;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.UnBindGatewayBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.UpdateDevNickNameBean;
+import com.kaadas.lock.publiclibrary.mqtt.publishbean.UpdateGatewayNickNameBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.WakeupCameraBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.GatewayOtaNotifyBean;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttConstant;
@@ -144,7 +145,7 @@ public class MqttCommandFactory {
     }
 
     /**
-     * 修改设备昵称
+     * 修改网关下设备昵称
      * @param uid
      * @param devuuid
      * @param deviceId
@@ -156,6 +157,20 @@ public class MqttCommandFactory {
         UpdateDevNickNameBean updateDevNickNameBean=new UpdateDevNickNameBean(MqttConstant.UPDATE_DEV_NICK_NAME,uid,devuuid,deviceId,nickName);
         return getMessage(updateDevNickNameBean,messageId);
     }
+
+    /**
+     * 修改网关昵称
+     * @param uid
+     * @param gatewayId
+     * @param nickName
+     * @return
+     */
+    public static MqttMessage updateGatewayNickName(String uid,String gatewayId,String nickName ){
+        int messageId=getMessageId();
+        UpdateGatewayNickNameBean updateGatewayNickNameBean=new UpdateGatewayNickNameBean(messageId,MqttConstant.UPDATE_GATEWAY_NICK_NAME,uid,gatewayId,nickName);
+        return getMessage(updateGatewayNickNameBean,messageId);
+    }
+
 
     /**
      * 获取所有的设备信息

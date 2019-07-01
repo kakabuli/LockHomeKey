@@ -261,6 +261,7 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                                 bleLockServiceInfo.setModel(serverBleDevice.getModel());
 
                                 bleLockServiceInfo.setDeviceSN(serverBleDevice.getDeviceSN());
+                                bleLockServiceInfo.setCreateTime(serverBleDevice.getCreateTime());
                                 bleLockServiceInfo.setSoftwareVersion(serverBleDevice.getSoftwareVersion());
                                 bleLockServiceInfo.setBleVersion(serverBleDevice.getBleVersion());
                                 bleLockServiceInfo.setUid(uid);

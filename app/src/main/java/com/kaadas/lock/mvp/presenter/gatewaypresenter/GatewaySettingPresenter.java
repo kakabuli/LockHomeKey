@@ -14,7 +14,11 @@ import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetNetBasicBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetWiFiBasic;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetZBChannel;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.UnBindGatewayBean;
+import com.kaadas.lock.publiclibrary.mqtt.publishbean.UpdateGatewayNickNameBean;
+import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.DeviceShareResultBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.GwWiFiBaseInfo;
+import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.UpdateDevNickNameResult;
+import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.UpdateGatewayNickNameResultBean;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttConstant;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttData;
 import com.kaadas.lock.utils.LogUtils;
@@ -36,6 +40,8 @@ public class GatewaySettingPresenter<T> extends BasePresenter<GatewaySettingView
     private Disposable setNetBasicDisposable;
     private Disposable setZBChannelDisposable;
     private Disposable unbindTestGatewayDisposable;
+    private Disposable deleteShareDisposable;
+    private Disposable updateNameDisposable;
     // 获取网络设置基本信息
     public void getNetBasic(String uid,String gatewayId,String deviceId){
         MqttMessage netBasic = MqttCommandFactory.getNetBasic(uid, gatewayId, deviceId);
@@ -397,6 +403,100 @@ public class GatewaySettingPresenter<T> extends BasePresenter<GatewaySettingView
     }
 
 
+    //删除分享用户,修改昵称
+    public void  deleteShareDevice(int type,String gatewayId,String deviceId,String uid,String shareUser,String userName,int shareFlag){
+        if (mqttService!=null){
+            toDisposable(deleteShareDisposable);
+            deleteShareDisposable= mqttService.mqttPublish(MqttConstant.PUBLISH_TO_SERVER, MqttCommandFactory.shareDevice(type,gatewayId,deviceId,uid,shareUser,userName,shareFlag))
+                    .filter(new Predicate<MqttData>() {
+                        @Override
+                        public boolean test(MqttData mqttData) throws Exception {
+                            if (mqttData.getFunc().equals(MqttConstant.SHARE_DEVICE)){
+                                return true;
+                            }
+                            return false;
+                        }
+                    })
+                    .timeout(10*1000, TimeUnit.MILLISECONDS)
+                    .compose(RxjavaHelper.observeOnMainThread())
+                    .subscribe(new Consumer<MqttData>() {
+                        @Override
+                        public void accept(MqttData mqttData) throws Exception {
+                            toDisposable(deleteShareDisposable);
+                            DeviceShareResultBean shareResultBean=new Gson().fromJson(mqttData.getPayload(),DeviceShareResultBean.class);
+                            if ("200".equals(shareResultBean.getCode())){
+                                if (mViewRef!=null&&mViewRef.get()!=null&&gatewayId.equals(shareResultBean.getGwId())&&deviceId.equals(shareResultBean.getDeviceId())){
+                                    mViewRef.get().deleteShareUserSuccess();
+                                }
+                            }else{
+                                if (mViewRef!=null&&mViewRef.get()!=null){
+                                    mViewRef.get().deleteShareUserFail();
+                                }
+                            }
+
+                        }
+                    }, new Consumer<Throwable>() {
+                        @Override
+                        public void accept(Throwable throwable) throws Exception {
+                            if (mViewRef!=null&&mViewRef.get()!=null){
+                                mViewRef.get().deleteShareUserThrowable();
+                            }
+                        }
+                    });
+            compositeDisposable.add(deleteShareDisposable);
+        }
+    }
+
+
+    //修改昵称
+    public void updateGatewayName(String gatewayId,String uid,String nickName ){
+        toDisposable(updateNameDisposable);
+        if (mqttService!=null&&mqttService.getMqttClient()!=null&&mqttService.getMqttClient().isConnected()){
+            MqttMessage mqttMessage= MqttCommandFactory.updateGatewayNickName(uid,gatewayId,nickName);
+            updateNameDisposable=mqttService
+                    .mqttPublish(MqttConstant.PUBLISH_TO_SERVER,mqttMessage)
+                    .timeout(10*1000, TimeUnit.MILLISECONDS)
+                    .compose(RxjavaHelper.observeOnMainThread())
+                    .filter(new Predicate<MqttData>() {
+                        @Override
+                        public boolean test(MqttData mqttData) throws Exception {
+                            if (MqttConstant.UPDATE_GATEWAY_NICK_NAME.equals(mqttData.getFunc())){
+                                return true;
+                            }
+                            return false;
+                        }
+                    })
+                    .subscribe(new Consumer<MqttData>() {
+                        @Override
+                        public void accept(MqttData mqttData) throws Exception {
+                            toDisposable(updateNameDisposable);
+                            UpdateGatewayNickNameResultBean nameResult=new Gson().fromJson(mqttData.getPayload(),UpdateGatewayNickNameResultBean.class);
+                            if (nameResult!=null){
+                                if ("200".equals(nameResult.getCode())){
+                                    if (mViewRef.get()!=null){
+                                        mViewRef.get().updateDevNickNameSuccess(nickName);
+                                        MyApplication.getInstance().getAllDevicesByMqtt(true);
+                                    }
+                                }else{
+                                    if (mViewRef.get()!=null){
+                                        mViewRef.get().updateDevNickNameFail();
+                                    }
+                                }
+                            }
+                        }
+                    }, new Consumer<Throwable>() {
+                        @Override
+                        public void accept(Throwable throwable) throws Exception {
+                            if (mViewRef.get()!=null){
+                                mViewRef.get().updateDevNickNameThrowable(throwable);
+                            }
+                        }
+                    });
+
+            compositeDisposable.add(updateNameDisposable);
+        }
+
+    }
 
 
 
