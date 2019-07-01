@@ -1118,4 +1118,5 @@
     <string name="fingerprint_second_hint">按照语音提示，点击对应数字选项，进入指纹添加</string>
     <string name="fingerprint_three_hint">请找到门锁指纹采集位置\n按照语音提示将要手指触摸进行采集</string>
     <string name="cat_eye_offfline_please_check_net">猫眼开小差啦，请检查网络!</string>
+    <string name="mimi_no_account">网关信息获取不全,请下拉刷新网关列表</string>
 </resources>

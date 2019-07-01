@@ -79,7 +79,10 @@ public class VideoCallBackActivity extends BaseActivity<IVedeoCallBack,VideoCall
         }
         initFragment();
         isRunning = true;
-
+        if(TextUtils.isEmpty(meUserName) || TextUtils.isEmpty(mePwd)){
+            Toast.makeText(VideoCallBackActivity.this, getString(R.string.mimi_no_account), Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         mPresenter.loginMeme(meUserName,mePwd);
 
