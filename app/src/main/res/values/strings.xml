@@ -144,7 +144,7 @@
     <string name="research">重新搜索</string>
     <string name="help">帮助</string>
     <string name="help_title">您无法发现您的蓝牙设备，请按照以下步骤对设备进行检查：</string>
-    <string name="help_bottom">如果您已经完成以上操作,您仍然无法成功添加设备,可以在"我的-用户反馈"向我们的工作人员进行反馈.</string>
+    <string name="help_bottom">如果您已经完成以上操作,您仍然无法成功添加设备,可以在“我的-用户反馈”向我们的工作人员进行反馈.</string>
     <string name="help_one">请保证您的设备已经接通电源，或电池电量充足。</string>
     <string name="help_two">请打开您的手机蓝牙。由于系统原因，安卓手机需要同时开启定位权限。</string>
     <string name="help_three">保持待添加的设备与手机的距离不超过5米，从而保证设备间的通信。</string>
@@ -611,7 +611,6 @@
     <string name="update_nickname_fail">设置名称失败</string>
     <string name="gateway_or_device_null">网关或者设备为空</string>
     <string name="is_allow_join">正在允许入网...</string>
-    <string name="is_allow_join_wait">正在允许入网,请稍等...</string>
     <string name="http_expection_retry">网络异常，请重试！</string>
     <string name="stress_password">胁迫密码</string>
     <string name="stress_fingerprint">胁迫指纹</string>
@@ -1067,7 +1066,7 @@
     <string name="update_toast">版本%s已经发布</string>
     <string name="video_destory_time">App准备中，请3秒后再试</string>
     <string name="people">人</string>
-    <string name="ri">日</string>
+    <string name="ri" >日</string>
     <string name="warrning_open">防拆报警</string>
     <string name="warrning_lock_block">门锁堵转报警</string>
     <string name="warrning_machine_key_open">机械钥匙开锁报警</string>
@@ -1123,14 +1122,5 @@
     <string name="gateway_is_authorization">网关是授权网关</string>
     <string name="authorization_gateway">（授权网关）</string>
     <string name="mimi_no_account">网关信息获取不全,请下拉刷新网关列表</string>
-    <string name="turn_on_cateye">开启猫眼</string>
-    <string name="turn_on_cateye_open">拨动猫眼背后开关</string>
-    <string name="turn_on_cateye_open_click">按猫眼上的配网按钮听到正在配置网络</string>
-    <string name="search_add_cateye"><u>猫眼扫描添加</u></string>
-    <string name="phone_add_info">手机屏幕对准</string>
-    <string name="phone_add_tip">将手机移动到猫头前面5-10cm</string>
-    <string name="product_qrcode">生成二维码</string>
-    <string name="qrcode_msg">扫描二维码</string>
-    <string name="qrcode_msg_info">(将APP二维码对准猫眼监控头，根据提示完成操作)</string>
-    <string name="qrcode_keep_info">保持扫描距离5-10cm</string>
+    <string name="touch_your_light">轻触照亮</string>
 </resources>

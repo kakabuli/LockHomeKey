@@ -27,6 +27,7 @@ import com.kaadas.lock.activity.addDevice.DeviceAddActivity;
 import com.kaadas.lock.activity.device.BluetoothLockAuthorizationActivity;
 import com.kaadas.lock.activity.device.BluetoothLockFunctionActivity;
 import com.kaadas.lock.activity.device.BluetoothLockFunctionV6V7Activity;
+import com.kaadas.lock.activity.device.cateye.more.CateyeAuthorizationFunctionActivity;
 import com.kaadas.lock.activity.device.gateway.GatewayActivity;
 import com.kaadas.lock.activity.device.cateye.more.CateyeFunctionActivity;
 import com.kaadas.lock.activity.device.gatewaylock.GatewayLockAuthorizeFunctionActivity;
@@ -53,11 +54,13 @@ import com.kaadas.lock.utils.ToastUtil;
 import com.kaadas.lock.utils.ftp.GeTui;
 import com.kaadas.lock.utils.greenDao.bean.BleLockServiceInfo;
 import com.kaadas.lock.utils.greenDao.bean.CatEyeServiceInfo;
+import com.kaadas.lock.utils.greenDao.bean.DevicePower;
 import com.kaadas.lock.utils.greenDao.bean.GatewayLockServiceInfo;
 import com.kaadas.lock.utils.greenDao.bean.GatewayServiceInfo;
 import com.kaadas.lock.utils.greenDao.db.BleLockServiceInfoDao;
 import com.kaadas.lock.utils.greenDao.db.CatEyeServiceInfoDao;
 import com.kaadas.lock.utils.greenDao.db.DaoSession;
+import com.kaadas.lock.utils.greenDao.db.DevicePowerDao;
 import com.kaadas.lock.utils.greenDao.db.GatewayLockServiceInfoDao;
 import com.kaadas.lock.utils.greenDao.db.GatewayServiceInfoDao;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
@@ -104,7 +107,8 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
 
     private List<HomeShowBean> mDeviceList = new ArrayList<>();
     private List<HomeShowBean> homeShowBeanList;
-
+    private String uid;
+    private DaoSession daoSession;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -169,8 +173,8 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
     private void initData(List<HomeShowBean> homeShowBeanList) {
         mDeviceList.clear();
         if (homeShowBeanList != null) {
-            DaoSession daoSession = MyApplication.getInstance().getDaoWriteSession();
-            String uid = MyApplication.getInstance().getUid();
+             daoSession= MyApplication.getInstance().getDaoWriteSession();
+            uid= MyApplication.getInstance().getUid();
             //清除数据库,可能存在用户在其他手机删除了设备，但是服务器已经没有该设备，所以会造成本地数据库误差
             daoSession.getGatewayServiceInfoDao().queryBuilder().where(GatewayServiceInfoDao.Properties.Uid.eq(uid)).buildDelete().executeDeleteWithoutDetachingEntities();
             daoSession.getGatewayLockServiceInfoDao().queryBuilder().where(GatewayLockServiceInfoDao.Properties.Uid.eq(uid)).buildDelete().executeDeleteWithoutDetachingEntities();
@@ -197,6 +201,12 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                                     gwLockInfo.getServerInfo().setEvent_str("offline");
                                 }
                             }
+                            DevicePower devicePower=daoSession.getDevicePowerDao().queryBuilder().where(DevicePowerDao.Properties.DeviceIdUid.eq(gwLockInfo.getServerInfo().getDeviceId()+uid)).unique();
+                            if (devicePower!=null){
+                                gwLockInfo.setPower(devicePower.getPower());
+                            }
+
+
                             mPresenter.getPower(gwLockInfo.getGwID(), gwLockInfo.getServerInfo().getDeviceId(), MyApplication.getInstance().getUid());
                             //插入数据库
                             ServerGwDevice gwLock = gwLockInfo.getServerInfo();
@@ -216,6 +226,11 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                                     cateEyeInfo.getServerInfo().setEvent_str("offline");
                                 }
                             }
+                            DevicePower catPower=daoSession.getDevicePowerDao().queryBuilder().where(DevicePowerDao.Properties.DeviceIdUid.eq(cateEyeInfo.getServerInfo().getDeviceId()+uid)).unique();
+                            if (catPower!=null){
+                                cateEyeInfo.setPower(catPower.getPower());
+                            }
+
 
                             //请求电量
                             mPresenter.getPower(cateEyeInfo.getGwID(), cateEyeInfo.getServerInfo().getDeviceId(), MyApplication.getInstance().getUid());
@@ -266,6 +281,13 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                                 bleLockServiceInfo.setBleVersion(serverBleDevice.getBleVersion());
                                 bleLockServiceInfo.setUid(uid);
                                 daoSession.insertOrReplace(bleLockServiceInfo);
+
+                                //请求电量
+                                DevicePower blePower=daoSession.getDevicePowerDao().queryBuilder().where(DevicePowerDao.Properties.DeviceSN.eq(serverBleDevice.getDeviceSN()+uid)).unique();
+                                if (blePower!=null){
+                                    bleLockInfo.setBattery(blePower.getPower());
+                                }
+
                             }
                             break;
                     }
@@ -431,9 +453,21 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                 switch (deviceDetailBean.getDeviceType()) {
                     case HomeShowBean.TYPE_CAT_EYE:
                         //猫眼
-                        Intent cateEyeInfoIntent = new Intent(getActivity(), CateyeFunctionActivity.class);
-                        cateEyeInfoIntent.putExtra(KeyConstants.CATE_INFO, deviceDetailBean);
-                        startActivity(cateEyeInfoIntent);
+                        CateEyeInfo cateEyeInfo = (CateEyeInfo) deviceDetailBean.getObject();
+                        GatewayInfo cateGw=MyApplication.getInstance().getGatewayById(cateEyeInfo.getGwID());
+                        if (cateGw!=null&&cateGw.getServerInfo().getIsAdmin()==1){
+                            //管理员
+                            Intent cateEyeInfoIntent = new Intent(getActivity(), CateyeFunctionActivity.class);
+                            cateEyeInfoIntent.putExtra(KeyConstants.CATE_INFO, deviceDetailBean);
+                            startActivity(cateEyeInfoIntent);
+                        }else{
+                            //授权
+                            Intent cateEyeAuthorizationInfoIntent = new Intent(getActivity(), CateyeAuthorizationFunctionActivity.class);
+                            cateEyeAuthorizationInfoIntent.putExtra(KeyConstants.CATE_INFO, deviceDetailBean);
+                            startActivity(cateEyeAuthorizationInfoIntent);
+                        }
+
+
                         break;
                     case HomeShowBean.TYPE_GATEWAY_LOCK:
 
@@ -541,6 +575,8 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                         CateEyeInfo cateEyeInfo = (CateEyeInfo) device.getObject();
                         cateEyeInfo.setPower(power);
                         cateEyeInfo.setPowerTimeStamp(timestamp);
+                        DevicePower devicePower=new DevicePower(devciceId+uid,devciceId,power);
+                        daoSession.insertOrReplace(devicePower);
                         /*if (cateEyeInfo.getServerInfo().getEvent_str().equals("offline")) {
                             cateEyeInfo.getServerInfo().setEvent_str("online");
                         }*/
@@ -556,6 +592,9 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                         }*/
                         gwLockInfo.setPower(power);
                         gwLockInfo.setPowerTimeStamp(timestamp);
+                        //缓存电量
+                        DevicePower devicePower=new DevicePower(devciceId+uid,devciceId,power);
+                        daoSession.insertOrReplace(devicePower);
                         if (deviceDetailAdapter != null) {
                             deviceDetailAdapter.notifyDataSetChanged();
                         }
@@ -761,6 +800,9 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                             if (device.getDeviceId().equals(getBle.getServerLockInfo().getLockName())) {
                                 BleLockInfo bleLockInfo = (BleLockInfo) device.getObject();
                                 bleLockInfo.setBattery(getBle.getBattery());
+                                String deviceSN=bleLockInfo.getServerLockInfo().getDeviceSN();
+                                DevicePower devicePower=new DevicePower(deviceSN+uid,deviceSN,getBle.getBattery());
+                                daoSession.insertOrReplace(devicePower);
                                 if (getBle.isConnected()) {
                                     bleLockInfo.setConnected(true);
                                 } else {
