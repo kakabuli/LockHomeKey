@@ -56,15 +56,12 @@ public class DeviceMorePresenter extends BlePresenter<IDeviceMoreView> {
                 .subscribe(new BaseObserver<BaseResult>() {
                     @Override
                     public void onSuccess(BaseResult result) {
-                        MyApplication.getInstance().getAllDevicesByMqtt(true);
-                        if (mViewRef.get() != null) {
-                            mViewRef.get().onDeleteDeviceSuccess();
-                        }
                         //todo 清除数据库的数据
                         //清除消息免打扰
                         SPUtils.remove(deviceName + SPUtils.MESSAGE_STATUS);
                         //todo 清除保存的密码
                         SPUtils.remove(KeyConstants.SAVE_PWD_HEARD + bleLockInfo.getServerLockInfo().getMacLock()); //Key
+                        MyApplication.getInstance().getAllDevicesByMqtt(true);
 
                         //通知homeFragment  和  device刷新界面
                         bleService.release();
@@ -74,6 +71,10 @@ public class DeviceMorePresenter extends BlePresenter<IDeviceMoreView> {
                         DaoSession daoSession = MyApplication.getInstance().getDaoWriteSession();
                         BleLockServiceInfoDao bleLockServiceInfoDao = daoSession.getBleLockServiceInfoDao();
                         bleLockServiceInfoDao.queryBuilder().where(BleLockServiceInfoDao.Properties.LockName.eq(bleLockInfo.getServerLockInfo().getLockName())).buildDelete().executeDeleteWithoutDetachingEntities();
+                        // 做完所有操作再跳转界面
+                        if (mViewRef.get() != null) {
+                            mViewRef.get().onDeleteDeviceSuccess();
+                        }
                     }
 
                     @Override
@@ -137,7 +138,7 @@ public class DeviceMorePresenter extends BlePresenter<IDeviceMoreView> {
                         LogUtils.e("获取到音量   " + voice);
                         String lang = new String(new byte[]{deValue[9], deValue[10]});  //语言设置
                         int battery = deValue[11] & 0xff; //电量
-                        if (bleLockInfo.getBattery()!=-1){
+                        if (bleLockInfo.getBattery() != -1) {
                             bleLockInfo.setBattery(battery);
                         }
                         byte[] time = new byte[]{deValue[12], deValue[13], deValue[14], deValue[15]};  //锁的时间
@@ -403,10 +404,10 @@ public class DeviceMorePresenter extends BlePresenter<IDeviceMoreView> {
 
                         String serverBleVersion = bleLockInfo.getServerLockInfo().getSoftwareVersion();
                         String deviceSN = bleLockInfo.getServerLockInfo().getDeviceSN();
-                        LogUtils.e("服务器数据是  serverBleVersion " + serverBleVersion+"  deviceSN  "+deviceSN +"  本地数据是  sn " + sn+"  version " +version);
-                        if (version.equals(serverBleVersion) && sn.equals(deviceSN)){
+                        LogUtils.e("服务器数据是  serverBleVersion " + serverBleVersion + "  deviceSN  " + deviceSN + "  本地数据是  sn " + sn + "  version " + version);
+                        if (version.equals(serverBleVersion) && sn.equals(deviceSN)) {
                             checkOtaInfo(sn, version);
-                        }else {
+                        } else {
                             uploadBleSoftware(sn, version);
                         }
 
@@ -426,7 +427,7 @@ public class DeviceMorePresenter extends BlePresenter<IDeviceMoreView> {
     }
 
 
-    public void uploadBleSoftware(String sn,String version){
+    public void uploadBleSoftware(String sn, String version) {
         XiaokaiNewServiceImp.updateSoftwareVersion(
                 bleLockInfo.getServerLockInfo().getLockName(), MyApplication.getInstance().getUid()
                 , version, sn
@@ -434,12 +435,12 @@ public class DeviceMorePresenter extends BlePresenter<IDeviceMoreView> {
             @Override
             public void onSuccess(BaseResult baseResult) {
                 LogUtils.e("上传蓝牙信息成功");
-                checkOtaInfo(sn,version);
+                checkOtaInfo(sn, version);
             }
 
             @Override
             public void onAckErrorCode(BaseResult baseResult) {
-                LogUtils.e(" 上传蓝牙软件信息失败  " +  baseResult.getCode());
+                LogUtils.e(" 上传蓝牙软件信息失败  " + baseResult.getCode());
                 if (mViewRef.get() != null) {
                     mViewRef.get().onUpdateSoftFailedServer(baseResult);
                 }
@@ -460,7 +461,6 @@ public class DeviceMorePresenter extends BlePresenter<IDeviceMoreView> {
     }
 
 
-
     public void checkOtaInfo(String SN, String version) {
         //请求成功
         //todo 测试版本号写死
@@ -471,7 +471,7 @@ public class DeviceMorePresenter extends BlePresenter<IDeviceMoreView> {
                     public void accept(OTAResult otaResult) throws Exception {
 
                         LogUtils.e("检查OTA升级数据   " + otaResult.toString());
-                        if ("200".equals(otaResult.getCode())  ) {
+                        if ("200".equals(otaResult.getCode())) {
                             String fileUrl = otaResult.getData().getFileUrl();
                             if (!fileUrl.startsWith("http://")) {
                                 otaResult.getData().setFileUrl("http://" + fileUrl);
