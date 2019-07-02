@@ -15,7 +15,7 @@ public class MqttConstant {
     public final static int  DC_TEST = 6750465;
 
 
-//      public static final String MQTT_BASE_URL = "tcp://mqtt-kaadas.juziwulian.com:1883";//正式服务器
+   //   public static final String MQTT_BASE_URL = "tcp://mqtt-kaadas.juziwulian.com:1883";//正式服务器
       public static final String MQTT_BASE_URL = "tcp://test.juziwulian.com:1883";//测试服务器
 
 

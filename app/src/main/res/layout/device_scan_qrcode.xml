@@ -11,28 +11,26 @@
           android:layout_height="match_parent"
           android:layout_gravity="center"
           >
-
-
           <SurfaceView
               android:id="@+id/surfaceView"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               />
+
           <com.king.zxing.ViewfinderView
               android:id="@+id/viewfinderView"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
-              app:frameWidth="250dp"
-              app:frameHeight="250dp"
-              app:frameColor="#EAE9E9"
               app:cornerColor="#149BF3"
-              app:laserColor="#1488D4"
+              app:frameColor="#EAE9E9"
+              app:frameHeight="250dp"
+              app:frameWidth="250dp"
               app:labelText="@string/please_qrcode_in"
-              app:labelTextLocation="bottom"
               app:labelTextColor="@color/white"
+              app:labelTextLocation="bottom"
               app:labelTextSize="@dimen/sp_15"
-              app:maskColor="@color/black"
-              />
+              app:laserColor="#1488D4"
+              app:maskColor="@color/black" />
           <ImageView
               android:id="@+id/back"
               android:layout_width="wrap_content"
@@ -54,6 +52,31 @@
               android:gravity="center_horizontal"
               android:layout_marginTop="@dimen/dp_10"
               />
+          <LinearLayout
+              android:id="@+id/touch_light_layout"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_gravity="center"
+              android:layout_marginTop="80dp"
+              android:orientation="vertical"
+              android:gravity="center"
+              android:paddingLeft="@dimen/dp_10"
+              android:paddingRight="@dimen/dp_10"
+              >
+              <ImageView
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:src="@mipmap/flashlight"
+                  />
+              <TextView
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:text="@string/touch_your_light"
+                  android:textColor="#ff21a6fd"
+                  android:textSize="12sp"
+                  android:layout_marginTop="@dimen/dp_10"
+                  />
+          </LinearLayout>
 
       </FrameLayout>
 

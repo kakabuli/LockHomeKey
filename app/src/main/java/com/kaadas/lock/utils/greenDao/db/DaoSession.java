@@ -13,6 +13,7 @@ import com.kaadas.lock.utils.greenDao.bean.CateEyeInfoBase;
 import com.kaadas.lock.utils.greenDao.bean.CatEyeEvent;
 import com.kaadas.lock.utils.greenDao.bean.CatEyeServiceInfo;
 import com.kaadas.lock.utils.greenDao.bean.DBOpenLockRecord;
+import com.kaadas.lock.utils.greenDao.bean.DevicePower;
 import com.kaadas.lock.utils.greenDao.bean.GatewayBaseInfo;
 import com.kaadas.lock.utils.greenDao.bean.GatewayLockAlarmEventDao;
 import com.kaadas.lock.utils.greenDao.bean.GatewayLockBaseInfo;
@@ -28,6 +29,7 @@ import com.kaadas.lock.utils.greenDao.db.CateEyeInfoBaseDao;
 import com.kaadas.lock.utils.greenDao.db.CatEyeEventDao;
 import com.kaadas.lock.utils.greenDao.db.CatEyeServiceInfoDao;
 import com.kaadas.lock.utils.greenDao.db.DBOpenLockRecordDao;
+import com.kaadas.lock.utils.greenDao.db.DevicePowerDao;
 import com.kaadas.lock.utils.greenDao.db.GatewayBaseInfoDao;
 import com.kaadas.lock.utils.greenDao.db.GatewayLockAlarmEventDaoDao;
 import com.kaadas.lock.utils.greenDao.db.GatewayLockBaseInfoDao;
@@ -52,6 +54,7 @@ public class DaoSession extends AbstractDaoSession {
     private final DaoConfig catEyeEventDaoConfig;
     private final DaoConfig catEyeServiceInfoDaoConfig;
     private final DaoConfig dBOpenLockRecordDaoConfig;
+    private final DaoConfig devicePowerDaoConfig;
     private final DaoConfig gatewayBaseInfoDaoConfig;
     private final DaoConfig gatewayLockAlarmEventDaoDaoConfig;
     private final DaoConfig gatewayLockBaseInfoDaoConfig;
@@ -67,6 +70,7 @@ public class DaoSession extends AbstractDaoSession {
     private final CatEyeEventDao catEyeEventDao;
     private final CatEyeServiceInfoDao catEyeServiceInfoDao;
     private final DBOpenLockRecordDao dBOpenLockRecordDao;
+    private final DevicePowerDao devicePowerDao;
     private final GatewayBaseInfoDao gatewayBaseInfoDao;
     private final GatewayLockAlarmEventDaoDao gatewayLockAlarmEventDaoDao;
     private final GatewayLockBaseInfoDao gatewayLockBaseInfoDao;
@@ -95,6 +99,9 @@ public class DaoSession extends AbstractDaoSession {
 
         dBOpenLockRecordDaoConfig = daoConfigMap.get(DBOpenLockRecordDao.class).clone();
         dBOpenLockRecordDaoConfig.initIdentityScope(type);
+
+        devicePowerDaoConfig = daoConfigMap.get(DevicePowerDao.class).clone();
+        devicePowerDaoConfig.initIdentityScope(type);
 
         gatewayBaseInfoDaoConfig = daoConfigMap.get(GatewayBaseInfoDao.class).clone();
         gatewayBaseInfoDaoConfig.initIdentityScope(type);
@@ -128,6 +135,7 @@ public class DaoSession extends AbstractDaoSession {
         catEyeEventDao = new CatEyeEventDao(catEyeEventDaoConfig, this);
         catEyeServiceInfoDao = new CatEyeServiceInfoDao(catEyeServiceInfoDaoConfig, this);
         dBOpenLockRecordDao = new DBOpenLockRecordDao(dBOpenLockRecordDaoConfig, this);
+        devicePowerDao = new DevicePowerDao(devicePowerDaoConfig, this);
         gatewayBaseInfoDao = new GatewayBaseInfoDao(gatewayBaseInfoDaoConfig, this);
         gatewayLockAlarmEventDaoDao = new GatewayLockAlarmEventDaoDao(gatewayLockAlarmEventDaoDaoConfig, this);
         gatewayLockBaseInfoDao = new GatewayLockBaseInfoDao(gatewayLockBaseInfoDaoConfig, this);
@@ -143,6 +151,7 @@ public class DaoSession extends AbstractDaoSession {
         registerDao(CatEyeEvent.class, catEyeEventDao);
         registerDao(CatEyeServiceInfo.class, catEyeServiceInfoDao);
         registerDao(DBOpenLockRecord.class, dBOpenLockRecordDao);
+        registerDao(DevicePower.class, devicePowerDao);
         registerDao(GatewayBaseInfo.class, gatewayBaseInfoDao);
         registerDao(GatewayLockAlarmEventDao.class, gatewayLockAlarmEventDaoDao);
         registerDao(GatewayLockBaseInfo.class, gatewayLockBaseInfoDao);
@@ -160,6 +169,7 @@ public class DaoSession extends AbstractDaoSession {
         catEyeEventDaoConfig.clearIdentityScope();
         catEyeServiceInfoDaoConfig.clearIdentityScope();
         dBOpenLockRecordDaoConfig.clearIdentityScope();
+        devicePowerDaoConfig.clearIdentityScope();
         gatewayBaseInfoDaoConfig.clearIdentityScope();
         gatewayLockAlarmEventDaoDaoConfig.clearIdentityScope();
         gatewayLockBaseInfoDaoConfig.clearIdentityScope();
@@ -189,6 +199,10 @@ public class DaoSession extends AbstractDaoSession {
 
     public DBOpenLockRecordDao getDBOpenLockRecordDao() {
         return dBOpenLockRecordDao;
+    }
+
+    public DevicePowerDao getDevicePowerDao() {
+        return devicePowerDao;
     }
 
     public GatewayBaseInfoDao getGatewayBaseInfoDao() {
