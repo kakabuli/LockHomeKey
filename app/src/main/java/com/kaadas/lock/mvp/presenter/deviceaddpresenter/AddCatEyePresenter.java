@@ -20,6 +20,7 @@ import com.kaadas.lock.publiclibrary.mqtt.eventbean.DeviceOnLineBean;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttConstant;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttData;
 import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.LoginUtil;
 
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
@@ -135,6 +136,7 @@ public class AddCatEyePresenter<T> extends BasePresenter<IAddCatEyeView> {
                         public void accept(MqttData mqttData) throws Exception {
                             toDisposable(listenerCatEyeOnlineDisposable);
                             DeviceOnLineBean deviceOnLineBean = new Gson().fromJson(mqttData.getPayload(), DeviceOnLineBean.class);
+                            LogUtils.e("猫眼上线:"+mqttData.getPayload());
                             LogUtils.e("本地信息为   " + "   " + deviceMac + "   " + deviceSn + "    " + gwId);
                             if ( deviceMac.equalsIgnoreCase(deviceOnLineBean.getEventparams().getMacaddr())
                                     &&  "online".equals(deviceOnLineBean.getEventparams().getEvent_str())
@@ -146,6 +148,16 @@ public class AddCatEyePresenter<T> extends BasePresenter<IAddCatEyeView> {
                                 }
                                 MyApplication.getInstance().getAllDevicesByMqtt(true);
                                 toDisposable(compositeDisposable);
+                            }else if(deviceOnLineBean.getEventparams().getMacaddr().contains(":")){
+                                String newMac= deviceOnLineBean.getEventparams().getMacaddr().replace(":","");
+                                if(deviceMac.equalsIgnoreCase(newMac) &&  "online".equals(deviceOnLineBean.getEventparams().getEvent_str())){
+                                    LogUtils.e("添加猫眼成功2");
+                                    if (mViewRef.get()!=null){
+                                        mViewRef.get().cateEyeJoinSuccess(deviceOnLineBean);
+                                    }
+                                    MyApplication.getInstance().getAllDevicesByMqtt(true);
+                                    toDisposable(compositeDisposable);
+                                }
                             }
 
                         }

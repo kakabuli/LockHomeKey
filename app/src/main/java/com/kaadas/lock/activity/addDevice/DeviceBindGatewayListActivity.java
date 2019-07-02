@@ -14,6 +14,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.addDevice.cateye.AddDeviceCatEyeCheckWifiActivity;
 import com.kaadas.lock.activity.addDevice.cateye.AddDeviceCatEyeFirstActivity;
+import com.kaadas.lock.activity.addDevice.cateye.TurnOnCatEyeFirstActivity;
 import com.kaadas.lock.activity.addDevice.gateway.AddGatewayFirstActivity;
 import com.kaadas.lock.activity.addDevice.zigbee.AddZigbeeLockFirstActivity;
 import com.kaadas.lock.adapter.AddZigbeeBindGatewayAdapter;
@@ -220,7 +221,8 @@ public class DeviceBindGatewayListActivity extends BaseActivity<DeviceGatewayBin
                 wifiName =wifiName.replaceAll("\"", "");
                 LogUtils.e("获取到的WiFi名称是    " + wifiName+"  网关的WiFi名称是  "+ssid+"   ");
                 if (wifiName.equals(ssid)){
-                    Intent catEyeIntent = new Intent(this, AddDeviceCatEyeFirstActivity.class);
+                   // Intent catEyeIntent = new Intent(this, AddDeviceCatEyeFirstActivity.class);
+                    Intent catEyeIntent = new Intent(this, TurnOnCatEyeFirstActivity.class);
                     catEyeIntent.putExtra(KeyConstants.GW_WIFI_SSID, ssid);
                     catEyeIntent.putExtra(KeyConstants.GW_WIFI_PWD, pwd);
                     catEyeIntent.putExtra(KeyConstants.GW_SN, zigbeeBindGatewayBeanSelect.getGatewayId());

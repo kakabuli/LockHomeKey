@@ -20,6 +20,8 @@ import android.widget.TextView;
 
 import com.kaadas.lock.R;
 
+import java.util.Collections;
+
 
 /**
  * Created by David
@@ -83,6 +85,17 @@ public class LoadingDialog {
             mDialog.show();
         }
     }
+    public void show2(String msg) {
+        mDialog.setCancelable(false);// 不可以用“返回键”取消
+        mDialog.setCanceledOnTouchOutside(false);
+        mSpaceshipImage.startAnimation(mAnimation);
+        mTipTextView.setTextColor(Color.BLACK);
+        mTipTextView.setText(msg);
+        if (!mDialog.isShowing()) {
+            mDialog.show();
+        }
+    }
+
 
     public void dismiss() {
         try {
