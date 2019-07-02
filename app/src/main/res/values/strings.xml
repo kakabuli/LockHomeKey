@@ -144,7 +144,7 @@
     <string name="research">重新搜索</string>
     <string name="help">帮助</string>
     <string name="help_title">您无法发现您的蓝牙设备，请按照以下步骤对设备进行检查：</string>
-    <string name="help_bottom">如果您已经完成以上操作,您仍然无法成功添加设备,可以在"我的-用户反馈"向我们的工作人员进行反馈.</string>
+    <string name="help_bottom">如果您已经完成以上操作,您仍然无法成功添加设备,可以在“我的-用户反馈”向我们的工作人员进行反馈.</string>
     <string name="help_one">请保证您的设备已经接通电源，或电池电量充足。</string>
     <string name="help_two">请打开您的手机蓝牙。由于系统原因，安卓手机需要同时开启定位权限。</string>
     <string name="help_three">保持待添加的设备与手机的距离不超过5米，从而保证设备间的通信。</string>

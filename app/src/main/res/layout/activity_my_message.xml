@@ -32,7 +32,8 @@
                 android:layout_marginTop="@dimen/dp_34"
                 android:text="@string/no_message"
                 android:textColor="#999999"
-                android:textSize="@dimen/sp_13" />
+                android:textSize="@dimen/sp_13"
+                android:visibility="gone"/>
         </LinearLayout>
     </RelativeLayout>
     <!--有消息-->
