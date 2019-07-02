@@ -1121,4 +1121,5 @@
     <string name="cat_eye_offfline_please_check_net">猫眼开小差啦，请检查网络!</string>
     <string name="gateway_is_authorization">网关是授权网关</string>
     <string name="authorization_gateway">（授权网关）</string>
+    <string name="mimi_no_account">网关信息获取不全,请下拉刷新网关列表</string>
 </resources>

@@ -31,4 +31,11 @@ public interface IGatewaySharedView extends IBaseView {
     void shareUserListThrowable();
 
 
+    //绑定咪咪网成功
+    void bindMimiSuccess(String deviceSN);
+
+    void bindMimiFail(String code,String msg);
+
+    void bindMimiThrowable(Throwable throwable);
+
 }

@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -19,10 +20,13 @@ import com.kaadas.lock.adapter.DeviceShareAdapter;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.mvp.presenter.gatewaypresenter.GatewaySharedPresenter;
 import com.kaadas.lock.mvp.view.gatewayView.IGatewaySharedView;
+import com.kaadas.lock.publiclibrary.bean.GatewayInfo;
+import com.kaadas.lock.publiclibrary.bean.GwLockInfo;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.DeviceShareResultBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.DeviceShareUserResultBean;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.KeyConstants;
+import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.NetUtil;
 import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.ToastUtil;
@@ -206,7 +210,18 @@ public class GatewayLockSharedActivity extends BaseActivity<IGatewaySharedView, 
             if (requestCode==REQUEST_CODE){
                 String phone = data.getStringExtra(KeyConstants.AUTHORIZATION_TELEPHONE);
                 if (gatewayId!=null&&deviceId!=null){
-                    mPresenter.shareDevice(2,gatewayId,deviceId,uid,phone,"",1);
+                    GatewayInfo gatewayInfo=MyApplication.getInstance().getGatewayById(gatewayId);
+                    if (gatewayInfo!=null) {
+                        if (!TextUtils.isEmpty(gatewayInfo.getServerInfo().getMeUsername()) && !TextUtils.isEmpty(gatewayInfo.getServerInfo().getMePwd())) {
+                            mPresenter.shareDevice(2, gatewayId, deviceId, uid, phone, "", 1);
+                        }else{
+                            LogUtils.e("咪咪网为空需要重新注册");
+                            String deviceSN = gatewayInfo.getServerInfo().getDeviceSN();
+                            mPresenter.bindMimi(deviceSN, deviceSN);
+                            ToastUtil.getInstance().showShort(getString(R.string.add_common_user_success));
+                        }
+                    }
+
                 }
             }
         }
@@ -265,5 +280,20 @@ public class GatewayLockSharedActivity extends BaseActivity<IGatewaySharedView, 
         }
         pageChange(true);
         ToastUtil.getInstance().showShort(R.string.get_share_user_fail);
+    }
+
+    @Override
+    public void bindMimiSuccess(String deviceSN) {
+        LogUtils.e("绑定咪咪网成功");
+    }
+
+    @Override
+    public void bindMimiFail(String code, String msg) {
+        LogUtils.e("绑定咪咪网失败");
+    }
+
+    @Override
+    public void bindMimiThrowable(Throwable throwable) {
+        LogUtils.e("绑定咪咪网失败");
     }
 }
