@@ -20,6 +20,7 @@ import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.device.gatewaylock.more.GatewayMoreActivity;
 import com.kaadas.lock.activity.device.gatewaylock.password.GatewayPasswordManagerActivity;
+import com.kaadas.lock.activity.device.gatewaylock.share.GatewayLockSharedActivity;
 import com.kaadas.lock.activity.device.gatewaylock.stress.old.GatewayLockStressDetailActivity;
 import com.kaadas.lock.adapter.ForecastAdapter;
 import com.kaadas.lock.bean.BluetoothLockFunctionBean;
@@ -103,8 +104,6 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
     ImageView ivFour;
     @BindView(R.id.tv_name_four)
     TextView tvNameFour;
-    @BindView(R.id.tv_number_four)
-    TextView tvNumberFour;
     @BindView(R.id.ll_four)
     LinearLayout llFour;
     private String gatewayId;
@@ -147,14 +146,16 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
         //密码
         ivOne.setImageResource(R.mipmap.bluetooth_password);
         tvNameOne.setText(R.string.password);
+        //设备共享
+        ivTwo.setImageResource(R.mipmap.share_icon);
+        tvNameTwo.setText(R.string.device_share);
+
         //胁迫警告
-        ivTwo.setImageResource(R.mipmap.stress_warn_icon);
-        tvNameTwo.setText(getString(R.string.stress_warn));
-
+        ivThree.setImageResource(R.mipmap.stress_warn_icon);
+        tvNameThree.setText(R.string.stress_warn);
         //更多
-        ivThree.setImageResource(R.mipmap.bluetooth_more);
-        tvNameThree.setText(R.string.more);
-
+        ivFour.setImageResource(R.mipmap.bluetooth_more);
+        tvNameFour.setText(R.string.more);
 
     }
 
@@ -163,6 +164,7 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
         llOne.setOnClickListener(this);
         llTwo.setOnClickListener(this);
         llThree.setOnClickListener(this);
+        llFour.setOnClickListener(this);
         tvOpenClock.setOnClickListener(this);
         ivSafeProtection.setOnClickListener(this);
     }
@@ -278,12 +280,22 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
                 finish();
                 break;
             case R.id.ll_one:
+                //密码
                 intent = new Intent(this, GatewayPasswordManagerActivity.class);
                 intent.putExtra(KeyConstants.GATEWAY_ID, gatewayId);
                 intent.putExtra(KeyConstants.DEVICE_ID, deviceId);
                 startActivity(intent);
                 break;
             case R.id.ll_two:
+               //设备分享
+                intent = new Intent(this, GatewayLockSharedActivity.class);
+                intent.putExtra(KeyConstants.GATEWAY_ID, gatewayId);
+                intent.putExtra(KeyConstants.DEVICE_ID, deviceId);
+                startActivity(intent);
+                break;
+
+            case R.id.ll_three:
+                //胁迫警告
                 if (!TextUtils.isEmpty(gatewayId) && !TextUtils.isEmpty(deviceId)) {
                     intent = new Intent(this, GatewayLockStressDetailActivity.class);
                     intent.putExtra(KeyConstants.GATEWAY_ID, gatewayId);
@@ -292,14 +304,12 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
                 }
 
                 break;
-            case R.id.ll_three:
+
+            case R.id.ll_four:
+                //更多
                 intent = new Intent(this, GatewayMoreActivity.class);
                 intent.putExtra(KeyConstants.GATEWAY_LOCK_INFO, showBean);
                 startActivityForResult(intent, KeyConstants.DEVICE_DETAIL_BEAN_NUM);
-              /*  intent=new Intent(this, GatewayLockSettingActivity.class);
-                intent.putExtra(KeyConstants.GATEWAY_ID,gatewayId);
-                intent.putExtra(KeyConstants.DEVICE_ID,deviceId);
-                startActivity(intent);*/
 
                 break;
             case R.id.tv_open_clock:

@@ -71,6 +71,7 @@
                 android:textSize="@dimen/sp_14" />-->
 
             <TextView
+                android:visibility="invisible"
                 android:id="@+id/tv_open_clock"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -85,8 +86,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dp_30"
-                android:layout_marginBottom="@dimen/dp_10"
+                android:layout_marginBottom="@dimen/dp_30"
                 android:gravity="center"
                 android:orientation="horizontal">
 
@@ -321,15 +321,6 @@
                             android:layout_marginTop="@dimen/dp_14"
                             android:textColor="#333333"
                             android:textSize="@dimen/sp_13" />
-
-                        <TextView
-                            android:id="@+id/tv_number_four"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_horizontal"
-                            android:layout_marginTop="@dimen/dp_9"
-                            android:textColor="#999999"
-                            android:textSize="@dimen/sp_12" />
                     </LinearLayout>
                 </LinearLayout>
 

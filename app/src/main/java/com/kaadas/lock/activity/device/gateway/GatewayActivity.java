@@ -1,5 +1,6 @@
 package com.kaadas.lock.activity.device.gateway;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -8,6 +9,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -24,8 +26,6 @@ import com.kaadas.lock.publiclibrary.bean.GatewayInfo;
 import com.kaadas.lock.publiclibrary.bean.GwLockInfo;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
-import com.kaadas.lock.utils.NotifyRefreshActivity;
-import com.kaadas.lock.utils.networkListenerutil.NetWorkChangReceiver;
 
 import java.util.List;
 
@@ -36,7 +36,7 @@ import butterknife.OnClick;
 /**
  * Created by David on 2019/4/25
  */
-public class GatewayActivity extends BaseActivity<GatewayView, GatewayPresenter<GatewayView>> implements  BaseQuickAdapter.OnItemClickListener, GatewayView{
+public class GatewayActivity extends BaseActivity<GatewayView, GatewayPresenter<GatewayView>> implements BaseQuickAdapter.OnItemClickListener, GatewayView {
 
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
@@ -53,6 +53,12 @@ public class GatewayActivity extends BaseActivity<GatewayView, GatewayPresenter<
     ImageView back;
     @BindView(R.id.see_more)
     ImageView seeMore;
+    @BindView(R.id.share)
+    ImageView share;
+    @BindView(R.id.con_device)
+    TextView conDevice;
+    @BindView(R.id.no_device_layout)
+    LinearLayout noDeviceLayout;
 
     private List<HomeShowBean> homeShowBeans;
     private boolean gatewayOnline = false;
@@ -124,10 +130,30 @@ public class GatewayActivity extends BaseActivity<GatewayView, GatewayPresenter<
     }
 
     private void initRecyclerview(List<HomeShowBean> homeShowBeans) {
-        gatewayAdapter = new GatewayAdapter(homeShowBeans);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(gatewayAdapter);
-        gatewayAdapter.setOnItemClickListener(this);
+        if (homeShowBeans!=null&&homeShowBeans.size()>0){
+            changeView(true);
+            gatewayAdapter = new GatewayAdapter(homeShowBeans);
+            recyclerView.setLayoutManager(new LinearLayoutManager(this));
+            recyclerView.setAdapter(gatewayAdapter);
+            gatewayAdapter.setOnItemClickListener(this);
+        }else{
+            changeView(false);
+        }
+
+
+    }
+
+    //改变视图
+    public void changeView(boolean haveData) {
+        if (haveData) {
+            recyclerView.setVisibility(View.VISIBLE);
+            conDevice.setVisibility(View.VISIBLE);
+            noDeviceLayout.setVisibility(View.INVISIBLE);
+        } else {
+            recyclerView.setVisibility(View.INVISIBLE);
+            conDevice.setVisibility(View.INVISIBLE);
+            noDeviceLayout.setVisibility(View.VISIBLE);
+        }
 
     }
 
@@ -142,8 +168,8 @@ public class GatewayActivity extends BaseActivity<GatewayView, GatewayPresenter<
     public void getPowerDataSuccess(String deviceId, int power) {
         //获取到电量
         LogUtils.e("设备名称   " + deviceId + "   电量   " + power);
-        if (power<0){
-            power=0;
+        if (power < 0) {
+            power = 0;
         }
 
         if (homeShowBeans != null && homeShowBeans.size() > 0) {
@@ -163,7 +189,7 @@ public class GatewayActivity extends BaseActivity<GatewayView, GatewayPresenter<
                 else if (HomeShowBean.TYPE_GATEWAY_LOCK == device.getDeviceType()) {
                     if (device.getDeviceId().equals(device)) {
                         GwLockInfo gwLockInfo = (GwLockInfo) device.getObject();
-                        gwLockInfo.setPower(power/2);
+                        gwLockInfo.setPower(power / 2);
                         LogUtils.e("设置zigbee电量成功" + power);
                         if (gatewayAdapter != null) {
                             gatewayAdapter.notifyDataSetChanged();
@@ -344,8 +370,7 @@ public class GatewayActivity extends BaseActivity<GatewayView, GatewayPresenter<
     }
 
 
-
-    @OnClick({R.id.unbindGateway, R.id.testunbindGateway,R.id.back, R.id.see_more})
+    @OnClick({R.id.unbindGateway, R.id.testunbindGateway, R.id.back, R.id.see_more, R.id.share})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             //解绑网关
@@ -354,7 +379,6 @@ public class GatewayActivity extends BaseActivity<GatewayView, GatewayPresenter<
                     mPresenter.unBindGateway(MyApplication.getInstance().getUid(), gatewayInfo.getServerInfo().getDeviceSN());
                 }
                 break;
-
             //测试解绑网关
             case R.id.testunbindGateway:
                 if (gatewayInfo != null) {
@@ -362,21 +386,46 @@ public class GatewayActivity extends BaseActivity<GatewayView, GatewayPresenter<
                 }
                 break;
             case R.id.back:
-                 finish();
+                finish();
                 break;
             case R.id.see_more:
-                Intent intent=new Intent(this, GatewaySettingActivity.class);
-                intent.putExtra(KeyConstants.GATEWAY_ID,gatewayInfo.getServerInfo().getDeviceSN());
-                startActivity(intent);
+                //基本信息
+                Intent intent = new Intent(this, GatewaySettingActivity.class);
+                intent.putExtra(KeyConstants.GATEWAY_NICKNAME,gatewayInfo.getServerInfo().getDeviceNickName());
+                intent.putExtra(KeyConstants.GATEWAY_ID, gatewayInfo.getServerInfo().getDeviceSN());
+                intent.putExtra(KeyConstants.IS_ADMIN,gatewayInfo.getServerInfo().getIsAdmin());
+                startActivityForResult(intent, KeyConstants.GATEWAY_NICK_NAME);
                 break;
+            case R.id.share:
+               /* //分享
+                Intent shareIntent = new Intent(this, GatewaySharedActivity.class);
+                shareIntent.putExtra(KeyConstants.GATEWAY_ID, gatewayInfo.getServerInfo().getDeviceSN());
+                startActivity(shareIntent);*/
+                break;
+
         }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (getIntent()!=null){
+        if (getIntent() != null) {
             getIntent().removeExtra(KeyConstants.GATEWAY_INFO);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == KeyConstants.GATEWAY_NICK_NAME) {
+            if (resultCode == Activity.RESULT_OK) {
+                String name = data.getStringExtra(KeyConstants.GATEWAY_NICKNAME);
+                if (name != null) {
+                    if (gatewayNickName != null) {
+                        gatewayNickName.setText(name);
+                    }
+                }
+            }
         }
     }
 }

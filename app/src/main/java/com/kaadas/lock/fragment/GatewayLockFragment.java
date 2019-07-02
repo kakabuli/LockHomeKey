@@ -93,8 +93,8 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
     private String deviceId;
     private BluetoothRecordAdapter openLockRecordAdapter;
     private HomePageFragment.ISelectChangeListener iSelectChangeListener;
-    private boolean isOpening = false;
-    private boolean isClosing = false;
+    //private boolean isOpening = false;
+    /*private boolean isClosing = false;*/
     private int statusFlag=0;
     private Handler handler = new Handler();
     @Nullable
@@ -317,11 +317,11 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
                 ivInnerSmall.setVisibility(View.VISIBLE);
                 ivInnerSmall.setImageResource(R.mipmap.gate_lock_close_inner_small_icon);
                 tvInner.setVisibility(View.VISIBLE);
-                tvInner.setText(R.string.long_press_open_lock);
+                tvInner.setText("");
                 tvInner.setTextColor(getResources().getColor(R.color.cF7FDFD));
                 tvExternal.setVisibility(View.VISIBLE);
                 tvExternal.setTextColor(getResources().getColor(R.color.cC6F5FF));
-                tvExternal.setText(getString(R.string.bluetooth_close_status));
+                tvExternal.setText(getString(R.string.gateway_close_status));
                 break;
             case 6:
 //                ”开锁中....“
@@ -692,8 +692,8 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
 
     @Override
     public void openLockSuccess() {
-        isOpening = false;
-        isClosing = true;
+        /*isOpening = false;*/
+        /*isClosing = true;*/
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -708,8 +708,8 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
 
     @Override
     public void openLockFailed() {
-        isOpening = false;
-        isClosing=false;
+       /* isOpening = false;*/
+       /* isClosing=false;*/
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -733,8 +733,8 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
     @Override
     public void openLockThrowable(Throwable throwable) {
         stopOpenLockAnimator();
-        isOpening = false;
-        isClosing=false;
+        /*isOpening = false;*/
+       /* isClosing=false;*/
         if (!TextUtils.isEmpty(deviceId)){
             SPUtils.remove(KeyConstants.SAVA_LOCK_PWD + deviceId);
         }
@@ -754,8 +754,8 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
 
     @Override
     public void startOpenLock() {
-        isOpening = true;
-        isClosing= false;
+        /*isOpening = true;*/
+        /*isClosing= false;*/
         openLockAnimator();
 //        changeOpenLockStatus(6);
     }
@@ -850,7 +850,7 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
     @Override
     public void lockCloseSuccess() {
         closeLockAnimator();
-        isClosing = false;
+        //isClosing = false;
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -870,7 +870,7 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
 
     @Override
     public void lockCloseFailed() {
-        isClosing = false;
+        //isClosing = false;
         if (deviceState != null) {
             String state=deviceState.getText().toString().trim();
             if (state.equals(getString(R.string.offline))){
@@ -909,8 +909,8 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
     @Override
     public void getLockEvent(String gwId, String devId) {
         if (gatewayLockInfo!=null&&deviceId.equals(devId)&&gwId.equals(gatewayId)) {
-            isOpening = false;
-            isClosing = true;
+            /*isOpening = false;*/
+            //isClosing = true;
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -975,7 +975,7 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
     public void closeLockSuccess() {
         //关锁成功
         closeLockAnimator();
-        isClosing = false;
+        //isClosing = false;
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -995,7 +995,7 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
 
     @Override
     public void closeLockThrowable() {
-        isClosing = false;
+        //isClosing = false;
     }
 
     @Override
@@ -1007,18 +1007,30 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
                         ToastUtil.getInstance().showShort(R.string.wifi_alreade_offline);
                         return true;
                     }
-                    if (isOpening) {
+                   /* if (isOpening) {
                         ToastUtil.getInstance().showShort(R.string.is_opening_try_latter);
                         return true;
-                    }
-                    if (isClosing) {
+                    }*/
+                   /* if (isClosing) {
                         ToastUtil.getInstance().showShort(R.string.lock_already_open);
                         return true;
-                    }
-                    if (mPresenter != null) {
+                    }*/
+                   /* if (mPresenter != null) {
                         mPresenter.attachView(this);
                         mPresenter.openLock(gatewayLockInfo);
-                    }
+                    }*/
+                   AlertDialogUtil.getInstance().noEditSingleButtonDialog(getActivity(), getString(R.string.hint), getString(R.string.this_operation_does_not_support_unlocking), getString(R.string.hao_de), new AlertDialogUtil.ClickListener() {
+                       @Override
+                       public void left() {
+
+                       }
+
+                       @Override
+                       public void right() {
+
+                       }
+                   });
+
                 }
                 break;
         }

@@ -253,6 +253,7 @@ public class BleLockPresenter<T> extends MyOpenLockRecordPresenter<IBleLockView>
                                 LogUtils.e("开锁次数的数据是   " + Rsa.toHexString(data));
                                 int number = (data[0] & 0xff) + ((data[1] & 0xff) << 8) + ((data[2] & 0xff) << 16) + ((data[3] & 0xff) << 24);
                                 LogUtils.e("开锁次数为   " + number);
+                                bleLockInfo.setOpenNumbers(number);
                                 if (mViewRef != null && mViewRef.get() != null) {
                                     mViewRef.get().onGetOpenNumberSuccess(number);
                                 }

@@ -150,7 +150,7 @@ public class MqttService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        LogUtils.e("mqtt", "MqttService为空");
+        LogUtils.e("mqtt", "MqttService 被杀死");
         //System.exit(0); 退出并没finish activity 因此增加了这一步
         MyApplication.getInstance().removeAllActivity();
         System.exit(0);

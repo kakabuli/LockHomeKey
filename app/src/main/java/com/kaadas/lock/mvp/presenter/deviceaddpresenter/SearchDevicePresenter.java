@@ -52,6 +52,13 @@ public class SearchDevicePresenter<T> extends BasePresenter<ISearchDeviceView> {
     private Disposable bindDisposable;
 
     public void searchDevices() {
+        if (bleService ==null  ){ //判断
+            if ( MyApplication.getInstance().getBleService() ==null){
+                return  ;
+            }else {
+                bleService = MyApplication.getInstance().getBleService(); //判断
+            }
+        }
         //订阅时 延时取消订阅
         //看是否包含有此设备
         //搜索到设备
@@ -64,10 +71,10 @@ public class SearchDevicePresenter<T> extends BasePresenter<ISearchDeviceView> {
                 mViewRef.get().loadDevices(devices);
             }
         }
-        bleService.release();
+        bleService.release();  //1
         handler.removeCallbacks(stopScanLe);
         handler.postDelayed(stopScanLe, 10 * 1000);
-        disposable = bleService.scanBleDevice(true)
+        disposable = bleService.scanBleDevice(true)  //1
                 .filter(new Predicate<BluetoothDevice>() {
                     @Override
                     public boolean test(BluetoothDevice device) throws Exception {
@@ -114,10 +121,18 @@ public class SearchDevicePresenter<T> extends BasePresenter<ISearchDeviceView> {
 
 
     public void checkBind(BluetoothDevice device) {
+        if (bleService ==null  ){ //判断
+            if ( MyApplication.getInstance().getBleService() ==null){
+                return  ;
+            }else {
+                bleService = MyApplication.getInstance().getBleService(); //判断
+            }
+        }
+
         handler.removeCallbacks(stopScanLe);
         if (bleService != null) { //停止扫描设备
-            bleService.scanBleDevice(false);
-            bleService.release();
+            bleService.scanBleDevice(false);  //1
+            bleService.release();  //2
             if (mViewRef != null) {
                 mViewRef.get().onStopScan();
             }
@@ -200,7 +215,7 @@ public class SearchDevicePresenter<T> extends BasePresenter<ISearchDeviceView> {
     public void detachView() {
         super.detachView();
         //界面退出的时候
-        bleService.scanBleDevice(false);
+              bleService.scanBleDevice(false);
     }
 
     private int connectTimes = 0;
@@ -212,6 +227,13 @@ public class SearchDevicePresenter<T> extends BasePresenter<ISearchDeviceView> {
     }
 
     public void bindDevice(BluetoothDevice device, boolean isBind) {
+        if (bleService ==null  ){ //判断
+            if ( MyApplication.getInstance().getBleService() ==null){
+                return  ;
+            }else {
+                bleService = MyApplication.getInstance().getBleService(); //判断
+            }
+        }
         LogUtils.e("开始绑定");
         this.isBind = isBind;
         this.device = device;
@@ -222,13 +244,13 @@ public class SearchDevicePresenter<T> extends BasePresenter<ISearchDeviceView> {
             return;
         }
         // 连接
-        bleService.removeBleLockInfo();
-        bleService.connectDeviceByDevice(device);
+        bleService.removeBleLockInfo(); //1
+        bleService.connectDeviceByDevice(device); //1
         if (mViewRef.get() != null) {
             mViewRef.get().onConnecting();
         }
         try{
-            bindDisposable = bleService.subscribeDeviceConnectState()
+            bindDisposable = bleService.subscribeDeviceConnectState() //1
                     .compose(RxjavaHelper.observeOnMainThread())
                     .subscribe(new Consumer<BleStateBean>() {
                         @Override
@@ -263,6 +285,13 @@ public class SearchDevicePresenter<T> extends BasePresenter<ISearchDeviceView> {
 
 
     public void readSn(int version) {
+        if (bleService ==null  ){ //判断
+            if ( MyApplication.getInstance().getBleService() ==null){
+                return  ;
+            }else {
+                bleService = MyApplication.getInstance().getBleService(); //判断
+            }
+        }
         toDisposable(snDisposable);
         LogUtils.e("第" + readSnTimes + "次读取SN");
         if (readSnTimes > 2) {
@@ -271,7 +300,7 @@ public class SearchDevicePresenter<T> extends BasePresenter<ISearchDeviceView> {
             }
             return;
         }
-        snDisposable = bleService.readSN(500)
+        snDisposable = bleService.readSN(500) //1
                 .filter(new Predicate<ReadInfoBean>() {
                     @Override
                     public boolean test(ReadInfoBean readInfoBean) throws Exception {
@@ -301,6 +330,7 @@ public class SearchDevicePresenter<T> extends BasePresenter<ISearchDeviceView> {
 
 
     public void getPwd1(String sn,int version) {
+
         if (mViewRef.get() != null) {
             mViewRef.get().getPwd1();
         }
@@ -330,7 +360,9 @@ public class SearchDevicePresenter<T> extends BasePresenter<ISearchDeviceView> {
                             pwd1 = Rsa.bytesToHexString(bPwd1);
                             if (mViewRef.get() != null) {
 //                                mViewRef.get().getPwd1Success(pwd1, isBind,version);
-                                bleService.release();
+                                if (bleService !=null){  //1
+                                    bleService.release(); //1
+                                }
                                 mViewRef.get().notice419();
 
                             }

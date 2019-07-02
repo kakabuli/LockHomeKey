@@ -34,10 +34,11 @@ public class GatewayBaseInfoDao extends AbstractDao<GatewayBaseInfo, String> {
         public final static Property WanNetmask = new Property(7, String.class, "wanNetmask", false, "WAN_NETMASK");
         public final static Property WanType = new Property(8, String.class, "wanType", false, "WAN_TYPE");
         public final static Property Channel = new Property(9, String.class, "channel", false, "CHANNEL");
-        public final static Property Encryption = new Property(10, String.class, "encryption", false, "ENCRYPTION");
-        public final static Property Pwd = new Property(11, String.class, "pwd", false, "PWD");
-        public final static Property Ssid = new Property(12, String.class, "ssid", false, "SSID");
-        public final static Property Uid = new Property(13, String.class, "uid", false, "UID");
+        public final static Property GatewayName = new Property(10, String.class, "gatewayName", false, "GATEWAY_NAME");
+        public final static Property Encryption = new Property(11, String.class, "encryption", false, "ENCRYPTION");
+        public final static Property Pwd = new Property(12, String.class, "pwd", false, "PWD");
+        public final static Property Ssid = new Property(13, String.class, "ssid", false, "SSID");
+        public final static Property Uid = new Property(14, String.class, "uid", false, "UID");
     }
 
 
@@ -63,10 +64,11 @@ public class GatewayBaseInfoDao extends AbstractDao<GatewayBaseInfo, String> {
                 "\"WAN_NETMASK\" TEXT," + // 7: wanNetmask
                 "\"WAN_TYPE\" TEXT," + // 8: wanType
                 "\"CHANNEL\" TEXT," + // 9: channel
-                "\"ENCRYPTION\" TEXT," + // 10: encryption
-                "\"PWD\" TEXT," + // 11: pwd
-                "\"SSID\" TEXT," + // 12: ssid
-                "\"UID\" TEXT);"); // 13: uid
+                "\"GATEWAY_NAME\" TEXT," + // 10: gatewayName
+                "\"ENCRYPTION\" TEXT," + // 11: encryption
+                "\"PWD\" TEXT," + // 12: pwd
+                "\"SSID\" TEXT," + // 13: ssid
+                "\"UID\" TEXT);"); // 14: uid
     }
 
     /** Drops the underlying database table. */
@@ -129,24 +131,29 @@ public class GatewayBaseInfoDao extends AbstractDao<GatewayBaseInfo, String> {
             stmt.bindString(10, channel);
         }
  
+        String gatewayName = entity.getGatewayName();
+        if (gatewayName != null) {
+            stmt.bindString(11, gatewayName);
+        }
+ 
         String encryption = entity.getEncryption();
         if (encryption != null) {
-            stmt.bindString(11, encryption);
+            stmt.bindString(12, encryption);
         }
  
         String pwd = entity.getPwd();
         if (pwd != null) {
-            stmt.bindString(12, pwd);
+            stmt.bindString(13, pwd);
         }
  
         String ssid = entity.getSsid();
         if (ssid != null) {
-            stmt.bindString(13, ssid);
+            stmt.bindString(14, ssid);
         }
  
         String uid = entity.getUid();
         if (uid != null) {
-            stmt.bindString(14, uid);
+            stmt.bindString(15, uid);
         }
     }
 
@@ -204,24 +211,29 @@ public class GatewayBaseInfoDao extends AbstractDao<GatewayBaseInfo, String> {
             stmt.bindString(10, channel);
         }
  
+        String gatewayName = entity.getGatewayName();
+        if (gatewayName != null) {
+            stmt.bindString(11, gatewayName);
+        }
+ 
         String encryption = entity.getEncryption();
         if (encryption != null) {
-            stmt.bindString(11, encryption);
+            stmt.bindString(12, encryption);
         }
  
         String pwd = entity.getPwd();
         if (pwd != null) {
-            stmt.bindString(12, pwd);
+            stmt.bindString(13, pwd);
         }
  
         String ssid = entity.getSsid();
         if (ssid != null) {
-            stmt.bindString(13, ssid);
+            stmt.bindString(14, ssid);
         }
  
         String uid = entity.getUid();
         if (uid != null) {
-            stmt.bindString(14, uid);
+            stmt.bindString(15, uid);
         }
     }
 
@@ -243,10 +255,11 @@ public class GatewayBaseInfoDao extends AbstractDao<GatewayBaseInfo, String> {
             cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7), // wanNetmask
             cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8), // wanType
             cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9), // channel
-            cursor.isNull(offset + 10) ? null : cursor.getString(offset + 10), // encryption
-            cursor.isNull(offset + 11) ? null : cursor.getString(offset + 11), // pwd
-            cursor.isNull(offset + 12) ? null : cursor.getString(offset + 12), // ssid
-            cursor.isNull(offset + 13) ? null : cursor.getString(offset + 13) // uid
+            cursor.isNull(offset + 10) ? null : cursor.getString(offset + 10), // gatewayName
+            cursor.isNull(offset + 11) ? null : cursor.getString(offset + 11), // encryption
+            cursor.isNull(offset + 12) ? null : cursor.getString(offset + 12), // pwd
+            cursor.isNull(offset + 13) ? null : cursor.getString(offset + 13), // ssid
+            cursor.isNull(offset + 14) ? null : cursor.getString(offset + 14) // uid
         );
         return entity;
     }
@@ -263,10 +276,11 @@ public class GatewayBaseInfoDao extends AbstractDao<GatewayBaseInfo, String> {
         entity.setWanNetmask(cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7));
         entity.setWanType(cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8));
         entity.setChannel(cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9));
-        entity.setEncryption(cursor.isNull(offset + 10) ? null : cursor.getString(offset + 10));
-        entity.setPwd(cursor.isNull(offset + 11) ? null : cursor.getString(offset + 11));
-        entity.setSsid(cursor.isNull(offset + 12) ? null : cursor.getString(offset + 12));
-        entity.setUid(cursor.isNull(offset + 13) ? null : cursor.getString(offset + 13));
+        entity.setGatewayName(cursor.isNull(offset + 10) ? null : cursor.getString(offset + 10));
+        entity.setEncryption(cursor.isNull(offset + 11) ? null : cursor.getString(offset + 11));
+        entity.setPwd(cursor.isNull(offset + 12) ? null : cursor.getString(offset + 12));
+        entity.setSsid(cursor.isNull(offset + 13) ? null : cursor.getString(offset + 13));
+        entity.setUid(cursor.isNull(offset + 14) ? null : cursor.getString(offset + 14));
      }
     
     @Override

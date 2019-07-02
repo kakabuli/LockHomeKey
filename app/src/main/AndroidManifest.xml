@@ -484,6 +484,12 @@
             android:name=".activity.device.gatewaylock.GatewayLockFunctionActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".activity.device.gatewaylock.GatewayLockAuthorizeFunctionActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait" />
+
         <activity
             android:name=".activity.device.gatewaylock.password.GatewayPasswordManagerActivity"
             android:launchMode="singleTask"
@@ -498,6 +504,10 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.device.gatewaylock.password.old.GatewayLockPasswordShareActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.gatewaylock.password.old.GatewayLockTempararyPwdAddActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
@@ -532,14 +542,8 @@
             android:name=".activity.device.gatewaylock.card.GatewayDoorCardManagerDetailActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
-        <activity
-            android:name=".activity.device.gatewaylock.share.GatewaySharedDeviceManagementActivity"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activity.device.gatewaylock.share.GatewayFamilyMemberDetailActivity"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait" />
+
+
         <activity
             android:name=".activity.device.gatewaylock.GatewayLockAuthorizationActivity"
             android:launchMode="singleTop"
@@ -563,6 +567,18 @@
         <activity
             android:name=".activity.device.gatewaylock.more.GatewayLockLanguageSettingActivity"
             android:launchMode="singleTop"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.gatewaylock.share.AddGatewayLockShareActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.gatewaylock.share.GatewayLockShareUserNumberActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.gatewaylock.share.GatewayLockSharedActivity"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.device.gatewaylock.stress.GatewayStressPasswordManagerActivity"

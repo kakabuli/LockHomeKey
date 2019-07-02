@@ -110,25 +110,32 @@ public class DevicePresenter<T> extends BasePresenter<IDeviceView> {
 
     }
     public void setBleLockInfo(BleLockInfo bleLockInfo) {
+        if (bleService ==null  ){ //判断
+            if ( MyApplication.getInstance().getBleService() ==null){
+                return;
+            }else {
+                bleService = MyApplication.getInstance().getBleService(); //判断
+            }
+        }
         //如果service中有bleLockInfo  并且deviceName一致，就不重新设置。
         LogUtils.e("设置的  设备信息为  " + bleLockInfo.getServerLockInfo().toString());
         if (bleService.getBleLockInfo() != null
-                && bleService.getBleLockInfo().getServerLockInfo().getLockName().equals(bleLockInfo.getServerLockInfo().getLockName())) {
-            ServerBleDevice serviceLockInfo = bleService.getBleLockInfo().getServerLockInfo();
+                && bleService.getBleLockInfo().getServerLockInfo().getLockName().equals(bleLockInfo.getServerLockInfo().getLockName())) { //1
+            ServerBleDevice serviceLockInfo = bleService.getBleLockInfo().getServerLockInfo(); //1
             ServerBleDevice serverLockInfo = bleLockInfo.getServerLockInfo();
             if (serverLockInfo.getPassword1() != null && serverLockInfo.getPassword2() != null) {
                 if (serverLockInfo.getPassword1().equals(serviceLockInfo.getPassword1()) && serverLockInfo.getPassword2().equals(serviceLockInfo.getPassword2())) {
-                    LogUtils.e("进来了  设备  数据一致   " + bleService.getBleLockInfo().getServerLockInfo().toString());
+                    LogUtils.e("进来了  设备  数据一致   " + bleService.getBleLockInfo().getServerLockInfo().toString()); //1
                     return;
                 }
             } else {
                 if ((serviceLockInfo.getPassword1() == null && serverLockInfo.getPassword1() == null) &&(serviceLockInfo.getPassword2() == null && serverLockInfo.getPassword2() == null) ) {
-                    LogUtils.e("进来了 密码为空 设备  数据一致   " + bleService.getBleLockInfo().getServerLockInfo().toString());
+                    LogUtils.e("进来了 密码为空 设备  数据一致   " + bleService.getBleLockInfo().getServerLockInfo().toString()); //1
                     return;
                 }
             }
         }
-        bleService.setBleLockInfo(bleLockInfo);
+        bleService.setBleLockInfo(bleLockInfo);  //1
         this.bleLockInfo = bleLockInfo;
     }
 

@@ -15,12 +15,12 @@ public class MqttConstant {
     public final static int  DC_TEST = 6750465;
 
 
-      public static final String MQTT_BASE_URL = "tcp://mqtt-kaadas.juziwulian.com:1883";//正式服务器
-//      public static final String MQTT_BASE_URL = "tcp://test.juziwulian.com:1883";//测试服务器
+//      public static final String MQTT_BASE_URL = "tcp://mqtt-kaadas.juziwulian.com:1883";//正式服务器
+      public static final String MQTT_BASE_URL = "tcp://test.juziwulian.com:1883";//测试服务器
 
 
-       public static final String LINPHONE_URL = "sip-kaadas.juziwulian.com:5061";//正式sip
-//          public static final String LINPHONE_URL = "test.juziwulian.com:5061";//测试sip
+       //public static final String LINPHONE_URL = "sip-kaadas.juziwulian.com:5061";//正式sip
+          public static final String LINPHONE_URL = "test.juziwulian.com:5061";//测试sip
 
     public static final String  MQTT_REQUEST_APP = "/request/app/func";
 
@@ -200,4 +200,12 @@ public class MqttConstant {
     //网关ota升级确认
     public static final String CONFIRM_GATEWAY_OTA="otaApprovateResult";
 
+    //分享设备
+    public static final String SHARE_DEVICE="shareDevice";
+
+    //分享的用户
+    public static final String SHARE_USER_LIST="shareUserList";
+
+    //修改网关昵称
+    public static final String UPDATE_GATEWAY_NICK_NAME="updateGwNickName";
 }

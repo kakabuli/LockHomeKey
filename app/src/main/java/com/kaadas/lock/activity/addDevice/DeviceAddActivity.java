@@ -20,6 +20,8 @@ import com.kaadas.lock.bean.HomeShowBean;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.mvp.presenter.deviceaddpresenter.DeviceZigBeeDetailPresenter;
 import com.kaadas.lock.mvp.view.deviceaddview.DeviceZigBeeDetailView;
+import com.kaadas.lock.publiclibrary.bean.GatewayInfo;
+import com.kaadas.lock.publiclibrary.bean.GwLockInfo;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.AllBindDevices;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.KeyConstants;
@@ -46,6 +48,7 @@ public class DeviceAddActivity extends BaseActivity<DeviceZigBeeDetailView, Devi
     LinearLayout gatewayLayout;
 
     private boolean flag=false; //判断是否有绑定的网列表
+    private int isAdmin=1; //管理员，非1不是管理员
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,7 +63,18 @@ public class DeviceAddActivity extends BaseActivity<DeviceZigBeeDetailView, Devi
         if (gatewayList!=null){
             if (gatewayList.size()>0){
                 flag=true;
+                if (gatewayList.size()==1){
+                 HomeShowBean homeShowBean= gatewayList.get(0);
+                 GatewayInfo gatewayInfo= (GatewayInfo) homeShowBean.getObject();
+                 if (gatewayInfo.getServerInfo().getIsAdmin()==1){
+                     isAdmin=1;
+                 }else{
+                     isAdmin=0;
+                 }
+                }
+
             }
+
         }
     }
 
@@ -79,6 +93,15 @@ public class DeviceAddActivity extends BaseActivity<DeviceZigBeeDetailView, Devi
             if (gatewayList!=null){
                 if (gatewayList.size()>0){
                     flag=true;
+                    if (gatewayList.size()==1){
+                        HomeShowBean homeShowBean= gatewayList.get(0);
+                        GatewayInfo gatewayInfo= (GatewayInfo) homeShowBean.getObject();
+                        if (gatewayInfo.getServerInfo().getIsAdmin()==1){
+                            isAdmin=1;
+                        }else{
+                            isAdmin=0;
+                        }
+                    }
                 }
             }
         }
@@ -120,7 +143,7 @@ public class DeviceAddActivity extends BaseActivity<DeviceZigBeeDetailView, Devi
                 zigbeeLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (flag==false) {
+                        if (flag==false||isAdmin==0) {
                             alertDialog.dismiss();
                             AlertDialogUtil.getInstance().havaNoEditTwoButtonDialog(DeviceAddActivity.this, getString(R.string.no_usable_gateway), getString(R.string.add_zigbee_device_first_pair_gateway), getString(R.string.cancel), getString(R.string.configuration),"#1F96F7", new AlertDialogUtil.ClickListener() {
                                 @Override
@@ -132,7 +155,6 @@ public class DeviceAddActivity extends BaseActivity<DeviceZigBeeDetailView, Devi
                                     //跳转到配置网关添加的流程
                                     Intent gatewayIntent = new Intent(DeviceAddActivity.this, AddGatewayFirstActivity.class);
                                     startActivity(gatewayIntent);
-
                                 }
                             });
                         }else{
@@ -142,19 +164,11 @@ public class DeviceAddActivity extends BaseActivity<DeviceZigBeeDetailView, Devi
                             startActivity(zigbeeIntent);
                             alertDialog.dismiss();
                         }
-
-
-
                     }
                 });
-
-
-
-
-
                 break;
             case R.id.catEye_layout:
-                if (flag==false) {
+                if (flag==false||isAdmin==0) {
                     AlertDialogUtil.getInstance().havaNoEditTwoButtonDialog(this, getString(R.string.no_usable_gateway), getString(R.string.add_zigbee_device_first_pair_gateway), getString(R.string.cancel), getString(R.string.configuration),"#1F96F7", new AlertDialogUtil.ClickListener() {
                         @Override
                         public void left() {

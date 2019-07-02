@@ -482,9 +482,7 @@ public class OldBluetoothDeviceDetailPresenter<T> extends OldBleLockDetailPresen
                     @Override
                     public void onSuccess(BaseResult result) {
                         MyApplication.getInstance().getAllDevicesByMqtt(true);
-                        if (mViewRef.get() != null) {
-                            mViewRef.get().onDeleteDeviceSuccess();
-                        }
+
                         //todo 清除数据库的数据
                         //清除消息免打扰
                         SPUtils.remove(deviceName + SPUtils.MESSAGE_STATUS);
@@ -500,7 +498,10 @@ public class OldBluetoothDeviceDetailPresenter<T> extends OldBleLockDetailPresen
                         DaoSession daoSession = MyApplication.getInstance().getDaoWriteSession();
                         BleLockServiceInfoDao bleLockServiceInfoDao = daoSession.getBleLockServiceInfoDao();
                         bleLockServiceInfoDao.queryBuilder().where(BleLockServiceInfoDao.Properties.LockName.eq(bleLockInfo.getServerLockInfo().getLockName())).buildDelete().executeDeleteWithoutDetachingEntities();
-
+                        //清除所有数据之后再跳转界面
+                        if (mViewRef.get() != null) {
+                            mViewRef.get().onDeleteDeviceSuccess();
+                        }
                     }
 
                     @Override
