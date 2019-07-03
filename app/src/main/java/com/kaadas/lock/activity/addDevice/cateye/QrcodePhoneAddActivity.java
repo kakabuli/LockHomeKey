@@ -1,12 +1,15 @@
 package com.kaadas.lock.activity.addDevice.cateye;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageView;
 
 import com.kaadas.lock.R;
@@ -50,6 +53,8 @@ public class  QrcodePhoneAddActivity extends BaseActivity<IAddCatEyeView, qrcode
         pwd = getIntent().getStringExtra(KeyConstants.GW_WIFI_PWD);
         gwId = getIntent().getStringExtra(KeyConstants.GW_SN);
 
+
+
         qrcontext= "ssid:"+"\""+ssid+"\""+" "+"password:"+"\""+pwd+"\"";
         Log.e("denganzhi1"," gwid:"+gwId+" ssid:"+ssid+" pwd:"+pwd);
         Log.e("denganzhi1","code:"+qrcontext);
@@ -80,7 +85,13 @@ public class  QrcodePhoneAddActivity extends BaseActivity<IAddCatEyeView, qrcode
     private void createQRCode(String content){
         //生成二维码最好放子线程生成防止阻塞UI，这里只是演示
      //   Bitmap logo = BitmapFactory.decodeResource(getResources(),R.drawable.logo);
-        Bitmap bitmap =  CodeUtils.createQRCode(content,800,null);
+
+        WindowManager wm = (WindowManager) this.getSystemService(Context.WINDOW_SERVICE);
+        DisplayMetrics dm = new DisplayMetrics();
+        wm.getDefaultDisplay().getMetrics(dm);
+        int width = dm.widthPixels;         // 屏幕宽度（像素）
+
+        Bitmap bitmap =  CodeUtils.createQRCode(content,width-180,null);
         //显示二维码
         qrcode_img.setImageBitmap(bitmap);
     }
@@ -97,7 +108,7 @@ public class  QrcodePhoneAddActivity extends BaseActivity<IAddCatEyeView, qrcode
 
     @Override
     public void joinTimeout() {
-        pairCatEyeResult(false);
+      //  pairCatEyeResult(false);
     }
 
     @Override
