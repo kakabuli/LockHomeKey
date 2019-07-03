@@ -62,8 +62,9 @@ public class AddDeviceCatEyeFirstActivity extends BaseAddToApplicationActivity {
                     Toast.makeText(this, getString(R.string.mimi_no_account), Toast.LENGTH_SHORT).show();
                     return;
                 }
-                phoneIntent.putExtra("pwd",pwd);
-                phoneIntent.putExtra("ssid",ssid);
+                phoneIntent.putExtra(KeyConstants.GW_WIFI_SSID,ssid);
+                phoneIntent.putExtra(KeyConstants.GW_WIFI_PWD,pwd);
+                phoneIntent.putExtra(KeyConstants.GW_SN, gwId);
                 startActivity(phoneIntent);
                 break;
         }

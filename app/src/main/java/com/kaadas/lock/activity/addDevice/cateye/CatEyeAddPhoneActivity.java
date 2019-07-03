@@ -15,6 +15,7 @@ public class CatEyeAddPhoneActivity extends AppCompatActivity {
 
     private String pwd;
     private String ssid;
+    private String gwId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,7 +25,7 @@ public class CatEyeAddPhoneActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         ssid = getIntent().getStringExtra(KeyConstants.GW_WIFI_SSID);
         pwd = getIntent().getStringExtra(KeyConstants.GW_WIFI_PWD);
-
+        gwId = getIntent().getStringExtra(KeyConstants.GW_SN);
 
     }
 
@@ -38,6 +39,7 @@ public class CatEyeAddPhoneActivity extends AppCompatActivity {
                 Intent catEyeIntent = new Intent(this, QrcodePhoneAddActivity.class);
                 catEyeIntent.putExtra(KeyConstants.GW_WIFI_SSID, ssid);
                 catEyeIntent.putExtra(KeyConstants.GW_WIFI_PWD, pwd);
+                catEyeIntent.putExtra(KeyConstants.GW_SN, gwId);
                 startActivity(catEyeIntent);
                 break;
         }

@@ -778,8 +778,10 @@
         <activity
             android:name=".activity.addDevice.cateye.TurnOnCatEyeSecondActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".activity.addDevice.cateye.CatEyeAddPhoneActivity" />
-        <activity android:name=".activity.addDevice.cateye.QrcodePhoneAddActivity"></activity>
+        <activity android:name=".activity.addDevice.cateye.CatEyeAddPhoneActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".activity.addDevice.cateye.QrcodePhoneAddActivity"
+            android:screenOrientation="portrait"></activity>
     </application>
 
 </manifest>
