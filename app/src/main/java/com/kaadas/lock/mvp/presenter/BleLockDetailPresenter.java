@@ -84,7 +84,7 @@ public class BleLockDetailPresenter<T> extends BlePresenter<IDeviceDetailView> {
                             return;
                         }
                         byte[] deValue = Rsa.decrypt(bleDataBean.getPayload(), bleLockInfo.getAuthKey());
-                        LogUtils.e("门锁信息的数据是   源数据是  "+Rsa.bytesToHexString(bleDataBean.getOriginalData())+"    解密后的数据是    " + Rsa.bytesToHexString(deValue));
+                        LogUtils.e("门锁信息的数据是   源数据是  " + Rsa.bytesToHexString(bleDataBean.getOriginalData()) + "    解密后的数据是    " + Rsa.bytesToHexString(deValue));
                         byte lockState = deValue[4]; //第五个字节为锁状态信息
                         /**
                          * 门锁状态
@@ -150,8 +150,8 @@ public class BleLockDetailPresenter<T> extends BlePresenter<IDeviceDetailView> {
                         LogUtils.e("锁上时间为    " + lockTime);
                         toDisposable(getDeviceInfoDisposable);
                         if (mViewRef.get() != null) {
-                            LogUtils.e("设置锁状态  反锁状态   " + bleLockInfo.getBackLock()+"    安全模式    "+bleLockInfo.getSafeMode()+"   布防模式   "+bleLockInfo.getArmMode());
-                            if (state2 == 0 && bleLockInfo.getSupportBackLock() == 1 ) {  //等于0时是反锁状态
+                            LogUtils.e("设置锁状态  反锁状态   " + bleLockInfo.getBackLock() + "    安全模式    " + bleLockInfo.getSafeMode() + "   布防模式   " + bleLockInfo.getArmMode());
+                            if (state2 == 0 && bleLockInfo.getSupportBackLock() == 1) {  //等于0时是反锁状态
                                 mViewRef.get().onBackLock();
                             }
                             if (state5 == 1) {//安全模式
@@ -221,8 +221,6 @@ public class BleLockDetailPresenter<T> extends BlePresenter<IDeviceDetailView> {
                         });
         compositeDisposable.add(electricDisposable);
     }
-
-
 
 
     /**
@@ -317,8 +315,21 @@ public class BleLockDetailPresenter<T> extends BlePresenter<IDeviceDetailView> {
                     @Override
                     public void onSuccess(BaseResult result) {
                         if ("200".equals(result.getCode())) {
+
+                            //S8不管是否是管理员模式  直接让输入密码
+                            localPwd = (String) SPUtils.get(KeyConstants.SAVE_PWD_HEARD + bleLockInfo.getServerLockInfo().getMacLock(), ""); //Key
+                            if (bleLockInfo.getServerLockInfo().getModel().startsWith("S8")) {
+                                if (TextUtils.isEmpty(localPwd)) { //如果用户密码为空
+                                    if (mViewRef != null && mViewRef.get() != null) {
+                                        mViewRef.get().inputPwd();
+                                    }
+                                } else {
+                                    realOpenLock(localPwd, false);
+                                }
+                                return;
+                            }
+
                             if ("1".equals(bleLockInfo.getServerLockInfo().getIs_admin())) { //如果是管理员  查看本地密码
-                                localPwd = (String) SPUtils.get(KeyConstants.SAVE_PWD_HEARD + bleLockInfo.getServerLockInfo().getMacLock(), "");  // //Key
                                 if (TextUtils.isEmpty(localPwd)) { //如果用户密码为空
                                     if (mViewRef.get() != null) {
                                         mViewRef.get().inputPwd();
@@ -608,8 +619,10 @@ public class BleLockDetailPresenter<T> extends BlePresenter<IDeviceDetailView> {
                 });
         compositeDisposable.add(deviceStateChangeDisposable);
     }
+
     private List<OpenLockRecord> serverRecords = new ArrayList<>();
     private Disposable serverDisposable;
+
     //获取全部的开锁记录
 /*    public void getOpenRecordFromServer(int pagenum,BleLockInfo bleLockInfo) {
         if (pagenum == 1) {  //如果是获取第一页的数据，那么清楚所有的开锁记录
@@ -677,7 +690,6 @@ public class BleLockDetailPresenter<T> extends BlePresenter<IDeviceDetailView> {
 
         handler.removeCallbacksAndMessages(null);
     }
-
 
 
 }

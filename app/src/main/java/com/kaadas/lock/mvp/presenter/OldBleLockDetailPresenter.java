@@ -322,6 +322,19 @@ public class OldBleLockDetailPresenter<T> extends BlePresenter<IOldBluetoothDevi
                     @Override
                     public void onSuccess(BaseResult result) {
                         if ("200".equals(result.getCode())) {
+                            //S8不管是否是管理员模式  直接让输入密码
+                            localPwd = (String) SPUtils.get(KeyConstants.SAVE_PWD_HEARD + bleLockInfo.getServerLockInfo().getMacLock(), ""); //Key
+                            if (bleLockInfo.getServerLockInfo().getModel().startsWith("S8")) {
+                                if (TextUtils.isEmpty(localPwd)) { //如果用户密码为空
+                                    if (mViewRef != null && mViewRef.get() != null) {
+                                        mViewRef.get().inputPwd();
+                                    }
+                                } else {
+                                    realOpenLock(localPwd, false);
+                                }
+                                return;
+                            }
+
                             //读取到蓝牙模块信号，且蓝牙型号是 rgbt1761或者Rgbt1761D  不用带密码开门  使用APP开门指令
                             if (!TextUtils.isEmpty(bleLockInfo.getModeNumber()) &&
                                     ("Rgbt1761".equalsIgnoreCase(bleLockInfo.getModeNumber()) ||
