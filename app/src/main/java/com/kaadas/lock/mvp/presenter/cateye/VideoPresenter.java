@@ -595,7 +595,6 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
         listenerLockClose(deviceId);
         if (mqttService != null) {
             openLockDisposable = mqttService.mqttPublish(MqttConstant.getCallTopic(MyApplication.getInstance().getUid()), MqttCommandFactory.openLock(gatewayId, deviceId, "unlock", "pin", pwd))
-                    .timeout(10 * 1000, TimeUnit.MILLISECONDS)
                     .filter(new Predicate<MqttData>() {
                         @Override
                         public boolean test(MqttData mqttData) throws Exception {
@@ -605,6 +604,7 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
                             return false;
                         }
                     })
+                    .timeout(20 * 1000, TimeUnit.MILLISECONDS)
                     .compose(RxjavaHelper.observeOnMainThread())
                     .subscribe(new Consumer<MqttData>() {
                         @Override

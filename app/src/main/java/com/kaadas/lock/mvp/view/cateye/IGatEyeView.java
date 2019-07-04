@@ -34,4 +34,13 @@ public interface IGatEyeView extends IBaseView {
     //设备删除异常
     void deleteDeviceThrowable(Throwable throwable);
 
+    //删除分享锁成功
+    void deleteShareDeviceSuccess();
+
+    //删除分享锁失败
+    void deleteShareDeviceFail();
+
+    //删除分享锁异常
+    void deleteShareDeviceThrowable();
+
 }

@@ -57,4 +57,12 @@ public interface GatewayLockDetailView  extends IBaseView {
     //获取网络变化
     void networkChangeSuccess();
 
+    //删除分享锁成功
+    void deleteShareDeviceSuccess();
+
+    //删除分享锁失败
+    void deleteShareDeviceFail();
+
+    //删除分享锁异常
+    void deleteShareDeviceThrowable();
 }

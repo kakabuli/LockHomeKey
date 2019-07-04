@@ -331,7 +331,23 @@ public class MqttService extends Service {
 
                     } else {
 //                        ToastUtil.getInstance().showShort(R.string.mqtt_connection_fail);
+
+                        if (exception.toString().equals("无权连接 (5)")) {
+                            // TODO: 2019/4/1  该用户在其他手机登录(清除所有数据）---暂时未处理
+                            if (mqttClient != null) {
+                                mqttDisconnect();
+                            }
+                            return;
+                        }
+                        if ("错误的用户名或密码 (4)".equals(exception.toString())) {
+                            LogUtils.e("mqtt的用户名或密码错误");
+                            if (mqttClient!=null){
+                                mqttDisconnect();
+                            }
+                            return;
+                        }
                         connectStateObservable.onNext(false);
+
                     }
 
                 }
