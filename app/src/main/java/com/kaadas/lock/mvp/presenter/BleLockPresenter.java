@@ -308,8 +308,18 @@ public class BleLockPresenter<T> extends MyOpenLockRecordPresenter<IBleLockView>
                     @Override
                     public void onSuccess(BaseResult result) {
                         if ("200".equals(result.getCode())) {
+                            localPwd = (String) SPUtils.get(KeyConstants.SAVE_PWD_HEARD + bleLockInfo.getServerLockInfo().getMacLock(), ""); //Key
+                            if (bleLockInfo.getServerLockInfo().getModel().startsWith("S8")) {
+                                if (TextUtils.isEmpty(localPwd)) { //如果用户密码为空
+                                    if (mViewRef != null && mViewRef.get() != null) {
+                                        mViewRef.get().inputPwd();
+                                    }
+                                } else {
+                                    realOpenLock(localPwd, false);
+                                }
+                                return;
+                            }
                             if ("1".equals(bleLockInfo.getServerLockInfo().getIs_admin())) { //如果是管理员  查看本地密码
-                                localPwd = (String) SPUtils.get(KeyConstants.SAVE_PWD_HEARD + bleLockInfo.getServerLockInfo().getMacLock(), ""); //Key
                                 if (TextUtils.isEmpty(localPwd)) { //如果用户密码为空
                                     if (mViewRef != null && mViewRef.get() != null) {
                                         mViewRef.get().inputPwd();
@@ -318,6 +328,7 @@ public class BleLockPresenter<T> extends MyOpenLockRecordPresenter<IBleLockView>
                                     realOpenLock(localPwd, false);
                                 }
                             } else {  //是被授权用户  直接开锁
+                                //授权用户，如果是S8设备
                                 realOpenLock("", true);
                             }
                         }
