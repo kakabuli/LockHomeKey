@@ -25,11 +25,13 @@ import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.mvp.presenter.cateye.CatEyeMorePresenter;
 import com.kaadas.lock.mvp.view.cateye.IGatEyeView;
 import com.kaadas.lock.publiclibrary.bean.CateEyeInfo;
+import com.kaadas.lock.publiclibrary.bean.GatewayInfo;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.CatEyeInfoBeanResult;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.EditTextWatcher;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LoadingDialog;
+import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.StringUtil;
 import com.kaadas.lock.utils.ToastUtil;
 import com.kaadas.lock.utils.greenDao.bean.CateEyeInfoBase;
@@ -102,6 +104,8 @@ public class CateyeMoreActivity extends BaseActivity<IGatEyeView, CatEyeMorePres
 
     private String pirwander="";//pir徘徊监测
     CateEyeInfoBase cateEyeInfoBase=null;
+    private int isAdmin;
+    private String adminUid;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -154,6 +158,7 @@ public class CateyeMoreActivity extends BaseActivity<IGatEyeView, CatEyeMorePres
         loadingDialog = LoadingDialog.getInstance(this);
         Intent intent = getIntent();
         cateEyeInfo = (CateEyeInfo) intent.getSerializableExtra(KeyConstants.CATE_INFO);
+        isAdmin=intent.getIntExtra(KeyConstants.IS_ADMIN,1);
         if (!TextUtils.isEmpty(cateEyeInfo.getServerInfo().getNickName())){
             deviceName = cateEyeInfo.getServerInfo().getNickName();
         }else{
@@ -161,6 +166,10 @@ public class CateyeMoreActivity extends BaseActivity<IGatEyeView, CatEyeMorePres
         }
         gatewayId = cateEyeInfo.getGwID();
         deviceId = cateEyeInfo.getServerInfo().getDeviceId();
+        GatewayInfo gatewayInfo = MyApplication.getInstance().getGatewayById(gatewayId);
+        if (gatewayInfo != null) {
+            adminUid = gatewayInfo.getServerInfo().getAdminuid();
+        }
         if (!TextUtils.isEmpty(gatewayId) && !TextUtils.isEmpty(deviceId)) {
             mPresenter.getCatEyeInfo(gatewayId, deviceId, MyApplication.getInstance().getUid());
             loadingDialog.show(getString(R.string.get_cateye_info_wait));
@@ -241,7 +250,14 @@ public class CateyeMoreActivity extends BaseActivity<IGatEyeView, CatEyeMorePres
                     public void right() {
                       //  if (gatewayId != null && deviceId != null) {
                         if (!TextUtils.isEmpty(gatewayId) &&  !TextUtils.isEmpty(deviceId)) {
-                            mPresenter.deleteCatEye(gatewayId, deviceId, "net");
+                            if (isAdmin==1){
+                                mPresenter.deleteCatEye(gatewayId, deviceId, "net");
+                            }else{
+                                String phone= (String) SPUtils.get(SPUtils.PHONEN,"");
+                                if (!TextUtils.isEmpty(phone)&&!TextUtils.isEmpty(adminUid)){
+                                    mPresenter.deleteShareDevice(2,gatewayId,deviceId,adminUid,"86"+phone,"",0);
+                                }
+                            }
                             deleteAlertDialog=AlertDialogUtil.getInstance().noButtonDialog(context,getString(R.string.delete_be_being));
                             deleteAlertDialog.setCancelable(false);
                         }
@@ -514,6 +530,34 @@ public class CateyeMoreActivity extends BaseActivity<IGatEyeView, CatEyeMorePres
 
     @Override
     public void deleteDeviceThrowable(Throwable throwable) {
+        if (deleteAlertDialog!=null){
+            deleteAlertDialog.dismiss();
+        }
+        ToastUtil.getInstance().showShort(getString(R.string.delete_fialed));
+    }
+
+    @Override
+    public void deleteShareDeviceSuccess() {
+        String uid=MyApplication.getInstance().getUid();
+        daoSession.getCatEyeServiceInfoDao().queryBuilder().where(CatEyeServiceInfoDao.Properties.Uid.eq(uid)).buildDelete().executeDeleteWithoutDetachingEntities();
+        if (deleteAlertDialog!=null){
+            deleteAlertDialog.dismiss();
+        }
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    @Override
+    public void deleteShareDeviceFail() {
+        if (deleteAlertDialog!=null){
+            deleteAlertDialog.dismiss();
+        }
+        ToastUtil.getInstance().showShort(getString(R.string.delete_fialed));
+    }
+
+    @Override
+    public void deleteShareDeviceThrowable() {
         if (deleteAlertDialog!=null){
             deleteAlertDialog.dismiss();
         }

@@ -36,6 +36,14 @@
                 android:ellipsize="end"
                 android:layout_marginRight="@dimen/dp_30"
                 android:layout_marginLeft="@dimen/dp_50"
+                />
+            <ImageView
+                android:id="@+id/delete_share"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/dp_17"
+                android:src="@mipmap/delete_share_lock"
+                android:layout_alignParentRight="true"
 
                 />
         </RelativeLayout>

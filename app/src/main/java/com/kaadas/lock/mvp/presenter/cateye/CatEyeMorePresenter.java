@@ -12,6 +12,7 @@ import com.kaadas.lock.publiclibrary.mqtt.publishbean.CatEyeInfoBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.GetSoundVolume;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetPirEnableBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.CatEyeInfoBeanResult;
+import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.DeviceShareResultBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.UpdateDevNickNameResult;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttConstant;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttData;
@@ -33,7 +34,7 @@ public class CatEyeMorePresenter <T> extends BasePresenter<IGatEyeView> {
     private Disposable getCatEyeInfoDisposable;
     private Disposable setPirEnableDisposable;
     private Disposable deleteCatEyeDisposable;
-
+    private Disposable deleteShareDisposable;
 
     //修改昵称
     public void updateDeviceName(String devuuid, String deviceId, String nickName) {
@@ -183,6 +184,51 @@ public class CatEyeMorePresenter <T> extends BasePresenter<IGatEyeView> {
                     });
 
             compositeDisposable.add(deleteCatEyeDisposable);
+        }
+    }
+
+    //取消授权网关锁
+    public void  deleteShareDevice(int type,String gatewayId,String deviceId,String uid,String shareUser,String userName,int shareFlag){
+        if (mqttService!=null){
+            toDisposable(deleteShareDisposable);
+            deleteShareDisposable= mqttService.mqttPublish(MqttConstant.PUBLISH_TO_SERVER, MqttCommandFactory.shareDevice(type,gatewayId,deviceId,uid,shareUser,userName,shareFlag))
+                    .filter(new Predicate<MqttData>() {
+                        @Override
+                        public boolean test(MqttData mqttData) throws Exception {
+                            if (mqttData.getFunc().equals(MqttConstant.SHARE_DEVICE)){
+                                return true;
+                            }
+                            return false;
+                        }
+                    })
+                    .timeout(10*1000, TimeUnit.MILLISECONDS)
+                    .compose(RxjavaHelper.observeOnMainThread())
+                    .subscribe(new Consumer<MqttData>() {
+                        @Override
+                        public void accept(MqttData mqttData) throws Exception {
+                            toDisposable(deleteShareDisposable);
+                            DeviceShareResultBean shareResultBean=new Gson().fromJson(mqttData.getPayload(),DeviceShareResultBean.class);
+                            if ("200".equals(shareResultBean.getCode())){
+                                if (mViewRef!=null&&mViewRef.get()!=null&&gatewayId.equals(shareResultBean.getGwId())&&deviceId.equals(shareResultBean.getDeviceId())){
+                                    mViewRef.get().deleteShareDeviceSuccess();
+                                    MyApplication.getInstance().getAllDevicesByMqtt(true);
+                                }
+                            }else{
+                                if (mViewRef!=null&&mViewRef.get()!=null){
+                                    mViewRef.get().deleteShareDeviceFail();
+                                }
+                            }
+
+                        }
+                    }, new Consumer<Throwable>() {
+                        @Override
+                        public void accept(Throwable throwable) throws Exception {
+                            if (mViewRef!=null&&mViewRef.get()!=null){
+                                mViewRef.get().deleteShareDeviceThrowable();
+                            }
+                        }
+                    });
+            compositeDisposable.add(deleteShareDisposable);
         }
     }
 }

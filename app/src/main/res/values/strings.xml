@@ -1096,8 +1096,8 @@
     <string name="lock_second">触摸按键区唤醒面板\n先按“*”两次，再输入管理密码，按“#”确认\n语音提示：“已进入管理模式”</string>
     <string name="zigbee_lock_third">根据语音提示，按键 【4】进入拓展功能</string>
     <string name="how_to_reset">如何重置</string>
-    <string name="how_to_reset_steps">请使用针插入重置孔3S左右,\n直到黄灯闪烁后松开，即重置成功</string>
-    <string name="scan_gatewy_behind_qrcode">请使用针插入重置孔5~10S</string>
+    <string name="how_to_reset_steps">请使用针插入重置孔5~10S</string>
+    <string name="scan_gatewy_behind_qrcode">扫描网关后面二维码</string>
     <string name="how_to_add_cateye_first">打开猫眼后盖二维码进行扫描</string>
     <string name="second_steps_pair_gateway">第二步</string>
     <string name="your_cayeye_pair_success">您的猫眼套装已联网成功</string>
