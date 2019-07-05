@@ -12,6 +12,8 @@ import com.kaadas.lock.publiclibrary.mqtt.util.MqttConstant;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttData;
 import com.kaadas.lock.utils.LogUtils;
 
+import org.linphone.mediastream.Log;
+
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Predicate;
@@ -62,10 +64,14 @@ public class qrcodePhoneAddPresenter  <T> extends BasePresenter<IAddCatEyeView> 
                             DeviceOnLineBean deviceOnLineBean = new Gson().fromJson(mqttData.getPayload(), DeviceOnLineBean.class);
                             LogUtils.e("猫眼上线:"+mqttData.getPayload());
                             LogUtils.e("本地信息为   " + "   " + deviceMac + "   " + deviceSn + "    " + gwId);
+                            Log.e("denganzhi1","猫眼上线:"+mqttData.getPayload());
+                            Log.e("本地信息为   " + "   " + deviceMac + "   " + deviceSn + "    " + gwId);
                             if ("online".equals(deviceOnLineBean.getEventparams().getEvent_str())) {
                                 //设备信息匹配成功  且是上线上报
                                 LogUtils.e("添加猫眼成功");
+                                Log.e("denganzhi1","猫眼添加成功");
                                 if (mViewRef.get()!=null){
+                                    Log.e("denganzhi1","cateEyeJoinSuccess");
                                     mViewRef.get().cateEyeJoinSuccess(deviceOnLineBean);
                                 }
                                 MyApplication.getInstance().getAllDevicesByMqtt(true);
