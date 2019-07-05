@@ -113,7 +113,6 @@
              android:layout_marginLeft="@dimen/dp_10"
              android:textColor="#FFF"
              android:textSize="@dimen/sp_15"
-             android:clickable="true"
              />
        </LinearLayout>
 
@@ -128,7 +127,6 @@
             android:textColor="#1F96F7"
             android:layout_marginTop="18dp"
             android:layout_gravity="center_horizontal"
-            android:clickable="true"
             />
 
 

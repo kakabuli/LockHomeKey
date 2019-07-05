@@ -89,7 +89,7 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
         listenerCallStatus();
     }
 
-    public static  boolean isConnectedEye=false;
+    public  boolean isConnectedEye=false;
     public void listenerCallStatus() {
         LinphoneHelper.addAutoAcceptCallBack(new PhoneAutoAccept() {
             @Override
@@ -188,6 +188,7 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
                 }
                 stopCountUp();
                 MemeManager.getInstance().videoActivityDisconnectMeme();
+                isConnectedEye=false;
             }
 
             @Override
