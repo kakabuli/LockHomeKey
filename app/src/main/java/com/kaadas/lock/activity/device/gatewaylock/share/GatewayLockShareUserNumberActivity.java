@@ -129,7 +129,7 @@ public class GatewayLockShareUserNumberActivity extends BaseActivity<IGatewayDel
 
                         @Override
                         public void right() {
-                            mPresenter.deleteShareDevice(2,gatewayId,deviceId,uid,userName,data,2);
+                            mPresenter.deleteShareDevice(2,gatewayId,deviceId,uid,userName,data,0);
                             deleteDialog= AlertDialogUtil.getInstance().noButtonDialog(context,getString(R.string.delete_be_being));
                             deleteDialog.setCancelable(false);
                         }

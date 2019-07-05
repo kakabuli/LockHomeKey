@@ -257,7 +257,7 @@
     <string name="rests">其他</string>
     <string name="zigbee_gateway">ZigBee&#160;&#160;&#160;&#160;网关</string>
     <string name="zigbee_bind_gateway">绑定网关</string>
-    <string name="select_add_bind_gateway">选择添加设备将要绑定的网卡</string>
+    <string name="select_add_bind_gateway">选择添加设备将要绑定的网关</string>
     <string name="admin">管理员：</string>
     <string name="gateway_id">ID：</string>
     <string name="online">在线</string>

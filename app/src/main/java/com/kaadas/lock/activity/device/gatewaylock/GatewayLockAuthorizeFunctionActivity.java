@@ -333,7 +333,12 @@ public class GatewayLockAuthorizeFunctionActivity extends BaseActivity<GatewayLo
                     public void right() {
                         if (gatewayId != null && deviceId != null) {
                             if (!TextUtils.isEmpty(phone)){
-                                mPresenter.deleteShareDevice(2,gatewayId,deviceId,adminUid,"86"+phone,"",0);
+                                if (StringUtil.isNumeric(phone)){
+                                    mPresenter.deleteShareDevice(2,gatewayId,deviceId,adminUid,"86"+phone,"",0);
+                                }else{
+                                    mPresenter.deleteShareDevice(2,gatewayId,deviceId,adminUid,phone,"",0);
+                                }
+
                             }
                             deleteDialog=AlertDialogUtil.getInstance().noButtonDialog(context,getString(R.string.delete_be_being));
                             deleteDialog.setCancelable(false);
