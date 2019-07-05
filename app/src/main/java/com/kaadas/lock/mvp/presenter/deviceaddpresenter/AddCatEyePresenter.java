@@ -148,7 +148,10 @@ public class AddCatEyePresenter<T> extends BasePresenter<IAddCatEyeView> {
                                 }
                                 MyApplication.getInstance().getAllDevicesByMqtt(true);
                                 toDisposable(compositeDisposable);
-                            }else if(deviceOnLineBean.getEventparams().getMacaddr().contains(":")){
+                            }else if(deviceOnLineBean!=null
+                             && deviceOnLineBean.getEventparams()!=null
+                             && deviceOnLineBean.getEventparams().getMacaddr()!=null &&
+                                    deviceOnLineBean.getEventparams().getMacaddr().contains(":")){
                                 String newMac= deviceOnLineBean.getEventparams().getMacaddr().replace(":","");
                                 if(deviceMac.equalsIgnoreCase(newMac) &&  "online".equals(deviceOnLineBean.getEventparams().getEvent_str())){
                                     LogUtils.e("添加猫眼成功2");
