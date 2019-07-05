@@ -151,10 +151,18 @@ public class CatEyePresenter<T> extends BasePresenter<ICatEyeView> {
                     })
                     .compose(RxjavaHelper.observeOnMainThread())
                     .subscribe(new Consumer<MqttData>() {
+
+
+
                         @Override
                         public void accept(MqttData mqttData) throws Exception {
                             JSONObject jsonObject = new JSONObject(mqttData.getPayload());
-                            String devtype = jsonObject.getString("devtype");
+                            String devtype = null;
+                            try {
+                                devtype = jsonObject.getString("devtype");
+                            }catch (Exception e){
+                                LogUtils.e("    " + e.getMessage());
+                            }
                             if (TextUtils.isEmpty(devtype)) { //devtype为空   无法处理数据
                                 return;
                             }

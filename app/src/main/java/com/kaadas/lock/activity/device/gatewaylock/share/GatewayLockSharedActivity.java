@@ -218,7 +218,7 @@ public class GatewayLockSharedActivity extends BaseActivity<IGatewaySharedView, 
                             LogUtils.e("咪咪网为空需要重新注册");
                             String deviceSN = gatewayInfo.getServerInfo().getDeviceSN();
                             mPresenter.bindMimi(deviceSN, deviceSN);
-                            ToastUtil.getInstance().showShort(getString(R.string.add_common_user_success));
+                            ToastUtil.getInstance().showShort(getString(R.string.add_common_user_fail));
                         }
                     }
 

@@ -148,7 +148,7 @@ public class OtaMutiProgress extends View {
     private void DrawProgerss() {
         //先画背景
         Paint bgPaint = new Paint();
-        bgPaint.setColor(Color.parseColor("#FFFFFF"));
+        bgPaint.setColor(Color.parseColor("#00FFFFFF"));
         mCanvas.drawRect(0, 0, mWidth, mHeight, bgPaint);
         //先画线段，线段的高度为nodeRadius/2
         mPaint.setStrokeWidth(nodeRadius / 2);

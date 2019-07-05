@@ -745,7 +745,9 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
     public void detachView() {
         super.detachView();
         LinphoneHelper.deleteUser();
-        bleService.release();
+        if (bleService!=null){
+            bleService.release();
+        }
         handler.removeCallbacksAndMessages(null);
     }
 
