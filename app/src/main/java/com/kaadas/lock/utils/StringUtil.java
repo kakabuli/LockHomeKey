@@ -337,6 +337,9 @@ public class StringUtil {
      * */
     public static String getSubstringFive(String str){
         String data="";
+        if (TextUtils.isEmpty(str)){
+            return data;
+        }
         if (str.length()>5){
            data= str.substring(0,5);
         }else {
