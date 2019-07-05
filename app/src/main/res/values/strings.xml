@@ -1103,7 +1103,7 @@
     <string name="your_cayeye_pair_success">您的猫眼套装已联网成功</string>
     <string name="add_common_user_fail">添加普通用户失败</string>
     <string name="no_linkage_device">暂无联动设备！</string>
-    <string name="this_operation_does_not_support_unlocking">本操作不支持开锁，请设置临时密码开锁</string>
+    <string name="this_operation_does_not_support_unlocking">为确保安全，不支持开锁</string>
     <string name="add_temporary_pwd">添加临时密码</string>
     <string name="get_share_user_fail">查找分享用户失败</string>
     <string name="video_cateye_noonline">猫眼开小差啦，请检查网络！</string>

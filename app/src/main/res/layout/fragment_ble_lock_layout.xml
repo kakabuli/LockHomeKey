@@ -67,7 +67,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginTop="@dimen/dp_111"
+                    android:layout_marginTop="@dimen/dp_105"
                     android:textSize="@dimen/sp_11" />
             </RelativeLayout>
 
