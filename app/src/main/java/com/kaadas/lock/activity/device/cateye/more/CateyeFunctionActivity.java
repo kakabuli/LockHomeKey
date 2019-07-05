@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -29,6 +30,9 @@ import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.NetUtil;
+import com.kaadas.lock.utils.ftp.GeTui;
+
+
 
 import java.util.List;
 
@@ -195,8 +199,10 @@ public class CateyeFunctionActivity extends BaseActivity<ICatEyeFunctionView, Ca
                 startActivity(intent);
                 break;
             case R.id.rl_icon:
+                Log.e(GeTui.VideoLog,"CatEyeFunction......"+VideoVActivity.isRunning);
                 if (VideoVActivity.isRunning) {
                     Toast.makeText(CateyeFunctionActivity.this, getString(R.string.video_destory_time), Toast.LENGTH_SHORT).show();
+                    return;
                 } else {
                     intent = new Intent(this, VideoVActivity.class);
                     intent.putExtra(KeyConstants.IS_CALL_IN, false);

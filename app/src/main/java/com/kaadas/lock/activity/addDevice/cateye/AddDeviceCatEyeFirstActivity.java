@@ -15,7 +15,10 @@ import com.kaadas.lock.activity.addDevice.DeviceBindGatewayListActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.ftp.GeTui;
 import com.king.zxing.Intents;
+
+import org.linphone.mediastream.Log;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

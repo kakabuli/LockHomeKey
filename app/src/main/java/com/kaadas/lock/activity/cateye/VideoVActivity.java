@@ -427,7 +427,7 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
                         LogUtils.e(Tag,"当前状态是   isOpening    " + isOpening + "   isClosing   " + isClosing);
 
                         if(!mPresenter.isConnectedEye){
-                            Toast.makeText(VideoVActivity.this,R.string.cateye_call_no,Toast.LENGTH_LONG).show();
+                            Toast.makeText(VideoVActivity.this,R.string.cateye_call_no,Toast.LENGTH_SHORT).show();
                             return;
                         }
 

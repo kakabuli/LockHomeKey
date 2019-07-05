@@ -1134,5 +1134,6 @@
     <string name="qrcode_msg_info">(将APP二维码对准猫眼监控头，根据提示完成操作)</string>
     <string name="qrcode_keep_info">保持扫描距离5-10cm</string>
     <string name="touch_your_light">轻触照亮</string>
+    <string name="finger">指纹</string>
     <string name="check_wifi_change">请切换手机网络为所选网关WiFi</string>
 </resources>
