@@ -125,7 +125,7 @@ public class AddDeviceCatEyeSaveNickNameActivity  extends BaseActivity<AddZigbee
             recycler.setAdapter(mAdapter);
             mAdapter.setOnItemClickListener(this);
         }
-        lock.setImageResource(R.mipmap.add_cat_eye_pic);
+        lock.setImageResource(R.mipmap.add_cateye_success_small);
 
     }
 
