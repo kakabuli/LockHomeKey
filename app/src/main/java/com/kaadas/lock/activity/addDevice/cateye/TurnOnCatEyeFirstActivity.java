@@ -21,6 +21,7 @@ public class TurnOnCatEyeFirstActivity extends AppCompatActivity {
     private String gwId;
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

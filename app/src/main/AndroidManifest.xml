@@ -774,7 +774,8 @@
             android:theme="@style/gatewayDialog" />
         <activity
             android:name=".activity.addDevice.cateye.TurnOnCatEyeFirstActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:launchMode="singleTask"/>
         <activity
             android:name=".activity.addDevice.cateye.TurnOnCatEyeSecondActivity"
             android:screenOrientation="portrait" />
