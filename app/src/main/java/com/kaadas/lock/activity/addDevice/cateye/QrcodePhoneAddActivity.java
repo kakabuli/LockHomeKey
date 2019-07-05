@@ -126,6 +126,8 @@ public class  QrcodePhoneAddActivity extends BaseActivity<IAddCatEyeView, qrcode
     //猫眼配置结果
     private void pairCatEyeResult(Boolean flag) {
 
+        Log.e("denganzhi1","QrcodePhoneAddAcrivity....flag:"+flag+ " gwid:"+gatewayId + " device:"+deviceId);
+
         if (flag) {
             if (!TextUtils.isEmpty(gatewayId)&&!TextUtils.isEmpty(deviceId)){
                 Intent successIntent = new Intent(this, AddDeviceCatEyeSuccessActivity.class);

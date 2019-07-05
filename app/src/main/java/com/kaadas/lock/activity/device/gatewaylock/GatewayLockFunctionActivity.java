@@ -630,6 +630,21 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
     }
 
     @Override
+    public void deleteShareDeviceSuccess() {
+
+    }
+
+    @Override
+    public void deleteShareDeviceFail() {
+
+    }
+
+    @Override
+    public void deleteShareDeviceThrowable() {
+
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         if (getIntent()!=null){

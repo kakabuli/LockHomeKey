@@ -183,6 +183,7 @@ public class CateyeAuthorizationFunctionActivity extends BaseActivity<ICatEyeFun
             case R.id.ll_more:
                 intent = new Intent(this, CateyeMoreActivity.class);
                 intent.putExtra(KeyConstants.CATE_INFO, cateEyeInfo);
+                intent.putExtra(KeyConstants.IS_ADMIN,0);
                 startActivityForResult(intent, KeyConstants.UPDATE_DEVICE_NAME_REQUEST_CODE);
                 break;
             case R.id.rl_icon:

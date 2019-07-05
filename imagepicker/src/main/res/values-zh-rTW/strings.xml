@@ -15,7 +15,7 @@
     <string name="sure_delete_this_photo">Would you like to delete this photo</string>
     <string name="prompt">prompt</string>
     <string name="sure">sure</string>
-    <string name="cancel">cancel</string>
+    <!--<string name="cancel">cancel</string>-->
 
 
     <string name="photo">照片</string>

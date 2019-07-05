@@ -462,7 +462,7 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
         }
     }
 
-    boolean isFront =false;
+    static  boolean isFront =false;
     public void isFontShow(){
         isFront=true;
     }
@@ -507,9 +507,9 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                     //收到来电通知
                     LogUtils.e("Linphone  收到来电     ");
                     Log.e(GeTui.VideoLog, "  Linphone  收到来电:"+isFront);
-                    if(VideoVActivity.isRunning && isFront){
-                          Toast.makeText(mContext,mContext.getString(R.string.video_desotry),Toast.LENGTH_LONG).show();
-                    }
+//                    if(VideoVActivity.isRunning && isFront){
+//                          Toast.makeText(mContext,mContext.getString(R.string.video_desotry),Toast.LENGTH_LONG).show();
+//                    }
                     if (VideoVActivity.isRunning) {
                         LogUtils.e("Linphone  收到来电   VideoActivity已经运行  不出来  ");
                         return;
