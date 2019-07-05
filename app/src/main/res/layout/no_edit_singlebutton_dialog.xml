@@ -16,6 +16,7 @@
         android:textColor="#101010"
         android:textSize="@dimen/sp_14"
         android:gravity="center"
+        android:textStyle="bold"
         />
 
     <TextView

@@ -1,0 +1,27 @@
+@startuml
+header Device Power
+
+title CatEyePower & ZigbeeLockPower
+DeviceFragment->Database : Database getPower
+Database->DeviceFragment : Show Power
+DeviceFragment->MqttService: Publish Device Power
+note left of DeviceFragment: 每次下拉刷新页面重新请求电量
+
+MqttService -> Server : Func(getPower)
+
+Server -> Gateway : Request power command passthrough
+
+Gateway->Server :Success/Fail/overtime
+
+Server->MqttService :Success/Fail/OverTime
+
+MqttService->DeviceFragment : Success
+DeviceFragment->DeviceFragment: Show Power
+DeviceFragment->Database : Database setPower
+
+MqttService->DeviceFragment:Fail/OverTime
+DeviceFragment->DeviceFragment: Hint
+
+
+
+@enduml

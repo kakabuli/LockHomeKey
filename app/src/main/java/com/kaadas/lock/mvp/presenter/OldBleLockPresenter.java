@@ -176,8 +176,19 @@ public class OldBleLockPresenter<T> extends MyOldOpenLockRecordPresenter<IOldBle
                                 realOpenLock("", true);
                                 return;
                             }
+                            //S8不管是否是管理员模式  直接让输入密码
+                            localPwd = (String) SPUtils.get(KeyConstants.SAVE_PWD_HEARD + bleLockInfo.getServerLockInfo().getMacLock(), ""); //Key
+                            if (bleLockInfo.getServerLockInfo().getModel().startsWith("S8")) {
+                                if (TextUtils.isEmpty(localPwd)) { //如果用户密码为空
+                                    if (mViewRef != null && mViewRef.get() != null) {
+                                        mViewRef.get().inputPwd();
+                                    }
+                                } else {
+                                    realOpenLock(localPwd, false);
+                                }
+                                return;
+                            }
                             if ("1".equals(bleLockInfo.getServerLockInfo().getIs_admin())) { //如果是管理员  查看本地密码
-                                localPwd = (String) SPUtils.get(KeyConstants.SAVE_PWD_HEARD + bleLockInfo.getServerLockInfo().getMacLock(), ""); //Key
                                 if (TextUtils.isEmpty(localPwd)) { //如果用户密码为空
                                     if (mViewRef != null && mViewRef.get() != null) {
                                         mViewRef.get().inputPwd();

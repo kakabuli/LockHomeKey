@@ -89,18 +89,17 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_140"
         >
+
         <Button
             android:id="@+id/button_next"
             android:layout_width="@dimen/dp_200"
             android:layout_height="@dimen/dp_44"
-            android:background="@drawable/button_next"
             android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/go_and_buy"
             android:text="@string/add_next"
-            android:textColor="#1F96F7"
-            android:textSize="@dimen/sp_15"
-            android:layout_marginBottom="@dimen/dp_48"
-            android:layout_alignParentBottom="true"
-            />
+            android:textColor="#FFF"
+            android:textSize="@dimen/sp_15" />
 
     </RelativeLayout>
 </LinearLayout>

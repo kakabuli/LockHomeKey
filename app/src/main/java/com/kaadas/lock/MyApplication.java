@@ -352,11 +352,12 @@ public class MyApplication extends Application {
             SPUtils.put(SPUtils.PHONEN, phone);
         }
         //清除内存中缓存的数据
-        bleService.release();
-        bleService.removeBleLockInfo();
+        if (bleService!=null){
+            bleService.release();
+            bleService.removeBleLockInfo();
+        }
         homeShowDevices.clear();
         MyApplication.getInstance().initTokenAndUid();
-
         //退出linphone
         LinphoneHelper.deleteUser();
         //退出meme网

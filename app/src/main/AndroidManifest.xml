@@ -56,7 +56,7 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <!-- OPPO辅助 SDK -->
     <uses-permission android:name="com.coloros.mcs.permission.RECIEVE_MCS_MESSAGE" />
-
+    <uses-permission android:name="android.permission.CAMERA"/>
     <application
         android:name=".MyApplication"
         android:allowBackup="true"
@@ -281,7 +281,8 @@
         <activity
             android:name=".activity.addDevice.cateye.AddDeviceCatEyeSecondActivity"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/MyTranslucentTheme" />
         <activity
             android:name=".activity.addDevice.cateye.AddDeviceCatEyeThirdActivity"
             android:launchMode="singleTask"
@@ -335,7 +336,7 @@
             android:name=".activity.device.bluetooth.AddBluetoothFamilyMemberActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".activity.device.bluetooth.FamilyMemberDetailActivity"
             android:launchMode="singleTop"
@@ -413,7 +414,7 @@
             android:name=".activity.device.bluetooth.fingerprint.FingerprintNoConnectBluetoothCollectionActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".activity.device.bluetooth.card.DoorCardManagerActivity"
             android:launchMode="singleTask"
@@ -459,7 +460,7 @@
             android:name=".activity.device.bluetooth.fingerprint.AddFingerprintSuccessActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".activity.home.BluetoothEquipmentDynamicActivity"
             android:launchMode="singleTop"
@@ -484,12 +485,10 @@
             android:name=".activity.device.gatewaylock.GatewayLockFunctionActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".activity.device.gatewaylock.GatewayLockAuthorizeFunctionActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".activity.device.gatewaylock.password.GatewayPasswordManagerActivity"
             android:launchMode="singleTask"
@@ -542,8 +541,6 @@
             android:name=".activity.device.gatewaylock.card.GatewayDoorCardManagerDetailActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
-
-
         <activity
             android:name=".activity.device.gatewaylock.GatewayLockAuthorizationActivity"
             android:launchMode="singleTop"
@@ -622,6 +619,10 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.device.cateye.more.CateyeFunctionActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.cateye.more.CateyeAuthorizationFunctionActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
@@ -768,10 +769,19 @@
         <activity
             android:name=".publiclibrary.ota.OTADialogActivity"
             android:theme="@style/gatewayDialog" />
-
         <activity
             android:name=".publiclibrary.ota.gatewayota.GatewayOTADialogActivity"
             android:theme="@style/gatewayDialog" />
+        <activity
+            android:name=".activity.addDevice.cateye.TurnOnCatEyeFirstActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.addDevice.cateye.TurnOnCatEyeSecondActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".activity.addDevice.cateye.CatEyeAddPhoneActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".activity.addDevice.cateye.QrcodePhoneAddActivity"
+            android:screenOrientation="portrait"></activity>
     </application>
 
 </manifest>

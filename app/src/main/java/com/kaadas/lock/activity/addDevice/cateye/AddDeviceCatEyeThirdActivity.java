@@ -173,8 +173,8 @@ public class AddDeviceCatEyeThirdActivity extends BaseActivity<IAddCatEyeView, A
     public void joinTimeout() {
         //允许入网失败
 //        加入网关超时
-        LogUtils.e("加入网关超时");
-        pairCatEyeResult(false);
+//        LogUtils.e("加入网关超时");
+//        pairCatEyeResult(false);
     }
 
     @Override

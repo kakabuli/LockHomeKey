@@ -2,6 +2,7 @@ package com.kaadas.lock.activity.device.gatewaylock;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -18,9 +19,8 @@ import android.widget.TextView;
 
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
-import com.kaadas.lock.activity.device.gatewaylock.more.GatewayMoreActivity;
+import com.kaadas.lock.activity.MainActivity;
 import com.kaadas.lock.activity.device.gatewaylock.password.GatewayPasswordManagerActivity;
-import com.kaadas.lock.activity.device.gatewaylock.stress.old.GatewayLockStressDetailActivity;
 import com.kaadas.lock.bean.BluetoothLockFunctionBean;
 import com.kaadas.lock.bean.HomeShowBean;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
@@ -37,6 +37,8 @@ import com.kaadas.lock.utils.NetUtil;
 import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.StringUtil;
 import com.kaadas.lock.utils.ToastUtil;
+import com.kaadas.lock.utils.greenDao.db.DaoSession;
+import com.kaadas.lock.utils.greenDao.db.GatewayLockServiceInfoDao;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -101,6 +103,8 @@ public class GatewayLockAuthorizeFunctionActivity extends BaseActivity<GatewayLo
     TextView tvNameFour;
     @BindView(R.id.ll_four)
     LinearLayout llFour;
+    @BindView(R.id.delete_share)
+    ImageView deleteShare;
     private String gatewayId;
     private String deviceId;
     private HomeShowBean showBean;
@@ -109,28 +113,29 @@ public class GatewayLockAuthorizeFunctionActivity extends BaseActivity<GatewayLo
     private GwLockInfo lockInfo;
 
 
-    private boolean getArmLock=false; //是否获取布防状态结束
+    private boolean getArmLock = false; //是否获取布防状态结束
 
-    private boolean getArmLockSuccess=false; //是否获取布防成功
+    private boolean getArmLockSuccess = false; //是否获取布防成功
 
-    private int armLock=0;
-    private int flagEvent=0;
+    private int armLock = 0;
+    private int flagEvent = 0;
+    private String adminUid;
+    private Context context;
+    private AlertDialog deleteDialog;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gateway_lock_authorize_function);
         ButterKnife.bind(this);
+        context=this;
         initView();
         initData();
         initClick();
-        initListener();
 
 
     }
 
-    private void initListener() {
 
-    }
 
     @Override
     protected GatewayLockDetailPresenter<GatewayLockDetailView> createPresent() {
@@ -153,10 +158,11 @@ public class GatewayLockAuthorizeFunctionActivity extends BaseActivity<GatewayLo
         llTwo.setOnClickListener(this);
         tvOpenClock.setOnClickListener(this);
         ivSafeProtection.setOnClickListener(this);
+        deleteShare.setOnClickListener(this);
     }
 
     public void changLockStatus(int lockStatus) {
-        if (isFinishing()){
+        if (isFinishing()) {
             return;
         }
         switch (lockStatus) {
@@ -225,21 +231,22 @@ public class GatewayLockAuthorizeFunctionActivity extends BaseActivity<GatewayLo
                 if (!TextUtils.isEmpty(gatewayId)) {
                     GatewayInfo gatewayInfo = MyApplication.getInstance().getGatewayById(gatewayId);
                     if (gatewayInfo != null) {
-                          if (NetUtil.isNetworkAvailable()) {
-                                dealWithPower(lockInfo.getPower(), lockInfo.getServerInfo().getEvent_str(), lockInfo.getPowerTimeStamp());
-                            if (gatewayInfo.getEvent_str()!=null){
+                        adminUid=gatewayInfo.getServerInfo().getAdminuid();
+                        if (NetUtil.isNetworkAvailable()) {
+                            dealWithPower(lockInfo.getPower(), lockInfo.getServerInfo().getEvent_str(), lockInfo.getPowerTimeStamp());
+                            if (gatewayInfo.getEvent_str() != null) {
                                 if (gatewayInfo.getEvent_str().equals("offline")) {
                                     dealWithPower(lockInfo.getPower(), "offline", lockInfo.getPowerTimeStamp());
                                 }
                             }
-                          } else {
+                        } else {
                             dealWithPower(lockInfo.getPower(), "offline", lockInfo.getPowerTimeStamp());
                         }
                     }
                 }
-                if (!TextUtils.isEmpty(lockInfo.getServerInfo().getNickName())){
+                if (!TextUtils.isEmpty(lockInfo.getServerInfo().getNickName())) {
                     tvName.setText(lockInfo.getServerInfo().getNickName());
-                }else {
+                } else {
                     tvName.setText(lockInfo.getServerInfo().getDeviceId());
                 }
 
@@ -273,7 +280,7 @@ public class GatewayLockAuthorizeFunctionActivity extends BaseActivity<GatewayLo
                 startActivity(intent);
                 break;
             case R.id.ll_two:
-               //设备信息
+                //设备信息
                 intent = new Intent(this, GatewayDeviceInformationActivity.class);
                 intent.putExtra(KeyConstants.GATEWAY_ID, gatewayId);
                 intent.putExtra(KeyConstants.DEVICE_ID, deviceId);
@@ -284,35 +291,61 @@ public class GatewayLockAuthorizeFunctionActivity extends BaseActivity<GatewayLo
                 //开锁
                 //对话框
                 String lockPwd = (String) SPUtils.get(KeyConstants.SAVA_LOCK_PWD + deviceId, "");
-                if (flagEvent==1){
+                if (flagEvent == 1) {
                     ToastUtil.getInstance().showShort(getString(R.string.lock_already_offline));
                     return;
-                }else if (TextUtils.isEmpty(lockPwd)) {
+                } else if (TextUtils.isEmpty(lockPwd)) {
                     //密码为空
-                        showPwdDialog();
+                    showPwdDialog();
                 } else {
-                        mPresenter.openLock(gatewayId, deviceId, lockPwd);
-                        lockStatus = KeyConstants.IS_LOCKING;
-                        changLockStatus(lockStatus);
-                        tvOpenClock.setClickable(false);
+                    mPresenter.openLock(gatewayId, deviceId, lockPwd);
+                    lockStatus = KeyConstants.IS_LOCKING;
+                    changLockStatus(lockStatus);
+                    tvOpenClock.setClickable(false);
                 }
 
                 break;
             case R.id.iv_safe_protection:
-                if (getArmLock){
-                    if (getArmLockSuccess){
-                        if (armLock==1){
-                            armLock=0;
-                        }else{
-                            armLock=1;
+                if (getArmLock) {
+                    if (getArmLockSuccess) {
+                        if (armLock == 1) {
+                            armLock = 0;
+                        } else {
+                            armLock = 1;
                         }
-                            mPresenter.setArmLocked(MyApplication.getInstance().getUid(),gatewayId,deviceId,armLock);
-                    }else{
-                     ToastUtil.getInstance().showShort(R.string.get_arm_lock_fail);
+                        mPresenter.setArmLocked(MyApplication.getInstance().getUid(), gatewayId, deviceId, armLock);
+                    } else {
+                        ToastUtil.getInstance().showShort(R.string.get_arm_lock_fail);
                     }
-                }else{
+                } else {
                     ToastUtil.getInstance().showShort(R.string.get_aram_lock);
                 }
+                break;
+            case R.id.delete_share:
+                String phone= (String) SPUtils.get(SPUtils.PHONEN,"");
+                AlertDialogUtil.getInstance().noEditTwoButtonDialog(this, getString(R.string.device_delete_dialog_head), getString(R.string.device_delete_lock_dialog_content), getString(R.string.cancel), getString(R.string.query), new AlertDialogUtil.ClickListener() {
+                    @Override
+                    public void left() {
+
+                    }
+
+                    @Override
+                    public void right() {
+                        if (gatewayId != null && deviceId != null) {
+                            if (!TextUtils.isEmpty(phone)){
+                                if (StringUtil.isNumeric(phone)){
+                                    mPresenter.deleteShareDevice(2,gatewayId,deviceId,adminUid,"86"+phone,"",0);
+                                }else{
+                                    mPresenter.deleteShareDevice(2,gatewayId,deviceId,adminUid,phone,"",0);
+                                }
+
+                            }
+                            deleteDialog=AlertDialogUtil.getInstance().noButtonDialog(context,getString(R.string.delete_be_being));
+                            deleteDialog.setCancelable(false);
+                        }
+
+                    }
+                });
 
 
                 break;
@@ -360,7 +393,7 @@ public class GatewayLockAuthorizeFunctionActivity extends BaseActivity<GatewayLo
         if (power < 0) {
             power = 0;
         }
-        int mPower=power/2;
+        int mPower = power / 2;
         String lockPower = mPower + "%";
         if (tvPower != null) {
             tvPower.setText(lockPower);
@@ -368,18 +401,18 @@ public class GatewayLockAuthorizeFunctionActivity extends BaseActivity<GatewayLo
         if (ivPower != null) {
             ivPower.setPower(mPower);
             if (eventStr.equals("online")) {
-                if (mPower<=20){
+                if (mPower <= 20) {
                     ivPower.setColor(R.color.cFF3B30);
                     ivPower.setBorderColor(R.color.white);
-                }else{
+                } else {
                     ivPower.setColor(R.color.c25F290);
                     ivPower.setBorderColor(R.color.white);
                 }
-                flagEvent=0;
+                flagEvent = 0;
             } else {
                 ivPower.setColor(R.color.cD6D6D6);
                 ivPower.setBorderColor(R.color.c949494);
-                flagEvent=1;
+                flagEvent = 1;
             }
         }
         long readDeviceInfoTime = 0;
@@ -476,8 +509,8 @@ public class GatewayLockAuthorizeFunctionActivity extends BaseActivity<GatewayLo
 
     @Override
     public void getPowerDataSuccess(String deviceId, int power, String timestamp) {
-        if (lockInfo!=null){
-            if (lockInfo.getServerInfo().getDeviceId().equals(deviceId)){
+        if (lockInfo != null) {
+            if (lockInfo.getServerInfo().getDeviceId().equals(deviceId)) {
                 dealWithPower(power, lockInfo.getServerInfo().getEvent_str(), timestamp);
             }
         }
@@ -528,21 +561,21 @@ public class GatewayLockAuthorizeFunctionActivity extends BaseActivity<GatewayLo
     @Override
     public void setArmLockedSuccess(int operatingMode) {
         //设置布防成功
-        if (operatingMode==1){
+        if (operatingMode == 1) {
             ivSafeProtection.setImageResource(R.mipmap.iv_open);
-            armLock=1;
-        }else{
+            armLock = 1;
+        } else {
             ivSafeProtection.setImageResource(R.mipmap.iv_close);
-            armLock=0;
+            armLock = 0;
         }
     }
 
     @Override
     public void setArmLockedFail(String code) {
         //设置布防失败
-        if ("405".equals(code)){
+        if ("405".equals(code)) {
             ToastUtil.getInstance().showShort(getString(R.string.the_lock_no_support_func));
-        }else{
+        } else {
             ToastUtil.getInstance().showShort(getString(R.string.set_failed));
         }
     }
@@ -556,26 +589,26 @@ public class GatewayLockAuthorizeFunctionActivity extends BaseActivity<GatewayLo
     @Override
     public void getArmLockedSuccess(int operatingMode) {
         //获取布防成功 0 撤防 非反锁  , 1 布防 , 2 反锁
-        if (operatingMode==1){
+        if (operatingMode == 1) {
             ivSafeProtection.setImageResource(R.mipmap.iv_open);
-            armLock=1;
-        }else{
+            armLock = 1;
+        } else {
             ivSafeProtection.setImageResource(R.mipmap.iv_close);
-            armLock=0;
+            armLock = 0;
         }
-        getArmLock=true;
-        getArmLockSuccess=true;
+        getArmLock = true;
+        getArmLockSuccess = true;
 
     }
 
     @Override
     public void getArmLockedFail(String code) {
         //获取布防失败
-        getArmLock= true;
-        if ("405".equals(code)){
-            getArmLockSuccess=true;
-        }else{
-            getArmLockSuccess=false;
+        getArmLock = true;
+        if ("405".equals(code)) {
+            getArmLockSuccess = true;
+        } else {
+            getArmLockSuccess = false;
             ToastUtil.getInstance().showShort(R.string.get_alarm_lock_fail);
         }
 
@@ -585,8 +618,8 @@ public class GatewayLockAuthorizeFunctionActivity extends BaseActivity<GatewayLo
     @Override
     public void getArmLockedThrowable(Throwable throwable) {
         //获取布防异常
-        getArmLock=true;
-        getArmLockSuccess=false;
+        getArmLock = true;
+        getArmLockSuccess = false;
         ToastUtil.getInstance().showShort(R.string.get_alarm_lock_fail);
     }
 
@@ -598,9 +631,40 @@ public class GatewayLockAuthorizeFunctionActivity extends BaseActivity<GatewayLo
     }
 
     @Override
+    public void deleteShareDeviceSuccess() {
+        DaoSession daoSession= MyApplication.getInstance().getDaoWriteSession();
+        String uid=MyApplication.getInstance().getUid();
+        daoSession.getGatewayLockServiceInfoDao().queryBuilder().where(GatewayLockServiceInfoDao.Properties.Uid.eq(uid)).buildDelete().executeDeleteWithoutDetachingEntities();
+        if (deleteDialog!=null){
+            deleteDialog.dismiss();
+        }
+        //删除成功
+        Intent intent=new Intent(GatewayLockAuthorizeFunctionActivity.this, MainActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    @Override
+    public void deleteShareDeviceFail() {
+        if (deleteDialog!=null){
+            deleteDialog.dismiss();
+        }
+        ToastUtil.getInstance().showShort(getString(R.string.delete_fialed));
+    }
+
+    @Override
+    public void deleteShareDeviceThrowable() {
+
+        if (deleteDialog!=null){
+            deleteDialog.dismiss();
+        }
+        ToastUtil.getInstance().showShort(getString(R.string.delete_fialed));
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (getIntent()!=null){
+        if (getIntent() != null) {
             getIntent().removeExtra(KeyConstants.GATEWAY_LOCK_INFO);
         }
     }

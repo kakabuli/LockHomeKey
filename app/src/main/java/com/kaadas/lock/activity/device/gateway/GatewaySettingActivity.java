@@ -127,14 +127,14 @@ public class GatewaySettingActivity extends BaseActivity<GatewaySettingView, Gat
         GatewaySettingItemBean gatewaySettingItemBeanThree=new GatewaySettingItemBean();
         gatewaySettingItemBeanThree.setTitle(getString(R.string.gateway_setting_wifi_name));
         if (isAdmin==1){
-            gatewaySettingItemBeanThree.setSetting(true);
+            gatewaySettingItemBeanThree.setSetting(false);
         }else{
             gatewaySettingItemBeanThree.setSetting(false);
         }
         GatewaySettingItemBean gatewaySettingItemBeanFour=new GatewaySettingItemBean();
         gatewaySettingItemBeanFour.setTitle(getString(R.string.gateway_setting_wifi_pwd));
         if (isAdmin==1){
-            gatewaySettingItemBeanFour.setSetting(true);
+            gatewaySettingItemBeanFour.setSetting(false);
         }else{
             gatewaySettingItemBeanFour.setSetting(false);
         }
@@ -165,7 +165,7 @@ public class GatewaySettingActivity extends BaseActivity<GatewaySettingView, Gat
         GatewaySettingItemBean gatewaySettingItemBeanTen=new GatewaySettingItemBean();
         gatewaySettingItemBeanTen.setTitle(getString(R.string.gateway_coordinator_channel));
         if (isAdmin==1){
-            gatewaySettingItemBeanTen.setSetting(true);
+            gatewaySettingItemBeanTen.setSetting(false);
         }else{
             gatewaySettingItemBeanTen.setSetting(false);
         }
@@ -356,7 +356,7 @@ public class GatewaySettingActivity extends BaseActivity<GatewaySettingView, Gat
 
                     break;
 
-                case 3:
+               /* case 3:
                     //wifi名称
                     View mView = LayoutInflater.from(this).inflate(R.layout.have_one_et_dialog, null);
                     TextView tvTitle = mView.findViewById(R.id.tv_title);
@@ -395,8 +395,8 @@ public class GatewaySettingActivity extends BaseActivity<GatewaySettingView, Gat
                             alertDialog.dismiss();
                         }
                     });
-                    break;
-                case 4:
+                    break;*/
+               /* case 4:
                     //wifi密码
                     View mViewPwd = LayoutInflater.from(this).inflate(R.layout.have_one_et_dialog, null);
                     TextView tvTitlePwd = mViewPwd.findViewById(R.id.tv_title);
@@ -442,7 +442,7 @@ public class GatewaySettingActivity extends BaseActivity<GatewaySettingView, Gat
                             alertDialogPwd.dismiss();
                         }
                     });
-                    break;
+                    break;*/
            /* case 4:
             case 6:
                 //配置局域网
@@ -493,7 +493,7 @@ public class GatewaySettingActivity extends BaseActivity<GatewaySettingView, Gat
                     }
                 });
                 break;*/
-                case 10:
+                /*case 10:
                     //配置
                     View mViewChannel = LayoutInflater.from(this).inflate(R.layout.have_one_et_dialog, null);
                     TextView tvTitleChannel = mViewChannel.findViewById(R.id.tv_title);
@@ -543,9 +543,8 @@ public class GatewaySettingActivity extends BaseActivity<GatewaySettingView, Gat
                             alertDialogChannel.dismiss();
                         }
                     });
-
-
                     break;
+*/
             }
         }
     }
