@@ -213,7 +213,7 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                             String deviceId = gwLock.getDeviceId();
                             GatewayLockServiceInfo gatewayLockServiceInfo = new GatewayLockServiceInfo(deviceId + uid, gwLock.getDeviceId(), gwLock.getSW(), gwLock.getDevice_type(), gwLock.getEvent_str(), gwLock.getIpaddr(), gwLock.getMacaddr(), gwLock.getNickName(), gwLock.getTime(), gwLockInfo.getGwID(), uid);
                             daoSession.insertOrReplace(gatewayLockServiceInfo);
-
+                            mDeviceList.add(homeShowBean);
                             break;
                         case HomeShowBean.TYPE_CAT_EYE:
                             //猫眼
@@ -230,8 +230,6 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                             if (catPower!=null){
                                 cateEyeInfo.setPower(catPower.getPower());
                             }
-
-
                             //请求电量
                             mPresenter.getPower(cateEyeInfo.getGwID(), cateEyeInfo.getServerInfo().getDeviceId(), MyApplication.getInstance().getUid());
                             //插入数据库
@@ -239,6 +237,7 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                             String catDeviceId = gwDevice.getDeviceId();
                             CatEyeServiceInfo catEyeServiceInfo = new CatEyeServiceInfo(catDeviceId + uid, gwDevice.getDeviceId(), gwDevice.getSW(), gwDevice.getDevice_type(), gwDevice.getEvent_str(), gwDevice.getIpaddr(), gwDevice.getMacaddr(), gwDevice.getNickName(), gwDevice.getTime(), cateEyeInfo.getGwID(), uid);
                             daoSession.insertOrReplace(catEyeServiceInfo);
+                            mDeviceList.add(homeShowBean);
                             break;
                         case HomeShowBean.TYPE_GATEWAY:
                             //网关
@@ -255,6 +254,10 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                                 String deviceSN = gatewayInfo.getServerInfo().getDeviceSN();
                                 mPresenter.bindMimi(deviceSN, deviceSN);
                             }
+                            if (gatewayInfo!=null&&gatewayInfo.getServerInfo().getIsAdmin()==1){
+                                mDeviceList.add(homeShowBean);
+                            }
+
                             break;
                         case HomeShowBean.TYPE_BLE_LOCK:
                             //蓝牙锁
@@ -289,10 +292,12 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                                 }
 
                             }
+                            mDeviceList.add(homeShowBean);
                             break;
                     }
 
-                    mDeviceList.add(homeShowBean);
+
+
                 }
                 if (deviceDetailAdapter != null) {
                     deviceDetailAdapter.notifyDataSetChanged();
