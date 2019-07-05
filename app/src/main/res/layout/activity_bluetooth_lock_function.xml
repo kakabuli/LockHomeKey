@@ -63,7 +63,7 @@
                     android:textColor="#FFFFFF"
                     android:layout_centerHorizontal="true"
                     android:layout_alignParentBottom="true"
-                    android:layout_marginBottom="@dimen/dp_12"
+                    android:layout_marginBottom="@dimen/dp_10"
                     android:text=""
                     android:textSize="@dimen/sp_14"
                     />
@@ -188,6 +188,7 @@
                             android:textSize="@dimen/sp_13" />
 
                         <TextView
+                            android:visibility="gone"
                             android:id="@+id/tv_number_one"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -231,6 +232,7 @@
                             android:textSize="@dimen/sp_13" />
 
                         <TextView
+                            android:visibility="gone"
                             android:id="@+id/tv_number_two"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -275,6 +277,7 @@
                             android:textSize="@dimen/sp_13" />
 
                         <TextView
+                            android:visibility="gone"
                             android:id="@+id/tv_number_three"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -325,6 +328,7 @@
                             android:textSize="@dimen/sp_13" />
 
                         <TextView
+                            android:visibility="gone"
                             android:id="@+id/tv_number_four"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -369,6 +373,7 @@
                             android:textSize="@dimen/sp_13" />
 
                         <TextView
+                            android:visibility="gone"
                             android:id="@+id/tv_number_five"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -412,6 +417,7 @@
                             android:textSize="@dimen/sp_13" />
 
                         <TextView
+                            android:visibility="gone"
                             android:id="@+id/tv_number_six"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"

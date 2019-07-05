@@ -63,7 +63,7 @@
                     android:textColor="#FFFFFF"
                     android:layout_centerHorizontal="true"
                     android:layout_alignParentBottom="true"
-                    android:layout_marginBottom="@dimen/dp_12"
+                    android:layout_marginBottom="@dimen/dp_10"
                     android:text=""
                     android:textSize="@dimen/sp_14"
                     />
@@ -188,6 +188,7 @@
                             android:textSize="@dimen/sp_13" />
 
                         <TextView
+                            android:visibility="gone"
                             android:id="@+id/tv_number_one"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -231,6 +232,7 @@
                             android:textSize="@dimen/sp_13" />
 
                         <TextView
+                            android:visibility="gone"
                             android:id="@+id/tv_number_two"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -241,10 +243,21 @@
                     </LinearLayout>
                 </LinearLayout>
 
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"
-                    android:background="#F2F2F2"></View>
+
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#F2F2F2"></View>
+            <!--第二行-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
                 <LinearLayout
                     android:id="@+id/ll_four"
                     android:layout_width="0dp"
@@ -273,6 +286,7 @@
                             android:textSize="@dimen/sp_13" />
 
                         <TextView
+                            android:visibility="gone"
                             android:id="@+id/tv_number_four"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -282,19 +296,10 @@
                             android:textSize="@dimen/sp_12" />
                     </LinearLayout>
                 </LinearLayout>
-
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#F2F2F2"></View>
-            <!--第二行-->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:orientation="horizontal">
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:background="#F2F2F2"></View>
                 <LinearLayout
                     android:id="@+id/ll_five"
                     android:layout_width="0dp"
@@ -324,6 +329,7 @@
                             android:textSize="@dimen/sp_13" />
 
                         <TextView
+                            android:visibility="gone"
                             android:id="@+id/tv_number_five"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -333,16 +339,16 @@
                             android:textSize="@dimen/sp_12" />
                     </LinearLayout>
                 </LinearLayout>
-                <View
+        <!--        <View
                     android:layout_width="1dp"
                     android:layout_height="match_parent"
-                    android:background="#F2F2F2"></View>
+                    android:background="#F2F2F2"></View>-->
                 <LinearLayout
                     android:id="@+id/ll_three"
                     android:visibility="invisible"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="1"
+                    android:layout_weight="0"
                     android:gravity="center">
 
                     <LinearLayout
@@ -381,16 +387,16 @@
 
 
 
-                <View
+     <!--           <View
                     android:layout_width="1dp"
                     android:layout_height="match_parent"
-                    android:background="#F2F2F2"></View>
+                    android:background="#F2F2F2"></View>-->
 
                 <LinearLayout
                     android:id="@+id/ll_six"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="1"
+                    android:layout_weight="0"
                     android:gravity="center">
 
                     <LinearLayout
