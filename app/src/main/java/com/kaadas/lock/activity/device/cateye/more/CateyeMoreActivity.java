@@ -255,7 +255,12 @@ public class CateyeMoreActivity extends BaseActivity<IGatEyeView, CatEyeMorePres
                             }else{
                                 String phone= (String) SPUtils.get(SPUtils.PHONEN,"");
                                 if (!TextUtils.isEmpty(phone)&&!TextUtils.isEmpty(adminUid)){
-                                    mPresenter.deleteShareDevice(2,gatewayId,deviceId,adminUid,"86"+phone,"",0);
+                                    if (StringUtil.isNumeric(phone)){
+                                        mPresenter.deleteShareDevice(2,gatewayId,deviceId,adminUid,"86"+phone,"",0);
+                                    }else{
+                                        mPresenter.deleteShareDevice(2,gatewayId,deviceId,adminUid,phone,"",0);
+                                    }
+
                                 }
                             }
                             deleteAlertDialog=AlertDialogUtil.getInstance().noButtonDialog(context,getString(R.string.delete_be_being));
