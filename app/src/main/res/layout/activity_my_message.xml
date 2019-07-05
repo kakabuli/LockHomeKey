@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F2F2F2"
+    android:background="#fff"
     android:orientation="vertical">
 
     <include layout="@layout/head"></include>
@@ -11,7 +11,7 @@
         android:id="@+id/rl_no_message"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#F2F2F2"
+        android:background="#fff"
         android:visibility="gone">
 
         <LinearLayout
