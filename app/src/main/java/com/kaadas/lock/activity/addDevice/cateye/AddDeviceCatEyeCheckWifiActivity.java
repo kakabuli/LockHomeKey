@@ -56,7 +56,7 @@ public class AddDeviceCatEyeCheckWifiActivity extends BaseAddToApplicationActivi
                 String wifiName = NetUtil.getWifiName().replaceAll("\"","");
                 LogUtils.e("获取到的WiFi名称是   " + wifiName );
                 if (!TextUtils.isEmpty(wifiName) && wifiName.equals(ssid)) {
-                    Intent catEyeIntent = new Intent(AddDeviceCatEyeCheckWifiActivity.this, AddDeviceCatEyeFirstActivity.class);
+                    Intent catEyeIntent = new Intent(AddDeviceCatEyeCheckWifiActivity.this, TurnOnCatEyeFirstActivity.class);
                     catEyeIntent.putExtra(KeyConstants.GW_WIFI_SSID, ssid);
                     catEyeIntent.putExtra(KeyConstants.GW_WIFI_PWD, pwd);
                     catEyeIntent.putExtra(KeyConstants.GW_SN, gwId);
@@ -101,11 +101,12 @@ public class AddDeviceCatEyeCheckWifiActivity extends BaseAddToApplicationActivi
             String wifiName = NetUtil.getWifiName().replaceAll("\"","");
             LogUtils.e("获取到的WiFi名称是   " + wifiName );
             if (!TextUtils.isEmpty(wifiName) && wifiName.equals(ssid)) {
-                Intent catEyeIntent = new Intent(this, AddDeviceCatEyeFirstActivity.class);
+             //   Intent catEyeIntent = new Intent(this, AddDeviceCatEyeFirstActivity.class);
+                Intent catEyeIntent = new Intent(this, TurnOnCatEyeFirstActivity.class);
                 catEyeIntent.putExtra(KeyConstants.GW_WIFI_SSID, ssid);
                 catEyeIntent.putExtra(KeyConstants.GW_WIFI_PWD, pwd);
                 catEyeIntent.putExtra(KeyConstants.GW_SN, gwId);
-                startActivity(catEyeIntent);
+            //    startActivity(catEyeIntent);
                 finish();
             }
         }else {
