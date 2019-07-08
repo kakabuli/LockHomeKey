@@ -196,6 +196,9 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
                 Log.e(GeTui.VideoLog, "VideoPresenter==>Streaming....");
                 Log.e(Tag, "猫眼 Streaming.........");
                 isConnectedEye=true;
+                if(mViewRef!=null && mViewRef.get()!=null){
+                    mViewRef.get().callSuccess();
+                }
             }
         });
     }

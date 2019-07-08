@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -21,7 +22,7 @@ import com.kaadas.lock.publiclibrary.mqtt.eventbean.DeviceOnLineBean;
 import com.kaadas.lock.utils.KeyConstants;
 import com.king.zxing.util.CodeUtils;
 
-import org.linphone.mediastream.Log;
+
 
 import java.util.Timer;
 import java.util.TimerTask;

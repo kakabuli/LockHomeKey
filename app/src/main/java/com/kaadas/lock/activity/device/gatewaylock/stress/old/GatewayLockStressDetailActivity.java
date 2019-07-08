@@ -32,7 +32,7 @@ import com.kaadas.lock.utils.ftp.GeTui;
 import com.kaadas.lock.utils.greenDao.bean.GatewayLockPwd;
 import com.kaadas.lock.utils.greenDao.db.GatewayLockPwdDao;
 
-import org.linphone.mediastream.Log;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;

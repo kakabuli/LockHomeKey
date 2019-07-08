@@ -34,6 +34,7 @@ import android.widget.Toast;
 
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
+import com.kaadas.lock.activity.MainActivity;
 import com.kaadas.lock.adapter.ForecastAdapter;
 import com.kaadas.lock.bean.HomeShowBean;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
@@ -82,7 +83,7 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
     ImageView video_v_go;
     ImageView iv_back;
     SurfaceView video_v_surfaceview;
-    ForecastAdapter forecastAdapter = null;
+    ForecastAdapter  forecastAdapter = null;
     SurfaceView videoPreview;
     ImageView hangup;
     CheckBox cbScreenShot;
@@ -410,7 +411,11 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
 
         if (cityPicker != null) {
             cityPicker.setSlideOnFling(true);
-            forecastAdapter = new ForecastAdapter(gwLockInfos, this);
+        //    forecastAdapter = new ForecastAdapter(gwLockInfos, this);
+//            for (int i=0;i<5;i++){
+//                gwLockInfos.add(gwLockInfos.get(0));
+//            }
+            forecastAdapter = new ForecastAdapter(mPresenter,gwLockInfos, this);
             cityPicker.setAdapter(forecastAdapter);
             cityPicker.addOnItemChangedListener(this);
             cityPicker.addScrollStateChangeListener(this);
@@ -887,6 +892,13 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
     @Override
     public void netWorkChange(boolean isEnable) {
         catEyeStateChange();
+    }
+
+    @Override
+    public void callSuccess() {
+     //      Toast.makeText(VideoVActivity.this,"呼叫成功",Toast.LENGTH_SHORT).show();
+           forecastAdapter.notifyDataSetChanged();
+
     }
 
     @Override
