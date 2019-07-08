@@ -52,7 +52,7 @@ public class WelcomeActivity extends BaseActivity<ISplashView, SplashPresenter<I
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
-        CheckLanguageUtil.getInstance().checkLag();//语言
+//        CheckLanguageUtil.getInstance().checkLag();//语言
         initData();
         executeGeTui();
         MqttService mqttService=MyApplication.getInstance().getMqttService();
