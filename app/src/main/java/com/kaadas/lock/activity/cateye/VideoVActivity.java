@@ -445,11 +445,24 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
                             }
                             String dvId=gwLockInfo.getServerInfo().getDeviceId();
                             if (openLockStatus.equals(dvId+"opening_true")) {
-                                ToastUtil.getInstance().showShort(gwLockInfo.getServerInfo().getNickName() + ":" + getString(R.string.is_opening_try_latter));
+                                String nickN=gwLockInfo.getServerInfo().getNickName();
+                                if (!TextUtils.isEmpty(nickN)){
+                                    ToastUtil.getInstance().showShort(nickN + ":" + getString(R.string.is_opening_try_latter));
+                                }else{
+                                    ToastUtil.getInstance().showShort(dvId + ":" + getString(R.string.is_opening_try_latter));
+                                }
+
                                 return;
                             }
                             if (closeLockStatus.equals(dvId+"closing_true")) {
-                                ToastUtil.getInstance().showShort(gwLockInfo.getServerInfo().getNickName()+":"+getString(R.string.lock_already_open));
+                                String nickName=gwLockInfo.getServerInfo().getNickName();
+                                if (!TextUtils.isEmpty(nickName)){
+                                    ToastUtil.getInstance().showShort(nickName+":"+getString(R.string.lock_already_open));
+                                }else{
+                                    ToastUtil.getInstance().showShort(dvId+":"+getString(R.string.lock_already_open));
+                                }
+
+
                                 return;
                             }
 
@@ -854,7 +867,13 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
         LogUtils.e(Tag,"当前状态是   isOpening    " + openLockStatus + "   isClosing   " + closeLockStatus);
         GwLockInfo gwLockInfo=MyApplication.getInstance().getGatewayLockById(devId);
         if (gwLockInfo!=null){
-            ToastUtil.getInstance().showShort(gwLockInfo.getServerInfo().getNickName()+":"+getString(R.string.open_lock_success));
+            String nickName=gwLockInfo.getServerInfo().getNickName();
+            if (!TextUtils.isEmpty(nickName)){
+                ToastUtil.getInstance().showShort(nickName+":"+getString(R.string.open_lock_success));
+            }else{
+                ToastUtil.getInstance().showShort(devId+":"+getString(R.string.open_lock_success));
+            }
+
         }
         //hiddenLoading();
     }
@@ -864,7 +883,13 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
         openLockStatus=devId+"opening_false";
         GwLockInfo gwLockInfo=MyApplication.getInstance().getGatewayLockById(devId);
         if (gwLockInfo!=null){
-            ToastUtil.getInstance().showShort(gwLockInfo.getServerInfo().getNickName()+":"+getString(R.string.open_lock_failed));
+            String nickName=gwLockInfo.getServerInfo().getNickName();
+            if (!TextUtils.isEmpty(nickName)){
+                ToastUtil.getInstance().showShort(nickName+":"+getString(R.string.open_lock_failed));
+            }else{
+                ToastUtil.getInstance().showShort(devId+":"+getString(R.string.open_lock_failed));
+            }
+
         }
         LogUtils.e("开锁异常"+devId);
        // hiddenLoading();
@@ -876,7 +901,12 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
         LogUtils.e("开锁失败"+devId);
         GwLockInfo gwLockInfo=MyApplication.getInstance().getGatewayLockById(devId);
         if (gwLockInfo!=null){
-            ToastUtil.getInstance().showShort(gwLockInfo.getServerInfo().getNickName()+":"+getString(R.string.open_lock_failed));
+            String nickName=gwLockInfo.getServerInfo().getNickName();
+            if (!TextUtils.isEmpty(nickName)){
+                ToastUtil.getInstance().showShort(nickName+":"+getString(R.string.open_lock_failed));
+            }else{
+                ToastUtil.getInstance().showShort(devId+":"+getString(R.string.open_lock_failed));
+            }
         }
         //hiddenLoading();
     }
