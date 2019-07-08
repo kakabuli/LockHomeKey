@@ -243,8 +243,10 @@ public class PersonalVerifyFingerPrintActivity extends BaseActivity<IPersonalVer
             /**
              * 把图片旋转为正的方向
              */
-            Bitmap newbitmap = BitmapUtil.rotaingImageView(degree, changeBitmap);
-            fingerImage.setImageBitmap(newbitmap);
+            if (changeBitmap!=null){
+                Bitmap newbitmap = BitmapUtil.rotaingImageView(degree, changeBitmap);
+                fingerImage.setImageBitmap(newbitmap);
+            }
         }
     }
 

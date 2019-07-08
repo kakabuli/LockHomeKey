@@ -590,7 +590,7 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
     public void realOpenLock(String gatewayId, String deviceId, String pwd) {
         toDisposable(openLockDisposable);
         if (mViewRef.get() != null) {
-            mViewRef.get().startOpenLock();
+            mViewRef.get().startOpenLock(deviceId);
         }
         listenerLockOpen(deviceId);
         listenerLockClose(deviceId);
@@ -605,7 +605,7 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
                             return false;
                         }
                     })
-                    .timeout(20 * 1000, TimeUnit.MILLISECONDS)
+                    .timeout(30 * 1000, TimeUnit.MILLISECONDS)
                     .compose(RxjavaHelper.observeOnMainThread())
                     .subscribe(new Consumer<MqttData>() {
                         @Override
@@ -616,7 +616,7 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
                                 SPUtils.put(KeyConstants.SAVA_LOCK_PWD + deviceId, pwd);
                             } else {
                                 if (mViewRef.get() != null) {
-                                    mViewRef.get().openLockFailed();
+                                    mViewRef.get().openLockFailed(deviceId);
                                 }
                                 SPUtils.remove(KeyConstants.SAVA_LOCK_PWD + deviceId);
                             }
@@ -627,7 +627,7 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
                             //开锁异常
                             if (mViewRef.get() != null) {
                                 SPUtils.remove(KeyConstants.SAVA_LOCK_PWD + deviceId);
-                                mViewRef.get().openLockThrowable(throwable);
+                                mViewRef.get().openLockThrowable(throwable,deviceId);
                             }
                         }
                     });
@@ -658,7 +658,7 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
                             return false;
                         }
                     })
-                    .timeout(10 * 1000, TimeUnit.MILLISECONDS)
+                    .timeout(30 * 1000, TimeUnit.MILLISECONDS)
                     .compose(RxjavaHelper.observeOnMainThread())
                     .subscribe(new Consumer<MqttData>() {
                         @Override
@@ -666,7 +666,7 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
                             toDisposable(closeLockNotifyDisposable);
                             LogUtils.e(Tag, "门锁打开上报");
                             if (mViewRef.get() != null) {
-                                mViewRef.get().openLockSuccess();
+                                mViewRef.get().openLockSuccess(deviceId);
                             }
                         }
                     }, new Consumer<Throwable>() {
@@ -674,7 +674,7 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
                         public void accept(Throwable throwable) throws Exception {
                             if (mViewRef.get() != null) {
                                 SPUtils.remove(KeyConstants.SAVA_LOCK_PWD + deviceId);
-                                mViewRef.get().openLockThrowable(throwable);
+                                mViewRef.get().openLockThrowable(throwable,deviceId);
                             }
                         }
                     });
@@ -716,14 +716,14 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
                             LogUtils.e(Tag, "门锁关闭 上报");
                             //关门
                             if (mViewRef.get() != null) {
-                                mViewRef.get().lockCloseSuccess();
+                                mViewRef.get().lockCloseSuccess(deviceId);
                             }
                         }
                     }, new Consumer<Throwable>() {
                         @Override
                         public void accept(Throwable throwable) throws Exception {
                             if (mViewRef.get() != null) {
-                                mViewRef.get().lockCloseFailed();
+                                mViewRef.get().lockCloseFailed(deviceId);
                             }
                         }
                     });

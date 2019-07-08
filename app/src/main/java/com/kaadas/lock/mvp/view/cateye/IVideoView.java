@@ -4,6 +4,7 @@ import com.kaadas.lock.mvp.mvpbase.IBaseView;
 import com.kaadas.lock.publiclibrary.bean.CateEyeInfo;
 import com.kaadas.lock.publiclibrary.bean.GwLockInfo;
 import com.kaadas.lock.publiclibrary.mqtt.eventbean.DeviceOnLineBean;
+import com.kaadas.lock.utils.StringUtil;
 
 public interface IVideoView extends IBaseView {
     /**
@@ -92,30 +93,30 @@ public interface IVideoView extends IBaseView {
     /**
      * 开锁成功
      */
-    void openLockSuccess();
+    void openLockSuccess(String deviceId);
     /**
      * 开锁失败
      */
-    void openLockFailed();
+    void openLockFailed(String deviceId);
 
     /**
      * 开锁异常
      * @param throwable
      */
-    void openLockThrowable(Throwable throwable);
+    void openLockThrowable(Throwable throwable,String devId);
 
     /**
      * 开始开锁
      */
-    void startOpenLock( );
+    void startOpenLock(String deviceId);
     /**
      * 关锁成功
      */
-    void lockCloseSuccess( );
+    void lockCloseSuccess(String deviceId);
     /**
      * 关锁失败
      */
-    void lockCloseFailed( );
+    void lockCloseFailed(String devId);
 
     /**
      * 有设备状态改变

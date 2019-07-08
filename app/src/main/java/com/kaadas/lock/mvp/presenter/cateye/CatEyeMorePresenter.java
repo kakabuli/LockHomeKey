@@ -93,8 +93,8 @@ public class CatEyeMorePresenter <T> extends BasePresenter<IGatEyeView> {
             MqttMessage mqttMessage = MqttCommandFactory.getCatEyeInfo(gatewayId, deviceId,uid);
             getCatEyeInfoDisposable = mqttService
                     .mqttPublish(MqttConstant.getCallTopic(MyApplication.getInstance().getUid()), mqttMessage)
-                    .compose(RxjavaHelper.observeOnMainThread())
                     .timeout(15 * 1000, TimeUnit.MILLISECONDS)
+                    .compose(RxjavaHelper.observeOnMainThread())
                     .filter(new Predicate<MqttData>() {
                         @Override
                         public boolean test(MqttData mqttData) throws Exception {

@@ -188,9 +188,11 @@ public class PersonalCenterFragment extends BaseFragment<IMyFragmentView, MyFrag
             /**
              * 把图片旋转为正的方向
              */
-            Bitmap newbitmap = BitmapUtil.rotaingImageView(degree, changeBitmap);
-            ivPhoto.setImageBitmap(newbitmap);
-            ivPhoto.setBackgroundResource(R.drawable.head_circle_bj);
+            if (changeBitmap!=null){
+                Bitmap newbitmap = BitmapUtil.rotaingImageView(degree, changeBitmap);
+                ivPhoto.setImageBitmap(newbitmap);
+                ivPhoto.setBackgroundResource(R.drawable.head_circle_bj);
+            }
         }
     }
 

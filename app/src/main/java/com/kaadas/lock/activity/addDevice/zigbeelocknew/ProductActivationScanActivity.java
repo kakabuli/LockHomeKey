@@ -1,7 +1,9 @@
 package com.kaadas.lock.activity.addDevice.zigbeelocknew;
 
+import android.Manifest;
 import android.content.pm.PackageManager;
 import android.hardware.Camera;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
@@ -11,14 +13,13 @@ import android.widget.LinearLayout;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.ToastUtil;
 import com.king.zxing.CaptureActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-/*import com.uuzuche.lib_zxing.activity.CaptureFragment;
-import com.uuzuche.lib_zxing.activity.CodeUtils;*/
 
 public class ProductActivationScanActivity extends CaptureActivity {
     @BindView(R.id.back)
@@ -42,6 +43,7 @@ public class ProductActivationScanActivity extends CaptureActivity {
         MyApplication.getInstance().addActivity(this);
         ButterKnife.bind(this);
         initView();
+        checkVersion();
     }
 
 
@@ -50,6 +52,47 @@ public class ProductActivationScanActivity extends CaptureActivity {
         super.onDestroy();
         MyApplication.getInstance().removeActivity(this);
     }
+
+    private void checkVersion() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            int i=checkSelfPermission(Manifest.permission.CAMERA);
+            if (i==-1){
+                if (!shouldShowRequestPermissionRationale(Manifest.permission.CAMERA)){
+                    ToastUtil.getInstance().showShort(getString(R.string.ban_camera_permission));
+                    finish();
+                    return;
+                }
+            }
+        }
+        //版本为22 5.1
+        if (Build.VERSION.SDK_INT==Build.VERSION_CODES.LOLLIPOP_MR1){
+            if (!isCameraCanUse()){
+                ToastUtil.getInstance().showShort(getString(R.string.ban_camera_permission));
+                finish();
+                return;
+            }
+
+        }
+
+    }
+    //Android6.0以下的摄像头权限处理：
+    public static boolean isCameraCanUse() {
+        boolean canUse = true;
+        Camera mCamera = null;
+        try {
+            mCamera = Camera.open();
+            // setParameters 是针对魅族MX5 做的。MX5 通过Camera.open() 拿到的Camera
+            Camera.Parameters mParameters = mCamera.getParameters();
+            mCamera.setParameters(mParameters);
+        } catch (Exception e) {
+            canUse = false;
+        }
+        if (mCamera != null) {
+            mCamera.release();
+        }
+        return canUse;
+    }
+
 
     private void initView() {
         if (!hasFlash()) {
