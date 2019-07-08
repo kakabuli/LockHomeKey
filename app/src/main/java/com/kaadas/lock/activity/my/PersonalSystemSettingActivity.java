@@ -185,7 +185,7 @@ public class PersonalSystemSettingActivity extends BaseActivity<ISystemSettingVi
     @Override
     protected void onResume() {
         super.onResume();
-        CheckLanguageUtil.getInstance().checkLag();
+//        CheckLanguageUtil.getInstance().checkLag();
     }
 
     UpgradePresenter upgradePresenter=null;

@@ -39,6 +39,7 @@ import com.kaadas.lock.adapter.ForecastAdapter;
 import com.kaadas.lock.bean.HomeShowBean;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.mvp.presenter.cateye.VideoPresenter;
+import com.kaadas.lock.mvp.view.IFamilyMemberDeatilView;
 import com.kaadas.lock.mvp.view.cateye.IVideoView;
 import com.kaadas.lock.publiclibrary.bean.CateEyeInfo;
 import com.kaadas.lock.publiclibrary.bean.GatewayInfo;
@@ -101,9 +102,9 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
     public static boolean isRunning = false;
     private String Tag = "猫眼通话界面 ";
     private static final int REQUEST_PERMISSION_REQUEST_CODE = 102;
-    private boolean isOpening; //正在开门
-    private boolean isClosing; //正在关门
 
+    private String openLockStatus="";//开门状态
+    private String closeLockStatus="";//关门状态
     private LinearLayout ll_video_control1;
     private LinearLayout ll_video_control2;
     private CheckBox cbScreenShot2;
@@ -429,32 +430,36 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
                 @Override
                 public void onItemClickItemMethod(int position) {
                     if (selectPostion != -1 && position == selectPostion) {
-                        LogUtils.e(Tag,"当前状态是   isOpening    " + isOpening + "   isClosing   " + isClosing);
+                        LogUtils.e(Tag, "当前状态是   isOpening    " + openLockStatus + "   isClosing   " + closeLockStatus);
 
-                        if(!mPresenter.isConnectedEye){
-                            Toast.makeText(VideoVActivity.this,R.string.cateye_call_no,Toast.LENGTH_SHORT).show();
+                        if (!mPresenter.isConnectedEye) {
+                            Toast.makeText(VideoVActivity.this, R.string.cateye_call_no, Toast.LENGTH_SHORT).show();
                             return;
                         }
-
-                        if (isOpening) {
-                            ToastUtil.getInstance().showShort(R.string.is_opening_try_latter);
-                            return;
-                        }
-                        if (isClosing) {
-                            ToastUtil.getInstance().showShort(R.string.lock_already_open);
-                            return;
-                        }
-                        LogUtils.e(Tag,"执行开门  ");
+                        LogUtils.e(Tag, "执行开门  ");
                         GwLockInfo gwLockInfo = gwLockInfos.get(position);
-                        if (gwLockInfo.getServerInfo().getEvent_str().equals("offline")){
-                            ToastUtil.getInstance().showShort(getString(R.string.wifi_alreade_offline));
-                            return;
-                        }
-                        if (NetUtil.isNetworkAvailable()){
-                            mPresenter.openLock(gwLockInfo);
-                        }else{
-                            ToastUtil.getInstance().showShort(getString(R.string.wifi_alreade_offline));
-                            return;
+                        if (gwLockInfo != null) {
+                            if (gwLockInfo.getServerInfo().getEvent_str().equals("offline")) {
+                                ToastUtil.getInstance().showShort(getString(R.string.wifi_alreade_offline));
+                                return;
+                            }
+                            String dvId=gwLockInfo.getServerInfo().getDeviceId();
+                            if (openLockStatus.equals(dvId+"opening_true")) {
+                                ToastUtil.getInstance().showShort(gwLockInfo.getServerInfo().getNickName() + ":" + getString(R.string.is_opening_try_latter));
+                                return;
+                            }
+                            if (closeLockStatus.equals(dvId+"closing_true")) {
+                                ToastUtil.getInstance().showShort(gwLockInfo.getServerInfo().getNickName()+":"+getString(R.string.lock_already_open));
+                                return;
+                            }
+
+
+                            if (NetUtil.isNetworkAvailable()) {
+                                mPresenter.openLock(gwLockInfo);
+                            } else {
+                                ToastUtil.getInstance().showShort(getString(R.string.wifi_alreade_offline));
+                                return;
+                            }
                         }
                     }
                 }
@@ -843,42 +848,57 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
     }
 
     @Override
-    public void openLockSuccess() {
-        isOpening = false;
-        isClosing = true;
-        LogUtils.e(Tag,"当前状态是   isOpening    " + isOpening + "   isClosing   " + isClosing);
-        ToastUtil.getInstance().showShort(R.string.open_lock_success);
-        hiddenLoading();
+    public void openLockSuccess(String devId) {
+        openLockStatus =devId+"opening_false";
+        closeLockStatus=devId+"closing_true";
+        LogUtils.e(Tag,"当前状态是   isOpening    " + openLockStatus + "   isClosing   " + closeLockStatus);
+        GwLockInfo gwLockInfo=MyApplication.getInstance().getGatewayLockById(devId);
+        if (gwLockInfo!=null){
+            ToastUtil.getInstance().showShort(gwLockInfo.getServerInfo().getNickName()+":"+getString(R.string.open_lock_success));
+        }
+        //hiddenLoading();
     }
 
     @Override
-    public void openLockThrowable(Throwable throwable) {
-        isOpening = false;
-        ToastUtil.getInstance().showShort(R.string.open_lock_failed);
-        hiddenLoading();
+    public void openLockThrowable(Throwable throwable,String devId) {
+        openLockStatus=devId+"opening_false";
+        GwLockInfo gwLockInfo=MyApplication.getInstance().getGatewayLockById(devId);
+        if (gwLockInfo!=null){
+            ToastUtil.getInstance().showShort(gwLockInfo.getServerInfo().getNickName()+":"+getString(R.string.open_lock_failed));
+        }
+        LogUtils.e("开锁异常"+devId);
+       // hiddenLoading();
     }
 
     @Override
-    public void openLockFailed() {
-        isOpening = false;
-        ToastUtil.getInstance().showShort(R.string.open_lock_failed);
-        hiddenLoading();
+    public void openLockFailed(String devId) {
+        openLockStatus=devId+"opening_false";
+        LogUtils.e("开锁失败"+devId);
+        GwLockInfo gwLockInfo=MyApplication.getInstance().getGatewayLockById(devId);
+        if (gwLockInfo!=null){
+            ToastUtil.getInstance().showShort(gwLockInfo.getServerInfo().getNickName()+":"+getString(R.string.open_lock_failed));
+        }
+        //hiddenLoading();
     }
     @Override
-    public void startOpenLock() {
-        isOpening = true;
-        showLoading(getString(R.string.is_open_lock));
+    public void startOpenLock(String devId) {
+        openLockStatus=devId+"opening_true";
+        //showLoading(devId+":"+getString(R.string.is_open_lock));
     }
 
     @Override
-    public void lockCloseSuccess() {
-        isClosing = false;
+    public void lockCloseSuccess(String devId) {
+        closeLockStatus=devId+"closing_false";
     }
 
     @Override
-    public void lockCloseFailed() {
-        isClosing = false;
+    public void lockCloseFailed(String devId) {
+        closeLockStatus=devId+"closing_false";
     }
+
+
+
+
 
     @Override
     public void deviceStatusChange(DeviceOnLineBean deviceOnLineBean) {

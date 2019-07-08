@@ -135,12 +135,23 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
     public void onResume() {
         super.onResume();
         isDestroy = false;
-        if (!mPresenter.isAttach() && !isDestroy && homeFragment.isSelectHome && isCurrentFragment) {
-//        if (!mPresenter.isAttach()&& !isDestroy ) {
-            LogUtils.e("attachView   4");
-            mPresenter.attachView(this);
-            mPresenter.setBleLockInfo(bleLockInfo);
-            lockRunnable.run();
+        if (!isDestroy) {
+            if (!mPresenter.isAttach()) {
+                mPresenter.attachView( this);
+            }
+            if (isCurrentFragment && homeFragment.isSelectHome) {
+                LogUtils.e("setBleLockInfo    52   ");
+                mPresenter.setBleLockInfo(bleLockInfo);
+                boolean auth = mPresenter.isAuth(bleLockInfo, true);
+                if (auth) {
+                    changeOpenLockStatus(8);
+                } else {
+//                                changeOpenLockStatus(12);
+                }
+                LogUtils.e("切换到当前界面 52  设备 isdestroy  " + isDestroy + auth);
+                LogUtils.e(this + "   设置设备52  " + bleLockInfo.getServerLockInfo().toString());
+                onChangeInitView();
+            }
         }
         mPresenter.getOpenRecordFromServer(1, bleLockInfo);
     }
@@ -309,7 +320,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
 
             @Override
             public void onPageSelected(int i) {
-                LogUtils.e("设备切换   当前index   " + i + "  position  " + position +"   "+homeFragment.isSelectHome+"   homeFragment.isSelectHome ");
+                LogUtils.e("设备切换   当前index   " + i + "  position  " + position + "   " + homeFragment.isSelectHome + "   homeFragment.isSelectHome ");
                 if (i == position) {
                     if (!isDestroy) {
                         isCurrentFragment = true;
@@ -340,7 +351,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
             }
         });
         LogUtils.e("设备position " + position + "    " + homeFragment.getCurrentPosition() + "     " + homeFragment.isSelectHome);
-        if (position == 0 && position == homeFragment.getCurrentPosition() && homeFragment.isSelectHome && !isDestroy) {
+        if (position == 0 && position == homeFragment.getCurrentPosition() && homeFragment.isSelectHome && !isDestroy && homeFragment.isResumed()) {
             if (!mPresenter.isAttach()) {
                 LogUtils.e("attachView   3");
                 mPresenter.attachView(BleLockFragment.this);
@@ -405,7 +416,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
     public void changeOpenLockStatus(int status) {
         stopOpenLockAnimator();
         stopCloseLockAnimator();
-        LogUtils.e("状态改变   " +status);
+        LogUtils.e("状态改变   " + status);
         if (!isAdded()) {
             return;
         }
@@ -415,8 +426,8 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
             } else {
                 tvDeviceStatus.setText(getString(R.string.normal));
             }
-            if (bleLockInfo.getOpenNumbers()>0){
-                tvOpenLockTimes.setText(""+bleLockInfo.getOpenNumbers());
+            if (bleLockInfo.getOpenNumbers() > 0) {
+                tvOpenLockTimes.setText("" + bleLockInfo.getOpenNumbers());
             }
         } else {
             tvDeviceStatus.setText(getString(R.string.not_connected));
@@ -752,8 +763,8 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
             case R.id.rl_device_dynamic:
             case R.id.iv_device_dynamic:
                 bleLockInfo.setLockStatusException(false);
-                LogUtils.e("跳转设备动态界面   设备当前状态是   " + bleLockInfo.isAuth() +"当前的设备  mac  " + bleLockInfo.getServerLockInfo().getMacLock());
-                LogUtils.e("跳转设备动态界面   设备当前状态是   " + bleLockInfo.isAuth() +"Service设备  mac  " + MyApplication.getInstance().getBleService().getBleLockInfo().getServerLockInfo().getMacLock());
+                LogUtils.e("跳转设备动态界面   设备当前状态是   " + bleLockInfo.isAuth() + "当前的设备  mac  " + bleLockInfo.getServerLockInfo().getMacLock());
+                LogUtils.e("跳转设备动态界面   设备当前状态是   " + bleLockInfo.isAuth() + "Service设备  mac  " + MyApplication.getInstance().getBleService().getBleLockInfo().getServerLockInfo().getMacLock());
                 if (bleLockInfo.isAuth()) {
                     if (bleLockInfo.isLockStatusException()) {
                         tvDeviceStatus.setText(getString(R.string.no_normal));

@@ -51,7 +51,7 @@ public class GetFAQResult {
         private String question;
         private String answer;
         private int sortNum;
-        private int createTime;
+        private long createTime;
 
         public String get_id() {
             return _id;
@@ -85,11 +85,11 @@ public class GetFAQResult {
             this.sortNum = sortNum;
         }
 
-        public int getCreateTime() {
+        public long getCreateTime() {
             return createTime;
         }
 
-        public void setCreateTime(int createTime) {
+        public void setCreateTime(long createTime) {
             this.createTime = createTime;
         }
     }
