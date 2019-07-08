@@ -54,4 +54,14 @@ public class GwLockInfo implements Serializable {
     public void setPowerTimeStamp(String powerTimeStamp) {
         this.powerTimeStamp = powerTimeStamp;
     }
+
+    @Override
+    public String toString() {
+        return "GwLockInfo{" +
+                "gwID='" + gwID + '\'' +
+                ", serverInfo=" + serverInfo +
+                ", power=" + power +
+                ", powerTimeStamp='" + powerTimeStamp + '\'' +
+                '}';
+    }
 }
