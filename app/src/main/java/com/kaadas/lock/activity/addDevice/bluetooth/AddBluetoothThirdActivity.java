@@ -41,6 +41,7 @@ public class AddBluetoothThirdActivity extends BaseActivity<IBindBleView, BindBl
     private int version;
     private boolean bindSuccess = false;
     private String sn;
+    private String mac;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -52,8 +53,13 @@ public class AddBluetoothThirdActivity extends BaseActivity<IBindBleView, BindBl
         isBind = intent.getBooleanExtra(KeyConstants.IS_BIND, true);
         version = intent.getIntExtra(KeyConstants.BLE_VERSION, 0);
         sn = intent.getStringExtra(KeyConstants.BLE_DEVICE_SN);
+
+
+        mac = intent.getStringExtra(KeyConstants.BLE_MAC);
+        deviceName = intent.getStringExtra( KeyConstants.DEVICE_NAME);
+
         //pwd1设置给Presenter使用
-        mPresenter.setPwd1(password1, isBind, version, sn);
+        mPresenter.setPwd1(password1, isBind, version, sn,mac,deviceName);
         mPresenter.listenConnectState();
         ButterKnife.bind(this);
 

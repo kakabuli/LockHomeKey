@@ -39,6 +39,8 @@ public class AddBluetoothSecondActivity extends BaseActivity<IBindBleSecondView,
     private int version;
     private static final int NEXT_ACTIVITY_CODE = 333;
     private String sn;
+    private String mac;
+    private String deviceName;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -48,6 +50,12 @@ public class AddBluetoothSecondActivity extends BaseActivity<IBindBleSecondView,
         isBind = intent.getBooleanExtra(KeyConstants.IS_BIND,true);
         version = intent.getIntExtra(KeyConstants.BLE_VERSION, 0);
         sn = intent.getStringExtra(KeyConstants.BLE_DEVICE_SN );
+
+        mac = intent.getStringExtra(KeyConstants.BLE_MAC);
+        deviceName = intent.getStringExtra( KeyConstants.DEVICE_NAME);
+
+
+
         LogUtils.e("第二步   " + password1 +"  设备SN    " + sn);
         setContentView(R.layout.device_bluetooth_second);
         mPresenter.listenConnectState();
@@ -72,6 +80,8 @@ public class AddBluetoothSecondActivity extends BaseActivity<IBindBleSecondView,
                 nextIntent.putExtra(KeyConstants.IS_BIND, isBind);
                 nextIntent.putExtra(KeyConstants.BLE_VERSION, version);
                 nextIntent.putExtra(KeyConstants.BLE_DEVICE_SN, sn);
+                nextIntent.putExtra(KeyConstants.BLE_MAC, mac);
+                nextIntent.putExtra(KeyConstants.DEVICE_NAME, deviceName);
                 startActivityForResult(nextIntent,NEXT_ACTIVITY_CODE);
                 break;
             case R.id.help:

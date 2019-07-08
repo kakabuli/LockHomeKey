@@ -263,10 +263,10 @@ public class SearchDevicePresenter<T> extends BasePresenter<ISearchDeviceView> {
                                         mViewRef.get().onConnectSuccess();
                                     }
                                     readSnTimes = 0;  //初始化读取SN的次数
-                                    readSn(bleStateBean.getBleVersion());
+                                    readSn(bleStateBean.getBleVersion(),device.getAddress(),device.getName());
                                 }else if (bleStateBean.getBleVersion() == 1){ //最老的模块，走老的流程
                                     if (mViewRef.get() != null) {
-                                        mViewRef.get().onConnectedAndIsOldMode(bleStateBean.getBleVersion(),isBind);
+                                        mViewRef.get().onConnectedAndIsOldMode(bleStateBean.getBleVersion(),isBind,device.getAddress(),device.getName());
                                     }
                                 }
                             } else {
@@ -284,7 +284,7 @@ public class SearchDevicePresenter<T> extends BasePresenter<ISearchDeviceView> {
     }
 
 
-    public void readSn(int version) {
+    public void readSn(int version,String mac,String deviceName) {
         if (bleService ==null  ){ //判断
             if ( MyApplication.getInstance().getBleService() ==null){
                 return  ;
@@ -314,14 +314,14 @@ public class SearchDevicePresenter<T> extends BasePresenter<ISearchDeviceView> {
                     public void accept(ReadInfoBean readInfoBean) throws Exception {
                         LogUtils.e("读取SN成功  " + readInfoBean.data);
                         toDisposable(snDisposable);
-                        getPwd1((String) readInfoBean.data,version);
+                        getPwd1((String) readInfoBean.data,version,mac ,deviceName);
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
                         LogUtils.e("读取SN失败  " + throwable.getMessage());
                         readSnTimes++;
-                        readSn(version);
+                        readSn(version,mac,deviceName);
                     }
                 });
         compositeDisposable.add(snDisposable);
@@ -329,7 +329,7 @@ public class SearchDevicePresenter<T> extends BasePresenter<ISearchDeviceView> {
     }
 
 
-    public void getPwd1(String sn,int version) {
+    public void getPwd1(String sn,int version,String mac,String deviceName) {
 
         if (mViewRef.get() != null) {
             mViewRef.get().getPwd1();
@@ -345,7 +345,7 @@ public class SearchDevicePresenter<T> extends BasePresenter<ISearchDeviceView> {
                         if ("200".equals(getPwdBySnResult.getCode())) { //获取pwd1成功
                             pwd1 = getPwdBySnResult.getData().getPassword1();
                             if (mViewRef.get() != null) {
-                                mViewRef.get().getPwd1Success(pwd1, isBind,version,sn);
+                                mViewRef.get().getPwd1Success(pwd1, isBind,version,sn,mac,deviceName);
                             }
                         }
                     }

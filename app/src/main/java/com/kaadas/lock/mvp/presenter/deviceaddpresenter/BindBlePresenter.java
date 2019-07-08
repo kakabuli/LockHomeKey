@@ -50,13 +50,17 @@ public class BindBlePresenter<T> extends BasePresenter<IBindBleView> {
     private Disposable readLockTypeDisposable;
     private int version;
     private Disposable inNetNotifyDisposable;
+    private String mac;
+    private String deviceName;
 
 
-    public void setPwd1(String pwd1, boolean isBind, int version,String deviceSn) {
+    public void setPwd1(String pwd1, boolean isBind, int version,String deviceSn,String mac,String deviceName) {
         LogUtils.e("密码1是   " + pwd1);
         this.isBind = isBind;
         this.pwd1 = pwd1;
         this.version = version;
+        this.mac = mac;
+        this.deviceName = deviceName;
 
         if (version == 1) {
             listenerInNetNotify(version);
@@ -206,7 +210,7 @@ public class BindBlePresenter<T> extends BasePresenter<IBindBleView> {
                 }
                 bleService.sendCommand(OldBleCommandFactory.getEndFrame()); //7
                 if (mViewRef.get() != null) {
-                    mViewRef.get().onBindSuccess(bleService.getCurrentDevice().getName()); //8
+                    mViewRef.get().onBindSuccess(deviceName); //8
                 }
             }
         }, 100);
@@ -337,14 +341,14 @@ public class BindBlePresenter<T> extends BasePresenter<IBindBleView> {
             }
         }
 
-        XiaokaiNewServiceImp.addDevice(bleService.getCurrentDevice().getAddress(), bleService.getCurrentDevice().getName(),  //13
+        XiaokaiNewServiceImp.addDevice(mac, deviceName,  //13
                 MyApplication.getInstance().getUid(), pwd1, pwd2, model, bleVersion,deviceSn)
                 .subscribe(new BaseObserver<BaseResult>() {
                     @Override
                     public void onSuccess(BaseResult result) {
                         LogUtils.e("绑定成功");
                         //清除保存的密码
-                        SPUtils.remove(KeyConstants.SAVE_PWD_HEARD + bleService.getCurrentDevice().getAddress()); //14
+                        SPUtils.remove(KeyConstants.SAVE_PWD_HEARD + mac); //14
                         if ("1".equals(bleVersion)) {
                             sendResponseData(true);
                             handler.postDelayed(new Runnable() {
@@ -356,7 +360,7 @@ public class BindBlePresenter<T> extends BasePresenter<IBindBleView> {
                             }, 500);
                         } else {
                             if (mViewRef.get() != null) {
-                                mViewRef.get().onBindSuccess(bleService.getCurrentDevice().getName());  //16
+                                mViewRef.get().onBindSuccess(deviceName);  //16
                             }
                             bleService.release();//绑定蓝牙界面  //17
                             MyApplication.getInstance().getAllDevicesByMqtt(true);
@@ -395,7 +399,7 @@ public class BindBlePresenter<T> extends BasePresenter<IBindBleView> {
         if (bleService ==null && MyApplication.getInstance().getBleService() ==null){ //判断
             return;
         }
-        XiaokaiNewServiceImp.resetDevice(MyApplication.getInstance().getUid(), bleService.getCurrentDevice().getName())  //18
+        XiaokaiNewServiceImp.resetDevice(MyApplication.getInstance().getUid(), deviceName)  //18
                 .subscribe(new BaseObserver<BaseResult>() {
                     @Override
                     public void onSuccess(BaseResult result) {
