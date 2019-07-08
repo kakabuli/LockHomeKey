@@ -106,7 +106,7 @@ public class BluetoothSharedDeviceBean implements Serializable {
         private String open_purview;
         private String datestart;
         private String dateend;
-        private int createTime;
+        private long createTime;
         private List<String> items;
 
         public String get_id() {
@@ -165,11 +165,11 @@ public class BluetoothSharedDeviceBean implements Serializable {
             this.dateend = dateend;
         }
 
-        public int getCreateTime() {
+        public long getCreateTime() {
             return createTime;
         }
 
-        public void setCreateTime(int createTime) {
+        public void setCreateTime(long createTime) {
             this.createTime = createTime;
         }
 
