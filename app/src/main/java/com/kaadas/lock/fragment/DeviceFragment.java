@@ -255,10 +255,10 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                                 String deviceSN = gatewayInfo.getServerInfo().getDeviceSN();
                                 mPresenter.bindMimi(deviceSN, deviceSN);
                             }
-                            if (gatewayInfo!=null&&gatewayInfo.getServerInfo().getIsAdmin()==1){
+                            /*if (gatewayInfo!=null&&gatewayInfo.getServerInfo().getIsAdmin()==1){
                                 mDeviceList.add(homeShowBean);
-                            }
-
+                            }*/
+                            mDeviceList.add(homeShowBean);
                             break;
                         case HomeShowBean.TYPE_BLE_LOCK:
                             //蓝牙锁
