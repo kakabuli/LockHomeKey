@@ -261,7 +261,11 @@ public class LinphoneUtils {
      * @param isMicMuted
      */
     public void toggleMicro(boolean isMicMuted) {
-        mLinphoneCore.muteMic(isMicMuted);
+        try{
+            mLinphoneCore.muteMic(isMicMuted);
+        }catch (Exception e){
+
+        }
     }
 
     public void setVideoSizeByName(String value) {

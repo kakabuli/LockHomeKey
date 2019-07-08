@@ -84,7 +84,7 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
     ImageView video_v_go;
     ImageView iv_back;
     SurfaceView video_v_surfaceview;
-    ForecastAdapter  forecastAdapter = null;
+    ForecastAdapter forecastAdapter = null;
     SurfaceView videoPreview;
     ImageView hangup;
     CheckBox cbScreenShot;

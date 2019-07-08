@@ -101,4 +101,18 @@ public class ServerGwDevice implements Serializable {
 
     public ServerGwDevice() {
     }
+
+    @Override
+    public String toString() {
+        return "ServerGwDevice{" +
+                "SW='" + SW + '\'' +
+                ", deviceId='" + deviceId + '\'' +
+                ", device_type='" + device_type + '\'' +
+                ", event_str='" + event_str + '\'' +
+                ", ipaddr='" + ipaddr + '\'' +
+                ", macaddr='" + macaddr + '\'' +
+                ", nickName='" + nickName + '\'' +
+                ", time='" + time + '\'' +
+                '}';
+    }
 }
