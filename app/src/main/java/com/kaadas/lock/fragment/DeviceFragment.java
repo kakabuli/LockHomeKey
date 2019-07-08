@@ -227,8 +227,8 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                                     cateEyeInfo.getServerInfo().setEvent_str("offline");
                                 }
                             }
-                            DevicePower catPower = daoSession.getDevicePowerDao().queryBuilder().where(DevicePowerDao.Properties.DeviceIdUid.eq(cateEyeInfo.getServerInfo().getDeviceId() + uid)).unique();
-                            if (catPower != null) {
+                            DevicePower catPower=daoSession.getDevicePowerDao().queryBuilder().where(DevicePowerDao.Properties.DeviceIdUid.eq(cateEyeInfo.getServerInfo().getDeviceId()+uid)).unique();
+                            if (catPower!=null){
                                 cateEyeInfo.setPower(catPower.getPower());
                             }
                             //请求电量
@@ -525,7 +525,7 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                                         startActivityForResult(detailIntent, KeyConstants.GET_BLE_POWER);
                                     }
                                 } else {
-                                    Intent detailIntent = new Intent(getActivity(), OldBluetoothLockDetailActivity.class);
+                                    Intent detailIntent = new Intent(getActivity(), BluetoothLockFunctionActivity.class);
                                     String model = bleLockInfo.getServerLockInfo().getModel();
                                     detailIntent.putExtra(KeyConstants.DEVICE_TYPE, model);
                                     startActivityForResult(detailIntent, KeyConstants.GET_BLE_POWER);
@@ -538,7 +538,6 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                                 startActivityForResult(detailIntent, KeyConstants.GET_BLE_POWER);
                             }
                         } else {
-                            LogUtils.e("点击8");
                             Intent impowerIntent = new Intent(getActivity(), BluetoothLockAuthorizationActivity.class);
                             String model = bleLockInfo.getServerLockInfo().getModel();
                             impowerIntent.putExtra(KeyConstants.DEVICE_TYPE, model);
@@ -546,7 +545,7 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                         }
                         break;
                 }
-            } else {
+            }else{
                 ToastUtil.getInstance().showShort(R.string.please_refresh_page_get_newdata);
             }
         }
@@ -593,7 +592,7 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                         CateEyeInfo cateEyeInfo = (CateEyeInfo) device.getObject();
                         cateEyeInfo.setPower(power);
                         cateEyeInfo.setPowerTimeStamp(timestamp);
-                        DevicePower devicePower = new DevicePower(devciceId + uid, devciceId, power);
+                        DevicePower devicePower=new DevicePower(devciceId+uid,devciceId,power);
                         daoSession.insertOrReplace(devicePower);
                         /*if (cateEyeInfo.getServerInfo().getEvent_str().equals("offline")) {
                             cateEyeInfo.getServerInfo().setEvent_str("online");
@@ -611,7 +610,7 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                         gwLockInfo.setPower(power);
                         gwLockInfo.setPowerTimeStamp(timestamp);
                         //缓存电量
-                        DevicePower devicePower = new DevicePower(devciceId + uid, devciceId, power);
+                        DevicePower devicePower=new DevicePower(devciceId+uid,devciceId,power);
                         daoSession.insertOrReplace(devicePower);
                         if (deviceDetailAdapter != null) {
                             deviceDetailAdapter.notifyDataSetChanged();
@@ -697,14 +696,14 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                                 //猫眼
                                 case HomeShowBean.TYPE_CAT_EYE:
                                     CateEyeInfo cateEyeInfo = (CateEyeInfo) device.getObject();
-                                    if (cateEyeInfo.getGwID().equals(gatewayId)) {
+                                    if (cateEyeInfo.getGwID().equals(gatewayId)){
                                         cateEyeInfo.getServerInfo().setEvent_str("offline");
                                     }
                                     break;
                                 //网关锁
                                 case HomeShowBean.TYPE_GATEWAY_LOCK:
                                     GwLockInfo gwLockInfo = (GwLockInfo) device.getObject();
-                                    if (gwLockInfo.getGwID().equals(gatewayId)) {
+                                    if (gwLockInfo.getGwID().equals(gatewayId)){
                                         gwLockInfo.getServerInfo().setEvent_str("offline");
                                     }
                                     break;
@@ -732,7 +731,7 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                         //猫眼上线
                         case HomeShowBean.TYPE_CAT_EYE:
                             CateEyeInfo cateEyeInfo = (CateEyeInfo) homeShowBean.getObject();
-                            if (cateEyeInfo.getGwID().equals(gatewayId) && cateEyeInfo.getServerInfo().getDeviceId().equals(deviceId)) {
+                            if (cateEyeInfo.getGwID().equals(gatewayId)&&cateEyeInfo.getServerInfo().getDeviceId().equals(deviceId)) {
                                 if ("online".equals(eventStr)) {
                                     cateEyeInfo.getServerInfo().setEvent_str("online");
                                 } else {
@@ -747,7 +746,7 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                         //网关锁上线
                         case HomeShowBean.TYPE_GATEWAY_LOCK:
                             GwLockInfo gwLockInfo = (GwLockInfo) homeShowBean.getObject();
-                            if (gwLockInfo.getGwID().equals(gatewayId) && gwLockInfo.getServerInfo().getDeviceId().equals(deviceId)) {
+                            if (gwLockInfo.getGwID().equals(gatewayId)&&gwLockInfo.getServerInfo().getDeviceId().equals(deviceId)) {
                                 if ("online".equals(eventStr)) {
                                     gwLockInfo.getServerInfo().setEvent_str("online");
                                 } else if ("offline".equals(eventStr)) {
@@ -818,8 +817,8 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                             if (device.getDeviceId().equals(getBle.getServerLockInfo().getLockName())) {
                                 BleLockInfo bleLockInfo = (BleLockInfo) device.getObject();
                                 bleLockInfo.setBattery(getBle.getBattery());
-                                String deviceSN = bleLockInfo.getServerLockInfo().getDeviceSN();
-                                DevicePower devicePower = new DevicePower(deviceSN + uid, deviceSN, getBle.getBattery());
+                                String deviceSN=bleLockInfo.getServerLockInfo().getDeviceSN();
+                                DevicePower devicePower=new DevicePower(deviceSN+uid,deviceSN,getBle.getBattery());
                                 daoSession.insertOrReplace(devicePower);
                                 if (getBle.isConnected()) {
                                     bleLockInfo.setConnected(true);
