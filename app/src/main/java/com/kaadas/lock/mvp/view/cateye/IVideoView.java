@@ -130,4 +130,6 @@ public interface IVideoView extends IBaseView {
      */
 
     void netWorkChange(boolean isEnable);
+
+    void callSuccess();
 }

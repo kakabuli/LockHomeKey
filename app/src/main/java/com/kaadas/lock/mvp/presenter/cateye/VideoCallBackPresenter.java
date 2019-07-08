@@ -1,5 +1,7 @@
 package com.kaadas.lock.mvp.presenter.cateye;
 
+import android.util.Log;
+
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.mvp.mvpbase.BasePresenter;
 import com.kaadas.lock.mvp.view.cateye.IVedeoCallBack;
@@ -12,7 +14,7 @@ import com.kaadas.lock.utils.ftp.GeTui;
 
 import net.sdvn.cmapi.Device;
 
-import org.linphone.mediastream.Log;
+
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;

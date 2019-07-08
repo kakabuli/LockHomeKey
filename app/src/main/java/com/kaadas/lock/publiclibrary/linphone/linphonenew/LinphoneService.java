@@ -403,7 +403,7 @@ public final class LinphoneService extends Service {
                     }
 
                     long diff=System.currentTimeMillis() - MyApplication.getInstance().getIsComingTime();
-                    Log.e(GeTui.VideoLog,"LinphoneService...."+diff);
+                    android.util.Log.e(GeTui.VideoLog,"LinphoneService...."+diff);
                     if (diff < 25 * 1000 && VideoVActivity.isRunning) {
                         // 屏幕亮了
                         handler.postDelayed(new Runnable() {

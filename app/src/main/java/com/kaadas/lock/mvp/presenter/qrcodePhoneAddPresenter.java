@@ -1,5 +1,7 @@
 package com.kaadas.lock.mvp.presenter;
 
+import android.util.Log;
+
 import com.google.gson.Gson;
 import com.hisilicon.hisilink.OnlineReciever;
 import com.hisilicon.hisilink.WiFiAdmin;
@@ -12,7 +14,6 @@ import com.kaadas.lock.publiclibrary.mqtt.util.MqttConstant;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttData;
 import com.kaadas.lock.utils.LogUtils;
 
-import org.linphone.mediastream.Log;
 
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
@@ -65,7 +66,7 @@ public class qrcodePhoneAddPresenter  <T> extends BasePresenter<IAddCatEyeView> 
                             LogUtils.e("猫眼上线:"+mqttData.getPayload());
                             LogUtils.e("本地信息为   " + "   " + deviceMac + "   " + deviceSn + "    " + gwId);
                             Log.e("denganzhi1","猫眼上线:"+mqttData.getPayload());
-                            Log.e("本地信息为   " + "   " + deviceMac + "   " + deviceSn + "    " + gwId);
+                          //  Log.e("本地信息为   " + "   " + deviceMac + "   " + deviceSn + "    " + gwId);
                             if ("online".equals(deviceOnLineBean.getEventparams().getEvent_str())) {
                                 //设备信息匹配成功  且是上线上报
                                 LogUtils.e("添加猫眼成功");
