@@ -616,8 +616,10 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
                             toDisposable(openLockDisposable);
                             OpenLockBean openLockBean = new Gson().fromJson(mqttData.getPayload(), OpenLockBean.class);
                             if ("200".equals(openLockBean.getReturnCode())) {
-                                SPUtils.put(KeyConstants.SAVA_LOCK_PWD + deviceId, pwd);
-                            } else {
+                                if (deviceId.equals(openLockBean.getDeviceId())){
+                                    SPUtils.put(KeyConstants.SAVA_LOCK_PWD + deviceId, pwd);
+                                }
+                            } else if (deviceId.equals(openLockBean.getDeviceId())){
                                 if (mViewRef.get() != null) {
                                     mViewRef.get().openLockFailed(deviceId);
                                 }

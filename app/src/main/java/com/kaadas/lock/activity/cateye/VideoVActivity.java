@@ -39,6 +39,7 @@ import com.kaadas.lock.adapter.ForecastAdapter;
 import com.kaadas.lock.bean.HomeShowBean;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.mvp.presenter.cateye.VideoPresenter;
+import com.kaadas.lock.mvp.view.IFamilyMemberDeatilView;
 import com.kaadas.lock.mvp.view.cateye.IVideoView;
 import com.kaadas.lock.publiclibrary.bean.CateEyeInfo;
 import com.kaadas.lock.publiclibrary.bean.GatewayInfo;
@@ -444,11 +445,11 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
                             }
                             String dvId=gwLockInfo.getServerInfo().getDeviceId();
                             if (openLockStatus.equals(dvId+"opening_true")) {
-                                ToastUtil.getInstance().showShort(dvId + ":" + R.string.is_opening_try_latter);
+                                ToastUtil.getInstance().showShort(gwLockInfo.getServerInfo().getNickName() + ":" + getString(R.string.is_opening_try_latter));
                                 return;
                             }
                             if (closeLockStatus.equals(dvId+"closing_true")) {
-                                ToastUtil.getInstance().showShort(dvId+":"+R.string.lock_already_open);
+                                ToastUtil.getInstance().showShort(gwLockInfo.getServerInfo().getNickName()+":"+getString(R.string.lock_already_open));
                                 return;
                             }
 
@@ -851,27 +852,38 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
         openLockStatus =devId+"opening_false";
         closeLockStatus=devId+"closing_true";
         LogUtils.e(Tag,"当前状态是   isOpening    " + openLockStatus + "   isClosing   " + closeLockStatus);
-        ToastUtil.getInstance().showShort(devId+":"+R.string.open_lock_success);
-        hiddenLoading();
+        GwLockInfo gwLockInfo=MyApplication.getInstance().getGatewayLockById(devId);
+        if (gwLockInfo!=null){
+            ToastUtil.getInstance().showShort(gwLockInfo.getServerInfo().getNickName()+":"+getString(R.string.open_lock_success));
+        }
+        //hiddenLoading();
     }
 
     @Override
     public void openLockThrowable(Throwable throwable,String devId) {
         openLockStatus=devId+"opening_false";
-        ToastUtil.getInstance().showShort(devId+":"+R.string.open_lock_failed);
-        hiddenLoading();
+        GwLockInfo gwLockInfo=MyApplication.getInstance().getGatewayLockById(devId);
+        if (gwLockInfo!=null){
+            ToastUtil.getInstance().showShort(gwLockInfo.getServerInfo().getNickName()+":"+getString(R.string.open_lock_failed));
+        }
+        LogUtils.e("开锁异常"+devId);
+       // hiddenLoading();
     }
 
     @Override
     public void openLockFailed(String devId) {
         openLockStatus=devId+"opening_false";
-        ToastUtil.getInstance().showShort(devId+":"+R.string.open_lock_failed);
-        hiddenLoading();
+        LogUtils.e("开锁失败"+devId);
+        GwLockInfo gwLockInfo=MyApplication.getInstance().getGatewayLockById(devId);
+        if (gwLockInfo!=null){
+            ToastUtil.getInstance().showShort(gwLockInfo.getServerInfo().getNickName()+":"+getString(R.string.open_lock_failed));
+        }
+        //hiddenLoading();
     }
     @Override
     public void startOpenLock(String devId) {
-        openLockStatus=devId+"opening_false";
-        showLoading(devId+":"+getString(R.string.is_open_lock));
+        openLockStatus=devId+"opening_true";
+        //showLoading(devId+":"+getString(R.string.is_open_lock));
     }
 
     @Override
