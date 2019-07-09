@@ -278,7 +278,11 @@ public class LinphoneUtils {
      * @param isSpeakerEnabled
      */
     public void toggleSpeaker(boolean isSpeakerEnabled) {
-        mLinphoneCore.enableSpeaker(isSpeakerEnabled);
+        try{
+            mLinphoneCore.enableSpeaker(isSpeakerEnabled);
+        }catch (Exception e){
+
+        }
     }
 
     public void StartRecordVideoPath(String filePath) {
