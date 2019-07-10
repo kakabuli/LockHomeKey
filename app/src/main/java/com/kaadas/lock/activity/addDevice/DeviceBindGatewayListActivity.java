@@ -249,6 +249,7 @@ public class DeviceBindGatewayListActivity extends BaseActivity<DeviceGatewayBin
     @Override
     public void onGetWifiInfoFailed(Throwable throwable) {
         hiddenLoading();
+        ToastUtil.getInstance().showLong(R.string.get_wifi_info_failed);
     }
 
 
