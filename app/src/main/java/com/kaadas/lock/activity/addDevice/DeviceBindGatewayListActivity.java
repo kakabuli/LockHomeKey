@@ -131,6 +131,7 @@ public class DeviceBindGatewayListActivity extends BaseActivity<DeviceGatewayBin
                         if (type == 2) {
                             //跳转猫眼流程,需要网络
                             if (NetUtil.isNetworkAvailable()){
+                                showLoading(getString(R.string.getting_wifi_info));
                                 mPresenter.getGatewayWifiPwd(zigbeeBindGatewayBeanSelect.getGatewayId());
                             }else{
                                 ToastUtil.getInstance().showShort(R.string.network_exception);
@@ -204,6 +205,7 @@ public class DeviceBindGatewayListActivity extends BaseActivity<DeviceGatewayBin
 
     @Override
     public void onGetWifiInfoSuccess(GwWiFiBaseInfo gwWiFiBaseInfo) {
+        hiddenLoading();
         String ssid = gwWiFiBaseInfo.getReturnData().getSsid();
         String pwd = gwWiFiBaseInfo.getReturnData().getPwd();
         if (NetUtil.isWifi()){
@@ -246,7 +248,7 @@ public class DeviceBindGatewayListActivity extends BaseActivity<DeviceGatewayBin
 
     @Override
     public void onGetWifiInfoFailed(Throwable throwable) {
-
+        hiddenLoading();
     }
 
 
