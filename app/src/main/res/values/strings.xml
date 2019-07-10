@@ -1137,4 +1137,5 @@
     <string name="finger">指纹</string>
     <string name="check_wifi_change">请切换手机网络为所选网关WiFi</string>
     <string name="ban_camera_permission">您已禁用拍照和录像权限并且设置为不再询问该权限，请到设置页面开启</string>
+    <string name="network_jion">点击退出可能导致猫眼配网失败</string>
 </resources>

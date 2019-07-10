@@ -28,6 +28,8 @@ import com.kaadas.lock.mvp.presenter.deviceaddpresenter.AddCatEyePresenter;
 import com.kaadas.lock.mvp.view.deviceaddview.IAddCatEyeView;
 import com.kaadas.lock.publiclibrary.mqtt.eventbean.DeviceOnLineBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.CatEyeInfoBean;
+import com.kaadas.lock.utils.AlertDialogUtil;
+import com.kaadas.lock.utils.AlertDialogUtil.ClickListener;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 
@@ -97,7 +99,22 @@ public class AddDeviceCatEyeThirdActivity extends BaseActivity<IAddCatEyeView, A
             startActivity(new Intent(AddDeviceCatEyeThirdActivity.this,DeviceBindGatewayListActivity.class));
             finish();
         }else {
-            Toast.makeText(this,getResources().getString(R.string.add_network_cateye),Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this,getResources().getString(R.string.add_network_cateye),Toast.LENGTH_SHORT).show();
+            AlertDialogUtil.getInstance().noEditTwoButtonDialogWidthDialog_color(AddDeviceCatEyeThirdActivity.this,getResources().getString(R.string.add_network_cateye),getString(R.string.network_jion),
+                    getString(R.string.quit),
+                    getString(R.string.cancel),
+                    new ClickListener(){
+
+                        @Override
+                        public void left() {
+                            finish();
+                        }
+
+                        @Override
+                        public void right() {
+
+                        }
+                    });
         }
 
     }
@@ -108,7 +125,24 @@ public class AddDeviceCatEyeThirdActivity extends BaseActivity<IAddCatEyeView, A
           if(isback){
               finish();
           }else {
-              Toast.makeText(this,getResources().getString(R.string.add_network_cateye),Toast.LENGTH_SHORT).show();
+              //Toast.makeText(this,getResources().getString(R.string.add_network_cateye),Toast.LENGTH_SHORT).show();
+              //noEditTwoButtonDialog
+              //Context context, String title, String content, String left, String right, ClickListener clickListener
+              AlertDialogUtil.getInstance().noEditTwoButtonDialogWidthDialog_color(AddDeviceCatEyeThirdActivity.this,getResources().getString(R.string.add_network_cateye),getString(R.string.network_jion),
+              getString(R.string.quit),
+                      getString(R.string.cancel),
+                      new ClickListener(){
+
+                          @Override
+                          public void left() {
+                               finish();
+                          }
+
+                          @Override
+                          public void right() {
+
+                          }
+                      });
               return true;
           }
         }
@@ -173,8 +207,8 @@ public class AddDeviceCatEyeThirdActivity extends BaseActivity<IAddCatEyeView, A
     public void joinTimeout() {
         //允许入网失败
 //        加入网关超时
-//        LogUtils.e("加入网关超时");
-//        pairCatEyeResult(false);
+        LogUtils.e("加入网关超时");
+        pairCatEyeResult(false);
     }
 
     @Override
@@ -193,6 +227,7 @@ public class AddDeviceCatEyeThirdActivity extends BaseActivity<IAddCatEyeView, A
     @Override
     public void onDestroy() {
         Log.d(TAG, "onDestroy");
+        HisiLibApi.stopMulticast();
         super.onDestroy();
     }
 
