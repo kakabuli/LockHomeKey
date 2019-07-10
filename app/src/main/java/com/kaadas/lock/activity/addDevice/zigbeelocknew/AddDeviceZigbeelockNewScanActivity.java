@@ -65,9 +65,16 @@ public class AddDeviceZigbeelockNewScanActivity extends CaptureActivity {
     private void checkVersion() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             int i=checkSelfPermission(Manifest.permission.CAMERA);
+            LogUtils.e("权限是允许还是开启还是禁止"+i);
             if (i==-1){
                 if (!shouldShowRequestPermissionRationale(Manifest.permission.CAMERA)){
+                    //禁止该权限
                     ToastUtil.getInstance().showShort(getString(R.string.ban_camera_permission));
+                    finish();
+                    return;
+                }else{
+                    //询问该权限
+                    ToastUtil.getInstance().showShort(getString(R.string.inquire_camera_permission));
                     finish();
                     return;
                 }
@@ -132,16 +139,18 @@ public class AddDeviceZigbeelockNewScanActivity extends CaptureActivity {
     //打开手电筒
     private void openFlashLight(boolean highlight){
         LogUtils.e("开启闪光灯");
-        camera=  getCameraManager().getOpenCamera().getCamera();
-        parameter = camera.getParameters();
-        if (!highlight) {
-            parameter.setFlashMode(android.hardware.Camera.Parameters.FLASH_MODE_TORCH);
-            camera.setParameters(parameter);
-            falshLight = true;
-        } else {  // 关灯
-            parameter.setFlashMode(android.hardware.Camera.Parameters.FLASH_MODE_OFF);
-            camera.setParameters(parameter);
-            falshLight = false;
+        if (getCameraManager().getOpenCamera()!=null) {
+            camera = getCameraManager().getOpenCamera().getCamera();
+            parameter = camera.getParameters();
+            if (!highlight) {
+                parameter.setFlashMode(android.hardware.Camera.Parameters.FLASH_MODE_TORCH);
+                camera.setParameters(parameter);
+                falshLight = true;
+            } else {  // 关灯
+                parameter.setFlashMode(android.hardware.Camera.Parameters.FLASH_MODE_OFF);
+                camera.setParameters(parameter);
+                falshLight = false;
+            }
         }
 
 
