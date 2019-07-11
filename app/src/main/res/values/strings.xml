@@ -1138,7 +1138,6 @@
     <string name="check_wifi_change">请切换手机网络为所选网关WiFi</string>
     <string name="ban_camera_permission">您已禁用拍照或录像权限并且设置为不再询问该权限，请到设置页面开启,并且设置为允许</string>
     <string name="inquire_camera_permission">您已设置拍照或录像权限为询问该权限，请到设置页面,设置为允许</string>
-    <string name="ban_camera_permission">您已禁用拍照和录像权限并且设置为不再询问该权限，请到设置页面开启</string>
     <string name="network_jion">点击退出可能导致猫眼配网失败</string>
     <string name="getting_wifi_info">正在获取网关WiFi信息...</string>
     <string name="get_wifi_info_failed">获取网关WiFi信息失败</string>
