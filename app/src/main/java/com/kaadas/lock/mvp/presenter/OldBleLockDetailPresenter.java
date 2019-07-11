@@ -505,6 +505,13 @@ public class OldBleLockDetailPresenter<T> extends BlePresenter<IOldBluetoothDevi
         super.attachView(view);
         //设置警报提醒
         toDisposable(warringDisposable);
+        if (bleService ==null  ){ //判断
+            if ( MyApplication.getInstance().getBleService() ==null){
+                return  ;
+            }else {
+                bleService = MyApplication.getInstance().getBleService(); //判断
+            }
+        }
         warringDisposable = bleService.listeneDataChange()
                 .filter(new Predicate<BleDataBean>() {
                     @Override
