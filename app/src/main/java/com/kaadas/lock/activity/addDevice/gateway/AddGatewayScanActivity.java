@@ -70,6 +70,10 @@ public class AddGatewayScanActivity extends CaptureActivity {
                     ToastUtil.getInstance().showShort(getString(R.string.ban_camera_permission));
                     finish();
                     return;
+                }else{
+                    ToastUtil.getInstance().showShort(getString(R.string.inquire_camera_permission));
+                    finish();
+                    return;
                 }
             }
         }
@@ -122,18 +126,19 @@ public class AddGatewayScanActivity extends CaptureActivity {
 
     //打开手电筒
     private void openFlashLight(boolean highlight){
-        camera=  getCameraManager().getOpenCamera().getCamera();
-        parameter = camera.getParameters();
-        if (!highlight) {
-            parameter.setFlashMode(android.hardware.Camera.Parameters.FLASH_MODE_TORCH);
-            camera.setParameters(parameter);
-            falshLight = true;
-        } else {  // 关灯
-            parameter.setFlashMode(android.hardware.Camera.Parameters.FLASH_MODE_OFF);
-            camera.setParameters(parameter);
-            falshLight = false;
+        if (getCameraManager().getOpenCamera()!=null) {
+            camera = getCameraManager().getOpenCamera().getCamera();
+            parameter = camera.getParameters();
+            if (!highlight) {
+                parameter.setFlashMode(android.hardware.Camera.Parameters.FLASH_MODE_TORCH);
+                camera.setParameters(parameter);
+                falshLight = true;
+            } else {  // 关灯
+                parameter.setFlashMode(android.hardware.Camera.Parameters.FLASH_MODE_OFF);
+                camera.setParameters(parameter);
+                falshLight = false;
+            }
         }
-
 
     }
 
