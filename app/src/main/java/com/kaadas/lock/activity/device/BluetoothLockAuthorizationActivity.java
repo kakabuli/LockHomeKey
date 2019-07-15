@@ -97,7 +97,9 @@ public class BluetoothLockAuthorizationActivity extends BaseBleActivity<IOldBlue
         showLockType();
         initView();
         initListener();
-        mPresenter.getAllPassword(bleLockInfo);
+        if (mPresenter != null) {
+            mPresenter.getAllPassword(bleLockInfo);
+        }
         lockRunnable = new Runnable() {
             @Override
             public void run() {
@@ -172,19 +174,19 @@ public class BluetoothLockAuthorizationActivity extends BaseBleActivity<IOldBlue
                 ivLockIcon.setImageResource(R.mipmap.bluetooth_authorization_lock_k9);
             } else if (model.contains("KX")) {
                 ivLockIcon.setImageResource(R.mipmap.bluetooth_authorization_lock_kx);
-            }else if (model.contains("S8C")){
+            } else if (model.contains("S8C")) {
                 ivLockIcon.setImageResource(R.mipmap.bluetooth_authorization_lock_s8);
-            }else if (model.contains("V6")){
+            } else if (model.contains("V6")) {
                 ivLockIcon.setImageResource(R.mipmap.bluetooth_authorization_lock_v6);
-            }else if (model.contains("V7")||model.contains("S100")){
+            } else if (model.contains("V7") || model.contains("S100")) {
                 ivLockIcon.setImageResource(R.mipmap.bluetooth_authorization_lock_v7);
-            }  else if (model.contains("S8")) {
+            } else if (model.contains("S8")) {
                 ivLockIcon.setImageResource(R.mipmap.bluetooth_authorization_lock_s8);
             } else if (model.contains("QZ013")) {
                 ivLockIcon.setImageResource(R.mipmap.bluetooth_authorization_lock_qz013);
             } else if (model.contains("QZ012")) {
                 ivLockIcon.setImageResource(R.mipmap.bluetooth_authorization_lock_qz012);
-            }else if (model.contains("K8-T")){
+            } else if (model.contains("K8-T")) {
                 ivLockIcon.setImageResource(R.mipmap.bluetooth_authorization_lock_k8_t);
             }
         }
@@ -440,7 +442,7 @@ public class BluetoothLockAuthorizationActivity extends BaseBleActivity<IOldBlue
         } else {
             ToastUtil.getInstance().showShort(getString(R.string.open_lock_failed));
         }
-        handler.postDelayed(lockRunnable,3000);
+        handler.postDelayed(lockRunnable, 3000);
     }
 
     @Override
@@ -513,7 +515,7 @@ public class BluetoothLockAuthorizationActivity extends BaseBleActivity<IOldBlue
     }
 
     public void changLockStatus(int state) {
-        if (isFinishing()){
+        if (isFinishing()) {
             return;
         }
         switch (state) {
@@ -573,17 +575,17 @@ public class BluetoothLockAuthorizationActivity extends BaseBleActivity<IOldBlue
         if (power > 100) {
             power = 100;
         }
-        if (power<0){
-            power=0;
+        if (power < 0) {
+            power = 0;
         }
         String lockPower = power + "%";
         tvPower.setText(lockPower);
         if (ivPower != null) {
             ivPower.setPower(power);
-            if (power<=20){
+            if (power <= 20) {
                 ivPower.setColor(R.color.cFF3B30);
                 ivPower.setBorderColor(R.color.white);
-            }else{
+            } else {
                 ivPower.setColor(R.color.c25F290);
                 ivPower.setBorderColor(R.color.white);
             }

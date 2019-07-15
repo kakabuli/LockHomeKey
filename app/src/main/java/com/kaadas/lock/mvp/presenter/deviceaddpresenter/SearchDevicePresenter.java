@@ -52,10 +52,10 @@ public class SearchDevicePresenter<T> extends BasePresenter<ISearchDeviceView> {
     private Disposable bindDisposable;
 
     public void searchDevices() {
-        if (bleService ==null  ){ //判断
-            if ( MyApplication.getInstance().getBleService() ==null){
-                return  ;
-            }else {
+        if (bleService == null) { //判断
+            if (MyApplication.getInstance().getBleService() == null) {
+                return;
+            } else {
                 bleService = MyApplication.getInstance().getBleService(); //判断
             }
         }
@@ -121,10 +121,10 @@ public class SearchDevicePresenter<T> extends BasePresenter<ISearchDeviceView> {
 
 
     public void checkBind(BluetoothDevice device) {
-        if (bleService ==null  ){ //判断
-            if ( MyApplication.getInstance().getBleService() ==null){
-                return  ;
-            }else {
+        if (bleService == null) { //判断
+            if (MyApplication.getInstance().getBleService() == null) {
+                return;
+            } else {
                 bleService = MyApplication.getInstance().getBleService(); //判断
             }
         }
@@ -155,7 +155,7 @@ public class SearchDevicePresenter<T> extends BasePresenter<ISearchDeviceView> {
 
                     @Override
                     public void onNext(Response<CheckBindResult> stringResponse) {
-                        if (stringResponse.body() == null){
+                        if (stringResponse.body() == null) {
                             if (mViewRef != null) {
                                 mViewRef.get().checkBindFailed();
                             }
@@ -163,10 +163,10 @@ public class SearchDevicePresenter<T> extends BasePresenter<ISearchDeviceView> {
                         }
                         if ("202".equals(stringResponse.body().getCode())) {
                             if (mViewRef != null) {
-                                if (stringResponse.body().getData()!=null){
-                                    mViewRef.get().onAlreadyBind(device,stringResponse.body().getData().getAdminname());
-                                }else {
-                                    mViewRef.get().onAlreadyBind(device,"");
+                                if (stringResponse.body().getData() != null) {
+                                    mViewRef.get().onAlreadyBind(device, stringResponse.body().getData().getAdminname());
+                                } else {
+                                    mViewRef.get().onAlreadyBind(device, "");
                                 }
                             }
                         } else if ("201".equals(stringResponse.body().getCode())) {
@@ -174,7 +174,7 @@ public class SearchDevicePresenter<T> extends BasePresenter<ISearchDeviceView> {
                                 mViewRef.get().onNoBind(device);
                             }
                         } else if ("444".equals(stringResponse.body().getCode())) {
-                            if (mqttService!=null){
+                            if (mqttService != null) {
                                 mqttService.httpMqttDisconnect();
                             }
                             MyApplication.getInstance().tokenInvalid(true);
@@ -191,7 +191,7 @@ public class SearchDevicePresenter<T> extends BasePresenter<ISearchDeviceView> {
                         if (e instanceof OtherException) {
                             OtherException exception = (OtherException) e;
                             if (exception.getResponse().getCode() == 444) {
-                                if (mqttService!=null){
+                                if (mqttService != null) {
                                     mqttService.httpMqttDisconnect();
                                 }
                                 MyApplication.getInstance().tokenInvalid(true);
@@ -215,7 +215,9 @@ public class SearchDevicePresenter<T> extends BasePresenter<ISearchDeviceView> {
     public void detachView() {
         super.detachView();
         //界面退出的时候
-              bleService.scanBleDevice(false);
+        if (bleService != null) {
+            bleService.scanBleDevice(false);
+        }
     }
 
     private int connectTimes = 0;
@@ -227,10 +229,10 @@ public class SearchDevicePresenter<T> extends BasePresenter<ISearchDeviceView> {
     }
 
     public void bindDevice(BluetoothDevice device, boolean isBind) {
-        if (bleService ==null  ){ //判断
-            if ( MyApplication.getInstance().getBleService() ==null){
-                return  ;
-            }else {
+        if (bleService == null) { //判断
+            if (MyApplication.getInstance().getBleService() == null) {
+                return;
+            } else {
                 bleService = MyApplication.getInstance().getBleService(); //判断
             }
         }
@@ -249,7 +251,7 @@ public class SearchDevicePresenter<T> extends BasePresenter<ISearchDeviceView> {
         if (mViewRef.get() != null) {
             mViewRef.get().onConnecting();
         }
-        try{
+        try {
             bindDisposable = bleService.subscribeDeviceConnectState() //1
                     .compose(RxjavaHelper.observeOnMainThread())
                     .subscribe(new Consumer<BleStateBean>() {
@@ -258,15 +260,15 @@ public class SearchDevicePresenter<T> extends BasePresenter<ISearchDeviceView> {
                             toDisposable(bindDisposable);
                             if (bleStateBean.isConnected()) {
                                 LogUtils.e(SearchDevicePresenter.class.getName() + "连接成功");
-                                if (bleStateBean.getBleVersion() == 2 || bleStateBean.getBleVersion() ==3) {
+                                if (bleStateBean.getBleVersion() == 2 || bleStateBean.getBleVersion() == 3) {
                                     if (mViewRef.get() != null) {
                                         mViewRef.get().onConnectSuccess();
                                     }
                                     readSnTimes = 0;  //初始化读取SN的次数
-                                    readSn(bleStateBean.getBleVersion(),device.getAddress(),device.getName());
-                                }else if (bleStateBean.getBleVersion() == 1){ //最老的模块，走老的流程
+                                    readSn(bleStateBean.getBleVersion(), device.getAddress(), device.getName());
+                                } else if (bleStateBean.getBleVersion() == 1) { //最老的模块，走老的流程
                                     if (mViewRef.get() != null) {
-                                        mViewRef.get().onConnectedAndIsOldMode(bleStateBean.getBleVersion(),isBind,device.getAddress(),device.getName());
+                                        mViewRef.get().onConnectedAndIsOldMode(bleStateBean.getBleVersion(), isBind, device.getAddress(), device.getName());
                                     }
                                 }
                             } else {
@@ -277,18 +279,18 @@ public class SearchDevicePresenter<T> extends BasePresenter<ISearchDeviceView> {
                         }
                     });
             compositeDisposable.add(bindDisposable);
-        }catch (Exception e){
+        } catch (Exception e) {
 
         }
 
     }
 
 
-    public void readSn(int version,String mac,String deviceName) {
-        if (bleService ==null  ){ //判断
-            if ( MyApplication.getInstance().getBleService() ==null){
-                return  ;
-            }else {
+    public void readSn(int version, String mac, String deviceName) {
+        if (bleService == null) { //判断
+            if (MyApplication.getInstance().getBleService() == null) {
+                return;
+            } else {
                 bleService = MyApplication.getInstance().getBleService(); //判断
             }
         }
@@ -314,14 +316,14 @@ public class SearchDevicePresenter<T> extends BasePresenter<ISearchDeviceView> {
                     public void accept(ReadInfoBean readInfoBean) throws Exception {
                         LogUtils.e("读取SN成功  " + readInfoBean.data);
                         toDisposable(snDisposable);
-                        getPwd1((String) readInfoBean.data,version,mac ,deviceName);
+                        getPwd1((String) readInfoBean.data, version, mac, deviceName);
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
                         LogUtils.e("读取SN失败  " + throwable.getMessage());
                         readSnTimes++;
-                        readSn(version,mac,deviceName);
+                        readSn(version, mac, deviceName);
                     }
                 });
         compositeDisposable.add(snDisposable);
@@ -329,7 +331,7 @@ public class SearchDevicePresenter<T> extends BasePresenter<ISearchDeviceView> {
     }
 
 
-    public void getPwd1(String sn,int version,String mac,String deviceName) {
+    public void getPwd1(String sn, int version, String mac, String deviceName) {
 
         if (mViewRef.get() != null) {
             mViewRef.get().getPwd1();
@@ -345,14 +347,14 @@ public class SearchDevicePresenter<T> extends BasePresenter<ISearchDeviceView> {
                         if ("200".equals(getPwdBySnResult.getCode())) { //获取pwd1成功
                             pwd1 = getPwdBySnResult.getData().getPassword1();
                             if (mViewRef.get() != null) {
-                                mViewRef.get().getPwd1Success(pwd1, isBind,version,sn,mac,deviceName);
+                                mViewRef.get().getPwd1Success(pwd1, isBind, version, sn, mac, deviceName);
                             }
                         }
                     }
 
                     @Override
                     public void onAckErrorCode(BaseResult baseResult) {
-                        LogUtils.e("获取pwd1失败 "+baseResult.getCode());
+                        LogUtils.e("获取pwd1失败 " + baseResult.getCode());
                         if ("419".equals(baseResult.getCode())) {  //此SN在服务器没有找到
                             LogUtils.e("获取pwd1失败   服务器没有该SN  将Mac地址转换成pwd");
                             bPwd1 = device.getAddress().replace(":", "").getBytes();
@@ -360,7 +362,7 @@ public class SearchDevicePresenter<T> extends BasePresenter<ISearchDeviceView> {
                             pwd1 = Rsa.bytesToHexString(bPwd1);
                             if (mViewRef.get() != null) {
 //                                mViewRef.get().getPwd1Success(pwd1, isBind,version);
-                                if (bleService !=null){  //1
+                                if (bleService != null) {  //1
                                     bleService.release(); //1
                                 }
                                 mViewRef.get().notice419();
