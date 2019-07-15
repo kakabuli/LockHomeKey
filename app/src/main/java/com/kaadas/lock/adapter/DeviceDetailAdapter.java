@@ -152,6 +152,10 @@ public class DeviceDetailAdapter extends BaseQuickAdapter<HomeShowBean, BaseView
                             helper.setImageResource(R.id.device_image, R.mipmap.v7);
                         }else if (model.startsWith("S8C")){
                             helper.setImageResource(R.id.device_image, R.mipmap.s8);
+                        }else if (model.startsWith("S6")){
+                            helper.setImageResource(R.id.device_image, R.mipmap.s6);
+                        }else if (model.startsWith("K100")){
+                            helper.setImageResource(R.id.device_image, R.mipmap.k100);
                         } else{
                             helper.setImageResource(R.id.device_image, R.mipmap.default_zigbee_lock_icon);
                         }
