@@ -47,6 +47,7 @@ import com.kaadas.lock.publiclibrary.mqtt.util.MqttData;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.RecordTools;
+import com.kaadas.lock.utils.Rom;
 import com.kaadas.lock.utils.Rsa;
 import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.SPUtils2;
@@ -462,14 +463,6 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
         }
     }
 
-    static  boolean isFront =false;
-    public void isFontShow(){
-        isFront=true;
-    }
-    public void  noIsFont(){
-        isFront=false;
-    }
-
     public void initLinphone() {
         if (!TextUtils.isEmpty(MyApplication.getInstance().getToken()) && !TextUtils.isEmpty(MyApplication.getInstance().getUid())) {
             LinphoneHelper.setAccount(MyApplication.getInstance().getUid(), "12345678Bm", MqttConstant.LINPHONE_URL);
@@ -488,7 +481,7 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                 @Override
                 public void registrationOk() {
                     super.registrationOk();
-//                    LogUtils.e("Linphone注册成功     ");
+                    LogUtils.e("Linphone注册成功     ");
                 }
 
                 @Override
@@ -506,7 +499,6 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                 public void incomingCall(LinphoneCall linphoneCall) {
                     //收到来电通知
                     LogUtils.e("Linphone  收到来电     ");
-                    Log.e(GeTui.VideoLog, "  Linphone  收到来电:"+isFront);
 //                    if(VideoVActivity.isRunning && isFront){
 //                          Toast.makeText(mContext,mContext.getString(R.string.video_desotry),Toast.LENGTH_LONG).show();
 //                    }
@@ -711,10 +703,26 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
     public void uploadpushmethod() {
         String uid = (String) SPUtils.get(SPUtils.UID, "");
         String JpushId = (String) SPUtils2.get(MyApplication.getInstance(), GeTui.JPUSH_ID, "");
-        Log.e(GeTui.VideoLog, "uid:" + uid + " jpushid:" + JpushId + " token:" + MyApplication.getInstance().getToken());
         //uploadPushId(String uid, String jpushId, int type)
+        // 个推
+        int type=2;
+        String phoneType="other";
+        //  华为
+        if(Rom.isEmui()){
+            String token= (String) SPUtils.get(GeTui.HUAWEI_KEY, "");
+            if(!TextUtils.isEmpty(token)){
+                JpushId=token;
+                type=3;
+                phoneType=GeTui.HUAWEI_KEY;
+            }else {
+                Log.e(GeTui.VideoLog,"huawei-->MainAcvitiyPresenter=>获取token为null..上传失败");
+                return;
+            }
+        }
+        Log.e(GeTui.VideoLog, "MainActivityPresenter-->phoneType:"+phoneType+" uid:" + uid + " jpushid:" + JpushId + " token:" + MyApplication.getInstance().getToken());
+
         if (!TextUtils.isEmpty(uid) && !TextUtils.isEmpty(JpushId)) {
-            XiaokaiNewServiceImp.uploadPushId(uid, JpushId, 2).subscribe(new BaseObserver<BaseResult>() {
+            XiaokaiNewServiceImp.uploadPushId(uid, JpushId, type).subscribe(new BaseObserver<BaseResult>() {
                 @Override
                 public void onSuccess(BaseResult baseResult) {
                     if (mViewRef != null) {
@@ -813,62 +821,69 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
         String uid = MyApplication.getInstance().getUid();
         List<HomeShowBean> homeShowBeans = new ArrayList<>();
         //获取蓝牙
-        List<BleLockServiceInfo> bleLockList = daoSession.getBleLockServiceInfoDao().queryBuilder().where(BleLockServiceInfoDao.Properties.Uid.eq(uid)).list();
-        if (bleLockList != null && bleLockList.size() > 0) {
-            for (BleLockServiceInfo bleDevice : bleLockList) {
-                ServerBleDevice serverBleDevice = new ServerBleDevice();
-                serverBleDevice.setAuto_lock(bleDevice.getAuto_lock());
-                serverBleDevice.setCenter_latitude(bleDevice.getCenter_latitude());
-                serverBleDevice.setCenter_longitude(bleDevice.getCenter_longitude());
-                serverBleDevice.setCircle_radius(bleDevice.getCircle_radius());
-                serverBleDevice.setLockName(bleDevice.getLockName());
-                serverBleDevice.setLockNickName(bleDevice.getLockNickName());
-                serverBleDevice.setMacLock(bleDevice.getMacLock()); //设置值
-                serverBleDevice.setIs_admin(bleDevice.getIs_admin());
-                serverBleDevice.setModel(bleDevice.getModel());
-                serverBleDevice.setOpen_purview(bleDevice.getOpen_purview());
-                serverBleDevice.setPassword1(bleDevice.getPassword1());
-                serverBleDevice.setPassword2(bleDevice.getPassword2());
+        if (daoSession!=null&&daoSession.getBleLockServiceInfoDao()!=null) {
+            List<BleLockServiceInfo> bleLockList = daoSession.getBleLockServiceInfoDao().queryBuilder().where(BleLockServiceInfoDao.Properties.Uid.eq(uid)).list();
+            if (bleLockList != null && bleLockList.size() > 0) {
+                for (BleLockServiceInfo bleDevice : bleLockList) {
+                    ServerBleDevice serverBleDevice = new ServerBleDevice();
+                    serverBleDevice.setAuto_lock(bleDevice.getAuto_lock());
+                    serverBleDevice.setCenter_latitude(bleDevice.getCenter_latitude());
+                    serverBleDevice.setCenter_longitude(bleDevice.getCenter_longitude());
+                    serverBleDevice.setCircle_radius(bleDevice.getCircle_radius());
+                    serverBleDevice.setLockName(bleDevice.getLockName());
+                    serverBleDevice.setLockNickName(bleDevice.getLockNickName());
+                    serverBleDevice.setMacLock(bleDevice.getMacLock()); //设置值
+                    serverBleDevice.setIs_admin(bleDevice.getIs_admin());
+                    serverBleDevice.setModel(bleDevice.getModel());
+                    serverBleDevice.setOpen_purview(bleDevice.getOpen_purview());
+                    serverBleDevice.setPassword1(bleDevice.getPassword1());
+                    serverBleDevice.setPassword2(bleDevice.getPassword2());
 
-                serverBleDevice.setBleVersion(bleDevice.getBleVersion());
+                    serverBleDevice.setBleVersion(bleDevice.getBleVersion());
 
-                serverBleDevice.setModel(bleDevice.getModel());
+                    serverBleDevice.setModel(bleDevice.getModel());
 
-                serverBleDevice.setDeviceSN(bleDevice.getDeviceSN());
-                serverBleDevice.setSoftwareVersion(bleDevice.getSoftwareVersion());
-                serverBleDevice.setBleVersion(bleDevice.getBleVersion());
-                serverBleDevice.setCreateTime(bleDevice.getCreateTime());
+                    serverBleDevice.setDeviceSN(bleDevice.getDeviceSN());
+                    serverBleDevice.setSoftwareVersion(bleDevice.getSoftwareVersion());
+                    serverBleDevice.setBleVersion(bleDevice.getBleVersion());
+                    serverBleDevice.setCreateTime(bleDevice.getCreateTime());
 
-                BleLockInfo bleLockInfo = new BleLockInfo(serverBleDevice);
-                homeShowBeans.add(new HomeShowBean(HomeShowBean.TYPE_BLE_LOCK, bleDevice.getLockName(), bleDevice.getLockNickName(), bleLockInfo));
+                    BleLockInfo bleLockInfo = new BleLockInfo(serverBleDevice);
+                    homeShowBeans.add(new HomeShowBean(HomeShowBean.TYPE_BLE_LOCK, bleDevice.getLockName(), bleDevice.getLockNickName(), bleLockInfo));
+                }
             }
         }
         //获取网关
-        List<GatewayServiceInfo> gatewayServiceInfoList = daoSession.getGatewayServiceInfoDao().queryBuilder().where(GatewayServiceInfoDao.Properties.Uid.eq(uid)).list();
-        if (gatewayServiceInfoList != null && gatewayServiceInfoList.size() > 0) {
-            for (GatewayServiceInfo gatewayServiceInfo : gatewayServiceInfoList) {
-                GatewayInfo newGatewayInfo = new GatewayInfo(new ServerGatewayInfo(gatewayServiceInfo.getDeviceSN(), gatewayServiceInfo.getDeviceNickName(), gatewayServiceInfo.getAdminuid(), gatewayServiceInfo.getAdminName(), gatewayServiceInfo.getAdminNickname(), gatewayServiceInfo.getIsAdmin(), gatewayServiceInfo.getMeUsername(), gatewayServiceInfo.getMePwd(), gatewayServiceInfo.getMeBindState()));
-                homeShowBeans.add(new HomeShowBean(HomeShowBean.TYPE_GATEWAY, gatewayServiceInfo.getDeviceSN(), gatewayServiceInfo.getDeviceNickName(), newGatewayInfo));
+        if (daoSession!=null&&daoSession.getGatewayServiceInfoDao()!=null){
+            List<GatewayServiceInfo> gatewayServiceInfoList = daoSession.getGatewayServiceInfoDao().queryBuilder().where(GatewayServiceInfoDao.Properties.Uid.eq(uid)).list();
+            if (gatewayServiceInfoList != null && gatewayServiceInfoList.size() > 0) {
+                for (GatewayServiceInfo gatewayServiceInfo : gatewayServiceInfoList) {
+                    GatewayInfo newGatewayInfo = new GatewayInfo(new ServerGatewayInfo(gatewayServiceInfo.getDeviceSN(), gatewayServiceInfo.getDeviceNickName(), gatewayServiceInfo.getAdminuid(), gatewayServiceInfo.getAdminName(), gatewayServiceInfo.getAdminNickname(), gatewayServiceInfo.getIsAdmin(), gatewayServiceInfo.getMeUsername(), gatewayServiceInfo.getMePwd(), gatewayServiceInfo.getMeBindState()));
+                    homeShowBeans.add(new HomeShowBean(HomeShowBean.TYPE_GATEWAY, gatewayServiceInfo.getDeviceSN(), gatewayServiceInfo.getDeviceNickName(), newGatewayInfo));
+                }
             }
         }
 
         //获取网关锁
-        List<GatewayLockServiceInfo> gatewayLockList = daoSession.getGatewayLockServiceInfoDao().queryBuilder().where(GatewayLockServiceInfoDao.Properties.Uid.eq(uid)).list();
-        if (gatewayLockList != null && gatewayLockList.size() > 0) {
-            for (GatewayLockServiceInfo gwLock : gatewayLockList) {
-                GwLockInfo gwLockInfo = new GwLockInfo(gwLock.getGatewayId(), new ServerGwDevice(gwLock.getSW(), gwLock.getDeviceId(), gwLock.getDevice_type(), gwLock.getEvent_str(), gwLock.getIpaddr(), gwLock.getMacaddr(), gwLock.getNickName(), gwLock.getTime()));
-                homeShowBeans.add(new HomeShowBean(HomeShowBean.TYPE_GATEWAY_LOCK, gwLock.getDeviceId(),
-                        gwLock.getNickName(), gwLockInfo));
+        if (daoSession!=null&&daoSession.getGatewayLockServiceInfoDao()!=null) {
+            List<GatewayLockServiceInfo> gatewayLockList = daoSession.getGatewayLockServiceInfoDao().queryBuilder().where(GatewayLockServiceInfoDao.Properties.Uid.eq(uid)).list();
+            if (gatewayLockList != null && gatewayLockList.size() > 0) {
+                for (GatewayLockServiceInfo gwLock : gatewayLockList) {
+                    GwLockInfo gwLockInfo = new GwLockInfo(gwLock.getGatewayId(), new ServerGwDevice(gwLock.getSW(), gwLock.getDeviceId(), gwLock.getDevice_type(), gwLock.getEvent_str(), gwLock.getIpaddr(), gwLock.getMacaddr(), gwLock.getNickName(), gwLock.getTime()));
+                    homeShowBeans.add(new HomeShowBean(HomeShowBean.TYPE_GATEWAY_LOCK, gwLock.getDeviceId(),
+                            gwLock.getNickName(), gwLockInfo));
+                }
             }
         }
-
         //获取猫眼
-        List<CatEyeServiceInfo> catEyeServiceList = daoSession.getCatEyeServiceInfoDao().queryBuilder().where(CatEyeServiceInfoDao.Properties.Uid.eq(uid)).list();
-        if (catEyeServiceList != null && catEyeServiceList.size() > 0) {
-            for (CatEyeServiceInfo catEyeService : catEyeServiceList) {
-                CateEyeInfo cateEyeInfo = new CateEyeInfo(catEyeService.getGatewayId(), new ServerGwDevice(catEyeService.getSW(), catEyeService.getDeviceId(), catEyeService.getDevice_type(), catEyeService.getEvent_str(), catEyeService.getIpaddr(), catEyeService.getMacaddr(), catEyeService.getNickName(), catEyeService.getTime()));
-                homeShowBeans.add(new HomeShowBean(HomeShowBean.TYPE_CAT_EYE, catEyeService.getDeviceId(),
-                        catEyeService.getNickName(), cateEyeInfo));
+        if (daoSession!=null&&daoSession.getCatEyeServiceInfoDao()!=null) {
+            List<CatEyeServiceInfo> catEyeServiceList = daoSession.getCatEyeServiceInfoDao().queryBuilder().where(CatEyeServiceInfoDao.Properties.Uid.eq(uid)).list();
+            if (catEyeServiceList != null && catEyeServiceList.size() > 0) {
+                for (CatEyeServiceInfo catEyeService : catEyeServiceList) {
+                    CateEyeInfo cateEyeInfo = new CateEyeInfo(catEyeService.getGatewayId(), new ServerGwDevice(catEyeService.getSW(), catEyeService.getDeviceId(), catEyeService.getDevice_type(), catEyeService.getEvent_str(), catEyeService.getIpaddr(), catEyeService.getMacaddr(), catEyeService.getNickName(), catEyeService.getTime()));
+                    homeShowBeans.add(new HomeShowBean(HomeShowBean.TYPE_CAT_EYE, catEyeService.getDeviceId(),
+                            catEyeService.getNickName(), cateEyeInfo));
+                }
             }
         }
         MyApplication.getInstance().setHomeshowDevice(homeShowBeans);

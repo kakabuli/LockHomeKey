@@ -783,6 +783,27 @@
             android:screenOrientation="portrait" />
         <activity android:name=".activity.addDevice.cateye.QrcodePhoneAddActivity"
             android:screenOrientation="portrait"></activity>
+
+
+        <!--
+   接入HMSSDK PUSH模块需要注册，第三方相关 :接收Push消息（注册、透传消息、通知栏点击事件）广播，
+    此receiver类需要开发者自己创建并继承com.huawei.hms.support.api.push.PushReceiver类，
+    参考示例代码中的类：com.huawei.hmsagent.HuaweiPushRevicer${PACKAGE_NAME} 要替换上您应用的包名
+    -->
+        <receiver
+            android:name="com.kaidishi.lock.push.HuaweiPushRevicer"
+            android:permission="com.kaidishi.lock.huawei.permission.PROCESS_PUSH_MSG">
+            <intent-filter>
+
+                <!-- 必须,用于接收token -->
+                <action android:name="com.huawei.android.push.intent.REGISTRATION" />
+                <!-- 必须, 用于接收透传消息 -->
+                <action android:name="com.huawei.android.push.intent.RECEIVE" />
+                <!-- 必须, 用于接收通知栏消息点击事件 此事件不需要开发者处理，只需注册就可以 -->
+                <action android:name="com.huawei.intent.action.PUSH_DELAY_NOTIFY" />
+            </intent-filter>
+        </receiver>
+
     </application>
 
 </manifest>

@@ -49,4 +49,6 @@ public class GeTui {
 	// fragment收到下载图片成功
 	public static final String IMG_DOWNLOAD_SUC="IMG_DOWNLOAD_SUC";
 
+	public static final  String HUAWEI_KEY="HUAWEI_KEY";
+
 }

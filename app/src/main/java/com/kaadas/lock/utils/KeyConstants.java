@@ -30,6 +30,14 @@ public class   KeyConstants {
      * 密码1
      */
     public static final String BLE_DEVICE_SN = "deviceSN";
+    /**
+     * 密码1
+     */
+    public static final String BLE_MAC = "bleMac";
+    /**
+     * 密码1
+     */
+    public static final String BLE_DEVICE_NAME = "deviceName";
 
     /**
      * 是否绑定

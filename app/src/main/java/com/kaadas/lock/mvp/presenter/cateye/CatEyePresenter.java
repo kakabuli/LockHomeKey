@@ -125,7 +125,7 @@ public class CatEyePresenter<T> extends BasePresenter<ICatEyeView> {
             @Override
             public void accept(Boolean aBoolean) throws Exception {
                 if (aBoolean){
-                    if (mViewRef.get()!=null){
+                    if (mViewRef!=null&&mViewRef.get()!=null){
                         mViewRef.get().networkChangeSuccess();
                     }
                 }

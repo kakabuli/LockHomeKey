@@ -25,6 +25,8 @@ import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.huawei.android.hms.agent.HMSAgent;
+import com.huawei.android.hms.agent.push.handler.GetTokenHandler;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.cateye.VideoVActivity;
@@ -58,6 +60,7 @@ import com.kaadas.lock.utils.greenDao.bean.CatEyeEvent;
 import com.kaadas.lock.utils.networkListenerutil.NetWorkChangReceiver;
 import com.kaadas.lock.widget.BottomMenuSelectMarketDialog;
 import com.kaadas.lock.widget.NoScrollViewPager;
+import com.kaidishi.lock.push.NetEvevt;
 import com.kaidishi.lock.service.GeTuiPushService;
 
 import net.sdvn.cmapi.CMAPI;
@@ -81,7 +84,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivityPresenter<IMainActivityView>>
-        implements ViewPager.OnPageChangeListener, IMainActivityView, RadioGroup.OnCheckedChangeListener{
+        implements ViewPager.OnPageChangeListener, IMainActivityView, RadioGroup.OnCheckedChangeListener,NetEvevt{
     @BindView(R.id.rb_one)
     RadioButton rbOne;
     @BindView(R.id.rb_two)
@@ -102,6 +105,9 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
     private NetWorkChangReceiver netWorkChangReceiver;
     private boolean isRegistered=false;
     UpgradePresenter upgradePresenter=null;
+
+    public static NetEvevt evevt;
+    boolean isCreate=false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setContentView(R.layout.activity_main);
@@ -118,8 +124,9 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
         fragments.add(new HomePageFragment());
         fragments.add(new DeviceFragment());
         fragments.add(new PersonalCenterFragment());
-
+        evevt=this;
         instance = this;
+        isCreate=true;
         homeViewPager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager()) {
             @Override
             public Fragment getItem(int i) {
@@ -141,21 +148,23 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
 
         mPresenter.initLinphone();
 
-        boolean isfromlogin= getIntent().getBooleanExtra(Constants.ISFROMLOGIN,false);
-        boolean ispush= (boolean) SPUtils.get(Constants.PUSHID,false);
-        Log.e(GeTui.VideoLog,"isfromlogin:"+isfromlogin);
-        if(isfromlogin){
-             mPresenter.uploadpushmethod();
-        }else if(!isfromlogin && !ispush){
-             Log.e(GeTui.VideoLog,"重新上传pushid.......");
-             mPresenter.uploadpushmethod();
-        }
+//        boolean isfromlogin= getIntent().getBooleanExtra(Constants.ISFROMLOGIN,false);
+//        boolean ispush= (boolean) SPUtils.get(Constants.PUSHID,false);
+//        Log.e(GeTui.VideoLog,"isfromlogin:"+isfromlogin);
+//        if(isfromlogin){
+//             mPresenter.uploadpushmethod();
+//        }else if(!isfromlogin && !ispush){
+//             Log.e(GeTui.VideoLog,"重新上传pushid.......");
+//             mPresenter.uploadpushmethod();
+//        }
         registerNetwork();
         startcallmethod();
         String sip_pacage_invite = MyApplication.getInstance().getSip_package_invite();
+        // if come from phone, dont to prompt update
         if(!TextUtils.isEmpty(sip_pacage_invite)){
             return;
         }
+        // app update info
         initPackages(this);
         upgradePresenter=new UpgradePresenter();
         upgradePresenter.getUpgreadJson(new UpgradePresenter.IUpgradePresenter() {
@@ -251,6 +260,10 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
         return new MainActivityPresenter<>(this);
     }
 
+    @Override
+    public void onNetEventToken(String token) {
+         uploadToken(token);
+    }
 
 
     public interface HomeSelectListener {
@@ -278,12 +291,54 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
     public boolean isOnBackground() {
         return isOnBackground;
     }
-
+    boolean ispush=false;
     @Override
     protected void onStart() {
         super.onStart();
         isOnBackground = false;
-        mPresenter.isFontShow();
+
+        ispush= (boolean) SPUtils.get(Constants.PUSHID,false);
+        Log.e(GeTui.VideoLog,"ispush:"+ispush);
+        if(Rom.isEmui()){
+            // no get token
+            String huawei=(String) SPUtils.get(GeTui.HUAWEI_KEY, "");
+            if(TextUtils.isEmpty(huawei)){
+                // 初始化,生成token失败
+                Log.e(GeTui.VideoLog,"init to HMSAgent,token produce fail");
+                HMSAgent.Push.getToken(new GetTokenHandler() {
+                    @Override
+                    public void onResult(int rtnCode) {
+//                        showLog("get token: end code=" + rtnCode);
+                        // 0:表示成功
+                        Log.e(GeTui.VideoLog,"get token: end code=" + rtnCode);
+                    }
+                });
+            }else {
+                // produce token success,upload token fail
+                if(!ispush){
+                    uploadToken(huawei);
+                }else {
+                    Log.e(GeTui.VideoLog,"token upload to success");
+                }
+            }
+        }else {
+            // 使用个推
+             if(!ispush){
+                 mPresenter.uploadpushmethod();
+             }else {
+                 Log.e(GeTui.VideoLog,"getui upload to success");
+             }
+
+        }
+
+        Log.e(GeTui.VideoLog,"MainAcvity...onStart.."+!isCreate+" invert_package:"+!TextUtils.isEmpty(MyApplication.getInstance().getSip_package_invite()));
+        if( !isCreate && !TextUtils.isEmpty(MyApplication.getInstance().getSip_package_invite())){
+            startcallmethod();  // 获取Linphone端口号
+        }
+    }
+    public void uploadToken(String token) {
+        Log.e(GeTui.VideoLog, "MainActivity-->ispush:" + ispush + " huawei:" + token);
+        mPresenter.uploadpushmethod();
     }
 
     public static final boolean isInstanciated() {
@@ -300,7 +355,8 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
     @Override
     protected void onStop() {
         super.onStop();
-        mPresenter.noIsFont();
+        isCreate=false;
+        MyApplication.getInstance().setSip_package_invite(null); //制空
     }
 
     //检查vpn授权
@@ -500,11 +556,11 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
         final String Tag1 = "sip_kaidishi";
         if (timer == null) {
             timer = new Timer();
+            String sip_pacage_invite = MyApplication.getInstance().getSip_package_invite();
             timer.schedule(new TimerTask() {
                 @Override
                 public void run() {
                     int linphone_port = MyApplication.getInstance().getLinphone_port();
-                    String sip_pacage_invite = MyApplication.getInstance().getSip_package_invite();
                     Log.e(GeTui.VideoLog,"port:"+linphone_port);
                     Log.e(GeTui.VideoLog,"sip_pacage_invite:"+sip_pacage_invite);
                     if (!TextUtils.isEmpty(sip_pacage_invite)) {

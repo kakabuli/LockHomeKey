@@ -1,5 +1,6 @@
 package com.kaadas.lock.fragment;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -47,6 +48,7 @@ import com.kaadas.lock.publiclibrary.bean.ServerGatewayInfo;
 import com.kaadas.lock.publiclibrary.bean.ServerGwDevice;
 import com.kaadas.lock.publiclibrary.http.result.ServerBleDevice;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.AllBindDevices;
+import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.Rom;
@@ -69,7 +71,7 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 
-
+import com.kaadas.lock.utils.AlertDialogUtil.ClickListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -110,6 +112,7 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
     private List<HomeShowBean> homeShowBeanList;
     private String uid;
     private DaoSession daoSession;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -171,11 +174,12 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
         }
     }
 
+    @SuppressLint("StringFormatInvalid")
     private void initData(List<HomeShowBean> homeShowBeanList) {
         mDeviceList.clear();
         if (homeShowBeanList != null) {
-             daoSession= MyApplication.getInstance().getDaoWriteSession();
-            uid= MyApplication.getInstance().getUid();
+            daoSession = MyApplication.getInstance().getDaoWriteSession();
+            uid = MyApplication.getInstance().getUid();
             //清除数据库,可能存在用户在其他手机删除了设备，但是服务器已经没有该设备，所以会造成本地数据库误差
             daoSession.getGatewayServiceInfoDao().queryBuilder().where(GatewayServiceInfoDao.Properties.Uid.eq(uid)).buildDelete().executeDeleteWithoutDetachingEntities();
             daoSession.getGatewayLockServiceInfoDao().queryBuilder().where(GatewayLockServiceInfoDao.Properties.Uid.eq(uid)).buildDelete().executeDeleteWithoutDetachingEntities();
@@ -194,16 +198,16 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                         case HomeShowBean.TYPE_GATEWAY_LOCK:
                             //网关锁
                             GwLockInfo gwLockInfo = (GwLockInfo) homeShowBean.getObject();
-                            if (gwLockInfo!=null){
-                                GatewayInfo gate= MyApplication.getInstance().getGatewayById(gwLockInfo.getGwID());
-                                if (gate!=null&&gate.getEvent_str()!=null&&gate.getEvent_str().equals("offline")){
+                            if (gwLockInfo != null) {
+                                GatewayInfo gate = MyApplication.getInstance().getGatewayById(gwLockInfo.getGwID());
+                                if (gate != null && gate.getEvent_str() != null && gate.getEvent_str().equals("offline")) {
                                     gwLockInfo.getServerInfo().setEvent_str("offline");
-                                }else if (gate!=null&&gate.getEvent_str()==null){
+                                } else if (gate != null && gate.getEvent_str() == null) {
                                     gwLockInfo.getServerInfo().setEvent_str("offline");
                                 }
                             }
-                            DevicePower devicePower=daoSession.getDevicePowerDao().queryBuilder().where(DevicePowerDao.Properties.DeviceIdUid.eq(gwLockInfo.getServerInfo().getDeviceId()+uid)).unique();
-                            if (devicePower!=null){
+                            DevicePower devicePower = daoSession.getDevicePowerDao().queryBuilder().where(DevicePowerDao.Properties.DeviceIdUid.eq(gwLockInfo.getServerInfo().getDeviceId() + uid)).unique();
+                            if (devicePower != null) {
                                 gwLockInfo.setPower(devicePower.getPower());
                             }
 
@@ -219,11 +223,11 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                         case HomeShowBean.TYPE_CAT_EYE:
                             //猫眼
                             CateEyeInfo cateEyeInfo = (CateEyeInfo) homeShowBean.getObject();
-                            if (cateEyeInfo!=null){
-                                GatewayInfo gat= MyApplication.getInstance().getGatewayById(cateEyeInfo.getGwID());
-                                if (gat!=null&&gat.getEvent_str()!=null&&gat.getEvent_str().equals("offline")){
+                            if (cateEyeInfo != null) {
+                                GatewayInfo gat = MyApplication.getInstance().getGatewayById(cateEyeInfo.getGwID());
+                                if (gat != null && gat.getEvent_str() != null && gat.getEvent_str().equals("offline")) {
                                     cateEyeInfo.getServerInfo().setEvent_str("offline");
-                                }else if (gat!=null&&gat.getEvent_str()==null){
+                                } else if (gat != null && gat.getEvent_str() == null) {
                                     cateEyeInfo.getServerInfo().setEvent_str("offline");
                                 }
                             }
@@ -255,10 +259,11 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                                 String deviceSN = gatewayInfo.getServerInfo().getDeviceSN();
                                 mPresenter.bindMimi(deviceSN, deviceSN);
                             }
-                            if (gatewayInfo!=null&&gatewayInfo.getServerInfo().getIsAdmin()==1){
+                            /*if (gatewayInfo!=null&&gatewayInfo.getServerInfo().getIsAdmin()==1){
+                            if (gatewayInfo != null && gatewayInfo.getServerInfo().getIsAdmin() == 1) {
                                 mDeviceList.add(homeShowBean);
-                            }
-
+                            }*/
+                            mDeviceList.add(homeShowBean);
                             break;
                         case HomeShowBean.TYPE_BLE_LOCK:
                             //蓝牙锁
@@ -287,8 +292,8 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                                 daoSession.insertOrReplace(bleLockServiceInfo);
 
                                 //请求电量
-                                DevicePower blePower=daoSession.getDevicePowerDao().queryBuilder().where(DevicePowerDao.Properties.DeviceSN.eq(serverBleDevice.getDeviceSN()+uid)).unique();
-                                if (blePower!=null){
+                                DevicePower blePower = daoSession.getDevicePowerDao().queryBuilder().where(DevicePowerDao.Properties.DeviceSN.eq(serverBleDevice.getDeviceSN() + uid)).unique();
+                                if (blePower != null) {
                                     bleLockInfo.setBattery(blePower.getPower());
                                 }
 
@@ -296,7 +301,6 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                             mDeviceList.add(homeShowBean);
                             break;
                     }
-
 
 
                 }
@@ -318,96 +322,119 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                 HomeShowBean homeShowBean = mDeviceList.get(i);
                 if (HomeShowBean.TYPE_CAT_EYE == homeShowBean.getDeviceType()) { //有网关
                     boolean isFlag = NotificationManagerCompat.from(getActivity()).areNotificationsEnabled();
-                    if (!isFlag && Rom.isOppo() && !MyApplication.getInstance().isPopDialog()) {
-                        final AlertDialog.Builder normalDialog = new AlertDialog.Builder(getActivity());
+               //     if (!isFlag && Rom.isOppo() && !MyApplication.getInstance().isPopDialog()) {
+                    if ((!isFlag && Rom.isOppo()) || (!isFlag && Rom.isVivo())){
+                       // final AlertDialog.Builder normalDialog = new AlertDialog.Builder(getActivity());
                         //	normalDialog.setIcon(R.drawable.icon_dialog);
-                        normalDialog.setTitle(getString(R.string.mainactivity_permission_alert_title));
-                        normalDialog.setMessage(getString(R.string.mainactivity_permission_alert_msg));
-                        normalDialog.setPositiveButton(getString(R.string.confirm),
-                                new DialogInterface.OnClickListener() {
+                        //(Context context, String title, String content, String left, String right, ClickListener clickListener)
+                        AlertDialogUtil.getInstance().noEditTwoButtonDialogWidthDialog_color_padding(
+                                getActivity(),
+                                getString(R.string.mainactivity_permission_alert_title),
+                                getString(R.string.mainactivity_permission_alert_msg),
+                                getString(R.string.cancel),
+                                getString(R.string.confirm),
+                                new ClickListener(){
+
                                     @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.dismiss();
+                                    public void left() {
+
+                                    }
+
+                                    @Override
+                                    public void right() {
                                         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                                             Intent intent = new Intent();
-                                        //    intent.setAction(Settings.ACTION_APP_NOTIFICATION_SETTINGS);
-//                                            intent.setAction(Settings.ACTION_APPLICATION_SETTINGS);
-//                                            intent.putExtra(Settings.EXTRA_APP_PACKAGE, "com.kaidishi.lock");
-//                                            getActivity().startActivity(intent);
-
-                                            if (Build.VERSION.SDK_INT >= 9) {
-                                                intent.setAction("android.settings.APPLICATION_DETAILS_SETTINGS");
-                                                intent.setData(Uri.fromParts("package", "com.kaidishi.lock", null));
-                                            } else if (Build.VERSION.SDK_INT <= 8) {
-                                                intent.setAction(Intent.ACTION_VIEW);
-                                                intent.setClassName("com.android.settings", "com.android.setting.InstalledAppDetails");
-                                                intent.putExtra("com.android.settings.ApplicationPkgName","com.kaidishi.lock");
-                                            }
+                                            intent.setAction("android.settings.APPLICATION_DETAILS_SETTINGS");
+                                            intent.setData(Uri.fromParts("package", "com.kaidishi.lock", null));
                                             startActivity(intent);
                                         }
                                     }
                                 });
-                        normalDialog.setNegativeButton(getActivity().getString(R.string.cancel),
-                                new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        Log.e(GeTui.VideoLog,"dialog.dismiss..........");
-                                        dialog.dismiss();
-                                    }
-                                });
-                        // 显示
-                        AlertDialog dialog = normalDialog.create();
-                        dialog.setCanceledOnTouchOutside(false);
-                        if(!dialog.isShowing()){
-                            Log.e(GeTui.VideoLog,"dialog.show..........");
-                            dialog.show();
-                            MyApplication.getInstance().setPopDialog(true);
-                        }
-                    }else if(!isFlag && Rom.isVivo() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.N &&!MyApplication.getInstance().isPopDialog()){
-                     //   boolean isVivoOpen= (boolean) SPUtils.get(Constants.IS_VOVO_OPEN,false);
-//                        if(isVivoOpen){
-//                            return;
+//                        normalDialog.setTitle(getString(R.string.mainactivity_permission_alert_title));
+//                        normalDialog.setMessage(getString(R.string.mainactivity_permission_alert_msg));
+//                        normalDialog.setPositiveButton(getString(R.string.confirm),
+//                                new DialogInterface.OnClickListener() {
+//                                    @Override
+//                                    public void onClick(DialogInterface dialog, int which) {
+//                                        dialog.dismiss();
+//                                        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//                                            Intent intent = new Intent();
+//                                            //    intent.setAction(Settings.ACTION_APP_NOTIFICATION_SETTINGS);
+////                                            intent.setAction(Settings.ACTION_APPLICATION_SETTINGS);
+////                                            intent.putExtra(Settings.EXTRA_APP_PACKAGE, "com.kaidishi.lock");
+////                                            getActivity().startActivity(intent);
+//
+//                                            if (Build.VERSION.SDK_INT >= 9) {
+//                                                intent.setAction("android.settings.APPLICATION_DETAILS_SETTINGS");
+//                                                intent.setData(Uri.fromParts("package", "com.kaidishi.lock", null));
+//                                            } else if (Build.VERSION.SDK_INT <= 8) {
+//                                                intent.setAction(Intent.ACTION_VIEW);
+//                                                intent.setClassName("com.android.settings", "com.android.setting.InstalledAppDetails");
+//                                                intent.putExtra("com.android.settings.ApplicationPkgName", "com.kaidishi.lock");
+//                                            }
+//                                            startActivity(intent);
+//                                        }
+//                                    }
+//                                });
+//                        normalDialog.setNegativeButton(getActivity().getString(R.string.cancel),
+//                                new DialogInterface.OnClickListener() {
+//                                    @Override
+//                                    public void onClick(DialogInterface dialog, int which) {
+//                                        Log.e(GeTui.VideoLog, "dialog.dismiss..........");
+//                                        dialog.dismiss();
+//                                    }
+//                                });
+//                        // 显示
+//                        AlertDialog dialog = normalDialog.create();
+//                        dialog.setCanceledOnTouchOutside(false);
+//                        if (!dialog.isShowing()) {
+//                            Log.e(GeTui.VideoLog, "dialog.show..........");
+//                            dialog.show();
+//                            MyApplication.getInstance().setPopDialog(true);
 //                        }
-                //        SPUtils.put(Constants.IS_VOVO_OPEN,true);
-                        final AlertDialog.Builder normalDialog = new AlertDialog.Builder(getActivity());
-                        //	normalDialog.setIcon(R.drawable.icon_dialog);
-                        normalDialog.setTitle(getString(R.string.mainactivity_permission_alert_title));
-                        normalDialog.setMessage(getString(R.string.mainactivity_permission_alert_msg));
-                        normalDialog.setPositiveButton(getString(R.string.confirm),
-                                new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.dismiss();
-                                        Intent mIntent = new Intent();
-                                        mIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                        if (Build.VERSION.SDK_INT >= 9) {
-                                            mIntent.setAction("android.settings.APPLICATION_DETAILS_SETTINGS");
-                                            mIntent.setData(Uri.fromParts("package", "com.kaidishi.lock", null));
-                                        } else if (Build.VERSION.SDK_INT <= 8) {
-                                            mIntent.setAction(Intent.ACTION_VIEW);
-                                            mIntent.setClassName("com.android.settings", "com.android.setting.InstalledAppDetails");
-                                            mIntent.putExtra("com.android.settings.ApplicationPkgName","com.kaidishi.lock");
-                                        }
-                                        startActivity(mIntent);
 
-                                    }
-                                });
-                        normalDialog.setNegativeButton(getActivity().getString(R.string.cancel),
-                                new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.dismiss();
-                                    }
-                                });
-                        // 显示
-                        AlertDialog dialog = normalDialog.create();
-                        dialog.setCanceledOnTouchOutside(false);
-                        if(!dialog.isShowing()){
-                            dialog.show();
-                            MyApplication.getInstance().setPopDialog(true);
-                        }
-                    }
-                    break;
+                        //!isFlag && Rom.isVivo() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && !MyApplication.getInstance().isPopDialog()
+                    } //else if (!isFlag && Rom.isVivo() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+
+//                        final AlertDialog.Builder normalDialog = new AlertDialog.Builder(getActivity());
+//                        //	normalDialog.setIcon(R.drawable.icon_dialog);
+//                        normalDialog.setTitle(getString(R.string.mainactivity_permission_alert_title));
+//                        normalDialog.setMessage(getString(R.string.mainactivity_permission_alert_msg));
+//                        normalDialog.setPositiveButton(getString(R.string.confirm),
+//                                new DialogInterface.OnClickListener() {
+//                                    @Override
+//                                    public void onClick(DialogInterface dialog, int which) {
+//                                        dialog.dismiss();
+//                                        Intent mIntent = new Intent();
+//                                        mIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                                        if (Build.VERSION.SDK_INT >= 9) {
+//                                            mIntent.setAction("android.settings.APPLICATION_DETAILS_SETTINGS");
+//                                            mIntent.setData(Uri.fromParts("package", "com.kaidishi.lock", null));
+//                                        } else if (Build.VERSION.SDK_INT <= 8) {
+//                                            mIntent.setAction(Intent.ACTION_VIEW);
+//                                            mIntent.setClassName("com.android.settings", "com.android.setting.InstalledAppDetails");
+//                                            mIntent.putExtra("com.android.settings.ApplicationPkgName", "com.kaidishi.lock");
+//                                        }
+//                                        startActivity(mIntent);
+//
+//                                    }
+//                                });
+//                        normalDialog.setNegativeButton(getActivity().getString(R.string.cancel),
+//                                new DialogInterface.OnClickListener() {
+//                                    @Override
+//                                    public void onClick(DialogInterface dialog, int which) {
+//                                        dialog.dismiss();
+//                                    }
+//                                });
+//                        // 显示
+//                        AlertDialog dialog = normalDialog.create();
+//                        dialog.setCanceledOnTouchOutside(false);
+//                        if (!dialog.isShowing()) {
+//                            dialog.show();
+//                            MyApplication.getInstance().setPopDialog(true);
+//                        }
+                //    }
+                 //   break;
                 }
             }
         }
@@ -452,21 +479,21 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
 
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-        if (mDeviceList!=null) {
-            if (mDeviceList.size()>position) {
-                LogUtils.e("设备总和  "+mDeviceList.size()+"位置  "+position);
+        if (mDeviceList != null) {
+            if (mDeviceList.size() > position) {
+                LogUtils.e("设备总和  " + mDeviceList.size() + "位置  " + position);
                 HomeShowBean deviceDetailBean = mDeviceList.get(position);
                 switch (deviceDetailBean.getDeviceType()) {
                     case HomeShowBean.TYPE_CAT_EYE:
                         //猫眼
                         CateEyeInfo cateEyeInfo = (CateEyeInfo) deviceDetailBean.getObject();
-                        GatewayInfo cateGw=MyApplication.getInstance().getGatewayById(cateEyeInfo.getGwID());
-                        if (cateGw!=null&&cateGw.getServerInfo().getIsAdmin()==1){
+                        GatewayInfo cateGw = MyApplication.getInstance().getGatewayById(cateEyeInfo.getGwID());
+                        if (cateGw != null && cateGw.getServerInfo().getIsAdmin() == 1) {
                             //管理员
                             Intent cateEyeInfoIntent = new Intent(getActivity(), CateyeFunctionActivity.class);
                             cateEyeInfoIntent.putExtra(KeyConstants.CATE_INFO, deviceDetailBean);
                             startActivity(cateEyeInfoIntent);
-                        }else{
+                        } else {
                             //授权
                             Intent cateEyeAuthorizationInfoIntent = new Intent(getActivity(), CateyeAuthorizationFunctionActivity.class);
                             cateEyeAuthorizationInfoIntent.putExtra(KeyConstants.CATE_INFO, deviceDetailBean);
@@ -477,20 +504,20 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                         break;
                     case HomeShowBean.TYPE_GATEWAY_LOCK:
 
-                       GwLockInfo lockInfo = (GwLockInfo) deviceDetailBean.getObject();
-                       GatewayInfo gw=MyApplication.getInstance().getGatewayById(lockInfo.getGwID());
-                       if (gw.getServerInfo().getIsAdmin()==1){
-                           //网关锁
-                           Intent gatewayLockintent = new Intent(getActivity(), GatewayLockFunctionActivity.class);
-                           gatewayLockintent.putExtra(KeyConstants.GATEWAY_LOCK_INFO, deviceDetailBean);
-                           startActivity(gatewayLockintent);
-                       }else{
-                           //授权锁
-                           //网关锁
-                           Intent gatewayLockintent = new Intent(getActivity(), GatewayLockAuthorizeFunctionActivity.class);
-                           gatewayLockintent.putExtra(KeyConstants.GATEWAY_LOCK_INFO, deviceDetailBean);
-                           startActivity(gatewayLockintent);
-                       }
+                        GwLockInfo lockInfo = (GwLockInfo) deviceDetailBean.getObject();
+                        GatewayInfo gw = MyApplication.getInstance().getGatewayById(lockInfo.getGwID());
+                        if (gw.getServerInfo().getIsAdmin() == 1) {
+                            //网关锁
+                            Intent gatewayLockintent = new Intent(getActivity(), GatewayLockFunctionActivity.class);
+                            gatewayLockintent.putExtra(KeyConstants.GATEWAY_LOCK_INFO, deviceDetailBean);
+                            startActivity(gatewayLockintent);
+                        } else {
+                            //授权锁
+                            //网关锁
+                            Intent gatewayLockintent = new Intent(getActivity(), GatewayLockAuthorizeFunctionActivity.class);
+                            gatewayLockintent.putExtra(KeyConstants.GATEWAY_LOCK_INFO, deviceDetailBean);
+                            startActivity(gatewayLockintent);
+                        }
 
                         break;
                     case HomeShowBean.TYPE_GATEWAY:
@@ -501,26 +528,37 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                         break;
                     case HomeShowBean.TYPE_BLE_LOCK:
                         //蓝牙
+                        LogUtils.e("点击1");
                         BleLockInfo bleLockInfo = (BleLockInfo) deviceDetailBean.getObject();
                         mPresenter.setBleLockInfo(bleLockInfo);
                         if (bleLockInfo.getServerLockInfo().getIs_admin() != null && bleLockInfo.getServerLockInfo().getIs_admin().equals("1")) {
+                            LogUtils.e("点击2");
                             if ("3".equals(bleLockInfo.getServerLockInfo().getBleVersion())) {
+                                LogUtils.e("点击3");
                                 String lockType = bleLockInfo.getServerLockInfo().getModel();
-                                if (!TextUtils.isEmpty(lockType)){
-                                    if (lockType.startsWith("V6") || lockType.startsWith("V7")||lockType.startsWith("S100")||lockType.startsWith("K9")||lockType.startsWith("S6")) {
+                                if (!TextUtils.isEmpty(lockType)) {
+                                    LogUtils.e("点击4");
+                                    if (lockType.startsWith("V6") || lockType.startsWith("V7") || lockType.startsWith("S100") || lockType.startsWith("K9")||lockType.startsWith("S6")) {
+                                        LogUtils.e("点击5");
                                         Intent detailIntent = new Intent(getActivity(), BluetoothLockFunctionV6V7Activity.class);
                                         String model = bleLockInfo.getServerLockInfo().getModel();
                                         detailIntent.putExtra(KeyConstants.DEVICE_TYPE, model);
                                         startActivityForResult(detailIntent, KeyConstants.GET_BLE_POWER);
                                     } else {
+                                        LogUtils.e("点击6");
                                         Intent detailIntent = new Intent(getActivity(), BluetoothLockFunctionActivity.class);
                                         String model = bleLockInfo.getServerLockInfo().getModel();
                                         detailIntent.putExtra(KeyConstants.DEVICE_TYPE, model);
                                         startActivityForResult(detailIntent, KeyConstants.GET_BLE_POWER);
                                     }
+                                } else {
+                                    Intent detailIntent = new Intent(getActivity(), BluetoothLockFunctionActivity.class);
+                                    String model = bleLockInfo.getServerLockInfo().getModel();
+                                    detailIntent.putExtra(KeyConstants.DEVICE_TYPE, model);
+                                    startActivityForResult(detailIntent, KeyConstants.GET_BLE_POWER);
                                 }
-
                             } else {
+                                LogUtils.e("点击7");
                                 Intent detailIntent = new Intent(getActivity(), OldBluetoothLockDetailActivity.class);
                                 String model = bleLockInfo.getServerLockInfo().getModel();
                                 detailIntent.putExtra(KeyConstants.DEVICE_TYPE, model);

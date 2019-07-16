@@ -93,8 +93,8 @@ public class CatEyeMorePresenter <T> extends BasePresenter<IGatEyeView> {
             MqttMessage mqttMessage = MqttCommandFactory.getCatEyeInfo(gatewayId, deviceId,uid);
             getCatEyeInfoDisposable = mqttService
                     .mqttPublish(MqttConstant.getCallTopic(MyApplication.getInstance().getUid()), mqttMessage)
-                    .compose(RxjavaHelper.observeOnMainThread())
                     .timeout(15 * 1000, TimeUnit.MILLISECONDS)
+                    .compose(RxjavaHelper.observeOnMainThread())
                     .filter(new Predicate<MqttData>() {
                         @Override
                         public boolean test(MqttData mqttData) throws Exception {
@@ -161,15 +161,17 @@ public class CatEyeMorePresenter <T> extends BasePresenter<IGatEyeView> {
                             toDisposable(deleteCatEyeDisposable);
                             DeleteDeviceLockBean deleteGatewayLockDeviceBean = new Gson().fromJson(mqttData.getPayload(), DeleteDeviceLockBean.class);
                             if (deleteGatewayLockDeviceBean != null) {
-                                LogUtils.e(deleteGatewayLockDeviceBean.getDevtype()+"删除猫眼"+deleteGatewayLockDeviceBean.getEventparams().getEvent_str());
-                                if ("kdscateye".equals(deleteGatewayLockDeviceBean.getDevtype()) && deleteGatewayLockDeviceBean.getEventparams().getEvent_str().equals("delete")&&deviceId.equals(deleteGatewayLockDeviceBean.getDeviceId())) {
-                                    if (mViewRef!=null && mViewRef.get() != null) {
-                                        mViewRef.get().deleteDeviceSuccess();
-                                        MyApplication.getInstance().getAllDevicesByMqtt(true);
-                                    }
-                                } else {
-                                    if (mViewRef!=null && mViewRef.get() != null) {
-                                        mViewRef.get().deleteDeviceFail();
+                                LogUtils.e(deleteGatewayLockDeviceBean.getDevtype() + "删除猫眼" + deleteGatewayLockDeviceBean.getEventparams().getEvent_str());
+                                if (deleteGatewayLockDeviceBean.getEventparams().getEvent_str() != null) {
+                                    if ("kdscateye".equals(deleteGatewayLockDeviceBean.getDevtype()) && deleteGatewayLockDeviceBean.getEventparams().getEvent_str().equals("delete") && deviceId.equals(deleteGatewayLockDeviceBean.getDeviceId())) {
+                                        if (mViewRef != null && mViewRef.get() != null) {
+                                            mViewRef.get().deleteDeviceSuccess();
+                                            MyApplication.getInstance().getAllDevicesByMqtt(true);
+                                        }
+                                    } else {
+                                        if (mViewRef != null && mViewRef.get() != null) {
+                                            mViewRef.get().deleteDeviceFail();
+                                        }
                                     }
                                 }
                             }

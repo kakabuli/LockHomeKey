@@ -838,8 +838,8 @@
     <string name="fingerprint_collect_success">号指纹采集成功</string>
     <string name="card_add_success">号卡添加成功</string>
     <string name="cate_sleep">猫眼已经休眠</string>
-    <string name="mainactivity_permission_alert_msg">请前往应用信息设置界面中打开通知开关，后台弹出界面开关,否则猫眼呼叫功能无法使用</string>
-    <string name="mainactivity_permission_alert_title">应用权限开关开启</string>
+    <string name="mainactivity_permission_alert_msg">请前往应用信息设置界面中打开通知开关，后台弹出界面开关,否则猫眼呼来电叫功能无法正常使用</string>
+    <string name="mainactivity_permission_alert_title">应用权限开关开启通知</string>
     <string name="no_unlock_record">暂无操作记录</string>
     <string name="connection_server">连接服务器失败,请检查网络退出该页面重新进去</string>
     <string name="lock_firware_version_number">门锁固件版本</string>
@@ -1136,4 +1136,9 @@
     <string name="touch_your_light">轻触照亮</string>
     <string name="finger">指纹</string>
     <string name="check_wifi_change">请切换手机网络为所选网关WiFi</string>
+    <string name="ban_camera_permission">您已禁用拍照或录像权限并且设置为不再询问该权限，请到设置页面开启,并且设置为允许</string>
+    <string name="inquire_camera_permission">您已设置拍照或录像权限为询问该权限，请到设置页面,设置为允许</string>
+    <string name="network_jion">点击退出可能导致猫眼配网失败</string>
+    <string name="getting_wifi_info">正在获取网关WiFi信息...</string>
+    <string name="get_wifi_info_failed">获取网关WiFi信息失败</string>
 </resources>

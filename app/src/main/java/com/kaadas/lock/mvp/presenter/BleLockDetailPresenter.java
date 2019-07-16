@@ -318,7 +318,7 @@ public class BleLockDetailPresenter<T> extends BlePresenter<IDeviceDetailView> {
 
                             //S8不管是否是管理员模式  直接让输入密码
                             localPwd = (String) SPUtils.get(KeyConstants.SAVE_PWD_HEARD + bleLockInfo.getServerLockInfo().getMacLock(), ""); //Key
-                            if (bleLockInfo.getServerLockInfo().getModel().startsWith("S8")) {
+                            if (!TextUtils.isEmpty(bleLockInfo.getServerLockInfo().getModel())&&bleLockInfo.getServerLockInfo().getModel().startsWith("S8")) {
                                 if (TextUtils.isEmpty(localPwd)) { //如果用户密码为空
                                     if (mViewRef != null && mViewRef.get() != null) {
                                         mViewRef.get().inputPwd();

@@ -981,11 +981,14 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
             public void run() {
                 stopCloseLockAnimator();
                 if (deviceState != null) {
-                    String state=deviceState.getText().toString().trim();
-                    if (state.equals(getString(R.string.offline))){
-                        changeOpenLockStatus(1);
-                    }else{
-                        changeOpenLockStatus(5);
+                    try {
+                        String state=deviceState.getText().toString().trim();
+                        if (state.equals(getString(R.string.offline))){
+                            changeOpenLockStatus(1);
+                        }else{
+                            changeOpenLockStatus(5);
+                        }
+                    }catch (Exception e){
                     }
                 }
             }

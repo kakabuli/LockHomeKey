@@ -139,7 +139,6 @@ public class AddZigbeeLockFourthActivity extends BaseActivity<IAddZigbeeLockView
         successIntent.putExtra(KeyConstants.GATEWAY_ID,gwId);
         successIntent.putExtra(KeyConstants.DEVICE_ID,deviceId);
         //清除锁上的密码
-
         startActivity(successIntent);
         finish();
         LogUtils.e("设备添加成功");
@@ -151,7 +150,6 @@ public class AddZigbeeLockFourthActivity extends BaseActivity<IAddZigbeeLockView
         startActivity(failIntent);
         finish();
         LogUtils.e("设备添加异常");
-
     }
 
     @Override

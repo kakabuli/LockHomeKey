@@ -223,8 +223,10 @@ public class PersonalUpdateHeadDataActivity extends BaseActivity<IPersonalDataVi
             /**
              * 把图片旋转为正的方向
              */
-            Bitmap newbitmap = BitmapUtil.rotaingImageView(degree, changeBitmap);
-            ivHead.setImageBitmap(newbitmap);
+            if (changeBitmap!=null){
+                Bitmap newbitmap = BitmapUtil.rotaingImageView(degree, changeBitmap);
+                ivHead.setImageBitmap(newbitmap);
+            }
         }
     }
 

@@ -1,10 +1,12 @@
 package com.kaadas.lock.activity.addDevice.zigbeelocknew;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.hardware.Camera;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -52,6 +54,7 @@ public class AddDeviceZigbeelockNewScanActivity extends CaptureActivity {
         MyApplication.getInstance().addActivity(this);
         ButterKnife.bind(this);
         initView();
+        checkVersion();
     }
 
     private void initView() {
@@ -59,6 +62,55 @@ public class AddDeviceZigbeelockNewScanActivity extends CaptureActivity {
             touchLightLayout.setVisibility(View.GONE);
         }
     }
+    private void checkVersion() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            int i=checkSelfPermission(Manifest.permission.CAMERA);
+            LogUtils.e("权限是允许还是开启还是禁止"+i);
+            if (i==-1){
+                if (!shouldShowRequestPermissionRationale(Manifest.permission.CAMERA)){
+                    //禁止该权限
+                    ToastUtil.getInstance().showShort(getString(R.string.ban_camera_permission));
+                    finish();
+                    return;
+                }else{
+                    //询问该权限
+                    ToastUtil.getInstance().showShort(getString(R.string.inquire_camera_permission));
+                    finish();
+                    return;
+                }
+            }
+        }
+        //版本为22 5.1
+        if (Build.VERSION.SDK_INT==Build.VERSION_CODES.LOLLIPOP_MR1){
+            if (!isCameraCanUse()){
+                ToastUtil.getInstance().showShort(getString(R.string.ban_camera_permission));
+                finish();
+                return;
+            }
+
+        }
+
+    }
+    //Android6.0以下的摄像头权限处理：
+    public static boolean isCameraCanUse() {
+        boolean canUse = true;
+        Camera mCamera = null;
+        try {
+            mCamera = Camera.open();
+            // setParameters 是针对魅族MX5 做的。MX5 通过Camera.open() 拿到的Camera
+            Camera.Parameters mParameters = mCamera.getParameters();
+            mCamera.setParameters(mParameters);
+        } catch (Exception e) {
+            canUse = false;
+        }
+        if (mCamera != null) {
+            mCamera.release();
+        }
+        return canUse;
+    }
+
+
+
 
     @OnClick({R.id.back, R.id.touch_light_layout})
     public void onViewClicked(View view) {
@@ -87,16 +139,18 @@ public class AddDeviceZigbeelockNewScanActivity extends CaptureActivity {
     //打开手电筒
     private void openFlashLight(boolean highlight){
         LogUtils.e("开启闪光灯");
-        camera=  getCameraManager().getOpenCamera().getCamera();
-        parameter = camera.getParameters();
-        if (!highlight) {
-            parameter.setFlashMode(android.hardware.Camera.Parameters.FLASH_MODE_TORCH);
-            camera.setParameters(parameter);
-            falshLight = true;
-        } else {  // 关灯
-            parameter.setFlashMode(android.hardware.Camera.Parameters.FLASH_MODE_OFF);
-            camera.setParameters(parameter);
-            falshLight = false;
+        if (getCameraManager().getOpenCamera()!=null) {
+            camera = getCameraManager().getOpenCamera().getCamera();
+            parameter = camera.getParameters();
+            if (!highlight) {
+                parameter.setFlashMode(android.hardware.Camera.Parameters.FLASH_MODE_TORCH);
+                camera.setParameters(parameter);
+                falshLight = true;
+            } else {  // 关灯
+                parameter.setFlashMode(android.hardware.Camera.Parameters.FLASH_MODE_OFF);
+                camera.setParameters(parameter);
+                falshLight = false;
+            }
         }
 
 
