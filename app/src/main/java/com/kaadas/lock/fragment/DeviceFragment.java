@@ -538,7 +538,7 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                                 String lockType = bleLockInfo.getServerLockInfo().getModel();
                                 if (!TextUtils.isEmpty(lockType)) {
                                     LogUtils.e("点击4");
-                                    if (lockType.startsWith("V6") || lockType.startsWith("V7") || lockType.startsWith("S100") || lockType.startsWith("K9")) {
+                                    if (lockType.startsWith("V6") || lockType.startsWith("V7") || lockType.startsWith("S100") || lockType.startsWith("K9")||lockType.startsWith("S6")) {
                                         LogUtils.e("点击5");
                                         Intent detailIntent = new Intent(getActivity(), BluetoothLockFunctionV6V7Activity.class);
                                         String model = bleLockInfo.getServerLockInfo().getModel();

@@ -188,6 +188,10 @@ public class BluetoothLockAuthorizationActivity extends BaseBleActivity<IOldBlue
                 ivLockIcon.setImageResource(R.mipmap.bluetooth_authorization_lock_qz012);
             } else if (model.contains("K8-T")) {
                 ivLockIcon.setImageResource(R.mipmap.bluetooth_authorization_lock_k8_t);
+            }else if (model.contains("S6")){
+                ivLockIcon.setImageResource(R.mipmap.bluetooth_authorization_lock_s6);
+            }else if (model.contains("K100")){
+                ivLockIcon.setImageResource(R.mipmap.bluetooth_authorization_lock_k100);
             }
         }
     }
