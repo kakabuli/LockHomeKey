@@ -1,5 +1,6 @@
 package com.kaadas.lock.fragment;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -47,6 +48,7 @@ import com.kaadas.lock.publiclibrary.bean.ServerGatewayInfo;
 import com.kaadas.lock.publiclibrary.bean.ServerGwDevice;
 import com.kaadas.lock.publiclibrary.http.result.ServerBleDevice;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.AllBindDevices;
+import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.Rom;
@@ -69,7 +71,7 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 
-
+import com.kaadas.lock.utils.AlertDialogUtil.ClickListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -172,6 +174,7 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
         }
     }
 
+    @SuppressLint("StringFormatInvalid")
     private void initData(List<HomeShowBean> homeShowBeanList) {
         mDeviceList.clear();
         if (homeShowBeanList != null) {
@@ -319,96 +322,119 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                 HomeShowBean homeShowBean = mDeviceList.get(i);
                 if (HomeShowBean.TYPE_CAT_EYE == homeShowBean.getDeviceType()) { //有网关
                     boolean isFlag = NotificationManagerCompat.from(getActivity()).areNotificationsEnabled();
-                    if (!isFlag && Rom.isOppo() && !MyApplication.getInstance().isPopDialog()) {
-                        final AlertDialog.Builder normalDialog = new AlertDialog.Builder(getActivity());
+               //     if (!isFlag && Rom.isOppo() && !MyApplication.getInstance().isPopDialog()) {
+                    if ((!isFlag && Rom.isOppo()) || (!isFlag && Rom.isVivo())){
+                       // final AlertDialog.Builder normalDialog = new AlertDialog.Builder(getActivity());
                         //	normalDialog.setIcon(R.drawable.icon_dialog);
-                        normalDialog.setTitle(getString(R.string.mainactivity_permission_alert_title));
-                        normalDialog.setMessage(getString(R.string.mainactivity_permission_alert_msg));
-                        normalDialog.setPositiveButton(getString(R.string.confirm),
-                                new DialogInterface.OnClickListener() {
+                        //(Context context, String title, String content, String left, String right, ClickListener clickListener)
+                        AlertDialogUtil.getInstance().noEditTwoButtonDialogWidthDialog_color_padding(
+                                getActivity(),
+                                getString(R.string.mainactivity_permission_alert_title),
+                                getString(R.string.mainactivity_permission_alert_msg),
+                                getString(R.string.cancel),
+                                getString(R.string.confirm),
+                                new ClickListener(){
+
                                     @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.dismiss();
+                                    public void left() {
+
+                                    }
+
+                                    @Override
+                                    public void right() {
                                         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                                             Intent intent = new Intent();
-                                            //    intent.setAction(Settings.ACTION_APP_NOTIFICATION_SETTINGS);
-//                                            intent.setAction(Settings.ACTION_APPLICATION_SETTINGS);
-//                                            intent.putExtra(Settings.EXTRA_APP_PACKAGE, "com.kaidishi.lock");
-//                                            getActivity().startActivity(intent);
-
-                                            if (Build.VERSION.SDK_INT >= 9) {
-                                                intent.setAction("android.settings.APPLICATION_DETAILS_SETTINGS");
-                                                intent.setData(Uri.fromParts("package", "com.kaidishi.lock", null));
-                                            } else if (Build.VERSION.SDK_INT <= 8) {
-                                                intent.setAction(Intent.ACTION_VIEW);
-                                                intent.setClassName("com.android.settings", "com.android.setting.InstalledAppDetails");
-                                                intent.putExtra("com.android.settings.ApplicationPkgName", "com.kaidishi.lock");
-                                            }
+                                            intent.setAction("android.settings.APPLICATION_DETAILS_SETTINGS");
+                                            intent.setData(Uri.fromParts("package", "com.kaidishi.lock", null));
                                             startActivity(intent);
                                         }
                                     }
                                 });
-                        normalDialog.setNegativeButton(getActivity().getString(R.string.cancel),
-                                new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        Log.e(GeTui.VideoLog, "dialog.dismiss..........");
-                                        dialog.dismiss();
-                                    }
-                                });
-                        // 显示
-                        AlertDialog dialog = normalDialog.create();
-                        dialog.setCanceledOnTouchOutside(false);
-                        if (!dialog.isShowing()) {
-                            Log.e(GeTui.VideoLog, "dialog.show..........");
-                            dialog.show();
-                            MyApplication.getInstance().setPopDialog(true);
-                        }
-                    } else if (!isFlag && Rom.isVivo() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && !MyApplication.getInstance().isPopDialog()) {
-                        //   boolean isVivoOpen= (boolean) SPUtils.get(Constants.IS_VOVO_OPEN,false);
-//                        if(isVivoOpen){
-//                            return;
+//                        normalDialog.setTitle(getString(R.string.mainactivity_permission_alert_title));
+//                        normalDialog.setMessage(getString(R.string.mainactivity_permission_alert_msg));
+//                        normalDialog.setPositiveButton(getString(R.string.confirm),
+//                                new DialogInterface.OnClickListener() {
+//                                    @Override
+//                                    public void onClick(DialogInterface dialog, int which) {
+//                                        dialog.dismiss();
+//                                        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//                                            Intent intent = new Intent();
+//                                            //    intent.setAction(Settings.ACTION_APP_NOTIFICATION_SETTINGS);
+////                                            intent.setAction(Settings.ACTION_APPLICATION_SETTINGS);
+////                                            intent.putExtra(Settings.EXTRA_APP_PACKAGE, "com.kaidishi.lock");
+////                                            getActivity().startActivity(intent);
+//
+//                                            if (Build.VERSION.SDK_INT >= 9) {
+//                                                intent.setAction("android.settings.APPLICATION_DETAILS_SETTINGS");
+//                                                intent.setData(Uri.fromParts("package", "com.kaidishi.lock", null));
+//                                            } else if (Build.VERSION.SDK_INT <= 8) {
+//                                                intent.setAction(Intent.ACTION_VIEW);
+//                                                intent.setClassName("com.android.settings", "com.android.setting.InstalledAppDetails");
+//                                                intent.putExtra("com.android.settings.ApplicationPkgName", "com.kaidishi.lock");
+//                                            }
+//                                            startActivity(intent);
+//                                        }
+//                                    }
+//                                });
+//                        normalDialog.setNegativeButton(getActivity().getString(R.string.cancel),
+//                                new DialogInterface.OnClickListener() {
+//                                    @Override
+//                                    public void onClick(DialogInterface dialog, int which) {
+//                                        Log.e(GeTui.VideoLog, "dialog.dismiss..........");
+//                                        dialog.dismiss();
+//                                    }
+//                                });
+//                        // 显示
+//                        AlertDialog dialog = normalDialog.create();
+//                        dialog.setCanceledOnTouchOutside(false);
+//                        if (!dialog.isShowing()) {
+//                            Log.e(GeTui.VideoLog, "dialog.show..........");
+//                            dialog.show();
+//                            MyApplication.getInstance().setPopDialog(true);
 //                        }
-                        //        SPUtils.put(Constants.IS_VOVO_OPEN,true);
-                        final AlertDialog.Builder normalDialog = new AlertDialog.Builder(getActivity());
-                        //	normalDialog.setIcon(R.drawable.icon_dialog);
-                        normalDialog.setTitle(getString(R.string.mainactivity_permission_alert_title));
-                        normalDialog.setMessage(getString(R.string.mainactivity_permission_alert_msg));
-                        normalDialog.setPositiveButton(getString(R.string.confirm),
-                                new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.dismiss();
-                                        Intent mIntent = new Intent();
-                                        mIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                        if (Build.VERSION.SDK_INT >= 9) {
-                                            mIntent.setAction("android.settings.APPLICATION_DETAILS_SETTINGS");
-                                            mIntent.setData(Uri.fromParts("package", "com.kaidishi.lock", null));
-                                        } else if (Build.VERSION.SDK_INT <= 8) {
-                                            mIntent.setAction(Intent.ACTION_VIEW);
-                                            mIntent.setClassName("com.android.settings", "com.android.setting.InstalledAppDetails");
-                                            mIntent.putExtra("com.android.settings.ApplicationPkgName", "com.kaidishi.lock");
-                                        }
-                                        startActivity(mIntent);
 
-                                    }
-                                });
-                        normalDialog.setNegativeButton(getActivity().getString(R.string.cancel),
-                                new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.dismiss();
-                                    }
-                                });
-                        // 显示
-                        AlertDialog dialog = normalDialog.create();
-                        dialog.setCanceledOnTouchOutside(false);
-                        if (!dialog.isShowing()) {
-                            dialog.show();
-                            MyApplication.getInstance().setPopDialog(true);
-                        }
-                    }
-                    break;
+                        //!isFlag && Rom.isVivo() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && !MyApplication.getInstance().isPopDialog()
+                    } //else if (!isFlag && Rom.isVivo() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+
+//                        final AlertDialog.Builder normalDialog = new AlertDialog.Builder(getActivity());
+//                        //	normalDialog.setIcon(R.drawable.icon_dialog);
+//                        normalDialog.setTitle(getString(R.string.mainactivity_permission_alert_title));
+//                        normalDialog.setMessage(getString(R.string.mainactivity_permission_alert_msg));
+//                        normalDialog.setPositiveButton(getString(R.string.confirm),
+//                                new DialogInterface.OnClickListener() {
+//                                    @Override
+//                                    public void onClick(DialogInterface dialog, int which) {
+//                                        dialog.dismiss();
+//                                        Intent mIntent = new Intent();
+//                                        mIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                                        if (Build.VERSION.SDK_INT >= 9) {
+//                                            mIntent.setAction("android.settings.APPLICATION_DETAILS_SETTINGS");
+//                                            mIntent.setData(Uri.fromParts("package", "com.kaidishi.lock", null));
+//                                        } else if (Build.VERSION.SDK_INT <= 8) {
+//                                            mIntent.setAction(Intent.ACTION_VIEW);
+//                                            mIntent.setClassName("com.android.settings", "com.android.setting.InstalledAppDetails");
+//                                            mIntent.putExtra("com.android.settings.ApplicationPkgName", "com.kaidishi.lock");
+//                                        }
+//                                        startActivity(mIntent);
+//
+//                                    }
+//                                });
+//                        normalDialog.setNegativeButton(getActivity().getString(R.string.cancel),
+//                                new DialogInterface.OnClickListener() {
+//                                    @Override
+//                                    public void onClick(DialogInterface dialog, int which) {
+//                                        dialog.dismiss();
+//                                    }
+//                                });
+//                        // 显示
+//                        AlertDialog dialog = normalDialog.create();
+//                        dialog.setCanceledOnTouchOutside(false);
+//                        if (!dialog.isShowing()) {
+//                            dialog.show();
+//                            MyApplication.getInstance().setPopDialog(true);
+//                        }
+                //    }
+                 //   break;
                 }
             }
         }

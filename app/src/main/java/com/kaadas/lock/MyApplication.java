@@ -14,6 +14,7 @@ import android.os.IBinder;
 import android.text.TextUtils;
 
 import com.google.gson.Gson;
+import com.huawei.android.hms.agent.HMSAgent;
 import com.igexin.sdk.PushManager;
 import com.kaadas.lock.activity.login.LoginActivity;
 import com.kaadas.lock.bean.HomeShowBean;
@@ -34,6 +35,7 @@ import com.kaadas.lock.publiclibrary.mqtt.util.MqttData;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttService;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.Rom;
 import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.ToastUtil;
 import com.kaadas.lock.utils.greenDao.db.DaoManager;
@@ -116,6 +118,10 @@ public class MyApplication extends Application {
         regToWx();
         //配置数据库
         setUpWriteDataBase();
+        // HuaWei phone
+        if(Rom.isEmui()){
+            HMSAgent.init(this);
+        }
         PushManager.getInstance().initialize(this, userPushService);
         // 注册 intentService 后 PushDemoReceiver 无效, sdk 会使用 DemoIntentService 传递数据,
         // AndroidManifest 对应保留一个即可(如果注册 DemoIntentService, 可以去掉 PushDemoReceiver, 如果注册了
@@ -126,7 +132,7 @@ public class MyApplication extends Application {
 //            tLogView.append(DemoApplication.payloadData);
 //        }
 
-    }
+     }
 
     private void regToWx() {
         // 通过WXAPIFactory工厂，获取IWXAPI的实例

@@ -35,7 +35,7 @@ android {
                 GETUI_APP_KEY   : "2MYvnQfX4k7JHqC7KNaCuA",
                 GETUI_APP_SECRET: "dePIsxVaor6Dibp8YMs8TA",
 
-                HUAWEI_APP_ID   : "100038281",
+//                HUAWEI_APP_ID   : "100038281",
 
                 XIAOMI_APP_ID   : "2882303761517594031",
                 XIAOMI_APP_KEY  : "5931759473031",
@@ -85,7 +85,6 @@ repositories {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-
     implementation 'com.android.support:appcompat-v7:28.0.0'
     testImplementation 'junit:junit:4.12'
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
@@ -147,13 +146,12 @@ dependencies {
     implementation project(':linphoneLibrary')
     implementation project(':library:WheelPicker')
     implementation project(':library:Common')
-    implementation 'com.getui:hwp:1.0.4'
+    //   implementation 'com.getui:hwp:1.0.4'
     implementation 'com.getui:xmp:1.0.3'
     implementation files('libs/GetuiSDK-support-OPPO-1.0.2.jar')
     implementation 'com.getui:mzp:1.0.7'
     //选择器控件
     implementation 'com.contrarywind:Android-PickerView:4.1.6'
-
     //文件下载的SDK
     implementation 'com.liulishuo.filedownloader:library:1.7.6'
     implementation 'com.tencent.bugly:crashreport:latest.release'
@@ -164,5 +162,5 @@ dependencies {
     // 其中latest.release指代最新Bugly SDK版本号，也可以指定明确的版本号，例如2.1.9
     implementation 'com.tencent.bugly:nativecrashreport:latest.release'
     //其中latest.release指代最新Bugly NDK版本号，也可以指定明确的版本号，例如3.0
-
+    implementation project(':push:pushsdk_huawei')
 }

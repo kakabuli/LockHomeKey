@@ -47,6 +47,7 @@ import com.kaadas.lock.publiclibrary.mqtt.util.MqttData;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.RecordTools;
+import com.kaadas.lock.utils.Rom;
 import com.kaadas.lock.utils.Rsa;
 import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.SPUtils2;
@@ -462,14 +463,6 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
         }
     }
 
-    static  boolean isFront =false;
-    public void isFontShow(){
-        isFront=true;
-    }
-    public void  noIsFont(){
-        isFront=false;
-    }
-
     public void initLinphone() {
         if (!TextUtils.isEmpty(MyApplication.getInstance().getToken()) && !TextUtils.isEmpty(MyApplication.getInstance().getUid())) {
             LinphoneHelper.setAccount(MyApplication.getInstance().getUid(), "12345678Bm", MqttConstant.LINPHONE_URL);
@@ -488,7 +481,7 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                 @Override
                 public void registrationOk() {
                     super.registrationOk();
-//                    LogUtils.e("Linphone注册成功     ");
+                    LogUtils.e("Linphone注册成功     ");
                 }
 
                 @Override
@@ -506,7 +499,6 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                 public void incomingCall(LinphoneCall linphoneCall) {
                     //收到来电通知
                     LogUtils.e("Linphone  收到来电     ");
-                    Log.e(GeTui.VideoLog, "  Linphone  收到来电:"+isFront);
 //                    if(VideoVActivity.isRunning && isFront){
 //                          Toast.makeText(mContext,mContext.getString(R.string.video_desotry),Toast.LENGTH_LONG).show();
 //                    }
@@ -711,10 +703,26 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
     public void uploadpushmethod() {
         String uid = (String) SPUtils.get(SPUtils.UID, "");
         String JpushId = (String) SPUtils2.get(MyApplication.getInstance(), GeTui.JPUSH_ID, "");
-        Log.e(GeTui.VideoLog, "uid:" + uid + " jpushid:" + JpushId + " token:" + MyApplication.getInstance().getToken());
         //uploadPushId(String uid, String jpushId, int type)
+        // 个推
+        int type=2;
+        String phoneType="other";
+        //  华为
+        if(Rom.isEmui()){
+            String token= (String) SPUtils.get(GeTui.HUAWEI_KEY, "");
+            if(!TextUtils.isEmpty(token)){
+                JpushId=token;
+                type=3;
+                phoneType=GeTui.HUAWEI_KEY;
+            }else {
+                Log.e(GeTui.VideoLog,"huawei-->MainAcvitiyPresenter=>获取token为null..上传失败");
+                return;
+            }
+        }
+        Log.e(GeTui.VideoLog, "MainActivityPresenter-->phoneType:"+phoneType+" uid:" + uid + " jpushid:" + JpushId + " token:" + MyApplication.getInstance().getToken());
+
         if (!TextUtils.isEmpty(uid) && !TextUtils.isEmpty(JpushId)) {
-            XiaokaiNewServiceImp.uploadPushId(uid, JpushId, 2).subscribe(new BaseObserver<BaseResult>() {
+            XiaokaiNewServiceImp.uploadPushId(uid, JpushId, type).subscribe(new BaseObserver<BaseResult>() {
                 @Override
                 public void onSuccess(BaseResult baseResult) {
                     if (mViewRef != null) {

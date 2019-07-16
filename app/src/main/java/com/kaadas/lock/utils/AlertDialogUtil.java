@@ -1,7 +1,9 @@
 package com.kaadas.lock.utils;
 
 import android.app.AlertDialog;
+import android.app.SearchManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -11,6 +13,9 @@ import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.kaadas.lock.R;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -185,6 +190,73 @@ public class AlertDialogUtil {
             @Override
             public void onClick(View v) {
                 alertDialog.dismiss();
+                if (clickListener != null) {
+                    clickListener.right();
+                }
+            }
+        });
+    }
+    List<AlertDialog> dialogArray=new ArrayList<>();
+    //no_et_dialog
+    public void noEditTwoButtonDialogWidthDialog_color_padding(Context context, String title, String content, String left, String right, ClickListener clickListener) {
+        View mView = LayoutInflater.from(context).inflate(R.layout.no_et_dialog_padding, null);
+        TextView tvTitle = mView.findViewById(R.id.tv_hint);
+        TextView tvContent = mView.findViewById(R.id.tv_content);
+        TextView tv_cancel = mView.findViewById(R.id.tv_left);
+        TextView tv_query = mView.findViewById(R.id.tv_right);
+        tv_query.setTextColor(Color.parseColor("#101010"));
+        AlertDialog alertDialog = AlertDialogUtil.getInstance().common(context, mView);
+        dialogArray.add(alertDialog);
+        alertDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialogInterface) {
+                for (int i=0;i<dialogArray.size();i++){
+                    AlertDialog alertDialog1= dialogArray.get(i);
+                    if(alertDialog1!=null && alertDialog1.isShowing()){
+                        alertDialog1.dismiss();
+                    }
+                }
+            }
+        });
+        if ("".equals(title)){
+            tvTitle.setVisibility(View.GONE);
+        }else {
+            tvTitle.setVisibility(View.VISIBLE);
+            tvTitle.setText(title);
+        }
+        tvContent.setText(content);
+        tv_cancel.setText(left);
+        tv_query.setText(right);
+        //取消
+        tv_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                for (int i=0;i<dialogArray.size();i++){
+                    AlertDialog alertDialog1= dialogArray.get(i);
+                    if(alertDialog1!=null && alertDialog1.isShowing()){
+                        alertDialog1.dismiss();
+                    }
+                }
+                dialogArray.clear();
+              //  alertDialog.dismiss();
+                if (clickListener != null) {
+                    clickListener.left();
+                }
+
+            }
+        });
+        //确定
+        tv_query.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+          //      alertDialog.dismiss();
+                for (int i=0;i<dialogArray.size();i++){
+                    AlertDialog alertDialog1= dialogArray.get(i);
+                    if(alertDialog1!=null && alertDialog1.isShowing()){
+                        alertDialog1.dismiss();
+                    }
+                }
+                dialogArray.clear();
                 if (clickListener != null) {
                     clickListener.right();
                 }

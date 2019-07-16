@@ -55,6 +55,7 @@ import com.kaadas.lock.publiclibrary.linphone.linphone.VideoActivity;
 import com.kaadas.lock.publiclibrary.linphone.linphone.linphone.ContactsManager;
 import com.kaadas.lock.publiclibrary.linphone.linphone.linphone.LinphoneContact;
 import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.ftp.GeTui;
 
 import org.linphone.core.CallDirection;
 import org.linphone.core.LinphoneAccountCreator;
@@ -690,7 +691,11 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
                                 //最为关键的主循环方法，应用程序应该经常调用它，因为它在后台会完成多件事情，
                                 // 如接收SIP指令，注册，认证，超时检测等，它必须要运行在LihpnoCore其它的方法所运行的线程里，
                                 // 说白了就是要保证LinphoneCore的方法运行在一至的线程里，不然就出错了。
-                                mLc.iterate();
+                                try{
+                                    mLc.iterate();
+                                }catch (Exception e){
+                                     Log.e(GeTui.VideoLog,e.getMessage());
+                                }
                             }
                         }
                     });
