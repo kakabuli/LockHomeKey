@@ -52,7 +52,7 @@ public class MqttService extends Service {
     private Handler mHandler = new Handler();
 
     //重连次数10
-    private int reconnectionNum = 10;
+    public int reconnectionNum = 10;
 
     /**
      * 判断是否订阅成功

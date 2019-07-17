@@ -1144,4 +1144,5 @@
     <string name="call_error_cateInfoEmpty">猫眼来电呼叫失败,获取网关信息失败!</string>
     <string name="call_error_mimi">猫眼来电呼叫失败,获取VPN信息失败</string>
     <string name="log_info">MyLog初始化失败</string>
+    <string name="mqtt_already_disconnect_refresh">远程链接已断开，请刷新页面进行重连</string>
 </resources>
