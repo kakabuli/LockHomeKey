@@ -156,7 +156,7 @@
     <string name="bluetooth_two_text">触摸按键区域唤醒面板</string>
     <string name="bluetooth_three_text">先按“*”两次，再输入管理密码，按“#”确认</string>
     <string name="bluetooth_four_text">语音提示：“已进入管理模式”</string>
-    <string name="bluetooth_five_text">根据语音提示，操作进入配网</string>
+    <string name="bluetooth_five_text">根据语音提示，进入配网</string>
     <string name="already_input_network">已提示进入配网</string>
     <string name="bluetooth_pairing">正在配对中...</string>
     <string name="bluetooth_add_success">您已添加成功，取个名字吧！</string>
@@ -1094,7 +1094,7 @@
     <string name="the_third_step">第三步</string>
     <string name="make_sure_the_door_lock_is_installed">确保门锁安装好，并装上电池</string>
     <string name="lock_second">触摸按键区唤醒面板\n先按“*”两次，再输入管理密码，按“#”确认\n语音提示：“已进入管理模式”</string>
-    <string name="zigbee_lock_third">根据语音提示，按键 【4】进入拓展功能</string>
+    <string name="zigbee_lock_third">根据语音提示，按“4”进入“扩展模块”\n再选择“加入网络”</string>
     <string name="how_to_reset">如何重置</string>
     <string name="how_to_reset_steps">请使用针插入重置孔5~10S</string>
     <string name="scan_gatewy_behind_qrcode">扫描网关后面二维码</string>
@@ -1145,4 +1145,10 @@
     <string name="call_error_mimi">猫眼来电呼叫失败,获取VPN信息失败</string>
     <string name="log_info">MyLog初始化失败</string>
     <string name="mqtt_already_disconnect_refresh">远程链接已断开，请刷新页面进行重连</string>
+    <string name="help_gateway_title">您无法添加您的网关设备，请按照以下步骤对设备进行检查：</string>
+    <string name="help_gateway_one">检查网关离门的距离，建议使用距离为可视距离8米内(可视距离指站在网关放置的地方，可以看到门上的锁)，若距离过长或有墙遮挡，会导致信号衰减，影响使用；</string>
+    <string name="help_gateway_two">请按照App一步一步操作，只操作锁或只操作App都会失败；</string>
+    <string name="help_gateway_three">按键【2】退出网络，若提示操作失败，说明扩展模块松动，请打开电池盖，将扩展模块拔出，再插入；</string>
+    <string name="help_gateway_four">若锁上提示入网成功，App提示超时失败，可能网络不好，成功消息丢失了，请刷新设备页面，观察有无出现锁设备，若没有，多加入几次；</string>
+    <string name="help_gateway_five">锁提示入网失败，说明信号很弱，请拉近网关距离；</string>
 </resources>
