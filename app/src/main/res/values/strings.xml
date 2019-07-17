@@ -1141,5 +1141,5 @@
     <string name="network_jion">点击退出可能导致猫眼配网失败</string>
     <string name="getting_wifi_info">正在获取网关WiFi信息...</string>
     <string name="get_wifi_info_failed">获取网关WiFi信息失败</string>
-    <string name="mqtt_already_disconnect_refresh">远程连接已断开，请刷新页面进行重连</string>
+    <string name="mqtt_already_disconnect_refresh">远程链接已断开，请刷新页面进行重连</string>
 </resources>
