@@ -150,7 +150,9 @@ public class AddBluetoothSearchActivity extends BaseActivity<ISearchDeviceView, 
             @Override
             public void right() {
                 //重新搜索设备.
-                tvIsSearching.setVisibility(View.VISIBLE);
+                if (tvIsSearching!=null){
+                    tvIsSearching.setVisibility(View.VISIBLE);
+                }
                 mPresenter.searchDevices();
             }
         });

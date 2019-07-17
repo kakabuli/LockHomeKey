@@ -260,6 +260,8 @@ public class BluetoothLockFunctionV6V7Activity extends BaseBleActivity<IDeviceDe
                 ivLockIcon.setImageResource(R.mipmap.bluetooth_lock_qz012);
             }else if (model.contains("K8-T")){
                 ivLockIcon.setImageResource(R.mipmap.bluetooth_lock_k8_t);
+            }else if (model.contains("S6")){
+                ivLockIcon.setImageResource(R.mipmap.bluetooth_lock_s6);
             }
         }
     }

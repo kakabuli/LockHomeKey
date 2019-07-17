@@ -97,7 +97,9 @@ public class OldBluetoothLockDetailActivity extends BaseBleActivity<IOldBluetoot
         initListener();
         hasMoreItem = true;
         showMoreItem();
-        mPresenter.getAllPassword(bleLockInfo);
+        if (mPresenter!=null){
+            mPresenter.getAllPassword(bleLockInfo);
+        }
         lockRunnable = new Runnable() {
             @Override
             public void run() {

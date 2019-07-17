@@ -25,7 +25,7 @@ public class BluetoothSharedDeviceManagementAdapter extends BaseQuickAdapter<Blu
     }
     @Override
     protected void convert(BaseViewHolder helper, BluetoothSharedDeviceBean.DataBean bean) {
-        int position = helper.getPosition();
+        int position = helper.getPosition()+1;
         String number="";
         if (position<10){
             number="0"+position;

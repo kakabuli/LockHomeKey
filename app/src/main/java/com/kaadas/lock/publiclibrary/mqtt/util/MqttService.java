@@ -327,7 +327,7 @@ public class MqttService extends Service {
                                 mqttConnection();
                             }
                         };
-                        mHandler.postDelayed(reconncetRunnable, 2000);
+                        mHandler.postDelayed(reconncetRunnable, 6000);
 
                     } else {
 //                        ToastUtil.getInstance().showShort(R.string.mqtt_connection_fail);
