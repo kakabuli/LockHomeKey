@@ -113,7 +113,10 @@ public class PersonalUpdateVerifyGesturePwd extends BaseAddToApplicationActivity
                 }
             });
         }
-        mGestureContentView.setParentView(gestureContainer);
+        if (mGestureContentView!=null){
+            mGestureContentView.setParentView(gestureContainer);
+        }
+
 
     }
 
