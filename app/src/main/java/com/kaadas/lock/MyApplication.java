@@ -12,6 +12,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.text.TextUtils;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.huawei.android.hms.agent.HMSAgent;
@@ -35,6 +36,7 @@ import com.kaadas.lock.publiclibrary.mqtt.util.MqttData;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttService;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.MyLog;
 import com.kaadas.lock.utils.Rom;
 import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.ToastUtil;
@@ -62,6 +64,7 @@ import net.sdvn.cmapi.Config;
 
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -111,6 +114,12 @@ public class MyApplication extends Application {
         SPUtils.init(this);  //初始化SPUtils  传递Context进去  不需要每次都传递Context
         ToastUtil.init(this); //初始化ToastUtil 传递Context进去  不需要每次都传递
         initTokenAndUid();  //获取本地UUID
+        try {
+            MyLog.getInstance().init(this);
+        } catch (IOException e) {
+            Toast.makeText(this,getString(R.string.log_info),Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        }
         listenerAppBackOrForge();
         //扫描二维码初始化
         /* ZXingLibrary.initDisplayOpinion(this);*/

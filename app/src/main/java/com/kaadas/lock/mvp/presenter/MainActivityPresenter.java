@@ -46,6 +46,7 @@ import com.kaadas.lock.publiclibrary.mqtt.util.MqttConstant;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttData;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.MyLog;
 import com.kaadas.lock.utils.RecordTools;
 import com.kaadas.lock.utils.Rom;
 import com.kaadas.lock.utils.Rsa;
@@ -467,6 +468,7 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
         if (!TextUtils.isEmpty(MyApplication.getInstance().getToken()) && !TextUtils.isEmpty(MyApplication.getInstance().getUid())) {
             LinphoneHelper.setAccount(MyApplication.getInstance().getUid(), "12345678Bm", MqttConstant.LINPHONE_URL);
             LogUtils.e("设置LinPhone  监听  ");
+            MyLog.getInstance().save("initLinphone ");
             LinphoneHelper.addCallback(new RegistrationCallback() {
                 @Override
                 public void registrationNone() {
@@ -482,6 +484,7 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                 public void registrationOk() {
                     super.registrationOk();
                     LogUtils.e("Linphone注册成功     ");
+                    MyLog.getInstance().save("Linphone注册成功     ");
                 }
 
                 @Override
@@ -502,8 +505,10 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
 //                    if(VideoVActivity.isRunning && isFront){
 //                          Toast.makeText(mContext,mContext.getString(R.string.video_desotry),Toast.LENGTH_LONG).show();
 //                    }
+                    MyLog.getInstance().save("Linphone  收到来电     ");
                     if (VideoVActivity.isRunning) {
                         LogUtils.e("Linphone  收到来电   VideoActivity已经运行  不出来  ");
+                        MyLog.getInstance().save("Linphone  收到来电   VideoActivity已经运行  不出来  ");
                         return;
                     }
 
@@ -545,6 +550,9 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                     //如果网关Id为空    不朝下走了
                     if (TextUtils.isEmpty(gwId) || gatewayInfo == null) {
                         Log.e(GeTui.VideoLog,"gwid为null");
+                        if (mViewRef != null && mViewRef.get() != null) {
+                            mViewRef.get().callErrorCateInfoEmpty();
+                        }
                         return;
                     }
                     //获取米米网账号情况
@@ -554,6 +562,9 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                     if (TextUtils.isEmpty(meUsername) || TextUtils.isEmpty(mePwd)) {
                         //如果账号或者密码有一个为空  直接退出
                         Log.e(GeTui.VideoLog,"咪咪网账号为null");
+                        if (mViewRef != null && mViewRef.get() != null) {
+                            mViewRef.get().callErrorCateInfoMimi();
+                        }
                         return;
                     }
                     Log.e(GeTui.VideoLog, "MainActivityPresenter--> next..." + meUsername + " " + mePwd);
@@ -574,6 +585,7 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                         }
                     } else { //meme网没有连接
                         Log.e(GeTui.VideoLog, "MainPresenter------>登录 mimi");
+                        MyLog.getInstance().save("MainPresenter------>登录 mimi ");
                         loginMeme(meUsername, mePwd);
                     }
                 }
@@ -630,6 +642,7 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                         if (aBoolean && devices.size() > 0) { //米米网登陆成功且网关在线  正常到此处，那么都应该是成功的
                             return true;
                         }
+                        MyLog.getInstance().save("米米网登录失败...网关获取为空");
                         return false;
                     }
                 })
@@ -658,6 +671,7 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                     public void accept(Throwable throwable) throws Exception {
                         LogUtils.e("登录米米网失败或者设备部在线");
                         Log.e(GeTui.VideoLog,"登录米米网失败或者设备部在线:"+throwable.getMessage());
+                        MyLog.getInstance().save("猫眼呼叫来电失败,通道建立失败:"+throwable.getMessage());
 //                        if(mViewRef!=null && mViewRef.get()!=null){
 //                            Log.e(GeTui.VideoLog,"MainAcvitiyPresenter===>失败");
 //                            mViewRef.get().onCatEyeCallFail();
