@@ -1141,4 +1141,7 @@
     <string name="network_jion">点击退出可能导致猫眼配网失败</string>
     <string name="getting_wifi_info">正在获取网关WiFi信息...</string>
     <string name="get_wifi_info_failed">获取网关WiFi信息失败</string>
+    <string name="unknow_function_set">未知锁型号(%1$s)，请更新等最新版本APP</string>
+    <string name="is_open_auto_mode">正在关闭自动模式</string>
+    <string name="is_close_auto_mode">正在关闭自动状态</string>
 </resources>

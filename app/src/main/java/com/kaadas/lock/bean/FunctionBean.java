@@ -1,25 +1,14 @@
 package com.kaadas.lock.bean;
 
-public class BluetoothLockFunctionBean {
-
-    private int image;
-
+public class FunctionBean {
     private String name;
-
+    private int imageID;
     private int type;
 
-    public BluetoothLockFunctionBean( String name,int image, int type) {
-        this.image = image;
+    public FunctionBean(String name, int imageID, int type) {
         this.name = name;
+        this.imageID = imageID;
         this.type = type;
-    }
-
-    public int getImage() {
-        return image;
-    }
-
-    public void setImage(int image) {
-        this.image = image;
     }
 
     public String getName() {
@@ -28,6 +17,14 @@ public class BluetoothLockFunctionBean {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public int getImageID() {
+        return imageID;
+    }
+
+    public void setImageID(int imageID) {
+        this.imageID = imageID;
     }
 
     public int getType() {

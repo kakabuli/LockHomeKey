@@ -276,7 +276,7 @@ public class DeviceMorePresenter extends BlePresenter<IDeviceMoreView> {
                 .subscribe(new Consumer<BleDataBean>() {
                     @Override
                     public void accept(BleDataBean bleDataBean) throws Exception {
-                        byte b = bleDataBean.getPayload()[0];
+                        int b = bleDataBean.getPayload()[0] & 0xff;
                      /*   0x00	成功
                         0x01	失败
                         0x85	某个字段错误

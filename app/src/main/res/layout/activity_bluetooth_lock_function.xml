@@ -124,14 +124,21 @@
                     android:textSize="@dimen/sp_12" />
             </LinearLayout>
         </LinearLayout>
-
-
-
-
-
     </LinearLayout>
 
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/detail_function_recyclerView"
+        android:layout_width="match_parent"
+        android:layout_weight="3"
+        android:layout_height="0dp"
+        android:layout_margin="@dimen/dp_10"
+        android:background="@color/device_item_background"
+        >
+    </android.support.v7.widget.RecyclerView>
+
     <LinearLayout
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="3"

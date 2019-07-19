@@ -46,14 +46,10 @@ public interface IBindBleView extends IBaseView {
      * 解绑设备失败
      */
     void onUnbindFailed(Throwable throwable);
-
-
     /**
      * 解绑设备失败  服务器返回错误码
      */
     void onUnbindFailedServer(BaseResult result);
-
-
     /**
      * 读取锁型号失败
      */
@@ -64,6 +60,9 @@ public interface IBindBleView extends IBaseView {
      */
     void readLockTypeSucces();
 
-
     void  onDeviceStateChange(boolean isConnected);
+    /**
+     * 未知锁型号
+     */
+    void unknownFunctionSet(int functionSet);
 }

@@ -13,6 +13,7 @@ import com.kaadas.lock.publiclibrary.http.XiaokaiNewServiceImp;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.util.BaseObserver;
 import com.kaadas.lock.publiclibrary.http.util.RxjavaHelper;
+import com.kaadas.lock.utils.FunctionSetUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.Rsa;
@@ -308,8 +309,11 @@ public class BindBlePresenter<T> extends BasePresenter<IBindBleView> {
 
                         String mode = (String) readInfoBean.data;
                         LogUtils.e("收到锁型号   " + mode);
-
-                        readLockFunctionSet(pwd1, pwd2, mode, version  , deviceSn);
+                        if (bleService.getBleVersion() == 3) {  //最近版本才读取锁功能集
+                            readLockFunctionSet(pwd1, pwd2, mode, version, deviceSn);
+                        } else {
+                            bindDevice(pwd1, pwd2, mode, version + "", deviceSn, null);
+                        }
                     }
                 }, new Consumer<Throwable>() {
                     @Override
@@ -344,8 +348,15 @@ public class BindBlePresenter<T> extends BasePresenter<IBindBleView> {
 
                         int functionSet = (int) readInfoBean.data;
                         LogUtils.e("收到锁功能集   " + functionSet);
+                        if (FunctionSetUtils.isExistFunctionSet(functionSet)) {
+                            bindDevice(pwd1, pwd2, mode, version + "", deviceSn, "" + functionSet);
+                        } else {
+                            if (mViewRef.get() != null) {
+                                mViewRef.get().unknownFunctionSet(functionSet);
+                            }
+                        }
 
-                        bindDevice(pwd1, pwd2, mode, version + "", deviceSn, "" +functionSet);
+
                     }
                 }, new Consumer<Throwable>() {
                     @Override

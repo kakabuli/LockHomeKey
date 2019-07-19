@@ -194,4 +194,10 @@ public class AddBluetoothThirdActivity extends BaseActivity<IBindBleView, BindBl
         }
     }
 
+    @Override
+    public void unknownFunctionSet(int functionSet) {
+        String content = String.format(getString(R.string.unknow_function_set), "" + functionSet);
+        ToastUtil.getInstance().showLong(content);
+    }
+
 }

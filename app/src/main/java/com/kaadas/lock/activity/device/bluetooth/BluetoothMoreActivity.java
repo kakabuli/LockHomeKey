@@ -27,6 +27,7 @@ import com.kaadas.lock.publiclibrary.ota.p6.P6OtaUpgradeActivity;
 import com.kaadas.lock.publiclibrary.ota.OtaConstants;
 import com.kaadas.lock.publiclibrary.ota.ti.TiOtaUpgradeActivity;
 import com.kaadas.lock.utils.AlertDialogUtil;
+import com.kaadas.lock.utils.FunctionSetUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.SPUtils;
@@ -85,10 +86,13 @@ public class BluetoothMoreActivity extends BaseBleActivity<IDeviceMoreView, Devi
         setContentView(R.layout.activity_bluetooth_more);
         Intent intent = getIntent();
         String source = intent.getStringExtra(KeyConstants.SOURCE);
-        if ("BluetoothLockFunctionV6V7Activity".equals(source)){
-           rlAm.setVisibility(View.GONE);
-        }
         bleLockInfo = mPresenter.getBleLockInfo();
+        int func = Integer.parseInt(bleLockInfo.getServerLockInfo().getFunctionSet());
+        if (FunctionSetUtils.isSupportAMModeShow(func)) {
+            rlAm.setVisibility(View.VISIBLE);
+        } else {
+            rlAm.setVisibility(View.GONE);
+        }
         ButterKnife.bind(this);
         initClick();
         initData();
@@ -206,21 +210,20 @@ public class BluetoothMoreActivity extends BaseBleActivity<IDeviceMoreView, Devi
 
                 break;
             case R.id.rl_am:
-                ToastUtil.getInstance().showLong(R.string.please_lock_countrol);
-//                return;
-//                if (amAutoLockStatus) {
-//                    //打开状态 现在关闭
-//                    mPresenter.setAutoLock(false);
-//                    showLoading("");
-//
-////                    SPUtils.put(KeyConstants.AM_AUTO_LOCK_STATUS, false);
-//                } else {
-//                    //关闭状态 现在打开
-//                    mPresenter.setAutoLock(true);
-//                    showLoading("");
-//
-////                    SPUtils.put(KeyConstants.AM_AUTO_LOCK_STATUS, true);
-//                }
+                int func = Integer.parseInt(bleLockInfo.getServerLockInfo().getFunctionSet());
+                if (FunctionSetUtils.isSupportAMModeSet(func)) {
+                    if (amAutoLockStatus) {
+                        //打开状态 现在关闭
+                        mPresenter.setAutoLock(false);
+                        showLoading(getString(R.string.is_open_auto_mode));
+                    } else {
+                        //关闭状态 现在打开
+                        mPresenter.setAutoLock(true);
+                        showLoading(getString(R.string.is_close_auto_mode));
+                    }
+                } else {
+                    ToastUtil.getInstance().showLong(R.string.please_lock_countrol);
+                }
                 break;
             case R.id.rl_door_lock_language_switch:
                 intent = new Intent(this, BluetoothLockLanguageSettingActivity.class);
@@ -395,17 +398,15 @@ public class BluetoothMoreActivity extends BaseBleActivity<IDeviceMoreView, Devi
     public void setAutoLockSuccess(boolean isOpen) {
         hiddenLoading();
         if (isOpen) {
-            amAutoLockStatus = true;
             ivAm.setImageResource(R.mipmap.iv_open);
         } else {
-            amAutoLockStatus = false;
             ivAm.setImageResource(R.mipmap.iv_close);
         }
-        amAutoLockStatus = !amAutoLockStatus;
+        amAutoLockStatus = isOpen;
     }
 
     @Override
-    public void setAutoLockFailed(byte b) {
+    public void setAutoLockFailed(int b) {
         hiddenLoading();
         String strError = "";
         switch (b) {
@@ -472,9 +473,10 @@ public class BluetoothMoreActivity extends BaseBleActivity<IDeviceMoreView, Devi
                     public void left() {
 
                     }
+
                     @Override
                     public void right() {
-                        if (bleLockInfo.getBattery()<20){
+                        if (bleLockInfo.getBattery() < 20) {
                             ToastUtil.getInstance().showLong(R.string.low_power_warring);
                             return;
                         }
@@ -522,7 +524,7 @@ public class BluetoothMoreActivity extends BaseBleActivity<IDeviceMoreView, Devi
 
                         }
                     });
-        }else {
+        } else {
             ToastUtil.getInstance().showLong(getString(R.string.check_update_failed));
         }
     }

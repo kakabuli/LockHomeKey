@@ -1,5 +1,7 @@
 package com.kaadas.lock.publiclibrary.http.result;
 
+import android.text.TextUtils;
+
 import java.io.Serializable;
 
 
@@ -199,8 +201,30 @@ public class ServerBleDevice implements Serializable {
     public void setPeripheralId(String peripheralId) {
         this.peripheralId = peripheralId;
     }
+//
+//     if (lockType.startsWith("V6") ||
+//             lockType.startsWith("V7") ||
+//             lockType.startsWith("S100") ||
+//             lockType.startsWith("K9")||
+//             lockType.startsWith("S6")) {
 
-    public String getFunctionSet() {
+
+        public String getFunctionSet() {
+        if (TextUtils.isEmpty(functionSet)){
+            if (TextUtils.isEmpty(model)){
+                return "" + 0x31;
+            }else {
+                if (model.startsWith("V6")||model.startsWith("S100") ){
+                    return "" + 0x20;
+                }else if (model.startsWith("S8C")){
+                    return "" + 0x32;
+                }else if (model.startsWith("V7")){
+
+                }else if (model.startsWith("K9")){
+
+                }
+            }
+        }
         return functionSet;
     }
 
