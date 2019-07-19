@@ -54,7 +54,6 @@ public class AddBluetoothThirdActivity extends BaseActivity<IBindBleView, BindBl
         version = intent.getIntExtra(KeyConstants.BLE_VERSION, 0);
         sn = intent.getStringExtra(KeyConstants.BLE_DEVICE_SN);
 
-
         mac = intent.getStringExtra(KeyConstants.BLE_MAC);
         deviceName = intent.getStringExtra( KeyConstants.DEVICE_NAME);
 

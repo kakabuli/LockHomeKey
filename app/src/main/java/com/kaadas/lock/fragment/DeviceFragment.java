@@ -289,6 +289,7 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                                 bleLockServiceInfo.setSoftwareVersion(serverBleDevice.getSoftwareVersion());
                                 bleLockServiceInfo.setBleVersion(serverBleDevice.getBleVersion());
                                 bleLockServiceInfo.setUid(uid);
+                                bleLockServiceInfo.setFunctionSet(serverBleDevice.getFunctionSet());
                                 daoSession.insertOrReplace(bleLockServiceInfo);
 
                                 //请求电量

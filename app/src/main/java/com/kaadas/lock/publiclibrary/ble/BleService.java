@@ -137,6 +137,7 @@ public class BleService extends Service {
     private int bleVersion;
     private BluetoothGattService p6otaService;
     private BluetoothGattCharacteristic notifyChar;
+    private BluetoothGattCharacteristic lockFunctionSetChar;
 
     public int getBleVersion() {
         return bleVersion;
@@ -516,6 +517,10 @@ public class BleService extends Service {
                     LogUtils.e("锁状态  字节1  " + Integer.toBinaryString(characteristic.getValue()[0] & 0xff) + "  字节2  " + Integer.toBinaryString(characteristic.getValue()[1] & 0xff));
                     readSystemIDSubject.onNext(new ReadInfoBean(ReadInfoBean.TYPE_LOCK_STATUS, characteristic.getValue()));
                     break;
+                case BLeConstants.UUID_FUNCTION_SET:
+                    LogUtils.e("锁功能集  字节1  " + Integer.toBinaryString(characteristic.getValue()[0] & 0xff)  );
+                    readSystemIDSubject.onNext(new ReadInfoBean(ReadInfoBean.TYPE_LOCK_FUNCTION_SET,characteristic.getValue()[0] & 0xff));
+                    break;
             }
         }
 
@@ -579,6 +584,19 @@ public class BleService extends Service {
             public void run() {
                 if (snChar != null && bluetoothGatt != null) {
                     bluetoothGatt.readCharacteristic(snChar);
+                }
+            }
+        }, delay);
+        return readSystemIDSubject;
+    }
+
+    //读取SN的特征值
+    public Observable<ReadInfoBean> readFunctionSet(long delay) {
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (snChar != null && bluetoothGatt != null) {
+                    bluetoothGatt.readCharacteristic(lockFunctionSetChar);
                 }
             }
         }, delay);
@@ -787,6 +805,11 @@ public class BleService extends Service {
                 if (uuidChar.equalsIgnoreCase(BLeConstants.UUID_LOCK_STATUS)) { //锁状态特征值
                     lockStatusChar = characteristic;
                 }
+                if (uuidChar.equalsIgnoreCase(BLeConstants.UUID_FUNCTION_SET)) { //功能集
+                    lockFunctionSetChar = characteristic;
+                }
+
+
             }
         }
 
@@ -863,7 +886,7 @@ public class BleService extends Service {
             }
             for (BluetoothGattCharacteristic characteristic : gattService.getCharacteristics()) {
                 LogUtils.e("    特征UUID  " + characteristic.getUuid().toString());
-                if (characteristic.getUuid().toString().equalsIgnoreCase(BLeConstants.PROTOCOL_VERSION_CHAR)) {
+                if (characteristic.getUuid().toString().equalsIgnoreCase(BLeConstants.UUID_FUNCTION_SET)) {
                     isFFE1 = true;
                 }
             }
@@ -1137,4 +1160,6 @@ public class BleService extends Service {
             }
         }
     };
+
+
 }

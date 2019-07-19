@@ -304,8 +304,9 @@ public class XiaokaiNewServiceImp {
      *
      * @return
      */
-    public static Observable<BaseResult> addDevice(String devmac, String devname, String user_id, String password1, String password2, String deviceModel, String bleVersion,String deviceSn) {
-        AddDeviceBean addDeviceBean = new AddDeviceBean(devmac, devname, user_id, password1, password2, deviceModel, bleVersion,deviceSn);
+    public static Observable<BaseResult> addDevice(String devmac, String devname, String user_id, String password1, String password2, String model, String bleVersion,String deviceSn, String functionSet) {
+        //(String devmac, String devname, String user_id, String password1, String password2, String model, String bleVersion, String deviceSN, String peripheralId, String softwareVersion, String functionSet)
+        AddDeviceBean addDeviceBean = new AddDeviceBean(  devmac,   devname,   user_id,   password1,   password2,   model,   bleVersion,   deviceSn,"", "",   functionSet);
         return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
                 .addDevice(new HttpUtils<AddDeviceBean>().getBody(addDeviceBean))
                 .compose(RxjavaHelper.observeOnMainThread());

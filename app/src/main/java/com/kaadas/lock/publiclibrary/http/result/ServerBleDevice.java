@@ -25,6 +25,13 @@ public class ServerBleDevice implements Serializable {
     private String bleVersion;
     private String softwareVersion;
     private String deviceSN;
+    /**
+     * peripheralId : 5c70ac053c554639ea931111
+     * functionSet : 01
+     */
+
+    private String peripheralId;
+    private String functionSet;
 
     public String getBleVersion() {
         return bleVersion;
@@ -183,5 +190,21 @@ public class ServerBleDevice implements Serializable {
                 ", softwareVersion='" + softwareVersion + '\'' +
                 ", deviceSN='" + deviceSN + '\'' +
                 '}';
+    }
+
+    public String getPeripheralId() {
+        return peripheralId;
+    }
+
+    public void setPeripheralId(String peripheralId) {
+        this.peripheralId = peripheralId;
+    }
+
+    public String getFunctionSet() {
+        return functionSet;
+    }
+
+    public void setFunctionSet(String functionSet) {
+        this.functionSet = functionSet;
     }
 }

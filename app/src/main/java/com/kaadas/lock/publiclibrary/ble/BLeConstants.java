@@ -14,9 +14,9 @@ public class BLeConstants {
     public static final String UUID_NOTIFY_SERVICE = "0000ffe0-0000-1000-8000-00805f9b34fb";// 通知数据
     //蓝牙->app 特征值
     public static final String UUID_NOTIFY_CHAR = "0000ffe4-0000-1000-8000-00805f9b34fb";// 通知charUUID
-    //蓝牙->app 特征值
+    //门锁功能集
 
-    public static final String PROTOCOL_VERSION_CHAR = "0000ffe1-0000-1000-8000-00805f9b34fb";// 协议版本号   最新版的协议才有这个服务  2019年5月9日
+    public static final String UUID_FUNCTION_SET = "0000ffe1-0000-1000-8000-00805f9b34fb";// 门锁功能集   最新版的协议才有这个服务  2019年5月9日
     /**
      * 电量特征值 UUID  0-100%，出厂默认值为100%
      */
@@ -125,7 +125,6 @@ public class BLeConstants {
      * Ota重启服务 Ti 服务的特征值
      */
     public static final String OAD_RESET_TI_SERVICE = "f000ffd0-0451-4000-b000-000000000000";  //OTA升级的服务UUID
-
 
     /**
      *  Ota重启服务 P6 服务的特征值
