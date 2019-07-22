@@ -1153,4 +1153,6 @@
     <string name="help_gateway_three">按键【2】退出网络，若提示操作失败，说明扩展模块松动，请打开电池盖，将扩展模块拔出，再插入；</string>
     <string name="help_gateway_four">若锁上提示入网成功，App提示超时失败，可能网络不好，成功消息丢失了，请刷新设备页面，观察有无出现锁设备，若没有，多加入几次；</string>
     <string name="help_gateway_five">锁提示入网失败，说明信号很弱，请拉近网关距离；</string>
+    <string name="gateway_reset_unbind">:已被重置或者解绑</string>
+    <string name="close_lock_success">门锁已关</string>
 </resources>

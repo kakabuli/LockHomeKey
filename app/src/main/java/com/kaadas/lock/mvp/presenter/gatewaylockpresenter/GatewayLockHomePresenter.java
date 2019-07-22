@@ -331,7 +331,7 @@ public class GatewayLockHomePresenter<T> extends BasePresenter<IGatewayLockHomeV
                             LogUtils.e("门锁关闭 上报");
                             //关门
                             if (mViewRef!=null&&mViewRef.get() != null) {
-                                mViewRef.get().lockCloseSuccess();
+                                mViewRef.get().lockCloseSuccess(deviceId);
                             }
                         }
                     }, new Consumer<Throwable>() {

@@ -848,7 +848,7 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
         }
     }
     @Override
-    public void lockCloseSuccess() {
+    public void lockCloseSuccess(String deviceId) {
         closeLockAnimator();
         //isClosing = false;
         new Handler().postDelayed(new Runnable() {

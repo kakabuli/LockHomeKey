@@ -208,4 +208,10 @@ public class MqttConstant {
 
     //修改网关昵称
     public static final String UPDATE_GATEWAY_NICK_NAME="updateGwNickName";
+
+    //网关重置上报
+    public static final String GATEWAY_RESET="gatewayReset";
+
+
+
 }

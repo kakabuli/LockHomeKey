@@ -52,7 +52,7 @@ public interface IGatewayLockHomeView extends IBaseView {
     /**
      * 关锁成功
      */
-    void lockCloseSuccess();
+    void lockCloseSuccess(String deviceId);
     /**
      * 关锁失败
      */

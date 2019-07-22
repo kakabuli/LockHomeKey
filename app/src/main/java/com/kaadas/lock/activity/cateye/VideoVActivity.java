@@ -919,6 +919,16 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
     @Override
     public void lockCloseSuccess(String devId) {
         closeLockStatus=devId+"closing_false";
+
+        GwLockInfo gwLockInfo=MyApplication.getInstance().getGatewayLockById(devId);
+        if (gwLockInfo!=null){
+            String nickName=gwLockInfo.getServerInfo().getNickName();
+            if (!TextUtils.isEmpty(nickName)){
+                ToastUtil.getInstance().showShort(nickName+":"+getString(R.string.close_lock_success));
+            }else{
+                ToastUtil.getInstance().showShort(devId+":"+getString(R.string.close_lock_success));
+            }
+        }
     }
 
     @Override
