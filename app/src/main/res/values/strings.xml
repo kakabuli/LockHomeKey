@@ -1167,4 +1167,5 @@
     <string name="modify_fowever_pwd">修改永久密码</string>
     <string name="modify_temp_pwd">修改临时密码</string>
     <string name="modify_force_pwd">修改胁迫密码</string>
+    <string name="get_stress_list_success">获取胁迫密码列表成功</string>
 </resources>
