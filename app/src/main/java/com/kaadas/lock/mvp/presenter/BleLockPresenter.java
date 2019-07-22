@@ -185,7 +185,7 @@ public class BleLockPresenter<T> extends MyOpenLockRecordPresenter<IBleLockView>
                 })
                 .timeout(1000, TimeUnit.MILLISECONDS)
                 .compose(RxjavaHelper.observeOnMainThread())
-                .retryWhen(new RetryWithTime(2, 0))  //读取三次电量   如果没有读取到电量的话
+                .retryWhen(new RetryWithTime(3, 0))  //读取三次电量   如果没有读取到电量的话
                 .subscribe(new Consumer<ReadInfoBean>() {
                     @Override
                     public void accept(ReadInfoBean readInfoBean) throws Exception {

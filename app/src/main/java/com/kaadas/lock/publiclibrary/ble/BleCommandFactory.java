@@ -417,6 +417,29 @@ public class BleCommandFactory {
 
 
     /**
+     * 获取操作记录
+     * LogIndex Start：查询的记录起始序号
+     * LogIndex End：查询的记录结束序号
+     *LogIndex End必须大于等于LogIndex Start，当只读取一条记录时LogIndex start等于LogIndex End。如果LogIndex Start大于LogTotal则直接返回确认帧。
+     *
+     * @param startIndex 查询日志起始序号。
+     * @param endIndex   日志结束序号
+     * @param key        加密秘钥
+     * @return
+     */
+
+    public static byte[] getOperationCommand(byte[] startIndex, byte[] endIndex, byte[] key) {
+        byte cmd = 0x18;
+        byte[] payload = new byte[16]; //负载数据
+        payload[0]=0x01;
+        payload[1]=0x03;
+        System.arraycopy(startIndex, 0, payload, 2, 2);
+        System.arraycopy(endIndex, 0, payload, 4, 2);
+        LogUtils.d("davi startIndex "+Rsa.bytesToHexString(startIndex)+" endIndex "+Rsa.bytesToHexString(endIndex));
+        return groupPackage(cmd, payload, key);
+    }
+
+    /**
      * 心跳帧
      *
      * @return

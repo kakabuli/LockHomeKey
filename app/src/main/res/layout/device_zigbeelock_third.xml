@@ -65,6 +65,8 @@
             android:layout_marginTop="@dimen/dp_5"
             android:textColor="#ff333333"
             android:textSize="14sp"
+            android:gravity="center"
+            android:lineSpacingExtra="@dimen/dp_8"
             />
 
     </LinearLayout>

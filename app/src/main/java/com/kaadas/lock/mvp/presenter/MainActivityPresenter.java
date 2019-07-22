@@ -27,7 +27,6 @@ import com.kaadas.lock.publiclibrary.ble.responsebean.BleDataBean;
 import com.kaadas.lock.publiclibrary.http.XiaokaiNewServiceImp;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.result.ServerBleDevice;
-import com.kaadas.lock.publiclibrary.http.result.ServerDevice;
 import com.kaadas.lock.publiclibrary.http.util.BaseObserver;
 import com.kaadas.lock.publiclibrary.http.util.RxjavaHelper;
 import com.kaadas.lock.publiclibrary.linphone.MemeManager;
@@ -39,6 +38,7 @@ import com.kaadas.lock.publiclibrary.mqtt.eventbean.CatEyeEventBean;
 import com.kaadas.lock.publiclibrary.mqtt.eventbean.DeleteDeviceLockBean;
 import com.kaadas.lock.publiclibrary.mqtt.eventbean.GatewayLockAlarmEventBean;
 import com.kaadas.lock.publiclibrary.mqtt.eventbean.GatewayLockInfoEventBean;
+import com.kaadas.lock.publiclibrary.mqtt.eventbean.GatewayResetBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.GatewayComfirmOtaResultBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.AllBindDevices;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.GatewayOtaNotifyBean;
@@ -102,7 +102,7 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
     private Disposable listerBleVersionDisposable;
     private Disposable listenerGatewayOtaDisposable;
     private Disposable comfirmGatewayOtaDisposable;
-
+    private Disposable gatewayResetDisposable;
     private Context mContext;
 
     public MainActivityPresenter() {
@@ -129,6 +129,8 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
         listerBleVersion();
         //监听网关ota升级
         listenGatewayOTA();
+        //监听网关重置上报
+        gatewayResetListener();
     }
 
     /**
@@ -870,15 +872,14 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                     serverBleDevice.setOpen_purview(bleDevice.getOpen_purview());
                     serverBleDevice.setPassword1(bleDevice.getPassword1());
                     serverBleDevice.setPassword2(bleDevice.getPassword2());
-
                     serverBleDevice.setBleVersion(bleDevice.getBleVersion());
-
                     serverBleDevice.setModel(bleDevice.getModel());
-
                     serverBleDevice.setDeviceSN(bleDevice.getDeviceSN());
                     serverBleDevice.setSoftwareVersion(bleDevice.getSoftwareVersion());
                     serverBleDevice.setBleVersion(bleDevice.getBleVersion());
                     serverBleDevice.setCreateTime(bleDevice.getCreateTime());
+
+                    serverBleDevice.setFunctionSet(bleDevice.getFunctionSet());
 
                     BleLockInfo bleLockInfo = new BleLockInfo(serverBleDevice);
                     homeShowBeans.add(new HomeShowBean(HomeShowBean.TYPE_BLE_LOCK, bleDevice.getLockName(), bleDevice.getLockNickName(), bleLockInfo));
@@ -921,6 +922,45 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
         MyApplication.getInstance().setHomeshowDevice(homeShowBeans);
     }
 
+
+    //监听网关重置上报
+    public void gatewayResetListener(){
+        if (mqttService!=null){
+            toDisposable(gatewayResetDisposable);
+            gatewayResetDisposable=mqttService.listenerDataBack()
+                                   .filter(new Predicate<MqttData>() {
+                                       @Override
+                                       public boolean test(MqttData mqttData) throws Exception {
+                                           if (mqttData.getFunc().equals(MqttConstant.GATEWAY_RESET)){
+                                               return true;
+                                           }
+                                           return false;
+                                       }
+                                   })
+                                    .compose(RxjavaHelper.observeOnMainThread())
+                                    .subscribe(new Consumer<MqttData>() {
+                                        @Override
+                                        public void accept(MqttData mqttData) throws Exception {
+                                            GatewayResetBean gatewayResetBean=new Gson().fromJson(mqttData.getPayload(),GatewayResetBean.class);
+                                            if (gatewayResetBean!=null&&gatewayResetBean.getMsgtype().equals("event")){
+                                                String gatewayId=gatewayResetBean.getDeviceId();
+                                                if (gatewayId!=null){
+                                                    GatewayInfo gatewayInfo=MyApplication.getInstance().getGatewayById(gatewayId);
+                                                    if (gatewayInfo!=null){
+                                                        if (mViewRef!=null&&mViewRef.get()!=null){
+                                                            mViewRef.get().gatewayResetSuccess(gatewayId);
+                                                        }
+                                                        MyApplication.getInstance().getAllDevicesByMqtt(true);
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    });
+            compositeDisposable.add(gatewayResetDisposable);
+        }
+
+
+    }
 
 
 }

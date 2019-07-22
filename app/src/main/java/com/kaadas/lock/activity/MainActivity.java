@@ -592,7 +592,10 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
         startActivity(intent);
     }
 
-
+    @Override
+    public void gatewayResetSuccess(String gatewayId) {
+        ToastUtil.getInstance().showShort(gatewayId+"网关:"+getString(R.string.gateway_reset_unbind));
+    }
 
 
     public NoScrollViewPager getViewPager() {

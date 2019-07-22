@@ -2,6 +2,7 @@ package com.kaadas.lock.activity.home;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -14,19 +15,22 @@ import com.kaadas.lock.R;
 import com.kaadas.lock.fragment.BluetoothOpenLockRecordFragment;
 import com.kaadas.lock.fragment.BluetoothWarnInformationFragment;
 import com.kaadas.lock.fragment.HomePageFragment;
+import com.kaadas.lock.fragment.OperationRecordFragment;
 import com.kaadas.lock.mvp.mvpbase.BaseBleActivity;
 import com.kaadas.lock.mvp.mvpbase.BlePresenter;
 import com.kaadas.lock.mvp.mvpbase.IBleView;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
+import com.kaadas.lock.utils.FunctionSetUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
  * Created by David on 2019/4/22
+ * 蓝牙记录：开锁记录，操作记录，报警记录等
  */
-public class BluetoothEquipmentDynamicActivity extends BaseBleActivity<IBleView,BlePresenter<IBleView>>
-        implements View.OnClickListener ,IBleView {
+public class BluetoothRecordActivity extends BaseBleActivity<IBleView, BlePresenter<IBleView>>
+        implements View.OnClickListener, IBleView {
     @BindView(R.id.iv_back)
     ImageView ivBack;
     @BindView(R.id.tv_content)
@@ -39,14 +43,23 @@ public class BluetoothEquipmentDynamicActivity extends BaseBleActivity<IBleView,
     FrameLayout content;
     private FragmentManager manager;
     private FragmentTransaction transaction;
-    BluetoothOpenLockRecordFragment bluetoothOpenLockRecordFragment;
+    Fragment recordFragment;
     BluetoothWarnInformationFragment bluetoothWarnInformationFragment;
     private BleLockInfo bleLockInfo;
+    private boolean isSupportOperationRecord;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bluetooth_equipment_dynamic);
         bleLockInfo = mPresenter.getBleLockInfo();
+
+        int func = Integer.parseInt(bleLockInfo.getServerLockInfo().getFunctionSet());
+        if ("3".equals(bleLockInfo.getServerLockInfo().getBleVersion())){
+            isSupportOperationRecord = FunctionSetUtils.isSupportOperationRecord(func);
+        }else {
+            isSupportOperationRecord = false;
+        }
         ButterKnife.bind(this);
         ivBack.setOnClickListener(this);
         tvContent.setText(getString(R.string.device_dynamic));
@@ -68,15 +81,21 @@ public class BluetoothEquipmentDynamicActivity extends BaseBleActivity<IBleView,
     private void initFragment() {
         manager = getSupportFragmentManager();
         transaction = manager.beginTransaction();
-        bluetoothOpenLockRecordFragment = new BluetoothOpenLockRecordFragment();
-        transaction.add(R.id.content, bluetoothOpenLockRecordFragment);
+        if (isSupportOperationRecord) {
+            recordFragment = new OperationRecordFragment();
+        } else {
+            recordFragment = new BluetoothOpenLockRecordFragment();
+        }
+
+        transaction.add(R.id.content, recordFragment);
         transaction.commit();
 
     }
 
-    public BleLockInfo getBleDeviceInfo(){
+    public BleLockInfo getBleDeviceInfo() {
         return bleLockInfo;
     }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -91,11 +110,16 @@ public class BluetoothEquipmentDynamicActivity extends BaseBleActivity<IBleView,
                 tvWarnInformation.setTextColor(getResources().getColor(R.color.c1F96F7));
                 FragmentTransaction fragmentTransaction = manager.beginTransaction();
                 hideAll(fragmentTransaction);
-                if (bluetoothOpenLockRecordFragment != null) {
-                    fragmentTransaction.show(bluetoothOpenLockRecordFragment);
+
+                if (recordFragment != null) {
+                    fragmentTransaction.show(recordFragment);
                 } else {
-                    bluetoothOpenLockRecordFragment = new BluetoothOpenLockRecordFragment();
-                    fragmentTransaction.add(R.id.content, bluetoothOpenLockRecordFragment);
+                    if (isSupportOperationRecord){
+                        recordFragment = new OperationRecordFragment();
+                    }else {
+                        recordFragment = new BluetoothOpenLockRecordFragment();
+                    }
+                    fragmentTransaction.add(R.id.content, recordFragment);
                 }
                 fragmentTransaction.commit();
                 break;
@@ -123,8 +147,8 @@ public class BluetoothEquipmentDynamicActivity extends BaseBleActivity<IBleView,
         if (ft == null) {
             return;
         }
-        if (bluetoothOpenLockRecordFragment != null) {
-            ft.hide(bluetoothOpenLockRecordFragment);
+        if (recordFragment != null) {
+            ft.hide(recordFragment);
         }
         if (bluetoothWarnInformationFragment != null) {
             ft.hide(bluetoothWarnInformationFragment);

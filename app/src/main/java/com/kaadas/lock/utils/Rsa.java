@@ -327,5 +327,17 @@ public class Rsa {
 		return array;
 	}
 
+
+	/**
+	 * 两个字节转int
+	 * */
+	public static int bytesToInt(byte[] ary) {
+		int value;
+		value = (int) ((ary[0]&0xFF)
+				| ((ary[1]<<8) & 0xFF00)
+		);
+		return value;
+	}
+
 }
 

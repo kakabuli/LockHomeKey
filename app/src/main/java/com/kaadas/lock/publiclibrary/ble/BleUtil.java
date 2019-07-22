@@ -9,6 +9,7 @@ import android.text.TextUtils;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.publiclibrary.ble.bean.OpenLockRecord;
+import com.kaadas.lock.publiclibrary.ble.bean.OperationLockRecord;
 import com.kaadas.lock.publiclibrary.ble.bean.WarringRecord;
 import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.LogUtils;
@@ -38,11 +39,24 @@ public class BleUtil {
     public static final String ONE_KEY_OPEN = "一键开启";
     public static final String UNKNOWN_OPEN = "不确定";
 
+    public static final String DOOR_LOCK = "门锁";
+    public static final String APP = "App";
 
     public static final int BLE_VERSION_OLD = 1; //最老的版本  老版本协议  功能只有开锁  开锁记录  电量
     public static final int BLE_VERSION_NEW1 = 2;   //中间的版本  新版本协议   功能只有开锁  开锁记录  电量
     public static final int BLE_VERSION_NEW2 = 3;   //最新的版本  最新的协议  全功能支持
 
+
+    public static final String ADMINISTRATOR_PASSWORD_MODIFY = "修改管理员密码";
+    public static final String PASSWORD_ADD= "添加密码";
+    public static final String PASSWORD_DELETE = "删除密码";
+    public static final String FINGERPRINT_ADD= "添加指纹";
+    public static final String FINGERPRINT_DELETE = "删除指纹";
+    public static final String FACE_ADD = "人脸添加";
+    public static final String FACE_DELETE = "人脸删除";
+    public static final String INTRAVENOUS_ADD = "静脉添加";
+    public static final String INTRAVENOUS_DELETE = "静脉删除";
+    public static final String RETAIN = "保留";
 
     public static String getRealName(byte[] data) {
         ParseBean parseBean = ParseHead(data);
@@ -331,15 +345,183 @@ public class BleUtil {
         return head + buffer.toString();
     }
 
+    public static OperationLockRecord parseOperationRecord(byte[] payload) {
+        int eventType = payload[5]& 0xff;
+        byte[] byteIndex = new byte[2];
+        System.arraycopy(payload, 2,byteIndex , 0, 2);
+        int index = Rsa.bytesToInt(byteIndex);
+
+        OperationLockRecord operationLockRecord=null;
+        /**
+         * 0x01：Operation操作(动作类)
+         * 0x02：Program程序(用户管理类)
+         * 0x03：Alarm
+         *type-source-code 都是int值 以中划线分割
+         * */
+        LogUtils.e("eventType "+eventType+" index  "+index );
+        if (1==eventType||2==eventType){
+            int eventSource1 = payload[6] & 0xff;
+            int eventCode = payload[7] & 0xff;
+            int userId1 = payload[8] & 0xff;
+            byte[] openLockTime = new byte[4];
+
+            System.arraycopy(payload, 9, openLockTime, 0, 4);
+            long time = Rsa.bytes2Int(openLockTime);
+            //开门时间秒
+            long openTimes = time + DEFINE_TIME;
+            String openDoorTime = DateUtils.getDateTimeFromMillisecond(openTimes * 1000);//要上传的开锁时间
+            operationLockRecord=new OperationLockRecord(eventType,eventSource1,eventCode,userId1,openDoorTime,MyApplication.getInstance().getUid());
+
+        }else if (3==eventType){
+            operationLockRecord=new OperationLockRecord(eventType,0,0,0,"",MyApplication.getInstance().getUid());
+        }
+        return operationLockRecord;
+    }
 
     public static boolean isMac(String mac){
         if (TextUtils.isEmpty(mac)){
             return false;
         }
-
-
-
         return false;
     }
+
+
+
+    /**
+     * 0x00：Keypad键盘
+     * 0x01：RF遥控
+     * 0x02：Manual手工
+     * 0x03：RFID卡片
+     * 0x04：Fingerprint指纹
+     * 0x05：Voice语音
+     * 0x06：Finger Vein指静脉
+     * 0x07：Face Recognition人脸识别
+     * 0xFF：不确定
+     */
+    public static String getOpenLockEventSourceContent(int eventSource,int userId) {
+        String openType = "";
+        switch (eventSource & 0xff) {
+            case 0:
+                openType = PASSWORD;
+                break;
+            case 1:
+                openType = RF;
+                break;
+            case 2:
+                openType = MANUAL;
+                break;
+            case 3:
+                openType = RFID;
+                break;
+            case 4:
+                openType = FINGERPRINT;
+                break;
+            case 5:
+                openType = VOICE;
+                break;
+            case 6:
+                openType = FINGER_VEIN;
+                break;
+            case 7:
+                openType = FACE_RECOGNITION;
+                break;
+            default:
+                if (userId == 103) {
+                    openType = PHONE;
+                }
+                break;
+
+        }
+        return openType;
+    }
+
+    public static String getOperationEventSourceContent(int eventSource) {
+        String openType = "";
+        switch (eventSource & 0xff) {
+            case 0:
+                openType = DOOR_LOCK;
+                break;
+            case 8:
+                openType = APP;
+                break;
+
+
+        }
+        return openType;
+    }
+
+
+    /**
+     * 0x00：UnknownOrMfgSpecific(保留)
+     * 0x01：MasterCodeChanged管理员密码修改
+     * 0x02：PINCodeAdded	密码添加
+     * 0x03：PINCodeDeleted	密码删除
+     * 0x04：PINCodeChanged	密码修改(不支持)
+     * 0x05：RFIDCodeAdded	RFID添加
+     * 0x06：RFIDCodeDeleted	RFID删除
+     * 0x07：FingerprintAdded	指纹添加
+     * 0x08：FingerprintDeleted	指纹删除
+     * 0x09：APP添加
+     * 0x0A：APP删除
+     * 0x0B：人脸添加
+     * 0x0C：人脸删除
+     * 0xD：指静脉添加
+     * 0xE：指静脉删除
+     */
+    public static String getOperationProgramContent(int eventCode) {
+        String openType = "";
+        switch (eventCode) {
+            case 0:
+                openType = RETAIN;
+                break;
+            case 1:
+                openType = ADMINISTRATOR_PASSWORD_MODIFY;
+                break;
+            case 2:
+                openType = PASSWORD_ADD;
+                break;
+            case 3:
+                openType = PASSWORD_DELETE;
+                break;
+            case 4:
+                openType = "密码修改(不支持)";
+                break;
+            case 5:
+                openType = "RFID添加";
+                break;
+            case 6:
+                openType = "RFID删除";
+                break;
+            case 7:
+                openType = FINGERPRINT_ADD;
+                break;
+            case 8:
+                openType = FINGERPRINT_DELETE;
+                break;
+//            case 9:
+//                openType = APP_ADD;
+//                break;
+//            case 10:
+//                openType = APP_DELETE;
+//                break;
+            case 11:
+                openType = FACE_ADD;
+                break;
+            case 12:
+                openType = FACE_DELETE;
+                break;
+            case 13:
+                openType = INTRAVENOUS_ADD;
+                break;
+            case 14:
+                openType = INTRAVENOUS_DELETE;
+                break;
+
+        }
+        return openType;
+    }
+
+
+
 
 }

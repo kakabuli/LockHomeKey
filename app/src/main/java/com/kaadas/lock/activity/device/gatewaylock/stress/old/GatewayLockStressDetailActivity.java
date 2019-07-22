@@ -261,7 +261,7 @@ public class GatewayLockStressDetailActivity extends BaseActivity<IGatewayLockSt
         }else{
             passwordPageChange(false);
         }
-
+        ToastUtil.getInstance().showShort(R.string.get_stress_list_success);
     }
 
     @Override

@@ -52,7 +52,7 @@ public interface IDeviceMoreView extends IBleView {
 
     void setAutoLockSuccess(boolean isOpen);
 
-    void setAutoLockFailed( byte b);
+    void setAutoLockFailed( int b);
 
     void setAutoLockError(Throwable throwable);
 

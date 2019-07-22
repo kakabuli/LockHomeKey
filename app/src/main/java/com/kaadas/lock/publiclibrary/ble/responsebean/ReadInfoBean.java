@@ -17,6 +17,7 @@ public class ReadInfoBean {
     public static final int TYPE_LOCK_TYPE = 10;
     public static final int TYPE_LOCK_FUN = 11;
     public static final int TYPE_LOCK_STATUS = 12;
+    public static final int TYPE_LOCK_FUNCTION_SET = 13;
     public int type;
     public Object data;
 

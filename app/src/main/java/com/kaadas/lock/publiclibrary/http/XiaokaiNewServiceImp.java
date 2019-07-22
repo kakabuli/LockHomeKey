@@ -17,6 +17,7 @@ import com.kaadas.lock.publiclibrary.http.postbean.GetDevicesBean;
 import com.kaadas.lock.publiclibrary.http.postbean.GetHelpLogBean;
 import com.kaadas.lock.publiclibrary.http.postbean.GetLockRecordBean;
 import com.kaadas.lock.publiclibrary.http.postbean.GetMessageBean;
+import com.kaadas.lock.publiclibrary.http.postbean.GetOperationRecordBean;
 import com.kaadas.lock.publiclibrary.http.postbean.GetPasswordBean;
 import com.kaadas.lock.publiclibrary.http.postbean.GetPwdBySNBean;
 import com.kaadas.lock.publiclibrary.http.postbean.GetSinglePasswordBean;
@@ -25,6 +26,7 @@ import com.kaadas.lock.publiclibrary.http.postbean.GetUserProtocolContentBean;
 import com.kaadas.lock.publiclibrary.http.postbean.GetWarringRecordBean;
 import com.kaadas.lock.publiclibrary.http.postbean.LoginByEmailBean;
 import com.kaadas.lock.publiclibrary.http.postbean.LoginByPhoneBean;
+import com.kaadas.lock.publiclibrary.http.postbean.ModifyFunctionSetBean;
 import com.kaadas.lock.publiclibrary.http.postbean.ModifyLockNickBean;
 import com.kaadas.lock.publiclibrary.http.postbean.ModifyPasswordBean;
 import com.kaadas.lock.publiclibrary.http.postbean.ModifyPasswordNickBean;
@@ -40,6 +42,7 @@ import com.kaadas.lock.publiclibrary.http.postbean.UpdateBleVersionBean;
 import com.kaadas.lock.publiclibrary.http.postbean.UpdateSoftwareVersionBean;
 import com.kaadas.lock.publiclibrary.http.postbean.UploadAppRecordBean;
 import com.kaadas.lock.publiclibrary.http.postbean.UploadBinRecordBean;
+import com.kaadas.lock.publiclibrary.http.postbean.UploadOperationRecordBean;
 import com.kaadas.lock.publiclibrary.http.postbean.UploadWarringRecordBean;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.result.DeleteMessageResult;
@@ -51,6 +54,7 @@ import com.kaadas.lock.publiclibrary.http.result.GetWarringRecordResult;
 import com.kaadas.lock.publiclibrary.http.result.LockRecordResult;
 import com.kaadas.lock.publiclibrary.http.result.LoginResult;
 import com.kaadas.lock.publiclibrary.http.result.OTAResult;
+import com.kaadas.lock.publiclibrary.http.result.OperationRecordResult;
 import com.kaadas.lock.publiclibrary.http.result.RegisterResult;
 import com.kaadas.lock.publiclibrary.http.result.SinglePasswordResult;
 import com.kaadas.lock.publiclibrary.http.result.SwitchStatusResult;
@@ -304,8 +308,9 @@ public class XiaokaiNewServiceImp {
      *
      * @return
      */
-    public static Observable<BaseResult> addDevice(String devmac, String devname, String user_id, String password1, String password2, String deviceModel, String bleVersion,String deviceSn) {
-        AddDeviceBean addDeviceBean = new AddDeviceBean(devmac, devname, user_id, password1, password2, deviceModel, bleVersion,deviceSn);
+    public static Observable<BaseResult> addDevice(String devmac, String devname, String user_id, String password1, String password2, String model, String bleVersion,String deviceSn, String functionSet) {
+        //(String devmac, String devname, String user_id, String password1, String password2, String model, String bleVersion, String deviceSN, String peripheralId, String softwareVersion, String functionSet)
+        AddDeviceBean addDeviceBean = new AddDeviceBean(  devmac,   devname,   user_id,   password1,   password2,   model,   bleVersion,   deviceSn,"", "",   functionSet);
         return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
                 .addDevice(new HttpUtils<AddDeviceBean>().getBody(addDeviceBean))
                 .compose(RxjavaHelper.observeOnMainThread());
@@ -338,6 +343,22 @@ public class XiaokaiNewServiceImp {
         DeleteDeviceBean deleteDeviceBean = new DeleteDeviceBean(adminid, devname);
         return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
                 .deleteDevice(new HttpUtils<DeleteDeviceBean>().getBody(deleteDeviceBean))
+                .compose(RxjavaHelper.observeOnMainThread())
+                ;
+    }
+
+    /**
+     * 获取操作记录
+     * 参数名	    必选	类型	说明
+     * device_name	是	    String	设备SN
+     * pagenum      页数
+     *
+     * @return
+     */
+    public static Observable<OperationRecordResult> getOperationRecord(String device_name, int pagenum) {
+        GetOperationRecordBean getOperationRecordBean = new GetOperationRecordBean(device_name, pagenum);
+        return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
+                .getOperationRecord(new HttpUtils<GetOperationRecordBean>().getBody(getOperationRecordBean))
                 .compose(RxjavaHelper.observeOnMainThread())
                 ;
     }
@@ -830,6 +851,29 @@ public class XiaokaiNewServiceImp {
                 ;
     }
 
+    /**
+     * {
+     * "devName":"BT01191910010",
+     * "operationList":[
+     * {
+     * "uid":"5c6fb4d014fd214910b33e80",
+     * "eventType":4,
+     * "eventSource":3,
+     * "eventCode":3,
+     * "userNum":4,
+     * "eventTime":"2019-07-04 12:00:03"
+     * }
+     * ]
+     * }
+     */
+    public static Observable<BaseResult> uploadOperationRecord(String device_name, List<UploadOperationRecordBean.OperationListBean> operationListBeanList) {
+        UploadOperationRecordBean uploadOperationRecordBean = new UploadOperationRecordBean(device_name, operationListBeanList);
+        return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
+                .uploadOperationRecord(new HttpUtils<UploadOperationRecordBean>().getBody(uploadOperationRecordBean))
+                .compose(RxjavaHelper.observeOnMainThread())
+                ;
+
+    }
 
     /**
      * 更新蓝牙的版本信息
@@ -859,6 +903,22 @@ public class XiaokaiNewServiceImp {
         UpdateBleVersionBean updateSoftwareVersionBean = new UpdateBleVersionBean(devname, user_id, bleVersion);
         return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
                 .updateBleVersion(new HttpUtils<UpdateBleVersionBean>().getBody(updateSoftwareVersionBean))
+                .compose(RxjavaHelper.observeOnMainThread())
+                ;
+    }
+
+
+    /**
+     * 更新功能集
+     * @param devname
+     * @param user_id
+     * @param functionSet
+     * @return
+     */
+    public static Observable<BaseResult> modifyFunctionSet(String devname, String user_id, String functionSet) {
+        ModifyFunctionSetBean updateSoftwareVersionBean = new ModifyFunctionSetBean(devname, user_id, functionSet);
+        return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
+                .updateBleVersion(new HttpUtils<ModifyFunctionSetBean>().getBody(updateSoftwareVersionBean))
                 .compose(RxjavaHelper.observeOnMainThread())
                 ;
     }

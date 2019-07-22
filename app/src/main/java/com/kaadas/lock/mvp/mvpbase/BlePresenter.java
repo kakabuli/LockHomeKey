@@ -19,6 +19,7 @@ import com.kaadas.lock.publiclibrary.http.result.ServerBleDevice;
 import com.kaadas.lock.publiclibrary.http.util.BaseObserver;
 import com.kaadas.lock.publiclibrary.http.util.RxjavaHelper;
 import com.kaadas.lock.publiclibrary.rxutils.TimeOutException;
+import com.kaadas.lock.utils.FunctionSetUtils;
 import com.kaadas.lock.utils.GpsUtil;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.Rsa;
@@ -51,6 +52,7 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
     private Disposable disposable1;
     private Disposable notDiscoverServiceDisposable;
     private Disposable readModelNumberDisposable;
+    private Disposable functionSetDisposable;
 
     public void setBleLockInfo(BleLockInfo bleLockInfo) {
         //如果service中有bleLockInfo  并且deviceName一致，就不重新设置。
@@ -620,6 +622,7 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
     /**
      * 鉴权   鉴权成功，读取蓝牙模块数据
      */
+
     private void readModelNumber() {
         if (bleService == null) { //判断
             if (MyApplication.getInstance().getBleService() == null) {
@@ -630,11 +633,13 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
         }
         if (!TextUtils.isEmpty(bleLockInfo.getModeNumber())) {
             LogUtils.e("已经存在蓝牙模块型号信息  不再读取   ");
+            readFunctionSet();
             return;
         }
 
         if (bleService.getBleVersion() != 2) { //1
             LogUtils.e("蓝牙模块不是2  不读取蓝牙型号信息   ");
+            readFunctionSet();
             return;
         }
 
@@ -674,6 +679,72 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
                     }
                 });
         compositeDisposable.add(readModelNumberDisposable);
+    }
+
+
+    public void readFunctionSet() {
+        if (bleService == null) { //判断
+            if (MyApplication.getInstance().getBleService() == null) {
+                return;
+            } else {
+                bleService = MyApplication.getInstance().getBleService(); //判断
+            }
+        }
+        if (bleService.getBleVersion() == 3) {
+            if (TextUtils.isEmpty(bleLockInfo.getServerLockInfo().getFunctionSet())){  //如果功能集为空，那么再读取功能集
+                functionSetDisposable = bleService.readFunctionSet(500)
+                            .filter(new Predicate<ReadInfoBean>() {
+                                @Override
+                                public boolean test(ReadInfoBean readInfoBean) throws Exception {
+                                    return readInfoBean.type == ReadInfoBean.TYPE_LOCK_FUNCTION_SET;
+                                }
+                            })
+                            .timeout(2 * 1000, TimeUnit.MILLISECONDS)
+                            .retryWhen(new RetryWithTime(2, 0))
+                            .subscribe(new Consumer<ReadInfoBean>() {
+                                @Override
+                                public void accept(ReadInfoBean readInfoBean) throws Exception {
+                                    toDisposable(functionSetDisposable);
+
+                                    int functionSet = (int) readInfoBean.data;
+                                    LogUtils.e("更新  收到锁功能集   " + functionSet);
+                                    modifyFunctionSet(bleLockInfo.getServerLockInfo().getLockName(),""+functionSet);
+
+                                }
+                            }, new Consumer<Throwable>() {
+                                @Override
+                                public void accept(Throwable throwable) throws Exception {
+
+                                }
+                            });
+                compositeDisposable.add(functionSetDisposable);
+            }
+        }
+    }
+
+    public void modifyFunctionSet(String deviceName,String functionSet){
+        XiaokaiNewServiceImp.modifyFunctionSet(deviceName, MyApplication.getInstance().getUid(), functionSet)
+                .subscribe(new BaseObserver<BaseResult>() {
+                    @Override
+                    public void onSuccess(BaseResult baseResult) {
+                        LogUtils.e("更新功能集成功   " + baseResult.toString());
+                    }
+
+                    @Override
+                    public void onAckErrorCode(BaseResult baseResult) {
+                        LogUtils.e("更新功能集失败   " + baseResult.toString());
+                    }
+
+                    @Override
+                    public void onFailed(Throwable throwable) {
+                        LogUtils.e("更新功能集失败   " + throwable.getMessage());
+                    }
+
+                    @Override
+                    public void onSubscribe1(Disposable d) {
+                        compositeDisposable.add(d);
+                    }
+                });
     }
 
 

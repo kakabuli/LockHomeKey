@@ -6,12 +6,12 @@ public class BluetoothLockFunctionBean {
 
     private String name;
 
-    private String number;
+    private int type;
 
-    public BluetoothLockFunctionBean(int image, String name, String number) {
+    public BluetoothLockFunctionBean( String name,int image, int type) {
         this.image = image;
         this.name = name;
-        this.number = number;
+        this.type = type;
     }
 
     public int getImage() {
@@ -30,11 +30,11 @@ public class BluetoothLockFunctionBean {
         this.name = name;
     }
 
-    public String getNumber() {
-        return number;
+    public int getType() {
+        return type;
     }
 
-    public void setNumber(String number) {
-        this.number = number;
+    public void setType(int type) {
+        this.type = type;
     }
 }

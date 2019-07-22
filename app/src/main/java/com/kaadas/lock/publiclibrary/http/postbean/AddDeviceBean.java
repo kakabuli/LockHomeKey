@@ -23,11 +23,20 @@ public class AddDeviceBean {
     private String model;
     private String bleVersion;
     private String deviceSN;
+    /**
+     * peripheralId : 5c70ac053c554639ea931111
+     * softwareVersion : 1.1.0
+     * functionSet : 00
+     */
+
+    private String peripheralId;
+    private String softwareVersion;
+    private String functionSet;
 
     public AddDeviceBean() {
     }
 
-    public AddDeviceBean(String devmac, String devname, String user_id, String password1, String password2, String model,String bleVersion,String deviceSN) {
+    public AddDeviceBean(String devmac, String devname, String user_id, String password1, String password2, String model, String bleVersion, String deviceSN, String peripheralId, String softwareVersion, String functionSet) {
         this.devmac = devmac;
         this.devname = devname;
         this.user_id = user_id;
@@ -35,6 +44,19 @@ public class AddDeviceBean {
         this.password2 = password2;
         this.model = model;
         this.bleVersion = bleVersion;
+        this.deviceSN = deviceSN;
+        this.peripheralId = peripheralId;
+        this.softwareVersion = softwareVersion;
+        this.functionSet = functionSet;
+    }
+
+
+
+    public String getDeviceSN() {
+        return deviceSN;
+    }
+
+    public void setDeviceSN(String deviceSN) {
         this.deviceSN = deviceSN;
     }
 
@@ -92,5 +114,29 @@ public class AddDeviceBean {
 
     public void setPassword2(String password2) {
         this.password2 = password2;
+    }
+
+    public String getPeripheralId() {
+        return peripheralId;
+    }
+
+    public void setPeripheralId(String peripheralId) {
+        this.peripheralId = peripheralId;
+    }
+
+    public String getSoftwareVersion() {
+        return softwareVersion;
+    }
+
+    public void setSoftwareVersion(String softwareVersion) {
+        this.softwareVersion = softwareVersion;
+    }
+
+    public String getFunctionSet() {
+        return functionSet;
+    }
+
+    public void setFunctionSet(String functionSet) {
+        this.functionSet = functionSet;
     }
 }

@@ -308,6 +308,7 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                                 bleLockServiceInfo.setSoftwareVersion(serverBleDevice.getSoftwareVersion());
                                 bleLockServiceInfo.setBleVersion(serverBleDevice.getBleVersion());
                                 bleLockServiceInfo.setUid(uid);
+                                bleLockServiceInfo.setFunctionSet(serverBleDevice.getFunctionSet());
                                 daoSession.insertOrReplace(bleLockServiceInfo);
 
                                 //请求电量
@@ -369,91 +370,8 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                                         }
                                     }
                                 });
-//                        normalDialog.setTitle(getString(R.string.mainactivity_permission_alert_title));
-//                        normalDialog.setMessage(getString(R.string.mainactivity_permission_alert_msg));
-//                        normalDialog.setPositiveButton(getString(R.string.confirm),
-//                                new DialogInterface.OnClickListener() {
-//                                    @Override
-//                                    public void onClick(DialogInterface dialog, int which) {
-//                                        dialog.dismiss();
-//                                        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//                                            Intent intent = new Intent();
-//                                            //    intent.setAction(Settings.ACTION_APP_NOTIFICATION_SETTINGS);
-////                                            intent.setAction(Settings.ACTION_APPLICATION_SETTINGS);
-////                                            intent.putExtra(Settings.EXTRA_APP_PACKAGE, "com.kaidishi.lock");
-////                                            getActivity().startActivity(intent);
-//
-//                                            if (Build.VERSION.SDK_INT >= 9) {
-//                                                intent.setAction("android.settings.APPLICATION_DETAILS_SETTINGS");
-//                                                intent.setData(Uri.fromParts("package", "com.kaidishi.lock", null));
-//                                            } else if (Build.VERSION.SDK_INT <= 8) {
-//                                                intent.setAction(Intent.ACTION_VIEW);
-//                                                intent.setClassName("com.android.settings", "com.android.setting.InstalledAppDetails");
-//                                                intent.putExtra("com.android.settings.ApplicationPkgName", "com.kaidishi.lock");
-//                                            }
-//                                            startActivity(intent);
-//                                        }
-//                                    }
-//                                });
-//                        normalDialog.setNegativeButton(getActivity().getString(R.string.cancel),
-//                                new DialogInterface.OnClickListener() {
-//                                    @Override
-//                                    public void onClick(DialogInterface dialog, int which) {
-//                                        Log.e(GeTui.VideoLog, "dialog.dismiss..........");
-//                                        dialog.dismiss();
-//                                    }
-//                                });
-//                        // 显示
-//                        AlertDialog dialog = normalDialog.create();
-//                        dialog.setCanceledOnTouchOutside(false);
-//                        if (!dialog.isShowing()) {
-//                            Log.e(GeTui.VideoLog, "dialog.show..........");
-//                            dialog.show();
-//                            MyApplication.getInstance().setPopDialog(true);
-//                        }
-
-                        //!isFlag && Rom.isVivo() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && !MyApplication.getInstance().isPopDialog()
                     } //else if (!isFlag && Rom.isVivo() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
 
-//                        final AlertDialog.Builder normalDialog = new AlertDialog.Builder(getActivity());
-//                        //	normalDialog.setIcon(R.drawable.icon_dialog);
-//                        normalDialog.setTitle(getString(R.string.mainactivity_permission_alert_title));
-//                        normalDialog.setMessage(getString(R.string.mainactivity_permission_alert_msg));
-//                        normalDialog.setPositiveButton(getString(R.string.confirm),
-//                                new DialogInterface.OnClickListener() {
-//                                    @Override
-//                                    public void onClick(DialogInterface dialog, int which) {
-//                                        dialog.dismiss();
-//                                        Intent mIntent = new Intent();
-//                                        mIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//                                        if (Build.VERSION.SDK_INT >= 9) {
-//                                            mIntent.setAction("android.settings.APPLICATION_DETAILS_SETTINGS");
-//                                            mIntent.setData(Uri.fromParts("package", "com.kaidishi.lock", null));
-//                                        } else if (Build.VERSION.SDK_INT <= 8) {
-//                                            mIntent.setAction(Intent.ACTION_VIEW);
-//                                            mIntent.setClassName("com.android.settings", "com.android.setting.InstalledAppDetails");
-//                                            mIntent.putExtra("com.android.settings.ApplicationPkgName", "com.kaidishi.lock");
-//                                        }
-//                                        startActivity(mIntent);
-//
-//                                    }
-//                                });
-//                        normalDialog.setNegativeButton(getActivity().getString(R.string.cancel),
-//                                new DialogInterface.OnClickListener() {
-//                                    @Override
-//                                    public void onClick(DialogInterface dialog, int which) {
-//                                        dialog.dismiss();
-//                                    }
-//                                });
-//                        // 显示
-//                        AlertDialog dialog = normalDialog.create();
-//                        dialog.setCanceledOnTouchOutside(false);
-//                        if (!dialog.isShowing()) {
-//                            dialog.show();
-//                            MyApplication.getInstance().setPopDialog(true);
-//                        }
-                //    }
-                 //   break;
                 }
             }
         }
@@ -558,37 +476,35 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                         break;
                     case HomeShowBean.TYPE_BLE_LOCK:
                         //蓝牙
-                        LogUtils.e("点击1");
                         BleLockInfo bleLockInfo = (BleLockInfo) deviceDetailBean.getObject();
                         mPresenter.setBleLockInfo(bleLockInfo);
                         if (bleLockInfo.getServerLockInfo().getIs_admin() != null && bleLockInfo.getServerLockInfo().getIs_admin().equals("1")) {
-                            LogUtils.e("点击2");
                             if ("3".equals(bleLockInfo.getServerLockInfo().getBleVersion())) {
-                                LogUtils.e("点击3");
-                                String lockType = bleLockInfo.getServerLockInfo().getModel();
-                                if (!TextUtils.isEmpty(lockType)) {
-                                    LogUtils.e("点击4");
-                                    if (lockType.startsWith("V6") || lockType.startsWith("V7") || lockType.startsWith("S100") || lockType.startsWith("K9")||lockType.startsWith("S6")) {
-                                        LogUtils.e("点击5");
-                                        Intent detailIntent = new Intent(getActivity(), BluetoothLockFunctionV6V7Activity.class);
-                                        String model = bleLockInfo.getServerLockInfo().getModel();
-                                        detailIntent.putExtra(KeyConstants.DEVICE_TYPE, model);
-                                        startActivityForResult(detailIntent, KeyConstants.GET_BLE_POWER);
-                                    } else {
-                                        LogUtils.e("点击6");
-                                        Intent detailIntent = new Intent(getActivity(), BluetoothLockFunctionActivity.class);
-                                        String model = bleLockInfo.getServerLockInfo().getModel();
-                                        detailIntent.putExtra(KeyConstants.DEVICE_TYPE, model);
-                                        startActivityForResult(detailIntent, KeyConstants.GET_BLE_POWER);
-                                    }
-                                } else {
-                                    Intent detailIntent = new Intent(getActivity(), BluetoothLockFunctionActivity.class);
-                                    String model = bleLockInfo.getServerLockInfo().getModel();
-                                    detailIntent.putExtra(KeyConstants.DEVICE_TYPE, model);
-                                    startActivityForResult(detailIntent, KeyConstants.GET_BLE_POWER);
-                                }
+//                                String lockType = bleLockInfo.getServerLockInfo().getModel();
+//                                if (!TextUtils.isEmpty(lockType)) {
+//                                    if (lockType.startsWith("V6") || lockType.startsWith("V7") || lockType.startsWith("S100") || lockType.startsWith("K9")||lockType.startsWith("S6")) {
+//                                        Intent detailIntent = new Intent(getActivity(), BluetoothLockFunctionV6V7Activity.class);
+//                                        String model = bleLockInfo.getServerLockInfo().getModel();
+//                                        detailIntent.putExtra(KeyConstants.DEVICE_TYPE, model);
+//                                        startActivityForResult(detailIntent, KeyConstants.GET_BLE_POWER);
+//                                    } else {
+//                                        Intent detailIntent = new Intent(getActivity(), BluetoothLockFunctionActivity.class);
+//                                        String model = bleLockInfo.getServerLockInfo().getModel();
+//                                        detailIntent.putExtra(KeyConstants.DEVICE_TYPE, model);
+//                                        startActivityForResult(detailIntent, KeyConstants.GET_BLE_POWER);
+//                                    }
+//                                } else {
+//                                    Intent detailIntent = new Intent(getActivity(), BluetoothLockFunctionActivity.class);
+//                                    String model = bleLockInfo.getServerLockInfo().getModel();
+//                                    detailIntent.putExtra(KeyConstants.DEVICE_TYPE, model);
+//                                    startActivityForResult(detailIntent, KeyConstants.GET_BLE_POWER);
+//                                }
+
+                                Intent detailIntent = new Intent(getActivity(), BluetoothLockFunctionActivity.class);
+                                String model = bleLockInfo.getServerLockInfo().getModel();
+                                detailIntent.putExtra(KeyConstants.DEVICE_TYPE, model);
+                                startActivityForResult(detailIntent, KeyConstants.GET_BLE_POWER);
                             } else {
-                                LogUtils.e("点击7");
                                 Intent detailIntent = new Intent(getActivity(), OldBluetoothLockDetailActivity.class);
                                 String model = bleLockInfo.getServerLockInfo().getModel();
                                 detailIntent.putExtra(KeyConstants.DEVICE_TYPE, model);

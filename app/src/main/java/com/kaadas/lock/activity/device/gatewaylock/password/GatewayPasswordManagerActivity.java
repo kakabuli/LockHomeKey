@@ -351,13 +351,14 @@ public class GatewayPasswordManagerActivity extends BaseActivity<GatewayLockFunc
         } else {
             passwordPageChange(false);
         }
+         ToastUtil.getInstance().showShort(R.string.get_lock_pwd_list_success);
     }
 
     @Override
     public void getLockFail() {
         //获取开锁密码失败
         loadingDialog.dismiss();
-        ToastUtil.getInstance().showShort("获取密码列表失败");
+        ToastUtil.getInstance().showShort(R.string.get_lock_pwd_list_fail);
         passwordPageChange(false);
         isAddLockPwd = 1;
 

@@ -5,8 +5,8 @@ package com.kaadas.lock.publiclibrary.http;
  * Describe
  */
 public class HttpUrlConstants {
-    public static final String BASE_URL = "https://app-kaadas.juziwulian.com:34000/";//凯迪仕正式服务器
-//    public static final String BASE_URL = "https://test.juziwulian.com:8090/";//凯迪仕测试服务器
+//    public static final String BASE_URL = "https://app-kaadas.juziwulian.com:34000/";//凯迪仕正式服务器
+    public static final String BASE_URL = "https://test.juziwulian.com:8090/";//凯迪仕测试服务器
 
 
     /**
@@ -215,13 +215,20 @@ public class HttpUrlConstants {
      */
     public static final String UPLOAD_APP_RECORD = BASE_URL + "adminlock/open/adminOpenLock";
 
+    /**
+     * 获取操作记录
+     */
+    public static final String GET_OPERATION_RECORD = BASE_URL + "operation/list";
 
     /**
      * 获取开门记录
      */
     public static final String GET_LOCK_RECORD = BASE_URL + "openlock/downloadopenlocklist";
 
-
+    /**
+     * 上传操作记录
+     */
+    public static final String UPLOAD_OPERATION_RECORD = BASE_URL + "operation/add";
     ////////////////////////////////////////////预警记录////////////////////////////////////////////
 
     /**
@@ -279,6 +286,13 @@ public class HttpUrlConstants {
      * 修改蓝牙版本
      */
     public static final String UPDATE_BLE_VERSION = BASE_URL + "adminlock/reg/updateBleVersion";
+
+
+    /**
+     * 修改功能集
+     */
+
+    public static final String MODIFY_FUNCTION_SET = BASE_URL + "adminlock/reg/updateFunctionSet";
 
 
 }

@@ -82,7 +82,7 @@ public class ApiTwentySixPlus {
 //					.setCategory(Notification.CATEGORY_MESSAGE)
 //					.setVisibility(Notification.VISIBILITY_PRIVATE)
 //					.setPriority(Notification.PRIORITY_HIGH)
-//					.setNumber(msgCount)
+//					.setType(msgCount)
 //					.build();
 
 		return notif;

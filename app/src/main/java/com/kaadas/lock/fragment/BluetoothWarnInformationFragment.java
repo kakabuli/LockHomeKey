@@ -10,9 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
-import com.kaadas.lock.activity.home.BluetoothEquipmentDynamicActivity;
+import com.kaadas.lock.activity.home.BluetoothRecordActivity;
 import com.kaadas.lock.adapter.BluetoothWarnMessageAdapter;
 import com.kaadas.lock.bean.BluetoothItemRecordBean;
 import com.kaadas.lock.bean.BluetoothRecordBean;
@@ -20,10 +19,8 @@ import com.kaadas.lock.mvp.mvpbase.BaseBleFragment;
 import com.kaadas.lock.mvp.presenter.WarringRecordPresenter;
 import com.kaadas.lock.mvp.view.IWarringRecordView;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
-import com.kaadas.lock.publiclibrary.ble.bean.OpenLockRecord;
 import com.kaadas.lock.publiclibrary.ble.bean.WarringRecord;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
-import com.kaadas.lock.publiclibrary.http.result.GetPasswordResult;
 import com.kaadas.lock.publiclibrary.http.util.HttpUtils;
 import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
@@ -64,7 +61,7 @@ public class BluetoothWarnInformationFragment extends BaseBleFragment<IWarringRe
     TextView tvSynchronizedRecord;
     private boolean isLoadingBleRecord;  //正在加载锁上数据
     private int currentPage = 1;   //当前的开锁记录时间
-    BluetoothEquipmentDynamicActivity activity;
+    BluetoothRecordActivity activity;
     private BleLockInfo bleLockInfo;
     View view;
     private Unbinder unbinder;
@@ -75,7 +72,7 @@ public class BluetoothWarnInformationFragment extends BaseBleFragment<IWarringRe
         view = View.inflate(getActivity(), R.layout.fragment_bluetooth_warn_information, null);
         unbinder = ButterKnife.bind(this, view);
         tvSynchronizedRecord.setOnClickListener(this);
-        activity = (BluetoothEquipmentDynamicActivity) getActivity();
+        activity = (BluetoothRecordActivity) getActivity();
         bleLockInfo = activity.getBleDeviceInfo();
         initRecycleView();
         initRefresh();
