@@ -911,17 +911,18 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
         if (gatewayLockInfo!=null&&deviceId.equals(devId)&&gwId.equals(gatewayId)) {
             /*isOpening = false;*/
             //isClosing = true;
+//            String nickName = gatewayLockInfo.getServerInfo().getNickName();
+//            if (!TextUtils.isEmpty(nickName)) {
+//                ToastUtil.getInstance().showShort(nickName + ":" + getString(R.string.open_lock_success));
+//            } else {
+//                ToastUtil.getInstance().showShort(devId + ":" + getString(R.string.open_lock_success));
+//            }
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     stopOpenLockAnimator();
                     changeOpenLockStatus(7);
-                    String nickName = gatewayLockInfo.getServerInfo().getNickName();
-                    if (!TextUtils.isEmpty(nickName)) {
-                        ToastUtil.getInstance().showShort(nickName + ":" + getString(R.string.lock_already_open));
-                    } else {
-                        ToastUtil.getInstance().showShort(devId + ":" + getString(R.string.lock_already_open));
-                    }
+
                 }
             }, 3000);
         }
@@ -972,27 +973,38 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
     }
 
     @Override
-    public void closeLockSuccess() {
+    public void closeLockSuccess(String devId,String gwId) {
         //关锁成功
         closeLockAnimator();
         //isClosing = false;
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                stopCloseLockAnimator();
-                if (deviceState != null) {
-                    try {
-                        String state=deviceState.getText().toString().trim();
-                        if (state.equals(getString(R.string.offline))){
-                            changeOpenLockStatus(1);
-                        }else{
-                            changeOpenLockStatus(5);
+        /*if (gatewayLockInfo!=null&&deviceId.equals(devId)&&gwId.equals(gatewayId)) {
+            GwLockInfo gwLockInfo = MyApplication.getInstance().getGatewayLockById(devId);
+            if (gwLockInfo != null) {
+                String nickName = gwLockInfo.getServerInfo().getNickName();
+                if (!TextUtils.isEmpty(nickName)) {
+                    ToastUtil.getInstance().showShort(nickName + ":" + getString(R.string.close_lock_success));
+                } else {
+                    ToastUtil.getInstance().showShort(devId + ":" + getString(R.string.close_lock_success));
+                }
+            }*/
+
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    stopCloseLockAnimator();
+                    if (deviceState != null) {
+                        try {
+                            String state = deviceState.getText().toString().trim();
+                            if (state.equals(getString(R.string.offline))) {
+                                changeOpenLockStatus(1);
+                            } else {
+                                changeOpenLockStatus(5);
+                            }
+                        } catch (Exception e) {
                         }
-                    }catch (Exception e){
                     }
                 }
-            }
-        },1000);
+            }, 1000);
 
     }
 

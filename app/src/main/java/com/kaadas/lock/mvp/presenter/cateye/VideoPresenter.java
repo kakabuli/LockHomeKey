@@ -23,6 +23,7 @@ import com.kaadas.lock.publiclibrary.linphone.linphone.util.Util;
 import com.kaadas.lock.publiclibrary.linphone.linphonenew.LinphoneManager;
 import com.kaadas.lock.publiclibrary.mqtt.MqttCommandFactory;
 import com.kaadas.lock.publiclibrary.mqtt.eventbean.DeviceOnLineBean;
+import com.kaadas.lock.publiclibrary.mqtt.eventbean.GatewayLockInfoEventBean;
 import com.kaadas.lock.publiclibrary.mqtt.eventbean.OpenLockNotifyBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.OpenLockBean;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttConstant;
@@ -41,6 +42,7 @@ import com.kaadas.lock.utils.networkListenerutil.NetWorkChangReceiver;
 import net.sdvn.cmapi.Device;
 
 import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.json.JSONObject;
 import org.linphone.core.LinphoneCall;
 
 import java.io.File;
@@ -77,7 +79,8 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
     private Context mContext;
     private Disposable listenerDeviceOnLineDisposable;
     private Disposable networkChangeDisposable;
-
+    private Disposable openLockEventDisposable;
+    private Disposable closeDisposable;
     public void init(Context context) {
         this.mContext = context;
         mMediaDBDao = MediaFileDBDao.getInstance(context);
@@ -787,4 +790,108 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
         });
         compositeDisposable.add(networkChangeDisposable);
     }
+
+    //监听开锁上报
+    public void listenGaEvent() {
+        toDisposable(openLockEventDisposable);
+        if (mqttService != null) {
+            openLockEventDisposable = mqttService.listenerDataBack()
+                    .filter(new Predicate<MqttData>() {
+                        @Override
+                        public boolean test(MqttData mqttData) throws Exception {
+                            if (MqttConstant.EVENT.equals(mqttData.getMsgtype())
+                                    && MqttConstant.GW_EVENT.equals(mqttData.getFunc())) {
+                                return true;
+                            }
+                            return false;
+                        }
+                    })
+                    .compose(RxjavaHelper.observeOnMainThread())
+                    .subscribe(new Consumer<MqttData>() {
+                        @Override
+                        public void accept(MqttData mqttData) throws Exception {
+                            JSONObject jsonObject = new JSONObject(mqttData.getPayload());
+                            String devtype = jsonObject.getString("devtype");
+                            String eventtype = jsonObject.getString("eventtype");
+                            if (TextUtils.isEmpty(devtype)) { //devtype为空   无法处理数据
+                                return;
+                            }
+                            if (KeyConstants.DEV_TYPE_LOCK.equals(devtype)) {
+                                if ("info".equals(eventtype)) {
+                                    GatewayLockInfoEventBean gatewayLockInfoEventBean = new Gson().fromJson(mqttData.getPayload(), GatewayLockInfoEventBean.class);
+                                    String eventParmDeveType = gatewayLockInfoEventBean.getEventparams().getDevetype();
+                                    int devecode = gatewayLockInfoEventBean.getEventparams().getDevecode();
+                                    int pin = gatewayLockInfoEventBean.getEventparams().getPin();
+                                    String gatewayId = gatewayLockInfoEventBean.getGwId();
+                                    String deviceId = gatewayLockInfoEventBean.getDeviceId();
+                                    if (eventParmDeveType.equals("lockop") && devecode == 2 && pin == 255) {
+                                        if (mViewRef != null && mViewRef.get() != null) {
+                                            mViewRef.get().getLockEvent(gatewayId, deviceId);
+                                        }
+                                    }
+                                }
+
+                            }
+                        }
+                    }, new Consumer<Throwable>() {
+                        @Override
+                        public void accept(Throwable throwable) throws Exception {
+                            LogUtils.e("报警消息失败   " + throwable.getMessage());
+                        }
+                    });
+            compositeDisposable.add(openLockEventDisposable);
+        }
+    }
+
+
+    public void lockClose() {
+        if (mqttService != null) {
+            toDisposable(closeDisposable);
+            //表示锁已开
+            //表示锁已经关闭
+            closeDisposable = mqttService.listenerDataBack()
+                    .filter(new Predicate<MqttData>() {
+                        @Override
+                        public boolean test(MqttData mqttData) throws Exception {
+                            if (mqttData.getFunc().equals(MqttConstant.GW_EVENT)) {
+                                OpenLockNotifyBean openLockNotifyBean = new Gson().fromJson(mqttData.getPayload(), OpenLockNotifyBean.class);
+                                int deviceCode = openLockNotifyBean.getEventparams().getDevecode();
+                                if ("kdszblock".equals(openLockNotifyBean.getDevtype())) {
+                                    if (deviceCode == 10 || deviceCode == 1) {
+                                        //表示锁已经关闭
+                                        LogUtils.e("");
+                                        return true;
+                                    }
+                                }
+                            }
+                            return false;
+                        }
+                    })
+                    .compose(RxjavaHelper.observeOnMainThread())
+                    .subscribe(new Consumer<MqttData>() {
+                        @Override
+                        public void accept(MqttData mqttData) throws Exception {
+                            //关门
+                            OpenLockNotifyBean openLockNotifyBean = new Gson().fromJson(mqttData.getPayload(), OpenLockNotifyBean.class);
+                            String deviceId= openLockNotifyBean.getDeviceId();
+                            String gatewayId=openLockNotifyBean.getGwId();
+                            if (mViewRef!=null&&mViewRef.get() != null) {
+                                mViewRef.get().closeLockSuccess(deviceId,gatewayId);
+                            }
+                        }
+                    }, new Consumer<Throwable>() {
+                        @Override
+                        public void accept(Throwable throwable) throws Exception {
+                            if (mViewRef!=null&&mViewRef.get() != null) {
+                                mViewRef.get().closeLockThrowable();
+                            }
+                        }
+                    });
+            compositeDisposable.add(closeDisposable);
+        }
+
+    }
+
+
+
 }

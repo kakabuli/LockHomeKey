@@ -525,8 +525,11 @@ public class GatewayLockHomePresenter<T> extends BasePresenter<IGatewayLockHomeV
                         @Override
                         public void accept(MqttData mqttData) throws Exception {
                             //关门
+                            OpenLockNotifyBean openLockNotifyBean = new Gson().fromJson(mqttData.getPayload(), OpenLockNotifyBean.class);
+                            String deviceId= openLockNotifyBean.getDeviceId();
+                            String gatewayId=openLockNotifyBean.getGwId();
                             if (mViewRef!=null&&mViewRef.get() != null) {
-                                mViewRef.get().closeLockSuccess();
+                                mViewRef.get().closeLockSuccess(deviceId,gatewayId);
                             }
                         }
                     }, new Consumer<Throwable>() {
