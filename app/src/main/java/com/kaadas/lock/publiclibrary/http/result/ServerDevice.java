@@ -124,11 +124,6 @@ public class ServerDevice implements Serializable {
     }
 
     public void setModel(String model) {
-        if (model.startsWith("X5")) {
-            model = "X5";
-        } else {
-            model = "T5";
-        }
         this.model = model;
     }
 

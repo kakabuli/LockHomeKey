@@ -1,6 +1,7 @@
 package com.kaadas.lock.adapter;
 
 import android.support.annotation.Nullable;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -34,9 +35,10 @@ public class BluetoothLockFunctionAdapter extends BaseQuickAdapter<BluetoothLock
             TextView tvName = helper.getView(R.id.tv_name);
             tvName.setText(bean.getName());
         }
-        if (!("".equals(bean.getType()))) {
-            TextView tvNumber = helper.getView(R.id.tv_number);
-            tvNumber.setText(bean.getType());
-        }
+        View convertView = helper.getConvertView();
+//        if (!("".equals(bean.getType()))) {
+//            TextView tvNumber = helper.getView(R.id.tv_number);
+//            tvNumber.setText(bean.getType());
+//        }
     }
 }

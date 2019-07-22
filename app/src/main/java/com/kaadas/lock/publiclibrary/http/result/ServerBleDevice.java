@@ -2,6 +2,8 @@ package com.kaadas.lock.publiclibrary.http.result;
 
 import android.text.TextUtils;
 
+import com.kaadas.lock.utils.LogUtils;
+
 import java.io.Serializable;
 
 
@@ -209,19 +211,28 @@ public class ServerBleDevice implements Serializable {
 //             lockType.startsWith("S6")) {
 
 
-        public String getFunctionSet() {
-        if (TextUtils.isEmpty(functionSet)){
-            if (TextUtils.isEmpty(model)){
+    public String getFunctionSet() {
+        LogUtils.e("");
+
+        if (TextUtils.isEmpty(functionSet)) {
+            if (!"3".equals(bleVersion)){ //如果蓝牙版本号不是3
+                return ""+0x00;
+            }
+            if (TextUtils.isEmpty(model)) {
                 return "" + 0x31;
-            }else {
-                if (model.startsWith("V6")||model.startsWith("S100") ){
+            } else {
+                if (model.startsWith("V6") || model.startsWith("S100")) {
                     return "" + 0x20;
-                }else if (model.startsWith("S8C")){
+                } else if (model.startsWith("S8")) {
                     return "" + 0x32;
-                }else if (model.startsWith("V7")){
-
-                }else if (model.startsWith("K9")){
-
+                } else if (model.startsWith("V7")) {
+                    return "" + 0x20;
+                } else if (model.startsWith("K9")) {
+                    return "" + 0x01;
+                }else if (model.startsWith("S6")) {
+                    return "" + 0x20;
+                }else {
+                    return "" + 0x31;
                 }
             }
         }

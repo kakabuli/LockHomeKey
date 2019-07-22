@@ -11,6 +11,7 @@ import com.kaadas.lock.publiclibrary.http.result.GetWarringRecordResult;
 import com.kaadas.lock.publiclibrary.http.result.LockRecordResult;
 import com.kaadas.lock.publiclibrary.http.result.LoginResult;
 import com.kaadas.lock.publiclibrary.http.result.OTAResult;
+import com.kaadas.lock.publiclibrary.http.result.OperationRecordResult;
 import com.kaadas.lock.publiclibrary.http.result.RegisterResult;
 import com.kaadas.lock.publiclibrary.http.result.SinglePasswordResult;
 import com.kaadas.lock.publiclibrary.http.result.SwitchStatusResult;
@@ -314,6 +315,13 @@ public interface IXiaoKaiNewService {
     @POST(HttpUrlConstants.GET_LOCK_RECORD)
     Observable<LockRecordResult> getLockRecord(@Body RequestBody info);
 
+    /**
+     * 获取操作记录
+     *
+     * @return
+     */
+    @POST(HttpUrlConstants.GET_OPERATION_RECORD)
+    Observable<OperationRecordResult> getOperationRecord(@Body RequestBody info);
 
     ////////////////////////////////////////////预警记录////////////////////////////////////////////
 
@@ -324,6 +332,16 @@ public interface IXiaoKaiNewService {
      */
     @POST(HttpUrlConstants.UPLOAD_WARRING_RECORD)
     Observable<BaseResult> uploadWarringRecord(@Body RequestBody info);
+
+
+
+    /**
+     * 上传操作记录
+     *
+     * @return
+     */
+    @POST(HttpUrlConstants.UPLOAD_OPERATION_RECORD)
+    Observable<BaseResult> uploadOperationRecord(@Body RequestBody info);
 
     /**
      * 获取预警记录
@@ -371,6 +389,7 @@ public interface IXiaoKaiNewService {
      */
     @POST(HttpUrlConstants.SYSTEM_MESSAGE)
     Observable<String> getMessageList(@Body RequestBody info);
+
 
     /**
      *获取常见问题列表
@@ -452,5 +471,15 @@ public interface IXiaoKaiNewService {
      */
     @POST(HttpUrlConstants.UPDATE_BLE_VERSION)
     Observable<BaseResult> updateBleVersion(@Body RequestBody info);
+
+
+
+
+
+    /**
+     * 上传版本号和SN到服务器
+     */
+    @POST(HttpUrlConstants.MODIFY_FUNCTION_SET)
+    Observable<BaseResult> modifyFunctionSet(@Body RequestBody info);
 
 }

@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Service;
 import android.content.Intent;
-import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Vibrator;
@@ -25,14 +24,13 @@ import android.widget.TextView;
 
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
-import com.kaadas.lock.activity.home.BluetoothEquipmentDynamicActivity;
+import com.kaadas.lock.activity.home.BluetoothRecordActivity;
 import com.kaadas.lock.adapter.BluetoothRecordAdapter;
 import com.kaadas.lock.bean.BluetoothItemRecordBean;
 import com.kaadas.lock.bean.BluetoothRecordBean;
 import com.kaadas.lock.mvp.mvpbase.BaseBleFragment;
 import com.kaadas.lock.mvp.presenter.BleLockPresenter;
 import com.kaadas.lock.mvp.view.IBleLockView;
-import com.kaadas.lock.mvp.view.IFamilyMemberDeatilView;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.publiclibrary.bean.ForeverPassword;
 import com.kaadas.lock.publiclibrary.ble.BleProtocolFailedException;
@@ -43,7 +41,6 @@ import com.kaadas.lock.publiclibrary.http.result.GetPasswordResult;
 import com.kaadas.lock.publiclibrary.http.util.HttpUtils;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.AnimationsContainer;
-import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.PermissionUtil;
@@ -53,7 +50,6 @@ import com.kaadas.lock.utils.ToastUtil;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.concurrent.TimeoutException;
 
 import butterknife.BindView;
@@ -774,11 +770,11 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
                 } else {
                     tvDeviceStatus.setText(getString(R.string.not_connected));
                 }
-                intent = new Intent(getActivity(), BluetoothEquipmentDynamicActivity.class);
+                intent = new Intent(getActivity(), BluetoothRecordActivity.class);
                 startActivity(intent);
                 break;
             case R.id.tv_more:
-                intent = new Intent(getActivity(), BluetoothEquipmentDynamicActivity.class);
+                intent = new Intent(getActivity(), BluetoothRecordActivity.class);
                 startActivity(intent);
                 break;
             case R.id.tv_synchronized_record:

@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +12,7 @@ import android.widget.TextView;
 
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
-import com.kaadas.lock.activity.home.BluetoothEquipmentDynamicActivity;
+import com.kaadas.lock.activity.home.BluetoothRecordActivity;
 import com.kaadas.lock.adapter.BluetoothRecordAdapter;
 import com.kaadas.lock.bean.BluetoothItemRecordBean;
 import com.kaadas.lock.bean.BluetoothRecordBean;
@@ -27,7 +26,6 @@ import com.kaadas.lock.publiclibrary.ble.bean.OpenLockRecord;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.result.GetPasswordResult;
 import com.kaadas.lock.publiclibrary.http.util.HttpUtils;
-import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.ToastUtil;
@@ -58,7 +56,7 @@ public class BluetoothOpenLockRecordFragment extends BaseBleFragment<IOpenLockRe
     @BindView(R.id.tv_synchronized_record)
     TextView tvSynchronizedRecord;
     private BleLockInfo bleLockInfo;
-    private BluetoothEquipmentDynamicActivity activity;
+    private BluetoothRecordActivity activity;
     private boolean isLoadingBleRecord;  //正在加载锁上数据
     private int currentPage = 1;   //当前的开锁记录时间
     View view;
@@ -72,7 +70,7 @@ public class BluetoothOpenLockRecordFragment extends BaseBleFragment<IOpenLockRe
         view = View.inflate(getActivity(), R.layout.fragment_bluetooth_open_lock_record, null);
         unbinder = ButterKnife.bind(this, view);
         tvSynchronizedRecord.setOnClickListener(this);
-        activity = (BluetoothEquipmentDynamicActivity) getActivity();
+        activity = (BluetoothRecordActivity) getActivity();
         bleLockInfo = activity.getBleDeviceInfo();
         initRecycleView();
         initRefresh();

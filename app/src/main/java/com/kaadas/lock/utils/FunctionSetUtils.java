@@ -11,8 +11,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import retrofit2.http.PUT;
+
 public class FunctionSetUtils {
 
+    public static final int TYPE_PASSWORD = 1;
+    public static final int TYPE_FINGER = 2;
+    public static final int TYPE_CARD = 3;
+    public static final int TYPE_SHARE = 4;
+    public static final int TYPE_MORE = 5;
 
     /***
      * 1	开门	带密码开门,需要输入用户密码密码开门,不支持不带密码开门。安全模式（双重验证模式）下,APP不能开门；电子反锁状态下,APP不能开门；系统锁定模式下,APP不能开门
@@ -47,94 +54,125 @@ public class FunctionSetUtils {
      */
 
     public static final Map<Integer, Integer[]> FUNCTION_SET = new HashMap<>();
+
     static {
-        FUNCTION_SET.put(0x00, new Integer[]{1,2,3,10});
-        FUNCTION_SET.put(0x01, new Integer[]{1,2,3,4,5,6,7,8,9,10,11,13,14,15,16,17,18,19,20,21,22});
-        FUNCTION_SET.put(0x02, new Integer[]{1,2,3,4,5,6,7,8,10,11,13,14,15,16,17,19,20,21,22});
-        FUNCTION_SET.put(0x03, new Integer[]{1,2,3,4,5,6,7,8,10,11,13,14,15,16,17,19,20,21,22,23});
-        FUNCTION_SET.put(0x20, new Integer[]{1,2,3,4,5,7,8,10,13,16,17,19,20,21,22});
-        FUNCTION_SET.put(0x31, new Integer[]{1,2,3,4,5,6,7,8,10,13,16,17,19,20,21,22});
-        FUNCTION_SET.put(0x32, new Integer[]{1,2,3,4,5,7,8,9,10,13,16,17,19,20,21,22});
-        FUNCTION_SET.put(0x33, new Integer[]{1,2,3,4,5,6,7,8,9,10,13,16,17,19,20,21,22});
-        FUNCTION_SET.put(0x34, new Integer[]{1,2,3,4,5,6,7,8,9,10,12,13,16,17,19,20,21,22});
-        FUNCTION_SET.put(0x35, new Integer[]{1,2,3,4,5,6,7,8,10,12,13,16,17,19,20,21,22,23});
+        FUNCTION_SET.put(0x00, new Integer[]{1, 2, 3, 10});
+        FUNCTION_SET.put(0x01, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22});
+        FUNCTION_SET.put(0x02, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 10, 11, 13, 14, 15, 16, 17, 19, 20, 21, 22});
+        FUNCTION_SET.put(0x03, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 10, 11, 13, 14, 15, 16, 17, 19, 20, 21, 22, 23});
+        FUNCTION_SET.put(0x20, new Integer[]{1, 2, 3, 4, 5, 7, 8, 10, 13, 16, 17, 19, 20, 21, 22});
+        FUNCTION_SET.put(0x31, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 10, 13, 16, 17, 19, 20, 21, 22});
+        FUNCTION_SET.put(0x32, new Integer[]{1, 2, 3, 4, 5, 7, 8, 9, 10, 13, 16, 17, 19, 20, 21, 22});
+        FUNCTION_SET.put(0x33, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 13, 16, 17, 19, 20, 21, 22});
+        FUNCTION_SET.put(0x34, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 13, 16, 17, 19, 20, 21, 22});
+        FUNCTION_SET.put(0x35, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 10, 12, 13, 16, 17, 19, 20, 21, 22, 23});
     }
 
 
     /**
      * 根据功能集判断是否支持手动自动模式显示
+     *
      * @param functionSet
      * @return
      */
     public static boolean isSupportAMModeShow(int functionSet) {
         Integer[] funcs = FUNCTION_SET.get(functionSet);
+        if (funcs == null){
+            return false;
+        }
         List<Integer> integers = Arrays.asList(funcs);
         return integers.contains(11);
     }
+
     /**
      * 根据功能集判断是否支持手动自动模式设置
+     *
      * @param functionSet
      * @return
      */
     public static boolean isSupportAMModeSet(int functionSet) {
         Integer[] funcs = FUNCTION_SET.get(functionSet);
+        if (funcs == null){
+            return false;
+        }
         List<Integer> integers = Arrays.asList(funcs);
         return integers.contains(12);
     }
 
     /**
      * 根据功能集判断是否支持修改管理员密码
+     *
      * @param functionSet
      * @return
      */
     public static boolean isSupportModifyManagerPassword(int functionSet) {
         Integer[] funcs = FUNCTION_SET.get(functionSet);
+        if (funcs == null){
+            return false;
+        }
         List<Integer> integers = Arrays.asList(funcs);
         return integers.contains(18);
     }
 
 
-    public static boolean isExistFunctionSet(int functionSet){
+    /**
+     * 根据功能集判断是否支持操作记录
+     *
+     * @param functionSet
+     * @return
+     */
+    public static boolean isSupportOperationRecord(int functionSet) {
+        Integer[] funcs = FUNCTION_SET.get(functionSet);
+        if (funcs == null){
+            return false;
+        }
+        List<Integer> integers = Arrays.asList(funcs);
+        return integers.contains(23);
+    }
+
+
+    public static boolean isExistFunctionSet(int functionSet) {
         //获取改功能集是否存在
-        return !(FUNCTION_SET.get(functionSet)==null);
+        return !(FUNCTION_SET.get(functionSet) == null);
 
     }
 
     /**
      * 根据功能集判断显示的界面
+     *
      * @param functionSet
      * @return
      */
-    public static  List<BluetoothLockFunctionBean> getSupportFunction(int functionSet) {
+    public static List<BluetoothLockFunctionBean> getSupportFunction(int functionSet) {
         List<BluetoothLockFunctionBean> functionBeans = new ArrayList<>();
         Integer[] funcs = FUNCTION_SET.get(functionSet);
-        System.out.println(funcs==null);
+        System.out.println(funcs == null);
         List<Integer> integers = Arrays.asList(funcs);
-        if (funcs == null){ //未知功能集
+        if (funcs == null) { //未知功能集
             funcs = FUNCTION_SET.get(0x31);
         }
 
-        if (integers.contains(7)){
-            functionBeans.add(new BluetoothLockFunctionBean(MyApplication.getInstance().getString(R.string.password),R.mipmap.bluetooth_password,1));
+        if (integers.contains(7)) {
+            functionBeans.add(new BluetoothLockFunctionBean(MyApplication.getInstance().getString(R.string.password), R.mipmap.bluetooth_password, TYPE_PASSWORD));
         }
-        if (integers.contains(8)){
-            functionBeans.add(new BluetoothLockFunctionBean(MyApplication.getInstance().getString(R.string.fingerprint),R.mipmap.bluetooth_fingerprint,2));
+        if (integers.contains(8)) {
+            functionBeans.add(new BluetoothLockFunctionBean(MyApplication.getInstance().getString(R.string.fingerprint), R.mipmap.bluetooth_fingerprint, TYPE_FINGER));
         }
-        if (integers.contains(9)){
-            functionBeans.add(new BluetoothLockFunctionBean(MyApplication.getInstance().getString(R.string.card),R.mipmap.bluetooth_card,3));
+        if (integers.contains(9)) {
+            functionBeans.add(new BluetoothLockFunctionBean(MyApplication.getInstance().getString(R.string.card), R.mipmap.bluetooth_card, TYPE_CARD));
         }
-        functionBeans.add(new BluetoothLockFunctionBean(MyApplication.getInstance().getString(R.string.device_share),R.mipmap.bluetooth_share,4));
-        functionBeans.add(new BluetoothLockFunctionBean(MyApplication.getInstance().getString(R.string.more),R.mipmap.bluetooth_more,5));
+        functionBeans.add(new BluetoothLockFunctionBean(MyApplication.getInstance().getString(R.string.device_share), R.mipmap.bluetooth_share, TYPE_SHARE));
+        functionBeans.add(new BluetoothLockFunctionBean(MyApplication.getInstance().getString(R.string.more), R.mipmap.bluetooth_more, TYPE_MORE));
 
         return functionBeans;
     }
 
 
-    public static void main(String[] args ){
+    public static void main(String[] args) {
 
         List<BluetoothLockFunctionBean> functionBeans = new ArrayList<>();
         Integer[] funcs = FUNCTION_SET.get(5);
-        System.out.println(funcs==null);
+        System.out.println(funcs == null);
 
 
     }

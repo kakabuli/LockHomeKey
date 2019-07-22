@@ -101,6 +101,7 @@ public class BluetoothMoreActivity extends BaseBleActivity<IDeviceMoreView, Devi
             mPresenter.getDeviceInfo();
         }
 
+
     }
 
     @Override
@@ -207,7 +208,6 @@ public class BluetoothMoreActivity extends BaseBleActivity<IDeviceMoreView, Devi
             case R.id.rl_safe_mode:
                 intent = new Intent(this, BluetoothSafeModeActivity.class);
                 startActivity(intent);
-
                 break;
             case R.id.rl_am:
                 int func = Integer.parseInt(bleLockInfo.getServerLockInfo().getFunctionSet());

@@ -308,7 +308,7 @@ public class BleService extends Service {
             //符合要求的设备
             if (device.getName().startsWith("Bootloader")
                     || device.getName().contains("KDS")
-//                    || device.getName().contains("XK")
+                    || device.getName().contains("NIKE")
                     || device.getName().contains("KdsLock")) {
                 deviceScanSubject.onNext(device);
             }
@@ -518,7 +518,7 @@ public class BleService extends Service {
                     readSystemIDSubject.onNext(new ReadInfoBean(ReadInfoBean.TYPE_LOCK_STATUS, characteristic.getValue()));
                     break;
                 case BLeConstants.UUID_FUNCTION_SET:
-                    LogUtils.e("锁功能集  字节1  " + Integer.toBinaryString(characteristic.getValue()[0] & 0xff)  );
+                    LogUtils.e("锁功能集  字节1  " +  Rsa.bytesToHexString(characteristic.getValue()) );
                     readSystemIDSubject.onNext(new ReadInfoBean(ReadInfoBean.TYPE_LOCK_FUNCTION_SET,characteristic.getValue()[0] & 0xff));
                     break;
             }
@@ -596,6 +596,7 @@ public class BleService extends Service {
             @Override
             public void run() {
                 if (snChar != null && bluetoothGatt != null) {
+                    LogUtils.e("读取功能集 ");
                     bluetoothGatt.readCharacteristic(lockFunctionSetChar);
                 }
             }

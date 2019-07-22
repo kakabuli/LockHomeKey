@@ -1144,4 +1144,14 @@
     <string name="unknow_function_set">未知锁型号(%1$s)，请更新等最新版本APP</string>
     <string name="is_open_auto_mode">正在关闭自动模式</string>
     <string name="is_close_auto_mode">正在关闭自动状态</string>
+
+    <string name="add_fowever_pwd">添加永久密码</string>
+    <string name="add_temp_pwd">添加临时密码</string>
+    <string name="add_force_pwd">添加胁迫密码</string>
+    <string name="del_fowever_pwd">删除永久密码</string>
+    <string name="del_temp_pwd">删除临时密码</string>
+    <string name="del_force_pwd">删除胁迫密码</string>
+    <string name="modify_fowever_pwd">修改永久密码</string>
+    <string name="modify_temp_pwd">修改临时密码</string>
+    <string name="modify_force_pwd">修改胁迫密码</string>
 </resources>

@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Vibrator;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.InputType;
@@ -27,6 +28,8 @@ import com.kaadas.lock.activity.device.bluetooth.BluetoothSharedDeviceManagement
 import com.kaadas.lock.activity.device.bluetooth.card.DoorCardManagerActivity;
 import com.kaadas.lock.activity.device.bluetooth.fingerprint.FingerprintManagerActivity;
 import com.kaadas.lock.activity.device.bluetooth.password.BluetoothPasswordManagerActivity;
+import com.kaadas.lock.adapter.BluetoothFunctionAdapater;
+import com.kaadas.lock.adapter.BluetoothFunctionOneLineAdapater;
 import com.kaadas.lock.adapter.BluetoothLockFunctionAdapter;
 import com.kaadas.lock.bean.BluetoothLockFunctionBean;
 import com.kaadas.lock.mvp.mvpbase.BaseBleActivity;
@@ -46,10 +49,10 @@ import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.StringUtil;
 import com.kaadas.lock.utils.ToastUtil;
+import com.kaadas.lock.widget.MyGridItemDecoration;
 
 import net.sdvn.cmapi.util.LogUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeoutException;
 
@@ -77,7 +80,8 @@ public class BluetoothLockFunctionActivity extends BaseBleActivity<IDeviceDetail
     //    @BindView(R.id.rv)
 //    RecyclerView rv;
 
-    BluetoothLockFunctionAdapter bluetoothLockFunctionAdapter;
+    private BluetoothFunctionAdapater adapater;
+    private BluetoothFunctionOneLineAdapater oneLineAdapater;
     @BindView(R.id.iv_one)
     ImageView ivOne;
     @BindView(R.id.tv_name_one)
@@ -133,6 +137,8 @@ public class BluetoothLockFunctionActivity extends BaseBleActivity<IDeviceDetail
     ImageView ivLockIcon;
     @BindView(R.id.detail_function_recyclerView)
     RecyclerView detailFunctionRecyclerView;
+    @BindView(R.id.detail_function_onLine)
+    RecyclerView detailFunctionOnLine;
     private BleLockInfo bleLockInfo;
     private static final int TO_MORE_REQUEST_CODE = 101;
     private boolean isOpening = false;
@@ -225,7 +231,7 @@ public class BluetoothLockFunctionActivity extends BaseBleActivity<IDeviceDetail
                 ivLockIcon.setImageResource(R.mipmap.bluetooth_lock_qz013);
             } else if (model.contains("QZ012")) {
                 ivLockIcon.setImageResource(R.mipmap.bluetooth_lock_qz012);
-            }  else if (model.contains("K100")) {
+            } else if (model.contains("K100")) {
                 ivLockIcon.setImageResource(R.mipmap.bluetooth_lock_k100);
             } else if (model.contains("S6")) {
                 ivLockIcon.setImageResource(R.mipmap.bluetooth_lock_s6);
@@ -351,19 +357,94 @@ public class BluetoothLockFunctionActivity extends BaseBleActivity<IDeviceDetail
         String functionSet = bleLockInfo.getServerLockInfo().getFunctionSet(); //锁功能集
         int func = Integer.parseInt(functionSet);
         List<BluetoothLockFunctionBean> supportFunction = FunctionSetUtils.getSupportFunction(func);
-        if (supportFunction.size() <= 4) {
+        MyGridItemDecoration dividerItemDecoration;
+        if (supportFunction.size() <= 2) {
+            detailFunctionOnLine.setLayoutManager(new GridLayoutManager(this, 2));
+            dividerItemDecoration = new MyGridItemDecoration(this, 2);
+
+            detailFunctionRecyclerView.setVisibility(View.GONE);
+            detailFunctionOnLine.setVisibility(View.VISIBLE);
+        } else if (supportFunction.size() <= 4) {
+            dividerItemDecoration = new MyGridItemDecoration(this, 2);
             detailFunctionRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
+            detailFunctionRecyclerView.setVisibility(View.VISIBLE);
+            detailFunctionOnLine.setVisibility(View.GONE);
         } else {
             detailFunctionRecyclerView.setLayoutManager(new GridLayoutManager(this, 3));
+            detailFunctionRecyclerView.setVisibility(View.VISIBLE);
+            detailFunctionOnLine.setVisibility(View.GONE);
+            dividerItemDecoration = new MyGridItemDecoration(this, 3);
         }
-        bluetoothLockFunctionAdapter = new BluetoothLockFunctionAdapter(supportFunction);
-        detailFunctionRecyclerView.setAdapter(bluetoothLockFunctionAdapter);
-        bluetoothLockFunctionAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+
+        detailFunctionOnLine.addItemDecoration(dividerItemDecoration);
+        detailFunctionRecyclerView.addItemDecoration(dividerItemDecoration);
+
+        adapater = new BluetoothFunctionAdapater(supportFunction, new BluetoothFunctionAdapater.OnItemClickListener() {
             @Override
-            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                adapter.getItem(position);
+            public void onItemClick(int position, BluetoothLockFunctionBean bluetoothLockFunctionBean) {
+                Intent intent;
+                switch (bluetoothLockFunctionBean.getType()){
+                    case FunctionSetUtils.TYPE_PASSWORD:
+                        intent = new Intent(BluetoothLockFunctionActivity.this, BluetoothPasswordManagerActivity.class);
+                        startActivity(intent);
+                        break;
+                    case FunctionSetUtils.TYPE_FINGER:
+                        intent = new Intent(BluetoothLockFunctionActivity.this, FingerprintManagerActivity.class);
+                        startActivity(intent);
+                        break;
+                    case FunctionSetUtils.TYPE_CARD:
+                        intent = new Intent(BluetoothLockFunctionActivity.this, DoorCardManagerActivity.class);
+                        startActivity(intent);
+                        break;
+                    case FunctionSetUtils.TYPE_SHARE:
+                        intent = new Intent(BluetoothLockFunctionActivity.this, BluetoothSharedDeviceManagementActivity.class);
+                        startActivity(intent);
+                        break;
+                    case FunctionSetUtils.TYPE_MORE:
+                        intent = new Intent(BluetoothLockFunctionActivity.this, BluetoothMoreActivity.class);
+                        if (lockType.startsWith("S8") || lockType.startsWith("V6") || lockType.startsWith("V7") || lockType.startsWith("S100")) {
+                            intent.putExtra(KeyConstants.SOURCE, "BluetoothLockFunctionV6V7Activity");
+                        }
+                        startActivityForResult(intent, TO_MORE_REQUEST_CODE);
+                        break;
+                }
             }
         });
+        oneLineAdapater = new BluetoothFunctionOneLineAdapater(supportFunction, new BluetoothFunctionOneLineAdapater.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position, BluetoothLockFunctionBean bluetoothLockFunctionBean) {
+                Intent intent;
+                switch (bluetoothLockFunctionBean.getType()){
+                    case FunctionSetUtils.TYPE_PASSWORD:
+                        intent = new Intent(BluetoothLockFunctionActivity.this, BluetoothPasswordManagerActivity.class);
+                        startActivity(intent);
+                        break;
+                    case FunctionSetUtils.TYPE_FINGER:
+                        intent = new Intent(BluetoothLockFunctionActivity.this, FingerprintManagerActivity.class);
+                        startActivity(intent);
+                        break;
+                    case FunctionSetUtils.TYPE_CARD:
+                        intent = new Intent(BluetoothLockFunctionActivity.this, DoorCardManagerActivity.class);
+                        startActivity(intent);
+                        break;
+                    case FunctionSetUtils.TYPE_SHARE:
+                        intent = new Intent(BluetoothLockFunctionActivity.this, BluetoothSharedDeviceManagementActivity.class);
+                        startActivity(intent);
+                        break;
+                    case FunctionSetUtils.TYPE_MORE:
+                        intent = new Intent(BluetoothLockFunctionActivity.this, BluetoothMoreActivity.class);
+                        if (lockType.startsWith("S8") || lockType.startsWith("V6") || lockType.startsWith("V7") || lockType.startsWith("S100")) {
+                            intent.putExtra(KeyConstants.SOURCE, "BluetoothLockFunctionV6V7Activity");
+                        }
+                        startActivityForResult(intent, TO_MORE_REQUEST_CODE);
+                        break;
+                }
+            }
+        });
+        detailFunctionRecyclerView.setAdapter(adapater);
+        detailFunctionOnLine.setAdapter(oneLineAdapater);
+
+
     }
 
     @Override
@@ -373,29 +454,7 @@ public class BluetoothLockFunctionActivity extends BaseBleActivity<IDeviceDetail
             case R.id.iv_back:
                 finish();
                 break;
-            case R.id.ll_one:
-                intent = new Intent(this, BluetoothPasswordManagerActivity.class);
-                startActivity(intent);
-                break;
-            case R.id.ll_two:
-                intent = new Intent(this, FingerprintManagerActivity.class);
-                startActivity(intent);
-                break;
-            case R.id.ll_three:
-                intent = new Intent(this, DoorCardManagerActivity.class);
-                startActivity(intent);
-                break;
-            case R.id.ll_four:
-                intent = new Intent(this, BluetoothSharedDeviceManagementActivity.class);
-                startActivity(intent);
-                break;
-            case R.id.ll_five:
-                intent = new Intent(this, BluetoothMoreActivity.class);
-                if (lockType.startsWith("S8") || lockType.startsWith("V6") || lockType.startsWith("V7") || lockType.startsWith("S100")) {
-                    intent.putExtra(KeyConstants.SOURCE, "BluetoothLockFunctionV6V7Activity");
-                }
-                startActivityForResult(intent, TO_MORE_REQUEST_CODE);
-                break;
+
             case R.id.tv_open_clock:
                 //开锁
                 if (isOpening) {
@@ -603,7 +662,6 @@ public class BluetoothLockFunctionActivity extends BaseBleActivity<IDeviceDetail
             ToastUtil.getInstance().showShort(getString(R.string.open_lock_failed));
         }
         handler.postDelayed(lockRunnable, 3000);
-
     }
 
     @Override
@@ -624,7 +682,6 @@ public class BluetoothLockFunctionActivity extends BaseBleActivity<IDeviceDetail
 
     @Override
     public void onBackLock() {
-//        lockStatus = KeyConstants.HAS_BEEN_LOCKED;
         changLockStatus(2);
     }
 
@@ -649,7 +706,6 @@ public class BluetoothLockFunctionActivity extends BaseBleActivity<IDeviceDetail
                 if (tempPwdList != null) {
                     tvNumberOne.setText((pwdList.size() + tempPwdList.size()) + getString(R.string.group));
                 }
-//        tvNumberFour.setText(2 + getString(R.string.people));
                 LogUtils.d("davi " + result.toString());
             }
 

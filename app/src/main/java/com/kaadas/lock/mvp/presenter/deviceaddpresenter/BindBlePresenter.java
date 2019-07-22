@@ -53,6 +53,7 @@ public class BindBlePresenter<T> extends BasePresenter<IBindBleView> {
     private Disposable inNetNotifyDisposable;
     private String mac;
     private String deviceName;
+    private Disposable functionSetDisposable;
 
 
     public void setPwd1(String pwd1, boolean isBind, int version, String deviceSn, String mac, String deviceName) {
@@ -328,12 +329,11 @@ public class BindBlePresenter<T> extends BasePresenter<IBindBleView> {
 
 
     public void readLockFunctionSet(String pwd1, String pwd2, String mode, int version, String deviceSn) {
-
-        Disposable functionSetDisposable = bleService.readFunctionSet(500)
+        functionSetDisposable = bleService.readFunctionSet(500)
                 .filter(new Predicate<ReadInfoBean>() {
                     @Override
                     public boolean test(ReadInfoBean readInfoBean) throws Exception {
-                        return false;
+                        return readInfoBean.type == ReadInfoBean.TYPE_LOCK_FUNCTION_SET;
                     }
                 })
                 .timeout(2 * 1000, TimeUnit.MILLISECONDS)
@@ -341,7 +341,7 @@ public class BindBlePresenter<T> extends BasePresenter<IBindBleView> {
                 .subscribe(new Consumer<ReadInfoBean>() {
                     @Override
                     public void accept(ReadInfoBean readInfoBean) throws Exception {
-                        toDisposable(readLockTypeDisposable);
+                        toDisposable(functionSetDisposable);
                         if (mViewRef.get() != null) {
                             mViewRef.get().readLockTypeSucces();
                         }
@@ -366,6 +366,7 @@ public class BindBlePresenter<T> extends BasePresenter<IBindBleView> {
                         }
                     }
                 });
+        compositeDisposable.add(functionSetDisposable);
 
     }
 
