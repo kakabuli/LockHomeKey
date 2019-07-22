@@ -13,6 +13,7 @@
              android:layout_gravity="center"
              android:layout_margin="4dp">
 
+     <!--    android:background="?android:selectableItemBackground" -->
 
     <LinearLayout
         android:id="@+id/container"
@@ -20,7 +21,6 @@
         android:layout_height="match_parent"
         android:layout_gravity="center"
         android:layout_margin="4dp"
-        android:background="?android:selectableItemBackground"
         android:orientation="vertical"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"

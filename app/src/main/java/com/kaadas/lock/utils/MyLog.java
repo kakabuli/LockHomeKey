@@ -91,12 +91,18 @@ public class MyLog {
 //                }
 //                FileWriter filerWriter = new FileWriter(file, true);
 //                BufferedWriter bufWriter = new BufferedWriter(filerWriter);
+                if(file !=null || !file.exists()){
+                    file.createNewFile();
+                    filerWriter = new FileWriter(file, true);
+                    bufWriter = new BufferedWriter(filerWriter);
+                }
+
                 writeFileTime= simpleDateFormat2.format(new Date());
                 // 获得当前类名
                 String clazz = Thread.currentThread() .getStackTrace()[3].getClassName();
                 // 获得当前方法名
                 String method = Thread.currentThread() .getStackTrace()[3].getMethodName();
-                String methodPath= clazz+method;
+                String methodPath= clazz+"."+method;
                 context= methodPath+" "+writeFileTime+" "+ context;
                 bufWriter.write(context);
                 bufWriter.newLine();

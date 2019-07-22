@@ -777,6 +777,16 @@ public class MyApplication extends Application {
         this.sip_package_invite = sip_package_invite;
     }
 
+    boolean isFromWel=false;
+
+    public boolean isFromWel() {
+        return isFromWel;
+    }
+
+    public void setFromWel(boolean fromWel) {
+        isFromWel = fromWel;
+    }
+
     int pirEnableStates = 1;
 
     public int getPirEnableStates() {

@@ -3,6 +3,8 @@ package com.kaadas.lock.mvp.presenter.cateye;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Handler;
+import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
@@ -32,6 +34,7 @@ import com.kaadas.lock.utils.CountUpTimer;
 import com.kaadas.lock.utils.FileUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.MyLog;
 import com.kaadas.lock.utils.RecordTools;
 import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.db.MediaFileDBDao;
@@ -49,7 +52,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Handler;
+
 
 import io.reactivex.Observable;
 import io.reactivex.disposables.Disposable;
@@ -90,6 +93,14 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
     }
 
     public  boolean isConnectedEye=false;
+
+   Handler videoHandler=new Handler(){
+       @Override
+       public void handleMessage(Message msg) {
+           super.handleMessage(msg);
+       }
+   };
+
     public void listenerCallStatus() {
         LinphoneHelper.addAutoAcceptCallBack(new PhoneAutoAccept() {
             @Override
@@ -98,7 +109,9 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
                     Toast.makeText(mContext, mContext.getString(R.string.cateye_call_record), Toast.LENGTH_SHORT).show();
                     return;
                 }
+                Log.e(GeTui.VideoLog, "VideoPresenter==>incomingCalll....");
                 Log.e(Tag, "猫眼   incomingCall1 ");
+                MyLog.getInstance().save("猫眼   incomingCall1 ");
                 //猫眼的设备Id
                 String catEyeDeviceId = linphoneCall.getRemoteAddress().getUserName();
                 CateEyeInfo callInCatEyeInfo = null;
@@ -130,6 +143,7 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
                     }
                     //如果网关Id为空    不朝下走了
                     if (TextUtils.isEmpty(gwId) || gatewayInfo == null) {
+                        Toast.makeText(mContext,mContext.getString(R.string.call_error_cateInfoEmpty),Toast.LENGTH_LONG).show();
                         return;
                     }
                     //获取米米网账号情况
@@ -138,6 +152,7 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
                     String meUsername = gatewayInfo.getServerInfo().getMeUsername();
                     if (TextUtils.isEmpty(meUsername) || TextUtils.isEmpty(mePwd)) {
                         //如果账号或者密码有一个为空  直接退出
+                        Toast.makeText(mContext,mContext.getString(R.string.call_error_mimi),Toast.LENGTH_LONG).show();
                         return;
                     }
                     if (MemeManager.getInstance().isConnected()) { //meme网已经连接
@@ -164,7 +179,8 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
             @Override
             public void callConnected() {
                 Log.e(Tag, "猫眼1  callConnected.........");
-                Log.e(GeTui.VideoLog, "VideoPresenter==>incomingCalll....");
+                Log.e(GeTui.VideoLog, "VideoPresenter==>callConnected....");
+                MyLog.getInstance().save("猫眼1  callConnected.........");
                 startCountUp();
                 isConnected = true;
                 if (mViewRef.get() != null) {
@@ -177,12 +193,14 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
             public void callReleased() {
                 Log.e(GeTui.VideoLog, "VideoPresenter==>callReleased....");
                 Log.e(Tag, "猫眼  callReleased.........");
+                MyLog.getInstance().save("猫眼  callReleased.........");
             }
 
             @Override
             public void callFinish() {
-
+                Log.e(GeTui.VideoLog, "VideoPresenter==>callFinish....");
                 Log.e(Tag, "猫眼 callFinish.........");
+                MyLog.getInstance().save("猫眼 callFinish.........");
                 if (mViewRef.get() != null) {
                     mViewRef.get().onCallFinish();
                 }
@@ -195,6 +213,7 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
             public void Streaming() {
                 Log.e(GeTui.VideoLog, "VideoPresenter==>Streaming....");
                 Log.e(Tag, "猫眼 Streaming.........");
+                MyLog.getInstance().save("猫眼 Streaming.........");
                 isConnectedEye=true;
                 if(mViewRef!=null && mViewRef.get()!=null){
                     mViewRef.get().callSuccess();
@@ -352,6 +371,7 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
      * @param isCallIn   是不是猫眼呼叫过来的
      */
     private void loginMeme(String meUsername, String mePwd, CateEyeInfo cateEyeInfo, boolean isCallIn) {
+        MyLog.getInstance().save("meUsername:"+meUsername+" mePwd:"+mePwd+" cateEyeInfo:"+cateEyeInfo+" isCallIn:"+isCallIn);
         //获取到设备列表
         if (memeDisposable != null && !memeDisposable.isDisposed()) {
             memeDisposable.dispose();
