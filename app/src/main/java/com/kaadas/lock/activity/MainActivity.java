@@ -551,7 +551,7 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
 
     @Override
     public void gatewayResetSuccess(String gatewayId) {
-        ToastUtil.getInstance().showShort(gatewayId+getString(R.string.gateway_reset_unbind));
+        ToastUtil.getInstance().showShort(gatewayId+"网关:"+getString(R.string.gateway_reset_unbind));
     }
 
 
