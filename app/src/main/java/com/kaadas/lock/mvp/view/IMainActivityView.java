@@ -38,7 +38,13 @@ public interface IMainActivityView extends IBleView {
 
     void callError();
 
+    void callErrorCateInfoEmpty();
+    void callErrorCateInfoMimi();
+
     //网关ota升级通知
     void gatewayNotifyOtaSuccess(GatewayOtaNotifyBean notifyBean);
+
+    //网关重置通知
+    void gatewayResetSuccess(String gatewayId);
 
 }

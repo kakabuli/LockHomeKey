@@ -158,6 +158,8 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
         mPresenter.init(this);
         mPresenter.listenerDeviceOnline();
         mPresenter.listenerNetworkChange();
+        mPresenter.listenGaEvent();
+        mPresenter.lockClose();
     }
 
     @Override
@@ -865,16 +867,7 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
         openLockStatus =devId+"opening_false";
         closeLockStatus=devId+"closing_true";
         LogUtils.e(Tag,"当前状态是   isOpening    " + openLockStatus + "   isClosing   " + closeLockStatus);
-        GwLockInfo gwLockInfo=MyApplication.getInstance().getGatewayLockById(devId);
-        if (gwLockInfo!=null){
-            String nickName=gwLockInfo.getServerInfo().getNickName();
-            if (!TextUtils.isEmpty(nickName)){
-                ToastUtil.getInstance().showShort(nickName+":"+getString(R.string.open_lock_success));
-            }else{
-                ToastUtil.getInstance().showShort(devId+":"+getString(R.string.open_lock_success));
-            }
 
-        }
         //hiddenLoading();
     }
 
@@ -919,6 +912,16 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
     @Override
     public void lockCloseSuccess(String devId) {
         closeLockStatus=devId+"closing_false";
+
+//        GwLockInfo gwLockInfo=MyApplication.getInstance().getGatewayLockById(devId);
+//        if (gwLockInfo!=null){
+//            String nickName=gwLockInfo.getServerInfo().getNickName();
+//            if (!TextUtils.isEmpty(nickName)){
+//                ToastUtil.getInstance().showShort(nickName+":"+getString(R.string.close_lock_success));
+//            }else{
+//                ToastUtil.getInstance().showShort(devId+":"+getString(R.string.close_lock_success));
+//            }
+//        }
     }
 
     @Override
@@ -948,6 +951,44 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
     public void callSuccess() {
      //      Toast.makeText(VideoVActivity.this,"呼叫成功",Toast.LENGTH_SHORT).show();
            forecastAdapter.notifyDataSetChanged();
+
+    }
+
+    @Override
+    public void getLockEvent(String gwId, String deviceId) {
+        if (deviceId!=null){
+        GwLockInfo gwLockInfo=MyApplication.getInstance().getGatewayLockById(deviceId);
+        if (gwLockInfo!=null) {
+            openLockStatus =deviceId+"opening_false";
+            closeLockStatus=deviceId+"closing_true";
+            String nickName = gwLockInfo.getServerInfo().getNickName();
+            if (!TextUtils.isEmpty(nickName)) {
+                ToastUtil.getInstance().showShort(nickName + ":" + getString(R.string.open_lock_success));
+            } else {
+                ToastUtil.getInstance().showShort(deviceId + ":" + getString(R.string.open_lock_success));
+            }
+        }
+        }
+    }
+
+    @Override
+    public void closeLockSuccess(String devId, String gwId) {
+        if (devId!=null){
+            GwLockInfo gwLockInfo=MyApplication.getInstance().getGatewayLockById(devId);
+            if (gwLockInfo!=null){
+                closeLockStatus=devId+"closing_false";
+                String nickName=gwLockInfo.getServerInfo().getNickName();
+                if (!TextUtils.isEmpty(nickName)){
+                    ToastUtil.getInstance().showShort(nickName+":"+getString(R.string.close_lock_success));
+                }else{
+                    ToastUtil.getInstance().showShort(devId+":"+getString(R.string.close_lock_success));
+                }
+            }
+        }
+    }
+
+    @Override
+    public void closeLockThrowable() {
 
     }
 

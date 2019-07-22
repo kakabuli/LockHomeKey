@@ -52,7 +52,7 @@ public class MqttService extends Service {
     private Handler mHandler = new Handler();
 
     //重连次数10
-    private int reconnectionNum = 10;
+    public int reconnectionNum = 10;
 
     /**
      * 判断是否订阅成功
@@ -305,14 +305,14 @@ public class MqttService extends Service {
                     if (reconnectionNum > 0) {
                         LogUtils.e("mqtt连接", "连接失败1     " + exception.toString()+"token是"+token+"用户名"+userId);
                         MqttExceptionHandle.onFail(MqttExceptionHandle.ConnectException, asyncActionToken, exception);
-                        if (exception.toString().equals("无权连接 (5)")) {
+                        if (exception.toString().endsWith(" (5)")) {
                             // TODO: 2019/4/1  该用户在其他手机登录(清除所有数据）---暂时未处理
                             if (mqttClient != null) {
                                 mqttDisconnect();
                             }
                             return;
                         }
-                        if ("错误的用户名或密码 (4)".equals(exception.toString())) {
+                        if (exception.toString().endsWith(" (4)")) {
                             LogUtils.e("mqtt的用户名或密码错误");
                             if (mqttClient!=null){
                                 mqttDisconnect();

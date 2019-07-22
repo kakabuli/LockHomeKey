@@ -30,8 +30,8 @@ import com.kaadas.lock.activity.device.BluetoothLockAuthorizationActivity;
 import com.kaadas.lock.activity.device.BluetoothLockFunctionActivity;
 import com.kaadas.lock.activity.device.BluetoothLockFunctionV6V7Activity;
 import com.kaadas.lock.activity.device.cateye.more.CateyeAuthorizationFunctionActivity;
-import com.kaadas.lock.activity.device.gateway.GatewayActivity;
 import com.kaadas.lock.activity.device.cateye.more.CateyeFunctionActivity;
+import com.kaadas.lock.activity.device.gateway.GatewayActivity;
 import com.kaadas.lock.activity.device.gatewaylock.GatewayLockAuthorizeFunctionActivity;
 import com.kaadas.lock.activity.device.gatewaylock.GatewayLockFunctionActivity;
 import com.kaadas.lock.activity.device.oldbluetooth.OldBluetoothLockDetailActivity;
@@ -48,9 +48,11 @@ import com.kaadas.lock.publiclibrary.bean.ServerGatewayInfo;
 import com.kaadas.lock.publiclibrary.bean.ServerGwDevice;
 import com.kaadas.lock.publiclibrary.http.result.ServerBleDevice;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.AllBindDevices;
+import com.kaadas.lock.publiclibrary.mqtt.util.MqttService;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.NetUtil;
 import com.kaadas.lock.utils.Rom;
 import com.kaadas.lock.utils.SPUtils2;
 import com.kaadas.lock.utils.ToastUtil;
@@ -112,7 +114,7 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
     private List<HomeShowBean> homeShowBeanList;
     private String uid;
     private DaoSession daoSession;
-
+    private MqttService mqttService;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -127,6 +129,7 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
         unbinder = ButterKnife.bind(this, mView);
         deviceRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
         homeShowBeanList = MyApplication.getInstance().getAllDevices();
+        mqttService=MyApplication.getInstance().getMqttService();
         initData(homeShowBeanList);
         initRefresh();
         return mView;
@@ -365,8 +368,19 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
             @Override
             public void onRefresh(@NonNull RefreshLayout refreshLayout) {
                 //刷新页面
-                mPresenter.refreshData();
-                refreshLayout.finishRefresh(8 * 1000);
+                if (NetUtil.isNetworkAvailable()) {
+                    if (mqttService != null && mqttService.getMqttClient() != null && !mqttService.getMqttClient().isConnected()) {
+                            MyApplication.getInstance().getMqttService().mqttConnection(); //重新连接mqtt
+                            LogUtils.e("重新连接mqtt");
+
+                    }
+                    mPresenter.refreshData();
+                    refreshLayout.finishRefresh(8 * 1000);
+                }else{
+                    ToastUtil.getInstance().showShort(getString(R.string.network_exception));
+                    refreshLayout.finishRefresh();
+                }
+
             }
         });
     }
@@ -521,6 +535,7 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
     public void deviceDataRefreshThrowable(Throwable throwable) {
         //刷新页面异常
         refresh.finishRefresh();
+        ToastUtil.getInstance().showShort(R.string.refresh_data_fail);
         LogUtils.e("刷新页面异常");
     }
 
@@ -738,6 +753,12 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
         if (isVisibleToUser == true) {
             //切换左右切换Fragment时，刷新页面
             if (mDeviceList != null && mDeviceList.size() > 0) {
+                    if (mqttService != null && mqttService.getMqttClient() != null && !mqttService.getMqttClient().isConnected()) {
+                       LogUtils.e("重连次数"+mqttService.reconnectionNum);
+                        if (mqttService.reconnectionNum == 0) {
+                            ToastUtil.getInstance().showShort(getString(R.string.mqtt_already_disconnect_refresh));
+                        }
+                    }
                 if (deviceDetailAdapter != null) {
                     deviceDetailAdapter.notifyDataSetChanged();
                 }

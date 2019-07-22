@@ -55,6 +55,7 @@ import com.kaadas.lock.publiclibrary.linphone.linphone.linphone.ContactsManager;
 import com.kaadas.lock.publiclibrary.linphone.linphone.linphone.LinphoneContact;
 import com.kaadas.lock.publiclibrary.linphone.linphonenew.compatibility.Compatibility;
 import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.MyLog;
 import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.ftp.GeTui;
 
@@ -290,7 +291,7 @@ public final class LinphoneService extends Service {
         setupActivityMonitor();
         // In case restart after a crash. Main in LinphoneActivity
         //  mNotificationTitle = "Linphone Service";
-
+        MyLog.getInstance().save(" 启动linphone service.... ");
         // Needed in order for the two next calls to succeed, libraries must have been loaded first
         LinphonePreferences.instance().setContext(getBaseContext());
         LinphoneCoreFactory.instance().setLogCollectionPath(getFilesDir().getAbsolutePath());
@@ -667,6 +668,7 @@ public final class LinphoneService extends Service {
     @Override
     public synchronized void onDestroy() {
         LogUtils.e("walter", "linphoneservice onDestroy");
+        Log.e(GeTui.VideoLog,"linphonservice...onDestory...");
         if (activityCallbacks != null) {
             getApplication().unregisterActivityLifecycleCallbacks(activityCallbacks);
             activityCallbacks = null;

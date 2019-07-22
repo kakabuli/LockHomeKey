@@ -27,6 +27,7 @@ import com.kaadas.lock.publiclibrary.mqtt.util.MqttService;
 import com.kaadas.lock.utils.CheckLanguageUtil;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.MyLog;
 import com.kaadas.lock.utils.NetUtil;
 import com.kaadas.lock.utils.Rom;
 import com.kaadas.lock.utils.SPUtils;
@@ -257,6 +258,7 @@ public class WelcomeActivity extends BaseActivity<ISplashView, SplashPresenter<I
             }else{
                 long diff_time = (System.currentTimeMillis()-sip_time_json)/1000;
                 Log.e(Tag,"sip_time_json:"+sip_time_json+" diff_time:"+diff_time);
+                MyLog.getInstance().save("sip_time_json:"+sip_time_json+" diff_time:"+diff_time);
                 if(diff_time>=timeout && sip_time_json!=0){
                     Toast.makeText(WelcomeActivity.this,getResources().getString(R.string.cate_sleep),Toast.LENGTH_SHORT).show();
                 }else if(diff_time<timeout && sip_time_json!=0){
@@ -298,6 +300,7 @@ public class WelcomeActivity extends BaseActivity<ISplashView, SplashPresenter<I
                             MyApplication.getInstance().setCurrentGeTuiMImiPwd(mePwd);
                             Log.e(Tag,"sip的invite包:"+sip_invite);
                             Log.e(Tag,"获取的deviceId:"+deviceid+"  gwid:"+gwid+" meUserName:"+meUserName+" mePwd:"+mePwd);
+                            MyLog.getInstance().save("获取的deviceId:"+deviceid+"  gwid:"+gwid+" meUserName:"+meUserName+" mePwd:"+mePwd);
                         }else{
                             Log.e(Tag,  "sip package是空");
                         }

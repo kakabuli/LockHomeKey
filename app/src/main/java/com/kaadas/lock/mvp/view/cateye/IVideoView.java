@@ -132,4 +132,13 @@ public interface IVideoView extends IBaseView {
     void netWorkChange(boolean isEnable);
 
     void callSuccess();
+
+    //开锁上报
+    void  getLockEvent(String gwId,String deviceId);
+
+    //关锁上报
+    void closeLockSuccess(String devId,String gwId);
+
+    //关锁上报异常
+    void closeLockThrowable();
 }

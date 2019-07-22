@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import com.kaadas.lock.R;
+import com.kaadas.lock.activity.addDevice.DeviceAddGatewayHelpActivity;
 import com.kaadas.lock.activity.addDevice.DeviceAddHelpActivity;
 import com.kaadas.lock.activity.addDevice.bluetooth.AddBluetoothThirdActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
@@ -43,7 +44,7 @@ public class AddZigbeeLockSecondActivity extends BaseAddToApplicationActivity {
                 startActivity(nextIntent);
                 break;
             case R.id.help:
-                Intent intent=new Intent(this, DeviceAddHelpActivity.class);
+                Intent intent=new Intent(this, DeviceAddGatewayHelpActivity.class);
                 startActivity(intent);
                 break;
         }

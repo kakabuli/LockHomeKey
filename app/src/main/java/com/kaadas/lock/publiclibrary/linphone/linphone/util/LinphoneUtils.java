@@ -8,6 +8,7 @@ import com.kaadas.lock.publiclibrary.linphone.linphone.linphone.PhoneBean;
 import com.kaadas.lock.publiclibrary.linphone.linphonenew.LinphoneManager;
 import com.kaadas.lock.utils.FileUtils;
 import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.MyLog;
 import com.kaadas.lock.utils.SPUtils;
 
 import org.linphone.core.LinphoneAddress;
@@ -69,6 +70,7 @@ public class LinphoneUtils {
      * @throws LinphoneCoreException
      */
     public void registerUserAuth(String name, String password, String host) {
+        MyLog.getInstance().save("registerUserAuth 设置账号.. "+ " name"+name+ " password:"+password+" host:"+host);
         Log.e(TAG, "registerUserAuth name = " + name);
         Log.e(TAG, "registerUserAuth pw = " + password);
         Log.e(TAG, "registerUserAuth host = " + host);

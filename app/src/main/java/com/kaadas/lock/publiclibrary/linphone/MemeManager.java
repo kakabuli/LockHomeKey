@@ -151,14 +151,18 @@ public class MemeManager {
         currentPassword = mePassword;
         LogUtils.e(TAG, "登录米米网   账号  " + currentAccount + "  密码  " + currentPassword);
         Log.e(GeTui.VideoLog, "调用登陆咪咪网api==>MemeManager==>登录米米网   账号  " + currentAccount + "  密码  " + currentPassword);
-        CMAPI.getInstance().login(context, meAccount, mePassword, BUILD_VPN_REQUEST, new ResultListener() {
-            @Override
-            public void onError(int errorCode) {
-                LogUtils.e(TAG, "登录错误   " + errorCode);
-                Log.e(GeTui.VideoLog,"登录错误   " + errorCode);
-                connectStatusChange.onNext(false);
-            }
-        });
+        try{
+            CMAPI.getInstance().login(context, meAccount, mePassword, BUILD_VPN_REQUEST, new ResultListener() {
+                @Override
+                public void onError(int errorCode) {
+                    LogUtils.e(TAG, "登录错误   " + errorCode);
+                    Log.e(GeTui.VideoLog,"登录错误   " + errorCode);
+                    connectStatusChange.onNext(false);
+                }
+            });
+        }catch (Exception e){
+            LogUtils.e(TAG, "登录错误:   "+e.getMessage() );
+        }
         return connectStatusChange;
     }
 

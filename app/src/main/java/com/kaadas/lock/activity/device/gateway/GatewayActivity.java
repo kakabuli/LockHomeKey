@@ -390,11 +390,13 @@ public class GatewayActivity extends BaseActivity<GatewayView, GatewayPresenter<
                 break;
             case R.id.see_more:
                 //基本信息
-                Intent intent = new Intent(this, GatewaySettingActivity.class);
-                intent.putExtra(KeyConstants.GATEWAY_NICKNAME,gatewayInfo.getServerInfo().getDeviceNickName());
-                intent.putExtra(KeyConstants.GATEWAY_ID, gatewayInfo.getServerInfo().getDeviceSN());
-                intent.putExtra(KeyConstants.IS_ADMIN,gatewayInfo.getServerInfo().getIsAdmin());
-                startActivityForResult(intent, KeyConstants.GATEWAY_NICK_NAME);
+                if (gatewayInfo!=null) {
+                    Intent intent = new Intent(this, GatewaySettingActivity.class);
+                    intent.putExtra(KeyConstants.GATEWAY_NICKNAME, gatewayInfo.getServerInfo().getDeviceNickName());
+                    intent.putExtra(KeyConstants.GATEWAY_ID, gatewayInfo.getServerInfo().getDeviceSN());
+                    intent.putExtra(KeyConstants.IS_ADMIN, gatewayInfo.getServerInfo().getIsAdmin());
+                    startActivityForResult(intent, KeyConstants.GATEWAY_NICK_NAME);
+                }
                 break;
             case R.id.share:
                /* //分享

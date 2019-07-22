@@ -50,6 +50,7 @@ import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.Constants;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.MyLog;
 import com.kaadas.lock.utils.NotifyRefreshActivity;
 import com.kaadas.lock.utils.PermissionUtil;
 import com.kaadas.lock.utils.Rom;
@@ -425,6 +426,7 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
     @Override
     public void onCatEyeCallIn(CateEyeInfo cateEyeInfo) {
         Log.e(GeTui.VideoLog,"MainActivity---->跳入=====>VideoVActivity:"+cateEyeInfo);
+        MyLog.getInstance().save("跳入=====>VideoVActivity:"+cateEyeInfo);
         Intent intent = new Intent(this, VideoVActivity.class);
         intent.putExtra(KeyConstants.IS_CALL_IN, true);
         intent.putExtra(KeyConstants.CATE_INFO, cateEyeInfo);
@@ -528,6 +530,16 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
     }
 
     @Override
+    public void callErrorCateInfoEmpty() {
+        Toast.makeText(this,getString(R.string.call_error_cateInfoEmpty),Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void callErrorCateInfoMimi() {
+        Toast.makeText(this,getString(R.string.call_error_mimi),Toast.LENGTH_LONG).show();
+    }
+
+    @Override
     public void gatewayNotifyOtaSuccess(GatewayOtaNotifyBean notifyBean) {
         LogUtils.e("网关ota升级通知 gatewayNotifyOtaSuccess");
         //网关ota升级通知
@@ -537,7 +549,10 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
         startActivity(intent);
     }
 
-
+    @Override
+    public void gatewayResetSuccess(String gatewayId) {
+        ToastUtil.getInstance().showShort(gatewayId+"网关:"+getString(R.string.gateway_reset_unbind));
+    }
 
 
     public NoScrollViewPager getViewPager() {
@@ -546,7 +561,7 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
     }
     private Class userPushService = GeTuiPushService.class;
     Timer timer;
-    private void    startcallmethod() {
+    private void     startcallmethod() {
         long startTime = 2500;
         if (Rom.isFlyme()) {
             startTime = 5000;
