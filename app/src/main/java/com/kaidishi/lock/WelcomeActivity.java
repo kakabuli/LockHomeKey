@@ -25,6 +25,7 @@ import com.kaadas.lock.mvp.presenter.SplashPresenter;
 import com.kaadas.lock.publiclibrary.ble.BleService;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttService;
 import com.kaadas.lock.utils.CheckLanguageUtil;
+import com.kaadas.lock.utils.Constants;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.MyLog;
@@ -36,6 +37,7 @@ import com.kaadas.lock.utils.ToastUtil;
 import com.kaadas.lock.utils.cachefloder.ACache;
 import com.kaadas.lock.utils.cachefloder.CacheFloder;
 import com.kaadas.lock.mvp.view.ISplashView;
+import com.kaadas.lock.utils.ftp.GeTui;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -46,16 +48,18 @@ public class WelcomeActivity extends BaseActivity<ISplashView, SplashPresenter<I
     private PackageInfo packageInfo;
     private int mVersionCode;
     private String mVersionName;
-    String Tag="sip_kaidishi";
     private long currentTime=0;
     private long remainTime=0;
+    Intent mainIntent=null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 //        CheckLanguageUtil.getInstance().checkLag();//语言
-        initData();
+        mainIntent=new Intent(WelcomeActivity.this, MainActivity.class);
+        MyLog.getInstance().save("onCreate..............:"+MainActivity.isRunning);
         executeGeTui();
+        initData();
         MqttService mqttService=MyApplication.getInstance().getMqttService();
         BleService bleService=MyApplication.getInstance().getBleService();
         if (mqttService!=null&&bleService!=null){
@@ -88,7 +92,9 @@ public class WelcomeActivity extends BaseActivity<ISplashView, SplashPresenter<I
                         startActivity(intent);
                         finish();
                     } else {
-                        startActivity(new Intent(WelcomeActivity.this, MainActivity.class));
+                      //  startActivity(new Intent(WelcomeActivity.this, MainActivity.class));
+                        startActivity(mainIntent);
+                        MyLog.getInstance().save("................1............");
                         finish();
                     }
 
@@ -178,7 +184,9 @@ public class WelcomeActivity extends BaseActivity<ISplashView, SplashPresenter<I
                     startActivity(intent);
                     finish();
                 } else {
-                    startActivity(new Intent(WelcomeActivity.this, MainActivity.class));
+                 //   startActivity(new Intent(WelcomeActivity.this, MainActivity.class));
+                    startActivity(mainIntent);
+                    MyLog.getInstance().save("................2............");
                     finish();
                 }
 
@@ -214,7 +222,9 @@ public class WelcomeActivity extends BaseActivity<ISplashView, SplashPresenter<I
             startActivity(intent);
             finish();
         } else {
-            startActivity(new Intent(WelcomeActivity.this, MainActivity.class));
+         //   startActivity(new Intent(WelcomeActivity.this, MainActivity.class));
+            startActivity(mainIntent);
+            MyLog.getInstance().save("................3............");
             finish();
         }
     }
@@ -222,6 +232,7 @@ public class WelcomeActivity extends BaseActivity<ISplashView, SplashPresenter<I
     @Override
     protected void onResume() {
         super.onResume();
+        MyLog.getInstance().save("onResume..............:"+MainActivity.isRunning);
         //启动mqttservice
         Intent intent = new Intent(this, MqttService.class);
         startService(intent);
@@ -246,21 +257,21 @@ public class WelcomeActivity extends BaseActivity<ISplashView, SplashPresenter<I
             if(!TextUtils.isEmpty(sip_time_json_str)){
                 sip_time_json= Long.valueOf(sip_time_json_str);
             }
-            Log.e(Tag,"oppo===>sip_time_json_str:"+sip_time_json);
+            Log.e(GeTui.VideoLog,"WelcomeActivity==>oppo===>sip_time_json_str:"+sip_time_json);
         }
         if(!TextUtils.isEmpty(sip_package_json)){
             String sip_package= new String(Base64.decode(sip_package_json,Base64.DEFAULT));
-            Log.e(Tag,"sip_package_json:"+sip_package);
+            Log.e(GeTui.VideoLog,"WelcomeActivity==>sip_package_json:"+sip_package);
             if(sip_package.equals("openLock")){
-                Log.e(Tag,"WelcomeActivity======>普通密码开锁");
+                Log.e(GeTui.VideoLog,"WelcomeActivity======>普通密码开锁");
             }else if(sip_package.equals("alarmOpenLockRisk")){
-                Log.e(Tag,"WelcomeActivity======>胁迫密码开锁");
+                Log.e(GeTui.VideoLog,"WelcomeActivity======>胁迫密码开锁");
             }else{
                 long diff_time = (System.currentTimeMillis()-sip_time_json)/1000;
-                Log.e(Tag,"sip_time_json:"+sip_time_json+" diff_time:"+diff_time);
+                Log.e(GeTui.VideoLog,"WelcomeActivity==>sip_time_json:"+sip_time_json+" diff_time:"+diff_time);
                 MyLog.getInstance().save("sip_time_json:"+sip_time_json+" diff_time:"+diff_time);
                 if(diff_time>=timeout && sip_time_json!=0){
-                    Toast.makeText(WelcomeActivity.this,getResources().getString(R.string.cate_sleep),Toast.LENGTH_SHORT).show();
+                    Toast.makeText(WelcomeActivity.this,getResources().getString(R.string.cate_sleep),Toast.LENGTH_LONG).show();
                 }else if(diff_time<timeout && sip_time_json!=0){
                     if(!TextUtils.isEmpty(sip_package_json)){
                         //String sip_package= new String(Base64.decode(sip_package_json,Base64.DEFAULT));
@@ -270,8 +281,11 @@ public class WelcomeActivity extends BaseActivity<ISplashView, SplashPresenter<I
                         String deviceid=null;
                         try {
                             jsonObject = new JSONObject(sip_package);
+                            Log.e(GeTui.VideoLog,"WelcomActivity.."+jsonObject);
                             sip_invite=jsonObject.optString("data");
-                            gwid= jsonObject.optString("gwId");
+                            mainIntent.putExtra(Constants.SIP_INVERT_PKG_INTENT,sip_invite);
+                            SPUtils.put(Constants.SIP_INVERT_PKG_SP,sip_invite);
+                     //       gwid= jsonObject.optString("gwId");
                             deviceid= jsonObject.optString("deviceId");
                             if(TextUtils.isEmpty(deviceid)){
                                 String startstr="From: <sip:";
@@ -284,25 +298,32 @@ public class WelcomeActivity extends BaseActivity<ISplashView, SplashPresenter<I
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
-                            Log.e(Tag,"出异常了..........");
+                            Log.e(GeTui.VideoLog,"WelcomeActivity==>出异常了..........");
                         }
 
                         if(!TextUtils.isEmpty(sip_invite)){
-                            String me= (String) SPUtils2.get(WelcomeActivity.this,gwid,"");
+                          //  String me= (String) SPUtils.get(gwid,"");
+                            gwid= (String) SPUtils.get(deviceid,"");
+                            String me= (String) SPUtils.get(gwid,"");
                             String meUserName=null;
                             String mePwd=null;
                             if(!TextUtils.isEmpty(me) && me.contains("&")){
                                  meUserName= me.split("&")[0];
                                  mePwd= me.split("&")[1];
                             }
+                          //  mainIntent.putExtra(Constants.SIP_INVERT_PKG_INTENT,true);
+                            mainIntent.putExtra(Constants.IS_FROM_WEL_INTENT,true);
+                            SPUtils.put(Constants.IS_FROM_WEL_SP,true);
+                            MyApplication.getInstance().setFromWel(true);
                             MyApplication.getInstance().setSip_package_invite(sip_invite);
                             MyApplication.getInstance().setCurrentGeTuiMimiUserName(meUserName);
                             MyApplication.getInstance().setCurrentGeTuiMImiPwd(mePwd);
-                            Log.e(Tag,"sip的invite包:"+sip_invite);
-                            Log.e(Tag,"获取的deviceId:"+deviceid+"  gwid:"+gwid+" meUserName:"+meUserName+" mePwd:"+mePwd);
+                            Log.e(GeTui.VideoLog,"WelcomeActivity==>sip的invite包:"+sip_invite);
+                            MyLog.getInstance().save("sip的invite包:"+sip_invite);
+                            Log.e(GeTui.VideoLog,"WelcomeActivity==>获取的deviceId:"+deviceid+"  gwid:"+gwid+" meUserName:"+meUserName+" mePwd:"+mePwd);
                             MyLog.getInstance().save("获取的deviceId:"+deviceid+"  gwid:"+gwid+" meUserName:"+meUserName+" mePwd:"+mePwd);
                         }else{
-                            Log.e(Tag,  "sip package是空");
+                            Log.e(GeTui.VideoLog,  "WelcomeActivity==>sip package是空");
                         }
                     }
                     //Toast.makeText(WelcomeActivity.this,"收到的是:"+sip_invite,Toast.LENGTH_LONG).show();

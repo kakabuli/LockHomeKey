@@ -106,15 +106,18 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
     private NetWorkChangReceiver netWorkChangReceiver;
     private boolean isRegistered=false;
     UpgradePresenter upgradePresenter=null;
-
+    public static boolean isRunning = false;
     public static NetEvevt evevt;
     boolean isCreate=false;
+    String sip_pacage_invite=null;
+    boolean isFromWelCom=false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setContentView(R.layout.activity_main);
         super.onCreate(savedInstanceState);
         ButterKnife.bind(this);
         PermissionUtil.getInstance().requestPermission(PermissionUtil.getInstance().permission, this);
+        isRunning = true;
         rg.setOnCheckedChangeListener(this);
         MqttService mqttService=MyApplication.getInstance().getMqttService();
         if (mqttService!=null) {
@@ -122,6 +125,7 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
                 MyApplication.getInstance().getMqttService().mqttConnection(); //连接mqtt
             }
         }
+        MyLog.getInstance().save("MainActivity==>OnCreate");
         fragments.add(new HomePageFragment());
         fragments.add(new DeviceFragment());
         fragments.add(new PersonalCenterFragment());
@@ -159,10 +163,10 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
 //             mPresenter.uploadpushmethod();
 //        }
         registerNetwork();
-        startcallmethod();
-        String sip_pacage_invite = MyApplication.getInstance().getSip_package_invite();
+        sip_pacage_invite = MyApplication.getInstance().getSip_package_invite();
         // if come from phone, dont to prompt update
-        if(!TextUtils.isEmpty(sip_pacage_invite)){
+        if(!TextUtils.isEmpty(sip_pacage_invite)){  // not null sip_package
+            startcallmethod(sip_pacage_invite);
             return;
         }
         // app update info
@@ -329,14 +333,45 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
              }else {
                  Log.e(GeTui.VideoLog,"getui upload to success");
              }
-
-        }
-
-        Log.e(GeTui.VideoLog,"MainAcvity...onStart.."+!isCreate+" invert_package:"+!TextUtils.isEmpty(MyApplication.getInstance().getSip_package_invite()));
-        if( !isCreate && !TextUtils.isEmpty(MyApplication.getInstance().getSip_package_invite())){
-            startcallmethod();  // 获取Linphone端口号
         }
     }
+
+    @Override
+    protected void onResume() {
+        sip_pacage_invite = MyApplication.getInstance().getSip_package_invite();
+        // if come from phone, dont to prompt update
+//        if(TextUtils.isEmpty(sip_pacage_invite)){
+//            MyLog.getInstance().save("sip_package_invert..1");
+//            Log.e(GeTui.VideoLog,"sip_package_invert..1");
+//            sip_pacage_invite= getIntent().getStringExtra(Constants.SIP_INVERT_PKG_INTENT);
+//            if(TextUtils.isEmpty(sip_pacage_invite)){
+//                MyLog.getInstance().save("sip_package_invert..2");
+//                Log.e(GeTui.VideoLog,"sip_package_invert..2");
+//                sip_pacage_invite = (String) SPUtils.get(Constants.SIP_INVERT_PKG_SP,null);
+//            }
+//        }
+//        isFromWelCom= getIntent().getBooleanExtra(Constants.IS_FROM_WEL_INTENT,false);
+//        if(!isFromWelCom){
+//            MyLog.getInstance().save("isFromWelCom..1");
+//            Log.e(GeTui.VideoLog,"isFromWelCom..1");
+//              isFromWelCom= (boolean) SPUtils.get(Constants.IS_FROM_WEL_SP,false);
+//        }
+        isFromWelCom= MyApplication.getInstance().isFromWel();
+        MyLog.getInstance().save("MainAcvity...onResume.."+!isCreate+" invert_package:"+!TextUtils.isEmpty(sip_pacage_invite)+" isFromWelCom:"+isFromWelCom);
+        Log.e(GeTui.VideoLog,"MainAcvity...onResume.."+!isCreate+" invert_package:"+!TextUtils.isEmpty(sip_pacage_invite)+" isFromWelCom:"+isFromWelCom);
+
+        if( isFromWelCom && !isCreate && !TextUtils.isEmpty(sip_pacage_invite)){
+            startcallmethod(sip_pacage_invite);  // 获取Linphone端口号
+        }else if(!isCreate && isFromWelCom && TextUtils.isEmpty(sip_pacage_invite)){
+            Toast.makeText(MainActivity.this,getString(R.string.cateye_call_fail),Toast.LENGTH_SHORT).show();
+        }
+        isFromWelCom=false;
+        isCreate=false;
+        sip_pacage_invite=null;
+
+        super.onResume();
+    }
+
     public void uploadToken(String token) {
         Log.e(GeTui.VideoLog, "MainActivity-->ispush:" + ispush + " huawei:" + token);
         mPresenter.uploadpushmethod();
@@ -354,10 +389,18 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+     //   isFromWelCom=false;
+    }
+
+    @Override
     protected void onStop() {
         super.onStop();
-        isCreate=false;
-        MyApplication.getInstance().setSip_package_invite(null); //制空
+        Log.e(GeTui.VideoLog,"MainAcvity .. onStop..");
+        MyLog.getInstance().save("MainAcvity .. onStop..");
+        SPUtils.remove(Constants.SIP_INVERT_PKG_SP);
+        SPUtils.remove(Constants.IS_FROM_WEL_SP);
     }
 
     //检查vpn授权
@@ -559,9 +602,13 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
 
         return homeViewPager;
     }
-    private Class userPushService = GeTuiPushService.class;
+
     Timer timer;
-    private void     startcallmethod() {
+    private void startcallmethod(String sip_pacage_invite1) {
+
+        MyApplication.getInstance().setSip_package_invite(null); //制空
+        MyApplication.getInstance().setFromWel(false);
+
         long startTime = 2500;
         if (Rom.isFlyme()) {
             startTime = 5000;
@@ -571,14 +618,17 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
         final String Tag1 = "sip_kaidishi";
         if (timer == null) {
             timer = new Timer();
-            String sip_pacage_invite = MyApplication.getInstance().getSip_package_invite();
+ //           sip_pacage_invite = MyApplication.getInstance().getSip_package_invite();
+//            if(TextUtils.isEmpty(sip_pacage_invite)){
+//                sip_pacage_invite= getIntent().getStringExtra("invert");
+//            }
             timer.schedule(new TimerTask() {
                 @Override
                 public void run() {
                     int linphone_port = MyApplication.getInstance().getLinphone_port();
-                    Log.e(GeTui.VideoLog,"port:"+linphone_port);
-                    Log.e(GeTui.VideoLog,"sip_pacage_invite:"+sip_pacage_invite);
-                    if (!TextUtils.isEmpty(sip_pacage_invite)) {
+                    Log.e(GeTui.VideoLog,"WelcomeActivity==>port:"+linphone_port+" sip_pkg:"+sip_pacage_invite1);
+//                    Log.e(GeTui.VideoLog,"sip_pacage_invite:"+sip_pacage_invite);
+                    MyLog.getInstance().save("prot:"+linphone_port+" sip_pkg:"+sip_pacage_invite1);
                         if (linphone_port > 0) {
                             timer.cancel();
                             timer = null;
@@ -590,7 +640,7 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
                                 //创建了一个数据包
                                 InetAddress inetAddress = InetAddress.getLocalHost();
                                 String ipaddress = inetAddress.getHostAddress();
-                                DatagramPacket packet = new DatagramPacket(sip_pacage_invite.getBytes(), sip_pacage_invite.getBytes().length, inetAddress, linphone_port);
+                                DatagramPacket packet = new DatagramPacket(sip_pacage_invite1.getBytes(), sip_pacage_invite1.getBytes().length, inetAddress, linphone_port);
                                 //调用udp的服务发送数据包
                                 datagramSocket.send(packet);
                                 //关闭资源 ---实际上就是释放占用的端口号
@@ -607,14 +657,11 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
                             }
                         } else {
                             Log.e(Tag1, "获取端口失败");
+                            timer.cancel();
+                            timer = null;
                         }
                         Log.e(Tag1, "获取的端口是:" + linphone_port);
-                    } else {
-                        Log.e(Tag1, "Sip数据包为空");
-                        timer.cancel();
-                        timer = null;
                     }
-                }
             }, startTime, 500);
             // 2500
         }
@@ -726,6 +773,7 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        isRunning = false;
         if (isRegistered){
             if (netWorkChangReceiver!=null){
                 unregisterReceiver(netWorkChangReceiver);

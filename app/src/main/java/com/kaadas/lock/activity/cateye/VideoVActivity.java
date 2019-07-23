@@ -50,6 +50,7 @@ import com.kaadas.lock.publiclibrary.mqtt.eventbean.DeviceOnLineBean;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.MyLog;
 import com.kaadas.lock.utils.NetUtil;
 import com.kaadas.lock.utils.RecordTools;
 import com.kaadas.lock.utils.SPUtils;
@@ -369,7 +370,8 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
                 LogUtils.e(Tag,"接听了电话");
                 mPresenter.listenerCallStatus();
                 String mDeviceIp = MemeManager.getInstance().getDeviceIp();
-                Log.e(GeTui.VideoLog,"接听电话:"+mDeviceIp);
+                Log.e(GeTui.VideoLog,"VideoActivity....接听电话:"+mDeviceIp);
+                MyLog.getInstance().save("接听电话:"+mDeviceIp);
                 LinphoneHelper.acceptCall(mDeviceIp);
                 acceptCall();
             } else { //挂断
@@ -727,7 +729,7 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
     }
 
     @Override
-    public void onCallFinish() {
+    public void  onCallFinish() {
         LogUtils.e(Tag,"通话结束");
         finish();
     }

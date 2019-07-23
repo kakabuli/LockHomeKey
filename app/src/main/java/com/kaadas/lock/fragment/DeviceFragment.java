@@ -49,6 +49,7 @@ import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.NetUtil;
 import com.kaadas.lock.utils.Rom;
+import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.SPUtils2;
 import com.kaadas.lock.utils.ToastUtil;
 import com.kaadas.lock.utils.greenDao.bean.BleLockServiceInfo;
@@ -221,6 +222,9 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                             //猫眼
                             CateEyeInfo cateEyeInfo = (CateEyeInfo) homeShowBean.getObject();
                             if (cateEyeInfo != null) {
+                                if(cateEyeInfo.getServerInfo()!=null){
+                                    SPUtils.put(cateEyeInfo.getServerInfo().getDeviceId(),cateEyeInfo.getGwID());
+                                }
                                 GatewayInfo gat = MyApplication.getInstance().getGatewayById(cateEyeInfo.getGwID());
                                 if (gat != null && gat.getEvent_str() != null && gat.getEvent_str().equals("offline")) {
                                     cateEyeInfo.getServerInfo().setEvent_str("offline");
@@ -255,6 +259,18 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                                 //需要绑定咪咪网
                                 String deviceSN = gatewayInfo.getServerInfo().getDeviceSN();
                                 mPresenter.bindMimi(deviceSN, deviceSN);
+                            }else {
+                                try{
+                                    String gwid= gatewayInfo.getServerInfo().getDeviceSN();
+                                    String meName = gatewayInfo.getServerInfo().getMeUsername();
+                                    String mePwd= gatewayInfo.getServerInfo().getMePwd();
+                                    String me = meName+"&"+mePwd;
+                                    if(!TextUtils.isEmpty(gwid) && !TextUtils.isEmpty(meName) && !TextUtils.isEmpty(mePwd)){
+                                        SPUtils.put(gwid,me);
+                                    }
+                                }catch (Exception e){
+                                }
+
                             }
                             /*if (gatewayInfo!=null&&gatewayInfo.getServerInfo().getIsAdmin()==1){
                             if (gatewayInfo != null && gatewayInfo.getServerInfo().getIsAdmin() == 1) {

@@ -40,6 +40,7 @@ import com.kaadas.lock.publiclibrary.mqtt.eventbean.GatewayLockAlarmEventBean;
 import com.kaadas.lock.publiclibrary.mqtt.eventbean.GatewayLockInfoEventBean;
 import com.kaadas.lock.publiclibrary.mqtt.eventbean.GatewayResetBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.GatewayComfirmOtaResultBean;
+import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.AllBindDevices;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.GatewayOtaNotifyBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.GetBindGatewayStatusResult;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttConstant;
@@ -485,8 +486,9 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                 @Override
                 public void registrationOk() {
                     super.registrationOk();
-                    LogUtils.e("Linphone注册成功     ");
-                    MyLog.getInstance().save("Linphone注册成功     ");
+                      LogUtils.e("Linphone注册成功     ");
+//                    MyLog.getInstance().save("Linphone注册成功     ");
+                      MyLog.getInstance().save("Linphone注册成功...");
                 }
 
                 @Override
@@ -532,7 +534,23 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                     String gwId = "";
                     GatewayInfo gatewayInfo = null;
                     Log.e(GeTui.VideoLog,"获取网关列表前");
-                    List<CateEyeInfo> cateEyes = MyApplication.getInstance().getAllBindDevices().getCateEyes();
+                    AllBindDevices allBindDevices=  MyApplication.getInstance().getAllBindDevices();
+                    if(allBindDevices==null){
+                        Log.e(GeTui.VideoLog,"allBindDevices为null");
+                        if (mViewRef != null && mViewRef.get() != null) {
+                            mViewRef.get().callErrorCateInfoEmpty();
+                        }
+                        return;
+                    }
+                    List<CateEyeInfo> cateEyes= allBindDevices.getCateEyes();
+                    //List<CateEyeInfo> cateEyes = MyApplication.getInstance().getAllBindDevices().getCateEyes();
+                    if(cateEyes==null){
+                        Log.e(GeTui.VideoLog,"cateEyes为null");
+                        if (mViewRef != null && mViewRef.get() != null) {
+                            mViewRef.get().callErrorCateInfoEmpty();
+                        }
+                        return;
+                    }
                     Log.e(GeTui.VideoLog,"cateEyes的大小:"+cateEyes.size());
                     for (CateEyeInfo cateEyeInfo : cateEyes) {
                         LogUtils.e("猫眼的  getDeviceId  " + cateEyeInfo.getServerInfo().getDeviceId());

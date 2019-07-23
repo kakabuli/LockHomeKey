@@ -61,4 +61,9 @@ public class Constants {
     // oppo权限是否打开
     public static final String IS_VOVO_OPEN="IS_VOVO_OPEN";
 
+    public static final String SIP_INVERT_PKG_INTENT="SIP_INVERT_PKG_INTENT";
+    public static final String SIP_INVERT_PKG_SP="SIP_INVERT_PKG_SP";
+
+    public static final String IS_FROM_WEL_INTENT="IS_FROM_WEL_INTENT";
+    public static final String IS_FROM_WEL_SP="IS_FROM_WEL_SP";
 }

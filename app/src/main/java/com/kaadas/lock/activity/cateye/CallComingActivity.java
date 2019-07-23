@@ -23,6 +23,7 @@ import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 import com.kaadas.lock.publiclibrary.linphone.linphone.callback.PhoneAutoAccept;
 import com.kaadas.lock.publiclibrary.linphone.linphone.util.LinphoneHelper;
 import com.kaadas.lock.utils.KeyConstants;
+import com.kaadas.lock.utils.MyLog;
 import com.kaadas.lock.utils.RingTools;
 import com.kaadas.lock.utils.ftp.GeTui;
 
@@ -58,6 +59,8 @@ public class CallComingActivity extends BaseAddToApplicationActivity implements 
         ButterKnife.bind(this);
         call_coming_refuse_ll.setOnClickListener(this);
         ivAcceptCall.setOnClickListener(this);
+        MyLog.getInstance().save("CallComingActivity==>onCreate......:");
+        Log.e(GeTui.VideoLog,"CallComingActivity==>onCreate......:");
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             // 当状态栏设置为透明的时候,View渲染到状态栏
             View decorView = getWindow().getDecorView();
@@ -107,6 +110,7 @@ public class CallComingActivity extends BaseAddToApplicationActivity implements 
                 intent = new Intent();
                 intent.putExtra(KeyConstants.IS_ACCEPT_CALL, true);
                 setResult(RESULT_OK, intent);
+                MyLog.getInstance().save("CallComingActivity..接听");
                 finish();
                 break;
         }

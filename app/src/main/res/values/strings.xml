@@ -1168,4 +1168,6 @@
     <string name="modify_temp_pwd">修改临时密码</string>
     <string name="modify_force_pwd">修改胁迫密码</string>
     <string name="get_stress_list_success">获取胁迫密码列表成功</string>
+    <string name="cateye_call_fail">猫眼来电呼叫失败</string>
+    <string name="cateye_sip_invert_fail">猫眼来电呼叫失败,获取数据包失败</string>
 </resources>
