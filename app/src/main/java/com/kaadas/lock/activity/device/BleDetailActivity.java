@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Vibrator;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.InputType;
@@ -21,7 +20,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.device.bluetooth.BluetoothMoreActivity;
 import com.kaadas.lock.activity.device.bluetooth.BluetoothSharedDeviceManagementActivity;
@@ -30,7 +28,6 @@ import com.kaadas.lock.activity.device.bluetooth.fingerprint.FingerprintManagerA
 import com.kaadas.lock.activity.device.bluetooth.password.BluetoothPasswordManagerActivity;
 import com.kaadas.lock.adapter.BluetoothFunctionAdapater;
 import com.kaadas.lock.adapter.BluetoothFunctionOneLineAdapater;
-import com.kaadas.lock.adapter.BluetoothLockFunctionAdapter;
 import com.kaadas.lock.bean.BluetoothLockFunctionBean;
 import com.kaadas.lock.mvp.mvpbase.BaseBleActivity;
 import com.kaadas.lock.mvp.presenter.DeviceDetailPresenter;
@@ -62,7 +59,7 @@ import butterknife.ButterKnife;
 /**
  * Created by David on 2019/4/10
  */
-public class BluetoothLockFunctionActivity extends BaseBleActivity<IDeviceDetailView, DeviceDetailPresenter<IDeviceDetailView>> implements IDeviceDetailView, View.OnClickListener {
+public class BleDetailActivity extends BaseBleActivity<IDeviceDetailView, DeviceDetailPresenter<IDeviceDetailView>> implements IDeviceDetailView, View.OnClickListener {
     @BindView(R.id.iv_back)
     ImageView ivBack;
     @BindView(R.id.tv_bluetooth_name)
@@ -385,23 +382,23 @@ public class BluetoothLockFunctionActivity extends BaseBleActivity<IDeviceDetail
                 Intent intent;
                 switch (bluetoothLockFunctionBean.getType()){
                     case FunctionSetUtils.TYPE_PASSWORD:
-                        intent = new Intent(BluetoothLockFunctionActivity.this, BluetoothPasswordManagerActivity.class);
+                        intent = new Intent(BleDetailActivity.this, BluetoothPasswordManagerActivity.class);
                         startActivity(intent);
                         break;
                     case FunctionSetUtils.TYPE_FINGER:
-                        intent = new Intent(BluetoothLockFunctionActivity.this, FingerprintManagerActivity.class);
+                        intent = new Intent(BleDetailActivity.this, FingerprintManagerActivity.class);
                         startActivity(intent);
                         break;
                     case FunctionSetUtils.TYPE_CARD:
-                        intent = new Intent(BluetoothLockFunctionActivity.this, DoorCardManagerActivity.class);
+                        intent = new Intent(BleDetailActivity.this, DoorCardManagerActivity.class);
                         startActivity(intent);
                         break;
                     case FunctionSetUtils.TYPE_SHARE:
-                        intent = new Intent(BluetoothLockFunctionActivity.this, BluetoothSharedDeviceManagementActivity.class);
+                        intent = new Intent(BleDetailActivity.this, BluetoothSharedDeviceManagementActivity.class);
                         startActivity(intent);
                         break;
                     case FunctionSetUtils.TYPE_MORE:
-                        intent = new Intent(BluetoothLockFunctionActivity.this, BluetoothMoreActivity.class);
+                        intent = new Intent(BleDetailActivity.this, BluetoothMoreActivity.class);
                         if (lockType.startsWith("S8") || lockType.startsWith("V6") || lockType.startsWith("V7") || lockType.startsWith("S100")) {
                             intent.putExtra(KeyConstants.SOURCE, "BluetoothLockFunctionV6V7Activity");
                         }
@@ -416,23 +413,23 @@ public class BluetoothLockFunctionActivity extends BaseBleActivity<IDeviceDetail
                 Intent intent;
                 switch (bluetoothLockFunctionBean.getType()){
                     case FunctionSetUtils.TYPE_PASSWORD:
-                        intent = new Intent(BluetoothLockFunctionActivity.this, BluetoothPasswordManagerActivity.class);
+                        intent = new Intent(BleDetailActivity.this, BluetoothPasswordManagerActivity.class);
                         startActivity(intent);
                         break;
                     case FunctionSetUtils.TYPE_FINGER:
-                        intent = new Intent(BluetoothLockFunctionActivity.this, FingerprintManagerActivity.class);
+                        intent = new Intent(BleDetailActivity.this, FingerprintManagerActivity.class);
                         startActivity(intent);
                         break;
                     case FunctionSetUtils.TYPE_CARD:
-                        intent = new Intent(BluetoothLockFunctionActivity.this, DoorCardManagerActivity.class);
+                        intent = new Intent(BleDetailActivity.this, DoorCardManagerActivity.class);
                         startActivity(intent);
                         break;
                     case FunctionSetUtils.TYPE_SHARE:
-                        intent = new Intent(BluetoothLockFunctionActivity.this, BluetoothSharedDeviceManagementActivity.class);
+                        intent = new Intent(BleDetailActivity.this, BluetoothSharedDeviceManagementActivity.class);
                         startActivity(intent);
                         break;
                     case FunctionSetUtils.TYPE_MORE:
-                        intent = new Intent(BluetoothLockFunctionActivity.this, BluetoothMoreActivity.class);
+                        intent = new Intent(BleDetailActivity.this, BluetoothMoreActivity.class);
                         if (lockType.startsWith("S8") || lockType.startsWith("V6") || lockType.startsWith("V7") || lockType.startsWith("S100")) {
                             intent.putExtra(KeyConstants.SOURCE, "BluetoothLockFunctionV6V7Activity");
                         }

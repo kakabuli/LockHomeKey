@@ -119,12 +119,10 @@ public class OldBluetoothLockDetailActivity extends BaseBleActivity<IOldBluetoot
             }
         };
 
-        if (mPresenter.getBleVersion() != 2) {
-//            rlDeviceInformation.setVisibility(View.GONE);
-            changeBluetoothFunction(17);
-        } else {
-//            rlDeviceInformation.setVisibility(View.VISIBLE);
+        if (mPresenter.getBleVersion() == 2 || mPresenter.getBleVersion() == 3) {
             changeBluetoothFunction(18);
+        } else {
+            changeBluetoothFunction(17);
         }
     }
 
@@ -270,10 +268,8 @@ public class OldBluetoothLockDetailActivity extends BaseBleActivity<IOldBluetoot
     @Override
     public void onBleVersionUpdate(int version) {
         if (version != 1) {
-//            rlDeviceInformation.setVisibility(View.VISIBLE);
             changeBluetoothFunction(18);
         } else {
-//            rlDeviceInformation.setVisibility(View.GONE);
             changeBluetoothFunction(17);
         }
     }
@@ -533,29 +529,6 @@ public class OldBluetoothLockDetailActivity extends BaseBleActivity<IOldBluetoot
             }
         }
 
-
-
-
-
-
-      /*  if (power == 0) {
-            imgResId = R.mipmap.horization_power_0;
-        } else if (power <= 5) {
-            imgResId = R.mipmap.horization_power_1;
-        } else if (power <= 20) {
-            imgResId = R.mipmap.horization_power_2;
-        } else if (power <= 60) {
-            imgResId = R.mipmap.horization_power_3;
-        } else if (power <= 80) {
-            imgResId = R.mipmap.horization_power_4;
-//        } else if (power <= 100) {
-        } else {
-            imgResId = R.mipmap.horization_power_5;
-        }
-        if (imgResId != -1) {
-            ivPower.setImageResource(imgResId);
-        }*/
-        //todo  读取电量时间
         long readDeviceInfoTime = System.currentTimeMillis();
         if (readDeviceInfoTime != -1) {
             if ((System.currentTimeMillis() - readDeviceInfoTime) < 60 * 60 * 1000) {
@@ -576,12 +549,8 @@ public class OldBluetoothLockDetailActivity extends BaseBleActivity<IOldBluetoot
 
     private void showMoreItem() {
         if (hasMoreItem) {
-//            rlDeviceInformation.setVisibility(View.VISIBLE);
-//            rlDeviceInformation.setEnabled(true);
             changeBluetoothFunction(18);
         } else {
-//            rlDeviceInformation.setVisibility(View.GONE);
-//            rlDeviceInformation.setEnabled(false);
             changeBluetoothFunction(17);
         }
     }

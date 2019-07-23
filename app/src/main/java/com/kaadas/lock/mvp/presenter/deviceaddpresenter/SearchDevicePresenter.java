@@ -228,6 +228,28 @@ public class SearchDevicePresenter<T> extends BasePresenter<ISearchDeviceView> {
         bindDevice(device, isBind);
     }
 
+
+
+    private Runnable releaseRunnable = new Runnable() {
+        @Override
+        public void run() {
+            LogUtils.e("延时断开连接  ");
+            //如果此时没有连接上设备，那么结束连接   释放连接资源
+            if (mViewRef.get() != null) {
+                mViewRef.get().onConnectFailed();
+            }
+            if (bleService == null) { //判断
+                if (MyApplication.getInstance().getBleService() == null) {
+                    return;
+                } else {
+                    bleService = MyApplication.getInstance().getBleService();
+                }
+            }
+            bleService.release();  //连接蓝牙时的延时断开蓝牙连接  1
+        }
+    };
+
+
     public void bindDevice(BluetoothDevice device, boolean isBind) {
         if (bleService == null) { //判断
             if (MyApplication.getInstance().getBleService() == null) {
@@ -247,7 +269,10 @@ public class SearchDevicePresenter<T> extends BasePresenter<ISearchDeviceView> {
         }
         // 连接
         bleService.removeBleLockInfo(); //1
+
+        handler.removeCallbacks(releaseRunnable);
         bleService.connectDeviceByDevice(device); //1
+        handler.postDelayed(releaseRunnable, 15 * 1000);
         if (mViewRef.get() != null) {
             mViewRef.get().onConnecting();
         }
@@ -257,6 +282,7 @@ public class SearchDevicePresenter<T> extends BasePresenter<ISearchDeviceView> {
                     .subscribe(new Consumer<BleStateBean>() {
                         @Override
                         public void accept(BleStateBean bleStateBean) throws Exception {
+                            handler.removeCallbacks(releaseRunnable);
                             toDisposable(bindDisposable);
                             if (bleStateBean.isConnected()) {
                                 LogUtils.e(SearchDevicePresenter.class.getName() + "连接成功");
@@ -282,7 +308,6 @@ public class SearchDevicePresenter<T> extends BasePresenter<ISearchDeviceView> {
         } catch (Exception e) {
 
         }
-
     }
 
 

@@ -3,7 +3,6 @@ package com.kaadas.lock.activity.device.bluetooth;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
@@ -11,17 +10,14 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.kaadas.lock.R;
-import com.kaadas.lock.activity.device.BluetoothLockFunctionActivity;
+import com.kaadas.lock.activity.device.BleDetailActivity;
 import com.kaadas.lock.activity.device.BluetoothLockFunctionV6V7Activity;
 import com.kaadas.lock.mvp.mvpbase.BaseBleActivity;
 import com.kaadas.lock.mvp.presenter.SafeModePresenter;
 import com.kaadas.lock.mvp.view.ISafeModeView;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
-import com.kaadas.lock.publiclibrary.http.util.HttpUtils;
 import com.kaadas.lock.utils.AlertDialogUtil;
-import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
-import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.ToastUtil;
 
 import butterknife.BindView;
@@ -152,7 +148,7 @@ public class BluetoothSafeModeActivity extends BaseBleActivity<ISafeModeView, Sa
                         finish();
                     }else {
                         Intent intent = new Intent();
-                        intent.setClass(BluetoothSafeModeActivity.this, BluetoothLockFunctionActivity.class);
+                        intent.setClass(BluetoothSafeModeActivity.this, BleDetailActivity.class);
                         startActivity(intent);
                         finish();
                     }

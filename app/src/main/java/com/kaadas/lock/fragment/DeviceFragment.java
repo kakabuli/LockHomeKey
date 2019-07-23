@@ -2,7 +2,6 @@ package com.kaadas.lock.fragment;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
@@ -10,11 +9,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationManagerCompat;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,9 +22,8 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.addDevice.DeviceAddActivity;
+import com.kaadas.lock.activity.device.BleDetailActivity;
 import com.kaadas.lock.activity.device.BluetoothLockAuthorizationActivity;
-import com.kaadas.lock.activity.device.BluetoothLockFunctionActivity;
-import com.kaadas.lock.activity.device.BluetoothLockFunctionV6V7Activity;
 import com.kaadas.lock.activity.device.cateye.more.CateyeAuthorizationFunctionActivity;
 import com.kaadas.lock.activity.device.cateye.more.CateyeFunctionActivity;
 import com.kaadas.lock.activity.device.gateway.GatewayActivity;
@@ -56,7 +51,6 @@ import com.kaadas.lock.utils.NetUtil;
 import com.kaadas.lock.utils.Rom;
 import com.kaadas.lock.utils.SPUtils2;
 import com.kaadas.lock.utils.ToastUtil;
-import com.kaadas.lock.utils.ftp.GeTui;
 import com.kaadas.lock.utils.greenDao.bean.BleLockServiceInfo;
 import com.kaadas.lock.utils.greenDao.bean.CatEyeServiceInfo;
 import com.kaadas.lock.utils.greenDao.bean.DevicePower;
@@ -472,19 +466,27 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
 //                                        detailIntent.putExtra(KeyConstants.DEVICE_TYPE, model);
 //                                        startActivityForResult(detailIntent, KeyConstants.GET_BLE_POWER);
 //                                    } else {
-//                                        Intent detailIntent = new Intent(getActivity(), BluetoothLockFunctionActivity.class);
+//                                        Intent detailIntent = new Intent(getActivity(), BleDetailActivity.class);
 //                                        String model = bleLockInfo.getServerLockInfo().getModel();
 //                                        detailIntent.putExtra(KeyConstants.DEVICE_TYPE, model);
 //                                        startActivityForResult(detailIntent, KeyConstants.GET_BLE_POWER);
 //                                    }
 //                                } else {
-//                                    Intent detailIntent = new Intent(getActivity(), BluetoothLockFunctionActivity.class);
+//                                    Intent detailIntent = new Intent(getActivity(), BleDetailActivity.class);
 //                                    String model = bleLockInfo.getServerLockInfo().getModel();
 //                                    detailIntent.putExtra(KeyConstants.DEVICE_TYPE, model);
 //                                    startActivityForResult(detailIntent, KeyConstants.GET_BLE_POWER);
 //                                }
-
-                                Intent detailIntent = new Intent(getActivity(), BluetoothLockFunctionActivity.class);
+                                LogUtils.e("蓝牙的功能集是   " + bleLockInfo.getServerLockInfo().getFunctionSet());
+//                                if ("0".equals(bleLockInfo.getServerLockInfo().getFunctionSet())){  //如果已知是
+//                                    Intent detailIntent = new Intent(getActivity(), OldBluetoothLockDetailActivity.class);
+//                                    String model = bleLockInfo.getServerLockInfo().getModel();
+//                                    detailIntent.putExtra(KeyConstants.DEVICE_TYPE, model);
+//                                    startActivityForResult(detailIntent, KeyConstants.GET_BLE_POWER);
+//                                }else {
+//
+//                                }
+                                Intent detailIntent = new Intent(getActivity(), BleDetailActivity.class);
                                 String model = bleLockInfo.getServerLockInfo().getModel();
                                 detailIntent.putExtra(KeyConstants.DEVICE_TYPE, model);
                                 startActivityForResult(detailIntent, KeyConstants.GET_BLE_POWER);
