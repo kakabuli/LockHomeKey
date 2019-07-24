@@ -10,6 +10,7 @@ import android.os.Handler;
 import android.os.Vibrator;
 import android.support.annotation.Nullable;
 import android.text.InputType;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -119,7 +120,13 @@ public class OldBluetoothLockDetailActivity extends BaseBleActivity<IOldBluetoot
             }
         };
 
-        if (mPresenter.getBleVersion() == 2 || mPresenter.getBleVersion() == 3) {
+        if (mPresenter.getBleVersion() == 2 || mPresenter.getBleVersion() == 3 ||
+                (bleLockInfo!=null && bleLockInfo.getServerLockInfo()!=null && !TextUtils.isEmpty(bleLockInfo.getServerLockInfo().getBleVersion())&&
+                "2".equals(bleLockInfo.getServerLockInfo().getBleVersion()))
+                ||
+                (bleLockInfo!=null && bleLockInfo.getServerLockInfo()!=null && !TextUtils.isEmpty(bleLockInfo.getServerLockInfo().getBleVersion())&&
+                        "3".equals(bleLockInfo.getServerLockInfo().getBleVersion()))
+                ){
             changeBluetoothFunction(18);
         } else {
             changeBluetoothFunction(17);

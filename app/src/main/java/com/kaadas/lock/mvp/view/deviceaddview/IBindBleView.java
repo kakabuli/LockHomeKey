@@ -65,4 +65,14 @@ public interface IBindBleView extends IBaseView {
      * 未知锁型号
      */
     void unknownFunctionSet(int functionSet);
+
+    /**
+     *  读取功能集成功
+     */
+    void readFunctionSetSuccess(int functionSet);
+
+    /**
+     *  读取功能集失败
+     */
+    void readFunctionSetFailed(Throwable throwable);
 }

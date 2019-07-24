@@ -510,15 +510,18 @@ public class BleService extends Service {
                     break;
 
                 case BLeConstants.UUID_LOCK_FUNCTION:
-                    LogUtils.e("锁支持功能   字节1  " + Integer.toBinaryString(characteristic.getValue()[0] & 0xff) + "  字节2  " + Integer.toBinaryString(characteristic.getValue()[1] & 0xff));
-                    readSystemIDSubject.onNext(new ReadInfoBean(ReadInfoBean.TYPE_LOCK_FUN, characteristic.getValue()));
+                    LogUtils.e("锁支持功能   字节1  " + Integer.toBinaryString(value[0] & 0xff) + "  字节2  " + Integer.toBinaryString(value[1] & 0xff));
+                    readSystemIDSubject.onNext(new ReadInfoBean(ReadInfoBean.TYPE_LOCK_FUN, value));
                     break;
                 case BLeConstants.UUID_LOCK_STATUS:
-                    LogUtils.e("锁状态  字节1  " + Integer.toBinaryString(characteristic.getValue()[0] & 0xff) + "  字节2  " + Integer.toBinaryString(characteristic.getValue()[1] & 0xff));
-                    readSystemIDSubject.onNext(new ReadInfoBean(ReadInfoBean.TYPE_LOCK_STATUS, characteristic.getValue()));
+                    LogUtils.e("锁状态  字节1  " + Integer.toBinaryString(value[0] & 0xff) + "  字节2  " + Integer.toBinaryString(value[1] & 0xff));
+                    readSystemIDSubject.onNext(new ReadInfoBean(ReadInfoBean.TYPE_LOCK_STATUS, value));
                     break;
                 case BLeConstants.UUID_FUNCTION_SET:
-                    LogUtils.e("锁功能集  字节1  " +  Rsa.bytesToHexString(characteristic.getValue()) );
+                    LogUtils.e("锁功能集  字节1  " +  Rsa.bytesToHexString(value) );
+                    if (value == null || value.length <= 0) {
+                        return  ;
+                    }
                     readSystemIDSubject.onNext(new ReadInfoBean(ReadInfoBean.TYPE_LOCK_FUNCTION_SET,characteristic.getValue()[0] & 0xff));
                     break;
             }

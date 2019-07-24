@@ -1,9 +1,10 @@
 package com.kaadas.lock.utils;
 
+import android.text.TextUtils;
+
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.bean.BluetoothLockFunctionBean;
-import com.kaadas.lock.bean.FunctionBean;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,9 +12,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import retrofit2.http.PUT;
 
-public class FunctionSetUtils {
+public class BleLockUtils {
 
     public static final int TYPE_PASSWORD = 1;
     public static final int TYPE_FINGER = 2;
@@ -166,15 +166,4 @@ public class FunctionSetUtils {
 
         return functionBeans;
     }
-
-
-    public static void main(String[] args) {
-
-        List<BluetoothLockFunctionBean> functionBeans = new ArrayList<>();
-        Integer[] funcs = FUNCTION_SET.get(5);
-        System.out.println(funcs == null);
-
-
-    }
-
 }

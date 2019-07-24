@@ -1170,4 +1170,5 @@
     <string name="get_stress_list_success">获取胁迫密码列表成功</string>
     <string name="cateye_call_fail">猫眼来电呼叫失败</string>
     <string name="cateye_sip_invert_fail">猫眼来电呼叫失败,获取数据包失败</string>
+    <string name="read_lock_info_failed">读取锁信息失败，请重试！</string>
 </resources>

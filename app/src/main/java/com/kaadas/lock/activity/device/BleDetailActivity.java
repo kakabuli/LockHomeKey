@@ -41,7 +41,7 @@ import com.kaadas.lock.publiclibrary.http.util.HttpUtils;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.BatteryView;
 import com.kaadas.lock.utils.DateUtils;
-import com.kaadas.lock.utils.FunctionSetUtils;
+import com.kaadas.lock.utils.BleLockUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.StringUtil;
@@ -353,7 +353,7 @@ public class BleDetailActivity extends BaseBleActivity<IDeviceDetailView, Device
     private void initRecycleview() {
         String functionSet = bleLockInfo.getServerLockInfo().getFunctionSet(); //锁功能集
         int func = Integer.parseInt(functionSet);
-        List<BluetoothLockFunctionBean> supportFunction = FunctionSetUtils.getSupportFunction(func);
+        List<BluetoothLockFunctionBean> supportFunction = BleLockUtils.getSupportFunction(func);
         MyGridItemDecoration dividerItemDecoration;
         if (supportFunction.size() <= 2) {
             detailFunctionOnLine.setLayoutManager(new GridLayoutManager(this, 2));
@@ -381,23 +381,23 @@ public class BleDetailActivity extends BaseBleActivity<IDeviceDetailView, Device
             public void onItemClick(int position, BluetoothLockFunctionBean bluetoothLockFunctionBean) {
                 Intent intent;
                 switch (bluetoothLockFunctionBean.getType()){
-                    case FunctionSetUtils.TYPE_PASSWORD:
+                    case BleLockUtils.TYPE_PASSWORD:
                         intent = new Intent(BleDetailActivity.this, BluetoothPasswordManagerActivity.class);
                         startActivity(intent);
                         break;
-                    case FunctionSetUtils.TYPE_FINGER:
+                    case BleLockUtils.TYPE_FINGER:
                         intent = new Intent(BleDetailActivity.this, FingerprintManagerActivity.class);
                         startActivity(intent);
                         break;
-                    case FunctionSetUtils.TYPE_CARD:
+                    case BleLockUtils.TYPE_CARD:
                         intent = new Intent(BleDetailActivity.this, DoorCardManagerActivity.class);
                         startActivity(intent);
                         break;
-                    case FunctionSetUtils.TYPE_SHARE:
+                    case BleLockUtils.TYPE_SHARE:
                         intent = new Intent(BleDetailActivity.this, BluetoothSharedDeviceManagementActivity.class);
                         startActivity(intent);
                         break;
-                    case FunctionSetUtils.TYPE_MORE:
+                    case BleLockUtils.TYPE_MORE:
                         intent = new Intent(BleDetailActivity.this, BluetoothMoreActivity.class);
                         if (lockType.startsWith("S8") || lockType.startsWith("V6") || lockType.startsWith("V7") || lockType.startsWith("S100")) {
                             intent.putExtra(KeyConstants.SOURCE, "BluetoothLockFunctionV6V7Activity");
@@ -412,23 +412,23 @@ public class BleDetailActivity extends BaseBleActivity<IDeviceDetailView, Device
             public void onItemClick(int position, BluetoothLockFunctionBean bluetoothLockFunctionBean) {
                 Intent intent;
                 switch (bluetoothLockFunctionBean.getType()){
-                    case FunctionSetUtils.TYPE_PASSWORD:
+                    case BleLockUtils.TYPE_PASSWORD:
                         intent = new Intent(BleDetailActivity.this, BluetoothPasswordManagerActivity.class);
                         startActivity(intent);
                         break;
-                    case FunctionSetUtils.TYPE_FINGER:
+                    case BleLockUtils.TYPE_FINGER:
                         intent = new Intent(BleDetailActivity.this, FingerprintManagerActivity.class);
                         startActivity(intent);
                         break;
-                    case FunctionSetUtils.TYPE_CARD:
+                    case BleLockUtils.TYPE_CARD:
                         intent = new Intent(BleDetailActivity.this, DoorCardManagerActivity.class);
                         startActivity(intent);
                         break;
-                    case FunctionSetUtils.TYPE_SHARE:
+                    case BleLockUtils.TYPE_SHARE:
                         intent = new Intent(BleDetailActivity.this, BluetoothSharedDeviceManagementActivity.class);
                         startActivity(intent);
                         break;
-                    case FunctionSetUtils.TYPE_MORE:
+                    case BleLockUtils.TYPE_MORE:
                         intent = new Intent(BleDetailActivity.this, BluetoothMoreActivity.class);
                         if (lockType.startsWith("S8") || lockType.startsWith("V6") || lockType.startsWith("V7") || lockType.startsWith("S100")) {
                             intent.putExtra(KeyConstants.SOURCE, "BluetoothLockFunctionV6V7Activity");

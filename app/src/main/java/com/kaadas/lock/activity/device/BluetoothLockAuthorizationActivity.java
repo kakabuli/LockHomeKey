@@ -118,6 +118,21 @@ public class BluetoothLockAuthorizationActivity extends BaseBleActivity<IOldBlue
                 }
             }
         };
+
+
+        if (mPresenter.getBleVersion() == 2 || mPresenter.getBleVersion() == 3 ||
+                (bleLockInfo!=null && bleLockInfo.getServerLockInfo()!=null && !TextUtils.isEmpty(bleLockInfo.getServerLockInfo().getBleVersion())&&
+                        "2".equals(bleLockInfo.getServerLockInfo().getBleVersion()))
+                ||
+                (bleLockInfo!=null && bleLockInfo.getServerLockInfo()!=null && !TextUtils.isEmpty(bleLockInfo.getServerLockInfo().getBleVersion())&&
+                        "3".equals(bleLockInfo.getServerLockInfo().getBleVersion()))
+                ){
+             //可以查设备信息
+            rlDeviceInformation.setVisibility(View.VISIBLE);
+        } else {
+            //不可以查设备信息
+            rlDeviceInformation.setVisibility(View.GONE);
+        }
     }
 
     private void showLockType() {
@@ -343,7 +358,11 @@ public class BluetoothLockAuthorizationActivity extends BaseBleActivity<IOldBlue
 
     @Override
     public void onBleVersionUpdate(int version) {
-
+        if (version == 1){
+            rlDeviceInformation.setVisibility(View.GONE);
+        }else {
+            rlDeviceInformation.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -487,7 +506,8 @@ public class BluetoothLockAuthorizationActivity extends BaseBleActivity<IOldBlue
                         }
                         return;
                     }
-                    mPresenter.openLock();
+                    LogUtils.e("开锁   ");
+                    mPresenter.currentOpenLock();
                 }
                 vibrate(this, 150);
                 break;
