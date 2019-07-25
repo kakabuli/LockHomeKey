@@ -138,7 +138,7 @@ public class DeviceMorePresenter extends BlePresenter<IDeviceMoreView> {
                         LogUtils.e("获取到音量   " + voice);
                         String lang = new String(new byte[]{deValue[9], deValue[10]});  //语言设置
                         int battery = deValue[11] & 0xff; //电量
-                        if (bleLockInfo.getBattery() != -1) {
+                        if (bleLockInfo.getBattery() == -1) {
                             bleLockInfo.setBattery(battery);
                         }
                         byte[] time = new byte[]{deValue[12], deValue[13], deValue[14], deValue[15]};  //锁的时间

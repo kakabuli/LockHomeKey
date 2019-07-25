@@ -156,7 +156,7 @@ public class BleDetailActivity extends BaseBleActivity<IDeviceDetailView, Device
         showLockType();
 //        initData();
         initClick();
-        showData();
+
         lockRunnable = new Runnable() {
             @Override
             public void run() {
@@ -205,35 +205,8 @@ public class BleDetailActivity extends BaseBleActivity<IDeviceDetailView, Device
 
     private void changeLockIcon(Intent intent) {
         String model = intent.getStringExtra(KeyConstants.DEVICE_TYPE);
-        if (!TextUtils.isEmpty(model)) {
-            if (model.contains("K7")) {
-                ivLockIcon.setImageResource(R.mipmap.bluetooth_lock_k7);
-            } else if (model.contains("S8C")) {
-                ivLockIcon.setImageResource(R.mipmap.bluetooth_lock_s8);
-            } else if (model.contains("V6")) {
-                ivLockIcon.setImageResource(R.mipmap.bluetooth_lock_v6);
-            } else if (model.contains("V7") || model.contains("S100")) {
-                ivLockIcon.setImageResource(R.mipmap.bluetooth_lock_v7);
-            } else if (model.contains("K8-T")) {
-                ivLockIcon.setImageResource(R.mipmap.bluetooth_lock_k8_t);
-            } else if (model.contains("K8")) {
-                ivLockIcon.setImageResource(R.mipmap.bluetooth_lock_k8);
-            } else if (model.contains("K9")) {
-                ivLockIcon.setImageResource(R.mipmap.bluetooth_lock_k9);
-            } else if (model.contains("KX")) {
-                ivLockIcon.setImageResource(R.mipmap.bluetooth_lock_kx);
-            } else if (model.contains("S8")) {
-                ivLockIcon.setImageResource(R.mipmap.bluetooth_lock_s8);
-            } else if (model.contains("QZ013")) {
-                ivLockIcon.setImageResource(R.mipmap.bluetooth_lock_qz013);
-            } else if (model.contains("QZ012")) {
-                ivLockIcon.setImageResource(R.mipmap.bluetooth_lock_qz012);
-            } else if (model.contains("K100")) {
-                ivLockIcon.setImageResource(R.mipmap.bluetooth_lock_k100);
-            } else if (model.contains("S6")) {
-                ivLockIcon.setImageResource(R.mipmap.bluetooth_lock_s6);
-            }
-        }
+        ivLockIcon.setImageResource(BleLockUtils.getDetailImageByModel(model));
+
     }
 
     @Override
@@ -260,6 +233,8 @@ public class BleDetailActivity extends BaseBleActivity<IDeviceDetailView, Device
     @Override
     protected void onResume() {
         super.onResume();
+        //每次显示界面都重新设置状态和电量
+        showData();
         if (mPresenter.getBleLockInfo() != null && mPresenter.getBleLockInfo().getServerLockInfo() != null && mPresenter.getBleLockInfo().getServerLockInfo().getLockNickName() != null) {
             LogUtils.e("设备昵称是   " + mPresenter.getBleLockInfo().getServerLockInfo().getLockNickName());
             tvBluetoothName.setText(mPresenter.getBleLockInfo().getServerLockInfo().getLockNickName());

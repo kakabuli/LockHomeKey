@@ -1216,7 +1216,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
         LogUtils.e("收到服务器数据  " + lockRecords.size());
 //        currentPage = page + 1;
         groupData(lockRecords);
-        LogUtils.d("davi list " + list.toString());
+        LogUtils.d("davi showDatas " + list.toString());
         bluetoothRecordAdapter.notifyDataSetChanged();
 //        if (page == 1) { //这时候是刷新
 //            refreshLayout.finishRefresh();

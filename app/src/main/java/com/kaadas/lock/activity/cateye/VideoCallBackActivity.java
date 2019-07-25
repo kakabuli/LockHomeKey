@@ -2,7 +2,6 @@ package com.kaadas.lock.activity.cateye;
 
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -12,16 +11,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kaadas.lock.R;
-import com.kaadas.lock.fragment.BluetoothOpenLockRecordFragment;
-import com.kaadas.lock.fragment.BluetoothWarnInformationFragment;
 import com.kaadas.lock.fragment.RecordingFragment;
-import com.kaadas.lock.fragment.SnapshotFragment;
 import com.kaadas.lock.fragment.SnapshotFragment1;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.mvp.presenter.cateye.VideoCallBackPresenter;
 import com.kaadas.lock.mvp.view.cateye.IVedeoCallBack;
 import com.kaadas.lock.publiclibrary.linphone.MemeManager;
-import com.kaadas.lock.publiclibrary.linphone.linphone.util.LinphoneHelper;
 import com.kaadas.lock.utils.Constants;
 
 import butterknife.BindView;

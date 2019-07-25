@@ -162,6 +162,7 @@ public class OldBluetoothLockDetailActivity extends BaseBleActivity<IOldBluetoot
     @Override
     protected void onResume() {
         super.onResume();
+        showData();
         if (mPresenter.getBleLockInfo() != null && mPresenter.getBleLockInfo().getServerLockInfo() != null && mPresenter.getBleLockInfo().getServerLockInfo().getLockNickName() != null) {
             LogUtils.e("设备昵称是   " + mPresenter.getBleLockInfo().getServerLockInfo().getLockNickName());
             tvBluetoothName.setText(mPresenter.getBleLockInfo().getServerLockInfo().getLockNickName());
@@ -171,7 +172,7 @@ public class OldBluetoothLockDetailActivity extends BaseBleActivity<IOldBluetoot
     private void initView() {
         Intent intent = getIntent();
         type = intent.getStringExtra(KeyConstants.DEVICE_TYPE);
-        showData();
+
     }
 
 

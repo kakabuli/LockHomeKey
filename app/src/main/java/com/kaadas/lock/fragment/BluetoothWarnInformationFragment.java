@@ -109,12 +109,12 @@ public class BluetoothWarnInformationFragment extends BaseBleFragment<IWarringRe
     private void initRecycleView() {
     /*    List<BluetoothItemRecordBean> itemList1 = new ArrayList<>();
         itemList1.add(new BluetoothItemRecordBean("jff", "jfji", KeyConstants.BLUETOOTH_RECORD_WARN, "fjjf", true, true));
-        list.add(new BluetoothRecordBean("jfjfk", itemList1, false));
+        showDatas.add(new BluetoothRecordBean("jfjfk", itemList1, false));
         List<BluetoothItemRecordBean> itemList2 = new ArrayList<>();
         itemList2.add(new BluetoothItemRecordBean("jff", "jfji", KeyConstants.BLUETOOTH_RECORD_WARN, "fjjf", true, false));
         itemList2.add(new BluetoothItemRecordBean("jff", "jfji", KeyConstants.BLUETOOTH_RECORD_COMMON, "fjjf", false, false));
         itemList2.add(new BluetoothItemRecordBean("jff", "jfji", KeyConstants.BLUETOOTH_RECORD_WARN, "fjjf", false, true));
-        list.add(new BluetoothRecordBean("jfjfk", itemList2, true));*/
+        showDatas.add(new BluetoothRecordBean("jfjfk", itemList2, true));*/
         bluetoothWarnMessageAdapter = new BluetoothWarnMessageAdapter(list);
         recycleview.setLayoutManager(new LinearLayoutManager(getActivity()));
         recycleview.setAdapter(bluetoothWarnMessageAdapter);
@@ -161,7 +161,7 @@ public class BluetoothWarnInformationFragment extends BaseBleFragment<IWarringRe
             itemList.add(new BluetoothItemRecordBean(content, "", KeyConstants.BLUETOOTH_RECORD_WARN,
                     record.getWarningTime() + "", true, true));
 
-            list.add(new BluetoothRecordBean(titleTime, itemList, true));
+            showDatas.add(new BluetoothRecordBean(titleTime, itemList, true));
         }*/
 
         bluetoothWarnMessageAdapter.notifyDataSetChanged();

@@ -1036,7 +1036,7 @@ public class OldBleLockFragment extends BaseBleFragment<IOldBleLockView, OldBleL
     public void onLoadServerRecord(List<OpenLockRecord> lockRecords, int page) {
         LogUtils.e("收到服务器数据  " + lockRecords.size());
         groupData(lockRecords);
-        LogUtils.d("davi list " + list.toString());
+        LogUtils.d("davi showDatas " + list.toString());
         bluetoothRecordAdapter.notifyDataSetChanged();
     }
 

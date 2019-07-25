@@ -8,9 +8,11 @@ import android.text.TextUtils;
 
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
+import com.kaadas.lock.publiclibrary.bean.ForeverPassword;
 import com.kaadas.lock.publiclibrary.ble.bean.OpenLockRecord;
 import com.kaadas.lock.publiclibrary.ble.bean.OperationLockRecord;
 import com.kaadas.lock.publiclibrary.ble.bean.WarringRecord;
+import com.kaadas.lock.publiclibrary.http.result.GetPasswordResult;
 import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.Rsa;
@@ -48,9 +50,9 @@ public class BleUtil {
 
 
     public static final String ADMINISTRATOR_PASSWORD_MODIFY = "修改管理员密码";
-    public static final String PASSWORD_ADD= "添加密码";
+    public static final String PASSWORD_ADD = "添加密码";
     public static final String PASSWORD_DELETE = "删除密码";
-    public static final String FINGERPRINT_ADD= "添加指纹";
+    public static final String FINGERPRINT_ADD = "添加指纹";
     public static final String FINGERPRINT_DELETE = "删除指纹";
     public static final String FACE_ADD = "人脸添加";
     public static final String FACE_DELETE = "人脸删除";
@@ -234,7 +236,7 @@ public class BleUtil {
             default:
                 if ((payload[5] & 0xff) == 103) {
                     openType = PHONE;
-                }else {
+                } else {
                     openType = UNKNOWN_OPEN;
                 }
                 break;
@@ -346,20 +348,20 @@ public class BleUtil {
     }
 
     public static OperationLockRecord parseOperationRecord(byte[] payload) {
-        int eventType = payload[5]& 0xff;
+        int eventType = payload[5] & 0xff;
         byte[] byteIndex = new byte[2];
-        System.arraycopy(payload, 2,byteIndex , 0, 2);
+        System.arraycopy(payload, 2, byteIndex, 0, 2);
         int index = Rsa.bytesToInt(byteIndex);
 
-        OperationLockRecord operationLockRecord=null;
+        OperationLockRecord operationLockRecord = null;
         /**
          * 0x01：Operation操作(动作类)
          * 0x02：Program程序(用户管理类)
          * 0x03：Alarm
          *type-source-code 都是int值 以中划线分割
          * */
-        LogUtils.e("eventType "+eventType+" index  "+index );
-        if (1==eventType||2==eventType){
+        LogUtils.e("eventType " + eventType + " index  " + index);
+        if (1 == eventType || 2 == eventType) {
             int eventSource1 = payload[6] & 0xff;
             int eventCode = payload[7] & 0xff;
             int userId1 = payload[8] & 0xff;
@@ -370,21 +372,20 @@ public class BleUtil {
             //开门时间秒
             long openTimes = time + DEFINE_TIME;
             String openDoorTime = DateUtils.getDateTimeFromMillisecond(openTimes * 1000);//要上传的开锁时间
-            operationLockRecord=new OperationLockRecord(eventType,eventSource1,eventCode,userId1,openDoorTime,MyApplication.getInstance().getUid());
+            operationLockRecord = new OperationLockRecord(eventType, eventSource1, eventCode, userId1, openDoorTime, MyApplication.getInstance().getUid());
 
-        }else if (3==eventType){
-            operationLockRecord=new OperationLockRecord(eventType,0,0,0,"",MyApplication.getInstance().getUid());
+        } else if (3 == eventType) {
+            operationLockRecord = new OperationLockRecord(eventType, 0, 0, 0, "", MyApplication.getInstance().getUid());
         }
         return operationLockRecord;
     }
 
-    public static boolean isMac(String mac){
-        if (TextUtils.isEmpty(mac)){
+    public static boolean isMac(String mac) {
+        if (TextUtils.isEmpty(mac)) {
             return false;
         }
         return false;
     }
-
 
 
     /**
@@ -398,7 +399,7 @@ public class BleUtil {
      * 0x07：Face Recognition人脸识别
      * 0xFF：不确定
      */
-    public static String getOpenLockEventSourceContent(int eventSource,int userId) {
+    public static String getOpenLockEventSourceContent(int eventSource, int userId) {
         String openType = "";
         switch (eventSource & 0xff) {
             case 0:
@@ -522,6 +523,103 @@ public class BleUtil {
     }
 
 
+    public static String getNickName(OperationLockRecord record, GetPasswordResult passwordResults) {
+        String nickName = "";
+        int eventType = record.getEventType();
+        int eventSource = record.getEventSource();
+        int eventCode = record.getEventCode();
+        int uNum = record.getUserNum();
+        nickName = uNum == 103 ? "App" : record.getUserNum() > 9 ? record.getUserNum() + "" : "0" + record.getUserNum();
+        if (1 == eventType) {  //开门关门类型
+            switch (eventSource) {
+                case 0x00://：Keypad键盘  密码开锁
+                    List<ForeverPassword> pwdList = passwordResults.getData().getPwdList();
+                    for (ForeverPassword password : pwdList) {
+                        if (Integer.parseInt(password.getNum()) == uNum) {
+                            nickName = password.getNickName();
+                        }
+                    }
+                    List<GetPasswordResult.DataBean.TempPassword> tempPwdList = passwordResults.getData().getTempPwdList();
+                    for (GetPasswordResult.DataBean.TempPassword password : tempPwdList) {
+                        if (Integer.parseInt(password.getNum()) == uNum) {
+                            nickName = password.getNickName();
+                        }
+                    }
+                    break;
+
+                case 0x03://：RFID卡片
+                    List<GetPasswordResult.DataBean.Card> cards = passwordResults.getData().getCardList();
+                    for (GetPasswordResult.DataBean.Card password : cards) {
+                        if (Integer.parseInt(password.getNum()) == uNum) {
+                            nickName = password.getNickName();
+                        }
+                    }
+                    break;
+                case 0x04://：Fingerprint指纹
+                    List<GetPasswordResult.DataBean.Fingerprint> fingerprints = passwordResults.getData().getFingerprintList();
+                    for (GetPasswordResult.DataBean.Fingerprint password : fingerprints) {
+                        if (Integer.parseInt(password.getNum()) == uNum) {
+                            nickName = password.getNickName();
+                        }
+                    }
+                    break;
+            }
+        } else if (2 == eventType) {  //
+            nickName = BleUtil.getOperationProgramContent(eventCode);
+        }
+        return nickName;
+    }
+
+
+    public static String getOpenType(OperationLockRecord record ) {
+        String openType = "";
+        int eventType = record.getEventType();
+        int eventSource = record.getEventSource();
+        int eventCode = record.getEventCode();
+        int uNum = record.getUserNum();
+        openType = uNum == 103 ? "App" : record.getUserNum() > 9 ? record.getUserNum() + "" : "0" + record.getUserNum();
+        if (1 == eventType) {  //开门关门类型
+            switch (eventSource) {
+                case 0x00:// "密码"  break;
+                    openType = MyApplication.getInstance().getString(R.string.password_open);
+                    break;
+                case 0x01:// "遥控";  break;
+                    openType = MyApplication.getInstance().getString(R.string.rf_open);
+                    break;
+                case 0x02:// = "手动";  break;
+                    openType = MyApplication.getInstance().getString(R.string.manual_open);
+                    break;
+                case 0x03://= "卡片";  break;
+                    openType = MyApplication.getInstance().getString(R.string.rfid_open);
+                    break;
+                case 0x04://= "指纹";  break;
+                    openType = MyApplication.getInstance().getString(R.string.fingerprint_open);
+                    break;
+                case 0x05://= "语音";  break;
+                    openType = MyApplication.getInstance().getString(R.string.voice_open);
+                    break;
+                case 0x06:// = "静脉";  break;
+                    openType = MyApplication.getInstance().getString(R.string.finger_vein_open);
+                    break;
+                case 0x07:// = "人脸";  break;
+                    openType = MyApplication.getInstance().getString(R.string.face_recognition_open);
+                    break;
+                case 0x08://= "手机";  break;
+                    openType = MyApplication.getInstance().getString(R.string.app_open);
+                    break;
+                case 0xFF:
+                    if (uNum == 103) {
+                        openType = MyApplication.getInstance().getString(R.string.app_open);
+                    } else {
+                        openType = MyApplication.getInstance().getString(R.string.unknown_open);
+                    }
+                    break;
+            }
+        } else if (2 == eventType) {  //
+            openType = BleUtil.getOperationProgramContent(eventCode);
+        }
+        return openType;
+    }
 
 
 }

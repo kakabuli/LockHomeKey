@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -13,12 +12,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.kaadas.lock.R;
-import com.kaadas.lock.fragment.BluetoothOpenLockRecordFragment;
-import com.kaadas.lock.fragment.BluetoothWarnInformationFragment;
 import com.kaadas.lock.fragment.GatewayOpenLockRecordFragment;
 import com.kaadas.lock.fragment.GatewayWarnInformationFragment;
 import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
-import com.kaadas.lock.publiclibrary.bean.GwLockInfo;
 import com.kaadas.lock.utils.KeyConstants;
 
 import butterknife.BindView;

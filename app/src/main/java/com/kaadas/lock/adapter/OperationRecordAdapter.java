@@ -35,7 +35,6 @@ public class OperationRecordAdapter extends BaseSectionQuickAdapter<OperationSec
             tvTime.setText(item.t.getEventTime());
             String openLockEventSourceContent = BleUtil.getOpenLockEventSourceContent(eventSource, item.t.getUserNum());
             tvType.setText(openLockEventSourceContent);
-
             tvName.setText("103".equals(userNum)?"App":userNum);
             if (passwordResults != null) {
                 switch (eventType) {

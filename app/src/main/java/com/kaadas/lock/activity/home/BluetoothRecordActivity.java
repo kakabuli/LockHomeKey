@@ -11,7 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.kaadas.lock.R;
-import com.kaadas.lock.fragment.BluetoothOpenLockRecordFragment;
+import com.kaadas.lock.fragment.BleOpenRecordFragment;
 import com.kaadas.lock.fragment.BluetoothWarnInformationFragment;
 import com.kaadas.lock.fragment.OperationRecordFragment;
 import com.kaadas.lock.mvp.mvpbase.BaseBleActivity;
@@ -82,7 +82,7 @@ public class BluetoothRecordActivity extends BaseBleActivity<IBleView, BlePresen
         if (isSupportOperationRecord) {
             recordFragment = new OperationRecordFragment();
         } else {
-            recordFragment = new BluetoothOpenLockRecordFragment();
+            recordFragment = new BleOpenRecordFragment();
         }
 
         transaction.add(R.id.content, recordFragment);
@@ -115,7 +115,7 @@ public class BluetoothRecordActivity extends BaseBleActivity<IBleView, BlePresen
                     if (isSupportOperationRecord){
                         recordFragment = new OperationRecordFragment();
                     }else {
-                        recordFragment = new BluetoothOpenLockRecordFragment();
+                        recordFragment = new BleOpenRecordFragment();
                     }
                     fragmentTransaction.add(R.id.content, recordFragment);
                 }

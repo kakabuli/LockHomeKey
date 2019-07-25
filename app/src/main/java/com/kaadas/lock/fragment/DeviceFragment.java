@@ -602,29 +602,7 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
 
     @Override
     public void getDevicePowerFail(String gatewayId, String deviceId) {
-     /*   //获取电量失败
-        if (mDeviceList != null && mDeviceList.size() > 0) {
-            for (HomeShowBean device : mDeviceList) {
-                //猫眼电量
-                if (HomeShowBean.TYPE_CAT_EYE == device.getDeviceType()) {
-                    if (device.getDeviceId().equals(deviceId)) {
-                        CateEyeInfo cateEyeInfo = (CateEyeInfo) device.getObject();
-                        cateEyeInfo.getServerInfo().setEvent_str("offline");
-                        if (deviceDetailAdapter != null) {
-                            deviceDetailAdapter.notifyDataSetChanged();
-                        }
-                    }
-                } else if (HomeShowBean.TYPE_GATEWAY_LOCK == device.getDeviceType()) {
-                    if (device.getDeviceId().equals(deviceId)) {
-                        GwLockInfo gwLockInfo = (GwLockInfo) device.getObject();
-                        gwLockInfo.getServerInfo().setEvent_str("offline");
-                        if (deviceDetailAdapter != null) {
-                            deviceDetailAdapter.notifyDataSetChanged();
-                        }
-                    }
-                }
-            }
-        }*/
+
 
     }
 
