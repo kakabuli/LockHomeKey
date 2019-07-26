@@ -36,11 +36,13 @@ import com.kaadas.lock.publiclibrary.bean.ForeverPassword;
 import com.kaadas.lock.publiclibrary.ble.BleProtocolFailedException;
 import com.kaadas.lock.publiclibrary.ble.BleUtil;
 import com.kaadas.lock.publiclibrary.ble.bean.OpenLockRecord;
+import com.kaadas.lock.publiclibrary.ble.bean.OperationLockRecord;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.result.GetPasswordResult;
 import com.kaadas.lock.publiclibrary.http.util.HttpUtils;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.AnimationsContainer;
+import com.kaadas.lock.utils.BleLockUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.PermissionUtil;
@@ -58,7 +60,7 @@ import butterknife.ButterKnife;
 public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresenter<IBleLockView>>
         implements View.OnClickListener, IBleLockView {
 
-    List<BluetoothRecordBean> list = new ArrayList<>();
+    List<BluetoothRecordBean> showDatas = new ArrayList<>();
     @BindView(R.id.recycleview)
     RecyclerView recycleview;
     @BindView(R.id.iv_external_big)
@@ -108,6 +110,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
     boolean hasData;
     private boolean isLoadingBleRecord;  //正在加载锁上数据
     private boolean isDestroy = false;
+    private boolean supportOperationRecord = false;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -133,7 +136,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
         isDestroy = false;
         if (!isDestroy) {
             if (!mPresenter.isAttach()) {
-                mPresenter.attachView( this);
+                mPresenter.attachView(this);
             }
             if (isCurrentFragment && homeFragment.isSelectHome) {
                 LogUtils.e("setBleLockInfo    52   ");
@@ -149,7 +152,12 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
                 onChangeInitView();
             }
         }
-        mPresenter.getOpenRecordFromServer(1, bleLockInfo);
+        if (supportOperationRecord) {
+            mPresenter.getOperationRecordFromServer(1);
+        } else {
+            mPresenter.getOpenRecordFromServer(1, bleLockInfo);
+        }
+
     }
 
     @Override
@@ -163,6 +171,9 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         Bundle arguments = getArguments();
         bleLockInfo = (BleLockInfo) arguments.getSerializable(KeyConstants.BLE_LOCK_INFO);
+        if (bleLockInfo != null && bleLockInfo.getServerLockInfo() != null && "3".equals(bleLockInfo.getServerLockInfo().getBleVersion())) {
+            supportOperationRecord = BleLockUtils.isSupportOperationRecord(Integer.parseInt(bleLockInfo.getServerLockInfo().getFunctionSet()));
+        }
         LogUtils.e("蓝牙界面   onCreateView   获取到的设备是否是空  " + (bleLockInfo == null));
         position = arguments.getInt(KeyConstants.FRAGMENT_POSITION);
         lockRunnable = new Runnable() {
@@ -204,7 +215,6 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
         tvMore.setOnClickListener(this);
         tvSynchronizedRecord.setOnClickListener(this);
         ivDeviceDynamic.setOnClickListener(this);
-//        mPresenter.getOpenRecordFromServer(1, bleLockInfo);
         initView();
         return view;
     }
@@ -378,7 +388,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
     }
 
     private void initRecycleView() {
-        bluetoothRecordAdapter = new BluetoothRecordAdapter(list);
+        bluetoothRecordAdapter = new BluetoothRecordAdapter(showDatas);
         recycleview.setLayoutManager(new LinearLayoutManager(getActivity()));
         recycleview.setAdapter(bluetoothRecordAdapter);
     }
@@ -391,7 +401,6 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
         LogUtils.e("蓝牙界面   onDestroyView  " + this);
         isDestroy = true;
     }
-
 
 
     public void changePage() {
@@ -611,47 +620,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
         }
     }
 
-   /* AnimationDrawable openLockBig;
-    AnimationDrawable openLockMiddle;
-    AnimationDrawable openLockSmall;*/
-//    AnimationDrawable closeLock;
-    /**
-     * 开锁动画
-     */
-/*    public void openLockAnimator() {
-        LogUtils.d("davi 开始1 "+System.currentTimeMillis());
-        ivExternalBig.setVisibility(View.VISIBLE);
-        ivExternalBig.setImageResource(R.drawable.open_lock_big);
-        ivExternalMiddle.setVisibility(View.VISIBLE);
-        ivExternalMiddle.setImageResource(R.drawable.open_lock_middle);
-        ivExternalSmall.setVisibility(View.GONE);
-//        ivExternalSmall.setImageResource(R.mipmap.bluetooth_open_lock_small_icon);
-        ivInnerMiddle.setVisibility(View.VISIBLE);
-        ivInnerMiddle.setImageResource(R.drawable.open_lock_small);
-        ivInnerSmall.setVisibility(View.GONE);
-//                ivInnerSmall.setImageResource();
-        tvInner.setVisibility(View.GONE);
-//                tvInner.setText();
-//                tvInner.setTextColor();
-        tvExternal.setVisibility(View.VISIBLE);
-        tvExternal.setTextColor(getResources().getColor(R.color.cC6F5FF));
-        tvExternal.setText(getString(R.string.is_lock));
 
-        openLockBig = (AnimationDrawable) ivExternalBig.getDrawable();
-        openLockMiddle = (AnimationDrawable) ivExternalMiddle.getDrawable();
-        openLockSmall = (AnimationDrawable) ivInnerMiddle.getDrawable();
-        LogUtils.d("davi 开始2 "+System.currentTimeMillis());
-        if (openLockBig != null) {
-            openLockBig.start();
-        }
-        if (openLockMiddle != null) {
-            openLockMiddle.start();
-        }
-        if (openLockSmall != null) {
-            openLockSmall.start();
-        }
-        LogUtils.d("davi 开始3 "+System.currentTimeMillis());
-    }*/
     AnimationsContainer.FramesSequenceAnimation openLockBig;
     AnimationsContainer.FramesSequenceAnimation openLockMiddle;
     AnimationsContainer.FramesSequenceAnimation openLockSmall;
@@ -660,28 +629,21 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
     public void openLockAnimator() {
         LogUtils.d("davi 开始新1 " + System.currentTimeMillis());
         ivExternalBig.setVisibility(View.VISIBLE);
-//        ivExternalBig.setImageResource(R.drawable.open_lock_big);
         //优化后的帧动画
         if (openLockBig == null) {
             openLockBig = AnimationsContainer.getInstance(R.array.open_lock_big, 26).createProgressDialogAnim(ivExternalBig);
         }
         ivExternalMiddle.setVisibility(View.VISIBLE);
-//        ivExternalMiddle.setImageResource(R.drawable.open_lock_middle);
         if (openLockMiddle == null) {
             openLockMiddle = AnimationsContainer.getInstance(R.array.open_lock_middle, 26).createProgressDialogAnim(ivExternalMiddle);
         }
         ivExternalSmall.setVisibility(View.GONE);
-//        ivExternalSmall.setImageResource(R.mipmap.bluetooth_open_lock_small_icon);
         ivInnerMiddle.setVisibility(View.VISIBLE);
-//        ivInnerMiddle.setImageResource(R.drawable.open_lock_small);
         if (openLockSmall == null) {
             openLockSmall = AnimationsContainer.getInstance(R.array.open_lock_small, 26).createProgressDialogAnim(ivInnerMiddle);
         }
         ivInnerSmall.setVisibility(View.GONE);
-//                ivInnerSmall.setImageResource();
         tvInner.setVisibility(View.GONE);
-//                tvInner.setText();
-//                tvInner.setTextColor();
         tvExternal.setVisibility(View.VISIBLE);
         tvExternal.setTextColor(getResources().getColor(R.color.cC6F5FF));
         tvExternal.setText(getString(R.string.is_lock));
@@ -697,7 +659,6 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
         if (openLockSmall != null) {
             openLockSmall.start();
         }
-        LogUtils.d("davi 开始新3 " + System.currentTimeMillis());
     }
 
     /**
@@ -707,11 +668,8 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
         ivExternalBig.setVisibility(View.VISIBLE);
         ivExternalBig.setImageResource(R.mipmap.bluetooth_lock_close_big_middle_icon);
         ivExternalMiddle.setVisibility(View.GONE);
-//        ivExternalMiddle.setImageResource(R.mipmap.);
         ivExternalSmall.setVisibility(View.GONE);
-//                ivExternalSmall.setImageResource(R.mipmap.bluetooth_open_lock_small_icon);
         ivInnerMiddle.setVisibility(View.VISIBLE);
-//        ivInnerMiddle.setImageResource(R.drawable.bluetooth_lock_close);
         if (closeLock == null) {
             closeLock = AnimationsContainer.getInstance(R.array.bluetooth_lock_close, 14).createProgressDialogAnim(ivInnerMiddle);
         }
@@ -778,22 +736,18 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
                 startActivity(intent);
                 break;
             case R.id.tv_synchronized_record:
-       /*         if(true){
-                   Random random=new Random();
-                    int i = random.nextInt(6);
-                     i=i+13;
-                    LogUtils.d("davi 状态 "+i);
-                    changeOpenLockStatus(i);
-                    return;
-                }*/
                 if (isLoadingBleRecord) { //如果正在加载锁上数据  不让用户再次点击
                     ToastUtil.getInstance().showShort(R.string.is_loading_lock_record);
                     return;
                 }
                 if (mPresenter.isAuth(bleLockInfo, true)) {
                     LogUtils.e("同步开锁记录");
-                    mPresenter.getRecordFromBle();
-                    list.clear();
+                    showDatas.clear();
+                    if (supportOperationRecord) {
+                        mPresenter.getOperationRecordFromBle();
+                    } else {
+                        mPresenter.getOpenRecordFromBle();
+                    }
                     if (bluetoothRecordAdapter != null) {
                         bluetoothRecordAdapter.notifyDataSetChanged();
                     }
@@ -803,8 +757,6 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
     }
 
     /////////////////////////////////////////        回调           //////////////////////////////////////
-
-
     @Override
     public void onDeviceStateChange(boolean isConnected) {
         LogUtils.e("连接状态改变   " + isConnected);
@@ -873,8 +825,6 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
 
     @Override
     public void onGetOpenNumberFailed(Throwable throwable) { //获取开锁次数失败
-//        ToastUtil.getInstance().showShort(HttpUtils.httpProtocolErrorCode(getActivity(), throwable));
-//        ToastUtil.getInstance().showShort(getText(R.string.fail_get_open_lock_number) + " " + throwable.toString());
 
     }
 
@@ -932,7 +882,6 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
     public void isOpeningLock() {
         openLockAnimator();
         isOpening = true;
-//        changeOpenLockStatus(9);
     }
 
     @Override
@@ -946,8 +895,6 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
                 handler.postDelayed(lockRunnable, 15 * 1000);  //十秒后退出开门状态
             }
         }, 3000);
-
-
     }
 
     @Override
@@ -1072,6 +1019,20 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
         }
     }
 
+    @Override
+    public void onLoadBleOperationRecord(List<OperationLockRecord> lockRecords) {
+        hiddenLoading();
+        groupOperationData(lockRecords);
+        bluetoothRecordAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onLoadServerOperationRecord(List<OperationLockRecord> lockRecords, int page) {
+        hiddenLoading();
+        groupOperationData(lockRecords);
+        bluetoothRecordAdapter.notifyDataSetChanged();
+    }
+
     private String getOpenLockType(GetPasswordResult passwordResults, OpenLockRecord record) {
         String nickName = record.getUser_num() + "";
         if (passwordResults != null) {
@@ -1126,7 +1087,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
             hasData = false;
             changePage();
         }
-        list.clear();
+        showDatas.clear();
         String lastTimeHead = "";
         for (int i = 0; i < lockRecords.size(); i++) {
             if (i >= 3) {
@@ -1145,9 +1106,9 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
                 List<BluetoothItemRecordBean> itemList = new ArrayList<>();
                 itemList.add(new BluetoothItemRecordBean(nickName, record.getOpen_type(), KeyConstants.BLUETOOTH_RECORD_COMMON,
                         hourSecond, false, false));
-                list.add(new BluetoothRecordBean(timeHead, itemList, false));
+                showDatas.add(new BluetoothRecordBean(timeHead, itemList, false));
             } else {
-                BluetoothRecordBean bluetoothRecordBean = list.get(list.size() - 1);
+                BluetoothRecordBean bluetoothRecordBean = showDatas.get(showDatas.size() - 1);
                 List<BluetoothItemRecordBean> bluetoothItemRecordBeanList = bluetoothRecordBean.getList();
                 bluetoothItemRecordBeanList.add(new BluetoothItemRecordBean(nickName, record.getOpen_type(), KeyConstants.BLUETOOTH_RECORD_COMMON,
                         hourSecond, false, false));
@@ -1155,8 +1116,8 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
 
         }
 
-        for (int i = 0; i < list.size(); i++) {
-            BluetoothRecordBean bluetoothRecordBean = list.get(i);
+        for (int i = 0; i < showDatas.size(); i++) {
+            BluetoothRecordBean bluetoothRecordBean = showDatas.get(i);
             List<BluetoothItemRecordBean> bluetoothRecordBeanList = bluetoothRecordBean.getList();
 
             for (int j = 0; j < bluetoothRecordBeanList.size(); j++) {
@@ -1170,7 +1131,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
                 }
 
             }
-            if (i == list.size() - 1) {
+            if (i == showDatas.size() - 1) {
                 bluetoothRecordBean.setLastData(true);
             }
 
@@ -1193,7 +1154,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
     @Override
     public void onLoadBleRecord(List<OpenLockRecord> lockRecords) {
         //获取到蓝牙的开锁记录
-        list.clear();
+        showDatas.clear();
         hiddenLoading();
         groupData(lockRecords);
         bluetoothRecordAdapter.notifyDataSetChanged();
@@ -1216,25 +1177,16 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
         LogUtils.e("收到服务器数据  " + lockRecords.size());
 //        currentPage = page + 1;
         groupData(lockRecords);
-        LogUtils.d("davi showDatas " + list.toString());
+        LogUtils.d("davi showDatas " + showDatas.toString());
         bluetoothRecordAdapter.notifyDataSetChanged();
-//        if (page == 1) { //这时候是刷新
-//            refreshLayout.finishRefresh();
-//            refreshLayout.setEnableLoadMore(true);
-//        } else {
-//            refreshLayout.finishLoadMore();
-//        }
     }
 
     @Override
     public void onLoadServerRecordFailed(Throwable throwable) {
-        //加载服务器开锁记录失败
-//        ToastUtil.getInstance().showShort(HttpUtils.httpProtocolErrorCode(getActivity(), throwable));
     }
 
     @Override
     public void onLoadServerRecordFailedServer(BaseResult result) {
-//        ToastUtil.getInstance().showShort(HttpUtils.httpErrorCode(getActivity(), result.getCode()));
 
     }
 
@@ -1242,19 +1194,19 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
     public void onServerNoData() {
         hasData = false;
         changePage();
-        //服务器没有开锁记录
-//        ToastUtil.getInstance().showShort(R.string.server_no_data);
+
     }
 
     @Override
     public void noMoreData() {
-//        ToastUtil.getInstance().showShort(R.string.no_more_data);
+
     }
+
 
     @Override
     public void onUploadServerRecordSuccess() {
         LogUtils.e("记录上传成功");
-//        ToastUtil.getInstance().showShort(R.string.lock_record_upload_success);
+
     }
 
     @Override
@@ -1356,5 +1308,58 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
         }
     }
 
+    private void groupOperationData(List<OperationLockRecord> lockRecords) {
+        if (lockRecords.size() > 0) {
+            hasData = true;
+        } else {
+            hasData = false;
+        }
+        changePage();
+        showDatas.clear();
+        String lastTimeHead = "";
+        for (int i = 0; i < lockRecords.size() && i < 3; i++) {
+            OperationLockRecord record = lockRecords.get(i);
+            //获取开锁时间的毫秒数
+            String timeHead = record.getEventTime().substring(0, 10);
+            String hourSecond = record.getEventTime().substring(11, 16);
+
+            GetPasswordResult passwordResult = MyApplication.getInstance().getPasswordResults(bleLockInfo.getServerLockInfo().getLockName());
+            //获取昵称
+
+            String nickName = BleUtil.getNickName(record, passwordResult);
+            String openType = BleUtil.getOpenType(record);
+            if (!timeHead.equals(lastTimeHead)) { //添加头
+                lastTimeHead = timeHead;
+                List<BluetoothItemRecordBean> itemList = new ArrayList<>();
+                itemList.add(new BluetoothItemRecordBean(nickName, openType, KeyConstants.BLUETOOTH_RECORD_COMMON,
+                        hourSecond, false, false));
+                showDatas.add(new BluetoothRecordBean(timeHead, itemList, false));
+            } else {
+                BluetoothRecordBean bluetoothRecordBean = showDatas.get(showDatas.size() - 1);
+                List<BluetoothItemRecordBean> bluetoothItemRecordBeanList = bluetoothRecordBean.getList();
+                bluetoothItemRecordBeanList.add(new BluetoothItemRecordBean(nickName, openType, KeyConstants.BLUETOOTH_RECORD_COMMON, hourSecond, false, false));
+            }
+        }
+
+        for (int i = 0; i < showDatas.size(); i++) {
+            BluetoothRecordBean bluetoothRecordBean = showDatas.get(i);
+            List<BluetoothItemRecordBean> bluetoothRecordBeanList = bluetoothRecordBean.getList();
+
+            for (int j = 0; j < bluetoothRecordBeanList.size(); j++) {
+                BluetoothItemRecordBean bluetoothItemRecordBean = bluetoothRecordBeanList.get(j);
+
+                if (j == 0) {
+                    bluetoothItemRecordBean.setFirstData(true);
+                }
+                if (j == bluetoothRecordBeanList.size() - 1) {
+                    bluetoothItemRecordBean.setLastData(true);
+                }
+
+            }
+            if (i == showDatas.size() - 1) {
+                bluetoothRecordBean.setLastData(true);
+            }
+        }
+    }
 
 }

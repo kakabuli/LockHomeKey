@@ -49,21 +49,21 @@ import io.reactivex.functions.Predicate;
  */
 public class OperationRecordPresenter<T> extends BlePresenter<IOperationRecordView> {
     private OperationLockRecord[] operationLockRecords = null;
-    private Disposable disposable;
-    private int currentPage;
-    private int total; //开锁记录的总数
-    private int startIndex;
-    private int endIndex;
-    private int retryTimes = 0;//重试的次数
-    private int maxPage;//最大的组数
-    private List<OperationLockRecord> serverRecords = new ArrayList<>();
-    private List<OperationLockRecord> notNullRecord = new ArrayList<>();
-    private byte[] command;
-    private Disposable serverDisposable;
-    private Disposable recordDisposable;
+    private Disposable operationDisposable;
+    private int operationCurrentPage;
+    private int operationTotal; //开锁记录的总数
+    private int operationStartIndex;
+    private int operationEndIndex;
+    private int operationRetryTimes = 0;//重试的次数
+    private int operationMaxPage;//最大的组数
+    private List<OperationLockRecord> operationServerRecords = new ArrayList<>();
+    private List<OperationLockRecord> operationNotNullRecord = new ArrayList<>();
+    private byte[] operationCommand;
+    private Disposable operationServerDisposable;
+    private Disposable operationRecordDisposable;
 
-    public List<OperationLockRecord> getNotNullRecord() {
-        notNullRecord.clear();
+    public List<OperationLockRecord> getNotNullOperationRecord() {
+        operationNotNullRecord.clear();
         if (operationLockRecords != null) {
             for (int i = 0; i < operationLockRecords.length; i++) {
                 if (operationLockRecords[i] != null) {
@@ -71,19 +71,19 @@ public class OperationRecordPresenter<T> extends BlePresenter<IOperationRecordVi
                      * 过滤报警信息
                      * */
                     if (3!=operationLockRecords[i].getEventType()){
-                        notNullRecord.add(operationLockRecords[i]);
+                        operationNotNullRecord.add(operationLockRecords[i]);
                     }
 
                 }
             }
         }
-        LogUtils.d("davi notNullRecord 数据 "+notNullRecord.toString());
-        return notNullRecord;
+        LogUtils.d("davi operationNotNullRecord 数据 "+ operationNotNullRecord.toString());
+        return operationNotNullRecord;
     }
 
-    public List<UploadOperationRecordBean.OperationListBean> getRecordToServer() {
-        if (serverDisposable != null && !serverDisposable.isDisposed()) {
-            serverDisposable.dispose();
+    public List<UploadOperationRecordBean.OperationListBean> getOperationRecordToServer() {
+        if (operationServerDisposable != null && !operationServerDisposable.isDisposed()) {
+            operationServerDisposable.dispose();
         }
         List<UploadOperationRecordBean.OperationListBean> recordToServers = new ArrayList<>();
         if (operationLockRecords == null) {
@@ -119,7 +119,7 @@ public class OperationRecordPresenter<T> extends BlePresenter<IOperationRecordVi
      * */
     public void getOperationRecordFromServer(int pagenum) {
         if (pagenum == 1) {  //如果是获取第一页的数据，那么清楚所有的开锁记录
-            serverRecords.clear();
+            operationServerRecords.clear();
         }
         XiaokaiNewServiceImp.getOperationRecord(bleService.getBleLockInfo().getServerLockInfo().getLockName(),
                 pagenum )
@@ -139,7 +139,7 @@ public class OperationRecordPresenter<T> extends BlePresenter<IOperationRecordVi
                         ///将服务器数据封装成用来解析的数据
                         for (OperationRecordResult.OperationBean record : operationRecordResult.getData()) {
                             if (3!=record.getEventType()){
-                                serverRecords.add(
+                                operationServerRecords.add(
                                         new OperationLockRecord(
                                                 record.getEventType(),
                                                 record.getEventSource(),
@@ -153,8 +153,8 @@ public class OperationRecordPresenter<T> extends BlePresenter<IOperationRecordVi
 
                         }
                         if (mViewRef.get() != null) {
-                            LogUtils.d("davi 服务器记录 1 serverRecords "+serverRecords.toString());
-                            mViewRef.get().onLoadServerRecord(serverRecords, pagenum);
+                            LogUtils.d(" 服务器记录 1 serverRecords "+operationServerRecords.toString());
+                            mViewRef.get().onLoadServerOperationRecord(operationServerRecords, pagenum);
                         }
                     }
 
@@ -176,8 +176,8 @@ public class OperationRecordPresenter<T> extends BlePresenter<IOperationRecordVi
 
                     @Override
                     public void onSubscribe1(Disposable d) {
-                        serverDisposable = d;
-                        compositeDisposable.add(serverDisposable);
+                        operationServerDisposable = d;
+                        compositeDisposable.add(operationServerDisposable);
                     }
                 });
     }
@@ -186,37 +186,36 @@ public class OperationRecordPresenter<T> extends BlePresenter<IOperationRecordVi
      * 用户点击同步时  调用的从BLe设备获取的开锁记录
      * 每次都从第一组开始获取  此时不知道开锁记录总个数
      */
-    public void getRecordFromBle() {
+    public void getOperationRecordFromBle() {
         //添加
-        toDisposable(disposable);
+        toDisposable(operationDisposable);
         if (mViewRef.get() != null) {
             mViewRef.get().startBleRecord();
         }
-        currentPage = 0;
-        retryTimes = 0;
-        total = 0;
-        maxPage = 0;
+        operationCurrentPage = 0;
+        operationRetryTimes = 0;
+        operationTotal = 0;
+        operationMaxPage = 0;
         operationLockRecords = null;
-        getRecordByPage();
-
+        getOperationRecordByPage();
     }
 
-    public void getRecordByPage() {
+    public void getOperationRecordByPage() {
         //获取开锁记录的时候  取消对服务器获取记录的订阅
-        if (serverDisposable != null && !serverDisposable.isDisposed()) {
-            serverDisposable.dispose();
+        if (operationServerDisposable != null && !operationServerDisposable.isDisposed()) {
+            operationServerDisposable.dispose();
         }
-        if (!(serverDisposable != null && !serverDisposable.isDisposed())) {
-            listenerLockRecord();
+        if (!(operationServerDisposable != null && !operationServerDisposable.isDisposed())) {
+            listenerOperationLockRecord();
         }
 
-        startIndex = 0;
-        endIndex = 20;
-        LogUtils.e("重试次数   " + retryTimes + "    " + currentPage);
-        if (retryTimes > 2) { //已经重试了两次，即请求过三次
+        operationStartIndex = 0;
+        operationEndIndex = 20;
+        LogUtils.e("重试次数   " + operationRetryTimes + "    " + operationCurrentPage);
+        if (operationRetryTimes > 2) { //已经重试了两次，即请求过三次
             //当前组数据已经查询完  不管查到的是什么结果  都显示给用户
             //看还有下一组数据没有   如果没有那么所有的数据都查询完了  不管之前查询到的是什么结果，都上传到服务器
-            if (currentPage + 1 >= maxPage) {  //已经查了最后一组数据
+            if (operationCurrentPage + 1 >= operationMaxPage) {  //已经查了最后一组数据
                 if (operationLockRecords == null) {  //没有获取到数据  请稍后再试
                     if (mViewRef.get() != null && operationLockRecords == null) {
                         mViewRef.get().onLoadBleRecordFinish(false);
@@ -225,45 +224,42 @@ public class OperationRecordPresenter<T> extends BlePresenter<IOperationRecordVi
                 } else {
                     if (mViewRef.get() != null && operationLockRecords != null) {
                         mViewRef.get().onLoadBleRecordFinish(true);
-                        LogUtils.d("davi 蓝牙记录 1 ");
-                        mViewRef.get().onLoadBleRecord(getNotNullRecord());
+                        LogUtils.d(" 蓝牙记录 1 ");
+                        mViewRef.get().onLoadBleOperationRecord(getNotNullOperationRecord());
                     }
                 }
-                if (recordDisposable != null && !recordDisposable.isDisposed()) {
-                    recordDisposable.dispose();
+                if (operationRecordDisposable != null && !operationRecordDisposable.isDisposed()) {
+                    operationRecordDisposable.dispose();
                 }
-                LogUtils.d("davi 上传开锁记录 1");
-                upLoadOpenRecord(bleService.getBleLockInfo().getServerLockInfo().getLockName()
+                LogUtils.d(" 上传开锁记录 1");
+                upLoadOperationRecord(bleService.getBleLockInfo().getServerLockInfo().getLockName()
                         , bleService.getBleLockInfo().getServerLockInfo().getLockNickName()
-                        , getRecordToServer(), MyApplication.getInstance().getUid());
+                        , getOperationRecordToServer(), MyApplication.getInstance().getUid());
                 return;
             }
-            currentPage++;
+            operationCurrentPage++;
         }
 
 
-        if (currentPage != 0) {       //如果不是第一组  动态生成
-            startIndex = ((currentPage) * 20);
-            endIndex = ((currentPage + 1) * 20-1);
+        if (operationCurrentPage != 0) {       //如果不是第一组  动态生成
+            operationStartIndex = ((operationCurrentPage) * 20);
+            operationEndIndex = ((operationCurrentPage + 1) * 20-1);
         }
 
-        if (disposable != null && !disposable.isDisposed()) {
-            disposable.dispose();
+        if (operationDisposable != null && !operationDisposable.isDisposed()) {
+            operationDisposable.dispose();
         }
 
         //TODO 测试操作记录
-//        command = BleCommandFactory.getLockRecordCommand((byte) startIndex, (byte) endIndex, bleService.getBleLockInfo().getAuthKey());
-        command = BleCommandFactory.getOperationCommand(Rsa.int2BytesArray(startIndex), Rsa.int2BytesArray(endIndex), bleService.getBleLockInfo().getAuthKey());
-        bleService.sendCommand(command);
+//        operationCommand = BleCommandFactory.getLockRecordCommand((byte) startIndex, (byte) endIndex, bleService.getBleLockInfo().getAuthKey());
+        operationCommand = BleCommandFactory.getOperationCommand(Rsa.int2BytesArray(operationStartIndex), Rsa.int2BytesArray(operationEndIndex), bleService.getBleLockInfo().getAuthKey());
+        bleService.sendCommand(operationCommand);
 
-        disposable = bleService.listeneDataChange()
+        operationDisposable = bleService.listeneDataChange()
                 .filter(new Predicate<BleDataBean>() {
                     @Override
                     public boolean test(BleDataBean bleDataBean) throws Exception {
-                        boolean b = command[1] == bleDataBean.getTsn();
-//                        if (Rsa.bytesToHexString(bleDataBean.getOriginalData()).contains("33")){
-//                            return false;
-//                        }
+                        boolean b = operationCommand[1] == bleDataBean.getTsn();
                         return b;
                     }
                 })
@@ -291,7 +287,7 @@ public class OperationRecordPresenter<T> extends BlePresenter<IOperationRecordVi
                                         if (mViewRef.get() != null) {
                                             mViewRef.get().noData();
                                         }
-                                        toDisposable(disposable);
+                                        toDisposable(operationDisposable);
                                     }
                                     return;
                                 }
@@ -304,20 +300,20 @@ public class OperationRecordPresenter<T> extends BlePresenter<IOperationRecordVi
                                 if (operationLockRecords == null) {
                                     byte[] totalByte = new byte[2];
                                     System.arraycopy(deVaule, 0,totalByte , 0, 2);
-                                    total = Rsa.bytesToInt(totalByte);
-                                    operationLockRecords = new OperationLockRecord[total];
-                                    maxPage = (int) Math.ceil(total * 1.0 / 20.0);
-                                    LogUtils.e(" 总个数   " + total + "  最大页数  " + maxPage);
+                                    operationTotal = Rsa.bytesToInt(totalByte);
+                                    operationLockRecords = new OperationLockRecord[operationTotal];
+                                    operationMaxPage = (int) Math.ceil(operationTotal * 1.0 / 20.0);
+                                    LogUtils.e(" 总个数   " + operationTotal + "  最大页数  " + operationMaxPage);
                                 }
                                 byte[] byteIndex = new byte[2];
                                 System.arraycopy(deVaule, 2,byteIndex , 0, 2);
                                 int index = Rsa.bytesToInt(byteIndex);
-                                LogUtils.d("davi 1 index "+index+" total "+total);
+                                LogUtils.d(" 1 index "+index+" operationTotal "+ operationTotal);
                                 operationLockRecords[index] = operationLockRecord;
 
                                 // TODO: 2019/3/7  开锁记录测试
                                 List<Integer> loseNumber = new ArrayList<>();
-                                for (int i = 0; i < endIndex && i < total; i++) {
+                                for (int i = 0; i < operationEndIndex && i < operationTotal; i++) {
                                     if (operationLockRecords[i] == null) { //数据不全
                                         loseNumber.add(i);
                                     }
@@ -327,63 +323,59 @@ public class OperationRecordPresenter<T> extends BlePresenter<IOperationRecordVi
                                 }
                                 // TODO: 2019/3/7  开锁记录测试
 
-                                if (index == (endIndex - 1) || index == (total - 1)) {  //收到一组最后一个数据  或者全部的最后一个数据
-                                    for (int i = startIndex; i < endIndex && i < total; i++) {
+                                if (index == (operationEndIndex - 1) || index == (operationTotal - 1)) {  //收到一组最后一个数据  或者全部的最后一个数据
+                                    for (int i = operationStartIndex; i < operationEndIndex && i < operationTotal; i++) {
                                         if (operationLockRecords[i] == null) { //如果一组  数据不全
-                                            retryTimes++;
-                                            if (retryTimes > 2) {  //如果已经尝试了三次  那么先显示数据
+                                            operationRetryTimes++;
+                                            if (operationRetryTimes > 2) {  //如果已经尝试了三次  那么先显示数据
                                                 if (mViewRef.get() != null) {
-                                                    LogUtils.d("davi 蓝牙记录 2 ");
-                                                    mViewRef.get().onLoadBleRecord(getNotNullRecord());
+                                                    mViewRef.get().onLoadBleOperationRecord(getNotNullOperationRecord());
                                                 }
                                             }
-                                            getRecordByPage();
+                                            getOperationRecordByPage();
                                             return;
                                         }
                                     }
                                     if (mViewRef.get() != null) {
-                                        LogUtils.d("davi 蓝牙记录 3 ");
-                                        mViewRef.get().onLoadBleRecord(getNotNullRecord());
+                                        mViewRef.get().onLoadBleOperationRecord(getNotNullOperationRecord());
                                     }
-                                    if (currentPage + 1 >= maxPage) { //如果收到最后一组的最后一个数据   直接上传
+                                    if (operationCurrentPage + 1 >= operationMaxPage) { //如果收到最后一组的最后一个数据   直接上传
                                         if (mViewRef.get() != null) {
-                                            LogUtils.d("davi 蓝牙记录 4 ");
-                                            mViewRef.get().onLoadBleRecord(getNotNullRecord());
+                                            mViewRef.get().onLoadBleOperationRecord(getNotNullOperationRecord());
                                             mViewRef.get().onLoadBleRecordFinish(true);
                                         }
-                                        if (recordDisposable != null && !recordDisposable.isDisposed()) {
-                                            recordDisposable.dispose();
+                                        if (operationRecordDisposable != null && !operationRecordDisposable.isDisposed()) {
+                                            operationRecordDisposable.dispose();
                                         }
-                                        if (disposable != null && !disposable.isDisposed()) {
-                                            disposable.dispose();
+                                        if (operationDisposable != null && !operationDisposable.isDisposed()) {
+                                            operationDisposable.dispose();
                                         }
-                                        LogUtils.d("davi 上传开锁记录 2");
-                                        upLoadOpenRecord(bleService.getBleLockInfo().getServerLockInfo().getLockName()
+                                        upLoadOperationRecord(bleService.getBleLockInfo().getServerLockInfo().getLockName()
                                                 , bleService.getBleLockInfo().getServerLockInfo().getLockNickName()
-                                                , getRecordToServer(), MyApplication.getInstance().getUid());
+                                                , getOperationRecordToServer(), MyApplication.getInstance().getUid());
                                     } else {  //如果后面还有
                                         LogUtils.e("收到一组完整的数据");
-                                        currentPage++;  //下一组数据
-                                        retryTimes = 0; //重试次数
-                                        getRecordByPage();  //获取数据
+                                        operationCurrentPage++;  //下一组数据
+                                        operationRetryTimes = 0; //重试次数
+                                        getOperationRecordByPage();  //获取数据
                                     }
                                 }
                             }
                         }, new Consumer<Throwable>() {
                             @Override
                             public void accept(Throwable throwable) throws Exception {
-                                LogUtils.e("取消订阅了吗   " + disposable.isDisposed() + "   " + throwable.getMessage());
+                                LogUtils.e("取消订阅了吗   " + operationDisposable.isDisposed() + "   " + throwable.getMessage());
 //                                if (throwable instanceof TimeoutException) {  //5秒没有收到数据
                                 if (operationLockRecords == null) {  //一个数据都没有收到  重试
-                                    retryTimes++;
-                                    getRecordByPage();
+                                    operationRetryTimes++;
+                                    getOperationRecordByPage();
                                     return;
                                 }
                                 LogUtils.e("获取数据  超时   数据完成");
 
                                 // TODO: 2019/3/7  开锁记录测试
                                 List<Integer> loseNumber = new ArrayList<>();
-                                for (int i = 0; i < endIndex && i < total; i++) {
+                                for (int i = 0; i < operationEndIndex && i < operationTotal; i++) {
                                     if (operationLockRecords[i] == null) { //数据不全
                                         loseNumber.add(i);
                                     }
@@ -392,55 +384,52 @@ public class OperationRecordPresenter<T> extends BlePresenter<IOperationRecordVi
                                     mViewRef.get().onLoseRecord(loseNumber);
                                 }
                                 // TODO: 2019/3/7  开锁记录测试
-                                for (int i = startIndex; i < endIndex && i < total; i++) {
+                                for (int i = operationStartIndex; i < operationEndIndex && i < operationTotal; i++) {
                                     if (operationLockRecords[i] == null) { //数据不全
-                                        LogUtils.e("数据不全  " + retryTimes);
-                                        retryTimes++;
-                                        if (retryTimes > 2) {  //如果已经尝试了三次  那么先显示数据
+                                        LogUtils.e("数据不全  " + operationRetryTimes);
+                                        operationRetryTimes++;
+                                        if (operationRetryTimes > 2) {  //如果已经尝试了三次  那么先显示数据
                                             if (mViewRef.get() != null) {
-                                                LogUtils.d("davi 蓝牙记录 5 ");
-                                                mViewRef.get().onLoadBleRecord(getNotNullRecord());
+                                                mViewRef.get().onLoadBleOperationRecord(getNotNullOperationRecord());
                                             }
                                         }
-                                        getRecordByPage();
+                                        getOperationRecordByPage();
                                         return;
                                     }
                                 }
                                 //到此处，那么说明这一组数据完整不重新获取
-                                if (currentPage + 1 >= maxPage) { //如果收到最后一组的最后一个数据   直接上传
+                                if (operationCurrentPage + 1 >= operationMaxPage) { //如果收到最后一组的最后一个数据   直接上传
                                     // 获取数据完成
                                     if (mViewRef.get() != null) {
-                                        LogUtils.d("davi 蓝牙记录 6 ");
-                                        mViewRef.get().onLoadBleRecord(getNotNullRecord());
+                                        mViewRef.get().onLoadBleOperationRecord(getNotNullOperationRecord());
                                         mViewRef.get().onLoadBleRecordFinish(true);
                                     }
-                                    if (recordDisposable != null && !recordDisposable.isDisposed()) {
-                                        recordDisposable.dispose();
+                                    if (operationRecordDisposable != null && !operationRecordDisposable.isDisposed()) {
+                                        operationRecordDisposable.dispose();
                                     }
-                                    LogUtils.d("davi 上传开锁记录 3");
-                                    upLoadOpenRecord(bleService.getBleLockInfo().getServerLockInfo().getLockName()
+                                    upLoadOperationRecord(bleService.getBleLockInfo().getServerLockInfo().getLockName()
                                             , bleService.getBleLockInfo().getServerLockInfo().getLockNickName()
-                                            , getRecordToServer(), MyApplication.getInstance().getUid());
+                                            , getOperationRecordToServer(), MyApplication.getInstance().getUid());
                                 } else {  //如果后面还有
-                                    currentPage++;  //下一组数据
-                                    retryTimes = 0; //重试次数
-                                    getRecordByPage();  //获取数据
+                                    operationCurrentPage++;  //下一组数据
+                                    operationRetryTimes = 0; //重试次数
+                                    getOperationRecordByPage();  //获取数据
                                 }
                             }
                         }
                 );
 
-        compositeDisposable.add(disposable);
+        compositeDisposable.add(operationDisposable);
 
     }
 
 
-    public void upLoadOpenRecord(String device_name, String device_nickname, List<UploadOperationRecordBean.OperationListBean> openLockList, String user_id) {
+    public void upLoadOperationRecord(String device_name, String device_nickname, List<UploadOperationRecordBean.OperationListBean> openLockList, String user_id) {
 
         for (UploadOperationRecordBean.OperationListBean bleRecord : openLockList) {
             LogUtils.e("上传的数据是    " + bleRecord.toString());
         }
-        LogUtils.e("数据获取完成   total" + total + "  获取到的个数是  " + openLockList.size());
+        LogUtils.e("数据获取完成   operationTotal" + operationTotal + "  获取到的个数是  " + openLockList.size());
         XiaokaiNewServiceImp.uploadOperationRecord(device_name, openLockList)
                 .subscribe(new BaseObserver<BaseResult>() {
                     @Override
@@ -478,9 +467,9 @@ public class OperationRecordPresenter<T> extends BlePresenter<IOperationRecordVi
      * 开一个独立的监听，监听开锁记录
      * 防止数据
      */
-    public void listenerLockRecord() {
-        toDisposable(recordDisposable);
-        recordDisposable = bleService.listeneDataChange()
+    public void listenerOperationLockRecord() {
+        toDisposable(operationRecordDisposable);
+        operationRecordDisposable = bleService.listeneDataChange()
                 .filter(new Predicate<BleDataBean>() {
                     @Override
                     public boolean test(BleDataBean bleDataBean) throws Exception {
@@ -498,7 +487,7 @@ public class OperationRecordPresenter<T> extends BlePresenter<IOperationRecordVi
                             System.arraycopy(deVaule, 2,byteIndex , 0, 2);
                             int index = Rsa.bytesToInt(byteIndex);
                             if (operationLockRecords != null && index < operationLockRecords.length) {
-                                LogUtils.d("davi 2 index "+index+" total "+total);
+                                LogUtils.d(" 操作记录 index "+index+" operationTotal "+ operationTotal);
                                 operationLockRecords[index] = operationLockRecord;
                             }
                         }
@@ -509,11 +498,12 @@ public class OperationRecordPresenter<T> extends BlePresenter<IOperationRecordVi
 
                     }
                 });
-        compositeDisposable.add(recordDisposable);
+        compositeDisposable.add(operationRecordDisposable);
     }
 
     @Override
     public void authSuccess() {
 
     }
+
 }

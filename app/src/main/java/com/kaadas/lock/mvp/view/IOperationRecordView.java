@@ -23,10 +23,7 @@ public interface IOperationRecordView extends IBleView {
      */
     void noData();
 
-    /**
-     * 从蓝牙模块获取开锁记录
-     */
-    void onLoadBleRecord(List<OperationLockRecord> lockRecords);
+
 
     /**
      * 从蓝牙模块获取开锁记录完成
@@ -36,9 +33,14 @@ public interface IOperationRecordView extends IBleView {
     void onLoadBleRecordFinish(boolean isComplete);
 
     /**
+     * 从蓝牙模块获取开锁记录
+     */
+    void onLoadBleOperationRecord(List<OperationLockRecord> lockRecords);
+
+    /**
      * 从服务器获取开锁记录   page 请求的是第几页数据
      */
-    void onLoadServerRecord(List<OperationLockRecord> lockRecords, int page);
+    void onLoadServerOperationRecord(List<OperationLockRecord> lockRecords, int page);
 
     /**
      * 从服务器获取开锁记录失败

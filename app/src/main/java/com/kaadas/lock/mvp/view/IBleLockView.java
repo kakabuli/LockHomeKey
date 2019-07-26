@@ -2,6 +2,7 @@ package com.kaadas.lock.mvp.view;
 
 import com.kaadas.lock.mvp.mvpbase.IBleView;
 import com.kaadas.lock.publiclibrary.ble.bean.OpenLockRecord;
+import com.kaadas.lock.publiclibrary.ble.bean.OperationLockRecord;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 
 import java.util.List;
@@ -92,24 +93,15 @@ public interface IBleLockView extends IMyOpenLockRecordView {
      */
     void onWarringUp(int type);
 
-//    /**
-//     * 从服务器获取开锁记录   page 请求的是第几页数据
-//     */
-//    void onLoadServerRecord(List<OpenLockRecord> lockRecords, int page);
-//
-//    /**
-//     * 从服务器获取开锁记录失败
-//     */
-//    void onLoadServerRecordFailed(Throwable throwable);
-//
-//    /**
-//     * 从服务器获取开锁记录失败 服务器返回错误码
-//     */
-//    void onLoadServerRecordFailedServer(BaseResult result);
-//
-//    /**
-//     * 服务器没有数据   如果page
-//     */
-//    void onServerNoData();
+    /**
+     * 从蓝牙模块获取开锁记录
+     */
+    void onLoadBleOperationRecord(List<OperationLockRecord> lockRecords);
+
+    /**
+     * 从服务器获取开锁记录   page 请求的是第几页数据
+     */
+    void onLoadServerOperationRecord(List<OperationLockRecord> lockRecords, int page);
+
 
 }

@@ -19,6 +19,7 @@ import com.kaadas.lock.mvp.mvpbase.BlePresenter;
 import com.kaadas.lock.mvp.mvpbase.IBleView;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.utils.BleLockUtils;
+import com.kaadas.lock.utils.LogUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -53,11 +54,13 @@ public class BluetoothRecordActivity extends BaseBleActivity<IBleView, BlePresen
         bleLockInfo = mPresenter.getBleLockInfo();
 
         int func = Integer.parseInt(bleLockInfo.getServerLockInfo().getFunctionSet());
+        LogUtils.e("是否支持操作记录   "+bleLockInfo.getServerLockInfo().getBleVersion() + "   " + bleLockInfo.getServerLockInfo().getFunctionSet());
         if ("3".equals(bleLockInfo.getServerLockInfo().getBleVersion())){
             isSupportOperationRecord = BleLockUtils.isSupportOperationRecord(func);
         }else {
             isSupportOperationRecord = false;
         }
+        LogUtils.e("是否支持操作记录   ");
         ButterKnife.bind(this);
         ivBack.setOnClickListener(this);
         tvContent.setText(getString(R.string.device_dynamic));
