@@ -648,7 +648,7 @@
     <string name="get_lock_finger_failed">获取锁上指纹失败！</string>
     <string name="please_connect_lock">锁设备未连接</string>
     <string name="refresh_data_fail">刷新失败，请稍后再试！</string>
-    <string name="return_code_409">设备正忙</string>
+    <string name="return_code_409">呼叫中断,请重新呼叫</string>
     <string name="push_type">firebase</string>
     <string name="push_sender_id">929724111839</string><!--firebase 929724111839 !! gcm 622464153529 -->
     <string name="unknown_incoming_call_name">Unknown</string>
@@ -757,7 +757,7 @@
     <string name="get_card_failed">获取卡片列表失败</string>
     <string name="call_time_out">呼叫超时</string>
     <string name="call_failed">呼叫失败</string>
-    <string name="link_failed">连接失败</string>
+    <string name="link_failed">呼叫失败,请重新呼叫</string>
     <string name="call_failed_cat_eye_offline">呼叫失败，猫眼不在线</string>
     <string name="zigbee_pwd_perpetual">密码永久有效</string>
     <string name="zigbee_pwd_temporary">密码临时有效</string>
@@ -837,7 +837,7 @@
     <string name="repeat_rules">重复规则</string>
     <string name="fingerprint_collect_success">号指纹采集成功</string>
     <string name="card_add_success">号卡添加成功</string>
-    <string name="cate_sleep">猫眼已经休眠</string>
+    <string name="cate_sleep">来电呼叫失败,猫眼已经休眠</string>
     <string name="mainactivity_permission_alert_msg">请前往应用信息设置界面中打开通知开关，后台弹出界面开关,否则猫眼呼来电叫功能无法正常使用</string>
     <string name="mainactivity_permission_alert_title">应用权限开关开启通知</string>
     <string name="no_unlock_record">暂无操作记录</string>
@@ -1170,4 +1170,8 @@
     <string name="get_stress_list_success">获取胁迫密码列表成功</string>
     <string name="cateye_call_fail">猫眼来电呼叫失败</string>
     <string name="cateye_sip_invert_fail">猫眼来电呼叫失败,获取数据包失败</string>
+    <string name="cateye_video_audio_send_fail">音视频传输失败,请重新呼叫</string>
+    <string name="cateye_video_audio_send_fail_no_time">无音视频传输,请重新呼叫</string>
+    <string name="sip_register_fail">Sip注册失败,来电呼叫失败，请重新呼叫</string>
+    <string name="call_coming_connection_fail">猫眼呼叫来电失败,呼叫结束,请重新呼叫</string>
 </resources>

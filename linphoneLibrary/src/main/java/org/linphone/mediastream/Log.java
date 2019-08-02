@@ -18,7 +18,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 package org.linphone.mediastream;
 
-public final class Log {
+public final class  Log {
 	private static Log logger;
 	private static Log instance() {
 		if (logger == null) {

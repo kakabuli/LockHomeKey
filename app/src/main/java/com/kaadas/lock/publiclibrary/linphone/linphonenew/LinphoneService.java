@@ -54,6 +54,7 @@ import com.kaadas.lock.publiclibrary.linphone.linphone.callback.RegistrationCall
 import com.kaadas.lock.publiclibrary.linphone.linphone.linphone.ContactsManager;
 import com.kaadas.lock.publiclibrary.linphone.linphone.linphone.LinphoneContact;
 import com.kaadas.lock.publiclibrary.linphone.linphonenew.compatibility.Compatibility;
+import com.kaadas.lock.utils.Constants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.MyLog;
 import com.kaadas.lock.utils.SPUtils;
@@ -386,6 +387,7 @@ public final class LinphoneService extends Service {
 
 
                 if (state == State.CallEnd && call.getCallLog().getStatus() == CallStatus.Missed) {
+                    android.util.Log.e(GeTui.VideoLog, "LinphoneService===>state:"+State.CallEnd+" call.getCallLog().getStatus():"+call.getCallLog().getStatus());
                     int missedCallCount = LinphoneManager.getLcIfManagerNotDestroyedOrNull().getMissedCallsCount();
                     String body;
                     if (missedCallCount > 1) {
@@ -403,15 +405,21 @@ public final class LinphoneService extends Service {
                         }
                     }
 
-                    long diff=System.currentTimeMillis() - MyApplication.getInstance().getIsComingTime();
-                    android.util.Log.e(GeTui.VideoLog,"LinphoneService...."+diff);
-                    if (diff < 25 * 1000 && VideoVActivity.isRunning) {
+                  //  long diff=System.currentTimeMillis() - MyApplication.getInstance().getIsComingTime();
+                  //  android.util.Log.e(GeTui.VideoLog,"LinphoneService...."+diff);
+                 //   if (diff < 25 * 1000 && VideoVActivity.isRunning) {
+                    if (VideoVActivity.isRunning) {
                         // 屏幕亮了
                         handler.postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                Toast.makeText(LinphoneService.this, getResources().getString(R.string.return_code_409), Toast.LENGTH_SHORT).show();
-                                //设备正忙
+                                boolean  isAlready= (boolean) SPUtils.get(Constants.ALREADY_TOAST,false);
+                                if(!isAlready){
+                                    Toast.makeText(LinphoneService.this, getResources().getString(R.string.return_code_409), Toast.LENGTH_SHORT).show();
+                                    //设备正忙
+                                }
+                                SPUtils.remove(Constants.ALREADY_TOAST);
+
                             }
                         }, 800);
                     }
@@ -669,6 +677,7 @@ public final class LinphoneService extends Service {
     public synchronized void onDestroy() {
         LogUtils.e("walter", "linphoneservice onDestroy");
         Log.e(GeTui.VideoLog,"linphonservice...onDestory...");
+        MyLog.getInstance().save("linphonservice...onDestory...");
         if (activityCallbacks != null) {
             getApplication().unregisterActivityLifecycleCallbacks(activityCallbacks);
             activityCallbacks = null;

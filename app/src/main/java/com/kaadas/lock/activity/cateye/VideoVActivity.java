@@ -320,17 +320,18 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
     @Override
     protected void onDestroy() {
         Log.e(GeTui.VideoLog,"VideoVActivity......onDestory.....");
-        isRunning = false;
         MemeManager.getInstance().videoActivityDisconnectMeme();
         LinphoneHelper.onDestroy();
         super.onDestroy();
         LogUtils.e(Tag,"界面被销毁");
         mHandler2.removeCallbacksAndMessages(null);
+        mPresenter.destoryPre();
         if(timer!=null){
             timer.cancel();
         }
         fileHander.removeCallbacksAndMessages(null);
-
+        noVideoHandler.removeMessages(NOVIDEO);
+        isRunning = false;
     }
 
     @Override
@@ -377,10 +378,31 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
             } else { //挂断
                 LogUtils.e(Tag,"挂断了电话");
                 mPresenter.hangup();
+                Log.e(GeTui.VideoLog,"挂断了电话finish");
                 finish();
             }
         }
     }
+
+     public static final   int NOVIDEO=1;
+     Handler noVideoHandler=new Handler(){
+         @Override
+         public void handleMessage(Message msg) {
+             super.handleMessage(msg);
+             switch (msg.what){
+                 case NOVIDEO:
+                     String videotime=video_play_time.getText().toString();
+                     if(videotime.equalsIgnoreCase("00:00:00")){
+                         Log.e(GeTui.VideoLog,"无音视频传输,请重新呼叫");
+                         MyLog.getInstance().save("无音视频传输,请重新呼叫");
+                         Toast.makeText(VideoVActivity.this,getString(R.string.cateye_video_audio_send_fail_no_time),Toast.LENGTH_LONG).show();
+                         finish();
+                     }
+
+                     break;
+             }
+         }
+     };
 
     /**
      * 接听电话的界面切换
@@ -405,6 +427,9 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
         }
 
         video_v_go.setVisibility(View.VISIBLE);
+
+
+        noVideoHandler.sendEmptyMessageDelayed(NOVIDEO,15*1000);
     }
 
     private void initView() {
@@ -610,12 +635,14 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
                 break;
             case R.id.iv_back:  //点击返回
                 mPresenter.hangup();
+                Log.e(GeTui.VideoLog,"点击返回finish");
                 finish();
                 break;
             case R.id.iv_hangup:  //点击挂断
             case R.id.iv_hangup2:  //点击挂断
                 LogUtils.e(Tag,"点击挂断");
                 mPresenter.hangup();
+                Log.e(GeTui.VideoLog,"点击挂断finish");
                 finish();
                 break;
         }
@@ -731,7 +758,10 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
     @Override
     public void  onCallFinish() {
         LogUtils.e(Tag,"通话结束");
-        finish();
+        if(isRunning){
+            finish();
+            Log.e(GeTui.VideoLog,"通话结束finish");
+        }
     }
 
     @Override
@@ -992,6 +1022,12 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
     @Override
     public void closeLockThrowable() {
 
+    }
+
+    @Override
+    public void closeMain() {
+        Log.e(GeTui.VideoLog,"closeMain--finish");
+        finish();
     }
 
     @Override

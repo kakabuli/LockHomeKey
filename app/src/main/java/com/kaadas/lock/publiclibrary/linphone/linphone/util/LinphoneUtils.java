@@ -96,7 +96,8 @@ public class LinphoneUtils {
 				prxCfg.setQualityReportingCollector(null);
 				prxCfg.setQualityReportingInterval(0);
 				prxCfg.enableRegister(true);
-				prxCfg.setExpires(10);
+			//	prxCfg.setExpires(10);
+                prxCfg.setExpires(4);
 				mLinphoneCore.addProxyConfig(prxCfg);
 				mLinphoneCore.addAuthInfo(authInfo);
 				mLinphoneCore.setDefaultProxyConfig(prxCfg);

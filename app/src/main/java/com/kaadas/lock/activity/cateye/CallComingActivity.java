@@ -17,14 +17,17 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.kaadas.lock.R;
 import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 import com.kaadas.lock.publiclibrary.linphone.linphone.callback.PhoneAutoAccept;
 import com.kaadas.lock.publiclibrary.linphone.linphone.util.LinphoneHelper;
+import com.kaadas.lock.utils.Constants;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.MyLog;
 import com.kaadas.lock.utils.RingTools;
+import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.ftp.GeTui;
 
 import org.linphone.core.LinphoneCall;
@@ -59,6 +62,7 @@ public class CallComingActivity extends BaseAddToApplicationActivity implements 
         ButterKnife.bind(this);
         call_coming_refuse_ll.setOnClickListener(this);
         ivAcceptCall.setOnClickListener(this);
+        SPUtils.remove(Constants.ALREADY_TOAST);
         MyLog.getInstance().save("CallComingActivity==>onCreate......:");
         Log.e(GeTui.VideoLog,"CallComingActivity==>onCreate......:");
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -151,6 +155,13 @@ public class CallComingActivity extends BaseAddToApplicationActivity implements 
                 if(ringTools!=null){
                     ringTools.stopRinging();
                 }
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        SPUtils.put(Constants.ALREADY_TOAST,true);
+                        Toast.makeText(CallComingActivity.this,getString(R.string.call_coming_connection_fail),Toast.LENGTH_LONG).show();
+                    }
+                });
                 Intent intent = new Intent();
                 intent.putExtra(KeyConstants.IS_ACCEPT_CALL, false);
                 setResult(RESULT_OK, intent);

@@ -14,6 +14,7 @@ import com.kaadas.lock.publiclibrary.linphone.linphonenew.LinphoneManager;
 import com.kaadas.lock.publiclibrary.linphone.linphonenew.LinphoneService;
 import com.kaadas.lock.utils.FileUtils;
 import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.ftp.GeTui;
 
 import org.linphone.core.LinphoneCall;
 import org.linphone.core.LinphoneCallParams;
@@ -267,6 +268,7 @@ public class LinphoneHelper {
      * 登录 SIP 服务器
      */
     private static void loginToServer() {
+        Log.e(GeTui.VideoLog,"mUsername:"+mUsername+" mPassword:"+mPassword+ " mServerIP:"+mServerIP);
         if (mUsername == null || mPassword == null || mServerIP == null) {
             throw new RuntimeException("The sip account is not configured.");
         }

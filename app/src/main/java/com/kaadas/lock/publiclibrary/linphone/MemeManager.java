@@ -207,7 +207,16 @@ public class MemeManager {
                 devices.add(device);
             }
         }
-        Log.e(GeTui.VideoLog,"MemeManager=>getGwDevice==>"+devices);
+        // 获得当前类名
+        String clazz=null;
+        String method=null;
+        try{
+             clazz = Thread.currentThread() .getStackTrace()[3].getClassName();
+            // 获得当前方法名
+             method = Thread.currentThread() .getStackTrace()[3].getMethodName();
+        }catch (Exception e){
+        }
+        Log.e(GeTui.VideoLog,"MemeManager=>getGwDevice==>"+devices+" clazz:"+clazz+" method:"+method);
         if (devices.size() > 0) {
             LogUtils.e(TAG, "网关设备在线   " + devices.size());
             gwDeviceChange.onNext(devices);
