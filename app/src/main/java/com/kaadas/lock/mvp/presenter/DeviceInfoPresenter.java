@@ -302,7 +302,6 @@ public class DeviceInfoPresenter extends BlePresenter<IDeviceInfoView> {
                                 }
                             }
                         });
-
         compositeDisposable.add(readModelNumberDisposable);
     }
 

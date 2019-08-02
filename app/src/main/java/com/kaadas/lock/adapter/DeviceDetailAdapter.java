@@ -18,6 +18,7 @@ import com.kaadas.lock.publiclibrary.bean.CateEyeInfo;
 import com.kaadas.lock.publiclibrary.bean.GatewayInfo;
 import com.kaadas.lock.publiclibrary.bean.GwLockInfo;
 import com.kaadas.lock.utils.BatteryView;
+import com.kaadas.lock.utils.BleLockUtils;
 import com.kaadas.lock.utils.LogUtils;
 
 import java.util.List;
@@ -131,37 +132,8 @@ public class DeviceDetailAdapter extends BaseQuickAdapter<HomeShowBean, BaseView
 
                     isWifiDevice(false, helper, status, batteryView,blePower);
                     String model = bleLockInfo.getServerLockInfo().getModel();
-                    if (model!=null){
-                        if (model.startsWith("K7")){
-                            helper.setImageResource(R.id.device_image, R.mipmap.k7);
-                        }else if (model.startsWith("K8")){
-                            helper.setImageResource(R.id.device_image, R.mipmap.k8);
-                        }else if (model.startsWith("K9")){
-                            helper.setImageResource(R.id.device_image, R.mipmap.k9);
-                        }else if (model.startsWith("KX")){
-                            helper.setImageResource(R.id.device_image, R.mipmap.kx);
-                        }else if (model.startsWith("QZ012")){
-                            helper.setImageResource(R.id.device_image, R.mipmap.qz012);
-                        }else if (model.startsWith("QZ013")){
-                            helper.setImageResource(R.id.device_image, R.mipmap.qz013);
-                        }else if (model.startsWith("S8")){
-                            helper.setImageResource(R.id.device_image, R.mipmap.s8);
-                        }else if (model.startsWith("V6")) {
-                            helper.setImageResource(R.id.device_image, R.mipmap.v6);
-                        }else if (model.startsWith("V7")) {
-                            helper.setImageResource(R.id.device_image, R.mipmap.v7);
-                        }else if (model.startsWith("S8C")){
-                            helper.setImageResource(R.id.device_image, R.mipmap.s8);
-                        }else if (model.startsWith("S6")){
-                            helper.setImageResource(R.id.device_image, R.mipmap.s6);
-                        }else if (model.startsWith("K100")){
-                            helper.setImageResource(R.id.device_image, R.mipmap.k100);
-                        } else{
-                            helper.setImageResource(R.id.device_image, R.mipmap.default_zigbee_lock_icon);
-                        }
-                    }else{
-                        helper.setImageResource(R.id.device_image, R.mipmap.default_zigbee_lock_icon);
-                    }
+                    helper.setImageResource(R.id.device_image, BleLockUtils.getSmallImageByModel(model));
+
                     batteryView.setPower(blePower);
                     helper.setText(R.id.device_power_text, blePower + "%");
                     textView.setText(bleLockInfo.getServerLockInfo().getLockNickName());

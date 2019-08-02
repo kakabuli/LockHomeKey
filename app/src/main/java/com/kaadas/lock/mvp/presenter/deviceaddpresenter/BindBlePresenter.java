@@ -13,7 +13,7 @@ import com.kaadas.lock.publiclibrary.http.XiaokaiNewServiceImp;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.util.BaseObserver;
 import com.kaadas.lock.publiclibrary.http.util.RxjavaHelper;
-import com.kaadas.lock.utils.FunctionSetUtils;
+import com.kaadas.lock.utils.BleLockUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.Rsa;
@@ -333,7 +333,8 @@ public class BindBlePresenter<T> extends BasePresenter<IBindBleView> {
                 .filter(new Predicate<ReadInfoBean>() {
                     @Override
                     public boolean test(ReadInfoBean readInfoBean) throws Exception {
-                        return readInfoBean.type == ReadInfoBean.TYPE_LOCK_FUNCTION_SET;
+                        return readInfoBean.type == ReadInfoBean.TYPE_LOCK_FUNCTION_SET ;
+
                     }
                 })
                 .timeout(2 * 1000, TimeUnit.MILLISECONDS)
@@ -342,13 +343,14 @@ public class BindBlePresenter<T> extends BasePresenter<IBindBleView> {
                     @Override
                     public void accept(ReadInfoBean readInfoBean) throws Exception {
                         toDisposable(functionSetDisposable);
-                        if (mViewRef.get() != null) {
-                            mViewRef.get().readLockTypeSucces();
-                        }
 
                         int functionSet = (int) readInfoBean.data;
+                        if (mViewRef.get() != null) {
+                            mViewRef.get().readFunctionSetSuccess(functionSet);
+                        }
+
                         LogUtils.e("收到锁功能集   " + functionSet);
-                        if (FunctionSetUtils.isExistFunctionSet(functionSet)) {
+                        if (BleLockUtils.isExistFunctionSet(functionSet)) {
                             bindDevice(pwd1, pwd2, mode, version + "", deviceSn, "" + functionSet);
                         } else {
                             if (mViewRef.get() != null) {
@@ -362,7 +364,7 @@ public class BindBlePresenter<T> extends BasePresenter<IBindBleView> {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
                         if (mViewRef.get() != null) {
-                            mViewRef.get().readLockTypeFailed(throwable);
+                            mViewRef.get().readFunctionSetFailed(throwable);
                         }
                     }
                 });

@@ -158,7 +158,6 @@
                     android:textColor="#333333"
                     android:textSize="@dimen/sp_14" />
 
-
             </RelativeLayout>
 
             <RelativeLayout

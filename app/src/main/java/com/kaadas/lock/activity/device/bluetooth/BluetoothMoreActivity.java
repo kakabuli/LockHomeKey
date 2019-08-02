@@ -27,7 +27,7 @@ import com.kaadas.lock.publiclibrary.ota.p6.P6OtaUpgradeActivity;
 import com.kaadas.lock.publiclibrary.ota.OtaConstants;
 import com.kaadas.lock.publiclibrary.ota.ti.TiOtaUpgradeActivity;
 import com.kaadas.lock.utils.AlertDialogUtil;
-import com.kaadas.lock.utils.FunctionSetUtils;
+import com.kaadas.lock.utils.BleLockUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.SPUtils;
@@ -88,7 +88,7 @@ public class BluetoothMoreActivity extends BaseBleActivity<IDeviceMoreView, Devi
         String source = intent.getStringExtra(KeyConstants.SOURCE);
         bleLockInfo = mPresenter.getBleLockInfo();
         int func = Integer.parseInt(bleLockInfo.getServerLockInfo().getFunctionSet());
-        if (FunctionSetUtils.isSupportAMModeShow(func)) {
+        if (BleLockUtils.isSupportAMModeShow(func)) {
             rlAm.setVisibility(View.VISIBLE);
         } else {
             rlAm.setVisibility(View.GONE);
@@ -211,7 +211,7 @@ public class BluetoothMoreActivity extends BaseBleActivity<IDeviceMoreView, Devi
                 break;
             case R.id.rl_am:
                 int func = Integer.parseInt(bleLockInfo.getServerLockInfo().getFunctionSet());
-                if (FunctionSetUtils.isSupportAMModeSet(func)) {
+                if (BleLockUtils.isSupportAMModeSet(func)) {
                     if (amAutoLockStatus) {
                         //打开状态 现在关闭
                         mPresenter.setAutoLock(false);

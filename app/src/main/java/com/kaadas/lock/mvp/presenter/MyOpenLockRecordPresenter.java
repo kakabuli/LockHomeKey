@@ -168,7 +168,7 @@ public class MyOpenLockRecordPresenter<T> extends BlePresenter<IBleLockView> {
      * 用户点击同步时  调用的从BLe设备获取的开锁记录
      * 每次都从第一组开始获取  此时不知道开锁记录总个数
      */
-    public void getRecordFromBle() {
+    public void getOpenRecordFromBle() {
         //添加
         toDisposable(disposable);
         if (mViewRef.get() != null) {

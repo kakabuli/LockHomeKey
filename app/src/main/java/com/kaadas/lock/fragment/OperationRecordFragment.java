@@ -13,16 +13,21 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.home.BluetoothRecordActivity;
-import com.kaadas.lock.adapter.OperationRecordAdapter;
+import com.kaadas.lock.adapter.BluetoothRecordAdapter;
+import com.kaadas.lock.bean.BluetoothItemRecordBean;
+import com.kaadas.lock.bean.BluetoothRecordBean;
 import com.kaadas.lock.bean.OperationSection;
 import com.kaadas.lock.mvp.mvpbase.BaseBleFragment;
 import com.kaadas.lock.mvp.presenter.OperationRecordPresenter;
 import com.kaadas.lock.mvp.view.IOpenLockRecordView;
 import com.kaadas.lock.mvp.view.IOperationRecordView;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
+import com.kaadas.lock.publiclibrary.ble.BleUtil;
 import com.kaadas.lock.publiclibrary.ble.bean.OperationLockRecord;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
+import com.kaadas.lock.publiclibrary.http.result.GetPasswordResult;
 import com.kaadas.lock.publiclibrary.http.util.HttpUtils;
+import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.ToastUtil;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
@@ -31,7 +36,6 @@ import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import butterknife.BindView;
@@ -50,11 +54,13 @@ public class OperationRecordFragment extends BaseBleFragment<IOperationRecordVie
     private int type = 0; //默认是开锁记录0   1为警报记录
     private int currentPage = 1;   //当前的开锁记录时间
     private Unbinder unbinder;
-    private OperationRecordAdapter openLockRecordAdapter;
+    private BluetoothRecordAdapter openLockRecordAdapter;
     private List<OperationSection> showList = new ArrayList<>();
     private boolean isLoadingBleRecord;  //正在加载锁上数据
     private BleLockInfo bleLockInfo;
     private BluetoothRecordActivity activity;
+
+    private List<BluetoothRecordBean> showDatas = new ArrayList<>();
 
 
     public void setType(int type) {
@@ -126,8 +132,8 @@ public class OperationRecordFragment extends BaseBleFragment<IOperationRecordVie
                 }
                 if (mPresenter.isAuth(bleLockInfo, true)) {
                     LogUtils.e("同步开锁记录");
-                    mPresenter.getRecordFromBle();
-                    showList.clear();
+                    mPresenter.getOperationRecordFromBle();
+                    showDatas.clear();
                     if (openLockRecordAdapter != null) {
                         openLockRecordAdapter.notifyDataSetChanged();
                     }
@@ -157,7 +163,8 @@ public class OperationRecordFragment extends BaseBleFragment<IOperationRecordVie
     }
 
     @Override
-    public void onLoadBleRecord(List<OperationLockRecord> lockRecords) {
+    public void onLoadBleOperationRecord(List<OperationLockRecord> lockRecords) {
+        LogUtils.e("获取到一组操作记录   "+lockRecords.size());
         //获取到蓝牙的开锁记录
         showList.clear();
         String lastTimeHead = "";
@@ -171,10 +178,9 @@ public class OperationRecordFragment extends BaseBleFragment<IOperationRecordVie
             }
             showList.add(new OperationSection(record));
         }
+        groupData(lockRecords);
         if (openLockRecordAdapter == null) {
-            openLockRecordAdapter = new OperationRecordAdapter(R.layout.equipment_dynamic_item, R.layout.equipment_dynamic_head, showList
-                    , MyApplication.getInstance().getPasswordResults(bleLockInfo.getServerLockInfo().getLockName())
-            );
+            openLockRecordAdapter = new BluetoothRecordAdapter(showDatas);
             recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
             recyclerView.setAdapter(openLockRecordAdapter);
             openLockRecordAdapter.setOnItemClickListener(this);
@@ -198,7 +204,7 @@ public class OperationRecordFragment extends BaseBleFragment<IOperationRecordVie
     }
 
     @Override
-    public void onLoadServerRecord(List<OperationLockRecord> lockRecords, int page) {
+    public void onLoadServerOperationRecord(List<OperationLockRecord> lockRecords, int page) {
         LogUtils.e("收到服务器数据  " + lockRecords.size());
         currentPage = page + 1;
         showList.clear();
@@ -212,11 +218,9 @@ public class OperationRecordFragment extends BaseBleFragment<IOperationRecordVie
             }
             showList.add(new OperationSection(record));
         }
-
+        groupData(lockRecords);
         if (openLockRecordAdapter == null) {
-            openLockRecordAdapter = new OperationRecordAdapter(R.layout.equipment_dynamic_item, R.layout.equipment_dynamic_head, showList
-                    ,MyApplication.getInstance().getPasswordResults(bleLockInfo.getServerLockInfo().getLockName())
-            );
+            openLockRecordAdapter = new BluetoothRecordAdapter(showDatas);
             recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
             recyclerView.setAdapter(openLockRecordAdapter);
             openLockRecordAdapter.setOnItemClickListener(this);
@@ -287,5 +291,55 @@ public class OperationRecordFragment extends BaseBleFragment<IOperationRecordVie
         refreshLayout.setEnableLoadMore(false);
         showLoading(getString(R.string.is_loading_lock_record));
     }
+
+
+    private void groupData(List<OperationLockRecord> lockRecords) {
+        showDatas.clear();
+        String lastTimeHead = "";
+        for (int i = 0; i < lockRecords.size(); i++) {
+            OperationLockRecord record = lockRecords.get(i);
+            //获取开锁时间的毫秒数
+            String timeHead = record.getEventTime().substring(0, 10);
+            String hourSecond = record.getEventTime().substring(11, 16);
+
+            GetPasswordResult passwordResult = MyApplication.getInstance().getPasswordResults(bleLockInfo.getServerLockInfo().getLockName());
+            //获取昵称
+
+            String nickName = BleUtil.getNickName(record,passwordResult );
+            String openType = BleUtil.getOpenType(record);
+            if (!timeHead.equals(lastTimeHead)) { //添加头
+                lastTimeHead = timeHead;
+                List<BluetoothItemRecordBean> itemList = new ArrayList<>();
+                itemList.add(new BluetoothItemRecordBean(nickName, openType, KeyConstants.BLUETOOTH_RECORD_COMMON,
+                        hourSecond, false, false));
+                showDatas.add(new BluetoothRecordBean(timeHead, itemList, false));
+            } else {
+                BluetoothRecordBean bluetoothRecordBean = showDatas.get(showDatas.size() - 1);
+                List<BluetoothItemRecordBean> bluetoothItemRecordBeanList = bluetoothRecordBean.getList();
+                bluetoothItemRecordBeanList.add(new BluetoothItemRecordBean(nickName, openType, KeyConstants.BLUETOOTH_RECORD_COMMON, hourSecond, false, false));
+            }
+        }
+
+        for (int i = 0; i < showDatas.size(); i++) {
+            BluetoothRecordBean bluetoothRecordBean = showDatas.get(i);
+            List<BluetoothItemRecordBean> bluetoothRecordBeanList = bluetoothRecordBean.getList();
+
+            for (int j = 0; j < bluetoothRecordBeanList.size(); j++) {
+                BluetoothItemRecordBean bluetoothItemRecordBean = bluetoothRecordBeanList.get(j);
+
+                if (j == 0) {
+                    bluetoothItemRecordBean.setFirstData(true);
+                }
+                if (j == bluetoothRecordBeanList.size() - 1) {
+                    bluetoothItemRecordBean.setLastData(true);
+                }
+
+            }
+            if (i == showDatas.size() - 1) {
+                bluetoothRecordBean.setLastData(true);
+            }
+        }
+    }
+
 
 }

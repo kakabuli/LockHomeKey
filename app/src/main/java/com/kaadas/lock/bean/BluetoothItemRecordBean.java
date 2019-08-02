@@ -10,7 +10,7 @@ public class BluetoothItemRecordBean {
     @Override
     public String toString() {
         return "BluetoothItemRecordBean{" +
-                "content='" + content + '\'' +
+                "nickName='" + nickName + '\'' +
                 ", strRight='" + strRight + '\'' +
                 ", iconImg='" + iconImg + '\'' +
                 ", open_time='" + open_time + '\'' +
@@ -19,7 +19,7 @@ public class BluetoothItemRecordBean {
                 '}';
     }
 
-    private String content;//中间的数据
+    private String nickName;//中间的数据
     private String strRight;//右边的数据
 
     public String getStrRight() {
@@ -30,12 +30,12 @@ public class BluetoothItemRecordBean {
         this.strRight = strRight;
     }
 
-    public String getContent() {
-        return content;
+    public String getNickName() {
+        return nickName;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
     }
 
     //用户编号
@@ -53,7 +53,7 @@ public class BluetoothItemRecordBean {
     }
 
     public BluetoothItemRecordBean(String content,String strRight, String iconImg, String open_time, boolean firstData, boolean lastData) {
-        this.content = content;
+        this.nickName = content;
         this.strRight=strRight;
         this.iconImg = iconImg;
         this.open_time = open_time;

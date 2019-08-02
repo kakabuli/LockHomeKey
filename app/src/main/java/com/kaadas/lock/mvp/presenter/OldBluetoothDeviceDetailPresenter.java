@@ -209,6 +209,7 @@ public class OldBluetoothDeviceDetailPresenter<T> extends OldBleLockDetailPresen
     }
 
     public void currentOpenLock() {
+        LogUtils.e("开门111     "+bleService.getBleVersion());
         if (bleService.getBleVersion() == 1) {
             oldOpenLockMethod();
         } else {
@@ -219,6 +220,9 @@ public class OldBluetoothDeviceDetailPresenter<T> extends OldBleLockDetailPresen
 
     //////////////////////老模块开锁逻辑///////////////////////////////
     public void oldOpenLockMethod() {
+        if (mViewRef.get() != null) {
+            mViewRef.get().isOpeningLock();
+        }
         openLockRunnable.run();
     }
 

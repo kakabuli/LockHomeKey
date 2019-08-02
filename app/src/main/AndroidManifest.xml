@@ -317,7 +317,7 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.device.BluetoothLockFunctionActivity"
+            android:name=".activity.device.BleDetailActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity

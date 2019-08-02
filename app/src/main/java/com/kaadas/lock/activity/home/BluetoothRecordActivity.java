@@ -5,22 +5,21 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.kaadas.lock.R;
-import com.kaadas.lock.fragment.BluetoothOpenLockRecordFragment;
+import com.kaadas.lock.fragment.BleOpenRecordFragment;
 import com.kaadas.lock.fragment.BluetoothWarnInformationFragment;
-import com.kaadas.lock.fragment.HomePageFragment;
 import com.kaadas.lock.fragment.OperationRecordFragment;
 import com.kaadas.lock.mvp.mvpbase.BaseBleActivity;
 import com.kaadas.lock.mvp.mvpbase.BlePresenter;
 import com.kaadas.lock.mvp.mvpbase.IBleView;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
-import com.kaadas.lock.utils.FunctionSetUtils;
+import com.kaadas.lock.utils.BleLockUtils;
+import com.kaadas.lock.utils.LogUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -55,11 +54,13 @@ public class BluetoothRecordActivity extends BaseBleActivity<IBleView, BlePresen
         bleLockInfo = mPresenter.getBleLockInfo();
 
         int func = Integer.parseInt(bleLockInfo.getServerLockInfo().getFunctionSet());
+        LogUtils.e("是否支持操作记录   "+bleLockInfo.getServerLockInfo().getBleVersion() + "   " + bleLockInfo.getServerLockInfo().getFunctionSet());
         if ("3".equals(bleLockInfo.getServerLockInfo().getBleVersion())){
-            isSupportOperationRecord = FunctionSetUtils.isSupportOperationRecord(func);
+            isSupportOperationRecord = BleLockUtils.isSupportOperationRecord(func);
         }else {
             isSupportOperationRecord = false;
         }
+        LogUtils.e("是否支持操作记录   ");
         ButterKnife.bind(this);
         ivBack.setOnClickListener(this);
         tvContent.setText(getString(R.string.device_dynamic));
@@ -84,7 +85,7 @@ public class BluetoothRecordActivity extends BaseBleActivity<IBleView, BlePresen
         if (isSupportOperationRecord) {
             recordFragment = new OperationRecordFragment();
         } else {
-            recordFragment = new BluetoothOpenLockRecordFragment();
+            recordFragment = new BleOpenRecordFragment();
         }
 
         transaction.add(R.id.content, recordFragment);
@@ -117,7 +118,7 @@ public class BluetoothRecordActivity extends BaseBleActivity<IBleView, BlePresen
                     if (isSupportOperationRecord){
                         recordFragment = new OperationRecordFragment();
                     }else {
-                        recordFragment = new BluetoothOpenLockRecordFragment();
+                        recordFragment = new BleOpenRecordFragment();
                     }
                     fragmentTransaction.add(R.id.content, recordFragment);
                 }

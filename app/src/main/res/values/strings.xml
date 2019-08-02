@@ -837,7 +837,7 @@
     <string name="repeat_rules">重复规则</string>
     <string name="fingerprint_collect_success">号指纹采集成功</string>
     <string name="card_add_success">号卡添加成功</string>
-    <string name="cate_sleep">来电呼叫失败,猫眼已经休眠</string>
+    <string name="cate_sleep">猫眼已经休眠</string>
     <string name="mainactivity_permission_alert_msg">请前往应用信息设置界面中打开通知开关，后台弹出界面开关,否则猫眼呼来电叫功能无法正常使用</string>
     <string name="mainactivity_permission_alert_title">应用权限开关开启通知</string>
     <string name="no_unlock_record">暂无操作记录</string>
@@ -1174,4 +1174,5 @@
     <string name="cateye_video_audio_send_fail_no_time">无音视频传输,请重新呼叫</string>
     <string name="sip_register_fail">Sip注册失败,来电呼叫失败，请重新呼叫</string>
     <string name="call_coming_connection_fail">猫眼呼叫来电失败,呼叫结束,请重新呼叫</string>
+    <string name="read_lock_info_failed">读取锁信息失败，请重试！</string>
 </resources>

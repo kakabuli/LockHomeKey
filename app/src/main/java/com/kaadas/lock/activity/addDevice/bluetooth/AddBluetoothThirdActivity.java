@@ -198,6 +198,20 @@ public class AddBluetoothThirdActivity extends BaseActivity<IBindBleView, BindBl
     public void unknownFunctionSet(int functionSet) {
         String content = String.format(getString(R.string.unknow_function_set), "" + functionSet);
         ToastUtil.getInstance().showLong(content);
+        finish();
+        startActivity(new Intent(AddBluetoothThirdActivity.this, AddBluetoothSearchActivity.class));
+    }
+
+    @Override
+    public void readFunctionSetSuccess(int functionSet) {
+
+    }
+
+    @Override
+    public void readFunctionSetFailed(Throwable throwable) {
+        ToastUtil.getInstance().showLong(R.string.read_lock_info_failed);
+        finish();
+        startActivity(new Intent(AddBluetoothThirdActivity.this, AddBluetoothSearchActivity.class));
     }
 
 }

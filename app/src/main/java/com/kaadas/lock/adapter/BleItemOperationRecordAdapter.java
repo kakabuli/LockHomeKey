@@ -21,20 +21,14 @@ import java.util.List;
  */
 
 
-public class BluetoothItemRecordAdapter extends BaseQuickAdapter<BluetoothItemRecordBean, BaseViewHolder> {
-    public BluetoothItemRecordAdapter(int layoutResId, @Nullable List<BluetoothItemRecordBean> data) {
+public class BleItemOperationRecordAdapter extends BaseQuickAdapter<BluetoothItemRecordBean, BaseViewHolder> {
+    public BleItemOperationRecordAdapter(int layoutResId, @Nullable List<BluetoothItemRecordBean> data) {
         super(layoutResId, data);
     }
 
-    public BluetoothItemRecordAdapter(@Nullable List<BluetoothItemRecordBean> data) {
+    public BleItemOperationRecordAdapter(@Nullable List<BluetoothItemRecordBean> data) {
         super(data);
     }
-
-//
-//    public BluetoothItemRecordAdapter(@Nullable List<BluetoothItemRecordBean> data) {
-//        super(R.layout.item_item_bluetooth_record, data);
-//    }
-
 
     @Override
     protected void convert(BaseViewHolder helper, BluetoothItemRecordBean bean) {
@@ -86,7 +80,7 @@ public class BluetoothItemRecordAdapter extends BaseQuickAdapter<BluetoothItemRe
                 strRight = mContext.getString(R.string.one_key_open);
                 break;
             case BleUtil.UNKNOWN_OPEN:
-                strRight = mContext.getString(R.string.unknown_open);
+                strRight =  mContext.getString(R.string.unknown_open);
                 break;
         }
         // 机械开锁/APP开锁/自动开锁/密码开锁/门卡开锁/指纹开锁

@@ -33,6 +33,7 @@ import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.util.HttpUtils;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.BatteryView;
+import com.kaadas.lock.utils.BleLockUtils;
 import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.StringUtil;
@@ -118,6 +119,21 @@ public class BluetoothLockAuthorizationActivity extends BaseBleActivity<IOldBlue
                 }
             }
         };
+
+
+        if (mPresenter.getBleVersion() == 2 || mPresenter.getBleVersion() == 3 ||
+                (bleLockInfo!=null && bleLockInfo.getServerLockInfo()!=null && !TextUtils.isEmpty(bleLockInfo.getServerLockInfo().getBleVersion())&&
+                        "2".equals(bleLockInfo.getServerLockInfo().getBleVersion()))
+                ||
+                (bleLockInfo!=null && bleLockInfo.getServerLockInfo()!=null && !TextUtils.isEmpty(bleLockInfo.getServerLockInfo().getBleVersion())&&
+                        "3".equals(bleLockInfo.getServerLockInfo().getBleVersion()))
+                ){
+             //可以查设备信息
+            rlDeviceInformation.setVisibility(View.VISIBLE);
+        } else {
+            //不可以查设备信息
+            rlDeviceInformation.setVisibility(View.GONE);
+        }
     }
 
     private void showLockType() {
@@ -152,48 +168,7 @@ public class BluetoothLockAuthorizationActivity extends BaseBleActivity<IOldBlue
 
     private void changeLockIcon(Intent intent) {
         String model = intent.getStringExtra(KeyConstants.DEVICE_TYPE);
- /*       if (!TextUtils.isEmpty(model)) {
-            if (model.contains("K7")) {
-                ivLockIcon.setImageResource(R.mipmap.bluetooth_authorization_lock_k7);
-            } else if (model.contains("K8")) {
-                ivLockIcon.setImageResource(R.mipmap.bluetooth_authorization_lock_k8);
-            } else if (model.contains("K9")) {
-                ivLockIcon.setImageResource(R.mipmap.bluetooth_authorization_lock_k9);
-            } else if (model.contains("KX")) {
-                ivLockIcon.setImageResource(R.mipmap.bluetooth_authorization_lock_kx);
-            } else if (model.contains("S8")) {
-                ivLockIcon.setImageResource(R.mipmap.bluetooth_authorization_lock_s8);
-            }
-        }*/
-        if (!TextUtils.isEmpty(model)) {
-            if (model.contains("K7")) {
-                ivLockIcon.setImageResource(R.mipmap.bluetooth_authorization_lock_k7);
-            } else if (model.contains("K8")) {
-                ivLockIcon.setImageResource(R.mipmap.bluetooth_authorization_lock_k8);
-            } else if (model.contains("K9")) {
-                ivLockIcon.setImageResource(R.mipmap.bluetooth_authorization_lock_k9);
-            } else if (model.contains("KX")) {
-                ivLockIcon.setImageResource(R.mipmap.bluetooth_authorization_lock_kx);
-            } else if (model.contains("S8C")) {
-                ivLockIcon.setImageResource(R.mipmap.bluetooth_authorization_lock_s8);
-            } else if (model.contains("V6")) {
-                ivLockIcon.setImageResource(R.mipmap.bluetooth_authorization_lock_v6);
-            } else if (model.contains("V7") || model.contains("S100")) {
-                ivLockIcon.setImageResource(R.mipmap.bluetooth_authorization_lock_v7);
-            } else if (model.contains("S8")) {
-                ivLockIcon.setImageResource(R.mipmap.bluetooth_authorization_lock_s8);
-            } else if (model.contains("QZ013")) {
-                ivLockIcon.setImageResource(R.mipmap.bluetooth_authorization_lock_qz013);
-            } else if (model.contains("QZ012")) {
-                ivLockIcon.setImageResource(R.mipmap.bluetooth_authorization_lock_qz012);
-            } else if (model.contains("K8-T")) {
-                ivLockIcon.setImageResource(R.mipmap.bluetooth_authorization_lock_k8_t);
-            }else if (model.contains("S6")){
-                ivLockIcon.setImageResource(R.mipmap.bluetooth_authorization_lock_s6);
-            }else if (model.contains("K100")){
-                ivLockIcon.setImageResource(R.mipmap.bluetooth_authorization_lock_k100);
-            }
-        }
+        ivLockIcon.setImageResource(BleLockUtils.getAuthorizationImageByModel(model));
     }
 
     @Override
@@ -208,12 +183,13 @@ public class BluetoothLockAuthorizationActivity extends BaseBleActivity<IOldBlue
 
     @Override
     protected OldBluetoothDeviceDetailPresenter<IOldBluetoothDeviceDetailView> createPresent() {
-        return new OldBluetoothDeviceDetailPresenter();
+        return new OldBluetoothDeviceDetailPresenter<>();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        showData();
         if (mPresenter.getBleLockInfo() != null && mPresenter.getBleLockInfo().getServerLockInfo() != null && mPresenter.getBleLockInfo().getServerLockInfo().getLockNickName() != null) {
             LogUtils.e("设备昵称是   " + mPresenter.getBleLockInfo().getServerLockInfo().getLockNickName());
             tvBluetoothName.setText(mPresenter.getBleLockInfo().getServerLockInfo().getLockNickName());
@@ -223,28 +199,9 @@ public class BluetoothLockAuthorizationActivity extends BaseBleActivity<IOldBlue
     private void initView() {
         Intent intent = getIntent();
         type = intent.getStringExtra(KeyConstants.DEVICE_TYPE);
-        showData();
+
     }
 
-/*    private void changeLockPage() {
-        if (isX5) {
-            x5Layout.setVisibility(View.VISIBLE);
-            t5Layout.setVisibility(View.GONE);
-            if (!TextUtils.isEmpty(bleLockInfo.getServerLockInfo().getModel())) {
-                modelX5.setText(getText(R.string.type) + bleLockInfo.getServerLockInfo().getModel());
-            }
-            detailDeviceImage.setImageResource(R.mipmap.detail_device_x5);
-        } else {
-            x5Layout.setVisibility(View.GONE);
-            t5Layout.setVisibility(View.VISIBLE);
-            if (!TextUtils.isEmpty(bleLockInfo.getServerLockInfo().getModel())) {
-                tvModelT5.setText(getText(R.string.type) + bleLockInfo.getServerLockInfo().getModel());
-            }
-            detailDeviceImage.setImageResource(R.mipmap.detail_device_t5);
-        }
-
-
-    }*/
 
     @SuppressLint("SetTextI18n")
     private void showData() {
@@ -343,7 +300,11 @@ public class BluetoothLockAuthorizationActivity extends BaseBleActivity<IOldBlue
 
     @Override
     public void onBleVersionUpdate(int version) {
-
+        if (version == 1){
+            rlDeviceInformation.setVisibility(View.GONE);
+        }else {
+            rlDeviceInformation.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -487,7 +448,8 @@ public class BluetoothLockAuthorizationActivity extends BaseBleActivity<IOldBlue
                         }
                         return;
                     }
-                    mPresenter.openLock();
+                    LogUtils.e("开锁   ");
+                    mPresenter.currentOpenLock();
                 }
                 vibrate(this, 150);
                 break;
