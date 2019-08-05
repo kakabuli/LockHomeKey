@@ -66,4 +66,10 @@ public class Constants {
 
     public static final String IS_FROM_WEL_INTENT="IS_FROM_WEL_INTENT";
     public static final String IS_FROM_WEL_SP="IS_FROM_WEL_SP";
+
+    public static final String LINPHONE_REGESTER_STATE="LINPHONE_REGESTER_STAT";  // 失败为false
+
+    public static final String ALL_DEVICES_DATA="ALL_DEVICES_DATA";
+
+    public static final String ALREADY_TOAST="ALREADY_TOAST";
 }

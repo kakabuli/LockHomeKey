@@ -34,6 +34,7 @@ import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.AllBindDevices;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttConstant;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttData;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttService;
+import com.kaadas.lock.utils.Constants;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.MyLog;
@@ -113,6 +114,7 @@ public class MyApplication extends Application {
         initLinphoneService();
         SPUtils.init(this);  //初始化SPUtils  传递Context进去  不需要每次都传递Context
         ToastUtil.init(this); //初始化ToastUtil 传递Context进去  不需要每次都传递
+        SPUtils.remove(Constants.LINPHONE_REGESTER_STATE);
         initTokenAndUid();  //获取本地UUID
         try {
             MyLog.getInstance().init(this);
@@ -523,6 +525,7 @@ public class MyApplication extends Application {
                         }
                         String payload = mqttData.getPayload();
                         allBindDevices = new Gson().fromJson(payload, AllBindDevices.class);
+                        SPUtils.put(Constants.ALL_DEVICES_DATA,payload);
 
                         long serverCurrentTime = Long.parseLong(allBindDevices.getTimestamp());
                         SPUtils.put(KeyConstants.SERVER_CURRENT_TIME, serverCurrentTime);

@@ -141,4 +141,6 @@ public interface IVideoView extends IBaseView {
 
     //关锁上报异常
     void closeLockThrowable();
+
+    void  closeMain();
 }

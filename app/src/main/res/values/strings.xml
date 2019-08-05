@@ -648,7 +648,7 @@
     <string name="get_lock_finger_failed">获取锁上指纹失败！</string>
     <string name="please_connect_lock">锁设备未连接</string>
     <string name="refresh_data_fail">刷新失败，请稍后再试！</string>
-    <string name="return_code_409">设备正忙</string>
+    <string name="return_code_409">呼叫中断,请重新呼叫</string>
     <string name="push_type">firebase</string>
     <string name="push_sender_id">929724111839</string><!--firebase 929724111839 !! gcm 622464153529 -->
     <string name="unknown_incoming_call_name">Unknown</string>
@@ -757,7 +757,7 @@
     <string name="get_card_failed">获取卡片列表失败</string>
     <string name="call_time_out">呼叫超时</string>
     <string name="call_failed">呼叫失败</string>
-    <string name="link_failed">连接失败</string>
+    <string name="link_failed">呼叫失败,请重新呼叫</string>
     <string name="call_failed_cat_eye_offline">呼叫失败，猫眼不在线</string>
     <string name="zigbee_pwd_perpetual">密码永久有效</string>
     <string name="zigbee_pwd_temporary">密码临时有效</string>
@@ -1170,6 +1170,10 @@
     <string name="get_stress_list_success">获取胁迫密码列表成功</string>
     <string name="cateye_call_fail">猫眼来电呼叫失败</string>
     <string name="cateye_sip_invert_fail">猫眼来电呼叫失败,获取数据包失败</string>
+    <string name="cateye_video_audio_send_fail">音视频传输失败,请重新呼叫</string>
+    <string name="cateye_video_audio_send_fail_no_time">无音视频传输,请重新呼叫</string>
+    <string name="sip_register_fail">Sip注册失败,来电呼叫失败，请重新呼叫</string>
+    <string name="call_coming_connection_fail">猫眼呼叫来电失败,呼叫结束,请重新呼叫</string>
     <string name="read_lock_info_failed">读取锁信息失败，请重试！</string>
     <string name="server_data_error">服务器数据错误</string>
 </resources>

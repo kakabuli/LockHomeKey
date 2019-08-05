@@ -96,11 +96,22 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
     }
 
     public  boolean isConnectedEye=false;
-
+    final int CLOSE=1;
+    int CLOSE_TIME=10*1000;
    Handler videoHandler=new Handler(){
        @Override
        public void handleMessage(Message msg) {
            super.handleMessage(msg);
+           switch (msg.what) {
+               case  CLOSE:
+                   Log.e(GeTui.VideoLog,"音视频传输失败,请重新呼叫");
+                   MyLog.getInstance().save("音视频传输失败,请重新呼叫");
+                Toast.makeText(mContext,mContext.getString(R.string.cateye_video_audio_send_fail),Toast.LENGTH_LONG).show();
+                   if (mViewRef.get() != null) {
+                       mViewRef.get().closeMain();
+                   }
+                   break;
+           }
        }
    };
 
@@ -181,6 +192,9 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
 
             @Override
             public void callConnected() {
+                Message msg= Message.obtain();
+                msg.what=CLOSE;
+                videoHandler.sendMessageDelayed(msg,CLOSE_TIME);
                 Log.e(Tag, "猫眼1  callConnected.........");
                 Log.e(GeTui.VideoLog, "VideoPresenter==>callConnected....");
                 MyLog.getInstance().save("猫眼1  callConnected.........");
@@ -204,6 +218,7 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
                 Log.e(GeTui.VideoLog, "VideoPresenter==>callFinish....");
                 Log.e(Tag, "猫眼 callFinish.........");
                 MyLog.getInstance().save("猫眼 callFinish.........");
+                videoHandler.removeCallbacksAndMessages(null);
                 if (mViewRef.get() != null) {
                     mViewRef.get().onCallFinish();
                 }
@@ -217,6 +232,7 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
                 Log.e(GeTui.VideoLog, "VideoPresenter==>Streaming....");
                 Log.e(Tag, "猫眼 Streaming.........");
                 MyLog.getInstance().save("猫眼 Streaming.........");
+                videoHandler.removeCallbacksAndMessages(null);
                 isConnectedEye=true;
                 if(mViewRef!=null && mViewRef.get()!=null){
                     mViewRef.get().callSuccess();
@@ -912,6 +928,10 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
 
     }
 
+
+    public void  destoryPre(){
+        videoHandler.removeCallbacksAndMessages(null);
+    }
 
 
 }

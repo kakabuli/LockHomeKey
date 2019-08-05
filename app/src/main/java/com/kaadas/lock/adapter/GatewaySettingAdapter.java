@@ -19,13 +19,13 @@ public class GatewaySettingAdapter extends BaseQuickAdapter<GatewaySettingItemBe
 
     @Override
     protected void convert(BaseViewHolder helper, GatewaySettingItemBean item) {
-        helper.setText(R.id.title,item.getTitle());
-        helper.setText(R.id.content,item.getContent());
-        ImageView imageView=helper.getView(R.id.right);
-        if (item.isSetting()){
-            imageView.setVisibility(View.VISIBLE);
-        }else{
-            imageView.setVisibility(View.GONE);
-        }
+            helper.setText(R.id.title, item.getTitle());
+            helper.setText(R.id.content, item.getContent());
+            ImageView imageView = helper.getView(R.id.right);
+            if (item.isSetting()) {
+                imageView.setVisibility(View.VISIBLE);
+            } else {
+                imageView.setVisibility(View.GONE);
+            }
     }
 }

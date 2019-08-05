@@ -22,8 +22,10 @@ import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.UpdateGatewayNickNam
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttConstant;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttData;
 import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.ftp.GeTui;
 
 import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.linphone.mediastream.Log;
 
 import java.util.concurrent.TimeUnit;
 
@@ -51,6 +53,7 @@ public class GatewaySettingPresenter<T> extends BasePresenter<GatewaySettingView
                     .filter(new Predicate<MqttData>() {
                         @Override
                         public boolean test(MqttData mqttData) throws Exception {
+                            Log.e(GeTui.MqttLog,"mqtt--receiver..test.."+"GatewaySettingPresenter"+mqttData.toString()+"");
                             if (MqttConstant.GET_NET_BASIC.equals(mqttData.getFunc())){
                                 return true;
                             }else{

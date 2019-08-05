@@ -55,6 +55,7 @@ import com.kaadas.lock.publiclibrary.linphone.linphone.VideoActivity;
 import com.kaadas.lock.publiclibrary.linphone.linphone.linphone.ContactsManager;
 import com.kaadas.lock.publiclibrary.linphone.linphone.linphone.LinphoneContact;
 import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.MyLog;
 import com.kaadas.lock.utils.ftp.GeTui;
 
 import org.linphone.core.CallDirection;
@@ -228,7 +229,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
         startLibLinphone(c);
         instance = this;
 //		instance.initOpenH264DownloadHelper();
-        mPrefs.setIncTimeout(30);
+        mPrefs.setIncTimeout(50);
         H264Helper.setH264Mode(H264Helper.MODE_AUTO, getLc());
     }
 
@@ -693,9 +694,11 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
                                 // 说白了就是要保证LinphoneCore的方法运行在一至的线程里，不然就出错了。
                                 try{
                                    // Log.e(GeTui.VideoLog,"LinphoneManager...itrator..");
+                                //    MyLog.getInstance().save("LinphoneManager....itrator....");
                                     mLc.iterate();
                                 }catch (Exception e){
                                      Log.e(GeTui.VideoLog,"LinphoneManager exception:"+e.getMessage());
+                                     MyLog.getInstance().save("LinphoneManager exception:"+e.getMessage());
                                 }
                             }
                         }
@@ -1298,13 +1301,6 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 
     }
 
-    Handler handler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-        }
-    };
-
     public Context getContext() {
         try {
             if (MainActivity.isInstanciated())
@@ -1389,7 +1385,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 
         if (state == State.CallEnd || state == State.Error) {
             //		Toast.makeText(mServiceContext,mServiceContext.getResources().getString(R.string.return_code_409),Toast.LENGTH_SHORT).show();
-            Log.e("denganzhi1", "manager===>call=========》End..........." + State.CallEnd + "    State.Error:" + State.Error);
+            Log.e(GeTui.VideoLog, "LinphoneManager===>call=========》End..........." + State.CallEnd + "    State.Error:" + State.Error);
             if (mLc.getCallsNb() == 0) {
                 //Disabling proximity sensor
                 enableProximitySensing(false);
@@ -1433,21 +1429,6 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 
         if (state == LinphoneCall.State.CallReleased) {
             Log.e("howard", "call CallReleased");
-            //   stopRinging();
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    //	stopRinging();
-                }
-            }, 1500);
-
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    //	stopRinging();
-                }
-            }, 2500);
-
             com.kaadas.lock.publiclibrary.linphone.linphone.util.LinphoneUtils.getInstance().hangUp();
         }
     }

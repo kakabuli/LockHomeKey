@@ -147,11 +147,10 @@ public class BleLockUtils {
         List<BluetoothLockFunctionBean> functionBeans = new ArrayList<>();
         Integer[] funcs = FUNCTION_SET.get(functionSet);
         System.out.println(funcs == null);
-        List<Integer> integers = Arrays.asList(funcs);
         if (funcs == null) { //未知功能集
             funcs = FUNCTION_SET.get(0x31);
         }
-
+        List<Integer> integers = Arrays.asList(funcs);
         if (integers.contains(7)) {
             functionBeans.add(new BluetoothLockFunctionBean(MyApplication.getInstance().getString(R.string.password), R.mipmap.bluetooth_password, TYPE_PASSWORD));
         }
@@ -201,7 +200,9 @@ public class BleLockUtils {
                 return R.mipmap.bluetooth_authorization_lock_s6;
             } else if (model.startsWith("K100")) {
                 return R.mipmap.bluetooth_authorization_lock_k100;
-            } else {
+            }else if (model.startsWith("H5606")){
+                return R.mipmap.bluetooth_authorization_lock_h5606;
+            }else {
                 return R.mipmap.bluetooth_authorization_lock_default;
             }
         }else {
@@ -242,7 +243,9 @@ public class BleLockUtils {
             }else if (model.startsWith("S6")){
                return R.mipmap.s6;
             }else if (model.startsWith("K100")){
-               return R.mipmap.k100;
+                return R.mipmap.k100;
+            }else if (model.startsWith("H5606")){
+                return R.mipmap.h5606;
             } else{
                return R.mipmap.default_zigbee_lock_icon;
             }
@@ -285,6 +288,8 @@ public class BleLockUtils {
                 return R.mipmap.bluetooth_lock_k100;
             } else if (model.contains("S6")) {
                 return R.mipmap.bluetooth_lock_s6;
+            }else if (model.contains("H5606")) {
+                return R.mipmap.bluetooth_lock_h5606;
             }else {
                 return R.mipmap.bluetooth_lock_default;
             }

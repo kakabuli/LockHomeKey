@@ -45,6 +45,7 @@ import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.GatewayOtaNotifyBean
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.GetBindGatewayStatusResult;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttConstant;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttData;
+import com.kaadas.lock.utils.Constants;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.MyLog;
@@ -457,7 +458,7 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                     }
                 });
         compositeDisposable.add(catEyeEventDisposable);
-    }
+      }
     }
 
     private void refreshData(String gatewayId, String deviceId) {
@@ -487,8 +488,8 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                 public void registrationOk() {
                     super.registrationOk();
                       LogUtils.e("Linphone注册成功     ");
-//                    MyLog.getInstance().save("Linphone注册成功     ");
-                      MyLog.getInstance().save("Linphone注册成功...");
+                     MyLog.getInstance().save("Linphone注册成功     ");
+                     SPUtils.put(Constants.LINPHONE_REGESTER_STATE,true);
                 }
 
                 @Override
@@ -500,6 +501,8 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                 public void registrationFailed() {
                     super.registrationFailed();
                     LogUtils.e("Linphone注册失败     ");
+                    MyLog.getInstance().save("Linphone注册失败...");
+                    SPUtils.put(Constants.LINPHONE_REGESTER_STATE,false);
                 }
             }, new PhoneCallback() {
                 @Override
@@ -536,11 +539,17 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                     Log.e(GeTui.VideoLog,"获取网关列表前");
                     AllBindDevices allBindDevices=  MyApplication.getInstance().getAllBindDevices();
                     if(allBindDevices==null){
-                        Log.e(GeTui.VideoLog,"allBindDevices为null");
-                        if (mViewRef != null && mViewRef.get() != null) {
-                            mViewRef.get().callErrorCateInfoEmpty();
+
+                        String payload= (String) SPUtils.get(Constants.ALL_DEVICES_DATA,"");
+                        allBindDevices = new Gson().fromJson(payload, AllBindDevices.class);
+
+                        if( TextUtils.isEmpty(payload) || allBindDevices==null) {
+                            Log.e(GeTui.VideoLog, "allBindDevices为null...payload:" + payload);
+                            if (mViewRef != null && mViewRef.get() != null) {
+                                mViewRef.get().callErrorCateInfoEmpty();
+                            }
+                            return;
                         }
-                        return;
                     }
                     List<CateEyeInfo> cateEyes= allBindDevices.getCateEyes();
                     //List<CateEyeInfo> cateEyes = MyApplication.getInstance().getAllBindDevices().getCateEyes();
@@ -667,7 +676,7 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                     }
                 })
                 .compose(RxjavaHelper.observeOnMainThread())
-                .timeout(5 * 1000, TimeUnit.MILLISECONDS)
+                .timeout(8 * 1000, TimeUnit.MILLISECONDS)
                 .subscribe(new Consumer<Boolean>() {
                     @Override
                     public void accept(Boolean aBoolean) throws Exception {

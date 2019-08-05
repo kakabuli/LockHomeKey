@@ -12,6 +12,8 @@ import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
+import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -338,6 +340,10 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
 
     @Override
     protected void onResume() {
+
+        String sip_package_json =getIntent().getStringExtra("stringType");
+        Log.e(GeTui.VideoLog,"..........MainActivity.........:"+sip_package_json);
+
         sip_pacage_invite = MyApplication.getInstance().getSip_package_invite();
         // if come from phone, dont to prompt update
 //        if(TextUtils.isEmpty(sip_pacage_invite)){
@@ -604,6 +610,18 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
     }
 
     Timer timer;
+    public static final int ERROR_1=1;
+    Handler errorHandler=new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what){
+                case ERROR_1:
+                    Toast.makeText(MainActivity.this,getString(R.string.sip_register_fail),Toast.LENGTH_LONG).show();
+                    break;
+            }
+        }
+    };
     private void startcallmethod(String sip_pacage_invite1) {
 
         MyApplication.getInstance().setSip_package_invite(null); //制空
@@ -625,10 +643,24 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
             timer.schedule(new TimerTask() {
                 @Override
                 public void run() {
-                    int linphone_port = MyApplication.getInstance().getLinphone_port();
-                    Log.e(GeTui.VideoLog,"WelcomeActivity==>port:"+linphone_port+" sip_pkg:"+sip_pacage_invite1);
+                      int linphone_port = MyApplication.getInstance().getLinphone_port();
+
+                      boolean isRegisterStatus = (boolean) SPUtils.get(Constants.LINPHONE_REGESTER_STATE,false);
+                      Log.e(GeTui.VideoLog,"MainActivity==>port:"+linphone_port+" sip_pkg:"+sip_pacage_invite1+" isRegisterStatus:"+isRegisterStatus);
 //                    Log.e(GeTui.VideoLog,"sip_pacage_invite:"+sip_pacage_invite);
-                    MyLog.getInstance().save("prot:"+linphone_port+" sip_pkg:"+sip_pacage_invite1);
+                      MyLog.getInstance().save("prot:"+linphone_port+" sip_pkg:"+sip_pacage_invite1 +" isRegisterStatus:"+isRegisterStatus);
+
+                      if(!isRegisterStatus && linphone_port>0 ){
+                          SystemClock.sleep(3000);
+                          isRegisterStatus= (boolean) SPUtils.get(Constants.LINPHONE_REGESTER_STATE,false);
+                      }
+
+                      if(!isRegisterStatus  && linphone_port>0){
+                            errorHandler.sendEmptyMessage(ERROR_1);
+                            timer.cancel();
+                            timer = null;
+                            return;
+                        }
                         if (linphone_port > 0) {
                             timer.cancel();
                             timer = null;
