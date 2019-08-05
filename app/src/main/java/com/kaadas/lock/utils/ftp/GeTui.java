@@ -13,6 +13,7 @@ public class GeTui {
 
 	public static  final  String isFirst="isFirst";
 	public static  final  String VideoLog="videopath";
+	public static  final  String MqttLog="mqttlog";
 	public static  final  String Fragment="Fragment__1";
 
 	public static  final  String Movies_video="Movies_video";
