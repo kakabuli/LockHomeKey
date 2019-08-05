@@ -395,7 +395,11 @@ public class AddBluetoothSearchActivity extends BaseActivity<ISearchDeviceView, 
         hiddenLoading();
     }
 
-
+    @Override
+    public void pwdIsEmpty() {
+        hiddenLoading();
+        ToastUtil.getInstance().showLong(R.string.server_data_error);
+    }
 
 
     @Override

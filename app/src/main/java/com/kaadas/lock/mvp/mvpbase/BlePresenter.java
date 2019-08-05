@@ -540,7 +540,6 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
 
     public void syncLockTime() {
         //如果全局设备信息为空   但是service不为空  且service里面的全局信息为空   直接退出
-
         if (bleService == null) { //判断
             if (MyApplication.getInstance().getBleService() == null) {
                 return;

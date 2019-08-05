@@ -371,14 +371,14 @@ public class OldBleLockPresenter<T> extends MyOldOpenLockRecordPresenter<IOldBle
                                     mViewRef.get().openLockSuccess();
                                 }
                                 //延时1秒读取开锁次数   直接读可能失败
-                                handler.postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        if (isAttach) {
-                                            syncLockTime();
-                                        }
-                                    }
-                                }, 1000);
+//                                handler.postDelayed(new Runnable() {
+//                                    @Override
+//                                    public void run() {
+//                                        if (isAttach) {
+//                                            syncLockTime();
+//                                        }
+//                                    }
+//                                }, 1000);
                             }
                         }
                     }
