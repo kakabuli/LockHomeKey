@@ -611,6 +611,9 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
 
     Timer timer;
     public static final int ERROR_1=1;
+    public static final int ERROR_2=2;
+    public static final int ERROR_3=3;
+    public static final int ERROR_4=4;
     Handler errorHandler=new Handler(){
         @Override
         public void handleMessage(Message msg) {
@@ -619,9 +622,19 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
                 case ERROR_1:
                     Toast.makeText(MainActivity.this,getString(R.string.sip_register_fail),Toast.LENGTH_LONG).show();
                     break;
+                case ERROR_2:
+                    Toast.makeText(MainActivity.this,getString(R.string.socket_send_failed),Toast.LENGTH_LONG).show();
+                    break;
+                case ERROR_3:
+                    Toast.makeText(MainActivity.this,getString(R.string.io_send_failed),Toast.LENGTH_LONG).show();
+                    break;
+                case ERROR_4:
+                    Toast.makeText(MainActivity.this,getString(R.string.get_port_failed),Toast.LENGTH_LONG).show();
+                    break;
             }
         }
     };
+    int getPortTimes=0;
     private void startcallmethod(String sip_pacage_invite1) {
 
         MyApplication.getInstance().setSip_package_invite(null); //制空
@@ -659,11 +672,20 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
                             errorHandler.sendEmptyMessage(ERROR_1);
                             timer.cancel();
                             timer = null;
+                            getPortTimes=0;
                             return;
                         }
-                        if (linphone_port > 0) {
+                        if(linphone_port<=0 && getPortTimes==10){
+                            errorHandler.sendEmptyMessage(ERROR_1);
                             timer.cancel();
                             timer = null;
+                            getPortTimes=0;
+                            return;
+                        }
+                        if (linphone_port > 0  && isRegisterStatus) {
+                            timer.cancel();
+                            timer = null;
+                            getPortTimes=0;
                             try {
                                 //建立udp的服务
                                 DatagramSocket datagramSocket = new DatagramSocket();
@@ -680,17 +702,20 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
                             } catch (SocketException e) {
                                 e.printStackTrace();
                                 Log.e(Tag1, "SocketException:" + e.getMessage());
+                                errorHandler.sendEmptyMessage(ERROR_2);
                             }  /* catch (UnknownHostException e) {
 								e.printStackTrace();
 								Log.e(Tag1,"UnknownHostException"+e.getMessage());
 							}  */ catch (IOException e) {
                                 e.printStackTrace();
                                 Log.e(Tag1, "IOException" + e.getMessage());
+                                errorHandler.sendEmptyMessage(ERROR_3);
                             }
                         } else {
                             Log.e(Tag1, "获取端口失败");
-                            timer.cancel();
-                            timer = null;
+                            getPortTimes++;
+//                            timer.cancel();
+//                            timer = null;
                         }
                         Log.e(Tag1, "获取的端口是:" + linphone_port);
                     }

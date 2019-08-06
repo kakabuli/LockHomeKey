@@ -41,6 +41,7 @@ import com.kaadas.lock.utils.MyLog;
 import com.kaadas.lock.utils.Rom;
 import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.ToastUtil;
+import com.kaadas.lock.utils.ftp.GeTui;
 import com.kaadas.lock.utils.greenDao.db.DaoManager;
 import com.kaadas.lock.utils.greenDao.db.DaoSession;
 import com.kaidishi.lock.service.GeTuiIntentService;
@@ -64,6 +65,7 @@ import net.sdvn.cmapi.CMAPI;
 import net.sdvn.cmapi.Config;
 
 import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.linphone.mediastream.Log;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -297,18 +299,20 @@ public class MyApplication extends Application {
      * 初始化linphone服务
      */
     private void initLinphoneService() {
-        Intent intent = new Intent(this, LinphoneService.class);
-        bindService(intent, new ServiceConnection() {
-            @Override
-            public void onServiceConnected(ComponentName name, IBinder service) {
-
-            }
-
-            @Override
-            public void onServiceDisconnected(ComponentName name) {
-
-            }
-        }, Context.BIND_AUTO_CREATE);
+//        Intent intent = new Intent(this, LinphoneService.class);
+//        bindService(intent, new ServiceConnection() {
+//            @Override
+//            public void onServiceConnected(ComponentName name, IBinder service) {
+//                Log.e(GeTui.VideoLog,"初始化linphone服务");
+//            }
+//
+//            @Override
+//            public void onServiceDisconnected(ComponentName name) {
+//
+//            }
+//        }, Context.BIND_AUTO_CREATE);
+        Intent linphoneServiceIntent = new Intent(this, LinphoneService.class);
+        startService(linphoneServiceIntent);
     }
 
     public MqttService getMqttService() {

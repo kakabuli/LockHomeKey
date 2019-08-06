@@ -232,16 +232,16 @@ public class WelcomeActivity extends BaseActivity<ISplashView, SplashPresenter<I
     @Override
     protected void onResume() {
         super.onResume();
-        MyLog.getInstance().save("onResume..............:"+MainActivity.isRunning);
+ //       MyLog.getInstance().save("onResume..............:"+MainActivity.isRunning);
         //启动mqttservice
-        Intent intent = new Intent(this, MqttService.class);
-        startService(intent);
-        //启动bleService
-        Intent bleServiceIntent = new Intent(this, BleService.class);
-        startService(bleServiceIntent);
-        //启动linphoneService
-        Intent linphoneServiceIntent = new Intent(this, LinphoneService.class);
-        startService(linphoneServiceIntent);
+//        Intent intent = new Intent(this, MqttService.class);
+//        startService(intent);
+//        //启动bleService
+//        Intent bleServiceIntent = new Intent(this, BleService.class);
+//        startService(bleServiceIntent);
+//        //启动linphoneService
+//        Intent linphoneServiceIntent = new Intent(this, LinphoneService.class);
+//        startService(linphoneServiceIntent);
     }
     final int timeout=20;
 
