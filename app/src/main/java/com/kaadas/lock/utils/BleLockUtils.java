@@ -60,6 +60,7 @@ public class BleLockUtils {
         FUNCTION_SET.put(0x01, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22});
         FUNCTION_SET.put(0x02, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 10, 11, 13, 14, 15, 16, 17, 19, 20, 21, 22});
         FUNCTION_SET.put(0x03, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 10, 11, 13, 14, 15, 16, 17, 19, 20, 21, 22, 23});
+//        FUNCTION_SET.put(0x04, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 10, 11, 13, 14, 15, 16, 17, 19, 20, 21, 22, 23});
         FUNCTION_SET.put(0x20, new Integer[]{1, 2, 3, 4, 5, 7, 8, 10, 13, 16, 17, 19, 20, 21, 22});
         FUNCTION_SET.put(0x31, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 10, 13, 16, 17, 19, 20, 21, 22});
         FUNCTION_SET.put(0x32, new Integer[]{1, 2, 3, 4, 5, 7, 8, 9, 10, 13, 16, 17, 19, 20, 21, 22});

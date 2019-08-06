@@ -256,18 +256,6 @@ public class OpenLockRecordPresenter<T> extends BlePresenter<IOpenLockRecordView
                         return b;
                     }
                 })
-                .doOnSubscribe(new Consumer<Disposable>() {
-                    @Override
-                    public void accept(Disposable disposable) throws Exception {
-                        LogUtils.e("订阅了   ");
-                    }
-                })
-                .doOnDispose(new Action() {
-                    @Override
-                    public void run() throws Exception {
-                        LogUtils.e("取消订阅了   ");
-                    }
-                })
                 .timeout(5000, TimeUnit.MILLISECONDS)  //间隔一秒没有数据，那么认为数据获取完成
                 .compose(RxjavaHelper.observeOnMainThread())
                 .subscribe(
@@ -285,6 +273,9 @@ public class OpenLockRecordPresenter<T> extends BlePresenter<IOpenLockRecordView
                                     return;
                                 }
 
+                                if (bleDataBean.getCmd() != command[3]) {
+                                    return;
+                                }
                                 byte[] deVaule = Rsa.decrypt(bleDataBean.getPayload(), bleService.getBleLockInfo().getAuthKey());
                                 LogUtils.e("获取开锁记录   解码之后的数据是   " + Rsa.bytesToHexString(deVaule) + "原始数据是   " + Rsa.toHexString(bleDataBean.getOriginalData()));
                                 OpenLockRecord openLockRecord = BleUtil.parseLockRecord(deVaule);

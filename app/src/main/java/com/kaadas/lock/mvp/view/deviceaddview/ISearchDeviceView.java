@@ -87,6 +87,10 @@ public interface ISearchDeviceView extends IBaseView {
      */
     void getPwd1Success(String pwd1, boolean isBind,int version,String deviceSN,String mac,String deviceName);
 
+    /**
+     * 密码1为空
+     */
+    void pwdIsEmpty();
 
     /**
      * 获取pwd1失败

@@ -533,33 +533,40 @@ public class BleUtil {
         if (1 == eventType) {  //开门关门类型
             switch (eventSource) {
                 case 0x00://：Keypad键盘  密码开锁
-                    List<ForeverPassword> pwdList = passwordResults.getData().getPwdList();
-                    for (ForeverPassword password : pwdList) {
-                        if (Integer.parseInt(password.getNum()) == uNum) {
-                            nickName = password.getNickName();
+                    if (passwordResults != null) {
+                        List<ForeverPassword> pwdList = passwordResults.getData().getPwdList();
+                        for (ForeverPassword password : pwdList) {
+                            if (Integer.parseInt(password.getNum()) == uNum) {
+                                nickName = password.getNickName();
+                            }
                         }
-                    }
-                    List<GetPasswordResult.DataBean.TempPassword> tempPwdList = passwordResults.getData().getTempPwdList();
-                    for (GetPasswordResult.DataBean.TempPassword password : tempPwdList) {
-                        if (Integer.parseInt(password.getNum()) == uNum) {
-                            nickName = password.getNickName();
+                        List<GetPasswordResult.DataBean.TempPassword> tempPwdList = passwordResults.getData().getTempPwdList();
+                        for (GetPasswordResult.DataBean.TempPassword password : tempPwdList) {
+                            if (Integer.parseInt(password.getNum()) == uNum) {
+                                nickName = password.getNickName();
+                            }
                         }
                     }
                     break;
 
                 case 0x03://：RFID卡片
-                    List<GetPasswordResult.DataBean.Card> cards = passwordResults.getData().getCardList();
-                    for (GetPasswordResult.DataBean.Card password : cards) {
-                        if (Integer.parseInt(password.getNum()) == uNum) {
-                            nickName = password.getNickName();
+                    if (passwordResults != null) {
+                        List<GetPasswordResult.DataBean.Card> cards = passwordResults.getData().getCardList();
+                        for (GetPasswordResult.DataBean.Card password : cards) {
+                            if (Integer.parseInt(password.getNum()) == uNum) {
+                                nickName = password.getNickName();
+                            }
                         }
                     }
+
                     break;
                 case 0x04://：Fingerprint指纹
-                    List<GetPasswordResult.DataBean.Fingerprint> fingerprints = passwordResults.getData().getFingerprintList();
-                    for (GetPasswordResult.DataBean.Fingerprint password : fingerprints) {
-                        if (Integer.parseInt(password.getNum()) == uNum) {
-                            nickName = password.getNickName();
+                    if (passwordResults != null) {
+                        List<GetPasswordResult.DataBean.Fingerprint> fingerprints = passwordResults.getData().getFingerprintList();
+                        for (GetPasswordResult.DataBean.Fingerprint password : fingerprints) {
+                            if (Integer.parseInt(password.getNum()) == uNum) {
+                                nickName = password.getNickName();
+                            }
                         }
                     }
                     break;
@@ -571,7 +578,7 @@ public class BleUtil {
     }
 
 
-    public static String getOpenType(OperationLockRecord record ) {
+    public static String getOpenType(OperationLockRecord record) {
         String openType = "";
         int eventType = record.getEventType();
         int eventSource = record.getEventSource();

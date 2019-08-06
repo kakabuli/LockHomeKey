@@ -479,7 +479,6 @@ public class TiOtaUpgradeActivity extends BaseAddToApplicationActivity implement
 
     public void getPwd3(byte[] systemId16) {
         byte[] authCommand = BleCommandFactory.getAuthCommand(password1, password2, systemId16);
-
         Log.e(TAG, "发送鉴权  " + " isWrite: " + Rsa.bytesToHexString(authCommand));
         if (writeChar != null) {
             writeChar.setValue(authCommand);

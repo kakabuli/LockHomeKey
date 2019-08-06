@@ -128,7 +128,7 @@ public class AddFingerprintEndPresenter<T> extends BlePresenter<IAddFingerprintE
     private List<Integer> bleNumber = new ArrayList<>();
 
     public void getFingerNumberFromLock() {
-        byte[] command = BleCommandFactory.syncLockPasswordCommand((byte) 0x02, bleLockInfo.getAuthKey());
+        byte[] command = BleCommandFactory.syncLockPasswordCommand((byte) 0x02, bleLockInfo.getAuthKey()); //2
         bleService.sendCommand(command);
         toDisposable(syncPwdDisposable);
         syncPwdDisposable = bleService.listeneDataChange()
@@ -147,6 +147,10 @@ public class AddFingerprintEndPresenter<T> extends BlePresenter<IAddFingerprintE
                             if (mViewRef.get() != null) {
                                 mViewRef.get().onSetFingerFailed(new BleProtocolFailedException(bleDataBean.getOriginalData()[4] & 0xff));
                             }
+                            return;
+                        }
+                        //判断是否是当前指令
+                        if (bleDataBean.getCmd() != command[3]) {
                             return;
                         }
                         bleNumber.clear();

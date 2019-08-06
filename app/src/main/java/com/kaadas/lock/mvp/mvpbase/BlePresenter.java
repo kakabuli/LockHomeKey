@@ -283,6 +283,9 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
                         public void accept(BleStateBean bleStateBean) throws Exception {
                             //连接状态改变之后   就不自动release连接了
                             LogUtils.e("设备状态改变   bleLockInfo为空   " + (bleLockInfo == null) + "   连接状态   " + bleStateBean.isConnected());
+//                            if (bleLockInfo.isConnected() == bleStateBean.isConnected()){
+//                                return;
+//                            }
                             handler.removeCallbacks(releaseRunnable);
                             if (bleLockInfo != null) {
                                 bleLockInfo.setConnected(bleStateBean.isConnected());
@@ -362,13 +365,14 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
         }
         toDisposable(readSystemIdDisposable);
         readSystemIdDisposable =
-                Observable.just(0)
-                        .flatMap(new Function<Integer, ObservableSource<ReadInfoBean>>() {
-                            @Override
-                            public ObservableSource<ReadInfoBean> apply(Integer integer) throws Exception {
-                                return bleService.readSystemId(500);  //1
-                            }
-                        })
+//                Observable.just(0)
+//                        .flatMap(new Function<Integer, ObservableSource<ReadInfoBean>>() {
+//                            @Override
+//                            public ObservableSource<ReadInfoBean> apply(Integer integer) throws Exception {
+//                                return bleService.readSystemId(500);  //1
+//                            }
+//                        })
+                bleService.readSystemId(500)
                         .filter(new Predicate<ReadInfoBean>() {
                             @Override
                             public boolean test(ReadInfoBean readInfoBean) throws Exception {
@@ -379,12 +383,12 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
                             }
                         })
                         .timeout(3000, TimeUnit.MILLISECONDS)         //3秒没有读取到SystemId  则认为超时
-                        .retryWhen(new RetryWithTime(2, 0))
+//                        .retryWhen(new RetryWithTime(2, 0))
                         .compose(RxjavaHelper.observeOnMainThread())
                         .subscribe(new Consumer<ReadInfoBean>() {
                             @Override
                             public void accept(ReadInfoBean readInfoBean) throws Exception {
-                                LogUtils.e("读取systemID成功");  //进行下一步
+                                LogUtils.e("读取systemID成功   123");  //进行下一步
                                 toDisposable(readSystemIdDisposable);
                                 getPwd3Times = 0;
                                 getPwd3(readInfoBean);
@@ -540,7 +544,6 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
 
     public void syncLockTime() {
         //如果全局设备信息为空   但是service不为空  且service里面的全局信息为空   直接退出
-
         if (bleService == null) { //判断
             if (MyApplication.getInstance().getBleService() == null) {
                 return;
@@ -690,38 +693,38 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
             }
         }
         if (bleService.getBleVersion() == 3) {
-            if (TextUtils.isEmpty(bleLockInfo.getServerLockInfo().getFunctionSet())){  //如果功能集为空，那么再读取功能集
+            if (TextUtils.isEmpty(bleLockInfo.getServerLockInfo().getFunctionSet())) {  //如果功能集为空，那么再读取功能集
                 functionSetDisposable = bleService.readFunctionSet(500)
-                            .filter(new Predicate<ReadInfoBean>() {
-                                @Override
-                                public boolean test(ReadInfoBean readInfoBean) throws Exception {
-                                    return readInfoBean.type == ReadInfoBean.TYPE_LOCK_FUNCTION_SET;
-                                }
-                            })
-                            .timeout(2 * 1000, TimeUnit.MILLISECONDS)
-                            .retryWhen(new RetryWithTime(2, 0))
-                            .subscribe(new Consumer<ReadInfoBean>() {
-                                @Override
-                                public void accept(ReadInfoBean readInfoBean) throws Exception {
-                                    toDisposable(functionSetDisposable);
+                        .filter(new Predicate<ReadInfoBean>() {
+                            @Override
+                            public boolean test(ReadInfoBean readInfoBean) throws Exception {
+                                return readInfoBean.type == ReadInfoBean.TYPE_LOCK_FUNCTION_SET;
+                            }
+                        })
+                        .timeout(2 * 1000, TimeUnit.MILLISECONDS)
+                        .retryWhen(new RetryWithTime(2, 0))
+                        .subscribe(new Consumer<ReadInfoBean>() {
+                            @Override
+                            public void accept(ReadInfoBean readInfoBean) throws Exception {
+                                toDisposable(functionSetDisposable);
 
-                                    int functionSet = (int) readInfoBean.data;
-                                    LogUtils.e("更新  收到锁功能集   " + functionSet);
-                                    modifyFunctionSet(bleLockInfo.getServerLockInfo().getLockName(),""+functionSet);
+                                int functionSet = (int) readInfoBean.data;
+                                LogUtils.e("更新  收到锁功能集   " + functionSet);
+                                modifyFunctionSet(bleLockInfo.getServerLockInfo().getLockName(), "" + functionSet);
 
-                                }
-                            }, new Consumer<Throwable>() {
-                                @Override
-                                public void accept(Throwable throwable) throws Exception {
+                            }
+                        }, new Consumer<Throwable>() {
+                            @Override
+                            public void accept(Throwable throwable) throws Exception {
 
-                                }
-                            });
+                            }
+                        });
                 compositeDisposable.add(functionSetDisposable);
             }
         }
     }
 
-    public void modifyFunctionSet(String deviceName,String functionSet){
+    public void modifyFunctionSet(String deviceName, String functionSet) {
         XiaokaiNewServiceImp.modifyFunctionSet(deviceName, MyApplication.getInstance().getUid(), functionSet)
                 .subscribe(new BaseObserver<BaseResult>() {
                     @Override

@@ -80,7 +80,7 @@ public class DeviceDetailPresenter<T> extends BleLockDetailPresenter<IDeviceDeta
 
 
     public void getDeviceInfo() {
-        byte[] command = BleCommandFactory.syncLockInfoCommand(bleLockInfo.getAuthKey());
+        byte[] command = BleCommandFactory.syncLockInfoCommand(bleLockInfo.getAuthKey()); //3
         bleService.sendCommand(command);
         toDisposable(getDeviceInfoDisposable);
         //第五个字节为锁状态信息
@@ -99,6 +99,10 @@ public class DeviceDetailPresenter<T> extends BleLockDetailPresenter<IDeviceDeta
                         if (bleDataBean.getOriginalData()[0] == 0) {
                             //收到门锁信息  确认帧
                             LogUtils.e("收到门锁信息  确认帧   " + Rsa.toHexString(bleDataBean.getOriginalData()));
+                            return;
+                        }
+                        //判断是否是当前指令
+                        if (bleDataBean.getCmd() != command[3]) {
                             return;
                         }
                         byte[] deValue = Rsa.decrypt(bleDataBean.getPayload(), bleLockInfo.getAuthKey());

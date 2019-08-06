@@ -69,18 +69,20 @@ public class AddTempPresenter<T> extends BlePresenter<IAddTempView> {
                     @Override
                     public void accept(BleDataBean bleDataBean) throws Exception {
                         LogUtils.e("收到设置密码ACK数据   " + Rsa.bytesToHexString(bleDataBean.getOriginalData()));
-                        if (bleDataBean.getOriginalData()[0] == 0 && bleDataBean.getPayload()[0] == 0) {  //设置密码成功
-                            if (mViewRef.get() != null) {
-                                mViewRef.get().onSetPwdSuccess();
+                        if (bleDataBean.getOriginalData()[0] == 0) {  //设置密码成功
+                            if (bleDataBean.getPayload()[0] == 0) {
+                                if (mViewRef.get() != null) {
+                                    mViewRef.get().onSetPwdSuccess();
+                                }
+                                //上传昵称   和密码  到   服务器
+                                uploadPasswordNickToServer(deviceName, nickName, number > 9 ? "" + number : "0" + number);
+                            } else {  //shezhi 设置密码失败
+                                if (mViewRef.get() != null) {
+                                    mViewRef.get().onSetPwdFailed(new BleProtocolFailedException(bleDataBean.getPayload()[0] & 0xff));
+                                }
                             }
-                            //上传昵称   和密码  到   服务器
-                            uploadPasswordNickToServer(deviceName, nickName, number > 9 ? "" + number : "0" + number);
-                        } else {  //shezhi 设置密码失败
-                            if (mViewRef.get() != null) {
-                                mViewRef.get().onSetPwdFailed(new BleProtocolFailedException(bleDataBean.getPayload()[0] & 0xff));
-                            }
+                            toDisposable(setPwdDisposable);
                         }
-                        toDisposable(setPwdDisposable);
                     }
                 }, new Consumer<Throwable>() {
                     @Override
@@ -169,7 +171,7 @@ public class AddTempPresenter<T> extends BlePresenter<IAddTempView> {
 
     public void setPwd(String pwd, String deviceName, String nickName) {
         //同步时将上次的数据
-        byte[] command = BleCommandFactory.syncLockPasswordCommand((byte) 0x01, bleLockInfo.getAuthKey());
+        byte[] command = BleCommandFactory.syncLockPasswordCommand((byte) 0x01, bleLockInfo.getAuthKey()); //3
         bleService.sendCommand(command);
         toDisposable(syncPwdDisposable);
         syncPwdDisposable = bleService.listeneDataChange()
@@ -189,6 +191,10 @@ public class AddTempPresenter<T> extends BlePresenter<IAddTempView> {
                             if (mViewRef.get() != null) {
                                 mViewRef.get().onSyncPasswordFailed(new BleProtocolFailedException(bleDataBean.getOriginalData()[4] & 0xff));
                             }
+                            return;
+                        }
+                        //判断是否是当前指令
+                        if (bleDataBean.getCmd() != command[3]) {
                             return;
                         }
                         bleNumber.clear();

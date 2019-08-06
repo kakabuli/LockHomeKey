@@ -66,17 +66,19 @@ public class PasswordDetailPresenter<T> extends BlePresenter<IPasswordDetailView
                     @Override
                     public void accept(BleDataBean bleDataBean) throws Exception {
                         LogUtils.e("收到原始数据   " + Rsa.bytesToHexString(bleDataBean.getOriginalData()));
-                        toDisposable(deleteDosposbale);
-                        if (bleDataBean.getOriginalData()[0] == 0 && bleDataBean.getPayload()[0] == 0) {
-                            if (mViewRef.get() != null) {
-                                mViewRef.get().onDeletePwdSuccess();
+                        if (bleDataBean.getOriginalData()[0] == 0  ) {
+                            if (bleDataBean.getPayload()[0] == 0){
+                                if (mViewRef.get() != null) {
+                                    mViewRef.get().onDeletePwdSuccess();
+                                }
+                                //如果是详情界面  那么删除服务器密码   如果不是那么是添加密码成功时的分享界面
+                                deleteServerPwd(serverPwdType, number);
+                            }else {
+                                if (mViewRef.get() != null) {
+                                    mViewRef.get().onDeletePwdFailed(new BleProtocolFailedException(bleDataBean.getPayload()[0] & 0xff));
+                                }
                             }
-                            //如果是详情界面  那么删除服务器密码   如果不是那么是添加密码成功时的分享界面
-                            deleteServerPwd(serverPwdType, number);
-                        } else {
-                            if (mViewRef.get() != null) {
-                                mViewRef.get().onDeletePwdFailed(new BleProtocolFailedException(bleDataBean.getPayload()[0] & 0xff));
-                            }
+                            toDisposable(deleteDosposbale);
                         }
                     }
                 }, new Consumer<Throwable>() {
@@ -178,7 +180,7 @@ public class PasswordDetailPresenter<T> extends BlePresenter<IPasswordDetailView
 
     public void getNumber(int serverType, int serverNumber, int blePwdType, boolean isDetail) {
         LogUtils.e("服务器数据是   serverNumber   " + serverNumber);
-        byte[] command = BleCommandFactory.syncLockPasswordCommand((byte) blePwdType, bleLockInfo.getAuthKey());
+        byte[] command = BleCommandFactory.syncLockPasswordCommand((byte) blePwdType, bleLockInfo.getAuthKey()); //7
         bleService.sendCommand(command);
         toDisposable(syncPwdDisposable);
         syncPwdDisposable = bleService.listeneDataChange()
@@ -200,6 +202,10 @@ public class PasswordDetailPresenter<T> extends BlePresenter<IPasswordDetailView
                             if (mViewRef.get() != null) {
                                 mViewRef.get().onGetLockNumberFailed(new BleProtocolFailedException(originalData[4]&0xff));
                             }
+                            return;
+                        }
+                        //判断是否是当前指令
+                        if (bleDataBean.getCmd() != command[3]) {
                             return;
                         }
                         byte[] deValue = Rsa.decrypt(bleDataBean.getPayload(), bleLockInfo.getAuthKey());

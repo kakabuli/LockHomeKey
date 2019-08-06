@@ -1154,7 +1154,7 @@
     <string name="help_gateway_five">锁提示入网失败，说明信号很弱，请拉近网关距离；</string>
     <string name="gateway_reset_unbind">已被重置或者解绑</string>
     <string name="close_lock_success">门锁已关</string>
-    <string name="unknow_function_set">未知锁型号(%1$s)，请更新等最新版本APP</string>
+    <string name="unknow_function_set">未知锁型号(%1$s)，请更新到最新版本APP</string>
     <string name="is_open_auto_mode">正在关闭自动模式</string>
     <string name="is_close_auto_mode">正在关闭自动状态</string>
 
@@ -1175,6 +1175,8 @@
     <string name="sip_register_fail">Sip注册失败,来电呼叫失败，请重新呼叫</string>
     <string name="call_coming_connection_fail">猫眼呼叫来电失败,呼叫结束,请重新呼叫</string>
     <string name="read_lock_info_failed">读取锁信息失败，请重试！</string>
+    <string name="server_data_error">服务器数据错误</string>
+    <string name="auth_failed">鉴权失败</string>
     <string name="socket_send_failed">猫眼呼叫来电失败,数据包发送失败</string>
     <string name="io_send_failed">猫眼呼叫来电失败,数据包发送IO异常</string>
     <string name="get_port_failed">猫眼呼叫来电失败,获取端口失败</string>

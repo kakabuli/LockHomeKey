@@ -38,6 +38,7 @@ import com.kaadas.lock.utils.ToastUtil;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -56,6 +57,7 @@ public class BleService extends Service {
     private BluetoothGattCharacteristic systemIDChar; //读取systemId的特征值
     private BluetoothGattCharacteristic snChar;    //读取SN的特征值
     private BluetoothGattCharacteristic modeChar;  //模块代号
+
     private BluetoothGattCharacteristic bleVersionChar;  //蓝牙版本号
     private BluetoothGattCharacteristic batteryChar; //电量信息的特征值
     private BluetoothGattCharacteristic lockTypeChar;   //锁型号
@@ -68,6 +70,7 @@ public class BleService extends Service {
     private static final int heartInterval = 3 * 1000; //心跳间隔时间 毫秒
     private static final int sendInterval = 150;  //命令发送间隔时间 毫秒
     private BluetoothDevice currentDevice;  //当前连接的设备
+    //待发送的队列
     private List<byte[]> commands = new ArrayList<>();
     private long lastSendTime = 0;   //上次发送的指令的时间
     private BleLockInfo bleLockInfo;
@@ -79,6 +82,15 @@ public class BleService extends Service {
      */
     private PublishSubject<Boolean> bleOpenStateSubject = PublishSubject.create();
 
+
+    /**********************************   新增队列功能   ***************************************/
+    //这个是待返回的指令队列
+    private List<byte[]> waitBackCommands = new ArrayList<>();
+
+    private byte[] currentCommand;
+
+
+    /**********************************   新增队列功能   ***************************************/
 
     /**
      * 蓝牙接收数据消息的Observable
@@ -101,7 +113,10 @@ public class BleService extends Service {
      */
 
     private PublishSubject<Boolean> connectSubject = PublishSubject.create();
-
+    /**
+     * 监听  是否鉴权
+     */
+    private PublishSubject<Boolean> authFailedSubject = PublishSubject.create();
 
     /**
      * 是否需要更新BleVersion的被观察者
@@ -147,6 +162,9 @@ public class BleService extends Service {
         return dataChangeSubject;
     }
 
+    public PublishSubject<Boolean> listenerAuthFailed() {
+        return authFailedSubject;
+    }
     @Override
     public void onCreate() {
         super.onCreate();
@@ -263,6 +281,8 @@ public class BleService extends Service {
             bleVersion = 0;
             handler.removeCallbacks(getRemoteDeviceRunnable);
             commands.clear();
+            waitBackCommands.clear();
+            currentCommand = null;
             handler.removeCallbacks(sendHeart);
             handler.removeCallbacks(sendCommandRannble);
             handler.removeCallbacks(releaseRunnable);
@@ -308,7 +328,7 @@ public class BleService extends Service {
             //符合要求的设备
             if (device.getName().startsWith("Bootloader")
                     || device.getName().contains("KDS")
-                    || device.getName().contains("NIKE")
+//                    || device.getName().contains("NIKE")
                     || device.getName().contains("KdsLock")) {
                 deviceScanSubject.onNext(device);
             }
@@ -337,9 +357,9 @@ public class BleService extends Service {
      * @param mac
      * @return
      */
-    public Observable<BluetoothDevice> getDeviceByMacOrName(String mac,String name) {
+    public Observable<BluetoothDevice> getDeviceByMacOrName(String mac, String name) {
         boolean isBluetoothAddress = BluetoothAdapter.checkBluetoothAddress(mac);
-        if (isBluetoothAddress){  //mac地址符合 MAC地址的格式才获取远程设备
+        if (isBluetoothAddress) {  //mac地址符合 MAC地址的格式才获取远程设备
             currentMac = mac;
             handler.postDelayed(getRemoteDeviceRunnable, 6000);
         }
@@ -348,7 +368,7 @@ public class BleService extends Service {
                     @Override
                     public boolean test(BluetoothDevice device) throws Exception {
                         LogUtils.e("搜索到设备   " + device.getName() + "    mac  " + device.getAddress() + "  本地地址是  " + mac);
-                        if (!isBluetoothAddress){
+                        if (!isBluetoothAddress) {
                             if (device.getName().equals(name)) {
                                 LogUtils.e("搜索成功   " + device.getName() + "    mac  " + device.getAddress() + "  本地地址是  " + mac);
                                 scanBleDevice(false);
@@ -356,7 +376,7 @@ public class BleService extends Service {
                             } else {
                                 return false;
                             }
-                        }else {
+                        } else {
                             if (device.getAddress().equals(mac)) {
                                 LogUtils.e("搜索成功   " + device.getName() + "    mac  " + device.getAddress() + "  本地地址是  " + mac);
                                 scanBleDevice(false);
@@ -403,6 +423,10 @@ public class BleService extends Service {
             }
         }
 
+
+
+
+
         /**
          * 发现服务
          * @param gatt
@@ -429,20 +453,60 @@ public class BleService extends Service {
         public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
             super.onCharacteristicChanged(gatt, characteristic);
             byte[] value = characteristic.getValue();
-            LogUtils.e("收到数据 Service  " + Rsa.bytesToHexString(value));
+            LogUtils.e("收到数据11111    " + Rsa.bytesToHexString(value));
+
             //加密数据中的   开锁记录   报警记录    不要回确认帧    秘钥上报  需要逻辑层才回确认帧
-            if (value[0] == 1 && !((value[3] & 0xff) == 0x04)
-                    && !((value[3] & 0xff) == 0x14) && !(value[3] == 0x08) && bleVersion != 1) {  //如果是加密数据  那么回确认帧
+            if (value[0] == 1 && !((value[3] & 0xff) == 0x04 )
+                    && !((value[3] & 0xff) == 0x14) && !(value[3] == 0x08) && bleVersion != 1 && value[3] != 0x18 && value.length == 20) {  //如果是加密数据  那么回确认帧
                 sendCommand(BleCommandFactory.confirmCommand(value));
             }
-            if ((value[0] & 0xff) == 0 && (value[4] & 0xff) == 0xc2) {
-                release();
+
+            if (value[0] == 1 && (value[3] & 0xFF) != 0x08 && value.length == 20) { //鉴权帧不在此处做判断   大概率此时还没有鉴权帧
+                byte[] payload = new byte[16];
+                System.arraycopy(value, 4, payload, 0, 16);
+                if (bleLockInfo!=null&& bleLockInfo.getAuthKey()!=null){
+                    byte[] decrypt = Rsa.decrypt(payload, bleLockInfo.getAuthKey());
+                    byte checkNum = 0;
+                    for (int i = 0; i < decrypt.length; i++) {
+                        checkNum += decrypt[i];
+                    }
+                    if (checkNum!=value[2]){
+                        authFailedSubject.onNext(true);
+                        return;
+                    }else {
+                        authFailedSubject.onNext(false);
+                    }
+                }
+            }
+
+
+            if ((value[0] & 0xff) == 0 && (value[4] & 0xff) == 0xc2 && value.length == 20) {
+                if (currentCommand!=null && currentCommand[3] == 0x01){
+
+                }else {
+                    authFailedSubject.onNext(true);
+                }
                 return;
             }
+
+            if (currentCommand != null && value.length == 20 && currentCommand[1] == value[1]) {
+                //当前的指令不为空，且收到的数据的TSN 与等待收到回调的TSN一直
+                LogUtils.e("收到指令   " + Rsa.bytesToHexString(currentCommand) + "  的回调 " + Rsa.bytesToHexString(value));
+                boolean isBack = false;
+                if (value[0] == 0x00) {
+                    isBack = true;
+                } else if (value[0] == 0x01 && value[3] == currentCommand[3]) {  //如果返回数据带有负载，需要判断CMd是否相同
+                    isBack = true;
+                }
+                if (isBack) {
+                    sendNextCommand();  //收到返回  发送下一条
+                }
+            }
+
             lastReceiveDataTime = System.currentTimeMillis();
             BleDataBean bleDataBean = new BleDataBean(value[3], value[1], value);
             bleDataBean.setDevice(gatt.getDevice());
-            if (value[0] == 1 && value[3] == 0x05) {  //锁状态改变的数据
+            if (value[0] == 1 && (value[3] == 0x05 ) && value.length == 20) {  //锁状态改变的数据
                 onLockStateCahnge(bleDataBean);
                 handler.postDelayed(new Runnable() {
                     @Override
@@ -450,7 +514,7 @@ public class BleService extends Service {
                         dataChangeSubject.onNext(bleDataBean);
                     }
                 }, 10);
-            }else {  //直接朝下面发送
+            } else {  //直接朝下面发送
                 dataChangeSubject.onNext(bleDataBean);
             }
         }
@@ -480,13 +544,6 @@ public class BleService extends Service {
                     readSystemIDSubject.onNext(new ReadInfoBean(ReadInfoBean.TYPE_BATTERY, (value[0] & 0xff)));
                     break;
                 case BLeConstants.UUID_BLE_VERSION: //蓝牙版本
-                    int M = value[0] & 0xff; //主版本号
-                    int m1 = value[1] & 0xff; //主版本号
-                    int m2 = value[2] & 0xff; //主版本号
-                    int b1 = value[3] & 0xff; //主版本号
-                    int b2 = value[4] & 0xff; //主版本号
-                    int b3 = value[5] & 0xff; //主版本号
-
                     LogUtils.e("读取到蓝牙版本信息  " + new String(value));
                     readSystemIDSubject.onNext(new ReadInfoBean(ReadInfoBean.TYPE_BLEINFO, new String(characteristic.getValue())));
                     break;
@@ -518,11 +575,11 @@ public class BleService extends Service {
                     readSystemIDSubject.onNext(new ReadInfoBean(ReadInfoBean.TYPE_LOCK_STATUS, value));
                     break;
                 case BLeConstants.UUID_FUNCTION_SET:
-                    LogUtils.e("锁功能集  字节1  " +  Rsa.bytesToHexString(value) );
+                    LogUtils.e("锁功能集  字节1  " + Rsa.bytesToHexString(value));
                     if (value == null || value.length <= 0) {
-                        return  ;
+                        return;
                     }
-                    readSystemIDSubject.onNext(new ReadInfoBean(ReadInfoBean.TYPE_LOCK_FUNCTION_SET,characteristic.getValue()[0] & 0xff));
+                    readSystemIDSubject.onNext(new ReadInfoBean(ReadInfoBean.TYPE_LOCK_FUNCTION_SET, characteristic.getValue()[0] & 0xff));
                     break;
             }
         }
@@ -817,7 +874,7 @@ public class BleService extends Service {
             }
         }
 
-        LogUtils.e("模块版本是   " + type+"   ");
+        LogUtils.e("模块版本是   " + type + "   ");
         bleVersion = type;
         isConnected = true;
         ////////////////////////////////       检查版本是否需要更新        /////////////////////////////
@@ -906,10 +963,93 @@ public class BleService extends Service {
     }
 
 
+    /**
+     * 指令入口
+     *
+     * @param command
+     */
     public void sendCommand(byte[] command) {
         synchronized (this) {
-            writeCommand(bluetoothGatt, mWritableCharacter, command);
+            if (command == null) {
+                return;
+            }
+            if (command.length != 20) { //命令长度不是  20  直接发送
+                writeStack(command, 1);
+                return;
+            }
+            if (command[0] != 0x01) { //如果第一个字节不是1   那么不是确认帧就是透传模块的  透传模块数据   直接发送
+                LogUtils.e("当前数据为空   直接发送   发送队列数据   " + commands.size());
+                writeStack(command, 2);
+            } else {
+                LogUtils.e("加入指令   " + Rsa.bytesToHexString(command) + "  已经等待的指令  "  + getCommands(waitBackCommands) + "  当前等待的指令  " + (currentCommand == null ? "" : Rsa.bytesToHexString(currentCommand)));
+                if (waitBackCommands.size() >= 4) {
+                    LogUtils.e("指令满了    ");
+                    return;
+                }
+                for (byte[] temp : waitBackCommands) {
+                    if (isSameCommand(temp, command)) {
+                        LogUtils.e("相同指令   待发送");
+                        return;
+                    }
+                }
+                for (byte[] temp : commands) {
+                    if (isSameCommand(temp, command)) {
+                        LogUtils.e("相同指令   发送队列");
+                        return;
+                    }
+                }
+                if (currentCommand!=null){
+                    if (isSameCommand(currentCommand, command)) {
+                        LogUtils.e("相同指令   等待返回");
+                        return;
+                    }
+                }
+                //如果已经累计多个指令
+                waitBackCommands.add(command);
+                boolean isExit = false;
+                for (byte[] bytes : commands) {
+                    if (bytes[0] == 0x01) {  //存在需要等待的数据
+                        isExit = true;
+                        break;
+                    }
+                }
+                //如果当前没有要等待指令，而且在发送队列中不存在需要等待的指令
+                if (currentCommand == null && !isExit) {
+                    writeStack(command, 3);
+                }
+            }
         }
+    }
+
+
+    private void writeStack(byte[] command, int position) {
+        LogUtils.e("当前指令   " + position + "   " + Rsa.bytesToHexString(command) + "    加入指令11111    " + getCommands(commands));
+        for (byte[] temp : commands) {
+            if (isSameCommand(temp, command)) {  //如果发送队列中有要发送的当前数据  不在加入
+                return;
+            }
+        }
+        commands.add(command);
+        long last = System.currentTimeMillis() - lastSendTime;
+        //如果上次发送的时间大于当前时间   那么认为手机发生变化，直接发送
+        handler.removeCallbacks(sendCommandRannble);
+        if (last < 0 || last > 100) {
+            sendCommandRannble.run();
+        } else {
+            handler.postDelayed(sendCommandRannble, sendInterval - last);
+        }
+    }
+
+    public boolean isSameCommand(byte[] command1, byte[] command2) {  //是否是相同指令
+        if (command1[3] == command2[3]) {  //如果两个指令的Cmd是一致的
+            for (int i = 4; i < command1.length; i++) {
+                if (command1[i] != command2[i]) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -919,12 +1059,14 @@ public class BleService extends Service {
      * @param characteristic
      * @param command
      */
-    public void writeCommand(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, byte[] command) {
+    private synchronized void writeCommand(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, byte[] command) {
         //此次发送数据的时间和上次发送数据的时间间隔  小于预定的时间间隔
         //将此命令添加进commands集合  再延时 离最小间隔时间的差发送
+
+        LogUtils.e("准备发送  " + Rsa.bytesToHexString(command) + "  等待发送的指令  " + getCommands(commands));
         if ((System.currentTimeMillis() - lastSendTime >= 0)) {
             if (System.currentTimeMillis() - lastSendTime < sendInterval) {
-                commands.add(command);
+                handler.removeCallbacks(sendCommandRannble);
                 handler.postDelayed(sendCommandRannble, sendInterval - (System.currentTimeMillis() - lastSendTime));
                 return;
             }
@@ -936,11 +1078,22 @@ public class BleService extends Service {
             characteristic.setValue(command);
             if (gatt != null) {
                 boolean isWrite = gatt.writeCharacteristic(characteristic);
-                LogUtils.e("发送数据  " + Rsa.bytesToHexString(command) + " isWrite: " + isWrite + "时间 " + System.currentTimeMillis());
-//                if (!isWrite){
-//                    commands.add(0,command);
-//                    handler.postDelayed(sendCommandRannble, sendInterval - (System.currentTimeMillis() - lastSendTime));
-//                }
+                commands.remove(command);
+                if (isWrite) {
+                    if (command[0] == 0x01) {
+                        currentCommand = command;
+                        handler.postDelayed(waitTimeout, 5 * 1000);
+                    }
+                } else {
+                    if (command[0] == 0x01) {
+                        sendNextCommand();  //发送失败 发送下一条
+                    }
+                }
+                if (commands.size() > 0) {  //如果还有指令  继续发送
+                    handler.removeCallbacks(sendCommandRannble);
+                    handler.postDelayed(sendCommandRannble, sendInterval);
+                }
+                LogUtils.e("发送数据11111    " + Rsa.bytesToHexString(command) + " isWrite: " + isWrite + "时间 " + System.currentTimeMillis());
             } else {
                 LogUtils.e("Ble 发送数据   Gatt为空");
                 release();  //此处为空  断开连接
@@ -948,6 +1101,39 @@ public class BleService extends Service {
         } else {
             LogUtils.e("Ble 发送数据   characteristic为空  bleService");
             release(); //此处为空  断开连接
+    }
+    }
+
+    private String getCommands(List<byte[]> commands) {
+        String command = "  ";
+        for (byte[] bytes : commands) {
+            command = command + "   " + Rsa.bytesToHexString(bytes);
+        }
+        return command;
+    }
+
+    /**
+     * 等待数据返回超时
+     */
+    private Runnable waitTimeout = new Runnable() {
+        @Override
+        public void run() {
+            sendNextCommand();  //超时返回  发送下一条
+        }
+    };
+
+    private void sendNextCommand() {
+        handler.removeCallbacks(waitTimeout);
+        currentCommand = null;
+
+        if (waitBackCommands.size() > 0) {
+            writeStack(waitBackCommands.get(0), 4);
+            try{
+                waitBackCommands.remove(0);
+            }catch (Exception e){
+                LogUtils.e("移除等待消息   " + e.getMessage());
+            }
+
         }
     }
 
@@ -963,7 +1149,12 @@ public class BleService extends Service {
             if (System.currentTimeMillis() - lastReceiveDataTime > 10 * 1000) {  //如果上次接收的数据大于现在超过10每秒   那么认为蓝牙已经断开连接
                 release();  //主动直接断开连接
             }
-            writeCommand(bluetoothGatt, mWritableCharacter, BleCommandFactory.heartCommand());
+            if (System.currentTimeMillis() - lastSendTime < 1000) { //如果上次发送的数据小于1秒  不再发送
+                handler.postDelayed(this, heartInterval);
+            } else {
+                writeStack(BleCommandFactory.heartCommand(), 5);
+            }
+
         }
     };
 
@@ -978,17 +1169,7 @@ public class BleService extends Service {
         @Override
         public synchronized void run() {
             if (commands.size() > 0) { //如果指令集合中有数据，那么直接发送数据 且移除此次发送的数据
-                sendCommand(commands.get(0));
-                try {
-                    commands.remove(0);
-                } catch (Exception e) {
-                    LogUtils.e("BleService 中报错  " + e.getMessage());
-                    handler.removeCallbacks(sendCommandRannble);
-                }
-            }
-            if (commands.size() > 0) {  //如果还有指令  继续发送
-                handler.removeCallbacks(sendCommandRannble);
-                handler.postDelayed(sendCommandRannble, sendInterval);
+                writeCommand(bluetoothGatt, mWritableCharacter, commands.get(0));
             }
         }
     };
@@ -1087,7 +1268,7 @@ public class BleService extends Service {
                                 Thread.sleep(100);
                                 //扫描需要延时吗
                                 bluetoothLeScanner.startScan(null, scanSettings, newScanBleCallback);
-                            } catch (Exception e ) {
+                            } catch (Exception e) {
                                 e.printStackTrace();
                             }
                         }

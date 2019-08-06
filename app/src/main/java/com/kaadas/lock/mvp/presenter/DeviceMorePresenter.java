@@ -100,7 +100,7 @@ public class DeviceMorePresenter extends BlePresenter<IDeviceMoreView> {
     }
 
     public void getDeviceInfo() {
-        byte[] command = BleCommandFactory.syncLockInfoCommand(bleLockInfo.getAuthKey());
+        byte[] command = BleCommandFactory.syncLockInfoCommand(bleLockInfo.getAuthKey());  //4
         bleService.sendCommand(command);
         toDisposable(getDeviceInfoDisposable);
         /**
@@ -128,6 +128,10 @@ public class DeviceMorePresenter extends BlePresenter<IDeviceMoreView> {
                     @Override
                     public void accept(BleDataBean bleDataBean) throws Exception {
                         if (bleDataBean.isConfirm()) {
+                            return;
+                        }
+                        //判断是否是当前指令
+                        if (bleDataBean.getCmd() != command[3]) {
                             return;
                         }
 
@@ -228,16 +232,18 @@ public class DeviceMorePresenter extends BlePresenter<IDeviceMoreView> {
                 .subscribe(new Consumer<BleDataBean>() {
                     @Override
                     public void accept(BleDataBean bleDataBean) throws Exception {
-                        if (bleDataBean.isConfirm() && bleDataBean.getPayload()[0] == 0) { //设置成功
-                            if (mViewRef.get() != null) {
-                                mViewRef.get().setVoiceSuccess(voice);
+                        if (bleDataBean.isConfirm()) { //设置成功
+                            if (bleDataBean.getPayload()[0] == 0) {
+                                if (mViewRef.get() != null) {
+                                    mViewRef.get().setVoiceSuccess(voice);
+                                }
+                            } else {  //设置失败
+                                if (mViewRef.get() != null) {
+                                    mViewRef.get().setVoiceFailed(new BleProtocolFailedException(0xff & bleDataBean.getPayload()[0]), voice);
+                                }
                             }
-                        } else {  //设置失败
-                            if (mViewRef.get() != null) {
-                                mViewRef.get().setVoiceFailed(new BleProtocolFailedException(0xff & bleDataBean.getPayload()[0]), voice);
-                            }
+                            toDisposable(voiceDisposable);
                         }
-                        toDisposable(voiceDisposable);
                     }
                 }, new Consumer<Throwable>() {
                     @Override
@@ -284,16 +290,18 @@ public class DeviceMorePresenter extends BlePresenter<IDeviceMoreView> {
                         0x9A	命令正在执行（TSN重复）
                         0xC2	校验错误
                         0xFF	锁接收到命令，但无结果返回*/
-                        if (0 == b) {
-                            if (mViewRef.get() != null) {
-                                mViewRef.get().setAutoLockSuccess(isOpen);
+                        if (bleDataBean.getOriginalData()[0] == 0) {
+                            if (0 == b) {
+                                if (mViewRef.get() != null) {
+                                    mViewRef.get().setAutoLockSuccess(isOpen);
+                                }
+                            } else {
+                                if (mViewRef.get() != null) {
+                                    mViewRef.get().setAutoLockFailed(b);
+                                }
                             }
-                        } else {
-                            if (mViewRef.get() != null) {
-                                mViewRef.get().setAutoLockFailed(b);
-                            }
+                            toDisposable(autoLockDisposable);
                         }
-                        toDisposable(autoLockDisposable);
                     }
                 }, new Consumer<Throwable>() {
                     @Override

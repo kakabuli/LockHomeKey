@@ -129,7 +129,7 @@ public class AddCardEndPresenter<T> extends BlePresenter<IAddCardEndView> {
 
     public void getCardNumberFromLock() {
         //同步时将上次的数据
-        byte[] command = BleCommandFactory.syncLockPasswordCommand((byte) 0x03, bleLockInfo.getAuthKey());
+        byte[] command = BleCommandFactory.syncLockPasswordCommand((byte) 0x03, bleLockInfo.getAuthKey());  //1
         bleService.sendCommand(command);
         toDisposable(syncPwdDisposable);
         syncPwdDisposable = bleService.listeneDataChange()
@@ -148,6 +148,10 @@ public class AddCardEndPresenter<T> extends BlePresenter<IAddCardEndView> {
                             if (mViewRef.get() != null) {
                                 mViewRef.get().onSetCardFailed(new BleProtocolFailedException(bleDataBean.getOriginalData()[4] & 0xff));
                             }
+                            return;
+                        }
+                        //判断是否是当前指令
+                        if (bleDataBean.getCmd() != command[3]) {
                             return;
                         }
                         bleNumber.clear();

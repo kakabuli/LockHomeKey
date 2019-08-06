@@ -54,6 +54,7 @@ public class OldBleLockPresenter<T> extends MyOldOpenLockRecordPresenter<IOldBle
     private Disposable oldPowerDisposable;
     private Disposable oldRecordDisposable;
     private Disposable syncTimeDisposable1;
+    private Disposable listenAuthFailedDisposable;
 
     @Override
     public void authSuccess() {
@@ -178,7 +179,7 @@ public class OldBleLockPresenter<T> extends MyOldOpenLockRecordPresenter<IOldBle
                             }
                             //S8不管是否是管理员模式  直接让输入密码
                             localPwd = (String) SPUtils.get(KeyConstants.SAVE_PWD_HEARD + bleLockInfo.getServerLockInfo().getMacLock(), ""); //Key
-                            if (!TextUtils.isEmpty(bleLockInfo.getServerLockInfo().getModel())&&bleLockInfo.getServerLockInfo().getModel().startsWith("S8")) {
+                            if (!TextUtils.isEmpty(bleLockInfo.getServerLockInfo().getModel()) && bleLockInfo.getServerLockInfo().getModel().startsWith("S8")) {
                                 if (TextUtils.isEmpty(localPwd)) { //如果用户密码为空
                                     if (mViewRef != null && mViewRef.get() != null) {
                                         mViewRef.get().inputPwd();
@@ -254,21 +255,23 @@ public class OldBleLockPresenter<T> extends MyOldOpenLockRecordPresenter<IOldBle
                 .subscribe(new Consumer<BleDataBean>() {  //
                     @Override
                     public void accept(BleDataBean bleDataBean) throws Exception {  //开锁成功
-                        if (bleDataBean.getOriginalData()[0] == 0 && bleDataBean.getPayload()[0] == 0) { //加密标志  0x01    且负载数据第一个是  0
-                            //开锁返回确认帧     如果成功  保存密码    那么监听开锁上报   以开锁上报为准   开锁上报  五秒超时
-                            LogUtils.e("开锁成功123   " + Rsa.bytesToHexString(bleDataBean.getPayload()));
-                            //开锁成功  保存密码
-                            SPUtils.put(KeyConstants.SAVE_PWD_HEARD + bleLockInfo.getServerLockInfo().getMacLock(), pwd); //Key
-                            listenerOpenLockUp();
-                        } else {  //开锁失败
-                            LogUtils.e("开锁失败123   " + Rsa.bytesToHexString(bleDataBean.getPayload()));
-                            if (mViewRef != null && mViewRef.get() != null) {
-                                mViewRef.get().openLockFailed(new BleProtocolFailedException(0xff & bleDataBean.getOriginalData()[0]));
+                        if (bleDataBean.getOriginalData()[0] == 0) { //加密标志  0x01    且负载数据第一个是  0
+                            if (bleDataBean.getPayload()[0] == 0) {
+                                //开锁返回确认帧     如果成功  保存密码    那么监听开锁上报   以开锁上报为准   开锁上报  五秒超时
+                                LogUtils.e("开锁成功123   " + Rsa.bytesToHexString(bleDataBean.getPayload()));
+                                //开锁成功  保存密码
+                                SPUtils.put(KeyConstants.SAVE_PWD_HEARD + bleLockInfo.getServerLockInfo().getMacLock(), pwd); //Key
+                                listenerOpenLockUp();
+                            } else {  //开锁失败
+                                LogUtils.e("开锁失败123   " + Rsa.bytesToHexString(bleDataBean.getPayload()));
+                                if (mViewRef != null && mViewRef.get() != null) {
+                                    mViewRef.get().openLockFailed(new BleProtocolFailedException(0xff & bleDataBean.getOriginalData()[0]));
+                                }
+                                //开锁失败  清除密码
+                                SPUtils.remove(KeyConstants.SAVE_PWD_HEARD + bleLockInfo.getServerLockInfo().getMacLock()); //Key
                             }
-                            //开锁失败  清除密码
-                            SPUtils.remove(KeyConstants.SAVE_PWD_HEARD + bleLockInfo.getServerLockInfo().getMacLock()); //Key
+                            toDisposable(openLockDisposable);
                         }
-                        toDisposable(openLockDisposable);
                     }
                 }, new Consumer<Throwable>() {
                     @Override
@@ -371,14 +374,14 @@ public class OldBleLockPresenter<T> extends MyOldOpenLockRecordPresenter<IOldBle
                                     mViewRef.get().openLockSuccess();
                                 }
                                 //延时1秒读取开锁次数   直接读可能失败
-                                handler.postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        if (isAttach) {
-                                            syncLockTime();
-                                        }
-                                    }
-                                }, 1000);
+//                                handler.postDelayed(new Runnable() {
+//                                    @Override
+//                                    public void run() {
+//                                        if (isAttach) {
+//                                            syncLockTime();
+//                                        }
+//                                    }
+//                                }, 1000);
                             }
                         }
                     }
@@ -389,6 +392,27 @@ public class OldBleLockPresenter<T> extends MyOldOpenLockRecordPresenter<IOldBle
                     }
                 });
         compositeDisposable.add(upLockDisposable);
+
+
+        //通知界面更新显示设备状态
+        listenAuthFailedDisposable = bleService.listenerAuthFailed()
+                .compose(RxjavaHelper.observeOnMainThread())
+                .subscribe(new Consumer<Boolean>() {
+                    @Override
+                    public void accept(Boolean isFailed) throws Exception {
+                        if (mViewRef.get() != null) {   //通知界面更新显示设备状态
+                            LogUtils.e("收到服务返回的设备更新回调2222");
+                            mViewRef.get().onAuthFailed(isFailed);
+                        }
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+
+
+                    }
+                });
+        compositeDisposable.add(listenAuthFailedDisposable);
     }
 
     private List<OpenLockRecord> serverRecords = new ArrayList<>();

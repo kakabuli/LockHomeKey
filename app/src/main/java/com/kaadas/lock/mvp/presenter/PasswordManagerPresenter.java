@@ -76,7 +76,7 @@ public class PasswordManagerPresenter<T> extends BlePresenter<IPasswordManagerVi
             mViewRef.get().startSync();
         }
 
-        byte[] command = BleCommandFactory.syncLockPasswordCommand((byte) 0x01, bleLockInfo.getAuthKey());
+        byte[] command = BleCommandFactory.syncLockPasswordCommand((byte) 0x01, bleLockInfo.getAuthKey());  //9
         bleService.sendCommand(command);
         syndPwdDisposable = bleService.listeneDataChange()
                 .filter(new Predicate<BleDataBean>() {
@@ -98,6 +98,10 @@ public class PasswordManagerPresenter<T> extends BlePresenter<IPasswordManagerVi
                             toDisposable(syndPwdDisposable);
                             return;
                         }
+                        //判断是否是当前指令
+                        if (bleDataBean.getCmd() != command[3]) {
+                            return;
+                        }
                         bleNumber.clear();
                         byte[] deValue = Rsa.decrypt(bleDataBean.getPayload(), bleLockInfo.getAuthKey());
                         LogUtils.e("同步秘钥解码数据是   " + Rsa.toHexString(deValue));
@@ -107,7 +111,7 @@ public class PasswordManagerPresenter<T> extends BlePresenter<IPasswordManagerVi
                         LogUtils.e("秘钥的帧数是  " + index + " 秘钥类型是  " + codeType + "  秘钥总数是   " + codeNumber);
                         getAllpasswordNumber(codeNumber, deValue);
                         LogUtils.e("秘钥列表为   " + Arrays.toString(bleNumber.toArray()));
-                        LogUtils.e(" 服务器数据 "+passwordResults.getData());
+                        LogUtils.e(" 服务器数据 " + passwordResults.getData());
                         LogUtils.e("服务器密码列表   " + pwdList);
                         //获取到编号
                         showList.clear();
@@ -214,10 +218,10 @@ public class PasswordManagerPresenter<T> extends BlePresenter<IPasswordManagerVi
         }
         List<AddPasswordBean.Password> passwords = new ArrayList<>();
         for (int i : numbers) {
-            if (i>4&&i<9){
+            if (i > 4 && i < 9) {
                 String number = i < 10 ? "0" + i : "" + i;
                 passwords.add(new AddPasswordBean.Password(2, number, number, 1));
-            }else {
+            } else {
                 String number = i < 10 ? "0" + i : "" + i;
                 passwords.add(new AddPasswordBean.Password(1, number, number, 1));
             }
@@ -240,7 +244,7 @@ public class PasswordManagerPresenter<T> extends BlePresenter<IPasswordManagerVi
 //                        if (mViewRef.get() != null) {
 //                            mViewRef.get().onUpLoadSuccess( );
 //                        }
-                        getAllPassword(bleLockInfo,true);
+                        getAllPassword(bleLockInfo, true);
                     }
 
                     @Override
@@ -277,10 +281,10 @@ public class PasswordManagerPresenter<T> extends BlePresenter<IPasswordManagerVi
         }
         List<DeletePasswordBean.DeletePassword> deletePasswords = new ArrayList<>();
         for (int i : numbers) {
-            if (i>4&&i<9){
+            if (i > 4 && i < 9) {
                 String number = i < 10 ? "0" + i : "" + i;
                 deletePasswords.add(new DeletePasswordBean.DeletePassword(2, number));
-            }else {
+            } else {
                 String number = i < 10 ? "0" + i : "" + i;
                 deletePasswords.add(new DeletePasswordBean.DeletePassword(1, number));
             }
@@ -291,7 +295,7 @@ public class PasswordManagerPresenter<T> extends BlePresenter<IPasswordManagerVi
                     @Override
                     public void onSuccess(BaseResult result) {
                         LogUtils.e("删除秘钥 到成功   " + result.toString());
-                        getAllPassword(bleLockInfo,true);
+                        getAllPassword(bleLockInfo, true);
                     }
 
                     @Override
@@ -341,7 +345,7 @@ public class PasswordManagerPresenter<T> extends BlePresenter<IPasswordManagerVi
                     @Override
                     public void onSuccess(BaseResult result) {
                         LogUtils.e("上传密码添加成功  ");
-                        getAllPassword(bleLockInfo,true);
+                        getAllPassword(bleLockInfo, true);
                     }
 
                     @Override
@@ -352,7 +356,7 @@ public class PasswordManagerPresenter<T> extends BlePresenter<IPasswordManagerVi
                     @Override
                     public void onFailed(Throwable throwable) {
                         LogUtils.e("上传密码失败  ");
-                        getAllPassword(bleLockInfo,true);
+                        getAllPassword(bleLockInfo, true);
                     }
 
                     @Override
@@ -396,6 +400,10 @@ public class PasswordManagerPresenter<T> extends BlePresenter<IPasswordManagerVi
                         if (bleDataBean.isConfirm()) {
                             return;
                         }
+                        //判断是否是当前指令
+                        if (bleDataBean.getCmd() != command[3]) {
+                            return;
+                        }
                         toDisposable(queryWeekPlanDisposable);
                         byte[] payload = Rsa.decrypt(bleDataBean.getPayload(), bleLockInfo.getAuthKey());
                         if (bleDataBean.getOriginalData()[0] == 1 && (payload[8] == 0) && payload[9] == 0 && payload[10] == 0) { //查询成功
@@ -421,7 +429,7 @@ public class PasswordManagerPresenter<T> extends BlePresenter<IPasswordManagerVi
                                 }
                             }
 
-                            LogUtils.e("查询到的周计划是   "+id+"   " + Arrays.toString(strWeeks));
+                            LogUtils.e("查询到的周计划是   " + id + "   " + Arrays.toString(strWeeks));
 
                             //周期密码
                             showList.get(position).setType(3);
@@ -475,6 +483,10 @@ public class PasswordManagerPresenter<T> extends BlePresenter<IPasswordManagerVi
                     public void accept(BleDataBean bleDataBean) throws Exception {
                         LogUtils.e("收到年计划查询数据  " + Rsa.toHexString(bleDataBean.getOriginalData()));
                         if (bleDataBean.isConfirm()) {
+                            return;
+                        }
+                        //判断是否是当前指令
+                        if (bleDataBean.getCmd() != command[3]) {
                             return;
                         }
                         if (bleDataBean.getOriginalData()[0] == 1) {
@@ -534,7 +546,7 @@ public class PasswordManagerPresenter<T> extends BlePresenter<IPasswordManagerVi
         }
         int id = bleNumber.get(position);
 
-        if (id>4){
+        if (id > 4) {
             position++;
             searchUserType();
             return;
@@ -561,6 +573,10 @@ public class PasswordManagerPresenter<T> extends BlePresenter<IPasswordManagerVi
                         if (bleDataBean.getOriginalData()[0] == 1) {
                             payload = Rsa.decrypt(payload, bleLockInfo.getAuthKey());
                         } else {
+                            return;
+                        }
+                        //判断是否是当前指令
+                        if (bleDataBean.getCmd() != searchCommand[3]) {
                             return;
                         }
                         toDisposable(searchUserTypeDisposable1);

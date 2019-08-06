@@ -5,8 +5,8 @@ package com.kaadas.lock.publiclibrary.http;
  * Describe
  */
 public class HttpUrlConstants {
-        public static final String BASE_URL = "https://app-kaadas.juziwulian.com:34000/";//凯迪仕正式服务器
-  //      public static final String BASE_URL = "https://test.juziwulian.com:8090/";//凯迪仕测试服务器
+      public static final String BASE_URL = "https://app-kaadas.juziwulian.com:34000/";//凯迪仕正式服务器
+//    public static final String BASE_URL = "https://test.juziwulian.com:8090/";//凯迪仕测试服务器
 
 
     /**

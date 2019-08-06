@@ -26,7 +26,7 @@ public class LanguageSetPresenter<T> extends BlePresenter<ILanguageSetView> {
     private Disposable setLangDisposable;
 
     public void getDeviceInfo() {
-        byte[] command = BleCommandFactory.syncLockInfoCommand(bleLockInfo.getAuthKey());
+        byte[] command = BleCommandFactory.syncLockInfoCommand(bleLockInfo.getAuthKey());   //5
         bleService.sendCommand(command);
         toDisposable(getDeviceInfoDisposable);
         getDeviceInfoDisposable = bleService.listeneDataChange()
@@ -45,16 +45,19 @@ public class LanguageSetPresenter<T> extends BlePresenter<ILanguageSetView> {
                             if (mViewRef.get() != null) {
                                 mViewRef.get().onGetLanguageFailed(new BleProtocolFailedException(bleDataBean.getPayload()[0] & 0xff));
                             }
-                        } else {
-                            byte[] deValue = Rsa.decrypt(bleDataBean.getPayload(), bleLockInfo.getAuthKey());
-                            int voice = deValue[8] & 0xff;
-                            String lang = new String(new byte[]{deValue[9], deValue[10]});
-                            int battery = deValue[11] & 0xff;
-                            byte[] time = new byte[]{deValue[12], deValue[13], deValue[14], deValue[15]};
-                            toDisposable(getDeviceInfoDisposable);
-                            if (mViewRef.get() != null) {
-                                mViewRef.get().onGetLanguageSuccess(lang);
-                            }
+                        }
+                        //判断是否是当前指令
+                        if (bleDataBean.getCmd() != command[3]) {
+                            return;
+                        }
+                        byte[] deValue = Rsa.decrypt(bleDataBean.getPayload(), bleLockInfo.getAuthKey());
+                        int voice = deValue[8] & 0xff;
+                        String lang = new String(new byte[]{deValue[9], deValue[10]});
+                        int battery = deValue[11] & 0xff;
+                        byte[] time = new byte[]{deValue[12], deValue[13], deValue[14], deValue[15]};
+                        toDisposable(getDeviceInfoDisposable);
+                        if (mViewRef.get() != null) {
+                            mViewRef.get().onGetLanguageSuccess(lang);
                         }
                         toDisposable(getDeviceInfoDisposable);
                     }
@@ -103,21 +106,21 @@ public class LanguageSetPresenter<T> extends BlePresenter<ILanguageSetView> {
                          * 0xFF	锁接收到命令，但无结果返回
                          */
 
-                        if (bleDataBean.isConfirm() && bleDataBean.getOriginalData()[4] != 0) {
-                            //设置失败
-                            if (mViewRef.get() != null) {
-                                mViewRef.get().onSetLangFailed(new BleProtocolFailedException(bleDataBean.getOriginalData()[4] & 0xff));
+                        if (bleDataBean.isConfirm()) {
+                            if (bleDataBean.getOriginalData()[4] != 0) {
+                                //设置失败
+                                if (mViewRef.get() != null) {
+                                    mViewRef.get().onSetLangFailed(new BleProtocolFailedException(bleDataBean.getOriginalData()[4] & 0xff));
+                                }
+                            } else {
+                                //shezhi che设置成功
+                                if (mViewRef.get() != null) {
+                                    mViewRef.get().onSetLangSuccess(language);
+                                }
                             }
-                        } else {
-                            //shezhi che设置成功
-                            if (mViewRef.get() != null) {
-                                mViewRef.get().onSetLangSuccess(language);
-                            }
+                            LogUtils.e("收到原始数据是   " + Rsa.bytesToHexString(bleDataBean.getOriginalData()));
+                            toDisposable(setLangDisposable);
                         }
-
-                        LogUtils.e("收到原始数据是   " + Rsa.bytesToHexString(bleDataBean.getOriginalData()));
-                        toDisposable(setLangDisposable);
-
                     }
                 }, new Consumer<Throwable>() {
                     @Override

@@ -1,6 +1,7 @@
 package com.kaadas.lock.mvp.presenter.deviceaddpresenter;
 
 import android.bluetooth.BluetoothDevice;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -371,9 +372,14 @@ public class SearchDevicePresenter<T> extends BasePresenter<ISearchDeviceView> {
                         LogUtils.e("根据SN 获取pwd1    " + getPwdBySnResult.getData().getPassword1());
                         if ("200".equals(getPwdBySnResult.getCode())) { //获取pwd1成功
                             pwd1 = getPwdBySnResult.getData().getPassword1();
-                            if (mViewRef.get() != null) {
-                                mViewRef.get().getPwd1Success(pwd1, isBind, version, sn, mac, deviceName);
+                            if (TextUtils.isEmpty(pwd1)){
+                                mViewRef.get().pwdIsEmpty();
+                            }else {
+                                if (mViewRef.get() != null ) {
+                                    mViewRef.get().getPwd1Success(pwd1, isBind, version, sn, mac, deviceName);
+                                }
                             }
+
                         }
                     }
 

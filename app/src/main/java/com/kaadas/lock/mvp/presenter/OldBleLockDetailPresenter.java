@@ -82,6 +82,11 @@ public class OldBleLockDetailPresenter<T> extends BlePresenter<IOldBluetoothDevi
                             LogUtils.e("收到门锁信息  确认帧   " + Rsa.toHexString(bleDataBean.getOriginalData()));
                             return;
                         }
+
+                        //判断是否是当前指令
+                        if (bleDataBean.getCmd() != command[3]) {
+                            return;
+                        }
                         byte[] deValue = Rsa.decrypt(bleDataBean.getPayload(), bleLockInfo.getAuthKey());
                         LogUtils.e("门锁信息的数据是   源数据是  " + Rsa.bytesToHexString(bleDataBean.getOriginalData()) + "    解密后的数据是    " + Rsa.bytesToHexString(deValue));
                         byte lockState = deValue[4]; //第五个字节为锁状态信息
@@ -161,12 +166,12 @@ public class OldBleLockDetailPresenter<T> extends BlePresenter<IOldBluetoothDevi
                             }
                         }
                         //如果获取锁信息成功，那么直接获取开锁次数
-                        getOpenLockNumber();
+//                        getOpenLockNumber();
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        getOpenLockNumber();
+//                        getOpenLockNumber();
                     }
                 });
 
@@ -225,56 +230,56 @@ public class OldBleLockDetailPresenter<T> extends BlePresenter<IOldBluetoothDevi
     /**
      * 获取开锁次数
      */
-    public void getOpenLockNumber() {
-        toDisposable(openLockNumebrDisposable);
-        openLockNumebrDisposable =
-                Observable.just(1)
-                        .flatMap(new Function<Integer, ObservableSource<BleDataBean>>() {
-                            @Override
-                            public ObservableSource<BleDataBean> apply(Integer integer) throws Exception {
-                                readLockNumberCommand = BleCommandFactory.searchOpenNumber(bleLockInfo.getAuthKey());
-                                bleService.sendCommand(readLockNumberCommand);
-                                return bleService.listeneDataChange();
-                            }
-                        })
-
-                        .filter(new Predicate<BleDataBean>() {
-                            @Override
-                            public boolean test(BleDataBean bleDataBean) throws Exception {
-                                return readLockNumberCommand[1] == bleDataBean.getTsn();
-                            }
-                        })
-                        .timeout(3000, TimeUnit.MILLISECONDS)
-                        .compose(RxjavaHelper.observeOnMainThread())
-                        .retryWhen(new RetryWithTime(2, 0))
-                        .subscribe(new Consumer<BleDataBean>() {
-                            @Override
-                            public void accept(BleDataBean bleDataBean) throws Exception {
-                                if (bleDataBean.getOriginalData()[0] == 0) { //
-                                    LogUtils.e("获取开锁次数失败  " + Rsa.toHexString(bleDataBean.getOriginalData()));
-                                    return;
-                                }
-                                toDisposable(openLockNumebrDisposable);
-                                //读取到开锁次数
-                                byte[] data = Rsa.decrypt(bleDataBean.getPayload(), bleLockInfo.getAuthKey());
-                                LogUtils.e("开锁次数的数据是   " + Rsa.toHexString(data));
-                                int number = (data[0] & 0xff) + ((data[1] & 0xff) << 8) + ((data[2] & 0xff) << 16) + ((data[3] & 0xff) << 24);
-                                LogUtils.e("开锁次数为   " + number);
-                                if (mViewRef.get() != null) {
-//                                    mViewRef.get().onGetOpenNumberSuccess(number);
-                                }
-                            }
-                        }, new Consumer<Throwable>() {
-                            @Override
-                            public void accept(Throwable throwable) throws Exception {
-                                LogUtils.e("获取开锁次数失败 ");
-                                if (mViewRef.get() != null) {
-//                                    mViewRef.get().onGetOpenNumberFailed(throwable);
-                                }
-                            }
-                        });
-        compositeDisposable.add(openLockNumebrDisposable);
-    }
+//    public void getOpenLockNumber() {
+//        toDisposable(openLockNumebrDisposable);
+//        openLockNumebrDisposable =
+//                Observable.just(1)
+//                        .flatMap(new Function<Integer, ObservableSource<BleDataBean>>() {
+//                            @Override
+//                            public ObservableSource<BleDataBean> apply(Integer integer) throws Exception {
+//                                readLockNumberCommand = BleCommandFactory.searchOpenNumber(bleLockInfo.getAuthKey());
+//                                bleService.sendCommand(readLockNumberCommand);
+//                                return bleService.listeneDataChange();
+//                            }
+//                        })
+//
+//                        .filter(new Predicate<BleDataBean>() {
+//                            @Override
+//                            public boolean test(BleDataBean bleDataBean) throws Exception {
+//                                return readLockNumberCommand[1] == bleDataBean.getTsn();
+//                            }
+//                        })
+//                        .timeout(3000, TimeUnit.MILLISECONDS)
+//                        .compose(RxjavaHelper.observeOnMainThread())
+//                        .retryWhen(new RetryWithTime(2, 0))
+//                        .subscribe(new Consumer<BleDataBean>() {
+//                            @Override
+//                            public void accept(BleDataBean bleDataBean) throws Exception {
+//                                if (bleDataBean.getOriginalData()[0] == 0) { //
+//                                    LogUtils.e("获取开锁次数失败  " + Rsa.toHexString(bleDataBean.getOriginalData()));
+//                                    return;
+//                                }
+//                                toDisposable(openLockNumebrDisposable);
+//                                //读取到开锁次数
+//                                byte[] data = Rsa.decrypt(bleDataBean.getPayload(), bleLockInfo.getAuthKey());
+//                                LogUtils.e("开锁次数的数据是   " + Rsa.toHexString(data));
+//                                int number = (data[0] & 0xff) + ((data[1] & 0xff) << 8) + ((data[2] & 0xff) << 16) + ((data[3] & 0xff) << 24);
+//                                LogUtils.e("开锁次数为   " + number);
+//                                if (mViewRef.get() != null) {
+////                                    mViewRef.get().onGetOpenNumberSuccess(number);
+//                                }
+//                            }
+//                        }, new Consumer<Throwable>() {
+//                            @Override
+//                            public void accept(Throwable throwable) throws Exception {
+//                                LogUtils.e("获取开锁次数失败 ");
+//                                if (mViewRef.get() != null) {
+////                                    mViewRef.get().onGetOpenNumberFailed(throwable);
+//                                }
+//                            }
+//                        });
+//        compositeDisposable.add(openLockNumebrDisposable);
+//    }
 
 
     /**
@@ -412,21 +417,23 @@ public class OldBleLockDetailPresenter<T> extends BlePresenter<IOldBluetoothDevi
                 .subscribe(new Consumer<BleDataBean>() {  //
                     @Override
                     public void accept(BleDataBean bleDataBean) throws Exception {  //开锁成功
-                        if (bleDataBean.getOriginalData()[0] == 0 && bleDataBean.getPayload()[0] == 0) { //加密标志  0x01    且负载数据第一个是  0
-                            //开锁返回确认帧     如果成功  保存密码    那么监听开锁上报   以开锁上报为准   开锁上报  五秒超时
-                            LogUtils.e("开锁成功3  " + Rsa.bytesToHexString(bleDataBean.getPayload()));
-                            //开锁成功  保存密码
-                            SPUtils.put(KeyConstants.SAVE_PWD_HEARD + bleLockInfo.getServerLockInfo().getMacLock(), pwd); //Key
-                            listenerOpenLockUp();
-                        } else {  //开锁失败
-                            LogUtils.e("开锁失败 4  " + Rsa.bytesToHexString(bleDataBean.getPayload()));
-                            if (mViewRef.get() != null) {
-                                mViewRef.get().openLockFailed(new BleProtocolFailedException(0xff & bleDataBean.getOriginalData()[0]));
+                        if (bleDataBean.getOriginalData()[0] == 0 ) { //加密标志  0x01    且负载数据第一个是  0
+                            if ( bleDataBean.getPayload()[0] == 0){
+                                //开锁返回确认帧     如果成功  保存密码    那么监听开锁上报   以开锁上报为准   开锁上报  五秒超时
+                                LogUtils.e("开锁成功3  " + Rsa.bytesToHexString(bleDataBean.getPayload()));
+                                //开锁成功  保存密码
+                                SPUtils.put(KeyConstants.SAVE_PWD_HEARD + bleLockInfo.getServerLockInfo().getMacLock(), pwd); //Key
+                                listenerOpenLockUp();
+                            }else {  //开锁失败
+                                LogUtils.e("开锁失败 4  " + Rsa.bytesToHexString(bleDataBean.getPayload()));
+                                if (mViewRef.get() != null) {
+                                    mViewRef.get().openLockFailed(new BleProtocolFailedException(0xff & bleDataBean.getOriginalData()[0]));
+                                }
+                                //开锁失败  清除密码
+                                SPUtils.remove(KeyConstants.SAVE_PWD_HEARD + bleLockInfo.getServerLockInfo().getMacLock()); //Key
                             }
-                            //开锁失败  清除密码
-                            SPUtils.remove(KeyConstants.SAVE_PWD_HEARD + bleLockInfo.getServerLockInfo().getMacLock()); //Key
+                            toDisposable(openLockDisposable);
                         }
-                        toDisposable(openLockDisposable);
                     }
                 }, new Consumer<Throwable>() {
                     @Override
@@ -473,15 +480,15 @@ public class OldBleLockDetailPresenter<T> extends BlePresenter<IOldBluetoothDevi
                                 if (mViewRef.get() != null) {
                                     mViewRef.get().openLockSuccess();
                                 }
-                                //延时1秒读取开锁次数   直接读可能失败
-                                handler.postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        if (isAttach) {
-                                            getOpenLockNumber();
-                                        }
-                                    }
-                                }, 500);
+//                                //延时1秒读取开锁次数   直接读可能失败
+//                                handler.postDelayed(new Runnable() {
+//                                    @Override
+//                                    public void run() {
+//                                        if (isAttach) {
+//                                            getOpenLockNumber();
+//                                        }
+//                                    }
+//                                }, 500);
                                 toDisposable(listenerOpenLockUpDisposable);
                             }
                         }
@@ -597,22 +604,22 @@ public class OldBleLockDetailPresenter<T> extends BlePresenter<IOldBluetoothDevi
                                 if (mViewRef.get() != null) {
                                     mViewRef.get().onLockLock();
                                 }
-                                getOpenLockNumber();
+//                                getOpenLockNumber();
                             } else if (value2 == 2) {   //开锁
                                 LogUtils.e("开锁成功56   " + Rsa.bytesToHexString(bleDataBean.getPayload()));
                                 if (mViewRef.get() != null) {
                                     mViewRef.get().openLockSuccess();
                                 }
-                                getOpenLockNumber();
+//                                getOpenLockNumber();
                                 //延时1秒读取开锁次数   直接读可能失败
-                                handler.postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        if (isAttach) {
-                                            syncLockTime();
-                                        }
-                                    }
-                                }, 500);
+//                                handler.postDelayed(new Runnable() {
+//                                    @Override
+//                                    public void run() {
+//                                        if (isAttach) {
+//                                            syncLockTime();
+//                                        }
+//                                    }
+//                                }, 500);
                             }
                         }
                     }
