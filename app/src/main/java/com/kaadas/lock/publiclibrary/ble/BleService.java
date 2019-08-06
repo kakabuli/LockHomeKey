@@ -1024,9 +1024,11 @@ public class BleService extends Service {
 
     private void writeStack(byte[] command, int position) {
         LogUtils.e("当前指令   " + position + "   " + Rsa.bytesToHexString(command) + "    加入指令11111    " + getCommands(commands));
-        for (byte[] temp : commands) {
-            if (isSameCommand(temp, command)) {  //如果发送队列中有要发送的当前数据  不在加入
-                return;
+        if (bleVersion == 2 || bleVersion ==3){
+            for (byte[] temp : commands) {
+                if (isSameCommand(temp, command)) {  //如果发送队列中有要发送的当前数据  不在加入
+                    return;
+                }
             }
         }
         commands.add(command);
@@ -1041,6 +1043,9 @@ public class BleService extends Service {
     }
 
     public boolean isSameCommand(byte[] command1, byte[] command2) {  //是否是相同指令
+        if (command1.length != 20 || command2.length != 20){  //如果有一个指令的长度不等于20   不判断
+            return false;
+        }
         if (command1[3] == command2[3]) {  //如果两个指令的Cmd是一致的
             for (int i = 4; i < command1.length; i++) {
                 if (command1[i] != command2[i]) {
