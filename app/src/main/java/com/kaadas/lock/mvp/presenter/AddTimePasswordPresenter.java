@@ -73,29 +73,32 @@ public class AddTimePasswordPresenter<T> extends BlePresenter<IAddTimePasswprdVi
                     @Override
                     public void accept(BleDataBean bleDataBean) throws Exception {
                         LogUtils.e("收到数据   设置年计划  " + Rsa.bytesToHexString(bleDataBean.getOriginalData()));
-                        if (bleDataBean.isConfirm() && bleDataBean.getPayload()[0] == 0) {
-                            LogUtils.e("设置时间策略成功    ");
-                            //设置时间计划成功
-                            if (mViewRef.get() != null) {
-                                mViewRef.get().onSetTimePlanSuccess();
-                            }
-                            //设置时间计划成功  之后设置用户类型   设置用户类型为时间表用户
-                            handler.postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    setUserType(number, 0x01);
+                        if (bleDataBean.isConfirm()  ) {
+                            if ( bleDataBean.getPayload()[0] == 0){
+                                LogUtils.e("设置时间策略成功    ");
+                                //设置时间计划成功
+                                if (mViewRef.get() != null) {
+                                    mViewRef.get().onSetTimePlanSuccess();
                                 }
-                            }, 500);
-
-                        } else {
-                            LogUtils.e("设置时间策略失败    ");
-                            //设置密码失败
-                            if (mViewRef.get() != null) {
-                                mViewRef.get().onSetTimePlanFailed(new BleProtocolFailedException(bleDataBean.getOriginalData()[4] & 0xff));
-                                mViewRef.get().endSetPwd();
+                                //设置时间计划成功  之后设置用户类型   设置用户类型为时间表用户
+                                handler.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        setUserType(number, 0x01);
+                                    }
+                                }, 500);
+                            }else {
+                                LogUtils.e("设置时间策略失败    ");
+                                //设置密码失败
+                                if (mViewRef.get() != null) {
+                                    mViewRef.get().onSetTimePlanFailed(new BleProtocolFailedException(bleDataBean.getOriginalData()[4] & 0xff));
+                                    mViewRef.get().endSetPwd();
+                                }
                             }
+                            toDisposable(setYearDisposable);
+
+
                         }
-                        toDisposable(setYearDisposable);
                     }
                 }, new Consumer<Throwable>() {
                     @Override
@@ -131,21 +134,23 @@ public class AddTimePasswordPresenter<T> extends BlePresenter<IAddTimePasswprdVi
                     @Override
                     public void accept(BleDataBean bleDataBean) throws Exception {
                         LogUtils.e("设置用户类型收到原始数据是  " + Rsa.bytesToHexString(bleDataBean.getOriginalData()));
-                        toDisposable(setUserTypeDisposable);
                         byte[] payload = bleDataBean.getPayload();
-                        if (bleDataBean.isConfirm() && bleDataBean.getOriginalData()[4] == 0) {
-                            LogUtils.e("设置用户类型成功  " + type);
-                            //设置用户类型成功
-                            if (mViewRef.get() != null) {
-                                mViewRef.get().onSetUserTypeSuccess();
+                        if (bleDataBean.isConfirm()) {
+                            if (bleDataBean.getOriginalData()[4] == 0) {
+                                LogUtils.e("设置用户类型成功  " + type);
+                                //设置用户类型成功
+                                if (mViewRef.get() != null) {
+                                    mViewRef.get().onSetUserTypeSuccess();
+                                }
+                                uploadPassword(password);
+                            } else {
+                                if (mViewRef.get() != null) {
+                                    LogUtils.e("设置用户类型失败    " + type + "    ");
+                                    mViewRef.get().onSetUserTypeFailed(new BleProtocolFailedException(bleDataBean.getOriginalData()[4] & 0xff));
+                                    mViewRef.get().endSetPwd();
+                                }
                             }
-                            uploadPassword(password);
-                        } else {
-                            if (mViewRef.get() != null) {
-                                LogUtils.e("设置用户类型失败    " + type + "    ");
-                                mViewRef.get().onSetUserTypeFailed(new BleProtocolFailedException(bleDataBean.getOriginalData()[4] & 0xff));
-                                mViewRef.get().endSetPwd();
-                            }
+                            toDisposable(setUserTypeDisposable);
                         }
                     }
                 }, new Consumer<Throwable>() {
@@ -211,34 +216,36 @@ public class AddTimePasswordPresenter<T> extends BlePresenter<IAddTimePasswprdVi
                     @Override
                     public void accept(BleDataBean bleDataBean) throws Exception {
                         LogUtils.e("收到设置密码回调     " + Rsa.toHexString(bleDataBean.getOriginalData()));
-                        if (bleDataBean.getOriginalData()[0] == 0 && bleDataBean.getOriginalData()[4] == 0) {  //status 为0
-                            LogUtils.e("设置密码成功   ");
-                            if (mViewRef.get() != null) {
-                                mViewRef.get().onSetPasswordSuccess(password);
+                        if (bleDataBean.getOriginalData()[0] == 0) {  //status 为0
+                            if (bleDataBean.getOriginalData()[4] == 0) {
+                                LogUtils.e("设置密码成功   ");
+                                if (mViewRef.get() != null) {
+                                    mViewRef.get().onSetPasswordSuccess(password);
+                                }
+                                if (type == 1) { //永久密码  设置用户类型
+                                    handler.postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            setUserType(number, 0x0);
+                                        }
+                                    }, 500);
+                                } else {   //非永久密码   设置时间策略
+                                    handler.postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            setYearPlan(number, startTime, endTime, pwd, nickName);
+                                        }
+                                    }, 500);
+                                }
+                            } else {
+                                LogUtils.e("设置密码失败   " + (bleDataBean.getPayload()[0] & 0xff));
+                                if (mViewRef.get() != null) {
+                                    mViewRef.get().onSetPasswordFailed(new BleProtocolFailedException(bleDataBean.getPayload()[0] & 0xff));
+                                    mViewRef.get().endSetPwd();
+                                }
                             }
-                            if (type == 1) { //永久密码  设置用户类型
-                                handler.postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        setUserType(number, 0x0);
-                                    }
-                                }, 500);
-                            } else {   //非永久密码   设置时间策略
-                                handler.postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        setYearPlan(number, startTime, endTime, pwd, nickName);
-                                    }
-                                }, 500);
-                            }
-                        } else {
-                            LogUtils.e("设置密码失败   " + (bleDataBean.getPayload()[0] & 0xff));
-                            if (mViewRef.get() != null) {
-                                mViewRef.get().onSetPasswordFailed(new BleProtocolFailedException(bleDataBean.getPayload()[0] & 0xff));
-                                mViewRef.get().endSetPwd();
-                            }
+                            toDisposable(addPwdDisposable);
                         }
-                        toDisposable(addPwdDisposable);
                     }
                 }, new Consumer<Throwable>() {
                     @Override
@@ -335,7 +342,7 @@ public class AddTimePasswordPresenter<T> extends BlePresenter<IAddTimePasswprdVi
 
     public void setPwd(String pwd, int type, String nickName, long startTime, long endTime) {
         //同步时将上次的数据
-        byte[] command = BleCommandFactory.syncLockPasswordCommand((byte) 0x01, bleLockInfo.getAuthKey());
+        byte[] command = BleCommandFactory.syncLockPasswordCommand((byte) 0x01, bleLockInfo.getAuthKey());  //4
         bleService.sendCommand(command);
         toDisposable(syncPwdDisposable);
         syncPwdDisposable = bleService.listeneDataChange()
@@ -354,6 +361,10 @@ public class AddTimePasswordPresenter<T> extends BlePresenter<IAddTimePasswprdVi
                             if (mViewRef.get() != null) {
                                 mViewRef.get().onSyncPasswordFailed(new BleProtocolFailedException(bleDataBean.getOriginalData()[4] & 0xff));
                             }
+                            return;
+                        }
+                        //判断是否是当前指令
+                        if (bleDataBean.getCmd() != command[3]) {
                             return;
                         }
                         bleNumber.clear();

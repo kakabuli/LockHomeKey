@@ -345,6 +345,7 @@ public class BleCommandFactory {
      * @return
      */
     public static byte[] syncLockInfoCommand(byte[] key) {
+        LogUtils.e("获取门锁信息   ");
         byte cmd = 0x12;
         byte[] payload = new byte[16]; //负载数据
         payload[0] = 0x01;

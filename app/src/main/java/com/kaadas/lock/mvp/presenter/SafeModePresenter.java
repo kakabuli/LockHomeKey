@@ -51,6 +51,10 @@ public class SafeModePresenter<T> extends BlePresenter<ISafeModeView> {
                         if (bleDataBean.isConfirm()) {
                             return;
                         }
+                        //判断是否是当前指令
+                        if (bleDataBean.getCmd() != command[3]) {
+                            return;
+                        }
                         byte[] deValue = Rsa.decrypt(bleDataBean.getPayload(), bleLockInfo.getAuthKey());
                         byte lockState = deValue[4]; //第五个字节为锁状态信息
                         /**
@@ -131,15 +135,17 @@ public class SafeModePresenter<T> extends BlePresenter<ISafeModeView> {
                     public void accept(BleDataBean bleDataBean) throws Exception {
                         LogUtils.e("收到锁警报信息   " + Rsa.toHexString(Rsa.decrypt(bleDataBean.getPayload(), bleLockInfo.getAuthKey())));
                         toDisposable(disposable);
-                        if (bleDataBean.isConfirm() && bleDataBean.getOriginalData()[4] == 0) {
-                            LogUtils.e("设置安全模式成功");
-                            if (mViewRef.get() != null) {
-                                mViewRef.get().onSetSuccess(isOpen);
-                            }
-                        } else {
-                            LogUtils.e("设置安全模式失败");
-                            if (mViewRef.get() != null) {
-                                mViewRef.get().onSetFailed(new BleProtocolFailedException((bleDataBean.getOriginalData()[4] & 0xff)));
+                        if (bleDataBean.isConfirm()) {
+                            if (bleDataBean.getOriginalData()[4] == 0) {
+                                LogUtils.e("设置安全模式成功");
+                                if (mViewRef.get() != null) {
+                                    mViewRef.get().onSetSuccess(isOpen);
+                                }
+                            } else {
+                                LogUtils.e("设置安全模式失败");
+                                if (mViewRef.get() != null) {
+                                    mViewRef.get().onSetFailed(new BleProtocolFailedException((bleDataBean.getOriginalData()[4] & 0xff)));
+                                }
                             }
                         }
                     }
@@ -167,7 +173,7 @@ public class SafeModePresenter<T> extends BlePresenter<ISafeModeView> {
 
     public void getNumber(int type, boolean isOpen) {
         //  0x01：PIN 密码     0x02：指纹     0x03：RFID 卡片
-        byte[] command = BleCommandFactory.syncLockPasswordCommand((byte) type, bleLockInfo.getAuthKey());
+        byte[] command = BleCommandFactory.syncLockPasswordCommand((byte) type, bleLockInfo.getAuthKey());   //10
         bleService.sendCommand(command);
         toDisposable(syncPwdDisposable);
         syncPwdDisposable = bleService.listeneDataChange()
@@ -204,6 +210,10 @@ public class SafeModePresenter<T> extends BlePresenter<ISafeModeView> {
                             return;
                         }
 
+                        //判断是否是当前指令
+                        if (bleDataBean.getCmd() != command[3]) {
+                            return;
+                        }
                         byte[] deValue = Rsa.decrypt(bleDataBean.getPayload(), bleLockInfo.getAuthKey());
                         LogUtils.e("同步秘钥解码数据是   " + Rsa.toHexString(deValue));
                         int index = deValue[0] & 0xff;
@@ -265,7 +275,7 @@ public class SafeModePresenter<T> extends BlePresenter<ISafeModeView> {
         //获取所有有秘钥的密码编号
         for (int index = 0; index < deValue.length; index++) {
             for (int j = 0; j < 8 && index * 8 + j < codeNumber; j++) {
-                if (((deValue[3 + index] & temp[j])) == temp[j] ) {
+                if (((deValue[3 + index] & temp[j])) == temp[j]) {
                     bleNumber.add(index * 8 + j);
                 }
                 if (index * 8 + j >= codeNumber) {  //

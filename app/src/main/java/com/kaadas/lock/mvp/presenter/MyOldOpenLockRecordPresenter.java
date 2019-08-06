@@ -264,13 +264,16 @@ public class MyOldOpenLockRecordPresenter<T> extends BlePresenter<IOldBleLockVie
                             public void accept(BleDataBean bleDataBean) throws Exception {
                                 if (bleDataBean.isConfirm()) {
                                     if (0x8b == (bleDataBean.getPayload()[0] & 0xff)) {  //没有数据
-                                        if (mViewRef.get() != null&&lockRecords == null) {
+                                        if (mViewRef.get() != null && lockRecords == null) {
                                             LogUtils.e("锁上   没有开锁记录  ");
                                             mViewRef.get().noData();
                                             toDisposable(disposable);
                                             return;
                                         }
                                     }
+                                }
+                                if (bleDataBean.getCmd() != command[3]) {
+                                    return;
                                 }
                                 byte[] deVaule = Rsa.decrypt(bleDataBean.getPayload(), bleService.getBleLockInfo().getAuthKey());
                                 LogUtils.e("获取开锁记录   解码之后的数据是   " + Rsa.bytesToHexString(deVaule) + "原始数据是   " + Rsa.toHexString(bleDataBean.getOriginalData()));

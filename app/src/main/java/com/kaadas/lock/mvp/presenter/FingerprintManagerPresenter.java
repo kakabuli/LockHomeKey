@@ -101,7 +101,7 @@ public class FingerprintManagerPresenter<T> extends BlePresenter<IFingerprintMan
             mViewRef.get().startSync();
         }
 
-        byte[] command = BleCommandFactory.syncLockPasswordCommand((byte) 0x02, bleLockInfo.getAuthKey());
+        byte[] command = BleCommandFactory.syncLockPasswordCommand((byte) 0x02, bleLockInfo.getAuthKey()); //6
         bleService.sendCommand(command);
         //获取到编号
         syncPwdDisposable = bleService.listeneDataChange()
@@ -122,6 +122,10 @@ public class FingerprintManagerPresenter<T> extends BlePresenter<IFingerprintMan
                                 mViewRef.get().endSync();
                             }
                             toDisposable(syncPwdDisposable);
+                            return;
+                        }
+                        //判断是否是当前指令
+                        if (bleDataBean.getCmd() != command[3]) {
                             return;
                         }
                         bleNumber.clear();

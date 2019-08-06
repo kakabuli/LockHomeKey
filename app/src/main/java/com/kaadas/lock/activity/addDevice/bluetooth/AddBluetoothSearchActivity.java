@@ -239,8 +239,9 @@ public class AddBluetoothSearchActivity extends BaseActivity<ISearchDeviceView, 
 
     @Override
     public void onAlreadyBind(BluetoothDevice device,String uName) {
+        LogUtils.e("设备名是1   " + uName);
         String name = "";
-        if (TextUtils.isEmpty(uName)){
+        if (!TextUtils.isEmpty(uName)){
             if (uName.contains("@")){ //邮箱用户
                 //123456@qq.com
                 int index = uName.indexOf("@");
@@ -259,12 +260,12 @@ public class AddBluetoothSearchActivity extends BaseActivity<ISearchDeviceView, 
                 }
             }
         }
-
+        LogUtils.e("设备名是   " + name);
         binding(device, false,  String.format(getResources().getString(R.string.this_device_already_bind_reset),name ));
     }
 
     public static void main (String[] args){
-        String uName = "1567539907";
+        String uName = "8615338786472";
         String name = "";
         if (uName.contains("@")){ //邮箱用户
             //123456@qq.com

@@ -240,22 +240,7 @@ public class MyOpenLockRecordPresenter<T> extends BlePresenter<IBleLockView> {
                     @Override
                     public boolean test(BleDataBean bleDataBean) throws Exception {
                         boolean b = command[1] == bleDataBean.getTsn();
-//                        if (Rsa.bytesToHexString(bleDataBean.getOriginalData()).contains("33")){
-//                            return false;
-//                        }
                         return b;
-                    }
-                })
-                .doOnSubscribe(new Consumer<Disposable>() {
-                    @Override
-                    public void accept(Disposable disposable) throws Exception {
-                        LogUtils.e("订阅了   ");
-                    }
-                })
-                .doOnDispose(new Action() {
-                    @Override
-                    public void run() throws Exception {
-                        LogUtils.e("取消订阅了   ");
                     }
                 })
                 .timeout(5000, TimeUnit.MILLISECONDS)  //间隔一秒没有数据，那么认为数据获取完成
@@ -272,6 +257,10 @@ public class MyOpenLockRecordPresenter<T> extends BlePresenter<IBleLockView> {
                                         }
                                         toDisposable(disposable);
                                     }
+                                    return;
+                                }
+
+                                if (bleDataBean.getCmd() != command[3]) {
                                     return;
                                 }
 

@@ -113,7 +113,10 @@ public class BleService extends Service {
      */
 
     private PublishSubject<Boolean> connectSubject = PublishSubject.create();
-
+    /**
+     * 监听  是否鉴权
+     */
+    private PublishSubject<Boolean> authFailedSubject = PublishSubject.create();
 
     /**
      * 是否需要更新BleVersion的被观察者
@@ -159,6 +162,9 @@ public class BleService extends Service {
         return dataChangeSubject;
     }
 
+    public PublishSubject<Boolean> listenerAuthFailed() {
+        return authFailedSubject;
+    }
     @Override
     public void onCreate() {
         super.onCreate();
@@ -322,7 +328,7 @@ public class BleService extends Service {
             //符合要求的设备
             if (device.getName().startsWith("Bootloader")
                     || device.getName().contains("KDS")
-                    || device.getName().contains("NIKE")
+//                    || device.getName().contains("NIKE")
                     || device.getName().contains("KdsLock")) {
                 deviceScanSubject.onNext(device);
             }
@@ -417,6 +423,10 @@ public class BleService extends Service {
             }
         }
 
+
+
+
+
         /**
          * 发现服务
          * @param gatt
@@ -446,9 +456,37 @@ public class BleService extends Service {
             LogUtils.e("收到数据11111    " + Rsa.bytesToHexString(value));
 
             //加密数据中的   开锁记录   报警记录    不要回确认帧    秘钥上报  需要逻辑层才回确认帧
-            if (value[0] == 1 && !((value[3] & 0xff) == 0x04)
-                    && !((value[3] & 0xff) == 0x14) && !(value[3] == 0x08) && bleVersion != 1) {  //如果是加密数据  那么回确认帧
+            if (value[0] == 1 && !((value[3] & 0xff) == 0x04 )
+                    && !((value[3] & 0xff) == 0x14) && !(value[3] == 0x08) && bleVersion != 1 && value[3] != 0x18 && value.length == 20) {  //如果是加密数据  那么回确认帧
                 sendCommand(BleCommandFactory.confirmCommand(value));
+            }
+
+            if (value[0] == 1 && (value[3] & 0xFF) != 0x08 && value.length == 20) { //鉴权帧不在此处做判断   大概率此时还没有鉴权帧
+                byte[] payload = new byte[16];
+                System.arraycopy(value, 4, payload, 0, 16);
+                if (bleLockInfo!=null&& bleLockInfo.getAuthKey()!=null){
+                    byte[] decrypt = Rsa.decrypt(payload, bleLockInfo.getAuthKey());
+                    byte checkNum = 0;
+                    for (int i = 0; i < decrypt.length; i++) {
+                        checkNum += decrypt[i];
+                    }
+                    if (checkNum!=value[2]){
+                        authFailedSubject.onNext(true);
+                        return;
+                    }else {
+                        authFailedSubject.onNext(false);
+                    }
+                }
+            }
+
+
+            if ((value[0] & 0xff) == 0 && (value[4] & 0xff) == 0xc2 && value.length == 20) {
+                if (currentCommand!=null && currentCommand[3] == 0x01){
+
+                }else {
+                    authFailedSubject.onNext(true);
+                }
+                return;
             }
 
             if (currentCommand != null && value.length == 20 && currentCommand[1] == value[1]) {
@@ -465,14 +503,10 @@ public class BleService extends Service {
                 }
             }
 
-            if ((value[0] & 0xff) == 0 && (value[4] & 0xff) == 0xc2) {
-                release();
-                return;
-            }
             lastReceiveDataTime = System.currentTimeMillis();
             BleDataBean bleDataBean = new BleDataBean(value[3], value[1], value);
             bleDataBean.setDevice(gatt.getDevice());
-            if (value[0] == 1 && value[3] == 0x05) {  //锁状态改变的数据
+            if (value[0] == 1 && (value[3] == 0x05 ) && value.length == 20) {  //锁状态改变的数据
                 onLockStateCahnge(bleDataBean);
                 handler.postDelayed(new Runnable() {
                     @Override
@@ -510,7 +544,6 @@ public class BleService extends Service {
                     readSystemIDSubject.onNext(new ReadInfoBean(ReadInfoBean.TYPE_BATTERY, (value[0] & 0xff)));
                     break;
                 case BLeConstants.UUID_BLE_VERSION: //蓝牙版本
-
                     LogUtils.e("读取到蓝牙版本信息  " + new String(value));
                     readSystemIDSubject.onNext(new ReadInfoBean(ReadInfoBean.TYPE_BLEINFO, new String(characteristic.getValue())));
                     break;
@@ -950,15 +983,24 @@ public class BleService extends Service {
             } else {
                 LogUtils.e("加入指令   " + Rsa.bytesToHexString(command) + "  已经等待的指令  "  + getCommands(waitBackCommands) + "  当前等待的指令  " + (currentCommand == null ? "" : Rsa.bytesToHexString(currentCommand)));
                 if (waitBackCommands.size() >= 4) {
+                    LogUtils.e("指令满了    ");
                     return;
                 }
                 for (byte[] temp : waitBackCommands) {
                     if (isSameCommand(temp, command)) {
+                        LogUtils.e("相同指令   待发送");
                         return;
                     }
                 }
                 for (byte[] temp : commands) {
                     if (isSameCommand(temp, command)) {
+                        LogUtils.e("相同指令   发送队列");
+                        return;
+                    }
+                }
+                if (currentCommand!=null){
+                    if (isSameCommand(currentCommand, command)) {
+                        LogUtils.e("相同指令   等待返回");
                         return;
                     }
                 }
@@ -982,6 +1024,11 @@ public class BleService extends Service {
 
     private void writeStack(byte[] command, int position) {
         LogUtils.e("当前指令   " + position + "   " + Rsa.bytesToHexString(command) + "    加入指令11111    " + getCommands(commands));
+        for (byte[] temp : commands) {
+            if (isSameCommand(temp, command)) {  //如果发送队列中有要发送的当前数据  不在加入
+                return;
+            }
+        }
         commands.add(command);
         long last = System.currentTimeMillis() - lastSendTime;
         //如果上次发送的时间大于当前时间   那么认为手机发生变化，直接发送
@@ -996,7 +1043,7 @@ public class BleService extends Service {
     public boolean isSameCommand(byte[] command1, byte[] command2) {  //是否是相同指令
         if (command1[3] == command2[3]) {  //如果两个指令的Cmd是一致的
             for (int i = 4; i < command1.length; i++) {
-                if (command1[i] != command2[2]) {
+                if (command1[i] != command2[i]) {
                     return false;
                 }
             }

@@ -99,7 +99,7 @@ public class CardManagerPresenter<T> extends BlePresenter<ICardManagerView> {
             mViewRef.get().startSync();
         }
 
-        byte[] command = BleCommandFactory.syncLockPasswordCommand((byte) 0x03, bleLockInfo.getAuthKey());
+        byte[] command = BleCommandFactory.syncLockPasswordCommand((byte) 0x03, bleLockInfo.getAuthKey());  //5
         bleService.sendCommand(command);
         toDisposable(syncPwdDisposable);
         //获取到编号
@@ -121,6 +121,10 @@ public class CardManagerPresenter<T> extends BlePresenter<ICardManagerView> {
                                 mViewRef.get().endSync();
                             }
                             toDisposable(syncPwdDisposable);
+                            return;
+                        }
+                        //判断是否是当前指令
+                        if (bleDataBean.getCmd() != command[3]) {
                             return;
                         }
                         bleNumber.clear();

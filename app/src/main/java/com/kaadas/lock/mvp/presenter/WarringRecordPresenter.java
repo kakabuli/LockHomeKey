@@ -234,6 +234,11 @@ public class WarringRecordPresenter<T> extends BlePresenter<IWarringRecordView> 
                                     return;
                                 }
 
+                                //判断是否是当前指令
+                                if (bleDataBean.getCmd() != command[3]) {
+                                    return;
+                                }
+
                                 byte[] deVaule = Rsa.decrypt(bleDataBean.getPayload(), bleService.getBleLockInfo().getAuthKey());
                                 LogUtils.e("获取开锁记录   解码之后的数据是   " + Rsa.bytesToHexString(deVaule) + "原始数据是   " + Rsa.toHexString(bleDataBean.getOriginalData()));
                                 WarringRecord openLockRecord = BleUtil.parseWarringRecord(deVaule);

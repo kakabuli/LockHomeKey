@@ -83,4 +83,8 @@ public interface IMyOpenLockRecordView extends IBleView {
      */
     void startBleRecord();
 
+    /**
+     * 鉴权失败
+     */
+    void onAuthFailed(boolean isFailed);
 }

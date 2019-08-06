@@ -54,6 +54,7 @@ public class BindBlePresenter<T> extends BasePresenter<IBindBleView> {
     private String mac;
     private String deviceName;
     private Disposable functionSetDisposable;
+    private int functionSet;
 
 
     public void setPwd1(String pwd1, boolean isBind, int version, String deviceSn, String mac, String deviceName) {
@@ -73,6 +74,8 @@ public class BindBlePresenter<T> extends BasePresenter<IBindBleView> {
             System.arraycopy(bPwd1, 0, password_1, 0, bPwd1.length);
             listenerPwd2(version, deviceSn);
         }
+
+        readLockFunctionSet();
     }
 
     private void listenerInNetNotify(int version) {
@@ -311,7 +314,7 @@ public class BindBlePresenter<T> extends BasePresenter<IBindBleView> {
                         String mode = (String) readInfoBean.data;
                         LogUtils.e("收到锁型号   " + mode);
                         if (bleService.getBleVersion() == 3) {  //最近版本才读取锁功能集
-                            readLockFunctionSet(pwd1, pwd2, mode, version, deviceSn);
+                            bindDevice(pwd1, pwd2, mode, version + "", deviceSn, "" + functionSet);
                         } else {
                             bindDevice(pwd1, pwd2, mode, version + "", deviceSn, null);
                         }
@@ -328,7 +331,7 @@ public class BindBlePresenter<T> extends BasePresenter<IBindBleView> {
     }
 
 
-    public void readLockFunctionSet(String pwd1, String pwd2, String mode, int version, String deviceSn) {
+    public void readLockFunctionSet() {
         functionSetDisposable = bleService.readFunctionSet(500)
                 .filter(new Predicate<ReadInfoBean>() {
                     @Override
@@ -343,18 +346,17 @@ public class BindBlePresenter<T> extends BasePresenter<IBindBleView> {
                     @Override
                     public void accept(ReadInfoBean readInfoBean) throws Exception {
                         toDisposable(functionSetDisposable);
-
-                        int functionSet = (int) readInfoBean.data;
+                        int funcSet = (int) readInfoBean.data;
                         if (mViewRef.get() != null) {
-                            mViewRef.get().readFunctionSetSuccess(functionSet);
+                            mViewRef.get().readFunctionSetSuccess(funcSet);
                         }
 
-                        LogUtils.e("收到锁功能集   " + functionSet);
-                        if (BleLockUtils.isExistFunctionSet(functionSet)) {
-                            bindDevice(pwd1, pwd2, mode, version + "", deviceSn, "" + functionSet);
+                        LogUtils.e("收到锁功能集   " + Rsa.byteToHexString((byte) funcSet));
+                        if (BleLockUtils.isExistFunctionSet(funcSet)) {
+                            functionSet = funcSet;
                         } else {
                             if (mViewRef.get() != null) {
-                                mViewRef.get().unknownFunctionSet(functionSet);
+                                mViewRef.get().unknownFunctionSet(funcSet);
                             }
                         }
 
