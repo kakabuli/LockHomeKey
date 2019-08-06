@@ -519,15 +519,15 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                         return;
                     }
 
-                    if(TextUtils.isEmpty(MyApplication.getInstance().getSip_package_invite())){  //app启动呼叫过来
-                        Log.e(GeTui.VideoLog,"麦克风状态:"+!RecordTools.validateMicAvailability());
-                        if (!RecordTools.validateMicAvailability()) {  //打开false,没有打开true
-                            if (mViewRef != null && mViewRef.get() != null) {
-                                mViewRef.get().callError();
-                            }
-                            return;
-                        }
-                    }
+
+//                        Log.e(GeTui.VideoLog,"麦克风状态:"+!RecordTools.validateMicAvailability());
+//                        if (!RecordTools.validateMicAvailability()) {  //打开false,没有打开true
+//                            if (mViewRef != null && mViewRef.get() != null) {
+//                                mViewRef.get().callError();
+//                            }
+//                            return;
+//                        }
+
                     //设置呼叫进来的时间
                     MyApplication.getInstance().setIsComingTime(System.currentTimeMillis());
                     //获取linphone的地址

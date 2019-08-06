@@ -6,9 +6,23 @@ package com.kaadas.lock.publiclibrary.http.postbean;
  */
 public class SendEmailBean {
     private String mail;
+    private int world=1;
 
     public SendEmailBean(String mail) {
         this.mail = mail;
+    }
+
+    public SendEmailBean(String mail, int world) {
+        this.mail = mail;
+        this.world = world;
+    }
+
+    public int getWorld() {
+        return world;
+    }
+
+    public void setWorld(int world) {
+        this.world = world;
     }
 
     public String getMail() {

@@ -14,10 +14,25 @@ public class SendMessageBean {
 
     private String tel;
     private String code;
+    private int world=1;
 
     public SendMessageBean(String tel, String code) {
         this.tel = tel;
         this.code = code;
+    }
+
+    public SendMessageBean(String tel, String code, int world) {
+        this.tel = tel;
+        this.code = code;
+        this.world = world;
+    }
+
+    public int getWorld() {
+        return world;
+    }
+
+    public void setWorld(int world) {
+        this.world = world;
     }
 
     public String getTel() {

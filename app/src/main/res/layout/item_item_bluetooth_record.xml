@@ -67,7 +67,7 @@
         android:layout_weight="10"
         android:ellipsize="end"
         android:singleLine="true"
-        android:text="时间时间fdsdfsdfsdfsdf发送f fdsfs范德萨"
+        android:text=""
         android:textColor="#999999"
         android:textSize="@dimen/sp_12" />
 </LinearLayout>
