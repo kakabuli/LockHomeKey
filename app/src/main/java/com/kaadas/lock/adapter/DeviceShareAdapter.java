@@ -25,7 +25,9 @@ public class DeviceShareAdapter extends BaseQuickAdapter<DeviceShareUserResultBe
         int position = helper.getPosition();
         String number="";
         if (position<10){
-            number="0"+position;
+            int newPosition=position+1;
+         //   number="0"+position;
+            number="0"+newPosition;
         }
         helper.setText(R.id.tv_serial_number, number);
         helper.setText(R.id.tv_num, item.getUserNickname());
