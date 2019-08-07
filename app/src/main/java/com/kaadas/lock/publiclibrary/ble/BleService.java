@@ -472,6 +472,7 @@ public class BleService extends Service {
                     }
                     if (checkNum != value[2]) {
                         authFailedSubject.onNext(true);
+                        LogUtils.e("校验和出错   原始数据 "  +Rsa.bytesToHexString(value)+"  解密后的数据是  "+ Rsa.bytesToHexString(decrypt));
                         return;
                     } else {
                         authFailedSubject.onNext(false);

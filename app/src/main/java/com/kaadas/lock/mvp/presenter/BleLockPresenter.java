@@ -15,8 +15,10 @@ import com.kaadas.lock.publiclibrary.http.XiaokaiNewServiceImp;
 import com.kaadas.lock.publiclibrary.http.postbean.UploadOperationRecordBean;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.result.OperationRecordResult;
+import com.kaadas.lock.publiclibrary.http.result.ServerBleDevice;
 import com.kaadas.lock.publiclibrary.http.util.BaseObserver;
 import com.kaadas.lock.publiclibrary.http.util.RxjavaHelper;
+import com.kaadas.lock.utils.BleLockUtils;
 import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
@@ -287,12 +289,26 @@ public class BleLockPresenter<T> extends MyOpenLockRecordPresenter<IBleLockView>
         if (NetUtil.isNetworkAvailable()) {  //有网络
             serverAuth();
         } else {  //没有网络
+            //读取到蓝牙模块信号，且蓝牙型号是 rgbt1761或者Rgbt1761D  不用带密码开门  使用APP开门指令
+            if (!TextUtils.isEmpty(bleLockInfo.getModeNumber()) &&
+                    ("Rgbt1761".equalsIgnoreCase(bleLockInfo.getModeNumber()) ||
+                            "Rgbt1761D".equalsIgnoreCase(bleLockInfo.getModeNumber()))) {
+                realOpenLock("", true);
+                return;
+            }
+
             if (isAdmin) {  //是 管理员
-                if (mViewRef != null && mViewRef.get() != null) {
-                    mViewRef.get().inputPwd();
+                ServerBleDevice serverLockInfo = bleLockInfo.getServerLockInfo();
+                String functionSet = serverLockInfo.getFunctionSet();
+                if (!serverLockInfo.functionIsEmpty() && !BleLockUtils.isNeedPwdOpen(functionSet)) { //有功能集  且不需要密码开门
+                    realOpenLock("", true);
+                } else {
+                    if (mViewRef.get() != null) {
+                        mViewRef.get().inputPwd();
+                    }
                 }
             } else { //不是管理员
-                if (mViewRef != null && mViewRef.get() != null) {
+                if (mViewRef.get() != null) {
                     mViewRef.get().notAdminMustHaveNet();
                 }
             }
@@ -316,28 +332,59 @@ public class BleLockPresenter<T> extends MyOpenLockRecordPresenter<IBleLockView>
                     @Override
                     public void onSuccess(BaseResult result) {
                         if ("200".equals(result.getCode())) {
-                            localPwd = (String) SPUtils.get(KeyConstants.SAVE_PWD_HEARD + bleLockInfo.getServerLockInfo().getMacLock(), ""); //Key
-                            if (!TextUtils.isEmpty(bleLockInfo.getServerLockInfo().getModel()) && bleLockInfo.getServerLockInfo().getModel().startsWith("S8")) {
-                                if (TextUtils.isEmpty(localPwd)) { //如果用户密码为空
-                                    if (mViewRef != null && mViewRef.get() != null) {
-                                        mViewRef.get().inputPwd();
-                                    }
-                                } else {
-                                    realOpenLock(localPwd, false);
-                                }
+                            localPwd = (String) SPUtils.get(KeyConstants.SAVE_PWD_HEARD + bleLockInfo.getServerLockInfo().getMacLock(), "");  //Key
+                            //读取到蓝牙模块信号，且蓝牙型号是 rgbt1761或者Rgbt1761D  不用带密码开门  使用APP开门指令
+                            if (!TextUtils.isEmpty(bleLockInfo.getModeNumber()) &&
+                                    ("Rgbt1761".equalsIgnoreCase(bleLockInfo.getModeNumber()) ||
+                                            "Rgbt1761D".equalsIgnoreCase(bleLockInfo.getModeNumber()))) {
+                                realOpenLock("", true);
                                 return;
                             }
+
                             if ("1".equals(bleLockInfo.getServerLockInfo().getIs_admin())) { //如果是管理员  查看本地密码
-                                if (TextUtils.isEmpty(localPwd)) { //如果用户密码为空
-                                    if (mViewRef != null && mViewRef.get() != null) {
-                                        mViewRef.get().inputPwd();
-                                    }
+                                ServerBleDevice serverLockInfo = bleLockInfo.getServerLockInfo();
+                                String functionSet = serverLockInfo.getFunctionSet();
+                                if (!serverLockInfo.functionIsEmpty() && !BleLockUtils.isNeedPwdOpen(functionSet)) { //有功能集  且不需要密码开门
+                                    realOpenLock("", true);
                                 } else {
-                                    realOpenLock(localPwd, false);
+                                    if (TextUtils.isEmpty(localPwd)) { //如果用户密码为空
+                                        if (mViewRef.get() != null) {
+                                            mViewRef.get().inputPwd();
+                                        }
+                                    } else {
+                                        realOpenLock(localPwd, false);
+                                    }
                                 }
-                            } else {  //是被授权用户  直接开锁
-                                //授权用户，如果是S8设备
-                                realOpenLock("", true);
+                            } else {  //是被授权用户  直接开锁.
+                                ServerBleDevice serverLockInfo = bleLockInfo.getServerLockInfo();
+                                String functionSet = serverLockInfo.getFunctionSet();
+                                if (!serverLockInfo.functionIsEmpty()  ) {  //有功能集
+                                    if ( BleLockUtils.authUserNeedPwdOpen(functionSet)){  //需要带密码开门
+                                        if (TextUtils.isEmpty(localPwd)) { //如果用户密码为空
+                                            if (mViewRef.get() != null) {
+                                                mViewRef.get().inputPwd();
+                                            }
+                                        } else {
+                                            realOpenLock(localPwd, false);
+                                        }
+                                    }else {
+                                        realOpenLock("", true);
+                                    }
+                                } else {  //没有功能集  判断是否是S8   如果是S8  那么带密码开锁   否则直接开锁
+                                    //S8不管是否是管理员模式  直接让输入密码
+                                    if (!TextUtils.isEmpty(bleLockInfo.getServerLockInfo().getModel()) &&
+                                            bleLockInfo.getServerLockInfo().getModel().startsWith("S8")) {
+                                        if (TextUtils.isEmpty(localPwd)) { //如果用户密码为空
+                                            if (mViewRef != null && mViewRef.get() != null) {
+                                                mViewRef.get().inputPwd();
+                                            }
+                                        } else {
+                                            realOpenLock(localPwd, false);
+                                        }
+                                    }else {
+                                        realOpenLock("", true);
+                                    }
+                                }
                             }
                         }
                     }
@@ -345,14 +392,14 @@ public class BleLockPresenter<T> extends MyOpenLockRecordPresenter<IBleLockView>
                     @Override
                     public void onAckErrorCode(BaseResult baseResult) {
                         //785 鉴权失败  没有这把锁   803 当前时间没有权限
-                        if (mViewRef != null && mViewRef.get() != null) {
+                        if (mViewRef.get() != null) {
                             mViewRef.get().authServerFailed(baseResult);
                         }
                     }
 
                     @Override
                     public void onFailed(Throwable throwable) {
-                        if (mViewRef != null && mViewRef.get() != null) {
+                        if (mViewRef.get() != null) {
                             mViewRef.get().authFailed(throwable);
                         }
                     }

@@ -211,6 +211,10 @@ public class ServerBleDevice implements Serializable {
 //             lockType.startsWith("S6")) {
 
 
+
+    public boolean functionIsEmpty(){
+        return TextUtils.isEmpty(functionSet);
+    }
     public String getFunctionSet() {
         LogUtils.e("");
 

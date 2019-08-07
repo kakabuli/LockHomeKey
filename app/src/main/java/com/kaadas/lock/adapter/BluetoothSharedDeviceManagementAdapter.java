@@ -40,8 +40,6 @@ public class BluetoothSharedDeviceManagementAdapter extends BaseQuickAdapter<Blu
         }else {
             helper.getView(R.id.my_view).setVisibility(View.VISIBLE);
         }
-
-
     }
 
 
