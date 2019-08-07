@@ -455,6 +455,8 @@ public class BleService extends Service {
             byte[] value = characteristic.getValue();
             LogUtils.e("收到数据11111    " + Rsa.bytesToHexString(value));
 
+            lastReceiveDataTime = System.currentTimeMillis();
+
             //加密数据中的   开锁记录   报警记录    不要回确认帧    秘钥上报  需要逻辑层才回确认帧
             if (value[0] == 1 && !((value[3] & 0xff) == 0x04 )
                     && !((value[3] & 0xff) == 0x14) && !(value[3] == 0x08) && bleVersion != 1 && value[3] != 0x18 && value.length == 20) {  //如果是加密数据  那么回确认帧
@@ -503,7 +505,7 @@ public class BleService extends Service {
                 }
             }
 
-            lastReceiveDataTime = System.currentTimeMillis();
+
             BleDataBean bleDataBean = new BleDataBean(value[3], value[1], value);
             bleDataBean.setDevice(gatt.getDevice());
             if (value[0] == 1 && (value[3] == 0x05 ) && value.length == 20) {  //锁状态改变的数据

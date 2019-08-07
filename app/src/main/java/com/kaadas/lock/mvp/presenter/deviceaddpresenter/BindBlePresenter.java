@@ -74,8 +74,9 @@ public class BindBlePresenter<T> extends BasePresenter<IBindBleView> {
             System.arraycopy(bPwd1, 0, password_1, 0, bPwd1.length);
             listenerPwd2(version, deviceSn);
         }
-
-        readLockFunctionSet();
+        if (version == 3){
+            readLockFunctionSet();
+        }
     }
 
     private void listenerInNetNotify(int version) {
@@ -294,15 +295,15 @@ public class BindBlePresenter<T> extends BasePresenter<IBindBleView> {
         }
         toDisposable(readLockTypeDisposable);
         readLockTypeDisposable = bleService.readLockType(500) //12
-                .compose(RxjavaHelper.observeOnMainThread())
                 .filter(new Predicate<ReadInfoBean>() {
                     @Override
                     public boolean test(ReadInfoBean readInfoBean) throws Exception {
                         return readInfoBean.type == ReadInfoBean.TYPE_FIRMWARE_REV;
                     }
                 })
-                .timeout(2 * 1000, TimeUnit.MILLISECONDS)
                 .retryWhen(new RetryWithTime(2, 0))
+                .timeout(2 * 1000, TimeUnit.MILLISECONDS)
+                .compose(RxjavaHelper.observeOnMainThread())
                 .subscribe(new Consumer<ReadInfoBean>() {
                     @Override
                     public void accept(ReadInfoBean readInfoBean) throws Exception {
@@ -340,8 +341,9 @@ public class BindBlePresenter<T> extends BasePresenter<IBindBleView> {
 
                     }
                 })
-                .timeout(2 * 1000, TimeUnit.MILLISECONDS)
                 .retryWhen(new RetryWithTime(2, 0))
+                .timeout(2 * 1000, TimeUnit.MILLISECONDS)
+                .compose(RxjavaHelper.observeOnMainThread())
                 .subscribe(new Consumer<ReadInfoBean>() {
                     @Override
                     public void accept(ReadInfoBean readInfoBean) throws Exception {

@@ -503,17 +503,20 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
 //                                }else {
 //
 //                                }
+                                LogUtils.e("跳转   全功能  蓝牙");
                                 Intent detailIntent = new Intent(getActivity(), BleDetailActivity.class);
                                 String model = bleLockInfo.getServerLockInfo().getModel();
                                 detailIntent.putExtra(KeyConstants.DEVICE_TYPE, model);
                                 startActivityForResult(detailIntent, KeyConstants.GET_BLE_POWER);
                             } else {
+                                LogUtils.e("跳转   老蓝牙");
                                 Intent detailIntent = new Intent(getActivity(), OldBluetoothLockDetailActivity.class);
                                 String model = bleLockInfo.getServerLockInfo().getModel();
                                 detailIntent.putExtra(KeyConstants.DEVICE_TYPE, model);
                                 startActivityForResult(detailIntent, KeyConstants.GET_BLE_POWER);
                             }
                         } else {
+                            LogUtils.e("跳转 授权  蓝牙");
                             Intent impowerIntent = new Intent(getActivity(), BluetoothLockAuthorizationActivity.class);
                             String model = bleLockInfo.getServerLockInfo().getModel();
                             impowerIntent.putExtra(KeyConstants.DEVICE_TYPE, model);
@@ -608,29 +611,7 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
 
     @Override
     public void getDevicePowerThrowable(String gatewayId, String deviceId) {
-        /*//获取电量失败
-        if (mDeviceList != null && mDeviceList.size() > 0) {
-            for (HomeShowBean device : mDeviceList) {
-                //猫眼电量
-                if (HomeShowBean.TYPE_CAT_EYE == device.getDeviceType()) {
-                    if (device.getDeviceId().equals(deviceId)) {
-                        CateEyeInfo cateEyeInfo = (CateEyeInfo) device.getObject();
-                        cateEyeInfo.getServerInfo().setEvent_str("offline");
-                        if (deviceDetailAdapter != null) {
-                            deviceDetailAdapter.notifyDataSetChanged();
-                        }
-                    }
-                } else if (HomeShowBean.TYPE_GATEWAY_LOCK == device.getDeviceType()) {
-                    if (device.getDeviceId().equals(deviceId)) {
-                        GwLockInfo gwLockInfo = (GwLockInfo) device.getObject();
-                        gwLockInfo.getServerInfo().setEvent_str("offline");
-                        if (deviceDetailAdapter != null) {
-                            deviceDetailAdapter.notifyDataSetChanged();
-                        }
-                    }
-                }
-            }
-        }*/
+
     }
 
     @Override

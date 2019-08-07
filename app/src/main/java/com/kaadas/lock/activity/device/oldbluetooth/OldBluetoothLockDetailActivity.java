@@ -428,11 +428,13 @@ public class OldBluetoothLockDetailActivity extends BaseBleActivity<IOldBluetoot
                 vibrate(this, 150);
                 break;
             case R.id.rl_device_information:
+                LogUtils.e("点击设备详情   ");
                 Intent intent = new Intent(this, OldBluetoothMoreActivity.class);
                 startActivity(intent);
                 break;
             case R.id.rl_device_share:
             case R.id.rl_bluetooth_17:
+                LogUtils.e("点击分享   ");
                 intent = new Intent(this, BluetoothSharedDeviceManagementActivity.class);
                 startActivity(intent);
                 break;

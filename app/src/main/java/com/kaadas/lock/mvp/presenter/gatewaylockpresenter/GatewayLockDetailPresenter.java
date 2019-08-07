@@ -335,7 +335,9 @@ public class GatewayLockDetailPresenter<T> extends BasePresenter<GatewayLockDeta
     //网络变化通知
     public void listenerNetworkChange(){
         toDisposable(networkChangeDisposable);
-        networkChangeDisposable= NetWorkChangReceiver.notifyNetworkChange().subscribe(new Consumer<Boolean>() {
+        networkChangeDisposable= NetWorkChangReceiver.notifyNetworkChange()
+                .compose(RxjavaHelper.observeOnMainThread())
+                .subscribe(new Consumer<Boolean>() {
             @Override
             public void accept(Boolean aBoolean) throws Exception {
                 if (aBoolean){

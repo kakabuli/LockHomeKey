@@ -74,7 +74,7 @@ public class SmartEyePresenter<T> extends BasePresenter<ISmartEyeView> {
             MqttMessage mqttMessage = MqttCommandFactory.setPirEnable(gatewayId, deviceId,uid,status);
             setPirEnableDisposable = mqttService
                     .mqttPublish(MqttConstant.getCallTopic(MyApplication.getInstance().getUid()), mqttMessage)
-                    .compose(RxjavaHelper.observeOnMainThread())
+
                     .timeout(10 * 1000, TimeUnit.MILLISECONDS)
                     .filter(new Predicate<MqttData>() {
                         @Override
@@ -85,6 +85,7 @@ public class SmartEyePresenter<T> extends BasePresenter<ISmartEyeView> {
                             return false;
                         }
                     })
+                    .compose(RxjavaHelper.observeOnMainThread())
                     .subscribe(new Consumer<MqttData>() {
                         @Override
                         public void accept(MqttData mqttData) throws Exception {

@@ -27,7 +27,6 @@ public class MyFragmentPresenter<T> extends BasePresenter<IMyFragmentView> {
             public void onSubscribe(Disposable d) {
                 compositeDisposable.add(d);
             }
-
             @Override
             public void onNext(ResponseBody value) {
                 LogUtils.d(" davi 下载成功:" + value);
