@@ -386,6 +386,7 @@ public class BleDetailActivity extends BaseBleActivity<IDeviceDetailView, Device
             @Override
             public void onItemClick(int position, BluetoothLockFunctionBean bluetoothLockFunctionBean) {
                 Intent intent;
+                LogUtils.e("点击类型是    " + bluetoothLockFunctionBean.getType());
                 switch (bluetoothLockFunctionBean.getType()){
                     case BleLockUtils.TYPE_PASSWORD:
                         intent = new Intent(BleDetailActivity.this, BluetoothPasswordManagerActivity.class);
@@ -400,10 +401,12 @@ public class BleDetailActivity extends BaseBleActivity<IDeviceDetailView, Device
                         startActivity(intent);
                         break;
                     case BleLockUtils.TYPE_SHARE:
+                        LogUtils.e("分享   ");
                         intent = new Intent(BleDetailActivity.this, BluetoothSharedDeviceManagementActivity.class);
                         startActivity(intent);
                         break;
                     case BleLockUtils.TYPE_MORE:
+                        LogUtils.e("更多   ");
                         intent = new Intent(BleDetailActivity.this, BluetoothMoreActivity.class);
                         if (lockType.startsWith("S8") || lockType.startsWith("V6") || lockType.startsWith("V7") || lockType.startsWith("S100")) {
                             intent.putExtra(KeyConstants.SOURCE, "BluetoothLockFunctionV6V7Activity");

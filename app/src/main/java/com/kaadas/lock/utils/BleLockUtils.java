@@ -60,7 +60,7 @@ public class BleLockUtils {
         FUNCTION_SET.put(0x01, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22});
         FUNCTION_SET.put(0x02, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 10, 11, 13, 14, 15, 16, 17, 19, 20, 21, 22});
         FUNCTION_SET.put(0x03, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 10, 11, 13, 14, 15, 16, 17, 19, 20, 21, 22, 23});
-//        FUNCTION_SET.put(0x04, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 10, 11, 13, 14, 15, 16, 17, 19, 20, 21, 22, 23});
+        FUNCTION_SET.put(0x04, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23});
         FUNCTION_SET.put(0x20, new Integer[]{1, 2, 3, 4, 5, 7, 8, 10, 13, 16, 17, 19, 20, 21, 22});
         FUNCTION_SET.put(0x31, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 10, 13, 16, 17, 19, 20, 21, 22});
         FUNCTION_SET.put(0x32, new Integer[]{1, 2, 3, 4, 5, 7, 8, 9, 10, 13, 16, 17, 19, 20, 21, 22});
@@ -113,6 +113,57 @@ public class BleLockUtils {
         }
         List<Integer> integers = Arrays.asList(funcs);
         return integers.contains(18);
+    }
+
+    /**
+     * 根据功能集判断主用户是否需要带密码开门
+     *
+     * @param functionSet
+     * @return   是否需要密码开门   默认是需要的
+     */
+    public static boolean isNeedPwdOpen(String functionSet) {
+        if (TextUtils.isEmpty(functionSet)) {
+            return true;  //默认需要带密码开门
+        }
+        int func;
+        try {
+              func = Integer.parseInt(functionSet);
+        }catch (NumberFormatException e){
+            return true;
+        }
+
+        Integer[] funcs = FUNCTION_SET.get(func);
+        if (funcs == null) {
+            return false;
+        }
+        List<Integer> integers = Arrays.asList(funcs);
+        return integers.contains(1);
+    }
+
+
+    /**
+     * 根据功能集判断  授权用户 是否需要带密码开门
+     *
+     * @param functionSet
+     * @return   是否需要密码开门   默认是需要的
+     */
+    public static boolean authUserNeedPwdOpen(String functionSet) {
+        if (TextUtils.isEmpty(functionSet)) {
+            return true;  //默认需要带密码开门
+        }
+        int func;
+        try {
+            func = Integer.parseInt(functionSet);
+        }catch (NumberFormatException e){
+            return true;
+        }
+
+        Integer[] funcs = FUNCTION_SET.get(func);
+        if (funcs == null) {
+            return false;
+        }
+        List<Integer> integers = Arrays.asList(funcs);
+        return integers.contains(10);
     }
 
 
@@ -169,7 +220,8 @@ public class BleLockUtils {
 
 
     /**
-     * 根据设备型号，获取授权界面的显示图片
+     * 根据设备型号,获取授权界面的显示图片
+     *
      * @param model
      * @return
      */
@@ -177,7 +229,7 @@ public class BleLockUtils {
         if (!TextUtils.isEmpty(model)) {
             if (model.startsWith("K7")) {
                 return R.mipmap.bluetooth_authorization_lock_k7;
-            }  else if (model.startsWith("K8-T")) {
+            } else if (model.startsWith("K8-T")) {
                 return R.mipmap.bluetooth_authorization_lock_k8_t;
             } else if (model.startsWith("K8")) {
                 return R.mipmap.bluetooth_authorization_lock_k8;
@@ -197,16 +249,16 @@ public class BleLockUtils {
                 return R.mipmap.bluetooth_authorization_lock_qz013;
             } else if (model.startsWith("QZ012")) {
                 return R.mipmap.bluetooth_authorization_lock_qz012;
-            }else if (model.startsWith("S6")) {
+            } else if (model.startsWith("S6")) {
                 return R.mipmap.bluetooth_authorization_lock_s6;
             } else if (model.startsWith("K100")) {
                 return R.mipmap.bluetooth_authorization_lock_k100;
-            }else if (model.startsWith("H5606")){
+            } else if (model.startsWith("H5606")) {
                 return R.mipmap.bluetooth_authorization_lock_h5606;
-            }else {
+            } else {
                 return R.mipmap.bluetooth_authorization_lock_default;
             }
-        }else {
+        } else {
             return R.mipmap.bluetooth_authorization_lock_default;
         }
     }
@@ -214,50 +266,52 @@ public class BleLockUtils {
 
     /**
      * 根据设备型号，获取设备列表显示的图片
+     *
      * @param model
      * @return
      */
     public static int getSmallImageByModel(String model) {
-        if (!TextUtils.isEmpty(model)){
-            if (model.startsWith("K7")){
-               return R.mipmap.k7;
-            }else if (model.startsWith("K8-T")){
+        if (!TextUtils.isEmpty(model)) {
+            if (model.startsWith("K7")) {
+                return R.mipmap.k7;
+            } else if (model.startsWith("K8-T")) {
                 return R.mipmap.k8_t;
-            }else if (model.startsWith("K8")){
-               return R.mipmap.k8;
-            }else if (model.startsWith("K9")){
-               return R.mipmap.k9;
-            }else if (model.startsWith("KX")){
-               return R.mipmap.kx;
-            }else if (model.startsWith("S8C")){
+            } else if (model.startsWith("K8")) {
+                return R.mipmap.k8;
+            } else if (model.startsWith("K9")) {
+                return R.mipmap.k9;
+            } else if (model.startsWith("KX")) {
+                return R.mipmap.kx;
+            } else if (model.startsWith("S8C")) {
                 return R.mipmap.s8;
-            }else if (model.startsWith("V6")) {
+            } else if (model.startsWith("V6")) {
                 return R.mipmap.v6;
-            }else if (model.startsWith("V7")|| model.startsWith("S100")) {
+            } else if (model.startsWith("V7") || model.startsWith("S100")) {
                 return R.mipmap.v7;
-            }else if (model.startsWith("S8")){
+            } else if (model.startsWith("S8")) {
                 return R.mipmap.s8;
-            }else if (model.startsWith("QZ012")){
-               return R.mipmap.qz012;
-            }else if (model.startsWith("QZ013")){
-               return R.mipmap.qz013;
-            }else if (model.startsWith("S6")){
-               return R.mipmap.s6;
-            }else if (model.startsWith("K100")){
+            } else if (model.startsWith("QZ012")) {
+                return R.mipmap.qz012;
+            } else if (model.startsWith("QZ013")) {
+                return R.mipmap.qz013;
+            } else if (model.startsWith("S6")) {
+                return R.mipmap.s6;
+            } else if (model.startsWith("K100")) {
                 return R.mipmap.k100;
-            }else if (model.startsWith("H5606")){
+            } else if (model.startsWith("H5606")) {
                 return R.mipmap.h5606;
-            } else{
-               return R.mipmap.default_zigbee_lock_icon;
+            } else {
+                return R.mipmap.default_zigbee_lock_icon;
             }
-        }else{
-           return R.mipmap.default_zigbee_lock_icon;
+        } else {
+            return R.mipmap.default_zigbee_lock_icon;
         }
     }
 
 
     /**
      * 根据设备型号，获取设备详情界面显示的图片
+     *
      * @param model
      * @return
      */
@@ -265,23 +319,23 @@ public class BleLockUtils {
         if (!TextUtils.isEmpty(model)) {
             if (model.contains("K7")) {
                 return R.mipmap.bluetooth_lock_k7;
-            }else if (model.contains("K8-T")) {
+            } else if (model.contains("K8-T")) {
                 return R.mipmap.bluetooth_lock_k8_t;
-            }  else if (model.contains("K8")) {
+            } else if (model.contains("K8")) {
                 return R.mipmap.bluetooth_lock_k8;
             } else if (model.contains("K9")) {
                 return R.mipmap.bluetooth_lock_k9;
-            }  else if (model.contains("KX")) {
+            } else if (model.contains("KX")) {
                 return R.mipmap.bluetooth_lock_kx;
-            }else if (model.contains("S8C")) {
+            } else if (model.contains("S8C")) {
                 return R.mipmap.bluetooth_lock_s8;
             } else if (model.contains("V6")) {
                 return R.mipmap.bluetooth_lock_v6;
             } else if (model.contains("V7") || model.contains("S100")) {
                 return R.mipmap.bluetooth_lock_v7;
-            }  else if (model.contains("S8")) {
+            } else if (model.contains("S8")) {
                 return R.mipmap.bluetooth_lock_s8;
-            }else if (model.contains("QZ013")) {
+            } else if (model.contains("QZ013")) {
                 return R.mipmap.bluetooth_lock_qz013;
             } else if (model.contains("QZ012")) {
                 return R.mipmap.bluetooth_lock_qz012;
@@ -289,12 +343,12 @@ public class BleLockUtils {
                 return R.mipmap.bluetooth_lock_k100;
             } else if (model.contains("S6")) {
                 return R.mipmap.bluetooth_lock_s6;
-            }else if (model.contains("H5606")) {
+            } else if (model.contains("H5606")) {
                 return R.mipmap.bluetooth_lock_h5606;
-            }else {
+            } else {
                 return R.mipmap.bluetooth_lock_default;
             }
-        }else {
+        } else {
             return R.mipmap.bluetooth_lock_default;
         }
     }

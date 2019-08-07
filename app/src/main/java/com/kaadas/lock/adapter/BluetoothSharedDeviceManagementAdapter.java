@@ -29,17 +29,17 @@ public class BluetoothSharedDeviceManagementAdapter extends BaseQuickAdapter<Blu
         String number="";
         if (position<10){
             number="0"+position;
+        }else {
+            number=""+position;
         }
         helper.setText(R.id.tv_serial_number, number);
         helper.setText(R.id.tv_num, bean.getUnickname());
         LogUtils.d("davi getData().size() "+getData().size()+"  position  "+position);
-        if(getData()!=null && getData().size()==position+1){
+        if( getData().size()==position){
             helper.getView(R.id.my_view).setVisibility(View.GONE);
         }else {
             helper.getView(R.id.my_view).setVisibility(View.VISIBLE);
         }
-
-
     }
 
 

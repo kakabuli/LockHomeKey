@@ -151,9 +151,6 @@ public class CatEyePresenter<T> extends BasePresenter<ICatEyeView> {
                     })
                     .compose(RxjavaHelper.observeOnMainThread())
                     .subscribe(new Consumer<MqttData>() {
-
-
-
                         @Override
                         public void accept(MqttData mqttData) throws Exception {
                             JSONObject jsonObject = new JSONObject(mqttData.getPayload());

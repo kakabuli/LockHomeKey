@@ -270,7 +270,6 @@ public class SearchDevicePresenter<T> extends BasePresenter<ISearchDeviceView> {
         }
         // 连接
         bleService.removeBleLockInfo(); //1
-
         handler.removeCallbacks(releaseRunnable);
         bleService.connectDeviceByDevice(device); //1
         handler.postDelayed(releaseRunnable, 15 * 1000);

@@ -35,6 +35,14 @@ public class BluetoothFunctionOneLineAdapater extends RecyclerView.Adapter {
         MyHolder holder = (MyHolder) viewHolder;
         holder.iv_icon.setImageResource(data.get(position).getImage());
         holder.tvNamepublic.setText(data.get(position).getName());
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (onItemClickListener!=null){
+                    onItemClickListener.onItemClick(position,data.get(position));
+                }
+            }
+        });
     }
 
     @Override
@@ -51,6 +59,7 @@ public class BluetoothFunctionOneLineAdapater extends RecyclerView.Adapter {
             super(itemView);
             iv_icon = itemView.findViewById(R.id.iv);
             tvNamepublic = itemView.findViewById(R.id.tv_name);
+
         }
     }
     public interface OnItemClickListener {

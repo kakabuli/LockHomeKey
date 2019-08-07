@@ -1,0 +1,46 @@
+@startuml
+title 安卓蓝牙队列逻辑
+
+Event->Filter: 事件(UI触发/蓝牙上报)产生指令
+SendQueue->SendQueue:  发送队列
+WaitQueue->WaitQueue:  需要等待上个CMD返回，\n才下发下一个CMD
+Ble->Ble:
+alt  确认帧
+Filter->SendQueue:SendQueue.add(cmd)
+else 非确认帧
+        alt WaitQueue队列满了，或者已经有相同CMD  \n下列情况，优先级由上到下
+          Filter->Discard: WaitQueue 个数大于4   丢弃
+          Filter->Discard: WaitQueue 存在此指令  丢弃
+          Filter->Discard: SendQueue 存在此指令  丢弃
+       else  正常情况
+          Filter->WaitQueue: 加入队列  WaitQueue.add(cmd)
+          alt  当前无等待返回的指令
+             WaitQueue->SendQueue: WaitQueue.get(0) \nSendQueue.add(cmd)
+             WaitQueue->WaitQueue:WaitQueue.remove(0)
+          else 当前有等待执行完的指令
+            WaitQueue->WaitQueue: 等待返回数据
+          end
+       end
+end
+
+SendQueue ->SendQueue:  每隔100ms发送一个CMD
+SendQueue->Ble:  发送指令给蓝牙  SendQueue.get(0)
+SendQueue ->SendQueue:  SendQueue.remove(0)
+    alt  非确认帧
+        WaitQueue->WaitQueue: 等待
+        Ble->WaitQueue:返回数据
+        alt   是当前等待返回指令的返回数据
+              WaitQueue-> SendQueue: WaitQueue.get(0) \nSendQueue.add(cmd)
+              WaitQueue->WaitQueue:WaitQueue.remove(0)
+        else  不是当前等待返回指令的返回数据
+            WaitQueue->WaitQueue:等待
+            alt   一直没收到返回数据,超过五秒
+              WaitQueue-> SendQueue: WaitQueue.get(0) \nSendQueue.add(cmd)
+              WaitQueue->WaitQueue:WaitQueue.remove(0)
+            else
+            end
+        end
+    else  确认帧
+    end
+
+@enduml
