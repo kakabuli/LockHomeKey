@@ -74,11 +74,8 @@ public class BluetoothLockAuthorizationActivity extends BaseBleActivity<IOldBlue
     ImageView ivLockIcon;
     @BindView(R.id.iv_delete)
     ImageView ivDelete;
-    private String type;
     private BleLockInfo bleLockInfo;
-    private boolean isX5 = false;
     private static final int TO_MORE_REQUEST_CODE = 101;
-    int lockStatus = -1;
     private Runnable lockRunnable;
     private boolean isOpening = false;
     private Handler handler = new Handler();
@@ -94,9 +91,7 @@ public class BluetoothLockAuthorizationActivity extends BaseBleActivity<IOldBlue
         ivBack.setOnClickListener(this);
         tvOpenClock.setOnClickListener(this);
         ivDelete.setOnClickListener(this);
-//        tvType.setText(getString(R.string.bluetooth_type) + bleLockInfo.getServerLockInfo().getModel());
         showLockType();
-        initView();
         initListener();
         if (mPresenter != null) {
             mPresenter.getAllPassword(bleLockInfo);
@@ -106,10 +101,9 @@ public class BluetoothLockAuthorizationActivity extends BaseBleActivity<IOldBlue
             public void run() {
                 LogUtils.e(" 首页锁状态  反锁状态   " + bleLockInfo.getBackLock() + "    安全模式    " + bleLockInfo.getSafeMode() + "   布防模式   " + bleLockInfo.getArmMode());
                 isOpening = false;
-//                lockStatus = KeyConstants.OPEN_LOCK;
                 changLockStatus(0);
                 if (bleLockInfo.getBackLock() == 0) {  //等于0时是反锁状态
-                    changLockStatus(2);
+//                    changLockStatus(2);
                 }
                 if (bleLockInfo.getSafeMode() == 1) {//安全模式
 
@@ -138,29 +132,6 @@ public class BluetoothLockAuthorizationActivity extends BaseBleActivity<IOldBlue
 
     private void showLockType() {
         String lockType = bleLockInfo.getServerLockInfo().getModel();
-   /*     if (lockType.startsWith("QZ012")) {
-            lockType = "QZ012";
-        } else if (lockType.startsWith("QZ013")) {
-            lockType = "QZ013";
-        }else if (lockType.startsWith("S8C")){
-            lockType="S8C";
-        } else if (lockType.startsWith("V6")){
-            lockType="V6";
-        } else if (lockType.startsWith("V7")){
-            lockType="V7";
-        }  else if (lockType.startsWith("S8")) {
-            lockType = "S8";
-        } else if (lockType.startsWith("KX")) {
-            lockType = "KX";
-        } else if (lockType.startsWith("K9")) {
-            lockType = "K9";
-        } else if (lockType.startsWith("K8")) {
-            lockType = "K8";
-        } else if (lockType.startsWith("K7")) {
-            lockType = "K7";
-        } else {
-            lockType = "";
-        }*/
         if (!TextUtils.isEmpty(lockType)) {
             tvType.setText(StringUtil.getSubstringFive(lockType));
         }
@@ -196,13 +167,6 @@ public class BluetoothLockAuthorizationActivity extends BaseBleActivity<IOldBlue
         }
     }
 
-    private void initView() {
-        Intent intent = getIntent();
-        type = intent.getStringExtra(KeyConstants.DEVICE_TYPE);
-
-    }
-
-
     @SuppressLint("SetTextI18n")
     private void showData() {
         //todo 等从锁中获取自动还是手动模式进行展示
@@ -216,7 +180,7 @@ public class BluetoothLockAuthorizationActivity extends BaseBleActivity<IOldBlue
             if (bleLockInfo.getBattery() != -1) {
                 dealWithPower(bleLockInfo.getBattery());
             }
-            mPresenter.getDeviceInfo();
+            mPresenter.authSuccess();
         }
     }
 
@@ -283,14 +247,19 @@ public class BluetoothLockAuthorizationActivity extends BaseBleActivity<IOldBlue
         if (bleLockInfo.getBattery() != -1) {
             dealWithPower(bleLockInfo.getBattery());
             //删除成功
-            Intent intent = new Intent();
-            //把返回数据存入Intent
-            intent.putExtra(KeyConstants.BLE_INTO, bleLockInfo);
-            //设置返回数据
-            this.setResult(RESULT_OK, intent);
-        }
+            setBatteryResult( );
 
+        }
     }
+
+    private void  setBatteryResult(){
+        Intent intent = new Intent();
+        //把返回数据存入Intent
+        intent.putExtra(KeyConstants.BLE_INTO, bleLockInfo);
+        //设置返回数据
+        this.setResult(RESULT_OK, intent);
+    }
+
 
 
     @Override
@@ -430,6 +399,7 @@ public class BluetoothLockAuthorizationActivity extends BaseBleActivity<IOldBlue
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.iv_back:
+                setBatteryResult();
                 finish();
                 break;
             case R.id.tv_open_clock:
@@ -449,7 +419,7 @@ public class BluetoothLockAuthorizationActivity extends BaseBleActivity<IOldBlue
                         return;
                     }
                     LogUtils.e("开锁   ");
-                    mPresenter.currentOpenLock();
+                    mPresenter.openLock();
                 }
                 vibrate(this, 150);
                 break;
@@ -472,6 +442,14 @@ public class BluetoothLockAuthorizationActivity extends BaseBleActivity<IOldBlue
                 });
                 break;
         }
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        setBatteryResult();
+        super.onBackPressed();
+
     }
 
     //震动milliseconds毫秒
@@ -557,24 +535,6 @@ public class BluetoothLockAuthorizationActivity extends BaseBleActivity<IOldBlue
             }
         }
 
-
-      /*  if (power == 0) {
-            imgResId = R.mipmap.horization_power_0;
-        } else if (power <= 5) {
-            imgResId = R.mipmap.horization_power_1;
-        } else if (power <= 20) {
-            imgResId = R.mipmap.horization_power_2;
-        } else if (power <= 60) {
-            imgResId = R.mipmap.horization_power_3;
-        } else if (power <= 80) {
-            imgResId = R.mipmap.horization_power_4;
-//        } else if (power <= 100) {
-        } else {
-            imgResId = R.mipmap.horization_power_5;
-        }
-        if (imgResId != -1) {
-            ivPower.setImageResource(imgResId);
-        }*/
         //todo  读取电量时间
         long readDeviceInfoTime = System.currentTimeMillis();
         if (readDeviceInfoTime != -1) {

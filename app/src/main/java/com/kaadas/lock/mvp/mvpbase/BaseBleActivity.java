@@ -109,4 +109,51 @@ public abstract class BaseBleActivity<T extends IBleView, V extends BlePresenter
     public void noOpenGps(){
         ToastUtil.getInstance().showLong(R.string.check_phone_not_open_gps_please_open);
     }
+
+
+//////////////////////////////////***************          *************************//////////////////////////////////////////
+    /**
+     * 非管理员用户必须联网才能开锁
+     */
+    public void notAdminMustHaveNet(){
+
+    };
+
+
+    /**
+     * 输入密码
+     */
+    public void inputPwd() {}
+
+    /**
+     * 鉴权失败
+     */
+    public void authServerFailed(BaseResult baseResult){}
+
+    /**
+     * 开锁失败
+     */
+    public void openLockFailed(Throwable throwable){}
+
+    /**
+     * 开锁成功
+     */
+    public void openLockSuccess(){}
+
+    /**
+     * 锁关闭
+     */
+    public void onLockLock(){}
+
+
+    /**
+     * 鉴权失败
+     */
+    public void authFailed(Throwable throwable){}
+
+
+    /**
+     * 正在开锁
+     */
+    public  void isOpeningLock(){}
 }

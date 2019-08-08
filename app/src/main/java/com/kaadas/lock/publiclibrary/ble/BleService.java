@@ -68,7 +68,7 @@ public class BleService extends Service {
     private boolean isConnected = false;
     private BluetoothGatt bluetoothGatt;
     private static final int heartInterval = 3 * 1000; //心跳间隔时间 毫秒
-    private static final int sendInterval = 150;  //命令发送间隔时间 毫秒
+    private static final int sendInterval = 100;  //命令发送间隔时间 毫秒
     private BluetoothDevice currentDevice;  //当前连接的设备
     //待发送的队列
     private List<byte[]> commands = new ArrayList<>();
@@ -1022,7 +1022,14 @@ public class BleService extends Service {
 
 
     private void writeStack(byte[] command, int position) {
+
         LogUtils.e("当前指令   " + position + "   " + Rsa.bytesToHexString(command) + "    加入指令11111    " + getCommands(commands));
+        if (!isConnected){
+            commands.clear();
+            waitBackCommands.clear();
+            handler.removeCallbacks(sendCommandRannble);
+            return;
+        }
         if (bleVersion == 2 || bleVersion == 3) {
             for (byte[] temp : commands) {
                 if (isSameCommand(temp, command)) {  //如果发送队列中有要发送的当前数据  不在加入

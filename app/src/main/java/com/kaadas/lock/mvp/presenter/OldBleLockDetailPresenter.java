@@ -1,32 +1,17 @@
 package com.kaadas.lock.mvp.presenter;
 
-import android.text.TextUtils;
 
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.mvp.mvpbase.BlePresenter;
-import com.kaadas.lock.mvp.view.IDeviceDetailView;
 import com.kaadas.lock.mvp.view.IOldBluetoothDeviceDetailView;
 import com.kaadas.lock.publiclibrary.ble.BleCommandFactory;
-import com.kaadas.lock.publiclibrary.ble.BleProtocolFailedException;
 import com.kaadas.lock.publiclibrary.ble.RetryWithTime;
-import com.kaadas.lock.publiclibrary.ble.bean.OpenLockRecord;
 import com.kaadas.lock.publiclibrary.ble.responsebean.BleDataBean;
 import com.kaadas.lock.publiclibrary.ble.responsebean.ReadInfoBean;
-import com.kaadas.lock.publiclibrary.http.XiaokaiNewServiceImp;
-import com.kaadas.lock.publiclibrary.http.result.BaseResult;
-import com.kaadas.lock.publiclibrary.http.result.ServerBleDevice;
-import com.kaadas.lock.publiclibrary.http.util.BaseObserver;
 import com.kaadas.lock.publiclibrary.http.util.RxjavaHelper;
-import com.kaadas.lock.utils.BleLockUtils;
 import com.kaadas.lock.utils.DateUtils;
-import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
-import com.kaadas.lock.utils.NetUtil;
 import com.kaadas.lock.utils.Rsa;
-import com.kaadas.lock.utils.SPUtils;
-
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
@@ -38,15 +23,12 @@ import io.reactivex.functions.Predicate;
 
 public class OldBleLockDetailPresenter<T> extends BlePresenter<IOldBluetoothDeviceDetailView> {
     private Disposable electricDisposable;
-    private String localPwd;
-    private Disposable openLockDisposable;
     private Disposable getDeviceInfoDisposable;
     public int state5;
     public int state8;
     public int state2;
     private Disposable warringDisposable;
     private Disposable upLockDisposable;
-    private Disposable listenerOpenLockUpDisposable;
     private Disposable deviceStateChangeDisposable;
 
 
@@ -227,246 +209,11 @@ public class OldBleLockDetailPresenter<T> extends BlePresenter<IOldBluetoothDevi
     }
 
 
-    /**
-     * 开锁
-     */
-    public void openLock() {
-        boolean isAdmin = bleLockInfo.getServerLockInfo().getIs_admin().equals("1");
-        if (NetUtil.isNetworkAvailable()) {  //有网络
-            serverAuth();
-        } else {  //没有网络
-            //读取到蓝牙模块信号，且蓝牙型号是 rgbt1761或者Rgbt1761D  不用带密码开门  使用APP开门指令
-            if (!TextUtils.isEmpty(bleLockInfo.getModeNumber()) &&
-                    ("Rgbt1761".equalsIgnoreCase(bleLockInfo.getModeNumber()) ||
-                            "Rgbt1761D".equalsIgnoreCase(bleLockInfo.getModeNumber()))) {
-                realOpenLock("", true);
-                return;
-            }
-
-            if (isAdmin) {  //是 管理员
-                ServerBleDevice serverLockInfo = bleLockInfo.getServerLockInfo();
-                String functionSet = serverLockInfo.getFunctionSet();
-                if (!serverLockInfo.functionIsEmpty() && !BleLockUtils.isNeedPwdOpen(functionSet)) { //有功能集  且不需要密码开门
-                    realOpenLock("", true);
-                } else {
-                    if (mViewRef.get() != null) {
-                        mViewRef.get().inputPwd();
-                    }
-                }
-            } else { //不是管理员
-                if (mViewRef.get() != null) {
-                    mViewRef.get().notAdminMustHaveNet();
-                }
-            }
-        }
-    }
-
-    /**
-     * 从服务器鉴权
-     */
-    private void serverAuth() {
-        String type;
-        if (bleLockInfo.getServerLockInfo().getIs_admin().equals("1")) {
-            type = "100";
-        } else {
-            type = "7";
-        }
-        XiaokaiNewServiceImp.openLockAuth(bleLockInfo.getServerLockInfo().getLockName(),
-                bleLockInfo.getServerLockInfo().getIs_admin(),
-                type, MyApplication.getInstance().getUid())
-                .subscribe(new BaseObserver<BaseResult>() {
-                    @Override
-                    public void onSuccess(BaseResult result) {
-                        if ("200".equals(result.getCode())) {
-                            localPwd = (String) SPUtils.get(KeyConstants.SAVE_PWD_HEARD + bleLockInfo.getServerLockInfo().getMacLock(), "");  //Key
-                            //读取到蓝牙模块信号，且蓝牙型号是 rgbt1761或者Rgbt1761D  不用带密码开门  使用APP开门指令
-                            if (!TextUtils.isEmpty(bleLockInfo.getModeNumber()) &&
-                                    ("Rgbt1761".equalsIgnoreCase(bleLockInfo.getModeNumber()) ||
-                                            "Rgbt1761D".equalsIgnoreCase(bleLockInfo.getModeNumber()))) {
-                                realOpenLock("", true);
-                                return;
-                            }
-
-                            if ("1".equals(bleLockInfo.getServerLockInfo().getIs_admin())) { //如果是管理员  查看本地密码
-                                ServerBleDevice serverLockInfo = bleLockInfo.getServerLockInfo();
-                                String functionSet = serverLockInfo.getFunctionSet();
-                                if (!serverLockInfo.functionIsEmpty() && !BleLockUtils.isNeedPwdOpen(functionSet)) { //有功能集  且不需要密码开门
-                                    realOpenLock("", true);
-                                } else {
-                                    if (TextUtils.isEmpty(localPwd)) { //如果用户密码为空
-                                        if (mViewRef.get() != null) {
-                                            mViewRef.get().inputPwd();
-                                        }
-                                    } else {
-                                        realOpenLock(localPwd, false);
-                                    }
-                                }
-                            } else {  //是被授权用户  直接开锁.
-                                ServerBleDevice serverLockInfo = bleLockInfo.getServerLockInfo();
-                                String functionSet = serverLockInfo.getFunctionSet();
-                                if (!serverLockInfo.functionIsEmpty()  ) {  //有功能集
-                                    if ( BleLockUtils.authUserNeedPwdOpen(functionSet)){  //需要带密码开门
-                                        if (TextUtils.isEmpty(localPwd)) { //如果用户密码为空
-                                            if (mViewRef.get() != null) {
-                                                mViewRef.get().inputPwd();
-                                            }
-                                        } else {
-                                            realOpenLock(localPwd, false);
-                                        }
-                                    }else {
-                                        realOpenLock("", true);
-                                    }
-                                } else {  //没有功能集  判断是否是S8   如果是S8  那么带密码开锁   否则直接开锁
-                                    //S8不管是否是管理员模式  直接让输入密码
-                                    if (!TextUtils.isEmpty(bleLockInfo.getServerLockInfo().getModel()) &&
-                                            bleLockInfo.getServerLockInfo().getModel().startsWith("S8")) {
-                                        if (TextUtils.isEmpty(localPwd)) { //如果用户密码为空
-                                            if (mViewRef != null && mViewRef.get() != null) {
-                                                mViewRef.get().inputPwd();
-                                            }
-                                        } else {
-                                            realOpenLock(localPwd, false);
-                                        }
-                                    }else {
-                                        realOpenLock("", true);
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onAckErrorCode(BaseResult baseResult) {
-                        //785 鉴权失败  没有这把锁   803 当前时间没有权限
-                        if (mViewRef.get() != null) {
-                            mViewRef.get().authServerFailed(baseResult);
-                        }
-                    }
-
-                    @Override
-                    public void onFailed(Throwable throwable) {
-                        if (mViewRef.get() != null) {
-                            mViewRef.get().authFailed(throwable);
-                        }
-                    }
-
-                    @Override
-                    public void onSubscribe1(Disposable d) {
-                        compositeDisposable.add(d);
-                    }
-                });
-
-    }
 
 
-    public void realOpenLock(String pwd, boolean isApp) {
-
-        if (mViewRef.get() != null) {
-            mViewRef.get().isOpeningLock();
-        }
-        if (bleService.getBleVersion() == 1) {
-            //老版本开锁
-            return;
-        }
-        byte[] openLockCommand;
-        if (isApp) {//如果是APP开锁
-            openLockCommand = BleCommandFactory.controlLockCommand((byte) 0x00, (byte) 0x04, "", bleLockInfo.getAuthKey());
-        } else {
-            openLockCommand = BleCommandFactory.controlLockCommand((byte) 0x00, (byte) 0x01, pwd, bleLockInfo.getAuthKey());
-        }
-        bleService.sendCommand(openLockCommand);
-        toDisposable(openLockDisposable);
-        openLockDisposable = bleService.listeneDataChange()
-                .filter(new Predicate<BleDataBean>() {
-                    @Override
-                    public boolean test(BleDataBean bleDataBean) throws Exception {
-                        return openLockCommand[1] == bleDataBean.getTsn();
-                    }
-                })
-                .timeout(5000, TimeUnit.MILLISECONDS)
-                .compose(RxjavaHelper.observeOnMainThread())
-                .subscribe(new Consumer<BleDataBean>() {  //
-                    @Override
-                    public void accept(BleDataBean bleDataBean) throws Exception {  //开锁成功
-                        if (bleDataBean.getOriginalData()[0] == 0) { //加密标志  0x01    且负载数据第一个是  0
-                            if (bleDataBean.getPayload()[0] == 0) {
-                                //开锁返回确认帧     如果成功  保存密码    那么监听开锁上报   以开锁上报为准   开锁上报  五秒超时
-                                LogUtils.e("开锁成功3  " + Rsa.bytesToHexString(bleDataBean.getPayload()));
-                                //开锁成功  保存密码
-                                SPUtils.put(KeyConstants.SAVE_PWD_HEARD + bleLockInfo.getServerLockInfo().getMacLock(), pwd); //Key
-                                listenerOpenLockUp();
-                            } else {  //开锁失败
-                                LogUtils.e("开锁失败 4  " + Rsa.bytesToHexString(bleDataBean.getPayload()));
-                                if (mViewRef.get() != null) {
-                                    mViewRef.get().openLockFailed(new BleProtocolFailedException(0xff & bleDataBean.getOriginalData()[0]));
-                                }
-                                //开锁失败  清除密码
-                                SPUtils.remove(KeyConstants.SAVE_PWD_HEARD + bleLockInfo.getServerLockInfo().getMacLock()); //Key
-                            }
-                            toDisposable(openLockDisposable);
-                        }
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        if (mViewRef.get() != null) {
-                            mViewRef.get().openLockFailed(throwable);
-                        }
-                    }
-                });
-        compositeDisposable.add(openLockDisposable);
-    }
 
 
-    /**
-     * 监听开锁上报
-     */
-    public void listenerOpenLockUp() {
-        toDisposable(listenerOpenLockUpDisposable);
-        listenerOpenLockUpDisposable = bleService.listeneDataChange()
-                .filter(new Predicate<BleDataBean>() {
-                    @Override
-                    public boolean test(BleDataBean bleDataBean) throws Exception {
-                        return bleDataBean.getCmd() == 0x05;
-                    }
-                })
-                .timeout(5 * 1000, TimeUnit.MILLISECONDS)
-                .compose(RxjavaHelper.observeOnMainThread())
-                .subscribe(new Consumer<BleDataBean>() {
-                    @Override
-                    public void accept(BleDataBean bleDataBean) throws Exception {
-                        if (MyApplication.getInstance().getBleService().getBleLockInfo().getAuthKey() == null || MyApplication.getInstance().getBleService().getBleLockInfo().getAuthKey().length == 0) {
-                            LogUtils.e("收到报警记录，但是鉴权帧为空");
-                            return;
-                        }
 
-                        byte[] deValue = Rsa.decrypt(bleDataBean.getPayload(), MyApplication.getInstance().getBleService().getBleLockInfo().getAuthKey());
-                        int value0 = deValue[0] & 0xff;
-                        int value1 = deValue[1] & 0xff;
-                        int value2 = deValue[2] & 0xff;
-                        if (value0 == 1) {  //上锁
-                            if (value2 == 1) {
-
-                            } else if (value2 == 2) {   //开锁
-                                if (mViewRef.get() != null) {
-                                    mViewRef.get().openLockSuccess();
-                                }
-                                toDisposable(listenerOpenLockUpDisposable);
-                            }
-                        }
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        if (mViewRef.get() != null) {
-                            mViewRef.get().openLockFailed(throwable);
-                        }
-                    }
-                });
-        compositeDisposable.add(listenerOpenLockUpDisposable);
-
-
-    }
 
 
     @Override
@@ -603,8 +350,6 @@ public class OldBleLockDetailPresenter<T> extends BlePresenter<IOldBluetoothDevi
         compositeDisposable.add(deviceStateChangeDisposable);
     }
 
-    private List<OpenLockRecord> serverRecords = new ArrayList<>();
-    private Disposable serverDisposable;
 
     @Override
     public void detachView() {

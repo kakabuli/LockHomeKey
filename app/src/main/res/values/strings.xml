@@ -492,7 +492,7 @@
     <string name="bluetooth_no_connect_bluetooth_three_hint">请找到门锁指纹采集位置,按照语音提示将要手指触摸进行采集</string>
     <string name="next_step">下一步</string>
 
-    <string name="warring_lock">您的门锁错误验证多次,门锁系统锁定5分钟</string>
+    <string name="warring_lock">您的门锁错误验证多次,门锁系统锁定</string>
     <string name="warring_three_times">您的智能锁已多次验证开门失败,请回家或联系保安查看</string>
     <string name="warring_broken">已监测到您的门锁被撬,请联系家人或小区保安</string>
     <string name="warring_mechanical_key">您的智能锁正在被机械锁开启,请回家或联系保安查看</string>
@@ -724,7 +724,7 @@
     <string name="recording_name">录屏</string>
     <string name="select_no_lock">暂无联动门锁</string>
     <string name="video_connecting">正在连接···</string>
-    <string name="not_admin_must_have_net">授权用户开锁必须要有网络！</string>
+    <string name="not_admin_must_have_net">授权用户开锁须有网络！</string>
     <string name="name_not_empty">输入值不能为空</string>
     <string name="be_beging_syc_lockinfo">正在同步锁信息，请稍后。。。</string>
     <string name="lock_has_bean_close">门锁已经打开</string>
@@ -1180,4 +1180,6 @@
     <string name="socket_send_failed">猫眼呼叫来电失败,数据包发送失败</string>
     <string name="io_send_failed">猫眼呼叫来电失败,数据包发送IO异常</string>
     <string name="get_port_failed">猫眼呼叫来电失败,获取端口失败</string>
+    <string name="warring_record_empty">报警记录为空</string>
+    <string name="is_openning">正在开锁，请稍后再试...</string>
 </resources>

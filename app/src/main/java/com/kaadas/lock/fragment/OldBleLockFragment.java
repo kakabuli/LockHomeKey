@@ -874,6 +874,7 @@ public class OldBleLockFragment extends BaseBleFragment<IOldBleLockView, OldBleL
 
     @Override
     public void openLockFailed(Throwable throwable) {
+        LogUtils.e("开锁失败   "  + throwable.getMessage());
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
