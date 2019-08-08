@@ -35,7 +35,6 @@ import io.reactivex.functions.Predicate;
  * Describe
  */
 public class DeviceDetailPresenter<T> extends BleLockDetailPresenter<IDeviceDetailView> {
-    private Disposable electricDisposable;
     private Disposable getDeviceInfoDisposable;
     private Disposable deviceStateChangeDisposable;
 

@@ -244,7 +244,12 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
                     if (TextUtils.isEmpty(bleVersion)) {
                         isOld = true;
                     } else {
-                        if (!"3".equals(bleVersion)) {
+                        if ("3".equals(bleVersion)  ) {
+                            String functionSet = bleLockInfo.getServerLockInfo().getFunctionSet();
+                            if ("0".equals(functionSet)){
+                                isOld = true;
+                            }
+                        }else {
                             isOld = true;
                         }
                     }

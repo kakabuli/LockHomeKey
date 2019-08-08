@@ -770,7 +770,6 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                                 if (deviceDetailAdapter != null) {
                                     deviceDetailAdapter.notifyDataSetChanged();
                                 }
-
                             }
                         }
                     }

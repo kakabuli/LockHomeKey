@@ -208,7 +208,7 @@ public class BluetoothWarnInformationFragment extends BaseBleFragment<IWarringRe
         if (isComplete) {
             ToastUtil.getInstance().showShort(R.string.sync_success);
         } else {
-            ToastUtil.getInstance().showShort(R.string.get_record_failed_please_wait);
+            ToastUtil.getInstance().showShort(R.string.warring_record_empty);
             hiddenLoading();
         }
         //加载完了   设置正在加载数据

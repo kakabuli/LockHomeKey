@@ -361,8 +361,6 @@ public class BindBlePresenter<T> extends BasePresenter<IBindBleView> {
                                 mViewRef.get().unknownFunctionSet(funcSet);
                             }
                         }
-
-
                     }
                 }, new Consumer<Throwable>() {
                     @Override

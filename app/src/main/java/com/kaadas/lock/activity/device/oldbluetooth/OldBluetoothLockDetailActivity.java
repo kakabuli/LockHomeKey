@@ -189,7 +189,6 @@ public class OldBluetoothLockDetailActivity extends BaseBleActivity<IOldBluetoot
             } else {
                 mPresenter.getPower();
             }
-
         }
     }
 
@@ -411,6 +410,7 @@ public class OldBluetoothLockDetailActivity extends BaseBleActivity<IOldBluetoot
                 //开锁
                 if (isOpening) {
                     LogUtils.e("长按  但是当前正在开锁状态   ");
+                    ToastUtil.getInstance().showLong(R.string.is_openning);
                     return;
                 }
                 if (mPresenter.isAuth(bleLockInfo, true)) {
@@ -423,7 +423,7 @@ public class OldBluetoothLockDetailActivity extends BaseBleActivity<IOldBluetoot
                         }
                         return;
                     }
-                    mPresenter.currentOpenLock();
+                    mPresenter.openLock();
                 }
                 vibrate(this, 150);
                 break;

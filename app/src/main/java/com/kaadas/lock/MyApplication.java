@@ -529,6 +529,10 @@ public class MyApplication extends Application {
                         }
                         String payload = mqttData.getPayload();
                         allBindDevices = new Gson().fromJson(payload, AllBindDevices.class);
+                        if (!"200".equals(allBindDevices.getCode())){  ///服务器获取设备列表失败
+                            LogUtils.e("   获取列表失败  "  +allBindDevices.getCode());
+                            return;
+                        }
                         SPUtils.put(Constants.ALL_DEVICES_DATA,payload);
 
                         long serverCurrentTime = Long.parseLong(allBindDevices.getTimestamp());
@@ -630,6 +634,9 @@ public class MyApplication extends Application {
     //所有网关
     public List<GatewayInfo> getAllGateway() {
         List<GatewayInfo> gatewayList = new ArrayList<>();
+        if (homeShowDevices == null){
+            return gatewayList;
+        }
         for (HomeShowBean homeShowBean : homeShowDevices) {
             if (homeShowBean.getDeviceType() == HomeShowBean.TYPE_GATEWAY) {
                 gatewayList.add((GatewayInfo) homeShowBean.getObject());

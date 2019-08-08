@@ -141,6 +141,27 @@ public class BleLockUtils {
     }
 
 
+
+    /**
+     * 根据功能集判断是否支持修改管理员密码
+     *
+     * @param functionSet
+     * @return
+     */
+    public static boolean isSupportCard(String functionSet) {
+        if (TextUtils.isEmpty(functionSet)){
+            return false;
+        }
+        int func = Integer.parseInt(functionSet);
+        Integer[] funcs = FUNCTION_SET.get(func);
+        if (funcs == null) { //  没有该功能集对应的  知己false
+            return false;
+        }
+        List<Integer> integers = Arrays.asList(funcs);
+        return integers.contains(9);
+    }
+
+
     /**
      * 根据功能集判断  授权用户 是否需要带密码开门
      *

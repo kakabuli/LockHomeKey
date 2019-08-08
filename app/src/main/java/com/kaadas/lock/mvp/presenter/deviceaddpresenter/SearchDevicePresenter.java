@@ -219,6 +219,7 @@ public class SearchDevicePresenter<T> extends BasePresenter<ISearchDeviceView> {
         if (bleService != null) {
             bleService.scanBleDevice(false);
         }
+        handler.removeCallbacks(releaseRunnable);
     }
 
     private int connectTimes = 0;

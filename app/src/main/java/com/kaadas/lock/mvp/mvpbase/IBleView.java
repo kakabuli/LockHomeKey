@@ -99,4 +99,49 @@ public interface IBleView extends IBaseView {
      */
     void noOpenGps();
 
+
+    ////////////////////////////////************              开锁逻辑的回调             ************///////////////////////////////////
+    /**
+     * 非管理员用户必须联网才能开锁
+     */
+    void notAdminMustHaveNet();
+
+
+    /**
+     * 输入密码
+     */
+    void inputPwd();
+
+    /**
+     * 鉴权失败
+     */
+    void authServerFailed(BaseResult baseResult);
+
+    /**
+     * 开锁失败
+     */
+    void openLockFailed(Throwable throwable);
+
+    /**
+     * 开锁成功
+     */
+    void openLockSuccess();
+
+    /**
+     * 锁关闭
+     */
+    void onLockLock();
+
+
+    /**
+     * 鉴权失败
+     */
+    void authFailed(Throwable throwable);
+
+
+    /**
+     * 正在开锁
+     */
+    void isOpeningLock();
+
 }

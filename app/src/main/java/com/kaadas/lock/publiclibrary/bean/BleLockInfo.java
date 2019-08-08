@@ -30,12 +30,13 @@ public class BleLockInfo implements Serializable {
     private int doorState = -1; //门状态   0 lock  1 unlock
     private int backLock = -1; //反锁（独立锁舌）状态 0 lock 1 unlock
     private long readDeviceInfoTime = -1;  //读取锁信息的时间
-    private int adminMode = -1;
-    private long readBatteryTime = -1;
-    private int supportBackLock = -1;
+    private int adminMode = -1;   //管理模式
+    private long readBatteryTime = -1;   //去取电量的时间
+    private int supportBackLock = -1;  //支持反锁
     private int bleType = -1;  //蓝牙的平台    1 Ti平台    2 P6平台
     private boolean lockStatusException = false;  //锁是否异常  即是否有报警信息
     private int openNumbers = 0;   //开门次数
+    private String localFunctionSet ;   //读取到蓝牙的功能集
 
 
     public int getOpenNumbers() {
@@ -91,6 +92,13 @@ public class BleLockInfo implements Serializable {
     }
 
 
+    public String getLocalFunctionSet() {
+        return localFunctionSet;
+    }
+
+    public void setLocalFunctionSet(String localFunctionSet) {
+        this.localFunctionSet = localFunctionSet;
+    }
 
     public ServerBleDevice getServerLockInfo() {
         return serverLockInfo;

@@ -156,6 +156,46 @@ public class FingerprintLinkBluetoothActivity extends BaseActivity<IAddPringerpr
 
     }
 
+    @Override
+    public void notAdminMustHaveNet() {
+
+    }
+
+    @Override
+    public void inputPwd() {
+
+    }
+
+    @Override
+    public void authServerFailed(BaseResult baseResult) {
+
+    }
+
+    @Override
+    public void openLockFailed(Throwable throwable) {
+
+    }
+
+    @Override
+    public void openLockSuccess() {
+
+    }
+
+    @Override
+    public void onLockLock() {
+
+    }
+
+    @Override
+    public void authFailed(Throwable throwable) {
+
+    }
+
+    @Override
+    public void isOpeningLock() {
+
+    }
+
     /**
      * 去手动绑定界面
      */

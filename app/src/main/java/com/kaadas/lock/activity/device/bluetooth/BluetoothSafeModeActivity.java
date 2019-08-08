@@ -6,19 +6,21 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.device.BleDetailActivity;
-import com.kaadas.lock.activity.device.BluetoothLockFunctionV6V7Activity;
 import com.kaadas.lock.mvp.mvpbase.BaseBleActivity;
 import com.kaadas.lock.mvp.presenter.SafeModePresenter;
 import com.kaadas.lock.mvp.view.ISafeModeView;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.utils.AlertDialogUtil;
+import com.kaadas.lock.utils.BleLockUtils;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.ToastUtil;
+import com.lzy.imagepicker.util.Utils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -39,8 +41,15 @@ public class BluetoothSafeModeActivity extends BaseBleActivity<ISafeModeView, Sa
     @BindView(R.id.rl_safe_mode)
     RelativeLayout rlSafeMode;
     boolean safeModeStatus;
+    @BindView(R.id.no_card)
+    LinearLayout noCard;
+    @BindView(R.id.all)
+    LinearLayout all;
+    @BindView(R.id.rl_notice)
+    RelativeLayout rlNotice;
     private BleLockInfo bleLockInfo;
     private String name;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,13 +65,33 @@ public class BluetoothSafeModeActivity extends BaseBleActivity<ISafeModeView, Sa
         ivBack.setOnClickListener(this);
         tvContent.setText(R.string.safe_mode);
         rlSafeMode.setOnClickListener(this);
+        if (bleLockInfo != null && bleLockInfo.getServerLockInfo() != null) {
+            if (BleLockUtils.isSupportCard(bleLockInfo.getServerLockInfo().getFunctionSet())) {
+//            if (false){
+                all.setVisibility(View.VISIBLE);
+                noCard.setVisibility(View.GONE);
+                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(rlNotice.getLayoutParams());
+                lp.setMargins(0,0, 0,  Utils.dp2px(this,60));
+                rlNotice.setLayoutParams(lp);
+            } else {
+                all.setVisibility(View.GONE);
+                noCard.setVisibility(View.VISIBLE);
+                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(rlNotice.getLayoutParams());
+                lp.setMargins(0, 0, 0, Utils.dp2px(this,100));
+                rlNotice.setLayoutParams(lp);
+            }
+
+        }
+
     }
+
     private void initData() {
         if (bleLockInfo != null) {
             name = bleLockInfo.getServerLockInfo().getModel();
         }
 
     }
+
     @Override
     protected SafeModePresenter<ISafeModeView> createPresent() {
         return new SafeModePresenter<>();
@@ -78,11 +107,11 @@ public class BluetoothSafeModeActivity extends BaseBleActivity<ISafeModeView, Sa
                 /**
                  * 开关监听事件
                  */
-                if (mPresenter.isAuth(bleLockInfo, false)){
+                if (mPresenter.isAuth(bleLockInfo, false)) {
                     //打开时
-                    if (safeModeStatus){
+                    if (safeModeStatus) {
                         mPresenter.openSafeMode(false);
-                    }else{
+                    } else {
                         mPresenter.openSafeMode(true);
                     }
                 }
@@ -97,10 +126,10 @@ public class BluetoothSafeModeActivity extends BaseBleActivity<ISafeModeView, Sa
         LogUtils.e("设置安全模式成功   " + isOpen);
         if (isOpen) {
             ivSafeMode.setImageResource(R.mipmap.iv_open);
-            safeModeStatus=true;
+            safeModeStatus = true;
         } else {
             ivSafeMode.setImageResource(R.mipmap.iv_close);
-            safeModeStatus=false;
+            safeModeStatus = false;
         }
         hiddenLoading();
     }
@@ -114,24 +143,25 @@ public class BluetoothSafeModeActivity extends BaseBleActivity<ISafeModeView, Sa
     @Override
     public void onGetStateSuccess(boolean isOpen) {
         if (isOpen) {
-            safeModeStatus=true;
+            safeModeStatus = true;
             ivSafeMode.setImageResource(R.mipmap.iv_open);
         } else {
-            safeModeStatus=false;
+            safeModeStatus = false;
             ivSafeMode.setImageResource(R.mipmap.iv_close);
         }
     }
 
     @Override
     public void onGetStateFailed(Throwable throwable) {
-        ToastUtil.getInstance().showShort(getString(R.string.get_lock_state_fail) );
+        hiddenLoading();
+        ToastUtil.getInstance().showShort(getString(R.string.get_lock_state_fail));
         LogUtils.e("获取门锁状态失败   " + throwable.getMessage());
     }
 
     @Override
     public void onPasswordTypeLess() {
         hiddenLoading();
-        AlertDialogUtil.getInstance().noEditTwoButtonDialog(this, getString(R.string.hint), getString(R.string.safe_mode_dialog),getString(R.string.cancel),getString(R.string.query) , new AlertDialogUtil.ClickListener() {
+        AlertDialogUtil.getInstance().noEditTwoButtonDialog(this, getString(R.string.hint), getString(R.string.safe_mode_dialog), getString(R.string.cancel), getString(R.string.query), new AlertDialogUtil.ClickListener() {
             @Override
             public void left() {
 
@@ -140,18 +170,11 @@ public class BluetoothSafeModeActivity extends BaseBleActivity<ISafeModeView, Sa
             @Override
             public void right() {
                 String lockType = bleLockInfo.getServerLockInfo().getModel();
-                if (!TextUtils.isEmpty(lockType)){
-                    if (lockType.startsWith("V6")||lockType.startsWith("V7")||lockType.startsWith("S100")||lockType.startsWith("K9")||lockType.startsWith("S6")){
-                        Intent intent = new Intent();
-                        intent.setClass(BluetoothSafeModeActivity.this, BluetoothLockFunctionV6V7Activity.class);
-                        startActivity(intent);
-                        finish();
-                    }else {
-                        Intent intent = new Intent();
-                        intent.setClass(BluetoothSafeModeActivity.this, BleDetailActivity.class);
-                        startActivity(intent);
-                        finish();
-                    }
+                if (!TextUtils.isEmpty(lockType)) {
+                    Intent intent = new Intent();
+                    intent.setClass(BluetoothSafeModeActivity.this, BleDetailActivity.class);
+                    startActivity(intent);
+                    finish();
                 }
 
 
