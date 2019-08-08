@@ -1172,6 +1172,7 @@
     <string name="cateye_sip_invert_fail">猫眼来电呼叫失败,获取数据包失败</string>
     <string name="cateye_video_audio_send_fail">音视频传输失败,请重新呼叫</string>
     <string name="cateye_video_audio_send_fail_no_time">无音视频传输,请重新呼叫</string>
+    <string name="cateye_video_audio_get_fail_no_time">App没有获取音视频,请重新呼叫</string>
     <string name="sip_register_fail">Sip注册失败,来电呼叫失败，请重新呼叫</string>
     <string name="call_coming_connection_fail">猫眼呼叫来电失败,呼叫结束,请重新呼叫</string>
     <string name="read_lock_info_failed">读取锁信息失败，请重试！</string>

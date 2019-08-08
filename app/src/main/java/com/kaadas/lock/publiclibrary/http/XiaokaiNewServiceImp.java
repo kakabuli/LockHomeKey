@@ -1,5 +1,6 @@
 package com.kaadas.lock.publiclibrary.http;
 
+import com.kaadas.lock.bean.PhoneMessage;
 import com.kaadas.lock.bean.PushBean;
 import com.kaadas.lock.bean.PushSwitch;
 import com.kaadas.lock.bean.PushSwitchBean;
@@ -830,6 +831,22 @@ public class XiaokaiNewServiceImp {
         PushBean pushBean = new PushBean(uid, jpushId, type);
         return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
                 .uploadPushId(new HttpUtils<PushBean>().getBody(pushBean))
+                .compose(RxjavaHelper.observeOnMainThread());
+    }
+
+    /**
+     * upload phone message
+     * @param uid
+     * @param account
+     * @param model          手机型号  SM-C7000
+     * @param manufacturer    手机厂商 samsung
+     * @param version          Android系统版本号 android8.0
+     * @return
+     */
+    public static Observable<BaseResult> uploadPushPhoneMsg(String uid, String account, String model,String manufacturer,String version) {
+        PhoneMessage phoneMessage = new PhoneMessage(uid, account, model,manufacturer,version);
+        return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
+                .uploadPushMsg(new HttpUtils<PhoneMessage>().getBody(phoneMessage))
                 .compose(RxjavaHelper.observeOnMainThread());
     }
 

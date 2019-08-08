@@ -336,6 +336,12 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
                  Log.e(GeTui.VideoLog,"getui upload to success");
              }
         }
+
+        boolean isUploadPhoneMsg= (boolean) SPUtils.get(Constants.PHONE_MSG_UPLOAD_STATUS,false);
+        if(!isUploadPhoneMsg){
+            mPresenter.uploadPhoneMessage();
+        }
+
     }
 
     @Override
@@ -669,6 +675,7 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
                       }
 
                       if(!isRegisterStatus  && linphone_port>0){
+                          Log.e(GeTui.VideoLog,"MainActivity==>port:"+linphone_port+" isRegisterStatus:"+isRegisterStatus);
                             errorHandler.sendEmptyMessage(ERROR_1);
                             timer.cancel();
                             timer = null;
@@ -676,6 +683,7 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
                             return;
                         }
                         if(linphone_port<=0 && getPortTimes==10){
+                            Log.e(GeTui.VideoLog,"MainActivity==>getPortTimes:"+getPortTimes+" linphone_port:"+linphone_port);
                             errorHandler.sendEmptyMessage(ERROR_1);
                             timer.cancel();
                             timer = null;
@@ -683,6 +691,7 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
                             return;
                         }
                         if (linphone_port > 0  && isRegisterStatus) {
+                            Log.e(GeTui.VideoLog,"MainActivity==>isRegisterStatus:"+isRegisterStatus+" linphone_port:"+linphone_port);
                             timer.cancel();
                             timer = null;
                             getPortTimes=0;

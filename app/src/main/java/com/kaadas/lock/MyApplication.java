@@ -586,9 +586,11 @@ public class MyApplication extends Application {
 
     //根据网关id查找出网关
     public GatewayInfo getGatewayById(String gatewayId) {
-        for (HomeShowBean homeShowBean : homeShowDevices) {
-            if (gatewayId.equals(homeShowBean.getDeviceId())) {
-                return (GatewayInfo) homeShowBean.getObject();
+        if(homeShowDevices!=null && homeShowDevices.size()>0){
+            for (HomeShowBean homeShowBean : homeShowDevices) {
+                if (gatewayId.equals(homeShowBean.getDeviceId())) {
+                    return (GatewayInfo) homeShowBean.getObject();
+                }
             }
         }
         return null;

@@ -41,10 +41,12 @@ public class DeviceZigBeeDetailPresenter<T> extends BasePresenter<DeviceZigBeeDe
     //获取绑定的网关列表
     public List<HomeShowBean> getGatewayBindList(){
         List<HomeShowBean> homeShowBeans=MyApplication.getInstance().getAllDevices();
-        for (HomeShowBean showBean:homeShowBeans){
-            if (showBean.getDeviceType()==HomeShowBean.TYPE_GATEWAY){
-                if (showBeansList!=null){
-                    showBeansList.add(showBean);
+        if(homeShowBeans!=null && homeShowBeans.size()>0){
+            for (HomeShowBean showBean:homeShowBeans){
+                if (showBean.getDeviceType()==HomeShowBean.TYPE_GATEWAY){
+                    if (showBeansList!=null){
+                        showBeansList.add(showBean);
+                    }
                 }
             }
         }

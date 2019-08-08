@@ -438,6 +438,15 @@ public interface IXiaoKaiNewService {
 
 
     /**
+     * 上传Msg
+     * @param info
+     * @return
+     */
+    @POST(HttpUrlConstants.UPLOAD_PHONE_MSG)
+    Observable<BaseResult> uploadPushMsg(@Body RequestBody info);
+
+
+    /**
      * 获取控制个推开关
      * @param info
      * @return

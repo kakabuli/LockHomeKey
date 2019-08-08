@@ -97,7 +97,7 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
 
     public  boolean isConnectedEye=false;
     final int CLOSE=1;
-    int CLOSE_TIME=10*1000;
+    int CLOSE_TIME=15*1000;
    Handler videoHandler=new Handler(){
        @Override
        public void handleMessage(Message msg) {

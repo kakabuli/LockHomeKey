@@ -395,7 +395,7 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
                      if(videotime.equalsIgnoreCase("00:00:00")){
                          Log.e(GeTui.VideoLog,"无音视频传输,请重新呼叫");
                          MyLog.getInstance().save("无音视频传输,请重新呼叫");
-                         Toast.makeText(VideoVActivity.this,getString(R.string.cateye_video_audio_send_fail_no_time),Toast.LENGTH_LONG).show();
+                         Toast.makeText(VideoVActivity.this,getString(R.string.cateye_video_audio_get_fail_no_time),Toast.LENGTH_LONG).show();
                          finish();
                      }
 

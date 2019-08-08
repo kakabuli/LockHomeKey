@@ -272,6 +272,8 @@ public class HttpUrlConstants {
 
     public static final String UPLOAD_PUSH_ID = BASE_URL + "user/upload/pushId";
 
+    public static final String UPLOAD_PHONE_MSG = "http://47.106.94.189:9111/api/mobile/add";
+
     public static final String GET_PUSH_SWITch = BASE_URL + "user/get/getPushSwitch";
     public static final String UPDATE_PUSH_SWITch = BASE_URL + "user/edit/postPushSwitch";
 

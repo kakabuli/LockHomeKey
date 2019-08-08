@@ -792,6 +792,42 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
     }
 
 
+    public void  uploadPhoneMessage(){
+        String uid = (String) SPUtils.get(SPUtils.UID, "");
+        String phone = (String) SPUtils.get(SPUtils.PHONEN,"");
+        // 获取Android系统版本号 android8.0
+        String version= android.os.Build.VERSION.RELEASE;
+        // 手机型号  SM-C7000
+        String model=android.os.Build.MODEL;
+        //手机厂商 samsung
+        String manufacturer=android.os.Build.BRAND;
+        if(TextUtils.isEmpty(uid) || TextUtils.isEmpty(phone) || TextUtils.isEmpty(version) || TextUtils.isEmpty(model) || TextUtils.isEmpty(manufacturer)){
+            Log.e(GeTui.VideoLog,"信息为null,上传手机信息失败");
+            return;
+        }
+        XiaokaiNewServiceImp.uploadPushPhoneMsg(uid,phone,model,manufacturer,version).subscribe(new BaseObserver<BaseResult>() {
+            @Override
+            public void onSuccess(BaseResult baseResult) {
+                if(baseResult.getCode().equals("200")){
+                    SPUtils.put(Constants.PHONE_MSG_UPLOAD_STATUS,true);
+                }
+            }
+            @Override
+            public void onAckErrorCode(BaseResult baseResult) {
+            }
+
+            @Override
+            public void onFailed(Throwable throwable) {
+            }
+
+            @Override
+            public void onSubscribe1(Disposable d) {
+                compositeDisposable.add(d);
+            }
+        });
+    }
+
+
     @Override
     public void detachView() {
         super.detachView();

@@ -72,4 +72,5 @@ public class Constants {
     public static final String ALL_DEVICES_DATA="ALL_DEVICES_DATA";
 
     public static final String ALREADY_TOAST="ALREADY_TOAST";
+    public static final String PHONE_MSG_UPLOAD_STATUS="PHONE_MSG_UPLOAD_STATUS";
 }
