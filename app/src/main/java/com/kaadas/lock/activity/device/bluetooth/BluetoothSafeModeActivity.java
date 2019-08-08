@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -16,8 +17,10 @@ import com.kaadas.lock.mvp.presenter.SafeModePresenter;
 import com.kaadas.lock.mvp.view.ISafeModeView;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.utils.AlertDialogUtil;
+import com.kaadas.lock.utils.BleLockUtils;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.ToastUtil;
+import com.lzy.imagepicker.util.Utils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -38,6 +41,12 @@ public class BluetoothSafeModeActivity extends BaseBleActivity<ISafeModeView, Sa
     @BindView(R.id.rl_safe_mode)
     RelativeLayout rlSafeMode;
     boolean safeModeStatus;
+    @BindView(R.id.no_card)
+    LinearLayout noCard;
+    @BindView(R.id.all)
+    LinearLayout all;
+    @BindView(R.id.rl_notice)
+    RelativeLayout rlNotice;
     private BleLockInfo bleLockInfo;
     private String name;
 
@@ -56,6 +65,24 @@ public class BluetoothSafeModeActivity extends BaseBleActivity<ISafeModeView, Sa
         ivBack.setOnClickListener(this);
         tvContent.setText(R.string.safe_mode);
         rlSafeMode.setOnClickListener(this);
+        if (bleLockInfo != null && bleLockInfo.getServerLockInfo() != null) {
+            if (BleLockUtils.isSupportCard(bleLockInfo.getServerLockInfo().getFunctionSet())) {
+//            if (false){
+                all.setVisibility(View.VISIBLE);
+                noCard.setVisibility(View.GONE);
+                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(rlNotice.getLayoutParams());
+                lp.setMargins(0,0, 0,  Utils.dp2px(this,60));
+                rlNotice.setLayoutParams(lp);
+            } else {
+                all.setVisibility(View.GONE);
+                noCard.setVisibility(View.VISIBLE);
+                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(rlNotice.getLayoutParams());
+                lp.setMargins(0, 0, 0, Utils.dp2px(this,100));
+                rlNotice.setLayoutParams(lp);
+            }
+
+        }
+
     }
 
     private void initData() {
@@ -126,6 +153,7 @@ public class BluetoothSafeModeActivity extends BaseBleActivity<ISafeModeView, Sa
 
     @Override
     public void onGetStateFailed(Throwable throwable) {
+        hiddenLoading();
         ToastUtil.getInstance().showShort(getString(R.string.get_lock_state_fail));
         LogUtils.e("获取门锁状态失败   " + throwable.getMessage());
     }
