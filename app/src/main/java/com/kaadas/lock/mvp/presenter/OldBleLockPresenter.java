@@ -55,10 +55,12 @@ public class OldBleLockPresenter<T> extends MyOldOpenLockRecordPresenter<IOldBle
     public void authSuccess() {
         //
         bleVersion = bleService.getBleVersion();
-        if (bleVersion == 1) {
-            getOldGetPower();
-        } else { //如果是中间的蓝牙版本   读取电量
-            readBattery();
+        if (bleLockInfo.getBattery() == -1) {
+            if (bleVersion == 1) {
+                getOldGetPower();
+            } else { //如果是中间的蓝牙版本   读取电量
+                readBattery();
+            }
         }
     }
 

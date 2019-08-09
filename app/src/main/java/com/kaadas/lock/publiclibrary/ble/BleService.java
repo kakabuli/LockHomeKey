@@ -26,6 +26,7 @@ import android.widget.Toast;
 
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
+import com.kaadas.lock.publiclibrary.NotificationManager;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.publiclibrary.ble.bean.NewVersionBean;
 import com.kaadas.lock.publiclibrary.ble.responsebean.BleDataBean;
@@ -38,7 +39,6 @@ import com.kaadas.lock.utils.ToastUtil;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -232,8 +232,11 @@ public class BleService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        NotificationManager.silentForegroundNotification(this);
+
         return super.onStartCommand(intent, flags, startId);
     }
+
 
     @Override
     public IBinder onBind(Intent intent) {

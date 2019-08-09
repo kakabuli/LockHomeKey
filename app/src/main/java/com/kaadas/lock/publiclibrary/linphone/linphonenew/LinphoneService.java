@@ -30,8 +30,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -40,13 +38,13 @@ import android.os.IBinder;
 import android.os.Message;
 import android.os.SystemClock;
 import android.provider.ContactsContract;
-import android.provider.MediaStore;
 import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.cateye.VideoVActivity;
+import com.kaadas.lock.publiclibrary.NotificationManager;
 import com.kaadas.lock.publiclibrary.linphone.linphone.VideoActivity;
 import com.kaadas.lock.publiclibrary.linphone.linphone.callback.PhoneAutoAccept;
 import com.kaadas.lock.publiclibrary.linphone.linphone.callback.PhoneCallback;
@@ -66,14 +64,12 @@ import org.linphone.core.LinphoneCall.State;
 import org.linphone.core.LinphoneCallLog.CallStatus;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCore.GlobalState;
-import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.core.LinphoneCoreListenerBase;
 import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.mediastream.Log;
 import org.linphone.mediastream.Version;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 
@@ -277,6 +273,7 @@ public final class LinphoneService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        NotificationManager.silentForegroundNotification(this);
         initData();
         return super.onStartCommand(intent, flags, startId);
     }
