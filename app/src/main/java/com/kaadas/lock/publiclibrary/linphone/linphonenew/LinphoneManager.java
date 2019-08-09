@@ -694,7 +694,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
                                 // 说白了就是要保证LinphoneCore的方法运行在一至的线程里，不然就出错了。
                                 try{
                                    //   Log.e(GeTui.VideoLog,"LinphoneManager...itrator..");
-                                    MyLog.getInstance().save("LinphoneManager....itrator....");
+                                   // MyLog.getInstance().save("LinphoneManager....itrator....");
                                     mLc.iterate();
                                 }catch (Exception e){
                                      Log.e(GeTui.VideoLog,"LinphoneManager exception:"+e.getMessage());
