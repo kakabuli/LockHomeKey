@@ -285,6 +285,7 @@ public class PasswordTimeFragment extends BaseBleFragment<IAddTimePasswprdView, 
                     LogUtils.e("当前时间   " + DateUtils.getDateTimeFromMillisecond(System.currentTimeMillis()));
                     if (mPresenter.isAuth(bleLockInfo, true)) {
                         mPresenter.setPwd(strPassword, 4, nickName, startMilliseconds, endMilliseconds);
+
                     }
                 }
                 break;

@@ -114,9 +114,7 @@ public class PasswordLoopPresenter<T> extends BlePresenter<IPasswordLoopView> {
             sdays.add("" + day);
         }
         password = new AddPasswordBean.Password(1, number > 9 ? "" + number : "0" + number, nickName, 3, startTime, endTime, sdays);
-        if (mViewRef.get() != null) {
-            mViewRef.get().startSetPwd();
-        }
+
         LogUtils.e("设置密码的编号是  " + number);
         byte[] addPasswordCommand = BleCommandFactory.controlKeyCommand((byte) 0x01, (byte) 0x01, number, pwd, bleLockInfo.getAuthKey());
         bleService.sendCommand(addPasswordCommand);
@@ -313,6 +311,9 @@ public class PasswordLoopPresenter<T> extends BlePresenter<IPasswordLoopView> {
     private List<Integer> bleNumber = new ArrayList<>();
 
     public void setPwd(String pwd, String nickName, int startHour, int startMin, int endHour, int endMin, int[] days) {
+        if (mViewRef.get() != null) {
+            mViewRef.get().startSetPwd();
+        }
         //同步时将上次的数据
         strPwd = pwd;
         byte[] command = BleCommandFactory.syncLockPasswordCommand((byte) 0x01, bleLockInfo.getAuthKey());  //8
