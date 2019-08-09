@@ -196,9 +196,7 @@ public class AddTimePasswordPresenter<T> extends BlePresenter<IAddTimePasswprdVi
                 password = new AddPasswordBean.Password(1, number > 9 ? "" + number : "0" + number, nickName, 2, startTime, endTime, new ArrayList<String>());
             }
         }
-        if (mViewRef.get() != null) {
-            mViewRef.get().startSetPwd();
-        }
+
         LogUtils.e("设置密码的编号是  " + number);
         byte[] addPasswordCommand = BleCommandFactory.controlKeyCommand((byte) 0x01, (byte) 0x01, number, pwd, bleLockInfo.getAuthKey());
         bleService.sendCommand(addPasswordCommand);
@@ -341,6 +339,9 @@ public class AddTimePasswordPresenter<T> extends BlePresenter<IAddTimePasswprdVi
     private List<Integer> bleNumber = new ArrayList<>();
 
     public void setPwd(String pwd, int type, String nickName, long startTime, long endTime) {
+        if (mViewRef.get() != null) {
+            mViewRef.get().startSetPwd();
+        }
         //同步时将上次的数据
         byte[] command = BleCommandFactory.syncLockPasswordCommand((byte) 0x01, bleLockInfo.getAuthKey());  //4
         bleService.sendCommand(command);

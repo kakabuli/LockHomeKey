@@ -170,6 +170,9 @@ public class AddTempPresenter<T> extends BlePresenter<IAddTempView> {
     private List<Integer> bleNumber = new ArrayList<>();
 
     public void setPwd(String pwd, String deviceName, String nickName) {
+        if (mViewRef.get() != null) {
+            mViewRef.get().onStartSetPwd();
+        }
         //同步时将上次的数据
         byte[] command = BleCommandFactory.syncLockPasswordCommand((byte) 0x01, bleLockInfo.getAuthKey()); //3
         bleService.sendCommand(command);
