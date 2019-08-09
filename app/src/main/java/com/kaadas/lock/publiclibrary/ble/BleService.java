@@ -463,7 +463,8 @@ public class BleService extends Service {
                 sendCommand(BleCommandFactory.confirmCommand(value));
             }
 
-            if (value[0] == 1 && value.length == 20 && (value[3] & 0xFF) != 0x08) { //鉴权帧不在此处做判断   大概率此时还没有鉴权帧
+            if (value[0] == 1 && value.length == 20
+                    && (value[3] & 0xFF) != 0x08) { //鉴权帧不在此处做判断   大概率此时还没有鉴权帧
                 byte[] payload = new byte[16];
                 System.arraycopy(value, 4, payload, 0, 16);
                 if (bleLockInfo != null && bleLockInfo.getAuthKey() != null) {
@@ -1016,7 +1017,7 @@ public class BleService extends Service {
                 }
                 //如果当前没有要等待指令，而且在发送队列中不存在需要等待的指令
                 if (currentCommand == null && !isExit) {
-                    writeStack(command, 3);
+                    sendNextCommand();
                 }
             }
         }
@@ -1024,7 +1025,6 @@ public class BleService extends Service {
 
 
     private void writeStack(byte[] command, int position) {
-
         LogUtils.e("当前指令   " + position + "   " + Rsa.bytesToHexString(command) + "    加入指令11111    " + getCommands(commands));
         if (!isConnected) {
             commands.clear();
