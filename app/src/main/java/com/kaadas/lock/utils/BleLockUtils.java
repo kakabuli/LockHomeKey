@@ -61,12 +61,16 @@ public class BleLockUtils {
         FUNCTION_SET.put(0x02, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 10, 11, 13, 14, 15, 16, 17, 19, 20, 21, 22});
         FUNCTION_SET.put(0x03, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 10, 11, 13, 14, 15, 16, 17, 19, 20, 21, 22, 23});
         FUNCTION_SET.put(0x04, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23});
+        FUNCTION_SET.put(0x05, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 10, 11, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26});
+
         FUNCTION_SET.put(0x20, new Integer[]{1, 2, 3, 4, 5, 7, 8, 10, 13, 16, 17, 19, 20, 21, 22});
         FUNCTION_SET.put(0x31, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 10, 13, 16, 17, 19, 20, 21, 22});
         FUNCTION_SET.put(0x32, new Integer[]{1, 2, 3, 4, 5, 7, 8, 9, 10, 13, 16, 17, 19, 20, 21, 22});
         FUNCTION_SET.put(0x33, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 13, 16, 17, 19, 20, 21, 22});
         FUNCTION_SET.put(0x34, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 13, 16, 17, 19, 20, 21, 22});
         FUNCTION_SET.put(0x35, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 10, 12, 13, 16, 17, 19, 20, 21, 22, 23});
+        FUNCTION_SET.put(0x36, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 10, 12, 13, 16, 17, 18, 19, 20, 21, 22, 23});
+
         FUNCTION_SET.put(0xFF, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 10, 13, 16, 17, 19, 20, 21, 22}); //默认为FF
     }
 
@@ -120,7 +124,7 @@ public class BleLockUtils {
      * 根据功能集判断主用户是否需要带密码开门
      *
      * @param functionSet
-     * @return   是否需要密码开门   默认是需要的
+     * @return 是否需要密码开门   默认是需要的
      */
     public static boolean isNeedPwdOpen(String functionSet) {
         if (TextUtils.isEmpty(functionSet)) {
@@ -128,8 +132,8 @@ public class BleLockUtils {
         }
         int func;
         try {
-              func = Integer.parseInt(functionSet);
-        }catch (NumberFormatException e){
+            func = Integer.parseInt(functionSet);
+        } catch (NumberFormatException e) {
             return true;
         }
 
@@ -142,7 +146,6 @@ public class BleLockUtils {
     }
 
 
-
     /**
      * 根据功能集判断是否支持修改管理员密码
      *
@@ -150,7 +153,7 @@ public class BleLockUtils {
      * @return
      */
     public static boolean isSupportCard(String functionSet) {
-        if (TextUtils.isEmpty(functionSet)){
+        if (TextUtils.isEmpty(functionSet)) {
             return false;
         }
         int func = Integer.parseInt(functionSet);
@@ -167,7 +170,7 @@ public class BleLockUtils {
      * 根据功能集判断  授权用户 是否需要带密码开门
      *
      * @param functionSet
-     * @return   是否需要密码开门   默认是需要的
+     * @return 是否需要密码开门   默认是需要的
      */
     public static boolean authUserNeedPwdOpen(String functionSet) {
         if (TextUtils.isEmpty(functionSet)) {
@@ -176,7 +179,7 @@ public class BleLockUtils {
         int func;
         try {
             func = Integer.parseInt(functionSet);
-        }catch (NumberFormatException e){
+        } catch (NumberFormatException e) {
             return true;
         }
 
@@ -261,7 +264,7 @@ public class BleLockUtils {
                 return R.mipmap.bluetooth_authorization_lock_kx;
             } else if (model.startsWith("S8C")) {
                 return R.mipmap.bluetooth_authorization_lock_s8;
-            } else if (model.contains("V6")||model.contains("V350")) {
+            } else if (model.contains("V6") || model.contains("V350")) {
                 return R.mipmap.bluetooth_authorization_lock_v6;
             } else if (model.startsWith("V7") || model.startsWith("S100")) {
                 return R.mipmap.bluetooth_authorization_lock_v7;
@@ -273,7 +276,7 @@ public class BleLockUtils {
                 return R.mipmap.bluetooth_authorization_lock_qz012;
             } else if (model.startsWith("S6")) {
                 return R.mipmap.bluetooth_authorization_lock_s6;
-            } else if (model.contains("K100") ||model.contains("V450")) {
+            } else if (model.contains("K100") || model.contains("V450")) {
                 return R.mipmap.bluetooth_authorization_lock_k100;
             } else if (model.startsWith("H5606")) {
                 return R.mipmap.bluetooth_authorization_lock_h5606;
@@ -306,7 +309,7 @@ public class BleLockUtils {
                 return R.mipmap.kx;
             } else if (model.startsWith("S8C")) {
                 return R.mipmap.s8;
-            } else if (model.contains("V6")||model.contains("V350")) {
+            } else if (model.contains("V6") || model.contains("V350")) {
                 return R.mipmap.v6;
             } else if (model.startsWith("V7") || model.startsWith("S100")) {
                 return R.mipmap.v7;
@@ -318,7 +321,7 @@ public class BleLockUtils {
                 return R.mipmap.qz013;
             } else if (model.startsWith("S6")) {
                 return R.mipmap.s6;
-            } else if (model.contains("K100") ||model.contains("V450")) {
+            } else if (model.contains("K100") || model.contains("V450")) {
                 return R.mipmap.k100;
             } else if (model.startsWith("H5606")) {
                 return R.mipmap.h5606;
@@ -351,7 +354,7 @@ public class BleLockUtils {
                 return R.mipmap.bluetooth_lock_kx;
             } else if (model.contains("S8C")) {
                 return R.mipmap.bluetooth_lock_s8;
-            } else if (model.contains("V6")||model.contains("V350")) {
+            } else if (model.contains("V6") || model.contains("V350")) {
                 return R.mipmap.bluetooth_lock_v6;
             } else if (model.contains("V7") || model.contains("S100")) {
                 return R.mipmap.bluetooth_lock_v7;
@@ -361,7 +364,7 @@ public class BleLockUtils {
                 return R.mipmap.bluetooth_lock_qz013;
             } else if (model.contains("QZ012")) {
                 return R.mipmap.bluetooth_lock_qz012;
-            } else if (model.contains("K100") ||model.contains("V450")) {
+            } else if (model.contains("K100") || model.contains("V450")) {
                 return R.mipmap.bluetooth_lock_k100;
             } else if (model.contains("S6")) {
                 return R.mipmap.bluetooth_lock_s6;
