@@ -7,12 +7,11 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.text.TextUtils;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.bean.PirEventBus;
-import com.kaadas.lock.publiclibrary.mqtt.PowerResultBean;
+import com.kaadas.lock.publiclibrary.NotificationManager;
 import com.kaadas.lock.publiclibrary.mqtt.PublishResult;
 import com.kaadas.lock.utils.Constants;
 import com.kaadas.lock.utils.LogUtils;
@@ -114,6 +113,7 @@ public class MqttService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        NotificationManager.silentForegroundNotification(this);
         return super.onStartCommand(intent, flags, startId);
     }
 

@@ -1,8 +1,11 @@
 package com.kaidishi.lock;
 
+import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
@@ -234,14 +237,26 @@ public class WelcomeActivity extends BaseActivity<ISplashView, SplashPresenter<I
         super.onResume();
  //       MyLog.getInstance().save("onResume..............:"+MainActivity.isRunning);
         //启动mqttservice
-//        Intent intent = new Intent(this, MqttService.class);
-//        startService(intent);
+        Intent intent = new Intent(this, MqttService.class);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForegroundService(intent);
+        }else {
+            startService(intent);
+        }
 //        //启动bleService
-//        Intent bleServiceIntent = new Intent(this, BleService.class);
-//        startService(bleServiceIntent);
+        Intent bleServiceIntent = new Intent(this, BleService.class);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForegroundService(bleServiceIntent);
+        }else {
+            startService(intent);
+        }
 //        //启动linphoneService
-//        Intent linphoneServiceIntent = new Intent(this, LinphoneService.class);
-//        startService(linphoneServiceIntent);
+        Intent linphoneServiceIntent = new Intent(this, LinphoneService.class);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForegroundService(linphoneServiceIntent);
+        }else {
+            startService(intent);
+        }
     }
     final int timeout=20;
 

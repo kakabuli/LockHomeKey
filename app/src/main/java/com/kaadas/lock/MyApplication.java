@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
+import android.graphics.ImageDecoder;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.text.TextUtils;
@@ -67,6 +68,7 @@ import net.sdvn.cmapi.Config;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.linphone.mediastream.Log;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
