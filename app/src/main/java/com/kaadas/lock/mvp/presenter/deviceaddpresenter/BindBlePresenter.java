@@ -4,6 +4,7 @@ import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.mvp.mvpbase.BasePresenter;
 import com.kaadas.lock.mvp.view.deviceaddview.IBindBleView;
 import com.kaadas.lock.publiclibrary.ble.BleCommandFactory;
+import com.kaadas.lock.publiclibrary.ble.BleProtocolFailedException;
 import com.kaadas.lock.publiclibrary.ble.OldBleCommandFactory;
 import com.kaadas.lock.publiclibrary.ble.RetryWithTime;
 import com.kaadas.lock.publiclibrary.ble.responsebean.BleDataBean;
@@ -356,6 +357,11 @@ public class BindBlePresenter<T> extends BasePresenter<IBindBleView> {
                         LogUtils.e("收到锁功能集   " + Rsa.byteToHexString((byte) funcSet));
                         if (BleLockUtils.isExistFunctionSet(funcSet)) {
                             functionSet = funcSet;
+                            if (funcSet == 0xff){
+                                if (mViewRef.get() != null) {
+                                    mViewRef.get().readFunctionSetFailed(new BleProtocolFailedException(0xff));
+                                }
+                            }
                         } else {
                             if (mViewRef.get() != null) {
                                 mViewRef.get().unknownFunctionSet(funcSet);

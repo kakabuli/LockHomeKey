@@ -24,13 +24,13 @@ import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.addDevice.DeviceAddActivity;
 import com.kaadas.lock.activity.device.BleDetailActivity;
-import com.kaadas.lock.activity.device.BluetoothLockAuthorizationActivity;
+import com.kaadas.lock.activity.device.BleAuthActivity;
 import com.kaadas.lock.activity.device.cateye.more.CateyeAuthorizationFunctionActivity;
 import com.kaadas.lock.activity.device.cateye.more.CateyeFunctionActivity;
 import com.kaadas.lock.activity.device.gateway.GatewayActivity;
 import com.kaadas.lock.activity.device.gatewaylock.GatewayLockAuthorizeFunctionActivity;
 import com.kaadas.lock.activity.device.gatewaylock.GatewayLockFunctionActivity;
-import com.kaadas.lock.activity.device.oldbluetooth.OldBluetoothLockDetailActivity;
+import com.kaadas.lock.activity.device.oldbluetooth.OldBleDetailActivity;
 import com.kaadas.lock.adapter.DeviceDetailAdapter;
 import com.kaadas.lock.bean.HomeShowBean;
 import com.kaadas.lock.mvp.mvpbase.BaseFragment;
@@ -494,30 +494,40 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
 //                                    detailIntent.putExtra(KeyConstants.DEVICE_TYPE, model);
 //                                    startActivityForResult(detailIntent, KeyConstants.GET_BLE_POWER);
 //                                }
-                                LogUtils.e("蓝牙的功能集是   " + bleLockInfo.getServerLockInfo().getFunctionSet());
+                                String functionSet = bleLockInfo.getServerLockInfo().getFunctionSet();
+                                LogUtils.e("蓝牙的功能集是   " + functionSet);
 //                                if ("0".equals(bleLockInfo.getServerLockInfo().getFunctionSet())){  //如果已知是
-//                                    Intent detailIntent = new Intent(getActivity(), OldBluetoothLockDetailActivity.class);
+//                                    Intent detailIntent = new Intent(getActivity(), OldBleDetailActivity.class);
 //                                    String model = bleLockInfo.getServerLockInfo().getModel();
 //                                    detailIntent.putExtra(KeyConstants.DEVICE_TYPE, model);
 //                                    startActivityForResult(detailIntent, KeyConstants.GET_BLE_POWER);
 //                                }else {
 //
 //                                }
-                                LogUtils.e("跳转   全功能  蓝牙");
-                                Intent detailIntent = new Intent(getActivity(), BleDetailActivity.class);
-                                String model = bleLockInfo.getServerLockInfo().getModel();
-                                detailIntent.putExtra(KeyConstants.DEVICE_TYPE, model);
-                                startActivityForResult(detailIntent, KeyConstants.GET_BLE_POWER);
+
+                                if (!TextUtils.isEmpty(functionSet) && Integer.parseInt(functionSet) == 0){
+                                    LogUtils.e("跳转   老蓝牙");
+                                    Intent detailIntent = new Intent(getActivity(), OldBleDetailActivity.class);
+                                    String model = bleLockInfo.getServerLockInfo().getModel();
+                                    detailIntent.putExtra(KeyConstants.DEVICE_TYPE, model);
+                                    startActivityForResult(detailIntent, KeyConstants.GET_BLE_POWER);
+                                }else {
+                                    LogUtils.e("跳转   全功能  蓝牙");
+                                    Intent detailIntent = new Intent(getActivity(), BleDetailActivity.class);
+                                    String model = bleLockInfo.getServerLockInfo().getModel();
+                                    detailIntent.putExtra(KeyConstants.DEVICE_TYPE, model);
+                                    startActivityForResult(detailIntent, KeyConstants.GET_BLE_POWER);
+                                }
                             } else {
                                 LogUtils.e("跳转   老蓝牙");
-                                Intent detailIntent = new Intent(getActivity(), OldBluetoothLockDetailActivity.class);
+                                Intent detailIntent = new Intent(getActivity(), OldBleDetailActivity.class);
                                 String model = bleLockInfo.getServerLockInfo().getModel();
                                 detailIntent.putExtra(KeyConstants.DEVICE_TYPE, model);
                                 startActivityForResult(detailIntent, KeyConstants.GET_BLE_POWER);
                             }
                         } else {
                             LogUtils.e("跳转 授权  蓝牙");
-                            Intent impowerIntent = new Intent(getActivity(), BluetoothLockAuthorizationActivity.class);
+                            Intent impowerIntent = new Intent(getActivity(), BleAuthActivity.class);
                             String model = bleLockInfo.getServerLockInfo().getModel();
                             impowerIntent.putExtra(KeyConstants.DEVICE_TYPE, model);
                             startActivityForResult(impowerIntent, KeyConstants.GET_BLE_POWER);

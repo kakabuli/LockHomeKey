@@ -156,6 +156,7 @@ public class DeviceDetailPresenter<T> extends BleLockDetailPresenter<IDeviceDeta
                             bleLockInfo.setBackLock(state2);
                         }
 
+
                         if (bleLockInfo.getBattery() == -1) {   //没有获取过再重新获取   获取到电量  那么
                             bleLockInfo.setBattery(battery);
                             bleLockInfo.setReadBatteryTime(System.currentTimeMillis());

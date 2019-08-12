@@ -321,7 +321,7 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.device.BluetoothLockAuthorizationActivity"
+            android:name=".activity.device.BleAuthActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
         <activity
@@ -466,7 +466,7 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.device.oldbluetooth.OldBluetoothLockDetailActivity"
+            android:name=".activity.device.oldbluetooth.OldBleDetailActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
         <activity

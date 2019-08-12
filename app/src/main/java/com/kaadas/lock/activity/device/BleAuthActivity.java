@@ -1,4 +1,4 @@
-package com.kaadas.lock.activity.device.oldbluetooth;
+package com.kaadas.lock.activity.device;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -21,16 +21,17 @@ import android.widget.TextView;
 
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.MainActivity;
-import com.kaadas.lock.activity.device.bluetooth.BluetoothSharedDeviceManagementActivity;
+import com.kaadas.lock.activity.device.bluetooth.BluetoothAuthorizationDeviceInformationActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseBleActivity;
-import com.kaadas.lock.mvp.presenter.OldBluetoothDeviceDetailPresenter;
-import com.kaadas.lock.mvp.view.IOldBluetoothDeviceDetailView;
+import com.kaadas.lock.mvp.presenter.OldAndAuthBleDetailPresenter;
+import com.kaadas.lock.mvp.view.IOldBleDetailView;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.publiclibrary.ble.BleProtocolFailedException;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.util.HttpUtils;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.BatteryView;
+import com.kaadas.lock.utils.BleLockUtils;
 import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.StringUtil;
@@ -46,9 +47,7 @@ import butterknife.ButterKnife;
 /**
  * Created by David on 2019/4/10
  */
-public class OldBluetoothLockDetailActivity extends BaseBleActivity<IOldBluetoothDeviceDetailView, OldBluetoothDeviceDetailPresenter<IOldBluetoothDeviceDetailView>> implements IOldBluetoothDeviceDetailView, View.OnClickListener {
-
-
+public class BleAuthActivity extends BaseBleActivity<IOldBleDetailView, OldAndAuthBleDetailPresenter<IOldBleDetailView>> implements IOldBleDetailView, View.OnClickListener {
     @BindView(R.id.iv_back)
     ImageView ivBack;
     @BindView(R.id.tv_bluetooth_name)
@@ -67,81 +66,76 @@ public class OldBluetoothLockDetailActivity extends BaseBleActivity<IOldBluetoot
     LinearLayout llPower;
     @BindView(R.id.rl_device_information)
     RelativeLayout rlDeviceInformation;
+    @BindView(R.id.iv_lock_icon)
+    ImageView ivLockIcon;
     @BindView(R.id.iv_delete)
     ImageView ivDelete;
-    @BindView(R.id.rl_device_share)
-    RelativeLayout rlDeviceShare;
-    @BindView(R.id.ll_bluetooth_18)
-    LinearLayout llBluetooth18;
-    @BindView(R.id.rl_bluetooth_17)
-    RelativeLayout rlBluetooth17;
-
-    private String type;
     private BleLockInfo bleLockInfo;
-    private boolean isX5 = false;
     private static final int TO_MORE_REQUEST_CODE = 101;
-    int lockStatus = -1;
     private Runnable lockRunnable;
     private boolean isOpening = false;
     private Handler handler = new Handler();
-    boolean hasMoreItem = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_old_bluetooth_lock_detail);
+        setContentView(R.layout.activity_bluetooth_lock_authorization);
         ButterKnife.bind(this);
+        Intent intent = getIntent();
+        changeLockIcon(intent);
         bleLockInfo = mPresenter.getBleLockInfo();
         ivBack.setOnClickListener(this);
         tvOpenClock.setOnClickListener(this);
-        initView();
+        ivDelete.setOnClickListener(this);
+        showLockType();
         initListener();
-        hasMoreItem = true;
-        showMoreItem();
-        if (mPresenter!=null){
-            mPresenter.getAllPassword(bleLockInfo);
-        }
+
         lockRunnable = new Runnable() {
             @Override
             public void run() {
+                LogUtils.e(" 首页锁状态  反锁状态   " + bleLockInfo.getBackLock() + "    安全模式    " + bleLockInfo.getSafeMode() + "   布防模式   " + bleLockInfo.getArmMode());
                 isOpening = false;
-//                lockStatus = KeyConstants.OPEN_LOCK;
-                changLockStatus(0);
-                if (bleLockInfo.getBackLock() == 0) {  //等于0时是反锁状态
-//                    lockStatus = KeyConstants.HAS_BEEN_LOCKED;
-                    changLockStatus(2);
-                }
-                if (bleLockInfo.getSafeMode() == 1) {//安全模式
-
-                }
-                if (bleLockInfo.getArmMode() == 1) {//布防模式
-
+                if (bleLockInfo.isAuth()){
+                    changLockStatus(0);
+                    if (bleLockInfo.getSafeMode() == 1) {//安全模式
+                        changLockStatus(6);
+                    }
+                    if (bleLockInfo.getBackLock() == 0) {  //等于0时是反锁状态
+                        changLockStatus(2);
+                    }
+                    if (bleLockInfo.getArmMode() == 1) {//布防模式
+                        changLockStatus(7);
+                    }
                 }
             }
         };
 
+
         if (mPresenter.getBleVersion() == 2 || mPresenter.getBleVersion() == 3 ||
                 (bleLockInfo!=null && bleLockInfo.getServerLockInfo()!=null && !TextUtils.isEmpty(bleLockInfo.getServerLockInfo().getBleVersion())&&
-                "2".equals(bleLockInfo.getServerLockInfo().getBleVersion()))
+                        "2".equals(bleLockInfo.getServerLockInfo().getBleVersion()))
                 ||
                 (bleLockInfo!=null && bleLockInfo.getServerLockInfo()!=null && !TextUtils.isEmpty(bleLockInfo.getServerLockInfo().getBleVersion())&&
                         "3".equals(bleLockInfo.getServerLockInfo().getBleVersion()))
                 ){
-            changeBluetoothFunction(18);
+             //可以查设备信息
+            rlDeviceInformation.setVisibility(View.VISIBLE);
         } else {
-            changeBluetoothFunction(17);
+            //不可以查设备信息
+            rlDeviceInformation.setVisibility(View.GONE);
         }
     }
 
-
-    private void changeBluetoothFunction(int bluetoothType) {
-        if (17 == bluetoothType) {
-            llBluetooth18.setVisibility(View.GONE);
-            rlBluetooth17.setVisibility(View.VISIBLE);
-        }else if (18==bluetoothType){
-            llBluetooth18.setVisibility(View.VISIBLE);
-            rlBluetooth17.setVisibility(View.GONE);
+    private void showLockType() {
+        String lockType = bleLockInfo.getServerLockInfo().getModel();
+        if (!TextUtils.isEmpty(lockType)) {
+            tvType.setText(StringUtil.getSubstringFive(lockType));
         }
+    }
+
+    private void changeLockIcon(Intent intent) {
+        String model = intent.getStringExtra(KeyConstants.DEVICE_TYPE);
+        ivLockIcon.setImageResource(BleLockUtils.getAuthorizationImageByModel(model));
     }
 
     @Override
@@ -155,8 +149,8 @@ public class OldBluetoothLockDetailActivity extends BaseBleActivity<IOldBluetoot
     }
 
     @Override
-    protected OldBluetoothDeviceDetailPresenter<IOldBluetoothDeviceDetailView> createPresent() {
-        return new OldBluetoothDeviceDetailPresenter<>();
+    protected OldAndAuthBleDetailPresenter<IOldBleDetailView> createPresent() {
+        return new OldAndAuthBleDetailPresenter<>();
     }
 
     @Override
@@ -169,16 +163,11 @@ public class OldBluetoothLockDetailActivity extends BaseBleActivity<IOldBluetoot
         }
     }
 
-    private void initView() {
-        Intent intent = getIntent();
-        type = intent.getStringExtra(KeyConstants.DEVICE_TYPE);
-
-    }
-
-
     @SuppressLint("SetTextI18n")
     private void showData() {
         //todo 等从锁中获取自动还是手动模式进行展示
+//        tvLockMode.setText();
+        //默认为手动模式
         if (mPresenter.isAuth(bleLockInfo, true)) {
             authResult(true);
             if (bleLockInfo.getAutoMode() == 0) {
@@ -186,18 +175,14 @@ public class OldBluetoothLockDetailActivity extends BaseBleActivity<IOldBluetoot
             }
             if (bleLockInfo.getBattery() != -1) {
                 dealWithPower(bleLockInfo.getBattery());
-            } else {
-                mPresenter.getPower();
             }
+            mPresenter.authSuccess();
         }
     }
 
 
     private void initListener() {
         rlDeviceInformation.setOnClickListener(this);
-        rlBluetooth17.setOnClickListener(this);
-        rlDeviceShare.setOnClickListener(this);
-        ivDelete.setOnClickListener(this);
     }
 
 
@@ -215,6 +200,7 @@ public class OldBluetoothLockDetailActivity extends BaseBleActivity<IOldBluetoot
     public void onDeviceStateChange(boolean isConnected) {
         if (isConnected) {
         } else {
+            changLockStatus(1);
         }
     }
 
@@ -234,10 +220,8 @@ public class OldBluetoothLockDetailActivity extends BaseBleActivity<IOldBluetoot
     @Override
     public void authResult(boolean isSuccess) {
         if (isSuccess) {
-            lockStatus = KeyConstants.OPEN_LOCK;
-            changLockStatus(0);
+            lockRunnable.run();
         } else {
-            lockStatus = KeyConstants.DEVICE_OFFLINE;
             changLockStatus(1);
         }
     }
@@ -258,13 +242,19 @@ public class OldBluetoothLockDetailActivity extends BaseBleActivity<IOldBluetoot
         if (bleLockInfo.getBattery() != -1) {
             dealWithPower(bleLockInfo.getBattery());
             //删除成功
-            Intent intent = new Intent();
-            //把返回数据存入Intent
-            intent.putExtra(KeyConstants.BLE_INTO, bleLockInfo);
-            //设置返回数据
-            this.setResult(RESULT_OK, intent);
+            setBatteryResult( );
+
         }
     }
+
+    private void  setBatteryResult(){
+        Intent intent = new Intent();
+        //把返回数据存入Intent
+        intent.putExtra(KeyConstants.BLE_INTO, bleLockInfo);
+        //设置返回数据
+        this.setResult(RESULT_OK, intent);
+    }
+
 
 
     @Override
@@ -274,10 +264,10 @@ public class OldBluetoothLockDetailActivity extends BaseBleActivity<IOldBluetoot
 
     @Override
     public void onBleVersionUpdate(int version) {
-        if (version != 1) {
-            changeBluetoothFunction(18);
-        } else {
-            changeBluetoothFunction(17);
+        if (version == 1){
+            rlDeviceInformation.setVisibility(View.GONE);
+        }else {
+            rlDeviceInformation.setVisibility(View.VISIBLE);
         }
     }
 
@@ -294,7 +284,6 @@ public class OldBluetoothLockDetailActivity extends BaseBleActivity<IOldBluetoot
     public void onDeleteDeviceFailed(Throwable throwable) {
         LogUtils.e("删除失败   " + throwable.getMessage());
         ToastUtil.getInstance().showShort(HttpUtils.httpProtocolErrorCode(this, throwable));
-//        ToastUtil.getInstance().showLong(R.string.delete_fialed);
         hiddenLoading();
     }
 
@@ -304,6 +293,11 @@ public class OldBluetoothLockDetailActivity extends BaseBleActivity<IOldBluetoot
         String httpErrorCode = HttpUtils.httpErrorCode(this, result.getCode());
         ToastUtil.getInstance().showLong(httpErrorCode);
         hiddenLoading();
+    }
+
+    @Override
+    public void onDeviceInfoLoaded() {
+        lockRunnable.run();
     }
 
     @Override
@@ -384,33 +378,19 @@ public class OldBluetoothLockDetailActivity extends BaseBleActivity<IOldBluetoot
         handler.postDelayed(lockRunnable, 3000);
     }
 
-    @Override
-    public void onSafeMode() {
-
-    }
-
-    @Override
-    public void onArmMode() {
-
-    }
-
-    @Override
-    public void onBackLock() {
-        changLockStatus(2);
-    }
 
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.iv_back:
+                setBatteryResult();
                 finish();
                 break;
             case R.id.tv_open_clock:
                 //开锁
                 if (isOpening) {
                     LogUtils.e("长按  但是当前正在开锁状态   ");
-                    ToastUtil.getInstance().showLong(R.string.is_openning);
                     return;
                 }
                 if (mPresenter.isAuth(bleLockInfo, true)) {
@@ -423,19 +403,13 @@ public class OldBluetoothLockDetailActivity extends BaseBleActivity<IOldBluetoot
                         }
                         return;
                     }
+                    LogUtils.e("开锁   ");
                     mPresenter.openLock();
                 }
                 vibrate(this, 150);
                 break;
             case R.id.rl_device_information:
-                LogUtils.e("点击设备详情   ");
-                Intent intent = new Intent(this, OldBluetoothMoreActivity.class);
-                startActivity(intent);
-                break;
-            case R.id.rl_device_share:
-            case R.id.rl_bluetooth_17:
-                LogUtils.e("点击分享   ");
-                intent = new Intent(this, BluetoothSharedDeviceManagementActivity.class);
+                Intent intent = new Intent(this, BluetoothAuthorizationDeviceInformationActivity.class);
                 startActivity(intent);
                 break;
             case R.id.iv_delete:
@@ -453,6 +427,14 @@ public class OldBluetoothLockDetailActivity extends BaseBleActivity<IOldBluetoot
                 });
                 break;
         }
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        setBatteryResult();
+        super.onBackPressed();
+
     }
 
     //震动milliseconds毫秒
@@ -514,6 +496,18 @@ public class OldBluetoothLockDetailActivity extends BaseBleActivity<IOldBluetoot
                 tvOpenClock.setTextColor(getResources().getColor(R.color.white));
                 tvOpenClock.setBackgroundResource(R.mipmap.open_lock_fail_bj);
                 break;
+            case 6:  //安全模式
+                tvOpenClock.setEnabled(false);
+                tvOpenClock.setText(getString(R.string.safe_status));
+                tvOpenClock.setTextColor(getResources().getColor(R.color.c149EF3));
+                tvOpenClock.setBackgroundResource(R.mipmap.has_been_locked_bj);
+                break;
+            case 7: //布防模式
+                tvOpenClock.setEnabled(false);
+                tvOpenClock.setText(getString(R.string.bu_fang_status));
+                tvOpenClock.setTextColor(getResources().getColor(R.color.c149EF3));
+                tvOpenClock.setBackgroundResource(R.mipmap.has_been_locked_bj);
+                break;
         }
     }
 
@@ -525,7 +519,6 @@ public class OldBluetoothLockDetailActivity extends BaseBleActivity<IOldBluetoot
         if (power < 0) {
             power = 0;
         }
-
         String lockPower = power + "%";
         tvPower.setText(lockPower);
         if (ivPower != null) {
@@ -539,6 +532,7 @@ public class OldBluetoothLockDetailActivity extends BaseBleActivity<IOldBluetoot
             }
         }
 
+        //todo  读取电量时间
         long readDeviceInfoTime = System.currentTimeMillis();
         if (readDeviceInfoTime != -1) {
             if ((System.currentTimeMillis() - readDeviceInfoTime) < 60 * 60 * 1000) {
@@ -555,14 +549,6 @@ public class OldBluetoothLockDetailActivity extends BaseBleActivity<IOldBluetoot
         }
 
 
-    }
-
-    private void showMoreItem() {
-        if (hasMoreItem) {
-            changeBluetoothFunction(18);
-        } else {
-            changeBluetoothFunction(17);
-        }
     }
 
     @Override

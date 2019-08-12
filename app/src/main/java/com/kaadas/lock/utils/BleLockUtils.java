@@ -71,13 +71,16 @@ public class BleLockUtils {
         FUNCTION_SET.put(0x35, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 10, 12, 13, 16, 17, 19, 20, 21, 22, 23});
         FUNCTION_SET.put(0x36, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 10, 12, 13, 16, 17, 18, 19, 20, 21, 22, 23});
 
+        FUNCTION_SET.put(0x37, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 13, 16, 17, 18, 19, 20, 21, 22, 23});
+        FUNCTION_SET.put(0x38, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 10, 12, 13, 16, 17, 18, 19, 20, 21, 22, 23, 24});
+        FUNCTION_SET.put(0x39, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 13, 16, 17, 18, 19, 20, 21, 22, 23, 24});
+
         FUNCTION_SET.put(0xFF, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 10, 13, 16, 17, 19, 20, 21, 22}); //默认为FF
     }
 
 
     /**
      * 根据功能集判断是否支持手动自动模式显示
-     *
      * @param functionSet
      * @return
      */

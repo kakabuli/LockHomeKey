@@ -26,6 +26,7 @@ import com.kaadas.lock.activity.device.bluetooth.BluetoothSharedDeviceManagement
 import com.kaadas.lock.activity.device.bluetooth.card.DoorCardManagerActivity;
 import com.kaadas.lock.activity.device.bluetooth.fingerprint.FingerprintManagerActivity;
 import com.kaadas.lock.activity.device.bluetooth.password.BluetoothPasswordManagerActivity;
+import com.kaadas.lock.activity.device.oldbluetooth.OldBluetoothMoreActivity;
 import com.kaadas.lock.adapter.BluetoothFunctionAdapater;
 import com.kaadas.lock.adapter.BluetoothFunctionOneLineAdapater;
 import com.kaadas.lock.bean.BluetoothLockFunctionBean;
@@ -140,7 +141,6 @@ public class BleDetailActivity extends BaseBleActivity<IDeviceDetailView, Device
     private static final int TO_MORE_REQUEST_CODE = 101;
     private boolean isOpening = false;
     private Runnable lockRunnable;
-    private boolean isConnectingDevice;
     private Handler handler = new Handler();
     String lockType;
 
@@ -154,25 +154,23 @@ public class BleDetailActivity extends BaseBleActivity<IDeviceDetailView, Device
         bleLockInfo = mPresenter.getBleLockInfo();
         ivBack.setOnClickListener(this);
         showLockType();
-//        initData();
         initClick();
-
         lockRunnable = new Runnable() {
             @Override
             public void run() {
                 LogUtils.e(" 首页锁状态  反锁状态   " + bleLockInfo.getBackLock() + "    安全模式    " + bleLockInfo.getSafeMode() + "   布防模式   " + bleLockInfo.getArmMode());
                 isOpening = false;
-//                lockStatus = KeyConstants.OPEN_LOCK;
-                changLockStatus(0);
-                if (bleLockInfo.getBackLock() == 0) {  //等于0时是反锁状态
-//                    lockStatus = KeyConstants.HAS_BEEN_LOCKED;
-                    changLockStatus(2);
-                }
-                if (bleLockInfo.getSafeMode() == 1) {//安全模式
-
-                }
-                if (bleLockInfo.getArmMode() == 1) {//布防模式
-
+                if (bleLockInfo.isAuth()){
+                    changLockStatus(0);
+                    if (bleLockInfo.getSafeMode() == 1) {//安全模式
+                        changLockStatus(6);
+                    }
+                    if (bleLockInfo.getBackLock() == 0) {  //等于0时是反锁状态
+                        changLockStatus(2);
+                    }
+                    if (bleLockInfo.getArmMode() == 1) {//布防模式
+                        changLockStatus(7);
+                    }
                 }
             }
         };
@@ -255,7 +253,6 @@ public class BleDetailActivity extends BaseBleActivity<IDeviceDetailView, Device
             return;
         }
         switch (state) {
-//            case KeyConstants.OPEN_LOCK:
             case 0:
                 //可以开锁
                 tvOpenClock.setEnabled(true);
@@ -263,7 +260,6 @@ public class BleDetailActivity extends BaseBleActivity<IDeviceDetailView, Device
                 tvOpenClock.setTextColor(getResources().getColor(R.color.c16B8FD));
                 tvOpenClock.setBackgroundResource(R.mipmap.open_lock_bj);
                 break;
-//            case KeyConstants.DEVICE_OFFLINE:
             case 1:
                 //设备离线
                 tvOpenClock.setEnabled(false);
@@ -271,7 +267,6 @@ public class BleDetailActivity extends BaseBleActivity<IDeviceDetailView, Device
                 tvOpenClock.setTextColor(getResources().getColor(R.color.c149EF3));
                 tvOpenClock.setBackgroundResource(R.mipmap.has_been_locked_bj);
                 break;
-//            case KeyConstants.HAS_BEEN_LOCKED:
             case 2:
                 //已反锁
                 tvOpenClock.setEnabled(false);
@@ -279,7 +274,6 @@ public class BleDetailActivity extends BaseBleActivity<IDeviceDetailView, Device
                 tvOpenClock.setTextColor(getResources().getColor(R.color.c149EF3));
                 tvOpenClock.setBackgroundResource(R.mipmap.has_been_locked_bj);
                 break;
-//            case KeyConstants.IS_LOCKING:
             case 3:
                 //正在开锁中
                 tvOpenClock.setEnabled(false);
@@ -287,7 +281,6 @@ public class BleDetailActivity extends BaseBleActivity<IDeviceDetailView, Device
                 tvOpenClock.setTextColor(getResources().getColor(R.color.white));
                 tvOpenClock.setBackgroundResource(R.mipmap.is_locking_bj);
                 break;
-//            case KeyConstants.OPEN_LOCK_SUCCESS:
             case 4:
                 //开锁成功
                 tvOpenClock.setEnabled(false);
@@ -295,7 +288,6 @@ public class BleDetailActivity extends BaseBleActivity<IDeviceDetailView, Device
                 tvOpenClock.setTextColor(getResources().getColor(R.color.white));
                 tvOpenClock.setBackgroundResource(R.mipmap.open_lock_success_bj);
                 break;
-//            case KeyConstants.OPEN_LOCK_FAILED:
             case 5:
                 //开锁失败
                 tvOpenClock.setEnabled(false);
@@ -303,27 +295,21 @@ public class BleDetailActivity extends BaseBleActivity<IDeviceDetailView, Device
                 tvOpenClock.setTextColor(getResources().getColor(R.color.white));
                 tvOpenClock.setBackgroundResource(R.mipmap.open_lock_fail_bj);
                 break;
+            case 6:  //安全模式
+                tvOpenClock.setEnabled(false);
+                tvOpenClock.setText(getString(R.string.safe_status));
+                tvOpenClock.setTextColor(getResources().getColor(R.color.c149EF3));
+                tvOpenClock.setBackgroundResource(R.mipmap.has_been_locked_bj);
+                break;
+            case 7: //布防模式
+                tvOpenClock.setEnabled(false);
+                tvOpenClock.setText(getString(R.string.bu_fang_status));
+                tvOpenClock.setTextColor(getResources().getColor(R.color.c149EF3));
+                tvOpenClock.setBackgroundResource(R.mipmap.has_been_locked_bj);
+                break;
         }
     }
 
-    private void initData() {
-        tvBluetoothName.setText("jfjif");
-        ivOne.setImageResource(R.mipmap.bluetooth_password);
-        tvNameOne.setText(R.string.password);
-        tvNumberOne.setText(0 + getString(R.string.group));
-        ivTwo.setImageResource(R.mipmap.bluetooth_fingerprint);
-        tvNameTwo.setText(R.string.fingerprint);
-        tvNumberTwo.setText(0 + getString(R.string.ge));
-        ivThree.setImageResource(R.mipmap.bluetooth_card);
-        tvNameThree.setText(R.string.card);
-        tvNumberThree.setText(0 + getString(R.string.zhang));
-        ivFour.setImageResource(R.mipmap.bluetooth_share);
-        tvNameFour.setText(R.string.device_share);
-        tvNumberFour.setText(0 + getString(R.string.people));
-        ivFive.setImageResource(R.mipmap.bluetooth_more);
-        tvNameFive.setText(R.string.more);
-
-    }
 
     private void initRecycleview() {
         String functionSet = bleLockInfo.getServerLockInfo().getFunctionSet(); //锁功能集
@@ -355,7 +341,7 @@ public class BleDetailActivity extends BaseBleActivity<IDeviceDetailView, Device
             @Override
             public void onItemClick(int position, BluetoothLockFunctionBean bluetoothLockFunctionBean) {
                 Intent intent;
-                switch (bluetoothLockFunctionBean.getType()){
+                switch (bluetoothLockFunctionBean.getType()) {
                     case BleLockUtils.TYPE_PASSWORD:
                         intent = new Intent(BleDetailActivity.this, BluetoothPasswordManagerActivity.class);
                         startActivity(intent);
@@ -387,7 +373,7 @@ public class BleDetailActivity extends BaseBleActivity<IDeviceDetailView, Device
             public void onItemClick(int position, BluetoothLockFunctionBean bluetoothLockFunctionBean) {
                 Intent intent;
                 LogUtils.e("点击类型是    " + bluetoothLockFunctionBean.getType());
-                switch (bluetoothLockFunctionBean.getType()){
+                switch (bluetoothLockFunctionBean.getType()) {
                     case BleLockUtils.TYPE_PASSWORD:
                         intent = new Intent(BleDetailActivity.this, BluetoothPasswordManagerActivity.class);
                         startActivity(intent);
@@ -406,11 +392,8 @@ public class BleDetailActivity extends BaseBleActivity<IDeviceDetailView, Device
                         startActivity(intent);
                         break;
                     case BleLockUtils.TYPE_MORE:
-                        LogUtils.e("更多   ");
-                        intent = new Intent(BleDetailActivity.this, BluetoothMoreActivity.class);
-                        if (lockType.startsWith("S8") || lockType.startsWith("V6") || lockType.startsWith("V7") || lockType.startsWith("S100")) {
-                            intent.putExtra(KeyConstants.SOURCE, "BluetoothLockFunctionV6V7Activity");
-                        }
+                        LogUtils.e("更多   ");  //这是老模块的  跳转地方
+                        intent = new Intent(BleDetailActivity.this, OldBluetoothMoreActivity.class);
                         startActivityForResult(intent, TO_MORE_REQUEST_CODE);
                         break;
                 }
@@ -429,7 +412,6 @@ public class BleDetailActivity extends BaseBleActivity<IDeviceDetailView, Device
             case R.id.iv_back:
                 finish();
                 break;
-
             case R.id.tv_open_clock:
                 //开锁
                 if (isOpening) {
@@ -461,17 +443,14 @@ public class BleDetailActivity extends BaseBleActivity<IDeviceDetailView, Device
 
     @Override
     public void onSearchDeviceFailed(Throwable throwable) {
-//        lockStatus = KeyConstants.DEVICE_OFFLINE;
         changLockStatus(1);
     }
 
     @Override
     public void authResult(boolean isSuccess) {
         if (isSuccess) {
-//            lockStatus = KeyConstants.OPEN_LOCK;
             changLockStatus(0);
         } else {
-//            lockStatus = KeyConstants.DEVICE_OFFLINE;
             changLockStatus(1);
         }
     }
@@ -498,23 +477,6 @@ public class BleDetailActivity extends BaseBleActivity<IDeviceDetailView, Device
             }
         }
 
-        /*if (power == 0) {
-            imgResId = R.mipmap.horization_power_0;
-        } else if (power <= 5) {
-            imgResId = R.mipmap.horization_power_1;
-        } else if (power <= 20) {
-            imgResId = R.mipmap.horization_power_2;
-        } else if (power <= 60) {
-            imgResId = R.mipmap.horization_power_3;
-        } else if (power <= 80) {
-            imgResId = R.mipmap.horization_power_4;
-//        } else if (power <= 100) {
-        } else {
-            imgResId = R.mipmap.horization_power_5;
-        }
-        if (imgResId != -1) {
-            ivPower.setImageResource(imgResId);
-        }*/
         //todo  读取电量时间
         long readDeviceInfoTime = System.currentTimeMillis();
         if (readDeviceInfoTime != -1) {
@@ -647,12 +609,12 @@ public class BleDetailActivity extends BaseBleActivity<IDeviceDetailView, Device
 
     @Override
     public void onSafeMode() {
-
+        changLockStatus(6);
     }
 
     @Override
-    public void onArmMode() {
-
+    public void onArmMode() {  ///布防模式
+        changLockStatus(7);
     }
 
     @Override
@@ -671,7 +633,6 @@ public class BleDetailActivity extends BaseBleActivity<IDeviceDetailView, Device
                 if (cardList != null) {
                     tvNumberThree.setText(cardList.size() + getString(R.string.zhang));
                 }
-
                 List<GetPasswordResult.DataBean.Fingerprint> fingerprintList = dataBean.getFingerprintList();
                 if (fingerprintList != null) {
                     tvNumberTwo.setText(fingerprintList.size() + getString(R.string.ge));
@@ -681,10 +642,7 @@ public class BleDetailActivity extends BaseBleActivity<IDeviceDetailView, Device
                 if (tempPwdList != null) {
                     tvNumberOne.setText((pwdList.size() + tempPwdList.size()) + getString(R.string.group));
                 }
-                LogUtils.d("davi " + result.toString());
             }
-
         }
-
     }
 }
