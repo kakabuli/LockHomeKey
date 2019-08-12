@@ -22,6 +22,7 @@ import android.widget.TextView;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.MainActivity;
 import com.kaadas.lock.activity.device.bluetooth.BluetoothAuthorizationDeviceInformationActivity;
+import com.kaadas.lock.activity.device.oldbluetooth.OldDeviceInfoActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseBleActivity;
 import com.kaadas.lock.mvp.presenter.OldAndAuthBleDetailPresenter;
 import com.kaadas.lock.mvp.view.IOldBleDetailView;
@@ -409,7 +410,7 @@ public class BleAuthActivity extends BaseBleActivity<IOldBleDetailView, OldAndAu
                 vibrate(this, 150);
                 break;
             case R.id.rl_device_information:
-                Intent intent = new Intent(this, BluetoothAuthorizationDeviceInformationActivity.class);
+                Intent intent = new Intent(this, OldDeviceInfoActivity.class);
                 startActivity(intent);
                 break;
             case R.id.iv_delete:

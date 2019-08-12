@@ -489,6 +489,7 @@ public class BleService extends Service {
 
                 } else {
                     authFailedSubject.onNext(true);
+                    LogUtils.e("校验和出错 返回C2   原始数据 " + Rsa.bytesToHexString(value)  );
                 }
                 return;
             }

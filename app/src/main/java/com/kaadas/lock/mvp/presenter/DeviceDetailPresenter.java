@@ -122,7 +122,6 @@ public class DeviceDetailPresenter<T> extends BleLockDetailPresenter<IDeviceDeta
                          * 0 0 1 1 0 0 0 1
                          */
                         LogUtils.e("门锁功能  第一个字节  " + Integer.toBinaryString(deValue[0] & 0xff) + "   第二个字节  " + Integer.toBinaryString(deValue[1] & 0xff));
-
                         //解析锁功能
                         int lockFun0 = deValue[0];
                         int lockFun1 = deValue[1];

@@ -31,12 +31,16 @@ import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.util.HttpUtils;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.BatteryView;
+import com.kaadas.lock.utils.BleLockUtils;
 import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.StringUtil;
 import com.kaadas.lock.utils.ToastUtil;
+
 import net.sdvn.cmapi.util.LogUtils;
+
 import java.util.concurrent.TimeoutException;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -71,6 +75,8 @@ public class OldBleDetailActivity extends BaseBleActivity<IOldBleDetailView, Old
     LinearLayout llBluetooth18;
     @BindView(R.id.rl_bluetooth_17)
     RelativeLayout rlBluetooth17;
+    @BindView(R.id.device_image)
+    ImageView deviceImage;
 
     private BleLockInfo bleLockInfo;
     private static final int TO_MORE_REQUEST_CODE = 101;
@@ -95,23 +101,25 @@ public class OldBleDetailActivity extends BaseBleActivity<IOldBleDetailView, Old
             @Override
             public void run() {
                 isOpening = false;
-                if (bleLockInfo.isAuth()){
+                if (bleLockInfo.isAuth()) {
                     changLockStatus(0);
                 }
             }
         };
 
         if (mPresenter.getBleVersion() == 2 || mPresenter.getBleVersion() == 3 ||
-                (bleLockInfo!=null && bleLockInfo.getServerLockInfo()!=null && !TextUtils.isEmpty(bleLockInfo.getServerLockInfo().getBleVersion())&&
-                "2".equals(bleLockInfo.getServerLockInfo().getBleVersion()))
+                (bleLockInfo != null && bleLockInfo.getServerLockInfo() != null && !TextUtils.isEmpty(bleLockInfo.getServerLockInfo().getBleVersion()) &&
+                        "2".equals(bleLockInfo.getServerLockInfo().getBleVersion()))
                 ||
-                (bleLockInfo!=null && bleLockInfo.getServerLockInfo()!=null && !TextUtils.isEmpty(bleLockInfo.getServerLockInfo().getBleVersion())&&
+                (bleLockInfo != null && bleLockInfo.getServerLockInfo() != null && !TextUtils.isEmpty(bleLockInfo.getServerLockInfo().getBleVersion()) &&
                         "3".equals(bleLockInfo.getServerLockInfo().getBleVersion()))
-                ){
+                ) {
             changeBluetoothFunction(18);
         } else {
             changeBluetoothFunction(17);
         }
+
+        deviceImage.setImageResource( BleLockUtils.getDetailImageByModel(bleLockInfo.getServerLockInfo().getModel()));
     }
 
 
@@ -119,7 +127,7 @@ public class OldBleDetailActivity extends BaseBleActivity<IOldBleDetailView, Old
         if (17 == bluetoothType) {
             llBluetooth18.setVisibility(View.GONE);
             rlBluetooth17.setVisibility(View.VISIBLE);
-        }else if (18==bluetoothType){
+        } else if (18 == bluetoothType) {
             llBluetooth18.setVisibility(View.VISIBLE);
             rlBluetooth17.setVisibility(View.GONE);
         }
@@ -391,7 +399,7 @@ public class OldBleDetailActivity extends BaseBleActivity<IOldBleDetailView, Old
                 break;
             case R.id.rl_device_information:
                 LogUtils.e("点击设备详情   ");
-                Intent intent = new Intent(this, OldBluetoothMoreActivity.class);
+                Intent intent = new Intent(this, OldDeviceInfoActivity.class);
                 startActivity(intent);
                 break;
             case R.id.rl_device_share:
@@ -515,8 +523,6 @@ public class OldBleDetailActivity extends BaseBleActivity<IOldBleDetailView, Old
             }
         }
     }
-
-
 
 
     private void showMoreItem() {

@@ -470,7 +470,7 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.device.oldbluetooth.OldBluetoothMoreActivity"
+            android:name=".activity.device.oldbluetooth.OldDeviceInfoActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
         <activity

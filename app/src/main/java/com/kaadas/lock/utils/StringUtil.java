@@ -320,8 +320,7 @@ public class StringUtil {
     }
 
     //是否是局域网ip
-    public static  boolean isInner(String ip)
-    {
+    public static boolean isInner(String ip) {
         String reg = "(127[.]0[.]0[.]1)|"
                 + "(localhost)|"
                 + "(10[.]\\d{1,3}[.]\\d{1,3}[.]\\d{1,3})|"
@@ -331,19 +330,20 @@ public class StringUtil {
         Matcher matcher = p.matcher(ip);
         return matcher.find();
     }
+
     /**
      * 大于5位则保留5位
      * 小于5位则直接显示
-     * */
-    public static String getSubstringFive(String str){
-        String data="";
-        if (TextUtils.isEmpty(str)){
+     */
+    public static String getSubstringFive(String str) {
+        String data = "";
+        if (TextUtils.isEmpty(str)) {
             return data;
         }
-        if (str.length()>5){
-           data= str.substring(0,5);
-        }else {
-            data=str;
+        if (str.length() > 5) {
+            data = str.substring(0, 5);
+        } else {
+            data = str;
         }
         return data;
     }

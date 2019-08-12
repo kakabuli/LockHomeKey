@@ -26,7 +26,7 @@ import com.kaadas.lock.activity.device.bluetooth.BluetoothSharedDeviceManagement
 import com.kaadas.lock.activity.device.bluetooth.card.DoorCardManagerActivity;
 import com.kaadas.lock.activity.device.bluetooth.fingerprint.FingerprintManagerActivity;
 import com.kaadas.lock.activity.device.bluetooth.password.BluetoothPasswordManagerActivity;
-import com.kaadas.lock.activity.device.oldbluetooth.OldBluetoothMoreActivity;
+import com.kaadas.lock.activity.device.oldbluetooth.OldDeviceInfoActivity;
 import com.kaadas.lock.adapter.BluetoothFunctionAdapater;
 import com.kaadas.lock.adapter.BluetoothFunctionOneLineAdapater;
 import com.kaadas.lock.bean.BluetoothLockFunctionBean;
@@ -195,7 +195,6 @@ public class BleDetailActivity extends BaseBleActivity<IDeviceDetailView, Device
 
     private void showLockType() {
         lockType = bleLockInfo.getServerLockInfo().getModel();
-
         if (!TextUtils.isEmpty(lockType)) {
             tvType.setText(StringUtil.getSubstringFive(lockType));
         }
@@ -204,7 +203,6 @@ public class BleDetailActivity extends BaseBleActivity<IDeviceDetailView, Device
     private void changeLockIcon(Intent intent) {
         String model = intent.getStringExtra(KeyConstants.DEVICE_TYPE);
         ivLockIcon.setImageResource(BleLockUtils.getDetailImageByModel(model));
-
     }
 
     @Override
@@ -393,7 +391,7 @@ public class BleDetailActivity extends BaseBleActivity<IDeviceDetailView, Device
                         break;
                     case BleLockUtils.TYPE_MORE:
                         LogUtils.e("更多   ");  //这是老模块的  跳转地方
-                        intent = new Intent(BleDetailActivity.this, OldBluetoothMoreActivity.class);
+                        intent = new Intent(BleDetailActivity.this, OldDeviceInfoActivity.class);
                         startActivityForResult(intent, TO_MORE_REQUEST_CODE);
                         break;
                 }

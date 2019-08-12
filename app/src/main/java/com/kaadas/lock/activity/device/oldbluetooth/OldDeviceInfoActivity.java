@@ -35,7 +35,7 @@ import com.kaadas.lock.utils.ToastUtil;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class OldBluetoothMoreActivity extends BaseBleActivity<IOldDeviceInfoView, OldDeviceInfoPresenter> implements IOldDeviceInfoView, View.OnClickListener {
+public class OldDeviceInfoActivity extends BaseBleActivity<IOldDeviceInfoView, OldDeviceInfoPresenter> implements IOldDeviceInfoView, View.OnClickListener {
 
 
     @BindView(R.id.iv_back)
@@ -271,10 +271,10 @@ public class OldBluetoothMoreActivity extends BaseBleActivity<IOldDeviceInfoView
                         intent.putExtra(OtaConstants.password2, bleLockInfo.getServerLockInfo().getPassword2());
                         if (bleLockInfo.getBleType() == 1) { //Ti升级
                             intent.putExtra(OtaConstants.fileName, "Kaadas_" + updateFileInfo.getFileVersion() + "_" + updateFileInfo.getFileMd5() + ".bin");
-                            intent.setClass(OldBluetoothMoreActivity.this, TiOtaUpgradeActivity.class);
+                            intent.setClass(OldDeviceInfoActivity.this, TiOtaUpgradeActivity.class);
                         } else if (bleLockInfo.getBleType() == 2) {  //P6升级
                             intent.putExtra(OtaConstants.fileName, "Kaadas_" + updateFileInfo.getFileVersion() + "_" + updateFileInfo.getFileMd5() + ".cyacd2");
-                            intent.setClass(OldBluetoothMoreActivity.this, P6OtaUpgradeActivity.class);
+                            intent.setClass(OldDeviceInfoActivity.this, P6OtaUpgradeActivity.class);
                         }
                         //还未完善   不跳转
                         startActivity(intent);
