@@ -75,11 +75,13 @@ public class OldAndAuthBleDetailPresenter<T> extends BlePresenter<IOldBleDetailV
     public void attachView(IOldBleDetailView view) {
         super.attachView(view);
         if (bleService != null) {
+            LogUtils.e("监听锁状态  111111");
             toDisposable(warringDisposable);
             warringDisposable = bleService.listeneDataChange()
                     .filter(new Predicate<BleDataBean>() {
                         @Override
                         public boolean test(BleDataBean bleDataBean) throws Exception {
+                            LogUtils.e("收到上报   " + Rsa.bytesToHexString(bleDataBean.getOriginalData()) + "   " + (bleDataBean.getCmd() == 0x07));
                             return bleDataBean.getCmd() == 0x07;
                         }
                     })
@@ -87,10 +89,7 @@ public class OldAndAuthBleDetailPresenter<T> extends BlePresenter<IOldBleDetailV
                     .subscribe(new Consumer<BleDataBean>() {
                         @Override
                         public void accept(BleDataBean bleDataBean) throws Exception {
-                            if (MyApplication.getInstance().getBleService().getBleLockInfo().getAuthKey() == null || MyApplication.getInstance().getBleService().getBleLockInfo().getAuthKey().length == 0) {
-                                LogUtils.e("收到报警记录，但是鉴权帧为空");
-                                return;
-                            }
+                            LogUtils.e("收到报警   234234234");
                             getDeviceInfo();
                         }
                     }, new Consumer<Throwable>() {
@@ -100,7 +99,6 @@ public class OldAndAuthBleDetailPresenter<T> extends BlePresenter<IOldBleDetailV
                         }
                     });
             compositeDisposable.add(warringDisposable);
-
 
             toDisposable(upLockDisposable);
             upLockDisposable = bleService.listeneDataChange()
@@ -118,17 +116,7 @@ public class OldAndAuthBleDetailPresenter<T> extends BlePresenter<IOldBleDetailV
                                 LogUtils.e("收到锁状态改变，但是鉴权帧为空");
                                 return;
                             }
-                            byte[] deValue = Rsa.decrypt(bleDataBean.getPayload(), MyApplication.getInstance().getBleService().getBleLockInfo().getAuthKey());
-                            LogUtils.e("锁状态改变   " + Rsa.bytesToHexString(deValue));
-                            int value0 = deValue[0] & 0xff;
-                            int value2 = deValue[2] & 0xff;
-                            if (value0 == 1) {  //上锁
-                                if (value2 == 1) {
-                                    getDeviceInfo();
-                                } else if (value2 == 2) {   //开锁
-                                    getDeviceInfo();
-                                }
-                            }
+                            getDeviceInfo();
                         }
                     }, new Consumer<Throwable>() {
                         @Override
@@ -285,7 +273,8 @@ public class OldAndAuthBleDetailPresenter<T> extends BlePresenter<IOldBleDetailV
 
 
     public void getDeviceInfo() {
-        if (bleService.getBleVersion() != 3) {
+        //如果功能集为0  或者版本不为3   不读取设备信息
+        if (bleService.getBleVersion() != 3 || "0".equals(bleLockInfo.getServerLockInfo().getFunctionSet())) {
             return;
         }
         byte[] command = BleCommandFactory.syncLockInfoCommand(bleLockInfo.getAuthKey());

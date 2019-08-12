@@ -44,12 +44,11 @@ import com.kaadas.lock.utils.BatteryView;
 import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.BleLockUtils;
 import com.kaadas.lock.utils.KeyConstants;
+import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.StringUtil;
 import com.kaadas.lock.utils.ToastUtil;
 import com.kaadas.lock.widget.MyGridItemDecoration;
-
-import net.sdvn.cmapi.util.LogUtils;
 
 import java.util.List;
 import java.util.concurrent.TimeoutException;
@@ -60,7 +59,8 @@ import butterknife.ButterKnife;
 /**
  * Created by David on 2019/4/10
  */
-public class BleDetailActivity extends BaseBleActivity<IDeviceDetailView, DeviceDetailPresenter<IDeviceDetailView>> implements IDeviceDetailView, View.OnClickListener {
+public class BleDetailActivity extends BaseBleActivity<IDeviceDetailView, DeviceDetailPresenter<IDeviceDetailView>>
+        implements IDeviceDetailView, View.OnClickListener {
     @BindView(R.id.iv_back)
     ImageView ivBack;
     @BindView(R.id.tv_bluetooth_name)
@@ -75,8 +75,6 @@ public class BleDetailActivity extends BaseBleActivity<IDeviceDetailView, Device
     TextView tvDate;//日期
     @BindView(R.id.ll_power)
     LinearLayout llPower;
-    //    @BindView(R.id.rv)
-//    RecyclerView rv;
 
     private BluetoothFunctionAdapater adapater;
     private BluetoothFunctionOneLineAdapater oneLineAdapater;
@@ -130,7 +128,6 @@ public class BleDetailActivity extends BaseBleActivity<IDeviceDetailView, Device
     LinearLayout llSix;
     @BindView(R.id.tv_open_clock)
     TextView tvOpenClock;
-    int lockStatus = -1;
     @BindView(R.id.iv_lock_icon)
     ImageView ivLockIcon;
     @BindView(R.id.detail_function_recyclerView)
@@ -140,14 +137,36 @@ public class BleDetailActivity extends BaseBleActivity<IDeviceDetailView, Device
     private BleLockInfo bleLockInfo;
     private static final int TO_MORE_REQUEST_CODE = 101;
     private boolean isOpening = false;
-    private Runnable lockRunnable;
     private Handler handler = new Handler();
     String lockType;
+    private Runnable lockRunnable = new Runnable() {
+        @Override
+        public void run() {
+            isOpening = false;
+            boolean auth = mPresenter.isAuth(bleLockInfo, false);
+            LogUtils.e(" 首页锁状态  反锁状态   " + auth + "   " + bleLockInfo.getBackLock() + "    安全模式    " + bleLockInfo.getSafeMode() + "   布防模式   " + bleLockInfo.getArmMode());
+            if (auth) {
+                onElectricUpdata(bleLockInfo.getBattery());
+                changLockStatus(0);
+                if (bleLockInfo.getSafeMode() == 1) {//安全模式
+                    changLockStatus(6);
+                }
+                if (bleLockInfo.getBackLock() == 0) {  //等于0时是反锁状态
+                    changLockStatus(2);
+                }
+                if (bleLockInfo.getArmMode() == 1) {//布防模式
+                    changLockStatus(7);
+                }
+            }
+        }
+    };
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+        LogUtils.e("全功能界面   1");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bluetooth_lock_function);
+        LogUtils.e("全功能界面  2 ");
         ButterKnife.bind(this);
         Intent intent = getIntent();
         changeLockIcon(intent);
@@ -155,25 +174,6 @@ public class BleDetailActivity extends BaseBleActivity<IDeviceDetailView, Device
         ivBack.setOnClickListener(this);
         showLockType();
         initClick();
-        lockRunnable = new Runnable() {
-            @Override
-            public void run() {
-                LogUtils.e(" 首页锁状态  反锁状态   " + bleLockInfo.getBackLock() + "    安全模式    " + bleLockInfo.getSafeMode() + "   布防模式   " + bleLockInfo.getArmMode());
-                isOpening = false;
-                if (bleLockInfo.isAuth()){
-                    changLockStatus(0);
-                    if (bleLockInfo.getSafeMode() == 1) {//安全模式
-                        changLockStatus(6);
-                    }
-                    if (bleLockInfo.getBackLock() == 0) {  //等于0时是反锁状态
-                        changLockStatus(2);
-                    }
-                    if (bleLockInfo.getArmMode() == 1) {//布防模式
-                        changLockStatus(7);
-                    }
-                }
-            }
-        };
         initRecycleview();
     }
 
@@ -182,9 +182,9 @@ public class BleDetailActivity extends BaseBleActivity<IDeviceDetailView, Device
     protected void onStart() {
         super.onStart();
         mPresenter.attachView(this);
-        mPresenter.getAllPassword(bleLockInfo);
         int userManageNumber = (int) SPUtils.getProtect(KeyConstants.USER_MANAGE_NUMBER + "" + bleLockInfo.getServerLockInfo().getLockName(), 0);
         tvNumberFour.setText(userManageNumber + getString(R.string.people));
+        runOnUiThread(lockRunnable);
     }
 
     @Override
@@ -196,7 +196,7 @@ public class BleDetailActivity extends BaseBleActivity<IDeviceDetailView, Device
     private void showLockType() {
         lockType = bleLockInfo.getServerLockInfo().getModel();
         if (!TextUtils.isEmpty(lockType)) {
-            tvType.setText(StringUtil.getSubstringFive(lockType));
+            tvType.setText(StringUtil.getSubstringFive(lockType) );
         }
     }
 
@@ -207,7 +207,7 @@ public class BleDetailActivity extends BaseBleActivity<IDeviceDetailView, Device
 
     @Override
     protected DeviceDetailPresenter<IDeviceDetailView> createPresent() {
-        return new DeviceDetailPresenter();
+        return new DeviceDetailPresenter<>();
     }
 
     @SuppressLint("SetTextI18n")
@@ -312,7 +312,9 @@ public class BleDetailActivity extends BaseBleActivity<IDeviceDetailView, Device
     private void initRecycleview() {
         String functionSet = bleLockInfo.getServerLockInfo().getFunctionSet(); //锁功能集
         int func = Integer.parseInt(functionSet);
+        LogUtils.e("功能集是   " + func);
         List<BluetoothLockFunctionBean> supportFunction = BleLockUtils.getSupportFunction(func);
+        LogUtils.e("获取到的功能集是   " + supportFunction.size());
         MyGridItemDecoration dividerItemDecoration;
         if (supportFunction.size() <= 2) {
             detailFunctionOnLine.setLayoutManager(new GridLayoutManager(this, 2));
@@ -447,7 +449,7 @@ public class BleDetailActivity extends BaseBleActivity<IDeviceDetailView, Device
     @Override
     public void authResult(boolean isSuccess) {
         if (isSuccess) {
-            changLockStatus(0);
+            lockRunnable.run();
         } else {
             changLockStatus(1);
         }
@@ -519,6 +521,12 @@ public class BleDetailActivity extends BaseBleActivity<IDeviceDetailView, Device
 
     @Override
     public void onElectricUpdataFailed(Throwable throwable) {
+    }
+
+    @Override
+    public void onDeviceInfoLoaded() {
+        LogUtils.e("获取到设备信息");
+        lockRunnable.run();
     }
 
     @Override

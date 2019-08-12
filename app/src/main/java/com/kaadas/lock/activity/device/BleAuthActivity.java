@@ -90,7 +90,7 @@ public class BleAuthActivity extends BaseBleActivity<IOldBleDetailView, OldAndAu
         ivDelete.setOnClickListener(this);
         showLockType();
         initListener();
-
+        LogUtils.e("授权界面");
         lockRunnable = new Runnable() {
             @Override
             public void run() {
@@ -98,6 +98,7 @@ public class BleAuthActivity extends BaseBleActivity<IOldBleDetailView, OldAndAu
                 isOpening = false;
                 if (bleLockInfo.isAuth()){
                     changLockStatus(0);
+                    onElectricUpdata(bleLockInfo.getBattery());
                     if (bleLockInfo.getSafeMode() == 1) {//安全模式
                         changLockStatus(6);
                     }
@@ -125,6 +126,7 @@ public class BleAuthActivity extends BaseBleActivity<IOldBleDetailView, OldAndAu
             //不可以查设备信息
             rlDeviceInformation.setVisibility(View.GONE);
         }
+        lockRunnable.run();
     }
 
     private void showLockType() {
