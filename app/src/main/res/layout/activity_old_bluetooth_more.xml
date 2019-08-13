@@ -114,7 +114,7 @@
                 android:layout_height="1dp"
                 android:layout_alignParentBottom="true"
                 android:layout_marginLeft="@dimen/dp_17"
-                android:background="#EAE9E9"></View>
+                android:background="#EAE9E9" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -180,7 +180,7 @@
                 android:layout_height="1dp"
                 android:layout_alignParentBottom="true"
                 android:layout_marginLeft="@dimen/dp_17"
-                android:background="#EAE9E9"></View>
+                android:background="#EAE9E9" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -205,11 +205,16 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:layout_marginRight="@dimen/dp_30"
+                android:layout_marginRight="@dimen/dp_15"
                 android:textColor="#999999"
                 android:textSize="@dimen/sp_12" />
 
-
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_alignParentBottom="true"
+                android:layout_marginLeft="@dimen/dp_17"
+                android:background="#EAE9E9" />
         </RelativeLayout>
         <RelativeLayout
             android:id="@+id/rl_bluetooth_module_version"

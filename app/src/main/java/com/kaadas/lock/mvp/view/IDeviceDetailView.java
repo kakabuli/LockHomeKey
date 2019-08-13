@@ -14,8 +14,8 @@ public interface IDeviceDetailView extends IBleLockDetailView {
 
     void onElectricUpdataFailed(Throwable throwable);
 
+    void onDeviceInfoLoaded();
 
-//    void onStateUpdate(int type);
 
 
 }

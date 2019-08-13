@@ -43,9 +43,16 @@
         </FrameLayout>
     </LinearLayout>
 
-    <LinearLayout
+
+    <TextView
+        android:id="@+id/hand_more"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_alignParentBottom="true"
         android:layout_weight="1"
-        android:background="@color/device_item_background"></LinearLayout>
+        android:gravity="center"
+        android:padding="@dimen/dp_23"
+        android:text="@string/device_detail_more"
+        android:textColor="#1F96F7"
+        android:textSize="@dimen/sp_15" />
 </LinearLayout>

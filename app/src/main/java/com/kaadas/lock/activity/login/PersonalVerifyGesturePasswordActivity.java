@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.Html;
+import android.text.TextUtils;
+import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
@@ -19,9 +21,11 @@ import com.kaadas.lock.utils.cachefloder.ACache;
 import com.kaadas.lock.utils.cachefloder.CacheFloder;
 import com.kaadas.lock.utils.handPwdUtil.GestureContentView;
 import com.kaadas.lock.utils.handPwdUtil.GestureDrawline;
+import com.kaadas.lock.widget.BottomMenuDialog;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class PersonalVerifyGesturePasswordActivity extends BaseAddToApplicationActivity {
 
@@ -31,6 +35,8 @@ public class PersonalVerifyGesturePasswordActivity extends BaseAddToApplicationA
 
     @BindView(R.id.gesture_container)
     FrameLayout gestureContainer;
+    @BindView(R.id.hand_more)
+    TextView handMore;
 
     private GestureContentView mGestureContentView;
     //输入错误剩余次数
@@ -44,8 +50,11 @@ public class PersonalVerifyGesturePasswordActivity extends BaseAddToApplicationA
         initView();
         Intent intent = getIntent();
         String source = intent.getStringExtra(KeyConstants.SOURCE);
-        if ("WelcomeActivity".equals(source)){
+        if ("WelcomeActivity".equals(source)) {
             mTextTip.setText(R.string.draw_gesture_password);
+            handMore.setVisibility(View.VISIBLE);
+        }else {
+            handMore.setVisibility(View.GONE);
         }
     }
 
@@ -82,7 +91,7 @@ public class PersonalVerifyGesturePasswordActivity extends BaseAddToApplicationA
                         //重新登录
                         //todo 清除数据，未做！
                         //1清除手势密码缓存的数据
-                        if (MyApplication.getInstance().getMqttService()!=null){
+                        if (MyApplication.getInstance().getMqttService() != null) {
                             MyApplication.getInstance().getMqttService().httpMqttDisconnect();
                         }
                         MyApplication.getInstance().tokenInvalid(false);
@@ -97,7 +106,9 @@ public class PersonalVerifyGesturePasswordActivity extends BaseAddToApplicationA
             mGestureContentView.setParentView(gestureContainer);
         }
     }
+
     private long lastClickBackTime = 0;
+
     @Override
     public void onBackPressed() {
         if (System.currentTimeMillis() - lastClickBackTime > 2000) {
@@ -109,4 +120,58 @@ public class PersonalVerifyGesturePasswordActivity extends BaseAddToApplicationA
     }
 
 
+    private BottomMenuDialog.Builder dialogBuilder;
+    private BottomMenuDialog bottomMenuDialog;
+
+    //展示头像对话框
+    private void showMoreDialog() {
+        String fingerPwd = CacheFloder.readPhoneFingerPrint(ACache.get(MyApplication.getInstance()), MyApplication.getInstance().getUid() + "fingerStatus");
+        dialogBuilder = new BottomMenuDialog.Builder(this);
+        //指纹解锁
+        if (!TextUtils.isEmpty(fingerPwd)) {
+            dialogBuilder.addMenu(R.string.finger_open, new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    finish();
+                    if (bottomMenuDialog != null) {
+                        bottomMenuDialog.dismiss();
+                    }
+                    Intent loginIntent = new Intent(PersonalVerifyGesturePasswordActivity.this, PersonalVerifyFingerPrintActivity.class);
+                    startActivity(loginIntent);
+                }
+            });
+        }
+        //密码登录
+        dialogBuilder.addMenu(R.string.pwd_select, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+                if (bottomMenuDialog != null) {
+                    bottomMenuDialog.dismiss();
+                }
+                Intent loginIntent = new Intent(PersonalVerifyGesturePasswordActivity.this, LoginActivity.class);
+                startActivity(loginIntent);
+
+            }
+        });
+        //切换注册页面
+        dialogBuilder.addMenu(R.string.select_register, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+                if (bottomMenuDialog != null) {
+                    bottomMenuDialog.dismiss();
+                }
+                Intent registerIntent = new Intent(PersonalVerifyGesturePasswordActivity.this, RegisterActivity.class);
+                startActivity(registerIntent);
+            }
+        });
+        bottomMenuDialog = dialogBuilder.create();
+        bottomMenuDialog.show();
+    }
+
+    @OnClick(R.id.hand_more)
+    public void onClick() {
+        showMoreDialog();
+    }
 }

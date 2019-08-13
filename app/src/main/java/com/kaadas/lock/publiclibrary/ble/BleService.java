@@ -459,12 +459,12 @@ public class BleService extends Service {
             lastReceiveDataTime = System.currentTimeMillis();
 
             //加密数据中的   开锁记录   报警记录    不要回确认帧    秘钥上报  需要逻辑层才回确认帧
-            if (value[0] == 1 && !((value[3] & 0xff) == 0x04)
-                    && !((value[3] & 0xff) == 0x14) && !(value[3] == 0x08) && bleVersion != 1 && value[3] != 0x18 && value.length == 20) {  //如果是加密数据  那么回确认帧
+            if ((value[0] & 0xff) == 0x01 && value.length == 20 && ((value[3] & 0xff) == 0x05 || (value[3] & 0xff) == 0x07)) {  //如果是加密数据  那么回确认帧
                 sendCommand(BleCommandFactory.confirmCommand(value));
             }
 
-            if (value[0] == 1 && (value[3] & 0xFF) != 0x08 && value.length == 20) { //鉴权帧不在此处做判断   大概率此时还没有鉴权帧
+            if (value[0] == 1 && value.length == 20
+                    && (value[3] & 0xFF) != 0x08) { //鉴权帧不在此处做判断   大概率此时还没有鉴权帧
                 byte[] payload = new byte[16];
                 System.arraycopy(value, 4, payload, 0, 16);
                 if (bleLockInfo != null && bleLockInfo.getAuthKey() != null) {
@@ -475,7 +475,7 @@ public class BleService extends Service {
                     }
                     if (checkNum != value[2]) {
                         authFailedSubject.onNext(true);
-                        LogUtils.e("校验和出错   原始数据 "  +Rsa.bytesToHexString(value)+"  解密后的数据是  "+ Rsa.bytesToHexString(decrypt));
+                        LogUtils.e("校验和出错   原始数据 " + Rsa.bytesToHexString(value) + "  解密后的数据是  " + Rsa.bytesToHexString(decrypt));
                         return;
                     } else {
                         authFailedSubject.onNext(false);
@@ -489,6 +489,7 @@ public class BleService extends Service {
 
                 } else {
                     authFailedSubject.onNext(true);
+                    LogUtils.e("校验和出错 返回C2   原始数据 " + Rsa.bytesToHexString(value)  );
                 }
                 return;
             }
@@ -1017,7 +1018,7 @@ public class BleService extends Service {
                 }
                 //如果当前没有要等待指令，而且在发送队列中不存在需要等待的指令
                 if (currentCommand == null && !isExit) {
-                    writeStack(command, 3);
+                    sendNextCommand();
                 }
             }
         }
@@ -1025,9 +1026,8 @@ public class BleService extends Service {
 
 
     private void writeStack(byte[] command, int position) {
-
         LogUtils.e("当前指令   " + position + "   " + Rsa.bytesToHexString(command) + "    加入指令11111    " + getCommands(commands));
-        if (!isConnected){
+        if (!isConnected) {
             commands.clear();
             waitBackCommands.clear();
             handler.removeCallbacks(sendCommandRannble);

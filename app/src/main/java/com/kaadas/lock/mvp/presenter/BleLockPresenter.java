@@ -42,15 +42,12 @@ public class BleLockPresenter<T> extends MyOpenLockRecordPresenter<IBleLockView>
     private Disposable openLockNumebrDisposable;
     private Disposable electricDisposable;
     private byte[] readLockNumberCommand;
-    private String localPwd;
-    private Disposable openLockDisposable;
     private Disposable getDeviceInfoDisposable;
     public int state5;
     public int state8;
     public int state2;
     private Disposable warringDisposable;
     private Disposable upLockDisposable;
-    private Disposable listenerOpenLockUpDisposable;
     private Disposable deviceStateChangeDisposable;
     private Disposable listenAuthFailedDisposable;
 
@@ -181,7 +178,6 @@ public class BleLockPresenter<T> extends MyOpenLockRecordPresenter<IBleLockView>
         compositeDisposable.add(getDeviceInfoDisposable);
     }
 
-
     private void readBattery() {
         toDisposable(electricDisposable);
         electricDisposable = Observable.just(0)
@@ -246,7 +242,6 @@ public class BleLockPresenter<T> extends MyOpenLockRecordPresenter<IBleLockView>
                 })
                 .timeout(10 * 1000, TimeUnit.MILLISECONDS)
                 .compose(RxjavaHelper.observeOnMainThread())
-//                        .retryWhen(new RetryWithTime(2, 0))
                 .subscribe(new Consumer<BleDataBean>() {
                     @Override
                     public void accept(BleDataBean bleDataBean) throws Exception {
@@ -388,15 +383,6 @@ public class BleLockPresenter<T> extends MyOpenLockRecordPresenter<IBleLockView>
                                     mViewRef.get().openLockSuccess();
                                 }
                                 getOpenLockNumber();
-                                //延时1秒读取开锁次数   直接读可能失败
-//                                handler.postDelayed(new Runnable() {
-//                                    @Override
-//                                    public void run() {
-//                                        if (isAttach) {
-//                                            syncLockTime();
-//                                        }
-//                                    }
-//                                }, 500);
                             }
                         }
                     }
@@ -836,7 +822,6 @@ public class BleLockPresenter<T> extends MyOpenLockRecordPresenter<IBleLockView>
 
 
     public void upLoadOperationRecord(String device_name, String device_nickname, List<UploadOperationRecordBean.OperationListBean> openLockList, String user_id) {
-
         for (UploadOperationRecordBean.OperationListBean bleRecord : openLockList) {
             LogUtils.e("上传的数据是    " + bleRecord.toString());
         }

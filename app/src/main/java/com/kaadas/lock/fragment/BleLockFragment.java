@@ -188,11 +188,11 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
                 } else {
                     changeOpenLockStatus(13);
                 }
-                if (bleLockInfo.getBackLock() == 0) {  //等于0时是反锁状态
-                    changeOpenLockStatus(6);
-                }
                 if (bleLockInfo.getSafeMode() == 1) {//安全模式
                     changeOpenLockStatus(16);
+                }
+                if (bleLockInfo.getBackLock() == 0) {  //等于0时是反锁状态
+                    changeOpenLockStatus(6);
                 }
                 if (bleLockInfo.getArmMode() == 1) {//布防模式
                     changeOpenLockStatus(4);
@@ -619,7 +619,6 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
                 tvExternal.setTextColor(getResources().getColor(R.color.cC6F5FF));
                 tvExternal.setText(getString(R.string.safe_status));
                 break;
-
             case 17:
                 //蓝牙链接失败
                 ivExternalBig.setVisibility(View.VISIBLE);
@@ -1316,11 +1315,12 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
             LogUtils.e("设备状态   2");
             changeOpenLockStatus(8);  //鉴权成功之后没有特殊状态
             onElectricUpdata(bleLockInfo.getBattery());
-            if (bleLockInfo.getBackLock() == 0) {  //等于0时是反锁状态
-                changeOpenLockStatus(6);
-            }
+
             if (bleLockInfo.getSafeMode() == 1) {//安全模式
                 changeOpenLockStatus(16);
+            }
+            if (bleLockInfo.getBackLock() == 0) {  //等于0时是反锁状态
+                changeOpenLockStatus(6);
             }
             if (bleLockInfo.getArmMode() == 1) {//布防模式
                 changeOpenLockStatus(4);

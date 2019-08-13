@@ -1183,5 +1183,6 @@
     <string name="get_port_failed">猫眼呼叫来电失败,获取端口失败</string>
     <string name="warring_record_empty">报警记录为空</string>
     <string name="is_openning">正在开锁，请稍后再试...</string>
+    <string name="finger_open">指纹解锁</string>
     <string name="update_nickname_exception">设置名称异常</string>
 </resources>

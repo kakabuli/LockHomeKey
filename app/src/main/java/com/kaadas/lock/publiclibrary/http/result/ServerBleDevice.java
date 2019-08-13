@@ -220,7 +220,7 @@ public class ServerBleDevice implements Serializable {
 
         if (TextUtils.isEmpty(functionSet)) {
             if (!"3".equals(bleVersion)){ //如果蓝牙版本号不是3
-                return ""+0x00;
+                return ""+0;
             }
             if (TextUtils.isEmpty(model)) {
                 return "" + 0x31;

@@ -188,7 +188,9 @@ public class PersonalVerifyFingerPrintActivity extends BaseActivity<IPersonalVer
             dialogBuilder.addMenu(R.string.hand_pwd, new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
                     Intent loginIntent = new Intent(mContext, PersonalVerifyGesturePasswordActivity.class);
+                    loginIntent.putExtra(KeyConstants.SOURCE,"WelcomeActivity");
                     startActivity(loginIntent);
                     if (bottomMenuDialog != null) {
                         bottomMenuDialog.dismiss();

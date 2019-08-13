@@ -1,9 +1,12 @@
 package com.kaadas.lock.mvp.presenter.deviceaddpresenter;
 
+import android.text.TextUtils;
+
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.mvp.mvpbase.BasePresenter;
 import com.kaadas.lock.mvp.view.deviceaddview.IBindBleView;
 import com.kaadas.lock.publiclibrary.ble.BleCommandFactory;
+import com.kaadas.lock.publiclibrary.ble.BleProtocolFailedException;
 import com.kaadas.lock.publiclibrary.ble.OldBleCommandFactory;
 import com.kaadas.lock.publiclibrary.ble.RetryWithTime;
 import com.kaadas.lock.publiclibrary.ble.responsebean.BleDataBean;
@@ -54,7 +57,7 @@ public class BindBlePresenter<T> extends BasePresenter<IBindBleView> {
     private String mac;
     private String deviceName;
     private Disposable functionSetDisposable;
-    private int functionSet;
+    private int functionSet = -1;
 
 
     public void setPwd1(String pwd1, boolean isBind, int version, String deviceSn, String mac, String deviceName) {
@@ -74,7 +77,7 @@ public class BindBlePresenter<T> extends BasePresenter<IBindBleView> {
             System.arraycopy(bPwd1, 0, password_1, 0, bPwd1.length);
             listenerPwd2(version, deviceSn);
         }
-        if (version == 3){
+        if (version == 3) {
             readLockFunctionSet();
         }
     }
@@ -264,10 +267,21 @@ public class BindBlePresenter<T> extends BasePresenter<IBindBleView> {
                     byte[] pswd2 = new byte[4];
                     System.arraycopy(password_2de, 1, pswd2, 0, 4);
                     pwd2 = Rsa.bytesToHexString(pswd2);  //转换pwd2为字符串
-                    inNetConfirmFrame = BleCommandFactory.confirmCommand(bytes);  //9
-                    bleService.sendCommand(inNetConfirmFrame);  //秘钥上报确认帧 10
-                    readLockType(pwd1, pwd2, version, deviceSn);
-                    toDisposable(pwd2Disposable);
+                    if (bleService.getBleVersion() == 3) {
+                        if (functionSet != -1) {  //获取到功能集  才让入网
+                            inNetConfirmFrame = BleCommandFactory.confirmCommand(bytes);  //9
+                            bleService.sendCommand(inNetConfirmFrame);  //秘钥上报确认帧 10
+                            readLockType(pwd1, pwd2, version, deviceSn);
+                            toDisposable(pwd2Disposable);
+                        }
+                    } else {
+                        inNetConfirmFrame = BleCommandFactory.confirmCommand(bytes);  //9
+                        bleService.sendCommand(inNetConfirmFrame);  //秘钥上报确认帧 10
+                        readLockType(pwd1, pwd2, version, deviceSn);
+                        toDisposable(pwd2Disposable);
+                    }
+
+
                 } else {  //解绑的逻辑
                     if (bytes[2] != checkNum || password_2de[0] != 0x03) { //0x03是解绑的秘钥上报  且校验和校验失败  正常情况是不会发生这种问题的
                         //如果校验未成功  或者不是0x03
@@ -337,7 +351,7 @@ public class BindBlePresenter<T> extends BasePresenter<IBindBleView> {
                 .filter(new Predicate<ReadInfoBean>() {
                     @Override
                     public boolean test(ReadInfoBean readInfoBean) throws Exception {
-                        return readInfoBean.type == ReadInfoBean.TYPE_LOCK_FUNCTION_SET ;
+                        return readInfoBean.type == ReadInfoBean.TYPE_LOCK_FUNCTION_SET;
 
                     }
                 })
@@ -356,6 +370,11 @@ public class BindBlePresenter<T> extends BasePresenter<IBindBleView> {
                         LogUtils.e("收到锁功能集   " + Rsa.byteToHexString((byte) funcSet));
                         if (BleLockUtils.isExistFunctionSet(funcSet)) {
                             functionSet = funcSet;
+                            if (funcSet == 0xff) {
+                                if (mViewRef.get() != null) {
+                                    mViewRef.get().readFunctionSetFailed(new BleProtocolFailedException(0xff));
+                                }
+                            }
                         } else {
                             if (mViewRef.get() != null) {
                                 mViewRef.get().unknownFunctionSet(funcSet);

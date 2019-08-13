@@ -131,9 +131,9 @@ public class BleLockDetailPresenter<T> extends BlePresenter<IDeviceDetailView> {
 
                         bleLockInfo.setArmMode(state8);
                         bleLockInfo.setSafeMode(state5);
-                        if (bleLockInfo.getSupportBackLock() == 1) {
-                            bleLockInfo.setBackLock(state2);
-                        }
+//                        if (bleLockInfo.getSupportBackLock() == 1) {
+//                            bleLockInfo.setBackLock(state2);
+//                        }
 
                         if (bleLockInfo.getBattery() == -1) {   //没有获取过再重新获取   获取到电量  那么
                             bleLockInfo.setBattery(battery);
@@ -151,12 +151,12 @@ public class BleLockDetailPresenter<T> extends BlePresenter<IDeviceDetailView> {
                         LogUtils.e("锁上时间为    " + lockTime);
                         toDisposable(getDeviceInfoDisposable);
                         if (mViewRef.get() != null) {
+                            if (state5 == 1) {//安全模式
+                                mViewRef.get().onSafeMode();
+                            }
                             LogUtils.e("设置锁状态  反锁状态   " + bleLockInfo.getBackLock() + "    安全模式    " + bleLockInfo.getSafeMode() + "   布防模式   " + bleLockInfo.getArmMode());
                             if (state2 == 0 && bleLockInfo.getSupportBackLock() == 1) {  //等于0时是反锁状态
                                 mViewRef.get().onBackLock();
-                            }
-                            if (state5 == 1) {//安全模式
-                                mViewRef.get().onSafeMode();
                             }
                             if (state8 == 1) {//布防模式
                                 mViewRef.get().onArmMode();
@@ -308,7 +308,6 @@ public class BleLockDetailPresenter<T> extends BlePresenter<IDeviceDetailView> {
                         byte[] deValue = Rsa.decrypt(bleDataBean.getPayload(), MyApplication.getInstance().getBleService().getBleLockInfo().getAuthKey());
                         LogUtils.e("锁状态改变   " + Rsa.bytesToHexString(deValue));
                         int value0 = deValue[0] & 0xff;
-                        int value1 = deValue[1] & 0xff;
                         int value2 = deValue[2] & 0xff;
                         if (value0 == 1) {  //上锁
                             if (value2 == 1) {
@@ -316,7 +315,6 @@ public class BleLockDetailPresenter<T> extends BlePresenter<IDeviceDetailView> {
                                 if (mViewRef.get() != null) {
                                     mViewRef.get().onLockLock();
                                 }
-//                                getOpenLockNumber();
                             } else if (value2 == 2) {   //开锁
                                 LogUtils.e("开锁成功  8 " + Rsa.bytesToHexString(bleDataBean.getPayload()));
                                 if (mViewRef.get() != null) {
@@ -343,7 +341,6 @@ public class BleLockDetailPresenter<T> extends BlePresenter<IDeviceDetailView> {
                         LogUtils.e("收到服务返回的设备更新回调1111");
                         if (mViewRef.get() != null) {   //通知界面更新显示设备状态
                             LogUtils.e("收到服务返回的设备更新回调2222");
-//                            mViewRef.get().onWarringUp(-1);
                         }
                         //锁状态改变   读取锁信息
                         getDeviceInfo();
@@ -356,9 +353,6 @@ public class BleLockDetailPresenter<T> extends BlePresenter<IDeviceDetailView> {
                 });
         compositeDisposable.add(deviceStateChangeDisposable);
     }
-
-    private List<OpenLockRecord> serverRecords = new ArrayList<>();
-    private Disposable serverDisposable;
 
 
     @Override

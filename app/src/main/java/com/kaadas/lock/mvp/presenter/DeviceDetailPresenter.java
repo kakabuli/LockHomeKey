@@ -1,26 +1,16 @@
 package com.kaadas.lock.mvp.presenter;
 
 
-import android.text.TextUtils;
 
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.mvp.mvpbase.BlePresenter;
-import com.kaadas.lock.mvp.view.IBleLockDetailView;
 import com.kaadas.lock.mvp.view.IDeviceDetailView;
-import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.publiclibrary.ble.BleCommandFactory;
 import com.kaadas.lock.publiclibrary.ble.responsebean.BleDataBean;
-import com.kaadas.lock.publiclibrary.http.XiaokaiNewServiceImp;
-import com.kaadas.lock.publiclibrary.http.result.BaseResult;
-import com.kaadas.lock.publiclibrary.http.result.GetPasswordResult;
-import com.kaadas.lock.publiclibrary.http.util.BaseObserver;
 import com.kaadas.lock.publiclibrary.http.util.RxjavaHelper;
 import com.kaadas.lock.utils.DateUtils;
-import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
-import com.kaadas.lock.utils.NetUtil;
 import com.kaadas.lock.utils.Rsa;
-import com.kaadas.lock.utils.SPUtils;
 
 
 import java.util.concurrent.TimeUnit;
@@ -34,47 +24,14 @@ import io.reactivex.functions.Predicate;
  * Create By lxj  on 2019/2/27
  * Describe
  */
-public class DeviceDetailPresenter<T> extends BleLockDetailPresenter<IDeviceDetailView> {
+public class DeviceDetailPresenter<T> extends BlePresenter<IDeviceDetailView> {
     private Disposable getDeviceInfoDisposable;
-    private Disposable deviceStateChangeDisposable;
+    private Disposable upLockDisposable;
+    private Disposable warringDisposable;
 
     @Override
     public void authSuccess() {
         getDeviceInfo();
-    }
-
-
-    public void getAllPassword(BleLockInfo bleLockInfo) {
-        XiaokaiNewServiceImp.getPasswords(MyApplication.getInstance().getUid(), bleLockInfo.getServerLockInfo().getLockName(), 0)
-                .subscribe(new BaseObserver<GetPasswordResult>() {
-                    @Override
-                    public void onSuccess(GetPasswordResult getPasswordResult) {
-                        if (mViewRef.get() != null) {
-                            mViewRef.get().onGetPasswordSuccess(getPasswordResult);
-                        }
-                        //更新列表
-                        MyApplication.getInstance().setPasswordResults(bleLockInfo.getServerLockInfo().getLockName(), getPasswordResult, true);
-                    }
-
-                    @Override
-                    public void onAckErrorCode(BaseResult baseResult) {
-                        if (mViewRef.get() != null) {
-                            mViewRef.get().onGetPasswordFailedServer(baseResult);
-                        }
-                    }
-
-                    @Override
-                    public void onFailed(Throwable throwable) {
-                        if (mViewRef.get() != null) {
-                            mViewRef.get().onGetPasswordFailed(throwable);
-                        }
-                    }
-
-                    @Override
-                    public void onSubscribe1(Disposable d) {
-                        compositeDisposable.add(d);
-                    }
-                });
     }
 
 
@@ -122,7 +79,6 @@ public class DeviceDetailPresenter<T> extends BleLockDetailPresenter<IDeviceDeta
                          * 0 0 1 1 0 0 0 1
                          */
                         LogUtils.e("门锁功能  第一个字节  " + Integer.toBinaryString(deValue[0] & 0xff) + "   第二个字节  " + Integer.toBinaryString(deValue[1] & 0xff));
-
                         //解析锁功能
                         int lockFun0 = deValue[0];
                         int lockFun1 = deValue[1];
@@ -139,7 +95,7 @@ public class DeviceDetailPresenter<T> extends BleLockDetailPresenter<IDeviceDeta
                         int state6 = (lockState & 0b01000000) == 0b01000000 ? 1 : 0;
                         int state7 = (lockState & 0b10000000) == 0b10000000 ? 1 : 0;  //手动模式/自动模式
                         int state8 = (deValue[5] & 0b00000001) == 0b00000001 ? 1 : 0;
-                        LogUtils.e("布防状态为   " + state8 + "  第五个字节数据为 " + Integer.toBinaryString((deValue[5] & 0xff))
+                        LogUtils.e("设备详情   布防状态为   " + state8 + "  第五个字节数据为 " + Integer.toBinaryString((deValue[5] & 0xff))
                                 + "安全模式状态   " + state5 + "  反锁模式    " + state2);
                         int voice = deValue[8] & 0xff;  //是否是静音模式 0静音  1有声音
                         String lang = new String(new byte[]{deValue[9], deValue[10]});  //语言设置
@@ -156,12 +112,17 @@ public class DeviceDetailPresenter<T> extends BleLockDetailPresenter<IDeviceDeta
                             bleLockInfo.setBackLock(state2);
                         }
 
+
                         if (bleLockInfo.getBattery() == -1) {   //没有获取过再重新获取   获取到电量  那么
                             bleLockInfo.setBattery(battery);
                             bleLockInfo.setReadBatteryTime(System.currentTimeMillis());
                             if (mViewRef.get() != null) {
                                 mViewRef.get().onElectricUpdata(battery);
                             }
+                        }
+
+                        if (mViewRef.get() != null) {
+                            mViewRef.get().onDeviceInfoLoaded();
                         }
                         bleLockInfo.setLang(lang);
                         bleLockInfo.setVoice(voice);
@@ -171,9 +132,6 @@ public class DeviceDetailPresenter<T> extends BleLockDetailPresenter<IDeviceDeta
 
                         LogUtils.e("锁上时间为    " + lockTime);
                         toDisposable(getDeviceInfoDisposable);
-
-                        //如果获取锁信息成功，那么直接获取开锁次数
-
                     }
                 }, new Consumer<Throwable>() {
                     @Override
@@ -187,38 +145,58 @@ public class DeviceDetailPresenter<T> extends BleLockDetailPresenter<IDeviceDeta
     @Override
     public void attachView(IDeviceDetailView view) {
         super.attachView(view);
-        compositeDisposable.add(MyApplication.getInstance().passwordChangeListener()
-                .subscribe(new Consumer<Boolean>() {
-                    @Override
-                    public void accept(Boolean aBoolean) throws Exception {
-                        getAllPassword(bleLockInfo);
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-
-                    }
-                }));
-
-        toDisposable(deviceStateChangeDisposable);
-        //通知界面更新显示设备状态
-        deviceStateChangeDisposable = bleService.listenerDeviceStateChange()
-                .compose(RxjavaHelper.observeOnMainThread())
-                .subscribe(new Consumer<BleDataBean>() {
-                    @Override
-                    public void accept(BleDataBean bleDataBean) throws Exception {
-                        if (mViewRef.get() != null) {   //通知界面更新显示设备状态
-//                            mViewRef.get().onStateUpdate(-1);
+        if (bleService != null) {
+            LogUtils.e("监听锁状态  111111");
+            toDisposable(warringDisposable);
+            warringDisposable = bleService.listeneDataChange()
+                    .filter(new Predicate<BleDataBean>() {
+                        @Override
+                        public boolean test(BleDataBean bleDataBean) throws Exception {
+                            LogUtils.e("收到上报   " + Rsa.bytesToHexString(bleDataBean.getOriginalData()) + "   "+(bleDataBean.getCmd() == 0x07) );
+                            return bleDataBean.getCmd() == 0x07;
                         }
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        LogUtils.e("监听设备状态改变出错   " + throwable.toString());
-                    }
-                });
-        compositeDisposable.add(deviceStateChangeDisposable);
+                    })
+                    .compose(RxjavaHelper.observeOnMainThread())
+                    .subscribe(new Consumer<BleDataBean>() {
+                        @Override
+                        public void accept(BleDataBean bleDataBean) throws Exception {
+                            LogUtils.e("收到报警   234234234");
+                            getDeviceInfo();
+                        }
+                    }, new Consumer<Throwable>() {
+                        @Override
+                        public void accept(Throwable throwable) throws Exception {
 
+                        }
+                    });
+            compositeDisposable.add(warringDisposable);
+
+            toDisposable(upLockDisposable);
+            upLockDisposable = bleService.listeneDataChange()
+                    .filter(new Predicate<BleDataBean>() {
+                        @Override
+                        public boolean test(BleDataBean bleDataBean) throws Exception {
+                            return bleDataBean.getCmd() == 0x05;
+                        }
+                    })
+                    .compose(RxjavaHelper.observeOnMainThread())
+                    .subscribe(new Consumer<BleDataBean>() {
+                        @Override
+                        public void accept(BleDataBean bleDataBean) throws Exception {
+                            if (MyApplication.getInstance().getBleService().getBleLockInfo().getAuthKey() == null || MyApplication.getInstance().getBleService().getBleLockInfo().getAuthKey().length == 0) {
+                                LogUtils.e("收到锁状态改变，但是鉴权帧为空");
+                                return;
+                            }
+                            getDeviceInfo();
+                        }
+                    }, new Consumer<Throwable>() {
+                        @Override
+                        public void accept(Throwable throwable) throws Exception {
+
+                        }
+                    });
+            compositeDisposable.add(upLockDisposable);
+        }
     }
 
 
