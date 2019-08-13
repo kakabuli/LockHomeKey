@@ -47,6 +47,7 @@ import android.provider.Settings;
 import android.provider.Settings.SettingNotFoundException;
 import android.telephony.TelephonyManager;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
@@ -728,6 +729,40 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
         } catch (Exception e) {
             Log.e("linphoneManager", e.toString() + "Cannot start linphone");
         }
+    }
+
+    public void startTime(){
+        if(mTimer!=null){
+            mTimer.cancel();
+            mTimer=null;
+        }
+        TimerTask lTask = new TimerTask() {
+            @Override
+            public void run() {
+                UIThreadDispatcher.dispatch(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (mLc != null) {
+                            //最为关键的主循环方法，应用程序应该经常调用它，因为它在后台会完成多件事情，
+                            // 如接收SIP指令，注册，认证，超时检测等，它必须要运行在LihpnoCore其它的方法所运行的线程里，
+                            // 说白了就是要保证LinphoneCore的方法运行在一至的线程里，不然就出错了。
+                            try{
+                                //   Log.e(GeTui.VideoLog,"LinphoneManager...itrator..");
+                                // MyLog.getInstance().save("LinphoneManager....itrator....");
+                            //    Toast.makeText(MyApplication.getInstance(),"重新启动",Toast.LENGTH_LONG).show();
+                                mLc.iterate();
+                            }catch (Exception e){
+                                Log.e(GeTui.VideoLog,"LinphoneManager exception:"+e.getMessage());
+                                MyLog.getInstance().save("LinphoneManager exception:"+e.getMessage());
+                            }
+                        }
+                    }
+                });
+            }
+        };
+            /*use schedule instead of scheduleAtFixedRate to avoid iterate from being call in burst after cpu wake up*/
+        mTimer = new Timer("Linphone scheduler");
+        mTimer.schedule(lTask, 0, 20);
     }
 
     private void initPushNotificationsService() {

@@ -74,18 +74,23 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.ViewHo
     public void onBindViewHolder(ViewHolder holder, final int position) {
         GwLockInfo gwLockInfo = data.get(position);
         Log.e("denganzhi1","positon:"+position+"isscroll:"+isScroll);
-
+        Log.e("denganzhi1","presenter:"+presenter.isConnectedEye+" gwLockInfo:"+gwLockInfo.getServerInfo().getEvent_str());
          if(!isScroll){ // 第一次进来
              //除了第二个显示正常，其他的都显示透明
              if(position==1){
                  //已经滑动
                  if(!presenter.isConnectedEye){
-                     // 未呼通
+                     // 未呼通, 设备不在线
                      Glide.with(holder.itemView.getContext())
                              .load(R.mipmap.video_no_online)
                              .into(holder.imageView);
                      holder.textView.setTextColor(Color.parseColor("#ABABAB"));
-                 }  else {
+                 } else if(gwLockInfo.getServerInfo().getEvent_str().equals("offline")){
+                     Glide.with(holder.itemView.getContext())
+                             .load(R.mipmap.video_no_online)
+                             .into(holder.imageView);
+                     holder.textView.setTextColor(Color.parseColor("#ABABAB"));
+                 } else {
                      // 已呼通
                      Glide.with(holder.itemView.getContext())
                              .load(R.mipmap.lock_on_select)
@@ -98,6 +103,11 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.ViewHo
                              .load(R.mipmap.video_no_online_small)
                              .into(holder.imageView);
                      holder.textView.setTextColor(Color.parseColor("#8CABABAB"));
+                 }else if(gwLockInfo.getServerInfo().getEvent_str().equals("offline")){
+                     Glide.with(holder.itemView.getContext())
+                             .load(R.mipmap.video_no_online)
+                             .into(holder.imageView);
+                     holder.textView.setTextColor(Color.parseColor("#ABABAB"));
                  }else {
                      Glide.with(context)
                              .load(R.mipmap.lock_on_select)
@@ -108,13 +118,18 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.ViewHo
 
          }else {
               // 已经滑动了刷新
-             if(!presenter.isConnectedEye){
+             if(!presenter.isConnectedEye ){
                  // 未呼通
                  Glide.with(holder.itemView.getContext())
                          .load(R.mipmap.video_no_online)
                          .into(holder.imageView);
                  holder.textView.setTextColor(Color.parseColor("#ABABAB"));
-             }  else {
+             } else if(gwLockInfo.getServerInfo().getEvent_str().equals("offline")){
+                 Glide.with(holder.itemView.getContext())
+                         .load(R.mipmap.video_no_online)
+                         .into(holder.imageView);
+                 holder.textView.setTextColor(Color.parseColor("#ABABAB"));
+             } else {
                  // 已呼通
                  Glide.with(holder.itemView.getContext())
                          .load(R.mipmap.lock_on_select)
@@ -155,9 +170,10 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.ViewHo
 
         }
 
-        public void showText() {
+        public void showText(int position) {
+            GwLockInfo gwLockInfo = data.get(position);
             isScroll=true;
-            if(!presenter.isConnectedEye){  //未呼通
+            if(!presenter.isConnectedEye || gwLockInfo.getServerInfo().getEvent_str().equals("offline")){  //未呼通
                 Glide.with(context)
                         .load(R.mipmap.video_no_online)
                         .into(imageView);
@@ -171,9 +187,10 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.ViewHo
 
         }
 
-        public void hideText() {
+        public void hideText(int position) {
+            GwLockInfo gwLockInfo = data.get(position);
             isScroll=true;
-            if(!presenter.isConnectedEye){  //未呼通
+            if(!presenter.isConnectedEye || gwLockInfo.getServerInfo().getEvent_str().equals("offline")){  //未呼通
                 Glide.with(context)
                         .load(R.mipmap.video_no_online_small)
                         .into(imageView);
@@ -188,8 +205,6 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.ViewHo
             imageView.animate().scaleX(1f).scaleY(1f)
                     .setDuration(200)
                     .start();
-
-
         }
     }
 }

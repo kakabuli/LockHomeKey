@@ -36,6 +36,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
+import android.os.PowerManager;
 import android.os.SystemClock;
 import android.provider.ContactsContract;
 import android.view.WindowManager;
@@ -263,12 +264,16 @@ public final class LinphoneService extends Service {
     public boolean displayServiceNotification() {
         return LinphonePreferences.instance().getServiceNotificationVisibility();
     }
-
+    PowerManager.WakeLock wakeLock=null;
 
     @SuppressWarnings("unchecked")
     @Override
     public void onCreate() {
         super.onCreate();
+        //保持cpu唤醒状态以使得service继续运行。
+        PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+        wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, LinphoneService.class.getName());
+        wakeLock.acquire();
     }
 
     @Override
@@ -312,6 +317,13 @@ public final class LinphoneService extends Service {
 
         if (LinphoneManager.getInstance() == null) {
             mLinphoneManager = new LinphoneManager(LinphoneService.this);
+           // Toast.makeText(LinphoneService.this,"重新启动",Toast.LENGTH_LONG).show();
+        }else {
+         //   Toast.makeText(LinphoneService.this,"no启动:"+VideoVActivity.isRunning,Toast.LENGTH_LONG).show();
+            if(VideoVActivity.isRunning){
+                LinphoneManager.getInstance().startTime();
+            }
+
         }
 
         instance = this; // instance is ready once linphone manager has been created
@@ -688,6 +700,11 @@ public final class LinphoneService extends Service {
 
         instance = null;
         LinphoneManager.destroy();
+
+        if (wakeLock != null) {
+            wakeLock.release();
+            wakeLock = null;
+        }
 
         System.exit(0);
 

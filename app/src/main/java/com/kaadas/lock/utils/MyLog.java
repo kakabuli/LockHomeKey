@@ -21,8 +21,8 @@ public class MyLog {
 
     private static MyLog instance;
     Date now = new Date(); //获取当前时间
-    SimpleDateFormat simpleDateFormat1=new SimpleDateFormat("YYYY年MM月dd");// "yyyy-MM-dd HH:mm:ss.fff"
-    SimpleDateFormat simpleDateFormat2=new SimpleDateFormat("YYYY--MM--dd HH:mm:ss.SSS");// "yyyy-MM-dd HH:mm:ss.fff"
+    SimpleDateFormat simpleDateFormat1=new SimpleDateFormat("yyyy年MM月dd");// "yyyy-MM-dd HH:mm:ss.fff"
+    SimpleDateFormat simpleDateFormat2=new SimpleDateFormat("yyyy--MM--dd HH:mm:ss.SSS");// "yyyy-MM-dd HH:mm:ss.fff"
 
     String newFileTime=null;
     String writeFileTime=null;
