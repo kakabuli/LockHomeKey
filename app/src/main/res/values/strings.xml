@@ -1005,7 +1005,6 @@
     <string name="wifi_alreade_offline">设备不在线</string>
     <string name="enter_feedback">请输入反馈信息</string>
     <string name="standard_password_door">标准密码开门</string>
-    <string name="app_open_lock">APP开门</string>
     <string name="admin_open_lock">管理密码开门</string>
     <string name="visitor_opne_lock">访客密码开门</string>
     <string name="disposable_open_lock">一次性开门</string>
@@ -1046,7 +1045,7 @@
     <string name="voice_open">语音开锁</string>
     <string name="finger_vein_open">静脉开锁</string>
     <string name="face_recognition_open">人脸开锁</string>
-    <string name="app_open">App开锁</string>
+    <string name="app_open">手机开锁</string>
     <string name="one_key_open">一键开启开锁</string>
     <string name="unknown_open">不确定</string>
     <string name="input_passwords">输入密码</string>

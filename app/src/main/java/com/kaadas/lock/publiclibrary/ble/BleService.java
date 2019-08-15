@@ -333,7 +333,7 @@ public class BleService extends Service {
             //符合要求的设备
             if (device.getName().startsWith("Bootloader")
                     || device.getName().contains("KDS")
-//                    || device.getName().contains("NIKE")
+//                    || device.getName().contains("XK")
                     || device.getName().contains("KdsLock")) {
                 deviceScanSubject.onNext(device);
             }

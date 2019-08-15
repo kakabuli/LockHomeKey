@@ -27,7 +27,6 @@ import java.util.List;
  */
 public class BleUtil {
 
-    private Handler handler = new Handler(Looper.getMainLooper());
 
     public static final String PASSWORD = "密码";
     public static final String RF = "遥控";
@@ -488,10 +487,10 @@ public class BleUtil {
                 openType = "密码修改(不支持)";
                 break;
             case 5:
-                openType = "RFID添加";
+                openType = "卡片添加";
                 break;
             case 6:
-                openType = "RFID删除";
+                openType = "卡片删除";
                 break;
             case 7:
                 openType = FINGERPRINT_ADD;

@@ -73,12 +73,10 @@ public class OperationRecordAdapter extends BaseSectionQuickAdapter<OperationSec
         }else if (2==eventType){
             tvTime.setText(item.t.getEventTime());
             //todo 操作记录类型
-            String operationEventSourceContent = BleUtil.getOperationEventSourceContent(eventSource);
             String operationProgramContent = BleUtil.getOperationProgramContent(eventCode);
             tvName.setText(operationProgramContent);
             tvType.setText(operationProgramContent);
             int userId = Integer.parseInt(userNum);
-            int type=-1;
             switch (eventCode){
                 case 2:
                     switch (userId){

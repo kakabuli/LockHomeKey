@@ -355,7 +355,7 @@ public class P6OtaUpgradeActivity extends BaseAddToApplicationActivity implement
 
     private void otaSuccess() {
         mutiProgress.setCurrNodeNO(3, true);
-        AlertDialogUtil.getInstance().noEditSingleButtonDialog(this, getString(R.string.good_for_you), getString(R.string.ota_good_for_you), getString(R.string.hao_de), new AlertDialogUtil.ClickListener() {
+        AlertDialogUtil.getInstance().noEditSingleCanNotDismissButtonDialog(this, getString(R.string.good_for_you), getString(R.string.ota_good_for_you), getString(R.string.hao_de), new AlertDialogUtil.ClickListener() {
             @Override
             public void left() {
                 finish();
