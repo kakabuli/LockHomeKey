@@ -56,7 +56,8 @@ public class FingerprintManagerPresenter<T> extends BlePresenter<IFingerprintMan
                 return true;
             }
         }
-        bleService.release();
+        LogUtils.e("判断如果没有鉴权成功   断开连接  不鉴权了");
+        bleService.release();  //判断如果没有鉴权成功   断开连接  不鉴权了
         return false;
     }
 

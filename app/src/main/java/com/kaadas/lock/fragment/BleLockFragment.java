@@ -294,11 +294,11 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
                 } else {
                     LogUtils.e("切换到当前界面  设备11  isdestroy  " + isDestroy + this + isCurrentFragment);
                     //切换到当前页面
-                    if (!mPresenter.isAttach() && !isDestroy) {
-                        LogUtils.e("attachView   1");
-                        mPresenter.attachView(BleLockFragment.this);
-                    }
                     if (isCurrentFragment && !isDestroy) {
+                        if (!mPresenter.isAttach()  ) {
+                            LogUtils.e("attachView   1");
+                            mPresenter.attachView(BleLockFragment.this);
+                        }
                         LogUtils.e("setBleLockInfo    55   "+bleLockInfo.getServerLockInfo().getLockNickName());
                         mPresenter.setBleLockInfo(bleLockInfo);
                         lockRunnable.run();

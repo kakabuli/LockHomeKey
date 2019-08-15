@@ -263,7 +263,8 @@ public class OldDeviceInfoActivity extends BaseBleActivity<IOldDeviceInfoView, O
                         SPUtils.put(KeyConstants.DEVICE_SN + bleLockInfo.getServerLockInfo().getMacLock(), sn);  //Key
                         SPUtils.put(KeyConstants.BLE_VERSION + bleLockInfo.getServerLockInfo().getMacLock(), version); //Key
                         LogUtils.e("升级的版本信息是   " + sn + "   下载链接是   " + updateFileInfo.getFileUrl());
-                        MyApplication.getInstance().getBleService().release();
+                        LogUtils.e("OTA  升级  断开连接");
+                        MyApplication.getInstance().getBleService().release();  //  OTA  升级  断开连接
                         Intent intent = new Intent();
                         intent.putExtra(OtaConstants.bindUrl, updateFileInfo.getFileUrl());
                         intent.putExtra(OtaConstants.deviceMac, bleLockInfo.getServerLockInfo().getMacLock()); //Key

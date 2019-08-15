@@ -526,7 +526,9 @@ public class BleDetailActivity extends BaseBleActivity<IDeviceDetailView, Device
     @Override
     public void onDeviceInfoLoaded() {
         LogUtils.e("获取到设备信息");
-        lockRunnable.run();
+        if (!isOpening){
+            lockRunnable.run();
+        }
     }
 
     @Override

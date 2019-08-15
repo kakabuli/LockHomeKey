@@ -376,7 +376,8 @@ public class MyApplication extends Application {
         }
         //清除内存中缓存的数据
         if (bleService!=null){
-            bleService.release();
+            LogUtils.e("token过期   断开连接  ");
+            bleService.release();  //token过期   断开连接
             bleService.removeBleLockInfo();
         }
         homeShowDevices.clear();

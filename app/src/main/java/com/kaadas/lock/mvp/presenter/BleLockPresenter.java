@@ -348,53 +348,6 @@ public class BleLockPresenter<T> extends MyOpenLockRecordPresenter<IBleLockView>
                 });
         compositeDisposable.add(warringDisposable);
 
-
-        toDisposable(upLockDisposable);
-        upLockDisposable = bleService.listeneDataChange()
-                .filter(new Predicate<BleDataBean>() {
-                    @Override
-                    public boolean test(BleDataBean bleDataBean) throws Exception {
-                        return bleDataBean.getCmd() == 0x05;
-                    }
-                })
-                .compose(RxjavaHelper.observeOnMainThread())
-                .subscribe(new Consumer<BleDataBean>() {
-                    @Override
-                    public void accept(BleDataBean bleDataBean) throws Exception {
-                        if (MyApplication.getInstance().getBleService().getBleLockInfo().getAuthKey() == null || MyApplication.getInstance().getBleService().getBleLockInfo().getAuthKey().length == 0) {
-                            LogUtils.e("收到锁状态改变，但是鉴权帧为空");
-                            return;
-                        }
-                        byte[] deValue = Rsa.decrypt(bleDataBean.getPayload(), MyApplication.getInstance().getBleService().getBleLockInfo().getAuthKey());
-                        LogUtils.e("锁状态改变   " + Rsa.bytesToHexString(deValue));
-                        int value0 = deValue[0] & 0xff;
-                        int value1 = deValue[1] & 0xff;
-                        int value2 = deValue[2] & 0xff;
-                        if (value0 == 1) {  //上锁
-                            if (value2 == 1) {
-                                LogUtils.e("上锁成功  ");
-                                if (mViewRef != null && mViewRef.get() != null) {
-                                    mViewRef.get().onLockLock();
-                                }
-                                getOpenLockNumber();
-                            } else if (value2 == 2) {   //开锁
-                                LogUtils.e("开锁成功   " + Rsa.bytesToHexString(bleDataBean.getPayload()));
-                                if (mViewRef != null && mViewRef.get() != null) {
-                                    mViewRef.get().openLockSuccess();
-                                }
-                                getOpenLockNumber();
-                            }
-                        }
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-
-                    }
-                });
-        compositeDisposable.add(upLockDisposable);
-
-
         toDisposable(deviceStateChangeDisposable);
         deviceStateChangeDisposable = bleService.listenerDeviceStateChange()
                 .compose(RxjavaHelper.observeOnMainThread())
@@ -424,14 +377,13 @@ public class BleLockPresenter<T> extends MyOpenLockRecordPresenter<IBleLockView>
                     @Override
                     public void accept(Boolean isFailed) throws Exception {
                         if (mViewRef.get() != null) {   //通知界面更新显示设备状态
-                            LogUtils.e("收到服务返回的设备更新回调2222");
+                            LogUtils.e("收到鉴权失败的回调    2222  ");
                             mViewRef.get().onAuthFailed(isFailed);
                         }
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-
 
                     }
                 });

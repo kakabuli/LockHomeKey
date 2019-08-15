@@ -78,8 +78,8 @@ public class OTADialogActivity extends BaseActivity<IOtaView, OtaPresenter<IOtaV
 
                 mPresenter.checkOtaInfo(sn,version);
 //                mPresenter.checkOtaInfo("K901192210013","1.01.007");
-
-                MyApplication.getInstance().getBleService().release();
+                LogUtils.e("OTA  升级  断开连接");
+                MyApplication.getInstance().getBleService().release();  // OTA  升级  断开连接"
 
 
             }
@@ -133,7 +133,8 @@ public class OTADialogActivity extends BaseActivity<IOtaView, OtaPresenter<IOtaV
 
     @Override
     public void onGetOtaInfoSuccess(OTAResult.UpdateFileInfo updateFileInfo) {
-        MyApplication.getInstance().getBleService().release();
+        LogUtils.e("OTA  升级  断开连接");
+        MyApplication.getInstance().getBleService().release();                //  LogUtils.e("OTA  升级  断开连接");
         LogUtils.e("下载链接是   " +updateFileInfo.getFileUrl() );
         Intent intent = new Intent();
         intent.putExtra(OtaConstants.bindUrl, updateFileInfo.getFileUrl());

@@ -833,7 +833,8 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
         super.detachView();
         LinphoneHelper.deleteUser();
         if (bleService!=null){
-            bleService.release();
+            LogUtils.e("MainActivity 退出界面   斷開連接");
+            bleService.release();  //MainActivity 退出界面   斷開連接
         }
         handler.removeCallbacksAndMessages(null);
     }

@@ -145,16 +145,7 @@ public class OldBleLockFragment extends BaseBleFragment<IOldBleLockView, OldBleL
     public void onResume() {
         super.onResume();
         isDestroy = false;
-//        if (!mPresenter.isAttach() && !isDestroy && homeFragment.isSelectHome && isCurrentFragment) {
-//            mPresenter.attachView(this);
-//            mPresenter.setBleLockInfo(bleLockInfo);
-//            if (bleLockInfo != null && bleLockInfo.isConnected()) {
-//                changeOpenLockStatus(8);
-//            }
-//        }
-
         if (!isDestroy) {
-
             if (isCurrentFragment && homeFragment.isSelectHome) {
                 if (!mPresenter.isAttach()) {
                     mPresenter.attachView(OldBleLockFragment.this);
@@ -192,11 +183,10 @@ public class OldBleLockFragment extends BaseBleFragment<IOldBleLockView, OldBleL
                     LogUtils.e("切换到当前界面  设备22  isdestroy  " + isDestroy + this + isCurrentFragment);
                     //切换到当前页面
                     if (!isDestroy) {
-                        if (!mPresenter.isAttach()) {
-                            mPresenter.attachView(OldBleLockFragment.this);
-                        }
                         if (isCurrentFragment) {
-
+                            if (!mPresenter.isAttach()) {
+                                mPresenter.attachView(OldBleLockFragment.this);
+                            }
                             LogUtils.e("setBleLockInfo   34352   "+bleLockInfo.getServerLockInfo().getLockNickName());
                             mPresenter.setBleLockInfo(bleLockInfo);
                             boolean auth = mPresenter.isAuth(bleLockInfo, true);

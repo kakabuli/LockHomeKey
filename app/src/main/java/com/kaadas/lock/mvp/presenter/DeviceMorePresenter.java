@@ -64,7 +64,8 @@ public class DeviceMorePresenter extends BlePresenter<IDeviceMoreView> {
                         MyApplication.getInstance().getAllDevicesByMqtt(true);
 
                         //通知homeFragment  和  device刷新界面
-                        bleService.release();
+                        LogUtils.e("删除设备  断开连接");
+                        bleService.release();  //删除设备  断开连接
 //                        MyApplication.getInstance().deleteDevice(deviceName);
                         bleService.removeBleLockInfo();
                         ///删除缓存的消息
@@ -314,9 +315,7 @@ public class DeviceMorePresenter extends BlePresenter<IDeviceMoreView> {
         compositeDisposable.add(autoLockDisposable);
     }
 
-    public void release() {
-        bleService.release();
-    }
+
 
     public void readSerialNumber() {
         toDisposable(readSerialNumberDisposable);

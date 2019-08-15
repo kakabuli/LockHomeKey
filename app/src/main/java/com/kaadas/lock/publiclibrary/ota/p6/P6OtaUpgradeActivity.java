@@ -426,8 +426,8 @@ public class P6OtaUpgradeActivity extends BaseAddToApplicationActivity implement
             ToastUtil.getInstance().showLong(getString(R.string.check_phone_not_open_gps_please_open));
             return;
         }
-
-        MyApplication.getInstance().getBleService().release();
+        LogUtils.e("OTA  升级  断开连接");
+        MyApplication.getInstance().getBleService().release();  //                LogUtils.e("OTA  升级  断开连接");
         BluetoothLeService.disconnect();
         ScanSettings scanSettings = new ScanSettings.Builder().setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY).build();
         bluetoothLeScanner.startScan(null, scanSettings, newScanBleCallback);

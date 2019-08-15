@@ -1,13 +1,9 @@
 package com.kaadas.lock.mvp.presenter;
 
-import android.os.Message;
-import android.text.TextUtils;
-import android.util.Log;
 
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.mvp.view.IOldBleLockView;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
-import com.kaadas.lock.publiclibrary.ble.BleCommandFactory;
 import com.kaadas.lock.publiclibrary.ble.BleProtocolFailedException;
 import com.kaadas.lock.publiclibrary.ble.BleUtil;
 import com.kaadas.lock.publiclibrary.ble.OldBleCommandFactory;
@@ -18,23 +14,14 @@ import com.kaadas.lock.publiclibrary.ble.responsebean.ReadInfoBean;
 import com.kaadas.lock.publiclibrary.http.XiaokaiNewServiceImp;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.result.LockRecordResult;
-import com.kaadas.lock.publiclibrary.http.result.ServerBleDevice;
 import com.kaadas.lock.publiclibrary.http.util.BaseObserver;
-import com.kaadas.lock.publiclibrary.http.util.OtherException;
 import com.kaadas.lock.publiclibrary.http.util.RxjavaHelper;
-import com.kaadas.lock.utils.BleLockUtils;
-import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
-import com.kaadas.lock.utils.NetUtil;
 import com.kaadas.lock.utils.Rsa;
-import com.kaadas.lock.utils.SPUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
-import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
@@ -121,50 +108,6 @@ public class OldBleLockPresenter<T> extends MyOldOpenLockRecordPresenter<IOldBle
         if (bleService == null) {
             return;
         }
-        toDisposable(upLockDisposable);
-        upLockDisposable = bleService.listeneDataChange()
-                .filter(new Predicate<BleDataBean>() {
-                    @Override
-                    public boolean test(BleDataBean bleDataBean) throws Exception {
-                        return bleDataBean.getCmd() == 0x05;
-                    }
-                })
-                .compose(RxjavaHelper.observeOnMainThread())
-                .subscribe(new Consumer<BleDataBean>() {
-                    @Override
-                    public void accept(BleDataBean bleDataBean) throws Exception {
-                        if (!MyApplication.getInstance().getBleService().getBleLockInfo().isAuth() || MyApplication.getInstance().getBleService().getBleLockInfo().getAuthKey() == null || MyApplication.getInstance().getBleService().getBleLockInfo().getAuthKey().length == 0) {
-                            LogUtils.e("收到锁状态改变，但是鉴权帧为空");
-                            return;
-                        }
-                        byte[] deValue = Rsa.decrypt(bleDataBean.getPayload(), MyApplication.getInstance().getBleService().getBleLockInfo().getAuthKey());
-                        LogUtils.e("锁状态改变   " + Rsa.bytesToHexString(deValue));
-                        int value0 = deValue[0] & 0xff;
-                        int value1 = deValue[1] & 0xff;
-                        int value2 = deValue[2] & 0xff;
-                        if (value0 == 1) {  //上锁
-                            if (value2 == 1) {
-                                LogUtils.e("上锁成功  ");
-                                if (mViewRef != null && mViewRef.get() != null) {
-                                    mViewRef.get().onLockLock();
-                                }
-                            } else if (value2 == 2) {   //开锁
-                                LogUtils.e("开锁成功111   " + Rsa.bytesToHexString(bleDataBean.getPayload()));
-                                if (mViewRef != null && mViewRef.get() != null) {
-                                    mViewRef.get().openLockSuccess();
-                                }
-                            }
-                        }
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-
-                    }
-                });
-        compositeDisposable.add(upLockDisposable);
-
-
         //通知界面更新显示设备状态
         listenAuthFailedDisposable = bleService.listenerAuthFailed()
                 .compose(RxjavaHelper.observeOnMainThread())

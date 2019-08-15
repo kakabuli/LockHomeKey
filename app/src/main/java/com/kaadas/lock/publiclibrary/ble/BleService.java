@@ -204,6 +204,7 @@ public class BleService extends Service {
                 if (!isConnected) {
                     //没有发现服务的回调。
                     notDiscoverService.onNext(true);
+                    LogUtils.e("10秒没有发现服务   断开连接");
                     release();  //10秒没有发现服务
                 }
             }
@@ -397,6 +398,7 @@ public class BleService extends Service {
      * 连接设备
      */
     public PublishSubject<Boolean> connectDeviceByDevice(final BluetoothDevice device) {
+        LogUtils.e(" //连接设备之前先断开连接   初始化数据    ");
         release();  //连接设备之前先断开连接   初始化数据
         currentDevice = device;
         bluetoothGatt = currentDevice.connectGatt(BleService.this, false, bluetoothGattCallback);
@@ -420,10 +422,10 @@ public class BleService extends Service {
                 handler.postDelayed(notDiscoverServerReleaseRunnbale, 10 * 1000);
             } else if (newState == BluetoothGatt.STATE_DISCONNECTED) { //断开连接
                 //断开连接  有时候是用户断开的  有时候是异常断开。
-                LogUtils.e("断开连接  ");
+                LogUtils.e("断开连接   系统断开连接");
                 isConnected = false;
                 connectStateSubject.onNext(new BleStateBean(false, gatt == null ? null : gatt.getDevice(), -1));
-                release(); //断开连接，初始化数据
+                release(); //系统断开连接，初始化数据
             }
         }
 
@@ -441,7 +443,8 @@ public class BleService extends Service {
                 handler.removeCallbacks(notDiscoverServerReleaseRunnbale);  //清除
                 discoverCharacteristic(gatt);
             } else {
-                release();
+                LogUtils.e("发现服务个数为0  断开连接    "  );
+                release();  // 发现服务个数为0  断开连接
             }
         }
 
@@ -794,6 +797,7 @@ public class BleService extends Service {
         //
         tiotaService = gatt.getService(UUID.fromString(BLeConstants.TI_OAD_SERVICE));
         if (tiotaService != null) {  //OTA升级模式下的设备
+            LogUtils.e("OTA模式下  断开连接");
             release();  //OTA模式下  断开连接
             if (bleLockInfo != null) {
                 bleLockInfo.setBleType(1);
@@ -803,6 +807,7 @@ public class BleService extends Service {
         }
         p6otaService = gatt.getService(UUID.fromString(BLeConstants.P6_OAD_SERVICE));
         if (p6otaService != null) {
+            LogUtils.e("OTA模式下  断开连接");
             release(); //OTA模式下  断开连接
             if (bleLockInfo != null) {
                 bleLockInfo.setBleType(2);
@@ -893,12 +898,14 @@ public class BleService extends Service {
                     modeChar == null || lockTypeChar == null || hardwareVersionChar == null
                     || bleVersionChar == null || bleVersionChar == null
             )) {
-                release();
+                LogUtils.e("如果蓝牙版本是2或者3   但是需要使用的特征值为空   直接断开连接");
+                release();  //如果蓝牙版本是2或者3   但是需要使用的特征值为空   直接断开连接
                 return;
             }
             //如果服务器的版本大于读取到的版本号  而且当前版本号为1   断开连接
             if (iVersion > bleVersion && bleVersion == 1) {
-                release();
+                LogUtils.e("如果服务器的版本大于读取到的版本号  而且当前版本号为1   断开连接");
+                release();  //如果服务器的版本大于读取到的版本号  而且当前版本号为1   断开连接
                 return;
             }
 
@@ -912,7 +919,8 @@ public class BleService extends Service {
 
         //如果写入数据的特征值和通知的特征值为空  那么断开连接
         if (mWritableCharacter == null || notifyChar == null) {
-            release();
+            LogUtils.e("如果写入数据的特征值和通知的特征值为空  那么断开连接");
+            release();  //如果写入数据的特征值和通知的特征值为空  那么断开连接
             return;
         }
 
@@ -981,10 +989,10 @@ public class BleService extends Service {
                 return;
             }
             if (command[0] != 0x01) { //如果第一个字节不是1   那么不是确认帧就是透传模块的  透传模块数据   直接发送
-                LogUtils.e("当前数据为空   直接发送   发送队列数据   " + commands.size());
+//                LogUtils.e("当前数据为空   直接发送   发送队列数据   " + commands.size());
                 writeStack(command, 2);
             } else {
-                LogUtils.e("加入指令   " + Rsa.bytesToHexString(command) + "  已经等待的指令  " + getCommands(waitBackCommands) + "  当前等待的指令  " + (currentCommand == null ? "" : Rsa.bytesToHexString(currentCommand)));
+//                LogUtils.e("加入指令   " + Rsa.bytesToHexString(command) + "  已经等待的指令  " + getCommands(waitBackCommands) + "  当前等待的指令  " + (currentCommand == null ? "" : Rsa.bytesToHexString(currentCommand)));
                 if (waitBackCommands.size() >= 4) {
                     LogUtils.e("指令满了    ");
                     return;
@@ -1026,7 +1034,7 @@ public class BleService extends Service {
 
 
     private void writeStack(byte[] command, int position) {
-        LogUtils.e("当前指令   " + position + "   " + Rsa.bytesToHexString(command) + "    加入指令11111    " + getCommands(commands));
+//        LogUtils.e("当前指令   " + position + "   " + Rsa.bytesToHexString(command) + "    加入指令11111    " + getCommands(commands));
         if (!isConnected) {
             commands.clear();
             waitBackCommands.clear();
@@ -1077,7 +1085,7 @@ public class BleService extends Service {
         //此次发送数据的时间和上次发送数据的时间间隔  小于预定的时间间隔
         //将此命令添加进commands集合  再延时 离最小间隔时间的差发送
 
-        LogUtils.e("准备发送  " + Rsa.bytesToHexString(command) + "  等待发送的指令  " + getCommands(commands));
+//        LogUtils.e("准备发送  " + Rsa.bytesToHexString(command) + "  等待发送的指令  " + getCommands(commands));
         if ((System.currentTimeMillis() - lastSendTime >= 0)) {
             if (System.currentTimeMillis() - lastSendTime < sendInterval) {
                 handler.removeCallbacks(sendCommandRannble);
@@ -1109,12 +1117,12 @@ public class BleService extends Service {
                 }
                 LogUtils.e("发送数据11111    " + Rsa.bytesToHexString(command) + " isWrite: " + isWrite + "时间 " + System.currentTimeMillis());
             } else {
-                LogUtils.e("Ble 发送数据   Gatt为空");
-                release();  //此处为空  断开连接
+                LogUtils.e("Ble 发送数据  Gatt为空  断开连接 ");
+                release();  //Gatt为空  断开连接
             }
         } else {
-            LogUtils.e("Ble 发送数据   characteristic为空  bleService");
-            release(); //此处为空  断开连接
+            LogUtils.e("Ble 发送数据   characteristic为空  断开连接");
+            release(); //characteristic为空  断开连接
         }
     }
 
@@ -1161,7 +1169,8 @@ public class BleService extends Service {
             }
             handler.removeCallbacks(sendHeart);
             if (System.currentTimeMillis() - lastReceiveDataTime > 10 * 1000) {  //如果上次接收的数据大于现在超过10每秒   那么认为蓝牙已经断开连接
-                release();  //主动直接断开连接
+                LogUtils.e("上次接收的数据大于现在超过10每秒   那么认为蓝牙已经断开连接");
+                release();  //上次接收的数据大于现在超过10每秒   那么认为蓝牙已经断开连接
             }
             if (System.currentTimeMillis() - lastSendTime < 1000) { //如果上次发送的数据小于1秒  不再发送
                 handler.postDelayed(this, heartInterval);
@@ -1175,6 +1184,7 @@ public class BleService extends Service {
     private Runnable releaseRunnable = new Runnable() {
         @Override
         public void run() {
+            LogUtils.e("后台20秒断开连接");
             release();   //后台20秒断开连接
         }
     };

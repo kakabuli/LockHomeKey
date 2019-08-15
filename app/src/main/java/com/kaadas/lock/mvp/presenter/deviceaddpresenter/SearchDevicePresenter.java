@@ -72,7 +72,8 @@ public class SearchDevicePresenter<T> extends BasePresenter<ISearchDeviceView> {
                 mViewRef.get().loadDevices(devices);
             }
         }
-        bleService.release();  //1
+        LogUtils.e("搜索设备    断开连接");
+        bleService.release();  //搜索设备    断开连接
         handler.removeCallbacks(stopScanLe);
         handler.postDelayed(stopScanLe, 10 * 1000);
         disposable = bleService.scanBleDevice(true)  //1
@@ -133,7 +134,8 @@ public class SearchDevicePresenter<T> extends BasePresenter<ISearchDeviceView> {
         handler.removeCallbacks(stopScanLe);
         if (bleService != null) { //停止扫描设备
             bleService.scanBleDevice(false);  //1
-            bleService.release();  //2
+            LogUtils.e("点击绑定设备   断开连接" );
+            bleService.release();  //点击绑定设备   断开连接
             if (mViewRef != null) {
                 mViewRef.get().onStopScan();
             }
@@ -247,7 +249,8 @@ public class SearchDevicePresenter<T> extends BasePresenter<ISearchDeviceView> {
                     bleService = MyApplication.getInstance().getBleService();
                 }
             }
-            bleService.release();  //连接蓝牙时的延时断开蓝牙连接  1
+            LogUtils.e("搜索设备  连接蓝牙时的延时   断开连接");
+            bleService.release();  //搜索设备  连接蓝牙时的延时   断开连接  1
         }
     };
 
@@ -394,10 +397,10 @@ public class SearchDevicePresenter<T> extends BasePresenter<ISearchDeviceView> {
                             if (mViewRef.get() != null) {
 //                                mViewRef.get().getPwd1Success(pwd1, isBind,version,sn,mac,deviceName);
                                 if (bleService != null) {  //1
-                                    bleService.release(); //1
+                                    LogUtils.e("设备未经过产测   断开连接");
+                                    bleService.release(); //设备未经过产测   断开连接
                                 }
                                 mViewRef.get().notice419();
-
                             }
                             return;
                         } else {

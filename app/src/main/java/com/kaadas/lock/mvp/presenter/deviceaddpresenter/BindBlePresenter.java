@@ -425,6 +425,7 @@ public class BindBlePresenter<T> extends BasePresenter<IBindBleView> {
                             handler.postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
+                                    LogUtils.e("绑定成功   断开连接");
                                     bleService.release();//绑定蓝牙界面  15
                                     MyApplication.getInstance().getAllDevicesByMqtt(true);
                                 }
@@ -433,6 +434,7 @@ public class BindBlePresenter<T> extends BasePresenter<IBindBleView> {
                             if (mViewRef.get() != null) {
                                 mViewRef.get().onBindSuccess(deviceName);  //16
                             }
+                            LogUtils.e("绑定成功   断开连接");
                             bleService.release();//绑定蓝牙界面  //17
                             MyApplication.getInstance().getAllDevicesByMqtt(true);
                         }

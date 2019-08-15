@@ -191,7 +191,8 @@ public class OldAndAuthBleDetailPresenter<T> extends BlePresenter<IOldBleDetailV
                         SPUtils.remove(KeyConstants.SAVE_PWD_HEARD + bleLockInfo.getServerLockInfo().getMacLock()); //Key
 
                         //通知homeFragment  和  device刷新界面
-                        bleService.release();
+                        LogUtils.e("删除设备   断开连接");
+                        bleService.release();  //删除设备   断开连接
 //                        MyApplication.getInstance().deleteDevice(deviceName);
                         bleService.removeBleLockInfo();
 
