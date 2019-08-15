@@ -741,8 +741,8 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
                 mExitTime = System.currentTimeMillis();
             } else {
 //                MainActivity.this.finish();
-//                System.exit(0);
-                  moveTaskToBack(true);
+                   System.exit(0);
+           //       moveTaskToBack(true);
             }
             return true;
         }

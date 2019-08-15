@@ -201,6 +201,7 @@ public class AddZigbeeLockSuccessSaveActivity extends BaseActivity<AddZigbeeLock
     @Override
     public void updateDevNickNameThrowable(Throwable throwable) {
         LogUtils.e("修改名称出现异常" + throwable.getMessage());
+        ToastUtil.getInstance().showShort(R.string.update_nickname_exception);
     }
 
 

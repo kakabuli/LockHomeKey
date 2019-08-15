@@ -121,7 +121,7 @@
     <string name="exception">异常消息</string>
     <string name="phone_number_con_not_empty">手机号不能为空</string>
     <string name="find_newAPP">发现新版本，是否更新？</string>
-    <string name="token_out_date">账号在别处登录</string>
+    <string name="token_out_date">登录过期</string>
     <string name="register_success">注册成功</string>
     <string name="pwd_resetting_success">密码重置成功</string>
     <string name="my_device">我的设备</string>
@@ -838,7 +838,7 @@
     <string name="fingerprint_collect_success">号指纹采集成功</string>
     <string name="card_add_success">号卡添加成功</string>
     <string name="cate_sleep">猫眼已经休眠</string>
-    <string name="mainactivity_permission_alert_msg">请前往应用信息设置界面中打开通知开关，后台弹出界面开关,否则猫眼呼来电叫功能无法正常使用</string>
+    <string name="mainactivity_permission_alert_msg">请前往应用信息设置界面中打开允许通知开关，允许自动启动开关,否则猫眼呼来电叫功能无法正常使用</string>
     <string name="mainactivity_permission_alert_title">应用权限开关开启通知</string>
     <string name="no_unlock_record">暂无操作记录</string>
     <string name="connection_server">连接服务器失败,请检查网络退出该页面重新进去</string>
@@ -1184,4 +1184,5 @@
     <string name="warring_record_empty">报警记录为空</string>
     <string name="is_openning">正在开锁，请稍后再试...</string>
     <string name="finger_open">指纹解锁</string>
+    <string name="update_nickname_exception">设置名称异常</string>
 </resources>

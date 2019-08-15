@@ -529,6 +529,7 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
                     public void accept(MqttData mqttData) throws Exception {
                         toDisposable(wakeupDisposable);
                         Log.e(Tag, "唤醒猫眼:" + mqttData.toString());
+                    //    Toast.makeText(mContext,mqttData.toString(),Toast.LENGTH_LONG).show();
                         if ("200".equals(mqttData.getReturnCode())) {
                             LogUtils.e(Tag, "唤醒猫眼成功");
                             if (mViewRef != null && mViewRef.get() != null) {

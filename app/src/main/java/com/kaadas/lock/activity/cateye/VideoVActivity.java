@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -46,6 +47,7 @@ import com.kaadas.lock.publiclibrary.bean.GatewayInfo;
 import com.kaadas.lock.publiclibrary.bean.GwLockInfo;
 import com.kaadas.lock.publiclibrary.linphone.MemeManager;
 import com.kaadas.lock.publiclibrary.linphone.linphone.util.LinphoneHelper;
+import com.kaadas.lock.publiclibrary.linphone.linphonenew.LinphoneService;
 import com.kaadas.lock.publiclibrary.mqtt.eventbean.DeviceOnLineBean;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.KeyConstants;
@@ -574,14 +576,14 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
     public void onCurrentItemChanged(@Nullable ForecastAdapter.ViewHolder holder, int position) {
         selectPostion = position;
         if (holder != null) {
-            holder.showText();
+            holder.showText(position);
         }
     }
 
 
     @Override
     public void onScrollStart(@NonNull ForecastAdapter.ViewHolder holder, int position) {
-        holder.hideText();
+        holder.hideText(position);
     }
 
     @Override
@@ -846,6 +848,8 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
         //等待猫眼呼叫35秒  没有呼叫过来
         ToastUtil.getInstance().showShort(R.string.call_time_out);
         callFailed();
+        Intent linphoneServiceIntent = new Intent(this, LinphoneService.class);
+        startService(linphoneServiceIntent);
     }
 
     @Override
