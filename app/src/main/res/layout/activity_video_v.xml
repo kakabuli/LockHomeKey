@@ -353,7 +353,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-
             <com.yarolegovich.discretescrollview.DiscreteScrollView
                 android:id="@+id/forecast_city_picker"
                 android:layout_width="match_parent"

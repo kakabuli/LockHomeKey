@@ -313,8 +313,8 @@ public class MyApplication extends Application {
 //
 //            }
 //        }, Context.BIND_AUTO_CREATE);
-        Intent linphoneServiceIntent = new Intent(this, LinphoneService.class);
-        startService(linphoneServiceIntent);
+//        Intent linphoneServiceIntent = new Intent(this, LinphoneService.class);
+//        startService(linphoneServiceIntent);
     }
 
     public MqttService getMqttService() {

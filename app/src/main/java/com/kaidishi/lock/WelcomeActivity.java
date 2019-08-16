@@ -36,6 +36,7 @@ import com.kaadas.lock.utils.NetUtil;
 import com.kaadas.lock.utils.Rom;
 import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.SPUtils2;
+import com.kaadas.lock.utils.ServiceUtils;
 import com.kaadas.lock.utils.ToastUtil;
 import com.kaadas.lock.utils.cachefloder.ACache;
 import com.kaadas.lock.utils.cachefloder.CacheFloder;
@@ -251,12 +252,17 @@ public class WelcomeActivity extends BaseActivity<ISplashView, SplashPresenter<I
             startService(intent);
         }
 //        //启动linphoneService
-        Intent linphoneServiceIntent = new Intent(this, LinphoneService.class);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            startForegroundService(linphoneServiceIntent);
-        }else {
-            startService(intent);
+        boolean isService= ServiceUtils.isServiceRunning(WelcomeActivity.this,"com.kaadas.lock.publiclibrary.linphone.linphonenew.LinphoneService");
+        if(!isService){
+            Intent linphoneServiceIntent = new Intent(this, LinphoneService.class);
+            startService(linphoneServiceIntent);
         }
+ //       Intent linphoneServiceIntent = new Intent(this, LinphoneService.class);
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//            startForegroundService(linphoneServiceIntent);
+//        }else {
+//            startService(intent);
+//        }
     }
     final int timeout=20;
 

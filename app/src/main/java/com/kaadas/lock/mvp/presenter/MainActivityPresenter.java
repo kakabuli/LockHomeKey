@@ -488,7 +488,7 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                 public void registrationOk() {
                     super.registrationOk();
                       LogUtils.e("Linphone注册成功     ");
-                     MyLog.getInstance().save("Linphone注册成功     ");
+                   //  MyLog.getInstance().save("Linphone注册成功     ");
                      SPUtils.put(Constants.LINPHONE_REGESTER_STATE,true);
                 }
 
@@ -501,7 +501,7 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                 public void registrationFailed() {
                     super.registrationFailed();
                     LogUtils.e("Linphone注册失败     ");
-                    MyLog.getInstance().save("Linphone注册失败...");
+                 //   MyLog.getInstance().save("Linphone注册失败...");
                     SPUtils.put(Constants.LINPHONE_REGESTER_STATE,false);
                 }
             }, new PhoneCallback() {

@@ -93,6 +93,7 @@ public class DeviceDetailAdapter extends BaseQuickAdapter<HomeShowBean, BaseView
                         isWifiDevice(true, helper, gwLockInfo.getServerInfo().getEvent_str(), batteryView,gatewayLockPower);
                     }
                     helper.setImageResource(R.id.device_image, R.mipmap.default_zigbee_lock_icon);
+
                     batteryView.setPower(gatewayLockPower);
                     helper.setText(R.id.device_power_text, gatewayLockPower + "%");
                     if (!TextUtils.isEmpty(gwLockInfo.getServerInfo().getNickName())){

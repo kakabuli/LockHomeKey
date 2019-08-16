@@ -1066,7 +1066,7 @@
     <string name="vivo_market">vivo应用市场</string>
     <string name="isforce">请务必升级到最新版本</string>
     <string name="update_toast">版本%s已经发布</string>
-    <string name="video_destory_time">App准备中，请3秒后再试</string>
+    <string name="video_destory_time">App准备中，请5秒后再试</string>
     <string name="people">人</string>
     <string name="ri">日</string>
     <string name="warrning_open">防拆报警</string>
@@ -1185,4 +1185,6 @@
     <string name="is_openning">正在开锁，请稍后再试...</string>
     <string name="finger_open">指纹解锁</string>
     <string name="update_nickname_exception">设置名称异常</string>
+    <string name="network_exception_video">网路状态异常,请切换网络</string>
+    <string name="get_stress_list_success_no">锁上无胁迫密码</string>
 </resources>

@@ -46,19 +46,23 @@ import com.kaadas.lock.publiclibrary.bean.CateEyeInfo;
 import com.kaadas.lock.publiclibrary.bean.GatewayInfo;
 import com.kaadas.lock.publiclibrary.bean.GwLockInfo;
 import com.kaadas.lock.publiclibrary.linphone.MemeManager;
+import com.kaadas.lock.publiclibrary.linphone.linphone.VideoActivity;
 import com.kaadas.lock.publiclibrary.linphone.linphone.util.LinphoneHelper;
 import com.kaadas.lock.publiclibrary.linphone.linphonenew.LinphoneService;
 import com.kaadas.lock.publiclibrary.mqtt.eventbean.DeviceOnLineBean;
 import com.kaadas.lock.utils.AlertDialogUtil;
+import com.kaadas.lock.utils.Constants;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.MyLog;
 import com.kaadas.lock.utils.NetUtil;
 import com.kaadas.lock.utils.RecordTools;
 import com.kaadas.lock.utils.SPUtils;
+import com.kaadas.lock.utils.ServiceUtils;
 import com.kaadas.lock.utils.StringUtil;
 import com.kaadas.lock.utils.ToastUtil;
 import com.kaadas.lock.utils.ftp.GeTui;
+import com.kaidishi.lock.WelcomeActivity;
 import com.yarolegovich.discretescrollview.DiscreteScrollView;
 import com.yarolegovich.discretescrollview.transform.ScaleTransformer;
 
@@ -603,6 +607,11 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
                     ToastUtil.getInstance().showLong(R.string.current_net_not_enable);
                     return;
                 }
+                boolean isRegisterStatus = (boolean) SPUtils.get(Constants.LINPHONE_REGESTER_STATE,false);
+                if(!isRegisterStatus){
+                    ToastUtil.getInstance().showLong(R.string.network_exception_video);
+                    return;
+                }
                 List<GatewayInfo> allGateway = MyApplication.getInstance().getAllGateway();
                 GatewayInfo gatewayInfo = null;
                 for (GatewayInfo info:allGateway){
@@ -848,8 +857,8 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
         //等待猫眼呼叫35秒  没有呼叫过来
         ToastUtil.getInstance().showShort(R.string.call_time_out);
         callFailed();
-        Intent linphoneServiceIntent = new Intent(this, LinphoneService.class);
-        startService(linphoneServiceIntent);
+//        Intent linphoneServiceIntent = new Intent(this, LinphoneService.class);
+//        startService(linphoneServiceIntent);
     }
 
     @Override

@@ -265,6 +265,24 @@ public class GatewayLockStressDetailActivity extends BaseActivity<IGatewayLockSt
     }
 
     @Override
+    public void getStressPwdSuccessNoPwd(int status) {
+        //获取成功
+        if (loadingDialog != null) {
+            loadingDialog.dismiss();
+        }
+        isAddLockPwd = 2;
+        if (status == 0) {
+            pwdList.clear();
+         //   pwdList.add("09");
+            gatewayLockStressPasswordAdapter.notifyDataSetChanged();
+            passwordPageChange(false);
+        }else{
+            passwordPageChange(false);
+        }
+        ToastUtil.getInstance().showShort(R.string.get_stress_list_success_no);
+    }
+
+    @Override
     public void getStressPwdFail() {
         if (loadingDialog != null) {
             loadingDialog.dismiss();
