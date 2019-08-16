@@ -533,7 +533,8 @@ public class BleUtil {
         if (1 == eventType) {  //开门关门类型
             switch (eventSource) {
                 case 0x00://：Keypad键盘  密码开锁
-                    if (passwordResults != null) {
+                    if (passwordResults != null && passwordResults.getData() != null && passwordResults.getData().getPwdList() != null) {
+//                        if (passwordResults != null ) {
                         List<ForeverPassword> pwdList = passwordResults.getData().getPwdList();
                         for (ForeverPassword password : pwdList) {
                             if (Integer.parseInt(password.getNum()) == uNum) {
@@ -550,7 +551,8 @@ public class BleUtil {
                     break;
 
                 case 0x03://：RFID卡片
-                    if (passwordResults != null) {
+//                    if (passwordResults != null) {
+                    if (passwordResults != null&&passwordResults.getData()!=null&&passwordResults.getData().getCardList()!=null) {
                         List<GetPasswordResult.DataBean.Card> cards = passwordResults.getData().getCardList();
                         for (GetPasswordResult.DataBean.Card password : cards) {
                             if (Integer.parseInt(password.getNum()) == uNum) {
@@ -561,7 +563,7 @@ public class BleUtil {
 
                     break;
                 case 0x04://：Fingerprint指纹
-                    if (passwordResults != null) {
+                    if (passwordResults != null&&passwordResults.getData()!=null&&passwordResults.getData().getFingerprintList()!=null) {
                         List<GetPasswordResult.DataBean.Fingerprint> fingerprints = passwordResults.getData().getFingerprintList();
                         for (GetPasswordResult.DataBean.Fingerprint password : fingerprints) {
                             if (Integer.parseInt(password.getNum()) == uNum) {
