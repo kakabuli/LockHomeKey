@@ -62,12 +62,22 @@ public class GatewayLockStressDetailPresenter<T> extends BasePresenter<IGatewayL
                             LockPwdFuncBean lockPwdFuncBean=new Gson().fromJson(mqttData.getPayload(),LockPwdFuncBean.class);
                             if ("200".equals(lockPwdFuncBean.getReturnCode())){
                                 if (mViewRef.get()!=null){
-                                    mViewRef.get().getStressPwdSuccess(lockPwdFuncBean.getReturnData().getStatus());
-                                    String uid=MyApplication.getInstance().getUid();
-                                    if (lockPwdFuncBean.getReturnData().getStatus()==1){
-                                        deleteOnePwd(gatewayId,deviceId,uid,"09");
-                                        addOnePwd(gatewayId,deviceId,MyApplication.getInstance().getUid(),"09",lockPwdFuncBean.getReturnData().getStatus());
+                                    if(lockPwdFuncBean.getReturnData().getStatus()==1){
+                                        mViewRef.get().getStressPwdSuccess(lockPwdFuncBean.getReturnData().getStatus());
+                                        String uid=MyApplication.getInstance().getUid();
+                                        if (lockPwdFuncBean.getReturnData().getStatus()==1){
+                                            deleteOnePwd(gatewayId,deviceId,uid,"09");
+                                            addOnePwd(gatewayId,deviceId,MyApplication.getInstance().getUid(),"09",lockPwdFuncBean.getReturnData().getStatus());
+                                        }
+                                    }else {
+                                        mViewRef.get().getStressPwdSuccessNoPwd(lockPwdFuncBean.getReturnData().getStatus());
+                                        String uid=MyApplication.getInstance().getUid();
+                                        if (lockPwdFuncBean.getReturnData().getStatus()==0){
+                                            deleteOnePwd(gatewayId,deviceId,uid,"09");
+                                           // addOnePwd(gatewayId,deviceId,MyApplication.getInstance().getUid(),"09",lockPwdFuncBean.getReturnData().getStatus());
+                                        }
                                     }
+
                                 }
                             }else{
                                 if (mViewRef.get()!=null){

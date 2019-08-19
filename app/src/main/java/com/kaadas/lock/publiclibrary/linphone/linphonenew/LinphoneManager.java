@@ -694,8 +694,9 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
                                 // 如接收SIP指令，注册，认证，超时检测等，它必须要运行在LihpnoCore其它的方法所运行的线程里，
                                 // 说白了就是要保证LinphoneCore的方法运行在一至的线程里，不然就出错了。
                                 try{
-                                   //   Log.e(GeTui.VideoLog,"LinphoneManager...itrator..");
+                                    //  Log.e(GeTui.VideoLog,"LinphoneManager...itrator..");
                                    // MyLog.getInstance().save("LinphoneManager....itrator....");
+                                    //Toast.makeText(MyApplication.getInstance(),"startLibLinphone",Toast.LENGTH_SHORT).show();
                                     mLc.iterate();
                                 }catch (Exception e){
                                      Log.e(GeTui.VideoLog,"LinphoneManager exception:"+e.getMessage());
@@ -747,9 +748,9 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
                             // 如接收SIP指令，注册，认证，超时检测等，它必须要运行在LihpnoCore其它的方法所运行的线程里，
                             // 说白了就是要保证LinphoneCore的方法运行在一至的线程里，不然就出错了。
                             try{
-                                //   Log.e(GeTui.VideoLog,"LinphoneManager...itrator..");
+                                   Log.e(GeTui.VideoLog,"LinphoneManager...startTime..");
                                 // MyLog.getInstance().save("LinphoneManager....itrator....");
-                            //    Toast.makeText(MyApplication.getInstance(),"重新启动",Toast.LENGTH_LONG).show();
+                                //Toast.makeText(MyApplication.getInstance(),"startTime",Toast.LENGTH_SHORT).show();
                                 mLc.iterate();
                             }catch (Exception e){
                                 Log.e(GeTui.VideoLog,"LinphoneManager exception:"+e.getMessage());

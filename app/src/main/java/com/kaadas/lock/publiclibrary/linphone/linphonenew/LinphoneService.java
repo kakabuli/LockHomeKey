@@ -278,7 +278,7 @@ public final class LinphoneService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        NotificationManager.silentForegroundNotification(this);
+   //     NotificationManager.silentForegroundNotification(this);
         initData();
         return super.onStartCommand(intent, flags, startId);
     }
@@ -291,6 +291,14 @@ public final class LinphoneService extends Service {
     };
 
     private void initData() {
+//        if(LinphoneManager.getInstance() != null) {
+//            //   Toast.makeText(LinphoneService.this,"no启动:"+VideoVActivity.isRunning,Toast.LENGTH_LONG).show();
+//            if(VideoVActivity.isRunning){
+//                Toast.makeText(LinphoneService.this,"重新启动",Toast.LENGTH_LONG).show();
+//                LinphoneManager.getInstance().startTime();
+//                return;
+//            }
+//        }
         setupActivityMonitor();
         // In case restart after a crash. Main in LinphoneActivity
         //  mNotificationTitle = "Linphone Service";
@@ -318,12 +326,6 @@ public final class LinphoneService extends Service {
         if (LinphoneManager.getInstance() == null) {
             mLinphoneManager = new LinphoneManager(LinphoneService.this);
            // Toast.makeText(LinphoneService.this,"重新启动",Toast.LENGTH_LONG).show();
-        }else {
-         //   Toast.makeText(LinphoneService.this,"no启动:"+VideoVActivity.isRunning,Toast.LENGTH_LONG).show();
-            if(VideoVActivity.isRunning){
-                LinphoneManager.getInstance().startTime();
-            }
-
         }
 
         instance = this; // instance is ready once linphone manager has been created
@@ -448,6 +450,7 @@ public final class LinphoneService extends Service {
             @Override
             public void registrationState(LinphoneCore lc, LinphoneProxyConfig cfg, LinphoneCore.RegistrationState registrationState, String smessage) {
                 String state = registrationState.toString();
+                 MyLog.getInstance().save("registrationState:"+state);
                 if (sRegistrationCallback != null && state.equals(LinphoneCore.RegistrationState.RegistrationNone.toString())) {
                     sRegistrationCallback.registrationNone();
                 } else if (sRegistrationCallback != null && state.equals(LinphoneCore.RegistrationState.RegistrationProgress.toString())) {

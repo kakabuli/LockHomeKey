@@ -8,6 +8,10 @@ public interface IGatewayLockStressDetailView  extends IBaseView {
     //获取胁迫密码成功
     void getStressPwdSuccess(int status);
 
+
+    //服务器胁迫密码
+    void getStressPwdSuccessNoPwd(int status);
+
     //获取胁迫密码失败
     void getStressPwdFail();
 
