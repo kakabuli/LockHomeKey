@@ -130,7 +130,6 @@ public class OldBleLockPresenter<T> extends MyOldOpenLockRecordPresenter<IOldBle
     }
 
     private List<OpenLockRecord> serverRecords = new ArrayList<>();
-    private Disposable serverDisposable;
 
     //获取全部的开锁记录
     public void getOpenRecordFromServer(int pagenum, BleLockInfo bleLockInfo) {
@@ -138,8 +137,6 @@ public class OldBleLockPresenter<T> extends MyOldOpenLockRecordPresenter<IOldBle
             serverRecords.clear();
         }
         try {
-
-
             XiaokaiNewServiceImp.getLockRecord(bleLockInfo.getServerLockInfo().getLockName(),
                     MyApplication.getInstance().getUid(),
                     null,

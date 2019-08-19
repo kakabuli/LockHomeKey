@@ -623,7 +623,7 @@ public class BleUtil {
                     }
                     break;
             }
-        } else if (2 == eventType) {  //
+        } else if (2 == eventType) {
             openType = BleUtil.getOperationProgramContent(eventCode);
         }
         return openType;
