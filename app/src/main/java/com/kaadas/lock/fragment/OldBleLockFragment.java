@@ -1032,7 +1032,7 @@ public class OldBleLockFragment extends BaseBleFragment<IOldBleLockView, OldBleL
     @Override
     public void onLoadBleRecordFinish(boolean isComplete) {
         if (isComplete) {
-            ToastUtil.getInstance().showShort(R.string.get_record_ble_success);
+            ToastUtil.getInstance().showShort(R.string.sync_success);
         } else {
             ToastUtil.getInstance().showShort(R.string.get_record_failed_please_wait);
             hiddenLoading();
@@ -1126,7 +1126,6 @@ public class OldBleLockFragment extends BaseBleFragment<IOldBleLockView, OldBleL
         if (!isSuccess) {
             changeOpenLockStatus(12);
         }
-
     }
 
     @Override

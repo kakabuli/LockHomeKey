@@ -202,6 +202,7 @@ public class BleDetailActivity extends BaseBleActivity<IDeviceDetailView, Device
 
     private void changeLockIcon(Intent intent) {
         String model = intent.getStringExtra(KeyConstants.DEVICE_TYPE);
+        LogUtils.e("获取到的设备型号是   "+ model);
         ivLockIcon.setImageResource(BleLockUtils.getDetailImageByModel(model));
     }
 

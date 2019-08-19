@@ -1181,7 +1181,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
     @Override
     public void onLoadBleRecordFinish(boolean isComplete) {
         if (isComplete) {
-            ToastUtil.getInstance().showShort(R.string.get_record_ble_success);
+            ToastUtil.getInstance().showShort(R.string.sync_success);
         } else {
             ToastUtil.getInstance().showShort(R.string.get_record_failed_please_wait);
             hiddenLoading();
