@@ -211,6 +211,26 @@ public class BleLockUtils {
     }
 
 
+
+
+
+
+    /**
+     * 根据功能集判断是否支持操作记录
+     *
+     * @param functionSet
+     * @return
+     */
+    public static boolean isSupport20Passwords(String functionSet) {
+        int funcSet = Integer.parseInt(functionSet);
+        Integer[] funcs = FUNCTION_SET.get(funcSet);
+        if (funcs == null) {
+            return false;
+        }
+        List<Integer> integers = Arrays.asList(funcs);
+        return integers.contains(24);
+    }
+
     public static boolean isExistFunctionSet(int functionSet) {
         //获取改功能集是否存在
         return !(FUNCTION_SET.get(functionSet) == null);
@@ -335,6 +355,7 @@ public class BleLockUtils {
             return R.mipmap.default_zigbee_lock_icon;
         }
     }
+
 
 
     /**

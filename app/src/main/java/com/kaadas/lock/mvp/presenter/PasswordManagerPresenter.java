@@ -16,6 +16,7 @@ import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.result.GetPasswordResult;
 import com.kaadas.lock.publiclibrary.http.util.BaseObserver;
 import com.kaadas.lock.publiclibrary.http.util.RxjavaHelper;
+import com.kaadas.lock.utils.BleLockUtils;
 import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.NetUtil;
@@ -185,8 +186,10 @@ public class PasswordManagerPresenter<T> extends BlePresenter<IPasswordManagerVi
     }
 
     private void getAllpasswordNumber(int codeNumber, byte[] deValue) {
-        int passwordNumber = 10;  //永久密码的最大编号   小凯锁都是5个  0-5
-        //获取所有有秘钥的密码编号
+        int passwordNumber =10;
+        if (BleLockUtils.isSupport20Passwords(bleLockInfo.getServerLockInfo().getFunctionSet()) ){  //支持20个密码的锁
+              passwordNumber = 20;  //永久密码的最大编号   小凯锁都是5个  0-5
+        }
         for (int index = 0; index * 8 < passwordNumber; index++) {
             if (index > 13) {
                 return;
@@ -199,7 +202,6 @@ public class PasswordManagerPresenter<T> extends BlePresenter<IPasswordManagerVi
                     return;
                 }
             }
-
         }
     }
 
