@@ -243,7 +243,7 @@ public class BluetoothMoreActivity extends BaseBleActivity<IDeviceMoreView, Devi
 
                 break;
             case R.id.rl_device_information:
-                intent = new Intent(this, BluetoothAuthorizationDeviceInformationActivity.class);
+                intent = new Intent(this, BleDeviceInfoActivity.class);
                 startActivity(intent);
                 break;
             case R.id.rl_check_firmware_update:
@@ -252,19 +252,6 @@ public class BluetoothMoreActivity extends BaseBleActivity<IDeviceMoreView, Devi
                 if (mPresenter.isAuth(bleLockInfo, true)) {
                     mPresenter.readSerialNumber();
                 }
-//                intent = new Intent();
-//                intent.putExtra(OtaConstants.fileName, "008.cyacd2");
-//                intent.putExtra(OtaConstants.bindUrl, "http://47.106.94.189/otaFiles/5b4453fdf4bb41f680e62a3337c8b206?filename=OTA_M0_K9S_T1.01.008.cyacd2");
-//                intent.putExtra(OtaConstants.deviceMac, bleLockInfo.getServerLockInfo().getMacLock());
-//                intent.putExtra(OtaConstants.password1, bleLockInfo.getServerLockInfo().getPassword1());
-//                intent.putExtra(OtaConstants.password2, bleLockInfo.getServerLockInfo().getPassword2());
-//                if (bleLockInfo.getBleType() == 1){ //Ti升级
-//                    intent.setClass(BluetoothMoreActivity.this, TiOtaUpgradeActivity.class);
-//                }else if (bleLockInfo.getBleType() == 2 ){  //P6升级
-//                    intent.setClass(BluetoothMoreActivity.this, P6OtaUpgradeActivity.class);
-//                }
-//                mPresenter.release();
-//                startActivity(intent);
                 break;
             case R.id.btn_delete:
                 AlertDialogUtil.getInstance().noEditTwoButtonDialog(this, getString(R.string.device_delete_dialog_head), getString(R.string.device_delete_lock_dialog_content), getString(R.string.cancel), getString(R.string.query), new AlertDialogUtil.ClickListener() {

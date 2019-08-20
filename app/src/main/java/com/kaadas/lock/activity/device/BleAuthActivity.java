@@ -21,7 +21,7 @@ import android.widget.TextView;
 
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.MainActivity;
-import com.kaadas.lock.activity.device.bluetooth.BluetoothAuthorizationDeviceInformationActivity;
+import com.kaadas.lock.activity.device.bluetooth.BleDeviceInfoActivity;
 import com.kaadas.lock.activity.device.oldbluetooth.OldDeviceInfoActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseBleActivity;
 import com.kaadas.lock.mvp.presenter.OldAndAuthBleDetailPresenter;
@@ -96,7 +96,7 @@ public class BleAuthActivity extends BaseBleActivity<IOldBleDetailView, OldAndAu
             public void run() {
                 LogUtils.e(" 首页锁状态  反锁状态   " + bleLockInfo.getBackLock() + "    安全模式    " + bleLockInfo.getSafeMode() + "   布防模式   " + bleLockInfo.getArmMode());
                 isOpening = false;
-                if (bleLockInfo.isAuth()){
+                if (bleLockInfo.isAuth()) {
                     changLockStatus(0);
                     onElectricUpdata(bleLockInfo.getBattery());
                     if (bleLockInfo.getSafeMode() == 1) {//安全模式
@@ -114,13 +114,13 @@ public class BleAuthActivity extends BaseBleActivity<IOldBleDetailView, OldAndAu
 
 
         if (mPresenter.getBleVersion() == 2 || mPresenter.getBleVersion() == 3 ||
-                (bleLockInfo!=null && bleLockInfo.getServerLockInfo()!=null && !TextUtils.isEmpty(bleLockInfo.getServerLockInfo().getBleVersion())&&
+                (bleLockInfo != null && bleLockInfo.getServerLockInfo() != null && !TextUtils.isEmpty(bleLockInfo.getServerLockInfo().getBleVersion()) &&
                         "2".equals(bleLockInfo.getServerLockInfo().getBleVersion()))
                 ||
-                (bleLockInfo!=null && bleLockInfo.getServerLockInfo()!=null && !TextUtils.isEmpty(bleLockInfo.getServerLockInfo().getBleVersion())&&
+                (bleLockInfo != null && bleLockInfo.getServerLockInfo() != null && !TextUtils.isEmpty(bleLockInfo.getServerLockInfo().getBleVersion()) &&
                         "3".equals(bleLockInfo.getServerLockInfo().getBleVersion()))
-                ){
-             //可以查设备信息
+                ) {
+            //可以查设备信息
             rlDeviceInformation.setVisibility(View.VISIBLE);
         } else {
             //不可以查设备信息
@@ -245,19 +245,18 @@ public class BleAuthActivity extends BaseBleActivity<IOldBleDetailView, OldAndAu
         if (bleLockInfo.getBattery() != -1) {
             dealWithPower(bleLockInfo.getBattery());
             //删除成功
-            setBatteryResult( );
+            setBatteryResult();
 
         }
     }
 
-    private void  setBatteryResult(){
+    private void setBatteryResult() {
         Intent intent = new Intent();
         //把返回数据存入Intent
         intent.putExtra(KeyConstants.BLE_INTO, bleLockInfo);
         //设置返回数据
         this.setResult(RESULT_OK, intent);
     }
-
 
 
     @Override
@@ -267,9 +266,9 @@ public class BleAuthActivity extends BaseBleActivity<IOldBleDetailView, OldAndAu
 
     @Override
     public void onBleVersionUpdate(int version) {
-        if (version == 1){
+        if (version == 1) {
             rlDeviceInformation.setVisibility(View.GONE);
-        }else {
+        } else {
             rlDeviceInformation.setVisibility(View.VISIBLE);
         }
     }
@@ -382,7 +381,6 @@ public class BleAuthActivity extends BaseBleActivity<IOldBleDetailView, OldAndAu
     }
 
 
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -412,8 +410,23 @@ public class BleAuthActivity extends BaseBleActivity<IOldBleDetailView, OldAndAu
                 vibrate(this, 150);
                 break;
             case R.id.rl_device_information:
-                Intent intent = new Intent(this, OldDeviceInfoActivity.class);
-                startActivity(intent);
+                if (bleLockInfo != null && bleLockInfo.getServerLockInfo() != null && !TextUtils.isEmpty(bleLockInfo.getServerLockInfo().getBleVersion()) &&
+                        "2".equals(bleLockInfo.getServerLockInfo().getBleVersion())) {
+                    Intent intent = new Intent(this, OldDeviceInfoActivity.class);
+                    startActivity(intent);
+                } else if (bleLockInfo != null && bleLockInfo.getServerLockInfo() != null && !TextUtils.isEmpty(bleLockInfo.getServerLockInfo().getBleVersion()) &&
+                        "3".equals(bleLockInfo.getServerLockInfo().getBleVersion())) {
+                    Intent intent = new Intent(this, BleDeviceInfoActivity.class);
+                    startActivity(intent);
+                } else {
+                    if (mPresenter.getBleVersion() == 2) {
+                        Intent intent = new Intent(this, OldDeviceInfoActivity.class);
+                        startActivity(intent);
+                    } else if (mPresenter.getBleVersion() == 3) {
+                        Intent intent = new Intent(this, BleDeviceInfoActivity.class);
+                        startActivity(intent);
+                    }
+                }
                 break;
             case R.id.iv_delete:
                 AlertDialogUtil.getInstance().noEditTwoButtonDialog(this, getString(R.string.device_delete_dialog_head), getString(R.string.device_delete_lock_dialog_content), getString(R.string.cancel), getString(R.string.query), new AlertDialogUtil.ClickListener() {
