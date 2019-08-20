@@ -251,6 +251,9 @@ public class BleLockUtils {
             funcs = FUNCTION_SET.get(0x31);
         }
         List<Integer> integers = Arrays.asList(funcs);
+        LogUtils.e("获取到的  功能集是1   " + functionSet);
+        LogUtils.e("获取到的  功能集是2   " + Arrays.toString(funcs));
+        LogUtils.e("获取到的  功能集是3否包含卡片      " + integers.contains(9));
         if (integers.contains(7)) {
             functionBeans.add(new BluetoothLockFunctionBean(MyApplication.getInstance().getString(R.string.password), R.mipmap.bluetooth_password, TYPE_PASSWORD));
         }

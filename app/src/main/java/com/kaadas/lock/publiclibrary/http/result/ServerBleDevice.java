@@ -215,6 +215,7 @@ public class ServerBleDevice implements Serializable {
     public boolean functionIsEmpty(){
         return TextUtils.isEmpty(functionSet);
     }
+
     public String getFunctionSet() {
         LogUtils.e("");
 

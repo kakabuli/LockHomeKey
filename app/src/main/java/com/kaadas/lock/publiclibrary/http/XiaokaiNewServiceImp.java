@@ -935,7 +935,7 @@ public class XiaokaiNewServiceImp {
     public static Observable<BaseResult> modifyFunctionSet(String devname, String user_id, String functionSet) {
         ModifyFunctionSetBean updateSoftwareVersionBean = new ModifyFunctionSetBean(devname, user_id, functionSet);
         return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
-                .updateBleVersion(new HttpUtils<ModifyFunctionSetBean>().getBody(updateSoftwareVersionBean))
+                .modifyFunctionSet(new HttpUtils<ModifyFunctionSetBean>().getBody(updateSoftwareVersionBean))
                 .compose(RxjavaHelper.observeOnMainThread())
                 ;
     }

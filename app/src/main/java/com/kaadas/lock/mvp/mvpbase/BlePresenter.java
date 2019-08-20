@@ -754,7 +754,7 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
         }
         if (bleService.getBleVersion() == 3) {
 //            if (TextUtils.isEmpty(bleLockInfo.getServerLockInfo().getFunctionSet())) {  //如果功能集为空，那么再读取功能集
-            functionSetDisposable = bleService.readFunctionSet(500)
+            functionSetDisposable = bleService.readFunctionSet(1000)
                     .filter(new Predicate<ReadInfoBean>() {
                         @Override
                         public boolean test(ReadInfoBean readInfoBean) throws Exception {
@@ -769,8 +769,8 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
                             toDisposable(functionSetDisposable);
 
                             int functionSet = (int) readInfoBean.data;
-                            LogUtils.e("更新  收到锁功能集   " + functionSet);
-                            if (TextUtils.isEmpty(bleLockInfo.getServerLockInfo().getFunctionSet())) {
+                            LogUtils.e("更新  收到锁功能集   " + functionSet +"   本地功能集是否存在  "+TextUtils.isEmpty(bleLockInfo.getServerLockInfo().getFunctionSet()));
+                            if (bleLockInfo.getServerLockInfo().functionIsEmpty()) {
                                 modifyFunctionSet(bleLockInfo.getServerLockInfo().getLockName(), "" + functionSet);
                             }
                         }
