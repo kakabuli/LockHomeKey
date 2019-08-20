@@ -308,6 +308,12 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
             case R.id.ll_four:
                 //更多
                 intent = new Intent(this, GatewayMoreActivity.class);
+                if(!TextUtils.isEmpty(nickName)){
+                    lockInfo = (GwLockInfo) showBean.getObject();
+                    if(lockInfo!=null){
+                        lockInfo.getServerInfo().setNickName(nickName);
+                    }
+                }
                 intent.putExtra(KeyConstants.GATEWAY_LOCK_INFO, showBean);
                 startActivityForResult(intent, KeyConstants.DEVICE_DETAIL_BEAN_NUM);
 
@@ -651,7 +657,7 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
             getIntent().removeExtra(KeyConstants.GATEWAY_LOCK_INFO);
         }
     }
-
+    String nickName=null;
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -661,6 +667,7 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
                 if (name != null) {
                     if (tvName != null) {
                         tvName.setText(name);
+                        nickName=name;
                     }
                 }
             }

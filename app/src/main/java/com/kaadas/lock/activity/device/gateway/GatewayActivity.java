@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -392,7 +393,13 @@ public class GatewayActivity extends BaseActivity<GatewayView, GatewayPresenter<
                 //基本信息
                 if (gatewayInfo!=null) {
                     Intent intent = new Intent(this, GatewaySettingActivity.class);
-                    intent.putExtra(KeyConstants.GATEWAY_NICKNAME, gatewayInfo.getServerInfo().getDeviceNickName());
+                 //   intent.putExtra(KeyConstants.GATEWAY_NICKNAME, gatewayInfo.getServerInfo().getDeviceNickName());
+                    if(!TextUtils.isEmpty(gatewayNickName.getText())){
+                        intent.putExtra(KeyConstants.GATEWAY_NICKNAME, gatewayNickName.getText().toString());
+                    }else {
+                        intent.putExtra(KeyConstants.GATEWAY_NICKNAME, gatewayInfo.getServerInfo().getDeviceNickName());
+                    }
+                    intent.putExtra(KeyConstants.GATEWAY_NICKNAME, gatewayNickName.getText().toString());
                     intent.putExtra(KeyConstants.GATEWAY_ID, gatewayInfo.getServerInfo().getDeviceSN());
                     intent.putExtra(KeyConstants.IS_ADMIN, gatewayInfo.getServerInfo().getIsAdmin());
                     startActivityForResult(intent, KeyConstants.GATEWAY_NICK_NAME);
