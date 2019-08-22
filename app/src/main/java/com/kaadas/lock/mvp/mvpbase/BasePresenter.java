@@ -45,6 +45,10 @@ public class BasePresenter<T extends IBaseView> {
     protected WeakReference<T> mViewRef;
     protected boolean isAttach = false;
 
+    public boolean isSafe(){
+        return mViewRef != null && mViewRef.get() != null;
+    }
+
     public void attachView(T view) {
         if (bleService == null) {
             bleService = MyApplication.getInstance().getBleService();

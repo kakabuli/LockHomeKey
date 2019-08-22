@@ -62,12 +62,6 @@ public class BluetoothPasswordAdapter extends BaseQuickAdapter<ForeverPassword, 
         helper.setText(R.id.tv_nick, bean.getNickName());
         //1永久 2时间段 3周期 4 24小时 5 周期
         if (bean.getType() == 1) {
-//            String strHint = String.format(MyApplication.getInstance().getString(R.string.already_enable_time),
-//                    (((System.currentTimeMillis()/1000)-bean.getCreateTime())/24/60/60)+"");
-//            if (bean.getCreateTime() == 0){
-//                strHint = String.format(MyApplication.getInstance().getString(R.string.already_enable_time),
-//                         "0");
-//            }
             helper.setText(R.id.tv_time, MyApplication.getInstance().getString(R.string.foever_able));
         } else if (bean.getType() == 2) {
             helper.setText(R.id.tv_time, DateUtils.getDateTimeFromMillisecond(bean.getStartTime()) + "-" + DateUtils.getDateTimeFromMillisecond(bean.getEndTime()));

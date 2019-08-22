@@ -430,8 +430,6 @@ public class   KeyConstants {
     public static final String FIRST_IN_GATEWAY_LOCK="firstInGatewayLock";
 
     public static final String BAR_CODE="BAR_CODE";
-    //蓝牙更多界面过来的
-    public static final String BLUETOOTH_MORE_PAGE="bluetooth_more_page";
     //来源
     public static final String SOURCE="source";
     //保存服务器的时间的Key  毫秒数
@@ -441,3 +439,4 @@ public class   KeyConstants {
     //网关ota升级
     public static final String GATEWAY_OTA_UPGRADE="gateway_ota_upgrade";
 }
+

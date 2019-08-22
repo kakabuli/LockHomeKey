@@ -325,10 +325,6 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.device.BluetoothDeviceInformationActivity"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".activity.device.bluetooth.BluetoothSharedDeviceManagementActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
@@ -379,7 +375,7 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.device.bluetooth.BluetoothAuthorizationDeviceInformationActivity"
+            android:name=".activity.device.bluetooth.BleDeviceInfoActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
         <activity

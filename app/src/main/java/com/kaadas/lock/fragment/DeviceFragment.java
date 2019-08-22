@@ -477,36 +477,8 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                         mPresenter.setBleLockInfo(bleLockInfo);
                         if (bleLockInfo.getServerLockInfo().getIs_admin() != null && bleLockInfo.getServerLockInfo().getIs_admin().equals("1")) {
                             if ("3".equals(bleLockInfo.getServerLockInfo().getBleVersion())) {
-//                                String lockType = bleLockInfo.getServerLockInfo().getModel();
-//                                if (!TextUtils.isEmpty(lockType)) {
-//                                    if (lockType.startsWith("V6") || lockType.startsWith("V7") || lockType.startsWith("S100") || lockType.startsWith("K9")||lockType.startsWith("S6")) {
-//                                        Intent detailIntent = new Intent(getActivity(), BluetoothLockFunctionV6V7Activity.class);
-//                                        String model = bleLockInfo.getServerLockInfo().getModel();
-//                                        detailIntent.putExtra(KeyConstants.DEVICE_TYPE, model);
-//                                        startActivityForResult(detailIntent, KeyConstants.GET_BLE_POWER);
-//                                    } else {
-//                                        Intent detailIntent = new Intent(getActivity(), BleDetailActivity.class);
-//                                        String model = bleLockInfo.getServerLockInfo().getModel();
-//                                        detailIntent.putExtra(KeyConstants.DEVICE_TYPE, model);
-//                                        startActivityForResult(detailIntent, KeyConstants.GET_BLE_POWER);
-//                                    }
-//                                } else {
-//                                    Intent detailIntent = new Intent(getActivity(), BleDetailActivity.class);
-//                                    String model = bleLockInfo.getServerLockInfo().getModel();
-//                                    detailIntent.putExtra(KeyConstants.DEVICE_TYPE, model);
-//                                    startActivityForResult(detailIntent, KeyConstants.GET_BLE_POWER);
-//                                }
                                 String functionSet = bleLockInfo.getServerLockInfo().getFunctionSet();
                                 LogUtils.e("蓝牙的功能集是   " + functionSet);
-//                                if ("0".equals(bleLockInfo.getServerLockInfo().getFunctionSet())){  //如果已知是
-//                                    Intent detailIntent = new Intent(getActivity(), OldBleDetailActivity.class);
-//                                    String model = bleLockInfo.getServerLockInfo().getModel();
-//                                    detailIntent.putExtra(KeyConstants.DEVICE_TYPE, model);
-//                                    startActivityForResult(detailIntent, KeyConstants.GET_BLE_POWER);
-//                                }else {
-//
-//                                }
-
                                 if (!TextUtils.isEmpty(functionSet) && Integer.parseInt(functionSet) == 0){
                                     LogUtils.e("跳转   老蓝牙");
                                     Intent detailIntent = new Intent(getActivity(), OldBleDetailActivity.class);

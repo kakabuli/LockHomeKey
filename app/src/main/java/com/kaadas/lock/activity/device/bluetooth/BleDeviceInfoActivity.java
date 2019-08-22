@@ -21,8 +21,7 @@ import com.kaadas.lock.utils.ToastUtil;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class BluetoothAuthorizationDeviceInformationActivity extends BaseBleActivity<IDeviceInfoView, DeviceInfoPresenter> implements IDeviceInfoView, View.OnClickListener {
-
+public class BleDeviceInfoActivity extends BaseBleActivity<IDeviceInfoView, DeviceInfoPresenter> implements IDeviceInfoView, View.OnClickListener {
 
     @BindView(R.id.iv_back)
     ImageView ivBack;

@@ -417,9 +417,6 @@ public class DeviceMorePresenter extends BlePresenter<IDeviceMoreView> {
                         } else {
                             uploadBleSoftware(sn, version);
                         }
-
-//                        checkOtaInfo(sn, "10.1.007");
-//                        toDisposable(readSoftwareRevDisposable);
                     }
                 }, new Consumer<Throwable>() {
                     @Override

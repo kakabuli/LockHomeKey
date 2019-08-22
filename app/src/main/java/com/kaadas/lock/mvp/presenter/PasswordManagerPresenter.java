@@ -16,6 +16,7 @@ import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.result.GetPasswordResult;
 import com.kaadas.lock.publiclibrary.http.util.BaseObserver;
 import com.kaadas.lock.publiclibrary.http.util.RxjavaHelper;
+import com.kaadas.lock.utils.BleLockUtils;
 import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.NetUtil;
@@ -185,8 +186,10 @@ public class PasswordManagerPresenter<T> extends BlePresenter<IPasswordManagerVi
     }
 
     private void getAllpasswordNumber(int codeNumber, byte[] deValue) {
-        int passwordNumber = 10;  //永久密码的最大编号   小凯锁都是5个  0-5
-        //获取所有有秘钥的密码编号
+        int passwordNumber = 10;
+        if (BleLockUtils.isSupport20Passwords(bleLockInfo.getServerLockInfo().getFunctionSet())) {  //支持20个密码的锁
+            passwordNumber = 20;  //永久密码的最大编号   小凯锁都是5个  0-5
+        }
         for (int index = 0; index * 8 < passwordNumber; index++) {
             if (index > 13) {
                 return;
@@ -199,7 +202,6 @@ public class PasswordManagerPresenter<T> extends BlePresenter<IPasswordManagerVi
                     return;
                 }
             }
-
         }
     }
 
@@ -398,16 +400,13 @@ public class PasswordManagerPresenter<T> extends BlePresenter<IPasswordManagerVi
                                 Rsa.toHexString(Rsa.decrypt(bleDataBean.getPayload(), bleLockInfo.getAuthKey()))
                         ));
                         if (bleDataBean.isConfirm()) {
+                            LogUtils.e("确认帧    ");
                             return;
                         }
                         //判断是否是当前指令
-                        if (bleDataBean.getCmd() != command[3]) {
-                            return;
-                        }
                         toDisposable(queryWeekPlanDisposable);
                         byte[] payload = Rsa.decrypt(bleDataBean.getPayload(), bleLockInfo.getAuthKey());
-                        if (bleDataBean.getOriginalData()[0] == 1 && (payload[8] == 0) && payload[9] == 0 && payload[10] == 0) { //查询成功
-
+                        if (bleDataBean.getCmd() == 0x0c) { //查询成功
                             //查询周计划成功
                             int scheduleId = payload[0] & 0xff;
                             int userId = payload[1] & 0xff;
@@ -428,9 +427,7 @@ public class PasswordManagerPresenter<T> extends BlePresenter<IPasswordManagerVi
                                     strWeeks[i] = "1";
                                 }
                             }
-
                             LogUtils.e("查询到的周计划是   " + id + "   " + Arrays.toString(strWeeks));
-
                             //周期密码
                             showList.get(position).setType(3);
                             showList.get(position).setItems(Arrays.asList(strWeeks));
@@ -445,14 +442,40 @@ public class PasswordManagerPresenter<T> extends BlePresenter<IPasswordManagerVi
                             //如果是周计划  直接返回成功   不查询年计划
                             position++;
                             searchUserType();
-                            return;
+                        } else if (bleDataBean.getCmd() == 0x0f) {
+                            //获取年计划成功
+                            LogUtils.e("收到年计划查询的回调   解码数据是   " + Rsa.toHexString(payload));
+                            int scheduleId = payload[0] & 0xff;
+                            int userId = payload[1] & 0xff;
+                            int codeType = payload[2] & 0xff;
+                            byte[] sTime = new byte[4];
+                            System.arraycopy(payload, 3, sTime, 0, sTime.length);
+                            byte[] eTime = new byte[4];
+                            System.arraycopy(payload, 7, eTime, 0, eTime.length);
+
+
+                            long startTime = (Rsa.bytes2Int(sTime) + BleUtil.DEFINE_TIME) * 1000;
+                            long endTime = (Rsa.bytes2Int(eTime) + BleUtil.DEFINE_TIME) * 1000;
+                            LogUtils.e("查到年计划   scheduleId " + scheduleId + "  userId  " + userId + "  codeType  " + codeType + "   " +
+                                    "开始时间  " + DateUtils.getDateTimeFromMillisecond(startTime) + "  结束时间  " + DateUtils.getDateTimeFromMillisecond(endTime)
+                            );
+                            showList.get(position).setType(2);
+                            showList.get(position).setStartTime(startTime);
+                            showList.get(position).setEndTime(endTime);
+                            showList.get(position).setNum(id > 9 ? "" + id : "0" + id);
+                            if (mViewRef.get() != null) {
+                                mViewRef.get().onUpdate(showList);
+                            }
+                            uploadPassword(showList.get(position));
+                            position++;
+                            searchUserType();
                         }
-                        queryYearPlan();
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        queryYearPlan();
+                        position++;
+                        searchUserType();
                     }
                 });
 
@@ -462,7 +485,6 @@ public class PasswordManagerPresenter<T> extends BlePresenter<IPasswordManagerVi
     }
 
     public void queryYearPlan() {
-
         //如果查询的位置到了最后   那么不再查询
         //查询年计划
         int id = bleNumber.get(position);
@@ -592,11 +614,12 @@ public class PasswordManagerPresenter<T> extends BlePresenter<IPasswordManagerVi
                             }
                             position++;
                             searchUserType();
-                            return;
                         } else if (userType == 1) {  //时间表用户
                             queryWeekPlan();
+                        } else {
+                            position++;
+                            searchUserType();
                         }
-
                     }
                 }, new Consumer<Throwable>() {
                     @Override

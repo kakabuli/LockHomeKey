@@ -232,6 +232,7 @@ public class BluetoothPasswordManagerActivity extends BaseBleActivity<IPasswordM
     @Override
     public void endSync() {
         isSync = false;
+        ToastUtil.getInstance().showLong(R.string.sync_success);
         hiddenLoading();
     }
 

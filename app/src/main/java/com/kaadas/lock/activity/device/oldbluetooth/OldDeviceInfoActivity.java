@@ -99,6 +99,9 @@ public class OldDeviceInfoActivity extends BaseBleActivity<IOldDeviceInfoView, O
                 finish();
                 break;
             case R.id.rl_bluetooth_module_version:
+                if (!"1".equals(bleLockInfo.getServerLockInfo().getIs_admin())) {  //非主用户不允许升级
+                    return;
+                }
                 showLoading(getString(R.string.is_check_vle_version));
                 sn = tvSerialNumber.getText().toString().trim();
                 version = tvBluetoothModuleVersion.getText().toString().replace("V", "");
