@@ -493,8 +493,6 @@ public class BleDetailActivity extends BaseBleActivity<IDeviceDetailView, Device
                 tvDate.setText(DateUtils.formatYearMonthDay(readDeviceInfoTime));
             }
         }
-
-
     }
 
     @Override

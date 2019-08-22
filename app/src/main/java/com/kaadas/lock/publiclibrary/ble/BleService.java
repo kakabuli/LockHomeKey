@@ -443,7 +443,7 @@ public class BleService extends Service {
                 handler.removeCallbacks(notDiscoverServerReleaseRunnbale);  //清除
                 discoverCharacteristic(gatt);
             } else {
-                LogUtils.e("发现服务个数为0  断开连接    "  );
+                LogUtils.e("发现服务个数为0  断开连接    ");
                 release();  // 发现服务个数为0  断开连接
             }
         }
@@ -462,7 +462,10 @@ public class BleService extends Service {
             lastReceiveDataTime = System.currentTimeMillis();
 
             //加密数据中的   开锁记录   报警记录    不要回确认帧    秘钥上报  需要逻辑层才回确认帧
-            if ((value[0] & 0xff) == 0x01 && value.length == 20 && ((value[3] & 0xff) == 0x05 || (value[3] & 0xff) == 0x07)) {  //如果是加密数据  那么回确认帧
+            if (value[0] == 1 && !((value[3] & 0xff) == 0x04)
+                    && !((value[3] & 0xff) == 0x14) && !((value[3] & 0xff) == 0x08)
+                    && bleVersion != 1 && (value[3] & 0xff) != 0x18
+                    && value.length == 20) {  //如果是加密数据  那么回确认帧
                 sendCommand(BleCommandFactory.confirmCommand(value));
             }
 
@@ -492,7 +495,7 @@ public class BleService extends Service {
 
                 } else {
                     authFailedSubject.onNext(true);
-                    LogUtils.e("校验和出错 返回C2   原始数据 " + Rsa.bytesToHexString(value)  );
+                    LogUtils.e("校验和出错 返回C2   原始数据 " + Rsa.bytesToHexString(value));
                 }
                 return;
             }
@@ -503,15 +506,17 @@ public class BleService extends Service {
                 boolean isBack = false;
                 if (value[0] == 0x00) {
                     isBack = true;
-                } else if (value[0] == 0x01 && value[3] == currentCommand[3]) {  //如果返回数据带有负载，需要判断CMd是否相同
-                    isBack = true;
+                } else if (value[0] == 0x01) {  //如果返回数据带有负载，需要判断CMd是否相同
+                    if (value[3] == currentCommand[3]) {
+                        isBack = true;
+                    } else if ((currentCommand[3] == 0x0c || currentCommand[3] == 0x0f) && (value[3] == 0x0c || value[3] == 0x0f)) {
+                        isBack = true;
+                    }
                 }
                 if (isBack) {
                     sendNextCommand();  //收到返回  发送下一条
                 }
             }
-
-
             BleDataBean bleDataBean = new BleDataBean(value[3], value[1], value);
             bleDataBean.setDevice(gatt.getDevice());
             if (value[0] == 1 && (value[3] == 0x05) && value.length == 20) {  //锁状态改变的数据
