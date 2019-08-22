@@ -19,8 +19,10 @@ import com.kaadas.lock.publiclibrary.bean.GatewayInfo;
 import com.kaadas.lock.publiclibrary.bean.GwLockInfo;
 import com.kaadas.lock.utils.BatteryView;
 import com.kaadas.lock.utils.BleLockUtils;
+import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 
+import java.security.Key;
 import java.util.List;
 
 public class DeviceDetailAdapter extends BaseQuickAdapter<HomeShowBean, BaseViewHolder> {
@@ -109,7 +111,12 @@ public class DeviceDetailAdapter extends BaseQuickAdapter<HomeShowBean, BaseView
             case HomeShowBean.TYPE_GATEWAY:
                 GatewayInfo gatewayInfo= (GatewayInfo) item.getObject();
                 isWifiDevice(true,helper,gatewayInfo.getEvent_str(),batteryView,0);
-                helper.setImageResource(R.id.device_image,R.mipmap.gateway_icon);
+                if(gatewayInfo.getServerInfo()!=null && gatewayInfo.getServerInfo().getModel()!=null && gatewayInfo.getServerInfo().getModel().equals(KeyConstants.SMALL_GW)){
+                    helper.setImageResource(R.id.device_image,R.mipmap.item_6030);
+                }else {
+                    helper.setImageResource(R.id.device_image,R.mipmap.gateway_icon);
+                }
+
                 textView.setText(item.getDeviceNickName());
                 break;
 
