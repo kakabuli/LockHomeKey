@@ -35,6 +35,7 @@ public class GatewayServiceInfoDao extends AbstractDao<GatewayServiceInfo, Strin
         public final static Property MePwd = new Property(8, String.class, "mePwd", false, "ME_PWD");
         public final static Property MeBindState = new Property(9, int.class, "meBindState", false, "ME_BIND_STATE");
         public final static Property Uid = new Property(10, String.class, "uid", false, "UID");
+        public final static Property Model = new Property(11, String.class, "model", false, "MODEL");
     }
 
 
@@ -60,7 +61,8 @@ public class GatewayServiceInfoDao extends AbstractDao<GatewayServiceInfo, Strin
                 "\"ME_USERNAME\" TEXT," + // 7: meUsername
                 "\"ME_PWD\" TEXT," + // 8: mePwd
                 "\"ME_BIND_STATE\" INTEGER NOT NULL ," + // 9: meBindState
-                "\"UID\" TEXT);"); // 10: uid
+                "\"UID\" TEXT," + // 10: uid
+                "\"MODEL\" TEXT);"); // 11: model
     }
 
     /** Drops the underlying database table. */
@@ -119,6 +121,11 @@ public class GatewayServiceInfoDao extends AbstractDao<GatewayServiceInfo, Strin
         if (uid != null) {
             stmt.bindString(11, uid);
         }
+ 
+        String model = entity.getModel();
+        if (model != null) {
+            stmt.bindString(12, model);
+        }
     }
 
     @Override
@@ -171,6 +178,11 @@ public class GatewayServiceInfoDao extends AbstractDao<GatewayServiceInfo, Strin
         if (uid != null) {
             stmt.bindString(11, uid);
         }
+ 
+        String model = entity.getModel();
+        if (model != null) {
+            stmt.bindString(12, model);
+        }
     }
 
     @Override
@@ -191,7 +203,8 @@ public class GatewayServiceInfoDao extends AbstractDao<GatewayServiceInfo, Strin
             cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7), // meUsername
             cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8), // mePwd
             cursor.getInt(offset + 9), // meBindState
-            cursor.isNull(offset + 10) ? null : cursor.getString(offset + 10) // uid
+            cursor.isNull(offset + 10) ? null : cursor.getString(offset + 10), // uid
+            cursor.isNull(offset + 11) ? null : cursor.getString(offset + 11) // model
         );
         return entity;
     }
@@ -209,6 +222,7 @@ public class GatewayServiceInfoDao extends AbstractDao<GatewayServiceInfo, Strin
         entity.setMePwd(cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8));
         entity.setMeBindState(cursor.getInt(offset + 9));
         entity.setUid(cursor.isNull(offset + 10) ? null : cursor.getString(offset + 10));
+        entity.setModel(cursor.isNull(offset + 11) ? null : cursor.getString(offset + 11));
      }
     
     @Override

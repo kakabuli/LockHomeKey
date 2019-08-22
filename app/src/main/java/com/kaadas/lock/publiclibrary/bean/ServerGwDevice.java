@@ -22,6 +22,7 @@ public class ServerGwDevice implements Serializable {
     private String macaddr;
     private String nickName;
     private String time;
+    private String model;   // 6030 小网关、 6010大网关
 
     public String getSW() {
         return SW;
@@ -97,6 +98,26 @@ public class ServerGwDevice implements Serializable {
         this.macaddr = macaddr;
         this.nickName = nickName;
         this.time = time;
+    }
+
+    public ServerGwDevice(String SW, String deviceId, String device_type, String event_str, String ipaddr, String macaddr, String nickName, String time, String model) {
+        this.SW = SW;
+        this.deviceId = deviceId;
+        this.device_type = device_type;
+        this.event_str = event_str;
+        this.ipaddr = ipaddr;
+        this.macaddr = macaddr;
+        this.nickName = nickName;
+        this.time = time;
+        this.model = model;
+    }
+
+    public String getModel() {
+        return model;
+    }
+
+    public void setModel(String model) {
+        this.model = model;
     }
 
     public ServerGwDevice() {

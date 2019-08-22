@@ -238,10 +238,11 @@ public class   KeyConstants {
     public static final String GATEWAY_ID="gatewayId";
     //网关的昵称
     public static final String GATEWAY_NICKNAME="gatewayNickName";
-
+    public static final String SMALL_GW="6030";
     //是否是管理员
     public static final String IS_ADMIN="isadmin";
-
+    //是否是管理员
+    public static final String GW_MODEL="gw_model";
 
     //设备的id
     public static final String DEVICE_ID="deviceId";

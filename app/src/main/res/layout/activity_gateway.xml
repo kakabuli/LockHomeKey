@@ -63,11 +63,12 @@
 
 
         <ImageView
+            android:id="@+id/gateway_logo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="@dimen/dp_36"
-            android:src="@mipmap/gateway_icon" />
+            android:src="@mipmap/gateway6010" />
 
         <LinearLayout
             android:layout_width="match_parent"
