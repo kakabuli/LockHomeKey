@@ -20,6 +20,7 @@ import android.widget.TextView;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.MainActivity;
+import com.kaadas.lock.activity.device.gatewaylock.more.GatewayMoreActivity;
 import com.kaadas.lock.activity.device.gatewaylock.password.GatewayPasswordManagerActivity;
 import com.kaadas.lock.bean.BluetoothLockFunctionBean;
 import com.kaadas.lock.bean.HomeShowBean;
@@ -40,6 +41,7 @@ import com.kaadas.lock.utils.ToastUtil;
 import com.kaadas.lock.utils.greenDao.db.DaoSession;
 import com.kaadas.lock.utils.greenDao.db.GatewayLockServiceInfoDao;
 
+import java.security.Key;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -219,7 +221,7 @@ public class GatewayLockAuthorizeFunctionActivity extends BaseActivity<GatewayLo
 
         }
     }
-
+    String nickName=null;
     private void initData() {
         Intent intent = getIntent();
         showBean = (HomeShowBean) intent.getSerializableExtra(KeyConstants.GATEWAY_LOCK_INFO);
@@ -245,8 +247,10 @@ public class GatewayLockAuthorizeFunctionActivity extends BaseActivity<GatewayLo
                     }
                 }
                 if (!TextUtils.isEmpty(lockInfo.getServerInfo().getNickName())) {
+                    nickName= lockInfo.getServerInfo().getNickName();
                     tvName.setText(lockInfo.getServerInfo().getNickName());
                 } else {
+                    nickName= lockInfo.getServerInfo().getDeviceId();
                     tvName.setText(lockInfo.getServerInfo().getDeviceId());
                 }
 
@@ -284,7 +288,9 @@ public class GatewayLockAuthorizeFunctionActivity extends BaseActivity<GatewayLo
                 intent = new Intent(this, GatewayDeviceInformationActivity.class);
                 intent.putExtra(KeyConstants.GATEWAY_ID, gatewayId);
                 intent.putExtra(KeyConstants.DEVICE_ID, deviceId);
-                startActivity(intent);
+                intent.putExtra(KeyConstants.DEVICE_NICKNAME,nickName);
+                //更多
+                startActivityForResult(intent, KeyConstants.DEVICE_DETAIL_BEAN_NUM);
                 break;
 
             case R.id.tv_open_clock:
@@ -674,10 +680,11 @@ public class GatewayLockAuthorizeFunctionActivity extends BaseActivity<GatewayLo
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == KeyConstants.DEVICE_DETAIL_BEAN_NUM) {
             if (resultCode == Activity.RESULT_OK) {
-                String name = data.getStringExtra(KeyConstants.NAME);
+                String name = data.getStringExtra(KeyConstants.DEVICE_NICKNAME);
                 if (name != null) {
                     if (tvName != null) {
                         tvName.setText(name);
+                        nickName=name;
                     }
                 }
             }

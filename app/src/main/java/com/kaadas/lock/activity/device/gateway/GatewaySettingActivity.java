@@ -308,7 +308,7 @@ public class GatewaySettingActivity extends BaseActivity<GatewaySettingView, Gat
 
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-        if (isAdmin == 1) {
+       // if (isAdmin == 1) {
             switch (position) {
                 case 0:
                     //设备名字
@@ -546,7 +546,7 @@ public class GatewaySettingActivity extends BaseActivity<GatewaySettingView, Gat
                     break;
 */
             }
-        }
+       // }
     }
 
     @Override

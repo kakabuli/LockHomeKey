@@ -250,6 +250,9 @@ public class   KeyConstants {
     //网关锁
     public static final String GATEWAY_LOCK="gateway_lock";
 
+    //设备的id
+    public static final String DEVICE_NICKNAME="DEVICE_NICKNAME";
+
     //开锁
     //已反锁
     //正在开锁
