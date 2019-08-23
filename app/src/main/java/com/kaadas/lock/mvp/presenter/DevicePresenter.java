@@ -197,7 +197,7 @@ public class DevicePresenter<T> extends BasePresenter<IDeviceView> {
                         public void accept(MqttData mqttData) throws Exception {
                             if (mqttData != null) {
                                 GetBindGatewayStatusResult gatewayStatusResult = new Gson().fromJson(mqttData.getPayload(), GetBindGatewayStatusResult.class);
-                                LogUtils.e("监听网关的Device状态" + gatewayStatusResult.getDevuuid());
+                                LogUtils.e("监听网关的Device状态" + gatewayStatusResult.getDevuuid()+" mqttData:"+mqttData);
                                 if (gatewayStatusResult != null&&gatewayStatusResult.getData().getState()!=null) {
                                     if (mViewRef.get() != null) {
                                         mViewRef.get().gatewayStatusChange(gatewayStatusResult.getDevuuid(),gatewayStatusResult.getData().getState());

@@ -264,6 +264,7 @@ public class GatewayMoreActivity extends BaseActivity<GatewayLockMoreView, Gatew
                 intent = new Intent(this, GatewayDeviceInformationActivity.class);
                 intent.putExtra(KeyConstants.DEVICE_ID, deviceId);
                 intent.putExtra(KeyConstants.GATEWAY_ID, gatewayId);
+                intent.putExtra(KeyConstants.IS_GATEAWAY,true);
                 startActivity(intent);
                 break;
 

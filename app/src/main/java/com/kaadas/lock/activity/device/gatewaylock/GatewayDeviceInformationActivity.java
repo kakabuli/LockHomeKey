@@ -90,6 +90,11 @@ public class GatewayDeviceInformationActivity extends BaseActivity<GatewayLockIn
         gatewayId=intent.getStringExtra(KeyConstants.GATEWAY_ID);
         deviceId=intent.getStringExtra(KeyConstants.DEVICE_ID);
         nickName= intent.getStringExtra(KeyConstants.DEVICE_NICKNAME);
+        boolean isgateway= getIntent().getBooleanExtra(KeyConstants.IS_GATEAWAY,false);
+        if(isgateway){
+            rlDeviceName.setVisibility(View.GONE);
+        }
+
         tv_device_auth_name.setText(nickName);
         uid=MyApplication.getInstance().getUid();
         daoSession=MyApplication.getInstance().getDaoWriteSession();
