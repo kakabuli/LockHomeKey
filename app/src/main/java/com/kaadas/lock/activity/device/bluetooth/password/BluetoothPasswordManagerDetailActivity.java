@@ -4,8 +4,6 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -186,9 +184,6 @@ public class BluetoothPasswordManagerDetailActivity extends BaseBleActivity<IPas
                             //确认删除
                             if (mPresenter.isAuth(bleLockInfo, true)) {
                                 showLoading(getString(R.string.is_deleting));
-                    /*            if (password.getPwdType()!=-1){
-                                    mPresenter.deletePwd(password.getPwdType(), Integer.parseInt(password.getNum()), 1, true);
-                                }*/
                                 if (password.getType() == 5){
                                     mPresenter.deletePwd(2, Integer.parseInt(password.getNum()), 1, true);
                                 }else {
@@ -219,7 +214,7 @@ public class BluetoothPasswordManagerDetailActivity extends BaseBleActivity<IPas
     public void onDeleteServerPwdSuccess() {
         LogUtils.e("删除服务器密码");
         hiddenLoading();
-        Intent intent = new Intent(this, BluetoothPasswordManagerActivity.class);
+        Intent intent = new Intent(this, BlePasswordManagerActivity.class);
         startActivity(intent);
         finish();
     }
@@ -244,7 +239,7 @@ public class BluetoothPasswordManagerDetailActivity extends BaseBleActivity<IPas
     public void updateNickNameSuccess(String nickName) {
         ToastUtil.getInstance().showShort(R.string.modify_success);
         hiddenLoading();
-        Intent intent = new Intent(this, BluetoothPasswordManagerActivity.class);
+        Intent intent = new Intent(this, BlePasswordManagerActivity.class);
         startActivity(intent);
         finish();
     }

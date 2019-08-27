@@ -276,15 +276,6 @@ public class BleLockPresenter<T> extends MyOpenLockRecordPresenter<IBleLockView>
     }
 
 
-
-
-
-
-
-
-
-
-
     @Override
     public void attachView(IBleLockView view) {
         super.attachView(view);

@@ -84,4 +84,11 @@ public interface IAddTimePasswprdView extends IBleView {
      * 同步密码错粗
      */
     void onSyncPasswordFailed(Throwable throwable);
+
+
+
+    /**
+     *  时效密码满了
+     */
+    void onTimePwdFull();
 }

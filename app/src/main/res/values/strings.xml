@@ -1186,4 +1186,5 @@
     <string name="update_nickname_exception">设置名称异常</string>
     <string name="network_exception_video">网路状态异常,请切换网络</string>
     <string name="get_stress_list_success_no">锁上无胁迫密码</string>
+    <string name="only_0to4">只有编号0～4才可以添加策略密码</string>
 </resources>

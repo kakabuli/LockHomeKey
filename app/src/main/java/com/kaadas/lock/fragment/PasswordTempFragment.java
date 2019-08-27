@@ -18,7 +18,7 @@ import android.widget.TextView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
-import com.kaadas.lock.activity.device.bluetooth.password.BluetoothPasswordManagerActivity;
+import com.kaadas.lock.activity.device.bluetooth.password.BlePasswordManagerActivity;
 import com.kaadas.lock.activity.device.bluetooth.password.BluetoothPasswordShareActivity;
 import com.kaadas.lock.adapter.ShiXiaoNameAdapter;
 import com.kaadas.lock.bean.ShiXiaoNameBean;
@@ -45,7 +45,7 @@ import butterknife.ButterKnife;
  * Created by David
  */
 
-public class PasswordTemporaryFragment extends BaseBleFragment<IAddTempView, AddTempPresenter<IAddTempView>>
+public class PasswordTempFragment extends BaseBleFragment<IAddTempView, AddTempPresenter<IAddTempView>>
         implements BaseQuickAdapter.OnItemClickListener, View.OnClickListener, IAddTempView {
     @BindView(R.id.recycleview)
     RecyclerView recyclerView;
@@ -100,8 +100,8 @@ public class PasswordTemporaryFragment extends BaseBleFragment<IAddTempView, Add
             }
         });
     }
-    public static PasswordTemporaryFragment newInstance() {
-        PasswordTemporaryFragment fragment = new PasswordTemporaryFragment();
+    public static PasswordTempFragment newInstance() {
+        PasswordTempFragment fragment = new PasswordTempFragment();
         return fragment;
     }
 
@@ -214,7 +214,7 @@ public class PasswordTemporaryFragment extends BaseBleFragment<IAddTempView, Add
     public void onSetPwdFailedServer(BaseResult result) {
         hiddenLoading();
         ToastUtil.getInstance().showShort(R.string.lock_set_success_please_sync);
-        startActivity(new Intent(getActivity(), BluetoothPasswordManagerActivity.class));
+        startActivity(new Intent(getActivity(), BlePasswordManagerActivity.class));
         getActivity().finish();
     }
 
@@ -247,7 +247,7 @@ public class PasswordTemporaryFragment extends BaseBleFragment<IAddTempView, Add
     public void onUploadFailed(Throwable throwable) {
         ToastUtil.getInstance().showShort(R.string.lock_set_success_please_sync);
         hiddenLoading();
-        startActivity(new Intent(getActivity(), BluetoothPasswordManagerActivity.class));
+        startActivity(new Intent(getActivity(), BlePasswordManagerActivity.class));
         getActivity().finish();
     }
 

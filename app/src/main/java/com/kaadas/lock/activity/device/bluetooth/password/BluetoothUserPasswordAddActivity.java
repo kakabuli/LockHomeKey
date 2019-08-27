@@ -6,7 +6,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -14,8 +13,8 @@ import android.widget.TextView;
 import com.flyco.tablayout.SlidingTabLayout;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
-import com.kaadas.lock.fragment.PasswordPeriodFragment;
-import com.kaadas.lock.fragment.PasswordTemporaryFragment;
+import com.kaadas.lock.fragment.PasswordWeekFragment;
+import com.kaadas.lock.fragment.PasswordTempFragment;
 import com.kaadas.lock.fragment.PasswordTimeFragment;
 import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
@@ -74,8 +73,8 @@ public class BluetoothUserPasswordAddActivity extends BaseAddToApplicationActivi
         // 这里可以从Activity中传递数据到Fragment中
         viewPager.setOffscreenPageLimit(3);
         mFragments.add(PasswordTimeFragment.newInstance());
-        mFragments.add(PasswordPeriodFragment.newInstance());
-        mFragments.add(PasswordTemporaryFragment.newInstance());
+        mFragments.add(PasswordWeekFragment.newInstance());
+        mFragments.add(PasswordTempFragment.newInstance());
 
         //适配器
         mPagerAdapter = new ListFragmentPagerAdapter(getSupportFragmentManager(), mFragments);

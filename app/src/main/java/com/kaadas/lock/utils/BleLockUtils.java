@@ -67,13 +67,19 @@ public class BleLockUtils {
         FUNCTION_SET.put(0x31, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 10, 13, 16, 17, 19, 20, 21, 22});
         FUNCTION_SET.put(0x32, new Integer[]{1, 2, 3, 4, 5, 7, 8, 9, 10, 13, 16, 17, 19, 20, 21, 22});
         FUNCTION_SET.put(0x33, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 13, 16, 17, 19, 20, 21, 22});
-        FUNCTION_SET.put(0x34, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 13, 16, 17, 19, 20, 21, 22});
-        FUNCTION_SET.put(0x35, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 10, 12, 13, 16, 17, 19, 20, 21, 22, 23});
-        FUNCTION_SET.put(0x36, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 10, 12, 13, 16, 17, 18, 19, 20, 21, 22, 23});
+        FUNCTION_SET.put(0x34, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 13, 16, 17, 19, 20, 21, 22});
+        FUNCTION_SET.put(0x35, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 10, 13, 16, 17, 19, 20, 21, 22, 23});
+        FUNCTION_SET.put(0x36, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 10, 13, 16, 17, 18, 19, 20, 21, 22, 23});
 
-        FUNCTION_SET.put(0x37, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 13, 16, 17, 18, 19, 20, 21, 22, 23});
-        FUNCTION_SET.put(0x38, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 10, 12, 13, 16, 17, 18, 19, 20, 21, 22, 23, 24});
-        FUNCTION_SET.put(0x39, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 13, 16, 17, 18, 19, 20, 21, 22, 23, 24});
+        FUNCTION_SET.put(0x37, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 13, 16, 17, 18, 19, 20, 21, 22, 23});
+        FUNCTION_SET.put(0x38, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 10, 13, 16, 17, 18, 19, 20, 21, 22, 23, 24});
+        FUNCTION_SET.put(0x39, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 13, 16, 17, 18, 19, 20, 21, 22, 23, 24});
+
+
+        FUNCTION_SET.put(0x60, new Integer[]{12, 3, 4, 5, 6, 7, 8, 9, 10, 13, 16, 17, 19, 20, 21, 22, 23, 25});
+        FUNCTION_SET.put(0x61, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 10, 13, 16, 17, 19, 20, 21, 22, 23, 25});
+        FUNCTION_SET.put(0x62, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 10, 13, 16, 17, 19, 20, 21, 22, 23, 24, 25});
+        FUNCTION_SET.put(0x63, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 13, 16, 17, 19, 20, 21, 22, 23, 24, 25});
 
         FUNCTION_SET.put(0xFF, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 10, 13, 16, 17, 19, 20, 21, 22}); //默认为FF
     }
@@ -81,6 +87,7 @@ public class BleLockUtils {
 
     /**
      * 根据功能集判断是否支持手动自动模式显示
+     *
      * @param functionSet
      * @return
      */
@@ -211,10 +218,6 @@ public class BleLockUtils {
     }
 
 
-
-
-
-
     /**
      * 根据功能集判断是否支持操作记录
      *
@@ -230,6 +233,23 @@ public class BleLockUtils {
         List<Integer> integers = Arrays.asList(funcs);
         return integers.contains(24);
     }
+
+    /**
+     * 根据功能集判断是否只支持20个指纹
+     *
+     * @param functionSet
+     * @return
+     */
+    public static boolean isOnlySupport20Fingers(String functionSet) {
+        int funcSet = Integer.parseInt(functionSet);
+        Integer[] funcs = FUNCTION_SET.get(funcSet);
+        if (funcs == null) {
+            return false;
+        }
+        List<Integer> integers = Arrays.asList(funcs);
+        return integers.contains(25);
+    }
+
 
     public static boolean isExistFunctionSet(int functionSet) {
         //获取改功能集是否存在
@@ -306,6 +326,8 @@ public class BleLockUtils {
                 return R.mipmap.bluetooth_authorization_lock_k100;
             } else if (model.startsWith("H5606")) {
                 return R.mipmap.bluetooth_authorization_lock_h5606;
+            } else if (model.startsWith("8008")) {
+                return R.mipmap.bluetooth_authorization_lock_8008;
             } else {
                 return R.mipmap.bluetooth_authorization_lock_default;
             }
@@ -316,8 +338,7 @@ public class BleLockUtils {
 
 
     /**
-     * 根据设备型号，获取设备列表显示的图片
-     *
+     * 根据设备型号,获取设备列表显示的图片
      * @param model
      * @return
      */
@@ -335,7 +356,7 @@ public class BleLockUtils {
                 return R.mipmap.kx;
             } else if (model.startsWith("S8C")) {
                 return R.mipmap.s8;
-            } else if (model.contains("V6") || model.contains("V350")) {
+            } else if (model.startsWith("V6") || model.startsWith("V350")) {
                 return R.mipmap.v6;
             } else if (model.startsWith("V7") || model.startsWith("S100")) {
                 return R.mipmap.v7;
@@ -347,10 +368,12 @@ public class BleLockUtils {
                 return R.mipmap.qz013;
             } else if (model.startsWith("S6")) {
                 return R.mipmap.s6;
-            } else if (model.contains("K100") || model.contains("V450")) {
+            } else if (model.startsWith("K100") || model.startsWith("V450")) {
                 return R.mipmap.k100;
             } else if (model.startsWith("H5606")) {
                 return R.mipmap.h5606;
+            } else if (model.startsWith("8008")) {
+                return R.mipmap.small_8008;
             } else {
                 return R.mipmap.default_zigbee_lock_icon;
             }
@@ -358,7 +381,6 @@ public class BleLockUtils {
             return R.mipmap.default_zigbee_lock_icon;
         }
     }
-
 
 
     /**
@@ -369,34 +391,36 @@ public class BleLockUtils {
      */
     public static int getDetailImageByModel(String model) {
         if (!TextUtils.isEmpty(model)) {
-            if (model.contains("K7")) {
+            if (model.startsWith("K7")) {
                 return R.mipmap.bluetooth_lock_k7;
-            } else if (model.contains("K8-T")) {
+            } else if (model.startsWith("K8-T")) {
                 return R.mipmap.bluetooth_lock_k8_t;
-            } else if (model.contains("K8")) {
+            } else if (model.startsWith("K8")) {
                 return R.mipmap.bluetooth_lock_k8;
-            } else if (model.contains("K9")) {
+            } else if (model.startsWith("K9")) {
                 return R.mipmap.bluetooth_lock_k9;
-            } else if (model.contains("KX")) {
+            } else if (model.startsWith("KX")) {
                 return R.mipmap.bluetooth_lock_kx;
-            } else if (model.contains("S8C")) {
+            } else if (model.startsWith("S8C")) {
                 return R.mipmap.bluetooth_lock_s8;
-            } else if (model.contains("V6") || model.contains("V350")) {
+            } else if (model.startsWith("V6") || model.startsWith("V350")) {
                 return R.mipmap.bluetooth_lock_v6;
-            } else if (model.contains("V7") || model.contains("S100")) {
+            } else if (model.startsWith("V7") || model.startsWith("S100")) {
                 return R.mipmap.bluetooth_lock_v7;
-            } else if (model.contains("S8")) {
+            } else if (model.startsWith("S8")) {
                 return R.mipmap.bluetooth_lock_s8;
-            } else if (model.contains("QZ013")) {
+            } else if (model.startsWith("QZ013")) {
                 return R.mipmap.bluetooth_lock_qz013;
-            } else if (model.contains("QZ012")) {
+            } else if (model.startsWith("QZ012")) {
                 return R.mipmap.bluetooth_lock_qz012;
-            } else if (model.contains("K100") || model.contains("V450")) {
+            } else if (model.startsWith("K100") || model.startsWith("V450")) {
                 return R.mipmap.bluetooth_lock_k100;
-            } else if (model.contains("S6")) {
+            } else if (model.startsWith("S6")) {
                 return R.mipmap.bluetooth_lock_s6;
-            } else if (model.contains("H5606")) {
+            } else if (model.startsWith("H5606")) {
                 return R.mipmap.bluetooth_lock_h5606;
+            } else if (model.startsWith("8008")) {
+                return R.mipmap.bluetooth_lock_8008;
             } else {
                 return R.mipmap.bluetooth_lock_default;
             }
