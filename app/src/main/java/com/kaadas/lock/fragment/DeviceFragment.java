@@ -102,7 +102,6 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
 
     private Unbinder unbinder;
 
-    private Boolean flag = false;
 
     private DeviceDetailAdapter deviceDetailAdapter;
 

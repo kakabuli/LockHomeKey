@@ -31,7 +31,7 @@ import com.kaadas.lock.adapter.BluetoothFunctionAdapater;
 import com.kaadas.lock.adapter.BluetoothFunctionOneLineAdapater;
 import com.kaadas.lock.bean.BluetoothLockFunctionBean;
 import com.kaadas.lock.mvp.mvpbase.BaseBleActivity;
-import com.kaadas.lock.mvp.presenter.DeviceDetailPresenter;
+import com.kaadas.lock.mvp.presenter.ble.BleDeviceDetailPresenter;
 import com.kaadas.lock.mvp.view.IDeviceDetailView;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.publiclibrary.bean.ForeverPassword;
@@ -59,7 +59,7 @@ import butterknife.ButterKnife;
 /**
  * Created by David on 2019/4/10
  */
-public class BleDetailActivity extends BaseBleActivity<IDeviceDetailView, DeviceDetailPresenter<IDeviceDetailView>>
+public class BleDetailActivity extends BaseBleActivity<IDeviceDetailView, BleDeviceDetailPresenter<IDeviceDetailView>>
         implements IDeviceDetailView, View.OnClickListener {
     @BindView(R.id.iv_back)
     ImageView ivBack;
@@ -207,8 +207,8 @@ public class BleDetailActivity extends BaseBleActivity<IDeviceDetailView, Device
     }
 
     @Override
-    protected DeviceDetailPresenter<IDeviceDetailView> createPresent() {
-        return new DeviceDetailPresenter<>();
+    protected BleDeviceDetailPresenter<IDeviceDetailView> createPresent() {
+        return new BleDeviceDetailPresenter<>();
     }
 
     @SuppressLint("SetTextI18n")

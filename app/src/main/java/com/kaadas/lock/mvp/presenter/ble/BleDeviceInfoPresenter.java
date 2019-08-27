@@ -1,4 +1,4 @@
-package com.kaadas.lock.mvp.presenter;
+package com.kaadas.lock.mvp.presenter.ble;
 
 
 import com.kaadas.lock.MyApplication;
@@ -26,7 +26,7 @@ import io.reactivex.functions.Predicate;
 /**
  * Created by David on 2019/3/14
  */
-public class DeviceInfoPresenter extends BlePresenter<IDeviceInfoView> {
+public class BleDeviceInfoPresenter extends BlePresenter<IDeviceInfoView> {
     private Disposable readSerialNumberDisposable;
     private Disposable readModelNumberDisposable;
     private Disposable readFirmwareRevDisposable;

@@ -1,18 +1,20 @@
-package com.kaadas.lock.mvp.presenter;
+package com.kaadas.lock.mvp.presenter.ble;
 
 import com.kaadas.lock.MyApplication;
-import com.kaadas.lock.mvp.mvpbase.BlePresenter;
-import com.kaadas.lock.mvp.view.IOperationRecordView;
+import com.kaadas.lock.mvp.view.IBleLockView;
 import com.kaadas.lock.publiclibrary.ble.BleCommandFactory;
 import com.kaadas.lock.publiclibrary.ble.BleUtil;
+import com.kaadas.lock.publiclibrary.ble.RetryWithTime;
 import com.kaadas.lock.publiclibrary.ble.bean.OperationLockRecord;
 import com.kaadas.lock.publiclibrary.ble.responsebean.BleDataBean;
+import com.kaadas.lock.publiclibrary.ble.responsebean.ReadInfoBean;
 import com.kaadas.lock.publiclibrary.http.XiaokaiNewServiceImp;
 import com.kaadas.lock.publiclibrary.http.postbean.UploadOperationRecordBean;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.result.OperationRecordResult;
 import com.kaadas.lock.publiclibrary.http.util.BaseObserver;
 import com.kaadas.lock.publiclibrary.http.util.RxjavaHelper;
+import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.Rsa;
 
@@ -20,34 +22,369 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
 import io.reactivex.functions.Predicate;
 
-/**
- * Create By lxj  on 2019/2/18
- * Describe
- * 第一种方式
- * 获取开锁记录的逻辑
- * 进入就从服务器获取开锁记录
- * 用户点击同步记录，即获取所有锁上的开锁记录
- * 如果用户不点击，那么不主动获取锁上开锁记录
- * 用户点击同步开锁记录时的获取开锁记录逻辑：
- * <p>
- * 方式一：
- * 获取所有的开锁记录，根据total值生成total值的开锁记录的数组
- * 超过1秒没有再收到数据则认为数据已经接受完成
- * 检查数据是否有遗漏   如果没有遗漏  直接传递给界面显示，并上传服务器
- * 如果有遗漏重新全部获取   最多重试三次
- * <p>
- * 方式二：
- * 分组查询
- * 首先查询第一组数据，获取到total值，然后根据total值分组
- * <p>
- * 每一组数据的查询逻辑
- */
-public class OperationRecordPresenter<T> extends BlePresenter<IOperationRecordView> {
+public class BleLockPresenter<T> extends MyOpenLockRecordPresenter<IBleLockView> {
+    private Disposable openLockNumebrDisposable;
+    private Disposable electricDisposable;
+    private byte[] readLockNumberCommand;
+    private Disposable getDeviceInfoDisposable;
+    public int state5;
+    public int state8;
+    public int state2;
+    private Disposable warringDisposable;
+    private Disposable upLockDisposable;
+    private Disposable deviceStateChangeDisposable;
+    private Disposable listenAuthFailedDisposable;
+
+
+    @Override
+    public void authSuccess() {
+        // TODO: 2019/4/1    连接成功   之后通过特征值获取信息   不通过   指令获取设备信息  规避管理模式下发送指令不能获取设备信息的问题
+        //存在一个问题    通过特征值获取信息可能不是最新的信息。这个怎么办
+        if (bleLockInfo.getBattery() == -1) {   //没有获取过再重新获取   获取到电量
+            readBattery();
+        } else {  //如果电量已经获取   那么读取设备支持功能和设备状态特征值
+            getDeviceInfo();
+        }
+    }
+
+    public void getDeviceInfo() {
+        byte[] command = BleCommandFactory.syncLockInfoCommand(bleLockInfo.getAuthKey());  //2
+        bleService.sendCommand(command);
+        toDisposable(getDeviceInfoDisposable);
+        getDeviceInfoDisposable = bleService.listeneDataChange()
+                .filter(new Predicate<BleDataBean>() {
+                    @Override
+                    public boolean test(BleDataBean bleDataBean) throws Exception {
+                        return command[1] == bleDataBean.getTsn();
+                    }
+                })
+                .timeout(5 * 1000, TimeUnit.MILLISECONDS)
+                .compose(RxjavaHelper.observeOnMainThread())
+                .subscribe(new Consumer<BleDataBean>() {
+                    @Override
+                    public void accept(BleDataBean bleDataBean) throws Exception {
+                        if (bleDataBean.getOriginalData()[0] == 0) {
+                            //收到门锁信息  确认帧
+                            LogUtils.e("收到门锁信息  确认帧   " + Rsa.toHexString(bleDataBean.getOriginalData()));
+                            return;
+                        }
+                        //判断是否是当前指令
+                        if (bleDataBean.getCmd() != command[3]) {
+                            return;
+                        }
+                        byte[] deValue = Rsa.decrypt(bleDataBean.getPayload(), bleLockInfo.getAuthKey());
+                        LogUtils.e("门锁信息的数据是   源数据是  " + Rsa.bytesToHexString(bleDataBean.getOriginalData()) + "    解密后的数据是    " + Rsa.bytesToHexString(deValue));
+                        byte lockState = deValue[4]; //第五个字节为锁状态信息
+                        /**
+                         * 门锁状态
+                         * bit0：锁斜舌状态     =0：Lock     =1：Unlock – 阻塞（Blocked）
+                         * bit1：主锁舌（联动锁舌）状态    =0：Lock     =1：Unlock
+                         * bit2：反锁（独立锁舌）状态     =0：Lock     =1：Unlock
+                         * bit3：门状态                    =0：Lock    =1：Unlock
+                         * bit4：门磁状态       =0：Close        =1：Open
+                         * bit5：安全模式       =0：不启用或不支持      =1：启用安全模式
+                         * bit6：默认管理密码         =0：出厂密码         =1：已修改
+                         * bit7：手自动模式   （LockFun：bit10=1）     =0：手动       =1：自动
+                         * bit8：布防状态    （LockFun：bit4=1）       =0：未布防      =1：已布防
+                         * 0 1 0 0 0 1 1 0
+                         * 0 0 1 1 0 0 0 1
+                         */
+
+                        //解析锁功能
+                        int lockFun0 = deValue[0];
+                        int lockFun1 = deValue[1];
+                        //支持反锁
+                        bleLockInfo.setSupportBackLock((lockFun1 & 0b01000000) == 0b01000000 ? 1 : 0);
+                        LogUtils.e("是否支持反锁   " + bleLockInfo.getSupportBackLock());
+                        int state0 = (lockState & 0b00000001) == 0b00000001 ? 1 : 0;
+                        int state1 = (lockState & 0b00000010) == 0b00000010 ? 1 : 0;
+                        state2 = (lockState & 0b00000100) == 0b00000100 ? 1 : 0;
+                        int state3 = (lockState & 0b00001000) == 0b00001000 ? 1 : 0;
+                        int state4 = (lockState & 0b00010000) == 0b00010000 ? 1 : 0;
+                        //安全模式
+                        state5 = (lockState & 0b00100000) == 0b00100000 ? 1 : 0;
+                        int state6 = (lockState & 0b01000000) == 0b01000000 ? 1 : 0;
+                        int state7 = (lockState & 0b10000000) == 0b10000000 ? 1 : 0;  //手动模式/自动模式
+                        state8 = (deValue[5] & 0b00000001) == 0b00000001 ? 1 : 0;
+                        LogUtils.e("布防状态为   " + state8 + "  第五个字节数据为 " + Integer.toBinaryString((deValue[5] & 0xff))
+                                + "安全模式状态   " + state5 + "  反锁模式    " + state2);
+                        int voice = deValue[8] & 0xff;  //是否是静音模式 0静音  1有声音
+                        String lang = new String(new byte[]{deValue[9], deValue[10]});  //语言设置
+                        int battery = deValue[11] & 0xff; //电量
+                        byte[] time = new byte[]{deValue[12], deValue[13], deValue[14], deValue[15]};  //锁的时间
+                        long time1 = Rsa.bytes2Int(time);
+                        //开门时间秒
+                        long openTimes = time1 + BleCommandFactory.defineTime;
+                        String lockTime = DateUtils.getDateTimeFromMillisecond(openTimes * 1000);//要上传的开锁时间
+
+                        bleLockInfo.setArmMode(state8);
+                        bleLockInfo.setSafeMode(state5);
+                        if (bleLockInfo.getSupportBackLock() == 1) {
+                            bleLockInfo.setBackLock(state2);
+                        }
+
+                        if (bleLockInfo.getBattery() == -1) {   //没有获取过再重新获取   获取到电量  那么
+                            bleLockInfo.setBattery(battery);
+                            bleLockInfo.setReadBatteryTime(System.currentTimeMillis());
+                            if (isSafe()) {
+                                mViewRef.get().onElectricUpdata(battery);
+                            }
+                        }
+                        bleLockInfo.setLang(lang);
+                        bleLockInfo.setVoice(voice);
+                        bleLockInfo.setAutoMode(state7);
+                        bleLockInfo.setDoorState(state3);
+                        bleLockInfo.setReadDeviceInfoTime(System.currentTimeMillis());
+
+                        LogUtils.e("锁上时间为    " + lockTime);
+                        toDisposable(getDeviceInfoDisposable);
+                        if (isSafe()) {
+                            LogUtils.e("设置锁状态  反锁状态   " + bleLockInfo.getBackLock() + "    安全模式    " + bleLockInfo.getSafeMode() + "   布防模式   " + bleLockInfo.getArmMode());
+                            if (state2 == 0 && bleLockInfo.getSupportBackLock() == 1) {  //等于0时是反锁状态
+                                mViewRef.get().onBackLock();
+                            }
+                            if (state5 == 1) {//安全模式
+                                mViewRef.get().onSafeMode();
+                            }
+                            if (state8 == 1) {//布防模式
+                                mViewRef.get().onArmMode();
+                            }
+                        }
+                        //如果获取锁信息成功，那么直接获取开锁次数
+                        getOpenLockNumber();
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        getOpenLockNumber();
+                    }
+                });
+        compositeDisposable.add(getDeviceInfoDisposable);
+    }
+
+    private void readBattery() {
+        toDisposable(electricDisposable);
+        electricDisposable = Observable.just(0)
+                .flatMap(new Function<Integer, ObservableSource<ReadInfoBean>>() {
+                    @Override
+                    public ObservableSource<ReadInfoBean> apply(Integer integer) throws Exception {
+                        return bleService.readBattery();
+                    }
+                })
+                .filter(new Predicate<ReadInfoBean>() {
+                    @Override
+                    public boolean test(ReadInfoBean readInfoBean) throws Exception {
+                        return readInfoBean.type == ReadInfoBean.TYPE_BATTERY;
+                    }
+                })
+                .timeout(1000, TimeUnit.MILLISECONDS)
+                .compose(RxjavaHelper.observeOnMainThread())
+                .retryWhen(new RetryWithTime(3, 0))  //读取三次电量   如果没有读取到电量的话
+                .subscribe(new Consumer<ReadInfoBean>() {
+                    @Override
+                    public void accept(ReadInfoBean readInfoBean) throws Exception {
+                        LogUtils.e("读取电量成功    " + (Integer) readInfoBean.data);
+                        Integer battery = (Integer) readInfoBean.data;
+                        if (bleLockInfo.getBattery() == -1) {   //没有获取过再重新获取   获取到电量  那么
+                            bleLockInfo.setBattery(battery);
+                            bleLockInfo.setReadBatteryTime(System.currentTimeMillis());
+                            if (isSafe()) {  //读取电量成功
+                                mViewRef.get().onElectricUpdata(battery);
+                            }
+                        }
+                        toDisposable(electricDisposable);
+                        getDeviceInfo();
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        LogUtils.e("读取电量失败   " + throwable.getMessage());
+                        if (isSafe()) {  //读取电量失败
+                            mViewRef.get().onElectricUpdataFailed(throwable);
+                        }
+                        getDeviceInfo();
+                    }
+                });
+        compositeDisposable.add(electricDisposable);
+    }
+
+
+    /**
+     * 获取开锁次数
+     */
+    public void getOpenLockNumber() {
+        LogUtils.e("获取开锁次数");
+        toDisposable(openLockNumebrDisposable);
+        readLockNumberCommand = BleCommandFactory.searchOpenNumber(bleLockInfo.getAuthKey());
+        bleService.sendCommand(readLockNumberCommand);
+        openLockNumebrDisposable = bleService.listeneDataChange()
+                .filter(new Predicate<BleDataBean>() {
+                    @Override
+                    public boolean test(BleDataBean bleDataBean) throws Exception {
+                        return readLockNumberCommand[1] == bleDataBean.getTsn();
+                    }
+                })
+                .timeout(10 * 1000, TimeUnit.MILLISECONDS)
+                .compose(RxjavaHelper.observeOnMainThread())
+                .subscribe(new Consumer<BleDataBean>() {
+                    @Override
+                    public void accept(BleDataBean bleDataBean) throws Exception {
+                        if (bleDataBean.getOriginalData()[0] == 0) { //
+                            LogUtils.e("获取开锁次数失败  " + Rsa.toHexString(bleDataBean.getOriginalData()));
+                            return;
+                        }
+                        //判断是否是当前指令
+                        if (bleDataBean.getCmd() != readLockNumberCommand[3]) {
+                            return;
+                        }
+                        toDisposable(openLockNumebrDisposable);
+                        //读取到开锁次数
+                        byte[] data = Rsa.decrypt(bleDataBean.getPayload(), bleLockInfo.getAuthKey());
+                        LogUtils.e("开锁次数的数据是   " + Rsa.toHexString(data));
+                        int number = (data[0] & 0xff) + ((data[1] & 0xff) << 8) + ((data[2] & 0xff) << 16) + ((data[3] & 0xff) << 24);
+                        LogUtils.e("开锁次数为   " + number + "  是否已经退出  " + (mViewRef.get() == null));
+                        if (isSafe()) {
+                            mViewRef.get().onGetOpenNumberSuccess(number);
+                        }
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        LogUtils.e("获取开锁次数失败 ");
+                        if (isSafe()) {
+                            mViewRef.get().onGetOpenNumberFailed(throwable);
+                        }
+                    }
+                });
+        compositeDisposable.add(openLockNumebrDisposable);
+    }
+
+
+    @Override
+    public void attachView(IBleLockView view) {
+        super.attachView(view);
+        if (bleService == null) {
+            return;
+        }
+        //设置警报提醒
+        LogUtils.e("蓝牙界面   attachView " + this + "    ");
+        toDisposable(warringDisposable);
+        warringDisposable = bleService.listeneDataChange()
+                .filter(new Predicate<BleDataBean>() {
+                    @Override
+                    public boolean test(BleDataBean bleDataBean) throws Exception {
+                        return bleDataBean.getCmd() == 0x07;
+                    }
+                })
+                .compose(RxjavaHelper.observeOnMainThread())
+                .subscribe(new Consumer<BleDataBean>() {
+                    @Override
+                    public void accept(BleDataBean bleDataBean) throws Exception {
+                        if (MyApplication.getInstance().getBleService().getBleLockInfo().getAuthKey() == null || MyApplication.getInstance().getBleService().getBleLockInfo().getAuthKey().length == 0) {
+                            LogUtils.e("收到报警记录，但是鉴权帧为空");
+                            return;
+                        }
+                        bleDataBean.getDevice().getName();
+                        bleDataBean.getCmd();
+                        byte[] deValue = Rsa.decrypt(bleDataBean.getPayload(), MyApplication.getInstance().getBleService().getBleLockInfo().getAuthKey());
+                        LogUtils.e("收到报警上报    " + Rsa.toHexString(deValue));
+                        int state0 = (deValue[4] & 0b00000001) == 0b00000001 ? 1 : 0;
+                        int state1 = (deValue[4] & 0b00000010) == 0b00000010 ? 1 : 0;
+                        state2 = (deValue[4] & 0b00000100) == 0b00000100 ? 1 : 0;
+                        int state3 = (deValue[4] & 0b00001000) == 0b00001000 ? 1 : 0;
+                        int state4 = (deValue[4] & 0b00010000) == 0b00010000 ? 1 : 0;
+                        //安全模式
+                        state5 = (deValue[4] & 0b00100000) == 0b00100000 ? 1 : 0;
+
+                        int state7 = (deValue[4] & 0b10000000) == 0b10000000 ? 1 : 0;  //手动模式/自动模式
+                        state8 = (deValue[5] & 0b00000001) == 0b00000001 ? 1 : 0;
+
+                        int state6 = (deValue[4] & 0b01000000) == 0b01000000 ? 1 : 0;   //恢复出厂设置
+                        int state9 = (deValue[5] & 0b00000010) == 0b00000010 ? 1 : 0;   //安全模式上报
+                        bleLockInfo.setLockStatusException(true);
+                        if (isSafe()) {
+                            if (state9 == 1) {
+                                mViewRef.get().onWarringUp(9);
+                                bleLockInfo.setSafeMode(1);
+                            } else if (state6 == 1) {
+                                mViewRef.get().onWarringUp(6);
+                            } else {
+                                mViewRef.get().onWarringUp(-2);
+                            }
+                        }
+                        //收到报警  0.5秒后读取锁信息
+                        getDeviceInfo();
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+
+                    }
+                });
+        compositeDisposable.add(warringDisposable);
+
+        toDisposable(deviceStateChangeDisposable);
+        deviceStateChangeDisposable = bleService.listenerDeviceStateChange()
+                .compose(RxjavaHelper.observeOnMainThread())
+                .subscribe(new Consumer<BleDataBean>() {
+                    @Override
+                    public void accept(BleDataBean bleDataBean) throws Exception {
+                        if (isSafe()) {   //通知界面更新显示设备状态
+                            mViewRef.get().onWarringUp(-1);
+                        }
+                        //锁状态改变   读取锁信息
+                        getDeviceInfo();
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        LogUtils.e("监听设备状态改变出错   " + throwable.toString());
+                    }
+                });
+        compositeDisposable.add(deviceStateChangeDisposable);
+
+
+        //通知界面更新显示设备状态
+        //通知界面更新显示设备状态
+        listenAuthFailedDisposable = bleService.listenerAuthFailed()
+                .compose(RxjavaHelper.observeOnMainThread())
+                .subscribe(new Consumer<Boolean>() {
+                    @Override
+                    public void accept(Boolean isFailed) throws Exception {
+                        if (isSafe()) {   //通知界面更新显示设备状态
+                            LogUtils.e("收到鉴权失败的回调    2222  ");
+                            mViewRef.get().onAuthFailed(isFailed);
+                        }
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+
+                    }
+                });
+        compositeDisposable.add(listenAuthFailedDisposable);
+    }
+
+
+    @Override
+    public void detachView() {
+        super.detachView();
+        // LogUtils.e("蓝牙界面   detachView " + this + "   " );
+        handler.removeCallbacksAndMessages(null);
+    }
+
+    public boolean isAttach() {
+        return isAttach;
+    }
+
+
     private OperationLockRecord[] operationLockRecords = null;
     private Disposable operationDisposable;
     private int operationCurrentPage;
@@ -70,14 +407,13 @@ public class OperationRecordPresenter<T> extends BlePresenter<IOperationRecordVi
                     /**
                      * 过滤报警信息
                      * */
-                    if (3!=operationLockRecords[i].getEventType()){
+                    if (3 != operationLockRecords[i].getEventType()) {
                         operationNotNullRecord.add(operationLockRecords[i]);
                     }
-
                 }
             }
         }
-        LogUtils.d("davi operationNotNullRecord 数据 "+ operationNotNullRecord.toString());
+        LogUtils.d("davi operationNotNullRecord 数据 " + operationNotNullRecord.toString());
         return operationNotNullRecord;
     }
 
@@ -89,13 +425,13 @@ public class OperationRecordPresenter<T> extends BlePresenter<IOperationRecordVi
         if (operationLockRecords == null) {
             return recordToServers;
         }
-        LogUtils.d("davi operationLockRecords 锁记录 "+operationLockRecords.toString());
+        LogUtils.d("davi operationLockRecords 锁记录 " + operationLockRecords.toString());
         for (int i = 0; i < operationLockRecords.length; i++) {
             if (operationLockRecords[i] != null) {
                 /**
                  * 过滤报警信息
                  * */
-                if (3!=operationLockRecords[i].getEventType()){
+                if (3 != operationLockRecords[i].getEventType()) {
                     UploadOperationRecordBean.OperationListBean record = new UploadOperationRecordBean.OperationListBean(
                             operationLockRecords[i].getUid(),
                             operationLockRecords[i].getEventType(),
@@ -113,21 +449,23 @@ public class OperationRecordPresenter<T> extends BlePresenter<IOperationRecordVi
     }
 
 
-
     /**
      * 获取全部的操作记录
-     * */
+     */
     public void getOperationRecordFromServer(int pagenum) {
         if (pagenum == 1) {  //如果是获取第一页的数据，那么清楚所有的开锁记录
             operationServerRecords.clear();
         }
+        if (!(bleService != null && bleService.getBleLockInfo() != null)) {
+            return;
+        }
         XiaokaiNewServiceImp.getOperationRecord(bleService.getBleLockInfo().getServerLockInfo().getLockName(),
-                pagenum )
+                pagenum)
                 .subscribe(new BaseObserver<OperationRecordResult>() {
                     @Override
                     public void onSuccess(OperationRecordResult operationRecordResult) {
-                        if (operationRecordResult.getData()!=null&&operationRecordResult.getData().size() == 0) {  //服务器没有数据  提示用户
-                            if (mViewRef.get() != null) {
+                        if (operationRecordResult.getData() != null && operationRecordResult.getData().size() == 0) {  //服务器没有数据  提示用户
+                            if (isSafe()) {
                                 if (pagenum == 1) { //第一次获取数据就没有
                                     mViewRef.get().onServerNoData();
                                 } else {
@@ -138,7 +476,7 @@ public class OperationRecordPresenter<T> extends BlePresenter<IOperationRecordVi
                         }
                         ///将服务器数据封装成用来解析的数据
                         for (OperationRecordResult.OperationBean record : operationRecordResult.getData()) {
-                            if (3!=record.getEventType()){
+                            if (3 != record.getEventType()) {
                                 operationServerRecords.add(
                                         new OperationLockRecord(
                                                 record.getEventType(),
@@ -152,8 +490,8 @@ public class OperationRecordPresenter<T> extends BlePresenter<IOperationRecordVi
                             }
 
                         }
-                        if (mViewRef.get() != null) {
-                            LogUtils.d(" 服务器记录 1 serverRecords "+operationServerRecords.toString());
+                        if (isSafe()) {
+                            LogUtils.d(" 服务器记录 1 serverRecords " + operationServerRecords.toString());
                             mViewRef.get().onLoadServerOperationRecord(operationServerRecords, pagenum);
                         }
                     }
@@ -161,7 +499,7 @@ public class OperationRecordPresenter<T> extends BlePresenter<IOperationRecordVi
                     @Override
                     public void onAckErrorCode(BaseResult baseResult) {
                         LogUtils.e("获取 开锁记录  失败   " + baseResult.getMsg() + "  " + baseResult.getCode());
-                        if (mViewRef.get() != null) {  //
+                        if (isSafe()) {  //
                             mViewRef.get().onLoadServerRecordFailedServer(baseResult);
                         }
                     }
@@ -189,7 +527,7 @@ public class OperationRecordPresenter<T> extends BlePresenter<IOperationRecordVi
     public void getOperationRecordFromBle() {
         //添加
         toDisposable(operationDisposable);
-        if (mViewRef.get() != null) {
+        if (isSafe()) {
             mViewRef.get().startBleRecord();
         }
         operationCurrentPage = 0;
@@ -217,12 +555,12 @@ public class OperationRecordPresenter<T> extends BlePresenter<IOperationRecordVi
             //看还有下一组数据没有   如果没有那么所有的数据都查询完了  不管之前查询到的是什么结果，都上传到服务器
             if (operationCurrentPage + 1 >= operationMaxPage) {  //已经查了最后一组数据
                 if (operationLockRecords == null) {  //没有获取到数据  请稍后再试
-                    if (mViewRef.get() != null && operationLockRecords == null) {
+                    if (isSafe() && operationLockRecords == null) {
                         mViewRef.get().onLoadBleRecordFinish(false);
                     }
                     return;
                 } else {
-                    if (mViewRef.get() != null && operationLockRecords != null) {
+                    if (isSafe() && operationLockRecords != null) {
                         mViewRef.get().onLoadBleRecordFinish(true);
                         LogUtils.d(" 蓝牙记录 1 ");
                         mViewRef.get().onLoadBleOperationRecord(getNotNullOperationRecord());
@@ -243,7 +581,7 @@ public class OperationRecordPresenter<T> extends BlePresenter<IOperationRecordVi
 
         if (operationCurrentPage != 0) {       //如果不是第一组  动态生成
             operationStartIndex = ((operationCurrentPage) * 20);
-            operationEndIndex = ((operationCurrentPage + 1) * 20-1);
+            operationEndIndex = ((operationCurrentPage + 1) * 20 - 1);
         }
 
         if (operationDisposable != null && !operationDisposable.isDisposed()) {
@@ -271,9 +609,9 @@ public class OperationRecordPresenter<T> extends BlePresenter<IOperationRecordVi
                             @Override
                             public void accept(BleDataBean bleDataBean) throws Exception {
                                 if (bleDataBean.isConfirm()) {
-                                    if (0x8b == (bleDataBean.getPayload()[0]&0xff) ) {  //没有数据
+                                    if (0x8b == (bleDataBean.getPayload()[0] & 0xff)) {  //没有数据
                                         LogUtils.e("锁上   没有开锁记录  ");
-                                        if (mViewRef.get() != null) {
+                                        if (isSafe()) {
                                             mViewRef.get().noData();
                                         }
                                         toDisposable(operationDisposable);
@@ -284,6 +622,7 @@ public class OperationRecordPresenter<T> extends BlePresenter<IOperationRecordVi
                                 if (bleDataBean.getCmd() != operationCommand[3]) {
                                     return;
                                 }
+
                                 byte[] deVaule = Rsa.decrypt(bleDataBean.getPayload(), bleService.getBleLockInfo().getAuthKey());
                                 LogUtils.e("获取开锁记录   解码之后的数据是   " + Rsa.bytesToHexString(deVaule) + "原始数据是   " + Rsa.toHexString(bleDataBean.getOriginalData()));
 //                                OpenLockRecord openLockRecord = BleUtil.parseLockRecord(deVaule);
@@ -291,16 +630,16 @@ public class OperationRecordPresenter<T> extends BlePresenter<IOperationRecordVi
                                 LogUtils.e("获取开锁记录是   " + operationLockRecord.toString());
                                 if (operationLockRecords == null) {
                                     byte[] totalByte = new byte[2];
-                                    System.arraycopy(deVaule, 0,totalByte , 0, 2);
+                                    System.arraycopy(deVaule, 0, totalByte, 0, 2);
                                     operationTotal = Rsa.bytesToInt(totalByte);
                                     operationLockRecords = new OperationLockRecord[operationTotal];
                                     operationMaxPage = (int) Math.ceil(operationTotal * 1.0 / 20.0);
                                     LogUtils.e(" 总个数   " + operationTotal + "  最大页数  " + operationMaxPage);
                                 }
                                 byte[] byteIndex = new byte[2];
-                                System.arraycopy(deVaule, 2,byteIndex , 0, 2);
+                                System.arraycopy(deVaule, 2, byteIndex, 0, 2);
                                 int index = Rsa.bytesToInt(byteIndex);
-                                LogUtils.d(" 1 index "+index+" operationTotal "+ operationTotal);
+                                LogUtils.d(" 1 index " + index + " operationTotal " + operationTotal);
                                 operationLockRecords[index] = operationLockRecord;
 
                                 // TODO: 2019/3/7  开锁记录测试
@@ -310,7 +649,7 @@ public class OperationRecordPresenter<T> extends BlePresenter<IOperationRecordVi
                                         loseNumber.add(i);
                                     }
                                 }
-                                if (mViewRef.get() != null) {
+                                if (isSafe()) {
                                     mViewRef.get().onLoseRecord(loseNumber);
                                 }
                                 // TODO: 2019/3/7  开锁记录测试
@@ -320,7 +659,7 @@ public class OperationRecordPresenter<T> extends BlePresenter<IOperationRecordVi
                                         if (operationLockRecords[i] == null) { //如果一组  数据不全
                                             operationRetryTimes++;
                                             if (operationRetryTimes > 2) {  //如果已经尝试了三次  那么先显示数据
-                                                if (mViewRef.get() != null) {
+                                                if (isSafe()) {
                                                     mViewRef.get().onLoadBleOperationRecord(getNotNullOperationRecord());
                                                 }
                                             }
@@ -328,11 +667,11 @@ public class OperationRecordPresenter<T> extends BlePresenter<IOperationRecordVi
                                             return;
                                         }
                                     }
-                                    if (mViewRef.get() != null) {
+                                    if (isSafe()) {
                                         mViewRef.get().onLoadBleOperationRecord(getNotNullOperationRecord());
                                     }
                                     if (operationCurrentPage + 1 >= operationMaxPage) { //如果收到最后一组的最后一个数据   直接上传
-                                        if (mViewRef.get() != null) {
+                                        if (isSafe()) {
                                             mViewRef.get().onLoadBleOperationRecord(getNotNullOperationRecord());
                                             mViewRef.get().onLoadBleRecordFinish(true);
                                         }
@@ -372,7 +711,7 @@ public class OperationRecordPresenter<T> extends BlePresenter<IOperationRecordVi
                                         loseNumber.add(i);
                                     }
                                 }
-                                if (mViewRef.get() != null) {
+                                if (isSafe()) {
                                     mViewRef.get().onLoseRecord(loseNumber);
                                 }
                                 // TODO: 2019/3/7  开锁记录测试
@@ -381,7 +720,7 @@ public class OperationRecordPresenter<T> extends BlePresenter<IOperationRecordVi
                                         LogUtils.e("数据不全  " + operationRetryTimes);
                                         operationRetryTimes++;
                                         if (operationRetryTimes > 2) {  //如果已经尝试了三次  那么先显示数据
-                                            if (mViewRef.get() != null) {
+                                            if (isSafe()) {
                                                 mViewRef.get().onLoadBleOperationRecord(getNotNullOperationRecord());
                                             }
                                         }
@@ -392,7 +731,7 @@ public class OperationRecordPresenter<T> extends BlePresenter<IOperationRecordVi
                                 //到此处，那么说明这一组数据完整不重新获取
                                 if (operationCurrentPage + 1 >= operationMaxPage) { //如果收到最后一组的最后一个数据   直接上传
                                     // 获取数据完成
-                                    if (mViewRef.get() != null) {
+                                    if (isSafe()) {
                                         mViewRef.get().onLoadBleOperationRecord(getNotNullOperationRecord());
                                         mViewRef.get().onLoadBleRecordFinish(true);
                                     }
@@ -417,7 +756,6 @@ public class OperationRecordPresenter<T> extends BlePresenter<IOperationRecordVi
 
 
     public void upLoadOperationRecord(String device_name, String device_nickname, List<UploadOperationRecordBean.OperationListBean> openLockList, String user_id) {
-
         for (UploadOperationRecordBean.OperationListBean bleRecord : openLockList) {
             LogUtils.e("上传的数据是    " + bleRecord.toString());
         }
@@ -427,14 +765,14 @@ public class OperationRecordPresenter<T> extends BlePresenter<IOperationRecordVi
                     @Override
                     public void onSuccess(BaseResult result) {
                         LogUtils.e("上传操作记录成功");
-                        if (mViewRef.get() != null) {
+                        if (isSafe()) {
                             mViewRef.get().onUploadServerRecordSuccess();
                         }
                     }
 
                     @Override
                     public void onAckErrorCode(BaseResult baseResult) {
-                        if (mViewRef.get() != null) {
+                        if (isSafe()) {
                             mViewRef.get().onUploadServerRecordFailedServer(baseResult);
                         }
                     }
@@ -442,7 +780,7 @@ public class OperationRecordPresenter<T> extends BlePresenter<IOperationRecordVi
                     @Override
                     public void onFailed(Throwable throwable) {
                         LogUtils.e("上传开锁记录失败");
-                        if (mViewRef.get() != null) {
+                        if (isSafe()) {
                             mViewRef.get().onUploadServerRecordFailed(throwable);
                         }
                     }
@@ -476,10 +814,10 @@ public class OperationRecordPresenter<T> extends BlePresenter<IOperationRecordVi
 //                            OpenLockRecord openLockRecord = BleUtil.parseLockRecord(deVaule);
                             OperationLockRecord operationLockRecord = BleUtil.parseOperationRecord(deVaule);
                             byte[] byteIndex = new byte[2];
-                            System.arraycopy(deVaule, 2,byteIndex , 0, 2);
+                            System.arraycopy(deVaule, 2, byteIndex, 0, 2);
                             int index = Rsa.bytesToInt(byteIndex);
                             if (operationLockRecords != null && index < operationLockRecords.length) {
-                                LogUtils.d(" 操作记录 index "+index+" operationTotal "+ operationTotal);
+                                LogUtils.d(" 操作记录 index " + index + " operationTotal " + operationTotal);
                                 operationLockRecords[index] = operationLockRecord;
                             }
                         }
@@ -493,9 +831,5 @@ public class OperationRecordPresenter<T> extends BlePresenter<IOperationRecordVi
         compositeDisposable.add(operationRecordDisposable);
     }
 
-    @Override
-    public void authSuccess() {
-
-    }
 
 }

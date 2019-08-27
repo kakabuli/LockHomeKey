@@ -10,7 +10,7 @@ import android.widget.TextView;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.mvp.mvpbase.BaseBleActivity;
-import com.kaadas.lock.mvp.presenter.DeviceInfoPresenter;
+import com.kaadas.lock.mvp.presenter.ble.BleDeviceInfoPresenter;
 import com.kaadas.lock.mvp.view.IDeviceInfoView;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.publiclibrary.http.result.OTAResult;
@@ -21,7 +21,7 @@ import com.kaadas.lock.utils.ToastUtil;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class BleDeviceInfoActivity extends BaseBleActivity<IDeviceInfoView, DeviceInfoPresenter> implements IDeviceInfoView, View.OnClickListener {
+public class BleDeviceInfoActivity extends BaseBleActivity<IDeviceInfoView, BleDeviceInfoPresenter> implements IDeviceInfoView, View.OnClickListener {
 
     @BindView(R.id.iv_back)
     ImageView ivBack;
@@ -63,8 +63,8 @@ public class BleDeviceInfoActivity extends BaseBleActivity<IDeviceInfoView, Devi
     }
 
     @Override
-    protected DeviceInfoPresenter createPresent() {
-        return new DeviceInfoPresenter();
+    protected BleDeviceInfoPresenter createPresent() {
+        return new BleDeviceInfoPresenter();
     }
 
     @Override

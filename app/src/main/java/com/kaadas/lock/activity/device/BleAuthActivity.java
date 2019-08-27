@@ -24,7 +24,7 @@ import com.kaadas.lock.activity.MainActivity;
 import com.kaadas.lock.activity.device.bluetooth.BleDeviceInfoActivity;
 import com.kaadas.lock.activity.device.oldbluetooth.OldDeviceInfoActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseBleActivity;
-import com.kaadas.lock.mvp.presenter.OldAndAuthBleDetailPresenter;
+import com.kaadas.lock.mvp.presenter.ble.OldAndAuthBleDetailPresenter;
 import com.kaadas.lock.mvp.view.IOldBleDetailView;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.publiclibrary.ble.BleProtocolFailedException;

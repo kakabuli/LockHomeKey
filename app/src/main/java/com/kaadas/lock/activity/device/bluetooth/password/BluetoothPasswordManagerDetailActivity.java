@@ -14,7 +14,7 @@ import android.widget.TextView;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.mvp.mvpbase.BaseBleActivity;
-import com.kaadas.lock.mvp.presenter.PasswordDetailPresenter;
+import com.kaadas.lock.mvp.presenter.ble.PasswordDetailPresenter;
 import com.kaadas.lock.mvp.view.IPasswordDetailView;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.publiclibrary.http.postbean.AddPasswordBean;

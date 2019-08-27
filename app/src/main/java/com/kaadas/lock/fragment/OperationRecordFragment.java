@@ -18,7 +18,7 @@ import com.kaadas.lock.bean.BluetoothItemRecordBean;
 import com.kaadas.lock.bean.BluetoothRecordBean;
 import com.kaadas.lock.bean.OperationSection;
 import com.kaadas.lock.mvp.mvpbase.BaseBleFragment;
-import com.kaadas.lock.mvp.presenter.OperationRecordPresenter;
+import com.kaadas.lock.mvp.presenter.ble.OperationRecordPresenter;
 import com.kaadas.lock.mvp.view.IOpenLockRecordView;
 import com.kaadas.lock.mvp.view.IOperationRecordView;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;

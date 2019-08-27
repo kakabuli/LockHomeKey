@@ -2,18 +2,15 @@ package com.kaadas.lock.activity.device.bluetooth.fingerprint;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.mvp.mvpbase.BaseBleActivity;
-import com.kaadas.lock.mvp.presenter.AddFingerprintEndPresenter;
+import com.kaadas.lock.mvp.presenter.ble.AddFingerprintEndPresenter;
 import com.kaadas.lock.mvp.view.IAddFingerprintEndView;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.publiclibrary.ble.BleProtocolFailedException;

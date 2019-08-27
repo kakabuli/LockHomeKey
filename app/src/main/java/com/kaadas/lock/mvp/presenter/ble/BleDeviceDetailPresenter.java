@@ -1,4 +1,4 @@
-package com.kaadas.lock.mvp.presenter;
+package com.kaadas.lock.mvp.presenter.ble;
 
 
 
@@ -24,7 +24,7 @@ import io.reactivex.functions.Predicate;
  * Create By lxj  on 2019/2/27
  * Describe
  */
-public class DeviceDetailPresenter<T> extends BlePresenter<IDeviceDetailView> {
+public class BleDeviceDetailPresenter<T> extends BlePresenter<IDeviceDetailView> {
     private Disposable getDeviceInfoDisposable;
     private Disposable upLockDisposable;
     private Disposable warringDisposable;

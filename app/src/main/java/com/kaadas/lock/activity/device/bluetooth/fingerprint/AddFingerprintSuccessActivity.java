@@ -19,7 +19,7 @@ import com.kaadas.lock.R;
 import com.kaadas.lock.adapter.ShiXiaoNameAdapter;
 import com.kaadas.lock.bean.ShiXiaoNameBean;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
-import com.kaadas.lock.mvp.presenter.AddFingerSuccessPresenter;
+import com.kaadas.lock.mvp.presenter.ble.AddFingerSuccessPresenter;
 import com.kaadas.lock.mvp.view.IAddFingerSuccessView;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;

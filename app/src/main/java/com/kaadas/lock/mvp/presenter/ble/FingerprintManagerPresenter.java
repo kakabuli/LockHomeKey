@@ -1,9 +1,9 @@
-package com.kaadas.lock.mvp.presenter;
+package com.kaadas.lock.mvp.presenter.ble;
 
 
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.mvp.mvpbase.BlePresenter;
-import com.kaadas.lock.mvp.view.ICardManagerView;
+import com.kaadas.lock.mvp.view.IFingerprintManagerView;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.publiclibrary.ble.BleCommandFactory;
 import com.kaadas.lock.publiclibrary.ble.BleProtocolFailedException;
@@ -32,19 +32,13 @@ import io.reactivex.functions.Predicate;
  * Create By lxj  on 2019/3/7
  * Describe
  */
-public class CardManagerPresenter<T> extends BlePresenter<ICardManagerView> {
-    private List<GetPasswordResult.DataBean.Card> cardList;
+public class FingerprintManagerPresenter<T> extends BlePresenter<IFingerprintManagerView> {
+    private List<GetPasswordResult.DataBean.Fingerprint> fingerprintList;
     private Disposable syncPwdDisposable;
     private List<Integer> morePwd = new ArrayList<>();
     private List<Integer> missPwd = new ArrayList<>();
     private List<Integer> bleNumber = new ArrayList<>(); //锁上的编号
-    private List<GetPasswordResult.DataBean.Card> showList = new ArrayList<>();
-
-
-    @Override
-    public void authSuccess() {
-
-    }
+    private List<GetPasswordResult.DataBean.Fingerprint> showList = new ArrayList<>();
 
     /**
      * 检查设备的当前状态
@@ -53,27 +47,35 @@ public class CardManagerPresenter<T> extends BlePresenter<ICardManagerView> {
      * @param bleLockInfo
      */
     public boolean isAuthAndNoConnect(BleLockInfo bleLockInfo) {
-        this.bleLockInfo = bleLockInfo;
-        //如果service中有设备  且不为空  且是当前设备
-        if (bleService.getBleLockInfo() != null && bleService.getCurrentDevice() != null
-                && bleService.getCurrentDevice().getName().equals(bleLockInfo.getServerLockInfo().getLockName())) {
+        if (bleService.getBleLockInfo() != null
+                && bleService.getCurrentDevice() != null
+                && bleService.getCurrentDevice().getName().equals(bleLockInfo.getServerLockInfo().getLockName())
+                ) {
             if (bleLockInfo.isAuth()) {  //如果已经鉴权   不管
                 LogUtils.e("服务中的数据是   " + bleLockInfo.isAuth());
                 return true;
             }
         }
+        LogUtils.e("判断如果没有鉴权成功   断开连接  不鉴权了");
+        bleService.release();  //判断如果没有鉴权成功   断开连接  不鉴权了
         return false;
     }
 
     @Override
-    public void attachView(ICardManagerView view) {
+    public void authSuccess() {
+
+    }
+
+    @Override
+    public void attachView(IFingerprintManagerView view) {
         super.attachView(view);
+
         compositeDisposable.add(MyApplication.getInstance().passwordLoadedListener()
                 .subscribe(new Consumer<Boolean>() {
                     @Override
                     public void accept(Boolean aBoolean) throws Exception {
                         //后台密码更新   重新获取并显示
-                        if (isSafe()) {
+                        if (mViewRef.get() != null) {
                             mViewRef.get().onServerDataUpdate();
                         }
                     }
@@ -83,6 +85,7 @@ public class CardManagerPresenter<T> extends BlePresenter<ICardManagerView> {
 
                     }
                 }));
+        compositeDisposable.add(compositeDisposable);
     }
 
 
@@ -90,18 +93,17 @@ public class CardManagerPresenter<T> extends BlePresenter<ICardManagerView> {
         //同步时将上次的数据
         GetPasswordResult passwordResults = MyApplication.getInstance().getPasswordResults(bleLockInfo.getServerLockInfo().getLockName());
         if (passwordResults != null) {
-            cardList = passwordResults.getData().getCardList();
+            fingerprintList = passwordResults.getData().getFingerprintList();
         } else {
-            cardList = new ArrayList<>();
+            fingerprintList = new ArrayList<>();
         }
 
-        if (isSafe()) {
+        if (mViewRef.get() != null) {
             mViewRef.get().startSync();
         }
 
-        byte[] command = BleCommandFactory.syncLockPasswordCommand((byte) 0x03, bleLockInfo.getAuthKey());  //5
+        byte[] command = BleCommandFactory.syncLockPasswordCommand((byte) 0x02, bleLockInfo.getAuthKey()); //6
         bleService.sendCommand(command);
-        toDisposable(syncPwdDisposable);
         //获取到编号
         syncPwdDisposable = bleService.listeneDataChange()
                 .filter(new Predicate<BleDataBean>() {
@@ -116,7 +118,7 @@ public class CardManagerPresenter<T> extends BlePresenter<ICardManagerView> {
                     @Override
                     public void accept(BleDataBean bleDataBean) throws Exception {
                         if (bleDataBean.getOriginalData()[0] == 0) {
-                            if (isSafe()) {
+                            if (mViewRef.get() != null) {
                                 mViewRef.get().onSyncPasswordFailed(new BleProtocolFailedException(bleDataBean.getOriginalData()[4] & 0xff));
                                 mViewRef.get().endSync();
                             }
@@ -145,47 +147,47 @@ public class CardManagerPresenter<T> extends BlePresenter<ICardManagerView> {
                         try {
                             for (Integer num : bleNumber) {
                                 boolean isMatch = false;
-                                for (GetPasswordResult.DataBean.Card card : cardList) {
-                                    if (Integer.parseInt(card.getNum()) == num) {
+                                for (GetPasswordResult.DataBean.Fingerprint fingerprint : fingerprintList) {
+                                    if (Integer.parseInt(fingerprint.getNum()) == num) {
                                         isMatch = true;
-                                        showList.add(card);
+                                        showList.add(fingerprint);
                                     }
                                 }
                                 if (!isMatch) {
                                     //服务器少的密码
                                     missPwd.add(num);
-                                    showList.add(new GetPasswordResult.DataBean.Card(num > 9 ? num + "" : "0" + num, num > 9 ? num + "" : "0" + num, 0));
+                                    showList.add(new GetPasswordResult.DataBean.Fingerprint(num > 9 ? num + "" : "0" + num, num > 9 ? num + "" : "0" + num, 0));
                                 }
                             }
                         } catch (NumberFormatException e) {
                             e.printStackTrace();
                         }
-                        if (isSafe()) {
+                        if (mViewRef.get() != null) {
                             LogUtils.e("同步锁密码  传递的密码是  " + Arrays.toString(showList.toArray()));
                             mViewRef.get().onSyncPasswordSuccess(showList);
                             mViewRef.get().endSync();
                         }
                         //服务器匹配锁上数据   锁上没有的密码  删除
                         try {
-                            for (GetPasswordResult.DataBean.Card card : cardList) {
+                            for (GetPasswordResult.DataBean.Fingerprint password : fingerprintList) {
                                 boolean isMatch = false;
                                 for (Integer num : bleNumber) {
-                                    if (Integer.parseInt(card.getNum()) == num) {
+                                    if (Integer.parseInt(password.getNum()) == num) {
                                         isMatch = true;
                                     }
                                 }
                                 if (!isMatch) {
-                                    morePwd.add(Integer.parseInt(card.getNum()));
+                                    morePwd.add(Integer.parseInt(password.getNum()));
                                 }
                             }
                         } catch (NumberFormatException e) {
                             e.printStackTrace();
                         }
-//                        if (bleNumber.size() == 0) { //如果锁上没有密码
-//                            for (GetPasswordResult.UpdateFileInfo.Card password : cardList) {
-//                                morePwd.add(Integer.parseInt(password.getNum()));
-//                            }
-//                        }
+                        if (bleNumber.size() == 0) { //如果锁上没有密码
+                            for (GetPasswordResult.DataBean.Fingerprint password : fingerprintList) {
+                                morePwd.add(Integer.parseInt(password.getNum()));
+                            }
+                        }
                         LogUtils.e("服务器多的数据是  " + Arrays.toString(morePwd.toArray()));
                         LogUtils.e("服务器少的数据是  " + Arrays.toString(missPwd.toArray()));
                         addMiss(missPwd);  //添加锁上有的服务器没有的密码
@@ -195,8 +197,7 @@ public class CardManagerPresenter<T> extends BlePresenter<ICardManagerView> {
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-
-                        if (isSafe() ) {
+                        if (mViewRef.get() != null) {
                             mViewRef.get().onSyncPasswordFailed(throwable);
                             mViewRef.get().endSync();
                         }
@@ -223,7 +224,7 @@ public class CardManagerPresenter<T> extends BlePresenter<ICardManagerView> {
         List<AddPasswordBean.Password> passwords = new ArrayList<>();
         for (int i : numbers) {
             String number = i < 10 ? "0" + i : "" + i;
-            passwords.add(new AddPasswordBean.Password(4, number, number, 1));
+            passwords.add(new AddPasswordBean.Password(3, number, number, 1));
         }
         XiaokaiNewServiceImp.addPassword(MyApplication.getInstance().getUid()
                 , bleLockInfo.getServerLockInfo().getLockName(), passwords)
@@ -272,7 +273,7 @@ public class CardManagerPresenter<T> extends BlePresenter<ICardManagerView> {
         List<DeletePasswordBean.DeletePassword> deletePasswords = new ArrayList<>();
         for (int i : numbers) {
             String number = i < 10 ? "0" + i : "" + i;
-            deletePasswords.add(new DeletePasswordBean.DeletePassword(4, number));
+            deletePasswords.add(new DeletePasswordBean.DeletePassword(3, number));
         }
         XiaokaiNewServiceImp.deletePassword(MyApplication.getInstance().getUid(), bleLockInfo.getServerLockInfo().getLockName(), deletePasswords)
                 .subscribe(new BaseObserver<BaseResult>() {
@@ -312,6 +313,7 @@ public class CardManagerPresenter<T> extends BlePresenter<ICardManagerView> {
                 return;
             }
             for (int j = 0; j < 8 && index * 8 + j < codeNumber; j++) {
+                LogUtils.e("  (deValue[3 + index] & temp[j])  " + (deValue[3 + index] & temp[j]) + "   temp[j]   " + temp[j] + "  index * 8 + j  " + index * 8 + j);
                 if (((deValue[3 + index] & temp[j])) == temp[j] && index * 8 + j < passwordNumber) {
                     bleNumber.add(index * 8 + j);
                 }

@@ -16,27 +16,14 @@ import android.widget.TextView;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
-import com.kaadas.lock.mvp.presenter.FamilyMemberDetailPresenter;
 import com.kaadas.lock.mvp.presenter.gatewaypresenter.GatewayDeleteSharePresenter;
-import com.kaadas.lock.mvp.presenter.gatewaypresenter.GatewaySharedPresenter;
-import com.kaadas.lock.mvp.view.IFamilyMemberDeatilView;
 import com.kaadas.lock.mvp.view.gatewayView.IGatewayDeleteShareView;
-import com.kaadas.lock.mvp.view.gatewayView.IGatewaySharedView;
-import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
-import com.kaadas.lock.publiclibrary.http.result.BaseResult;
-import com.kaadas.lock.publiclibrary.http.result.BluetoothSharedDeviceBean;
-import com.kaadas.lock.publiclibrary.http.util.HttpUtils;
-import com.kaadas.lock.publiclibrary.linphone.linphone.util.DateUtil;
-import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.DeviceShareResultBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.DeviceShareUserResultBean;
 import com.kaadas.lock.utils.AlertDialogUtil;
-import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.NetUtil;
 import com.kaadas.lock.utils.StringUtil;
 import com.kaadas.lock.utils.ToastUtil;
-
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

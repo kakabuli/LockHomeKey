@@ -18,7 +18,6 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.kaadas.lock.MyApplication;
@@ -29,7 +28,7 @@ import com.kaadas.lock.activity.device.bluetooth.password.BluetoothUserPasswordA
 import com.kaadas.lock.adapter.ShiXiaoNameAdapter;
 import com.kaadas.lock.bean.ShiXiaoNameBean;
 import com.kaadas.lock.mvp.mvpbase.BaseBleFragment;
-import com.kaadas.lock.mvp.presenter.AddTimePasswordPresenter;
+import com.kaadas.lock.mvp.presenter.ble.AddTimePasswordPresenter;
 import com.kaadas.lock.mvp.view.IAddTimePasswprdView;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.publiclibrary.http.postbean.AddPasswordBean;

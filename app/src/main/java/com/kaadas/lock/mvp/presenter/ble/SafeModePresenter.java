@@ -1,4 +1,4 @@
-package com.kaadas.lock.mvp.presenter;
+package com.kaadas.lock.mvp.presenter.ble;
 
 import com.kaadas.lock.mvp.mvpbase.BlePresenter;
 import com.kaadas.lock.mvp.view.ISafeModeView;

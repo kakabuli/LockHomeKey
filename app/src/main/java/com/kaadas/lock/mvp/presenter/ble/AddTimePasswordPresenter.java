@@ -1,9 +1,9 @@
-package com.kaadas.lock.mvp.presenter;
+package com.kaadas.lock.mvp.presenter.ble;
 
 
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.mvp.mvpbase.BlePresenter;
-import com.kaadas.lock.mvp.view.IPasswordLoopView;
+import com.kaadas.lock.mvp.view.IAddTimePasswprdView;
 import com.kaadas.lock.publiclibrary.ble.BleCommandFactory;
 import com.kaadas.lock.publiclibrary.ble.BleProtocolFailedException;
 import com.kaadas.lock.publiclibrary.ble.responsebean.BleDataBean;
@@ -13,10 +13,12 @@ import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.util.BaseObserver;
 import com.kaadas.lock.publiclibrary.http.util.RxjavaHelper;
 import com.kaadas.lock.utils.BleLockUtils;
+import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.Rsa;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -25,22 +27,90 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Predicate;
 
 /**
- * Create By lxj  on 2019/3/12
+ * Create By lxj  on 2019/3/9
  * Describe
+ * <p>
+ * 如果永久密码
+ * 设置密码
+ * 设置用户类型
+ * 如果时间表用户
+ * 设置密码
+ * 设置用户类型
+ * 设置时间策略
  */
-public class PasswordWeekPresenter<T> extends BlePresenter<IPasswordLoopView> {
+public class AddTimePasswordPresenter<T> extends BlePresenter<IAddTimePasswprdView> {
 
-    private AddPasswordBean.Password password;
+    private Disposable setYearDisposable;
     private Disposable setUserTypeDisposable;
+    private AddPasswordBean.Password password;
     private Disposable addPwdDisposable;
-    private Disposable SetWeekPlanDisposable;
+    private String strPWd;
     private Disposable syncPwdDisposable;
     private int number;
-    private String strPwd;
 
     @Override
     public void authSuccess() {
 
+    }
+
+    public void setYearPlan(int number, long startTime, long endTime, String pwd, String nickName) {
+        byte[] sTime = Rsa.int2BytesArray((int) (startTime / 1000) - BleCommandFactory.defineTime);
+        byte[] eTime = Rsa.int2BytesArray((int) (endTime / 1000) - BleCommandFactory.defineTime);
+
+        LogUtils.e("设置年计划  开始时间  " + startTime + "  结束时间   " + endTime);
+        LogUtils.e("设置年计划  开始时间  " + DateUtils.getStrFromMillisecond2(startTime) + "  结束时间   " + DateUtils.getStrFromMillisecond2(endTime));
+        LogUtils.e("设置年计划  开始时间 " + Rsa.bytesToHexString(sTime) + "  结束时间  " + Rsa.bytesToHexString(eTime));
+        byte[] command = BleCommandFactory.setYearPlanCommand((byte) number, (byte) number, (byte) 0x01, sTime, eTime, bleLockInfo.getAuthKey());
+        bleService.sendCommand(command);
+        setYearDisposable = bleService.listeneDataChange()
+                .filter(new Predicate<BleDataBean>() {
+                    @Override
+                    public boolean test(BleDataBean bleDataBean) throws Exception {
+                        return command[1] == bleDataBean.getTsn();
+                    }
+                })
+                .timeout(5 * 1000, TimeUnit.MILLISECONDS)
+                .compose(RxjavaHelper.observeOnMainThread())
+                .subscribe(new Consumer<BleDataBean>() {
+                    @Override
+                    public void accept(BleDataBean bleDataBean) throws Exception {
+                        LogUtils.e("收到数据   设置年计划  " + Rsa.bytesToHexString(bleDataBean.getOriginalData()));
+                        if (bleDataBean.isConfirm()) {
+                            if (bleDataBean.getPayload()[0] == 0) {
+                                LogUtils.e("设置时间策略成功    ");
+                                //设置时间计划成功
+                                if (mViewRef.get() != null) {
+                                    mViewRef.get().onSetTimePlanSuccess();
+                                }
+                                //设置时间计划成功  之后设置用户类型   设置用户类型为时间表用户
+                                handler.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        setUserType(number, 0x01);
+                                    }
+                                }, 500);
+                            } else {
+                                LogUtils.e("设置时间策略失败    ");
+                                //设置密码失败
+                                if (mViewRef.get() != null) {
+                                    mViewRef.get().onSetTimePlanFailed(new BleProtocolFailedException(bleDataBean.getOriginalData()[4] & 0xff));
+                                    mViewRef.get().endSetPwd();
+                                }
+                            }
+                            toDisposable(setYearDisposable);
+                        }
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        LogUtils.e("设置时间策略失败    " + throwable.getMessage());
+                        if (mViewRef.get() != null) {
+                            mViewRef.get().onSetTimePlanFailed(throwable);
+                            mViewRef.get().endSetPwd();
+                        }
+                    }
+                });
+        compositeDisposable.add(setYearDisposable);
     }
 
     /**
@@ -51,7 +121,6 @@ public class PasswordWeekPresenter<T> extends BlePresenter<IPasswordLoopView> {
         LogUtils.e("设置用户类型   ");
         byte[] setCommand = BleCommandFactory.setUserTypeCommand((byte) 0x01, (byte) number, (byte) type, bleLockInfo.getAuthKey());
         bleService.sendCommand(setCommand);
-        //设置用户类型成功
         setUserTypeDisposable = bleService.listeneDataChange()
                 .filter(new Predicate<BleDataBean>() {
                     @Override
@@ -64,19 +133,20 @@ public class PasswordWeekPresenter<T> extends BlePresenter<IPasswordLoopView> {
                 .subscribe(new Consumer<BleDataBean>() {
                     @Override
                     public void accept(BleDataBean bleDataBean) throws Exception {
-                        LogUtils.e("收到原始数据是  " + Rsa.bytesToHexString(bleDataBean.getOriginalData()));
+                        LogUtils.e("设置用户类型收到原始数据是  " + Rsa.bytesToHexString(bleDataBean.getOriginalData()));
+                        byte[] payload = bleDataBean.getPayload();
                         if (bleDataBean.isConfirm()) {
                             if (bleDataBean.getOriginalData()[4] == 0) {
                                 LogUtils.e("设置用户类型成功  " + type);
                                 //设置用户类型成功
                                 if (mViewRef.get() != null) {
-                                    mViewRef.get().setUserTypeSuccess();
+                                    mViewRef.get().onSetUserTypeSuccess();
                                 }
                                 uploadPassword(password);
                             } else {
                                 if (mViewRef.get() != null) {
-                                    LogUtils.e("设置用户类型失败   " + type);
-                                    mViewRef.get().setUserTypeFailed(new BleProtocolFailedException(bleDataBean.getOriginalData()[4] & 0xff));
+                                    LogUtils.e("设置用户类型失败    " + type + "    ");
+                                    mViewRef.get().onSetUserTypeFailed(new BleProtocolFailedException(bleDataBean.getOriginalData()[4] & 0xff));
                                     mViewRef.get().endSetPwd();
                                 }
                             }
@@ -86,8 +156,9 @@ public class PasswordWeekPresenter<T> extends BlePresenter<IPasswordLoopView> {
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
+                        LogUtils.e("设置用户类型失败   " + throwable.getMessage());
                         if (mViewRef.get() != null) {
-                            mViewRef.get().setUserTypeFailed(throwable);
+                            mViewRef.get().onSetUserTypeFailed(throwable);
                             mViewRef.get().endSetPwd();
                         }
                     }
@@ -95,12 +166,17 @@ public class PasswordWeekPresenter<T> extends BlePresenter<IPasswordLoopView> {
         compositeDisposable.add(setUserTypeDisposable);
     }
 
+
     /**
      * @param pwd
+     * @param type
      * @param nickName
+     * @param startTime
+     * @param endTime
      */
-    public void realAddPwd(String pwd, String nickName, int startHour, int startMin, int endHour, int endMin, int[] days) {
+    public void realAddPwd(String pwd, int type, String nickName, long startTime, long endTime) {
         //开始
+        strPWd = pwd;
         number = getNumber();
         if (number == -1) {
             if (mViewRef.get() != null) {
@@ -108,25 +184,29 @@ public class PasswordWeekPresenter<T> extends BlePresenter<IPasswordLoopView> {
             }
             return;
         }
-        if (number>4){
+        if (type!=1 && number > 4){ //不是永久密码
             if (isSafe()) {
                 mViewRef.get().onTimePwdFull();
             }
             return;
         }
-
-        long startTime = startHour * 60 * 60 * 1000 + startMin * 60 * 1000;
-        long endTime = endHour * 60 * 60 * 1000 + endMin * 60 * 1000;
-        List<String> sdays = new ArrayList<>();
-        for (int day : days) {
-            sdays.add("" + day);
+        if (type == 1) { //永久密码
+            password = new AddPasswordBean.Password(1, number > 9 ? "" + number : "0" + number, nickName, 1, startTime, endTime, new ArrayList<String>());
+        } else {
+            if ((endTime - startTime) == 24 * 60 * 60 * 1000) {
+                //天计划
+                //int pwdType, String num, String nickName, int type, long startTime, long endTime, List<String> item
+                password = new AddPasswordBean.Password(1, number > 9 ? "" + number : "0" + number, nickName, 4, startTime, endTime, new ArrayList<String>());
+            } else {
+                //自定义计划
+                password = new AddPasswordBean.Password(1, number > 9 ? "" + number : "0" + number, nickName, 2, startTime, endTime, new ArrayList<String>());
+            }
         }
-        password = new AddPasswordBean.Password(1, number > 9 ? "" + number : "0" + number, nickName, 3, startTime, endTime, sdays);
 
         LogUtils.e("设置密码的编号是  " + number);
         byte[] addPasswordCommand = BleCommandFactory.controlKeyCommand((byte) 0x01, (byte) 0x01, number, pwd, bleLockInfo.getAuthKey());
         bleService.sendCommand(addPasswordCommand);
-
+        //status 为0
         addPwdDisposable = bleService.listeneDataChange()
                 .filter(new Predicate<BleDataBean>() {
                     @Override
@@ -134,7 +214,7 @@ public class PasswordWeekPresenter<T> extends BlePresenter<IPasswordLoopView> {
                         return addPasswordCommand[1] == bleDataBean.getTsn();
                     }
                 })
-                .timeout(5 * 1000, TimeUnit.MILLISECONDS)
+                .compose(RxjavaHelper.toTimeOut(5000))
                 .compose(RxjavaHelper.observeOnMainThread())
                 .subscribe(new Consumer<BleDataBean>() {
                     @Override
@@ -146,29 +226,42 @@ public class PasswordWeekPresenter<T> extends BlePresenter<IPasswordLoopView> {
                                 if (mViewRef.get() != null) {
                                     mViewRef.get().onSetPasswordSuccess(password);
                                 }
-                                setWeekPlan(number, days, startHour, startMin, endHour, endMin);
+                                if (type == 1) { //永久密码  设置用户类型
+                                    handler.postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            setUserType(number, 0x0);
+                                        }
+                                    }, 500);
+                                } else {   //非永久密码   设置时间策略
+                                    handler.postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            setYearPlan(number, startTime, endTime, pwd, nickName);
+                                        }
+                                    }, 500);
+                                }
                             } else {
-                                LogUtils.e("设置密码失败   ");
+                                LogUtils.e("设置密码失败   " + (bleDataBean.getPayload()[0] & 0xff));
                                 if (mViewRef.get() != null) {
                                     mViewRef.get().onSetPasswordFailed(new BleProtocolFailedException(bleDataBean.getPayload()[0] & 0xff));
                                     mViewRef.get().endSetPwd();
                                 }
-
                             }
                             toDisposable(addPwdDisposable);
-
                         }
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        LogUtils.e("设置密码失败   ");
+                        LogUtils.e("设置密码失败   " + throwable.getMessage());
                         if (mViewRef.get() != null) {
                             mViewRef.get().onSetPasswordFailed(throwable);
                             mViewRef.get().endSetPwd();
                         }
                     }
                 });
+
         compositeDisposable.add(addPwdDisposable);
     }
 
@@ -181,7 +274,6 @@ public class PasswordWeekPresenter<T> extends BlePresenter<IPasswordLoopView> {
             countNumber = 20;
         }
         for (int i = 0; i < countNumber; i++) {
-
             if (!(i > 4 && i < 10)) {  //临时密码和胁迫密码的范围 5-9
                 boolean isHave = false;
                 for (int number : bleNumber) {
@@ -199,7 +291,6 @@ public class PasswordWeekPresenter<T> extends BlePresenter<IPasswordLoopView> {
         return -1;
     }
 
-
     /**
      * 门锁密钥添加
      * 参数名	    必选	类型	说明
@@ -213,6 +304,7 @@ public class PasswordWeekPresenter<T> extends BlePresenter<IPasswordLoopView> {
      * endTime	    否	    timestamp	时间段密钥结束时间
      * items	    否	    list	周期密码星期几
      */
+
     public void uploadPassword(AddPasswordBean.Password password) {
         LogUtils.e(Thread.currentThread().getName() + "密码为空吗  " + password.toString());
         List<AddPasswordBean.Password> passwords = new ArrayList<>();
@@ -224,7 +316,7 @@ public class PasswordWeekPresenter<T> extends BlePresenter<IPasswordLoopView> {
                     public void onSuccess(BaseResult result) {
                         LogUtils.e("上传密码到服务器成功   ");
                         if (mViewRef.get() != null) {
-                            mViewRef.get().onUploadPwdSuccess(strPwd, number > 9 ? "" + number : "0" + number, password.getNickName());
+                            mViewRef.get().onUploadSuccess(strPWd, number > 9 ? "" + number : "0" + number, password.getNickName());
                             mViewRef.get().endSetPwd();
                         }
                         MyApplication.getInstance().passwordChangeListener().onNext(true);
@@ -234,7 +326,7 @@ public class PasswordWeekPresenter<T> extends BlePresenter<IPasswordLoopView> {
                     public void onAckErrorCode(BaseResult baseResult) {
                         LogUtils.e("上传密码失败  " + baseResult.toString());
                         if (mViewRef.get() != null) {
-                            mViewRef.get().onUploadPwdFailedServer(baseResult);
+                            mViewRef.get().onUploadFailedServer(baseResult);
                             mViewRef.get().endSetPwd();
                         }
                     }
@@ -243,93 +335,27 @@ public class PasswordWeekPresenter<T> extends BlePresenter<IPasswordLoopView> {
                     public void onFailed(Throwable throwable) {
                         LogUtils.e("上传密码失败  " + throwable.getMessage());
                         if (mViewRef.get() != null) {
-                            mViewRef.get().onUploadPwdFailed(throwable);
+                            mViewRef.get().onUploadFailed(throwable);
                             mViewRef.get().endSetPwd();
                         }
                     }
 
                     @Override
                     public void onSubscribe1(Disposable d) {
-                        LogUtils.e("上传密码订阅  ");
                         compositeDisposable.add(d);
                     }
                 });
     }
 
-    /**
-     * scheduleId  计划编号
-     * codeType 密钥类型：          0x00：保留      0x01：PIN 密码     0x03：RFID 卡片
-     * userID  用户编号：     0~9 Code Type 为 PIN 时       0~99 Code Type 为 RFID 时
-     * day 日掩码
-     * startHout  开始时间
-     * startMinute  开始的分钟
-     * endHour   结束的时间
-     * endMinute 结束的分钟
-     * key 加密秘钥
-     *
-     * @param number
-     */
-    public void setWeekPlan(int number, int[] days, int startHour, int startMin, int endHour, int endMin) {
-        int dayMask = 0;
-        for (int i = 0; i < days.length; i++) {
-            dayMask += days[i] << i;
-        }
-        LogUtils.e("周  日掩码是  " + Integer.toBinaryString(dayMask));
-
-
-        byte[] command = BleCommandFactory.setWeekPlanCommand((byte) number, (byte) 0x01, (byte) number, (byte) dayMask, (byte) startHour,
-                (byte) startMin, (byte) endHour, (byte) endMin, bleLockInfo.getAuthKey());
-        bleService.sendCommand(command);
-
-        toDisposable(SetWeekPlanDisposable);
-        SetWeekPlanDisposable = bleService.listeneDataChange()
-                .filter(new Predicate<BleDataBean>() {
-                    @Override
-                    public boolean test(BleDataBean bleDataBean) throws Exception {
-                        return bleDataBean.getOriginalData()[1] == command[1];
-                    }
-                })
-                .compose(RxjavaHelper.toTimeOut(5000))
-                .compose(RxjavaHelper.observeOnMainThread())
-                .subscribe(new Consumer<BleDataBean>() {
-                    @Override
-                    public void accept(BleDataBean bleDataBean) throws Exception {
-                        LogUtils.e("获取的数据是   " + Rsa.bytesToHexString(bleDataBean.getOriginalData()));
-                        if (bleDataBean.isConfirm()) {
-                            if (bleDataBean.getOriginalData()[4] == 0) {
-                                if (mViewRef.get() != null) {
-                                    mViewRef.get().setWeekPlanSuccess();
-                                    setUserType(number, 1);
-                                }
-                            } else {
-                                if (mViewRef.get() != null) {
-                                    mViewRef.get().endSetPwd();
-                                    mViewRef.get().setWeekPlanFailed(new BleProtocolFailedException(bleDataBean.getPayload()[0] & 0xff));
-                                }
-                            }
-                            toDisposable(SetWeekPlanDisposable);
-                        }
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        if (mViewRef.get() != null) {
-                            mViewRef.get().setWeekPlanFailed(throwable);
-                        }
-                    }
-                });
-        compositeDisposable.add(SetWeekPlanDisposable);
-    }
 
     private List<Integer> bleNumber = new ArrayList<>();
 
-    public void setPwd(String pwd, String nickName, int startHour, int startMin, int endHour, int endMin, int[] days) {
+    public void setPwd(String pwd, int type, String nickName, long startTime, long endTime) {
         if (mViewRef.get() != null) {
             mViewRef.get().startSetPwd();
         }
         //同步时将上次的数据
-        strPwd = pwd;
-        byte[] command = BleCommandFactory.syncLockPasswordCommand((byte) 0x01, bleLockInfo.getAuthKey());  //8
+        byte[] command = BleCommandFactory.syncLockPasswordCommand((byte) 0x01, bleLockInfo.getAuthKey());  //4
         bleService.sendCommand(command);
         toDisposable(syncPwdDisposable);
         syncPwdDisposable = bleService.listeneDataChange()
@@ -347,6 +373,7 @@ public class PasswordWeekPresenter<T> extends BlePresenter<IPasswordLoopView> {
                         if (bleDataBean.getOriginalData()[0] == 0) {
                             if (mViewRef.get() != null) {
                                 mViewRef.get().onSyncPasswordFailed(new BleProtocolFailedException(bleDataBean.getOriginalData()[4] & 0xff));
+                                mViewRef.get().endSetPwd();
                             }
                             return;
                         }
@@ -362,11 +389,14 @@ public class PasswordWeekPresenter<T> extends BlePresenter<IPasswordLoopView> {
                         int codeNumber = deValue[2] & 0xff;
                         LogUtils.e("秘钥的帧数是  " + index + " 秘钥类型是  " + codeType + "  秘钥总数是   " + codeNumber);
 
-                        getAllpasswordNumber(deValue);
+                        getAllpasswordNumber(codeNumber, deValue);
+
+
+                        LogUtils.e("获取到的数据是   " + Arrays.toString(bleNumber.toArray()));
 
                         toDisposable(syncPwdDisposable);
 
-                        realAddPwd(pwd, nickName, startHour, startMin, endHour, endMin, days);
+                        realAddPwd(pwd, type, nickName, startTime, endTime);
                     }
                 }, new Consumer<Throwable>() {
                     @Override
@@ -378,13 +408,12 @@ public class PasswordWeekPresenter<T> extends BlePresenter<IPasswordLoopView> {
                     }
                 });
 
-
+        compositeDisposable.add(syncPwdDisposable);
     }
-
 
     private int[] temp = new int[]{0b10000000, 0b01000000, 0b00100000, 0b00010000, 0b00001000, 0b00000100, 0b00000010, 0b00000001};
 
-    private void getAllpasswordNumber(byte[] deValue) {
+    private void getAllpasswordNumber(int codeNumber, byte[] deValue) {
         int passwordNumber = 10;
         if (BleLockUtils.isSupport20Passwords(bleLockInfo.getServerLockInfo().getFunctionSet())) {  //支持20个密码的锁
             passwordNumber = 20;  //永久密码的最大编号   小凯锁都是5个  0-5
@@ -403,6 +432,4 @@ public class PasswordWeekPresenter<T> extends BlePresenter<IPasswordLoopView> {
             }
         }
     }
-
-
 }
