@@ -14,7 +14,7 @@ public class ServerGatewayInfo implements Serializable {
     private String meUsername;
     private String mePwd;
     private int meBindState;
-
+    private String model;   // 6030 小网关、 6010大网关
     public ServerGatewayInfo() {
     }
 
@@ -28,6 +28,7 @@ public class ServerGatewayInfo implements Serializable {
         meUsername = gwListBean.getMeUsername();
         mePwd = gwListBean.getMePwd();
         meBindState = gwListBean.getMeBindState();
+        model= gwListBean.getModel();
     }
 
 
@@ -113,5 +114,26 @@ public class ServerGatewayInfo implements Serializable {
         this.meUsername = meUsername;
         this.mePwd = mePwd;
         this.meBindState = meBindState;
+    }
+
+    public ServerGatewayInfo(String deviceSN, String deviceNickName, String adminuid, String adminName, String adminNickname, int isAdmin, String meUsername, String mePwd, int meBindState, String model) {
+        this.deviceSN = deviceSN;
+        this.deviceNickName = deviceNickName;
+        this.adminuid = adminuid;
+        this.adminName = adminName;
+        this.adminNickname = adminNickname;
+        this.isAdmin = isAdmin;
+        this.meUsername = meUsername;
+        this.mePwd = mePwd;
+        this.meBindState = meBindState;
+        this.model = model;
+    }
+
+    public String getModel() {
+        return model;
+    }
+
+    public void setModel(String model) {
+        this.model = model;
     }
 }

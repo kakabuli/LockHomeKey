@@ -253,7 +253,9 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                             ServerGatewayInfo serverGatewayInfo = gatewayInfo.getServerInfo();
                             String deviceSn = serverGatewayInfo.getDeviceSN();
                             //插入数据库
-                            GatewayServiceInfo gatewayServiceInfo = new GatewayServiceInfo(deviceSn + uid, serverGatewayInfo.getDeviceSN(), serverGatewayInfo.getDeviceNickName(), serverGatewayInfo.getAdminuid(), serverGatewayInfo.getAdminName(), serverGatewayInfo.getAdminNickname(), serverGatewayInfo.getIsAdmin(), serverGatewayInfo.getMeUsername(), serverGatewayInfo.getMePwd(), serverGatewayInfo.getMeBindState(), uid);
+                            GatewayServiceInfo gatewayServiceInfo = new GatewayServiceInfo(deviceSn + uid, serverGatewayInfo.getDeviceSN(), serverGatewayInfo.getDeviceNickName(), serverGatewayInfo.getAdminuid(), serverGatewayInfo.getAdminName(), serverGatewayInfo.getAdminNickname()
+                                    , serverGatewayInfo.getIsAdmin(), serverGatewayInfo.getMeUsername(),
+                                    serverGatewayInfo.getMePwd(), serverGatewayInfo.getMeBindState(), uid,serverGatewayInfo.getModel());
                             daoSession.getGatewayServiceInfoDao().insertOrReplace(gatewayServiceInfo);
                             //咪咪网未绑定
                             if (gatewayInfo.getServerInfo().getMeBindState() != 1) {

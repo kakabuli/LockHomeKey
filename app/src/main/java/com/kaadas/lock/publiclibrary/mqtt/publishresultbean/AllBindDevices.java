@@ -158,6 +158,7 @@ public class AllBindDevices {
             private String meUsername;
             private String mePwd;
             private int meBindState;
+            private String model;   // 6030 小网关、 6010大网关
 
             private List<ServerGwDevice> deviceList;
 
@@ -241,6 +242,30 @@ public class AllBindDevices {
                 this.deviceList = deviceList;
             }
 
+            public GwListBean() {
+            }
+
+            public GwListBean(String deviceSN, String deviceNickName, String adminuid, String adminName, String adminNickname, int isAdmin, String meUsername, String mePwd, int meBindState, String model, List<ServerGwDevice> deviceList) {
+                this.deviceSN = deviceSN;
+                this.deviceNickName = deviceNickName;
+                this.adminuid = adminuid;
+                this.adminName = adminName;
+                this.adminNickname = adminNickname;
+                this.isAdmin = isAdmin;
+                this.meUsername = meUsername;
+                this.mePwd = mePwd;
+                this.meBindState = meBindState;
+                this.model = model;
+                this.deviceList = deviceList;
+            }
+
+            public String getModel() {
+                return model;
+            }
+
+            public void setModel(String model) {
+                this.model = model;
+            }
         }
     }
 

@@ -22,6 +22,7 @@ import com.kaadas.lock.bean.HomeShowBean;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.bean.deviceAdd.AddZigbeeBindGatewayBean;
 import com.kaadas.lock.mvp.presenter.deviceaddpresenter.DeviceGatewayBindListPresenter;
+import com.kaadas.lock.publiclibrary.bean.CateEyeInfo;
 import com.kaadas.lock.publiclibrary.bean.GatewayInfo;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.GwWiFiBaseInfo;
 import com.kaadas.lock.utils.KeyConstants;
@@ -88,6 +89,9 @@ public class DeviceBindGatewayListActivity extends BaseActivity<DeviceGatewayBin
      for (HomeShowBean homeShowBean:homeShowBeans){
          AddZigbeeBindGatewayBean addZigbeeBindGatewayBean=new AddZigbeeBindGatewayBean();
          GatewayInfo gatewayInfo= (GatewayInfo) homeShowBean.getObject();
+         if(!TextUtils.isEmpty(gatewayInfo.getServerInfo().getModel()) && gatewayInfo.getServerInfo().getModel().equals(KeyConstants.SMALL_GW) && type ==2 ){
+             continue;
+         }
          addZigbeeBindGatewayBean.setNickName(gatewayInfo.getServerInfo().getDeviceNickName());
          addZigbeeBindGatewayBean.setAdminId(gatewayInfo.getServerInfo().getAdminName());
          addZigbeeBindGatewayBean.setGatewayId(gatewayInfo.getServerInfo().getDeviceSN());

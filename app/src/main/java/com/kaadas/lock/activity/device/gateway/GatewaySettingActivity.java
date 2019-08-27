@@ -52,6 +52,7 @@ import com.kaadas.lock.utils.greenDao.db.GatewayServiceInfoDao;
 
 import org.w3c.dom.Text;
 
+import java.security.Key;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -102,12 +103,14 @@ public class GatewaySettingActivity extends BaseActivity<GatewaySettingView, Gat
         }
     }
 
-
+    String model=null;
     private void initData() {
         Intent intent=getIntent();
         gatewayId=intent.getStringExtra(KeyConstants.GATEWAY_ID);
         isAdmin=intent.getIntExtra(KeyConstants.IS_ADMIN,0);
         gatewayNickName= intent.getStringExtra(KeyConstants.GATEWAY_NICKNAME);
+        model= intent.getStringExtra(KeyConstants.GW_MODEL);
+
         GatewaySettingItemBean gatewaySettingItemBeanNewOne=new GatewaySettingItemBean();
         gatewaySettingItemBeanNewOne.setTitle(getString(R.string.gateway_setting_name));
         if (isAdmin==1){
@@ -173,14 +176,19 @@ public class GatewaySettingActivity extends BaseActivity<GatewaySettingView, Gat
         gatewaySettingItemBeans.add(gatewaySettingItemBeanNewOne);
         gatewaySettingItemBeans.add(gatewaySettingItemBeanOne);
         gatewaySettingItemBeans.add(gatewaySettingItemBeanTwo);
-        gatewaySettingItemBeans.add(gatewaySettingItemBeanThree);
-        gatewaySettingItemBeans.add(gatewaySettingItemBeanFour);
-        gatewaySettingItemBeans.add(gatewaySettingItemBeanFive);
-        gatewaySettingItemBeans.add(gatewaySettingItemBeanSix);
-        gatewaySettingItemBeans.add(gatewaySettingItemBeanSeven);
-        gatewaySettingItemBeans.add(gatewaySettingItemBeanEight);
-        gatewaySettingItemBeans.add(gatewaySettingItemBeanNight);
-        gatewaySettingItemBeans.add(gatewaySettingItemBeanTen);
+        if(TextUtils.isEmpty(model) || model.equals(KeyConstants.SMALL_GW)){
+
+        }else{
+            gatewaySettingItemBeans.add(gatewaySettingItemBeanThree);
+            gatewaySettingItemBeans.add(gatewaySettingItemBeanFour);
+            gatewaySettingItemBeans.add(gatewaySettingItemBeanFive);
+            gatewaySettingItemBeans.add(gatewaySettingItemBeanSix);
+            gatewaySettingItemBeans.add(gatewaySettingItemBeanSeven);
+            gatewaySettingItemBeans.add(gatewaySettingItemBeanEight);
+            gatewaySettingItemBeans.add(gatewaySettingItemBeanNight);
+            gatewaySettingItemBeans.add(gatewaySettingItemBeanTen);
+        }
+
 
         if (gatewaySettingAdapter!=null){
             gatewaySettingAdapter.notifyDataSetChanged();
@@ -223,19 +231,24 @@ public class GatewaySettingActivity extends BaseActivity<GatewaySettingView, Gat
         gatewaySettingItemBeans.get(1).setContent(gatewayBaseInfo.getGatewayId());
         //固件版本号
         gatewaySettingItemBeans.get(2).setContent(gatewayBaseInfo.getSW());
-        //局域网ip
-        gatewaySettingItemBeans.get(5).setContent(gatewayBaseInfo.getLanIp());
-        //广域网ip
-        gatewaySettingItemBeans.get(6).setContent(gatewayBaseInfo.getWanIp());
-        //局域网子网掩码
-        gatewaySettingItemBeans.get(7).setContent(gatewayBaseInfo.getLanNetmask());
-        //广域网子网掩码
-        gatewaySettingItemBeans.get(8).setContent(gatewayBaseInfo.getWanNetmask());
-        //网关广域网接入方式
-        gatewaySettingItemBeans.get(9).setContent(gatewayBaseInfo.getWanType());
-        gatewaySettingItemBeans.get(3).setContent(gatewayBaseInfo.getSsid());
-        gatewaySettingItemBeans.get(4).setContent(gatewayBaseInfo.getPwd());
-        gatewaySettingItemBeans.get(10).setContent(gatewayBaseInfo.getChannel());
+        if(TextUtils.isEmpty(model) || model.equals(KeyConstants.SMALL_GW)){
+
+        }else {
+            //局域网ip
+            gatewaySettingItemBeans.get(5).setContent(gatewayBaseInfo.getLanIp());
+            //广域网ip
+            gatewaySettingItemBeans.get(6).setContent(gatewayBaseInfo.getWanIp());
+            //局域网子网掩码
+            gatewaySettingItemBeans.get(7).setContent(gatewayBaseInfo.getLanNetmask());
+            //广域网子网掩码
+            gatewaySettingItemBeans.get(8).setContent(gatewayBaseInfo.getWanNetmask());
+            //网关广域网接入方式
+            gatewaySettingItemBeans.get(9).setContent(gatewayBaseInfo.getWanType());
+            gatewaySettingItemBeans.get(3).setContent(gatewayBaseInfo.getSsid());
+            gatewaySettingItemBeans.get(4).setContent(gatewayBaseInfo.getPwd());
+            gatewaySettingItemBeans.get(10).setContent(gatewayBaseInfo.getChannel());
+        }
+
         if (gatewaySettingAdapter!=null){
             gatewaySettingAdapter.notifyDataSetChanged();
         }
@@ -551,7 +564,12 @@ public class GatewaySettingActivity extends BaseActivity<GatewaySettingView, Gat
 
     @Override
     public void getNetBasicSuccess(GetNetBasicBean basicBean) {
-        mPresenter.getGatewayWifiPwd(gatewayId);
+        if(TextUtils.isEmpty(model) || model.equals(KeyConstants.SMALL_GW)){  // 小网关
+
+        }else{
+            mPresenter.getGatewayWifiPwd(gatewayId);
+        }
+
         //获取到
 
         if (gatewaySettingItemBeans!=null&&gatewaySettingItemBeans.size()>0){
@@ -562,28 +580,47 @@ public class GatewaySettingActivity extends BaseActivity<GatewaySettingView, Gat
             gatewaySettingItemBeans.get(1).setContent(basicBean.getGwId());
             //固件版本号
             gatewaySettingItemBeans.get(2).setContent(returnDataBean.getSW());
-            //局域网ip
-            gatewaySettingItemBeans.get(5).setContent(returnDataBean.getLanIp());
-            networkLan=returnDataBean.getLanIp();
-            //广域网ip
-            gatewaySettingItemBeans.get(6).setContent(returnDataBean.getWanIp());
-            //局域网子网掩码
-            gatewaySettingItemBeans.get(7).setContent(returnDataBean.getLanNetmask());
-            networkMask=returnDataBean.getLanNetmask();
-            //广域网子网掩码
-            gatewaySettingItemBeans.get(8).setContent(returnDataBean.getWanNetmask());
-            //网关广域网接入方式
-            gatewaySettingItemBeans.get(9).setContent(returnDataBean.getWanType());
+            if(TextUtils.isEmpty(model) || model.equals(KeyConstants.SMALL_GW)){
+                if (loadingDialog!=null){
+                    loadingDialog.dismiss();
+                }
+//                GatewayBaseInfo gatewayBaseInfo1=new GatewayBaseInfo();
+//                gatewayBaseInfo.setGatewayName(gatewayNickName);
+//                gatewayBaseInfo.setGatewayId(basicBean.getGwId());
+//                gatewayBaseInfo.setSW(returnDataBean.getSW());
+//                MyApplication.getInstance().getDaoWriteSession().insertOrReplace(gatewayBaseInfo1);
 
+            }else {
+                //局域网ip
+                gatewaySettingItemBeans.get(5).setContent(returnDataBean.getLanIp());
+                networkLan=returnDataBean.getLanIp();
+                //广域网ip
+                gatewaySettingItemBeans.get(6).setContent(returnDataBean.getWanIp());
+                //局域网子网掩码
+                gatewaySettingItemBeans.get(7).setContent(returnDataBean.getLanNetmask());
+                networkMask=returnDataBean.getLanNetmask();
+                //广域网子网掩码
+                gatewaySettingItemBeans.get(8).setContent(returnDataBean.getWanNetmask());
+                //网关广域网接入方式
+                gatewaySettingItemBeans.get(9).setContent(returnDataBean.getWanType());
+                gatewayBaseInfo.setLanIp(returnDataBean.getLanIp());
+                gatewayBaseInfo.setWanIp(returnDataBean.getWanIp());
+                gatewayBaseInfo.setLanNetmask(returnDataBean.getLanNetmask());
+                gatewayBaseInfo.setWanNetmask(returnDataBean.getWanNetmask());
+                gatewayBaseInfo.setWanType(returnDataBean.getWanType());
+
+            }
+
+            gatewayBaseInfo.setUid(uid);
             gatewayBaseInfo.setGatewayId(basicBean.getGwId());
             gatewayBaseInfo.setDeviceIdUid(basicBean.getGwId()+uid);
             gatewayBaseInfo.setSW(returnDataBean.getSW());
-            gatewayBaseInfo.setLanIp(returnDataBean.getLanIp());
-            gatewayBaseInfo.setWanIp(returnDataBean.getWanIp());
-            gatewayBaseInfo.setLanNetmask(returnDataBean.getLanNetmask());
-            gatewayBaseInfo.setWanNetmask(returnDataBean.getWanNetmask());
-            gatewayBaseInfo.setWanType(returnDataBean.getWanType());
-            gatewayBaseInfo.setUid(uid);
+
+            if(TextUtils.isEmpty(model) || model.equals(KeyConstants.SMALL_GW)){
+                MyApplication.getInstance().getDaoWriteSession().insertOrReplace(gatewayBaseInfo);
+            }else {
+
+            }
         }
         if (gatewaySettingAdapter!=null){
             gatewaySettingAdapter.notifyDataSetChanged();
@@ -632,7 +669,12 @@ public class GatewaySettingActivity extends BaseActivity<GatewaySettingView, Gat
         if (loadingDialog!=null){
             loadingDialog.dismiss();
         }
-        ToastUtil.getInstance().showShort(R.string.get_wifi_info_fail);
+        if(TextUtils.isEmpty(model) || model.equals(KeyConstants.SMALL_GW)){  // 小网关
+
+        }else{
+            ToastUtil.getInstance().showShort(R.string.get_wifi_info_fail);
+        }
+
     }
 
     @Override
@@ -640,7 +682,11 @@ public class GatewaySettingActivity extends BaseActivity<GatewaySettingView, Gat
         if (loadingDialog!=null){
             loadingDialog.dismiss();
         }
-        ToastUtil.getInstance().showShort(R.string.get_wifi_info_fail);
+        if(TextUtils.isEmpty(model) || model.equals(KeyConstants.SMALL_GW)){  // 小网关
+
+        }else{
+            ToastUtil.getInstance().showShort(R.string.get_wifi_info_fail);
+        }
     }
 
     @Override

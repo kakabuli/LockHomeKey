@@ -6,6 +6,7 @@ import org.greenrobot.greendao.annotation.Id;
 import androidx.annotation.IntDef;
 import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Index;
+import org.greenrobot.greendao.annotation.Keep;
 
 /**
  * 服务器的网关信息
@@ -24,12 +25,27 @@ public class GatewayServiceInfo {
     private String mePwd;
     private int meBindState;
     private String uid;
+    private String model;   // 6030 小网关、 6010大网关
 
-    @Generated(hash = 546772347)
+
+
+    public String getModel() {
+        return model;
+    }
+
+    public void setModel(String model) {
+        this.model = model;
+    }
+
+    @Generated(hash = 426171648)
+    public GatewayServiceInfo() {
+    }
+
+    @Generated(hash = 564882921)
     public GatewayServiceInfo(String deviceIdUid, String deviceSN,
             String deviceNickName, String adminuid, String adminName,
             String adminNickname, int isAdmin, String meUsername, String mePwd,
-            int meBindState, String uid) {
+            int meBindState, String uid, String model) {
         this.deviceIdUid = deviceIdUid;
         this.deviceSN = deviceSN;
         this.deviceNickName = deviceNickName;
@@ -41,10 +57,7 @@ public class GatewayServiceInfo {
         this.mePwd = mePwd;
         this.meBindState = meBindState;
         this.uid = uid;
-    }
-
-    @Generated(hash = 426171648)
-    public GatewayServiceInfo() {
+        this.model = model;
     }
 
     public String getDeviceIdUid() {

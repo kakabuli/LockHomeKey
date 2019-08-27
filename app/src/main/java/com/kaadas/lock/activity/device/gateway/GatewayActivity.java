@@ -28,6 +28,7 @@ import com.kaadas.lock.publiclibrary.bean.GwLockInfo;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 
+import java.security.Key;
 import java.util.List;
 
 import butterknife.BindView;
@@ -60,6 +61,8 @@ public class GatewayActivity extends BaseActivity<GatewayView, GatewayPresenter<
     TextView conDevice;
     @BindView(R.id.no_device_layout)
     LinearLayout noDeviceLayout;
+    @BindView(R.id.gateway_logo)
+    ImageView gateway_logo;
 
     private List<HomeShowBean> homeShowBeans;
     private boolean gatewayOnline = false;
@@ -118,6 +121,9 @@ public class GatewayActivity extends BaseActivity<GatewayView, GatewayPresenter<
             gatewayInfo = (GatewayInfo) homeShowBean.getObject();
             if (gatewayInfo != null) {
                 gatewayNickName.setText(gatewayInfo.getServerInfo().getDeviceNickName());
+                if(!TextUtils.isEmpty(gatewayInfo.getServerInfo().getModel()) && gatewayInfo.getServerInfo().getModel().equals(KeyConstants.SMALL_GW)){
+                    gateway_logo.setImageResource(R.mipmap.gateway6030);
+                }
                 changeGatewayStatus(gatewayInfo.getEvent_str());
                 mPresenter.getPowerData(gatewayInfo.getServerInfo().getDeviceSN());
                 mPresenter.getPublishNotify();
@@ -402,6 +408,8 @@ public class GatewayActivity extends BaseActivity<GatewayView, GatewayPresenter<
                     intent.putExtra(KeyConstants.GATEWAY_NICKNAME, gatewayNickName.getText().toString());
                     intent.putExtra(KeyConstants.GATEWAY_ID, gatewayInfo.getServerInfo().getDeviceSN());
                     intent.putExtra(KeyConstants.IS_ADMIN, gatewayInfo.getServerInfo().getIsAdmin());
+                    intent.putExtra(KeyConstants.GW_MODEL,gatewayInfo.getServerInfo().getModel());
+
                     startActivityForResult(intent, KeyConstants.GATEWAY_NICK_NAME);
                 }
                 break;

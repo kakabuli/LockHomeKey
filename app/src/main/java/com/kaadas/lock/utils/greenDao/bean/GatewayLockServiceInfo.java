@@ -31,10 +31,9 @@ public class GatewayLockServiceInfo {
     private String gatewayId;
     private String uid;
 
+
     @Generated(hash = 2128289398)
-    public GatewayLockServiceInfo(String deviceIdUid, String deviceId, String SW,
-            String device_type, String event_str, String ipaddr, String macaddr,
-            String nickName, String time, String gatewayId, String uid) {
+    public GatewayLockServiceInfo(String deviceIdUid, String deviceId, String SW, String device_type, String event_str, String ipaddr, String macaddr, String nickName, String time, String gatewayId, String uid) {
         this.deviceIdUid = deviceIdUid;
         this.deviceId = deviceId;
         this.SW = SW;
@@ -47,6 +46,7 @@ public class GatewayLockServiceInfo {
         this.gatewayId = gatewayId;
         this.uid = uid;
     }
+
 
     @Generated(hash = 1056849880)
     public GatewayLockServiceInfo() {
@@ -139,5 +139,7 @@ public class GatewayLockServiceInfo {
     public void setUid(String uid) {
         this.uid = uid;
     }
+
+
 
 }
