@@ -342,7 +342,7 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
                                 bleService.scanBleDevice(false);   //连接成功   停止搜索
                             } else if (!bleStateBean.isConnected() && bleService.getCurrentDevice() != null &&
                                     bleService.getCurrentDevice().getName().equals(bleLockInfo.getServerLockInfo().getLockName())) {
-                                if (mViewRef.get() != null && isNotify) {
+                                if (isSafe() && isNotify) {
                                     mViewRef.get().onEndConnectDevice(false);
                                     LogUtils.e("设备连接失败");
                                 }
@@ -942,7 +942,7 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
                                 realOpenLock("", true);
                             } else {
                                 if (TextUtils.isEmpty(localPwd)) { //如果用户密码为空
-                                    if (mViewRef.get() != null) {
+                                    if (isSafe()) {
                                         mViewRef.get().inputPwd();
                                     }
                                 } else {
@@ -955,14 +955,14 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
                     @Override
                     public void onAckErrorCode(BaseResult baseResult) {
                         //785 鉴权失败  没有这把锁   803 当前时间没有权限
-                        if (mViewRef.get() != null) {
+                        if (isSafe()) {
                             mViewRef.get().authServerFailed(baseResult);
                         }
                     }
 
                     @Override
                     public void onFailed(Throwable throwable) {
-                        if (mViewRef.get() != null) {
+                        if (isSafe()) {
                             mViewRef.get().authFailed(throwable);
                         }
                     }
@@ -977,7 +977,7 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
 
 
     public void realOpenLock(String pwd, boolean isApp) {
-        if (mViewRef.get() != null) {
+        if (isSafe()) {
             mViewRef.get().isOpeningLock();
         }
         if (bleService.getBleVersion() == 1) {
@@ -1014,7 +1014,7 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
                                 listenerOpenLockUp();
                             } else {  //开锁失败
                                 LogUtils.e("开锁失败 4  " + Rsa.bytesToHexString(bleDataBean.getPayload()));
-                                if (mViewRef.get() != null) {
+                                if (isSafe()) {
                                     mViewRef.get().openLockFailed(new BleProtocolFailedException(0xff & bleDataBean.getOriginalData()[0]));
                                 }
                                 //开锁失败  清除密码
@@ -1026,7 +1026,7 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        if (mViewRef.get() != null) {
+                        if (isSafe()) {
                             mViewRef.get().openLockFailed(throwable);
                         }
                     }
@@ -1065,7 +1065,7 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
 
                             } else if (value2 == 2) {   //开锁
                                 LogUtils.e("开锁上报     111");
-                                if (mViewRef.get() != null) {
+                                if (isSafe()) {
                                     mViewRef.get().openLockSuccess();
                                 }
                                 toDisposable(listenerOpenLockUpDisposable);
@@ -1075,7 +1075,7 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        if (mViewRef.get() != null) {
+                        if (isSafe()) {
                             mViewRef.get().openLockFailed(throwable);
                         }
                     }
@@ -1130,7 +1130,7 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
                     @Override
                     public void accept(Throwable throwable) throws Exception {
                         handler.removeCallbacks(openLockRunnable);
-                        if (mViewRef.get() != null) {
+                        if (isSafe()) {
                             mViewRef.get().openLockFailed(new TimeoutException());
                         }
                     }
@@ -1168,7 +1168,7 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
     // 开锁数据头
     private void parseOpenLockResponse(List<byte[]> datas) {
         if (!(datas.get(0).length == 20 && datas.get(1).length == 12 && datas.get(2).length == 20 && datas.get(3).length == 12)) {
-            if (mViewRef.get() != null) {
+            if (isSafe()) {
                 mViewRef.get().openLockFailed(new TimeoutException());
             }
             return;
@@ -1286,7 +1286,7 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
                         if ((originalData[5] & 0xff) == 0x01) {  //老模块开门上报
                             toDisposable(oldOpenStatusDisposable);
                             listenerCloseStatus();
-                            if (mViewRef.get() != null) {
+                            if (isSafe()) {
                                 mViewRef.get().openLockSuccess();
                             }
                         }
@@ -1294,7 +1294,7 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        if (mViewRef.get() != null) {
+                        if (isSafe()) {
                             mViewRef.get().openLockFailed(throwable);
                         }
                     }
@@ -1329,7 +1329,7 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
                         byte[] originalData = bleDataBean.getOriginalData();
                         if ((originalData[5] & 0xff) == 0x00) {  //老模块关门上报
                             toDisposable(oldCloseStatusDisposable);
-                            if (mViewRef.get() != null) {
+                            if (isSafe()) {
                                 mViewRef.get().onLockLock();
                             }
                         }
@@ -1337,7 +1337,7 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        if (mViewRef.get() != null) {
+                        if (isSafe()) {
                             mViewRef.get().onLockLock();
                         }
                     }

@@ -73,7 +73,7 @@ public class CardManagerPresenter<T> extends BlePresenter<ICardManagerView> {
                     @Override
                     public void accept(Boolean aBoolean) throws Exception {
                         //后台密码更新   重新获取并显示
-                        if (mViewRef.get() != null) {
+                        if (isSafe()) {
                             mViewRef.get().onServerDataUpdate();
                         }
                     }
@@ -95,7 +95,7 @@ public class CardManagerPresenter<T> extends BlePresenter<ICardManagerView> {
             cardList = new ArrayList<>();
         }
 
-        if (mViewRef.get() != null) {
+        if (isSafe()) {
             mViewRef.get().startSync();
         }
 
@@ -116,7 +116,7 @@ public class CardManagerPresenter<T> extends BlePresenter<ICardManagerView> {
                     @Override
                     public void accept(BleDataBean bleDataBean) throws Exception {
                         if (bleDataBean.getOriginalData()[0] == 0) {
-                            if (mViewRef.get() != null) {
+                            if (isSafe()) {
                                 mViewRef.get().onSyncPasswordFailed(new BleProtocolFailedException(bleDataBean.getOriginalData()[4] & 0xff));
                                 mViewRef.get().endSync();
                             }
@@ -160,7 +160,7 @@ public class CardManagerPresenter<T> extends BlePresenter<ICardManagerView> {
                         } catch (NumberFormatException e) {
                             e.printStackTrace();
                         }
-                        if (mViewRef.get() != null) {
+                        if (isSafe()) {
                             LogUtils.e("同步锁密码  传递的密码是  " + Arrays.toString(showList.toArray()));
                             mViewRef.get().onSyncPasswordSuccess(showList);
                             mViewRef.get().endSync();
@@ -196,7 +196,7 @@ public class CardManagerPresenter<T> extends BlePresenter<ICardManagerView> {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
 
-                        if (mViewRef.get() != null) {
+                        if (isSafe() ) {
                             mViewRef.get().onSyncPasswordFailed(throwable);
                             mViewRef.get().endSync();
                         }

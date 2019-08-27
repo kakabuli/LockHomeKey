@@ -41,7 +41,7 @@ import butterknife.ButterKnife;
 /**
  * Created by David
  */
-public class BluetoothPasswordManagerActivity extends BaseBleActivity<IPasswordManagerView, PasswordManagerPresenter<IPasswordManagerView>>
+public class BlePasswordManagerActivity extends BaseBleActivity<IPasswordManagerView, PasswordManagerPresenter<IPasswordManagerView>>
         implements BaseQuickAdapter.OnItemClickListener, View.OnClickListener, IPasswordManagerView {
     @BindView(R.id.iv_back)
     ImageView ivBack;//返回
@@ -127,11 +127,12 @@ public class BluetoothPasswordManagerActivity extends BaseBleActivity<IPasswordM
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
         Intent intent = new Intent(this, BluetoothPasswordManagerDetailActivity.class);
         String num = list.get(position).getNum();
-        int pwdType=-1;
-        if ("00".equals(num)||"01".equals(num)||"02".equals(num)||"03".equals(num)||"09".equals(num)){
-            pwdType=1;
-        }else if ("04".equals(num)||"05".equals(num)||"06".equals(num)||"07".equals(num)){
-            pwdType=2;
+        int number = Integer.parseInt(num);
+        int pwdType ;
+        if (number > 4 && number < 9) {
+            pwdType = 2;
+        } else   {
+            pwdType = 1;
         }
         AddPasswordBean.Password password = new AddPasswordBean.Password(pwdType, list.get(position));
         intent.putExtra(KeyConstants.TO_PWD_DETAIL, password);
@@ -161,7 +162,6 @@ public class BluetoothPasswordManagerActivity extends BaseBleActivity<IPasswordM
                 intent = new Intent(this, BluetoothUserPasswordAddActivity.class);
                 startActivity(intent);
                 break;
-
             case R.id.tv_synchronized_record:
                 //同步
                 if (isSync) {

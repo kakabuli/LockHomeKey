@@ -79,7 +79,7 @@ public class OldDeviceInfoPresenter extends BlePresenter<IOldDeviceInfoView> {
                                 readFirmwareRev();
                                 LogUtils.e(" davi 读取SoftwareRev成功 " + readInfoBean.data);  //进行下一步
                                 bleLockInfo.setSoftware((String) readInfoBean.data);
-                                if (mViewRef.get() != null) {
+                                if (isSafe()) {
                                     mViewRef.get().SoftwareRevDataSuccess((String) readInfoBean.data);
                                 }
                                 toDisposable(readSoftwareRevDisposable);
@@ -89,7 +89,7 @@ public class OldDeviceInfoPresenter extends BlePresenter<IOldDeviceInfoView> {
                             public void accept(Throwable throwable) throws Exception {
                                 readFirmwareRev();
                                 LogUtils.e(" davi 读取SoftwareRev失败  " + (throwable instanceof TimeOutException) + "   " + throwable.getMessage());
-                                if (mViewRef.get() != null) {
+                                if (isSafe()) {
                                     mViewRef.get().SoftwareRevDataError(throwable);
                                 }
                                 //读取SoftwareRev失败
@@ -131,7 +131,7 @@ public class OldDeviceInfoPresenter extends BlePresenter<IOldDeviceInfoView> {
                                 readFirmwareRev();
                                 LogUtils.e(" davi 读取HardwareRev成功 " + readInfoBean.data);  //进行下一步
                                 bleLockInfo.setHardware((String) readInfoBean.data);
-                                if (mViewRef.get() != null) {
+                                if (isSafe()) {
                                     mViewRef.get().HardwareRevDataSuccess((String) readInfoBean.data);
                                 }
                                 toDisposable(readHardwareRevDisposable);
@@ -141,7 +141,7 @@ public class OldDeviceInfoPresenter extends BlePresenter<IOldDeviceInfoView> {
                             public void accept(Throwable throwable) throws Exception {
                                 readFirmwareRev();
                                 LogUtils.e(" davi 读取HardwareRev失败  " + (throwable instanceof TimeOutException) + "   " + throwable.getMessage());
-                                if (mViewRef.get() != null) {
+                                if (isSafe()) {
                                     mViewRef.get().HardwareRevDataError(throwable);
                                 }
                                 //读取FirmwareRev失败
@@ -183,7 +183,7 @@ public class OldDeviceInfoPresenter extends BlePresenter<IOldDeviceInfoView> {
                                 readSerialNumber();
                                 LogUtils.e(" davi 读取FirmwareRev成功 " + readInfoBean.data);  //进行下一步
                                 bleLockInfo.setFirmware((String) readInfoBean.data);
-                                if (mViewRef.get() != null) {
+                                if (isSafe()) {
                                     mViewRef.get().FirmwareRevDataSuccess((String) readInfoBean.data);
                                 }
                                 toDisposable(readFirmwareRevDisposable);
@@ -193,7 +193,7 @@ public class OldDeviceInfoPresenter extends BlePresenter<IOldDeviceInfoView> {
                             public void accept(Throwable throwable) throws Exception {
                                 readSerialNumber();
                                 LogUtils.e(" davi 读取FirmwareRev失败  " + (throwable instanceof TimeOutException) + "   " + throwable.getMessage());
-                                if (mViewRef.get() != null) {
+                                if (isSafe()) {
                                     mViewRef.get().FirmwareRevDataError(throwable);
                                 }
                                 //读取FirmwareRev失败
@@ -235,7 +235,7 @@ public class OldDeviceInfoPresenter extends BlePresenter<IOldDeviceInfoView> {
                                 readModelNumber();
                                 LogUtils.e(" davi 读取SerialNumber成功 " + readInfoBean.data);  //进行下一步
                                 bleLockInfo.setSerialNumber((String) readInfoBean.data);
-                                if (mViewRef.get() != null) {
+                                if (isSafe()) {
                                     mViewRef.get().SerialNumberDataSuccess((String) readInfoBean.data);
                                 }
                                 toDisposable(readSerialNumberDisposable);
@@ -245,7 +245,7 @@ public class OldDeviceInfoPresenter extends BlePresenter<IOldDeviceInfoView> {
                             public void accept(Throwable throwable) throws Exception {
                                 readModelNumber();
                                 LogUtils.e(" davi 读取SerialNumber失败  " + (throwable instanceof TimeOutException) + "   " + throwable.getMessage());
-                                if (mViewRef.get() != null) {
+                                if (isSafe()) {
                                     mViewRef.get().SerialNumberDataError(throwable);
                                 }
                                 //读取SerialNumber失败
@@ -264,7 +264,7 @@ public class OldDeviceInfoPresenter extends BlePresenter<IOldDeviceInfoView> {
         //一秒没有读取到ModelNumber  则认为超时
         //超时然后重试
         if (bleLockInfo != null && !TextUtils.isEmpty(bleLockInfo.getModeNumber())) {
-            if (mViewRef.get() != null) {
+            if (isSafe()) {
                 mViewRef.get().ModelNumberDataSuccess(bleLockInfo.getModeNumber());
             }
             return;
@@ -295,7 +295,7 @@ public class OldDeviceInfoPresenter extends BlePresenter<IOldDeviceInfoView> {
                             public void accept(ReadInfoBean readInfoBean) throws Exception {
                                 LogUtils.e(" davi 读取ModelNumber成功 " + readInfoBean.data);  //进行下一步
                                 bleLockInfo.setModeNumber((String) readInfoBean.data);
-                                if (mViewRef.get() != null) {
+                                if (isSafe()) {
                                     mViewRef.get().ModelNumberDataSuccess((String) readInfoBean.data);
                                 }
                                 toDisposable(readModelNumberDisposable);
@@ -304,7 +304,7 @@ public class OldDeviceInfoPresenter extends BlePresenter<IOldDeviceInfoView> {
                             @Override
                             public void accept(Throwable throwable) throws Exception {
                                 LogUtils.e(" davi 读取ModelNumber失败  " + (throwable instanceof TimeOutException) + "   " + throwable.getMessage());
-                                if (mViewRef.get() != null) {
+                                if (isSafe()) {
                                     mViewRef.get().ModelNumberDataError(throwable);
                                 }
                             }
@@ -327,14 +327,14 @@ public class OldDeviceInfoPresenter extends BlePresenter<IOldDeviceInfoView> {
             @Override
             public void onAckErrorCode(BaseResult baseResult) {
                 LogUtils.e(" 上传蓝牙软件信息失败  " + baseResult.getCode());
-                if (mViewRef.get() != null) {
+                if (isSafe()) {
                     mViewRef.get().onUpdateSoftFailedServer(baseResult);
                 }
             }
 
             @Override
             public void onFailed(Throwable throwable) {
-                if (mViewRef.get() != null) {
+                if (isSafe()) {
                     mViewRef.get().onUpdateSoftFailed(throwable);
                 }
             }
@@ -355,7 +355,7 @@ public class OldDeviceInfoPresenter extends BlePresenter<IOldDeviceInfoView> {
                     public void accept(OTAResult otaResult) throws Exception {
                         if ("200".equals(otaResult.getCode())) {
                             //请求成功
-                            if (mViewRef.get() != null) {
+                            if (isSafe()) {
 
                                 String fileUrl = otaResult.getData().getFileUrl();
                                 if (!fileUrl.startsWith("http://")) {
@@ -364,11 +364,11 @@ public class OldDeviceInfoPresenter extends BlePresenter<IOldDeviceInfoView> {
                                 mViewRef.get().needUpdate(otaResult.getData());
                             }
                         } else if ("402".equals(otaResult.getCode())) {
-                            if (mViewRef.get() != null) {
+                            if (isSafe()) {
                                 mViewRef.get().noUpdateConfig();
                             }
                         } else {
-                            if (mViewRef.get() != null) {
+                            if (isSafe()) {
                                 mViewRef.get().checkInfoFailed(otaResult.getCode());
                             }
                         }
@@ -376,7 +376,7 @@ public class OldDeviceInfoPresenter extends BlePresenter<IOldDeviceInfoView> {
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        if (mViewRef.get() != null) {
+                        if (isSafe()) {
                             mViewRef.get().checkInfoFailed("");
                         }
                     }
@@ -391,7 +391,7 @@ public class OldDeviceInfoPresenter extends BlePresenter<IOldDeviceInfoView> {
         XiaokaiNewServiceImp.modifyLockNick(devname, user_id, lockNickName).subscribe(new BaseObserver<BaseResult>() {
             @Override
             public void onSuccess(BaseResult baseResult) {
-                if (mViewRef.get() != null) {
+                if (isSafe()) {
                     mViewRef.get().modifyDeviceNicknameSuccess();
                 }
                 bleLockInfo.getServerLockInfo().setLockNickName(lockNickName);
@@ -401,14 +401,14 @@ public class OldDeviceInfoPresenter extends BlePresenter<IOldDeviceInfoView> {
 
             @Override
             public void onAckErrorCode(BaseResult baseResult) {
-                if (mViewRef.get() != null) {
+                if (isSafe()) {
                     mViewRef.get().modifyDeviceNicknameFail(baseResult);
                 }
             }
 
             @Override
             public void onFailed(Throwable throwable) {
-                if (mViewRef.get() != null) {
+                if (isSafe()) {
                     mViewRef.get().modifyDeviceNicknameError(throwable);
                 }
             }

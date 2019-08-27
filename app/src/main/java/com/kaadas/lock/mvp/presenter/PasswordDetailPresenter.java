@@ -14,6 +14,7 @@ import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.result.GetPasswordResult;
 import com.kaadas.lock.publiclibrary.http.util.BaseObserver;
 import com.kaadas.lock.publiclibrary.http.util.RxjavaHelper;
+import com.kaadas.lock.utils.BleLockUtils;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.NetUtil;
 import com.kaadas.lock.utils.Rsa;
@@ -246,7 +247,7 @@ public class PasswordDetailPresenter<T> extends BlePresenter<IPasswordDetailView
                         List<Integer> tempNumber = new ArrayList<>();
                         if (serverType == 1) { //永久密码
                             for (int num : bleNumber) {
-                                if (num >= 0 && num < 10) {
+                                if (num >= 0 && num < 20) {
                                     tempNumber.add(num);
                                 }
                             }
@@ -265,6 +266,7 @@ public class PasswordDetailPresenter<T> extends BlePresenter<IPasswordDetailView
                             }
                         }
                         for (int number : bleNumber) {
+                            LogUtils.e("   ");
                             if (serverNumber == number) {
                                 //锁上有该编号的密码   删除
                                 isLockHaveThisNumber = true;
@@ -297,6 +299,9 @@ public class PasswordDetailPresenter<T> extends BlePresenter<IPasswordDetailView
         int codeNumber = 0;
         if (type == 1) {
             codeNumber = 10;
+            if (BleLockUtils.isSupport20Passwords(bleLockInfo.getServerLockInfo().getFunctionSet())) {  //支持20个密码的锁
+                codeNumber = 20;  //永久密码的最大编号   小凯锁都是5个  0-5
+            }
         } else if (type == 2 || type == 3) {
             codeNumber = 100;
         }

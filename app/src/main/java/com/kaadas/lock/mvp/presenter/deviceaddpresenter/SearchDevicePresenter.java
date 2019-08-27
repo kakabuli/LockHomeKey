@@ -395,11 +395,11 @@ public class SearchDevicePresenter<T> extends BasePresenter<ISearchDeviceView> {
                             System.arraycopy(bPwd1, 0, password_1, 0, bPwd1.length);
                             pwd1 = Rsa.bytesToHexString(bPwd1);
                             if (mViewRef.get() != null) {
-//                                mViewRef.get().getPwd1Success(pwd1, isBind,version,sn,mac,deviceName);
-                                if (bleService != null) {  //1
-                                    LogUtils.e("设备未经过产测   断开连接");
-                                    bleService.release(); //设备未经过产测   断开连接
-                                }
+                                mViewRef.get().getPwd1Success(pwd1, isBind,version,sn,mac,deviceName);
+//                                if (bleService != null) {  //1
+//                                    LogUtils.e("设备未经过产测   断开连接");
+//                                    bleService.release(); //设备未经过产测   断开连接
+//                                }
                                 mViewRef.get().notice419();
                             }
                             return;

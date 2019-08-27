@@ -110,7 +110,7 @@ public class PasswordManagerPresenter<T> extends BlePresenter<IPasswordManagerVi
                         int codeType = deValue[1] & 0xff;
                         int codeNumber = deValue[2] & 0xff;
                         LogUtils.e("秘钥的帧数是  " + index + " 秘钥类型是  " + codeType + "  秘钥总数是   " + codeNumber);
-                        getAllpasswordNumber(codeNumber, deValue);
+                        getAllpasswordNumber(deValue);
                         LogUtils.e("秘钥列表为   " + Arrays.toString(bleNumber.toArray()));
                         LogUtils.e(" 服务器数据 " + passwordResults.getData());
                         LogUtils.e("服务器密码列表   " + pwdList);
@@ -185,7 +185,7 @@ public class PasswordManagerPresenter<T> extends BlePresenter<IPasswordManagerVi
         compositeDisposable.add(syndPwdDisposable);
     }
 
-    private void getAllpasswordNumber(int codeNumber, byte[] deValue) {
+    private void getAllpasswordNumber(byte[] deValue) {
         int passwordNumber = 10;
         if (BleLockUtils.isSupport20Passwords(bleLockInfo.getServerLockInfo().getFunctionSet())) {  //支持20个密码的锁
             passwordNumber = 20;  //永久密码的最大编号   小凯锁都是5个  0-5
@@ -227,14 +227,6 @@ public class PasswordManagerPresenter<T> extends BlePresenter<IPasswordManagerVi
                 String number = i < 10 ? "0" + i : "" + i;
                 passwords.add(new AddPasswordBean.Password(1, number, number, 1));
             }
-         /*   if (i>4){
-                String number = i < 10 ? "0" + i : "" + i;
-                passwords.add(new AddPasswordBean.Password(2, number, number, 1));
-            }else {
-                String number = i < 10 ? "0" + i : "" + i;
-                passwords.add(new AddPasswordBean.Password(1, number, number, 1));
-            }*/
-
 
         }
         XiaokaiNewServiceImp.addPassword(MyApplication.getInstance().getUid()
@@ -243,9 +235,6 @@ public class PasswordManagerPresenter<T> extends BlePresenter<IPasswordManagerVi
                     @Override
                     public void onSuccess(BaseResult result) {
                         LogUtils.e("上传秘钥昵称到服务器成功  " + result.toString());
-//                        if (mViewRef.get() != null) {
-//                            mViewRef.get().onUpLoadSuccess( );
-//                        }
                         getAllPassword(bleLockInfo, true);
                     }
 
@@ -328,7 +317,7 @@ public class PasswordManagerPresenter<T> extends BlePresenter<IPasswordManagerVi
      * num	        是	    String	密钥编号
      * nickName	    是	    String	密钥昵称
      * type 	    否	    int 	密钥周期类型：1永久 2时间段 3周期 4 24小时
-     * startTime	否	    timestamp	时间段密钥开始时间
+     * startTime	否	    timestamp	时间段密钥开始时间a
      * endTime	    否	    timestamp	时间段密钥结束时间
      * items	    否	    list	周期密码星期几
      */

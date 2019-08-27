@@ -25,7 +25,7 @@ import com.kaadas.lock.activity.device.bluetooth.BluetoothMoreActivity;
 import com.kaadas.lock.activity.device.bluetooth.BluetoothSharedDeviceManagementActivity;
 import com.kaadas.lock.activity.device.bluetooth.card.DoorCardManagerActivity;
 import com.kaadas.lock.activity.device.bluetooth.fingerprint.FingerprintManagerActivity;
-import com.kaadas.lock.activity.device.bluetooth.password.BluetoothPasswordManagerActivity;
+import com.kaadas.lock.activity.device.bluetooth.password.BlePasswordManagerActivity;
 import com.kaadas.lock.activity.device.oldbluetooth.OldDeviceInfoActivity;
 import com.kaadas.lock.adapter.BluetoothFunctionAdapater;
 import com.kaadas.lock.adapter.BluetoothFunctionOneLineAdapater;
@@ -344,7 +344,7 @@ public class BleDetailActivity extends BaseBleActivity<IDeviceDetailView, Device
                 Intent intent;
                 switch (bluetoothLockFunctionBean.getType()) {
                     case BleLockUtils.TYPE_PASSWORD:
-                        intent = new Intent(BleDetailActivity.this, BluetoothPasswordManagerActivity.class);
+                        intent = new Intent(BleDetailActivity.this, BlePasswordManagerActivity.class);
                         startActivity(intent);
                         break;
                     case BleLockUtils.TYPE_FINGER:
@@ -376,7 +376,7 @@ public class BleDetailActivity extends BaseBleActivity<IDeviceDetailView, Device
                 LogUtils.e("点击类型是    " + bluetoothLockFunctionBean.getType());
                 switch (bluetoothLockFunctionBean.getType()) {
                     case BleLockUtils.TYPE_PASSWORD:
-                        intent = new Intent(BleDetailActivity.this, BluetoothPasswordManagerActivity.class);
+                        intent = new Intent(BleDetailActivity.this, BlePasswordManagerActivity.class);
                         startActivity(intent);
                         break;
                     case BleLockUtils.TYPE_FINGER:

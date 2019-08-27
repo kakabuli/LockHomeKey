@@ -229,10 +229,10 @@ public class BluetoothPasswordShareActivity extends BaseBleActivity<IPasswordDet
     public void onDeleteServerPwdSuccess() {
         Intent intent = new Intent();
         if (type == 1) {
-            intent.setClass(this, BluetoothPasswordManagerActivity.class);
+            intent.setClass(this, BlePasswordManagerActivity.class);
         } else {
             //todo 跳转到临时密码管理页面
-            intent.setClass(this, BluetoothPasswordManagerActivity.class);
+            intent.setClass(this, BlePasswordManagerActivity.class);
         }
         startActivity(intent);
         finish();
@@ -256,11 +256,11 @@ public class BluetoothPasswordShareActivity extends BaseBleActivity<IPasswordDet
     public void updateNickNameSuccess(String nickName) {
         hiddenLoading();
         if (type == 1) {
-            Intent intent = new Intent(this, BluetoothPasswordManagerActivity.class);
+            Intent intent = new Intent(this, BlePasswordManagerActivity.class);
             startActivity(intent);
         } else if (type == 2) {
             //todo 跳转到临时密码管理页面
-            Intent intent = new Intent(this, BluetoothPasswordManagerActivity.class);
+            Intent intent = new Intent(this, BlePasswordManagerActivity.class);
             startActivity(intent);
         }
         hiddenLoading();

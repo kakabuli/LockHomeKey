@@ -26,12 +26,12 @@ public class CateyeDynamicPresenter<T> extends BasePresenter<ICateyeDynamicView>
                         catEyeInfo.add(catEyeEvent);
                     }
                 }
-                if (mViewRef!=null&&mViewRef.get()!=null){
+                if (isSafe()){
                     mViewRef.get().getCateyeDynamicSuccess(catEyeInfo);
                     catEyeInfo.clear();
                 }
             }else{
-                if (mViewRef!=null&&mViewRef.get()!=null){
+                if (isSafe()){
                     mViewRef.get().getCateyeDynamicFail();
                     if (catEyeInfo!=null) {
                         catEyeInfo.clear();

@@ -80,11 +80,11 @@ public class VideoCallBackPresenter <T> extends BasePresenter<IVedeoCallBack> {
                             if (aBoolean) { // 米米网登陆成功且网关在线
                             //    LogUtils.e("米米网  登陆成功   呼叫猫眼");
                                 Log.e(GeTui.VideoLog,"米米网  登陆成功........");
-                                if (mViewRef.get() != null) {
+                                if (isSafe()) {
                                     mViewRef.get().onCatEyeCallIn();
                                 }
                             } else { //米米网登陆失败或者网关不在线  不处理
-                                if (mViewRef.get() != null) {
+                                if (isSafe()) {
                                     mViewRef.get().loginMemeFailed();
                                     MemeManager.getInstance().videoActivityDisconnectMeme();
                                 }
@@ -96,7 +96,7 @@ public class VideoCallBackPresenter <T> extends BasePresenter<IVedeoCallBack> {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
                         Log.e(GeTui.VideoLog,"登录米米网失败或者设备不在线........");
-                            if (mViewRef.get() != null) {
+                            if (isSafe()) {
                                 mViewRef.get().loginMemeFailed();
                             }
 

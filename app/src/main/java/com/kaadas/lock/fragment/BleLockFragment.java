@@ -144,13 +144,11 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
                 boolean auth = mPresenter.isAuth(bleLockInfo, true);
                 if (auth) {
                     changeOpenLockStatus(8);
-                } else {
-//                                changeOpenLockStatus(12);
+                    mPresenter.getDeviceInfo();
                 }
                 LogUtils.e("切换到当前界面 52  设备 isdestroy  " + isDestroy + auth);
                 LogUtils.e(this + "   设置设备52  " + bleLockInfo.getServerLockInfo().toString());
                 onChangeInitView();
-
                 if (supportOperationRecord) {
                     mPresenter.getOperationRecordFromServer(1);
                 } else {
@@ -188,12 +186,15 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
                 } else {
                     changeOpenLockStatus(13);
                 }
+
                 if (bleLockInfo.getSafeMode() == 1) {//安全模式
                     changeOpenLockStatus(16);
                 }
+
                 if (bleLockInfo.getBackLock() == 0) {  //等于0时是反锁状态
                     changeOpenLockStatus(6);
                 }
+
                 if (bleLockInfo.getArmMode() == 1) {//布防模式
                     changeOpenLockStatus(4);
                 }

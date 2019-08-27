@@ -18,21 +18,22 @@ import io.reactivex.functions.Predicate;
 import kotlin.DslMarker;
 
 public class CatEyeFunctionPresenter<T> extends BasePresenter<ICatEyeFunctionView> {
-    private Disposable  getPowerDataDisposable;
-    private Disposable  listenerGatewayOnLine;
-    private Disposable  listenerDeviceOnLineDisposable;
+    private Disposable getPowerDataDisposable;
+    private Disposable listenerGatewayOnLine;
+    private Disposable listenerDeviceOnLineDisposable;
     private Disposable networkChangeDisposable;
+
     //监听电量的变化
-    public void getPowerData(String gatewayId,String deviceId){
-        if (mqttService!=null){
-            getPowerDataDisposable=mqttService.getPowerData()
+    public void getPowerData(String gatewayId, String deviceId) {
+        if (mqttService != null) {
+            getPowerDataDisposable = mqttService.getPowerData()
                     .filter(new Predicate<MqttData>() {
                         @Override
                         public boolean test(MqttData mqttData) throws Exception {
-                            if (mqttData!=null){
+                            if (mqttData != null) {
                                 //过滤
                                 GetDevicePowerBean powerBean = new Gson().fromJson(mqttData.getPayload(), GetDevicePowerBean.class);
-                                if (gatewayId.equals(powerBean.getGwId())&&deviceId.equals(powerBean.getDeviceId())){
+                                if (gatewayId.equals(powerBean.getGwId()) && deviceId.equals(powerBean.getDeviceId())) {
                                     LogUtils.e("过滤成功值");
                                     return true;
                                 }
@@ -45,20 +46,20 @@ public class CatEyeFunctionPresenter<T> extends BasePresenter<ICatEyeFunctionVie
                         @Override
                         public void accept(MqttData mqttData) throws Exception {
                             GetDevicePowerBean powerBean = new Gson().fromJson(mqttData.getPayload(), GetDevicePowerBean.class);
-                            if ("200".equals(mqttData.getReturnCode())){
-                                if (mViewRef.get()!=null){
-                                    mViewRef.get().getPowerDataSuccess(powerBean.getDeviceId(),powerBean.getReturnData().getPower(),powerBean.getTimestamp());
+                            if ("200".equals(mqttData.getReturnCode())) {
+                                if (isSafe()) {
+                                    mViewRef.get().getPowerDataSuccess(powerBean.getDeviceId(), powerBean.getReturnData().getPower(), powerBean.getTimestamp());
                                 }
-                            }else{
-                                if (mViewRef.get()!=null){
-                                    mViewRef.get().getPowerDataFail(powerBean.getDeviceId(),powerBean.getTimestamp());
+                            } else {
+                                if (isSafe()) {
+                                    mViewRef.get().getPowerDataFail(powerBean.getDeviceId(), powerBean.getTimestamp());
                                 }
                             }
                         }
                     }, new Consumer<Throwable>() {
                         @Override
                         public void accept(Throwable throwable) throws Exception {
-                            if (mViewRef.get()!=null){
+                            if (isSafe()) {
                                 mViewRef.get().getPowerThrowable();
                             }
                         }
@@ -79,9 +80,9 @@ public class CatEyeFunctionPresenter<T> extends BasePresenter<ICatEyeFunctionVie
                             if (mqttData != null) {
                                 GetBindGatewayStatusResult gatewayStatusResult = new Gson().fromJson(mqttData.getPayload(), GetBindGatewayStatusResult.class);
                                 LogUtils.e("监听网关GatewayActivity" + gatewayStatusResult.getDevuuid());
-                                if (gatewayStatusResult != null&&gatewayStatusResult.getData().getState()!=null) {
-                                    if (mViewRef.get() != null) {
-                                        mViewRef.get().gatewayStatusChange(gatewayStatusResult.getDevuuid(),gatewayStatusResult.getData().getState());
+                                if (gatewayStatusResult != null && gatewayStatusResult.getData().getState() != null) {
+                                    if (isSafe()) {
+                                        mViewRef.get().gatewayStatusChange(gatewayStatusResult.getDevuuid(), gatewayStatusResult.getData().getState());
                                     }
                                 }
                             }
@@ -114,9 +115,9 @@ public class CatEyeFunctionPresenter<T> extends BasePresenter<ICatEyeFunctionVie
                         @Override
                         public void accept(MqttData mqttData) throws Exception {
                             DeviceOnLineBean deviceOnLineBean = new Gson().fromJson(mqttData.getPayload(), DeviceOnLineBean.class);
-                            if (deviceOnLineBean!=null){
-                                if (mViewRef.get()!=null&&deviceOnLineBean.getEventparams().getEvent_str()!=null){
-                                    mViewRef.get().deviceStatusChange(deviceOnLineBean.getGwId(),deviceOnLineBean.getDeviceId(),deviceOnLineBean.getEventparams().getEvent_str());
+                            if (deviceOnLineBean != null) {
+                                if (isSafe() && deviceOnLineBean.getEventparams().getEvent_str() != null) {
+                                    mViewRef.get().deviceStatusChange(deviceOnLineBean.getGwId(), deviceOnLineBean.getDeviceId(), deviceOnLineBean.getEventparams().getEvent_str());
                                 }
                             }
                         }
@@ -131,13 +132,13 @@ public class CatEyeFunctionPresenter<T> extends BasePresenter<ICatEyeFunctionVie
     }
 
     //网络变化通知
-    public void listenerNetworkChange(){
+    public void listenerNetworkChange() {
         toDisposable(networkChangeDisposable);
-        networkChangeDisposable= NetWorkChangReceiver.notifyNetworkChange().subscribe(new Consumer<Boolean>() {
+        networkChangeDisposable = NetWorkChangReceiver.notifyNetworkChange().subscribe(new Consumer<Boolean>() {
             @Override
             public void accept(Boolean aBoolean) throws Exception {
-                if (aBoolean){
-                    if (mViewRef!=null&&mViewRef.get()!=null){
+                if (aBoolean) {
+                    if (isSafe()) {
                         mViewRef.get().networkChangeSuccess();
                     }
                 }
@@ -145,8 +146,6 @@ public class CatEyeFunctionPresenter<T> extends BasePresenter<ICatEyeFunctionVie
         });
         compositeDisposable.add(networkChangeDisposable);
     }
-
-
 
 
 }

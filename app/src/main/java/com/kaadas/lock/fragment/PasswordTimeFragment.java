@@ -18,11 +18,12 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
-import com.kaadas.lock.activity.device.bluetooth.password.BluetoothPasswordManagerActivity;
+import com.kaadas.lock.activity.device.bluetooth.password.BlePasswordManagerActivity;
 import com.kaadas.lock.activity.device.bluetooth.password.BluetoothPasswordShareActivity;
 import com.kaadas.lock.activity.device.bluetooth.password.BluetoothUserPasswordAddActivity;
 import com.kaadas.lock.adapter.ShiXiaoNameAdapter;
@@ -100,7 +101,6 @@ public class PasswordTimeFragment extends BaseBleFragment<IAddTimePasswprdView, 
     @BindView(R.id.tv_deadline_time)
     TextView tvDeadlineTime;
     private BleLockInfo bleLockInfo;
-    private String[] str1;
     ShiXiaoNameAdapter shiXiaoNameAdapter;
 
     public static PasswordTimeFragment newInstance() {
@@ -285,7 +285,6 @@ public class PasswordTimeFragment extends BaseBleFragment<IAddTimePasswprdView, 
                     LogUtils.e("当前时间   " + DateUtils.getDateTimeFromMillisecond(System.currentTimeMillis()));
                     if (mPresenter.isAuth(bleLockInfo, true)) {
                         mPresenter.setPwd(strPassword, 4, nickName, startMilliseconds, endMilliseconds);
-
                     }
                 }
                 break;
@@ -461,14 +460,14 @@ public class PasswordTimeFragment extends BaseBleFragment<IAddTimePasswprdView, 
     @Override
     public void onUploadFailed(Throwable throwable) {
         ToastUtil.getInstance().showShort(R.string.lock_set_success_please_sync);
-        startActivity(new Intent(getContext(), BluetoothPasswordManagerActivity.class));
+        startActivity(new Intent(getContext(), BlePasswordManagerActivity.class));
         getActivity().finish();
     }
 
     @Override
     public void onUploadFailedServer(BaseResult result) {
         ToastUtil.getInstance().showShort(R.string.lock_set_success_please_sync);
-        startActivity(new Intent(getContext(), BluetoothPasswordManagerActivity.class));
+        startActivity(new Intent(getContext(), BlePasswordManagerActivity.class));
         getActivity().finish();
     }
 
@@ -485,6 +484,12 @@ public class PasswordTimeFragment extends BaseBleFragment<IAddTimePasswprdView, 
     @Override
     public void onSyncPasswordFailed(Throwable throwable) {
         ToastUtil.getInstance().showLong(R.string.set_failed);
+    }
+
+    @Override
+    public void onTimePwdFull() {
+        hiddenLoading();
+        ToastUtil.getInstance().showLong(R.string.only_0to4);
     }
 
     @Override

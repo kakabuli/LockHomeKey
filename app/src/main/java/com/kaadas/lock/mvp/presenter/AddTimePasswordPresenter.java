@@ -12,11 +12,13 @@ import com.kaadas.lock.publiclibrary.http.postbean.AddPasswordBean;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.util.BaseObserver;
 import com.kaadas.lock.publiclibrary.http.util.RxjavaHelper;
+import com.kaadas.lock.utils.BleLockUtils;
 import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.Rsa;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -73,8 +75,8 @@ public class AddTimePasswordPresenter<T> extends BlePresenter<IAddTimePasswprdVi
                     @Override
                     public void accept(BleDataBean bleDataBean) throws Exception {
                         LogUtils.e("收到数据   设置年计划  " + Rsa.bytesToHexString(bleDataBean.getOriginalData()));
-                        if (bleDataBean.isConfirm()  ) {
-                            if ( bleDataBean.getPayload()[0] == 0){
+                        if (bleDataBean.isConfirm()) {
+                            if (bleDataBean.getPayload()[0] == 0) {
                                 LogUtils.e("设置时间策略成功    ");
                                 //设置时间计划成功
                                 if (mViewRef.get() != null) {
@@ -87,7 +89,7 @@ public class AddTimePasswordPresenter<T> extends BlePresenter<IAddTimePasswprdVi
                                         setUserType(number, 0x01);
                                     }
                                 }, 500);
-                            }else {
+                            } else {
                                 LogUtils.e("设置时间策略失败    ");
                                 //设置密码失败
                                 if (mViewRef.get() != null) {
@@ -96,8 +98,6 @@ public class AddTimePasswordPresenter<T> extends BlePresenter<IAddTimePasswprdVi
                                 }
                             }
                             toDisposable(setYearDisposable);
-
-
                         }
                     }
                 }, new Consumer<Throwable>() {
@@ -184,6 +184,12 @@ public class AddTimePasswordPresenter<T> extends BlePresenter<IAddTimePasswprdVi
             }
             return;
         }
+        if (type!=1 && number > 4){ //不是永久密码
+            if (isSafe()) {
+                mViewRef.get().onTimePwdFull();
+            }
+            return;
+        }
         if (type == 1) { //永久密码
             password = new AddPasswordBean.Password(1, number > 9 ? "" + number : "0" + number, nickName, 1, startTime, endTime, new ArrayList<String>());
         } else {
@@ -260,20 +266,26 @@ public class AddTimePasswordPresenter<T> extends BlePresenter<IAddTimePasswprdVi
     }
 
     public int getNumber() {
+        int countNumber = 10;
         if (bleNumber.size() == 0) {
             return 0;
         }
-        for (int i = 0; i < 5; i++) {
-            boolean isHave = false;
-            for (int number : bleNumber) {
-                if (number == i) {
-                    isHave = true;
-                    break;
+        if (BleLockUtils.isSupport20Passwords(bleLockInfo.getServerLockInfo().getFunctionSet())) {  //支持20个密码的锁
+            countNumber = 20;
+        }
+        for (int i = 0; i < countNumber; i++) {
+            if (!(i > 4 && i < 10)) {  //临时密码和胁迫密码的范围 5-9
+                boolean isHave = false;
+                for (int number : bleNumber) {
+                    if (number == i) {
+                        isHave = true;
+                        break;
+                    }
                 }
-            }
-            //如果该密码没有
-            if (!isHave) {
-                return i;
+                //如果该密码没有
+                if (!isHave) {
+                    return i;
+                }
             }
         }
         return -1;
@@ -361,6 +373,7 @@ public class AddTimePasswordPresenter<T> extends BlePresenter<IAddTimePasswprdVi
                         if (bleDataBean.getOriginalData()[0] == 0) {
                             if (mViewRef.get() != null) {
                                 mViewRef.get().onSyncPasswordFailed(new BleProtocolFailedException(bleDataBean.getOriginalData()[4] & 0xff));
+                                mViewRef.get().endSetPwd();
                             }
                             return;
                         }
@@ -377,6 +390,9 @@ public class AddTimePasswordPresenter<T> extends BlePresenter<IAddTimePasswprdVi
                         LogUtils.e("秘钥的帧数是  " + index + " 秘钥类型是  " + codeType + "  秘钥总数是   " + codeNumber);
 
                         getAllpasswordNumber(codeNumber, deValue);
+
+
+                        LogUtils.e("获取到的数据是   " + Arrays.toString(bleNumber.toArray()));
 
                         toDisposable(syncPwdDisposable);
 
@@ -398,13 +414,15 @@ public class AddTimePasswordPresenter<T> extends BlePresenter<IAddTimePasswprdVi
     private int[] temp = new int[]{0b10000000, 0b01000000, 0b00100000, 0b00010000, 0b00001000, 0b00000100, 0b00000010, 0b00000001};
 
     private void getAllpasswordNumber(int codeNumber, byte[] deValue) {
-        int passwordNumber = 5;  //永久密码的最大编号   小凯锁都是5个  0-5
-        //获取所有有秘钥的密码编号
-        for (int index = 0; index * 8 < codeNumber; index++) {
+        int passwordNumber = 10;
+        if (BleLockUtils.isSupport20Passwords(bleLockInfo.getServerLockInfo().getFunctionSet())) {  //支持20个密码的锁
+            passwordNumber = 20;  //永久密码的最大编号   小凯锁都是5个  0-5
+        }
+        for (int index = 0; index * 8 < passwordNumber; index++) {
             if (index > 13) {
                 return;
             }
-            for (int j = 0; j < 8 && index * 8 + j < codeNumber; j++) {
+            for (int j = 0; j < 8 && index * 8 + j < passwordNumber; j++) {
                 if (((deValue[3 + index] & temp[j])) == temp[j] && index * 8 + j < passwordNumber) {
                     bleNumber.add(index * 8 + j);
                 }

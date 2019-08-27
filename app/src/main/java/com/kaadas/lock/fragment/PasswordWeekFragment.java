@@ -22,14 +22,14 @@ import android.widget.TextView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
-import com.kaadas.lock.activity.device.bluetooth.password.BluetoothPasswordManagerActivity;
+import com.kaadas.lock.activity.device.bluetooth.password.BlePasswordManagerActivity;
 import com.kaadas.lock.activity.device.bluetooth.password.BluetoothPasswordShareActivity;
 import com.kaadas.lock.activity.device.bluetooth.password.BluetoothUserPasswordAddActivity;
 import com.kaadas.lock.activity.device.bluetooth.password.CycleRulesActivity;
 import com.kaadas.lock.adapter.ShiXiaoNameAdapter;
 import com.kaadas.lock.bean.ShiXiaoNameBean;
 import com.kaadas.lock.mvp.mvpbase.BaseBleFragment;
-import com.kaadas.lock.mvp.presenter.PasswordLoopPresenter;
+import com.kaadas.lock.mvp.presenter.PasswordWeekPresenter;
 import com.kaadas.lock.mvp.view.IPasswordLoopView;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.publiclibrary.http.postbean.AddPasswordBean;
@@ -61,7 +61,7 @@ import static android.app.Activity.RESULT_OK;
  * Created by David
  */
 
-public class PasswordPeriodFragment extends BaseBleFragment<IPasswordLoopView, PasswordLoopPresenter<IPasswordLoopView>>
+public class PasswordWeekFragment extends BaseBleFragment<IPasswordLoopView, PasswordWeekPresenter<IPasswordLoopView>>
         implements View.OnClickListener, IPasswordLoopView, BaseQuickAdapter.OnItemClickListener {
     @BindView(R.id.recycleview)
     RecyclerView recyclerView;
@@ -127,6 +127,7 @@ public class PasswordPeriodFragment extends BaseBleFragment<IPasswordLoopView, P
         return mView;
 
     }
+
     private void initMonitor() {
         etName.addTextChangedListener(new TextWatcher() {
             @Override
@@ -149,6 +150,7 @@ public class PasswordPeriodFragment extends BaseBleFragment<IPasswordLoopView, P
             }
         });
     }
+
     private void setEffectiveTime() {
         String startTime = DateUtils.currentLong2HourMin(System.currentTimeMillis());
         String endTime = DateUtils.currentLong2HourMin(System.currentTimeMillis() + 60 * 60 * 1000);
@@ -187,12 +189,12 @@ public class PasswordPeriodFragment extends BaseBleFragment<IPasswordLoopView, P
     }
 
     @Override
-    protected PasswordLoopPresenter<IPasswordLoopView> createPresent() {
-        return new PasswordLoopPresenter<>();
+    protected PasswordWeekPresenter<IPasswordLoopView> createPresent() {
+        return new PasswordWeekPresenter<>();
     }
 
-    public static PasswordPeriodFragment newInstance() {
-        PasswordPeriodFragment fragment = new PasswordPeriodFragment();
+    public static PasswordWeekFragment newInstance() {
+        PasswordWeekFragment fragment = new PasswordWeekFragment();
         return fragment;
     }
 
@@ -441,19 +443,26 @@ public class PasswordPeriodFragment extends BaseBleFragment<IPasswordLoopView, P
     @Override
     public void onUploadPwdFailed(Throwable throwable) {
         ToastUtil.getInstance().showShort(R.string.lock_set_success_please_sync);
-        startActivity(new Intent(getContext(), BluetoothPasswordManagerActivity.class));
+        startActivity(new Intent(getContext(), BlePasswordManagerActivity.class));
         getActivity().finish();
     }
 
     @Override
     public void onUploadPwdFailedServer(BaseResult result) {
         ToastUtil.getInstance().showShort(R.string.lock_set_success_please_sync);
-        startActivity(new Intent(getContext(), BluetoothPasswordManagerActivity.class));
+        startActivity(new Intent(getContext(), BlePasswordManagerActivity.class));
         getActivity().finish();
     }
 
     @Override
     public void onSyncPasswordFailed(Throwable throwable) {
+        hiddenLoading();
         ToastUtil.getInstance().showLong(getString(R.string.set_failed));
+    }
+
+    @Override
+    public void onTimePwdFull() {
+        hiddenLoading();
+        ToastUtil.getInstance().showLong(R.string.only_0to4);
     }
 }

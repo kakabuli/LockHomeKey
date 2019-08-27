@@ -12,6 +12,7 @@ import com.kaadas.lock.publiclibrary.http.postbean.AddPasswordBean;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.util.BaseObserver;
 import com.kaadas.lock.publiclibrary.http.util.RxjavaHelper;
+import com.kaadas.lock.utils.BleLockUtils;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.Rsa;
 
@@ -27,7 +28,7 @@ import io.reactivex.functions.Predicate;
  * Create By lxj  on 2019/3/12
  * Describe
  */
-public class PasswordLoopPresenter<T> extends BlePresenter<IPasswordLoopView> {
+public class PasswordWeekPresenter<T> extends BlePresenter<IPasswordLoopView> {
 
     private AddPasswordBean.Password password;
     private Disposable setUserTypeDisposable;
@@ -64,15 +65,15 @@ public class PasswordLoopPresenter<T> extends BlePresenter<IPasswordLoopView> {
                     @Override
                     public void accept(BleDataBean bleDataBean) throws Exception {
                         LogUtils.e("收到原始数据是  " + Rsa.bytesToHexString(bleDataBean.getOriginalData()));
-                        if (bleDataBean.isConfirm()   ) {
-                            if (bleDataBean.getOriginalData()[4] == 0){
+                        if (bleDataBean.isConfirm()) {
+                            if (bleDataBean.getOriginalData()[4] == 0) {
                                 LogUtils.e("设置用户类型成功  " + type);
                                 //设置用户类型成功
                                 if (mViewRef.get() != null) {
                                     mViewRef.get().setUserTypeSuccess();
                                 }
                                 uploadPassword(password);
-                            }else {
+                            } else {
                                 if (mViewRef.get() != null) {
                                     LogUtils.e("设置用户类型失败   " + type);
                                     mViewRef.get().setUserTypeFailed(new BleProtocolFailedException(bleDataBean.getOriginalData()[4] & 0xff));
@@ -107,6 +108,13 @@ public class PasswordLoopPresenter<T> extends BlePresenter<IPasswordLoopView> {
             }
             return;
         }
+        if (number>4){
+            if (isSafe()) {
+                mViewRef.get().onTimePwdFull();
+            }
+            return;
+        }
+
         long startTime = startHour * 60 * 60 * 1000 + startMin * 60 * 1000;
         long endTime = endHour * 60 * 60 * 1000 + endMin * 60 * 1000;
         List<String> sdays = new ArrayList<>();
@@ -132,14 +140,14 @@ public class PasswordLoopPresenter<T> extends BlePresenter<IPasswordLoopView> {
                     @Override
                     public void accept(BleDataBean bleDataBean) throws Exception {
                         LogUtils.e("收到设置密码回调     " + Rsa.toHexString(bleDataBean.getOriginalData()));
-                        if (bleDataBean.getOriginalData()[0] == 0   ) {  //status 为0
-                            if (bleDataBean.getOriginalData()[4] == 0){
+                        if (bleDataBean.getOriginalData()[0] == 0) {  //status 为0
+                            if (bleDataBean.getOriginalData()[4] == 0) {
                                 LogUtils.e("设置密码成功   ");
                                 if (mViewRef.get() != null) {
                                     mViewRef.get().onSetPasswordSuccess(password);
                                 }
                                 setWeekPlan(number, days, startHour, startMin, endHour, endMin);
-                            }else {
+                            } else {
                                 LogUtils.e("设置密码失败   ");
                                 if (mViewRef.get() != null) {
                                     mViewRef.get().onSetPasswordFailed(new BleProtocolFailedException(bleDataBean.getPayload()[0] & 0xff));
@@ -165,24 +173,29 @@ public class PasswordLoopPresenter<T> extends BlePresenter<IPasswordLoopView> {
     }
 
     public int getNumber() {
+        int countNumber = 10;
         if (bleNumber.size() == 0) {
             return 0;
         }
-        for (int i = 0; i < 5; i++) {
-            //
-            boolean isHave = false;
-            for (int number : bleNumber) {
-                if (number == i) {
-                    isHave = true;
-                    break;
+        if (BleLockUtils.isSupport20Passwords(bleLockInfo.getServerLockInfo().getFunctionSet())) {  //支持20个密码的锁
+            countNumber = 20;
+        }
+        for (int i = 0; i < countNumber; i++) {
+
+            if (!(i > 4 && i < 10)) {  //临时密码和胁迫密码的范围 5-9
+                boolean isHave = false;
+                for (int number : bleNumber) {
+                    if (number == i) {
+                        isHave = true;
+                        break;
+                    }
+                }
+                //如果该密码没有
+                if (!isHave) {
+                    return i;
                 }
             }
-            //如果该密码没有
-            if (!isHave) {
-                return i;
-            }
         }
-
         return -1;
     }
 
@@ -282,13 +295,13 @@ public class PasswordLoopPresenter<T> extends BlePresenter<IPasswordLoopView> {
                     @Override
                     public void accept(BleDataBean bleDataBean) throws Exception {
                         LogUtils.e("获取的数据是   " + Rsa.bytesToHexString(bleDataBean.getOriginalData()));
-                        if (bleDataBean.isConfirm()   ) {
-                            if (bleDataBean.getOriginalData()[4] == 0){
+                        if (bleDataBean.isConfirm()) {
+                            if (bleDataBean.getOriginalData()[4] == 0) {
                                 if (mViewRef.get() != null) {
                                     mViewRef.get().setWeekPlanSuccess();
                                     setUserType(number, 1);
                                 }
-                            }else {
+                            } else {
                                 if (mViewRef.get() != null) {
                                     mViewRef.get().endSetPwd();
                                     mViewRef.get().setWeekPlanFailed(new BleProtocolFailedException(bleDataBean.getPayload()[0] & 0xff));
@@ -349,7 +362,7 @@ public class PasswordLoopPresenter<T> extends BlePresenter<IPasswordLoopView> {
                         int codeNumber = deValue[2] & 0xff;
                         LogUtils.e("秘钥的帧数是  " + index + " 秘钥类型是  " + codeType + "  秘钥总数是   " + codeNumber);
 
-                        getAllpasswordNumber(codeNumber, deValue);
+                        getAllpasswordNumber(deValue);
 
                         toDisposable(syncPwdDisposable);
 
@@ -371,14 +384,16 @@ public class PasswordLoopPresenter<T> extends BlePresenter<IPasswordLoopView> {
 
     private int[] temp = new int[]{0b10000000, 0b01000000, 0b00100000, 0b00010000, 0b00001000, 0b00000100, 0b00000010, 0b00000001};
 
-    private void getAllpasswordNumber(int codeNumber, byte[] deValue) {
-        int passwordNumber = 5;  //永久密码的最大编号   小凯锁都是5个  0-5
-        //获取所有有秘钥的密码编号
-        for (int index = 0; index * 8 < codeNumber; index++) {
+    private void getAllpasswordNumber(byte[] deValue) {
+        int passwordNumber = 10;
+        if (BleLockUtils.isSupport20Passwords(bleLockInfo.getServerLockInfo().getFunctionSet())) {  //支持20个密码的锁
+            passwordNumber = 20;  //永久密码的最大编号   小凯锁都是5个  0-5
+        }
+        for (int index = 0; index * 8 < passwordNumber; index++) {
             if (index > 13) {
                 return;
             }
-            for (int j = 0; j < 8 && index * 8 + j < codeNumber; j++) {
+            for (int j = 0; j < 8 && index * 8 + j < passwordNumber; j++) {
                 if (((deValue[3 + index] & temp[j])) == temp[j] && index * 8 + j < passwordNumber) {
                     bleNumber.add(index * 8 + j);
                 }
@@ -386,7 +401,6 @@ public class PasswordLoopPresenter<T> extends BlePresenter<IPasswordLoopView> {
                     return;
                 }
             }
-
         }
     }
 
