@@ -119,7 +119,7 @@ public class GatewayActivity extends BaseActivity<GatewayView, GatewayPresenter<
         HomeShowBean homeShowBean = (HomeShowBean) intent.getSerializableExtra(KeyConstants.GATEWAY_INFO);
         if (homeShowBean != null) {
             gatewayInfo = (GatewayInfo) homeShowBean.getObject();
-            if (gatewayInfo != null) {
+            if (gatewayInfo != null && gatewayInfo.getServerInfo()!=null) {
                 gatewayNickName.setText(gatewayInfo.getServerInfo().getDeviceNickName());
                 if(!TextUtils.isEmpty(gatewayInfo.getServerInfo().getModel()) && gatewayInfo.getServerInfo().getModel().equals(KeyConstants.SMALL_GW)){
                     gateway_logo.setImageResource(R.mipmap.gateway6030);
