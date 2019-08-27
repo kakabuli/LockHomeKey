@@ -20,7 +20,7 @@ public class BindBleSecondPresenter<T> extends BasePresenter<IBindBleSecondView>
                 .subscribe(new Consumer<BleStateBean>() {
                     @Override
                     public void accept(BleStateBean bleStateBean) throws Exception {
-                        if (mViewRef.get()!=null){
+                        if (isSafe()){
                             mViewRef.get().onDeviceStateChange(bleStateBean.isConnected());
                         }
                     }
