@@ -55,6 +55,7 @@ public class BleLockPresenter<T> extends MyOpenLockRecordPresenter<IBleLockView>
     }
 
     public void getDeviceInfo() {
+        LogUtils.e("获取锁信息    ");
         byte[] command = BleCommandFactory.syncLockInfoCommand(bleLockInfo.getAuthKey());  //2
         bleService.sendCommand(command);
         toDisposable(getDeviceInfoDisposable);

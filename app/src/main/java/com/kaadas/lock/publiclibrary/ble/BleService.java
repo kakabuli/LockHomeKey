@@ -646,8 +646,8 @@ public class BleService extends Service {
             LogUtils.e("锁状态改变0   反锁模式  " + bleLockInfo.getBackLock() + "  布防模式   " + bleLockInfo.getArmMode()
                     + "   安全模式  " + bleLockInfo.getSafeMode() + "   管理模式  " + bleLockInfo.getAdminMode()
                     + "   动/自动模式  " + bleLockInfo.getAutoMode());
-            deviceStateSubject.onNext(bleDataBean);
         }
+        deviceStateSubject.onNext(bleDataBean);
     }
 
     //读取SN的特征值
