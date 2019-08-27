@@ -324,10 +324,12 @@ public class BleLockUtils {
                 return R.mipmap.bluetooth_authorization_lock_s6;
             } else if (model.contains("K100") || model.contains("V450")) {
                 return R.mipmap.bluetooth_authorization_lock_k100;
-            } else if (model.startsWith("H5606")) {
+            } else if (model.startsWith("H5606") || model.startsWith("S700")) {
                 return R.mipmap.bluetooth_authorization_lock_h5606;
             } else if (model.startsWith("8008")) {
                 return R.mipmap.bluetooth_authorization_lock_8008;
+            }else if (model.startsWith("8100")) {
+                return R.mipmap.bluetooth_authorization_lock_8100;
             } else {
                 return R.mipmap.bluetooth_authorization_lock_default;
             }
@@ -339,6 +341,7 @@ public class BleLockUtils {
 
     /**
      * 根据设备型号,获取设备列表显示的图片
+     *
      * @param model
      * @return
      */
@@ -370,10 +373,12 @@ public class BleLockUtils {
                 return R.mipmap.s6;
             } else if (model.startsWith("K100") || model.startsWith("V450")) {
                 return R.mipmap.k100;
-            } else if (model.startsWith("H5606")) {
+            } else if (model.startsWith("H5606") || model.startsWith("S700")) {
                 return R.mipmap.h5606;
             } else if (model.startsWith("8008")) {
                 return R.mipmap.small_8008;
+            }  else if (model.startsWith("8100")) {
+                return R.mipmap.small_8100;
             } else {
                 return R.mipmap.default_zigbee_lock_icon;
             }
@@ -417,10 +422,12 @@ public class BleLockUtils {
                 return R.mipmap.bluetooth_lock_k100;
             } else if (model.startsWith("S6")) {
                 return R.mipmap.bluetooth_lock_s6;
-            } else if (model.startsWith("H5606")) {
+            } else if (model.startsWith("H5606") || model.startsWith("S700")) {
                 return R.mipmap.bluetooth_lock_h5606;
             } else if (model.startsWith("8008")) {
                 return R.mipmap.bluetooth_lock_8008;
+            }else if (model.startsWith("8100")) {
+                return R.mipmap.bluetooth_lock_8100;
             } else {
                 return R.mipmap.bluetooth_lock_default;
             }

@@ -1,11 +1,8 @@
-package com.kaadas.lock.mvp.presenter;
-
-import android.text.TextUtils;
+package com.kaadas.lock.mvp.presenter.ble;
 
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.mvp.view.IBleLockView;
 import com.kaadas.lock.publiclibrary.ble.BleCommandFactory;
-import com.kaadas.lock.publiclibrary.ble.BleProtocolFailedException;
 import com.kaadas.lock.publiclibrary.ble.BleUtil;
 import com.kaadas.lock.publiclibrary.ble.RetryWithTime;
 import com.kaadas.lock.publiclibrary.ble.bean.OperationLockRecord;
@@ -15,16 +12,11 @@ import com.kaadas.lock.publiclibrary.http.XiaokaiNewServiceImp;
 import com.kaadas.lock.publiclibrary.http.postbean.UploadOperationRecordBean;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.result.OperationRecordResult;
-import com.kaadas.lock.publiclibrary.http.result.ServerBleDevice;
 import com.kaadas.lock.publiclibrary.http.util.BaseObserver;
 import com.kaadas.lock.publiclibrary.http.util.RxjavaHelper;
-import com.kaadas.lock.utils.BleLockUtils;
 import com.kaadas.lock.utils.DateUtils;
-import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
-import com.kaadas.lock.utils.NetUtil;
 import com.kaadas.lock.utils.Rsa;
-import com.kaadas.lock.utils.SPUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +25,6 @@ import java.util.concurrent.TimeUnit;
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.functions.Predicate;
@@ -64,6 +55,7 @@ public class BleLockPresenter<T> extends MyOpenLockRecordPresenter<IBleLockView>
     }
 
     public void getDeviceInfo() {
+        LogUtils.e("获取锁信息    ");
         byte[] command = BleCommandFactory.syncLockInfoCommand(bleLockInfo.getAuthKey());  //2
         bleService.sendCommand(command);
         toDisposable(getDeviceInfoDisposable);

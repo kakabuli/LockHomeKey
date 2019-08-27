@@ -1,4 +1,4 @@
-package com.kaadas.lock.mvp.presenter;
+package com.kaadas.lock.mvp.presenter.ble;
 
 import android.text.TextUtils;
 

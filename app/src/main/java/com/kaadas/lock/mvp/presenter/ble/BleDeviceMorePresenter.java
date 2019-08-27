@@ -1,4 +1,4 @@
-package com.kaadas.lock.mvp.presenter;
+package com.kaadas.lock.mvp.presenter.ble;
 
 
 import android.text.TextUtils;
@@ -40,7 +40,7 @@ import io.reactivex.functions.Predicate;
  * Create By lxj  on 2019/3/4
  * Describe
  */
-public class DeviceMorePresenter extends BlePresenter<IDeviceMoreView> {
+public class BleDeviceMorePresenter extends BlePresenter<IDeviceMoreView> {
 
     private Disposable getDeviceInfoDisposable;
     private Disposable voiceDisposable;

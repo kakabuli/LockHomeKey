@@ -16,7 +16,7 @@ import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.adapter.BluetoothSharedDeviceManagementAdapter;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
-import com.kaadas.lock.mvp.presenter.BluetoothSharedDeviceManagementPresenter;
+import com.kaadas.lock.mvp.presenter.ble.BluetoothSharedDeviceManagementPresenter;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.result.BluetoothSharedDeviceBean;

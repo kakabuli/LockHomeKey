@@ -17,7 +17,7 @@ import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.adapter.BluetoothPasswordAdapter;
 import com.kaadas.lock.mvp.mvpbase.BaseBleActivity;
-import com.kaadas.lock.mvp.presenter.PasswordManagerPresenter;
+import com.kaadas.lock.mvp.presenter.ble.PasswordManagerPresenter;
 import com.kaadas.lock.mvp.view.IPasswordManagerView;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.publiclibrary.bean.ForeverPassword;

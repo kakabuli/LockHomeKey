@@ -13,7 +13,7 @@ import android.widget.TextView;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.device.BleDetailActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseBleActivity;
-import com.kaadas.lock.mvp.presenter.SafeModePresenter;
+import com.kaadas.lock.mvp.presenter.ble.SafeModePresenter;
 import com.kaadas.lock.mvp.view.ISafeModeView;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.utils.AlertDialogUtil;

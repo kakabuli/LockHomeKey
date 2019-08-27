@@ -17,7 +17,7 @@ import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.MainActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseBleActivity;
-import com.kaadas.lock.mvp.presenter.DeviceMorePresenter;
+import com.kaadas.lock.mvp.presenter.ble.BleDeviceMorePresenter;
 import com.kaadas.lock.mvp.view.IDeviceMoreView;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
@@ -40,7 +40,7 @@ import butterknife.ButterKnife;
 /**
  * Created by David on 2019/4/15
  */
-public class BluetoothMoreActivity extends BaseBleActivity<IDeviceMoreView, DeviceMorePresenter> implements IDeviceMoreView, View.OnClickListener {
+public class BluetoothMoreActivity extends BaseBleActivity<IDeviceMoreView, BleDeviceMorePresenter> implements IDeviceMoreView, View.OnClickListener {
     @BindView(R.id.iv_back)
     ImageView ivBack;
     @BindView(R.id.tv_content)
@@ -105,8 +105,8 @@ public class BluetoothMoreActivity extends BaseBleActivity<IDeviceMoreView, Devi
     }
 
     @Override
-    protected DeviceMorePresenter createPresent() {
-        return new DeviceMorePresenter();
+    protected BleDeviceMorePresenter createPresent() {
+        return new BleDeviceMorePresenter();
     }
 
     private void initData() {

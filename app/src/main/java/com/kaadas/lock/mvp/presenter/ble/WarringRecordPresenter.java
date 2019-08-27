@@ -1,19 +1,15 @@
-package com.kaadas.lock.mvp.presenter;
+package com.kaadas.lock.mvp.presenter.ble;
 
 
-import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.mvp.mvpbase.BlePresenter;
-import com.kaadas.lock.mvp.view.IBleLockView;
-import com.kaadas.lock.mvp.view.IOldBleLockView;
-import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
+import com.kaadas.lock.mvp.view.IWarringRecordView;
 import com.kaadas.lock.publiclibrary.ble.BleCommandFactory;
 import com.kaadas.lock.publiclibrary.ble.BleUtil;
-import com.kaadas.lock.publiclibrary.ble.bean.OpenLockRecord;
+import com.kaadas.lock.publiclibrary.ble.bean.WarringRecord;
 import com.kaadas.lock.publiclibrary.ble.responsebean.BleDataBean;
 import com.kaadas.lock.publiclibrary.http.XiaokaiNewServiceImp;
-import com.kaadas.lock.publiclibrary.http.postbean.UploadBinRecordBean;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
-import com.kaadas.lock.publiclibrary.http.result.LockRecordResult;
+import com.kaadas.lock.publiclibrary.http.result.GetWarringRecordResult;
 import com.kaadas.lock.publiclibrary.http.util.BaseObserver;
 import com.kaadas.lock.publiclibrary.http.util.RxjavaHelper;
 import com.kaadas.lock.utils.LogUtils;
@@ -24,7 +20,6 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Predicate;
 
@@ -50,51 +45,42 @@ import io.reactivex.functions.Predicate;
  * <p>
  * 每一组数据的查询逻辑
  */
-public class MyOldOpenLockRecordPresenter<T> extends BlePresenter<IOldBleLockView> {
-    protected OpenLockRecord[] lockRecords = null;
+public class WarringRecordPresenter<T> extends BlePresenter<IWarringRecordView> {
+    private WarringRecord[] warringRecords = null;
     private Disposable disposable;
     private int currentPage;
-    protected int total; //开锁记录的总数
+    private int total; //开锁记录的总数
     private int startIndex;
     private int endIndex;
-    protected int retryTimes = 0;//重试的次数
+    private int retryTimes = 0;//重试的次数
     private int maxPage;//最大的组数
-    private List<OpenLockRecord> serverRecords = new ArrayList<>();
-    protected List<OpenLockRecord> notNullRecord = new ArrayList<>();
+    private List<WarringRecord> serverRecords = new ArrayList<>();
+    private List<WarringRecord> notNullRecord = new ArrayList<>();
     private byte[] command;
     private Disposable serverDisposable;
     private Disposable recordDisposable;
 
-    public List<OpenLockRecord> getNotNullRecord() {
+    public List<WarringRecord> getNotNullRecord() {
         notNullRecord.clear();
-        if (lockRecords != null) {
-            for (int i = 0; i < lockRecords.length; i++) {
-                if (lockRecords[i] != null) {
-
-                    notNullRecord.add(lockRecords[i]);
+        if (warringRecords != null) {
+            for (int i = 0; i < warringRecords.length; i++) {
+                if (warringRecords[i] != null) {
+                    notNullRecord.add(warringRecords[i]);
                 }
             }
         }
         return notNullRecord;
     }
 
-    public List<UploadBinRecordBean.OpenLockRecordBle> getRecordToServer() {
-        if (serverDisposable != null && !serverDisposable.isDisposed()) {
-            serverDisposable.dispose();
-        }
-        List<UploadBinRecordBean.OpenLockRecordBle> recordToServers = new ArrayList<>();
-        if (lockRecords == null) {
+    public List<WarringRecord> getRecordToServer() {
+        toDisposable(serverDisposable);
+        List<WarringRecord> recordToServers = new ArrayList<>();
+        if (warringRecords == null) {
             return recordToServers;
         }
-        for (int i = 0; i < lockRecords.length; i++) {
-            if (lockRecords[i] != null) {
-                UploadBinRecordBean.OpenLockRecordBle record = new UploadBinRecordBean.OpenLockRecordBle(
-                        lockRecords[i].getOpen_time(),
-                        lockRecords[i].getOpen_type(),
-                        lockRecords[i].getUser_num(),
-                        lockRecords[i].getUser_num()
-                );
-                recordToServers.add(record);
+        for (int i = 0; i < warringRecords.length; i++) {
+            if (warringRecords[i] != null) {
+                recordToServers.add(warringRecords[i]);
             }
         }
         return recordToServers;
@@ -102,19 +88,16 @@ public class MyOldOpenLockRecordPresenter<T> extends BlePresenter<IOldBleLockVie
 
 
     //获取全部的开锁记录
-    public void getOpenRecordFromServer(int pagenum, BleLockInfo bleLockInfo) {
+    public void getOpenRecordFromServer(int pagenum) {
         if (pagenum == 1) {  //如果是获取第一页的数据，那么清楚所有的开锁记录
             serverRecords.clear();
         }
-        XiaokaiNewServiceImp.getLockRecord(bleLockInfo.getServerLockInfo().getLockName(),
-                MyApplication.getInstance().getUid(),
-                null,
-                pagenum + "")
-                .subscribe(new BaseObserver<LockRecordResult>() {
+        XiaokaiNewServiceImp.getWarringRecord(bleService.getBleLockInfo().getServerLockInfo().getLockName(),
+                pagenum)
+                .subscribe(new BaseObserver<GetWarringRecordResult>() {
                     @Override
-                    public void onSuccess(LockRecordResult lockRecordResult) {
-                        LogUtils.d("davi lockRecordResult " + lockRecordResult.toString());
-                        if (lockRecordResult.getData().size() == 0) {  //服务器没有数据  提示用户
+                    public void onSuccess(GetWarringRecordResult warringRecordResult) {
+                        if (warringRecordResult.getData().size() == 0) {  //服务器没有数据  提示用户
                             if (mViewRef.get() != null) {
                                 if (pagenum == 1) { //第一次获取数据就没有
                                     mViewRef.get().onServerNoData();
@@ -125,14 +108,8 @@ public class MyOldOpenLockRecordPresenter<T> extends BlePresenter<IOldBleLockVie
                             }
                         }
                         ///将服务器数据封装成用来解析的数据
-                        for (LockRecordResult.LockRecordServer record : lockRecordResult.getData()) {
-                            serverRecords.add(
-                                    new OpenLockRecord(
-                                            record.getUser_num(),
-                                            record.getOpen_type(),
-                                            record.getOpen_time(), -1
-                                    )
-                            );
+                        for (GetWarringRecordResult.DataBean record : warringRecordResult.getData()) {
+                            serverRecords.add(new WarringRecord(record.getWarningType(), record.getWarningTime()));
                         }
                         if (mViewRef.get() != null) {
                             mViewRef.get().onLoadServerRecord(serverRecords, pagenum);
@@ -178,8 +155,9 @@ public class MyOldOpenLockRecordPresenter<T> extends BlePresenter<IOldBleLockVie
         retryTimes = 0;
         total = 0;
         maxPage = 0;
-        lockRecords = null;
+        warringRecords = null;
         getRecordByPage();
+
     }
 
     public void getRecordByPage() {
@@ -190,6 +168,7 @@ public class MyOldOpenLockRecordPresenter<T> extends BlePresenter<IOldBleLockVie
         if (!(serverDisposable != null && !serverDisposable.isDisposed())) {
             listenerLockRecord();
         }
+
         startIndex = 0;
         endIndex = 20;
         LogUtils.e("重试次数   " + retryTimes + "    " + currentPage);
@@ -197,13 +176,13 @@ public class MyOldOpenLockRecordPresenter<T> extends BlePresenter<IOldBleLockVie
             //当前组数据已经查询完  不管查到的是什么结果  都显示给用户
             //看还有下一组数据没有   如果没有那么所有的数据都查询完了  不管之前查询到的是什么结果，都上传到服务器
             if (currentPage + 1 >= maxPage) {  //已经查了最后一组数据
-                if (lockRecords == null) {  //没有获取到数据  请稍后再试
-                    if (mViewRef.get() != null && lockRecords == null) {
+                if (warringRecords == null) {  //没有获取到数据  请稍后再试
+                    if (mViewRef.get() != null && warringRecords == null) {
                         mViewRef.get().onLoadBleRecordFinish(false);
                     }
                     return;
                 } else {
-                    if (mViewRef.get() != null && lockRecords != null) {
+                    if (mViewRef.get() != null && warringRecords != null) {
                         mViewRef.get().onLoadBleRecordFinish(true);
                         mViewRef.get().onLoadBleRecord(getNotNullRecord());
                     }
@@ -211,9 +190,7 @@ public class MyOldOpenLockRecordPresenter<T> extends BlePresenter<IOldBleLockVie
                 if (recordDisposable != null && !recordDisposable.isDisposed()) {
                     recordDisposable.dispose();
                 }
-                upLoadOpenRecord(bleService.getBleLockInfo().getServerLockInfo().getLockName()
-                        , bleService.getBleLockInfo().getServerLockInfo().getLockNickName()
-                        , getRecordToServer(), MyApplication.getInstance().getUid());
+                upLoadOpenRecord(bleLockInfo.getServerLockInfo().getLockName(), getRecordToServer());
                 return;
             }
             currentPage++;
@@ -225,12 +202,10 @@ public class MyOldOpenLockRecordPresenter<T> extends BlePresenter<IOldBleLockVie
             endIndex = ((currentPage + 1) * 20);
         }
 
-        if (disposable != null && !disposable.isDisposed()) {
-            disposable.dispose();
-        }
+        toDisposable(disposable);
 
 
-        command = BleCommandFactory.getLockRecordCommand((byte) startIndex, (byte) endIndex, bleService.getBleLockInfo().getAuthKey());
+        command = BleCommandFactory.searchLockWarringRecord((byte) startIndex, (byte) endIndex, bleService.getBleLockInfo().getAuthKey());
         bleService.sendCommand(command);
 
         disposable = bleService.listeneDataChange()
@@ -238,24 +213,11 @@ public class MyOldOpenLockRecordPresenter<T> extends BlePresenter<IOldBleLockVie
                     @Override
                     public boolean test(BleDataBean bleDataBean) throws Exception {
                         boolean b = command[1] == bleDataBean.getTsn();
-//                        if (Rsa.bytesToHexString(bleDataBean.getOriginalData()).contains("33")){
-//                            return false;
-//                        }
+
                         return b;
                     }
                 })
-                .doOnSubscribe(new Consumer<Disposable>() {
-                    @Override
-                    public void accept(Disposable disposable) throws Exception {
-                        LogUtils.e("订阅了   ");
-                    }
-                })
-                .doOnDispose(new Action() {
-                    @Override
-                    public void run() throws Exception {
-                        LogUtils.e("取消订阅了   ");
-                    }
-                })
+
                 .timeout(5000, TimeUnit.MILLISECONDS)  //间隔一秒没有数据，那么认为数据获取完成
                 .compose(RxjavaHelper.observeOnMainThread())
                 .subscribe(
@@ -263,45 +225,38 @@ public class MyOldOpenLockRecordPresenter<T> extends BlePresenter<IOldBleLockVie
                             @Override
                             public void accept(BleDataBean bleDataBean) throws Exception {
                                 if (bleDataBean.isConfirm()) {
-                                    if (0x8b == (bleDataBean.getPayload()[0] & 0xff)) {  //没有数据
-                                        if (mViewRef.get() != null && lockRecords == null) {
-                                            LogUtils.e("锁上   没有开锁记录  ");
+                                    if (0x8b == (bleDataBean.getPayload()[0]&0xff)) {  //没有数据
+                                        if (mViewRef.get() != null) {
                                             mViewRef.get().noData();
-                                            toDisposable(disposable);
-                                            return;
                                         }
+                                        toDisposable(disposable);
                                     }
+                                    return;
                                 }
+
+                                //判断是否是当前指令
                                 if (bleDataBean.getCmd() != command[3]) {
                                     return;
                                 }
+
                                 byte[] deVaule = Rsa.decrypt(bleDataBean.getPayload(), bleService.getBleLockInfo().getAuthKey());
                                 LogUtils.e("获取开锁记录   解码之后的数据是   " + Rsa.bytesToHexString(deVaule) + "原始数据是   " + Rsa.toHexString(bleDataBean.getOriginalData()));
-                                OpenLockRecord openLockRecord = BleUtil.parseLockRecord(deVaule);
-                                LogUtils.e("获取开锁记录是   " + openLockRecord.toString());
-                                if (lockRecords == null) {
-                                    lockRecords = new OpenLockRecord[deVaule[0] & 0xff];
+                                WarringRecord openLockRecord = BleUtil.parseWarringRecord(deVaule);
+                                LogUtils.e("获取报警记录是   " + openLockRecord.toString());
+                                if (warringRecords == null) {
+                                    warringRecords = new WarringRecord[deVaule[0] & 0xff];
                                     total = deVaule[0] & 0xff;
                                     maxPage = (int) Math.ceil(total * 1.0 / 20.0);
                                     LogUtils.e(" 总个数   " + total + "  最大页数  " + maxPage);
                                 }
-                                lockRecords[deVaule[1] & 0xff] = openLockRecord;
+                                warringRecords[deVaule[1] & 0xff] = openLockRecord;
 
                                 // TODO: 2019/3/7  开锁记录测试
                                 List<Integer> loseNumber = new ArrayList<>();
-                                for (int i = 0; i < endIndex && i < total; i++) {
-                                    if (lockRecords[i] == null) { //数据不全
-                                        loseNumber.add(i);
-                                    }
-                                }
-                                if (mViewRef.get() != null) {
-                                    mViewRef.get().onLoseRecord(loseNumber);
-                                }
-                                // TODO: 2019/3/7  开锁记录测试
 
                                 if ((deVaule[1] & 0xff) == (endIndex - 1) || (deVaule[1] & 0xff) == (total - 1)) {  //收到一组最后一个数据  或者全部的最后一个数据
                                     for (int i = startIndex; i < endIndex && i < total; i++) {
-                                        if (lockRecords[i] == null) { //如果一组  数据不全
+                                        if (warringRecords[i] == null) { //如果一组  数据不全
                                             retryTimes++;
                                             if (retryTimes > 2) {  //如果已经尝试了三次  那么先显示数据
                                                 if (mViewRef.get() != null) {
@@ -323,12 +278,8 @@ public class MyOldOpenLockRecordPresenter<T> extends BlePresenter<IOldBleLockVie
                                         if (recordDisposable != null && !recordDisposable.isDisposed()) {
                                             recordDisposable.dispose();
                                         }
-                                        if (disposable != null && !disposable.isDisposed()) {
-                                            disposable.dispose();
-                                        }
-                                        upLoadOpenRecord(bleService.getBleLockInfo().getServerLockInfo().getLockName()
-                                                , bleService.getBleLockInfo().getServerLockInfo().getLockNickName()
-                                                , getRecordToServer(), MyApplication.getInstance().getUid());
+                                        toDisposable(disposable);
+                                        upLoadOpenRecord(bleLockInfo.getServerLockInfo().getLockName(), getRecordToServer());
                                     } else {  //如果后面还有
                                         LogUtils.e("收到一组完整的数据");
                                         currentPage++;  //下一组数据
@@ -340,19 +291,16 @@ public class MyOldOpenLockRecordPresenter<T> extends BlePresenter<IOldBleLockVie
                         }, new Consumer<Throwable>() {
                             @Override
                             public void accept(Throwable throwable) throws Exception {
-                                LogUtils.e("取消订阅了吗   " + disposable.isDisposed() + "   " + throwable.getMessage());
-//                                if (throwable instanceof TimeoutException) {  //5秒没有收到数据
-                                if (lockRecords == null) {  //一个数据都没有收到  重试
+                                if (warringRecords == null) {  //一个数据都没有收到  重试
                                     retryTimes++;
                                     getRecordByPage();
                                     return;
                                 }
                                 LogUtils.e("获取数据  超时   数据完成");
-
                                 // TODO: 2019/3/7  开锁记录测试
                                 List<Integer> loseNumber = new ArrayList<>();
                                 for (int i = 0; i < endIndex && i < total; i++) {
-                                    if (lockRecords[i] == null) { //数据不全
+                                    if (warringRecords[i] == null) { //数据不全
                                         loseNumber.add(i);
                                     }
                                 }
@@ -361,7 +309,7 @@ public class MyOldOpenLockRecordPresenter<T> extends BlePresenter<IOldBleLockVie
                                 }
                                 // TODO: 2019/3/7  开锁记录测试
                                 for (int i = startIndex; i < endIndex && i < total; i++) {
-                                    if (lockRecords[i] == null) { //数据不全
+                                    if (warringRecords[i] == null) { //数据不全
                                         LogUtils.e("数据不全  " + retryTimes);
                                         retryTimes++;
                                         if (retryTimes > 2) {  //如果已经尝试了三次  那么先显示数据
@@ -383,9 +331,7 @@ public class MyOldOpenLockRecordPresenter<T> extends BlePresenter<IOldBleLockVie
                                     if (recordDisposable != null && !recordDisposable.isDisposed()) {
                                         recordDisposable.dispose();
                                     }
-                                    upLoadOpenRecord(bleService.getBleLockInfo().getServerLockInfo().getLockName()
-                                            , bleService.getBleLockInfo().getServerLockInfo().getLockNickName()
-                                            , getRecordToServer(), MyApplication.getInstance().getUid());
+                                    upLoadOpenRecord(bleLockInfo.getServerLockInfo().getLockName(), getRecordToServer());
                                 } else {  //如果后面还有
                                     currentPage++;  //下一组数据
                                     retryTimes = 0; //重试次数
@@ -400,18 +346,12 @@ public class MyOldOpenLockRecordPresenter<T> extends BlePresenter<IOldBleLockVie
     }
 
 
-    public void upLoadOpenRecord(String device_name, String device_nickname, List<UploadBinRecordBean.OpenLockRecordBle> openLockList, String user_id) {
-
-        for (UploadBinRecordBean.OpenLockRecordBle bleRecord : openLockList) {
-            LogUtils.e("上传的数据是    " + bleRecord.toString());
-        }
-        LogUtils.e("数据获取完成   total" + total + "  获取到的个数是  " + openLockList.size());
-        XiaokaiNewServiceImp.uploadBinRecord(device_name, device_nickname,
-                MyApplication.getInstance().getUid(), openLockList)
+    public void upLoadOpenRecord(String devName, List<WarringRecord> warningList) {
+        XiaokaiNewServiceImp.uploadWarringRecord(devName, warningList)
                 .subscribe(new BaseObserver<BaseResult>() {
                     @Override
                     public void onSuccess(BaseResult result) {
-                        LogUtils.e("上传开锁记录成功");
+                        LogUtils.e("上传警报记录成功");
                         if (mViewRef.get() != null) {
                             mViewRef.get().onUploadServerRecordSuccess();
                         }
@@ -426,7 +366,7 @@ public class MyOldOpenLockRecordPresenter<T> extends BlePresenter<IOldBleLockVie
 
                     @Override
                     public void onFailed(Throwable throwable) {
-                        LogUtils.e("上传开锁记录失败");
+                        LogUtils.e("上传警报记录失败");
                         if (mViewRef.get() != null) {
                             mViewRef.get().onUploadServerRecordFailed(throwable);
                         }
@@ -457,9 +397,9 @@ public class MyOldOpenLockRecordPresenter<T> extends BlePresenter<IOldBleLockVie
                     public void accept(BleDataBean bleDataBean) throws Exception {
                         if (bleDataBean.getOriginalData()[0] == 1) { //开锁记录都是加密的
                             byte[] deVaule = Rsa.decrypt(bleDataBean.getPayload(), bleService.getBleLockInfo().getAuthKey());
-                            OpenLockRecord openLockRecord = BleUtil.parseLockRecord(deVaule);
-                            if (lockRecords != null && (deVaule[1] & 0xff) < lockRecords.length) {
-                                lockRecords[deVaule[1] & 0xff] = openLockRecord;
+                            WarringRecord openLockRecord = BleUtil.parseWarringRecord(deVaule);
+                            if (warringRecords != null && (deVaule[1] & 0xff) < warringRecords.length) {
+                                warringRecords[deVaule[1] & 0xff] = openLockRecord;
                             }
                         }
                     }

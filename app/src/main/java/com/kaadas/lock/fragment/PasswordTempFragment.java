@@ -23,7 +23,7 @@ import com.kaadas.lock.activity.device.bluetooth.password.BluetoothPasswordShare
 import com.kaadas.lock.adapter.ShiXiaoNameAdapter;
 import com.kaadas.lock.bean.ShiXiaoNameBean;
 import com.kaadas.lock.mvp.mvpbase.BaseBleFragment;
-import com.kaadas.lock.mvp.presenter.AddTempPresenter;
+import com.kaadas.lock.mvp.presenter.ble.AddTempPresenter;
 import com.kaadas.lock.mvp.view.IAddTempView;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;

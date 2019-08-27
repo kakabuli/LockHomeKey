@@ -17,7 +17,7 @@ import com.kaadas.lock.adapter.BluetoothRecordAdapter;
 import com.kaadas.lock.bean.BluetoothItemRecordBean;
 import com.kaadas.lock.bean.BluetoothRecordBean;
 import com.kaadas.lock.mvp.mvpbase.BaseBleFragment;
-import com.kaadas.lock.mvp.presenter.OpenLockRecordPresenter;
+import com.kaadas.lock.mvp.presenter.ble.OpenLockRecordPresenter;
 import com.kaadas.lock.mvp.view.IOpenLockRecordView;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.publiclibrary.bean.ForeverPassword;
