@@ -5,12 +5,18 @@ import android.widget.Toast;
 
 import com.kaadas.lock.R;
 
+import org.linphone.mediastream.Log;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Create By denganzhi  on 2019/7/16
@@ -24,8 +30,8 @@ public class MyLog {
 
     private static MyLog instance;
     Date now = new Date(); //获取当前时间
-    SimpleDateFormat simpleDateFormat1 = new SimpleDateFormat("yyyy年MM月dd");// "yyyy-MM-dd HH:mm:ss.fff"
-    SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat("yyyy--MM--dd HH:mm:ss.SSS");// "yyyy-MM-dd HH:mm:ss.fff"
+    SimpleDateFormat simpleDateFormat1 = new SimpleDateFormat("yyyy_MM_dd");// "yyyy-MM-dd HH:mm:ss.fff"
+    SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat("yyyy_MM_dd HH:mm:ss.SSS");// "yyyy-MM-dd HH:mm:ss.fff"
 
     String newFileTime = null;
     String writeFileTime = null;
@@ -34,7 +40,7 @@ public class MyLog {
     FileWriter filerWriter = null;
     BufferedWriter bufWriter = null;
     Context app_context = null;
-
+    List<String> fileArr=new ArrayList<String>();
     public void init(Context mContext) {
         app_context = mContext;
         try {
@@ -47,6 +53,23 @@ public class MyLog {
                 file.createNewFile();
 
             }
+            File dirPathFile=new File(dirPath);
+            fileArr.clear();
+            for (String fileStr: dirPathFile.list()){
+                if(!fileStr.contains(".txt")){
+                    continue;
+                }
+                fileArr.add(fileStr);
+            }
+            if(fileArr.size()>5){
+                Collections.sort(fileArr);
+                Collections.reverse(fileArr);
+                for (int i=5;i<fileArr.size();i++){
+                    File delete=new File(dirPath + File.separator + fileArr.get(i));
+                    delete.delete();
+                }
+            }
+
             filerWriter = new FileWriter(file, true);
             bufWriter = new BufferedWriter(filerWriter);
         } catch (Exception e) {
