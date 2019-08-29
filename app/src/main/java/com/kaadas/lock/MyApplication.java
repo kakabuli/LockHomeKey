@@ -122,12 +122,7 @@ public class MyApplication extends Application {
         ToastUtil.init(this); //初始化ToastUtil 传递Context进去  不需要每次都传递
         SPUtils.remove(Constants.LINPHONE_REGESTER_STATE);
         initTokenAndUid();  //获取本地UUID
-        try {
-            MyLog.getInstance().init(this);
-        } catch (IOException e) {
-            Toast.makeText(this,getString(R.string.log_info),Toast.LENGTH_SHORT).show();
-            e.printStackTrace();
-        }
+        MyLog.getInstance().init(this);
         listenerAppBackOrForge();
         //扫描二维码初始化
         /* ZXingLibrary.initDisplayOpinion(this);*/
