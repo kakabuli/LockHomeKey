@@ -113,11 +113,11 @@ public class GatewaySettingActivity extends BaseActivity<GatewaySettingView, Gat
 
         GatewaySettingItemBean gatewaySettingItemBeanNewOne=new GatewaySettingItemBean();
         gatewaySettingItemBeanNewOne.setTitle(getString(R.string.gateway_setting_name));
-        if (isAdmin==1){
+    //    if (isAdmin==1){
             gatewaySettingItemBeanNewOne.setSetting(true);
-        }else{
-            gatewaySettingItemBeanNewOne.setSetting(false);
-        }
+    //    }else{
+    //        gatewaySettingItemBeanNewOne.setSetting(false);
+    //    }
 
         GatewaySettingItemBean gatewaySettingItemBeanOne=new GatewaySettingItemBean();
         gatewaySettingItemBeanOne.setTitle(getString(R.string.gateway_setting));
