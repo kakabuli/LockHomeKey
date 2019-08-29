@@ -118,7 +118,7 @@ public class RetrofitServiceManager {
     public static class HttpLogger implements HttpLoggingInterceptor.Logger {
         @Override
         public void log(String message) {
-            Log.d("小凯网络请求   ", message);
+           LogUtils.e("网络请求   ", message);
         }
     }
 
