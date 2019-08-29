@@ -63,6 +63,10 @@ public class BleLockUtils {
         FUNCTION_SET.put(0x04, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23});
         FUNCTION_SET.put(0x05, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 10, 11, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26});
 
+        FUNCTION_SET.put(0x06, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 10, 11, 13, 14, 15, 16, 17, 19, 20, 21, 22, 23, 24});        //2019年8月29日11:10:53
+        FUNCTION_SET.put(0x07, new Integer[]{1, 2, 3, 4, 5, 7, 8, 10, 11, 13, 14, 15, 16, 17, 19, 20, 21, 22, 26, 27, 28, 29, 30});        //2019年8月29日11:10:53
+
+
         FUNCTION_SET.put(0x20, new Integer[]{1, 2, 3, 4, 5, 7, 8, 10, 13, 16, 17, 19, 20, 21, 22});
         FUNCTION_SET.put(0x31, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 10, 13, 16, 17, 19, 20, 21, 22});
         FUNCTION_SET.put(0x32, new Integer[]{1, 2, 3, 4, 5, 7, 8, 9, 10, 13, 16, 17, 19, 20, 21, 22});
@@ -75,6 +79,7 @@ public class BleLockUtils {
         FUNCTION_SET.put(0x38, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 10, 13, 16, 17, 18, 19, 20, 21, 22, 23, 24});
         FUNCTION_SET.put(0x39, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 13, 16, 17, 18, 19, 20, 21, 22, 23, 24});
 
+        FUNCTION_SET.put(0x40, new Integer[]{1, 2, 3, 4, 5, 6, 7, 9, 10, 13, 16, 17, 19, 20, 21, 22, 23});        //2019年8月29日11:11:10
 
         FUNCTION_SET.put(0x60, new Integer[]{12, 3, 4, 5, 6, 7, 8, 9, 10, 13, 16, 17, 19, 20, 21, 22, 23, 25});
         FUNCTION_SET.put(0x61, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 10, 13, 16, 17, 19, 20, 21, 22, 23, 25});
@@ -328,7 +333,7 @@ public class BleLockUtils {
                 return R.mipmap.bluetooth_authorization_lock_h5606;
             } else if (model.startsWith("8008")) {
                 return R.mipmap.bluetooth_authorization_lock_8008;
-            }else if (model.startsWith("8100")) {
+            } else if (model.startsWith("8100")) {
                 return R.mipmap.bluetooth_authorization_lock_8100;
             } else {
                 return R.mipmap.bluetooth_authorization_lock_default;
@@ -377,7 +382,7 @@ public class BleLockUtils {
                 return R.mipmap.h5606;
             } else if (model.startsWith("8008")) {
                 return R.mipmap.small_8008;
-            }  else if (model.startsWith("8100")) {
+            } else if (model.startsWith("8100")) {
                 return R.mipmap.small_8100;
             } else {
                 return R.mipmap.default_zigbee_lock_icon;
@@ -389,7 +394,7 @@ public class BleLockUtils {
 
 
     /**
-     * 根据设备型号，获取设备详情界面显示的图片
+     * 根据设备型号,获取设备详情界面显示的图片
      *
      * @param model
      * @return
@@ -426,7 +431,7 @@ public class BleLockUtils {
                 return R.mipmap.bluetooth_lock_h5606;
             } else if (model.startsWith("8008")) {
                 return R.mipmap.bluetooth_lock_8008;
-            }else if (model.startsWith("8100")) {
+            } else if (model.startsWith("8100")) {
                 return R.mipmap.bluetooth_lock_8100;
             } else {
                 return R.mipmap.bluetooth_lock_default;

@@ -478,7 +478,7 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
 
     @Override
     public void onWarringUp(String warringContent) {
-        Toast.makeText(MyApplication.getInstance(), warringContent, Toast.LENGTH_LONG).show();
+        Toast.makeText(this, warringContent, Toast.LENGTH_LONG).show();
 //        ToastUtil.getInstance().showLong(warringContent);
     }
 
