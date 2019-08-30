@@ -62,6 +62,8 @@ public class OldDeviceInfoActivity extends BaseBleActivity<IOldDeviceInfoView, O
     RelativeLayout rlDeviceName;
     @BindView(R.id.ble_mode)
     TextView bleMode;
+    @BindView(R.id.device_info_right)
+    ImageView deviceInfoRight;
     private BleLockInfo bleLockInfo;
     String deviceNickname;//设备名称
     String name;
@@ -79,6 +81,11 @@ public class OldDeviceInfoActivity extends BaseBleActivity<IOldDeviceInfoView, O
         showLoading(getString(R.string.being_get_device_information));
         if (mPresenter.isAuth(bleLockInfo, true)) {
             mPresenter.getBluetoothDeviceInformation();
+        }
+        if (!"1".equals(bleLockInfo.getServerLockInfo().getIs_admin())){
+            deviceInfoRight.setVisibility(View.GONE);
+        }else {
+            deviceInfoRight.setVisibility(View.VISIBLE);
         }
         ivBack.setOnClickListener(this);
         rlDeviceName.setOnClickListener(this);

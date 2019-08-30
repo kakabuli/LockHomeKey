@@ -243,6 +243,7 @@
                 android:textSize="@dimen/sp_12" />
 
             <ImageView
+                android:id="@+id/device_info_right"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
