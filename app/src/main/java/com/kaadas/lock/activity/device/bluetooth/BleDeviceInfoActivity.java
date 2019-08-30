@@ -1,8 +1,12 @@
 package com.kaadas.lock.activity.device.bluetooth;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.InputFilter;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -13,13 +17,16 @@ import com.kaadas.lock.mvp.mvpbase.BaseBleActivity;
 import com.kaadas.lock.mvp.presenter.ble.BleDeviceInfoPresenter;
 import com.kaadas.lock.mvp.view.IDeviceInfoView;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
+import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.result.OTAResult;
+import com.kaadas.lock.publiclibrary.http.util.HttpUtils;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.StringUtil;
 import com.kaadas.lock.utils.ToastUtil;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class BleDeviceInfoActivity extends BaseBleActivity<IDeviceInfoView, BleDeviceInfoPresenter> implements IDeviceInfoView, View.OnClickListener {
 
@@ -45,14 +52,32 @@ public class BleDeviceInfoActivity extends BaseBleActivity<IDeviceInfoView, BleD
     TextView tvZigbeeModuleVersion;
     @BindView(R.id.rl_zigbee_module_version)
     RelativeLayout rlZigbeeModuleVersion;
+    @BindView(R.id.tv_device_name)
+    TextView tvDeviceName;
+    @BindView(R.id.rl_device_name)
+    RelativeLayout rlDeviceName;
     private BleLockInfo bleLockInfo;
+    private String deviceNickname;
+    private String name;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bluetooth_authorization_device_information);
+
+
+
         ButterKnife.bind(this);
         bleLockInfo = MyApplication.getInstance().getBleService().getBleLockInfo();
+
+        deviceNickname = bleLockInfo.getServerLockInfo().getLockNickName();
+        tvDeviceName.setText(deviceNickname);
+        if (!"1".equals(bleLockInfo.getServerLockInfo().getIs_admin())){
+            rlDeviceName.setVisibility(View.VISIBLE);
+        }else {
+            rlDeviceName.setVisibility(View.GONE);
+        }
+
         showLoading(getString(R.string.being_get_device_information));
         if (mPresenter.isAuth(bleLockInfo, true)) {
             mPresenter.getBluetoothDeviceInformation();
@@ -82,13 +107,13 @@ public class BleDeviceInfoActivity extends BaseBleActivity<IDeviceInfoView, BleD
 
     @Override
     public void SoftwareRevDataSuccess(String data) {
-        if (data.contains("-")){
+        if (data.contains("-")) {
             String[] split = data.split("-");
             String strModuleHardwareVersion = split[0];
             String strLockHardwareVersion = split[1];
             tvLockSoftwareVersion.setText(strLockHardwareVersion);
             tvBluetoothModuleVersion.setText(strModuleHardwareVersion);
-        }else {
+        } else {
             tvBluetoothModuleVersion.setText(data);
         }
 
@@ -101,13 +126,13 @@ public class BleDeviceInfoActivity extends BaseBleActivity<IDeviceInfoView, BleD
 
     @Override
     public void HardwareRevDataSuccess(String data) {
-        if (data.contains("-")){
+        if (data.contains("-")) {
             String[] split = data.split("-");
             String strModuleHardwareVersion = split[0];
             String strLockHardwareVersion = split[1];
 //        tvBluetoothModuleVersion.setText(strModuleHardwareVersion);
             tvLockFirmwareVersion.setText(strLockHardwareVersion);
-        }else {
+        } else {
             tvLockFirmwareVersion.setText(data);
         }
 
@@ -197,6 +222,27 @@ public class BleDeviceInfoActivity extends BaseBleActivity<IDeviceInfoView, BleD
     }
 
     @Override
+    public void modifyDeviceNicknameSuccess() {
+        hiddenLoading();
+        deviceNickname = name;
+        tvDeviceName.setText(deviceNickname);
+        bleLockInfo.getServerLockInfo().setLockNickName(deviceNickname);
+        ToastUtil.getInstance().showLong(R.string.device_nick_name_update_success);
+    }
+
+    @Override
+    public void modifyDeviceNicknameError(Throwable throwable) {
+        hiddenLoading();
+        ToastUtil.getInstance().showShort(HttpUtils.httpProtocolErrorCode(this, throwable));
+    }
+
+    @Override
+    public void modifyDeviceNicknameFail(BaseResult baseResult) {
+        hiddenLoading();
+        ToastUtil.getInstance().showLong(HttpUtils.httpErrorCode(this, baseResult.getCode()));
+    }
+
+    @Override
     public void onDeviceStateChange(boolean isConnected) {  //设备连接状态改变   连接成功时提示正在鉴权，连接失败时直接提示用户
         if (isConnected) {
             showLoading(getString(R.string.is_authing));
@@ -204,5 +250,50 @@ public class BleDeviceInfoActivity extends BaseBleActivity<IDeviceInfoView, BleD
             hiddenLoading();
             ToastUtil.getInstance().showLong(R.string.connet_failed_please_near);
         }
+    }
+
+    @OnClick(R.id.tv_device_name)
+    public void onClick() {
+
+        //设备名字
+        View mView = LayoutInflater.from(this).inflate(R.layout.have_edit_dialog, null);
+        TextView tvTitle = mView.findViewById(R.id.tv_title);
+        EditText editText = mView.findViewById(R.id.et_name);
+        TextView tv_cancel = mView.findViewById(R.id.tv_left);
+        TextView tv_query = mView.findViewById(R.id.tv_right);
+        AlertDialog alertDialog = AlertDialogUtil.getInstance().common(this, mView);
+        tvTitle.setText(getString(R.string.input_device_name));
+        //获取到设备名称设置
+        editText.setText(deviceNickname);
+        editText.setSelection(deviceNickname.length());
+        editText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(50)});
+        tv_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+            }
+        });
+        tv_query.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                name = editText.getText().toString().trim();
+                if (!StringUtil.nicknameJudge(name)) {
+                    ToastUtil.getInstance().showShort(R.string.nickname_verify_error);
+                    return;
+                }
+                if (deviceNickname != null) {
+                    if (deviceNickname.equals(name)) {
+                        ToastUtil.getInstance().showShort(getString(R.string.device_nick_name_no_update));
+                        alertDialog.dismiss();
+                        return;
+                    }
+                }
+                showLoading(getString(R.string.upload_device_name));
+                if (bleLockInfo != null && bleLockInfo.getServerLockInfo() != null && bleLockInfo.getServerLockInfo().getLockName() != null) {
+                    mPresenter.modifyDeviceNickname(bleLockInfo.getServerLockInfo().getLockName(), MyApplication.getInstance().getUid(), name);
+                }
+                alertDialog.dismiss();
+            }
+        });
     }
 }

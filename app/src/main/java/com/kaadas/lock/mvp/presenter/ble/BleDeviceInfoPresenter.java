@@ -335,4 +335,37 @@ public class BleDeviceInfoPresenter extends BlePresenter<IDeviceInfoView> {
     }
 
 
+    public void modifyDeviceNickname(String devname, String user_id, String lockNickName) {
+        XiaokaiNewServiceImp.modifyLockNick(devname, user_id, lockNickName).subscribe(new BaseObserver<BaseResult>() {
+            @Override
+            public void onSuccess(BaseResult baseResult) {
+                if (isSafe()) {
+                    mViewRef.get().modifyDeviceNicknameSuccess();
+                }
+                bleLockInfo.getServerLockInfo().setLockNickName(lockNickName);
+                bleService.getBleLockInfo().getServerLockInfo().setLockNickName(lockNickName);
+                MyApplication.getInstance().getAllDevicesByMqtt(true);
+            }
+
+            @Override
+            public void onAckErrorCode(BaseResult baseResult) {
+                if (isSafe()) {
+                    mViewRef.get().modifyDeviceNicknameFail(baseResult);
+                }
+            }
+
+            @Override
+            public void onFailed(Throwable throwable) {
+                if (isSafe()) {
+                    mViewRef.get().modifyDeviceNicknameError(throwable);
+                }
+            }
+
+            @Override
+            public void onSubscribe1(Disposable d) {
+                compositeDisposable.add(d);
+            }
+        });
+    }
+
 }

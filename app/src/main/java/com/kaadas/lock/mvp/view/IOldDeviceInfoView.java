@@ -74,7 +74,6 @@ public interface IOldDeviceInfoView extends IBleView {
      */
     void modifyDeviceNicknameFail(BaseResult baseResult);
 
-
     /**
      *上传设备信息服务器失败
      */
