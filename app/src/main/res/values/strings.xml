@@ -499,7 +499,7 @@
     <string name="warring_low_power">您的智能锁电量过低,请及时更换电池</string>
     <string name="warring_door_not_lock">您的门锁有故障,请注意</string>
     <string name="warring_arm">您的门锁处于布防状态,有从门内开锁情况</string>
-    <string name="warrign_hijack">您的门锁使用劫持密码开门,赶紧联系或报警</string>
+    <string name="warrign_hijack">您的门锁发生劫持事件,赶紧联系或报警</string>
     <string name="warring_unkonw">未知警报</string>
     <string name="warring_defence">布防报警</string>
     <string name="warring_temp_exception">锁具温度异常</string>
