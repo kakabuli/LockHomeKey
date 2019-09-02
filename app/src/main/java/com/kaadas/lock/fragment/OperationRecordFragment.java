@@ -239,6 +239,7 @@ public class OperationRecordFragment extends BaseBleFragment<IOperationRecordVie
     public void onLoadServerRecordFailed(Throwable throwable) {
         //加载服务器开锁记录失败
         refreshLayout.finishRefresh();
+        refreshLayout.finishLoadMore();
 //        ToastUtil.getInstance().showShort(R.string.get_record_failed);
         ToastUtil.getInstance().showShort( HttpUtils.httpProtocolErrorCode(getActivity(),throwable));
     }

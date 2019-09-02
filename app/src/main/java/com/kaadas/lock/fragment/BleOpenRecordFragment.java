@@ -270,6 +270,7 @@ public class BleOpenRecordFragment extends BaseBleFragment<IOpenLockRecordView, 
     public void onLoadServerRecordFailed(Throwable throwable) {
         //加载服务器开锁记录失败
         refreshLayout.finishRefresh();
+        refreshLayout.finishLoadMore();
         ToastUtil.getInstance().showShort(HttpUtils.httpProtocolErrorCode(getActivity(), throwable));
     }
 
