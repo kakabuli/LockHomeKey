@@ -67,8 +67,8 @@ public class CircleProgress extends View {
     private RectF mRectF;
     //渐变的颜色是360度，如果只显示270，那么则会缺失部分颜色
     private SweepGradient mSweepGradient;
-  //  private int[] mGradientColors = {Color.GREEN, Color.YELLOW, Color.RED};
-    private int[] mGradientColors = {0xFF1C8FFC,0xFF1C8FFC,0xFF1C8FFC};
+    //  private int[] mGradientColors = {Color.GREEN, Color.YELLOW, Color.RED};
+    private int[] mGradientColors = {0xFF1C8FFC, 0xFF1C8FFC, 0xFF1C8FFC};
     //当前进度，[0.0f,1.0f]
     private float mPercent;
     //动画时间
@@ -172,10 +172,10 @@ public class CircleProgress extends View {
         mValuePaint = new TextPaint();
         mValuePaint.setAntiAlias(antiAlias);
         mValuePaint.setTextSize(mValueSize);
-      //  mValuePaint.setColor(mValueColor);
+        //  mValuePaint.setColor(mValueColor);
         mValuePaint.setColor(Color.parseColor("#1E90FB"));
         // 设置Typeface对象，即字体风格，包括粗体，斜体以及衬线体，非衬线体等
-      //  mValuePaint.setTypeface(Typeface.DEFAULT_BOLD);
+        //  mValuePaint.setTypeface(Typeface.DEFAULT_BOLD);
         mValuePaint.setTextAlign(Paint.Align.CENTER);
 
         mUnitPaint = new TextPaint();
@@ -261,7 +261,7 @@ public class CircleProgress extends View {
         // 计算文字宽度，由于Paint已设置为居中绘制，故此处不需要重新计算
         // float textWidth = mValuePaint.measureText(mValue.toString());
         // float x = mCenterPoint.x - textWidth / 2;
-        canvas.drawText(String.format(mPrecisionFormat, mValue)+"%", mCenterPoint.x, mValueOffset*0.9f, mValuePaint);
+        canvas.drawText(String.format(mPrecisionFormat, mValue == 1 ? 0 : mValue) + "%", mCenterPoint.x, mValueOffset * 0.9f, mValuePaint);
 
         if (mHint != null) {
             canvas.drawText(mHint.toString(), mCenterPoint.x, mHintOffset, mHintPaint);
@@ -277,6 +277,7 @@ public class CircleProgress extends View {
         // 从进度圆弧结束的地方开始重新绘制，优化性能
         canvas.save();
         float currentAngle = mSweepAngle * mPercent;
+        currentAngle = (currentAngle == 0) ? (float) 0.0001 : currentAngle;
         canvas.rotate(mStartAngle, mCenterPoint.x, mCenterPoint.y);
         canvas.drawArc(mRectF, currentAngle, mSweepAngle - currentAngle + 2, false, mBgArcPaint);
         // 第一个参数 oval 为 RectF 类型，即圆弧显示区域
@@ -335,7 +336,7 @@ public class CircleProgress extends View {
         startAnimator(start, end, mAnimTime);
     }
 
-    private void startAnimator(float start, float end, long animTime) {
+    public void startAnimator(float start, float end, long animTime) {
         mAnimator = ValueAnimator.ofFloat(start, end);
         mAnimator.setDuration(animTime);
         mAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
