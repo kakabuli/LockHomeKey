@@ -55,4 +55,22 @@ public interface IDeviceInfoView extends IBleView {
     void needUpdate(OTAResult.UpdateFileInfo updateFileInfo);
 
 
+
+
+    /**
+     * 修改设备昵称成功
+     */
+    void modifyDeviceNicknameSuccess();
+
+    /**
+     * 修改昵称异常
+     */
+    void modifyDeviceNicknameError(Throwable throwable);
+
+    /**
+     * 修改昵称失败
+     */
+    void modifyDeviceNicknameFail(BaseResult baseResult);
+
+
 }

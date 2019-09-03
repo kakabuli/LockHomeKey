@@ -22,6 +22,7 @@ import android.widget.TextView;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.MainActivity;
 import com.kaadas.lock.activity.device.bluetooth.BleDeviceInfoActivity;
+import com.kaadas.lock.activity.device.oldbluetooth.OldBleDetailActivity;
 import com.kaadas.lock.activity.device.oldbluetooth.OldDeviceInfoActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseBleActivity;
 import com.kaadas.lock.mvp.presenter.ble.OldAndAuthBleDetailPresenter;
@@ -409,22 +410,42 @@ public class BleAuthActivity extends BaseBleActivity<IOldBleDetailView, OldAndAu
                 }
                 vibrate(this, 150);
                 break;
+
             case R.id.rl_device_information:
-                if (bleLockInfo != null && bleLockInfo.getServerLockInfo() != null && !TextUtils.isEmpty(bleLockInfo.getServerLockInfo().getBleVersion()) &&
+                //先拿本地的数据    然后拿读取到的数据
+                if (bleLockInfo != null && bleLockInfo.getServerLockInfo() != null &&
+                        !TextUtils.isEmpty(bleLockInfo.getServerLockInfo().getBleVersion()) &&
                         "2".equals(bleLockInfo.getServerLockInfo().getBleVersion())) {
                     Intent intent = new Intent(this, OldDeviceInfoActivity.class);
                     startActivity(intent);
-                } else if (bleLockInfo != null && bleLockInfo.getServerLockInfo() != null && !TextUtils.isEmpty(bleLockInfo.getServerLockInfo().getBleVersion()) &&
+                } else if (bleLockInfo != null && bleLockInfo.getServerLockInfo() != null &&
+                        !TextUtils.isEmpty(bleLockInfo.getServerLockInfo().getBleVersion()) &&
                         "3".equals(bleLockInfo.getServerLockInfo().getBleVersion())) {
-                    Intent intent = new Intent(this, BleDeviceInfoActivity.class);
-                    startActivity(intent);
+                    String functionSet = bleLockInfo.getServerLockInfo().getFunctionSet();
+                    if (!TextUtils.isEmpty(functionSet) && Integer.parseInt(functionSet) == 0) {
+                        com.kaadas.lock.utils.LogUtils.e("跳转   老蓝牙  设备信息");
+                        Intent intent = new Intent(this, OldDeviceInfoActivity.class);
+                        startActivity(intent);
+                    } else {
+                        com.kaadas.lock.utils.LogUtils.e("跳转   全功能  蓝牙   设备信息");
+                        Intent intent = new Intent(this, BleDeviceInfoActivity.class);
+                        startActivity(intent);
+                    }
                 } else {
                     if (mPresenter.getBleVersion() == 2) {
                         Intent intent = new Intent(this, OldDeviceInfoActivity.class);
                         startActivity(intent);
                     } else if (mPresenter.getBleVersion() == 3) {
-                        Intent intent = new Intent(this, BleDeviceInfoActivity.class);
-                        startActivity(intent);
+                        String functionSet = bleLockInfo.getServerLockInfo().getFunctionSet();
+                        if (!TextUtils.isEmpty(functionSet) && Integer.parseInt(functionSet) == 0) {
+                            com.kaadas.lock.utils.LogUtils.e("跳转   老蓝牙  设备信息");
+                            Intent intent = new Intent(this, OldDeviceInfoActivity.class);
+                            startActivity(intent);
+                        } else {
+                            com.kaadas.lock.utils.LogUtils.e("跳转   全功能  蓝牙   设备信息");
+                            Intent intent = new Intent(this, BleDeviceInfoActivity.class);
+                            startActivity(intent);
+                        }
                     }
                 }
                 break;
