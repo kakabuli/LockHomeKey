@@ -123,6 +123,8 @@ public class GatewayActivity extends BaseActivity<GatewayView, GatewayPresenter<
                 gatewayNickName.setText(gatewayInfo.getServerInfo().getDeviceNickName());
                 if(!TextUtils.isEmpty(gatewayInfo.getServerInfo().getModel()) && gatewayInfo.getServerInfo().getModel().equals(KeyConstants.SMALL_GW)){
                     gateway_logo.setImageResource(R.mipmap.gateway6030);
+                }else if(!TextUtils.isEmpty(gatewayInfo.getServerInfo().getModel()) && gatewayInfo.getServerInfo().getModel().equals(KeyConstants.SMALL_GW2)){
+                    gateway_logo.setImageResource(R.mipmap.gateway6030);
                 }
                 changeGatewayStatus(gatewayInfo.getEvent_str());
                 mPresenter.getPowerData(gatewayInfo.getServerInfo().getDeviceSN());

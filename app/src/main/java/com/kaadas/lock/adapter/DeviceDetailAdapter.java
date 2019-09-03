@@ -113,7 +113,9 @@ public class DeviceDetailAdapter extends BaseQuickAdapter<HomeShowBean, BaseView
                 isWifiDevice(true,helper,gatewayInfo.getEvent_str(),batteryView,0);
                 if(gatewayInfo.getServerInfo()!=null && gatewayInfo.getServerInfo().getModel()!=null && gatewayInfo.getServerInfo().getModel().equals(KeyConstants.SMALL_GW)){
                     helper.setImageResource(R.id.device_image,R.mipmap.item_6030);
-                }else {
+                }else if(gatewayInfo.getServerInfo()!=null && gatewayInfo.getServerInfo().getModel()!=null && gatewayInfo.getServerInfo().getModel().equals(KeyConstants.SMALL_GW2)){
+                    helper.setImageResource(R.id.device_image,R.mipmap.item_6030);
+                } else{
                     helper.setImageResource(R.id.device_image,R.mipmap.gateway_icon);
                 }
 

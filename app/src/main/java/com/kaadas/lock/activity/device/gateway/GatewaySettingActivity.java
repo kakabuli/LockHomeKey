@@ -176,7 +176,7 @@ public class GatewaySettingActivity extends BaseActivity<GatewaySettingView, Gat
         gatewaySettingItemBeans.add(gatewaySettingItemBeanNewOne);
         gatewaySettingItemBeans.add(gatewaySettingItemBeanOne);
         gatewaySettingItemBeans.add(gatewaySettingItemBeanTwo);
-        if(TextUtils.isEmpty(model) || model.equals(KeyConstants.SMALL_GW)){
+        if(!TextUtils.isEmpty(model) || model.equals(KeyConstants.SMALL_GW) || model.equals(KeyConstants.SMALL_GW2)){
 
         }else{
             gatewaySettingItemBeans.add(gatewaySettingItemBeanThree);
@@ -231,7 +231,7 @@ public class GatewaySettingActivity extends BaseActivity<GatewaySettingView, Gat
         gatewaySettingItemBeans.get(1).setContent(gatewayBaseInfo.getGatewayId());
         //固件版本号
         gatewaySettingItemBeans.get(2).setContent(gatewayBaseInfo.getSW());
-        if(TextUtils.isEmpty(model) || model.equals(KeyConstants.SMALL_GW)){
+        if(!TextUtils.isEmpty(model) || model.equals(KeyConstants.SMALL_GW) || model.equals(KeyConstants.SMALL_GW2)){
 
         }else {
             //局域网ip
@@ -564,7 +564,7 @@ public class GatewaySettingActivity extends BaseActivity<GatewaySettingView, Gat
 
     @Override
     public void getNetBasicSuccess(GetNetBasicBean basicBean) {
-        if(TextUtils.isEmpty(model) || model.equals(KeyConstants.SMALL_GW)){  // 小网关
+        if(!TextUtils.isEmpty(model) || model.equals(KeyConstants.SMALL_GW) || model.equals(KeyConstants.SMALL_GW2)){  // 小网关
 
         }else{
             mPresenter.getGatewayWifiPwd(gatewayId);
@@ -580,7 +580,7 @@ public class GatewaySettingActivity extends BaseActivity<GatewaySettingView, Gat
             gatewaySettingItemBeans.get(1).setContent(basicBean.getGwId());
             //固件版本号
             gatewaySettingItemBeans.get(2).setContent(returnDataBean.getSW());
-            if(TextUtils.isEmpty(model) || model.equals(KeyConstants.SMALL_GW)){
+            if(!TextUtils.isEmpty(model) || model.equals(KeyConstants.SMALL_GW) || model.equals(KeyConstants.SMALL_GW2)){
                 if (loadingDialog!=null){
                     loadingDialog.dismiss();
                 }
@@ -616,7 +616,7 @@ public class GatewaySettingActivity extends BaseActivity<GatewaySettingView, Gat
             gatewayBaseInfo.setDeviceIdUid(basicBean.getGwId()+uid);
             gatewayBaseInfo.setSW(returnDataBean.getSW());
 
-            if(TextUtils.isEmpty(model) || model.equals(KeyConstants.SMALL_GW)){
+            if(!TextUtils.isEmpty(model) || model.equals(KeyConstants.SMALL_GW) || model.equals(KeyConstants.SMALL_GW2)){
                 MyApplication.getInstance().getDaoWriteSession().insertOrReplace(gatewayBaseInfo);
             }else {
 
@@ -669,7 +669,7 @@ public class GatewaySettingActivity extends BaseActivity<GatewaySettingView, Gat
         if (loadingDialog!=null){
             loadingDialog.dismiss();
         }
-        if(TextUtils.isEmpty(model) || model.equals(KeyConstants.SMALL_GW)){  // 小网关
+        if(!TextUtils.isEmpty(model) || model.equals(KeyConstants.SMALL_GW) || model.equals(KeyConstants.SMALL_GW2)){  // 小网关
 
         }else{
             ToastUtil.getInstance().showShort(R.string.get_wifi_info_fail);
@@ -682,7 +682,7 @@ public class GatewaySettingActivity extends BaseActivity<GatewaySettingView, Gat
         if (loadingDialog!=null){
             loadingDialog.dismiss();
         }
-        if(TextUtils.isEmpty(model) || model.equals(KeyConstants.SMALL_GW)){  // 小网关
+        if(!TextUtils.isEmpty(model) || model.equals(KeyConstants.SMALL_GW) || model.equals(KeyConstants.SMALL_GW2)){  // 小网关
 
         }else{
             ToastUtil.getInstance().showShort(R.string.get_wifi_info_fail);
