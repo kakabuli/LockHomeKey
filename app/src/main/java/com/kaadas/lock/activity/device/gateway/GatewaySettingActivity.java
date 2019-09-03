@@ -752,7 +752,7 @@ public class GatewaySettingActivity extends BaseActivity<GatewaySettingView, Gat
         if (deleteDialog!=null){
             deleteDialog.dismiss();
         }
-        ToastUtil.getInstance().showShort(getString(R.string.delete_fialed));
+        ToastUtil.getInstance().showShort(getString(R.string.delete_fialed_error));
     }
 
     @Override

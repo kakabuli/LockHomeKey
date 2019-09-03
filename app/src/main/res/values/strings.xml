@@ -1187,4 +1187,5 @@
     <string name="network_exception_video">网路状态异常,请切换网络</string>
     <string name="get_stress_list_success_no">锁上无胁迫密码</string>
     <string name="only_0to4">只有编号0～4才可以添加策略密码</string>
+    <string name="delete_fialed_error">删除异常</string>
 </resources>
