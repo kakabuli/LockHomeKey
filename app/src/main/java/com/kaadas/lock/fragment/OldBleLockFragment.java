@@ -150,6 +150,7 @@ public class OldBleLockFragment extends BaseBleFragment<IOldBleLockView, OldBleL
                 }
                 LogUtils.e("setBleLockInfo    52   "+bleLockInfo.getServerLockInfo().getLockNickName());
                 mPresenter.setBleLockInfo(bleLockInfo);
+                mPresenter.getOpenRecordFromServer(1, bleLockInfo);
                 boolean auth = mPresenter.isAuth(bleLockInfo, true);
                 if (auth) {
                     changeOpenLockStatus(8);
@@ -187,6 +188,7 @@ public class OldBleLockFragment extends BaseBleFragment<IOldBleLockView, OldBleL
                             }
                             LogUtils.e("setBleLockInfo   34352   "+bleLockInfo.getServerLockInfo().getLockNickName());
                             mPresenter.setBleLockInfo(bleLockInfo);
+                            mPresenter.getOpenRecordFromServer(1, bleLockInfo);
                             boolean auth = mPresenter.isAuth(bleLockInfo, true);
                             if (auth) {
                                 changeOpenLockStatus(8);
@@ -220,6 +222,7 @@ public class OldBleLockFragment extends BaseBleFragment<IOldBleLockView, OldBleL
                         mPresenter.attachView(OldBleLockFragment.this);
                         LogUtils.e("setBleLockInfo    136 5  "+bleLockInfo.getServerLockInfo().getLockNickName());
                         mPresenter.setBleLockInfo(bleLockInfo);
+                        mPresenter.getOpenRecordFromServer(1, bleLockInfo);
                         LogUtils.e(this + "   设置设备1  " + bleLockInfo.getServerLockInfo().toString());
                         boolean auth = mPresenter.isAuth(bleLockInfo, true);
                         if (auth) {
@@ -248,10 +251,10 @@ public class OldBleLockFragment extends BaseBleFragment<IOldBleLockView, OldBleL
         if (position == 0 && position == homeFragment.getCurrentPosition() && homeFragment.isSelectHome && !isDestroy && homeFragment.isResumed()) {
             if (!mPresenter.isAttach()) {
                 mPresenter.attachView(this);
-                mPresenter.setBleLockInfo(bleLockInfo);
             }
             LogUtils.e("setBleLockInfo    684   "+bleLockInfo.getServerLockInfo().getLockNickName());
             mPresenter.setBleLockInfo(bleLockInfo);
+            mPresenter.getOpenRecordFromServer(1, bleLockInfo);
             boolean auth = mPresenter.isAuth(bleLockInfo, true);
             if (auth) {
                 changeOpenLockStatus(8);

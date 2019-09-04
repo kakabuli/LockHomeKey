@@ -72,7 +72,6 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
     boolean hasDevice = false;//是否有设备  默认没有设备
     private List<ISelectChangeListener> listeners = new ArrayList<>();
     private MainActivity activity;
-    private int currentPosition;
     public boolean isSelectHome = true;
     private FragmentPagerAdapter adapter;
 

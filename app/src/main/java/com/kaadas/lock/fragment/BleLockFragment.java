@@ -140,6 +140,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
                 }
                 LogUtils.e("setBleLockInfo    52   "+bleLockInfo.getServerLockInfo().getLockNickName());
                 mPresenter.setBleLockInfo(bleLockInfo);
+                getRecord();
                 boolean auth = mPresenter.isAuth(bleLockInfo, true);
                 if (auth) {
                     changeOpenLockStatus(8);
@@ -148,15 +149,8 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
                 LogUtils.e("切换到当前界面 52  设备 isdestroy  " + isDestroy + auth);
                 LogUtils.e(this + "   设置设备52  " + bleLockInfo.getServerLockInfo().toString());
                 onChangeInitView();
-                if (supportOperationRecord) {
-                    mPresenter.getOperationRecordFromServer(1);
-                } else {
-                    mPresenter.getOpenRecordFromServer(1, bleLockInfo);
-                }
             }
         }
-
-
     }
 
     @Override
@@ -301,6 +295,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
                         }
                         LogUtils.e("setBleLockInfo    55   "+bleLockInfo.getServerLockInfo().getLockNickName());
                         mPresenter.setBleLockInfo(bleLockInfo);
+                        getRecord();
                         lockRunnable.run();
                         onChangeInitView();
                         boolean auth = mPresenter.isAuth(bleLockInfo, true);
@@ -340,6 +335,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
                         }
                         LogUtils.e("setBleLockInfo    22  "+bleLockInfo.getServerLockInfo().getLockNickName());
                         mPresenter.setBleLockInfo(bleLockInfo);
+                        getRecord();
                         lockRunnable.run();
                         onChangeInitView();
                         LogUtils.e(this + "   设置设备1  " + bleLockInfo.getServerLockInfo().toString());
@@ -367,6 +363,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
 
             LogUtils.e("setBleLockInfo    33   "+bleLockInfo.getServerLockInfo().getLockNickName());
             mPresenter.setBleLockInfo(bleLockInfo);
+            getRecord();
             lockRunnable.run();
             onChangeInitView();
             mPresenter.isAuth(bleLockInfo, true);
@@ -1392,4 +1389,14 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
         }
     }
 
+
+
+    public void getRecord(){
+        LogUtils.e("获取操作记录   "+supportOperationRecord);
+        if (supportOperationRecord) {
+            mPresenter.getOperationRecordFromServer(1);
+        } else {
+            mPresenter.getOpenRecordFromServer(1, bleLockInfo);
+        }
+    }
 }
