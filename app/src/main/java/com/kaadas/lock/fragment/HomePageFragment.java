@@ -396,6 +396,9 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
 
 
     public int getCurrentPosition() {
-        return currentPosition;
+        if (viewPager == null){
+            return 0;
+        }
+        return viewPager.getCurrentItem();
     }
 }
