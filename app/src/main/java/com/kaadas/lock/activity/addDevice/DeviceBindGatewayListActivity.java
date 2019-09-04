@@ -91,6 +91,8 @@ public class DeviceBindGatewayListActivity extends BaseActivity<DeviceGatewayBin
          GatewayInfo gatewayInfo= (GatewayInfo) homeShowBean.getObject();
          if(!TextUtils.isEmpty(gatewayInfo.getServerInfo().getModel()) && gatewayInfo.getServerInfo().getModel().equals(KeyConstants.SMALL_GW) && type ==2 ){
              continue;
+         }else if(!TextUtils.isEmpty(gatewayInfo.getServerInfo().getModel()) && gatewayInfo.getServerInfo().getModel().equals(KeyConstants.SMALL_GW2) && type ==2){
+             continue;
          }
          addZigbeeBindGatewayBean.setNickName(gatewayInfo.getServerInfo().getDeviceNickName());
          addZigbeeBindGatewayBean.setAdminId(gatewayInfo.getServerInfo().getAdminName());
