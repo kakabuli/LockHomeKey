@@ -260,6 +260,7 @@ public class BluetoothMoreActivity extends BaseBleActivity<IDeviceMoreView, BleD
 
                     }
 
+
                     @Override
                     public void right() {
                         showLoading(getString(R.string.is_deleting));
