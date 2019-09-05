@@ -194,6 +194,10 @@ public class BleDetailActivity extends BaseBleActivity<IDeviceDetailView, BleDev
     }
 
     private void showLockType() {
+        if (bleLockInfo ==null){
+            tvType.setText("");
+            return;
+        }
         lockType = bleLockInfo.getServerLockInfo().getModel();
         if (!TextUtils.isEmpty(lockType)) {
             tvType.setText(StringUtil.getSubstringFive(lockType) );
