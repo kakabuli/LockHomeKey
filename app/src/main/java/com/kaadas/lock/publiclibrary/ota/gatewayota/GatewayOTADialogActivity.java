@@ -53,14 +53,55 @@ public class GatewayOTADialogActivity extends BaseActivity<GatewayOTAView, Gatew
     private void initData() {
         Intent intent=getIntent();
         notifyBean= (GatewayOtaNotifyBean) intent.getSerializableExtra(KeyConstants.GATEWAY_OTA_UPGRADE);
-        if (notifyBean!=null){
-            tvContent.setText(getString(R.string.gateway) + ":" + notifyBean.getDeviceId() + "\n" + getString(R.string.have_new_gateway_version));
+        if(notifyBean!=null){
+            // 网关
+            String swInfo= notifyBean.getParams().getSW();
+            String deviceSn= notifyBean.getParams().getDeviceList().get(0).toString();
+            String swInfoStr= String.format(getString(R.string.have_gateway_version),swInfo);
+            if(deviceSn.startsWith("GW")){
+                if(swInfo.startsWith("orangeiot")){
+
+                    tvContent.setText(getString(R.string.gateway) + ":" + notifyBean.getDeviceId() + "\n" + swInfoStr);
+                }
+            }
+
+            //zigbeen
+            else if(deviceSn.startsWith("ZG")){
+                tvContent.setText(getString(R.string.zigbeen_have_update) + ":" + notifyBean.getDeviceId() + "\n" + swInfoStr);
+            }
+
+            // znp
+           else  if(deviceSn.startsWith("GW")){
+                if(swInfo.startsWith("znpv")){
+
+                    tvContent.setText(getString(R.string.gateway_zigbeen_have_update) + ":" + notifyBean.getDeviceId() + "\n" + swInfoStr);
+                }
+            }
+
+
+            // 猫眼
+           else  if(deviceSn.startsWith("CH")){
+                tvContent.setText(getString(R.string.cateye) + ":" + notifyBean.getDeviceId() + "\n" + swInfoStr);
+            }
+
+            else{
+
+               finish();
+            }
+        }else{
+            finish();
         }
+
+     //   if(notifyBean!=null){
+            // tvContent.setText(getString(R.string.gateway) + ":" + notifyBean.getDeviceId() + "\n" + getString(R.string.have_new_gateway_version));
+     //    }
+
     }
 
     private void initView() {
         if (tvHint!=null){
-            tvHint.setText(getString(R.string.gateway_ota_upgrade));
+            tvHint.setVisibility(View.GONE);
+          //  tvHint.setText(getString(R.string.gateway_ota_upgrade));
         }
         //设置窗口对齐屏幕宽度
         Window win = this.getWindow();
