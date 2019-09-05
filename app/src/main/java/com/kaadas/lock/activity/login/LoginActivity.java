@@ -220,7 +220,6 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter<ILogi
             String phone = getEdittextContent(etAccount);
             String pwd = getEdittextContent(etPassword);
             if (TextUtils.isEmpty(phone)) {
-//                ToastUtil.getInstance().showShort(R.string.input_telephone_or_rmail);
                 AlertDialogUtil.getInstance().noButtonSingleLineDialog(this, getString(R.string.account_message_not_empty));
                 return;
             }
@@ -228,34 +227,17 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter<ILogi
                 ToastUtil.getInstance().showShort(R.string.not_input_special_symbol);
                 return;
             }
-
-
             if (StringUtil.isNumeric(phone)) {
                 if (!PhoneUtil.isMobileNO(phone)) {
-//                    ToastUtil.getInstance().showShort(R.string.phone_not_right);
                     // 账户密码错误 请输入正确验证码 调用这个方法传入对应的内容就可以
                     AlertDialogUtil.getInstance().noButtonSingleLineDialog(this, getString(R.string.input_valid_telephone_or_email));
                     return;
                 } else {
                     //密码错误
                     if (!StringUtil.passwordJudge(pwd)) {
-//                ToastUtil.getInstance().showShort(R.string.password_judgment);
-          /*      AlertDialogUtil.getInstance().noEditSingleButtonDialog(this, getString(R.string.hint), getString(R.string.password_error), getString(R.string.affirm), new AlertDialogUtil.ClickListener() {
-                    @Override
-                    public void left() {
-
-                    }
-
-                    @Override
-                    public void right() {
-
-                    }
-                });*/
                         AlertDialogUtil.getInstance().noButtonSingleLineDialog(this, getString(R.string.account_password_error));
                         return;
                     }
-//                    String countryCode = tvAreaCode.getText().toString().trim().replace("+", "");
-//                    phoneLogin(countryCode + phone, pwd);
                     showLoading(getString(R.string.login_in));
                     String countryCode = tvAreaCode.getText().toString().trim().replace("+", "");
                     btnLogin.setBackgroundResource(R.drawable.login_button_shape_check);
@@ -263,24 +245,11 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter<ILogi
                 }
             } else {
                 if (!DetectionEmailPhone.isEmail(phone)) {
-//                    ToastUtil.getInstance().showShort(R.string.email_not_right);
                     AlertDialogUtil.getInstance().noButtonSingleLineDialog(this, getString(R.string.input_valid_telephone_or_email));
                     return;
                 } else {
                     //密码错误
                     if (!StringUtil.passwordJudge(pwd)) {
-//                ToastUtil.getInstance().showShort(R.string.password_judgment);
-          /*      AlertDialogUtil.getInstance().noEditSingleButtonDialog(this, getString(R.string.hint), getString(R.string.password_error), getString(R.string.affirm), new AlertDialogUtil.ClickListener() {
-                    @Override
-                    public void left() {
-
-                    }
-
-                    @Override
-                    public void right() {
-
-                    }
-                });*/
                         AlertDialogUtil.getInstance().noButtonSingleLineDialog(this, getString(R.string.account_password_error));
                         return;
                     }

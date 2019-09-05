@@ -85,6 +85,7 @@ public class PersonalSecuritySettingActivity extends BaseActivity<IPersonalSecur
                 String code = CacheFloder.readHandPassword(ACache.get(MyApplication.getInstance()), MyApplication.getInstance().getUid() + "handPassword");
                 if (code != null) {
                     Intent personalUpdateVerifyIntent = new Intent(this, PersonalUpdateVerifyGesturePwd.class);
+                    personalUpdateVerifyIntent.putExtra(KeyConstants.SOURCE, "PersonalSecuritySettingActivity_Update");
                     startActivity(personalUpdateVerifyIntent);
                 } else {
                     showHandPwdDilog();

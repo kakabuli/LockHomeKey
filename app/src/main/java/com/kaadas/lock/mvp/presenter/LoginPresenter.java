@@ -12,6 +12,7 @@ import com.kaadas.lock.publiclibrary.http.result.LoginResult;
 import com.kaadas.lock.publiclibrary.http.result.UserNickResult;
 import com.kaadas.lock.publiclibrary.http.util.BaseObserver;
 import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.MD5Utils;
 import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.mvp.view.ILoginView;
 import com.kaadas.lock.utils.SPUtils2;
@@ -120,6 +121,9 @@ public class LoginPresenter<T> extends BasePresenter<ILoginView> {
         SPUtils.put(SPUtils.TOKEN, loginResult.getData().getToken());
         SPUtils.put(SPUtils.UID, loginResult.getData().getUid());
         SPUtils.put(SPUtils.PHONEN,phone);
+        SPUtils.put(SPUtils.PASSWORD,MD5Utils.encode(pwd));
+
+
         MyApplication.getInstance().setToken(loginResult.getData().getToken());
         MyApplication.getInstance().setUid(loginResult.getData().getUid());
         getUserName(loginResult.getData().getUid());
