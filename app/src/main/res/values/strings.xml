@@ -1191,4 +1191,10 @@
     <string name="delete_fialed_error">删除异常</string>
     <string name="zigbeen_have_update">门锁zigbee模块</string>
     <string name="gateway_zigbeen_have_update">网关zigbee模块</string>
+    <string name="please_input_password">请输入有效密码</string>
+    <string name="pease_input_login_pwd">请输入账户登录密码</string>
+    <string name="current_account">当前账户</string>
+    <string name="account_password_error2">账户密码输入错误</string>
+    <string name="modify_password">修改密码</string>
+    <string name="re_input">重新输入</string>
 </resources>

@@ -1,7 +1,6 @@
 package com.kaadas.lock.utils;
 
 import android.app.AlertDialog;
-import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
@@ -10,6 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.kaadas.lock.R;
@@ -17,12 +18,16 @@ import com.kaadas.lock.R;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.OnClick;
+
 
 /**
  * Created by David on 2019/2/20
  */
 public class AlertDialogUtil {
     private static AlertDialogUtil alertDialogUtil = null;
+
     private AlertDialog dialog;
 
     public static AlertDialogUtil getInstance() {
@@ -37,7 +42,7 @@ public class AlertDialogUtil {
     // 1 have_edit_dialog（存在输入框，两个按钮）2 no_button_dialog(只有内容的对话框)
     //3 no_edit_singleButton(没有输入框，只有一个按钮)4 no_et_dialog(没有输入框，有两个按钮)
     //由于有输入框这种需要不同的约束，所以不进行封装。
-    public AlertDialog  common(Context context, View view) {
+    public AlertDialog common(Context context, View view) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.MyDialog);
         dialog = builder.create();
         dialog.setCancelable(true);
@@ -70,8 +75,9 @@ public class AlertDialogUtil {
         tvContent.setText(content);
         return alertDialog;
     }
+
     //没有标题，只有内容和一个按钮
-    public AlertDialog singleButtonNoTitleDialog(Context context, String content,String query,String queryColor ,ClickListener clickListener) {
+    public AlertDialog singleButtonNoTitleDialog(Context context, String content, String query, String queryColor, ClickListener clickListener) {
         View mView = LayoutInflater.from(context).inflate(R.layout.no_edit_singlebutton_dialog_no_title, null);
         TextView tvContent = mView.findViewById(R.id.tv_content);
         TextView tv_query = mView.findViewById(R.id.tv_button);
@@ -155,7 +161,6 @@ public class AlertDialogUtil {
     }
 
 
-
     //no_et_dialog
     public void noEditTwoButtonDialogWidthDialog_color(Context context, String title, String content, String left, String right, ClickListener clickListener) {
         View mView = LayoutInflater.from(context).inflate(R.layout.no_et_dialog, null);
@@ -165,9 +170,9 @@ public class AlertDialogUtil {
         TextView tv_query = mView.findViewById(R.id.tv_right);
         tv_query.setTextColor(Color.parseColor("#101010"));
         AlertDialog alertDialog = AlertDialogUtil.getInstance().common(context, mView);
-        if ("".equals(title)){
+        if ("".equals(title)) {
             tvTitle.setVisibility(View.GONE);
-        }else {
+        } else {
             tvTitle.setVisibility(View.VISIBLE);
             tvTitle.setText(title);
         }
@@ -196,7 +201,9 @@ public class AlertDialogUtil {
             }
         });
     }
-    List<AlertDialog> dialogArray=new ArrayList<>();
+
+    List<AlertDialog> dialogArray = new ArrayList<>();
+
     //no_et_dialog
     public void noEditTwoButtonDialogWidthDialog_color_padding(Context context, String title, String content, String left, String right, ClickListener clickListener) {
         View mView = LayoutInflater.from(context).inflate(R.layout.no_et_dialog_padding, null);
@@ -210,17 +217,17 @@ public class AlertDialogUtil {
         alertDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialogInterface) {
-                for (int i=0;i<dialogArray.size();i++){
-                    AlertDialog alertDialog1= dialogArray.get(i);
-                    if(alertDialog1!=null && alertDialog1.isShowing()){
+                for (int i = 0; i < dialogArray.size(); i++) {
+                    AlertDialog alertDialog1 = dialogArray.get(i);
+                    if (alertDialog1 != null && alertDialog1.isShowing()) {
                         alertDialog1.dismiss();
                     }
                 }
             }
         });
-        if ("".equals(title)){
+        if ("".equals(title)) {
             tvTitle.setVisibility(View.GONE);
-        }else {
+        } else {
             tvTitle.setVisibility(View.VISIBLE);
             tvTitle.setText(title);
         }
@@ -231,14 +238,14 @@ public class AlertDialogUtil {
         tv_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                for (int i=0;i<dialogArray.size();i++){
-                    AlertDialog alertDialog1= dialogArray.get(i);
-                    if(alertDialog1!=null && alertDialog1.isShowing()){
+                for (int i = 0; i < dialogArray.size(); i++) {
+                    AlertDialog alertDialog1 = dialogArray.get(i);
+                    if (alertDialog1 != null && alertDialog1.isShowing()) {
                         alertDialog1.dismiss();
                     }
                 }
                 dialogArray.clear();
-              //  alertDialog.dismiss();
+                //  alertDialog.dismiss();
                 if (clickListener != null) {
                     clickListener.left();
                 }
@@ -249,10 +256,10 @@ public class AlertDialogUtil {
         tv_query.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-          //      alertDialog.dismiss();
-                for (int i=0;i<dialogArray.size();i++){
-                    AlertDialog alertDialog1= dialogArray.get(i);
-                    if(alertDialog1!=null && alertDialog1.isShowing()){
+                //      alertDialog.dismiss();
+                for (int i = 0; i < dialogArray.size(); i++) {
+                    AlertDialog alertDialog1 = dialogArray.get(i);
+                    if (alertDialog1 != null && alertDialog1.isShowing()) {
                         alertDialog1.dismiss();
                     }
                 }
@@ -272,9 +279,9 @@ public class AlertDialogUtil {
         TextView tv_cancel = mView.findViewById(R.id.tv_left);
         TextView tv_query = mView.findViewById(R.id.tv_right);
         AlertDialog alertDialog = AlertDialogUtil.getInstance().common(context, mView);
-        if ("".equals(title)){
+        if ("".equals(title)) {
             tvTitle.setVisibility(View.GONE);
-        }else {
+        } else {
             tvTitle.setVisibility(View.VISIBLE);
             tvTitle.setText(title);
         }
@@ -314,9 +321,9 @@ public class AlertDialogUtil {
         TextView tv_query = mView.findViewById(R.id.tv_right);
         AlertDialog alertDialog = AlertDialogUtil.getInstance().common(context, mView);
         alertDialog.setCancelable(false);
-        if ("".equals(title)){
+        if ("".equals(title)) {
             tvTitle.setVisibility(View.GONE);
-        }else {
+        } else {
             tvTitle.setVisibility(View.VISIBLE);
             tvTitle.setText(title);
         }
@@ -346,7 +353,7 @@ public class AlertDialogUtil {
     }
 
     //没有标题的对话框
-    public void noEditTitleTwoButtonDialog(Context context, String content, String left, String right,String leftColor,String rightColor, ClickListener clickListener) {
+    public void noEditTitleTwoButtonDialog(Context context, String content, String left, String right, String leftColor, String rightColor, ClickListener clickListener) {
         View mView = LayoutInflater.from(context).inflate(R.layout.no_et_title_two_button_dialog, null);
         TextView tvTitle = mView.findViewById(R.id.tv_hint);
         TextView tvContent = mView.findViewById(R.id.tv_content);
@@ -381,7 +388,7 @@ public class AlertDialogUtil {
     }
 
     //有标题的对话框
-    public void havaNoEditTwoButtonDialog(Context context, String title, String content, String left, String right, String rightColor,ClickListener clickListener) {
+    public void havaNoEditTwoButtonDialog(Context context, String title, String content, String left, String right, String rightColor, ClickListener clickListener) {
         View mView = LayoutInflater.from(context).inflate(R.layout.no_et_two_button_dialog, null);
         TextView tvTitle = mView.findViewById(R.id.tv_title);
         TextView tvContent = mView.findViewById(R.id.tv_content);
@@ -413,7 +420,14 @@ public class AlertDialogUtil {
                 alertDialog.dismiss();
             }
         });
+
+
+
     }
+
+
+
+
 
 
     public interface ClickListener {
