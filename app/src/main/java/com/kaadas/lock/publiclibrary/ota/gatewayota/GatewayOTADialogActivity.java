@@ -66,12 +66,12 @@ public class GatewayOTADialogActivity extends BaseActivity<GatewayOTAView, Gatew
             }
 
             //zigbeen
-            if(deviceSn.startsWith("ZG")){
+            else if(deviceSn.startsWith("ZG")){
                 tvContent.setText(getString(R.string.zigbeen_have_update) + ":" + notifyBean.getDeviceId() + "\n" + swInfoStr);
             }
 
             // znp
-            if(deviceSn.startsWith("GW")){
+           else  if(deviceSn.startsWith("GW")){
                 if(swInfo.startsWith("znpv")){
 
                     tvContent.setText(getString(R.string.gateway_zigbeen_have_update) + ":" + notifyBean.getDeviceId() + "\n" + swInfoStr);
@@ -80,9 +80,16 @@ public class GatewayOTADialogActivity extends BaseActivity<GatewayOTAView, Gatew
 
 
             // 猫眼
-            if(deviceSn.startsWith("CH")){
+           else  if(deviceSn.startsWith("CH")){
                 tvContent.setText(getString(R.string.cateye) + ":" + notifyBean.getDeviceId() + "\n" + swInfoStr);
             }
+
+            else{
+
+               finish();
+            }
+        }else{
+            finish();
         }
 
      //   if(notifyBean!=null){
