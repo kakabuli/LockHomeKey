@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.Html;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
@@ -26,8 +27,7 @@ import butterknife.OnClick;
 
 public class GatewayOTADialogActivity extends BaseActivity<GatewayOTAView, GatewayOTAPresenter<GatewayOTAView>> implements GatewayOTAView {
 
-    @BindView(R.id.tv_hint)
-    TextView tvHint;
+
     @BindView(R.id.tv_content)
     TextView tvContent;
     @BindView(R.id.tv_left)
@@ -44,7 +44,7 @@ public class GatewayOTADialogActivity extends BaseActivity<GatewayOTAView, Gatew
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         LogUtils.e("网关ota升级通知 GatewayOTADialogActivity ");
-        setContentView(R.layout.activity_otadialog);
+        setContentView(R.layout.activity_otadialog1);
         ButterKnife.bind(this);
         initData();
         initView();
@@ -58,30 +58,38 @@ public class GatewayOTADialogActivity extends BaseActivity<GatewayOTAView, Gatew
             String swInfo= notifyBean.getParams().getSW();
             String deviceSn= notifyBean.getParams().getDeviceList().get(0).toString();
             String swInfoStr= String.format(getString(R.string.have_gateway_version),swInfo);
+
+
             if(deviceSn.startsWith("GW")){
                 if(swInfo.startsWith("orangeiot")){
 
-                    tvContent.setText(getString(R.string.gateway) + ":" + notifyBean.getDeviceId() + "\n" + swInfoStr);
+                    tvContent.setText( Html.fromHtml(  "<big><font color='black'>"+ swInfoStr + "</font></big>"+ "<br>" +"<font color='#999999'>" + getString(R.string.gateway) + ":" + notifyBean.getDeviceId() +"</font>"));
                 }
             }
 
             //zigbeen
             else if(deviceSn.startsWith("ZG")){
-                tvContent.setText(getString(R.string.zigbeen_have_update) + ":" + notifyBean.getDeviceId() + "\n" + swInfoStr);
+
+                tvContent.setText( Html.fromHtml(  "<big><font color='black'>"+ swInfoStr + "</font></big>"+ "<br>" +"<font color='#999999'>" + getString(R.string.zigbeen_have_update) + ":" + notifyBean.getDeviceId() +"</font>"));
+            //    tvContent.setText(getString(R.string.zigbeen_have_update) + ":" + notifyBean.getDeviceId() + "\n" + swInfoStr);
             }
 
-            // znp
+            // znpv
            else  if(deviceSn.startsWith("GW")){
                 if(swInfo.startsWith("znpv")){
 
-                    tvContent.setText(getString(R.string.gateway_zigbeen_have_update) + ":" + notifyBean.getDeviceId() + "\n" + swInfoStr);
+                    tvContent.setText( Html.fromHtml(  "<big><font color='black'>"+ swInfoStr + "</font></big>"+ "<br>" +"<font color='#999999'>" + getString(R.string.gateway_zigbeen_have_update) + ":" + notifyBean.getDeviceId() +"</font>"));
+                //    tvContent.setText(getString(R.string.gateway_zigbeen_have_update) + ":" + notifyBean.getDeviceId() + "\n" + swInfoStr);
                 }
             }
 
 
             // 猫眼
            else  if(deviceSn.startsWith("CH")){
-                tvContent.setText(getString(R.string.cateye) + ":" + notifyBean.getDeviceId() + "\n" + swInfoStr);
+
+                tvContent.setText( Html.fromHtml(  "<big><font color='black'>"+ swInfoStr + "</font></big>"+ "<br>" +"<font color='#999999'>" + getString(R.string.cateye) + ":" + notifyBean.getDeviceId() +"</font>"));
+
+              //  tvContent.setText(getString(R.string.cateye) + ":" + notifyBean.getDeviceId() + "\n" + swInfoStr);
             }
 
             else{
@@ -99,10 +107,7 @@ public class GatewayOTADialogActivity extends BaseActivity<GatewayOTAView, Gatew
     }
 
     private void initView() {
-        if (tvHint!=null){
-            tvHint.setVisibility(View.GONE);
-          //  tvHint.setText(getString(R.string.gateway_ota_upgrade));
-        }
+
         //设置窗口对齐屏幕宽度
         Window win = this.getWindow();
         win.getDecorView().setPadding(0, 0, 0, 0);
