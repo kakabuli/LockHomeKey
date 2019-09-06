@@ -34,7 +34,7 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 
 
-public class GatewayLockPasswordForeverFragment extends BaseFragment<GatewayLockPasswrodView, GatewayLockPasswordForeverPresenter<GatewayLockPasswrodView>> implements GatewayLockPasswrodView{
+public class GatewayLockPasswordForeverFragment extends BaseFragment<GatewayLockPasswrodView, GatewayLockPasswordForeverPresenter<GatewayLockPasswrodView>> implements GatewayLockPasswrodView {
 
     View mView;
     @BindView(R.id.pwd_manager_icon)
@@ -46,11 +46,11 @@ public class GatewayLockPasswordForeverFragment extends BaseFragment<GatewayLock
     @BindView(R.id.btn_confirm_generation)
     Button btnConfirmGeneration;
     Unbinder unbinder;
-    private  List<String> pwdList;
+    private List<String> pwdList;
 
-    private List<String> addPwdIdList=new ArrayList<>();
-    private String  gatewayId;
-    private String  deviceId;
+    private List<String> addPwdIdList = new ArrayList<>();
+    private String gatewayId;
+    private String deviceId;
     private AlertDialog takeEffect;
 
     @Nullable
@@ -67,13 +67,13 @@ public class GatewayLockPasswordForeverFragment extends BaseFragment<GatewayLock
     }
 
     private void getData() {
-        pwdList= (List<String>) getArguments().get(KeyConstants.LOCK_PWD_LIST);
-        gatewayId=getArguments().getString(KeyConstants.GATEWAY_ID);
-        deviceId=getArguments().getString(KeyConstants.DEVICE_ID);
+        pwdList = (List<String>) getArguments().get(KeyConstants.LOCK_PWD_LIST);
+        gatewayId = getArguments().getString(KeyConstants.GATEWAY_ID);
+        deviceId = getArguments().getString(KeyConstants.DEVICE_ID);
     }
 
     private void initData() {
-        if (addPwdIdList!=null){
+        if (addPwdIdList != null) {
             addPwdIdList.add("00");
             addPwdIdList.add("01");
             addPwdIdList.add("02");
@@ -81,12 +81,12 @@ public class GatewayLockPasswordForeverFragment extends BaseFragment<GatewayLock
             addPwdIdList.add("04");
         }
 
-        if (pwdList!=null){
-            for (int i=0;i<pwdList.size();i++){
+        if (pwdList != null) {
+            for (int i = 0; i < pwdList.size(); i++) {
                 //是否存在00-04的值，存在的话要删除list中的数据
-                String pwdNum=pwdList.get(i);
-                for (int j=0;j<addPwdIdList.size();j++){
-                    if (pwdNum.equals(addPwdIdList.get(j))){
+                String pwdNum = pwdList.get(i);
+                for (int j = 0; j < addPwdIdList.size(); j++) {
+                    if (pwdNum.equals(addPwdIdList.get(j))) {
                         addPwdIdList.remove(j);
                     }
                 }
@@ -111,14 +111,14 @@ public class GatewayLockPasswordForeverFragment extends BaseFragment<GatewayLock
         switch (view.getId()) {
             case R.id.btn_random_generation:
                 String password = StringUtil.makeRandomPassword();
-                if (etPassword!=null){
+                if (etPassword != null) {
                     etPassword.setText(password);
                     etPassword.setSelection(password.length());
                 }
                 break;
             case R.id.btn_confirm_generation:
                 if (!NetUtil.isNetworkAvailable()) {
-                    AlertDialogUtil.getInstance().noButtonDialog(getActivity(),getString(R.string.no_find_network));
+                    AlertDialogUtil.getInstance().noButtonDialog(getActivity(), getString(R.string.no_find_network));
                     return;
                 }
                 String strForeverPassword = etPassword.getText().toString().trim();
@@ -127,11 +127,12 @@ public class GatewayLockPasswordForeverFragment extends BaseFragment<GatewayLock
                     return;
                 }
                 if (StringUtil.checkSimplePassword(strForeverPassword)) {
-                    AlertDialogUtil.getInstance().noEditTitleTwoButtonDialog(getActivity(), getString(R.string.password_simple_please_reset), getString(R.string.go_on), getString(R.string.reinstall),"#1F96F7","#1F96F7", new AlertDialogUtil.ClickListener() {
+                    AlertDialogUtil.getInstance().noEditTitleTwoButtonDialog(getActivity(), getString(R.string.password_simple_please_reset), getString(R.string.go_on), getString(R.string.reinstall), "#1F96F7", "#1F96F7", new AlertDialogUtil.ClickListener() {
                         @Override
                         public void left() {
 
                         }
+
                         @Override
                         public void right() {
                             etPassword.setText("");
@@ -147,10 +148,10 @@ public class GatewayLockPasswordForeverFragment extends BaseFragment<GatewayLock
 
     private void addLockPwd(String strForeverPassword) {
         if (addPwdIdList != null && addPwdIdList.size() > 0) {
-            for (int p=0;p<addPwdIdList.size();p++){
-                LogUtils.e("添加密码的编号   "+addPwdIdList.get(p));
-                mPresenter.addLockPwd(gatewayId,deviceId,addPwdIdList.get(p),strForeverPassword);
-                takeEffect=AlertDialogUtil.getInstance().noButtonDialog(getActivity(),getString(R.string.take_effect_be_being));
+            for (int p = 0; p < addPwdIdList.size(); p++) {
+                LogUtils.e("添加密码的编号   " + addPwdIdList.get(p));
+                mPresenter.addLockPwd(gatewayId, deviceId, addPwdIdList.get(p), strForeverPassword);
+                takeEffect = AlertDialogUtil.getInstance().noButtonDialog(getActivity(), getString(R.string.take_effect_be_being));
                 takeEffect.setCancelable(false);
                 break;
             }
@@ -164,40 +165,48 @@ public class GatewayLockPasswordForeverFragment extends BaseFragment<GatewayLock
                 @Override
                 public void right() {
 
+
                 }
             });
         }
     }
+
     @Override
-    public void addLockPwdSuccess(String pwdId,String pwdValue) {
+    public void addLockPwdSuccess(String pwdId, String pwdValue) {
         //密码添加成功
         addPwdIdList.remove(0);
-        if (takeEffect!=null){
+        if (takeEffect != null) {
             takeEffect.dismiss();
         }
 
-
-       //跳转到分享页面
-        Intent intent=new Intent(getActivity(), GatewayLockPasswordShareActivity.class);
-        intent.putExtra(KeyConstants.GATEWAY_ID,gatewayId);
-        intent.putExtra(KeyConstants.DEVICE_ID,deviceId);
+        //跳转到分享页面
+        Intent intent = new Intent(getActivity(), GatewayLockPasswordShareActivity.class);
+        intent.putExtra(KeyConstants.GATEWAY_ID, gatewayId);
+        intent.putExtra(KeyConstants.DEVICE_ID, deviceId);
         //1表示永久密码，2表示临时密码
-        intent.putExtra(KeyConstants.PWD_TYPE,1);
-        intent.putExtra(KeyConstants.PWD_VALUE,pwdValue);
-        intent.putExtra(KeyConstants.PWD_ID,pwdId);
-        LogUtils.e(pwdId+"pwdId------"+pwdValue+"pwdValue");
+        intent.putExtra(KeyConstants.PWD_TYPE, 1);
+        intent.putExtra(KeyConstants.PWD_VALUE, pwdValue);
+        intent.putExtra(KeyConstants.PWD_ID, pwdId);
+        LogUtils.e(pwdId + "pwdId------" + pwdValue + "pwdValue");
         startActivity(intent);
     }
 
     @Override
-    public void addLockPwdFail() {
+    public void addLockPwdFail(int status) {
         //密码添加失败
         LogUtils.e("添加密码失败");
-        if (takeEffect!=null){
+        if (takeEffect != null) {
             takeEffect.dismiss();
         }
-        if (getActivity()!=null) {
-            AlertDialogUtil.getInstance().singleButtonNoTitleDialog(getActivity(), getString(R.string.add_lock_pwd_fail), getString(R.string.confirm), "#1F96F7", new AlertDialogUtil.ClickListener() {
+
+        String content = "";
+        if (status == 2 || status == 3) {
+            content = getString(R.string.password_number_exit_please_sync);
+        } else {
+            content = getString(R.string.add_lock_pwd_fail);
+        }
+        if (getActivity() != null) {
+            AlertDialogUtil.getInstance().singleButtonNoTitleDialog(getActivity(), content, getString(R.string.confirm), "#1F96F7", new AlertDialogUtil.ClickListener() {
                 @Override
                 public void left() {
 
@@ -215,10 +224,10 @@ public class GatewayLockPasswordForeverFragment extends BaseFragment<GatewayLock
     public void addLockPwdThrowable(Throwable throwable) {
         //密码添加异常
         LogUtils.e("添加密码异常    ");
-        if (takeEffect!=null){
+        if (takeEffect != null) {
             takeEffect.dismiss();
         }
-        if (getActivity()!=null) {
+        if (getActivity() != null) {
             AlertDialogUtil.getInstance().singleButtonNoTitleDialog(getActivity(), getString(R.string.add_lock_pwd_fail), getString(R.string.confirm), "#1F96F7", new AlertDialogUtil.ClickListener() {
                 @Override
                 public void left() {

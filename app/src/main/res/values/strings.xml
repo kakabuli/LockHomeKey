@@ -1197,4 +1197,5 @@
     <string name="account_password_error2">账户密码输入错误</string>
     <string name="modify_password">修改密码</string>
     <string name="re_input">重新输入</string>
+    <string name="password_number_exit_please_sync">密码编号已存在，请先同步</string>
 </resources>
