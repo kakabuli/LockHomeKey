@@ -96,7 +96,7 @@ public class GatewayLockTempararyPwdAddActivity extends BaseActivity<GatewayLock
     }
 
 
-    @OnClick({R.id.btn_random_generation, R.id.btn_confirm_generation,R.id.back})
+    @OnClick({R.id.btn_random_generation, R.id.btn_confirm_generation, R.id.back})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.back:
@@ -183,25 +183,29 @@ public class GatewayLockTempararyPwdAddActivity extends BaseActivity<GatewayLock
     }
 
     @Override
-    public void addLockPwdFail() {
+    public void addLockPwdFail(int status) {
         //密码添加失败
         LogUtils.e("添加密码失败");
         if (takeEffect != null) {
             takeEffect.dismiss();
         }
-        if (context != null) {
-            AlertDialogUtil.getInstance().singleButtonNoTitleDialog(context, getString(R.string.add_lock_pwd_fail), getString(R.string.confirm), "#1F96F7", new AlertDialogUtil.ClickListener() {
-                @Override
-                public void left() {
-
-                }
-
-                @Override
-                public void right() {
-
-                }
-            });
+        String content = "";
+        if (status == 2 || status == 3) {
+            content = getString(R.string.password_number_exit_please_sync);
+        } else {
+            content = getString(R.string.add_lock_pwd_fail);
         }
+        AlertDialogUtil.getInstance().singleButtonNoTitleDialog(this, content, getString(R.string.confirm), "#1F96F7", new AlertDialogUtil.ClickListener() {
+            @Override
+            public void left() {
+
+            }
+
+            @Override
+            public void right() {
+
+            }
+        });
     }
 
     @Override
@@ -225,7 +229,6 @@ public class GatewayLockTempararyPwdAddActivity extends BaseActivity<GatewayLock
             });
         }
     }
-
 
 
 }

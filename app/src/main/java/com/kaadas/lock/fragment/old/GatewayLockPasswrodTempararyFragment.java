@@ -186,14 +186,21 @@ public class GatewayLockPasswrodTempararyFragment extends BaseFragment<GatewayLo
     }
 
     @Override
-    public void addLockPwdFail() {
+    public void addLockPwdFail(int status) {
         //密码添加失败
         LogUtils.e("添加密码失败");
         if (takeEffect!=null){
             takeEffect.dismiss();
         }
-        if (getActivity()!=null) {
-            AlertDialogUtil.getInstance().singleButtonNoTitleDialog(getActivity(), getString(R.string.add_lock_pwd_fail), getString(R.string.confirm), "#1F96F7", new AlertDialogUtil.ClickListener() {
+
+        String content = "";
+        if (status == 2|| status ==3){
+            content = getString(R.string.password_number_exit_please_sync);
+        }else {
+            content = getString(R.string.add_lock_pwd_fail);
+        }
+        if (getActivity() != null) {
+            AlertDialogUtil.getInstance().singleButtonNoTitleDialog(getActivity(), content, getString(R.string.confirm), "#1F96F7", new AlertDialogUtil.ClickListener() {
                 @Override
                 public void left() {
 

@@ -7,7 +7,7 @@ public interface  GatewayLockPasswrodView extends IBaseView {
     void addLockPwdSuccess(String pwdId,String pwdValue);
 
     //添加密码失败
-    void addLockPwdFail();
+    void addLockPwdFail(int status);
 
     //添加密码异常
     void addLockPwdThrowable(Throwable throwable);

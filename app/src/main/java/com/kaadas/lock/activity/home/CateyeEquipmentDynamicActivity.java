@@ -65,7 +65,6 @@ public class CateyeEquipmentDynamicActivity extends BaseActivity<ICateyeDynamicV
         initData();
         initRefresh();
         initRecycleView();
-
     }
 
     @Override
