@@ -1,0 +1,17 @@
+@startuml
+title face OTA
+    App->FaceBlock: socket 连接：Ip：192.168.4.2 \n端口：3456
+    App->FaceBlock:
+    App->FaceBlock:
+    App->FaceBlock:
+    App->FaceBlock:
+    App->FaceBlock:
+    App->FaceBlock:
+    App->FaceBlock:
+    App->FaceBlock:
+    App->FaceBlock:
+    App->FaceBlock:
+    App->FaceBlock:
+
+
+@enduml

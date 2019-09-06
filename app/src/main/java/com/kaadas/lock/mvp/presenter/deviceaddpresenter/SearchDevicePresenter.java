@@ -134,7 +134,7 @@ public class SearchDevicePresenter<T> extends BasePresenter<ISearchDeviceView> {
         handler.removeCallbacks(stopScanLe);
         if (bleService != null) { //停止扫描设备
             bleService.scanBleDevice(false);  //1
-            LogUtils.e("点击绑定设备   断开连接" );
+            LogUtils.e("点击绑定设备   断开连接");
             bleService.release();  //点击绑定设备   断开连接
             if (mViewRef != null) {
                 mViewRef.get().onStopScan();
@@ -231,7 +231,6 @@ public class SearchDevicePresenter<T> extends BasePresenter<ISearchDeviceView> {
         connectTimes = 0;
         bindDevice(device, isBind);
     }
-
 
 
     private Runnable releaseRunnable = new Runnable() {
@@ -375,10 +374,10 @@ public class SearchDevicePresenter<T> extends BasePresenter<ISearchDeviceView> {
                         LogUtils.e("根据SN 获取pwd1    " + getPwdBySnResult.getData().getPassword1());
                         if ("200".equals(getPwdBySnResult.getCode())) { //获取pwd1成功
                             pwd1 = getPwdBySnResult.getData().getPassword1();
-                            if (TextUtils.isEmpty(pwd1)){
+                            if (TextUtils.isEmpty(pwd1)) {
                                 mViewRef.get().pwdIsEmpty();
-                            }else {
-                                if (mViewRef.get() != null ) {
+                            } else {
+                                if (mViewRef.get() != null) {
                                     mViewRef.get().getPwd1Success(pwd1, isBind, version, sn, mac, deviceName);
                                 }
                             }
@@ -395,11 +394,11 @@ public class SearchDevicePresenter<T> extends BasePresenter<ISearchDeviceView> {
                             System.arraycopy(bPwd1, 0, password_1, 0, bPwd1.length);
                             pwd1 = Rsa.bytesToHexString(bPwd1);
                             if (mViewRef.get() != null) {
-                                mViewRef.get().getPwd1Success(pwd1, isBind,version,sn,mac,deviceName);
-//                                if (bleService != null) {  //1
-//                                    LogUtils.e("设备未经过产测   断开连接");
-//                                    bleService.release(); //设备未经过产测   断开连接
-//                                }
+//                                mViewRef.get().getPwd1Success(pwd1, isBind,version,sn,mac,deviceName);
+                                if (bleService != null) {  //1
+                                    LogUtils.e("设备未经过产测   断开连接");
+                                    bleService.release(); //设备未经过产测   断开连接
+                                }
                                 mViewRef.get().notice419();
                             }
                             return;
