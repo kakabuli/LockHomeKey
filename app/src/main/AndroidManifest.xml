@@ -768,6 +768,11 @@
         <activity
             android:name=".publiclibrary.ota.gatewayota.GatewayOTADialogActivity"
             android:theme="@style/gatewayDialog" />
+
+        <activity
+            android:name=".activity.device.cateye.dialog.CatEyeNightSightDialogActivity"
+            android:theme="@style/gatewayDialog" />
+
         <activity
             android:name=".activity.addDevice.cateye.TurnOnCatEyeFirstActivity"
             android:screenOrientation="portrait"

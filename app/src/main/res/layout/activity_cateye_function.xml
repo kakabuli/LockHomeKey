@@ -176,10 +176,39 @@
                     android:gravity="center_horizontal"
                     android:orientation="vertical">
 
-                    <ImageView
+              <!--      <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@mipmap/look_back" />
+                        android:src="@mipmap/look_back" />-->
+
+                    <RelativeLayout
+                        android:id="@+id/rl_comment_area"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/pl_text"
+                        android:layout_centerHorizontal="true">
+
+                        <ImageView
+                            android:id="@+id/cateye_device_icon"
+                            android:layout_width="60dp"
+                            android:layout_height="32dp"
+                            android:src="@mipmap/look_back" />
+
+                        <TextView
+                            android:id="@+id/tv_comment_count"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentTop="true"
+                            android:layout_marginStart="40dp"
+                            android:background="@drawable/shape_red_comment_bg_notification"
+                            android:paddingLeft="4dp"
+                            android:paddingRight="4dp"
+                            android:text="   "
+                            android:visibility="visible"
+                            android:textColor="@android:color/white"
+                            android:textSize="12sp" />
+                    </RelativeLayout>
+
 
                     <TextView
                         android:layout_width="wrap_content"

@@ -292,15 +292,25 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
                 try {
                     //开始录制之前需要删除临时视频  可能会崩溃
                     deleteTempVideo();
+                    if (mViewRef.get() != null) {
+                        mViewRef.get().recordTooStart();
+                    }
                     LinphoneManager.getLc().getCurrentCall().startRecording();
                     isRecoding = true;
                     startRecordTime = System.currentTimeMillis();
                 } catch (Exception e) {
                     LogUtils.d("开启录屏失败 " + e);
+                    if (mViewRef.get() != null) {
+                        mViewRef.get().recordExceptionTooShort();
+                    }
                 }
+            }else {
             }
         } else {
             if (System.currentTimeMillis() - startRecordTime > 5 * 1000) {
+                if(mViewRef.get()!=null){
+                    mViewRef.get().recordTooEnd();
+                }
                 stopRecordVideo(deviceId);
             } else {
                 if (mViewRef.get() != null) {

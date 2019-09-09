@@ -21,12 +21,15 @@ import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.MainActivity;
 import com.kaadas.lock.activity.device.cateye.CateyeMoreDeviceInformationActivity;
+import com.kaadas.lock.activity.device.cateye.dialog.CatEyeNightSightDialogActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.mvp.presenter.cateye.CatEyeMorePresenter;
 import com.kaadas.lock.mvp.view.cateye.IGatEyeView;
 import com.kaadas.lock.publiclibrary.bean.CateEyeInfo;
 import com.kaadas.lock.publiclibrary.bean.GatewayInfo;
+import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.CatEyeInfoBeanPropertyResult;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.CatEyeInfoBeanResult;
+import com.kaadas.lock.publiclibrary.ota.gatewayota.GatewayOTADialogActivity;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.EditTextWatcher;
 import com.kaadas.lock.utils.KeyConstants;
@@ -84,6 +87,9 @@ public class CateyeMoreActivity extends BaseActivity<IGatEyeView, CatEyeMorePres
     RelativeLayout rlVolume;
     @BindView(R.id.tv_smart_monitor)
     TextView tvSmartMonitor;
+
+    @BindView(R.id.night_sight_view)
+    RelativeLayout night_sight_view;
 
     private String deviceName;
     private String gatewayId;
@@ -186,6 +192,7 @@ public class CateyeMoreActivity extends BaseActivity<IGatEyeView, CatEyeMorePres
         rlRingNumber.setOnClickListener(this);//响铃次数
         rlResolution.setOnClickListener(this);//分辨率
         rlVolume.setOnClickListener(this);
+        night_sight_view.setOnClickListener(this);
     }
 
     @Override
@@ -380,6 +387,19 @@ public class CateyeMoreActivity extends BaseActivity<IGatEyeView, CatEyeMorePres
                     }
                 }
                 break;
+
+            case R.id.night_sight_view:
+
+                loadingDialog.show(getString(R.string.get_cateye_info_night_wait));
+                mPresenter.getCatNightSightInfo(gatewayId, deviceId, MyApplication.getInstance().getUid());
+
+//                Intent night_sight_intent = new Intent();
+//                night_sight_intent.setClass(CateyeMoreActivity.this, CatEyeNightSightDialogActivity.class);
+                //intent.putExtra(KeyConstants.GATEWAY_OTA_UPGRADE, notifyBean);
+//                startActivity(night_sight_intent);
+//          //       mPresenter.getCatNightSightInfo(gatewayId, deviceId, MyApplication.getInstance().getUid());
+
+                break;
         }
     }
 
@@ -567,6 +587,34 @@ public class CateyeMoreActivity extends BaseActivity<IGatEyeView, CatEyeMorePres
             deleteAlertDialog.dismiss();
         }
         ToastUtil.getInstance().showShort(getString(R.string.delete_fialed));
+    }
+
+    @Override
+    public void getCatEyeInfoNightSightSuccess(CatEyeInfoBeanPropertyResult catEyeInfoBeanPropertyResult) {
+        if (loadingDialog != null) {
+            loadingDialog.dismiss();
+        }
+
+                Intent night_sight_intent = new Intent();
+                night_sight_intent.setClass(CateyeMoreActivity.this, CatEyeNightSightDialogActivity.class);
+        night_sight_intent.putExtra(KeyConstants.GATEWAY_OTA_UPGRADE, catEyeInfoBeanPropertyResult);
+                startActivity(night_sight_intent);
+//          //       mPresenter.getCatNightSightInfo(gatewayId, deviceId, MyApplication.getInstance().getUid());
+
+    }
+
+    @Override
+    public void getCatEyeInfoNightSightFail() {
+        if (loadingDialog != null) {
+            loadingDialog.dismiss();
+        }
+    }
+
+    @Override
+    public void getNightSighEveThrowable(Throwable throwable) {
+        if (loadingDialog != null) {
+            loadingDialog.dismiss();
+        }
     }
 
     @Override

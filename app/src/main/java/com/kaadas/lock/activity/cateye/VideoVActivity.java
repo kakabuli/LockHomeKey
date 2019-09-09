@@ -10,6 +10,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.SystemClock;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -143,6 +144,7 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
     Timer timer = new Timer();
     private LinearLayout cat_eye_offline;
     private RelativeLayout cat_eye_online;
+    boolean isShuPing=true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -272,7 +274,6 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
         cbMute2 = findViewById(R.id.cb_mute2);
         cbHandsFree2 = findViewById(R.id.cb_hands_free2);
         cbScreenRecord2 = findViewById(R.id.cb_screen_record2);
-
         ll_video_control1 = findViewById(R.id.ll_video_control1);
         ll_video_control2 = findViewById(R.id.ll_video_control2);
         rl_bottom = findViewById(R.id.rl_bottom);
@@ -670,8 +671,10 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
         if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) {
             //如果屏幕当前是横屏显示，则设置屏幕锁死为竖屏显示
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+            isShuPing=true;
         } else if (currentOrientation == Configuration.ORIENTATION_PORTRAIT) {
             //如果屏幕当前是竖屏显示，则设置屏幕锁死为横屏显示
+            isShuPing=false;
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         }
     }
@@ -680,7 +683,7 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
     public void onScrollEnd(@NonNull ForecastAdapter.ViewHolder holder, int position) {
 
     }
-
+    long startRecord= 0;
     @Override
     public void onCheckedChanged(CompoundButton buttonView,final boolean isChecked) {
         switch (buttonView.getId()) {
@@ -693,13 +696,42 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
                 break;
             case R.id.cb_screen_record: //录屏
             case R.id.cb_screen_record2: //录屏
-                if (isChecked) { //开启录屏
-                    mPresenter.recordVideo(true, cateEyeInfo.getServerInfo().getDeviceId());
-                } else {  //结束录屏
-                    mPresenter.recordVideo(false, cateEyeInfo.getServerInfo().getDeviceId());
+
+                String tag=  buttonView.getTag().toString();
+        //    Log.e("denganzhi1","tag:"+tag+" shuping:"+isShuPing+" ischeck:"+isChecked);
+                if(isShuPing==true && tag.equals("shuping")){
+                    if( startRecord !=0 && System.currentTimeMillis()-startRecord<5*1000 && isChecked==false){
+                        ToastUtil.getInstance().showShort(R.string.video_must_record_5_seconds);
+                        cbScreenRecord.setChecked(true);
+                        return;
+                    }
+                    startRecord= System.currentTimeMillis();
+                    if (isChecked) { //开启录屏
+                        mPresenter.recordVideo(true, cateEyeInfo.getServerInfo().getDeviceId());
+                    } else {  //结束录屏
+                        mPresenter.recordVideo(false, cateEyeInfo.getServerInfo().getDeviceId());
+                    }
+                    cbScreenRecord.setChecked(isChecked);
+                    cbScreenRecord2.setChecked(isChecked);
+                }else if(isShuPing==false && tag.equals("hengping") ){
+                    if( startRecord !=0 && System.currentTimeMillis()-startRecord<5*1000 && isChecked==false){
+                        ToastUtil.getInstance().showShort(R.string.video_must_record_5_seconds);
+                        cbScreenRecord2.setChecked(true);
+                        return;
+                    }
+                    startRecord= System.currentTimeMillis();
+                    if (isChecked) { //开启录屏
+                        mPresenter.recordVideo(true, cateEyeInfo.getServerInfo().getDeviceId());
+                    } else {  //结束录屏
+                        mPresenter.recordVideo(false, cateEyeInfo.getServerInfo().getDeviceId());
+                    }
+                    cbScreenRecord.setChecked(isChecked);
+                    cbScreenRecord2.setChecked(isChecked);
+                }else {
+                    return;
                 }
-                cbScreenRecord.setChecked(isChecked);
-                cbScreenRecord2.setChecked(isChecked);
+
+
                 break;
             case R.id.cb_mute: //静音
             case R.id.cb_mute2: //静音
@@ -824,6 +856,28 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
     public void recordTooShort() {
         cbScreenRecord.setChecked(true);
         ToastUtil.getInstance().showShort(R.string.video_must_record_5_seconds);
+    }
+
+    @Override
+    public void recordTooStart() {
+        ToastUtil.getInstance().showShort(R.string.start_recording);
+    }
+
+    @Override
+    public void recordTooEnd() {
+        ToastUtil.getInstance().showShort(R.string.end_recording);
+    }
+
+    @Override
+    public void recordExceptionTooShort() {
+       Toast.makeText(VideoVActivity.this,getString(R.string.recording_exception),Toast.LENGTH_SHORT).show();
+
+    }
+
+    @Override
+    public void recordFrequentlyTooShort() {
+        // 正在录制中
+        Toast.makeText(VideoVActivity.this,getString(R.string.frequently),Toast.LENGTH_SHORT).show();
     }
 
     @Override

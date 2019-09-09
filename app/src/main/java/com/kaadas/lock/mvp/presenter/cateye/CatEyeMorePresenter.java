@@ -11,6 +11,7 @@ import com.kaadas.lock.publiclibrary.mqtt.eventbean.DeleteDeviceLockBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.CatEyeInfoBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.GetSoundVolume;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetPirEnableBean;
+import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.CatEyeInfoBeanPropertyResult;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.CatEyeInfoBeanResult;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.DeviceShareResultBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.UpdateDevNickNameResult;
@@ -127,6 +128,59 @@ public class CatEyeMorePresenter <T> extends BasePresenter<IGatEyeView> {
                         public void accept(Throwable throwable) throws Exception {
                             if (mViewRef.get() != null) {
                                 mViewRef.get().getCatEveThrowable(throwable);
+                            }
+                        }
+                    });
+
+            compositeDisposable.add(getCatEyeInfoDisposable);
+        }
+
+    }
+
+
+    //获取猫眼夜视信息
+    public void getCatNightSightInfo(String gatewayId, String deviceId,String uid) {
+        toDisposable(getCatEyeInfoDisposable);
+        if (mqttService != null) {
+            MqttMessage mqttMessage = MqttCommandFactory.getCatNightSight(gatewayId, deviceId,uid);
+            getCatEyeInfoDisposable = mqttService
+                    .mqttPublish(MqttConstant.getCallTopic(MyApplication.getInstance().getUid()), mqttMessage)
+                    .timeout(15 * 1000, TimeUnit.MILLISECONDS)
+                    .filter(new Predicate<MqttData>() {
+                        @Override
+                        public boolean test(MqttData mqttData) throws Exception {
+                            if (MqttConstant.CATEYE_NIGHT_SIGHT.equals(mqttData.getFunc())) {
+                                return true;
+                            }
+                            return false;
+                        }
+                    })
+                    .compose(RxjavaHelper.observeOnMainThread())
+                    .subscribe(new Consumer<MqttData>() {
+                        @Override
+                        public void accept(MqttData mqttData) throws Exception {
+                            toDisposable(getCatEyeInfoDisposable);
+                            CatEyeInfoBeanPropertyResult catEyeInfoBeanPropertyResult  = new Gson().fromJson(mqttData.getPayload(), CatEyeInfoBeanPropertyResult.class);
+                            LogUtils.e("获取到的猫眼基本信息    "+mqttData.getPayload());
+                            if (catEyeInfoBeanPropertyResult != null) {
+                                if ("200".equals(catEyeInfoBeanPropertyResult.getReturnCode())) {
+                                    if (mViewRef.get() != null) {
+                                   //     mViewRef.get().getCatEyeInfoSuccess(catEyeInfoBean,mqttData.getPayload());
+
+                                        mViewRef.get().getCatEyeInfoNightSightSuccess(catEyeInfoBeanPropertyResult);
+                                    }
+                                } else {
+                                    if (mViewRef.get() != null) {
+                                           mViewRef.get().getCatEyeInfoNightSightFail();
+                                    }
+                                }
+                            }
+                        }
+                    }, new Consumer<Throwable>() {
+                        @Override
+                        public void accept(Throwable throwable) throws Exception {
+                            if (mViewRef.get() != null) {
+                                mViewRef.get().getNightSighEveThrowable(throwable);
                             }
                         }
                     });

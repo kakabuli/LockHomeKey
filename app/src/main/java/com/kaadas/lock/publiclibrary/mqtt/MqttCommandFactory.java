@@ -7,6 +7,7 @@ import com.kaadas.lock.publiclibrary.mqtt.publishbean.AllowCateyeJoinBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.BindGatewayBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.BindGatewayMemeBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.CatEyeInfoBean;
+import com.kaadas.lock.publiclibrary.mqtt.publishbean.CatEyeInfoBeanProperty;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.DeleteGatewayLockDeviceBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.DeviceShareBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.DeviceShareUserBean;
@@ -51,6 +52,11 @@ import com.kaadas.lock.publiclibrary.mqtt.util.MqttConstant;
 import com.kaadas.lock.utils.LogUtils;
 
 import org.eclipse.paho.client.mqttv3.MqttMessage;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class MqttCommandFactory {
 
@@ -385,6 +391,27 @@ public class MqttCommandFactory {
        return getMessage(catEyeInfoBean,messageId);
 
    }
+
+    /**
+     * 获取猫眼夜市功能
+     * @param gatewayId
+     * @param deviceId
+     * @param uid
+     * @return
+     */
+
+    public static MqttMessage getCatNightSight(String gatewayId,String deviceId,String uid){
+        int messageId=getMessageId();
+      //  CatEyeInfoBean catEyeInfoBean=new CatEyeInfoBean(MqttConstant.MSG_TYPE_REQUEST,uid,messageId,gatewayId,deviceId,MqttConstant.CATEYE_NIGHT_SIGHT,new CatEyeInfoBean.ParamsBean(),"0",new CatEyeInfoBean.ReturnDataBean(),System.currentTimeMillis()+"");
+
+                                                                     //  (String msgtype, String userId, String msgId, String gwId, String deviceId, String func, ParamsEntity params, int returnCode, ReturnDataEntity returnData, String timestamp)
+        CatEyeInfoBeanProperty.ParamsEntity paramsEntity=new CatEyeInfoBeanProperty.ParamsEntity();
+        List<String> result = Arrays.asList("CamInfrared");
+        paramsEntity.setPropertys(result);
+        CatEyeInfoBeanProperty catEyeInfoBean=new CatEyeInfoBeanProperty(MqttConstant.MSG_TYPE_REQUEST,uid,messageId+"",gatewayId,deviceId,MqttConstant.CATEYE_NIGHT_SIGHT,paramsEntity,0,new CatEyeInfoBeanProperty.ReturnDataEntity(),System.currentTimeMillis()+"");
+        return getMessage(catEyeInfoBean,messageId);
+
+    }
 
     /**
      * 设置智能监测

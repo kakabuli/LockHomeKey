@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:background="@drawable/dialog_bj"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true">
+        <RadioGroup
+            android:id="@+id/night_sighth_rg"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:layout_alignParentBottom="true"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/night_sighth_hand"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:button="@null"
+                android:checked="true"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:text="手动"
+                android:textColor="@color/white"
+                android:background="@drawable/cateye_radiobutton"
+                android:textSize="20sp" />
+
+            <RadioButton
+                android:id="@+id/night_sighth_auto"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:button="@null"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:text="自动"
+                android:textColor="@color/white"
+                android:background="@drawable/cateye_radiobutton_right"
+                android:textSize="20sp" />
+
+        </RadioGroup>
+    </LinearLayout>
+<!--
+    <TextView
+        android:id="@+id/tv_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_25"
+        android:gravity="center"
+        android:lineSpacingExtra="@dimen/dp_10"
+        android:text=""
+        android:textColor="@color/dialog_color"
+        android:textSize="@dimen/sp_13" />
+-->
+
+
+    <!-- 手动-->
+    <LinearLayout
+        android:id="@+id/hand_ll"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_140"
+        android:background="#FFFFFF"
+        android:orientation="vertical"
+
+        >
+
+
+        <RelativeLayout
+            android:id="@+id/auto_hand_day"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_69">
+
+            <TextView
+                android:id="@+id/auto_hand_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/dp_24"
+                android:text="@string/hand_day"
+                android:textColor="#333333"
+                android:textSize="@dimen/sp_15" />
+
+            <CheckBox
+                android:id="@+id/auto_hand_ck"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/dp_17"
+                android:button="@drawable/language_selector"
+                android:clickable="false" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_1"
+                android:layout_alignParentBottom="true"
+                android:layout_marginLeft="@dimen/dp_20"
+                android:background="#F2F2F2"></View>
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:id="@+id/auto_hand_night"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_69"
+
+            >
+
+            <TextView
+                android:id="@+id/auto_hand_night_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/dp_24"
+                android:drawablePadding="@dimen/dp_27"
+                android:text="@string/hand_night"
+                android:textColor="#333333"
+                android:textSize="@dimen/sp_15" />
+
+            <CheckBox
+                android:id="@+id/auto_hand_night_ck"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/dp_17"
+                android:button="@drawable/language_selector"
+                android:clickable="false" />
+
+
+        </RelativeLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_1"
+            android:layout_marginLeft="@dimen/dp_13"
+            android:layout_marginRight="@dimen/dp_13"
+            android:background="@color/more_line" />
+
+    </LinearLayout>
+
+
+    <!-- 自动-->
+    <LinearLayout
+        android:id="@+id/auto_ll"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_140"
+        android:background="#FFFFFF"
+        android:orientation="vertical"
+        android:visibility="gone"
+        >
+
+        <RelativeLayout
+            android:id="@+id/night_sight_hight"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_45">
+
+            <TextView
+                android:id="@+id/night_sight_hight_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/dp_24"
+                android:text="@string/high"
+                android:textColor="#333333"
+                android:textSize="@dimen/sp_15" />
+
+            <CheckBox
+                android:id="@+id/night_sight_hight_ck"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/dp_17"
+                android:button="@drawable/language_selector"
+                android:clickable="false" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_1"
+                android:layout_alignParentBottom="true"
+                android:layout_marginLeft="@dimen/dp_20"
+                android:background="#F2F2F2"></View>
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:id="@+id/night_sight_center"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_45"
+
+            >
+
+            <TextView
+                android:id="@+id/night_sight_center_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/dp_24"
+                android:drawablePadding="@dimen/dp_27"
+                android:text="@string/centre"
+                android:textColor="#333333"
+                android:textSize="@dimen/sp_15" />
+
+            <CheckBox
+                android:id="@+id/night_sight_center_ck"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/dp_17"
+                android:button="@drawable/language_selector"
+                android:clickable="false" />
+
+
+        </RelativeLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_1"
+            android:layout_marginLeft="@dimen/dp_13"
+            android:layout_marginRight="@dimen/dp_13"
+            android:background="@color/more_line" />
+
+
+        <RelativeLayout
+            android:id="@+id/night_sight_low"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_45"
+
+            >
+
+            <TextView
+                android:id="@+id/night_sight_low_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/dp_24"
+                android:drawablePadding="@dimen/dp_27"
+                android:text="@string/low"
+                android:textColor="#333333"
+                android:textSize="@dimen/sp_15" />
+
+            <CheckBox
+                android:id="@+id/night_sight_low_ck"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/dp_17"
+                android:button="@drawable/language_selector"
+                android:clickable="false" />
+
+
+        </RelativeLayout>
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_1"
+            android:layout_marginLeft="@dimen/dp_13"
+            android:layout_marginRight="@dimen/dp_13"
+            android:background="@color/more_line" />
+
+    </LinearLayout>
+
+
+
+
+
+ <!--   <TextView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_1"
+        android:layout_marginTop="@dimen/dp_5"
+        android:background="@color/dialog_line" />-->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_40">
+
+        <TextView
+            android:id="@+id/tv_left"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/cancel"
+            android:textColor="@color/dialog_color"
+            android:textSize="@dimen/sp_13" />
+
+        <TextView
+            android:layout_width="@dimen/dp_1"
+            android:layout_height="match_parent"
+            android:background="@color/dialog_line" />
+
+        <TextView
+            android:id="@+id/tv_right"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/query"
+            android:textColor="@color/dialog_text_color"
+            android:textSize="@dimen/sp_13" />
+    </LinearLayout>
+</LinearLayout>

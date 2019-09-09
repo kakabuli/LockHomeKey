@@ -1198,4 +1198,12 @@
     <string name="modify_password">修改密码</string>
     <string name="re_input">重新输入</string>
     <string name="password_number_exit_please_sync">密码编号已存在，请先同步</string>
+    <string name="night_sight_info">夜视功能</string>
+    <string name="hand_day">白天</string>
+    <string name="hand_night">黑夜</string>
+    <string name="get_cateye_info_night_wait">正在获取夜视功能信息，请稍后。。。</string>
+    <string name="recording_exception">录屏失败</string>
+    <string name="frequently">操作过于频繁</string>
+    <string name="start_recording">开始录制</string>
+    <string name="end_recording">结束录制</string>
 </resources>

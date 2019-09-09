@@ -228,8 +228,10 @@
                 android:drawableTop="@drawable/cb_recording"
                 android:drawablePadding="6dp"
                 android:gravity="center"
-                android:text="@string/recording_name"
-                android:textColor="#fff" />
+                android:text="录屏2"
+                android:textColor="#fff"
+                android:tag="hengping"
+                />
 
 
         </LinearLayout>
@@ -312,7 +314,8 @@
             android:drawablePadding="6dp"
             android:gravity="center"
             android:text="@string/recording_name"
-            android:textColor="#fff" />
+            android:textColor="#fff"
+            android:tag="shuping"/>
     </LinearLayout>
 
 

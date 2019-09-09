@@ -19,6 +19,7 @@ import com.kaadas.lock.activity.cateye.VideoCallBackActivity;
 import com.kaadas.lock.activity.cateye.VideoVActivity;
 import com.kaadas.lock.activity.device.gatewaylock.share.GatewayLockSharedActivity;
 import com.kaadas.lock.bean.HomeShowBean;
+import com.kaadas.lock.bean.PirEventBus;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.mvp.presenter.cateye.CatEyeFunctionPresenter;
 import com.kaadas.lock.mvp.view.cateye.ICatEyeFunctionView;
@@ -30,9 +31,13 @@ import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.NetUtil;
+import com.kaadas.lock.utils.SPUtils2;
 import com.kaadas.lock.utils.ftp.GeTui;
 
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
 
@@ -77,9 +82,13 @@ public class CateyeFunctionActivity extends BaseActivity<ICatEyeFunctionView, Ca
     TextView iv_number;
     @BindView(R.id.device_share)
     LinearLayout deviceShare;
+    @BindView(R.id.tv_comment_count)
+    TextView tv_comment_count;
     private CateEyeInfo cateEyeInfo;
     private String gwId;
     private String devId;
+    String key=null;
+    int catEyeCount=0;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -87,7 +96,26 @@ public class CateyeFunctionActivity extends BaseActivity<ICatEyeFunctionView, Ca
         ButterKnife.bind(this);
         initListener();
         initData();
+        key= devId+GeTui.CATEYE_KEY;
+        tvCommentCount();
+        if(!EventBus.getDefault().isRegistered(this)){
+            EventBus.getDefault().register(this);
+        }
 
+    }
+
+    public void tvCommentCount(){
+        catEyeCount= (int) SPUtils2.get(this,key,0);
+        if(catEyeCount>=99){
+            tv_comment_count.setVisibility(View.VISIBLE);
+            tv_comment_count.setText("   ");
+        }else if(catEyeCount==0){
+            tv_comment_count.setVisibility(View.GONE);
+        }else{
+            tv_comment_count.setVisibility(View.VISIBLE);
+            tv_comment_count.setText(catEyeCount+"");
+        }
+      //  Log.e("denganzhi1","cateyey:"+catEyeCount +" key:"+key);
     }
 
     private void initListener() {
@@ -314,12 +342,29 @@ public class CateyeFunctionActivity extends BaseActivity<ICatEyeFunctionView, Ca
 
 
     }
+    // 收到EventBus Pir消息
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void imagePirSuccess(PirEventBus str) {
+        //	if(str.equals(GeTui.CATEYE_PIR)){
+        if(str!=null && str.getDeviceId().equals(devId)){
+             tvCommentCount();
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        tvCommentCount();
+    }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         if (getIntent() != null) {
             getIntent().removeExtra(KeyConstants.CATE_INFO);
+        }
+        if(EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this);
         }
     }
 

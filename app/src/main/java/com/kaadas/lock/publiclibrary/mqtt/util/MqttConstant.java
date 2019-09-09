@@ -131,8 +131,10 @@ public class MqttConstant {
     //推送消息
     public static final String EVENT = "event";
 
+
     //获取猫眼信息
     public static final String BASIC_INFO="basicInfo";
+
 
     //设置Pir
     public static final String SET_PIR_ENABLE="setPirEnable";
@@ -212,6 +214,8 @@ public class MqttConstant {
     //网关重置上报
     public static final String GATEWAY_RESET="gatewayReset";
 
+    //获取猫眼夜市
+    public static final String CATEYE_NIGHT_SIGHT="getPropertys";
 
 
 }

@@ -51,6 +51,12 @@ public interface IVideoView extends IBaseView {
      */
     void recordTooShort();
 
+    void recordTooStart();
+
+    void recordTooEnd();
+
+    void recordExceptionTooShort();
+    void recordFrequentlyTooShort();
     /**
      * 唤醒猫眼成功
      */

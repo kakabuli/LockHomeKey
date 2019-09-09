@@ -2,6 +2,7 @@ package com.kaadas.lock.mvp.view.cateye;
 
 import com.kaadas.lock.mvp.mvpbase.IBaseView;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.CatEyeInfoBean;
+import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.CatEyeInfoBeanPropertyResult;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.CatEyeInfoBeanResult;
 
 public interface IGatEyeView extends IBaseView {
@@ -43,4 +44,11 @@ public interface IGatEyeView extends IBaseView {
     //删除分享锁异常
     void deleteShareDeviceThrowable();
 
+
+    //获取夜视功能成功
+    void getCatEyeInfoNightSightSuccess(CatEyeInfoBeanPropertyResult catEyeInfoBeanPropertyResult);
+    // 获取夜视失败
+    void getCatEyeInfoNightSightFail();
+
+    void  getNightSighEveThrowable(Throwable throwable);
 }
