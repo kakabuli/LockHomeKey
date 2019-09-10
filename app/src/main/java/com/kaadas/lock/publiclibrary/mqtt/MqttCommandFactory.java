@@ -8,6 +8,7 @@ import com.kaadas.lock.publiclibrary.mqtt.publishbean.BindGatewayBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.BindGatewayMemeBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.CatEyeInfoBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.CatEyeInfoBeanProperty;
+import com.kaadas.lock.publiclibrary.mqtt.publishbean.CateEyeInfoBeanPropertyUpdate;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.DeleteGatewayLockDeviceBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.DeviceShareBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.DeviceShareUserBean;
@@ -410,6 +411,31 @@ public class MqttCommandFactory {
         paramsEntity.setPropertys(result);
         CatEyeInfoBeanProperty catEyeInfoBean=new CatEyeInfoBeanProperty(MqttConstant.MSG_TYPE_REQUEST,uid,messageId+"",gatewayId,deviceId,MqttConstant.CATEYE_NIGHT_SIGHT,paramsEntity,0,new CatEyeInfoBeanProperty.ReturnDataEntity(),System.currentTimeMillis()+"");
         return getMessage(catEyeInfoBean,messageId);
+
+    }
+
+
+    /**
+     * 更新猫眼夜市功能
+     * @param gatewayId
+     * @param deviceId
+     * @param uid
+     * @return
+     */
+
+    public static MqttMessage updateCatNightSight(String gatewayId,String deviceId,String uid,List<String> values){
+        int messageId=getMessageId();
+        //  CatEyeInfoBean catEyeInfoBean=new CatEyeInfoBean(MqttConstant.MSG_TYPE_REQUEST,uid,messageId,gatewayId,deviceId,MqttConstant.CATEYE_NIGHT_SIGHT,new CatEyeInfoBean.ParamsBean(),"0",new CatEyeInfoBean.ReturnDataBean(),System.currentTimeMillis()+"");
+
+        //  (String msgtype, String userId, String msgId, String gwId, String deviceId, String func, ParamsEntity params, int returnCode, ReturnDataEntity returnData, String timestamp)
+        CateEyeInfoBeanPropertyUpdate.ParamsEntity paramsEntity=new CateEyeInfoBeanPropertyUpdate.ParamsEntity();
+        List<String> result = Arrays.asList("CamInfrared");
+        paramsEntity.setPropertys(result);
+        paramsEntity.setValues(values);
+                                                                                    //(int returnCode, String func, ReturnDataEntity returnData, String msgId, String gwId, ParamsEntity params, String msgtype, String userId, String deviceId, String timestamp)
+        CateEyeInfoBeanPropertyUpdate cateEyeInfoBeanPropertyUpdate=new CateEyeInfoBeanPropertyUpdate(0,MqttConstant.SET_NIGHT_SIGHT,new CateEyeInfoBeanPropertyUpdate.ReturnDataEntity(),messageId,gatewayId,paramsEntity,MqttConstant.MSG_TYPE_REQUEST,uid,deviceId,System.currentTimeMillis()+"");
+      //  CateEyeInfoBeanPropertyUpdate catEyeInfoBean=new CateEyeInfoBeanPropertyUpdate(MqttConstant.MSG_TYPE_REQUEST,uid,messageId+"",gatewayId,deviceId,MqttConstant.SET_NIGHT_SIGHT,paramsEntity,0,new CatEyeInfoBeanProperty.ReturnDataEntity(),System.currentTimeMillis()+"");
+        return getMessage(cateEyeInfoBeanPropertyUpdate,messageId);
 
     }
 

@@ -216,6 +216,8 @@ public class MqttConstant {
 
     //获取猫眼夜市
     public static final String CATEYE_NIGHT_SIGHT="getPropertys";
+    // 设置猫眼夜市功能
+    public static final String SET_NIGHT_SIGHT="setPropertys";
 
 
 }

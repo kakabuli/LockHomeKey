@@ -440,5 +440,7 @@ public class   KeyConstants {
     public static final String USER_MANAGE_NUMBER="user_manage_number";
     //网关ota升级
     public static final String GATEWAY_OTA_UPGRADE="gateway_ota_upgrade";
+
+    public static final String GATEWAY_NIGHT_SIGHT="GATEWAY_NIGHT_SIGHT";
 }
 

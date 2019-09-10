@@ -1206,4 +1206,11 @@
     <string name="frequently">操作过于频繁</string>
     <string name="start_recording">开始录制</string>
     <string name="end_recording">结束录制</string>
+    <string name="get_nightsight_fail">获取夜视功能失败</string>
+    <string name="get_nightsight_overtime">获取超时</string>
+    <string name="update_nightsight_suc">设置夜视功能成功</string>
+    <string name="update_nightsight_fail">设置夜视功能失败</string>
+    <string name="update_nightsight_exc">设置夜视功能异常</string>
+    <string name="update_wating">设置中,请稍等!</string>
+    <string name="update_nightsight_invalid">设置无效</string>
 </resources>

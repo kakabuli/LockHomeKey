@@ -15,6 +15,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.kaadas.lock.MyApplication;
@@ -31,9 +32,11 @@ import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.CatEyeInfoBeanProper
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.CatEyeInfoBeanResult;
 import com.kaadas.lock.publiclibrary.ota.gatewayota.GatewayOTADialogActivity;
 import com.kaadas.lock.utils.AlertDialogUtil;
+import com.kaadas.lock.utils.Constants;
 import com.kaadas.lock.utils.EditTextWatcher;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LoadingDialog;
+import com.kaadas.lock.utils.NetUtil;
 import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.StringUtil;
 import com.kaadas.lock.utils.ToastUtil;
@@ -42,6 +45,11 @@ import com.kaadas.lock.utils.greenDao.db.CatEyeServiceInfoDao;
 import com.kaadas.lock.utils.greenDao.db.CateEyeInfoBaseDao;
 import com.kaadas.lock.utils.greenDao.db.DaoSession;
 import com.kaadas.lock.utils.greenDao.db.HistoryInfoDao;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -389,15 +397,42 @@ public class CateyeMoreActivity extends BaseActivity<IGatEyeView, CatEyeMorePres
                 break;
 
             case R.id.night_sight_view:
+                if (!NetUtil.isNetworkAvailable()) {
+//                    ToastUtil.getInstance().showShort(getString(R.string.network_exception));
+//                    return;
+                    String result= (String) SPUtils.get(deviceId+Constants.NIGHT_SIGHT,"");
+                    if(TextUtils.isEmpty(result)){
+                     ToastUtil.getInstance().showShort(getString(R.string.network_exception));
+                     return;
+                    }else {
+                        Intent night_sight = new Intent();
+                        night_sight.setClass(CateyeMoreActivity.this, CatEyeNightSightDialogActivity.class);
+                        //  night_sight_intent.putExtra(KeyConstants.GATEWAY_OTA_UPGRADE, catEyeInfoBeanPropertyResult);
+                        ArrayList<String> valuse= new ArrayList<>();
+                        valuse.add(result);
+                        night_sight.putStringArrayListExtra(KeyConstants.GATEWAY_NIGHT_SIGHT, valuse);
+                        night_sight.putExtra(Constants.GATEWAYID,gatewayId);
+                        night_sight.putExtra(Constants.DEVICE_ID,deviceId);
+                        startActivity(night_sight);
+                        return;
+                    }
+                }
 
                 loadingDialog.show(getString(R.string.get_cateye_info_night_wait));
                 mPresenter.getCatNightSightInfo(gatewayId, deviceId, MyApplication.getInstance().getUid());
 
+
+
+                // 测试
 //                Intent night_sight_intent = new Intent();
 //                night_sight_intent.setClass(CateyeMoreActivity.this, CatEyeNightSightDialogActivity.class);
-                //intent.putExtra(KeyConstants.GATEWAY_OTA_UPGRADE, notifyBean);
+//                ArrayList<String> valuse= new ArrayList<>();
+//                valuse.add("0,120,70");
+//                night_sight_intent.putStringArrayListExtra(KeyConstants.GATEWAY_NIGHT_SIGHT, valuse);
+//                night_sight_intent.putExtra(Constants.GATEWAYID,gatewayId);
+//                night_sight_intent.putExtra(Constants.DEVICE_ID,deviceId);
 //                startActivity(night_sight_intent);
-//          //       mPresenter.getCatNightSightInfo(gatewayId, deviceId, MyApplication.getInstance().getUid());
+
 
                 break;
         }
@@ -597,8 +632,13 @@ public class CateyeMoreActivity extends BaseActivity<IGatEyeView, CatEyeMorePres
 
                 Intent night_sight_intent = new Intent();
                 night_sight_intent.setClass(CateyeMoreActivity.this, CatEyeNightSightDialogActivity.class);
-        night_sight_intent.putExtra(KeyConstants.GATEWAY_OTA_UPGRADE, catEyeInfoBeanPropertyResult);
-                startActivity(night_sight_intent);
+      //  night_sight_intent.putExtra(KeyConstants.GATEWAY_OTA_UPGRADE, catEyeInfoBeanPropertyResult);
+        ArrayList<String> valuse= (ArrayList<String>) catEyeInfoBeanPropertyResult.getReturnData().getValues();
+        night_sight_intent.putStringArrayListExtra(KeyConstants.GATEWAY_NIGHT_SIGHT, valuse);
+        night_sight_intent.putExtra(Constants.GATEWAYID,gatewayId);
+        night_sight_intent.putExtra(Constants.DEVICE_ID,deviceId);
+        SPUtils.put(deviceId+Constants.NIGHT_SIGHT,valuse.get(0).toString());
+        startActivity(night_sight_intent);
 //          //       mPresenter.getCatNightSightInfo(gatewayId, deviceId, MyApplication.getInstance().getUid());
 
     }
@@ -608,6 +648,7 @@ public class CateyeMoreActivity extends BaseActivity<IGatEyeView, CatEyeMorePres
         if (loadingDialog != null) {
             loadingDialog.dismiss();
         }
+        Toast.makeText(CateyeMoreActivity.this,getString(R.string.get_nightsight_fail),Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -615,6 +656,7 @@ public class CateyeMoreActivity extends BaseActivity<IGatEyeView, CatEyeMorePres
         if (loadingDialog != null) {
             loadingDialog.dismiss();
         }
+        Toast.makeText(CateyeMoreActivity.this,getString(R.string.get_nightsight_overtime),Toast.LENGTH_SHORT).show();
     }
 
     @Override

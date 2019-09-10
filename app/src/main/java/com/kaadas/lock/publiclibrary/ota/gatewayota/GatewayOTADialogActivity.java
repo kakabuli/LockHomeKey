@@ -70,7 +70,7 @@ public class GatewayOTADialogActivity extends BaseActivity<GatewayOTAView, Gatew
             //zigbeen
             else if(deviceSn.startsWith("ZG")){
 
-                tvContent.setText( Html.fromHtml(  "<big><font color='black'>"+ swInfoStr + "</font></big>"+ "<br>" +"<font color='#999999'>" + getString(R.string.zigbeen_have_update) + ":" + notifyBean.getDeviceId() +"</font>"));
+                tvContent.setText( Html.fromHtml(  "<big><font color='black'>"+ swInfoStr + "</font></big>"+ "<br>" +"<font color='#999999'>" + getString(R.string.zigbeen_have_update) + ":" + deviceSn +"</font>"));
             //    tvContent.setText(getString(R.string.zigbeen_have_update) + ":" + notifyBean.getDeviceId() + "\n" + swInfoStr);
             }
 
@@ -78,7 +78,7 @@ public class GatewayOTADialogActivity extends BaseActivity<GatewayOTAView, Gatew
            else  if(deviceSn.startsWith("GW")){
                 if(swInfo.startsWith("znpv")){
 
-                    tvContent.setText( Html.fromHtml(  "<big><font color='black'>"+ swInfoStr + "</font></big>"+ "<br>" +"<font color='#999999'>" + getString(R.string.gateway_zigbeen_have_update) + ":" + notifyBean.getDeviceId() +"</font>"));
+                    tvContent.setText( Html.fromHtml(  "<big><font color='black'>"+ swInfoStr + "</font></big>"+ "<br>" +"<font color='#999999'>" + getString(R.string.gateway_zigbeen_have_update) + ":" + deviceSn +"</font>"));
                 //    tvContent.setText(getString(R.string.gateway_zigbeen_have_update) + ":" + notifyBean.getDeviceId() + "\n" + swInfoStr);
                 }
             }
@@ -87,7 +87,7 @@ public class GatewayOTADialogActivity extends BaseActivity<GatewayOTAView, Gatew
             // 猫眼
            else  if(deviceSn.startsWith("CH")){
 
-                tvContent.setText( Html.fromHtml(  "<big><font color='black'>"+ swInfoStr + "</font></big>"+ "<br>" +"<font color='#999999'>" + getString(R.string.cateye) + ":" + notifyBean.getDeviceId() +"</font>"));
+                tvContent.setText( Html.fromHtml(  "<big><font color='black'>"+ swInfoStr + "</font></big>"+ "<br>" +"<font color='#999999'>" + getString(R.string.cateye) + ":" + deviceSn +"</font>"));
 
               //  tvContent.setText(getString(R.string.cateye) + ":" + notifyBean.getDeviceId() + "\n" + swInfoStr);
             }

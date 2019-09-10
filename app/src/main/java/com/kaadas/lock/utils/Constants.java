@@ -73,5 +73,8 @@ public class Constants {
 
     public static final String ALREADY_TOAST="ALREADY_TOAST";
     public static final String PHONE_MSG_UPLOAD_STATUS="PHONE_MSG_UPLOAD_STATUS";
+    public static final String GATEWAYID="gatewayId";
+    public static final String DEVICEID="deviceId";
+    public static final String NIGHT_SIGHT="NIGHT_SIGHT";
 
 }
