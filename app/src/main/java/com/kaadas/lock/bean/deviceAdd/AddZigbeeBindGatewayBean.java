@@ -9,6 +9,7 @@ public class AddZigbeeBindGatewayBean implements Serializable {
     private int isOnLine;
     private boolean isSelect;
     private int isAdmin;
+    private  String model;
 
     public String getNickName() {
         return nickName;
@@ -68,5 +69,23 @@ public class AddZigbeeBindGatewayBean implements Serializable {
     }
 
     public AddZigbeeBindGatewayBean() {
+    }
+
+    public String getModel() {
+        return model;
+    }
+
+    public void setModel(String model) {
+        this.model = model;
+    }
+
+    public AddZigbeeBindGatewayBean(String nickName, String adminId, String gatewayId, int isOnLine, boolean isSelect, int isAdmin, String model) {
+        this.nickName = nickName;
+        this.adminId = adminId;
+        this.gatewayId = gatewayId;
+        this.isOnLine = isOnLine;
+        this.isSelect = isSelect;
+        this.isAdmin = isAdmin;
+        this.model = model;
     }
 }

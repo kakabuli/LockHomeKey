@@ -89,16 +89,17 @@ public class DeviceBindGatewayListActivity extends BaseActivity<DeviceGatewayBin
      for (HomeShowBean homeShowBean:homeShowBeans){
          AddZigbeeBindGatewayBean addZigbeeBindGatewayBean=new AddZigbeeBindGatewayBean();
          GatewayInfo gatewayInfo= (GatewayInfo) homeShowBean.getObject();
-         if(!TextUtils.isEmpty(gatewayInfo.getServerInfo().getModel()) && gatewayInfo.getServerInfo().getModel().equals(KeyConstants.SMALL_GW) && type ==2 ){
-             continue;
-         }else if(!TextUtils.isEmpty(gatewayInfo.getServerInfo().getModel()) && gatewayInfo.getServerInfo().getModel().equals(KeyConstants.SMALL_GW2) && type ==2){
-             continue;
-         }
+//         if(!TextUtils.isEmpty(gatewayInfo.getServerInfo().getModel()) && gatewayInfo.getServerInfo().getModel().equals(KeyConstants.SMALL_GW) && type ==2 ){
+//             continue;
+//         }else if(!TextUtils.isEmpty(gatewayInfo.getServerInfo().getModel()) && gatewayInfo.getServerInfo().getModel().equals(KeyConstants.SMALL_GW2) && type ==2){
+//             continue;
+//         }
          addZigbeeBindGatewayBean.setNickName(gatewayInfo.getServerInfo().getDeviceNickName());
          addZigbeeBindGatewayBean.setAdminId(gatewayInfo.getServerInfo().getAdminName());
          addZigbeeBindGatewayBean.setGatewayId(gatewayInfo.getServerInfo().getDeviceSN());
          addZigbeeBindGatewayBean.setSelect(false);
          addZigbeeBindGatewayBean.setIsAdmin(gatewayInfo.getServerInfo().getIsAdmin());
+         addZigbeeBindGatewayBean.setModel(gatewayInfo.getServerInfo().getModel());
          if ("offline".equals(gatewayInfo.getEvent_str())){
              addZigbeeBindGatewayBean.setIsOnLine(0);
          }else if ("online".equals(gatewayInfo.getEvent_str())){
@@ -137,6 +138,7 @@ public class DeviceBindGatewayListActivity extends BaseActivity<DeviceGatewayBin
                         if (type == 2) {
                             //跳转猫眼流程,需要网络
                             if (NetUtil.isNetworkAvailable()){
+
                                 showLoading(getString(R.string.getting_wifi_info));
                                 mPresenter.getGatewayWifiPwd(zigbeeBindGatewayBeanSelect.getGatewayId());
                             }else{
@@ -169,7 +171,18 @@ public class DeviceBindGatewayListActivity extends BaseActivity<DeviceGatewayBin
         }
         if (zigbeeBindGatewayBeanSelect.getIsAdmin()!=1){
             ToastUtil.getInstance().showShort(R.string.gateway_is_authorization);
+            zigbeeBindGatewayBeanSelect=null;
+            return;
         }
+
+        if( (zigbeeBindGatewayBeanSelect.getModel().equals(KeyConstants.SMALL_GW)  && type ==2)
+                ||  (zigbeeBindGatewayBeanSelect.getModel().equals(KeyConstants.SMALL_GW2) && type ==2)){
+            ToastUtil.getInstance().showShort(R.string.gateway_no_support);
+            zigbeeBindGatewayBeanSelect=null;
+            return;
+        }
+
+
         if (currentFlag){
             mList.get(position).setSelect(false);
         }else{

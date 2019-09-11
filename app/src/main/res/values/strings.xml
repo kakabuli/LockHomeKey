@@ -1213,4 +1213,5 @@
     <string name="update_nightsight_exc">设置夜视功能异常</string>
     <string name="update_wating">设置中,请稍等!</string>
     <string name="update_nightsight_invalid">设置无效</string>
+    <string name="gateway_no_support">该网关不支持绑定猫眼</string>
 </resources>
