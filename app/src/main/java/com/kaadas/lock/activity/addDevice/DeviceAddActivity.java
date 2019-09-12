@@ -178,18 +178,23 @@ public class DeviceAddActivity extends BaseActivity<DeviceZigBeeDetailView, Devi
                 break;
             case R.id.catEye_layout:
                 if (flag==false||isAdmin==0) {
-                    AlertDialogUtil.getInstance().havaNoEditTwoButtonDialog(this, getString(R.string.no_usable_gateway), getString(R.string.add_zigbee_device_first_pair_gateway), getString(R.string.cancel), getString(R.string.configuration),"#1F96F7", new AlertDialogUtil.ClickListener() {
-                        @Override
-                        public void left() {
+//                    AlertDialogUtil.getInstance().havaNoEditTwoButtonDialog(this, getString(R.string.no_usable_gateway), getString(R.string.add_zigbee_device_first_pair_gateway), getString(R.string.cancel), getString(R.string.configuration),"#1F96F7", new AlertDialogUtil.ClickListener() {
+//                        @Override
+//                        public void left() {
+//
+//                        }
+//                        @Override
+//                        public void right() {
+//                            //跳转到配置网关添加的流程
+//                            Intent gatewayIntent = new Intent(DeviceAddActivity.this, AddGatewayFirstActivity.class);
+//                            startActivity(gatewayIntent);
+//                        }
+//                    });
 
-                        }
-                        @Override
-                        public void right() {
-                            //跳转到配置网关添加的流程
-                            Intent gatewayIntent = new Intent(DeviceAddActivity.this, AddGatewayFirstActivity.class);
-                            startActivity(gatewayIntent);
-                        }
-                    });
+                    Intent catEyeIntent = new Intent(this, DeviceBindGatewayListActivity.class);
+                    int type =2;
+                    catEyeIntent.putExtra("type", type);
+                    startActivity(catEyeIntent);
                 }else{
                     Intent catEyeIntent = new Intent(this, DeviceBindGatewayListActivity.class);
                     int type =2;

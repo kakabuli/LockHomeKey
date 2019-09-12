@@ -155,7 +155,7 @@ public class DeviceBindGatewayListActivity extends BaseActivity<DeviceGatewayBin
                 break;
         }
     }
-
+    private AddZigbeeBindGatewayBean lastzigbeeBindGatewayBeanSelect;
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
         boolean currentFlag=mList.get(position).isSelect();
@@ -166,25 +166,36 @@ public class DeviceBindGatewayListActivity extends BaseActivity<DeviceGatewayBin
         zigbeeBindGatewayBeanSelect = mList.get(position);
         //离线
         if (zigbeeBindGatewayBeanSelect.getIsOnLine() == 0) {
+            zigbeeBindGatewayBeanSelect=lastzigbeeBindGatewayBeanSelect;
+            if(zigbeeBindGatewayBeanSelect!=null){
+                zigbeeBindGatewayBeanSelect.setSelect(true);
+            }
             ToastUtil.getInstance().showShort(getString(R.string.gateway_offline));
             return;
         }
         if (zigbeeBindGatewayBeanSelect.getIsAdmin()!=1){
+            zigbeeBindGatewayBeanSelect=lastzigbeeBindGatewayBeanSelect;
+            if(zigbeeBindGatewayBeanSelect!=null){
+                zigbeeBindGatewayBeanSelect.setSelect(true);
+            }
             ToastUtil.getInstance().showShort(R.string.gateway_is_authorization);
-            zigbeeBindGatewayBeanSelect=null;
             return;
         }
 
         if( (zigbeeBindGatewayBeanSelect.getModel().equals(KeyConstants.SMALL_GW)  && type ==2)
                 ||  (zigbeeBindGatewayBeanSelect.getModel().equals(KeyConstants.SMALL_GW2) && type ==2)){
+            zigbeeBindGatewayBeanSelect=lastzigbeeBindGatewayBeanSelect;
+            if(zigbeeBindGatewayBeanSelect!=null){
+                zigbeeBindGatewayBeanSelect.setSelect(true);
+            }
             ToastUtil.getInstance().showShort(R.string.gateway_no_support);
-            zigbeeBindGatewayBeanSelect=null;
             return;
         }
-
+        lastzigbeeBindGatewayBeanSelect= zigbeeBindGatewayBeanSelect;
 
         if (currentFlag){
             mList.get(position).setSelect(false);
+            lastzigbeeBindGatewayBeanSelect=null;
         }else{
             mList.get(position).setSelect(true);
         }
