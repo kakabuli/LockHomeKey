@@ -74,6 +74,7 @@
         </RelativeLayout>
 
         <RelativeLayout
+            android:visibility="gone"
             android:id="@+id/product_activition"
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -111,6 +112,7 @@
         </RelativeLayout>
 
         <RelativeLayout
+            android:layout_marginTop="10dp"
             android:id="@+id/security_setting_layout"
             android:layout_width="match_parent"
             android:layout_height="0dp"
