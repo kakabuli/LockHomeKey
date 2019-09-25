@@ -184,12 +184,12 @@ public class AddTimePasswordPresenter<T> extends BlePresenter<IAddTimePasswprdVi
             }
             return;
         }
-        if (type!=1 && number > 4){ //不是永久密码
-            if (isSafe()) {
-                mViewRef.get().onTimePwdFull();
-            }
-            return;
-        }
+//        if (type!=1 && number > 4){ //不是永久密码
+//            if (isSafe()) {
+//                mViewRef.get().onTimePwdFull();
+//            }
+//            return;
+//        }
         if (type == 1) { //永久密码
             password = new AddPasswordBean.Password(1, number > 9 ? "" + number : "0" + number, nickName, 1, startTime, endTime, new ArrayList<String>());
         } else {

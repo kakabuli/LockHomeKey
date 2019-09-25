@@ -108,12 +108,12 @@ public class PasswordWeekPresenter<T> extends BlePresenter<IPasswordLoopView> {
             }
             return;
         }
-        if (number>4){
-            if (isSafe()) {
-                mViewRef.get().onTimePwdFull();
-            }
-            return;
-        }
+//        if (number>4){
+//            if (isSafe()) {
+//                mViewRef.get().onTimePwdFull();
+//            }
+//            return;
+//        }
 
         long startTime = startHour * 60 * 60 * 1000 + startMin * 60 * 1000;
         long endTime = endHour * 60 * 60 * 1000 + endMin * 60 * 1000;
