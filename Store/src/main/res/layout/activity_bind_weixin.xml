@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/default_bg_color"
+    >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:background="@color/white"
+        android:layout_margin="15dp"
+        android:layout_height="200dp">
+        
+        
+        <ImageView
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:src="@drawable/pic_head_mine"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@id/iv_2"
+            android:layout_margin="10dp"
+            />
+        <ImageView
+            android:id="@+id/iv_2"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_centerInParent="true"
+            android:src="@drawable/icon_bind"
+            android:layout_margin="10dp"
+            />
+        <ImageView
+            android:layout_toRightOf="@+id/iv_2"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_centerVertical="true"
+            android:src="@drawable/weichat_bind"
+            android:layout_margin="10dp"
+            />
+    </RelativeLayout>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:text="绑定微信"
+        android:textSize="18sp"
+        android:textColor="@color/white"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="5dp"
+        android:background="#333333"
+        />
+
+    
+</LinearLayout>

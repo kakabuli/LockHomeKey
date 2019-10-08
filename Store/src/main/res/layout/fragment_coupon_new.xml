@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/default_bg_color"
+    android:orientation="vertical"
+    android:layout_height="match_parent">
+    
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:background="@color/default_bg_color"
+        android:layout_marginTop="20dp"
+        android:layout_height="44dp">
+        
+        <EditText
+            android:id="@+id/edit_text"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:cursorVisible="false"
+            android:paddingLeft="10dp"
+            android:hint="请输入激活码"
+            android:textSize="15sp"
+            android:textColor="#333333"
+            android:background="@drawable/bg_coupon_edit"
+            android:layout_height="match_parent" />
+        
+        <Button
+            android:id="@+id/button"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:background="#333333"
+            android:textSize="15sp"
+            android:text="激活优惠券"
+            android:textColor="#ffffff"
+            />
+        
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/root_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        >
+        <com.scwang.smartrefresh.layout.SmartRefreshLayout
+            android:id="@+id/refreshLayout"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:overScrollMode="never"
+            app:srlAccentColor="@color/refresh_color"
+            app:srlEnablePreviewInEditMode="true"
+            app:srlPrimaryColor="@color/default_bg_color">
+            <com.scwang.smartrefresh.layout.header.ClassicsHeader
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:srlClassicsSpinnerStyle="Scale"
+                app:srlDrawableArrowSize="20dp"
+                app:srlDrawableMarginRight="20dp"
+                app:srlDrawableProgress="@drawable/ic_progress_puzzle_white"
+                app:srlDrawableProgressSize="20dp"
+                app:srlDisableContentWhenRefresh="true"
+                app:srlEnableLastTime="true"
+                app:srlFinishDuration="500"
+                app:srlTextSizeTime="10dp"
+                app:srlTextSizeTitle="16sp"
+                app:srlTextTimeMarginTop="2dp"/>
+
+            <android.support.v7.widget.RecyclerView
+                android:layout_marginTop="5dp"
+                android:id="@+id/rv_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/default_bg_color"
+                android:clipChildren="false"
+                android:clipToPadding="false"
+                android:fadingEdge="none"
+                android:overScrollMode="never"
+                android:nestedScrollingEnabled="false"/>
+
+
+
+        </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+
+    </LinearLayout>
+
+
+
+</LinearLayout>

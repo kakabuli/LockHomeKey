@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    >
+
+    <com.yun.software.kaadas.UI.view.CheckableButton
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="33dp"
+        android:text="全部"
+        android:textSize="15dp"
+        android:textColor="@color/white"
+        android:gravity="center"
+        android:button="@null"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:layout_centerVertical="true"
+        android:background="@drawable/selector_bg_rb_act"
+        android:layout_marginLeft="15dp"
+        />
+
+
+</RelativeLayout>
+
+
+

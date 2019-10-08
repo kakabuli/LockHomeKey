@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@color/transparent_0"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_marginTop="100dp"
+        android:background="@color/white"
+        android:layout_height="51dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="基础保障"
+            android:textStyle="bold"
+            android:textColor="#333333"
+            android:textSize="18sp"
+            android:gravity="center"
+            />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/line_color"
+            />
+
+    </LinearLayout>
+
+
+    <com.yun.software.kaadas.UI.view.JudgeNestedScrollView
+        android:layout_marginTop="151dp"
+        android:layout_width="match_parent"
+        android:layout_marginBottom="50dp"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:background="@color/white"
+            android:layout_height="match_parent">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_marginTop="30dp"
+                android:layout_height="wrap_content">
+
+               <ImageView
+                   android:layout_width="15dp"
+                   android:layout_height="17dp"
+                   android:layout_centerVertical="true"
+                   android:src="@drawable/icon_install_service"
+                   android:layout_marginLeft="15dp"
+                   />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="预约安装"
+                    android:textSize="15sp"
+                    android:textColor="#333333"
+                    android:layout_marginLeft="55dp"
+                    android:layout_centerVertical="true"
+                    />
+
+            </RelativeLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="服务费包含旧锁拆除、装新锁及调试费用"
+                android:textSize="12sp"
+                android:textColor="#999999"
+                android:layout_marginLeft="55dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginRight="15dp"
+                />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_marginTop="30dp"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:layout_width="15dp"
+                    android:layout_height="17dp"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/icon_years_service"
+                    android:layout_marginLeft="15dp"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="三年质保"
+                    android:textSize="15sp"
+                    android:textColor="#333333"
+                    android:layout_marginLeft="55dp"
+                    android:layout_centerVertical="true"
+                    />
+
+            </RelativeLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="您购买的此商品带有'三年质保'服务,若该商品在指定三年内出现质量问题,则商家将根据商品的实际故障情况,在规定时间内向消费者提供维修或补寄零配件或更换全新商品,以确保消费者可再正常使用该商品的附加服务,或向消费者补偿一定质保基金的附加服务.服务费用由商家与消费者协商确定,且须达成一致."
+                android:textSize="12sp"
+                android:lineHeight="20dp"
+                android:textColor="#999999"
+                android:layout_marginLeft="55dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginRight="15dp"
+                />
+
+
+
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_marginTop="30dp"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:layout_width="15dp"
+                    android:layout_height="17dp"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/icon_brand_service"
+                    android:layout_marginLeft="15dp"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="正品保证"
+                    android:textSize="15sp"
+                    android:textColor="#333333"
+                    android:layout_marginLeft="55dp"
+                    android:layout_centerVertical="true"
+                    />
+
+            </RelativeLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="商品支持正品保障服务"
+                android:textSize="12sp"
+                android:textColor="#999999"
+                android:layout_marginLeft="55dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginRight="15dp"
+                />
+
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_marginTop="30dp"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:layout_width="15dp"
+                    android:layout_height="17dp"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/icon_time_service"
+                    android:layout_marginLeft="15dp"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="七天无理由退换"
+                    android:textSize="15sp"
+                    android:textColor="#333333"
+                    android:layout_marginLeft="55dp"
+                    android:layout_centerVertical="true"
+                    />
+
+            </RelativeLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="消费者在满足七天无理由退换货申请条件的前提下，可以提出“七天无理由退换货”的申请"
+                android:textSize="12sp"
+                android:textColor="#999999"
+                android:lineHeight="20dp"
+                android:layout_marginLeft="55dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginRight="15dp"
+                />
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_marginTop="30dp"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:layout_width="15dp"
+                    android:layout_height="17dp"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/icon_give_service"
+                    android:layout_marginLeft="15dp"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="赠运费险"
+                    android:textSize="15sp"
+                    android:textColor="#333333"
+                    android:layout_marginLeft="55dp"
+                    android:layout_centerVertical="true"
+                    />
+
+            </RelativeLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="卖家为您购买的商品投保退货运费险(保单生效以下单显示为标准)"
+                android:textSize="12sp"
+                android:textColor="#999999"
+                android:layout_marginLeft="55dp"
+                android:layout_marginTop="15dp"
+                android:lineHeight="20dp"
+                android:layout_marginRight="15dp"
+                />
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_marginTop="30dp"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:layout_width="15dp"
+                    android:layout_height="17dp"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/icon_compensation_service"
+                    android:layout_marginLeft="15dp"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="破损包赔"
+                    android:textSize="15sp"
+                    android:textColor="#333333"
+                    android:layout_marginLeft="55dp"
+                    android:layout_centerVertical="true"
+                    />
+
+            </RelativeLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="该商品由商家承诺在服务有效期内提供配件破损补寄服务"
+                android:textSize="12sp"
+                android:textColor="#999999"
+                android:layout_marginLeft="55dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginBottom="15dp"
+                />
+        </LinearLayout>
+
+    </com.yun.software.kaadas.UI.view.JudgeNestedScrollView>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_alignParentBottom="true"
+        android:background="@color/white"
+        android:layout_height="50dp">
+
+        <TextView
+            android:id="@+id/tv_sure"
+            android:layout_width="200dp"
+            android:layout_height="40dp"
+            android:layout_centerInParent="true"
+            android:text="确定"
+            android:textColor="#ffffff"
+            android:textSize="18sp"
+            android:gravity="center"
+            android:background="@drawable/light_blue_btn_bg"
+            />
+    </RelativeLayout>
+
+
+
+</RelativeLayout>

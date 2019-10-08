@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="150dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_height="50dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="好友团·"
+            android:textSize="15sp"
+            android:textColor="#333333"
+            android:layout_marginLeft="15dp"
+            android:layout_gravity="center_vertical"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="新老用户均可开团/参团"
+            android:textSize="12sp"
+            android:textColor="#333333"
+            android:layout_marginLeft="5dp"
+            android:layout_gravity="center_vertical"
+            />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"/>
+
+
+        <ImageView
+            android:layout_width="7dp"
+            android:layout_height="13dp"
+            android:src="@drawable/icon_list_more"
+            android:layout_marginRight="15dp"
+            android:layout_gravity="center_vertical"
+            />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/line_color"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:background="@color/white"
+        android:layout_height="80dp">
+
+        <com.yun.software.kaadas.UI.view.TextFlowLayout
+            android:id="@+id/text_flow_layout"
+            android:background="@color/white"
+            android:layout_width="match_parent"
+            android:layout_marginLeft="15dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            >
+        </com.yun.software.kaadas.UI.view.TextFlowLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:textColor="#7f5c3a"
+            android:layout_marginLeft="15dp"
+            android:gravity="center_vertical"
+            android:text="*每个用户最多可买5件，单笔订单限购1件"
+            android:textSize="12sp"
+            />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="15dp"
+        android:background="@color/default_bg_color"
+        />
+
+
+</LinearLayout>

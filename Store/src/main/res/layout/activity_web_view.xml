@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <include layout="@layout/webview_title"/>
+    <WebView
+        android:id="@+id/wv_mmd"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/rl_webviewtitlt"
+        android:background="@color/transparent"
+        android:backgroundTint="@color/transparent"
+        android:gravity="center" />
+    <ProgressBar
+        android:id="@+id/game_pro"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="2dp"
+        android:progressDrawable="@drawable/web_progress"
+        android:visibility="gone" />
+</RelativeLayout>

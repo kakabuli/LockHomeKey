@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:background="@drawable/home_pop"
+    android:layout_width="126dp"
+    android:layout_height="214dp">
+    
+    <LinearLayout
+        android:id="@+id/ll_msg"
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_marginTop="5dp"
+        android:layout_height="50dp">
+        
+        <ImageView
+            android:layout_width="17dp"
+            android:layout_height="18dp"
+            android:background="@drawable/home_news"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="16dp"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="消息"
+            android:textColor="#ffffffff"
+            android:layout_gravity="center_vertical"
+            android:textSize="9sp"
+            android:layout_marginLeft="15dp"
+            />
+
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#989898"
+        />
+
+
+
+    <LinearLayout
+        android:id="@+id/ll_order"
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_height="50dp">
+
+        <ImageView
+            android:layout_width="17dp"
+            android:layout_height="18dp"
+            android:background="@drawable/home_order"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="16dp"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="订单"
+            android:textColor="#ffffffff"
+            android:layout_gravity="center_vertical"
+            android:textSize="9sp"
+            android:layout_marginLeft="15dp"
+            />
+
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#989898"
+        />
+
+
+
+    <LinearLayout
+        android:id="@+id/ll_feedback"
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_height="50dp">
+
+        <ImageView
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:background="@drawable/home_feedback"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="16dp"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="反馈中心"
+            android:textColor="#ffffffff"
+            android:layout_gravity="center_vertical"
+            android:textSize="9sp"
+            android:layout_marginLeft="15dp"
+            />
+
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#989898"
+        />
+
+
+
+    <LinearLayout
+        android:id="@+id/ll_me"
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_height="50dp">
+
+        <ImageView
+            android:layout_width="15dp"
+            android:layout_height="18dp"
+            android:background="@drawable/home_me"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="16dp"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="个人信息"
+            android:textColor="#ffffffff"
+            android:layout_gravity="center_vertical"
+            android:textSize="9sp"
+            android:layout_marginLeft="15dp"
+            />
+
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#989898"
+        />
+
+
+</LinearLayout>

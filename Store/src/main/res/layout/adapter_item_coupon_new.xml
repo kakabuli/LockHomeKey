@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_marginLeft="15dp"
+    android:layout_marginRight="15dp"
+    android:layout_marginTop="10dp"
+    android:layout_height="120dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:background="#f6ede3"
+        android:layout_height="60dp">
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="满减券"
+            android:textColor="#8a7a6a"
+            android:textSize="12sp"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/bg_coupon_zhe"
+            android:layout_marginLeft="20dp"
+            android:padding="8dp"
+            />
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="16dp"
+            android:layout_height="wrap_content">
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="¥"
+                android:textColor="#8a7a6a"
+                android:textSize="15sp"
+                android:layout_gravity="bottom"
+                />
+            <TextView
+                android:id="@+id/remark"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="9.8"
+                android:textColor="#8a7a6a"
+                android:textSize="24sp"
+                android:layout_gravity="bottom"
+                />
+
+
+
+
+        </LinearLayout>
+
+
+        <View
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"/>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="去使用"
+            android:textColor="#ca2128"
+            android:textSize="15sp"
+            android:layout_gravity="center_vertical"
+            />
+
+        <ImageView
+            android:layout_width="7dp"
+            android:layout_height="13dp"
+            android:src="@drawable/icon_more_coupon"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="15dp"
+            android:layout_marginLeft="10dp"
+            />
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:background="@color/white"
+        android:layout_height="60dp">
+        
+        <TextView
+            android:id="@+id/condition"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:layout_marginLeft="20dp"
+            android:text="全品类通用(全球购及特殊商品除外)"
+            android:textSize="12sp"
+            android:textColor="#666666"
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:orientation="horizontal"
+            android:layout_weight="1"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="20dp"
+                android:text="有效期"
+                android:textSize="12sp"
+                android:textColor="#666666"
+                />
+            <TextView
+                android:id="@+id/start_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="2019.01.24 17:08"
+                android:textSize="12sp"
+                android:textColor="#666666"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="至"
+                android:textSize="12sp"
+                android:textColor="#666666"
+                />
+
+            <TextView
+                android:id="@+id/end_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="2019.01.30.17:08"
+                android:textSize="12sp"
+                android:textColor="#666666"
+                />
+
+
+
+        </LinearLayout>
+        
+        
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,15 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+
+    <dimen name="dp_2">2dp</dimen>
+    <dimen name="dp_4">4dp</dimen>
+    <dimen name="dp_5">5dp</dimen>
+
+
+    <dimen name="text_size_16">16sp</dimen>
+
+    <dimen name="dialog_radius">15dp</dimen>
+    <dimen name="dk_dp_15">15dp</dimen>
+
+
+</resources>

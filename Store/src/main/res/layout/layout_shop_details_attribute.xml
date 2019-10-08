@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:background="@color/white"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+
+    <LinearLayout
+        android:id="@+id/ll_product_attr"
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_height="50dp">
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="选择"
+            android:textColor="#666666"
+            android:textSize="12sp"
+            android:layout_marginLeft="15dp"
+            android:layout_gravity="center_vertical"
+            />
+        <TextView
+            android:id="@+id/tv_product_attr"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="15dp"
+            android:maxLines="1"
+            android:layout_height="wrap_content"
+            android:text="曜石黑+全国包安装+三年质保"
+            android:textColor="#333333"
+            android:ellipsize="end"
+            android:textSize="12sp"
+            android:layout_gravity="center_vertical"
+            />
+        <ImageView
+            android:layout_width="19dp"
+            android:layout_height="19dp"
+            android:src="@drawable/icon_more_circle_detail"
+            android:layout_marginRight="15dp"
+            android:layout_gravity="center_vertical"
+            />
+    </LinearLayout>
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/line_color"
+        />
+
+    <LinearLayout
+        android:id="@+id/ll_product_param"
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_height="50dp">
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="参数"
+            android:textColor="#666666"
+            android:textSize="12sp"
+            android:layout_marginLeft="15dp"
+            android:layout_gravity="center_vertical"
+            />
+        <TextView
+            android:id="@+id/tv_params"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="15dp"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:text=""
+            android:textColor="#333333"
+            android:ellipsize="end"
+            android:textSize="12sp"
+            android:layout_gravity="center_vertical"
+            />
+        <ImageView
+            android:layout_width="19dp"
+            android:layout_height="19dp"
+            android:src="@drawable/icon_more_circle_detail"
+            android:layout_marginRight="15dp"
+            android:layout_gravity="center_vertical"
+            />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/line_color"
+        />
+
+    <LinearLayout
+        android:id="@+id/ll_servers"
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_height="50dp">
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="服务"
+            android:textColor="#666666"
+            android:textSize="12sp"
+            android:layout_marginLeft="15dp"
+            android:layout_gravity="center_vertical"
+            />
+
+        <ImageView
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:layout_marginLeft="20dp"
+            android:src="@drawable/icon_service_detail"
+            android:layout_gravity="center_vertical"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_height="wrap_content"
+            android:text="预约安装"
+            android:textColor="#333333"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:textSize="12sp"
+            android:layout_gravity="center_vertical"
+            />
+
+        <ImageView
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:layout_marginLeft="20dp"
+            android:src="@drawable/icon_service_detail"
+            android:layout_gravity="center_vertical"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_height="wrap_content"
+            android:text="三年质保"
+            android:textColor="#333333"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:textSize="12sp"
+            android:layout_gravity="center_vertical"
+            />
+
+        <ImageView
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:layout_marginLeft="20dp"
+            android:src="@drawable/icon_service_detail"
+            android:layout_gravity="center_vertical"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_height="wrap_content"
+            android:text="品质认证"
+            android:textColor="#333333"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:textSize="12sp"
+            android:layout_gravity="center_vertical"
+            />
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1"/>
+        <ImageView
+            android:layout_width="19dp"
+            android:layout_height="19dp"
+            android:src="@drawable/icon_more_circle_detail"
+            android:layout_marginRight="15dp"
+            android:layout_gravity="center_vertical"
+            />
+    </LinearLayout>
+</LinearLayout>
