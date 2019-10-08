@@ -1,1 +1,1 @@
-include ':app', ':imagepicker', ':linphoneLibrary', ':library:Common', ':library:WheelPicker', ':push:pushsdk_huawei'
+include ':app', ':imagepicker', ':linphoneLibrary', ':library:Common', ':library:WheelPicker', ':push:pushsdk_huawei', ':pickerview', ':Store', ':refresh', ':Core', ':rxeasyhttp', ':countdownview'

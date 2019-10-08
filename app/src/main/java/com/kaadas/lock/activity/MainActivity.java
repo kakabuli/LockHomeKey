@@ -36,6 +36,7 @@ import com.kaadas.lock.bean.UpgradeBean;
 import com.kaadas.lock.fragment.DeviceFragment;
 import com.kaadas.lock.fragment.HomePageFragment;
 import com.kaadas.lock.fragment.PersonalCenterFragment;
+import com.kaadas.lock.fragment.SnapshotFragment;
 import com.kaadas.lock.mvp.mvpbase.BaseBleActivity;
 import com.kaadas.lock.mvp.presenter.MainActivityPresenter;
 import com.kaadas.lock.mvp.presenter.UpgradePresenter;
@@ -65,6 +66,10 @@ import com.kaadas.lock.widget.BottomMenuSelectMarketDialog;
 import com.kaadas.lock.widget.NoScrollViewPager;
 import com.kaidishi.lock.push.NetEvevt;
 import com.kaidishi.lock.service.GeTuiPushService;
+import com.yun.software.kaadas.Comment.Constans;
+import com.yun.software.kaadas.UI.activitys.WxLoginActivity;
+import com.yun.software.kaadas.UI.fragment.ShopFragment;
+import com.yun.software.kaadas.Utils.UserUtils;
 
 import net.sdvn.cmapi.CMAPI;
 import net.sdvn.cmapi.ConnectionService;
@@ -85,6 +90,10 @@ import java.util.TimerTask;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import de.greenrobot.event.EventBus;
+import de.greenrobot.event.Subscribe;
+import de.greenrobot.event.ThreadMode;
+import la.xiong.androidquick.ui.eventbus.EventCenter;
 
 public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivityPresenter<IMainActivityView>>
         implements ViewPager.OnPageChangeListener, IMainActivityView, RadioGroup.OnCheckedChangeListener, NetEvevt {
@@ -121,6 +130,8 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
         ButterKnife.bind(this);
         PermissionUtil.getInstance().requestPermission(PermissionUtil.getInstance().permission, this);
         isRunning = true;
+
+        EventBus.getDefault().register(this);
         rg.setOnCheckedChangeListener(this);
         MqttService mqttService = MyApplication.getInstance().getMqttService();
         if (mqttService != null) {
@@ -138,6 +149,7 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
         MyLog.getInstance().save("MainActivity==>OnCreate");
         fragments.add(new HomePageFragment());
         fragments.add(new DeviceFragment());
+        fragments.add(new ShopFragment());
         fragments.add(new PersonalCenterFragment());
         evevt = this;
         instance = this;
@@ -299,8 +311,11 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
             case R.id.rb_two:
                 homeViewPager.setCurrentItem(1);
                 break;
-            case R.id.rb_three:
+            case R.id.rb_shop:
                 homeViewPager.setCurrentItem(2);
+                break;
+            case R.id.rb_three:
+                homeViewPager.setCurrentItem(3);
                 break;
         }
     }
@@ -863,6 +878,17 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
                 unregisterReceiver(netWorkChangReceiver);
             }
         }
-
     }
+
+
+
+    @Subscribe(threadMode = ThreadMode.MainThread)
+    public void onEventBus(EventCenter eventCenter) {
+        if (eventCenter.getEventCode() == Constans.RELOGIN){  //商城token  过期
+            MyApplication.getInstance().tokenInvalid(true);
+            UserUtils.setToken("");
+        }
+    }
+
+
 }

@@ -1,20 +1,18 @@
 package com.kaadas.lock.publiclibrary.http;
 
+import com.kaadas.lock.utils.ConstantConfig;
+
 /**
  * Create By lxj  on 2019/3/3
  * Describe
  */
 public class HttpUrlConstants {
-      public static final String BASE_URL = "https://app-kaadas.juziwulian.com:34000/";//凯迪仕正式服务器
-//    public static final String BASE_URL = "https://test.juziwulian.com:8090/";//凯迪仕测试服务器
-
+    public static final String BASE_URL = ConstantConfig.HTTP_BASE_URL;
 
     /**
      * OTA  升级  API地址
      */
-      public static final String OTA_INFO_URL = "http://ota.juziwulian.com:9111/api/otaUpgrade/check";  //正式OTA服务器
-//    public static final String OTA_INFO_URL = "http://47.106.83.60:9111/api/otaUpgrade/check";  //测试OTA服务器
-
+    public static final String OTA_INFO_URL = ConstantConfig.OTA_INFO_URL;  //测试OTA服务器
 
     //////////////////////////////////////// 注册登陆/////////////////////////////////////////////////
     /**

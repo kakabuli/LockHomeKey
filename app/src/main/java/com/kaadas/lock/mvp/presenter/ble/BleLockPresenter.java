@@ -359,8 +359,10 @@ public class BleLockPresenter<T> extends MyOpenLockRecordPresenter<IBleLockView>
                 .subscribe(new Consumer<Boolean>() {
                     @Override
                     public void accept(Boolean isFailed) throws Exception {
-                        if (isSafe()) {   //通知界面更新显示设备状态
+                        if (isFailed){
                             LogUtils.e("收到鉴权失败的回调    2222  ");
+                        }
+                        if (isSafe()) {   //通知界面更新显示设备状态
                             mViewRef.get().onAuthFailed(isFailed);
                         }
                     }

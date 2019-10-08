@@ -17,6 +17,7 @@ import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.mvp.view.ILoginView;
 import com.kaadas.lock.utils.SPUtils2;
 import com.kaadas.lock.utils.ftp.GeTui;
+import com.yun.software.kaadas.Utils.UserUtils;
 
 
 import net.sdvn.cmapi.ConnectionService;
@@ -111,7 +112,7 @@ public class LoginPresenter<T> extends BasePresenter<ILoginView> {
         SPUtils.put(SPUtils.USERNAME,userName);
     }
 
-    private void loginSuccess(LoginResult loginResult,String phone,String pwd) {
+    private void loginSuccess(LoginResult loginResult,String phone,String pwd ) {
         //请求用户名称，由于服务器返回过来的用户名称为空，因此需要重新获取
         if (mViewRef != null) {
             mViewRef.get().onLoginSuccess();
@@ -127,6 +128,7 @@ public class LoginPresenter<T> extends BasePresenter<ILoginView> {
         MyApplication.getInstance().setToken(loginResult.getData().getToken());
         MyApplication.getInstance().setUid(loginResult.getData().getUid());
         getUserName(loginResult.getData().getUid());
+        UserUtils.setToken(loginResult.getData().getStoreToken());
     }
 
 }

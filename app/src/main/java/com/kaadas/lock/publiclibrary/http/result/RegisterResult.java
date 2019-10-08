@@ -40,13 +40,16 @@ public class RegisterResult  extends BaseResult {
     }
 
     public static class ResisterResult {
+
         /**
          * token : eyJfaWQiOiI1YzcwYWMwNTNjNTU0NjM5ZWE5M2NjODUiLCJ1c2VybmFtZSI6Ijg2MTg5NTQzNTk4MjQiLCJpYXQiOjE1NTA4ODc5NDF9
          * uid : 5c70ac053c554639ea93cc85
+         * storeToken : eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiI5NTAiLCJpc3MiOiJodHRwczovL3d3dy5rYW5nYXJvb2JhYnljYXIuY29tIiwiaWF0IjoxNTY5NzQ2MTQwfQ.3uoz632-uN20cpAnz9M2BqCVxysUwV2q6Jgma8y8FrM
          */
 
         private String token;
         private String uid;
+        private String storeToken;
 
         public String getToken() {
             return token;
@@ -64,12 +67,12 @@ public class RegisterResult  extends BaseResult {
             this.uid = uid;
         }
 
-        @Override
-        public String toString() {
-            return "ResisterResult{" +
-                    "token='" + token + '\'' +
-                    ", uid='" + uid + '\'' +
-                    '}';
+        public String getStoreToken() {
+            return storeToken;
+        }
+
+        public void setStoreToken(String storeToken) {
+            this.storeToken = storeToken;
         }
     }
 }

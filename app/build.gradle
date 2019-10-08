@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'org.greenrobot.greendao'
 apply plugin: 'bugly'   //添加bugly的符号表
+apply plugin: 'com.mob.sdk'
 
 greendao {
     schemaVersion 14// 数据库版本号
@@ -14,7 +15,7 @@ bugly {
     debug = true
 }
 
-
+android.defaultConfig.javaCompileOptions.annotationProcessorOptions.includeCompileClasspath = true
 android {
     compileSdkVersion 28
     defaultConfig {
@@ -92,16 +93,21 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     implementation 'com.jakewharton:butterknife:8.8.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
+
     //----------------------------网络请求依赖----------------------------------
     implementation 'com.squareup.retrofit2:retrofit:2.5.0'
     implementation 'com.squareup.retrofit2:converter-scalars:2.5.0'
     implementation 'com.squareup.okhttp3:okhttp:3.12.0'
+
     //Retrofit通过GSON将结果转换为Bean对象
     implementation 'com.squareup.retrofit2:converter-gson:2.5.0'
+
     //okhttp拦截器
     implementation 'com.squareup.okhttp3:logging-interceptor:3.9.0'
+
     //图片加载框架
     implementation 'com.github.bumptech.glide:glide:3.7.0'
+
     //Rxjava rx Android
     implementation 'com.squareup.retrofit2:adapter-rxjava2:2.5.0'
     implementation 'io.reactivex.rxjava2:rxjava:2.2.5'
@@ -109,6 +115,7 @@ dependencies {
     implementation 'com.github.franmontiel:PersistentCookieJar:v1.0.0'
     implementation 'org.ligboy.retrofit2:converter-fastjson-android:2.1.0'
     implementation 'com.safframework.log:saf-logginginterceptor:1.3.3'
+
     //----------------------------网络请求依赖----------------------------------
     implementation 'com.polidea.rxandroidble2:rxandroidble:1.8.0'
     implementation 'com.jakewharton.rxrelay2:rxrelay:2.1.0'
@@ -119,17 +126,22 @@ dependencies {
     implementation 'com.flyco.tablayout:FlycoTabLayout_Lib:2.1.2@aar'
     implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.42'
     implementation 'com.android.support:recyclerview-v7:28.0.0-alpha1'
+
     //SmartRefreshLayout
     implementation 'com.scwang.smartrefresh:SmartRefreshLayout:1.1.0-alpha-14'
     implementation project(path: ':imagepicker')
+
     //mqtt
     implementation 'org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.1.1'
     implementation 'org.eclipse.paho:org.eclipse.paho.android.service:1.1.1'
+
     //zxing
     implementation 'com.king.zxing:zxing-lite:1.1.1'
     implementation 'com.android.support:design:28.0.0'
+
     //linphone库
     implementation project(path: ':linphoneLibrary')
+
     //米米网库
     implementation(name: 'cmapi_v2_0_0', ext: 'aar')
     implementation 'com.github.razerdp:BasePopup:2.1.9'
@@ -137,8 +149,10 @@ dependencies {
     implementation 'com.yarolegovich:discrete-scrollview:1.4.9'
     implementation 'com.yanzhenjie:recyclerview-swipe:1.1.4'
     implementation 'org.greenrobot:eventbus:3.1.1'
+
     //微信分享
-    implementation 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:+'
+
+    //    implementation 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:+'
     implementation 'org.greenrobot:greendao:3.2.2'
     implementation 'net.zetetic:android-database-sqlcipher:3.4.0@aar'
     implementation 'com.getui:sdk:2.13.0.0'
@@ -146,25 +160,37 @@ dependencies {
     implementation project(':linphoneLibrary')
     implementation project(':library:WheelPicker')
     implementation project(':library:Common')
+
     //   implementation 'com.getui:hwp:1.0.4'
     implementation 'com.getui:xmp:1.0.3'
     implementation files('libs/GetuiSDK-support-OPPO-1.0.2.jar')
     implementation 'com.getui:mzp:1.0.7'
+
     //选择器控件
-    implementation 'com.contrarywind:Android-PickerView:4.1.6'
+//    implementation 'com.contrarywind:Android-PickerView:4.1.6'
+
     //文件下载的SDK
     implementation 'com.liulishuo.filedownloader:library:1.7.6'
     implementation 'com.tencent.bugly:crashreport:latest.release'
+
     //其中latest.release指代最新Bugly SDK版本号，也可以指定明确的版本号，例如2.1.9
     implementation 'com.tencent.bugly:nativecrashreport:latest.release'
+
     //其中latest.release指代最新Bugly NDK版本号，也可以指定明确的版本号，例如3.0
     implementation 'com.tencent.bugly:crashreport:latest.release'
+
     // 其中latest.release指代最新Bugly SDK版本号，也可以指定明确的版本号，例如2.1.9
     implementation 'com.tencent.bugly:nativecrashreport:latest.release'
+
     //其中latest.release指代最新Bugly NDK版本号，也可以指定明确的版本号，例如3.0
     implementation project(':push:pushsdk_huawei')
 
     //日志功能
     implementation 'com.blankj:alog:1.9.1'
+    implementation project(':Store')
+    implementation project(':Core')
 
+
+    implementation "com.jakewharton:butterknife:8.4.0"
+    implementation "com.jakewharton:butterknife-compiler:8.4.0"
 }

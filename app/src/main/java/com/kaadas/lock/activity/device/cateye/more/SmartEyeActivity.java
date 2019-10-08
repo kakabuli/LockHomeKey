@@ -12,9 +12,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.bigkoo.pickerview.builder.OptionsPickerBuilder;
-import com.bigkoo.pickerview.listener.OnOptionsSelectListener;
-import com.bigkoo.pickerview.view.OptionsPickerView;
+import com.bigkoo.pickerview.OptionsPickerView;
 import com.google.gson.Gson;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
@@ -221,7 +219,7 @@ public class SmartEyeActivity extends BaseActivity<ISmartEyeView, SmartEyePresen
 
     private void initOptionPicker() {//条件选择器初始化
 
-        pvOptions = new OptionsPickerBuilder(this, new OnOptionsSelectListener() {
+        pvOptions = new OptionsPickerView.Builder(this, new OptionsPickerView.OnOptionsSelectListener() {
             @Override
             public void onOptionsSelect(int options1, int options2, int options3, View v) {
                 //返回的分别是三个级别的选中位置
@@ -248,7 +246,7 @@ public class SmartEyeActivity extends BaseActivity<ISmartEyeView, SmartEyePresen
                 .setCancelColor(Color.WHITE)
                 .setSubmitText(getString(R.string.confirm))
                 .setCancelText("")
-                .isRestoreItem(true)//切换时是否还原，设置默认选中第一项。
+//                .isRestoreItem(true)//切换时是否还原，设置默认选中第一项。
                 .isCenterLabel(false) //是否只显示中间选中项的label文字，false则每项item全部都带有label。
                 .setLabels(getString(R.string.next), getString(R.string.second_time), getString(R.string.second_time))
                 .build();

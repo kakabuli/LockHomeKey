@@ -60,6 +60,8 @@ import com.scwang.smartrefresh.layout.header.ClassicsHeader;
 import com.tencent.bugly.crashreport.CrashReport;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
+import com.yun.software.kaadas.Utils.ActivityCollectorUtil;
+import com.yun.software.kaadas.Utils.UserUtils;
 /*import com.uuzuche.lib_zxing.activity.ZXingLibrary;*/
 
 
@@ -90,7 +92,7 @@ import io.reactivex.subjects.PublishSubject;
  * Create By lxj  on 2019/1/7
  * Describe
  */
-public class MyApplication extends Application {
+public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication {
     private static MyApplication instance;
     private String token;
     private String uid;
@@ -358,11 +360,13 @@ public class MyApplication extends Application {
      *                     ....
      */
     public void tokenInvalid(boolean isShowDialog) {
+        ActivityCollectorUtil.finishAllActivity();
         LogUtils.e("token过期   ");
         SPUtils.put(KeyConstants.HEAD_PATH, "");
         boolean alreadyStart = false;
         Boolean appUpdate = (Boolean) SPUtils.get(SPUtils.APPUPDATE, false);
         String phone = (String) SPUtils.get(SPUtils.PHONEN, "");
+        UserUtils.setToken("");
         //退出登录  清除数据
         SPUtils.clear();
         if (appUpdate == true) {
