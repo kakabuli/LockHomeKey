@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="bg_color">#f2f2f2</color>
+    <color name="base_bg">#ffeeeeee</color>
+    <color name="base_msg_color">#ff999999</color>
+    <color name="dialog_loading_color">#60000000</color>
+
+    <color name="dialog_title">#212121</color>
+    <color name="dialog_btn_confirm">#fff36a5f</color>
+    <color name="dialog_btn_cancel">#212121</color>
+
+    <color name="tab_unselect">#c9c9c9</color>
+
+
+    <!-- Start: from outer -->
+    <color name="white">#FFFFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="blue_sky">#62c8f9</color>
+    <color name="gray">#666666</color>
+    <color name="transparent">#00000000</color>
+    <color name="color_333333">#333333</color>
+    <color name="commentColor">#FFFFFF</color>
+    <color name="title_21">#212121</color>
+    <color name="commentTextColor">#9e9e9e</color>
+    <color name="grey_light_ec">#ffececec</color>
+    <!-- End: from outer -->
+
+    <!--<color name="color_F8">#F8F8F8</color>-->
+    <!--fafafa-->
+    <color name="bg_state_color">#fafafa</color>
+</resources>
