@@ -26,7 +26,7 @@ public class ApiConstants {
     /**
      * 发布环境配置
      */
-    public static final EnvironmentConfig ENVIRONMENTCONFIG = EnvironmentConfig.EXTRANET;
+    public static final EnvironmentConfig ENVIRONMENTCONFIG = EnvironmentConfig.PRODUCTION;
 
     static {
         if (ENVIRONMENTCONFIG == EnvironmentConfig.PRODUCTION) {
