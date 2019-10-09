@@ -31,7 +31,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.github.chrisbanes.photoview.OnPhotoTapListener;
 import com.github.chrisbanes.photoview.PhotoView;
-import com.kaadas.lock.R;;import com.kaadas.lock.R2;;
+import com.kaadas.lock.store.R;;import com.kaadas.lock.store.R2;;
 import com.yun.software.kaadas.base.BaseActivity;
 
 import java.util.ArrayList;

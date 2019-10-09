@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import com.kaadas.lock.R;;import com.kaadas.lock.R2;;
+import com.kaadas.lock.store.R;;import com.kaadas.lock.store.R2;;
 
 import java.net.PortUnreachableException;
 

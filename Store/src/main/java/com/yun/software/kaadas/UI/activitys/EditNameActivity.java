@@ -5,7 +5,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 
-import com.kaadas.lock.R;;import com.kaadas.lock.R2;;
+import com.kaadas.lock.store.R;;import com.kaadas.lock.store.R2;;
 import com.yun.software.kaadas.base.BaseActivity;
 
 import butterknife.BindView;

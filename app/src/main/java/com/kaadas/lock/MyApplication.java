@@ -847,7 +847,7 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
                 .setLogHeadSwitch(false)// 设置log头信息开关，默认为开
                 .setLog2FileSwitch(true)// 打印log时是否存到文件的开关，默认关
                 .setDir(new File(getExternalFilesDir("").getAbsolutePath() + File.separator + "", "LogFile").getPath())// 当自定义路径为空时，写入应用的/cache/log/目录中
-                .setFilePrefix("kaadas-")// 当文件前缀为空时，默认为"alog"，即写入文件为"alog-MM-dd.txt"
+                .setFilePrefix("kaadas-ALog-")// 当文件前缀为空时，默认为"alog"，即写入文件为"alog-MM-dd.txt"
                 .setBorderSwitch(false)// 输出日志是否带边框开关，默认开
                 .setSingleTagSwitch(false)// 一条日志仅输出一条，默认开，为美化 AS 3.1.0 的 Logcat
                 .setConsoleFilter(ALog.V)// log的控制台过滤器，和logcat过滤器同理，默认Verbose

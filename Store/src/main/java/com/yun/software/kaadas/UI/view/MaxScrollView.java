@@ -6,7 +6,7 @@ import android.support.v4.widget.NestedScrollView;
 import android.util.AttributeSet;
 import android.view.WindowManager;
 
-import com.kaadas.lock.R;;import com.kaadas.lock.R2;;
+import com.kaadas.lock.store.R;
 
 
 /**

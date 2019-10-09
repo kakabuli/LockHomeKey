@@ -8,7 +8,7 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import com.jaeger.library.StatusBarUtil;
-import com.kaadas.lock.R;
+import com.kaadas.lock.store.R;
 import com.yun.software.kaadas.Http.DisPostManager;
 import com.yun.software.kaadas.Utils.ActivityCollectorUtil;
 

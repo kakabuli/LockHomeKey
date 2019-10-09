@@ -7,7 +7,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.kaadas.lock.R;;import com.kaadas.lock.R2;;
+import com.kaadas.lock.store.R;;import com.kaadas.lock.store.R2;;
 import com.yun.software.kaadas.UI.bean.AfterSaleInfor;
 import com.yun.software.kaadas.UI.bean.IndentInfo;
 import com.yun.software.kaadas.UI.view.OrderItemListView2;

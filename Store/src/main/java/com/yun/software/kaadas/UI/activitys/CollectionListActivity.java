@@ -17,7 +17,7 @@ import com.scwang.smartrefresh.layout.listener.SimpleMultiPurposeListener;
 import com.yun.software.kaadas.Http.ApiConstants;
 import com.yun.software.kaadas.Http.HttpManager;
 import com.yun.software.kaadas.Http.OnIResponseListener;
-import com.kaadas.lock.R;;import com.kaadas.lock.R2;;
+import com.kaadas.lock.store.R;;import com.kaadas.lock.store.R2;;
 import com.yun.software.kaadas.UI.adapter.CollectionAdapter;
 import com.yun.software.kaadas.UI.adapter.FootprintAdapter;
 import com.yun.software.kaadas.UI.bean.BaseBody;

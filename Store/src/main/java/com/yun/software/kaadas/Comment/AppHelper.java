@@ -6,7 +6,7 @@ import android.view.Gravity;
 
 import com.yun.software.kaadas.Http.ApiConstants;
 import com.yun.software.kaadas.Http.CustomSignInterceptor;
-import com.kaadas.lock.R;;import com.kaadas.lock.R2;;
+import com.kaadas.lock.store.R;;import com.kaadas.lock.store.R2;;
 import com.zhouyou.http.EasyHttp;
 import com.zhouyou.http.cache.converter.SerializableDiskConverter;
 import com.zhouyou.http.model.HttpHeaders;

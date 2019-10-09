@@ -1,11 +1,16 @@
 package com.kaadas.lock.utils;
+import android.os.Build;
 import android.util.Log;
+
+import com.blankj.ALog;
 
 /**
  * Created by walter on 2016/6/30.
  */
 public class LogUtils {
-	
+
+
+	private static final boolean isOutFile = false;
 	/**
 	 * 日志输出级别NONE
 	 */
@@ -34,7 +39,6 @@ public class LogUtils {
 	 * 日志输出时的TAG
 	 */
 	private static String mTag = "-凯迪仕-";
-//    private static String mTag = "---交易---";
 	/**
 	 * 是否允许输出log 的级别
 	 */
@@ -53,8 +57,7 @@ public class LogUtils {
 			Log.v(mTag, msg);
 		}
 	}
-	
-	
+
 	/**
 	 * 以级别为 d 的形式输出LOG
 	 */
@@ -93,7 +96,9 @@ public class LogUtils {
 		}
 	}
 	
-	
+
+
+
 	/**
 	 * 以级别为 w 的形式输出Throwable
 	 */
@@ -119,7 +124,11 @@ public class LogUtils {
 	 */
 	public static void e(String msg) {
 		if (mDebuggable >= LEVEL_ERROR) {
-			Log.e(mTag, msg);
+			if (isOutFile){
+				ALog.e( msg);
+			}else {
+				Log.e(mTag, msg);
+			}
 		}
 	}
 	/**
@@ -127,7 +136,12 @@ public class LogUtils {
 	 */
 	public static void e(String TAG, String msg) {
 		if (mDebuggable >= LEVEL_ERROR) {
-			Log.e(mTag+TAG, msg);
+			if (isOutFile){
+				ALog.e(mTag+TAG, msg);
+			}else {
+				Log.e(mTag+TAG, msg);
+			}
+
 		}
 	}
 

@@ -8,8 +8,8 @@ import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.kaadas.lock.store.R;
 import com.yun.software.kaadas.Comment.MyApplication;
-import com.kaadas.lock.R;;import com.kaadas.lock.R2;;
 import com.yun.software.kaadas.UI.bean.GoodsBean;
 import com.yun.software.kaadas.UI.bean.KanjiaMine;
 

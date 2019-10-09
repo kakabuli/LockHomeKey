@@ -2,7 +2,7 @@ package com.yun.software.kaadas.base;
 
 import android.os.Bundle;
 
-import com.kaadas.lock.R;;import com.kaadas.lock.R2;;
+import com.kaadas.lock.store.R;;import com.kaadas.lock.store.R2;;
 
 import la.xiong.androidquick.tool.LogUtils;
 import la.xiong.androidquick.tool.ReflectUtil;

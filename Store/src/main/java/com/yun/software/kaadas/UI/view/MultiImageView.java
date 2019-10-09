@@ -8,7 +8,7 @@ import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
 
 
-import com.kaadas.lock.R;;import com.kaadas.lock.R2;;
+import com.kaadas.lock.store.R;;import com.kaadas.lock.store.R2;;
 
 import java.util.List;
 

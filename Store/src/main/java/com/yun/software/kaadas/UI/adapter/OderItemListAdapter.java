@@ -9,7 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
-import com.kaadas.lock.R;;import com.kaadas.lock.R2;;
+import com.kaadas.lock.store.R;;import com.kaadas.lock.store.R2;;
 import com.yun.software.kaadas.UI.activitys.ApplyDrawBackActivity;
 import com.yun.software.kaadas.UI.activitys.ApplySaleAfterActivity;
 import com.yun.software.kaadas.UI.bean.IndentInfo;
