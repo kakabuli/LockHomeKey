@@ -27,7 +27,7 @@ import com.yalantis.ucrop.UCropActivity;
 import com.yun.software.kaadas.Http.ApiConstants;
 import com.yun.software.kaadas.Http.HttpManager;
 import com.yun.software.kaadas.Http.OnIResponseListener;
-import com.kaadas.lock.R;;import com.kaadas.lock.R2;;
+import com.kaadas.lock.store.R;;import com.kaadas.lock.store.R2;;
 import com.yun.software.kaadas.UI.adapter.CommentImgsAdapter;
 import com.yun.software.kaadas.UI.bean.FeedPicture;
 import com.yun.software.kaadas.UI.bean.HotkeyBean;

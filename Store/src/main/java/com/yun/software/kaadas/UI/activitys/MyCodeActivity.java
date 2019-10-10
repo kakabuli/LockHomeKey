@@ -4,8 +4,9 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.kaadas.lock.store.R;
+import com.kaadas.lock.store.R2;
 import com.yun.software.kaadas.Http.ApiConstants;
-import com.kaadas.lock.R;;import com.kaadas.lock.R2;;
 import com.yun.software.kaadas.UI.bean.User;
 import com.yun.software.kaadas.Utils.ImageUtils;
 import com.yun.software.kaadas.Utils.UserUtils;

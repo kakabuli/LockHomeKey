@@ -10,7 +10,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.kaadas.lock.R;;import com.kaadas.lock.R2;;
+import com.kaadas.lock.store.R;;import com.kaadas.lock.store.R2;;
 import com.yun.software.kaadas.UI.adapter.SaleAdaterTypeAdapter;
 import com.yun.software.kaadas.UI.bean.HotkeyBean;
 

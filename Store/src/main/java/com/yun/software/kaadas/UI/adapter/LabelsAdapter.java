@@ -4,7 +4,7 @@ import android.widget.Button;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
-import com.kaadas.lock.R;;import com.kaadas.lock.R2;;
+import com.kaadas.lock.store.R;
 import com.yun.software.kaadas.UI.bean.ActDetails;
 import com.yun.software.kaadas.UI.bean.HotkeyBean;
 import com.yun.software.kaadas.UI.view.CheckableButton;

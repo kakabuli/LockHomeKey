@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 
-import com.kaadas.lock.R;;import com.kaadas.lock.R2;;
+import com.kaadas.lock.store.R;;import com.kaadas.lock.store.R2;;
 import com.yun.software.kaadas.UI.adapter.BaseMainFragmentAdapter;
 import com.yun.software.kaadas.UI.fragment.CouponNewFragment;
 import com.yun.software.kaadas.UI.fragment.CouponOldFragment;

@@ -36,16 +36,16 @@ android {
 
 
 
-    signingConfigs {
-        debug {
-            keyAlias 'kaadas'
-            keyPassword 'kaadas123'
-            storePassword 'kaadas123'
-            storeFile file('keystore/kaadas.jks')
-            storeFile file('C:/softwareDemo/kaddas/app/kaadas.jks')
-            storeFile file('./kaadas.jks')
-        }
-    }
+//    signingConfigs {
+//        debug {
+//            keyAlias 'kaadas'
+//            keyPassword 'kaadas123'
+//            storePassword 'kaadas123'
+//            storeFile file('keystore/kaadas.jks')
+//            storeFile file('C:/softwareDemo/kaddas/app/kaadas.jks')
+//            storeFile file('./kaadas.jks')
+//        }
+//    }
 
     packagingOptions {
         exclude 'META-INF/maven/com.alibaba.fastjson/pom.xml'
@@ -59,24 +59,15 @@ android {
     buildTypes {
         release {
             debuggable false
-            signingConfig signingConfigs.debug
             //混淆
             minifyEnabled false
             //Zipalign优化 是否使用zipalign工具压缩
             zipAlignEnabled false
             // 移除无用的resource文件
             shrinkResources false
-
-//            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
-        debug {
-            debuggable true
-            signingConfig signingConfigs.debug
-            minifyEnabled false
-            zipAlignEnabled false
-            shrinkResources false
-        }
+
 //        android.applicationVariants.all { variant ->
 //            variant.outputs.all {
 //                outputFileName = "kaadas-${defaultConfig.versionCode}-${defaultConfig.versionName}-${releaseTime()}.apk"
@@ -95,8 +86,8 @@ dependencies {
     //noinspection GradleCompatible
     implementation 'com.android.support:appcompat-v7:28.0.0'
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
-    implementation project(':Core')
-    implementation project(':refresh')
+    api project(':Core')
+    api project(':refresh')
     implementation project(':rxeasyhttp')
     implementation 'com.github.hackware1993:MagicIndicator:1.5.0'
     implementation 'com.flyco.tablayout:FlycoTabLayout_Lib:2.1.2@aar'

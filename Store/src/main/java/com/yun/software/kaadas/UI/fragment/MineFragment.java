@@ -1,6 +1,6 @@
 package com.yun.software.kaadas.UI.fragment;
 
-import com.kaadas.lock.R;;import com.kaadas.lock.R2;;
+import com.kaadas.lock.store.R;;import com.kaadas.lock.store.R2;;
 import com.yun.software.kaadas.base.BaseFragment;
 
 public class MineFragment extends BaseFragment {

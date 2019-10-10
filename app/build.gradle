@@ -23,7 +23,7 @@ android {
         minSdkVersion 22
         targetSdkVersion 26
         versionCode 201909250
-        versionName "3.4.8"
+        versionName "3.4.9"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         flavorDimensions "versionCode"
         multiDexEnabled true
@@ -47,6 +47,10 @@ android {
                 MEIZU_APP_ID    : "118878",
                 MEIZU_APP_KEY   : "6121ecee371449c2b536b58452d78cb8"
         ]
+    }
+
+    dexOptions {
+        preDexLibraries = false
     }
     //多渠道打包
     productFlavors {
@@ -128,7 +132,7 @@ dependencies {
     implementation 'com.android.support:recyclerview-v7:28.0.0-alpha1'
 
     //SmartRefreshLayout
-    implementation 'com.scwang.smartrefresh:SmartRefreshLayout:1.1.0-alpha-14'
+//    implementation 'com.scwang.smartrefresh:SmartRefreshLayout:1.1.0-alpha-14'
     implementation project(path: ':imagepicker')
 
     //mqtt
@@ -187,8 +191,9 @@ dependencies {
 
     //日志功能
     implementation 'com.blankj:alog:1.9.1'
+    //依赖商城
     implementation project(':Store')
-    implementation project(':Core')
+//    implementation project(':Core')
 
 
     implementation "com.jakewharton:butterknife:8.4.0"

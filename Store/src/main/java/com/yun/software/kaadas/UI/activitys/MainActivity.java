@@ -18,7 +18,7 @@ import com.flyco.tablayout.listener.CustomTabEntity;
 import com.flyco.tablayout.listener.OnTabSelectListener;
 import com.jaeger.library.StatusBarUtil;
 import com.yun.software.kaadas.Comment.Constans;
-import com.kaadas.lock.R;;import com.kaadas.lock.R2;;
+import com.kaadas.lock.store.R;;import com.kaadas.lock.store.R2;;
 import com.yun.software.kaadas.UI.bean.TabEntity;
 import com.yun.software.kaadas.UI.fragment.DeviceFragment;
 import com.yun.software.kaadas.UI.fragment.HomeFragment;

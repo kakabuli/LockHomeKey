@@ -11,7 +11,7 @@ import android.widget.Button;
 import com.yun.software.kaadas.Comment.Constans;
 import com.yun.software.kaadas.Comment.MyApplication;
 import com.yun.software.kaadas.Comment.PreferencesConstans;
-import com.kaadas.lock.R;;import com.kaadas.lock.R2;;
+import com.kaadas.lock.store.R;;import com.kaadas.lock.store.R2;;
 import com.yun.software.kaadas.Utils.CommonUtils;
 import com.yun.software.kaadas.Utils.UserUtils;
 import com.yun.software.kaadas.base.BaseActivity;

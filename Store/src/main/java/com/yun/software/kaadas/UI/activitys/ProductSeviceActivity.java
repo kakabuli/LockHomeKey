@@ -2,7 +2,7 @@ package com.yun.software.kaadas.UI.activitys;
 
 import android.view.View;
 
-import com.kaadas.lock.R;;import com.kaadas.lock.R2;;
+import com.kaadas.lock.store.R;;import com.kaadas.lock.store.R2;;
 import com.yun.software.kaadas.base.BaseActivity;
 
 import butterknife.OnClick;
