@@ -239,8 +239,11 @@ public class   KeyConstants {
     //网关的昵称
     public static final String GATEWAY_NICKNAME="gatewayNickName";
     public static final String IS_GATEAWAY="is_gateway";
+    // 大网关6015
+    // 小的6030和6032
     public static final String SMALL_GW="6030";
     public static final String SMALL_GW2="6032";
+    public static final String BIG_GW="6010";
     //是否是管理员
     public static final String IS_ADMIN="isadmin";
     //是否是管理员
