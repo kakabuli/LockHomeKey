@@ -198,4 +198,5 @@ dependencies {
 
     implementation "com.jakewharton:butterknife:8.4.0"
     implementation "com.jakewharton:butterknife-compiler:8.4.0"
+
 }
