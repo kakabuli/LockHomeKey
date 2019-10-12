@@ -11,15 +11,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
+
 import com.kaadas.lock.R;
 import com.kaadas.lock.bean.Forecast;
 import com.kaadas.lock.mvp.presenter.cateye.VideoPresenter;
 import com.kaadas.lock.publiclibrary.bean.GwLockInfo;
-
 
 
 
@@ -81,37 +77,31 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.ViewHo
                  //已经滑动
                  if(!presenter.isConnectedEye){
                      // 未呼通, 设备不在线
-                     Glide.with(holder.itemView.getContext())
-                             .load(R.mipmap.video_no_online)
-                             .into(holder.imageView);
+                     holder.imageView.setBackgroundResource(R.mipmap.video_no_online);
+
                      holder.textView.setTextColor(Color.parseColor("#ABABAB"));
                  } else if(gwLockInfo.getServerInfo().getEvent_str().equals("offline")){
-                     Glide.with(holder.itemView.getContext())
-                             .load(R.mipmap.video_no_online)
-                             .into(holder.imageView);
+                     holder.imageView.setBackgroundResource(R.mipmap.video_no_online);
+
                      holder.textView.setTextColor(Color.parseColor("#ABABAB"));
                  } else {
                      // 已呼通
-                     Glide.with(holder.itemView.getContext())
-                             .load(R.mipmap.lock_on_select)
-                             .into(holder.imageView);
+                     holder.imageView.setBackgroundResource(R.mipmap.lock_on_select);
+
                      holder.textView.setTextColor(Color.parseColor("#70333333"));
                  }
              }else {
                  if(!presenter.isConnectedEye){  //未呼通
-                     Glide.with(context)
-                             .load(R.mipmap.video_no_online_small)
-                             .into(holder.imageView);
+                     holder.imageView.setBackgroundResource(R.mipmap.video_no_online_small);
+
                      holder.textView.setTextColor(Color.parseColor("#8CABABAB"));
                  }else if(gwLockInfo.getServerInfo().getEvent_str().equals("offline")){
-                     Glide.with(holder.itemView.getContext())
-                             .load(R.mipmap.video_no_online)
-                             .into(holder.imageView);
+                     holder.imageView.setBackgroundResource(R.mipmap.video_no_online);
+
                      holder.textView.setTextColor(Color.parseColor("#ABABAB"));
                  }else {
-                     Glide.with(context)
-                             .load(R.mipmap.lock_on_select)
-                             .into(holder.imageView);
+                     holder.imageView.setBackgroundResource(R.mipmap.lock_on_select);
+
                      holder.textView.setTextColor(Color.parseColor("#70333333"));
                  }
              }
@@ -119,21 +109,17 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.ViewHo
          }else {
               // 已经滑动了刷新
              if(!presenter.isConnectedEye ){
+                 holder.imageView.setBackgroundResource(R.mipmap.video_no_online);
                  // 未呼通
-                 Glide.with(holder.itemView.getContext())
-                         .load(R.mipmap.video_no_online)
-                         .into(holder.imageView);
                  holder.textView.setTextColor(Color.parseColor("#ABABAB"));
              } else if(gwLockInfo.getServerInfo().getEvent_str().equals("offline")){
-                 Glide.with(holder.itemView.getContext())
-                         .load(R.mipmap.video_no_online)
-                         .into(holder.imageView);
+                 holder.imageView.setBackgroundResource(R.mipmap.video_no_online);
+
                  holder.textView.setTextColor(Color.parseColor("#ABABAB"));
              } else {
                  // 已呼通
-                 Glide.with(holder.itemView.getContext())
-                         .load(R.mipmap.lock_on_select)
-                         .into(holder.imageView);
+                 holder.imageView.setBackgroundResource(R.mipmap.lock_on_select);
+
                  holder.textView.setTextColor(Color.parseColor("#70333333"));
              }
          }
@@ -174,14 +160,10 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.ViewHo
             GwLockInfo gwLockInfo = data.get(position);
             isScroll=true;
             if(!presenter.isConnectedEye || gwLockInfo.getServerInfo().getEvent_str().equals("offline")){  //未呼通
-                Glide.with(context)
-                        .load(R.mipmap.video_no_online)
-                        .into(imageView);
+                imageView.setBackgroundResource(R.mipmap.video_no_online);
                 textView.setTextColor(Color.parseColor("#ABABAB"));
             }else {
-                Glide.with(context)
-                        .load(R.mipmap.lock_select)
-                        .into(imageView);
+                imageView.setBackgroundResource(R.mipmap.lock_select);
                 textView.setTextColor(Color.parseColor("#333333"));
             }
 
@@ -191,14 +173,10 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.ViewHo
             GwLockInfo gwLockInfo = data.get(position);
             isScroll=true;
             if(!presenter.isConnectedEye || gwLockInfo.getServerInfo().getEvent_str().equals("offline")){  //未呼通
-                Glide.with(context)
-                        .load(R.mipmap.video_no_online_small)
-                        .into(imageView);
+                imageView.setBackgroundResource(R.mipmap.video_no_online_small);
                 textView.setTextColor(Color.parseColor("#8CABABAB"));
             }else {
-                Glide.with(context)
-                        .load(R.mipmap.lock_on_select)
-                        .into(imageView);
+                imageView.setBackgroundResource(R.mipmap.video_no_online_small);
                 textView.setTextColor(Color.parseColor("#70333333"));
             }
 

@@ -30,6 +30,7 @@ public class CatEyeServiceInfo {
     private String gatewayId;
     private String uid;
 
+
     @Generated(hash = 327214530)
     public CatEyeServiceInfo(String deviceIdUid, String deviceId, String SW,
             String device_type, String event_str, String ipaddr, String macaddr,

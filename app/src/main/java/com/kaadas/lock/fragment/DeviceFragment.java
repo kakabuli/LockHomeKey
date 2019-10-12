@@ -257,7 +257,8 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                                     serverGatewayInfo.getMePwd(), serverGatewayInfo.getMeBindState(), uid,serverGatewayInfo.getModel());
                             daoSession.getGatewayServiceInfoDao().insertOrReplace(gatewayServiceInfo);
                             //咪咪网未绑定
-                            if (gatewayInfo.getServerInfo().getMeBindState() != 1) {
+                            if (gatewayInfo.getServerInfo().getMeBindState() != 1  && gatewayServiceInfo.getModel()!=null &&
+                                    gatewayServiceInfo.getModel().equals(KeyConstants.BIG_GW)) {
                                 //需要绑定咪咪网
                                 String deviceSN = gatewayInfo.getServerInfo().getDeviceSN();
                                 mPresenter.bindMimi(deviceSN, deviceSN);
