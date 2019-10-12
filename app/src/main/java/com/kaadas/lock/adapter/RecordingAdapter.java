@@ -9,6 +9,7 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.kaadas.lock.MyApplication;
@@ -18,6 +19,7 @@ import com.kaadas.lock.utils.PirConst;
 import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.SPUtils2;
 import com.kaadas.lock.utils.db.MediaItem;
+import com.kaadas.lock.widget.image.CircleTransform;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -49,11 +51,23 @@ public class RecordingAdapter extends BaseQuickAdapter<MediaItem, BaseViewHolder
         String name= (String) SPUtils2.get(mContext,key,"");
 		helper.setText(R.id.pir_img_time, showFormater.format(new Date(currentTime)));
 
-                 Glide.with(mContext).load(imgPath)
-				.error(R.mipmap.pre_video_image)
-				.diskCacheStrategy(DiskCacheStrategy.NONE)
-				.placeholder(R.mipmap.pre_video_image)
-				.into((ImageView) helper.getView(R.id.pir_img_icon));
+
+        RequestOptions options = new RequestOptions()
+                .placeholder(R.mipmap.pre_video_image)       //加载成功之前占位图
+                .error(R.mipmap.pre_video_image)          //加载错误之后的错误图
+                .diskCacheStrategy(DiskCacheStrategy.NONE);
+
+
+        Glide.with(mContext).load(imgPath)
+                .apply(options)
+                .into((ImageView) helper.getView(R.id.pir_img_icon));
+
+
+//        Glide.with(mContext).load(imgPath)
+//				.error(R.mipmap.pre_video_image)
+//				.diskCacheStrategy(DiskCacheStrategy.NONE)
+//				.placeholder(R.mipmap.pre_video_image)
+//				.into((ImageView) helper.getView(R.id.pir_img_icon));
 
 
                  if(item.getMediaType()==2){  //图片

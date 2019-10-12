@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.kaadas.lock.MyApplication;
@@ -71,12 +72,19 @@ public class PirHistoryAdapter extends BaseQuickAdapter<String, BaseViewHolder> 
 //				.setImageResource(R.mipmap.pir_history_item_default);
 //		}
 
-		Glide.with(mContext).load(imgPath)
-				.error(R.mipmap.pir_history_item_default)
-				.diskCacheStrategy(DiskCacheStrategy.NONE)
-				.placeholder(R.mipmap.pir_history_item_default)
-				.into((ImageView) helper.getView(R.id.pir_img_icon));
 
+		RequestOptions options = new RequestOptions()
+				.placeholder(R.mipmap.pir_history_item_default)      //加载成功之前占位图
+				.error(R.mipmap.pir_history_item_default)      //加载错误之后的错误图
+				.diskCacheStrategy(DiskCacheStrategy.NONE);
+
+//		Glide.with(mContext).load(imgPath)
+//				.error(R.mipmap.pir_history_item_default)
+//				.diskCacheStrategy(DiskCacheStrategy.NONE)
+//				.placeholder(R.mipmap.pir_history_item_default)
+//				.into((ImageView) helper.getView(R.id.pir_img_icon));
+
+		Glide.with(mContext).load(imgPath).apply(options).into((ImageView) helper.getView(R.id.pir_img_icon));
 
 
 		if(!TextUtils.isEmpty(result)){
