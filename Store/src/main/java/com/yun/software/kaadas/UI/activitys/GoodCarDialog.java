@@ -42,6 +42,7 @@ import la.xiong.androidquick.ui.widget.writeDialog.BottomDialog;
 
 import static com.yun.software.kaadas.UI.activitys.ShopDetailsNewActivity.TYPE_KANJIA;
 import static com.yun.software.kaadas.UI.activitys.ShopDetailsNewActivity.TYPE_NORMAL;
+import static la.xiong.androidquick.http.HeaderInterceptor.MESSAGE_LOGINOUT;
 
 /**
  * Created by yanliang
@@ -211,8 +212,9 @@ public class GoodCarDialog implements View.OnClickListener {
 
         } else if (i == R.id.add_shopcart) {
             if (TextUtils.isEmpty(UserUtils.getToken())) {
-                Intent intent = new Intent(mContext, WxLoginActivity.class);
-                mContext.startActivity(intent);
+//                Intent intent = new Intent(mContext, WxLoginActivity.class);
+//                mContext.startActivity(intent);
+                EventBus.getDefault().post(new EventCenter(MESSAGE_LOGINOUT,"relogin"));
                 return;
             }
 
@@ -220,8 +222,9 @@ public class GoodCarDialog implements View.OnClickListener {
 
         } else if (i == R.id.buy_now) {
             if (TextUtils.isEmpty(UserUtils.getToken())) {
-                Intent intent = new Intent(mContext, WxLoginActivity.class);
-                mContext.startActivity(intent);
+//                Intent intent = new Intent(mContext, WxLoginActivity.class);
+//                mContext.startActivity(intent);
+                EventBus.getDefault().post(new EventCenter(MESSAGE_LOGINOUT,"relogin"));
                 return;
             }
 

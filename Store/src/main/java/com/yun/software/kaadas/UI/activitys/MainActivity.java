@@ -233,15 +233,14 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void onEventComing(EventCenter eventCenter) {
-        super.onEventComing(eventCenter);
-        if (eventCenter.getEventCode() == Constans.RELOGIN){
-            readyGo(WxLoginActivity.class);
-            UserUtils.setToken("");
-
-        }else if (eventCenter.getEventCode() == Constans.MESSAGE_GOTO_HOME){
-            selectIndex = 0;
-            isSwitch = true;
-        }
+//        super.onEventComing(eventCenter);
+//        if (eventCenter.getEventCode() == Constans.RELOGIN){
+//            readyGo(WxLoginActivity.class);
+//            UserUtils.setToken("");
+//        }else if (eventCenter.getEventCode() == Constans.MESSAGE_GOTO_HOME){
+//            selectIndex = 0;
+//            isSwitch = true;
+//        }
 
     }
 

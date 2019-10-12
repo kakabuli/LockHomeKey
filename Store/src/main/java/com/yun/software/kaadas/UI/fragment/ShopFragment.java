@@ -89,7 +89,6 @@ import la.xiong.androidquick.ui.eventbus.EventCenter;
 import static la.xiong.androidquick.http.HeaderInterceptor.MESSAGE_LOGINOUT;
 
 public class ShopFragment extends BaseFragment {
-    View inflateView_tuila,inflateView_lingdong,inflateView_zhongchou,inflateView_pintuan,inflateView_miaosha,inflateView_kanjia;
     @BindView(R2.id.refreshLayout)
     SmartRefreshLayout mRefreshLayout;
 
@@ -568,8 +567,6 @@ public class ShopFragment extends BaseFragment {
 //足迹
         if (i == R.id.ll_search) {
             readyGo(SearchActivity.class);
-//                linChild.reSetlayoutView();
-
         } else if (i == R.id.rl_new_msg) {
             if (TextUtils.isEmpty(UserUtils.getToken())) {
 //                readyGo(WxLoginActivity.class);
@@ -625,7 +622,8 @@ public class ShopFragment extends BaseFragment {
 
         } else if (i == R.id.rl_shopcart) {
             if (TextUtils.isEmpty(UserUtils.getToken())) {
-                readyGo(WxLoginActivity.class);
+//                readyGo(WxLoginActivity.class);
+                EventBus.getDefault().post(new EventCenter(MESSAGE_LOGINOUT,"relogin"));
                 return;
             }
             Bundle bundle2 = new Bundle();

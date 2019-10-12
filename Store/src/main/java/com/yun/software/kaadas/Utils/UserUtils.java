@@ -28,7 +28,6 @@ public class UserUtils {
 
     public static String getToken() {
         return SPUtils.getInstance().getString(PreferencesConstans.TOKEN, "");
-//        return "eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIxMSIsImlzcyI6Imh0dHBzOi8vd3d3Lmthbmdhcm9vYmFieWNhci5jb20iLCJzdWIiOiIxMzY3MDA5MTI3OSIsImlhdCI6MTU2OTQ2MjcwOX0.23FbT8QA8XDsXqlam_CnqTZxJoqwD2qixIu0SvO42TM";
     }
 
     public static void setToken(String token) {

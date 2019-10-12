@@ -1370,7 +1370,6 @@ public class BleService extends Service {
                 LogUtils.e("获取到远程设备   " + remoteDevice.getAddress() + "   设备名是  " + remoteDevice.getName());
                 deviceScanSubject.onNext(remoteDevice);
             } else {
-                //LogUtils.e("获取到远程设备   失败   ");
                 handler.postDelayed(getRemoteDeviceRunnable, 1000);
             }
         }
