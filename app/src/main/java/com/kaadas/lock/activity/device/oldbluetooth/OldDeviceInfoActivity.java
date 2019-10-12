@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.mvp.mvpbase.BaseBleActivity;
+import com.kaadas.lock.mvp.mvpbase.BaseBleCheckInfoActivity;
 import com.kaadas.lock.mvp.presenter.ble.OldDeviceInfoPresenter;
 import com.kaadas.lock.mvp.view.IOldDeviceInfoView;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
@@ -35,7 +36,8 @@ import com.kaadas.lock.utils.ToastUtil;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class OldDeviceInfoActivity extends BaseBleActivity<IOldDeviceInfoView, OldDeviceInfoPresenter> implements IOldDeviceInfoView, View.OnClickListener {
+public class OldDeviceInfoActivity extends BaseBleCheckInfoActivity<IOldDeviceInfoView, OldDeviceInfoPresenter>
+        implements IOldDeviceInfoView, View.OnClickListener {
 
 
     @BindView(R.id.iv_back)
@@ -119,7 +121,6 @@ public class OldDeviceInfoActivity extends BaseBleActivity<IOldDeviceInfoView, O
                     }
                     return;
                 }
-//                sn = "BT02191410009";
                 mPresenter.uploadBleSoftware(sn, version);
                 break;
             case R.id.rl_device_name:
@@ -192,7 +193,6 @@ public class OldDeviceInfoActivity extends BaseBleActivity<IOldDeviceInfoView, O
         String[] split = data.split("-");
         String strModuleHardwareVersion = split[0];
         String strLockHardwareVersion = split[1];
-//        tvBluetoothModuleVersion.setText(strModuleHardwareVersion);
         tvLockFirmwareVersion.setText(strLockHardwareVersion);
     }
 
@@ -233,94 +233,6 @@ public class OldDeviceInfoActivity extends BaseBleActivity<IOldDeviceInfoView, O
         ToastUtil.getInstance().showShort(R.string.read_device_info_fail);
     }
 
-    @Override
-    public void noUpdateConfig() {
-        //当前已是最新版本
-        AlertDialogUtil.getInstance().noEditSingleButtonDialog(this, getString(R.string.hint)
-                , getString(R.string.already_newest_version), getString(R.string.confirm), new AlertDialogUtil.ClickListener() {
-                    @Override
-                    public void left() {
-
-                    }
-
-                    @Override
-                    public void right() {
-
-                    }
-                });
-    }
-
-    @Override
-    public void needUpdate(OTAResult.UpdateFileInfo updateFileInfo) {
-        //todo 蓝牙升级
-        hiddenLoading();
-        if (bleLockInfo.getBleType() == 1) { //Ti升级
-
-        } else if (bleLockInfo.getBleType() == 2) {  //P6升级
-
-        } else {
-            ToastUtil.getInstance().showLong(getString(R.string.check_update_failed));
-        }
-        AlertDialogUtil.getInstance().noEditTwoButtonDialog(this, getString(R.string.hint)
-                , getString(R.string.hava_ble_new_version), getString(R.string.cancel), getString(R.string.confirm), new AlertDialogUtil.ClickListener() {
-                    @Override
-                    public void left() {
-
-                    }
-
-                    @Override
-                    public void right() {
-                        SPUtils.put(KeyConstants.DEVICE_SN + bleLockInfo.getServerLockInfo().getMacLock(), sn);  //Key
-                        SPUtils.put(KeyConstants.BLE_VERSION + bleLockInfo.getServerLockInfo().getMacLock(), version); //Key
-                        LogUtils.e("升级的版本信息是   " + sn + "   下载链接是   " + updateFileInfo.getFileUrl());
-                        LogUtils.e("OTA  升级  断开连接");
-                        MyApplication.getInstance().getBleService().release();  //  OTA  升级  断开连接
-                        Intent intent = new Intent();
-                        intent.putExtra(OtaConstants.bindUrl, updateFileInfo.getFileUrl());
-                        intent.putExtra(OtaConstants.deviceMac, bleLockInfo.getServerLockInfo().getMacLock()); //Key
-                        intent.putExtra(OtaConstants.password1, bleLockInfo.getServerLockInfo().getPassword1());
-                        intent.putExtra(OtaConstants.password2, bleLockInfo.getServerLockInfo().getPassword2());
-                        if (bleLockInfo.getBleType() == 1) { //Ti升级
-                            intent.putExtra(OtaConstants.fileName, "Kaadas_" + updateFileInfo.getFileVersion() + "_" + updateFileInfo.getFileMd5() + ".bin");
-                            intent.setClass(OldDeviceInfoActivity.this, TiOtaUpgradeActivity.class);
-                        } else if (bleLockInfo.getBleType() == 2) {  //P6升级
-                            intent.putExtra(OtaConstants.fileName, "Kaadas_" + updateFileInfo.getFileVersion() + "_" + updateFileInfo.getFileMd5() + ".cyacd2");
-                            intent.setClass(OldDeviceInfoActivity.this, P6OtaUpgradeActivity.class);
-                        }
-                        //还未完善   不跳转
-                        startActivity(intent);
-                    }
-                }
-        );
-
-
-    }
-
-    @Override
-    public void checkInfoFailed(String errorCode) {
-        hiddenLoading();
-        if ("401".equals(errorCode)) {  //数据参数不对
-            ToastUtil.getInstance().showLong(getString(R.string.data_params_error));
-        } else if ("102".equals(errorCode)) { //SN格式不正确
-            ToastUtil.getInstance().showLong(R.string.sn_error);
-        } else if ("210".equals(errorCode)) { //查无结果
-            //当前已是最新版本
-            AlertDialogUtil.getInstance().noEditSingleButtonDialog(this, getString(R.string.hint)
-                    , getString(R.string.already_newest_version), getString(R.string.confirm), new AlertDialogUtil.ClickListener() {
-                        @Override
-                        public void left() {
-
-                        }
-
-                        @Override
-                        public void right() {
-
-                        }
-                    });
-        } else {
-            ToastUtil.getInstance().showLong(getString(R.string.check_update_failed));
-        }
-    }
 
     @Override
     public void modifyDeviceNicknameSuccess() {
@@ -361,9 +273,14 @@ public class OldDeviceInfoActivity extends BaseBleActivity<IOldDeviceInfoView, O
             showLoading(getString(R.string.is_authing));
         } else {
             hiddenLoading();
-            ToastUtil.getInstance().showLong(R.string.connet_failed_please_near);
+            if (!isEnterOta ){
+                ToastUtil.getInstance().showLong(R.string.connet_failed_please_near);
+            }
         }
     }
 
+    @Override
+    public void onEnterOta() {
+    }
 
 }

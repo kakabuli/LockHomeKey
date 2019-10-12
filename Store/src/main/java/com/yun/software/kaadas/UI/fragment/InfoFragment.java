@@ -147,7 +147,6 @@ public class InfoFragment extends BaseFragment {
                 String id = listBeans.get(position).getId();
                 String url = ApiConstants.webUrl + "?token="+UserUtils.getToken()+"&id=" + id +"&type=banner_list_information";
                 String shareUrl  = ApiConstants.webUrl + "?customerId="+UserUtils.getuserID()+"&id=" + id +"&type=banner_list_information";
-
                 Bundle bundle = new Bundle();
                 bundle.putString("type", Constans.SHARE_TYPE_ARTICLE);
                 bundle.putString("id",id);

@@ -307,7 +307,7 @@ public class BleDeviceInfoPresenter extends BlePresenter<IDeviceInfoView> {
 
 
     public void checkOtaInfo(String SN, String version) {
-        otaDisposable = XiaokaiNewServiceImp.getOtaInfo(2, SN, version)
+        otaDisposable = XiaokaiNewServiceImp.getOtaInfo(2, SN, version,1)
                 .subscribe(new Consumer<OTAResult>() {
                     @Override
                     public void accept(OTAResult otaResult) throws Exception {
@@ -330,7 +330,6 @@ public class BleDeviceInfoPresenter extends BlePresenter<IDeviceInfoView> {
 
                     }
                 });
-
         compositeDisposable.add(otaDisposable);
     }
 

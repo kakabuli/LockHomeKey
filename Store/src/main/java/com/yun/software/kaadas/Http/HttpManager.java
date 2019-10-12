@@ -1,6 +1,7 @@
 package com.yun.software.kaadas.Http;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.zhouyou.http.EasyHttp;
@@ -80,14 +81,16 @@ public class HttpManager {
                     }
                     @Override
                     public void onError(ApiException e) {
+                        Log.e("出错了", "出错原因是   " + e.getMessage());
                         if(mIsLoading){
                           DialogUtil.dismissLoadingDialog(context);
                         }
-                        if(e.getMessage().contains("无效的")){
-                            return;
-                        }else if(e.getMessage().contains("无法解析该域名")){
-
-                        }
+//                        if(e.getMessage().contains("无效的")){
+//                            Log.e("无效的", "无效的");
+//                            return;
+//                        }else if(e.getMessage().contains("无法解析该域名")){
+//
+//                        }
                         responseListener.onFailed(e.getMessage());
                     }
 

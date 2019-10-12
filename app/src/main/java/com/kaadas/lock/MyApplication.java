@@ -366,7 +366,7 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
         boolean alreadyStart = false;
         Boolean appUpdate = (Boolean) SPUtils.get(SPUtils.APPUPDATE, false);
         String phone = (String) SPUtils.get(SPUtils.PHONEN, "");
-        UserUtils.setToken("");
+        UserUtils.clear();
         //退出登录  清除数据
         SPUtils.clear();
         if (appUpdate == true) {

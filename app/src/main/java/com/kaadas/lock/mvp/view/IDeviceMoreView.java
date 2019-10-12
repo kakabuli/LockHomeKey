@@ -2,6 +2,7 @@ package com.kaadas.lock.mvp.view;
 
 
 import com.kaadas.lock.mvp.mvpbase.IBleView;
+import com.kaadas.lock.mvp.mvpbase.ICheckOtaView;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.result.OTAResult;
 
@@ -9,7 +10,7 @@ import com.kaadas.lock.publiclibrary.http.result.OTAResult;
  * Create By lxj  on 2019/3/4
  * Describe
  */
-public interface IDeviceMoreView extends IBleView {
+public interface IDeviceMoreView extends ICheckOtaView {
 
     void onDeleteDeviceSuccess();
 
@@ -69,16 +70,6 @@ public interface IDeviceMoreView extends IBleView {
      * 读取版本成功
      */
     void readVersionSuccess(String version);
-
-    /**
-     * 查询有OTA升级
-     */
-    void needUpdate(OTAResult.UpdateFileInfo updateFileInfo, String SN, String version);
-
-    /**
-     * 请求OTA错误
-     */
-    void notNeedUpdate(String errorCode );
 
     /**
      * @param type

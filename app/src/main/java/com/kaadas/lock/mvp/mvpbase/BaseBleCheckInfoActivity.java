@@ -1,0 +1,176 @@
+package com.kaadas.lock.mvp.mvpbase;
+
+import android.content.Intent;
+import android.os.Bundle;
+
+import com.kaadas.lock.MyApplication;
+import com.kaadas.lock.R;
+import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
+import com.kaadas.lock.publiclibrary.http.result.OTAResult;
+import com.kaadas.lock.publiclibrary.ota.OtaConstants;
+import com.kaadas.lock.publiclibrary.ota.p6.P6OtaUpgradeActivity;
+import com.kaadas.lock.publiclibrary.ota.ti.Ti2FileOtaUpgradeActivity;
+import com.kaadas.lock.publiclibrary.ota.ti.TiOtaUpgradeActivity;
+import com.kaadas.lock.utils.AlertDialogUtil;
+import com.kaadas.lock.utils.KeyConstants;
+import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.SPUtils;
+import com.kaadas.lock.utils.ToastUtil;
+
+public abstract class BaseBleCheckInfoActivity<T extends ICheckOtaView,V extends BleCheckOTAPresenter<T>>  extends BaseBleActivity<T,V> implements ICheckOtaView  {
+
+    private BleLockInfo bleLockInfo;
+    protected boolean isEnterOta = false;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        bleLockInfo = mPresenter.getBleLockInfo();
+    }
+
+    @Override
+    public void noNeedUpdate() {
+        hiddenLoading();
+        //当前已是最新版本
+        AlertDialogUtil.getInstance().noEditSingleButtonDialog(this, getString(R.string.hint)
+                , getString(R.string.already_newest_version), getString(R.string.confirm), new AlertDialogUtil.ClickListener() {
+                    @Override
+                    public void left() {
+
+                    }
+
+                    @Override
+                    public void right() {
+
+                    }
+                });
+    }
+
+    @Override
+    public void snError() {
+        hiddenLoading();
+        ToastUtil.getInstance().showLong(getString(R.string.sn_error));
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        isEnterOta = false;
+    }
+
+    @Override
+    public void dataError() {
+        hiddenLoading();
+        ToastUtil.getInstance().showLong(getString(R.string.data_params_error));
+    }
+
+    @Override
+    public void needOneUpdate(OTAResult.UpdateFileInfo appInfo, String SN, String version) {
+        LogUtils.e("只有一个固件需要升级");
+        if (bleLockInfo.getBleType() == 1) { //Ti升级
+
+        } else if (bleLockInfo.getBleType() == 2) {  //P6升级
+
+        } else {
+            ToastUtil.getInstance().showLong(getString(R.string.check_update_failed2));
+            return;
+        }
+        AlertDialogUtil.getInstance().noEditTwoButtonDialog(this, getString(R.string.hint)
+                , getString(R.string.hava_ble_new_version), getString(R.string.cancel), getString(R.string.confirm), new AlertDialogUtil.ClickListener() {
+                    @Override
+                    public void left() {
+
+                    }
+                    @Override
+                    public void right() {
+                        if (bleLockInfo.getBattery()!=-1&&bleLockInfo.getBattery() < 20) {
+                            ToastUtil.getInstance().showLong(R.string.low_power_warring);
+                            return;
+                        }
+                        SPUtils.put(KeyConstants.DEVICE_SN + bleLockInfo.getServerLockInfo().getMacLock(), SN);    //Key
+                        SPUtils.put(KeyConstants.BLE_VERSION + bleLockInfo.getServerLockInfo().getMacLock(), version); //Key
+                        LogUtils.e("升级的版本信息是   " + SN + "   下载链接是   " + appInfo.getFileUrl());
+                        MyApplication.getInstance().getBleService().release();  //进入ota模式之前  需要断开连接
+                        isEnterOta = true;
+                        Intent intent = new Intent();
+                        intent.putExtra(OtaConstants.bindUrl, appInfo.getFileUrl());
+                        intent.putExtra(OtaConstants.deviceMac, bleLockInfo.getServerLockInfo().getMacLock()); //升级
+                        intent.putExtra(OtaConstants.password1, bleLockInfo.getServerLockInfo().getPassword1());
+                        intent.putExtra(OtaConstants.password2, bleLockInfo.getServerLockInfo().getPassword2());
+                        if (bleLockInfo.getBleType() == 1) { //Ti升级
+                            intent.putExtra(OtaConstants.fileName, "Kaadas_" + appInfo.getFileVersion() + "_" + appInfo.getFileMd5() + ".bin");
+                            intent.setClass(BaseBleCheckInfoActivity.this, TiOtaUpgradeActivity.class);
+                        } else if (bleLockInfo.getBleType() == 2) {  //P6升级
+                            intent.putExtra(OtaConstants.fileName, "Kaadas_" + appInfo.getFileVersion() + "_" + appInfo.getFileMd5() + ".cyacd2");
+                            intent.setClass(BaseBleCheckInfoActivity.this, P6OtaUpgradeActivity.class);
+                        }
+                        onEnterOta();
+                        startActivity(intent);
+                    }
+                }
+        );
+    }
+
+    @Override
+    public void needTwoUpdate(OTAResult.UpdateFileInfo stackInfo, OTAResult.UpdateFileInfo appInfo, String SN, String version) {
+        LogUtils.e("有两个固件需要升级");
+        if (bleLockInfo.getBleType() != 1) { //Ti升级
+            ToastUtil.getInstance().showLong(getString(R.string.check_update_failed2)+bleLockInfo.getBleType() );
+            return;
+        }
+        AlertDialogUtil.getInstance().noEditTwoButtonDialog(this, getString(R.string.hint)
+                , getString(R.string.hava_ble_new_version), getString(R.string.cancel), getString(R.string.confirm), new AlertDialogUtil.ClickListener() {
+                    @Override
+                    public void left() {
+
+                    }
+                    @Override
+                    public void right() {
+                        if (bleLockInfo.getBattery()!=-1&&bleLockInfo.getBattery() < 20) {
+                            ToastUtil.getInstance().showLong(R.string.low_power_warring);
+                            return;
+                        }
+                        isEnterOta = true;
+                        SPUtils.put(KeyConstants.DEVICE_SN + bleLockInfo.getServerLockInfo().getMacLock(), SN);    //Key
+                        SPUtils.put(KeyConstants.BLE_VERSION + bleLockInfo.getServerLockInfo().getMacLock(), version); //Key
+                        LogUtils.e("升级的版本信息是   " + SN + "   下载链接是   " + appInfo.getFileUrl());
+                        MyApplication.getInstance().getBleService().release();  //进入ota模式之前  需要断开连接
+                        Intent intent = new Intent();
+                        intent.putExtra(OtaConstants.bindUrl, stackInfo.getFileUrl());
+                        intent.putExtra(OtaConstants.bindUrl2, appInfo.getFileUrl());
+                        intent.putExtra(OtaConstants.deviceMac, bleLockInfo.getServerLockInfo().getMacLock()); //升级
+                        intent.putExtra(OtaConstants.password1, bleLockInfo.getServerLockInfo().getPassword1());
+                        intent.putExtra(OtaConstants.password2, bleLockInfo.getServerLockInfo().getPassword2());
+                        intent.putExtra(OtaConstants.fileName, "Kaadas_" + stackInfo.getFileVersion() + "_" + stackInfo.getFileMd5() + ".bin");
+                        intent.putExtra(OtaConstants.fileName2, "Kaadas_" + appInfo.getFileVersion() + "_" + appInfo.getFileMd5() + ".bin");
+                        intent.setClass(BaseBleCheckInfoActivity.this, Ti2FileOtaUpgradeActivity.class);
+                        onEnterOta();
+                        startActivity(intent);
+                    }
+                }
+        );
+    }
+
+    @Override
+    public void readInfoFailed(Throwable throwable) {
+        ToastUtil.getInstance().showLong(getString(R.string.check_update_failed));
+        hiddenLoading();
+    }
+
+    @Override
+    public void unknowError(String errorCode) {
+        ToastUtil.getInstance().showLong( R.string.unknown_error);
+        hiddenLoading();
+    }
+
+    @Override
+    public void onDeviceStateChange(boolean isConnected) {  //设备连接状态改变   连接成功时提示正在鉴权，连接失败时直接提示用户
+
+    }
+
+
+    public void onEnterOta(){
+
+    }
+
+}

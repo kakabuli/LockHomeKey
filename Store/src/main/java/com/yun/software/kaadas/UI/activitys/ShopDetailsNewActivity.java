@@ -54,9 +54,12 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import cn.iwgang.countdownview.CountdownView;
 import cn.sharesdk.framework.Platform;
+import de.greenrobot.event.EventBus;
 import la.xiong.androidquick.tool.LogUtils;
 import la.xiong.androidquick.tool.ToastUtil;
 import la.xiong.androidquick.ui.eventbus.EventCenter;
+
+import static la.xiong.androidquick.http.HeaderInterceptor.MESSAGE_LOGINOUT;
 
 
 public class ShopDetailsNewActivity extends BaseActivity {
@@ -384,14 +387,16 @@ public class ShopDetailsNewActivity extends BaseActivity {
 
         } else if (i == R.id.ll_shoucang) {
             if (TextUtils.isEmpty(UserUtils.getToken())) {
-                readyGo(WxLoginActivity.class);
+//                readyGo(WxLoginActivity.class);
+                EventBus.getDefault().post(new EventCenter(MESSAGE_LOGINOUT,"relogin"));
                 return;
             }
             changeCollectStatue();
 
         } else if (i == R.id.ll_shopcart) {
             if (TextUtils.isEmpty(UserUtils.getToken())) {
-                readyGo(WxLoginActivity.class);
+//                readyGo(WxLoginActivity.class);
+                EventBus.getDefault().post(new EventCenter(MESSAGE_LOGINOUT,"relogin"));
                 return;
             }
             Bundle bundle = new Bundle();

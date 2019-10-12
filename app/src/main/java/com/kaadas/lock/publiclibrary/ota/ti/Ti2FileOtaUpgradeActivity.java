@@ -17,7 +17,6 @@ import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -46,7 +45,7 @@ import java.util.UUID;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class TiOtaUpgradeActivity extends BaseAddToApplicationActivity implements View.OnClickListener {
+public class Ti2FileOtaUpgradeActivity extends BaseAddToApplicationActivity implements View.OnClickListener {
     @BindView(R.id.tv_content)
     TextView tv_content;
     @BindView(R.id.iv_back)
@@ -86,12 +85,13 @@ public class TiOtaUpgradeActivity extends BaseAddToApplicationActivity implement
     private boolean isHand = false;
     private String PATH;  //基础地址
     private String binDownUrl;  //bin文件的保存地址
+    private String binDownUrl2;  //bin文件的保存地址
     private String filePath;  //文件路径
+    private String filePath2;  //文件路径
     private String fileName;   //文件名
-    private boolean downSuccess = false;   //是否下载成功
+    private String fileName2;   //文件名
     private String password1;
     private String password2;
-    private boolean isUpdateMode;
     private BluetoothGattCharacteristic writeChar;
     private BluetoothGattService otaService;
     private BluetoothLeScanner bluetoothLeScanner;
@@ -124,22 +124,23 @@ public class TiOtaUpgradeActivity extends BaseAddToApplicationActivity implement
         createFolder(PATH);
         Intent intent = getIntent();
         if (intent != null) {
-            fileName = intent.getStringExtra(OtaConstants.fileName);
-            binDownUrl = intent.getStringExtra(OtaConstants.bindUrl);
             mac = intent.getStringExtra(OtaConstants.deviceMac);
             password1 = intent.getStringExtra(OtaConstants.password1);
             password2 = intent.getStringExtra(OtaConstants.password2);
+
+            fileName = intent.getStringExtra(OtaConstants.fileName);
+            binDownUrl = intent.getStringExtra(OtaConstants.bindUrl);
             filePath = PATH + "/" + fileName;
+
+            fileName2 = intent.getStringExtra(OtaConstants.fileName2);
+            binDownUrl2 = intent.getStringExtra(OtaConstants.bindUrl2);
+            filePath2 = PATH + "/" + fileName2;
+
         }
 
-//        fileName = "TI_OTA_APP_V1.07.154_XK.bin";
-//        binDownUrl = "http://www.kaadas.com/APP/Xiaokaioat/TI_OTA_APP_V1.07.154_XK.bin";
-        filePath = PATH + "/" + fileName;
-
+//        filePath = PATH + "/" + fileName;
 
         mutiProgress.setCurrNodeNO(0, false);
-//        downBinNew(binDownUrl, filePath);
-
     }
 
 
@@ -252,7 +253,8 @@ public class TiOtaUpgradeActivity extends BaseAddToApplicationActivity implement
             otaService = gatt.getService(UUID.fromString(OAD_SERVICE));
             if (otaService != null) {  //OTA升级模式下的设备
                 isHand = true;
-                startUpdata(gatt.getDevice());
+                LogUtils.e("线程是   " + Thread.currentThread().getName());
+                startUpdata(gatt.getDevice(), filePath);
                 return;
             }
 
@@ -316,7 +318,7 @@ public class TiOtaUpgradeActivity extends BaseAddToApplicationActivity implement
 
                 break;
             case R.id.start_upgrade:
-                if (isUpdating){
+                if (isUpdating) {
                     ToastUtil.getInstance().showLong(R.string.isupdating_can_not_back);
                     break;
                 }
@@ -367,10 +369,14 @@ public class TiOtaUpgradeActivity extends BaseAddToApplicationActivity implement
         File file = new File(path);
         if (file.exists()) {
             Log.e(TAG, "文件已存在，不再下载");
-            downSuccess = true;
             mutiProgress.setCurrNodeNO(1, false);
-            mCircleProgress2.setValue(50);
-            searchDeviceByMacAndConnect();
+            if (url.equalsIgnoreCase(binDownUrl)) {
+                mCircleProgress2.setValue(25);
+                downBinNew(binDownUrl2, filePath2);
+            } else if (url.equalsIgnoreCase(binDownUrl2)) {
+                mCircleProgress2.setValue(50);
+                searchDeviceByMacAndConnect();
+            }
             return;
         }
         FileDownloader.getImpl().create(url)
@@ -380,24 +386,36 @@ public class TiOtaUpgradeActivity extends BaseAddToApplicationActivity implement
                     //等待
                     @Override
                     protected void pending(BaseDownloadTask task, int soFarBytes, int totalBytes) {
-                        LogUtils.e("开始下载   ");
+                        LogUtils.e("开始下载  l1 ");
                     }
 
                     //下载进度回调
                     @Override
                     protected void progress(BaseDownloadTask task, int soFarBytes, int totalBytes) {
                         LogUtils.e("下载进度   " + (soFarBytes * 1.0 / 1.0 * totalBytes) * 100);
-                        mCircleProgress2.setValue(soFarBytes / totalBytes * 50);
+                        if (url.equalsIgnoreCase(binDownUrl)) {
+                            mCircleProgress2.setValue(soFarBytes / totalBytes * 25);
+                            downBinNew(binDownUrl2, filePath2);
+                        } else if (url.equalsIgnoreCase(binDownUrl2)) {
+                            mCircleProgress2.setValue(25 + (soFarBytes / totalBytes * 25));
+                            searchDeviceByMacAndConnect();
+                        }
                     }
 
                     //完成下载
                     @Override
                     protected void completed(BaseDownloadTask task) {
                         LogUtils.e("下载成功");
-                        downSuccess = true;
                         mutiProgress.setCurrNodeNO(1, false);
-                        mCircleProgress2.setValue(50);
-                        searchDeviceByMacAndConnect();
+                        if (url.equalsIgnoreCase(binDownUrl)) {
+                            mCircleProgress2.setValue(25);
+                            downBinNew(binDownUrl2, filePath2);
+                        } else if (url.equalsIgnoreCase(binDownUrl2)) {
+                            mCircleProgress2.setValue(50);
+                            searchDeviceByMacAndConnect();
+                        }
+
+//                        searchDeviceByMacAndConnect();
                     }
 
                     //暂停
@@ -462,7 +480,7 @@ public class TiOtaUpgradeActivity extends BaseAddToApplicationActivity implement
             if (device.getAddress().equals(mac)) {  //搜索到设备连接
                 Log.e(TAG, "停止扫描   " + device.getName() + "  mac  " + device.getAddress());
                 bluetoothLeScanner.stopScan(newScanBleCallback);
-                bluetoothGatt = device.connectGatt(TiOtaUpgradeActivity.this, false, bluetoothGattCallback);
+                bluetoothGatt = device.connectGatt(Ti2FileOtaUpgradeActivity.this, false, bluetoothGattCallback);
             }
         }
 
@@ -510,7 +528,7 @@ public class TiOtaUpgradeActivity extends BaseAddToApplicationActivity implement
     }
 
 
-    public void startUpdata(BluetoothDevice device) {
+    public void startUpdata(BluetoothDevice device, String path) {
         Log.e(TAG, "开始升级");
         handler.post(new Runnable() {
             @Override
@@ -518,7 +536,7 @@ public class TiOtaUpgradeActivity extends BaseAddToApplicationActivity implement
                 mutiProgress.setCurrNodeNO(2, false);
             }
         });
-        client = new TIOADEoadClient(TiOtaUpgradeActivity.this);
+        client = new TIOADEoadClient(Ti2FileOtaUpgradeActivity.this);
         client.initializeTIOADEoadProgrammingOnDevice(device, new TIOADEoadClientProgressCallback() {
             @Override
             public void oadProgressUpdate(final float percent, final int currentBlock) {
@@ -528,7 +546,11 @@ public class TiOtaUpgradeActivity extends BaseAddToApplicationActivity implement
                         Log.d(TAG, "Progress update : " + percent + "%");
                         mutiProgress.setCurrNodeNO(2, true);
                         //设置进度条
-                        mCircleProgress2.setValue(50 + (percent / 2));
+                        if (client.getFilePath().equalsIgnoreCase(filePath)) {
+                            mCircleProgress2.setValue(50 + (percent / 4));
+                        } else if (client.getFilePath().equalsIgnoreCase(filePath2)) {
+                            mCircleProgress2.setValue(75 + (percent / 4));
+                        }
                     }
                 });
             }
@@ -536,14 +558,14 @@ public class TiOtaUpgradeActivity extends BaseAddToApplicationActivity implement
             @Override
             public void oadStatusUpdate(TIOADEoadDefinitions.oadStatusEnumeration status) {
                 handler.removeCallbacks(timeoutRunnable);
-                handler.postDelayed(timeoutRunnable,10 * 1000);
+                handler.postDelayed(timeoutRunnable, 10 * 1000);
                 final TIOADEoadDefinitions.oadStatusEnumeration finalStatus = status;
                 LogUtils.e("OTA升级  状态改变   " + TIOADEoadDefinitions.oadStatusEnumerationGetDescriptiveString(finalStatus));
 
                 if (finalStatus == TIOADEoadDefinitions.oadStatusEnumeration.tiOADClientReady) {
                     //设备已经准备好    //在此处查看设备
                     LogUtils.e("文件准备好了  ");
-                    client.start(filePath);
+                    client.start(path);
                 } else if (finalStatus == TIOADEoadDefinitions.oadStatusEnumeration.tiOADClientFileIsNotForDevice) {
                     //升级镜像与设备部匹配
                     runOnUiThread(new Runnable() {
@@ -553,30 +575,39 @@ public class TiOtaUpgradeActivity extends BaseAddToApplicationActivity implement
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    Toast.makeText(TiOtaUpgradeActivity.this, getString(R.string.image_not_match), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(Ti2FileOtaUpgradeActivity.this, getString(R.string.image_not_match), Toast.LENGTH_SHORT).show();
                                 }
                             });
                         }
                     });
                 } else if (finalStatus == TIOADEoadDefinitions.oadStatusEnumeration.tiOADClientCompleteFeedbackOK) {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            mutiProgress.setCurrNodeNO(3, true);
+                    handler.removeCallbacks(timeoutRunnable);
+                    if (client.getFilePath().equalsIgnoreCase(filePath2)) {
+                        if (client != null) {
+                            client.release();
+                            client.abortProgramming();
+                        }
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                mutiProgress.setCurrNodeNO(3, true);
+                                Toast.makeText(Ti2FileOtaUpgradeActivity.this, getString(R.string.update_success), Toast.LENGTH_SHORT).show();
+                                otasuccess();
+                            }
+                        });
+                    } else {
+                        if (client.getFilePath().equalsIgnoreCase(filePath)) {
                             if (client != null) {
                                 client.release();
                                 client.abortProgramming();
                             }
-                            handler.removeCallbacks(timeoutRunnable);
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    Toast.makeText(TiOtaUpgradeActivity.this, getString(R.string.update_success), Toast.LENGTH_SHORT).show();
-                                    otasuccess();
-                                }
-                            });
+                            LogUtils.e("升级成功一个文件    " + "线程是   " + Thread.currentThread().getName());
+                            startUpdata(device, filePath2);
+//                            client.start(filePath2);
                         }
-                    });
+                    }
+
+
                 } else if (finalStatus == TIOADEoadDefinitions.oadStatusEnumeration.tiOADClientCompleteDeviceDisconnectedDuringProgramming) {
                     runOnUiThread(new Runnable() {
                         @Override
@@ -585,7 +616,7 @@ public class TiOtaUpgradeActivity extends BaseAddToApplicationActivity implement
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    Toast.makeText(TiOtaUpgradeActivity.this, getString(R.string.update_failed_please_retry), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(Ti2FileOtaUpgradeActivity.this, getString(R.string.update_failed_please_retry), Toast.LENGTH_SHORT).show();
                                 }
                             });
                         }
@@ -602,7 +633,6 @@ public class TiOtaUpgradeActivity extends BaseAddToApplicationActivity implement
             otaFailed("升级超时");
         }
     };
-
 
     @Override
     protected void onDestroy() {

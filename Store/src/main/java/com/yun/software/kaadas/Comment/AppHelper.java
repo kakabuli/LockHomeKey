@@ -24,14 +24,16 @@ import spa.lyh.cn.statusbarlightmode.ImmersionMode;
 public class AppHelper {
     private static AppHelper instance = null;
     public Context appContext;
+
     public synchronized static AppHelper getInstance() {
         if (instance == null) {
             instance = new AppHelper();
         }
         return instance;
     }
+
     public void init(Application context) {
-        appContext=context;
+        appContext = context;
         stateBarinit();
         QizhiConfig();
         Utils.init(appContext);
@@ -49,14 +51,14 @@ public class AppHelper {
 //    }
 
     //测试环境
-    private void QizhiConfig(){
+    private void QizhiConfig() {
         Setting.init(appContext)
                 .withWeChatAppId("wxd1cccfeb16cd07d1")
                 .withWeChatAppSecret("5d3d1005f5fc485c65adfcf64320b6d9")
                 .configure();
     }
 
-    private  void stateBarinit(){
+    private void stateBarinit() {
         ImmersionConfiguration configuration = new ImmersionConfiguration.Builder(appContext)
                 .enableImmersionMode(ImmersionConfiguration.ENABLE)
                 .setColor(R.color.bg_state_color)//默认标题栏颜色
@@ -66,16 +68,19 @@ public class AppHelper {
         ToastUtil.setGravity(Gravity.CENTER, 0, 0);
         ToastUtil.setMsgColor(appContext.getResources().getColor(R.color.white));
     }
-    public String getString(int id){
-     return appContext.getString(id);
+
+    public String getString(int id) {
+        return appContext.getString(id);
     }
+
+
     public void setDefalutNewWorkRequest() {
         EasyHttp.init((Application) appContext);
         //这里涉及到安全我把url去掉了，demo都是调试通的
         String Url = ApiConstants.BASE_URL;
         //设置请求头
-         HttpHeaders headers = new HttpHeaders();
-         headers.put("Content-Type", "application/json;charset=UTF-8");
+        HttpHeaders headers = new HttpHeaders();
+        headers.put("Content-Type", "application/json;charset=UTF-8");
         // 设置请求参数
         // HttpParams params = new HttpParams();
         // params.put("appId", AppConstant.APPID);
@@ -92,7 +97,7 @@ public class AppHelper {
                 .setCacheDiskConverter(new SerializableDiskConverter())//默认缓存使用序列化转化
                 .setCacheMaxSize(50 * 1024 * 1024)//设置缓存大小为50M
                 .setCacheVersion(1)//缓存版本为1
- //             .setHostnameVerifier(new UnSafeHostnameVerifier(Url))//全局访问规则
+                //             .setHostnameVerifier(new UnSafeHostnameVerifier(Url))//全局访问规则
                 .setCertificates()
                 //添加参数访问规则
                 .addInterceptor(new CustomSignInterceptor())

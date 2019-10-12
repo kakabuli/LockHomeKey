@@ -37,7 +37,6 @@ public class BluetoothLEDevice {
     public boolean isConnected;
     public boolean isDiscovered;
     public BluetoothLEDeviceCB myCB;
-    public boolean needsBroadcastScreen;
     public boolean shouldReconnect;
     BluetoothLEDevice mThis;
     BluetoothLEDeviceDebugVariables dVars;
@@ -267,7 +266,7 @@ public class BluetoothLEDevice {
         public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
             super.onConnectionStateChange(gatt, status, newState);
             if (newState == BluetoothGatt.STATE_CONNECTED) {
-                Log.d(TAG,"Device  连接成功" + gatt.getDevice().getAddress().toString() + " CONNECTED");
+                Log.e(TAG,"Device  连接成功" + gatt.getDevice().getAddress().toString() + " CONNECTED");
                 isConnected = true;
                 if (refreshDeviceCache()) {
                     try {
@@ -277,6 +276,7 @@ public class BluetoothLEDevice {
 
                     }
                 }
+
 
                 boolean startDiscoveryOK = gatt.discoverServices();
                 if (mThis.g == null) {
@@ -310,9 +310,11 @@ public class BluetoothLEDevice {
             super.onServicesDiscovered(gatt, status);
             Log.e(TAG,"Device " + gatt.getDevice().getAddress().toString() + " SERVICES DISCOVERED  " + "  Status  " + status);
             if (status != BluetoothGatt.GATT_SUCCESS) {
-                Log.d(TAG,"Device " + gatt.getDevice().getAddress().toString() + "Service Discovery FAILED !");
+                Log.e(TAG,"Device " + gatt.getDevice().getAddress().toString() + "Service Discovery FAILED !");
                 return;
             }
+            Log.e(TAG,"Device " + gatt.getDevice().getAddress().toString() + " 发现服务成功  " + "  Status  " + status);
+
             services = gatt.getServices();
             for (BluetoothGattService serv : services) {
                 for (BluetoothGattCharacteristic characteristic : serv.getCharacteristics()) {

@@ -15,6 +15,8 @@ import android.widget.Toast;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
+import com.kaadas.lock.mvp.mvpbase.BaseBleActivity;
+import com.kaadas.lock.mvp.mvpbase.BaseBleCheckInfoActivity;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.publiclibrary.http.result.OTAResult;
 import com.kaadas.lock.publiclibrary.ota.p6.P6OtaUpgradeActivity;
@@ -27,7 +29,7 @@ import com.kaadas.lock.utils.ToastUtil;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class OTADialogActivity extends BaseActivity<IOtaView, OtaPresenter<IOtaView>> implements IOtaView {
+public class OTADialogActivity extends BaseBleCheckInfoActivity<IOtaView, OtaPresenter<IOtaView>> implements IOtaView {
     @BindView(R.id.tv_hint)
     TextView tvHint;
     @BindView(R.id.tv_content)
@@ -49,8 +51,6 @@ public class OTADialogActivity extends BaseActivity<IOtaView, OtaPresenter<IOtaV
         bleLockInfo = (BleLockInfo) getIntent().getSerializableExtra(KeyConstants.BLE_DEVICE_INFO);
         String content = String.format(getString(R.string.oad_content), bleLockInfo.getServerLockInfo().getLockNickName());
         tvContent.setText(content);
-
-
 
         sn = bleLockInfo.getServerLockInfo().getDeviceSN();
         version = bleLockInfo.getServerLockInfo().getSoftwareVersion();
@@ -76,12 +76,10 @@ public class OTADialogActivity extends BaseActivity<IOtaView, OtaPresenter<IOtaV
                 }
                 //获取版本信息
 
-                mPresenter.checkOtaInfo(sn,version);
+                mPresenter.checkOTAInfo(sn,version);
 //                mPresenter.checkOtaInfo("K901192210013","1.01.007");
                 LogUtils.e("OTA  升级  断开连接");
                 MyApplication.getInstance().getBleService().release();  // OTA  升级  断开连接"
-
-
             }
         });
 
@@ -115,62 +113,8 @@ public class OTADialogActivity extends BaseActivity<IOtaView, OtaPresenter<IOtaV
     }
 
     @Override
-    public void onFailedServer(OTAResult result) {
-        //401	String	数据参数不对
-        //102	String	SN格式不正确
-        //210	String	查无结果
-        if ("401".equals(result.getCode())){ //数据参数不对
-            Toast.makeText(this,getString(R.string.data_parameter_incorrect),Toast.LENGTH_LONG).show();
-        }else if ("102".equals(result.getCode())){ //SN格式不正确
-            Toast.makeText(this,getString(R.string.sn_error),Toast.LENGTH_LONG).show();
-        }else if ("210".equals(result.getCode())){//查无结果
-            Toast.makeText(this,getString(R.string.new_version),Toast.LENGTH_LONG).show();
-        }else {
-            Toast.makeText(this, result.getMsg()+" "+result.getCode(),Toast.LENGTH_LONG).show();
-        }
+    public void onEnterOta() {
+        super.onEnterOta();
         finish();
     }
-
-    @Override
-    public void onGetOtaInfoSuccess(OTAResult.UpdateFileInfo updateFileInfo) {
-        LogUtils.e("OTA  升级  断开连接");
-        MyApplication.getInstance().getBleService().release();                //  LogUtils.e("OTA  升级  断开连接");
-        LogUtils.e("下载链接是   " +updateFileInfo.getFileUrl() );
-        Intent intent = new Intent();
-        intent.putExtra(OtaConstants.bindUrl, updateFileInfo.getFileUrl());
-        intent.putExtra(OtaConstants.deviceMac, bleLockInfo.getServerLockInfo().getMacLock());  //升级
-        intent.putExtra(OtaConstants.password1, bleLockInfo.getServerLockInfo().getPassword1());
-        intent.putExtra(OtaConstants.password2, bleLockInfo.getServerLockInfo().getPassword2());
-        if (bleLockInfo.getBleType()==1){
-            intent.putExtra(OtaConstants.fileName, "Kaadas_" + updateFileInfo.getFileVersion() + "_" + updateFileInfo.getFileMd5() + ".bin");
-            intent.setClass(OTADialogActivity.this, TiOtaUpgradeActivity.class);
-        }else {
-            intent.putExtra(OtaConstants.fileName, "Kaadas_" + updateFileInfo.getFileVersion() + "_" + updateFileInfo.getFileMd5()+ ".cyacd2");
-            intent.setClass(OTADialogActivity.this, P6OtaUpgradeActivity.class);
-        }
-        finish();
-        startActivity(intent);
-
-    }
-
-    @Override
-    public void onFailed(Throwable throwable) {
-        ToastUtil.getInstance().showLong(R.string.net_exception_tryagain);
-        finish();
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }

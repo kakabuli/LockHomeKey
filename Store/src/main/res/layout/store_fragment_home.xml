@@ -81,7 +81,7 @@
 
                         />
 
-                    <include layout="@layout/fragment_home_item_0"/>
+                    <include layout="@layout/fragment_home_item_0" />
 
 
                     <!--智能锁,猫眼-->
@@ -156,8 +156,8 @@
             android:layout_width="match_parent"
             android:layout_height="33dp"
             android:layout_marginLeft="15dp"
-            android:layout_marginRight="110dp"
             android:layout_marginTop="26dp"
+            android:layout_marginRight="110dp"
             android:background="#99ffffff"
             android:orientation="horizontal"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -186,8 +186,8 @@
             android:id="@+id/rl_shopcart"
             android:layout_width="33dp"
             android:layout_height="33dp"
-            android:layout_marginRight="63dp"
             android:layout_marginTop="26dp"
+            android:layout_marginRight="63dp"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
@@ -202,8 +202,8 @@
                 android:id="@+id/shop_cart_count"
                 android:layout_width="15dp"
                 android:layout_height="15dp"
-                android:layout_alignParentRight="true"
                 android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
                 android:background="@drawable/has_new_msg"
                 android:gravity="center"
                 android:text="0"
@@ -218,8 +218,8 @@
             android:id="@+id/rl_new_msg"
             android:layout_width="33dp"
             android:layout_height="33dp"
-            android:layout_marginRight="17dp"
             android:layout_marginTop="26dp"
+            android:layout_marginRight="17dp"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
@@ -234,8 +234,6 @@
                 />
 
 
-
-
         </RelativeLayout>
 
 
@@ -245,9 +243,8 @@
         android:id="@+id/iv_kefu"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:background="@drawable/home_kefu"
-        android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
         android:layout_margin="15dp"
-        />
+        android:background="@drawable/home_kefu" />
 </RelativeLayout>

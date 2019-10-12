@@ -331,7 +331,8 @@ public class BleService extends Service {
                 return;
             }
             //符合要求的设备
-            if (device.getName().startsWith("Bootloader")
+            if (device.getName().contains("Bootloader")
+            ||device.getName().contains("OAD")
                     || device.getName().contains("KDS")
 //                    || device.getName().contains("XK")
                     || device.getName().contains("KdsLock")) {
@@ -1369,7 +1370,6 @@ public class BleService extends Service {
                 LogUtils.e("获取到远程设备   " + remoteDevice.getAddress() + "   设备名是  " + remoteDevice.getName());
                 deviceScanSubject.onNext(remoteDevice);
             } else {
-                //LogUtils.e("获取到远程设备   失败   ");
                 handler.postDelayed(getRemoteDeviceRunnable, 1000);
             }
         }

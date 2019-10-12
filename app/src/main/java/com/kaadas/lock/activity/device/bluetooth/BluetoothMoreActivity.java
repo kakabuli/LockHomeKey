@@ -17,6 +17,7 @@ import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.MainActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseBleActivity;
+import com.kaadas.lock.mvp.mvpbase.BaseBleCheckInfoActivity;
 import com.kaadas.lock.mvp.presenter.ble.BleDeviceMorePresenter;
 import com.kaadas.lock.mvp.view.IDeviceMoreView;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
@@ -40,7 +41,7 @@ import butterknife.ButterKnife;
 /**
  * Created by David on 2019/4/15
  */
-public class BluetoothMoreActivity extends BaseBleActivity<IDeviceMoreView, BleDeviceMorePresenter> implements IDeviceMoreView, View.OnClickListener {
+public class BluetoothMoreActivity extends BaseBleCheckInfoActivity<IDeviceMoreView, BleDeviceMorePresenter<IDeviceMoreView>> implements IDeviceMoreView, View.OnClickListener {
     @BindView(R.id.iv_back)
     ImageView ivBack;
     @BindView(R.id.tv_content)
@@ -71,7 +72,6 @@ public class BluetoothMoreActivity extends BaseBleActivity<IDeviceMoreView, BleD
     RelativeLayout rlCheckFirmwareUpdate;
     @BindView(R.id.btn_delete)
     Button btnDelete;
-    boolean messageFreeStatus;
     boolean amAutoLockStatus;
     boolean silentModeStatus;
     String name;
@@ -433,89 +433,13 @@ public class BluetoothMoreActivity extends BaseBleActivity<IDeviceMoreView, BleD
 
     }
 
-    @Override
-    public void readInfoFailed(Throwable throwable) {
-        ToastUtil.getInstance().showLong(getString(R.string.check_update_failed));
-        hiddenLoading();
-    }
 
     @Override
     public void readVersionSuccess(String version) {
 
     }
 
-    @Override
-    public void needUpdate(OTAResult.UpdateFileInfo updateFileInfo, String Sn, String version) {
-        hiddenLoading();
-        if (bleLockInfo.getBleType() == 1) { //Ti升级
 
-        } else if (bleLockInfo.getBleType() == 2) {  //P6升级
-
-        } else {
-            ToastUtil.getInstance().showLong(getString(R.string.check_update_failed2));
-            return;
-        }
-        AlertDialogUtil.getInstance().noEditTwoButtonDialog(this, getString(R.string.hint)
-                , getString(R.string.hava_ble_new_version), getString(R.string.cancel), getString(R.string.confirm), new AlertDialogUtil.ClickListener() {
-                    @Override
-                    public void left() {
-
-                    }
-
-                    @Override
-                    public void right() {
-                        if (bleLockInfo.getBattery() < 20) {
-                            ToastUtil.getInstance().showLong(R.string.low_power_warring);
-                            return;
-                        }
-                        SPUtils.put(KeyConstants.DEVICE_SN + bleLockInfo.getServerLockInfo().getMacLock(), Sn);    //Key
-                        SPUtils.put(KeyConstants.BLE_VERSION + bleLockInfo.getServerLockInfo().getMacLock(), version); //Key
-                        LogUtils.e("升级的版本信息是   " + Sn + "   下载链接是   " + updateFileInfo.getFileUrl());
-                        MyApplication.getInstance().getBleService().release();  //进入ota模式之前  需要断开连接
-                        Intent intent = new Intent();
-                        intent.putExtra(OtaConstants.bindUrl, updateFileInfo.getFileUrl());
-                        intent.putExtra(OtaConstants.deviceMac, bleLockInfo.getServerLockInfo().getMacLock()); //升级
-                        intent.putExtra(OtaConstants.password1, bleLockInfo.getServerLockInfo().getPassword1());
-                        intent.putExtra(OtaConstants.password2, bleLockInfo.getServerLockInfo().getPassword2());
-                        if (bleLockInfo.getBleType() == 1) { //Ti升级
-                            intent.putExtra(OtaConstants.fileName, "Kaadas_" + updateFileInfo.getFileVersion() + "_" + updateFileInfo.getFileMd5() + ".bin");
-                            intent.setClass(BluetoothMoreActivity.this, TiOtaUpgradeActivity.class);
-                        } else if (bleLockInfo.getBleType() == 2) {  //P6升级
-                            intent.putExtra(OtaConstants.fileName, "Kaadas_" + updateFileInfo.getFileVersion() + "_" + updateFileInfo.getFileMd5() + ".cyacd2");
-                            intent.setClass(BluetoothMoreActivity.this, P6OtaUpgradeActivity.class);
-                        }
-                        //还未完善   不跳转
-                        startActivity(intent);
-                    }
-                }
-        );
-    }
-
-    @Override
-    public void notNeedUpdate(String errorCode) {
-        hiddenLoading();
-        if ("401".equals(errorCode)) {  //数据参数不对
-            ToastUtil.getInstance().showLong(getString(R.string.data_params_error));
-        } else if ("102".equals(errorCode)) { //SN格式不正确
-            ToastUtil.getInstance().showLong(R.string.sn_error);
-        } else if ("210".equals(errorCode)) { //查无结果
-            //当前已是最新版本
-            AlertDialogUtil.getInstance().noEditSingleButtonDialog(this, getString(R.string.hint)
-                    , getString(R.string.already_newest_version), getString(R.string.confirm), new AlertDialogUtil.ClickListener() {
-                        @Override
-                        public void left() {
-
-                        }
-
-                        @Override
-                        public void right() {
-
-                        }
-                    });
-        } else {
-            ToastUtil.getInstance().showLong(getString(R.string.check_update_failed));
-        }
-    }
 
     @Override
     public void onStateUpdate(int type) {

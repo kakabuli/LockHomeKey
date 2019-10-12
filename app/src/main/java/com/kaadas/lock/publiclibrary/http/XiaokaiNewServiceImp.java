@@ -789,10 +789,11 @@ public class XiaokaiNewServiceImp {
      * @param customer   是	int	客户：1凯迪仕 2小凯 3桔子物联 4飞利浦
      * @param deviceName 是	String	设备唯一编号
      * @param version    否	String	当前版本号
+     * @param type          1主模块 2算法模块 3相机模块（空：默认1） 4协议栈
      * @return
      */
-    public static Observable<OTAResult> getOtaInfo(int customer, String deviceName, String version) {
-        OTABean helpLogBean = new OTABean(customer, deviceName, version);
+    public static Observable<OTAResult> getOtaInfo(int customer, String deviceName, String version,int type) {
+        OTABean helpLogBean = new OTABean(customer, deviceName, version,  type);
         return RetrofitServiceManager.getNoTokenInstance().create(IXiaoKaiNewService.class)
                 .getOtaInfo(new HttpUtils<OTABean>().getBody(helpLogBean))
                 .subscribeOn(Schedulers.io())
