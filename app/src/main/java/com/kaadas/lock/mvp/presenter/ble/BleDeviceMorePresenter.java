@@ -1,20 +1,15 @@
 package com.kaadas.lock.mvp.presenter.ble;
 
-
-import android.text.TextUtils;
-
 import com.kaadas.lock.MyApplication;
-import com.kaadas.lock.mvp.mvpbase.BlePresenter;
+import com.kaadas.lock.mvp.mvpbase.BleCheckOTAPresenter;
 import com.kaadas.lock.mvp.view.IDeviceMoreView;
 import com.kaadas.lock.publiclibrary.ble.BleCommandFactory;
 import com.kaadas.lock.publiclibrary.ble.BleProtocolFailedException;
-import com.kaadas.lock.publiclibrary.ble.BleService;
 import com.kaadas.lock.publiclibrary.ble.RetryWithTime;
 import com.kaadas.lock.publiclibrary.ble.responsebean.BleDataBean;
 import com.kaadas.lock.publiclibrary.ble.responsebean.ReadInfoBean;
 import com.kaadas.lock.publiclibrary.http.XiaokaiNewServiceImp;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
-import com.kaadas.lock.publiclibrary.http.result.OTAResult;
 import com.kaadas.lock.publiclibrary.http.util.BaseObserver;
 import com.kaadas.lock.publiclibrary.http.util.RxjavaHelper;
 import com.kaadas.lock.publiclibrary.rxutils.TimeOutException;
@@ -40,7 +35,7 @@ import io.reactivex.functions.Predicate;
  * Create By lxj  on 2019/3/4
  * Describe
  */
-public class BleDeviceMorePresenter extends BlePresenter<IDeviceMoreView> {
+public class BleDeviceMorePresenter<T> extends BleCheckOTAPresenter<IDeviceMoreView> {
 
     private Disposable getDeviceInfoDisposable;
     private Disposable voiceDisposable;
@@ -413,7 +408,7 @@ public class BleDeviceMorePresenter extends BlePresenter<IDeviceMoreView> {
                         String deviceSN = bleLockInfo.getServerLockInfo().getDeviceSN();
                         LogUtils.e("服务器数据是  serverBleVersion " + serverBleVersion + "  deviceSN  " + deviceSN + "  本地数据是  sn " + sn + "  version " + version);
                         if (version.equals(serverBleVersion) && sn.equals(deviceSN)) {
-                            checkOtaInfo(sn, version);
+                            checkOTAInfo(sn, version );
                         } else {
                             uploadBleSoftware(sn, version);
                         }
@@ -439,7 +434,7 @@ public class BleDeviceMorePresenter extends BlePresenter<IDeviceMoreView> {
             @Override
             public void onSuccess(BaseResult baseResult) {
                 LogUtils.e("上传蓝牙信息成功");
-                checkOtaInfo(sn, version);
+                checkOTAInfo(sn, version );
             }
 
             @Override
@@ -464,43 +459,6 @@ public class BleDeviceMorePresenter extends BlePresenter<IDeviceMoreView> {
         });
     }
 
-
-    public void checkOtaInfo(String SN, String version) {
-        //请求成功
-        //todo 测试版本号写死
-//        otaDisposable = XiaokaiNewServiceImp.getOtaInfo(1, "K901192210013", "1.01.007")
-        otaDisposable = XiaokaiNewServiceImp.getOtaInfo(1, SN, version)
-                .subscribe(new Consumer<OTAResult>() {
-                    @Override
-                    public void accept(OTAResult otaResult) throws Exception {
-
-                        LogUtils.e("检查OTA升级数据   " + otaResult.toString());
-                        if ("200".equals(otaResult.getCode())) {
-                            String fileUrl = otaResult.getData().getFileUrl();
-                            if (!fileUrl.startsWith("http://")) {
-                                otaResult.getData().setFileUrl("http://" + fileUrl);
-                            }
-                            //请求成功
-                            if (mViewRef.get() != null) {
-                                mViewRef.get().needUpdate(otaResult.getData(), SN, version);
-                            }
-                        } else {
-                            if (mViewRef.get() != null) {
-                                mViewRef.get().notNeedUpdate(otaResult.getCode());
-                            }
-                        }
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        if (mViewRef.get() != null) {
-                            mViewRef.get().readInfoFailed(throwable);
-                        }
-                        LogUtils.e("检查OTA升级数据 失败  " + throwable.getMessage());
-                    }
-                });
-        compositeDisposable.add(otaDisposable);
-    }
 
     @Override
     public void attachView(IDeviceMoreView view) {

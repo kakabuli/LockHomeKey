@@ -4,6 +4,7 @@ package com.kaadas.lock.mvp.presenter.ble;
 import android.text.TextUtils;
 
 import com.kaadas.lock.MyApplication;
+import com.kaadas.lock.mvp.mvpbase.BleCheckOTAPresenter;
 import com.kaadas.lock.mvp.mvpbase.BlePresenter;
 import com.kaadas.lock.mvp.view.IDeviceInfoView;
 import com.kaadas.lock.mvp.view.IOldDeviceInfoView;
@@ -29,7 +30,7 @@ import io.reactivex.functions.Predicate;
 /**
  * Created by David on 2019/3/14
  */
-public class OldDeviceInfoPresenter extends BlePresenter<IOldDeviceInfoView> {
+public class OldDeviceInfoPresenter extends BleCheckOTAPresenter<IOldDeviceInfoView> {
     private Disposable readSerialNumberDisposable;
     private Disposable readModelNumberDisposable;
     private Disposable readFirmwareRevDisposable;
@@ -321,7 +322,7 @@ public class OldDeviceInfoPresenter extends BlePresenter<IOldDeviceInfoView> {
             @Override
             public void onSuccess(BaseResult baseResult) {
                 LogUtils.e("上传蓝牙信息成功");
-                checkOtaInfo(sn, version);
+                checkOTAInfo(sn, version);
             }
 
             @Override
@@ -346,46 +347,8 @@ public class OldDeviceInfoPresenter extends BlePresenter<IOldDeviceInfoView> {
         });
     }
 
-    public void checkOtaInfo(String SN, String version) {
 
 
-        otaDisposable = XiaokaiNewServiceImp.getOtaInfo(1, SN, version)
-                .subscribe(new Consumer<OTAResult>() {
-                    @Override
-                    public void accept(OTAResult otaResult) throws Exception {
-                        if ("200".equals(otaResult.getCode())) {
-                            //请求成功
-                            if (isSafe()) {
-
-                                String fileUrl = otaResult.getData().getFileUrl();
-                                if (!fileUrl.startsWith("http://")) {
-                                    otaResult.getData().setFileUrl("http://" + fileUrl);
-                                }
-                                mViewRef.get().needUpdate(otaResult.getData());
-                            }
-                        } else if ("402".equals(otaResult.getCode())) {
-                            if (isSafe()) {
-                                mViewRef.get().noUpdateConfig();
-                            }
-                        } else {
-                            if (isSafe()) {
-                                mViewRef.get().checkInfoFailed(otaResult.getCode());
-                            }
-                        }
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        if (isSafe()) {
-                            mViewRef.get().checkInfoFailed("");
-                        }
-                    }
-                });
-
-        compositeDisposable.add(otaDisposable);
-
-
-    }
 
     public void modifyDeviceNickname(String devname, String user_id, String lockNickName) {
         XiaokaiNewServiceImp.modifyLockNick(devname, user_id, lockNickName).subscribe(new BaseObserver<BaseResult>() {

@@ -51,7 +51,7 @@ public class TIOADEoadClient {
     public Runnable oadThread = new Runnable() {
         @Override
         public void run() {
-            Log.d(TAG, "OAD Thread started !");
+            Log.e(TAG, "OAD Thread started !");
             internalState = TIOADEoadDefinitions.oadStatusEnumeration.tiOADClientInitializing;
 
             oadDevice.myCB = cb;
@@ -180,8 +180,18 @@ public class TIOADEoadClient {
         return true;
     }
 
+    private String filePath;
+
+    public String getFilePath() {
+        return filePath;
+    }
+
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
+    }
 
     public void start(String filename) {
+        this.filePath = filename;
         //Start programming directly
         fileReader = new TIOADEoadImageReader(filename, this.context);
 
@@ -384,6 +394,7 @@ public class TIOADEoadClient {
 
 
     public void release(){
+        oadDevice.disconnectDevice();
         if (oadDevice!=null &&  oadDevice.g!=null){
             refreshDeviceCache(oadDevice.g);
             oadDevice.g.disconnect();

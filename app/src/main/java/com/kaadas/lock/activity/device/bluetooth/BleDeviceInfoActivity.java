@@ -193,32 +193,7 @@ public class BleDeviceInfoActivity extends BaseBleActivity<IDeviceInfoView, BleD
 
     @Override
     public void needUpdate(OTAResult.UpdateFileInfo updateFileInfo) {
-        //todo 蓝牙升级
-     /*   AlertDialogUtil.getInstance().noEditTwoButtonDialog(this, getString(R.string.hint)
-                , getString(R.string.hava_ble_new_version), getString(R.string.cancel), getString(R.string.confirm), new AlertDialogUtil.ClickListener() {
-                    @Override
-                    public void left() {
 
-
-                    }
-
-                    @Override
-                    public void right() {
-                        SPUtils.put(KeyConstants.DEVICE_SN + bleLockInfo.getServerLockInfo().getMacLock(), tvSerialNumber.getText().toString().trim());
-                        SPUtils.put(KeyConstants.BLE_VERSION + bleLockInfo.getServerLockInfo().getMacLock(), tvBluetoothModuleVersion.getText().toString().replace("V", ""));
-                        LogUtils.e("升级的文件信息   " + updateFileInfo.toString());
-                        MyApplication.getInstance().getBleService().release();
-                        Intent intent = new Intent();
-                        intent.putExtra(OtaConstants.fileName, "XiaoKai_" + updateFileInfo.getFileVersion() + ".bin");
-                        intent.putExtra(OtaConstants.bindUrl, updateFileInfo.getFileUrl());
-                        intent.putExtra(OtaConstants.deviceMac, bleLockInfo.getServerLockInfo().getMacLock());
-                        intent.putExtra(OtaConstants.password1, bleLockInfo.getServerLockInfo().getPassword1());
-                        intent.putExtra(OtaConstants.password2, bleLockInfo.getServerLockInfo().getPassword2());
-                        intent.setClass(BluetoothDeviceInformationActivity.this, DeviceOtaUpgradeActivity.class);
-                        startActivity(intent);
-                    }
-                }
-        );*/
     }
 
     @Override

@@ -48,4 +48,13 @@ public class UserUtils {
     }
 
 
+    public static void clear(){
+        SPUtils.getInstance().put(PreferencesConstans.YANBAOKA_CARD, false);
+        SPUtils.getInstance().put(PreferencesConstans.HAS_TEL, false);
+        SPUtils.getInstance().put(PreferencesConstans.TOKEN, "");
+        SPUtils.getInstance().put(PreferencesConstans.USER_TEL, "");
+        SPUtils.getInstance().put(PreferencesConstans.ID,  "");
+    }
+
+
 }

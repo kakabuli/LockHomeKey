@@ -188,7 +188,6 @@
             android:id="@+id/rl_bluetooth_module_version"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_60"
-
             >
 
             <TextView

@@ -6,7 +6,6 @@
     <!-- // 使用蓝牙设备的权限 -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
-
     <!-- To auto-complete the email text field in the login form with the user's emails -->
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.READ_PROFILE" />
@@ -43,14 +42,15 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <!-- OPPO辅助 SDK -->
     <uses-permission android:name="com.coloros.mcs.permission.RECIEVE_MCS_MESSAGE" />
+
     <application
         android:name=".MyApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        tools:replace="android:name,android:allowBackup"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        tools:replace="android:name,android:allowBackup">
         <activity
             android:name=".activity.MainActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
@@ -755,29 +755,31 @@
         <activity
             android:name=".publiclibrary.ota.gatewayota.GatewayOTADialogActivity"
             android:theme="@style/gatewayDialog" />
-
         <activity
             android:name=".activity.device.cateye.dialog.CatEyeNightSightDialogActivity"
             android:theme="@style/gatewayDialog" />
-
         <activity
             android:name=".activity.addDevice.cateye.TurnOnCatEyeFirstActivity"
-            android:screenOrientation="portrait"
-            android:launchMode="singleTask"/>
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.addDevice.cateye.TurnOnCatEyeSecondActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".activity.addDevice.cateye.CatEyeAddPhoneActivity"
+        <activity
+            android:name=".activity.addDevice.cateye.CatEyeAddPhoneActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".activity.addDevice.cateye.QrcodePhoneAddActivity"
-            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activity.addDevice.cateye.QrcodePhoneAddActivity"
+            android:screenOrientation="portrait" />
 
+        <activity android:name=".publiclibrary.ota.ti.Ti2FileOtaUpgradeActivity"
+            android:screenOrientation="portrait" />
 
         <!--
    接入HMSSDK PUSH模块需要注册，第三方相关 :接收Push消息（注册、透传消息、通知栏点击事件）广播，
     此receiver类需要开发者自己创建并继承com.huawei.hms.support.api.push.PushReceiver类，
     参考示例代码中的类：com.huawei.hmsagent.HuaweiPushRevicer${PACKAGE_NAME} 要替换上您应用的包名
-    -->
+        -->
         <receiver
             android:name="com.kaidishi.lock.push.HuaweiPushRevicer"
             android:permission="com.kaidishi.lock.huawei.permission.PROCESS_PUSH_MSG">
@@ -791,7 +793,6 @@
                 <action android:name="com.huawei.intent.action.PUSH_DELAY_NOTIFY" />
             </intent-filter>
         </receiver>
-
     </application>
 
 </manifest>

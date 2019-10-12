@@ -4,15 +4,25 @@ public class OTABean {
     private int customer;
     private String deviceName;
     private String version;
+    private int devNum;
 
 
-    public OTABean(int customer, String deviceName, String version) {
+    public OTABean(int customer, String deviceName, String version,int type) {
         this.customer = customer;
         this.deviceName = deviceName;
         this.version = version;
+        this.devNum = type;
     }
 
     public OTABean() {
+    }
+
+    public int getDevNum() {
+        return devNum;
+    }
+
+    public void setDevNum(int devNum) {
+        this.devNum = devNum;
     }
 
     public int getCustomer() {
