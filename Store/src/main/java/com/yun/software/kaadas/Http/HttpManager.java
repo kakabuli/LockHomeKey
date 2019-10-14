@@ -102,6 +102,7 @@ public class HttpManager {
                             }
                             responseListener.onSucceed(response);
                         }catch (Exception e) {
+                            Log.e("网络请求出错了", "  " + e.getMessage());
                             ExceptionUtil.handle(e);
                         }finally {
                             if(mIsLoading){

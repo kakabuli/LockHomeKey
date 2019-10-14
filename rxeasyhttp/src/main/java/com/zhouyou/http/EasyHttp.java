@@ -19,6 +19,7 @@ package com.zhouyou.http;
 import android.app.Application;
 import android.content.Context;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.zhouyou.http.cache.RxCache;
 import com.zhouyou.http.cache.converter.IDiskConverter;
@@ -79,7 +80,7 @@ import retrofit2.Retrofit;
  */
 public final class EasyHttp {
     private static Application sContext;
-    public static final int DEFAULT_MILLISECONDS = 60000;             //默认的超时时间
+    public static final int DEFAULT_MILLISECONDS = 10*1000;             //默认的超时时间
     private static final int DEFAULT_RETRY_COUNT = 3;                 //默认重试次数
     private static final int DEFAULT_RETRY_INCREASEDELAY = 0;         //默认重试叠加时间
     private static final int DEFAULT_RETRY_DELAY = 500;               //默认重试延时
@@ -193,9 +194,12 @@ public final class EasyHttp {
     public EasyHttp debug(String tag, boolean isPrintException) {
         String tempTag = TextUtils.isEmpty(tag)?"RxEasyHttp_":tag;
         if(isPrintException){
-            HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor(tempTag, isPrintException);
-            loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-            okHttpClientBuilder.addInterceptor(loggingInterceptor);
+
+            okhttp3.logging.HttpLoggingInterceptor logInterceptor = new okhttp3.logging.HttpLoggingInterceptor(new HttpLogger());
+            logInterceptor.setLevel(okhttp3.logging.HttpLoggingInterceptor.Level.BODY);
+//            HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor(tempTag, isPrintException);
+//            loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+            okHttpClientBuilder.addInterceptor(logInterceptor);
         }
         HttpLog.customTagPrefix = tempTag;
         HttpLog.allowE = isPrintException;
@@ -203,6 +207,13 @@ public final class EasyHttp {
         HttpLog.allowI = isPrintException;
         HttpLog.allowV = isPrintException;
         return this;
+    }
+
+    public static class HttpLogger implements okhttp3.logging.HttpLoggingInterceptor.Logger {
+        @Override
+        public void log(String message) {
+            Log.e("商城网络请求   ", message);
+        }
     }
 
     /**

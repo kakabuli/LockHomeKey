@@ -147,9 +147,8 @@ public class BleCommandFactory {
      * @param valueArray
      * @param key
      * @return
-     *
      */
-    public static byte[] setLockParamsCommand(byte number, byte[] valueArray, int length,byte[] key) {
+    public static byte[] setLockParamsCommand(byte number, byte[] valueArray, int length, byte[] key) {
         byte cmd = 0x06;
         byte[] payload = new byte[16]; //负载数据
         payload[0] = number;
@@ -157,6 +156,7 @@ public class BleCommandFactory {
         System.arraycopy(valueArray, 0, payload, 2, length);
         return groupPackage(cmd, payload, key);
     }
+
     public static byte[] setLockParamsCommand(byte number, byte[] valueArray, byte[] key) {
         byte cmd = 0x06;
         byte[] payload = new byte[16]; //负载数据
@@ -326,6 +326,7 @@ public class BleCommandFactory {
 
     /**
      * 同步门锁密钥状态：
+     *
      * @param codeType Code Type 密钥类型：     0x00：保留     0x01：PIN 密码     0x02：指纹     0x03：RFID 卡片        0x04：保留（管理员密码
      * @param key
      * @return
@@ -421,7 +422,7 @@ public class BleCommandFactory {
      * 获取操作记录
      * LogIndex Start：查询的记录起始序号
      * LogIndex End：查询的记录结束序号
-     *LogIndex End必须大于等于LogIndex Start，当只读取一条记录时LogIndex start等于LogIndex End。如果LogIndex Start大于LogTotal则直接返回确认帧。
+     * LogIndex End必须大于等于LogIndex Start，当只读取一条记录时LogIndex start等于LogIndex End。如果LogIndex Start大于LogTotal则直接返回确认帧。
      *
      * @param startIndex 查询日志起始序号。
      * @param endIndex   日志结束序号
@@ -432,13 +433,27 @@ public class BleCommandFactory {
     public static byte[] getOperationCommand(byte[] startIndex, byte[] endIndex, byte[] key) {
         byte cmd = 0x18;
         byte[] payload = new byte[16]; //负载数据
-        payload[0]=0x01;
-        payload[1]=0x03;
+        payload[0] = 0x01;
+        payload[1] = 0x03;
         System.arraycopy(startIndex, 0, payload, 2, 2);
         System.arraycopy(endIndex, 0, payload, 4, 2);
-        LogUtils.d("davi startIndex "+Rsa.bytesToHexString(startIndex)+" endIndex "+Rsa.bytesToHexString(endIndex));
+        LogUtils.d("davi startIndex " + Rsa.bytesToHexString(startIndex) + " endIndex " + Rsa.bytesToHexString(endIndex));
         return groupPackage(cmd, payload, key);
     }
+
+
+    /**
+     * 获取字模块列表
+     *
+     * @return
+     */
+
+    public static byte[] getModuleList(byte[] key) {
+        byte cmd = (byte) 0x83;
+        byte[] payload = new byte[16]; //负载数据
+        return groupPackage(cmd, payload, key);
+    }
+
 
     /**
      * 心跳帧
@@ -480,9 +495,9 @@ public class BleCommandFactory {
             checkSum += payload[i];
         }
         LogUtils.e("加密前 " + Rsa.bytesToHexString(payload) + "key是  " + Rsa.bytesToHexString(key));
-        if (key!=null){
+        if (key != null) {
             tempBuff = Rsa.encryptAES(payload, key);
-        }else {
+        } else {
             tempBuff = payload;
         }
         //设置数据头  是加密的

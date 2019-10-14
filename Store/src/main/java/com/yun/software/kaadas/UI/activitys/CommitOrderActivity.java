@@ -43,6 +43,7 @@ import java.util.List;
 import java.util.Map;
 
 import butterknife.BindView;
+import la.xiong.androidquick.tool.LogUtils;
 import la.xiong.androidquick.tool.StringUtil;
 import la.xiong.androidquick.tool.ToastUtil;
 import la.xiong.androidquick.ui.eventbus.EventCenter;
@@ -603,6 +604,7 @@ public class CommitOrderActivity extends BaseActivity {
     @Override
     protected void onEventComing(EventCenter eventCenter) {
         super.onEventComing(eventCenter);
+        LogUtils.e("状态值是   "+eventCenter.getEventCode());
         if(eventCenter.getEventCode()== Constans.MESSAGE_ORDER_COUPON){
             CouponBean couponBean = (CouponBean) eventCenter.getData();
             selectCoupon = couponBean.getPosition();

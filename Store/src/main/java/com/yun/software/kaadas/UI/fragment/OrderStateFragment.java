@@ -1,10 +1,12 @@
 package com.yun.software.kaadas.UI.fragment;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -126,6 +128,7 @@ public class OrderStateFragment extends BaseFragment {
             orderStatue =bundle.getString("statue");
             orderType = bundle.getString("type");
             title = bundle.getString("title");
+            LogUtils.e("orderStatue  " + orderStatue+"  orderType "+orderType);
             LogUtils.iTag(TAG,"type"+orderStatue);
         }
 
@@ -135,6 +138,34 @@ public class OrderStateFragment extends BaseFragment {
             tvTitle.setText(title);
         }
 
+        initAdapter();
+
+        //此处必须开启 防止用户刷星时候进行下拉操作 会引起IndexOutOfBoundsException
+        mRefreshLayout.setDisableContentWhenRefresh(true);
+        mRefreshLayout.setOnMultiPurposeListener(new SimpleMultiPurposeListener() {
+            @Override
+            public void onRefresh(@NonNull RefreshLayout refreshLayout) {
+                startIndex = 1;
+                getData();
+            }
+
+            @Override
+            public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
+                if (startIndex * pageSize >= total){
+                    ToastUtil.showShort("没有更多数据了");
+                    mRefreshLayout.finishLoadMoreWithNoMoreData();
+                    return;
+                }
+                startIndex += 1;
+                getData();
+            }
+        });
+//        mRefreshLayout.autoRefresh();
+
+    }
+
+
+    public void initAdapter(){
         oderShoperItemAdapter=new OrderShoperItemAdapter(listBeans,orderStatue,orderType);
         rvList.setHasFixedSize(true);
         rvList.setLayoutManager(new LinearLayoutManager(mContext));
@@ -145,13 +176,7 @@ public class OrderStateFragment extends BaseFragment {
                 OrderInfor infor = listBeans.get(position);
                 Bundle bundle = new Bundle();
                 int i = view.getId();//删除订单
-//退货
-//预约安装
-//立刻支付
-//取消订单
-//售后
-//安装
-//申请退款
+
                 if (i == R.id.tv_order_buy) {
                 } else if (i == R.id.tv_order_delete) {//                        DialogUtil.getDialogBuilder(mContext)
 //                                .setTitle("提示")
@@ -229,36 +254,25 @@ public class OrderStateFragment extends BaseFragment {
                 }
             }
         });
-
-        //此处必须开启 防止用户刷星时候进行下拉操作 会引起IndexOutOfBoundsException
-        mRefreshLayout.setDisableContentWhenRefresh(true);
-        mRefreshLayout.setOnMultiPurposeListener(new SimpleMultiPurposeListener() {
-            @Override
-            public void onRefresh(@NonNull RefreshLayout refreshLayout) {
-                startIndex = 1;
-                getData();
-            }
-
-            @Override
-            public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
-                if (startIndex * pageSize >= total){
-                    ToastUtil.showShort("没有更多数据了");
-                    mRefreshLayout.finishLoadMoreWithNoMoreData();
-                    return;
-                }
-                startIndex += 1;
-                getData();
-            }
-        });
-        mRefreshLayout.autoRefresh();
-
     }
-
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        Log.e("切换到当前界面", "界面类型是   " + orderStatue);
+        if (isVisibleToUser){
+            if (mRefreshLayout!=null){
+                Log.e("切换到当前界面", "刷新获取数据   "   );
+                mRefreshLayout.autoRefresh();
+            }
+        }
+    }
 
     @OnClick(R2.id.lin_back)
     public void onClickView(View view){
         getActivity().finish();
     }
+
+
 
     private void cancelOrder(OrderInfor infor) {
         Map<String,Object> map = new HashMap<>();
@@ -281,29 +295,27 @@ public class OrderStateFragment extends BaseFragment {
         },true);
     }
 
-//    private void deleteOrder(OrderInfor infor) {
-//        Map<String,Object> map = new HashMap<>();
-//        map.put("token", UserUtils.getToken());
-//        Map<String,Object> params = new HashMap<>();
-//        params.put("id",infor.getId());
-//        map.put("params",params);
-//
-//        HttpManager.getInstance().post(mContext, ApiConstants.INDENT_DELETE, map, new OnIResponseListener() {
-//            @Override
-//            public void onSucceed(String result) {
-//                ToastUtil.showShort("已删除");
-//                mRefreshLayout.autoRefresh();
-////
-//            }
-//            @Override
-//            public void onFailed(String error) {
-//                ToastUtil.showShort(error);
-//            }
-//        },true);
-//    }
 
+    private Handler handler = new Handler();
+    Runnable timeoutRunnable = new Runnable() {
+        @Override
+        public void run() {
+            if (mRefreshLayout != null) {
+                mRefreshLayout.finishRefresh();
+                mRefreshLayout.finishLoadMore(true);
+            }
+            toggleShowEmptyImage(true, R.drawable.order_missing_pages, new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    toggleRestore();
+                    getData();
+                }
+            });
+        }
+    };
 
     private void getData() {
+        handler.postDelayed(timeoutRunnable, 5 * 1000);
         Map<String,Object> map = new HashMap<>();
         map.put("token", UserUtils.getToken());
         Map<String,Object> page = new HashMap<>();
@@ -314,13 +326,14 @@ public class OrderStateFragment extends BaseFragment {
         params.put("indentType",orderType);//订单类型
         params.put("indentStatus",orderStatue);//订单状态
         map.put("params",params);
-
+        LogUtils.e("数据返回  " + orderStatue + "11");
         HttpManager.getInstance().post(mContext, ApiConstants.INDENT_MYINDENTSEARCH, map, new OnIResponseListener() {
             @Override
             public void onSucceed(String result) {
                 if(startIndex == 1){
                     listBeans.clear();
                 }
+                LogUtils.e("数据返回  " + orderStatue);
                 Gson gson = new Gson();
                 BaseBody<OrderInfor> baseBody = gson.fromJson(result,new TypeToken<BaseBody<OrderInfor>>(){}.getType());
                 listBeans.addAll(baseBody.getRows());
@@ -334,6 +347,10 @@ public class OrderStateFragment extends BaseFragment {
                         }
                     });
                 }
+                if (oderShoperItemAdapter == null){
+                    initAdapter();
+                }
+                handler.removeCallbacks(timeoutRunnable);
                 oderShoperItemAdapter.notifyDataSetChanged();
                 mRefreshLayout.finishRefresh();
                 mRefreshLayout.finishLoadMore(true);
@@ -384,5 +401,8 @@ public class OrderStateFragment extends BaseFragment {
         }else if (eventCenter.getEventCode() == Constans.MESSAGE_REFRESH_ORDER){
             getData();
         }
+//        else if (eventCenter.getEventCode() == Constans.MESSAGE_SUBMIT_ORDER){
+////            getData();
+//        }
     }
 }
