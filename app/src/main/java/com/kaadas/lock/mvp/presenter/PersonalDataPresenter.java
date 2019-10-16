@@ -117,7 +117,7 @@ public class PersonalDataPresenter<T> extends BasePresenter<IPersonalDataView> {
             @Override
             public void onSuccess(BaseResult baseResult) {
                 if (mViewRef != null) {
-                    LogUtils.d("davi 图片上传成功");
+                    LogUtils.d(" 图片上传成功");
                     mViewRef.get().photoUploadSuccess();
                 }
             }
@@ -125,14 +125,14 @@ public class PersonalDataPresenter<T> extends BasePresenter<IPersonalDataView> {
             @Override
             public void onAckErrorCode(BaseResult baseResult) {
                 if (mViewRef.get() != null) {
-                    LogUtils.d("davi 图片上传失败" + baseResult.toString());
+                    LogUtils.d(" 图片上传失败" + baseResult.toString());
                     mViewRef.get().photoUploadFail(baseResult);
                 }
             }
 
             @Override
             public void onFailed(Throwable throwable) {
-                LogUtils.d("davi 图片上传异常 " + throwable.toString());
+                LogUtils.d(" 图片上传异常 " + throwable.toString());
                 if (mViewRef.get() != null) {
                     mViewRef.get().photoUploadError(throwable);
                 }

@@ -78,7 +78,7 @@ public class OldDeviceInfoPresenter extends BleCheckOTAPresenter<IOldDeviceInfoV
                             @Override
                             public void accept(ReadInfoBean readInfoBean) throws Exception {
                                 readFirmwareRev();
-                                LogUtils.e(" davi 读取SoftwareRev成功 " + readInfoBean.data);  //进行下一步
+                                LogUtils.e("  读取SoftwareRev成功 " + readInfoBean.data);  //进行下一步
                                 bleLockInfo.setSoftware((String) readInfoBean.data);
                                 if (isSafe()) {
                                     mViewRef.get().SoftwareRevDataSuccess((String) readInfoBean.data);
@@ -89,7 +89,7 @@ public class OldDeviceInfoPresenter extends BleCheckOTAPresenter<IOldDeviceInfoV
                             @Override
                             public void accept(Throwable throwable) throws Exception {
                                 readFirmwareRev();
-                                LogUtils.e(" davi 读取SoftwareRev失败  " + (throwable instanceof TimeOutException) + "   " + throwable.getMessage());
+                                LogUtils.e("  读取SoftwareRev失败  " + (throwable instanceof TimeOutException) + "   " + throwable.getMessage());
                                 if (isSafe()) {
                                     mViewRef.get().SoftwareRevDataError(throwable);
                                 }
@@ -130,7 +130,7 @@ public class OldDeviceInfoPresenter extends BleCheckOTAPresenter<IOldDeviceInfoV
                             @Override
                             public void accept(ReadInfoBean readInfoBean) throws Exception {
                                 readFirmwareRev();
-                                LogUtils.e(" davi 读取HardwareRev成功 " + readInfoBean.data);  //进行下一步
+                                LogUtils.e("  读取HardwareRev成功 " + readInfoBean.data);  //进行下一步
                                 bleLockInfo.setHardware((String) readInfoBean.data);
                                 if (isSafe()) {
                                     mViewRef.get().HardwareRevDataSuccess((String) readInfoBean.data);
@@ -141,7 +141,7 @@ public class OldDeviceInfoPresenter extends BleCheckOTAPresenter<IOldDeviceInfoV
                             @Override
                             public void accept(Throwable throwable) throws Exception {
                                 readFirmwareRev();
-                                LogUtils.e(" davi 读取HardwareRev失败  " + (throwable instanceof TimeOutException) + "   " + throwable.getMessage());
+                                LogUtils.e("  读取HardwareRev失败  " + (throwable instanceof TimeOutException) + "   " + throwable.getMessage());
                                 if (isSafe()) {
                                     mViewRef.get().HardwareRevDataError(throwable);
                                 }
@@ -182,7 +182,7 @@ public class OldDeviceInfoPresenter extends BleCheckOTAPresenter<IOldDeviceInfoV
                             @Override
                             public void accept(ReadInfoBean readInfoBean) throws Exception {
                                 readSerialNumber();
-                                LogUtils.e(" davi 读取FirmwareRev成功 " + readInfoBean.data);  //进行下一步
+                                LogUtils.e("  读取FirmwareRev成功 " + readInfoBean.data);  //进行下一步
                                 bleLockInfo.setFirmware((String) readInfoBean.data);
                                 if (isSafe()) {
                                     mViewRef.get().FirmwareRevDataSuccess((String) readInfoBean.data);
@@ -193,7 +193,7 @@ public class OldDeviceInfoPresenter extends BleCheckOTAPresenter<IOldDeviceInfoV
                             @Override
                             public void accept(Throwable throwable) throws Exception {
                                 readSerialNumber();
-                                LogUtils.e(" davi 读取FirmwareRev失败  " + (throwable instanceof TimeOutException) + "   " + throwable.getMessage());
+                                LogUtils.e("  读取FirmwareRev失败  " + (throwable instanceof TimeOutException) + "   " + throwable.getMessage());
                                 if (isSafe()) {
                                     mViewRef.get().FirmwareRevDataError(throwable);
                                 }
@@ -234,7 +234,7 @@ public class OldDeviceInfoPresenter extends BleCheckOTAPresenter<IOldDeviceInfoV
                             @Override
                             public void accept(ReadInfoBean readInfoBean) throws Exception {
                                 readModelNumber();
-                                LogUtils.e(" davi 读取SerialNumber成功 " + readInfoBean.data);  //进行下一步
+                                LogUtils.e("  读取SerialNumber成功 " + readInfoBean.data);  //进行下一步
                                 bleLockInfo.setSerialNumber((String) readInfoBean.data);
                                 if (isSafe()) {
                                     mViewRef.get().SerialNumberDataSuccess((String) readInfoBean.data);
@@ -245,7 +245,7 @@ public class OldDeviceInfoPresenter extends BleCheckOTAPresenter<IOldDeviceInfoV
                             @Override
                             public void accept(Throwable throwable) throws Exception {
                                 readModelNumber();
-                                LogUtils.e(" davi 读取SerialNumber失败  " + (throwable instanceof TimeOutException) + "   " + throwable.getMessage());
+                                LogUtils.e("  读取SerialNumber失败  " + (throwable instanceof TimeOutException) + "   " + throwable.getMessage());
                                 if (isSafe()) {
                                     mViewRef.get().SerialNumberDataError(throwable);
                                 }
@@ -294,7 +294,7 @@ public class OldDeviceInfoPresenter extends BleCheckOTAPresenter<IOldDeviceInfoV
                         .subscribe(new Consumer<ReadInfoBean>() {
                             @Override
                             public void accept(ReadInfoBean readInfoBean) throws Exception {
-                                LogUtils.e(" davi 读取ModelNumber成功 " + readInfoBean.data);  //进行下一步
+                                LogUtils.e("  读取ModelNumber成功 " + readInfoBean.data);  //进行下一步
                                 bleLockInfo.setModeNumber((String) readInfoBean.data);
                                 if (isSafe()) {
                                     mViewRef.get().ModelNumberDataSuccess((String) readInfoBean.data);
@@ -304,7 +304,7 @@ public class OldDeviceInfoPresenter extends BleCheckOTAPresenter<IOldDeviceInfoV
                         }, new Consumer<Throwable>() {
                             @Override
                             public void accept(Throwable throwable) throws Exception {
-                                LogUtils.e(" davi 读取ModelNumber失败  " + (throwable instanceof TimeOutException) + "   " + throwable.getMessage());
+                                LogUtils.e("  读取ModelNumber失败  " + (throwable instanceof TimeOutException) + "   " + throwable.getMessage());
                                 if (isSafe()) {
                                     mViewRef.get().ModelNumberDataError(throwable);
                                 }
@@ -322,7 +322,7 @@ public class OldDeviceInfoPresenter extends BleCheckOTAPresenter<IOldDeviceInfoV
             @Override
             public void onSuccess(BaseResult baseResult) {
                 LogUtils.e("上传蓝牙信息成功");
-                checkOTAInfo(sn, version);
+                checkOTAInfo(sn, version,1);
             }
 
             @Override

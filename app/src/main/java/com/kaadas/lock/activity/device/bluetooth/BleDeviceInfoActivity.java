@@ -1,6 +1,7 @@
 package com.kaadas.lock.activity.device.bluetooth;
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.InputFilter;
@@ -14,21 +15,31 @@ import android.widget.TextView;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.mvp.mvpbase.BaseBleActivity;
+import com.kaadas.lock.mvp.mvpbase.BaseBleCheckInfoActivity;
 import com.kaadas.lock.mvp.presenter.ble.BleDeviceInfoPresenter;
 import com.kaadas.lock.mvp.view.IDeviceInfoView;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.result.OTAResult;
 import com.kaadas.lock.publiclibrary.http.util.HttpUtils;
+import com.kaadas.lock.publiclibrary.ota.DownFileUtils;
+import com.kaadas.lock.publiclibrary.ota.ble.OtaConstants;
+import com.kaadas.lock.publiclibrary.ota.face.FaceOtaActivity;
 import com.kaadas.lock.utils.AlertDialogUtil;
+import com.kaadas.lock.utils.BleLockUtils;
+import com.kaadas.lock.utils.KeyConstants;
+import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.StringUtil;
 import com.kaadas.lock.utils.ToastUtil;
+import com.liulishuo.filedownloader.FileDownloader;
+
+import java.io.File;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class BleDeviceInfoActivity extends BaseBleActivity<IDeviceInfoView, BleDeviceInfoPresenter> implements IDeviceInfoView, View.OnClickListener {
+public class BleDeviceInfoActivity extends BaseBleCheckInfoActivity<IDeviceInfoView, BleDeviceInfoPresenter> implements IDeviceInfoView, View.OnClickListener {
 
     @BindView(R.id.iv_back)
     ImageView ivBack;
@@ -48,33 +59,42 @@ public class BleDeviceInfoActivity extends BaseBleActivity<IDeviceInfoView, BleD
     TextView tvBluetoothModuleVersion;
     @BindView(R.id.tv_lock_software_version)
     TextView tvLockSoftwareVersion;
-    @BindView(R.id.tv_zigbee_module_version)
-    TextView tvZigbeeModuleVersion;
-    @BindView(R.id.rl_zigbee_module_version)
-    RelativeLayout rlZigbeeModuleVersion;
     @BindView(R.id.tv_device_name)
     TextView tvDeviceName;
     @BindView(R.id.rl_device_name)
     RelativeLayout rlDeviceName;
+    @BindView(R.id.rv_3d_algorithm)
+    TextView tv3dAlgorithm;
+    @BindView(R.id.tv_3d_camera)
+    TextView tv3dCamera;
+    @BindView(R.id.lr_3d_algorithm)
+    RelativeLayout lr3dAlgorithm;
+    @BindView(R.id.lr_3d_camera)
+    RelativeLayout lr3dCamera;
     private BleLockInfo bleLockInfo;
     private String deviceNickname;
     private String name;
+    private OTAResult.UpdateFileInfo currentAppInfo;
+    private String filePath;
+    private int algorithmNumber;
+    private int algorithmOtaType;
+    private int cameraNumber;
+    private int cameraOtaType;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bluetooth_authorization_device_information);
 
-
-
+        FileDownloader.setup(this);
         ButterKnife.bind(this);
         bleLockInfo = MyApplication.getInstance().getBleService().getBleLockInfo();
 
         deviceNickname = bleLockInfo.getServerLockInfo().getLockNickName();
         tvDeviceName.setText(deviceNickname);
-        if (!"1".equals(bleLockInfo.getServerLockInfo().getIs_admin())){
+        if (!"1".equals(bleLockInfo.getServerLockInfo().getIs_admin())) {
             rlDeviceName.setVisibility(View.VISIBLE);
-        }else {
+        } else {
             rlDeviceName.setVisibility(View.GONE);
         }
 
@@ -85,6 +105,19 @@ public class BleDeviceInfoActivity extends BaseBleActivity<IDeviceInfoView, BleD
         ivBack.setOnClickListener(this);
         tvContent.setText(R.string.device_info);
         rlBluetoothModuleVersion.setOnClickListener(this);
+
+        tv3dCamera.setOnClickListener(this);
+        tv3dAlgorithm.setOnClickListener(this);
+
+
+        boolean supportFace = BleLockUtils.isSupportFace(bleLockInfo.getServerLockInfo().getFunctionSet());
+        if (!supportFace) {
+            lr3dAlgorithm.setVisibility(View.GONE);
+            lr3dCamera.setVisibility(View.GONE);
+        } else {
+            lr3dAlgorithm.setVisibility(View.VISIBLE);
+            lr3dCamera.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -99,8 +132,19 @@ public class BleDeviceInfoActivity extends BaseBleActivity<IDeviceInfoView, BleD
                 finish();
                 break;
             case R.id.rl_bluetooth_module_version:
-                mPresenter.checkOtaInfo(tvSerialNumber.getText().toString().trim(),
-                        tvBluetoothModuleVersion.getText().toString().replace("V", ""));
+
+                break;
+            case R.id.tv_3d_camera:
+                showLoading(getString(R.string.is_check_version));
+                String version = tv3dCamera.getText().toString().trim();
+//                version = version.replace("ALG_", "");
+                mPresenter.checkOTAInfo(bleLockInfo.getServerLockInfo().getDeviceSN(), version, 3);
+                break;
+            case R.id.rv_3d_algorithm:
+                showLoading(getString(R.string.is_check_version));
+                String versionAlgorithm = tv3dAlgorithm.getText().toString().trim();
+//                versionAlgorithm = versionAlgorithm.replace("ALG_", "");
+                mPresenter.checkOTAInfo(bleLockInfo.getServerLockInfo().getDeviceSN(), versionAlgorithm, 2);
                 break;
         }
     }
@@ -128,9 +172,7 @@ public class BleDeviceInfoActivity extends BaseBleActivity<IDeviceInfoView, BleD
     public void HardwareRevDataSuccess(String data) {
         if (data.contains("-")) {
             String[] split = data.split("-");
-            String strModuleHardwareVersion = split[0];
             String strLockHardwareVersion = split[1];
-//        tvBluetoothModuleVersion.setText(strModuleHardwareVersion);
             tvLockFirmwareVersion.setText(strLockHardwareVersion);
         } else {
             tvLockFirmwareVersion.setText(data);
@@ -159,44 +201,6 @@ public class BleDeviceInfoActivity extends BaseBleActivity<IDeviceInfoView, BleD
     }
 
     @Override
-    public void SerialNumberDataError(Throwable throwable) {
-        ToastUtil.getInstance().showShort(R.string.read_device_info_fail);
-    }
-
-    @Override
-    public void ModelNumberDataSuccess(String data) {
-        hiddenLoading();
-    }
-
-    @Override
-    public void ModelNumberDataError(Throwable throwable) {
-        hiddenLoading();
-        ToastUtil.getInstance().showShort(R.string.read_device_info_fail);
-    }
-
-    @Override
-    public void noUpdateConfig() {
-        //当前已是最新版本
-        AlertDialogUtil.getInstance().noEditSingleButtonDialog(this, getString(R.string.hint)
-                , getString(R.string.already_newest_version), getString(R.string.confirm), new AlertDialogUtil.ClickListener() {
-                    @Override
-                    public void left() {
-
-                    }
-
-                    @Override
-                    public void right() {
-
-                    }
-                });
-    }
-
-    @Override
-    public void needUpdate(OTAResult.UpdateFileInfo updateFileInfo) {
-
-    }
-
-    @Override
     public void modifyDeviceNicknameSuccess() {
         hiddenLoading();
         deviceNickname = name;
@@ -218,6 +222,88 @@ public class BleDeviceInfoActivity extends BaseBleActivity<IDeviceInfoView, BleD
     }
 
     @Override
+    public void readDeviceInfoEnd() {
+        hiddenLoading();
+    }
+
+
+    @Override
+    public void readDeviceInfoFailed(Throwable throwable) {
+        hiddenLoading();
+    }
+
+    @Override
+    public void onReadModuleVersion(int moduleNumber, String version, int otaType) {
+        if (moduleNumber == 1) {
+            tv3dAlgorithm.setText(version);
+            algorithmNumber = moduleNumber;
+            algorithmOtaType = otaType;
+
+        } else if (moduleNumber == 2) {
+            tv3dCamera.setText(version);
+            cameraNumber = moduleNumber;
+            cameraOtaType = otaType;
+        }
+    }
+
+    @Override
+    public void onRequestOtaFailed(Throwable throwable) {
+        ToastUtil.getInstance().showLong(R.string.open_ota_failed);
+    }
+
+    @Override
+    public void onRequestOtaSuccess(String ssid, String password) {
+        showLoading(getString(R.string.is_down_file));
+        DownFileUtils downFileUtils = new DownFileUtils() {
+            @Override
+            public void onFileExist(String url, String path) {
+                hiddenLoading();
+                Intent intent = new Intent();
+                intent.putExtra(OtaConstants.filePath, filePath);
+                intent.putExtra(OtaConstants.wifiPassword, password);
+                intent.putExtra(OtaConstants.wifiSSid, ssid);
+                intent.setClass(BleDeviceInfoActivity.this, FaceOtaActivity.class);
+                startActivity(intent);
+            }
+
+            @Override
+            public void onDownFailed(String url, String path, Throwable throwable) {
+                LogUtils.e("下载文件失败，  " + throwable.getMessage());
+                hiddenLoading();
+                ToastUtil.getInstance().showLong(R.string.down_file_failed_please_retry);
+            }
+
+            @Override
+            public void onTaskExist(String url, String path) {
+                hiddenLoading();
+            }
+
+            @Override
+            public void onDownComplete(String url, String path) {
+                hiddenLoading();
+                Intent intent = new Intent();
+                intent.putExtra(OtaConstants.filePath, path);
+                intent.putExtra(OtaConstants.wifiPassword, password);
+                intent.putExtra(OtaConstants.wifiSSid, ssid);
+                intent.setClass(BleDeviceInfoActivity.this, FaceOtaActivity.class);
+                startActivity(intent);
+            }
+
+            @Override
+            public void onDownProgressUpdate(String url, String path, int progress) {
+
+            }
+        };
+        String PATH = getExternalFilesDir("").getAbsolutePath() + File.separator + "binFile";
+        downFileUtils.createFolder(PATH);
+        String fileName = "Kaadas_module" + currentAppInfo.getFileVersion() + "_" + currentAppInfo.getFileMd5() + ".bin";
+        filePath = PATH + "/" + fileName;
+        downFileUtils.downFile(currentAppInfo.getFileUrl(), filePath);
+
+
+    }
+
+    @Override
     public void onDeviceStateChange(boolean isConnected) {  //设备连接状态改变   连接成功时提示正在鉴权，连接失败时直接提示用户
         if (isConnected) {
             showLoading(getString(R.string.is_authing));
@@ -229,7 +315,6 @@ public class BleDeviceInfoActivity extends BaseBleActivity<IDeviceInfoView, BleD
 
     @OnClick(R.id.tv_device_name)
     public void onClick() {
-
         //设备名字
         View mView = LayoutInflater.from(this).inflate(R.layout.have_edit_dialog, null);
         TextView tvTitle = mView.findViewById(R.id.tv_title);
@@ -270,5 +355,17 @@ public class BleDeviceInfoActivity extends BaseBleActivity<IDeviceInfoView, BleD
                 alertDialog.dismiss();
             }
         });
+    }
+
+    @Override
+    public void on3DModuleEnterOta(int type, OTAResult.UpdateFileInfo appInfo) {
+        currentAppInfo = appInfo;
+        if (mPresenter.isAuth(bleLockInfo, true)) {
+            if (type == 2) { //算法模块
+                mPresenter.sendOtaCommand((byte) algorithmNumber, (byte) algorithmOtaType, appInfo.getFileVersion());
+            } else if (type == 3) {
+                mPresenter.sendOtaCommand((byte) cameraNumber, (byte) cameraOtaType, appInfo.getFileVersion());
+            }
+        }
     }
 }

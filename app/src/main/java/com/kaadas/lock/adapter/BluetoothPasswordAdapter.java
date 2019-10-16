@@ -45,7 +45,7 @@ public class BluetoothPasswordAdapter extends BaseQuickAdapter<ForeverPassword, 
 //        int itemCount = getItemCount();
         int itemCount=data.size();
         int pos=helper.getPosition();
-        LogUtils.d("davi itemCount "+itemCount+"----------pos "+pos);
+        LogUtils.d(" itemCount "+itemCount+"----------pos "+pos);
         if (pos==itemCount-1){
            View view= helper.getView(R.id.my_view);
             view.setVisibility(View.GONE);

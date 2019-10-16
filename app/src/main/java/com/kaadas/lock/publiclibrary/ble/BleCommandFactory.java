@@ -443,14 +443,44 @@ public class BleCommandFactory {
 
 
     /**
-     * 获取字模块列表
-     *
+     * 获取子模块列表
      * @return
      */
 
     public static byte[] getModuleList(byte[] key) {
         byte cmd = (byte) 0x83;
         byte[] payload = new byte[16]; //负载数据
+        return groupPackage(cmd, payload, key);
+    }
+
+    /**
+     * 获取子模块版本信息
+     * @param key
+     * @param number   模块号
+     * @return
+     */
+
+    public static byte[] getModuleVersion(byte[] key,byte number) {
+        byte cmd = (byte) 0x84;
+        byte[] payload = new byte[16]; //负载数据
+        payload[0] = number;
+        return groupPackage(cmd, payload, key);
+    }
+
+
+    /**
+     * 获取子模块版本信息
+     * @param key
+     * @param number   模块号
+     * @return
+     */
+
+    public static byte[] moduleOtaRequest(byte[] key,byte number,byte otaType ,byte[] newVersion) {
+        byte cmd = (byte) 0x85;
+        byte[] payload = new byte[16]; //负载数据
+        payload[0] = number;
+        payload[1] = otaType;
+        System.arraycopy(newVersion,0,payload,2,newVersion.length);
         return groupPackage(cmd, payload, key);
     }
 

@@ -2,13 +2,14 @@ package com.kaadas.lock.mvp.view;
 
 
 import com.kaadas.lock.mvp.mvpbase.IBleView;
+import com.kaadas.lock.mvp.mvpbase.ICheckOtaView;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.result.OTAResult;
 
 /**
  * Created by David on 2019/3/14
  */
-public interface IDeviceInfoView extends IBleView {
+public interface IDeviceInfoView extends ICheckOtaView {
     /**
      * 软件版本
      */
@@ -35,27 +36,6 @@ public interface IDeviceInfoView extends IBleView {
      */
     void SerialNumberDataSuccess(String data);
 
-    void SerialNumberDataError(Throwable throwable);
-
-    /**
-     * 模块代号
-     */
-    void ModelNumberDataSuccess(String data);
-
-    void ModelNumberDataError(Throwable throwable);
-
-    /**
-     * 无升级配置
-     */
-    void noUpdateConfig();
-
-    /**
-     * 需要升级
-     */
-    void needUpdate(OTAResult.UpdateFileInfo updateFileInfo);
-
-
-
 
     /**
      * 修改设备昵称成功
@@ -71,6 +51,36 @@ public interface IDeviceInfoView extends IBleView {
      * 修改昵称失败
      */
     void modifyDeviceNicknameFail(BaseResult baseResult);
+
+
+    /**
+     * 读取设备信息结束
+     */
+    void readDeviceInfoEnd();
+
+    /**
+     * 读取设备信息失败
+     * @param throwable
+     */
+    void readDeviceInfoFailed(Throwable throwable);
+
+    /**
+     * 读取子模块版本信息
+     */
+    void onReadModuleVersion(int moduleNumber,String version,int otaType);
+
+
+
+    /**
+     * 请求OTA  失败
+     */
+    void onRequestOtaFailed(Throwable throwable);
+
+    /**
+     * 请求OTA  成功
+     */
+    void onRequestOtaSuccess(String ssid,String password);
+
 
 
 }

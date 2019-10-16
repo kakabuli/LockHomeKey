@@ -445,5 +445,10 @@ public class   KeyConstants {
     public static final String GATEWAY_OTA_UPGRADE="gateway_ota_upgrade";
 
     public static final String GATEWAY_NIGHT_SIGHT="GATEWAY_NIGHT_SIGHT";
+
+
+    public static final int  TAG_NUMBER = 2001;
+    public static final int  TAG_OTA_TYPE = 2002;
+
 }
 

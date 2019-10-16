@@ -164,8 +164,7 @@ public class BleLockUtils {
 
 
     /**
-     * 根据功能集判断是否支持修改管理员密码
-     *
+     * 根据功能集判断是否支持卡片
      * @param functionSet
      * @return
      */
@@ -180,6 +179,41 @@ public class BleLockUtils {
         }
         List<Integer> integers = Arrays.asList(funcs);
         return integers.contains(9);
+    }
+
+    /**
+     * 根据功能集判断是否支持指纹
+     * @param functionSet
+     * @return
+     */
+    public static boolean isSupportFinger(String functionSet) {
+        if (TextUtils.isEmpty(functionSet)) {
+            return false;
+        }
+        int func = Integer.parseInt(functionSet);
+        Integer[] funcs = FUNCTION_SET.get(func);
+        if (funcs == null) { //  没有该功能集对应的  知己false
+            return false;
+        }
+        List<Integer> integers = Arrays.asList(funcs);
+        return integers.contains(8);
+    }
+    /**
+     * 根据功能集判断是否支持密码
+     * @param functionSet
+     * @return
+     */
+    public static boolean isSupportPassword(String functionSet) {
+        if (TextUtils.isEmpty(functionSet)) {
+            return false;
+        }
+        int func = Integer.parseInt(functionSet);
+        Integer[] funcs = FUNCTION_SET.get(func);
+        if (funcs == null) { //  没有该功能集对应的  知己false
+            return false;
+        }
+        List<Integer> integers = Arrays.asList(funcs);
+        return integers.contains(7);
     }
 
 
@@ -264,6 +298,16 @@ public class BleLockUtils {
 
     }
 
+    public static boolean isSupportFace(String functionSet){
+        int funcSet = Integer.parseInt(functionSet);
+        Integer[] funcs = FUNCTION_SET.get(funcSet);
+        if (funcs == null) {
+            return false;
+        }
+        List<Integer> integers = Arrays.asList(funcs);
+        return integers.contains(26);
+    }
+
     /**
      * 根据功能集判断显示的界面
      *
@@ -339,6 +383,12 @@ public class BleLockUtils {
                 return R.mipmap.bluetooth_authorization_lock_8008;
             } else if (model.startsWith("8100")) {
                 return R.mipmap.bluetooth_authorization_lock_8100;
+            } else if (model.startsWith("K200")) {
+                return R.mipmap.bluetooth_authorization_lock_k200;
+            } else if (model.startsWith("S300")) {
+                return R.mipmap.bluetooth_authorization_lock_s300;
+            } else if (model.startsWith("5011")) {
+                return R.mipmap.bluetooth_authorization_lock_5011;
             } else {
                 return R.mipmap.bluetooth_authorization_lock_default;
             }
@@ -390,6 +440,12 @@ public class BleLockUtils {
                 return R.mipmap.small_8008;
             } else if (model.startsWith("8100")) {
                 return R.mipmap.small_8100;
+            } else if (model.startsWith("K200")) {
+                return R.mipmap.k200;
+            } else if (model.startsWith("S300")) {
+                return R.mipmap.s300;
+            } else if (model.startsWith("5011")) {
+                return R.mipmap.small_5011;
             } else {
                 return R.mipmap.default_zigbee_lock_icon;
             }
@@ -441,6 +497,12 @@ public class BleLockUtils {
                 return R.mipmap.bluetooth_lock_8008;
             } else if (model.startsWith("8100")) {
                 return R.mipmap.bluetooth_lock_8100;
+            }else if (model.startsWith("K200")) {
+                return R.mipmap.bluetooth_lock_k200;
+            }else if (model.startsWith("S300")) {
+                return R.mipmap.bluetooth_lock_s300;
+            }else if (model.startsWith("5011")) {
+                return R.mipmap.bluetooth_lock_5011;
             } else {
                 return R.mipmap.bluetooth_lock_default;
             }
@@ -448,6 +510,8 @@ public class BleLockUtils {
             return R.mipmap.bluetooth_lock_default;
         }
     }
+
+
 
 
 }

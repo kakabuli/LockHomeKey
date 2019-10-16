@@ -732,16 +732,16 @@
             android:name=".activity.my.BarCodeActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".publiclibrary.ota.ti.TiOtaUpgradeActivity"
+            android:name=".publiclibrary.ota.ble.ti.TiOtaUpgradeActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".publiclibrary.ota.p6.P6OtaUpgradeActivity"
+            android:name=".publiclibrary.ota.ble.p6.P6OtaUpgradeActivity"
             android:screenOrientation="portrait" />
 
-        <service android:name=".publiclibrary.ota.p6.BluetoothLeService" />
+        <service android:name=".publiclibrary.ota.ble.p6.BluetoothLeService" />
 
         <receiver
-            android:name=".publiclibrary.ota.p6.OTAFirmwareUpdate.OTAResponseReceiver_v1"
+            android:name=".publiclibrary.ota.ble.p6.OTAFirmwareUpdate.OTAResponseReceiver_v1"
             android:enabled="true"
             android:exported="false">
             <intent-filter>
@@ -750,7 +750,7 @@
         </receiver>
 
         <activity
-            android:name=".publiclibrary.ota.OTADialogActivity"
+            android:name=".publiclibrary.ota.ble.OTADialogActivity"
             android:theme="@style/gatewayDialog" />
         <activity
             android:name=".publiclibrary.ota.gatewayota.GatewayOTADialogActivity"
@@ -771,8 +771,8 @@
         <activity
             android:name=".activity.addDevice.cateye.QrcodePhoneAddActivity"
             android:screenOrientation="portrait" />
-
-        <activity android:name=".publiclibrary.ota.ti.Ti2FileOtaUpgradeActivity"
+        <activity
+            android:name=".publiclibrary.ota.ble.ti.Ti2FileOtaUpgradeActivity"
             android:screenOrientation="portrait" />
 
         <!--
@@ -793,6 +793,9 @@
                 <action android:name="com.huawei.intent.action.PUSH_DELAY_NOTIFY" />
             </intent-filter>
         </receiver>
+
+        <activity android:name=".publiclibrary.ota.face.FaceOtaActivity" />
+        <activity android:name=".publiclibrary.ota.face.RequestOtaAndLinkWifiActivity"></activity>
     </application>
 
 </manifest>

@@ -10,13 +10,30 @@ public interface ICheckOtaView extends IBleView {
 
     void dataError(); //数据参数错误
 
-    void needOneUpdate(OTAResult.UpdateFileInfo appInfo,String SN,String version );
+    /**
+     *
+     * @param appInfo
+     * @param SN
+     * @param version
+     * @param type 1 只有蓝牙固件需要升级   2算法版升级  3摄像头升级
+     */
+    void needUpdate(OTAResult.UpdateFileInfo appInfo, String SN, String version, int type );
 
+    /**
+     * 两个文件需要升级
+     * @param stackInfo
+     * @param appInfo
+     * @param SN
+     * @param version
+     */
     void needTwoUpdate(OTAResult.UpdateFileInfo stackInfo,OTAResult.UpdateFileInfo appInfo,String SN,String version );
 
+    /**
+     * 读取信息失败
+     * @param throwable
+     */
     void readInfoFailed(Throwable throwable);
 
     void unknowError(String errorCode); //   未知错误
-
 
 }

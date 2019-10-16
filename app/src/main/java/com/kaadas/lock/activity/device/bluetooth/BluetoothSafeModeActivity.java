@@ -47,6 +47,16 @@ public class BluetoothSafeModeActivity extends BaseBleActivity<ISafeModeView, Sa
     LinearLayout all;
     @BindView(R.id.rl_notice)
     RelativeLayout rlNotice;
+    @BindView(R.id.notice1)
+    RelativeLayout notice1;
+    @BindView(R.id.iv_1)
+    ImageView iv1;
+    @BindView(R.id.tv_1)
+    TextView tv1;
+    @BindView(R.id.iv_2)
+    ImageView iv2;
+    @BindView(R.id.tv_2)
+    TextView tv2;
     private BleLockInfo bleLockInfo;
     private String name;
 
@@ -65,22 +75,44 @@ public class BluetoothSafeModeActivity extends BaseBleActivity<ISafeModeView, Sa
         ivBack.setOnClickListener(this);
         tvContent.setText(R.string.safe_mode);
         rlSafeMode.setOnClickListener(this);
+
+
         if (bleLockInfo != null && bleLockInfo.getServerLockInfo() != null) {
-            if (BleLockUtils.isSupportCard(bleLockInfo.getServerLockInfo().getFunctionSet())) {
-//            if (false){
+            String functionSet = bleLockInfo.getServerLockInfo().getFunctionSet();
+//            functionSet = ""+0x41;
+//            functionSet = ""+0x36;
+            boolean supportCard = BleLockUtils.isSupportCard(functionSet);
+            boolean supportFinger = BleLockUtils.isSupportFinger(functionSet);
+            boolean supportPassword = BleLockUtils.isSupportPassword(functionSet);
+            if (supportCard && supportFinger && supportPassword) {
                 all.setVisibility(View.VISIBLE);
                 noCard.setVisibility(View.GONE);
                 LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(rlNotice.getLayoutParams());
-                lp.setMargins(0,0, 0,  Utils.dp2px(this,60));
+                lp.setMargins(0, 0, 0, Utils.dp2px(this, 60));
                 rlNotice.setLayoutParams(lp);
             } else {
                 all.setVisibility(View.GONE);
                 noCard.setVisibility(View.VISIBLE);
                 LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(rlNotice.getLayoutParams());
-                lp.setMargins(0, 0, 0, Utils.dp2px(this,100));
+                lp.setMargins(0, 0, 0, Utils.dp2px(this, 100));
                 rlNotice.setLayoutParams(lp);
+                if (supportFinger && supportCard) {
+                    iv1.setImageResource(R.mipmap.safe_finger);
+                    iv1.setImageResource(R.mipmap.safe_card);
+                    tv1.setText(R.string.finger);
+                    tv2.setText(R.string.card);
+                } else if (supportPassword && supportFinger) {
+                    iv1.setImageResource(R.mipmap.safe_password);
+                    iv1.setImageResource(R.mipmap.safe_finger);
+                    tv1.setText(R.string.password);
+                    tv2.setText(R.string.finger);
+                } else if (supportPassword && supportCard) {
+                    iv1.setImageResource(R.mipmap.safe_password);
+                    iv1.setImageResource(R.mipmap.safe_card);
+                    tv1.setText(R.string.password);
+                    tv2.setText(R.string.card);
+                }
             }
-
         }
 
     }

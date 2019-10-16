@@ -16,17 +16,12 @@ import android.widget.TextView;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.MainActivity;
-import com.kaadas.lock.mvp.mvpbase.BaseBleActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseBleCheckInfoActivity;
 import com.kaadas.lock.mvp.presenter.ble.BleDeviceMorePresenter;
 import com.kaadas.lock.mvp.view.IDeviceMoreView;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
-import com.kaadas.lock.publiclibrary.http.result.OTAResult;
 import com.kaadas.lock.publiclibrary.http.util.HttpUtils;
-import com.kaadas.lock.publiclibrary.ota.p6.P6OtaUpgradeActivity;
-import com.kaadas.lock.publiclibrary.ota.OtaConstants;
-import com.kaadas.lock.publiclibrary.ota.ti.TiOtaUpgradeActivity;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.BleLockUtils;
 import com.kaadas.lock.utils.KeyConstants;
@@ -37,6 +32,7 @@ import com.kaadas.lock.utils.ToastUtil;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by David on 2019/4/15
@@ -78,6 +74,8 @@ public class BluetoothMoreActivity extends BaseBleCheckInfoActivity<IDeviceMoreV
     @BindView(R.id.tv_device_name)
     TextView tvDeviceName;
     String deviceNickname;//设备名称
+    @BindView(R.id.rl_check_face_ota)
+    RelativeLayout rlCheckFaceOta;
     private BleLockInfo bleLockInfo;
 
     @Override
@@ -440,7 +438,6 @@ public class BluetoothMoreActivity extends BaseBleCheckInfoActivity<IDeviceMoreV
     }
 
 
-
     @Override
     public void onStateUpdate(int type) {
         if (bleLockInfo.getAutoMode() == 0) {
@@ -468,5 +465,10 @@ public class BluetoothMoreActivity extends BaseBleCheckInfoActivity<IDeviceMoreV
 
     @Override
     public void onDeviceStateChange(boolean isConnected) {  //设备连接状态改变   连接成功时提示正在鉴权，连接失败时直接提示用户
+    }
+
+    @OnClick(R.id.rl_check_face_ota)
+    public void onClick() {
+
     }
 }
