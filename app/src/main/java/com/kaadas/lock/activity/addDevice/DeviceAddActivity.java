@@ -142,20 +142,12 @@ public class DeviceAddActivity extends BaseActivity<DeviceZigBeeDetailView, Devi
                 zigbeeLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (flag==false||isAdmin==0) {
-                            alertDialog.dismiss();
-//                            AlertDialogUtil.getInstance().havaNoEditTwoButtonDialog(DeviceAddActivity.this, getString(R.string.no_usable_gateway), getString(R.string.add_zigbee_device_first_pair_gateway), getString(R.string.cancel), getString(R.string.configuration),"#1F96F7", new AlertDialogUtil.ClickListener() {
-//                                @Override
-//                                public void left() {
-//
-//                                }
-//                                @Override
-//                                public void right() {
-//                                    //跳转到配置网关添加的流程
-//                                    Intent gatewayIntent = new Intent(DeviceAddActivity.this, AddGatewayFirstActivity.class);
-//                                    startActivity(gatewayIntent);
-//                                }
-//                            });
+
+                        // 授权，有网关
+
+                        //无网关       有网关,不授权
+
+                        if( (flag==true  && isAdmin==0)  || (flag==true  && isAdmin==1)){
 
                             Intent zigbeeIntent = new Intent(DeviceAddActivity.this, DeviceBindGatewayListActivity.class);
                             int type = 3;
@@ -163,42 +155,73 @@ public class DeviceAddActivity extends BaseActivity<DeviceZigBeeDetailView, Devi
                             startActivity(zigbeeIntent);
                             alertDialog.dismiss();
 
-
-                        }else{
-                            Intent zigbeeIntent = new Intent(DeviceAddActivity.this, DeviceBindGatewayListActivity.class);
-                            int type = 3;
-                            zigbeeIntent.putExtra("type", type);
-                            startActivity(zigbeeIntent);
+                        } else if (flag==false) {
                             alertDialog.dismiss();
+                            AlertDialogUtil.getInstance().havaNoEditTwoButtonDialog(DeviceAddActivity.this, getString(R.string.no_usable_gateway), getString(R.string.add_zigbee_device_first_pair_gateway), getString(R.string.cancel), getString(R.string.configuration),"#1F96F7", new AlertDialogUtil.ClickListener() {
+                                @Override
+                                public void left() {
+
+                                }
+                                @Override
+                                public void right() {
+                                    //跳转到配置网关添加的流程
+                                    Intent gatewayIntent = new Intent(DeviceAddActivity.this, AddGatewayFirstActivity.class);
+                                    startActivity(gatewayIntent);
+                                }
+                            });
+
+//                            Intent zigbeeIntent = new Intent(DeviceAddActivity.this, DeviceBindGatewayListActivity.class);
+//                            int type = 3;
+//                            zigbeeIntent.putExtra("type", type);
+//                            startActivity(zigbeeIntent);
+//                            alertDialog.dismiss();
+
+
                         }
+//                        else{
+//                            Intent zigbeeIntent = new Intent(DeviceAddActivity.this, DeviceBindGatewayListActivity.class);
+//                            int type = 3;
+//                            zigbeeIntent.putExtra("type", type);
+//                            startActivity(zigbeeIntent);
+//                            alertDialog.dismiss();
+//                        }
                     }
                 });
                 break;
             case R.id.catEye_layout:
-                if (flag==false||isAdmin==0) {
-//                    AlertDialogUtil.getInstance().havaNoEditTwoButtonDialog(this, getString(R.string.no_usable_gateway), getString(R.string.add_zigbee_device_first_pair_gateway), getString(R.string.cancel), getString(R.string.configuration),"#1F96F7", new AlertDialogUtil.ClickListener() {
-//                        @Override
-//                        public void left() {
-//
-//                        }
-//                        @Override
-//                        public void right() {
-//                            //跳转到配置网关添加的流程
-//                            Intent gatewayIntent = new Intent(DeviceAddActivity.this, AddGatewayFirstActivity.class);
-//                            startActivity(gatewayIntent);
-//                        }
-//                    });
+                if( (flag==true  && isAdmin==0)  || (flag==true  && isAdmin==1)){
 
                     Intent catEyeIntent = new Intent(this, DeviceBindGatewayListActivity.class);
                     int type =2;
                     catEyeIntent.putExtra("type", type);
                     startActivity(catEyeIntent);
-                }else{
-                    Intent catEyeIntent = new Intent(this, DeviceBindGatewayListActivity.class);
-                    int type =2;
-                    catEyeIntent.putExtra("type", type);
-                    startActivity(catEyeIntent);
+
+                } else if (flag==false) {
+                    AlertDialogUtil.getInstance().havaNoEditTwoButtonDialog(this, getString(R.string.no_usable_gateway), getString(R.string.add_zigbee_device_first_pair_gateway), getString(R.string.cancel), getString(R.string.configuration),"#1F96F7", new AlertDialogUtil.ClickListener() {
+                        @Override
+                        public void left() {
+
+                        }
+                        @Override
+                        public void right() {
+                            //跳转到配置网关添加的流程
+                            Intent gatewayIntent = new Intent(DeviceAddActivity.this, AddGatewayFirstActivity.class);
+                            startActivity(gatewayIntent);
+                        }
+                    });
+
+//                    Intent catEyeIntent = new Intent(this, DeviceBindGatewayListActivity.class);
+//                    int type =2;
+//                    catEyeIntent.putExtra("type", type);
+//                    startActivity(catEyeIntent);
                 }
+
+//                else{
+//                    Intent catEyeIntent = new Intent(this, DeviceBindGatewayListActivity.class);
+//                    int type =2;
+//                    catEyeIntent.putExtra("type", type);
+//                    startActivity(catEyeIntent);
+//                }
                 break;
             case R.id.gateway_layout:
                 //跳转到添加网关
