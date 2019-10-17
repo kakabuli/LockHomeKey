@@ -128,6 +128,7 @@ public class FaceOtaActivity extends BaseBleActivity<IFaceOtaView,FaceOtaPresent
                 @Override
                 public void run() {
                     otaStatus.setText("OTA出错  " + errorCode);
+
                 }
             });
 
@@ -145,4 +146,9 @@ public class FaceOtaActivity extends BaseBleActivity<IFaceOtaView,FaceOtaPresent
 
     }
 
+    @Override
+    public void otaSuccess() {
+        ToastUtil.getInstance().showLong("蓝牙上报OTA成功");
+        otaStatus.setText("蓝牙上报OTA成功");
+    }
 }

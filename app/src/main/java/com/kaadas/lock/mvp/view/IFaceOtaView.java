@@ -4,5 +4,6 @@ import com.kaadas.lock.mvp.mvpbase.IBleView;
 
 public interface IFaceOtaView extends IBleView {
 
+    void otaSuccess();
 
 }

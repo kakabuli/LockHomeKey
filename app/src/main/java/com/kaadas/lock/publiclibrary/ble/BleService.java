@@ -215,7 +215,7 @@ public class BleService extends Service {
                         new Consumer<Boolean>() {
                             @Override
                             public void accept(Boolean isBackground) throws Exception {
-                                if (isBackground) {
+                                if (isBackground && !isOta) {
                                     handler.removeCallbacks(releaseRunnable);
                                     handler.postDelayed(releaseRunnable, releaseTimeToBackground);
                                 } else {
@@ -332,7 +332,7 @@ public class BleService extends Service {
             }
             //符合要求的设备
             if (device.getName().contains("Bootloader")
-            ||device.getName().contains("OAD")
+                    || device.getName().contains("OAD")
                     || device.getName().contains("KDS")
 //                    || device.getName().contains("XK")
                     || device.getName().contains("KdsLock")) {
@@ -1374,6 +1374,12 @@ public class BleService extends Service {
             }
         }
     };
+
+    private boolean isOta = false;
+
+    public void setIsOta(boolean isOta) {
+        this.isOta = isOta;
+    }
 
 
 }
