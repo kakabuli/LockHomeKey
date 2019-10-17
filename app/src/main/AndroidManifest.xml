@@ -795,7 +795,6 @@
         </receiver>
 
         <activity android:name=".publiclibrary.ota.face.FaceOtaActivity" />
-        <activity android:name=".publiclibrary.ota.face.RequestOtaAndLinkWifiActivity"></activity>
     </application>
 
 </manifest>
