@@ -257,15 +257,19 @@ public class AlertDialogUtil {
             @Override
             public void onClick(View v) {
                 //      alertDialog.dismiss();
-                for (int i = 0; i < dialogArray.size(); i++) {
-                    AlertDialog alertDialog1 = dialogArray.get(i);
-                    if (alertDialog1 != null && alertDialog1.isShowing()) {
-                        alertDialog1.dismiss();
+                try{
+                    for (int i = 0; i < dialogArray.size(); i++) {
+                        AlertDialog alertDialog1 = dialogArray.get(i);
+                        if (alertDialog1 != null && alertDialog1.isShowing()) {
+                            alertDialog1.dismiss();
+                        }
                     }
-                }
-                dialogArray.clear();
-                if (clickListener != null) {
-                    clickListener.right();
+                    dialogArray.clear();
+                    if (clickListener != null) {
+                        clickListener.right();
+                    }
+                }catch (Exception e){
+
                 }
             }
         });

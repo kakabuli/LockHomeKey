@@ -30,61 +30,64 @@ public class GatewayBindPresenter<T> extends BasePresenter<GatewayBindView> {
     public void bindGateway(String deviceSN) {
         toDisposable(bindGatewayDisposable);
         MqttMessage mqttMessage = MqttCommandFactory.bindGateway(MyApplication.getInstance().getUid(), deviceSN);
-        bindGatewayDisposable = mqttService.mqttPublish(MqttConstant.MQTT_REQUEST_APP, mqttMessage)
-                .compose(RxjavaHelper.observeOnMainThread())
-                .filter(new Predicate<MqttData>() {
-                    @Override
-                    public boolean test(MqttData mqttData) throws Exception {
-                        //TODO  以后改成根据  msgId 区分是不是当前消息的回调
-                        if (MqttConstant.BIND_GATEWAY.equals(mqttData.getFunc())) {
-                            return true;
+        if(mqttService!=null){
+            bindGatewayDisposable = mqttService.mqttPublish(MqttConstant.MQTT_REQUEST_APP, mqttMessage)
+                    .compose(RxjavaHelper.observeOnMainThread())
+                    .filter(new Predicate<MqttData>() {
+                        @Override
+                        public boolean test(MqttData mqttData) throws Exception {
+                            //TODO  以后改成根据  msgId 区分是不是当前消息的回调
+                            if (MqttConstant.BIND_GATEWAY.equals(mqttData.getFunc())) {
+                                return true;
+                            }
+                            return false;
                         }
-                        return false;
-                    }
-                })
-                .timeout(10 * 1000, TimeUnit.MILLISECONDS)
-                .subscribe(new Consumer<MqttData>() {
-                    @Override
-                    public void accept(MqttData mqttData) throws Exception {
-                        LogUtils.e("绑定网关回调" + mqttData.getPayload());
-                        BindGatewayResultBean bindGatewayResult = new Gson().fromJson(mqttData.getPayload(), BindGatewayResultBean.class);
-                        LogUtils.e(bindGatewayResult.getFunc());
-                        if ("200".equals(bindGatewayResult.getCode())&&bindGatewayResult.getData().getDeviceList()!=null&&bindGatewayResult.getData().getDeviceList().size()>0) {
-                            if (mViewRef.get()!=null){
-                                if (bindGatewayResult.getData().getMeBindState()==1){
-                                    mViewRef.get().bindGatewaySuitSuccess(deviceSN,bindGatewayResult.getData().getDeviceList(),true);
-                                }else{
-                                    mViewRef.get().bindGatewaySuitSuccess(deviceSN,bindGatewayResult.getData().getDeviceList(),false);
+                    })
+                    .timeout(10 * 1000, TimeUnit.MILLISECONDS)
+                    .subscribe(new Consumer<MqttData>() {
+                        @Override
+                        public void accept(MqttData mqttData) throws Exception {
+                            LogUtils.e("绑定网关回调" + mqttData.getPayload());
+                            BindGatewayResultBean bindGatewayResult = new Gson().fromJson(mqttData.getPayload(), BindGatewayResultBean.class);
+                            LogUtils.e(bindGatewayResult.getFunc());
+                            if ("200".equals(bindGatewayResult.getCode())&&bindGatewayResult.getData().getDeviceList()!=null&&bindGatewayResult.getData().getDeviceList().size()>0) {
+                                if (mViewRef.get()!=null){
+                                    if (bindGatewayResult.getData().getMeBindState()==1){
+                                        mViewRef.get().bindGatewaySuitSuccess(deviceSN,bindGatewayResult.getData().getDeviceList(),true);
+                                    }else{
+                                        mViewRef.get().bindGatewaySuitSuccess(deviceSN,bindGatewayResult.getData().getDeviceList(),false);
+                                    }
+                                    MyApplication.getInstance().getAllDevicesByMqtt(true);
                                 }
-                                MyApplication.getInstance().getAllDevicesByMqtt(true);
-                            }
-                        }else if ("200".equals(bindGatewayResult.getCode())){
-                            if (mViewRef.get() != null) {
-                                mViewRef.get().bindGatewaySuccess(deviceSN);
-                                //bindMimi(deviceSN,deviceSN);
-                                MyApplication.getInstance().getAllDevicesByMqtt(true);
-                            }
-                        } else {
-                            if (mViewRef.get() != null) {
-                                if (bindGatewayResult.getData().getDeviceList()!=null&&bindGatewayResult.getData().getDeviceList().size()>0){
-                                    mViewRef.get().bindGatewaySuitFail(bindGatewayResult.getCode(), bindGatewayResult.getMsg());
-                                }else{
-                                    mViewRef.get().bindGatewayFail(bindGatewayResult.getCode(), bindGatewayResult.getMsg());
+                            }else if ("200".equals(bindGatewayResult.getCode())){
+                                if (mViewRef.get() != null) {
+                                    mViewRef.get().bindGatewaySuccess(deviceSN);
+                                    //bindMimi(deviceSN,deviceSN);
+                                    MyApplication.getInstance().getAllDevicesByMqtt(true);
                                 }
+                            } else {
+                                if (mViewRef.get() != null) {
+                                    if (bindGatewayResult.getData().getDeviceList()!=null&&bindGatewayResult.getData().getDeviceList().size()>0){
+                                        mViewRef.get().bindGatewaySuitFail(bindGatewayResult.getCode(), bindGatewayResult.getMsg());
+                                    }else{
+                                        mViewRef.get().bindGatewayFail(bindGatewayResult.getCode(), bindGatewayResult.getMsg());
+                                    }
 
+                                }
+                            }
+                            toDisposable(bindGatewayDisposable);
+                        }
+                    }, new Consumer<Throwable>() {
+                        @Override
+                        public void accept(Throwable throwable) throws Exception {
+                            if (mViewRef.get() != null) {
+                                mViewRef.get().bindGatewayThrowable(throwable);
                             }
                         }
-                        toDisposable(bindGatewayDisposable);
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        if (mViewRef.get() != null) {
-                            mViewRef.get().bindGatewayThrowable(throwable);
-                        }
-                    }
-                });
-        compositeDisposable.add(bindGatewayDisposable);
+                    });
+            compositeDisposable.add(bindGatewayDisposable);
+        }
+
     }
 
     //绑定咪咪网

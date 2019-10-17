@@ -327,7 +327,7 @@ public class BleService extends Service {
 
         public void onScanResult(int callbackType, ScanResult result) {
             BluetoothDevice device = result.getDevice();
-            if (device.getName() == null) {  //如果名字为空
+            if (device==null || device.getName() == null) {  //如果名字为空
                 return;
             }
             //符合要求的设备
