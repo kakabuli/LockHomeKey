@@ -36,7 +36,6 @@ import com.kaadas.lock.bean.UpgradeBean;
 import com.kaadas.lock.fragment.DeviceFragment;
 import com.kaadas.lock.fragment.HomePageFragment;
 import com.kaadas.lock.fragment.PersonalCenterFragment;
-import com.kaadas.lock.fragment.SnapshotFragment;
 import com.kaadas.lock.mvp.mvpbase.BaseBleActivity;
 import com.kaadas.lock.mvp.presenter.MainActivityPresenter;
 import com.kaadas.lock.mvp.presenter.UpgradePresenter;

@@ -209,8 +209,10 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                                 gwLockInfo.setPower(devicePower.getPower());
                             }
 
+                            if(!gwLockInfo.getServerInfo().getEvent_str().equals("offline")) {
+                                mPresenter.getPower(gwLockInfo.getGwID(), gwLockInfo.getServerInfo().getDeviceId(), MyApplication.getInstance().getUid());
+                            }
 
-                            mPresenter.getPower(gwLockInfo.getGwID(), gwLockInfo.getServerInfo().getDeviceId(), MyApplication.getInstance().getUid());
                             //插入数据库
                             ServerGwDevice gwLock = gwLockInfo.getServerInfo();
                             String deviceId = gwLock.getDeviceId();
@@ -237,7 +239,10 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                                 cateEyeInfo.setPower(catPower.getPower());
                             }
                             //请求电量
-                            mPresenter.getPower(cateEyeInfo.getGwID(), cateEyeInfo.getServerInfo().getDeviceId(), MyApplication.getInstance().getUid());
+                            if(!cateEyeInfo.getServerInfo().getEvent_str().equals("offline")){
+                                mPresenter.getPower(cateEyeInfo.getGwID(), cateEyeInfo.getServerInfo().getDeviceId(), MyApplication.getInstance().getUid());
+                            }
+
                             //插入数据库
                             ServerGwDevice gwDevice = cateEyeInfo.getServerInfo();
                             String catDeviceId = gwDevice.getDeviceId();
