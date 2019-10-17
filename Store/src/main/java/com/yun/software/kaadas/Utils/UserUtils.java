@@ -29,8 +29,8 @@ public class UserUtils {
     public static String getToken() {
 
 
-        return "eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiI5NTYiLCJpc3MiOiJodHRwczovL3d3dy5rYW5nYXJvb2JhYnljYXIuY29tIiwiaWF0IjoxNTcwODY5MTgyfQ.dS4Cz7Gxm4QhQ3fyOv9fCLuSvTd4dmFqGMR4s8yRLFQ";
-//        return SPUtils.getInstance().getString(PreferencesConstans.TOKEN, "");
+//        return "eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiI5NTYiLCJpc3MiOiJodHRwczovL3d3dy5rYW5nYXJvb2JhYnljYXIuY29tIiwiaWF0IjoxNTcwODY5MTgyfQ.dS4Cz7Gxm4QhQ3fyOv9fCLuSvTd4dmFqGMR4s8yRLFQ";
+        return SPUtils.getInstance().getString(PreferencesConstans.TOKEN, "");
     }
 
     public static void setToken(String token) {
