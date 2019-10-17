@@ -634,6 +634,7 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
         }
 
 
+
         toDisposable(upLockDisposable);
         upLockDisposable = bleService.listeneDataChange()
                 .filter(new Predicate<BleDataBean>() {

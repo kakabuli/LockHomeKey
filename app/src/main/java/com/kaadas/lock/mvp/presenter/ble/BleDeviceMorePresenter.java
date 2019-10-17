@@ -22,6 +22,11 @@ import com.kaadas.lock.utils.ToastUtil;
 import com.kaadas.lock.utils.greenDao.db.BleLockServiceInfoDao;
 import com.kaadas.lock.utils.greenDao.db.DaoSession;
 
+import org.linphone.mediastream.Log;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
@@ -45,6 +50,8 @@ public class BleDeviceMorePresenter<T> extends BleCheckOTAPresenter<IDeviceMoreV
     private Disposable readSoftwareRevDisposable;
 
     private Disposable deviceStateChangeDisposable;
+    private Disposable checkModuleNumberDisposable;
+    private Disposable checkModuleVersionDisposable;
 
     public void deleteDevice(String deviceName) {
         XiaokaiNewServiceImp.deleteDevice(MyApplication.getInstance().getUid(), deviceName)
@@ -311,7 +318,6 @@ public class BleDeviceMorePresenter<T> extends BleCheckOTAPresenter<IDeviceMoreV
     }
 
 
-
     public void readSerialNumber() {
         toDisposable(readSerialNumberDisposable);
         readSerialNumberDisposable = Observable.just(0)
@@ -408,7 +414,7 @@ public class BleDeviceMorePresenter<T> extends BleCheckOTAPresenter<IDeviceMoreV
                         String deviceSN = bleLockInfo.getServerLockInfo().getDeviceSN();
                         LogUtils.e("服务器数据是  serverBleVersion " + serverBleVersion + "  deviceSN  " + deviceSN + "  本地数据是  sn " + sn + "  version " + version);
                         if (version.equals(serverBleVersion) && sn.equals(deviceSN)) {
-                            checkOTAInfo(sn, version );
+                            checkOTAInfo(sn, version,1);
                         } else {
                             uploadBleSoftware(sn, version);
                         }
@@ -434,7 +440,7 @@ public class BleDeviceMorePresenter<T> extends BleCheckOTAPresenter<IDeviceMoreV
             @Override
             public void onSuccess(BaseResult baseResult) {
                 LogUtils.e("上传蓝牙信息成功");
-                checkOTAInfo(sn, version );
+                checkOTAInfo(sn, version,1);
             }
 
             @Override

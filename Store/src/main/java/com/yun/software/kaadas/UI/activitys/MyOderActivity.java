@@ -91,7 +91,6 @@ public class MyOderActivity extends BaseActivity {
     private PopupWindow popupWindow;
 
     private List<HotkeyBean> labelList = new ArrayList<>();
-    private LabelsAdapter labelsAdapter;
     private String searcherKey;
 
     @Override
@@ -232,7 +231,6 @@ public class MyOderActivity extends BaseActivity {
                 }
                 labelList.addAll(list);
                 labelList.get(0).setCheck(true);
-                labelsAdapter.notifyDataSetChanged();
                 searcherKey = labelList.get(0).getKey();
 
             }

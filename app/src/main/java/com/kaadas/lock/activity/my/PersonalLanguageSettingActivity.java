@@ -228,7 +228,7 @@ public class PersonalLanguageSettingActivity extends BaseAddToApplicationActivit
         if (!checklag) {
             Locale locale = getResources().getConfiguration().locale;
             String language = locale.getLanguage();
-            LogUtils.d("davi local  "+locale.toLanguageTag());
+            LogUtils.d(" local  "+locale.toLanguageTag());
             if (locale.equals( Locale.SIMPLIFIED_CHINESE)) { //简体中文
                 zhImg.setChecked(true);
                 enImg.setChecked(false);

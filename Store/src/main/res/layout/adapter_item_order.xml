@@ -131,9 +131,8 @@
             android:textColor="@color/white"
             android:background="@drawable/light_blue_btn_bg"
             android:layout_height="33dp"/>
-        <TextView
+        <Button
             android:id="@+id/tv_order_comment"
-            android:visibility="gone"
             android:layout_width="90dp"
             android:textSize="14sp"
             android:text="评价"

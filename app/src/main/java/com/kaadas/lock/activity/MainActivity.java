@@ -46,7 +46,7 @@ import com.kaadas.lock.publiclibrary.bean.GatewayInfo;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.GatewayOtaNotifyBean;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttService;
-import com.kaadas.lock.publiclibrary.ota.OTADialogActivity;
+import com.kaadas.lock.publiclibrary.ota.ble.OTADialogActivity;
 import com.kaadas.lock.publiclibrary.ota.gatewayota.GatewayOTADialogActivity;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.Constants;

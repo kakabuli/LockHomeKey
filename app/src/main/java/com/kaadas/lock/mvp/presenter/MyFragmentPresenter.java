@@ -29,13 +29,13 @@ public class MyFragmentPresenter<T> extends BasePresenter<IMyFragmentView> {
             }
             @Override
             public void onNext(ResponseBody value) {
-                LogUtils.d(" davi 下载成功:" + value);
+                LogUtils.d("  下载成功:" + value);
 
                 byte[] bys;
                 try {
                     bys = value.bytes(); //注意：把byte[]转换为bitmap时，也是耗时操作，也必须在子线程
                     Bitmap bitmap = BitmapFactory.decodeByteArray(bys, 0, bys.length);
-                    LogUtils.d("davi 图片解析 bitmap " + bitmap.toString());
+                    LogUtils.d(" 图片解析 bitmap " + bitmap.toString());
                     handler.post(new Runnable() {
                         @Override
                         public void run() {
@@ -56,7 +56,7 @@ public class MyFragmentPresenter<T> extends BasePresenter<IMyFragmentView> {
 
             @Override
             public void onError(Throwable e) {
-                LogUtils.d("davi 图片路径失败 " + e);
+                LogUtils.d(" 图片路径失败 " + e);
                 if (mViewRef != null) {
                     mViewRef.get().downloadPhotoError(e);
                 }

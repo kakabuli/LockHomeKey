@@ -976,6 +976,8 @@
     <string name="data_params_error">数据参数不对</string>
     <string name="sn_error">Sn格式不正确</string>
     <string name="hava_ble_new_version">检测到新蓝牙版本，是否升级？</string>
+    <string name="hava_camera_new_version">检测到新摄像头固件，是否升级？</string>
+    <string name="hava_algorithm_new_version">检测到新算法版固件，是否升级？</string>
     <string name="update_success">升级完成，设备正在重启！</string>
     <string name="image_not_match">镜像不匹配，请重试！</string>
     <string name="update_failed_please_retry">升级过程中断开，请靠近后重试</string>
@@ -1216,4 +1218,17 @@
     <string name="gateway_no_support">该网关不支持绑定猫眼</string>
     <string name="shop">商城</string>
     <string name="unknown_error">未知错误</string>
+    <string name="check_face_ota">检查人脸模块升级</string>
+    <string name="_3d_camera">3D摄像头</string>
+    <string name="_3d_algorithm">3D算法版</string>
+    <string name="check_new_version">检测到新版本</string>
+    <string name="open_ota_failed">开启Ota失败</string>
+    <string name="is_down_file">正在下载固件</string>
+    <string name="down_file_failed_please_retry">下载文件失败，请重试</string>
+    <string name="is_check_version">正在检查版本...</string>
+    <string name="please_connect_up_wifi">请连接以上WiFi，再进行OTA</string>
+    <string name="wifi_pwd">WiFi 密码</string>
+    <string name="wifi_account">WiFi 账号</string>
+    <string name="connect_wifi_start_ota">已连接WiFi，开始OTA</string>
+    <string name="already_copy">已复制到剪切板</string>
 </resources>
