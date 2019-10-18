@@ -344,6 +344,9 @@ public class Ti2FileOtaUpgradeActivity extends OtaBaseActivity implements View.O
     }
 
     private void otaFailed(String tag) {
+        if (isFinishing()){
+            return;
+        }
         isUpdating = false;
         AlertDialogUtil.getInstance().noEditTwoButtonDialog(this, getString(R.string.ota_fail), getString(R.string.ota_fail_reply),
                 getString(R.string.cancel), getString(R.string.query), new AlertDialogUtil.ClickListener() {
@@ -552,6 +555,7 @@ public class Ti2FileOtaUpgradeActivity extends OtaBaseActivity implements View.O
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        handler.removeCallbacks(timeoutRunnable);
         if (client != null) {
             client.release();
             client.abortProgramming();

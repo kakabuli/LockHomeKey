@@ -607,6 +607,7 @@ public class TiOtaUpgradeActivity extends BaseAddToApplicationActivity implement
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        handler.removeCallbacks(timeoutRunnable);
         if (client != null) {
             client.release();
             client.abortProgramming();

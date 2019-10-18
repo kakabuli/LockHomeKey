@@ -191,15 +191,12 @@ public class SafeModePresenter<T> extends BlePresenter<ISafeModeView> {
                         toDisposable(syncPwdDisposable);
                         if (bleDataBean.getOriginalData()[0] == 0) {
                             if (type == 1) {
-
                                 getNumber(2, isOpen);
-
                             } else if (type == 2) {
-
                                 getNumber(3, isOpen);
-
                             } else if (type == 3) {
                                 if (typeNumber < 2) {  ///密码种类不够，提示用户添加密码
+                                    LogUtils.e("密码种类不够，提示用户添加密码");
                                     if (mViewRef.get() != null) {
                                         mViewRef.get().onPasswordTypeLess();
                                     }

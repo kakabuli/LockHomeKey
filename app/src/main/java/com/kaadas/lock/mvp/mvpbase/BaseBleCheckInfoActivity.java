@@ -67,6 +67,7 @@ public abstract class BaseBleCheckInfoActivity<T extends ICheckOtaView, V extend
 
     @Override
     public void needUpdate(OTAResult.UpdateFileInfo appInfo, String SN, String version, int type) {
+        hiddenLoading();
         LogUtils.e("只有一个固件需要升级");
         if (type == 1) {
             if (bleLockInfo.getBleType() == 1) { //Ti升级
@@ -139,6 +140,7 @@ public abstract class BaseBleCheckInfoActivity<T extends ICheckOtaView, V extend
 
     @Override
     public void needTwoUpdate(OTAResult.UpdateFileInfo stackInfo, OTAResult.UpdateFileInfo appInfo, String SN, String version) {
+        hiddenLoading();
         LogUtils.e("有两个固件需要升级");
         if (bleLockInfo.getBleType() != 1) { //Ti升级
             ToastUtil.getInstance().showLong(getString(R.string.check_update_failed2) + bleLockInfo.getBleType());

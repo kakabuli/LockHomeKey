@@ -400,6 +400,8 @@ public class P6OtaUpgradeActivity extends BaseAddToApplicationActivity implement
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        handler.removeCallbacks(stopScanRunnable);
+        handler.removeCallbacks(disconnectedRunnable);
         stopService(gattServiceIntent);
         if (mGattOTAStatusReceiver != null) {
             unregisterReceiver(mGattOTAStatusReceiver);

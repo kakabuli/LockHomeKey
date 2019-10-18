@@ -115,8 +115,10 @@ public class BleDeviceInfoActivity extends BaseBleCheckInfoActivity<IDeviceInfoV
             lr3dAlgorithm.setVisibility(View.GONE);
             lr3dCamera.setVisibility(View.GONE);
         } else {
-            lr3dAlgorithm.setVisibility(View.VISIBLE);
-            lr3dCamera.setVisibility(View.VISIBLE);
+            lr3dAlgorithm.setVisibility(View.GONE);
+            lr3dCamera.setVisibility(View.GONE);
+//            lr3dAlgorithm.setVisibility(View.VISIBLE);
+//            lr3dCamera.setVisibility(View.VISIBLE);
         }
     }
 
