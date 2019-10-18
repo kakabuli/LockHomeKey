@@ -318,6 +318,7 @@ public class BleDeviceInfoPresenter extends BleCheckOTAPresenter<IDeviceInfoView
                         return command[1] == bleDataBean.getTsn();
                     }
                 })
+                .timeout(5*1000,TimeUnit.MILLISECONDS)
                 .compose(RxjavaHelper.observeOnMainThread())
                 .subscribe(new Consumer<BleDataBean>() {
                     @Override
@@ -371,6 +372,7 @@ public class BleDeviceInfoPresenter extends BleCheckOTAPresenter<IDeviceInfoView
                         return command[1] == bleDataBean.getTsn();
                     }
                 })
+                .timeout(5*1000,TimeUnit.MILLISECONDS)
                 .compose(RxjavaHelper.observeOnMainThread())
                 .subscribe(new Consumer<BleDataBean>() {
                     @Override
@@ -441,6 +443,7 @@ public class BleDeviceInfoPresenter extends BleCheckOTAPresenter<IDeviceInfoView
                         return command[1] == bleDataBean.getTsn();
                     }
                 })
+                .timeout(5 * 1000, TimeUnit.MILLISECONDS)
                 .compose(RxjavaHelper.observeOnMainThread())
                 .subscribe(new Consumer<BleDataBean>() {
                     @Override
