@@ -70,14 +70,14 @@ public class OperationRecordPresenter<T> extends BlePresenter<IOperationRecordVi
                     /**
                      * 过滤报警信息
                      * */
-                    if (3!=operationLockRecords[i].getEventType()){
+                    if (3 != operationLockRecords[i].getEventType()) {
                         operationNotNullRecord.add(operationLockRecords[i]);
                     }
 
                 }
             }
         }
-        LogUtils.d("davi operationNotNullRecord 数据 "+ operationNotNullRecord.toString());
+        LogUtils.d("davi operationNotNullRecord 数据 " + operationNotNullRecord.toString());
         return operationNotNullRecord;
     }
 
@@ -89,13 +89,13 @@ public class OperationRecordPresenter<T> extends BlePresenter<IOperationRecordVi
         if (operationLockRecords == null) {
             return recordToServers;
         }
-        LogUtils.d("davi operationLockRecords 锁记录 "+operationLockRecords.toString());
+        LogUtils.d("davi operationLockRecords 锁记录 " + operationLockRecords.toString());
         for (int i = 0; i < operationLockRecords.length; i++) {
             if (operationLockRecords[i] != null) {
                 /**
                  * 过滤报警信息
                  * */
-                if (3!=operationLockRecords[i].getEventType()){
+                if (3 != operationLockRecords[i].getEventType()) {
                     UploadOperationRecordBean.OperationListBean record = new UploadOperationRecordBean.OperationListBean(
                             operationLockRecords[i].getUid(),
                             operationLockRecords[i].getEventType(),
@@ -113,20 +113,19 @@ public class OperationRecordPresenter<T> extends BlePresenter<IOperationRecordVi
     }
 
 
-
     /**
      * 获取全部的操作记录
-     * */
+     */
     public void getOperationRecordFromServer(int pagenum) {
         if (pagenum == 1) {  //如果是获取第一页的数据，那么清楚所有的开锁记录
             operationServerRecords.clear();
         }
         XiaokaiNewServiceImp.getOperationRecord(bleService.getBleLockInfo().getServerLockInfo().getLockName(),
-                pagenum )
+                pagenum)
                 .subscribe(new BaseObserver<OperationRecordResult>() {
                     @Override
                     public void onSuccess(OperationRecordResult operationRecordResult) {
-                        if (operationRecordResult.getData()!=null&&operationRecordResult.getData().size() == 0) {  //服务器没有数据  提示用户
+                        if (operationRecordResult.getData() != null && operationRecordResult.getData().size() == 0) {  //服务器没有数据  提示用户
                             if (mViewRef.get() != null) {
                                 if (pagenum == 1) { //第一次获取数据就没有
                                     mViewRef.get().onServerNoData();
@@ -138,7 +137,7 @@ public class OperationRecordPresenter<T> extends BlePresenter<IOperationRecordVi
                         }
                         ///将服务器数据封装成用来解析的数据
                         for (OperationRecordResult.OperationBean record : operationRecordResult.getData()) {
-                            if (3!=record.getEventType()){
+                            if (3 != record.getEventType()) {
                                 operationServerRecords.add(
                                         new OperationLockRecord(
                                                 record.getEventType(),
@@ -153,7 +152,7 @@ public class OperationRecordPresenter<T> extends BlePresenter<IOperationRecordVi
 
                         }
                         if (mViewRef.get() != null) {
-                            LogUtils.d(" 服务器记录 1 serverRecords "+operationServerRecords.toString());
+                            LogUtils.d(" 服务器记录 1 serverRecords " + operationServerRecords.toString());
                             mViewRef.get().onLoadServerOperationRecord(operationServerRecords, pagenum);
                         }
                     }
@@ -186,7 +185,10 @@ public class OperationRecordPresenter<T> extends BlePresenter<IOperationRecordVi
      * 用户点击同步时  调用的从BLe设备获取的开锁记录
      * 每次都从第一组开始获取  此时不知道开锁记录总个数
      */
+    private boolean isFirst = true;
+
     public void getOperationRecordFromBle() {
+        isFirst = true;
         //添加
         toDisposable(operationDisposable);
         if (mViewRef.get() != null) {
@@ -243,7 +245,7 @@ public class OperationRecordPresenter<T> extends BlePresenter<IOperationRecordVi
 
         if (operationCurrentPage != 0) {       //如果不是第一组  动态生成
             operationStartIndex = ((operationCurrentPage) * 20);
-            operationEndIndex = ((operationCurrentPage + 1) * 20-1);
+            operationEndIndex = ((operationCurrentPage + 1) * 20 - 1);
         }
 
         if (operationDisposable != null && !operationDisposable.isDisposed()) {
@@ -271,7 +273,7 @@ public class OperationRecordPresenter<T> extends BlePresenter<IOperationRecordVi
                             @Override
                             public void accept(BleDataBean bleDataBean) throws Exception {
                                 if (bleDataBean.isConfirm()) {
-                                    if (0x8b == (bleDataBean.getPayload()[0]&0xff) ) {  //没有数据
+                                    if (0x8b == (bleDataBean.getPayload()[0] & 0xff) && isFirst) {  //没有数据
                                         LogUtils.e("锁上   没有开锁记录  ");
                                         if (mViewRef.get() != null) {
                                             mViewRef.get().noData();
@@ -284,6 +286,7 @@ public class OperationRecordPresenter<T> extends BlePresenter<IOperationRecordVi
                                 if (bleDataBean.getCmd() != operationCommand[3]) {
                                     return;
                                 }
+                                isFirst = false;
                                 byte[] deVaule = Rsa.decrypt(bleDataBean.getPayload(), bleService.getBleLockInfo().getAuthKey());
                                 LogUtils.e("获取开锁记录   解码之后的数据是   " + Rsa.bytesToHexString(deVaule) + "原始数据是   " + Rsa.toHexString(bleDataBean.getOriginalData()));
 //                                OpenLockRecord openLockRecord = BleUtil.parseLockRecord(deVaule);
@@ -291,16 +294,16 @@ public class OperationRecordPresenter<T> extends BlePresenter<IOperationRecordVi
                                 LogUtils.e("获取开锁记录是   " + operationLockRecord.toString());
                                 if (operationLockRecords == null) {
                                     byte[] totalByte = new byte[2];
-                                    System.arraycopy(deVaule, 0,totalByte , 0, 2);
+                                    System.arraycopy(deVaule, 0, totalByte, 0, 2);
                                     operationTotal = Rsa.bytesToInt(totalByte);
                                     operationLockRecords = new OperationLockRecord[operationTotal];
                                     operationMaxPage = (int) Math.ceil(operationTotal * 1.0 / 20.0);
                                     LogUtils.e(" 总个数   " + operationTotal + "  最大页数  " + operationMaxPage);
                                 }
                                 byte[] byteIndex = new byte[2];
-                                System.arraycopy(deVaule, 2,byteIndex , 0, 2);
+                                System.arraycopy(deVaule, 2, byteIndex, 0, 2);
                                 int index = Rsa.bytesToInt(byteIndex);
-                                LogUtils.d(" 1 index "+index+" operationTotal "+ operationTotal);
+                                LogUtils.d(" 1 index " + index + " operationTotal " + operationTotal);
                                 operationLockRecords[index] = operationLockRecord;
 
                                 // TODO: 2019/3/7  开锁记录测试
@@ -476,10 +479,10 @@ public class OperationRecordPresenter<T> extends BlePresenter<IOperationRecordVi
 //                            OpenLockRecord openLockRecord = BleUtil.parseLockRecord(deVaule);
                             OperationLockRecord operationLockRecord = BleUtil.parseOperationRecord(deVaule);
                             byte[] byteIndex = new byte[2];
-                            System.arraycopy(deVaule, 2,byteIndex , 0, 2);
+                            System.arraycopy(deVaule, 2, byteIndex, 0, 2);
                             int index = Rsa.bytesToInt(byteIndex);
                             if (operationLockRecords != null && index < operationLockRecords.length) {
-                                LogUtils.d(" 操作记录 index "+index+" operationTotal "+ operationTotal);
+                                LogUtils.d(" 操作记录 index " + index + " operationTotal " + operationTotal);
                                 operationLockRecords[index] = operationLockRecord;
                             }
                         }

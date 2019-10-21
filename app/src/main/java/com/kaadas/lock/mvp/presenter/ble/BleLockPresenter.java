@@ -359,7 +359,7 @@ public class BleLockPresenter<T> extends MyOpenLockRecordPresenter<IBleLockView>
                 .subscribe(new Consumer<Boolean>() {
                     @Override
                     public void accept(Boolean isFailed) throws Exception {
-                        if (isFailed){
+                        if (isFailed) {
                             LogUtils.e("收到鉴权失败的回调    2222  ");
                         }
                         if (isSafe()) {   //通知界面更新显示设备状态
@@ -541,7 +541,10 @@ public class BleLockPresenter<T> extends MyOpenLockRecordPresenter<IBleLockView>
         getOperationRecordByPage();
     }
 
+    private boolean isFirst = true;
+
     public void getOperationRecordByPage() {
+        isFirst = true;
         //获取开锁记录的时候  取消对服务器获取记录的订阅
         if (operationServerDisposable != null && !operationServerDisposable.isDisposed()) {
             operationServerDisposable.dispose();
@@ -612,7 +615,7 @@ public class BleLockPresenter<T> extends MyOpenLockRecordPresenter<IBleLockView>
                             @Override
                             public void accept(BleDataBean bleDataBean) throws Exception {
                                 if (bleDataBean.isConfirm()) {
-                                    if (0x8b == (bleDataBean.getPayload()[0] & 0xff)) {  //没有数据
+                                    if (0x8b == (bleDataBean.getPayload()[0] & 0xff) && isFirst) {  //没有数据
                                         LogUtils.e("锁上   没有开锁记录  ");
                                         if (isSafe()) {
                                             mViewRef.get().noData();
@@ -626,6 +629,7 @@ public class BleLockPresenter<T> extends MyOpenLockRecordPresenter<IBleLockView>
                                     return;
                                 }
 
+                                isFirst = false;
                                 byte[] deVaule = Rsa.decrypt(bleDataBean.getPayload(), bleService.getBleLockInfo().getAuthKey());
                                 LogUtils.e("获取开锁记录   解码之后的数据是   " + Rsa.bytesToHexString(deVaule) + "原始数据是   " + Rsa.toHexString(bleDataBean.getOriginalData()));
 //                                OpenLockRecord openLockRecord = BleUtil.parseLockRecord(deVaule);
