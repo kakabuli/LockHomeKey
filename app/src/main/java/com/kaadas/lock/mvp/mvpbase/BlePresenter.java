@@ -1019,7 +1019,7 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
                                     mViewRef.get().openLockFailed(new BleProtocolFailedException(0xff & bleDataBean.getOriginalData()[0]));
                                 }
                                 //开锁失败  清除密码
-                                SPUtils.remove(KeyConstants.SAVE_PWD_HEARD + bleLockInfo.getServerLockInfo().getMacLock()); //Key
+                                SPUtils.remove(KeyConstants.SAVE_PWD_HEARD + bleLockInfo.getServerLockInfo().getMacLock()); //Key 开锁失败
                             }
                             toDisposable(openLockDisposable);
                         }

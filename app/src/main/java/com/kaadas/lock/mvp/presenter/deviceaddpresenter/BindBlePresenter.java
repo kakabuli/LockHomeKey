@@ -419,7 +419,7 @@ public class BindBlePresenter<T> extends BasePresenter<IBindBleView> {
                     public void onSuccess(BaseResult result) {
                         LogUtils.e("绑定成功");
                         //清除保存的密码
-                        SPUtils.remove(KeyConstants.SAVE_PWD_HEARD + mac); //14
+                        SPUtils.remove(KeyConstants.SAVE_PWD_HEARD + mac); //14绑定成功
                         if ("1".equals(bleVersion)) {
                             sendResponseData(true);
                             handler.postDelayed(new Runnable() {

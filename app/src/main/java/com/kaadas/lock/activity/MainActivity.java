@@ -129,7 +129,7 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
         ButterKnife.bind(this);
         PermissionUtil.getInstance().requestPermission(PermissionUtil.getInstance().permission, this);
         isRunning = true;
-
+        ToastUtil.init(this); //初始化ToastUtil 传递Context进去  不需要每次都传递
         EventBus.getDefault().register(this);
         rg.setOnCheckedChangeListener(this);
         MqttService mqttService = MyApplication.getInstance().getMqttService();

@@ -5,7 +5,7 @@ title CatEyePower & ZigbeeLockPower
 DeviceFragment->Database : Database getPower
 Database->DeviceFragment : Show Power
 DeviceFragment->MqttService: Publish Device Power
-note left of DeviceFragment: 每次下拉刷新页面重新请求电量
+note right of DeviceFragment: 每次下拉刷新页面重新请求电量
 
 MqttService -> Server : Func(getPower)
 

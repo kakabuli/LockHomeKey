@@ -55,6 +55,7 @@ public class HttpManager {
         String json = gson.toJson(map);
         HttpHeaders headers = new HttpHeaders();
         headers.put("Content-Type", "application/json");
+
         Disposable disposable = EasyHttp.post(method)
                 .baseUrl(ApiConstants.BASE_URL)
                 .upJson(json)

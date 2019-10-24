@@ -79,9 +79,18 @@ public class UserInfoActivity extends BaseActivity {
     private String userLogo;
     private String userGender;
     private String userBirthday;
+    @BindView(R2.id.root_view)
+    View rootView;
+
+
+    @Override
+    protected View getLoadingTargetView() {
+        return rootView;
+    }
 
     @Override
     protected int getContentViewLayoutID() {
+
         return R.layout.activity_user_info;
     }
 
@@ -91,73 +100,77 @@ public class UserInfoActivity extends BaseActivity {
     }
 
 
-
     @Override
     protected void initViewsAndEvents() {
         tvTitle.setText("个人信息");
         getData();
     }
+
     private void getData() {
-        Map<String,Object> map = new HashMap<>();
+        toggleRestore();
+        Map<String, Object> map = new HashMap<>();
         map.put("token", UserUtils.getToken());
         HttpManager.getInstance().post(mContext, ApiConstants.CUSTOMERAPP_MYINFO, map, new OnIResponseListener() {
             @Override
             public void onSucceed(String result) {
                 Gson gson = new Gson();
-                user = gson.fromJson(result,User.class);
+                user = gson.fromJson(result, User.class);
                 UserUtils.setUserTel(user.getTel());
                 UserUtils.setYanbaoka(user.isGetTimeDelay());
                 setView();
-
             }
+
             @Override
             public void onFailed(String error) {
                 ToastUtil.showShort(error);
+                toggleShowEmptyImage(true, R.drawable.loading_missing_pages, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        getData();
+                        toggleRestore();
+                    }
+                });
 
             }
-        },false);
+        }, false);
     }
 
     private void setView() {
-        if(TextUtils.isEmpty(user.getLogo())){
+        if (TextUtils.isEmpty(user.getLogo())) {
 //            GlidUtils.loadCircleImageView(mContext,R.drawable.pic_head_mine,imageView,R.drawable.pic_head_mine);
             imageView.setImageResource(R.drawable.pic_head_mine);
-        }else{
-            GlidUtils.loadCircleImageView(mContext,user.getLogo(),imageView,R.drawable.pic_head_mine);
+        } else {
+            GlidUtils.loadCircleImageView(mContext, user.getLogo(), imageView, R.drawable.pic_head_mine);
         }
         tvTel.setText(user.getTel());
 
-        userNameView.setText(user.getUserName());
+        if (user != null) {
+            userNameView.setText(user.getUserName());
+        }
         tvSexView.setText(user.getGenderCN());
         tvBirthdayView.setText(user.getBirthday());
         grender = user.getGender();
     }
 
 
-    @OnClick({R2.id.ll_head_img,R2.id.ll_name,R2.id.ll_tel
-            ,R2.id.ll_sex,R2.id.ll_birthday,R2.id.ll_address
-        })
-    public void onClick(View view){
+    @OnClick({R2.id.ll_head_img, R2.id.ll_name, R2.id.ll_tel
+            , R2.id.ll_sex, R2.id.ll_birthday, R2.id.ll_address
+    })
+    public void onClick(View view) {
         int i = view.getId();//头像
-//用户名
-//绑定手机
-//修改性别
         if (i == R.id.ll_head_img) {
             initDialogChooseImage();
-
         } else if (i == R.id.ll_name) {
-            Bundle bundle = new Bundle();
-            bundle.putString("name", user.getUserName());
-            readyGoForResult(EditNameActivity.class, Constans.REQUEST_CODE_USER_NAME, bundle);
-
+            if (user != null) {
+                Bundle bundle = new Bundle();
+                bundle.putString("name", user.getUserName());
+                readyGoForResult(EditNameActivity.class, Constans.REQUEST_CODE_USER_NAME, bundle);
+            }
         } else if (i == R.id.ll_tel) {
         } else if (i == R.id.ll_sex) {
             initDialogSelectGender();
-
-
         } else if (i == R.id.ll_birthday) {
             showBirthdayDialog();
-
         } else if (i == R.id.ll_address) {
             readyGo(ManageAddress.class);
 
@@ -174,13 +187,13 @@ public class UserInfoActivity extends BaseActivity {
         //endDate.set(2020,1,1);
 
         //正确设置方式 原因：注意事项有说明
-        startDate.set(1900,0,1);
+        startDate.set(1900, 0, 1);
 //        endDate.set(2020,11,31);
 
         TimePickerView.Builder builder = new TimePickerView.Builder(this, new TimePickerView.OnTimeSelectListener() {
             @Override
             public void onTimeSelect(Date date, View v) {
-                String time = TimeUtil.formatData(TimeUtil.dateFormatYMDofChinese,date.getTime()/1000);
+                String time = TimeUtil.formatData(TimeUtil.dateFormatYMDofChinese, date.getTime() / 1000);
                 tvBirthdayView.setText(time);
                 userBirthday = time;
                 user.setBirthday(userBirthday);
@@ -202,8 +215,8 @@ public class UserInfoActivity extends BaseActivity {
                 .setTextColorCenter(Color.BLACK)
                 .setBgColor(Color.WHITE)//滚轮背景颜色 Night mode
                 .setDate(selectedDate)// 如果不设置的话，默认是系统时间*/
-                .setRangDate(startDate,endDate)//起始终止年月日设定
-                .setLabel("年","月","日","时","分","秒")//默认设置为年月日时分秒
+                .setRangDate(startDate, endDate)//起始终止年月日设定
+                .setLabel("年", "月", "日", "时", "分", "秒")//默认设置为年月日时分秒
                 .isCenterLabel(false) //是否只显示中间选中项的label文字，false则每项item全部都带有label。
                 .isDialog(false);//是否显示为对话框样式
         TimePickerView timePickerView = builder.build();
@@ -213,42 +226,42 @@ public class UserInfoActivity extends BaseActivity {
     }
 
     private void updateData() {
-        Map<String,Object> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>();
         map.put("token", UserUtils.getToken());
-        Map<String,String> params = new HashMap<>();
+        Map<String, String> params = new HashMap<>();
         params.put("userName", userName);
-        params.put("logo",userLogo);
-        params.put("gender",userGender);
-        params.put("birthday",userBirthday);
-        map.put("params",params);
+        params.put("logo", userLogo);
+        params.put("gender", userGender);
+        params.put("birthday", userBirthday);
+        map.put("params", params);
         HttpManager.getInstance().post(mContext, ApiConstants.CUSTOMERAPP_UPDATE, map, new OnIResponseListener() {
             @Override
             public void onSucceed(String result) {
 
 
-
             }
+
             @Override
             public void onFailed(String error) {
                 ToastUtil.showShort(error);
 
             }
-        },false);
+        }, false);
     }
 
 
     private void initDialogSelectGender() {
-        if (genderDialog == null){
+        if (genderDialog == null) {
             genderDialog = new GenderDialog(this);
         }
         genderDialog.setSelect(grender);
         genderDialog.show();
         genderDialog.setSelectGenderListener(sex -> {
-            if (sex == GenderDialog.GENDER_FEMALE){
+            if (sex == GenderDialog.GENDER_FEMALE) {
                 tvSexView.setText("女");
                 grender = GenderDialog.GENDER_FEMALE;
                 user.setGenderCN("女");
-            }else if (sex == GenderDialog.GENDER_MALE){
+            } else if (sex == GenderDialog.GENDER_MALE) {
                 tvSexView.setText("男");
                 grender = GenderDialog.GENDER_MALE;
                 user.setGenderCN("男");
@@ -289,6 +302,7 @@ public class UserInfoActivity extends BaseActivity {
                     e.printStackTrace();
                 }
             }
+
             @Override
             public void onFailed(String error) {
                 ToastUtil.showShort(error);
@@ -300,8 +314,8 @@ public class UserInfoActivity extends BaseActivity {
     @Override
     public void finish() {
         Intent intent = new Intent();
-        intent.putExtra("user",user);
-        setResult(1,intent);
+        intent.putExtra("user", user);
+        setResult(1, intent);
         super.finish();
     }
 
@@ -327,8 +341,7 @@ public class UserInfoActivity extends BaseActivity {
                 RequestOptions options = new RequestOptions()
                         .placeholder(R.drawable.pic_head_mine)
                         .error(R.drawable.pic_head_mine)
-                        .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
-                        ;
+                        .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
 
                 Glide.with(mContext).
                         load(PhotoTool.cropImageUri).
@@ -344,7 +357,7 @@ public class UserInfoActivity extends BaseActivity {
                     File file = roadImageView(resultUri, imageView);
                     //上传头像
                     uploadFile(file);
-                    LogUtils.eTag(TAG,file.getAbsolutePath());
+                    LogUtils.eTag(TAG, file.getAbsolutePath());
                     //                    RxSPTool.putContent(mContext, "AVATAR", resultUri.toString());
                 } else if (resultCode == UCrop.RESULT_ERROR) {
                     final Throwable cropError = UCrop.getError(data);
@@ -355,7 +368,7 @@ public class UserInfoActivity extends BaseActivity {
                 break;
 
             case Constans.REQUEST_CODE_USER_NAME:
-                if (resultCode == 1){
+                if (resultCode == 1) {
                     String name = data.getStringExtra("name");
                     userNameView.setText(name);
                     userName = name;
@@ -378,8 +391,7 @@ public class UserInfoActivity extends BaseActivity {
                 .placeholder(R.drawable.pic_head_mine)
                 .error(R.drawable.pic_head_mine)
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
-                .transform(new GlideCircleTransform(mContext))
-                ;
+                .transform(new GlideCircleTransform(mContext));
 
         Glide.with(mContext).
                 load(uri).

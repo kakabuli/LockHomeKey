@@ -43,7 +43,7 @@ public class ShopImageListAdapter extends BaseQuickAdapter<ImgUrlBean,BaseViewHo
         lp.height = lp.WRAP_CONTENT;
         imageView.setLayoutParams(lp);
         imageView.setMaxWidth(screenWidth);
-        GlidUtils.loadImageNormal(MyApplication.getInstance().getApplicationContext(),item.getImgUrl(),imageView);
+        GlidUtils.loadImageNormal(mContext,item.getImgUrl(),imageView);
 
     }
 }

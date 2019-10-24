@@ -1,0 +1,32 @@
+@startuml
+title  BLE OTA
+    App->BLE:  获取SN 蓝牙版本号
+    note right of App:http://ota.juziwulian.com:9111/api/otaUpgrade/check
+    App->Server: 查询是否需要升级
+
+    alt 需要升级
+        Server->App: fileUrl()（文件下载地址），version（新版本的版本号）
+        App->App: 用户点击升级
+
+        alt  P6
+            App->BLE:朝特征值 00002a06-0000-1000-8000-00805f9b34fb 写入1
+        else Ti
+            App->BLE:朝特征值 f000ffd1-0451-4000-b000-000000000000 写入1
+        end
+        BLE->BLE: 进入boot模式
+        BLE->App: 断开连接
+        App->BLE: 重新连接
+        App->BLE: 开始发送数据
+        alt  出现异常
+            App->App:提示用户升级失败
+        else 正常发送完成
+            App->App:提示用户升级成功
+        end
+    else  不需要升级
+        Server->App: code = 210
+         App->App: 提示用户  版本已是最新
+    end
+
+
+
+@enduml

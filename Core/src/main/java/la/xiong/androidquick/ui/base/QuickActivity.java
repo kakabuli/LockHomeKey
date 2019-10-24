@@ -45,6 +45,7 @@ import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 import de.greenrobot.event.ThreadMode;
 import la.xiong.androidquick.R;
+import la.xiong.androidquick.tool.LogUtils;
 import la.xiong.androidquick.ui.eventbus.EventCenter;
 import la.xiong.androidquick.ui.manager.HttpSubRequest;
 import la.xiong.androidquick.ui.manager.QuickAppManager;
@@ -231,7 +232,9 @@ public abstract class QuickActivity extends AppCompatActivity implements EasyPer
         linback.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                LogUtils.e("测试","点击返回");
                 finish();
+                onFinish();
             }
         });
     }
@@ -273,6 +276,12 @@ public abstract class QuickActivity extends AppCompatActivity implements EasyPer
             }
         }
     }
+
+    public void onFinish(){
+
+    }
+
+
 
     @Override
     protected void onDestroy() {
@@ -664,5 +673,12 @@ public abstract class QuickActivity extends AppCompatActivity implements EasyPer
             return;
         }
         mPermissonCallbacks.get(requestCode).showDialog(dialogType, callback);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        LogUtils.e("测试","返回按钮");
+        onFinish();
     }
 }

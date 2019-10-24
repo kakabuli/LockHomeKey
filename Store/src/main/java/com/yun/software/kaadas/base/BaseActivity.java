@@ -100,12 +100,22 @@ public abstract class BaseActivity extends QuickActivity {
         }
     }
 
+    @Override
+    public void onFinish() {
+        super.onFinish();
+        LogUtils.e("测试","取消所有请求   "+ getClass().getName());
+        DisPostManager.getInstance().cancleAllDispose();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+    }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         ActivityCollectorUtil.removeActivity(this);
-        DisPostManager.getInstance().cancleAllDispose();
-
     }
 }

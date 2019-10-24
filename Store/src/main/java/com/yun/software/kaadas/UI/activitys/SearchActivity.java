@@ -202,6 +202,7 @@ public class SearchActivity extends BaseActivity {
     }
 
     private void getSeacherData() {
+        toggleRestore();
         Map<String,Object> map = new HashMap<>();
         map.put("token", UserUtils.getToken());
         Map<String,Object> page = new HashMap<>();

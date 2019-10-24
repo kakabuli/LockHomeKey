@@ -240,10 +240,10 @@ public class ShopDetailsNewActivity extends BaseActivity {
 
     private boolean isNeedScrollTo = true;
 
-    private List<String> titleList ;
+    private List<String> titleList;
 
     private float alpha = 0;
-    private int type ;
+    private int type;
     private String productId;
     private String statue;
     private String actid;
@@ -255,7 +255,7 @@ public class ShopDetailsNewActivity extends BaseActivity {
     private List<CommentsBean> listBeans = new ArrayList<>();
     ApriseHomeListAdapter listAdapter;
 
-    private String[] mLabels = {"选择商品","支付开团","分享好友","成功(失败退款)"};
+    private String[] mLabels = {"选择商品", "支付开团", "分享好友", "成功(失败退款)"};
     private boolean miaoshaTimeOver = false;//秒杀时间是否到期
 
     @Override
@@ -280,7 +280,7 @@ public class ShopDetailsNewActivity extends BaseActivity {
         productId = extras.getString("id");
         statue = extras.getString("statue");
         actid = extras.getString("actid");
-        switch (type){
+        switch (type) {
             case TYPE_NORMAL:
                 normalView.setVisibility(View.VISIBLE);
                 shoucangView.setVisibility(View.VISIBLE);
@@ -320,7 +320,7 @@ public class ShopDetailsNewActivity extends BaseActivity {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 int position = tab.getPosition();
-                if(isNeedScrollTo){
+                if (isNeedScrollTo) {
                     ideaScrollView.setPosition(position);
                 }
             }
@@ -336,12 +336,12 @@ public class ShopDetailsNewActivity extends BaseActivity {
             }
         });
 
-        listAdapter=new ApriseHomeListAdapter(listBeans);
+        listAdapter = new ApriseHomeListAdapter(listBeans);
         recyclerView.setHasFixedSize(true);
 //        recyclerView.setLayoutManager(new GridLayoutManager(mContext, 2));
         recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         //添加自定义分割线
-        GridItemDecoration.Builder  decoration = new GridItemDecoration.Builder(mContext);
+        GridItemDecoration.Builder decoration = new GridItemDecoration.Builder(mContext);
         decoration.setColor(getResources().getColor(R.color.default_bg_color));
         decoration.setHorizontalSpan(getResources().getDimension(R.dimen.dp_2));
         recyclerView.addItemDecoration(decoration.build());
@@ -354,17 +354,17 @@ public class ShopDetailsNewActivity extends BaseActivity {
     }
 
 
-    private void setShowAlpha(float alpha){
+    private void setShowAlpha(float alpha) {
         mTabLayout.setAlpha(alpha);
         llshopTopShowView.setAlpha(alpha);
         ivBackView.setAlpha(alpha);
     }
 
-    private void setHideAlpha(float alpha){
+    private void setHideAlpha(float alpha) {
         ivBackHideView.setAlpha(alpha);
     }
 
-    public int getMeasureHeight(View view){
+    public int getMeasureHeight(View view) {
         int width = View.MeasureSpec.makeMeasureSpec(0,
                 View.MeasureSpec.UNSPECIFIED);
         int height = View.MeasureSpec.makeMeasureSpec(0,
@@ -373,9 +373,9 @@ public class ShopDetailsNewActivity extends BaseActivity {
         return view.getMeasuredHeight();
     }
 
-    @OnClick({R2.id.rl_back_show,R2.id.rl_back_hide,R2.id.tv_add_card,R2.id.tv_buy_now,
-            R2.id.tv_zhongchou,R2.id.rl_pintuan,R2.id.ll_miaosha,R2.id.ll_shoucang,R2.id.ll_shopcart,R2.id.ll_kefu,R2.id.tv_kanjia})
-    public void onViewClick(View view){
+    @OnClick({R2.id.rl_back_show, R2.id.rl_back_hide, R2.id.tv_add_card, R2.id.tv_buy_now,
+            R2.id.tv_zhongchou, R2.id.rl_pintuan, R2.id.ll_miaosha, R2.id.ll_shoucang, R2.id.ll_shopcart, R2.id.ll_kefu, R2.id.tv_kanjia})
+    public void onViewClick(View view) {
         int i = view.getId();//返回
 //收藏
 //去购物车
@@ -388,7 +388,7 @@ public class ShopDetailsNewActivity extends BaseActivity {
         } else if (i == R.id.ll_shoucang) {
             if (TextUtils.isEmpty(UserUtils.getToken())) {
 //                readyGo(WxLoginActivity.class);
-                EventBus.getDefault().post(new EventCenter(MESSAGE_LOGINOUT,"relogin"));
+                EventBus.getDefault().post(new EventCenter(MESSAGE_LOGINOUT, "relogin"));
                 return;
             }
             changeCollectStatue();
@@ -396,7 +396,7 @@ public class ShopDetailsNewActivity extends BaseActivity {
         } else if (i == R.id.ll_shopcart) {
             if (TextUtils.isEmpty(UserUtils.getToken())) {
 //                readyGo(WxLoginActivity.class);
-                EventBus.getDefault().post(new EventCenter(MESSAGE_LOGINOUT,"relogin"));
+                EventBus.getDefault().post(new EventCenter(MESSAGE_LOGINOUT, "relogin"));
                 return;
             }
             Bundle bundle = new Bundle();
@@ -410,14 +410,14 @@ public class ShopDetailsNewActivity extends BaseActivity {
     }
 
     private void shareNetWork() {
-        Map<String,Object> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>();
         map.put("token", UserUtils.getToken());
-        Map<String,Object> params = new HashMap<>();
-        params.put("type",Constans.SHARE_TYPE_PRODUCT);
-        params.put("businessId",bean.getAgentProductId());
-        map.put("params",params);
+        Map<String, Object> params = new HashMap<>();
+        params.put("type", Constans.SHARE_TYPE_PRODUCT);
+        params.put("businessId", bean.getAgentProductId());
+        map.put("params", params);
 
-        HttpManager.getInstance().post(mContext, ApiConstants.SHARE_SAVE,map, new OnIResponseListener() {
+        HttpManager.getInstance().post(mContext, ApiConstants.SHARE_SAVE, map, new OnIResponseListener() {
             @Override
             public void onSucceed(String result) {
 
@@ -427,52 +427,54 @@ public class ShopDetailsNewActivity extends BaseActivity {
             public void onFailed(String error) {
 
             }
-        },false);
+        }, false);
     }
 
     /**
-     *获取商品属性
+     * 获取商品属性
      */
-    private  void getParams(){
-        Map<String,Object> map = new HashMap<>();
+    private void getParams() {
+        Map<String, Object> map = new HashMap<>();
         map.put("token", UserUtils.getToken());
-        Map<String,String> params = new HashMap<>();
-        params.put("id",bean.getProductId());
-        map.put("params",params);
+        Map<String, String> params = new HashMap<>();
+        params.put("id", bean.getProductId());
+        map.put("params", params);
         HttpManager.getInstance().post(mContext, ApiConstants.PARAMETERAPP_GETPARAMETERAPP, map, new OnIResponseListener() {
             @Override
             public void onSucceed(String result) {
                 Gson gson = new Gson();
-                List<ProductParams> listAttr = gson.fromJson(result,new TypeToken<List<ProductParams>>(){}.getType());
-               String text = "";
-               for (ProductParams p: listAttr){
-                   text = text + p.getName() + " ";
-               }
+                List<ProductParams> listAttr = gson.fromJson(result, new TypeToken<List<ProductParams>>() {
+                }.getType());
+                String text = "";
+                for (ProductParams p : listAttr) {
+                    text = text + p.getName() + " ";
+                }
                 tvParamsView.setText(text);
 
             }
+
             @Override
             public void onFailed(String error) {
                 ToastUtil.showShort(error);
 
             }
-        },false);
+        }, false);
     }
 
     @Override
     protected void onEventComing(EventCenter eventCenter) {
         super.onEventComing(eventCenter);
-        if(eventCenter.getEventCode()== Constans.MESSAGE_GOODS_ATTR){
-          selectAttr = (int) eventCenter.getData();
+        if (eventCenter.getEventCode() == Constans.MESSAGE_GOODS_ATTR) {
+            selectAttr = (int) eventCenter.getData();
             tvProductAttr.setText(listAttr.get(selectAttr).getAttributeComboName());
-        }else if (eventCenter.getEventCode() == Constans.MESSAGE_FINISH_SHOP_DETAILS){
+        } else if (eventCenter.getEventCode() == Constans.MESSAGE_FINISH_SHOP_DETAILS) {
             finish();
         }
     }
 
 
-    @OnClick({R2.id.ll_look_all,R2.id.ll_product_param,R2.id.ll_servers,R2.id.ll_product_attr})
-    public void onViewCLick(View view ){
+    @OnClick({R2.id.ll_look_all, R2.id.ll_product_param, R2.id.ll_servers, R2.id.ll_product_attr})
+    public void onViewCLick(View view) {
         Bundle bundle = new Bundle();
         int i = view.getId();//查看全部
 //参数
@@ -507,13 +509,13 @@ public class ShopDetailsNewActivity extends BaseActivity {
         layoutParams.setMargins(0, 30, 5, 10);// 设置边距
         for (int i = 0; i < mLabels.length; i++) {
 
-            LinearLayout linearLayout = (LinearLayout) LayoutInflater.from(mContext).inflate(R.layout.text_flow_layout_shop,null);
+            LinearLayout linearLayout = (LinearLayout) LayoutInflater.from(mContext).inflate(R.layout.text_flow_layout_shop, null);
             TextView tvXuhaoView = linearLayout.findViewById(R.id.tv_xuhao);
             TextView tvStringView = linearLayout.findViewById(R.id.tv_string);
-            View view= linearLayout.findViewById(R.id.view_);
+            View view = linearLayout.findViewById(R.id.view_);
             tvXuhaoView.setText(String.valueOf(i + 1));
 
-            if (i == mLabels.length - 1){
+            if (i == mLabels.length - 1) {
                 view.setVisibility(View.GONE);
             }
             tvStringView.setText(mLabels[i]);
@@ -522,11 +524,11 @@ public class ShopDetailsNewActivity extends BaseActivity {
         }
     }
 
-    private void setView(){
+    private void setView() {
 
         getPinglunData();
         List<String> imgs = new ArrayList<>();
-        for (ImgUrlBean bean:bean.getBanners()){
+        for (ImgUrlBean bean : bean.getBanners()) {
             imgs.add(bean.getImgUrl());
         }
 
@@ -538,32 +540,32 @@ public class ShopDetailsNewActivity extends BaseActivity {
 
         tvProductAttr.setText(bean.getAttributeComboName());
 
-        detailAdapter=new ShopImageListAdapter(bean.getDetailImgs());
+        detailAdapter = new ShopImageListAdapter(bean.getDetailImgs());
         detailListView.setHasFixedSize(true);
         detailListView.setLayoutManager(new LinearLayoutManager(mContext));
         detailListView.setAdapter(detailAdapter);
 
-        switch (type){
+        switch (type) {
             case TYPE_KANJIA://砍价
             case TYPE_NORMAL://普通
                 layoutNormal.setVisibility(View.VISIBLE);
                 normalOldPriceView.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG); //中划线
                 normalNameView.setText(bean.getName());
                 normalPriceView.setText(bean.getPrice());
-                normalOldPriceView.setText("¥"+bean.getOldPrice());
-                normalXiaoliangView.setText("月销  " +bean.getCountNum() + "件");
+                normalOldPriceView.setText("¥" + bean.getOldPrice());
+                normalXiaoliangView.setText("月销  " + bean.getCountNum() + "件");
                 break;
             case TYPE_MIAOSHA://秒杀
                 layoutMiaosha.setVisibility(View.VISIBLE);
                 miaoshaOldPrice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG); //中划线
                 miaoshaName.setText(bean.getName());
                 miaoshaPrice.setText(bean.getPrice());
-                miaoshaOldPrice.setText("¥"+bean.getOldPrice());
+                miaoshaOldPrice.setText("¥" + bean.getOldPrice());
                 miaoshaYuexiao.setText("月销  " + bean.getCountNum() + "件");
 //                Date endDate = TimeUtil.getDateByFormat(bean.getEndTime(),TimeUtil.dateFormatYMDHMS);
                 long des = bean.getSecond();
                 miaoshaCountdown.start(des);
-                if (des < 0){
+                if (des < 0) {
                     tvXianshiView.setVisibility(View.GONE);
                     miaoshaCountdown.setVisibility(View.GONE);
                     tvOverTimeView.setVisibility(View.VISIBLE);
@@ -584,7 +586,7 @@ public class ShopDetailsNewActivity extends BaseActivity {
                 layoutPintuan.setVisibility(View.VISIBLE);
 //                layoutPintuanBottom.setVisibility(View.VISIBLE);
                 pintuanOldPrice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG); //中划线
-                pintuanOldPrice.setText("¥"+bean.getOldPrice());
+                pintuanOldPrice.setText("¥" + bean.getOldPrice());
                 pintuanPrice.setText(bean.getPrice());
                 pintuanName.setText(bean.getName());
                 pintuanZhekou.setText(bean.getDiscount());
@@ -600,13 +602,12 @@ public class ShopDetailsNewActivity extends BaseActivity {
                 zhongchouPercent.setText(bean.getPercentage() + "%");
                 zhongchouProgressbar.setProgress(Integer.parseInt(bean.getPercentage()));
                 long nowTime = System.currentTimeMillis();
-                long endTime = TimeUtil.getDateByFormat(bean.getEndTime(),TimeUtil.dateFormatYMDHMS).getTime();
-                int time = TimeUtil.getOffectHour(endTime,nowTime);
-                zhongchouTime.setText(time +"");
+                long endTime = TimeUtil.getDateByFormat(bean.getEndTime(), TimeUtil.dateFormatYMDHMS).getTime();
+                int time = TimeUtil.getOffectHour(endTime, nowTime);
+                zhongchouTime.setText(time + "");
                 break;
 
         }
-
 
 
     }
@@ -614,11 +615,11 @@ public class ShopDetailsNewActivity extends BaseActivity {
 
     private void setScrollView() {
         headerParent = findViewById(R.id.headerParent);
-        ideaScrollView = (IdeaScrollView)findViewById(R.id.ideaScrollView);
+        ideaScrollView = (IdeaScrollView) findViewById(R.id.ideaScrollView);
 
-        Rect rectangle= new Rect();
+        Rect rectangle = new Rect();
         getWindow().getDecorView().getWindowVisibleDisplayFrame(rectangle);
-        ideaScrollView.setViewPager(null,getMeasureHeight(headerParent));
+        ideaScrollView.setViewPager(null, getMeasureHeight(headerParent));
         setShowAlpha(0);
 
         View one = findViewById(R.id.one);
@@ -626,17 +627,17 @@ public class ShopDetailsNewActivity extends BaseActivity {
         ArrayList<Integer> araryDistance = new ArrayList<>();
 
         araryDistance.add(0);
-        araryDistance.add(getMeasureHeight(one)-getMeasureHeight(headerParent));
-        araryDistance.add(getMeasureHeight(one)+getMeasureHeight(two)-getMeasureHeight(headerParent));
+        araryDistance.add(getMeasureHeight(one) - getMeasureHeight(headerParent));
+        araryDistance.add(getMeasureHeight(one) + getMeasureHeight(two) - getMeasureHeight(headerParent));
 
         ideaScrollView.setArrayDistance(araryDistance);
         ideaScrollView.setOnScrollChangedColorListener(new IdeaScrollView.OnScrollChangedColorListener() {
             @Override
             public void onChanged(float percentage) {
 
-                alpha = percentage>0.8f?1.0f:percentage;
+                alpha = percentage > 0.8f ? 1.0f : percentage;
                 setShowAlpha(alpha);
-                setHideAlpha(1-alpha);
+                setHideAlpha(1 - alpha);
 
             }
 
@@ -663,38 +664,39 @@ public class ShopDetailsNewActivity extends BaseActivity {
     }
 
     /**
-     *获取商品详情
+     * 获取商品详情
      */
-    private  void getProductDetail(){
-        toggleShowLoading(true,"正在加载");
-        Map<String,Object> map = new HashMap<>();
+    private void getProductDetail() {
+        toggleShowLoading(true, "正在加载");
+        Map<String, Object> map = new HashMap<>();
         map.put("token", UserUtils.getToken());
-        Map<String,String> params = new HashMap<>();
-        params.put("id",productId);//productId
-        if (type != TYPE_NORMAL){
-            params.put("status",statue);
-            params.put("activityProductId",actid);
+        Map<String, String> params = new HashMap<>();
+        params.put("id", productId);//productId
+        if (type != TYPE_NORMAL) {
+            params.put("status", statue);
+            params.put("activityProductId", actid);
         }
-        map.put("params",params);
+        map.put("params", params);
         HttpManager.getInstance().post(mContext, ApiConstants.HOME_SHOPDETAIL, map, new OnIResponseListener() {
             @Override
             public void onSucceed(String result) {
                 toggleRestore();
                 Gson gson = new Gson();
-                bean = gson.fromJson(result,GoodsBean.class);
-                if (type == TYPE_PINTUAN){
-                    tvPrice.setText("¥" + bean.getPrice() +"/");
+                bean = gson.fromJson(result, GoodsBean.class);
+                if (type == TYPE_PINTUAN) {
+                    tvPrice.setText("¥" + bean.getPrice() + "/");
                     tvCount.setText(bean.getMaxQty() + "人团");
                 }
-                if ("1".equals(bean.getColloctFlag())){
+                if ("1".equals(bean.getColloctFlag())) {
                     ivCollect.setImageResource(R.drawable.icon_collected_detail);
-                }else {
+                } else {
                     ivCollect.setImageResource(R.drawable.icon_collect_detail);
                 }
                 setView();
                 getParams();
 
             }
+
             @Override
             public void onFailed(String error) {
                 toggleRestore();
@@ -708,27 +710,28 @@ public class ShopDetailsNewActivity extends BaseActivity {
 
 
             }
-        },false);
+        }, false);
     }
 
-    private void getPinglunData(){
-        Map<String,Object> map = new HashMap<>();
+    private void getPinglunData() {
+        Map<String, Object> map = new HashMap<>();
         map.put("token", UserUtils.getToken());
-        Map<String,Object> page = new HashMap<>();
-        page.put("pageNum",String.valueOf(1));
-        page.put("pageSize",String.valueOf(1));
-        map.put("page",page);
-        Map<String,String> params = new HashMap<>();
-        params.put("id",bean.getId());
-        map.put("params",params);
+        Map<String, Object> page = new HashMap<>();
+        page.put("pageNum", String.valueOf(1));
+        page.put("pageSize", String.valueOf(1));
+        map.put("page", page);
+        Map<String, String> params = new HashMap<>();
+        params.put("id", bean.getId());
+        map.put("params", params);
         HttpManager.getInstance().post(mContext, ApiConstants.FRONT_COMMENT_PAGE, map, new OnIResponseListener() {
             @Override
             public void onSucceed(String result) {
                 Gson gson = new Gson();
-                BaseBody<CommentsBean> baseBody = gson.fromJson(result,new TypeToken<BaseBody<CommentsBean>>(){}.getType());
+                BaseBody<CommentsBean> baseBody = gson.fromJson(result, new TypeToken<BaseBody<CommentsBean>>() {
+                }.getType());
                 listBeans.addAll(baseBody.getRows());
 
-                if (listBeans.size() == 0){
+                if (listBeans.size() == 0) {
                     recyclerView.setVisibility(View.GONE);
                     emptyPinglun.setVisibility(View.VISIBLE);
                 }
@@ -737,27 +740,27 @@ public class ShopDetailsNewActivity extends BaseActivity {
                 commtentCount.setText("商品评价(" + baseBody.getTotal() + ")");
                 setScrollView();
             }
+
             @Override
             public void onFailed(String error) {
                 ToastUtil.showShort(error);
 
             }
-        },false);
+        }, false);
     }
 
 
-
     /**
-     *获取商品属性
+     * 获取商品属性
      */
-    private  void getProductAttr(){
+    private void getProductAttr() {
 
-        if (miaoshaTimeOver){
+        if (miaoshaTimeOver) {
             ToastUtil.showShort("秒杀商品已经过期");
             return;
         }
 
-        if (type == TYPE_PINTUAN && "activity_product_end".equals(bean.getStatus())){
+        if (type == TYPE_PINTUAN && "activity_product_end".equals(bean.getStatus())) {
             ToastUtil.showShort("活动已结束");
             return;
 
@@ -771,19 +774,19 @@ public class ShopDetailsNewActivity extends BaseActivity {
         }
 
 
-
-        Map<String,Object> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>();
         map.put("token", UserUtils.getToken());
-        Map<String,String> params = new HashMap<>();
-        params.put("id",bean.getProductId());//productId
-        params.put("activityProductId",bean.getActivityProductId());
-        params.put("status",bean.getBusinessType());
-        map.put("params",params);
+        Map<String, String> params = new HashMap<>();
+        params.put("id", bean.getProductId());//productId
+        params.put("activityProductId", bean.getActivityProductId());
+        params.put("status", bean.getBusinessType());
+        map.put("params", params);
         HttpManager.getInstance().post(mContext, ApiConstants.FRONT_PRODUCT_GETSKU, map, new OnIResponseListener() {
             @Override
             public void onSucceed(String result) {
                 Gson gson = new Gson();
-                listAttr = gson.fromJson(result,new TypeToken<List<GoodsAttrBean>>(){}.getType());
+                listAttr = gson.fromJson(result, new TypeToken<List<GoodsAttrBean>>() {
+                }.getType());
                 GoodCarDialog dialog = GoodCarDialog.getInstance();
                 dialog.setPriorityRefresh(new GoodCarDialog.Priority() {
                     @Override
@@ -792,27 +795,30 @@ public class ShopDetailsNewActivity extends BaseActivity {
                         normalOldPriceView.setText(colorType);
                     }
                 });
-                dialog.buyDialog(getSupportFragmentManager(),mContext,listAttr,type,selectAttr,bean.getResidueNum(),getSelecttext());
+                dialog.buyDialog(getSupportFragmentManager(), mContext, listAttr, type, selectAttr, bean.getResidueNum(), getSelecttext());
             }
+
             @Override
             public void onFailed(String error) {
                 ToastUtil.showShort(error);
             }
-        },false);
+        }, false);
     }
-    private void changeCollectStatue(){
-        if ("1".equals(bean.getColloctFlag())){
+
+    private void changeCollectStatue() {
+        if ("1".equals(bean.getColloctFlag())) {
             cancelCollect();
-        }else {
+        } else {
             addCollect();
         }
     }
+
     private void addCollect() {
-        Map<String,Object> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>();
         map.put("token", UserUtils.getToken());
-        Map<String,String> params = new HashMap<>();
-        params.put("agentProductId",bean.getId());
-        map.put("params",params);
+        Map<String, String> params = new HashMap<>();
+        params.put("agentProductId", bean.getId());
+        map.put("params", params);
         HttpManager.getInstance().post(mContext, ApiConstants.COLLECTAPP_ADDCOLLECT, map, new OnIResponseListener() {
             @Override
             public void onSucceed(String result) {
@@ -820,19 +826,20 @@ public class ShopDetailsNewActivity extends BaseActivity {
                 bean.setColloctFlag("1");
                 ivCollect.setImageResource(R.drawable.icon_collected_detail);
             }
+
             @Override
             public void onFailed(String error) {
                 ToastUtil.showShort(error);
             }
-        },true);
+        }, true);
     }
 
     private void cancelCollect() {
-        Map<String,Object> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>();
         map.put("token", UserUtils.getToken());
-        Map<String,String> params = new HashMap<>();
-        params.put("agentProductId",bean.getId());
-        map.put("params",params);
+        Map<String, String> params = new HashMap<>();
+        params.put("agentProductId", bean.getId());
+        map.put("params", params);
         HttpManager.getInstance().post(mContext, ApiConstants.COLLECTAPP_CANCELCOLLECT, map, new OnIResponseListener() {
             @Override
             public void onSucceed(String result) {
@@ -840,16 +847,17 @@ public class ShopDetailsNewActivity extends BaseActivity {
                 ToastUtil.showShort("取消收藏成功");
                 ivCollect.setImageResource(R.drawable.icon_collect_detail);
             }
+
             @Override
             public void onFailed(String error) {
                 ToastUtil.showShort(error);
 
             }
-        },true);
+        }, true);
 
     }
 
-    private String getSelecttext(){
+    private String getSelecttext() {
         return tvProductAttr.getText().toString().trim();
     }
 
