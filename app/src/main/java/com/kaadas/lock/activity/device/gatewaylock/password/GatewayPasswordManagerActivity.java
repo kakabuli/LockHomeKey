@@ -3,6 +3,8 @@ package com.kaadas.lock.activity.device.gatewaylock.password;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -290,12 +292,10 @@ public class GatewayPasswordManagerActivity extends BaseActivity<GatewayLockFunc
         //1获取最大用户密码数量
         if (!TextUtils.isEmpty(gatewayId)&&!TextUtils.isEmpty(deviceId)){
             isAddLockPwd=0;
-            loadingDialog.show(getString(R.string.get_gateway_lock_pwd_waiting));
+            loadingDialog.show2(getString(R.string.get_gateway_lock_pwd_waiting));
             mPresenter.getLockPwdInfo(gatewayId, deviceId);
         }
     }
-
-
 
     @Override
     public void getLockOneSuccess(int pwdId) {

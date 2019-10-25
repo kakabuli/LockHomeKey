@@ -63,7 +63,7 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@mipmap/k7_authorization_lock" />
+                    android:src="@mipmap/lock_pic_default" />
             </LinearLayout>
             <TextView
                 android:visibility="invisible"

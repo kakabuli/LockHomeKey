@@ -84,6 +84,11 @@ public class AddZigbeeLockFourthActivity extends BaseActivity<IAddZigbeeLockView
         operatingAnim.setInterpolator(lin);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        startAnimation();
+    }
 
     /**
      * 启动搜索图片的动画
