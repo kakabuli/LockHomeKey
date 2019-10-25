@@ -104,6 +104,7 @@
 
 
         <LinearLayout
+            android:visibility="gone"
             android:id="@+id/ll_weichat"
             android:layout_width="match_parent"
             android:orientation="horizontal"
@@ -193,8 +194,6 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginRight="26dp"
                 />
-
-
         </LinearLayout>
 
         <View
