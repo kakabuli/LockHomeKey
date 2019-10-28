@@ -338,7 +338,7 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
             String huawei = (String) SPUtils.get(GeTui.HUAWEI_KEY, "");
             if (TextUtils.isEmpty(huawei)) {
                 // 初始化,生成token失败
-                Log.e(GeTui.VideoLog, "init to HMSAgent,token produce fail");
+                Log.e(GeTui.VideoLog, "startSendFile to HMSAgent,token produce fail");
                 HMSAgent.Push.getToken(new GetTokenHandler() {
                     @Override
                     public void onResult(int rtnCode) {

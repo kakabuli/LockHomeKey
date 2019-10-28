@@ -836,7 +836,7 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
         System.exit(0);
     }
 
-    // init it in ur application
+    // startSendFile it in ur application
     public void initALog() {
         ALog.Config config = ALog.init(this)
                 .setLogSwitch(BuildConfig.DEBUG)// 设置log总开关，包括输出到控制台和文件，默认开

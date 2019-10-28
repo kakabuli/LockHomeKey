@@ -431,8 +431,8 @@ public class BleDeviceInfoPresenter extends BleCheckOTAPresenter<IDeviceInfoView
     }
 
 
-    public void sendOtaCommand(byte number, byte otaType, String version) {
-        byte[] command = BleCommandFactory.moduleOtaRequest(bleLockInfo.getAuthKey(), number, otaType, version.getBytes());
+    public void startOTA(byte number, byte otaType, String version) {
+        byte[] command = BleCommandFactory.moduleOtaRequest(bleLockInfo.getAuthKey(), (byte) 0x01, number, otaType, version.getBytes());
         bleService.sendCommand(command);
         toDisposable(sendOtaCommandDisposable);
         //OTA返回出错
