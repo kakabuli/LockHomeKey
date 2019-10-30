@@ -159,6 +159,8 @@ public class AllBindDevices {
             private String mePwd;
             private int meBindState;
             private String model;   // 6030 小网关、 6010大网关
+            private int relayType;
+
 
             private List<ServerGwDevice> deviceList;
 
@@ -243,6 +245,29 @@ public class AllBindDevices {
             }
 
             public GwListBean() {
+            }
+
+            public int getRelayType() {
+                return relayType;
+            }
+
+            public void setRelayType(int relayType) {
+                this.relayType = relayType;
+            }
+
+            public GwListBean(String deviceSN, String deviceNickName, String adminuid, String adminName, String adminNickname, int isAdmin, String meUsername, String mePwd, int meBindState, String model, int relayType, List<ServerGwDevice> deviceList) {
+                this.deviceSN = deviceSN;
+                this.deviceNickName = deviceNickName;
+                this.adminuid = adminuid;
+                this.adminName = adminName;
+                this.adminNickname = adminNickname;
+                this.isAdmin = isAdmin;
+                this.meUsername = meUsername;
+                this.mePwd = mePwd;
+                this.meBindState = meBindState;
+                this.model = model;
+                this.relayType = relayType;
+                this.deviceList = deviceList;
             }
 
             public GwListBean(String deviceSN, String deviceNickName, String adminuid, String adminName, String adminNickname, int isAdmin, String meUsername, String mePwd, int meBindState, String model, List<ServerGwDevice> deviceList) {

@@ -46,6 +46,7 @@ import android.os.Vibrator;
 import android.provider.Settings;
 import android.provider.Settings.SettingNotFoundException;
 import android.telephony.TelephonyManager;
+import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -138,7 +139,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
     private PowerManager mPowerManager;
     private Resources mR;
     private LinphonePreferences mPrefs;
-    private LinphoneCore mLc;
+    private static LinphoneCore mLc;
     private OpenH264DownloadHelper mCodecDownloader;
     private OpenH264DownloadHelperListener mCodecListener;
     private String lastLcStatusMessage;
@@ -808,6 +809,20 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
         }
     }
 
+
+    public static    boolean switchRelay(boolean isRelay){
+        if(isRelay){
+            mLc.setUserAgent("relay","");
+        }else{
+            if(TextUtils.isEmpty(versionName)){
+                return  false;
+            }
+            mLc.setUserAgent("LinphoneAndroid", versionName);
+        }
+          return true;
+    }
+
+    static String versionName =null;
     @SuppressLint("InvalidWakeLockTag")
     private synchronized void initLiblinphone(LinphoneCore lc) throws LinphoneCoreException {
         mLc = lc;
@@ -825,11 +840,13 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
         mLc.setZrtpSecretsCache(basePath + "/zrtp_secrets");
 
         try {
-            String versionName = mServiceContext.getPackageManager().getPackageInfo(mServiceContext.getPackageName(), 0).versionName;
+             versionName = mServiceContext.getPackageManager().getPackageInfo(mServiceContext.getPackageName(), 0).versionName;
             if (versionName == null) {
                 versionName = String.valueOf(mServiceContext.getPackageManager().getPackageInfo(mServiceContext.getPackageName(), 0).versionCode);
             }
             mLc.setUserAgent("LinphoneAndroid", versionName);
+
+      //        mLc.setUserAgent("relay","");
         } catch (NameNotFoundException e) {
             Log.e("linphoneManager", e.toString());
         }
