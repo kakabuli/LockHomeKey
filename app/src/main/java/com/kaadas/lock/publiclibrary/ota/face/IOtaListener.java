@@ -39,4 +39,7 @@ public interface IOtaListener {
      * @param throwable
      */
     void onError(int errorCode, Throwable throwable);
+
+
+    void startSendFile();
 }

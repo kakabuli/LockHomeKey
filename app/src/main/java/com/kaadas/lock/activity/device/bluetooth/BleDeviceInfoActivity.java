@@ -14,7 +14,6 @@ import android.widget.TextView;
 
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
-import com.kaadas.lock.mvp.mvpbase.BaseBleActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseBleCheckInfoActivity;
 import com.kaadas.lock.mvp.presenter.ble.BleDeviceInfoPresenter;
 import com.kaadas.lock.mvp.view.IDeviceInfoView;
@@ -27,7 +26,6 @@ import com.kaadas.lock.publiclibrary.ota.ble.OtaConstants;
 import com.kaadas.lock.publiclibrary.ota.face.FaceOtaActivity;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.BleLockUtils;
-import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.StringUtil;
 import com.kaadas.lock.utils.ToastUtil;
@@ -364,9 +362,9 @@ public class BleDeviceInfoActivity extends BaseBleCheckInfoActivity<IDeviceInfoV
         currentAppInfo = appInfo;
         if (mPresenter.isAuth(bleLockInfo, true)) {
             if (type == 2) { //算法模块
-                mPresenter.sendOtaCommand((byte) algorithmNumber, (byte) algorithmOtaType, appInfo.getFileVersion());
+                mPresenter.startOTA((byte) algorithmNumber, (byte) algorithmOtaType, appInfo.getFileVersion());
             } else if (type == 3) {
-                mPresenter.sendOtaCommand((byte) cameraNumber, (byte) cameraOtaType, appInfo.getFileVersion());
+                mPresenter.startOTA((byte) cameraNumber, (byte) cameraOtaType, appInfo.getFileVersion());
             }
         }
     }

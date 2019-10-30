@@ -13,7 +13,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kaadas.lock.R;
-import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseBleActivity;
 import com.kaadas.lock.mvp.presenter.FaceOtaPresenter;
 import com.kaadas.lock.mvp.view.IFaceOtaView;
@@ -34,6 +33,7 @@ public class FaceOtaActivity extends BaseBleActivity<IFaceOtaView,FaceOtaPresent
     private TextView tvPassword;
     private String wifiPassword;
     private String wifiSSid;
+    private boolean isStarting = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +62,7 @@ public class FaceOtaActivity extends BaseBleActivity<IFaceOtaView,FaceOtaPresent
 
     public void ota(View view) {
         startOta();
+        isStarting = true;
     }
 
     private void startOta() {
@@ -74,7 +75,7 @@ public class FaceOtaActivity extends BaseBleActivity<IFaceOtaView,FaceOtaPresent
                 public void run() {
                     super.run();
 //                    String filePath = "/storage/emulated/0/01.01.02.bin";
-                    socketOtaUtil.init(filePath);
+                    socketOtaUtil.startSendFile(filePath);
                 }
             }.start();
         } else {
@@ -113,6 +114,8 @@ public class FaceOtaActivity extends BaseBleActivity<IFaceOtaView,FaceOtaPresent
 
         @Override
         public void onComplete() {
+            mPresenter.endSendFile();
+            isStarting = false;
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -124,6 +127,7 @@ public class FaceOtaActivity extends BaseBleActivity<IFaceOtaView,FaceOtaPresent
 
         @Override
         public void onError(final int errorCode, Throwable throwable) {
+            isStarting = false;
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -132,6 +136,11 @@ public class FaceOtaActivity extends BaseBleActivity<IFaceOtaView,FaceOtaPresent
                 }
             });
 
+        }
+
+        @Override
+        public void startSendFile() {
+            mPresenter.startSendFile();
         }
     };
 
@@ -151,4 +160,18 @@ public class FaceOtaActivity extends BaseBleActivity<IFaceOtaView,FaceOtaPresent
         ToastUtil.getInstance().showLong("蓝牙上报OTA成功");
         otaStatus.setText("蓝牙上报OTA成功");
     }
+
+
+
+    @Override
+    public void onBackPressed() {
+        if (isStarting){
+            return;
+        }
+        super.onBackPressed();
+        if (socketOtaUtil !=null ){
+            socketOtaUtil.release();
+        }
+    }
+
 }

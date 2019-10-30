@@ -468,22 +468,42 @@ public class BleCommandFactory {
     }
 
 
+
+
     /**
-     * 获取子模块版本信息
+     *  ota控制
      * @param key
-     * @param number   模块号
+     * @param operation  0x1 升级请求；0x2 退出OTA请求；
+     * @param number    模块编号
+     * @param otaType  ota类型
+     * @param newVersion  新版本
      * @return
      */
-
-    public static byte[] moduleOtaRequest(byte[] key,byte number,byte otaType ,byte[] newVersion) {
+    public static byte[] moduleOtaRequest(byte[] key,byte operation,byte number,byte otaType ,byte[] newVersion) {
         byte cmd = (byte) 0x85;
         byte[] payload = new byte[16]; //负载数据
-        payload[0] = number;
-        payload[1] = otaType;
+        payload[0] = operation;
+        payload[1] = number;
+        payload[2] = otaType;
         System.arraycopy(newVersion,0,payload,2,newVersion.length);
         return groupPackage(cmd, payload, key);
     }
 
+
+
+    /**
+     *  传输文件状态上报
+     * @param key
+     * @param state   模块号  0x1 开始传输文件；0x2传输文件中；0x3传输文件完成；
+     * @return
+     */
+
+    public static byte[] reportOtaFileState(byte[] key,byte state ) {
+        byte cmd = (byte) 0x88;
+        byte[] payload = new byte[16]; //负载数据
+        payload[0] = state;
+        return groupPackage(cmd, payload, key);
+    }
 
     /**
      * 心跳帧

@@ -28,6 +28,7 @@ public class SocketOtaUtil {
     private FileInputStream fileInputStream;
     private int fileSize;
     private long crc32;
+    private boolean firstSendFile = false;
 
 
     public SocketOtaUtil(IOtaListener listener) {
@@ -54,7 +55,7 @@ public class SocketOtaUtil {
 
     }
 
-    public void init(String filePath) {
+    public void startSendFile(String filePath) {
         if (!initFile(filePath)) {  //如果初始化文件失败，那么不再继续
             return;
         }
@@ -76,8 +77,10 @@ public class SocketOtaUtil {
         }
     }
 
-
-    public void sendData() {
+    /**
+     * 发送数据
+     */
+    private void sendData() {
         try {
             InetAddress inetAddress = socket.getInetAddress();
             Log.e(TAG, "IP地址是 " + inetAddress.toString() + "  端口是 " + String.valueOf(socket.getPort()));
@@ -87,6 +90,9 @@ public class SocketOtaUtil {
             Log.e(TAG, "写入测试指令" + "  结果" + testCommandResult);
             if (testCommandResult == 0) {  //写入测试结果成功   接着开始OTA配置
                 //包总数
+                if (firstSendFile && listener!=null){
+                    listener.startSendFile();
+                }
                 int totalPackage = (int) Math.ceil((fileSize * 1.0) / (package_size * 1.0));
                 byte[] configCommand = getOtaConfigInfo(fileSize, crc32, package_size).getBytes();
                 int configCommandResult = writeData(configCommand);
@@ -155,6 +161,10 @@ public class SocketOtaUtil {
         if (listener != null && errorCode < 0) {
             listener.onError(errorCode, throwable);
         }
+        release();
+    }
+
+    public void release(){
         try {
             //关闭文件流
             if (fileInputStream != null) {

@@ -128,8 +128,8 @@
             android:layout_marginLeft="@dimen/dp_10"
             android:text="申请售后"
             android:gravity="center"
-            android:textColor="@color/white"
-            android:background="@drawable/light_blue_btn_bg"
+            android:textColor="@color/light_blue"
+            android:background="@drawable/delete_blue_btn_bg"
             android:layout_height="33dp"/>
         <Button
             android:id="@+id/tv_order_comment"
@@ -206,8 +206,8 @@
             android:layout_marginLeft="@dimen/dp_10"
             android:text=""
             android:gravity="center"
-            android:textColor="@color/dk_color_FFFFFF"
-            android:background="@drawable/light_blue_btn_bg"
+            android:textColor="@color/light_blue"
+            android:background="@drawable/delete_blue_btn_bg"
             android:layout_height="33dp"/>
 
 

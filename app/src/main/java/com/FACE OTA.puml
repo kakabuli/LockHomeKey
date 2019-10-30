@@ -1,17 +1,43 @@
 @startuml
 title face OTA
-    App->FaceBlock: socket 连接：Ip：192.168.4.2 \n端口：3456
-    App->FaceBlock:
-    App->FaceBlock:
-    App->FaceBlock:
-    App->FaceBlock:
-    App->FaceBlock:
-    App->FaceBlock:
-    App->FaceBlock:
-    App->FaceBlock:
-    App->FaceBlock:
-    App->FaceBlock:
-    App->FaceBlock:
-
-
+    App->BLE: 发送开始OTA指令  0x85 operation 0x01
+    App->App: 下载文件
+    alt  用户取消升级
+         App->BLE: 发送终止OTA指令  0x85 operation 0x02
+    else 用户确定升级
+            App->App:用户连接WiFi
+         App->FaceModule: Socket连接
+         alt  Socket连接成功
+             App->FaceModule: 发送文件
+             App->BLE: 开始传输文件指令 0x88 info 0x01
+             App->BLE: 文件传输中指令 0x88 info 0x02 \n每隔1秒发送一次
+             alt 正常传输
+                 App->FaceModule: 文件传输完成
+                 App->BLE: 文件传输完成指令 0x88 info 0x03
+                 App->App: 监听蓝牙返回OTA状态  0x86
+                 alt 收到上报
+                    BLE->App: 上报OTA状态
+                       alt 升级成功
+                          App->App: 提示用户升级成功
+                       else  升级失败
+                          App->BLE: 发送终止OTA指令  0x85 operation 0x02
+                          App->App: 提示失败，退出OTA，重新开始
+                       end
+                 else 没有收到  多久超时待定
+                     App->App: 提示失败，退出OTA，重新开始
+                 end
+             else  传输文件出错
+                App->BLE: 发送终止OTA指令  0x85 operation 0x02
+                App->App: 提示失败，退出OTA，重新开始
+             end
+         else  Socket连接失败
+             App->BLE: 发送终止OTA指令  0x85 operation 0x02
+             App->App: 提示失败，退出OTA，重新开始
+         else  蓝牙上报OTA异常
+             App->BLE: 发送终止OTA指令  0x85 operation 0x02
+             App->App: 提示失败，退出OTA，重新开始
+         else  Ble连接断开
+             App->App: 提示失败，退出OTA，重新开始
+         end
+    end
 @enduml
