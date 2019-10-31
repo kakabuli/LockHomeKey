@@ -113,10 +113,10 @@ public class BleDeviceInfoActivity extends BaseBleCheckInfoActivity<IDeviceInfoV
             lr3dAlgorithm.setVisibility(View.GONE);
             lr3dCamera.setVisibility(View.GONE);
         } else {
-            lr3dAlgorithm.setVisibility(View.GONE);
-            lr3dCamera.setVisibility(View.GONE);
-//            lr3dAlgorithm.setVisibility(View.VISIBLE);
-//            lr3dCamera.setVisibility(View.VISIBLE);
+//            lr3dAlgorithm.setVisibility(View.GONE);
+//            lr3dCamera.setVisibility(View.GONE);
+            lr3dAlgorithm.setVisibility(View.VISIBLE);
+            lr3dCamera.setVisibility(View.VISIBLE);
         }
     }
 
@@ -252,18 +252,43 @@ public class BleDeviceInfoActivity extends BaseBleCheckInfoActivity<IDeviceInfoV
     }
 
     @Override
-    public void onRequestOtaSuccess(String ssid, String password) {
+    public void onRequestOtaSuccess(String ssid, String password, String version, int number, int otaType, String path) {
+        hiddenLoading();
+        Intent intent = new Intent();
+        intent.putExtra(OtaConstants.filePath, path);
+        intent.putExtra(OtaConstants.wifiPassword, password);
+        intent.putExtra(OtaConstants.wifiSSid, ssid);
+        intent.putExtra(OtaConstants.otaType, otaType);
+        intent.putExtra(OtaConstants.moduleNumber, number);
+        intent.putExtra(OtaConstants.version, version);
+        intent.setClass(BleDeviceInfoActivity.this, FaceOtaActivity.class);
+        startActivity(intent);
+    }
+
+    @Override
+    public void onDeviceStateChange(boolean isConnected) {  //设备连接状态改变   连接成功时提示正在鉴权，连接失败时直接提示用户
+        if (isConnected) {
+            showLoading(getString(R.string.is_authing));
+        } else {
+            hiddenLoading();
+            ToastUtil.getInstance().showLong(R.string.connet_failed_please_near);
+        }
+    }
+
+    private void downFile(String version, int number, int otaType) {
         showLoading(getString(R.string.is_down_file));
+        String PATH = getExternalFilesDir("").getAbsolutePath() + File.separator + "binFile";
+        DownFileUtils.createFolder(PATH);
+        String fileName = "Kaadas_module" + currentAppInfo.getFileVersion() + "_" + currentAppInfo.getFileMd5() + ".bin";
+        filePath = PATH + "/" + fileName;
         DownFileUtils downFileUtils = new DownFileUtils() {
             @Override
             public void onFileExist(String url, String path) {
                 hiddenLoading();
-                Intent intent = new Intent();
-                intent.putExtra(OtaConstants.filePath, filePath);
-                intent.putExtra(OtaConstants.wifiPassword, password);
-                intent.putExtra(OtaConstants.wifiSSid, ssid);
-                intent.setClass(BleDeviceInfoActivity.this, FaceOtaActivity.class);
-                startActivity(intent);
+                if (mPresenter.isAuth(bleLockInfo, true)) {
+                    showLoading(getString(R.string.is_openning_ota));
+                    mPresenter.startOTA((byte) number, (byte) otaType, version, filePath);
+                }
             }
 
             @Override
@@ -281,12 +306,10 @@ public class BleDeviceInfoActivity extends BaseBleCheckInfoActivity<IDeviceInfoV
             @Override
             public void onDownComplete(String url, String path) {
                 hiddenLoading();
-                Intent intent = new Intent();
-                intent.putExtra(OtaConstants.filePath, path);
-                intent.putExtra(OtaConstants.wifiPassword, password);
-                intent.putExtra(OtaConstants.wifiSSid, ssid);
-                intent.setClass(BleDeviceInfoActivity.this, FaceOtaActivity.class);
-                startActivity(intent);
+                if (mPresenter.isAuth(bleLockInfo, true)) {
+                    showLoading(getString(R.string.is_openning_ota));
+                    mPresenter.startOTA((byte) number, (byte) otaType, version, filePath);
+                }
             }
 
             @Override
@@ -294,23 +317,7 @@ public class BleDeviceInfoActivity extends BaseBleCheckInfoActivity<IDeviceInfoV
 
             }
         };
-        String PATH = getExternalFilesDir("").getAbsolutePath() + File.separator + "binFile";
-        downFileUtils.createFolder(PATH);
-        String fileName = "Kaadas_module" + currentAppInfo.getFileVersion() + "_" + currentAppInfo.getFileMd5() + ".bin";
-        filePath = PATH + "/" + fileName;
         downFileUtils.downFile(currentAppInfo.getFileUrl(), filePath);
-
-
-    }
-
-    @Override
-    public void onDeviceStateChange(boolean isConnected) {  //设备连接状态改变   连接成功时提示正在鉴权，连接失败时直接提示用户
-        if (isConnected) {
-            showLoading(getString(R.string.is_authing));
-        } else {
-            hiddenLoading();
-            ToastUtil.getInstance().showLong(R.string.connet_failed_please_near);
-        }
     }
 
     @OnClick(R.id.tv_device_name)
@@ -359,13 +366,9 @@ public class BleDeviceInfoActivity extends BaseBleCheckInfoActivity<IDeviceInfoV
 
     @Override
     public void on3DModuleEnterOta(int type, OTAResult.UpdateFileInfo appInfo) {
+        showLoading(getString(R.string.is_enter_ota_module));
         currentAppInfo = appInfo;
-        if (mPresenter.isAuth(bleLockInfo, true)) {
-            if (type == 2) { //算法模块
-                mPresenter.startOTA((byte) algorithmNumber, (byte) algorithmOtaType, appInfo.getFileVersion());
-            } else if (type == 3) {
-                mPresenter.startOTA((byte) cameraNumber, (byte) cameraOtaType, appInfo.getFileVersion());
-            }
-        }
+        downFile(appInfo.getFileVersion(),(byte) algorithmNumber, (byte) algorithmOtaType);
+
     }
 }

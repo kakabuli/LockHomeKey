@@ -998,6 +998,10 @@ public class BleService extends Service {
 //                LogUtils.e("当前数据为空   直接发送   发送队列数据   " + commands.size());
                 writeStack(command, 2);
             } else {
+                if ((command[3]&0xff) == 0x88){     //如果是ota状态上报
+                    writeStack(command, 3);
+                    return;
+                }
 //                LogUtils.e("加入指令   " + Rsa.bytesToHexString(command) + "  已经等待的指令  " + getCommands(waitBackCommands) + "  当前等待的指令  " + (currentCommand == null ? "" : Rsa.bytesToHexString(currentCommand)));
                 if (waitBackCommands.size() >= 4) {
                     LogUtils.e("指令满了    ");
