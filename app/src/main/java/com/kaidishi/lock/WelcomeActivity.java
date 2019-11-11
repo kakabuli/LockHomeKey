@@ -339,6 +339,7 @@ public class WelcomeActivity extends BaseActivity<ISplashView, SplashPresenter<I
                             MyApplication.getInstance().setSip_package_invite(sip_invite);
                             MyApplication.getInstance().setCurrentGeTuiMimiUserName(meUserName);
                             MyApplication.getInstance().setCurrentGeTuiMImiPwd(mePwd);
+                            MyApplication.getInstance().setCurrentGwId(gwid);
                             Log.e(GeTui.VideoLog,"WelcomeActivity==>sip的invite包:"+sip_invite);
                             MyLog.getInstance().save("sip的invite包:"+sip_invite);
                             Log.e(GeTui.VideoLog,"WelcomeActivity==>获取的deviceId:"+deviceid+"  gwid:"+gwid+" meUserName:"+meUserName+" mePwd:"+mePwd);

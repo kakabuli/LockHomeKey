@@ -360,6 +360,11 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
             LinphoneManager.switchRelay(true);
             mPresenter.setisRelay();
             }
+        }else if(replay==0){
+            if(!isCallIn){
+                LinphoneManager.switchRelay(false);
+                mPresenter.setisRelayFalse();
+            }
         }
 
         List<HomeShowBean> homeShowDevices = MyApplication.getInstance().getHomeShowDevices();
