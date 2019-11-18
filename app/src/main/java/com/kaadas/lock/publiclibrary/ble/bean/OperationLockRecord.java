@@ -1,5 +1,9 @@
 package com.kaadas.lock.publiclibrary.ble.bean;
 
+import org.greenrobot.greendao.annotation.Entity;
+
+import androidx.annotation.Nullable;
+
 public class OperationLockRecord {
     @Override
     public String toString() {
@@ -12,6 +16,7 @@ public class OperationLockRecord {
                 ", uid='" + uid + '\'' +
                 '}';
     }
+
 
     private int eventType; //事件类型
     private int eventSource;//事件内容
@@ -77,4 +82,23 @@ public class OperationLockRecord {
         this.uid = uid;
     }
 
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj instanceof OperationLockRecord) {
+            OperationLockRecord record = (OperationLockRecord)obj;
+            if (record.eventCode == eventCode
+                    && record.eventSource == eventSource
+                    && record.eventType == eventType
+                    && record.userNum == userNum
+                    && record.eventTime.equals(eventTime)
+                    ){
+                return true;
+            }
+        }
+        return false;
+
+    }
 }

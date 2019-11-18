@@ -1,0 +1,30 @@
+@startuml
+title  BLE OTA
+    == 用户昵称 ==
+    alt 有网络
+      App->Server:请求服务器昵称列表
+        alt 请求成功
+         App->App: 缓存昵称列表
+        else 请求失败
+         App->App: 获取缓存？还是不处理
+        end
+    else 无网络
+        App->App: 获取缓存
+    end
+
+    == 操作记录 ==
+    alt 有网络
+      App->Server:请求服务器昵称列表
+        alt 请求成功
+         App->App: 缓存昵称列表
+        else 请求失败
+         App->App: 显示缓存？
+        end
+    else 无网络
+        App->App: 显示缓存
+    end
+        App->BLE: 同步操作记录
+        BLE->App: 开锁记录
+        App->BLE: 去重缓存操作记录
+        App->BLE: 显示操作记录
+@enduml

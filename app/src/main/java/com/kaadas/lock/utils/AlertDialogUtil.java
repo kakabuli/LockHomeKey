@@ -155,7 +155,6 @@ public class AlertDialogUtil {
                 if (clickListener != null) {
                     clickListener.right();
                 }
-
             }
         });
     }

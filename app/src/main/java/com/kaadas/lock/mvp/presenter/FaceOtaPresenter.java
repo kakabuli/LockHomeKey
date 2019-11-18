@@ -118,8 +118,6 @@ public class FaceOtaPresenter<T> extends BlePresenter<IFaceOtaView> {
      * 发送数据完成的超时
      */
     private void onSendFileCompleteFaceOtaState() {
-        //3分钟超时
-//不管OTA成功还是失败都不发发送文件的心跳
         otaStateDisposable = bleService.listeneDataChange()
                  .filter(new Predicate<BleDataBean>() {
                      @Override
@@ -127,7 +125,7 @@ public class FaceOtaPresenter<T> extends BlePresenter<IFaceOtaView> {
                          return (bleDataBean.getCmd() & 0xff) == 0x86;
                      }
                  })
-                 .timeout(3,TimeUnit.SECONDS)  //3分钟超时
+                 .timeout(3,TimeUnit.MINUTES)  //3分钟超时
                  .compose(RxjavaHelper.observeOnMainThread())
                  .subscribe(new Consumer<BleDataBean>() {
                      @Override
@@ -198,14 +196,8 @@ public class FaceOtaPresenter<T> extends BlePresenter<IFaceOtaView> {
                 .subscribe(new Consumer<BleDataBean>() {
                     @Override
                     public void accept(BleDataBean bleDataBean) throws Exception {
-                        byte[] decrypt = Rsa.decrypt(bleDataBean.getPayload(), bleLockInfo.getAuthKey());
-                        LogUtils.e("sendStartSendFile   " + Rsa.bytesToHexString(decrypt));
-                        if ((decrypt[0] & 0xff) == number && (decrypt[1] & 0xff) == otaType && (decrypt[3] & 0xff) == 0) {
-                            if (isSafe()) {
-                                mViewRef.get().otaSuccess();
-                            }
-                        }
-                        toDisposable(finishOtaDisposable);
+
+
                     }
                 }, new Consumer<Throwable>() {
                     @Override

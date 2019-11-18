@@ -523,4 +523,13 @@ public abstract class CallBackBaseFragment<T extends IBaseView, V
         }
     }
 
+    @Override
+    public void showLoadingNoCancel(String content) {
+        loadingDialog = LoadingDialog.getInstance(getContext());
+        loadingDialog.setCancelable(false);
+        if (loadingDialog != null) {
+            loadingDialog.dismiss();
+        }
+    }
+
 }

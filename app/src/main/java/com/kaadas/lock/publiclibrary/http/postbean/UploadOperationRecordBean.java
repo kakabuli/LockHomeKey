@@ -110,20 +110,4 @@ public class UploadOperationRecordBean {
             this.eventTime = eventTime;
         }
     }
-    /**
-     *     {
-     *         "devName":"BT01191910010",
-     *         "operationList":[
-     *             {
-     *                 "uid":"5c6fb4d014fd214910b33e80",
-     *                 "eventType":4,
-     *                 "eventSource":3,
-     *                 "eventCode":3,
-     *                 "userNum":4,
-     *                 "eventTime":"2019-07-04 12:00:03"
-     *             }
-     *         ]
-     *     }
-     * */
-
 }

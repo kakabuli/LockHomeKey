@@ -43,6 +43,7 @@ public class FaceOtaActivity extends BaseBleActivity<IFaceOtaView, FaceOtaPresen
     private String version;
     private int moduleNumber;
     private int otaType;
+    private TextView error_log;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +59,8 @@ public class FaceOtaActivity extends BaseBleActivity<IFaceOtaView, FaceOtaPresen
         otaType = intent.getIntExtra(OtaConstants.otaType, 0);
         moduleNumber = intent.getIntExtra(OtaConstants.moduleNumber, 0);
         version = intent.getStringExtra(OtaConstants.version);
+
+        error_log = findViewById(R.id.error_log);
 
         LogUtils.e("传递过来的信息为    " + "   filePath " + filePath
                 + "   wifiSSid " + wifiSSid
@@ -147,8 +150,6 @@ public class FaceOtaActivity extends BaseBleActivity<IFaceOtaView, FaceOtaPresen
 
         @Override
         public void onComplete() {
-            mPresenter.endSendFile();
-            isStarting = false;
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -175,6 +176,16 @@ public class FaceOtaActivity extends BaseBleActivity<IFaceOtaView, FaceOtaPresen
         public void startSendFile() {
             mPresenter.startSendFile();
         }
+
+        @Override
+        public void sendTimeOut(long time,int packageNumber) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    error_log.setText(error_log.getText().toString()  + "  包序号  " +packageNumber+ "  时间  "+ time+"  \n");
+                }
+            });
+        }
     };
 
     public void copy(View view) {
@@ -190,17 +201,20 @@ public class FaceOtaActivity extends BaseBleActivity<IFaceOtaView, FaceOtaPresen
 
     @Override
     public void otaSuccess() {
+        socketOtaUtil.release();
         isStarting = false;
         ToastUtil.getInstance().showLong("蓝牙上报OTA成功");
         otaStatus.setText("蓝牙上报OTA成功");
         AlertDialogUtil.getInstance().noEditSingleButtonDialog(this, getString(R.string.good_for_you), getString(R.string.ota_good_for_you), getString(R.string.hao_de), new AlertDialogUtil.ClickListener() {
             @Override
             public void left() {
+                setResult(RESULT_OK);
                 finish();
             }
 
             @Override
             public void right() {
+                setResult(RESULT_OK);
                 finish();
             }
         });
@@ -239,11 +253,11 @@ public class FaceOtaActivity extends BaseBleActivity<IFaceOtaView, FaceOtaPresen
     }
 
     private void showNotice() {
-        AlertDialogUtil.getInstance().noEditSingleButtonDialog(this, getString(R.string.hint),
+        AlertDialogUtil.getInstance().noEditSingleCanNotDismissButtonDialog(this, getString(R.string.hint),
                 getString(R.string.ota_fail), getString(R.string.confirm), new AlertDialogUtil.ClickListener() {
                     @Override
                     public void left() {
-
+                        finish();
                     }
 
                     @Override
@@ -258,8 +272,6 @@ public class FaceOtaActivity extends BaseBleActivity<IFaceOtaView, FaceOtaPresen
         @Override
         public void onReceive(Context context, Intent intent) {
             ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-
-
             LogUtils.e("当前网络状态   是否连接WiFi  " + NetUtil.isWifi());
         }
     };

@@ -6,6 +6,7 @@ package com.kaadas.lock.mvp.mvpbase;
  */
 public interface IBaseView {
     void showLoading(String content);
+    void showLoadingNoCancel(String content);
 
     void hiddenLoading();
 }

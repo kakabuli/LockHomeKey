@@ -208,10 +208,7 @@ public class BleDeviceInfoPresenter extends BleCheckOTAPresenter<IDeviceInfoView
     }
 
     private void readSerialNumber() {
-        LogUtils.e("设备连接成功     ");
-        //发现服务之后不能立即读取特征值数据  需要延时500ms以上（魅族）
-        //一秒没有读取到SerialNumber  则认为超时
-        //超时然后重试
+        LogUtils.e("读取       ");
         toDisposable(readSerialNumberDisposable);
         readSerialNumberDisposable =
                 Observable.just(0)

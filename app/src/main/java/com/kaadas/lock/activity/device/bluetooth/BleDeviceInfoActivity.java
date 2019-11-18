@@ -78,6 +78,7 @@ public class BleDeviceInfoActivity extends BaseBleCheckInfoActivity<IDeviceInfoV
     private int algorithmOtaType;
     private int cameraNumber;
     private int cameraOtaType;
+    private static int FACE_OTA_REQUEST_CODE = 101;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -113,10 +114,10 @@ public class BleDeviceInfoActivity extends BaseBleCheckInfoActivity<IDeviceInfoV
             lr3dAlgorithm.setVisibility(View.GONE);
             lr3dCamera.setVisibility(View.GONE);
         } else {
-//            lr3dAlgorithm.setVisibility(View.GONE);
-//            lr3dCamera.setVisibility(View.GONE);
-            lr3dAlgorithm.setVisibility(View.VISIBLE);
-            lr3dCamera.setVisibility(View.VISIBLE);
+            lr3dAlgorithm.setVisibility(View.GONE);
+            lr3dCamera.setVisibility(View.GONE);
+//            lr3dAlgorithm.setVisibility(View.VISIBLE);
+//            lr3dCamera.setVisibility(View.VISIBLE);
         }
     }
 
@@ -137,13 +138,11 @@ public class BleDeviceInfoActivity extends BaseBleCheckInfoActivity<IDeviceInfoV
             case R.id.tv_3d_camera:
                 showLoading(getString(R.string.is_check_version));
                 String version = tv3dCamera.getText().toString().trim();
-//                version = version.replace("ALG_", "");
                 mPresenter.checkOTAInfo(bleLockInfo.getServerLockInfo().getDeviceSN(), version, 3);
                 break;
             case R.id.rv_3d_algorithm:
                 showLoading(getString(R.string.is_check_version));
                 String versionAlgorithm = tv3dAlgorithm.getText().toString().trim();
-//                versionAlgorithm = versionAlgorithm.replace("ALG_", "");
                 mPresenter.checkOTAInfo(bleLockInfo.getServerLockInfo().getDeviceSN(), versionAlgorithm, 2);
                 break;
         }
@@ -238,7 +237,6 @@ public class BleDeviceInfoActivity extends BaseBleCheckInfoActivity<IDeviceInfoV
             tv3dAlgorithm.setText(version);
             algorithmNumber = moduleNumber;
             algorithmOtaType = otaType;
-
         } else if (moduleNumber == 2) {
             tv3dCamera.setText(version);
             cameraNumber = moduleNumber;
@@ -262,7 +260,7 @@ public class BleDeviceInfoActivity extends BaseBleCheckInfoActivity<IDeviceInfoV
         intent.putExtra(OtaConstants.moduleNumber, number);
         intent.putExtra(OtaConstants.version, version);
         intent.setClass(BleDeviceInfoActivity.this, FaceOtaActivity.class);
-        startActivity(intent);
+        startActivityForResult(intent,FACE_OTA_REQUEST_CODE);
     }
 
     @Override
@@ -276,7 +274,7 @@ public class BleDeviceInfoActivity extends BaseBleCheckInfoActivity<IDeviceInfoV
     }
 
     private void downFile(String version, int number, int otaType) {
-        showLoading(getString(R.string.is_down_file));
+        showLoadingNoCancel(getString(R.string.is_down_file));
         String PATH = getExternalFilesDir("").getAbsolutePath() + File.separator + "binFile";
         DownFileUtils.createFolder(PATH);
         String fileName = "Kaadas_module" + currentAppInfo.getFileVersion() + "_" + currentAppInfo.getFileMd5() + ".bin";
@@ -286,7 +284,7 @@ public class BleDeviceInfoActivity extends BaseBleCheckInfoActivity<IDeviceInfoV
             public void onFileExist(String url, String path) {
                 hiddenLoading();
                 if (mPresenter.isAuth(bleLockInfo, true)) {
-                    showLoading(getString(R.string.is_openning_ota));
+                    showLoadingNoCancel(getString(R.string.is_openning_ota));
                     mPresenter.startOTA((byte) number, (byte) otaType, version, filePath);
                 }
             }
@@ -366,9 +364,31 @@ public class BleDeviceInfoActivity extends BaseBleCheckInfoActivity<IDeviceInfoV
 
     @Override
     public void on3DModuleEnterOta(int type, OTAResult.UpdateFileInfo appInfo) {
-        showLoading(getString(R.string.is_enter_ota_module));
+        int otaType = 1;
+        int number = 1;
+        if (type == 2){
+            otaType = algorithmOtaType;
+            number = algorithmNumber;
+        }else if (type == 3)  {
+            otaType = cameraOtaType;
+            number = cameraNumber;
+        }
+        showLoadingNoCancel(getString(R.string.is_enter_ota_module));
         currentAppInfo = appInfo;
-        downFile(appInfo.getFileVersion(),(byte) algorithmNumber, (byte) algorithmOtaType);
+        downFile(appInfo.getFileVersion(),(byte) number, (byte) otaType);
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == FACE_OTA_REQUEST_CODE ){
+            if (resultCode == RESULT_OK){
+                if(mPresenter.isAuth(bleLockInfo,true)){
+                    mPresenter.checkModuleNumber();
+                    LogUtils.e("升级成功   重新获取");
+                }
+            }
+        }
     }
 }
