@@ -77,7 +77,7 @@ public class CallComingActivity extends BaseAddToApplicationActivity implements 
 
         ringTools = new RingTools(this);
         ringTools.startRinging();
-        listenerCallStatus();
+         listenerCallStatus();
 
 
         //设置窗口对齐屏幕宽度

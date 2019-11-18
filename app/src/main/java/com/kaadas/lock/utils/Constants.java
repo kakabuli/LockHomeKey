@@ -77,4 +77,6 @@ public class Constants {
     public static final String DEVICEID="deviceId";
     public static final String NIGHT_SIGHT="NIGHT_SIGHT";
 
+    public static final String RELAYTYPE="RELAYTYPE";
+
 }

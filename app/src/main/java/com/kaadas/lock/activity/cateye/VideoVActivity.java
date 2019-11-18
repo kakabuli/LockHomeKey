@@ -37,6 +37,7 @@ import android.widget.Toast;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.MainActivity;
+import com.kaadas.lock.activity.TestActivity;
 import com.kaadas.lock.adapter.ForecastAdapter;
 import com.kaadas.lock.bean.HomeShowBean;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
@@ -49,6 +50,7 @@ import com.kaadas.lock.publiclibrary.bean.GwLockInfo;
 import com.kaadas.lock.publiclibrary.linphone.MemeManager;
 import com.kaadas.lock.publiclibrary.linphone.linphone.VideoActivity;
 import com.kaadas.lock.publiclibrary.linphone.linphone.util.LinphoneHelper;
+import com.kaadas.lock.publiclibrary.linphone.linphonenew.LinphoneManager;
 import com.kaadas.lock.publiclibrary.linphone.linphonenew.LinphoneService;
 import com.kaadas.lock.publiclibrary.mqtt.eventbean.DeviceOnLineBean;
 import com.kaadas.lock.utils.AlertDialogUtil;
@@ -351,6 +353,15 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
         isCallIn = (boolean) getIntent().getSerializableExtra(KeyConstants.IS_CALL_IN);
 
         String gwID = cateEyeInfo.getGwID();
+        String key=Constants.RELAYTYPE + gwID;
+        int replay=(int)SPUtils.get(key,0);
+        if(replay==1){
+            if(!isCallIn){
+            LinphoneManager.switchRelay(true);
+            mPresenter.setisRelay();
+            }
+        }
+
         List<HomeShowBean> homeShowDevices = MyApplication.getInstance().getHomeShowDevices();
         gwLockInfos = new ArrayList<>();
         //获取跟猫眼通一网关下的锁
@@ -365,6 +376,9 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
         if (isCallIn) {
             Intent intent = new Intent(this, CallComingActivity.class);
             startActivityForResult(intent, REQUEST_CODE_CALL_COMING);
+
+//            Intent intent = new Intent(this, TestActivity.class);
+//            startActivity(intent);
         }
         catEyeStateChange();
     }

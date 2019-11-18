@@ -33,6 +33,7 @@ import com.kaadas.lock.publiclibrary.linphone.MemeManager;
 import com.kaadas.lock.publiclibrary.linphone.linphone.callback.PhoneCallback;
 import com.kaadas.lock.publiclibrary.linphone.linphone.callback.RegistrationCallback;
 import com.kaadas.lock.publiclibrary.linphone.linphone.util.LinphoneHelper;
+import com.kaadas.lock.publiclibrary.linphone.linphonenew.LinphoneManager;
 import com.kaadas.lock.publiclibrary.mqtt.MqttCommandFactory;
 import com.kaadas.lock.publiclibrary.mqtt.eventbean.CatEyeEventBean;
 import com.kaadas.lock.publiclibrary.mqtt.eventbean.DeleteDeviceLockBean;
@@ -469,6 +470,7 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
     }
 
     public void initLinphone() {
+//        LinphoneManager.switchRelay(true);
         if (!TextUtils.isEmpty(MyApplication.getInstance().getToken()) && !TextUtils.isEmpty(MyApplication.getInstance().getUid())) {
             LinphoneHelper.setAccount(MyApplication.getInstance().getUid(), "12345678Bm", MqttConstant.LINPHONE_URL);
             LogUtils.e("设置LinPhone  监听  ");
@@ -584,6 +586,18 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                         }
                         return;
                     }
+
+                    String key=Constants.RELAYTYPE + gwId;
+                    int replay=(int)SPUtils.get(key,0);
+                    if(replay==1){
+                        LinphoneManager.switchRelay(true);
+                        if (mViewRef.get() != null) {
+                            mViewRef.get().onCatEyeCallIn(callInCatEyeInfo);
+                        }
+                        return;
+                    }
+
+
                     //获取米米网账号情况
                     int meBindState = gatewayInfo.getServerInfo().getMeBindState();
                     String mePwd = gatewayInfo.getServerInfo().getMePwd();

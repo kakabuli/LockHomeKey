@@ -533,6 +533,14 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
                         }
                         String payload = mqttData.getPayload();
                         allBindDevices = new Gson().fromJson(payload, AllBindDevices.class);
+
+                        List<AllBindDevices.ReturnDataBean.GwListBean> gwList=  allBindDevices.getData().getGwList();
+                        int allgwSize=gwList.size();
+                        for (int j=0;j<allgwSize;j++){
+                         //  SPUtils.put(Constants.RELAYTYPE+gwList.get(j).getDeviceSN(),gwList.get(j).getRelayType());
+                            SPUtils.put(Constants.RELAYTYPE+gwList.get(j).getDeviceSN(),gwList.get(j).getRelayType());
+                        }
+
                         if (!"200".equals(allBindDevices.getCode())){  ///服务器获取设备列表失败
                             LogUtils.e("   获取列表失败  "  +allBindDevices.getCode());
                             return;

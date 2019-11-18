@@ -160,6 +160,14 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
                         Toast.makeText(mContext,mContext.getString(R.string.call_error_cateInfoEmpty),Toast.LENGTH_LONG).show();
                         return;
                     }
+
+                    if(isRelay){
+                        if (mViewRef.get() != null) {
+                            mViewRef.get().onCatEyeCallIn();
+                        }
+                        return;
+                    }
+
                     //获取米米网账号情况
                     int meBindState = gatewayInfo.getServerInfo().getMeBindState();
                     String mePwd = gatewayInfo.getServerInfo().getMePwd();
@@ -347,7 +355,7 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
         }
         LinphoneHelper.hangUp();
     }
-
+    boolean isRelay=false;
     public void callCatEye(CateEyeInfo cateEyeInfo) {
         //判断网关是否在线
         //判断猫眼是否在线
@@ -368,9 +376,15 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
                 break;
             }
         }
+        // 呼过去
+        if(isRelay){
+            wakeupCatEye(cateEyeInfo);
+            return;
+        }
         if (gatewayInfo != null) {
             String meUsername = gatewayInfo.getServerInfo().getMeUsername();
             String mePwd = gatewayInfo.getServerInfo().getMePwd();
+
             if (MemeManager.getInstance().isConnected()) { //meme网已经连接
                 //如果meme网登陆的账号密码为当前的账号密码，直接发起通信
                 if (meUsername.equals(MemeManager.getInstance().getCurrentAccount())
@@ -937,6 +951,10 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
             compositeDisposable.add(closeDisposable);
         }
 
+    }
+
+    public void setisRelay(){
+        isRelay=true;
     }
 
 
