@@ -1233,4 +1233,15 @@
     <string name="already_copy">已复制到剪切板</string>
     <string name="is_enter_ota_module">正在进入设备Ota模式......</string>
     <string name="is_openning_ota">正在开启OTA</string>
+    <string name="retain">保留</string>
+    <string name="modify_manager_password">修改管理员密码</string>
+    <string name="card_add">卡片添加</string>
+    <string name="card_delete">卡片删除</string>
+    <string name="add_finger">添加指纹</string>
+    <string name="delete_finger">删除指纹</string>
+    <string name="face_add">人脸添加</string>
+    <string name="face_delete">人脸删除</string>
+    <string name="vana_add">指静脉添加</string>
+    <string name="vana_delete">指静脉删除</string>
+    <string name="recover_factory">恢复出厂设置</string>
 </resources>

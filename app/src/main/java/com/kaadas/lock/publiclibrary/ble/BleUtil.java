@@ -48,16 +48,20 @@ public class BleUtil {
     public static final int BLE_VERSION_NEW2 = 3;   //最新的版本  最新的协议  全功能支持
 
 
-    public static final String ADMINISTRATOR_PASSWORD_MODIFY = "修改管理员密码";
-    public static final String PASSWORD_ADD = "添加密码";
-    public static final String PASSWORD_DELETE = "删除密码";
-    public static final String FINGERPRINT_ADD = "添加指纹";
-    public static final String FINGERPRINT_DELETE = "删除指纹";
-    public static final String FACE_ADD = "人脸添加";
-    public static final String FACE_DELETE = "人脸删除";
-    public static final String INTRAVENOUS_ADD = "静脉添加";
-    public static final String INTRAVENOUS_DELETE = "静脉删除";
-    public static final String RETAIN = "保留";
+//    public static final String ADMINISTRATOR_PASSWORD_MODIFY = "修改管理员密码";
+//    public static final String PASSWORD_ADD = "添加密码";
+//    public static final String PASSWORD_DELETE = "删除密码";
+//    public static final String PASSWORD_MODIFY = "密码修改";
+//    public static final String CARD_ADD = "卡片添加";
+//    public static final String CARD_DELETE = "卡片删除";
+//    public static final String FINGERPRINT_ADD = "添加指纹";
+//    public static final String FINGERPRINT_DELETE = "删除指纹";
+//    public static final String FACE_ADD = "人脸添加";
+//    public static final String FACE_DELETE = "人脸删除";
+//    public static final String INTRAVENOUS_ADD = "指静脉添加";
+//    public static final String INTRAVENOUS_DELETE = "指静脉删除";
+//    public static final String RECOVER = "恢复出厂设置";
+//    public static final String RETAIN = "保留";
 
     public static String getRealName(byte[] data) {
         ParseBean parseBean = ParseHead(data);
@@ -470,31 +474,31 @@ public class BleUtil {
         String openType = "";
         switch (eventCode) {
             case 0:
-                openType = RETAIN;
+                openType = MyApplication.getInstance().getString(R.string.retain) ;
                 break;
             case 1:
-                openType = ADMINISTRATOR_PASSWORD_MODIFY;
+                openType = MyApplication.getInstance().getString(R.string.modify_manager_password);
                 break;
             case 2:
-                openType = PASSWORD_ADD;
+                openType = MyApplication.getInstance().getString(R.string.add_password);
                 break;
             case 3:
-                openType = PASSWORD_DELETE;
+                openType = MyApplication.getInstance().getString(R.string.delete_password);
                 break;
             case 4:
-                openType = "密码修改(不支持)";
+                openType = MyApplication.getInstance().getString(R.string.modify_password);
                 break;
             case 5:
-                openType = "卡片添加";
+                openType = MyApplication.getInstance().getString(R.string.card_add);
                 break;
             case 6:
-                openType = "卡片删除";
+                openType = MyApplication.getInstance().getString(R.string.card_delete);
                 break;
             case 7:
-                openType = FINGERPRINT_ADD;
+                openType = MyApplication.getInstance().getString(R.string.add_finger);
                 break;
             case 8:
-                openType = FINGERPRINT_DELETE;
+                openType = MyApplication.getInstance().getString(R.string.delete_finger);
                 break;
 //            case 9:
 //                openType = APP_ADD;
@@ -503,18 +507,23 @@ public class BleUtil {
 //                openType = APP_DELETE;
 //                break;
             case 11:
-                openType = FACE_ADD;
+                openType = MyApplication.getInstance().getString(R.string.face_add);
                 break;
             case 12:
-                openType = FACE_DELETE;
+                openType = MyApplication.getInstance().getString(R.string.face_delete);
                 break;
             case 13:
-                openType = INTRAVENOUS_ADD;
+                openType = MyApplication.getInstance().getString(R.string.vana_add);
                 break;
             case 14:
-                openType = INTRAVENOUS_DELETE;
+                openType = MyApplication.getInstance().getString(R.string.vana_delete);
                 break;
-
+            case 15:
+                openType = MyApplication.getInstance().getString(R.string.recover_factory);
+                break;
+            default:
+                openType = "不确定";
+                break;
         }
         return openType;
     }
@@ -549,7 +558,7 @@ public class BleUtil {
 
                 case 0x03://：RFID卡片
 //                    if (passwordResults != null) {
-                    if (passwordResults != null&&passwordResults.getData()!=null&&passwordResults.getData().getCardList()!=null) {
+                    if (passwordResults != null && passwordResults.getData() != null && passwordResults.getData().getCardList() != null) {
                         List<GetPasswordResult.DataBean.Card> cards = passwordResults.getData().getCardList();
                         for (GetPasswordResult.DataBean.Card password : cards) {
                             if (Integer.parseInt(password.getNum()) == uNum) {
@@ -560,7 +569,7 @@ public class BleUtil {
 
                     break;
                 case 0x04://：Fingerprint指纹
-                    if (passwordResults != null&&passwordResults.getData()!=null&&passwordResults.getData().getFingerprintList()!=null) {
+                    if (passwordResults != null && passwordResults.getData() != null && passwordResults.getData().getFingerprintList() != null) {
                         List<GetPasswordResult.DataBean.Fingerprint> fingerprints = passwordResults.getData().getFingerprintList();
                         for (GetPasswordResult.DataBean.Fingerprint password : fingerprints) {
                             if (Integer.parseInt(password.getNum()) == uNum) {

@@ -288,10 +288,10 @@ public class OperationRecordPresenter<T> extends BlePresenter<IOperationRecordVi
                                 }
                                 isFirst = false;
                                 byte[] deVaule = Rsa.decrypt(bleDataBean.getPayload(), bleService.getBleLockInfo().getAuthKey());
-                                LogUtils.e("获取开锁记录   解码之后的数据是   " + Rsa.bytesToHexString(deVaule) + "原始数据是   " + Rsa.toHexString(bleDataBean.getOriginalData()));
+                                LogUtils.e("获取操作记录   解码之后的数据是   " + Rsa.bytesToHexString(deVaule) + "原始数据是   " + Rsa.toHexString(bleDataBean.getOriginalData()));
 //                                OpenLockRecord openLockRecord = BleUtil.parseLockRecord(deVaule);
                                 OperationLockRecord operationLockRecord = BleUtil.parseOperationRecord(deVaule);
-                                LogUtils.e("获取开锁记录是   " + operationLockRecord.toString());
+                                LogUtils.e("获取操作记录是   " + operationLockRecord.toString());
                                 if (operationLockRecords == null) {
                                     byte[] totalByte = new byte[2];
                                     System.arraycopy(deVaule, 0, totalByte, 0, 2);
