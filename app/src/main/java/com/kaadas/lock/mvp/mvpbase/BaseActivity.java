@@ -74,7 +74,6 @@ public abstract class BaseActivity<T extends IBaseView, V
 
     @Override
     public void showLoading(String Content) {
-
         loadingDialog = LoadingDialog.getInstance(this);
         if (!isFinishing()) {
             loadingDialog.show(Content);
@@ -83,6 +82,15 @@ public abstract class BaseActivity<T extends IBaseView, V
 
     @Override
     public void hiddenLoading() {
+        if (loadingDialog != null) {
+            loadingDialog.dismiss();
+        }
+    }
+
+    @Override
+    public void showLoadingNoCancel(String content) {
+        loadingDialog = LoadingDialog.getInstance(this);
+        loadingDialog.setCancelable(false);
         if (loadingDialog != null) {
             loadingDialog.dismiss();
         }

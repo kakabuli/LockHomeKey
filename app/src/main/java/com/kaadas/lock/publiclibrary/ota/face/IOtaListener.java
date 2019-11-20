@@ -26,15 +26,15 @@ public interface IOtaListener {
      *
      * @param errorCode 返回ERROR          -1
      *                  inputStream  为空   -2
-     *                  读取数据出多       -3
+     *                  读取数据出错  Io异常，具体原因需要查日志      -3
      *                  返回未知数据       -4
-     *                  写数据出错        -5
+     *                  写数据出错         -5
      *                  socket 为空        -6
-     *                  连接失败    -7
-     *                  文件未找到错误   -8
-     *                  读取文件失败     -9
-     *                  线程中断错误    -10
-     *                  读取数据超时  -11
+     *                  连接失败           -7
+     *                  文件未找到错误     -8
+     *                  读取文件失败       -9
+     *                  线程中断错误       -10
+     *                  读取数据超时       -11
      *                  读取文件中数据的个数失败   -12
      * @param throwable
      */
@@ -42,4 +42,7 @@ public interface IOtaListener {
 
 
     void startSendFile();
+
+
+    void sendTimeOut(long time,int packageNumber);
 }

@@ -208,10 +208,7 @@ public class BleDeviceInfoPresenter extends BleCheckOTAPresenter<IDeviceInfoView
     }
 
     private void readSerialNumber() {
-        LogUtils.e("设备连接成功     ");
-        //发现服务之后不能立即读取特征值数据  需要延时500ms以上（魅族）
-        //一秒没有读取到SerialNumber  则认为超时
-        //超时然后重试
+        LogUtils.e("读取       ");
         toDisposable(readSerialNumberDisposable);
         readSerialNumberDisposable =
                 Observable.just(0)
@@ -431,7 +428,7 @@ public class BleDeviceInfoPresenter extends BleCheckOTAPresenter<IDeviceInfoView
     }
 
 
-    public void startOTA(byte number, byte otaType, String version) {
+    public void startOTA(byte number, byte otaType, String version,String filePath) {
         byte[] command = BleCommandFactory.moduleOtaRequest(bleLockInfo.getAuthKey(), (byte) 0x01, number, otaType, version.getBytes());
         bleService.sendCommand(command);
         toDisposable(sendOtaCommandDisposable);
@@ -443,7 +440,7 @@ public class BleDeviceInfoPresenter extends BleCheckOTAPresenter<IDeviceInfoView
                         return command[1] == bleDataBean.getTsn();
                     }
                 })
-                .timeout(5 * 1000, TimeUnit.MILLISECONDS)
+                .timeout(15 * 1000, TimeUnit.MILLISECONDS)
                 .compose(RxjavaHelper.observeOnMainThread())
                 .subscribe(new Consumer<BleDataBean>() {
                     @Override
@@ -472,7 +469,7 @@ public class BleDeviceInfoPresenter extends BleCheckOTAPresenter<IDeviceInfoView
                         String ssid = new String(bWifi);
                         String password = new String(bPassword);
                         if (isSafe()) {
-                            mViewRef.get().onRequestOtaSuccess(ssid, password);
+                            mViewRef.get().onRequestOtaSuccess(ssid, password,version,number,otaType,filePath);
                         }
                         toDisposable(sendOtaCommandDisposable);
                     }

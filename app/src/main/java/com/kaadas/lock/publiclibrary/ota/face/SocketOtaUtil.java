@@ -5,6 +5,8 @@ import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.util.Log;
 
+import com.kaadas.lock.utils.LogUtils;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -22,13 +24,14 @@ public class SocketOtaUtil {
     private Socket socket;
     private OutputStream outputStream;
     private InputStream inputStream;
-    private static final int package_size = 1000;  //一个包的大小
+    private static final int PACKAGE_SIZE = 1000;  //一个包的大小
     private int currentPackage = 0;  //包总数  14:37:30.202
     private IOtaListener listener;
     private FileInputStream fileInputStream;
     private int fileSize;
     private long crc32;
     private boolean firstSendFile = false;
+    private long sendTime;
 
 
     public SocketOtaUtil(IOtaListener listener) {
@@ -73,6 +76,7 @@ public class SocketOtaUtil {
             sendData();
         } catch (IOException e) {
             e.printStackTrace();
+            LogUtils.e("socket  连接出错   " + e.getMessage());
             onError(-7, e);
         }
     }
@@ -89,55 +93,67 @@ public class SocketOtaUtil {
             int testCommandResult = writeData(testCommand);
             Log.e(TAG, "写入测试指令" + "  结果" + testCommandResult);
             if (testCommandResult == 0) {  //写入测试结果成功   接着开始OTA配置
-                //包总数
-                if (firstSendFile && listener!=null){
-                    listener.startSendFile();
-                }
-                int totalPackage = (int) Math.ceil((fileSize * 1.0) / (package_size * 1.0));
-                byte[] configCommand = getOtaConfigInfo(fileSize, crc32, package_size).getBytes();
-                int configCommandResult = writeData(configCommand);
-                if (listener != null) {
-                    listener.onProgress(0, totalPackage);
-                }
-                Log.e(TAG, "写入配置数据" + "  结果  " + configCommandResult);
-                if (configCommandResult == 0) {  //写入配置数据成功
-                    while (currentPackage < totalPackage) {
-                        byte[] line = new byte[package_size];
-                        int lineSize = fileInputStream.read(line);
-                        if (lineSize > 0) {
-                            if (lineSize < package_size) {
-                                byte[] temp = new byte[lineSize];
-                                System.arraycopy(line, 0, temp, 0, lineSize);
-                                line = temp;
-                            }
-                            byte[] packageCommand = getOtaPackage(currentPackage, line);
-                            int packageCommandResult = writeData(packageCommand);
-                            Log.e(TAG, "写入数据包" + currentPackage + "  结果 " + packageCommandResult);
-                            if (packageCommandResult == 0) {  //写入数据成功
-                                currentPackage++;
-                                if (listener != null) {
-                                    listener.onProgress(currentPackage, totalPackage);
+                byte[] finishCommand = OTA_Finish_COMMAND.getBytes();
+                int finishCommandResult = writeData(finishCommand);
+                Log.e(TAG, "开始时  写入结束指令   结果" + finishCommandResult);
+                if (finishCommandResult == 0) {  //写入数据成功
+                    //包总数
+                    if (!firstSendFile && listener != null) {
+                        listener.startSendFile();
+                        firstSendFile = true;
+                    }
+                    int totalPackage = (int) Math.ceil((fileSize * 1.0) / (PACKAGE_SIZE * 1.0));
+                    byte[] configCommand = getOtaConfigInfo(fileSize, crc32, PACKAGE_SIZE).getBytes();
+                    int configCommandResult = writeData(configCommand);
+                    if (listener != null) {
+                        listener.onProgress(0, totalPackage);
+                    }
+                    Log.e(TAG, "写入配置数据" + "  结果  " + configCommandResult);
+                    if (configCommandResult == 0) {  //写入配置数据成功
+                        while (currentPackage < totalPackage) {
+                            byte[] line = new byte[PACKAGE_SIZE];
+                            int lineSize = fileInputStream.read(line);
+                            if (lineSize > 0) {
+                                if (lineSize < PACKAGE_SIZE) {
+                                    byte[] temp = new byte[lineSize];
+                                    System.arraycopy(line, 0, temp, 0, lineSize);
+                                    line = temp;
+                                }
+                                byte[] packageCommand = getOtaPackage(currentPackage, line);
+                                long currentTimeMillis = System.currentTimeMillis();
+                                int packageCommandResult = writeData(packageCommand);
+                                long interval =  System.currentTimeMillis() -currentTimeMillis ;
+                                if (interval>1000 && listener!=null){
+                                    listener.sendTimeOut(interval,currentPackage);
+                                    LogUtils.e("写入数据包 超时   " + interval);
+                                }
+                                Log.e(TAG, "写入数据包  "+ currentPackage +"  interval " +interval+ "  结果 " + packageCommandResult);
+                                if (packageCommandResult == 0) {  //写入数据成功
+                                    currentPackage++;
+                                    if (listener != null) {
+                                        listener.onProgress(currentPackage, totalPackage);
+                                    }
+                                } else {
+                                    //退出循环
+                                    break;
                                 }
                             } else {
+                                onError(-12, null);
+                                Log.e(TAG, "读取数据出现异常，读取到的数据个数为0，正常不会出现此情况");
                                 //退出循环
                                 break;
                             }
-                        } else {
-                            onError(-12, null);
-                            Log.e(TAG, "读取数据出现异常，读取到的数据个数为0，正常不会出现此情况");
-                            //退出循环
-                            break;
                         }
-                    }
-                    if (currentPackage == totalPackage) { //数据写完了
-                        Log.e("数据写入完成", "数据写入完成");
-                        byte[] finishCommand = OTA_Finish_COMMAND.getBytes();
-                        int finishCommandResult = writeData(finishCommand);
-                        Log.e(TAG, "写入结束指令   结果" + finishCommandResult);
-                        if (finishCommandResult == 0) {  //写入数据成功
-                            Log.e(TAG, "Ota成功");
-                            if (listener != null) {
-                                listener.onComplete();
+                        if (currentPackage == totalPackage) { //数据写完了
+                            Log.e("数据写入完成", "数据写入完成");
+                            finishCommand = OTA_Finish_COMMAND.getBytes();
+                            finishCommandResult = writeData(finishCommand);
+                            Log.e(TAG, "写入结束指令   结果" + finishCommandResult);
+                            if (finishCommandResult == 0) {  //写入数据成功
+                                Log.e(TAG, "Ota成功");
+                                if (listener != null) {
+                                    listener.onComplete();
+                                }
                             }
                         }
                     }
@@ -164,7 +180,8 @@ public class SocketOtaUtil {
         release();
     }
 
-    public void release(){
+    public void release() {
+        listener = null;
         try {
             //关闭文件流
             if (fileInputStream != null) {
@@ -197,6 +214,7 @@ public class SocketOtaUtil {
             outputStream.write(data);
             outputStream.flush();
             Log.e(TAG, "发送数据   " + new String(data));
+            sendTime = System.currentTimeMillis();
             return isSuccess(inputStream);
         } catch (IOException e) {
             if (listener != null) {
@@ -206,7 +224,6 @@ public class SocketOtaUtil {
             return -5;
         }
     }
-
 
     /**
      * @param inputStream
@@ -220,10 +237,10 @@ public class SocketOtaUtil {
         }
         byte[] b = new byte[8];
         try {
-            socket.setSoTimeout(2 * 1000);
+            socket.setSoTimeout(10005 * 1000);  //超时时间  10秒
             int size = inputStream.read(b);
             String result = new String(b, 0, size);
-            Log.e(TAG, "收到Socket数据   " + result);
+            Log.e(TAG, "收到Socket数据   " + result + "  耗时  " + (System.currentTimeMillis() - sendTime));
             if (result.contains("OK")) {
                 return 0;
             } else if (result.contains("ERROR")) {
@@ -236,8 +253,8 @@ public class SocketOtaUtil {
         } catch (SocketTimeoutException e) {
             Log.e("读取数据超时", e.getMessage());
             e.printStackTrace();
-            onError(-11, e);
-            return -11;
+            onError(-11 - currentPackage*1000, e);
+            return -11 - currentPackage*1000;
         } catch (IOException e) {
             e.printStackTrace();
             Log.e("读取数据出错", e.getMessage());

@@ -444,8 +444,6 @@ public class BleUtil {
             case 8:
                 openType = APP;
                 break;
-
-
         }
         return openType;
     }

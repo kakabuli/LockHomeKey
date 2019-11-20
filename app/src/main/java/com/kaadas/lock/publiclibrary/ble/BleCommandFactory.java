@@ -485,7 +485,7 @@ public class BleCommandFactory {
         payload[0] = operation;
         payload[1] = number;
         payload[2] = otaType;
-        System.arraycopy(newVersion,0,payload,2,newVersion.length);
+        System.arraycopy(newVersion,0,payload,3,newVersion.length);
         return groupPackage(cmd, payload, key);
     }
 

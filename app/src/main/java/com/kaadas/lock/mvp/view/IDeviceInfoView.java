@@ -79,7 +79,7 @@ public interface IDeviceInfoView extends ICheckOtaView {
     /**
      * 请求OTA  成功
      */
-    void onRequestOtaSuccess(String ssid,String password);
+    void onRequestOtaSuccess(String ssid,String password,String version,int number,int otaType,String filePath);
 
 
 

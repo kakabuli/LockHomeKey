@@ -1231,4 +1231,6 @@
     <string name="wifi_account">WiFi 账号</string>
     <string name="connect_wifi_start_ota">已连接WiFi，开始OTA</string>
     <string name="already_copy">已复制到剪切板</string>
+    <string name="is_enter_ota_module">正在进入设备Ota模式......</string>
+    <string name="is_openning_ota">正在开启OTA</string>
 </resources>

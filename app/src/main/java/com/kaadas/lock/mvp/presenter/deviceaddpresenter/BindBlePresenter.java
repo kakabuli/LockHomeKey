@@ -404,6 +404,7 @@ public class BindBlePresenter<T> extends BasePresenter<IBindBleView> {
     }
 
     public void bindDevice(String pwd1, String pwd2, String model, String bleVersion, String deviceSn, String functionSet) {
+        LogUtils.e("绑定设备   gi功能集是   " + functionSet);
         if (bleService == null) { //判断
             if (MyApplication.getInstance().getBleService() == null) {
                 return;
