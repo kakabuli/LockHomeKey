@@ -515,12 +515,13 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
                         allBindDevices = new Gson().fromJson(payload, AllBindDevices.class);
 
                         List<AllBindDevices.ReturnDataBean.GwListBean> gwList=  allBindDevices.getData().getGwList();
-                        int allgwSize=gwList.size();
-                        for (int j=0;j<allgwSize;j++){
-                           SPUtils.put(Constants.RELAYTYPE+gwList.get(j).getDeviceSN(),gwList.get(j).getRelayType());
-                    //       SPUtils.put(Constants.RELAYTYPE+gwList.get(j).getDeviceSN(),0);
+                        if(gwList!=null){
+                            int allgwSize=gwList.size();
+                            for (int j=0;j<allgwSize;j++){
+                                SPUtils.put(Constants.RELAYTYPE+gwList.get(j).getDeviceSN(),gwList.get(j).getRelayType());
+                                //       SPUtils.put(Constants.RELAYTYPE+gwList.get(j).getDeviceSN(),0);
+                            }
                         }
-
                         if (!"200".equals(allBindDevices.getCode())){  ///服务器获取设备列表失败
                             LogUtils.e("   获取列表失败  "  +allBindDevices.getCode());
                             return;
