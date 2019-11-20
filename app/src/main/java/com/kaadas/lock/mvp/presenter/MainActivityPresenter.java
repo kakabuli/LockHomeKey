@@ -470,6 +470,16 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
     }
 
     public void initLinphone() {
+        String gwId= MyApplication.getInstance().getCurrentGwId();
+        String key=Constants.RELAYTYPE + gwId;
+        int replay=(int)SPUtils.get(key,0);
+        if(replay==1){
+            LinphoneManager.switchRelay(true);
+            MyApplication.getInstance().setCurrentGwId("");
+        }else if(replay==0){
+            LinphoneManager.switchRelay(false);
+        }
+
 //        LinphoneManager.switchRelay(true);
         if (!TextUtils.isEmpty(MyApplication.getInstance().getToken()) && !TextUtils.isEmpty(MyApplication.getInstance().getUid())) {
             LinphoneHelper.setAccount(MyApplication.getInstance().getUid(), "12345678Bm", MqttConstant.LINPHONE_URL);
@@ -590,7 +600,7 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                     String key=Constants.RELAYTYPE + gwId;
                     int replay=(int)SPUtils.get(key,0);
                     if(replay==1){
-                        LinphoneManager.switchRelay(true);
+                //        LinphoneManager.switchRelay(true);
                         if (mViewRef.get() != null) {
                             mViewRef.get().onCatEyeCallIn(callInCatEyeInfo);
                         }

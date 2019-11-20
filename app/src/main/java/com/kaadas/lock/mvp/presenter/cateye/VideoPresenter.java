@@ -956,6 +956,9 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
     public void setisRelay(){
         isRelay=true;
     }
+    public void setisRelayFalse(){
+        isRelay=false;
+    }
 
 
     public void  destoryPre(){

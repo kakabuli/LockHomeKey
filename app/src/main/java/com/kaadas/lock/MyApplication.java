@@ -119,7 +119,6 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
         CrashReport.initCrashReport(getApplicationContext(), "3ac95f5a71", true);
         initBleService();
         initMqttService();//启动MqttService
-        initLinphoneService();
         SPUtils.init(this);  //初始化SPUtils  传递Context进去  不需要每次都传递Context
         ToastUtil.init(this); //初始化ToastUtil 传递Context进去  不需要每次都传递
         SPUtils.remove(Constants.LINPHONE_REGESTER_STATE);
@@ -296,25 +295,6 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
     }
 
 
-    /**
-     * 初始化linphone服务
-     */
-    private void initLinphoneService() {
-//        Intent intent = new Intent(this, LinphoneService.class);
-//        bindService(intent, new ServiceConnection() {
-//            @Override
-//            public void onServiceConnected(ComponentName name, IBinder service) {
-//                Log.e(GeTui.VideoLog,"初始化linphone服务");
-//            }
-//
-//            @Override
-//            public void onServiceDisconnected(ComponentName name) {
-//
-//            }
-//        }, Context.BIND_AUTO_CREATE);
-//        Intent linphoneServiceIntent = new Intent(this, LinphoneService.class);
-//        startService(linphoneServiceIntent);
-    }
 
     public MqttService getMqttService() {
         return mqttService;
@@ -535,12 +515,13 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
                         allBindDevices = new Gson().fromJson(payload, AllBindDevices.class);
 
                         List<AllBindDevices.ReturnDataBean.GwListBean> gwList=  allBindDevices.getData().getGwList();
-                        int allgwSize=gwList.size();
-                        for (int j=0;j<allgwSize;j++){
-                         //  SPUtils.put(Constants.RELAYTYPE+gwList.get(j).getDeviceSN(),gwList.get(j).getRelayType());
-                            SPUtils.put(Constants.RELAYTYPE+gwList.get(j).getDeviceSN(),gwList.get(j).getRelayType());
+                        if(gwList!=null){
+                            int allgwSize=gwList.size();
+                            for (int j=0;j<allgwSize;j++){
+                                SPUtils.put(Constants.RELAYTYPE+gwList.get(j).getDeviceSN(),gwList.get(j).getRelayType());
+                                //       SPUtils.put(Constants.RELAYTYPE+gwList.get(j).getDeviceSN(),0);
+                            }
                         }
-
                         if (!"200".equals(allBindDevices.getCode())){  ///服务器获取设备列表失败
                             LogUtils.e("   获取列表失败  "  +allBindDevices.getCode());
                             return;
@@ -803,6 +784,16 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
 
     public void setSip_package_invite(String sip_package_invite) {
         this.sip_package_invite = sip_package_invite;
+    }
+
+    public String currentGwId;
+
+    public String getCurrentGwId() {
+        return currentGwId;
+    }
+
+    public void setCurrentGwId(String currentGwId) {
+        this.currentGwId = currentGwId;
     }
 
     boolean isFromWel=false;

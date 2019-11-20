@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <resources>
-    <string name="select_coutroy">选择国家</string>
+    <string name="select_coutroy">选择国家/地区</string>
     <string name="app_name">凯迪仕智能</string>
     <string name="china">中国大陆</string>
     <string name="input_telephone_or_rmail">请输入手机号或邮箱</string>
