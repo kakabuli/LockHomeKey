@@ -1,7 +1,7 @@
 package com.kaadas.lock.mvp.mvpbase;
 
 import com.kaadas.lock.publiclibrary.http.XiaokaiNewServiceImp;
-import com.kaadas.lock.publiclibrary.http.result.OTAResult;
+import com.kaadas.lock.publiclibrary.http.result.CheckOTAResult;
 import com.kaadas.lock.utils.LogUtils;
 
 import io.reactivex.disposables.Disposable;
@@ -31,14 +31,14 @@ public class BleCheckOTAPresenter<T extends ICheckOtaView> extends BlePresenter<
 
     }
 
-    private void checkOtaInfo(String SN, String version, int type, OTAResult stackResult) {
+    private void checkOtaInfo(String SN, String version, int type, CheckOTAResult stackResult) {
         //请求成功
         //todo 测试版本号写死
         //200  成功  401  数据参数不对  102 SN格式不对  210 查无结果
         otaDisposable = XiaokaiNewServiceImp.getOtaInfo(1, SN, version, type)
-                .subscribe(new Consumer<OTAResult>() {
+                .subscribe(new Consumer<CheckOTAResult>() {
                     @Override
-                    public void accept(OTAResult otaResult) throws Exception {
+                    public void accept(CheckOTAResult otaResult) throws Exception {
                         LogUtils.e("检查OTA升级数据   " + otaResult.toString());
                         //200  成功  401  数据参数不对  102 SN格式不对  210 查无结果
                         if ("200".equals(otaResult.getCode())) {

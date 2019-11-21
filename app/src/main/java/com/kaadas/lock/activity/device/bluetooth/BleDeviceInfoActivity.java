@@ -19,7 +19,7 @@ import com.kaadas.lock.mvp.presenter.ble.BleDeviceInfoPresenter;
 import com.kaadas.lock.mvp.view.IDeviceInfoView;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
-import com.kaadas.lock.publiclibrary.http.result.OTAResult;
+import com.kaadas.lock.publiclibrary.http.result.CheckOTAResult;
 import com.kaadas.lock.publiclibrary.http.util.HttpUtils;
 import com.kaadas.lock.publiclibrary.ota.DownFileUtils;
 import com.kaadas.lock.publiclibrary.ota.ble.OtaConstants;
@@ -72,7 +72,7 @@ public class BleDeviceInfoActivity extends BaseBleCheckInfoActivity<IDeviceInfoV
     private BleLockInfo bleLockInfo;
     private String deviceNickname;
     private String name;
-    private OTAResult.UpdateFileInfo currentAppInfo;
+    private CheckOTAResult.UpdateFileInfo currentAppInfo;
     private String filePath;
     private int algorithmNumber;
     private int algorithmOtaType;
@@ -363,7 +363,7 @@ public class BleDeviceInfoActivity extends BaseBleCheckInfoActivity<IDeviceInfoV
     }
 
     @Override
-    public void on3DModuleEnterOta(int type, OTAResult.UpdateFileInfo appInfo) {
+    public void on3DModuleEnterOta(int type, CheckOTAResult.UpdateFileInfo appInfo) {
         int otaType = 1;
         int number = 1;
         if (type == 2){

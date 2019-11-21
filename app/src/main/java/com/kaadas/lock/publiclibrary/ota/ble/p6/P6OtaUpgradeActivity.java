@@ -79,11 +79,16 @@ public class P6OtaUpgradeActivity extends BaseAddToApplicationActivity implement
     private String filePath;
     private boolean isUpdating;
 
+    private String version = "";
+    private String sn = "";
+
+
     private static final String TAG = "OTA升级";
     private BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
     private BluetoothLeScanner bluetoothLeScanner;
     private OTAFUHandler mOTAFUHandler = DUMMY_HANDLER;//Initializing to DUMMY_HANDLER to avoid NPEs
     private Handler handler = new Handler();
+
 
     /**
      * 进入boot模式的ServiceUUID
@@ -245,6 +250,9 @@ public class P6OtaUpgradeActivity extends BaseAddToApplicationActivity implement
             filePath = path + "/" + fileName;
 //            filePath = "/storage/emulated/0/CySmart/OTA_M0_K9S_T1.01.008.cyacd2";
 
+        version = intent.getStringExtra(OtaConstants.version);
+        sn = intent.getStringExtra(OtaConstants.SN);
+
         tv_content.setText(getResources().getString(R.string.ota_lock_upgrade));
         iv_back.setOnClickListener(this);
         start_upgrade.setOnClickListener(this);
@@ -340,7 +348,7 @@ public class P6OtaUpgradeActivity extends BaseAddToApplicationActivity implement
                         ToastUtil.getInstance().showLong(R.string.down_failed);
                         mutiProgress.setCurrNodeNO(0, false);
                         mCircleProgress2.setValue(0);
-                        otaFailed("");
+                        otaFailed("下载出错   "+e.getMessage());
                     }
                     //已存在相同下载
                     @Override
@@ -351,6 +359,7 @@ public class P6OtaUpgradeActivity extends BaseAddToApplicationActivity implement
     }
 
     private void otaSuccess() {
+        MyApplication.getInstance().uploadOtaResult(sn,version,"0",1);
         mutiProgress.setCurrNodeNO(3, true);
         AlertDialogUtil.getInstance().noEditSingleCanNotDismissButtonDialog(this, getString(R.string.good_for_you), getString(R.string.ota_good_for_you), getString(R.string.hao_de), new AlertDialogUtil.ClickListener() {
             @Override
@@ -369,6 +378,7 @@ public class P6OtaUpgradeActivity extends BaseAddToApplicationActivity implement
         if (isFinishing()) {
             return;
         }
+        MyApplication.getInstance().uploadOtaResult(sn,version,tag,1);
         isUpdating = false;
         AlertDialogUtil.getInstance().noEditTwoButtonDialog(this, getString(R.string.ota_fail), getString(R.string.ota_fail_reply),
                 getString(R.string.cancel), getString(R.string.query), new AlertDialogUtil.ClickListener() {
@@ -390,7 +400,7 @@ public class P6OtaUpgradeActivity extends BaseAddToApplicationActivity implement
     public Runnable disconnectedRunnable = new Runnable() {
         @Override
         public void run() {
-            otaFailed("连接失败");
+            otaFailed("连接失败 超过10秒未连接成功或者未发现服务");
             bluetoothLeScanner.stopScan(newScanBleCallback);
             BluetoothLeService.disconnect();
         }
@@ -439,7 +449,7 @@ public class P6OtaUpgradeActivity extends BaseAddToApplicationActivity implement
         public void run() {
             bluetoothLeScanner.stopScan(newScanBleCallback);
             ToastUtil.getInstance().showLong(R.string.please_near_lock);
-            otaFailed(BluetoothLeService.ERROR_TAG_NOT_FOUND);
+            otaFailed("设备未搜索到   ");
         }
     };
 

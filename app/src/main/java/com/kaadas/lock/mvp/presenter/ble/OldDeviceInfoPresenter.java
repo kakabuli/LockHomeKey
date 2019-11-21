@@ -5,14 +5,11 @@ import android.text.TextUtils;
 
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.mvp.mvpbase.BleCheckOTAPresenter;
-import com.kaadas.lock.mvp.mvpbase.BlePresenter;
-import com.kaadas.lock.mvp.view.IDeviceInfoView;
 import com.kaadas.lock.mvp.view.IOldDeviceInfoView;
 import com.kaadas.lock.publiclibrary.ble.RetryWithTime;
 import com.kaadas.lock.publiclibrary.ble.responsebean.ReadInfoBean;
 import com.kaadas.lock.publiclibrary.http.XiaokaiNewServiceImp;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
-import com.kaadas.lock.publiclibrary.http.result.OTAResult;
 import com.kaadas.lock.publiclibrary.http.util.BaseObserver;
 import com.kaadas.lock.publiclibrary.http.util.RxjavaHelper;
 import com.kaadas.lock.publiclibrary.rxutils.TimeOutException;

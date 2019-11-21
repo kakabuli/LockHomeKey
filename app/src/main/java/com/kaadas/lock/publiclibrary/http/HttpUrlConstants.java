@@ -13,6 +13,10 @@ public class HttpUrlConstants {
      * OTA  升级  API地址
      */
     public static final String OTA_INFO_URL = ConstantConfig.OTA_INFO_URL;  //测试OTA服务器
+    /**
+     * OTA  升级结果上报  API地址
+     */
+    public static final String OTA_RESULT_UPLOAD_URL = ConstantConfig.OTA_RESULT_UPLOAD_URL;  //测试OTA服务器
 
     //////////////////////////////////////// 注册登陆/////////////////////////////////////////////////
     /**

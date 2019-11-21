@@ -1,6 +1,6 @@
 package com.kaadas.lock.publiclibrary.http.result;
 
-public class OTAResult {
+public class CheckOTAResult {
 
     /**
      * msg : 操作成功
@@ -84,7 +84,7 @@ public class OTAResult {
 
     @Override
     public String toString() {
-        return "OTAResult{" +
+        return "CheckOTAResult{" +
                 "msg='" + msg + '\'' +
                 ", code='" + code + '\'' +
                 ", data=" + data +

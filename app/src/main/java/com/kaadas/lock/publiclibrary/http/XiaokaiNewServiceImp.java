@@ -44,8 +44,10 @@ import com.kaadas.lock.publiclibrary.http.postbean.UpdateSoftwareVersionBean;
 import com.kaadas.lock.publiclibrary.http.postbean.UploadAppRecordBean;
 import com.kaadas.lock.publiclibrary.http.postbean.UploadBinRecordBean;
 import com.kaadas.lock.publiclibrary.http.postbean.UploadOperationRecordBean;
+import com.kaadas.lock.publiclibrary.http.postbean.UploadOtaResultBean;
 import com.kaadas.lock.publiclibrary.http.postbean.UploadWarringRecordBean;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
+import com.kaadas.lock.publiclibrary.http.result.CheckOTAResult;
 import com.kaadas.lock.publiclibrary.http.result.DeleteMessageResult;
 import com.kaadas.lock.publiclibrary.http.result.GetDeviceResult;
 import com.kaadas.lock.publiclibrary.http.result.GetHelpLogResult;
@@ -54,7 +56,6 @@ import com.kaadas.lock.publiclibrary.http.result.GetPwdBySnResult;
 import com.kaadas.lock.publiclibrary.http.result.GetWarringRecordResult;
 import com.kaadas.lock.publiclibrary.http.result.LockRecordResult;
 import com.kaadas.lock.publiclibrary.http.result.LoginResult;
-import com.kaadas.lock.publiclibrary.http.result.OTAResult;
 import com.kaadas.lock.publiclibrary.http.result.OperationRecordResult;
 import com.kaadas.lock.publiclibrary.http.result.RegisterResult;
 import com.kaadas.lock.publiclibrary.http.result.SinglePasswordResult;
@@ -309,9 +310,9 @@ public class XiaokaiNewServiceImp {
      *
      * @return
      */
-    public static Observable<BaseResult> addDevice(String devmac, String devname, String user_id, String password1, String password2, String model, String bleVersion,String deviceSn, String functionSet) {
+    public static Observable<BaseResult> addDevice(String devmac, String devname, String user_id, String password1, String password2, String model, String bleVersion, String deviceSn, String functionSet) {
         //(String devmac, String devname, String user_id, String password1, String password2, String model, String bleVersion, String deviceSN, String peripheralId, String softwareVersion, String functionSet)
-        AddDeviceBean addDeviceBean = new AddDeviceBean(  devmac,   devname,   user_id,   password1,   password2,   model,   bleVersion,   deviceSn,"", "",   functionSet);
+        AddDeviceBean addDeviceBean = new AddDeviceBean(devmac, devname, user_id, password1, password2, model, bleVersion, deviceSn, "", "", functionSet);
         return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
                 .addDevice(new HttpUtils<AddDeviceBean>().getBody(addDeviceBean))
                 .compose(RxjavaHelper.observeOnMainThread());
@@ -785,20 +786,6 @@ public class XiaokaiNewServiceImp {
                 .compose(RxjavaHelper.observeOnMainThread());
     }
 
-    /**
-     * @param customer   是	int	客户：1凯迪仕 2小凯 3桔子物联 4飞利浦
-     * @param deviceName 是	String	设备唯一编号
-     * @param version    否	String	当前版本号
-     * @param type          1主模块 2算法模块 3相机模块（空：默认1） 4协议栈
-     * @return
-     */
-    public static Observable<OTAResult> getOtaInfo(int customer, String deviceName, String version,int type) {
-        OTABean helpLogBean = new OTABean(customer, deviceName, version,  type);
-        return RetrofitServiceManager.getNoTokenInstance().create(IXiaoKaiNewService.class)
-                .getOtaInfo(new HttpUtils<OTABean>().getBody(helpLogBean))
-                .subscribeOn(Schedulers.io())
-                .compose(RxjavaHelper.observeOnMainThread());
-    }
 
     /**
      * 上报预警记录
@@ -837,15 +824,16 @@ public class XiaokaiNewServiceImp {
 
     /**
      * upload phone message
+     *
      * @param uid
      * @param account
-     * @param model          手机型号  SM-C7000
-     * @param manufacturer    手机厂商 samsung
-     * @param version          Android系统版本号 android8.0
+     * @param model        手机型号  SM-C7000
+     * @param manufacturer 手机厂商 samsung
+     * @param version      Android系统版本号 android8.0
      * @return
      */
-    public static Observable<BaseResult> uploadPushPhoneMsg(String uid, String account, String model,String manufacturer,String version) {
-        PhoneMessage phoneMessage = new PhoneMessage(uid, account, model,manufacturer,version);
+    public static Observable<BaseResult> uploadPushPhoneMsg(String uid, String account, String model, String manufacturer, String version) {
+        PhoneMessage phoneMessage = new PhoneMessage(uid, account, model, manufacturer, version);
         return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
                 .uploadPushMsg(new HttpUtils<PhoneMessage>().getBody(phoneMessage))
                 .compose(RxjavaHelper.observeOnMainThread());
@@ -895,10 +883,11 @@ public class XiaokaiNewServiceImp {
 
     /**
      * 更新蓝牙的版本信息
-     * @param devname  设备名
+     *
+     * @param devname         设备名
      * @param user_id
-     * @param softwareVersion    蓝牙软件版本号
-     * @param deviceSN   蓝牙的SN
+     * @param softwareVersion 蓝牙软件版本号
+     * @param deviceSN        蓝牙的SN
      * @return
      */
     public static Observable<BaseResult> updateSoftwareVersion(String devname, String user_id, String softwareVersion, String deviceSN) {
@@ -912,6 +901,7 @@ public class XiaokaiNewServiceImp {
 
     /**
      * 更新蓝牙的版本号
+     *
      * @param devname
      * @param user_id
      * @param bleVersion
@@ -928,6 +918,7 @@ public class XiaokaiNewServiceImp {
 
     /**
      * 更新功能集
+     *
      * @param devname
      * @param user_id
      * @param functionSet
@@ -940,4 +931,39 @@ public class XiaokaiNewServiceImp {
                 .compose(RxjavaHelper.observeOnMainThread())
                 ;
     }
+
+
+    /**
+     * @param customer   是	int	客户：1凯迪仕 2小凯 3桔子物联 4飞利浦
+     * @param deviceName 是	String	设备唯一编号
+     * @param version    否	String	当前版本号
+     * @param type       1主模块 2算法模块 3相机模块（空：默认1） 4协议栈
+     * @return
+     */
+    public static Observable<CheckOTAResult> getOtaInfo(int customer, String deviceName, String version, int type) {
+        OTABean helpLogBean = new OTABean(customer, deviceName, version, type);
+        return RetrofitServiceManager.getNoTokenInstance().create(IXiaoKaiNewService.class)
+                .getOtaInfo(new HttpUtils<OTABean>().getBody(helpLogBean))
+                .subscribeOn(Schedulers.io())
+                .compose(RxjavaHelper.observeOnMainThread());
+    }
+
+
+    /**
+     * @param sn
+     * @param version    新版本的版本号
+     * @param customer   客户：1凯迪仕 2小凯 3桔子物联 4飞利浦
+     * @param resultCode 结果：0升级成功 1升级失败 （可自定义其他错误码）
+     * @param devNum     模块：1主模块 2算法模块 3相机模块（空：默认1）
+     * @return
+     */
+    public static Observable<BaseResult> uploadOtaResult(String sn, String version, int customer, String resultCode, int devNum) {
+        UploadOtaResultBean uploadOtaResultBean = new UploadOtaResultBean(sn, version, customer, resultCode, devNum);
+        return RetrofitServiceManager.getNoTokenInstance().create(IXiaoKaiNewService.class)
+                .uploadOtaResult(new HttpUtils<UploadOtaResultBean>().getBody(uploadOtaResultBean))
+                .subscribeOn(Schedulers.io())
+                .compose(RxjavaHelper.observeOnMainThread());
+    }
+
+
 }

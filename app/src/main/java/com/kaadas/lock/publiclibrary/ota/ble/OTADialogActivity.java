@@ -1,8 +1,6 @@
 package com.kaadas.lock.publiclibrary.ota.ble;
 
 import android.content.Context;
-import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Gravity;
@@ -10,17 +8,11 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
-import com.kaadas.lock.mvp.mvpbase.BaseActivity;
-import com.kaadas.lock.mvp.mvpbase.BaseBleActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseBleCheckInfoActivity;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
-import com.kaadas.lock.publiclibrary.http.result.OTAResult;
-import com.kaadas.lock.publiclibrary.ota.ble.p6.P6OtaUpgradeActivity;
-import com.kaadas.lock.publiclibrary.ota.ble.ti.TiOtaUpgradeActivity;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.SPUtils;

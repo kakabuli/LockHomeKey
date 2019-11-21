@@ -16,6 +16,7 @@ public class OtaConstants {
     public static final String moduleNumber = "moduleNumber"; //模块编号
     public static final String otaType = "otaType"; //
     public static final String version = "version"; //
+    public static final String SN = "sn"; //
 
 
 

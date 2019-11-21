@@ -24,6 +24,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 import com.kaadas.lock.publiclibrary.ble.BleCommandFactory;
@@ -98,6 +99,10 @@ public class Ti2FileOtaUpgradeActivity extends OtaBaseActivity implements View.O
     private BluetoothLeScanner bluetoothLeScanner;
     private ScanSettings scanSettings;
     private boolean isUpdating;
+    private String currentStatus;
+
+    private String version = "";
+    private String sn = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -136,6 +141,8 @@ public class Ti2FileOtaUpgradeActivity extends OtaBaseActivity implements View.O
             fileName2 = intent.getStringExtra(OtaConstants.fileName2);
             binDownUrl2 = intent.getStringExtra(OtaConstants.bindUrl2);
             filePath2 = PATH + "/" + fileName2;
+            version = intent.getStringExtra(OtaConstants.version);
+            sn = intent.getStringExtra(OtaConstants.SN);
         }
 
         mutiProgress.setCurrNodeNO(0, false);
@@ -175,6 +182,7 @@ public class Ti2FileOtaUpgradeActivity extends OtaBaseActivity implements View.O
                      * 读取电量  读取SN？  读取
                      */
                     Log.e(TAG, "鉴权成功");
+                    handler.removeCallbacks(bleTimeOutRunnable);
                     byte[] confirmCommand = new byte[20];
                     confirmCommand[1] = value[1];
                     characteristic.setValue(confirmCommand);
@@ -187,6 +195,7 @@ public class Ti2FileOtaUpgradeActivity extends OtaBaseActivity implements View.O
         @Override
         public void onCharacteristicRead(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
             super.onCharacteristicRead(gatt, characteristic, status);
+            handler.removeCallbacks(bleTimeOutRunnable);
             byte[] value = characteristic.getValue();
             Log.e(TAG, "读取特征值   " + Rsa.bytesToHexString(value));
             byte[] systemId16 = new byte[16];
@@ -200,12 +209,16 @@ public class Ti2FileOtaUpgradeActivity extends OtaBaseActivity implements View.O
             if (newState == BluetoothGatt.STATE_CONNECTED) { //连接成功  此时还不算连接成功，等到发现服务且读取到所有特征值之后才算连接成功
                 Log.e(TAG, "连接成功");
                 gatt.discoverServices();  //连接成功  发现服务
+                handler.removeCallbacks(bleTimeOutRunnable);
+                currentStatus = "发现服务";
+                handler.postDelayed(bleTimeOutRunnable, 10 * 1000);
                 bluetoothLeScanner.stopScan(newScanBleCallback);
 //                    handler.removeCallbacksAndMessages(releaseRunnable);
 //                    handler.postDelayed(releaseRunnable, 5000); //三秒后如果没有没有发现服务   那么直接断开连接
             } else if (newState == BluetoothGatt.STATE_DISCONNECTED) { //断开连接
                 Log.e(TAG, "断开连接   ");
                 //完全断开连接
+                handler.removeCallbacks(bleTimeOutRunnable); //连接失败   取消连接超时
                 if (bluetoothGatt != null) {
                     bluetoothGatt.disconnect();
                     bluetoothGatt.close();
@@ -220,6 +233,7 @@ public class Ti2FileOtaUpgradeActivity extends OtaBaseActivity implements View.O
         @Override
         public void onServicesDiscovered(BluetoothGatt gatt, int status) {
             super.onServicesDiscovered(gatt, status);
+            handler.removeCallbacks(bleTimeOutRunnable);
             for (BluetoothGattService service : gatt.getServices()) {
                 Log.e(TAG, "服务UUID   " + service.getUuid().toString());
                 for (BluetoothGattCharacteristic characteristic : service.getCharacteristics()) {
@@ -277,6 +291,8 @@ public class Ti2FileOtaUpgradeActivity extends OtaBaseActivity implements View.O
                         Log.e(TAG, "读取SystemId   " + (systemIDChar != null) + "   " + (bluetoothGatt != null));
                         if (systemIDChar != null && bluetoothGatt != null) {
                             Log.e(TAG, "读取SystemId");
+                            currentStatus = "读取SystemId";
+                            handler.postDelayed(bleTimeOutRunnable, 5 * 1000);
                             bluetoothGatt.readCharacteristic(systemIDChar);
                         }
                     }
@@ -330,6 +346,7 @@ public class Ti2FileOtaUpgradeActivity extends OtaBaseActivity implements View.O
 
     private void otasuccess() {
         isUpdating = false;
+        MyApplication.getInstance().uploadOtaResult(sn,version,"0",1);
         AlertDialogUtil.getInstance().noEditSingleButtonDialog(this, getString(R.string.good_for_you), getString(R.string.ota_good_for_you), getString(R.string.hao_de), new AlertDialogUtil.ClickListener() {
             @Override
             public void left() {
@@ -347,6 +364,7 @@ public class Ti2FileOtaUpgradeActivity extends OtaBaseActivity implements View.O
         if (isFinishing()){
             return;
         }
+        MyApplication.getInstance().uploadOtaResult(sn,version,tag,1);
         isUpdating = false;
         AlertDialogUtil.getInstance().noEditTwoButtonDialog(this, getString(R.string.ota_fail), getString(R.string.ota_fail_reply),
                 getString(R.string.cancel), getString(R.string.query), new AlertDialogUtil.ClickListener() {
@@ -357,7 +375,7 @@ public class Ti2FileOtaUpgradeActivity extends OtaBaseActivity implements View.O
 
                     @Override
                     public void right() {
-                        isUpdating = true;
+                        isUpdating = false;
                         mutiProgress.setCurrNodeNO(0, true);
                         downFile(binDownUrl, filePath);
                         warring.setVisibility(View.VISIBLE);
@@ -385,6 +403,9 @@ public class Ti2FileOtaUpgradeActivity extends OtaBaseActivity implements View.O
     }
 
     public void searchDeviceByMacAndConnect() {
+
+        currentStatus = "搜索设备";
+        handler.postDelayed(scanDeviceRunnable, 10 * 1000);
         bluetoothLeScanner.startScan(null, scanSettings, newScanBleCallback);
     }
 
@@ -403,8 +424,11 @@ public class Ti2FileOtaUpgradeActivity extends OtaBaseActivity implements View.O
             }
             Log.e(TAG, "搜索到设备" + device.getName());
             if (device.getAddress().equals(mac)) {  //搜索到设备连接
-                Log.e(TAG, "停止扫描   " + device.getName() + "  mac  " + device.getAddress());
+                handler.removeCallbacks(scanDeviceRunnable);
                 bluetoothLeScanner.stopScan(newScanBleCallback);
+                currentStatus = "正在连接设备";
+                handler.postDelayed(bleTimeOutRunnable, 20 * 1000);
+                Log.e(TAG, "停止扫描   " + device.getName() + "  mac  " + device.getAddress());
                 bluetoothGatt = device.connectGatt(Ti2FileOtaUpgradeActivity.this, false, bluetoothGattCallback);
             }
         }
@@ -423,6 +447,8 @@ public class Ti2FileOtaUpgradeActivity extends OtaBaseActivity implements View.O
     public void getPwd3(byte[] systemId16) {
         byte[] authCommand = BleCommandFactory.getAuthCommand(password1, password2, systemId16);
         Log.e(TAG, "发送鉴权  " + " isWrite: " + Rsa.bytesToHexString(authCommand));
+        currentStatus = "  鉴权  ";
+        handler.postDelayed(bleTimeOutRunnable, 5 * 1000);
         if (writeChar != null) {
             writeChar.setValue(authCommand);
             if (bluetoothGatt != null) {
@@ -431,9 +457,11 @@ public class Ti2FileOtaUpgradeActivity extends OtaBaseActivity implements View.O
                 return;
             } else {
                 Log.e(TAG, "Ble 发送数据   Gatt为空");
+                otaFailed("鉴权失败  Gatt为空");
             }
         } else {
             Log.e(TAG, "Ble 发送数据   characteristic为空");
+            otaFailed("鉴权失败  characteristic为空");
         }
     }
 
@@ -479,17 +507,19 @@ public class Ti2FileOtaUpgradeActivity extends OtaBaseActivity implements View.O
                 handler.postDelayed(timeoutRunnable, 10 * 1000);
                 final TIOADEoadDefinitions.oadStatusEnumeration finalStatus = status;
                 LogUtils.e("OTA升级  状态改变   " + TIOADEoadDefinitions.oadStatusEnumerationGetDescriptiveString(finalStatus));
-
+                currentStatus = TIOADEoadDefinitions.oadStatusEnumerationGetDescriptiveString(status);
                 if (finalStatus == TIOADEoadDefinitions.oadStatusEnumeration.tiOADClientReady) {
                     //设备已经准备好    //在此处查看设备
                     LogUtils.e("文件准备好了  ");
                     client.start(path);
                 } else if (finalStatus == TIOADEoadDefinitions.oadStatusEnumeration.tiOADClientFileIsNotForDevice) {
+                    handler.removeCallbacks(timeoutRunnable);
                     //升级镜像与设备部匹配
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            otaFailed("镜像不匹配");
+                            otaFailed("镜像不匹配  " + currentStatus);
+                            handler.removeCallbacks(timeoutRunnable);
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -524,13 +554,12 @@ public class Ti2FileOtaUpgradeActivity extends OtaBaseActivity implements View.O
 //                            client.start(filePath2);
                         }
                     }
-
-
                 } else if (finalStatus == TIOADEoadDefinitions.oadStatusEnumeration.tiOADClientCompleteDeviceDisconnectedDuringProgramming) {
+                    handler.removeCallbacks(timeoutRunnable);
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            otaFailed("升级中断");
+                            otaFailed("升级中断  " + currentStatus);
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -545,17 +574,44 @@ public class Ti2FileOtaUpgradeActivity extends OtaBaseActivity implements View.O
     }
 
 
+
+
     Runnable timeoutRunnable = new Runnable() {
         @Override
         public void run() {
-            otaFailed("升级超时");
+            otaFailed("升级超时  " + currentStatus);
+        }
+    };
+
+    Runnable scanDeviceRunnable = new Runnable() {
+        @Override
+        public void run() {
+            if (bluetoothLeScanner!=null){
+                bluetoothLeScanner.stopScan(newScanBleCallback);
+            }
+            ToastUtil.getInstance().showLong(R.string.please_near_lock);
+            otaFailed("搜索超时  " + currentStatus);
+        }
+    };
+
+    Runnable bleTimeOutRunnable = new Runnable() {
+        @Override
+        public void run() {
+            if (bluetoothGatt!=null){
+                bluetoothGatt.disconnect();
+                bluetoothGatt.close();
+                isHand = true;
+            }
+            ToastUtil.getInstance().showLong(R.string.connet_failed_please_near);
+            otaFailed("超时  " + currentStatus);
         }
     };
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        handler.removeCallbacks(timeoutRunnable);
+        handler.removeCallbacks(null);
+        handler.removeCallbacksAndMessages(null);
         if (client != null) {
             client.release();
             client.abortProgramming();
@@ -615,5 +671,11 @@ public class Ti2FileOtaUpgradeActivity extends OtaBaseActivity implements View.O
             searchDeviceByMacAndConnect();
         }
     }
+
+
+
+
+
+
 
 }

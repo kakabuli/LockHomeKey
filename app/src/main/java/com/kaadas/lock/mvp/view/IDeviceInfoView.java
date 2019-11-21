@@ -1,10 +1,8 @@
 package com.kaadas.lock.mvp.view;
 
 
-import com.kaadas.lock.mvp.mvpbase.IBleView;
 import com.kaadas.lock.mvp.mvpbase.ICheckOtaView;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
-import com.kaadas.lock.publiclibrary.http.result.OTAResult;
 
 /**
  * Created by David on 2019/3/14

@@ -10,7 +10,7 @@ import com.kaadas.lock.publiclibrary.http.result.GetPwdBySnResult;
 import com.kaadas.lock.publiclibrary.http.result.GetWarringRecordResult;
 import com.kaadas.lock.publiclibrary.http.result.LockRecordResult;
 import com.kaadas.lock.publiclibrary.http.result.LoginResult;
-import com.kaadas.lock.publiclibrary.http.result.OTAResult;
+import com.kaadas.lock.publiclibrary.http.result.CheckOTAResult;
 import com.kaadas.lock.publiclibrary.http.result.OperationRecordResult;
 import com.kaadas.lock.publiclibrary.http.result.RegisterResult;
 import com.kaadas.lock.publiclibrary.http.result.SinglePasswordResult;
@@ -46,7 +46,7 @@ public interface IXiaoKaiNewService {
      * @return
      */
     @POST(HttpUrlConstants.REGISTER_BY_PHONE)
-    Observable<RegisterResult>  registerByPhone(@Body RequestBody info);
+    Observable<RegisterResult> registerByPhone(@Body RequestBody info);
 
     /**
      * 通过邮箱注册
@@ -55,6 +55,7 @@ public interface IXiaoKaiNewService {
      */
     @POST(HttpUrlConstants.EMAIL_REGISTER)
     Observable<RegisterResult> registerByEmail(@Body RequestBody info);
+
     /**
      * 通过手机号登陆
      *
@@ -137,6 +138,7 @@ public interface IXiaoKaiNewService {
      */
     @POST(HttpUrlConstants.PUT_MESSAGE)
     Observable<BaseResult> putMessage(@Body RequestBody info);
+
     /**
      * 获取指定设备的普通管理员
      */
@@ -144,7 +146,7 @@ public interface IXiaoKaiNewService {
     Observable<String> getDeviceGeneralAdministrator(@Body RequestBody info);
 
     /**
-     *删除设备的普通用户
+     * 删除设备的普通用户
      */
     @POST(HttpUrlConstants.DELETE_NORMALDEV)
     Observable<BaseResult> deleteDeviceNormalUser(@Body RequestBody info);
@@ -265,6 +267,7 @@ public interface IXiaoKaiNewService {
      */
     @POST(HttpUrlConstants.ADD_USER)
     Observable<BaseResult> addUser(@Body RequestBody info);
+
     /**
      * 修改普通用户昵称
      *
@@ -272,6 +275,7 @@ public interface IXiaoKaiNewService {
      */
     @POST(HttpUrlConstants.MODIFY_COMMON_USER_NICKNAME)
     Observable<BaseResult> modifyCommonUserNickname(@Body RequestBody info);
+
     /**
      * 删除普通用户
      *
@@ -334,7 +338,6 @@ public interface IXiaoKaiNewService {
     Observable<BaseResult> uploadWarringRecord(@Body RequestBody info);
 
 
-
     /**
      * 上传操作记录
      *
@@ -358,6 +361,7 @@ public interface IXiaoKaiNewService {
      */
     @POST(HttpUrlConstants.SEND_MSG)
     Observable<BaseResult> sendMessage(@Body RequestBody info);
+
     /**
      * 发送邮箱验证码
      *
@@ -392,9 +396,9 @@ public interface IXiaoKaiNewService {
 
 
     /**
-     *获取常见问题列表
+     * 获取常见问题列表
      */
-    @GET(HttpUrlConstants.FAQ_LIST+"{languageType}")
+    @GET(HttpUrlConstants.FAQ_LIST + "{languageType}")
     Observable<String> getFAQList(@Path("languageType") int languageType);
 
     /**
@@ -415,12 +419,6 @@ public interface IXiaoKaiNewService {
     @GET(HttpUrlConstants.GET_APP_VERSION)
     Observable<VersionBean> getAppVersion();
 
-    /**
-     * OTA升级查询ApI
-     */
-    @POST(HttpUrlConstants.OTA_INFO_URL)
-    Observable<OTAResult> getOtaInfo(@Body RequestBody info);
-
 
     /**
      * 开锁鉴权
@@ -430,6 +428,7 @@ public interface IXiaoKaiNewService {
 
     /**
      * 上传PushId
+     *
      * @param info
      * @return
      */
@@ -439,6 +438,7 @@ public interface IXiaoKaiNewService {
 
     /**
      * 上传Msg
+     *
      * @param info
      * @return
      */
@@ -448,6 +448,7 @@ public interface IXiaoKaiNewService {
 
     /**
      * 获取控制个推开关
+     *
      * @param info
      * @return
      */
@@ -457,13 +458,12 @@ public interface IXiaoKaiNewService {
 
     /**
      * 修改个推开关状态
+     *
      * @param info
      * @return
      */
     @POST(HttpUrlConstants.UPDATE_PUSH_SWITch)
     Observable<SwitchStatusResult> updatePushSwitch(@Body RequestBody info);
-
-
 
 
     /**
@@ -473,16 +473,11 @@ public interface IXiaoKaiNewService {
     Observable<BaseResult> updateSoftwareVersion(@Body RequestBody info);
 
 
-
-
     /**
      * 上传版本号和SN到服务器
      */
     @POST(HttpUrlConstants.UPDATE_BLE_VERSION)
     Observable<BaseResult> updateBleVersion(@Body RequestBody info);
-
-
-
 
 
     /**
@@ -491,4 +486,16 @@ public interface IXiaoKaiNewService {
     @POST(HttpUrlConstants.MODIFY_FUNCTION_SET)
     Observable<BaseResult> modifyFunctionSet(@Body RequestBody info);
 
+
+    /**
+     * OTA升级查询ApI
+     */
+    @POST(HttpUrlConstants.OTA_INFO_URL)
+    Observable<CheckOTAResult> getOtaInfo(@Body RequestBody info);
+
+    /**
+     * OTA升级结果上报
+     */
+    @POST(HttpUrlConstants.OTA_RESULT_UPLOAD_URL)
+    Observable<BaseResult> uploadOtaResult(@Body RequestBody info);
 }

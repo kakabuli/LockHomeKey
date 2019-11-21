@@ -24,6 +24,10 @@ import com.kaadas.lock.bean.HomeShowBean;
 import com.kaadas.lock.publiclibrary.bean.CateEyeInfo;
 import com.kaadas.lock.publiclibrary.bean.GatewayInfo;
 import com.kaadas.lock.publiclibrary.bean.GwLockInfo;
+import com.kaadas.lock.publiclibrary.http.XiaokaiNewServiceImp;
+import com.kaadas.lock.publiclibrary.http.result.BaseResult;
+import com.kaadas.lock.publiclibrary.http.result.CheckOTAResult;
+import com.kaadas.lock.publiclibrary.http.util.BaseObserver;
 import com.kaadas.lock.publiclibrary.linphone.MemeManager;
 import com.kaadas.lock.publiclibrary.ble.BleService;
 import com.kaadas.lock.publiclibrary.http.result.GetPasswordResult;
@@ -863,6 +867,45 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
                 });
         ALog.e(config.toString());
     }
+
+
+    /**
+     * @param sn
+     * @param version    新版本的版本号
+     * @param customer   客户：1凯迪仕 2小凯 3桔子物联 4飞利浦
+     * @param resultCode 结果：0升级成功 1升级失败 （可自定义其他错误码）
+     * @param devNum     模块：1主模块 2算法模块 3相机模块（空：默认1）
+     * @return
+     */
+    public void uploadOtaResult(String sn, String version,  String resultCode, int devNum){
+        XiaokaiNewServiceImp.uploadOtaResult(sn, version, 1, resultCode, devNum)
+            .subscribe(new BaseObserver<BaseResult>() {
+                @Override
+                public void onSuccess(BaseResult baseResult) {
+                    LogUtils.e("上传OTA结果成功    "+baseResult.toString());
+            }
+
+                @Override
+                public void onAckErrorCode(BaseResult baseResult) {
+                    LogUtils.e("上传OTA结果失败    "+baseResult.toString());
+                }
+
+                @Override
+                public void onFailed(Throwable throwable) {
+                    LogUtils.e("上传OTA结果失败    "+throwable.getMessage());
+                }
+
+                @Override
+                public void onSubscribe1(Disposable d) {
+
+                }
+            })
+
+        ;
+
+
+    }
+
 }
 
 

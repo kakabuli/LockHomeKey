@@ -1,7 +1,6 @@
 package com.kaadas.lock.activity.device.oldbluetooth;
 
 import android.app.AlertDialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.InputFilter;
@@ -15,21 +14,14 @@ import android.widget.TextView;
 
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
-import com.kaadas.lock.mvp.mvpbase.BaseBleActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseBleCheckInfoActivity;
 import com.kaadas.lock.mvp.presenter.ble.OldDeviceInfoPresenter;
 import com.kaadas.lock.mvp.view.IOldDeviceInfoView;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
-import com.kaadas.lock.publiclibrary.http.result.OTAResult;
 import com.kaadas.lock.publiclibrary.http.util.HttpUtils;
-import com.kaadas.lock.publiclibrary.ota.ble.OtaConstants;
-import com.kaadas.lock.publiclibrary.ota.ble.p6.P6OtaUpgradeActivity;
-import com.kaadas.lock.publiclibrary.ota.ble.ti.TiOtaUpgradeActivity;
 import com.kaadas.lock.utils.AlertDialogUtil;
-import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
-import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.StringUtil;
 import com.kaadas.lock.utils.ToastUtil;
 

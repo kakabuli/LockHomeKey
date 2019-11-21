@@ -6,12 +6,11 @@ import android.os.Bundle;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
-import com.kaadas.lock.publiclibrary.http.result.OTAResult;
+import com.kaadas.lock.publiclibrary.http.result.CheckOTAResult;
 import com.kaadas.lock.publiclibrary.ota.ble.OtaConstants;
 import com.kaadas.lock.publiclibrary.ota.ble.p6.P6OtaUpgradeActivity;
 import com.kaadas.lock.publiclibrary.ota.ble.ti.Ti2FileOtaUpgradeActivity;
 import com.kaadas.lock.publiclibrary.ota.ble.ti.TiOtaUpgradeActivity;
-import com.kaadas.lock.publiclibrary.ota.face.FaceOtaActivity;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
@@ -66,7 +65,7 @@ public abstract class BaseBleCheckInfoActivity<T extends ICheckOtaView, V extend
     }
 
     @Override
-    public void needUpdate(OTAResult.UpdateFileInfo appInfo, String SN, String version, int type) {
+    public void needUpdate(CheckOTAResult.UpdateFileInfo appInfo, String SN, String version, int type) {
         hiddenLoading();
         LogUtils.e("只有一个固件需要升级");
         if (type == 1) {
@@ -112,6 +111,8 @@ public abstract class BaseBleCheckInfoActivity<T extends ICheckOtaView, V extend
                             intent.putExtra(OtaConstants.deviceMac, bleLockInfo.getServerLockInfo().getMacLock()); //升级
                             intent.putExtra(OtaConstants.password1, bleLockInfo.getServerLockInfo().getPassword1());
                             intent.putExtra(OtaConstants.password2, bleLockInfo.getServerLockInfo().getPassword2());
+                            intent.putExtra(OtaConstants.version, appInfo.getFileVersion());
+                            intent.putExtra(OtaConstants.SN, bleLockInfo.getServerLockInfo().getDeviceSN());
                             if (bleLockInfo.getBleType() == 1) { //Ti升级
                                 intent.putExtra(OtaConstants.fileName, "Kaadas_ble" + appInfo.getFileVersion() + "_" + appInfo.getFileMd5() + ".bin");
                                 intent.setClass(BaseBleCheckInfoActivity.this, TiOtaUpgradeActivity.class);
@@ -139,7 +140,7 @@ public abstract class BaseBleCheckInfoActivity<T extends ICheckOtaView, V extend
     }
 
     @Override
-    public void needTwoUpdate(OTAResult.UpdateFileInfo stackInfo, OTAResult.UpdateFileInfo appInfo, String SN, String version) {
+    public void needTwoUpdate(CheckOTAResult.UpdateFileInfo stackInfo, CheckOTAResult.UpdateFileInfo appInfo, String SN, String version) {
         hiddenLoading();
         LogUtils.e("有两个固件需要升级");
         if (bleLockInfo.getBleType() != 1) { //Ti升级
@@ -170,6 +171,8 @@ public abstract class BaseBleCheckInfoActivity<T extends ICheckOtaView, V extend
                         intent.putExtra(OtaConstants.deviceMac, bleLockInfo.getServerLockInfo().getMacLock()); //升级
                         intent.putExtra(OtaConstants.password1, bleLockInfo.getServerLockInfo().getPassword1());
                         intent.putExtra(OtaConstants.password2, bleLockInfo.getServerLockInfo().getPassword2());
+                        intent.putExtra(OtaConstants.version, appInfo.getFileVersion());
+                        intent.putExtra(OtaConstants.SN, bleLockInfo.getServerLockInfo().getDeviceSN());
                         intent.putExtra(OtaConstants.fileName, "Kaadas_" + stackInfo.getFileVersion() + "_" + stackInfo.getFileMd5() + ".bin");
                         intent.putExtra(OtaConstants.fileName2, "Kaadas_" + appInfo.getFileVersion() + "_" + appInfo.getFileMd5() + ".bin");
                         intent.setClass(BaseBleCheckInfoActivity.this, Ti2FileOtaUpgradeActivity.class);
@@ -202,7 +205,7 @@ public abstract class BaseBleCheckInfoActivity<T extends ICheckOtaView, V extend
 
     }
 
-    public void on3DModuleEnterOta(int type,OTAResult.UpdateFileInfo appInfo){
+    public void on3DModuleEnterOta(int type,CheckOTAResult.UpdateFileInfo appInfo){
 
     }
 
