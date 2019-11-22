@@ -140,7 +140,6 @@ public class GatewayLockFunctionPresenter<T> extends BasePresenter<GatewayLockFu
                                                     if (mViewRef.get()!=null){
                                                        mViewRef.get().getLockInfoFail();
                                                     }
-
                                                 }
                                         }
                                     }, new Consumer<Throwable>() {
@@ -153,7 +152,6 @@ public class GatewayLockFunctionPresenter<T> extends BasePresenter<GatewayLockFu
                                     });
             compositeDisposable.add(getLockPwdInfoDisposable);
         }
-
     }
 
     //监听密码的信息

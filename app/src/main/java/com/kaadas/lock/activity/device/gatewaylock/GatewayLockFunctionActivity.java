@@ -284,7 +284,9 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
                 intent = new Intent(this, GatewayPasswordManagerActivity.class);
                 intent.putExtra(KeyConstants.GATEWAY_ID, gatewayId);
                 intent.putExtra(KeyConstants.DEVICE_ID, deviceId);
+                intent.putExtra(KeyConstants.GATEWAY_LOCK_INFO, lockInfo);
                 startActivity(intent);
+
                 break;
             case R.id.ll_two:
                //设备分享

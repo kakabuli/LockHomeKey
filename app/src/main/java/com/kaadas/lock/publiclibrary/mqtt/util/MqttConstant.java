@@ -218,4 +218,10 @@ public class MqttConstant {
     public static final String SET_NIGHT_SIGHT = "setPropertys";
 
 
+    public static final String SET_USER_TYPE = "setUserType";
+
+
+    public static final String SCHEDULE = "schedule";
+
+
 }

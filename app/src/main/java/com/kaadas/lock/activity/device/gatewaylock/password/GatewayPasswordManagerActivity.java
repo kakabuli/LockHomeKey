@@ -21,10 +21,12 @@ import com.kaadas.lock.R;
 import com.kaadas.lock.activity.device.gatewaylock.password.old.GatewayLockDeletePasswordActivity;
 import com.kaadas.lock.activity.device.gatewaylock.password.old.GatewayLockPasswordAddActivity;
 import com.kaadas.lock.activity.device.gatewaylock.password.old.GatewayLockTempararyPwdAddActivity;
+import com.kaadas.lock.activity.device.gatewaylock.password.test.PasswordTestActivity;
 import com.kaadas.lock.adapter.GatewayLockPasswordAdapter;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.mvp.presenter.gatewaylockpresenter.GatewayLockFunctionPresenter;
 import com.kaadas.lock.mvp.view.gatewaylockview.GatewayLockFunctinView;
+import com.kaadas.lock.publiclibrary.bean.GwLockInfo;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LoadingDialog;
@@ -70,7 +72,7 @@ public class GatewayPasswordManagerActivity extends BaseActivity<GatewayLockFunc
 
     private String gatewayId;
     private String deviceId;
-
+    private GwLockInfo lockInfo;
 
     private List<String> mList = new ArrayList<>();
 
@@ -222,6 +224,18 @@ public class GatewayPasswordManagerActivity extends BaseActivity<GatewayLockFunc
                                 }
                             });
                         }else{
+                            //新版锁
+//                            if ("8100".equals(lockInfo.getServerInfo().getModel()) || lockInfo.getServerInfo().getModel() ==null){  //支持时间策略的网关锁
+//                                intent = new Intent(this, PasswordTestActivity.class);
+//                                intent.putExtra(KeyConstants.LOCK_PWD_LIST, (Serializable) mList);
+//                                intent.putExtra(KeyConstants.GATEWAY_ID, gatewayId);
+//                                intent.putExtra(KeyConstants.DEVICE_ID, deviceId);
+//                            }else {
+//                                intent = new Intent(this, GatewayLockTempararyPwdAddActivity.class);
+//                                intent.putExtra(KeyConstants.LOCK_PWD_LIST, (Serializable) mList);
+//                                intent.putExtra(KeyConstants.GATEWAY_ID, gatewayId);
+//                                intent.putExtra(KeyConstants.DEVICE_ID, deviceId);
+//                            }
                             intent = new Intent(this, GatewayLockTempararyPwdAddActivity.class);
                             intent.putExtra(KeyConstants.LOCK_PWD_LIST, (Serializable) mList);
                             intent.putExtra(KeyConstants.GATEWAY_ID, gatewayId);
@@ -255,7 +269,9 @@ public class GatewayPasswordManagerActivity extends BaseActivity<GatewayLockFunc
         Intent intent = getIntent();
         gatewayId = intent.getStringExtra(KeyConstants.GATEWAY_ID);
         deviceId = intent.getStringExtra(KeyConstants.DEVICE_ID);
+        lockInfo = (GwLockInfo) intent.getSerializableExtra(KeyConstants.GATEWAY_LOCK_INFO);
         userId=MyApplication.getInstance().getUid();
+
         mPresenter.getLockPwdInfoEvent();
         //第一次进入该页面,由于锁上重置，删除，添加无法知道当前锁的信息所以只有第一次进入需要判断
         if (!TextUtils.isEmpty(userId)){
@@ -306,7 +322,6 @@ public class GatewayPasswordManagerActivity extends BaseActivity<GatewayLockFunc
             } else {
                 mPresenter.getLockPwd(gatewayId, deviceId, pwd + "", maxPwdId, pwd);
             }
-
         }
     }
 

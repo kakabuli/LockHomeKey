@@ -795,7 +795,8 @@
         </receiver>
 
         <activity android:name=".publiclibrary.ota.face.FaceOtaActivity" />
-        <activity android:name=".activity.TestActivity"></activity>
+        <activity android:name=".activity.TestActivity" />
+        <activity android:name=".activity.device.gatewaylock.password.test.PasswordTestActivity"></activity>
     </application>
 
 </manifest>
