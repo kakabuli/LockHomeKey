@@ -853,14 +853,13 @@ public class MqttCommandFactory {
      * @return
      */
     public static MqttMessage setPasswordPlan(String deviceId, String gwId, String userId,
-                                              String action, int scheduleId, String type, int pwdId, int  zLocalEndT, int zLocalStartT,
-                                              int dayMaskBits, int endHour, int endMinute,  int startHour, int startMinute
-
-                                              ) {
+                                              String action, int scheduleId, String type, int pwdId, int zLocalEndT, int zLocalStartT,
+                                              int dayMaskBits, int endHour, int endMinute, int startHour, int startMinute) {
         int messageId = getMessageId();
-        SetPasswordPlanBean.ParamsBean paramsBean = new SetPasswordPlanBean.ParamsBean(action, scheduleId,type,pwdId,zLocalEndT,zLocalStartT);
-        SetPasswordPlanBean setUserTypeBean = new SetPasswordPlanBean(deviceId,MqttConstant.SCHEDULE,gwId,messageId,MqttConstant.MSG_TYPE_REQUEST
-                ,paramsBean,0,new SetPasswordPlanBean.ReturnDataBean(),""+System.currentTimeMillis(),userId
+        SetPasswordPlanBean.ParamsBean paramsBean = new SetPasswordPlanBean.ParamsBean(action, dayMaskBits, endHour, endMinute, scheduleId,
+                startHour, startMinute, type, pwdId, zLocalEndT, zLocalStartT);
+        SetPasswordPlanBean setUserTypeBean = new SetPasswordPlanBean(deviceId, MqttConstant.SCHEDULE, gwId, messageId, MqttConstant.MSG_TYPE_REQUEST
+                , paramsBean, 0, new SetPasswordPlanBean.ReturnDataBean(), "" + System.currentTimeMillis(), userId
         );
         return getMessage(setUserTypeBean, messageId);
     }
