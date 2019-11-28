@@ -23,6 +23,23 @@ public class ServerGwDevice implements Serializable {
     private String nickName;
     private String time;
     private String model;   // 6030 小网关、 6010大网关
+    /**
+     * delectTime : 2019-11-28 14:29:33.961
+     * lockversion : 8100Z;00;V1.02.040;V0.00.000
+     * moduletype : KSZG1703U
+     * nwaddr : 34049
+     * offlineTime : 2019-11-28 17:29:13.809
+     * onlineTime : 2019-11-28 17:29:24.923
+     * shareFlag : 0
+     */
+
+    private String delectTime;
+    private String lockversion;
+    private String moduletype;
+    private int nwaddr;
+    private String offlineTime;
+    private String onlineTime;
+    private int shareFlag;
 
     public String getSW() {
         return SW;
@@ -89,7 +106,10 @@ public class ServerGwDevice implements Serializable {
     }
 
 
-    public ServerGwDevice(String SW, String deviceId, String device_type, String event_str, String ipaddr, String macaddr, String nickName, String time) {
+    public ServerGwDevice(String SW, String deviceId, String device_type, String event_str,
+                          String ipaddr, String macaddr, String nickName, String time, String model,
+                          String delectTime, String lockversion, String moduletype, int nwaddr,
+                          String offlineTime, String onlineTime, int shareFlag) {
         this.SW = SW;
         this.deviceId = deviceId;
         this.device_type = device_type;
@@ -98,6 +118,14 @@ public class ServerGwDevice implements Serializable {
         this.macaddr = macaddr;
         this.nickName = nickName;
         this.time = time;
+        this.model = model;
+        this.delectTime = delectTime;
+        this.lockversion = lockversion;
+        this.moduletype = moduletype;
+        this.nwaddr = nwaddr;
+        this.offlineTime = offlineTime;
+        this.onlineTime = onlineTime;
+        this.shareFlag = shareFlag;
     }
 
     public ServerGwDevice(String SW, String deviceId, String device_type, String event_str, String ipaddr, String macaddr, String nickName, String time, String model) {
@@ -135,5 +163,61 @@ public class ServerGwDevice implements Serializable {
                 ", nickName='" + nickName + '\'' +
                 ", time='" + time + '\'' +
                 '}';
+    }
+
+    public String getDelectTime() {
+        return delectTime;
+    }
+
+    public void setDelectTime(String delectTime) {
+        this.delectTime = delectTime;
+    }
+
+    public String getLockversion() {
+        return lockversion;
+    }
+
+    public void setLockversion(String lockversion) {
+        this.lockversion = lockversion;
+    }
+
+    public String getModuletype() {
+        return moduletype;
+    }
+
+    public void setModuletype(String moduletype) {
+        this.moduletype = moduletype;
+    }
+
+    public int getNwaddr() {
+        return nwaddr;
+    }
+
+    public void setNwaddr(int nwaddr) {
+        this.nwaddr = nwaddr;
+    }
+
+    public String getOfflineTime() {
+        return offlineTime;
+    }
+
+    public void setOfflineTime(String offlineTime) {
+        this.offlineTime = offlineTime;
+    }
+
+    public String getOnlineTime() {
+        return onlineTime;
+    }
+
+    public void setOnlineTime(String onlineTime) {
+        this.onlineTime = onlineTime;
+    }
+
+    public int getShareFlag() {
+        return shareFlag;
+    }
+
+    public void setShareFlag(int shareFlag) {
+        this.shareFlag = shareFlag;
     }
 }

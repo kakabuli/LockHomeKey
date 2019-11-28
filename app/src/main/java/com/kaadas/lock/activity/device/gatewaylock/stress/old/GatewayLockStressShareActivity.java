@@ -12,8 +12,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.kaadas.lock.R;
-import com.kaadas.lock.activity.device.gatewaylock.password.GatewayPasswordManagerActivity;
-import com.kaadas.lock.activity.device.gatewaylock.password.old.GatewayLockPasswordShareActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.mvp.presenter.gatewaylockpresenter.GatewayLockSharePresenter;
 import com.kaadas.lock.mvp.view.gatewaylockview.GatewayLockShareView;

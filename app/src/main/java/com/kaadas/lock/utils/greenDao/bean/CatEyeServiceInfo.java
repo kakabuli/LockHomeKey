@@ -31,10 +31,31 @@ public class CatEyeServiceInfo {
     private String uid;
 
 
-    @Generated(hash = 327214530)
+    /**
+     * delectTime : 2019-11-28 14:29:33.961
+     * lockversion : 8100Z;00;V1.02.040;V0.00.000
+     * moduletype : KSZG1703U
+     * nwaddr : 34049
+     * offlineTime : 2019-11-28 17:29:13.809
+     * onlineTime : 2019-11-28 17:29:24.923
+     * shareFlag : 0
+     */
+
+    private String delectTime;
+    private String lockversion;
+    private String moduletype;
+    private int nwaddr;
+    private String offlineTime;
+    private String onlineTime;
+    private int shareFlag;
+
+
+    @Generated(hash = 1129370850)
     public CatEyeServiceInfo(String deviceIdUid, String deviceId, String SW,
             String device_type, String event_str, String ipaddr, String macaddr,
-            String nickName, String time, String gatewayId, String uid) {
+            String nickName, String time, String gatewayId, String uid,
+            String delectTime, String lockversion, String moduletype, int nwaddr,
+            String offlineTime, String onlineTime, int shareFlag) {
         this.deviceIdUid = deviceIdUid;
         this.deviceId = deviceId;
         this.SW = SW;
@@ -46,10 +67,74 @@ public class CatEyeServiceInfo {
         this.time = time;
         this.gatewayId = gatewayId;
         this.uid = uid;
+        this.delectTime = delectTime;
+        this.lockversion = lockversion;
+        this.moduletype = moduletype;
+        this.nwaddr = nwaddr;
+        this.offlineTime = offlineTime;
+        this.onlineTime = onlineTime;
+        this.shareFlag = shareFlag;
     }
 
     @Generated(hash = 1773439888)
     public CatEyeServiceInfo() {
+    }
+
+
+    public String getDelectTime() {
+        return delectTime;
+    }
+
+    public void setDelectTime(String delectTime) {
+        this.delectTime = delectTime;
+    }
+
+    public String getLockversion() {
+        return lockversion;
+    }
+
+    public void setLockversion(String lockversion) {
+        this.lockversion = lockversion;
+    }
+
+    public String getModuletype() {
+        return moduletype;
+    }
+
+    public void setModuletype(String moduletype) {
+        this.moduletype = moduletype;
+    }
+
+    public int getNwaddr() {
+        return nwaddr;
+    }
+
+    public void setNwaddr(int nwaddr) {
+        this.nwaddr = nwaddr;
+    }
+
+    public String getOfflineTime() {
+        return offlineTime;
+    }
+
+    public void setOfflineTime(String offlineTime) {
+        this.offlineTime = offlineTime;
+    }
+
+    public String getOnlineTime() {
+        return onlineTime;
+    }
+
+    public void setOnlineTime(String onlineTime) {
+        this.onlineTime = onlineTime;
+    }
+
+    public int getShareFlag() {
+        return shareFlag;
+    }
+
+    public void setShareFlag(int shareFlag) {
+        this.shareFlag = shareFlag;
     }
 
     public String getDeviceIdUid() {

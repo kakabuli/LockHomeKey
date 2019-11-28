@@ -138,7 +138,7 @@ public class SetPasswordPlanBean {
 
         //全部
         public ParamsBean(String action, int dayMaskBits, int endHour, int endMinute, int scheduleId,
-                          int startHour, int startMinute, String type, int userId, int zLocalEndT, int zLocalStartT) {
+                          int startHour, int startMinute, String type, int userId, long zLocalEndT, long zLocalStartT) {
             this.action = action;
             this.dayMaskBits = dayMaskBits;
             this.endHour = endHour;
@@ -177,8 +177,8 @@ public class SetPasswordPlanBean {
         private int startMinute;
         private String type; //点计划  或者周计划
         private int userId;
-        private int zLocalEndT;
-        private int zLocalStartT;
+        private long zLocalEndT;
+        private long zLocalStartT;
 
         public String getAction() {
             return action;
@@ -252,19 +252,19 @@ public class SetPasswordPlanBean {
             this.userId = userId;
         }
 
-        public int getZLocalEndT() {
+        public long getZLocalEndT() {
             return zLocalEndT;
         }
 
-        public void setZLocalEndT(int zLocalEndT) {
+        public void setZLocalEndT(long zLocalEndT) {
             this.zLocalEndT = zLocalEndT;
         }
 
-        public int getZLocalStartT() {
+        public long getZLocalStartT() {
             return zLocalStartT;
         }
 
-        public void setZLocalStartT(int zLocalStartT) {
+        public void setZLocalStartT(long zLocalStartT) {
             this.zLocalStartT = zLocalStartT;
         }
     }

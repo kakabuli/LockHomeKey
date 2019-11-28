@@ -29,6 +29,8 @@ public class GatewayServiceInfo {
 
 
 
+
+
     public String getModel() {
         return model;
     }

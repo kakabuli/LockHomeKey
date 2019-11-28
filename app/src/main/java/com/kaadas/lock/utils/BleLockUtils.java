@@ -57,11 +57,11 @@ public class BleLockUtils {
 
     static {
         FUNCTION_SET.put(0x00, new Integer[]{1, 2, 3, 10});
-        FUNCTION_SET.put(0x01, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22});
+        FUNCTION_SET.put(0x01, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 15, 16, 17, 19, 20, 21, 22});
         FUNCTION_SET.put(0x02, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 10, 11, 13, 14, 15, 16, 17, 19, 20, 21, 22});
         FUNCTION_SET.put(0x03, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 10, 11, 13, 14, 15, 16, 17, 19, 20, 21, 22, 23});
-        FUNCTION_SET.put(0x04, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23});
-        FUNCTION_SET.put(0x05, new Integer[]{1, 2, 3, 4, 5, 6, 7, 9, 10, 13, 16, 17, 19, 20, 21, 22, 23, 24});
+        FUNCTION_SET.put(0x04, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 15, 16, 17, 19, 20, 21, 22, 23});
+        FUNCTION_SET.put(0x05, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 15, 16, 17, 19, 20, 21, 22, 23, 24});
 
         FUNCTION_SET.put(0x06, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 10, 11, 13, 14, 15, 16, 17, 19, 20, 21, 22, 23, 24});        //2019年8月29日11:10:53
         FUNCTION_SET.put(0x07, new Integer[]{1, 2, 3, 4, 5, 7, 8, 10, 11, 13, 14, 15, 16, 17, 19, 20, 21, 22, 26, 27, 28, 29, 30});        //2019年8月29日11:10:53
@@ -71,19 +71,19 @@ public class BleLockUtils {
         FUNCTION_SET.put(0x31, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 10, 13, 16, 17, 19, 20, 21, 22});
         FUNCTION_SET.put(0x32, new Integer[]{1, 2, 3, 4, 5, 7, 8, 9, 10, 13, 16, 17, 19, 20, 21, 22});
         FUNCTION_SET.put(0x33, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 13, 16, 17, 19, 20, 21, 22});
-        FUNCTION_SET.put(0x34, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 13, 16, 17, 19, 20, 21, 22});
-        FUNCTION_SET.put(0x35, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 10, 13, 16, 17, 19, 20, 21, 22, 23});
-        FUNCTION_SET.put(0x36, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 10, 13, 16, 17, 18, 19, 20, 21, 22, 23});
+        FUNCTION_SET.put(0x34, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10,   13, 16, 17, 19, 20, 21, 22});
+        FUNCTION_SET.put(0x35, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 10,   13, 16, 17, 19, 20, 21, 22, 23});
+        FUNCTION_SET.put(0x36, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 10,   13, 16, 17, 19, 20, 21, 22, 23});
 
-        FUNCTION_SET.put(0x37, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 13, 16, 17, 18, 19, 20, 21, 22, 23});
-        FUNCTION_SET.put(0x38, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 10, 13, 16, 17, 18, 19, 20, 21, 22, 23, 24});
-        FUNCTION_SET.put(0x39, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 13, 16, 17, 18, 19, 20, 21, 22, 23, 24});
+        FUNCTION_SET.put(0x37, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10,   13, 16, 17, 19, 20, 21, 22, 23});
+        FUNCTION_SET.put(0x38, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 10,   13, 16, 17, 19, 20, 21, 22, 23, 24});
+        FUNCTION_SET.put(0x39, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10,   13, 16, 17, 19, 20, 21, 22, 23, 24});
 
         FUNCTION_SET.put(0x40, new Integer[]{1, 2, 3, 4, 5, 6, 7, 9, 10, 13, 16, 17, 19, 20, 21, 22, 23});        //2019年8月29日11:11:10
 
         FUNCTION_SET.put(0x41, new Integer[]{1, 2, 3, 4, 5, 6, 7, 9, 10, 13, 16, 17, 19, 20, 21, 22, 23, 24});        //2019年9月6日08:45:45
 
-        FUNCTION_SET.put(0x60, new Integer[]{12, 3, 4, 5, 6, 7, 8, 9, 10, 13, 16, 17, 19, 20, 21, 22, 23, 25});
+        FUNCTION_SET.put(0x60, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 13, 16, 17, 19, 20, 21, 22, 23, 25});
         FUNCTION_SET.put(0x61, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 10, 13, 16, 17, 19, 20, 21, 22, 23, 25});
         FUNCTION_SET.put(0x62, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 10, 13, 16, 17, 19, 20, 21, 22, 23, 24, 25});
         FUNCTION_SET.put(0x63, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 13, 16, 17, 19, 20, 21, 22, 23, 24, 25});
@@ -94,7 +94,6 @@ public class BleLockUtils {
 
     /**
      * 根据功能集判断是否支持手动自动模式显示
-     *
      * @param functionSet
      * @return
      */
@@ -165,6 +164,7 @@ public class BleLockUtils {
 
     /**
      * 根据功能集判断是否支持卡片
+     *
      * @param functionSet
      * @return
      */
@@ -183,6 +183,7 @@ public class BleLockUtils {
 
     /**
      * 根据功能集判断是否支持指纹
+     *
      * @param functionSet
      * @return
      */
@@ -198,8 +199,10 @@ public class BleLockUtils {
         List<Integer> integers = Arrays.asList(funcs);
         return integers.contains(8);
     }
+
     /**
      * 根据功能集判断是否支持密码
+     *
      * @param functionSet
      * @return
      */
@@ -298,7 +301,7 @@ public class BleLockUtils {
 
     }
 
-    public static boolean isSupportFace(String functionSet){
+    public static boolean isSupportFace(String functionSet) {
         int funcSet = Integer.parseInt(functionSet);
         Integer[] funcs = FUNCTION_SET.get(funcSet);
         if (funcs == null) {
@@ -479,7 +482,7 @@ public class BleLockUtils {
                 return R.mipmap.bluetooth_lock_k9;
             } else if (model.startsWith("KX-T")) {
                 return R.mipmap.bluetooth_lock_kx_t;
-            }  else if (model.startsWith("KX")) {
+            } else if (model.startsWith("KX")) {
                 return R.mipmap.bluetooth_lock_kx;
             } else if (model.startsWith("S8C")) {
                 return R.mipmap.bluetooth_lock_s8;
@@ -503,11 +506,11 @@ public class BleLockUtils {
                 return R.mipmap.bluetooth_lock_8008;
             } else if (model.startsWith("8100")) {
                 return R.mipmap.bluetooth_lock_8100;
-            }else if (model.startsWith("K200")) {
+            } else if (model.startsWith("K200")) {
                 return R.mipmap.bluetooth_lock_k200;
-            }else if (model.startsWith("S300")) {
+            } else if (model.startsWith("S300")) {
                 return R.mipmap.bluetooth_lock_s300;
-            }else if (model.startsWith("5011")) {
+            } else if (model.startsWith("5011")) {
                 return R.mipmap.bluetooth_lock_5011;
             } else {
                 return R.mipmap.bluetooth_lock_default;
@@ -516,8 +519,6 @@ public class BleLockUtils {
             return R.mipmap.bluetooth_lock_default;
         }
     }
-
-
 
 
 }

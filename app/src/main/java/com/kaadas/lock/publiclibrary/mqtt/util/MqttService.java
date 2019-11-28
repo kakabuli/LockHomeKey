@@ -62,7 +62,6 @@ public class MqttService extends Service {
     private PublishSubject<PublishResult> publishObservable = PublishSubject.create();
     private PublishSubject<Boolean> disconnectObservable = PublishSubject.create();
     private PublishSubject<MqttData>  notifyDataObservable = PublishSubject.create();
-
     private PublishSubject<MqttData> powerDataObversable = PublishSubject.create();
 
 
@@ -171,8 +170,7 @@ public class MqttService extends Service {
         //
 
         if (mqttClient == null) {
-            mqttClient = new MqttAndroidClient(MyApplication.getInstance(), MqttConstant.MQTT_BASE_URL,
-                    "app:" + userId);
+            mqttClient = new MqttAndroidClient(MyApplication.getInstance(), MqttConstant.MQTT_BASE_URL, "app:" + userId);
         }
         //已经连接
         if (mqttClient.isConnected()) {
@@ -233,7 +231,6 @@ public class MqttService extends Service {
                 //收到消息
                 String payload = new String(message.getPayload());
                 LogUtils.e("收到mqtt消息", payload + "---topic" + topic + "  messageID  " + message.getId());
-                Log.e(GeTui.MqttLog,"receiver...."+payload + "---topic" + topic + "  messageID  " + message.getId());
                 //String func, String topic, String payload, MqttMessage mqttMessage
                 JSONObject jsonObject = new JSONObject(payload);
                 int messageId = -1;
@@ -405,11 +402,11 @@ public class MqttService extends Service {
     public Observable<MqttData> mqttPublish(String topic, MqttMessage mqttMessage) {
         try {
             if (mqttClient!=null&&mqttClient.isConnected()) {
-                Log.e(GeTui.MqttLog,"mqttService...push: "+"topic: "+topic+"  mqttMessage: "+mqttMessage.toString());
+                Log.e("发布消息", "topic: "+topic+"  mqttMessage: "+mqttMessage.toString());
                 mqttClient.publish(topic, mqttMessage, null, new IMqttActionListener() {
                     @Override
                     public void onSuccess(IMqttToken asyncActionToken) {
-                        LogUtils.e("发布消息成功  ", topic + "  发布消息内容  " + new String(mqttMessage.getPayload()) );
+                        LogUtils.e("发布消息成功  ", topic + "  消息Id  " + mqttMessage.getId() );
                         publishObservable.onNext(new PublishResult(true, asyncActionToken, mqttMessage));
                     }
 

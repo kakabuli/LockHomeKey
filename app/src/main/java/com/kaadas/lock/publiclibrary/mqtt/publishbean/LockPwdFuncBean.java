@@ -173,9 +173,18 @@ public class LockPwdFuncBean implements Serializable {
 
     public static class ReturnDataBean {
         private int status;
+        private int userType;
 
         public int getStatus() {
             return status;
+        }
+
+        public int getUserType() {
+            return userType;
+        }
+
+        public void setUserType(int userType) {
+            this.userType = userType;
         }
 
         public void setStatus(int status) {

@@ -26,6 +26,7 @@ import com.kaadas.lock.utils.greenDao.bean.GatewayLockAlarmEventDao;
 import com.kaadas.lock.utils.greenDao.bean.GatewayLockPwd;
 import com.kaadas.lock.utils.greenDao.db.GatewayLockAlarmEventDaoDao;
 import com.kaadas.lock.utils.greenDao.db.GatewayLockPwdDao;
+import com.kaadas.lock.utils.greenDao.manager.GatewayLockPasswordManager;
 
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
@@ -278,6 +279,8 @@ public class GatewayLockMorePresenter<T> extends BasePresenter<GatewayLockMoreVi
                                         SPUtils.remove(KeyConstants.FIRST_IN_GATEWAY_LOCK+ uid+deviceId);
                                         //清除报警记录
                                         deleteAllAram(gatewayId,deviceId);
+                                        //删除密码情况
+                                        new GatewayLockPasswordManager().deleteAll(deviceId,MyApplication.getInstance().getUid(), gatewayId);
                                     }
                                 }else{
                                     if (mViewRef.get()!=null){

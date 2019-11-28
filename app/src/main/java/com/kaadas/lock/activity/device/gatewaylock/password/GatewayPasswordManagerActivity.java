@@ -1,12 +1,9 @@
 package com.kaadas.lock.activity.device.gatewaylock.password;
 
-import android.app.Activity;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -18,27 +15,23 @@ import android.widget.TextView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
-import com.kaadas.lock.activity.device.gatewaylock.password.old.GatewayLockDeletePasswordActivity;
-import com.kaadas.lock.activity.device.gatewaylock.password.old.GatewayLockPasswordAddActivity;
-import com.kaadas.lock.activity.device.gatewaylock.password.old.GatewayLockTempararyPwdAddActivity;
-import com.kaadas.lock.activity.device.gatewaylock.password.test.PasswordTestActivity;
 import com.kaadas.lock.adapter.GatewayLockPasswordAdapter;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
-import com.kaadas.lock.mvp.presenter.gatewaylockpresenter.GatewayLockFunctionPresenter;
-import com.kaadas.lock.mvp.view.gatewaylockview.GatewayLockFunctinView;
+import com.kaadas.lock.mvp.presenter.gatewaylockpresenter.GatewayLockPasswordManagerPresenter;
+import com.kaadas.lock.mvp.view.gatewaylockview.IGatewayLockPasswordManagerView;
+import com.kaadas.lock.utils.greenDao.bean.GatewayPasswordPlanBean;
 import com.kaadas.lock.publiclibrary.bean.GwLockInfo;
-import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LoadingDialog;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.SPUtils2;
 import com.kaadas.lock.utils.ToastUtil;
-import com.kaadas.lock.utils.greenDao.bean.GatewayLockPwd;
-import com.kaadas.lock.utils.greenDao.db.GatewayLockPwdDao;
+import com.kaadas.lock.utils.greenDao.manager.GatewayLockPasswordManager;
 
-import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -48,8 +41,8 @@ import butterknife.ButterKnife;
 /**
  * Created by David
  */
-public class GatewayPasswordManagerActivity extends BaseActivity<GatewayLockFunctinView, GatewayLockFunctionPresenter<GatewayLockFunctinView>>
-        implements BaseQuickAdapter.OnItemClickListener, View.OnClickListener, GatewayLockFunctinView {
+public class GatewayPasswordManagerActivity extends BaseActivity<IGatewayLockPasswordManagerView, GatewayLockPasswordManagerPresenter<IGatewayLockPasswordManagerView>>
+        implements IGatewayLockPasswordManagerView, BaseQuickAdapter.OnItemClickListener, View.OnClickListener {
     @BindView(R.id.iv_back)
     ImageView ivBack;//返回
     @BindView(R.id.tv_content)
@@ -74,17 +67,16 @@ public class GatewayPasswordManagerActivity extends BaseActivity<GatewayLockFunc
     private String deviceId;
     private GwLockInfo lockInfo;
 
-    private List<String> mList = new ArrayList<>();
+    private List<GatewayPasswordPlanBean> mList = new ArrayList<>();
 
     private GatewayLockPasswordAdapter gatewayLockPasswordAdapter;
 
     private LoadingDialog loadingDialog;
 
-    private int maxPwdId = 0;
 
-    //0表示列表还没有获取完成，无法添加，1表示列表获取异常无法添加，2表示可以进行添加
-    private int isAddLockPwd = 0;
     private String userId;
+
+    private GatewayLockPasswordManager daoManager = new GatewayLockPasswordManager();
 
 
     @Override
@@ -98,8 +90,8 @@ public class GatewayPasswordManagerActivity extends BaseActivity<GatewayLockFunc
     }
 
     @Override
-    protected GatewayLockFunctionPresenter<GatewayLockFunctinView> createPresent() {
-        return new GatewayLockFunctionPresenter<>();
+    protected GatewayLockPasswordManagerPresenter<IGatewayLockPasswordManagerView> createPresent() {
+        return new GatewayLockPasswordManagerPresenter<>();
     }
 
     private void initView() {
@@ -126,24 +118,25 @@ public class GatewayPasswordManagerActivity extends BaseActivity<GatewayLockFunc
     @Override
     protected void onStart() {
         super.onStart();
-        if (mList != null) {
-            String pwdValue = (String) SPUtils2.get(this, KeyConstants.ADD_PWD_ID, "");
-            if (!TextUtils.isEmpty(pwdValue)) {
-                if (!mList.contains(pwdValue)){
-                    mList.add(pwdValue);
-                    gatewayLockPasswordAdapter.notifyDataSetChanged();
-                    passwordPageChange(true);
-                    SPUtils2.remove(this, KeyConstants.ADD_PWD_ID);
-                }
-            }
-        }
+
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        //重新获取数据
-
+        //从数据库获取数据
+        List<GatewayPasswordPlanBean> gatewayPasswordPlanBeans = daoManager.queryAll(deviceId, MyApplication.getInstance().getUid(), gatewayId);
+        mList.clear();
+        mList.addAll(gatewayPasswordPlanBeans);
+        if (gatewayPasswordPlanBeans.size() > 0) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                mList.sort(Comparator.naturalOrder());
+            }
+            gatewayLockPasswordAdapter.notifyDataSetChanged();
+            passwordPageChange(true);
+        } else {
+            passwordPageChange(false);
+        }
     }
 
     @Override
@@ -165,24 +158,23 @@ public class GatewayPasswordManagerActivity extends BaseActivity<GatewayLockFunc
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
         Intent intent = new Intent(this, GatewayLockDeletePasswordActivity.class);
-        intent.putExtra(KeyConstants.LOCK_PWD_NUMBER, mList.get(position));
         if (gatewayId != null && deviceId != null) {
             intent.putExtra(KeyConstants.GATEWAY_ID, gatewayId);
             intent.putExtra(KeyConstants.DEVICE_ID, deviceId);
+            GatewayPasswordPlanBean item = (GatewayPasswordPlanBean) adapter.getItem(position);
+            intent.putExtra(KeyConstants.GATEWAY_PASSWORD_BEAN, item);
             startActivityForResult(intent, KeyConstants.DELETE_PWD_REQUEST_CODE);
         }
-
     }
 
     public void passwordPageChange(boolean havePwd) {
-
         if (havePwd) {
-            if (llHasData!=null&&tvNoUser!=null){
+            if (llHasData != null && tvNoUser != null) {
                 llHasData.setVisibility(View.VISIBLE);
                 tvNoUser.setVisibility(View.GONE);
             }
         } else {
-            if (llHasData!=null&&tvNoUser!=null){
+            if (llHasData != null && tvNoUser != null) {
                 llHasData.setVisibility(View.GONE);
                 tvNoUser.setVisibility(View.VISIBLE);
             }
@@ -197,70 +189,31 @@ public class GatewayPasswordManagerActivity extends BaseActivity<GatewayLockFunc
                 finish();
                 break;
             case R.id.ll_add_password:
-                if (isAddLockPwd == 0) {
-                    ToastUtil.getInstance().showShort(R.string.be_beging_get_lock_pwd_no_add_pwd);
-                    return;
-                } else if (isAddLockPwd == 1) {
-                    ToastUtil.getInstance().showShort(R.string.get_lock_pwd_throwable);
-                    return;
-                } else if (isAddLockPwd == 2) {
-                    //减一主要是扣除09
-                    if (mList != null && mList.size() < maxPwdId - 1) {
-                        List<String> temparayList=new ArrayList<>();
-                        temparayList.add("05");
-                        temparayList.add("06");
-                        temparayList.add("07");
-                        temparayList.add("08");
-                        if (mList.containsAll(temparayList)){
-                            AlertDialogUtil.getInstance().singleButtonNoTitleDialog(this, getString(R.string.password_full_and_delete_exist_code), getString(R.string.hao_de), "#1F96F7", new AlertDialogUtil.ClickListener() {
-                                @Override
-                                public void left() {
-
-                                }
-
-                                @Override
-                                public void right() {
-
-                                }
-                            });
-                        }else{
-                            //新版锁
-//                            if ("8100".equals(lockInfo.getServerInfo().getModel()) || lockInfo.getServerInfo().getModel() ==null){  //支持时间策略的网关锁
-//                                intent = new Intent(this, PasswordTestActivity.class);
-//                                intent.putExtra(KeyConstants.LOCK_PWD_LIST, (Serializable) mList);
-//                                intent.putExtra(KeyConstants.GATEWAY_ID, gatewayId);
-//                                intent.putExtra(KeyConstants.DEVICE_ID, deviceId);
-//                            }else {
-//                                intent = new Intent(this, GatewayLockTempararyPwdAddActivity.class);
-//                                intent.putExtra(KeyConstants.LOCK_PWD_LIST, (Serializable) mList);
-//                                intent.putExtra(KeyConstants.GATEWAY_ID, gatewayId);
-//                                intent.putExtra(KeyConstants.DEVICE_ID, deviceId);
-//                            }
-                            intent = new Intent(this, GatewayLockTempararyPwdAddActivity.class);
-                            intent.putExtra(KeyConstants.LOCK_PWD_LIST, (Serializable) mList);
-                            intent.putExtra(KeyConstants.GATEWAY_ID, gatewayId);
-                            intent.putExtra(KeyConstants.DEVICE_ID, deviceId);
-                            startActivity(intent);
-                        }
-                    } else {
-                        AlertDialogUtil.getInstance().singleButtonNoTitleDialog(this, getString(R.string.password_full_and_delete_exist_code), getString(R.string.hao_de), "#1F96F7", new AlertDialogUtil.ClickListener() {
-                            @Override
-                            public void left() {
-
-                            }
-
-                            @Override
-                            public void right() {
-
-                            }
-                        });
+                //新版锁
+                String lockversion = lockInfo.getServerInfo().getLockversion();
+                LogUtils.e("获取到 版本信息是   " + lockversion);
+                if (!TextUtils.isEmpty(lockversion)) {
+                    String lockModel = lockversion.split(";")[0];
+                    if (!TextUtils.isEmpty(lockModel) && lockModel.startsWith("8100")) {
+                        intent = new Intent(this, GatewayPasswordAddActivity.class);
+                        intent.putExtra(KeyConstants.GATEWAY_ID, gatewayId);
+                        intent.putExtra(KeyConstants.DEVICE_ID, deviceId);
+                        startActivity(intent);
+                        return;
                     }
                 }
+                intent = new Intent(this, GatewayLockTempararyPwdAddActivity.class);
+                intent.putExtra(KeyConstants.GATEWAY_ID, gatewayId);
+                intent.putExtra(KeyConstants.DEVICE_ID, deviceId);
+//                intent = new Intent(this, PasswordTestActivity.class);
+//                intent.putExtra(KeyConstants.GATEWAY_ID, gatewayId);
+//                intent.putExtra(KeyConstants.DEVICE_ID, deviceId);
+                startActivity(intent);
                 break;
-
             case R.id.tv_synchronized_record:
                 //点击同步
-                getPwd();
+                loadingDialog.show2(getString(R.string.get_gateway_lock_pwd_waiting));
+                mPresenter.syncPassword(gatewayId, deviceId);
                 break;
         }
     }
@@ -270,132 +223,32 @@ public class GatewayPasswordManagerActivity extends BaseActivity<GatewayLockFunc
         gatewayId = intent.getStringExtra(KeyConstants.GATEWAY_ID);
         deviceId = intent.getStringExtra(KeyConstants.DEVICE_ID);
         lockInfo = (GwLockInfo) intent.getSerializableExtra(KeyConstants.GATEWAY_LOCK_INFO);
-        userId=MyApplication.getInstance().getUid();
-
-        mPresenter.getLockPwdInfoEvent();
+        userId = MyApplication.getInstance().getUid();
         //第一次进入该页面,由于锁上重置，删除，添加无法知道当前锁的信息所以只有第一次进入需要判断
-        if (!TextUtils.isEmpty(userId)){
-            int firstIn= (int) SPUtils.get(KeyConstants.FIRST_IN_GATEWAY_LOCK+userId+deviceId,1);
-            //第一次进入
-            if (firstIn==1){
-                getPwd();
-            }else{
-                //读取数据库信息
-                isAddLockPwd=2;
-                maxPwdId=10;
-               List<GatewayLockPwd> gatewayLockPwds= MyApplication.getInstance().getDaoWriteSession().getGatewayLockPwdDao().queryBuilder().where(GatewayLockPwdDao.Properties.DeviceId.eq(deviceId),GatewayLockPwdDao.Properties.GatewayId.eq(gatewayId),GatewayLockPwdDao.Properties.Status.eq(1),GatewayLockPwdDao.Properties.Uid.eq(userId)).list();
-                if (gatewayLockPwds!=null&&gatewayLockPwds.size()>0){
-                    mList.clear();
-                    for (GatewayLockPwd gatewayLockPwd:gatewayLockPwds){
-                        if (!gatewayLockPwd.getNum().equals("09")){
-                            mList.add(gatewayLockPwd.getNum());
-                        }
-                    }
-                    if (mList!=null&&mList.size()>0){
-                        passwordPageChange(true);
-                        gatewayLockPasswordAdapter.notifyDataSetChanged();
-                    }else{
-                        passwordPageChange(false);
-                    }
-                }else{
-                    passwordPageChange(false);
-                }
-
-            }
-        }
-    }
-    public void getPwd(){
-        //1获取最大用户密码数量
-        if (!TextUtils.isEmpty(gatewayId)&&!TextUtils.isEmpty(deviceId)){
-            isAddLockPwd=0;
-            loadingDialog.show2(getString(R.string.get_gateway_lock_pwd_waiting));
-            mPresenter.getLockPwdInfo(gatewayId, deviceId);
-        }
+//        int firstIn = (int) SPUtils.get(KeyConstants.FIRST_IN_GATEWAY_LOCK + userId + deviceId, 0);
+//        LogUtils.e("是否是第一次进入   " + firstIn);
+//        if (firstIn == 0) { //默认是第一次进来
+//            mPresenter.syncPassword(gatewayId, deviceId);
+//            loadingDialog.show2(getString(R.string.get_gateway_lock_pwd_waiting));
+//        } else {
+        // TODO: 2019/11/26    获取缓存的数据
+//        List<GatewayPasswordPlanBean> gatewayPasswordPlanBeans = daoManager.queryAll(deviceId, MyApplication.getInstance().getUid(), gatewayId);
+//        mList.clear();
+//        mList.addAll(gatewayPasswordPlanBeans);
+//        if (gatewayPasswordPlanBeans.size() > 0) {
+//            gatewayLockPasswordAdapter.notifyDataSetChanged();
+//            passwordPageChange(true);
+//        } else {
+//            passwordPageChange(false);
+//        }
+//        }
     }
 
-    @Override
-    public void getLockOneSuccess(int pwdId) {
-        int pwd = pwdId + 1;
-        if (maxPwdId > 0 && pwd < maxPwdId) {
-            if (pwd < 10) {
-                mPresenter.getLockPwd(gatewayId, deviceId, "0" + pwd, maxPwdId, pwd);
-            } else {
-                mPresenter.getLockPwd(gatewayId, deviceId, pwd + "", maxPwdId, pwd);
-            }
-        }
-    }
 
-    @Override
-    public void getLockSuccess(Map<String, Integer> map) {
-        //获取开锁密码成功
-        loadingDialog.dismiss();
-        LogUtils.e(map.size() + "map集合大小");
-        isAddLockPwd = 2;
-        SPUtils.put(KeyConstants.FIRST_IN_GATEWAY_LOCK+ userId+deviceId,2);
-         if (map.size() > 0) {
-             mList.clear();
-            for (String key : map.keySet()) {
-                GatewayLockPwd gatewayLockPwd=new GatewayLockPwd();
-                gatewayLockPwd.setDeviceId(deviceId);
-                gatewayLockPwd.setGatewayId(gatewayId);
-                gatewayLockPwd.setName("");
-                gatewayLockPwd.setStatus(map.get(key));
-                gatewayLockPwd.setNum(key);
-                gatewayLockPwd.setUid(userId);
-                Integer keyInt=Integer.parseInt(key);
-                //用于zigbee锁是根据编号识别是永久密码，临时密码，还是胁迫密码
-                if(keyInt<=4){
-                    gatewayLockPwd.setTime(1);
-                }else if (keyInt<=8&&keyInt>4){
-                    gatewayLockPwd.setTime(2);
-                }else if (keyInt==9){
-                    gatewayLockPwd.setTime(3);
-                }
-                MyApplication.getInstance().getDaoWriteSession().getGatewayLockPwdDao().insert(gatewayLockPwd);
-                if (map.get(key) == 1 && !key.equals("09")) {
-                    mList.add(key);
-                }
-            }
-            if (mList.size() > 0) {
-                passwordPageChange(true);
-                gatewayLockPasswordAdapter.notifyDataSetChanged();
-            } else {
-                passwordPageChange(false);
-            }
-
-        } else {
-            passwordPageChange(false);
-        }
-         ToastUtil.getInstance().showShort(R.string.get_lock_pwd_list_success);
-    }
-
-    @Override
-    public void getLockFail() {
-        //获取开锁密码失败
-        loadingDialog.dismiss();
-        ToastUtil.getInstance().showShort(R.string.get_lock_pwd_list_fail);
-        passwordPageChange(false);
-        isAddLockPwd = 1;
-
-    }
-
-    @Override
-    public void getLockThrowable(Throwable throwable) {
-        LogUtils.e("获取开锁密码异常   " + throwable.getMessage());
-        loadingDialog.dismiss();
-        ToastUtil.getInstance().showShort(R.string.get_lock_pwd_list_fail);
-        passwordPageChange(false);
-        isAddLockPwd = 1;
-    }
 
     @Override
     public void getLockInfoSuccess(int pwdNum) {
         //获取到总的次数
-        maxPwdId = pwdNum;
-        if (maxPwdId > 0) {
-            mPresenter.getLockPwd(gatewayId, deviceId, "0" + 0, pwdNum, 0);
-        }
-
     }
 
     @Override
@@ -403,7 +256,6 @@ public class GatewayPasswordManagerActivity extends BaseActivity<GatewayLockFunc
         if (loadingDialog != null) {
             loadingDialog.dismiss();
         }
-        isAddLockPwd=1;
         //passwordPageChange(false);
         ToastUtil.getInstance().showShort(getString(R.string.get_lock_info_fail));
         LogUtils.e("获取到锁信息失败   ");
@@ -414,97 +266,136 @@ public class GatewayPasswordManagerActivity extends BaseActivity<GatewayLockFunc
         if (loadingDialog != null) {
             loadingDialog.dismiss();
         }
-        isAddLockPwd=1;
         //passwordPageChange(false);
         ToastUtil.getInstance().showShort(getString(R.string.get_lock_info_fail));
         LogUtils.e("获取到锁信息异常   ");
     }
 
     @Override
-    public void addOnePwdLock(String pwdId) {
-        if (mList!=null){
-            if (!pwdId.equals("09")){
-                mList.add(pwdId);
-            }
+    public void syncPasswordComplete(Map<Integer, GatewayPasswordPlanBean> passwordPlanBeans) {
+        if (loadingDialog != null) {
+            loadingDialog.dismiss();
         }
-        if (gatewayLockPasswordAdapter!=null){
-            gatewayLockPasswordAdapter.notifyDataSetChanged();
-        }
-        if (mList.size()==1){
+        SPUtils.put(KeyConstants.FIRST_IN_GATEWAY_LOCK + userId + deviceId, 1);
+        List<GatewayPasswordPlanBean> gatewayPasswordPlanBeans = parsePassword(passwordPlanBeans);
+        LogUtils.e("获取全部密码  1  " + Arrays.toString(gatewayPasswordPlanBeans.toArray()));
+
+        daoManager.insertAfterDelete(deviceId, MyApplication.getInstance().getUid(), gatewayId, gatewayPasswordPlanBeans);
+        mList.clear();
+        mList.addAll(gatewayPasswordPlanBeans);
+        if (mList.size() > 0) {
             passwordPageChange(true);
-        }
-
-
-    }
-
-    @Override
-    public void deleteOnePwdLock(String pwdId) {
-        if (mList!=null&&mList.size()>0){
-            if (mList.contains(pwdId)){
-                mList.remove(pwdId);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                mList.sort(Comparator.naturalOrder());
             }
-
-        }
-        if (gatewayLockPasswordAdapter!=null){
             gatewayLockPasswordAdapter.notifyDataSetChanged();
-        }
-        if (mList.size()==0){
+        } else {
             passwordPageChange(false);
         }
+    }
+
+
+    @Override
+    public void syncPasswordFailed(Throwable throwable) {
+        LogUtils.e("获取开锁密码异常   " + throwable.getMessage());
+        loadingDialog.dismiss();
+        ToastUtil.getInstance().showShort(R.string.get_lock_pwd_list_fail);
+        passwordPageChange(false);
+    }
+
+    @Override
+    public void addLockPwdFail(Throwable throwable) {
 
     }
 
     @Override
-    public void deleteAllPwdLock() {
-        if (mList!=null&&mList.size()>0){
-            mList.clear();
-        }
-        if (gatewayLockPasswordAdapter!=null){
-            passwordPageChange(false);
-            gatewayLockPasswordAdapter.notifyDataSetChanged();
-        }
+    public void addLockPwdSuccess(GatewayPasswordPlanBean gatewayPasswordPlanBean, String pwdValue) {
 
     }
 
     @Override
-    public void useSingleUse(String pwdId) {
-        if (mList!=null&&mList.size()>0){
-            if (mList.contains(pwdId)){
-                mList.remove(pwdId);
+    public void setUserTypeSuccess(String passwordValue, GatewayPasswordPlanBean gatewayPasswordPlanBean) {
+
+    }
+
+    @Override
+    public void onLoadPasswordPlan(Map<Integer, GatewayPasswordPlanBean> passwordPlanBeans) {
+        LogUtils.e("");
+        List<GatewayPasswordPlanBean> gatewayPasswordPlanBeans = parsePassword(passwordPlanBeans);
+        LogUtils.e("获取全部密码   2 " + Arrays.toString(gatewayPasswordPlanBeans.toArray()));
+        daoManager.insertAfterDelete(deviceId, MyApplication.getInstance().getUid(), gatewayId, gatewayPasswordPlanBeans);
+        mList.clear();
+        mList.addAll(gatewayPasswordPlanBeans);
+        passwordPageChange(true);
+    }
+
+    @Override
+    public void onLoadPasswordPlanFailed(Throwable throwable) {
+        hiddenLoading();
+        ToastUtil.getInstance().showLong(R.string.synv_failed);
+
+    }
+
+    @Override
+    public void onLoadPasswordPlanComplete(Map<Integer, GatewayPasswordPlanBean> passwordPlanBeans) {
+        List<GatewayPasswordPlanBean> gatewayPasswordPlanBeans = parsePassword(passwordPlanBeans);
+        LogUtils.e("获取全部密码   2 " + Arrays.toString(gatewayPasswordPlanBeans.toArray()));
+        daoManager.insertAfterDelete(deviceId, MyApplication.getInstance().getUid(), gatewayId, gatewayPasswordPlanBeans);
+        mList.clear();
+        mList.addAll(gatewayPasswordPlanBeans);
+        if (mList.size() > 0) {
+            passwordPageChange(true);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                mList.sort(Comparator.naturalOrder());
             }
-
-        }
-        if (gatewayLockPasswordAdapter!=null){
             gatewayLockPasswordAdapter.notifyDataSetChanged();
-        }
-        if (mList.size()==0){
+        } else {
             passwordPageChange(false);
         }
+        hiddenLoading();
+    }
 
 
+    @Override
+    public void setUserTypeFailed(Throwable typeFailed) {
+
+    }
+
+    @Override
+    public void setPlanSuccess(String passwordValue, GatewayPasswordPlanBean gatewayPasswordPlanBean) {
+
+    }
+
+    @Override
+    public void setPlanFailed(Throwable throwable) {
+
+    }
+
+    @Override
+    public void deletePasswordSuccess() {
+
+    }
+
+    @Override
+    public void deletePasswordFailed(Throwable throwable) {
+
+    }
+
+    public List<GatewayPasswordPlanBean> parsePassword(Map<Integer, GatewayPasswordPlanBean> passwordPlanBeans) {
+        List<GatewayPasswordPlanBean> passwords = new ArrayList<>();
+        for (Integer number : passwordPlanBeans.keySet()) {
+            passwords.add(passwordPlanBeans.get(number));
+        }
+        return passwords;
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == KeyConstants.DELETE_PWD_REQUEST_CODE) {
-            if (resultCode == Activity.RESULT_OK) {
-                String lockNumber = data.getStringExtra(KeyConstants.LOCK_PWD_NUMBER);
-                if (lockNumber != null) {
-                    for (int i = 0; i < mList.size(); i++) {
-                        if (lockNumber.equals(mList.get(i))) {
-                            mList.remove(i);
-                            if (mList.size() == 0) {
-                                gatewayLockPasswordAdapter.notifyDataSetChanged();
-                                passwordPageChange(false);
-                            } else {
-                                gatewayLockPasswordAdapter.notifyDataSetChanged();
-                            }
-                        }
-                    }
-                }
-            }
-        }
     }
 
+    @Override
+    public void isSyncPlan() {
+        showLoading(getString(R.string.is_sync_password_plan));
+    }
 }

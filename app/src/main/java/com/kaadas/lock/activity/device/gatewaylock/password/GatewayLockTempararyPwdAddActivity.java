@@ -1,6 +1,5 @@
-package com.kaadas.lock.activity.device.gatewaylock.password.old;
+package com.kaadas.lock.activity.device.gatewaylock.password;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,24 +12,24 @@ import android.widget.TextView;
 
 import com.kaadas.lock.R;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
-import com.kaadas.lock.mvp.presenter.gatewaylockpresenter.GatewayLockPasswordForeverPresenter;
-import com.kaadas.lock.mvp.view.gatewaylockview.GatewayLockPasswrodView;
+import com.kaadas.lock.mvp.presenter.gatewaylockpresenter.GatewayLockPasswordTempPresenter;
+import com.kaadas.lock.mvp.view.gatewaylockview.IGatewayLockPasswordTempView;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.NetUtil;
 import com.kaadas.lock.utils.StringUtil;
 import com.kaadas.lock.utils.ToastUtil;
+import com.kaadas.lock.utils.greenDao.bean.GatewayPasswordPlanBean;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import butterknife.Unbinder;
 
-public class GatewayLockTempararyPwdAddActivity extends BaseActivity<GatewayLockPasswrodView, GatewayLockPasswordForeverPresenter<GatewayLockPasswrodView>> implements GatewayLockPasswrodView {
+public class GatewayLockTempararyPwdAddActivity extends BaseActivity<IGatewayLockPasswordTempView,
+        GatewayLockPasswordTempPresenter<IGatewayLockPasswordTempView>> implements IGatewayLockPasswordTempView {
 
     View mView;
     @BindView(R.id.pwd_manager_icon)
@@ -41,15 +40,10 @@ public class GatewayLockTempararyPwdAddActivity extends BaseActivity<GatewayLock
     TextView btnRandomGeneration;
     @BindView(R.id.btn_confirm_generation)
     Button btnConfirmGeneration;
-    Unbinder unbinder;
     @BindView(R.id.back)
     ImageView back;
-    private List<String> pwdList;
-
-    private List<String> addPwdIdList = new ArrayList<>();
     private String gatewayId;
     private String deviceId;
-    private AlertDialog takeEffect;
     private Context context;
 
     @Override
@@ -59,40 +53,19 @@ public class GatewayLockTempararyPwdAddActivity extends BaseActivity<GatewayLock
         ButterKnife.bind(this);
         context = this;
         getData();
-        initData();
     }
 
     private void getData() {
         Intent intent = getIntent();
-        pwdList = (List<String>) intent.getSerializableExtra(KeyConstants.LOCK_PWD_LIST);
         gatewayId = intent.getStringExtra(KeyConstants.GATEWAY_ID);
         deviceId = intent.getStringExtra(KeyConstants.DEVICE_ID);
     }
 
-    private void initData() {
-        if (addPwdIdList != null) {
-            addPwdIdList.add("05");
-            addPwdIdList.add("06");
-            addPwdIdList.add("07");
-            addPwdIdList.add("08");
-        }
 
-        if (pwdList != null) {
-            for (int i = 0; i < pwdList.size(); i++) {
-                //是否存在05-08的值，存在的话要删除list中的数据,因为里面的编号不可以在添加
-                String pwdNum = pwdList.get(i);
-                for (int j = 0; j < addPwdIdList.size(); j++) {
-                    if (pwdNum.equals(addPwdIdList.get(j))) {
-                        addPwdIdList.remove(j);
-                    }
-                }
-            }
-        }
-    }
 
     @Override
-    protected GatewayLockPasswordForeverPresenter<GatewayLockPasswrodView> createPresent() {
-        return new GatewayLockPasswordForeverPresenter<>();
+    protected GatewayLockPasswordTempPresenter<IGatewayLockPasswordTempView> createPresent() {
+        return new GatewayLockPasswordTempPresenter<>();
     }
 
 
@@ -134,87 +107,110 @@ public class GatewayLockTempararyPwdAddActivity extends BaseActivity<GatewayLock
                     });
                     return;
                 }
-                addLockPwd(strForeverPassword);
+                mPresenter.setTempPassword(gatewayId, deviceId, strForeverPassword);
+                showLoading(getString(R.string.take_effect_be_being));
                 break;
         }
     }
 
-    private void addLockPwd(String strForeverPassword) {
-        if (addPwdIdList != null && addPwdIdList.size() > 0) {
-            for (int p = 0; p < addPwdIdList.size(); p++) {
-                LogUtils.e("添加密码的编号   " + addPwdIdList.get(p));
-                mPresenter.addLockPwd(gatewayId, deviceId, addPwdIdList.get(p), strForeverPassword);
-                takeEffect = AlertDialogUtil.getInstance().noButtonDialog(context, getString(R.string.take_effect_be_being));
-                takeEffect.setCancelable(false);
-                break;
-            }
-        } else {
-            AlertDialogUtil.getInstance().singleButtonNoTitleDialog(context, getString(R.string.tempory_pwd_is_full), getString(R.string.hao_de), "#1F96F7", new AlertDialogUtil.ClickListener() {
-                @Override
-                public void left() {
 
-                }
+    @Override
+    public void getLockInfoSuccess(int maxPwd) {
 
-                @Override
-                public void right() {
-
-                }
-            });
-        }
     }
 
     @Override
-    public void addLockPwdSuccess(String pwdId, String pwdValue) {
-        //密码添加成功
-        addPwdIdList.remove(0);
-        if (takeEffect != null) {
-            takeEffect.dismiss();
-        }
+    public void getLockInfoFail() {
+        onFailed();
+    }
+
+    @Override
+    public void getLockInfoThrowable(Throwable throwable) {
+        onFailed();
+    }
+
+    @Override
+    public void syncPasswordComplete(Map<Integer, GatewayPasswordPlanBean> passwordPlanBeans) {
+
+    }
+
+    @Override
+    public void onLoadPasswordPlan(Map<Integer, GatewayPasswordPlanBean> passwordPlanBeans) {
+
+    }
+
+    @Override
+    public void onLoadPasswordPlanFailed(Throwable throwable) {
+
+    }
+
+    @Override
+    public void onLoadPasswordPlanComplete(Map<Integer, GatewayPasswordPlanBean> passwordPlanBeans) {
+
+    }
+
+    @Override
+    public void syncPasswordFailed(Throwable throwable) {
+        onFailed();
+    }
+
+    @Override
+    public void addLockPwdFail(Throwable throwable) {
+        onFailed();
+    }
+
+    @Override
+    public void addLockPwdSuccess(GatewayPasswordPlanBean gatewayPasswordPlanBean, String pwdValue) {
+        hiddenLoading();
+        ToastUtil.getInstance().showLong(getString(R.string.set_success));
+
         //跳转到分享页面
-        Intent intent = new Intent(context, GatewayLockPasswordShareActivity.class);
+        Intent intent = new Intent(this, GatewayLockPasswordShareActivity.class);
         intent.putExtra(KeyConstants.GATEWAY_ID, gatewayId);
         intent.putExtra(KeyConstants.DEVICE_ID, deviceId);
         //1表示永久密码，2表示临时密码
-        intent.putExtra(KeyConstants.PWD_TYPE, 2);
         intent.putExtra(KeyConstants.PWD_VALUE, pwdValue);
-        intent.putExtra(KeyConstants.PWD_ID, pwdId);
-        LogUtils.e(pwdId + "pwdId------" + pwdValue + "pwdValue");
+        intent.putExtra(KeyConstants.PWD_ID, gatewayPasswordPlanBean.getPasswordNumber());
+        intent.putExtra(KeyConstants.GATEWAY_PASSWORD_BEAN, gatewayPasswordPlanBean);
         startActivity(intent);
     }
 
     @Override
-    public void addLockPwdFail(int status) {
-        //密码添加失败
-        LogUtils.e("添加密码失败");
-        if (takeEffect != null) {
-            takeEffect.dismiss();
-        }
-        String content = "";
-        if (status == 2 || status == 3) {
-            content = getString(R.string.password_number_exit_please_sync);
-        } else {
-            content = getString(R.string.add_lock_pwd_fail);
-        }
-        AlertDialogUtil.getInstance().singleButtonNoTitleDialog(this, content, getString(R.string.confirm), "#1F96F7", new AlertDialogUtil.ClickListener() {
-            @Override
-            public void left() {
+    public void setUserTypeSuccess(String passwordValue, GatewayPasswordPlanBean gatewayPasswordPlanBean) {
 
-            }
+    }
 
-            @Override
-            public void right() {
 
-            }
-        });
+
+    @Override
+    public void setUserTypeFailed(Throwable typeFailed) {
+
     }
 
     @Override
-    public void addLockPwdThrowable(Throwable throwable) {
+    public void setPlanSuccess(String passwordValue, GatewayPasswordPlanBean gatewayPasswordPlanBean) {
+
+    }
+
+    @Override
+    public void setPlanFailed(Throwable throwable) {
+
+    }
+
+    @Override
+    public void deletePasswordSuccess() {
+
+    }
+
+    @Override
+    public void deletePasswordFailed(Throwable throwable) {
+
+    }
+
+    private void onFailed(){
+        hiddenLoading();
         //密码添加异常
         LogUtils.e("添加密码异常    ");
-        if (takeEffect != null) {
-            takeEffect.dismiss();
-        }
         if (context != null) {
             AlertDialogUtil.getInstance().singleButtonNoTitleDialog(context, getString(R.string.add_lock_pwd_fail), getString(R.string.confirm), "#1F96F7", new AlertDialogUtil.ClickListener() {
                 @Override
@@ -230,5 +226,19 @@ public class GatewayLockTempararyPwdAddActivity extends BaseActivity<GatewayLock
         }
     }
 
+    @Override
+    public void gatewayPasswordFull() {
+        hiddenLoading();
+        AlertDialogUtil.getInstance().noEditSingleButtonDialog(this, getString(R.string.hint), getString(R.string.password_full_and_delete_exist_code), getString(R.string.hao_de), new AlertDialogUtil.ClickListener() {
+            @Override
+            public void left() {
 
+            }
+
+            @Override
+            public void right() {
+
+            }
+        });
+    }
 }

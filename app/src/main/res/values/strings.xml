@@ -1244,4 +1244,7 @@
     <string name="vana_add">指静脉添加</string>
     <string name="vana_delete">指静脉删除</string>
     <string name="recover_factory">恢复出厂设置</string>
+    <string name="is_setting_password">正在添加密码.......</string>
+    <string name="is_sync_password_plan">正在同步密码计划...</string>
+    <string name="synv_failed">同步失败</string>
 </resources>

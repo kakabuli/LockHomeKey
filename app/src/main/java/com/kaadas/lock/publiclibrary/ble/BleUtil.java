@@ -474,7 +474,7 @@ public class BleUtil {
         String openType = "";
         switch (eventCode) {
             case 0:
-                openType = MyApplication.getInstance().getString(R.string.retain) ;
+                openType = MyApplication.getInstance().getString(R.string.retain);
                 break;
             case 1:
                 openType = MyApplication.getInstance().getString(R.string.modify_manager_password);
@@ -636,5 +636,18 @@ public class BleUtil {
         return openType;
     }
 
+    private static int[] temp2 = new int[]{0b00000001, 0b00000010, 0b00000100, 0b00001000, 0b00010000, 0b00100000, 0b01000000, 0b10000000};
+
+    public static String getStringByMask(int mask, String[] weeks) {
+        String content = "";
+        for (int i = 0; i < 7; i++) {
+            //倒着取
+            if ((temp2[i] & mask) == temp2[i]) {
+                content += " " + weeks[i];
+            }
+        }
+        return content;
+
+    }
 
 }

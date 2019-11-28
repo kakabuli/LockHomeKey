@@ -35,6 +35,13 @@ public class GatewayLockServiceInfoDao extends AbstractDao<GatewayLockServiceInf
         public final static Property Time = new Property(8, String.class, "time", false, "TIME");
         public final static Property GatewayId = new Property(9, String.class, "gatewayId", false, "GATEWAY_ID");
         public final static Property Uid = new Property(10, String.class, "uid", false, "UID");
+        public final static Property DelectTime = new Property(11, String.class, "delectTime", false, "DELECT_TIME");
+        public final static Property Lockversion = new Property(12, String.class, "lockversion", false, "LOCKVERSION");
+        public final static Property Moduletype = new Property(13, String.class, "moduletype", false, "MODULETYPE");
+        public final static Property Nwaddr = new Property(14, int.class, "nwaddr", false, "NWADDR");
+        public final static Property OfflineTime = new Property(15, String.class, "offlineTime", false, "OFFLINE_TIME");
+        public final static Property OnlineTime = new Property(16, String.class, "onlineTime", false, "ONLINE_TIME");
+        public final static Property ShareFlag = new Property(17, int.class, "shareFlag", false, "SHARE_FLAG");
     }
 
 
@@ -60,7 +67,14 @@ public class GatewayLockServiceInfoDao extends AbstractDao<GatewayLockServiceInf
                 "\"NICK_NAME\" TEXT," + // 7: nickName
                 "\"TIME\" TEXT," + // 8: time
                 "\"GATEWAY_ID\" TEXT," + // 9: gatewayId
-                "\"UID\" TEXT);"); // 10: uid
+                "\"UID\" TEXT," + // 10: uid
+                "\"DELECT_TIME\" TEXT," + // 11: delectTime
+                "\"LOCKVERSION\" TEXT," + // 12: lockversion
+                "\"MODULETYPE\" TEXT," + // 13: moduletype
+                "\"NWADDR\" INTEGER NOT NULL ," + // 14: nwaddr
+                "\"OFFLINE_TIME\" TEXT," + // 15: offlineTime
+                "\"ONLINE_TIME\" TEXT," + // 16: onlineTime
+                "\"SHARE_FLAG\" INTEGER NOT NULL );"); // 17: shareFlag
     }
 
     /** Drops the underlying database table. */
@@ -127,6 +141,33 @@ public class GatewayLockServiceInfoDao extends AbstractDao<GatewayLockServiceInf
         if (uid != null) {
             stmt.bindString(11, uid);
         }
+ 
+        String delectTime = entity.getDelectTime();
+        if (delectTime != null) {
+            stmt.bindString(12, delectTime);
+        }
+ 
+        String lockversion = entity.getLockversion();
+        if (lockversion != null) {
+            stmt.bindString(13, lockversion);
+        }
+ 
+        String moduletype = entity.getModuletype();
+        if (moduletype != null) {
+            stmt.bindString(14, moduletype);
+        }
+        stmt.bindLong(15, entity.getNwaddr());
+ 
+        String offlineTime = entity.getOfflineTime();
+        if (offlineTime != null) {
+            stmt.bindString(16, offlineTime);
+        }
+ 
+        String onlineTime = entity.getOnlineTime();
+        if (onlineTime != null) {
+            stmt.bindString(17, onlineTime);
+        }
+        stmt.bindLong(18, entity.getShareFlag());
     }
 
     @Override
@@ -187,6 +228,33 @@ public class GatewayLockServiceInfoDao extends AbstractDao<GatewayLockServiceInf
         if (uid != null) {
             stmt.bindString(11, uid);
         }
+ 
+        String delectTime = entity.getDelectTime();
+        if (delectTime != null) {
+            stmt.bindString(12, delectTime);
+        }
+ 
+        String lockversion = entity.getLockversion();
+        if (lockversion != null) {
+            stmt.bindString(13, lockversion);
+        }
+ 
+        String moduletype = entity.getModuletype();
+        if (moduletype != null) {
+            stmt.bindString(14, moduletype);
+        }
+        stmt.bindLong(15, entity.getNwaddr());
+ 
+        String offlineTime = entity.getOfflineTime();
+        if (offlineTime != null) {
+            stmt.bindString(16, offlineTime);
+        }
+ 
+        String onlineTime = entity.getOnlineTime();
+        if (onlineTime != null) {
+            stmt.bindString(17, onlineTime);
+        }
+        stmt.bindLong(18, entity.getShareFlag());
     }
 
     @Override
@@ -207,7 +275,14 @@ public class GatewayLockServiceInfoDao extends AbstractDao<GatewayLockServiceInf
             cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7), // nickName
             cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8), // time
             cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9), // gatewayId
-            cursor.isNull(offset + 10) ? null : cursor.getString(offset + 10) // uid
+            cursor.isNull(offset + 10) ? null : cursor.getString(offset + 10), // uid
+            cursor.isNull(offset + 11) ? null : cursor.getString(offset + 11), // delectTime
+            cursor.isNull(offset + 12) ? null : cursor.getString(offset + 12), // lockversion
+            cursor.isNull(offset + 13) ? null : cursor.getString(offset + 13), // moduletype
+            cursor.getInt(offset + 14), // nwaddr
+            cursor.isNull(offset + 15) ? null : cursor.getString(offset + 15), // offlineTime
+            cursor.isNull(offset + 16) ? null : cursor.getString(offset + 16), // onlineTime
+            cursor.getInt(offset + 17) // shareFlag
         );
         return entity;
     }
@@ -225,6 +300,13 @@ public class GatewayLockServiceInfoDao extends AbstractDao<GatewayLockServiceInf
         entity.setTime(cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8));
         entity.setGatewayId(cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9));
         entity.setUid(cursor.isNull(offset + 10) ? null : cursor.getString(offset + 10));
+        entity.setDelectTime(cursor.isNull(offset + 11) ? null : cursor.getString(offset + 11));
+        entity.setLockversion(cursor.isNull(offset + 12) ? null : cursor.getString(offset + 12));
+        entity.setModuletype(cursor.isNull(offset + 13) ? null : cursor.getString(offset + 13));
+        entity.setNwaddr(cursor.getInt(offset + 14));
+        entity.setOfflineTime(cursor.isNull(offset + 15) ? null : cursor.getString(offset + 15));
+        entity.setOnlineTime(cursor.isNull(offset + 16) ? null : cursor.getString(offset + 16));
+        entity.setShareFlag(cursor.getInt(offset + 17));
      }
     
     @Override

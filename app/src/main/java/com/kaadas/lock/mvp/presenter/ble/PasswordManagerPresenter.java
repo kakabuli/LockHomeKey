@@ -557,7 +557,7 @@ public class PasswordManagerPresenter<T> extends BlePresenter<IPasswordManagerVi
         }
         int id = bleNumber.get(position);
 
-        if (id > 4) {
+        if (id > 4 && id <10 ) {
             position++;
             searchUserType();
             return;

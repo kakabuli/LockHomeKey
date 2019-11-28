@@ -1,9 +1,8 @@
 package com.kaadas.lock.utils.greenDao.bean;
 
 import org.greenrobot.greendao.annotation.Entity;
-import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Generated;
-import org.greenrobot.greendao.annotation.Index;
+import org.greenrobot.greendao.annotation.Id;
 
 @Entity
 public class GatewayLockServiceInfo {
@@ -30,10 +29,33 @@ public class GatewayLockServiceInfo {
     private String time;
     private String gatewayId;
     private String uid;
+    /**
+     * delectTime : 2019-11-28 14:29:33.961
+     * lockversion : 8100Z;00;V1.02.040;V0.00.000
+     * moduletype : KSZG1703U
+     * nwaddr : 34049
+     * offlineTime : 2019-11-28 17:29:13.809
+     * onlineTime : 2019-11-28 17:29:24.923
+     * shareFlag : 0
+     */
+
+    private String delectTime;
+    private String lockversion;
+    private String moduletype;
+    private int nwaddr;
+    private String offlineTime;
+    private String onlineTime;
+    private int shareFlag;
 
 
-    @Generated(hash = 2128289398)
-    public GatewayLockServiceInfo(String deviceIdUid, String deviceId, String SW, String device_type, String event_str, String ipaddr, String macaddr, String nickName, String time, String gatewayId, String uid) {
+
+
+
+
+    @Generated(hash = 1994000690)
+    public GatewayLockServiceInfo(String deviceIdUid, String deviceId, String SW, String device_type, String event_str, String ipaddr,
+                                  String macaddr, String nickName, String time, String gatewayId, String uid,
+            String delectTime, String lockversion, String moduletype, int nwaddr, String offlineTime, String onlineTime, int shareFlag) {
         this.deviceIdUid = deviceIdUid;
         this.deviceId = deviceId;
         this.SW = SW;
@@ -45,13 +67,23 @@ public class GatewayLockServiceInfo {
         this.time = time;
         this.gatewayId = gatewayId;
         this.uid = uid;
+        this.delectTime = delectTime;
+        this.lockversion = lockversion;
+        this.moduletype = moduletype;
+        this.nwaddr = nwaddr;
+        this.offlineTime = offlineTime;
+        this.onlineTime = onlineTime;
+        this.shareFlag = shareFlag;
     }
+
 
 
     @Generated(hash = 1056849880)
     public GatewayLockServiceInfo() {
     }
 
+
+    
     public String getDeviceIdUid() {
         return deviceIdUid;
     }
@@ -141,5 +173,59 @@ public class GatewayLockServiceInfo {
     }
 
 
+    public String getDelectTime() {
+        return delectTime;
+    }
 
+    public void setDelectTime(String delectTime) {
+        this.delectTime = delectTime;
+    }
+
+    public String getLockversion() {
+        return lockversion;
+    }
+
+    public void setLockversion(String lockversion) {
+        this.lockversion = lockversion;
+    }
+
+    public String getModuletype() {
+        return moduletype;
+    }
+
+    public void setModuletype(String moduletype) {
+        this.moduletype = moduletype;
+    }
+
+    public int getNwaddr() {
+        return nwaddr;
+    }
+
+    public void setNwaddr(int nwaddr) {
+        this.nwaddr = nwaddr;
+    }
+
+    public String getOfflineTime() {
+        return offlineTime;
+    }
+
+    public void setOfflineTime(String offlineTime) {
+        this.offlineTime = offlineTime;
+    }
+
+    public String getOnlineTime() {
+        return onlineTime;
+    }
+
+    public void setOnlineTime(String onlineTime) {
+        this.onlineTime = onlineTime;
+    }
+
+    public int getShareFlag() {
+        return shareFlag;
+    }
+
+    public void setShareFlag(int shareFlag) {
+        this.shareFlag = shareFlag;
+    }
 }

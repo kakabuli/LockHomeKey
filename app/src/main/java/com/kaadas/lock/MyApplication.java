@@ -136,7 +136,7 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
         //配置数据库
         setUpWriteDataBase();
         // HuaWei phone
-        if(Rom.isEmui()){
+        if (Rom.isEmui()) {
             HMSAgent.init(this);
         }
         PushManager.getInstance().initialize(this, userPushService);
@@ -149,7 +149,7 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
 //            tLogView.append(DemoApplication.payloadData);
 //        }
 
-     }
+    }
 
     private void regToWx() {
         // 通过WXAPIFactory工厂，获取IWXAPI的实例
@@ -299,7 +299,6 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
     }
 
 
-
     public MqttService getMqttService() {
         return mqttService;
     }
@@ -360,7 +359,7 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
             SPUtils.put(SPUtils.PHONEN, phone);
         }
         //清除内存中缓存的数据
-        if (bleService!=null){
+        if (bleService != null) {
             LogUtils.e("token过期   断开连接  ");
             bleService.release();  //token过期   断开连接
             bleService.removeBleLockInfo();
@@ -518,19 +517,18 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
                         String payload = mqttData.getPayload();
                         allBindDevices = new Gson().fromJson(payload, AllBindDevices.class);
 
-                        List<AllBindDevices.ReturnDataBean.GwListBean> gwList=  allBindDevices.getData().getGwList();
-                        if(gwList!=null){
-                            int allgwSize=gwList.size();
-                            for (int j=0;j<allgwSize;j++){
-                                SPUtils.put(Constants.RELAYTYPE+gwList.get(j).getDeviceSN(),gwList.get(j).getRelayType());
-                                //       SPUtils.put(Constants.RELAYTYPE+gwList.get(j).getDeviceSN(),0);
+                        List<AllBindDevices.ReturnDataBean.GwListBean> gwList = allBindDevices.getData().getGwList();
+                        if (gwList != null) {
+                            int allgwSize = gwList.size();
+                            for (int j = 0; j < allgwSize; j++) {
+                                SPUtils.put(Constants.RELAYTYPE + gwList.get(j).getDeviceSN(), gwList.get(j).getRelayType());
                             }
                         }
-                        if (!"200".equals(allBindDevices.getCode())){  ///服务器获取设备列表失败
-                            LogUtils.e("   获取列表失败  "  +allBindDevices.getCode());
+                        if (!"200".equals(allBindDevices.getCode())) {  ///服务器获取设备列表失败
+                            LogUtils.e("   获取列表失败  " + allBindDevices.getCode());
                             return;
                         }
-                        SPUtils.put(Constants.ALL_DEVICES_DATA,payload);
+                        SPUtils.put(Constants.ALL_DEVICES_DATA, payload);
 
                         long serverCurrentTime = Long.parseLong(allBindDevices.getTimestamp());
                         SPUtils.put(KeyConstants.SERVER_CURRENT_TIME, serverCurrentTime);
@@ -587,7 +585,7 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
 
     //根据网关id查找出网关
     public GatewayInfo getGatewayById(String gatewayId) {
-        if(homeShowDevices!=null && homeShowDevices.size()>0){
+        if (homeShowDevices != null && homeShowDevices.size() > 0) {
             for (HomeShowBean homeShowBean : homeShowDevices) {
                 if (gatewayId.equals(homeShowBean.getDeviceId())) {
                     return (GatewayInfo) homeShowBean.getObject();
@@ -631,7 +629,7 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
     //所有网关
     public List<GatewayInfo> getAllGateway() {
         List<GatewayInfo> gatewayList = new ArrayList<>();
-        if (homeShowDevices == null){
+        if (homeShowDevices == null) {
             return gatewayList;
         }
         for (HomeShowBean homeShowBean : homeShowDevices) {
@@ -800,7 +798,7 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
         this.currentGwId = currentGwId;
     }
 
-    boolean isFromWel=false;
+    boolean isFromWel = false;
 
     public boolean isFromWel() {
         return isFromWel;
@@ -834,8 +832,8 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
     public void reStartApp() {
         Intent intent = getBaseContext().getPackageManager().getLaunchIntentForPackage(getBaseContext().getPackageName());
         PendingIntent restartIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, PendingIntent.FLAG_ONE_SHOT);
-        AlarmManager mgr = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
-        mgr.set(AlarmManager.RTC, System.currentTimeMillis() , restartIntent); // 1秒钟后重启应用
+        AlarmManager mgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        mgr.set(AlarmManager.RTC, System.currentTimeMillis(), restartIntent); // 1秒钟后重启应用
         System.exit(0);
     }
 
@@ -877,29 +875,29 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
      * @param devNum     模块：1主模块 2算法模块 3相机模块（空：默认1）
      * @return
      */
-    public void uploadOtaResult(String sn, String version,  String resultCode, int devNum){
+    public void uploadOtaResult(String sn, String version, String resultCode, int devNum) {
         XiaokaiNewServiceImp.uploadOtaResult(sn, version, 1, resultCode, devNum)
-            .subscribe(new BaseObserver<BaseResult>() {
-                @Override
-                public void onSuccess(BaseResult baseResult) {
-                    LogUtils.e("上传OTA结果成功    "+baseResult.toString());
-            }
+                .subscribe(new BaseObserver<BaseResult>() {
+                    @Override
+                    public void onSuccess(BaseResult baseResult) {
+                        LogUtils.e("上传OTA结果成功    " + baseResult.toString());
+                    }
 
-                @Override
-                public void onAckErrorCode(BaseResult baseResult) {
-                    LogUtils.e("上传OTA结果失败    "+baseResult.toString());
-                }
+                    @Override
+                    public void onAckErrorCode(BaseResult baseResult) {
+                        LogUtils.e("上传OTA结果失败    " + baseResult.toString());
+                    }
 
-                @Override
-                public void onFailed(Throwable throwable) {
-                    LogUtils.e("上传OTA结果失败    "+throwable.getMessage());
-                }
+                    @Override
+                    public void onFailed(Throwable throwable) {
+                        LogUtils.e("上传OTA结果失败    " + throwable.getMessage());
+                    }
 
-                @Override
-                public void onSubscribe1(Disposable d) {
+                    @Override
+                    public void onSubscribe1(Disposable d) {
 
-                }
-            })
+                    }
+                })
 
         ;
 

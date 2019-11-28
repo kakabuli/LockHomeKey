@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -13,9 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.kaadas.lock.R;
-import com.kaadas.lock.activity.device.gatewaylock.password.old.GatewayLockPasswordShareActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
-import com.kaadas.lock.mvp.presenter.gatewaylockpresenter.GatewayLockPasswordForeverPresenter;
 import com.kaadas.lock.mvp.presenter.gatewaylockpresenter.GatewayLockStressAddPresenter;
 import com.kaadas.lock.mvp.view.gatewaylockview.IGatewayLockStressAddView;
 import com.kaadas.lock.utils.AlertDialogUtil;

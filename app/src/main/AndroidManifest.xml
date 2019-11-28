@@ -477,31 +477,19 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.device.gatewaylock.password.old.GatewayLockDeletePasswordActivity"
+            android:name=".activity.device.gatewaylock.password.GatewayLockDeletePasswordActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.device.gatewaylock.password.old.GatewayLockPasswordAddActivity"
+            android:name=".activity.device.gatewaylock.password.GatewayLockPasswordShareActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.device.gatewaylock.password.old.GatewayLockPasswordShareActivity"
+            android:name=".activity.device.gatewaylock.password.GatewayLockTempararyPwdAddActivity"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activity.device.gatewaylock.password.old.GatewayLockTempararyPwdAddActivity"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activity.device.gatewaylock.password.GatewayPasswordManagerDetailActivity"
-            android:launchMode="singleTop"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.device.gatewaylock.password.GatewayPasswordAddActivity"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activity.device.gatewaylock.password.GatewayPasswordShareActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
         <activity

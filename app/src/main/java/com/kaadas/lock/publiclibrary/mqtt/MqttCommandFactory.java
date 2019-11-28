@@ -253,7 +253,8 @@ public class MqttCommandFactory {
         paramsBean.setType(type);
         paramsBean.setPwdid(pwdId);
         paramsBean.setPwdvalue(pwdValue);
-        LockPwdFuncBean lockPwdFuncBean = new LockPwdFuncBean(MqttConstant.MSG_TYPE_REQUEST, MyApplication.getInstance().getUid(), messageId, gatewayId, deviceId, MqttConstant.SET_PWD, paramsBean, "0", new LockPwdFuncBean.ReturnDataBean(), System.currentTimeMillis() + "");
+        LockPwdFuncBean lockPwdFuncBean = new LockPwdFuncBean(MqttConstant.MSG_TYPE_REQUEST, MyApplication.getInstance().getUid(),
+                messageId, gatewayId, deviceId, MqttConstant.SET_PWD, paramsBean, "0", new LockPwdFuncBean.ReturnDataBean(), System.currentTimeMillis() + "");
         return getMessage(lockPwdFuncBean, messageId);
     }
 
@@ -267,7 +268,10 @@ public class MqttCommandFactory {
 
     public static MqttMessage getLockPwdInfo(String gatewayId, String deviceId) {
         int messageId = getMessageId();
-        LockPwdInfoBean lockPwdInfoBean = new LockPwdInfoBean(MqttConstant.MSG_TYPE_REQUEST, MyApplication.getInstance().getUid(), messageId, gatewayId, deviceId, MqttConstant.LOCK_PWD_INFO, new LockPwdInfoBean.ParamsBean(), "0", new LockPwdInfoBean.ReturnDataBean(), System.currentTimeMillis() + "");
+        LockPwdInfoBean lockPwdInfoBean = new LockPwdInfoBean(MqttConstant.MSG_TYPE_REQUEST,
+                MyApplication.getInstance().getUid(), messageId, gatewayId, deviceId,
+                MqttConstant.LOCK_PWD_INFO, new LockPwdInfoBean.ParamsBean(), "0",
+                new LockPwdInfoBean.ReturnDataBean(), System.currentTimeMillis() + "");
         return getMessage(lockPwdInfoBean, messageId);
     }
 
@@ -829,7 +833,8 @@ public class MqttCommandFactory {
     public static MqttMessage setUserType(String deviceId, String gwId, String userId, int pwdId, int pwdType) {
         int messageId = getMessageId();
         SetUserTypeBean.ParamsBean paramsBean = new SetUserTypeBean.ParamsBean(pwdId, pwdType);
-        SetUserTypeBean setUserTypeBean = new SetUserTypeBean(deviceId, MqttConstant.SET_USER_TYPE, gwId, messageId, MqttConstant.MSG_TYPE_REQUEST, paramsBean, 0, new SetUserTypeBean.ReturnDataBean(), "" + System.currentTimeMillis(), userId);
+        SetUserTypeBean setUserTypeBean = new SetUserTypeBean(deviceId, MqttConstant.SET_USER_TYPE, gwId, messageId,
+                MqttConstant.MSG_TYPE_REQUEST, paramsBean, 0, new SetUserTypeBean.ReturnDataBean(), "" + System.currentTimeMillis(), userId);
         return getMessage(setUserTypeBean, messageId);
     }
 
@@ -853,7 +858,7 @@ public class MqttCommandFactory {
      * @return
      */
     public static MqttMessage setPasswordPlan(String deviceId, String gwId, String userId,
-                                              String action, int scheduleId, String type, int pwdId, int zLocalEndT, int zLocalStartT,
+                                              String action, int scheduleId, String type, int pwdId, long zLocalEndT, long zLocalStartT,
                                               int dayMaskBits, int endHour, int endMinute, int startHour, int startMinute) {
         int messageId = getMessageId();
         SetPasswordPlanBean.ParamsBean paramsBean = new SetPasswordPlanBean.ParamsBean(action, dayMaskBits, endHour, endMinute, scheduleId,
@@ -901,7 +906,6 @@ public class MqttCommandFactory {
 
     public static MqttMessage getMessage(Object o, int messageID) {
         String payload = new Gson().toJson(o);
-        LogUtils.e(payload + "ota升级地址");
         MqttMessage mqttMessage = new MqttMessage();
         mqttMessage.setQos(2);
         mqttMessage.setRetained(false);
@@ -914,7 +918,6 @@ public class MqttCommandFactory {
         GsonBuilder gb = new GsonBuilder();
         gb.disableHtmlEscaping();
         String payload = gb.create().toJson(o);
-        LogUtils.e(payload + "ota升级地址");
         MqttMessage mqttMessage = new MqttMessage();
         mqttMessage.setQos(2);
         mqttMessage.setRetained(false);

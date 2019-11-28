@@ -432,7 +432,7 @@ public class   KeyConstants {
     public static final String GET_CAT_EYE_INFO_BASE="GET_CAT_EYE_INFO_BASE";
 
     //获取第一次进入锁密码
-    public static final String FIRST_IN_GATEWAY_LOCK="firstInGatewayLock";
+    public static final String FIRST_IN_GATEWAY_LOCK="firstInGatewayLock2";
 
     public static final String BAR_CODE="BAR_CODE";
     //来源
@@ -446,6 +446,9 @@ public class   KeyConstants {
 
     public static final String GATEWAY_NIGHT_SIGHT="GATEWAY_NIGHT_SIGHT";
 
+    public static final String GATEWAY_PASSWORD_BEAN = "gatewayPasswordBean";
+
+    public static final String GATEWAY_PASSWORD_BOUND = "gatewayPasswordBound";
 
     public static final int  TAG_NUMBER = 2001;
     public static final int  TAG_OTA_TYPE = 2002;

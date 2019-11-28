@@ -6,17 +6,17 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.flyco.tablayout.SlidingTabLayout;
 import com.kaadas.lock.R;
-import com.kaadas.lock.fragment.GatewayPasswordPeriodFragment;
+import com.kaadas.lock.fragment.GatewayPasswordWeekFragment;
 import com.kaadas.lock.fragment.GatewayPasswordTemporaryFragment;
-import com.kaadas.lock.fragment.GatewayPasswordTimeFragment;
+import com.kaadas.lock.fragment.GatewayPasswordYearFragment;
 import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
+import com.kaadas.lock.utils.KeyConstants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +40,8 @@ public class GatewayPasswordAddActivity extends BaseAddToApplicationActivity imp
     TextView tvContent;
     private ListFragmentPagerAdapter mPagerAdapter;
     private List<Fragment> mFragments = new ArrayList<Fragment>();
-
+    public String gatewayId;
+    public String deviceId;
 
     private String[] tabs;
 
@@ -48,8 +49,10 @@ public class GatewayPasswordAddActivity extends BaseAddToApplicationActivity imp
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gateway_password_add);
-
         ButterKnife.bind(this);
+
+        gatewayId = getIntent().getStringExtra(KeyConstants.GATEWAY_ID);
+        deviceId = getIntent().getStringExtra(KeyConstants.DEVICE_ID);
         ivBack.setOnClickListener(this);
         tvContent.setText(getString(R.string.pwd_header_add_tv));
         tabs = getResources().getStringArray(R.array.home_top);
@@ -67,8 +70,8 @@ public class GatewayPasswordAddActivity extends BaseAddToApplicationActivity imp
         //添加Fragment
         // 这里可以从Activity中传递数据到Fragment中
         viewPager.setOffscreenPageLimit(3);
-        mFragments.add(new GatewayPasswordTimeFragment());
-        mFragments.add(new GatewayPasswordPeriodFragment());
+        mFragments.add(new GatewayPasswordYearFragment());
+        mFragments.add(new GatewayPasswordWeekFragment());
         mFragments.add(new GatewayPasswordTemporaryFragment());
 
         //适配器

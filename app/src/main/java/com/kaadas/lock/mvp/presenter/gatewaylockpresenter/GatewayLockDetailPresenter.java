@@ -92,7 +92,7 @@ public class GatewayLockDetailPresenter<T> extends BasePresenter<GatewayLockDeta
                     .filter(new Predicate<MqttData>() {
                 @Override
                 public boolean test(MqttData mqttData) throws Exception {
-                    LogUtils.e(mqttData.getPayload()+"收到消息");
+
                     if (mqttData.getFunc().equals(MqttConstant.GW_EVENT)){
                         return  true;
                     }
@@ -103,6 +103,7 @@ public class GatewayLockDetailPresenter<T> extends BasePresenter<GatewayLockDeta
             .subscribe(new Consumer<MqttData>() {
                 @Override
                 public void accept(MqttData mqttData) throws Exception {
+                    LogUtils.e(mqttData.getPayload()+"收到上报消息  ");
                     OpenLockNotifyBean openLockNotifyBean=new Gson().fromJson(mqttData.getPayload(),OpenLockNotifyBean.class);
                     int deviceCode=openLockNotifyBean.getEventparams().getDevecode();
                    LogUtils.e(mqttData.getPayload()+"收到处理");
@@ -238,6 +239,7 @@ public class GatewayLockDetailPresenter<T> extends BasePresenter<GatewayLockDeta
                     }, new Consumer<Throwable>() {
                         @Override
                         public void accept(Throwable throwable) throws Exception {
+
                         }
                     });
             compositeDisposable.add(listenerDeviceOnLineDisposable);
@@ -394,11 +396,5 @@ public class GatewayLockDetailPresenter<T> extends BasePresenter<GatewayLockDeta
             compositeDisposable.add(deleteShareDisposable);
         }
     }
-
-
-
-
-
-
 
 }

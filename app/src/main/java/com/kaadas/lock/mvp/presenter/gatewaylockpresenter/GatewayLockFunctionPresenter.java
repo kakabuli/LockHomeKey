@@ -113,7 +113,8 @@ public class GatewayLockFunctionPresenter<T> extends BasePresenter<GatewayLockFu
     public void getLockPwdInfo(String gatewayId,String deviceId){
         toDisposable(getLockPwdInfoDisposable);
         if (mqttService!=null){
-            getLockPwdInfoDisposable=mqttService.mqttPublish(MqttConstant.getCallTopic(MyApplication.getInstance().getUid()),MqttCommandFactory.getLockPwdInfo(gatewayId,deviceId))
+            getLockPwdInfoDisposable=mqttService.mqttPublish(MqttConstant.getCallTopic(MyApplication.getInstance().getUid()),
+                    MqttCommandFactory.getLockPwdInfo(gatewayId,deviceId))
                                         .filter(new Predicate<MqttData>() {
                                             @Override
                                             public boolean test(MqttData mqttData) throws Exception {
@@ -184,8 +185,8 @@ public class GatewayLockFunctionPresenter<T> extends BasePresenter<GatewayLockFu
                                if("info".equals(eventtype)) {
                                     GatewayLockInfoEventBean gatewayLockInfoEventBean = new Gson().fromJson(mqttData.getPayload(), GatewayLockInfoEventBean.class);
                                     String gatewayId = gatewayLockInfoEventBean.getGwId();
-                                    String deviceId = gatewayLockInfoEventBean.getDeviceId();
-                                    String uid = MyApplication.getInstance().getUid();
+                                   String deviceId = gatewayLockInfoEventBean.getDeviceId();
+                                   String uid = MyApplication.getInstance().getUid();
                                     String eventParmDeveType = gatewayLockInfoEventBean.getEventparams().getDevetype();
                                     int num = gatewayLockInfoEventBean.getEventparams().getUserID();
                                     int devecode = gatewayLockInfoEventBean.getEventparams().getDevecode();
@@ -213,7 +214,6 @@ public class GatewayLockFunctionPresenter<T> extends BasePresenter<GatewayLockFu
                                                 mViewRef.get().useSingleUse("0"+num);
                                             }
                                         }
-
                                     }
                                 }
                             }

@@ -12,15 +12,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.kaadas.lock.R;
-import com.kaadas.lock.activity.device.gatewaylock.password.old.GatewayLockDeletePasswordActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
-import com.kaadas.lock.mvp.presenter.gatewaylockpresenter.GatewayLockDeletePasswordPresenter;
 import com.kaadas.lock.mvp.presenter.gatewaylockpresenter.GatewayLockDeleteStressPasswordPresenter;
-import com.kaadas.lock.mvp.view.gatewaylockview.GatewayLockDeletePasswordView;
 import com.kaadas.lock.mvp.view.gatewaylockview.IGatewayLockDeleteStressPasswordView;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.KeyConstants;
-import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.ToastUtil;
 
 import butterknife.BindView;

@@ -20,6 +20,7 @@ import com.kaadas.lock.utils.greenDao.bean.GatewayLockBaseInfo;
 import com.kaadas.lock.utils.greenDao.bean.GatewayLockPwd;
 import com.kaadas.lock.utils.greenDao.bean.GatewayLockRecord;
 import com.kaadas.lock.utils.greenDao.bean.GatewayLockServiceInfo;
+import com.kaadas.lock.utils.greenDao.bean.GatewayPasswordPlanBean;
 import com.kaadas.lock.utils.greenDao.bean.GatewayServiceInfo;
 import com.kaadas.lock.utils.greenDao.bean.HistoryInfo;
 import com.kaadas.lock.utils.greenDao.bean.PirDefault;
@@ -36,6 +37,7 @@ import com.kaadas.lock.utils.greenDao.db.GatewayLockBaseInfoDao;
 import com.kaadas.lock.utils.greenDao.db.GatewayLockPwdDao;
 import com.kaadas.lock.utils.greenDao.db.GatewayLockRecordDao;
 import com.kaadas.lock.utils.greenDao.db.GatewayLockServiceInfoDao;
+import com.kaadas.lock.utils.greenDao.db.GatewayPasswordPlanBeanDao;
 import com.kaadas.lock.utils.greenDao.db.GatewayServiceInfoDao;
 import com.kaadas.lock.utils.greenDao.db.HistoryInfoDao;
 import com.kaadas.lock.utils.greenDao.db.PirDefaultDao;
@@ -61,6 +63,7 @@ public class DaoSession extends AbstractDaoSession {
     private final DaoConfig gatewayLockPwdDaoConfig;
     private final DaoConfig gatewayLockRecordDaoConfig;
     private final DaoConfig gatewayLockServiceInfoDaoConfig;
+    private final DaoConfig gatewayPasswordPlanBeanDaoConfig;
     private final DaoConfig gatewayServiceInfoDaoConfig;
     private final DaoConfig historyInfoDaoConfig;
     private final DaoConfig pirDefaultDaoConfig;
@@ -77,6 +80,7 @@ public class DaoSession extends AbstractDaoSession {
     private final GatewayLockPwdDao gatewayLockPwdDao;
     private final GatewayLockRecordDao gatewayLockRecordDao;
     private final GatewayLockServiceInfoDao gatewayLockServiceInfoDao;
+    private final GatewayPasswordPlanBeanDao gatewayPasswordPlanBeanDao;
     private final GatewayServiceInfoDao gatewayServiceInfoDao;
     private final HistoryInfoDao historyInfoDao;
     private final PirDefaultDao pirDefaultDao;
@@ -121,6 +125,9 @@ public class DaoSession extends AbstractDaoSession {
         gatewayLockServiceInfoDaoConfig = daoConfigMap.get(GatewayLockServiceInfoDao.class).clone();
         gatewayLockServiceInfoDaoConfig.initIdentityScope(type);
 
+        gatewayPasswordPlanBeanDaoConfig = daoConfigMap.get(GatewayPasswordPlanBeanDao.class).clone();
+        gatewayPasswordPlanBeanDaoConfig.initIdentityScope(type);
+
         gatewayServiceInfoDaoConfig = daoConfigMap.get(GatewayServiceInfoDao.class).clone();
         gatewayServiceInfoDaoConfig.initIdentityScope(type);
 
@@ -142,6 +149,7 @@ public class DaoSession extends AbstractDaoSession {
         gatewayLockPwdDao = new GatewayLockPwdDao(gatewayLockPwdDaoConfig, this);
         gatewayLockRecordDao = new GatewayLockRecordDao(gatewayLockRecordDaoConfig, this);
         gatewayLockServiceInfoDao = new GatewayLockServiceInfoDao(gatewayLockServiceInfoDaoConfig, this);
+        gatewayPasswordPlanBeanDao = new GatewayPasswordPlanBeanDao(gatewayPasswordPlanBeanDaoConfig, this);
         gatewayServiceInfoDao = new GatewayServiceInfoDao(gatewayServiceInfoDaoConfig, this);
         historyInfoDao = new HistoryInfoDao(historyInfoDaoConfig, this);
         pirDefaultDao = new PirDefaultDao(pirDefaultDaoConfig, this);
@@ -158,6 +166,7 @@ public class DaoSession extends AbstractDaoSession {
         registerDao(GatewayLockPwd.class, gatewayLockPwdDao);
         registerDao(GatewayLockRecord.class, gatewayLockRecordDao);
         registerDao(GatewayLockServiceInfo.class, gatewayLockServiceInfoDao);
+        registerDao(GatewayPasswordPlanBean.class, gatewayPasswordPlanBeanDao);
         registerDao(GatewayServiceInfo.class, gatewayServiceInfoDao);
         registerDao(HistoryInfo.class, historyInfoDao);
         registerDao(PirDefault.class, pirDefaultDao);
@@ -176,6 +185,7 @@ public class DaoSession extends AbstractDaoSession {
         gatewayLockPwdDaoConfig.clearIdentityScope();
         gatewayLockRecordDaoConfig.clearIdentityScope();
         gatewayLockServiceInfoDaoConfig.clearIdentityScope();
+        gatewayPasswordPlanBeanDaoConfig.clearIdentityScope();
         gatewayServiceInfoDaoConfig.clearIdentityScope();
         historyInfoDaoConfig.clearIdentityScope();
         pirDefaultDaoConfig.clearIdentityScope();
@@ -227,6 +237,10 @@ public class DaoSession extends AbstractDaoSession {
 
     public GatewayLockServiceInfoDao getGatewayLockServiceInfoDao() {
         return gatewayLockServiceInfoDao;
+    }
+
+    public GatewayPasswordPlanBeanDao getGatewayPasswordPlanBeanDao() {
+        return gatewayPasswordPlanBeanDao;
     }
 
     public GatewayServiceInfoDao getGatewayServiceInfoDao() {

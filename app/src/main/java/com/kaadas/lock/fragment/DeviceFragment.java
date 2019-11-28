@@ -216,7 +216,11 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                             //插入数据库
                             ServerGwDevice gwLock = gwLockInfo.getServerInfo();
                             String deviceId = gwLock.getDeviceId();
-                            GatewayLockServiceInfo gatewayLockServiceInfo = new GatewayLockServiceInfo(deviceId + uid, gwLock.getDeviceId(), gwLock.getSW(), gwLock.getDevice_type(), gwLock.getEvent_str(), gwLock.getIpaddr(), gwLock.getMacaddr(), gwLock.getNickName(), gwLock.getTime(), gwLockInfo.getGwID(), uid);
+                            GatewayLockServiceInfo gatewayLockServiceInfo = new GatewayLockServiceInfo(deviceId + uid, gwLock.getDeviceId(),
+                                    gwLock.getSW(), gwLock.getDevice_type(), gwLock.getEvent_str(), gwLock.getIpaddr(), gwLock.getMacaddr(),
+                                gwLock.getNickName(), gwLock.getTime(), gwLockInfo.getGwID(), uid,
+                                gwLock.getDelectTime(), gwLock.getLockversion(), gwLock.getModuletype(),gwLock.getNwaddr(), gwLock.getOfflineTime(),
+                                gwLock.getOnlineTime(),   gwLock.getShareFlag());
                             daoSession.insertOrReplace(gatewayLockServiceInfo);
                             mDeviceList.add(homeShowBean);
                             break;
@@ -246,7 +250,11 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                             //插入数据库
                             ServerGwDevice gwDevice = cateEyeInfo.getServerInfo();
                             String catDeviceId = gwDevice.getDeviceId();
-                            CatEyeServiceInfo catEyeServiceInfo = new CatEyeServiceInfo(catDeviceId + uid, gwDevice.getDeviceId(), gwDevice.getSW(), gwDevice.getDevice_type(), gwDevice.getEvent_str(), gwDevice.getIpaddr(), gwDevice.getMacaddr(), gwDevice.getNickName(), gwDevice.getTime(), cateEyeInfo.getGwID(), uid);
+                            CatEyeServiceInfo catEyeServiceInfo = new CatEyeServiceInfo(catDeviceId + uid, gwDevice.getDeviceId(),
+                                    gwDevice.getSW(), gwDevice.getDevice_type(), gwDevice.getEvent_str(), gwDevice.getIpaddr(), gwDevice.getMacaddr(),
+                                    gwDevice.getNickName(), gwDevice.getTime(), cateEyeInfo.getGwID(), uid,
+                                    gwDevice.getDelectTime(), gwDevice.getLockversion(), gwDevice.getModuletype(),gwDevice.getNwaddr(), gwDevice.getOfflineTime(),
+                                    gwDevice.getOnlineTime(),   gwDevice.getShareFlag());
                             daoSession.insertOrReplace(catEyeServiceInfo);
                             mDeviceList.add(homeShowBean);
                             break;
@@ -257,9 +265,12 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                             ServerGatewayInfo serverGatewayInfo = gatewayInfo.getServerInfo();
                             String deviceSn = serverGatewayInfo.getDeviceSN();
                             //插入数据库
-                            GatewayServiceInfo gatewayServiceInfo = new GatewayServiceInfo(deviceSn + uid, serverGatewayInfo.getDeviceSN(), serverGatewayInfo.getDeviceNickName(), serverGatewayInfo.getAdminuid(), serverGatewayInfo.getAdminName(), serverGatewayInfo.getAdminNickname()
+                            GatewayServiceInfo gatewayServiceInfo =
+                                    new GatewayServiceInfo(
+                                            deviceSn + uid, serverGatewayInfo.getDeviceSN(), serverGatewayInfo.getDeviceNickName(), serverGatewayInfo.getAdminuid(), serverGatewayInfo.getAdminName(), serverGatewayInfo.getAdminNickname()
                                     , serverGatewayInfo.getIsAdmin(), serverGatewayInfo.getMeUsername(),
-                                    serverGatewayInfo.getMePwd(), serverGatewayInfo.getMeBindState(), uid,serverGatewayInfo.getModel());
+                                    serverGatewayInfo.getMePwd(), serverGatewayInfo.getMeBindState(), uid,
+                                            serverGatewayInfo.getModel());
                             daoSession.getGatewayServiceInfoDao().insertOrReplace(gatewayServiceInfo);
                             //咪咪网未绑定
                             if (gatewayInfo.getServerInfo().getMeBindState() != 1  && gatewayServiceInfo.getModel()!=null &&
@@ -277,6 +288,7 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                                         SPUtils.put(gwid,me);
                                     }
                                 }catch (Exception e){
+                                    LogUtils.e(e.getMessage());
                                 }
 
                             }
