@@ -71,13 +71,13 @@ public class BleLockUtils {
         FUNCTION_SET.put(0x31, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 10, 13, 16, 17, 19, 20, 21, 22});
         FUNCTION_SET.put(0x32, new Integer[]{1, 2, 3, 4, 5, 7, 8, 9, 10, 13, 16, 17, 19, 20, 21, 22});
         FUNCTION_SET.put(0x33, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 13, 16, 17, 19, 20, 21, 22});
-        FUNCTION_SET.put(0x34, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10,   13, 16, 17, 19, 20, 21, 22});
-        FUNCTION_SET.put(0x35, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 10,   13, 16, 17, 19, 20, 21, 22, 23});
-        FUNCTION_SET.put(0x36, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 10,   13, 16, 17, 19, 20, 21, 22, 23});
+        FUNCTION_SET.put(0x34, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 13, 16, 17, 19, 20, 21, 22});
+        FUNCTION_SET.put(0x35, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 10, 13, 16, 17, 19, 20, 21, 22, 23});
+        FUNCTION_SET.put(0x36, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 10, 13, 16, 17, 19, 20, 21, 22, 23});
 
-        FUNCTION_SET.put(0x37, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10,   13, 16, 17, 19, 20, 21, 22, 23});
-        FUNCTION_SET.put(0x38, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 10,   13, 16, 17, 19, 20, 21, 22, 23, 24});
-        FUNCTION_SET.put(0x39, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10,   13, 16, 17, 19, 20, 21, 22, 23, 24});
+        FUNCTION_SET.put(0x37, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 13, 16, 17, 19, 20, 21, 22, 23});
+        FUNCTION_SET.put(0x38, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 10, 13, 16, 17, 19, 20, 21, 22, 23, 24});
+        FUNCTION_SET.put(0x39, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 13, 16, 17, 19, 20, 21, 22, 23, 24});
 
         FUNCTION_SET.put(0x40, new Integer[]{1, 2, 3, 4, 5, 6, 7, 9, 10, 13, 16, 17, 19, 20, 21, 22, 23});        //2019年8月29日11:11:10
 
@@ -94,6 +94,7 @@ public class BleLockUtils {
 
     /**
      * 根据功能集判断是否支持手动自动模式显示
+     *
      * @param functionSet
      * @return
      */
@@ -360,6 +361,10 @@ public class BleLockUtils {
                 return R.mipmap.bluetooth_authorization_lock_s800;
             } else if (model.startsWith("K8")) {
                 return R.mipmap.bluetooth_authorization_lock_k8;
+            } else if (model.startsWith("Q8")) {
+                return R.mipmap.bluetooth_authorization_lock_q8;
+            } else if (model.startsWith("8012")) {
+                return R.mipmap.bluetooth_authorization_lock_8012;
             } else if (model.startsWith("K9")) {
                 return R.mipmap.bluetooth_authorization_lock_k9;
             } else if (model.startsWith("KX-T")) {
@@ -394,6 +399,10 @@ public class BleLockUtils {
                 return R.mipmap.bluetooth_authorization_lock_s300;
             } else if (model.startsWith("5011")) {
                 return R.mipmap.bluetooth_authorization_lock_5011;
+            } else if (model.startsWith("5200-A5PJ")) {
+                return R.mipmap.bluetooth_authorization_lock_5200_a5pj;
+            } else if (model.startsWith("5200-A6")) {
+                return R.mipmap.bluetooth_authorization_lock_5200_a6;
             } else {
                 return R.mipmap.bluetooth_authorization_lock_default;
             }
@@ -419,6 +428,10 @@ public class BleLockUtils {
                 return R.mipmap.s800;
             } else if (model.startsWith("K8")) {
                 return R.mipmap.k8;
+            } else if (model.startsWith("Q8")) {
+                return R.mipmap.q8;
+            } else if (model.startsWith("8012")) {
+                return R.mipmap.small_8012;
             } else if (model.startsWith("K9")) {
                 return R.mipmap.k9;
             } else if (model.startsWith("KX-T")) {
@@ -453,6 +466,10 @@ public class BleLockUtils {
                 return R.mipmap.s300;
             } else if (model.startsWith("5011")) {
                 return R.mipmap.small_5011;
+            } else if (model.startsWith("5200-A5PJ")) {
+                return R.mipmap.small_5200_a5pj;
+            } else if (model.startsWith("5200-A6")) {
+                return R.mipmap.small_5200_a6;
             } else {
                 return R.mipmap.default_zigbee_lock_icon;
             }
@@ -478,6 +495,10 @@ public class BleLockUtils {
                 return R.mipmap.bluetooth_lock_s800;
             } else if (model.startsWith("K8")) {
                 return R.mipmap.bluetooth_lock_k8;
+            } else if (model.startsWith("Q8")) {
+                return R.mipmap.bluetooth_lock_q8;
+            } else if (model.startsWith("8012")) {
+                return R.mipmap.bluetooth_lock_8012;
             } else if (model.startsWith("K9")) {
                 return R.mipmap.bluetooth_lock_k9;
             } else if (model.startsWith("KX-T")) {
@@ -512,6 +533,10 @@ public class BleLockUtils {
                 return R.mipmap.bluetooth_lock_s300;
             } else if (model.startsWith("5011")) {
                 return R.mipmap.bluetooth_lock_5011;
+            } else if (model.startsWith("5200-A5PJ")) {
+                return R.mipmap.bluetooth_lock_5200_a5pj;
+            } else if (model.startsWith("5200-A6")) {
+                return R.mipmap.bluetooth_lock_5200_a6;
             } else {
                 return R.mipmap.bluetooth_lock_default;
             }
