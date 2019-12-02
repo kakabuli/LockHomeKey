@@ -107,7 +107,7 @@ public class GatewayLockTempararyPwdAddActivity extends BaseActivity<IGatewayLoc
                     });
                     return;
                 }
-                mPresenter.setTempPassword(gatewayId, deviceId, strForeverPassword);
+                mPresenter.setTempPassword(deviceId, gatewayId, strForeverPassword);
                 showLoading(getString(R.string.take_effect_be_being));
                 break;
         }

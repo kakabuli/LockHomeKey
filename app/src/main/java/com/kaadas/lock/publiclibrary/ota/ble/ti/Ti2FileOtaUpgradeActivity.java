@@ -41,6 +41,7 @@ import com.liulishuo.filedownloader.FileDownloadListener;
 import com.liulishuo.filedownloader.FileDownloader;
 
 import java.io.File;
+import java.lang.reflect.Method;
 import java.util.List;
 import java.util.UUID;
 
@@ -197,6 +198,10 @@ public class Ti2FileOtaUpgradeActivity extends OtaBaseActivity implements View.O
             super.onCharacteristicRead(gatt, characteristic, status);
             handler.removeCallbacks(bleTimeOutRunnable);
             byte[] value = characteristic.getValue();
+            if (value == null) {
+                otaFailed("读取特征值为空    SystemID");
+                return;
+            }
             Log.e(TAG, "读取特征值   " + Rsa.bytesToHexString(value));
             byte[] systemId16 = new byte[16];
             System.arraycopy(value, 0, systemId16, 0, value.length);
@@ -219,6 +224,7 @@ public class Ti2FileOtaUpgradeActivity extends OtaBaseActivity implements View.O
                 Log.e(TAG, "断开连接   ");
                 //完全断开连接
                 handler.removeCallbacks(bleTimeOutRunnable); //连接失败   取消连接超时
+                refreshBleCatch(gatt);
                 if (bluetoothGatt != null) {
                     bluetoothGatt.disconnect();
                     bluetoothGatt.close();
@@ -263,12 +269,15 @@ public class Ti2FileOtaUpgradeActivity extends OtaBaseActivity implements View.O
             }
 
             otaService = gatt.getService(UUID.fromString(OAD_SERVICE));
+
             if (otaService != null) {  //OTA升级模式下的设备
+                LogUtils.e("OTA模式下");
                 isHand = true;
                 LogUtils.e("线程是   " + Thread.currentThread().getName());
                 startUpdata(gatt.getDevice(), filePath);
                 return;
             }
+            LogUtils.e("普通模式下");
 
 
             BluetoothGattService resetService = gatt.getService(UUID.fromString(OAD_RESET_SERVICE));
@@ -346,7 +355,7 @@ public class Ti2FileOtaUpgradeActivity extends OtaBaseActivity implements View.O
 
     private void otasuccess() {
         isUpdating = false;
-        MyApplication.getInstance().uploadOtaResult(sn,version,"0",1);
+        MyApplication.getInstance().uploadOtaResult(sn, version, "0", 1);
         AlertDialogUtil.getInstance().noEditSingleButtonDialog(this, getString(R.string.good_for_you), getString(R.string.ota_good_for_you), getString(R.string.hao_de), new AlertDialogUtil.ClickListener() {
             @Override
             public void left() {
@@ -361,12 +370,12 @@ public class Ti2FileOtaUpgradeActivity extends OtaBaseActivity implements View.O
     }
 
     private void otaFailed(String tag) {
-        if (isFinishing()){
+        if (isFinishing()) {
             return;
         }
-        MyApplication.getInstance().uploadOtaResult(sn,version,tag,1);
+        MyApplication.getInstance().uploadOtaResult(sn, version, tag, 1);
         isUpdating = false;
-        AlertDialogUtil.getInstance().noEditTwoButtonDialog(this, getString(R.string.ota_fail), getString(R.string.ota_fail_reply),
+        AlertDialogUtil.getInstance().noEditTwoButtonDialogCanNotDismiss(this, getString(R.string.ota_fail), getString(R.string.ota_fail_reply),
                 getString(R.string.cancel), getString(R.string.query), new AlertDialogUtil.ClickListener() {
                     @Override
                     public void left() {
@@ -382,7 +391,6 @@ public class Ti2FileOtaUpgradeActivity extends OtaBaseActivity implements View.O
                     }
                 });
     }
-
 
 
     public boolean sendOtaCommand() {
@@ -503,16 +511,27 @@ public class Ti2FileOtaUpgradeActivity extends OtaBaseActivity implements View.O
 
             @Override
             public void oadStatusUpdate(TIOADEoadDefinitions.oadStatusEnumeration status) {
-                handler.removeCallbacks(timeoutRunnable);
-                handler.postDelayed(timeoutRunnable, 10 * 1000);
-                final TIOADEoadDefinitions.oadStatusEnumeration finalStatus = status;
-                LogUtils.e("OTA升级  状态改变   " + TIOADEoadDefinitions.oadStatusEnumerationGetDescriptiveString(finalStatus));
-                currentStatus = TIOADEoadDefinitions.oadStatusEnumerationGetDescriptiveString(status);
-                if (finalStatus == TIOADEoadDefinitions.oadStatusEnumeration.tiOADClientReady) {
+                LogUtils.e("OTA升级  状态改变   " + TIOADEoadDefinitions.oadStatusEnumerationGetDescriptiveString(status));
+                if (TIOADEoadDefinitions.oadStatusEnumeration.tiOADClientDeviceMTUSet != status
+                        ) {
+                    handler.removeCallbacks(timeoutRunnable);
+                    handler.postDelayed(timeoutRunnable, 20 * 1000);
+                    currentStatus = TIOADEoadDefinitions.oadStatusEnumerationGetDescriptiveString(status);
+                }
+                if (TIOADEoadDefinitions.oadStatusEnumeration.tiOADClientCompleteDeviceDisconnectedPositive == status) {
+//                    if (isUpdating){
+//                        if (client != null) {
+//                            client.release();
+//                            client.abortProgramming();
+//                        }
+//                        startUpdata(device, path);
+//                    }
+                }
+                if (status == TIOADEoadDefinitions.oadStatusEnumeration.tiOADClientReady) {
                     //设备已经准备好    //在此处查看设备
                     LogUtils.e("文件准备好了  ");
                     client.start(path);
-                } else if (finalStatus == TIOADEoadDefinitions.oadStatusEnumeration.tiOADClientFileIsNotForDevice) {
+                } else if (status == TIOADEoadDefinitions.oadStatusEnumeration.tiOADClientFileIsNotForDevice) {
                     handler.removeCallbacks(timeoutRunnable);
                     //升级镜像与设备部匹配
                     runOnUiThread(new Runnable() {
@@ -528,7 +547,7 @@ public class Ti2FileOtaUpgradeActivity extends OtaBaseActivity implements View.O
                             });
                         }
                     });
-                } else if (finalStatus == TIOADEoadDefinitions.oadStatusEnumeration.tiOADClientCompleteFeedbackOK) {
+                } else if (status == TIOADEoadDefinitions.oadStatusEnumeration.tiOADClientCompleteFeedbackOK) {
                     handler.removeCallbacks(timeoutRunnable);
                     if (client.getFilePath().equalsIgnoreCase(filePath2)) {
                         if (client != null) {
@@ -554,7 +573,7 @@ public class Ti2FileOtaUpgradeActivity extends OtaBaseActivity implements View.O
 //                            client.start(filePath2);
                         }
                     }
-                } else if (finalStatus == TIOADEoadDefinitions.oadStatusEnumeration.tiOADClientCompleteDeviceDisconnectedDuringProgramming) {
+                } else if (status == TIOADEoadDefinitions.oadStatusEnumeration.tiOADClientCompleteDeviceDisconnectedDuringProgramming) {
                     handler.removeCallbacks(timeoutRunnable);
                     runOnUiThread(new Runnable() {
                         @Override
@@ -574,8 +593,6 @@ public class Ti2FileOtaUpgradeActivity extends OtaBaseActivity implements View.O
     }
 
 
-
-
     Runnable timeoutRunnable = new Runnable() {
         @Override
         public void run() {
@@ -586,7 +603,7 @@ public class Ti2FileOtaUpgradeActivity extends OtaBaseActivity implements View.O
     Runnable scanDeviceRunnable = new Runnable() {
         @Override
         public void run() {
-            if (bluetoothLeScanner!=null){
+            if (bluetoothLeScanner != null) {
                 bluetoothLeScanner.stopScan(newScanBleCallback);
             }
             ToastUtil.getInstance().showLong(R.string.please_near_lock);
@@ -597,7 +614,7 @@ public class Ti2FileOtaUpgradeActivity extends OtaBaseActivity implements View.O
     Runnable bleTimeOutRunnable = new Runnable() {
         @Override
         public void run() {
-            if (bluetoothGatt!=null){
+            if (bluetoothGatt != null) {
                 bluetoothGatt.disconnect();
                 bluetoothGatt.close();
                 isHand = true;
@@ -617,10 +634,6 @@ public class Ti2FileOtaUpgradeActivity extends OtaBaseActivity implements View.O
             client.abortProgramming();
         }
     }
-
-
-
-
 
 
     @Override
@@ -664,7 +677,7 @@ public class Ti2FileOtaUpgradeActivity extends OtaBaseActivity implements View.O
     @Override
     public void onDownProgressUpdate(String url, String path, int progress) {
         if (url.equalsIgnoreCase(binDownUrl)) {
-            mCircleProgress2.setValue(progress* 25);
+            mCircleProgress2.setValue(progress * 25);
             downFile(binDownUrl2, filePath2);
         } else if (url.equalsIgnoreCase(binDownUrl2)) {
             mCircleProgress2.setValue(25 + (progress * 25));
@@ -672,10 +685,19 @@ public class Ti2FileOtaUpgradeActivity extends OtaBaseActivity implements View.O
         }
     }
 
-
-
-
-
-
+    public boolean refreshBleCatch(BluetoothGatt gatt) {
+        if (gatt == null){
+            return false;
+        }
+        try {
+            Method localMethod = gatt.getClass().getMethod("refresh");
+            if (localMethod != null) {
+                return (Boolean) localMethod.invoke(gatt);
+            }
+        } catch (Exception localException) {
+            Log.e("refreshServices()", "An exception occured while refreshing device");
+        }
+        return false;
+    }
 
 }

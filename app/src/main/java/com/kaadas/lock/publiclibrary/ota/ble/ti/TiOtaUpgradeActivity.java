@@ -40,6 +40,7 @@ import com.liulishuo.filedownloader.FileDownloadListener;
 import com.liulishuo.filedownloader.FileDownloader;
 
 import java.io.File;
+import java.lang.reflect.Method;
 import java.util.List;
 import java.util.UUID;
 
@@ -195,6 +196,10 @@ public class TiOtaUpgradeActivity extends BaseAddToApplicationActivity implement
             handler.removeCallbacks(bleTimeOutRunnable);
             byte[] value = characteristic.getValue();
             Log.e(TAG, "读取特征值   " + Rsa.bytesToHexString(value));
+            if (value == null){
+                otaFailed("读取特征值为空    SystemID");
+                return;
+            }
             byte[] systemId16 = new byte[16];
             System.arraycopy(value, 0, systemId16, 0, value.length);
             getPwd3(systemId16);
@@ -206,6 +211,9 @@ public class TiOtaUpgradeActivity extends BaseAddToApplicationActivity implement
             if (newState == BluetoothGatt.STATE_CONNECTED) { //连接成功  此时还不算连接成功，等到发现服务且读取到所有特征值之后才算连接成功
                 Log.e(TAG, "连接成功");
                 gatt.discoverServices();  //连接成功  发现服务
+                //所有特征值  置空
+                systemIDChar = null;
+
                 handler.removeCallbacks(bleTimeOutRunnable);
                 currentStatus = "发现服务";
                 handler.postDelayed(bleTimeOutRunnable, 10 * 1000);
@@ -260,11 +268,14 @@ public class TiOtaUpgradeActivity extends BaseAddToApplicationActivity implement
             }
 
             otaService = gatt.getService(UUID.fromString(OAD_SERVICE));
+            LogUtils.e("OTA模式下");
             if (otaService != null) {  //OTA升级模式下的设备
                 isHand = true;
                 startUpdata(gatt.getDevice());
                 return;
             }
+            LogUtils.e("普通模式下");
+
 
 
             BluetoothGattService resetService = gatt.getService(UUID.fromString(OAD_RESET_SERVICE));
@@ -657,5 +668,21 @@ public class TiOtaUpgradeActivity extends BaseAddToApplicationActivity implement
             client.release();
             client.abortProgramming();
         }
+    }
+
+
+    public boolean refreshBleCatch(BluetoothGatt gatt) {
+        if (gatt == null){
+            return false;
+        }
+        try {
+            Method localMethod = gatt.getClass().getMethod("refresh");
+            if (localMethod != null) {
+                return (Boolean) localMethod.invoke(gatt);
+            }
+        } catch (Exception localException) {
+            Log.e("refreshServices()", "An exception occured while refreshing device");
+        }
+        return false;
     }
 }
