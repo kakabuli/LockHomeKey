@@ -194,7 +194,7 @@ public class GatewayPasswordManagerActivity extends BaseActivity<IGatewayLockPas
                 LogUtils.e("获取到 版本信息是   " + lockversion);
                 if (!TextUtils.isEmpty(lockversion)) {
                     String lockModel = lockversion.split(";")[0];
-                    if (!TextUtils.isEmpty(lockModel) && lockModel.startsWith("8100")) {
+                    if (!TextUtils.isEmpty(lockModel) &&( lockModel.equalsIgnoreCase("8100Z") ||  lockModel.equalsIgnoreCase("8100A"))) {
                         intent = new Intent(this, GatewayPasswordAddActivity.class);
                         intent.putExtra(KeyConstants.GATEWAY_ID, gatewayId);
                         intent.putExtra(KeyConstants.DEVICE_ID, deviceId);
