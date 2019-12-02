@@ -513,7 +513,7 @@ public class Ti2FileOtaUpgradeActivity extends OtaBaseActivity implements View.O
             public void oadStatusUpdate(TIOADEoadDefinitions.oadStatusEnumeration status) {
                 LogUtils.e("OTA升级  状态改变   " + TIOADEoadDefinitions.oadStatusEnumerationGetDescriptiveString(status));
                 if (TIOADEoadDefinitions.oadStatusEnumeration.tiOADClientDeviceMTUSet != status
-                        ) {
+                       && isUpdating  ) {  //升级成功   不设置超时
                     handler.removeCallbacks(timeoutRunnable);
                     handler.postDelayed(timeoutRunnable, 20 * 1000);
                     currentStatus = TIOADEoadDefinitions.oadStatusEnumerationGetDescriptiveString(status);
