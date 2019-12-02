@@ -870,12 +870,15 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
     /**
      * @param sn
      * @param version    新版本的版本号
-     * @param customer   客户：1凯迪仕 2小凯 3桔子物联 4飞利浦
+     * param customer   客户：1凯迪仕 2小凯 3桔子物联 4飞利浦
      * @param resultCode 结果：0升级成功 1升级失败 （可自定义其他错误码）
      * @param devNum     模块：1主模块 2算法模块 3相机模块（空：默认1）
      * @return
      */
     public void uploadOtaResult(String sn, String version, String resultCode, int devNum) {
+        if (!TextUtils.isEmpty(resultCode) && resultCode.length() >200){
+            resultCode = resultCode.substring(0,200);
+        }
         XiaokaiNewServiceImp.uploadOtaResult(sn, version, 1, resultCode, devNum)
                 .subscribe(new BaseObserver<BaseResult>() {
                     @Override
