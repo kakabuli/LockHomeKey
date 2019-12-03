@@ -5,6 +5,7 @@ import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Path;
 import android.graphics.RectF;
 import android.net.Uri;
@@ -12,6 +13,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -24,6 +27,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.addDevice.DeviceAddHelpActivity;
@@ -72,6 +76,7 @@ public class AddBluetoothSearchActivity extends BaseActivity<ISearchDeviceView, 
     private DividerItemDecoration dividerItemDecoration;
     private List<BluetoothDevice> mDevices;
     private ObjectAnimator ivGreenObjectAnimator;
+    public static final int REQUEST_CALL_PERMISSION = 10111; //拨号请求码
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -419,7 +424,6 @@ public class AddBluetoothSearchActivity extends BaseActivity<ISearchDeviceView, 
 
     @Override
     public void notice419() {
-
         AlertDialogUtil.getInstance().noEditTwoButtonDialog(this, getString(R.string.hint),
                 getString(R.string.notice_419_call), getString(R.string.cancel), getString(R.string.confirm), new AlertDialogUtil.ClickListener() {
                     @Override
@@ -429,16 +433,13 @@ public class AddBluetoothSearchActivity extends BaseActivity<ISearchDeviceView, 
 
                     @Override
                     public void right() {
-                        Intent intent = new Intent(Intent.ACTION_CALL);
-                        Uri data = Uri.parse("tel:" + "4001166667");
-                        intent.setData(data);
-                        startActivity(intent);
+                        call("tel:"+"4001166667");
                     }
                 });
 
 
         hiddenLoading();
-        ToastUtil.getInstance().showLong(R.string.ble_not_test);
+//        ToastUtil.getInstance().showLong(R.string.ble_not_test);
     }
 
     @Override
@@ -453,17 +454,54 @@ public class AddBluetoothSearchActivity extends BaseActivity<ISearchDeviceView, 
         ToastUtil.getInstance().showLong(R.string.network_exception);
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode) {
 
-        }
-    }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         hiddenLoading();
     }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_CALL_PERMISSION: //拨打电话
+                if (permissions.length != 0 && grantResults[0] != PackageManager.PERMISSION_GRANTED) {//失败
+                    Toast.makeText(this,"请允许拨号权限后再试",Toast.LENGTH_SHORT).show();
+                } else {//成功
+                    call("tel:"+"4001166667");
+                }
+                break;
+        }
+    }
+
+    /**
+     * 拨打电话（直接拨打）
+     * @param telPhone 电话
+     */
+    public void call(String telPhone){
+        if(checkReadPermission(Manifest.permission.CALL_PHONE,REQUEST_CALL_PERMISSION)){
+            Intent intent = new Intent(Intent.ACTION_CALL,Uri.parse(telPhone));
+            startActivity(intent);
+        }
+    }
+
+    /**
+     * 判断是否有某项权限
+     * @param string_permission 权限
+     * @param request_code 请求码
+     * @return
+     */
+    public boolean checkReadPermission(String string_permission,int request_code) {
+        boolean flag = false;
+        if (ContextCompat.checkSelfPermission(this, string_permission) == PackageManager.PERMISSION_GRANTED) {//已有权限
+            flag = true;
+        } else {//申请权限
+            ActivityCompat.requestPermissions(this, new String[]{string_permission}, request_code);
+        }
+        return flag;
+    }
+
+
 }
