@@ -32,6 +32,7 @@ public class SocketOtaUtil {
     private long crc32;
     private boolean firstSendFile = false;
     private long sendTime;
+    private ServerSocket serverSocket;
 
 
     public SocketOtaUtil(IOtaListener listener) {
@@ -64,7 +65,7 @@ public class SocketOtaUtil {
         }
         try {
             int otaPort = 3456;
-            ServerSocket serverSocket = new ServerSocket(otaPort);
+            serverSocket = new ServerSocket(otaPort);
             serverSocket.setSoTimeout(15 * 1000);
             socket = serverSocket.accept();
             outputStream = socket.getOutputStream();
@@ -195,6 +196,9 @@ public class SocketOtaUtil {
             }
             if (socket != null) {
                 socket.close();
+            }
+            if (serverSocket!=null){
+                serverSocket.close();
             }
         } catch (IOException e) {
             e.printStackTrace();

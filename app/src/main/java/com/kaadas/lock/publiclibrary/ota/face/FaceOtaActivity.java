@@ -29,8 +29,6 @@ import com.kaadas.lock.utils.ToastUtil;
 import java.io.File;
 
 public class FaceOtaActivity extends BaseBleActivity<IFaceOtaView, FaceOtaPresenter<IFaceOtaView>> implements IFaceOtaView {
-
-
     private String filePath;
     private TextView otaStatus;
     private SeekBar otaProgress;
@@ -267,6 +265,14 @@ public class FaceOtaActivity extends BaseBleActivity<IFaceOtaView, FaceOtaPresen
                 });
     }
 
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (socketOtaUtil != null) {
+            socketOtaUtil.release();
+        }
+    }
 
     BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override

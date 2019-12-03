@@ -1085,17 +1085,21 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                                     int pin = gatewayLockInfoEventBean.getEventparams().getPin();
                                     if (eventParmDeveType.equals("lockprom") && devecode == 2 && pin == 255) {
 //                                         //添加单个密码
+                                        LogUtils.e("添加单个密码   ");
                                         manager.insertWhenNoExist(deviceId, MyApplication.getInstance().getUid(), gatewayId,
                                                 new GatewayPasswordPlanBean(deviceId, gatewayId, MyApplication.getInstance().getUid(), num)
                                         );
                                     } else if (eventParmDeveType.equals("lockprom") && devecode == 3 && num == 255 && pin == 255) {
 //                                         //全部删除
+                                        LogUtils.e("全部删除   ");
                                         manager.deleteAll(deviceId, MyApplication.getInstance().getUid(), gatewayId);
                                     } else if (eventParmDeveType.equals("lockprom") && devecode == 3 && pin == 255) {
 //                                         //删除单个密码
+                                        LogUtils.e("删除单个密码   ");
                                         manager.deleteByNumber(deviceId, MyApplication.getInstance().getUid(), gatewayId, num);
                                     } else if (eventParmDeveType.equals("lockop") && devecode == 2 && pin == 255) {
 //                                         //使用一次性开锁密码
+                                        LogUtils.e("使用一次性开锁密码   ");
                                         if (num > 4 && num < 9) {
                                             manager.deleteByNumber(deviceId, MyApplication.getInstance().getUid(), gatewayId, num);
                                         }

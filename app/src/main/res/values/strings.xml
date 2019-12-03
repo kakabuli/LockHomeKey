@@ -1247,4 +1247,5 @@
     <string name="is_setting_password">正在添加密码.......</string>
     <string name="is_sync_password_plan">正在同步密码计划...</string>
     <string name="synv_failed">同步失败</string>
+    <string name="notice_419_call">蓝牙SN未检索到，请拨打 400-11-66667</string>
 </resources>

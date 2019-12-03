@@ -7,6 +7,7 @@ import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.graphics.Path;
 import android.graphics.RectF;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -418,6 +419,24 @@ public class AddBluetoothSearchActivity extends BaseActivity<ISearchDeviceView, 
 
     @Override
     public void notice419() {
+
+        AlertDialogUtil.getInstance().noEditTwoButtonDialog(this, getString(R.string.hint),
+                getString(R.string.notice_419_call), getString(R.string.cancel), getString(R.string.confirm), new AlertDialogUtil.ClickListener() {
+                    @Override
+                    public void left() {
+
+                    }
+
+                    @Override
+                    public void right() {
+                        Intent intent = new Intent(Intent.ACTION_CALL);
+                        Uri data = Uri.parse("tel:" + "4001166667");
+                        intent.setData(data);
+                        startActivity(intent);
+                    }
+                });
+
+
         hiddenLoading();
         ToastUtil.getInstance().showLong(R.string.ble_not_test);
     }

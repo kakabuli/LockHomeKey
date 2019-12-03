@@ -278,6 +278,7 @@ public abstract class GatewayLockPasswordPresenter<T extends IGatewayLockPasswor
                             long zLocalEndT, long zLocalStartT, int dayMaskBits, int endHour,
                             int endMinute, int startHour, int startMinute) {
         toDisposable(setUserTypeDisposable);
+        pwdType = 1;
         setUserTypeDisposable = mqttService.mqttPublish(MqttConstant.getCallTopic(MyApplication.getInstance().getUid()),
                 MqttCommandFactory.setUserType(deviceId, gwId, MyApplication.getInstance().getUid(), pwdId, pwdType))
                 .filter(new Predicate<MqttData>() {
@@ -423,7 +424,7 @@ public abstract class GatewayLockPasswordPresenter<T extends IGatewayLockPasswor
                 .subscribe(new Consumer<MqttData>() {
                     @Override
                     public void accept(MqttData mqttData) throws Exception {
-                        toDisposable(getLockPwdDisposable);
+                        toDisposable(getPlanDisposable);
                         GatewayPasswordResultBean gatewayPasswordResultBean = new Gson().fromJson(mqttData.getPayload(), GatewayPasswordResultBean.class);
                         LogUtils.e("获取策略 返回数据  " + gatewayPasswordResultBean.toString());
                         String returnCode = gatewayPasswordResultBean.getReturnCode();
