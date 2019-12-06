@@ -93,8 +93,8 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
     private String deviceId;
     private BluetoothRecordAdapter openLockRecordAdapter;
     private HomePageFragment.ISelectChangeListener iSelectChangeListener;
-    //private boolean isOpening = false;
-    /*private boolean isClosing = false;*/
+    private boolean isOpening = false;
+     private boolean isClosing = false;
     private int statusFlag=0;
     private Handler handler = new Handler();
     @Nullable
@@ -692,8 +692,8 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
 
     @Override
     public void openLockSuccess() {
-        /*isOpening = false;*/
-        /*isClosing = true;*/
+        isOpening = false;
+        isClosing = true;
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -708,8 +708,8 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
 
     @Override
     public void openLockFailed() {
-       /* isOpening = false;*/
-       /* isClosing=false;*/
+         isOpening = false;
+         isClosing=false;
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -733,8 +733,8 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
     @Override
     public void openLockThrowable(Throwable throwable) {
         stopOpenLockAnimator();
-        /*isOpening = false;*/
-       /* isClosing=false;*/
+         isOpening = false;
+         isClosing=false;
         if (!TextUtils.isEmpty(deviceId)){
             SPUtils.remove(KeyConstants.SAVA_LOCK_PWD + deviceId);
         }
@@ -754,10 +754,10 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
 
     @Override
     public void startOpenLock() {
-        /*isOpening = true;*/
-        /*isClosing= false;*/
+      isOpening = true;
+        isClosing= false;
         openLockAnimator();
-//        changeOpenLockStatus(6);
+        changeOpenLockStatus(6);
     }
 
 
@@ -850,7 +850,7 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
     @Override
     public void lockCloseSuccess(String deviceId) {
         closeLockAnimator();
-        //isClosing = false;
+        isClosing = false;
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -870,7 +870,7 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
 
     @Override
     public void lockCloseFailed() {
-        //isClosing = false;
+        isClosing = false;
         if (deviceState != null) {
             String state=deviceState.getText().toString().trim();
             if (state.equals(getString(R.string.offline))){
@@ -909,14 +909,14 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
     @Override
     public void getLockEvent(String gwId, String devId) {
         if (gatewayLockInfo!=null&&deviceId.equals(devId)&&gwId.equals(gatewayId)) {
-            /*isOpening = false;*/
-            //isClosing = true;
-//            String nickName = gatewayLockInfo.getServerInfo().getNickName();
-//            if (!TextUtils.isEmpty(nickName)) {
-//                ToastUtil.getInstance().showShort(nickName + ":" + getString(R.string.open_lock_success));
-//            } else {
-//                ToastUtil.getInstance().showShort(devId + ":" + getString(R.string.open_lock_success));
-//            }
+             isOpening = false;
+            isClosing = true;
+            String nickName = gatewayLockInfo.getServerInfo().getNickName();
+            if (!TextUtils.isEmpty(nickName)) {
+                ToastUtil.getInstance().showShort(nickName + ":" + getString(R.string.open_lock_success));
+            } else {
+                ToastUtil.getInstance().showShort(devId + ":" + getString(R.string.open_lock_success));
+            }
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -937,7 +937,7 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
 
     @Override
     public void getPowerSuccess(String gwId, String devId) {
-       /* if (gatewayId.equals(gwId)&&deviceId.equals(devId)){
+        if (gatewayId.equals(gwId)&&deviceId.equals(devId)){
             if (statusFlag!=5){
                 gatewayLockInfo.getServerInfo().setEvent_str("online");
                 changeOpenLockStatus(5);
@@ -945,14 +945,13 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
                     deviceState.setText(getString(R.string.normal));
                 }
             }
-
-        }*/
+        }
 
     }
 
     @Override
     public void getPowerFail(String gwId,String devId) {
-        /*if (gatewayId.equals(gwId)&&deviceId.equals(devId)){
+        if (gatewayId.equals(gwId)&&deviceId.equals(devId)){
             if (statusFlag!=1){
                 gatewayLockInfo.getServerInfo().setEvent_str("offline");
                 changeOpenLockStatus(1);
@@ -961,7 +960,7 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
                 }
             }
 
-        }*/
+        }
 
 
 
@@ -976,65 +975,48 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
     public void closeLockSuccess(String devId,String gwId) {
         //关锁成功
         closeLockAnimator();
-        //isClosing = false;
-        /*if (gatewayLockInfo!=null&&deviceId.equals(devId)&&gwId.equals(gatewayId)) {
-            GwLockInfo gwLockInfo = MyApplication.getInstance().getGatewayLockById(devId);
-            if (gwLockInfo != null) {
-                String nickName = gwLockInfo.getServerInfo().getNickName();
-                if (!TextUtils.isEmpty(nickName)) {
-                    ToastUtil.getInstance().showShort(nickName + ":" + getString(R.string.close_lock_success));
-                } else {
-                    ToastUtil.getInstance().showShort(devId + ":" + getString(R.string.close_lock_success));
-                }
-            }*/
+       isClosing = false;
+         if (gatewayLockInfo!=null&&deviceId.equals(devId)&&gwId.equals(gatewayId)) {
+             GwLockInfo gwLockInfo = MyApplication.getInstance().getGatewayLockById(devId);
+             if (gwLockInfo != null) {
+                 String nickName = gwLockInfo.getServerInfo().getNickName();
+                 if (!TextUtils.isEmpty(nickName)) {
+                     ToastUtil.getInstance().showShort(nickName + ":" + getString(R.string.close_lock_success));
+                 } else {
+                     ToastUtil.getInstance().showShort(devId + ":" + getString(R.string.close_lock_success));
+                 }
+             }
 
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    stopCloseLockAnimator();
-                    if (deviceState != null) {
-                        try {
-                            String state = deviceState.getText().toString().trim();
-                            if (state.equals(getString(R.string.offline))) {
-                                changeOpenLockStatus(1);
-                            } else {
-                                changeOpenLockStatus(5);
-                            }
-                        } catch (Exception e) {
-                        }
-                    }
-                }
-            }, 1000);
-
+             new Handler().postDelayed(new Runnable() {
+                 @Override
+                 public void run() {
+                     stopCloseLockAnimator();
+                     if (deviceState != null) {
+                         try {
+                             String state = deviceState.getText().toString().trim();
+                             if (state.equals(getString(R.string.offline))) {
+                                 changeOpenLockStatus(1);
+                             } else {
+                                 changeOpenLockStatus(5);
+                             }
+                         } catch (Exception e) {
+                         }
+                     }
+                 }
+             }, 1000);
+         }
     }
 
     @Override
     public void closeLockThrowable() {
-        //isClosing = false;
+        isClosing = false;
     }
 
     @Override
     public boolean onLongClick(View v) {
         switch (v.getId()) {
             case R.id.rl_icon:
-                if (gatewayLockInfo != null) {
-                    if (statusFlag==1){
-                        ToastUtil.getInstance().showShort(R.string.wifi_alreade_offline);
-                        return true;
-                    }
-                   /* if (isOpening) {
-                        ToastUtil.getInstance().showShort(R.string.is_opening_try_latter);
-                        return true;
-                    }*/
-                   /* if (isClosing) {
-                        ToastUtil.getInstance().showShort(R.string.lock_already_open);
-                        return true;
-                    }*/
-                   /* if (mPresenter != null) {
-                        mPresenter.attachView(this);
-                        mPresenter.openLock(gatewayLockInfo);
-                    }*/
-                   AlertDialogUtil.getInstance().noEditSingleButtonDialog(getActivity(), getString(R.string.hint), getString(R.string.this_operation_does_not_support_unlocking), getString(R.string.hao_de), new AlertDialogUtil.ClickListener() {
+                AlertDialogUtil.getInstance().noEditSingleButtonDialog(getActivity(), getString(R.string.hint), getString(R.string.this_operation_does_not_support_unlocking), getString(R.string.hao_de), new AlertDialogUtil.ClickListener() {
                        @Override
                        public void left() {
 
@@ -1046,7 +1028,24 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
                        }
                    });
 
-                }
+//                if (gatewayLockInfo != null) {
+//                    if (statusFlag==1){
+//                        ToastUtil.getInstance().showShort(R.string.wifi_alreade_offline);
+//                        return true;
+//                    }
+//                   if (isOpening) {
+//                        ToastUtil.getInstance().showShort(R.string.is_opening_try_latter);
+//                        return true;
+//                    }
+//                     if (isClosing) {
+//                        ToastUtil.getInstance().showShort(R.string.lock_already_open);
+//                        return true;
+//                    }
+//                     if (mPresenter != null) {
+//                        mPresenter.attachView(this);
+//                        mPresenter.openLock(gatewayLockInfo);
+//                    }
+//                }
                 break;
         }
         return true;

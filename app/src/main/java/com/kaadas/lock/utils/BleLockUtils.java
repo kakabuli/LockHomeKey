@@ -409,10 +409,10 @@ public class BleLockUtils {
                 return R.mipmap.bluetooth_authorization_lock_s300;
             } else if (model.startsWith("5011")) {
                 return R.mipmap.bluetooth_authorization_lock_5011;
-            } else if (model.startsWith("5200-A5PJ")) {
-                return R.mipmap.bluetooth_authorization_lock_5200_a5pj;
-            } else if (model.startsWith("5200-A6")) {
-                return R.mipmap.bluetooth_authorization_lock_5200_a6;
+            } else if (model.startsWith("G3350")) {
+                return R.mipmap.bluetooth_authorization_lock_g3350;
+            } else if (model.startsWith("G3560")) {
+                return R.mipmap.bluetooth_authorization_lock_g3560;
             } else if (model.startsWith("6113")) {
                 return R.mipmap.bluetooth_authorization_lock_6113;
             } else {
@@ -478,10 +478,10 @@ public class BleLockUtils {
                 return R.mipmap.s300;
             } else if (model.startsWith("5011")) {
                 return R.mipmap.small_5011;
-            } else if (model.startsWith("5200-A5PJ")) {
-                return R.mipmap.small_5200_a5pj;
-            } else if (model.startsWith("5200-A6")) {
-                return R.mipmap.small_5200_a6;
+            } else if (model.startsWith("G3350")) {
+                return R.mipmap.small_g3350;
+            } else if (model.startsWith("G3560")) {
+                return R.mipmap.small_g3560;
             } else if (model.startsWith("6113")) {
                 return R.mipmap.small_6113;
             } else {
@@ -547,10 +547,10 @@ public class BleLockUtils {
                 return R.mipmap.bluetooth_lock_s300;
             } else if (model.startsWith("5011")) {
                 return R.mipmap.bluetooth_lock_5011;
-            } else if (model.startsWith("5200-A5PJ")) {
-                return R.mipmap.bluetooth_lock_5200_a5pj;
-            } else if (model.startsWith("5200-A6")) {
-                return R.mipmap.bluetooth_lock_5200_a6;
+            } else if (model.startsWith("G3350")) {
+                return R.mipmap.bluetooth_lock_g3350;
+            } else if (model.startsWith("G3560")) {
+                return R.mipmap.bluetooth_lock_g3560;
             } else if (model.startsWith("6113")) {
                 return R.mipmap.bluetooth_lock_6113;
             } else {

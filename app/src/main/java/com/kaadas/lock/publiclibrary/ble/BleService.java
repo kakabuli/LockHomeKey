@@ -334,7 +334,7 @@ public class BleService extends Service {
             if (device.getName().contains("Bootloader")
                     || device.getName().contains("OAD")
                     || device.getName().contains("KDS")
-//                    || device.getName().contains("XK")
+                    || device.getName().contains("XK")
                     || device.getName().contains("KdsLock")) {
                 deviceScanSubject.onNext(device);
             }
@@ -894,11 +894,14 @@ public class BleService extends Service {
         ////////////////////////////////       检查版本是否需要更新        /////////////////////////////
         if (bleLockInfo != null) {
             String sVersion = bleLockInfo.getServerLockInfo().getBleVersion();
+            String model = bleLockInfo.getServerLockInfo().getModel();
             int iVersion = 0;
             if (!TextUtils.isEmpty(sVersion)) {  //蓝牙型号为空
                 iVersion = Integer.parseInt(sVersion);
             }
-
+//            if (model!=null && model.startsWith("T5") && iVersion == 3){  //如果有锁型号  锁型号为T5  且版本号为3
+//                bleVersion = 3;
+//            }
             //如果蓝牙版本是2或者3   但是需要使用的特征值为空   直接断开连接
             if ((iVersion == 2 || iVersion == 3) && (systemIDChar == null || batteryChar == null || snChar == null ||
                     modeChar == null || lockTypeChar == null || hardwareVersionChar == null

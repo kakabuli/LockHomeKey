@@ -7,6 +7,7 @@ title Face Lock OTA
     else 用户确定升级
          App->App: 下载文件
          App->BLE: 发送开始OTA指令  0x85 operation 0x01
+         BLE->App: wifi名（7Byte）和密码（8Byte）
          App->App:用户连接WiFi
          App->BLE: 监听蓝牙上报  0x86
 '            note right of App: 以下三种情况忽略: \n  0x01：就绪；\n  0x02：正接收升级固件包；\n  0x03：正在往flash写数据；

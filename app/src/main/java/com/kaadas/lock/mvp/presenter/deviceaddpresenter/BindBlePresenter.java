@@ -331,6 +331,10 @@ public class BindBlePresenter<T> extends BasePresenter<IBindBleView> {
                         if (bleService.getBleVersion() == 3) {  //最近版本才读取锁功能集
                             bindDevice(pwd1, pwd2, mode, version + "", deviceSn, "" + functionSet);
                         } else {
+//                            if (!TextUtils.isEmpty(mode) && mode.startsWith("T5")){
+//                                functionSet = 0x31;
+//                                bindDevice(pwd1, pwd2, mode, 3 + "", deviceSn, null);
+//                            }
                             bindDevice(pwd1, pwd2, mode, version + "", deviceSn, null);
                         }
                     }

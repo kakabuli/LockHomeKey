@@ -241,7 +241,7 @@ public class SocketOtaUtil {
         }
         byte[] b = new byte[8];
         try {
-            socket.setSoTimeout(10005 * 1000);  //超时时间  10秒
+            socket.setSoTimeout(10 * 1000);  //超时时间  10秒
             int size = inputStream.read(b);
             String result = new String(b, 0, size);
             Log.e(TAG, "收到Socket数据   " + result + "  耗时  " + (System.currentTimeMillis() - sendTime));

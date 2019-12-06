@@ -29,7 +29,6 @@
     <uses-feature android:name="android.hardware.camera.autofocus" />
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission
         android:name="android.permission.READ_LOGS"
         tools:ignore="ProtectedPermissions" />
@@ -785,7 +784,10 @@
 
         <activity android:name=".publiclibrary.ota.face.FaceOtaActivity" />
         <activity android:name=".activity.TestActivity" />
-        <activity android:name=".activity.device.gatewaylock.password.test.PasswordTestActivity"></activity>
+        <activity android:name=".activity.device.gatewaylock.password.test.PasswordTestActivity" />
+        <activity android:name=".activity.wifilock.configure.EsptouchDemoActivity">
+
+        </activity>
     </application>
 
 </manifest>
