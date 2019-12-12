@@ -20,7 +20,6 @@ import android.widget.TextView;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.MainActivity;
-import com.kaadas.lock.activity.device.gatewaylock.more.GatewayMoreActivity;
 import com.kaadas.lock.activity.device.gatewaylock.password.GatewayPasswordManagerActivity;
 import com.kaadas.lock.bean.BluetoothLockFunctionBean;
 import com.kaadas.lock.bean.HomeShowBean;
@@ -41,7 +40,6 @@ import com.kaadas.lock.utils.ToastUtil;
 import com.kaadas.lock.utils.greenDao.db.DaoSession;
 import com.kaadas.lock.utils.greenDao.db.GatewayLockServiceInfoDao;
 
-import java.security.Key;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -107,6 +105,10 @@ public class GatewayLockAuthorizeFunctionActivity extends BaseActivity<GatewayLo
     LinearLayout llFour;
     @BindView(R.id.delete_share)
     ImageView deleteShare;
+    @BindView(R.id.gateway_lock_auth)
+    ImageView gatewayLockAuth;
+    @BindView(R.id.tv_type)
+    TextView tvType;
     private String gatewayId;
     private String deviceId;
     private HomeShowBean showBean;
@@ -124,19 +126,19 @@ public class GatewayLockAuthorizeFunctionActivity extends BaseActivity<GatewayLo
     private String adminUid;
     private Context context;
     private AlertDialog deleteDialog;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gateway_lock_authorize_function);
         ButterKnife.bind(this);
-        context=this;
+        context = this;
         initView();
         initData();
         initClick();
 
 
     }
-
 
 
     @Override
@@ -221,19 +223,28 @@ public class GatewayLockAuthorizeFunctionActivity extends BaseActivity<GatewayLo
 
         }
     }
-    String nickName=null;
+
+    String nickName = null;
+
     private void initData() {
         Intent intent = getIntent();
         showBean = (HomeShowBean) intent.getSerializableExtra(KeyConstants.GATEWAY_LOCK_INFO);
         //设置电量
         if (showBean != null) {
             lockInfo = (GwLockInfo) showBean.getObject();
+            String lockversion = lockInfo.getServerInfo().getLockversion();
+            if (!TextUtils.isEmpty(lockversion) && lockversion.contains(";") &&
+                    (lockversion.split(";")[0].startsWith("8100Z") || lockversion.split(";")[0].startsWith("8100A"))) {
+                gatewayLockAuth.setImageResource(R.mipmap.bluetooth_authorization_lock_8100);
+                tvType.setText(lockversion.split(";")[0]);
+            }
+
             if (lockInfo != null) {
                 gatewayId = lockInfo.getGwID();
                 if (!TextUtils.isEmpty(gatewayId)) {
                     GatewayInfo gatewayInfo = MyApplication.getInstance().getGatewayById(gatewayId);
                     if (gatewayInfo != null) {
-                        adminUid=gatewayInfo.getServerInfo().getAdminuid();
+                        adminUid = gatewayInfo.getServerInfo().getAdminuid();
                         if (NetUtil.isNetworkAvailable()) {
                             dealWithPower(lockInfo.getPower(), lockInfo.getServerInfo().getEvent_str(), lockInfo.getPowerTimeStamp());
                             if (gatewayInfo.getEvent_str() != null) {
@@ -247,10 +258,10 @@ public class GatewayLockAuthorizeFunctionActivity extends BaseActivity<GatewayLo
                     }
                 }
                 if (!TextUtils.isEmpty(lockInfo.getServerInfo().getNickName())) {
-                    nickName= lockInfo.getServerInfo().getNickName();
+                    nickName = lockInfo.getServerInfo().getNickName();
                     tvName.setText(lockInfo.getServerInfo().getNickName());
                 } else {
-                    nickName= lockInfo.getServerInfo().getDeviceId();
+                    nickName = lockInfo.getServerInfo().getDeviceId();
                     tvName.setText(lockInfo.getServerInfo().getDeviceId());
                 }
 
@@ -281,6 +292,9 @@ public class GatewayLockAuthorizeFunctionActivity extends BaseActivity<GatewayLo
                 intent = new Intent(this, GatewayPasswordManagerActivity.class);
                 intent.putExtra(KeyConstants.GATEWAY_ID, gatewayId);
                 intent.putExtra(KeyConstants.DEVICE_ID, deviceId);
+                intent.putExtra(KeyConstants.DEVICE_ID, deviceId);
+                intent.putExtra(KeyConstants.GATEWAY_LOCK_INFO, lockInfo);
+
                 startActivity(intent);
                 break;
             case R.id.ll_two:
@@ -288,7 +302,7 @@ public class GatewayLockAuthorizeFunctionActivity extends BaseActivity<GatewayLo
                 intent = new Intent(this, GatewayDeviceInformationActivity.class);
                 intent.putExtra(KeyConstants.GATEWAY_ID, gatewayId);
                 intent.putExtra(KeyConstants.DEVICE_ID, deviceId);
-                intent.putExtra(KeyConstants.DEVICE_NICKNAME,nickName);
+                intent.putExtra(KeyConstants.DEVICE_NICKNAME, nickName);
                 //更多
                 startActivityForResult(intent, KeyConstants.DEVICE_DETAIL_BEAN_NUM);
                 break;
@@ -328,7 +342,7 @@ public class GatewayLockAuthorizeFunctionActivity extends BaseActivity<GatewayLo
                 }
                 break;
             case R.id.delete_share:
-                String phone= (String) SPUtils.get(SPUtils.PHONEN,"");
+                String phone = (String) SPUtils.get(SPUtils.PHONEN, "");
                 AlertDialogUtil.getInstance().noEditTwoButtonDialog(this, getString(R.string.device_delete_dialog_head), getString(R.string.device_delete_lock_dialog_content), getString(R.string.cancel), getString(R.string.query), new AlertDialogUtil.ClickListener() {
                     @Override
                     public void left() {
@@ -338,15 +352,15 @@ public class GatewayLockAuthorizeFunctionActivity extends BaseActivity<GatewayLo
                     @Override
                     public void right() {
                         if (gatewayId != null && deviceId != null) {
-                            if (!TextUtils.isEmpty(phone)){
-                                if (StringUtil.isNumeric(phone)){
-                                    mPresenter.deleteShareDevice(2,gatewayId,deviceId,adminUid,"86"+phone,"",0);
-                                }else{
-                                    mPresenter.deleteShareDevice(2,gatewayId,deviceId,adminUid,phone,"",0);
+                            if (!TextUtils.isEmpty(phone)) {
+                                if (StringUtil.isNumeric(phone)) {
+                                    mPresenter.deleteShareDevice(2, gatewayId, deviceId, adminUid, "86" + phone, "", 0);
+                                } else {
+                                    mPresenter.deleteShareDevice(2, gatewayId, deviceId, adminUid, phone, "", 0);
                                 }
 
                             }
-                            deleteDialog=AlertDialogUtil.getInstance().noButtonDialog(context,getString(R.string.delete_be_being));
+                            deleteDialog = AlertDialogUtil.getInstance().noButtonDialog(context, getString(R.string.delete_be_being));
                             deleteDialog.setCancelable(false);
                         }
 
@@ -638,21 +652,21 @@ public class GatewayLockAuthorizeFunctionActivity extends BaseActivity<GatewayLo
 
     @Override
     public void deleteShareDeviceSuccess() {
-        DaoSession daoSession= MyApplication.getInstance().getDaoWriteSession();
-        String uid=MyApplication.getInstance().getUid();
+        DaoSession daoSession = MyApplication.getInstance().getDaoWriteSession();
+        String uid = MyApplication.getInstance().getUid();
         daoSession.getGatewayLockServiceInfoDao().queryBuilder().where(GatewayLockServiceInfoDao.Properties.Uid.eq(uid)).buildDelete().executeDeleteWithoutDetachingEntities();
-        if (deleteDialog!=null){
+        if (deleteDialog != null) {
             deleteDialog.dismiss();
         }
         //删除成功
-        Intent intent=new Intent(GatewayLockAuthorizeFunctionActivity.this, MainActivity.class);
+        Intent intent = new Intent(GatewayLockAuthorizeFunctionActivity.this, MainActivity.class);
         startActivity(intent);
         finish();
     }
 
     @Override
     public void deleteShareDeviceFail() {
-        if (deleteDialog!=null){
+        if (deleteDialog != null) {
             deleteDialog.dismiss();
         }
         ToastUtil.getInstance().showShort(getString(R.string.delete_fialed));
@@ -661,7 +675,7 @@ public class GatewayLockAuthorizeFunctionActivity extends BaseActivity<GatewayLo
     @Override
     public void deleteShareDeviceThrowable() {
 
-        if (deleteDialog!=null){
+        if (deleteDialog != null) {
             deleteDialog.dismiss();
         }
         ToastUtil.getInstance().showShort(getString(R.string.delete_fialed));
@@ -684,7 +698,7 @@ public class GatewayLockAuthorizeFunctionActivity extends BaseActivity<GatewayLo
                 if (name != null) {
                     if (tvName != null) {
                         tvName.setText(name);
-                        nickName=name;
+                        nickName = name;
                     }
                 }
             }

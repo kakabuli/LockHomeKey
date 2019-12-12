@@ -34,6 +34,7 @@ public class BasePresenter<T extends IBaseView> {
             LogUtils.e("bleService  为空   异常情况  " + (MyApplication.getInstance().getBleService() == null));
             bleService = MyApplication.getInstance().getBleService();
 //            MyApplication.getInstance().reStartApp();
+            LogUtils.e("bleService 是否仍然 为空   异常情况  " + (MyApplication.getInstance().getBleService() == null));
         }
     }
 

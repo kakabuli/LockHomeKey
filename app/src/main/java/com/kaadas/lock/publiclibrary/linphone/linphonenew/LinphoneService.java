@@ -39,6 +39,7 @@ import android.os.Message;
 import android.os.PowerManager;
 import android.os.SystemClock;
 import android.provider.ContactsContract;
+import android.util.Log;
 import android.view.WindowManager;
 import android.widget.Toast;
 
@@ -68,7 +69,6 @@ import org.linphone.core.LinphoneCore.GlobalState;
 import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.core.LinphoneCoreListenerBase;
 import org.linphone.core.LinphoneProxyConfig;
-import org.linphone.mediastream.Log;
 import org.linphone.mediastream.Version;
 
 import java.lang.reflect.Method;
@@ -167,22 +167,22 @@ public final class LinphoneService extends Service {
 
         @Override
         public synchronized void onActivityCreated(Activity activity, Bundle savedInstanceState) {
-            Log.i("Activity created:" + activity);
+            LogUtils.i("Activity created:" + activity);
             if (!activities.contains(activity))
                 activities.add(activity);
         }
 
         @Override
         public void onActivityStarted(Activity activity) {
-            Log.i("Activity started:" + activity);
+            LogUtils.i("Activity started:" + activity);
         }
 
         @Override
         public synchronized void onActivityResumed(Activity activity) {
-            Log.i("Activity resumed:" + activity);
+            LogUtils.i("Activity resumed:" + activity);
             if (activities.contains(activity)) {
                 mRunningActivities++;
-                Log.i("runningActivities=" + mRunningActivities);
+                LogUtils.i("runningActivities=" + mRunningActivities);
                 checkActivity();
             }
 
@@ -190,10 +190,10 @@ public final class LinphoneService extends Service {
 
         @Override
         public synchronized void onActivityPaused(Activity activity) {
-            Log.i("Activity paused:" + activity);
+            LogUtils.i("Activity paused:" + activity);
             if (activities.contains(activity)) {
                 mRunningActivities--;
-                Log.i("runningActivities=" + mRunningActivities);
+                LogUtils.i("runningActivities=" + mRunningActivities);
                 checkActivity();
             }
 
@@ -201,7 +201,7 @@ public final class LinphoneService extends Service {
 
         @Override
         public void onActivityStopped(Activity activity) {
-            Log.i("Activity stopped:" + activity);
+            LogUtils.i("Activity stopped:" + activity);
         }
 
         @Override
@@ -211,7 +211,7 @@ public final class LinphoneService extends Service {
 
         @Override
         public synchronized void onActivityDestroyed(Activity activity) {
-            Log.i("Activity destroyed:" + activity);
+            LogUtils.i("Activity destroyed:" + activity);
             if (activities.contains(activity)) {
                 activities.remove(activity);
             }
@@ -241,7 +241,7 @@ public final class LinphoneService extends Service {
     }
 
     protected void onBackgroundMode() {
-        Log.i("App has entered background mode");
+        LogUtils.i("App has entered background mode");
         if (LinphonePreferences.instance() != null && LinphonePreferences.instance().isFriendlistsubscriptionEnabled()) {
             if (LinphoneManager.isInstanciated())
                 LinphoneManager.getInstance().subscribeFriendList(false);
@@ -249,7 +249,7 @@ public final class LinphoneService extends Service {
     }
 
     protected void onForegroundMode() {
-        Log.i("App has left background mode");
+        LogUtils.i("App has left background mode");
         if (LinphonePreferences.instance() != null && LinphonePreferences.instance().isFriendlistsubscriptionEnabled()) {
             if (LinphoneManager.isInstanciated())
                 LinphoneManager.getInstance().subscribeFriendList(true);
@@ -310,7 +310,7 @@ public final class LinphoneService extends Service {
         LinphoneCoreFactory.instance().enableLogCollection(isDebugEnabled);
         LinphoneCoreFactory.instance().setDebugMode(isDebugEnabled, getString(R.string.app_name));
         // Dump some debugging information to the logs
-        Log.i(START_LINPHONE_LOGS);
+        LogUtils.i(START_LINPHONE_LOGS);
         dumpDeviceInformation();
         dumpInstalledLinphoneInformation();
 
@@ -333,7 +333,7 @@ public final class LinphoneService extends Service {
         try {
             incomingReceivedActivity = (Class<? extends Activity>) Class.forName(incomingReceivedActivityName);
         } catch (ClassNotFoundException e) {
-            Log.e(e);
+            LogUtils.e(e);
         }
 
 
@@ -347,7 +347,7 @@ public final class LinphoneService extends Service {
             public void callState(LinphoneCore lc, LinphoneCall call, LinphoneCall.State state, String message) {
                 LogUtils.d("linphone状态改变 " + call.toString() + " " + "state " + state.toString() + " message " + message);
                 if (instance == null) {
-                    Log.i("Service not ready, discarding call state change to ", state.toString());
+                    LogUtils.i("Service not ready, discarding call state change to ", state.toString());
                     return;
                 }
                 if (state == LinphoneCall.State.IncomingReceived) {
@@ -471,7 +471,7 @@ public final class LinphoneService extends Service {
             mStartForeground = getClass().getMethod("startForeground", mStartFgSign);
             mStopForeground = getClass().getMethod("stopForeground", mStopFgSign);
         } catch (NoSuchMethodException e) {
-            Log.e(e, "Couldn't find startForeground or stopForeground");
+            LogUtils.e("出错 ", "Couldn't find startForeground or stopForeground"+e.getMessage());
         }
 
         if (!Version.sdkAboveOrEqual(Version.API26_O_80)
@@ -645,7 +645,7 @@ public final class LinphoneService extends Service {
             sb.append(abi + ", ");
         }
         sb.append("\n");
-        Log.i(sb.toString());
+        LogUtils.i(sb.toString());
     }
 
     private void dumpInstalledLinphoneInformation() {
@@ -656,9 +656,9 @@ public final class LinphoneService extends Service {
         }
 
         if (info != null) {
-            Log.i("Linphone version is ", info.versionName + " (" + info.versionCode + ")");
+            LogUtils.i("Linphone version is ", info.versionName + " (" + info.versionCode + ")");
         } else {
-            Log.i("Linphone version is unknown");
+            LogUtils.i("Linphone version is unknown");
         }
     }
 
@@ -674,7 +674,7 @@ public final class LinphoneService extends Service {
     @Override
     public void onTaskRemoved(Intent rootIntent) {
         if (getResources().getBoolean(R.bool.kill_service_with_task_manager)) {
-//            Log.d("Task removed, stop service");
+//            LogUtils.d("Task removed, stop service");
             // If push is enabled, don't unregister account, otherwise do unregister
             if (LinphonePreferences.instance().isPushNotificationEnabled()) {
                 LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
@@ -688,7 +688,7 @@ public final class LinphoneService extends Service {
     @Override
     public synchronized void onDestroy() {
         LogUtils.e("walter", "linphoneservice onDestroy");
-        Log.e(GeTui.VideoLog,"linphonservice...onDestory...");
+        LogUtils.e(GeTui.VideoLog,"linphonservice...onDestory...");
         MyLog.getInstance().save("linphonservice...onDestory...");
         if (activityCallbacks != null) {
             getApplication().unregisterActivityLifecycleCallbacks(activityCallbacks);

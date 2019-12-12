@@ -109,9 +109,9 @@ public class GatewayLockSharedActivity extends BaseActivity<IGatewaySharedView, 
     private void initView() {
         tvContent.setText(getString(R.string.user_manage));
     }
-    
-    
-    
+
+
+
 
     @Override
     protected GatewaySharedPresenter<IGatewaySharedView> createPresent() {
@@ -212,13 +212,18 @@ public class GatewayLockSharedActivity extends BaseActivity<IGatewaySharedView, 
                 if (gatewayId!=null&&deviceId!=null){
                     GatewayInfo gatewayInfo=MyApplication.getInstance().getGatewayById(gatewayId);
                     if (gatewayInfo!=null) {
-                        if (!TextUtils.isEmpty(gatewayInfo.getServerInfo().getMeUsername()) && !TextUtils.isEmpty(gatewayInfo.getServerInfo().getMePwd())) {
+                        String model = gatewayInfo.getServerInfo().getModel();
+                        if ("6010".equals(model)){
+                            if (!TextUtils.isEmpty(gatewayInfo.getServerInfo().getMeUsername()) && !TextUtils.isEmpty(gatewayInfo.getServerInfo().getMePwd())) {
+                                mPresenter.shareDevice(2, gatewayId, deviceId, uid, phone, "", 1);
+                            }else{
+                                LogUtils.e("咪咪网为空需要重新注册");
+                                String deviceSN = gatewayInfo.getServerInfo().getDeviceSN();
+                                mPresenter.bindMimi(deviceSN, deviceSN);
+                                ToastUtil.getInstance().showShort(getString(R.string.add_common_user_fail));
+                            }
+                        }else {
                             mPresenter.shareDevice(2, gatewayId, deviceId, uid, phone, "", 1);
-                        }else{
-                            LogUtils.e("咪咪网为空需要重新注册");
-                            String deviceSN = gatewayInfo.getServerInfo().getDeviceSN();
-                            mPresenter.bindMimi(deviceSN, deviceSN);
-                            ToastUtil.getInstance().showShort(getString(R.string.add_common_user_fail));
                         }
                     }
 

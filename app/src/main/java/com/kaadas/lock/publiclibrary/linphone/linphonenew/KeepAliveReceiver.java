@@ -28,10 +28,10 @@ import android.os.SystemClock;
 
 import com.kaadas.lock.R;
 import com.kaadas.lock.publiclibrary.linphone.linphonenew.compatibility.Compatibility;
+import com.kaadas.lock.utils.LogUtils;
 
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCoreFactory;
-import org.linphone.mediastream.Log;
 
 /*
  * Purpose of this receiver is to disable keep alives when screen is off
@@ -50,13 +50,13 @@ public class KeepAliveReceiver extends BroadcastReceiver {
 
 			String action = intent.getAction();
 			if (action == null) {
-				Log.i("[KeepAlive] Refresh registers");
+				LogUtils.i("[KeepAlive] Refresh registers");
 				lc.refreshRegisters();
 				//make sure iterate will have enough time, device will not sleep until exit from this method
 				try {
 					Thread.sleep(2000);
 				} catch (InterruptedException e) {
-					Log.e("Cannot sleep for 2s", e);
+					LogUtils.e("Cannot sleep for 2s", e);
 				} finally {
 					//make sure the application will at least wakes up every 10 mn
 					Intent newIntent = new Intent(context, KeepAliveReceiver.class);
@@ -66,10 +66,10 @@ public class KeepAliveReceiver extends BroadcastReceiver {
 					Compatibility.scheduleAlarm(alarmManager, AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 600000, keepAlivePendingIntent);
 				}
 			} else if (action.equalsIgnoreCase(Intent.ACTION_SCREEN_ON)) {
-				Log.i("[KeepAlive] Screen is on, enable");
+				LogUtils.i("[KeepAlive] Screen is on, enable");
 				lc.enableKeepAlive(true);
 			} else if (action.equalsIgnoreCase(Intent.ACTION_SCREEN_OFF)) {
-				Log.i("[KeepAlive] Screen is off, disable");
+				LogUtils.i("[KeepAlive] Screen is off, disable");
 				lc.enableKeepAlive(false);
 			}
 		}

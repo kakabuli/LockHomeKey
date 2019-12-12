@@ -138,7 +138,7 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
             try {
                 connected = mqttService.getMqttClient().isConnected();
             } catch (Exception e) {
-                LogUtils.e(e.getMessage());
+                LogUtils.e("  获取连接状态失败  "+e.getMessage());
                 connected = false;
             }
             if (mqttService.getMqttClient() == null || !connected) {
@@ -880,10 +880,9 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
     }
 
 
-
     @Subscribe(threadMode = ThreadMode.MainThread)
     public void onEventBus(EventCenter eventCenter) {
-        if (eventCenter.getEventCode() == Constans.RELOGIN){  //商城token  过期
+        if (eventCenter.getEventCode() == Constans.RELOGIN) {  //商城token  过期
             MyApplication.getInstance().tokenInvalid(true);
             UserUtils.setToken("");
         }

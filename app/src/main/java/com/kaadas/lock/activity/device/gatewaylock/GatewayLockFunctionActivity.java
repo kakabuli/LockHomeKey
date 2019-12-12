@@ -22,7 +22,6 @@ import com.kaadas.lock.activity.device.gatewaylock.more.GatewayMoreActivity;
 import com.kaadas.lock.activity.device.gatewaylock.password.GatewayPasswordManagerActivity;
 import com.kaadas.lock.activity.device.gatewaylock.share.GatewayLockSharedActivity;
 import com.kaadas.lock.activity.device.gatewaylock.stress.old.GatewayLockStressDetailActivity;
-import com.kaadas.lock.adapter.ForecastAdapter;
 import com.kaadas.lock.bean.BluetoothLockFunctionBean;
 import com.kaadas.lock.bean.HomeShowBean;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
@@ -36,18 +35,15 @@ import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.NetUtil;
-import com.kaadas.lock.utils.NotifyRefreshActivity;
 import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.StringUtil;
 import com.kaadas.lock.utils.ToastUtil;
-import com.kaadas.lock.utils.networkListenerutil.NetWorkChangReceiver;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 /**
  * Created by David
@@ -106,6 +102,10 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
     TextView tvNameFour;
     @BindView(R.id.ll_four)
     LinearLayout llFour;
+    @BindView(R.id.gateway_lock_image)
+    ImageView gatewayLockImage;
+    @BindView(R.id.tv_type)
+    TextView tvType;
     private String gatewayId;
     private String deviceId;
     private HomeShowBean showBean;
@@ -114,12 +114,13 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
     private GwLockInfo lockInfo;
 
 
-    private boolean getArmLock=false; //是否获取布防状态结束
+    private boolean getArmLock = false; //是否获取布防状态结束
 
-    private boolean getArmLockSuccess=false; //是否获取布防成功
+    private boolean getArmLockSuccess = false; //是否获取布防成功
 
-    private int armLock=0;
-    private int flagEvent=0;
+    private int armLock = 0;
+    private int flagEvent = 0;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -143,6 +144,8 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
     }
 
     private void initView() {
+
+
         //密码
         ivOne.setImageResource(R.mipmap.bluetooth_password);
         tvNameOne.setText(R.string.password);
@@ -170,7 +173,7 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
     }
 
     public void changLockStatus(int lockStatus) {
-        if (isFinishing()){
+        if (isFinishing()) {
             return;
         }
         switch (lockStatus) {
@@ -233,27 +236,35 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
         showBean = (HomeShowBean) intent.getSerializableExtra(KeyConstants.GATEWAY_LOCK_INFO);
         //设置电量
         if (showBean != null) {
+            GwLockInfo gwLockInfo = (GwLockInfo) showBean.getObject();
+            String lockversion = gwLockInfo.getServerInfo().getLockversion();
+            if (!TextUtils.isEmpty(lockversion) && lockversion.contains(";") &&
+                    (lockversion.split(";")[0].startsWith("8100Z") || lockversion.split(";")[0].startsWith("8100A"))) {
+                gatewayLockImage.setImageResource(R.mipmap.bluetooth_lock_8100);
+                tvType.setText(lockversion.split(";")[0]);
+            }
+
             lockInfo = (GwLockInfo) showBean.getObject();
             if (lockInfo != null) {
                 gatewayId = lockInfo.getGwID();
                 if (!TextUtils.isEmpty(gatewayId)) {
                     GatewayInfo gatewayInfo = MyApplication.getInstance().getGatewayById(gatewayId);
                     if (gatewayInfo != null) {
-                          if (NetUtil.isNetworkAvailable()) {
-                                dealWithPower(lockInfo.getPower(), lockInfo.getServerInfo().getEvent_str(), lockInfo.getPowerTimeStamp());
-                            if (gatewayInfo.getEvent_str()!=null){
+                        if (NetUtil.isNetworkAvailable()) {
+                            dealWithPower(lockInfo.getPower(), lockInfo.getServerInfo().getEvent_str(), lockInfo.getPowerTimeStamp());
+                            if (gatewayInfo.getEvent_str() != null) {
                                 if (gatewayInfo.getEvent_str().equals("offline")) {
                                     dealWithPower(lockInfo.getPower(), "offline", lockInfo.getPowerTimeStamp());
                                 }
                             }
-                          } else {
+                        } else {
                             dealWithPower(lockInfo.getPower(), "offline", lockInfo.getPowerTimeStamp());
                         }
                     }
                 }
-                if (!TextUtils.isEmpty(lockInfo.getServerInfo().getNickName())){
+                if (!TextUtils.isEmpty(lockInfo.getServerInfo().getNickName())) {
                     tvName.setText(lockInfo.getServerInfo().getNickName());
-                }else {
+                } else {
                     tvName.setText(lockInfo.getServerInfo().getDeviceId());
                 }
 
@@ -269,6 +280,7 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
                 }*/
             }
         }
+
 
     }
 
@@ -289,7 +301,7 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
 
                 break;
             case R.id.ll_two:
-               //设备分享
+                //设备分享
                 intent = new Intent(this, GatewayLockSharedActivity.class);
                 intent.putExtra(KeyConstants.GATEWAY_ID, gatewayId);
                 intent.putExtra(KeyConstants.DEVICE_ID, deviceId);
@@ -310,9 +322,9 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
             case R.id.ll_four:
                 //更多
                 intent = new Intent(this, GatewayMoreActivity.class);
-                if(!TextUtils.isEmpty(nickName)){
+                if (!TextUtils.isEmpty(nickName)) {
                     lockInfo = (GwLockInfo) showBean.getObject();
-                    if(lockInfo!=null){
+                    if (lockInfo != null) {
                         lockInfo.getServerInfo().setNickName(nickName);
                     }
                 }
@@ -324,33 +336,33 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
                 //开锁
                 //对话框
                 String lockPwd = (String) SPUtils.get(KeyConstants.SAVA_LOCK_PWD + deviceId, "");
-                if (flagEvent==1){
+                if (flagEvent == 1) {
                     ToastUtil.getInstance().showShort(getString(R.string.lock_already_offline));
                     return;
-                }else if (TextUtils.isEmpty(lockPwd)) {
+                } else if (TextUtils.isEmpty(lockPwd)) {
                     //密码为空
-                        showPwdDialog();
+                    showPwdDialog();
                 } else {
-                        mPresenter.openLock(gatewayId, deviceId, lockPwd);
-                        lockStatus = KeyConstants.IS_LOCKING;
-                        changLockStatus(lockStatus);
-                        tvOpenClock.setClickable(false);
+                    mPresenter.openLock(gatewayId, deviceId, lockPwd);
+                    lockStatus = KeyConstants.IS_LOCKING;
+                    changLockStatus(lockStatus);
+                    tvOpenClock.setClickable(false);
                 }
 
                 break;
             case R.id.iv_safe_protection:
-                if (getArmLock){
-                    if (getArmLockSuccess){
-                        if (armLock==1){
-                            armLock=0;
-                        }else{
-                            armLock=1;
+                if (getArmLock) {
+                    if (getArmLockSuccess) {
+                        if (armLock == 1) {
+                            armLock = 0;
+                        } else {
+                            armLock = 1;
                         }
-                            mPresenter.setArmLocked(MyApplication.getInstance().getUid(),gatewayId,deviceId,armLock);
-                    }else{
-                     ToastUtil.getInstance().showShort(R.string.get_arm_lock_fail);
+                        mPresenter.setArmLocked(MyApplication.getInstance().getUid(), gatewayId, deviceId, armLock);
+                    } else {
+                        ToastUtil.getInstance().showShort(R.string.get_arm_lock_fail);
                     }
-                }else{
+                } else {
                     ToastUtil.getInstance().showShort(R.string.get_aram_lock);
                 }
 
@@ -400,7 +412,7 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
         if (power < 0) {
             power = 0;
         }
-        int mPower=power/2;
+        int mPower = power / 2;
         String lockPower = mPower + "%";
         if (tvPower != null) {
             tvPower.setText(lockPower);
@@ -408,18 +420,18 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
         if (ivPower != null) {
             ivPower.setPower(mPower);
             if (eventStr.equals("online")) {
-                if (mPower<=20){
+                if (mPower <= 20) {
                     ivPower.setColor(R.color.cFF3B30);
                     ivPower.setBorderColor(R.color.white);
-                }else{
+                } else {
                     ivPower.setColor(R.color.c25F290);
                     ivPower.setBorderColor(R.color.white);
                 }
-                flagEvent=0;
+                flagEvent = 0;
             } else {
                 ivPower.setColor(R.color.cD6D6D6);
                 ivPower.setBorderColor(R.color.c949494);
-                flagEvent=1;
+                flagEvent = 1;
             }
         }
         long readDeviceInfoTime = 0;
@@ -516,8 +528,8 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
 
     @Override
     public void getPowerDataSuccess(String deviceId, int power, String timestamp) {
-        if (lockInfo!=null){
-            if (lockInfo.getServerInfo().getDeviceId().equals(deviceId)){
+        if (lockInfo != null) {
+            if (lockInfo.getServerInfo().getDeviceId().equals(deviceId)) {
                 dealWithPower(power, lockInfo.getServerInfo().getEvent_str(), timestamp);
             }
         }
@@ -568,21 +580,21 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
     @Override
     public void setArmLockedSuccess(int operatingMode) {
         //设置布防成功
-        if (operatingMode==1){
+        if (operatingMode == 1) {
             ivSafeProtection.setImageResource(R.mipmap.iv_open);
-            armLock=1;
-        }else{
+            armLock = 1;
+        } else {
             ivSafeProtection.setImageResource(R.mipmap.iv_close);
-            armLock=0;
+            armLock = 0;
         }
     }
 
     @Override
     public void setArmLockedFail(String code) {
         //设置布防失败
-        if ("405".equals(code)){
+        if ("405".equals(code)) {
             ToastUtil.getInstance().showShort(getString(R.string.the_lock_no_support_func));
-        }else{
+        } else {
             ToastUtil.getInstance().showShort(getString(R.string.set_failed));
         }
     }
@@ -596,26 +608,26 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
     @Override
     public void getArmLockedSuccess(int operatingMode) {
         //获取布防成功 0 撤防 非反锁  , 1 布防 , 2 反锁
-        if (operatingMode==1){
+        if (operatingMode == 1) {
             ivSafeProtection.setImageResource(R.mipmap.iv_open);
-            armLock=1;
-        }else{
+            armLock = 1;
+        } else {
             ivSafeProtection.setImageResource(R.mipmap.iv_close);
-            armLock=0;
+            armLock = 0;
         }
-        getArmLock=true;
-        getArmLockSuccess=true;
+        getArmLock = true;
+        getArmLockSuccess = true;
 
     }
 
     @Override
     public void getArmLockedFail(String code) {
         //获取布防失败
-        getArmLock= true;
-        if ("405".equals(code)){
-            getArmLockSuccess=true;
-        }else{
-            getArmLockSuccess=false;
+        getArmLock = true;
+        if ("405".equals(code)) {
+            getArmLockSuccess = true;
+        } else {
+            getArmLockSuccess = false;
             ToastUtil.getInstance().showShort(R.string.get_alarm_lock_fail);
         }
 
@@ -625,8 +637,8 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
     @Override
     public void getArmLockedThrowable(Throwable throwable) {
         //获取布防异常
-        getArmLock=true;
-        getArmLockSuccess=false;
+        getArmLock = true;
+        getArmLockSuccess = false;
         ToastUtil.getInstance().showShort(R.string.get_alarm_lock_fail);
     }
 
@@ -655,11 +667,13 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (getIntent()!=null){
+        if (getIntent() != null) {
             getIntent().removeExtra(KeyConstants.GATEWAY_LOCK_INFO);
         }
     }
-    String nickName=null;
+
+    String nickName = null;
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -669,7 +683,7 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
                 if (name != null) {
                     if (tvName != null) {
                         tvName.setText(name);
-                        nickName=name;
+                        nickName = name;
                     }
                 }
             }

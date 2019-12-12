@@ -172,9 +172,15 @@ public class MqttService extends Service {
         if (mqttClient == null) {
             mqttClient = new MqttAndroidClient(MyApplication.getInstance(), MqttConstant.MQTT_BASE_URL, "app:" + userId);
         }
+
         //已经连接
-        if (mqttClient.isConnected()) {
-            LogUtils.e("mqttConnection", "mqtt已连接");
+        try {
+            if (mqttClient.isConnected()) {
+                LogUtils.e("mqttConnection", "mqtt已连接");
+                return;
+            }
+        }catch (IllegalArgumentException e){
+            LogUtils.e("获取客户端连接状况失败   " + e.getMessage());
             return;
         }
 
@@ -286,7 +292,6 @@ public class MqttService extends Service {
             @Override
             public void deliveryComplete(IMqttDeliveryToken token) {
                 //交互完成
-
             }
         });
         try {

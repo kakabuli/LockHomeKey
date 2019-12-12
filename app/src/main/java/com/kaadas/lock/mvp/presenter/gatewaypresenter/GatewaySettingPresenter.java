@@ -1,5 +1,7 @@
 package com.kaadas.lock.mvp.presenter.gatewaypresenter;
 
+import android.util.Log;
+
 import com.google.gson.Gson;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.mvp.mvpbase.BasePresenter;
@@ -21,7 +23,6 @@ import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.ftp.GeTui;
 
 import org.eclipse.paho.client.mqttv3.MqttMessage;
-import org.linphone.mediastream.Log;
 
 import java.util.concurrent.TimeUnit;
 

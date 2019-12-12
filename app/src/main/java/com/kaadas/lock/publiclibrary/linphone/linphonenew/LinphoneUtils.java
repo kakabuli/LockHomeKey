@@ -52,6 +52,7 @@ import android.widget.TextView;
 
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
+import com.kaadas.lock.utils.LogUtils;
 
 import org.linphone.core.DialPlan;
 import org.linphone.core.LinphoneAddress;
@@ -62,7 +63,6 @@ import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.core.LinphoneProxyConfig;
-import org.linphone.mediastream.Log;
 import org.linphone.mediastream.video.capture.hwconf.Hacks;
 
 import java.io.BufferedOutputStream;
@@ -204,7 +204,7 @@ public final class LinphoneUtils {
 		}
 
 		if (!LinphoneService.isReady()) {
-			Log.i("Couldn't change softvolume has service is not running");
+			LogUtils.i("Couldn't change softvolume has service is not running");
 			return true;
 		} else if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
 			LinphoneManager.getInstance().adjustVolume(1);
@@ -226,9 +226,9 @@ public final class LinphoneUtils {
 			is = url.openStream();
 			return BitmapFactory.decodeStream(is);
 		} catch (MalformedURLException e) {
-			Log.e(e, e.getMessage());
+			LogUtils.e("error", e.getMessage());
 		} catch (IOException e) {
-			Log.e(e, e.getMessage());
+			LogUtils.e("error", e.getMessage());
 		} finally {
 			try {is.close();} catch (IOException x) {}
 		}
@@ -364,7 +364,7 @@ public final class LinphoneUtils {
 		try {
 			Runtime.getRuntime().exec(new String[] { "logcat", "-c" });
 		} catch (IOException e) {
-			Log.e(e);
+			LogUtils.e(e);
 		}
 	}
 
@@ -383,7 +383,7 @@ public final class LinphoneUtils {
             success = true;
 
         } catch (Exception e){
-            Log.e("Exception when trying to zip the logs: " + e.getMessage());
+            LogUtils.e("Exception when trying to zip the logs: " + e.getMessage());
         }
 
         return success;
@@ -404,7 +404,7 @@ public final class LinphoneUtils {
 	    		sb.append("\r\n");
 	    	}
             String zipFilePath = context.getExternalFilesDir(null).getAbsolutePath() + "/logs.zip";
-            Log.i("Saving logs to " + zipFilePath);
+            LogUtils.i("Saving logs to " + zipFilePath);
 
             if( zipLogs(sb, zipFilePath) ) {
             	final String appName = (context != null) ? context.getString(R.string.app_name) : "Linphone(?)";
@@ -424,7 +424,7 @@ public final class LinphoneUtils {
             }
 
 		} catch (IOException e) {
-			Log.e(e);
+			LogUtils.e(e);
 		}
 	}
 
@@ -539,9 +539,9 @@ public final class LinphoneUtils {
 
 	        msg.setAppData(path.toString());
 		} catch (FileNotFoundException e) {
-			Log.e(e);
+			LogUtils.e(e);
 		} catch (IOException e) {
-			Log.e(e);
+			LogUtils.e(e);
 		}
 	}
 
