@@ -138,7 +138,7 @@ public class BleLockDetailPresenter<T> extends BlePresenter<IDeviceDetailView> {
                         if (bleLockInfo.getBattery() == -1) {   //没有获取过再重新获取   获取到电量  那么
                             bleLockInfo.setBattery(battery);
                             bleLockInfo.setReadBatteryTime(System.currentTimeMillis());
-                            if (mViewRef.get() != null) {
+                            if (isSafe()) {
                                 mViewRef.get().onElectricUpdata(battery);
                             }
                         }
@@ -150,7 +150,7 @@ public class BleLockDetailPresenter<T> extends BlePresenter<IDeviceDetailView> {
 
                         LogUtils.e("锁上时间为    " + lockTime);
                         toDisposable(getDeviceInfoDisposable);
-                        if (mViewRef.get() != null) {
+                        if (isSafe()) {
                             if (state5 == 1) {//安全模式
                                 mViewRef.get().onSafeMode();
                             }
@@ -203,7 +203,7 @@ public class BleLockDetailPresenter<T> extends BlePresenter<IDeviceDetailView> {
                                 if (bleLockInfo.getBattery() == -1) {   //没有获取过再重新获取   获取到电量  那么
                                     bleLockInfo.setBattery(battery);
                                     bleLockInfo.setReadBatteryTime(System.currentTimeMillis());
-                                    if (mViewRef.get() != null) {  //读取电量成功
+                                    if (isSafe()) {  //读取电量成功
                                         mViewRef.get().onElectricUpdata(battery);
                                     }
                                 }
@@ -214,7 +214,7 @@ public class BleLockDetailPresenter<T> extends BlePresenter<IDeviceDetailView> {
                             @Override
                             public void accept(Throwable throwable) throws Exception {
                                 LogUtils.e("读取电量失败   " + throwable.getMessage());
-                                if (mViewRef.get() != null) {  //读取电量失败
+                                if (isSafe()) {  //读取电量失败
                                     mViewRef.get().onElectricUpdataFailed(throwable);
                                 }
                                 getDeviceInfo();
@@ -222,8 +222,6 @@ public class BleLockDetailPresenter<T> extends BlePresenter<IDeviceDetailView> {
                         });
         compositeDisposable.add(electricDisposable);
     }
-
-
 
 
     @Override
@@ -268,7 +266,7 @@ public class BleLockDetailPresenter<T> extends BlePresenter<IDeviceDetailView> {
 
                         int state6 = (deValue[4] & 0b01000000) == 0b01000000 ? 1 : 0;   //恢复出厂设置
                         int state9 = (deValue[5] & 0b00000010) == 0b00000010 ? 1 : 0;   //安全模式上报
-                        if (mViewRef.get() != null) {
+                        if (isSafe()) {
                             if (state9 == 1) {
 //                                mViewRef.get().onWarringUp(9);
                                 bleLockInfo.setSafeMode(1);
@@ -312,12 +310,12 @@ public class BleLockDetailPresenter<T> extends BlePresenter<IDeviceDetailView> {
                         if (value0 == 1) {  //上锁
                             if (value2 == 1) {
                                 LogUtils.e("上锁成功  ");
-                                if (mViewRef.get() != null) {
+                                if (isSafe()) {
                                     mViewRef.get().onLockLock();
                                 }
                             } else if (value2 == 2) {   //开锁
                                 LogUtils.e("开锁成功  8 " + Rsa.bytesToHexString(bleDataBean.getPayload()));
-                                if (mViewRef.get() != null) {
+                                if (isSafe()) {
                                     mViewRef.get().openLockSuccess();
                                 }
                             }
@@ -339,7 +337,7 @@ public class BleLockDetailPresenter<T> extends BlePresenter<IDeviceDetailView> {
                     @Override
                     public void accept(BleDataBean bleDataBean) throws Exception {
                         LogUtils.e("收到服务返回的设备更新回调1111");
-                        if (mViewRef.get() != null) {   //通知界面更新显示设备状态
+                        if (isSafe()) {   //通知界面更新显示设备状态
                             LogUtils.e("收到服务返回的设备更新回调2222");
                         }
                         //锁状态改变   读取锁信息

@@ -44,7 +44,7 @@ public class OldAndAuthBleDetailPresenter<T> extends BlePresenter<IOldBleDetailV
 
     @Override
     public void authSuccess() {
-        if (mViewRef.get() != null) {
+        if (isSafe()) {
             mViewRef.get().onBleVersionUpdate(bleService.getBleVersion());
         }
         if (bleService.getBleVersion() == 2 || bleService.getBleVersion() == 3) {
@@ -156,12 +156,12 @@ public class OldAndAuthBleDetailPresenter<T> extends BlePresenter<IOldBleDetailV
                                     bleLockInfo.setBattery(power);
                                     bleLockInfo.setReadBatteryTime(System.currentTimeMillis());
                                     LogUtils.e("读取电量成功   " + power);
-                                    if (mViewRef.get() != null) {  //读取电量成功
+                                    if (isSafe()) {  //读取电量成功
                                         mViewRef.get().onElectricUpdata(power);
                                     }
                                 }
                             } else if (result == 0x81) {  //获取电量失败
-                                if (mViewRef.get() != null) {  //读取电量成功
+                                if (isSafe()) {  //读取电量成功
                                     mViewRef.get().onElectricUpdataFailed(new BleProtocolFailedException(0x81));
                                 }
                             }
@@ -201,21 +201,21 @@ public class OldAndAuthBleDetailPresenter<T> extends BlePresenter<IOldBleDetailV
                         BleLockServiceInfoDao bleLockServiceInfoDao = daoSession.getBleLockServiceInfoDao();
                         bleLockServiceInfoDao.queryBuilder().where(BleLockServiceInfoDao.Properties.LockName.eq(bleLockInfo.getServerLockInfo().getLockName())).buildDelete().executeDeleteWithoutDetachingEntities();
                         //清除所有数据之后再跳转界面
-                        if (mViewRef.get() != null) {
+                        if (isSafe()) {
                             mViewRef.get().onDeleteDeviceSuccess();
                         }
                     }
 
                     @Override
                     public void onAckErrorCode(BaseResult baseResult) {
-                        if (mViewRef.get() != null) {
+                        if (isSafe()) {
                             mViewRef.get().onDeleteDeviceFailedServer(baseResult);
                         }
                     }
 
                     @Override
                     public void onFailed(Throwable throwable) {
-                        if (mViewRef.get() != null) {
+                        if (isSafe()) {
                             mViewRef.get().onDeleteDeviceFailed(throwable);
                         }
                     }
@@ -254,7 +254,7 @@ public class OldAndAuthBleDetailPresenter<T> extends BlePresenter<IOldBleDetailV
                         if (bleLockInfo.getBattery() == -1) {   //没有获取过再重新获取   获取到电量  那么
                             bleLockInfo.setBattery(battery);
                             bleLockInfo.setReadBatteryTime(System.currentTimeMillis());
-                            if (mViewRef.get() != null) {  //读取电量成功
+                            if (isSafe()) {  //读取电量成功
                                 mViewRef.get().onElectricUpdata(battery);
                             }
                         }
@@ -264,7 +264,7 @@ public class OldAndAuthBleDetailPresenter<T> extends BlePresenter<IOldBleDetailV
                     @Override
                     public void accept(Throwable throwable) throws Exception {
                         LogUtils.e("读取电量失败   " + throwable.getMessage());
-                        if (mViewRef.get() != null) {  //读取电量失败
+                        if (isSafe()) {  //读取电量失败
                             mViewRef.get().onElectricUpdataFailed(throwable);
                         }
                     }
@@ -368,7 +368,7 @@ public class OldAndAuthBleDetailPresenter<T> extends BlePresenter<IOldBleDetailV
 
                         LogUtils.e("锁上时间为    " + lockTime);
                         toDisposable(getDeviceInfoDisposable);
-                        if (mViewRef.get() != null) {
+                        if (isSafe()) {
                             mViewRef.get().onDeviceInfoLoaded();
                         }
                     }

@@ -13,25 +13,26 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GatewayLockAlarmPresenter<T> extends BasePresenter<GatewayLockAlramView> {
-    private List<GatewayLockAlarmEventDao> gatewayLockAlarmList=new ArrayList<>();
+    private List<GatewayLockAlarmEventDao> gatewayLockAlarmList = new ArrayList<>();
+
     //获取数据库的门锁报警信息
-    public void getLockAlarm(int page,int pageNum,String gatewayId,String deviceId){
+    public void getLockAlarm(int page, int pageNum, String gatewayId, String deviceId) {
         LogUtils.e("访问数据库的门锁信息");
         List<GatewayLockAlarmEventDao> alarmEventBeansList = MyApplication.getInstance().getDaoWriteSession().queryBuilder(GatewayLockAlarmEventDao.class).orderDesc(GatewayLockAlarmEventDaoDao.Properties.TimeStamp).offset(page * pageNum).limit(pageNum).list();
-        if(alarmEventBeansList!=null&&alarmEventBeansList.size()>0){
-                for (GatewayLockAlarmEventDao gatewayLockAlarmEventDao:alarmEventBeansList) {
-                    if (gatewayId.equals(gatewayLockAlarmEventDao.getGatewayId())&&deviceId.equals(gatewayLockAlarmEventDao.getDeviceId())){
-                        gatewayLockAlarmList.add(gatewayLockAlarmEventDao);
-                    }
+        if (alarmEventBeansList != null && alarmEventBeansList.size() > 0) {
+            for (GatewayLockAlarmEventDao gatewayLockAlarmEventDao : alarmEventBeansList) {
+                if (gatewayId.equals(gatewayLockAlarmEventDao.getGatewayId()) && deviceId.equals(gatewayLockAlarmEventDao.getDeviceId())) {
+                    gatewayLockAlarmList.add(gatewayLockAlarmEventDao);
                 }
-                if (mViewRef!=null&&mViewRef.get()!=null){
-                    mViewRef.get().getLockAlarmSuccess(gatewayLockAlarmList);
-                    gatewayLockAlarmList.clear();
-                }
-        }else{
-            if (mViewRef!=null&&mViewRef.get()!=null){
+            }
+            if (isSafe()) {
+                mViewRef.get().getLockAlarmSuccess(gatewayLockAlarmList);
+                gatewayLockAlarmList.clear();
+            }
+        } else {
+            if (isSafe()) {
                 mViewRef.get().getLockAlarmFail();
-                if (gatewayLockAlarmList!=null) {
+                if (gatewayLockAlarmList != null) {
                     gatewayLockAlarmList.clear();
                 }
             }

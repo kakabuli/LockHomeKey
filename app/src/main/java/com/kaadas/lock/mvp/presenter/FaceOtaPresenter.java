@@ -34,7 +34,7 @@ public class FaceOtaPresenter<T> extends BlePresenter<IFaceOtaView> {
 
     }
 
-    public void init(int number, int otaType,String version) {
+    public void init(int number, int otaType, String version) {
         this.number = number;
         this.otaType = otaType;
         this.version = version;
@@ -108,7 +108,7 @@ public class FaceOtaPresenter<T> extends BlePresenter<IFaceOtaView> {
                         if (isSafe()) {//不管OTA成功还是失败都不发发送文件的心跳
                             mViewRef.get().otaFailed(-6);
                         }
-                        finishOta((byte) number, (byte) otaType,version);
+                        finishOta((byte) number, (byte) otaType, version);
                     }
                 });
         compositeDisposable.add(otaTotalStateDisposable);
@@ -119,39 +119,39 @@ public class FaceOtaPresenter<T> extends BlePresenter<IFaceOtaView> {
      */
     private void onSendFileCompleteFaceOtaState() {
         otaStateDisposable = bleService.listeneDataChange()
-                 .filter(new Predicate<BleDataBean>() {
-                     @Override
-                     public boolean test(BleDataBean bleDataBean) throws Exception {
-                         return (bleDataBean.getCmd() & 0xff) == 0x86;
-                     }
-                 })
-                 .timeout(3,TimeUnit.MINUTES)  //3分钟超时
-                 .compose(RxjavaHelper.observeOnMainThread())
-                 .subscribe(new Consumer<BleDataBean>() {
-                     @Override
-                     public void accept(BleDataBean bleDataBean) throws Exception {
-                         byte[] decrypt = Rsa.decrypt(bleDataBean.getPayload(), bleLockInfo.getAuthKey());
-                         int state = decrypt[4] & 0xff;
-                         LogUtils.e("收到ota状态上报   " + "  ota状态  " + state + "  number  " + number + "  otaType  " + otaType + Rsa.bytesToHexString(decrypt));
-                         if ((decrypt[0] & 0xff) == number && (decrypt[1] & 0xff) == otaType) {
-                             if (state == 0) {
-                                 if (isSafe()) {
-                                     mViewRef.get().otaSuccess();
-                                     toDisposable(otaStateDisposable);
-                                 }
-                             }
-                         }
-                     }
-                 }, new Consumer<Throwable>() {
-                     @Override
-                     public void accept(Throwable throwable) throws Exception {
-                         LogUtils.e("发送完文件监听OTA状态错误  " + throwable.getMessage());
-                         if (isSafe()) {//不管OTA成功还是失败都不发发送文件的心跳
-                             mViewRef.get().otaFailed(-8);
-                         }
-                         finishOta((byte) number, (byte) otaType,version);
-                     }
-                 });
+                .filter(new Predicate<BleDataBean>() {
+                    @Override
+                    public boolean test(BleDataBean bleDataBean) throws Exception {
+                        return (bleDataBean.getCmd() & 0xff) == 0x86;
+                    }
+                })
+                .timeout(3, TimeUnit.MINUTES)  //3分钟超时
+                .compose(RxjavaHelper.observeOnMainThread())
+                .subscribe(new Consumer<BleDataBean>() {
+                    @Override
+                    public void accept(BleDataBean bleDataBean) throws Exception {
+                        byte[] decrypt = Rsa.decrypt(bleDataBean.getPayload(), bleLockInfo.getAuthKey());
+                        int state = decrypt[4] & 0xff;
+                        LogUtils.e("收到ota状态上报   " + "  ota状态  " + state + "  number  " + number + "  otaType  " + otaType + Rsa.bytesToHexString(decrypt));
+                        if ((decrypt[0] & 0xff) == number && (decrypt[1] & 0xff) == otaType) {
+                            if (state == 0) {
+                                if (isSafe()) {
+                                    mViewRef.get().otaSuccess();
+                                    toDisposable(otaStateDisposable);
+                                }
+                            }
+                        }
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        LogUtils.e("发送完文件监听OTA状态错误  " + throwable.getMessage());
+                        if (isSafe()) {//不管OTA成功还是失败都不发发送文件的心跳
+                            mViewRef.get().otaFailed(-8);
+                        }
+                        finishOta((byte) number, (byte) otaType, version);
+                    }
+                });
         compositeDisposable.add(otaStateDisposable);
     }
 

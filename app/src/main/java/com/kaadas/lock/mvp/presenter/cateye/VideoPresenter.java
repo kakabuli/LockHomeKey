@@ -84,6 +84,7 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
     private Disposable networkChangeDisposable;
     private Disposable openLockEventDisposable;
     private Disposable closeDisposable;
+
     public void init(Context context) {
         this.mContext = context;
         mMediaDBDao = MediaFileDBDao.getInstance(context);
@@ -95,25 +96,25 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
         listenerCallStatus();
     }
 
-    public  boolean isConnectedEye=false;
-    final int CLOSE=1;
-    int CLOSE_TIME=15*1000;
-   Handler videoHandler=new Handler(){
-       @Override
-       public void handleMessage(Message msg) {
-           super.handleMessage(msg);
-           switch (msg.what) {
-               case  CLOSE:
-                   Log.e(GeTui.VideoLog,"音视频传输失败,请重新呼叫");
-                   MyLog.getInstance().save("音视频传输失败,请重新呼叫");
-                Toast.makeText(mContext,mContext.getString(R.string.cateye_video_audio_send_fail),Toast.LENGTH_LONG).show();
-                   if (mViewRef.get() != null) {
-                       mViewRef.get().closeMain();
-                   }
-                   break;
-           }
-       }
-   };
+    public boolean isConnectedEye = false;
+    final int CLOSE = 1;
+    int CLOSE_TIME = 15 * 1000;
+    Handler videoHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case CLOSE:
+                    Log.e(GeTui.VideoLog, "音视频传输失败,请重新呼叫");
+                    MyLog.getInstance().save("音视频传输失败,请重新呼叫");
+                    Toast.makeText(mContext, mContext.getString(R.string.cateye_video_audio_send_fail), Toast.LENGTH_LONG).show();
+                    if (isSafe()) {
+                        mViewRef.get().closeMain();
+                    }
+                    break;
+            }
+        }
+    };
 
     public void listenerCallStatus() {
         LinphoneHelper.addAutoAcceptCallBack(new PhoneAutoAccept() {
@@ -157,12 +158,12 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
                     }
                     //如果网关Id为空    不朝下走了
                     if (TextUtils.isEmpty(gwId) || gatewayInfo == null) {
-                        Toast.makeText(mContext,mContext.getString(R.string.call_error_cateInfoEmpty),Toast.LENGTH_LONG).show();
+                        Toast.makeText(mContext, mContext.getString(R.string.call_error_cateInfoEmpty), Toast.LENGTH_LONG).show();
                         return;
                     }
 
-                    if(isRelay){
-                        if (mViewRef.get() != null) {
+                    if (isRelay) {
+                        if (isSafe()) {
                             mViewRef.get().onCatEyeCallIn();
                         }
                         return;
@@ -174,7 +175,7 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
                     String meUsername = gatewayInfo.getServerInfo().getMeUsername();
                     if (TextUtils.isEmpty(meUsername) || TextUtils.isEmpty(mePwd)) {
                         //如果账号或者密码有一个为空  直接退出
-                        Toast.makeText(mContext,mContext.getString(R.string.call_error_mimi),Toast.LENGTH_LONG).show();
+                        Toast.makeText(mContext, mContext.getString(R.string.call_error_mimi), Toast.LENGTH_LONG).show();
                         return;
                     }
                     if (MemeManager.getInstance().isConnected()) { //meme网已经连接
@@ -183,7 +184,7 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
                                 && mePwd.equals(MemeManager.getInstance().getCurrentPassword())) {
                             //查看是否有设备在线   如果有  弹出来电框
                             if (MemeManager.getInstance().getGwDevices().size() > 0) {
-                                if (mViewRef.get() != null) {
+                                if (isSafe()) {
                                     mViewRef.get().onCatEyeCallIn();
                                 }
                             } else {  //本地登录了米米网账号且是当前猫眼的meme网昂好   但是没有本地设备在线  等待五秒
@@ -200,15 +201,15 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
 
             @Override
             public void callConnected() {
-                Message msg= Message.obtain();
-                msg.what=CLOSE;
-                videoHandler.sendMessageDelayed(msg,CLOSE_TIME);
+                Message msg = Message.obtain();
+                msg.what = CLOSE;
+                videoHandler.sendMessageDelayed(msg, CLOSE_TIME);
                 Log.e(Tag, "猫眼1  callConnected.........");
                 Log.e(GeTui.VideoLog, "VideoPresenter==>callConnected....");
                 MyLog.getInstance().save("猫眼1  callConnected.........");
                 startCountUp();
                 isConnected = true;
-                if (mViewRef.get() != null) {
+                if (isSafe()) {
                     mViewRef.get().onCallConnected();
                 }
 
@@ -227,12 +228,12 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
                 Log.e(Tag, "猫眼 callFinish.........");
                 MyLog.getInstance().save("猫眼 callFinish.........");
                 videoHandler.removeCallbacksAndMessages(null);
-                if (mViewRef.get() != null) {
+                if (isSafe()) {
                     mViewRef.get().onCallFinish();
                 }
                 stopCountUp();
                 MemeManager.getInstance().videoActivityDisconnectMeme();
-                isConnectedEye=false;
+                isConnectedEye = false;
             }
 
             @Override
@@ -241,8 +242,8 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
                 Log.e(Tag, "猫眼 Streaming.........");
                 MyLog.getInstance().save("猫眼 Streaming.........");
                 videoHandler.removeCallbacksAndMessages(null);
-                isConnectedEye=true;
-                if(mViewRef!=null && mViewRef.get()!=null){
+                isConnectedEye = true;
+                if (isSafe()) {
                     mViewRef.get().callSuccess();
                 }
             }
@@ -257,10 +258,10 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
             mPicturePath = Util.PICTURE_DIR + "/" + timeMillis + deviceId + ".jpeg";
             LinphoneManager.getLc().getCurrentCall().takeSnapshot(mPicturePath);
             mMediaDBDao.add(timeMillis + deviceId + ".jpeg", String.valueOf(timeMillis), 2, mPicturePath);
-            if (mViewRef.get() != null) {
+            if (isSafe()) {
                 mViewRef.get().screenShotSuccess();
             }
-            if (mViewRef != null && mViewRef.get() != null) {
+            if (isSafe()) {
                 mViewRef.get().screenShotSuccessPath(mPicturePath);
             }
 
@@ -271,7 +272,7 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
                     file.delete();
                 }
             }
-            if (mViewRef.get() != null) {
+            if (isSafe()) {
                 mViewRef.get().screenShotFailed(e);
             }
         }
@@ -300,7 +301,7 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
                 try {
                     //开始录制之前需要删除临时视频  可能会崩溃
                     deleteTempVideo();
-                    if (mViewRef.get() != null) {
+                    if (isSafe()) {
                         mViewRef.get().recordTooStart();
                     }
                     LinphoneManager.getLc().getCurrentCall().startRecording();
@@ -308,20 +309,20 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
                     startRecordTime = System.currentTimeMillis();
                 } catch (Exception e) {
                     LogUtils.d("开启录屏失败 " + e);
-                    if (mViewRef.get() != null) {
+                    if (isSafe()) {
                         mViewRef.get().recordExceptionTooShort();
                     }
                 }
-            }else {
+            } else {
             }
         } else {
             if (System.currentTimeMillis() - startRecordTime > 5 * 1000) {
-                if(mViewRef.get()!=null){
+                if (isSafe()) {
                     mViewRef.get().recordTooEnd();
                 }
                 stopRecordVideo(deviceId);
             } else {
-                if (mViewRef.get() != null) {
+                if (isSafe()) {
                     mViewRef.get().recordTooShort();
                 }
             }
@@ -355,13 +356,15 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
         }
         LinphoneHelper.hangUp();
     }
-    boolean isRelay=false;
+
+    boolean isRelay = false;
+
     public void callCatEye(CateEyeInfo cateEyeInfo) {
         //判断网关是否在线
         //判断猫眼是否在线
         if ("offline".equals(cateEyeInfo.getServerInfo().getEvent_str())) {
             //猫眼离线状态
-            if (mViewRef.get() != null) {
+            if (isSafe()) {
                 mViewRef.get().onCatEyeOffline();
             }
             return;
@@ -377,7 +380,7 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
             }
         }
         // 呼过去
-        if(isRelay){
+        if (isRelay) {
             wakeupCatEye(cateEyeInfo);
             return;
         }
@@ -414,7 +417,7 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
      * @param isCallIn   是不是猫眼呼叫过来的
      */
     private void loginMeme(String meUsername, String mePwd, CateEyeInfo cateEyeInfo, boolean isCallIn) {
-        MyLog.getInstance().save("meUsername:"+meUsername+" mePwd:"+mePwd+" cateEyeInfo:"+cateEyeInfo+" isCallIn:"+isCallIn);
+        MyLog.getInstance().save("meUsername:" + meUsername + " mePwd:" + mePwd + " cateEyeInfo:" + cateEyeInfo + " isCallIn:" + isCallIn);
         //获取到设备列表
         if (memeDisposable != null && !memeDisposable.isDisposed()) {
             memeDisposable.dispose();
@@ -445,7 +448,7 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
                                 LogUtils.e(Tag, "米米网  登陆成功   呼叫猫眼");
                                 wakeupCatEye(cateEyeInfo);
                             } else { //米米网登陆失败或者网关不在线
-                                if (mViewRef.get() != null) {
+                                if (isSafe()) {
                                     mViewRef.get().loginMemeFailed();
                                     MemeManager.getInstance().videoActivityDisconnectMeme();
                                 }
@@ -454,11 +457,11 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
                         } else { //米米网登录成功的话   通知界面   有电话呼叫过来  弹出对话框
                             if (aBoolean) { // 米米网登陆成功且网关在线
                                 LogUtils.e(Tag, "米米网  登陆成功   呼叫猫眼");
-                                if (mViewRef.get() != null) {
+                                if (isSafe()) {
                                     mViewRef.get().onCatEyeCallIn();
                                 }
                             } else { //米米网登陆失败或者网关不在线  不处理
-                                if (mViewRef.get() != null) {
+                                if (isSafe()) {
                                     mViewRef.get().loginMemeFailed();
                                     MemeManager.getInstance().videoActivityDisconnectMeme();
                                 }
@@ -471,7 +474,7 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
                     public void accept(Throwable throwable) throws Exception {
                         LogUtils.e(Tag, "登录米米网失败或者设备不在线");
                         if (!isCallIn) {
-                            if (mViewRef.get() != null) {
+                            if (isSafe()) {
                                 mViewRef.get().loginMemeFailed();
                             }
                             isCalling = false;
@@ -501,7 +504,7 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
                                 LogUtils.e(Tag, "米米网  登陆成功   呼叫猫眼");
                                 wakeupCatEye(cateEyeInfo);
                             } else {
-                                if (mViewRef.get() != null) {
+                                if (isSafe()) {
                                     mViewRef.get().onCatEyeCallIn();
                                 }
                             }
@@ -511,7 +514,7 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
                         if (!isCallIn) {  //监听设备在线情况   主动呼叫  提示失败   被呼叫不做处理
-                            if (mViewRef.get() != null) {
+                            if (isSafe()) {
                                 mViewRef.get().loginMemeFailed();
                             }
                         } else {
@@ -553,16 +556,16 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
                     public void accept(MqttData mqttData) throws Exception {
                         toDisposable(wakeupDisposable);
                         Log.e(Tag, "唤醒猫眼:" + mqttData.toString());
-                    //    Toast.makeText(mContext,mqttData.toString(),Toast.LENGTH_LONG).show();
+                        //    Toast.makeText(mContext,mqttData.toString(),Toast.LENGTH_LONG).show();
                         if ("200".equals(mqttData.getReturnCode())) {
                             LogUtils.e(Tag, "唤醒猫眼成功");
-                            if (mViewRef != null && mViewRef.get() != null) {
+                            if (isSafe()) {
                                 mViewRef.get().wakeupSuccess();
                             }
                         } else {
                             //407  猫眼离线  猫眼唤醒失败
                             LogUtils.e(Tag, "唤醒猫眼失败   " + mqttData.getReturnCode() + "   耗时  " + (System.currentTimeMillis() - start));
-                            if (mViewRef != null && mViewRef.get() != null && !isConnected) {
+                            if (isSafe() && !isConnected) {
                                 //  mViewRef.get().wakeupFailed();
                                 mViewRef.get().wakeupFailedStateCode(mqttData.getReturnCode());
                             }
@@ -573,7 +576,7 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        if (mViewRef.get() != null && !isConnected) {
+                        if (isSafe() && !isConnected) {
                             mViewRef.get().wakeupFailed();
                         }
                         handler.removeCallbacks(timeoutRunnable);
@@ -588,7 +591,7 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
         public void run() {
             wakeupSuccess = false;
             currentCateEyeInfo = null;
-            if (mViewRef.get() != null) {
+            if (isSafe()) {
                 mViewRef.get().waitCallTimeout();
             }
 
@@ -614,7 +617,7 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
     private CountUpTimer countUpTimer = new CountUpTimer(1000) {
         @Override
         public void onTick(long millis) {
-            if (mViewRef != null && mViewRef.get() != null) {
+            if (isSafe()) {
                 formatter.setTimeZone(TimeZone.getTimeZone("GMT+0"));
                 String time = formatter.format(new Date(millis));
                 mViewRef.get().callTimes(time);
@@ -645,7 +648,7 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
         String deviceId = gwLockInfo.getServerInfo().getDeviceId();
         String lockPwd = (String) SPUtils.get(KeyConstants.SAVA_LOCK_PWD + deviceId, "");
         if (TextUtils.isEmpty(lockPwd)) { //密码为空
-            if (mViewRef.get() != null) {
+            if (isSafe()) {
                 mViewRef.get().inputPwd(gwLockInfo);
             }
         } else {
@@ -656,7 +659,7 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
     //开锁
     public void realOpenLock(String gatewayId, String deviceId, String pwd) {
         toDisposable(openLockDisposable);
-        if (mViewRef.get() != null) {
+        if (isSafe()) {
             mViewRef.get().startOpenLock(deviceId);
         }
         listenerLockOpen(deviceId);
@@ -680,11 +683,11 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
                             toDisposable(openLockDisposable);
                             OpenLockBean openLockBean = new Gson().fromJson(mqttData.getPayload(), OpenLockBean.class);
                             if ("200".equals(openLockBean.getReturnCode())) {
-                                if (deviceId.equals(openLockBean.getDeviceId())){
+                                if (deviceId.equals(openLockBean.getDeviceId())) {
                                     SPUtils.put(KeyConstants.SAVA_LOCK_PWD + deviceId, pwd);
                                 }
-                            } else if (deviceId.equals(openLockBean.getDeviceId())){
-                                if (mViewRef.get() != null) {
+                            } else if (deviceId.equals(openLockBean.getDeviceId())) {
+                                if (isSafe()) {
                                     mViewRef.get().openLockFailed(deviceId);
                                 }
                                 SPUtils.remove(KeyConstants.SAVA_LOCK_PWD + deviceId);
@@ -694,9 +697,9 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
                         @Override
                         public void accept(Throwable throwable) throws Exception {
                             //开锁异常
-                            if (mViewRef.get() != null) {
+                            if (isSafe()) {
                                 SPUtils.remove(KeyConstants.SAVA_LOCK_PWD + deviceId);
-                                mViewRef.get().openLockThrowable(throwable,deviceId);
+                                mViewRef.get().openLockThrowable(throwable, deviceId);
                             }
                         }
                     });
@@ -734,16 +737,16 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
                         public void accept(MqttData mqttData) throws Exception {
                             toDisposable(closeLockNotifyDisposable);
                             LogUtils.e(Tag, "门锁打开上报");
-                            if (mViewRef.get() != null) {
+                            if (isSafe()) {
                                 mViewRef.get().openLockSuccess(deviceId);
                             }
                         }
                     }, new Consumer<Throwable>() {
                         @Override
                         public void accept(Throwable throwable) throws Exception {
-                            if (mViewRef.get() != null) {
+                            if (isSafe()) {
                                 SPUtils.remove(KeyConstants.SAVA_LOCK_PWD + deviceId);
-                                mViewRef.get().openLockThrowable(throwable,deviceId);
+                                mViewRef.get().openLockThrowable(throwable, deviceId);
                             }
                         }
                     });
@@ -784,14 +787,14 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
                             toDisposable(lockCloseDisposable);
                             LogUtils.e(Tag, "门锁关闭 上报");
                             //关门
-                            if (mViewRef.get() != null) {
+                            if (isSafe()) {
                                 mViewRef.get().lockCloseSuccess(deviceId);
                             }
                         }
                     }, new Consumer<Throwable>() {
                         @Override
                         public void accept(Throwable throwable) throws Exception {
-                            if (mViewRef.get() != null) {
+                            if (isSafe()) {
                                 mViewRef.get().lockCloseFailed(deviceId);
                             }
                         }
@@ -821,7 +824,7 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
                             DeviceOnLineBean deviceOnLineBean = new Gson().fromJson(mqttData.getPayload(), DeviceOnLineBean.class);
                             if (deviceOnLineBean != null) {
                                 LogUtils.e("设备上下线    " + deviceOnLineBean.toString());
-                                if (mViewRef.get() != null && deviceOnLineBean.getEventparams().getEvent_str() != null) {
+                                if (isSafe() && deviceOnLineBean.getEventparams().getEvent_str() != null) {
                                     mViewRef.get().deviceStatusChange(deviceOnLineBean);
                                 }
                             }
@@ -844,7 +847,7 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
             @Override
             public void accept(Boolean aBoolean) throws Exception {
                 LogUtils.e("监听网络变化");
-                if (mViewRef != null && mViewRef.get() != null) {
+                if (isSafe()) {
                     mViewRef.get().netWorkChange(aBoolean);
                 }
             }
@@ -886,7 +889,7 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
                                     String gatewayId = gatewayLockInfoEventBean.getGwId();
                                     String deviceId = gatewayLockInfoEventBean.getDeviceId();
                                     if (eventParmDeveType.equals("lockop") && devecode == 2 && pin == 255) {
-                                        if (mViewRef != null && mViewRef.get() != null) {
+                                        if (isSafe()) {
                                             mViewRef.get().getLockEvent(gatewayId, deviceId);
                                         }
                                     }
@@ -934,16 +937,16 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
                         public void accept(MqttData mqttData) throws Exception {
                             //关门
                             OpenLockNotifyBean openLockNotifyBean = new Gson().fromJson(mqttData.getPayload(), OpenLockNotifyBean.class);
-                            String deviceId= openLockNotifyBean.getDeviceId();
-                            String gatewayId=openLockNotifyBean.getGwId();
-                            if (mViewRef!=null&&mViewRef.get() != null) {
-                                mViewRef.get().closeLockSuccess(deviceId,gatewayId);
+                            String deviceId = openLockNotifyBean.getDeviceId();
+                            String gatewayId = openLockNotifyBean.getGwId();
+                            if (isSafe()) {
+                                mViewRef.get().closeLockSuccess(deviceId, gatewayId);
                             }
                         }
                     }, new Consumer<Throwable>() {
                         @Override
                         public void accept(Throwable throwable) throws Exception {
-                            if (mViewRef!=null&&mViewRef.get() != null) {
+                            if (isSafe()) {
                                 mViewRef.get().closeLockThrowable();
                             }
                         }
@@ -953,15 +956,16 @@ public class VideoPresenter<T> extends BasePresenter<IVideoView> {
 
     }
 
-    public void setisRelay(){
-        isRelay=true;
+    public void setisRelay() {
+        isRelay = true;
     }
-    public void setisRelayFalse(){
-        isRelay=false;
+
+    public void setisRelayFalse() {
+        isRelay = false;
     }
 
 
-    public void  destoryPre(){
+    public void destoryPre() {
         videoHandler.removeCallbacksAndMessages(null);
     }
 

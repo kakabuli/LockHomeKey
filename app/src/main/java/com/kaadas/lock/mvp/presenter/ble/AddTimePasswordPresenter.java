@@ -79,7 +79,7 @@ public class AddTimePasswordPresenter<T> extends BlePresenter<IAddTimePasswprdVi
                             if (bleDataBean.getPayload()[0] == 0) {
                                 LogUtils.e("设置时间策略成功    ");
                                 //设置时间计划成功
-                                if (mViewRef.get() != null) {
+                                if (isSafe()) {
                                     mViewRef.get().onSetTimePlanSuccess();
                                 }
                                 //设置时间计划成功  之后设置用户类型   设置用户类型为时间表用户
@@ -92,7 +92,7 @@ public class AddTimePasswordPresenter<T> extends BlePresenter<IAddTimePasswprdVi
                             } else {
                                 LogUtils.e("设置时间策略失败    ");
                                 //设置密码失败
-                                if (mViewRef.get() != null) {
+                                if (isSafe()) {
                                     mViewRef.get().onSetTimePlanFailed(new BleProtocolFailedException(bleDataBean.getOriginalData()[4] & 0xff));
                                     mViewRef.get().endSetPwd();
                                 }
@@ -104,7 +104,7 @@ public class AddTimePasswordPresenter<T> extends BlePresenter<IAddTimePasswprdVi
                     @Override
                     public void accept(Throwable throwable) throws Exception {
                         LogUtils.e("设置时间策略失败    " + throwable.getMessage());
-                        if (mViewRef.get() != null) {
+                        if (isSafe()) {
                             mViewRef.get().onSetTimePlanFailed(throwable);
                             mViewRef.get().endSetPwd();
                         }
@@ -139,12 +139,12 @@ public class AddTimePasswordPresenter<T> extends BlePresenter<IAddTimePasswprdVi
                             if (bleDataBean.getOriginalData()[4] == 0) {
                                 LogUtils.e("设置用户类型成功  " + type);
                                 //设置用户类型成功
-                                if (mViewRef.get() != null) {
+                                if (isSafe()) {
                                     mViewRef.get().onSetUserTypeSuccess();
                                 }
                                 uploadPassword(password);
                             } else {
-                                if (mViewRef.get() != null) {
+                                if (isSafe()) {
                                     LogUtils.e("设置用户类型失败    " + type + "    ");
                                     mViewRef.get().onSetUserTypeFailed(new BleProtocolFailedException(bleDataBean.getOriginalData()[4] & 0xff));
                                     mViewRef.get().endSetPwd();
@@ -157,7 +157,7 @@ public class AddTimePasswordPresenter<T> extends BlePresenter<IAddTimePasswprdVi
                     @Override
                     public void accept(Throwable throwable) throws Exception {
                         LogUtils.e("设置用户类型失败   " + throwable.getMessage());
-                        if (mViewRef.get() != null) {
+                        if (isSafe()) {
                             mViewRef.get().onSetUserTypeFailed(throwable);
                             mViewRef.get().endSetPwd();
                         }
@@ -179,7 +179,7 @@ public class AddTimePasswordPresenter<T> extends BlePresenter<IAddTimePasswprdVi
         strPWd = pwd;
         number = getNumber();
         if (number == -1) {
-            if (mViewRef.get() != null) {
+            if (isSafe()) {
                 mViewRef.get().onPwdFull();
             }
             return;
@@ -223,7 +223,7 @@ public class AddTimePasswordPresenter<T> extends BlePresenter<IAddTimePasswprdVi
                         if (bleDataBean.getOriginalData()[0] == 0) {  //status 为0
                             if (bleDataBean.getOriginalData()[4] == 0) {
                                 LogUtils.e("设置密码成功   ");
-                                if (mViewRef.get() != null) {
+                                if (isSafe()) {
                                     mViewRef.get().onSetPasswordSuccess(password);
                                 }
                                 if (type == 1) { //永久密码  设置用户类型
@@ -243,7 +243,7 @@ public class AddTimePasswordPresenter<T> extends BlePresenter<IAddTimePasswprdVi
                                 }
                             } else {
                                 LogUtils.e("设置密码失败   " + (bleDataBean.getPayload()[0] & 0xff));
-                                if (mViewRef.get() != null) {
+                                if (isSafe()) {
                                     mViewRef.get().onSetPasswordFailed(new BleProtocolFailedException(bleDataBean.getPayload()[0] & 0xff));
                                     mViewRef.get().endSetPwd();
                                 }
@@ -255,7 +255,7 @@ public class AddTimePasswordPresenter<T> extends BlePresenter<IAddTimePasswprdVi
                     @Override
                     public void accept(Throwable throwable) throws Exception {
                         LogUtils.e("设置密码失败   " + throwable.getMessage());
-                        if (mViewRef.get() != null) {
+                        if (isSafe()) {
                             mViewRef.get().onSetPasswordFailed(throwable);
                             mViewRef.get().endSetPwd();
                         }
@@ -315,7 +315,7 @@ public class AddTimePasswordPresenter<T> extends BlePresenter<IAddTimePasswprdVi
                     @Override
                     public void onSuccess(BaseResult result) {
                         LogUtils.e("上传密码到服务器成功   ");
-                        if (mViewRef.get() != null) {
+                        if (isSafe()) {
                             mViewRef.get().onUploadSuccess(strPWd, number > 9 ? "" + number : "0" + number, password.getNickName());
                             mViewRef.get().endSetPwd();
                         }
@@ -325,7 +325,7 @@ public class AddTimePasswordPresenter<T> extends BlePresenter<IAddTimePasswprdVi
                     @Override
                     public void onAckErrorCode(BaseResult baseResult) {
                         LogUtils.e("上传密码失败  " + baseResult.toString());
-                        if (mViewRef.get() != null) {
+                        if (isSafe()) {
                             mViewRef.get().onUploadFailedServer(baseResult);
                             mViewRef.get().endSetPwd();
                         }
@@ -334,7 +334,7 @@ public class AddTimePasswordPresenter<T> extends BlePresenter<IAddTimePasswprdVi
                     @Override
                     public void onFailed(Throwable throwable) {
                         LogUtils.e("上传密码失败  " + throwable.getMessage());
-                        if (mViewRef.get() != null) {
+                        if (isSafe()) {
                             mViewRef.get().onUploadFailed(throwable);
                             mViewRef.get().endSetPwd();
                         }
@@ -351,7 +351,7 @@ public class AddTimePasswordPresenter<T> extends BlePresenter<IAddTimePasswprdVi
     private List<Integer> bleNumber = new ArrayList<>();
 
     public void setPwd(String pwd, int type, String nickName, long startTime, long endTime) {
-        if (mViewRef.get() != null) {
+        if (isSafe()) {
             mViewRef.get().startSetPwd();
         }
         //同步时将上次的数据
@@ -371,7 +371,7 @@ public class AddTimePasswordPresenter<T> extends BlePresenter<IAddTimePasswprdVi
                     @Override
                     public void accept(BleDataBean bleDataBean) throws Exception {
                         if (bleDataBean.getOriginalData()[0] == 0) {
-                            if (mViewRef.get() != null) {
+                            if (isSafe()) {
                                 mViewRef.get().onSyncPasswordFailed(new BleProtocolFailedException(bleDataBean.getOriginalData()[4] & 0xff));
                                 mViewRef.get().endSetPwd();
                             }
@@ -401,7 +401,7 @@ public class AddTimePasswordPresenter<T> extends BlePresenter<IAddTimePasswprdVi
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        if (mViewRef.get() != null) {
+                        if (isSafe()) {
                             mViewRef.get().onSyncPasswordFailed(throwable);
                             mViewRef.get().endSetPwd();
                         }

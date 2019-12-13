@@ -69,12 +69,12 @@ public class PasswordWeekPresenter<T> extends BlePresenter<IPasswordLoopView> {
                             if (bleDataBean.getOriginalData()[4] == 0) {
                                 LogUtils.e("设置用户类型成功  " + type);
                                 //设置用户类型成功
-                                if (mViewRef.get() != null) {
+                                if (isSafe()) {
                                     mViewRef.get().setUserTypeSuccess();
                                 }
                                 uploadPassword(password);
                             } else {
-                                if (mViewRef.get() != null) {
+                                if (isSafe()) {
                                     LogUtils.e("设置用户类型失败   " + type);
                                     mViewRef.get().setUserTypeFailed(new BleProtocolFailedException(bleDataBean.getOriginalData()[4] & 0xff));
                                     mViewRef.get().endSetPwd();
@@ -86,7 +86,7 @@ public class PasswordWeekPresenter<T> extends BlePresenter<IPasswordLoopView> {
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        if (mViewRef.get() != null) {
+                        if (isSafe()) {
                             mViewRef.get().setUserTypeFailed(throwable);
                             mViewRef.get().endSetPwd();
                         }
@@ -103,7 +103,7 @@ public class PasswordWeekPresenter<T> extends BlePresenter<IPasswordLoopView> {
         //开始
         number = getNumber();
         if (number == -1) {
-            if (mViewRef.get() != null) {
+            if (isSafe()) {
                 mViewRef.get().onPwdFull();
             }
             return;
@@ -143,13 +143,13 @@ public class PasswordWeekPresenter<T> extends BlePresenter<IPasswordLoopView> {
                         if (bleDataBean.getOriginalData()[0] == 0) {  //status 为0
                             if (bleDataBean.getOriginalData()[4] == 0) {
                                 LogUtils.e("设置密码成功   ");
-                                if (mViewRef.get() != null) {
+                                if (isSafe()) {
                                     mViewRef.get().onSetPasswordSuccess(password);
                                 }
                                 setWeekPlan(number, days, startHour, startMin, endHour, endMin);
                             } else {
                                 LogUtils.e("设置密码失败   ");
-                                if (mViewRef.get() != null) {
+                                if (isSafe()) {
                                     mViewRef.get().onSetPasswordFailed(new BleProtocolFailedException(bleDataBean.getPayload()[0] & 0xff));
                                     mViewRef.get().endSetPwd();
                                 }
@@ -163,7 +163,7 @@ public class PasswordWeekPresenter<T> extends BlePresenter<IPasswordLoopView> {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
                         LogUtils.e("设置密码失败   ");
-                        if (mViewRef.get() != null) {
+                        if (isSafe()) {
                             mViewRef.get().onSetPasswordFailed(throwable);
                             mViewRef.get().endSetPwd();
                         }
@@ -223,7 +223,7 @@ public class PasswordWeekPresenter<T> extends BlePresenter<IPasswordLoopView> {
                     @Override
                     public void onSuccess(BaseResult result) {
                         LogUtils.e("上传密码到服务器成功   ");
-                        if (mViewRef.get() != null) {
+                        if (isSafe()) {
                             mViewRef.get().onUploadPwdSuccess(strPwd, number > 9 ? "" + number : "0" + number, password.getNickName());
                             mViewRef.get().endSetPwd();
                         }
@@ -233,7 +233,7 @@ public class PasswordWeekPresenter<T> extends BlePresenter<IPasswordLoopView> {
                     @Override
                     public void onAckErrorCode(BaseResult baseResult) {
                         LogUtils.e("上传密码失败  " + baseResult.toString());
-                        if (mViewRef.get() != null) {
+                        if (isSafe()) {
                             mViewRef.get().onUploadPwdFailedServer(baseResult);
                             mViewRef.get().endSetPwd();
                         }
@@ -242,7 +242,7 @@ public class PasswordWeekPresenter<T> extends BlePresenter<IPasswordLoopView> {
                     @Override
                     public void onFailed(Throwable throwable) {
                         LogUtils.e("上传密码失败  " + throwable.getMessage());
-                        if (mViewRef.get() != null) {
+                        if (isSafe()) {
                             mViewRef.get().onUploadPwdFailed(throwable);
                             mViewRef.get().endSetPwd();
                         }
@@ -297,12 +297,12 @@ public class PasswordWeekPresenter<T> extends BlePresenter<IPasswordLoopView> {
                         LogUtils.e("获取的数据是   " + Rsa.bytesToHexString(bleDataBean.getOriginalData()));
                         if (bleDataBean.isConfirm()) {
                             if (bleDataBean.getOriginalData()[4] == 0) {
-                                if (mViewRef.get() != null) {
+                                if (isSafe()) {
                                     mViewRef.get().setWeekPlanSuccess();
                                     setUserType(number, 1);
                                 }
                             } else {
-                                if (mViewRef.get() != null) {
+                                if (isSafe()) {
                                     mViewRef.get().endSetPwd();
                                     mViewRef.get().setWeekPlanFailed(new BleProtocolFailedException(bleDataBean.getPayload()[0] & 0xff));
                                 }
@@ -313,7 +313,7 @@ public class PasswordWeekPresenter<T> extends BlePresenter<IPasswordLoopView> {
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        if (mViewRef.get() != null) {
+                        if (isSafe()) {
                             mViewRef.get().setWeekPlanFailed(throwable);
                         }
                     }
@@ -324,7 +324,7 @@ public class PasswordWeekPresenter<T> extends BlePresenter<IPasswordLoopView> {
     private List<Integer> bleNumber = new ArrayList<>();
 
     public void setPwd(String pwd, String nickName, int startHour, int startMin, int endHour, int endMin, int[] days) {
-        if (mViewRef.get() != null) {
+        if (isSafe()) {
             mViewRef.get().startSetPwd();
         }
         //同步时将上次的数据
@@ -345,7 +345,7 @@ public class PasswordWeekPresenter<T> extends BlePresenter<IPasswordLoopView> {
                     @Override
                     public void accept(BleDataBean bleDataBean) throws Exception {
                         if (bleDataBean.getOriginalData()[0] == 0) {
-                            if (mViewRef.get() != null) {
+                            if (isSafe()) {
                                 mViewRef.get().onSyncPasswordFailed(new BleProtocolFailedException(bleDataBean.getOriginalData()[4] & 0xff));
                             }
                             return;
@@ -371,7 +371,7 @@ public class PasswordWeekPresenter<T> extends BlePresenter<IPasswordLoopView> {
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        if (mViewRef.get() != null) {
+                        if (isSafe()) {
                             mViewRef.get().onSyncPasswordFailed(throwable);
                             mViewRef.get().endSetPwd();
                         }

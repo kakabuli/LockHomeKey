@@ -43,6 +43,7 @@ public class DevicePresenter<T> extends BasePresenter<IDeviceView> {
     private Disposable listenerGatewayOnLine;
     private Disposable networkChangeDisposable;
     private Disposable bingMimiDisposable;
+
     @Override
     public void attachView(IDeviceView view) {
         super.attachView(view);
@@ -51,7 +52,7 @@ public class DevicePresenter<T> extends BasePresenter<IDeviceView> {
                 .subscribe(new Consumer<AllBindDevices>() {
                     @Override
                     public void accept(AllBindDevices allBindDevices) throws Exception {
-                        if (mViewRef.get()!=null){
+                        if (isSafe()) {
                             mViewRef.get().onDeviceRefresh(allBindDevices);
                         }
                     }
@@ -89,9 +90,9 @@ public class DevicePresenter<T> extends BasePresenter<IDeviceView> {
                                     MyApplication.getInstance().setAllBindDevices(allBindDevices);
                                     //重新获取数据
                                     long serverCurrentTime = Long.parseLong(allBindDevices.getTimestamp());
-                                    SPUtils.put(KeyConstants.SERVER_CURRENT_TIME,serverCurrentTime);
+                                    SPUtils.put(KeyConstants.SERVER_CURRENT_TIME, serverCurrentTime);
                                 } else {
-                                    if (mViewRef.get() != null) {
+                                    if (isSafe()) {
                                         mViewRef.get().deviceDataRefreshFail();
                                     }
                                 }
@@ -100,7 +101,7 @@ public class DevicePresenter<T> extends BasePresenter<IDeviceView> {
                     }, new Consumer<Throwable>() {
                         @Override
                         public void accept(Throwable throwable) throws Exception {
-                            if (mViewRef.get() != null) {
+                            if (isSafe()) {
                                 mViewRef.get().deviceDataRefreshThrowable(throwable);
                             }
                         }
@@ -109,11 +110,12 @@ public class DevicePresenter<T> extends BasePresenter<IDeviceView> {
         }
 
     }
+
     public void setBleLockInfo(BleLockInfo bleLockInfo) {
-        if (bleService ==null  ){ //判断
-            if ( MyApplication.getInstance().getBleService() ==null){
+        if (bleService == null) { //判断
+            if (MyApplication.getInstance().getBleService() == null) {
                 return;
-            }else {
+            } else {
                 bleService = MyApplication.getInstance().getBleService(); //判断
             }
         }
@@ -129,7 +131,7 @@ public class DevicePresenter<T> extends BasePresenter<IDeviceView> {
                     return;
                 }
             } else {
-                if ((serviceLockInfo.getPassword1() == null && serverLockInfo.getPassword1() == null) &&(serviceLockInfo.getPassword2() == null && serverLockInfo.getPassword2() == null) ) {
+                if ((serviceLockInfo.getPassword1() == null && serverLockInfo.getPassword1() == null) && (serviceLockInfo.getPassword2() == null && serverLockInfo.getPassword2() == null)) {
                     LogUtils.e("进来了 密码为空 设备  数据一致   " + bleService.getBleLockInfo().getServerLockInfo().toString()); //1
                     return;
                 }
@@ -140,9 +142,8 @@ public class DevicePresenter<T> extends BasePresenter<IDeviceView> {
     }
 
 
-
     //请求电量
-    public void getPower(String gatewayId,String deviceId,String uid) {
+    public void getPower(String gatewayId, String deviceId, String uid) {
         if (mqttService != null) {
             MqttMessage message = MqttCommandFactory.getDevicePower(gatewayId, deviceId, uid);
             getPowerDisposable = mqttService.mqttPublish(MqttConstant.getCallTopic(uid), message)
@@ -163,12 +164,12 @@ public class DevicePresenter<T> extends BasePresenter<IDeviceView> {
                             GetDevicePowerBean powerBean = new Gson().fromJson(payload, GetDevicePowerBean.class);
                             if (powerBean != null && deviceId.equals(powerBean.getDeviceId())) {
                                 if ("200".equals(powerBean.getReturnCode())) {
-                                    if (mViewRef.get() != null) {
-                                        mViewRef.get().getDevicePowerSuccess(gatewayId, deviceId, powerBean.getReturnData().getPower(),powerBean.getTimestamp());
+                                    if (isSafe()) {
+                                        mViewRef.get().getDevicePowerSuccess(gatewayId, deviceId, powerBean.getReturnData().getPower(), powerBean.getTimestamp());
                                     }
                                 } else {
-                                    if (mViewRef.get() != null) {
-                                        mViewRef.get().getDevicePowerFail(gatewayId,deviceId);
+                                    if (isSafe()) {
+                                        mViewRef.get().getDevicePowerFail(gatewayId, deviceId);
                                     }
                                 }
                             }
@@ -176,8 +177,8 @@ public class DevicePresenter<T> extends BasePresenter<IDeviceView> {
                     }, new Consumer<Throwable>() {
                         @Override
                         public void accept(Throwable throwable) throws Exception {
-                            if (mViewRef.get() != null) {
-                                mViewRef.get().getDevicePowerThrowable(gatewayId,deviceId);
+                            if (isSafe()) {
+                                mViewRef.get().getDevicePowerThrowable(gatewayId, deviceId);
                             }
                         }
                     });
@@ -197,10 +198,10 @@ public class DevicePresenter<T> extends BasePresenter<IDeviceView> {
                         public void accept(MqttData mqttData) throws Exception {
                             if (mqttData != null) {
                                 GetBindGatewayStatusResult gatewayStatusResult = new Gson().fromJson(mqttData.getPayload(), GetBindGatewayStatusResult.class);
-                                LogUtils.e("监听网关的Device状态" + gatewayStatusResult.getDevuuid()+" mqttData:"+mqttData);
-                                if (gatewayStatusResult != null&&gatewayStatusResult.getData().getState()!=null) {
-                                    if (mViewRef.get() != null) {
-                                        mViewRef.get().gatewayStatusChange(gatewayStatusResult.getDevuuid(),gatewayStatusResult.getData().getState());
+                                LogUtils.e("监听网关的Device状态" + gatewayStatusResult.getDevuuid() + " mqttData:" + mqttData);
+                                if (gatewayStatusResult != null && gatewayStatusResult.getData().getState() != null) {
+                                    if (isSafe()) {
+                                        mViewRef.get().gatewayStatusChange(gatewayStatusResult.getDevuuid(), gatewayStatusResult.getData().getState());
                                     }
                                 }
                             }
@@ -233,10 +234,10 @@ public class DevicePresenter<T> extends BasePresenter<IDeviceView> {
                         @Override
                         public void accept(MqttData mqttData) throws Exception {
                             DeviceOnLineBean deviceOnLineBean = new Gson().fromJson(mqttData.getPayload(), DeviceOnLineBean.class);
-                            if (deviceOnLineBean!=null){
-                                if (mViewRef.get()!=null&&deviceOnLineBean.getEventparams().getEvent_str()!=null){
-                                        mViewRef.get().deviceStatusChange(deviceOnLineBean.getGwId(),deviceOnLineBean.getDeviceId(),deviceOnLineBean.getEventparams().getEvent_str());
-                                    }
+                            if (deviceOnLineBean != null) {
+                                if (isSafe() && deviceOnLineBean.getEventparams().getEvent_str() != null) {
+                                    mViewRef.get().deviceStatusChange(deviceOnLineBean.getGwId(), deviceOnLineBean.getDeviceId(), deviceOnLineBean.getEventparams().getEvent_str());
+                                }
                             }
                         }
                     }, new Consumer<Throwable>() {
@@ -248,14 +249,15 @@ public class DevicePresenter<T> extends BasePresenter<IDeviceView> {
         }
 
     }
+
     //网络变化通知
-    public void listenerNetworkChange(){
+    public void listenerNetworkChange() {
         toDisposable(networkChangeDisposable);
-        networkChangeDisposable=NetWorkChangReceiver.notifyNetworkChange().subscribe(new Consumer<Boolean>() {
+        networkChangeDisposable = NetWorkChangReceiver.notifyNetworkChange().subscribe(new Consumer<Boolean>() {
             @Override
             public void accept(Boolean aBoolean) throws Exception {
-                if (aBoolean){
-                    if (mViewRef!=null&&mViewRef.get()!=null){
+                if (aBoolean) {
+                    if (isSafe()) {
                         mViewRef.get().networkChangeSuccess();
                     }
                 }
@@ -265,7 +267,7 @@ public class DevicePresenter<T> extends BasePresenter<IDeviceView> {
     }
 
     //绑定咪咪网
-    public void bindMimi(String deviceSN,String gatewayId) {
+    public void bindMimi(String deviceSN, String gatewayId) {
         if (mqttService != null) {
             toDisposable(bingMimiDisposable);
             MqttMessage mqttMessage = MqttCommandFactory.registerMemeAndBind(MyApplication.getInstance().getUid(), gatewayId, deviceSN);
@@ -288,11 +290,11 @@ public class DevicePresenter<T> extends BasePresenter<IDeviceView> {
                             BindMemeReuslt bindMemeReuslt = new Gson().fromJson(mqttData.getPayload(), BindMemeReuslt.class);
                             LogUtils.e(bindMemeReuslt.getFunc());
                             if ("200".equals(bindMemeReuslt.getCode())) {
-                                if (mViewRef.get() != null) {
+                                if (isSafe()) {
                                     mViewRef.get().bindMimiSuccess(deviceSN);
                                 }
                             } else {
-                                if (mViewRef.get() != null) {
+                                if (isSafe()) {
                                     mViewRef.get().bindMimiFail(bindMemeReuslt.getCode(), bindMemeReuslt.getMsg());
                                 }
                             }
@@ -300,7 +302,7 @@ public class DevicePresenter<T> extends BasePresenter<IDeviceView> {
                     }, new Consumer<Throwable>() {
                         @Override
                         public void accept(Throwable throwable) throws Exception {
-                            if (mViewRef.get() != null) {
+                            if (isSafe()) {
                                 mViewRef.get().bindMimiThrowable(throwable);
                             }
                         }

@@ -22,16 +22,17 @@ import io.reactivex.functions.Predicate;
 public class GatewayLockInformationPresenter<T> extends BasePresenter<GatewayLockInformationView> {
     //获取锁的基本信息
     private Disposable getLockInfoDisposable;
-    public void getGatewayLockInfo(String gatewayId,String deviceId){
+
+    public void getGatewayLockInfo(String gatewayId, String deviceId) {
         toDisposable(getLockInfoDisposable);
-        if (mqttService!=null){
-            getLockInfoDisposable=mqttService.mqttPublish(MqttConstant.getCallTopic(MyApplication.getInstance().getUid()), MqttCommandFactory.getGatewayLockInformation(gatewayId,deviceId))
-                    .timeout(10*1000, TimeUnit.MILLISECONDS)
+        if (mqttService != null) {
+            getLockInfoDisposable = mqttService.mqttPublish(MqttConstant.getCallTopic(MyApplication.getInstance().getUid()), MqttCommandFactory.getGatewayLockInformation(gatewayId, deviceId))
+                    .timeout(10 * 1000, TimeUnit.MILLISECONDS)
                     .compose(RxjavaHelper.observeOnMainThread())
                     .filter(new Predicate<MqttData>() {
                         @Override
                         public boolean test(MqttData mqttData) throws Exception {
-                            if (MqttConstant.GET_LOCK_INFO.equals(mqttData.getFunc())){
+                            if (MqttConstant.GET_LOCK_INFO.equals(mqttData.getFunc())) {
                                 return true;
                             }
                             return false;
@@ -42,13 +43,13 @@ public class GatewayLockInformationPresenter<T> extends BasePresenter<GatewayLoc
                         @Override
                         public void accept(MqttData mqttData) throws Exception {
                             toDisposable(getLockInfoDisposable);
-                            GetGatewayLockInfoBean getGatewayLockInfoBean=new Gson().fromJson(mqttData.getPayload(), GetGatewayLockInfoBean.class);
-                            if ("200".equals(getGatewayLockInfoBean.getReturnCode())){
-                                if (mViewRef.get()!=null){
-                                   mViewRef.get().getLockInfoSuccess(getGatewayLockInfoBean.getReturnData());
+                            GetGatewayLockInfoBean getGatewayLockInfoBean = new Gson().fromJson(mqttData.getPayload(), GetGatewayLockInfoBean.class);
+                            if ("200".equals(getGatewayLockInfoBean.getReturnCode())) {
+                                if (isSafe()) {
+                                    mViewRef.get().getLockInfoSuccess(getGatewayLockInfoBean.getReturnData());
                                 }
-                            }else{
-                                if (mViewRef.get()!=null){
+                            } else {
+                                if (isSafe()) {
                                     mViewRef.get().getLcokInfoFail();
                                 }
                             }
@@ -56,7 +57,7 @@ public class GatewayLockInformationPresenter<T> extends BasePresenter<GatewayLoc
                     }, new Consumer<Throwable>() {
                         @Override
                         public void accept(Throwable throwable) throws Exception {
-                            if (mViewRef.get()!=null){
+                            if (isSafe()) {
                                 mViewRef.get().getLockInfoThrowable(throwable);
                             }
                         }
@@ -67,20 +68,22 @@ public class GatewayLockInformationPresenter<T> extends BasePresenter<GatewayLoc
 
 
     }
+
     private Disposable updateNameDisposable;
+
     //修改昵称
-    public void updateZigbeeLockName(String devuuid,String deviceId,String nickName ){
+    public void updateZigbeeLockName(String devuuid, String deviceId, String nickName) {
         toDisposable(updateNameDisposable);
-        if (mqttService!=null&&mqttService.getMqttClient()!=null&&mqttService.getMqttClient().isConnected()){
-            MqttMessage mqttMessage= MqttCommandFactory.updateDeviceNickName(MyApplication.getInstance().getUid(),devuuid,deviceId,nickName);
-            updateNameDisposable=mqttService
-                    .mqttPublish(MqttConstant.PUBLISH_TO_SERVER,mqttMessage)
-                    .timeout(10*1000, TimeUnit.MILLISECONDS)
+        if (mqttService != null && mqttService.getMqttClient() != null && mqttService.getMqttClient().isConnected()) {
+            MqttMessage mqttMessage = MqttCommandFactory.updateDeviceNickName(MyApplication.getInstance().getUid(), devuuid, deviceId, nickName);
+            updateNameDisposable = mqttService
+                    .mqttPublish(MqttConstant.PUBLISH_TO_SERVER, mqttMessage)
+                    .timeout(10 * 1000, TimeUnit.MILLISECONDS)
                     .compose(RxjavaHelper.observeOnMainThread())
                     .filter(new Predicate<MqttData>() {
                         @Override
                         public boolean test(MqttData mqttData) throws Exception {
-                            if (MqttConstant.UPDATE_DEV_NICK_NAME.equals(mqttData.getFunc())){
+                            if (MqttConstant.UPDATE_DEV_NICK_NAME.equals(mqttData.getFunc())) {
                                 return true;
                             }
                             return false;
@@ -90,15 +93,15 @@ public class GatewayLockInformationPresenter<T> extends BasePresenter<GatewayLoc
                         @Override
                         public void accept(MqttData mqttData) throws Exception {
                             toDisposable(updateNameDisposable);
-                            UpdateDevNickNameResult nameResult=new Gson().fromJson(mqttData.getPayload(),UpdateDevNickNameResult.class);
-                            if (nameResult!=null){
-                                if ("200".equals(nameResult.getCode())){
-                                    if (mViewRef.get()!=null){
+                            UpdateDevNickNameResult nameResult = new Gson().fromJson(mqttData.getPayload(), UpdateDevNickNameResult.class);
+                            if (nameResult != null) {
+                                if ("200".equals(nameResult.getCode())) {
+                                    if (isSafe()) {
                                         mViewRef.get().updateDevNickNameSuccess(nickName);
                                         MyApplication.getInstance().getAllDevicesByMqtt(true);
                                     }
-                                }else{
-                                    if (mViewRef.get()!=null){
+                                } else {
+                                    if (isSafe()) {
                                         mViewRef.get().updateDevNickNameFail();
                                     }
                                 }
@@ -107,7 +110,7 @@ public class GatewayLockInformationPresenter<T> extends BasePresenter<GatewayLoc
                     }, new Consumer<Throwable>() {
                         @Override
                         public void accept(Throwable throwable) throws Exception {
-                            if (mViewRef.get()!=null){
+                            if (isSafe()) {
                                 mViewRef.get().updateDevNickNameThrowable(throwable);
                             }
                         }

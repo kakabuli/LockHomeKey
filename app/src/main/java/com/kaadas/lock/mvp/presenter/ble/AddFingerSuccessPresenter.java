@@ -32,7 +32,7 @@ public class AddFingerSuccessPresenter<T> extends BasePresenter<IAddFingerSucces
                     public void onSuccess(BaseResult result) {
                         LogUtils.e("davi 上传秘钥昵称到服务器成功");
                         // TODO: 2019/3/8   通知更新秘钥列表   从服务器拿
-                        if (mViewRef.get() != null) {
+                        if (isSafe()) {
                             mViewRef.get().onUploadSuccess();
                             MyApplication.getInstance().passwordChangeListener().onNext(true);
                         }
@@ -40,7 +40,7 @@ public class AddFingerSuccessPresenter<T> extends BasePresenter<IAddFingerSucces
 
                     @Override
                     public void onAckErrorCode(BaseResult baseResult) {
-                        if (mViewRef.get() != null) {
+                        if (isSafe()) {
                             mViewRef.get().onUploadFailedServer(baseResult);
                         }
                     }
@@ -48,7 +48,7 @@ public class AddFingerSuccessPresenter<T> extends BasePresenter<IAddFingerSucces
                     @Override
                     public void onFailed(Throwable throwable) {
                         LogUtils.e("上传秘钥昵称到服务器失败");
-                        if (mViewRef.get() != null) {
+                        if (isSafe()) {
                             mViewRef.get().onUploadFailed(throwable);
                         }
                     }

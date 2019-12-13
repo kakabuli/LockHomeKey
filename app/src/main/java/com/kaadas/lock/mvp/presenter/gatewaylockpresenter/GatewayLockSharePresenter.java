@@ -23,39 +23,40 @@ import io.reactivex.functions.Predicate;
 
 public class GatewayLockSharePresenter<T> extends BasePresenter<GatewayLockShareView> {
     private Disposable shareDeleteDisposable;
+
     //删除用户密码
-    public void shareDeleteLockPwd(String gatewayId,String deviceId,String pwdNum){
+    public void shareDeleteLockPwd(String gatewayId, String deviceId, String pwdNum) {
         toDisposable(shareDeleteDisposable);
-        if (mqttService!=null){
-            shareDeleteDisposable=mqttService.mqttPublish(MqttConstant.getCallTopic(MyApplication.getInstance().getUid()), MqttCommandFactory.lockPwdFunc(gatewayId,deviceId,"clear","pin",pwdNum,""))
+        if (mqttService != null) {
+            shareDeleteDisposable = mqttService.mqttPublish(MqttConstant.getCallTopic(MyApplication.getInstance().getUid()), MqttCommandFactory.lockPwdFunc(gatewayId, deviceId, "clear", "pin", pwdNum, ""))
                     .filter(new Predicate<MqttData>() {
                         @Override
                         public boolean test(MqttData mqttData) throws Exception {
                             LogUtils.e("删除锁消息");
-                            if (MqttConstant.SET_PWD.equals(mqttData.getFunc())){
+                            if (MqttConstant.SET_PWD.equals(mqttData.getFunc())) {
                                 return true;
                             }
                             return false;
                         }
                     })
-                    .timeout(20*1000, TimeUnit.MILLISECONDS)
+                    .timeout(20 * 1000, TimeUnit.MILLISECONDS)
                     .compose(RxjavaHelper.observeOnMainThread())
                     .subscribe(new Consumer<MqttData>() {
                         @Override
                         public void accept(MqttData mqttData) throws Exception {
-                            LogUtils.e("删除....."+mqttData.getFunc());
+                            LogUtils.e("删除....." + mqttData.getFunc());
                             toDisposable(shareDeleteDisposable);
-                            LockPwdFuncBean lockPwdFuncBean=new Gson().fromJson(mqttData.getPayload(),LockPwdFuncBean.class);
-                            if ("200".equals(mqttData.getReturnCode())){
-                                if (lockPwdFuncBean.getReturnData().getStatus()==0){
+                            LockPwdFuncBean lockPwdFuncBean = new Gson().fromJson(mqttData.getPayload(), LockPwdFuncBean.class);
+                            if ("200".equals(mqttData.getReturnCode())) {
+                                if (lockPwdFuncBean.getReturnData().getStatus() == 0) {
                                     //删除成功
-                                    if (mViewRef.get()!=null){
+                                    if (isSafe()) {
                                         mViewRef.get().shareDeletePasswordSuccess(pwdNum);
-                                        deleteOnePwd(gatewayId,deviceId,MyApplication.getInstance().getUid(),pwdNum);
+                                        deleteOnePwd(gatewayId, deviceId, MyApplication.getInstance().getUid(), pwdNum);
                                     }
                                 }
-                            }else{
-                                if (mViewRef.get()!=null){
+                            } else {
+                                if (isSafe()) {
                                     mViewRef.get().shareDeletePasswordFail();
                                 }
                             }
@@ -63,7 +64,7 @@ public class GatewayLockSharePresenter<T> extends BasePresenter<GatewayLockShare
                     }, new Consumer<Throwable>() {
                         @Override
                         public void accept(Throwable throwable) throws Exception {
-                            if (mViewRef.get()!=null){
+                            if (isSafe()) {
                                 mViewRef.get().shareDeletePasswordThrowable(throwable);
                             }
                         }
@@ -72,14 +73,13 @@ public class GatewayLockSharePresenter<T> extends BasePresenter<GatewayLockShare
         }
 
 
-
     }
 
     //删除某个数据
-    private void deleteOnePwd(String gatewayId,String deviceId,String uid,String num) {
-        GatewayLockPwdDao gatewayLockPwdDao=MyApplication.getInstance().getDaoWriteSession().getGatewayLockPwdDao();
-        GatewayLockPwd gatewayLockPwd=gatewayLockPwdDao.queryBuilder().where(GatewayLockPwdDao.Properties.GatewayId.eq(gatewayId), GatewayLockPwdDao.Properties.DeviceId.eq(deviceId),GatewayLockPwdDao.Properties.Uid.eq(uid),GatewayLockPwdDao.Properties.Num.eq(num)).unique();
-        if (gatewayLockPwd!=null){
+    private void deleteOnePwd(String gatewayId, String deviceId, String uid, String num) {
+        GatewayLockPwdDao gatewayLockPwdDao = MyApplication.getInstance().getDaoWriteSession().getGatewayLockPwdDao();
+        GatewayLockPwd gatewayLockPwd = gatewayLockPwdDao.queryBuilder().where(GatewayLockPwdDao.Properties.GatewayId.eq(gatewayId), GatewayLockPwdDao.Properties.DeviceId.eq(deviceId), GatewayLockPwdDao.Properties.Uid.eq(uid), GatewayLockPwdDao.Properties.Num.eq(num)).unique();
+        if (gatewayLockPwd != null) {
             gatewayLockPwdDao.delete(gatewayLockPwd);
         }
     }

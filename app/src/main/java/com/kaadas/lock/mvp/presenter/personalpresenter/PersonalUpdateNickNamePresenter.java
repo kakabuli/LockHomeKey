@@ -11,28 +11,28 @@ import io.reactivex.disposables.Disposable;
 
 public class PersonalUpdateNickNamePresenter<T> extends BasePresenter<IPersonalUpdateNickNameView> {
     //修改昵称
-    public void updateNickName(String uid,String nickName){
-        XiaokaiNewServiceImp.modifyUserNick(uid,nickName).subscribe(new BaseObserver<BaseResult>() {
+    public void updateNickName(String uid, String nickName) {
+        XiaokaiNewServiceImp.modifyUserNick(uid, nickName).subscribe(new BaseObserver<BaseResult>() {
             @Override
             public void onSuccess(BaseResult baseResult) {
-                    if (mViewRef.get()!=null){
-                        if ("200".equals(baseResult.getCode()))
+                if (isSafe()) {
+                    if ("200".equals(baseResult.getCode()))
                         mViewRef.get().updateNickNameSuccess(nickName);
-                    }
+                }
             }
 
             @Override
             public void onAckErrorCode(BaseResult baseResult) {
-                if (mViewRef.get()!=null){
+                if (isSafe()) {
                     mViewRef.get().updateNickNameFail(baseResult);
                 }
             }
 
             @Override
             public void onFailed(Throwable throwable) {
-                 if (mViewRef.get()!=null){
-                     mViewRef.get().updateNickNameError(throwable);
-                 }
+                if (isSafe()) {
+                    mViewRef.get().updateNickNameError(throwable);
+                }
             }
 
             @Override

@@ -20,34 +20,35 @@ import io.reactivex.functions.Predicate;
 public class CatEyeDefaultPresenter<T> extends BasePresenter<ICatEyeDefaultView> {
     private Disposable getPirSlientDisposable;
     private Disposable setPirSlientDisposable;
+
     //获取静默参数
-    public void getPirSlient(String uid,String gatewayId,String deviceId){
-        if (mqttService!=null){
+    public void getPirSlient(String uid, String gatewayId, String deviceId) {
+        if (mqttService != null) {
             toDisposable(getPirSlientDisposable);
-            getPirSlientDisposable=mqttService.mqttPublish(MqttConstant.getCallTopic(uid), MqttCommandFactory.getPirSlient(uid,gatewayId,deviceId))
+            getPirSlientDisposable = mqttService.mqttPublish(MqttConstant.getCallTopic(uid), MqttCommandFactory.getPirSlient(uid, gatewayId, deviceId))
                     .filter(new Predicate<MqttData>() {
                         @Override
                         public boolean test(MqttData mqttData) throws Exception {
-                            if (MqttConstant.GET_PIR_SLIENT.equals(mqttData.getFunc())){
+                            if (MqttConstant.GET_PIR_SLIENT.equals(mqttData.getFunc())) {
                                 return true;
                             }
                             return false;
                         }
                     })
-                    .timeout(10*1000, TimeUnit.MILLISECONDS)
+                    .timeout(10 * 1000, TimeUnit.MILLISECONDS)
                     .compose(RxjavaHelper.observeOnMainThread())
                     .subscribe(new Consumer<MqttData>() {
                         @Override
                         public void accept(MqttData mqttData) throws Exception {
                             toDisposable(getPirSlientDisposable);
-                            GetPirSlientBean getPirSlientBean=new Gson().fromJson(mqttData.getPayload(),GetPirSlientBean.class);
-                            if (getPirSlientBean!=null){
-                                if ("200".equals(getPirSlientBean.getReturnCode())){
-                                    if (mViewRef!=null&&mViewRef.get()!=null){
+                            GetPirSlientBean getPirSlientBean = new Gson().fromJson(mqttData.getPayload(), GetPirSlientBean.class);
+                            if (getPirSlientBean != null) {
+                                if ("200".equals(getPirSlientBean.getReturnCode())) {
+                                    if (isSafe()) {
                                         mViewRef.get().getPirSlientSuccess(getPirSlientBean.getReturnData());
                                     }
-                                }else{
-                                    if (mViewRef!=null&&mViewRef.get()!=null){
+                                } else {
+                                    if (isSafe()) {
                                         mViewRef.get().getPirSlientFail();
                                     }
                                 }
@@ -57,7 +58,7 @@ public class CatEyeDefaultPresenter<T> extends BasePresenter<ICatEyeDefaultView>
                     }, new Consumer<Throwable>() {
                         @Override
                         public void accept(Throwable throwable) throws Exception {
-                            if (mViewRef!=null&&mViewRef.get()!=null){
+                            if (isSafe()) {
                                 mViewRef.get().getPirSlientThrowable(throwable);
                             }
                         }
@@ -67,52 +68,50 @@ public class CatEyeDefaultPresenter<T> extends BasePresenter<ICatEyeDefaultView>
     }
 
     //设置静默参数
-        public void setPirSlient(String uid,String gatewayId,String deviceId,int ust,int enable,int maxprohibition,int periodtime,int protecttime,int threshold){
-        if (mqttService!=null){
+    public void setPirSlient(String uid, String gatewayId, String deviceId, int ust, int enable, int maxprohibition, int periodtime, int protecttime, int threshold) {
+        if (mqttService != null) {
             toDisposable(setPirSlientDisposable);
-                setPirSlientDisposable =mqttService.mqttPublish(MqttConstant.getCallTopic(uid), MqttCommandFactory.setPirSlient(uid,gatewayId,deviceId,ust,enable,maxprohibition,periodtime,protecttime,threshold))
-                        .filter(new Predicate<MqttData>() {
-                            @Override
-                            public boolean test(MqttData mqttData) throws Exception {
-                                if (MqttConstant.SET_PIR_SLIENT.equals(mqttData.getFunc())){
-                                    return true;
-                                }
-                                return false;
+            setPirSlientDisposable = mqttService.mqttPublish(MqttConstant.getCallTopic(uid), MqttCommandFactory.setPirSlient(uid, gatewayId, deviceId, ust, enable, maxprohibition, periodtime, protecttime, threshold))
+                    .filter(new Predicate<MqttData>() {
+                        @Override
+                        public boolean test(MqttData mqttData) throws Exception {
+                            if (MqttConstant.SET_PIR_SLIENT.equals(mqttData.getFunc())) {
+                                return true;
                             }
-                        })
-                        .timeout(10*1000, TimeUnit.MILLISECONDS)
-                        .compose(RxjavaHelper.observeOnMainThread())
-                        .subscribe(new Consumer<MqttData>() {
-                            @Override
-                            public void accept(MqttData mqttData) throws Exception {
-                                toDisposable(setPirSlientDisposable);
-                                SetPirSlientBean setPirSlientBean=new Gson().fromJson(mqttData.getPayload(),SetPirSlientBean.class);
-                                if (setPirSlientBean!=null){
-                                    if ("200".equals(setPirSlientBean.getReturnCode())){
-                                        if (mViewRef!=null&&mViewRef.get()!=null){
-                                            mViewRef.get().setPirSlientSuccess();
-                                        }
-                                    }else{
-                                        if (mViewRef!=null&&mViewRef.get()!=null){
-                                            mViewRef.get().setPirSlientFail();
-                                        }
+                            return false;
+                        }
+                    })
+                    .timeout(10 * 1000, TimeUnit.MILLISECONDS)
+                    .compose(RxjavaHelper.observeOnMainThread())
+                    .subscribe(new Consumer<MqttData>() {
+                        @Override
+                        public void accept(MqttData mqttData) throws Exception {
+                            toDisposable(setPirSlientDisposable);
+                            SetPirSlientBean setPirSlientBean = new Gson().fromJson(mqttData.getPayload(), SetPirSlientBean.class);
+                            if (setPirSlientBean != null) {
+                                if ("200".equals(setPirSlientBean.getReturnCode())) {
+                                    if (isSafe()) {
+                                        mViewRef.get().setPirSlientSuccess();
+                                    }
+                                } else {
+                                    if (isSafe()) {
+                                        mViewRef.get().setPirSlientFail();
                                     }
                                 }
+                            }
 
+                        }
+                    }, new Consumer<Throwable>() {
+                        @Override
+                        public void accept(Throwable throwable) throws Exception {
+                            if (isSafe()) {
+                                mViewRef.get().setPirSlientThrowable(throwable);
                             }
-                        }, new Consumer<Throwable>() {
-                            @Override
-                            public void accept(Throwable throwable) throws Exception {
-                                if (mViewRef!=null&&mViewRef.get()!=null){
-                                    mViewRef.get().setPirSlientThrowable(throwable);
-                                }
-                            }
-                        });
-            }
-            compositeDisposable.add(setPirSlientDisposable);
+                        }
+                    });
         }
-
-
+        compositeDisposable.add(setPirSlientDisposable);
+    }
 
 
 }

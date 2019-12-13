@@ -18,33 +18,34 @@ import io.reactivex.functions.Predicate;
 
 public class CatEyeResolutionPresenter<T> extends BasePresenter<ICatEyeResolutionView> {
     private Disposable resolutionDisposable;
+
     //设置猫眼的分辨率
-    public void  setResolution(String gatewayId,String deviceId,String uid,String resolution){
+    public void setResolution(String gatewayId, String deviceId, String uid, String resolution) {
         toDisposable(resolutionDisposable);
-        if (mqttService!=null){
-            resolutionDisposable=mqttService.mqttPublish(MqttConstant.getCallTopic(uid), MqttCommandFactory.setVedioRes(gatewayId,deviceId,uid,resolution))
+        if (mqttService != null) {
+            resolutionDisposable = mqttService.mqttPublish(MqttConstant.getCallTopic(uid), MqttCommandFactory.setVedioRes(gatewayId, deviceId, uid, resolution))
                     .filter(new Predicate<MqttData>() {
                         @Override
                         public boolean test(MqttData mqttData) throws Exception {
-                            if (mqttData.getFunc().equals(MqttConstant.SET_VEDIO_RES)){
+                            if (mqttData.getFunc().equals(MqttConstant.SET_VEDIO_RES)) {
                                 return true;
                             }
                             return false;
                         }
                     })
-                    .timeout(10*1000, TimeUnit.MILLISECONDS)
+                    .timeout(10 * 1000, TimeUnit.MILLISECONDS)
                     .compose(RxjavaHelper.observeOnMainThread())
                     .subscribe(new Consumer<MqttData>() {
                         @Override
                         public void accept(MqttData mqttData) throws Exception {
                             toDisposable(resolutionDisposable);
-                            SetVedioResBean setVedioResBean=new Gson().fromJson(mqttData.getPayload(), SetVedioResBean.class);
-                            if ("200".equals(setVedioResBean.getReturnCode())){
-                                if (mViewRef.get()!=null){
+                            SetVedioResBean setVedioResBean = new Gson().fromJson(mqttData.getPayload(), SetVedioResBean.class);
+                            if ("200".equals(setVedioResBean.getReturnCode())) {
+                                if (isSafe()) {
                                     mViewRef.get().setResolutionSuccess(resolution);
                                 }
-                            }else{
-                                if (mViewRef.get()!=null){
+                            } else {
+                                if (isSafe()) {
                                     mViewRef.get().setResolutionFail();
                                 }
                             }
@@ -52,7 +53,7 @@ public class CatEyeResolutionPresenter<T> extends BasePresenter<ICatEyeResolutio
                     }, new Consumer<Throwable>() {
                         @Override
                         public void accept(Throwable throwable) throws Exception {
-                            if (mViewRef.get()!=null){
+                            if (isSafe()) {
                                 mViewRef.get().setResolutionThrowable(throwable);
                             }
                         }

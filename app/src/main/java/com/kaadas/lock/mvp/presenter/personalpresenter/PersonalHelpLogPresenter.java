@@ -1,7 +1,6 @@
 package com.kaadas.lock.mvp.presenter.personalpresenter;
 
 
-
 import com.kaadas.lock.mvp.mvpbase.BasePresenter;
 import com.kaadas.lock.publiclibrary.http.XiaokaiNewServiceImp;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
@@ -14,13 +13,13 @@ import io.reactivex.disposables.Disposable;
 public class PersonalHelpLogPresenter<T> extends BasePresenter<IPersonalHelpLogView> {
 
     //获取帮助日志
-    public void  getHelpLog(String uid,int page){
+    public void getHelpLog(String uid, int page) {
 
-        XiaokaiNewServiceImp.getHelpLog(uid,page).subscribe(new BaseObserver<GetHelpLogResult>() {
+        XiaokaiNewServiceImp.getHelpLog(uid, page).subscribe(new BaseObserver<GetHelpLogResult>() {
             @Override
             public void onSuccess(GetHelpLogResult getHelpLogResult) {
-                if ("200".equals(getHelpLogResult.getCode())){
-                    if (mViewRef.get()!=null){
+                if ("200".equals(getHelpLogResult.getCode())) {
+                    if (isSafe()) {
                         mViewRef.get().getHelpLogSuccess(getHelpLogResult);
                     }
                 }
@@ -28,14 +27,14 @@ public class PersonalHelpLogPresenter<T> extends BasePresenter<IPersonalHelpLogV
 
             @Override
             public void onAckErrorCode(BaseResult baseResult) {
-                if (mViewRef.get()!=null){
+                if (isSafe()) {
                     mViewRef.get().getHelpLogFail(baseResult);
                 }
             }
 
             @Override
             public void onFailed(Throwable throwable) {
-                if (mViewRef.get()!=null){
+                if (isSafe()) {
                     mViewRef.get().getHelpLogError(throwable);
                 }
             }

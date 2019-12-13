@@ -60,25 +60,26 @@ public class PersonalFAQPresenter<T> extends BasePresenter<IPersonalFAQView> {
                 GetFAQResult getFAQResult = gson.fromJson(s, GetFAQResult.class);
                 if ("200".equals(getFAQResult.getCode())) { //如果请求成功
                     if (mViewRef != null) {
-                        mViewRef.get().getFAQSuccessListView(getFAQResult,s);
+                        mViewRef.get().getFAQSuccessListView(getFAQResult, s);
                     }
                 } else {
                     if ("444".equals(getFAQResult.getCode())) { //Token过期
                         LogUtils.e("token过期   " + Thread.currentThread().getName());
-                        if (mqttService!=null){
+                        if (mqttService != null) {
                             mqttService.httpMqttDisconnect();
                         }
                         MyApplication.getInstance().tokenInvalid(true);
-                    }else {
+                    } else {
                         if (mViewRef != null) {
                             mViewRef.get().getFAQFail(getFAQResult);
                         }
                     }
                 }
             }
+
             @Override
             public void onError(Throwable e) {
-                if (mViewRef.get()!=null){
+                if (isSafe()) {
                     mViewRef.get().getFAQError(e);
                 }
             }

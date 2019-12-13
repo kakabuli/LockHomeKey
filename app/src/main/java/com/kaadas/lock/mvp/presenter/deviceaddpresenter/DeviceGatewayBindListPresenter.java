@@ -30,13 +30,14 @@ public class DeviceGatewayBindListPresenter<T> extends BasePresenter<DeviceGatew
 
     private Disposable disposable;
     private Disposable getWiFiBasicDisposable;
-    private ArrayList<HomeShowBean> showBeansList=new ArrayList<>();
+    private ArrayList<HomeShowBean> showBeansList = new ArrayList<>();
+
     //获取绑定的网关列表
-    public List<HomeShowBean> getGatewayBindList(){
-        List<HomeShowBean> homeShowBeans=MyApplication.getInstance().getAllDevices();
-        for (HomeShowBean showBean:homeShowBeans){
-            if (showBean.getDeviceType()==HomeShowBean.TYPE_GATEWAY){
-                if (showBeansList!=null){
+    public List<HomeShowBean> getGatewayBindList() {
+        List<HomeShowBean> homeShowBeans = MyApplication.getInstance().getAllDevices();
+        for (HomeShowBean showBean : homeShowBeans) {
+            if (showBean.getDeviceType() == HomeShowBean.TYPE_GATEWAY) {
+                if (showBeansList != null) {
                     showBeansList.add(showBean);
                 }
             }
@@ -48,7 +49,7 @@ public class DeviceGatewayBindListPresenter<T> extends BasePresenter<DeviceGatew
 
     //获取通知
     public void getGatewayState() {
-        if (mqttService!=null) {
+        if (mqttService != null) {
             disposable = mqttService.listenerNotifyData()
                     .subscribe(new Consumer<MqttData>() {
                         @Override
@@ -57,7 +58,7 @@ public class DeviceGatewayBindListPresenter<T> extends BasePresenter<DeviceGatew
                                 if (MqttConstant.GATEWAY_STATE.equals(mqttData.getFunc())) {
                                     GetBindGatewayStatusResult gatewayStatusResult = new Gson().fromJson(mqttData.getPayload(), GetBindGatewayStatusResult.class);
                                     if (gatewayStatusResult != null) {
-                                        if (mViewRef.get() != null) {
+                                        if (isSafe()) {
                                             mViewRef.get().getGatewayStateSuccess(gatewayStatusResult.getDevuuid(), gatewayStatusResult.getData().getState());
                                         }
                                     }
@@ -78,7 +79,7 @@ public class DeviceGatewayBindListPresenter<T> extends BasePresenter<DeviceGatew
                         @Override
                         public boolean test(MqttData mqttData) throws Exception {
                             LogUtils.e("获取到的数据的messageId是   " + mqttData.getMessageId() + "   发送的messageId是  " + wiFiBasic.getId());
-                            return mqttData.isThisRequest(wiFiBasic.getId(),   MqttConstant.GET_WIFI_BASIC );
+                            return mqttData.isThisRequest(wiFiBasic.getId(), MqttConstant.GET_WIFI_BASIC);
                         }
                     })
                     .timeout(10 * 1000, TimeUnit.MILLISECONDS)
@@ -86,13 +87,13 @@ public class DeviceGatewayBindListPresenter<T> extends BasePresenter<DeviceGatew
                     .subscribe(new Consumer<MqttData>() {
                         @Override
                         public void accept(MqttData mqttData) throws Exception {
-                            if ("200".equals(mqttData.getReturnCode() )   ){ //请求成功
+                            if ("200".equals(mqttData.getReturnCode())) { //请求成功
                                 GwWiFiBaseInfo wiFiBaseInfo = new Gson().fromJson(mqttData.getPayload(), GwWiFiBaseInfo.class);
-                                if (mViewRef.get()!=null){
+                                if (isSafe()) {
                                     mViewRef.get().onGetWifiInfoSuccess(wiFiBaseInfo);
                                 }
-                            }else {
-                                if (mViewRef.get()!=null){
+                            } else {
+                                if (isSafe()) {
                                     mViewRef.get().onGetWifiInfoFailed(new MqttReturnCodeError(mqttData.getReturnCode()));
                                 }
                             }
@@ -101,7 +102,7 @@ public class DeviceGatewayBindListPresenter<T> extends BasePresenter<DeviceGatew
                     }, new Consumer<Throwable>() {
                         @Override
                         public void accept(Throwable throwable) throws Exception {
-                            if (mViewRef.get()!=null){
+                            if (isSafe()) {
                                 mViewRef.get().onGetWifiInfoFailed(throwable);
                             }
                         }

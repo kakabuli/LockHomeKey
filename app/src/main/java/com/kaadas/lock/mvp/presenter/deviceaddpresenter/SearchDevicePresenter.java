@@ -68,7 +68,7 @@ public class SearchDevicePresenter<T> extends BasePresenter<ISearchDeviceView> {
         toDisposable(disposable);
         if (devices != null) {  //每次重新搜索都清空搜索到的设备，然后传递给界面让界面刷新
             devices.clear();
-            if (mViewRef.get() != null) {
+            if (isSafe()) {
                 mViewRef.get().loadDevices(devices);
             }
         }
@@ -238,7 +238,7 @@ public class SearchDevicePresenter<T> extends BasePresenter<ISearchDeviceView> {
         public void run() {
             LogUtils.e("延时断开连接  ");
             //如果此时没有连接上设备，那么结束连接   释放连接资源
-            if (mViewRef.get() != null) {
+            if (isSafe()) {
                 mViewRef.get().onConnectFailed();
             }
             if (bleService == null) { //判断
@@ -266,7 +266,7 @@ public class SearchDevicePresenter<T> extends BasePresenter<ISearchDeviceView> {
         this.isBind = isBind;
         this.device = device;
         if (connectTimes > 2) {
-            if (mViewRef.get() != null) {
+            if (isSafe()) {
                 mViewRef.get().onConnectFailed();
             }
             return;
@@ -276,7 +276,7 @@ public class SearchDevicePresenter<T> extends BasePresenter<ISearchDeviceView> {
         handler.removeCallbacks(releaseRunnable);
         bleService.connectDeviceByDevice(device); //1
         handler.postDelayed(releaseRunnable, 15 * 1000);
-        if (mViewRef.get() != null) {
+        if (isSafe()) {
             mViewRef.get().onConnecting();
         }
         try {
@@ -290,13 +290,13 @@ public class SearchDevicePresenter<T> extends BasePresenter<ISearchDeviceView> {
                             if (bleStateBean.isConnected()) {
                                 LogUtils.e(SearchDevicePresenter.class.getName() + "连接成功");
                                 if (bleStateBean.getBleVersion() == 2 || bleStateBean.getBleVersion() == 3) {
-                                    if (mViewRef.get() != null) {
+                                    if (isSafe()) {
                                         mViewRef.get().onConnectSuccess();
                                     }
                                     readSnTimes = 0;  //初始化读取SN的次数
                                     readSn(bleStateBean.getBleVersion(), device.getAddress(), device.getName());
                                 } else if (bleStateBean.getBleVersion() == 1) { //最老的模块，走老的流程
-                                    if (mViewRef.get() != null) {
+                                    if (isSafe()) {
                                         mViewRef.get().onConnectedAndIsOldMode(bleStateBean.getBleVersion(), isBind, device.getAddress(), device.getName());
                                     }
                                 }
@@ -325,7 +325,7 @@ public class SearchDevicePresenter<T> extends BasePresenter<ISearchDeviceView> {
         toDisposable(snDisposable);
         LogUtils.e("第" + readSnTimes + "次读取SN");
         if (readSnTimes > 2) {
-            if (mViewRef.get() != null) {
+            if (isSafe()) {
                 mViewRef.get().readSNFailed();
             }
             return;
@@ -361,7 +361,7 @@ public class SearchDevicePresenter<T> extends BasePresenter<ISearchDeviceView> {
 
     public void getPwd1(String sn, int version, String mac, String deviceName) {
 
-        if (mViewRef.get() != null) {
+        if (isSafe()) {
             mViewRef.get().getPwd1();
         }
 
@@ -377,7 +377,7 @@ public class SearchDevicePresenter<T> extends BasePresenter<ISearchDeviceView> {
                             if (TextUtils.isEmpty(pwd1)) {
                                 mViewRef.get().pwdIsEmpty();
                             } else {
-                                if (mViewRef.get() != null) {
+                                if (isSafe()) {
                                     mViewRef.get().getPwd1Success(pwd1, isBind, version, sn, mac, deviceName);
                                 }
                             }
@@ -393,7 +393,7 @@ public class SearchDevicePresenter<T> extends BasePresenter<ISearchDeviceView> {
                             bPwd1 = device.getAddress().replace(":", "").getBytes();
                             System.arraycopy(bPwd1, 0, password_1, 0, bPwd1.length);
                             pwd1 = Rsa.bytesToHexString(bPwd1);
-                            if (mViewRef.get() != null) {
+                            if (isSafe()) {
 //                                mViewRef.get().getPwd1Success(pwd1, isBind,version,sn,mac,deviceName);
                                 if (bleService != null) {  //1
                                     LogUtils.e("设备未经过产测   断开连接");
@@ -403,7 +403,7 @@ public class SearchDevicePresenter<T> extends BasePresenter<ISearchDeviceView> {
                             }
                             return;
                         } else {
-                            if (mViewRef.get() != null) {
+                            if (isSafe()) {
                                 mViewRef.get().getPwd1FailedServer(baseResult);
                             }
                         }
@@ -412,7 +412,7 @@ public class SearchDevicePresenter<T> extends BasePresenter<ISearchDeviceView> {
                     @Override
                     public void onFailed(Throwable throwable) {
                         LogUtils.e("获取pwd1失败");
-                        if (mViewRef.get() != null) {
+                        if (isSafe()) {
                             mViewRef.get().getPwd1Failed(throwable);
                         }
                     }

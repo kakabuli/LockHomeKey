@@ -16,7 +16,7 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Predicate;
 
-public class CatEyeVolumePresenter  <T> extends BasePresenter<ICatEyeVolumeView> {
+public class CatEyeVolumePresenter<T> extends BasePresenter<ICatEyeVolumeView> {
     private Disposable setRingNumberDisposable;
 
     //设置响铃次数
@@ -41,11 +41,11 @@ public class CatEyeVolumePresenter  <T> extends BasePresenter<ICatEyeVolumeView>
                             toDisposable(setRingNumberDisposable);
                             SetCatEyeBellCountBean setCatEyeBellCount = new Gson().fromJson(mqttData.getPayload(), SetCatEyeBellCountBean.class);
                             if ("200".equals(setCatEyeBellCount.getReturnCode())) {
-                                if (mViewRef.get() != null) {
+                                if (isSafe()) {
                                     mViewRef.get().setVolumeSuccess(volume);
                                 }
                             } else {
-                                if (mViewRef.get() != null) {
+                                if (isSafe()) {
                                     mViewRef.get().setVolumeFail();
                                 }
                             }
@@ -53,7 +53,7 @@ public class CatEyeVolumePresenter  <T> extends BasePresenter<ICatEyeVolumeView>
                     }, new Consumer<Throwable>() {
                         @Override
                         public void accept(Throwable throwable) throws Exception {
-                            if (mViewRef.get() != null) {
+                            if (isSafe()) {
                                 mViewRef.get().setVolumeThrowable(throwable);
                             }
                         }

@@ -16,19 +16,17 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
  */
 
 public class UpgradePresenter {
-    Retrofit retrofit=null;
+    Retrofit retrofit = null;
 
     UpgradeService upgradeService;
 
     public interface IUpgradePresenter {
 
-        void  ShowUpgradePresenterSuccess(String jsonPresenterResult);
-        void  ShowUpgradePresenterFail();
+        void ShowUpgradePresenterSuccess(String jsonPresenterResult);
+
+        void ShowUpgradePresenterFail();
 
     }
-
-
-
 
 
     public UpgradePresenter() {
@@ -43,29 +41,26 @@ public class UpgradePresenter {
     }
 
 
-    public void getUpgreadJson( IUpgradePresenter upgradePresenter){
-        Call<String> callLogin=upgradeService.getUpdateJson();
+    public void getUpgreadJson(IUpgradePresenter upgradePresenter) {
+        Call<String> callLogin = upgradeService.getUpdateJson();
         callLogin.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
-                String result= response.body();
-                if(upgradePresenter!=null){
+                String result = response.body();
+                if (upgradePresenter != null) {
                     upgradePresenter.ShowUpgradePresenterSuccess(result);
                 }
             }
 
             @Override
             public void onFailure(Call<String> call, Throwable t) {
-                Log.e("denganzhi1",t.toString());
-                if(upgradePresenter!=null){
+                Log.e("denganzhi1", t.toString());
+                if (upgradePresenter != null) {
                     upgradePresenter.ShowUpgradePresenterFail();
                 }
             }
         });
     }
-
-
-
 
 
 }

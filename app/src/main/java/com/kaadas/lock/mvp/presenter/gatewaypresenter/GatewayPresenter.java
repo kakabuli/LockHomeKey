@@ -84,11 +84,11 @@ public class GatewayPresenter<T> extends BasePresenter<GatewayView> {
                         public void accept(MqttData mqttData) throws Exception {
                             GetDevicePowerBean powerBean = new Gson().fromJson(mqttData.getPayload(), GetDevicePowerBean.class);
                             if ("200".equals(mqttData.getReturnCode())) {
-                                if (mViewRef.get() != null) {
+                                if (isSafe()) {
                                     mViewRef.get().getPowerDataSuccess(powerBean.getDeviceId(), powerBean.getReturnData().getPower());
                                 }
                             } else {
-                                if (mViewRef.get() != null) {
+                                if (isSafe()) {
                                     mViewRef.get().getPowerDataFail(powerBean.getGwId(), powerBean.getDeviceId());
                                 }
                             }
@@ -96,7 +96,7 @@ public class GatewayPresenter<T> extends BasePresenter<GatewayView> {
                     }, new Consumer<Throwable>() {
                         @Override
                         public void accept(Throwable throwable) throws Exception {
-                            if (mViewRef.get() != null) {
+                            if (isSafe()) {
                                 mViewRef.get().getPowerThrowable();
                             }
                         }
@@ -119,7 +119,7 @@ public class GatewayPresenter<T> extends BasePresenter<GatewayView> {
                                 GetBindGatewayStatusResult gatewayStatusResult = new Gson().fromJson(mqttData.getPayload(), GetBindGatewayStatusResult.class);
                                 LogUtils.e("监听网关GatewayActivity" + gatewayStatusResult.getDevuuid());
                                 if (gatewayStatusResult != null && gatewayStatusResult.getData().getState() != null) {
-                                    if (mViewRef.get() != null) {
+                                    if (isSafe()) {
                                         mViewRef.get().gatewayStatusChange(gatewayStatusResult.getDevuuid(), gatewayStatusResult.getData().getState());
                                     }
                                 }
@@ -154,7 +154,7 @@ public class GatewayPresenter<T> extends BasePresenter<GatewayView> {
                         public void accept(MqttData mqttData) throws Exception {
                             DeviceOnLineBean deviceOnLineBean = new Gson().fromJson(mqttData.getPayload(), DeviceOnLineBean.class);
                             if (deviceOnLineBean != null) {
-                                if (mViewRef.get() != null && deviceOnLineBean.getEventparams().getEvent_str() != null) {
+                                if (isSafe() && deviceOnLineBean.getEventparams().getEvent_str() != null) {
                                     mViewRef.get().deviceStatusChange(deviceOnLineBean.getGwId(), deviceOnLineBean.getDeviceId(), deviceOnLineBean.getEventparams().getEvent_str());
                                 }
                             }
@@ -191,12 +191,12 @@ public class GatewayPresenter<T> extends BasePresenter<GatewayView> {
                             toDisposable(unbindGatewayDisposable);
                             UnBindGatewayBean unBindGatewayBean = new Gson().fromJson(mqttData.getPayload(), UnBindGatewayBean.class);
                             if ("200".equals(unBindGatewayBean.getCode())) {
-                                if (mViewRef.get() != null) {
+                                if (isSafe()) {
                                     mViewRef.get().unbindGatewaySuccess();
                                     MyApplication.getInstance().getAllDevicesByMqtt(true);
                                 }
                             } else {
-                                if (mViewRef.get() != null) {
+                                if (isSafe()) {
                                     mViewRef.get().unbindGatewayFail();
                                 }
                             }
@@ -204,7 +204,7 @@ public class GatewayPresenter<T> extends BasePresenter<GatewayView> {
                     }, new Consumer<Throwable>() {
                         @Override
                         public void accept(Throwable throwable) throws Exception {
-                            if (mViewRef.get() != null) {
+                            if (isSafe()) {
                                 mViewRef.get().unbindGatewayThrowable(throwable);
                             }
                         }
@@ -235,12 +235,12 @@ public class GatewayPresenter<T> extends BasePresenter<GatewayView> {
                             toDisposable(unbindTestGatewayDisposable);
                             UnBindGatewayBean unBindGatewayBean = new Gson().fromJson(mqttData.getPayload(), UnBindGatewayBean.class);
                             if ("200".equals(unBindGatewayBean.getCode())) {
-                                if (mViewRef.get() != null) {
+                                if (isSafe()) {
                                     mViewRef.get().unbindTestGatewaySuccess();
                                     MyApplication.getInstance().getAllDevicesByMqtt(true);
                                 }
                             } else {
-                                if (mViewRef.get() != null) {
+                                if (isSafe()) {
                                     mViewRef.get().unbindTestGatewayFail();
                                 }
                             }
@@ -248,7 +248,7 @@ public class GatewayPresenter<T> extends BasePresenter<GatewayView> {
                     }, new Consumer<Throwable>() {
                         @Override
                         public void accept(Throwable throwable) throws Exception {
-                            if (mViewRef.get() != null) {
+                            if (isSafe()) {
                                 mViewRef.get().unbindTestGatewayThrowable(throwable);
                             }
                         }
@@ -267,7 +267,7 @@ public class GatewayPresenter<T> extends BasePresenter<GatewayView> {
                     @Override
                     public void accept(Boolean aBoolean) throws Exception {
                         if (aBoolean) {
-                            if (mViewRef != null && mViewRef.get() != null) {
+                            if (mViewRef != null && isSafe()) {
                                 mViewRef.get().networkChangeSuccess();
                             }
                         }

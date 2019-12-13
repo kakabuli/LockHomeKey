@@ -15,7 +15,6 @@ import com.kaadas.lock.utils.ftp.GeTui;
 import net.sdvn.cmapi.Device;
 
 
-
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -29,9 +28,10 @@ import io.reactivex.functions.Consumer;
  * Describe
  */
 
-public class VideoCallBackPresenter <T> extends BasePresenter<IVedeoCallBack> {
+public class VideoCallBackPresenter<T> extends BasePresenter<IVedeoCallBack> {
 
     private Disposable memeDisposable;
+
     /**
      * 登录米米网
      *
@@ -49,8 +49,8 @@ public class VideoCallBackPresenter <T> extends BasePresenter<IVedeoCallBack> {
                 new BiFunction<Boolean, List<Device>, Boolean>() {
                     @Override
                     public Boolean apply(Boolean aBoolean, List<Device> devices) throws Exception {
-                    //    LogUtils.e("米米网登陆成功  且网关在线");
-                         Log.e(GeTui.VideoLog,"米米网登陆成功  且网关在线........");
+                        //    LogUtils.e("米米网登陆成功  且网关在线");
+                        Log.e(GeTui.VideoLog, "米米网登陆成功  且网关在线........");
                         if (aBoolean && devices.size() > 0) { //米米网登陆成功且网关在线  正常到此处，那么都应该是成功的
                             return true;
                         }
@@ -70,42 +70,41 @@ public class VideoCallBackPresenter <T> extends BasePresenter<IVedeoCallBack> {
 //                                LogUtils.e("米米网  登陆成功   呼叫猫眼");
 //                                wakeupCatEye(cateEyeInfo);
 //                            } else { //米米网登陆失败或者网关不在线
-//                                if (mViewRef.get() != null) {
+//                                if (isSafe()) {
 //                                    mViewRef.get().loginMemeFailed();
 //                                    MemeManager.getInstance().videoActivityDisconnectMeme();
 //                                }
 //                                isCalling = false;
 //                            }
 //                        } else { //米米网登录成功的话   通知界面   有电话呼叫过来  弹出对话框
-                            if (aBoolean) { // 米米网登陆成功且网关在线
+                        if (aBoolean) { // 米米网登陆成功且网关在线
                             //    LogUtils.e("米米网  登陆成功   呼叫猫眼");
-                                Log.e(GeTui.VideoLog,"米米网  登陆成功........");
-                                if (isSafe()) {
-                                    mViewRef.get().onCatEyeCallIn();
-                                }
-                            } else { //米米网登陆失败或者网关不在线  不处理
-                                if (isSafe()) {
-                                    mViewRef.get().loginMemeFailed();
-                                    MemeManager.getInstance().videoActivityDisconnectMeme();
-                                }
-                       //     }
+                            Log.e(GeTui.VideoLog, "米米网  登陆成功........");
+                            if (isSafe()) {
+                                mViewRef.get().onCatEyeCallIn();
+                            }
+                        } else { //米米网登陆失败或者网关不在线  不处理
+                            if (isSafe()) {
+                                mViewRef.get().loginMemeFailed();
+                                MemeManager.getInstance().videoActivityDisconnectMeme();
+                            }
+                            //     }
                         }
 
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        Log.e(GeTui.VideoLog,"登录米米网失败或者设备不在线........");
-                            if (isSafe()) {
-                                mViewRef.get().loginMemeFailed();
-                            }
+                        Log.e(GeTui.VideoLog, "登录米米网失败或者设备不在线........");
+                        if (isSafe()) {
+                            mViewRef.get().loginMemeFailed();
+                        }
 
                         MemeManager.getInstance().videoActivityDisconnectMeme();
                     }
                 });
-                  compositeDisposable.add(memeDisposable);
+        compositeDisposable.add(memeDisposable);
     }
-
 
 
 }

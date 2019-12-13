@@ -33,15 +33,15 @@ public class SnapPresenter<T> extends BasePresenter<ISnapShotView> {
 
 
     String deviceId = "";
-    String gatewayId="";
+    String gatewayId = "";
     private Disposable allBindDeviceDisposable;
 
-    public void  weakUpFTP(String gatewayId,String deviceId){
-        this.gatewayId=gatewayId;
-        this.deviceId=deviceId;
-        MqttMessage allBindDevice = MqttCommandFactory.setEnableFTP(gatewayId,deviceId);
+    public void weakUpFTP(String gatewayId, String deviceId) {
+        this.gatewayId = gatewayId;
+        this.deviceId = deviceId;
+        MqttMessage allBindDevice = MqttCommandFactory.setEnableFTP(gatewayId, deviceId);
         toDisposable(allBindDeviceDisposable);
-        String topic= "/" + MyApplication.getInstance().getUid() +MqttConstant.PUBLISH_TO_GATEWAY;
+        String topic = "/" + MyApplication.getInstance().getUid() + MqttConstant.PUBLISH_TO_GATEWAY;
         allBindDeviceDisposable = mqttService.mqttPublish(topic, allBindDevice)
                 .compose(RxjavaHelper.observeOnMainThread())
                 .filter(new Predicate<MqttData>() {
@@ -58,17 +58,17 @@ public class SnapPresenter<T> extends BasePresenter<ISnapShotView> {
                     public void accept(MqttData mqttData) throws Exception {
                         toDisposable(allBindDeviceDisposable);
                         String payload = mqttData.getPayload();
-                        Log.e("denganzhi1",payload);
+                        Log.e("denganzhi1", payload);
                         FtpEnable ftpEnable = new Gson().fromJson(payload, FtpEnable.class);
-                        if (ftpEnable!=null){
-                            if ("200".equals(ftpEnable.getReturnCode())){
-                            //    MyApplication.getInstance().getDevicesFromServer.onNext(allBindDevices);
+                        if (ftpEnable != null) {
+                            if ("200".equals(ftpEnable.getReturnCode())) {
+                                //    MyApplication.getInstance().getDevicesFromServer.onNext(allBindDevices);
                                 //重新获取数据
-                                if (mViewRef.get()!=null){
+                                if (isSafe()) {
                                     mViewRef.get().showFTPResultSuccess(ftpEnable);
                                 }
-                            }else{
-                                if (mViewRef.get()!=null){
+                            } else {
+                                if (isSafe()) {
                                     mViewRef.get().showFTPResultFail();
                                 }
                             }
@@ -79,12 +79,12 @@ public class SnapPresenter<T> extends BasePresenter<ISnapShotView> {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
                         toDisposable(allBindDeviceDisposable);
-                        if (mViewRef.get()!=null){
+                        if (isSafe()) {
                             mViewRef.get().showFTPOverTime();
                         }
                     }
                 });
-                compositeDisposable.add(allBindDeviceDisposable);
+        compositeDisposable.add(allBindDeviceDisposable);
 
     }
 }

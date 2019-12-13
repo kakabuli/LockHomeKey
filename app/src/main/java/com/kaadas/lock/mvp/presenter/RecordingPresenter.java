@@ -24,7 +24,7 @@ public class RecordingPresenter<T> extends BasePresenter<IRecordingView> {
 
     private MediaFileDBDao mMediaDBDao;
 
-    public void fetchVideoAndImage(String deviceId,Context context){
+    public void fetchVideoAndImage(String deviceId, Context context) {
 
         mMediaDBDao = MediaFileDBDao.getInstance(context);
 
@@ -42,23 +42,23 @@ public class RecordingPresenter<T> extends BasePresenter<IRecordingView> {
 //
 //                        });
 
-                        if (mViewRef.get()!=null){
+                        if (isSafe()) {
                             mViewRef.get().showFetchResult(mediaItems);
                         }
 
                     }
                 });
-            compositeDisposable.add(disposable);
-       }
+        compositeDisposable.add(disposable);
+    }
 
 
-       public void  deleteVideoAndImage(String name,Context context){
-           mMediaDBDao = MediaFileDBDao.getInstance(context);
-           boolean isDeleteFlag=mMediaDBDao.deleteFileByName(name);
-           if (mViewRef.get()!=null){
-               mViewRef.get().deleteResult(isDeleteFlag);
-           }
-       }
+    public void deleteVideoAndImage(String name, Context context) {
+        mMediaDBDao = MediaFileDBDao.getInstance(context);
+        boolean isDeleteFlag = mMediaDBDao.deleteFileByName(name);
+        if (isSafe()) {
+            mViewRef.get().deleteResult(isDeleteFlag);
+        }
+    }
 
 
 }
