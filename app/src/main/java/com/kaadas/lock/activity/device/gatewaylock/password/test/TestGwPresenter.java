@@ -56,12 +56,12 @@ public class TestGwPresenter<T> extends BasePresenter<ITestGwTestView> {
                             String returnCode = lockPwdInfoBean.getReturnCode();
                             if ("200".equals(returnCode)) {
                                 maxNumber = lockPwdInfoBean.getReturnData().getMaxpwdusernum();
-                                if (isSafe()) {
+                                if (mViewRef.get() != null) {
                                     mViewRef.get().getLockInfoSuccess(maxNumber);
                                 }
 
                             } else {
-                                if (isSafe()) {
+                                if (mViewRef.get() != null) {
                                     mViewRef.get().getLockInfoFail();
                                 }
                             }
@@ -69,7 +69,7 @@ public class TestGwPresenter<T> extends BasePresenter<ITestGwTestView> {
                     }, new Consumer<Throwable>() {
                         @Override
                         public void accept(Throwable throwable) throws Exception {
-                            if (isSafe()) {
+                            if (mViewRef.get() != null) {
                                 mViewRef.get().getLockInfoThrowable(throwable);
                             }
                         }
@@ -109,19 +109,19 @@ public class TestGwPresenter<T> extends BasePresenter<ITestGwTestView> {
                             LockPwdFuncBean lockPwdFuncBean = new Gson().fromJson(mqttData.getPayload(), LockPwdFuncBean.class);
                             if ("200".equals(lockPwdFuncBean.getReturnCode())) {
 //                                map.put(lockPwdFuncBean.getParams().getPwdid(), lockPwdFuncBean.getReturnData().getStatus());
-//                                if (isSafe()) {
+//                                if (mViewRef.get() != null) {
 //                                    mViewRef.get().getLockOneSuccess(currentNum);
 //                                }
                                 String pwdid = lockPwdFuncBean.getParams().getPwdid();
                                 int status = lockPwdFuncBean.getReturnData().getStatus();
                                 pwds[currentNum] = status;
                                 if (currentNum == maxNumber - 1) {  //全部获取完
-                                    if (isSafe()) {
+                                    if (mViewRef.get() != null) {
 
                                     }
                                 }
                             } else {
-                                if (isSafe()) {
+                                if (mViewRef.get() != null) {
 
                                 }
                             }
@@ -129,7 +129,7 @@ public class TestGwPresenter<T> extends BasePresenter<ITestGwTestView> {
                     }, new Consumer<Throwable>() {
                         @Override
                         public void accept(Throwable throwable) throws Exception {
-                            if (isSafe()) {
+                            if (mViewRef.get() != null) {
 
                             }
                         }
@@ -171,7 +171,7 @@ public class TestGwPresenter<T> extends BasePresenter<ITestGwTestView> {
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        if (isSafe()) {
+                        if (mViewRef.get() != null) {
 
                         }
                     }
@@ -215,7 +215,7 @@ public class TestGwPresenter<T> extends BasePresenter<ITestGwTestView> {
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        if (isSafe()) {
+                        if (mViewRef.get() != null) {
 
                         }
                     }
@@ -255,7 +255,7 @@ public class TestGwPresenter<T> extends BasePresenter<ITestGwTestView> {
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        if (isSafe()) {
+                        if (mViewRef.get() != null) {
 
                         }
                     }
