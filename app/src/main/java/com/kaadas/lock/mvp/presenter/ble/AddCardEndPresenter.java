@@ -40,7 +40,7 @@ public class AddCardEndPresenter<T> extends BlePresenter<IAddCardEndView> {
     public void addCard() {
         int number = getNumber();
         if (number == -1) {
-            if (mViewRef.get() != null) {
+            if (isSafe()) {
                 mViewRef.get().onPwdFull();
             }
             return;
@@ -79,14 +79,14 @@ public class AddCardEndPresenter<T> extends BlePresenter<IAddCardEndView> {
                             byte[] time = new byte[]{deValue[4], deValue[5], deValue[6], deValue[7]};  //锁上的时间
                             //  2 4 7 d 25 ef 14 24 0 0 0 0 0 0 0 0
                             if (eventType == 2 && eventSource == 3 && eventCode == 5) {  //这是添加指卡片成功的回调，
-                                if (mViewRef.get() != null) {
+                                if (isSafe()) {
                                     mViewRef.get().onSetCardSuccess(userNum);
                                 }
                                 uploadPasswordNickToServer(bleLockInfo.getServerLockInfo().getLockName(), number > 9 ? "" + number : "0" + number, number > 9 ? "" + number : "0" + number);
                                 toDisposable(addFingerDisposable);
                             }
 //                            else {
-//                                if (mViewRef.get() != null) {
+//                                if (isSafe()) {
 //                                    mViewRef.get().onSetCardFailed(new BleProtocolFailedException(1));
 //                                }
 //                            }
@@ -95,7 +95,7 @@ public class AddCardEndPresenter<T> extends BlePresenter<IAddCardEndView> {
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        if (mViewRef.get() != null) {
+                        if (isSafe()) {
                             mViewRef.get().onSetCardFailed(throwable);
                         }
                     }
@@ -145,7 +145,7 @@ public class AddCardEndPresenter<T> extends BlePresenter<IAddCardEndView> {
                     @Override
                     public void accept(BleDataBean bleDataBean) throws Exception {
                         if (bleDataBean.getOriginalData()[0] == 0) {
-                            if (mViewRef.get() != null) {
+                            if (isSafe()) {
                                 mViewRef.get().onSetCardFailed(new BleProtocolFailedException(bleDataBean.getOriginalData()[4] & 0xff));
                             }
                             return;
@@ -168,7 +168,7 @@ public class AddCardEndPresenter<T> extends BlePresenter<IAddCardEndView> {
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        if (mViewRef.get() != null) {
+                        if (isSafe()) {
                             mViewRef.get().syncNumberFailed(throwable);
                         }
                     }
@@ -208,7 +208,7 @@ public class AddCardEndPresenter<T> extends BlePresenter<IAddCardEndView> {
                     @Override
                     public void onSuccess(BaseResult result) {
                         LogUtils.e("上传秘钥昵称到服务器成功");
-                        if (mViewRef.get() != null) {
+                        if (isSafe()) {
                             mViewRef.get().onUploadPasswordNickSuccess(nickName, userNum, "");
                         }
                         MyApplication.getInstance().passwordChangeListener().onNext(true);
@@ -216,7 +216,7 @@ public class AddCardEndPresenter<T> extends BlePresenter<IAddCardEndView> {
 
                     @Override
                     public void onAckErrorCode(BaseResult baseResult) {
-                        if (mViewRef.get() != null) {
+                        if (isSafe()) {
                             mViewRef.get().onUploadPasswordNickFailedServer(baseResult);
                         }
                     }
@@ -224,7 +224,7 @@ public class AddCardEndPresenter<T> extends BlePresenter<IAddCardEndView> {
                     @Override
                     public void onFailed(Throwable throwable) {
                         LogUtils.e("上传秘钥昵称到服务器失败");
-                        if (mViewRef.get() != null) {
+                        if (isSafe()) {
                             mViewRef.get().onUploadPasswordNickFailed(throwable);
                         }
                     }

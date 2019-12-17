@@ -88,7 +88,7 @@ public class BleDeviceInfoPresenter extends BleCheckOTAPresenter<IDeviceInfoView
                                 readHardwareRev();
                                 LogUtils.e("   读取SoftwareRev成功 " + readInfoBean.data);  //进行下一步
                                 bleLockInfo.setSoftware((String) readInfoBean.data);
-                                if (mViewRef.get() != null) {
+                                if (isSafe()) {
                                     mViewRef.get().SoftwareRevDataSuccess((String) readInfoBean.data);
                                 }
                                 toDisposable(readSoftwareRevDisposable);
@@ -98,7 +98,7 @@ public class BleDeviceInfoPresenter extends BleCheckOTAPresenter<IDeviceInfoView
                             public void accept(Throwable throwable) throws Exception {
                                 readHardwareRev();
                                 LogUtils.e("   读取SoftwareRev失败  " + (throwable instanceof TimeOutException) + "   " + throwable.getMessage());
-                                if (mViewRef.get() != null) {
+                                if (isSafe()) {
                                     mViewRef.get().SoftwareRevDataError(throwable);
                                 }
                                 //读取SoftwareRev失败
@@ -136,7 +136,7 @@ public class BleDeviceInfoPresenter extends BleCheckOTAPresenter<IDeviceInfoView
                                 readFirmwareRev();
                                 LogUtils.e("   读取HardwareRev成功 " + readInfoBean.data);  //进行下一步
                                 bleLockInfo.setHardware((String) readInfoBean.data);
-                                if (mViewRef.get() != null) {
+                                if (isSafe()) {
                                     mViewRef.get().HardwareRevDataSuccess((String) readInfoBean.data);
                                 }
                                 toDisposable(readHardwareRevDisposable);
@@ -146,7 +146,7 @@ public class BleDeviceInfoPresenter extends BleCheckOTAPresenter<IDeviceInfoView
                             public void accept(Throwable throwable) throws Exception {
                                 readFirmwareRev();
                                 LogUtils.e("   读取HardwareRev失败  " + (throwable instanceof TimeOutException) + "   " + throwable.getMessage());
-                                if (mViewRef.get() != null) {
+                                if (isSafe()) {
                                     mViewRef.get().HardwareRevDataError(throwable);
                                 }
                                 //读取FirmwareRev失败
@@ -185,7 +185,7 @@ public class BleDeviceInfoPresenter extends BleCheckOTAPresenter<IDeviceInfoView
                                 readSerialNumber();
                                 LogUtils.e(" davi 读取FirmwareRev成功 " + readInfoBean.data);  //进行下一步
                                 bleLockInfo.setFirmware((String) readInfoBean.data);
-                                if (mViewRef.get() != null) {
+                                if (isSafe()) {
                                     mViewRef.get().FirmwareRevDataSuccess((String) readInfoBean.data);
                                 }
                                 toDisposable(readFirmwareRevDisposable);
@@ -195,7 +195,7 @@ public class BleDeviceInfoPresenter extends BleCheckOTAPresenter<IDeviceInfoView
                             public void accept(Throwable throwable) throws Exception {
                                 readSerialNumber();
                                 LogUtils.e(" davi 读取FirmwareRev失败  " + (throwable instanceof TimeOutException) + "   " + throwable.getMessage());
-                                if (mViewRef.get() != null) {
+                                if (isSafe()) {
                                     mViewRef.get().FirmwareRevDataError(throwable);
                                 }
                                 //读取FirmwareRev失败
@@ -313,7 +313,7 @@ public class BleDeviceInfoPresenter extends BleCheckOTAPresenter<IDeviceInfoView
                         return command[1] == bleDataBean.getTsn();
                     }
                 })
-                .timeout(5*1000,TimeUnit.MILLISECONDS)
+                .timeout(5 * 1000, TimeUnit.MILLISECONDS)
                 .compose(RxjavaHelper.observeOnMainThread())
                 .subscribe(new Consumer<BleDataBean>() {
                     @Override
@@ -367,7 +367,7 @@ public class BleDeviceInfoPresenter extends BleCheckOTAPresenter<IDeviceInfoView
                         return command[1] == bleDataBean.getTsn();
                     }
                 })
-                .timeout(5*1000,TimeUnit.MILLISECONDS)
+                .timeout(5 * 1000, TimeUnit.MILLISECONDS)
                 .compose(RxjavaHelper.observeOnMainThread())
                 .subscribe(new Consumer<BleDataBean>() {
                     @Override
@@ -426,7 +426,7 @@ public class BleDeviceInfoPresenter extends BleCheckOTAPresenter<IDeviceInfoView
     }
 
 
-    public void startOTA(byte number, byte otaType, String version,String filePath) {
+    public void startOTA(byte number, byte otaType, String version, String filePath) {
         byte[] command = BleCommandFactory.moduleOtaRequest(bleLockInfo.getAuthKey(), (byte) 0x01, number, otaType, version.getBytes());
         bleService.sendCommand(command);
         toDisposable(sendOtaCommandDisposable);
@@ -467,7 +467,7 @@ public class BleDeviceInfoPresenter extends BleCheckOTAPresenter<IDeviceInfoView
                         String ssid = new String(bWifi);
                         String password = new String(bPassword);
                         if (isSafe()) {
-                            mViewRef.get().onRequestOtaSuccess(ssid, password,version,number,otaType,filePath);
+                            mViewRef.get().onRequestOtaSuccess(ssid, password, version, number, otaType, filePath);
                         }
                         toDisposable(sendOtaCommandDisposable);
                     }

@@ -16,36 +16,37 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Predicate;
 
-public class GatewayDeleteSharePresenter <T> extends BasePresenter<IGatewayDeleteShareView> {
+public class GatewayDeleteSharePresenter<T> extends BasePresenter<IGatewayDeleteShareView> {
     private Disposable deleteShareDisposable;
     private Disposable updateShareDisposable;
+
     //删除分享用户,修改昵称
-    public void  deleteShareDevice(int type,String gatewayId,String deviceId,String uid,String shareUser,String userName,int shareFlag){
-        if (mqttService!=null){
+    public void deleteShareDevice(int type, String gatewayId, String deviceId, String uid, String shareUser, String userName, int shareFlag) {
+        if (mqttService != null) {
             toDisposable(deleteShareDisposable);
-            deleteShareDisposable= mqttService.mqttPublish(MqttConstant.PUBLISH_TO_SERVER, MqttCommandFactory.shareDevice(type,gatewayId,deviceId,uid,shareUser,userName,shareFlag))
+            deleteShareDisposable = mqttService.mqttPublish(MqttConstant.PUBLISH_TO_SERVER, MqttCommandFactory.shareDevice(type, gatewayId, deviceId, uid, shareUser, userName, shareFlag))
                     .filter(new Predicate<MqttData>() {
                         @Override
                         public boolean test(MqttData mqttData) throws Exception {
-                            if (mqttData.getFunc().equals(MqttConstant.SHARE_DEVICE)){
+                            if (mqttData.getFunc().equals(MqttConstant.SHARE_DEVICE)) {
                                 return true;
                             }
                             return false;
                         }
                     })
-                    .timeout(10*1000, TimeUnit.MILLISECONDS)
+                    .timeout(10 * 1000, TimeUnit.MILLISECONDS)
                     .compose(RxjavaHelper.observeOnMainThread())
                     .subscribe(new Consumer<MqttData>() {
                         @Override
                         public void accept(MqttData mqttData) throws Exception {
                             toDisposable(deleteShareDisposable);
-                            DeviceShareResultBean shareResultBean=new Gson().fromJson(mqttData.getPayload(),DeviceShareResultBean.class);
-                            if ("200".equals(shareResultBean.getCode())){
-                                if (mViewRef!=null&&mViewRef.get()!=null&&gatewayId.equals(shareResultBean.getGwId())&&deviceId.equals(shareResultBean.getDeviceId())){
+                            DeviceShareResultBean shareResultBean = new Gson().fromJson(mqttData.getPayload(), DeviceShareResultBean.class);
+                            if ("200".equals(shareResultBean.getCode())) {
+                                if (isSafe() && gatewayId.equals(shareResultBean.getGwId()) && deviceId.equals(shareResultBean.getDeviceId())) {
                                     mViewRef.get().deleteShareUserSuccess();
                                 }
-                            }else{
-                                if (mViewRef!=null&&mViewRef.get()!=null){
+                            } else {
+                                if (isSafe()) {
                                     mViewRef.get().deleteShareUserFail();
                                 }
                             }
@@ -54,7 +55,7 @@ public class GatewayDeleteSharePresenter <T> extends BasePresenter<IGatewayDelet
                     }, new Consumer<Throwable>() {
                         @Override
                         public void accept(Throwable throwable) throws Exception {
-                            if (mViewRef!=null&&mViewRef.get()!=null){
+                            if (isSafe()) {
                                 mViewRef.get().deleteShareUserThrowable();
                             }
                         }
@@ -64,32 +65,32 @@ public class GatewayDeleteSharePresenter <T> extends BasePresenter<IGatewayDelet
     }
 
 
-    public void  updateShareNameDevice(int type,String gatewayId,String deviceId,String uid,String shareUser,String userName,int shareFlag){
-        if (mqttService!=null){
+    public void updateShareNameDevice(int type, String gatewayId, String deviceId, String uid, String shareUser, String userName, int shareFlag) {
+        if (mqttService != null) {
             toDisposable(updateShareDisposable);
-            updateShareDisposable= mqttService.mqttPublish(MqttConstant.PUBLISH_TO_SERVER, MqttCommandFactory.shareDevice(type,gatewayId,deviceId,uid,shareUser,userName,shareFlag))
+            updateShareDisposable = mqttService.mqttPublish(MqttConstant.PUBLISH_TO_SERVER, MqttCommandFactory.shareDevice(type, gatewayId, deviceId, uid, shareUser, userName, shareFlag))
                     .filter(new Predicate<MqttData>() {
                         @Override
                         public boolean test(MqttData mqttData) throws Exception {
-                            if (mqttData.getFunc().equals(MqttConstant.SHARE_DEVICE)){
+                            if (mqttData.getFunc().equals(MqttConstant.SHARE_DEVICE)) {
                                 return true;
                             }
                             return false;
                         }
                     })
-                    .timeout(10*1000, TimeUnit.MILLISECONDS)
+                    .timeout(10 * 1000, TimeUnit.MILLISECONDS)
                     .compose(RxjavaHelper.observeOnMainThread())
                     .subscribe(new Consumer<MqttData>() {
                         @Override
                         public void accept(MqttData mqttData) throws Exception {
                             toDisposable(updateShareDisposable);
-                            DeviceShareResultBean shareResultBean=new Gson().fromJson(mqttData.getPayload(),DeviceShareResultBean.class);
-                            if ("200".equals(shareResultBean.getCode())){
-                                if (mViewRef!=null&&mViewRef.get()!=null&&gatewayId.equals(shareResultBean.getGwId())&&deviceId.equals(shareResultBean.getDeviceId())){
+                            DeviceShareResultBean shareResultBean = new Gson().fromJson(mqttData.getPayload(), DeviceShareResultBean.class);
+                            if ("200".equals(shareResultBean.getCode())) {
+                                if (isSafe() && gatewayId.equals(shareResultBean.getGwId()) && deviceId.equals(shareResultBean.getDeviceId())) {
                                     mViewRef.get().updateShareUserNameSuccess(userName);
                                 }
-                            }else{
-                                if (mViewRef!=null&&mViewRef.get()!=null){
+                            } else {
+                                if (isSafe()) {
                                     mViewRef.get().updateShareUserNameFail();
                                 }
                             }
@@ -98,7 +99,7 @@ public class GatewayDeleteSharePresenter <T> extends BasePresenter<IGatewayDelet
                     }, new Consumer<Throwable>() {
                         @Override
                         public void accept(Throwable throwable) throws Exception {
-                            if (mViewRef!=null&&mViewRef.get()!=null){
+                            if (isSafe()) {
                                 mViewRef.get().updaateShareUserNameThrowable();
                             }
                         }

@@ -27,6 +27,7 @@ public class MyFragmentPresenter<T> extends BasePresenter<IMyFragmentView> {
             public void onSubscribe(Disposable d) {
                 compositeDisposable.add(d);
             }
+
             @Override
             public void onNext(ResponseBody value) {
                 LogUtils.d("  下载成功:" + value);
@@ -112,24 +113,25 @@ public class MyFragmentPresenter<T> extends BasePresenter<IMyFragmentView> {
     }
 
     //获取用户名称
-    public void   getUserName(String uid){
+    public void getUserName(String uid) {
         XiaokaiNewServiceImp.getUserNick(uid).subscribe(new BaseObserver<UserNickResult>() {
             @Override
             public void onSuccess(UserNickResult userNickResult) {
-                if (mViewRef.get()!=null){
-                        mViewRef.get().getNicknameSuccess(userNickResult);
+                if (isSafe()) {
+                    mViewRef.get().getNicknameSuccess(userNickResult);
                 }
             }
+
             @Override
             public void onAckErrorCode(BaseResult baseResult) {
-                if (mViewRef.get()!=null){
+                if (isSafe()) {
                     mViewRef.get().getNicknameFail(baseResult);
                 }
             }
 
             @Override
             public void onFailed(Throwable throwable) {
-                if (mViewRef.get()!=null){
+                if (isSafe()) {
                     mViewRef.get().getNicknameError(throwable);
                 }
             }

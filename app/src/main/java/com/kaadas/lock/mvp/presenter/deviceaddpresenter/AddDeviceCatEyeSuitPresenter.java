@@ -22,9 +22,10 @@ import io.reactivex.functions.Predicate;
 public class AddDeviceCatEyeSuitPresenter<T> extends BasePresenter<AddDeviceCatEyeSuitView> {
     //绑定咪咪网
     private Disposable bingMimiDisposable;
-    public void bindMimi(String deviceSN,String gatewayId) {
+
+    public void bindMimi(String deviceSN, String gatewayId) {
         toDisposable(bingMimiDisposable);
-        MqttMessage mqttMessage = MqttCommandFactory.registerMemeAndBind(MyApplication.getInstance().getUid(),gatewayId, deviceSN);
+        MqttMessage mqttMessage = MqttCommandFactory.registerMemeAndBind(MyApplication.getInstance().getUid(), gatewayId, deviceSN);
         bingMimiDisposable = mqttService.mqttPublish(MqttConstant.MQTT_REQUEST_APP, mqttMessage)
                 .compose(RxjavaHelper.observeOnMainThread())
                 .filter(new Predicate<MqttData>() {
@@ -45,11 +46,11 @@ public class AddDeviceCatEyeSuitPresenter<T> extends BasePresenter<AddDeviceCatE
                         BindMemeReuslt bindMemeReuslt = new Gson().fromJson(mqttData.getPayload(), BindMemeReuslt.class);
                         LogUtils.e(bindMemeReuslt.getFunc());
                         if ("200".equals(bindMemeReuslt.getCode())) {
-                            if (mViewRef.get() != null) {
+                            if (isSafe()) {
                                 mViewRef.get().bindMimiSuccess();
                             }
                         } else {
-                            if (mViewRef.get() != null) {
+                            if (isSafe()) {
                                 mViewRef.get().bindMimiFail(bindMemeReuslt.getCode(), bindMemeReuslt.getMsg());
                             }
                         }
@@ -58,7 +59,7 @@ public class AddDeviceCatEyeSuitPresenter<T> extends BasePresenter<AddDeviceCatE
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        if (mViewRef.get() != null) {
+                        if (isSafe()) {
                             mViewRef.get().bindMimiThrowable(throwable);
                         }
                     }

@@ -31,12 +31,12 @@ import io.reactivex.disposables.Disposable;
 public class LoginPresenter<T> extends BasePresenter<ILoginView> {
 
 
-    public void loginByPhone(String phone, String pwd,String noCounturyPhone) {
+    public void loginByPhone(String phone, String pwd, String noCounturyPhone) {
         XiaokaiNewServiceImp.loginByPhone(phone, pwd)
                 .subscribe(new BaseObserver<LoginResult>() {
                     @Override
                     public void onSuccess(LoginResult loginResult) {
-                        loginSuccess(loginResult,noCounturyPhone,pwd);
+                        loginSuccess(loginResult, noCounturyPhone, pwd);
                     }
 
                     @Override
@@ -56,12 +56,13 @@ public class LoginPresenter<T> extends BasePresenter<ILoginView> {
                     }
                 });
     }
+
     public void loginByEmail(String Email, String pwd) {
         XiaokaiNewServiceImp.loginByEmail(Email, pwd)
                 .subscribe(new BaseObserver<LoginResult>() {
                     @Override
                     public void onSuccess(LoginResult loginResult) {
-                        loginSuccess(loginResult,Email,pwd);
+                        loginSuccess(loginResult, Email, pwd);
                     }
 
                     @Override
@@ -83,14 +84,15 @@ public class LoginPresenter<T> extends BasePresenter<ILoginView> {
     }
 
     //获取用户名称
-    private void   getUserName(String uid){
+    private void getUserName(String uid) {
         XiaokaiNewServiceImp.getUserNick(uid).subscribe(new BaseObserver<UserNickResult>() {
             @Override
             public void onSuccess(UserNickResult userNickResult) {
-                if ("200".equals(userNickResult.getCode())){
-                   setUserName(userNickResult.getData().getNickName());
+                if ("200".equals(userNickResult.getCode())) {
+                    setUserName(userNickResult.getData().getNickName());
                 }
             }
+
             @Override
             public void onAckErrorCode(BaseResult baseResult) {
 
@@ -109,10 +111,10 @@ public class LoginPresenter<T> extends BasePresenter<ILoginView> {
     }
 
     private void setUserName(String userName) {
-        SPUtils.put(SPUtils.USERNAME,userName);
+        SPUtils.put(SPUtils.USERNAME, userName);
     }
 
-    private void loginSuccess(LoginResult loginResult,String phone,String pwd ) {
+    private void loginSuccess(LoginResult loginResult, String phone, String pwd) {
         //请求用户名称，由于服务器返回过来的用户名称为空，因此需要重新获取
         if (mViewRef != null) {
             mViewRef.get().onLoginSuccess();
@@ -121,8 +123,8 @@ public class LoginPresenter<T> extends BasePresenter<ILoginView> {
         //保存数据到本地  以及 内存
         SPUtils.put(SPUtils.TOKEN, loginResult.getData().getToken());
         SPUtils.put(SPUtils.UID, loginResult.getData().getUid());
-        SPUtils.put(SPUtils.PHONEN,phone);
-        SPUtils.put(SPUtils.PASSWORD,MD5Utils.encode(pwd));
+        SPUtils.put(SPUtils.PHONEN, phone);
+        SPUtils.put(SPUtils.PASSWORD, MD5Utils.encode(pwd));
 
 
         MyApplication.getInstance().setToken(loginResult.getData().getToken());

@@ -102,7 +102,7 @@ public class MyOpenLockRecordPresenter<T> extends BlePresenter<IBleLockView> {
 
 
     //获取全部的开锁记录
-    public void getOpenRecordFromServer(int pagenum,BleLockInfo bleLockInfo) {
+    public void getOpenRecordFromServer(int pagenum, BleLockInfo bleLockInfo) {
         if (pagenum == 1) {  //如果是获取第一页的数据，那么清楚所有的开锁记录
             serverRecords.clear();
         }
@@ -113,9 +113,9 @@ public class MyOpenLockRecordPresenter<T> extends BlePresenter<IBleLockView> {
                 .subscribe(new BaseObserver<LockRecordResult>() {
                     @Override
                     public void onSuccess(LockRecordResult lockRecordResult) {
-                        LogUtils.d("davi lockRecordResult "+lockRecordResult.toString());
+                        LogUtils.d("davi lockRecordResult " + lockRecordResult.toString());
                         if (lockRecordResult.getData().size() == 0) {  //服务器没有数据  提示用户
-                            if (mViewRef!=null&&mViewRef.get() != null) {
+                            if (isSafe()) {
                                 if (pagenum == 1) { //第一次获取数据就没有
                                     mViewRef.get().onServerNoData();
                                 } else {
@@ -134,7 +134,7 @@ public class MyOpenLockRecordPresenter<T> extends BlePresenter<IBleLockView> {
                                     )
                             );
                         }
-                        if (mViewRef!=null&&mViewRef.get() != null) {
+                        if (isSafe()) {
                             mViewRef.get().onLoadServerRecord(serverRecords, pagenum);
                         }
                     }
@@ -142,7 +142,7 @@ public class MyOpenLockRecordPresenter<T> extends BlePresenter<IBleLockView> {
                     @Override
                     public void onAckErrorCode(BaseResult baseResult) {
                         LogUtils.e("获取 开锁记录  失败   " + baseResult.getMsg() + "  " + baseResult.getCode());
-                        if (mViewRef!=null&&mViewRef.get() != null) {  //
+                        if (isSafe()) {  //
                             mViewRef.get().onLoadServerRecordFailedServer(baseResult);
                         }
                     }
@@ -150,7 +150,7 @@ public class MyOpenLockRecordPresenter<T> extends BlePresenter<IBleLockView> {
                     @Override
                     public void onFailed(Throwable throwable) {
                         LogUtils.e("获取 开锁记录  失败   " + throwable.getMessage());
-                        if (mViewRef!=null&&mViewRef.get() != null) {
+                        if (isSafe()) {
                             mViewRef.get().onLoadServerRecordFailed(throwable);
                         }
                     }
@@ -171,7 +171,7 @@ public class MyOpenLockRecordPresenter<T> extends BlePresenter<IBleLockView> {
     public void getOpenRecordFromBle() {
         //添加
         toDisposable(disposable);
-        if (mViewRef.get() != null) {
+        if (isSafe()) {
             mViewRef.get().startBleRecord();
         }
         currentPage = 0;
@@ -200,12 +200,12 @@ public class MyOpenLockRecordPresenter<T> extends BlePresenter<IBleLockView> {
             //看还有下一组数据没有   如果没有那么所有的数据都查询完了  不管之前查询到的是什么结果，都上传到服务器
             if (currentPage + 1 >= maxPage) {  //已经查了最后一组数据
                 if (lockRecords == null) {  //没有获取到数据  请稍后再试
-                    if (mViewRef.get() != null && lockRecords == null) {
+                    if (isSafe() && lockRecords == null) {
                         mViewRef.get().onLoadBleRecordFinish(false);
                     }
                     return;
                 } else {
-                    if (mViewRef.get() != null && lockRecords != null) {
+                    if (isSafe() && lockRecords != null) {
                         mViewRef.get().onLoadBleRecordFinish(true);
                         mViewRef.get().onLoadBleRecord(getNotNullRecord());
                     }
@@ -250,9 +250,9 @@ public class MyOpenLockRecordPresenter<T> extends BlePresenter<IBleLockView> {
                             @Override
                             public void accept(BleDataBean bleDataBean) throws Exception {
                                 if (bleDataBean.isConfirm()) {
-                                    if (0x8b ==( bleDataBean.getPayload()[0]&0xff)) {  //没有数据
+                                    if (0x8b == (bleDataBean.getPayload()[0] & 0xff)) {  //没有数据
                                         LogUtils.e("锁上   没有开锁记录  ");
-                                        if (mViewRef.get() != null) {
+                                        if (isSafe()) {
                                             mViewRef.get().noData();
                                         }
                                         toDisposable(disposable);
@@ -283,7 +283,7 @@ public class MyOpenLockRecordPresenter<T> extends BlePresenter<IBleLockView> {
                                         loseNumber.add(i);
                                     }
                                 }
-                                if (mViewRef.get() != null) {
+                                if (isSafe()) {
                                     mViewRef.get().onLoseRecord(loseNumber);
                                 }
                                 // TODO: 2019/3/7  开锁记录测试
@@ -293,7 +293,7 @@ public class MyOpenLockRecordPresenter<T> extends BlePresenter<IBleLockView> {
                                         if (lockRecords[i] == null) { //如果一组  数据不全
                                             retryTimes++;
                                             if (retryTimes > 2) {  //如果已经尝试了三次  那么先显示数据
-                                                if (mViewRef.get() != null) {
+                                                if (isSafe()) {
                                                     mViewRef.get().onLoadBleRecord(getNotNullRecord());
                                                 }
                                             }
@@ -301,11 +301,11 @@ public class MyOpenLockRecordPresenter<T> extends BlePresenter<IBleLockView> {
                                             return;
                                         }
                                     }
-                                    if (mViewRef.get() != null) {
+                                    if (isSafe()) {
                                         mViewRef.get().onLoadBleRecord(getNotNullRecord());
                                     }
                                     if (currentPage + 1 >= maxPage) { //如果收到最后一组的最后一个数据   直接上传
-                                        if (mViewRef.get() != null) {
+                                        if (isSafe()) {
                                             mViewRef.get().onLoadBleRecord(getNotNullRecord());
                                             mViewRef.get().onLoadBleRecordFinish(true);
                                         }
@@ -345,7 +345,7 @@ public class MyOpenLockRecordPresenter<T> extends BlePresenter<IBleLockView> {
                                         loseNumber.add(i);
                                     }
                                 }
-                                if (mViewRef.get() != null) {
+                                if (isSafe()) {
                                     mViewRef.get().onLoseRecord(loseNumber);
                                 }
                                 // TODO: 2019/3/7  开锁记录测试
@@ -354,7 +354,7 @@ public class MyOpenLockRecordPresenter<T> extends BlePresenter<IBleLockView> {
                                         LogUtils.e("数据不全  " + retryTimes);
                                         retryTimes++;
                                         if (retryTimes > 2) {  //如果已经尝试了三次  那么先显示数据
-                                            if (mViewRef.get() != null) {
+                                            if (isSafe()) {
                                                 mViewRef.get().onLoadBleRecord(getNotNullRecord());
                                             }
                                         }
@@ -365,7 +365,7 @@ public class MyOpenLockRecordPresenter<T> extends BlePresenter<IBleLockView> {
                                 //到此处，那么说明这一组数据完整不重新获取
                                 if (currentPage + 1 >= maxPage) { //如果收到最后一组的最后一个数据   直接上传
                                     // 获取数据完成
-                                    if (mViewRef.get() != null) {
+                                    if (isSafe()) {
                                         mViewRef.get().onLoadBleRecord(getNotNullRecord());
                                         mViewRef.get().onLoadBleRecordFinish(true);
                                     }
@@ -401,14 +401,14 @@ public class MyOpenLockRecordPresenter<T> extends BlePresenter<IBleLockView> {
                     @Override
                     public void onSuccess(BaseResult result) {
                         LogUtils.e("上传开锁记录成功");
-                        if (mViewRef.get() != null) {
+                        if (isSafe()) {
                             mViewRef.get().onUploadServerRecordSuccess();
                         }
                     }
 
                     @Override
                     public void onAckErrorCode(BaseResult baseResult) {
-                        if (mViewRef.get() != null) {
+                        if (isSafe()) {
                             mViewRef.get().onUploadServerRecordFailedServer(baseResult);
                         }
                     }
@@ -416,7 +416,7 @@ public class MyOpenLockRecordPresenter<T> extends BlePresenter<IBleLockView> {
                     @Override
                     public void onFailed(Throwable throwable) {
                         LogUtils.e("上传开锁记录失败");
-                        if (mViewRef.get() != null) {
+                        if (isSafe()) {
                             mViewRef.get().onUploadServerRecordFailed(throwable);
                         }
                     }

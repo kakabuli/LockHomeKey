@@ -154,7 +154,7 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                                 if (MqttConstant.NOTIFY_GATEWAY_OTA.equals(mqttData.getFunc())) {
                                     //接收到网关ota升级
                                     GatewayOtaNotifyBean gatewayOtaNotifyBean = new Gson().fromJson(mqttData.getPayload(), GatewayOtaNotifyBean.class);
-                                    if (mViewRef.get() != null) {
+                                    if (isSafe()) {
                                         mViewRef.get().gatewayNotifyOtaSuccess(gatewayOtaNotifyBean);
                                     }
 
@@ -219,7 +219,7 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                             MyApplication.getInstance().getBleService().getBleLockInfo().setSafeMode(state9);
                             if (!TextUtils.isEmpty(nickNameByDeviceName)) {
                                 String warringContent = BleUtil.parseWarring(MyApplication.getInstance(), deValue, nickNameByDeviceName);
-                                if (mViewRef.get() != null && !TextUtils.isEmpty(warringContent)) {
+                                if (isSafe() && !TextUtils.isEmpty(warringContent)) {
                                     mViewRef.get().onWarringUp(warringContent);
                                 }
                             } else {
@@ -242,7 +242,7 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                         @Override
                         public void accept(BleLockInfo bleLockInfo) throws Exception {
                             LogUtils.e("设备  正在升级模式   " + bleLockInfo.getServerLockInfo().toString());
-                            if (mViewRef.get() != null) {
+                            if (isSafe()) {
                                 mViewRef.get().onDeviceInBoot(bleLockInfo);
                             }
                         }
@@ -375,7 +375,7 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                                 catEyeEvent.setGatewayId(catEyeEventBean.getGwId());
                                 //   保存到数据库
                                 MyApplication.getInstance().getDaoWriteSession().getCatEyeEventDao().insert(catEyeEvent);
-                                if (mViewRef.get() != null) {
+                                if (isSafe()) {
                                     mViewRef.get().onGwEvent(eventType, catEyeEventBean.getDeviceId(), catEyeEventBean.getGwId());
                                 }
                                 //网关锁信息上报
@@ -407,7 +407,7 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                                         //插入到数据库
                                         if (!checkSame(gatewayLockAlarmEventBean.getTimestamp(), gatewayLockAlarmEventBean.getEventparams().getAlarmCode())) {
                                             MyApplication.getInstance().getDaoWriteSession().getGatewayLockAlarmEventDaoDao().insert(gatewayLockAlarmEventDao);
-                                            if (mViewRef.get() != null) {
+                                            if (isSafe()) {
                                                 mViewRef.get().onGwLockEvent(alarmCode, clusterID, deviceId, gatewayId);
                                             }
                                         }
@@ -538,7 +538,7 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
 
 //                        Log.e(GeTui.VideoLog,"麦克风状态:"+!RecordTools.validateMicAvailability());
 //                        if (!RecordTools.validateMicAvailability()) {  //打开false,没有打开true
-//                            if (mViewRef != null && mViewRef.get() != null) {
+//                            if (mViewRef != null && isSafe()) {
 //                                mViewRef.get().callError();
 //                            }
 //                            return;
@@ -561,7 +561,7 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
 
                         if (TextUtils.isEmpty(payload) || allBindDevices == null) {
                             Log.e(GeTui.VideoLog, "allBindDevices为null...payload:" + payload);
-                            if (mViewRef != null && mViewRef.get() != null) {
+                            if (mViewRef != null && isSafe()) {
                                 mViewRef.get().callErrorCateInfoEmpty();
                             }
                             return;
@@ -571,7 +571,7 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                     //List<CateEyeInfo> cateEyes = MyApplication.getInstance().getAllBindDevices().getCateEyes();
                     if (cateEyes == null) {
                         Log.e(GeTui.VideoLog, "cateEyes为null");
-                        if (mViewRef != null && mViewRef.get() != null) {
+                        if (isSafe()) {
                             mViewRef.get().callErrorCateInfoEmpty();
                         }
                         return;
@@ -595,7 +595,7 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                     //如果网关Id为空    不朝下走了
                     if (TextUtils.isEmpty(gwId) || gatewayInfo == null) {
                         Log.e(GeTui.VideoLog, "gwid为null");
-                        if (mViewRef != null && mViewRef.get() != null) {
+                        if (isSafe()) {
                             mViewRef.get().callErrorCateInfoEmpty();
                         }
                         return;
@@ -605,7 +605,7 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                     int replay = (int) SPUtils.get(key, 0);
                     if (replay == 1) {
                         //        LinphoneManager.switchRelay(true);
-                        if (mViewRef.get() != null) {
+                        if (isSafe()) {
                             mViewRef.get().onCatEyeCallIn(callInCatEyeInfo);
                         }
                         return;
@@ -619,7 +619,7 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                     if (TextUtils.isEmpty(meUsername) || TextUtils.isEmpty(mePwd)) {
                         //如果账号或者密码有一个为空  直接退出
                         Log.e(GeTui.VideoLog, "咪咪网账号为null");
-                        if (mViewRef != null && mViewRef.get() != null) {
+                        if (isSafe()) {
                             mViewRef.get().callErrorCateInfoMimi();
                         }
                         return;
@@ -631,7 +631,7 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                                 && mePwd.equals(MemeManager.getInstance().getCurrentPassword())) {
                             //查看是否有设备在线   如果有  弹出来电框
                             if (MemeManager.getInstance().getGwDevices().size() > 0) {
-                                if (mViewRef.get() != null) {
+                                if (isSafe()) {
                                     mViewRef.get().onCatEyeCallIn(callInCatEyeInfo);
                                 }
                             } else {  //本地登录了米米网账号且是当前猫眼的meme网昂好   但是没有本地设备在线  等待五秒
@@ -714,11 +714,11 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                         if (aBoolean) { // 米米网登陆成功且网关在线
                             LogUtils.e("米米网  登陆成功   弹出来电框");
                             Log.e(GeTui.VideoLog, "米米网  登陆成功   弹出来电框");
-                            if (mViewRef.get() != null) {
+                            if (isSafe()) {
                                 mViewRef.get().onCatEyeCallIn(callInCatEyeInfo);
                             }
                         } else { //米米网登陆失败或者网关不在线   不做处理
-                            if (mViewRef != null && mViewRef.get() != null) {
+                            if (isSafe()) {
                                 mViewRef.get().onCatEyeCallFail();
                             }
                         }
@@ -757,7 +757,7 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                     public void accept(List<Device> devices) throws Exception {
                         toDisposable(deviceChangeDisposable);
                         if (devices.size() > 1) {
-                            if (mViewRef.get() != null) {
+                            if (isSafe()) {
                                 mViewRef.get().onCatEyeCallIn(callInCatEyeInfo);
                             }
                         }
@@ -980,8 +980,8 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                     GwLockInfo gwLockInfo = new GwLockInfo(gwLock.getGatewayId(), new ServerGwDevice(gwLock.getSW(), gwLock.getDeviceId(),
                             gwLock.getDevice_type(), gwLock.getEvent_str(), gwLock.getIpaddr(),
                             gwLock.getMacaddr(), gwLock.getNickName(), gwLock.getTime()
-                            ,"",gwLock.getDelectTime(),gwLock.getLockversion(),gwLock.getModuletype()
-                            ,gwLock.getNwaddr(),gwLock.getOfflineTime(),gwLock.getOnlineTime(),gwLock.getShareFlag()
+                            , "", gwLock.getDelectTime(), gwLock.getLockversion(), gwLock.getModuletype()
+                            , gwLock.getNwaddr(), gwLock.getOfflineTime(), gwLock.getOnlineTime(), gwLock.getShareFlag()
                     ));
                     homeShowBeans.add(new HomeShowBean(HomeShowBean.TYPE_GATEWAY_LOCK, gwLock.getDeviceId(),
                             gwLock.getNickName(), gwLockInfo));
@@ -997,8 +997,8 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                             new ServerGwDevice(catEyeService.getSW(), catEyeService.getDeviceId(),
                                     catEyeService.getDevice_type(), catEyeService.getEvent_str(), catEyeService.getIpaddr(),
                                     catEyeService.getMacaddr(), catEyeService.getNickName(), catEyeService.getTime()
-                                    ,"",catEyeService.getDelectTime(),catEyeService.getLockversion(),catEyeService.getModuletype()
-                                    ,catEyeService.getNwaddr(),catEyeService.getOfflineTime(),catEyeService.getOnlineTime(),catEyeService.getShareFlag()
+                                    , "", catEyeService.getDelectTime(), catEyeService.getLockversion(), catEyeService.getModuletype()
+                                    , catEyeService.getNwaddr(), catEyeService.getOfflineTime(), catEyeService.getOnlineTime(), catEyeService.getShareFlag()
                             ));
                     homeShowBeans.add(new HomeShowBean(HomeShowBean.TYPE_CAT_EYE, catEyeService.getDeviceId(),
                             catEyeService.getNickName(), cateEyeInfo));
@@ -1033,7 +1033,7 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                                 if (gatewayId != null) {
                                     GatewayInfo gatewayInfo = MyApplication.getInstance().getGatewayById(gatewayId);
                                     if (gatewayInfo != null) {
-                                        if (mViewRef != null && mViewRef.get() != null) {
+                                        if (isSafe()) {
                                             mViewRef.get().gatewayResetSuccess(gatewayId);
                                         }
                                         MyApplication.getInstance().getAllDevicesByMqtt(true);

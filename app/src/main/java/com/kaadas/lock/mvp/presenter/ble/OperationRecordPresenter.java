@@ -126,7 +126,7 @@ public class OperationRecordPresenter<T> extends BlePresenter<IOperationRecordVi
                     @Override
                     public void onSuccess(OperationRecordResult operationRecordResult) {
                         if (operationRecordResult.getData() != null && operationRecordResult.getData().size() == 0) {  //服务器没有数据  提示用户
-                            if (mViewRef.get() != null) {
+                            if (isSafe()) {
                                 if (pagenum == 1) { //第一次获取数据就没有
                                     mViewRef.get().onServerNoData();
                                 } else {
@@ -151,7 +151,7 @@ public class OperationRecordPresenter<T> extends BlePresenter<IOperationRecordVi
                             }
 
                         }
-                        if (mViewRef.get() != null) {
+                        if (isSafe()) {
                             LogUtils.d(" 服务器记录 1 serverRecords " + operationServerRecords.toString());
                             mViewRef.get().onLoadServerOperationRecord(operationServerRecords, pagenum);
                         }
@@ -160,7 +160,7 @@ public class OperationRecordPresenter<T> extends BlePresenter<IOperationRecordVi
                     @Override
                     public void onAckErrorCode(BaseResult baseResult) {
                         LogUtils.e("获取 开锁记录  失败   " + baseResult.getMsg() + "  " + baseResult.getCode());
-                        if (mViewRef.get() != null) {  //
+                        if (isSafe()) {  //
                             mViewRef.get().onLoadServerRecordFailedServer(baseResult);
                         }
                     }
@@ -168,7 +168,7 @@ public class OperationRecordPresenter<T> extends BlePresenter<IOperationRecordVi
                     @Override
                     public void onFailed(Throwable throwable) {
                         LogUtils.e("获取 开锁记录  失败   " + throwable.getMessage());
-                        if (mViewRef.get() != null) {
+                        if (isSafe()) {
                             mViewRef.get().onLoadServerRecordFailed(throwable);
                         }
                     }
@@ -191,7 +191,7 @@ public class OperationRecordPresenter<T> extends BlePresenter<IOperationRecordVi
         isFirst = true;
         //添加
         toDisposable(operationDisposable);
-        if (mViewRef.get() != null) {
+        if (isSafe()) {
             mViewRef.get().startBleRecord();
         }
         operationCurrentPage = 0;
@@ -219,12 +219,12 @@ public class OperationRecordPresenter<T> extends BlePresenter<IOperationRecordVi
             //看还有下一组数据没有   如果没有那么所有的数据都查询完了  不管之前查询到的是什么结果，都上传到服务器
             if (operationCurrentPage + 1 >= operationMaxPage) {  //已经查了最后一组数据
                 if (operationLockRecords == null) {  //没有获取到数据  请稍后再试
-                    if (mViewRef.get() != null && operationLockRecords == null) {
+                    if (isSafe() && operationLockRecords == null) {
                         mViewRef.get().onLoadBleRecordFinish(false);
                     }
                     return;
                 } else {
-                    if (mViewRef.get() != null && operationLockRecords != null) {
+                    if (isSafe() && operationLockRecords != null) {
                         mViewRef.get().onLoadBleRecordFinish(true);
                         LogUtils.d(" 蓝牙记录 1 ");
                         mViewRef.get().onLoadBleOperationRecord(getNotNullOperationRecord());
@@ -275,7 +275,7 @@ public class OperationRecordPresenter<T> extends BlePresenter<IOperationRecordVi
                                 if (bleDataBean.isConfirm()) {
                                     if (0x8b == (bleDataBean.getPayload()[0] & 0xff) && isFirst) {  //没有数据
                                         LogUtils.e("锁上   没有开锁记录  ");
-                                        if (mViewRef.get() != null) {
+                                        if (isSafe()) {
                                             mViewRef.get().noData();
                                         }
                                         toDisposable(operationDisposable);
@@ -313,7 +313,7 @@ public class OperationRecordPresenter<T> extends BlePresenter<IOperationRecordVi
                                         loseNumber.add(i);
                                     }
                                 }
-                                if (mViewRef.get() != null) {
+                                if (isSafe()) {
                                     mViewRef.get().onLoseRecord(loseNumber);
                                 }
                                 // TODO: 2019/3/7  开锁记录测试
@@ -323,7 +323,7 @@ public class OperationRecordPresenter<T> extends BlePresenter<IOperationRecordVi
                                         if (operationLockRecords[i] == null) { //如果一组  数据不全
                                             operationRetryTimes++;
                                             if (operationRetryTimes > 2) {  //如果已经尝试了三次  那么先显示数据
-                                                if (mViewRef.get() != null) {
+                                                if (isSafe()) {
                                                     mViewRef.get().onLoadBleOperationRecord(getNotNullOperationRecord());
                                                 }
                                             }
@@ -331,11 +331,11 @@ public class OperationRecordPresenter<T> extends BlePresenter<IOperationRecordVi
                                             return;
                                         }
                                     }
-                                    if (mViewRef.get() != null) {
+                                    if (isSafe()) {
                                         mViewRef.get().onLoadBleOperationRecord(getNotNullOperationRecord());
                                     }
                                     if (operationCurrentPage + 1 >= operationMaxPage) { //如果收到最后一组的最后一个数据   直接上传
-                                        if (mViewRef.get() != null) {
+                                        if (isSafe()) {
                                             mViewRef.get().onLoadBleOperationRecord(getNotNullOperationRecord());
                                             mViewRef.get().onLoadBleRecordFinish(true);
                                         }
@@ -375,7 +375,7 @@ public class OperationRecordPresenter<T> extends BlePresenter<IOperationRecordVi
                                         loseNumber.add(i);
                                     }
                                 }
-                                if (mViewRef.get() != null) {
+                                if (isSafe()) {
                                     mViewRef.get().onLoseRecord(loseNumber);
                                 }
                                 // TODO: 2019/3/7  开锁记录测试
@@ -384,7 +384,7 @@ public class OperationRecordPresenter<T> extends BlePresenter<IOperationRecordVi
                                         LogUtils.e("数据不全  " + operationRetryTimes);
                                         operationRetryTimes++;
                                         if (operationRetryTimes > 2) {  //如果已经尝试了三次  那么先显示数据
-                                            if (mViewRef.get() != null) {
+                                            if (isSafe()) {
                                                 mViewRef.get().onLoadBleOperationRecord(getNotNullOperationRecord());
                                             }
                                         }
@@ -395,7 +395,7 @@ public class OperationRecordPresenter<T> extends BlePresenter<IOperationRecordVi
                                 //到此处，那么说明这一组数据完整不重新获取
                                 if (operationCurrentPage + 1 >= operationMaxPage) { //如果收到最后一组的最后一个数据   直接上传
                                     // 获取数据完成
-                                    if (mViewRef.get() != null) {
+                                    if (isSafe()) {
                                         mViewRef.get().onLoadBleOperationRecord(getNotNullOperationRecord());
                                         mViewRef.get().onLoadBleRecordFinish(true);
                                     }
@@ -430,14 +430,14 @@ public class OperationRecordPresenter<T> extends BlePresenter<IOperationRecordVi
                     @Override
                     public void onSuccess(BaseResult result) {
                         LogUtils.e("上传操作记录成功");
-                        if (mViewRef.get() != null) {
+                        if (isSafe()) {
                             mViewRef.get().onUploadServerRecordSuccess();
                         }
                     }
 
                     @Override
                     public void onAckErrorCode(BaseResult baseResult) {
-                        if (mViewRef.get() != null) {
+                        if (isSafe()) {
                             mViewRef.get().onUploadServerRecordFailedServer(baseResult);
                         }
                     }
@@ -445,7 +445,7 @@ public class OperationRecordPresenter<T> extends BlePresenter<IOperationRecordVi
                     @Override
                     public void onFailed(Throwable throwable) {
                         LogUtils.e("上传开锁记录失败");
-                        if (mViewRef.get() != null) {
+                        if (isSafe()) {
                             mViewRef.get().onUploadServerRecordFailed(throwable);
                         }
                     }

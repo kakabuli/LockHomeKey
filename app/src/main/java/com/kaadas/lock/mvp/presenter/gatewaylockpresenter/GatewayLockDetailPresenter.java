@@ -39,114 +39,114 @@ public class GatewayLockDetailPresenter<T> extends BasePresenter<GatewayLockDeta
     private Disposable getArmLockDisposable;
     private Disposable networkChangeDisposable;
     private Disposable deleteShareDisposable;
+
     //开锁
-    public void openLock(String gatewayId,String deviceId,String pwd){
+    public void openLock(String gatewayId, String deviceId, String pwd) {
         toDisposable(openLockDisposable);
-        if (mqttService!=null){
-            openLockDisposable= mqttService.mqttPublish(MqttConstant.getCallTopic(MyApplication.getInstance().getUid()),MqttCommandFactory.openLock(gatewayId,deviceId,"unlock","pin",pwd))
-                                .filter(new Predicate<MqttData>() {
-                                    @Override
-                                    public boolean test(MqttData mqttData) throws Exception {
-                                        if (MqttConstant.OPEN_LOCK.equals(mqttData.getFunc())){
-                                            return true;
-                                        }
-                                        return false;
-                                    }
-                                })
-                                .timeout(10*1000, TimeUnit.MILLISECONDS)
-                                .compose(RxjavaHelper.observeOnMainThread())
-                                .subscribe(new Consumer<MqttData>() {
-                                    @Override
-                                    public void accept(MqttData mqttData) throws Exception {
-                                        toDisposable(openLockDisposable);
-                                        OpenLockBean openLockBean=new Gson().fromJson(mqttData.getPayload(),OpenLockBean.class);
-                                        if ("200".equals(openLockBean.getReturnCode())){
-                                            if (mViewRef.get()!=null){
-                                                mViewRef.get().openLockSuccess();
-                                                SPUtils.put(KeyConstants.SAVA_LOCK_PWD+deviceId,pwd);
-                                            }
-                                        }else{
-                                            if (mViewRef.get()!=null){
-                                                mViewRef.get().openLockFail();
-                                            }
-                                        }
-                                    }
-                                }, new Consumer<Throwable>() {
-                                    @Override
-                                    public void accept(Throwable throwable) throws Exception {
-                                        //开锁异常
-                                        if (mViewRef.get()!=null){
-                                            mViewRef.get().openLockThrowable(throwable);
-                                        }
-                                    }
-                                });
+        if (mqttService != null) {
+            openLockDisposable = mqttService.mqttPublish(MqttConstant.getCallTopic(MyApplication.getInstance().getUid()), MqttCommandFactory.openLock(gatewayId, deviceId, "unlock", "pin", pwd))
+                    .filter(new Predicate<MqttData>() {
+                        @Override
+                        public boolean test(MqttData mqttData) throws Exception {
+                            if (MqttConstant.OPEN_LOCK.equals(mqttData.getFunc())) {
+                                return true;
+                            }
+                            return false;
+                        }
+                    })
+                    .timeout(10 * 1000, TimeUnit.MILLISECONDS)
+                    .compose(RxjavaHelper.observeOnMainThread())
+                    .subscribe(new Consumer<MqttData>() {
+                        @Override
+                        public void accept(MqttData mqttData) throws Exception {
+                            toDisposable(openLockDisposable);
+                            OpenLockBean openLockBean = new Gson().fromJson(mqttData.getPayload(), OpenLockBean.class);
+                            if ("200".equals(openLockBean.getReturnCode())) {
+                                if (isSafe()) {
+                                    mViewRef.get().openLockSuccess();
+                                    SPUtils.put(KeyConstants.SAVA_LOCK_PWD + deviceId, pwd);
+                                }
+                            } else {
+                                if (isSafe()) {
+                                    mViewRef.get().openLockFail();
+                                }
+                            }
+                        }
+                    }, new Consumer<Throwable>() {
+                        @Override
+                        public void accept(Throwable throwable) throws Exception {
+                            //开锁异常
+                            if (isSafe()) {
+                                mViewRef.get().openLockThrowable(throwable);
+                            }
+                        }
+                    });
             compositeDisposable.add(openLockDisposable);
         }
     }
 
     //锁上报事件
-    public void  closeLockNotify(String deviceId){
-        if (mqttService!=null){
+    public void closeLockNotify(String deviceId) {
+        if (mqttService != null) {
             toDisposable(closeLockNotifyDisposable);
-            closeLockNotifyDisposable=mqttService.listenerDataBack()
+            closeLockNotifyDisposable = mqttService.listenerDataBack()
                     .filter(new Predicate<MqttData>() {
-                @Override
-                public boolean test(MqttData mqttData) throws Exception {
+                        @Override
+                        public boolean test(MqttData mqttData) throws Exception {
 
-                    if (mqttData.getFunc().equals(MqttConstant.GW_EVENT)){
-                        return  true;
-                    }
-                    return false;
-                }
-            })
-            .compose(RxjavaHelper.observeOnMainThread())
-            .subscribe(new Consumer<MqttData>() {
-                @Override
-                public void accept(MqttData mqttData) throws Exception {
-                    LogUtils.e(mqttData.getPayload()+"收到上报消息  ");
-                    OpenLockNotifyBean openLockNotifyBean=new Gson().fromJson(mqttData.getPayload(),OpenLockNotifyBean.class);
-                    int deviceCode=openLockNotifyBean.getEventparams().getDevecode();
-                   LogUtils.e(mqttData.getPayload()+"收到处理");
-                    if ("kdszblock".equals(openLockNotifyBean.getDevtype())&&deviceId.equals(openLockNotifyBean.getDeviceId())){
-                        if (deviceCode==2){
-                            //表示锁已开
-                          if (mViewRef.get()!=null){
-                              mViewRef.get().lockHasBeenOpen();
-                          }
-                        }else if (deviceCode==10||deviceCode==1){
-                            //表示锁已经关闭
-                           if (mViewRef.get()!=null){
-                               mViewRef.get().lockHasBeenClose();
-                           }
+                            if (mqttData.getFunc().equals(MqttConstant.GW_EVENT)) {
+                                return true;
+                            }
+                            return false;
                         }
-                    }
-                }
-            }, new Consumer<Throwable>() {
-                @Override
-                public void accept(Throwable throwable) throws Exception {
-                    if (mViewRef.get()!=null){
-                        mViewRef.get().lockHasBeenThrowable(throwable);
-                    }
-                }
-            });
+                    })
+                    .compose(RxjavaHelper.observeOnMainThread())
+                    .subscribe(new Consumer<MqttData>() {
+                        @Override
+                        public void accept(MqttData mqttData) throws Exception {
+                            LogUtils.e(mqttData.getPayload() + "收到上报消息  ");
+                            OpenLockNotifyBean openLockNotifyBean = new Gson().fromJson(mqttData.getPayload(), OpenLockNotifyBean.class);
+                            int deviceCode = openLockNotifyBean.getEventparams().getDevecode();
+                            LogUtils.e(mqttData.getPayload() + "收到处理");
+                            if ("kdszblock".equals(openLockNotifyBean.getDevtype()) && deviceId.equals(openLockNotifyBean.getDeviceId())) {
+                                if (deviceCode == 2) {
+                                    //表示锁已开
+                                    if (isSafe()) {
+                                        mViewRef.get().lockHasBeenOpen();
+                                    }
+                                } else if (deviceCode == 10 || deviceCode == 1) {
+                                    //表示锁已经关闭
+                                    if (isSafe()) {
+                                        mViewRef.get().lockHasBeenClose();
+                                    }
+                                }
+                            }
+                        }
+                    }, new Consumer<Throwable>() {
+                        @Override
+                        public void accept(Throwable throwable) throws Exception {
+                            if (isSafe()) {
+                                mViewRef.get().lockHasBeenThrowable(throwable);
+                            }
+                        }
+                    });
             compositeDisposable.add(closeLockNotifyDisposable);
         }
     }
 
 
-
     //监听电量的变化
-    public void getPowerData(String gatewayId,String deviceId){
+    public void getPowerData(String gatewayId, String deviceId) {
         LogUtils.e("进入获取电量。。。");
-        if (mqttService!=null){
-            getPowerDataDisposable=mqttService.getPowerData()
+        if (mqttService != null) {
+            getPowerDataDisposable = mqttService.getPowerData()
                     .filter(new Predicate<MqttData>() {
                         @Override
                         public boolean test(MqttData mqttData) throws Exception {
-                            if (mqttData!=null){
+                            if (mqttData != null) {
                                 //过滤
                                 GetDevicePowerBean powerBean = new Gson().fromJson(mqttData.getPayload(), GetDevicePowerBean.class);
-                                if (gatewayId.equals(powerBean.getGwId())&&deviceId.equals(powerBean.getDeviceId())){
+                                if (gatewayId.equals(powerBean.getGwId()) && deviceId.equals(powerBean.getDeviceId())) {
                                     LogUtils.e("过滤成功值");
                                     return true;
                                 }
@@ -159,20 +159,20 @@ public class GatewayLockDetailPresenter<T> extends BasePresenter<GatewayLockDeta
                         @Override
                         public void accept(MqttData mqttData) throws Exception {
                             GetDevicePowerBean powerBean = new Gson().fromJson(mqttData.getPayload(), GetDevicePowerBean.class);
-                            if ("200".equals(mqttData.getReturnCode())){
-                                if (mViewRef.get()!=null){
-                                    mViewRef.get().getPowerDataSuccess(powerBean.getDeviceId(),powerBean.getReturnData().getPower(),powerBean.getTimestamp());
+                            if ("200".equals(mqttData.getReturnCode())) {
+                                if (isSafe()) {
+                                    mViewRef.get().getPowerDataSuccess(powerBean.getDeviceId(), powerBean.getReturnData().getPower(), powerBean.getTimestamp());
                                 }
-                            }else{
-                                if (mViewRef.get()!=null){
-                                    mViewRef.get().getPowerDataFail(powerBean.getDeviceId(),powerBean.getTimestamp());
+                            } else {
+                                if (isSafe()) {
+                                    mViewRef.get().getPowerDataFail(powerBean.getDeviceId(), powerBean.getTimestamp());
                                 }
                             }
                         }
                     }, new Consumer<Throwable>() {
                         @Override
                         public void accept(Throwable throwable) throws Exception {
-                            if (mViewRef.get()!=null){
+                            if (isSafe()) {
                                 mViewRef.get().getPowerThrowable();
                             }
                         }
@@ -180,7 +180,6 @@ public class GatewayLockDetailPresenter<T> extends BasePresenter<GatewayLockDeta
             compositeDisposable.add(getPowerDataDisposable);
         }
     }
-
 
 
     //获取网关状态通知
@@ -195,9 +194,9 @@ public class GatewayLockDetailPresenter<T> extends BasePresenter<GatewayLockDeta
                             if (mqttData != null) {
                                 GetBindGatewayStatusResult gatewayStatusResult = new Gson().fromJson(mqttData.getPayload(), GetBindGatewayStatusResult.class);
                                 LogUtils.e("监听网关GatewayActivity" + gatewayStatusResult.getDevuuid());
-                                if (gatewayStatusResult != null&&gatewayStatusResult.getData().getState()!=null) {
-                                    if (mViewRef.get() != null) {
-                                        mViewRef.get().gatewayStatusChange(gatewayStatusResult.getDevuuid(),gatewayStatusResult.getData().getState());
+                                if (gatewayStatusResult != null && gatewayStatusResult.getData().getState() != null) {
+                                    if (isSafe()) {
+                                        mViewRef.get().gatewayStatusChange(gatewayStatusResult.getDevuuid(), gatewayStatusResult.getData().getState());
                                     }
                                 }
                             }
@@ -230,9 +229,9 @@ public class GatewayLockDetailPresenter<T> extends BasePresenter<GatewayLockDeta
                         @Override
                         public void accept(MqttData mqttData) throws Exception {
                             DeviceOnLineBean deviceOnLineBean = new Gson().fromJson(mqttData.getPayload(), DeviceOnLineBean.class);
-                            if (deviceOnLineBean!=null){
-                                if (mViewRef.get()!=null&&deviceOnLineBean.getEventparams().getEvent_str()!=null){
-                                    mViewRef.get().deviceStatusChange(deviceOnLineBean.getGwId(),deviceOnLineBean.getDeviceId(),deviceOnLineBean.getEventparams().getEvent_str());
+                            if (deviceOnLineBean != null) {
+                                if (isSafe() && deviceOnLineBean.getEventparams().getEvent_str() != null) {
+                                    mViewRef.get().deviceStatusChange(deviceOnLineBean.getGwId(), deviceOnLineBean.getDeviceId(), deviceOnLineBean.getEventparams().getEvent_str());
                                 }
                             }
                         }
@@ -248,32 +247,32 @@ public class GatewayLockDetailPresenter<T> extends BasePresenter<GatewayLockDeta
     }
 
     //设置布防
-    public void setArmLocked(String uid,String gatewayId,String deviceId,int operatingMode){
-        if (mqttService!=null){
+    public void setArmLocked(String uid, String gatewayId, String deviceId, int operatingMode) {
+        if (mqttService != null) {
             toDisposable(setArmLockDisposable);
-            setArmLockDisposable=mqttService.mqttPublish(MqttConstant.getCallTopic(uid), MqttCommandFactory.setArmLocked(deviceId,gatewayId,operatingMode,uid))
+            setArmLockDisposable = mqttService.mqttPublish(MqttConstant.getCallTopic(uid), MqttCommandFactory.setArmLocked(deviceId, gatewayId, operatingMode, uid))
                     .filter(new Predicate<MqttData>() {
                         @Override
                         public boolean test(MqttData mqttData) throws Exception {
-                            if (MqttConstant.SET_ARM_LOCKED.equals(mqttData.getFunc())){
+                            if (MqttConstant.SET_ARM_LOCKED.equals(mqttData.getFunc())) {
                                 return true;
                             }
                             return false;
                         }
                     })
-                    .timeout(10*1000, TimeUnit.MILLISECONDS)
+                    .timeout(10 * 1000, TimeUnit.MILLISECONDS)
                     .compose(RxjavaHelper.observeOnMainThread())
                     .subscribe(new Consumer<MqttData>() {
                         @Override
                         public void accept(MqttData mqttData) throws Exception {
                             toDisposable(setArmLockDisposable);
-                            SetArmLockedBean setArmLockedBean=new Gson().fromJson(mqttData.getPayload(),SetArmLockedBean.class);
-                            if ("200".equals(setArmLockedBean.getReturnCode())){
-                                if (mViewRef.get()!=null){
+                            SetArmLockedBean setArmLockedBean = new Gson().fromJson(mqttData.getPayload(), SetArmLockedBean.class);
+                            if ("200".equals(setArmLockedBean.getReturnCode())) {
+                                if (isSafe()) {
                                     mViewRef.get().setArmLockedSuccess(operatingMode);
                                 }
-                            }else{
-                                if (mViewRef.get()!=null){
+                            } else {
+                                if (isSafe()) {
                                     mViewRef.get().setArmLockedFail(setArmLockedBean.getReturnCode());
                                 }
                             }
@@ -281,7 +280,7 @@ public class GatewayLockDetailPresenter<T> extends BasePresenter<GatewayLockDeta
                     }, new Consumer<Throwable>() {
                         @Override
                         public void accept(Throwable throwable) throws Exception {
-                            if (mViewRef.get()!=null){
+                            if (isSafe()) {
                                 mViewRef.get().setArmLockedThrowable(throwable);
                             }
                         }
@@ -290,33 +289,33 @@ public class GatewayLockDetailPresenter<T> extends BasePresenter<GatewayLockDeta
         }
     }
 
-//获取布防
-    public void getArmLocked(String uid,String gatewayId,String deviceId){
-        if (mqttService!=null){
+    //获取布防
+    public void getArmLocked(String uid, String gatewayId, String deviceId) {
+        if (mqttService != null) {
             toDisposable(getArmLockDisposable);
-            getArmLockDisposable=mqttService.mqttPublish(MqttConstant.getCallTopic(uid), MqttCommandFactory.getArmLocked(uid,gatewayId,deviceId))
+            getArmLockDisposable = mqttService.mqttPublish(MqttConstant.getCallTopic(uid), MqttCommandFactory.getArmLocked(uid, gatewayId, deviceId))
                     .filter(new Predicate<MqttData>() {
                         @Override
                         public boolean test(MqttData mqttData) throws Exception {
-                            if (MqttConstant.GET_ALRAM_LOCK.equals(mqttData.getFunc())){
+                            if (MqttConstant.GET_ALRAM_LOCK.equals(mqttData.getFunc())) {
                                 return true;
                             }
                             return false;
                         }
                     })
-                    .timeout(10*1000, TimeUnit.MILLISECONDS)
+                    .timeout(10 * 1000, TimeUnit.MILLISECONDS)
                     .compose(RxjavaHelper.observeOnMainThread())
                     .subscribe(new Consumer<MqttData>() {
                         @Override
                         public void accept(MqttData mqttData) throws Exception {
                             toDisposable(getArmLockDisposable);
-                            GetArmLockedBean getArmLockedBean=new Gson().fromJson(mqttData.getPayload(),GetArmLockedBean.class);
-                            if ("200".equals(getArmLockedBean.getReturnCode())){
-                                if (mViewRef.get()!=null){
+                            GetArmLockedBean getArmLockedBean = new Gson().fromJson(mqttData.getPayload(), GetArmLockedBean.class);
+                            if ("200".equals(getArmLockedBean.getReturnCode())) {
+                                if (isSafe()) {
                                     mViewRef.get().getArmLockedSuccess(getArmLockedBean.getReturnData().getOperatingMode());
                                 }
-                            }else{
-                                if (mViewRef.get()!=null){
+                            } else {
+                                if (isSafe()) {
                                     mViewRef.get().getArmLockedFail(getArmLockedBean.getReturnCode());
                                 }
                             }
@@ -324,7 +323,7 @@ public class GatewayLockDetailPresenter<T> extends BasePresenter<GatewayLockDeta
                     }, new Consumer<Throwable>() {
                         @Override
                         public void accept(Throwable throwable) throws Exception {
-                            if (mViewRef.get()!=null){
+                            if (isSafe()) {
                                 mViewRef.get().getArmLockedThrowable(throwable);
                             }
                         }
@@ -335,51 +334,51 @@ public class GatewayLockDetailPresenter<T> extends BasePresenter<GatewayLockDeta
 
 
     //网络变化通知
-    public void listenerNetworkChange(){
+    public void listenerNetworkChange() {
         toDisposable(networkChangeDisposable);
-        networkChangeDisposable= NetWorkChangReceiver.notifyNetworkChange()
+        networkChangeDisposable = NetWorkChangReceiver.notifyNetworkChange()
                 .compose(RxjavaHelper.observeOnMainThread())
                 .subscribe(new Consumer<Boolean>() {
-            @Override
-            public void accept(Boolean aBoolean) throws Exception {
-                if (aBoolean){
-                    if (mViewRef!=null&&mViewRef.get()!=null){
-                        mViewRef.get().networkChangeSuccess();
+                    @Override
+                    public void accept(Boolean aBoolean) throws Exception {
+                        if (aBoolean) {
+                            if (isSafe()) {
+                                mViewRef.get().networkChangeSuccess();
+                            }
+                        }
                     }
-                }
-            }
-        });
+                });
         compositeDisposable.add(networkChangeDisposable);
     }
 
     //取消授权网关锁
-    public void  deleteShareDevice(int type,String gatewayId,String deviceId,String uid,String shareUser,String userName,int shareFlag){
-        if (mqttService!=null){
+    public void deleteShareDevice(int type, String gatewayId, String deviceId, String uid, String shareUser, String userName, int shareFlag) {
+        if (mqttService != null) {
             toDisposable(deleteShareDisposable);
-            deleteShareDisposable= mqttService.mqttPublish(MqttConstant.PUBLISH_TO_SERVER, MqttCommandFactory.shareDevice(type,gatewayId,deviceId,uid,shareUser,userName,shareFlag))
+            deleteShareDisposable = mqttService.mqttPublish(MqttConstant.PUBLISH_TO_SERVER, MqttCommandFactory.shareDevice(type, gatewayId, deviceId, uid, shareUser, userName, shareFlag))
                     .filter(new Predicate<MqttData>() {
                         @Override
                         public boolean test(MqttData mqttData) throws Exception {
-                            if (mqttData.getFunc().equals(MqttConstant.SHARE_DEVICE)){
+                            if (mqttData.getFunc().equals(MqttConstant.SHARE_DEVICE)) {
                                 return true;
                             }
                             return false;
                         }
                     })
-                    .timeout(10*1000, TimeUnit.MILLISECONDS)
+                    .timeout(10 * 1000, TimeUnit.MILLISECONDS)
                     .compose(RxjavaHelper.observeOnMainThread())
                     .subscribe(new Consumer<MqttData>() {
                         @Override
                         public void accept(MqttData mqttData) throws Exception {
                             toDisposable(deleteShareDisposable);
-                            DeviceShareResultBean shareResultBean=new Gson().fromJson(mqttData.getPayload(),DeviceShareResultBean.class);
-                            if ("200".equals(shareResultBean.getCode())){
-                                if (mViewRef!=null&&mViewRef.get()!=null&&gatewayId.equals(shareResultBean.getGwId())&&deviceId.equals(shareResultBean.getDeviceId())){
+                            DeviceShareResultBean shareResultBean = new Gson().fromJson(mqttData.getPayload(), DeviceShareResultBean.class);
+                            if ("200".equals(shareResultBean.getCode())) {
+                                if (isSafe() && gatewayId.equals(shareResultBean.getGwId()) && deviceId.equals(shareResultBean.getDeviceId())) {
                                     mViewRef.get().deleteShareDeviceSuccess();
                                     MyApplication.getInstance().getAllDevicesByMqtt(true);
                                 }
-                            }else{
-                                if (mViewRef!=null&&mViewRef.get()!=null){
+                            } else {
+                                if (isSafe()) {
                                     mViewRef.get().deleteShareDeviceFail();
                                 }
                             }
@@ -388,7 +387,7 @@ public class GatewayLockDetailPresenter<T> extends BasePresenter<GatewayLockDeta
                     }, new Consumer<Throwable>() {
                         @Override
                         public void accept(Throwable throwable) throws Exception {
-                            if (mViewRef!=null&&mViewRef.get()!=null){
+                            if (isSafe()) {
                                 mViewRef.get().deleteShareDeviceThrowable();
                             }
                         }

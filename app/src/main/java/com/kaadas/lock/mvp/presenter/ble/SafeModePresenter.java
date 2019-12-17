@@ -95,14 +95,14 @@ public class SafeModePresenter<T> extends BlePresenter<ISafeModeView> {
                         int state8 = (deValue[5] & 0b00000001) == 0b00000001 ? 1 : 0;
                         LogUtils.e("布防状态为   " + state8 + "    " + "  安全模式  " + state5);
                         toDisposable(getDeviceInfoDisposable);
-                        if (mViewRef.get() != null) {
+                        if (isSafe()) {
                             mViewRef.get().onGetStateSuccess(state5 == 1);
                         }
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        if (mViewRef.get() != null) {
+                        if (isSafe()) {
                             mViewRef.get().onGetStateFailed(throwable);
                         }
                     }
@@ -138,12 +138,12 @@ public class SafeModePresenter<T> extends BlePresenter<ISafeModeView> {
                         if (bleDataBean.isConfirm()) {
                             if (bleDataBean.getOriginalData()[4] == 0) {
                                 LogUtils.e("设置安全模式成功");
-                                if (mViewRef.get() != null) {
+                                if (isSafe()) {
                                     mViewRef.get().onSetSuccess(isOpen);
                                 }
                             } else {
                                 LogUtils.e("设置安全模式失败");
-                                if (mViewRef.get() != null) {
+                                if (isSafe()) {
                                     mViewRef.get().onSetFailed(new BleProtocolFailedException((bleDataBean.getOriginalData()[4] & 0xff)));
                                 }
                             }
@@ -152,7 +152,7 @@ public class SafeModePresenter<T> extends BlePresenter<ISafeModeView> {
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        if (mViewRef.get() != null) {
+                        if (isSafe()) {
                             mViewRef.get().onSetFailed(throwable);
                         }
                     }
@@ -197,7 +197,7 @@ public class SafeModePresenter<T> extends BlePresenter<ISafeModeView> {
                             } else if (type == 3) {
                                 if (typeNumber < 2) {  ///密码种类不够，提示用户添加密码
                                     LogUtils.e("密码种类不够，提示用户添加密码");
-                                    if (mViewRef.get() != null) {
+                                    if (isSafe()) {
                                         mViewRef.get().onPasswordTypeLess();
                                     }
                                 } else {
@@ -229,7 +229,7 @@ public class SafeModePresenter<T> extends BlePresenter<ISafeModeView> {
                             getNumber(3, isOpen);
                         } else if (type == 3) {
                             if (typeNumber < 2) {  ///密码种类不够，提示用户添加密码
-                                if (mViewRef.get() != null) {
+                                if (isSafe()) {
                                     mViewRef.get().onPasswordTypeLess();
                                 }
                             } else {
@@ -246,7 +246,7 @@ public class SafeModePresenter<T> extends BlePresenter<ISafeModeView> {
                             getNumber(3, isOpen);
                         } else if (type == 3) {
                             if (typeNumber < 2) {  ///密码种类不够，提示用户添加密码
-                                if (mViewRef.get() != null) {
+                                if (isSafe()) {
                                     mViewRef.get().onPasswordTypeLess();
                                 }
                             } else {

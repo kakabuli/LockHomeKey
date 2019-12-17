@@ -4,7 +4,7 @@ import com.kaadas.lock.mvp.view.gatewaylockview.IGatewayLockPasswordTempView;
 import com.kaadas.lock.mvp.view.gatewaylockview.IGatewayLockPasswordView;
 import com.kaadas.lock.mvp.view.gatewaylockview.IGatewayLockPasswordWeekView;
 
-public class GatewayLockPasswordTempPresenter<T extends IGatewayLockPasswordTempView> extends  GatewayLockPasswordPresenter<T> {
+public class GatewayLockPasswordTempPresenter<T extends IGatewayLockPasswordTempView> extends GatewayLockPasswordPresenter<T> {
 
 
     @Override
@@ -12,8 +12,8 @@ public class GatewayLockPasswordTempPresenter<T extends IGatewayLockPasswordTemp
                         int pwdType, long zLocalEndT, long zLocalStartT, int dayMaskBits,
                         int endHour, int endMinute, int startHour, int startMinute) {
         int number = getNumber(TEMP_PASSWORD);
-        if (number == -1){
-            if (isSafe()){
+        if (number == -1) {
+            if (isSafe()) {
                 mViewRef.get().gatewayPasswordFull();
             }
             return;

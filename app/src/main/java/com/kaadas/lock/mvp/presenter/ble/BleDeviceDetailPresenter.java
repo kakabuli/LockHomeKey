@@ -1,7 +1,6 @@
 package com.kaadas.lock.mvp.presenter.ble;
 
 
-
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.mvp.mvpbase.BlePresenter;
 import com.kaadas.lock.mvp.view.IDeviceDetailView;
@@ -116,12 +115,12 @@ public class BleDeviceDetailPresenter<T> extends BlePresenter<IDeviceDetailView>
                         if (bleLockInfo.getBattery() == -1) {   //没有获取过再重新获取   获取到电量  那么
                             bleLockInfo.setBattery(battery);
                             bleLockInfo.setReadBatteryTime(System.currentTimeMillis());
-                            if (mViewRef.get() != null) {
+                            if (isSafe()) {
                                 mViewRef.get().onElectricUpdata(battery);
                             }
                         }
 
-                        if (mViewRef.get() != null) {
+                        if (isSafe()) {
                             mViewRef.get().onDeviceInfoLoaded();
                         }
                         bleLockInfo.setLang(lang);
@@ -152,7 +151,7 @@ public class BleDeviceDetailPresenter<T> extends BlePresenter<IDeviceDetailView>
                     .filter(new Predicate<BleDataBean>() {
                         @Override
                         public boolean test(BleDataBean bleDataBean) throws Exception {
-                            LogUtils.e("收到上报   " + Rsa.bytesToHexString(bleDataBean.getOriginalData()) + "   "+(bleDataBean.getCmd() == 0x07) );
+                            LogUtils.e("收到上报   " + Rsa.bytesToHexString(bleDataBean.getOriginalData()) + "   " + (bleDataBean.getCmd() == 0x07));
                             return bleDataBean.getCmd() == 0x07;
                         }
                     })

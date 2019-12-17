@@ -1,8 +1,6 @@
 package com.kaadas.lock.mvp.presenter;
 
 
-
-
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.mvp.mvpbase.BasePresenter;
 import com.kaadas.lock.publiclibrary.http.XiaokaiNewServiceImp;
@@ -49,6 +47,7 @@ public class RegisterPresenter<T> extends BasePresenter<IRegisterView> {
                     }
                 });
     }
+
     public void sendRandomByEmail(String email) {
         XiaokaiNewServiceImp.sendEmailYZM(email)
                 .subscribe(new BaseObserver<BaseResult>() {
@@ -121,6 +120,7 @@ public class RegisterPresenter<T> extends BasePresenter<IRegisterView> {
                 );
 
     }
+
     public void registerByEmail(String phone, String pwd, String random) {
         XiaokaiNewServiceImp.registerByEmail(phone, pwd, random)
                 .subscribe(

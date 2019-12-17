@@ -82,11 +82,11 @@ public class GatewayLockHomePresenter<T> extends BasePresenter<IGatewayLockHomeV
                                 toDisposable(openLockRecordDisposable);
                                 LogUtils.e("请求开锁记录 设备id" + selectOpenLockResultBean.getDeviceId());
                                 if ("200".equals(selectOpenLockResultBean.getCode())) {
-                                    if (mViewRef != null && mViewRef.get() != null) {
+                                    if (isSafe()) {
                                         mViewRef.get().getOpenLockRecordSuccess(selectOpenLockResultBean.getData(), selectOpenLockResultBean.getDeviceId());
                                     }
                                 } else {
-                                    if (mViewRef != null && mViewRef.get() != null) {
+                                    if (isSafe()) {
                                         mViewRef.get().getOpenLockRecordFail();
                                     }
                                 }
@@ -96,7 +96,7 @@ public class GatewayLockHomePresenter<T> extends BasePresenter<IGatewayLockHomeV
                     }, new Consumer<Throwable>() {
                         @Override
                         public void accept(Throwable throwable) throws Exception {
-                            if (mViewRef != null && mViewRef.get() != null) {
+                            if (isSafe()) {
                                 mViewRef.get().getOpenLockRecordThrowable(throwable);
                             }
                         }
@@ -114,7 +114,7 @@ public class GatewayLockHomePresenter<T> extends BasePresenter<IGatewayLockHomeV
                     @Override
                     public void accept(Boolean aBoolean) throws Exception {
                         if (aBoolean) {
-                            if (mViewRef.get() != null) {
+                            if (isSafe()) {
                                 mViewRef.get().networkChangeSuccess();
                             }
                         }
@@ -138,7 +138,7 @@ public class GatewayLockHomePresenter<T> extends BasePresenter<IGatewayLockHomeV
                                 GetBindGatewayStatusResult gatewayStatusResult = new Gson().fromJson(mqttData.getPayload(), GetBindGatewayStatusResult.class);
                                 LogUtils.e("监听网关GatewayActivity" + gatewayStatusResult.getDevuuid());
                                 if (gatewayStatusResult != null && gatewayStatusResult.getData().getState() != null) {
-                                    if (mViewRef.get() != null) {
+                                    if (isSafe()) {
                                         mViewRef.get().gatewayStatusChange(gatewayStatusResult.getDevuuid(), gatewayStatusResult.getData().getState());
                                     }
                                 }
@@ -173,7 +173,7 @@ public class GatewayLockHomePresenter<T> extends BasePresenter<IGatewayLockHomeV
                         public void accept(MqttData mqttData) throws Exception {
                             DeviceOnLineBean deviceOnLineBean = new Gson().fromJson(mqttData.getPayload(), DeviceOnLineBean.class);
                             if (deviceOnLineBean != null) {
-                                if (mViewRef.get() != null && deviceOnLineBean.getEventparams().getEvent_str() != null) {
+                                if (isSafe() && deviceOnLineBean.getEventparams().getEvent_str() != null) {
                                     mViewRef.get().deviceStatusChange(deviceOnLineBean.getGwId(), deviceOnLineBean.getDeviceId(), deviceOnLineBean.getEventparams().getEvent_str());
                                 }
                             }
@@ -192,7 +192,7 @@ public class GatewayLockHomePresenter<T> extends BasePresenter<IGatewayLockHomeV
         String deviceId = gwLockInfo.getServerInfo().getDeviceId();
         String lockPwd = (String) SPUtils.get(KeyConstants.SAVA_LOCK_PWD + deviceId, "");
         if (TextUtils.isEmpty(lockPwd)) { //密码为空
-            if (mViewRef.get() != null) {
+            if (isSafe()) {
                 mViewRef.get().inputPwd(gwLockInfo);
             }
         } else {
@@ -203,7 +203,7 @@ public class GatewayLockHomePresenter<T> extends BasePresenter<IGatewayLockHomeV
     //开锁
     public void realOpenLock(String gatewayId, String deviceId, String pwd) {
         toDisposable(openLockDisposable);
-        if (mViewRef.get() != null) {
+        if (isSafe()) {
             mViewRef.get().startOpenLock();
         }
         listenerLockClose(deviceId);
@@ -230,7 +230,7 @@ public class GatewayLockHomePresenter<T> extends BasePresenter<IGatewayLockHomeV
                                 SPUtils.put(KeyConstants.SAVA_LOCK_PWD + deviceId, pwd);
                                 LogUtils.e("开锁成功");
                             } else {
-                                if (mViewRef != null && mViewRef.get() != null && openLockBean.getDeviceId().equals(deviceId)) {
+                                if (isSafe() && openLockBean.getDeviceId().equals(deviceId)) {
                                     mViewRef.get().openLockFailed();
                                     SPUtils.remove(KeyConstants.SAVA_LOCK_PWD + deviceId);
                                 }
@@ -241,7 +241,7 @@ public class GatewayLockHomePresenter<T> extends BasePresenter<IGatewayLockHomeV
                         @Override
                         public void accept(Throwable throwable) throws Exception {
                            /* //开锁异常
-                            if (mViewRef.get() != null) {
+                            if (isSafe()) {
                                 mViewRef.get().openLockThrowable(throwable);
                             }*/
                         }
@@ -281,7 +281,7 @@ public class GatewayLockHomePresenter<T> extends BasePresenter<IGatewayLockHomeV
                         public void accept(MqttData mqttData) throws Exception {
                             toDisposable(closeLockNotifyDisposable);
                             LogUtils.e("门锁打开上报");
-                            if (mViewRef != null && mViewRef.get() != null) {
+                            if (isSafe()) {
                                 mViewRef.get().openLockSuccess();
                             }
 
@@ -289,7 +289,7 @@ public class GatewayLockHomePresenter<T> extends BasePresenter<IGatewayLockHomeV
                     }, new Consumer<Throwable>() {
                         @Override
                         public void accept(Throwable throwable) throws Exception {
-                            if (mViewRef.get() != null) {
+                            if (isSafe()) {
                                 mViewRef.get().openLockThrowable(throwable);
                             }
                         }
@@ -332,14 +332,14 @@ public class GatewayLockHomePresenter<T> extends BasePresenter<IGatewayLockHomeV
                             toDisposable(lockCloseDisposable);
                             LogUtils.e("门锁关闭 上报");
                             //关门
-                            if (mViewRef != null && mViewRef.get() != null) {
+                            if (isSafe()) {
                                 mViewRef.get().lockCloseSuccess(deviceId);
                             }
                         }
                     }, new Consumer<Throwable>() {
                         @Override
                         public void accept(Throwable throwable) throws Exception {
-                            if (mViewRef != null && mViewRef.get() != null) {
+                            if (isSafe()) {
                                 mViewRef.get().lockCloseFailed();
                             }
                         }
@@ -375,11 +375,11 @@ public class GatewayLockHomePresenter<T> extends BasePresenter<IGatewayLockHomeV
                             if (getLockRecordTotalResult.getDeviceId().equals(deviceId)) {
                                 toDisposable(getLockRecordTotalDisposable);
                                 if ("200".equals(getLockRecordTotalResult.getCode())) {
-                                    if (mViewRef != null && mViewRef.get() != null) {
+                                    if (isSafe()) {
                                         mViewRef.get().getLockRecordTotalSuccess(getLockRecordTotalResult.getData().getCount(), getLockRecordTotalResult.getDeviceId());
                                     }
                                 } else {
-                                    if (mViewRef != null && mViewRef.get() != null) {
+                                    if (isSafe()) {
                                         mViewRef.get().getLockRecordTotalFail();
                                     }
                                 }
@@ -388,7 +388,7 @@ public class GatewayLockHomePresenter<T> extends BasePresenter<IGatewayLockHomeV
                     }, new Consumer<Throwable>() {
                         @Override
                         public void accept(Throwable throwable) throws Exception {
-                            if (mViewRef != null && mViewRef.get() != null) {
+                            if (isSafe()) {
                                 mViewRef.get().getLockRecordTotalThrowable(throwable);
                             }
                         }
@@ -431,7 +431,7 @@ public class GatewayLockHomePresenter<T> extends BasePresenter<IGatewayLockHomeV
                                     String gatewayId = gatewayLockInfoEventBean.getGwId();
                                     String deviceId = gatewayLockInfoEventBean.getDeviceId();
                                     if (eventParmDeveType.equals("lockop") && devecode == 2 && pin == 255) {
-                                        if (mViewRef != null && mViewRef.get() != null) {
+                                        if (isSafe()) {
                                             mViewRef.get().getLockEvent(gatewayId, deviceId);
                                         }
                                     }
@@ -472,11 +472,11 @@ public class GatewayLockHomePresenter<T> extends BasePresenter<IGatewayLockHomeV
                             GetDevicePowerBean powerBean = new Gson().fromJson(payload, GetDevicePowerBean.class);
                             if (powerBean != null) {
                                 if ("200".equals(powerBean.getReturnCode())) {
-                                    if (mViewRef != null && mViewRef.get() != null) {
+                                    if (isSafe()) {
                                         mViewRef.get().getPowerSuccess(powerBean.getGwId(), powerBean.getDeviceId());
                                     }
                                 } else {
-                                    if (mViewRef != null && mViewRef.get() != null) {
+                                    if (isSafe()) {
                                         mViewRef.get().getPowerFail(powerBean.getGwId(), powerBean.getDeviceId());
                                     }
                                 }
@@ -486,7 +486,7 @@ public class GatewayLockHomePresenter<T> extends BasePresenter<IGatewayLockHomeV
                     }, new Consumer<Throwable>() {
                         @Override
                         public void accept(Throwable throwable) throws Exception {
-                            if (mViewRef.get() != null) {
+                            if (isSafe()) {
                                 mViewRef.get().getPowerThrowable();
                             }
                         }
@@ -528,14 +528,14 @@ public class GatewayLockHomePresenter<T> extends BasePresenter<IGatewayLockHomeV
                             OpenLockNotifyBean openLockNotifyBean = new Gson().fromJson(mqttData.getPayload(), OpenLockNotifyBean.class);
                             String deviceId = openLockNotifyBean.getDeviceId();
                             String gatewayId = openLockNotifyBean.getGwId();
-                            if (mViewRef != null && mViewRef.get() != null) {
+                            if (isSafe()) {
                                 mViewRef.get().closeLockSuccess(deviceId, gatewayId);
                             }
                         }
                     }, new Consumer<Throwable>() {
                         @Override
                         public void accept(Throwable throwable) throws Exception {
-                            if (mViewRef != null && mViewRef.get() != null) {
+                            if (isSafe()) {
                                 mViewRef.get().closeLockThrowable();
                             }
                         }

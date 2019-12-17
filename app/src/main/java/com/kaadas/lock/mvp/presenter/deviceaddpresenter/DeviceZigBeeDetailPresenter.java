@@ -15,6 +15,7 @@ import io.reactivex.functions.Consumer;
 
 public class DeviceZigBeeDetailPresenter<T> extends BasePresenter<DeviceZigBeeDetailView> {
     private Disposable listenerAllDevicesDisposable;
+
     @Override
     public void attachView(DeviceZigBeeDetailView view) {
         super.attachView(view);
@@ -23,7 +24,7 @@ public class DeviceZigBeeDetailPresenter<T> extends BasePresenter<DeviceZigBeeDe
                 .subscribe(new Consumer<AllBindDevices>() {
                     @Override
                     public void accept(AllBindDevices allBindDevices) throws Exception {
-                        if (mViewRef.get()!=null){
+                        if (isSafe()) {
                             mViewRef.get().onDeviceRefresh(allBindDevices);
                         }
                     }
@@ -37,14 +38,15 @@ public class DeviceZigBeeDetailPresenter<T> extends BasePresenter<DeviceZigBeeDe
 
     }
 
-    private ArrayList<HomeShowBean> showBeansList=new ArrayList<>();
+    private ArrayList<HomeShowBean> showBeansList = new ArrayList<>();
+
     //获取绑定的网关列表
-    public List<HomeShowBean> getGatewayBindList(){
-        List<HomeShowBean> homeShowBeans=MyApplication.getInstance().getAllDevices();
-        if(homeShowBeans!=null && homeShowBeans.size()>0){
-            for (HomeShowBean showBean:homeShowBeans){
-                if (showBean.getDeviceType()==HomeShowBean.TYPE_GATEWAY){
-                    if (showBeansList!=null){
+    public List<HomeShowBean> getGatewayBindList() {
+        List<HomeShowBean> homeShowBeans = MyApplication.getInstance().getAllDevices();
+        if (homeShowBeans != null && homeShowBeans.size() > 0) {
+            for (HomeShowBean showBean : homeShowBeans) {
+                if (showBean.getDeviceType() == HomeShowBean.TYPE_GATEWAY) {
+                    if (showBeansList != null) {
                         showBeansList.add(showBean);
                     }
                 }

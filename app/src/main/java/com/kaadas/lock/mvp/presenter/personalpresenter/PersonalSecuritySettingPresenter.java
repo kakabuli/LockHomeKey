@@ -15,24 +15,26 @@ import com.kaadas.lock.mvp.view.personalview.IPersonalSecuritySettingView;
 
 public class PersonalSecuritySettingPresenter<T> extends BasePresenter<IPersonalSecuritySettingView> {
     private FingerprintManager mFingerprintManager;
-    //设置手势开关状态
-    public void setHandPwdSwitchFlag(){
 
-        String pwd= CacheFloder.readHandPassword(ACache.get(MyApplication.getInstance()),MyApplication.getInstance().getUid()+"handPassword");
-        if (TextUtils.isEmpty(pwd)){
+    //设置手势开关状态
+    public void setHandPwdSwitchFlag() {
+
+        String pwd = CacheFloder.readHandPassword(ACache.get(MyApplication.getInstance()), MyApplication.getInstance().getUid() + "handPassword");
+        if (TextUtils.isEmpty(pwd)) {
             mViewRef.get().closeHandPwdSuccess();
-        }else{
+        } else {
             mViewRef.get().openHandPwdSuccess();
         }
 
     }
+
     //设置手机指纹开启状态
-    public void setFingerPrintFlag(){
-        String flag= CacheFloder.readPhoneFingerPrint(ACache.get(MyApplication.getInstance()),MyApplication.getInstance().getUid()+"fingerStatus");
-        if (mViewRef.get()!=null){
-            if (TextUtils.isEmpty(flag)){
+    public void setFingerPrintFlag() {
+        String flag = CacheFloder.readPhoneFingerPrint(ACache.get(MyApplication.getInstance()), MyApplication.getInstance().getUid() + "fingerStatus");
+        if (isSafe()) {
+            if (TextUtils.isEmpty(flag)) {
                 mViewRef.get().closeFingerPrintSuccess();
-            }else{
+            } else {
 
                 mViewRef.get().openFingerPrintSuccess();
             }
@@ -41,33 +43,34 @@ public class PersonalSecuritySettingPresenter<T> extends BasePresenter<IPersonal
 
 
     //判断是否支持指纹识别
-    public Boolean isSupportFinger(){
+    public Boolean isSupportFinger() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            mFingerprintManager=getFingerprintManagerOrNull();
-            if (mFingerprintManager!=null){
-                Boolean flag=mFingerprintManager.isHardwareDetected();
-                if (flag==true){
-                   return true;
+            mFingerprintManager = getFingerprintManagerOrNull();
+            if (mFingerprintManager != null) {
+                Boolean flag = mFingerprintManager.isHardwareDetected();
+                if (flag == true) {
+                    return true;
                 }
             }
         }
-        return  false;
+        return false;
     }
-    //判断是否开启了指纹识别
-    public void isOpenFingerPrint(){
-        if (mFingerprintManager!=null){
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-               Boolean openFlag= mFingerprintManager.hasEnrolledFingerprints();
-               if (openFlag==true){
-                   if (mViewRef.get()!=null){
-                       mViewRef.get().phoneFigerprintOpen();
-                   }
-               }else{
-                   if (mViewRef.get()!=null){
-                       mViewRef.get().phoneFigerprintClose();
-                   }
 
-               }
+    //判断是否开启了指纹识别
+    public void isOpenFingerPrint() {
+        if (mFingerprintManager != null) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                Boolean openFlag = mFingerprintManager.hasEnrolledFingerprints();
+                if (openFlag == true) {
+                    if (isSafe()) {
+                        mViewRef.get().phoneFigerprintOpen();
+                    }
+                } else {
+                    if (isSafe()) {
+                        mViewRef.get().phoneFigerprintClose();
+                    }
+
+                }
 
             }
         }

@@ -16,6 +16,7 @@ public class ResetPasswordPresenter<T> extends BasePresenter<IResetPasswordView>
 
     /**
      * 发送手机验证码
+     *
      * @param phone
      * @param code
      */
@@ -24,21 +25,21 @@ public class ResetPasswordPresenter<T> extends BasePresenter<IResetPasswordView>
                 .subscribe(new BaseObserver<BaseResult>() {
                     @Override
                     public void onSuccess(BaseResult result) {
-                        if (mViewRef.get() != null) {
+                        if (isSafe()) {
                             mViewRef.get().senRandomSuccess();
                         }
                     }
 
                     @Override
                     public void onAckErrorCode(BaseResult baseResult) {
-                        if (mViewRef.get() != null) {
+                        if (isSafe()) {
                             mViewRef.get().sendRandomFailedServer(baseResult);
                         }
                     }
 
                     @Override
                     public void onFailed(Throwable throwable) {
-                        if (mViewRef.get() != null) {
+                        if (isSafe()) {
                             mViewRef.get().sendRandomFailed(throwable);
                         }
                     }
@@ -51,8 +52,10 @@ public class ResetPasswordPresenter<T> extends BasePresenter<IResetPasswordView>
 
 
     }
+
     /**
      * 发送邮箱验证码
+     *
      * @param email
      */
     public void sendRandomByEmail(String email) {
@@ -60,22 +63,25 @@ public class ResetPasswordPresenter<T> extends BasePresenter<IResetPasswordView>
                 .subscribe(new BaseObserver<BaseResult>() {
                     @Override
                     public void onSuccess(BaseResult result) {
-                        if (mViewRef.get() != null) {
+                        if (isSafe()) {
                             mViewRef.get().senRandomSuccess();
                         }
                     }
+
                     @Override
                     public void onAckErrorCode(BaseResult baseResult) {
-                        if (mViewRef.get() != null) {
+                        if (isSafe()) {
                             mViewRef.get().sendRandomFailedServer(baseResult);
                         }
                     }
+
                     @Override
                     public void onFailed(Throwable throwable) {
-                        if (mViewRef.get() != null) {
+                        if (isSafe()) {
                             mViewRef.get().sendRandomFailed(throwable);
                         }
                     }
+
                     @Override
                     public void onSubscribe1(Disposable d) {
                         compositeDisposable.add(d);
@@ -84,7 +90,7 @@ public class ResetPasswordPresenter<T> extends BasePresenter<IResetPasswordView>
 
     }
 
-    public void resetPassword(String user_name, String pwd,int type, String token) {
+    public void resetPassword(String user_name, String pwd, int type, String token) {
         XiaokaiNewServiceImp.forgetPassword(user_name, pwd, type, token)
                 .subscribe(new BaseObserver<BaseResult>() {
                     @Override
@@ -96,14 +102,14 @@ public class ResetPasswordPresenter<T> extends BasePresenter<IResetPasswordView>
 
                     @Override
                     public void onAckErrorCode(BaseResult baseResult) {
-                        if (mViewRef.get() != null) {
+                        if (isSafe()) {
                             mViewRef.get().resetPasswordFailedServer(baseResult);
                         }
                     }
 
                     @Override
                     public void onFailed(Throwable throwable) {
-                        if (mViewRef.get() != null) {
+                        if (isSafe()) {
                             mViewRef.get().resetPasswordFailed(throwable);
                         }
                     }
@@ -114,7 +120,8 @@ public class ResetPasswordPresenter<T> extends BasePresenter<IResetPasswordView>
                     }
                 });
     }
-    public void resetPasswordSuccess(){
+
+    public void resetPasswordSuccess() {
         if (mViewRef != null) {
             mViewRef.get().resetPasswordSuccess();
         }

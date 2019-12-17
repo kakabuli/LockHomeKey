@@ -319,7 +319,7 @@ public class OldDeviceInfoPresenter extends BleCheckOTAPresenter<IOldDeviceInfoV
             @Override
             public void onSuccess(BaseResult baseResult) {
                 LogUtils.e("上传蓝牙信息成功");
-                checkOTAInfo(sn, version,1);
+                checkOTAInfo(sn, version, 1);
             }
 
             @Override
@@ -343,8 +343,6 @@ public class OldDeviceInfoPresenter extends BleCheckOTAPresenter<IOldDeviceInfoV
             }
         });
     }
-
-
 
 
     public void modifyDeviceNickname(String devname, String user_id, String lockNickName) {

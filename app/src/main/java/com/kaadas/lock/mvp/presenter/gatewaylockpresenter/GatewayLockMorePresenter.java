@@ -46,19 +46,20 @@ public class GatewayLockMorePresenter<T> extends BasePresenter<GatewayLockMoreVi
     private Disposable deleteReceiveDisposable;
     private Disposable setAMDisposable;
     private Disposable getAMDisposable;
+
     //修改昵称
-    public void updateZigbeeLockName(String devuuid,String deviceId,String nickName ){
+    public void updateZigbeeLockName(String devuuid, String deviceId, String nickName) {
         toDisposable(updateNameDisposable);
-        if (mqttService!=null&&mqttService.getMqttClient()!=null&&mqttService.getMqttClient().isConnected()){
-            MqttMessage mqttMessage= MqttCommandFactory.updateDeviceNickName(MyApplication.getInstance().getUid(),devuuid,deviceId,nickName);
-            updateNameDisposable=mqttService
-                    .mqttPublish(MqttConstant.PUBLISH_TO_SERVER,mqttMessage)
-                    .timeout(10*1000, TimeUnit.MILLISECONDS)
+        if (mqttService != null && mqttService.getMqttClient() != null && mqttService.getMqttClient().isConnected()) {
+            MqttMessage mqttMessage = MqttCommandFactory.updateDeviceNickName(MyApplication.getInstance().getUid(), devuuid, deviceId, nickName);
+            updateNameDisposable = mqttService
+                    .mqttPublish(MqttConstant.PUBLISH_TO_SERVER, mqttMessage)
+                    .timeout(10 * 1000, TimeUnit.MILLISECONDS)
                     .compose(RxjavaHelper.observeOnMainThread())
                     .filter(new Predicate<MqttData>() {
                         @Override
                         public boolean test(MqttData mqttData) throws Exception {
-                            if (MqttConstant.UPDATE_DEV_NICK_NAME.equals(mqttData.getFunc())){
+                            if (MqttConstant.UPDATE_DEV_NICK_NAME.equals(mqttData.getFunc())) {
                                 return true;
                             }
                             return false;
@@ -68,15 +69,15 @@ public class GatewayLockMorePresenter<T> extends BasePresenter<GatewayLockMoreVi
                         @Override
                         public void accept(MqttData mqttData) throws Exception {
                             toDisposable(updateNameDisposable);
-                            UpdateDevNickNameResult nameResult=new Gson().fromJson(mqttData.getPayload(),UpdateDevNickNameResult.class);
-                            if (nameResult!=null){
-                                if ("200".equals(nameResult.getCode())){
-                                    if (mViewRef.get()!=null){
+                            UpdateDevNickNameResult nameResult = new Gson().fromJson(mqttData.getPayload(), UpdateDevNickNameResult.class);
+                            if (nameResult != null) {
+                                if ("200".equals(nameResult.getCode())) {
+                                    if (isSafe()) {
                                         mViewRef.get().updateDevNickNameSuccess(nickName);
                                         MyApplication.getInstance().getAllDevicesByMqtt(true);
                                     }
-                                }else{
-                                    if (mViewRef.get()!=null){
+                                } else {
+                                    if (isSafe()) {
                                         mViewRef.get().updateDevNickNameFail();
                                     }
                                 }
@@ -85,7 +86,7 @@ public class GatewayLockMorePresenter<T> extends BasePresenter<GatewayLockMoreVi
                     }, new Consumer<Throwable>() {
                         @Override
                         public void accept(Throwable throwable) throws Exception {
-                            if (mViewRef.get()!=null){
+                            if (isSafe()) {
                                 mViewRef.get().updateDevNickNameThrowable(throwable);
                             }
                         }
@@ -97,18 +98,18 @@ public class GatewayLockMorePresenter<T> extends BasePresenter<GatewayLockMoreVi
     }
 
     //获取音量状态
-    public void getSoundVolume (String gatewayId,String deviceId ){
+    public void getSoundVolume(String gatewayId, String deviceId) {
         toDisposable(getLockSoundVolumeDisposable);
-        if (mqttService!=null){
-            MqttMessage mqttMessage= MqttCommandFactory.getSoundVolume(gatewayId,deviceId);
-            getLockSoundVolumeDisposable=mqttService
-                    .mqttPublish(MqttConstant.getCallTopic(MyApplication.getInstance().getUid()),mqttMessage)
-                    .timeout(10*1000, TimeUnit.MILLISECONDS)
+        if (mqttService != null) {
+            MqttMessage mqttMessage = MqttCommandFactory.getSoundVolume(gatewayId, deviceId);
+            getLockSoundVolumeDisposable = mqttService
+                    .mqttPublish(MqttConstant.getCallTopic(MyApplication.getInstance().getUid()), mqttMessage)
+                    .timeout(10 * 1000, TimeUnit.MILLISECONDS)
                     .compose(RxjavaHelper.observeOnMainThread())
                     .filter(new Predicate<MqttData>() {
                         @Override
                         public boolean test(MqttData mqttData) throws Exception {
-                            if (MqttConstant.SOUND_VOLUME.equals(mqttData.getFunc())){
+                            if (MqttConstant.SOUND_VOLUME.equals(mqttData.getFunc())) {
                                 return true;
                             }
                             return false;
@@ -118,14 +119,14 @@ public class GatewayLockMorePresenter<T> extends BasePresenter<GatewayLockMoreVi
                         @Override
                         public void accept(MqttData mqttData) throws Exception {
                             toDisposable(getLockSoundVolumeDisposable);
-                            GetSoundVolume getSoundVolume=new Gson().fromJson(mqttData.getPayload(),GetSoundVolume.class);
-                            if (getSoundVolume!=null){
-                                if ("200".equals(getSoundVolume.getReturnCode())){
-                                    if (mViewRef.get()!=null){
+                            GetSoundVolume getSoundVolume = new Gson().fromJson(mqttData.getPayload(), GetSoundVolume.class);
+                            if (getSoundVolume != null) {
+                                if ("200".equals(getSoundVolume.getReturnCode())) {
+                                    if (isSafe()) {
                                         mViewRef.get().getSoundVolumeSuccess(getSoundVolume.getReturnData().getVolume());
                                     }
-                                }else{
-                                    if (mViewRef.get()!=null){
+                                } else {
+                                    if (isSafe()) {
                                         mViewRef.get().getSoundVolumeFail();
                                     }
                                 }
@@ -134,7 +135,7 @@ public class GatewayLockMorePresenter<T> extends BasePresenter<GatewayLockMoreVi
                     }, new Consumer<Throwable>() {
                         @Override
                         public void accept(Throwable throwable) throws Exception {
-                            if (mViewRef.get()!=null){
+                            if (isSafe()) {
                                 mViewRef.get().getSoundVolumeThrowable(throwable);
                             }
                         }
@@ -146,18 +147,18 @@ public class GatewayLockMorePresenter<T> extends BasePresenter<GatewayLockMoreVi
     }
 
     //设置音量
-    public void setSoundVolume (String gatewayId,String deviceId,int volume){
+    public void setSoundVolume(String gatewayId, String deviceId, int volume) {
         toDisposable(setLockSoundVolumeDisposable);
-        if (mqttService!=null){
-            MqttMessage mqttMessage= MqttCommandFactory.setSoundVolume(gatewayId,deviceId,volume);
-            setLockSoundVolumeDisposable=mqttService
-                    .mqttPublish(MqttConstant.getCallTopic(MyApplication.getInstance().getUid()),mqttMessage)
-                    .timeout(10*1000, TimeUnit.MILLISECONDS)
+        if (mqttService != null) {
+            MqttMessage mqttMessage = MqttCommandFactory.setSoundVolume(gatewayId, deviceId, volume);
+            setLockSoundVolumeDisposable = mqttService
+                    .mqttPublish(MqttConstant.getCallTopic(MyApplication.getInstance().getUid()), mqttMessage)
+                    .timeout(10 * 1000, TimeUnit.MILLISECONDS)
                     .compose(RxjavaHelper.observeOnMainThread())
                     .filter(new Predicate<MqttData>() {
                         @Override
                         public boolean test(MqttData mqttData) throws Exception {
-                            if (MqttConstant.SET_SOUND_VOLUME.equals(mqttData.getFunc())){
+                            if (MqttConstant.SET_SOUND_VOLUME.equals(mqttData.getFunc())) {
                                 return true;
                             }
                             return false;
@@ -167,14 +168,14 @@ public class GatewayLockMorePresenter<T> extends BasePresenter<GatewayLockMoreVi
                         @Override
                         public void accept(MqttData mqttData) throws Exception {
                             toDisposable(setLockSoundVolumeDisposable);
-                            GetSoundVolume getSoundVolume=new Gson().fromJson(mqttData.getPayload(),GetSoundVolume.class);
-                            if (getSoundVolume!=null){
-                                if ("200".equals(getSoundVolume.getReturnCode())){
-                                    if (mViewRef.get()!=null){
+                            GetSoundVolume getSoundVolume = new Gson().fromJson(mqttData.getPayload(), GetSoundVolume.class);
+                            if (getSoundVolume != null) {
+                                if ("200".equals(getSoundVolume.getReturnCode())) {
+                                    if (isSafe()) {
                                         mViewRef.get().setSoundVolumeSuccess(getSoundVolume.getParams().getVolume());
                                     }
-                                }else{
-                                    if (mViewRef.get()!=null){
+                                } else {
+                                    if (isSafe()) {
                                         mViewRef.get().setSoundVolumeFail();
                                     }
                                 }
@@ -183,7 +184,7 @@ public class GatewayLockMorePresenter<T> extends BasePresenter<GatewayLockMoreVi
                     }, new Consumer<Throwable>() {
                         @Override
                         public void accept(Throwable throwable) throws Exception {
-                            if (mViewRef.get()!=null){
+                            if (isSafe()) {
                                 mViewRef.get().setSoundVolumeThrowable(throwable);
                             }
                         }
@@ -243,19 +244,19 @@ public class GatewayLockMorePresenter<T> extends BasePresenter<GatewayLockMoreVi
         }
     }*/
 
-    public void deleteLock(String gatewayId,String deviceId,String bustType){
+    public void deleteLock(String gatewayId, String deviceId, String bustType) {
         toDisposable(deleteLockInfoDisposable);
-        if (mqttService!=null){
-            MqttMessage mqttMessage= MqttCommandFactory.deleteDevice(gatewayId,deviceId,bustType);
-            deleteLockInfoDisposable=mqttService
-                    .mqttPublish(MqttConstant.getCallTopic(MyApplication.getInstance().getUid()),mqttMessage)
-                    .timeout(10*1000, TimeUnit.MILLISECONDS)
+        if (mqttService != null) {
+            MqttMessage mqttMessage = MqttCommandFactory.deleteDevice(gatewayId, deviceId, bustType);
+            deleteLockInfoDisposable = mqttService
+                    .mqttPublish(MqttConstant.getCallTopic(MyApplication.getInstance().getUid()), mqttMessage)
+                    .timeout(10 * 1000, TimeUnit.MILLISECONDS)
                     .compose(RxjavaHelper.observeOnMainThread())
                     .filter(new Predicate<MqttData>() {
                         @Override
                         public boolean test(MqttData mqttData) throws Exception {
                             //由于网关那边没有响应事件，所以暂时以接收上报删除事件来判断是否删除成功。
-                            if (MqttConstant.GW_EVENT.equals(mqttData.getFunc())){
+                            if (MqttConstant.GW_EVENT.equals(mqttData.getFunc())) {
                                 return true;
                             }
                             return false;
@@ -265,25 +266,25 @@ public class GatewayLockMorePresenter<T> extends BasePresenter<GatewayLockMoreVi
                         @Override
                         public void accept(MqttData mqttData) throws Exception {
                             toDisposable(deleteLockInfoDisposable);
-                            DeleteDeviceLockBean deleteGatewayLockDeviceBean=new Gson().fromJson(mqttData.getPayload(),DeleteDeviceLockBean.class);
-                            if (deleteGatewayLockDeviceBean!=null){
-                                if ("kdszblock".equals(deleteGatewayLockDeviceBean.getDevtype())&&deleteGatewayLockDeviceBean.getEventparams().getEvent_str().equals("delete")){
-                                    if (mViewRef.get()!=null){
+                            DeleteDeviceLockBean deleteGatewayLockDeviceBean = new Gson().fromJson(mqttData.getPayload(), DeleteDeviceLockBean.class);
+                            if (deleteGatewayLockDeviceBean != null) {
+                                if ("kdszblock".equals(deleteGatewayLockDeviceBean.getDevtype()) && deleteGatewayLockDeviceBean.getEventparams().getEvent_str().equals("delete")) {
+                                    if (isSafe()) {
                                         mViewRef.get().deleteDeviceSuccess();
                                         MyApplication.getInstance().getAllDevicesByMqtt(true);
                                         //清除锁上的密码
-                                        SPUtils.remove(KeyConstants.SAVA_LOCK_PWD+deviceId);
+                                        SPUtils.remove(KeyConstants.SAVA_LOCK_PWD + deviceId);
                                         //清除数据库当前锁的全部密码
-                                        String uid=MyApplication.getInstance().getUid();
-                                        deleteAllPwd(gatewayId,deviceId,uid);
-                                        SPUtils.remove(KeyConstants.FIRST_IN_GATEWAY_LOCK+ uid+deviceId);
+                                        String uid = MyApplication.getInstance().getUid();
+                                        deleteAllPwd(gatewayId, deviceId, uid);
+                                        SPUtils.remove(KeyConstants.FIRST_IN_GATEWAY_LOCK + uid + deviceId);
                                         //清除报警记录
-                                        deleteAllAram(gatewayId,deviceId);
+                                        deleteAllAram(gatewayId, deviceId);
                                         //删除密码情况
-                                        new GatewayLockPasswordManager().deleteAll(deviceId,MyApplication.getInstance().getUid(), gatewayId);
+                                        new GatewayLockPasswordManager().deleteAll(deviceId, MyApplication.getInstance().getUid(), gatewayId);
                                     }
-                                }else{
-                                    if (mViewRef.get()!=null){
+                                } else {
+                                    if (isSafe()) {
                                         mViewRef.get().deleteDeviceFail();
                                     }
                                 }
@@ -292,7 +293,7 @@ public class GatewayLockMorePresenter<T> extends BasePresenter<GatewayLockMoreVi
                     }, new Consumer<Throwable>() {
                         @Override
                         public void accept(Throwable throwable) throws Exception {
-                            if (mViewRef.get()!=null){
+                            if (isSafe()) {
                                 mViewRef.get().deleteDeviceThrowable(throwable);
                             }
                         }
@@ -302,12 +303,12 @@ public class GatewayLockMorePresenter<T> extends BasePresenter<GatewayLockMoreVi
         }
     }
 
-    public void getPushSwitch(){
+    public void getPushSwitch() {
         //      toDisposable(compositeDisposable);
-        String uid= (String) SPUtils.get(SPUtils.UID,"");
-        Log.e(GeTui.VideoLog,"uid:"+uid);
+        String uid = (String) SPUtils.get(SPUtils.UID, "");
+        Log.e(GeTui.VideoLog, "uid:" + uid);
         //uploadPushId(String uid, String jpushId, int type)
-        if(!TextUtils.isEmpty(uid)){
+        if (!TextUtils.isEmpty(uid)) {
             XiaokaiNewServiceImp.getPushSwitch(uid).subscribe(new Observer<SwitchStatusResult>() {
                 @Override
                 public void onSubscribe(Disposable d) {
@@ -323,42 +324,46 @@ public class GatewayLockMorePresenter<T> extends BasePresenter<GatewayLockMoreVi
 
                 @Override
                 public void onError(Throwable e) {
-                    if (mViewRef.get() != null) {
+                    if (isSafe()) {
                         mViewRef.get().getSwitchFail();
                     }
                 }
 
                 @Override
-                public void onComplete() {}
+                public void onComplete() {
+                }
             });
 
         }
     }
 
 
-    public void updatePushSwitch(boolean openlockPushSwitch){
+    public void updatePushSwitch(boolean openlockPushSwitch) {
         //      toDisposable(compositeDisposable);
-        String uid= (String) SPUtils.get(SPUtils.UID,"");
-        Log.e(GeTui.VideoLog,"uid:"+uid);
+        String uid = (String) SPUtils.get(SPUtils.UID, "");
+        Log.e(GeTui.VideoLog, "uid:" + uid);
         //uploadPushId(String uid, String jpushId, int type)
-        if(!TextUtils.isEmpty(uid)){
-            XiaokaiNewServiceImp.updatePushSwitch(uid,openlockPushSwitch).subscribe(new Observer<SwitchStatusResult>() {
+        if (!TextUtils.isEmpty(uid)) {
+            XiaokaiNewServiceImp.updatePushSwitch(uid, openlockPushSwitch).subscribe(new Observer<SwitchStatusResult>() {
                 @Override
                 public void onSubscribe(Disposable d) {
                     compositeDisposable.add(d);
                 }
+
                 @Override
                 public void onNext(SwitchStatusResult switchStatusResult) {
                     if (mViewRef != null) {
                         mViewRef.get().updateSwitchStatus(switchStatusResult);
                     }
                 }
+
                 @Override
                 public void onError(Throwable e) {
-                    if (mViewRef.get() != null) {
+                    if (isSafe()) {
                         mViewRef.get().updateSwitchUpdateFail();
                     }
                 }
+
                 @Override
                 public void onComplete() {
                 }
@@ -367,32 +372,32 @@ public class GatewayLockMorePresenter<T> extends BasePresenter<GatewayLockMoreVi
     }
 
     //设置AM
-    public void setAM(String uid,String gatewayId,String deviceId,int autoRelockTime){
-        if (mqttService!=null){
+    public void setAM(String uid, String gatewayId, String deviceId, int autoRelockTime) {
+        if (mqttService != null) {
             toDisposable(setAMDisposable);
-            setAMDisposable=mqttService.mqttPublish(MqttConstant.getCallTopic(uid), MqttCommandFactory.setAM(uid,gatewayId,deviceId,autoRelockTime))
+            setAMDisposable = mqttService.mqttPublish(MqttConstant.getCallTopic(uid), MqttCommandFactory.setAM(uid, gatewayId, deviceId, autoRelockTime))
                     .filter(new Predicate<MqttData>() {
                         @Override
                         public boolean test(MqttData mqttData) throws Exception {
-                            if (MqttConstant.SET_AM.equals(mqttData.getFunc())){
+                            if (MqttConstant.SET_AM.equals(mqttData.getFunc())) {
                                 return true;
                             }
                             return false;
                         }
                     })
-                    .timeout(10*1000, TimeUnit.MILLISECONDS)
+                    .timeout(10 * 1000, TimeUnit.MILLISECONDS)
                     .compose(RxjavaHelper.observeOnMainThread())
                     .subscribe(new Consumer<MqttData>() {
                         @Override
                         public void accept(MqttData mqttData) throws Exception {
                             toDisposable(setAMDisposable);
-                            SetAMBean setAMBean=new Gson().fromJson(mqttData.getPayload(),SetAMBean.class);
-                            if ("200".equals(setAMBean.getReturnCode())){
-                                if (mViewRef.get()!=null){
+                            SetAMBean setAMBean = new Gson().fromJson(mqttData.getPayload(), SetAMBean.class);
+                            if ("200".equals(setAMBean.getReturnCode())) {
+                                if (isSafe()) {
                                     mViewRef.get().setAMSuccess(autoRelockTime);
                                 }
-                            }else{
-                                if (mViewRef.get()!=null){
+                            } else {
+                                if (isSafe()) {
                                     mViewRef.get().setAMFail(setAMBean.getReturnCode());
                                 }
                             }
@@ -400,7 +405,7 @@ public class GatewayLockMorePresenter<T> extends BasePresenter<GatewayLockMoreVi
                     }, new Consumer<Throwable>() {
                         @Override
                         public void accept(Throwable throwable) throws Exception {
-                            if (mViewRef.get()!=null){
+                            if (isSafe()) {
                                 mViewRef.get().setAMThrowable(throwable);
                             }
                         }
@@ -410,32 +415,32 @@ public class GatewayLockMorePresenter<T> extends BasePresenter<GatewayLockMoreVi
     }
 
     //获取AM
-    public void getAm(String uid,String gatewayId,String deviceId){
-        if (mqttService!=null){
+    public void getAm(String uid, String gatewayId, String deviceId) {
+        if (mqttService != null) {
             toDisposable(getAMDisposable);
-            getAMDisposable=mqttService.mqttPublish(MqttConstant.getCallTopic(uid), MqttCommandFactory.getAM(uid,gatewayId,deviceId))
+            getAMDisposable = mqttService.mqttPublish(MqttConstant.getCallTopic(uid), MqttCommandFactory.getAM(uid, gatewayId, deviceId))
                     .filter(new Predicate<MqttData>() {
                         @Override
                         public boolean test(MqttData mqttData) throws Exception {
-                            if (MqttConstant.GET_AM.equals(mqttData.getFunc())){
+                            if (MqttConstant.GET_AM.equals(mqttData.getFunc())) {
                                 return true;
                             }
                             return false;
                         }
                     })
-                    .timeout(10*1000, TimeUnit.MILLISECONDS)
+                    .timeout(10 * 1000, TimeUnit.MILLISECONDS)
                     .compose(RxjavaHelper.observeOnMainThread())
                     .subscribe(new Consumer<MqttData>() {
                         @Override
                         public void accept(MqttData mqttData) throws Exception {
                             toDisposable(getAMDisposable);
-                            GetAMBean getAMBean=new Gson().fromJson(mqttData.getPayload(),GetAMBean.class);
-                            if ("200".equals(getAMBean.getReturnCode())){
-                                if (mViewRef.get()!=null){
+                            GetAMBean getAMBean = new Gson().fromJson(mqttData.getPayload(), GetAMBean.class);
+                            if ("200".equals(getAMBean.getReturnCode())) {
+                                if (isSafe()) {
                                     mViewRef.get().getAMSuccess(getAMBean.getReturnData().getAutoRelockTime());
                                 }
-                            }else{
-                                if (mViewRef.get()!=null){
+                            } else {
+                                if (isSafe()) {
                                     mViewRef.get().getAMFail(getAMBean.getReturnCode());
                                 }
                             }
@@ -443,7 +448,7 @@ public class GatewayLockMorePresenter<T> extends BasePresenter<GatewayLockMoreVi
                     }, new Consumer<Throwable>() {
                         @Override
                         public void accept(Throwable throwable) throws Exception {
-                            if (mViewRef.get()!=null){
+                            if (isSafe()) {
                                 mViewRef.get().getAMThrowable(throwable);
                             }
                         }
@@ -453,21 +458,21 @@ public class GatewayLockMorePresenter<T> extends BasePresenter<GatewayLockMoreVi
     }
 
     //删除该锁的所有密码
-    private void deleteAllPwd(String gatewayId,String deviceId,String uid){
-        GatewayLockPwdDao gatewayLockPwdDao=MyApplication.getInstance().getDaoWriteSession().getGatewayLockPwdDao();
-        List<GatewayLockPwd> gatewayLockPwdList=gatewayLockPwdDao.queryBuilder().where(GatewayLockPwdDao.Properties.GatewayId.eq(gatewayId), GatewayLockPwdDao.Properties.DeviceId.eq(deviceId),GatewayLockPwdDao.Properties.Uid.eq(uid)).list();
-        if (gatewayLockPwdList!=null&&gatewayLockPwdList.size()>0){
-            for (GatewayLockPwd gatewayLockPwd:gatewayLockPwdList){
+    private void deleteAllPwd(String gatewayId, String deviceId, String uid) {
+        GatewayLockPwdDao gatewayLockPwdDao = MyApplication.getInstance().getDaoWriteSession().getGatewayLockPwdDao();
+        List<GatewayLockPwd> gatewayLockPwdList = gatewayLockPwdDao.queryBuilder().where(GatewayLockPwdDao.Properties.GatewayId.eq(gatewayId), GatewayLockPwdDao.Properties.DeviceId.eq(deviceId), GatewayLockPwdDao.Properties.Uid.eq(uid)).list();
+        if (gatewayLockPwdList != null && gatewayLockPwdList.size() > 0) {
+            for (GatewayLockPwd gatewayLockPwd : gatewayLockPwdList) {
                 gatewayLockPwdDao.delete(gatewayLockPwd);
             }
         }
     }
 
-    private void deleteAllAram(String gatewayId,String deviceId){
-        GatewayLockAlarmEventDaoDao gatewayLockAlarmEventDaoDao=MyApplication.getInstance().getDaoWriteSession().getGatewayLockAlarmEventDaoDao();
-        List<GatewayLockAlarmEventDao> gatewayLockAlarmEventDaoList=gatewayLockAlarmEventDaoDao.queryBuilder().where(GatewayLockAlarmEventDaoDao.Properties.GatewayId.eq(gatewayId), GatewayLockAlarmEventDaoDao.Properties.DeviceId.eq(deviceId)).list();
-        if (gatewayLockAlarmEventDaoList!=null&&gatewayLockAlarmEventDaoList.size()>0){
-            for (GatewayLockAlarmEventDao gatewayLockAlarmEventDao:gatewayLockAlarmEventDaoList){
+    private void deleteAllAram(String gatewayId, String deviceId) {
+        GatewayLockAlarmEventDaoDao gatewayLockAlarmEventDaoDao = MyApplication.getInstance().getDaoWriteSession().getGatewayLockAlarmEventDaoDao();
+        List<GatewayLockAlarmEventDao> gatewayLockAlarmEventDaoList = gatewayLockAlarmEventDaoDao.queryBuilder().where(GatewayLockAlarmEventDaoDao.Properties.GatewayId.eq(gatewayId), GatewayLockAlarmEventDaoDao.Properties.DeviceId.eq(deviceId)).list();
+        if (gatewayLockAlarmEventDaoList != null && gatewayLockAlarmEventDaoList.size() > 0) {
+            for (GatewayLockAlarmEventDao gatewayLockAlarmEventDao : gatewayLockAlarmEventDaoList) {
                 gatewayLockAlarmEventDaoDao.delete(gatewayLockAlarmEventDao);
             }
         }

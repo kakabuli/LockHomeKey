@@ -67,15 +67,15 @@ public class PasswordDetailPresenter<T> extends BlePresenter<IPasswordDetailView
                     @Override
                     public void accept(BleDataBean bleDataBean) throws Exception {
                         LogUtils.e("收到原始数据   " + Rsa.bytesToHexString(bleDataBean.getOriginalData()));
-                        if (bleDataBean.getOriginalData()[0] == 0  ) {
-                            if (bleDataBean.getPayload()[0] == 0){
-                                if (mViewRef.get() != null) {
+                        if (bleDataBean.getOriginalData()[0] == 0) {
+                            if (bleDataBean.getPayload()[0] == 0) {
+                                if (isSafe()) {
                                     mViewRef.get().onDeletePwdSuccess();
                                 }
                                 //如果是详情界面  那么删除服务器密码   如果不是那么是添加密码成功时的分享界面
                                 deleteServerPwd(serverPwdType, number);
-                            }else {
-                                if (mViewRef.get() != null) {
+                            } else {
+                                if (isSafe()) {
                                     mViewRef.get().onDeletePwdFailed(new BleProtocolFailedException(bleDataBean.getPayload()[0] & 0xff));
                                 }
                             }
@@ -85,7 +85,7 @@ public class PasswordDetailPresenter<T> extends BlePresenter<IPasswordDetailView
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        if (mViewRef.get() != null) {
+                        if (isSafe()) {
                             mViewRef.get().onDeletePwdFailed(throwable);
                         }
                     }
@@ -102,7 +102,7 @@ public class PasswordDetailPresenter<T> extends BlePresenter<IPasswordDetailView
                 .subscribe(new BaseObserver<BaseResult>() {
                     @Override
                     public void onSuccess(BaseResult result) {
-                        if (mViewRef.get() != null) {
+                        if (isSafe()) {
                             mViewRef.get().onDeleteServerPwdSuccess();
                         }
                         MyApplication.getInstance().passwordChangeListener().onNext(true);
@@ -110,14 +110,14 @@ public class PasswordDetailPresenter<T> extends BlePresenter<IPasswordDetailView
 
                     @Override
                     public void onAckErrorCode(BaseResult baseResult) {
-                        if (mViewRef.get() != null) {
+                        if (isSafe()) {
                             mViewRef.get().onDeleteServerPwdFailedServer(baseResult);
                         }
                     }
 
                     @Override
                     public void onFailed(Throwable throwable) {
-                        if (mViewRef.get() != null) {
+                        if (isSafe()) {
                             mViewRef.get().onDeleteServerPwdFailed(throwable);
                         }
                     }
@@ -139,7 +139,7 @@ public class PasswordDetailPresenter<T> extends BlePresenter<IPasswordDetailView
                 .subscribe(new BaseObserver<BaseResult>() {
                     @Override
                     public void onSuccess(BaseResult result) {
-                        if (mViewRef.get() != null) {
+                        if (isSafe()) {
                             mViewRef.get().updateNickNameSuccess(nickname);
                         }
                         MyApplication.getInstance().passwordChangeListener().onNext(true);
@@ -147,14 +147,14 @@ public class PasswordDetailPresenter<T> extends BlePresenter<IPasswordDetailView
 
                     @Override
                     public void onAckErrorCode(BaseResult result) {
-                        if (mViewRef.get() != null) {
+                        if (isSafe()) {
                             mViewRef.get().updateNickNameFailedServer(result);
                         }
                     }
 
                     @Override
                     public void onFailed(Throwable throwable) {
-                        if (mViewRef.get() != null) {
+                        if (isSafe()) {
                             mViewRef.get().updateNickNameFailed(throwable);
                         }
                     }
@@ -200,8 +200,8 @@ public class PasswordDetailPresenter<T> extends BlePresenter<IPasswordDetailView
                         byte[] originalData = bleDataBean.getOriginalData();
                         if (originalData[0] == 0) {
                             LogUtils.e("同步锁上的编号失败    不加密的数据   收到的数据为   " + Rsa.bytesToHexString(originalData));
-                            if (mViewRef.get() != null) {
-                                mViewRef.get().onGetLockNumberFailed(new BleProtocolFailedException(originalData[4]&0xff));
+                            if (isSafe()) {
+                                mViewRef.get().onGetLockNumberFailed(new BleProtocolFailedException(originalData[4] & 0xff));
                             }
                             return;
                         }
@@ -275,7 +275,7 @@ public class PasswordDetailPresenter<T> extends BlePresenter<IPasswordDetailView
                             }
                         }
 
-                        if (mViewRef.get() != null) {
+                        if (isSafe()) {
                             mViewRef.get().onLockNoThisNumber();
                         }
                     }
@@ -283,7 +283,7 @@ public class PasswordDetailPresenter<T> extends BlePresenter<IPasswordDetailView
                     @Override
                     public void accept(Throwable throwable) throws Exception {
                         LogUtils.e("同步锁上的编号失败    " + throwable.getMessage());
-                        if (mViewRef.get() != null) {
+                        if (isSafe()) {
                             mViewRef.get().onGetLockNumberFailed(throwable);
                         }
                     }
@@ -343,7 +343,7 @@ public class PasswordDetailPresenter<T> extends BlePresenter<IPasswordDetailView
                     @Override
                     public void onSuccess(BaseResult result) {
                         LogUtils.e("删除秘钥 到成功   " + result.toString());
-                        if (mViewRef.get() != null) {
+                        if (isSafe()) {
                             mViewRef.get().onDeleteServerPwdSuccess();
                         }
                         MyApplication.getInstance().passwordChangeListener().onNext(true);

@@ -30,11 +30,12 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Predicate;
 
 public class CatEyePresenter<T> extends BasePresenter<ICatEyeView> {
-    private Disposable  listenerGatewayOnLine;
-    private Disposable  listenerDeviceOnLineDisposable;
-    private Disposable  networkCatEyeDisposable;
+    private Disposable listenerGatewayOnLine;
+    private Disposable listenerDeviceOnLineDisposable;
+    private Disposable networkCatEyeDisposable;
     private Disposable catEyeEventDisposable;
     private Handler mHandler = new Handler();
+
     //获取网关状态通知
     public void getPublishNotify() {
 
@@ -48,9 +49,9 @@ public class CatEyePresenter<T> extends BasePresenter<ICatEyeView> {
                             if (mqttData != null) {
                                 GetBindGatewayStatusResult gatewayStatusResult = new Gson().fromJson(mqttData.getPayload(), GetBindGatewayStatusResult.class);
                                 LogUtils.e("监听网关GatewayActivity" + gatewayStatusResult.getDevuuid());
-                                if (gatewayStatusResult != null&&gatewayStatusResult.getData().getState()!=null) {
-                                    if (mViewRef.get() != null) {
-                                        mViewRef.get().gatewayStatusChange(gatewayStatusResult.getDevuuid(),gatewayStatusResult.getData().getState());
+                                if (gatewayStatusResult != null && gatewayStatusResult.getData().getState() != null) {
+                                    if (isSafe()) {
+                                        mViewRef.get().gatewayStatusChange(gatewayStatusResult.getDevuuid(), gatewayStatusResult.getData().getState());
                                     }
                                 }
                             }
@@ -83,9 +84,9 @@ public class CatEyePresenter<T> extends BasePresenter<ICatEyeView> {
                         @Override
                         public void accept(MqttData mqttData) throws Exception {
                             DeviceOnLineBean deviceOnLineBean = new Gson().fromJson(mqttData.getPayload(), DeviceOnLineBean.class);
-                            if (deviceOnLineBean!=null){
-                                if (mViewRef!=null&&mViewRef.get()!=null&&deviceOnLineBean.getEventparams().getEvent_str()!=null){
-                                    mViewRef.get().deviceStatusChange(deviceOnLineBean.getGwId(),deviceOnLineBean.getDeviceId(),deviceOnLineBean.getEventparams().getEvent_str());
+                            if (deviceOnLineBean != null) {
+                                if (isSafe() && deviceOnLineBean.getEventparams().getEvent_str() != null) {
+                                    mViewRef.get().deviceStatusChange(deviceOnLineBean.getGwId(), deviceOnLineBean.getDeviceId(), deviceOnLineBean.getEventparams().getEvent_str());
                                 }
                             }
                         }
@@ -100,32 +101,33 @@ public class CatEyePresenter<T> extends BasePresenter<ICatEyeView> {
     }
 
     //读取数据库数据
-    private List<CatEyeEvent> catEyeInfo=new ArrayList<>();
+    private List<CatEyeEvent> catEyeInfo = new ArrayList<>();
+
     //获取猫眼动态信息
-    public List<CatEyeEvent> getCatEyeDynamicInfo(int page,int pageNum,String gatewayId,String deviceId){
+    public List<CatEyeEvent> getCatEyeDynamicInfo(int page, int pageNum, String gatewayId, String deviceId) {
         //获取数据库的门锁报警信息
         LogUtils.e("访问数据库的猫眼信息");
         catEyeInfo.clear();
-        List<CatEyeEvent> catEyeEventsList=MyApplication.getInstance().getDaoWriteSession().queryBuilder(CatEyeEvent.class).orderDesc(CatEyeEventDao.Properties.EventTime).offset(page * pageNum).limit(pageNum).list();
-        if(catEyeEventsList!=null&&catEyeEventsList.size()>0){
-            for (CatEyeEvent catEyeEvent:catEyeEventsList) {
-                if (gatewayId.equals(catEyeEvent.getGatewayId())&&deviceId.equals(catEyeEvent.getDeviceId())){
+        List<CatEyeEvent> catEyeEventsList = MyApplication.getInstance().getDaoWriteSession().queryBuilder(CatEyeEvent.class).orderDesc(CatEyeEventDao.Properties.EventTime).offset(page * pageNum).limit(pageNum).list();
+        if (catEyeEventsList != null && catEyeEventsList.size() > 0) {
+            for (CatEyeEvent catEyeEvent : catEyeEventsList) {
+                if (gatewayId.equals(catEyeEvent.getGatewayId()) && deviceId.equals(catEyeEvent.getDeviceId())) {
                     catEyeInfo.add(catEyeEvent);
                 }
             }
             return catEyeInfo;
         }
         return null;
-}
+    }
 
     //网络变化通知
-    public void listenerNetworkChange(){
+    public void listenerNetworkChange() {
         toDisposable(networkCatEyeDisposable);
-        networkCatEyeDisposable= NetWorkChangReceiver.notifyNetworkChange().subscribe(new Consumer<Boolean>() {
+        networkCatEyeDisposable = NetWorkChangReceiver.notifyNetworkChange().subscribe(new Consumer<Boolean>() {
             @Override
             public void accept(Boolean aBoolean) throws Exception {
-                if (aBoolean){
-                    if (mViewRef!=null&&mViewRef.get()!=null){
+                if (aBoolean) {
+                    if (isSafe()) {
                         mViewRef.get().networkChangeSuccess();
                     }
                 }
@@ -137,7 +139,7 @@ public class CatEyePresenter<T> extends BasePresenter<ICatEyeView> {
 
     public void listenCatEyeEvent() {
         toDisposable(catEyeEventDisposable);
-        if (mqttService!=null) {
+        if (mqttService != null) {
             catEyeEventDisposable = mqttService.listenerDataBack()
                     .filter(new Predicate<MqttData>() {
                         @Override
@@ -157,7 +159,7 @@ public class CatEyePresenter<T> extends BasePresenter<ICatEyeView> {
                             String devtype = null;
                             try {
                                 devtype = jsonObject.getString("devtype");
-                            }catch (Exception e){
+                            } catch (Exception e) {
                                 LogUtils.e("    " + e.getMessage());
                             }
                             if (TextUtils.isEmpty(devtype)) { //devtype为空   无法处理数据
@@ -168,12 +170,12 @@ public class CatEyePresenter<T> extends BasePresenter<ICatEyeView> {
                              * 猫眼信息上报
                              */
                             if (devtype.equals(KeyConstants.DEV_TYPE_CAT_EYE)) {
-                                if (mViewRef!=null&&mViewRef.get() != null) {
+                                if (isSafe()) {
                                     //两秒后进行重连
                                     Runnable reconncetRunnable = new Runnable() {
                                         @Override
                                         public void run() {
-                                            if (mViewRef != null && mViewRef.get() != null) {
+                                            if (isSafe()) {
                                                 mViewRef.get().catEyeEventSuccess();
                                                 LogUtils.e("访问数据猫眼信息");
                                             }

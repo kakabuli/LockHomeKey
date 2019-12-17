@@ -196,7 +196,7 @@ public class CardManagerPresenter<T> extends BlePresenter<ICardManagerView> {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
 
-                        if (isSafe() ) {
+                        if (isSafe()) {
                             mViewRef.get().onSyncPasswordFailed(throwable);
                             mViewRef.get().endSync();
                         }
@@ -231,7 +231,7 @@ public class CardManagerPresenter<T> extends BlePresenter<ICardManagerView> {
                     @Override
                     public void onSuccess(BaseResult result) {
                         LogUtils.e("上传秘钥昵称到服务器成功  " + result.toString());
-//                        if (mViewRef.get() != null) {
+//                        if (isSafe()) {
 //                            mViewRef.get().onUpLoadSuccess( );
 //                        }
                         MyApplication.getInstance().passwordChangeListener().onNext(true);

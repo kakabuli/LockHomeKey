@@ -19,21 +19,21 @@ public class UserFeedbackPresenter<T> extends BasePresenter<IUserFeedbackView> {
                 .subscribe(new BaseObserver<BaseResult>() {
                     @Override
                     public void onSuccess(BaseResult result) {
-                        if (mViewRef.get() != null) {
+                        if (isSafe()) {
                             mViewRef.get().userFeedbackSubmitSuccess();
                         }
                     }
 
                     @Override
                     public void onAckErrorCode(BaseResult baseResult) {
-                        if (mViewRef.get() != null) {
+                        if (isSafe()) {
                             mViewRef.get().userFeedbackSubmitFailedServer(baseResult);
                         }
                     }
 
                     @Override
                     public void onFailed(Throwable throwable) {
-                        if (mViewRef.get() != null) {
+                        if (isSafe()) {
                             mViewRef.get().userFeedbackSubmitFailed(throwable);
                         }
                     }

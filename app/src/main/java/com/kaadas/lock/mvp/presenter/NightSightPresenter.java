@@ -27,11 +27,12 @@ import io.reactivex.functions.Predicate;
 public class NightSightPresenter<T> extends BasePresenter<NightSightView> {
 
     private Disposable getCatEyeInfoDisposable;
+
     //获取猫眼夜视信息
-    public void updateCatNightSightInfo(String gatewayId, String deviceId,String uid,List<String> values) {
+    public void updateCatNightSightInfo(String gatewayId, String deviceId, String uid, List<String> values) {
         toDisposable(getCatEyeInfoDisposable);
         if (mqttService != null) {
-            MqttMessage mqttMessage = MqttCommandFactory.updateCatNightSight(gatewayId, deviceId,uid,values);
+            MqttMessage mqttMessage = MqttCommandFactory.updateCatNightSight(gatewayId, deviceId, uid, values);
             getCatEyeInfoDisposable = mqttService
                     .mqttPublish(MqttConstant.getCallTopic(MyApplication.getInstance().getUid()), mqttMessage)
                     .timeout(10 * 1000, TimeUnit.MILLISECONDS)
@@ -49,17 +50,17 @@ public class NightSightPresenter<T> extends BasePresenter<NightSightView> {
                         @Override
                         public void accept(MqttData mqttData) throws Exception {
                             toDisposable(getCatEyeInfoDisposable);
-                            CatEyeInfoBeanPropertyResultUpdate catEyeInfoBeanPropertyResultUpdate  = new Gson().fromJson(mqttData.getPayload(), CatEyeInfoBeanPropertyResultUpdate.class);
-                            LogUtils.e("获取到的猫眼基本信息    "+mqttData.getPayload());
+                            CatEyeInfoBeanPropertyResultUpdate catEyeInfoBeanPropertyResultUpdate = new Gson().fromJson(mqttData.getPayload(), CatEyeInfoBeanPropertyResultUpdate.class);
+                            LogUtils.e("获取到的猫眼基本信息    " + mqttData.getPayload());
                             if (catEyeInfoBeanPropertyResultUpdate != null) {
                                 if ("200".equals(catEyeInfoBeanPropertyResultUpdate.getReturnCode())) {
-                                    if (mViewRef.get() != null) {
+                                    if (isSafe()) {
                                         //     mViewRef.get().getCatEyeInfoSuccess(catEyeInfoBean,mqttData.getPayload());
 
                                         mViewRef.get().updateNightSightSuccess(catEyeInfoBeanPropertyResultUpdate);
                                     }
                                 } else {
-                                    if (mViewRef.get() != null) {
+                                    if (isSafe()) {
                                         mViewRef.get().updateNightSightFail();
                                     }
                                 }
@@ -68,7 +69,7 @@ public class NightSightPresenter<T> extends BasePresenter<NightSightView> {
                     }, new Consumer<Throwable>() {
                         @Override
                         public void accept(Throwable throwable) throws Exception {
-                            if (mViewRef.get() != null) {
+                            if (isSafe()) {
                                 mViewRef.get().updateNightSighEveThrowable(throwable);
                             }
                         }

@@ -26,11 +26,12 @@ import io.reactivex.functions.Predicate;
 public class GatewayBindPresenter<T> extends BasePresenter<GatewayBindView> {
     private Disposable bindGatewayDisposable;
     private Disposable bingMimiDisposable;
+
     //绑定网关
     public void bindGateway(String deviceSN) {
         toDisposable(bindGatewayDisposable);
         MqttMessage mqttMessage = MqttCommandFactory.bindGateway(MyApplication.getInstance().getUid(), deviceSN);
-        if(mqttService!=null){
+        if (mqttService != null) {
             bindGatewayDisposable = mqttService.mqttPublish(MqttConstant.MQTT_REQUEST_APP, mqttMessage)
                     .compose(RxjavaHelper.observeOnMainThread())
                     .filter(new Predicate<MqttData>() {
@@ -50,26 +51,26 @@ public class GatewayBindPresenter<T> extends BasePresenter<GatewayBindView> {
                             LogUtils.e("绑定网关回调" + mqttData.getPayload());
                             BindGatewayResultBean bindGatewayResult = new Gson().fromJson(mqttData.getPayload(), BindGatewayResultBean.class);
                             LogUtils.e(bindGatewayResult.getFunc());
-                            if ("200".equals(bindGatewayResult.getCode())&&bindGatewayResult.getData().getDeviceList()!=null&&bindGatewayResult.getData().getDeviceList().size()>0) {
-                                if (mViewRef.get()!=null){
-                                    if (bindGatewayResult.getData().getMeBindState()==1){
-                                        mViewRef.get().bindGatewaySuitSuccess(deviceSN,bindGatewayResult.getData().getDeviceList(),true);
-                                    }else{
-                                        mViewRef.get().bindGatewaySuitSuccess(deviceSN,bindGatewayResult.getData().getDeviceList(),false);
+                            if ("200".equals(bindGatewayResult.getCode()) && bindGatewayResult.getData().getDeviceList() != null && bindGatewayResult.getData().getDeviceList().size() > 0) {
+                                if (isSafe()) {
+                                    if (bindGatewayResult.getData().getMeBindState() == 1) {
+                                        mViewRef.get().bindGatewaySuitSuccess(deviceSN, bindGatewayResult.getData().getDeviceList(), true);
+                                    } else {
+                                        mViewRef.get().bindGatewaySuitSuccess(deviceSN, bindGatewayResult.getData().getDeviceList(), false);
                                     }
                                     MyApplication.getInstance().getAllDevicesByMqtt(true);
                                 }
-                            }else if ("200".equals(bindGatewayResult.getCode())){
-                                if (mViewRef.get() != null) {
+                            } else if ("200".equals(bindGatewayResult.getCode())) {
+                                if (isSafe()) {
                                     mViewRef.get().bindGatewaySuccess(deviceSN);
                                     //bindMimi(deviceSN,deviceSN);
                                     MyApplication.getInstance().getAllDevicesByMqtt(true);
                                 }
                             } else {
-                                if (mViewRef.get() != null) {
-                                    if (bindGatewayResult.getData().getDeviceList()!=null&&bindGatewayResult.getData().getDeviceList().size()>0){
+                                if (isSafe()) {
+                                    if (bindGatewayResult.getData().getDeviceList() != null && bindGatewayResult.getData().getDeviceList().size() > 0) {
                                         mViewRef.get().bindGatewaySuitFail(bindGatewayResult.getCode(), bindGatewayResult.getMsg());
-                                    }else{
+                                    } else {
                                         mViewRef.get().bindGatewayFail(bindGatewayResult.getCode(), bindGatewayResult.getMsg());
                                     }
 
@@ -80,7 +81,7 @@ public class GatewayBindPresenter<T> extends BasePresenter<GatewayBindView> {
                     }, new Consumer<Throwable>() {
                         @Override
                         public void accept(Throwable throwable) throws Exception {
-                            if (mViewRef.get() != null) {
+                            if (isSafe()) {
                                 mViewRef.get().bindGatewayThrowable(throwable);
                             }
                         }
@@ -91,9 +92,9 @@ public class GatewayBindPresenter<T> extends BasePresenter<GatewayBindView> {
     }
 
     //绑定咪咪网
-    public void bindMimi(String deviceSN,String gatewayId) {
+    public void bindMimi(String deviceSN, String gatewayId) {
         toDisposable(bingMimiDisposable);
-        MqttMessage mqttMessage = MqttCommandFactory.registerMemeAndBind(MyApplication.getInstance().getUid(),gatewayId, deviceSN);
+        MqttMessage mqttMessage = MqttCommandFactory.registerMemeAndBind(MyApplication.getInstance().getUid(), gatewayId, deviceSN);
         bingMimiDisposable = mqttService.mqttPublish(MqttConstant.MQTT_REQUEST_APP, mqttMessage)
                 .compose(RxjavaHelper.observeOnMainThread())
                 .filter(new Predicate<MqttData>() {
@@ -114,11 +115,11 @@ public class GatewayBindPresenter<T> extends BasePresenter<GatewayBindView> {
                         BindMemeReuslt bindMemeReuslt = new Gson().fromJson(mqttData.getPayload(), BindMemeReuslt.class);
                         LogUtils.e(bindMemeReuslt.getFunc());
                         if ("200".equals(bindMemeReuslt.getCode())) {
-                            if (mViewRef.get() != null) {
+                            if (isSafe()) {
                                 mViewRef.get().bindMimiSuccess();
                             }
                         } else {
-                            if (mViewRef.get() != null) {
+                            if (isSafe()) {
                                 mViewRef.get().bindMimiFail(bindMemeReuslt.getCode(), bindMemeReuslt.getMsg());
                             }
                         }
@@ -127,7 +128,7 @@ public class GatewayBindPresenter<T> extends BasePresenter<GatewayBindView> {
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        if (mViewRef.get() != null) {
+                        if (isSafe()) {
                             mViewRef.get().bindMimiThrowable(throwable);
                         }
                     }

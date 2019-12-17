@@ -20,7 +20,7 @@ public class BindBleSuccessPresenter<T> extends BasePresenter<IBindBleSuccessVie
         XiaokaiNewServiceImp.modifyLockNick(devname, user_id, lockNickName).subscribe(new BaseObserver<BaseResult>() {
             @Override
             public void onSuccess(BaseResult baseResult) {
-                if (mViewRef.get() != null) {
+                if (isSafe()) {
                     mViewRef.get().modifyDeviceNicknameSuccess();
                 }
 
@@ -29,14 +29,14 @@ public class BindBleSuccessPresenter<T> extends BasePresenter<IBindBleSuccessVie
 
             @Override
             public void onAckErrorCode(BaseResult baseResult) {
-                if (mViewRef.get() != null) {
+                if (isSafe()) {
                     mViewRef.get().modifyDeviceNicknameFail(baseResult);
                 }
             }
 
             @Override
             public void onFailed(Throwable throwable) {
-                if (mViewRef.get() != null) {
+                if (isSafe()) {
                     mViewRef.get().modifyDeviceNicknameError(throwable);
                 }
             }
@@ -47,7 +47,6 @@ public class BindBleSuccessPresenter<T> extends BasePresenter<IBindBleSuccessVie
             }
         });
     }
-
 
 
 }

@@ -88,12 +88,12 @@ public abstract class GatewayLockPasswordPresenter<T extends IGatewayLockPasswor
                             String returnCode = lockPwdInfoBean.getReturnCode();
                             if ("200".equals(returnCode)) {
                                 maxNumber = lockPwdInfoBean.getReturnData().getMaxpwdusernum();
-                                if (mViewRef.get() != null) {
+                                if (isSafe()) {
                                     mViewRef.get().getLockInfoSuccess(maxNumber);
                                 }
                                 initValidIndex();
                                 if (validIndex.size() == 0) {
-                                    if (mViewRef.get() != null) {
+                                    if (isSafe()) {
                                         mViewRef.get().getLockInfoFail();
                                     }
                                     return;
@@ -103,7 +103,7 @@ public abstract class GatewayLockPasswordPresenter<T extends IGatewayLockPasswor
 
                             } else {
                                 LogUtils.e("获取锁信息失败   " + returnCode);
-                                if (mViewRef.get() != null) {
+                                if (isSafe()) {
                                     mViewRef.get().getLockInfoFail();
                                 }
                             }
@@ -112,7 +112,7 @@ public abstract class GatewayLockPasswordPresenter<T extends IGatewayLockPasswor
                         @Override
                         public void accept(Throwable throwable) throws Exception {
                             LogUtils.e("获取锁信息失败   " + throwable.getMessage());
-                            if (mViewRef.get() != null) {
+                            if (isSafe()) {
                                 mViewRef.get().getLockInfoThrowable(throwable);
                             }
                         }
@@ -202,7 +202,7 @@ public abstract class GatewayLockPasswordPresenter<T extends IGatewayLockPasswor
                         @Override
                         public void accept(Throwable throwable) throws Exception {
                             LogUtils.e("获取密码列表失败      " + throwable.getMessage());
-                            if (mViewRef.get() != null) {
+                            if (isSafe()) {
                                 mViewRef.get().syncPasswordFailed(throwable);
                             }
                         }
@@ -306,7 +306,7 @@ public abstract class GatewayLockPasswordPresenter<T extends IGatewayLockPasswor
 
                                 managerDao.insertOrReplace(deviceId, MyApplication.getInstance().getUid(), gwId, gatewayPasswordPlanBean);
                                 if (isSafe()) {
-                                    mViewRef.get().setUserTypeSuccess(  pwdValue,   gatewayPasswordPlanBean);
+                                    mViewRef.get().setUserTypeSuccess(pwdValue, gatewayPasswordPlanBean);
                                 }
                             } else {
                                 LogUtils.e("设置用户类型失败1   " + status);
@@ -549,12 +549,12 @@ public abstract class GatewayLockPasswordPresenter<T extends IGatewayLockPasswor
                                     setPlan(deviceId, gatewayiId, "set", pwdId, type, pwdId, zLocalEndT, zLocalStartT,
                                             dayMaskBits, endHour, endMinute, startHour, startMinute);
                                 } else {
-                                    if (mViewRef.get() != null) {
+                                    if (isSafe()) {
                                         mViewRef.get().addLockPwdFail(new MqttStatusException(status));
                                     }
                                 }
                             } else {
-                                if (mViewRef.get() != null) {
+                                if (isSafe()) {
                                     mViewRef.get().addLockPwdFail(new MqttBackCodeException(returnCode));
                                 }
                             }
@@ -562,7 +562,7 @@ public abstract class GatewayLockPasswordPresenter<T extends IGatewayLockPasswor
                     }, new Consumer<Throwable>() {
                         @Override
                         public void accept(Throwable throwable) throws Exception {
-                            if (mViewRef.get() != null) {
+                            if (isSafe()) {
                                 mViewRef.get().addLockPwdFail(throwable);
                             }
                         }
@@ -637,7 +637,7 @@ public abstract class GatewayLockPasswordPresenter<T extends IGatewayLockPasswor
                         }, new Consumer<Throwable>() {
                             @Override
                             public void accept(Throwable throwable) throws Exception {
-                                if (mViewRef.get() != null) {
+                                if (isSafe()) {
                                     mViewRef.get().deletePasswordFailed(throwable);
                                 }
                             }
@@ -651,5 +651,5 @@ public abstract class GatewayLockPasswordPresenter<T extends IGatewayLockPasswor
 
 
     abstract void onSyncComplete(String gatewayId, String deviceId, int currentIndex, int pwdId, String pwdValue, int pwdType,
-                                 long zLocalEndT, long zLocalStartT,  int dayMaskBits, int endHour, int endMinute, int startHour, int startMinute);
+                                 long zLocalEndT, long zLocalStartT, int dayMaskBits, int endHour, int endMinute, int startHour, int startMinute);
 }
