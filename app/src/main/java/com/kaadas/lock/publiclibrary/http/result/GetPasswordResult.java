@@ -44,7 +44,7 @@ public class GetPasswordResult  extends BaseResult  {
     public static class DataBean {
         @Override
         public String toString() {
-            return "DataBean{" +
+            return "WifiLockShareUser{" +
                     "_id='" + _id + '\'' +
                     ", pwdList=" + pwdList +
                     ", tempPwdList=" + tempPwdList +

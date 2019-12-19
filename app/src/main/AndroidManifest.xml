@@ -68,15 +68,19 @@
             android:exported="true"
             android:launchMode="singleTop"
             android:screenOrientation="portrait">
-            <intent-filter>
-                <category android:name="android.intent.category.DEFAULT" />
 
-                <action android:name="android.intent.action.MAIN" />
+            <!-- <intent-filter> -->
+            <!-- <category android:name="android.intent.category.DEFAULT" /> -->
 
-                <category android:name="android.intent.category.LAUNCHER" />
 
-                <action android:name="android.intent.action.oppopush" />
-            </intent-filter>
+            <!-- <action android:name="android.intent.action.MAIN" /> -->
+
+
+            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+
+
+            <!-- <action android:name="android.intent.action.oppopush" /> -->
+            <!-- </intent-filter> -->
         </activity>
         <!-- 登录 -->
         <activity
@@ -785,9 +789,32 @@
         <activity android:name=".publiclibrary.ota.face.FaceOtaActivity" />
         <activity android:name=".activity.TestActivity" />
         <activity android:name=".activity.device.gatewaylock.password.test.PasswordTestActivity" />
-        <activity android:name=".activity.wifilock.configure.EsptouchDemoActivity">
+        <activity android:name=".activity.device.wifilock.add.WifiSetUpActivity" />
+        <activity android:name=".activity.device.wifilock.add.AddWifiLockFirstActivity" />
+        <activity android:name=".activity.device.wifilock.add.AddWifiLockSecondActivity" />
+        <activity android:name=".activity.device.wifilock.add.AddWifiLockThirdActivity" />
+        <activity android:name=".activity.device.wifilock.add.SupportWifiActivity" />
+        <activity android:name=".activity.device.wifilock.WiFiLockDetailActivity" />
+        <activity android:name=".activity.device.wifilock.add.AddWifiLockFailedActivity" />
+        <activity android:name=".activity.device.wifilock.password.AddWifiLockTempPasswordFirstActivity" />
+        <activity android:name=".activity.device.wifilock.password.AddWifiLockTempPasswordSecondActivity" />
+        <activity android:name=".activity.device.wifilock.password.WifiLockPasswordShareActivity" />
+        <activity android:name=".activity.device.wifilock.password.WiFiLockPasswordManagerActivity">
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT" />
 
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+
+                <action android:name="android.intent.action.oppopush" />
+            </intent-filter>
         </activity>
+        <activity android:name=".activity.device.wifilock.password.WifiLockPasswordDetailActivity" />
+        <activity android:name=".activity.device.wifilock.family.WifiLockFamilyManagerActivity" />
+        <activity android:name=".activity.device.wifilock.family.WiFiLockAddShareUserActivity" />
+        <activity android:name=".activity.device.wifilock.family.WiFiLockShareUserDetailActivity" />
+        <activity android:name=".activity.device.wifilock.WifiLockRecordActivity"></activity>
     </application>
 
 </manifest>

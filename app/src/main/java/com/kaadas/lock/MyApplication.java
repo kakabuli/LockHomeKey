@@ -49,6 +49,7 @@ import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.ToastUtil;
 import com.kaadas.lock.utils.ftp.GeTui;
 import com.kaadas.lock.utils.greenDao.db.DaoManager;
+import com.kaadas.lock.utils.greenDao.db.DaoMaster;
 import com.kaadas.lock.utils.greenDao.db.DaoSession;
 import com.kaidishi.lock.service.GeTuiIntentService;
 import com.kaidishi.lock.service.GeTuiPushService;
@@ -71,8 +72,10 @@ import com.yun.software.kaadas.Utils.UserUtils;
 
 import net.sdvn.cmapi.CMAPI;
 import net.sdvn.cmapi.Config;
+import net.sqlcipher.database.SQLiteDatabase;
 
 import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.greenrobot.greendao.database.Database;
 import org.linphone.mediastream.Log;
 
 import java.io.File;
@@ -343,6 +346,7 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
      *                     ....
      */
     public void tokenInvalid(boolean isShowDialog) {
+        deleSQL();  //清除数据库数据
         ActivityCollectorUtil.finishAllActivity();
         LogUtils.e("token过期   ");
         SPUtils.put(KeyConstants.HEAD_PATH, "");
@@ -385,8 +389,13 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
                 activity.finish();
             }
         }
+    }
 
-
+    public void deleSQL(){  //删除所有表 然后创建所有表
+        Database database = getDaoWriteSession().getDatabase();
+        DaoMaster daoMaster = new DaoMaster(database);
+        DaoMaster.dropAllTables(daoMaster.getDatabase(),true);
+        DaoMaster.createAllTables(daoMaster.getDatabase(),true);
     }
 
 
@@ -819,15 +828,6 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
     }
 
     boolean isPopDialog = false;
-
-    public boolean isPopDialog() {
-        return isPopDialog;
-    }
-
-    public void setPopDialog(boolean popDialog) {
-        isPopDialog = popDialog;
-    }
-
 
     public void reStartApp() {
         Intent intent = getBaseContext().getPackageManager().getLaunchIntentForPackage(getBaseContext().getPackageName());

@@ -23,7 +23,6 @@ public class BluetoothSharedDeviceManagementPresenter<T> extends BasePresenter<I
      * 查询用户列表
      */
     public void queryUserList(String user_id, String devname) {
-
         XiaokaiNewServiceImp.getDeviceGeneralAdministrator(user_id, devname).subscribe(new Observer<String>() {
             @Override
             public void onSubscribe(Disposable d) {

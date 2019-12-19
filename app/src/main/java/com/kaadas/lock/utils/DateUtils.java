@@ -20,7 +20,6 @@ public class DateUtils {
 	 */
 	public static String getDateTimeFromMillisecond(Long millisecond) {
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-//		simpleDateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Beijing"));
 		simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT+8"));
 		Date date = new Date(millisecond);
 		String dateStr = simpleDateFormat.format(date);

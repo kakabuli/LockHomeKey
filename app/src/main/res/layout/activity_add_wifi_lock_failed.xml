@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    android:background="#F2F2F2"
+    tools:context="com.kaadas.lock.activity.device.wifilock.add.AddWifiLockFailedActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_40"
+        android:background="#F8F8F8">
+
+        <ImageView
+            android:id="@+id/back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:paddingLeft="@dimen/dp_16"
+            android:paddingTop="@dimen/dp_5"
+            android:paddingRight="@dimen/dp_16"
+            android:paddingBottom="@dimen/dp_5"
+            android:src="@mipmap/back_gray" />
+
+        <TextView
+            android:id="@+id/head_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/add_failed"
+            android:textColor="#000000"
+            android:textSize="@dimen/sp_17"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_60"
+        android:src="@mipmap/wifi_lock_add_failed" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:gravity="center"
+        android:text="@string/pair_failed"
+        android:textColor="#565656"
+        android:textSize="16sp" />
+
+    <LinearLayout
+        android:paddingLeft="12dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/dp_10"
+        android:layout_marginTop="32dp"
+        android:background="@drawable/background_white_10dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:textSize="14sp"
+            android:layout_marginTop="@dimen/dp_20"
+            android:drawablePadding="@dimen/dp_10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/circle_b5b5b5"
+            android:text="@string/set_up_wifi_failed1"
+            android:textColor="#959595" />
+
+        <TextView
+            android:textSize="14sp"
+            android:layout_marginTop="@dimen/dp_10"
+            android:drawablePadding="@dimen/dp_10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/circle_b5b5b5"
+            android:text="@string/set_up_wifi_failed2"
+            android:textColor="#959595" />
+
+        <TextView
+            android:textSize="14sp"
+            android:layout_marginTop="@dimen/dp_10"
+            android:drawablePadding="@dimen/dp_10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/circle_b5b5b5"
+            android:text="@string/set_up_wifi_failed3"
+            android:textColor="#959595" />
+
+        <LinearLayout
+            android:id="@+id/to_look_support_route"
+            android:layout_marginTop="@dimen/dp_10"
+            android:layout_marginBottom="@dimen/dp_20"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:src="@drawable/circle_209afd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <EditText
+                android:layout_marginLeft="@dimen/dp_10"
+                android:textSize="14sp"
+                android:background="@drawable/edit_text_line_209afd"
+                android:editable="false"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/look_wifi_support_rout"
+                android:textColor="#1F96F7" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <TextView
+        android:gravity="center"
+        android:layout_marginTop="@dimen/dp_40"
+        android:id="@+id/bt_repair"
+        android:layout_width="@dimen/dp_200"
+        android:layout_height="@dimen/dp_44"
+        android:background="@drawable/go_and_buy"
+        android:text="@string/wifi_lock_repair"
+        android:textColor="#fff"
+        android:textSize="@dimen/sp_15" />
+
+
+    <TextView
+        android:gravity="center"
+        android:layout_marginTop="@dimen/dp_20"
+        android:id="@+id/bt_skip"
+        android:layout_width="@dimen/dp_200"
+        android:layout_height="@dimen/dp_44"
+        android:background="@drawable/bord_707070_adius20"
+        android:text="@string/wifi_lovk_skip"
+        android:textColor="#929292"
+        android:textSize="@dimen/sp_15" />
+</LinearLayout>

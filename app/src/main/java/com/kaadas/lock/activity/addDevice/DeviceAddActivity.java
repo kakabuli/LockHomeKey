@@ -16,6 +16,7 @@ import com.kaadas.lock.activity.addDevice.gateway.AddGatewayFirstActivity;
 import com.kaadas.lock.activity.addDevice.zigbeelocknew.AddDeviceZigbeeLockNewScanFailActivity;
 import com.kaadas.lock.activity.addDevice.zigbeelocknew.AddDeviceZigbeeLockNewZeroActivity;
 import com.kaadas.lock.activity.addDevice.zigbeelocknew.AddDeviceZigbeelockNewScanActivity;
+import com.kaadas.lock.activity.device.wifilock.add.AddWifiLockFirstActivity;
 import com.kaadas.lock.bean.HomeShowBean;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.mvp.presenter.deviceaddpresenter.DeviceZigBeeDetailPresenter;
@@ -123,6 +124,7 @@ public class DeviceAddActivity extends BaseActivity<DeviceZigBeeDetailView, Devi
                 ImageView cancel = mView.findViewById(R.id.cancel);
                 LinearLayout bluetoothLayout = mView.findViewById(R.id.bluetooth_Layout);
                 LinearLayout zigbeeLayout = mView.findViewById(R.id.zigbee_Layout);
+                LinearLayout wifiLockZigbee = mView.findViewById(R.id.ll_wifi_lock);
                 AlertDialog alertDialog = AlertDialogUtil.getInstance().common(this, mView);
                 cancel.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -136,6 +138,12 @@ public class DeviceAddActivity extends BaseActivity<DeviceZigBeeDetailView, Devi
                         Intent bluetoothIntent = new Intent(DeviceAddActivity.this, AddBluetoothFirstActivity.class);
                         startActivity(bluetoothIntent);
                         alertDialog.dismiss();
+                    }
+                });
+                wifiLockZigbee.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        startActivity(new Intent(DeviceAddActivity.this,AddWifiLockFirstActivity.class));
                     }
                 });
 
@@ -170,21 +178,7 @@ public class DeviceAddActivity extends BaseActivity<DeviceZigBeeDetailView, Devi
                                 }
                             });
 
-//                            Intent zigbeeIntent = new Intent(DeviceAddActivity.this, DeviceBindGatewayListActivity.class);
-//                            int type = 3;
-//                            zigbeeIntent.putExtra("type", type);
-//                            startActivity(zigbeeIntent);
-//                            alertDialog.dismiss();
-
-
                         }
-//                        else{
-//                            Intent zigbeeIntent = new Intent(DeviceAddActivity.this, DeviceBindGatewayListActivity.class);
-//                            int type = 3;
-//                            zigbeeIntent.putExtra("type", type);
-//                            startActivity(zigbeeIntent);
-//                            alertDialog.dismiss();
-//                        }
                     }
                 });
                 break;

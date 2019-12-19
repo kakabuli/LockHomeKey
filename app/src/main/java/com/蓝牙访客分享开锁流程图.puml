@@ -1,0 +1,52 @@
+@startuml
+title Face Lock OTA
+    App->App: 发现新版本
+    App->App: 提示用户升级
+    alt  用户取消升级
+        App->App:不再提示
+    else 用户确定升级
+         App->App: 下载文件
+         App->BLE: 发送开始OTA指令  0x85 operation 0x01
+         BLE->App: wifi名（7Byte）和密码（8Byte）
+         App->App:用户连接WiFi
+         App->BLE: 监听蓝牙上报  0x86
+'            note right of App: 以下三种情况忽略: \n  0x01：就绪；\n  0x02：正接收升级固件包；\n  0x03：正在往flash写数据；
+         App->BLE: 监听蓝牙连接状态
+         App->FaceModule: Socket连接
+         alt  Socket连接成功
+             App->FaceModule: 发送文件
+             App->BLE: 开始传输文件指令 0x88 info 0x01
+             App->BLE: 文件传输中指令 0x88 info 0x02 \n每隔1秒发送一次
+             alt 正常传输
+                 App->FaceModule: 文件传输完成
+                 App->BLE: 文件传输完成指令 0x88 info 0x03
+                 App->App: 监听蓝牙返回OTA状态  0x86
+                 alt 收到上报
+                    BLE->App: 上报OTA状态
+                       alt 升级成功
+                          App->App: 提示用户升级成功
+                       else  升级失败
+                          App->App: 提示失败，退出OTA，重新开始
+                       end
+                 else 没有收到  3分钟超时
+                    App->BLE: 发送终止OTA指令  0x85 operation 0x02
+                    App->App: 提示失败，退出OTA，重新开始
+                 end
+             else  传输文件出错
+               note right of App: 1、读取超时（10秒）\n2、模块返回 ERROR \n3、IO异常 \n4、未知返回\n5、读取文件异常
+                App->BLE: 发送终止OTA指令  0x85 operation 0x02
+                App->App: 提示失败，退出OTA，重新开始
+             end
+         else  Socket连接失败
+            note right of App: 1、连接超时（5秒）\n2、端口被占用
+             App->BLE: 发送终止OTA指令  0x85 operation 0x02
+             App->App: 提示失败，退出OTA，重新开始
+         else  蓝牙上报OTA异常
+            note right of App: 错误的情况: \n0x04：升级失败（用升级前固件正常运行） \n0x05：升级失败（保留在 bootloader 模式）\n0x06：未执行OTA \n0x07：OTA超时 \n0x08：OTA文件传输失败 \n0x09：OTA文件传输超时 \n0x0A：发送的数据量大于预期 \n0x0B：数据包数据格式不正确 \n0x0C：校验和错误
+             App->BLE: 发送终止OTA指令  0x85 operation 0x02
+             App->App: 提示失败，退出OTA，重新开始
+         else  Ble连接断开
+             App->App: 提示失败，退出OTA，重新开始
+         end
+    end
+@enduml

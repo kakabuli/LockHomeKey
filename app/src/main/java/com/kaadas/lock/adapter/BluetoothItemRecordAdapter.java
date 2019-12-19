@@ -30,12 +30,6 @@ public class BluetoothItemRecordAdapter extends BaseQuickAdapter<BluetoothItemRe
         super(data);
     }
 
-//
-//    public BluetoothItemRecordAdapter(@Nullable List<BluetoothItemRecordBean> data) {
-//        super(R.layout.item_item_bluetooth_record, data);
-//    }
-
-
     @Override
     protected void convert(BaseViewHolder helper, BluetoothItemRecordBean bean) {
         TextView tvTime = helper.getView(R.id.tv_time);

@@ -82,6 +82,11 @@ public class   KeyConstants {
     public static final String TO_PWD_DETAIL = "toPwdDetail";
 
     /**
+     * 密码类型   	密钥类型：1密码 2指纹密码 3卡片密码
+     */
+    public static final String PASSWORD_TYPE = "passwordType";
+
+    /**
      * 密码创建时间
      */
     public static final String CREATE_TIME = "createTime";
@@ -452,6 +457,18 @@ public class   KeyConstants {
 
     public static final int  TAG_NUMBER = 2001;
     public static final int  TAG_OTA_TYPE = 2002;
+
+
+    public static final String KEY_TYPE = "keyType";
+    public static final String WIFI_SN = "wifiSn";
+    public static final String WIFI_LOCK_PASSWORD_LIST = "WifiLockPasswordList";
+    public static final String WIFI_LOCK_ALARM_RECORD = "WifiLockAlarmRecord";
+    public static final String WIFI_LOCK_OPERATION_RECORD = "WifiLockOperationRecord";
+    public static final String SHARE_USER_INFO = "shareUserInfo";
+
+
+
+
 
 }
 

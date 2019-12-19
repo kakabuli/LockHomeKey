@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.bean.BluetoothLockFunctionBean;
+import com.kaadas.lock.bean.WifiLockFunctionBean;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,6 +21,7 @@ public class BleLockUtils {
     public static final int TYPE_CARD = 3;
     public static final int TYPE_SHARE = 4;
     public static final int TYPE_MORE = 5;
+    public static final int TYPE_TEMP_PASSWORD = 6;
 
     /***
      * 1	开门	带密码开门,需要输入用户密码密码开门,不支持不带密码开门。安全模式（双重验证模式）下,APP不能开门；电子反锁状态下,APP不能开门；系统锁定模式下,APP不能开门
@@ -341,6 +343,8 @@ public class BleLockUtils {
         LogUtils.e("获取到的  功能集是3否包含卡片      " + integers.contains(9));
         if (integers.contains(7)) {
             functionBeans.add(new BluetoothLockFunctionBean(MyApplication.getInstance().getString(R.string.password), R.mipmap.bluetooth_password, TYPE_PASSWORD));
+            functionBeans.add(new BluetoothLockFunctionBean(MyApplication.getInstance().getString(R.string.fingerprint), R.mipmap.bluetooth_fingerprint, TYPE_FINGER));
+
         }
         if (integers.contains(8)) {
             functionBeans.add(new BluetoothLockFunctionBean(MyApplication.getInstance().getString(R.string.fingerprint), R.mipmap.bluetooth_fingerprint, TYPE_FINGER));
@@ -354,6 +358,38 @@ public class BleLockUtils {
         return functionBeans;
     }
 
+    /**
+     * 根据功能集判断显示的界面
+     *
+     * @param functionSet
+     * @return
+     */
+    public static List<WifiLockFunctionBean> getWifiLockSupportFunction(int functionSet) {
+        List<WifiLockFunctionBean> functionBeans = new ArrayList<>();
+        Integer[] funcs = FUNCTION_SET.get(functionSet);
+        System.out.println(funcs == null);
+        if (funcs == null) { //未知功能集
+            funcs = FUNCTION_SET.get(0x31);
+        }
+        List<Integer> integers = Arrays.asList(funcs);
+        LogUtils.e("获取到的  功能集是1   " + functionSet);
+        LogUtils.e("获取到的  功能集是2   " + Arrays.toString(funcs));
+        LogUtils.e("获取到的  功能集是3否包含卡片      " + integers.contains(9));
+        if (integers.contains(7)) {
+            functionBeans.add(new WifiLockFunctionBean(MyApplication.getInstance().getString(R.string.wifi_lock_temp_password), R.mipmap.bluetooth_password, TYPE_TEMP_PASSWORD));
+            functionBeans.add(new WifiLockFunctionBean(MyApplication.getInstance().getString(R.string.password), R.mipmap.bluetooth_password, TYPE_PASSWORD));
+        }
+        if (integers.contains(8)) {
+            functionBeans.add(new WifiLockFunctionBean(MyApplication.getInstance().getString(R.string.fingerprint), R.mipmap.bluetooth_fingerprint, TYPE_FINGER));
+        }
+        if (integers.contains(9)) {
+            functionBeans.add(new WifiLockFunctionBean(MyApplication.getInstance().getString(R.string.card), R.mipmap.bluetooth_card, TYPE_CARD));
+        }
+        functionBeans.add(new WifiLockFunctionBean(MyApplication.getInstance().getString(R.string.device_share), R.mipmap.bluetooth_share, TYPE_SHARE));
+        functionBeans.add(new WifiLockFunctionBean(MyApplication.getInstance().getString(R.string.more), R.mipmap.bluetooth_more, TYPE_MORE));
+
+        return functionBeans;
+    }
 
     /**
      * 根据设备型号,获取授权界面的显示图片

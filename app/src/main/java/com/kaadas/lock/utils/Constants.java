@@ -79,4 +79,6 @@ public class Constants {
 
     public static final String RELAYTYPE="RELAYTYPE";
 
+    public static final String ADMIN_PASSWORD = "adminPassword";
+
 }
