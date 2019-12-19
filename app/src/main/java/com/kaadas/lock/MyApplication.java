@@ -517,6 +517,11 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
                         String payload = mqttData.getPayload();
                         allBindDevices = new Gson().fromJson(payload, AllBindDevices.class);
 
+                        if (!"200".equals(allBindDevices.getCode())) {  ///服务器获取设备列表失败
+                            LogUtils.e("   获取列表失败  " + allBindDevices.getCode());
+                            return;
+                        }
+                        
                         List<AllBindDevices.ReturnDataBean.GwListBean> gwList = allBindDevices.getData().getGwList();
                         if (gwList != null) {
                             int allgwSize = gwList.size();
@@ -524,10 +529,7 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
                                 SPUtils.put(Constants.RELAYTYPE + gwList.get(j).getDeviceSN(), gwList.get(j).getRelayType());
                             }
                         }
-                        if (!"200".equals(allBindDevices.getCode())) {  ///服务器获取设备列表失败
-                            LogUtils.e("   获取列表失败  " + allBindDevices.getCode());
-                            return;
-                        }
+
                         SPUtils.put(Constants.ALL_DEVICES_DATA, payload);
 
                         long serverCurrentTime = Long.parseLong(allBindDevices.getTimestamp());
