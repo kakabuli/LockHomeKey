@@ -521,7 +521,7 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
                             LogUtils.e("   获取列表失败  " + allBindDevices.getCode());
                             return;
                         }
-                        
+
                         List<AllBindDevices.ReturnDataBean.GwListBean> gwList = allBindDevices.getData().getGwList();
                         if (gwList != null) {
                             int allgwSize = gwList.size();
