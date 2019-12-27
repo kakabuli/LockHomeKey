@@ -43,6 +43,7 @@ import com.kaadas.lock.mvp.view.IMainActivityView;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.publiclibrary.bean.CateEyeInfo;
 import com.kaadas.lock.publiclibrary.bean.GatewayInfo;
+import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.GatewayOtaNotifyBean;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttService;
@@ -138,7 +139,7 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
             try {
                 connected = mqttService.getMqttClient().isConnected();
             } catch (Exception e) {
-                LogUtils.e("  获取连接状态失败  "+e.getMessage());
+                LogUtils.e("  获取连接状态失败  " + e.getMessage());
                 connected = false;
             }
             if (mqttService.getMqttClient() == null || !connected) {
@@ -634,6 +635,44 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
     @Override
     public void gatewayResetSuccess(String gatewayId) {
         ToastUtil.getInstance().showShort(gatewayId + "网关:" + getString(R.string.gateway_reset_unbind));
+    }
+
+    @Override
+    public void onWifiLockAlarmEvent(String wifiSn, int alarmCode) {
+        String content = "";
+        WifiLockInfo wifiLockInfoBySn = MyApplication.getInstance().getWifiLockInfoBySn(wifiSn);
+        String nickName = "";
+        if (wifiLockInfoBySn != null) {
+            nickName = wifiLockInfoBySn.getLockNickname();
+        }
+
+        switch (alarmCode) {
+            case 0x01: //锁定报警（输入错误密码或指纹或卡片超过 10 次就报 警系统锁定）
+                content = String.format(getString(R.string.wifi_lock_alarm_1) , nickName);
+                break;
+            case 0x02:// 劫持报警（输入防劫持密码或防劫持指纹开锁就报警）
+                content = String.format(getString(R.string.wifi_lock_alarm_2) , nickName);
+                break;
+            case 0x03:// 三次错误报警
+                content = String.format(getString(R.string.wifi_lock_alarm_3) , nickName);
+                break;
+            case 0x04:// 防撬报警（锁被撬开）
+                content = String.format(getString(R.string.wifi_lock_alarm_4) , nickName);
+                break;
+            case 0x08:// 机械钥匙报警（使用机械钥匙开锁）
+                content = String.format(getString(R.string.wifi_lock_alarm_8) , nickName);
+                break;
+            case 0x10:// 低电压报警（电池电量不足）
+                content = String.format(getString(R.string.wifi_lock_alarm_10) , nickName);
+                break;
+            case 0x20:// 锁体异常报警（旧:门锁不上报警）
+                content = String.format(getString(R.string.wifi_lock_alarm_20) , nickName);
+                break;
+            case 0x40:// 门锁布防报警
+                content = String.format(getString(R.string.wifi_lock_alarm_40) , nickName);
+                break;
+        }
+        Toast.makeText(MainActivity.this, content, Toast.LENGTH_SHORT).show();
     }
 
 

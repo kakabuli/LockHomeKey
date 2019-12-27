@@ -4,31 +4,30 @@ public class WiFiLockBindBean {
 
     /**
      * wifiSN : WF132231004
-     * productSN : 34353245191810001
-     * productModel : k8
      * lockNickName : 我的锁
      * uid : 5c70ac053c554639ea93cc85
-     * softwareVersion : 1.1.0
-     * functionSet : 00
+     * randomCode : j123hk1h3kj1h4kjh12k
      */
 
     private String wifiSN;
-    private String productSN;
-    private String productModel;
     private String lockNickName;
     private String uid;
-    private String softwareVersion;
-    private String functionSet;
+    private String randomCode;
+    /**
+     * wifiName : wodewifi
+     */
 
-    public WiFiLockBindBean(String wifiSN, String productSN, String productModel, String lockNickName, String uid, String softwareVersion, String functionSet) {
+    private String wifiName;
+
+    public WiFiLockBindBean(String wifiSN, String lockNickName, String uid, String randomCode, String wifiName) {
         this.wifiSN = wifiSN;
-        this.productSN = productSN;
-        this.productModel = productModel;
         this.lockNickName = lockNickName;
         this.uid = uid;
-        this.softwareVersion = softwareVersion;
-        this.functionSet = functionSet;
+        this.randomCode = randomCode;
+        this.wifiName = wifiName;
     }
+
+
 
     public String getWifiSN() {
         return wifiSN;
@@ -36,22 +35,6 @@ public class WiFiLockBindBean {
 
     public void setWifiSN(String wifiSN) {
         this.wifiSN = wifiSN;
-    }
-
-    public String getProductSN() {
-        return productSN;
-    }
-
-    public void setProductSN(String productSN) {
-        this.productSN = productSN;
-    }
-
-    public String getProductModel() {
-        return productModel;
-    }
-
-    public void setProductModel(String productModel) {
-        this.productModel = productModel;
     }
 
     public String getLockNickName() {
@@ -70,19 +53,19 @@ public class WiFiLockBindBean {
         this.uid = uid;
     }
 
-    public String getSoftwareVersion() {
-        return softwareVersion;
+    public String getRandomCode() {
+        return randomCode;
     }
 
-    public void setSoftwareVersion(String softwareVersion) {
-        this.softwareVersion = softwareVersion;
+    public void setRandomCode(String randomCode) {
+        this.randomCode = randomCode;
     }
 
-    public String getFunctionSet() {
-        return functionSet;
+    public String getWifiName() {
+        return wifiName;
     }
 
-    public void setFunctionSet(String functionSet) {
-        this.functionSet = functionSet;
+    public void setWifiName(String wifiName) {
+        this.wifiName = wifiName;
     }
 }

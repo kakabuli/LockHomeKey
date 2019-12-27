@@ -11,22 +11,21 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.kaadas.lock.R;
 import com.kaadas.lock.adapter.WifiLockOperationGroupRecordAdapter;
 import com.kaadas.lock.bean.WifiLockOperationRecordGroup;
 import com.kaadas.lock.mvp.mvpbase.BaseFragment;
 import com.kaadas.lock.mvp.presenter.wifilock.WifiLockOpenRecordPresenter;
 import com.kaadas.lock.mvp.view.wifilock.IWifiLockOpenRecordView;
-import com.kaadas.lock.publiclibrary.bean.ForeverPassword;
 import com.kaadas.lock.publiclibrary.bean.WifiLockOperationRecord;
-import com.kaadas.lock.publiclibrary.ble.BleUtil;
-import com.kaadas.lock.publiclibrary.ble.bean.OpenLockRecord;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
-import com.kaadas.lock.publiclibrary.http.result.GetPasswordResult;
 import com.kaadas.lock.publiclibrary.http.util.HttpUtils;
 import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.ToastUtil;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
@@ -55,6 +54,7 @@ public class WifiLockOpenRecordFragment extends BaseFragment<IWifiLockOpenRecord
     TextView tvSynchronizedRecord;
     @BindView(R.id.rl_head)
     RelativeLayout rlHead;
+
     private int currentPage = 1;   //当前的开锁记录时间
     View view;
     private Unbinder unbinder;
@@ -68,16 +68,26 @@ public class WifiLockOpenRecordFragment extends BaseFragment<IWifiLockOpenRecord
         tvSynchronizedRecord.setOnClickListener(this);
         wifiSn = getArguments().getString(KeyConstants.WIFI_SN);
         rlHead.setVisibility(View.GONE);
+
         initRecycleView();
         initRefresh();
+        initData();
         return view;
+    }
+
+    private void initData() {
+        String localRecord = (String) SPUtils.get(KeyConstants.WIFI_LOCK_OPERATION_RECORD + wifiSn, "");
+        Gson gson = new Gson();
+        List<WifiLockOperationRecord> records = gson.fromJson(localRecord, new TypeToken<List<WifiLockOperationRecord>>() {
+        }.getType());
+        groupData(records);
+        operationGroupRecordAdapter.notifyDataSetChanged();
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mPresenter.getOpenRecordFromServer(1, wifiSn);
-
     }
 
 
@@ -119,58 +129,11 @@ public class WifiLockOpenRecordFragment extends BaseFragment<IWifiLockOpenRecord
     public void onLoseRecord(List<Integer> numbers) {
     }
 
-
-    private String getOpenLockType(GetPasswordResult passwordResults, OpenLockRecord record) {
-        String nickName = record.getUser_num() + "";
-        if (passwordResults != null) {
-            switch (record.getOpen_type()) {
-                case BleUtil.PASSWORD:
-                    List<ForeverPassword> pwdList = passwordResults.getData().getPwdList();
-                    if (pwdList != null && pwdList.size() > 0) {
-                        for (ForeverPassword password : pwdList) {
-                            if (Integer.parseInt(password.getNum()) == Integer.parseInt(record.getUser_num())) {
-                                nickName = password.getNickName();
-                            }
-                        }
-                    }
-                    break;
-                case BleUtil.FINGERPRINT:
-                    List<GetPasswordResult.DataBean.Fingerprint> fingerprints = passwordResults.getData().getFingerprintList();
-                    if (fingerprints != null && fingerprints.size() > 0) {
-                        for (GetPasswordResult.DataBean.Fingerprint password : fingerprints) {
-                            if (Integer.parseInt(password.getNum()) == Integer.parseInt(record.getUser_num())) {
-                                nickName = password.getNickName();
-                            }
-                        }
-                    }
-                    break;
-                case BleUtil.RFID:  //卡片
-                    List<GetPasswordResult.DataBean.Card> cards = passwordResults.getData().getCardList();
-                    if (cards != null && cards.size() > 0) {
-                        for (GetPasswordResult.DataBean.Card password : cards) {
-                            if (Integer.parseInt(password.getNum()) == Integer.parseInt(record.getUser_num())) {
-                                nickName = password.getNickName();
-                            }
-                        }
-                    }
-                    break;
-                case BleUtil.PHONE:  //103
-                    nickName = "App";
-                    break;
-            }
-        } else {
-            nickName = record.getUser_num() + "";
-        }
-        return nickName;
-    }
-
-
     @Override
     public void onLoadServerRecord(List<WifiLockOperationRecord> lockRecords, int page) {
         LogUtils.e("收到服务器数据  " + lockRecords.size());
         currentPage = page + 1;
         groupData(lockRecords);
-        LogUtils.d("davi showDatas " + showDatas.toString());
         operationGroupRecordAdapter.notifyDataSetChanged();
         if (page == 1) { //这时候是刷新
             refreshLayout.finishRefresh();
@@ -183,25 +146,28 @@ public class WifiLockOpenRecordFragment extends BaseFragment<IWifiLockOpenRecord
     private void groupData(List<WifiLockOperationRecord> lockRecords) {
         showDatas.clear();
         String lastTimeHead = "";
-        for (int i = 0; i < lockRecords.size(); i++) {
-            WifiLockOperationRecord record = lockRecords.get(i);
-            //获取开锁时间的毫秒数
-            long openTime = record.getTime();
-            String sOpenTime = DateUtils.getDateTimeFromMillisecond(openTime);
-            String timeHead = sOpenTime.substring(0, 10);
-
-
-            if (!timeHead.equals(lastTimeHead)) { //添加头
-                lastTimeHead = timeHead;
-                List<WifiLockOperationRecord> itemList = new ArrayList<>();
-                itemList.add(record);
-                showDatas.add(new WifiLockOperationRecordGroup(timeHead, itemList));
-            } else {
-                WifiLockOperationRecordGroup operationRecordGroup = showDatas.get(showDatas.size() - 1);
-                List<WifiLockOperationRecord> bluetoothItemRecordBeanList = operationRecordGroup.getList();
-                bluetoothItemRecordBeanList.add(record);
+        if (lockRecords !=null && lockRecords.size()>0){
+            for (int i = 0; i < lockRecords.size(); i++) {
+                WifiLockOperationRecord record = lockRecords.get(i);
+                //获取开锁时间的毫秒数
+                long openTime = record.getTime();
+                String sOpenTime = DateUtils.getDateTimeFromMillisecond(openTime);
+                String timeHead = sOpenTime.substring(0, 10);
+                if (!timeHead.equals(lastTimeHead)) { //添加头
+                    lastTimeHead = timeHead;
+                    List<WifiLockOperationRecord> itemList = new ArrayList<>();
+                    itemList.add(record);
+                    showDatas.add(new WifiLockOperationRecordGroup(timeHead, itemList));
+                } else {
+                    WifiLockOperationRecordGroup operationRecordGroup = showDatas.get(showDatas.size() - 1);
+                    List<WifiLockOperationRecord> bluetoothItemRecordBeanList = operationRecordGroup.getList();
+                    bluetoothItemRecordBeanList.add(record);
+                }
             }
+        }else {
+
         }
+
     }
 
 

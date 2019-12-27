@@ -11,14 +11,20 @@ public class WifiLockShareBean {
 
     private String wifiSN;
     private String uid;
-    private String uname;
+    private String username;
     private String userNickname;
+    /**
+     * adminNickname : 我是管理员
+     */
 
-    public WifiLockShareBean(String wifiSN, String uid, String uname, String userNickname) {
+    private String adminNickname;
+
+    public WifiLockShareBean(String wifiSN, String uid, String uname, String userNickname,String adminNickname) {
         this.wifiSN = wifiSN;
         this.uid = uid;
-        this.uname = uname;
+        this.username = uname;
         this.userNickname = userNickname;
+        this.adminNickname = adminNickname;
     }
 
     public String getWifiSN() {
@@ -38,11 +44,11 @@ public class WifiLockShareBean {
     }
 
     public String getUname() {
-        return uname;
+        return username;
     }
 
     public void setUname(String uname) {
-        this.uname = uname;
+        this.username = uname;
     }
 
     public String getUserNickname() {
@@ -51,5 +57,13 @@ public class WifiLockShareBean {
 
     public void setUserNickname(String userNickname) {
         this.userNickname = userNickname;
+    }
+
+    public String getAdminNickname() {
+        return adminNickname;
+    }
+
+    public void setAdminNickname(String adminNickname) {
+        this.adminNickname = adminNickname;
     }
 }

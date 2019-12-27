@@ -1,4 +1,4 @@
-package com.kaadas.lock.activity.device.wifilock.password;
+package com.kaadas.lock.activity.device.wifilock.add;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,8 +9,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.kaadas.lock.R;
+import com.kaadas.lock.activity.device.wifilock.password.AddWifiLockTempPasswordSecondActivity;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.Constants;
+import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.StringUtil;
 import com.kaadas.lock.utils.ToastUtil;
 
@@ -18,7 +20,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class AddWifiLockTempPasswordFirstActivity extends AppCompatActivity {
+public class InputAdminPasswordActivity extends AppCompatActivity {
 
     @BindView(R.id.back)
     ImageView back;
@@ -48,27 +50,9 @@ public class AddWifiLockTempPasswordFirstActivity extends AppCompatActivity {
                     ToastUtil.getInstance().showShort(R.string.random_verify_error);
                     return;
                 }
-                if (StringUtil.checkSimplePassword(adminPassword)) {
-                    AlertDialogUtil.getInstance().noEditTwoButtonDialog(this, getString(R.string.hint), getString(R.string.password_simple_please_reset), getString(R.string.go_on), getString(R.string.reinstall), new AlertDialogUtil.ClickListener() {
-
-                        @Override
-                        public void left() {
-
-                        }
-
-                        @Override
-                        public void right() {
-                            etAdminPassword.setText("");
-                            return;
-                        }
-                    });
-                    return;
-                }
-
-                Intent intent = new Intent(AddWifiLockTempPasswordFirstActivity.this,AddWifiLockTempPasswordSecondActivity.class);
-                intent.putExtra(Constants.ADMIN_PASSWORD, adminPassword);
+                Intent intent = new Intent(InputAdminPasswordActivity.this,WifiSetUpActivity.class);
+                intent.putExtra(KeyConstants.WIFI_LOCK_ADMIN_PASSWORD, adminPassword);
                 startActivity(intent);
-
                 break;
         }
     }

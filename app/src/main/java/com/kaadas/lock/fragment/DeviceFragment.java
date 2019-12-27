@@ -31,6 +31,8 @@ import com.kaadas.lock.activity.device.gateway.GatewayActivity;
 import com.kaadas.lock.activity.device.gatewaylock.GatewayLockAuthorizeFunctionActivity;
 import com.kaadas.lock.activity.device.gatewaylock.GatewayLockFunctionActivity;
 import com.kaadas.lock.activity.device.oldbluetooth.OldBleDetailActivity;
+import com.kaadas.lock.activity.device.wifilock.WiFiLockDetailActivity;
+import com.kaadas.lock.activity.device.wifilock.WifiLockAuthActivity;
 import com.kaadas.lock.adapter.DeviceDetailAdapter;
 import com.kaadas.lock.bean.HomeShowBean;
 import com.kaadas.lock.mvp.mvpbase.BaseFragment;
@@ -42,6 +44,7 @@ import com.kaadas.lock.publiclibrary.bean.GatewayInfo;
 import com.kaadas.lock.publiclibrary.bean.GwLockInfo;
 import com.kaadas.lock.publiclibrary.bean.ServerGatewayInfo;
 import com.kaadas.lock.publiclibrary.bean.ServerGwDevice;
+import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
 import com.kaadas.lock.publiclibrary.http.result.ServerBleDevice;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.AllBindDevices;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttService;
@@ -220,7 +223,7 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                                     gwLock.getSW(), gwLock.getDevice_type(), gwLock.getEvent_str(), gwLock.getIpaddr(), gwLock.getMacaddr(),
                                 gwLock.getNickName(), gwLock.getTime(), gwLockInfo.getGwID(), uid,
                                 gwLock.getDelectTime(), gwLock.getLockversion(), gwLock.getModuletype(),gwLock.getNwaddr(), gwLock.getOfflineTime(),
-                                gwLock.getOnlineTime(),   gwLock.getShareFlag());
+                                gwLock.getOnlineTime(),   gwLock.getShareFlag(),gwLock.getPushSwitch());
                             daoSession.insertOrReplace(gatewayLockServiceInfo);
                             mDeviceList.add(homeShowBean);
                             break;
@@ -254,7 +257,7 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                                     gwDevice.getSW(), gwDevice.getDevice_type(), gwDevice.getEvent_str(), gwDevice.getIpaddr(), gwDevice.getMacaddr(),
                                     gwDevice.getNickName(), gwDevice.getTime(), cateEyeInfo.getGwID(), uid,
                                     gwDevice.getDelectTime(), gwDevice.getLockversion(), gwDevice.getModuletype(),gwDevice.getNwaddr(), gwDevice.getOfflineTime(),
-                                    gwDevice.getOnlineTime(),   gwDevice.getShareFlag());
+                                    gwDevice.getOnlineTime(),   gwDevice.getShareFlag(),gwDevice.getPushSwitch());
                             daoSession.insertOrReplace(catEyeServiceInfo);
                             mDeviceList.add(homeShowBean);
                             break;
@@ -292,10 +295,6 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                                 }
 
                             }
-                            /*if (gatewayInfo!=null&&gatewayInfo.getServerInfo().getIsAdmin()==1){
-                            if (gatewayInfo != null && gatewayInfo.getServerInfo().getIsAdmin() == 1) {
-                                mDeviceList.add(homeShowBean);
-                            }*/
                             mDeviceList.add(homeShowBean);
                             break;
                         case HomeShowBean.TYPE_BLE_LOCK:
@@ -334,9 +333,11 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                             }
                             mDeviceList.add(homeShowBean);
                             break;
+                        case HomeShowBean.TYPE_WIFI_LOCK:
+                            WifiLockInfo wifiLockInfo = (WifiLockInfo) homeShowBean.getObject();
+                            mDeviceList.add(homeShowBean);
+                            break;
                     }
-
-
                 }
                 if (deviceDetailAdapter != null) {
                     deviceDetailAdapter.notifyDataSetChanged();
@@ -356,11 +357,7 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                 HomeShowBean homeShowBean = mDeviceList.get(i);
                 if (HomeShowBean.TYPE_CAT_EYE == homeShowBean.getDeviceType()) { //有网关
                     boolean isFlag = NotificationManagerCompat.from(getActivity()).areNotificationsEnabled();
-               //     if (!isFlag && Rom.isOppo() && !MyApplication.getInstance().isPopDialog()) {
                     if ((!isFlag && Rom.isOppo()) || (!isFlag && Rom.isVivo())){
-                       // final AlertDialog.Builder normalDialog = new AlertDialog.Builder(getActivity());
-                        //	normalDialog.setIcon(R.drawable.icon_dialog);
-                        //(Context context, String title, String content, String left, String right, ClickListener clickListener)
                         AlertDialogUtil.getInstance().noEditTwoButtonDialogWidthDialog_color_padding(
                                 getActivity(),
                                 getString(R.string.mainactivity_permission_alert_title),
@@ -384,8 +381,7 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                                         }
                                     }
                                 });
-                    } //else if (!isFlag && Rom.isVivo() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-
+                    }
                 }
             }
         }
@@ -461,11 +457,8 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                             cateEyeAuthorizationInfoIntent.putExtra(KeyConstants.CATE_INFO, deviceDetailBean);
                             startActivity(cateEyeAuthorizationInfoIntent);
                         }
-
-
                         break;
                     case HomeShowBean.TYPE_GATEWAY_LOCK:
-
                         GwLockInfo lockInfo = (GwLockInfo) deviceDetailBean.getObject();
                         GatewayInfo gw = MyApplication.getInstance().getGatewayById(lockInfo.getGwID());
                         if (gw.getServerInfo().getIsAdmin() == 1) {
@@ -522,6 +515,23 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                             String model = bleLockInfo.getServerLockInfo().getModel();
                             impowerIntent.putExtra(KeyConstants.DEVICE_TYPE, model);
                             startActivityForResult(impowerIntent, KeyConstants.GET_BLE_POWER);
+                        }
+                        break;
+                    case HomeShowBean.TYPE_WIFI_LOCK:
+                        WifiLockInfo wifiLockInfo = (WifiLockInfo) deviceDetailBean.getObject();
+                        if (!TextUtils.isEmpty(wifiLockInfo.getFunctionSet())){
+                            if (wifiLockInfo.getIsAdmin() == 1 ){ //主用户
+                                Intent intent = new Intent(getActivity(), WiFiLockDetailActivity.class);
+                                intent.putExtra(KeyConstants.WIFI_SN, wifiLockInfo.getWifiSN());
+                                startActivity(intent);
+                            }else { //分享用户
+                                LogUtils.e("分享 wifi锁  用户  " + wifiLockInfo.toString());
+                                Intent intent = new Intent(getActivity(), WifiLockAuthActivity.class);
+                                intent.putExtra(KeyConstants.WIFI_SN, wifiLockInfo.getWifiSN());
+                                startActivity(intent);
+                            }
+                        }else {
+                            ToastUtil.getInstance().showLong(R.string.lock_info_not_push);
                         }
                         break;
                 }

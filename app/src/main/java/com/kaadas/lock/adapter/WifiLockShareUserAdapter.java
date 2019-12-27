@@ -33,7 +33,7 @@ public class WifiLockShareUserAdapter extends BaseQuickAdapter<WifiLockShareResu
             number=""+position;
         }
         helper.setText(R.id.tv_serial_number, number);
-        helper.setText(R.id.tv_num, bean.getUnickname());
+        helper.setText(R.id.tv_num, bean.getUserNickname());
         LogUtils.d("davi getData().size() "+getData().size()+"  position  "+position);
         if( getData().size()==position){
             helper.getView(R.id.my_view).setVisibility(View.GONE);

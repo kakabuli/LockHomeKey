@@ -223,7 +223,6 @@ public class BleOpenRecordFragment extends BaseBleFragment<IOpenLockRecordView, 
         for (int i = 0; i < lockRecords.size(); i++) {
             OpenLockRecord record = lockRecords.get(i);
             //获取开锁时间的毫秒数
-
             String timeHead = record.getOpen_time().substring(0, 10);
             String hourSecond = record.getOpen_time().substring(11, 16);
 

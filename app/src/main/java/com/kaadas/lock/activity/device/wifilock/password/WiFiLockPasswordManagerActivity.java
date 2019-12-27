@@ -87,6 +87,12 @@ public class WiFiLockPasswordManagerActivity extends BaseActivity<IWifiLockPassw
                 mPresenter.getPasswordList(wifiSn);
             }
         });
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 
     private void initData() {
@@ -166,7 +172,7 @@ public class WiFiLockPasswordManagerActivity extends BaseActivity<IWifiLockPassw
         wifiLockCardAndFingerAdapter = new WifiLockCardAndFingerAdapter(cardAndFingerList, R.layout.item_door_card_manager);
         recycleview.setLayoutManager(new LinearLayoutManager(this));
         recycleview.setAdapter(wifiLockCardAndFingerAdapter);
-        passwordAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+        wifiLockCardAndFingerAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 Intent intent = new Intent(WiFiLockPasswordManagerActivity.this, WifiLockPasswordDetailActivity.class);
@@ -182,6 +188,9 @@ public class WiFiLockPasswordManagerActivity extends BaseActivity<IWifiLockPassw
 
     @Override
     public void onGetPasswordSuccess(WiFiLockPassword wiFiLockPassword) {
+        if (refreshLayout!=null){
+            refreshLayout.finishRefresh();
+        }
         if (type == 1) {
             passwordList = mPresenter.getShowPasswords(wiFiLockPassword);
             if (passwordList != null && passwordList.size() > 0) {

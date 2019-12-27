@@ -10,18 +10,17 @@ import com.kaadas.lock.publiclibrary.http.util.BaseObserver;
 import io.reactivex.disposables.Disposable;
 
 public class WiFiLockShareUserDetailPresenter<T> extends BasePresenter<IWiFiLockShareUserDetailView> {
-
-
     /**
      * 删除用户列表
      */
-    public void deleteUserList(String shareId) {
-        XiaokaiNewServiceImp.wifiLockDeleteShareUser(shareId, MyApplication.getInstance().getUid()).
+    public void deleteUserList(String shareId,String adminNickname) {
+        XiaokaiNewServiceImp.wifiLockDeleteShareUser(shareId, MyApplication.getInstance().getUid(),adminNickname).
                 subscribe(new BaseObserver<BaseResult>() {
                     @Override
                     public void onSuccess(BaseResult baseResult) {
                         if (mViewRef != null) {
                             mViewRef.get().deleteCommonUserListSuccess(baseResult);
+
                         }
                     }
 
@@ -51,7 +50,8 @@ public class WiFiLockShareUserDetailPresenter<T> extends BasePresenter<IWiFiLock
      * 修改普通用户昵称
      */
     public void modifyCommonUserNickname(String ndId, String userNickName) {
-        XiaokaiNewServiceImp.wifiLockUpdateShareUserNickname(ndId, userNickName).subscribe(new BaseObserver<BaseResult>() {
+        XiaokaiNewServiceImp.wifiLockUpdateShareUserNickname(ndId, userNickName,MyApplication.getInstance().getUid())
+                .subscribe(new BaseObserver<BaseResult>() {
             @Override
             public void onSuccess(BaseResult baseResult) {
                 if (mViewRef != null) {

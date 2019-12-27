@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.kaadas.lock.R;
 import com.kaadas.lock.bean.WifiLockFunctionBean;
 import com.kaadas.lock.utils.BleLockUtils;
+import com.kaadas.lock.utils.LogUtils;
 
 import java.util.List;
 
@@ -41,17 +42,18 @@ public class WifiLockDetailAdapater extends RecyclerView.Adapter {
         WifiLockFunctionBean lockFunctionBean = data.get(position);
         holder.iv_icon.setImageResource(lockFunctionBean.getImage());
         holder.tvNamepublic.setText(lockFunctionBean.getName());
-
+        holder.tvNumber.setVisibility(View.VISIBLE);
         if (lockFunctionBean.getType() == BleLockUtils.TYPE_PASSWORD ||
                 lockFunctionBean.getType() == BleLockUtils.TYPE_FINGER ||
-                lockFunctionBean.getType() == BleLockUtils.TYPE_TEMP_PASSWORD
+                lockFunctionBean.getType() == BleLockUtils.TYPE_OFFLINE_PASSWORD
                 ) {
             holder.tvNumber.setText(lockFunctionBean.getNumber() + context.getString(R.string.group));
         } else if (lockFunctionBean.getType() == BleLockUtils.TYPE_CARD) {
             holder.tvNumber.setText(lockFunctionBean.getNumber() + context.getString(R.string.pice));
         } else if (lockFunctionBean.getType() == BleLockUtils.TYPE_SHARE) {
+            LogUtils.e("设置共享用户个数   " + lockFunctionBean.getNumber());
             holder.tvNumber.setText(lockFunctionBean.getNumber() + context.getString(R.string.rad));
-        } else if (lockFunctionBean.getType() == BleLockUtils.TYPE_MORE) {
+        } else    {
             holder.tvNumber.setVisibility(View.GONE);
         }
 

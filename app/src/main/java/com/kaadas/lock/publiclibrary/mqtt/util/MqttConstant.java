@@ -223,5 +223,11 @@ public class MqttConstant {
 
     public static final String SCHEDULE = "schedule";
 
+    //wifi锁上报的  Function
+    public static final String FUNC_WFEVENT = "wfevent";
+
+
+    public static final String UPDATE_DEV_PUSH_SWITCH = "updateDevPushSwitch";
+
 
 }

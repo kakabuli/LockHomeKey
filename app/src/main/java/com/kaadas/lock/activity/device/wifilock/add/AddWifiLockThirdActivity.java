@@ -61,7 +61,7 @@ public class AddWifiLockThirdActivity extends AppCompatActivity {
                 finish();
                 break;
             case R.id.already_pair_network:
-                startActivity(new Intent(AddWifiLockThirdActivity.this,WifiSetUpActivity.class));
+                startActivity(new Intent(AddWifiLockThirdActivity.this,InputAdminPasswordActivity.class));
                 break;
             case R.id.help:
 //                Intent intent = new Intent(this, DeviceAddHelpActivity.class);

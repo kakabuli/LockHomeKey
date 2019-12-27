@@ -9,10 +9,16 @@ public class WifiLockDeleteShareBean {
 
     private String shareId;
     private String uid;
+    /**
+     * adminNickname : 我是管理员
+     */
 
-    public WifiLockDeleteShareBean(String shareId, String uid) {
+    private String adminNickname;
+
+    public WifiLockDeleteShareBean(String shareId, String uid, String adminNickname) {
         this.shareId = shareId;
         this.uid = uid;
+        this.adminNickname = adminNickname;
     }
 
     public String getShareId() {
@@ -29,5 +35,13 @@ public class WifiLockDeleteShareBean {
 
     public void setUid(String uid) {
         this.uid = uid;
+    }
+
+    public String getAdminNickname() {
+        return adminNickname;
+    }
+
+    public void setAdminNickname(String adminNickname) {
+        this.adminNickname = adminNickname;
     }
 }

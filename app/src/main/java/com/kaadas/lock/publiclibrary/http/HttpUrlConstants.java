@@ -363,5 +363,15 @@ public class HttpUrlConstants {
      * 获取wifi报警记录
      */
     public static final String WIFI_LOCK_ALARM_LIST = BASE_URL + "wifi/alarm/list";
+    /**
+     * 获取开锁次数
+     */
+    public static final String WIFI_LOCK_OPEN_COUNT = BASE_URL + "wifi/operation/opencount";
+
+
+    /**
+     * 获取开锁次数
+     */
+    public static final String WIFI_LOCK_UPDATE_INFO = BASE_URL + "wifi/device/infoUpdate";
 
 }

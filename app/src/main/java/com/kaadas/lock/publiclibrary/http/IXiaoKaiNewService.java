@@ -5,6 +5,7 @@ import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.result.DeleteMessageResult;
 import com.kaadas.lock.publiclibrary.http.result.GetDeviceResult;
 import com.kaadas.lock.publiclibrary.http.result.GetHelpLogResult;
+import com.kaadas.lock.publiclibrary.http.result.GetOpenCountResult;
 import com.kaadas.lock.publiclibrary.http.result.GetPasswordResult;
 import com.kaadas.lock.publiclibrary.http.result.GetPwdBySnResult;
 import com.kaadas.lock.publiclibrary.http.result.GetWarringRecordResult;
@@ -581,5 +582,20 @@ public interface IXiaoKaiNewService {
      */
     @POST(HttpUrlConstants.WIFI_LOCK_ALARM_LIST)
     Observable<GetWifiLockAlarmRecordResult> wifiLockGetAlarmList(@Body RequestBody info);
+    /**
+     * 开锁次数
+     */
+    @POST(HttpUrlConstants.WIFI_LOCK_OPEN_COUNT)
+    Observable<GetOpenCountResult> wifiLockGetOpenCount(@Body RequestBody info);
+
+
+    /**
+     * 更新wifi信息
+     */
+    @POST(HttpUrlConstants.WIFI_LOCK_UPDATE_INFO)
+    Observable<BaseResult> wifiLockUpdateInfo(@Body RequestBody info);
+
+
+
 
 }

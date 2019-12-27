@@ -28,16 +28,20 @@ public class WifiLockAlarmRecordPresenter<T> extends BasePresenter<IWifiLockAlar
                     @Override
                     public void onSuccess(GetWifiLockAlarmRecordResult alarmRecordResult) {
                         List<WifiLockAlarmRecord> alarmRecords = alarmRecordResult.getData();
-                        if (alarmRecords != null && alarmRecords.size() > 0) {  //服务器没有数据  提示用户
+                        if (alarmRecords != null && alarmRecords.size() > 0) {
                             if (page == 1) {
-                                SPUtils.put(KeyConstants.WIFI_LOCK_ALARM_RECORD, new Gson().toJson(alarmRecordResult));
+                                SPUtils.put(KeyConstants.WIFI_LOCK_ALARM_RECORD + wifiSn, new Gson().toJson(alarmRecords));
                             }
                             wifiLockAlarmRecords.addAll(alarmRecords);
                             if (mViewRef.get() != null) {
                                 mViewRef.get().onLoadServerRecord(wifiLockAlarmRecords, page);
                             }
                         } else {
-                            if (mViewRef.get() != null) {
+                            if (page == 1) {
+                                SPUtils.put(KeyConstants.WIFI_LOCK_ALARM_RECORD + wifiSn, "");
+                            }
+                            if (mViewRef.get() != null) {//服务器没有数据  提示用户
+
                                 if (page == 1) { //第一次获取数据就没有
                                     mViewRef.get().onServerNoData();
                                 } else {

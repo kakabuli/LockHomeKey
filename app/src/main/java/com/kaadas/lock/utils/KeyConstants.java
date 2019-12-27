@@ -6,7 +6,7 @@ package com.kaadas.lock.utils;
  * 各种常量Key的静态类
  * 每个Key都需要注释有什么作用
  */
-public class   KeyConstants {
+public class KeyConstants {
     /**
      * Intent 传递值的常量Key
      */
@@ -240,29 +240,29 @@ public class   KeyConstants {
     public static final String GW_SN = "gwSn";
 
     //网关的id
-    public static final String GATEWAY_ID="gatewayId";
+    public static final String GATEWAY_ID = "gatewayId";
     //网关的昵称
-    public static final String GATEWAY_NICKNAME="gatewayNickName";
-    public static final String IS_GATEAWAY="is_gateway";
+    public static final String GATEWAY_NICKNAME = "gatewayNickName";
+    public static final String IS_GATEAWAY = "is_gateway";
     // 大网关6015
     // 小的6030和6032
-    public static final String SMALL_GW="6030";
-    public static final String SMALL_GW2="6032";
-    public static final String BIG_GW="6010";
+    public static final String SMALL_GW = "6030";
+    public static final String SMALL_GW2 = "6032";
+    public static final String BIG_GW = "6010";
     //是否是管理员
-    public static final String IS_ADMIN="isadmin";
+    public static final String IS_ADMIN = "isadmin";
     //是否是管理员
-    public static final String GW_MODEL="gw_model";
+    public static final String GW_MODEL = "gw_model";
 
     //设备的id
-    public static final String DEVICE_ID="deviceId";
+    public static final String DEVICE_ID = "deviceId";
     //猫眼
-    public static final String CATEYE="cateye";
+    public static final String CATEYE = "cateye";
     //网关锁
-    public static final String GATEWAY_LOCK="gateway_lock";
+    public static final String GATEWAY_LOCK = "gateway_lock";
 
     //设备的id
-    public static final String DEVICE_NICKNAME="DEVICE_NICKNAME";
+    public static final String DEVICE_NICKNAME = "DEVICE_NICKNAME";
 
     //开锁
     //已反锁
@@ -278,67 +278,67 @@ public class   KeyConstants {
     public static final int DEVICE_OFFLINE = 5;
 
     //设备
-    public static final String DEVICE_DETAIL_BEAN="deviceDetailBean";
+    public static final String DEVICE_DETAIL_BEAN = "deviceDetailBean";
 
     //是否保存了开锁密码
-    public static final String SAVA_LOCK_PWD="saveLockPwd";
+    public static final String SAVA_LOCK_PWD = "saveLockPwd";
 
     //开锁密码编号
-    public static final String LOCK_PWD_NUMBER="lockPwdNumber";
+    public static final String LOCK_PWD_NUMBER = "lockPwdNumber";
 
     //开锁密码集合
-    public static final String LOCK_PWD_LIST="lockPwdList";
+    public static final String LOCK_PWD_LIST = "lockPwdList";
 
     //开锁密码编号添加
-    public static final String ADD_LOCK_PWD_NUMBER="addLockPwdNumber";
+    public static final String ADD_LOCK_PWD_NUMBER = "addLockPwdNumber";
 
     //设备名称
-    public static final String NAME="name";
+    public static final String NAME = "name";
 
     //设置onActivityResult
-    public static final int DEVICE_DETAIL_BEAN_NUM=1000;
+    public static final int DEVICE_DETAIL_BEAN_NUM = 1000;
 
-    public static final int DELETE_PWD_REQUEST_CODE=1001;
+    public static final int DELETE_PWD_REQUEST_CODE = 1001;
 
-    public static final int ADD_PWD_REQUEST_CODE=1002;
+    public static final int ADD_PWD_REQUEST_CODE = 1002;
 
-    public static final int UPDATE_DEVICE_NAME_REQUEST_CODE=1003;
+    public static final int UPDATE_DEVICE_NAME_REQUEST_CODE = 1003;
 
     //铃声
-    public static final int RING_NUMBER_REQUESET_CODE=1004;
+    public static final int RING_NUMBER_REQUESET_CODE = 1004;
 
     //音量
-    public static final int VOLUME_REQUESET_CODE=1005;
+    public static final int VOLUME_REQUESET_CODE = 1005;
 
     //分辨率
-    public static final int RESOLUTION_REQUEST_CODE=1006;
+    public static final int RESOLUTION_REQUEST_CODE = 1006;
 
     //扫描猫眼跳转
-    public static final int SCANCATEYE_REQUEST_CODE=1007;
+    public static final int SCANCATEYE_REQUEST_CODE = 1007;
 
     //扫描网关的跳转
-    public static final int SCANGATEWAY_REQUEST_CODE=1008;
+    public static final int SCANGATEWAY_REQUEST_CODE = 1008;
 
     //使用扫一扫页面跳转
-    public static final int SCANGATEWAYNEW_REQUEST_CODE=1009;
+    public static final int SCANGATEWAYNEW_REQUEST_CODE = 1009;
 
     //产品激活
-    public static final int SCANPRODUCT_REQUEST_CODE=1010;
+    public static final int SCANPRODUCT_REQUEST_CODE = 1010;
 
     //网关昵称修改
-    public static final int GATEWAY_NICK_NAME=1011;
+    public static final int GATEWAY_NICK_NAME = 1011;
 
     //铃声次数
-    public static final String RIGH_NUMBER="ringNumber";
+    public static final String RIGH_NUMBER = "ringNumber";
 
     //音量
-    public static final String VOLUME_NUMBER="volumeNumber";
+    public static final String VOLUME_NUMBER = "volumeNumber";
 
     //分辨率
-    public static final String RESOLUTION_NUMBER="resolutionNumber";
+    public static final String RESOLUTION_NUMBER = "resolutionNumber";
 
     //传递蓝牙电量
-    public static final int GET_BLE_POWER=1004;
+    public static final int GET_BLE_POWER = 1004;
 
 
     /**
@@ -350,7 +350,7 @@ public class   KeyConstants {
      */
     public static final String FRAGMENT_POSITION = "fragmentPosition";
     /**
-     *  传递猫眼数据
+     * 传递猫眼数据
      */
     public static final String CATE_INFO = "cateInfo";
 
@@ -366,34 +366,34 @@ public class   KeyConstants {
 
 
     /**
-     *  是否是呼叫进来
+     * 是否是呼叫进来
      */
     public static final String IS_CALL_IN = "isCallIn";
 
     /**
-     *  是否是呼叫进来
+     * 是否是呼叫进来
      */
     public static final String IS_ACCEPT_CALL = "isAcceptCall";
 
     /**
      * 升级时，保存的设备蓝牙版本号的Key
      */
-    public static final String BLE_VERSION= "bleVersion";
+    public static final String BLE_VERSION = "bleVersion";
 
     //区分密码是永久有效还是，临时有效
-    public static final String PWD_TYPE="pwdType";
+    public static final String PWD_TYPE = "pwdType";
     //密码值
-    public static final String PWD_VALUE="pwdValue";
+    public static final String PWD_VALUE = "pwdValue";
     //密码编号
-    public static final String PWD_ID="pwdId";
+    public static final String PWD_ID = "pwdId";
 
     //密码编号管理
-    public static final String ADD_PWD_ID="addPwdId";
+    public static final String ADD_PWD_ID = "addPwdId";
     //添加胁迫密码编号
-    public static final String ADD_STRESS_PWD_ID="addStressPwdId";
+    public static final String ADD_STRESS_PWD_ID = "addStressPwdId";
 
     //获取猫眼信息
-    public static final String GET_CAT_EYE_INFO="getCatEyeInfo";
+    public static final String GET_CAT_EYE_INFO = "getCatEyeInfo";
 
     //上报类型为猫眼
     public static final String DEV_TYPE_CAT_EYE = "kdscateye";
@@ -401,73 +401,75 @@ public class   KeyConstants {
     /**
      * 上报类型为网关锁
      */
-    public static final String DEV_TYPE_LOCK= "kdszblock";
+    public static final String DEV_TYPE_LOCK = "kdszblock";
 
     //蓝牙电量信息
-    public static final String BLE_INTO="bleInfo";
+    public static final String BLE_INTO = "bleInfo";
 
     //响铃次数
-    public static final String CAT_EYE_RING_NUMBER="catEyeRingNumber";
+    public static final String CAT_EYE_RING_NUMBER = "catEyeRingNumber";
 
     //分辨率
-    public static final String CAT_EYE_RESOLUTION="catEyeResolution";
+    public static final String CAT_EYE_RESOLUTION = "catEyeResolution";
 
     //账号
-    public static final String ACCOUNT="account";
+    public static final String ACCOUNT = "account";
 
     //密码
-    public static final String PASSWORD="password";
+    public static final String PASSWORD = "password";
     //地区码
-    public static final String AREA_CODE="area_code";
+    public static final String AREA_CODE = "area_code";
     //国家
-    public static final String COUNTRY="country";
+    public static final String COUNTRY = "country";
 
     //铃声音量
-    public static final String CAT_EYE_VOLUME="catEyeVolume";
+    public static final String CAT_EYE_VOLUME = "catEyeVolume";
     /**
      * 锁型号
      */
     public static final String LOCK_MODEL = "lock_model";
 
     //是否绑定了咪咪网
-    public static final String IS_BIND_MEME="isbindMeme";
+    public static final String IS_BIND_MEME = "isbindMeme";
 
 
     //获取猫眼信息
-    public static final String GET_CAT_EYE_INFO_BASE="GET_CAT_EYE_INFO_BASE";
+    public static final String GET_CAT_EYE_INFO_BASE = "GET_CAT_EYE_INFO_BASE";
 
     //获取第一次进入锁密码
-    public static final String FIRST_IN_GATEWAY_LOCK="firstInGatewayLock2";
+    public static final String FIRST_IN_GATEWAY_LOCK = "firstInGatewayLock2";
 
-    public static final String BAR_CODE="BAR_CODE";
+    public static final String BAR_CODE = "BAR_CODE";
     //来源
-    public static final String SOURCE="source";
+    public static final String SOURCE = "source";
     //保存服务器的时间的Key  毫秒数
     public static final String SERVER_CURRENT_TIME = "Server_Current_time";
     //用户管理个数
-    public static final String USER_MANAGE_NUMBER="user_manage_number";
+    public static final String USER_MANAGE_NUMBER = "user_manage_number";
     //网关ota升级
-    public static final String GATEWAY_OTA_UPGRADE="gateway_ota_upgrade";
+    public static final String GATEWAY_OTA_UPGRADE = "gateway_ota_upgrade";
 
-    public static final String GATEWAY_NIGHT_SIGHT="GATEWAY_NIGHT_SIGHT";
+    public static final String GATEWAY_NIGHT_SIGHT = "GATEWAY_NIGHT_SIGHT";
 
     public static final String GATEWAY_PASSWORD_BEAN = "gatewayPasswordBean";
 
     public static final String GATEWAY_PASSWORD_BOUND = "gatewayPasswordBound";
 
-    public static final int  TAG_NUMBER = 2001;
-    public static final int  TAG_OTA_TYPE = 2002;
+    public static final int TAG_NUMBER = 2001;
+    public static final int TAG_OTA_TYPE = 2002;
 
 
-    public static final String KEY_TYPE = "keyType";
+    public static final String KEY_TYPE = "keyType";  //
     public static final String WIFI_SN = "wifiSn";
-    public static final String WIFI_LOCK_PASSWORD_LIST = "WifiLockPasswordList";
-    public static final String WIFI_LOCK_ALARM_RECORD = "WifiLockAlarmRecord";
-    public static final String WIFI_LOCK_OPERATION_RECORD = "WifiLockOperationRecord";
-    public static final String SHARE_USER_INFO = "shareUserInfo";
-
-
-
+    public static final String WIFI_LOCK_PASSWORD_LIST = "WifiLockPasswordList";  //WiFi锁密码列表
+    public static final String WIFI_LOCK_SHARE_USER_LIST = "WifiLockShareUserList";  //WiFi锁密码列表
+    public static final String WIFI_LOCK_ALARM_RECORD = "WifiLockAlarmRecord";  //WiFi锁 报警记录
+    public static final String WIFI_LOCK_OPERATION_RECORD = "WifiLockOperationRecord";  //WiFi锁操作记录
+    public static final String SHARE_USER_INFO = "shareUserInfo";   //分享用户信息
+    public static final String WIFI_LOCK_ADMIN_PASSWORD = "wifiLockAdminPassword";  //WiFi锁管理员密码
+    public static final String WIFI_LOCK_INFO = "wifiLockInfo"; //WiFi锁信息
+    public static final String WIFI_LOCK_FUNCTION = "wifiLockFunction"; //WiFi锁信息
+    public static final String WIFI_LOCK_OPEN_COUNT = "wifiLockOpenCount"; //WiFi锁开锁次数
 
 
 }

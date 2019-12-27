@@ -42,6 +42,8 @@
     <!-- OPPO辅助 SDK -->
     <uses-permission android:name="com.coloros.mcs.permission.RECIEVE_MCS_MESSAGE" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
 
     <application
         android:name=".MyApplication"
@@ -68,19 +70,15 @@
             android:exported="true"
             android:launchMode="singleTop"
             android:screenOrientation="portrait">
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT" />
 
-            <!-- <intent-filter> -->
-            <!-- <category android:name="android.intent.category.DEFAULT" /> -->
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
 
-            <!-- <action android:name="android.intent.action.MAIN" /> -->
-
-
-            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
-
-
-            <!-- <action android:name="android.intent.action.oppopush" /> -->
-            <!-- </intent-filter> -->
+                <action android:name="android.intent.action.oppopush" />
+            </intent-filter>
         </activity>
         <!-- 登录 -->
         <activity
@@ -786,8 +784,8 @@
             </intent-filter>
         </receiver>
 
+        <activity android:name=".activity.device.wifilock.add.AddWifiLockSuccessActivity" />
         <activity android:name=".publiclibrary.ota.face.FaceOtaActivity" />
-        <activity android:name=".activity.TestActivity" />
         <activity android:name=".activity.device.gatewaylock.password.test.PasswordTestActivity" />
         <activity android:name=".activity.device.wifilock.add.WifiSetUpActivity" />
         <activity android:name=".activity.device.wifilock.add.AddWifiLockFirstActivity" />
@@ -796,25 +794,19 @@
         <activity android:name=".activity.device.wifilock.add.SupportWifiActivity" />
         <activity android:name=".activity.device.wifilock.WiFiLockDetailActivity" />
         <activity android:name=".activity.device.wifilock.add.AddWifiLockFailedActivity" />
-        <activity android:name=".activity.device.wifilock.password.AddWifiLockTempPasswordFirstActivity" />
+        <activity android:name=".activity.device.wifilock.add.InputAdminPasswordActivity" />
         <activity android:name=".activity.device.wifilock.password.AddWifiLockTempPasswordSecondActivity" />
         <activity android:name=".activity.device.wifilock.password.WifiLockPasswordShareActivity" />
-        <activity android:name=".activity.device.wifilock.password.WiFiLockPasswordManagerActivity">
-            <intent-filter>
-                <category android:name="android.intent.category.DEFAULT" />
-
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-
-                <action android:name="android.intent.action.oppopush" />
-            </intent-filter>
-        </activity>
+        <activity android:name=".activity.device.wifilock.password.WiFiLockPasswordManagerActivity" />
         <activity android:name=".activity.device.wifilock.password.WifiLockPasswordDetailActivity" />
         <activity android:name=".activity.device.wifilock.family.WifiLockFamilyManagerActivity" />
         <activity android:name=".activity.device.wifilock.family.WiFiLockAddShareUserActivity" />
         <activity android:name=".activity.device.wifilock.family.WiFiLockShareUserDetailActivity" />
-        <activity android:name=".activity.device.wifilock.WifiLockRecordActivity"></activity>
+        <activity android:name=".activity.device.wifilock.WifiLockRecordActivity" />
+        <activity android:name=".activity.device.wifilock.WifiLockMoreActivity" />
+        <activity android:name=".activity.device.wifilock.WifiLockDeviceInfoActivity" />
+        <activity android:name=".activity.device.wifilock.WifiLockSafeModelActivity" />
+        <activity android:name=".activity.device.wifilock.WifiLockAuthActivity"></activity>
     </application>
 
 </manifest>

@@ -32,6 +32,7 @@ import com.kaadas.lock.mvp.view.IHomeView;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.publiclibrary.bean.CateEyeInfo;
 import com.kaadas.lock.publiclibrary.bean.GwLockInfo;
+import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.AllBindDevices;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
@@ -283,6 +284,15 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
                     gwBundle.putSerializable(KeyConstants.GATEWAY_LOCK_INFO, (GwLockInfo) devices.get(i).getObject());
                     gatewayLockFragment.setArguments(gwBundle);
                     fragments.add(gatewayLockFragment);
+                    break;
+                case HomeShowBean.TYPE_WIFI_LOCK:
+                    rb.setCompoundDrawablesRelativeWithIntrinsicBounds(null, getContext().getDrawable(R.drawable.home_rb_lock_drawable), null, null);
+                    WifiLockFragment wifiLockFragment = new WifiLockFragment();
+                    Bundle wifiBundle = new Bundle();
+                    WifiLockInfo wifiLockInfo = (WifiLockInfo) devices.get(i).getObject();
+                    wifiBundle.putSerializable(KeyConstants.WIFI_LOCK_INFO, wifiLockInfo);
+                    wifiLockFragment.setArguments(wifiBundle);
+                    fragments.add(wifiLockFragment);
                     break;
             }
             //根据需要设置显示初始标签的个数，这里显示3个

@@ -40,6 +40,16 @@ public class ServerGwDevice implements Serializable {
     private String offlineTime;
     private String onlineTime;
     private int shareFlag;
+    private int pushSwitch;
+
+
+    public int getPushSwitch() {
+        return pushSwitch;
+    }
+
+    public void setPushSwitch(int pushSwitch) {
+        this.pushSwitch = pushSwitch;
+    }
 
     public String getSW() {
         return SW;
@@ -106,10 +116,7 @@ public class ServerGwDevice implements Serializable {
     }
 
 
-    public ServerGwDevice(String SW, String deviceId, String device_type, String event_str,
-                          String ipaddr, String macaddr, String nickName, String time, String model,
-                          String delectTime, String lockversion, String moduletype, int nwaddr,
-                          String offlineTime, String onlineTime, int shareFlag) {
+    public ServerGwDevice(String SW, String deviceId, String device_type, String event_str, String ipaddr, String macaddr, String nickName, String time, String model, String delectTime, String lockversion, String moduletype, int nwaddr, String offlineTime, String onlineTime, int shareFlag, int pushSwitch) {
         this.SW = SW;
         this.deviceId = deviceId;
         this.device_type = device_type;
@@ -126,6 +133,7 @@ public class ServerGwDevice implements Serializable {
         this.offlineTime = offlineTime;
         this.onlineTime = onlineTime;
         this.shareFlag = shareFlag;
+        this.pushSwitch = pushSwitch;
     }
 
     public ServerGwDevice(String SW, String deviceId, String device_type, String event_str, String ipaddr, String macaddr, String nickName, String time, String model) {

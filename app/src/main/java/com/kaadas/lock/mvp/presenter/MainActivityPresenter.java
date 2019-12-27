@@ -21,6 +21,7 @@ import com.kaadas.lock.publiclibrary.bean.GatewayInfo;
 import com.kaadas.lock.publiclibrary.bean.GwLockInfo;
 import com.kaadas.lock.publiclibrary.bean.ServerGatewayInfo;
 import com.kaadas.lock.publiclibrary.bean.ServerGwDevice;
+import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
 import com.kaadas.lock.publiclibrary.ble.BleUtil;
 import com.kaadas.lock.publiclibrary.ble.bean.NewVersionBean;
 import com.kaadas.lock.publiclibrary.ble.responsebean.BleDataBean;
@@ -40,6 +41,7 @@ import com.kaadas.lock.publiclibrary.mqtt.eventbean.DeleteDeviceLockBean;
 import com.kaadas.lock.publiclibrary.mqtt.eventbean.GatewayLockAlarmEventBean;
 import com.kaadas.lock.publiclibrary.mqtt.eventbean.GatewayLockInfoEventBean;
 import com.kaadas.lock.publiclibrary.mqtt.eventbean.GatewayResetBean;
+import com.kaadas.lock.publiclibrary.mqtt.eventbean.WifiLockAlarmBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.GatewayComfirmOtaResultBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.AllBindDevices;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.GatewayOtaNotifyBean;
@@ -110,6 +112,7 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
     private Context mContext;
     private Disposable getLockPwdInfoEventDisposable;
     private GatewayLockPasswordManager manager = new GatewayLockPasswordManager();
+    private Disposable wifiLockStatusListenDisposable;
 
     public MainActivityPresenter(Context mContext) {
         this.mContext = mContext;
@@ -137,6 +140,8 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
         gatewayResetListener();
         //监听密码的信息
         getLockPwdInfoEvent();
+        //监听wifi锁  报警信息
+        listenWifiLockStatus();
     }
 
     /**
@@ -417,7 +422,6 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                                         if (deleteGatewayLockDeviceBean != null) {
                                             if ("zigbee".equals(deleteGatewayLockDeviceBean.getEventparams().getDevice_type()) && deleteGatewayLockDeviceBean.getEventparams().getEvent_str().equals("delete")) {
                                                 refreshData(deleteGatewayLockDeviceBean.getGwId(), deleteGatewayLockDeviceBean.getDeviceId());
-
                                             }
                                         }
                                     }
@@ -981,7 +985,7 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                             gwLock.getDevice_type(), gwLock.getEvent_str(), gwLock.getIpaddr(),
                             gwLock.getMacaddr(), gwLock.getNickName(), gwLock.getTime()
                             ,"",gwLock.getDelectTime(),gwLock.getLockversion(),gwLock.getModuletype()
-                            ,gwLock.getNwaddr(),gwLock.getOfflineTime(),gwLock.getOnlineTime(),gwLock.getShareFlag()
+                            ,gwLock.getNwaddr(),gwLock.getOfflineTime(),gwLock.getOnlineTime(),gwLock.getShareFlag(),gwLock.getPushSwitch()
                     ));
                     homeShowBeans.add(new HomeShowBean(HomeShowBean.TYPE_GATEWAY_LOCK, gwLock.getDeviceId(),
                             gwLock.getNickName(), gwLockInfo));
@@ -999,9 +1003,20 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                                     catEyeService.getMacaddr(), catEyeService.getNickName(), catEyeService.getTime()
                                     ,"",catEyeService.getDelectTime(),catEyeService.getLockversion(),catEyeService.getModuletype()
                                     ,catEyeService.getNwaddr(),catEyeService.getOfflineTime(),catEyeService.getOnlineTime(),catEyeService.getShareFlag()
+                                    ,catEyeService.getPushSwitch()
                             ));
                     homeShowBeans.add(new HomeShowBean(HomeShowBean.TYPE_CAT_EYE, catEyeService.getDeviceId(),
                             catEyeService.getNickName(), cateEyeInfo));
+                }
+            }
+        }
+        //获取WiFi锁
+        if (daoSession != null && daoSession.getCatEyeServiceInfoDao() != null){
+            List<WifiLockInfo> wifiLockInfos = daoSession.getWifiLockInfoDao().loadAll();
+            if (wifiLockInfos != null && wifiLockInfos.size() > 0) {
+                for (WifiLockInfo wifiLockInfo : wifiLockInfos) {
+                    homeShowBeans.add(new HomeShowBean(HomeShowBean.TYPE_WIFI_LOCK, wifiLockInfo.getWifiSN(),
+                            wifiLockInfo.getLockNickname(), wifiLockInfo));
                 }
             }
         }
@@ -1116,6 +1131,43 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
             compositeDisposable.add(getLockPwdInfoEventDisposable);
         }
     }
+
+
+
+
+//    /监听网关重置上报
+    public void listenWifiLockStatus() {
+        if (mqttService != null) {
+            toDisposable(wifiLockStatusListenDisposable);
+            wifiLockStatusListenDisposable = mqttService.listenerDataBack()
+                    .filter(new Predicate<MqttData>() {
+                        @Override
+                        public boolean test(MqttData mqttData) throws Exception {
+                            if (mqttData.getFunc().equals(MqttConstant.FUNC_WFEVENT)) {
+                                return true;
+                            }
+                            return false;
+                        }
+                    })
+                    .compose(RxjavaHelper.observeOnMainThread())
+                    .subscribe(new Consumer<MqttData>() {
+                        @Override
+                        public void accept(MqttData mqttData) throws Exception {
+                            WifiLockAlarmBean wifiLockAlarmBean = new Gson().fromJson(mqttData.getPayload(), WifiLockAlarmBean.class);
+                            if (wifiLockAlarmBean != null && wifiLockAlarmBean.getEventtype().equals("alarm")) {
+                                WifiLockAlarmBean.EventparamsBean eventparams = wifiLockAlarmBean.getEventparams();
+                                if (eventparams !=null){
+                                    if (isSafe()){
+                                        mViewRef.get().onWifiLockAlarmEvent(wifiLockAlarmBean.getWfId(),eventparams.getAlarmCode());
+                                    }
+                                }
+                            }
+                        }
+                    });
+            compositeDisposable.add(wifiLockStatusListenDisposable);
+        }
+    }
+
 
 
 }

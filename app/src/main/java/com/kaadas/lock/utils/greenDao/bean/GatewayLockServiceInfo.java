@@ -46,16 +46,14 @@ public class GatewayLockServiceInfo {
     private String offlineTime;
     private String onlineTime;
     private int shareFlag;
+    private int pushSwitch;
 
-
-
-
-
-
-    @Generated(hash = 1994000690)
-    public GatewayLockServiceInfo(String deviceIdUid, String deviceId, String SW, String device_type, String event_str, String ipaddr,
-                                  String macaddr, String nickName, String time, String gatewayId, String uid,
-            String delectTime, String lockversion, String moduletype, int nwaddr, String offlineTime, String onlineTime, int shareFlag) {
+    @Generated(hash = 1124163145)
+    public GatewayLockServiceInfo(String deviceIdUid, String deviceId, String SW,
+            String device_type, String event_str, String ipaddr, String macaddr,
+            String nickName, String time, String gatewayId, String uid,
+            String delectTime, String lockversion, String moduletype, int nwaddr,
+            String offlineTime, String onlineTime, int shareFlag, int pushSwitch) {
         this.deviceIdUid = deviceIdUid;
         this.deviceId = deviceId;
         this.SW = SW;
@@ -74,16 +72,23 @@ public class GatewayLockServiceInfo {
         this.offlineTime = offlineTime;
         this.onlineTime = onlineTime;
         this.shareFlag = shareFlag;
+        this.pushSwitch = pushSwitch;
     }
-
-
 
     @Generated(hash = 1056849880)
     public GatewayLockServiceInfo() {
     }
 
+    public int getPushSwitch() {
+        return pushSwitch;
+    }
 
-    
+    public void setPushSwitch(int pushSwitch) {
+        this.pushSwitch = pushSwitch;
+    }
+
+
+
     public String getDeviceIdUid() {
         return deviceIdUid;
     }

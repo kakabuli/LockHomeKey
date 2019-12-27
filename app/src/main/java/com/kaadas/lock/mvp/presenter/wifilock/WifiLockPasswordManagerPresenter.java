@@ -22,28 +22,28 @@ import io.reactivex.disposables.Disposable;
 
 public class WifiLockPasswordManagerPresenter<T> extends BasePresenter<IWifiLockPasswordManagerView> {
 
-    public void getPasswordList(String wifiSn){
+    public void getPasswordList(String wifiSn) {
         XiaokaiNewServiceImp.wifiLockGetPwdList(wifiSn, MyApplication.getInstance().getUid())
                 .subscribe(new BaseObserver<WifiLockGetPasswordListResult>() {
                     @Override
                     public void onSuccess(WifiLockGetPasswordListResult wifiLockGetPasswordListResult) {
                         WiFiLockPassword wiFiLockPassword = wifiLockGetPasswordListResult.getDataX();
                         SPUtils.put(KeyConstants.WIFI_LOCK_PASSWORD_LIST + wifiSn, new Gson().toJson(wiFiLockPassword));
-                        if (isSafe()){
+                        if (isSafe()) {
                             mViewRef.get().onGetPasswordSuccess(wiFiLockPassword);
                         }
                     }
 
                     @Override
                     public void onAckErrorCode(BaseResult baseResult) {
-                        if (isSafe()){
+                        if (isSafe()) {
                             mViewRef.get().onGetPasswordFailedServer(baseResult);
                         }
                     }
 
                     @Override
                     public void onFailed(Throwable throwable) {
-                        if (isSafe()){
+                        if (isSafe()) {
                             mViewRef.get().onGetPasswordFailed(throwable);
                         }
                     }
@@ -54,7 +54,6 @@ public class WifiLockPasswordManagerPresenter<T> extends BasePresenter<IWifiLock
                     }
                 });
     }
-
 
 
     public List<ForeverPassword> getShowPasswords(WiFiLockPassword wiFiLockPassword) {
@@ -130,8 +129,6 @@ public class WifiLockPasswordManagerPresenter<T> extends BasePresenter<IWifiLock
         }
         return passwords;
     }
-
-
 
 
 }

@@ -99,7 +99,7 @@
                 <com.kaadas.lock.utils.BatteryView
                     android:id="@+id/iv_power"
                     android:layout_width="21dp"
-                    android:layout_height="16dp"
+                    android:layout_height="12dp"
                     app:batteryColor="#25F290"
                     app:batteryOrientation="horizontal"
                     app:batteryPower="0" />

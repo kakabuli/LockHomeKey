@@ -48,27 +48,19 @@ public class WifiLockShareResult extends BaseResult {
     }
 
     public static class WifiLockShareUser implements Serializable {
+
         /**
-         * _id : 5df206704d3ee14df09d6d50
-         * adminname : 8618954359822
+         * _id : 5def586f4d3ee1156842868c
+         * uid : 5d0c9aa322916bfd695cbae3
          * uname : 8618954359823
-         * unickname : ahaha
-         * open_purview : 3
-         * datestart : 2019-12-12 14:00:00
-         * dateend : 2019-12-12 15:00:00
-         * items : ["1"]
-         * createTime : 1576142448
+         * userNickname : 萝卜头
          */
 
         private String _id;
-        private String adminname;
+        private String uid;
         private String uname;
-        private String unickname;
-        private String open_purview;
-        private String datestart;
-        private String dateend;
-        private int createTime;
-        private List<String> items;
+        private String userNickname;
+        private long createTime;
 
         public String get_id() {
             return _id;
@@ -78,12 +70,12 @@ public class WifiLockShareResult extends BaseResult {
             this._id = _id;
         }
 
-        public String getAdminname() {
-            return adminname;
+        public String getUid() {
+            return uid;
         }
 
-        public void setAdminname(String adminname) {
-            this.adminname = adminname;
+        public void setUid(String uid) {
+            this.uid = uid;
         }
 
         public String getUname() {
@@ -94,52 +86,20 @@ public class WifiLockShareResult extends BaseResult {
             this.uname = uname;
         }
 
-        public String getUnickname() {
-            return unickname;
+        public String getUserNickname() {
+            return userNickname;
         }
 
-        public void setUnickname(String unickname) {
-            this.unickname = unickname;
+        public void setUserNickname(String userNickname) {
+            this.userNickname = userNickname;
         }
 
-        public String getOpen_purview() {
-            return open_purview;
-        }
-
-        public void setOpen_purview(String open_purview) {
-            this.open_purview = open_purview;
-        }
-
-        public String getDatestart() {
-            return datestart;
-        }
-
-        public void setDatestart(String datestart) {
-            this.datestart = datestart;
-        }
-
-        public String getDateend() {
-            return dateend;
-        }
-
-        public void setDateend(String dateend) {
-            this.dateend = dateend;
-        }
-
-        public int getCreateTime() {
+        public long getCreateTime() {
             return createTime;
         }
 
-        public void setCreateTime(int createTime) {
+        public void setCreateTime(long createTime) {
             this.createTime = createTime;
-        }
-
-        public List<String> getItems() {
-            return items;
-        }
-
-        public void setItems(List<String> items) {
-            this.items = items;
         }
     }
 }

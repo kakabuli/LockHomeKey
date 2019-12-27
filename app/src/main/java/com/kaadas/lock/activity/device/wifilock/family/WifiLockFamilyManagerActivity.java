@@ -156,8 +156,9 @@ public class WifiLockFamilyManagerActivity extends BaseActivity<IWifiLockFamilyM
             case R.id.ll_add_user:
                 if (querySuccess ) {
                     if (shareUsers.size() < 10) {
-                        intent = new Intent(this, AddBluetoothFamilyMemberActivity.class);
-                        startActivityForResult(intent, REQUEST_CODE);
+                        intent = new Intent(this, WiFiLockAddShareUserActivity.class);
+                        intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
+                        startActivity(intent );
                     } else {
                         AlertDialogUtil.getInstance().noEditSingleButtonDialog(this, "", getString(R.string.more_then_ten_member), getString(R.string.hao_de), new AlertDialogUtil.ClickListener() {
                             @Override
@@ -180,33 +181,6 @@ public class WifiLockFamilyManagerActivity extends BaseActivity<IWifiLockFamilyM
         }
     }
 
-//
-//
-//    @Override
-//    public void addCommonUserSuccess(BaseResult baseResult) {
-//        queryUser();
-//        ToastUtil.getInstance().showShort(R.string.add_common_user_success);
-//    }
-//
-//    @Override
-//    public void addCommonUserFail(BaseResult baseResult) {
-//        ToastUtil.getInstance().showShort(HttpUtils.httpErrorCode(this, baseResult.getCode()));
-//    }
-//
-//    @Override
-//    public void addCommonUserError(Throwable throwable) {
-//        ToastUtil.getInstance().showShort(HttpUtils.httpProtocolErrorCode(this, throwable));
-//    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK) {
-
-        }
-    }
-
-
     @Override
     public void querySuccess(List<WifiLockShareResult.WifiLockShareUser> users) {
         if (users == null){
@@ -217,10 +191,10 @@ public class WifiLockFamilyManagerActivity extends BaseActivity<IWifiLockFamilyM
         //刷新完成
         refreshLayout.finishRefresh();
         querySuccess = true;
-        shareUsers = users;
+        shareUsers.clear();
+        shareUsers.addAll(users);
         //todo  缓存数据
         if (shareUsers.size() > 0) {
-            shareUsers.clear();
             isNotData = false;
             wifiLockShareUserAdapter.notifyDataSetChanged();
         } else {

@@ -9,6 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.kaadas.lock.R;
+import com.kaadas.lock.activity.MainActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -49,7 +50,7 @@ public class AddWifiLockFailedActivity extends AppCompatActivity {
                 finish();
                 break;
             case R.id.bt_skip:
-                startActivity(new Intent(AddWifiLockFailedActivity.this,WifiSetUpActivity.class));
+                startActivity(new Intent(AddWifiLockFailedActivity.this,MainActivity.class));
                 finish();
                 break;
         }

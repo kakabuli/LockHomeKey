@@ -24,6 +24,7 @@ import com.kaadas.lock.bean.HomeShowBean;
 import com.kaadas.lock.publiclibrary.bean.CateEyeInfo;
 import com.kaadas.lock.publiclibrary.bean.GatewayInfo;
 import com.kaadas.lock.publiclibrary.bean.GwLockInfo;
+import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
 import com.kaadas.lock.publiclibrary.http.XiaokaiNewServiceImp;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.result.CheckOTAResult;
@@ -51,6 +52,7 @@ import com.kaadas.lock.utils.ftp.GeTui;
 import com.kaadas.lock.utils.greenDao.db.DaoManager;
 import com.kaadas.lock.utils.greenDao.db.DaoMaster;
 import com.kaadas.lock.utils.greenDao.db.DaoSession;
+import com.kaadas.lock.utils.greenDao.db.WifiLockInfoDao;
 import com.kaidishi.lock.service.GeTuiIntentService;
 import com.kaidishi.lock.service.GeTuiPushService;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
@@ -391,11 +393,11 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
         }
     }
 
-    public void deleSQL(){  //删除所有表 然后创建所有表
+    public void deleSQL() {  //删除所有表 然后创建所有表
         Database database = getDaoWriteSession().getDatabase();
         DaoMaster daoMaster = new DaoMaster(database);
-        DaoMaster.dropAllTables(daoMaster.getDatabase(),true);
-        DaoMaster.createAllTables(daoMaster.getDatabase(),true);
+        DaoMaster.dropAllTables(daoMaster.getDatabase(), true);
+        DaoMaster.createAllTables(daoMaster.getDatabase(), true);
     }
 
 
@@ -490,7 +492,6 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
         }
     }
 
-
     /**
      * 全局的获取所有设备信息
      *
@@ -546,6 +547,15 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
                             homeShowDevices = allBindDevices.getHomeShow();
                             LogUtils.e("设备更新  application");
                             getDevicesFromServer.onNext(allBindDevices);
+
+
+                            //缓存WiFi锁设备
+                            if (allBindDevices.getData() != null && allBindDevices.getData().getWifiList() != null) {
+                                List<WifiLockInfo> wifiList = allBindDevices.getData().getWifiList();
+                                WifiLockInfoDao wifiLockInfoDao = getDaoWriteSession().getWifiLockInfoDao();
+                                wifiLockInfoDao.deleteAll();
+                                wifiLockInfoDao.insertInTx(wifiList);
+                            }
                         }
                     }
                 }, new Consumer<Throwable>() {
@@ -554,6 +564,21 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
 
                     }
                 });
+    }
+
+    public WifiLockInfo getWifiLockInfoBySn(String sn) {
+        if (homeShowDevices != null) {
+            for (int i = homeShowDevices.size() - 1; i >= 0; i--) {
+                HomeShowBean homeShowBean = homeShowDevices.get(i);
+                if (homeShowBean.getDeviceType() == HomeShowBean.TYPE_WIFI_LOCK) {
+                   WifiLockInfo wifiLockInfo = (WifiLockInfo) homeShowBean.getObject();
+                   if (wifiLockInfo.getWifiSN().equals(sn)){
+                       return wifiLockInfo;
+                   }
+                }
+            }
+        }
+        return null;
     }
 
 
@@ -870,14 +895,14 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
     /**
      * @param sn
      * @param version    新版本的版本号
-     * param customer   客户：1凯迪仕 2小凯 3桔子物联 4飞利浦
+     *                   param customer   客户：1凯迪仕 2小凯 3桔子物联 4飞利浦
      * @param resultCode 结果：0升级成功 1升级失败 （可自定义其他错误码）
      * @param devNum     模块：1主模块 2算法模块 3相机模块（空：默认1）
      * @return
      */
     public void uploadOtaResult(String sn, String version, String resultCode, int devNum) {
-        if (!TextUtils.isEmpty(resultCode) && resultCode.length() >200){
-            resultCode = resultCode.substring(0,200);
+        if (!TextUtils.isEmpty(resultCode) && resultCode.length() > 200) {
+            resultCode = resultCode.substring(0, 200);
         }
         XiaokaiNewServiceImp.uploadOtaResult(sn, version, 1, resultCode, devNum)
                 .subscribe(new BaseObserver<BaseResult>() {

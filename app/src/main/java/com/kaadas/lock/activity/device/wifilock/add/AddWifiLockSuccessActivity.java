@@ -42,7 +42,6 @@ import butterknife.OnClick;
 public class AddWifiLockSuccessActivity extends BaseActivity<IWifiLockAddSuccessView
         , WifiLockAddSuccessPresenter<IWifiLockAddSuccessView>> implements IWifiLockAddSuccessView, BaseQuickAdapter.OnItemClickListener {
 
-
     @BindView(R.id.input_name)
     EditText inputName;
     @BindView(R.id.recycler)
@@ -57,18 +56,18 @@ public class AddWifiLockSuccessActivity extends BaseActivity<IWifiLockAddSuccess
     private List<AddBluetoothPairSuccessBean> mList;
 
     private AddBluetoothPairSuccessAdapter mAdapter;
-    private String deviceName;
+    private String wifiSN;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.bluetooth_add_success);
         ButterKnife.bind(this);
-        deviceName = getIntent().getStringExtra(KeyConstants.DEVICE_NAME);
         initData();
         initView();
         initListener();
         initMonitor();
+
     }
 
     private void initMonitor() {
@@ -105,9 +104,10 @@ public class AddWifiLockSuccessActivity extends BaseActivity<IWifiLockAddSuccess
 
     private void initData() {
         mList = new ArrayList<>();
-        mList.add( new AddBluetoothPairSuccessBean(getString(R.string.wifi_lock_my_home), false));
-        mList.add( new AddBluetoothPairSuccessBean(getString(R.string.wifi_lock_bedroom), false));
-        mList.add( new AddBluetoothPairSuccessBean(getString(R.string.wifi_lock_company), false));
+        mList.add(new AddBluetoothPairSuccessBean(getString(R.string.wifi_lock_my_home), false));
+        mList.add(new AddBluetoothPairSuccessBean(getString(R.string.wifi_lock_bedroom), false));
+        mList.add(new AddBluetoothPairSuccessBean(getString(R.string.wifi_lock_company), false));
+        wifiSN = getIntent().getStringExtra(KeyConstants.WIFI_SN);
     }
 
     private void initView() {
@@ -121,7 +121,6 @@ public class AddWifiLockSuccessActivity extends BaseActivity<IWifiLockAddSuccess
         if (name != null) {
             inputName.setCursorVisible(false);
         }
-
     }
 
 
@@ -144,7 +143,7 @@ public class AddWifiLockSuccessActivity extends BaseActivity<IWifiLockAddSuccess
         mAdapter.notifyDataSetChanged();
     }
 
-    @OnClick({R.id.save,R.id.back})
+    @OnClick({R.id.save, R.id.back})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.back:
@@ -163,7 +162,7 @@ public class AddWifiLockSuccessActivity extends BaseActivity<IWifiLockAddSuccess
                 }
 
                 showLoading(getString(R.string.is_saving_name));
-//                mPresenter.setName( );
+                mPresenter.setNickName(wifiSN, name);
                 break;
         }
     }
@@ -189,7 +188,9 @@ public class AddWifiLockSuccessActivity extends BaseActivity<IWifiLockAddSuccess
 
     @Override
     public void onSetNameSuccess() {
-
+        MyApplication.getInstance().getAllDevicesByMqtt(true);
+        Intent backIntent=new Intent(this, MainActivity.class);
+        startActivity(backIntent);
     }
 
     @Override

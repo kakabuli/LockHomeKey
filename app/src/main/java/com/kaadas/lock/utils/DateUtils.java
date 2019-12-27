@@ -115,6 +115,9 @@ public class DateUtils {
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd HH:mm");
 		return formatter.format(curDate);
 	}
+
+
+
 	/**
 	 * 格式化时间 单位是毫秒
 	 *
@@ -138,6 +141,14 @@ public class DateUtils {
 	public static String secondToDate(Long timestamp) {
 		Date date = new Date(timestamp*1000);
 		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm");
+		String format = dateFormat.format(date);
+		return format;
+	}
+
+	//时间转成yyyy/MM/dd HH:mm 单位是秒
+	public static String secondToDate2(Long timestamp) {
+		Date date = new Date(timestamp*1000);
+		DateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd HH:mm");
 		String format = dateFormat.format(date);
 		return format;
 	}

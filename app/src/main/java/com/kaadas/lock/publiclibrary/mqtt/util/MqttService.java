@@ -179,7 +179,7 @@ public class MqttService extends Service {
                 LogUtils.e("mqttConnection", "mqtt已连接");
                 return;
             }
-        }catch (IllegalArgumentException e){
+        }catch (Exception e){
             LogUtils.e("获取客户端连接状况失败   " + e.getMessage());
             return;
         }

@@ -18,6 +18,7 @@ import com.kaadas.lock.publiclibrary.http.postbean.GetDevicesBean;
 import com.kaadas.lock.publiclibrary.http.postbean.GetHelpLogBean;
 import com.kaadas.lock.publiclibrary.http.postbean.GetLockRecordBean;
 import com.kaadas.lock.publiclibrary.http.postbean.GetMessageBean;
+import com.kaadas.lock.publiclibrary.http.postbean.GetOpenCountBean;
 import com.kaadas.lock.publiclibrary.http.postbean.GetOperationRecordBean;
 import com.kaadas.lock.publiclibrary.http.postbean.GetPasswordBean;
 import com.kaadas.lock.publiclibrary.http.postbean.GetPwdBySNBean;
@@ -52,6 +53,7 @@ import com.kaadas.lock.publiclibrary.http.postbean.WiFiLockUpdateNickNameBean;
 import com.kaadas.lock.publiclibrary.http.postbean.WifiLockDeleteShareBean;
 import com.kaadas.lock.publiclibrary.http.postbean.WifiLockRecordBean;
 import com.kaadas.lock.publiclibrary.http.postbean.WifiLockShareBean;
+import com.kaadas.lock.publiclibrary.http.postbean.WifiLockUpdateInfoBean;
 import com.kaadas.lock.publiclibrary.http.postbean.WifiLockUpdatePushSwitchBean;
 import com.kaadas.lock.publiclibrary.http.postbean.WifiLockUpdatePwdNickBean;
 import com.kaadas.lock.publiclibrary.http.postbean.WifiLockUpdateShareNickBean;
@@ -60,6 +62,7 @@ import com.kaadas.lock.publiclibrary.http.result.CheckOTAResult;
 import com.kaadas.lock.publiclibrary.http.result.DeleteMessageResult;
 import com.kaadas.lock.publiclibrary.http.result.GetDeviceResult;
 import com.kaadas.lock.publiclibrary.http.result.GetHelpLogResult;
+import com.kaadas.lock.publiclibrary.http.result.GetOpenCountResult;
 import com.kaadas.lock.publiclibrary.http.result.GetPasswordResult;
 import com.kaadas.lock.publiclibrary.http.result.GetPwdBySnResult;
 import com.kaadas.lock.publiclibrary.http.result.GetWarringRecordResult;
@@ -986,18 +989,14 @@ public class XiaokaiNewServiceImp {
     /**
      * 绑定WiFi锁
      *
-     * @param wifiSN          是	String	wifi模块SN
-     * @param productSN       是	String	产品SN
-     * @param productModel    是	String	产品型号
-     * @param lockNickName    否	String	门锁昵称
-     * @param uid             是	String	用户ID
-     * @param softwareVersion 是	String	门锁版本
-     * @param functionSet     是	String	功能集
+     * @param wifiSN       是	String	wifi模块SN
+     * @param lockNickName 否	String	门锁昵称
+     * @param uid          是	String	用户ID
      * @return
      */
-    public static Observable<BaseResult> wifiLockBind(String wifiSN, String productSN, String productModel, String lockNickName, String uid, String softwareVersion, String functionSet) {
-        WiFiLockBindBean wiFiLockBindBean = new WiFiLockBindBean(wifiSN, productSN, productModel, lockNickName, uid, softwareVersion, functionSet);
-        return RetrofitServiceManager.getNoTokenInstance().create(IXiaoKaiNewService.class)
+    public static Observable<BaseResult> wifiLockBind(String wifiSN, String lockNickName, String uid, String randomCode, String wifiName) {
+        WiFiLockBindBean wiFiLockBindBean = new WiFiLockBindBean(wifiSN, lockNickName, uid, randomCode, wifiName);
+        return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
                 .wifiLockBind(new HttpUtils<WiFiLockBindBean>().getBody(wiFiLockBindBean))
                 .subscribeOn(Schedulers.io())
                 .compose(RxjavaHelper.observeOnMainThread());
@@ -1012,7 +1011,7 @@ public class XiaokaiNewServiceImp {
      */
     public static Observable<BaseResult> wifiLockUnbind(String wifiSN, String uid) {
         WiFiLockWifiSNAndUid wiFiLockUnbind = new WiFiLockWifiSNAndUid(wifiSN, uid);
-        return RetrofitServiceManager.getNoTokenInstance().create(IXiaoKaiNewService.class)
+        return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
                 .wifiLockUnbind(new HttpUtils<WiFiLockWifiSNAndUid>().getBody(wiFiLockUnbind))
                 .subscribeOn(Schedulers.io())
                 .compose(RxjavaHelper.observeOnMainThread());
@@ -1028,7 +1027,7 @@ public class XiaokaiNewServiceImp {
      */
     public static Observable<BaseResult> wifiLockUpdateNickname(String wifiSN, String uid, String lockNickname) {
         WiFiLockUpdateNickNameBean wiFiLockUpdateNickNameBean = new WiFiLockUpdateNickNameBean(wifiSN, uid, lockNickname);
-        return RetrofitServiceManager.getNoTokenInstance().create(IXiaoKaiNewService.class)
+        return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
                 .wifiLockUpdateNickname(new HttpUtils<WiFiLockUpdateNickNameBean>().getBody(wiFiLockUpdateNickNameBean))
                 .subscribeOn(Schedulers.io())
                 .compose(RxjavaHelper.observeOnMainThread());
@@ -1039,12 +1038,12 @@ public class XiaokaiNewServiceImp {
      *
      * @param wifiSN
      * @param uid
-     * @param switchX 推送开关：0关 1开
+     * @param switchX 推送开关：1关 2开
      * @return
      */
     public static Observable<BaseResult> wifiLockUpdatePush(String wifiSN, String uid, int switchX) {
         WifiLockUpdatePushSwitchBean wifiLockUpdatePushSwitchBean = new WifiLockUpdatePushSwitchBean(wifiSN, uid, switchX);
-        return RetrofitServiceManager.getNoTokenInstance().create(IXiaoKaiNewService.class)
+        return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
                 .wifiLockUpdatePush(new HttpUtils<WifiLockUpdatePushSwitchBean>().getBody(wifiLockUpdatePushSwitchBean))
                 .subscribeOn(Schedulers.io())
                 .compose(RxjavaHelper.observeOnMainThread());
@@ -1057,7 +1056,7 @@ public class XiaokaiNewServiceImp {
      */
     public static Observable<WifiLockGetPasswordListResult> wifiLockGetPwdList(String wifiSN, String uid) {
         WiFiLockWifiSNAndUid wiFiLockUnbind = new WiFiLockWifiSNAndUid(wifiSN, uid);
-        return RetrofitServiceManager.getNoTokenInstance().create(IXiaoKaiNewService.class)
+        return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
                 .wifiLockGetPwdList(new HttpUtils<WiFiLockWifiSNAndUid>().getBody(wiFiLockUnbind))
                 .subscribeOn(Schedulers.io())
                 .compose(RxjavaHelper.observeOnMainThread());
@@ -1075,7 +1074,7 @@ public class XiaokaiNewServiceImp {
      */
     public static Observable<BaseResult> wifiLockUpdatePwdNickName(String uid, String wifiSN, int pwdType, int num, String nickName) {
         WifiLockUpdatePwdNickBean wifiLockUpdatePwdNickBean = new WifiLockUpdatePwdNickBean(uid, wifiSN, pwdType, num, nickName);
-        return RetrofitServiceManager.getNoTokenInstance().create(IXiaoKaiNewService.class)
+        return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
                 .wifiLockUpdatePwdNickName(new HttpUtils<WifiLockUpdatePwdNickBean>().getBody(wifiLockUpdatePwdNickBean))
                 .subscribeOn(Schedulers.io())
                 .compose(RxjavaHelper.observeOnMainThread());
@@ -1090,9 +1089,9 @@ public class XiaokaiNewServiceImp {
      * @param userNickname 是	String	分享用户昵称
      * @return
      */
-    public static Observable<BaseResult> wifiLockAddShareUser(String wifiSN, String uid, String uname, String userNickname) {
-        WifiLockShareBean wifiLockShareBean = new WifiLockShareBean(wifiSN, uid, uname, userNickname);
-        return RetrofitServiceManager.getNoTokenInstance().create(IXiaoKaiNewService.class)
+    public static Observable<BaseResult> wifiLockAddShareUser(String wifiSN, String uid, String uname, String userNickname, String adminNickname) {
+        WifiLockShareBean wifiLockShareBean = new WifiLockShareBean(wifiSN, uid, uname, userNickname, adminNickname);
+        return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
                 .wifiLockShare(new HttpUtils<WifiLockShareBean>().getBody(wifiLockShareBean))
                 .subscribeOn(Schedulers.io())
                 .compose(RxjavaHelper.observeOnMainThread());
@@ -1100,13 +1099,14 @@ public class XiaokaiNewServiceImp {
 
     /**
      * wifi锁删除授权用户
-     * @param shareId	是	String	用户设备关联ID
-     * @param uid	是	String	用户ID
+     *
+     * @param shareId 是	String	用户设备关联ID
+     * @param uid     是	String	用户ID
      * @return
      */
-    public static Observable<BaseResult> wifiLockDeleteShareUser(String shareId, String uid) {
-        WifiLockDeleteShareBean wifiLockDeleteShareBean = new WifiLockDeleteShareBean(shareId, uid);
-        return RetrofitServiceManager.getNoTokenInstance().create(IXiaoKaiNewService.class)
+    public static Observable<BaseResult> wifiLockDeleteShareUser(String shareId, String uid, String adminNickname) {
+        WifiLockDeleteShareBean wifiLockDeleteShareBean = new WifiLockDeleteShareBean(shareId, uid, adminNickname);
+        return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
                 .wifiLockDeleteShareUser(new HttpUtils<WifiLockDeleteShareBean>().getBody(wifiLockDeleteShareBean))
                 .subscribeOn(Schedulers.io())
                 .compose(RxjavaHelper.observeOnMainThread());
@@ -1114,13 +1114,14 @@ public class XiaokaiNewServiceImp {
 
     /**
      * wifi锁修改授权用户昵称
+     *
      * @param shareId
      * @param nickName
      * @return
      */
-    public static Observable<BaseResult> wifiLockUpdateShareUserNickname(String shareId, String nickName) {
-        WifiLockUpdateShareNickBean wifiLockUpdateShareNickBean = new WifiLockUpdateShareNickBean(shareId, nickName);
-        return RetrofitServiceManager.getNoTokenInstance().create(IXiaoKaiNewService.class)
+    public static Observable<BaseResult> wifiLockUpdateShareUserNickname(String shareId, String nickName, String uid) {
+        WifiLockUpdateShareNickBean wifiLockUpdateShareNickBean = new WifiLockUpdateShareNickBean(shareId, nickName, uid);
+        return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
                 .wifiLockUpdateShareUserNickname(new HttpUtils<WifiLockUpdateShareNickBean>().getBody(wifiLockUpdateShareNickBean))
                 .subscribeOn(Schedulers.io())
                 .compose(RxjavaHelper.observeOnMainThread());
@@ -1128,44 +1129,71 @@ public class XiaokaiNewServiceImp {
 
     /**
      * wifi锁授权用户列表
+     *
      * @param wifiSN
      * @param uid
      * @return
      */
     public static Observable<WifiLockShareResult> wifiLockGetShareUserList(String wifiSN, String uid) {
         WiFiLockWifiSNAndUid wiFiLockWifiSNAndUid = new WiFiLockWifiSNAndUid(wifiSN, uid);
-        return RetrofitServiceManager.getNoTokenInstance().create(IXiaoKaiNewService.class)
+        return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
                 .wifiLockGetShareUserList(new HttpUtils<WiFiLockWifiSNAndUid>().getBody(wiFiLockWifiSNAndUid))
                 .subscribeOn(Schedulers.io())
                 .compose(RxjavaHelper.observeOnMainThread());
     }
-     /**
+
+    /**
      * 获取wifi锁操作记录
+     *
      * @param wifiSN
      * @param page
      * @return
      */
-    public static Observable<GetWifiLockOperationRecordResult> wifiLockGetOperationList(String wifiSN, int  page) {
+    public static Observable<GetWifiLockOperationRecordResult> wifiLockGetOperationList(String wifiSN, int page) {
         WifiLockRecordBean wiFiLockWifiSNAndUid = new WifiLockRecordBean(wifiSN, page);
-        return RetrofitServiceManager.getNoTokenInstance().create(IXiaoKaiNewService.class)
+        return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
                 .wifiLockGetOperationList(new HttpUtils<WifiLockRecordBean>().getBody(wiFiLockWifiSNAndUid))
                 .subscribeOn(Schedulers.io())
                 .compose(RxjavaHelper.observeOnMainThread());
     }
 
 
-
     /**
      * 获取wifi报警记录
      */
 
-    public static Observable<GetWifiLockAlarmRecordResult> wifiLockGetAlarmList(String wifiSN, int  page) {
+    public static Observable<GetWifiLockAlarmRecordResult> wifiLockGetAlarmList(String wifiSN, int page) {
         WifiLockRecordBean wiFiLockWifiSNAndUid = new WifiLockRecordBean(wifiSN, page);
-        return RetrofitServiceManager.getNoTokenInstance().create(IXiaoKaiNewService.class)
+        return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
                 .wifiLockGetAlarmList(new HttpUtils<WifiLockRecordBean>().getBody(wiFiLockWifiSNAndUid))
                 .subscribeOn(Schedulers.io())
                 .compose(RxjavaHelper.observeOnMainThread());
     }
 
+    /**
+     * 开锁次数
+     */
+
+    public static Observable<GetOpenCountResult> wifiLockGetOpenCount(String wifiSN) {
+        GetOpenCountBean getOpenCountBean = new GetOpenCountBean(wifiSN);
+        return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
+                .wifiLockGetOpenCount(new HttpUtils<GetOpenCountBean>().getBody(getOpenCountBean))
+                .subscribeOn(Schedulers.io())
+                .compose(RxjavaHelper.observeOnMainThread());
+    }
+
+    /**
+     * @param uid
+     * @param wifiSN
+     * @param randomCode
+     * @return
+     */
+    public static Observable<BaseResult> wifiLockUpdateInfo(String uid, String wifiSN, String randomCode, String wifiName) {
+        WifiLockUpdateInfoBean updateInfoBean = new WifiLockUpdateInfoBean(uid, wifiSN, randomCode, wifiName);
+        return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
+                .wifiLockUpdateInfo(new HttpUtils<WifiLockUpdateInfoBean>().getBody(updateInfoBean))
+                .subscribeOn(Schedulers.io())
+                .compose(RxjavaHelper.observeOnMainThread());
+    }
 
 }

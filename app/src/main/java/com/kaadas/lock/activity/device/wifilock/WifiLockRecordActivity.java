@@ -12,17 +12,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.kaadas.lock.R;
-import com.kaadas.lock.fragment.BleOpenRecordFragment;
-import com.kaadas.lock.fragment.BluetoothWarnInformationFragment;
-import com.kaadas.lock.fragment.OperationRecordFragment;
 import com.kaadas.lock.fragment.WifiLockAlarmRecordFragment;
 import com.kaadas.lock.fragment.WifiLockOpenRecordFragment;
 import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
-import com.kaadas.lock.mvp.mvpbase.BaseBleActivity;
-import com.kaadas.lock.mvp.mvpbase.BlePresenter;
-import com.kaadas.lock.mvp.mvpbase.IBleView;
-import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
-import com.kaadas.lock.utils.BleLockUtils;
+import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 
 import butterknife.BindView;
@@ -43,28 +36,19 @@ public class WifiLockRecordActivity extends BaseAddToApplicationActivity  implem
     private FragmentTransaction transaction;
     WifiLockOpenRecordFragment openRecordFragment;
     WifiLockAlarmRecordFragment alarmRecordFragment;
-    private BleLockInfo bleLockInfo;
-    private boolean isSupportOperationRecord;
+    private String wifiSn;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bluetooth_equipment_dynamic);
-        if(bleLockInfo!=null){
-            int func = Integer.parseInt(bleLockInfo.getServerLockInfo().getFunctionSet());
-            LogUtils.e("是否支持操作记录   "+bleLockInfo.getServerLockInfo().getBleVersion() + "   " + bleLockInfo.getServerLockInfo().getFunctionSet());
-            if ("3".equals(bleLockInfo.getServerLockInfo().getBleVersion())){
-                isSupportOperationRecord = BleLockUtils.isSupportOperationRecord(func);
-            }else {
-                isSupportOperationRecord = false;
-            }
-        }
         LogUtils.e("是否支持操作记录   ");
         ButterKnife.bind(this);
         ivBack.setOnClickListener(this);
         tvContent.setText(getString(R.string.device_dynamic));
         tvOpenLockRecord.setOnClickListener(this);
         tvWarnInformation.setOnClickListener(this);
+        wifiSn = getIntent().getStringExtra(KeyConstants.WIFI_SN);
         initFragment();
     }
 
@@ -73,7 +57,9 @@ public class WifiLockRecordActivity extends BaseAddToApplicationActivity  implem
         manager = getSupportFragmentManager();
         transaction = manager.beginTransaction();
         openRecordFragment = new WifiLockOpenRecordFragment();
-
+        Bundle bundle = new Bundle();
+        bundle.putString(KeyConstants.WIFI_SN,wifiSn);
+        openRecordFragment.setArguments(bundle);
         transaction.add(R.id.content, openRecordFragment);
         transaction.commit();
     }
@@ -97,6 +83,9 @@ public class WifiLockRecordActivity extends BaseAddToApplicationActivity  implem
                     fragmentTransaction.show(openRecordFragment);
                 } else {
                     openRecordFragment = new WifiLockOpenRecordFragment();
+                    Bundle bundle = new Bundle();
+                    bundle.putString(KeyConstants.WIFI_SN,wifiSn);
+                    openRecordFragment.setArguments(bundle);
                     fragmentTransaction.add(R.id.content, openRecordFragment);
                 }
                 fragmentTransaction.commit();
@@ -113,6 +102,9 @@ public class WifiLockRecordActivity extends BaseAddToApplicationActivity  implem
                     fragmentTransaction.show(alarmRecordFragment);
                 } else {
                     alarmRecordFragment = new WifiLockAlarmRecordFragment();
+                    Bundle bundle = new Bundle();
+                    bundle.putString(KeyConstants.WIFI_SN,wifiSn);
+                    alarmRecordFragment.setArguments(bundle);
                     fragmentTransaction.add(R.id.content, alarmRecordFragment);
                 }
                 fragmentTransaction.commit();

@@ -14,7 +14,6 @@ import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
@@ -31,14 +30,19 @@ import com.espressif.iot.esptouch.IEsptouchResult;
 import com.espressif.iot.esptouch.IEsptouchTask;
 import com.espressif.iot.esptouch.util.ByteUtil;
 import com.espressif.iot.esptouch.util.TouchNetUtil;
+import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
+import com.kaadas.lock.mvp.mvpbase.BaseActivity;
+import com.kaadas.lock.mvp.presenter.wifilock.WifiSetUpPresenter;
+import com.kaadas.lock.mvp.view.wifilock.IWifiSetUpView;
+import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.utils.GpsUtil;
+import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LoadingDialog;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.ToastUtil;
 
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -46,12 +50,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class WifiSetUpActivity extends AppCompatActivity implements View.OnClickListener {
+public class WifiSetUpActivity extends BaseActivity<IWifiSetUpView, WifiSetUpPresenter<IWifiSetUpView>>
+        implements View.OnClickListener, IWifiSetUpView {
     private static final String TAG = WifiSetUpActivity.class.getSimpleName();
 
     private static final int REQUEST_PERMISSION = 0x01;
-
-    private static final int MENU_ITEM_ABOUT = 0;
     @BindView(R.id.back)
     ImageView back;
     @BindView(R.id.head_title)
@@ -72,6 +75,7 @@ public class WifiSetUpActivity extends AppCompatActivity implements View.OnClick
     private Button mConfirmBtn;
 
     private EsptouchAsyncTask4 mTask;
+    public String sSsid;
 
     private boolean mReceiverRegistered = false;
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
@@ -97,6 +101,8 @@ public class WifiSetUpActivity extends AppCompatActivity implements View.OnClick
     private boolean mDestroyed = false;
     private String wifiBssid;
     private boolean passwordHide = true;
+    public String adminPassword;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,6 +114,9 @@ public class WifiSetUpActivity extends AppCompatActivity implements View.OnClick
         mConfirmBtn = findViewById(R.id.confirm_btn);
         mConfirmBtn.setEnabled(false);
         mConfirmBtn.setOnClickListener(this);
+
+        adminPassword = getIntent().getStringExtra(KeyConstants.WIFI_LOCK_ADMIN_PASSWORD);
+        LogUtils.e("输入的管理员密码是    " + adminPassword);
 
 
         if (isSDKAtLeastP()) {
@@ -145,6 +154,14 @@ public class WifiSetUpActivity extends AppCompatActivity implements View.OnClick
         if (mReceiverRegistered) {
             unregisterReceiver(mReceiver);
         }
+        if (mTask != null) {
+            mTask.cancelEsptouch();
+        }
+    }
+
+    @Override
+    protected WifiSetUpPresenter<IWifiSetUpView> createPresent() {
+        return new WifiSetUpPresenter<>();
     }
 
 
@@ -191,7 +208,6 @@ public class WifiSetUpActivity extends AppCompatActivity implements View.OnClick
             mApSsidTV.setTag(ssidOriginalData);
             wifiBssid = info.getBSSID();
             mConfirmBtn.setEnabled(true);
-
         }
     }
 
@@ -203,20 +219,16 @@ public class WifiSetUpActivity extends AppCompatActivity implements View.OnClick
         }
     }
 
-    @OnClick({R.id.confirm_btn, R.id.tv_support_list,R.id.iv_eye,R.id.back})
+    @OnClick({R.id.confirm_btn, R.id.tv_support_list, R.id.iv_eye, R.id.back})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.confirm_btn:
-                String sSsid = mApSsidTV.getText().toString();
+                sSsid = mApSsidTV.getText().toString();
                 String sPassword = mApPasswordET.getText().toString();
                 if (TextUtils.isEmpty(sSsid)) { //WiFi名为空
                     ToastUtil.getInstance().showLong(R.string.wifi_name_disable_empty);
                     return;
                 }
-//                if (TextUtils.isEmpty(sPassword)){ //密码为空
-//                    ToastUtil.getInstance().showLong(R.string.wifi_name_disable_empty);
-//                    return;
-//                }
                 byte[] ssid = ByteUtil.getBytesByString(sSsid);
                 byte[] password = ByteUtil.getBytesByString(sPassword);
                 byte[] bssid = TouchNetUtil.parseBssid2bytes(wifiBssid);
@@ -226,26 +238,33 @@ public class WifiSetUpActivity extends AppCompatActivity implements View.OnClick
                 if (mTask != null) {
                     mTask.cancelEsptouch();
                 }
-                mTask = new EsptouchAsyncTask4(this);
+                mTask = new EsptouchAsyncTask4(this, new ISetUpResult() {
+                    @Override
+                    public void onSetUpFailed() {
+                        startActivity(new Intent(WifiSetUpActivity.this, AddWifiLockFailedActivity.class));
+                        ToastUtil.getInstance().showLong(R.string.wifi_model_set_up_failed);
+                    }
+
+                    @Override
+                    public void onSetUpSuccess(String hostAddress) {
+                        ToastUtil.getInstance().showLong(R.string.set_up_success);
+                        mPresenter.connectSocket(hostAddress, adminPassword, sSsid);
+                    }
+                });
                 mTask.execute(ssid, bssid, password, deviceCount, broadcast);
                 break;
             case R.id.tv_support_list:
                 //跳转查看支持WiFi列表
-                startActivity(new Intent(WifiSetUpActivity.this,SupportWifiActivity.class));
+                startActivity(new Intent(WifiSetUpActivity.this, SupportWifiActivity.class));
                 break;
             case R.id.iv_eye:
                 passwordHide = !passwordHide;
                 if (passwordHide) {
                     apPasswordEdit.setTransformationMethod(PasswordTransformationMethod.getInstance());
-                    /* etPassword.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);*/
                     apPasswordEdit.setSelection(apPasswordEdit.getText().toString().length());//将光标移至文字末尾
-//                    ivPasswordStatus.setImageResource(R.mipmap.eye_close_has_color);
                 } else {
-                    //默认状态显示密码--设置文本 要一起写才能起作用 InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD
-                    //etPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
                     apPasswordEdit.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
                     apPasswordEdit.setSelection(apPasswordEdit.getText().toString().length());//将光标移至文字末尾
-//                    ivPasswordStatus.setImageResource(R.mipmap.eye_open_has_color);
                 }
                 break;
             case R.id.back:
@@ -253,6 +272,70 @@ public class WifiSetUpActivity extends AppCompatActivity implements View.OnClick
                 break;
         }
     }
+
+    @Override
+    public void connectFailed(Throwable throwable) {
+        hiddenLoading();
+        ToastUtil.getInstance().showLong(R.string.bind_failed);
+    }
+
+    @Override
+    public void startConnect() {
+        showLoading(getString(R.string.is_swap_data));
+    }
+
+    @Override
+    public void readSuccess(String sn, byte[] password) {
+
+    }
+
+    @Override
+    public void readFailed(int errorCode) {
+        ToastUtil.getInstance().showLong(R.string.bind_failed);
+        hiddenLoading();
+    }
+
+    @Override
+    public void onBindSuccess(String wifiSn) {
+        hiddenLoading();
+        MyApplication.getInstance().getAllDevicesByMqtt(true);
+        ToastUtil.getInstance().showLong(R.string.wifi_lockbind_success);
+        Intent intent = new Intent(this, AddWifiLockSuccessActivity.class);
+        intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
+        startActivity(intent);
+
+    }
+
+    @Override
+    public void onBindFailed(BaseResult baseResult) {
+        ToastUtil.getInstance().showLong(R.string.bind_failed);
+        hiddenLoading();
+    }
+
+    @Override
+    public void onBindThrowable(Throwable throwable) {
+        ToastUtil.getInstance().showLong(R.string.bind_failed);
+        hiddenLoading();
+    }
+
+    @Override
+    public void onUpdateSuccess(String wifiSn) {
+        ToastUtil.getInstance().showLong(R.string.modify_success);
+        hiddenLoading();
+    }
+
+    @Override
+    public void onUpdateFailed(BaseResult baseResult) {
+        ToastUtil.getInstance().showLong(R.string.modify_failed);
+        hiddenLoading();
+    }
+
+    @Override
+    public void onUpdateThrowable(Throwable throwable) {
+        ToastUtil.getInstance().showLong(R.string.modify_failed);
+        hiddenLoading();
+    }
+
     private static class EsptouchAsyncTask4 extends AsyncTask<byte[], IEsptouchResult, List<IEsptouchResult>> {
         private WeakReference<WifiSetUpActivity> mActivity;
 
@@ -260,10 +343,12 @@ public class WifiSetUpActivity extends AppCompatActivity implements View.OnClick
         private AlertDialog mResultDialog;
         private IEsptouchTask mEsptouchTask;
         private LoadingDialog loadingDialog;
+        private ISetUpResult setUpResult;
 
-        EsptouchAsyncTask4(WifiSetUpActivity activity) {
+        EsptouchAsyncTask4(WifiSetUpActivity activity, ISetUpResult setUpResult) {
             mActivity = new WeakReference<>(activity);
             loadingDialog = LoadingDialog.getInstance(activity);
+            this.setUpResult = setUpResult;
         }
 
         void cancelEsptouch() {
@@ -293,15 +378,6 @@ public class WifiSetUpActivity extends AppCompatActivity implements View.OnClick
                 }
             });
             loadingDialog.show(mActivity.get().getString(R.string.lock_net_connect));
-//            mProgressDialog.setButton(DialogInterface.BUTTON_NEGATIVE, activity.getText(android.R.string.cancel),
-//                    (dialog, which) -> {
-//                        synchronized (mLock) {
-//                            if (mEsptouchTask != null) {
-//                                mEsptouchTask.interrupt();
-//                            }
-//                        }
-//                    });
-//            mProgressDialog.show();
         }
 
         @Override
@@ -318,20 +394,17 @@ public class WifiSetUpActivity extends AppCompatActivity implements View.OnClick
         @Override
         protected List<IEsptouchResult> doInBackground(byte[]... params) {
             WifiSetUpActivity activity = mActivity.get();
-            int taskResultCount;
             synchronized (mLock) {
                 byte[] apSsid = params[0];
                 byte[] apBssid = params[1];
                 byte[] apPassword = params[2];
-                byte[] deviceCountData = params[3];
-                byte[] broadcastData = params[4];
-                taskResultCount = 1;
                 Context context = activity.getApplicationContext();
+                LogUtils.e("  apSsid  ");
                 mEsptouchTask = new EsptouchTask(apSsid, apBssid, apPassword, context);
-                mEsptouchTask.setPackageBroadcast(broadcastData[0] == 1);
+                mEsptouchTask.setPackageBroadcast(true);  //true 广播方式
                 mEsptouchTask.setEsptouchListener(this::publishProgress);
             }
-            return mEsptouchTask.executeForResults(taskResultCount);
+            return mEsptouchTask.executeForResults(1);
         }
 
         @Override
@@ -345,6 +418,7 @@ public class WifiSetUpActivity extends AppCompatActivity implements View.OnClick
                         .setPositiveButton(android.R.string.ok, null)
                         .show();
                 mResultDialog.setCanceledOnTouchOutside(false);
+                cancelEsptouch();
                 return;
             }
 
@@ -352,29 +426,32 @@ public class WifiSetUpActivity extends AppCompatActivity implements View.OnClick
             IEsptouchResult firstResult = result.get(0);
             if (firstResult.isCancelled()) {
                 //配网被取消
+                cancelEsptouch();
                 return;
             }
-            // the task received some results including cancelled while
-            // executing before receiving enough results
-
-            //该任务收到了一些结果，包括取消了
-            //在收到足够的结果之前执行
 
             if (!firstResult.isSuc()) {
-                mResultDialog = new AlertDialog.Builder(activity)
-                        .setMessage(R.string.configure_result_failed)
-                        .setPositiveButton(android.R.string.ok, null)
-                        .show();
-                mResultDialog.setCanceledOnTouchOutside(false);
-            }else {
+                if (loadingDialog != null) {
+                    loadingDialog.dismiss();
+                }
+                ToastUtil.getInstance().showLong(R.string.set_up_failed);
+                setUpResult.onSetUpFailed();
+            } else {
                 if (loadingDialog != null) {
                     loadingDialog.dismiss();
                 }
                 String deviceBssid = firstResult.getBssid();
                 String hostAddress = firstResult.getInetAddress().getHostAddress();
-
-                LogUtils.e("配置成功   deviceBssid   " +deviceBssid+"   hostAddress   " + hostAddress );
+                LogUtils.e("配置成功   deviceBssid   " + deviceBssid + "   hostAddress   " + hostAddress);
+                setUpResult.onSetUpSuccess(hostAddress);
             }
         }
+    }
+
+    interface ISetUpResult {
+
+        void onSetUpFailed();
+
+        void onSetUpSuccess(String hostAddress);
     }
 }

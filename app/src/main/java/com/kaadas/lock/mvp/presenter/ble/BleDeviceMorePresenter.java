@@ -401,15 +401,11 @@ public class BleDeviceMorePresenter<T> extends BleCheckOTAPresenter<IDeviceMoreV
                         if (mViewRef.get() != null) {
                             mViewRef.get().readVersionSuccess(version);
                         }
-                        //                            // TODO: 2019/5/28    测试
+                        // TODO: 2019/5/28    测试
                         LogUtils.e("获取到的版本号是   " + version);
                         if (version.length() >= 9) {
                             version = version.substring(1, 9);
                         }
-//                        ToastUtil.getInstance().showLong("获取到的版本号是   " + version+"  获取到SN是  " + sn);
-//                        checkOtaInfo(sn, version);
-
-
                         String serverBleVersion = bleLockInfo.getServerLockInfo().getSoftwareVersion();
                         String deviceSN = bleLockInfo.getServerLockInfo().getDeviceSN();
                         LogUtils.e("服务器数据是  serverBleVersion " + serverBleVersion + "  deviceSN  " + deviceSN + "  本地数据是  sn " + sn + "  version " + version);

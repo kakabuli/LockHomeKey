@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -27,6 +28,7 @@ import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.NetUtil;
+import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.StringUtil;
 import com.kaadas.lock.utils.ToastUtil;
 
@@ -51,12 +53,12 @@ public class WiFiLockShareUserDetailActivity extends BaseActivity<IWiFiLockShare
     ImageView ivEditor;
     @BindView(R.id.tv_time)
     TextView tvTime;
-    BleLockInfo bleLockInfo;
     @BindView(R.id.btn_delete)
     Button btnDelete;
     private String nickname;
     String data;
     WifiLockShareResult.WifiLockShareUser shareUser;
+    private String adminNickname;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -70,7 +72,7 @@ public class WiFiLockShareUserDetailActivity extends BaseActivity<IWiFiLockShare
         Intent intent = getIntent();
         shareUser = (WifiLockShareResult.WifiLockShareUser) intent.getSerializableExtra(KeyConstants.SHARE_USER_INFO);
         tvNumber.setText(shareUser.getUname());
-        tvName.setText(shareUser.getUnickname());
+        tvName.setText(shareUser.getUserNickname());
         long createTime = shareUser.getCreateTime();
         if (createTime == 0) {
             getAuthorizationTime();
@@ -78,6 +80,11 @@ public class WiFiLockShareUserDetailActivity extends BaseActivity<IWiFiLockShare
         }
         String time = DateUtils.secondToDate(createTime);
         tvTime.setText(time);
+
+        adminNickname = (String) SPUtils.get(SPUtils.USERNAME, "");
+        if (!TextUtils.isEmpty(adminNickname)) {
+            adminNickname = (String) SPUtils.get(SPUtils.PHONEN, "");
+        }
     }
 
     private void getAuthorizationTime() {
@@ -105,11 +112,8 @@ public class WiFiLockShareUserDetailActivity extends BaseActivity<IWiFiLockShare
 
                         @Override
                         public void right() {
-                            String uid = MyApplication.getInstance().getUid();
-                            if (bleLockInfo == null) {
-                                return;
-                            }
-                            mPresenter.deleteUserList(shareUser.get_id());
+                            showLoading(getString(R.string.is_deleting));
+                            mPresenter.deleteUserList(shareUser.get_id(),adminNickname);
                         }
                     });
                 } else {
@@ -125,9 +129,9 @@ public class WiFiLockShareUserDetailActivity extends BaseActivity<IWiFiLockShare
                 TextView tv_query = mView.findViewById(R.id.tv_right);
                 AlertDialog alertDialog = AlertDialogUtil.getInstance().common(this, mView);
                 tvTitle.setText(getString(R.string.input_user_name));
-                editText.setText(shareUser.getUnickname());
-                if (shareUser.getUnickname() != null) {
-                    editText.setSelection(shareUser.getUnickname().length());
+                editText.setText(shareUser.getUserNickname());
+                if (shareUser.getUserNickname() != null) {
+                    editText.setSelection(shareUser.getUserNickname().length());
                 }
                 tv_cancel.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -143,15 +147,11 @@ public class WiFiLockShareUserDetailActivity extends BaseActivity<IWiFiLockShare
                             ToastUtil.getInstance().showShort(R.string.nickname_verify_error);
                             return;
                         }
-                        if (shareUser.getUnickname().equals(data)) {
+                        if (!TextUtils.isEmpty(shareUser.getUserNickname()) && shareUser.getUserNickname().equals(data)) {
                             ToastUtil.getInstance().showShort(getString(R.string.user_nickname_no_update));
                             return;
                         }
-                        String uid = MyApplication.getInstance().getUid();
-                        if (bleLockInfo == null) {
-                            return;
-                        }
-
+                        showLoading(getString(R.string.is_modifing));
                         mPresenter.modifyCommonUserNickname(shareUser.get_id(), data);
                         alertDialog.dismiss();
                     }
@@ -171,28 +171,33 @@ public class WiFiLockShareUserDetailActivity extends BaseActivity<IWiFiLockShare
     @Override
     public void deleteCommonUserListFail(BaseResult baseResult) {
         ToastUtil.getInstance().showShort(HttpUtils.httpErrorCode(this, baseResult.getCode()));
+        hiddenLoading();
     }
 
     @Override
     public void deleteCommonUserListError(Throwable throwable) {
         ToastUtil.getInstance().showShort(HttpUtils.httpProtocolErrorCode(this, throwable));
+        hiddenLoading();
     }
 
     @Override
     public void modifyCommonUserNicknameSuccess(BaseResult baseResult) {
         nickname = data;
         tvName.setText(nickname);
-        shareUser.setUnickname(nickname);
+        shareUser.setUserNickname(nickname);
         ToastUtil.getInstance().showShort(R.string.modify_user_nickname_success);
+        hiddenLoading();
     }
 
     @Override
     public void modifyCommonUserNicknameFail(BaseResult baseResult) {
         ToastUtil.getInstance().showShort(HttpUtils.httpErrorCode(this, baseResult.getCode()));
+        hiddenLoading();
     }
 
     @Override
     public void modifyCommonUserNicknameError(Throwable throwable) {
         ToastUtil.getInstance().showShort(HttpUtils.httpProtocolErrorCode(this, throwable));
+        hiddenLoading();
     }
 }

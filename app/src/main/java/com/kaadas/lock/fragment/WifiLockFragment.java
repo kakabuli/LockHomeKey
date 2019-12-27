@@ -5,7 +5,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,16 +15,24 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
-import com.kaadas.lock.bean.BluetoothItemRecordBean;
-import com.kaadas.lock.bean.BluetoothRecordBean;
+import com.kaadas.lock.activity.device.wifilock.WifiLockRecordActivity;
+import com.kaadas.lock.adapter.WifiLockOperationGroupRecordAdapter;
+import com.kaadas.lock.bean.WifiLockOperationRecordGroup;
 import com.kaadas.lock.mvp.mvpbase.BaseFragment;
 import com.kaadas.lock.mvp.presenter.wifilock.WifiLockPresenter;
 import com.kaadas.lock.mvp.view.wifilock.IWifiLockView;
-import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.SelectOpenLockResultBean;
+import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
+import com.kaadas.lock.publiclibrary.bean.WifiLockOperationRecord;
+import com.kaadas.lock.publiclibrary.http.result.BaseResult;
+import com.kaadas.lock.publiclibrary.mqtt.eventbean.WifiLockOperationBean;
 import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.SPUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +44,6 @@ public class WifiLockFragment extends BaseFragment<IWifiLockView, WifiLockPresen
         implements View.OnClickListener, IWifiLockView, View.OnLongClickListener {
 
 
-    List<BluetoothRecordBean> mOpenLockList = new ArrayList<>();
     @BindView(R.id.iv_external_big)
     ImageView ivBackGround; //背景图片
     @BindView(R.id.iv_inner_small)
@@ -57,17 +66,17 @@ public class WifiLockFragment extends BaseFragment<IWifiLockView, WifiLockPresen
     TextView tvNoData;
     @BindView(R.id.create_time)
     TextView createTime;
-    @BindView(R.id.tv_device_status)
-    TextView tvDeviceStatus;
     @BindView(R.id.iv_device_dynamic)
     ImageView ivDeviceDynamic;
-    @BindView(R.id.rl_device_dynamic)
-    RelativeLayout rlDeviceDynamic;
     @BindView(R.id.tv_update_time)
     TextView tvUpdateTime;
+    @BindView(R.id.tv_open_lock_times)
+    TextView tvOpenLockTimes;
 
-    private HomePageFragment.ISelectChangeListener iSelectChangeListener;
-    private int statusFlag = 0;
+    private WifiLockInfo wifiLockInfo;
+
+    private List<WifiLockOperationRecordGroup> showDatas = new ArrayList<>();
+    private WifiLockOperationGroupRecordAdapter operationGroupRecordAdapter;
     private Handler handler = new Handler();
 
     @Nullable
@@ -75,9 +84,10 @@ public class WifiLockFragment extends BaseFragment<IWifiLockView, WifiLockPresen
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_wifi_lock_layout, null);
         ButterKnife.bind(this, view);
-        initListener();
+        initRecycleView();
+        wifiLockInfo = (WifiLockInfo) getArguments().getSerializable(KeyConstants.WIFI_LOCK_INFO);
+        wifiLockInfo = MyApplication.getInstance().getWifiLockInfoBySn(wifiLockInfo.getWifiSN());
         initData();
-        LogUtils.e("fragment onCreateView");
         return view;
     }
 
@@ -88,37 +98,84 @@ public class WifiLockFragment extends BaseFragment<IWifiLockView, WifiLockPresen
     }
 
     private void initData() {
+        //获取缓存数据并显示
+        String localRecord = (String) SPUtils.get(KeyConstants.WIFI_LOCK_OPERATION_RECORD + wifiLockInfo.getWifiSN(), "");
+        Gson gson = new Gson();
+        List<WifiLockOperationRecord> records = gson.fromJson(localRecord, new TypeToken<List<WifiLockOperationRecord>>() {
+        }.getType());
+        groupData(records);
+        mPresenter.getOperationRecord(wifiLockInfo.getWifiSN());
+        //WiFi信息并展示
+        int count = (int) SPUtils.get(KeyConstants.WIFI_LOCK_OPEN_COUNT + wifiLockInfo.getWifiSN(), 0);
+        tvOpenLockTimes.setText("" + count);
+
+        int safeMode = wifiLockInfo.getSafeMode();  //安全模式
+        int operatingMode = wifiLockInfo.getOperatingMode(); //反锁模式
+        int defences = wifiLockInfo.getDefences();  //布防模式
+
+        changeLockStatus(5);
+        if (safeMode == 1) {//安全模式
+            changeLockStatus(6);
+        }
+        if (operatingMode == 1) {//反锁模式
+            changeLockStatus(3);
+        }
+        if (defences == 1) {//布防模式
+            changeLockStatus(2);
+        }
+
+
+        long createTime2 = wifiLockInfo.getCreateTime();
+
+        if (createTime2 == 0) {
+            createTime.setText("0");
+        } else {
+            long currentTimeMillis = System.currentTimeMillis();
+            long day = ((currentTimeMillis / 1000) - createTime2) / (60 * 24 * 60);
+            createTime.setText(day + "");
+        }
+    }
+
+    private void groupData(List<WifiLockOperationRecord> lockRecords) {
+        showDatas.clear();
+        if (lockRecords != null) {
+            String lastTimeHead = "";
+            for (int i = 0; i < lockRecords.size(); i++) {
+                WifiLockOperationRecord record = lockRecords.get(i);
+                //获取开锁时间的毫秒数
+                long openTime = record.getTime();
+                String sOpenTime = DateUtils.getDateTimeFromMillisecond(openTime);
+                String timeHead = sOpenTime.substring(0, 10);
+                if (!timeHead.equals(lastTimeHead)) { //添加头
+                    lastTimeHead = timeHead;
+                    List<WifiLockOperationRecord> itemList = new ArrayList<>();
+                    itemList.add(record);
+                    showDatas.add(new WifiLockOperationRecordGroup(timeHead, itemList));
+                } else {
+                    WifiLockOperationRecordGroup operationRecordGroup = showDatas.get(showDatas.size() - 1);
+                    List<WifiLockOperationRecord> bluetoothItemRecordBeanList = operationRecordGroup.getList();
+                    bluetoothItemRecordBeanList.add(record);
+                }
+            }
+        }
+
+        if (showDatas.size() > 0) {
+            changePage(true);
+        } else {
+            changePage(false);
+        }
+        operationGroupRecordAdapter.notifyDataSetChanged();
+    }
+
+    private void initRecycleView() {
+        operationGroupRecordAdapter = new WifiLockOperationGroupRecordAdapter(showDatas);
+        recycleview.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recycleview.setAdapter(operationGroupRecordAdapter);
+        ivDeviceDynamic.setOnClickListener(this);
+        tvMore.setOnClickListener(this);
 
     }
 
-    private void initListener() {
-
-    }
-
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        LogUtils.e("fragment onStart");
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        LogUtils.e("fragment OnResume");
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        LogUtils.e("fragment onPause");
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        LogUtils.e("fragment onStop");
-    }
 
     @Override
     public void onDestroyView() {
@@ -131,7 +188,13 @@ public class WifiLockFragment extends BaseFragment<IWifiLockView, WifiLockPresen
             return;
         }
         //设置时间
-        tvUpdateTime.setText("时间");
+        long updateTime = wifiLockInfo.getUpdateTime();
+        if (updateTime == 0) {
+            tvUpdateTime.setText("");
+        } else {
+            tvUpdateTime.setText("" + DateUtils.secondToDate2(updateTime));
+        }
+
 
         switch (status) {
             case 1: //离线状态
@@ -145,35 +208,35 @@ public class WifiLockFragment extends BaseFragment<IWifiLockView, WifiLockPresen
                 ivBackGround.setImageResource(R.mipmap.bluetooth_bu_fang_big_middle_icon);  //背景大图标
                 ivCenterIcon.setImageResource(R.mipmap.bluetooth_lock_safe_inner_midder_icon);  //门锁关闭状态
                 ivTopIcon.setVisibility(View.VISIBLE); //上方图标显示
-                tvTopStates.setText("已启动布防模式");  //设置设备状态   离线
+                tvTopStates.setText(getString(R.string.already_open_alarm));  //设置设备状态   离线
                 break;
             case 3:
                 //“已反锁，请门内开锁”
                 ivBackGround.setImageResource(R.mipmap.bluetooth_double_lock_big_middle_icon);  //背景大图标
                 ivCenterIcon.setImageResource(R.mipmap.bluetooth_lock_safe_inner_midder_icon);  //门锁关闭状态
                 ivTopIcon.setVisibility(View.VISIBLE); //上方图标显示
-                tvTopStates.setText("已反锁，请门内开锁");  //设置设备状态   离线
+                tvTopStates.setText(getString(R.string.already_back_lock));  //设置设备状态   离线
                 break;
             case 4:
                 //“锁已打开”
                 ivBackGround.setImageResource(R.mipmap.bluetooth_lock_close_big_middle_icon);  //背景大图标
                 ivCenterIcon.setImageResource(R.mipmap.bluetooth_open_lock_success_niner_middle_icon);  //门锁关闭状态
                 ivTopIcon.setVisibility(View.VISIBLE); //上方图标显示
-                tvTopStates.setText("门已开锁");  //设置设备状态   离线
+                tvTopStates.setText(getString(R.string.open_lock_already));  //设置设备状态   离线
                 break;
             case 5:
-                //门已上锁
+                //门已上锁  正常模式
                 ivBackGround.setImageResource(R.mipmap.bluetooth_lock_close_big_middle_icon);  //背景大图标
                 ivCenterIcon.setImageResource(R.mipmap.bluetooth_open_lock_success_niner_middle_icon);  //门锁关闭状态
                 ivTopIcon.setVisibility(View.VISIBLE); //上方图标显示
-                tvTopStates.setText("门已上锁");  //设置设备状态   离线
+                tvTopStates.setText(getString(R.string.lock_lock_already));  //设置设备状态   离线
                 break;
             case 6:
                 //已启动安全模式
                 ivBackGround.setImageResource(R.mipmap.wifi_lock_safe_bg);  //背景大图标
                 ivCenterIcon.setImageResource(R.mipmap.bluetooth_lock_safe_inner_midder_icon);  //门锁关闭状态
                 ivTopIcon.setVisibility(View.VISIBLE); //上方图标显示
-                tvTopStates.setText("已启动安全模式");  //设置设备状态   离线
+                tvTopStates.setText(getString(R.string.already_safe_model_open));  //设置设备状态   离线
                 break;
         }
     }
@@ -193,95 +256,79 @@ public class WifiLockFragment extends BaseFragment<IWifiLockView, WifiLockPresen
 
     @Override
     public void onClick(View v) {
-        Intent intent;
         switch (v.getId()) {
             case R.id.rl_device_dynamic:
             case R.id.iv_device_dynamic:
             case R.id.tv_more:
                 //  跳转至记录界面
+                Intent intent = new Intent(getContext(), WifiLockRecordActivity.class);
+                intent.putExtra(KeyConstants.WIFI_SN, wifiLockInfo.getWifiSN());
+                startActivity(intent);
                 break;
-
         }
     }
 
-    private void groupData(List<SelectOpenLockResultBean.DataBean> mOpenLockRecordList) {
-        mOpenLockList.clear();
-        String lastDayTime = "";
-        for (int i = 0; i < mOpenLockRecordList.size(); i++) {
-
-            SelectOpenLockResultBean.DataBean dataBean = mOpenLockRecordList.get(i);
-            //获取开锁时间的毫秒数
-            long openTime = Long.parseLong(dataBean.getOpen_time()); //开锁毫秒时间
-
-            List<BluetoothItemRecordBean> itemList = new ArrayList<>();
-
-            String open_time = DateUtils.getDateTimeFromMillisecond(openTime);//将毫秒时间转换成功年月日时分秒的格式
-            String timeHead = open_time.substring(0, 10);
-            String hourSecond = open_time.substring(11, 16);
-
-            String titleTime = "";
-            String name = "";
-            String openType = "";
-            switch (dataBean.getOpen_type()) {
-                case "0":
-                    openType = getString(R.string.keypad_open_lock);
-                    break;
-                case "1":
-                    openType = getString(R.string.rf_open_lock);
-                    break;
-                case "2":
-                    openType = getString(R.string.manual_open_lock);
-                    break;
-                case "3":
-                    openType = getString(R.string.rfid_open_lock);
-                    break;
-                case "4":
-                    openType = getString(R.string.fingerprint_open_lock);
-                    break;
-                case "255":
-                    openType = getString(R.string.indeterminate);
-                    break;
-            }
-
-
-            if (!timeHead.equals(lastDayTime)) { //添加头
-                lastDayTime = timeHead;
-                titleTime = DateUtils.getDayTimeFromMillisecond(openTime); //转换成功顶部的时间
-                itemList.add(new BluetoothItemRecordBean(name, openType, KeyConstants.BLUETOOTH_RECORD_COMMON,
-                        hourSecond, false, false));
-                mOpenLockList.add(new BluetoothRecordBean(titleTime, itemList, false));
-            } else {
-                BluetoothRecordBean bluetoothRecordBean = mOpenLockList.get(mOpenLockList.size() - 1);
-                List<BluetoothItemRecordBean> bluetoothItemRecordBeanList = bluetoothRecordBean.getList();
-                bluetoothItemRecordBeanList.add(new BluetoothItemRecordBean(name, openType, KeyConstants.BLUETOOTH_RECORD_COMMON,
-                        hourSecond, false, false));
-            }
-
-        }
-
-        for (int i = 0; i < mOpenLockList.size(); i++) {
-            BluetoothRecordBean bluetoothRecordBean = mOpenLockList.get(i);
-            List<BluetoothItemRecordBean> bluetoothRecordBeanList = bluetoothRecordBean.getList();
-
-            for (int j = 0; j < bluetoothRecordBeanList.size(); j++) {
-                BluetoothItemRecordBean bluetoothItemRecordBean = bluetoothRecordBeanList.get(j);
-
-                if (j == 0) {
-                    bluetoothItemRecordBean.setFirstData(true);
-                }
-                if (j == bluetoothRecordBeanList.size() - 1) {
-                    bluetoothItemRecordBean.setLastData(true);
-                }
-
-            }
-            if (i == mOpenLockList.size() - 1) {
-                bluetoothRecordBean.setLastData(true);
-            }
-        }
-    }
 
     @Override
     public boolean onLongClick(View v) {
         return false;
     }
+
+    @Override
+    public void onLoadServerRecord(List<WifiLockOperationRecord> operationRecords) {
+        groupData(operationRecords);
+    }
+
+    @Override
+    public void onLoadServerRecordFailed(Throwable throwable) {
+
+    }
+
+    @Override
+    public void onLoadServerRecordFailedServer(BaseResult result) {
+
+    }
+
+    @Override
+    public void onServerNoData() {
+
+    }
+
+    @Override
+    public void getOpenCountSuccess(int count) {
+        tvOpenLockTimes.setText("" + count);
+    }
+
+    @Override
+    public void getOpenCountFailed(BaseResult result) {
+
+    }
+
+    @Override
+    public void getOpenCountThrowable(Throwable throwable) {
+
+    }
+
+    @Override
+    public void onWifiLockOperationEvent(String wifiSn, WifiLockOperationBean.EventparamsBean eventparams) {
+        if (!TextUtils.isEmpty(wifiSn) && wifiLockInfo != null && wifiSn.equals(wifiLockInfo.getWifiSN())) {
+            if (eventparams.getEventType() == 0x01) { //操作类
+                if (eventparams.getEventCode() == 0x01) {  //上锁
+                    changeLockStatus(5);
+                    handler.removeCallbacks(initRunnable);
+                } else if (eventparams.getEventCode() == 0x02) { //开锁
+                    changeLockStatus(4);
+                    handler.removeCallbacks(initRunnable);
+                    handler.postDelayed(initRunnable, 15 * 1000);
+                }
+            }
+        }
+    }
+
+    private Runnable initRunnable = new Runnable() {
+        @Override
+        public void run() {
+            initData();
+        }
+    };
 }

@@ -9,6 +9,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.mvp.presenter.wifilock.WiFiLockShareAddUserPresenter;
@@ -43,6 +44,7 @@ public class WiFiLockAddShareUserActivity extends BaseActivity<IWiFiLockShareAdd
     @BindView(R.id.btn_confirm)
     Button btnConfirm;
     private String wifiSn;
+    private String nickName;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -53,6 +55,13 @@ public class WiFiLockAddShareUserActivity extends BaseActivity<IWiFiLockShareAdd
         tvContent.setText(getString(R.string.add_user));
         btnConfirm.setOnClickListener(this);
         wifiSn = getIntent().getStringExtra(KeyConstants.WIFI_SN);
+
+
+        nickName = (String) SPUtils.get(SPUtils.USERNAME, "");
+        if (!TextUtils.isEmpty(nickName)) {
+            nickName = (String) SPUtils.get(SPUtils.PHONEN, "");
+        }
+
     }
 
     @Override
@@ -89,7 +98,7 @@ public class WiFiLockAddShareUserActivity extends BaseActivity<IWiFiLockShareAdd
                             AlertDialogUtil.getInstance().noButtonSingleLineDialog(this, getString(R.string.input_valid_telephone_or_email));
                             return;
                         } else {
-                            mPresenter.addUser(wifiSn, "86" + phone, "86" + phone);
+                            mPresenter.addUser(wifiSn, "86" + phone, "86" + phone,nickName);
                             showLoading(getString(R.string.is_adding));
                         }
                     } else {
@@ -97,7 +106,7 @@ public class WiFiLockAddShareUserActivity extends BaseActivity<IWiFiLockShareAdd
                             AlertDialogUtil.getInstance().noButtonSingleLineDialog(this, getString(R.string.input_valid_telephone_or_email));
                             return;
                         } else {
-                            mPresenter.addUser(wifiSn, phone, phone);
+                            mPresenter.addUser(wifiSn, phone, phone,nickName);
                             showLoading(getString(R.string.is_adding));
                         }
                     }
