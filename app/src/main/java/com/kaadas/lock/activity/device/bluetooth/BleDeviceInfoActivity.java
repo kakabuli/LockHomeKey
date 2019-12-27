@@ -154,10 +154,10 @@ public class BleDeviceInfoActivity extends BaseBleCheckInfoActivity<IDeviceInfoV
             String[] split = data.split("-");
             String strModuleHardwareVersion = split[0];
             String strLockHardwareVersion = split[1];
-            tvLockSoftwareVersion.setText(strLockHardwareVersion);
-            tvBluetoothModuleVersion.setText(strModuleHardwareVersion);
+            tvLockSoftwareVersion.setText(strLockHardwareVersion.trim());
+            tvBluetoothModuleVersion.setText(strModuleHardwareVersion.trim());
         } else {
-            tvBluetoothModuleVersion.setText(data);
+            tvBluetoothModuleVersion.setText(data.trim());
         }
 
     }
@@ -172,9 +172,9 @@ public class BleDeviceInfoActivity extends BaseBleCheckInfoActivity<IDeviceInfoV
         if (data.contains("-")) {
             String[] split = data.split("-");
             String strLockHardwareVersion = split[1];
-            tvLockFirmwareVersion.setText(strLockHardwareVersion);
+            tvLockFirmwareVersion.setText(strLockHardwareVersion.trim());
         } else {
-            tvLockFirmwareVersion.setText(data);
+            tvLockFirmwareVersion.setText(data.trim());
         }
 
     }
@@ -186,7 +186,7 @@ public class BleDeviceInfoActivity extends BaseBleCheckInfoActivity<IDeviceInfoV
 
     @Override
     public void FirmwareRevDataSuccess(String data) {
-        tvDeviceModel.setText(StringUtil.getSubstringFive(data));
+        tvDeviceModel.setText(data.trim());
     }
 
     @Override
@@ -196,7 +196,7 @@ public class BleDeviceInfoActivity extends BaseBleCheckInfoActivity<IDeviceInfoV
 
     @Override
     public void SerialNumberDataSuccess(String data) {
-        tvSerialNumber.setText(data);
+        tvSerialNumber.setText(data.trim());
     }
 
     @Override
@@ -234,11 +234,11 @@ public class BleDeviceInfoActivity extends BaseBleCheckInfoActivity<IDeviceInfoV
     @Override
     public void onReadModuleVersion(int moduleNumber, String version, int otaType) {
         if (moduleNumber == 1) {
-            tv3dAlgorithm.setText(version);
+            tv3dAlgorithm.setText(version.trim());
             algorithmNumber = moduleNumber;
             algorithmOtaType = otaType;
         } else if (moduleNumber == 2) {
-            tv3dCamera.setText(version);
+            tv3dCamera.setText(version.trim());
             cameraNumber = moduleNumber;
             cameraOtaType = otaType;
         }

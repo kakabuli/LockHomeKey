@@ -452,6 +452,8 @@ public class BleLockUtils {
                 return R.mipmap.bluetooth_authorization_lock_g3560;
             } else if (model.startsWith("6113")) {
                 return R.mipmap.bluetooth_authorization_lock_6113;
+            }  else if (model.startsWith("A8")) {
+                return R.mipmap.bluetooth_authorization_lock_a8;
             } else {
                 return R.mipmap.bluetooth_authorization_lock_default;
             }
@@ -521,6 +523,8 @@ public class BleLockUtils {
                 return R.mipmap.small_g3560;
             } else if (model.startsWith("6113")) {
                 return R.mipmap.small_6113;
+            } else if (model.startsWith("A8")) {
+                return R.mipmap.small_a8;
             } else {
                 return R.mipmap.default_zigbee_lock_icon;
             }
@@ -590,6 +594,8 @@ public class BleLockUtils {
                 return R.mipmap.bluetooth_lock_g3560;
             } else if (model.startsWith("6113")) {
                 return R.mipmap.bluetooth_lock_6113;
+            } else if (model.startsWith("A8")) {
+                return R.mipmap.bluetooth_lock_a8;
             } else {
                 return R.mipmap.bluetooth_lock_default;
             }
