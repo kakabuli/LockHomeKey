@@ -322,6 +322,9 @@ public class WifiSetUpActivity extends BaseActivity<IWifiSetUpView, WifiSetUpPre
     public void onUpdateSuccess(String wifiSn) {
         ToastUtil.getInstance().showLong(R.string.modify_success);
         hiddenLoading();
+        Intent intent = new Intent(this, AddWifiLockSuccessActivity.class);
+        intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
+        startActivity(intent);
     }
 
     @Override

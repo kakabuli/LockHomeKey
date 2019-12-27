@@ -191,7 +191,7 @@ public class WifiLockOpenRecordFragment extends BaseFragment<IWifiLockOpenRecord
         //服务器没有开锁记录
         refreshLayout.finishRefresh();
         refreshLayout.setEnableLoadMore(false);  //服务器没有数据时，不让上拉加载更多
-        ToastUtil.getInstance().showShort(R.string.server_no_data);
+        ToastUtil.getInstance().showShort(R.string.server_no_data_2);
     }
 
     @Override

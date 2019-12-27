@@ -35,7 +35,7 @@ public class WifiLockPresenter<T> extends BasePresenter<IWifiLockView> {
 
     }
 
-    public void getOperationRecord(String wifiSn) {
+    public void getOperationRecord(String wifiSn,boolean isNotice) {
         XiaokaiNewServiceImp.wifiLockGetOperationList(wifiSn, 1)
                 .subscribe(new BaseObserver<GetWifiLockOperationRecordResult>() {
                     @Override
@@ -44,12 +44,12 @@ public class WifiLockPresenter<T> extends BasePresenter<IWifiLockView> {
                             List<WifiLockOperationRecord> operationRecords = operationRecordResult.getData();
                             SPUtils.put(KeyConstants.WIFI_LOCK_OPERATION_RECORD + wifiSn, new Gson().toJson(operationRecords));
                             if (mViewRef.get() != null) {
-                                mViewRef.get().onLoadServerRecord(operationRecords);
+                                mViewRef.get().onLoadServerRecord(operationRecords,isNotice);
                             }
                         } else {
                             SPUtils.put(KeyConstants.WIFI_LOCK_OPERATION_RECORD + wifiSn, "");
                             if (mViewRef.get() != null) {
-                                mViewRef.get().onServerNoData();
+                                mViewRef.get().onServerNoData(isNotice);
                                 return;
                             }
                         }
@@ -58,14 +58,14 @@ public class WifiLockPresenter<T> extends BasePresenter<IWifiLockView> {
                     @Override
                     public void onAckErrorCode(BaseResult baseResult) {
                         if (mViewRef.get() != null) {  //
-                            mViewRef.get().onLoadServerRecordFailedServer(baseResult);
+                            mViewRef.get().onLoadServerRecordFailedServer(baseResult,isNotice);
                         }
                     }
 
                     @Override
                     public void onFailed(Throwable throwable) {
                         if (mViewRef.get() != null) {
-                            mViewRef.get().onLoadServerRecordFailed(throwable);
+                            mViewRef.get().onLoadServerRecordFailed(throwable,isNotice);
                         }
                     }
 

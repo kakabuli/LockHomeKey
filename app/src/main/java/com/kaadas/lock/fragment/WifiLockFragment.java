@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -104,7 +105,7 @@ public class WifiLockFragment extends BaseFragment<IWifiLockView, WifiLockPresen
         List<WifiLockOperationRecord> records = gson.fromJson(localRecord, new TypeToken<List<WifiLockOperationRecord>>() {
         }.getType());
         groupData(records);
-        mPresenter.getOperationRecord(wifiLockInfo.getWifiSN());
+        mPresenter.getOperationRecord(wifiLockInfo.getWifiSN(),false);
         //WiFi信息并展示
         int count = (int) SPUtils.get(KeyConstants.WIFI_LOCK_OPEN_COUNT + wifiLockInfo.getWifiSN(), 0);
         tvOpenLockTimes.setText("" + count);
@@ -173,6 +174,7 @@ public class WifiLockFragment extends BaseFragment<IWifiLockView, WifiLockPresen
         recycleview.setAdapter(operationGroupRecordAdapter);
         ivDeviceDynamic.setOnClickListener(this);
         tvMore.setOnClickListener(this);
+        tvSynchronizedRecord.setOnClickListener(this);
 
     }
 
@@ -265,6 +267,10 @@ public class WifiLockFragment extends BaseFragment<IWifiLockView, WifiLockPresen
                 intent.putExtra(KeyConstants.WIFI_SN, wifiLockInfo.getWifiSN());
                 startActivity(intent);
                 break;
+            case R.id.tv_synchronized_record:
+                showLoading(getString(R.string.is_syncing));
+                mPresenter.getOperationRecord(wifiLockInfo.getWifiSN(),true);
+                break;
         }
     }
 
@@ -275,23 +281,36 @@ public class WifiLockFragment extends BaseFragment<IWifiLockView, WifiLockPresen
     }
 
     @Override
-    public void onLoadServerRecord(List<WifiLockOperationRecord> operationRecords) {
+    public void onLoadServerRecord(List<WifiLockOperationRecord> operationRecords,boolean isNotice) {
         groupData(operationRecords);
+        hiddenLoading();
+        if (isNotice){
+            Toast.makeText(getContext(),getString(R.string.sync_success),Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
-    public void onLoadServerRecordFailed(Throwable throwable) {
-
+    public void onLoadServerRecordFailed(Throwable throwable,boolean isNotice) {
+        if (isNotice){
+            Toast.makeText(getContext(),getString(R.string.sync_failed),Toast.LENGTH_SHORT).show();
+        }
+        hiddenLoading();
     }
 
     @Override
-    public void onLoadServerRecordFailedServer(BaseResult result) {
-
+    public void onLoadServerRecordFailedServer(BaseResult result,boolean isNotice) {
+        if (isNotice){
+            Toast.makeText(getContext(),getString(R.string.sync_failed),Toast.LENGTH_SHORT).show();
+        }
+        hiddenLoading();
     }
 
     @Override
-    public void onServerNoData() {
-
+    public void onServerNoData( boolean isNotice) {
+        if (isNotice){
+            Toast.makeText(getContext(),getString(R.string.no_data),Toast.LENGTH_SHORT).show();
+        }
+        hiddenLoading();
     }
 
     @Override

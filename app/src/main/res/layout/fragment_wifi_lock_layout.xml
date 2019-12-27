@@ -1,33 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@drawable/background_gradient_large_small"
-    >
+    android:background="@drawable/background_gradient_large_small">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center"
         android:gravity="center"
-        android:orientation="vertical"
-         >
+        android:orientation="vertical">
 
         <LinearLayout
-            android:paddingBottom="@dimen/dp_40"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_gravity="center"
             android:layout_weight="33"
             android:gravity="center"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/dp_40">
 
             <RelativeLayout
-                android:layout_marginTop="26dp"
                 android:id="@+id/rl_icon"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" >
+                android:layout_height="wrap_content"
+                android:layout_marginTop="26dp">
 
                 <ImageView
                     android:id="@+id/iv_external_big"
@@ -38,59 +36,60 @@
                     android:src="@mipmap/bluetooth_no_connect_big_middle_icon" />
 
                 <ImageView
-                    android:src="@mipmap/home_wifi_lock_wifi_icon"
                     android:id="@+id/iv_inner_small"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginTop="@dimen/dp_40" />
+                    android:layout_marginTop="@dimen/dp_40"
+                    android:src="@mipmap/home_wifi_lock_wifi_icon" />
 
                 <ImageView
-                    android:src="@mipmap/bluetooth_connect_fail"
                     android:id="@+id/iv_center_icon"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:layout_centerInParent="true" />
+                    android:layout_centerInParent="true"
+                    android:src="@mipmap/bluetooth_connect_fail" />
             </RelativeLayout>
 
             <TextView
-                android:gravity="center"
-                android:layout_height="18dp"
                 android:id="@+id/tv_external"
                 android:layout_width="wrap_content"
+                android:layout_height="18dp"
                 android:layout_below="@id/rl_icon"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="@dimen/dp_18"
+                android:gravity="center"
                 android:text="已启动安全模式"
                 android:textColor="#FFFFFF"
                 android:textSize="@dimen/sp_10" />
+
             <TextView
-                android:ellipsize="end"
-                android:singleLine="true"
-                android:gravity="center"
-                android:layout_marginTop="@dimen/dp_10"
                 android:id="@+id/tv_update_time"
-                android:textSize="10sp"
-                android:textColor="#FFFFFF"
-                android:text="2019.10.28  13:05:56"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_10"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:singleLine="true"
+                android:text="2019.10.28  13:05:56"
+                android:textColor="#FFFFFF"
+                android:textSize="10sp" />
 
         </LinearLayout>
 
         <LinearLayout
-            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="20"
-            android:background="#F2F2F2">
+            android:background="#F2F2F2"
+            android:orientation="vertical">
 
 
             <RelativeLayout
-                android:layout_marginTop="50dp"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dp_44"
                 android:layout_marginLeft="@dimen/dp_15"
+                android:layout_marginTop="50dp"
                 android:layout_marginRight="@dimen/dp_15"
                 android:background="@drawable/retangle_fff_4">
 
@@ -128,9 +127,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginTop="@dimen/dp_18"
-                    android:visibility="gone"
+                    android:focusable="true"
                     android:focusableInTouchMode="true"
-                    android:focusable="true">
+                    android:visibility="gone">
 
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/recycleview"
@@ -157,26 +156,25 @@
                     android:layout_centerInParent="true"
                     android:text="@string/no_door_record_please_synchronized"
                     android:textColor="#999999"
-                    android:textSize="@dimen/sp_12"
-                     />
+                    android:textSize="@dimen/sp_12" />
             </RelativeLayout>
         </LinearLayout>
     </LinearLayout>
 
     <LinearLayout
 
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_80"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/retangle_fff_4"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.64"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_80"
-        android:layout_marginRight="15dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
-        android:background="@drawable/retangle_fff_4" >
+        app:layout_constraintVertical_bias="0.64">
 
         <RelativeLayout
             android:layout_width="0dp"
@@ -193,14 +191,14 @@
                 android:textSize="@dimen/sp_12" />
 
             <TextView
-                android:text="0"
                 android:id="@+id/create_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:textColor="#1F96F7"
-                android:singleLine="true"
                 android:ellipsize="end"
+                android:singleLine="true"
+                android:text="0"
+                android:textColor="#1F96F7"
                 android:textSize="20sp" />
 
             <TextView
@@ -215,10 +213,11 @@
         </RelativeLayout>
 
         <View
-            android:layout_marginVertical="@dimen/dp_13"
-            android:background="#DCDCDC"
             android:layout_width="1dp"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:layout_marginVertical="@dimen/dp_13"
+            android:background="#DCDCDC" />
+
         <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -234,14 +233,14 @@
                 android:textSize="@dimen/sp_12" />
 
             <TextView
-                android:text="0"
                 android:id="@+id/tv_open_lock_times"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:textColor="#1F96F7"
-                android:singleLine="true"
                 android:ellipsize="end"
+                android:singleLine="true"
+                android:text="0"
+                android:textColor="#1F96F7"
                 android:textSize="20sp" />
 
             <TextView
@@ -255,11 +254,11 @@
                 android:textSize="@dimen/sp_12" />
 
             <ImageView
-                android:layout_centerVertical="true"
-                android:layout_alignParentRight="true"
                 android:id="@+id/iv_device_dynamic"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
                 android:layout_gravity="center_vertical"
                 android:padding="@dimen/dp_20"
                 android:src="@mipmap/right" />

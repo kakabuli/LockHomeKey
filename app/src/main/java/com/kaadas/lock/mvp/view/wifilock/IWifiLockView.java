@@ -12,22 +12,22 @@ public interface IWifiLockView extends IBaseView {
     /**
      * 从服务器获取开锁记录   page 请求的是第几页数据
      */
-    void onLoadServerRecord(List<WifiLockOperationRecord> alarmRecords );
+    void onLoadServerRecord(List<WifiLockOperationRecord> alarmRecords,boolean isNotice );
 
     /**
      * 从服务器获取开锁记录失败
      */
-    void onLoadServerRecordFailed(Throwable throwable);
+    void onLoadServerRecordFailed(Throwable throwable,boolean isNotice);
 
     /**
      * 从服务器获取开锁记录失败 服务器返回错误码
      */
-    void onLoadServerRecordFailedServer(BaseResult result);
+    void onLoadServerRecordFailedServer(BaseResult result,boolean isNotice);
 
     /**
      * 服务器没有数据   如果page
      */
-    void onServerNoData();
+    void onServerNoData(boolean isNotice);
 
 
     /**
