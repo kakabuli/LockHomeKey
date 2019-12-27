@@ -124,7 +124,7 @@ public class PersonalDataPresenter<T> extends BasePresenter<IPersonalDataView> {
 
             @Override
             public void onAckErrorCode(BaseResult baseResult) {
-                if (mViewRef.get() != null) {
+                if (isSafe()) {
                     LogUtils.d(" 图片上传失败" + baseResult.toString());
                     mViewRef.get().photoUploadFail(baseResult);
                 }
@@ -133,7 +133,7 @@ public class PersonalDataPresenter<T> extends BasePresenter<IPersonalDataView> {
             @Override
             public void onFailed(Throwable throwable) {
                 LogUtils.d(" 图片上传异常 " + throwable.toString());
-                if (mViewRef.get() != null) {
+                if (isSafe()) {
                     mViewRef.get().photoUploadError(throwable);
                 }
 

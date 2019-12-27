@@ -75,21 +75,21 @@ public class BleDeviceMorePresenter<T> extends BleCheckOTAPresenter<IDeviceMoreV
                         BleLockServiceInfoDao bleLockServiceInfoDao = daoSession.getBleLockServiceInfoDao();
                         bleLockServiceInfoDao.queryBuilder().where(BleLockServiceInfoDao.Properties.LockName.eq(bleLockInfo.getServerLockInfo().getLockName())).buildDelete().executeDeleteWithoutDetachingEntities();
                         // 做完所有操作再跳转界面
-                        if (mViewRef.get() != null) {
+                        if (isSafe()) {
                             mViewRef.get().onDeleteDeviceSuccess();
                         }
                     }
 
                     @Override
                     public void onAckErrorCode(BaseResult baseResult) {
-                        if (mViewRef.get() != null) {
+                        if (isSafe()) {
                             mViewRef.get().onDeleteDeviceFailedServer(baseResult);
                         }
                     }
 
                     @Override
                     public void onFailed(Throwable throwable) {
-                        if (mViewRef.get() != null) {
+                        if (isSafe()) {
                             mViewRef.get().onDeleteDeviceFailed(throwable);
                         }
                     }
@@ -155,14 +155,14 @@ public class BleDeviceMorePresenter<T> extends BleCheckOTAPresenter<IDeviceMoreV
                         String lockTime = DateUtils.getDateTimeFromMillisecond(openTimes * 1000);//要上传的开锁时间
                         LogUtils.e("锁上时间为    " + lockTime);
                         toDisposable(getDeviceInfoDisposable);
-                        if (mViewRef.get() != null) {
+                        if (isSafe()) {
                             mViewRef.get().getVoice(voice);
                         }
                         byte[] bytes = Rsa.byteToBit(deValue[4]);
                         int openLock = bytes[0];
 //                        0：手动 1：自动
                         boolean isOpen = openLock == 1 ? true : false;
-                        if (mViewRef.get() != null) {
+                        if (isSafe()) {
                             mViewRef.get().getAutoLock(isOpen);
                         }
                         //如果获取锁信息成功，那么直接获取开锁次数
@@ -180,7 +180,7 @@ public class BleDeviceMorePresenter<T> extends BleCheckOTAPresenter<IDeviceMoreV
         XiaokaiNewServiceImp.modifyLockNick(devname, user_id, lockNickName).subscribe(new BaseObserver<BaseResult>() {
             @Override
             public void onSuccess(BaseResult baseResult) {
-                if (mViewRef.get() != null) {
+                if (isSafe()) {
                     mViewRef.get().modifyDeviceNicknameSuccess();
                 }
                 bleLockInfo.getServerLockInfo().setLockNickName(lockNickName);
@@ -190,14 +190,14 @@ public class BleDeviceMorePresenter<T> extends BleCheckOTAPresenter<IDeviceMoreV
 
             @Override
             public void onAckErrorCode(BaseResult baseResult) {
-                if (mViewRef.get() != null) {
+                if (isSafe()) {
                     mViewRef.get().modifyDeviceNicknameFail(baseResult);
                 }
             }
 
             @Override
             public void onFailed(Throwable throwable) {
-                if (mViewRef.get() != null) {
+                if (isSafe()) {
                     mViewRef.get().modifyDeviceNicknameError(throwable);
                 }
             }
@@ -237,11 +237,11 @@ public class BleDeviceMorePresenter<T> extends BleCheckOTAPresenter<IDeviceMoreV
                     public void accept(BleDataBean bleDataBean) throws Exception {
                         if (bleDataBean.isConfirm()) { //设置成功
                             if (bleDataBean.getPayload()[0] == 0) {
-                                if (mViewRef.get() != null) {
+                                if (isSafe()) {
                                     mViewRef.get().setVoiceSuccess(voice);
                                 }
                             } else {  //设置失败
-                                if (mViewRef.get() != null) {
+                                if (isSafe()) {
                                     mViewRef.get().setVoiceFailed(new BleProtocolFailedException(0xff & bleDataBean.getPayload()[0]), voice);
                                 }
                             }
@@ -251,7 +251,7 @@ public class BleDeviceMorePresenter<T> extends BleCheckOTAPresenter<IDeviceMoreV
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        if (mViewRef.get() != null) {
+                        if (isSafe()) {
                             mViewRef.get().setVoiceFailed(throwable, voice);
                         }
                     }
@@ -295,11 +295,11 @@ public class BleDeviceMorePresenter<T> extends BleCheckOTAPresenter<IDeviceMoreV
                         0xFF	锁接收到命令，但无结果返回*/
                         if (bleDataBean.getOriginalData()[0] == 0) {
                             if (0 == b) {
-                                if (mViewRef.get() != null) {
+                                if (isSafe()) {
                                     mViewRef.get().setAutoLockSuccess(isOpen);
                                 }
                             } else {
-                                if (mViewRef.get() != null) {
+                                if (isSafe()) {
                                     mViewRef.get().setAutoLockFailed(b);
                                 }
                             }
@@ -309,7 +309,7 @@ public class BleDeviceMorePresenter<T> extends BleCheckOTAPresenter<IDeviceMoreV
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        if (mViewRef.get() != null) {
+                        if (isSafe()) {
                             mViewRef.get().setAutoLockError(throwable);
                         }
                     }
@@ -344,7 +344,7 @@ public class BleDeviceMorePresenter<T> extends BleCheckOTAPresenter<IDeviceMoreV
                     public void accept(ReadInfoBean readInfoBean) throws Exception {
                         LogUtils.e("读取SerialNumber成功 " + readInfoBean.data);  //进行下一步
                         bleLockInfo.setSerialNumber((String) readInfoBean.data);
-                        if (mViewRef.get() != null) {
+                        if (isSafe()) {
                             mViewRef.get().readSnSuccess((String) readInfoBean.data);
                         }
                         toDisposable(readSerialNumberDisposable);
@@ -354,7 +354,7 @@ public class BleDeviceMorePresenter<T> extends BleCheckOTAPresenter<IDeviceMoreV
                     @Override
                     public void accept(Throwable throwable) throws Exception {
                         LogUtils.e(" 读取SerialNumber失败  " + (throwable instanceof TimeOutException) + "   " + throwable.getMessage());
-                        if (mViewRef.get() != null) {
+                        if (isSafe()) {
                             mViewRef.get().readInfoFailed(throwable);
                         }
                     }
@@ -398,7 +398,7 @@ public class BleDeviceMorePresenter<T> extends BleCheckOTAPresenter<IDeviceMoreV
                             }
                         }
                         toDisposable(readSoftwareRevDisposable);
-                        if (mViewRef.get() != null) {
+                        if (isSafe()) {
                             mViewRef.get().readVersionSuccess(version);
                         }
                         // TODO: 2019/5/28    测试
@@ -410,7 +410,7 @@ public class BleDeviceMorePresenter<T> extends BleCheckOTAPresenter<IDeviceMoreV
                         String deviceSN = bleLockInfo.getServerLockInfo().getDeviceSN();
                         LogUtils.e("服务器数据是  serverBleVersion " + serverBleVersion + "  deviceSN  " + deviceSN + "  本地数据是  sn " + sn + "  version " + version);
                         if (version.equals(serverBleVersion) && sn.equals(deviceSN)) {
-                            checkOTAInfo(sn, version,1);
+                            checkOTAInfo(sn, version, 1);
                         } else {
                             uploadBleSoftware(sn, version);
                         }
@@ -419,7 +419,7 @@ public class BleDeviceMorePresenter<T> extends BleCheckOTAPresenter<IDeviceMoreV
                     @Override
                     public void accept(Throwable throwable) throws Exception {
                         LogUtils.e(" 读取SoftwareRev失败  " + (throwable instanceof TimeOutException) + "   " + throwable.getMessage());
-                        if (mViewRef.get() != null) {
+                        if (isSafe()) {
                             mViewRef.get().readInfoFailed(throwable);
                         }
                     }
@@ -436,20 +436,20 @@ public class BleDeviceMorePresenter<T> extends BleCheckOTAPresenter<IDeviceMoreV
             @Override
             public void onSuccess(BaseResult baseResult) {
                 LogUtils.e("上传蓝牙信息成功");
-                checkOTAInfo(sn, version,1);
+                checkOTAInfo(sn, version, 1);
             }
 
             @Override
             public void onAckErrorCode(BaseResult baseResult) {
                 LogUtils.e(" 上传蓝牙软件信息失败  " + baseResult.getCode());
-                if (mViewRef.get() != null) {
+                if (isSafe()) {
                     mViewRef.get().onUpdateSoftFailedServer(baseResult);
                 }
             }
 
             @Override
             public void onFailed(Throwable throwable) {
-                if (mViewRef.get() != null) {
+                if (isSafe()) {
                     mViewRef.get().onUpdateSoftFailed(throwable);
                 }
             }
@@ -472,7 +472,7 @@ public class BleDeviceMorePresenter<T> extends BleCheckOTAPresenter<IDeviceMoreV
                 .subscribe(new Consumer<BleDataBean>() {
                     @Override
                     public void accept(BleDataBean bleDataBean) throws Exception {
-                        if (mViewRef.get() != null) {   //通知界面更新显示设备状态
+                        if (isSafe()) {   //通知界面更新显示设备状态
                             mViewRef.get().onStateUpdate(-1);
                         }
                     }

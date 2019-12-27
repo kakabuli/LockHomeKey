@@ -218,7 +218,7 @@ public class BindBlePresenter<T> extends BasePresenter<IBindBleView> {
                     return;
                 }
                 bleService.sendCommand(OldBleCommandFactory.getEndFrame()); //7
-                if (mViewRef.get() != null) {
+                if (isSafe()) {
                     mViewRef.get().onBindSuccess(deviceName); //8
                 }
             }
@@ -260,7 +260,7 @@ public class BindBlePresenter<T> extends BasePresenter<IBindBleView> {
                         return;
                     }
 
-                    if (mViewRef.get() != null) {
+                    if (isSafe()) {
                         mViewRef.get().onReceiveInNetInfo();
                     }
 
@@ -287,7 +287,7 @@ public class BindBlePresenter<T> extends BasePresenter<IBindBleView> {
                         //如果校验未成功  或者不是0x03
                         return;
                     }
-                    if (mViewRef.get() != null) {
+                    if (isSafe()) {
                         mViewRef.get().onReceiveUnbind();
                     }
                     bleService.sendCommand(BleCommandFactory.confirmCommand(bytes));  //秘钥上报确认帧  11
@@ -322,7 +322,7 @@ public class BindBlePresenter<T> extends BasePresenter<IBindBleView> {
                     @Override
                     public void accept(ReadInfoBean readInfoBean) throws Exception {
                         toDisposable(readLockTypeDisposable);
-                        if (mViewRef.get() != null) {
+                        if (isSafe()) {
                             mViewRef.get().readLockTypeSucces();
                         }
 
@@ -341,7 +341,7 @@ public class BindBlePresenter<T> extends BasePresenter<IBindBleView> {
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        if (mViewRef.get() != null) {
+                        if (isSafe()) {
                             mViewRef.get().readLockTypeFailed(throwable);
                         }
                     }
@@ -367,7 +367,7 @@ public class BindBlePresenter<T> extends BasePresenter<IBindBleView> {
                     public void accept(ReadInfoBean readInfoBean) throws Exception {
                         toDisposable(functionSetDisposable);
                         int funcSet = (int) readInfoBean.data;
-                        if (mViewRef.get() != null) {
+                        if (isSafe()) {
                             mViewRef.get().readFunctionSetSuccess(funcSet);
                         }
 
@@ -375,12 +375,12 @@ public class BindBlePresenter<T> extends BasePresenter<IBindBleView> {
                         if (BleLockUtils.isExistFunctionSet(funcSet)) {
                             functionSet = funcSet;
                             if (funcSet == 0xff) {
-                                if (mViewRef.get() != null) {
+                                if (isSafe()) {
                                     mViewRef.get().readFunctionSetFailed(new BleProtocolFailedException(0xff));
                                 }
                             }
                         } else {
-                            if (mViewRef.get() != null) {
+                            if (isSafe()) {
                                 mViewRef.get().unknownFunctionSet(funcSet);
                             }
                         }
@@ -388,7 +388,7 @@ public class BindBlePresenter<T> extends BasePresenter<IBindBleView> {
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        if (mViewRef.get() != null) {
+                        if (isSafe()) {
                             mViewRef.get().readFunctionSetFailed(throwable);
                         }
                     }
@@ -436,7 +436,7 @@ public class BindBlePresenter<T> extends BasePresenter<IBindBleView> {
                                 }
                             }, 500);
                         } else {
-                            if (mViewRef.get() != null) {
+                            if (isSafe()) {
                                 mViewRef.get().onBindSuccess(deviceName);  //16
                             }
                             LogUtils.e("绑定成功   断开连接");
@@ -450,7 +450,7 @@ public class BindBlePresenter<T> extends BasePresenter<IBindBleView> {
                         if ("1".equals(bleVersion)) {
                             sendResponseData(false);
                         }
-                        if (mViewRef.get() != null) {
+                        if (isSafe()) {
                             mViewRef.get().onBindFailedServer(baseResult);
                         }
                     }
@@ -461,7 +461,7 @@ public class BindBlePresenter<T> extends BasePresenter<IBindBleView> {
                         if ("1".equals(bleVersion)) {
                             sendResponseData(false);
                         }
-                        if (mViewRef.get() != null) {
+                        if (isSafe()) {
                             mViewRef.get().onBindFailed(throwable);
                         }
                     }
@@ -482,7 +482,7 @@ public class BindBlePresenter<T> extends BasePresenter<IBindBleView> {
                     @Override
                     public void onSuccess(BaseResult result) {
                         LogUtils.e("解绑成功");
-                        if (mViewRef.get() != null) {
+                        if (isSafe()) {
                             mViewRef.get().onUnbindSuccess();
                         }
                         isBind = true;  //解绑成功，进入绑定状态，重新走流程
@@ -498,7 +498,7 @@ public class BindBlePresenter<T> extends BasePresenter<IBindBleView> {
 
                     @Override
                     public void onAckErrorCode(BaseResult baseResult) {
-                        if (mViewRef.get() != null) {
+                        if (isSafe()) {
                             mViewRef.get().onUnbindFailedServer(baseResult);
                         }
                         if (bleVersion == 1) {
@@ -509,7 +509,7 @@ public class BindBlePresenter<T> extends BasePresenter<IBindBleView> {
                     @Override
                     public void onFailed(Throwable throwable) {
                         LogUtils.e("解绑失败");
-                        if (mViewRef.get() != null) {
+                        if (isSafe()) {
                             mViewRef.get().onUnbindFailed(throwable);
                         }
                         if (bleVersion == 1) {
@@ -545,7 +545,7 @@ public class BindBlePresenter<T> extends BasePresenter<IBindBleView> {
                 .subscribe(new Consumer<BleStateBean>() {
                     @Override
                     public void accept(BleStateBean bleStateBean) throws Exception {
-                        if (mViewRef.get() != null) {
+                        if (isSafe()) {
                             mViewRef.get().onDeviceStateChange(bleStateBean.isConnected());
                         }
                     }

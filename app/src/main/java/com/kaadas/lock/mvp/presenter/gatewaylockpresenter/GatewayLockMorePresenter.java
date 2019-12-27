@@ -74,12 +74,12 @@ public class GatewayLockMorePresenter<T> extends BasePresenter<GatewayLockMoreVi
                             UpdateDevNickNameResult nameResult = new Gson().fromJson(mqttData.getPayload(), UpdateDevNickNameResult.class);
                             if (nameResult != null) {
                                 if ("200".equals(nameResult.getCode())) {
-                                    if (mViewRef.get() != null) {
+                                    if (isSafe()) {
                                         mViewRef.get().updateDevNickNameSuccess(nickName);
                                         MyApplication.getInstance().getAllDevicesByMqtt(true);
                                     }
                                 } else {
-                                    if (mViewRef.get() != null) {
+                                    if (isSafe()) {
                                         mViewRef.get().updateDevNickNameFail();
                                     }
                                 }
@@ -88,7 +88,7 @@ public class GatewayLockMorePresenter<T> extends BasePresenter<GatewayLockMoreVi
                     }, new Consumer<Throwable>() {
                         @Override
                         public void accept(Throwable throwable) throws Exception {
-                            if (mViewRef.get() != null) {
+                            if (isSafe()) {
                                 mViewRef.get().updateDevNickNameThrowable(throwable);
                             }
                         }
@@ -124,11 +124,11 @@ public class GatewayLockMorePresenter<T> extends BasePresenter<GatewayLockMoreVi
                             GetSoundVolume getSoundVolume = new Gson().fromJson(mqttData.getPayload(), GetSoundVolume.class);
                             if (getSoundVolume != null) {
                                 if ("200".equals(getSoundVolume.getReturnCode())) {
-                                    if (mViewRef.get() != null) {
+                                    if (isSafe()) {
                                         mViewRef.get().getSoundVolumeSuccess(getSoundVolume.getReturnData().getVolume());
                                     }
                                 } else {
-                                    if (mViewRef.get() != null) {
+                                    if (isSafe()) {
                                         mViewRef.get().getSoundVolumeFail();
                                     }
                                 }
@@ -137,7 +137,7 @@ public class GatewayLockMorePresenter<T> extends BasePresenter<GatewayLockMoreVi
                     }, new Consumer<Throwable>() {
                         @Override
                         public void accept(Throwable throwable) throws Exception {
-                            if (mViewRef.get() != null) {
+                            if (isSafe()) {
                                 mViewRef.get().getSoundVolumeThrowable(throwable);
                             }
                         }
@@ -173,11 +173,11 @@ public class GatewayLockMorePresenter<T> extends BasePresenter<GatewayLockMoreVi
                             GetSoundVolume getSoundVolume = new Gson().fromJson(mqttData.getPayload(), GetSoundVolume.class);
                             if (getSoundVolume != null) {
                                 if ("200".equals(getSoundVolume.getReturnCode())) {
-                                    if (mViewRef.get() != null) {
+                                    if (isSafe()) {
                                         mViewRef.get().setSoundVolumeSuccess(getSoundVolume.getParams().getVolume());
                                     }
                                 } else {
-                                    if (mViewRef.get() != null) {
+                                    if (isSafe()) {
                                         mViewRef.get().setSoundVolumeFail();
                                     }
                                 }
@@ -186,7 +186,7 @@ public class GatewayLockMorePresenter<T> extends BasePresenter<GatewayLockMoreVi
                     }, new Consumer<Throwable>() {
                         @Override
                         public void accept(Throwable throwable) throws Exception {
-                            if (mViewRef.get() != null) {
+                            if (isSafe()) {
                                 mViewRef.get().setSoundVolumeThrowable(throwable);
                             }
                         }
@@ -238,7 +238,7 @@ public class GatewayLockMorePresenter<T> extends BasePresenter<GatewayLockMoreVi
                                         new GatewayLockPasswordManager().deleteAll(deviceId, MyApplication.getInstance().getUid(), gatewayId);
                                     }
                                 } else {
-                                    if (mViewRef.get() != null) {
+                                    if (isSafe()) {
                                         mViewRef.get().deleteDeviceFail();
                                     }
                                 }
@@ -247,7 +247,7 @@ public class GatewayLockMorePresenter<T> extends BasePresenter<GatewayLockMoreVi
                     }, new Consumer<Throwable>() {
                         @Override
                         public void accept(Throwable throwable) throws Exception {
-                            if (mViewRef.get() != null) {
+                            if (isSafe()) {
                                 mViewRef.get().deleteDeviceThrowable(throwable);
                             }
                         }
@@ -280,11 +280,11 @@ public class GatewayLockMorePresenter<T> extends BasePresenter<GatewayLockMoreVi
                             toDisposable(setAMDisposable);
                             SetAMBean setAMBean = new Gson().fromJson(mqttData.getPayload(), SetAMBean.class);
                             if ("200".equals(setAMBean.getReturnCode())) {
-                                if (mViewRef.get() != null) {
+                                if (isSafe()) {
                                     mViewRef.get().setAMSuccess(autoRelockTime);
                                 }
                             } else {
-                                if (mViewRef.get() != null) {
+                                if (isSafe()) {
                                     mViewRef.get().setAMFail(setAMBean.getReturnCode());
                                 }
                             }
@@ -292,7 +292,7 @@ public class GatewayLockMorePresenter<T> extends BasePresenter<GatewayLockMoreVi
                     }, new Consumer<Throwable>() {
                         @Override
                         public void accept(Throwable throwable) throws Exception {
-                            if (mViewRef.get() != null) {
+                            if (isSafe()) {
                                 mViewRef.get().setAMThrowable(throwable);
                             }
                         }
@@ -323,11 +323,11 @@ public class GatewayLockMorePresenter<T> extends BasePresenter<GatewayLockMoreVi
                             toDisposable(getAMDisposable);
                             GetAMBean getAMBean = new Gson().fromJson(mqttData.getPayload(), GetAMBean.class);
                             if ("200".equals(getAMBean.getReturnCode())) {
-                                if (mViewRef.get() != null) {
+                                if (isSafe()) {
                                     mViewRef.get().getAMSuccess(getAMBean.getReturnData().getAutoRelockTime());
                                 }
                             } else {
-                                if (mViewRef.get() != null) {
+                                if (isSafe()) {
                                     mViewRef.get().getAMFail(getAMBean.getReturnCode());
                                 }
                             }
@@ -335,7 +335,7 @@ public class GatewayLockMorePresenter<T> extends BasePresenter<GatewayLockMoreVi
                     }, new Consumer<Throwable>() {
                         @Override
                         public void accept(Throwable throwable) throws Exception {
-                            if (mViewRef.get() != null) {
+                            if (isSafe()) {
                                 mViewRef.get().getAMThrowable(throwable);
                             }
                         }

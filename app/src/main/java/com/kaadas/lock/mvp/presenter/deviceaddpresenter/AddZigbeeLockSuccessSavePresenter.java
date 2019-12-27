@@ -46,13 +46,13 @@ public class AddZigbeeLockSuccessSavePresenter<T> extends BasePresenter<AddZigbe
                             UpdateDevNickNameResult nameResult = new Gson().fromJson(mqttData.getPayload(), UpdateDevNickNameResult.class);
                             if (nameResult != null) {
                                 if ("200".equals(nameResult.getCode())) {
-                                    if (mViewRef.get() != null) {
+                                    if (isSafe()) {
                                         mViewRef.get().updateDevNickNameSuccess();
                                         MyApplication.getInstance().getAllDevicesByMqtt(true);
                                     }
                                     MyApplication.getInstance().getAllDevicesByMqtt(true);
                                 } else {
-                                    if (mViewRef.get() != null) {
+                                    if (isSafe()) {
                                         mViewRef.get().updateDevNickNameFail();
                                     }
                                 }
@@ -61,7 +61,7 @@ public class AddZigbeeLockSuccessSavePresenter<T> extends BasePresenter<AddZigbe
                     }, new Consumer<Throwable>() {
                         @Override
                         public void accept(Throwable throwable) throws Exception {
-                            if (mViewRef.get() != null) {
+                            if (isSafe()) {
                                 mViewRef.get().updateDevNickNameThrowable(throwable);
                             }
                         }

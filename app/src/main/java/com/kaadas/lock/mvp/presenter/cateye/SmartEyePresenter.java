@@ -23,55 +23,56 @@ import io.reactivex.functions.Predicate;
 public class SmartEyePresenter<T> extends BasePresenter<ISmartEyeView> {
     private Disposable pirWanderDisposable;
     private Disposable setPirEnableDisposable;
-    //pir徘徊设置
-    public void setPirWander(String uid,String gatewayId,String deviceId,String wander){
-        if (mqttService!=null){
-            pirWanderDisposable=mqttService.mqttPublish(MqttConstant.getCallTopic(uid), MqttCommandFactory.setPirWander(uid,gatewayId,deviceId,wander))
-                                .filter(new Predicate<MqttData>() {
-                                    @Override
-                                    public boolean test(MqttData mqttData) throws Exception {
-                                        if (MqttConstant.SET_PIR_WANDER.equals(mqttData.getFunc())){
-                                            return true;
-                                        }
-                                        return false;
-                                    }
-                                })
-                                .timeout(10*1000, TimeUnit.MILLISECONDS)
-                                .compose(RxjavaHelper.observeOnMainThread())
-                                .subscribe(new Consumer<MqttData>() {
-                                    @Override
-                                    public void accept(MqttData mqttData) throws Exception {
-                                        SetPirWanderBean setPirWanderBean=new Gson().fromJson(mqttData.getPayload(),SetPirWanderBean.class);
-                                        if (setPirWanderBean!=null){
-                                            if ("200".equals(setPirWanderBean.getReturnCode())){
-                                                if (mViewRef!=null&&mViewRef.get()!=null){
-                                                    mViewRef.get().setPirWanderSuccess();
-                                                }
-                                            }else{
-                                                if (mViewRef!=null&&mViewRef.get()!=null){
-                                                    mViewRef.get().setPirWanderFail();
-                                                }
-                                            }
-                                        }
 
+    //pir徘徊设置
+    public void setPirWander(String uid, String gatewayId, String deviceId, String wander) {
+        if (mqttService != null) {
+            pirWanderDisposable = mqttService.mqttPublish(MqttConstant.getCallTopic(uid), MqttCommandFactory.setPirWander(uid, gatewayId, deviceId, wander))
+                    .filter(new Predicate<MqttData>() {
+                        @Override
+                        public boolean test(MqttData mqttData) throws Exception {
+                            if (MqttConstant.SET_PIR_WANDER.equals(mqttData.getFunc())) {
+                                return true;
+                            }
+                            return false;
+                        }
+                    })
+                    .timeout(10 * 1000, TimeUnit.MILLISECONDS)
+                    .compose(RxjavaHelper.observeOnMainThread())
+                    .subscribe(new Consumer<MqttData>() {
+                        @Override
+                        public void accept(MqttData mqttData) throws Exception {
+                            SetPirWanderBean setPirWanderBean = new Gson().fromJson(mqttData.getPayload(), SetPirWanderBean.class);
+                            if (setPirWanderBean != null) {
+                                if ("200".equals(setPirWanderBean.getReturnCode())) {
+                                    if (isSafe()) {
+                                        mViewRef.get().setPirWanderSuccess();
                                     }
-                                }, new Consumer<Throwable>() {
-                                    @Override
-                                    public void accept(Throwable throwable) throws Exception {
-                                        if (mViewRef!=null&&mViewRef.get()!=null){
-                                            mViewRef.get().setPirWander(throwable);
-                                        }
+                                } else {
+                                    if (isSafe()) {
+                                        mViewRef.get().setPirWanderFail();
                                     }
-                                });
+                                }
+                            }
+
+                        }
+                    }, new Consumer<Throwable>() {
+                        @Override
+                        public void accept(Throwable throwable) throws Exception {
+                            if (isSafe()) {
+                                mViewRef.get().setPirWander(throwable);
+                            }
+                        }
+                    });
         }
     }
 
 
     //设置智能监测
-    public void setPirEnable(String gatewayId, String deviceId,String uid, int status) {
+    public void setPirEnable(String gatewayId, String deviceId, String uid, int status) {
         toDisposable(setPirEnableDisposable);
         if (mqttService != null) {
-            MqttMessage mqttMessage = MqttCommandFactory.setPirEnable(gatewayId, deviceId,uid,status);
+            MqttMessage mqttMessage = MqttCommandFactory.setPirEnable(gatewayId, deviceId, uid, status);
             setPirEnableDisposable = mqttService
                     .mqttPublish(MqttConstant.getCallTopic(MyApplication.getInstance().getUid()), mqttMessage)
 
@@ -93,11 +94,11 @@ public class SmartEyePresenter<T> extends BasePresenter<ISmartEyeView> {
                             SetPirEnableBean getSoundVolume = new Gson().fromJson(mqttData.getPayload(), SetPirEnableBean.class);
                             if (getSoundVolume != null) {
                                 if ("200".equals(getSoundVolume.getReturnCode())) {
-                                    if (mViewRef.get() != null) {
+                                    if (isSafe()) {
                                         mViewRef.get().setPirEnableSuccess(status);
                                     }
                                 } else {
-                                    if (mViewRef.get() != null) {
+                                    if (isSafe()) {
                                         mViewRef.get().setPirEnableFail();
                                     }
                                 }
@@ -106,7 +107,7 @@ public class SmartEyePresenter<T> extends BasePresenter<ISmartEyeView> {
                     }, new Consumer<Throwable>() {
                         @Override
                         public void accept(Throwable throwable) throws Exception {
-                            if (mViewRef.get() != null) {
+                            if (isSafe()) {
                                 mViewRef.get().setPirEnableThrowable(throwable);
                             }
                         }

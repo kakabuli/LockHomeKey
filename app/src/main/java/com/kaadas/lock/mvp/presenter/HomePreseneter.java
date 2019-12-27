@@ -26,6 +26,7 @@ public class HomePreseneter<T> extends BasePresenter<IHomeView> {
     private Disposable listenerAllDevicesDisposable;
 
     private Disposable getPowerDisposable;
+
     @Override
     public void attachView(IHomeView view) {
         super.attachView(view);
@@ -35,7 +36,7 @@ public class HomePreseneter<T> extends BasePresenter<IHomeView> {
                     @Override
                     public void accept(AllBindDevices allBindDevices) throws Exception {
                         LogUtils.e("设备更新   homePresenter");
-                        if (mViewRef.get()!=null){
+                        if (isSafe()) {
                             mViewRef.get().onDeviceRefresh(allBindDevices);
                         }
                     }

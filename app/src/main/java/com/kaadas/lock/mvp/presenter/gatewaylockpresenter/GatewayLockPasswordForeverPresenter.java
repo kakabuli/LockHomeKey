@@ -46,13 +46,13 @@ public class GatewayLockPasswordForeverPresenter<T> extends BasePresenter<Gatewa
                             toDisposable(addLockPwddDisposable);
                             LockPwdFuncBean pwdFuncBean = new Gson().fromJson(mqttData.getPayload(), LockPwdFuncBean.class);
                             if ("200".equals(pwdFuncBean.getReturnCode()) && pwdFuncBean.getReturnData().getStatus() == 0) {
-                                if (mViewRef.get() != null) {
+                                if (isSafe()) {
                                     deleteOnePwd(gatewayiId, deviceId, MyApplication.getInstance().getUid(), pwdId);
                                     mViewRef.get().addLockPwdSuccess(pwdId, pwdValue);
                                     AddOnePwd(gatewayiId, deviceId, MyApplication.getInstance().getUid(), pwdId);
                                 }
                             } else {
-                                if (mViewRef.get() != null) {
+                                if (isSafe()) {
                                     mViewRef.get().addLockPwdFail(pwdFuncBean.getReturnData().getStatus());
                                 }
                             }
@@ -61,7 +61,7 @@ public class GatewayLockPasswordForeverPresenter<T> extends BasePresenter<Gatewa
                     }, new Consumer<Throwable>() {
                         @Override
                         public void accept(Throwable throwable) throws Exception {
-                            if (mViewRef.get() != null) {
+                            if (isSafe()) {
                                 mViewRef.get().addLockPwdThrowable(throwable);
                             }
                         }

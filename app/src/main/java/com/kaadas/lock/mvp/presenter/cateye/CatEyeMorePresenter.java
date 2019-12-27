@@ -30,7 +30,7 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Predicate;
 
-public class CatEyeMorePresenter <T> extends BasePresenter<IGatEyeView> {
+public class CatEyeMorePresenter<T> extends BasePresenter<IGatEyeView> {
     private Disposable updateNameDisposable;
     private Disposable getCatEyeInfoDisposable;
     private Disposable setPirEnableDisposable;
@@ -62,12 +62,12 @@ public class CatEyeMorePresenter <T> extends BasePresenter<IGatEyeView> {
                             UpdateDevNickNameResult nameResult = new Gson().fromJson(mqttData.getPayload(), UpdateDevNickNameResult.class);
                             if (nameResult != null) {
                                 if ("200".equals(nameResult.getCode())) {
-                                    if (mViewRef.get() != null) {
+                                    if (isSafe()) {
                                         mViewRef.get().updateDevNickNameSuccess(nickName);
                                         MyApplication.getInstance().getAllDevicesByMqtt(true);
                                     }
                                 } else {
-                                    if (mViewRef.get() != null) {
+                                    if (isSafe()) {
                                         mViewRef.get().updateDevNickNameFail();
                                     }
                                 }
@@ -76,7 +76,7 @@ public class CatEyeMorePresenter <T> extends BasePresenter<IGatEyeView> {
                     }, new Consumer<Throwable>() {
                         @Override
                         public void accept(Throwable throwable) throws Exception {
-                            if (mViewRef.get() != null) {
+                            if (isSafe()) {
                                 mViewRef.get().updateDevNickNameThrowable(throwable);
                             }
                         }
@@ -88,10 +88,10 @@ public class CatEyeMorePresenter <T> extends BasePresenter<IGatEyeView> {
     }
 
     //获取猫眼基本信息
-    public void getCatEyeInfo(String gatewayId, String deviceId,String uid) {
+    public void getCatEyeInfo(String gatewayId, String deviceId, String uid) {
         toDisposable(getCatEyeInfoDisposable);
         if (mqttService != null) {
-            MqttMessage mqttMessage = MqttCommandFactory.getCatEyeInfo(gatewayId, deviceId,uid);
+            MqttMessage mqttMessage = MqttCommandFactory.getCatEyeInfo(gatewayId, deviceId, uid);
             getCatEyeInfoDisposable = mqttService
                     .mqttPublish(MqttConstant.getCallTopic(MyApplication.getInstance().getUid()), mqttMessage)
                     .timeout(15 * 1000, TimeUnit.MILLISECONDS)
@@ -109,15 +109,15 @@ public class CatEyeMorePresenter <T> extends BasePresenter<IGatEyeView> {
                         @Override
                         public void accept(MqttData mqttData) throws Exception {
                             toDisposable(getCatEyeInfoDisposable);
-                            CatEyeInfoBeanResult catEyeInfoBean  = new Gson().fromJson(mqttData.getPayload(), CatEyeInfoBeanResult.class);
-                            LogUtils.e("获取到的猫眼基本信息    "+mqttData.getPayload());
+                            CatEyeInfoBeanResult catEyeInfoBean = new Gson().fromJson(mqttData.getPayload(), CatEyeInfoBeanResult.class);
+                            LogUtils.e("获取到的猫眼基本信息    " + mqttData.getPayload());
                             if (catEyeInfoBean != null) {
                                 if ("200".equals(catEyeInfoBean.getReturnCode())) {
-                                    if (mViewRef.get() != null) {
-                                        mViewRef.get().getCatEyeInfoSuccess(catEyeInfoBean,mqttData.getPayload());
+                                    if (isSafe()) {
+                                        mViewRef.get().getCatEyeInfoSuccess(catEyeInfoBean, mqttData.getPayload());
                                     }
                                 } else {
-                                    if (mViewRef.get() != null) {
+                                    if (isSafe()) {
                                         mViewRef.get().getCatEyeInfoFail();
                                     }
                                 }
@@ -126,7 +126,7 @@ public class CatEyeMorePresenter <T> extends BasePresenter<IGatEyeView> {
                     }, new Consumer<Throwable>() {
                         @Override
                         public void accept(Throwable throwable) throws Exception {
-                            if (mViewRef.get() != null) {
+                            if (isSafe()) {
                                 mViewRef.get().getCatEveThrowable(throwable);
                             }
                         }
@@ -139,10 +139,10 @@ public class CatEyeMorePresenter <T> extends BasePresenter<IGatEyeView> {
 
 
     //获取猫眼夜视信息
-    public void getCatNightSightInfo(String gatewayId, String deviceId,String uid) {
+    public void getCatNightSightInfo(String gatewayId, String deviceId, String uid) {
         toDisposable(getCatEyeInfoDisposable);
         if (mqttService != null) {
-            MqttMessage mqttMessage = MqttCommandFactory.getCatNightSight(gatewayId, deviceId,uid);
+            MqttMessage mqttMessage = MqttCommandFactory.getCatNightSight(gatewayId, deviceId, uid);
             getCatEyeInfoDisposable = mqttService
                     .mqttPublish(MqttConstant.getCallTopic(MyApplication.getInstance().getUid()), mqttMessage)
                     .timeout(10 * 1000, TimeUnit.MILLISECONDS)
@@ -160,18 +160,18 @@ public class CatEyeMorePresenter <T> extends BasePresenter<IGatEyeView> {
                         @Override
                         public void accept(MqttData mqttData) throws Exception {
                             toDisposable(getCatEyeInfoDisposable);
-                            CatEyeInfoBeanPropertyResult catEyeInfoBeanPropertyResult  = new Gson().fromJson(mqttData.getPayload(), CatEyeInfoBeanPropertyResult.class);
-                            LogUtils.e("获取到的猫眼基本信息    "+mqttData.getPayload());
+                            CatEyeInfoBeanPropertyResult catEyeInfoBeanPropertyResult = new Gson().fromJson(mqttData.getPayload(), CatEyeInfoBeanPropertyResult.class);
+                            LogUtils.e("获取到的猫眼基本信息    " + mqttData.getPayload());
                             if (catEyeInfoBeanPropertyResult != null) {
                                 if ("200".equals(catEyeInfoBeanPropertyResult.getReturnCode())) {
-                                    if (mViewRef.get() != null) {
-                                   //     mViewRef.get().getCatEyeInfoSuccess(catEyeInfoBean,mqttData.getPayload());
+                                    if (isSafe()) {
+                                        //     mViewRef.get().getCatEyeInfoSuccess(catEyeInfoBean,mqttData.getPayload());
 
                                         mViewRef.get().getCatEyeInfoNightSightSuccess(catEyeInfoBeanPropertyResult);
                                     }
                                 } else {
-                                    if (mViewRef.get() != null) {
-                                           mViewRef.get().getCatEyeInfoNightSightFail();
+                                    if (isSafe()) {
+                                        mViewRef.get().getCatEyeInfoNightSightFail();
                                     }
                                 }
                             }
@@ -179,7 +179,7 @@ public class CatEyeMorePresenter <T> extends BasePresenter<IGatEyeView> {
                     }, new Consumer<Throwable>() {
                         @Override
                         public void accept(Throwable throwable) throws Exception {
-                            if (mViewRef.get() != null) {
+                            if (isSafe()) {
                                 mViewRef.get().getNightSighEveThrowable(throwable);
                             }
                         }
@@ -218,12 +218,12 @@ public class CatEyeMorePresenter <T> extends BasePresenter<IGatEyeView> {
                                 LogUtils.e(deleteGatewayLockDeviceBean.getDevtype() + "删除猫眼" + deleteGatewayLockDeviceBean.getEventparams().getEvent_str());
                                 if (deleteGatewayLockDeviceBean.getEventparams().getEvent_str() != null) {
                                     if ("kdscateye".equals(deleteGatewayLockDeviceBean.getDevtype()) && deleteGatewayLockDeviceBean.getEventparams().getEvent_str().equals("delete") && deviceId.equals(deleteGatewayLockDeviceBean.getDeviceId())) {
-                                        if (mViewRef != null && mViewRef.get() != null) {
+                                        if (isSafe()) {
                                             mViewRef.get().deleteDeviceSuccess();
                                             MyApplication.getInstance().getAllDevicesByMqtt(true);
                                         }
                                     } else {
-                                        if (mViewRef != null && mViewRef.get() != null) {
+                                        if (isSafe()) {
                                             mViewRef.get().deleteDeviceFail();
                                         }
                                     }
@@ -233,7 +233,7 @@ public class CatEyeMorePresenter <T> extends BasePresenter<IGatEyeView> {
                     }, new Consumer<Throwable>() {
                         @Override
                         public void accept(Throwable throwable) throws Exception {
-                            if (mViewRef!=null && mViewRef.get() != null) {
+                            if (isSafe()) {
                                 mViewRef.get().deleteDeviceThrowable(throwable);
                             }
                         }
@@ -244,33 +244,33 @@ public class CatEyeMorePresenter <T> extends BasePresenter<IGatEyeView> {
     }
 
     //取消授权网关锁
-    public void  deleteShareDevice(int type,String gatewayId,String deviceId,String uid,String shareUser,String userName,int shareFlag){
-        if (mqttService!=null){
+    public void deleteShareDevice(int type, String gatewayId, String deviceId, String uid, String shareUser, String userName, int shareFlag) {
+        if (mqttService != null) {
             toDisposable(deleteShareDisposable);
-            deleteShareDisposable= mqttService.mqttPublish(MqttConstant.PUBLISH_TO_SERVER, MqttCommandFactory.shareDevice(type,gatewayId,deviceId,uid,shareUser,userName,shareFlag))
+            deleteShareDisposable = mqttService.mqttPublish(MqttConstant.PUBLISH_TO_SERVER, MqttCommandFactory.shareDevice(type, gatewayId, deviceId, uid, shareUser, userName, shareFlag))
                     .filter(new Predicate<MqttData>() {
                         @Override
                         public boolean test(MqttData mqttData) throws Exception {
-                            if (mqttData.getFunc().equals(MqttConstant.SHARE_DEVICE)){
+                            if (mqttData.getFunc().equals(MqttConstant.SHARE_DEVICE)) {
                                 return true;
                             }
                             return false;
                         }
                     })
-                    .timeout(10*1000, TimeUnit.MILLISECONDS)
+                    .timeout(10 * 1000, TimeUnit.MILLISECONDS)
                     .compose(RxjavaHelper.observeOnMainThread())
                     .subscribe(new Consumer<MqttData>() {
                         @Override
                         public void accept(MqttData mqttData) throws Exception {
                             toDisposable(deleteShareDisposable);
-                            DeviceShareResultBean shareResultBean=new Gson().fromJson(mqttData.getPayload(),DeviceShareResultBean.class);
-                            if ("200".equals(shareResultBean.getCode())){
-                                if (mViewRef!=null&&mViewRef.get()!=null&&gatewayId.equals(shareResultBean.getGwId())&&deviceId.equals(shareResultBean.getDeviceId())){
+                            DeviceShareResultBean shareResultBean = new Gson().fromJson(mqttData.getPayload(), DeviceShareResultBean.class);
+                            if ("200".equals(shareResultBean.getCode())) {
+                                if (isSafe() && gatewayId.equals(shareResultBean.getGwId()) && deviceId.equals(shareResultBean.getDeviceId())) {
                                     mViewRef.get().deleteShareDeviceSuccess();
                                     MyApplication.getInstance().getAllDevicesByMqtt(true);
                                 }
-                            }else{
-                                if (mViewRef!=null&&mViewRef.get()!=null){
+                            } else {
+                                if (isSafe()) {
                                     mViewRef.get().deleteShareDeviceFail();
                                 }
                             }
@@ -279,7 +279,7 @@ public class CatEyeMorePresenter <T> extends BasePresenter<IGatEyeView> {
                     }, new Consumer<Throwable>() {
                         @Override
                         public void accept(Throwable throwable) throws Exception {
-                            if (mViewRef!=null&&mViewRef.get()!=null){
+                            if (isSafe()) {
                                 mViewRef.get().deleteShareDeviceThrowable();
                             }
                         }

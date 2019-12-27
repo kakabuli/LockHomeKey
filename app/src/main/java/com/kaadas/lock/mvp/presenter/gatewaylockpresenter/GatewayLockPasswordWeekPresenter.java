@@ -10,8 +10,8 @@ public class GatewayLockPasswordWeekPresenter<T> extends GatewayLockPasswordPres
                         int pwdId, String pwdValue, int pwdType, long zLocalEndT, long zLocalStartT,
                         int dayMaskBits, int endHour, int endMinute, int startHour, int startMinute) {
         int number = getNumber(NORMAL_PASSWORD);
-        if (number == -1){
-            if (isSafe()){
+        if (number == -1) {
+            if (isSafe()) {
                 mViewRef.get().gatewayPasswordFull();
             }
             return;

@@ -78,7 +78,8 @@ public class AddCatEyePresenter<T> extends BasePresenter<IAddCatEyeView> {
 
     /**
      * 网关Id   猫眼的mac地址
-     * @param gwId      网关Id
+     *
+     * @param gwId 网关Id
      */
 
     public void startJoin(String deviceMac, String deviceSn, String gwId, String ssid, String pwd) {
@@ -136,26 +137,26 @@ public class AddCatEyePresenter<T> extends BasePresenter<IAddCatEyeView> {
                         public void accept(MqttData mqttData) throws Exception {
                             toDisposable(listenerCatEyeOnlineDisposable);
                             DeviceOnLineBean deviceOnLineBean = new Gson().fromJson(mqttData.getPayload(), DeviceOnLineBean.class);
-                            LogUtils.e("猫眼上线:"+mqttData.getPayload());
+                            LogUtils.e("猫眼上线:" + mqttData.getPayload());
                             LogUtils.e("本地信息为   " + "   " + deviceMac + "   " + deviceSn + "    " + gwId);
-                            if ( deviceMac.equalsIgnoreCase(deviceOnLineBean.getEventparams().getMacaddr())
-                                    &&  "online".equals(deviceOnLineBean.getEventparams().getEvent_str())
+                            if (deviceMac.equalsIgnoreCase(deviceOnLineBean.getEventparams().getMacaddr())
+                                    && "online".equals(deviceOnLineBean.getEventparams().getEvent_str())
                                     ) {
                                 //设备信息匹配成功  且是上线上报
                                 LogUtils.e("添加猫眼成功");
-                                if (mViewRef.get()!=null){
+                                if (isSafe()) {
                                     mViewRef.get().cateEyeJoinSuccess(deviceOnLineBean);
                                 }
                                 MyApplication.getInstance().getAllDevicesByMqtt(true);
                                 toDisposable(compositeDisposable);
-                            }else if(deviceOnLineBean!=null
-                             && deviceOnLineBean.getEventparams()!=null
-                             && deviceOnLineBean.getEventparams().getMacaddr()!=null &&
-                                    deviceOnLineBean.getEventparams().getMacaddr().contains(":")){
-                                String newMac= deviceOnLineBean.getEventparams().getMacaddr().replace(":","");
-                                if(deviceMac.equalsIgnoreCase(newMac) &&  "online".equals(deviceOnLineBean.getEventparams().getEvent_str())){
+                            } else if (deviceOnLineBean != null
+                                    && deviceOnLineBean.getEventparams() != null
+                                    && deviceOnLineBean.getEventparams().getMacaddr() != null &&
+                                    deviceOnLineBean.getEventparams().getMacaddr().contains(":")) {
+                                String newMac = deviceOnLineBean.getEventparams().getMacaddr().replace(":", "");
+                                if (deviceMac.equalsIgnoreCase(newMac) && "online".equals(deviceOnLineBean.getEventparams().getEvent_str())) {
                                     LogUtils.e("添加猫眼成功2");
-                                    if (mViewRef.get()!=null){
+                                    if (isSafe()) {
                                         mViewRef.get().cateEyeJoinSuccess(deviceOnLineBean);
                                     }
                                     MyApplication.getInstance().getAllDevicesByMqtt(true);
@@ -167,7 +168,7 @@ public class AddCatEyePresenter<T> extends BasePresenter<IAddCatEyeView> {
                     }, new Consumer<Throwable>() {
                         @Override
                         public void accept(Throwable throwable) throws Exception {
-                            if (mViewRef.get()!=null){
+                            if (isSafe()) {
                                 mViewRef.get().catEysJoinFailed(throwable);
                             }
                         }
@@ -181,7 +182,7 @@ public class AddCatEyePresenter<T> extends BasePresenter<IAddCatEyeView> {
     private Runnable timeOutRunnable = new Runnable() {
         @Override
         public void run() {
-            if (mViewRef.get() != null) {
+            if (isSafe()) {
                 mViewRef.get().joinTimeout();  //入网超时
             }
         }
@@ -195,7 +196,6 @@ public class AddCatEyePresenter<T> extends BasePresenter<IAddCatEyeView> {
             onlineReciever.stop();
         }
     }
-
 
 
     public int sendMessage() {
@@ -246,7 +246,6 @@ public class AddCatEyePresenter<T> extends BasePresenter<IAddCatEyeView> {
             }
         }
     };
-
 
 
 }

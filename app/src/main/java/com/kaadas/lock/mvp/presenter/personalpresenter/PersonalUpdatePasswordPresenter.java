@@ -1,7 +1,6 @@
 package com.kaadas.lock.mvp.presenter.personalpresenter;
 
 
-
 import com.kaadas.lock.mvp.mvpbase.BasePresenter;
 import com.kaadas.lock.publiclibrary.http.XiaokaiNewServiceImp;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
@@ -17,7 +16,7 @@ public class PersonalUpdatePasswordPresenter<T> extends BasePresenter<IPersonalU
         XiaokaiNewServiceImp.modifyPassword(uid, newpwd, oldpwd).subscribe(new BaseObserver<BaseResult>() {
             @Override
             public void onSuccess(BaseResult baseResult) {
-                if (mViewRef.get() != null) {
+                if (isSafe()) {
                     if ("200".equals(baseResult.getCode())) {
                         mViewRef.get().updatePwdSuccess(newpwd);
                     }
@@ -26,14 +25,14 @@ public class PersonalUpdatePasswordPresenter<T> extends BasePresenter<IPersonalU
 
             @Override
             public void onAckErrorCode(BaseResult baseResult) {
-                if (mViewRef.get()!=null){
+                if (isSafe()) {
                     mViewRef.get().updatePwdFail(baseResult);
                 }
             }
 
             @Override
             public void onFailed(Throwable throwable) {
-                if (mViewRef.get()!=null){
+                if (isSafe()) {
                     mViewRef.get().updatePwdError(throwable);
                 }
             }

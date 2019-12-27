@@ -42,7 +42,7 @@ public class LanguageSetPresenter<T> extends BlePresenter<ILanguageSetView> {
                     @Override
                     public void accept(BleDataBean bleDataBean) throws Exception {
                         if (bleDataBean.getOriginalData()[0] == 0) {
-                            if (mViewRef.get() != null) {
+                            if (isSafe()) {
                                 mViewRef.get().onGetLanguageFailed(new BleProtocolFailedException(bleDataBean.getPayload()[0] & 0xff));
                             }
                         }
@@ -56,7 +56,7 @@ public class LanguageSetPresenter<T> extends BlePresenter<ILanguageSetView> {
                         int battery = deValue[11] & 0xff;
                         byte[] time = new byte[]{deValue[12], deValue[13], deValue[14], deValue[15]};
                         toDisposable(getDeviceInfoDisposable);
-                        if (mViewRef.get() != null) {
+                        if (isSafe()) {
                             mViewRef.get().onGetLanguageSuccess(lang);
                         }
                         toDisposable(getDeviceInfoDisposable);
@@ -64,7 +64,7 @@ public class LanguageSetPresenter<T> extends BlePresenter<ILanguageSetView> {
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        if (mViewRef.get() != null) {
+                        if (isSafe()) {
                             mViewRef.get().onGetLanguageFailed(throwable);
                         }
                     }
@@ -109,12 +109,12 @@ public class LanguageSetPresenter<T> extends BlePresenter<ILanguageSetView> {
                         if (bleDataBean.isConfirm()) {
                             if (bleDataBean.getOriginalData()[4] != 0) {
                                 //设置失败
-                                if (mViewRef.get() != null) {
+                                if (isSafe()) {
                                     mViewRef.get().onSetLangFailed(new BleProtocolFailedException(bleDataBean.getOriginalData()[4] & 0xff));
                                 }
                             } else {
                                 //shezhi che设置成功
-                                if (mViewRef.get() != null) {
+                                if (isSafe()) {
                                     mViewRef.get().onSetLangSuccess(language);
                                 }
                             }
@@ -126,7 +126,7 @@ public class LanguageSetPresenter<T> extends BlePresenter<ILanguageSetView> {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
                         //设置超时
-                        if (mViewRef.get() != null) {
+                        if (isSafe()) {
                             mViewRef.get().onSetLangFailed(throwable);
                         }
                     }

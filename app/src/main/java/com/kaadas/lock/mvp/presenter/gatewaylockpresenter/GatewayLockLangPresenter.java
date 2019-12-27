@@ -21,17 +21,18 @@ public class GatewayLockLangPresenter<T> extends BasePresenter<GatewayLockLangVi
 
     private Disposable getLangDisposable;
     private Disposable setLangDisposable;
+
     //获取语言
-    public void getLang(String gatewayId,String deviceId){
+    public void getLang(String gatewayId, String deviceId) {
         toDisposable(getLangDisposable);
-        if (mqttService!=null){
-            getLangDisposable=mqttService.mqttPublish(MqttConstant.getCallTopic(MyApplication.getInstance().getUid()), MqttCommandFactory.getLockLang(gatewayId,deviceId))
-                    .timeout(10*1000, TimeUnit.MILLISECONDS)
+        if (mqttService != null) {
+            getLangDisposable = mqttService.mqttPublish(MqttConstant.getCallTopic(MyApplication.getInstance().getUid()), MqttCommandFactory.getLockLang(gatewayId, deviceId))
+                    .timeout(10 * 1000, TimeUnit.MILLISECONDS)
                     .compose(RxjavaHelper.observeOnMainThread())
                     .filter(new Predicate<MqttData>() {
                         @Override
                         public boolean test(MqttData mqttData) throws Exception {
-                            if (MqttConstant.GET_LANG.equals(mqttData.getFunc())){
+                            if (MqttConstant.GET_LANG.equals(mqttData.getFunc())) {
                                 return true;
                             }
                             return false;
@@ -41,13 +42,13 @@ public class GatewayLockLangPresenter<T> extends BasePresenter<GatewayLockLangVi
                         @Override
                         public void accept(MqttData mqttData) throws Exception {
                             toDisposable(getLangDisposable);
-                            GetLockLang getLockLang=new Gson().fromJson(mqttData.getPayload(),GetLockLang.class);
-                            if ("200".equals(getLockLang.getReturnCode())){
-                                if (mViewRef.get()!=null){
+                            GetLockLang getLockLang = new Gson().fromJson(mqttData.getPayload(), GetLockLang.class);
+                            if ("200".equals(getLockLang.getReturnCode())) {
+                                if (isSafe()) {
                                     mViewRef.get().getLockLangSuccess(getLockLang.getReturnData().getLang());
                                 }
-                            }else{
-                                if (mViewRef.get()!=null){
+                            } else {
+                                if (isSafe()) {
                                     mViewRef.get().getLockLangFail();
                                 }
                             }
@@ -55,9 +56,9 @@ public class GatewayLockLangPresenter<T> extends BasePresenter<GatewayLockLangVi
                     }, new Consumer<Throwable>() {
                         @Override
                         public void accept(Throwable throwable) throws Exception {
-                                if (mViewRef.get()!=null){
-                                    mViewRef.get().getLockLangThrowable(throwable);
-                                }
+                            if (isSafe()) {
+                                mViewRef.get().getLockLangThrowable(throwable);
+                            }
                         }
                     });
             compositeDisposable.add(getLangDisposable);
@@ -66,16 +67,16 @@ public class GatewayLockLangPresenter<T> extends BasePresenter<GatewayLockLangVi
 
 
     //设置锁的语言
-    public void setLang(String gatewayId,String deviceId,String lang){
+    public void setLang(String gatewayId, String deviceId, String lang) {
         toDisposable(setLangDisposable);
-        if (mqttService!=null){
-            setLangDisposable=mqttService.mqttPublish(MqttConstant.getCallTopic(MyApplication.getInstance().getUid()), MqttCommandFactory.setLockLang(gatewayId,deviceId,lang))
-                    .timeout(10*1000, TimeUnit.MILLISECONDS)
+        if (mqttService != null) {
+            setLangDisposable = mqttService.mqttPublish(MqttConstant.getCallTopic(MyApplication.getInstance().getUid()), MqttCommandFactory.setLockLang(gatewayId, deviceId, lang))
+                    .timeout(10 * 1000, TimeUnit.MILLISECONDS)
                     .compose(RxjavaHelper.observeOnMainThread())
                     .filter(new Predicate<MqttData>() {
                         @Override
                         public boolean test(MqttData mqttData) throws Exception {
-                            if (MqttConstant.SET_LANG.equals(mqttData.getFunc())){
+                            if (MqttConstant.SET_LANG.equals(mqttData.getFunc())) {
                                 return true;
                             }
                             return false;
@@ -85,13 +86,13 @@ public class GatewayLockLangPresenter<T> extends BasePresenter<GatewayLockLangVi
                         @Override
                         public void accept(MqttData mqttData) throws Exception {
                             toDisposable(setLangDisposable);
-                            SetLockLang setLockLang=new Gson().fromJson(mqttData.getPayload(),SetLockLang.class);
-                            if ("200".equals(setLockLang.getReturnCode())){
-                                if (mViewRef.get()!=null){
+                            SetLockLang setLockLang = new Gson().fromJson(mqttData.getPayload(), SetLockLang.class);
+                            if ("200".equals(setLockLang.getReturnCode())) {
+                                if (isSafe()) {
                                     mViewRef.get().setLockLangSuccess(setLockLang.getParams().getLanguage());
                                 }
-                            }else{
-                                if (mViewRef.get()!=null){
+                            } else {
+                                if (isSafe()) {
                                     mViewRef.get().setLockLangFail();
                                 }
                             }
@@ -99,7 +100,7 @@ public class GatewayLockLangPresenter<T> extends BasePresenter<GatewayLockLangVi
                     }, new Consumer<Throwable>() {
                         @Override
                         public void accept(Throwable throwable) throws Exception {
-                            if (mViewRef.get()!=null){
+                            if (isSafe()) {
                                 mViewRef.get().setLockLangThrowable(throwable);
                             }
                         }

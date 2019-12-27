@@ -20,36 +20,37 @@ import io.reactivex.functions.Predicate;
 
 public class GatewayLockStressAddPresenter<T> extends BasePresenter<IGatewayLockStressAddView> {
     private Disposable addStressPwdDisposable;
+
     //添加胁迫密码
-    public void addLockPwd(String gatewayiId,String deviceId,String pwdId,String pwdValue){
+    public void addLockPwd(String gatewayiId, String deviceId, String pwdId, String pwdValue) {
         toDisposable(addStressPwdDisposable);
-        if (mqttService!=null){
-            addStressPwdDisposable=mqttService.mqttPublish(MqttConstant.getCallTopic(MyApplication.getInstance().getUid()), MqttCommandFactory.lockPwdFunc(gatewayiId,deviceId,"set","pin",pwdId,pwdValue))
+        if (mqttService != null) {
+            addStressPwdDisposable = mqttService.mqttPublish(MqttConstant.getCallTopic(MyApplication.getInstance().getUid()), MqttCommandFactory.lockPwdFunc(gatewayiId, deviceId, "set", "pin", pwdId, pwdValue))
                     .filter(new Predicate<MqttData>() {
                         @Override
                         public boolean test(MqttData mqttData) throws Exception {
-                            if (mqttData.getFunc().equals(MqttConstant.SET_PWD)){
-                                return  true;
+                            if (mqttData.getFunc().equals(MqttConstant.SET_PWD)) {
+                                return true;
                             }
                             return false;
                         }
                     })
-                    .timeout(10*1000, TimeUnit.MILLISECONDS)
+                    .timeout(10 * 1000, TimeUnit.MILLISECONDS)
                     .compose(RxjavaHelper.observeOnMainThread())
                     .subscribe(new Consumer<MqttData>() {
                         @Override
                         public void accept(MqttData mqttData) throws Exception {
                             toDisposable(addStressPwdDisposable);
-                            LockPwdFuncBean pwdFuncBean=new Gson().fromJson(mqttData.getPayload(),LockPwdFuncBean.class);
-                            if ("200".equals(pwdFuncBean.getReturnCode())&&pwdFuncBean.getReturnData().getStatus()==0){
-                                if (mViewRef.get()!=null){
+                            LockPwdFuncBean pwdFuncBean = new Gson().fromJson(mqttData.getPayload(), LockPwdFuncBean.class);
+                            if ("200".equals(pwdFuncBean.getReturnCode()) && pwdFuncBean.getReturnData().getStatus() == 0) {
+                                if (isSafe()) {
                                     mViewRef.get().addStressSuccess(pwdValue);
-                                    String uid=MyApplication.getInstance().getUid();
-                                    deleteOnePwd(gatewayiId,deviceId,uid,"09");
-                                    addOnePwd(gatewayiId,deviceId,uid,"09",1);
+                                    String uid = MyApplication.getInstance().getUid();
+                                    deleteOnePwd(gatewayiId, deviceId, uid, "09");
+                                    addOnePwd(gatewayiId, deviceId, uid, "09", 1);
                                 }
-                            }else{
-                                if (mViewRef.get()!=null){
+                            } else {
+                                if (isSafe()) {
                                     mViewRef.get().addStressFail();
                                 }
                             }
@@ -58,7 +59,7 @@ public class GatewayLockStressAddPresenter<T> extends BasePresenter<IGatewayLock
                     }, new Consumer<Throwable>() {
                         @Override
                         public void accept(Throwable throwable) throws Exception {
-                            if (mViewRef.get()!=null){
+                            if (isSafe()) {
                                 mViewRef.get().addStressThrowable(throwable);
                             }
                         }
@@ -69,7 +70,7 @@ public class GatewayLockStressAddPresenter<T> extends BasePresenter<IGatewayLock
     }
 
     //添加某个
-    private void addOnePwd(String gatewayId,String deviceId,String uid,String num,int status) {
+    private void addOnePwd(String gatewayId, String deviceId, String uid, String num, int status) {
         GatewayLockPwdDao gatewayLockPwdDao = MyApplication.getInstance().getDaoWriteSession().getGatewayLockPwdDao();
         GatewayLockPwd gatewayLockPwd = new GatewayLockPwd();
         gatewayLockPwd.setUid(uid);
@@ -93,10 +94,10 @@ public class GatewayLockStressAddPresenter<T> extends BasePresenter<IGatewayLock
     }
 
     //删除某个数据
-    private void deleteOnePwd(String gatewayId,String deviceId,String uid,String num) {
-        GatewayLockPwdDao gatewayLockPwdDao=MyApplication.getInstance().getDaoWriteSession().getGatewayLockPwdDao();
-        GatewayLockPwd gatewayLockPwd=gatewayLockPwdDao.queryBuilder().where(GatewayLockPwdDao.Properties.GatewayId.eq(gatewayId), GatewayLockPwdDao.Properties.DeviceId.eq(deviceId),GatewayLockPwdDao.Properties.Uid.eq(uid),GatewayLockPwdDao.Properties.Num.eq(num)).unique();
-        if (gatewayLockPwd!=null){
+    private void deleteOnePwd(String gatewayId, String deviceId, String uid, String num) {
+        GatewayLockPwdDao gatewayLockPwdDao = MyApplication.getInstance().getDaoWriteSession().getGatewayLockPwdDao();
+        GatewayLockPwd gatewayLockPwd = gatewayLockPwdDao.queryBuilder().where(GatewayLockPwdDao.Properties.GatewayId.eq(gatewayId), GatewayLockPwdDao.Properties.DeviceId.eq(deviceId), GatewayLockPwdDao.Properties.Uid.eq(uid), GatewayLockPwdDao.Properties.Num.eq(num)).unique();
+        if (gatewayLockPwd != null) {
             gatewayLockPwdDao.delete(gatewayLockPwd);
         }
     }

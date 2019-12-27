@@ -336,11 +336,11 @@ public class OldBleLockPresenter<T> extends MyOldOpenLockRecordPresenter<IOldBle
                         if (isFull() || retryTimes >= 3) {   //全部查询到了  或者查询了三次
                             upLoadOpenRecord(bleLockInfo.getServerLockInfo().getLockName(), bleLockInfo.getServerLockInfo().getLockNickName(),
                                     getRecordToServer(), MyApplication.getInstance().getUid());
-                            if (isSafe()&& lockRecords == null) {
+                            if (isSafe() && lockRecords == null) {
                                 mViewRef.get().onLoadBleRecordFinish(false);
                                 return;
                             }
-                            if (isSafe()   && lockRecords != null) {
+                            if (isSafe() && lockRecords != null) {
                                 mViewRef.get().onLoadBleRecordFinish(true);
                                 mViewRef.get().onLoadBleRecord(getNotNullRecord());
                             }

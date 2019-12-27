@@ -13,7 +13,7 @@ import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
 import okhttp3.ResponseBody;
 
-public class PersonalFingerPrintPresenter <T> extends BasePresenter<IPersonalVerifyFingerPrintView> {
+public class PersonalFingerPrintPresenter<T> extends BasePresenter<IPersonalVerifyFingerPrintView> {
     //下载图片
     public void downloadPicture(String uid) {
         // TODO: 2019/3/15    付积辉    此处订阅方法没有加入  complate   可能会导致内存泄漏  空指针异常

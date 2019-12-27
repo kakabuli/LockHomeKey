@@ -29,14 +29,14 @@ public class SplashPresenter<T> extends BasePresenter<ISplashView> {
 
             @Override
             public void onNext(VersionBean versionBean) {
-                if (mViewRef.get() != null) {
+                if (isSafe()) {
                     mViewRef.get().getVersionSuccess(versionBean);
                 }
             }
 
             @Override
             public void onError(Throwable e) {
-                if (mViewRef.get() != null) {
+                if (isSafe()) {
                     mViewRef.get().getVersionFail();
                 }
             }
@@ -53,27 +53,27 @@ public class SplashPresenter<T> extends BasePresenter<ISplashView> {
         toDisposable(listenerServiceDisposable);
         listenerServiceDisposable = MyApplication.getInstance()
                 .listenerServiceConnect()
-                .timeout(6*1000, TimeUnit.MILLISECONDS)
+                .timeout(6 * 1000, TimeUnit.MILLISECONDS)
                 .compose(RxjavaHelper.observeOnMainThread())
                 .subscribe(new Consumer<Integer>() {
-            @Override
-            public void accept(Integer integer) throws Exception {
-                if (integer==2){
-                    toDisposable(listenerServiceDisposable);
-                    if (mViewRef!=null&&mViewRef.get()!=null){
-                        mViewRef.get().serviceConnectSuccess();
-                    }
+                    @Override
+                    public void accept(Integer integer) throws Exception {
+                        if (integer == 2) {
+                            toDisposable(listenerServiceDisposable);
+                            if (isSafe()) {
+                                mViewRef.get().serviceConnectSuccess();
+                            }
 
-                }
-            }
-        }, new Consumer<Throwable>() {
-            @Override
-            public void accept(Throwable throwable) throws Exception {
-                if (mViewRef!=null&&mViewRef.get()!=null){
-                    mViewRef.get().serviceConnectThrowable();
-                }
-            }
-        });
+                        }
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        if (isSafe()) {
+                            mViewRef.get().serviceConnectThrowable();
+                        }
+                    }
+                });
         compositeDisposable.add(listenerServiceDisposable);
     }
 }

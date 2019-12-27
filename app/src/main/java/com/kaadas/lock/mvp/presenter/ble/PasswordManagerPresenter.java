@@ -73,7 +73,7 @@ public class PasswordManagerPresenter<T> extends BlePresenter<IPasswordManagerVi
         toDisposable(queryYearPlanDisposable);
         toDisposable(searchUserTypeDisposable1);
 
-        if (mViewRef.get() != null) {
+        if (isSafe()) {
             mViewRef.get().startSync();
         }
 
@@ -92,7 +92,7 @@ public class PasswordManagerPresenter<T> extends BlePresenter<IPasswordManagerVi
                     @Override
                     public void accept(BleDataBean bleDataBean) throws Exception {
                         if (bleDataBean.getOriginalData()[0] == 0) {
-                            if (mViewRef.get() != null) {
+                            if (isSafe()) {
                                 mViewRef.get().onSyncPasswordFailed(new BleProtocolFailedException(bleDataBean.getOriginalData()[4] & 0xff));
                                 mViewRef.get().endSync();
                             }
@@ -137,7 +137,7 @@ public class PasswordManagerPresenter<T> extends BlePresenter<IPasswordManagerVi
                         } catch (NumberFormatException e) {
                             e.printStackTrace();
                         }
-                        if (mViewRef.get() != null) {
+                        if (isSafe()) {
                             LogUtils.e("同步锁密码  传递的密码是  " + Arrays.toString(showList.toArray()));
                             mViewRef.get().onSyncPasswordSuccess(showList);
                         }
@@ -175,7 +175,7 @@ public class PasswordManagerPresenter<T> extends BlePresenter<IPasswordManagerVi
                     @Override
                     public void accept(Throwable throwable) throws Exception {
                         LogUtils.e("同步密码失败   " + throwable.getMessage());
-                        if (mViewRef.get() != null) {
+                        if (isSafe()) {
                             mViewRef.get().onSyncPasswordFailed(throwable);
                             mViewRef.get().endSync();
                         }
@@ -423,7 +423,7 @@ public class PasswordManagerPresenter<T> extends BlePresenter<IPasswordManagerVi
                             showList.get(position).setStartTime((startHour * 60 * 60 * 1000) + (startMin * 60 * 1000));
                             showList.get(position).setEndTime((endHour * 60 * 60 * 1000) + (endMin * 60 * 1000));
                             showList.get(position).setNum(id > 9 ? "" + id : "0" + id);
-                            if (mViewRef.get() != null) {
+                            if (isSafe()) {
                                 mViewRef.get().onUpdate(showList);
                             }
                             //上传计划
@@ -452,7 +452,7 @@ public class PasswordManagerPresenter<T> extends BlePresenter<IPasswordManagerVi
                             showList.get(position).setStartTime(startTime);
                             showList.get(position).setEndTime(endTime);
                             showList.get(position).setNum(id > 9 ? "" + id : "0" + id);
-                            if (mViewRef.get() != null) {
+                            if (isSafe()) {
                                 mViewRef.get().onUpdate(showList);
                             }
                             uploadPassword(showList.get(position));
@@ -522,7 +522,7 @@ public class PasswordManagerPresenter<T> extends BlePresenter<IPasswordManagerVi
                             showList.get(position).setStartTime(startTime);
                             showList.get(position).setEndTime(endTime);
                             showList.get(position).setNum(id > 9 ? "" + id : "0" + id);
-                            if (mViewRef.get() != null) {
+                            if (isSafe()) {
                                 mViewRef.get().onUpdate(showList);
                             }
                             uploadPassword(showList.get(position));
@@ -550,14 +550,14 @@ public class PasswordManagerPresenter<T> extends BlePresenter<IPasswordManagerVi
     public void searchUserType() {
         LogUtils.e("bleNumber的个数是   " + bleNumber.size() + "  position  " + position);
         if (position >= bleNumber.size()) {  //查询完了
-            if (mViewRef.get() != null) {
+            if (isSafe()) {
                 mViewRef.get().endSync();
             }
             return;
         }
         int id = bleNumber.get(position);
 
-        if (id > 4 && id <10 ) {
+        if (id > 4 && id < 10) {
             position++;
             searchUserType();
             return;
@@ -598,7 +598,7 @@ public class PasswordManagerPresenter<T> extends BlePresenter<IPasswordManagerVi
                         if (userType == 0) {  //永久用户   永久用户类型，不用管。
                             showList.get(position).setType(1);
                             uploadPassword(showList.get(position));
-                            if (mViewRef.get() != null) {
+                            if (isSafe()) {
                                 mViewRef.get().onUpdate(showList);
                             }
                             position++;
@@ -629,7 +629,7 @@ public class PasswordManagerPresenter<T> extends BlePresenter<IPasswordManagerVi
                     @Override
                     public void accept(Boolean aBoolean) throws Exception {
                         //后台密码更新   重新获取并显示
-                        if (mViewRef.get() != null) {
+                        if (isSafe()) {
                             mViewRef.get().onServerDataUpdate();
                         }
                     }

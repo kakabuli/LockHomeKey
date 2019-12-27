@@ -29,6 +29,7 @@ import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.NetUtil;
 import com.kaadas.lock.utils.ToastUtil;
 import com.kaadas.lock.mvp.view.personalview.IPersonalMessageView;
+import com.kaadas.lock.widget.RecyclerViewNoBugLinearLayoutManager;
 import com.kaadas.lock.widget.SlideRecyclerView;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
@@ -88,7 +89,7 @@ public class PersonalMessageActivity extends BaseActivity<IPersonalMessageView, 
 
     private void initView() {
         mPersonalMessageList = new ArrayList<>();
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        RecyclerViewNoBugLinearLayoutManager linearLayoutManager = new RecyclerViewNoBugLinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         messageRecycler.setLayoutManager(linearLayoutManager);
         dividerItemDecoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
         dividerItemDecoration.setDrawable(ContextCompat.getDrawable(this, R.drawable.divider_inset));
