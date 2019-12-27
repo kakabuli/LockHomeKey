@@ -119,7 +119,7 @@ public class GatewayLockTimePasswordPresenter<T> extends BasePresenter<IGatewayL
 
                 @Override
                 public void onError(Throwable e) {
-                    if (mViewRef.get() != null) {
+                    if (isSafe()) {
                         mViewRef.get().getSwitchFail();
                     }
                 }
@@ -151,7 +151,7 @@ public class GatewayLockTimePasswordPresenter<T> extends BasePresenter<IGatewayL
                 }
                 @Override
                 public void onError(Throwable e) {
-                    if (mViewRef.get() != null) {
+                    if (isSafe()) {
                         mViewRef.get().updateSwitchUpdateFail();
                     }
                 }

@@ -223,7 +223,7 @@ public class GatewayLockMorePresenter<T> extends BasePresenter<GatewayLockMoreVi
                             if (deleteGatewayLockDeviceBean != null) {
                                 if ("kdszblock".equals(deleteGatewayLockDeviceBean.getDevtype())
                                         && deleteGatewayLockDeviceBean.getEventparams().getEvent_str().equals("delete")) {
-                                    if (mViewRef.get() != null) {
+                                    if (isSafe()) {
                                         mViewRef.get().deleteDeviceSuccess();
                                         MyApplication.getInstance().getAllDevicesByMqtt(true);
                                         //清除锁上的密码
@@ -391,11 +391,11 @@ public class GatewayLockMorePresenter<T> extends BasePresenter<GatewayLockMoreVi
                                 String returnCode = updatePushSwitchResult.getCode();
                                 if ("200".equals(returnCode)) {
                                     MyApplication.getInstance().getAllDevicesByMqtt(true);
-                                    if (mViewRef.get() != null) {
+                                    if (isSafe()) {
                                         mViewRef.get().onUpdatePushSwitchSuccess(pushStatus);
                                     }
                                 } else {
-                                    if (mViewRef.get() != null) {
+                                    if (isSafe()) {
                                         mViewRef.get().onUpdatePushSwitchThrowable(new MqttBackCodeException(returnCode));
                                     }
                                 }
@@ -404,7 +404,7 @@ public class GatewayLockMorePresenter<T> extends BasePresenter<GatewayLockMoreVi
                     }, new Consumer<Throwable>() {
                         @Override
                         public void accept(Throwable throwable) throws Exception {
-                            if (mViewRef.get() != null) {
+                            if (isSafe()) {
                                 mViewRef.get().onUpdatePushSwitchThrowable(throwable);
                             }
                         }

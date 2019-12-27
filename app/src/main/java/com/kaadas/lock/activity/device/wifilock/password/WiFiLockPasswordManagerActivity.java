@@ -14,7 +14,6 @@ import android.widget.TextView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.google.gson.Gson;
 import com.kaadas.lock.R;
-import com.kaadas.lock.activity.device.bluetooth.password.BluetoothPasswordManagerDetailActivity;
 import com.kaadas.lock.adapter.BluetoothPasswordAdapter;
 import com.kaadas.lock.adapter.WifiLockCardAndFingerAdapter;
 import com.kaadas.lock.bean.WiFiLockCardAndFingerShowBean;
@@ -25,6 +24,7 @@ import com.kaadas.lock.publiclibrary.bean.ForeverPassword;
 import com.kaadas.lock.publiclibrary.bean.WiFiLockPassword;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.utils.KeyConstants;
+import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.ToastUtil;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
@@ -70,6 +70,7 @@ public class WiFiLockPasswordManagerActivity extends BaseActivity<IWifiLockPassw
 
         initView();
         initData();
+        refreshLayout.autoRefresh();
     }
 
     @Override
@@ -133,13 +134,14 @@ public class WiFiLockPasswordManagerActivity extends BaseActivity<IWifiLockPassw
             initCardAndFingerAdapter();
         }
         changeState();
-        refreshLayout.autoRefresh();
     }
 
     private void changeState() {
         if (havePassword) {
+            recycleview.setVisibility(View.VISIBLE);
             tvNoPassword.setVisibility(View.GONE);
         } else {
+            recycleview.setVisibility(View.GONE);
             tvNoPassword.setVisibility(View.VISIBLE);
         }
     }
@@ -157,7 +159,7 @@ public class WiFiLockPasswordManagerActivity extends BaseActivity<IWifiLockPassw
         passwordAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                Intent intent = new Intent(WiFiLockPasswordManagerActivity.this, BluetoothPasswordManagerDetailActivity.class);
+                Intent intent = new Intent(WiFiLockPasswordManagerActivity.this, WifiLockPasswordDetailActivity.class);
                 ForeverPassword foreverPassword = passwordList.get(position);
                 //输入密码类型
                 intent.putExtra(KeyConstants.PASSWORD_TYPE, type);
@@ -188,27 +190,10 @@ public class WiFiLockPasswordManagerActivity extends BaseActivity<IWifiLockPassw
 
     @Override
     public void onGetPasswordSuccess(WiFiLockPassword wiFiLockPassword) {
-        if (refreshLayout!=null){
+        if (refreshLayout != null) {
             refreshLayout.finishRefresh();
         }
-        if (type == 1) {
-            passwordList = mPresenter.getShowPasswords(wiFiLockPassword);
-            if (passwordList != null && passwordList.size() > 0) {
-                havePassword = true;
-            } else {
-                havePassword = false;
-            }
-            passwordAdapter.notifyDataSetChanged();
-        } else if (type == 2 || type == 3) {
-            cardAndFingerList = mPresenter.getShowCardsFingers(wiFiLockPassword, type);
-            if (cardAndFingerList != null && cardAndFingerList.size() > 0) {
-                havePassword = true;
-            } else {
-                havePassword = false;
-            }
-            wifiLockCardAndFingerAdapter.notifyDataSetChanged();
-        }
-        changeState();
+        initData();
     }
 
     @Override
@@ -232,7 +217,7 @@ public class WiFiLockPasswordManagerActivity extends BaseActivity<IWifiLockPassw
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
-            initData();
+            mPresenter.getPasswordList(wifiSn);
         }
     }
 }

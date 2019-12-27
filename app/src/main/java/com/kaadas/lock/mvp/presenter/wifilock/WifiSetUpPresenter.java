@@ -15,6 +15,7 @@ import com.kaadas.lock.R;
 import com.kaadas.lock.activity.device.wifilock.add.WifiSetUpActivity;
 import com.kaadas.lock.mvp.mvpbase.BasePresenter;
 import com.kaadas.lock.mvp.view.wifilock.IWifiSetUpView;
+import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
 import com.kaadas.lock.publiclibrary.http.XiaokaiNewServiceImp;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.util.BaseObserver;
@@ -139,7 +140,8 @@ public class WifiSetUpPresenter<T> extends BasePresenter<IWifiSetUpView> {
                     String randomCode = Rsa.bytesToHexString(pwd);
                     LogUtils.e("设备返回的随机码是  16进制 " + Rsa.bytesToHexString(pwd));
                     LogUtils.e("设备返回的随机码是   长度是 " + randomCode.length() + "  字符串  " + randomCode);
-                    if (MyApplication.getInstance().getWifiLockInfoBySn(wifiSn) != null) {
+                    WifiLockInfo wifiLockInfo = MyApplication.getInstance().getWifiLockInfoBySn(wifiSn);
+                    if (wifiLockInfo != null && wifiLockInfo.getIsAdmin() == 1) {
                         update(wifiSn, randomCode, wifiName);
                     } else {
                         bindDevice(wifiSn, wifiSn, MyApplication.getInstance().getUid(), randomCode, wifiName);

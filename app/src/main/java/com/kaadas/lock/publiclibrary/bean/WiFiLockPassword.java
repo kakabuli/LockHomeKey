@@ -12,6 +12,18 @@ public class WiFiLockPassword {
     private List<FingerprintNicknameBean> fingerprintNickname;
     private List<CardNicknameBean> cardNickname;
 
+    public WiFiLockPassword() {
+    }
+
+    public WiFiLockPassword(List<PwdListBean> pwdList, List<FingerprintListBean> fingerprintList, List<CardListBean> cardList, List<PwdNicknameBean> pwdNickname, List<FingerprintNicknameBean> fingerprintNickname, List<CardNicknameBean> cardNickname) {
+        this.pwdList = pwdList;
+        this.fingerprintList = fingerprintList;
+        this.cardList = cardList;
+        this.pwdNickname = pwdNickname;
+        this.fingerprintNickname = fingerprintNickname;
+        this.cardNickname = cardNickname;
+    }
+
     public List<PwdListBean> getPwdList() {
         return pwdList;
     }
@@ -77,6 +89,18 @@ public class WiFiLockPassword {
         private int type;
         private List<String> items;
 
+        public PwdListBean(long createTime, int endTime, int num, int startTime, int type, List<String> items) {
+            this.createTime = createTime;
+            this.endTime = endTime;
+            this.num = num;
+            this.startTime = startTime;
+            this.type = type;
+            this.items = items;
+        }
+
+        public PwdListBean() {
+        }
+
         public long getCreateTime() {
             return createTime;
         }
@@ -135,6 +159,14 @@ public class WiFiLockPassword {
         private long createTime;
         private int num;
 
+        public FingerprintListBean(long createTime, int num) {
+            this.createTime = createTime;
+            this.num = num;
+        }
+
+        public FingerprintListBean() {
+        }
+
         public long getCreateTime() {
             return createTime;
         }
@@ -153,10 +185,20 @@ public class WiFiLockPassword {
     }
 
     public static class CardListBean {
+        public CardListBean(long createTime, int num) {
+            this.createTime = createTime;
+            this.num = num;
+        }
+
+        public CardListBean() {
+        }
+
         /**
          * createTime : 1551785021
          * num : 1
          */
+
+
 
         private long createTime;
         private int num;
@@ -179,10 +221,20 @@ public class WiFiLockPassword {
     }
 
     public static class PwdNicknameBean {
+        public PwdNicknameBean(int num, String nickName) {
+            this.num = num;
+            this.nickName = nickName;
+        }
+
+        public PwdNicknameBean() {
+        }
+
         /**
          * num : 1
          * nickName : 啊啊啊
          */
+
+
 
         private int num;
         private String nickName;
@@ -205,10 +257,19 @@ public class WiFiLockPassword {
     }
 
     public static class FingerprintNicknameBean {
+        public FingerprintNicknameBean(int num, String nickName) {
+            this.num = num;
+            this.nickName = nickName;
+        }
+
+        public FingerprintNicknameBean() {
+        }
+
         /**
          * num : 1
          * nickName : 密码1
          */
+
 
         private int num;
         private String nickName;
@@ -231,10 +292,20 @@ public class WiFiLockPassword {
     }
 
     public static class CardNicknameBean {
+        public CardNicknameBean(int num, String nickName) {
+            this.num = num;
+            this.nickName = nickName;
+        }
+
+        public CardNicknameBean() {
+        }
+
         /**
          * num : 1
          * nickName : 密码1
          */
+
+
 
         private int num;
         private String nickName;

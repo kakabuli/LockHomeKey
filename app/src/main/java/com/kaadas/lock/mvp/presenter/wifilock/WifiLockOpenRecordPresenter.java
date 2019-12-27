@@ -33,14 +33,14 @@ public class WifiLockOpenRecordPresenter<T> extends BasePresenter<IWifiLockOpenR
                             if (page == 1) {
                                 SPUtils.put(KeyConstants.WIFI_LOCK_OPERATION_RECORD + wifiSn, new Gson().toJson(operationRecords));
                             }
-                            if (mViewRef.get() != null) {
+                            if (isSafe()) {
                                 mViewRef.get().onLoadServerRecord(wifiLockOperationRecords, page);
                             }
                         } else {
                             if (page == 1) {
                                 SPUtils.put(KeyConstants.WIFI_LOCK_OPERATION_RECORD + wifiSn, "");
                             }
-                            if (mViewRef.get() != null) {
+                            if (isSafe()) {
                                 if (page == 1) { //第一次获取数据就没有
                                     mViewRef.get().onServerNoData();
                                 } else {
@@ -54,14 +54,14 @@ public class WifiLockOpenRecordPresenter<T> extends BasePresenter<IWifiLockOpenR
 
                     @Override
                     public void onAckErrorCode(BaseResult baseResult) {
-                        if (mViewRef.get() != null) {  //
+                        if (isSafe()) {  //
                             mViewRef.get().onLoadServerRecordFailedServer(baseResult);
                         }
                     }
 
                     @Override
                     public void onFailed(Throwable throwable) {
-                        if (mViewRef.get() != null) {
+                        if (isSafe()) {
                             mViewRef.get().onLoadServerRecordFailed(throwable);
                         }
                     }

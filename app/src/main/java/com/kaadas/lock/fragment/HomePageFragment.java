@@ -120,10 +120,15 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
         initView();
         initData(devices);
         getScrollViewWidth();
+
         return view;
     }
 
     private void initView() {
+
+        mRadioGroup.setBackgroundResource(R.color.color_trans);
+        scTitle.setBackgroundResource(R.color.color_trans);
+
 //        viewPager.setOffscreenPageLimit(3);
         mRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override

@@ -43,12 +43,12 @@ public class WifiLockPresenter<T> extends BasePresenter<IWifiLockView> {
                         if (operationRecordResult.getData() != null && operationRecordResult.getData().size() > 0) {  //服务器没有数据  提示用户
                             List<WifiLockOperationRecord> operationRecords = operationRecordResult.getData();
                             SPUtils.put(KeyConstants.WIFI_LOCK_OPERATION_RECORD + wifiSn, new Gson().toJson(operationRecords));
-                            if (mViewRef.get() != null) {
+                            if (isSafe()) {
                                 mViewRef.get().onLoadServerRecord(operationRecords,isNotice);
                             }
                         } else {
                             SPUtils.put(KeyConstants.WIFI_LOCK_OPERATION_RECORD + wifiSn, "");
-                            if (mViewRef.get() != null) {
+                            if (isSafe()) {
                                 mViewRef.get().onServerNoData(isNotice);
                                 return;
                             }
@@ -57,14 +57,14 @@ public class WifiLockPresenter<T> extends BasePresenter<IWifiLockView> {
 
                     @Override
                     public void onAckErrorCode(BaseResult baseResult) {
-                        if (mViewRef.get() != null) {  //
+                        if (isSafe()) {  //
                             mViewRef.get().onLoadServerRecordFailedServer(baseResult,isNotice);
                         }
                     }
 
                     @Override
                     public void onFailed(Throwable throwable) {
-                        if (mViewRef.get() != null) {
+                        if (isSafe()) {
                             mViewRef.get().onLoadServerRecordFailed(throwable,isNotice);
                         }
                     }

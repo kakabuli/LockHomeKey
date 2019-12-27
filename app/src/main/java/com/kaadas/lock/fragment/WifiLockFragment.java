@@ -197,7 +197,7 @@ public class WifiLockFragment extends BaseFragment<IWifiLockView, WifiLockPresen
             tvUpdateTime.setText("" + DateUtils.secondToDate2(updateTime));
         }
 
-
+        ivTopIcon.setVisibility(View.VISIBLE); //上方图标显示
         switch (status) {
             case 1: //离线状态
                 ivBackGround.setImageResource(R.mipmap.bluetooth_no_connect_big_middle_icon);  //背景大图标
@@ -209,35 +209,30 @@ public class WifiLockFragment extends BaseFragment<IWifiLockView, WifiLockPresen
                 //已启动布防模式
                 ivBackGround.setImageResource(R.mipmap.bluetooth_bu_fang_big_middle_icon);  //背景大图标
                 ivCenterIcon.setImageResource(R.mipmap.bluetooth_lock_safe_inner_midder_icon);  //门锁关闭状态
-                ivTopIcon.setVisibility(View.VISIBLE); //上方图标显示
                 tvTopStates.setText(getString(R.string.already_open_alarm));  //设置设备状态   离线
                 break;
             case 3:
                 //“已反锁，请门内开锁”
                 ivBackGround.setImageResource(R.mipmap.bluetooth_double_lock_big_middle_icon);  //背景大图标
                 ivCenterIcon.setImageResource(R.mipmap.bluetooth_lock_safe_inner_midder_icon);  //门锁关闭状态
-                ivTopIcon.setVisibility(View.VISIBLE); //上方图标显示
                 tvTopStates.setText(getString(R.string.already_back_lock));  //设置设备状态   离线
                 break;
             case 4:
                 //“锁已打开”
                 ivBackGround.setImageResource(R.mipmap.bluetooth_lock_close_big_middle_icon);  //背景大图标
                 ivCenterIcon.setImageResource(R.mipmap.bluetooth_open_lock_success_niner_middle_icon);  //门锁关闭状态
-                ivTopIcon.setVisibility(View.VISIBLE); //上方图标显示
                 tvTopStates.setText(getString(R.string.open_lock_already));  //设置设备状态   离线
                 break;
             case 5:
                 //门已上锁  正常模式
                 ivBackGround.setImageResource(R.mipmap.bluetooth_lock_close_big_middle_icon);  //背景大图标
-                ivCenterIcon.setImageResource(R.mipmap.bluetooth_open_lock_success_niner_middle_icon);  //门锁关闭状态
-                ivTopIcon.setVisibility(View.VISIBLE); //上方图标显示
+                ivCenterIcon.setImageResource(R.mipmap.bluetooth_lock_safe_inner_midder_icon);  //门锁关闭状态
                 tvTopStates.setText(getString(R.string.lock_lock_already));  //设置设备状态   离线
                 break;
             case 6:
                 //已启动安全模式
                 ivBackGround.setImageResource(R.mipmap.wifi_lock_safe_bg);  //背景大图标
                 ivCenterIcon.setImageResource(R.mipmap.bluetooth_lock_safe_inner_midder_icon);  //门锁关闭状态
-                ivTopIcon.setVisibility(View.VISIBLE); //上方图标显示
                 tvTopStates.setText(getString(R.string.already_safe_model_open));  //设置设备状态   离线
                 break;
         }

@@ -49,7 +49,6 @@ public class WifiLockAlarmItemRecordAdapter extends BaseQuickAdapter<WifiLockAla
         TextView tvContent = helper.getView(R.id.tv_content);
         String content = BleUtil.getAlarmByType(bean.getType(),mContext);
 
-        LogUtils.e("Adapter 显示的   " + content);
          // 机械开锁/APP开锁/自动开锁/密码开锁/门卡开锁/指纹开锁
         tvContent.setText(content);
     }

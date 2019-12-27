@@ -94,7 +94,7 @@ public class BleCheckOTAPresenter<T extends ICheckOtaView> extends BlePresenter<
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        if (mViewRef.get() != null) {
+                        if (isSafe()) {
                             mViewRef.get().readInfoFailed(throwable);
                         }
                         LogUtils.e("检查OTA升级数据 失败  " + throwable.getMessage());

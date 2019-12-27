@@ -188,6 +188,7 @@ public class AddWifiLockSuccessActivity extends BaseActivity<IWifiLockAddSuccess
 
     @Override
     public void onSetNameSuccess() {
+        hiddenLoading();
         MyApplication.getInstance().getAllDevicesByMqtt(true);
         Intent backIntent=new Intent(this, MainActivity.class);
         startActivity(backIntent);

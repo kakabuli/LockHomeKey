@@ -117,8 +117,8 @@ public class WifiSetUpActivity extends BaseActivity<IWifiSetUpView, WifiSetUpPre
 
         adminPassword = getIntent().getStringExtra(KeyConstants.WIFI_LOCK_ADMIN_PASSWORD);
         LogUtils.e("输入的管理员密码是    " + adminPassword);
-
-
+        mApSsidTV.setEnabled(false);
+        mApPasswordET.setSelection(0 );
         if (isSDKAtLeastP()) {
             if (checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION)
                     != PackageManager.PERMISSION_GRANTED) {

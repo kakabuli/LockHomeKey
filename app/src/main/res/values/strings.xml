@@ -1309,7 +1309,7 @@
     <string name="share_success">分享成功</string>
     <string name="checked_off_line">您的门锁于检测已离线</string>
     <string name="wifi_lock_alarm_lock_5min">验证多次锁定：您的门锁错误验证多次，门锁系统锁定5分分钟</string>
-    <string name="wifi_lock_alarm_hijack">紧急开锁报警：您的家人丽丽使用劫持密码开门，赶紧联系或报警</string>
+    <string name="wifi_lock_alarm_hijack">紧急开锁报警：您的家人使用劫持密码开门，请联系或报警</string>
     <string name="wifi_lock_alarm_many_failed">验证失败多次报警：您的智能锁已多次验证开门失败，请回家或联系保安查看</string>
     <string name="wifi_lock_alarm_lock_broken">防撬报警：已监测到您的门锁被撬，请联系家人或小区保安</string>
     <string name="wifi_lock_alarm_opens">机械开锁报警：您的智能锁正在被机械锁开启，请回家或联系保安查看</string>

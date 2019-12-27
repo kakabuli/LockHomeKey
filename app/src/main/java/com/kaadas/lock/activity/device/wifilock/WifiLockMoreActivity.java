@@ -195,6 +195,7 @@ public class WifiLockMoreActivity extends BaseActivity<IWifiLockMoreView, WifiLo
                 break;
             case R.id.rl_message_free: //消息免打扰
                 int status = wifiLockInfo.getPushSwitch() == 2 ? 1 : 2;
+                showLoading(getString(R.string.is_setting));
                 mPresenter.updateSwitchStatus(status, wifiLockInfo.getWifiSN());
                 break;
             case R.id.rl_safe_mode:
@@ -298,6 +299,7 @@ public class WifiLockMoreActivity extends BaseActivity<IWifiLockMoreView, WifiLo
 
     @Override
     public void onUpdatePushStatusSuccess(int status) {
+        hiddenLoading();
         wifiLockInfo.setPushSwitch(status);
         if (status == 2) {
             ivMessageFree.setImageResource(R.mipmap.iv_open);
@@ -308,11 +310,13 @@ public class WifiLockMoreActivity extends BaseActivity<IWifiLockMoreView, WifiLo
 
     @Override
     public void onUpdatePushStatusFailed(BaseResult result) {
+        hiddenLoading();
         ToastUtil.getInstance().showLong(R.string.set_failed);
     }
 
     @Override
     public void onUpdatePushStatusThrowable(Throwable throwable) {
+        hiddenLoading();
         ToastUtil.getInstance().showLong(R.string.set_failed);
     }
 

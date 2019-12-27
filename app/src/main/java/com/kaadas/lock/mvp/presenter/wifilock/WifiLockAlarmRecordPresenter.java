@@ -9,6 +9,7 @@ import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.result.GetWifiLockAlarmRecordResult;
 import com.kaadas.lock.publiclibrary.http.util.BaseObserver;
 import com.kaadas.lock.utils.KeyConstants;
+import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.SPUtils;
 
 import java.util.ArrayList;
@@ -30,17 +31,18 @@ public class WifiLockAlarmRecordPresenter<T> extends BasePresenter<IWifiLockAlar
                         List<WifiLockAlarmRecord> alarmRecords = alarmRecordResult.getData();
                         if (alarmRecords != null && alarmRecords.size() > 0) {
                             if (page == 1) {
-                                SPUtils.put(KeyConstants.WIFI_LOCK_ALARM_RECORD + wifiSn, new Gson().toJson(alarmRecords));
+                                String object = new Gson().toJson(alarmRecords);
+                                SPUtils.put(KeyConstants.WIFI_LOCK_ALARM_RECORD + wifiSn, object);
                             }
                             wifiLockAlarmRecords.addAll(alarmRecords);
-                            if (mViewRef.get() != null) {
+                            if (isSafe()) {
                                 mViewRef.get().onLoadServerRecord(wifiLockAlarmRecords, page);
                             }
                         } else {
                             if (page == 1) {
                                 SPUtils.put(KeyConstants.WIFI_LOCK_ALARM_RECORD + wifiSn, "");
                             }
-                            if (mViewRef.get() != null) {//服务器没有数据  提示用户
+                            if (isSafe()) {//服务器没有数据  提示用户
 
                                 if (page == 1) { //第一次获取数据就没有
                                     mViewRef.get().onServerNoData();
@@ -53,14 +55,14 @@ public class WifiLockAlarmRecordPresenter<T> extends BasePresenter<IWifiLockAlar
 
                     @Override
                     public void onAckErrorCode(BaseResult baseResult) {
-                        if (mViewRef.get() != null) {  //
+                        if (isSafe()) {  //
                             mViewRef.get().onLoadServerRecordFailedServer(baseResult);
                         }
                     }
 
                     @Override
                     public void onFailed(Throwable throwable) {
-                        if (mViewRef.get() != null) {  //
+                        if (isSafe()) {  //
                             mViewRef.get().onLoadServerRecordFailed(throwable);
                         }
                     }

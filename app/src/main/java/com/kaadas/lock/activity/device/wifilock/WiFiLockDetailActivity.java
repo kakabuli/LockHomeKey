@@ -115,7 +115,6 @@ public class WiFiLockDetailActivity extends BaseActivity<IWifiLockDetailView, Wi
             shareUsers = new Gson().fromJson(localShareUsers, new TypeToken<List<WifiLockShareResult.WifiLockShareUser>>() {
             }.getType());
             LogUtils.e("本地的分享用户为  shareUsers  " + (shareUsers == null ? 0 : shareUsers.size()));
-
         }
         initPassword();
         mPresenter.getPasswordList(wifiSn);

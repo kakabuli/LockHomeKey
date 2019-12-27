@@ -29,9 +29,6 @@ import butterknife.ButterKnife;
 public class WifiLockPasswordDetailActivity extends BaseActivity<IWifiLockNickNameView, WifiLockNickNamePresenter<IWifiLockNickNameView>>
         implements View.OnClickListener, IWifiLockNickNameView {
 
-
-    @BindView(R.id.iv_back)
-    ImageView ivBack;
     @BindView(R.id.tv_number)
     TextView tvNumber;
     @BindView(R.id.tv_name)
@@ -66,12 +63,11 @@ public class WifiLockPasswordDetailActivity extends BaseActivity<IWifiLockNickNa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wifi_lock_password_detail);
         ButterKnife.bind(this);
-        ivBack.setOnClickListener(this);
+        back.setOnClickListener(this);
         ivEditor.setOnClickListener(this);
 
         pwdType = getIntent().getIntExtra(KeyConstants.PASSWORD_TYPE, 1);
         wifiSn = getIntent().getStringExtra(KeyConstants.WIFI_SN);
-
 
         if (pwdType == 1) {
             llPassword.setVisibility(View.VISIBLE);
@@ -95,8 +91,9 @@ public class WifiLockPasswordDetailActivity extends BaseActivity<IWifiLockNickNa
             llCardFinger.setVisibility(View.VISIBLE);
             nickName = wiFiLockCardAndFingerShowBean.getNickName();
             createTime = wiFiLockCardAndFingerShowBean.getCreateTime();
-            tvCardFingerNumber.setText("");
-            num = wiFiLockCardAndFingerShowBean.getNum();
+            int num = wiFiLockCardAndFingerShowBean.getNum();
+            tvCardFingerNumber.setText(num < 9 ? "0" + num : "" + num);
+            this.num = wiFiLockCardAndFingerShowBean.getNum();
         }
 
         if (createTime == 0) {
@@ -154,7 +151,7 @@ public class WifiLockPasswordDetailActivity extends BaseActivity<IWifiLockNickNa
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.iv_back:
+            case R.id.back:
                 finish();
                 break;
             case R.id.iv_editor:
@@ -168,11 +165,11 @@ public class WifiLockPasswordDetailActivity extends BaseActivity<IWifiLockNickNa
                 TextView tv_cancel = mView.findViewById(R.id.tv_left);
                 TextView tv_query = mView.findViewById(R.id.tv_right);
                 AlertDialog alertDialog = AlertDialogUtil.getInstance().common(this, mView);
-                if (pwdType == 1){
+                if (pwdType == 1) {
                     tvTitle.setText(getString(R.string.please_input_password_name));
-                }else if (pwdType == 2){
+                } else if (pwdType == 2) {
                     tvTitle.setText(getString(R.string.input_fingerprint_name));
-                }else if (pwdType == 3){
+                } else if (pwdType == 3) {
                     tvTitle.setText(getString(R.string.input_door_card_name));
                 }
 
