@@ -85,11 +85,11 @@ public class WiFiLockPassword {
         private long createTime;
         private int endTime;
         private int num;
-        private int startTime;
+        private long startTime;
         private int type;
         private List<String> items;
 
-        public PwdListBean(long createTime, int endTime, int num, int startTime, int type, List<String> items) {
+        public PwdListBean(long createTime, int endTime, int num, long startTime, int type, List<String> items) {
             this.createTime = createTime;
             this.endTime = endTime;
             this.num = num;
@@ -125,11 +125,11 @@ public class WiFiLockPassword {
             this.num = num;
         }
 
-        public int getStartTime() {
+        public long getStartTime() {
             return startTime;
         }
 
-        public void setStartTime(int startTime) {
+        public void setStartTime(long startTime) {
             this.startTime = startTime;
         }
 

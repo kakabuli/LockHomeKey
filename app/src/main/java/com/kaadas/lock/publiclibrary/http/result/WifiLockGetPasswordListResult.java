@@ -14,8 +14,7 @@ public class WifiLockGetPasswordListResult extends BaseResult {
      */
 
     private int nowTime;
-    @SerializedName("data")
-    private WiFiLockPassword dataX;
+    private WiFiLockPassword data;
 
 
 
@@ -46,12 +45,12 @@ public class WifiLockGetPasswordListResult extends BaseResult {
         this.nowTime = nowTime;
     }
 
-    public WiFiLockPassword getDataX() {
-        return dataX;
+    public WiFiLockPassword getData() {
+        return data;
     }
 
-    public void setDataX(WiFiLockPassword dataX) {
-        this.dataX = dataX;
+    public void setData(WiFiLockPassword dataX) {
+        this.data = dataX;
     }
 
 

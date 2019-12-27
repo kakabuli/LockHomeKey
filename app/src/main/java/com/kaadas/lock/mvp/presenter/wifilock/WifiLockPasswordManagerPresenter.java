@@ -30,7 +30,7 @@ public class WifiLockPasswordManagerPresenter<T> extends BasePresenter<IWifiLock
                 .subscribe(new BaseObserver<WifiLockGetPasswordListResult>() {
                     @Override
                     public void onSuccess(WifiLockGetPasswordListResult wifiLockGetPasswordListResult) {
-                        WiFiLockPassword wiFiLockPassword = wifiLockGetPasswordListResult.getDataX();
+                        WiFiLockPassword wiFiLockPassword = wifiLockGetPasswordListResult.getData();
 
                         List<WiFiLockPassword.PwdListBean> pwdList = new ArrayList<>();
 //                         long time =  System.currentTimeMillis() / 1000;
@@ -54,6 +54,8 @@ public class WifiLockPasswordManagerPresenter<T> extends BasePresenter<IWifiLock
 //                        cardNickname.add(new WiFiLockPassword.CardNicknameBean(1, "卡片2"));
 //                        wiFiLockPassword = new WiFiLockPassword( pwdList,  fingerprintList,  cardList,   pwdNickname,  fingerprintNickname,  cardNickname);
                         String object = new Gson().toJson(wiFiLockPassword);
+                        LogUtils.e("服务器数据是   " + object);
+
                         SPUtils.put(KeyConstants.WIFI_LOCK_PASSWORD_LIST + wifiSn, object);
                         if (isSafe()) {
                             mViewRef.get().onGetPasswordSuccess(wiFiLockPassword);

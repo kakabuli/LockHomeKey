@@ -26,7 +26,7 @@ public class WifiLockDetailPresenter<T> extends BasePresenter<IWifiLockDetailVie
                 .subscribe(new BaseObserver<WifiLockGetPasswordListResult>() {
                     @Override
                     public void onSuccess(WifiLockGetPasswordListResult wifiLockGetPasswordListResult) {
-                        WiFiLockPassword wiFiLockPassword = wifiLockGetPasswordListResult.getDataX();
+                        WiFiLockPassword wiFiLockPassword = wifiLockGetPasswordListResult.getData();
 //                        List<WiFiLockPassword.PwdListBean> pwdList = new ArrayList<>();
 //                        long time =  System.currentTimeMillis() / 1000;
 //                        pwdList.add(new WiFiLockPassword.PwdListBean(time, 0, 0, 0, 1, null));
