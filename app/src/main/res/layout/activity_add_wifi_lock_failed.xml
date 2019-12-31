@@ -103,6 +103,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
             <EditText
+                android:id="@+id/tv_support_list"
                 android:layout_marginLeft="@dimen/dp_10"
                 android:textSize="14sp"
                 android:background="@drawable/edit_text_line_209afd"
@@ -111,7 +112,6 @@
                 android:layout_height="wrap_content"
                 android:text="@string/look_wifi_support_rout"
                 android:textColor="#1F96F7" />
-
         </LinearLayout>
     </LinearLayout>
 

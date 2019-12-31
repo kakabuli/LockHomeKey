@@ -256,7 +256,7 @@ public class WiFiLockDetailActivity extends BaseActivity<IWifiLockDetailView, Wi
         try {
             func = Integer.parseInt(functionSet);
         } catch (Exception e) {
-            func = 0x04;
+            func = 0x64;
         }
 
         LogUtils.e("功能集是   " + func);
@@ -278,7 +278,6 @@ public class WiFiLockDetailActivity extends BaseActivity<IWifiLockDetailView, Wi
                         wifiLockFunctionBean.setNumber(cardList == null ? 0 : cardList.size());
                         break;
                 }
-
             }
         }
 

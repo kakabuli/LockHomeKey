@@ -11,10 +11,9 @@ public interface IWifiSetUpView extends IBaseView {
     void readSuccess(String sn,byte[] password);
     /**
      *  读取失败
-     * @param errorCode  -1 长度不够  -2 校验和错误   -3 求Sha256出错
+     * @param errorCode  -1 长度不够  -2 校验和错误   -3 求Sha256出错  -4读取数据失败
      */
     void readFailed( int errorCode);
-
 
     /**
      * 绑定成功
@@ -49,5 +48,8 @@ public interface IWifiSetUpView extends IBaseView {
      * 绑定异常
      */
     void onUpdateThrowable(Throwable throwable);
+
+
+    void onCheckError(byte[] data);
 
 }

@@ -16,12 +16,18 @@ public class WifiLockUpdateInfoBean {
      */
 
     private String wifiName;
+    /**
+     * functionSet : 100
+     */
 
-    public WifiLockUpdateInfoBean(String uid, String wifiSN, String randomCode, String wifiName) {
+    private int functionSet;
+
+    public WifiLockUpdateInfoBean(String uid, String wifiSN, String randomCode, String wifiName, int functionSet) {
         this.uid = uid;
         this.wifiSN = wifiSN;
         this.randomCode = randomCode;
         this.wifiName = wifiName;
+        this.functionSet = functionSet;
     }
 
     public String getUid() {
@@ -54,5 +60,13 @@ public class WifiLockUpdateInfoBean {
 
     public void setWifiName(String wifiName) {
         this.wifiName = wifiName;
+    }
+
+    public int getFunctionSet() {
+        return functionSet;
+    }
+
+    public void setFunctionSet(int functionSet) {
+        this.functionSet = functionSet;
     }
 }

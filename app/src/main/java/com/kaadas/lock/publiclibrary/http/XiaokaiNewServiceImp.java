@@ -994,8 +994,8 @@ public class XiaokaiNewServiceImp {
      * @param uid          是	String	用户ID
      * @return
      */
-    public static Observable<BaseResult> wifiLockBind(String wifiSN, String lockNickName, String uid, String randomCode, String wifiName) {
-        WiFiLockBindBean wiFiLockBindBean = new WiFiLockBindBean(wifiSN, lockNickName, uid, randomCode, wifiName);
+    public static Observable<BaseResult> wifiLockBind(String wifiSN, String lockNickName, String uid, String randomCode, String wifiName,int func) {
+        WiFiLockBindBean wiFiLockBindBean = new WiFiLockBindBean(wifiSN, lockNickName, uid, randomCode, wifiName,func);
         return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
                 .wifiLockBind(new HttpUtils<WiFiLockBindBean>().getBody(wiFiLockBindBean))
                 .subscribeOn(Schedulers.io())
@@ -1188,8 +1188,8 @@ public class XiaokaiNewServiceImp {
      * @param randomCode
      * @return
      */
-    public static Observable<BaseResult> wifiLockUpdateInfo(String uid, String wifiSN, String randomCode, String wifiName) {
-        WifiLockUpdateInfoBean updateInfoBean = new WifiLockUpdateInfoBean(uid, wifiSN, randomCode, wifiName);
+    public static Observable<BaseResult> wifiLockUpdateInfo(String uid, String wifiSN, String randomCode, String wifiName,int func) {
+        WifiLockUpdateInfoBean updateInfoBean = new WifiLockUpdateInfoBean(uid, wifiSN, randomCode, wifiName,func);
         return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
                 .wifiLockUpdateInfo(new HttpUtils<WifiLockUpdateInfoBean>().getBody(updateInfoBean))
                 .subscribeOn(Schedulers.io())

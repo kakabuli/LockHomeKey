@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -27,32 +28,45 @@ public class AddWifiLockFailedActivity extends AppCompatActivity {
     TextView btRepair;
     @BindView(R.id.bt_skip)
     TextView btSkip;
+    @BindView(R.id.tv_support_list)
+    EditText tvSupportList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_wifi_lock_failed);
         ButterKnife.bind(this);
+        toLookSupportRoute.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(AddWifiLockFailedActivity.this, SupportWifiActivity.class));
+            }
+        });
     }
 
-    @OnClick({R.id.back, R.id.to_look_support_route, R.id.bt_repair, R.id.bt_skip})
+    @OnClick({R.id.back, R.id.to_look_support_route, R.id.bt_repair, R.id.bt_skip,R.id.tv_support_list})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.back:
-                startActivity(new Intent(AddWifiLockFailedActivity.this,WifiSetUpActivity.class));
+                startActivity(new Intent(AddWifiLockFailedActivity.this, WifiSetUpActivity.class));
                 finish();
                 break;
             case R.id.to_look_support_route:
                 //跳转查看支持WiFi列表
-                startActivity(new Intent(AddWifiLockFailedActivity.this,SupportWifiActivity.class));
+                startActivity(new Intent(AddWifiLockFailedActivity.this, SupportWifiActivity.class));
                 break;
             case R.id.bt_repair:
                 finish();
                 break;
             case R.id.bt_skip:
-                startActivity(new Intent(AddWifiLockFailedActivity.this,MainActivity.class));
+                startActivity(new Intent(AddWifiLockFailedActivity.this, MainActivity.class));
                 finish();
                 break;
+            case R.id.tv_support_list:
+                //跳转查看支持WiFi列表
+                startActivity(new Intent(AddWifiLockFailedActivity.this, SupportWifiActivity.class));
+            break;
         }
     }
+
 }

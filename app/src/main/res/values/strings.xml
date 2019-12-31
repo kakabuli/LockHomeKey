@@ -1277,7 +1277,7 @@
     <string name="connect">连 接</string>
     <string name="look_wifi_support_rout">查看门锁WiFi支持家庭路由器</string>
     <string name="please_input_wifi_password">请输入密码</string>
-    <string name="wifi_name_disable_empty">WiFi名不能为空</string>
+    <string name="wifi_name_disable_empty">请先连接wifi</string>
     <string name="lock_net_connect">门锁网络连接中</string>
     <string name="support_family_rute">支持的家庭路由器</string>
     <string name="rute_name">路由器名称</string>
@@ -1355,4 +1355,8 @@
     <string name="wifi_lock_bufang_model">门锁启动布防模式</string>
     <string name="is_syncing">正在同步......</string>
     <string name="server_no_data_2">服务器没有数据</string>
+    <string name="please_input_admin_password">请输入管理员密码</string>
+    <string name="admin_password_please_re_input">管理员密码错误，请重新输入</string>
+    <string name="no_support_no_pwd_wifi">不支持无密码wifi</string>
+    <string name="ok_wifi_lock">好的</string>
 </resources>

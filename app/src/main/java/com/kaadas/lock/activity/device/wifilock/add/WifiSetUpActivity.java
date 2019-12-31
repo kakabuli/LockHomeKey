@@ -14,10 +14,12 @@ import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -36,10 +38,12 @@ import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.mvp.presenter.wifilock.WifiSetUpPresenter;
 import com.kaadas.lock.mvp.view.wifilock.IWifiSetUpView;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
+import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.GpsUtil;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LoadingDialog;
 import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.StringUtil;
 import com.kaadas.lock.utils.ToastUtil;
 
 import java.lang.ref.WeakReference;
@@ -73,6 +77,7 @@ public class WifiSetUpActivity extends BaseActivity<IWifiSetUpView, WifiSetUpPre
     private TextView mApSsidTV;
     private EditText mApPasswordET;
     private Button mConfirmBtn;
+    private int adminCount = 1;
 
     private EsptouchAsyncTask4 mTask;
     public String sSsid;
@@ -118,7 +123,7 @@ public class WifiSetUpActivity extends BaseActivity<IWifiSetUpView, WifiSetUpPre
         adminPassword = getIntent().getStringExtra(KeyConstants.WIFI_LOCK_ADMIN_PASSWORD);
         LogUtils.e("输入的管理员密码是    " + adminPassword);
         mApSsidTV.setEnabled(false);
-        mApPasswordET.setSelection(0 );
+        mApPasswordET.setSelection(0);
         if (isSDKAtLeastP()) {
             if (checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION)
                     != PackageManager.PERMISSION_GRANTED) {
@@ -127,7 +132,6 @@ public class WifiSetUpActivity extends BaseActivity<IWifiSetUpView, WifiSetUpPre
             } else {
                 registerBroadcastReceiver();
             }
-
         } else {
             registerBroadcastReceiver();
         }
@@ -229,6 +233,11 @@ public class WifiSetUpActivity extends BaseActivity<IWifiSetUpView, WifiSetUpPre
                     ToastUtil.getInstance().showLong(R.string.wifi_name_disable_empty);
                     return;
                 }
+
+                if (TextUtils.isEmpty(sPassword)) { //WiFi名为空
+                    AlertDialogUtil.getInstance().noEditSingleButtonDialog(WifiSetUpActivity.this,"",getString(R.string.no_support_no_pwd_wifi),getString(R.string.ok_wifi_lock),null);
+                    return;
+                }
                 byte[] ssid = ByteUtil.getBytesByString(sSsid);
                 byte[] password = ByteUtil.getBytesByString(sPassword);
                 byte[] bssid = TouchNetUtil.parseBssid2bytes(wifiBssid);
@@ -247,7 +256,6 @@ public class WifiSetUpActivity extends BaseActivity<IWifiSetUpView, WifiSetUpPre
 
                     @Override
                     public void onSetUpSuccess(String hostAddress) {
-                        ToastUtil.getInstance().showLong(R.string.set_up_success);
                         mPresenter.connectSocket(hostAddress, adminPassword, sSsid);
                     }
                 });
@@ -291,15 +299,16 @@ public class WifiSetUpActivity extends BaseActivity<IWifiSetUpView, WifiSetUpPre
 
     @Override
     public void readFailed(int errorCode) {
+        LogUtils.e("读取数据失败     " + errorCode);
         ToastUtil.getInstance().showLong(R.string.bind_failed);
         hiddenLoading();
     }
 
     @Override
     public void onBindSuccess(String wifiSn) {
+        ToastUtil.getInstance().showLong(R.string.wifi_lockbind_success);
         hiddenLoading();
         MyApplication.getInstance().getAllDevicesByMqtt(true);
-        ToastUtil.getInstance().showLong(R.string.wifi_lockbind_success);
         Intent intent = new Intent(this, AddWifiLockSuccessActivity.class);
         intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
         startActivity(intent);
@@ -337,6 +346,47 @@ public class WifiSetUpActivity extends BaseActivity<IWifiSetUpView, WifiSetUpPre
     public void onUpdateThrowable(Throwable throwable) {
         ToastUtil.getInstance().showLong(R.string.modify_failed);
         hiddenLoading();
+    }
+
+    @Override
+    public void onCheckError(byte[] data) {
+        ToastUtil.getInstance().showLong(R.string.admin_password_please_re_input);
+        hiddenLoading();
+//        LogUtils.e("校验和错误  ");
+//        if (adminCount > 3) {
+//            startActivity(new Intent(WifiSetUpActivity.this, AddWifiLockFailedActivity.class));
+//            ToastUtil.getInstance().showLong(R.string.set_up_failed);
+//            return;
+//        }
+//        ToastUtil.getInstance().showLong(R.string.admin_password_please_re_input);
+//        View mView = LayoutInflater.from(this).inflate(R.layout.have_edit_dialog, null);
+//        TextView tvTitle = mView.findViewById(R.id.tv_title);
+//        EditText editText = mView.findViewById(R.id.et_name);
+//        editText.setInputType(InputType.TYPE_CLASS_NUMBER);
+//        TextView tv_cancel = mView.findViewById(R.id.tv_left);
+//        TextView tv_query = mView.findViewById(R.id.tv_right);
+//        AlertDialog alertDialog = AlertDialogUtil.getInstance().common(this, mView);
+//        tvTitle.setText(getString(R.string.please_input_admin_password));
+//        tv_cancel.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                alertDialog.dismiss();
+//            }
+//        });
+//
+//        tv_query.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                String password = editText.getText().toString().trim();
+//                if (!StringUtil.randomJudge(password)) {
+//                    ToastUtil.getInstance().showShort(R.string.random_verify_error);
+//                    return;
+//                }
+//                adminCount++;
+//                alertDialog.dismiss();
+//                mPresenter.parseWifiData(password, data);
+//            }
+//        });
     }
 
     private static class EsptouchAsyncTask4 extends AsyncTask<byte[], IEsptouchResult, List<IEsptouchResult>> {
@@ -424,7 +474,6 @@ public class WifiSetUpActivity extends BaseActivity<IWifiSetUpView, WifiSetUpPre
                 cancelEsptouch();
                 return;
             }
-
             // check whether the task is cancelled and no results received
             IEsptouchResult firstResult = result.get(0);
             if (firstResult.isCancelled()) {
@@ -452,7 +501,6 @@ public class WifiSetUpActivity extends BaseActivity<IWifiSetUpView, WifiSetUpPre
     }
 
     interface ISetUpResult {
-
         void onSetUpFailed();
 
         void onSetUpSuccess(String hostAddress);

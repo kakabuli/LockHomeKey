@@ -18,16 +18,20 @@ public class WiFiLockBindBean {
      */
 
     private String wifiName;
+    /**
+     * functionSet : 100
+     */
 
-    public WiFiLockBindBean(String wifiSN, String lockNickName, String uid, String randomCode, String wifiName) {
+    private int functionSet;
+
+    public WiFiLockBindBean(String wifiSN, String lockNickName, String uid, String randomCode, String wifiName, int functionSet) {
         this.wifiSN = wifiSN;
         this.lockNickName = lockNickName;
         this.uid = uid;
         this.randomCode = randomCode;
         this.wifiName = wifiName;
+        this.functionSet = functionSet;
     }
-
-
 
     public String getWifiSN() {
         return wifiSN;
@@ -67,5 +71,13 @@ public class WiFiLockBindBean {
 
     public void setWifiName(String wifiName) {
         this.wifiName = wifiName;
+    }
+
+    public int getFunctionSet() {
+        return functionSet;
+    }
+
+    public void setFunctionSet(int functionSet) {
+        this.functionSet = functionSet;
     }
 }

@@ -43,16 +43,16 @@ public class WifiLockDetailAdapater extends RecyclerView.Adapter {
         holder.iv_icon.setImageResource(lockFunctionBean.getImage());
         holder.tvNamepublic.setText(lockFunctionBean.getName());
         holder.tvNumber.setVisibility(View.VISIBLE);
-        if (lockFunctionBean.getType() == BleLockUtils.TYPE_PASSWORD ||
-                lockFunctionBean.getType() == BleLockUtils.TYPE_FINGER ||
-                lockFunctionBean.getType() == BleLockUtils.TYPE_OFFLINE_PASSWORD
+        if (lockFunctionBean.getType() == BleLockUtils.TYPE_PASSWORD
+                ||  lockFunctionBean.getType() == BleLockUtils.TYPE_FINGER
+//                ||  lockFunctionBean.getType() == BleLockUtils.TYPE_OFFLINE_PASSWORD
                 ) {
-            holder.tvNumber.setText(lockFunctionBean.getNumber() + context.getString(R.string.group));
+            holder.tvNumber.setText("("+lockFunctionBean.getNumber() + context.getString(R.string.group)+")");
         } else if (lockFunctionBean.getType() == BleLockUtils.TYPE_CARD) {
-            holder.tvNumber.setText(lockFunctionBean.getNumber() + context.getString(R.string.pice));
+            holder.tvNumber.setText("("+lockFunctionBean.getNumber() + context.getString(R.string.pice)+")");
         } else if (lockFunctionBean.getType() == BleLockUtils.TYPE_SHARE) {
             LogUtils.e("设置共享用户个数   " + lockFunctionBean.getNumber());
-            holder.tvNumber.setText(lockFunctionBean.getNumber() + context.getString(R.string.rad));
+            holder.tvNumber.setText("("+lockFunctionBean.getNumber() + context.getString(R.string.rad)+")");
         } else    {
             holder.tvNumber.setVisibility(View.GONE);
         }
