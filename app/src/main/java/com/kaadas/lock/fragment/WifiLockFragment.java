@@ -88,6 +88,7 @@ public class WifiLockFragment extends BaseFragment<IWifiLockView, WifiLockPresen
         initRecycleView();
         wifiLockInfo = (WifiLockInfo) getArguments().getSerializable(KeyConstants.WIFI_LOCK_INFO);
         wifiLockInfo = MyApplication.getInstance().getWifiLockInfoBySn(wifiLockInfo.getWifiSN());
+        mPresenter.getOpenCount(wifiLockInfo.getWifiSN());
         initData();
         return view;
     }
@@ -145,7 +146,7 @@ public class WifiLockFragment extends BaseFragment<IWifiLockView, WifiLockPresen
                 WifiLockOperationRecord record = lockRecords.get(i);
                 //获取开锁时间的毫秒数
                 long openTime = record.getTime();
-                String sOpenTime = DateUtils.getDateTimeFromMillisecond(openTime);
+                String sOpenTime = DateUtils.getDateTimeFromMillisecond(openTime * 1000);
                 String timeHead = sOpenTime.substring(0, 10);
                 if (!timeHead.equals(lastTimeHead)) { //添加头
                     lastTimeHead = timeHead;
@@ -331,6 +332,7 @@ public class WifiLockFragment extends BaseFragment<IWifiLockView, WifiLockPresen
                     changeLockStatus(5);
                     handler.removeCallbacks(initRunnable);
                 } else if (eventparams.getEventCode() == 0x02) { //开锁
+                    mPresenter.getOpenCount(wifiLockInfo.getWifiSN());
                     changeLockStatus(4);
                     handler.removeCallbacks(initRunnable);
                     handler.postDelayed(initRunnable, 15 * 1000);

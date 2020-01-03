@@ -236,7 +236,8 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
             //根据下标获取商品类别对象
             HomeShowBean homeShowBean = devices.get(i);
 
-            rb.setText(homeShowBean.getDeviceNickName());
+            String deviceNickName = homeShowBean.getDeviceNickName();
+            rb.setText(TextUtils.isEmpty(deviceNickName)?homeShowBean.getDeviceId():deviceNickName);
             rb.setTextSize(13);
             rb.setGravity(Gravity.CENTER);
             //设置图片   根据类型不同显示不同的图片

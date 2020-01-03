@@ -82,7 +82,7 @@ public class WifiSetUpPresenter<T> extends BasePresenter<IWifiSetUpView> {
                     LogUtils.e("收到的数据是   hex  " + Rsa.bytesToHexString(tempData));
                     LogUtils.e("收到的数据是   string  " + new String(tempData));
                     if (tempData.length < MaxLength) { //
-                        LogUtils.e("字节不够");
+                        LogUtils.e("字节不够   " + tempData.length);
                         if (isSafe()) {
                             handler.post(new Runnable() {
                                 @Override
@@ -221,7 +221,6 @@ public class WifiSetUpPresenter<T> extends BasePresenter<IWifiSetUpView> {
                             mViewRef.get().onUpdateThrowable(throwable);
                         }
                     }
-
                     @Override
                     public void onSubscribe1(Disposable d) {
                         compositeDisposable.add(d);
@@ -314,7 +313,7 @@ public class WifiSetUpPresenter<T> extends BasePresenter<IWifiSetUpView> {
         LogUtils.e("结束读取数据1   " + System.currentTimeMillis());
         byte[] data = new byte[64];
         int size = inputStream.read(data);
-        LogUtils.e("结束读取数据2  " + System.currentTimeMillis());
+        LogUtils.e("结束读取数据2   次数" +size+"   "+ System.currentTimeMillis());
         LogUtils.e("读取到的数据是  " + Rsa.bytesToHexString(data));
 
         if (tempData == null) {

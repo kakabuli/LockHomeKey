@@ -84,10 +84,9 @@ public class WifiLockAuthActivity extends BaseActivity<IWifiLockAuthView, WifiLo
         setContentView(R.layout.activity_bluetooth_lock_authorization);
         ButterKnife.bind(this);
         Intent intent = getIntent();
-        changeLockIcon(intent);
         wifiSn = getIntent().getStringExtra(KeyConstants.WIFI_SN);
         wifiLockInfo = MyApplication.getInstance().getWifiLockInfoBySn(wifiSn);
-
+        changeLockIcon();
         ivBack.setOnClickListener(this);
         tvOpenClock.setVisibility(View.INVISIBLE);
         ivDelete.setOnClickListener(this);
@@ -95,7 +94,7 @@ public class WifiLockAuthActivity extends BaseActivity<IWifiLockAuthView, WifiLo
         initListener();
         LogUtils.e("授权界面");
         rlDeviceInformation.setVisibility(View.VISIBLE);
-        dealWithPower(wifiLockInfo.getPower(),wifiLockInfo.getUpdateTime());
+        dealWithPower(wifiLockInfo.getPower(), wifiLockInfo.getUpdateTime());
     }
 
     private void showLockType() {
@@ -105,9 +104,9 @@ public class WifiLockAuthActivity extends BaseActivity<IWifiLockAuthView, WifiLo
         }
     }
 
-    private void changeLockIcon(Intent intent) {
-        String model = intent.getStringExtra(KeyConstants.DEVICE_TYPE);
-        ivLockIcon.setImageResource(BleLockUtils.getAuthorizationImageByModel(model));
+    private void changeLockIcon() {
+        String productModel = wifiLockInfo.getProductModel();
+        ivLockIcon.setImageResource(BleLockUtils.getAuthorizationImageByModel(productModel));
     }
 
     @Override
@@ -166,14 +165,23 @@ public class WifiLockAuthActivity extends BaseActivity<IWifiLockAuthView, WifiLo
                 startActivity(intent);
                 break;
             case R.id.iv_delete:
-                mPresenter.deleteDevice(wifiSn);
-                showLoading(getString(R.string.is_deleting));
+                AlertDialogUtil.getInstance().noEditTwoButtonDialog(this, getString(R.string.device_delete_dialog_head), getString(R.string.device_delete_lock_dialog_content), getString(R.string.cancel), getString(R.string.query), new AlertDialogUtil.ClickListener() {
+                    @Override
+                    public void left() {
+                    }
+
+                    @Override
+                    public void right() {
+                        mPresenter.deleteDevice(wifiSn);
+                        showLoading(getString(R.string.is_deleting));
+                    }
+                });
                 break;
         }
     }
 
 
-    private void dealWithPower(int power,long updateTime) {
+    private void dealWithPower(int power, long updateTime) {
         //电量：80%
         if (power > 100) {
             power = 100;
@@ -195,7 +203,7 @@ public class WifiLockAuthActivity extends BaseActivity<IWifiLockAuthView, WifiLo
         }
 
         //todo  读取电量时间
-        long readDeviceInfoTime = updateTime * 1000 ;
+        long readDeviceInfoTime = updateTime * 1000;
         if (readDeviceInfoTime != -1) {
             if ((System.currentTimeMillis() - readDeviceInfoTime) < 60 * 60 * 1000) {
                 //小于一小时

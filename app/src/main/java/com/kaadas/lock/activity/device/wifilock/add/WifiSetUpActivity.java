@@ -117,7 +117,6 @@ public class WifiSetUpActivity extends BaseActivity<IWifiSetUpView, WifiSetUpPre
         mApSsidTV = findViewById(R.id.ap_ssid_text);
         mApPasswordET = findViewById(R.id.ap_password_edit);
         mConfirmBtn = findViewById(R.id.confirm_btn);
-        mConfirmBtn.setEnabled(false);
         mConfirmBtn.setOnClickListener(this);
 
         adminPassword = getIntent().getStringExtra(KeyConstants.WIFI_LOCK_ADMIN_PASSWORD);
@@ -189,7 +188,6 @@ public class WifiSetUpActivity extends BaseActivity<IWifiSetUpView, WifiSetUpPre
         if (disconnected) {
             mApSsidTV.setText("");
             mApSsidTV.setTag(null);
-            mConfirmBtn.setEnabled(false);
 
             checkLocation();
 
@@ -211,7 +209,6 @@ public class WifiSetUpActivity extends BaseActivity<IWifiSetUpView, WifiSetUpPre
             byte[] ssidOriginalData = TouchNetUtil.getOriginalSsidBytes(info);
             mApSsidTV.setTag(ssidOriginalData);
             wifiBssid = info.getBSSID();
-            mConfirmBtn.setEnabled(true);
         }
     }
 
@@ -230,7 +227,7 @@ public class WifiSetUpActivity extends BaseActivity<IWifiSetUpView, WifiSetUpPre
                 sSsid = mApSsidTV.getText().toString();
                 String sPassword = mApPasswordET.getText().toString();
                 if (TextUtils.isEmpty(sSsid)) { //WiFi名为空
-                    ToastUtil.getInstance().showLong(R.string.wifi_name_disable_empty);
+                    Toast.makeText(this,R.string.wifi_name_disable_empty,Toast.LENGTH_SHORT).show();
                     return;
                 }
 

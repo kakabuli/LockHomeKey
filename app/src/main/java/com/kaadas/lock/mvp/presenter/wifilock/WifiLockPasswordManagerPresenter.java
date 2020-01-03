@@ -137,7 +137,7 @@ public class WifiLockPasswordManagerPresenter<T> extends BasePresenter<IWifiLock
                 case 3:  //卡片
                     List<WiFiLockPassword.CardListBean> cardList = wiFiLockPassword.getCardList();
                     List<WiFiLockPassword.CardNicknameBean> cardNickname = wiFiLockPassword.getCardNickname();
-                    LogUtils.e("服务器数量是  " + cardList.size());
+//                    LogUtils.e("服务器数量是  " + cardList.size());
                     if (cardList != null) {
                         for (WiFiLockPassword.CardListBean password : cardList) {
                             int num = password.getNum();
@@ -156,7 +156,7 @@ public class WifiLockPasswordManagerPresenter<T> extends BasePresenter<IWifiLock
                     break;
             }
         }
-        LogUtils.e("服务器数量是  " + passwords.size());
+//        LogUtils.e("服务器数量是  " + passwords.size());
         return passwords;
     }
 

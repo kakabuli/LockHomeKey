@@ -40,7 +40,7 @@ public class WifiLockAlarmItemRecordAdapter extends BaseQuickAdapter<WifiLockAla
 
         TextView tvTime = helper.getView(R.id.tv_time);
         long time = bean.getTime();
-        String s = DateUtils.long2HourMin(time);
+        String s = DateUtils.currentLong2HourMin(time *1000);
         tvTime.setText(TextUtils.isEmpty(s) ? "" : s);
         helper.getView(R.id.view_top).setVisibility(position == 0? View.INVISIBLE : View.VISIBLE);
         helper.getView(R.id.view_bottom).setVisibility(position == size-1 ? View.INVISIBLE : View.VISIBLE);

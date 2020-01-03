@@ -151,7 +151,7 @@ public class WifiLockOpenRecordFragment extends BaseFragment<IWifiLockOpenRecord
                 WifiLockOperationRecord record = lockRecords.get(i);
                 //获取开锁时间的毫秒数
                 long openTime = record.getTime();
-                String sOpenTime = DateUtils.getDateTimeFromMillisecond(openTime);
+                String sOpenTime = DateUtils.getDateTimeFromMillisecond(openTime * 1000);
                 String timeHead = sOpenTime.substring(0, 10);
                 if (!timeHead.equals(lastTimeHead)) { //添加头
                     lastTimeHead = timeHead;

@@ -37,7 +37,7 @@ public class WifiLockOperationItemRecordAdapter extends BaseQuickAdapter<WifiLoc
         int position = helper.getPosition();
         TextView tvTime = helper.getView(R.id.tv_time);
         long time = record.getTime();
-        String s = DateUtils.long2HourMin(time);
+        String s = DateUtils.currentLong2HourMin(time *1000);
         tvTime.setText(TextUtils.isEmpty(s) ? "" : s);
         helper.getView(R.id.view_top).setVisibility(position == 0 ? View.INVISIBLE : View.VISIBLE);
         helper.getView(R.id.view_bottom).setVisibility(position == size - 1 ? View.INVISIBLE : View.VISIBLE);
@@ -58,18 +58,27 @@ public class WifiLockOperationItemRecordAdapter extends BaseQuickAdapter<WifiLoc
                     left = record.getPwdNum() + "";
                 }
                 switch (pwdType) {
-                    //密码类型：1密码 2指纹 3卡片 4APP用户
-                    case 1:
+                    //	密码类型：0密码 3卡片 4指纹 8APP用户 9机械钥匙
+                    case 0:
                         right = mContext.getString(R.string.password_open);
+                        if (record.getPwdNum() == 252 ){
+                            left = mContext.getString(R.string.offline_password);
+                        }
                         break;
-                    case 2:
+                    case 4:
                         right = mContext.getString(R.string.fingerprint_open);
                         break;
                     case 3:
                         right = mContext.getString(R.string.rfid_open);
                         break;
-                    case 4:
+                    case 8:
                         right = mContext.getString(R.string.app_open);
+                        break;
+                    case 9:
+                        right = mContext.getString(R.string.machine_key);
+                        break;
+                    default:
+                        right = mContext.getString(R.string.unknown_open);
                         break;
                 }
                 break;
@@ -79,30 +88,36 @@ public class WifiLockOperationItemRecordAdapter extends BaseQuickAdapter<WifiLoc
             case 3: //添加秘钥
                 right = mContext.getString(R.string.lock_add) + record.getPwdNum();
                 switch (pwdType) {
-                    //密码类型：1密码 2指纹 3卡片 4APP用户
-                    case 1:
+                    //	密码类型：0密码 3卡片 4指纹 8APP用户 9机械钥匙
+                    case 0:
                         right = right + mContext.getString(R.string.password);
                         break;
-                    case 2:
+                    case 4:
                         right = right + mContext.getString(R.string.fingerprint);
                         break;
                     case 3:
                         right = right + mContext.getString(R.string.card);
+                        break;
+                    default:
+                        right = right + mContext.getString(R.string.unknown_open);
                         break;
                 }
                 break;
             case 4: //删除秘钥
                 right = mContext.getString(R.string.lock_delete) + record.getPwdNum();
                 switch (pwdType) {
-                    //密码类型：1密码 2指纹 3卡片 4APP用户
-                    case 1:
+                    //	密码类型：0密码 3卡片 4指纹 8APP用户 9机械钥匙
+                    case 0:
                         right = right + mContext.getString(R.string.password);
                         break;
-                    case 2:
+                    case 4:
                         right = right + mContext.getString(R.string.fingerprint);
                         break;
                     case 3:
                         right = right + mContext.getString(R.string.card);
+                        break;
+                    default:
+                        right = mContext.getString(R.string.unknown_open);
                         break;
                 }
                 break;
@@ -131,12 +146,11 @@ public class WifiLockOperationItemRecordAdapter extends BaseQuickAdapter<WifiLoc
                 right = mContext.getString(R.string.unknown_open);
                 break;
         }
-
-
         LogUtils.e("Adapter 显示的   " + content);
         // 机械开锁/APP开锁/自动开锁/密码开锁/门卡开锁/指纹开锁
         tvContent.setText(left);
         tvRight.setText(right);
     }
+
 
 }

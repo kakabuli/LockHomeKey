@@ -1049,7 +1049,7 @@
     <string name="face_recognition_open">人脸开锁</string>
     <string name="app_open">手机开锁</string>
     <string name="one_key_open">一键开启开锁</string>
-    <string name="unknown_open">不确定</string>
+    <string name="unknown_open">未知</string>
     <string name="input_passwords">输入密码</string>
     <string name="try_again">再试一次</string>
     <string name="verify_and_turn_on_touch_id">验证并开启Touch ID</string>
@@ -1359,4 +1359,6 @@
     <string name="admin_password_please_re_input">管理员密码错误，请重新输入</string>
     <string name="no_support_no_pwd_wifi">不支持无密码wifi</string>
     <string name="ok_wifi_lock">好的</string>
+    <string name="app">App</string>
+    <string name="machine_key">机械钥匙开锁</string>
 </resources>
