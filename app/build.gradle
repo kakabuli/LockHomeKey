@@ -45,7 +45,10 @@ android {
                 OPPO_APP_SECRET : "24205939F1fedeF4a5734af4cAB30612",
 
                 MEIZU_APP_ID    : "118878",
-                MEIZU_APP_KEY   : "6121ecee371449c2b536b58452d78cb8"
+                MEIZU_APP_KEY   : "6121ecee371449c2b536b58452d78cb8",
+
+                VIVO_APP_ID : "18137",
+                VIVO_APP_KEY : "11e24474-cf3b-447c-9052-feb08012f033"
         ]
     }
 
@@ -202,4 +205,5 @@ dependencies {
     implementation 'com.jakewharton:butterknife:8.4.0'
     implementation 'com.jakewharton:butterknife-compiler:8.4.0'
     implementation files('libs/esptouch.jar')
+    implementation files('libs/GetuiSDK-support-VIVO-1.0.3.jar')
 }
