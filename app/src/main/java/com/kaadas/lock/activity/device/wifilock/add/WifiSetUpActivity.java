@@ -442,8 +442,8 @@ public class WifiSetUpActivity extends BaseActivity<IWifiSetUpView, WifiSetUpPre
             if (context != null) {
                 IEsptouchResult result = values[0];
                 Log.i(TAG, "EspTouchResult: " + result);
-                String text = result.getBssid() + " is connected to the wifi";
-                Toast.makeText(context, text, Toast.LENGTH_SHORT).show();
+//                String text = result.getBssid() + " is connected to the wifi";
+//                Toast.makeText(context, text, Toast.LENGTH_SHORT).show();
             }
         }
 

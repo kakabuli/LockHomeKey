@@ -146,11 +146,15 @@ public class WifiLockOperationItemRecordAdapter extends BaseQuickAdapter<WifiLoc
                 break;
             // 12修改密码昵称
             case 12:
-                right = mContext.getString(R.string.modify) + (record.getPwdNum() > 9 ? ""+record.getPwdNum():"0" + record.getPwdNum());
+                left = record.getUserNickname();
+                if (TextUtils.isEmpty(left)) {
+                    left = record.getUname() + "";
+                }
+                right = mContext.getString(R.string.modify) + (record.getPwdNum() > 9 ? "" + record.getPwdNum() : "0" + record.getPwdNum());
                 switch (pwdType) {
                     //	密码类型：0密码 3卡片 4指纹 8APP用户 9机械钥匙
                     case 0:
-                        right = right+mContext.getString(R.string.password);
+                        right = right + mContext.getString(R.string.password);
                         break;
                     case 4:
                         right = right + mContext.getString(R.string.fingerprint);
@@ -166,13 +170,21 @@ public class WifiLockOperationItemRecordAdapter extends BaseQuickAdapter<WifiLoc
                 break;
             //13添加分享用户
             case 13:
-                  shareUserNickname = record.getShareUserNickname();
-                right = mContext.getString(R.string.wifi_add)+ (!TextUtils.isEmpty(shareUserNickname)?shareUserNickname:record.getShareAccount())+mContext.getString(R.string.wifi_add2);
+                left = record.getUserNickname();
+                if (TextUtils.isEmpty(left)) {
+                    left = record.getUname() + "";
+                }
+                shareUserNickname = record.getShareUserNickname();
+                right = mContext.getString(R.string.wifi_add) + (!TextUtils.isEmpty(shareUserNickname) ? shareUserNickname : record.getShareAccount()) + mContext.getString(R.string.wifi_add2);
                 break;
             //14删除分享用户
             case 14:
-                  shareUserNickname = record.getShareUserNickname();
-                right = mContext.getString(R.string.wifi_delete)+ (!TextUtils.isEmpty(shareUserNickname)?shareUserNickname:record.getShareAccount())+mContext.getString(R.string.wifi_delete2);
+                left = record.getUserNickname();
+                if (TextUtils.isEmpty(left)) {
+                    left = record.getUname() + "";
+                }
+                shareUserNickname = record.getShareUserNickname();
+                right = mContext.getString(R.string.wifi_delete) + (!TextUtils.isEmpty(shareUserNickname) ? shareUserNickname : record.getShareAccount()) + mContext.getString(R.string.wifi_delete2);
                 break;
             default:
                 right = mContext.getString(R.string.unknown_open);

@@ -96,6 +96,8 @@ public class WifiSetUpPresenter<T> extends BasePresenter<IWifiSetUpView> {
                     }
                     WifiResult wifiResult = parseWifiData(adminPassword, tempData);
                     if (wifiResult == null) {
+                        sendData("CheckError");
+                        Thread.sleep(1000);
                         return;
                     }
                     String wifiSn = new String(wifiResult.wifiSn);
@@ -126,6 +128,8 @@ public class WifiSetUpPresenter<T> extends BasePresenter<IWifiSetUpView> {
                     if (isSafe()) {
                         mViewRef.get().connectFailed(e);
                     }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 } finally {
                     release();
                 }
@@ -280,7 +284,7 @@ public class WifiSetUpPresenter<T> extends BasePresenter<IWifiSetUpView> {
         long localCrc = crc32.getValue();
         byte[] bytes = Rsa.int2BytesArray((int) localCrc);
         LogUtils.e("校验和 本地CRC  " + Rsa.bytesToHexString(bytes) + "   锁端CRC  " + Rsa.bytesToHexString(crc));
-        if (bytes[0] != crc[0] || bytes[1] != crc[1] || bytes[2] != crc[2] || bytes[3] != crc[3]) {
+        if (bytes[0] != crc[0] || bytes[1] != crc[1] || bytes[2] != crc[2] || bytes[3] != crc[3]) { //校验失败
             if (isSafe()) {
                 handler.post(new Runnable() {
                     @Override
@@ -334,6 +338,7 @@ public class WifiSetUpPresenter<T> extends BasePresenter<IWifiSetUpView> {
     }
 
     public void sendData(String content) throws IOException {
+        LogUtils.e("发送数据    " + content);
         if (socket != null) {
             outputStream = socket.getOutputStream();
             outputStream.write(content.getBytes());
