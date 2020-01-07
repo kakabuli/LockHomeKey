@@ -28,6 +28,12 @@ public class WifiLockOperationRecord {
     private String uid;
     private String uname;
     private String userNickname;
+    private String shareAccount;
+    private String shareUid;
+    private String shareUserNickname;
+    private String pwdNickname;
+
+
 
     public String get_id() {
         return _id;
@@ -123,5 +129,38 @@ public class WifiLockOperationRecord {
 
     public void setUserNickname(String userNickname) {
         this.userNickname = userNickname;
+    }
+
+
+    public String getShareAccount() {
+        return shareAccount;
+    }
+
+    public void setShareAccount(String shareAccount) {
+        this.shareAccount = shareAccount;
+    }
+
+    public String getShareUid() {
+        return shareUid;
+    }
+
+    public void setShareUid(String shareUid) {
+        this.shareUid = shareUid;
+    }
+
+    public String getShareUserNickname() {
+        return shareUserNickname;
+    }
+
+    public void setShareUserNickname(String shareUserNickname) {
+        this.shareUserNickname = shareUserNickname;
+    }
+
+    public String getPwdNickname() {
+        return pwdNickname;
+    }
+
+    public void setPwdNickname(String pwdNickname) {
+        this.pwdNickname = pwdNickname;
     }
 }

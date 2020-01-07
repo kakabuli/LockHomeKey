@@ -7,7 +7,7 @@
     android:orientation="vertical"
     android:gravity="center_horizontal"
     android:background="#F2F2F2"
-    tools:context="com.kaadas.lock.activity.device.wifilock.add.AddWifiLockFailedActivity">
+    tools:context="com.kaadas.lock.activity.device.wifilock.add.WifiLockAddFailedActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"

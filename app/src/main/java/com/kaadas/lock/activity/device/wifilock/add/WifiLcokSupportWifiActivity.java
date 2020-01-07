@@ -22,7 +22,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class SupportWifiActivity extends BaseAddToApplicationActivity {
+public class WifiLcokSupportWifiActivity extends BaseAddToApplicationActivity {
 
     @BindView(R.id.back)
     ImageView back;

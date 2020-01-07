@@ -89,7 +89,21 @@ public class WifiLockFragment extends BaseFragment<IWifiLockView, WifiLockPresen
         wifiLockInfo = (WifiLockInfo) getArguments().getSerializable(KeyConstants.WIFI_LOCK_INFO);
         wifiLockInfo = MyApplication.getInstance().getWifiLockInfoBySn(wifiLockInfo.getWifiSN());
         mPresenter.getOpenCount(wifiLockInfo.getWifiSN());
+        mPresenter.getOperationRecord(wifiLockInfo.getWifiSN(),false);
         initData();
+        rlIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getContext(),getString(R.string.not_enable_click),Toast.LENGTH_SHORT).show();
+            }
+        });
+        rlIcon.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                Toast.makeText(getContext(),getString(R.string.not_enable_click),Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        });
         return view;
     }
 
@@ -99,6 +113,7 @@ public class WifiLockFragment extends BaseFragment<IWifiLockView, WifiLockPresen
         return new WifiLockPresenter<>();
     }
 
+
     private void initData() {
         //获取缓存数据并显示
         String localRecord = (String) SPUtils.get(KeyConstants.WIFI_LOCK_OPERATION_RECORD + wifiLockInfo.getWifiSN(), "");
@@ -106,7 +121,7 @@ public class WifiLockFragment extends BaseFragment<IWifiLockView, WifiLockPresen
         List<WifiLockOperationRecord> records = gson.fromJson(localRecord, new TypeToken<List<WifiLockOperationRecord>>() {
         }.getType());
         groupData(records);
-        mPresenter.getOperationRecord(wifiLockInfo.getWifiSN(),false);
+
         //WiFi信息并展示
         int count = (int) SPUtils.get(KeyConstants.WIFI_LOCK_OPEN_COUNT + wifiLockInfo.getWifiSN(), 0);
         tvOpenLockTimes.setText("" + count);
@@ -125,7 +140,6 @@ public class WifiLockFragment extends BaseFragment<IWifiLockView, WifiLockPresen
         if (defences == 1) {//布防模式
             changeLockStatus(2);
         }
-
 
         long createTime2 = wifiLockInfo.getCreateTime();
 
@@ -339,6 +353,12 @@ public class WifiLockFragment extends BaseFragment<IWifiLockView, WifiLockPresen
                 }
             }
         }
+    }
+
+    @Override
+    public void onWifiLockActionUpdate() {
+        wifiLockInfo = MyApplication.getInstance().getWifiLockInfoBySn(wifiLockInfo.getWifiSN());
+        initData();
     }
 
     private Runnable initRunnable = new Runnable() {

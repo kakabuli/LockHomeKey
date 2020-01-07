@@ -102,6 +102,7 @@ public class WiFiLockPasswordManagerActivity extends BaseActivity<IWifiLockPassw
         if (!TextUtils.isEmpty(localPasswordCache)) {
             wiFiLockPassword = new Gson().fromJson(localPasswordCache, WiFiLockPassword.class);
         }
+
         if (type == 1) {
             headTitle.setText(R.string.password);
             passwordList = mPresenter.getShowPasswords(wiFiLockPassword);

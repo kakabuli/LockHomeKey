@@ -156,7 +156,7 @@
     <string name="bluetooth_two_text">触摸按键区域唤醒面板</string>
     <string name="bluetooth_three_text">先按“*”两次，再输入管理密码，按“#”确认</string>
     <string name="bluetooth_four_text">语音提示：“已进入管理模式”</string>
-    <string name="bluetooth_five_text">根据语音提示，进入配网</string>
+    <string name="bluetooth_five_text">第三步 根据语音提示，\n选择扩展功能，加入网络</string>
     <string name="already_input_network">已提示进入配网</string>
     <string name="bluetooth_pairing">正在配对中...</string>
     <string name="bluetooth_add_success">您已添加成功，取个名字吧！</string>
@@ -1308,14 +1308,14 @@
     <string name="is_adding">正在添加....</string>
     <string name="share_success">分享成功</string>
     <string name="checked_off_line">您的门锁于检测已离线</string>
-    <string name="wifi_lock_alarm_lock_5min">验证多次锁定：您的门锁错误验证多次，门锁系统锁定5分分钟</string>
-    <string name="wifi_lock_alarm_hijack">紧急开锁报警：您的家人使用劫持密码开门，请联系或报警</string>
-    <string name="wifi_lock_alarm_many_failed">验证失败多次报警：您的智能锁已多次验证开门失败，请回家或联系保安查看</string>
-    <string name="wifi_lock_alarm_lock_broken">防撬报警：已监测到您的门锁被撬，请联系家人或小区保安</string>
-    <string name="wifi_lock_alarm_opens">机械开锁报警：您的智能锁正在被机械锁开启，请回家或联系保安查看</string>
-    <string name="wifi_lock_alarm_low_power">低电量：您的智能锁电量已低于15%,请及时更换</string>
-    <string name="wifi_lock_alarm_problem">上锁故障报警：您的门锁有故障，请注意</string>
-    <string name="wifi_lock_alarm_safe">布防报警：您的门锁处于布防状态，有从门内开锁 情况</string>
+    <string name="wifi_lock_alarm_lock_5min">您的门锁错误验证多次，门锁系统锁定100秒</string>
+    <string name="wifi_lock_alarm_hijack">您的家人使用劫持密码开门，请联系或报警</string>
+    <string name="wifi_lock_alarm_many_failed">您的智能锁已多次验证开门失败，请回家或联系保安查看</string>
+    <string name="wifi_lock_alarm_lock_broken">已监测到您的门锁被撬，请联系家人或小区保安</string>
+    <string name="wifi_lock_alarm_opens">您的智能锁正在被机械锁开启，请回家或联系保安查看</string>
+    <string name="wifi_lock_alarm_low_power">您的智能锁电量已低于15%,请及时更换</string>
+    <string name="wifi_lock_alarm_problem">您的门锁有故障，请注意</string>
+    <string name="wifi_lock_alarm_safe">您的门锁处于布防状态，有从门内开锁情况</string>
     <string name="wifi_lockbind_success">绑定成功</string>
     <string name="is_swap_data">正在交换数据...</string>
     <string name="please_operation_in_lock">App不可设置，请在锁端设置</string>
@@ -1335,7 +1335,7 @@
     <string name="offline_password_notice">注：远程离线临时密码30分钟有效</string>
     <string name="sync_lock_status">同步门锁状态</string>
     <string name="modify_success__">更新成功</string>
-    <string name="wifi_lock_alarm_1">您的%1$s门锁错误验证多次，门锁系统锁定！</string>
+    <string name="wifi_lock_alarm_1">您的%1$s门锁错误验证多次，门锁系统锁定100秒</string>
     <string name="wifi_lock_alarm_2">您的家人使用劫持密码开启%1$s门锁，赶紧联系或报警</string>
     <string name="wifi_lock_alarm_3">您的%1$s门锁错误验证多次</string>
     <string name="wifi_lock_alarm_4">已监测到您的%1$s门锁被撬，请联系家人或小区保安</string>
@@ -1361,4 +1361,16 @@
     <string name="ok_wifi_lock">好的</string>
     <string name="app">App</string>
     <string name="machine_key">机械钥匙开锁</string>
+    <string name="connect_device_wifi">连接设备\nWIFI</string>
+    <string name="connect_home_wifi">连接家庭\nWIFI</string>
+    <string name="wifi_lock_set_up_ap_notice">请将手机和设备尽量靠近路由器，能够更\n好的连接设备</string>
+    <string name="ap_set_up">AP配网</string>
+    <string name="smartconfig">smartconfig</string>
+    <string name="not_enable_click">不可点击</string>
+    <string name="modify">修改</string>
+    <string name="nick_for">昵称为</string>
+    <string name="wifi_delete">删除</string>
+    <string name="wifi_delete2">门锁授权使用</string>
+    <string name="wifi_add">添加</string>
+    <string name="wifi_add2">为门锁授权使用</string>
 </resources>

@@ -37,7 +37,7 @@ public class WifiLockOperationItemRecordAdapter extends BaseQuickAdapter<WifiLoc
         int position = helper.getPosition();
         TextView tvTime = helper.getView(R.id.tv_time);
         long time = record.getTime();
-        String s = DateUtils.currentLong2HourMin(time *1000);
+        String s = DateUtils.currentLong2HourMin(time * 1000);
         tvTime.setText(TextUtils.isEmpty(s) ? "" : s);
         helper.getView(R.id.view_top).setVisibility(position == 0 ? View.INVISIBLE : View.VISIBLE);
         helper.getView(R.id.view_bottom).setVisibility(position == size - 1 ? View.INVISIBLE : View.VISIBLE);
@@ -50,6 +50,7 @@ public class WifiLockOperationItemRecordAdapter extends BaseQuickAdapter<WifiLoc
         //1开锁 2关锁 3添加密钥 4删除密钥 5修改管理员密码 6自动模式 7手动模式 8安全模式切换 9常用模式切换 10反锁模式 11布防模式
         String left = "";
         String right = "";
+        String shareUserNickname;
         int pwdType = record.getPwdType();
         switch (type) {
             case 1: //开锁
@@ -61,7 +62,7 @@ public class WifiLockOperationItemRecordAdapter extends BaseQuickAdapter<WifiLoc
                     //	密码类型：0密码 3卡片 4指纹 8APP用户 9机械钥匙
                     case 0:
                         right = mContext.getString(R.string.password_open);
-                        if (record.getPwdNum() == 252 ){
+                        if (record.getPwdNum() == 252) {
                             left = mContext.getString(R.string.offline_password);
                         }
                         break;
@@ -104,7 +105,8 @@ public class WifiLockOperationItemRecordAdapter extends BaseQuickAdapter<WifiLoc
                 }
                 break;
             case 4: //删除秘钥
-                right = mContext.getString(R.string.lock_delete) + record.getPwdNum();
+                int pwdNum = record.getPwdNum();
+                right = mContext.getString(R.string.lock_delete) + ((pwdNum == 255) ? "全部" : pwdNum + "");
                 switch (pwdType) {
                     //	密码类型：0密码 3卡片 4指纹 8APP用户 9机械钥匙
                     case 0:
@@ -141,6 +143,36 @@ public class WifiLockOperationItemRecordAdapter extends BaseQuickAdapter<WifiLoc
                 break;
             case 11: //布防模式
                 right = mContext.getString(R.string.wifi_lock_bufang_model);
+                break;
+            // 12修改密码昵称
+            case 12:
+                right = mContext.getString(R.string.modify) + (record.getPwdNum() > 9 ? ""+record.getPwdNum():"0" + record.getPwdNum());
+                switch (pwdType) {
+                    //	密码类型：0密码 3卡片 4指纹 8APP用户 9机械钥匙
+                    case 0:
+                        right = right+mContext.getString(R.string.password);
+                        break;
+                    case 4:
+                        right = right + mContext.getString(R.string.fingerprint);
+                        break;
+                    case 3:
+                        right = right + mContext.getString(R.string.card);
+                        break;
+                    default:
+                        right = right + mContext.getString(R.string.unknown_open);
+                        break;
+                }
+                right = right + mContext.getString(R.string.nick_for) + record.getPwdNickname();
+                break;
+            //13添加分享用户
+            case 13:
+                  shareUserNickname = record.getShareUserNickname();
+                right = mContext.getString(R.string.wifi_add)+ (!TextUtils.isEmpty(shareUserNickname)?shareUserNickname:record.getShareAccount())+mContext.getString(R.string.wifi_add2);
+                break;
+            //14删除分享用户
+            case 14:
+                  shareUserNickname = record.getShareUserNickname();
+                right = mContext.getString(R.string.wifi_delete)+ (!TextUtils.isEmpty(shareUserNickname)?shareUserNickname:record.getShareAccount())+mContext.getString(R.string.wifi_delete2);
                 break;
             default:
                 right = mContext.getString(R.string.unknown_open);

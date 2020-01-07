@@ -14,12 +14,10 @@ import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.text.InputType;
 import android.text.TextUtils;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -43,7 +41,6 @@ import com.kaadas.lock.utils.GpsUtil;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LoadingDialog;
 import com.kaadas.lock.utils.LogUtils;
-import com.kaadas.lock.utils.StringUtil;
 import com.kaadas.lock.utils.ToastUtil;
 
 import java.lang.ref.WeakReference;
@@ -77,7 +74,6 @@ public class WifiSetUpActivity extends BaseActivity<IWifiSetUpView, WifiSetUpPre
     private TextView mApSsidTV;
     private EditText mApPasswordET;
     private Button mConfirmBtn;
-    private int adminCount = 1;
 
     private EsptouchAsyncTask4 mTask;
     public String sSsid;
@@ -107,6 +103,7 @@ public class WifiSetUpActivity extends BaseActivity<IWifiSetUpView, WifiSetUpPre
     private String wifiBssid;
     private boolean passwordHide = true;
     public String adminPassword;
+    private boolean isAp;
 
 
     @Override
@@ -120,6 +117,7 @@ public class WifiSetUpActivity extends BaseActivity<IWifiSetUpView, WifiSetUpPre
         mConfirmBtn.setOnClickListener(this);
 
         adminPassword = getIntent().getStringExtra(KeyConstants.WIFI_LOCK_ADMIN_PASSWORD);
+        isAp = getIntent().getBooleanExtra(KeyConstants.WIFI_LOCK_SETUP_IS_AP, false);
         LogUtils.e("输入的管理员密码是    " + adminPassword);
         mApSsidTV.setEnabled(false);
         mApPasswordET.setSelection(0);
@@ -227,18 +225,26 @@ public class WifiSetUpActivity extends BaseActivity<IWifiSetUpView, WifiSetUpPre
                 sSsid = mApSsidTV.getText().toString();
                 String sPassword = mApPasswordET.getText().toString();
                 if (TextUtils.isEmpty(sSsid)) { //WiFi名为空
-                    Toast.makeText(this,R.string.wifi_name_disable_empty,Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, R.string.wifi_name_disable_empty, Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                if (TextUtils.isEmpty(sPassword)) { //WiFi名为空
-                    AlertDialogUtil.getInstance().noEditSingleButtonDialog(WifiSetUpActivity.this,"",getString(R.string.no_support_no_pwd_wifi),getString(R.string.ok_wifi_lock),null);
+                if (TextUtils.isEmpty(sPassword)) { //WiFi密码为空
+                    AlertDialogUtil.getInstance().noEditSingleButtonDialog(WifiSetUpActivity.this, "", getString(R.string.no_support_no_pwd_wifi), getString(R.string.ok_wifi_lock), null);
+                    return;
+                }
+                if (isAp) { //r如果是Ap模式配网
+                    Intent intent = new Intent(this, WifiLockApSetUpActivity.class);
+                    intent.putExtra(KeyConstants.WIFI_LOCK_HOME_PASSWORD, sPassword);
+                    intent.putExtra(KeyConstants.WIFI_LOCK_HOME_SSID, sSsid);
+                    intent.putExtra(KeyConstants.WIFI_LOCK_ADMIN_PASSWORD, adminPassword);
+                    startActivity(intent);
                     return;
                 }
                 byte[] ssid = ByteUtil.getBytesByString(sSsid);
                 byte[] password = ByteUtil.getBytesByString(sPassword);
                 byte[] bssid = TouchNetUtil.parseBssid2bytes(wifiBssid);
-                ;//todo  wifiBssid 为空
+                 //todo  wifiBssid 为空
                 byte[] deviceCount = {1};
                 byte[] broadcast = {1};
                 if (mTask != null) {
@@ -247,7 +253,7 @@ public class WifiSetUpActivity extends BaseActivity<IWifiSetUpView, WifiSetUpPre
                 mTask = new EsptouchAsyncTask4(this, new ISetUpResult() {
                     @Override
                     public void onSetUpFailed() {
-                        startActivity(new Intent(WifiSetUpActivity.this, AddWifiLockFailedActivity.class));
+                        startActivity(new Intent(WifiSetUpActivity.this, WifiLockAddFailedActivity.class));
                         ToastUtil.getInstance().showLong(R.string.wifi_model_set_up_failed);
                     }
 
@@ -260,7 +266,7 @@ public class WifiSetUpActivity extends BaseActivity<IWifiSetUpView, WifiSetUpPre
                 break;
             case R.id.tv_support_list:
                 //跳转查看支持WiFi列表
-                startActivity(new Intent(WifiSetUpActivity.this, SupportWifiActivity.class));
+                startActivity(new Intent(WifiSetUpActivity.this, WifiLcokSupportWifiActivity.class));
                 break;
             case R.id.iv_eye:
                 passwordHide = !passwordHide;
@@ -306,7 +312,7 @@ public class WifiSetUpActivity extends BaseActivity<IWifiSetUpView, WifiSetUpPre
         ToastUtil.getInstance().showLong(R.string.wifi_lockbind_success);
         hiddenLoading();
         MyApplication.getInstance().getAllDevicesByMqtt(true);
-        Intent intent = new Intent(this, AddWifiLockSuccessActivity.class);
+        Intent intent = new Intent(this, WifiLockAddSuccessActivity.class);
         intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
         startActivity(intent);
 
@@ -328,7 +334,7 @@ public class WifiSetUpActivity extends BaseActivity<IWifiSetUpView, WifiSetUpPre
     public void onUpdateSuccess(String wifiSn) {
         ToastUtil.getInstance().showLong(R.string.modify_success);
         hiddenLoading();
-        Intent intent = new Intent(this, AddWifiLockSuccessActivity.class);
+        Intent intent = new Intent(this, WifiLockAddSuccessActivity.class);
         intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
         startActivity(intent);
     }
@@ -351,7 +357,7 @@ public class WifiSetUpActivity extends BaseActivity<IWifiSetUpView, WifiSetUpPre
         hiddenLoading();
 //        LogUtils.e("校验和错误  ");
 //        if (adminCount > 3) {
-//            startActivity(new Intent(WifiSetUpActivity.this, AddWifiLockFailedActivity.class));
+//            startActivity(new Intent(WifiSetUpActivity.this, WifiLockAddFailedActivity.class));
 //            ToastUtil.getInstance().showLong(R.string.set_up_failed);
 //            return;
 //        }

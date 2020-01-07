@@ -49,7 +49,6 @@ public class WifiLockPasswordShareActivity extends AppCompatActivity {
         String wifiSn = getIntent().getStringExtra(KeyConstants.WIFI_SN);
         wifiLockInfo = MyApplication.getInstance().getWifiLockInfoBySn(wifiSn);
         tvPassword.setText(pwd);
-        headTitle.setText(getString(R.string.password_detail));
         tvTime.setText(" " + DateUtils.getStrFromMillisecond2(System.currentTimeMillis()));
         initPassword();
     }
@@ -63,7 +62,6 @@ public class WifiLockPasswordShareActivity extends AppCompatActivity {
             }
         }
         tvPassword.setText(temp);
-
     }
 
     private String getPassword() {
@@ -83,7 +81,7 @@ public class WifiLockPasswordShareActivity extends AppCompatActivity {
             long l = Rsa.getInt(temp);
             String text = (l % 1000000) + "";
             LogUtils.e("转换之后的数据是     " + l +"    " + Rsa.bytes2Int(temp));
-            for (int i = 0; i < (6 - text.length()); i++) {
+            for (int i = 0; i <= (6 - text.length()); i++) {
                 text = "0" + text;
             }
             System.out.println("   testSha256 数据是   " + Rsa.bytesToHexString(messageDigest.digest()));

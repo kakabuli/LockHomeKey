@@ -14,7 +14,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class AddWifiLockFirstActivity extends BaseAddToApplicationActivity {
+public class WifiLockAddFirstActivity extends BaseAddToApplicationActivity {
     @BindView(R.id.back)
     ImageView back;
     @BindView(R.id.help)
@@ -40,7 +40,7 @@ public class AddWifiLockFirstActivity extends BaseAddToApplicationActivity {
 //                startActivity(intent);
                 break;
             case R.id.button_next:
-                Intent searchIntent = new Intent(this, AddWifiLockSecondActivity.class);
+                Intent searchIntent = new Intent(this, WifiLockAddSecondActivity.class);
                 startActivity(searchIntent);
                 break;
         }

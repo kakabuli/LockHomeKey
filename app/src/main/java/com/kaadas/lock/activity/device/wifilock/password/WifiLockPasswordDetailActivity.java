@@ -3,6 +3,7 @@ package com.kaadas.lock.activity.device.wifilock.password;
 import android.app.AlertDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -92,7 +93,8 @@ public class WifiLockPasswordDetailActivity extends BaseActivity<IWifiLockNickNa
             nickName = wiFiLockCardAndFingerShowBean.getNickName();
             createTime = wiFiLockCardAndFingerShowBean.getCreateTime();
             int num = wiFiLockCardAndFingerShowBean.getNum();
-            tvCardFingerNumber.setText(num < 9 ? "0" + num : "" + num);
+            String sNum = (num < 9 ? "0" + num : "" + num);
+            tvCardFingerNumber.setText(sNum + " " + (TextUtils.isEmpty(nickName) ? num : nickName));
             this.num = wiFiLockCardAndFingerShowBean.getNum();
         }
 

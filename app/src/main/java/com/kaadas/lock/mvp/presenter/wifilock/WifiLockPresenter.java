@@ -1,8 +1,12 @@
 package com.kaadas.lock.mvp.presenter.wifilock;
 
+import android.text.TextUtils;
+
 import com.google.gson.Gson;
+import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.mvp.mvpbase.BasePresenter;
 import com.kaadas.lock.mvp.view.wifilock.IWifiLockView;
+import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
 import com.kaadas.lock.publiclibrary.bean.WifiLockOperationRecord;
 import com.kaadas.lock.publiclibrary.http.XiaokaiNewServiceImp;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
@@ -26,12 +30,37 @@ import io.reactivex.functions.Predicate;
 public class WifiLockPresenter<T> extends BasePresenter<IWifiLockView> {
 
     private Disposable wifiLockStatusListenDisposable;
+    private Disposable listenActionUpdateDisposable;
+    private String wifiSN;
 
     @Override
     public void attachView(IWifiLockView view) {
         super.attachView(view);
 
         listenWifiLockOpenStatus();
+
+        listenActionUpdate();
+
+    }
+
+
+
+    private void listenActionUpdate(){
+        toDisposable(listenActionUpdateDisposable);
+        listenActionUpdateDisposable = MyApplication.getInstance().listenerWifiLockAction()
+                .subscribe(new Consumer<WifiLockInfo>() {
+                    @Override
+                    public void accept(WifiLockInfo wifiLockInfo) throws Exception {
+                        if (wifiLockInfo!=null &&!TextUtils.isEmpty( wifiLockInfo.getWifiSN())){
+                            if ( wifiLockInfo.getWifiSN().equals(wifiSN) && isSafe()){
+                                mViewRef.get().onWifiLockActionUpdate();
+                            }
+                        }
+
+                    }
+                });
+
+        compositeDisposable.add(listenActionUpdateDisposable);
 
     }
 
@@ -79,6 +108,7 @@ public class WifiLockPresenter<T> extends BasePresenter<IWifiLockView> {
 
 
     public void getOpenCount(String wifiSn) {
+        wifiSN = wifiSn;
         XiaokaiNewServiceImp.wifiLockGetOpenCount(wifiSn)
                 .subscribe(new BaseObserver<GetOpenCountResult>() {
                     @Override

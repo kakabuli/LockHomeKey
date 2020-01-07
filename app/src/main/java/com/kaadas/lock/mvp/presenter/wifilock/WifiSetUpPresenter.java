@@ -62,6 +62,7 @@ public class WifiSetUpPresenter<T> extends BasePresenter<IWifiSetUpView> {
                 try {
                     serverSocket = new ServerSocket(PORT);
                     serverSocket.setSoTimeout(15 * 1000);
+
                     socket = serverSocket.accept();
                     LogUtils.e("连接成功   ");
                     tempData = null;
@@ -221,6 +222,7 @@ public class WifiSetUpPresenter<T> extends BasePresenter<IWifiSetUpView> {
                             mViewRef.get().onUpdateThrowable(throwable);
                         }
                     }
+
                     @Override
                     public void onSubscribe1(Disposable d) {
                         compositeDisposable.add(d);
@@ -306,28 +308,36 @@ public class WifiSetUpPresenter<T> extends BasePresenter<IWifiSetUpView> {
 
     private void readWifiData(Socket socket) throws IOException {
         LogUtils.e("开始读取数据  第   " + reTryTimes + "  次读取数据 ");
-        socket.setSoTimeout(3 * 1000);
+        socket.setSoTimeout(10 * 1000);
         LogUtils.e("开始读取数据  第   " + reTryTimes + "  次  " + System.currentTimeMillis());
         inputStream = socket.getInputStream();
         //连接成功
         LogUtils.e("结束读取数据1   " + System.currentTimeMillis());
         byte[] data = new byte[64];
-        int size = inputStream.read(data);
-        LogUtils.e("结束读取数据2   次数" +size+"   "+ System.currentTimeMillis());
-        LogUtils.e("读取到的数据是  " + Rsa.bytesToHexString(data));
-
-        if (tempData == null) {
-            tempData = new byte[size];
-            System.arraycopy(data, 0, tempData, 0, tempData.length);
-        } else {
-            byte[] temp = new byte[size + tempData.length];
-            System.arraycopy(tempData, 0, temp, 0, tempData.length);
-            System.arraycopy(data, 0, temp, tempData.length, size);
-            tempData = temp;
+        int size = 0;
+        try {
+            size = inputStream.read(data);
+        } catch (IOException e) {
+            e.printStackTrace();
+            sendData("TimeOut\r");
         }
-        if (tempData.length < MaxLength || reTryTimes >= 5) {
+        LogUtils.e("结束读取数据2   次数" + size + "   " + System.currentTimeMillis());
+        LogUtils.e("读取到的数据是  " + Rsa.bytesToHexString(data));
+        if (size < 46) {
+            sendData("Error\r");
             readWifiData(socket);
             reTryTimes++;
+        } else {
+            tempData = new byte[size];
+            System.arraycopy(data, 0, tempData, 0, tempData.length);
+        }
+    }
+
+    public void sendData(String content) throws IOException {
+        if (socket != null) {
+            outputStream = socket.getOutputStream();
+            outputStream.write(content.getBytes());
+            outputStream.flush();
         }
     }
 

@@ -103,6 +103,9 @@ public class WifiLockPasswordManagerPresenter<T> extends BasePresenter<IWifiLock
                             }
                         }
                     }
+                    if (num > 4 && num < 9) {
+                        foreverPassword.setType(5);
+                    }
                     passwords.add(foreverPassword);
                 }
             }

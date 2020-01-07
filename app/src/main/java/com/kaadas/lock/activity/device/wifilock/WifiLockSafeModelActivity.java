@@ -8,8 +8,14 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
+import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
+import com.kaadas.lock.mvp.presenter.wifilock.WifiLockMorePresenter;
+import com.kaadas.lock.mvp.presenter.wifilock.WifiLockSafeModePresenter;
+import com.kaadas.lock.mvp.view.wifilock.IWifiLockSafeModeView;
+import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
 import com.kaadas.lock.utils.BleLockUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.ToastUtil;
@@ -17,9 +23,11 @@ import com.lzy.imagepicker.util.Utils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 
-public class WifiLockSafeModelActivity extends BaseAddToApplicationActivity
-        implements View.OnClickListener {
+public class WifiLockSafeModelActivity extends BaseActivity<IWifiLockSafeModeView,WifiLockSafeModePresenter<IWifiLockSafeModeView>> implements
+        View.OnClickListener,IWifiLockSafeModeView {
 
 
     @BindView(R.id.iv_back)
@@ -48,6 +56,7 @@ public class WifiLockSafeModelActivity extends BaseAddToApplicationActivity
     LinearLayout noCard;
     @BindView(R.id.rl_notice)
     RelativeLayout rlNotice;
+    private String wifiSn;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -58,8 +67,12 @@ public class WifiLockSafeModelActivity extends BaseAddToApplicationActivity
         ivBack.setOnClickListener(this);
         tvContent.setText(R.string.safe_mode);
         rlSafeMode.setOnClickListener(this);
-
-        String functionSet = getIntent().getStringExtra(KeyConstants.WIFI_LOCK_FUNCTION);
+        wifiSn = getIntent().getStringExtra(KeyConstants.WIFI_SN);
+        mPresenter.init(wifiSn);
+        WifiLockInfo wifiLockInfo = MyApplication.getInstance().getWifiLockInfoBySn(wifiSn);
+        String functionSet = wifiLockInfo.getFunctionSet();
+        int safeMode = wifiLockInfo.getSafeMode();
+        ivSafeMode.setImageResource(safeMode == 1 ? R.mipmap.iv_open : R.mipmap.iv_close);
         int func;
         try {
             func = Integer.parseInt(functionSet);
@@ -101,6 +114,11 @@ public class WifiLockSafeModelActivity extends BaseAddToApplicationActivity
     }
 
     @Override
+    protected WifiLockSafeModePresenter<IWifiLockSafeModeView> createPresent() {
+        return new WifiLockSafeModePresenter<>();
+    }
+
+    @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.iv_back:
@@ -112,4 +130,13 @@ public class WifiLockSafeModelActivity extends BaseAddToApplicationActivity
         }
     }
 
+
+    @Override
+    public void onWifiLockActionUpdate() {
+        WifiLockInfo wifiLockInfo = MyApplication.getInstance().getWifiLockInfoBySn(wifiSn);
+        if (ivSafeMode!=null && wifiLockInfo!=null){
+            int safeMode = wifiLockInfo.getSafeMode();
+            ivSafeMode.setImageResource(safeMode == 1 ? R.mipmap.iv_open : R.mipmap.iv_close);
+        }
+    }
 }

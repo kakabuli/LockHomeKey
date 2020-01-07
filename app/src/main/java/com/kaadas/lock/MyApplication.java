@@ -21,6 +21,7 @@ import com.huawei.android.hms.agent.HMSAgent;
 import com.igexin.sdk.PushManager;
 import com.kaadas.lock.activity.login.LoginActivity;
 import com.kaadas.lock.bean.HomeShowBean;
+import com.kaadas.lock.bean.WifiLockActionBean;
 import com.kaadas.lock.publiclibrary.bean.CateEyeInfo;
 import com.kaadas.lock.publiclibrary.bean.GatewayInfo;
 import com.kaadas.lock.publiclibrary.bean.GwLockInfo;
@@ -53,6 +54,7 @@ import com.kaadas.lock.utils.greenDao.db.DaoManager;
 import com.kaadas.lock.utils.greenDao.db.DaoMaster;
 import com.kaadas.lock.utils.greenDao.db.DaoSession;
 import com.kaadas.lock.utils.greenDao.db.WifiLockInfoDao;
+import com.kaadas.lock.utils.greenDao.manager.WifiLockInfoManager;
 import com.kaidishi.lock.service.GeTuiIntentService;
 import com.kaidishi.lock.service.GeTuiPushService;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
@@ -573,14 +575,53 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
             for (int i = homeShowDevices.size() - 1; i >= 0; i--) {
                 HomeShowBean homeShowBean = homeShowDevices.get(i);
                 if (homeShowBean.getDeviceType() == HomeShowBean.TYPE_WIFI_LOCK) {
-                   WifiLockInfo wifiLockInfo = (WifiLockInfo) homeShowBean.getObject();
-                   if (wifiLockInfo.getWifiSN().equals(sn)){
-                       return wifiLockInfo;
-                   }
+                    WifiLockInfo wifiLockInfo = (WifiLockInfo) homeShowBean.getObject();
+                    if (wifiLockInfo.getWifiSN().equals(sn)) {
+                        return wifiLockInfo;
+                    }
                 }
             }
         }
         return null;
+    }
+
+
+    public void updateWifiLockInfo(String sn, WifiLockActionBean.EventparamsBean eventparams) {
+        if (homeShowDevices != null) {
+            for (int i = homeShowDevices.size() - 1; i >= 0; i--) {
+                HomeShowBean homeShowBean = homeShowDevices.get(i);
+                if (homeShowBean.getDeviceType() == HomeShowBean.TYPE_WIFI_LOCK) {
+                    WifiLockInfo wifiLockInfo = (WifiLockInfo) homeShowBean.getObject();
+                    /**
+                     * amMode : 1
+                     * defences : 1
+                     * language : zh/en
+                     * operatingMode : 1
+                     * safeMode : 1
+                     * volume : 0
+                     */
+                    if (wifiLockInfo.getWifiSN().equals(sn)) {
+                        wifiLockInfo.setAmMode(eventparams.getAmMode());
+                        wifiLockInfo.setDefences(eventparams.getDefences());
+                        wifiLockInfo.setLanguage(eventparams.getLanguage());
+                        wifiLockInfo.setOperatingMode(eventparams.getOperatingMode());
+                        wifiLockInfo.setSafeMode(eventparams.getSafeMode());
+                        wifiLockInfo.setVolume(eventparams.getVolume());
+                    }
+                    new WifiLockInfoManager().insertOrReplace(wifiLockInfo);
+                    wifiLockActionChange.onNext(wifiLockInfo);
+                }
+            }
+        }
+    }
+
+    /**
+     * wifi锁动态更新界面
+     */
+    private PublishSubject<WifiLockInfo> wifiLockActionChange = PublishSubject.create();
+
+    public Observable<WifiLockInfo> listenerWifiLockAction() {
+        return wifiLockActionChange;
     }
 
 

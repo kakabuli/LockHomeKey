@@ -45,4 +45,10 @@ public interface IWifiLockMoreView extends IBaseView {
      */
     void onUpdatePushStatusThrowable(Throwable throwable);
 
+
+    /**
+     *
+     */
+    void onWifiLockActionUpdate();
+
 }

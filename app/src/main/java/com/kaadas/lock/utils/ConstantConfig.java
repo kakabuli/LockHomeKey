@@ -14,5 +14,6 @@ public class ConstantConfig {
     public static final String OTA_RESULT_UPLOAD_URL = "http://47.106.83.60:9111/api/deviceDevupRecord/bt/add";  //正式OTA上报服务器
     public static final String MQTT_BASE_URL = "tcp://test.juziwulian.com:1883";//测试服务器
     public static final String LINPHONE_URL = "test.juziwulian.com:5061";//测试sip
+    
 
 }

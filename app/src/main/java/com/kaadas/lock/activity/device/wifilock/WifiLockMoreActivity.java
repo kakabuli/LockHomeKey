@@ -16,9 +16,7 @@ import android.widget.TextView;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.MainActivity;
-import com.kaadas.lock.activity.device.bluetooth.BluetoothLockLanguageSettingActivity;
-import com.kaadas.lock.activity.device.bluetooth.BluetoothSafeModeActivity;
-import com.kaadas.lock.activity.device.wifilock.add.AddWifiLockFirstActivity;
+import com.kaadas.lock.activity.device.wifilock.add.WifiLockAddFirstActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.mvp.presenter.wifilock.WifiLockMorePresenter;
 import com.kaadas.lock.mvp.view.wifilock.IWifiLockMoreView;
@@ -34,7 +32,6 @@ import com.kaadas.lock.utils.ToastUtil;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 public class WifiLockMoreActivity extends BaseActivity<IWifiLockMoreView, WifiLockMorePresenter<IWifiLockMoreView>>
         implements IWifiLockMoreView, View.OnClickListener {
@@ -90,19 +87,8 @@ public class WifiLockMoreActivity extends BaseActivity<IWifiLockMoreView, WifiLo
         ButterKnife.bind(this);
         wifiSn = getIntent().getStringExtra(KeyConstants.WIFI_SN);
         wifiLockInfo = MyApplication.getInstance().getWifiLockInfoBySn(wifiSn);
-        String functionSet = wifiLockInfo.getFunctionSet();
-        int func = 0;
-        try {
-            func = Integer.parseInt(functionSet);
-        } catch (Exception e) {
-
-        }
-        if (BleLockUtils.isSupportAMModeShow(func)) {
-            rlAm.setVisibility(View.VISIBLE);
-        } else {
-            rlAm.setVisibility(View.GONE);
-        }
-
+        rlAm.setVisibility(View.GONE);
+        mPresenter.init(wifiSn);
         initClick();
         initData();
     }
@@ -111,6 +97,9 @@ public class WifiLockMoreActivity extends BaseActivity<IWifiLockMoreView, WifiLo
     protected WifiLockMorePresenter createPresent() {
         return new WifiLockMorePresenter();
     }
+
+
+
 
     private void initData() {
         tvDeviceName.setText(wifiLockInfo.getLockNickname());  //昵称
@@ -200,7 +189,7 @@ public class WifiLockMoreActivity extends BaseActivity<IWifiLockMoreView, WifiLo
                 break;
             case R.id.rl_safe_mode:
                 intent = new Intent(this, WifiLockSafeModelActivity.class);
-                intent.putExtra(KeyConstants.WIFI_LOCK_FUNCTION, wifiLockInfo.getFunctionSet());
+                intent.putExtra(KeyConstants.WIFI_SN, wifiLockInfo.getWifiSN());
                 startActivity(intent);
                 break;
             case R.id.rl_am:   //手动自动模式
@@ -235,7 +224,7 @@ public class WifiLockMoreActivity extends BaseActivity<IWifiLockMoreView, WifiLo
                 });
                 break;
             case R.id.rl_wifi_name: //WiFi名称
-                startActivity(new Intent(this,AddWifiLockFirstActivity.class));
+                startActivity(new Intent(this, WifiLockAddFirstActivity.class));
                 break;
         }
     }
@@ -283,6 +272,9 @@ public class WifiLockMoreActivity extends BaseActivity<IWifiLockMoreView, WifiLo
         tvDeviceName.setText(name);
         wifiLockInfo.setLockNickname(name);
         ToastUtil.getInstance().showLong(R.string.device_nick_name_update_success);
+        Intent intent = new Intent();
+        intent.putExtra(KeyConstants.WIFI_LOCK_NEW_NAME, name);
+        setResult(RESULT_OK, intent);
     }
 
     @Override
@@ -320,6 +312,11 @@ public class WifiLockMoreActivity extends BaseActivity<IWifiLockMoreView, WifiLo
         ToastUtil.getInstance().showLong(R.string.set_failed);
     }
 
+    @Override
+    public void onWifiLockActionUpdate() {
+        wifiLockInfo = MyApplication.getInstance().getWifiLockInfoBySn(wifiSn);
+        initData();
+    }
 
 
 }

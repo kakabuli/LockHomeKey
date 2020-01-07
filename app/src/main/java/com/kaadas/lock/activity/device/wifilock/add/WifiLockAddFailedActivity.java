@@ -16,7 +16,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class AddWifiLockFailedActivity extends AppCompatActivity {
+public class WifiLockAddFailedActivity extends AppCompatActivity {
 
     @BindView(R.id.back)
     ImageView back;
@@ -39,7 +39,7 @@ public class AddWifiLockFailedActivity extends AppCompatActivity {
         toLookSupportRoute.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(AddWifiLockFailedActivity.this, SupportWifiActivity.class));
+                startActivity(new Intent(WifiLockAddFailedActivity.this, WifiLcokSupportWifiActivity.class));
             }
         });
     }
@@ -48,23 +48,23 @@ public class AddWifiLockFailedActivity extends AppCompatActivity {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.back:
-                startActivity(new Intent(AddWifiLockFailedActivity.this, WifiSetUpActivity.class));
+                startActivity(new Intent(WifiLockAddFailedActivity.this, WifiSetUpActivity.class));
                 finish();
                 break;
             case R.id.to_look_support_route:
                 //跳转查看支持WiFi列表
-                startActivity(new Intent(AddWifiLockFailedActivity.this, SupportWifiActivity.class));
+                startActivity(new Intent(WifiLockAddFailedActivity.this, WifiLcokSupportWifiActivity.class));
                 break;
             case R.id.bt_repair:
                 finish();
                 break;
             case R.id.bt_skip:
-                startActivity(new Intent(AddWifiLockFailedActivity.this, MainActivity.class));
+                startActivity(new Intent(WifiLockAddFailedActivity.this, MainActivity.class));
                 finish();
                 break;
             case R.id.tv_support_list:
                 //跳转查看支持WiFi列表
-                startActivity(new Intent(AddWifiLockFailedActivity.this, SupportWifiActivity.class));
+                startActivity(new Intent(WifiLockAddFailedActivity.this, WifiLcokSupportWifiActivity.class));
             break;
         }
     }

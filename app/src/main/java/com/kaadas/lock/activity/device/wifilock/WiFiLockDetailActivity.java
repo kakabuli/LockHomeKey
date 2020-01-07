@@ -97,6 +97,8 @@ public class WiFiLockDetailActivity extends BaseActivity<IWifiLockDetailView, Wi
         showLockType();
         initRecycleview();
         initData();
+        String lockNickname = wifiLockInfo.getLockNickname();
+        tvBluetoothName.setText(TextUtils.isEmpty(lockNickname)?wifiLockInfo.getWifiSN():lockNickname);
     }
 
     @Override
@@ -106,6 +108,7 @@ public class WiFiLockDetailActivity extends BaseActivity<IWifiLockDetailView, Wi
     }
 
     private void initData() {
+        wifiLockInfo = MyApplication.getInstance().getWifiLockInfoBySn(wifiSn);
         String localPasswordCache = (String) SPUtils.get(KeyConstants.WIFI_LOCK_PASSWORD_LIST + wifiSn, "");
         if (!TextUtils.isEmpty(localPasswordCache)) {
             wiFiLockPassword = new Gson().fromJson(localPasswordCache, WiFiLockPassword.class);
@@ -120,6 +123,7 @@ public class WiFiLockDetailActivity extends BaseActivity<IWifiLockDetailView, Wi
         mPresenter.getPasswordList(wifiSn);
         mPresenter.queryUserList(wifiSn);
         dealWithPower(wifiLockInfo.getPower(),wifiLockInfo.getUpdateTime());
+
     }
 
 
@@ -137,12 +141,12 @@ public class WiFiLockDetailActivity extends BaseActivity<IWifiLockDetailView, Wi
 
     private void showLockType() {
         if (wifiLockInfo == null) {
-            tvType.setText("");
+            tvLockType.setText("");
             return;
         }
         lockType = wifiLockInfo.getProductModel();
         if (!TextUtils.isEmpty(lockType)) {
-            tvType.setText(StringUtil.getSubstringFive(lockType));
+            tvLockType.setText(StringUtil.getSubstringFive(lockType));
         }
     }
 
@@ -403,9 +407,8 @@ public class WiFiLockDetailActivity extends BaseActivity<IWifiLockDetailView, Wi
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == TO_MORE_REQUEST_CODE && resultCode == RESULT_OK) {
-            if (data.getBooleanExtra(KeyConstants.IS_DELETE, false)) {
-                finish();
-            }
+           String newName =   data.getStringExtra(KeyConstants.WIFI_LOCK_NEW_NAME);
+            tvBluetoothName.setText(newName+"");
         }
     }
 

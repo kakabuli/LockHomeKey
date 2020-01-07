@@ -39,7 +39,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class AddWifiLockSuccessActivity extends BaseActivity<IWifiLockAddSuccessView
+public class WifiLockAddSuccessActivity extends BaseActivity<IWifiLockAddSuccessView
         , WifiLockAddSuccessPresenter<IWifiLockAddSuccessView>> implements IWifiLockAddSuccessView, BaseQuickAdapter.OnItemClickListener {
 
     @BindView(R.id.input_name)

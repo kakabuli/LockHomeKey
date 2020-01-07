@@ -470,6 +470,10 @@ public class KeyConstants {
     public static final String WIFI_LOCK_INFO = "wifiLockInfo"; //WiFi锁信息
     public static final String WIFI_LOCK_FUNCTION = "wifiLockFunction"; //WiFi锁信息
     public static final String WIFI_LOCK_OPEN_COUNT = "wifiLockOpenCount"; //WiFi锁开锁次数
+    public static final String WIFI_LOCK_SETUP_IS_AP = "wifiLockSetUpType"; //WiFi锁配网方式是否是Ap
+    public static final String WIFI_LOCK_HOME_PASSWORD = "wifiLockHomePassword"; //WiFi锁配网方式是否是Ap
+    public static final String WIFI_LOCK_HOME_SSID = "wifiLockHomeSsid"; //WiFi锁配网方式是否是Ap
+    public static final String WIFI_LOCK_NEW_NAME = "wifiLockNewName"; //WiFi锁配网方式是否是Ap
 
 
 }

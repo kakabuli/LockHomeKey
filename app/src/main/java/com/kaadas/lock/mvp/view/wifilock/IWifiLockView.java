@@ -51,4 +51,9 @@ public interface IWifiLockView extends IBaseView {
      * 锁操作上报
      */
     void onWifiLockOperationEvent(String wifiSn, WifiLockOperationBean.EventparamsBean eventparams );
+
+    /**
+     * 锁状态更新
+     */
+    void onWifiLockActionUpdate();
 }

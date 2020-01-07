@@ -784,17 +784,17 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".activity.device.wifilock.add.AddWifiLockSuccessActivity" />
+        <activity android:name=".activity.device.wifilock.add.WifiLockAddSuccessActivity" />
         <activity android:name=".publiclibrary.ota.face.FaceOtaActivity" />
         <activity android:name=".activity.device.gatewaylock.password.test.PasswordTestActivity" />
         <activity android:name=".activity.device.wifilock.add.WifiSetUpActivity" />
-        <activity android:name=".activity.device.wifilock.add.AddWifiLockFirstActivity" />
-        <activity android:name=".activity.device.wifilock.add.AddWifiLockSecondActivity" />
-        <activity android:name=".activity.device.wifilock.add.AddWifiLockThirdActivity" />
-        <activity android:name=".activity.device.wifilock.add.SupportWifiActivity" />
+        <activity android:name=".activity.device.wifilock.add.WifiLockAddFirstActivity" />
+        <activity android:name=".activity.device.wifilock.add.WifiLockAddSecondActivity" />
+        <activity android:name=".activity.device.wifilock.add.WifiLockAddThirdActivity" />
+        <activity android:name=".activity.device.wifilock.add.WifiLcokSupportWifiActivity" />
         <activity android:name=".activity.device.wifilock.WiFiLockDetailActivity" />
-        <activity android:name=".activity.device.wifilock.add.AddWifiLockFailedActivity" />
-        <activity android:name=".activity.device.wifilock.add.InputAdminPasswordActivity" />
+        <activity android:name=".activity.device.wifilock.add.WifiLockAddFailedActivity" />
+        <activity android:name=".activity.device.wifilock.add.WifiLockInputAdminPasswordActivity" />
         <activity android:name=".activity.device.wifilock.password.AddWifiLockTempPasswordSecondActivity" />
         <activity android:name=".activity.device.wifilock.password.WifiLockPasswordShareActivity" />
         <activity android:name=".activity.device.wifilock.password.WiFiLockPasswordManagerActivity" />
@@ -806,7 +806,8 @@
         <activity android:name=".activity.device.wifilock.WifiLockMoreActivity" />
         <activity android:name=".activity.device.wifilock.WifiLockDeviceInfoActivity" />
         <activity android:name=".activity.device.wifilock.WifiLockSafeModelActivity" />
-        <activity android:name=".activity.device.wifilock.WifiLockAuthActivity"></activity>
+        <activity android:name=".activity.device.wifilock.WifiLockAuthActivity" />
+        <activity android:name=".activity.device.wifilock.add.WifiLockApSetUpActivity"></activity>
     </application>
 
 </manifest>

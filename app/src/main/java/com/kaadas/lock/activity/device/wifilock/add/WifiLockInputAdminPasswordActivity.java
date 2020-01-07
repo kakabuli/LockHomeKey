@@ -9,9 +9,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.kaadas.lock.R;
-import com.kaadas.lock.activity.device.wifilock.password.AddWifiLockTempPasswordSecondActivity;
-import com.kaadas.lock.utils.AlertDialogUtil;
-import com.kaadas.lock.utils.Constants;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.StringUtil;
 import com.kaadas.lock.utils.ToastUtil;
@@ -20,7 +17,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class InputAdminPasswordActivity extends AppCompatActivity {
+public class WifiLockInputAdminPasswordActivity extends AppCompatActivity {
 
     @BindView(R.id.back)
     ImageView back;
@@ -36,6 +33,7 @@ public class InputAdminPasswordActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_temp_password_first);
         ButterKnife.bind(this);
+
     }
 
     @OnClick({R.id.back, R.id.tv_next})
@@ -50,8 +48,10 @@ public class InputAdminPasswordActivity extends AppCompatActivity {
                     ToastUtil.getInstance().showShort(R.string.random_verify_error);
                     return;
                 }
-                Intent intent = new Intent(InputAdminPasswordActivity.this,WifiSetUpActivity.class);
+                Intent intent = new Intent(WifiLockInputAdminPasswordActivity.this,WifiSetUpActivity.class);
                 intent.putExtra(KeyConstants.WIFI_LOCK_ADMIN_PASSWORD, adminPassword);
+                intent.putExtra(KeyConstants.WIFI_LOCK_SETUP_IS_AP, getIntent().getBooleanExtra(KeyConstants.WIFI_LOCK_SETUP_IS_AP,false));
+
                 startActivity(intent);
                 break;
         }

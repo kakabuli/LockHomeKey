@@ -8,11 +8,13 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.MainActivity;
 import com.kaadas.lock.activity.cateye.VideoVActivity;
 import com.kaadas.lock.bean.HomeShowBean;
+import com.kaadas.lock.bean.WifiLockActionBean;
 import com.kaadas.lock.mvp.mvpbase.BlePresenter;
 import com.kaadas.lock.mvp.view.IMainActivityView;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
@@ -78,6 +80,7 @@ import com.kaadas.lock.utils.greenDao.manager.GatewayLockPasswordManager;
 import net.sdvn.cmapi.Device;
 
 import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.linphone.core.LinphoneCall;
 
@@ -985,8 +988,8 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                     GwLockInfo gwLockInfo = new GwLockInfo(gwLock.getGatewayId(), new ServerGwDevice(gwLock.getSW(), gwLock.getDeviceId(),
                             gwLock.getDevice_type(), gwLock.getEvent_str(), gwLock.getIpaddr(),
                             gwLock.getMacaddr(), gwLock.getNickName(), gwLock.getTime()
-                            ,"",gwLock.getDelectTime(),gwLock.getLockversion(),gwLock.getModuletype()
-                            ,gwLock.getNwaddr(),gwLock.getOfflineTime(),gwLock.getOnlineTime(),gwLock.getShareFlag(),gwLock.getPushSwitch()
+                            , "", gwLock.getDelectTime(), gwLock.getLockversion(), gwLock.getModuletype()
+                            , gwLock.getNwaddr(), gwLock.getOfflineTime(), gwLock.getOnlineTime(), gwLock.getShareFlag(), gwLock.getPushSwitch()
                     ));
                     homeShowBeans.add(new HomeShowBean(HomeShowBean.TYPE_GATEWAY_LOCK, gwLock.getDeviceId(),
                             gwLock.getNickName(), gwLockInfo));
@@ -1002,9 +1005,9 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                             new ServerGwDevice(catEyeService.getSW(), catEyeService.getDeviceId(),
                                     catEyeService.getDevice_type(), catEyeService.getEvent_str(), catEyeService.getIpaddr(),
                                     catEyeService.getMacaddr(), catEyeService.getNickName(), catEyeService.getTime()
-                                    ,"",catEyeService.getDelectTime(),catEyeService.getLockversion(),catEyeService.getModuletype()
-                                    ,catEyeService.getNwaddr(),catEyeService.getOfflineTime(),catEyeService.getOnlineTime(),catEyeService.getShareFlag()
-                                    ,catEyeService.getPushSwitch()
+                                    , "", catEyeService.getDelectTime(), catEyeService.getLockversion(), catEyeService.getModuletype()
+                                    , catEyeService.getNwaddr(), catEyeService.getOfflineTime(), catEyeService.getOnlineTime(), catEyeService.getShareFlag()
+                                    , catEyeService.getPushSwitch()
                             ));
                     homeShowBeans.add(new HomeShowBean(HomeShowBean.TYPE_CAT_EYE, catEyeService.getDeviceId(),
                             catEyeService.getNickName(), cateEyeInfo));
@@ -1012,7 +1015,7 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
             }
         }
         //获取WiFi锁
-        if (daoSession != null && daoSession.getCatEyeServiceInfoDao() != null){
+        if (daoSession != null && daoSession.getCatEyeServiceInfoDao() != null) {
             List<WifiLockInfo> wifiLockInfos = daoSession.getWifiLockInfoDao().loadAll();
             if (wifiLockInfos != null && wifiLockInfos.size() > 0) {
                 for (WifiLockInfo wifiLockInfo : wifiLockInfos) {
@@ -1134,9 +1137,7 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
     }
 
 
-
-
-//    /监听网关重置上报
+    //    /监听网关重置上报
     public void listenWifiLockStatus() {
         if (mqttService != null) {
             toDisposable(wifiLockStatusListenDisposable);
@@ -1154,13 +1155,31 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                     .subscribe(new Consumer<MqttData>() {
                         @Override
                         public void accept(MqttData mqttData) throws Exception {
-                            WifiLockAlarmBean wifiLockAlarmBean = new Gson().fromJson(mqttData.getPayload(), WifiLockAlarmBean.class);
-                            if (wifiLockAlarmBean != null && wifiLockAlarmBean.getEventtype().equals("alarm")) {
-                                WifiLockAlarmBean.EventparamsBean eventparams = wifiLockAlarmBean.getEventparams();
-                                if (eventparams !=null){
-                                    if (isSafe()){
-                                        mViewRef.get().onWifiLockAlarmEvent(wifiLockAlarmBean.getWfId(),eventparams.getAlarmCode());
+                            String payload = mqttData.getPayload();
+                            JSONObject jsonObject = new JSONObject(payload);
+
+                            String eventtype = "";
+                            try {
+                                if (payload.contains("eventtype")) {
+                                    eventtype = jsonObject.getString("eventtype");
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            if ("alarm".equals(eventtype)) {
+                                WifiLockAlarmBean wifiLockAlarmBean = new Gson().fromJson(payload, WifiLockAlarmBean.class);
+
+                                if (wifiLockAlarmBean != null && wifiLockAlarmBean.getEventparams() != null) {
+                                    WifiLockAlarmBean.EventparamsBean eventparams = wifiLockAlarmBean.getEventparams();
+                                    if (isSafe()) {
+                                        mViewRef.get().onWifiLockAlarmEvent(wifiLockAlarmBean.getWfId(), eventparams.getAlarmCode());
                                     }
+                                }
+                            } else if ("action".equals(eventtype)) {
+                                WifiLockActionBean wifiLockActionBean = new Gson().fromJson(payload, WifiLockActionBean.class);
+                                if (wifiLockActionBean != null && wifiLockActionBean.getEventparams()!=null) {
+                                    WifiLockActionBean.EventparamsBean eventparams = wifiLockActionBean.getEventparams();
+                                    MyApplication.getInstance().updateWifiLockInfo(wifiLockActionBean.getWfId(),eventparams);
                                 }
                             }
                         }
@@ -1168,7 +1187,6 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
             compositeDisposable.add(wifiLockStatusListenDisposable);
         }
     }
-
 
 
 }
