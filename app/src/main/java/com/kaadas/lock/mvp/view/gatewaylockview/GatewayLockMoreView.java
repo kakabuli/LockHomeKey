@@ -42,13 +42,6 @@ public interface GatewayLockMoreView extends IBaseView {
     //设备删除异常
     void deleteDeviceThrowable(Throwable throwable);
 
-
-    void getSwitchStatus(SwitchStatusResult switchStatusResult);
-    void getSwitchFail();
-
-    void updateSwitchStatus(SwitchStatusResult switchStatusResult);
-    void updateSwitchUpdateFail();
-
     //设置AM成功
     void setAMSuccess(int autoRelockTime);
 
@@ -68,5 +61,17 @@ public interface GatewayLockMoreView extends IBaseView {
 
     //获取布防异常
     void getAMThrowable(Throwable throwable);
+
+    /**
+     * 更新成功   更新之后的Status
+     * @param status
+     */
+    void onUpdatePushSwitchSuccess(int status);
+
+    /**
+     * 更新失败
+     * @param throwable
+     */
+    void onUpdatePushSwitchThrowable(Throwable throwable);
 
 }

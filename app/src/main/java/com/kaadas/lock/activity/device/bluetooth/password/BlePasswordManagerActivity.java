@@ -141,7 +141,6 @@ public class BlePasswordManagerActivity extends BaseBleActivity<IPasswordManager
     }
 
     public void passwordPageChange() {
-
         if (isNotPassword) {
             llHasData.setVisibility(View.GONE);
             tvNoUser.setVisibility(View.VISIBLE);

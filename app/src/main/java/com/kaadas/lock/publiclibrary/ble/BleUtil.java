@@ -650,4 +650,56 @@ public class BleUtil {
 
     }
 
+
+
+    //////////////////////////////////     WiFi锁相关    //////////////////////////////////
+
+    public static final int LOCK_WARRING = 1;
+    public static final int HIJACK = 2;
+    public static final int THREE_TIMES_ERROR = 3;
+    public static final int BROKEN = 4;
+    public static final int MECHANICAL_KEY = 8;
+    public static final int LOW_POWER = 0x10;
+    public static final int DOOR_NOT_LOCK = 0x20;
+    public static final int ARM = 0x40;
+
+
+    /**
+     * @param type  	报警类型：1锁定 2劫持 3三次错误 4防撬 8机械钥匙报警 16低电压 32锁体异常 64布防
+     * @return
+     */
+    public static String getAlarmByType(int type,Context context) {
+        String content = "";
+        switch (type) {
+            case LOCK_WARRING: //锁定
+                content = context.getString(R.string.wifi_lock_alarm_lock_5min);
+                break;
+            case HIJACK: //2劫持
+                content = context.getString(R.string.wifi_lock_alarm_hijack);
+                break;
+            case THREE_TIMES_ERROR: //3三次错误
+                content = context.getString(R.string.wifi_lock_alarm_many_failed);
+                break;
+            case BROKEN: //4防撬
+                content = context.getString(R.string.wifi_lock_alarm_lock_broken);
+                break;
+            case MECHANICAL_KEY://8机械钥匙报警
+                content = context.getString(R.string.wifi_lock_alarm_opens);
+                break;
+            case LOW_POWER://16低电压
+                content = context.getString(R.string.wifi_lock_alarm_low_power);
+                break;
+            case DOOR_NOT_LOCK: //32锁体异常
+                content = context.getString(R.string.wifi_lock_alarm_problem);
+                break;
+            case ARM://64布防
+                content = context.getString(R.string.wifi_lock_alarm_safe);
+                break;
+            default:
+                content = context.getString(R.string.warring_unkonw);
+                break;
+        }
+        return content;
+    }
+
 }

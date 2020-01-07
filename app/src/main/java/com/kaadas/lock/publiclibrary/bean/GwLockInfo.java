@@ -21,6 +21,7 @@ public class GwLockInfo implements Serializable {
     public GwLockInfo(String gwID, ServerGwDevice serverInfo) {
         this.gwID = gwID;
         this.serverInfo = serverInfo;
+
     }
 
     public String getGwID() {

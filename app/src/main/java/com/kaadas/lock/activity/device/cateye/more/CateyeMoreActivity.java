@@ -109,17 +109,18 @@ public class CateyeMoreActivity extends BaseActivity<IGatEyeView, CatEyeMorePres
     private int getCatInfoStatus = 0;
     private CateEyeInfo cateEyeInfo;
 
-    private AlertDialog  deleteAlertDialog;
+    private AlertDialog deleteAlertDialog;
     private Context context;
 
-    private int pirEnable=-1; //智能监测开关
+    private int pirEnable = -1; //智能监测开关
 
-    private int sdStatus=-1; //sd卡状态
+    private int sdStatus = -1; //sd卡状态
 
-    private String pirwander="";//pir徘徊监测
-    CateEyeInfoBase cateEyeInfoBase=null;
+    private String pirwander = "";//pir徘徊监测
+    CateEyeInfoBase cateEyeInfoBase = null;
     private int isAdmin;
     private String adminUid;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -130,24 +131,24 @@ public class CateyeMoreActivity extends BaseActivity<IGatEyeView, CatEyeMorePres
         initData();
         initView();
         initClick();
-        cateEyeInfoBase= daoSession.getCateEyeInfoBaseDao().queryBuilder()
+        cateEyeInfoBase = daoSession.getCateEyeInfoBaseDao().queryBuilder()
                 .where(CateEyeInfoBaseDao.Properties.DeviceId.eq(deviceId)).build()
                 .unique();
-        if(cateEyeInfoBase!=null){
+        if (cateEyeInfoBase != null) {
             tvBell.setText(getString(R.string.the_tinkle_of_bells) + cateEyeInfoBase.getCurBellNum());//设置铃声值
-                switch (cateEyeInfoBase.getBellVolume()){
-                    case 1:
-                        tvVolume.setText(getString(R.string.centre));
-                        break;
-                    case 2:
+            switch (cateEyeInfoBase.getBellVolume()) {
+                case 1:
+                    tvVolume.setText(getString(R.string.centre));
+                    break;
+                case 2:
 
-                        tvVolume.setText(getString(R.string.low));
-                        break;
+                    tvVolume.setText(getString(R.string.low));
+                    break;
 
-                    case 0:
-                        tvVolume.setText(getString(R.string.high));
-                        break;
-                }
+                case 0:
+                    tvVolume.setText(getString(R.string.high));
+                    break;
+            }
             tvRingnumber.setText(cateEyeInfoBase.getBellCount() + "");//响铃次数
             tvResolution.setText(cateEyeInfoBase.getResolution());
         }
@@ -172,11 +173,11 @@ public class CateyeMoreActivity extends BaseActivity<IGatEyeView, CatEyeMorePres
         loadingDialog = LoadingDialog.getInstance(this);
         Intent intent = getIntent();
         cateEyeInfo = (CateEyeInfo) intent.getSerializableExtra(KeyConstants.CATE_INFO);
-        isAdmin=intent.getIntExtra(KeyConstants.IS_ADMIN,1);
-        if (!TextUtils.isEmpty(cateEyeInfo.getServerInfo().getNickName())){
+        isAdmin = intent.getIntExtra(KeyConstants.IS_ADMIN, 1);
+        if (!TextUtils.isEmpty(cateEyeInfo.getServerInfo().getNickName())) {
             deviceName = cateEyeInfo.getServerInfo().getNickName();
-        }else{
-            deviceName=cateEyeInfo.getServerInfo().getDeviceId();
+        } else {
+            deviceName = cateEyeInfo.getServerInfo().getDeviceId();
         }
         gatewayId = cateEyeInfo.getGwID();
         deviceId = cateEyeInfo.getServerInfo().getDeviceId();
@@ -223,7 +224,7 @@ public class CateyeMoreActivity extends BaseActivity<IGatEyeView, CatEyeMorePres
                 String deviceNickname = tvDeviceName.getText().toString().trim();
                 editText.setText(deviceNickname);
                 editText.setSelection(deviceNickname.length());
-                editText.addTextChangedListener(new EditTextWatcher(this,null,editText,50));
+                editText.addTextChangedListener(new EditTextWatcher(this, null, editText, 50));
                 tv_cancel.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -234,7 +235,7 @@ public class CateyeMoreActivity extends BaseActivity<IGatEyeView, CatEyeMorePres
                     @Override
                     public void onClick(View v) {
                         name = editText.getText().toString().trim();
-                        if (TextUtils.isEmpty(name)){
+                        if (TextUtils.isEmpty(name)) {
                             ToastUtil.getInstance().showShort(getString(R.string.device_name_cannot_be_empty));
                             return;
                         }
@@ -261,24 +262,25 @@ public class CateyeMoreActivity extends BaseActivity<IGatEyeView, CatEyeMorePres
                     public void left() {
 
                     }
+
                     @Override
                     public void right() {
-                      //  if (gatewayId != null && deviceId != null) {
-                        if (!TextUtils.isEmpty(gatewayId) &&  !TextUtils.isEmpty(deviceId)) {
-                            if (isAdmin==1){
+                        //  if (gatewayId != null && deviceId != null) {
+                        if (!TextUtils.isEmpty(gatewayId) && !TextUtils.isEmpty(deviceId)) {
+                            if (isAdmin == 1) {
                                 mPresenter.deleteCatEye(gatewayId, deviceId, "net");
-                            }else{
-                                String phone= (String) SPUtils.get(SPUtils.PHONEN,"");
-                                if (!TextUtils.isEmpty(phone)&&!TextUtils.isEmpty(adminUid)){
-                                    if (StringUtil.isNumeric(phone)){
-                                        mPresenter.deleteShareDevice(2,gatewayId,deviceId,adminUid,"86"+phone,"",0);
-                                    }else{
-                                        mPresenter.deleteShareDevice(2,gatewayId,deviceId,adminUid,phone,"",0);
+                            } else {
+                                String phone = (String) SPUtils.get(SPUtils.PHONEN, "");
+                                if (!TextUtils.isEmpty(phone) && !TextUtils.isEmpty(adminUid)) {
+                                    if (StringUtil.isNumeric(phone)) {
+                                        mPresenter.deleteShareDevice(2, gatewayId, deviceId, adminUid, "86" + phone, "", 0);
+                                    } else {
+                                        mPresenter.deleteShareDevice(2, gatewayId, deviceId, adminUid, phone, "", 0);
                                     }
 
                                 }
                             }
-                            deleteAlertDialog=AlertDialogUtil.getInstance().noButtonDialog(context,getString(R.string.delete_be_being));
+                            deleteAlertDialog = AlertDialogUtil.getInstance().noButtonDialog(context, getString(R.string.delete_be_being));
                             deleteAlertDialog.setCancelable(false);
                         }
                     }
@@ -290,7 +292,7 @@ public class CateyeMoreActivity extends BaseActivity<IGatEyeView, CatEyeMorePres
                     ToastUtil.getInstance().showShort(R.string.get_cateye_info_wait);
                     return;
                 } else if (getCatInfoStatus == 2) {
-                    if(cateEyeInfoBase!=null){
+                    if (cateEyeInfoBase != null) {
                         Intent detailIntent = new Intent(this, CateyeMoreDeviceInformationActivity.class);
                         String jsonBase = new Gson().toJson(cateEyeInfoBase);
                         detailIntent.putExtra(KeyConstants.GET_CAT_EYE_INFO_BASE, jsonBase);
@@ -301,9 +303,9 @@ public class CateyeMoreActivity extends BaseActivity<IGatEyeView, CatEyeMorePres
                     return;
                 } else {
                     if (!TextUtils.isEmpty(returnCatEyeInfo)) {
-                            Intent detailIntent = new Intent(this, CateyeMoreDeviceInformationActivity.class);
-                            detailIntent.putExtra(KeyConstants.GET_CAT_EYE_INFO, returnCatEyeInfo);
-                            startActivity(detailIntent);
+                        Intent detailIntent = new Intent(this, CateyeMoreDeviceInformationActivity.class);
+                        detailIntent.putExtra(KeyConstants.GET_CAT_EYE_INFO, returnCatEyeInfo);
+                        startActivity(detailIntent);
                     }
                 }
                 break;
@@ -312,7 +314,7 @@ public class CateyeMoreActivity extends BaseActivity<IGatEyeView, CatEyeMorePres
                     ToastUtil.getInstance().showShort(R.string.get_cateye_info_wait);
                     return;
                 } else if (getCatInfoStatus == 2) {
-                    if(cateEyeInfoBase!=null){
+                    if (cateEyeInfoBase != null) {
                         Intent smartEyeIntent = new Intent(this, SmartEyeActivity.class);
                         String jsonBase = new Gson().toJson(cateEyeInfoBase);
                         smartEyeIntent.putExtra(KeyConstants.GET_CAT_EYE_INFO, returnCatEyeInfo);
@@ -322,7 +324,7 @@ public class CateyeMoreActivity extends BaseActivity<IGatEyeView, CatEyeMorePres
                     }
                     ToastUtil.getInstance().showShort(R.string.get_cateye_info_fail);
                     return;
-                }else{
+                } else {
                     if (returnCatEyeInfo != null) {
                         Intent smartEyeIntent = new Intent(this, SmartEyeActivity.class);
                         smartEyeIntent.putExtra(KeyConstants.GET_CAT_EYE_INFO, returnCatEyeInfo);
@@ -345,7 +347,7 @@ public class CateyeMoreActivity extends BaseActivity<IGatEyeView, CatEyeMorePres
                         ringtIntent.putExtra(KeyConstants.CAT_EYE_RING_NUMBER, ring);
                         ringtIntent.putExtra(KeyConstants.GATEWAY_ID, gatewayId);
                         ringtIntent.putExtra(KeyConstants.DEVICE_ID, deviceId);
-                        startActivityForResult(ringtIntent,KeyConstants.RING_NUMBER_REQUESET_CODE);
+                        startActivityForResult(ringtIntent, KeyConstants.RING_NUMBER_REQUESET_CODE);
                         //startActivity(ringtIntent);
                     }
                 }
@@ -366,11 +368,11 @@ public class CateyeMoreActivity extends BaseActivity<IGatEyeView, CatEyeMorePres
                         resolutionIntent.putExtra(KeyConstants.CAT_EYE_RESOLUTION, resolution);
                         resolutionIntent.putExtra(KeyConstants.GATEWAY_ID, gatewayId);
                         resolutionIntent.putExtra(KeyConstants.DEVICE_ID, deviceId);
-                        startActivityForResult(resolutionIntent,KeyConstants.RESOLUTION_REQUEST_CODE);
+                        startActivityForResult(resolutionIntent, KeyConstants.RESOLUTION_REQUEST_CODE);
                     }
                 }
                 break;
-                //音量
+            //音量
             case R.id.rl_volume:
                 //音量
                 if (getCatInfoStatus == 0) {
@@ -381,17 +383,17 @@ public class CateyeMoreActivity extends BaseActivity<IGatEyeView, CatEyeMorePres
                     return;
                 } else {
                     String volume = tvVolume.getText().toString().trim();
-                    if(volume.equals("中")){
-                        volume="低";
-                    }else  if(volume.equals("低")){
-                        volume="中";
+                    if (volume.equals("中")) {
+                        volume = "低";
+                    } else if (volume.equals("低")) {
+                        volume = "中";
                     }
                     if (!TextUtils.isEmpty(volume) && !TextUtils.isEmpty(gatewayId) && !TextUtils.isEmpty(deviceId)) {
                         Intent volumeIntent = new Intent(this, CatEyeVolumeActivity.class);
                         volumeIntent.putExtra(KeyConstants.CAT_EYE_VOLUME, volume);
                         volumeIntent.putExtra(KeyConstants.GATEWAY_ID, gatewayId);
                         volumeIntent.putExtra(KeyConstants.DEVICE_ID, deviceId);
-                        startActivityForResult(volumeIntent,KeyConstants.VOLUME_REQUESET_CODE);
+                        startActivityForResult(volumeIntent, KeyConstants.VOLUME_REQUESET_CODE);
                     }
                 }
                 break;
@@ -400,19 +402,19 @@ public class CateyeMoreActivity extends BaseActivity<IGatEyeView, CatEyeMorePres
                 if (!NetUtil.isNetworkAvailable()) {
 //                    ToastUtil.getInstance().showShort(getString(R.string.network_exception));
 //                    return;
-                    String result= (String) SPUtils.get(deviceId+Constants.NIGHT_SIGHT,"");
-                    if(TextUtils.isEmpty(result)){
-                     ToastUtil.getInstance().showShort(getString(R.string.network_exception));
-                     return;
-                    }else {
+                    String result = (String) SPUtils.get(deviceId + Constants.NIGHT_SIGHT, "");
+                    if (TextUtils.isEmpty(result)) {
+                        ToastUtil.getInstance().showShort(getString(R.string.network_exception));
+                        return;
+                    } else {
                         Intent night_sight = new Intent();
                         night_sight.setClass(CateyeMoreActivity.this, CatEyeNightSightDialogActivity.class);
                         //  night_sight_intent.putExtra(KeyConstants.GATEWAY_OTA_UPGRADE, catEyeInfoBeanPropertyResult);
-                        ArrayList<String> valuse= new ArrayList<>();
+                        ArrayList<String> valuse = new ArrayList<>();
                         valuse.add(result);
                         night_sight.putStringArrayListExtra(KeyConstants.GATEWAY_NIGHT_SIGHT, valuse);
-                        night_sight.putExtra(Constants.GATEWAYID,gatewayId);
-                        night_sight.putExtra(Constants.DEVICE_ID,deviceId);
+                        night_sight.putExtra(Constants.GATEWAYID, gatewayId);
+                        night_sight.putExtra(Constants.DEVICE_ID, deviceId);
                         startActivity(night_sight);
                         return;
                     }
@@ -420,7 +422,6 @@ public class CateyeMoreActivity extends BaseActivity<IGatEyeView, CatEyeMorePres
 
                 loadingDialog.show(getString(R.string.get_cateye_info_night_wait));
                 mPresenter.getCatNightSightInfo(gatewayId, deviceId, MyApplication.getInstance().getUid());
-
 
 
                 // 测试
@@ -458,7 +459,9 @@ public class CateyeMoreActivity extends BaseActivity<IGatEyeView, CatEyeMorePres
     public void updateDevNickNameThrowable(Throwable throwable) {
         ToastUtil.getInstance().showShort(getString(R.string.update_nickname_fail));
     }
+
     private DaoSession daoSession;
+
     @Override
     public void getCatEyeInfoSuccess(CatEyeInfoBeanResult catEyeInfoBean, String payload) {
 
@@ -475,12 +478,12 @@ public class CateyeMoreActivity extends BaseActivity<IGatEyeView, CatEyeMorePres
             if (tvRingnumber != null) {
                 tvRingnumber.setText(returnDataBean.getBellCount() + "");//响铃次数
             }
-            pirEnable=returnDataBean.getPirEnable();
-            sdStatus=returnDataBean.getSdStatus();
-            pirwander=returnDataBean.getPirWander();
+            pirEnable = returnDataBean.getPirEnable();
+            sdStatus = returnDataBean.getSdStatus();
+            pirwander = returnDataBean.getPirWander();
 
-            if (tvVolume!=null){
-                switch (returnDataBean.getBellVolume()){
+            if (tvVolume != null) {
+                switch (returnDataBean.getBellVolume()) {
                     case 1:
                         tvVolume.setText(getString(R.string.centre));
                         break;
@@ -509,8 +512,8 @@ public class CateyeMoreActivity extends BaseActivity<IGatEyeView, CatEyeMorePres
 //            CateEyeInfoBase cateEyeInfoBase= daoSession.getCateEyeInfoBaseDao().queryBuilder()
 //                    .where(CateEyeInfoBaseDao.Properties.DeviceId.eq(deviceId)).build()
 //                    .unique();
-            if(cateEyeInfoBase==null){
-                cateEyeInfoBase =new CateEyeInfoBase(null, returnDataBean.getCurBellNum(),
+            if (cateEyeInfoBase == null) {
+                cateEyeInfoBase = new CateEyeInfoBase(null, returnDataBean.getCurBellNum(),
                         returnDataBean.getBellVolume(), returnDataBean.getBellCount(),
                         returnDataBean.getResolution(),
                         deviceId, returnDataBean.getSW(),
@@ -525,23 +528,23 @@ public class CateyeMoreActivity extends BaseActivity<IGatEyeView, CatEyeMorePres
                         returnDataBean.getSdStatus(),
                         gatewayId);
                 daoSession.getCateEyeInfoBaseDao().insertOrReplace(cateEyeInfoBase);
-            }else {
-                 cateEyeInfoBase.setBellVolume(returnDataBean.getCurBellNum());
-                 cateEyeInfoBase.setBellVolume(returnDataBean.getBellVolume());
-                 cateEyeInfoBase.setBellCount( returnDataBean.getBellCount());
-                 cateEyeInfoBase.setResolution(returnDataBean.getResolution());
-                 cateEyeInfoBase.setDeviceId(deviceId);
-                 cateEyeInfoBase.setSW(returnDataBean.getSW());
-                 cateEyeInfoBase.setHW(returnDataBean.getHW());
-                 cateEyeInfoBase.setMCU(returnDataBean.getMCU());
-                 cateEyeInfoBase.setT200(returnDataBean.getT200());
-                 cateEyeInfoBase.setMacaddr(returnDataBean.getMacaddr());
-                 cateEyeInfoBase.setIpaddr(returnDataBean.getIpaddr());
-                 cateEyeInfoBase.setWifiStrength(returnDataBean.getWifiStrength());
-                 cateEyeInfoBase.setPirEnable(returnDataBean.getPirEnable());
-                 cateEyeInfoBase.setPirWander(returnDataBean.getPirWander());
-                 cateEyeInfoBase.setSdStatus(returnDataBean.getSdStatus());
-                 cateEyeInfoBase.setGwid(gatewayId);
+            } else {
+                cateEyeInfoBase.setBellVolume(returnDataBean.getCurBellNum());
+                cateEyeInfoBase.setBellVolume(returnDataBean.getBellVolume());
+                cateEyeInfoBase.setBellCount(returnDataBean.getBellCount());
+                cateEyeInfoBase.setResolution(returnDataBean.getResolution());
+                cateEyeInfoBase.setDeviceId(deviceId);
+                cateEyeInfoBase.setSW(returnDataBean.getSW());
+                cateEyeInfoBase.setHW(returnDataBean.getHW());
+                cateEyeInfoBase.setMCU(returnDataBean.getMCU());
+                cateEyeInfoBase.setT200(returnDataBean.getT200());
+                cateEyeInfoBase.setMacaddr(returnDataBean.getMacaddr());
+                cateEyeInfoBase.setIpaddr(returnDataBean.getIpaddr());
+                cateEyeInfoBase.setWifiStrength(returnDataBean.getWifiStrength());
+                cateEyeInfoBase.setPirEnable(returnDataBean.getPirEnable());
+                cateEyeInfoBase.setPirWander(returnDataBean.getPirWander());
+                cateEyeInfoBase.setSdStatus(returnDataBean.getSdStatus());
+                cateEyeInfoBase.setGwid(gatewayId);
                 daoSession.getCateEyeInfoBaseDao().insertOrReplace(cateEyeInfoBase);
             }
         }
@@ -566,13 +569,12 @@ public class CateyeMoreActivity extends BaseActivity<IGatEyeView, CatEyeMorePres
     }
 
 
-
     @Override
     public void deleteDeviceSuccess() {
         //删除成功
-        String uid=MyApplication.getInstance().getUid();
+        String uid = MyApplication.getInstance().getUid();
         daoSession.getCatEyeServiceInfoDao().queryBuilder().where(CatEyeServiceInfoDao.Properties.Uid.eq(uid)).buildDelete().executeDeleteWithoutDetachingEntities();
-        if (deleteAlertDialog!=null){
+        if (deleteAlertDialog != null) {
             deleteAlertDialog.dismiss();
         }
         Intent intent = new Intent(this, MainActivity.class);
@@ -582,7 +584,7 @@ public class CateyeMoreActivity extends BaseActivity<IGatEyeView, CatEyeMorePres
 
     @Override
     public void deleteDeviceFail() {
-        if (deleteAlertDialog!=null){
+        if (deleteAlertDialog != null) {
             deleteAlertDialog.dismiss();
         }
         ToastUtil.getInstance().showShort(getString(R.string.delete_fialed));
@@ -590,7 +592,7 @@ public class CateyeMoreActivity extends BaseActivity<IGatEyeView, CatEyeMorePres
 
     @Override
     public void deleteDeviceThrowable(Throwable throwable) {
-        if (deleteAlertDialog!=null){
+        if (deleteAlertDialog != null) {
             deleteAlertDialog.dismiss();
         }
         ToastUtil.getInstance().showShort(getString(R.string.delete_fialed));
@@ -598,9 +600,9 @@ public class CateyeMoreActivity extends BaseActivity<IGatEyeView, CatEyeMorePres
 
     @Override
     public void deleteShareDeviceSuccess() {
-        String uid=MyApplication.getInstance().getUid();
+        String uid = MyApplication.getInstance().getUid();
         daoSession.getCatEyeServiceInfoDao().queryBuilder().where(CatEyeServiceInfoDao.Properties.Uid.eq(uid)).buildDelete().executeDeleteWithoutDetachingEntities();
-        if (deleteAlertDialog!=null){
+        if (deleteAlertDialog != null) {
             deleteAlertDialog.dismiss();
         }
         Intent intent = new Intent(this, MainActivity.class);
@@ -610,7 +612,7 @@ public class CateyeMoreActivity extends BaseActivity<IGatEyeView, CatEyeMorePres
 
     @Override
     public void deleteShareDeviceFail() {
-        if (deleteAlertDialog!=null){
+        if (deleteAlertDialog != null) {
             deleteAlertDialog.dismiss();
         }
         ToastUtil.getInstance().showShort(getString(R.string.delete_fialed));
@@ -618,7 +620,7 @@ public class CateyeMoreActivity extends BaseActivity<IGatEyeView, CatEyeMorePres
 
     @Override
     public void deleteShareDeviceThrowable() {
-        if (deleteAlertDialog!=null){
+        if (deleteAlertDialog != null) {
             deleteAlertDialog.dismiss();
         }
         ToastUtil.getInstance().showShort(getString(R.string.delete_fialed));
@@ -630,14 +632,14 @@ public class CateyeMoreActivity extends BaseActivity<IGatEyeView, CatEyeMorePres
             loadingDialog.dismiss();
         }
 
-                Intent night_sight_intent = new Intent();
-                night_sight_intent.setClass(CateyeMoreActivity.this, CatEyeNightSightDialogActivity.class);
-      //  night_sight_intent.putExtra(KeyConstants.GATEWAY_OTA_UPGRADE, catEyeInfoBeanPropertyResult);
-        ArrayList<String> valuse= (ArrayList<String>) catEyeInfoBeanPropertyResult.getReturnData().getValues();
+        Intent night_sight_intent = new Intent();
+        night_sight_intent.setClass(CateyeMoreActivity.this, CatEyeNightSightDialogActivity.class);
+        //  night_sight_intent.putExtra(KeyConstants.GATEWAY_OTA_UPGRADE, catEyeInfoBeanPropertyResult);
+        ArrayList<String> valuse = (ArrayList<String>) catEyeInfoBeanPropertyResult.getReturnData().getValues();
         night_sight_intent.putStringArrayListExtra(KeyConstants.GATEWAY_NIGHT_SIGHT, valuse);
-        night_sight_intent.putExtra(Constants.GATEWAYID,gatewayId);
-        night_sight_intent.putExtra(Constants.DEVICE_ID,deviceId);
-        SPUtils.put(deviceId+Constants.NIGHT_SIGHT,valuse.get(0).toString());
+        night_sight_intent.putExtra(Constants.GATEWAYID, gatewayId);
+        night_sight_intent.putExtra(Constants.DEVICE_ID, deviceId);
+        SPUtils.put(deviceId + Constants.NIGHT_SIGHT, valuse.get(0).toString());
         startActivity(night_sight_intent);
 //          //       mPresenter.getCatNightSightInfo(gatewayId, deviceId, MyApplication.getInstance().getUid());
 
@@ -648,7 +650,7 @@ public class CateyeMoreActivity extends BaseActivity<IGatEyeView, CatEyeMorePres
         if (loadingDialog != null) {
             loadingDialog.dismiss();
         }
-        Toast.makeText(CateyeMoreActivity.this,getString(R.string.get_nightsight_fail),Toast.LENGTH_SHORT).show();
+        Toast.makeText(CateyeMoreActivity.this, getString(R.string.get_nightsight_fail), Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -656,30 +658,30 @@ public class CateyeMoreActivity extends BaseActivity<IGatEyeView, CatEyeMorePres
         if (loadingDialog != null) {
             loadingDialog.dismiss();
         }
-        Toast.makeText(CateyeMoreActivity.this,getString(R.string.get_nightsight_overtime),Toast.LENGTH_SHORT).show();
+        Toast.makeText(CateyeMoreActivity.this, getString(R.string.get_nightsight_overtime), Toast.LENGTH_SHORT).show();
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         //铃声设置成功的返回
-        if (requestCode==KeyConstants.RING_NUMBER_REQUESET_CODE){
-            if (resultCode== Activity.RESULT_OK){
-             int ringNumber= data.getIntExtra(KeyConstants.RIGH_NUMBER,0);
-             if (tvRingnumber!=null){
-                 tvRingnumber.setText(ringNumber+"");
-              }
+        if (requestCode == KeyConstants.RING_NUMBER_REQUESET_CODE) {
+            if (resultCode == Activity.RESULT_OK) {
+                int ringNumber = data.getIntExtra(KeyConstants.RIGH_NUMBER, 0);
+                if (tvRingnumber != null) {
+                    tvRingnumber.setText(ringNumber + "");
+                }
             }
         }
         //音量
-        if (requestCode==KeyConstants.VOLUME_REQUESET_CODE){
-            if (resultCode== Activity.RESULT_OK){
-                int volumeNumber= data.getIntExtra(KeyConstants.VOLUME_NUMBER,-1);
-                if (tvVolume!=null){
-                    switch (volumeNumber){
+        if (requestCode == KeyConstants.VOLUME_REQUESET_CODE) {
+            if (resultCode == Activity.RESULT_OK) {
+                int volumeNumber = data.getIntExtra(KeyConstants.VOLUME_NUMBER, -1);
+                if (tvVolume != null) {
+                    switch (volumeNumber) {
                         case 1:
                             tvVolume.setText(getString(R.string.centre));
-                        //    tvVolume.setText(getString(R.string.low));
+                            //    tvVolume.setText(getString(R.string.low));
                             break;
                         case 2:
 
@@ -696,10 +698,10 @@ public class CateyeMoreActivity extends BaseActivity<IGatEyeView, CatEyeMorePres
         }
 
         //分辨率
-        if (requestCode==KeyConstants.RESOLUTION_REQUEST_CODE){
-            if (resultCode== Activity.RESULT_OK){
-                String resolution= data.getStringExtra(KeyConstants.RESOLUTION_NUMBER);
-                if (tvResolution!=null){
+        if (requestCode == KeyConstants.RESOLUTION_REQUEST_CODE) {
+            if (resultCode == Activity.RESULT_OK) {
+                String resolution = data.getStringExtra(KeyConstants.RESOLUTION_NUMBER);
+                if (tvResolution != null) {
                     tvResolution.setText(resolution);
                 }
             }

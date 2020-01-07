@@ -5,9 +5,12 @@ import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.result.DeleteMessageResult;
 import com.kaadas.lock.publiclibrary.http.result.GetDeviceResult;
 import com.kaadas.lock.publiclibrary.http.result.GetHelpLogResult;
+import com.kaadas.lock.publiclibrary.http.result.GetOpenCountResult;
 import com.kaadas.lock.publiclibrary.http.result.GetPasswordResult;
 import com.kaadas.lock.publiclibrary.http.result.GetPwdBySnResult;
 import com.kaadas.lock.publiclibrary.http.result.GetWarringRecordResult;
+import com.kaadas.lock.publiclibrary.http.result.GetWifiLockAlarmRecordResult;
+import com.kaadas.lock.publiclibrary.http.result.GetWifiLockOperationRecordResult;
 import com.kaadas.lock.publiclibrary.http.result.LockRecordResult;
 import com.kaadas.lock.publiclibrary.http.result.LoginResult;
 import com.kaadas.lock.publiclibrary.http.result.CheckOTAResult;
@@ -18,6 +21,8 @@ import com.kaadas.lock.publiclibrary.http.result.SwitchStatusResult;
 import com.kaadas.lock.publiclibrary.http.result.UserNickResult;
 import com.kaadas.lock.publiclibrary.http.result.UserProtocolResult;
 import com.kaadas.lock.publiclibrary.http.result.UserProtocolVersionResult;
+import com.kaadas.lock.publiclibrary.http.result.WifiLockGetPasswordListResult;
+import com.kaadas.lock.publiclibrary.http.result.WifiLockShareResult;
 
 
 import io.reactivex.Observable;
@@ -498,4 +503,99 @@ public interface IXiaoKaiNewService {
      */
     @POST(HttpUrlConstants.OTA_RESULT_UPLOAD_URL)
     Observable<BaseResult> uploadOtaResult(@Body RequestBody info);
+
+
+    ////////////////////////////////////////////           WiFi锁api功能            ///////////////////////////////////////////////
+
+    /**
+     * 绑定WiFi锁
+     */
+    @POST(HttpUrlConstants.WIFI_LOCK_BIND)
+    Observable<BaseResult> wifiLockBind(@Body RequestBody info);
+
+
+    /**
+     * 解绑WiFi锁
+     */
+    @POST(HttpUrlConstants.WIFI_LOCK_UNBIND)
+    Observable<BaseResult> wifiLockUnbind(@Body RequestBody info);
+
+
+    /**
+     * 修改WiFi锁昵称
+     */
+    @POST(HttpUrlConstants.WIFI_LOCK_UPDATE_NICK_NAME)
+    Observable<BaseResult> wifiLockUpdateNickname(@Body RequestBody info);
+
+
+    /**
+     * 更改推送开关
+     */
+    @POST(HttpUrlConstants.WIFI_LOCK_UPDATE_PUSH)
+    Observable<BaseResult> wifiLockUpdatePush(@Body RequestBody info);
+
+
+    /**
+     * 获取wifi锁密码列表
+     */
+    @POST(HttpUrlConstants.WIFI_LOCK_GET_PWD_LIST)
+    Observable<WifiLockGetPasswordListResult> wifiLockGetPwdList(@Body RequestBody info);
+
+    /**
+     * 修改wifi密码昵称
+     */
+    @POST(HttpUrlConstants.WIFI_LOCK_UPDATE_PWD_NICKNAME)
+    Observable<BaseResult> wifiLockUpdatePwdNickName(@Body RequestBody info);
+
+    /**
+     * wifi锁授权用户
+     */
+    @POST(HttpUrlConstants.WIFI_LOCK_SHARE)
+    Observable<BaseResult> wifiLockShare(@Body RequestBody info);
+
+    /**
+     * wifi锁删除授权用户
+     */
+    @POST(HttpUrlConstants.WIFI_LOCK_DELETE_SHARE)
+    Observable<BaseResult> wifiLockDeleteShareUser(@Body RequestBody info);
+
+    /**
+     * wifi锁修改授权用户昵称
+     */
+    @POST(HttpUrlConstants.WIFI_LOCK_UPDATE_SHARE_NICKNAME)
+    Observable<BaseResult> wifiLockUpdateShareUserNickname(@Body RequestBody info);
+
+    /**
+     * wifi锁授权用户列表
+     */
+    @POST(HttpUrlConstants.WIFI_LOCK_GET_SHARE_LIST)
+    Observable<WifiLockShareResult> wifiLockGetShareUserList(@Body RequestBody info);
+
+    /**
+     * 获取wifi锁操作记录
+     */
+    @POST(HttpUrlConstants.WIFI_LOCK_OPERATION_LIST)
+    Observable<GetWifiLockOperationRecordResult> wifiLockGetOperationList(@Body RequestBody info);
+
+    /**
+     * 获取wifi报警记录
+     */
+    @POST(HttpUrlConstants.WIFI_LOCK_ALARM_LIST)
+    Observable<GetWifiLockAlarmRecordResult> wifiLockGetAlarmList(@Body RequestBody info);
+    /**
+     * 开锁次数
+     */
+    @POST(HttpUrlConstants.WIFI_LOCK_OPEN_COUNT)
+    Observable<GetOpenCountResult> wifiLockGetOpenCount(@Body RequestBody info);
+
+
+    /**
+     * 更新wifi信息
+     */
+    @POST(HttpUrlConstants.WIFI_LOCK_UPDATE_INFO)
+    Observable<BaseResult> wifiLockUpdateInfo(@Body RequestBody info);
+
+
+
+
 }

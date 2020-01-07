@@ -299,4 +299,79 @@ public class HttpUrlConstants {
     public static final String MODIFY_FUNCTION_SET = BASE_URL + "adminlock/reg/updateFunctionSet";
 
 
+    ////////////////////////////////////////////           WiFi锁api功能            ///////////////////////////////////////////////
+    /**
+     * 绑定WiFi锁
+     */
+    public static final String WIFI_LOCK_BIND = BASE_URL + "wifi/device/bind";
+
+
+    /**
+     * 解绑WiFi锁
+     */
+    public static final String WIFI_LOCK_UNBIND = BASE_URL + "wifi/device/unbind";
+
+
+    /**
+     * 修改WiFi昵称
+     */
+    public static final String WIFI_LOCK_UPDATE_NICK_NAME = BASE_URL + "wifi/device/updatenickname";
+
+
+    /**
+     * 修改推送开关
+     */
+    public static final String WIFI_LOCK_UPDATE_PUSH = BASE_URL + "wifi/device/updatepushswitch";
+
+
+    /**
+     * 获取wifi锁密码列表
+     */
+    public static final String WIFI_LOCK_GET_PWD_LIST = BASE_URL + "wifi/pwd/list";
+
+
+    /**
+     * 修改wifi密码昵称
+     */
+    public static final String WIFI_LOCK_UPDATE_PWD_NICKNAME = BASE_URL + "wifi/pwd/updatenickname";
+
+    /**
+     * wifi锁授权用户
+     */
+    public static final String WIFI_LOCK_SHARE = BASE_URL + "wifi/share/add";
+
+    /**
+     * wifi锁删除授权用户
+     */
+    public static final String WIFI_LOCK_DELETE_SHARE = BASE_URL + "wifi/share/del";
+
+    /**
+     * wifi锁修改授权用户昵称
+     */
+    public static final String WIFI_LOCK_UPDATE_SHARE_NICKNAME = BASE_URL + "wifi/share/updatenickname";
+    /**
+     * wifi锁授权用户列表
+     */
+    public static final String WIFI_LOCK_GET_SHARE_LIST = BASE_URL + "wifi/share/list";
+
+    /**
+     * 获取wifi锁操作记录
+     */
+    public static final String WIFI_LOCK_OPERATION_LIST = BASE_URL + "wifi/operation/list";
+
+    /**
+     * 获取wifi报警记录
+     */
+    public static final String WIFI_LOCK_ALARM_LIST = BASE_URL + "wifi/alarm/list";
+    /**
+     * 获取开锁次数
+     */
+    public static final String WIFI_LOCK_OPEN_COUNT = BASE_URL + "wifi/operation/opencount";
+
+
+    /**
+     * 获取开锁次数
+     */
+    public static final String WIFI_LOCK_UPDATE_INFO = BASE_URL + "wifi/device/infoUpdate";
+
 }

@@ -32,6 +32,7 @@ import com.kaadas.lock.mvp.view.IHomeView;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.publiclibrary.bean.CateEyeInfo;
 import com.kaadas.lock.publiclibrary.bean.GwLockInfo;
+import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.AllBindDevices;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
@@ -119,10 +120,15 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
         initView();
         initData(devices);
         getScrollViewWidth();
+
         return view;
     }
 
     private void initView() {
+
+        mRadioGroup.setBackgroundResource(R.color.color_trans);
+        scTitle.setBackgroundResource(R.color.color_trans);
+
 //        viewPager.setOffscreenPageLimit(3);
         mRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -230,7 +236,8 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
             //根据下标获取商品类别对象
             HomeShowBean homeShowBean = devices.get(i);
 
-            rb.setText(homeShowBean.getDeviceNickName());
+            String deviceNickName = homeShowBean.getDeviceNickName();
+            rb.setText(TextUtils.isEmpty(deviceNickName)?homeShowBean.getDeviceId():deviceNickName);
             rb.setTextSize(13);
             rb.setGravity(Gravity.CENTER);
             //设置图片   根据类型不同显示不同的图片
@@ -283,6 +290,15 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
                     gwBundle.putSerializable(KeyConstants.GATEWAY_LOCK_INFO, (GwLockInfo) devices.get(i).getObject());
                     gatewayLockFragment.setArguments(gwBundle);
                     fragments.add(gatewayLockFragment);
+                    break;
+                case HomeShowBean.TYPE_WIFI_LOCK:
+                    rb.setCompoundDrawablesRelativeWithIntrinsicBounds(null, getContext().getDrawable(R.drawable.home_rb_lock_drawable), null, null);
+                    WifiLockFragment wifiLockFragment = new WifiLockFragment();
+                    Bundle wifiBundle = new Bundle();
+                    WifiLockInfo wifiLockInfo = (WifiLockInfo) devices.get(i).getObject();
+                    wifiBundle.putSerializable(KeyConstants.WIFI_LOCK_INFO, wifiLockInfo);
+                    wifiLockFragment.setArguments(wifiBundle);
+                    fragments.add(wifiLockFragment);
                     break;
             }
             //根据需要设置显示初始标签的个数，这里显示3个

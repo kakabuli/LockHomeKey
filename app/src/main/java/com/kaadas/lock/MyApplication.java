@@ -21,9 +21,11 @@ import com.huawei.android.hms.agent.HMSAgent;
 import com.igexin.sdk.PushManager;
 import com.kaadas.lock.activity.login.LoginActivity;
 import com.kaadas.lock.bean.HomeShowBean;
+import com.kaadas.lock.bean.WifiLockActionBean;
 import com.kaadas.lock.publiclibrary.bean.CateEyeInfo;
 import com.kaadas.lock.publiclibrary.bean.GatewayInfo;
 import com.kaadas.lock.publiclibrary.bean.GwLockInfo;
+import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
 import com.kaadas.lock.publiclibrary.http.XiaokaiNewServiceImp;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.result.CheckOTAResult;
@@ -49,7 +51,10 @@ import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.ToastUtil;
 import com.kaadas.lock.utils.ftp.GeTui;
 import com.kaadas.lock.utils.greenDao.db.DaoManager;
+import com.kaadas.lock.utils.greenDao.db.DaoMaster;
 import com.kaadas.lock.utils.greenDao.db.DaoSession;
+import com.kaadas.lock.utils.greenDao.db.WifiLockInfoDao;
+import com.kaadas.lock.utils.greenDao.manager.WifiLockInfoManager;
 import com.kaidishi.lock.service.GeTuiIntentService;
 import com.kaidishi.lock.service.GeTuiPushService;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
@@ -71,8 +76,10 @@ import com.yun.software.kaadas.Utils.UserUtils;
 
 import net.sdvn.cmapi.CMAPI;
 import net.sdvn.cmapi.Config;
+import net.sqlcipher.database.SQLiteDatabase;
 
 import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.greenrobot.greendao.database.Database;
 import org.linphone.mediastream.Log;
 
 import java.io.File;
@@ -343,6 +350,7 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
      *                     ....
      */
     public void tokenInvalid(boolean isShowDialog) {
+        deleSQL();  //清除数据库数据
         ActivityCollectorUtil.finishAllActivity();
         LogUtils.e("token过期   ");
         SPUtils.put(KeyConstants.HEAD_PATH, "");
@@ -385,8 +393,13 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
                 activity.finish();
             }
         }
+    }
 
-
+    public void deleSQL() {  //删除所有表 然后创建所有表
+        Database database = getDaoWriteSession().getDatabase();
+        DaoMaster daoMaster = new DaoMaster(database);
+        DaoMaster.dropAllTables(daoMaster.getDatabase(), true);
+        DaoMaster.createAllTables(daoMaster.getDatabase(), true);
     }
 
 
@@ -481,7 +494,6 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
         }
     }
 
-
     /**
      * 全局的获取所有设备信息
      *
@@ -539,6 +551,15 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
                             homeShowDevices = allBindDevices.getHomeShow();
                             LogUtils.e("设备更新  application");
                             getDevicesFromServer.onNext(allBindDevices);
+
+
+                            //缓存WiFi锁设备
+                            if (allBindDevices.getData() != null && allBindDevices.getData().getWifiList() != null) {
+                                List<WifiLockInfo> wifiList = allBindDevices.getData().getWifiList();
+                                WifiLockInfoDao wifiLockInfoDao = getDaoWriteSession().getWifiLockInfoDao();
+                                wifiLockInfoDao.deleteAll();
+                                wifiLockInfoDao.insertInTx(wifiList);
+                            }
                         }
                     }
                 }, new Consumer<Throwable>() {
@@ -547,6 +568,60 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
 
                     }
                 });
+    }
+
+    public WifiLockInfo getWifiLockInfoBySn(String sn) {
+        if (homeShowDevices != null) {
+            for (int i = homeShowDevices.size() - 1; i >= 0; i--) {
+                HomeShowBean homeShowBean = homeShowDevices.get(i);
+                if (homeShowBean.getDeviceType() == HomeShowBean.TYPE_WIFI_LOCK) {
+                    WifiLockInfo wifiLockInfo = (WifiLockInfo) homeShowBean.getObject();
+                    if (wifiLockInfo.getWifiSN().equals(sn)) {
+                        return wifiLockInfo;
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+
+    public void updateWifiLockInfo(String sn, WifiLockActionBean.EventparamsBean eventparams) {
+        if (homeShowDevices != null) {
+            for (int i = homeShowDevices.size() - 1; i >= 0; i--) {
+                HomeShowBean homeShowBean = homeShowDevices.get(i);
+                if (homeShowBean.getDeviceType() == HomeShowBean.TYPE_WIFI_LOCK) {
+                    WifiLockInfo wifiLockInfo = (WifiLockInfo) homeShowBean.getObject();
+                    /**
+                     * amMode : 1
+                     * defences : 1
+                     * language : zh/en
+                     * operatingMode : 1
+                     * safeMode : 1
+                     * volume : 0
+                     */
+                    if (wifiLockInfo.getWifiSN().equals(sn)) {
+                        wifiLockInfo.setAmMode(eventparams.getAmMode());
+                        wifiLockInfo.setDefences(eventparams.getDefences());
+                        wifiLockInfo.setLanguage(eventparams.getLanguage());
+                        wifiLockInfo.setOperatingMode(eventparams.getOperatingMode());
+                        wifiLockInfo.setSafeMode(eventparams.getSafeMode());
+                        wifiLockInfo.setVolume(eventparams.getVolume());
+                    }
+                    new WifiLockInfoManager().insertOrReplace(wifiLockInfo);
+                    wifiLockActionChange.onNext(wifiLockInfo);
+                }
+            }
+        }
+    }
+
+    /**
+     * wifi锁动态更新界面
+     */
+    private PublishSubject<WifiLockInfo> wifiLockActionChange = PublishSubject.create();
+
+    public Observable<WifiLockInfo> listenerWifiLockAction() {
+        return wifiLockActionChange;
     }
 
 
@@ -822,15 +897,6 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
 
     boolean isPopDialog = false;
 
-    public boolean isPopDialog() {
-        return isPopDialog;
-    }
-
-    public void setPopDialog(boolean popDialog) {
-        isPopDialog = popDialog;
-    }
-
-
     public void reStartApp() {
         Intent intent = getBaseContext().getPackageManager().getLaunchIntentForPackage(getBaseContext().getPackageName());
         PendingIntent restartIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, PendingIntent.FLAG_ONE_SHOT);
@@ -872,14 +938,14 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
     /**
      * @param sn
      * @param version    新版本的版本号
-     * param customer   客户：1凯迪仕 2小凯 3桔子物联 4飞利浦
+     *                   param customer   客户：1凯迪仕 2小凯 3桔子物联 4飞利浦
      * @param resultCode 结果：0升级成功 1升级失败 （可自定义其他错误码）
      * @param devNum     模块：1主模块 2算法模块 3相机模块（空：默认1）
      * @return
      */
     public void uploadOtaResult(String sn, String version, String resultCode, int devNum) {
-        if (!TextUtils.isEmpty(resultCode) && resultCode.length() >200){
-            resultCode = resultCode.substring(0,200);
+        if (!TextUtils.isEmpty(resultCode) && resultCode.length() > 200) {
+            resultCode = resultCode.substring(0, 200);
         }
         XiaokaiNewServiceImp.uploadOtaResult(sn, version, 1, resultCode, devNum)
                 .subscribe(new BaseObserver<BaseResult>() {

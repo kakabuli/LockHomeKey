@@ -171,8 +171,8 @@ public class OldDeviceInfoActivity extends BaseBleCheckInfoActivity<IOldDeviceIn
         } else {
             strModuleHardwareVersion = data;
         }
-        tvLockSoftwareVersion.setText(strLockHardwareVersion);
-        tvBluetoothModuleVersion.setText(strModuleHardwareVersion);
+        tvLockSoftwareVersion.setText(strLockHardwareVersion.trim());
+        tvBluetoothModuleVersion.setText(strModuleHardwareVersion.trim());
     }
 
     @Override
@@ -185,7 +185,7 @@ public class OldDeviceInfoActivity extends BaseBleCheckInfoActivity<IOldDeviceIn
         String[] split = data.split("-");
         String strModuleHardwareVersion = split[0];
         String strLockHardwareVersion = split[1];
-        tvLockFirmwareVersion.setText(strLockHardwareVersion);
+        tvLockFirmwareVersion.setText(strLockHardwareVersion.trim());
     }
 
     @Override
@@ -195,7 +195,7 @@ public class OldDeviceInfoActivity extends BaseBleCheckInfoActivity<IOldDeviceIn
 
     @Override
     public void FirmwareRevDataSuccess(String data) {
-        tvDeviceModel.setText(data);
+        tvDeviceModel.setText(data.trim());
     }
 
     @Override
@@ -205,7 +205,7 @@ public class OldDeviceInfoActivity extends BaseBleCheckInfoActivity<IOldDeviceIn
 
     @Override
     public void SerialNumberDataSuccess(String data) {
-        tvSerialNumber.setText(data);
+        tvSerialNumber.setText(data.trim());
     }
 
     @Override
@@ -215,7 +215,7 @@ public class OldDeviceInfoActivity extends BaseBleCheckInfoActivity<IOldDeviceIn
 
     @Override
     public void ModelNumberDataSuccess(String data) {
-        bleMode.setText(data);
+        bleMode.setText(data.trim());
         hiddenLoading();
     }
 

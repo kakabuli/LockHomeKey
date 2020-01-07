@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.bean.BluetoothLockFunctionBean;
+import com.kaadas.lock.bean.WifiLockFunctionBean;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,6 +21,7 @@ public class BleLockUtils {
     public static final int TYPE_CARD = 3;
     public static final int TYPE_SHARE = 4;
     public static final int TYPE_MORE = 5;
+    public static final int TYPE_OFFLINE_PASSWORD = 6;
 
     /***
      * 1	开门	带密码开门,需要输入用户密码密码开门,不支持不带密码开门。安全模式（双重验证模式）下,APP不能开门；电子反锁状态下,APP不能开门；系统锁定模式下,APP不能开门
@@ -66,6 +68,12 @@ public class BleLockUtils {
         FUNCTION_SET.put(0x06, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 10, 11, 13, 14, 15, 16, 17, 19, 20, 21, 22, 23, 24});        //2019年8月29日11:10:53
         FUNCTION_SET.put(0x07, new Integer[]{1, 2, 3, 4, 5, 7, 8, 10, 11, 13, 14, 15, 16, 17, 19, 20, 21, 22, 26, 27, 28, 29, 30});        //2019年8月29日11:10:53
 
+        FUNCTION_SET.put(0x08, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 15, 16, 17, 19, 20, 21, 22, 23, 38, 40});   //2019年12月30日15:16:25
+        FUNCTION_SET.put(0x09, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 15, 16, 17, 19, 20, 21, 22, 23, 24, 38, 40});   //2019年12月30日15:16:25
+
+        FUNCTION_SET.put(0x0A, new Integer[]{2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 19, 20, 21, 22, 23, 38, 40});       //2019年12月30日15:16:25
+        FUNCTION_SET.put(0x0B, new Integer[]{2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 19, 20, 21, 22, 23, 24, 38, 40});        //2019年12月30日15:16:25
+
 
         FUNCTION_SET.put(0x20, new Integer[]{1, 2, 3, 4, 5, 7, 8, 10, 13, 16, 17, 19, 20, 21, 22});
         FUNCTION_SET.put(0x31, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 10, 13, 16, 17, 19, 20, 21, 22});
@@ -89,14 +97,18 @@ public class BleLockUtils {
         FUNCTION_SET.put(0x63, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 13, 16, 17, 19, 20, 21, 22, 23, 24, 25});
 
 
+        FUNCTION_SET.put(0x64, new Integer[]{2, 3, 4, 5, 6, 7, 8, 10, 13, 16, 17, 19, 20, 21, 22, 23, 24, 25, 38, 39});
+        FUNCTION_SET.put(0x65, new Integer[]{2, 3, 4, 5, 6, 7, 8, 9, 10, 13, 16, 17, 19, 20, 21, 22, 23, 24, 25, 38, 39});
+
         //2019年12月3日17:18:47
         FUNCTION_SET.put(0x70, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 15, 16, 17, 19, 20, 21, 22, 23});
         FUNCTION_SET.put(0x71, new Integer[]{1, 2, 3, 4, 5, 6, 7, 9, 10, 11, 13, 14, 15, 16, 17, 19, 20, 21, 22, 23});
         FUNCTION_SET.put(0x72, new Integer[]{1, 2, 3, 4, 5, 6, 7, 10, 11, 13, 14, 15, 16, 17, 19, 20, 21, 22, 23});
-        FUNCTION_SET.put(0xC0, new Integer[]{1, 2, 3, 4, 5, 6, 7, 10, 11, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 31, 32, 33, 36});
-        FUNCTION_SET.put(0xC1, new Integer[]{1, 2, 3, 4, 5, 6, 7, 10, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 31, 32, 33, 35, 36});
-        FUNCTION_SET.put(0xC3, new Integer[]{1, 2, 3, 4, 5, 6, 7, 10, 11, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 31, 32, 33,});
-        FUNCTION_SET.put(0xC4, new Integer[]{1, 2, 3, 4, 5, 6, 7, 10, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 31, 32, 33, 35});
+
+        FUNCTION_SET.put(0xC0, new Integer[]{1, 2, 3, 4, 5, 6, 7, 10, 11, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 31, 32, 33, 36, 41, 42});
+        FUNCTION_SET.put(0xC1, new Integer[]{1, 2, 3, 4, 5, 6, 7, 10, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 31, 32, 33, 35, 36, 41, 42});
+        FUNCTION_SET.put(0xC3, new Integer[]{1, 2, 3, 4, 5, 6, 7, 10, 11, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 31, 32, 33, 41, 42});
+        FUNCTION_SET.put(0xC4, new Integer[]{1, 2, 3, 4, 5, 6, 7, 10, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 31, 32, 33, 35, 41, 42});
 
         FUNCTION_SET.put(0xFF, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 10, 13, 16, 17, 19, 20, 21, 22}); //默认为FF
     }
@@ -341,6 +353,8 @@ public class BleLockUtils {
         LogUtils.e("获取到的  功能集是3否包含卡片      " + integers.contains(9));
         if (integers.contains(7)) {
             functionBeans.add(new BluetoothLockFunctionBean(MyApplication.getInstance().getString(R.string.password), R.mipmap.bluetooth_password, TYPE_PASSWORD));
+            functionBeans.add(new BluetoothLockFunctionBean(MyApplication.getInstance().getString(R.string.fingerprint), R.mipmap.bluetooth_fingerprint, TYPE_FINGER));
+
         }
         if (integers.contains(8)) {
             functionBeans.add(new BluetoothLockFunctionBean(MyApplication.getInstance().getString(R.string.fingerprint), R.mipmap.bluetooth_fingerprint, TYPE_FINGER));
@@ -354,6 +368,39 @@ public class BleLockUtils {
         return functionBeans;
     }
 
+    /**
+     * 根据功能集判断显示的界面
+     *
+     * @param functionSet
+     * @return
+     */
+    public static List<WifiLockFunctionBean> getWifiLockSupportFunction(int functionSet) {
+        List<WifiLockFunctionBean> functionBeans = new ArrayList<>();
+        Integer[] funcs = FUNCTION_SET.get(functionSet);
+        System.out.println(funcs == null);
+        if (funcs == null) { //未知功能集
+            funcs = FUNCTION_SET.get(0x31);
+        }
+        List<Integer> integers = Arrays.asList(funcs);
+        LogUtils.e("获取到的  功能集是1   " + functionSet);
+        LogUtils.e("获取到的  功能集是2   " + Arrays.toString(funcs));
+        LogUtils.e("获取到的  功能集是3否包含卡片      " + integers.contains(9));
+        functionBeans.add(new WifiLockFunctionBean(MyApplication.getInstance().getString(R.string.offline_password), R.mipmap.bluetooth_password, TYPE_OFFLINE_PASSWORD));
+        if (integers.contains(7)) {
+
+            functionBeans.add(new WifiLockFunctionBean(MyApplication.getInstance().getString(R.string.password), R.mipmap.bluetooth_password, TYPE_PASSWORD));
+        }
+        if (integers.contains(8)) {
+            functionBeans.add(new WifiLockFunctionBean(MyApplication.getInstance().getString(R.string.fingerprint), R.mipmap.bluetooth_fingerprint, TYPE_FINGER));
+        }
+        if (integers.contains(9)) {
+            functionBeans.add(new WifiLockFunctionBean(MyApplication.getInstance().getString(R.string.card), R.mipmap.bluetooth_card, TYPE_CARD));
+        }
+        functionBeans.add(new WifiLockFunctionBean(MyApplication.getInstance().getString(R.string.device_share), R.mipmap.bluetooth_share, TYPE_SHARE));
+        functionBeans.add(new WifiLockFunctionBean(MyApplication.getInstance().getString(R.string.more), R.mipmap.bluetooth_more, TYPE_MORE));
+
+        return functionBeans;
+    }
 
     /**
      * 根据设备型号,获取授权界面的显示图片
@@ -415,6 +462,8 @@ public class BleLockUtils {
                 return R.mipmap.bluetooth_authorization_lock_g3560;
             } else if (model.startsWith("6113")) {
                 return R.mipmap.bluetooth_authorization_lock_6113;
+            } else if (model.startsWith("A8")) {
+                return R.mipmap.bluetooth_authorization_lock_a8;
             } else {
                 return R.mipmap.bluetooth_authorization_lock_default;
             }
@@ -444,7 +493,7 @@ public class BleLockUtils {
                 return R.mipmap.k8;
             } else if (model.startsWith("Q8")) {
                 return R.mipmap.q8;
-            } else if (model.startsWith("8012")|| model.startsWith("G8012")) {
+            } else if (model.startsWith("8012") || model.startsWith("G8012")) {
                 return R.mipmap.small_8012;
             } else if (model.startsWith("K9")) {
                 return R.mipmap.k9;
@@ -484,6 +533,8 @@ public class BleLockUtils {
                 return R.mipmap.small_g3560;
             } else if (model.startsWith("6113")) {
                 return R.mipmap.small_6113;
+            } else if (model.startsWith("A8")) {
+                return R.mipmap.small_a8;
             } else {
                 return R.mipmap.default_zigbee_lock_icon;
             }
@@ -553,6 +604,8 @@ public class BleLockUtils {
                 return R.mipmap.bluetooth_lock_g3560;
             } else if (model.startsWith("6113")) {
                 return R.mipmap.bluetooth_lock_6113;
+            } else if (model.startsWith("A8")) {
+                return R.mipmap.bluetooth_lock_a8;
             } else {
                 return R.mipmap.bluetooth_lock_default;
             }

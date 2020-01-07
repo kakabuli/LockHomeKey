@@ -8,6 +8,7 @@ import org.greenrobot.greendao.database.Database;
 import org.greenrobot.greendao.identityscope.IdentityScopeType;
 import org.greenrobot.greendao.internal.DaoConfig;
 
+import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
 import com.kaadas.lock.utils.greenDao.bean.BleLockServiceInfo;
 import com.kaadas.lock.utils.greenDao.bean.CateEyeInfoBase;
 import com.kaadas.lock.utils.greenDao.bean.CatEyeEvent;
@@ -25,6 +26,7 @@ import com.kaadas.lock.utils.greenDao.bean.GatewayServiceInfo;
 import com.kaadas.lock.utils.greenDao.bean.HistoryInfo;
 import com.kaadas.lock.utils.greenDao.bean.PirDefault;
 
+import com.kaadas.lock.utils.greenDao.db.WifiLockInfoDao;
 import com.kaadas.lock.utils.greenDao.db.BleLockServiceInfoDao;
 import com.kaadas.lock.utils.greenDao.db.CateEyeInfoBaseDao;
 import com.kaadas.lock.utils.greenDao.db.CatEyeEventDao;
@@ -51,6 +53,7 @@ import com.kaadas.lock.utils.greenDao.db.PirDefaultDao;
  */
 public class DaoSession extends AbstractDaoSession {
 
+    private final DaoConfig wifiLockInfoDaoConfig;
     private final DaoConfig bleLockServiceInfoDaoConfig;
     private final DaoConfig cateEyeInfoBaseDaoConfig;
     private final DaoConfig catEyeEventDaoConfig;
@@ -68,6 +71,7 @@ public class DaoSession extends AbstractDaoSession {
     private final DaoConfig historyInfoDaoConfig;
     private final DaoConfig pirDefaultDaoConfig;
 
+    private final WifiLockInfoDao wifiLockInfoDao;
     private final BleLockServiceInfoDao bleLockServiceInfoDao;
     private final CateEyeInfoBaseDao cateEyeInfoBaseDao;
     private final CatEyeEventDao catEyeEventDao;
@@ -88,6 +92,9 @@ public class DaoSession extends AbstractDaoSession {
     public DaoSession(Database db, IdentityScopeType type, Map<Class<? extends AbstractDao<?, ?>>, DaoConfig>
             daoConfigMap) {
         super(db);
+
+        wifiLockInfoDaoConfig = daoConfigMap.get(WifiLockInfoDao.class).clone();
+        wifiLockInfoDaoConfig.initIdentityScope(type);
 
         bleLockServiceInfoDaoConfig = daoConfigMap.get(BleLockServiceInfoDao.class).clone();
         bleLockServiceInfoDaoConfig.initIdentityScope(type);
@@ -137,6 +144,7 @@ public class DaoSession extends AbstractDaoSession {
         pirDefaultDaoConfig = daoConfigMap.get(PirDefaultDao.class).clone();
         pirDefaultDaoConfig.initIdentityScope(type);
 
+        wifiLockInfoDao = new WifiLockInfoDao(wifiLockInfoDaoConfig, this);
         bleLockServiceInfoDao = new BleLockServiceInfoDao(bleLockServiceInfoDaoConfig, this);
         cateEyeInfoBaseDao = new CateEyeInfoBaseDao(cateEyeInfoBaseDaoConfig, this);
         catEyeEventDao = new CatEyeEventDao(catEyeEventDaoConfig, this);
@@ -154,6 +162,7 @@ public class DaoSession extends AbstractDaoSession {
         historyInfoDao = new HistoryInfoDao(historyInfoDaoConfig, this);
         pirDefaultDao = new PirDefaultDao(pirDefaultDaoConfig, this);
 
+        registerDao(WifiLockInfo.class, wifiLockInfoDao);
         registerDao(BleLockServiceInfo.class, bleLockServiceInfoDao);
         registerDao(CateEyeInfoBase.class, cateEyeInfoBaseDao);
         registerDao(CatEyeEvent.class, catEyeEventDao);
@@ -173,6 +182,7 @@ public class DaoSession extends AbstractDaoSession {
     }
     
     public void clear() {
+        wifiLockInfoDaoConfig.clearIdentityScope();
         bleLockServiceInfoDaoConfig.clearIdentityScope();
         cateEyeInfoBaseDaoConfig.clearIdentityScope();
         catEyeEventDaoConfig.clearIdentityScope();
@@ -189,6 +199,10 @@ public class DaoSession extends AbstractDaoSession {
         gatewayServiceInfoDaoConfig.clearIdentityScope();
         historyInfoDaoConfig.clearIdentityScope();
         pirDefaultDaoConfig.clearIdentityScope();
+    }
+
+    public WifiLockInfoDao getWifiLockInfoDao() {
+        return wifiLockInfoDao;
     }
 
     public BleLockServiceInfoDao getBleLockServiceInfoDao() {

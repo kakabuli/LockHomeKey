@@ -48,14 +48,17 @@ public class CatEyeServiceInfo {
     private String offlineTime;
     private String onlineTime;
     private int shareFlag;
+    private int pushSwitch;
 
 
-    @Generated(hash = 1129370850)
+
+
+    @Generated(hash = 365171126)
     public CatEyeServiceInfo(String deviceIdUid, String deviceId, String SW,
             String device_type, String event_str, String ipaddr, String macaddr,
             String nickName, String time, String gatewayId, String uid,
             String delectTime, String lockversion, String moduletype, int nwaddr,
-            String offlineTime, String onlineTime, int shareFlag) {
+            String offlineTime, String onlineTime, int shareFlag, int pushSwitch) {
         this.deviceIdUid = deviceIdUid;
         this.deviceId = deviceId;
         this.SW = SW;
@@ -74,12 +77,23 @@ public class CatEyeServiceInfo {
         this.offlineTime = offlineTime;
         this.onlineTime = onlineTime;
         this.shareFlag = shareFlag;
+        this.pushSwitch = pushSwitch;
     }
 
     @Generated(hash = 1773439888)
     public CatEyeServiceInfo() {
     }
 
+
+
+
+    public int getPushSwitch() {
+        return pushSwitch;
+    }
+
+    public void setPushSwitch(int pushSwitch) {
+        this.pushSwitch = pushSwitch;
+    }
 
     public String getDelectTime() {
         return delectTime;

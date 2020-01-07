@@ -1,0 +1,35 @@
+@startuml
+== Delete Gateway Lock  ==
+App-> MqttServer :func:delDevice  \nbustype:zigbee  \ndeviceId:xxx
+alt  网关在线
+    MqttServer-> gateway:
+else 网关离线
+    MqttServer-> MqttServer :缓存七天,上线重发
+end
+App-> App :监听网关上报事件
+alt  收到上报
+    gateway --> MqttServer: func:gwevent  \n devtype:kdszblock  \n event_str:delete
+    MqttServer-->App:
+    App->App: 提示用户删除成功\n重新获取设备
+else  10秒未收到上报
+    MqttServer-->App:
+    App->App: 提示用户删除失败
+end
+
+== Delete Gateway  ==
+App-> MqttServer :func:unbindGateway   \n devuuid:xxx
+App-> App :等待结果返回
+MqttServer-> MqttServer :删除绑定数据
+
+alt  收到返回结果
+    MqttServer-> App :返回解绑结果
+    alt returnCode 为200
+        App->App: 提示用户解绑成功 \n重新获取设备
+    else
+        App->App: 提示用户删除失败
+    end
+else  10秒未收到返回结果
+    MqttServer-->App:
+App->App: 提示用户删除失败
+end
+@enduml

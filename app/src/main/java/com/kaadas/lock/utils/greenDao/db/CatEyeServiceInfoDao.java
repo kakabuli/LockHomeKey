@@ -42,6 +42,7 @@ public class CatEyeServiceInfoDao extends AbstractDao<CatEyeServiceInfo, String>
         public final static Property OfflineTime = new Property(15, String.class, "offlineTime", false, "OFFLINE_TIME");
         public final static Property OnlineTime = new Property(16, String.class, "onlineTime", false, "ONLINE_TIME");
         public final static Property ShareFlag = new Property(17, int.class, "shareFlag", false, "SHARE_FLAG");
+        public final static Property PushSwitch = new Property(18, int.class, "pushSwitch", false, "PUSH_SWITCH");
     }
 
 
@@ -74,7 +75,8 @@ public class CatEyeServiceInfoDao extends AbstractDao<CatEyeServiceInfo, String>
                 "\"NWADDR\" INTEGER NOT NULL ," + // 14: nwaddr
                 "\"OFFLINE_TIME\" TEXT," + // 15: offlineTime
                 "\"ONLINE_TIME\" TEXT," + // 16: onlineTime
-                "\"SHARE_FLAG\" INTEGER NOT NULL );"); // 17: shareFlag
+                "\"SHARE_FLAG\" INTEGER NOT NULL ," + // 17: shareFlag
+                "\"PUSH_SWITCH\" INTEGER NOT NULL );"); // 18: pushSwitch
     }
 
     /** Drops the underlying database table. */
@@ -168,6 +170,7 @@ public class CatEyeServiceInfoDao extends AbstractDao<CatEyeServiceInfo, String>
             stmt.bindString(17, onlineTime);
         }
         stmt.bindLong(18, entity.getShareFlag());
+        stmt.bindLong(19, entity.getPushSwitch());
     }
 
     @Override
@@ -255,6 +258,7 @@ public class CatEyeServiceInfoDao extends AbstractDao<CatEyeServiceInfo, String>
             stmt.bindString(17, onlineTime);
         }
         stmt.bindLong(18, entity.getShareFlag());
+        stmt.bindLong(19, entity.getPushSwitch());
     }
 
     @Override
@@ -282,7 +286,8 @@ public class CatEyeServiceInfoDao extends AbstractDao<CatEyeServiceInfo, String>
             cursor.getInt(offset + 14), // nwaddr
             cursor.isNull(offset + 15) ? null : cursor.getString(offset + 15), // offlineTime
             cursor.isNull(offset + 16) ? null : cursor.getString(offset + 16), // onlineTime
-            cursor.getInt(offset + 17) // shareFlag
+            cursor.getInt(offset + 17), // shareFlag
+            cursor.getInt(offset + 18) // pushSwitch
         );
         return entity;
     }
@@ -307,6 +312,7 @@ public class CatEyeServiceInfoDao extends AbstractDao<CatEyeServiceInfo, String>
         entity.setOfflineTime(cursor.isNull(offset + 15) ? null : cursor.getString(offset + 15));
         entity.setOnlineTime(cursor.isNull(offset + 16) ? null : cursor.getString(offset + 16));
         entity.setShareFlag(cursor.getInt(offset + 17));
+        entity.setPushSwitch(cursor.getInt(offset + 18));
      }
     
     @Override

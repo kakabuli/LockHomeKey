@@ -61,7 +61,7 @@ public class SwitchStatusResult  {
 
         @Override
         public String toString() {
-            return "DataBean{" +
+            return "WifiLockShareUser{" +
                     "openlockPushSwitch=" + openlockPushSwitch +
                     '}';
         }

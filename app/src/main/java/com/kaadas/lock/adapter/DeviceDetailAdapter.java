@@ -17,6 +17,7 @@ import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.publiclibrary.bean.CateEyeInfo;
 import com.kaadas.lock.publiclibrary.bean.GatewayInfo;
 import com.kaadas.lock.publiclibrary.bean.GwLockInfo;
+import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
 import com.kaadas.lock.utils.BatteryView;
 import com.kaadas.lock.utils.BleLockUtils;
 import com.kaadas.lock.utils.KeyConstants;
@@ -97,7 +98,7 @@ public class DeviceDetailAdapter extends BaseQuickAdapter<HomeShowBean, BaseView
                     String lockversion = gwLockInfo.getServerInfo().getLockversion();
                     helper.setImageResource(R.id.device_image, R.mipmap.default_zigbee_lock_icon);
 
-                    if (!TextUtils.isEmpty(lockversion) && lockversion.contains(";")&&
+                    if (!TextUtils.isEmpty(lockversion) && lockversion.contains(";") &&
                             (lockversion.split(";")[0].startsWith("8100Z") || lockversion.split(";")[0].startsWith("8100A"))) {
                         helper.setImageResource(R.id.device_image, R.mipmap.small_8100);
                     }
@@ -152,6 +153,23 @@ public class DeviceDetailAdapter extends BaseQuickAdapter<HomeShowBean, BaseView
                     batteryView.setPower(blePower);
                     helper.setText(R.id.device_power_text, blePower + "%");
                     textView.setText(bleLockInfo.getServerLockInfo().getLockNickName());
+                }
+                break;
+
+            //wifi锁
+            case HomeShowBean.TYPE_WIFI_LOCK:
+                WifiLockInfo wifiLockInfo = (WifiLockInfo) item.getObject();
+                if (wifiLockInfo != null) {
+                    int power1 = wifiLockInfo.getPower();
+                    isWifiDevice(false, helper, "online", batteryView, power1);
+                    String model = wifiLockInfo.getProductModel();
+                    helper.setImageResource(R.id.device_image, BleLockUtils.getSmallImageByModel(model));
+                    batteryView.setPower(power1);
+                    helper.setText(R.id.device_power_text, power1 + "%");
+                    textView.setText(wifiLockInfo.getLockNickname());
+
+                    helper.setVisible(R.id.device_type_image, false);
+                    helper.setVisible(R.id.device_type_text, false);
                 }
                 break;
         }

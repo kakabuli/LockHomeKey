@@ -4,7 +4,7 @@ apply plugin: 'bugly'   //添加bugly的符号表
 apply plugin: 'com.mob.sdk'
 
 greendao {
-    schemaVersion 16// 数据库版本号
+    schemaVersion 19// 数据库版本号
     daoPackage 'com.kaadas.lock.utils.greenDao.db'//自动生成的dao的包名，包名默认是entity所在的包；
     targetGenDir 'src/main/java'//生成数据库文件的目录
 }
@@ -22,8 +22,8 @@ android {
         applicationId "com.kaadas.lock"
         minSdkVersion 22
         targetSdkVersion 26
-        versionCode 201912130
-        versionName "3.5.6"
+        versionCode 202001030
+        versionName "3.6.3"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         flavorDimensions "versionCode"
         multiDexEnabled true
@@ -204,6 +204,7 @@ dependencies {
     //    implementation project(':Core')
     implementation 'com.jakewharton:butterknife:8.4.0'
     implementation 'com.jakewharton:butterknife-compiler:8.4.0'
+    implementation files('libs/esptouch.aar')
     implementation files('libs/esptouch.jar')
     implementation files('libs/GetuiSDK-support-VIVO-1.0.3.jar')
 }

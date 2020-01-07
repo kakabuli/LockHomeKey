@@ -227,19 +227,23 @@ public class SPUtils {
 
         /**
          * 如果找到则使用apply执行，否则使用commit
-         *
          * @param editor
          */
         public static void apply(SharedPreferences.Editor editor) {
             try {
                 if (sApplyMethod != null) {
                     sApplyMethod.invoke(editor);
+
                     return;
                 }
             } catch (IllegalArgumentException e) {
+                LogUtils.e("缓存失败   " + e.getMessage());
             } catch (IllegalAccessException e) {
+                LogUtils.e("缓存失败   " + e.getMessage());
             } catch (InvocationTargetException e) {
+                LogUtils.e("缓存失败   " + e.getMessage());
             }
+
             editor.commit();
         }
     }

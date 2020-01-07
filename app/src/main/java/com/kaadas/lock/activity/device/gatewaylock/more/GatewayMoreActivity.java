@@ -46,7 +46,8 @@ import butterknife.ButterKnife;
 /**
  * Created by David on 2019/4/15
  */
-public class GatewayMoreActivity extends BaseActivity<GatewayLockMoreView, GatewayLockMorePresenter<GatewayLockMoreView>> implements View.OnClickListener, GatewayLockMoreView {
+public class GatewayMoreActivity extends BaseActivity<GatewayLockMoreView, GatewayLockMorePresenter<GatewayLockMoreView>>
+        implements View.OnClickListener, GatewayLockMoreView {
     @BindView(R.id.iv_back)
     ImageView ivBack;
     @BindView(R.id.tv_content)
@@ -67,11 +68,8 @@ public class GatewayMoreActivity extends BaseActivity<GatewayLockMoreView, Gatew
     RelativeLayout rlSilentMode;
     @BindView(R.id.rl_device_information)
     RelativeLayout rlDeviceInformation;
-    /* @BindView(R.id.rl_check_firmware_update)
-     RelativeLayout rlCheckFirmwareUpdate;*/
     @BindView(R.id.btn_delete)
     Button btnDelete;
-    //  boolean messageFreeStatus;
     boolean getAutoLockSuccess = false;
     boolean silentModeStatus;
     String name;
@@ -92,9 +90,9 @@ public class GatewayMoreActivity extends BaseActivity<GatewayLockMoreView, Gatew
     //获取音量时避免用户去点开音量开关
     private boolean flagSoundVolume = false;
     //获取AM时避免用户去点开
-    private boolean flagAM= false;
+    private boolean flagAM = false;
 
-    private int autoRelock=0;
+    private int autoRelock = 0;
     private AlertDialog deleteDialog;
     private Context context;
 
@@ -103,7 +101,7 @@ public class GatewayMoreActivity extends BaseActivity<GatewayLockMoreView, Gatew
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gateway_more);
         ButterKnife.bind(this);
-        context=this;
+        context = this;
         initView();
         initData();
         initClick();
@@ -125,23 +123,19 @@ public class GatewayMoreActivity extends BaseActivity<GatewayLockMoreView, Gatew
         showBean = (HomeShowBean) intent.getSerializableExtra(KeyConstants.GATEWAY_LOCK_INFO);
         if (showBean != null) {
             gwLockInfo = (GwLockInfo) showBean.getObject();
-            if (!TextUtils.isEmpty(gwLockInfo.getServerInfo().getNickName())){
+            if (!TextUtils.isEmpty(gwLockInfo.getServerInfo().getNickName())) {
                 tvDeviceName.setText(gwLockInfo.getServerInfo().getNickName());
-            }else{
+            } else {
                 tvDeviceName.setText(gwLockInfo.getServerInfo().getDeviceId());
             }
             gatewayId = gwLockInfo.getGwID();
             deviceId = gwLockInfo.getServerInfo().getDeviceId();
+            if (gwLockInfo.getServerInfo().getPushSwitch() == 2) {
+                ivMessageFree.setImageResource(R.mipmap.iv_open);
+            } else {
+                ivMessageFree.setImageResource(R.mipmap.iv_close);
+            }
         }
-
-
-        //todo 获取到设备名字时,key都加上设备名字
-//        messageFreeStatus = (boolean) SPUtils.get(KeyConstants.MESSAGE_FREE_STATUS, true);
-//        if (messageFreeStatus) {
-//            ivMessageFree.setImageResource(R.mipmap.iv_open);
-//        } else {
-//            ivMessageFree.setImageResource(R.mipmap.iv_close);
-//        }
 
         if (gatewayId != null && deviceId != null) {
             if (loadingDialog != null) {
@@ -149,10 +143,9 @@ public class GatewayMoreActivity extends BaseActivity<GatewayLockMoreView, Gatew
                 //先获取音量，在获取AM
                 mPresenter.getSoundVolume(gatewayId, deviceId);
             }
-
         }
 
-        mPresenter.getPushSwitch();
+
     }
 
     private void initClick() {
@@ -187,7 +180,7 @@ public class GatewayMoreActivity extends BaseActivity<GatewayLockMoreView, Gatew
                 String deviceNickname = tvDeviceName.getText().toString().trim();
                 editText.setText(deviceNickname);
                 editText.setSelection(deviceNickname.length());
-                editText.addTextChangedListener(new EditTextWatcher(this,null,editText,50));
+                editText.addTextChangedListener(new EditTextWatcher(this, null, editText, 50));
                 tv_cancel.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -199,10 +192,10 @@ public class GatewayMoreActivity extends BaseActivity<GatewayLockMoreView, Gatew
                     public void onClick(View v) {
                         name = editText.getText().toString().trim();
                         //todo 判断名称是否修改
-                            if (TextUtils.isEmpty(name)){
-                                ToastUtil.getInstance().showShort(getString(R.string.device_name_cannot_be_empty));
-                                return;
-                            }
+                        if (TextUtils.isEmpty(name)) {
+                            ToastUtil.getInstance().showShort(getString(R.string.device_name_cannot_be_empty));
+                            return;
+                        }
 
                         if (deviceNickname != null) {
                             if (deviceNickname.equals(name)) {
@@ -219,20 +212,8 @@ public class GatewayMoreActivity extends BaseActivity<GatewayLockMoreView, Gatew
                 });
                 break;
             case R.id.rl_message_free:
-//                if (messageFreeStatus) {
-//                    //打开状态 现在关闭
-//                    ivMessageFree.setImageResource(R.mipmap.iv_close);
-//                    SPUtils.put(KeyConstants.MESSAGE_FREE_STATUS, false);
-//                } else {
-//                    //关闭状态 现在打开
-//                    ivMessageFree.setImageResource(R.mipmap.iv_open);
-//                    SPUtils.put(KeyConstants.MESSAGE_FREE_STATUS, true);
-//                }
-//                messageFreeStatus = !messageFreeStatus;
-
-                isopenlockPushSwitch = !isopenlockPushSwitch;
-                mPresenter.updatePushSwitch(isopenlockPushSwitch);
-
+                showLoading(getString(R.string.is_modifing));
+                mPresenter.updatePushSwitch(gatewayId, deviceId, gwLockInfo.getServerInfo().getPushSwitch() == 2 ? 1 : 2);
                 break;
             case R.id.rl_door_lock_language_switch:
                 intent = new Intent(this, GatewayLockLanguageSettingActivity.class);
@@ -264,29 +245,29 @@ public class GatewayMoreActivity extends BaseActivity<GatewayLockMoreView, Gatew
                 intent = new Intent(this, GatewayDeviceInformationActivity.class);
                 intent.putExtra(KeyConstants.DEVICE_ID, deviceId);
                 intent.putExtra(KeyConstants.GATEWAY_ID, gatewayId);
-                intent.putExtra(KeyConstants.IS_GATEAWAY,true);
+                intent.putExtra(KeyConstants.IS_GATEAWAY, true);
                 startActivity(intent);
                 break;
 
             case R.id.rl_am:
                 //设置A-M
                 LogUtils.e("点击了AM");
-                if (flagAM){
-                    if (getAutoLockSuccess){
-                            if (autoRelock==10){
-                                autoRelock=0;
-                            }else{
-                                autoRelock=10;
-                            }
-                            if (!TextUtils.isEmpty(gatewayId)&&!TextUtils.isEmpty(deviceId)){
-                                loadingDialog.show(getString(R.string.is_setting_am_wait));
-                                mPresenter.setAM(MyApplication.getInstance().getUid(),gatewayId,deviceId,autoRelock);
-                            }
+                if (flagAM) {
+                    if (getAutoLockSuccess) {
+                        if (autoRelock == 10) {
+                            autoRelock = 0;
+                        } else {
+                            autoRelock = 10;
+                        }
+                        if (!TextUtils.isEmpty(gatewayId) && !TextUtils.isEmpty(deviceId)) {
+                            loadingDialog.show(getString(R.string.is_setting_am_wait));
+                            mPresenter.setAM(MyApplication.getInstance().getUid(), gatewayId, deviceId, autoRelock);
+                        }
 
-                    }else{
+                    } else {
                         ToastUtil.getInstance().showShort(getString(R.string.get_am_fail));
                     }
-                }else{
+                } else {
                     ToastUtil.getInstance().showShort(R.string.get_am_status);
                 }
 
@@ -303,7 +284,7 @@ public class GatewayMoreActivity extends BaseActivity<GatewayLockMoreView, Gatew
                     public void right() {
                         if (gatewayId != null && deviceId != null) {
                             mPresenter.deleteLock(gatewayId, deviceId, "zigbee");
-                            deleteDialog=AlertDialogUtil.getInstance().noButtonDialog(context,getString(R.string.delete_be_being));
+                            deleteDialog = AlertDialogUtil.getInstance().noButtonDialog(context, getString(R.string.delete_be_being));
                             deleteDialog.setCancelable(false);
                         }
 
@@ -346,7 +327,7 @@ public class GatewayMoreActivity extends BaseActivity<GatewayLockMoreView, Gatew
             silentModeStatus = true;
             flagSoundVolume = true;
         }
-        if (loadingDialog!=null){
+        if (loadingDialog != null) {
             loadingDialog.dismiss();
         }
        /* if (!TextUtils.isEmpty(gatewayId) && !TextUtils.isEmpty(deviceId)) {
@@ -360,7 +341,7 @@ public class GatewayMoreActivity extends BaseActivity<GatewayLockMoreView, Gatew
       /*  if (!TextUtils.isEmpty(gatewayId) && !TextUtils.isEmpty(deviceId)) {
             mPresenter.getAm(MyApplication.getInstance().getUid(), gatewayId, deviceId);
         }*/
-        if (loadingDialog!=null){
+        if (loadingDialog != null) {
             loadingDialog.dismiss();
         }
         ToastUtil.getInstance().showShort(R.string.get_sound_volume_fail);
@@ -372,7 +353,7 @@ public class GatewayMoreActivity extends BaseActivity<GatewayLockMoreView, Gatew
       /*  if (!TextUtils.isEmpty(gatewayId) && !TextUtils.isEmpty(deviceId)) {
             mPresenter.getAm(MyApplication.getInstance().getUid(), gatewayId, deviceId);
         }*/
-        if (loadingDialog!=null){
+        if (loadingDialog != null) {
             loadingDialog.dismiss();
         }
         ToastUtil.getInstance().showShort(R.string.get_sound_volume_fail);
@@ -415,20 +396,20 @@ public class GatewayMoreActivity extends BaseActivity<GatewayLockMoreView, Gatew
     @Override
     public void deleteDeviceSuccess() {
         //删除成功
-       DaoSession daoSession= MyApplication.getInstance().getDaoWriteSession();
-       String uid=MyApplication.getInstance().getUid();
+        DaoSession daoSession = MyApplication.getInstance().getDaoWriteSession();
+        String uid = MyApplication.getInstance().getUid();
         daoSession.getGatewayLockServiceInfoDao().queryBuilder().where(GatewayLockServiceInfoDao.Properties.Uid.eq(uid)).buildDelete().executeDeleteWithoutDetachingEntities();
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
         finish();
-        if (deleteDialog!=null){
+        if (deleteDialog != null) {
             deleteDialog.dismiss();
         }
     }
 
     @Override
     public void deleteDeviceFail() {
-        if (deleteDialog!=null){
+        if (deleteDialog != null) {
             deleteDialog.dismiss();
         }
         //删除失败
@@ -437,79 +418,41 @@ public class GatewayMoreActivity extends BaseActivity<GatewayLockMoreView, Gatew
 
     @Override
     public void deleteDeviceThrowable(Throwable throwable) {
-        if (deleteDialog!=null){
+        if (deleteDialog != null) {
             deleteDialog.dismiss();
         }
         ToastUtil.getInstance().showShort(getString(R.string.delete_fialed));
         LogUtils.e("删除异常   " + throwable.getMessage());
     }
 
-    boolean isopenlockPushSwitch = true;
-
-    @Override
-    public void getSwitchStatus(SwitchStatusResult switchStatusResult) {
-        Log.e(GeTui.VideoLog, "switchStatusResult:" + switchStatusResult);
-        // Toast.makeText(this,switchStatusResult.toString(), Toast.LENGTH_LONG).show();
-        if (switchStatusResult.getCode().equals("200")) {
-            isopenlockPushSwitch = switchStatusResult.getData().isOpenlockPushSwitch();
-            if (isopenlockPushSwitch) {
-                ivMessageFree.setImageResource(R.mipmap.iv_open);
-            } else {
-                ivMessageFree.setImageResource(R.mipmap.iv_close);
-            }
-        }
-    }
-
-    @Override
-    public void getSwitchFail() {
-        Toast.makeText(this, getString(R.string.get_nitification_status_fail), Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void updateSwitchStatus(SwitchStatusResult switchStatusResult) {
-        Log.e(GeTui.VideoLog, "更新以后状态是:" + switchStatusResult);
-        if (isopenlockPushSwitch) {
-            // 打开状态
-            ivMessageFree.setImageResource(R.mipmap.iv_open);
-        } else {
-            // 关闭状态
-            ivMessageFree.setImageResource(R.mipmap.iv_close);
-        }
-    }
-
-    @Override
-    public void updateSwitchUpdateFail() {
-        isopenlockPushSwitch = !isopenlockPushSwitch;
-        Toast.makeText(this, getString(R.string.update_swtich_status_fail), Toast.LENGTH_SHORT).show();
-    }
 
     @Override
     public void setAMSuccess(int autoRelockTime) {
-        if (loadingDialog!=null){
+        if (loadingDialog != null) {
             loadingDialog.dismiss();
         }
-        if (autoRelockTime==10){
+        if (autoRelockTime == 10) {
             ivAm.setImageResource(R.mipmap.iv_open);
-        }else{
+        } else {
             ivAm.setImageResource(R.mipmap.iv_close);
         }
     }
 
     @Override
     public void setAMFail(String code) {
-        if (loadingDialog!=null){
+        if (loadingDialog != null) {
             loadingDialog.dismiss();
         }
-        if ("405".equals(code)){
+        if ("405".equals(code)) {
             ToastUtil.getInstance().showShort(R.string.the_lock_no_support_func);
-        }else{
+        } else {
             ToastUtil.getInstance().showShort(R.string.set_failed);
         }
     }
 
     @Override
     public void setAMThrowable(Throwable throwable) {
-        if (loadingDialog!=null){
+        if (loadingDialog != null) {
             loadingDialog.dismiss();
         }
         ToastUtil.getInstance().showShort(R.string.set_failed);
@@ -519,23 +462,23 @@ public class GatewayMoreActivity extends BaseActivity<GatewayLockMoreView, Gatew
     public void getAMSuccess(int autoRelockTime) {
         loadingDialog.dismiss();
         getAutoLockSuccess = true;
-        flagAM=true;
+        flagAM = true;
         if (autoRelockTime == 10) {
             ivAm.setImageResource(R.mipmap.iv_open);
-            autoRelock=10;
-        }else{
+            autoRelock = 10;
+        } else {
             ivAm.setImageResource(R.mipmap.iv_close);
-            autoRelock=0;
+            autoRelock = 0;
         }
     }
 
     @Override
     public void getAMFail(String code) {
         loadingDialog.dismiss();
-        flagAM=true;
-        if ("405".equals(code)){
+        flagAM = true;
+        if ("405".equals(code)) {
             getAutoLockSuccess = true;
-        }else{
+        } else {
             getAutoLockSuccess = false;
             ToastUtil.getInstance().showShort(R.string.get_am_fail);
         }
@@ -546,8 +489,25 @@ public class GatewayMoreActivity extends BaseActivity<GatewayLockMoreView, Gatew
     public void getAMThrowable(Throwable throwable) {
         loadingDialog.dismiss();
         getAutoLockSuccess = false;
-        flagAM=true;
+        flagAM = true;
         ToastUtil.getInstance().showShort(R.string.get_am_fail);
     }
 
+    @Override
+    public void onUpdatePushSwitchSuccess(int status) {
+        Toast.makeText(this, getString(R.string.set_success), Toast.LENGTH_SHORT).show();
+        hiddenLoading();
+        gwLockInfo.getServerInfo().setPushSwitch(status);
+        if (status == 2) {
+            ivMessageFree.setImageResource(R.mipmap.iv_open);
+        } else {
+            ivMessageFree.setImageResource(R.mipmap.iv_close);
+        }
+    }
+
+    @Override
+    public void onUpdatePushSwitchThrowable(Throwable throwable) {
+        hiddenLoading();
+        Toast.makeText(this, getString(R.string.set_failed), Toast.LENGTH_SHORT).show();
+    }
 }

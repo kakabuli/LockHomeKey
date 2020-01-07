@@ -10,6 +10,7 @@ import com.kaadas.lock.publiclibrary.bean.GatewayInfo;
 import com.kaadas.lock.publiclibrary.bean.GwLockInfo;
 import com.kaadas.lock.publiclibrary.bean.ServerGwDevice;
 import com.kaadas.lock.publiclibrary.bean.ServerGatewayInfo;
+import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
 import com.kaadas.lock.publiclibrary.http.result.ServerBleDevice;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.SPUtils;
@@ -29,7 +30,13 @@ public class AllBindDevices {
      * func : getAllBindDevice
      * code : 200
      * timestamp : 1556172487814
-     * data : {"gwList":[{"deviceSN":"GW01182510163","deviceNickName":"GW01182510163","adminuid":"5c4fe492dc93897aa7d8600b","adminName":"8618954359822","adminNickname":"8618954359822","isAdmin":1,"meUsername":"17c830b7267a4d208029c217fbb6b7c5","mePwd":"1456dfc75ba34d5191399bcc6473b85a","meBindState":1,"deviceList":[{"ipaddr":"192.168.168.235","macaddr":"0C:9A:42:B7:8C:F5","SW":"orangecat-1.3.4","event_str":"offline","device_type":"kdscateye","deviceId":"CH01183910242","time":"2019-04-02 09:13:57.481"}]}],"devList":[{"_id":"5c8f5563dc938989e2f5429d","lockName":"BT123456","lockNickName":"BT123456","macLock":"123456","open_purview":"3","is_admin":"1","center_latitude":"0","center_longitude":"0","circle_radius":"0","auto_lock":"0","password1":"123456","password2":"654321","model":""}]}
+     * data : {"gwList":[{"deviceSN":"GW01182510163","deviceNickName":"GW01182510163","adminuid":"5c4fe492dc93897aa7d8600b",
+     * "adminName":"8618954359822","adminNickname":"8618954359822","isAdmin":1,"meUsername":"17c830b7267a4d208029c217fbb6b7c5",
+     * "mePwd":"1456dfc75ba34d5191399bcc6473b85a","meBindState":1,"deviceList":[{"ipaddr":"192.168.168.235",
+     * "macaddr":"0C:9A:42:B7:8C:F5","SW":"orangecat-1.3.4","event_str":"offline","device_type":"kdscateye","deviceId":"CH01183910242",
+     * "time":"2019-04-02 09:13:57.481"}]}],"devList":[{"_id":"5c8f5563dc938989e2f5429d","lockName":"BT123456","lockNickName":"BT123456",
+     * "macLock":"123456","open_purview":"3","is_admin":"1","center_latitude":"0","center_longitude":"0","circle_radius":"0","auto_lock":"0",
+     * "password1":"123456","password2":"654321","model":""}]}
      */
 
     private int msgId;
@@ -117,6 +124,7 @@ public class AllBindDevices {
     public static class ReturnDataBean {
         private List<GwListBean> gwList;
         private List<ServerBleDevice> devList;
+        private List<WifiLockInfo> wifiList;
 
         public List<GwListBean> getGwList() {
             return gwList;
@@ -134,6 +142,13 @@ public class AllBindDevices {
             this.devList = devList;
         }
 
+        public List<WifiLockInfo> getWifiList() {
+            return wifiList;
+        }
+
+        public void setWifiList(List<WifiLockInfo> wifiList) {
+            this.wifiList = wifiList;
+        }
 
         public static class GwListBean {
             /**
@@ -296,21 +311,12 @@ public class AllBindDevices {
 
 
     /**
-     * 获取所有设备
-     */
-    public void getAllDevices() {
-
-
-    }
-
-
-    /**
      * 获取首页显示需要的对象，即除了网管之外的所有设备
      */
     public List<HomeShowBean> getHomeShow() {
         ReturnDataBean returnData = getData();
         List<HomeShowBean> homeShowBeans = new ArrayList<>();
-        if (returnData==null){
+        if (returnData == null) {
             return homeShowBeans;
         }
         List<ServerBleDevice> bleDevices = returnData.getDevList();
@@ -337,6 +343,16 @@ public class AllBindDevices {
                 }
             }
         }
+
+        //WiFi锁
+        List<WifiLockInfo> wifiList = returnData.getWifiList();
+        if (wifiList != null) {
+            for (WifiLockInfo wifiLockInfo : wifiList) {
+                homeShowBeans.add(new HomeShowBean(HomeShowBean.TYPE_WIFI_LOCK, wifiLockInfo.getWifiSN(), wifiLockInfo.getLockNickname(), wifiLockInfo));
+            }
+        }
+
+
         List<ReturnDataBean.GwListBean> gwList = returnData.getGwList();
         if (gwList != null) {
             for (ReturnDataBean.GwListBean gwListBean : gwList) {
@@ -347,12 +363,12 @@ public class AllBindDevices {
                     if (!isExistGateway && homeShowBean.getDeviceType() == HomeShowBean.TYPE_GATEWAY) {
                         //如果设备原来就存在，那么只替换服务器数据   其他数据不变
                         GatewayInfo gatewayInfo = (GatewayInfo) homeShowBean.getObject();
-                        LogUtils.e("gatewayInfo网关状态  "+gatewayInfo.getEvent_str());
-                        LogUtils.e("网关id "+gatewayInfo.getServerInfo().getDeviceSN());
+                        LogUtils.e("gatewayInfo网关状态  " + gatewayInfo.getEvent_str());
+                        LogUtils.e("网关id " + gatewayInfo.getServerInfo().getDeviceSN());
                         if (gwListBean.getDeviceSN().equals(gatewayInfo.getServerInfo().getDeviceSN())) {
                             isExistGateway = true;
                             gatewayInfo.setServerInfo(new ServerGatewayInfo(gwListBean));
-                            homeShowBean.setDeviceNickName( gwListBean.getDeviceNickName());
+                            homeShowBean.setDeviceNickName(gwListBean.getDeviceNickName());
                             homeShowBeans.add(homeShowBean);
                         }
 
@@ -360,10 +376,10 @@ public class AllBindDevices {
                 }
                 if (!isExistGateway) {
                     newGatewayInfo = new GatewayInfo(new ServerGatewayInfo(gwListBean));
-                    LogUtils.e("网关状态SN"+newGatewayInfo.getServerInfo().getDeviceSN());
+                    LogUtils.e("网关状态SN" + newGatewayInfo.getServerInfo().getDeviceSN());
                     String gatewayStatus = (String) SPUtils.get(newGatewayInfo.getServerInfo().getDeviceSN(), "");
                     newGatewayInfo.setEvent_str(gatewayStatus);
-                    LogUtils.e("newGatewayInfo网关状态   "+newGatewayInfo.getEvent_str()+ "网关状态"+gatewayStatus);
+                    LogUtils.e("newGatewayInfo网关状态   " + newGatewayInfo.getEvent_str() + "网关状态" + gatewayStatus);
                     SPUtils.remove(newGatewayInfo.getServerInfo().getDeviceSN());
                     homeShowBeans.add(new HomeShowBean(HomeShowBean.TYPE_GATEWAY, gwListBean.getDeviceSN(), gwListBean.getDeviceNickName(), newGatewayInfo));
                 }
@@ -393,7 +409,7 @@ public class AllBindDevices {
                             CateEyeInfo cateEyeInfo = new CateEyeInfo(gwListBean.getDeviceSN(), serverGwDevice);
                             cateEyeInfo.setGatewayInfo(newGatewayInfo);
                             homeShowBeans.add(new HomeShowBean(HomeShowBean.TYPE_CAT_EYE, serverGwDevice.getDeviceId(), nickName, cateEyeInfo));
-                            LogUtils.e("猫眼不存在   昵称是" +    cateEyeInfo.getServerInfo().getNickName()  );
+                            LogUtils.e("猫眼不存在   昵称是" + cateEyeInfo.getServerInfo().getNickName());
                         }
 
                     } else {
@@ -401,13 +417,13 @@ public class AllBindDevices {
                             if (!isExist && homeShowBean.getDeviceType() == HomeShowBean.TYPE_GATEWAY_LOCK) {
                                 GwLockInfo gwLockInfo = (GwLockInfo) homeShowBean.getObject();
                                 //如果设备 网关Id 一致   且deviceId也一致   替换服务器数据
-                                LogUtils.e(gwLockInfo.getServerInfo().getNickName()+"值还没有改变");
+                                LogUtils.e(gwLockInfo.getServerInfo().getNickName() + "值还没有改变");
                                 if (gwLockInfo.getGwID().equals(gwListBean.getDeviceSN())
                                         && gwLockInfo.getServerInfo().getDeviceId().equals(serverGwDevice.getDeviceId())
                                         ) {
                                     isExist = true;
                                     gwLockInfo.setServerInfo(serverGwDevice);
-                                    LogUtils.e(gwLockInfo.getServerInfo().getNickName()+"值发生改变");
+                                    LogUtils.e(gwLockInfo.getServerInfo().getNickName() + "值发生改变");
                                     homeShowBean.setDeviceNickName(nickName);
                                     homeShowBeans.add(homeShowBean);
                                 }

@@ -10,6 +10,7 @@ import com.kaadas.lock.mvp.view.gatewaylockview.GatewayLockMoreView;
 import com.kaadas.lock.publiclibrary.http.XiaokaiNewServiceImp;
 import com.kaadas.lock.publiclibrary.http.result.SwitchStatusResult;
 import com.kaadas.lock.publiclibrary.http.util.RxjavaHelper;
+import com.kaadas.lock.publiclibrary.mqtt.MqttBackCodeException;
 import com.kaadas.lock.publiclibrary.mqtt.MqttCommandFactory;
 import com.kaadas.lock.publiclibrary.mqtt.eventbean.DeleteDeviceLockBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.DeleteGatewayLockDeviceBean;
@@ -17,6 +18,7 @@ import com.kaadas.lock.publiclibrary.mqtt.publishbean.GetAMBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.GetSoundVolume;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetAMBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.UpdateDevNickNameResult;
+import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.UpdatePushSwitchResult;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttConstant;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttData;
 import com.kaadas.lock.utils.KeyConstants;
@@ -43,9 +45,9 @@ public class GatewayLockMorePresenter<T> extends BasePresenter<GatewayLockMoreVi
     private Disposable getLockSoundVolumeDisposable;
     private Disposable setLockSoundVolumeDisposable;
     private Disposable deleteLockInfoDisposable;
-    private Disposable deleteReceiveDisposable;
     private Disposable setAMDisposable;
     private Disposable getAMDisposable;
+    private Disposable updatePushSwitchDisposable;
 
     //修改昵称
     public void updateZigbeeLockName(String devuuid, String deviceId, String nickName) {
@@ -195,55 +197,6 @@ public class GatewayLockMorePresenter<T> extends BasePresenter<GatewayLockMoreVi
 
     }
 
-    //删除设备-----由于网关的删除设备无响应事件，只有上报。网关说过后会修改。
-/*    public void deleteLock(String gatewayId,String deviceId,String bustType){
-        toDisposable(deleteLockInfoDisposable);
-        if (mqttService!=null){
-            MqttMessage mqttMessage= MqttCommandFactory.deleteDevice(gatewayId,deviceId,bustType);
-            deleteLockInfoDisposable=mqttService
-                    .mqttPublish(MqttConstant.getCallTopic(MyApplication.getInstance().getUid()),mqttMessage)
-                    .compose(RxjavaHelper.observeOnMainThread())
-                    .timeout(10*1000, TimeUnit.MILLISECONDS)
-                    .filter(new Predicate<MqttData>() {
-                        @Override
-                        public boolean test(MqttData mqttData) throws Exception {
-                            if (MqttConstant.DELETE_GATEWAY_LOCK.equals(mqttData.getFunc())){
-                                return true;
-                            }
-                            return false;
-                        }
-                    })
-                    .subscribe(new Consumer<MqttData>() {
-                        @Override
-                        public void accept(MqttData mqttData) throws Exception {
-                            toDisposable(deleteLockInfoDisposable);
-                            DeleteGatewayLockDeviceBean deleteGatewayLockDeviceBean=new Gson().fromJson(mqttData.getPayload(),DeleteGatewayLockDeviceBean.class);
-                            if (deleteGatewayLockDeviceBean!=null){
-                                if ("200".equals(deleteGatewayLockDeviceBean.getReturnCode())){
-                                    if (mViewRef.get()!=null){
-                                        mViewRef.get().deleteDeviceSuccess();
-                                        MyApplication.getInstance().getAllDevicesByMqtt(true);
-                                    }
-                                }else{
-                                    if (mViewRef.get()!=null){
-                                        mViewRef.get().deleteDeviceFail();
-                                    }
-                                }
-                            }
-                        }
-                    }, new Consumer<Throwable>() {
-                        @Override
-                        public void accept(Throwable throwable) throws Exception {
-                            if (mViewRef.get()!=null){
-                                mViewRef.get().deleteDeviceThrowable(throwable);
-                            }
-                        }
-                    });
-
-            compositeDisposable.add(deleteLockInfoDisposable);
-        }
-    }*/
-
     public void deleteLock(String gatewayId, String deviceId, String bustType) {
         toDisposable(deleteLockInfoDisposable);
         if (mqttService != null) {
@@ -268,7 +221,8 @@ public class GatewayLockMorePresenter<T> extends BasePresenter<GatewayLockMoreVi
                             toDisposable(deleteLockInfoDisposable);
                             DeleteDeviceLockBean deleteGatewayLockDeviceBean = new Gson().fromJson(mqttData.getPayload(), DeleteDeviceLockBean.class);
                             if (deleteGatewayLockDeviceBean != null) {
-                                if ("kdszblock".equals(deleteGatewayLockDeviceBean.getDevtype()) && deleteGatewayLockDeviceBean.getEventparams().getEvent_str().equals("delete")) {
+                                if ("kdszblock".equals(deleteGatewayLockDeviceBean.getDevtype())
+                                        && deleteGatewayLockDeviceBean.getEventparams().getEvent_str().equals("delete")) {
                                     if (isSafe()) {
                                         mViewRef.get().deleteDeviceSuccess();
                                         MyApplication.getInstance().getAllDevicesByMqtt(true);
@@ -303,73 +257,6 @@ public class GatewayLockMorePresenter<T> extends BasePresenter<GatewayLockMoreVi
         }
     }
 
-    public void getPushSwitch() {
-        //      toDisposable(compositeDisposable);
-        String uid = (String) SPUtils.get(SPUtils.UID, "");
-        Log.e(GeTui.VideoLog, "uid:" + uid);
-        //uploadPushId(String uid, String jpushId, int type)
-        if (!TextUtils.isEmpty(uid)) {
-            XiaokaiNewServiceImp.getPushSwitch(uid).subscribe(new Observer<SwitchStatusResult>() {
-                @Override
-                public void onSubscribe(Disposable d) {
-                    compositeDisposable.add(d);
-                }
-
-                @Override
-                public void onNext(SwitchStatusResult switchStatusResult) {
-                    if (mViewRef != null) {
-                        mViewRef.get().getSwitchStatus(switchStatusResult);
-                    }
-                }
-
-                @Override
-                public void onError(Throwable e) {
-                    if (isSafe()) {
-                        mViewRef.get().getSwitchFail();
-                    }
-                }
-
-                @Override
-                public void onComplete() {
-                }
-            });
-
-        }
-    }
-
-
-    public void updatePushSwitch(boolean openlockPushSwitch) {
-        //      toDisposable(compositeDisposable);
-        String uid = (String) SPUtils.get(SPUtils.UID, "");
-        Log.e(GeTui.VideoLog, "uid:" + uid);
-        //uploadPushId(String uid, String jpushId, int type)
-        if (!TextUtils.isEmpty(uid)) {
-            XiaokaiNewServiceImp.updatePushSwitch(uid, openlockPushSwitch).subscribe(new Observer<SwitchStatusResult>() {
-                @Override
-                public void onSubscribe(Disposable d) {
-                    compositeDisposable.add(d);
-                }
-
-                @Override
-                public void onNext(SwitchStatusResult switchStatusResult) {
-                    if (mViewRef != null) {
-                        mViewRef.get().updateSwitchStatus(switchStatusResult);
-                    }
-                }
-
-                @Override
-                public void onError(Throwable e) {
-                    if (isSafe()) {
-                        mViewRef.get().updateSwitchUpdateFail();
-                    }
-                }
-
-                @Override
-                public void onComplete() {
-                }
-            });
-        }
-    }
 
     //设置AM
     public void setAM(String uid, String gatewayId, String deviceId, int autoRelockTime) {
@@ -476,6 +363,56 @@ public class GatewayLockMorePresenter<T> extends BasePresenter<GatewayLockMoreVi
                 gatewayLockAlarmEventDaoDao.delete(gatewayLockAlarmEventDao);
             }
         }
+    }
+
+    public void updatePushSwitch(String gwId, String deviceId, int pushStatus) {
+        toDisposable(updatePushSwitchDisposable);
+        if (mqttService != null) {
+            MqttMessage mqttMessage = MqttCommandFactory.updateDevPushSwitch(MyApplication.getInstance().getUid(), gwId, deviceId, pushStatus);
+            updatePushSwitchDisposable = mqttService
+                    .mqttPublish(MqttConstant.PUBLISH_TO_SERVER, mqttMessage)
+                    .timeout(10 * 1000, TimeUnit.MILLISECONDS)
+                    .compose(RxjavaHelper.observeOnMainThread())
+                    .filter(new Predicate<MqttData>() {
+                        @Override
+                        public boolean test(MqttData mqttData) throws Exception {
+                            if (MqttConstant.UPDATE_DEV_PUSH_SWITCH.equals(mqttData.getFunc())) {
+                                return true;
+                            }
+                            return false;
+                        }
+                    })
+                    .subscribe(new Consumer<MqttData>() {
+                        @Override
+                        public void accept(MqttData mqttData) throws Exception {
+                            toDisposable(updatePushSwitchDisposable);
+                            UpdatePushSwitchResult updatePushSwitchResult = new Gson().fromJson(mqttData.getPayload(), UpdatePushSwitchResult.class);
+                            if (updatePushSwitchResult != null) {
+                                String returnCode = updatePushSwitchResult.getCode();
+                                if ("200".equals(returnCode)) {
+                                    MyApplication.getInstance().getAllDevicesByMqtt(true);
+                                    if (isSafe()) {
+                                        mViewRef.get().onUpdatePushSwitchSuccess(pushStatus);
+                                    }
+                                } else {
+                                    if (isSafe()) {
+                                        mViewRef.get().onUpdatePushSwitchThrowable(new MqttBackCodeException(returnCode));
+                                    }
+                                }
+                            }
+                        }
+                    }, new Consumer<Throwable>() {
+                        @Override
+                        public void accept(Throwable throwable) throws Exception {
+                            if (isSafe()) {
+                                mViewRef.get().onUpdatePushSwitchThrowable(throwable);
+                            }
+                        }
+                    });
+
+            compositeDisposable.add(updatePushSwitchDisposable);
+        }
+
     }
 
 

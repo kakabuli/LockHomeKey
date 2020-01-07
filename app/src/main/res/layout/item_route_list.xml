@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:orientation="horizontal"
+    android:layout_marginLeft="@dimen/dp_10"
+    android:layout_marginRight="@dimen/dp_10"
+    android:layout_marginTop="@dimen/dp_5"
+    android:layout_marginBottom="@dimen/dp_5"
+    android:gravity="center_vertical"
+    android:background="@drawable/background_add_white"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:layout_marginBottom="@dimen/dp_10"
+        android:layout_marginTop="@dimen/dp_10"
+        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/tv_produce_name"
+            android:gravity="center"
+            android:layout_marginLeft="14dp"
+            android:text="360"
+            android:textSize="14sp"
+            android:textColor="#363636"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content" />
+
+
+    </RelativeLayout>
+
+    <TextView
+        android:layout_marginBottom="@dimen/dp_10"
+        android:layout_marginTop="@dimen/dp_10"
+        android:id="@+id/type"
+        android:lineSpacingExtra="12dp"
+        android:layout_weight="1"
+        android:layout_marginLeft="50dp"
+        android:text="P3sss"
+        android:textSize="14sp"
+        android:textColor="#363636"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>

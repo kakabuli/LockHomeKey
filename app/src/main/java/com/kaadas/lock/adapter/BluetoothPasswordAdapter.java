@@ -87,7 +87,6 @@ public class BluetoothPasswordAdapter extends BaseQuickAdapter<ForeverPassword, 
             helper.setText(R.id.tv_time, DateUtils.getDateTimeFromMillisecond(bean.getStartTime()) + "-" + DateUtils.getDateTimeFromMillisecond(bean.getEndTime()));
         }else if (bean.getType()==5){
             helper.setText(R.id.tv_time, MyApplication.getInstance().getString(R.string.temporary_password_used_once));
-
         }
         if ("09".equals(bean.getNum())){
             helper.setText(R.id.tv_time, MyApplication.getInstance().getString(R.string.stress_password));

@@ -9,7 +9,6 @@ import java.io.Serializable;
 public class BaseResult implements Serializable {
     protected String code;
     protected String msg;
-    private LoginResult.DataBean data;
 
 
     public String getCode() {
@@ -42,7 +41,6 @@ public class BaseResult implements Serializable {
         return "BaseResult{" +
                 "code='" + code + '\'' +
                 ", msg='" + msg + '\'' +
-                ", data=" + data +
                 '}';
     }
 }

@@ -48,6 +48,7 @@ import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetWiFiBasic;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetZBChannel;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.UnBindGatewayBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.UpdateDevNickNameBean;
+import com.kaadas.lock.publiclibrary.mqtt.publishbean.UpdateDevPushSwitchBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.UpdateGatewayNickNameBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.WakeupCameraBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.GatewayOtaNotifyBean;
@@ -887,6 +888,21 @@ public class MqttCommandFactory {
         DeviceShareBean shareBean = new DeviceShareBean(messageId, MqttConstant.SHARE_DEVICE, type, gatewayId, deviceId, uid, shareUser, userName, shareFlag);
         return getMessage(shareBean, messageId);
     }
+
+    /**
+     * 更新推送开关
+     * @param uid
+     * @param gwId
+     * @param deviceId
+     * @param pushSwitch   1开启推送  2关闭推送
+     * @return
+     */
+    public static MqttMessage updateDevPushSwitch(  String uid, String gwId, String deviceId, int pushSwitch) {
+        int messageId = getMessageId();
+        UpdateDevPushSwitchBean shareBean = new UpdateDevPushSwitchBean(messageId, MqttConstant.UPDATE_DEV_PUSH_SWITCH, uid, gwId, deviceId, pushSwitch  );
+        return getMessage(shareBean, messageId);
+    }
+
 
     /**
      * 查找分享用户的列表
