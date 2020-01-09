@@ -205,6 +205,5 @@ dependencies {
     implementation 'com.jakewharton:butterknife:8.4.0'
     implementation 'com.jakewharton:butterknife-compiler:8.4.0'
     implementation files('libs/esptouch.aar')
-    implementation files('libs/esptouch.jar')
     implementation files('libs/GetuiSDK-support-VIVO-1.0.3.jar')
 }

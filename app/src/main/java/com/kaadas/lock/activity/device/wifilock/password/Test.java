@@ -68,7 +68,8 @@ public class Test {
 //        System.out.println("读取数据成功");
 
 
-        getPassword();
+//        getPassword();
+        createPassword();
     }
 
     public static void compCrc() {
@@ -104,37 +105,52 @@ public class Test {
         }
     }
 
-    public static void createPassword(){
+    public static void createPassword() {
 
+        String str = "REXWIFI";
+        String ssid = "kaadas";
+        String password = "kaadas668";
+        byte[] bHead = str.getBytes();
+        byte[] bSsid = ssid.getBytes();
+        byte[] bPassword = password.getBytes();
 
+        byte[] result = new byte[bHead.length + bSsid.length + bPassword.length + 2];
+        System.arraycopy(bHead, 0, result, 0, bHead.length);
 
+        result[bHead.length] = (byte) (bSsid.length & 0xff);
+        System.arraycopy(bSsid, 0, result, bHead.length, bSsid.length);
+
+        result[bHead.length + bSsid.length + 1] = (byte) (bPassword.length & 0xff);
+        System.arraycopy(bPassword, 0, result, bHead.length + bSsid.length + 1, bPassword.length);
+
+        System.out.println("结果是   " + Rsa.bytesToHexString(result) );
     }
 
 
     private static String getPassword() {
         String wifiSN = "WF01193810004";
         String randomCode = "8a4ad8eda904e7d860177583fb25faf8e6622aeff7d72977a857c7ee";
-        String time =  (System.currentTimeMillis() / 1000 / 60 / 5) + "";
+        String time = (System.currentTimeMillis() / 1000 / 60 / 5) + "";
         String content = wifiSN + randomCode + time;
-        System.out.println(  "拼接的数据是  " + content);
-        System.out.println(  "当前时间戳  " + (System.currentTimeMillis() / 1000 / 60 / 5) + "");
+        System.out.println("拼接的数据是  " + content);
+        System.out.println("当前时间戳  " + (System.currentTimeMillis() / 1000 / 60 / 5) + "");
         byte[] data = content.toUpperCase().getBytes();
         try {
             MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
             messageDigest.update(data);
             byte[] digest = messageDigest.digest();
-            System.out.println(  "Sha256之后的数据是     " + Rsa.bytesToHexString(digest));
+            System.out.println("Sha256之后的数据是     " + Rsa.bytesToHexString(digest));
             byte[] temp = new byte[4];
             System.arraycopy(digest, 0, temp, 0, 4);
-            System.out.println(  "前四个字节是     " + Rsa.bytesToHexString(temp));
+            System.out.println("前四个字节是     " + Rsa.bytesToHexString(temp));
             long l = Rsa.getInt(temp);
-            System.out.println(  "获取的整数是     " + l);
+            System.out.println("获取的整数是     " + l);
             String text = (l % 1000000) + "";
             System.out.println("转换之后的数据是     ");
             for (int i = 0; i < (6 - text.length()); i++) {
                 text = "0" + text;
             }
-            System.out.println("  生成的密码是  " +text);
+            System.out.println("  生成的密码是  " + text);
             return text;
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();

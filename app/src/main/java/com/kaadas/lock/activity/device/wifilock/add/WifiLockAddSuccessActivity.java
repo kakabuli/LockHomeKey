@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.kaadas.lock.MyApplication;
@@ -196,11 +197,13 @@ public class WifiLockAddSuccessActivity extends BaseActivity<IWifiLockAddSuccess
 
     @Override
     public void onSetNameFailedNet(Throwable throwable) {
-
+        Toast.makeText(this, R.string.set_failed, Toast.LENGTH_SHORT).show();
+        hiddenLoading();
     }
 
     @Override
     public void onSetNameFailedServer(BaseResult baseResult) {
-
+        Toast.makeText(this, R.string.set_failed, Toast.LENGTH_SHORT).show();
+        hiddenLoading();
     }
 }

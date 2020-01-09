@@ -595,7 +595,6 @@ public class XiaokaiNewServiceImp {
 
     /**
      * 查询普通用户列表
-     *
      * @return
      */
     public static Observable<BaseResult> searchUser(String devname, String user_id) {

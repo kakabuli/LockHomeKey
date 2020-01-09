@@ -26,7 +26,4 @@ title  BLE OTA
         Server->App: code = 210
          App->App: 提示用户  版本已是最新
     end
-
-
-
 @enduml

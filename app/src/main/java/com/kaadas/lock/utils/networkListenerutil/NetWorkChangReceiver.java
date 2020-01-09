@@ -54,10 +54,8 @@ public class NetWorkChangReceiver extends BroadcastReceiver {
                         gatewayInfo.setEvent_str("offline");
                     }
                 }
-                LogUtils.e("网络离线");
                 networkChangeObversable.onNext(true);
             }else {
-                LogUtils.e("网络在线");
                 networkChangeObversable.onNext(false);
             }
 

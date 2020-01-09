@@ -10,6 +10,7 @@ import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
 import com.kaadas.lock.utils.KeyConstants;
+import com.kaadas.lock.utils.StringUtil;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -38,7 +39,8 @@ public class WifiLockDeviceInfoActivity extends AppCompatActivity {
         String wifiSn = getIntent().getStringExtra(KeyConstants.WIFI_SN);
         WifiLockInfo wifiLockInfo = MyApplication.getInstance().getWifiLockInfoBySn(wifiSn);
         if (wifiLockInfo != null) {
-            tvDeviceModel.setText(TextUtils.isEmpty(wifiLockInfo.getProductModel()) ? "" : wifiLockInfo.getProductModel());
+            String productModel = wifiLockInfo.getProductModel();
+            tvDeviceModel.setText(TextUtils.isEmpty(productModel) ? "" : productModel.startsWith("K13")?getString(R.string.lan_bo_ji_ni):productModel);
             tvSerialNumber.setText(TextUtils.isEmpty(wifiLockInfo.getProductSN()) ? "" : wifiLockInfo.getProductSN());
             tvLockFirmwareVersion.setText(TextUtils.isEmpty(wifiLockInfo.getLockFirmwareVersion()) ? "" : wifiLockInfo.getLockFirmwareVersion());
             tvLockSoftwareVersion.setText(TextUtils.isEmpty(wifiLockInfo.getLockSoftwareVersion()) ? "" : wifiLockInfo.getLockSoftwareVersion());

@@ -22,14 +22,10 @@ public class WifiLockAddThirdActivity extends AppCompatActivity {
 
     @BindView(R.id.back)
     ImageView back;
-//    @BindView(R.id.already_pair_network)
-//    Button alreadyPairNetwork;
     @BindView(R.id.help)
     ImageView help;
     @BindView(R.id.tv_notice)
     TextView tvNotice;
-//    @BindView(R.id.rl_next)
-//    RelativeLayout rlNext;
 
 
     @Override

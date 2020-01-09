@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.location.LocationManager;
+import android.net.wifi.ScanResult;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
@@ -19,6 +20,7 @@ import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -41,9 +43,13 @@ import com.kaadas.lock.utils.GpsUtil;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LoadingDialog;
 import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.PermissionUtil;
 import com.kaadas.lock.utils.ToastUtil;
+import com.kaadas.lock.utils.WifiUtils;
+import com.kaadas.lock.widget.DropEditText;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -71,7 +77,7 @@ public class WifiSetUpActivity extends BaseActivity<IWifiSetUpView, WifiSetUpPre
     @BindView(R.id.tv_support_list)
     TextView tvSupportList;
 
-    private TextView mApSsidTV;
+    private DropEditText mApSsidTV;
     private EditText mApPasswordET;
     private Button mConfirmBtn;
 
@@ -104,6 +110,9 @@ public class WifiSetUpActivity extends BaseActivity<IWifiSetUpView, WifiSetUpPre
     private boolean passwordHide = true;
     public String adminPassword;
     private boolean isAp;
+    private ArrayAdapter adapter;
+    private List<String> wifiList;
+    private WifiUtils wifiUtils;
 
 
     @Override
@@ -121,7 +130,17 @@ public class WifiSetUpActivity extends BaseActivity<IWifiSetUpView, WifiSetUpPre
         LogUtils.e("输入的管理员密码是    " + adminPassword);
         mApSsidTV.setEnabled(false);
         mApPasswordET.setSelection(0);
-        if (isSDKAtLeastP()) {
+        wifiUtils = WifiUtils.getInstance(this);
+        checkLocation();
+        if (!isAp) {
+            mApSsidTV.setClickable(false);
+        } else {
+            mApSsidTV.setClickable(true);
+        }
+
+        initWifiList();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION)
                     != PackageManager.PERMISSION_GRANTED) {
                 String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION};
@@ -132,6 +151,14 @@ public class WifiSetUpActivity extends BaseActivity<IWifiSetUpView, WifiSetUpPre
         } else {
             registerBroadcastReceiver();
         }
+
+        mApSsidTV.setOnOpenPopWindowListener(new DropEditText.OnOpenPopWindowListener() {
+            @Override
+            public void onOpenPopWindowListener(View view) {
+                parseWifiList(WifiUtils.getInstance(MyApplication.getInstance()).getWifiList());
+            }
+        });
+
     }
 
     @Override
@@ -144,7 +171,6 @@ public class WifiSetUpActivity extends BaseActivity<IWifiSetUpView, WifiSetUpPre
             }
             return;
         }
-
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
@@ -186,9 +212,7 @@ public class WifiSetUpActivity extends BaseActivity<IWifiSetUpView, WifiSetUpPre
         if (disconnected) {
             mApSsidTV.setText("");
             mApSsidTV.setTag(null);
-
             checkLocation();
-
             if (mTask != null) {
                 mTask.cancelEsptouch();
                 mTask = null;
@@ -210,12 +234,15 @@ public class WifiSetUpActivity extends BaseActivity<IWifiSetUpView, WifiSetUpPre
         }
     }
 
-    private void checkLocation() {
+    private boolean checkLocation() {
         boolean enable;
         enable = GpsUtil.isOPen(this);
         if (!enable) {
-            ToastUtil.getInstance().showLong(R.string.location_disable_message);
+            AlertDialogUtil.getInstance().noButtonDialog(this, getString(R.string.location_disable_message));
+            Toast.makeText(this, R.string.location_disable_message, Toast.LENGTH_SHORT).show();
         }
+
+        return enable;
     }
 
     @OnClick({R.id.confirm_btn, R.id.tv_support_list, R.id.iv_eye, R.id.back})
@@ -244,7 +271,7 @@ public class WifiSetUpActivity extends BaseActivity<IWifiSetUpView, WifiSetUpPre
                 byte[] ssid = ByteUtil.getBytesByString(sSsid);
                 byte[] password = ByteUtil.getBytesByString(sPassword);
                 byte[] bssid = TouchNetUtil.parseBssid2bytes(wifiBssid);
-                 //todo  wifiBssid 为空
+                //todo  wifiBssid 为空
                 byte[] deviceCount = {1};
                 byte[] broadcast = {1};
                 if (mTask != null) {
@@ -355,41 +382,6 @@ public class WifiSetUpActivity extends BaseActivity<IWifiSetUpView, WifiSetUpPre
     public void onCheckError(byte[] data) {
         ToastUtil.getInstance().showLong(R.string.admin_password_please_re_input);
         hiddenLoading();
-//        LogUtils.e("校验和错误  ");
-//        if (adminCount > 3) {
-//            startActivity(new Intent(WifiSetUpActivity.this, WifiLockAddFailedActivity.class));
-//            ToastUtil.getInstance().showLong(R.string.set_up_failed);
-//            return;
-//        }
-//        ToastUtil.getInstance().showLong(R.string.admin_password_please_re_input);
-//        View mView = LayoutInflater.from(this).inflate(R.layout.have_edit_dialog, null);
-//        TextView tvTitle = mView.findViewById(R.id.tv_title);
-//        EditText editText = mView.findViewById(R.id.et_name);
-//        editText.setInputType(InputType.TYPE_CLASS_NUMBER);
-//        TextView tv_cancel = mView.findViewById(R.id.tv_left);
-//        TextView tv_query = mView.findViewById(R.id.tv_right);
-//        AlertDialog alertDialog = AlertDialogUtil.getInstance().common(this, mView);
-//        tvTitle.setText(getString(R.string.please_input_admin_password));
-//        tv_cancel.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                alertDialog.dismiss();
-//            }
-//        });
-//
-//        tv_query.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                String password = editText.getText().toString().trim();
-//                if (!StringUtil.randomJudge(password)) {
-//                    ToastUtil.getInstance().showShort(R.string.random_verify_error);
-//                    return;
-//                }
-//                adminCount++;
-//                alertDialog.dismiss();
-//                mPresenter.parseWifiData(password, data);
-//            }
-//        });
     }
 
     private static class EsptouchAsyncTask4 extends AsyncTask<byte[], IEsptouchResult, List<IEsptouchResult>> {
@@ -507,5 +499,34 @@ public class WifiSetUpActivity extends BaseActivity<IWifiSetUpView, WifiSetUpPre
         void onSetUpFailed();
 
         void onSetUpSuccess(String hostAddress);
+    }
+
+    private void initWifiList() {
+        wifiList = new ArrayList<>();
+        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, wifiList);
+        mApSsidTV.setAdapter(adapter);
+    }
+
+    private void parseWifiList(List<ScanResult> mlist) {
+        if (!wifiUtils.isWifiEnable()){
+            wifiUtils.isWifiEnable();
+            Toast.makeText(this, getString(R.string.please_open_wifi), Toast.LENGTH_SHORT).show();
+        }
+        if (!checkLocation()) {
+            return;
+        }
+
+        wifiUtils.startScan();
+        if (mlist != null && mlist.size() > 0) {
+            for (ScanResult result : mlist) {
+                String ssid = result.SSID;
+                if (!TextUtils.isEmpty(ssid)) {
+                    wifiList.add(ssid);
+                }
+            }
+        } else {
+            wifiList.clear();
+        }
+        adapter.notifyDataSetChanged();
     }
 }

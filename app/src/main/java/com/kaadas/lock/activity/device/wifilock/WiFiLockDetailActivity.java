@@ -98,7 +98,7 @@ public class WiFiLockDetailActivity extends BaseActivity<IWifiLockDetailView, Wi
         initRecycleview();
         initData();
         String lockNickname = wifiLockInfo.getLockNickname();
-        tvBluetoothName.setText(TextUtils.isEmpty(lockNickname)?wifiLockInfo.getWifiSN():lockNickname);
+        tvBluetoothName.setText(TextUtils.isEmpty(lockNickname) ? wifiLockInfo.getWifiSN() : lockNickname);
     }
 
     @Override
@@ -122,7 +122,7 @@ public class WiFiLockDetailActivity extends BaseActivity<IWifiLockDetailView, Wi
         initPassword();
         mPresenter.getPasswordList(wifiSn);
         mPresenter.queryUserList(wifiSn);
-        dealWithPower(wifiLockInfo.getPower(),wifiLockInfo.getUpdateTime());
+        dealWithPower(wifiLockInfo.getPower(), wifiLockInfo.getUpdateTime());
 
     }
 
@@ -146,7 +146,7 @@ public class WiFiLockDetailActivity extends BaseActivity<IWifiLockDetailView, Wi
         }
         lockType = wifiLockInfo.getProductModel();
         if (!TextUtils.isEmpty(lockType)) {
-            tvLockType.setText(StringUtil.getSubstringFive(lockType));
+            tvLockType.setText(lockType.startsWith("K13")?getString(R.string.lan_bo_ji_ni):StringUtil.getSubstringFive(lockType));
         }
     }
 
@@ -238,19 +238,30 @@ public class WiFiLockDetailActivity extends BaseActivity<IWifiLockDetailView, Wi
         }
 
         //todo  读取电量时间
-        long readDeviceInfoTime = updateTime * 10000;
-        if (readDeviceInfoTime != -1) {
-            if ((System.currentTimeMillis() - readDeviceInfoTime) < 60 * 60 * 1000) {
-                //小于一小时
-                tvDate.setText(getString(R.string.device_detail_power_date));
-            } else if ((System.currentTimeMillis() - readDeviceInfoTime) < 24 * 60 * 60 * 1000) {
-                //小于一天
+        long readDeviceInfoTime = updateTime * 1000;
+        long todayMillions = DateUtils.getTodayMillions();
+        LogUtils.e("更新时间   " + readDeviceInfoTime + "  当前时间  " + System.currentTimeMillis() + "  相差时间 " + ((System.currentTimeMillis() - readDeviceInfoTime))
+                + "  今天的时间  " + todayMillions + "    "
+
+        );
+        if ((System.currentTimeMillis() - readDeviceInfoTime) < 60 * 60 * 1000) {
+            //小于一小时
+            tvDate.setText(getString(R.string.device_detail_power_date));
+        } else if ((System.currentTimeMillis() - readDeviceInfoTime) < 24 * 60 * 60 * 1000) {
+            //小于一天
+            if (readDeviceInfoTime > todayMillions) {
                 tvDate.setText(getString(R.string.today) + " " + DateUtils.currentLong2HourMin(readDeviceInfoTime));
-            } else if ((System.currentTimeMillis() - readDeviceInfoTime) < 2 * 24 * 60 * 60 * 1000) {
+            } else {
+                tvDate.setText(getString(R.string.yesterday) + " " + DateUtils.currentLong2HourMin(readDeviceInfoTime));
+            }
+        } else if ((System.currentTimeMillis() - readDeviceInfoTime) < 2 * 24 * 60 * 60 * 1000) {
+            if (readDeviceInfoTime > todayMillions) {
                 tvDate.setText(getString(R.string.yesterday) + " " + DateUtils.currentLong2HourMin(readDeviceInfoTime));
             } else {
                 tvDate.setText(DateUtils.formatYearMonthDay(readDeviceInfoTime));
             }
+        } else {
+            tvDate.setText(DateUtils.formatYearMonthDay(readDeviceInfoTime));
         }
     }
 
@@ -407,8 +418,8 @@ public class WiFiLockDetailActivity extends BaseActivity<IWifiLockDetailView, Wi
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == TO_MORE_REQUEST_CODE && resultCode == RESULT_OK) {
-           String newName =   data.getStringExtra(KeyConstants.WIFI_LOCK_NEW_NAME);
-            tvBluetoothName.setText(newName+"");
+            String newName = data.getStringExtra(KeyConstants.WIFI_LOCK_NEW_NAME);
+            tvBluetoothName.setText(newName + "");
         }
     }
 

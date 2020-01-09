@@ -125,9 +125,14 @@ public class WifiSetUpPresenter<T> extends BasePresenter<IWifiSetUpView> {
                 } catch (IOException e) {
                     LogUtils.e("读取数据失败   " + e.getMessage());
                     e.printStackTrace();
-                    if (isSafe()) {
-                        mViewRef.get().connectFailed(e);
-                    }
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (isSafe()) {
+                                mViewRef.get().connectFailed(e);
+                            }
+                        }
+                    });
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 } finally {

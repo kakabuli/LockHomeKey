@@ -841,27 +841,28 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
             Log.e(GeTui.VideoLog, "信息为null,上传手机信息失败");
             return;
         }
-        XiaokaiNewServiceImp.uploadPushPhoneMsg(uid, phone, model, manufacturer, version).subscribe(new BaseObserver<BaseResult>() {
-            @Override
-            public void onSuccess(BaseResult baseResult) {
-                if (baseResult.getCode().equals("200")) {
-                    SPUtils.put(Constants.PHONE_MSG_UPLOAD_STATUS, true);
-                }
-            }
+        XiaokaiNewServiceImp.uploadPushPhoneMsg(uid, phone, model, manufacturer, version)
+                .subscribe(new BaseObserver<BaseResult>() {
+                    @Override
+                    public void onSuccess(BaseResult baseResult) {
+                        if (baseResult.getCode().equals("200")) {
+                            SPUtils.put(Constants.PHONE_MSG_UPLOAD_STATUS, true);
+                        }
+                    }
 
-            @Override
-            public void onAckErrorCode(BaseResult baseResult) {
-            }
+                    @Override
+                    public void onAckErrorCode(BaseResult baseResult) {
+                    }
 
-            @Override
-            public void onFailed(Throwable throwable) {
-            }
+                    @Override
+                    public void onFailed(Throwable throwable) {
+                    }
 
-            @Override
-            public void onSubscribe1(Disposable d) {
-                compositeDisposable.add(d);
-            }
-        });
+                    @Override
+                    public void onSubscribe1(Disposable d) {
+                        compositeDisposable.add(d);
+                    }
+                });
     }
 
 
@@ -1177,9 +1178,9 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                                 }
                             } else if ("action".equals(eventtype)) {
                                 WifiLockActionBean wifiLockActionBean = new Gson().fromJson(payload, WifiLockActionBean.class);
-                                if (wifiLockActionBean != null && wifiLockActionBean.getEventparams()!=null) {
+                                if (wifiLockActionBean != null && wifiLockActionBean.getEventparams() != null) {
                                     WifiLockActionBean.EventparamsBean eventparams = wifiLockActionBean.getEventparams();
-                                    MyApplication.getInstance().updateWifiLockInfo(wifiLockActionBean.getWfId(),eventparams);
+                                    MyApplication.getInstance().updateWifiLockInfo(wifiLockActionBean.getWfId(), wifiLockActionBean);
                                 }
                             }
                         }

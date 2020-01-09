@@ -75,18 +75,16 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_alignParentEnd="true"
-                android:paddingLeft="@dimen/dp_10"
                 android:paddingRight="@dimen/dp_10"
-                android:src="@mipmap/add_wifi_lock_right" />
+                android:src="@mipmap/add_wifi_lock_wifi" />
 
-            <EditText
+            <com.kaadas.lock.widget.DropEditText
                 android:id="@+id/ap_ssid_text"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@drawable/edit_text_line_ffdcdcdc"
-                android:drawableLeft="@mipmap/add_wifi_lock_wifi"
                 android:drawablePadding="@dimen/dp_10"
+                android:paddingLeft="30dp"
                 android:ellipsize="end"
                 android:hint="WiFi"
                 android:singleLine="true"
@@ -106,8 +104,8 @@
             android:layout_marginBottom="@dimen/dp_20">
 
 
-
             <EditText
+                android:paddingRight="32dp"
                 android:id="@+id/ap_password_edit"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -173,8 +171,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="30dp"
-            android:gravity="center"
             android:background="@drawable/edit_text_line_209afd"
+            android:gravity="center"
             android:text="@string/look_wifi_support_rout"
             android:textColor="#1F96F7"
             android:textSize="12sp" />

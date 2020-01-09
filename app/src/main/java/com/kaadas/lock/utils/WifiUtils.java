@@ -26,6 +26,10 @@ public class WifiUtils {
         return utils;
     }
 
+    public boolean startScan() {
+        return wifiManager.startScan();
+    }
+
     private WifiManager wifiManager;
 
     /**
@@ -78,6 +82,7 @@ public class WifiUtils {
      * @param pws
      */
     public void connectWifiPws(String ssid, String pws){
+        LogUtils.e("连接wifi   " +ssid);
         wifiManager.disableNetwork(wifiManager.getConnectionInfo().getNetworkId());
         int netId = wifiManager.addNetwork(getWifiConfig(ssid, pws, true));
         wifiManager.enableNetwork(netId, true);
@@ -88,6 +93,7 @@ public class WifiUtils {
      * @param ssid
      */
     public void connectWifiNoPws(String ssid){
+        LogUtils.e("连接wifi   " +ssid);
         wifiManager.disableNetwork(wifiManager.getConnectionInfo().getNetworkId());
         int netId = wifiManager.addNetwork(getWifiConfig(ssid, "", false));
         wifiManager.enableNetwork(netId, true);

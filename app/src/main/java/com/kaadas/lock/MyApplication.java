@@ -43,6 +43,7 @@ import com.kaadas.lock.publiclibrary.mqtt.util.MqttConstant;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttData;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttService;
 import com.kaadas.lock.utils.Constants;
+import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.MyLog;
@@ -586,7 +587,7 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
     }
 
 
-    public void updateWifiLockInfo(String sn, WifiLockActionBean.EventparamsBean eventparams) {
+    public void updateWifiLockInfo(String sn, WifiLockActionBean actionBean) {
         if (homeShowDevices != null) {
             for (int i = homeShowDevices.size() - 1; i >= 0; i--) {
                 HomeShowBean homeShowBean = homeShowDevices.get(i);
@@ -601,12 +602,15 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
                      * volume : 0
                      */
                     if (wifiLockInfo.getWifiSN().equals(sn)) {
-                        wifiLockInfo.setAmMode(eventparams.getAmMode());
-                        wifiLockInfo.setDefences(eventparams.getDefences());
-                        wifiLockInfo.setLanguage(eventparams.getLanguage());
-                        wifiLockInfo.setOperatingMode(eventparams.getOperatingMode());
-                        wifiLockInfo.setSafeMode(eventparams.getSafeMode());
-                        wifiLockInfo.setVolume(eventparams.getVolume());
+                        wifiLockInfo.setAmMode(actionBean.getEventparams().getAmMode());
+                        wifiLockInfo.setDefences(actionBean.getEventparams().getDefences());
+                        wifiLockInfo.setLanguage(actionBean.getEventparams().getLanguage());
+                        wifiLockInfo.setOperatingMode(actionBean.getEventparams().getOperatingMode());
+                        wifiLockInfo.setSafeMode(actionBean.getEventparams().getSafeMode());
+                        wifiLockInfo.setVolume(actionBean.getEventparams().getVolume());
+                        long updateTime = Long.parseLong(actionBean.getTimestamp());
+                        LogUtils.e("更新的时间为   " + DateUtils.getDateTimeFromMillisecond(updateTime * 1000));
+                        wifiLockInfo.setUpdateTime(updateTime);
                     }
                     new WifiLockInfoManager().insertOrReplace(wifiLockInfo);
                     wifiLockActionChange.onNext(wifiLockInfo);

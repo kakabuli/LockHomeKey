@@ -544,6 +544,7 @@
     <string name="connect_out_of_date">连接超时</string>
     <string name="connecting_ble">正在连接蓝牙</string>
     <string name="bind_failed">绑定失败</string>
+    <string name="bind_failed2">绑定失败!</string>
 
     <string name="device_add_third_content_in_net">根据语音提示，操作进入配网</string>
     <string name="device_add_third_content_exit_net">根据语音提示，操作进入退网</string>
@@ -1365,7 +1366,7 @@
     <string name="connect_home_wifi">连接家庭\nWIFI</string>
     <string name="wifi_lock_set_up_ap_notice">请将手机和设备尽量靠近路由器，能够更\n好的连接设备</string>
     <string name="ap_set_up">AP配网</string>
-    <string name="smartconfig">smartconfig</string>
+    <string name="smartconfig">SmartLink</string>
     <string name="not_enable_click">不可点击</string>
     <string name="modify">修改</string>
     <string name="nick_for">昵称为</string>
@@ -1373,4 +1374,11 @@
     <string name="wifi_delete2">门锁授权使用</string>
     <string name="wifi_add">添加</string>
     <string name="wifi_add2">为门锁授权使用</string>
+    <string name="lan_bo_ji_ni">兰博基尼传奇</string>
+    <string name="connect_lock_failed">连接锁设备失败</string>
+    <string name="read_data_failed">读取数据失败</string>
+    <string name="please_open_wifi">请打开WiFi</string>
+    <string name="add_failed_net_expcetion">添加设备失败，网络异常</string>
+    <string name="no_scan_wifi">没有搜索到可用WiFi</string>
+    <string name="bidn_success2">绑定成功！</string>
 </resources>
