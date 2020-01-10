@@ -1149,8 +1149,6 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
             if (i == showDatas.size() - 1) {
                 bluetoothRecordBean.setLastData(true);
             }
-
-
         }
     }
 

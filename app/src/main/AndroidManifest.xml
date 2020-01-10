@@ -45,17 +45,17 @@
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
 
-    <!--使用网络-->
+    <!-- 使用网络 -->
     <uses-permission android:name="android.permission.INTERNET" />
-    <!--网络状态-->
+    <!-- 网络状态 -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <!--wifi状态权限-->
+    <!-- wifi状态权限 -->
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <!--位置信息-->
+    <!-- 位置信息 -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <!--如果是安卓10.0，需要后台获取连接的wifi名称则添加进程获取位置信息权限 -->
+    <!-- 如果是安卓10.0，需要后台获取连接的wifi名称则添加进程获取位置信息权限 -->
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
-    <!--android 10.0使用wifi api新添加的权限-->
+    <!-- android 10.0使用wifi api新添加的权限 -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
@@ -800,10 +800,7 @@
         <activity android:name=".activity.device.wifilock.add.WifiLockAddSuccessActivity" />
         <activity android:name=".publiclibrary.ota.face.FaceOtaActivity" />
         <activity android:name=".activity.device.gatewaylock.password.test.PasswordTestActivity" />
-        <activity android:name=".activity.wifilock.configure.EsptouchDemoActivity">
-
-        </activity>
-
+        <activity android:name=".activity.wifilock.configure.EsptouchDemoActivity"></activity>
 
         <!-- VIVO辅助 SDK -->
         <meta-data
@@ -812,19 +809,24 @@
         <meta-data
             android:name="com.vivo.push.api_key"
             android:value="${VIVO_APP_KEY}" />
+
         <service
             android:name="com.vivo.push.sdk.service.CommandClientService"
             android:exported="true"
-            android:process=":pushservice"/>
+            android:process=":pushservice" />
+
         <activity
             android:name="com.vivo.push.sdk.LinkProxyClientActivity"
             android:exported="true"
+            android:process=":pushservice"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"
-            android:process=":pushservice"/>
-        <receiver android:name="com.igexin.sdk.VivoPushMessageReceiver"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
+        <receiver
+            android:name="com.igexin.sdk.VivoPushMessageReceiver"
             android:process=":pushservice">
             <intent-filter>
+
                 <!-- 接收 push 消息 -->
                 <action android:name="com.vivo.pushclient.action.RECEIVE" />
             </intent-filter>
@@ -851,7 +853,8 @@
         <activity android:name=".activity.device.wifilock.WifiLockDeviceInfoActivity" />
         <activity android:name=".activity.device.wifilock.WifiLockSafeModelActivity" />
         <activity android:name=".activity.device.wifilock.WifiLockAuthActivity" />
-        <activity android:name=".activity.device.wifilock.add.WifiLockApSetUpActivity"></activity>
+        <activity android:name=".activity.device.wifilock.add.WifiLockApSetUpActivity" />
+        <activity android:name=".activity.device.singlebutton.SingleButtonDetailActivity"></activity>
     </application>
 
 </manifest>

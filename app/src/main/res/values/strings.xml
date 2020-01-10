@@ -1383,4 +1383,5 @@
     <string name="bidn_success2">绑定成功！</string>
     <string name="admin_password">管理员密码</string>
     <string name="gust_password">访客密码</string>
+    <string name="device_detail">设备详情</string>
 </resources>

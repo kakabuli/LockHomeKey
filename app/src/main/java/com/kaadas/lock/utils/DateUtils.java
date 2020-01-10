@@ -170,4 +170,14 @@ public class DateUtils {
         return currentTimeMillis - (currentTimeMillis % 24 * 60 * 60 * 1000);
 
     }
+
+
+    //获取当前日期的年月日
+    public static String getCurrentYMD() {
+
+        Date date = new Date(System.currentTimeMillis());
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        return dateFormat.format(date);
+
+    }
 }

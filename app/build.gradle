@@ -47,8 +47,8 @@ android {
                 MEIZU_APP_ID    : "118878",
                 MEIZU_APP_KEY   : "6121ecee371449c2b536b58452d78cb8",
 
-                VIVO_APP_ID : "18137",
-                VIVO_APP_KEY : "11e24474-cf3b-447c-9052-feb08012f033"
+                VIVO_APP_ID     : "18137",
+                VIVO_APP_KEY    : "11e24474-cf3b-447c-9052-feb08012f033"
         ]
     }
 

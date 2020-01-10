@@ -14,6 +14,7 @@ import com.kaadas.lock.bean.WifiLockAlarmRecordGroup;
 import com.kaadas.lock.bean.WifiLockOperationRecordGroup;
 import com.kaadas.lock.publiclibrary.bean.WifiLockAlarmRecord;
 import com.kaadas.lock.publiclibrary.bean.WifiLockOperationRecord;
+import com.kaadas.lock.utils.DateUtils;
 
 import java.util.List;
 
@@ -33,6 +34,9 @@ public class WifiLockOperationGroupRecordAdapter extends BaseQuickAdapter<WifiLo
         TextView tvTitle = helper.getView(R.id.tv_title);
         String time = bean.getTime();
         if (!TextUtils.isEmpty(time)) {
+            if (time.equals(DateUtils.getCurrentYMD())){
+                time = mContext.getString(R.string.today);
+            }
             tvTitle.setText(time);
             tvTitle.setVisibility(View.VISIBLE);
         } else {
