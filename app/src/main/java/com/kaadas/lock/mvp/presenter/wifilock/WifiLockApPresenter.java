@@ -100,7 +100,7 @@ public class WifiLockApPresenter<T> extends BasePresenter<IWifiLockApView> {
                                 String sSsid = scanResult.SSID;
                                 if (!TextUtils.isEmpty(sSsid)) {
                                     LogUtils.e("设备列表是   " + sSsid);
-                                    if (sSsid.startsWith("KDS_45D19B")) {
+                                    if (sSsid.startsWith("KDS_")) {
                                         wifiUtils.connectWifiPws(sSsid, "12345678");
                                         if (isSafe()) {
                                             mViewRef.get().onConnectingWifi(sSsid);
@@ -303,13 +303,20 @@ public class WifiLockApPresenter<T> extends BasePresenter<IWifiLockApView> {
                 .subscribe(new Consumer<Long>() {
                     @Override
                     public void accept(Long aLong) throws Exception {
+                        LogUtils.e("网络是否可用   " + NetUtil.isNetworkAvailable());
                         if (NetUtil.isNetworkAvailable()){
-                            WifiLockInfo wifiLockInfo = MyApplication.getInstance().getWifiLockInfoBySn(wifiSN);
-                            if (wifiLockInfo != null && wifiLockInfo.getIsAdmin() == 1) {
-                                update(wifiSN, randomCode, wifiName, func);
-                            } else {
-                                bindDevice(wifiSN, wifiSN, MyApplication.getInstance().getUid(), randomCode, wifiName, func);
-                            }
+                            handler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    WifiLockInfo wifiLockInfo = MyApplication.getInstance().getWifiLockInfoBySn(wifiSN);
+                                    if (wifiLockInfo != null && wifiLockInfo.getIsAdmin() == 1) {
+                                        update(wifiSN, randomCode, wifiName, func);
+                                    } else {
+                                        bindDevice(wifiSN, wifiSN, MyApplication.getInstance().getUid(), randomCode, wifiName, func);
+                                    }
+                                }
+                            }, 1000);
+
                             toDisposable(checkNetDisposable);
                         }
                     }

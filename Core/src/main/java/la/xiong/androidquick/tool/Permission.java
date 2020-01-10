@@ -55,7 +55,7 @@ public class Permission {
         //定位
         public static final String[] LOCATION = new String[]{
                 Permission.ACCESS_FINE_LOCATION,
-                Permission.ACCESS_COARSE_LOCATION};
+                Permission.ACCESS_FINE_LOCATION};
         //麦克风
         public static final String[] MICROPHONE = new String[]{Permission.RECORD_AUDIO};
         //电话

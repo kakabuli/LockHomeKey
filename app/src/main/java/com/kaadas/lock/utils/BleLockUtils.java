@@ -187,7 +187,6 @@ public class BleLockUtils {
 
     /**
      * 根据功能集判断是否支持卡片
-     *
      * @param functionSet
      * @return
      */

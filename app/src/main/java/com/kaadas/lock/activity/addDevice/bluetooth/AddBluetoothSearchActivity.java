@@ -84,9 +84,9 @@ public class AddBluetoothSearchActivity extends BaseActivity<ISearchDeviceView, 
         setContentView(R.layout.device_bluetooth_search);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            int i=checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION);
+            int i=checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION);
             if (i==-1){
-                if (!shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_COARSE_LOCATION)){
+                if (!shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)){
                     ToastUtil.getInstance().showShort(getString(R.string.aler_no_entry_location));
                     finish();
                     return;

@@ -72,7 +72,7 @@ public class WelcomeActivity extends BaseActivity {
 
     }
     private void permissionsCheck() {
-        String[] perms = {Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.CAMERA,Manifest.permission.ACCESS_COARSE_LOCATION};
+        String[] perms = {Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.CAMERA,Manifest.permission.ACCESS_FINE_LOCATION};
         performCodeWithPermission(1, Constans.RC_PERMISSION_PERMISSION_ACTIVITY, perms, new PermissionCallback() {
             @Override
             public void hasPermission(List<String> allPerms) {
@@ -91,7 +91,7 @@ public class WelcomeActivity extends BaseActivity {
                     if (deniedPerms.contains(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                         denied.append("存储权限");
                     }
-                    if (deniedPerms.contains(Manifest.permission.ACCESS_COARSE_LOCATION)) {
+                    if (deniedPerms.contains(Manifest.permission.ACCESS_FINE_LOCATION)) {
                         denied.append("位置权限");
                     }
                     deniedPermsString = denied.toString();

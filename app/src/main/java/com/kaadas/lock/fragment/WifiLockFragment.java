@@ -209,7 +209,7 @@ public class WifiLockFragment extends BaseFragment<IWifiLockView, WifiLockPresen
         if (updateTime == 0) {
             tvUpdateTime.setText("");
         } else {
-            tvUpdateTime.setText("" + DateUtils.secondToDate2(updateTime));
+            tvUpdateTime.setText("" + DateUtils.timestampToDateSecond(updateTime));
         }
 
         ivTopIcon.setVisibility(View.VISIBLE); //上方图标显示

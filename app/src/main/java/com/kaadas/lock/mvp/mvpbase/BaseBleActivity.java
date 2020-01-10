@@ -98,7 +98,7 @@ public abstract class BaseBleActivity<T extends IBleView, V extends BlePresenter
      */
     @Override
     public void noPermissions(){
-        PermissionUtil.getInstance().requestPermission(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, this);
+        PermissionUtil.getInstance().requestPermission(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, this);
         ToastUtil.getInstance().showLong(R.string.please_allow_ble_permission);
     }
 

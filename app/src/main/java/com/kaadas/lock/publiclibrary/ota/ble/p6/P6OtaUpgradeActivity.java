@@ -633,7 +633,7 @@ public class P6OtaUpgradeActivity extends BaseAddToApplicationActivity implement
         ActivityCompat.requestPermissions(this, new String[]{
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
                 Manifest.permission.READ_EXTERNAL_STORAGE,
-                Manifest.permission.ACCESS_COARSE_LOCATION
+                Manifest.permission.ACCESS_FINE_LOCATION
         }, 1);
     }
 

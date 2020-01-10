@@ -65,6 +65,10 @@ public class WifiLockOperationItemRecordAdapter extends BaseQuickAdapter<WifiLoc
                         right = mContext.getString(R.string.password_open);
                         if (record.getPwdNum() == 252) {
                             left = mContext.getString(R.string.offline_password);
+                        }else if (record.getPwdNum() == 254){
+                            left = mContext.getString(R.string.admin_password);
+                        }else if (record.getPwdNum() == 253){
+                            left = mContext.getString(R.string.gust_password);
                         }
                         break;
                     case 4:
@@ -179,7 +183,6 @@ public class WifiLockOperationItemRecordAdapter extends BaseQuickAdapter<WifiLoc
                 right = mContext.getString(R.string.unknown_open);
                 break;
         }
-        LogUtils.e("Adapter 显示的   " + content);
         // 机械开锁/APP开锁/自动开锁/密码开锁/门卡开锁/指纹开锁
         tvContent.setText(left);
         tvRight.setText(right);

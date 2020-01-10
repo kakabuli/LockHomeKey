@@ -476,7 +476,7 @@ public class Ti2FileOtaUpgradeActivity extends OtaBaseActivity implements View.O
     private void requestPermission() {
         ActivityCompat.requestPermissions(this, new String[]{
                         Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                        Manifest.permission.ACCESS_COARSE_LOCATION
+                        Manifest.permission.ACCESS_FINE_LOCATION
                 },
                 1);
     }

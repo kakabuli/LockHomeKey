@@ -196,7 +196,7 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
         }
         //开始连接蓝牙
         handler.removeCallbacks(releaseRunnable);
-        if (ContextCompat.checkSelfPermission(MyApplication.getInstance(), Manifest.permission.ACCESS_COARSE_LOCATION) != PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(MyApplication.getInstance(), Manifest.permission.ACCESS_FINE_LOCATION) != PERMISSION_GRANTED) {
             //没有定位权限
             if (isSafe()) {
                 mViewRef.get().noPermissions();
