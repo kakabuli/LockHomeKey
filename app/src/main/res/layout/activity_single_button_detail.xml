@@ -1,17 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#F2F2F2"
     android:orientation="vertical"
     tools:context="com.kaadas.lock.activity.device.singlebutton.SingleButtonDetailActivity">
 
     <LinearLayout
-        android:background="@mipmap/single_button_detail_bg"
-        android:layout_weight="1"
         android:layout_width="match_parent"
-        android:layout_height="0dp">
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="#1397f2"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -46,14 +48,27 @@
                 android:padding="@dimen/dp_17"
                 android:src="@mipmap/old_bluetooth_delete" />
 
+
         </RelativeLayout>
 
 
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/single_button_detail_icon" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="电源开关智能灯"
+            android:textColor="#FFFFFF"
+            android:textSize="15sp" />
     </LinearLayout>
+
     <LinearLayout
-        android:layout_weight="1"
         android:layout_width="match_parent"
-        android:layout_height="0dp">
+        android:layout_height="0dp"
+        android:layout_weight="1">
 
     </LinearLayout>
 </LinearLayout>

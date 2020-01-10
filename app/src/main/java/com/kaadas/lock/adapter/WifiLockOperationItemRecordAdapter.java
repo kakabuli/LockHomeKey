@@ -52,7 +52,7 @@ public class WifiLockOperationItemRecordAdapter extends BaseQuickAdapter<WifiLoc
         String right = "";
         String shareUserNickname;
         int pwdType = record.getPwdType();
-        String sNum = record.getPwdNum() > 9 ? ""+ record.getPwdNum() : "0"+ record.getPwdNum();
+        String sNum = mContext.getString(R.string.number)+(record.getPwdNum() > 9 ? ""+ record.getPwdNum() : "0"+ record.getPwdNum());
         switch (type) {
             case 1: //开锁
                 left = record.getUserNickname();
@@ -64,11 +64,14 @@ public class WifiLockOperationItemRecordAdapter extends BaseQuickAdapter<WifiLoc
                     case 0:
                         right = mContext.getString(R.string.password_open);
                         if (record.getPwdNum() == 252) {
-                            left = mContext.getString(R.string.offline_password);
+                            left = "离线密码开锁";
+                            right = "";
                         }else if (record.getPwdNum() == 254){
                             left = mContext.getString(R.string.admin_password);
+                            right = "";
                         }else if (record.getPwdNum() == 253){
                             left = mContext.getString(R.string.gust_password);
+                            right = "";
                         }
                         break;
                     case 4:
@@ -81,7 +84,7 @@ public class WifiLockOperationItemRecordAdapter extends BaseQuickAdapter<WifiLoc
                         right = mContext.getString(R.string.app_open);
                         break;
                     case 9:
-                        right = mContext.getString(R.string.machine_key);
+                        left = mContext.getString(R.string.machine_key);
                         break;
                     default:
                         right = mContext.getString(R.string.unknown_open);
@@ -89,68 +92,69 @@ public class WifiLockOperationItemRecordAdapter extends BaseQuickAdapter<WifiLoc
                 }
                 break;
             case 2: //关锁
-                right = mContext.getString(R.string.lock_already_lock);
+                left = mContext.getString(R.string.lock_already_lock);
                 break;
             case 3: //添加秘钥
-                right = mContext.getString(R.string.lock_add) + sNum;
+                left = mContext.getString(R.string.lock_add) + sNum;
                 switch (pwdType) {
                     //	密码类型：0密码 3卡片 4指纹 8APP用户 9机械钥匙
                     case 0:
-                        right = right + mContext.getString(R.string.password);
+                        left = left + mContext.getString(R.string.password);
                         break;
                     case 4:
-                        right = right + mContext.getString(R.string.fingerprint);
+                        left = left + mContext.getString(R.string.fingerprint);
                         break;
                     case 3:
-                        right = right + mContext.getString(R.string.card);
+                        left = left + mContext.getString(R.string.card);
                         break;
                     default:
-                        right = right + mContext.getString(R.string.unknown_open);
+                        left = left + mContext.getString(R.string.unknown_open);
                         break;
                 }
                 break;
             case 4: //删除秘钥
                 int pwdNum = record.getPwdNum();
-                right = mContext.getString(R.string.lock_delete) + ((pwdNum == 255) ? "全部" : sNum + "");
+                left = mContext.getString(R.string.lock_delete) + ((pwdNum == 255) ? mContext.getString(R.string.all) : sNum + "");
                 switch (pwdType) {
                     //	密码类型：0密码 3卡片 4指纹 8APP用户 9机械钥匙
                     case 0:
-                        right = right + mContext.getString(R.string.password);
+                        left = left + mContext.getString(R.string.password);
                         break;
                     case 4:
-                        right = right + mContext.getString(R.string.fingerprint);
+                        left = left + mContext.getString(R.string.fingerprint);
                         break;
                     case 3:
-                        right = right + mContext.getString(R.string.card);
+                        left = left + mContext.getString(R.string.card);
                         break;
                     default:
-                        right = mContext.getString(R.string.unknown_open);
+                        left = mContext.getString(R.string.unknown_open);
                         break;
                 }
                 break;
             case 5: //修改管理员密码
-                right = mContext.getString(R.string.wifi_lock_modify_admin_password);
+                left = mContext.getString(R.string.wifi_lock_modify_admin_password);
                 break;
             case 6: //自动模式
-                right = mContext.getString(R.string.wifi_lock_auto_model);
+                left = mContext.getString(R.string.wifi_lock_auto_model);
                 break;
             case 7: //手动模式
-                right = mContext.getString(R.string.wifi_lock_hand_model);
+                left = mContext.getString(R.string.wifi_lock_hand_model);
                 break;
             case 8: //安全模式切换
-                right = mContext.getString(R.string.wifi_lock_safe_model);
+                left = mContext.getString(R.string.wifi_lock_safe_model);
                 break;
             case 9: //常用模式切换
-                right = mContext.getString(R.string.wifi_lock_commen_model);
+                left = mContext.getString(R.string.wifi_lock_commen_model);
                 break;
             case 10: //反锁模式
-                right = mContext.getString(R.string.wifi_lock_bacl_lock_model);
+                left = mContext.getString(R.string.wifi_lock_bacl_lock_model);
                 break;
             case 11: //布防模式
-                right = mContext.getString(R.string.wifi_lock_bufang_model);
+                left = mContext.getString(R.string.wifi_lock_bufang_model);
                 break;
             // 12修改密码昵称
             case 12:
+                left = record.getUserNickname();
                 right = mContext.getString(R.string.modify) + sNum;
                 switch (pwdType) {
                     //	密码类型：0密码 3卡片 4指纹 8APP用户 9机械钥匙
@@ -171,13 +175,15 @@ public class WifiLockOperationItemRecordAdapter extends BaseQuickAdapter<WifiLoc
                 break;
             //13添加分享用户
             case 13:
+                left = record.getUserNickname();
                 shareUserNickname = record.getShareUserNickname();
                 right = mContext.getString(R.string.wifi_add) + (!TextUtils.isEmpty(shareUserNickname) ? shareUserNickname : record.getShareAccount()) + mContext.getString(R.string.wifi_add2);
                 break;
             //14删除分享用户
             case 14:
+                left = record.getUserNickname();
                 shareUserNickname = record.getShareUserNickname();
-                right = mContext.getString(R.string.wifi_delete) + (!TextUtils.isEmpty(shareUserNickname) ? shareUserNickname : record.getShareAccount()) + mContext.getString(R.string.wifi_delete2);
+                right = mContext.getString(R.string.wifi_delete) + (!TextUtils.isEmpty(shareUserNickname) ? shareUserNickname : record.getShareAccount()) + mContext.getString(R.string.wifi_add2);
                 break;
             default:
                 right = mContext.getString(R.string.unknown_open);
@@ -185,7 +191,14 @@ public class WifiLockOperationItemRecordAdapter extends BaseQuickAdapter<WifiLoc
         }
         // 机械开锁/APP开锁/自动开锁/密码开锁/门卡开锁/指纹开锁
         tvContent.setText(left);
-        tvRight.setText(right);
+        if (TextUtils.isEmpty(right)){
+            tvRight.setVisibility(View.GONE);
+            tvRight.setText(right+"");
+        }else {
+            tvRight.setVisibility(View.VISIBLE);
+            tvRight.setText(right+"");
+        }
+
     }
 
 

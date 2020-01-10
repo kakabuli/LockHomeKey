@@ -1310,10 +1310,10 @@
     <string name="share_success">分享成功</string>
     <string name="checked_off_line">您的门锁于检测已离线</string>
     <string name="wifi_lock_alarm_lock_5min">您的门锁错误验证多次，门锁系统锁定100秒</string>
-    <string name="wifi_lock_alarm_hijack">您的家人使用劫持密码开门，请联系或报警</string>
+    <string name="wifi_lock_alarm_hijack">有人使用劫持密码开启门锁，赶紧联系或报警</string>
     <string name="wifi_lock_alarm_many_failed">您的智能锁已多次验证开门失败，请回家或联系保安查看</string>
     <string name="wifi_lock_alarm_lock_broken">已监测到您的门锁被撬，请联系家人或小区保安</string>
-    <string name="wifi_lock_alarm_opens">您的智能锁正在被机械锁开启，请回家或联系保安查看</string>
+    <string name="wifi_lock_alarm_opens">门锁正在被机械钥匙开启，请回家或联系保安查看   拷贝 2</string>
     <string name="wifi_lock_alarm_low_power">您的智能锁电量已低于15%,请及时更换</string>
     <string name="wifi_lock_alarm_problem">您的门锁有故障，请注意</string>
     <string name="wifi_lock_alarm_safe">您的门锁处于布防状态，有从门内开锁情况</string>
@@ -1348,10 +1348,10 @@
     <string name="lock_delete">门锁删除</string>
     <string name="lock_add">门锁添加</string>
     <string name="wifi_lock_modify_admin_password">门锁修改管理员密码</string>
-    <string name="wifi_lock_auto_model">门锁切换自动模式</string>
-    <string name="wifi_lock_hand_model">门锁切换手动模式</string>
-    <string name="wifi_lock_safe_model">门锁切换安全模式</string>
-    <string name="wifi_lock_commen_model">门锁切换常用模式</string>
+    <string name="wifi_lock_auto_model">门锁启动自动模式</string>
+    <string name="wifi_lock_hand_model">门锁启动手动模式</string>
+    <string name="wifi_lock_safe_model">门锁启动安全模式</string>
+    <string name="wifi_lock_commen_model">门锁启动常用模式</string>
     <string name="wifi_lock_bacl_lock_model">门锁启动反锁模式</string>
     <string name="wifi_lock_bufang_model">门锁启动布防模式</string>
     <string name="is_syncing">正在同步......</string>
@@ -1368,12 +1368,12 @@
     <string name="ap_set_up">AP配网</string>
     <string name="smartconfig">SmartLink</string>
     <string name="not_enable_click">不可点击</string>
-    <string name="modify">修改</string>
-    <string name="nick_for">昵称为</string>
+    <string name="modify">更改</string>
+    <string name="nick_for">为</string>
     <string name="wifi_delete">删除</string>
     <string name="wifi_delete2">门锁授权使用</string>
-    <string name="wifi_add">添加</string>
-    <string name="wifi_add2">为门锁授权使用</string>
+    <string name="wifi_add">授权</string>
+    <string name="wifi_add2">使用门锁</string>
     <string name="lan_bo_ji_ni">兰博基尼传奇</string>
     <string name="connect_lock_failed">连接锁设备失败</string>
     <string name="read_data_failed">读取数据失败</string>
@@ -1381,7 +1381,9 @@
     <string name="add_failed_net_expcetion">添加设备失败，网络异常</string>
     <string name="no_scan_wifi">没有搜索到可用WiFi</string>
     <string name="bidn_success2">绑定成功！</string>
-    <string name="admin_password">管理员密码</string>
-    <string name="gust_password">访客密码</string>
+    <string name="admin_password">管理员密码开锁</string>
+    <string name="gust_password">访客密码开锁</string>
     <string name="device_detail">设备详情</string>
+    <string name="number">编号</string>
+    <string name="all">全部</string>
 </resources>
