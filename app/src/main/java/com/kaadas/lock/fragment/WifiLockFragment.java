@@ -75,7 +75,7 @@ public class WifiLockFragment extends BaseFragment<IWifiLockView, WifiLockPresen
     TextView tvOpenLockTimes;
 
     private WifiLockInfo wifiLockInfo;
-
+    private boolean isOpening = false;
     private List<WifiLockOperationRecordGroup> showDatas = new ArrayList<>();
     private WifiLockOperationGroupRecordAdapter operationGroupRecordAdapter;
     private Handler handler = new Handler();
@@ -126,21 +126,23 @@ public class WifiLockFragment extends BaseFragment<IWifiLockView, WifiLockPresen
         int count = (int) SPUtils.get(KeyConstants.WIFI_LOCK_OPEN_COUNT + wifiLockInfo.getWifiSN(), 0);
         tvOpenLockTimes.setText("" + count);
 
-        int safeMode = wifiLockInfo.getSafeMode();  //安全模式
-        int operatingMode = wifiLockInfo.getOperatingMode(); //反锁模式
-        int defences = wifiLockInfo.getDefences();  //布防模式
+        if (!isOpening){
+            int safeMode = wifiLockInfo.getSafeMode();  //安全模式
+            int operatingMode = wifiLockInfo.getOperatingMode(); //反锁模式
+            int defences = wifiLockInfo.getDefences();  //布防模式
 
-        changeLockStatus(5);
-        if (safeMode == 1) {//安全模式
-            changeLockStatus(6);
-        }
-        if (operatingMode == 1) {//反锁模式
-            changeLockStatus(3);
-        }
-        if (defences == 1) {//布防模式
-            changeLockStatus(2);
-        }
+            changeLockStatus(5);
 
+            if (safeMode == 1) {//安全模式
+                changeLockStatus(6);
+            }
+            if (operatingMode == 1) {//反锁模式
+                changeLockStatus(3);
+            }
+            if (defences == 1) {//布防模式
+                changeLockStatus(2);
+            }
+        }
         long createTime2 = wifiLockInfo.getCreateTime();
 
         if (createTime2 == 0) {
@@ -343,9 +345,10 @@ public class WifiLockFragment extends BaseFragment<IWifiLockView, WifiLockPresen
         if (!TextUtils.isEmpty(wifiSn) && wifiLockInfo != null && wifiSn.equals(wifiLockInfo.getWifiSN())) {
             if (eventparams.getEventType() == 0x01) { //操作类
                 if (eventparams.getEventCode() == 0x01) {  //上锁
-                    changeLockStatus(5);
                     handler.removeCallbacks(initRunnable);
+                    handler.post(initRunnable);
                 } else if (eventparams.getEventCode() == 0x02) { //开锁
+                    isOpening = true;
                     mPresenter.getOpenCount(wifiLockInfo.getWifiSN());
                     changeLockStatus(4);
                     handler.removeCallbacks(initRunnable);
@@ -364,6 +367,7 @@ public class WifiLockFragment extends BaseFragment<IWifiLockView, WifiLockPresen
     private Runnable initRunnable = new Runnable() {
         @Override
         public void run() {
+            isOpening = false;
             initData();
         }
     };

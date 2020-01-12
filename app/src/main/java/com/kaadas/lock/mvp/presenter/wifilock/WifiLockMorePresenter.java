@@ -9,6 +9,8 @@ import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
 import com.kaadas.lock.publiclibrary.http.XiaokaiNewServiceImp;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.util.BaseObserver;
+import com.kaadas.lock.utils.KeyConstants;
+import com.kaadas.lock.utils.SPUtils;
 
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
@@ -63,6 +65,11 @@ public class WifiLockMorePresenter<T> extends BasePresenter<IWifiLockMoreView> {
                     @Override
                     public void onSuccess(BaseResult baseResult) {
                         MyApplication.getInstance().getAllDevicesByMqtt(true);
+                        SPUtils.remove(KeyConstants.WIFI_LOCK_ALARM_RECORD + wifiSn);
+                        SPUtils.remove(KeyConstants.WIFI_LOCK_OPERATION_RECORD + wifiSn);
+                        SPUtils.remove(KeyConstants.WIFI_LOCK_OPEN_COUNT + wifiSn);
+                        SPUtils.remove(KeyConstants.WIFI_LOCK_SHARE_USER_LIST + wifiSn);
+                        SPUtils.remove(KeyConstants.WIFI_LOCK_PASSWORD_LIST + wifiSn);
                         if (isSafe()) {
                             mViewRef.get().onDeleteDeviceSuccess();
                         }

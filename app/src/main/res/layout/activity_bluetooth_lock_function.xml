@@ -71,9 +71,6 @@
 
         </LinearLayout>
 
-
-
-
         <TextView
             android:layout_gravity="center_horizontal"
             android:id="@+id/tv_open_clock"

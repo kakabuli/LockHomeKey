@@ -1386,4 +1386,6 @@
     <string name="device_detail">设备详情</string>
     <string name="number">编号</string>
     <string name="all">全部</string>
+    <string name="offline_password_open">离线密码开锁</string>
+    <string name="unknow_operation">未知操作</string>
 </resources>

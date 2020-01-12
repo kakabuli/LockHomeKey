@@ -44,7 +44,8 @@
         android:background="@drawable/retangle_fff_4"
         android:orientation="vertical">
 
-        <RelativeLayout
+        <LinearLayout
+            android:gravity="center_vertical"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1">
@@ -59,6 +60,8 @@
                 android:textSize="@dimen/sp_15" />
 
             <TextView
+                android:layout_marginLeft="@dimen/dp_12"
+                android:layout_weight="1"
                 android:id="@+id/tv_name"
                 android:layout_width="@dimen/dp_100"
                 android:layout_height="wrap_content"
@@ -76,14 +79,16 @@
                 android:layout_centerVertical="true"
                 android:padding="@dimen/dp_14"
                 android:src="@mipmap/bluetooth_user_detail_edit_icon" />
-        </RelativeLayout>
+        </LinearLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_1"
             android:background="#EAE9E9"></View>
 
-        <RelativeLayout
+        <LinearLayout
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1">
@@ -98,13 +103,17 @@
                 android:textSize="@dimen/sp_15" />
 
             <TextView
+                android:layout_weight="1"
+                android:layout_marginRight="@dimen/dp_12"
+                android:layout_marginLeft="@dimen/dp_12"
                 android:id="@+id/tv_time"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
+                android:ellipsize="end"
+                android:singleLine="true"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
                 android:textColor="#999999"
                 android:textSize="@dimen/sp_15" />
-        </RelativeLayout>
+        </LinearLayout>
     </LinearLayout>
 
 

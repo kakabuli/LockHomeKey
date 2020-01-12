@@ -352,8 +352,6 @@ public class BleLockUtils {
         LogUtils.e("获取到的  功能集是3否包含卡片      " + integers.contains(9));
         if (integers.contains(7)) {
             functionBeans.add(new BluetoothLockFunctionBean(MyApplication.getInstance().getString(R.string.password), R.mipmap.bluetooth_password, TYPE_PASSWORD));
-            functionBeans.add(new BluetoothLockFunctionBean(MyApplication.getInstance().getString(R.string.fingerprint), R.mipmap.bluetooth_fingerprint, TYPE_FINGER));
-
         }
         if (integers.contains(8)) {
             functionBeans.add(new BluetoothLockFunctionBean(MyApplication.getInstance().getString(R.string.fingerprint), R.mipmap.bluetooth_fingerprint, TYPE_FINGER));

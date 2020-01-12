@@ -11,6 +11,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
@@ -41,6 +42,7 @@ public abstract class BaseActivity<T extends IBaseView, V
         mPresenter = createPresent();
         mPresenter.attachView((T) this);
         MyApplication.getInstance().addActivity(this);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
     }
 
 
@@ -50,7 +52,6 @@ public abstract class BaseActivity<T extends IBaseView, V
         unbinder = ButterKnife.bind(this);
 
     }
-
 
     @Override
     protected void onDestroy() {
@@ -69,8 +70,6 @@ public abstract class BaseActivity<T extends IBaseView, V
      * @return
      */
     protected abstract V createPresent();
-
-
 
     @Override
     public void showLoading(String Content) {

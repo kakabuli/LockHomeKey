@@ -315,7 +315,7 @@ public class WifiLockApPresenter<T> extends BasePresenter<IWifiLockApView> {
                                         bindDevice(wifiSN, wifiSN, MyApplication.getInstance().getUid(), randomCode, wifiName, func);
                                     }
                                 }
-                            }, 1000);
+                            }, 10 * 1000);
 
                             toDisposable(checkNetDisposable);
                         }

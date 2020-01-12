@@ -69,6 +69,16 @@ public class Test {
 
 
 //        getPassword();
+        String text = "1234";
+        int offSet = (6 - text.length());
+        for (int i = 0; i < offSet; i++) {
+            text = "0" + text;
+        }
+
+
+        System.out.println("，密码是   " + text);
+
+
         createPassword();
     }
 

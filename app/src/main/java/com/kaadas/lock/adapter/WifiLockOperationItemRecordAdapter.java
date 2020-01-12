@@ -64,7 +64,7 @@ public class WifiLockOperationItemRecordAdapter extends BaseQuickAdapter<WifiLoc
                     case 0:
                         right = mContext.getString(R.string.password_open);
                         if (record.getPwdNum() == 252) {
-                            left = "离线密码开锁";
+                            left = mContext.getString(R.string.offline_password_open);
                             right = "";
                         }else if (record.getPwdNum() == 254){
                             left = mContext.getString(R.string.admin_password);
@@ -186,7 +186,7 @@ public class WifiLockOperationItemRecordAdapter extends BaseQuickAdapter<WifiLoc
                 right = mContext.getString(R.string.wifi_delete) + (!TextUtils.isEmpty(shareUserNickname) ? shareUserNickname : record.getShareAccount()) + mContext.getString(R.string.wifi_add2);
                 break;
             default:
-                right = mContext.getString(R.string.unknown_open);
+                left = mContext.getString(R.string.unknow_operation);
                 break;
         }
         // 机械开锁/APP开锁/自动开锁/密码开锁/门卡开锁/指纹开锁
