@@ -1,13 +1,19 @@
 package com.kaadas.lock.activity.device.wifilock.password;
 
 import com.kaadas.lock.MyApplication;
+import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
+import com.kaadas.lock.publiclibrary.http.util.RxjavaHelper;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.Rsa;
 
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.concurrent.TimeUnit;
 import java.util.zip.CRC32;
+
+import io.reactivex.Observable;
+import io.reactivex.functions.Consumer;
 
 public class Test {
 
@@ -80,6 +86,18 @@ public class Test {
 
 
         createPassword();
+
+
+        Observable.interval(3, 3, TimeUnit.SECONDS)//设置0延迟，每隔一秒发送一条数据
+                .take(5)//设置截取前20次
+                .subscribe(new Consumer<Long>() {
+                    @Override
+                    public void accept(Long aLong) throws Exception {
+                        System.out.println("数据是   " + aLong);
+
+                    }
+                });
+
     }
 
     public static void compCrc() {

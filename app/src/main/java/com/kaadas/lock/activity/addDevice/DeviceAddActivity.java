@@ -143,7 +143,8 @@ public class DeviceAddActivity extends BaseActivity<DeviceZigBeeDetailView, Devi
                 wifiLockZigbee.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        startActivity(new Intent(DeviceAddActivity.this,WifiLockAddFirstActivity.class));
+                        Intent intent = new Intent(DeviceAddActivity.this, WifiLockAddFirstActivity.class);
+                        startActivity(intent);
                     }
                 });
 

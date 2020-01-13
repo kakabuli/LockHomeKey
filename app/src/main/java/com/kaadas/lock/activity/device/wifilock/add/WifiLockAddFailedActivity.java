@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.MainActivity;
+import com.kaadas.lock.utils.KeyConstants;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -30,12 +31,16 @@ public class WifiLockAddFailedActivity extends AppCompatActivity {
     TextView btSkip;
     @BindView(R.id.tv_support_list)
     EditText tvSupportList;
+    @BindView(R.id.help)
+    ImageView help;
+    private boolean isAp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_wifi_lock_failed);
         ButterKnife.bind(this);
+        isAp = getIntent().getBooleanExtra(KeyConstants.WIFI_LOCK_SETUP_IS_AP, true);
         toLookSupportRoute.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -44,11 +49,17 @@ public class WifiLockAddFailedActivity extends AppCompatActivity {
         });
     }
 
-    @OnClick({R.id.back, R.id.to_look_support_route, R.id.bt_repair, R.id.bt_skip,R.id.tv_support_list})
+    @OnClick({R.id.back, R.id.to_look_support_route, R.id.bt_repair, R.id.bt_skip, R.id.tv_support_list,R.id.help})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.back:
-                startActivity(new Intent(WifiLockAddFailedActivity.this, WifiSetUpActivity.class));
+                if (isAp){
+                    Intent intent = new Intent(WifiLockAddFailedActivity.this, WifiLockNoticeUserLinkWifiFirstActivity.class);
+                    startActivity(intent);
+                }else {
+                    Intent intent = new Intent(WifiLockAddFailedActivity.this, WifiSetUpActivity.class);
+                    startActivity(intent);
+                }
                 finish();
                 break;
             case R.id.to_look_support_route:
@@ -56,7 +67,13 @@ public class WifiLockAddFailedActivity extends AppCompatActivity {
                 startActivity(new Intent(WifiLockAddFailedActivity.this, WifiLcokSupportWifiActivity.class));
                 break;
             case R.id.bt_repair:
-                finish();
+                if (isAp){
+                    Intent intent = new Intent(WifiLockAddFailedActivity.this, WifiLockNoticeUserLinkWifiFirstActivity.class);
+                    startActivity(intent);
+                }else {
+                    Intent intent = new Intent(WifiLockAddFailedActivity.this, WifiSetUpActivity.class);
+                    startActivity(intent);
+                }
                 break;
             case R.id.bt_skip:
                 startActivity(new Intent(WifiLockAddFailedActivity.this, MainActivity.class));
@@ -65,8 +82,13 @@ public class WifiLockAddFailedActivity extends AppCompatActivity {
             case R.id.tv_support_list:
                 //跳转查看支持WiFi列表
                 startActivity(new Intent(WifiLockAddFailedActivity.this, WifiLcokSupportWifiActivity.class));
-            break;
+                break;
+            case R.id.help:
+                //跳转查看支持WiFi列表
+                startActivity(new Intent(WifiLockAddFailedActivity.this, WifiLockHelpActivity.class));
+                break;
         }
     }
+
 
 }

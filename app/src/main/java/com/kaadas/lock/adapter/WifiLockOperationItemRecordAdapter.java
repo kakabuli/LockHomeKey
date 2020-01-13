@@ -185,6 +185,12 @@ public class WifiLockOperationItemRecordAdapter extends BaseQuickAdapter<WifiLoc
                 shareUserNickname = record.getShareUserNickname();
                 right = mContext.getString(R.string.wifi_delete) + (!TextUtils.isEmpty(shareUserNickname) ? shareUserNickname : record.getShareAccount()) + mContext.getString(R.string.wifi_add2);
                 break;
+            case 15: //15修改管理指纹
+                left = mContext.getString(R.string.lock_modify_admin_finger);
+                break;
+            case 16: //   16添加管理员指纹
+                left = mContext.getString(R.string.lock_add_admin_finger);
+                break;
             default:
                 left = mContext.getString(R.string.unknow_operation);
                 break;

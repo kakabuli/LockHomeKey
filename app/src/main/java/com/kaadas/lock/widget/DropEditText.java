@@ -41,8 +41,8 @@ public class DropEditText extends AppCompatEditText implements AdapterView.OnIte
 
     private void init(Context context) {
         mPopListView = new ListView(context);
-        mDropDrawableResId = R.mipmap.add_wifi_lock_right; // 设置下拉图标
-        mRiseDrawableResID = R.mipmap.add_wifi_lock_right2; // 设置上拉图标
+        mDropDrawableResId = R.mipmap.wifi_ssid_right_delete; // 设置下拉图标
+        mRiseDrawableResID = R.mipmap.wifi_ssid_right_delete; // 设置上拉图标
         showDropDrawable(); // 默认显示下拉图标
         mPopListView.setOnItemClickListener(this);
     }
@@ -61,10 +61,11 @@ public class DropEditText extends AppCompatEditText implements AdapterView.OnIte
                 int start = getWidth() - getTotalPaddingRight() + getPaddingRight(); // 起始位置
                 int end = getWidth(); // 结束位置
                 boolean available = (event.getX() > start) && (event.getX() < end);
-                  available = true;
                 if (available) {
-                    closeSoftInput();
-                    showPopWindow();
+                    setText("");
+                    setSelection(0);
+//                    closeSoftInput();
+//                    showPopWindow();
                     if (onOpenPopWindowListener !=null ){
                         onOpenPopWindowListener.onOpenPopWindowListener(this);
                     }

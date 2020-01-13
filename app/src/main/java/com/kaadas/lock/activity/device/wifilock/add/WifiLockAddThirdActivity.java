@@ -1,22 +1,27 @@
 package com.kaadas.lock.activity.device.wifilock.add;
 
+import android.Manifest;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
+import com.kaadas.lock.utils.GpsUtil;
 import com.kaadas.lock.utils.KeyConstants;
+import com.kaadas.lock.utils.WifiUtils;
+import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.reactivex.disposables.Disposable;
 
 public class WifiLockAddThirdActivity extends AppCompatActivity {
 
@@ -26,13 +31,46 @@ public class WifiLockAddThirdActivity extends AppCompatActivity {
     ImageView help;
     @BindView(R.id.tv_notice)
     TextView tvNotice;
-
+    final RxPermissions rxPermissions = new RxPermissions(this);
+    @BindView(R.id.head)
+    TextView head;
+    @BindView(R.id.bt_ap)
+    Button btAp;
+    @BindView(R.id.bt_smart_config)
+    Button btSmartConfig;
+    private Disposable permissionDisposable;
+    private boolean isAp;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_device_wifi_lock_third);
         ButterKnife.bind(this);
+        isAp = getIntent().getBooleanExtra(KeyConstants.WIFI_LOCK_SETUP_IS_AP, true);
+        if (!isAp) {
+            head.setText(R.string.second_step);
+            tvNotice.setText(getString(R.string.fkjdksklaj));
+        }
+        //获取权限  定位权限
+        permissionDisposable = rxPermissions
+                .request(Manifest.permission.ACCESS_FINE_LOCATION)
+                .subscribe(granted -> {
+                    if (granted) {
+                    } else {
+                        Toast.makeText(this, getString(R.string.granted_local_please_open_wifi), Toast.LENGTH_SHORT).show();
+
+                    }
+                });
+        //打开wifi
+        WifiUtils wifiUtils = WifiUtils.getInstance(MyApplication.getInstance());
+        if (!wifiUtils.isWifiEnable()) {
+            wifiUtils.openWifi();
+            Toast.makeText(this, getString(R.string.wifi_no_open_please_open_wifi), Toast.LENGTH_SHORT).show();
+        }
+        if (!GpsUtil.isOPen(MyApplication.getInstance())) {
+            GpsUtil.openGPS(MyApplication.getInstance());
+            Toast.makeText(this, getString(R.string.locak_no_open_please_open_local), Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
@@ -40,7 +78,7 @@ public class WifiLockAddThirdActivity extends AppCompatActivity {
         super.onBackPressed();
     }
 
-    @OnClick({R.id.back, R.id.bt_ap, R.id.bt_smart_config})
+    @OnClick({R.id.back, R.id.bt_ap, R.id.bt_smart_config, R.id.help})
     public void onViewClicked(View view) {
         Intent intent;
         switch (view.getId()) {
@@ -48,15 +86,19 @@ public class WifiLockAddThirdActivity extends AppCompatActivity {
                 finish();
                 break;
             case R.id.bt_ap:
-                intent = new Intent(WifiLockAddThirdActivity.this, WifiLockInputAdminPasswordActivity.class);
-                intent.putExtra(KeyConstants.WIFI_LOCK_SETUP_IS_AP, true);
-                startActivity(intent);
+                if (isAp) {
+                    intent = new Intent(WifiLockAddThirdActivity.this, WifiLockNoticeUserLinkWifiFirstActivity.class);
+                    startActivity(intent);
+                } else {
+                    intent = new Intent(WifiLockAddThirdActivity.this, WifiSetUpActivity.class);
+                    intent.putExtra(KeyConstants.WIFI_LOCK_SETUP_IS_AP, false);
+                    startActivity(intent);
+                }
                 break;
-            case R.id.bt_smart_config:
-                intent = new Intent(WifiLockAddThirdActivity.this, WifiLockInputAdminPasswordActivity.class);
-                intent.putExtra(KeyConstants.WIFI_LOCK_SETUP_IS_AP, false);
-                startActivity(intent);
+            case R.id.help:
+                startActivity(new Intent(this, WifiLockHelpActivity.class));
                 break;
+
         }
     }
 }

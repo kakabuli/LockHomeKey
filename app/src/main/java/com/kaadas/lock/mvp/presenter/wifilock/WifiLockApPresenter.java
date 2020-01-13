@@ -193,12 +193,6 @@ public class WifiLockApPresenter<T> extends BasePresenter<IWifiLockApView> {
                     String randomCode = Rsa.bytesToHexString(wifiResult.password);
                     LogUtils.e("设备返回的随机码是  16进制 " + Rsa.bytesToHexString(wifiResult.password));
                     LogUtils.e("设备返回的随机码是   长度是 " + randomCode.length() + "  字符串  " + randomCode);
-                    WifiLockInfo wifiLockInfo = MyApplication.getInstance().getWifiLockInfoBySn(wifiSn);
-//                    if (wifiLockInfo != null && wifiLockInfo.getIsAdmin() == 1) {
-//                        update(wifiSn, randomCode, wifiName, wifiResult.func);
-//                    } else {
-//                        bindDevice(wifiSn, wifiSn, MyApplication.getInstance().getUid(), randomCode, wifiName, wifiResult.func);
-//                    }
                     if (isSafe()) {
                         handler.post(new Runnable() {
                             @Override

@@ -2,7 +2,6 @@ package com.kaadas.lock.activity.device.wifilock.add;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -12,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.kaadas.lock.R;
+import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.StringUtil;
 import com.kaadas.lock.utils.ToastUtil;
@@ -20,7 +20,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class WifiLockInputAdminPasswordActivity extends AppCompatActivity {
+public class WifiLockApInputAdminPasswordActivity extends BaseAddToApplicationActivity {
 
 
     @BindView(R.id.back)
@@ -31,14 +31,13 @@ public class WifiLockInputAdminPasswordActivity extends AppCompatActivity {
     EditText etAdminPassword;
     @BindView(R.id.tv_next)
     TextView tvNext;
-    private String wifiBssid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wifi_lock_ap_input_admin_password);
         ButterKnife.bind(this);
-        wifiBssid = getIntent().getStringExtra(KeyConstants.WIFI_LOCK_WIFI_SSID);
+
         etAdminPassword.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -77,16 +76,14 @@ public class WifiLockInputAdminPasswordActivity extends AppCompatActivity {
                     ToastUtil.getInstance().showShort(R.string.random_verify_error);
                     return;
                 }
-                Intent intent = new Intent(WifiLockInputAdminPasswordActivity.this, WifiLockCheckAdminPasswordActivity.class);
+                Intent intent = new Intent(WifiLockApInputAdminPasswordActivity.this, WifiLockApCheckAdminPasswordActivity.class);
                 intent.putExtra(KeyConstants.WIFI_LOCK_ADMIN_PASSWORD, adminPassword);
-                intent.putExtra(KeyConstants.WIFI_LOCK_WIFI_SSID, wifiBssid);
                 startActivity(intent);
                 break;
-        }
-    }
+            case R.id.help:
 
-    @OnClick(R.id.help)
-    public void onClick() {
-        startActivity(new Intent(this,WifiLockHelpActivity.class));
+                startActivity(new Intent(this, WifiLockHelpActivity.class));
+                break;
+        }
     }
 }

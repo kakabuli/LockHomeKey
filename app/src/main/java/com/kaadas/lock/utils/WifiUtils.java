@@ -88,6 +88,15 @@ public class WifiUtils {
         wifiManager.enableNetwork(netId, true);
     }
 
+
+    /**
+     * 关闭当前wifi
+     */
+    public void disableWiFi( ){
+        LogUtils.e("连接wifi   " );
+        wifiManager.disableNetwork(wifiManager.getConnectionInfo().getNetworkId());
+    }
+
     /**
      * 无密码连接
      * @param ssid

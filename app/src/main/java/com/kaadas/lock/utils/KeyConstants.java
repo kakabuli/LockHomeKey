@@ -475,6 +475,14 @@ public class KeyConstants {
     public static final String WIFI_LOCK_HOME_SSID = "wifiLockHomeSsid"; //WiFi锁配网方式是否是Ap
     public static final String WIFI_LOCK_NEW_NAME = "wifiLockNewName"; //WiFi锁配网方式是否是Ap
 
+    public static final String WIFI_LOCK_RANDOM_CODE = "wifiLockRandomCode"; //获取的随机码
+    public static final String WIFI_LOCK_FUNC = "wifiLockFunc"; //wifi锁功能集
+
+    public static final String WIFI_LOCK_WIFI_SSID = "wifiLockWifiSsid";
+    public static final String WIFI_LOCK_WIFI_BSSID = "wifiLockWifiBSsid";
+    public static final String WIFI_LOCK_WIFI_PASSWORD = "wifiLockWifiPassword";
+
+
 
 }
 

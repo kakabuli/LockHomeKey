@@ -2,6 +2,7 @@ package com.kaadas.lock.activity;
 
 
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -9,7 +10,10 @@ import android.content.pm.ActivityInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.location.LocationManager;
 import android.net.Uri;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -26,12 +30,15 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import com.espressif.iot.esptouch.util.ByteUtil;
+import com.espressif.iot.esptouch.util.TouchNetUtil;
 import com.google.gson.Gson;
 import com.huawei.android.hms.agent.HMSAgent;
 import com.huawei.android.hms.agent.push.handler.GetTokenHandler;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.cateye.VideoVActivity;
+import com.kaadas.lock.activity.device.wifilock.add.WifiSetUpActivity;
 import com.kaadas.lock.bean.UpgradeBean;
 import com.kaadas.lock.fragment.DeviceFragment;
 import com.kaadas.lock.fragment.HomePageFragment;
@@ -231,7 +238,9 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
                 Log.e(GeTui.VideoLog, "update.....fail.......失败");
             }
         });
-
+        IntentFilter filter = new IntentFilter(WifiManager.NETWORK_STATE_CHANGED_ACTION);
+        filter.addAction(LocationManager.PROVIDERS_CHANGED_ACTION);
+        registerReceiver(mReceiver, filter);
     }
 
     private static List<String> packages;
@@ -289,6 +298,42 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
     protected MainActivityPresenter<IMainActivityView> createPresent() {
         return new MainActivityPresenter<>(this);
     }
+
+    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (action == null) {
+                return;
+            }
+            WifiManager wifiManager = (WifiManager) context.getApplicationContext()
+                    .getSystemService(WIFI_SERVICE);
+            assert wifiManager != null;
+
+            switch (action) {
+                case WifiManager.NETWORK_STATE_CHANGED_ACTION:
+                case LocationManager.PROVIDERS_CHANGED_ACTION:
+                    onWifiChanged(wifiManager.getConnectionInfo());
+                    break;
+            }
+        }
+    };
+
+    private void onWifiChanged(WifiInfo info) {
+        boolean disconnected = info == null
+                || info.getNetworkId() == -1
+                || "<unknown ssid>".equals(info.getSSID());
+        if (disconnected) {
+            LogUtils.e("切换wifi  断开连接"  );
+        } else {
+            String ssid = info.getSSID();
+            if (ssid.startsWith("\"") && ssid.endsWith("\"")) {
+                ssid = ssid.substring(1, ssid.length() - 1);
+            }
+           LogUtils.e("切换wifi  ssid "  +ssid);
+        }
+    }
+
 
     @Override
     public void onNetEventToken(String token) {

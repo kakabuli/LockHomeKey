@@ -22,8 +22,8 @@ android {
         applicationId "com.kaadas.lock"
         minSdkVersion 22
         targetSdkVersion 26
-        versionCode 202001100
-        versionName "3.6.4"
+        versionCode 202001140
+        versionName "3.6.5"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         flavorDimensions "versionCode"
         multiDexEnabled true
@@ -206,4 +206,5 @@ dependencies {
     implementation 'com.jakewharton:butterknife-compiler:8.4.0'
     implementation files('libs/esptouch.aar')
     implementation files('libs/GetuiSDK-support-VIVO-1.0.3.jar')
+    implementation 'com.github.tbruyelle:rxpermissions:0.10.2'
 }

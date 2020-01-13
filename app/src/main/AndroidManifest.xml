@@ -800,7 +800,6 @@
         <activity android:name=".activity.device.wifilock.add.WifiLockAddSuccessActivity" />
         <activity android:name=".publiclibrary.ota.face.FaceOtaActivity" />
         <activity android:name=".activity.device.gatewaylock.password.test.PasswordTestActivity" />
-        <activity android:name=".activity.wifilock.configure.EsptouchDemoActivity"></activity>
 
         <!-- VIVO辅助 SDK -->
         <meta-data
@@ -833,28 +832,127 @@
         </receiver>
         <!-- VIVO辅助 SDK -->
 
-        <activity android:name=".activity.device.wifilock.add.WifiSetUpActivity" />
-        <activity android:name=".activity.device.wifilock.add.WifiLockAddFirstActivity" />
-        <activity android:name=".activity.device.wifilock.add.WifiLockAddSecondActivity" />
-        <activity android:name=".activity.device.wifilock.add.WifiLockAddThirdActivity" />
-        <activity android:name=".activity.device.wifilock.add.WifiLcokSupportWifiActivity" />
-        <activity android:name=".activity.device.wifilock.WiFiLockDetailActivity" />
-        <activity android:name=".activity.device.wifilock.add.WifiLockAddFailedActivity" />
-        <activity android:name=".activity.device.wifilock.add.WifiLockInputAdminPasswordActivity" />
-        <activity android:name=".activity.device.wifilock.password.AddWifiLockTempPasswordSecondActivity" />
-        <activity android:name=".activity.device.wifilock.password.WifiLockPasswordShareActivity" />
-        <activity android:name=".activity.device.wifilock.password.WiFiLockPasswordManagerActivity" />
-        <activity android:name=".activity.device.wifilock.password.WifiLockPasswordDetailActivity" />
-        <activity android:name=".activity.device.wifilock.family.WifiLockFamilyManagerActivity" />
-        <activity android:name=".activity.device.wifilock.family.WiFiLockAddShareUserActivity" />
-        <activity android:name=".activity.device.wifilock.family.WiFiLockShareUserDetailActivity" />
-        <activity android:name=".activity.device.wifilock.WifiLockRecordActivity" />
-        <activity android:name=".activity.device.wifilock.WifiLockMoreActivity" />
-        <activity android:name=".activity.device.wifilock.WifiLockDeviceInfoActivity" />
-        <activity android:name=".activity.device.wifilock.WifiLockSafeModelActivity" />
-        <activity android:name=".activity.device.wifilock.WifiLockAuthActivity" />
-        <activity android:name=".activity.device.wifilock.add.WifiLockApSetUpActivity" />
-        <activity android:name=".activity.device.singlebutton.SingleButtonDetailActivity"></activity>
+        <activity
+            android:name=".activity.device.wifilock.add.WifiSetUpActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.wifilock.add.WifiLockAddFirstActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.wifilock.add.WifiLockAddSecondActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.wifilock.add.WifiLockAddThirdActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.wifilock.add.WifiLcokSupportWifiActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.wifilock.WiFiLockDetailActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.wifilock.add.WifiLockAddFailedActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.wifilock.add.WifiLockInputAdminPasswordActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.wifilock.password.AddWifiLockTempPasswordSecondActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.wifilock.password.WifiLockPasswordShareActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.wifilock.password.WiFiLockPasswordManagerActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.wifilock.password.WifiLockPasswordDetailActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.wifilock.family.WifiLockFamilyManagerActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.wifilock.family.WiFiLockAddShareUserActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.wifilock.family.WiFiLockShareUserDetailActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.wifilock.WifiLockRecordActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.wifilock.WifiLockMoreActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.wifilock.WifiLockDeviceInfoActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.wifilock.WifiLockSafeModelActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.wifilock.WifiLockAuthActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.wifilock.add.WifiLockApSetUpActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.singlebutton.SingleButtonDetailActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.wifilock.add.WifiLockNoticeUserLinkWifiFirstActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.wifilock.add.WifiLockHelpActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.wifilock.add.WifiLockApInputAdminPasswordActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.wifilock.add.WifiLockApCheckAdminPasswordActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.wifilock.add.WifiLockApWifiSetUpActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.wifilock.add.WifiLockSmartConfigActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.wifilock.add.WifiLockCheckAdminPasswordActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".activity.device.wifilock.add.WifiLockApConnectDeviceActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>
