@@ -48,6 +48,7 @@ public class WifiLockAddSecondActivity extends BaseAddToApplicationActivity {
         isAp = getIntent().getBooleanExtra(KeyConstants.WIFI_LOCK_SETUP_IS_AP, true);
         if (!isAp) {
             head.setText(R.string.first_step);
+
             notice.setText(getString(R.string.noticesdkjfh));
         }
         //获取权限  定位权限

@@ -482,6 +482,8 @@ public class KeyConstants {
     public static final String WIFI_LOCK_WIFI_BSSID = "wifiLockWifiBSsid";
     public static final String WIFI_LOCK_WIFI_PASSWORD = "wifiLockWifiPassword";
 
+    public static final String WIFI_LOCK_CONNECT_NAME = "wifiLockConnectName";
+
 
 
 }

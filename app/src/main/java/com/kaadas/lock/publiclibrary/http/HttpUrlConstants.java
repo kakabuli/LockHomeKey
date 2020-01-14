@@ -374,4 +374,11 @@ public class HttpUrlConstants {
      */
     public static final String WIFI_LOCK_UPDATE_INFO = BASE_URL + "wifi/device/infoUpdate";
 
+
+    /**
+     * 获取开锁次数
+     */
+    public static final String WIFI_LOCK_UPLOAD_OTA = BASE_URL + "wifi/device/ota";
+
+
 }

@@ -1,44 +1,23 @@
 package com.kaadas.lock.mvp.presenter.wifilock;
 
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.os.AsyncTask;
-import android.util.Log;
-import android.widget.Toast;
-
-import com.espressif.iot.esptouch.EsptouchTask;
-import com.espressif.iot.esptouch.IEsptouchResult;
-import com.espressif.iot.esptouch.IEsptouchTask;
 import com.kaadas.lock.MyApplication;
-import com.kaadas.lock.R;
-import com.kaadas.lock.activity.device.wifilock.add.WifiSetUpActivity;
 import com.kaadas.lock.mvp.mvpbase.BasePresenter;
 import com.kaadas.lock.mvp.view.wifilock.IWifiSetUpView;
 import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
 import com.kaadas.lock.publiclibrary.http.XiaokaiNewServiceImp;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.util.BaseObserver;
-import com.kaadas.lock.utils.LoadingDialog;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.Rsa;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.lang.ref.WeakReference;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.security.Key;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.security.Security;
-import java.util.List;
 import java.util.zip.CRC32;
-
-import javax.crypto.Cipher;
-import javax.crypto.SecretKey;
-import javax.crypto.spec.SecretKeySpec;
 
 import io.reactivex.disposables.Disposable;
 
@@ -181,6 +160,7 @@ public class WifiSetUpPresenter<T> extends BasePresenter<IWifiSetUpView> {
                 .subscribe(new BaseObserver<BaseResult>() {
                     @Override
                     public void onSuccess(BaseResult baseResult) {
+                        MyApplication.getInstance().getAllDevicesByMqtt(true);
                         if (isSafe()) {
                             mViewRef.get().onBindSuccess(wifiSN);
                         }
@@ -213,6 +193,7 @@ public class WifiSetUpPresenter<T> extends BasePresenter<IWifiSetUpView> {
                 .subscribe(new BaseObserver<BaseResult>() {
                     @Override
                     public void onSuccess(BaseResult baseResult) {
+                        MyApplication.getInstance().getAllDevicesByMqtt(true);
                         if (isSafe()) {
                             mViewRef.get().onUpdateSuccess(wifiSN);
                         }

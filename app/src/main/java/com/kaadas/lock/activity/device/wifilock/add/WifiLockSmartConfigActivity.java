@@ -2,7 +2,6 @@ package com.kaadas.lock.activity.device.wifilock.add;
 
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.AsyncTask;
@@ -12,6 +11,7 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.espressif.iot.esptouch.EsptouchTask;
@@ -48,6 +48,8 @@ public class WifiLockSmartConfigActivity extends AppCompatActivity {
     ImageView ivAnim;
     @BindView(R.id.bind_success)
     CheckBox bindSuccess;
+    @BindView(R.id.ll_bind_success)
+    LinearLayout llBindSuccess;
 
     private EsptouchAsyncTask4 mTask;
     public String TAG = "WifiLockSmartConfigActivity";
@@ -71,7 +73,9 @@ public class WifiLockSmartConfigActivity extends AppCompatActivity {
         mTask = new EsptouchAsyncTask4(this, new ISetUpResult() {
             @Override
             public void onSetUpFailed() {
-                startActivity(new Intent(WifiLockSmartConfigActivity.this, WifiLockAddFailedActivity.class));
+                Intent intent = new Intent(WifiLockSmartConfigActivity.this, WifiLockAPAddFailedActivity.class);
+                intent.putExtra(KeyConstants.WIFI_LOCK_SETUP_IS_AP, false);
+                startActivity(intent);
                 ToastUtil.getInstance().showLong(R.string.wifi_model_set_up_failed);
             }
 
@@ -93,7 +97,7 @@ public class WifiLockSmartConfigActivity extends AppCompatActivity {
         byte[] broadcast = {1};
         mTask.execute(ssid, bssid, password, deviceCount, broadcast);
         //通过设置android:background时，得到AnimationDrawable 用如下方法
-
+        llBindSuccess.setVisibility(View.GONE);
     }
 
     @OnClick({R.id.back, R.id.help, R.id.cb_send_wifi_account_password, R.id.cb_success, R.id.tv_support_list})

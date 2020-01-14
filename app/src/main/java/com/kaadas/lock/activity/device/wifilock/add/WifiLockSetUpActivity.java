@@ -58,27 +58,28 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.reactivex.disposables.Disposable;
 
-public class WifiSetUpActivity extends BaseActivity<IWifiSetUpView, WifiSetUpPresenter<IWifiSetUpView>>
+public class WifiLockSetUpActivity extends BaseActivity<IWifiSetUpView, WifiSetUpPresenter<IWifiSetUpView>>
         implements View.OnClickListener, IWifiSetUpView {
-    private static final String TAG = WifiSetUpActivity.class.getSimpleName();
+    private static final String TAG = WifiLockSetUpActivity.class.getSimpleName();
 
     private static final int REQUEST_PERMISSION = 0x01;
     @BindView(R.id.back)
     ImageView back;
     @BindView(R.id.head_title)
     TextView headTitle;
+    @BindView(R.id.help)
+    ImageView help;
     @BindView(R.id.ap_ssid_text)
-    EditText apSsidText;
-    @BindView(R.id.iv_eye)
-    ImageView ivEye;
+    DropEditText apSsidText;
     @BindView(R.id.ap_password_edit)
     EditText apPasswordEdit;
+    @BindView(R.id.iv_eye)
+    ImageView ivEye;
     @BindView(R.id.confirm_btn)
     Button confirmBtn;
     @BindView(R.id.tv_support_list)
     TextView tvSupportList;
-    @BindView(R.id.help)
-    ImageView help;
+
 
     private DropEditText mApSsidTV;
     private EditText mApPasswordET;
@@ -120,7 +121,7 @@ public class WifiSetUpActivity extends BaseActivity<IWifiSetUpView, WifiSetUpPre
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_esptouch_demo);
+        setContentView(R.layout.activity_wifi_lock_ap_wifi_set_up);
         ButterKnife.bind(this);
         mApSsidTV = findViewById(R.id.ap_ssid_text);
         mApPasswordET = findViewById(R.id.ap_password_edit);
@@ -150,7 +151,8 @@ public class WifiSetUpActivity extends BaseActivity<IWifiSetUpView, WifiSetUpPre
         mApSsidTV.setOnOpenPopWindowListener(new DropEditText.OnOpenPopWindowListener() {
             @Override
             public void onOpenPopWindowListener(View view) {
-                parseWifiList(WifiUtils.getInstance(MyApplication.getInstance()).getWifiList());
+//                parseWifiList(WifiUtils.getInstance(MyApplication.getInstance()).getWifiList());
+
             }
         });
 
@@ -210,11 +212,9 @@ public class WifiSetUpActivity extends BaseActivity<IWifiSetUpView, WifiSetUpPre
     }
 
 
-
-
     private void registerBroadcastReceiver() {
         IntentFilter filter = new IntentFilter(WifiManager.NETWORK_STATE_CHANGED_ACTION);
-            filter.addAction(LocationManager.PROVIDERS_CHANGED_ACTION);
+        filter.addAction(LocationManager.PROVIDERS_CHANGED_ACTION);
         registerReceiver(mReceiver, filter);
         mReceiverRegistered = true;
     }
@@ -230,7 +230,7 @@ public class WifiSetUpActivity extends BaseActivity<IWifiSetUpView, WifiSetUpPre
             if (mTask != null) {
                 mTask.cancelEsptouch();
                 mTask = null;
-                new AlertDialog.Builder(WifiSetUpActivity.this)
+                new AlertDialog.Builder(WifiLockSetUpActivity.this)
                         .setMessage(R.string.configure_wifi_change_message)
                         .setNegativeButton(android.R.string.cancel, null)
                         .show();
@@ -271,10 +271,10 @@ public class WifiSetUpActivity extends BaseActivity<IWifiSetUpView, WifiSetUpPre
                 }
 
                 if (TextUtils.isEmpty(sPassword)) { //WiFi密码为空
-                    AlertDialogUtil.getInstance().noEditSingleButtonDialog(WifiSetUpActivity.this, "", getString(R.string.no_support_no_pwd_wifi), getString(R.string.ok_wifi_lock), null);
+                    AlertDialogUtil.getInstance().noEditSingleButtonDialog(WifiLockSetUpActivity.this, "", getString(R.string.no_support_no_pwd_wifi), getString(R.string.ok_wifi_lock), null);
                     return;
                 }
-                Intent intent = new Intent(WifiSetUpActivity.this, WifiLockSmartConfigActivity.class);
+                Intent intent = new Intent(WifiLockSetUpActivity.this, WifiLockSmartConfigActivity.class);
                 intent.putExtra(KeyConstants.WIFI_LOCK_WIFI_SSID, sSsid);
                 intent.putExtra(KeyConstants.WIFI_LOCK_WIFI_BSSID, wifiBssid);
                 intent.putExtra(KeyConstants.WIFI_LOCK_WIFI_PASSWORD, sPassword);
@@ -282,9 +282,12 @@ public class WifiSetUpActivity extends BaseActivity<IWifiSetUpView, WifiSetUpPre
                 break;
             case R.id.tv_support_list:
                 //跳转查看支持WiFi列表
-                startActivity(new Intent(WifiSetUpActivity.this, WifiLcokSupportWifiActivity.class));
+                startActivity(new Intent(WifiLockSetUpActivity.this, WifiLcokSupportWifiActivity.class));
                 break;
             case R.id.iv_eye:
+                if (passwordHide) {
+
+                }
                 passwordHide = !passwordHide;
                 if (passwordHide) {
                     apPasswordEdit.setTransformationMethod(PasswordTransformationMethod.getInstance());
@@ -375,11 +378,11 @@ public class WifiSetUpActivity extends BaseActivity<IWifiSetUpView, WifiSetUpPre
 
     @OnClick(R.id.help)
     public void onClick() {
-        startActivity(new Intent(this,WifiLockHelpActivity.class));
+        startActivity(new Intent(this, WifiLockHelpActivity.class));
     }
 
     private static class EsptouchAsyncTask4 extends AsyncTask<byte[], IEsptouchResult, List<IEsptouchResult>> {
-        private WeakReference<WifiSetUpActivity> mActivity;
+        private WeakReference<WifiLockSetUpActivity> mActivity;
 
         private final Object mLock = new Object();
         private AlertDialog mResultDialog;
@@ -387,7 +390,7 @@ public class WifiSetUpActivity extends BaseActivity<IWifiSetUpView, WifiSetUpPre
         private LoadingDialog loadingDialog;
         private ISetUpResult setUpResult;
 
-        EsptouchAsyncTask4(WifiSetUpActivity activity, ISetUpResult setUpResult) {
+        EsptouchAsyncTask4(WifiLockSetUpActivity activity, ISetUpResult setUpResult) {
             mActivity = new WeakReference<>(activity);
             loadingDialog = LoadingDialog.getInstance(activity);
             this.setUpResult = setUpResult;
@@ -435,7 +438,7 @@ public class WifiSetUpActivity extends BaseActivity<IWifiSetUpView, WifiSetUpPre
 
         @Override
         protected List<IEsptouchResult> doInBackground(byte[]... params) {
-            WifiSetUpActivity activity = mActivity.get();
+            WifiLockSetUpActivity activity = mActivity.get();
             synchronized (mLock) {
                 byte[] apSsid = params[0];
                 byte[] apBssid = params[1];
@@ -451,7 +454,7 @@ public class WifiSetUpActivity extends BaseActivity<IWifiSetUpView, WifiSetUpPre
 
         @Override
         protected void onPostExecute(List<IEsptouchResult> result) {
-            WifiSetUpActivity activity = mActivity.get();
+            WifiLockSetUpActivity activity = mActivity.get();
             activity.mTask = null;
             loadingDialog.dismiss();
             if (result == null) {

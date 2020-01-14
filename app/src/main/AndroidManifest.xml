@@ -833,7 +833,7 @@
         <!-- VIVO辅助 SDK -->
 
         <activity
-            android:name=".activity.device.wifilock.add.WifiSetUpActivity"
+            android:name=".activity.device.wifilock.add.WifiLockSetUpActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
@@ -857,7 +857,7 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.device.wifilock.add.WifiLockAddFailedActivity"
+            android:name=".activity.device.wifilock.add.WifiLockAPAddFailedActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity

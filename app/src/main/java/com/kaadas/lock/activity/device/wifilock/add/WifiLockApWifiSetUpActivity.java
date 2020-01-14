@@ -32,6 +32,7 @@ import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.GpsUtil;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.SocketManager;
 import com.kaadas.lock.widget.DropEditText;
 
@@ -67,25 +68,25 @@ public class WifiLockApWifiSetUpActivity extends BaseActivity<IWifiLockAPWifiSet
     public String adminPassword;
     public String sSsid;
 
-    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-            if (action == null) {
-                return;
-            }
-            WifiManager wifiManager = (WifiManager) context.getApplicationContext()
-                    .getSystemService(WIFI_SERVICE);
-            assert wifiManager != null;
-
-            switch (action) {
-                case WifiManager.NETWORK_STATE_CHANGED_ACTION:
-                case LocationManager.PROVIDERS_CHANGED_ACTION:
-                    onWifiChanged(wifiManager.getConnectionInfo());
-                    break;
-            }
-        }
-    };
+//    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+//        @Override
+//        public void onReceive(Context context, Intent intent) {
+//            String action = intent.getAction();
+//            if (action == null) {
+//                return;
+//            }
+//            WifiManager wifiManager = (WifiManager) context.getApplicationContext()
+//                    .getSystemService(WIFI_SERVICE);
+//            assert wifiManager != null;
+//
+//            switch (action) {
+//                case WifiManager.NETWORK_STATE_CHANGED_ACTION:
+//                case LocationManager.PROVIDERS_CHANGED_ACTION:
+//                    onWifiChanged(wifiManager.getConnectionInfo());
+//                    break;
+//            }
+//        }
+//    };
     private String wifiSn;
     private String randomCode;
     private int func;
@@ -105,19 +106,8 @@ public class WifiLockApWifiSetUpActivity extends BaseActivity<IWifiLockAPWifiSet
         randomCode = getIntent().getStringExtra(KeyConstants.WIFI_LOCK_RANDOM_CODE);
         func = getIntent().getIntExtra(KeyConstants.WIFI_LOCK_FUNC,0);
 
-        LogUtils.e("数据是 1 randomCode " + randomCode);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)
-                    != PackageManager.PERMISSION_GRANTED) {
-                String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION};
-                requestPermissions(permissions, REQUEST_PERMISSION);
-            } else {
-                registerBroadcastReceiver();
-            }
-        } else {
-            registerBroadcastReceiver();
-        }
-
+        String wifiName = (String) SPUtils.get(KeyConstants.WIFI_LOCK_CONNECT_NAME, "");
+        apSsidText.setText(wifiName);
         mApSsidTV.setOnOpenPopWindowListener(new DropEditText.OnOpenPopWindowListener() {
             @Override
             public void onOpenPopWindowListener(View view) {
@@ -127,14 +117,13 @@ public class WifiLockApWifiSetUpActivity extends BaseActivity<IWifiLockAPWifiSet
         });
 
 
+
+
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (mReceiver != null) {
-            unregisterReceiver(mReceiver);
-        }
     }
 
     @Override
@@ -142,43 +131,6 @@ public class WifiLockApWifiSetUpActivity extends BaseActivity<IWifiLockAPWifiSet
         return new WifiApWifiSetUpPresenter<>();
     }
 
-    private void registerBroadcastReceiver() {
-        IntentFilter filter = new IntentFilter(WifiManager.NETWORK_STATE_CHANGED_ACTION);
-        filter.addAction(LocationManager.PROVIDERS_CHANGED_ACTION);
-        registerReceiver(mReceiver, filter);
-    }
-
-    private void onWifiChanged(WifiInfo info) {
-        boolean disconnected = info == null
-                || info.getNetworkId() == -1
-                || "<unknown ssid>".equals(info.getSSID());
-        if (disconnected) {
-            mApSsidTV.setText("");
-            mApSsidTV.setTag(null);
-            checkLocation();
-        } else {
-            String ssid = info.getSSID();
-            if (ssid.startsWith("\"") && ssid.endsWith("\"")) {
-                ssid = ssid.substring(1, ssid.length() - 1);
-            }
-            mApSsidTV.setText(ssid);
-            mApSsidTV.setTag(ByteUtil.getBytesByString(ssid));
-            byte[] ssidOriginalData = TouchNetUtil.getOriginalSsidBytes(info);
-            mApSsidTV.setTag(ssidOriginalData);
-            wifiBssid = info.getBSSID();
-        }
-    }
-
-    private boolean checkLocation() {
-        boolean enable;
-        enable = GpsUtil.isOPen(this);
-        if (!enable) {
-            AlertDialogUtil.getInstance().noButtonDialog(this, getString(R.string.location_disable_message));
-            Toast.makeText(this, R.string.location_disable_message, Toast.LENGTH_SHORT).show();
-        }
-
-        return enable;
-    }
 
     @OnClick({R.id.confirm_btn, R.id.tv_support_list, R.id.iv_eye, R.id.back})
     public void onClick(View view) {

@@ -7,7 +7,7 @@
     android:orientation="vertical"
     android:gravity="center_horizontal"
     android:background="#F2F2F2"
-    tools:context="com.kaadas.lock.activity.device.wifilock.add.WifiLockAddFailedActivity">
+    tools:context="com.kaadas.lock.activity.device.wifilock.add.WifiLockAPAddFailedActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -128,6 +128,11 @@
         </LinearLayout>
     </LinearLayout>
 
+    <View
+        android:layout_weight="1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
     <TextView
         android:gravity="center"
         android:layout_marginTop="@dimen/dp_40"
@@ -138,16 +143,33 @@
         android:text="@string/wifi_lock_repair"
         android:textColor="#fff"
         android:textSize="@dimen/sp_15" />
-
+    <EditText
+        android:visibility="gone"
+        android:layout_marginBottom="@dimen/dp_40"
+        android:layout_marginTop="@dimen/dp_30"
+        android:id="@+id/et_other_method"
+        android:editable="false"
+        android:paddingBottom="@dimen/dp_4"
+        android:background="@drawable/edit_text_line_1f967f"
+        android:layout_marginLeft="@dimen/dp_10"
+        android:textSize="13sp"
+        android:text="@string/other_set_up_method"
+        android:textColor="#1F96F7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
     <TextView
-        android:gravity="center"
-        android:layout_marginTop="@dimen/dp_20"
-        android:id="@+id/bt_skip"
-        android:layout_width="@dimen/dp_200"
-        android:layout_height="@dimen/dp_44"
-        android:background="@drawable/bord_707070_adius20"
-        android:text="@string/wifi_lovk_skip"
-        android:textColor="#929292"
-        android:textSize="@dimen/sp_15" />
+        android:id="@+id/cancel"
+        android:layout_marginBottom="@dimen/dp_40"
+        android:layout_marginTop="@dimen/dp_15"
+        android:editable="false"
+        android:paddingBottom="@dimen/dp_4"
+        android:background="@drawable/edit_text_line_1f967f"
+        android:layout_marginLeft="@dimen/dp_10"
+        android:textSize="13sp"
+        android:text="@string/cancel"
+        android:textColor="#707070"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
 </LinearLayout>

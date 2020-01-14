@@ -17,6 +17,7 @@ import com.kaadas.lock.R;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.NetUtil;
+import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.WifiUtils;
 
 import butterknife.ButterKnife;
@@ -30,8 +31,6 @@ public class WifiLockNoticeUserLinkWifiFirstActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wifi_lock_notice_user_link_wifi_first);
         ButterKnife.bind(this);
-
-
         IntentFilter filter = new IntentFilter(WifiManager.NETWORK_STATE_CHANGED_ACTION);
         filter.addAction(LocationManager.PROVIDERS_CHANGED_ACTION);
         registerReceiver(mReceiver, filter);
@@ -44,19 +43,19 @@ public class WifiLockNoticeUserLinkWifiFirstActivity extends AppCompatActivity {
                 finish();
                 break;
             case R.id.help:
-                startActivity(new Intent(WifiLockNoticeUserLinkWifiFirstActivity.this,WifiLockHelpActivity.class));
+                startActivity(new Intent(WifiLockNoticeUserLinkWifiFirstActivity.this, WifiLockHelpActivity.class));
                 break;
             case R.id.go_to_connect:
+                saveWifiName();
                 startActivity(new Intent(android.provider.Settings.ACTION_WIFI_SETTINGS));
                 break;
             case R.id.et_other_method:
-                Intent intent = new Intent(WifiLockNoticeUserLinkWifiFirstActivity.this, WifiLockAddSecondActivity .class);
+                Intent intent = new Intent(WifiLockNoticeUserLinkWifiFirstActivity.this, WifiLockAddSecondActivity.class);
                 intent.putExtra(KeyConstants.WIFI_LOCK_SETUP_IS_AP, false);
                 startActivity(intent);
                 break;
         }
     }
-
 
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
@@ -76,6 +75,19 @@ public class WifiLockNoticeUserLinkWifiFirstActivity extends AppCompatActivity {
         }
     };
 
+    private void saveWifiName(){
+        WifiManager wifiMgr = (WifiManager) MyApplication.getInstance().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        WifiInfo info = wifiMgr.getConnectionInfo();
+        String ssid = info != null ? info.getSSID() : null;
+        if (TextUtils.isEmpty(ssid)) {
+            SPUtils.put(KeyConstants.WIFI_LOCK_CONNECT_NAME, "");
+            return;
+        }
+        if (ssid.startsWith("\"") && ssid.endsWith("\"")) {
+            ssid = ssid.substring(1, ssid.length() - 1);
+            SPUtils.put(KeyConstants.WIFI_LOCK_CONNECT_NAME, ssid);
+        }
+    }
 
     private void onWifiChanged(WifiInfo info) {
         boolean disconnected = info == null
@@ -91,10 +103,10 @@ public class WifiLockNoticeUserLinkWifiFirstActivity extends AppCompatActivity {
             if (ssid.startsWith("\"") && ssid.endsWith("\"")) {
                 ssid = ssid.substring(1, ssid.length() - 1);
             }
-            LogUtils.e("网络切换    " + ssid + "   "  + "网络可用   " + NetUtil.isNetworkAvailable());
-            if (ssid.startsWith("KDS_") && isFirst ) {
+            LogUtils.e("网络切换    " + ssid + "   " + "网络可用   " + NetUtil.isNetworkAvailable());
+            if (ssid.startsWith("KDS_") && isFirst) {
                 isFirst = false;
-                startActivity(new Intent(WifiLockNoticeUserLinkWifiFirstActivity.this,WifiLockApInputAdminPasswordActivity.class));
+                startActivity(new Intent(WifiLockNoticeUserLinkWifiFirstActivity.this, WifiLockApInputAdminPasswordActivity.class));
             }
         }
     }
@@ -103,15 +115,14 @@ public class WifiLockNoticeUserLinkWifiFirstActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         isFirst = true;
-        WifiManager wifiManager = (WifiManager)  getApplicationContext().getSystemService(WIFI_SERVICE);
-        onWifiChanged( wifiManager.getConnectionInfo());
+        WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(WIFI_SERVICE);
+        onWifiChanged(wifiManager.getConnectionInfo());
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
-        if (mReceiver!=null){
+        if (mReceiver != null) {
             unregisterReceiver(mReceiver);
         }
 

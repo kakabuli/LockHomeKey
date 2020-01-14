@@ -2,6 +2,7 @@ package com.kaadas.lock.mvp.view.wifilock;
 
 import com.kaadas.lock.mvp.mvpbase.IBaseView;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
+import com.kaadas.lock.publiclibrary.http.result.CheckOTAResult;
 
 public interface IWifiLockMoreView extends IBaseView {
 
@@ -45,10 +46,43 @@ public interface IWifiLockMoreView extends IBaseView {
      */
     void onUpdatePushStatusThrowable(Throwable throwable);
 
-
     /**
      *
      */
     void onWifiLockActionUpdate();
+
+
+    void noNeedUpdate( ); //  不需要更新
+
+    void snError();  //Sn错误
+
+    void dataError(); //数据参数错误
+
+    /**
+     *
+     * @param appInfo
+     * @param SN
+     */
+    void needUpdate(CheckOTAResult.UpdateFileInfo appInfo, String SN ,int type);
+
+
+    /**
+     * 读取信息失败
+     * @param throwable
+     */
+    void readInfoFailed(Throwable throwable);
+
+    void unknowError(String errorCode); //   未知错误
+
+
+    /**
+     * 上传成功
+     */
+    void uploadSuccess();
+
+    /**
+     * 上传失败
+     */
+    void uploadFailed();
 
 }

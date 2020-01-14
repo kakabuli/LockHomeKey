@@ -45,6 +45,7 @@ import com.kaadas.lock.publiclibrary.http.postbean.UpdateSoftwareVersionBean;
 import com.kaadas.lock.publiclibrary.http.postbean.UploadAppRecordBean;
 import com.kaadas.lock.publiclibrary.http.postbean.UploadBinRecordBean;
 import com.kaadas.lock.publiclibrary.http.postbean.UploadOperationRecordBean;
+import com.kaadas.lock.publiclibrary.http.postbean.UploadOtaBean;
 import com.kaadas.lock.publiclibrary.http.postbean.UploadOtaResultBean;
 import com.kaadas.lock.publiclibrary.http.postbean.UploadWarringRecordBean;
 import com.kaadas.lock.publiclibrary.http.postbean.WiFiLockBindBean;
@@ -1080,6 +1081,25 @@ public class XiaokaiNewServiceImp {
     }
 
     /**
+     * 修改wifi密码昵称
+     *
+     * @param uid      是	String	管理员用户ID
+     * @param wifiSN   是	String	设备唯一编号
+     * @param pwdType  是	String	密钥类型：1密码 2指纹密码 3卡片密码
+     * @param num      是	int	密钥编号
+     * @param nickName 是	String	密钥昵称
+     * @return
+     */
+    public static Observable<BaseResult> wifiLockUpdatePwdNickName(String uid, String wifiSN, int pwdType, int num, String nickName,String userNickName) {
+        WifiLockUpdatePwdNickBean wifiLockUpdatePwdNickBean = new WifiLockUpdatePwdNickBean(uid, wifiSN, pwdType, num, nickName,userNickName);
+        return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
+                .wifiLockUpdatePwdNickName(new HttpUtils<WifiLockUpdatePwdNickBean>().getBody(wifiLockUpdatePwdNickBean))
+                .subscribeOn(Schedulers.io())
+                .compose(RxjavaHelper.observeOnMainThread());
+    }
+
+
+    /**
      * 分享设备
      *
      * @param wifiSN       是	String	wifi模块SN
@@ -1195,4 +1215,17 @@ public class XiaokaiNewServiceImp {
                 .compose(RxjavaHelper.observeOnMainThread());
     }
 
+
+
+    /**
+     * @return
+     */
+    public static Observable<BaseResult> wifiLockUploadOta( CheckOTAResult.UpdateFileInfo updateFileInfo,String wifiSN) {
+        UploadOtaBean uploadOtaBean = new UploadOtaBean(  wifiSN, updateFileInfo.getFileLen(), updateFileInfo .getFileUrl(),
+                updateFileInfo.getFileMd5(),updateFileInfo.getDevNum(), updateFileInfo.getFileVersion());
+        return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
+                .wifiLockUploadOta(new HttpUtils<UploadOtaBean>().getBody(uploadOtaBean))
+                .subscribeOn(Schedulers.io())
+                .compose(RxjavaHelper.observeOnMainThread());
+    }
 }

@@ -15,6 +15,20 @@ public class WifiLockUpdatePwdNickBean {
     private int pwdType;
     private int num;
     private String nickName;
+    /**
+     * userNickname : 我是管理员
+     */
+
+    private String userNickname;
+
+    public WifiLockUpdatePwdNickBean(String uid, String wifiSN, int pwdType, int num, String nickName, String userNickname) {
+        this.uid = uid;
+        this.wifiSN = wifiSN;
+        this.pwdType = pwdType;
+        this.num = num;
+        this.nickName = nickName;
+        this.userNickname = userNickname;
+    }
 
     public WifiLockUpdatePwdNickBean(String uid, String wifiSN, int pwdType, int num, String nickName) {
         this.uid = uid;
@@ -62,5 +76,13 @@ public class WifiLockUpdatePwdNickBean {
 
     public void setNickName(String nickName) {
         this.nickName = nickName;
+    }
+
+    public String getUserNickname() {
+        return userNickname;
+    }
+
+    public void setUserNickname(String userNickname) {
+        this.userNickname = userNickname;
     }
 }

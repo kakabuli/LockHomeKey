@@ -18,7 +18,6 @@ import android.widget.Toast;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
-import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 import com.kaadas.lock.mvp.presenter.wifilock.WifiApWifiSetUpPresenter;
 import com.kaadas.lock.mvp.view.wifilock.IWifiLockAPWifiSetUpView;
 import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
@@ -26,11 +25,9 @@ import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.util.RxjavaHelper;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.KeyConstants;
-import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.Rsa;
 import com.kaadas.lock.utils.SocketManager;
 
-import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
@@ -116,7 +113,7 @@ public class WifiLockCheckAdminPasswordActivity extends BaseActivity<IWifiLockAP
                 }
                 finish();
                 Toast.makeText(WifiLockCheckAdminPasswordActivity.this, R.string.bind_failed, Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(WifiLockCheckAdminPasswordActivity.this, WifiLockAddFailedActivity.class);
+                Intent intent = new Intent(WifiLockCheckAdminPasswordActivity.this, WifiLockAPAddFailedActivity.class);
                 intent.putExtra(KeyConstants.WIFI_LOCK_SETUP_IS_AP, false);
                 startActivity(intent);
                 if (errorCode == -1) {
@@ -216,7 +213,7 @@ public class WifiLockCheckAdminPasswordActivity extends BaseActivity<IWifiLockAP
 
     private void onSuccess(SocketManager.WifiResult result) {
         String wifiSn = new String(result.wifiSn);
-        String randomCode = new String(result.password);
+        String randomCode = Rsa.bytesToHexString(result.password);
         WifiLockInfo wifiLockInfo = MyApplication.getInstance().getWifiLockInfoBySn(wifiSn);
         if (wifiLockInfo != null && wifiLockInfo.getIsAdmin() == 1) {
             mPresenter.update(wifiSn, randomCode, wifiName, result.func);
@@ -281,7 +278,7 @@ public class WifiLockCheckAdminPasswordActivity extends BaseActivity<IWifiLockAP
     @Override
     public void onBindFailed(BaseResult baseResult) {
         Toast.makeText(this, R.string.bind_failed, Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent(this, WifiLockAddFailedActivity.class);
+        Intent intent = new Intent(this, WifiLockAPAddFailedActivity.class);
         intent.putExtra(KeyConstants.WIFI_LOCK_SETUP_IS_AP, false);
         startActivity(intent);
     }
@@ -289,7 +286,7 @@ public class WifiLockCheckAdminPasswordActivity extends BaseActivity<IWifiLockAP
     @Override
     public void onBindThrowable(Throwable throwable) {
         Toast.makeText(this, R.string.bind_failed, Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent(this, WifiLockAddFailedActivity.class);
+        Intent intent = new Intent(this, WifiLockAPAddFailedActivity.class);
         intent.putExtra(KeyConstants.WIFI_LOCK_SETUP_IS_AP, false);
         startActivity(intent);
     }
@@ -304,7 +301,7 @@ public class WifiLockCheckAdminPasswordActivity extends BaseActivity<IWifiLockAP
     @Override
     public void onUpdateFailed(BaseResult baseResult) {
         Toast.makeText(this, R.string.bind_failed, Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent(this, WifiLockAddFailedActivity.class);
+        Intent intent = new Intent(this, WifiLockAPAddFailedActivity.class);
         intent.putExtra(KeyConstants.WIFI_LOCK_SETUP_IS_AP, false);
         startActivity(intent);
     }
@@ -312,7 +309,7 @@ public class WifiLockCheckAdminPasswordActivity extends BaseActivity<IWifiLockAP
     @Override
     public void onUpdateThrowable(Throwable throwable) {
         Toast.makeText(this, R.string.bind_failed, Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent(this, WifiLockAddFailedActivity.class);
+        Intent intent = new Intent(this, WifiLockAPAddFailedActivity.class);
         intent.putExtra(KeyConstants.WIFI_LOCK_SETUP_IS_AP, false);
         startActivity(intent);
     }
@@ -325,7 +322,7 @@ public class WifiLockCheckAdminPasswordActivity extends BaseActivity<IWifiLockAP
     @Override
     public void onSendFailed() {
         Toast.makeText(this, R.string.bind_failed, Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent(this, WifiLockAddFailedActivity.class);
+        Intent intent = new Intent(this, WifiLockAPAddFailedActivity.class);
         intent.putExtra(KeyConstants.WIFI_LOCK_SETUP_IS_AP, false);
         startActivity(intent);
     }
@@ -333,7 +330,7 @@ public class WifiLockCheckAdminPasswordActivity extends BaseActivity<IWifiLockAP
     @Override
     public void onReceiverFailed() {
         Toast.makeText(this, R.string.bind_failed, Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent(this, WifiLockAddFailedActivity.class);
+        Intent intent = new Intent(this, WifiLockAPAddFailedActivity.class);
         intent.putExtra(KeyConstants.WIFI_LOCK_SETUP_IS_AP, false);
         startActivity(intent);
     }

@@ -22,6 +22,7 @@ import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.SPUtils;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
@@ -66,6 +67,7 @@ public class WifiLockPresenter<T> extends BasePresenter<IWifiLockView> {
 
     public void getOperationRecord(String wifiSn,boolean isNotice) {
         XiaokaiNewServiceImp.wifiLockGetOperationList(wifiSn, 1)
+                .timeout(10 *1000,TimeUnit.MILLISECONDS)
                 .subscribe(new BaseObserver<GetWifiLockOperationRecordResult>() {
                     @Override
                     public void onSuccess(GetWifiLockOperationRecordResult operationRecordResult) {
@@ -172,9 +174,6 @@ public class WifiLockPresenter<T> extends BasePresenter<IWifiLockView> {
                     });
             compositeDisposable.add(wifiLockStatusListenDisposable);
         }
-
-
-
     }
 
 }

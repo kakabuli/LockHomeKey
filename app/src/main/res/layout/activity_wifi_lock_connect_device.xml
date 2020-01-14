@@ -116,6 +116,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/ll_bind_success"
             android:gravity="center_vertical"
             android:orientation="horizontal"
             android:layout_width="wrap_content"

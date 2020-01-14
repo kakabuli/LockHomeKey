@@ -1,7 +1,6 @@
 package com.kaadas.lock.activity;
 
 
-import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -30,15 +29,12 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
-import com.espressif.iot.esptouch.util.ByteUtil;
-import com.espressif.iot.esptouch.util.TouchNetUtil;
 import com.google.gson.Gson;
 import com.huawei.android.hms.agent.HMSAgent;
 import com.huawei.android.hms.agent.push.handler.GetTokenHandler;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.cateye.VideoVActivity;
-import com.kaadas.lock.activity.device.wifilock.add.WifiSetUpActivity;
 import com.kaadas.lock.bean.UpgradeBean;
 import com.kaadas.lock.fragment.DeviceFragment;
 import com.kaadas.lock.fragment.HomePageFragment;
@@ -56,12 +52,10 @@ import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.GatewayOtaNotifyBean
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttService;
 import com.kaadas.lock.publiclibrary.ota.ble.OTADialogActivity;
 import com.kaadas.lock.publiclibrary.ota.gatewayota.GatewayOTADialogActivity;
-import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.Constants;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.MyLog;
-import com.kaadas.lock.utils.NotifyRefreshActivity;
 import com.kaadas.lock.utils.PermissionUtil;
 import com.kaadas.lock.utils.Rom;
 import com.kaadas.lock.utils.SPUtils;
@@ -72,17 +66,12 @@ import com.kaadas.lock.utils.networkListenerutil.NetWorkChangReceiver;
 import com.kaadas.lock.widget.BottomMenuSelectMarketDialog;
 import com.kaadas.lock.widget.NoScrollViewPager;
 import com.kaidishi.lock.push.NetEvevt;
-import com.kaidishi.lock.service.GeTuiPushService;
 import com.yun.software.kaadas.Comment.Constans;
-import com.yun.software.kaadas.UI.activitys.WxLoginActivity;
 import com.yun.software.kaadas.UI.fragment.ShopFragment;
 import com.yun.software.kaadas.Utils.UserUtils;
 
 import net.sdvn.cmapi.CMAPI;
 import net.sdvn.cmapi.ConnectionService;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.DatagramPacket;

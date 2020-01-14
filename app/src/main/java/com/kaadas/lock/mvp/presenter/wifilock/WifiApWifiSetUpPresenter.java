@@ -52,6 +52,7 @@ public class WifiApWifiSetUpPresenter<T> extends BasePresenter<IWifiLockAPWifiSe
                 .subscribe(new BaseObserver<BaseResult>() {
                     @Override
                     public void onSuccess(BaseResult baseResult) {
+                        MyApplication.getInstance().getAllDevicesByMqtt(true);
                         toDisposable(bindDisposable);
                         if (isSafe()) {
                             mViewRef.get().onBindSuccess(wifiSN);
@@ -87,6 +88,7 @@ public class WifiApWifiSetUpPresenter<T> extends BasePresenter<IWifiLockAPWifiSe
                 .subscribe(new BaseObserver<BaseResult>() {
                     @Override
                     public void onSuccess(BaseResult baseResult) {
+                        MyApplication.getInstance().getAllDevicesByMqtt(true);
                         toDisposable(bindDisposable);
                         if (isSafe()) {
                             mViewRef.get().onUpdateSuccess(wifiSN);

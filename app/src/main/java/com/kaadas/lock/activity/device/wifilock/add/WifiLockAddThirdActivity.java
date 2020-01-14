@@ -90,7 +90,7 @@ public class WifiLockAddThirdActivity extends AppCompatActivity {
                     intent = new Intent(WifiLockAddThirdActivity.this, WifiLockNoticeUserLinkWifiFirstActivity.class);
                     startActivity(intent);
                 } else {
-                    intent = new Intent(WifiLockAddThirdActivity.this, WifiSetUpActivity.class);
+                    intent = new Intent(WifiLockAddThirdActivity.this, WifiLockSetUpActivity.class);
                     intent.putExtra(KeyConstants.WIFI_LOCK_SETUP_IS_AP, false);
                     startActivity(intent);
                 }

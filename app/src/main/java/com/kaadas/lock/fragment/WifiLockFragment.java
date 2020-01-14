@@ -282,6 +282,7 @@ public class WifiLockFragment extends BaseFragment<IWifiLockView, WifiLockPresen
             case R.id.tv_synchronized_record:
                 showLoading(getString(R.string.is_syncing));
                 mPresenter.getOperationRecord(wifiLockInfo.getWifiSN(),true);
+                mPresenter.getOpenCount(wifiLockInfo.getWifiSN());
                 break;
         }
     }

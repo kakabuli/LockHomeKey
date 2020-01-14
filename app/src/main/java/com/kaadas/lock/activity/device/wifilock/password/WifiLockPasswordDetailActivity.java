@@ -21,6 +21,7 @@ import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
+import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.StringUtil;
 import com.kaadas.lock.utils.ToastUtil;
 
@@ -58,6 +59,7 @@ public class WifiLockPasswordDetailActivity extends BaseActivity<IWifiLockNickNa
     private ForeverPassword foreverPassword;
     private String nickName;
     private int num;
+    private String adminNickName;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -110,6 +112,12 @@ public class WifiLockPasswordDetailActivity extends BaseActivity<IWifiLockNickNa
                 getString(R.string.saturday)};
         tvTime.setText(DateUtils.secondToDate(createTime));
         tvName.setText(nickName != null ? nickName : "");
+
+
+        adminNickName = (String) SPUtils.get(SPUtils.USERNAME, "");
+        if (TextUtils.isEmpty(adminNickName)) {
+            adminNickName = (String) SPUtils.get(SPUtils.PHONEN, "");
+        }
     }
 
     private void initData() {
@@ -195,7 +203,7 @@ public class WifiLockPasswordDetailActivity extends BaseActivity<IWifiLockNickNa
                             return;
                         }
                         alertDialog.dismiss();
-                        mPresenter.updateNickName(wifiSn, pwdType, num, name);
+                        mPresenter.updateNickName(wifiSn, pwdType, num, name,adminNickName);
                         showLoading(getString(R.string.is_modifing));
                     }
                 });

@@ -7,6 +7,7 @@ public class ConstantConfig {
 //    public static final String OTA_RESULT_UPLOAD_URL = "http://ota.juziwulian.com:9111/api/deviceDevupRecord/bt/add";  //正式OTA上报服务器
 //    public static final String MQTT_BASE_URL = "tcp://mqtt-kaadas.juziwulian.com:1883";//正式服务器
 //    public static final String LINPHONE_URL = "sip-kaadas.juziwulian.com:5061";//正式sip
+public static final String WIFI_LOCK_UPLOAD_OTA = "https://test.juziwulian.com:8090/wifi/device/ota";//wifi锁上报OTA
 
 
     public static final String HTTP_BASE_URL = "https://test.juziwulian.com:8090/";//凯迪仕测试服务器
@@ -14,6 +15,7 @@ public class ConstantConfig {
     public static final String OTA_RESULT_UPLOAD_URL = "http://47.106.83.60:9111/api/deviceDevupRecord/bt/add";  //正式OTA上报服务器
     public static final String MQTT_BASE_URL = "tcp://test.juziwulian.com:1883";//测试服务器
     public static final String LINPHONE_URL = "test.juziwulian.com:5061";//测试sip
+
     
 
 }

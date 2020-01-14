@@ -8,8 +8,10 @@ import com.kaadas.lock.mvp.view.wifilock.IWifiLockMoreView;
 import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
 import com.kaadas.lock.publiclibrary.http.XiaokaiNewServiceImp;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
+import com.kaadas.lock.publiclibrary.http.result.CheckOTAResult;
 import com.kaadas.lock.publiclibrary.http.util.BaseObserver;
 import com.kaadas.lock.utils.KeyConstants;
+import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.SPUtils;
 
 import io.reactivex.disposables.Disposable;
@@ -19,6 +21,7 @@ public class WifiLockMorePresenter<T> extends BasePresenter<IWifiLockMoreView> {
 
     private Disposable listenActionUpdateDisposable;
     private String wifiSN;
+    private Disposable otaDisposable;
 
     public void init(String wifiSn) {
         wifiSN = wifiSn;
@@ -143,7 +146,87 @@ public class WifiLockMorePresenter<T> extends BasePresenter<IWifiLockMoreView> {
                 });
 
         compositeDisposable.add(listenActionUpdateDisposable);
-
     }
 
+
+    /**
+     * @param SN
+     * @param version
+     * @param type    1模块  2锁
+     */
+    public void checkOtaInfo(String SN, String version, int type) {
+        //请求成功
+        otaDisposable = XiaokaiNewServiceImp.getOtaInfo(1, SN, version, type)
+                .subscribe(new Consumer<CheckOTAResult>() {
+                    @Override
+                    public void accept(CheckOTAResult otaResult) throws Exception {
+                        LogUtils.e("检查OTA升级数据   " + otaResult.toString());
+                        //200  成功  401  数据参数不对  102 SN格式不对  210 查无结果
+                        if ("200".equals(otaResult.getCode())) {
+                            if (isSafe()) {
+                                CheckOTAResult.UpdateFileInfo data = otaResult.getData();
+                                mViewRef.get().needUpdate(data, SN, type);
+                            }
+                        } else if ("401".equals(otaResult.getCode())) { // 数据参数不对
+                            if (isSafe()) {
+                                mViewRef.get().dataError();
+                            }
+                        } else if ("102".equals(otaResult.getCode())) { //SN格式不对
+                            if (isSafe()) {
+                                mViewRef.get().snError();
+                            }
+                        } else if ("210".equals(otaResult.getCode())) { // 查无结果
+                            if (isSafe()) {
+                                mViewRef.get().noNeedUpdate();
+                            }
+                        } else {
+                            if (isSafe()) {
+                                mViewRef.get().unknowError(otaResult.getCode());
+                            }
+                        }
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        if (isSafe()) {
+                            mViewRef.get().readInfoFailed(throwable);
+                        }
+                        LogUtils.e("检查OTA升级数据 失败  " + throwable.getMessage());
+                    }
+                });
+        compositeDisposable.add(otaDisposable);
+    }
+
+
+    public void uploadOta(CheckOTAResult.UpdateFileInfo updateFileInfo, String wifiSN) {
+        XiaokaiNewServiceImp.wifiLockUploadOta(updateFileInfo, wifiSN)
+                .subscribe(new BaseObserver<BaseResult>() {
+                    @Override
+                    public void onSuccess(BaseResult result) {
+                        if (isSafe()) {
+                            mViewRef.get().uploadSuccess();
+                        }
+                    }
+
+                    @Override
+                    public void onAckErrorCode(BaseResult baseResult) {
+                        if (isSafe()) {
+                            mViewRef.get().uploadFailed();
+                        }
+                    }
+
+                    @Override
+                    public void onFailed(Throwable throwable) {
+                        if (isSafe()) {
+                            mViewRef.get().uploadFailed();
+                        }
+                    }
+
+                    @Override
+                    public void onSubscribe1(Disposable d) {
+                        compositeDisposable.add(d);
+                    }
+                });
+
+    }
 }

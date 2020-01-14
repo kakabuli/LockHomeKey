@@ -66,9 +66,12 @@ public class WifiLockApInputAdminPasswordActivity extends BaseAddToApplicationAc
 
     @OnClick({R.id.back, R.id.help, R.id.et_admin_password, R.id.tv_next})
     public void onClick(View view) {
+        Intent intent;
         switch (view.getId()) {
             case R.id.back:
                 finish();
+                intent = new Intent(WifiLockApInputAdminPasswordActivity.this, WifiLockAddThirdActivity.class);
+                startActivity(intent);
                 break;
             case R.id.tv_next:
                 String adminPassword = etAdminPassword.getText().toString().trim();
@@ -76,14 +79,20 @@ public class WifiLockApInputAdminPasswordActivity extends BaseAddToApplicationAc
                     ToastUtil.getInstance().showShort(R.string.random_verify_error);
                     return;
                 }
-                Intent intent = new Intent(WifiLockApInputAdminPasswordActivity.this, WifiLockApCheckAdminPasswordActivity.class);
+                intent = new Intent(WifiLockApInputAdminPasswordActivity.this, WifiLockApCheckAdminPasswordActivity.class);
                 intent.putExtra(KeyConstants.WIFI_LOCK_ADMIN_PASSWORD, adminPassword);
                 startActivity(intent);
                 break;
             case R.id.help:
-
                 startActivity(new Intent(this, WifiLockHelpActivity.class));
                 break;
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(WifiLockApInputAdminPasswordActivity.this, WifiLockNoticeUserLinkWifiFirstActivity.class);
+        startActivity(intent);
+        super.onBackPressed();
     }
 }

@@ -18,8 +18,8 @@ public class WifiLockNickNamePresenter<T> extends BasePresenter<IWifiLockNickNam
      * @param num
      * @param nickName
      */
-    public void updateNickName( String wifiSN, int pwdType, int num, String nickName){
-        XiaokaiNewServiceImp.wifiLockUpdatePwdNickName(MyApplication.getInstance().getUid(),wifiSN, pwdType, num, nickName)
+    public void updateNickName( String wifiSN, int pwdType, int num, String nickName,String userNickName){
+        XiaokaiNewServiceImp.wifiLockUpdatePwdNickName(MyApplication.getInstance().getUid(),wifiSN, pwdType, num, nickName,userNickName)
             .subscribe(new BaseObserver<BaseResult>() {
                 @Override
                 public void onSuccess(BaseResult baseResult) {

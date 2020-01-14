@@ -597,5 +597,9 @@ public interface IXiaoKaiNewService {
 
 
 
-
+    /**
+     * 更新wifi信息
+     */
+    @POST(HttpUrlConstants.WIFI_LOCK_UPLOAD_OTA)
+    Observable<BaseResult> wifiLockUploadOta(@Body RequestBody info);
 }

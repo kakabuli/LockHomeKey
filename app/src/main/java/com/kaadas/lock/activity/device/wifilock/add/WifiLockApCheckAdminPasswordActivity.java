@@ -21,6 +21,7 @@ import com.kaadas.lock.publiclibrary.http.util.RxjavaHelper;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.Rsa;
 import com.kaadas.lock.utils.SocketManager;
 import com.kaadas.lock.utils.StringUtil;
 import com.kaadas.lock.utils.ToastUtil;
@@ -121,7 +122,7 @@ public class WifiLockApCheckAdminPasswordActivity extends BaseAddToApplicationAc
             public void run() {
                 Intent intent = new Intent(WifiLockApCheckAdminPasswordActivity.this, WifiLockApWifiSetUpActivity.class);
                 intent.putExtra(KeyConstants.WIFI_SN, new String(result.wifiSn));
-                intent.putExtra(KeyConstants.WIFI_LOCK_RANDOM_CODE, new String(result.password));
+                intent.putExtra(KeyConstants.WIFI_LOCK_RANDOM_CODE, Rsa.bytesToHexString(result.password));
                 intent.putExtra(KeyConstants.WIFI_LOCK_FUNC, result.func);
                 startActivity(intent);
             }

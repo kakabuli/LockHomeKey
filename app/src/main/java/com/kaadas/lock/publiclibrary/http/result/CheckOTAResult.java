@@ -46,6 +46,13 @@ public class CheckOTAResult {
         private String fileUrl;
         private String fileMd5;
         private String fileVersion;
+        /**
+         * fileLen : 20850
+         * devNum : 1
+         */
+
+        private int fileLen;
+        private int devNum;
 
         public String getFileUrl() {
             return fileUrl;
@@ -79,6 +86,22 @@ public class CheckOTAResult {
                     ", fileMd5='" + fileMd5 + '\'' +
                     ", fileVersion='" + fileVersion + '\'' +
                     '}';
+        }
+
+        public int getFileLen() {
+            return fileLen;
+        }
+
+        public void setFileLen(int fileLen) {
+            this.fileLen = fileLen;
+        }
+
+        public int getDevNum() {
+            return devNum;
+        }
+
+        public void setDevNum(int devNum) {
+            this.devNum = devNum;
         }
     }
 

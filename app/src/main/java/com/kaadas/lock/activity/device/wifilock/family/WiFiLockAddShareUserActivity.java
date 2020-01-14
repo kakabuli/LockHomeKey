@@ -58,7 +58,7 @@ public class WiFiLockAddShareUserActivity extends BaseActivity<IWiFiLockShareAdd
 
 
         nickName = (String) SPUtils.get(SPUtils.USERNAME, "");
-        if (!TextUtils.isEmpty(nickName)) {
+        if (TextUtils.isEmpty(nickName)) {
             nickName = (String) SPUtils.get(SPUtils.PHONEN, "");
         }
 

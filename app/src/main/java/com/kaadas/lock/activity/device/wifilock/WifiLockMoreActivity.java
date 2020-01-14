@@ -22,6 +22,7 @@ import com.kaadas.lock.mvp.presenter.wifilock.WifiLockMorePresenter;
 import com.kaadas.lock.mvp.view.wifilock.IWifiLockMoreView;
 import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
+import com.kaadas.lock.publiclibrary.http.result.CheckOTAResult;
 import com.kaadas.lock.publiclibrary.http.util.HttpUtils;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.BleLockUtils;
@@ -317,6 +318,48 @@ public class WifiLockMoreActivity extends BaseActivity<IWifiLockMoreView, WifiLo
     public void onWifiLockActionUpdate() {
         wifiLockInfo = MyApplication.getInstance().getWifiLockInfoBySn(wifiSn);
         initData();
+    }
+
+    @Override
+    public void noNeedUpdate() {
+
+    }
+
+    @Override
+    public void snError() {
+
+    }
+
+    @Override
+    public void dataError() {
+
+    }
+
+    @Override
+    public void needUpdate(CheckOTAResult.UpdateFileInfo appInfo, String SN,int type) {
+
+    }
+
+
+
+    @Override
+    public void readInfoFailed(Throwable throwable) {
+
+    }
+
+    @Override
+    public void unknowError(String errorCode) {
+
+    }
+
+    @Override
+    public void uploadSuccess() {
+
+    }
+
+    @Override
+    public void uploadFailed() {
+
     }
 
 
