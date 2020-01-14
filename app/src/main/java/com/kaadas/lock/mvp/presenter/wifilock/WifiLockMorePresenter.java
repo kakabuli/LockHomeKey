@@ -204,7 +204,7 @@ public class WifiLockMorePresenter<T> extends BasePresenter<IWifiLockMoreView> {
                     @Override
                     public void onSuccess(BaseResult result) {
                         if (isSafe()) {
-                            mViewRef.get().uploadSuccess();
+                            mViewRef.get().uploadSuccess(updateFileInfo.getDevNum());
                         }
                     }
 

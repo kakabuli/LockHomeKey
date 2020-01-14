@@ -45,11 +45,16 @@ public class WifiLockDeviceInfoActivity extends BaseActivity<IWifiLockMoreView, 
     ImageView ivMessageFree;
     @BindView(R.id.rl_message_free)
     RelativeLayout rlMessageFree;
+    @BindView(R.id.iv_wifilock)
+    ImageView ivWifilock;
+    @BindView(R.id.iv_wifimodel)
+    ImageView ivWifimodel;
     private WifiLockInfo wifiLockInfo;
     private String wifiSN;
     private String sWifiVersion;
     private String sLockSoftwareVersion;
     private boolean isAdmin;
+    private int type;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +87,13 @@ public class WifiLockDeviceInfoActivity extends BaseActivity<IWifiLockMoreView, 
             }
         } else {
             rlMessageFree.setVisibility(View.GONE);
+        }
+        if (isAdmin){
+            ivWifimodel.setVisibility(View.VISIBLE);
+            ivWifilock.setVisibility(View.VISIBLE);
+        }else {
+            ivWifimodel.setVisibility(View.GONE);
+            ivWifilock.setVisibility(View.GONE);
         }
     }
 
@@ -218,7 +230,12 @@ public class WifiLockDeviceInfoActivity extends BaseActivity<IWifiLockMoreView, 
     @Override
     public void needUpdate(CheckOTAResult.UpdateFileInfo appInfo, String SN, int type) {
         hiddenLoading();
-        String content = getString(R.string.hava_wifi_new_version);
+        String content = "";
+        if (type == 1) { //wifi模块
+            content = getString(R.string.hava_wifi_new_version) + appInfo.getFileVersion() + getString(R.string.is_update);
+        } else if (type == 2) { //wifi 锁
+            content = getString(R.string.hava_lock_new_version) + appInfo.getFileVersion() + getString(R.string.is_update);
+        }
         AlertDialogUtil.getInstance().noEditTwoButtonDialog(this, getString(R.string.hint)
                 , content, getString(R.string.cancel), getString(R.string.confirm), new AlertDialogUtil.ClickListener() {
                     @Override
@@ -249,9 +266,15 @@ public class WifiLockDeviceInfoActivity extends BaseActivity<IWifiLockMoreView, 
     }
 
     @Override
-    public void uploadSuccess() {
-        hiddenLoading();
-        Toast.makeText(this, getString(R.string.notice_wifi_update), Toast.LENGTH_SHORT).show();
+    public void uploadSuccess(int type) {
+        if (type == 1) {
+            hiddenLoading();
+            Toast.makeText(this, getString(R.string.notice_wifi_update), Toast.LENGTH_SHORT).show();
+        } else if (type == 2) {
+            hiddenLoading();
+            Toast.makeText(this, getString(R.string.notice_lock_update), Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     @Override

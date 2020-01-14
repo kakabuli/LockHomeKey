@@ -78,7 +78,7 @@ public interface IWifiLockMoreView extends IBaseView {
     /**
      * 上传成功
      */
-    void uploadSuccess();
+    void uploadSuccess(int type);
 
     /**
      * 上传失败

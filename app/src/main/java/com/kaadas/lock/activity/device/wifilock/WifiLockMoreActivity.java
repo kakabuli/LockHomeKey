@@ -353,7 +353,7 @@ public class WifiLockMoreActivity extends BaseActivity<IWifiLockMoreView, WifiLo
     }
 
     @Override
-    public void uploadSuccess() {
+    public void uploadSuccess(int type) {
 
     }
 

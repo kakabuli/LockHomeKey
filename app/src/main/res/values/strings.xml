@@ -1431,5 +1431,8 @@
     <string name="iploading">正在上传服务器</string>
     <string name="notice">目前暂不支持5G频段的Wi-Fi以及酒店机场需认证的Wi-Fi</string>
     <string name="notice_wifi_update">注意观察WiFi模块升级</string>
+    <string name="notice_lock_update">注意观察WiFi锁升级</string>
     <string name="hava_wifi_new_version">检测有新WiFi模块版本</string>
+    <string name="hava_lock_new_version">检测有新WiFi锁版本</string>
+    <string name="is_update">,是否升级?</string>
 </resources>
