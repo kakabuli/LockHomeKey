@@ -4,7 +4,6 @@ import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -13,6 +12,7 @@ import android.widget.Toast;
 
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
+import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 import com.kaadas.lock.utils.GpsUtil;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.WifiUtils;
@@ -23,35 +23,44 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.reactivex.disposables.Disposable;
 
-public class WifiLockAddSecondActivity extends AppCompatActivity {
+public class WifiLockApAddSecondActivity extends BaseAddToApplicationActivity {
 
     @BindView(R.id.back)
     ImageView back;
+    @BindView(R.id.button_next)
+    Button buttonNext;
     @BindView(R.id.help)
     ImageView help;
     final RxPermissions rxPermissions = new RxPermissions(this);
     @BindView(R.id.head)
     TextView head;
-    @BindView(R.id.bt_ap)
-    Button btAp;
-    @BindView(R.id.bt_smart_config)
-    Button btSmartConfig;
+    @BindView(R.id.notice)
+    TextView notice;
     private Disposable permissionDisposable;
+    private boolean isAp;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.wifi_lock_add_second);
+        setContentView(R.layout.wifi_lock_add_device_second);
         ButterKnife.bind(this);
 
+        isAp = getIntent().getBooleanExtra(KeyConstants.WIFI_LOCK_SETUP_IS_AP, true);
+        if (!isAp) {
+            head.setText(R.string.first_step);
+
+            notice.setText(getString(R.string.noticesdkjfh));
+        }
         //获取权限  定位权限
         permissionDisposable = rxPermissions
                 .request(Manifest.permission.ACCESS_FINE_LOCATION)
                 .subscribe(granted -> {
                     if (granted) {
-
+                        // All requested permissions are granted
                     } else {
+                        // At least one permission is denied
                         Toast.makeText(this, getString(R.string.granted_local_please_open_wifi), Toast.LENGTH_SHORT).show();
+
                     }
                 });
         //打开wifi
@@ -67,25 +76,30 @@ public class WifiLockAddSecondActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onBackPressed() {
-        super.onBackPressed();
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        isAp = intent.getBooleanExtra(KeyConstants.WIFI_LOCK_SETUP_IS_AP, true);
+        if (!isAp) {
+            head.setText(R.string.first_step);
+            notice.setText(getString(R.string.noticesdkjfh));
+        }
     }
 
-    @OnClick({R.id.back, R.id.bt_ap, R.id.bt_smart_config, R.id.help})
+    @OnClick({R.id.back, R.id.button_next, R.id.help})
     public void onViewClicked(View view) {
-        Intent intent;
         switch (view.getId()) {
             case R.id.back:
                 finish();
                 break;
-            case R.id.bt_ap:
-                    intent = new Intent(WifiLockAddSecondActivity.this, WifiLockSetUpActivity.class);
-                    startActivity(intent);
+            case R.id.button_next:
+                Intent intent = new Intent(WifiLockApAddSecondActivity.this, WifiLockApAddThirdActivity.class);
+                startActivity(intent);
                 break;
             case R.id.help:
                 startActivity(new Intent(this, WifiLockHelpActivity.class));
                 break;
-
         }
     }
+
+
 }

@@ -293,7 +293,9 @@ public class WelcomeActivity extends BaseActivity<ISplashView, SplashPresenter<I
             } else if(sip_package_json.equals("{\"func\":\"alarm\"}")){
                 Log.e(GeTui.VideoLog, "WelcomeActivity======>wifi锁开锁");
 
-            }else {
+            }else if (sip_package_json.contains("{\"func\":\"alarm\"}")){ //11
+
+            }else  {
                 long diff_time = (System.currentTimeMillis() - sip_time_json) / 1000;
                 Log.e(GeTui.VideoLog, "WelcomeActivity==>sip_time_json:" + sip_time_json + " diff_time:" + diff_time);
                 MyLog.getInstance().save("sip_time_json:" + sip_time_json + " diff_time:" + diff_time);

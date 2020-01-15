@@ -16,7 +16,7 @@ import com.kaadas.lock.activity.addDevice.gateway.AddGatewayFirstActivity;
 import com.kaadas.lock.activity.addDevice.zigbeelocknew.AddDeviceZigbeeLockNewScanFailActivity;
 import com.kaadas.lock.activity.addDevice.zigbeelocknew.AddDeviceZigbeeLockNewZeroActivity;
 import com.kaadas.lock.activity.addDevice.zigbeelocknew.AddDeviceZigbeelockNewScanActivity;
-import com.kaadas.lock.activity.device.wifilock.add.WifiLockAddFirstActivity;
+import com.kaadas.lock.activity.device.wifilock.add.WifiLockAPAddFirstActivity;
 import com.kaadas.lock.bean.HomeShowBean;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.mvp.presenter.deviceaddpresenter.DeviceZigBeeDetailPresenter;
@@ -143,7 +143,7 @@ public class DeviceAddActivity extends BaseActivity<DeviceZigBeeDetailView, Devi
                 wifiLockZigbee.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent intent = new Intent(DeviceAddActivity.this, WifiLockAddFirstActivity.class);
+                        Intent intent = new Intent(DeviceAddActivity.this, WifiLockAPAddFirstActivity.class);
                         startActivity(intent);
                     }
                 });

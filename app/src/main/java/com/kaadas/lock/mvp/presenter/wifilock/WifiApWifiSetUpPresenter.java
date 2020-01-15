@@ -61,7 +61,7 @@ public class WifiApWifiSetUpPresenter<T> extends BasePresenter<IWifiLockAPWifiSe
 
                     @Override
                     public void onAckErrorCode(BaseResult baseResult) {
-                        if (isSafe() && times>=10) {
+                        if (isSafe() && times>=9) {
                             mViewRef.get().onBindFailed(baseResult);
                             toDisposable(bindDisposable);
                         }
@@ -69,7 +69,7 @@ public class WifiApWifiSetUpPresenter<T> extends BasePresenter<IWifiLockAPWifiSe
 
                     @Override
                     public void onFailed(Throwable throwable) {
-                        if (isSafe() && times>=10) {
+                        if (isSafe() && times>=9) {
                             mViewRef.get().onBindThrowable(throwable);
                             toDisposable(bindDisposable);
                         }
@@ -97,7 +97,7 @@ public class WifiApWifiSetUpPresenter<T> extends BasePresenter<IWifiLockAPWifiSe
 
                     @Override
                     public void onAckErrorCode(BaseResult baseResult) {
-                        if (isSafe() && times>=10) {
+                        if (isSafe() && times>=9) {
                             mViewRef.get().onUpdateFailed(baseResult);
                             toDisposable(bindDisposable);
                         }
@@ -105,7 +105,7 @@ public class WifiApWifiSetUpPresenter<T> extends BasePresenter<IWifiLockAPWifiSe
 
                     @Override
                     public void onFailed(Throwable throwable) {
-                        if (isSafe() && times>=10) {
+                        if (isSafe() && times>=9) {
                             mViewRef.get().onUpdateThrowable(throwable);
                             toDisposable(bindDisposable);
                         }

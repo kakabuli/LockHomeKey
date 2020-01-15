@@ -837,15 +837,15 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.device.wifilock.add.WifiLockAddFirstActivity"
+            android:name=".activity.device.wifilock.add.WifiLockAPAddFirstActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.device.wifilock.add.WifiLockAddSecondActivity"
+            android:name=".activity.device.wifilock.add.WifiLockApAddSecondActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.device.wifilock.add.WifiLockAddThirdActivity"
+            android:name=".activity.device.wifilock.add.WifiLockApAddThirdActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
@@ -913,10 +913,6 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.device.wifilock.add.WifiLockApSetUpActivity"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".activity.device.singlebutton.SingleButtonDetailActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
@@ -951,6 +947,14 @@
 
         <activity
             android:name=".activity.device.wifilock.add.WifiLockApConnectDeviceActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.wifilock.add.WifiLockAddFirstActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.wifilock.add.WifiLockAddSecondActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
     </application>

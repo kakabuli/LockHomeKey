@@ -55,10 +55,10 @@ public class WifiLockAPAddFailedActivity extends AppCompatActivity {
             case R.id.back:
             case R.id.bt_repair:
                 if (isAp) {
-                    intent = new Intent(WifiLockAPAddFailedActivity.this, WifiLockAddFirstActivity.class);
+                    intent = new Intent(WifiLockAPAddFailedActivity.this, WifiLockAPAddFirstActivity.class);
                     startActivity(intent);
                 } else {
-                    intent = new Intent(WifiLockAPAddFailedActivity.this, WifiLockAddSecondActivity.class);
+                    intent = new Intent(WifiLockAPAddFailedActivity.this, WifiLockAddFirstActivity.class);
                     intent.putExtra(KeyConstants.WIFI_LOCK_SETUP_IS_AP, false);
                     startActivity(intent);
                 }
@@ -78,8 +78,7 @@ public class WifiLockAPAddFailedActivity extends AppCompatActivity {
                 break;
             case R.id.et_other_method:
                 finish();
-                intent = new Intent(WifiLockAPAddFailedActivity.this, WifiLockAddSecondActivity.class);
-                intent.putExtra(KeyConstants.WIFI_LOCK_SETUP_IS_AP, false);
+                intent = new Intent(WifiLockAPAddFailedActivity.this, WifiLockAddFirstActivity.class);
                 startActivity(intent);
                 break;
             case R.id.cancel:

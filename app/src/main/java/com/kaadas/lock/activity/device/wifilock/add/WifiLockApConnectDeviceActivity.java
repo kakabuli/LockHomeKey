@@ -112,7 +112,7 @@ public class WifiLockApConnectDeviceActivity extends BaseActivity<IWifiLockAPWif
                 } else if (errorCode == -4) {
                     Toast.makeText(WifiLockApConnectDeviceActivity.this, "写数据错误", Toast.LENGTH_SHORT).show();
                 } else if (errorCode == -5) {
-                    Toast.makeText(WifiLockApConnectDeviceActivity.this, "账号或密码错误", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(WifiLockApConnectDeviceActivity.this, "返回错误", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -143,18 +143,22 @@ public class WifiLockApConnectDeviceActivity extends BaseActivity<IWifiLockAPWif
                 System.arraycopy(bPwd, 0, data, 32, bPwd.length);
                 int writeResult = socketManager.writeData(data);
                 if (writeResult == 0) {
+                    LogUtils.e("发送账号密码成功   开始读取数据");
                     SocketManager.ReadResult readResult = socketManager.readWifiData();
                     if (readResult.resultCode >= 0) { //读取成功
                         String sResult = new String(readResult.data);
+                        LogUtils.e("读取成功   "  + sResult );
                         if (!TextUtils.isEmpty(sResult) && sResult.startsWith("APSuccess")) {
                             onSuccess();
                             isSuccess = true;
                             socketManager.destroy();
                         } else {
                             onError(socketManager, -5);
+                            LogUtils.e("读数据失败   " + sResult);
                         }
                     } else {
                         onError(socketManager, -1);
+                        LogUtils.e("读数据失败   " + writeResult);
                     }
                 } else { //写数据失败
                     LogUtils.e("写数据失败   " + writeResult);

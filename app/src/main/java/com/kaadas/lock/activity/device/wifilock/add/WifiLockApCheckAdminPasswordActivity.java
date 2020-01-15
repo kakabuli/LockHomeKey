@@ -2,7 +2,6 @@ package com.kaadas.lock.activity.device.wifilock.add;
 
 import android.app.AlertDialog;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.InputType;
@@ -23,10 +22,6 @@ import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.Rsa;
 import com.kaadas.lock.utils.SocketManager;
-import com.kaadas.lock.utils.StringUtil;
-import com.kaadas.lock.utils.ToastUtil;
-
-import java.util.Observable;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -88,13 +83,8 @@ public class WifiLockApCheckAdminPasswordActivity extends BaseAddToApplicationAc
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if (errorCode == -3) {
-                    reInputAdminPassword();
-                    Toast.makeText(WifiLockApCheckAdminPasswordActivity.this, getString(R.string.admin_password_error), Toast.LENGTH_SHORT).show();
-                    return;
-                }
                 finish();
-                startActivity(new Intent(WifiLockApCheckAdminPasswordActivity.this, WifiLockAddThirdActivity.class));
+                startActivity(new Intent(WifiLockApCheckAdminPasswordActivity.this, WifiLockApAddThirdActivity.class));
                 socketManager.destroy();
                 runOnUiThread(new Runnable() {
                     @Override
@@ -169,6 +159,7 @@ public class WifiLockApCheckAdminPasswordActivity extends BaseAddToApplicationAc
                         parseData(adminPassword);
                     }
                 } else { //读取失败
+                    socketManager.writeData(("TimeOut").getBytes());
                     onError(socketManager, -1);
                 }
             } else {  //连接失败
@@ -193,7 +184,7 @@ public class WifiLockApCheckAdminPasswordActivity extends BaseAddToApplicationAc
                 alertDialog.dismiss();
                 socketManager.destroy();
                 finish();
-                startActivity(new Intent(WifiLockApCheckAdminPasswordActivity.this, WifiLockAddThirdActivity.class));
+                startActivity(new Intent(WifiLockApCheckAdminPasswordActivity.this, WifiLockApAddThirdActivity.class));
             }
         });
         tv_query.setOnClickListener(new View.OnClickListener() {
@@ -254,15 +245,28 @@ public class WifiLockApCheckAdminPasswordActivity extends BaseAddToApplicationAc
                             LogUtils.e("异常   " + throwable);
                             socketManager.destroy();
                             finish();
-                            startActivity(new Intent(WifiLockApCheckAdminPasswordActivity.this, WifiLockAddThirdActivity.class));
+                            startActivity(new Intent(WifiLockApCheckAdminPasswordActivity.this, WifiLockApAddThirdActivity.class));
                         }
                     });
         } else {
-            if (retryTimes >= 3) {
+            if (retryTimes > 5) {
                 socketManager.destroy();
                 finish();
-                startActivity(new Intent(WifiLockApCheckAdminPasswordActivity.this, WifiLockAddThirdActivity.class));
+                startActivity(new Intent(WifiLockApCheckAdminPasswordActivity.this, WifiLockApAddThirdActivity.class));
             } else {
+//                if (Looper.myLooper() != Looper.getMainLooper()) {
+//                    //非主线程
+//                    int writeResult = socketManager.writeData(("CRCError\r").getBytes());
+//                    LogUtils.e("写 CRC Error  结果为   " + writeResult);
+//                }
+                new Thread(){
+                    @Override
+                    public void run() {
+                        super.run();
+                        int writeResult = socketManager.writeData(("CRCError\r").getBytes());
+                        LogUtils.e("写 CRC Error  结果为   " + writeResult);
+                    }
+                }.start();
                 LogUtils.e("重新输入管理员密码");
                 handler.post(new Runnable() {
                     @Override

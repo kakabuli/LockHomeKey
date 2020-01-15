@@ -23,7 +23,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.reactivex.disposables.Disposable;
 
-public class WifiLockAddThirdActivity extends AppCompatActivity {
+public class WifiLockApAddThirdActivity extends AppCompatActivity {
 
     @BindView(R.id.back)
     ImageView back;
@@ -39,7 +39,7 @@ public class WifiLockAddThirdActivity extends AppCompatActivity {
     @BindView(R.id.bt_smart_config)
     Button btSmartConfig;
     private Disposable permissionDisposable;
-    private boolean isAp;
+    private boolean isAp = true;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -47,18 +47,14 @@ public class WifiLockAddThirdActivity extends AppCompatActivity {
         setContentView(R.layout.add_device_wifi_lock_third);
         ButterKnife.bind(this);
         isAp = getIntent().getBooleanExtra(KeyConstants.WIFI_LOCK_SETUP_IS_AP, true);
-        if (!isAp) {
-            head.setText(R.string.second_step);
-            tvNotice.setText(getString(R.string.fkjdksklaj));
-        }
         //获取权限  定位权限
         permissionDisposable = rxPermissions
                 .request(Manifest.permission.ACCESS_FINE_LOCATION)
                 .subscribe(granted -> {
                     if (granted) {
+
                     } else {
                         Toast.makeText(this, getString(R.string.granted_local_please_open_wifi), Toast.LENGTH_SHORT).show();
-
                     }
                 });
         //打开wifi
@@ -86,14 +82,8 @@ public class WifiLockAddThirdActivity extends AppCompatActivity {
                 finish();
                 break;
             case R.id.bt_ap:
-                if (isAp) {
-                    intent = new Intent(WifiLockAddThirdActivity.this, WifiLockNoticeUserLinkWifiFirstActivity.class);
-                    startActivity(intent);
-                } else {
-                    intent = new Intent(WifiLockAddThirdActivity.this, WifiLockSetUpActivity.class);
-                    intent.putExtra(KeyConstants.WIFI_LOCK_SETUP_IS_AP, false);
-                    startActivity(intent);
-                }
+                intent = new Intent(WifiLockApAddThirdActivity.this, WifiLockNoticeUserLinkWifiFirstActivity.class);
+                startActivity(intent);
                 break;
             case R.id.help:
                 startActivity(new Intent(this, WifiLockHelpActivity.class));

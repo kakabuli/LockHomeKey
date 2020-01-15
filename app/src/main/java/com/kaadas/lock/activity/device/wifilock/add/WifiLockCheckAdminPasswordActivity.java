@@ -25,6 +25,7 @@ import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.util.RxjavaHelper;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.KeyConstants;
+import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.Rsa;
 import com.kaadas.lock.utils.SocketManager;
 
@@ -62,7 +63,6 @@ public class WifiLockCheckAdminPasswordActivity extends BaseActivity<IWifiLockAP
         ButterKnife.bind(this);
         adminPassword = getIntent().getStringExtra(KeyConstants.WIFI_LOCK_ADMIN_PASSWORD);
         wifiName = getIntent().getStringExtra(KeyConstants.WIFI_LOCK_WIFI_SSID);
-
         Log.e("凯迪仕", "onCreate: adminPassword " + adminPassword + "   wifiName " + wifiName);
         thread.start();
     }
@@ -91,6 +91,9 @@ public class WifiLockCheckAdminPasswordActivity extends BaseActivity<IWifiLockAP
         thread.interrupt();
         if (socketManager != null) {
             socketManager.destroy();
+        }
+        if (writeDisposable != null) {
+            writeDisposable.dispose();
         }
     }
 
@@ -142,7 +145,7 @@ public class WifiLockCheckAdminPasswordActivity extends BaseActivity<IWifiLockAP
                 alertDialog.dismiss();
                 socketManager.destroy();
                 finish();
-                startActivity(new Intent(WifiLockCheckAdminPasswordActivity.this, WifiLockAddThirdActivity.class));
+                startActivity(new Intent(WifiLockCheckAdminPasswordActivity.this, WifiLockApAddThirdActivity.class));
             }
         });
         tv_query.setOnClickListener(new View.OnClickListener() {
@@ -178,7 +181,7 @@ public class WifiLockCheckAdminPasswordActivity extends BaseActivity<IWifiLockAP
                             return writeResult;
                         }
                     })
-                    .delay(1000,TimeUnit.MILLISECONDS)
+                    .delay(1000, TimeUnit.MILLISECONDS)
                     .compose(RxjavaHelper.observeOnMainThread())
                     .subscribe(new Consumer<Integer>() {
                         @Override
@@ -192,11 +195,24 @@ public class WifiLockCheckAdminPasswordActivity extends BaseActivity<IWifiLockAP
                         }
                     });
         } else { //解析数据错误
-            if (retryTimes >= 3) {
+            if (retryTimes > 5 ) {
                 socketManager.destroy();
                 finish();
-                startActivity(new Intent(WifiLockCheckAdminPasswordActivity.this, WifiLockAddThirdActivity.class));
+                startActivity(new Intent(WifiLockCheckAdminPasswordActivity.this, WifiLockApAddThirdActivity.class));
             } else {
+//                if (Looper.myLooper() != Looper.getMainLooper()) {
+//                    //非主线程
+//                    int writeResult = socketManager.writeData(("CRCError\r").getBytes());
+//                    LogUtils.e("写 CRC Error  结果为   " + writeResult);
+//                }
+                new Thread(){
+                    @Override
+                    public void run() {
+                        super.run();
+                        int writeResult = socketManager.writeData(("CRCError\r").getBytes());
+                        LogUtils.e("写 CRC Error  结果为   " + writeResult);
+                    }
+                }.start();
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
@@ -205,11 +221,9 @@ public class WifiLockCheckAdminPasswordActivity extends BaseActivity<IWifiLockAP
                 });
             }
         }
-
     }
 
     private Handler handler = new Handler();
-
 
     private void onSuccess(SocketManager.WifiResult result) {
         String wifiSn = new String(result.wifiSn);

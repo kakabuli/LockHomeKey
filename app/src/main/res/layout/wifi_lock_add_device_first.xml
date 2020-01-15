@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#fff"
+    android:gravity="center_horizontal"
     android:orientation="vertical"
     >
     <RelativeLayout
@@ -46,30 +47,97 @@
             />
     </RelativeLayout>
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/dp_30"
-        android:gravity="center"
         android:orientation="vertical"
         >
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/first"
-            android:textColor="#333333"
-            android:textSize="@dimen/sp_18"
-            />
-        <TextView
-            android:gravity="center"
-            android:lineSpacingExtra="@dimen/dp_8"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/wifi_lock_first_notice1"
-            android:layout_marginTop="@dimen/dp_5"
-            android:textColor="#ff333333"
-            android:textSize="14sp"
-            />
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1. 门锁配网准备 "
+                android:textColor="#333333"
+                android:textSize="@dimen/sp_18"
+                />
+            <TextView
+                android:lineSpacingExtra="@dimen/dp_6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="① 确保您的门锁已安装  "
+                android:layout_marginTop="@dimen/dp_25"
+                android:textColor="#ff333333"
+                android:textSize="14sp"
+                />
+            <TextView
+                android:layout_marginTop="@dimen/dp_6"
+                android:lineSpacingExtra="@dimen/dp_6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="② 后面板Wi-Fi模块插紧"
+                android:textColor="#ff333333"
+                android:textSize="14sp"
+                />
+
+            <TextView
+                android:layout_marginTop="@dimen/dp_6"
+                android:lineSpacingExtra="@dimen/dp_6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="③ 装上配对好的4节电池"
+                android:textColor="#ff333333"
+                android:textSize="14sp"
+                />
+            <TextView
+                android:layout_marginLeft="@dimen/dp_10"
+                android:layout_marginTop="@dimen/dp_8"
+                android:lineSpacingExtra="@dimen/dp_6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="（建议安装8节电池，确保门锁联网使用）"
+                android:textColor="#ff333333"
+                android:textSize="10sp"
+                />
+
+            <TextView
+                android:layout_marginTop="@dimen/dp_8"
+                android:lineSpacingExtra="@dimen/dp_6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="④ 首次绑定请先确保门锁已激活 "
+                android:textColor="#ff333333"
+                android:textSize="14sp"
+                />
+            <LinearLayout
+                android:layout_marginTop="@dimen/dp_10"
+                android:layout_width="wrap_content"
+                android:orientation="horizontal"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:scaleY="0.8"
+                    android:scaleX="0.8"
+                    android:src="@mipmap/remind"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <EditText
+                    android:id="@+id/tohelp"
+                    android:editable="false"
+                    android:paddingBottom="@dimen/dp_4"
+                    android:background="@drawable/edit_text_line_1f967f"
+                    android:layout_marginLeft="@dimen/dp_10"
+                    android:textSize="12sp"
+                    android:text="@string/how_to_active"
+                    android:textColor="#1F96F7"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+        </LinearLayout>
     </LinearLayout>
 
     <ImageView
@@ -79,60 +147,6 @@
         android:src="@mipmap/lock_first"
         android:layout_gravity="center"
         />
-
-    <LinearLayout
-        android:layout_gravity="center"
-        android:gravity=""
-        android:orientation="vertical"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-
-        <LinearLayout
-            android:layout_marginTop="@dimen/dp_30"
-            android:layout_width="match_parent"
-            android:orientation="horizontal"
-            android:layout_height="wrap_content">
-
-            <ImageView
-                android:src="@mipmap/remind"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-            <TextView
-                android:layout_marginLeft="@dimen/dp_10"
-                android:textSize="13sp"
-                android:text="@string/wifi_lock_first_notice2"
-                android:textColor="#333333"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
-
-
-        <LinearLayout
-            android:layout_marginTop="@dimen/dp_5"
-            android:layout_width="match_parent"
-            android:orientation="horizontal"
-            android:layout_height="wrap_content">
-
-            <ImageView
-                android:visibility="invisible"
-                android:src="@mipmap/remind"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
-            <EditText
-                android:id="@+id/tohelp"
-                android:editable="false"
-                android:paddingBottom="@dimen/dp_4"
-                android:background="@drawable/edit_text_line_1f967f"
-                android:layout_marginLeft="@dimen/dp_10"
-                android:textSize="13sp"
-                android:text="@string/how_to_active"
-                android:textColor="#1F96F7"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
-
-    </LinearLayout>
 
     <View
         android:layout_weight="1"

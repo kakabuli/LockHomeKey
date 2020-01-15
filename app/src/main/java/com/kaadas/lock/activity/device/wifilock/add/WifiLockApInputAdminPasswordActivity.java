@@ -70,7 +70,7 @@ public class WifiLockApInputAdminPasswordActivity extends BaseAddToApplicationAc
         switch (view.getId()) {
             case R.id.back:
                 finish();
-                intent = new Intent(WifiLockApInputAdminPasswordActivity.this, WifiLockAddThirdActivity.class);
+                intent = new Intent(WifiLockApInputAdminPasswordActivity.this, WifiLockApAddThirdActivity.class);
                 startActivity(intent);
                 break;
             case R.id.tv_next:

@@ -89,18 +89,18 @@ public class WifiLockFragment extends BaseFragment<IWifiLockView, WifiLockPresen
         wifiLockInfo = (WifiLockInfo) getArguments().getSerializable(KeyConstants.WIFI_LOCK_INFO);
         wifiLockInfo = MyApplication.getInstance().getWifiLockInfoBySn(wifiLockInfo.getWifiSN());
         mPresenter.getOpenCount(wifiLockInfo.getWifiSN());
-        mPresenter.getOperationRecord(wifiLockInfo.getWifiSN(),false);
+        mPresenter.getOperationRecord(wifiLockInfo.getWifiSN(), false);
         initData();
         rlIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getContext(),getString(R.string.not_enable_click),Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), getString(R.string.not_enable_click), Toast.LENGTH_SHORT).show();
             }
         });
         rlIcon.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                Toast.makeText(getContext(),getString(R.string.not_enable_click),Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), getString(R.string.not_enable_click), Toast.LENGTH_SHORT).show();
                 return false;
             }
         });
@@ -126,22 +126,20 @@ public class WifiLockFragment extends BaseFragment<IWifiLockView, WifiLockPresen
         int count = (int) SPUtils.get(KeyConstants.WIFI_LOCK_OPEN_COUNT + wifiLockInfo.getWifiSN(), 0);
         tvOpenLockTimes.setText("" + count);
 
-        if (!isOpening){
-            int safeMode = wifiLockInfo.getSafeMode();  //安全模式
-            int operatingMode = wifiLockInfo.getOperatingMode(); //反锁模式
-            int defences = wifiLockInfo.getDefences();  //布防模式
+        int safeMode = wifiLockInfo.getSafeMode();  //安全模式
+        int operatingMode = wifiLockInfo.getOperatingMode(); //反锁模式
+        int defences = wifiLockInfo.getDefences();  //布防模式
 
-            changeLockStatus(5);
+        changeLockStatus(5);
 
-            if (safeMode == 1) {//安全模式
-                changeLockStatus(6);
-            }
-            if (operatingMode == 1) {//反锁模式
-                changeLockStatus(3);
-            }
-            if (defences == 1) {//布防模式
-                changeLockStatus(2);
-            }
+        if (safeMode == 1) {//安全模式
+            changeLockStatus(6);
+        }
+        if (operatingMode == 1) {//反锁模式
+            changeLockStatus(3);
+        }
+        if (defences == 1) {//布防模式
+            changeLockStatus(2);
         }
         long createTime2 = wifiLockInfo.getCreateTime();
 
@@ -216,22 +214,22 @@ public class WifiLockFragment extends BaseFragment<IWifiLockView, WifiLockPresen
 
         ivTopIcon.setVisibility(View.VISIBLE); //上方图标显示
         switch (status) {
-            case 1: //离线状态
-                ivBackGround.setImageResource(R.mipmap.bluetooth_no_connect_big_middle_icon);  //背景大图标
-                ivCenterIcon.setImageResource(R.mipmap.wifi_lock_off_line);  //离线图标
-                ivTopIcon.setVisibility(View.GONE); //上方图标隐藏
-                tvTopStates.setText(getString(R.string.checked_off_line));  //设置设备状态   离线
-                break;
+//            case 1: //离线状态
+//                ivBackGround.setImageResource(R.mipmap.bluetooth_no_connect_big_middle_icon);  //背景大图标
+//                ivCenterIcon.setImageResource(R.mipmap.wifi_lock_off_line);  //离线图标
+//                ivTopIcon.setVisibility(View.GONE); //上方图标隐藏
+//                tvTopStates.setText(getString(R.string.checked_off_line));  //设置设备状态   离线
+//                break;
             case 2:
                 //已启动布防模式
                 ivBackGround.setImageResource(R.mipmap.bluetooth_bu_fang_big_middle_icon);  //背景大图标
-                ivCenterIcon.setImageResource(R.mipmap.bluetooth_lock_safe_inner_midder_icon);  //门锁关闭状态
+                ivCenterIcon.setImageResource(isOpening ? R.mipmap.bluetooth_open_lock_success_niner_middle_icon : R.mipmap.bluetooth_lock_safe_inner_midder_icon);  //门锁关闭状态
                 tvTopStates.setText(getString(R.string.already_open_alarm));  //设置设备状态   离线
                 break;
             case 3:
                 //“已反锁，请门内开锁”
                 ivBackGround.setImageResource(R.mipmap.bluetooth_double_lock_big_middle_icon);  //背景大图标
-                ivCenterIcon.setImageResource(R.mipmap.bluetooth_lock_safe_inner_midder_icon);  //门锁关闭状态
+                ivCenterIcon.setImageResource(isOpening ? R.mipmap.bluetooth_open_lock_success_niner_middle_icon : R.mipmap.bluetooth_lock_safe_inner_midder_icon);  //门锁关闭状态
                 tvTopStates.setText(getString(R.string.already_back_lock));  //设置设备状态   离线
                 break;
             case 4:
@@ -243,13 +241,13 @@ public class WifiLockFragment extends BaseFragment<IWifiLockView, WifiLockPresen
             case 5:
                 //门已上锁  正常模式
                 ivBackGround.setImageResource(R.mipmap.bluetooth_lock_close_big_middle_icon);  //背景大图标
-                ivCenterIcon.setImageResource(R.mipmap.bluetooth_lock_safe_inner_midder_icon);  //门锁关闭状态
+                ivCenterIcon.setImageResource(isOpening ? R.mipmap.bluetooth_open_lock_success_niner_middle_icon : R.mipmap.bluetooth_lock_safe_inner_midder_icon);  //门锁关闭状态
                 tvTopStates.setText(getString(R.string.lock_lock_already));  //设置设备状态   离线
                 break;
             case 6:
                 //已启动安全模式
                 ivBackGround.setImageResource(R.mipmap.wifi_lock_safe_bg);  //背景大图标
-                ivCenterIcon.setImageResource(R.mipmap.bluetooth_lock_safe_inner_midder_icon);  //门锁关闭状态
+                ivCenterIcon.setImageResource(isOpening ? R.mipmap.bluetooth_open_lock_success_niner_middle_icon : R.mipmap.bluetooth_lock_safe_inner_midder_icon);  //门锁关闭状态
                 tvTopStates.setText(getString(R.string.already_safe_model_open));  //设置设备状态   离线
                 break;
         }
@@ -281,7 +279,7 @@ public class WifiLockFragment extends BaseFragment<IWifiLockView, WifiLockPresen
                 break;
             case R.id.tv_synchronized_record:
                 showLoading(getString(R.string.is_syncing));
-                mPresenter.getOperationRecord(wifiLockInfo.getWifiSN(),true);
+                mPresenter.getOperationRecord(wifiLockInfo.getWifiSN(), true);
                 mPresenter.getOpenCount(wifiLockInfo.getWifiSN());
                 break;
         }
@@ -294,34 +292,34 @@ public class WifiLockFragment extends BaseFragment<IWifiLockView, WifiLockPresen
     }
 
     @Override
-    public void onLoadServerRecord(List<WifiLockOperationRecord> operationRecords,boolean isNotice) {
+    public void onLoadServerRecord(List<WifiLockOperationRecord> operationRecords, boolean isNotice) {
         groupData(operationRecords);
         hiddenLoading();
-        if (isNotice){
-            Toast.makeText(getContext(),getString(R.string.sync_success),Toast.LENGTH_SHORT).show();
+        if (isNotice) {
+            Toast.makeText(getContext(), getString(R.string.sync_success), Toast.LENGTH_SHORT).show();
         }
     }
 
     @Override
-    public void onLoadServerRecordFailed(Throwable throwable,boolean isNotice) {
-        if (isNotice){
-            Toast.makeText(getContext(),getString(R.string.sync_failed),Toast.LENGTH_SHORT).show();
-        }
-        hiddenLoading();
-    }
-
-    @Override
-    public void onLoadServerRecordFailedServer(BaseResult result,boolean isNotice) {
-        if (isNotice){
-            Toast.makeText(getContext(),getString(R.string.sync_failed),Toast.LENGTH_SHORT).show();
+    public void onLoadServerRecordFailed(Throwable throwable, boolean isNotice) {
+        if (isNotice) {
+            Toast.makeText(getContext(), getString(R.string.sync_failed), Toast.LENGTH_SHORT).show();
         }
         hiddenLoading();
     }
 
     @Override
-    public void onServerNoData( boolean isNotice) {
-        if (isNotice){
-            Toast.makeText(getContext(),getString(R.string.no_data),Toast.LENGTH_SHORT).show();
+    public void onLoadServerRecordFailedServer(BaseResult result, boolean isNotice) {
+        if (isNotice) {
+            Toast.makeText(getContext(), getString(R.string.sync_failed), Toast.LENGTH_SHORT).show();
+        }
+        hiddenLoading();
+    }
+
+    @Override
+    public void onServerNoData(boolean isNotice) {
+        if (isNotice) {
+            Toast.makeText(getContext(), getString(R.string.no_data), Toast.LENGTH_SHORT).show();
         }
         hiddenLoading();
     }
@@ -346,14 +344,16 @@ public class WifiLockFragment extends BaseFragment<IWifiLockView, WifiLockPresen
         if (!TextUtils.isEmpty(wifiSn) && wifiLockInfo != null && wifiSn.equals(wifiLockInfo.getWifiSN())) {
             if (eventparams.getEventType() == 0x01) { //操作类
                 if (eventparams.getEventCode() == 0x01) {  //上锁
-                    handler.removeCallbacks(initRunnable);
-                    handler.post(initRunnable);
+                    isOpening = false;
+//                    handler.removeCallbacks(initRunnable);
+//                    handler.post(initRunnable);
                 } else if (eventparams.getEventCode() == 0x02) { //开锁
+                    mPresenter.getOperationRecord(wifiLockInfo.getWifiSN(), true);
                     isOpening = true;
                     mPresenter.getOpenCount(wifiLockInfo.getWifiSN());
                     changeLockStatus(4);
-                    handler.removeCallbacks(initRunnable);
-                    handler.postDelayed(initRunnable, 15 * 1000);
+//                    handler.removeCallbacks(initRunnable);
+//                    handler.postDelayed(initRunnable, 15 * 1000);
                 }
             }
         }
@@ -365,11 +365,11 @@ public class WifiLockFragment extends BaseFragment<IWifiLockView, WifiLockPresen
         initData();
     }
 
-    private Runnable initRunnable = new Runnable() {
-        @Override
-        public void run() {
-            isOpening = false;
-            initData();
-        }
-    };
+//    private Runnable initRunnable = new Runnable() {
+//        @Override
+//        public void run() {
+////            isOpening = false;
+////            initData();
+//        }
+//    };
 }

@@ -78,13 +78,13 @@ public class SocketManager {
             readResult.resultCode = -99;
             return readResult;
         }
-
         try {
-            socket.setSoTimeout(10 * 1000);
+            socket.setSoTimeout(15 * 1000);
         } catch (SocketException e) {
             e.printStackTrace();
             release();
             readResult.resultCode = -1;
+            LogUtils.e("读取数据超时   -1 " + e.getMessage());
             return readResult;
         }
         try {
@@ -93,6 +93,7 @@ public class SocketManager {
             e.printStackTrace();
             release();
             readResult.resultCode = -2;
+            LogUtils.e("读取数据超时   -2 " + e.getMessage());
             return readResult;
         }
         int size = 0;

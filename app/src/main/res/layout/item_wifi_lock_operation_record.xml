@@ -65,8 +65,8 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="10"
+        android:gravity="center"
         android:lines="2"
-        android:text=""
         android:textColor="#999999"
         android:textSize="@dimen/sp_12" />
 </LinearLayout>

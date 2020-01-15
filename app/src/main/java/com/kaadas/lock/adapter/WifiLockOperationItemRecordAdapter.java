@@ -64,13 +64,16 @@ public class WifiLockOperationItemRecordAdapter extends BaseQuickAdapter<WifiLoc
                     case 0:
                         right = mContext.getString(R.string.password_open);
                         if (record.getPwdNum() == 252) {
-                            left = mContext.getString(R.string.offline_password_open);
+                            left = mContext.getString(R.string.temp_password_open_lock);
                             right = "";
                         }else if (record.getPwdNum() == 254){
                             left = mContext.getString(R.string.admin_password);
                             right = "";
                         }else if (record.getPwdNum() == 253){
                             left = mContext.getString(R.string.gust_password);
+                            right = "";
+                        }else if (record.getPwdNum() == 250){
+                            left = mContext.getString(R.string.offline_password_open);
                             right = "";
                         }
                         break;

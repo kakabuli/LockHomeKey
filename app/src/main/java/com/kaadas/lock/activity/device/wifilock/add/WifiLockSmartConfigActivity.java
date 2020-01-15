@@ -149,18 +149,7 @@ public class WifiLockSmartConfigActivity extends AppCompatActivity {
 
         @Override
         protected void onPreExecute() {
-//            loadingDialog.setCanceledOutside(false);
-//            loadingDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-//                @Override
-//                public void onCancel(DialogInterface dialog) {
-//                    synchronized (mLock) {
-//                        if (mEsptouchTask != null) {
-//                            mEsptouchTask.interrupt();
-//                        }
-//                    }
-//                }
-//            });
-//            loadingDialog.show(mActivity.get().getString(R.string.lock_net_connect));
+
         }
 
         @Override

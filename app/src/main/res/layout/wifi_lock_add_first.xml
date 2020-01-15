@@ -45,7 +45,12 @@
             android:layout_centerVertical="true"
             />
     </RelativeLayout>
-     <LinearLayout
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+    </LinearLayout>
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/dp_30"
@@ -55,15 +60,15 @@
             android:id="@+id/head"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="2. 门锁进入管理模式"
+            android:text="1. 门锁进入管理模式"
             android:textColor="#333333"
             android:textSize="@dimen/sp_18"
             />
         <TextView
             android:id="@+id/notice"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/hfdsjfsdhjf"
+            android:text="@string/dsfkjasdfsdfsdfshj"
             android:layout_marginTop="@dimen/dp_25"
             android:textColor="#ff333333"
             android:textSize="@dimen/sp_13"
@@ -87,7 +92,7 @@
                 <TextView
                     android:layout_marginLeft="@dimen/dp_10"
                     android:textSize="12sp"
-                    android:text="@string/wifi_lock_sconed_notice3"
+                    android:text="初始管理密码为：12345678"
                     android:textColor="#333333"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
@@ -109,7 +114,7 @@
                 <TextView
                     android:layout_marginLeft="@dimen/dp_10"
                     android:textSize="12sp"
-                    android:text="@string/wifi_lock_sconed_notice2"
+                    android:text="进入管理模式根据语音提示完成更改"
                     android:textColor="#333333"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
@@ -122,7 +127,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@mipmap/lock_second"
-        android:layout_marginTop="@dimen/dp_42"
+        android:layout_marginTop="@dimen/dp_20"
         android:layout_gravity="center"
         />
     <View

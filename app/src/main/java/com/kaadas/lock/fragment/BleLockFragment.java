@@ -1109,9 +1109,14 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
                 break;
             }
             OpenLockRecord record = lockRecords.get(i);
-            //获取开锁时间的毫秒数
-            String timeHead = record.getOpen_time().substring(0, 10);
-            String hourSecond = record.getOpen_time().substring(11, 16);
+            String timeHead = "";
+            String hourSecond = "";
+            try {
+                  timeHead = record.getOpen_time().substring(0, 10);
+                  hourSecond = record.getOpen_time().substring(11, 16);
+            }catch (Exception e){
+                LogUtils.e("获取时间错误    " +  record.getOpen_time());
+            }
 
             GetPasswordResult passwordResult = MyApplication.getInstance().getPasswordResults(bleLockInfo.getServerLockInfo().getLockName());
             String nickName = getOpenLockType(passwordResult, record);

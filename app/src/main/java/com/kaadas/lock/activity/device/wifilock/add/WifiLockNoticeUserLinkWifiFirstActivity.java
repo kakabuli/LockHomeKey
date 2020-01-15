@@ -18,7 +18,6 @@ import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.NetUtil;
 import com.kaadas.lock.utils.SPUtils;
-import com.kaadas.lock.utils.WifiUtils;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -50,8 +49,7 @@ public class WifiLockNoticeUserLinkWifiFirstActivity extends AppCompatActivity {
                 startActivity(new Intent(android.provider.Settings.ACTION_WIFI_SETTINGS));
                 break;
             case R.id.et_other_method:
-                Intent intent = new Intent(WifiLockNoticeUserLinkWifiFirstActivity.this, WifiLockAddSecondActivity.class);
-                intent.putExtra(KeyConstants.WIFI_LOCK_SETUP_IS_AP, false);
+                Intent intent = new Intent(WifiLockNoticeUserLinkWifiFirstActivity.this, WifiLockAddFirstActivity.class);
                 startActivity(intent);
                 break;
         }

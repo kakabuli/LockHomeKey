@@ -68,25 +68,6 @@ public class WifiLockApWifiSetUpActivity extends BaseActivity<IWifiLockAPWifiSet
     public String adminPassword;
     public String sSsid;
 
-//    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
-//        @Override
-//        public void onReceive(Context context, Intent intent) {
-//            String action = intent.getAction();
-//            if (action == null) {
-//                return;
-//            }
-//            WifiManager wifiManager = (WifiManager) context.getApplicationContext()
-//                    .getSystemService(WIFI_SERVICE);
-//            assert wifiManager != null;
-//
-//            switch (action) {
-//                case WifiManager.NETWORK_STATE_CHANGED_ACTION:
-//                case LocationManager.PROVIDERS_CHANGED_ACTION:
-//                    onWifiChanged(wifiManager.getConnectionInfo());
-//                    break;
-//            }
-//        }
-//    };
     private String wifiSn;
     private String randomCode;
     private int func;
@@ -107,7 +88,7 @@ public class WifiLockApWifiSetUpActivity extends BaseActivity<IWifiLockAPWifiSet
         func = getIntent().getIntExtra(KeyConstants.WIFI_LOCK_FUNC,0);
 
         String wifiName = (String) SPUtils.get(KeyConstants.WIFI_LOCK_CONNECT_NAME, "");
-        apSsidText.setText(wifiName);
+        apSsidText.setText(wifiName.trim());
         mApSsidTV.setOnOpenPopWindowListener(new DropEditText.OnOpenPopWindowListener() {
             @Override
             public void onOpenPopWindowListener(View view) {
@@ -115,10 +96,6 @@ public class WifiLockApWifiSetUpActivity extends BaseActivity<IWifiLockAPWifiSet
                 mApSsidTV.setSelection(0);
             }
         });
-
-
-
-
     }
 
     @Override
@@ -165,9 +142,11 @@ public class WifiLockApWifiSetUpActivity extends BaseActivity<IWifiLockAPWifiSet
                 if (passwordHide) {
                     apPasswordEdit.setTransformationMethod(PasswordTransformationMethod.getInstance());
                     apPasswordEdit.setSelection(apPasswordEdit.getText().toString().length());//将光标移至文字末尾
+                    ivEye.setImageResource(R.mipmap.eye_close_has_color);
                 } else {
                     apPasswordEdit.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
                     apPasswordEdit.setSelection(apPasswordEdit.getText().toString().length());//将光标移至文字末尾
+                    ivEye.setImageResource(R.mipmap.eye_open_has_color);
                 }
                 break;
             case R.id.back:
