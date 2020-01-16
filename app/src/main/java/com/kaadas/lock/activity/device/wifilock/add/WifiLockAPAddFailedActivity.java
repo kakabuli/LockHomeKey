@@ -48,6 +48,20 @@ public class WifiLockAPAddFailedActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent;
+        if (isAp) {
+            intent = new Intent(WifiLockAPAddFailedActivity.this, WifiLockAPAddFirstActivity.class);
+            startActivity(intent);
+        } else {
+            intent = new Intent(WifiLockAPAddFailedActivity.this, WifiLockAddFirstActivity.class);
+            intent.putExtra(KeyConstants.WIFI_LOCK_SETUP_IS_AP, false);
+            startActivity(intent);
+        }
+    }
+
     @OnClick({R.id.back, R.id.to_look_support_route, R.id.bt_repair,  R.id.tv_support_list, R.id.help, R.id.et_other_method, R.id.cancel})
     public void onClick(View view) {
         Intent intent;
