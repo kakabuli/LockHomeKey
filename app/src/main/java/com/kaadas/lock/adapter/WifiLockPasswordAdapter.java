@@ -21,19 +21,11 @@ import java.util.List;
 
 public class WifiLockPasswordAdapter extends BaseQuickAdapter<ForeverPassword, BaseViewHolder> {
 
-    private final String[] weekdays;
 
     public WifiLockPasswordAdapter(@Nullable List<ForeverPassword> data, int layoutId) {
         super(layoutId, data);
         mContext = MyApplication.getInstance().getApplicationContext();
-        weekdays = new String[]{
-                mContext.getString(R.string.week_day),
-                mContext.getString(R.string.monday),
-                mContext.getString(R.string.tuesday),
-                mContext.getString(R.string.wedensday),
-                mContext.getString(R.string.thursday),
-                mContext.getString(R.string.friday),
-                mContext.getString(R.string.saturday)};
+
     }
 
     @Override
@@ -66,68 +58,21 @@ public class WifiLockPasswordAdapter extends BaseQuickAdapter<ForeverPassword, B
                 break;
             case 2:
                 helper.setText(R.id.tv_time, "胁迫密码");
-
                 break;
             case 3:
                 helper.setText(R.id.tv_time, "管理员密码");
-
                 break;
             case 4:
                 helper.setText(R.id.tv_time, "无权限密码");
-
                 break;
             case 254:
                 helper.setText(R.id.tv_time, "临时密码");
-
                 break;
             case 255:
                 helper.setText(R.id.tv_time, "无效值密码");
-
                 break;
         }
-        if (bean.getType() == 1) {
-
-        } else if (bean.getType() == 2) {
-            helper.setText(R.id.tv_time, DateUtils.getDateTimeFromMillisecond(bean.getStartTime()) + "-" + DateUtils.getDateTimeFromMillisecond(bean.getEndTime()));
-        } else if (bean.getType() == 3) {  //周期密码
-            String weeks = "";
-            boolean isFirst = false;
-            for (int i = 0; i < bean.getItems().size(); i++) {
-                if ("1".equals(bean.getItems().get(i))) {
-                    if (isFirst) {
-                        weeks += "、" + weekdays[i];
-                    } else {
-                        weeks += weekdays[i];
-                        isFirst = true;
-                    }
-
-                }
-            }
-            String startTime = getStartTime(bean);
-            String endTime = getEndTime(bean);
-            weeks = mContext.getString(R.string.pwd_will) + weeks + startTime + "-" + endTime + mContext.getString(R.string.force);
-            helper.setText(R.id.tv_time, weeks);
-        } else if (bean.getType() == 4) {
-            helper.setText(R.id.tv_time, DateUtils.getDateTimeFromMillisecond(bean.getStartTime()) + "-" + DateUtils.getDateTimeFromMillisecond(bean.getEndTime()));
-        } else if (bean.getType() == 5) {
-            helper.setText(R.id.tv_time, MyApplication.getInstance().getString(R.string.temporary_password_used_once));
-        }
-        if ("09".equals(bean.getNum())) {
-            helper.setText(R.id.tv_time, MyApplication.getInstance().getString(R.string.stress_password));
-        }
     }
 
-    private String getEndTime(ForeverPassword bean) {
-        int endHour = (int) bean.getEndTime() / 60 / 60 / 1000;
-        int endMinute = (int) bean.getEndTime() % (60 * 60 * 1000) / 60 / 1000;
-        String endTime = (endHour > 9 ? "" + endHour : "0" + endHour) + ":" + (endMinute > 9 ? "" + endMinute : "0" + endMinute);
-        return endTime;
-    }
 
-    private String getStartTime(ForeverPassword bean) {
-        int startHour = (int) bean.getStartTime() / 60 / 60 / 1000;
-        int startMinute = (int) bean.getStartTime() % (60 * 60 * 1000) / 60 / 1000;
-        String startTime = (startHour > 9 ? "" + startHour : "0" + startHour) + ":" + (startMinute > 9 ? "" + startMinute : "0" + startMinute);
-        return startTime;
-    }
 }

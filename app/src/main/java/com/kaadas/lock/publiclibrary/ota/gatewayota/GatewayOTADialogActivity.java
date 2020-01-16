@@ -34,7 +34,8 @@ public class GatewayOTADialogActivity extends BaseActivity<GatewayOTAView, Gatew
     TextView tvLeft;
     @BindView(R.id.tv_right)
     TextView tvRight;
-    private  GatewayOtaNotifyBean notifyBean;
+    private GatewayOtaNotifyBean notifyBean;
+
     @Override
     protected GatewayOTAPresenter<GatewayOTAView> createPresent() {
         return new GatewayOTAPresenter<>();
@@ -51,59 +52,33 @@ public class GatewayOTADialogActivity extends BaseActivity<GatewayOTAView, Gatew
     }
 
     private void initData() {
-        Intent intent=getIntent();
-        notifyBean= (GatewayOtaNotifyBean) intent.getSerializableExtra(KeyConstants.GATEWAY_OTA_UPGRADE);
-        if(notifyBean!=null){
+        Intent intent = getIntent();
+        notifyBean = (GatewayOtaNotifyBean) intent.getSerializableExtra(KeyConstants.GATEWAY_OTA_UPGRADE);
+        if (notifyBean != null) {
             // 网关
-            String swInfo= notifyBean.getParams().getSW();
-            String deviceSn= notifyBean.getParams().getDeviceList().get(0).toString();
-            String swInfoStr= String.format(getString(R.string.have_gateway_version),swInfo);
+            String swInfo = notifyBean.getParams().getSW();
+            String deviceSn = notifyBean.getParams().getDeviceList().get(0).toString();
+            String swInfoStr = String.format(getString(R.string.have_gateway_version), swInfo);
 
 
-            if(deviceSn.startsWith("GW")){
-                if(swInfo.startsWith("orangeiot")){
-
-                    tvContent.setText( Html.fromHtml(  "<big><font color='black'>"+ swInfoStr + "</font></big>"+ "<br>" +"<font color='#999999'>" + getString(R.string.gateway) + ":" + notifyBean.getDeviceId() +"</font>"));
+            if (deviceSn.startsWith("GW")) {
+                if (swInfo.startsWith("orangeiot")) {
+                    tvContent.setText(Html.fromHtml("<big><font color='black'>" + swInfoStr + "</font></big>" + "<br>" + "<font color='#999999'>" + getString(R.string.gateway) + ":" + notifyBean.getDeviceId() + "</font>"));
+                } else if (swInfo.startsWith("znp")) {
+                    tvContent.setText(Html.fromHtml("<big><font color='black'>" + swInfoStr + "</font></big>" + "<br>" + "<font color='#999999'>" + getString(R.string.gateway_zigbeen_have_update) + ":" + deviceSn + "</font>"));
                 }
+            } else if (deviceSn.startsWith("ZG")) { //zigbeen
+                tvContent.setText(Html.fromHtml("<big><font color='black'>" + swInfoStr + "</font></big>" + "<br>" + "<font color='#999999'>" + getString(R.string.zigbeen_have_update) + ":" + deviceSn + "</font>"));
+                //    tvContent.setText(getString(R.string.zigbeen_have_update) + ":" + notifyBean.getDeviceId() + "\n" + swInfoStr);
+            } else if (deviceSn.startsWith("CH")) { // 猫眼
+                tvContent.setText(Html.fromHtml("<big><font color='black'>" + swInfoStr + "</font></big>" + "<br>" + "<font color='#999999'>" + getString(R.string.cateye) + ":" + deviceSn + "</font>"));
+                //  tvContent.setText(getString(R.string.cateye) + ":" + notifyBean.getDeviceId() + "\n" + swInfoStr);
+            } else {
+                finish();
             }
-
-            //zigbeen
-            else if(deviceSn.startsWith("ZG")){
-
-                tvContent.setText( Html.fromHtml(  "<big><font color='black'>"+ swInfoStr + "</font></big>"+ "<br>" +"<font color='#999999'>" + getString(R.string.zigbeen_have_update) + ":" + deviceSn +"</font>"));
-            //    tvContent.setText(getString(R.string.zigbeen_have_update) + ":" + notifyBean.getDeviceId() + "\n" + swInfoStr);
-            }
-
-            // znpv
-           else  if(deviceSn.startsWith("GW")){
-                if(swInfo.startsWith("znpv")){
-
-                    tvContent.setText( Html.fromHtml(  "<big><font color='black'>"+ swInfoStr + "</font></big>"+ "<br>" +"<font color='#999999'>" + getString(R.string.gateway_zigbeen_have_update) + ":" + deviceSn +"</font>"));
-                //    tvContent.setText(getString(R.string.gateway_zigbeen_have_update) + ":" + notifyBean.getDeviceId() + "\n" + swInfoStr);
-                }
-            }
-
-
-            // 猫眼
-           else  if(deviceSn.startsWith("CH")){
-
-                tvContent.setText( Html.fromHtml(  "<big><font color='black'>"+ swInfoStr + "</font></big>"+ "<br>" +"<font color='#999999'>" + getString(R.string.cateye) + ":" + deviceSn +"</font>"));
-
-              //  tvContent.setText(getString(R.string.cateye) + ":" + notifyBean.getDeviceId() + "\n" + swInfoStr);
-            }
-
-            else{
-
-               finish();
-            }
-        }else{
+        } else {
             finish();
         }
-
-     //   if(notifyBean!=null){
-            // tvContent.setText(getString(R.string.gateway) + ":" + notifyBean.getDeviceId() + "\n" + getString(R.string.have_new_gateway_version));
-     //    }
-
     }
 
     private void initView() {
@@ -115,9 +90,9 @@ public class GatewayOTADialogActivity extends BaseActivity<GatewayOTAView, Gatew
         win.getDecorView().setScaleY((float) 0.96);
 
         WindowManager.LayoutParams lp = win.getAttributes();
-        WindowManager wm = (WindowManager)getSystemService(Context.WINDOW_SERVICE);
+        WindowManager wm = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
         int width = wm.getDefaultDisplay().getWidth();
-        lp.width = (int) (width*0.9);
+        lp.width = (int) (width * 0.9);
         lp.height = WindowManager.LayoutParams.MATCH_PARENT;
         lp.gravity = Gravity.CENTER;//设置对话框置顶显示
         win.setAttributes(lp);
@@ -129,10 +104,10 @@ public class GatewayOTADialogActivity extends BaseActivity<GatewayOTAView, Gatew
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.tv_left:
-                 finish();
+                finish();
                 break;
             case R.id.tv_right:
-                if (notifyBean!=null){
+                if (notifyBean != null) {
                     mPresenter.confirmGatewayOtaUpgrade(notifyBean, MyApplication.getInstance().getUid());
                 }
 
@@ -142,13 +117,13 @@ public class GatewayOTADialogActivity extends BaseActivity<GatewayOTAView, Gatew
 
     @Override
     public void gatewayUpgradeingNow(String deviceId) {
-        ToastUtil.getInstance().showShort(deviceId+getString(R.string.gateway_upgrade_now));
+        ToastUtil.getInstance().showShort(deviceId + getString(R.string.gateway_upgrade_now));
         finish();
     }
 
     @Override
     public void gatewayUpgradeFail(String deviceId) {
-        ToastUtil.getInstance().showShort(deviceId+getString(R.string.gateway_upgade_fail));
+        ToastUtil.getInstance().showShort(deviceId + getString(R.string.gateway_upgade_fail));
         finish();
     }
 }

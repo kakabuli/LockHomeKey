@@ -15,6 +15,4 @@ public class ConstantConfig {
 //    public static final String MQTT_BASE_URL = "tcp://test.juziwulian.com:1883";//测试服务器
 //    public static final String LINPHONE_URL = "test.juziwulian.com:5061";//测试sip
 
-    
-
 }

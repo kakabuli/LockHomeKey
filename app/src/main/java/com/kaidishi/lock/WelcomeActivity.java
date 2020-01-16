@@ -290,10 +290,9 @@ public class WelcomeActivity extends BaseActivity<ISplashView, SplashPresenter<I
                 Log.e(GeTui.VideoLog, "WelcomeActivity======>普通密码开锁");
             } else if (sip_package.equals("alarmOpenLockRisk")) {
                 Log.e(GeTui.VideoLog, "WelcomeActivity======>胁迫密码开锁");
-            } else if(sip_package_json.equals("{\"func\":\"alarm\"}")){
+            } else if(sip_package.equals("{\"func\":\"alarm\"}")){
                 Log.e(GeTui.VideoLog, "WelcomeActivity======>wifi锁开锁");
-
-            }else if (sip_package_json.contains("{\"func\":\"alarm\"}")){ //11
+            }else if (sip_package.contains("{\"func\":\"alarm\"}")){ //11
 
             }else  {
                 long diff_time = (System.currentTimeMillis() - sip_time_json) / 1000;
