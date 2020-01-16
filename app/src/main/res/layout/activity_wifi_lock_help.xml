@@ -361,7 +361,7 @@
                     android:lineSpacingExtra="5dp"
                     android:textSize="10sp"
                     android:textColor="#666666"
-                    android:text="1 尝试关闭手机WiFi并再次打开后重试;\n2 重新启动手机系统后重试。"
+                    android:text="1 尝试关闭手机Wi-Fi并再次打开后重试;\n2 重新启动手机系统后重试。"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
