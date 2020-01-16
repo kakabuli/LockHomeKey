@@ -130,7 +130,12 @@ public class WifiLockFragment extends BaseFragment<IWifiLockView, WifiLockPresen
         int operatingMode = wifiLockInfo.getOperatingMode(); //反锁模式
         int defences = wifiLockInfo.getDefences();  //布防模式
 
-        changeLockStatus(5);
+        if (isOpening){
+            changeLockStatus(4);
+        }else {
+            changeLockStatus(5);
+        }
+
 
         if (safeMode == 1) {//安全模式
             changeLockStatus(6);
@@ -148,6 +153,9 @@ public class WifiLockFragment extends BaseFragment<IWifiLockView, WifiLockPresen
         } else {
             long currentTimeMillis = System.currentTimeMillis();
             long day = ((currentTimeMillis / 1000) - createTime2) / (60 * 24 * 60);
+            if (day< 0 ){
+                day = 0;
+            }
             createTime.setText(day + "");
         }
     }
@@ -241,7 +249,7 @@ public class WifiLockFragment extends BaseFragment<IWifiLockView, WifiLockPresen
             case 5:
                 //门已上锁  正常模式
                 ivBackGround.setImageResource(R.mipmap.bluetooth_lock_close_big_middle_icon);  //背景大图标
-                ivCenterIcon.setImageResource(isOpening ? R.mipmap.bluetooth_open_lock_success_niner_middle_icon : R.mipmap.bluetooth_lock_safe_inner_midder_icon);  //门锁关闭状态
+                ivCenterIcon.setImageResource(R.mipmap.bluetooth_lock_safe_inner_midder_icon);  //门锁关闭状态
                 tvTopStates.setText(getString(R.string.lock_lock_already));  //设置设备状态   离线
                 break;
             case 6:
@@ -346,6 +354,7 @@ public class WifiLockFragment extends BaseFragment<IWifiLockView, WifiLockPresen
                     isOpening = false;
 //                    handler.removeCallbacks(initRunnable);
 //                    handler.post(initRunnable);
+                    changeLockStatus(5);
                 } else if (eventparams.getEventCode() == 0x02) { //开锁
                     mPresenter.getOperationRecord(wifiLockInfo.getWifiSN(), true);
                     isOpening = true;
