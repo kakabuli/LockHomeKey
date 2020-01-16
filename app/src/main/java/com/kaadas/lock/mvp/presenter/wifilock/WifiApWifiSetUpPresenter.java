@@ -27,20 +27,20 @@ public class WifiApWifiSetUpPresenter<T> extends BasePresenter<IWifiLockAPWifiSe
         super.detachView();
     }
 
-    public void onReadSuccess(String wifiSN,   String randomCode, String wifiName, int func){
+    public void onReadSuccess(String wifiSN, String randomCode, String wifiName, int func) {
         bindDisposable = Observable.interval(3, 3, TimeUnit.SECONDS)//设置0延迟，每隔一秒发送一条数据
-                .take(10)//设置截取前20次
+                .take(20)//设置截取前20次
                 .compose(RxjavaHelper.observeOnMainThread())
                 .subscribe(new Consumer<Long>() {
                     @Override
                     public void accept(Long aLong) throws Exception {
-                        LogUtils.e("第  " + aLong +"次访问");
+                        LogUtils.e("第  " + aLong + "次访问");
                         times = aLong;
                         WifiLockInfo wifiLockInfo = MyApplication.getInstance().getWifiLockInfoBySn(wifiSN);
                         if (wifiLockInfo != null && wifiLockInfo.getIsAdmin() == 1) {
-                              update(wifiSN, randomCode, wifiName, func);
+                            update(wifiSN, randomCode, wifiName, func);
                         } else {
-                             bindDevice(wifiSN, wifiSN, MyApplication.getInstance().getUid(), randomCode, wifiName, func);
+                            bindDevice(wifiSN, wifiSN, MyApplication.getInstance().getUid(), randomCode, wifiName, func);
                         }
                     }
                 });
@@ -61,7 +61,7 @@ public class WifiApWifiSetUpPresenter<T> extends BasePresenter<IWifiLockAPWifiSe
 
                     @Override
                     public void onAckErrorCode(BaseResult baseResult) {
-                        if (isSafe() && times>=9) {
+                        if (isSafe() && times >= 19) {
                             mViewRef.get().onBindFailed(baseResult);
                             toDisposable(bindDisposable);
                         }
@@ -69,7 +69,7 @@ public class WifiApWifiSetUpPresenter<T> extends BasePresenter<IWifiLockAPWifiSe
 
                     @Override
                     public void onFailed(Throwable throwable) {
-                        if (isSafe() && times>=9) {
+                        if (isSafe() && times >= 19) {
                             mViewRef.get().onBindThrowable(throwable);
                             toDisposable(bindDisposable);
                         }
@@ -97,7 +97,7 @@ public class WifiApWifiSetUpPresenter<T> extends BasePresenter<IWifiLockAPWifiSe
 
                     @Override
                     public void onAckErrorCode(BaseResult baseResult) {
-                        if (isSafe() && times>=9) {
+                        if (isSafe() && times >= 19) {
                             mViewRef.get().onUpdateFailed(baseResult);
                             toDisposable(bindDisposable);
                         }
@@ -105,7 +105,7 @@ public class WifiApWifiSetUpPresenter<T> extends BasePresenter<IWifiLockAPWifiSe
 
                     @Override
                     public void onFailed(Throwable throwable) {
-                        if (isSafe() && times>=9) {
+                        if (isSafe() && times >= 19) {
                             mViewRef.get().onUpdateThrowable(throwable);
                             toDisposable(bindDisposable);
                         }

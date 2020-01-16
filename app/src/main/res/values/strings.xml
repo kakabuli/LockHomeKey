@@ -1441,4 +1441,6 @@
     <string name="hfdsjfsdhjf">① 按键区先输入“*”两次\n② 输入管理密码 :“******”\n③ 按“#”确认，“已进入管理模式” </string>
     <string name="_4_1">① 根据语音提示，按“4”选择“扩展功能”\n② 再按“1”选择“加入网络”</string>
     <string name="fjdskj">输入区分大小写</string>
+    <string name="click_copy_pwd">点击复制门锁热点密码</string>
+    <string name="fkjdshfjkh">进入管理模式根据语音提示完成更改</string>
 </resources>

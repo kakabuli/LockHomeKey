@@ -1,6 +1,7 @@
 package com.kaadas.lock.activity.device.wifilock.add;
 
 import android.content.BroadcastReceiver;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -8,9 +9,12 @@ import android.location.LocationManager;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
@@ -19,10 +23,13 @@ import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.NetUtil;
 import com.kaadas.lock.utils.SPUtils;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class WifiLockNoticeUserLinkWifiFirstActivity extends AppCompatActivity {
+    @BindView(R.id.back)
+    ImageView back;
     private boolean isFirst = true;
 
     @Override
@@ -46,7 +53,7 @@ public class WifiLockNoticeUserLinkWifiFirstActivity extends AppCompatActivity {
                 break;
             case R.id.go_to_connect:
                 saveWifiName();
-                startActivity(new Intent(android.provider.Settings.ACTION_WIFI_SETTINGS));
+                startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
                 break;
             case R.id.et_other_method:
                 Intent intent = new Intent(WifiLockNoticeUserLinkWifiFirstActivity.this, WifiLockAddFirstActivity.class);
@@ -73,7 +80,7 @@ public class WifiLockNoticeUserLinkWifiFirstActivity extends AppCompatActivity {
         }
     };
 
-    private void saveWifiName(){
+    private void saveWifiName() {
         WifiManager wifiMgr = (WifiManager) MyApplication.getInstance().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         WifiInfo info = wifiMgr.getConnectionInfo();
         String ssid = info != null ? info.getSSID() : null;
@@ -102,7 +109,7 @@ public class WifiLockNoticeUserLinkWifiFirstActivity extends AppCompatActivity {
                 ssid = ssid.substring(1, ssid.length() - 1);
             }
             LogUtils.e("网络切换    " + ssid + "   " + "网络可用   " + NetUtil.isNetworkAvailable());
-            if (ssid.startsWith("KDS_") && isFirst) {
+            if ((ssid.equals("kaadas_AP")) && isFirst) {
                 isFirst = false;
                 startActivity(new Intent(WifiLockNoticeUserLinkWifiFirstActivity.this, WifiLockApInputAdminPasswordActivity.class));
             }
@@ -123,6 +130,15 @@ public class WifiLockNoticeUserLinkWifiFirstActivity extends AppCompatActivity {
         if (mReceiver != null) {
             unregisterReceiver(mReceiver);
         }
+    }
 
+    @OnClick(R.id.copy)
+    public void onClick() {
+        // 从API11开始android推荐使用android.content.ClipboardManager
+        // 为了兼容低版本我们这里使用旧版的android.text.ClipboardManager，虽然提示deprecated，但不影响使用。
+        ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+        // 将文本内容放到系统剪贴板里。
+        cm.setText("88888888");
+        Toast.makeText(this, R.string.copy_success, Toast.LENGTH_LONG).show();
     }
 }

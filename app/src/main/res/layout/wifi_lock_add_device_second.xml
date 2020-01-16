@@ -109,7 +109,7 @@
                 <TextView
                     android:layout_marginLeft="@dimen/dp_10"
                     android:textSize="12sp"
-                    android:text="@string/wifi_lock_sconed_notice2"
+                    android:text="@string/fkjdshfjkh"
                     android:textColor="#333333"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />

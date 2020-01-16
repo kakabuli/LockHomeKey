@@ -52,7 +52,6 @@ public class WifiLockPasswordDetailActivity extends BaseActivity<IWifiLockNickNa
     @BindView(R.id.ll_card_finger)
     LinearLayout llCardFinger;
     private long createTime;
-    private String[] weekdays;
     private int pwdType; //	密钥类型：1密码 2指纹密码 3卡片密码
     private String wifiSn;
     private WiFiLockCardAndFingerShowBean wiFiLockCardAndFingerShowBean;
@@ -103,13 +102,7 @@ public class WifiLockPasswordDetailActivity extends BaseActivity<IWifiLockNickNa
         if (createTime == 0) {
             createTime = System.currentTimeMillis() / 1000;
         }
-        weekdays = new String[]{getString(R.string.week_day),
-                getString(R.string.monday),
-                getString(R.string.tuesday),
-                getString(R.string.wedensday),
-                getString(R.string.thursday),
-                getString(R.string.friday),
-                getString(R.string.saturday)};
+
         tvTime.setText(DateUtils.secondToDate(createTime));
         tvName.setText(nickName != null ? nickName : "");
 
@@ -121,35 +114,32 @@ public class WifiLockPasswordDetailActivity extends BaseActivity<IWifiLockNickNa
     }
 
     private void initData() {
-        String weeks = "";
-        if (foreverPassword.getType() == 1) { //永久密码
-            tvNumber.setText(getString(R.string.password_yong_jiu_valid));
-        } else {
-            // 2时间段 3周期 4 24小时 5 一次性密码
-            if (foreverPassword.getType() == 2) {  //时效密码
-//                密码有效时效  2018/12/12  10：22~2018/12/24 10:22
-                String startTime = DateUtils.formatDetailTime(foreverPassword.getStartTime());
-                String endTime = DateUtils.formatDetailTime(foreverPassword.getEndTime());
-                String content = getString(R.string.password_valid_shi_xiao) + "  " + startTime + "~" + endTime;
-                tvNumber.setText(content);
-            } else if (foreverPassword.getType() == 4) { //24小时
-                tvNumber.setText(getString(R.string.password_one_day_valid));
-            } else if (foreverPassword.getType() == 3) {  //周期密码
-                for (int i = 0; i < foreverPassword.getItems().size(); i++) {
-                    if ("1".equals(foreverPassword.getItems().get(i))) {
-                        weeks += " " + weekdays[i];
-                    }
-                }
-                String strHint = String.format(getString(R.string.week_hint), weeks,
-                        DateUtils.long2HourMin(foreverPassword.getStartTime()), DateUtils.long2HourMin(foreverPassword.getEndTime()));
-                tvNumber.setText(strHint);
-            } else if (foreverPassword.getType() == 5) {
-                tvNumber.setText(R.string.temporary_password_used_once);
-            }
-            if ("09".equals(foreverPassword.getNum())) {
-                tvNumber.setText(R.string.stress_password);
-            }
+        tvNumber.setText(getString(R.string.password_yong_jiu_valid));
+        switch (foreverPassword.getType()) {
+            case 0:
+                tvNumber.setText(getString(R.string.password_yong_jiu_valid));
+                break;
+            case 1:
+                tvNumber.setText("策略密码");
+                break;
+            case 2:
+                tvNumber.setText("胁迫密码");
+                break;
+            case 3:
+                tvNumber.setText("管理员密码");
+                break;
+            case 4:
+                tvNumber.setText("无权限密码");
+                break;
+            case 254:
+                tvNumber.setText("密码一次性有效");
+                break;
+            case 255:
+                tvNumber.setText("无效值密码");
+                break;
+
         }
+
 
     }
 
@@ -203,7 +193,7 @@ public class WifiLockPasswordDetailActivity extends BaseActivity<IWifiLockNickNa
                             return;
                         }
                         alertDialog.dismiss();
-                        mPresenter.updateNickName(wifiSn, pwdType, num, name,adminNickName);
+                        mPresenter.updateNickName(wifiSn, pwdType, num, name, adminNickName);
                         showLoading(getString(R.string.is_modifing));
                     }
                 });

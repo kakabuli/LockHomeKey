@@ -16,6 +16,7 @@ import com.google.gson.Gson;
 import com.kaadas.lock.R;
 import com.kaadas.lock.adapter.BluetoothPasswordAdapter;
 import com.kaadas.lock.adapter.WifiLockCardAndFingerAdapter;
+import com.kaadas.lock.adapter.WifiLockPasswordAdapter;
 import com.kaadas.lock.bean.WiFiLockCardAndFingerShowBean;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.mvp.presenter.wifilock.WifiLockPasswordManagerPresenter;
@@ -50,7 +51,7 @@ public class WiFiLockPasswordManagerActivity extends BaseActivity<IWifiLockPassw
     TextView tvNoPassword;
     @BindView(R.id.refreshLayout)
     SmartRefreshLayout refreshLayout;
-    private BluetoothPasswordAdapter passwordAdapter;
+    private WifiLockPasswordAdapter passwordAdapter;
     private List<ForeverPassword> passwordList = new ArrayList<>();
     private int type;  // 1 密码  2指纹  3 卡片
     private List<WiFiLockCardAndFingerShowBean> cardAndFingerList = new ArrayList<>();
@@ -102,7 +103,6 @@ public class WiFiLockPasswordManagerActivity extends BaseActivity<IWifiLockPassw
         if (!TextUtils.isEmpty(localPasswordCache)) {
             wiFiLockPassword = new Gson().fromJson(localPasswordCache, WiFiLockPassword.class);
         }
-
         if (type == 1) {
             headTitle.setText(R.string.password);
             passwordList = mPresenter.getShowPasswords(wiFiLockPassword);
@@ -154,7 +154,7 @@ public class WiFiLockPasswordManagerActivity extends BaseActivity<IWifiLockPassw
     }
 
     private void initPasswordAdapter() {
-        passwordAdapter = new BluetoothPasswordAdapter(passwordList, R.layout.item_bluetooth_password);
+        passwordAdapter = new WifiLockPasswordAdapter(passwordList, R.layout.item_bluetooth_password);
         recycleview.setLayoutManager(new LinearLayoutManager(this));
         recycleview.setAdapter(passwordAdapter);
         passwordAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
