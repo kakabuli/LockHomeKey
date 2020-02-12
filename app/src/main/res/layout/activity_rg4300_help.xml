@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F2F2F2"
+    android:orientation="vertical"
+    tools:context="com.kaadas.lock.activity.device.wifilock.add.WifiLockHelpActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_40"
+        android:background="#F8F8F8">
+
+        <ImageView
+            android:id="@+id/back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:paddingLeft="@dimen/dp_16"
+            android:paddingTop="@dimen/dp_5"
+            android:paddingRight="@dimen/dp_16"
+            android:paddingBottom="@dimen/dp_5"
+            android:src="@mipmap/back_gray" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/help"
+            android:textColor="#000000"
+            android:textSize="@dimen/sp_17"
+            android:textStyle="bold" />
+
+    </RelativeLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="@dimen/dp_14">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="@dimen/dp_15"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/dp_15"
+                android:background="@drawable/background_add_white"
+                android:lineSpacingExtra="8dp"
+                android:paddingHorizontal="@dimen/dp_22"
+                android:paddingVertical="@dimen/dp_20"
+                android:text="您无法发现您的蓝牙设备，请按照以下步骤对设备进行检查："
+                android:textColor="#333333"
+                android:textSize="13sp" />
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/dp_15"
+                android:background="@drawable/background_add_white"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="@dimen/dp_22"
+                        android:src="@mipmap/rg4300_help_number1" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/dp_16"
+                        android:layout_marginRight="@dimen/dp_24"
+                        android:lineSpacingExtra="@dimen/dp_8"
+                        android:paddingVertical="@dimen/dp_30"
+                        android:text="请保证您的设备已经接通电源，或电池电量充足。"
+                        android:textColor="#333333"
+                        android:textSize="13sp" />
+
+
+                </LinearLayout>
+
+                <TextView
+                    android:layout_marginLeft="@dimen/dp_58"
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:background="#ffeae9e9" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="@dimen/dp_22"
+                        android:src="@mipmap/rg4300_help_number1" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/dp_16"
+                        android:layout_marginRight="@dimen/dp_24"
+                        android:lineSpacingExtra="@dimen/dp_8"
+                        android:paddingVertical="@dimen/dp_30"
+                        android:text="请保证您的设备已经接通电源，或电池电量充足。"
+                        android:textColor="#333333"
+                        android:textSize="13sp" />
+
+
+                </LinearLayout>
+
+                <TextView
+                    android:layout_marginLeft="@dimen/dp_58"
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:background="#ffeae9e9" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="@dimen/dp_22"
+                        android:src="@mipmap/rg4300_help_number1" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/dp_16"
+                        android:layout_marginRight="@dimen/dp_24"
+                        android:lineSpacingExtra="@dimen/dp_8"
+                        android:paddingVertical="@dimen/dp_30"
+                        android:text="请保证您的设备已经接通电源，或电池电量充足。"
+                        android:textColor="#333333"
+                        android:textSize="13sp" />
+
+
+                </LinearLayout>
+
+                <TextView
+                    android:layout_marginLeft="@dimen/dp_58"
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:background="#ffeae9e9" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="@dimen/dp_22"
+                        android:src="@mipmap/rg4300_help_number1" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/dp_16"
+                        android:layout_marginRight="@dimen/dp_24"
+                        android:lineSpacingExtra="@dimen/dp_8"
+                        android:paddingVertical="@dimen/dp_30"
+                        android:text="请保证您的设备已经接通电源，或电池电量充足。"
+                        android:textColor="#333333"
+                        android:textSize="13sp" />
+
+
+                </LinearLayout>
+
+                <TextView
+                    android:layout_marginLeft="@dimen/dp_58"
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:background="#ffeae9e9" />
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+
+    </ScrollView>
+
+</LinearLayout>

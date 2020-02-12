@@ -1,4 +1,4 @@
-package com.kaadas.lock.fragment;
+package com.kaadas.lock.fragment.home;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -22,6 +22,7 @@ import com.kaadas.lock.activity.home.CateyeEquipmentDynamicActivity;
 import com.kaadas.lock.adapter.BluetoothRecordAdapter;
 import com.kaadas.lock.bean.BluetoothItemRecordBean;
 import com.kaadas.lock.bean.BluetoothRecordBean;
+import com.kaadas.lock.fragment.home.HomePageFragment;
 import com.kaadas.lock.mvp.mvpbase.BaseFragment;
 import com.kaadas.lock.mvp.presenter.cateye.CatEyePresenter;
 import com.kaadas.lock.mvp.view.cateye.ICatEyeView;
@@ -32,13 +33,9 @@ import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.NetUtil;
 import com.kaadas.lock.utils.SPUtils;
-import com.kaadas.lock.utils.ftp.GeTui;
 import com.kaadas.lock.utils.greenDao.bean.CatEyeEvent;
 
-import org.linphone.mediastream.Log;
-
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import butterknife.BindView;

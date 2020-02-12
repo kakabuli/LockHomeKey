@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    tools:context="com.kaadas.lock.activity.device.wifilock.add.WifiLockApCheckAdminPasswordActivity">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_40"
+        android:background="#F8F8F8">
+
+        <ImageView
+            android:id="@+id/back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:paddingLeft="@dimen/dp_16"
+            android:paddingTop="@dimen/dp_5"
+            android:paddingRight="@dimen/dp_16"
+            android:paddingBottom="@dimen/dp_5"
+            android:src="@mipmap/back_gray" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/add_lock"
+            android:textColor="#000000"
+            android:textSize="@dimen/sp_17"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/help"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:paddingLeft="@dimen/dp_16"
+            android:paddingTop="@dimen/dp_5"
+            android:paddingRight="@dimen/dp_16"
+            android:paddingBottom="@dimen/dp_5"
+            android:src="@mipmap/help" />
+    </RelativeLayout>
+
+    <ImageView
+        android:layout_marginTop="@dimen/dp_70"
+        android:src="@mipmap/lcok_check_drawable"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:layout_marginTop="30dp"
+        android:textSize="14sp"
+        android:textColor="#666666"
+        android:text="@string/auto_connect_wifi_notice1"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:layout_marginTop="85dp"
+        android:textSize="18sp"
+        android:textColor="#3A3A3A"
+        android:text="@string/auto_connect_wifi_notice2"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+</LinearLayout>

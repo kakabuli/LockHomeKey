@@ -87,25 +87,7 @@ public class DeviceAddActivity extends BaseActivity<DeviceZigBeeDetailView, Devi
 
     @Override
     public void onDeviceRefresh(AllBindDevices allBindDevices) {
-        if (allBindDevices!=null){
-            LogUtils.e("添加设备加入网关");
-            List<HomeShowBean> gatewayList= mPresenter.getGatewayBindList();
-            if (gatewayList!=null){
-                if (gatewayList.size()>0){
-                    flag=true;
-                    if (gatewayList.size()==1){
-                        HomeShowBean homeShowBean= gatewayList.get(0);
-                        GatewayInfo gatewayInfo= (GatewayInfo) homeShowBean.getObject();
-                        if (gatewayInfo.getServerInfo().getIsAdmin()==1){
-                            isAdmin=1;
-                        }else{
-                            isAdmin=0;
-                        }
-                    }
-                }
-            }
-        }
-    }
+     }
 
 
     @OnClick({R.id.back, R.id.scan, R.id.add_device, R.id.catEye_layout, R.id.gateway_layout})
@@ -115,9 +97,7 @@ public class DeviceAddActivity extends BaseActivity<DeviceZigBeeDetailView, Devi
                 finish();
                 break;
             case R.id.scan:
-                Intent zigbeeLockIntent=new Intent(this, AddDeviceZigbeelockNewScanActivity.class);
-                startActivityForResult(zigbeeLockIntent, KeyConstants.SCANGATEWAYNEW_REQUEST_CODE);
-                break;
+                 break;
             case R.id.add_device:
                 //添加锁
                 View mView = LayoutInflater.from(this).inflate(R.layout.device_add_lock, null);
@@ -145,6 +125,7 @@ public class DeviceAddActivity extends BaseActivity<DeviceZigBeeDetailView, Devi
                     public void onClick(View v) {
                         Intent intent = new Intent(DeviceAddActivity.this, WifiLockAPAddFirstActivity.class);
                         startActivity(intent);
+                        alertDialog.dismiss();
                     }
                 });
 
@@ -156,72 +137,14 @@ public class DeviceAddActivity extends BaseActivity<DeviceZigBeeDetailView, Devi
 
                         //无网关       有网关,不授权
 
-                        if( (flag==true  && isAdmin==0)  || (flag==true  && isAdmin==1)){
-
-                            Intent zigbeeIntent = new Intent(DeviceAddActivity.this, DeviceBindGatewayListActivity.class);
-                            int type = 3;
-                            zigbeeIntent.putExtra("type", type);
-                            startActivity(zigbeeIntent);
-                            alertDialog.dismiss();
-
-                        } else if (flag==false) {
-                            alertDialog.dismiss();
-                            AlertDialogUtil.getInstance().havaNoEditTwoButtonDialog(DeviceAddActivity.this, getString(R.string.no_usable_gateway), getString(R.string.add_zigbee_device_first_pair_gateway), getString(R.string.cancel), getString(R.string.configuration),"#1F96F7", new AlertDialogUtil.ClickListener() {
-                                @Override
-                                public void left() {
-
-                                }
-                                @Override
-                                public void right() {
-                                    //跳转到配置网关添加的流程
-                                    Intent gatewayIntent = new Intent(DeviceAddActivity.this, AddGatewayFirstActivity.class);
-                                    startActivity(gatewayIntent);
-                                }
-                            });
-
-                        }
                     }
                 });
                 break;
             case R.id.catEye_layout:
-                if( (flag==true  && isAdmin==0)  || (flag==true  && isAdmin==1)){
 
-                    Intent catEyeIntent = new Intent(this, DeviceBindGatewayListActivity.class);
-                    int type =2;
-                    catEyeIntent.putExtra("type", type);
-                    startActivity(catEyeIntent);
-
-                } else if (flag==false) {
-                    AlertDialogUtil.getInstance().havaNoEditTwoButtonDialog(this, getString(R.string.no_usable_gateway), getString(R.string.add_zigbee_device_first_pair_gateway), getString(R.string.cancel), getString(R.string.configuration),"#1F96F7", new AlertDialogUtil.ClickListener() {
-                        @Override
-                        public void left() {
-
-                        }
-                        @Override
-                        public void right() {
-                            //跳转到配置网关添加的流程
-                            Intent gatewayIntent = new Intent(DeviceAddActivity.this, AddGatewayFirstActivity.class);
-                            startActivity(gatewayIntent);
-                        }
-                    });
-
-//                    Intent catEyeIntent = new Intent(this, DeviceBindGatewayListActivity.class);
-//                    int type =2;
-//                    catEyeIntent.putExtra("type", type);
-//                    startActivity(catEyeIntent);
-                }
-
-//                else{
-//                    Intent catEyeIntent = new Intent(this, DeviceBindGatewayListActivity.class);
-//                    int type =2;
-//                    catEyeIntent.putExtra("type", type);
-//                    startActivity(catEyeIntent);
-//                }
                 break;
             case R.id.gateway_layout:
-                //跳转到添加网关
-                Intent addGateway = new Intent(this, AddGatewayFirstActivity.class);
-                startActivity(addGateway);
+
                 break;
         }
 
@@ -230,32 +153,5 @@ public class DeviceAddActivity extends BaseActivity<DeviceZigBeeDetailView, Devi
     }
 
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode == RESULT_OK && data!=null){
-            switch (requestCode){
-                case KeyConstants.SCANGATEWAYNEW_REQUEST_CODE:
-                    String result = data.getStringExtra(Intents.Scan.RESULT);
-                    LogUtils.e("扫描结果是   " + result);
-                    if (result.contains("SN-GW")&&result.contains("MAC-")&&result.contains(" ")){
-                        String[] strs=result.split(" ");
-                        String deviceSN=strs[0].replace("SN-","");
-                        Intent scanSuccessIntent=new Intent(DeviceAddActivity.this, AddDeviceZigbeeLockNewZeroActivity.class);
-                        scanSuccessIntent.putExtra("deviceSN",deviceSN);
-                        LogUtils.e("设备SN是   " + deviceSN);
-                        startActivity(scanSuccessIntent);
-                        finish();
-                    }else{
-                        Intent scanSuccessIntent=new Intent(DeviceAddActivity.this, AddDeviceZigbeeLockNewScanFailActivity.class);
-                        startActivity(scanSuccessIntent);
-                        finish();
-                    }
-                    break;
-            }
-
-        }
-
-    }
 
 }

@@ -83,15 +83,19 @@
             android:exported="true"
             android:launchMode="singleTop"
             android:screenOrientation="portrait">
-            <intent-filter>
-                <category android:name="android.intent.category.DEFAULT" />
 
-                <action android:name="android.intent.action.MAIN" />
+            <!-- <intent-filter> -->
+            <!-- <category android:name="android.intent.category.DEFAULT" /> -->
 
-                <category android:name="android.intent.category.LAUNCHER" />
 
-                <action android:name="android.intent.action.oppopush" />
-            </intent-filter>
+            <!-- <action android:name="android.intent.action.MAIN" /> -->
+
+
+            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+
+
+            <!-- <action android:name="android.intent.action.oppopush" /> -->
+            <!-- </intent-filter> -->
         </activity>
         <!-- 登录 -->
         <activity
@@ -944,7 +948,6 @@
             android:name=".activity.device.wifilock.add.WifiLockCheckAdminPasswordActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".activity.device.wifilock.add.WifiLockApConnectDeviceActivity"
             android:launchMode="singleTask"
@@ -957,6 +960,24 @@
             android:name=".activity.device.wifilock.add.WifiLockAddSecondActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
+        <activity android:name=".activity.device.wifilock.add.WifiLockApAutoConnectWifiActivity" />
+        <activity android:name=".activity.addDevice.DeviceAdd2Activity">
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+
+                <action android:name="android.intent.action.oppopush" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".activity.addDevice.rg4300.AddRG4300FirstActivity" />
+        <activity android:name=".activity.addDevice.rg4300.Rg4300HelpActivity" />
+        <activity android:name=".activity.device.singleswitch.SingleSwitchActivity" />
+        <activity android:name=".activity.device.singleswitch.SingleSwichMoreActivity" />
+        <activity android:name=".activity.device.singleswitch.TimerManagerActivity" />
+        <activity android:name=".activity.device.singleswitch.AddTimeActivity"></activity>
     </application>
 
 </manifest>

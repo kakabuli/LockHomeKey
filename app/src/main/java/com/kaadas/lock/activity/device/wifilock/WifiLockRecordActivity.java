@@ -1,10 +1,8 @@
 package com.kaadas.lock.activity.device.wifilock;
 
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -12,8 +10,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.kaadas.lock.R;
-import com.kaadas.lock.fragment.WifiLockAlarmRecordFragment;
-import com.kaadas.lock.fragment.WifiLockOpenRecordFragment;
+import com.kaadas.lock.fragment.record.WifiLockAlarmRecordFragment;
+import com.kaadas.lock.fragment.record.WifiLockOpenRecordFragment;
 import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;

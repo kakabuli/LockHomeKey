@@ -1,4 +1,4 @@
-package com.kaadas.lock.fragment;
+package com.kaadas.lock.fragment.device;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;

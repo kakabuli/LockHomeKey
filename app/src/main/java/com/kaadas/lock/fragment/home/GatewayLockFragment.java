@@ -1,4 +1,4 @@
-package com.kaadas.lock.fragment;
+package com.kaadas.lock.fragment.home;
 
 import android.app.AlertDialog;
 import android.content.Intent;
@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.bottomappbar.BottomAppBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.InputFilter;
@@ -26,9 +25,9 @@ import com.kaadas.lock.activity.home.GatewayEquipmentDynamicActivity;
 import com.kaadas.lock.adapter.BluetoothRecordAdapter;
 import com.kaadas.lock.bean.BluetoothItemRecordBean;
 import com.kaadas.lock.bean.BluetoothRecordBean;
+import com.kaadas.lock.fragment.home.HomePageFragment;
 import com.kaadas.lock.mvp.mvpbase.BaseFragment;
 import com.kaadas.lock.mvp.presenter.gatewaylockpresenter.GatewayLockHomePresenter;
-import com.kaadas.lock.mvp.view.IFingerprintManagerView;
 import com.kaadas.lock.mvp.view.gatewaylockview.IGatewayLockHomeView;
 import com.kaadas.lock.publiclibrary.bean.GatewayInfo;
 import com.kaadas.lock.publiclibrary.bean.GwLockInfo;
@@ -45,7 +44,6 @@ import com.kaadas.lock.utils.ToastUtil;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

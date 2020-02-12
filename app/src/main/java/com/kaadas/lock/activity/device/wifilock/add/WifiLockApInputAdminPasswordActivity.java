@@ -91,7 +91,7 @@ public class WifiLockApInputAdminPasswordActivity extends BaseAddToApplicationAc
 
     @Override
     public void onBackPressed() {
-        Intent intent = new Intent(WifiLockApInputAdminPasswordActivity.this, WifiLockNoticeUserLinkWifiFirstActivity.class);
+        Intent intent = new Intent(WifiLockApInputAdminPasswordActivity.this, WifiLockApAddThirdActivity.class);
         startActivity(intent);
         super.onBackPressed();
     }

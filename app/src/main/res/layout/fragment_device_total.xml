@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <LinearLayout
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="40dp">
+        <RadioGroup
+            android:id="@+id/rg_device"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/rb_device"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/device_radio_button_bg"
+                android:button="@null"
+                android:paddingBottom="10dp"
+                android:text="@string/device_list"
+                android:textColor="#000000"
+                android:textSize="15sp" />
+
+            <RadioButton
+                android:id="@+id/rv_scene"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dp_34"
+                android:button="@null"
+                android:background="@drawable/device_radio_button_bg"
+                android:paddingBottom="10dp"
+                android:text="@string/smart_scene"
+                android:textColor="#000000"
+                android:textSize="15sp" />
+
+        </RadioGroup>
+
+        <View
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <ImageView
+            android:id="@+id/iv_add_device"
+            android:paddingLeft="@dimen/dp_20"
+            android:paddingRight="@dimen/dp_20"
+            android:src="@mipmap/device_fragment_add_ico"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+
+    <com.kaadas.lock.widget.NoScrollViewPager
+        android:id="@+id/vp_device"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+</LinearLayout>

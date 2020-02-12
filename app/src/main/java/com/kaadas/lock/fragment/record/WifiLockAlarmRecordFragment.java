@@ -1,4 +1,4 @@
-package com.kaadas.lock.fragment;
+package com.kaadas.lock.fragment.record;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -14,11 +14,13 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.kaadas.lock.R;
-import com.kaadas.lock.adapter.WifiLockOperationGroupRecordAdapter;
-import com.kaadas.lock.bean.WifiLockOperationRecordGroup;
+import com.kaadas.lock.activity.home.BluetoothRecordActivity;
+import com.kaadas.lock.adapter.WifiLockAlarmGroupRecordAdapter;
+import com.kaadas.lock.bean.WifiLockAlarmRecordGroup;
 import com.kaadas.lock.mvp.mvpbase.BaseFragment;
-import com.kaadas.lock.mvp.presenter.wifilock.WifiLockOpenRecordPresenter;
-import com.kaadas.lock.mvp.view.wifilock.IWifiLockOpenRecordView;
+import com.kaadas.lock.mvp.presenter.wifilock.WifiLockAlarmRecordPresenter;
+import com.kaadas.lock.mvp.view.wifilock.IWifiLockAlarmRecordView;
+import com.kaadas.lock.publiclibrary.bean.WifiLockAlarmRecord;
 import com.kaadas.lock.publiclibrary.bean.WifiLockOperationRecord;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.util.HttpUtils;
@@ -42,64 +44,33 @@ import butterknife.Unbinder;
 /**
  * Created by David on 2019/4/22
  */
-public class WifiLockOpenRecordFragment extends BaseFragment<IWifiLockOpenRecordView, WifiLockOpenRecordPresenter<IWifiLockOpenRecordView>>
-        implements IWifiLockOpenRecordView, View.OnClickListener {
+public class WifiLockAlarmRecordFragment extends BaseFragment<IWifiLockAlarmRecordView, WifiLockAlarmRecordPresenter<IWifiLockAlarmRecordView>>
+        implements IWifiLockAlarmRecordView, View.OnClickListener {
+
     @BindView(R.id.recycleview)
     RecyclerView recycleview;
-    List<WifiLockOperationRecordGroup> showDatas = new ArrayList<>();
-    WifiLockOperationGroupRecordAdapter operationGroupRecordAdapter;
     @BindView(R.id.refreshLayout)
     SmartRefreshLayout refreshLayout;
-    @BindView(R.id.tv_synchronized_record)
-    TextView tvSynchronizedRecord;
+    WifiLockAlarmGroupRecordAdapter wifiLockAlarmGroupRecordAdapter;
     @BindView(R.id.rl_head)
     RelativeLayout rlHead;
-
     private int currentPage = 1;   //当前的开锁记录时间
     View view;
     private Unbinder unbinder;
     private String wifiSn;
+    List<WifiLockAlarmRecordGroup> list = new ArrayList<>();
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view = View.inflate(getActivity(), R.layout.fragment_bluetooth_open_lock_record, null);
+        view = View.inflate(getActivity(), R.layout.fragment_bluetooth_warn_information, null);
         unbinder = ButterKnife.bind(this, view);
-        tvSynchronizedRecord.setOnClickListener(this);
-        wifiSn = getArguments().getString(KeyConstants.WIFI_SN);
-        rlHead.setVisibility(View.GONE);
 
+        wifiSn = getArguments().getString(KeyConstants.WIFI_SN);
         initRecycleView();
         initRefresh();
-        initData();
+        rlHead.setVisibility(View.GONE);
         return view;
-    }
-
-    private void initData() {
-        String localRecord = (String) SPUtils.get(KeyConstants.WIFI_LOCK_OPERATION_RECORD + wifiSn, "");
-        Gson gson = new Gson();
-        List<WifiLockOperationRecord> records = gson.fromJson(localRecord, new TypeToken<List<WifiLockOperationRecord>>() {
-        }.getType());
-        groupData(records);
-        operationGroupRecordAdapter.notifyDataSetChanged();
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        mPresenter.getOpenRecordFromServer(1, wifiSn);
-    }
-
-
-    @Override
-    protected WifiLockOpenRecordPresenter<IWifiLockOpenRecordView> createPresent() {
-        return new WifiLockOpenRecordPresenter<>();
-    }
-
-    private void initRecycleView() {
-        operationGroupRecordAdapter = new WifiLockOperationGroupRecordAdapter(showDatas);
-        recycleview.setLayoutManager(new LinearLayoutManager(getActivity()));
-        recycleview.setAdapter(operationGroupRecordAdapter);
     }
 
     private void initRefresh() {
@@ -119,22 +90,36 @@ public class WifiLockOpenRecordFragment extends BaseFragment<IWifiLockOpenRecord
     }
 
     @Override
+    protected WifiLockAlarmRecordPresenter<IWifiLockAlarmRecordView> createPresent() {
+        return new WifiLockAlarmRecordPresenter<>();
+    }
+
+    private void initRecycleView() {
+        wifiLockAlarmGroupRecordAdapter = new WifiLockAlarmGroupRecordAdapter(list);
+        recycleview.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recycleview.setAdapter(wifiLockAlarmGroupRecordAdapter);
+
+        String alarmCache = (String) SPUtils.get(KeyConstants.WIFI_LOCK_ALARM_RECORD + wifiSn, "");
+        Gson gson = new Gson();
+        List<WifiLockAlarmRecord> records = gson.fromJson(alarmCache, new TypeToken<List<WifiLockAlarmRecord>>() {
+        }.getType());
+        groupData(records);
+        wifiLockAlarmGroupRecordAdapter.notifyDataSetChanged();
+    }
+
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
         ((ViewGroup) view.getParent()).removeView(view);
         unbinder.unbind();
     }
 
-    @Override
-    public void onLoseRecord(List<Integer> numbers) {
-    }
 
     @Override
-    public void onLoadServerRecord(List<WifiLockOperationRecord> lockRecords, int page) {
-        LogUtils.e("收到服务器数据  " + lockRecords.size());
+    public void onLoadServerRecord(List<WifiLockAlarmRecord> alarmRecords, int page) {
         currentPage = page + 1;
-        groupData(lockRecords);
-        operationGroupRecordAdapter.notifyDataSetChanged();
+        groupData(alarmRecords);
+        wifiLockAlarmGroupRecordAdapter.notifyDataSetChanged();
         if (page == 1) { //这时候是刷新
             refreshLayout.finishRefresh();
             refreshLayout.setEnableLoadMore(true);
@@ -143,40 +128,39 @@ public class WifiLockOpenRecordFragment extends BaseFragment<IWifiLockOpenRecord
         }
     }
 
-    private void groupData(List<WifiLockOperationRecord> lockRecords) {
-        showDatas.clear();
+    private void groupData(List<WifiLockAlarmRecord> warringRecords) {
+        list.clear();
         String lastTimeHead = "";
-        if (lockRecords !=null && lockRecords.size()>0){
-            for (int i = 0; i < lockRecords.size(); i++) {
-                WifiLockOperationRecord record = lockRecords.get(i);
+        if (warringRecords != null && warringRecords.size() > 0) {
+            for (int i = 0; i < warringRecords.size(); i++) {
+                WifiLockAlarmRecord record = warringRecords.get(i);
                 //获取开锁时间的毫秒数
                 long openTime = record.getTime();
                 String sOpenTime = DateUtils.getDateTimeFromMillisecond(openTime * 1000);
                 String timeHead = sOpenTime.substring(0, 10);
+                List<WifiLockAlarmRecord> itemList;
                 if (!timeHead.equals(lastTimeHead)) { //添加头
+                    itemList = new ArrayList<>();
                     lastTimeHead = timeHead;
-                    List<WifiLockOperationRecord> itemList = new ArrayList<>();
                     itemList.add(record);
-                    showDatas.add(new WifiLockOperationRecordGroup(timeHead, itemList));
+                    list.add(new WifiLockAlarmRecordGroup(timeHead, itemList, false));
                 } else {
-                    WifiLockOperationRecordGroup operationRecordGroup = showDatas.get(showDatas.size() - 1);
-                    List<WifiLockOperationRecord> bluetoothItemRecordBeanList = operationRecordGroup.getList();
-                    bluetoothItemRecordBeanList.add(record);
+                    WifiLockAlarmRecordGroup alarmRecordGroup = list.get(list.size() - 1);
+                    itemList = alarmRecordGroup.getList();
+                    itemList.add(record);
                 }
             }
-        }else {
 
         }
-
     }
 
 
     @Override
     public void onLoadServerRecordFailed(Throwable throwable) {
+        ToastUtil.getInstance().showShort(HttpUtils.httpProtocolErrorCode(getActivity(), throwable));
         //加载服务器开锁记录失败
         refreshLayout.finishRefresh();
         refreshLayout.finishLoadMore();
-        ToastUtil.getInstance().showShort(HttpUtils.httpProtocolErrorCode(getActivity(), throwable));
     }
 
     @Override
@@ -203,6 +187,5 @@ public class WifiLockOpenRecordFragment extends BaseFragment<IWifiLockOpenRecord
 
     @Override
     public void onClick(View v) {
-
     }
 }

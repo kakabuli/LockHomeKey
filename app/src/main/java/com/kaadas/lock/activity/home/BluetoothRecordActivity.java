@@ -11,9 +11,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.kaadas.lock.R;
-import com.kaadas.lock.fragment.BleOpenRecordFragment;
-import com.kaadas.lock.fragment.BluetoothWarnInformationFragment;
-import com.kaadas.lock.fragment.OperationRecordFragment;
+import com.kaadas.lock.fragment.record.BleOpenRecordFragment;
+import com.kaadas.lock.fragment.record.BluetoothWarnInformationFragment;
+import com.kaadas.lock.fragment.record.OperationRecordFragment;
 import com.kaadas.lock.mvp.mvpbase.BaseBleActivity;
 import com.kaadas.lock.mvp.mvpbase.BlePresenter;
 import com.kaadas.lock.mvp.mvpbase.IBleView;

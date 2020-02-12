@@ -1,4 +1,4 @@
-package com.kaadas.lock.fragment;
+package com.kaadas.lock.fragment.home;
 
 import android.content.Intent;
 import android.graphics.Color;

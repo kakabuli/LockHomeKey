@@ -53,8 +53,6 @@ public class DeviceZigBeeDetailPresenter<T> extends BasePresenter<DeviceZigBeeDe
             }
         }
         return showBeansList;
-
-
     }
 
 

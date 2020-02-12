@@ -1443,4 +1443,24 @@
     <string name="fjdskj">输入区分大小写</string>
     <string name="click_copy_pwd">点击复制门锁热点密码</string>
     <string name="fkjdshfjkh">进入管理模式根据语音提示完成更改</string>
+    <string name="auto_connect_wifi_notice1">请将手机尽量靠近门锁，能够更好的连接设备热点</string>
+    <string name="auto_connect_wifi_notice2">自动连接门锁热点中，请稍等...</string>
+    <string name="is_connect_wifi_please_wait">正在切换WiFi，请稍后...</string>
+    <string name="ble_lock">蓝牙锁</string>
+    <string name="zigbeelock">网关锁</string>
+    <string name="wifi_lock2">WiFi锁</string>
+    <string name="other_device">其他智能家居</string>
+    <string name="cateye2">猫 眼</string>
+    <string name="single_switch">零火单键</string>
+    <string name="double_switch">零火双键</string>
+    <string name="device_list">设备列表</string>
+    <string name="smart_scene">智能场景</string>
+    <string name="set_time">定时</string>
+    <string name="device_share1">设备共享</string>
+    <string name="device_setting">设备设置</string>
+    <string name="room_position">房间位置</string>
+    <string name="device_id1">设备ID</string>
+    <string name="ip_address">IP地址</string>
+    <string name="hard_version">固件版本</string>
+    <string name="bind_time1">绑定时间</string>
 </resources>
