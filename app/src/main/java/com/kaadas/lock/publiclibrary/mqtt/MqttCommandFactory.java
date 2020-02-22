@@ -378,7 +378,8 @@ public class MqttCommandFactory {
      */
     public static MqttMessage getGatewayLockInformation(String gatewayId, String deviceId) {
         int messageId = getMessageId();
-        GetGatewayLockInfoBean getGatewayLockInfoBean = new GetGatewayLockInfoBean(MqttConstant.MSG_TYPE_REQUEST, MyApplication.getInstance().getUid(), messageId, gatewayId, deviceId, MqttConstant.GET_LOCK_INFO, new GetGatewayLockInfoBean.ParamsBean(), "0", new GetGatewayLockInfoBean.ReturnDataBean(), System.currentTimeMillis() + "");
+        GetGatewayLockInfoBean getGatewayLockInfoBean = new GetGatewayLockInfoBean(MqttConstant.MSG_TYPE_REQUEST, MyApplication.getInstance().getUid(),
+                messageId, gatewayId, deviceId, MqttConstant.GET_LOCK_INFO, new GetGatewayLockInfoBean.ParamsBean(), "0", new GetGatewayLockInfoBean.ReturnDataBean(), System.currentTimeMillis() + "");
         return getMessage(getGatewayLockInfoBean, messageId);
     }
 

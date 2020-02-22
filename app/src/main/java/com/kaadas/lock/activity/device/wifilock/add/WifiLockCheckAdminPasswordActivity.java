@@ -111,7 +111,18 @@ public class WifiLockCheckAdminPasswordActivity extends BaseActivity<IWifiLockAP
             @Override
             public void run() {
                 if (errorCode == -3) {
-                    reInputAdminPassword();
+                    AlertDialogUtil.getInstance().noEditSingleCanNotDismissButtonDialog(
+                            WifiLockCheckAdminPasswordActivity.this, "", getString(R.string.admin_error_reinput), getString(R.string.hao_de), new AlertDialogUtil.ClickListener() {
+                                @Override
+                                public void left() {
+                                    reInputAdminPassword();
+                                }
+
+                                @Override
+                                public void right() {
+                                    reInputAdminPassword();
+                                }
+                            });
                     return;
                 }
                 finish();
@@ -119,13 +130,13 @@ public class WifiLockCheckAdminPasswordActivity extends BaseActivity<IWifiLockAP
                 Intent intent = new Intent(WifiLockCheckAdminPasswordActivity.this, WifiLockAPAddFailedActivity.class);
                 intent.putExtra(KeyConstants.WIFI_LOCK_SETUP_IS_AP, false);
                 startActivity(intent);
-                if (errorCode == -1) {
-                    Toast.makeText(WifiLockCheckAdminPasswordActivity.this, "读取失败", Toast.LENGTH_SHORT).show();
-                } else if (errorCode == -2) {
-                    Toast.makeText(WifiLockCheckAdminPasswordActivity.this, "连接失败", Toast.LENGTH_SHORT).show();
-                } else if (errorCode == -3) {
-                    Toast.makeText(WifiLockCheckAdminPasswordActivity.this, "管理员密码输入错误，请重新输入", Toast.LENGTH_SHORT).show();
-                }
+//                if (errorCode == -1) {
+//                    Toast.makeText(WifiLockCheckAdminPasswordActivity.this, "读取失败", Toast.LENGTH_SHORT).show();
+//                } else if (errorCode == -2) {
+//                    Toast.makeText(WifiLockCheckAdminPasswordActivity.this, "连接失败", Toast.LENGTH_SHORT).show();
+//                } else if (errorCode == -3) {
+//                    Toast.makeText(WifiLockCheckAdminPasswordActivity.this, "管理员密码输入错误，请重新输入", Toast.LENGTH_SHORT).show();
+//                }
             }
         });
     }
@@ -152,7 +163,7 @@ public class WifiLockCheckAdminPasswordActivity extends BaseActivity<IWifiLockAP
             @Override
             public void onClick(View v) {
                 String name = editText.getText().toString().trim();
-                if (!TextUtils.isEmpty(name) && name.length() >= 6) {
+                if (!TextUtils.isEmpty(name) && name.length() >= 5) {
                     adminPassword = name;
                     parseData(adminPassword);
                 } else {
@@ -195,17 +206,12 @@ public class WifiLockCheckAdminPasswordActivity extends BaseActivity<IWifiLockAP
                         }
                     });
         } else { //解析数据错误
-            if (retryTimes > 5 ) {
+            if (retryTimes > 5) {
                 socketManager.destroy();
                 finish();
                 startActivity(new Intent(WifiLockCheckAdminPasswordActivity.this, WifiLockApAddThirdActivity.class));
             } else {
-//                if (Looper.myLooper() != Looper.getMainLooper()) {
-//                    //非主线程
-//                    int writeResult = socketManager.writeData(("CRCError\r").getBytes());
-//                    LogUtils.e("写 CRC Error  结果为   " + writeResult);
-//                }
-                new Thread(){
+                new Thread() {
                     @Override
                     public void run() {
                         super.run();
@@ -213,12 +219,7 @@ public class WifiLockCheckAdminPasswordActivity extends BaseActivity<IWifiLockAP
                         LogUtils.e("写 CRC Error  结果为   " + writeResult);
                     }
                 }.start();
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        reInputAdminPassword();
-                    }
-                });
+                onError(socketManager, -3);
             }
         }
     }
@@ -229,11 +230,12 @@ public class WifiLockCheckAdminPasswordActivity extends BaseActivity<IWifiLockAP
         String wifiSn = new String(result.wifiSn);
         String randomCode = Rsa.bytesToHexString(result.password);
         WifiLockInfo wifiLockInfo = MyApplication.getInstance().getWifiLockInfoBySn(wifiSn);
-        if (wifiLockInfo != null && wifiLockInfo.getIsAdmin() == 1) {
-            mPresenter.update(wifiSn, randomCode, wifiName, result.func);
-        } else {
-            mPresenter.bindDevice(wifiSn, wifiSn, MyApplication.getInstance().getUid(), randomCode, wifiName, result.func);
-        }
+//        if (wifiLockInfo != null && wifiLockInfo.getIsAdmin() == 1) {
+//            mPresenter.update(wifiSn, randomCode, wifiName, result.func);
+//        } else {
+//            mPresenter.bindDevice(wifiSn, wifiSn, MyApplication.getInstance().getUid(), randomCode, wifiName, result.func);
+//        }
+        mPresenter.onReadSuccess(wifiSn, randomCode, wifiName, result.func);
     }
 
     /**
@@ -287,6 +289,7 @@ public class WifiLockCheckAdminPasswordActivity extends BaseActivity<IWifiLockAP
         Intent intent = new Intent(this, WifiLockAddSuccessActivity.class);
         intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
         startActivity(intent);
+        finish();
     }
 
     @Override
@@ -295,14 +298,17 @@ public class WifiLockCheckAdminPasswordActivity extends BaseActivity<IWifiLockAP
         Intent intent = new Intent(this, WifiLockAPAddFailedActivity.class);
         intent.putExtra(KeyConstants.WIFI_LOCK_SETUP_IS_AP, false);
         startActivity(intent);
+        finish();
     }
 
     @Override
     public void onBindThrowable(Throwable throwable) {
+
         Toast.makeText(this, R.string.bind_failed, Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(this, WifiLockAPAddFailedActivity.class);
         intent.putExtra(KeyConstants.WIFI_LOCK_SETUP_IS_AP, false);
         startActivity(intent);
+        finish();
     }
 
     @Override
@@ -310,6 +316,7 @@ public class WifiLockCheckAdminPasswordActivity extends BaseActivity<IWifiLockAP
         Intent intent = new Intent(this, WifiLockAddSuccessActivity.class);
         intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
         startActivity(intent);
+        finish();
     }
 
     @Override
@@ -318,6 +325,7 @@ public class WifiLockCheckAdminPasswordActivity extends BaseActivity<IWifiLockAP
         Intent intent = new Intent(this, WifiLockAPAddFailedActivity.class);
         intent.putExtra(KeyConstants.WIFI_LOCK_SETUP_IS_AP, false);
         startActivity(intent);
+        finish();
     }
 
     @Override
@@ -326,6 +334,7 @@ public class WifiLockCheckAdminPasswordActivity extends BaseActivity<IWifiLockAP
         Intent intent = new Intent(this, WifiLockAPAddFailedActivity.class);
         intent.putExtra(KeyConstants.WIFI_LOCK_SETUP_IS_AP, false);
         startActivity(intent);
+        finish();
     }
 
     @Override

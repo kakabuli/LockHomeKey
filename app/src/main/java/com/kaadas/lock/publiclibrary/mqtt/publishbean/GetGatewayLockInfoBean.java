@@ -128,6 +128,16 @@ public class GetGatewayLockInfoBean implements Serializable {
         private String swversion;
         private String manufact;
         private String linkquality;
+        private String lockversion;
+
+
+        public String getLockversion() {
+            return lockversion;
+        }
+
+        public void setLockversion(String lockversion) {
+            this.lockversion = lockversion;
+        }
 
         public String getMacaddr() {
             return macaddr;

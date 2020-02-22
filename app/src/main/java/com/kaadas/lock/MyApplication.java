@@ -239,8 +239,6 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
 
             @Override
             public void onActivityStarted(Activity activity) {
-
-
             }
 
             @Override
@@ -552,8 +550,6 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
                             homeShowDevices = allBindDevices.getHomeShow();
                             LogUtils.e("设备更新  application");
                             getDevicesFromServer.onNext(allBindDevices);
-
-
                             //缓存WiFi锁设备
                             if (allBindDevices.getData() != null && allBindDevices.getData().getWifiList() != null) {
                                 List<WifiLockInfo> wifiList = allBindDevices.getData().getWifiList();
@@ -704,7 +700,6 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
             }
         }
         return gatewayBindList;
-
     }
 
     //所有网关

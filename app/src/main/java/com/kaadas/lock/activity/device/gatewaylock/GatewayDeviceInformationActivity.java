@@ -36,7 +36,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class GatewayDeviceInformationActivity extends BaseActivity<GatewayLockInformationView, GatewayLockInformationPresenter<GatewayLockInformationView>> implements GatewayLockInformationView{
+public class GatewayDeviceInformationActivity extends BaseActivity<GatewayLockInformationView, GatewayLockInformationPresenter<GatewayLockInformationView>> implements GatewayLockInformationView {
 
 
     @BindView(R.id.iv_back)
@@ -74,6 +74,7 @@ public class GatewayDeviceInformationActivity extends BaseActivity<GatewayLockIn
     private LoadingDialog loadingDialog;
     private String uid;
     private DaoSession daoSession;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,32 +82,34 @@ public class GatewayDeviceInformationActivity extends BaseActivity<GatewayLockIn
         ButterKnife.bind(this);
         initView();
         initData();
-        
+
     }
-    String nickName=null;
+
+    String nickName = null;
     String name;
+
     private void initData() {
-        Intent intent=getIntent();
-        gatewayId=intent.getStringExtra(KeyConstants.GATEWAY_ID);
-        deviceId=intent.getStringExtra(KeyConstants.DEVICE_ID);
-        nickName= intent.getStringExtra(KeyConstants.DEVICE_NICKNAME);
-        boolean isgateway= getIntent().getBooleanExtra(KeyConstants.IS_GATEAWAY,false);
-        if(isgateway){
+        Intent intent = getIntent();
+        gatewayId = intent.getStringExtra(KeyConstants.GATEWAY_ID);
+        deviceId = intent.getStringExtra(KeyConstants.DEVICE_ID);
+        nickName = intent.getStringExtra(KeyConstants.DEVICE_NICKNAME);
+        boolean isgateway = getIntent().getBooleanExtra(KeyConstants.IS_GATEAWAY, false);
+        if (isgateway) {
             rlDeviceName.setVisibility(View.GONE);
         }
 
         tv_device_auth_name.setText(nickName);
-        uid=MyApplication.getInstance().getUid();
-        daoSession=MyApplication.getInstance().getDaoWriteSession();
-        if (gatewayId!=null&&deviceId!=null){
-            if (loadingDialog!=null){
+        uid = MyApplication.getInstance().getUid();
+        daoSession = MyApplication.getInstance().getDaoWriteSession();
+        if (gatewayId != null && deviceId != null) {
+            if (loadingDialog != null) {
                 //先读取数据库数据
-                GatewayLockBaseInfo gatewayLockBaseInfo=daoSession.getGatewayLockBaseInfoDao().queryBuilder().where(GatewayLockBaseInfoDao.Properties.DeviceId.eq(deviceId),GatewayLockBaseInfoDao.Properties.GatewayId.eq(gatewayId),GatewayLockBaseInfoDao.Properties.Uid.eq(uid)).unique();
-                if (gatewayLockBaseInfo!=null){
+                GatewayLockBaseInfo gatewayLockBaseInfo = daoSession.getGatewayLockBaseInfoDao().queryBuilder().where(GatewayLockBaseInfoDao.Properties.DeviceId.eq(deviceId), GatewayLockBaseInfoDao.Properties.GatewayId.eq(gatewayId), GatewayLockBaseInfoDao.Properties.Uid.eq(uid)).unique();
+                if (gatewayLockBaseInfo != null) {
                     setGatewayLockBase(gatewayLockBaseInfo);
                 }
                 loadingDialog.show(getString(R.string.get_lock_info_later_on));
-                mPresenter.getGatewayLockInfo(gatewayId,deviceId);
+                mPresenter.getGatewayLockInfo(gatewayId, deviceId);
             }
 
         }
@@ -125,7 +128,7 @@ public class GatewayDeviceInformationActivity extends BaseActivity<GatewayLockIn
                 String deviceNickname = tv_device_auth_name.getText().toString().trim();
                 editText.setText(deviceNickname);
                 editText.setSelection(deviceNickname.length());
-                editText.addTextChangedListener(new EditTextWatcher(GatewayDeviceInformationActivity.this,null,editText,50));
+                editText.addTextChangedListener(new EditTextWatcher(GatewayDeviceInformationActivity.this, null, editText, 50));
                 tv_cancel.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -137,7 +140,7 @@ public class GatewayDeviceInformationActivity extends BaseActivity<GatewayLockIn
                     public void onClick(View v) {
                         name = editText.getText().toString().trim();
                         //todo 判断名称是否修改
-                        if (TextUtils.isEmpty(name)){
+                        if (TextUtils.isEmpty(name)) {
                             ToastUtil.getInstance().showShort(getString(R.string.device_name_cannot_be_empty));
                             return;
                         }
@@ -163,7 +166,17 @@ public class GatewayDeviceInformationActivity extends BaseActivity<GatewayLockIn
         tvSerialNumber.setText(gatewayLockBaseInfo.getModel());//序列号
         tvDeviceModel.setText(gatewayLockBaseInfo.getLinkquality());//链路信号
         tvLockFirmwareVersion.setText(gatewayLockBaseInfo.getFirmware());//固件版本号
-        tvSoftwareVersion.setText(gatewayLockBaseInfo.getSwversion());//软件版本号
+        String lockversion = gatewayLockBaseInfo.getLockversion();
+        if (!TextUtils.isEmpty(lockversion)) {
+            String[] split = lockversion.split(";");
+            if (split.length >= 3) {
+                tvSoftwareVersion.setText(split[2]);//软件版本号
+            }else {
+                tvSoftwareVersion.setText(gatewayLockBaseInfo.getSwversion());//软件版本号
+            }
+        } else {
+            tvSoftwareVersion.setText(gatewayLockBaseInfo.getSwversion());//软件版本号
+        }
         tvHardwareVersion.setText(gatewayLockBaseInfo.getHwversion());//硬件版本号
         tvModuleMark.setText(gatewayLockBaseInfo.getMacaddr());
 
@@ -175,7 +188,7 @@ public class GatewayDeviceInformationActivity extends BaseActivity<GatewayLockIn
     }
 
     private void initView() {
-        loadingDialog=LoadingDialog.getInstance(this);
+        loadingDialog = LoadingDialog.getInstance(this);
         tvContent.setText(R.string.device_info);
     }
 
@@ -188,16 +201,27 @@ public class GatewayDeviceInformationActivity extends BaseActivity<GatewayLockIn
     @Override
     public void getLockInfoSuccess(GetGatewayLockInfoBean.ReturnDataBean returnDataBean) {
         loadingDialog.dismiss();
-        if (returnDataBean!=null){
+        if (returnDataBean != null) {
             tvSerialNumber.setText(returnDataBean.getModel());//序列号
             tvDeviceModel.setText(returnDataBean.getLinkquality());//链路信号
             tvLockFirmwareVersion.setText(returnDataBean.getFirmware());//固件版本号
-            tvSoftwareVersion.setText(returnDataBean.getSwversion());//软件版本号
+
+            String lockversion = returnDataBean.getLockversion();
+            if (!TextUtils.isEmpty(lockversion)) {
+                String[] split = lockversion.split(";");
+                if (split.length >= 3) {
+                    tvSoftwareVersion.setText(split[2]);//软件版本号
+                }else {
+                    tvSoftwareVersion.setText(returnDataBean.getSwversion());//软件版本号
+                }
+            } else {
+                tvSoftwareVersion.setText(returnDataBean.getSwversion());//软件版本号
+            }
             tvHardwareVersion.setText(returnDataBean.getHwversion());//硬件版本号
             tvModuleMark.setText(returnDataBean.getMacaddr());
-            GatewayLockBaseInfo gatewayLockBaseInfo=new GatewayLockBaseInfo();
+            GatewayLockBaseInfo gatewayLockBaseInfo = new GatewayLockBaseInfo();
             gatewayLockBaseInfo.setDeviceId(deviceId);
-            gatewayLockBaseInfo.setDeviceUId(deviceId+uid);
+            gatewayLockBaseInfo.setDeviceUId(deviceId + uid);
             gatewayLockBaseInfo.setFirmware(returnDataBean.getFirmware());
             gatewayLockBaseInfo.setGatewayId(gatewayId);
             gatewayLockBaseInfo.setHwversion(returnDataBean.getHwversion());
@@ -206,6 +230,7 @@ public class GatewayDeviceInformationActivity extends BaseActivity<GatewayLockIn
             gatewayLockBaseInfo.setManufact(returnDataBean.getManufact());
             gatewayLockBaseInfo.setModel(returnDataBean.getModel());
             gatewayLockBaseInfo.setSwversion(returnDataBean.getSwversion());
+            gatewayLockBaseInfo.setLockversion(returnDataBean.getLockversion());
             gatewayLockBaseInfo.setUid(uid);
             daoSession.insertOrReplace(gatewayLockBaseInfo);
         }
@@ -221,32 +246,32 @@ public class GatewayDeviceInformationActivity extends BaseActivity<GatewayLockIn
     public void getLockInfoThrowable(Throwable throwable) {
         loadingDialog.dismiss();
         ToastUtil.getInstance().showShort(R.string.get_lock_info_fail);
-        LogUtils.e("获取锁信息出现异常    "+throwable.getMessage());
+        LogUtils.e("获取锁信息出现异常    " + throwable.getMessage());
     }
 
     @Override
     public void updateDevNickNameSuccess(String name) {
         tv_device_auth_name.setText(name);
-        nickName=name;
+        nickName = name;
         Intent intent = new Intent();
         //把返回数据存入Intent
         intent.putExtra(KeyConstants.DEVICE_NICKNAME, name);
         //设置返回数据
         setResult(RESULT_OK, intent);
-    //    ToastUtil.getInstance().showShort(getString(R.string.update_nick_name));
-        Toast.makeText(GatewayDeviceInformationActivity.this,getString(R.string.update_nick_name),Toast.LENGTH_SHORT).show();
+        //    ToastUtil.getInstance().showShort(getString(R.string.update_nick_name));
+        Toast.makeText(GatewayDeviceInformationActivity.this, getString(R.string.update_nick_name), Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void updateDevNickNameFail() {
-      //  ToastUtil.getInstance().showShort(getString(R.string.update_nickname_fail));
-        Toast.makeText(GatewayDeviceInformationActivity.this,getString(R.string.update_nickname_fail),Toast.LENGTH_SHORT).show();
+        //  ToastUtil.getInstance().showShort(getString(R.string.update_nickname_fail));
+        Toast.makeText(GatewayDeviceInformationActivity.this, getString(R.string.update_nickname_fail), Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void updateDevNickNameThrowable(Throwable throwable) {
-       // ToastUtil.getInstance().showShort(getString(R.string.update_nickname_exception));
-        Toast.makeText(GatewayDeviceInformationActivity.this,getString(R.string.update_nickname_exception),Toast.LENGTH_SHORT).show();
+        // ToastUtil.getInstance().showShort(getString(R.string.update_nickname_exception));
+        Toast.makeText(GatewayDeviceInformationActivity.this, getString(R.string.update_nickname_exception), Toast.LENGTH_SHORT).show();
     }
 
 }

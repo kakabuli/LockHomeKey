@@ -103,17 +103,17 @@ public class WifiLockApConnectDeviceActivity extends BaseActivity<IWifiLockAPWif
                 Toast.makeText(WifiLockApConnectDeviceActivity.this, R.string.bind_failed, Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(WifiLockApConnectDeviceActivity.this, WifiLockAPAddFailedActivity.class);
                 startActivity(intent);
-                if (errorCode == -1) {
-                    Toast.makeText(WifiLockApConnectDeviceActivity.this, "读取失败", Toast.LENGTH_SHORT).show();
-                } else if (errorCode == -2) {
-                    Toast.makeText(WifiLockApConnectDeviceActivity.this, "连接失败", Toast.LENGTH_SHORT).show();
-                } else if (errorCode == -3) {
-                    Toast.makeText(WifiLockApConnectDeviceActivity.this, "管理员密码输入错误，请重新输入", Toast.LENGTH_SHORT).show();
-                } else if (errorCode == -4) {
-                    Toast.makeText(WifiLockApConnectDeviceActivity.this, "写数据错误", Toast.LENGTH_SHORT).show();
-                } else if (errorCode == -5) {
-                    Toast.makeText(WifiLockApConnectDeviceActivity.this, "返回错误", Toast.LENGTH_SHORT).show();
-                }
+//                if (errorCode == -1) {
+//                    Toast.makeText(WifiLockApConnectDeviceActivity.this, "读取失败", Toast.LENGTH_SHORT).show();
+//                } else if (errorCode == -2) {
+//                    Toast.makeText(WifiLockApConnectDeviceActivity.this, "连接失败", Toast.LENGTH_SHORT).show();
+//                } else if (errorCode == -3) {
+//                    Toast.makeText(WifiLockApConnectDeviceActivity.this, "管理员密码输入错误，请重新输入", Toast.LENGTH_SHORT).show();
+//                } else if (errorCode == -4) {
+//                    Toast.makeText(WifiLockApConnectDeviceActivity.this, "写数据错误", Toast.LENGTH_SHORT).show();
+//                } else if (errorCode == -5) {
+//                    Toast.makeText(WifiLockApConnectDeviceActivity.this, "返回错误", Toast.LENGTH_SHORT).show();
+//                }
             }
         });
     }

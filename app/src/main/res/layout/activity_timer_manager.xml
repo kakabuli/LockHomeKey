@@ -1,9 +1,95 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#f2f2f2"
     tools:context="com.kaadas.lock.activity.device.singleswitch.TimerManagerActivity">
 
-</android.support.constraint.ConstraintLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_40"
+        android:background="#F8F8F8"
+        >
+        <ImageView
+            android:id="@+id/back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/dp_16"
+            android:paddingRight="@dimen/dp_16"
+            android:paddingTop="@dimen/dp_5"
+            android:paddingBottom="@dimen/dp_5"
+            android:src="@mipmap/back_gray"
+            android:layout_centerVertical="true"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/timer"
+            android:textSize="@dimen/sp_17"
+            android:textColor="#000000"
+            android:textStyle="bold"
+            />
+        <ImageView
+            android:id="@+id/iv_ad_timer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:paddingLeft="@dimen/dp_16"
+            android:paddingRight="@dimen/dp_16"
+            android:paddingTop="@dimen/dp_5"
+            android:paddingBottom="@dimen/dp_5"
+            android:src="@mipmap/device_fragment_add_ico"
+            android:layout_centerVertical="true"
+            />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:visibility="gone"
+        android:id="@+id/ll_no_data"
+        android:background="#fff"
+        android:orientation="vertical"
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/dp_46"
+            android:src="@mipmap/rg4300_timer_manager_empty" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/dp_20"
+            android:gravity="center"
+            android:text="@string/rg4300_timer_manager_notice_empty" />
+
+
+        <Button
+            android:id="@+id/button_next"
+            android:layout_width="@dimen/dp_200"
+            android:layout_height="@dimen/dp_44"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/dp_120"
+            android:layout_marginBottom="@dimen/dp_40"
+            android:background="@drawable/go_and_buy"
+            android:gravity="center"
+            android:text="@string/add_timer"
+            android:textColor="#fff"
+            android:textSize="@dimen/sp_15" />
+    </LinearLayout>
+
+    <com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView
+        android:id="@+id/rv_timer_list"
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"/>
+
+</LinearLayout>

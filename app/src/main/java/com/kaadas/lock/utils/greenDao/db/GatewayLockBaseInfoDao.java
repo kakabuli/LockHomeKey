@@ -35,6 +35,7 @@ public class GatewayLockBaseInfoDao extends AbstractDao<GatewayLockBaseInfo, Str
         public final static Property Manufact = new Property(8, String.class, "manufact", false, "MANUFACT");
         public final static Property Linkquality = new Property(9, String.class, "linkquality", false, "LINKQUALITY");
         public final static Property Uid = new Property(10, String.class, "uid", false, "UID");
+        public final static Property Lockversion = new Property(11, String.class, "lockversion", false, "LOCKVERSION");
     }
 
 
@@ -60,7 +61,8 @@ public class GatewayLockBaseInfoDao extends AbstractDao<GatewayLockBaseInfo, Str
                 "\"SWVERSION\" TEXT," + // 7: swversion
                 "\"MANUFACT\" TEXT," + // 8: manufact
                 "\"LINKQUALITY\" TEXT," + // 9: linkquality
-                "\"UID\" TEXT);"); // 10: uid
+                "\"UID\" TEXT," + // 10: uid
+                "\"LOCKVERSION\" TEXT);"); // 11: lockversion
     }
 
     /** Drops the underlying database table. */
@@ -127,6 +129,11 @@ public class GatewayLockBaseInfoDao extends AbstractDao<GatewayLockBaseInfo, Str
         if (uid != null) {
             stmt.bindString(11, uid);
         }
+ 
+        String lockversion = entity.getLockversion();
+        if (lockversion != null) {
+            stmt.bindString(12, lockversion);
+        }
     }
 
     @Override
@@ -187,6 +194,11 @@ public class GatewayLockBaseInfoDao extends AbstractDao<GatewayLockBaseInfo, Str
         if (uid != null) {
             stmt.bindString(11, uid);
         }
+ 
+        String lockversion = entity.getLockversion();
+        if (lockversion != null) {
+            stmt.bindString(12, lockversion);
+        }
     }
 
     @Override
@@ -207,7 +219,8 @@ public class GatewayLockBaseInfoDao extends AbstractDao<GatewayLockBaseInfo, Str
             cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7), // swversion
             cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8), // manufact
             cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9), // linkquality
-            cursor.isNull(offset + 10) ? null : cursor.getString(offset + 10) // uid
+            cursor.isNull(offset + 10) ? null : cursor.getString(offset + 10), // uid
+            cursor.isNull(offset + 11) ? null : cursor.getString(offset + 11) // lockversion
         );
         return entity;
     }
@@ -225,6 +238,7 @@ public class GatewayLockBaseInfoDao extends AbstractDao<GatewayLockBaseInfo, Str
         entity.setManufact(cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8));
         entity.setLinkquality(cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9));
         entity.setUid(cursor.isNull(offset + 10) ? null : cursor.getString(offset + 10));
+        entity.setLockversion(cursor.isNull(offset + 11) ? null : cursor.getString(offset + 11));
      }
     
     @Override

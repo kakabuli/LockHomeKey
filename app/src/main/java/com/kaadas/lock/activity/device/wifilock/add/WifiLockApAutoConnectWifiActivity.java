@@ -83,30 +83,24 @@ public class WifiLockApAutoConnectWifiActivity extends AppCompatActivity {
             if (action == null) {
                 return;
             }
-            WifiManager wifiManager = (WifiManager) context.getApplicationContext().getSystemService(WIFI_SERVICE);
-            assert wifiManager != null;
             switch (action) {
                 case WifiManager.NETWORK_STATE_CHANGED_ACTION:
                 case LocationManager.PROVIDERS_CHANGED_ACTION:
-                    onWifiChanged(wifiManager.getConnectionInfo());
+                    handler.postDelayed(runnable,2000);
                     break;
             }
         }
     };
 
-    private void saveWifiName() {
-        WifiManager wifiMgr = (WifiManager) MyApplication.getInstance().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-        WifiInfo info = wifiMgr.getConnectionInfo();
-        String ssid = info != null ? info.getSSID() : null;
-        if (TextUtils.isEmpty(ssid)) {
-            SPUtils.put(KeyConstants.WIFI_LOCK_CONNECT_NAME, "");
-            return;
+    Runnable runnable = new Runnable() {
+        @Override
+        public void run() {
+            WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(WIFI_SERVICE);
+            assert wifiManager != null;
+            onWifiChanged(wifiManager.getConnectionInfo());
         }
-        if (ssid.startsWith("\"") && ssid.endsWith("\"")) {
-            ssid = ssid.substring(1, ssid.length() - 1);
-            SPUtils.put(KeyConstants.WIFI_LOCK_CONNECT_NAME, ssid);
-        }
-    }
+    };
+
 
     private void onWifiChanged(WifiInfo info) {
         boolean disconnected = info == null
@@ -123,13 +117,16 @@ public class WifiLockApAutoConnectWifiActivity extends AppCompatActivity {
                 ssid = ssid.substring(1, ssid.length() - 1);
             }
             LogUtils.e("网络切换    " + ssid + "   " + "网络可用   " + NetUtil.isNetworkAvailable());
-            if ((ssid.equals("LXJ"))) {
+            if ((ssid.equals("kaadas_AP"))) {
+                handler.removeCallbacks(runnable);
                 startActivity(new Intent(WifiLockApAutoConnectWifiActivity.this, WifiLockApInputAdminPasswordActivity.class));
                 handler.removeCallbacks(timeoutRunnable);
-                saveWifiName();
+                finish();
             }
         }
     }
+
+
 
     @Override
     protected void onDestroy() {

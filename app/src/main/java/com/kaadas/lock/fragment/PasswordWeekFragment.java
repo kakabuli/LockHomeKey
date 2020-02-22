@@ -102,7 +102,6 @@ public class PasswordWeekFragment extends BaseBleFragment<IPasswordLoopView, Pas
     private int startHour;
     private int endMin;
     private int endHour;
-    private CustomDatePicker mTimerPicker;
     SimpleDateFormat formatter = new SimpleDateFormat("HH:mm");
 
     String startcurrentTime = formatter.format(new Date());
@@ -121,7 +120,7 @@ public class PasswordWeekFragment extends BaseBleFragment<IPasswordLoopView, Pas
         tvStart.setOnClickListener(this);
         tvEnd.setOnClickListener(this);
         initRecycleview();
-        initTimerPicker();
+//        initTimerPicker();
         setEffectiveTime();
         initMonitor();
         return mView;
@@ -160,33 +159,33 @@ public class PasswordWeekFragment extends BaseBleFragment<IPasswordLoopView, Pas
         setEndTime(endSplit[0], endSplit[1]);
     }
 
-    private void initTimerPicker() {
-        try {
-            long after1 = formatter.parse("00:00").getTime();
-            long after2 = formatter.parse("23:59").getTime();
-            long diff = after2 - after1;
-
-            String beginTime = formatter.format(new Date(System.currentTimeMillis()));
-            String endTime = formatter.format(new Date(System.currentTimeMillis() + diff));
-            // 通过日期字符串初始化日期，格式请用：yyyy-MM-dd HH:mm
-            mTimerPicker = new CustomDatePicker(getActivity(), new CustomDatePicker.Callback() {
-                @Override
-                public void onTimeSelected(long timestamp) {
-                    startcurrentTime = formatter.format(new Date(timestamp));
-                }
-            }, beginTime, endTime);
-            // 允许点击屏幕或物理返回键关闭
-            mTimerPicker.setCancelable(true);
-            // 显示时和分
-            mTimerPicker.setCanShowPreciseTime(true);
-            // 允许循环滚动
-            mTimerPicker.setScrollLoop(false);
-            // 允许滚动动画
-            mTimerPicker.setCanShowAnim(true);
-        } catch (Exception e) {
-            Log.e("denganzhi1", e.getMessage());
-        }
-    }
+//    private void initTimerPicker() {
+//        try {
+//            long after1 = formatter.parse("00:00").getTime();
+//            long after2 = formatter.parse("23:59").getTime();
+//            long diff = after2 - after1;
+//
+//            String beginTime = formatter.format(new Date(System.currentTimeMillis()));
+//            String endTime = formatter.format(new Date(System.currentTimeMillis() + diff));
+//            // 通过日期字符串初始化日期，格式请用：yyyy-MM-dd HH:mm
+//            mTimerPicker = new CustomDatePicker(getActivity(), new CustomDatePicker.Callback() {
+//                @Override
+//                public void onTimeSelected(long timestamp) {
+//                    startcurrentTime = formatter.format(new Date(timestamp));
+//                }
+//            }, beginTime, endTime);
+//            // 允许点击屏幕或物理返回键关闭
+//            mTimerPicker.setCancelable(true);
+//            // 显示时和分
+//            mTimerPicker.setCanShowPreciseTime(true);
+//            // 允许循环滚动
+//            mTimerPicker.setScrollLoop(false);
+//            // 允许滚动动画
+//            mTimerPicker.setCanShowAnim(true);
+//        } catch (Exception e) {
+//            Log.e("denganzhi1", e.getMessage());
+//        }
+//    }
 
     @Override
     protected PasswordWeekPresenter<IPasswordLoopView> createPresent() {
@@ -310,7 +309,6 @@ public class PasswordWeekFragment extends BaseBleFragment<IPasswordLoopView, Pas
             case R.id.tv_end:
                 //结束
                 TimeUtil.getInstance().getHourMinute(getActivity(), new TimeUtil.TimeListener() {
-
                     @Override
                     public void time(String hour, String minute) {
                         setEndTime(hour, minute);

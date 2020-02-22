@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#F2F2F2"
-    tools:context="com.kaadas.lock.activity.device.singleswitch.SingleSwitchActivity">
+    tools:context="com.kaadas.lock.activity.device.singleswitch.SingleSwitchDetailActivity">
     <LinearLayout
         android:orientation="vertical"
         android:layout_weight="1"

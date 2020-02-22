@@ -84,22 +84,23 @@ public class WifiLockApCheckAdminPasswordActivity extends BaseAddToApplicationAc
             @Override
             public void run() {
                 finish();
+                Toast.makeText(WifiLockApCheckAdminPasswordActivity.this, R.string.bind_failed, Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(WifiLockApCheckAdminPasswordActivity.this, WifiLockApAddThirdActivity.class));
                 socketManager.destroy();
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        if (errorCode == -1) {
-                            Toast.makeText(WifiLockApCheckAdminPasswordActivity.this, getString(R.string.read_failed), Toast.LENGTH_SHORT).show();
-                        } else if (errorCode == -2) {
-                            Toast.makeText(WifiLockApCheckAdminPasswordActivity.this, getString(R.string.connect_failed2), Toast.LENGTH_SHORT).show();
-                        } else if (errorCode == -3) {
-                            Toast.makeText(WifiLockApCheckAdminPasswordActivity.this, getString(R.string.admin_password_error), Toast.LENGTH_SHORT).show();
-                        } else if (errorCode == -4) {
-                            Toast.makeText(WifiLockApCheckAdminPasswordActivity.this, getString(R.string.write_error), Toast.LENGTH_SHORT).show();
-                        } else if (errorCode == -5) {
-                            Toast.makeText(WifiLockApCheckAdminPasswordActivity.this, getString(R.string.back_failed), Toast.LENGTH_SHORT).show();
-                        }
+//                        if (errorCode == -1) {
+//                            Toast.makeText(WifiLockApCheckAdminPasswordActivity.this, getString(R.string.read_failed), Toast.LENGTH_SHORT).show();
+//                        } else if (errorCode == -2) {
+//                            Toast.makeText(WifiLockApCheckAdminPasswordActivity.this, getString(R.string.connect_failed2), Toast.LENGTH_SHORT).show();
+//                        } else if (errorCode == -3) {
+//                            Toast.makeText(WifiLockApCheckAdminPasswordActivity.this, getString(R.string.admin_password_error), Toast.LENGTH_SHORT).show();
+//                        } else if (errorCode == -4) {
+//                            Toast.makeText(WifiLockApCheckAdminPasswordActivity.this, getString(R.string.write_error), Toast.LENGTH_SHORT).show();
+//                        } else if (errorCode == -5) {
+//                            Toast.makeText(WifiLockApCheckAdminPasswordActivity.this, getString(R.string.back_failed), Toast.LENGTH_SHORT).show();
+//                        }
                     }
                 });
             }
@@ -191,7 +192,7 @@ public class WifiLockApCheckAdminPasswordActivity extends BaseAddToApplicationAc
             @Override
             public void onClick(View v) {
                 String name = editText.getText().toString().trim();
-                if (!TextUtils.isEmpty(name) && name.length() >= 6) {
+                if (!TextUtils.isEmpty(name) && name.length() >= 5) {
                     adminPassword = name;
                     parseData(adminPassword);
                 } else {
@@ -254,11 +255,6 @@ public class WifiLockApCheckAdminPasswordActivity extends BaseAddToApplicationAc
                 finish();
                 startActivity(new Intent(WifiLockApCheckAdminPasswordActivity.this, WifiLockApAddThirdActivity.class));
             } else {
-//                if (Looper.myLooper() != Looper.getMainLooper()) {
-//                    //非主线程
-//                    int writeResult = socketManager.writeData(("CRCError\r").getBytes());
-//                    LogUtils.e("写 CRC Error  结果为   " + writeResult);
-//                }
                 new Thread(){
                     @Override
                     public void run() {
@@ -271,7 +267,18 @@ public class WifiLockApCheckAdminPasswordActivity extends BaseAddToApplicationAc
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        reInputAdminPassword();
+                        AlertDialogUtil.getInstance().noEditSingleCanNotDismissButtonDialog(
+                                WifiLockApCheckAdminPasswordActivity.this, "", getString(R.string.admin_error_reinput), getString(R.string.hao_de), new AlertDialogUtil.ClickListener() {
+                                    @Override
+                                    public void left() {
+                                        reInputAdminPassword();
+                                    }
+
+                                    @Override
+                                    public void right() {
+                                        reInputAdminPassword();
+                                    }
+                                });
                     }
                 });
             }

@@ -20,11 +20,15 @@ public class GatewayLockBaseInfo {
     private String manufact;
     private String linkquality;
     private String uid;
+    private String lockversion;
 
-    @Generated(hash = 73491696)
+
+
+    @Generated(hash = 2062913538)
     public GatewayLockBaseInfo(String deviceUId, String gatewayId, String deviceId,
             String macaddr, String model, String firmware, String hwversion,
-            String swversion, String manufact, String linkquality, String uid) {
+            String swversion, String manufact, String linkquality, String uid,
+            String lockversion) {
         this.deviceUId = deviceUId;
         this.gatewayId = gatewayId;
         this.deviceId = deviceId;
@@ -36,11 +40,14 @@ public class GatewayLockBaseInfo {
         this.manufact = manufact;
         this.linkquality = linkquality;
         this.uid = uid;
+        this.lockversion = lockversion;
     }
 
     @Generated(hash = 262657088)
     public GatewayLockBaseInfo() {
     }
+
+
 
     public String getDeviceUId() {
         return deviceUId;
@@ -129,5 +136,13 @@ public class GatewayLockBaseInfo {
 
     public void setUid(String uid) {
         this.uid = uid;
+    }
+
+    public String getLockversion() {
+        return this.lockversion;
+    }
+
+    public void setLockversion(String lockversion) {
+        this.lockversion = lockversion;
     }
 }

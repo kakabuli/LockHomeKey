@@ -26,7 +26,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="@string/add_lock"
+            android:text="@string/add_gateway"
             android:textSize="@dimen/sp_17"
             android:textColor="#000000"
             android:textStyle="bold"
@@ -45,13 +45,45 @@
             />
     </RelativeLayout>
 
+
     <TextView
         android:layout_marginTop="@dimen/dp_70"
         android:gravity="center"
         android:textColor="#333333"
         android:textSize="17sp"
-        android:text="按下按键保持3秒进行配网"
+        android:text="@string/add_rg4300_first_notice1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
+
+    <ImageView
+        android:layout_weight="1"
+        android:layout_gravity="center"
+        android:src="@mipmap/add_rg4300_first"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:text="@string/add_rg4300_first_notice2"
+        android:textColor="#333333"
+        android:textSize="12sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+
+    <Button
+        android:layout_marginBottom="@dimen/dp_60"
+        android:layout_marginTop="@dimen/dp_20"
+        android:id="@+id/button_next"
+        android:layout_width="@dimen/dp_200"
+        android:layout_height="@dimen/dp_44"
+        android:layout_gravity="center"
+        android:background="@drawable/go_and_buy"
+        android:gravity="center"
+        android:text="@string/add_rg4300_first_notice3"
+        android:textColor="#fff"
+        android:textSize="@dimen/sp_15" />
+
 
 </LinearLayout>

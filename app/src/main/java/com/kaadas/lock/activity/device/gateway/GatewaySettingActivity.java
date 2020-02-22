@@ -42,11 +42,9 @@ import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.StringUtil;
 import com.kaadas.lock.utils.ToastUtil;
 import com.kaadas.lock.utils.greenDao.bean.GatewayBaseInfo;
-import com.kaadas.lock.utils.greenDao.bean.GatewayLockBaseInfo;
 import com.kaadas.lock.utils.greenDao.db.CatEyeServiceInfoDao;
 import com.kaadas.lock.utils.greenDao.db.DaoSession;
 import com.kaadas.lock.utils.greenDao.db.GatewayBaseInfoDao;
-import com.kaadas.lock.utils.greenDao.db.GatewayLockBaseInfoDao;
 import com.kaadas.lock.utils.greenDao.db.GatewayLockServiceInfoDao;
 import com.kaadas.lock.utils.greenDao.db.GatewayServiceInfoDao;
 

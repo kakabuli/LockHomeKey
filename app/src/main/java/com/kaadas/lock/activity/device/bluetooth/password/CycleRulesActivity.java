@@ -149,6 +149,16 @@ public class CycleRulesActivity extends BaseAddToApplicationActivity implements 
                 days[0] = 1;
             }
         }
+        boolean isAll = true;
+        for (int i = 0; i < days.length; i++) {
+            if (days[i]==0){
+                isAll = false;
+            }
+        }
+        if (isAll){
+            data = getString(R.string.every_day);
+        }
+
     }
 
     @Override

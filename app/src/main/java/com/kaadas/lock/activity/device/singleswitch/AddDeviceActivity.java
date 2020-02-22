@@ -5,11 +5,11 @@ import android.os.Bundle;
 
 import com.kaadas.lock.R;
 
-public class SingleSwitchActivity extends AppCompatActivity {
+public class AddDeviceActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_single_switch);
+        setContentView(R.layout.activity_add_device);
     }
 }

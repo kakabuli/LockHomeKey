@@ -15,6 +15,7 @@ import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
 
 public class WifiApWifiSetUpPresenter<T> extends BasePresenter<IWifiLockAPWifiSetUpView> {
@@ -28,7 +29,7 @@ public class WifiApWifiSetUpPresenter<T> extends BasePresenter<IWifiLockAPWifiSe
     }
 
     public void onReadSuccess(String wifiSN, String randomCode, String wifiName, int func) {
-        bindDisposable = Observable.interval(3, 3, TimeUnit.SECONDS)//设置0延迟，每隔一秒发送一条数据
+        bindDisposable = Observable.interval(5, 5, TimeUnit.SECONDS)//设置0延迟，每隔一秒发送一条数据
                 .take(20)//设置截取前20次
                 .compose(RxjavaHelper.observeOnMainThread())
                 .subscribe(new Consumer<Long>() {
@@ -42,6 +43,19 @@ public class WifiApWifiSetUpPresenter<T> extends BasePresenter<IWifiLockAPWifiSe
                         } else {
                             bindDevice(wifiSN, wifiSN, MyApplication.getInstance().getUid(), randomCode, wifiName, func);
                         }
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+
+                    }
+                }, new Action() {
+                    @Override
+                    public void run() throws Exception {
+//                        if (isSafe()) {
+//                            mViewRef.get().onBindFailed(null);
+//                            toDisposable(bindDisposable);
+//                        }
                     }
                 });
         compositeDisposable.add(bindDisposable);

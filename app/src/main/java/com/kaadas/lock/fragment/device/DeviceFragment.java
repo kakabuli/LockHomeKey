@@ -73,6 +73,7 @@ import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 
 import com.kaadas.lock.utils.AlertDialogUtil.ClickListener;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -113,6 +114,7 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
     private String uid;
     private DaoSession daoSession;
     private MqttService mqttService;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -127,7 +129,7 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
         unbinder = ButterKnife.bind(this, mView);
         deviceRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
         homeShowBeanList = MyApplication.getInstance().getAllDevices();
-        mqttService=MyApplication.getInstance().getMqttService();
+        mqttService = MyApplication.getInstance().getMqttService();
         initData(homeShowBeanList);
         initRefresh();
         return mView;
@@ -212,7 +214,7 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                                 gwLockInfo.setPower(devicePower.getPower());
                             }
 
-                            if(!gwLockInfo.getServerInfo().getEvent_str().equals("offline")) {
+                            if (!gwLockInfo.getServerInfo().getEvent_str().equals("offline")) {
                                 mPresenter.getPower(gwLockInfo.getGwID(), gwLockInfo.getServerInfo().getDeviceId(), MyApplication.getInstance().getUid());
                             }
 
@@ -221,9 +223,9 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                             String deviceId = gwLock.getDeviceId();
                             GatewayLockServiceInfo gatewayLockServiceInfo = new GatewayLockServiceInfo(deviceId + uid, gwLock.getDeviceId(),
                                     gwLock.getSW(), gwLock.getDevice_type(), gwLock.getEvent_str(), gwLock.getIpaddr(), gwLock.getMacaddr(),
-                                gwLock.getNickName(), gwLock.getTime(), gwLockInfo.getGwID(), uid,
-                                gwLock.getDelectTime(), gwLock.getLockversion(), gwLock.getModuletype(),gwLock.getNwaddr(), gwLock.getOfflineTime(),
-                                gwLock.getOnlineTime(),   gwLock.getShareFlag(),gwLock.getPushSwitch());
+                                    gwLock.getNickName(), gwLock.getTime(), gwLockInfo.getGwID(), uid,
+                                    gwLock.getDelectTime(), gwLock.getLockversion(), gwLock.getModuletype(), gwLock.getNwaddr(), gwLock.getOfflineTime(),
+                                    gwLock.getOnlineTime(), gwLock.getShareFlag(), gwLock.getPushSwitch());
                             daoSession.insertOrReplace(gatewayLockServiceInfo);
                             mDeviceList.add(homeShowBean);
                             break;
@@ -231,8 +233,8 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                             //猫眼
                             CateEyeInfo cateEyeInfo = (CateEyeInfo) homeShowBean.getObject();
                             if (cateEyeInfo != null) {
-                                if(cateEyeInfo.getServerInfo()!=null){
-                                    SPUtils.put(cateEyeInfo.getServerInfo().getDeviceId(),cateEyeInfo.getGwID());
+                                if (cateEyeInfo.getServerInfo() != null) {
+                                    SPUtils.put(cateEyeInfo.getServerInfo().getDeviceId(), cateEyeInfo.getGwID());
                                 }
                                 GatewayInfo gat = MyApplication.getInstance().getGatewayById(cateEyeInfo.getGwID());
                                 if (gat != null && gat.getEvent_str() != null && gat.getEvent_str().equals("offline")) {
@@ -241,12 +243,12 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                                     cateEyeInfo.getServerInfo().setEvent_str("offline");
                                 }
                             }
-                            DevicePower catPower=daoSession.getDevicePowerDao().queryBuilder().where(DevicePowerDao.Properties.DeviceIdUid.eq(cateEyeInfo.getServerInfo().getDeviceId()+uid)).unique();
-                            if (catPower!=null){
+                            DevicePower catPower = daoSession.getDevicePowerDao().queryBuilder().where(DevicePowerDao.Properties.DeviceIdUid.eq(cateEyeInfo.getServerInfo().getDeviceId() + uid)).unique();
+                            if (catPower != null) {
                                 cateEyeInfo.setPower(catPower.getPower());
                             }
                             //请求电量
-                            if(!cateEyeInfo.getServerInfo().getEvent_str().equals("offline")){
+                            if (!cateEyeInfo.getServerInfo().getEvent_str().equals("offline")) {
                                 mPresenter.getPower(cateEyeInfo.getGwID(), cateEyeInfo.getServerInfo().getDeviceId(), MyApplication.getInstance().getUid());
                             }
 
@@ -256,8 +258,8 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                             CatEyeServiceInfo catEyeServiceInfo = new CatEyeServiceInfo(catDeviceId + uid, gwDevice.getDeviceId(),
                                     gwDevice.getSW(), gwDevice.getDevice_type(), gwDevice.getEvent_str(), gwDevice.getIpaddr(), gwDevice.getMacaddr(),
                                     gwDevice.getNickName(), gwDevice.getTime(), cateEyeInfo.getGwID(), uid,
-                                    gwDevice.getDelectTime(), gwDevice.getLockversion(), gwDevice.getModuletype(),gwDevice.getNwaddr(), gwDevice.getOfflineTime(),
-                                    gwDevice.getOnlineTime(),   gwDevice.getShareFlag(),gwDevice.getPushSwitch());
+                                    gwDevice.getDelectTime(), gwDevice.getLockversion(), gwDevice.getModuletype(), gwDevice.getNwaddr(), gwDevice.getOfflineTime(),
+                                    gwDevice.getOnlineTime(), gwDevice.getShareFlag(), gwDevice.getPushSwitch());
                             daoSession.insertOrReplace(catEyeServiceInfo);
                             mDeviceList.add(homeShowBean);
                             break;
@@ -271,26 +273,26 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                             GatewayServiceInfo gatewayServiceInfo =
                                     new GatewayServiceInfo(
                                             deviceSn + uid, serverGatewayInfo.getDeviceSN(), serverGatewayInfo.getDeviceNickName(), serverGatewayInfo.getAdminuid(), serverGatewayInfo.getAdminName(), serverGatewayInfo.getAdminNickname()
-                                    , serverGatewayInfo.getIsAdmin(), serverGatewayInfo.getMeUsername(),
-                                    serverGatewayInfo.getMePwd(), serverGatewayInfo.getMeBindState(), uid,
+                                            , serverGatewayInfo.getIsAdmin(), serverGatewayInfo.getMeUsername(),
+                                            serverGatewayInfo.getMePwd(), serverGatewayInfo.getMeBindState(), uid,
                                             serverGatewayInfo.getModel());
                             daoSession.getGatewayServiceInfoDao().insertOrReplace(gatewayServiceInfo);
                             //咪咪网未绑定
-                            if (gatewayInfo.getServerInfo().getMeBindState() != 1  && gatewayServiceInfo.getModel()!=null &&
+                            if (gatewayInfo.getServerInfo().getMeBindState() != 1 && gatewayServiceInfo.getModel() != null &&
                                     gatewayServiceInfo.getModel().equals(KeyConstants.BIG_GW)) {
                                 //需要绑定咪咪网
                                 String deviceSN = gatewayInfo.getServerInfo().getDeviceSN();
                                 mPresenter.bindMimi(deviceSN, deviceSN);
-                            }else {
-                                try{
-                                    String gwid= gatewayInfo.getServerInfo().getDeviceSN();
+                            } else {
+                                try {
+                                    String gwid = gatewayInfo.getServerInfo().getDeviceSN();
                                     String meName = gatewayInfo.getServerInfo().getMeUsername();
-                                    String mePwd= gatewayInfo.getServerInfo().getMePwd();
-                                    String me = meName+"&"+mePwd;
-                                    if(!TextUtils.isEmpty(gwid) && !TextUtils.isEmpty(meName) && !TextUtils.isEmpty(mePwd)){
-                                        SPUtils.put(gwid,me);
+                                    String mePwd = gatewayInfo.getServerInfo().getMePwd();
+                                    String me = meName + "&" + mePwd;
+                                    if (!TextUtils.isEmpty(gwid) && !TextUtils.isEmpty(meName) && !TextUtils.isEmpty(mePwd)) {
+                                        SPUtils.put(gwid, me);
                                     }
-                                }catch (Exception e){
+                                } catch (Exception e) {
                                     LogUtils.e(e.getMessage());
                                 }
 
@@ -352,19 +354,19 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
             noDeviceLayout.setVisibility(View.VISIBLE);
             refresh.setVisibility(View.GONE);
         }
-        if (mDeviceList != null) {
+        if (mDeviceList != null && mDeviceList.size() > 0) {
             for (int i = 0; i < mDeviceList.size(); i++) {
                 HomeShowBean homeShowBean = mDeviceList.get(i);
                 if (HomeShowBean.TYPE_CAT_EYE == homeShowBean.getDeviceType()) { //有网关
                     boolean isFlag = NotificationManagerCompat.from(getActivity()).areNotificationsEnabled();
-                    if ((!isFlag && Rom.isOppo()) || (!isFlag && Rom.isVivo())){
+                    if ((!isFlag && Rom.isOppo()) || (!isFlag && Rom.isVivo())) {
                         AlertDialogUtil.getInstance().noEditTwoButtonDialogWidthDialog_color_padding(
                                 getActivity(),
                                 getString(R.string.mainactivity_permission_alert_title),
                                 getString(R.string.mainactivity_permission_alert_msg),
                                 getString(R.string.cancel),
                                 getString(R.string.confirm),
-                                new ClickListener(){
+                                new ClickListener() {
 
                                     @Override
                                     public void left() {
@@ -384,6 +386,9 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                     }
                 }
             }
+        }else {
+            noDeviceLayout.setVisibility(View.VISIBLE);
+            refresh.setVisibility(View.GONE);
         }
     }
 
@@ -396,13 +401,13 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                 //刷新页面
                 if (NetUtil.isNetworkAvailable()) {
                     if (mqttService != null && mqttService.getMqttClient() != null && !mqttService.getMqttClient().isConnected()) {
-                            MyApplication.getInstance().getMqttService().mqttConnection(); //重新连接mqtt
-                            LogUtils.e("重新连接mqtt");
+                        MyApplication.getInstance().getMqttService().mqttConnection(); //重新连接mqtt
+                        LogUtils.e("重新连接mqtt");
 
                     }
                     mPresenter.refreshData();
                     refreshLayout.finishRefresh(8 * 1000);
-                }else{
+                } else {
                     ToastUtil.getInstance().showShort(getString(R.string.network_exception));
                     refreshLayout.finishRefresh();
                 }
@@ -489,13 +494,13 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                             if ("3".equals(bleLockInfo.getServerLockInfo().getBleVersion())) {
                                 String functionSet = bleLockInfo.getServerLockInfo().getFunctionSet();
                                 LogUtils.e("蓝牙的功能集是   " + functionSet);
-                                if (!TextUtils.isEmpty(functionSet) && Integer.parseInt(functionSet) == 0){
+                                if (!TextUtils.isEmpty(functionSet) && Integer.parseInt(functionSet) == 0) {
                                     LogUtils.e("跳转   老蓝牙");
                                     Intent detailIntent = new Intent(getActivity(), OldBleDetailActivity.class);
                                     String model = bleLockInfo.getServerLockInfo().getModel();
                                     detailIntent.putExtra(KeyConstants.DEVICE_TYPE, model);
                                     startActivityForResult(detailIntent, KeyConstants.GET_BLE_POWER);
-                                }else {
+                                } else {
                                     LogUtils.e("跳转   全功能  蓝牙");
                                     Intent detailIntent = new Intent(getActivity(), BleDetailActivity.class);
                                     String model = bleLockInfo.getServerLockInfo().getModel();
@@ -519,23 +524,23 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                         break;
                     case HomeShowBean.TYPE_WIFI_LOCK:
                         WifiLockInfo wifiLockInfo = (WifiLockInfo) deviceDetailBean.getObject();
-                        if (!TextUtils.isEmpty(wifiLockInfo.getFunctionSet())){
-                            if (wifiLockInfo.getIsAdmin() == 1 ){ //主用户
+                        if (!TextUtils.isEmpty(wifiLockInfo.getFunctionSet())) {
+                            if (wifiLockInfo.getIsAdmin() == 1) { //主用户
                                 Intent intent = new Intent(getActivity(), WiFiLockDetailActivity.class);
                                 intent.putExtra(KeyConstants.WIFI_SN, wifiLockInfo.getWifiSN());
                                 startActivity(intent);
-                            }else { //分享用户
+                            } else { //分享用户
                                 LogUtils.e("分享 wifi锁  用户  " + wifiLockInfo.toString());
                                 Intent intent = new Intent(getActivity(), WifiLockAuthActivity.class);
                                 intent.putExtra(KeyConstants.WIFI_SN, wifiLockInfo.getWifiSN());
                                 startActivity(intent);
                             }
-                        }else {
+                        } else {
                             ToastUtil.getInstance().showLong(R.string.lock_info_not_push);
                         }
                         break;
                 }
-            }else{
+            } else {
                 ToastUtil.getInstance().showShort(R.string.please_refresh_page_get_newdata);
             }
         }
@@ -583,7 +588,7 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                         CateEyeInfo cateEyeInfo = (CateEyeInfo) device.getObject();
                         cateEyeInfo.setPower(power);
                         cateEyeInfo.setPowerTimeStamp(timestamp);
-                        DevicePower devicePower=new DevicePower(devciceId+uid,devciceId,power);
+                        DevicePower devicePower = new DevicePower(devciceId + uid, devciceId, power);
                         daoSession.insertOrReplace(devicePower);
                         /*if (cateEyeInfo.getServerInfo().getEvent_str().equals("offline")) {
                             cateEyeInfo.getServerInfo().setEvent_str("online");
@@ -601,7 +606,7 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                         gwLockInfo.setPower(power);
                         gwLockInfo.setPowerTimeStamp(timestamp);
                         //缓存电量
-                        DevicePower devicePower=new DevicePower(devciceId+uid,devciceId,power);
+                        DevicePower devicePower = new DevicePower(devciceId + uid, devciceId, power);
                         daoSession.insertOrReplace(devicePower);
                         if (deviceDetailAdapter != null) {
                             deviceDetailAdapter.notifyDataSetChanged();
@@ -643,14 +648,14 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                                 //猫眼
                                 case HomeShowBean.TYPE_CAT_EYE:
                                     CateEyeInfo cateEyeInfo = (CateEyeInfo) device.getObject();
-                                    if (cateEyeInfo.getGwID().equals(gatewayId)){
+                                    if (cateEyeInfo.getGwID().equals(gatewayId)) {
                                         cateEyeInfo.getServerInfo().setEvent_str("offline");
                                     }
                                     break;
                                 //网关锁
                                 case HomeShowBean.TYPE_GATEWAY_LOCK:
                                     GwLockInfo gwLockInfo = (GwLockInfo) device.getObject();
-                                    if (gwLockInfo.getGwID().equals(gatewayId)){
+                                    if (gwLockInfo.getGwID().equals(gatewayId)) {
                                         gwLockInfo.getServerInfo().setEvent_str("offline");
                                     }
                                     break;
@@ -678,7 +683,7 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                         //猫眼上线
                         case HomeShowBean.TYPE_CAT_EYE:
                             CateEyeInfo cateEyeInfo = (CateEyeInfo) homeShowBean.getObject();
-                            if (cateEyeInfo.getGwID().equals(gatewayId)&&cateEyeInfo.getServerInfo().getDeviceId().equals(deviceId)) {
+                            if (cateEyeInfo.getGwID().equals(gatewayId) && cateEyeInfo.getServerInfo().getDeviceId().equals(deviceId)) {
                                 if ("online".equals(eventStr)) {
                                     cateEyeInfo.getServerInfo().setEvent_str("online");
                                 } else {
@@ -693,7 +698,7 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                         //网关锁上线
                         case HomeShowBean.TYPE_GATEWAY_LOCK:
                             GwLockInfo gwLockInfo = (GwLockInfo) homeShowBean.getObject();
-                            if (gwLockInfo.getGwID().equals(gatewayId)&&gwLockInfo.getServerInfo().getDeviceId().equals(deviceId)) {
+                            if (gwLockInfo.getGwID().equals(gatewayId) && gwLockInfo.getServerInfo().getDeviceId().equals(deviceId)) {
                                 if ("online".equals(eventStr)) {
                                     gwLockInfo.getServerInfo().setEvent_str("online");
                                 } else if ("offline".equals(eventStr)) {
@@ -742,12 +747,12 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
         if (isVisibleToUser == true) {
             //切换左右切换Fragment时，刷新页面
             if (mDeviceList != null && mDeviceList.size() > 0) {
-                    if (mqttService != null && mqttService.getMqttClient() != null && !mqttService.getMqttClient().isConnected()) {
-                       LogUtils.e("重连次数"+mqttService.reconnectionNum);
-                        if (mqttService.reconnectionNum == 0) {
-                            ToastUtil.getInstance().showShort(getString(R.string.mqtt_already_disconnect_refresh));
-                        }
+                if (mqttService != null && mqttService.getMqttClient() != null && !mqttService.getMqttClient().isConnected()) {
+                    LogUtils.e("重连次数" + mqttService.reconnectionNum);
+                    if (mqttService.reconnectionNum == 0) {
+                        ToastUtil.getInstance().showShort(getString(R.string.mqtt_already_disconnect_refresh));
                     }
+                }
                 if (deviceDetailAdapter != null) {
                     deviceDetailAdapter.notifyDataSetChanged();
                 }
@@ -770,8 +775,8 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                             if (device.getDeviceId().equals(getBle.getServerLockInfo().getLockName())) {
                                 BleLockInfo bleLockInfo = (BleLockInfo) device.getObject();
                                 bleLockInfo.setBattery(getBle.getBattery());
-                                String deviceSN=bleLockInfo.getServerLockInfo().getDeviceSN();
-                                DevicePower devicePower=new DevicePower(deviceSN+uid,deviceSN,getBle.getBattery());
+                                String deviceSN = bleLockInfo.getServerLockInfo().getDeviceSN();
+                                DevicePower devicePower = new DevicePower(deviceSN + uid, deviceSN, getBle.getBattery());
                                 daoSession.insertOrReplace(devicePower);
                                 if (getBle.isConnected()) {
                                     bleLockInfo.setConnected(true);

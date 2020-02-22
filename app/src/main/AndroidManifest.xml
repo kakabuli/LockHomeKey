@@ -84,18 +84,18 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait">
 
-            <!-- <intent-filter> -->
-            <!-- <category android:name="android.intent.category.DEFAULT" /> -->
+             <intent-filter>
+             <category android:name="android.intent.category.DEFAULT" />
 
 
-            <!-- <action android:name="android.intent.action.MAIN" /> -->
+             <action android:name="android.intent.action.MAIN" />
 
 
-            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+             <category android:name="android.intent.category.LAUNCHER" />
 
 
-            <!-- <action android:name="android.intent.action.oppopush" /> -->
-            <!-- </intent-filter> -->
+             <action android:name="android.intent.action.oppopush" />
+             </intent-filter>
         </activity>
         <!-- 登录 -->
         <activity
@@ -801,7 +801,11 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".activity.device.wifilock.add.WifiLockAddSuccessActivity" />
+        <activity android:name=".activity.device.wifilock.add.WifiLockAddSuccessActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            />
+
         <activity android:name=".publiclibrary.ota.face.FaceOtaActivity" />
         <activity android:name=".activity.device.gatewaylock.password.test.PasswordTestActivity" />
 
@@ -829,7 +833,6 @@
             android:name="com.igexin.sdk.VivoPushMessageReceiver"
             android:process=":pushservice">
             <intent-filter>
-
                 <!-- 接收 push 消息 -->
                 <action android:name="com.vivo.pushclient.action.RECEIVE" />
             </intent-filter>
@@ -917,10 +920,6 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.device.singlebutton.SingleButtonDetailActivity"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".activity.device.wifilock.add.WifiLockNoticeUserLinkWifiFirstActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
@@ -961,23 +960,35 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity android:name=".activity.device.wifilock.add.WifiLockApAutoConnectWifiActivity" />
-        <activity android:name=".activity.addDevice.DeviceAdd2Activity">
-            <intent-filter>
-                <category android:name="android.intent.category.DEFAULT" />
-
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-
-                <action android:name="android.intent.action.oppopush" />
-            </intent-filter>
-        </activity>
+        <activity android:name=".activity.addDevice.DeviceAdd2Activity" />
         <activity android:name=".activity.addDevice.rg4300.AddRG4300FirstActivity" />
         <activity android:name=".activity.addDevice.rg4300.Rg4300HelpActivity" />
-        <activity android:name=".activity.device.singleswitch.SingleSwitchActivity" />
+        <activity android:name=".activity.device.singleswitch.SingleSwitchDetailActivity" />
         <activity android:name=".activity.device.singleswitch.SingleSwichMoreActivity" />
         <activity android:name=".activity.device.singleswitch.TimerManagerActivity" />
-        <activity android:name=".activity.device.singleswitch.AddTimeActivity"></activity>
+        <activity android:name=".activity.device.singleswitch.AddTimeActivity" />
+        <activity android:name=".activity.device.singleswitch.AddDeviceActivity" />
+        <activity android:name=".activity.addDevice.rg4300.AddRG4300ScanActivity" />
+        <activity android:name=".activity.addDevice.rg4300.AddRg4300PairActivity" />
+        <activity android:name=".activity.addDevice.rg4300.AddRg4300InputWifiActivity" />
+        <activity android:name=".activity.addDevice.rg4300.AddRG4300ConnectWifiActivity" />
+        <activity android:name=".activity.addDevice.rg4300.AddRg4300SuccessActivity" />
+        <activity android:name=".activity.addDevice.rg4300.AddRg4300FailedActivity" />
+        <activity android:name=".activity.addDevice.rg4300.AddRg4300PairFailedActivity" />
+        <activity android:name=".activity.addDevice.singleswitch.AddSingleSwitchFirstActivity" />
+        <activity android:name=".activity.addDevice.singleswitch.AddSingleSwitchSecondActivity" />
+        <activity android:name=".activity.addDevice.singleswitch.AddSingleSwitchThirdActivity" />
+        <activity android:name=".activity.addDevice.singleswitch.AddSingleSwitchSuccessActivity">
+
+        </activity>
+        <activity android:name=".activity.addDevice.doubleswitch.AddDoubleSwitchFirstActivity" />
+        <activity android:name=".activity.addDevice.doubleswitch.AddDoubleSwitchSecondActivity" />
+        <activity android:name=".activity.addDevice.doubleswitch.AddDoubleSwitchThirdActivity" />
+        <activity android:name=".activity.addDevice.doubleswitch.AddDoubleSwitchSuccessActivity" />
+        <activity android:name=".activity.addDevice.pir.AddPirFirstActivity" />
+        <activity android:name=".activity.addDevice.pir.AddPirSecondActivity" />
+        <activity android:name=".activity.addDevice.pir.AddPirThirdActivity" />
+        <activity android:name=".activity.addDevice.pir.AddPirSuccessActivity"></activity>
     </application>
 
 </manifest>

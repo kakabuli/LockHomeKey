@@ -122,6 +122,7 @@ public class WifiLockDeviceInfoActivity extends BaseActivity<IWifiLockMoreView, 
             case R.id.wifi_version:
                 if (isAdmin) {
                     if (!TextUtils.isEmpty(wifiSN) && !TextUtils.isEmpty(sWifiVersion)) {
+                        showLoading(getString(R.string.is_check_version));
                         mPresenter.checkOtaInfo(wifiSN, sWifiVersion, 1);
                     } else {
                         Toast.makeText(this, getString(R.string.info_error), Toast.LENGTH_SHORT).show();

@@ -1,10 +1,14 @@
 package com.kaadas.lock.activity.device.wifilock.add;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -15,6 +19,7 @@ import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.utils.GpsUtil;
 import com.kaadas.lock.utils.KeyConstants;
+import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.WifiUtils;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
@@ -82,6 +87,7 @@ public class WifiLockApAddThirdActivity extends AppCompatActivity {
                 finish();
                 break;
             case R.id.bt_ap:
+                saveWifiName();
                 intent = new Intent(WifiLockApAddThirdActivity.this, WifiLockApAutoConnectWifiActivity.class);
                 startActivity(intent);
                 break;
@@ -89,6 +95,21 @@ public class WifiLockApAddThirdActivity extends AppCompatActivity {
                 startActivity(new Intent(this, WifiLockHelpActivity.class));
                 break;
 
+        }
+    }
+
+
+    private void saveWifiName() {
+        WifiManager wifiMgr = (WifiManager) MyApplication.getInstance().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        WifiInfo info = wifiMgr.getConnectionInfo();
+        String ssid = info != null ? info.getSSID() : null;
+        if (TextUtils.isEmpty(ssid)) {
+            SPUtils.put(KeyConstants.WIFI_LOCK_CONNECT_NAME, "");
+            return;
+        }
+        if (ssid.startsWith("\"") && ssid.endsWith("\"")) {
+            ssid = ssid.substring(1, ssid.length() - 1);
+            SPUtils.put(KeyConstants.WIFI_LOCK_CONNECT_NAME, ssid);
         }
     }
 }

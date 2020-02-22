@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#f2f2f2"
+    android:orientation="vertical"
+    tools:context="com.kaadas.lock.activity.addDevice.rg4300.AddRg4300SuccessActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_40"
+        android:background="#F8F8F8">
+
+        <ImageView
+            android:id="@+id/back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:paddingLeft="@dimen/dp_16"
+            android:paddingTop="@dimen/dp_5"
+            android:paddingRight="@dimen/dp_16"
+            android:paddingBottom="@dimen/dp_5"
+            android:src="@mipmap/back_gray" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/add_gateway"
+            android:textColor="#000000"
+            android:textSize="@dimen/sp_17"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/help"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:paddingLeft="@dimen/dp_16"
+            android:paddingTop="@dimen/dp_5"
+            android:paddingRight="@dimen/dp_16"
+            android:paddingBottom="@dimen/dp_5"
+            android:src="@mipmap/help" />
+    </RelativeLayout>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/dp_64"
+        android:src="@mipmap/add_rg4300_success" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="22dp"
+        android:text="@string/gateway_bind_success2"
+        android:textColor="#333333"
+        android:textSize="15sp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1" />
+
+    <Button
+        android:id="@+id/button_next"
+        android:layout_width="@dimen/dp_200"
+        android:layout_height="@dimen/dp_44"
+        android:layout_gravity="center"
+        android:layout_marginBottom="@dimen/dp_70"
+        android:background="@drawable/go_and_buy"
+        android:gravity="center"
+        android:text="@string/go_to_device_detail"
+        android:textColor="#fff"
+        android:textSize="@dimen/sp_15" />
+
+
+</LinearLayout>

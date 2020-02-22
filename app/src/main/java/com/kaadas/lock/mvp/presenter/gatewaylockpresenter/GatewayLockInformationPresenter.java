@@ -26,7 +26,8 @@ public class GatewayLockInformationPresenter<T> extends BasePresenter<GatewayLoc
     public void getGatewayLockInfo(String gatewayId, String deviceId) {
         toDisposable(getLockInfoDisposable);
         if (mqttService != null) {
-            getLockInfoDisposable = mqttService.mqttPublish(MqttConstant.getCallTopic(MyApplication.getInstance().getUid()), MqttCommandFactory.getGatewayLockInformation(gatewayId, deviceId))
+            getLockInfoDisposable = mqttService.mqttPublish(MqttConstant.getCallTopic(MyApplication.getInstance().getUid()),
+                    MqttCommandFactory.getGatewayLockInformation(gatewayId, deviceId))
                     .timeout(10 * 1000, TimeUnit.MILLISECONDS)
                     .compose(RxjavaHelper.observeOnMainThread())
                     .filter(new Predicate<MqttData>() {

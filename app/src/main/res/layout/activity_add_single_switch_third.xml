@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="match_parent"
+    tools:context="com.kaadas.lock.activity.addDevice.singleswitch.AddSingleSwitchThirdActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_40"
+        android:background="#F8F8F8">
+
+        <ImageView
+            android:id="@+id/back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:paddingLeft="@dimen/dp_16"
+            android:paddingTop="@dimen/dp_5"
+            android:paddingRight="@dimen/dp_16"
+            android:paddingBottom="@dimen/dp_5"
+            android:src="@mipmap/back_gray" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/add_device"
+            android:textColor="#000000"
+            android:textSize="@dimen/sp_17"
+            android:textStyle="bold" />
+
+
+    </RelativeLayout>
+
+    <TextView
+        android:layout_marginLeft="@dimen/dp_26"
+        android:layout_marginTop="@dimen/dp_36"
+        android:text="@string/add_single_switch_third_notice3"
+        android:textSize="18sp"
+        android:textColor="#333333"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:layout_marginTop="@dimen/dp_18"
+        android:lineSpacingExtra="6dp"
+        android:layout_marginLeft="@dimen/dp_26"
+        android:layout_marginRight="@dimen/dp_26"
+        android:text="@string/add_single_switch_third_notice2"
+        android:textSize="16sp"
+        android:textColor="#666666"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:layout_marginTop="@dimen/dp_18"
+        android:lineSpacingExtra="6dp"
+        android:layout_marginLeft="@dimen/dp_26"
+        android:layout_marginRight="@dimen/dp_26"
+        android:text="@string/add_single_switch_third_notice1"
+        android:textSize="16sp"
+        android:textColor="#666666"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <ImageView
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        android:src="@mipmap/add_single_switch_third_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+
+    <TextView
+        android:layout_marginBottom="@dimen/dp_70"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:id="@+id/bt_repair"
+        android:layout_width="@dimen/dp_200"
+        android:layout_height="@dimen/dp_44"
+        android:background="@drawable/go_and_buy"
+        android:text="@string/complete"
+        android:textColor="#fff"
+        android:textSize="@dimen/sp_15" />
+
+
+
+</LinearLayout>
