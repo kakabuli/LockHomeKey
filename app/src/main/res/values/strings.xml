@@ -1510,4 +1510,5 @@
     <string name="add_pir_first_notice1">1. PIR配网准备</string>
     <string name="add_pir_first_notice2">设备通电后，逆时针打开电池后盖</string>
     <string name="admin_error_reinput">门锁管理员密码验证失败请重新输入</string>
+    <string name="wifi_view1">Wi-Fi模块固件版本</string>
 </resources>

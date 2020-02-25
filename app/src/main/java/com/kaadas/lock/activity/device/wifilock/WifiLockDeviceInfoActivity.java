@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,34 +26,27 @@ import butterknife.OnClick;
 public class WifiLockDeviceInfoActivity extends BaseActivity<IWifiLockMoreView, WifiLockMorePresenter<IWifiLockMoreView>>
         implements IWifiLockMoreView {
 
+
     @BindView(R.id.back)
     ImageView back;
+    @BindView(R.id.head_title)
+    TextView headTitle;
     @BindView(R.id.tv_device_model)
     TextView tvDeviceModel;
     @BindView(R.id.tv_serial_number)
     TextView tvSerialNumber;
     @BindView(R.id.tv_lock_firmware_version)
     TextView tvLockFirmwareVersion;
-    @BindView(R.id.tv_lock_software_version)
-    TextView tvLockSoftwareVersion;
-    @BindView(R.id.wifi_version)
-    TextView wifiVersion;
-    @BindView(R.id.head_title)
-    TextView headTitle;
-    @BindView(R.id.iv_message_free)
-    ImageView ivMessageFree;
-    @BindView(R.id.rl_message_free)
-    RelativeLayout rlMessageFree;
     @BindView(R.id.iv_wifilock)
     ImageView ivWifilock;
+    @BindView(R.id.wifi_version)
+    TextView wifiVersion;
     @BindView(R.id.iv_wifimodel)
     ImageView ivWifimodel;
     private WifiLockInfo wifiLockInfo;
     private String wifiSN;
     private String sWifiVersion;
-    private String sLockSoftwareVersion;
-    private boolean isAdmin;
-    private int type;
+    private String lockFirmwareVersion;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,37 +56,19 @@ public class WifiLockDeviceInfoActivity extends BaseActivity<IWifiLockMoreView, 
         String wifiSn = getIntent().getStringExtra(KeyConstants.WIFI_SN);
         wifiLockInfo = MyApplication.getInstance().getWifiLockInfoBySn(wifiSn);
         if (wifiLockInfo != null) {
-
             wifiSN = wifiLockInfo.getWifiSN();
             sWifiVersion = wifiLockInfo.getWifiVersion();
-            sLockSoftwareVersion = wifiLockInfo.getLockSoftwareVersion();
 
             String productModel = wifiLockInfo.getProductModel();
             tvDeviceModel.setText(TextUtils.isEmpty(productModel) ? "" : productModel.startsWith("K13") ? getString(R.string.lan_bo_ji_ni) : productModel);
             tvSerialNumber.setText(TextUtils.isEmpty(wifiLockInfo.getWifiSN()) ? "" : wifiLockInfo.getWifiSN());
-            tvLockFirmwareVersion.setText(TextUtils.isEmpty(wifiLockInfo.getLockFirmwareVersion()) ? "" : wifiLockInfo.getLockFirmwareVersion());
-            tvLockSoftwareVersion.setText(TextUtils.isEmpty(wifiLockInfo.getLockSoftwareVersion()) ? "" : wifiLockInfo.getLockSoftwareVersion());
+            lockFirmwareVersion = wifiLockInfo.getLockFirmwareVersion();
+            tvLockFirmwareVersion.setText(TextUtils.isEmpty(lockFirmwareVersion) ? "" : wifiLockInfo.getLockFirmwareVersion());
             wifiVersion.setText(TextUtils.isEmpty(wifiLockInfo.getWifiVersion()) ? "" : wifiLockInfo.getWifiVersion());
-            isAdmin = wifiLockInfo.getIsAdmin() == 1;
-            if (wifiLockInfo.getIsAdmin() == 1) {
-                rlMessageFree.setVisibility(View.GONE);
-            }
-            int pushSwitch = wifiLockInfo.getPushSwitch();
-            if (pushSwitch == 2) {
-                ivMessageFree.setImageResource(R.mipmap.iv_open);
-            } else {
-                ivMessageFree.setImageResource(R.mipmap.iv_close);
-            }
-        } else {
-            rlMessageFree.setVisibility(View.GONE);
+
+
         }
-        if (isAdmin){
-            ivWifimodel.setVisibility(View.VISIBLE);
-            ivWifilock.setVisibility(View.VISIBLE);
-        }else {
-            ivWifimodel.setVisibility(View.GONE);
-            ivWifilock.setVisibility(View.GONE);
-        }
+
     }
 
     @Override
@@ -107,33 +81,24 @@ public class WifiLockDeviceInfoActivity extends BaseActivity<IWifiLockMoreView, 
         finish();
     }
 
-    @OnClick({R.id.iv_message_free, R.id.tv_lock_software_version, R.id.wifi_version})
+    @OnClick({ R.id.tv_lock_firmware_version, R.id.wifi_version})
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.tv_lock_software_version:
-                if (isAdmin) {
-                    if (!TextUtils.isEmpty(wifiSN) && !TextUtils.isEmpty(sLockSoftwareVersion)) {
-                        mPresenter.checkOtaInfo(wifiSN, sLockSoftwareVersion, 2);
-                    } else {
-                        Toast.makeText(this, getString(R.string.info_error), Toast.LENGTH_SHORT).show();
-                    }
+            case R.id.tv_lock_firmware_version:
+                if (!TextUtils.isEmpty(wifiSN) && !TextUtils.isEmpty(lockFirmwareVersion)) {
+                    showLoading(getString(R.string.is_check_version));
+                    mPresenter.checkOtaInfo(wifiSN, lockFirmwareVersion, 2);
+                } else {
+                    Toast.makeText(this, getString(R.string.info_error), Toast.LENGTH_SHORT).show();
                 }
                 break;
             case R.id.wifi_version:
-                if (isAdmin) {
-                    if (!TextUtils.isEmpty(wifiSN) && !TextUtils.isEmpty(sWifiVersion)) {
-                        showLoading(getString(R.string.is_check_version));
-                        mPresenter.checkOtaInfo(wifiSN, sWifiVersion, 1);
-                    } else {
-                        Toast.makeText(this, getString(R.string.info_error), Toast.LENGTH_SHORT).show();
-                    }
+                if (!TextUtils.isEmpty(wifiSN) && !TextUtils.isEmpty(sWifiVersion)) {
+                    showLoading(getString(R.string.is_check_version));
+                    mPresenter.checkOtaInfo(wifiSN, sWifiVersion, 1);
+                } else {
+                    Toast.makeText(this, getString(R.string.info_error), Toast.LENGTH_SHORT).show();
                 }
-
-                break;
-            case R.id.iv_message_free:
-                int status = wifiLockInfo.getPushSwitch() == 2 ? 1 : 2;
-                showLoading(getString(R.string.is_setting));
-                mPresenter.updateSwitchStatus(status, wifiLockInfo.getWifiSN());
                 break;
 
         }
@@ -173,11 +138,7 @@ public class WifiLockDeviceInfoActivity extends BaseActivity<IWifiLockMoreView, 
     public void onUpdatePushStatusSuccess(int status) {
         hiddenLoading();
         wifiLockInfo.setPushSwitch(status);
-        if (status == 2) {
-            ivMessageFree.setImageResource(R.mipmap.iv_open);
-        } else {
-            ivMessageFree.setImageResource(R.mipmap.iv_close);
-        }
+
     }
 
     @Override

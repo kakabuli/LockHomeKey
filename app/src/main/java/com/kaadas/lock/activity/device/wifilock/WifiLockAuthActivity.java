@@ -160,7 +160,7 @@ public class WifiLockAuthActivity extends BaseActivity<IWifiLockAuthView, WifiLo
                 break;
             case R.id.rl_device_information:
                 //先拿本地的数据    然后拿读取到的数据
-                Intent intent = new Intent(this, WifiLockDeviceInfoActivity.class);
+                Intent intent = new Intent(this, WifiLockAuthDeviceInfoActivity.class);
                 intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
                 startActivity(intent);
                 break;

@@ -83,19 +83,15 @@
             android:exported="true"
             android:launchMode="singleTop"
             android:screenOrientation="portrait">
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT" />
 
-             <intent-filter>
-             <category android:name="android.intent.category.DEFAULT" />
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
 
-             <action android:name="android.intent.action.MAIN" />
-
-
-             <category android:name="android.intent.category.LAUNCHER" />
-
-
-             <action android:name="android.intent.action.oppopush" />
-             </intent-filter>
+                <action android:name="android.intent.action.oppopush" />
+            </intent-filter>
         </activity>
         <!-- 登录 -->
         <activity
@@ -801,11 +797,10 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".activity.device.wifilock.add.WifiLockAddSuccessActivity"
+        <activity
+            android:name=".activity.device.wifilock.add.WifiLockAddSuccessActivity"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait"
-            />
-
+            android:screenOrientation="portrait" />
         <activity android:name=".publiclibrary.ota.face.FaceOtaActivity" />
         <activity android:name=".activity.device.gatewaylock.password.test.PasswordTestActivity" />
 
@@ -833,6 +828,7 @@
             android:name="com.igexin.sdk.VivoPushMessageReceiver"
             android:process=":pushservice">
             <intent-filter>
+
                 <!-- 接收 push 消息 -->
                 <action android:name="com.vivo.pushclient.action.RECEIVE" />
             </intent-filter>
@@ -978,9 +974,7 @@
         <activity android:name=".activity.addDevice.singleswitch.AddSingleSwitchFirstActivity" />
         <activity android:name=".activity.addDevice.singleswitch.AddSingleSwitchSecondActivity" />
         <activity android:name=".activity.addDevice.singleswitch.AddSingleSwitchThirdActivity" />
-        <activity android:name=".activity.addDevice.singleswitch.AddSingleSwitchSuccessActivity">
-
-        </activity>
+        <activity android:name=".activity.addDevice.singleswitch.AddSingleSwitchSuccessActivity"></activity>
         <activity android:name=".activity.addDevice.doubleswitch.AddDoubleSwitchFirstActivity" />
         <activity android:name=".activity.addDevice.doubleswitch.AddDoubleSwitchSecondActivity" />
         <activity android:name=".activity.addDevice.doubleswitch.AddDoubleSwitchThirdActivity" />
@@ -988,7 +982,8 @@
         <activity android:name=".activity.addDevice.pir.AddPirFirstActivity" />
         <activity android:name=".activity.addDevice.pir.AddPirSecondActivity" />
         <activity android:name=".activity.addDevice.pir.AddPirThirdActivity" />
-        <activity android:name=".activity.addDevice.pir.AddPirSuccessActivity"></activity>
+        <activity android:name=".activity.addDevice.pir.AddPirSuccessActivity" />
+        <activity android:name=".activity.device.wifilock.WifiLockAuthDeviceInfoActivity"></activity>
     </application>
 
 </manifest>
