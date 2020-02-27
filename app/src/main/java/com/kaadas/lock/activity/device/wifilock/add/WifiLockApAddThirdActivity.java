@@ -109,7 +109,10 @@ public class WifiLockApAddThirdActivity extends AppCompatActivity {
         }
         if (ssid.startsWith("\"") && ssid.endsWith("\"")) {
             ssid = ssid.substring(1, ssid.length() - 1);
+        }
+        if (!ssid.equals("kaadas_AP")) {
             SPUtils.put(KeyConstants.WIFI_LOCK_CONNECT_NAME, ssid);
         }
+
     }
 }

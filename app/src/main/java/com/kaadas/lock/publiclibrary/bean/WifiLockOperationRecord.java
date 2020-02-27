@@ -33,6 +33,10 @@ public class WifiLockOperationRecord {
     private String shareUserNickname;
     private String pwdNickname;
 
+    private boolean first = false; // 是否是第一个
+    private boolean last = false; //是否是最后一个
+    private String dayTime;
+
 
 
     public String get_id() {
@@ -162,5 +166,29 @@ public class WifiLockOperationRecord {
 
     public void setPwdNickname(String pwdNickname) {
         this.pwdNickname = pwdNickname;
+    }
+
+    public boolean isFirst() {
+        return first;
+    }
+
+    public void setFirst(boolean first) {
+        this.first = first;
+    }
+
+    public boolean isLast() {
+        return last;
+    }
+
+    public void setLast(boolean last) {
+        this.last = last;
+    }
+
+    public String getDayTime() {
+        return dayTime;
+    }
+
+    public void setDayTime(String dayTime) {
+        this.dayTime = dayTime;
     }
 }

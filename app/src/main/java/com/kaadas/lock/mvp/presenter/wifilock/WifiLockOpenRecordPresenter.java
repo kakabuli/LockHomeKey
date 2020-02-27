@@ -17,24 +17,24 @@ import java.util.List;
 import io.reactivex.disposables.Disposable;
 
 public class WifiLockOpenRecordPresenter<T> extends BasePresenter<IWifiLockOpenRecordView> {
-    private List<WifiLockOperationRecord> wifiLockOperationRecords = new ArrayList<>();
+//    private List<WifiLockOperationRecord> wifiLockOperationRecords = new ArrayList<>();
 
     public void getOpenRecordFromServer(int page, String wifiSn) {
-        if (page == 1) {  //如果是获取第一页的数据，那么清楚所有的开锁记录
-            wifiLockOperationRecords.clear();
-        }
+//        if (page == 1) {  //如果是获取第一页的数据，那么清楚所有的开锁记录
+//            wifiLockOperationRecords.clear();
+//        }
         XiaokaiNewServiceImp.wifiLockGetOperationList(wifiSn, page)
                 .subscribe(new BaseObserver<GetWifiLockOperationRecordResult>() {
                     @Override
                     public void onSuccess(GetWifiLockOperationRecordResult operationRecordResult) {
                         if (operationRecordResult.getData() != null && operationRecordResult.getData().size() > 0) {  //服务器没有数据  提示用户
                             List<WifiLockOperationRecord> operationRecords = operationRecordResult.getData();
-                            wifiLockOperationRecords.addAll(operationRecords);
+//                            wifiLockOperationRecords.addAll(operationRecords);
                             if (page == 1) {
                                 SPUtils.put(KeyConstants.WIFI_LOCK_OPERATION_RECORD + wifiSn, new Gson().toJson(operationRecords));
                             }
                             if (isSafe()) {
-                                mViewRef.get().onLoadServerRecord(wifiLockOperationRecords, page);
+                                mViewRef.get().onLoadServerRecord(operationRecords, page);
                             }
                         } else {
                             if (page == 1) {

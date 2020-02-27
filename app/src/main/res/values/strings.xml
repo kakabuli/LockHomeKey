@@ -1278,7 +1278,7 @@
     <string name="connect">连 接</string>
     <string name="look_wifi_support_rout">查看门锁Wi-Fi支持家庭路由器</string>
     <string name="please_input_wifi_password">请输入密码</string>
-    <string name="wifi_name_disable_empty">请先连接Wi-Fi</string>
+    <string name="wifi_name_disable_empty">WiFi名不能为空</string>
     <string name="lock_net_connect">门锁网络连接中</string>
     <string name="support_family_rute">支持的家庭路由器</string>
     <string name="rute_name">路由器名称</string>
@@ -1511,4 +1511,9 @@
     <string name="add_pir_first_notice2">设备通电后，逆时针打开电池后盖</string>
     <string name="admin_error_reinput">门锁管理员密码验证失败请重新输入</string>
     <string name="wifi_view1">Wi-Fi模块固件版本</string>
+    <string name="am_mode">A-M自动/手动模式</string>
+    <string name="lock_auto_mode">门锁自动模式状态</string>
+    <string name="lock_hand_mode">门锁手动模式状态</string>
+    <string name="hand">手动</string>
+    <string name="auto">自动</string>
 </resources>

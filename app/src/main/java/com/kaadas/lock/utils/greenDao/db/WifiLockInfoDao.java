@@ -53,6 +53,8 @@ public class WifiLockInfoDao extends AbstractDao<WifiLockInfo, Long> {
         public final static Property WifiName = new Property(26, String.class, "wifiName", false, "WIFI_NAME");
         public final static Property Power = new Property(27, int.class, "power", false, "POWER");
         public final static Property UpdateTime = new Property(28, long.class, "updateTime", false, "UPDATE_TIME");
+        public final static Property OpenStatus = new Property(29, int.class, "openStatus", false, "OPEN_STATUS");
+        public final static Property OpenStatusTime = new Property(30, long.class, "openStatusTime", false, "OPEN_STATUS_TIME");
     }
 
 
@@ -96,7 +98,9 @@ public class WifiLockInfoDao extends AbstractDao<WifiLockInfo, Long> {
                 "\"CREATE_TIME\" INTEGER NOT NULL ," + // 25: createTime
                 "\"WIFI_NAME\" TEXT," + // 26: wifiName
                 "\"POWER\" INTEGER NOT NULL ," + // 27: power
-                "\"UPDATE_TIME\" INTEGER NOT NULL );"); // 28: updateTime
+                "\"UPDATE_TIME\" INTEGER NOT NULL ," + // 28: updateTime
+                "\"OPEN_STATUS\" INTEGER NOT NULL ," + // 29: openStatus
+                "\"OPEN_STATUS_TIME\" INTEGER NOT NULL );"); // 30: openStatusTime
     }
 
     /** Drops the underlying database table. */
@@ -209,6 +213,8 @@ public class WifiLockInfoDao extends AbstractDao<WifiLockInfo, Long> {
         }
         stmt.bindLong(28, entity.getPower());
         stmt.bindLong(29, entity.getUpdateTime());
+        stmt.bindLong(30, entity.getOpenStatus());
+        stmt.bindLong(31, entity.getOpenStatusTime());
     }
 
     @Override
@@ -315,6 +321,8 @@ public class WifiLockInfoDao extends AbstractDao<WifiLockInfo, Long> {
         }
         stmt.bindLong(28, entity.getPower());
         stmt.bindLong(29, entity.getUpdateTime());
+        stmt.bindLong(30, entity.getOpenStatus());
+        stmt.bindLong(31, entity.getOpenStatusTime());
     }
 
     @Override
@@ -353,7 +361,9 @@ public class WifiLockInfoDao extends AbstractDao<WifiLockInfo, Long> {
             cursor.getLong(offset + 25), // createTime
             cursor.isNull(offset + 26) ? null : cursor.getString(offset + 26), // wifiName
             cursor.getInt(offset + 27), // power
-            cursor.getLong(offset + 28) // updateTime
+            cursor.getLong(offset + 28), // updateTime
+            cursor.getInt(offset + 29), // openStatus
+            cursor.getLong(offset + 30) // openStatusTime
         );
         return entity;
     }
@@ -389,6 +399,8 @@ public class WifiLockInfoDao extends AbstractDao<WifiLockInfo, Long> {
         entity.setWifiName(cursor.isNull(offset + 26) ? null : cursor.getString(offset + 26));
         entity.setPower(cursor.getInt(offset + 27));
         entity.setUpdateTime(cursor.getLong(offset + 28));
+        entity.setOpenStatus(cursor.getInt(offset + 29));
+        entity.setOpenStatusTime(cursor.getLong(offset + 30));
      }
     
     @Override

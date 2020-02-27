@@ -62,7 +62,6 @@ public class WifiLockPresenter<T> extends BasePresenter<IWifiLockView> {
                 });
 
         compositeDisposable.add(listenActionUpdateDisposable);
-
     }
 
     public void getOperationRecord(String wifiSn,boolean isNotice) {

@@ -34,6 +34,7 @@ import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.SPUtils;
+import com.kaadas.lock.utils.greenDao.manager.WifiLockInfoManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -129,6 +130,7 @@ public class WifiLockFragment extends BaseFragment<IWifiLockView, WifiLockPresen
         int safeMode = wifiLockInfo.getSafeMode();  //安全模式
         int operatingMode = wifiLockInfo.getOperatingMode(); //反锁模式
         int defences = wifiLockInfo.getDefences();  //布防模式
+        int openStatus = wifiLockInfo.getOpenStatus();
 
         if (isOpening){
             changeLockStatus(4);
@@ -146,6 +148,10 @@ public class WifiLockFragment extends BaseFragment<IWifiLockView, WifiLockPresen
         if (defences == 1) {//布防模式
             changeLockStatus(2);
         }
+        if (openStatus == 2){ //开锁的优先级最高
+            changeLockStatus(4);
+        }
+
         long createTime2 = wifiLockInfo.getCreateTime();
 
         if (createTime2 == 0) {
@@ -214,6 +220,7 @@ public class WifiLockFragment extends BaseFragment<IWifiLockView, WifiLockPresen
         }
         //设置时间
         long updateTime = wifiLockInfo.getUpdateTime();
+        long openStatusTime = wifiLockInfo.getOpenStatusTime();
         if (updateTime == 0) {
             tvUpdateTime.setText("");
         } else {
@@ -222,12 +229,6 @@ public class WifiLockFragment extends BaseFragment<IWifiLockView, WifiLockPresen
 
         ivTopIcon.setVisibility(View.VISIBLE); //上方图标显示
         switch (status) {
-//            case 1: //离线状态
-//                ivBackGround.setImageResource(R.mipmap.bluetooth_no_connect_big_middle_icon);  //背景大图标
-//                ivCenterIcon.setImageResource(R.mipmap.wifi_lock_off_line);  //离线图标
-//                ivTopIcon.setVisibility(View.GONE); //上方图标隐藏
-//                tvTopStates.setText(getString(R.string.checked_off_line));  //设置设备状态   离线
-//                break;
             case 2:
                 //已启动布防模式
                 ivBackGround.setImageResource(R.mipmap.bluetooth_bu_fang_big_middle_icon);  //背景大图标
@@ -245,12 +246,23 @@ public class WifiLockFragment extends BaseFragment<IWifiLockView, WifiLockPresen
                 ivBackGround.setImageResource(R.mipmap.bluetooth_lock_close_big_middle_icon);  //背景大图标
                 ivCenterIcon.setImageResource(R.mipmap.bluetooth_open_lock_success_niner_middle_icon);  //门锁关闭状态
                 tvTopStates.setText(getString(R.string.open_lock_already));  //设置设备状态   离线
+                if (openStatusTime == 0) {
+                    tvUpdateTime.setText(""+ DateUtils.timestampToDateSecond(updateTime));
+                } else {
+                    tvUpdateTime.setText("" + DateUtils.timestampToDateSecond(openStatusTime));
+                }
                 break;
             case 5:
                 //门已上锁  正常模式
                 ivBackGround.setImageResource(R.mipmap.bluetooth_lock_close_big_middle_icon);  //背景大图标
                 ivCenterIcon.setImageResource(R.mipmap.bluetooth_lock_safe_inner_midder_icon);  //门锁关闭状态
                 tvTopStates.setText(getString(R.string.lock_lock_already));  //设置设备状态   离线
+
+                if (openStatusTime == 0) {
+                    tvUpdateTime.setText(""+ DateUtils.timestampToDateSecond(updateTime));
+                } else {
+                    tvUpdateTime.setText("" + DateUtils.timestampToDateSecond(openStatusTime));
+                }
                 break;
             case 6:
                 //已启动安全模式
@@ -352,16 +364,18 @@ public class WifiLockFragment extends BaseFragment<IWifiLockView, WifiLockPresen
             if (eventparams.getEventType() == 0x01) { //操作类
                 if (eventparams.getEventCode() == 0x01) {  //上锁
                     isOpening = false;
-//                    handler.removeCallbacks(initRunnable);
-//                    handler.post(initRunnable);
+                    wifiLockInfo.setUpdateTime(System.currentTimeMillis());
+                    wifiLockInfo.setOpenStatus(1);
                     changeLockStatus(5);
+                    new WifiLockInfoManager().insertOrReplace(wifiLockInfo);
                 } else if (eventparams.getEventCode() == 0x02) { //开锁
                     mPresenter.getOperationRecord(wifiLockInfo.getWifiSN(), true);
                     isOpening = true;
+                    wifiLockInfo.setOpenStatus(2);
                     mPresenter.getOpenCount(wifiLockInfo.getWifiSN());
+                    wifiLockInfo.setUpdateTime(System.currentTimeMillis());
                     changeLockStatus(4);
-//                    handler.removeCallbacks(initRunnable);
-//                    handler.postDelayed(initRunnable, 15 * 1000);
+                    new WifiLockInfoManager().insertOrReplace(wifiLockInfo);
                 }
             }
         }

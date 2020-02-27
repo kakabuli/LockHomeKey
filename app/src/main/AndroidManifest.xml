@@ -974,7 +974,7 @@
         <activity android:name=".activity.addDevice.singleswitch.AddSingleSwitchFirstActivity" />
         <activity android:name=".activity.addDevice.singleswitch.AddSingleSwitchSecondActivity" />
         <activity android:name=".activity.addDevice.singleswitch.AddSingleSwitchThirdActivity" />
-        <activity android:name=".activity.addDevice.singleswitch.AddSingleSwitchSuccessActivity"></activity>
+        <activity android:name=".activity.addDevice.singleswitch.AddSingleSwitchSuccessActivity" />
         <activity android:name=".activity.addDevice.doubleswitch.AddDoubleSwitchFirstActivity" />
         <activity android:name=".activity.addDevice.doubleswitch.AddDoubleSwitchSecondActivity" />
         <activity android:name=".activity.addDevice.doubleswitch.AddDoubleSwitchThirdActivity" />
@@ -983,7 +983,8 @@
         <activity android:name=".activity.addDevice.pir.AddPirSecondActivity" />
         <activity android:name=".activity.addDevice.pir.AddPirThirdActivity" />
         <activity android:name=".activity.addDevice.pir.AddPirSuccessActivity" />
-        <activity android:name=".activity.device.wifilock.WifiLockAuthDeviceInfoActivity"></activity>
+        <activity android:name=".activity.device.wifilock.WifiLockAuthDeviceInfoActivity" />
+        <activity android:name=".activity.device.wifilock.WifiLockAMActivity"></activity>
     </application>
 
 </manifest>

@@ -99,9 +99,26 @@ public class WifiLockInfo implements Serializable {
 
     private int power;
     private long updateTime;
+    /**
+     * _id : 5de4c32a33cc1949441265ca
+     * updateTime : 1577176575
+     * createTime : 1577176575
+     * openStatus : 2
+     * openStatusTime : 1541468973
+     */
+
+    private int openStatus;
+    private long openStatusTime;
 
 
-    @Generated(hash = 132103187)
+
+
+
+
+
+
+
+    @Generated(hash = 952102782)
     public WifiLockInfo(Long id, String wifiSN, int isAdmin, String adminUid,
             String adminName, String productSN, String productModel, int appId,
             String lockNickname, String lockSoftwareVersion, String functionSet,
@@ -109,7 +126,8 @@ public class WifiLockInfo implements Serializable {
             int defences, String language, int operatingMode, int volume,
             String bleVersion, String wifiVersion, String mqttVersion,
             String lockFirmwareVersion, String randomCode, long createTime,
-            String wifiName, int power, long updateTime) {
+            String wifiName, int power, long updateTime, int openStatus,
+            long openStatusTime) {
         this.id = id;
         this.wifiSN = wifiSN;
         this.isAdmin = isAdmin;
@@ -139,11 +157,20 @@ public class WifiLockInfo implements Serializable {
         this.wifiName = wifiName;
         this.power = power;
         this.updateTime = updateTime;
+        this.openStatus = openStatus;
+        this.openStatusTime = openStatusTime;
     }
 
     @Generated(hash = 666757199)
     public WifiLockInfo() {
     }
+
+
+
+
+
+
+
 
 
     public String getWifiSN() {
@@ -409,5 +436,21 @@ public class WifiLockInfo implements Serializable {
 
     public void setCreateTime(long createTime) {
         this.createTime = createTime;
+    }
+
+    public int getOpenStatus() {
+        return openStatus;
+    }
+
+    public void setOpenStatus(int openStatus) {
+        this.openStatus = openStatus;
+    }
+
+    public long getOpenStatusTime() {
+        return openStatusTime;
+    }
+
+    public void setOpenStatusTime(long openStatusTime) {
+        this.openStatusTime = openStatusTime;
     }
 }

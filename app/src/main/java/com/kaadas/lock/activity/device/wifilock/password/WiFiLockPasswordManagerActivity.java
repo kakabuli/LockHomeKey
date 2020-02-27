@@ -68,7 +68,6 @@ public class WiFiLockPasswordManagerActivity extends BaseActivity<IWifiLockPassw
 
         type = getIntent().getIntExtra(KeyConstants.KEY_TYPE, 1);
         wifiSn = getIntent().getStringExtra(KeyConstants.WIFI_SN);
-
         initView();
         initData();
         refreshLayout.autoRefresh();

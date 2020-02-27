@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    >
+
+    <TextView
+        android:layout_marginLeft="@dimen/dp_25"
+        android:layout_marginVertical="@dimen/dp_15"
+        android:textSize="12sp"
+        android:textColor="#333333"
+        android:text="今天"
+        android:id="@+id/tv_day_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_gravity="center"
+            android:id="@+id/tv_time"
+            android:layout_width="@dimen/dp_80"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="16:40"
+            android:textColor="#999999"
+            android:textSize="@dimen/sp_12" />
+
+        <LinearLayout
+            android:layout_gravity="center_vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <View
+                android:id="@+id/view_top"
+                android:layout_width="1dp"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:background="#999999"
+                android:visibility="invisible" />
+
+            <ImageView
+                android:id="@+id/iv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/bluetooth_common_icon" />
+
+            <View
+                android:id="@+id/view_bottom"
+                android:layout_width="@dimen/dp_1"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:background="#999999"
+                android:visibility="invisible" />
+        </LinearLayout>
+
+        <TextView
+            android:gravity="center_vertical"
+            android:layout_marginLeft="@dimen/dp_16"
+            android:id="@+id/tv_content"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="8"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:text="爸爸"
+            android:textColor="#999999"
+            android:textSize="@dimen/sp_12" />
+
+        <TextView
+            android:layout_marginRight="@dimen/dp_40"
+            android:layout_marginLeft="@dimen/dp_20"
+            android:id="@+id/tv_right"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="10"
+            android:gravity="center_vertical"
+            android:lines="2"
+            android:text="更改编号01密码为妈妈"
+            android:textColor="#999999"
+            android:textSize="@dimen/sp_12" />
+    </LinearLayout>
+
+
+    <View
+        android:id="@+id/driver"
+        android:layout_marginRight="@dimen/dp_15"
+        android:layout_marginLeft="@dimen/dp_15"
+        android:layout_marginTop="@dimen/dp_20"
+        android:background="#D8D8D8"
+        android:layout_width="match_parent"
+        android:layout_height="1dp" />
+</LinearLayout>

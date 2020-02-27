@@ -25,6 +25,7 @@ import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.result.CheckOTAResult;
 import com.kaadas.lock.publiclibrary.http.util.HttpUtils;
 import com.kaadas.lock.utils.AlertDialogUtil;
+import com.kaadas.lock.utils.BleLockUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.StringUtil;
@@ -45,8 +46,7 @@ public class WifiLockMoreActivity extends BaseActivity<IWifiLockMoreView, WifiLo
     RelativeLayout rlMessageFree;
     @BindView(R.id.rl_safe_mode)
     RelativeLayout rlSafeMode;
-    @BindView(R.id.iv_am)
-    ImageView ivAm;
+
     @BindView(R.id.rl_am)
     RelativeLayout rlAm;
     @BindView(R.id.rl_door_lock_language_switch)
@@ -76,6 +76,8 @@ public class WifiLockMoreActivity extends BaseActivity<IWifiLockMoreView, WifiLo
     TextView wifiName;
     @BindView(R.id.rl_wifi_name)
     RelativeLayout rlWifiName;
+    @BindView(R.id.iv_am)
+    TextView ivAm;
     private WifiLockInfo wifiLockInfo;
     private String wifiSn;
     String deviceNickname;//设备名称
@@ -87,6 +89,7 @@ public class WifiLockMoreActivity extends BaseActivity<IWifiLockMoreView, WifiLo
         ButterKnife.bind(this);
         wifiSn = getIntent().getStringExtra(KeyConstants.WIFI_SN);
         wifiLockInfo = MyApplication.getInstance().getWifiLockInfoBySn(wifiSn);
+
         rlAm.setVisibility(View.GONE);
         mPresenter.init(wifiSn);
         initClick();
@@ -99,12 +102,11 @@ public class WifiLockMoreActivity extends BaseActivity<IWifiLockMoreView, WifiLo
     }
 
 
-
-
     private void initData() {
         tvDeviceName.setText(wifiLockInfo.getLockNickname());  //昵称
-        ivAm.setImageResource(wifiLockInfo.getAmMode() == 1 ? R.mipmap.iv_open : R.mipmap.iv_close);  //手动自动模式
         ivSilentMode.setImageResource(wifiLockInfo.getVolume() == 1 ? R.mipmap.iv_open : R.mipmap.iv_close);             //静音非静音模式
+
+
         int pushSwitch = wifiLockInfo.getPushSwitch();
         if (pushSwitch == 2) {
             ivMessageFree.setImageResource(R.mipmap.iv_open);
@@ -116,6 +118,22 @@ public class WifiLockMoreActivity extends BaseActivity<IWifiLockMoreView, WifiLo
             tvLanguage.setText(R.string.chinese);
         } else if ("en".equals(language)) {
             tvLanguage.setText(R.string.setting_language_en);
+        }
+
+        String functionSet = wifiLockInfo.getFunctionSet();
+        int func = 0;
+        try {
+            func = Integer.parseInt(functionSet);
+        } catch (Exception e) {
+            LogUtils.e("" + e.getMessage());
+        }
+
+        if (BleLockUtils.isSupportAMModeShow(func)) {
+            rlAm.setVisibility(View.VISIBLE);
+            int amMode = wifiLockInfo.getAmMode();
+            ivAm.setText(amMode == 1 ? getString(R.string.hand) : getString(R.string.auto));
+        } else {
+            rlAm.setVisibility(View.GONE);
         }
 
         wifiName.setText(wifiLockInfo.getWifiName());
@@ -134,6 +152,7 @@ public class WifiLockMoreActivity extends BaseActivity<IWifiLockMoreView, WifiLo
         rlWifiName.setOnClickListener(this);
         rlCheckFirmwareUpdate.setOnClickListener(this);
         btnDelete.setOnClickListener(this);
+        ivAm.setOnClickListener(this);
     }
 
     @Override
@@ -192,8 +211,10 @@ public class WifiLockMoreActivity extends BaseActivity<IWifiLockMoreView, WifiLo
                 intent.putExtra(KeyConstants.WIFI_SN, wifiLockInfo.getWifiSN());
                 startActivity(intent);
                 break;
-            case R.id.rl_am:   //手动自动模式
-                ToastUtil.getInstance().showLong(R.string.please_operation_in_lock);
+            case R.id.iv_am:   //手动自动模式
+                intent = new Intent(this, WifiLockAMActivity.class);
+                intent.putExtra(KeyConstants.WIFI_SN, wifiLockInfo.getWifiSN());
+                startActivity(intent);
                 break;
             case R.id.rl_door_lock_language_switch:
                 ToastUtil.getInstance().showLong(R.string.please_operation_in_lock);
@@ -334,10 +355,9 @@ public class WifiLockMoreActivity extends BaseActivity<IWifiLockMoreView, WifiLo
     }
 
     @Override
-    public void needUpdate(CheckOTAResult.UpdateFileInfo appInfo, String SN,int type) {
+    public void needUpdate(CheckOTAResult.UpdateFileInfo appInfo, String SN, int type) {
 
     }
-
 
 
     @Override

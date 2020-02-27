@@ -4,7 +4,7 @@ apply plugin: 'bugly'   //添加bugly的符号表
 apply plugin: 'com.mob.sdk'
 
 greendao {
-    schemaVersion 20// 数据库版本号
+    schemaVersion 21// 数据库版本号
     daoPackage 'com.kaadas.lock.utils.greenDao.db'//自动生成的dao的包名，包名默认是entity所在的包；
     targetGenDir 'src/main/java'//生成数据库文件的目录
 }
@@ -136,8 +136,8 @@ dependencies {
     implementation 'com.android.support:recyclerview-v7:28.0.0-alpha1'
 
     //SmartRefreshLayout
+    implementation 'com.scwang.smartrefresh:SmartRefreshLayout:1.1.0'
 
-    //    implementation 'com.scwang.smartrefresh:SmartRefreshLayout:1.1.0-alpha-14'
     implementation project(path: ':imagepicker')
 
     //mqtt

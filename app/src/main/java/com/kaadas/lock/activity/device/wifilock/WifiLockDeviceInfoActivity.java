@@ -58,17 +58,13 @@ public class WifiLockDeviceInfoActivity extends BaseActivity<IWifiLockMoreView, 
         if (wifiLockInfo != null) {
             wifiSN = wifiLockInfo.getWifiSN();
             sWifiVersion = wifiLockInfo.getWifiVersion();
-
             String productModel = wifiLockInfo.getProductModel();
             tvDeviceModel.setText(TextUtils.isEmpty(productModel) ? "" : productModel.startsWith("K13") ? getString(R.string.lan_bo_ji_ni) : productModel);
             tvSerialNumber.setText(TextUtils.isEmpty(wifiLockInfo.getWifiSN()) ? "" : wifiLockInfo.getWifiSN());
             lockFirmwareVersion = wifiLockInfo.getLockFirmwareVersion();
             tvLockFirmwareVersion.setText(TextUtils.isEmpty(lockFirmwareVersion) ? "" : wifiLockInfo.getLockFirmwareVersion());
             wifiVersion.setText(TextUtils.isEmpty(wifiLockInfo.getWifiVersion()) ? "" : wifiLockInfo.getWifiVersion());
-
-
         }
-
     }
 
     @Override

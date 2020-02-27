@@ -89,15 +89,15 @@
                 android:paddingRight="@dimen/dp_10"
                 android:src="@mipmap/add_wifi_lock_wifi" />
 
-            <EditText
+            <com.kaadas.lock.widget.DropEditText
                 android:id="@+id/ap_ssid_text"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
                 android:background="@drawable/edit_text_line_ffdcdcdc"
-                android:clickable="false"
                 android:drawablePadding="@dimen/dp_10"
                 android:ellipsize="end"
-                android:enabled="false"
                 android:hint="@string/fjdskj"
                 android:paddingLeft="30dp"
                 android:paddingRight="15dp"
