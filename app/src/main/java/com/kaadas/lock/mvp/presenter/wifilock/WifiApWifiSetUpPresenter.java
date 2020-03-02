@@ -8,7 +8,9 @@ import com.kaadas.lock.publiclibrary.http.XiaokaiNewServiceImp;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.util.BaseObserver;
 import com.kaadas.lock.publiclibrary.http.util.RxjavaHelper;
+import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.SPUtils;
 
 
 import java.util.concurrent.TimeUnit;
@@ -68,6 +70,8 @@ public class WifiApWifiSetUpPresenter<T> extends BasePresenter<IWifiLockAPWifiSe
                     public void onSuccess(BaseResult baseResult) {
                         MyApplication.getInstance().getAllDevicesByMqtt(true);
                         toDisposable(bindDisposable);
+                        SPUtils.put(KeyConstants.WIFI_LOCK_OPERATION_RECORD + wifiSN, "");
+                        SPUtils.put(KeyConstants.WIFI_LOCK_ALARM_RECORD + wifiSN, "");
                         if (isSafe()) {
                             mViewRef.get().onBindSuccess(wifiSN);
                         }

@@ -3,6 +3,8 @@ package com.kaadas.lock.activity.device.wifilock.add;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
@@ -19,6 +21,7 @@ import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.utils.GpsUtil;
 import com.kaadas.lock.utils.KeyConstants;
+import com.kaadas.lock.utils.NetUtil;
 import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.WifiUtils;
 import com.tbruyelle.rxpermissions2.RxPermissions;
@@ -110,7 +113,7 @@ public class WifiLockApAddThirdActivity extends AppCompatActivity {
         if (ssid.startsWith("\"") && ssid.endsWith("\"")) {
             ssid = ssid.substring(1, ssid.length() - 1);
         }
-        if (!ssid.equals("kaadas_AP")) {
+        if (!ssid.equals("kaadas_AP") && !"<unknown ssid>".equals(ssid)) {
             SPUtils.put(KeyConstants.WIFI_LOCK_CONNECT_NAME, ssid);
         }
 

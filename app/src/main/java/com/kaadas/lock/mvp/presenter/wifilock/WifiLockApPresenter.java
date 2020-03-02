@@ -11,9 +11,11 @@ import com.kaadas.lock.publiclibrary.http.XiaokaiNewServiceImp;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.util.BaseObserver;
 import com.kaadas.lock.publiclibrary.http.util.RxjavaHelper;
+import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.NetUtil;
 import com.kaadas.lock.utils.Rsa;
+import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.WifiUtils;
 
 import java.io.IOException;
@@ -265,6 +267,8 @@ public class WifiLockApPresenter<T> extends BasePresenter<IWifiLockApView> {
                     @Override
                     public void onSuccess(BaseResult baseResult) {
                         MyApplication.getInstance().getAllDevicesByMqtt(true);
+                        SPUtils.put(KeyConstants.WIFI_LOCK_ALARM_RECORD + wifiSN, "");
+                        SPUtils.put(KeyConstants.WIFI_LOCK_OPERATION_RECORD + wifiSN, "");
                         if (isSafe()) {
                             mViewRef.get().onBindSuccess(wifiSN);
                         }

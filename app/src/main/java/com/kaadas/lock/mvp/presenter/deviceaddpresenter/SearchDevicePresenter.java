@@ -381,7 +381,6 @@ public class SearchDevicePresenter<T> extends BasePresenter<ISearchDeviceView> {
                                     mViewRef.get().getPwd1Success(pwd1, isBind, version, sn, mac, deviceName);
                                 }
                             }
-
                         }
                     }
 

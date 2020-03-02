@@ -51,7 +51,7 @@ public class WifiLockFragment extends BaseFragment<IWifiLockView, WifiLockPresen
     @BindView(R.id.iv_inner_small)
     ImageView ivTopIcon;  //上方小图标
     @BindView(R.id.iv_center_icon)
-    ImageView ivCenterIcon;  //中间图标
+    ImageView ivCenterIcon;  //中间图标wi
     @BindView(R.id.rl_icon)
     RelativeLayout rlIcon;
     @BindView(R.id.tv_external)
@@ -363,17 +363,19 @@ public class WifiLockFragment extends BaseFragment<IWifiLockView, WifiLockPresen
         if (!TextUtils.isEmpty(wifiSn) && wifiLockInfo != null && wifiSn.equals(wifiLockInfo.getWifiSN())) {
             if (eventparams.getEventType() == 0x01) { //操作类
                 if (eventparams.getEventCode() == 0x01) {  //上锁
+                    LogUtils.e("门锁状态上报   上锁" );
                     isOpening = false;
-                    wifiLockInfo.setUpdateTime(System.currentTimeMillis());
+                    wifiLockInfo.setOpenStatusTime(System.currentTimeMillis()/1000);
                     wifiLockInfo.setOpenStatus(1);
                     changeLockStatus(5);
                     new WifiLockInfoManager().insertOrReplace(wifiLockInfo);
                 } else if (eventparams.getEventCode() == 0x02) { //开锁
+                    LogUtils.e("门锁状态上报   开锁" );
                     mPresenter.getOperationRecord(wifiLockInfo.getWifiSN(), true);
                     isOpening = true;
                     wifiLockInfo.setOpenStatus(2);
                     mPresenter.getOpenCount(wifiLockInfo.getWifiSN());
-                    wifiLockInfo.setUpdateTime(System.currentTimeMillis());
+                    wifiLockInfo.setOpenStatusTime(System.currentTimeMillis()/1000);
                     changeLockStatus(4);
                     new WifiLockInfoManager().insertOrReplace(wifiLockInfo);
                 }
@@ -384,14 +386,15 @@ public class WifiLockFragment extends BaseFragment<IWifiLockView, WifiLockPresen
     @Override
     public void onWifiLockActionUpdate() {
         wifiLockInfo = MyApplication.getInstance().getWifiLockInfoBySn(wifiLockInfo.getWifiSN());
+        LogUtils.e("门锁状态上报   " );
         initData();
     }
 
-//    private Runnable initRunnable = new Runnable() {
-//        @Override
-//        public void run() {
-////            isOpening = false;
-////            initData();
-//        }
-//    };
+   private Runnable initRunnable = new Runnable() {
+       @Override
+       public void run() {
+             isOpening = false;
+             initData();
+       }
+   };
 }
