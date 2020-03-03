@@ -479,6 +479,7 @@ public class KeyConstants {
     public static final String WIFI_LOCK_FUNC = "wifiLockFunc"; //wifi锁功能集
 
     public static final String WIFI_LOCK_WIFI_SSID = "wifiLockWifiSsid";
+    public static final String WIFI_LOCK_WIFI_SSID_ARRAYS = "wifiLockWifiSsidArrays";
     public static final String WIFI_LOCK_WIFI_BSSID = "wifiLockWifiBSsid";
     public static final String WIFI_LOCK_WIFI_PASSWORD = "wifiLockWifiPassword";
 

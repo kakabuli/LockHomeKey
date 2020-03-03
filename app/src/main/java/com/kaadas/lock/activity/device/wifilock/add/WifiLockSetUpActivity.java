@@ -19,7 +19,6 @@ import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -105,11 +104,10 @@ public class WifiLockSetUpActivity extends BaseActivity<IWifiSetUpView, WifiSetU
     private boolean mDestroyed = false;
     private String wifiBssid;
     private boolean passwordHide = true;
-    private ArrayAdapter adapter;
-    private List<String> wifiList;
     private WifiUtils wifiUtils;
     final RxPermissions rxPermissions = new RxPermissions(this);
     private Disposable permissionDisposable;
+    private String ssid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -235,7 +233,7 @@ public class WifiLockSetUpActivity extends BaseActivity<IWifiSetUpView, WifiSetU
                         .show();
             }
         } else {
-            String ssid = info.getSSID();
+            ssid = info.getSSID();
             if (TextUtils.isEmpty(ssid)) {
                 return;
             }
@@ -244,9 +242,11 @@ public class WifiLockSetUpActivity extends BaseActivity<IWifiSetUpView, WifiSetU
             }
             apSsidText.setText(ssid);
             apSsidText.setTag(ByteUtil.getBytesByString(ssid));
+
             byte[] ssidOriginalData = TouchNetUtil.getOriginalSsidBytes(info);
             apSsidText.setTag(ssidOriginalData);
             wifiBssid = info.getBSSID();
+
         }
     }
 
@@ -255,17 +255,28 @@ public class WifiLockSetUpActivity extends BaseActivity<IWifiSetUpView, WifiSetU
         switch (view.getId()) {
             case R.id.confirm_btn:
                 sSsid = apSsidText.getText().toString();
+
                 String sPassword = apPasswordEdit.getText().toString();
                 if (TextUtils.isEmpty(sSsid)) { //WiFi名为空
                     Toast.makeText(this, R.string.wifi_name_disable_empty, Toast.LENGTH_SHORT).show();
                     check();
                     return;
                 }
+
                 if (TextUtils.isEmpty(sPassword)) { //WiFi密码为空
                     AlertDialogUtil.getInstance().noEditSingleButtonDialog(WifiLockSetUpActivity.this, "", getString(R.string.no_support_no_pwd_wifi), getString(R.string.ok_wifi_lock), null);
                     return;
                 }
+
+                byte[] ssidBytes;
+                if (sSsid.equals(ssid)) {
+                    ssidBytes = (byte[]) apSsidText.getTag();
+                } else {
+                    ssidBytes = sSsid.getBytes();
+                }
                 Intent intent = new Intent(WifiLockSetUpActivity.this, WifiLockSmartConfigActivity.class);
+
+                intent.putExtra(KeyConstants.WIFI_LOCK_WIFI_SSID_ARRAYS, ssidBytes);
                 intent.putExtra(KeyConstants.WIFI_LOCK_WIFI_SSID, sSsid);
                 intent.putExtra(KeyConstants.WIFI_LOCK_WIFI_BSSID, wifiBssid);
                 intent.putExtra(KeyConstants.WIFI_LOCK_WIFI_PASSWORD, sPassword);

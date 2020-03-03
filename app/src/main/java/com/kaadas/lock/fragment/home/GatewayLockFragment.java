@@ -1014,36 +1014,40 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
     public boolean onLongClick(View v) {
         switch (v.getId()) {
             case R.id.rl_icon:
+                if (gatewayLockInfo != null) {
+                    String lockversion = gatewayLockInfo.getServerInfo().getLockversion();
+                    if (!TextUtils.isEmpty(lockversion) && lockversion.contains(";") &&
+                            (lockversion.split(";")[0].startsWith("8100Z") || lockversion.split(";")[0].startsWith("8100A"))) {
+                        if (statusFlag==1){
+                            ToastUtil.getInstance().showShort(R.string.wifi_alreade_offline);
+                            return true;
+                        }
+                        if (isOpening) {
+                            ToastUtil.getInstance().showShort(R.string.is_opening_try_latter);
+                            return true;
+                        }
+                        if (isClosing) {
+                            ToastUtil.getInstance().showShort(R.string.lock_already_open);
+                            return true;
+                        }
+                        if (mPresenter != null) {
+                            mPresenter.attachView(this);
+                            mPresenter.openLock(gatewayLockInfo);
+                        }
+                        return true;
+                    }
+                }
                 AlertDialogUtil.getInstance().noEditSingleButtonDialog(getActivity(), getString(R.string.hint), getString(R.string.this_operation_does_not_support_unlocking), getString(R.string.hao_de), new AlertDialogUtil.ClickListener() {
-                       @Override
-                       public void left() {
+                    @Override
+                    public void left() {
 
-                       }
+                    }
 
-                       @Override
-                       public void right() {
+                    @Override
+                    public void right() {
 
-                       }
-                   });
-
-//                if (gatewayLockInfo != null) {
-//                    if (statusFlag==1){
-//                        ToastUtil.getInstance().showShort(R.string.wifi_alreade_offline);
-//                        return true;
-//                    }
-//                   if (isOpening) {
-//                        ToastUtil.getInstance().showShort(R.string.is_opening_try_latter);
-//                        return true;
-//                    }
-//                     if (isClosing) {
-//                        ToastUtil.getInstance().showShort(R.string.lock_already_open);
-//                        return true;
-//                    }
-//                     if (mPresenter != null) {
-//                        mPresenter.attachView(this);
-//                        mPresenter.openLock(gatewayLockInfo);
-//                    }
-//                }
+                    }
+                });
                 break;
         }
         return true;

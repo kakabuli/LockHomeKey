@@ -7,6 +7,7 @@ import android.graphics.drawable.AnimationDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -64,7 +65,9 @@ public class WifiLockSmartConfigActivity extends AppCompatActivity {
         final AnimationDrawable animationDrawable = (AnimationDrawable) ivAnim.getBackground();
         animationDrawable.start();
 
+
         String sSsid = getIntent().getStringExtra(KeyConstants.WIFI_LOCK_WIFI_SSID);
+        byte[] ssidArrays = getIntent().getByteArrayExtra(KeyConstants.WIFI_LOCK_WIFI_SSID_ARRAYS);
         String sPassword = getIntent().getStringExtra(KeyConstants.WIFI_LOCK_WIFI_PASSWORD);
         String wifiBssid = getIntent().getStringExtra(KeyConstants.WIFI_LOCK_WIFI_BSSID);
         if (mTask != null) {
@@ -89,13 +92,17 @@ public class WifiLockSmartConfigActivity extends AppCompatActivity {
             }
         });
 
-        byte[] ssid = ByteUtil.getBytesByString(sSsid);
         byte[] password = ByteUtil.getBytesByString(sPassword);
-        byte[] bssid = TouchNetUtil.parseBssid2bytes(wifiBssid);
+        byte[] bssid;
+        if (TextUtils.isEmpty(wifiBssid)){
+            bssid = new byte[6];
+        }else {
+              bssid = TouchNetUtil.parseBssid2bytes(wifiBssid);
+        }
         //todo  wifiBssid 为空
         byte[] deviceCount = {1};
         byte[] broadcast = {1};
-        mTask.execute(ssid, bssid, password, deviceCount, broadcast);
+        mTask.execute(ssidArrays, bssid, password, deviceCount, broadcast);
         //通过设置android:background时，得到AnimationDrawable 用如下方法
         llBindSuccess.setVisibility(View.GONE);
     }

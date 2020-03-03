@@ -301,7 +301,7 @@
                     android:lineSpacingExtra="5dp"
                     android:textSize="10sp"
                     android:textColor="#666666"
-                    android:text="① 门锁目前支持2.4G Wi-Fi， 暂不支持5G Wi-Fi\n② 如果您的路由器同时打开了2.4G和5G的Wi-Fi，建议两者使用不同的Wi-Fi名称，以免影响门锁联网效果\n③ 门锁暂不支持同一Wi-Fi名称漫游的公共Wi-Fi环境，比如很多公司、酒店等公共场合的Wi-Fi环境\n④ 如果需要在上述公共Wi-Fi环境下使用，可以安装一台拥有独立Wi-Fi名称的路由器，并将该路由器接入公共Wi-Fi 网络"
+                    android:text="① 门锁目前支持2.4G Wi-Fi， 暂不支持5G Wi-Fi\n② 如果您的路由器同时打开了2.4G和5G的Wi-Fi，建议两者使用不同的Wi-Fi名称，以免影响门锁联网效果\n③ 门锁暂不支持同一Wi-Fi名称漫游的公共Wi-Fi环境，比如很多公司、酒店等公共场合的Wi-Fi环境\n④ 如果需要在上述公共Wi-Fi环境下使用，可以安装一台拥有独立Wi-Fi名称的路由器，并将该路由器接入公共Wi-Fi 网络\n⑤.如使用连接的家庭Wi-Fi无密码，可在App端输入密码12345678，进行连网"
                     android:layout_width="match_parent"
                     android:layout_marginBottom="@dimen/dp_14"
                     android:layout_height="wrap_content" />
