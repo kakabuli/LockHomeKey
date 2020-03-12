@@ -25,10 +25,12 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import com.flyco.tablayout.CommonTabLayout;
 import com.google.gson.Gson;
 import com.huawei.android.hms.agent.HMSAgent;
 import com.huawei.android.hms.agent.push.handler.GetTokenHandler;
@@ -36,9 +38,9 @@ import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.cateye.VideoVActivity;
 import com.kaadas.lock.bean.UpgradeBean;
+import com.kaadas.lock.fragment.PersonalCenterFragment;
 import com.kaadas.lock.fragment.device.DeviceFragment;
 import com.kaadas.lock.fragment.home.HomePageFragment;
-import com.kaadas.lock.fragment.PersonalCenterFragment;
 import com.kaadas.lock.mvp.mvpbase.BaseBleActivity;
 import com.kaadas.lock.mvp.presenter.MainActivityPresenter;
 import com.kaadas.lock.mvp.presenter.UpgradePresenter;
@@ -104,6 +106,8 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
     RadioGroup rg;
     @BindView(R.id.home_view_pager)
     NoScrollViewPager homeViewPager;
+
+
     private List<Fragment> fragments = new ArrayList<>();
     private boolean isOnBackground = false;
     private static MainActivity instance;
@@ -164,8 +168,6 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
 
         //首页的fragment不重新加载，导致各种问题
         homeViewPager.setOffscreenPageLimit(fragments.size());
-
-        checkVpnService();
 
         //设置Linphone的监听
 
@@ -230,6 +232,9 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
         IntentFilter filter = new IntentFilter(WifiManager.NETWORK_STATE_CHANGED_ACTION);
         filter.addAction(LocationManager.PROVIDERS_CHANGED_ACTION);
         registerReceiver(mReceiver, filter);
+
+        RadioButton rb_shop = findViewById(R.id.rb_shop);
+        rb_shop.setVisibility(View.GONE);
     }
 
     private static List<String> packages;
@@ -313,13 +318,13 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
                 || info.getNetworkId() == -1
                 || "<unknown ssid>".equals(info.getSSID());
         if (disconnected) {
-            LogUtils.e("切换wifi  断开连接"  );
+            LogUtils.e("切换wifi  断开连接");
         } else {
             String ssid = info.getSSID();
             if (ssid.startsWith("\"") && ssid.endsWith("\"")) {
                 ssid = ssid.substring(1, ssid.length() - 1);
             }
-           LogUtils.e("切换wifi  ssid "  +ssid);
+            LogUtils.e("切换wifi  ssid " + ssid);
         }
     }
 
@@ -476,6 +481,7 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
         SPUtils.remove(Constants.SIP_INVERT_PKG_SP);
         SPUtils.remove(Constants.IS_FROM_WEL_SP);
     }
+
 
     //检查vpn授权
     public void checkVpnService() {
@@ -682,31 +688,36 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
 
         switch (alarmCode) {
             case 0x01: //锁定报警（输入错误密码或指纹或卡片超过 10 次就报 警系统锁定）
-                content = String.format(getString(R.string.wifi_lock_alarm_1) , nickName);
+                content = String.format(getString(R.string.wifi_lock_alarm_1), nickName);
                 break;
             case 0x02:// 劫持报警（输入防劫持密码或防劫持指纹开锁就报警）
-                content = String.format(getString(R.string.wifi_lock_alarm_2) , nickName);
+                content = String.format(getString(R.string.wifi_lock_alarm_2), nickName);
                 break;
             case 0x03:// 三次错误报警
-                content = String.format(getString(R.string.wifi_lock_alarm_3) , nickName);
+                content = String.format(getString(R.string.wifi_lock_alarm_3), nickName);
                 break;
             case 0x04:// 防撬报警（锁被撬开）
-                content = String.format(getString(R.string.wifi_lock_alarm_4) , nickName);
+                content = String.format(getString(R.string.wifi_lock_alarm_4), nickName);
                 break;
             case 0x08:// 机械钥匙报警（使用机械钥匙开锁）
-                content = String.format(getString(R.string.wifi_lock_alarm_8) , nickName);
+                content = String.format(getString(R.string.wifi_lock_alarm_8), nickName);
                 break;
             case 0x10:// 低电压报警（电池电量不足）
-                content = String.format(getString(R.string.wifi_lock_alarm_10) , nickName);
+                content = String.format(getString(R.string.wifi_lock_alarm_10), nickName);
                 break;
             case 0x20:// 锁体异常报警（旧:门锁不上报警）
-                content = String.format(getString(R.string.wifi_lock_alarm_20) , nickName);
+                content = String.format(getString(R.string.wifi_lock_alarm_20), nickName);
                 break;
             case 0x40:// 门锁布防报警
-                content = String.format(getString(R.string.wifi_lock_alarm_40) , nickName);
+                content = String.format(getString(R.string.wifi_lock_alarm_40), nickName);
                 break;
         }
         Toast.makeText(MainActivity.this, content, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void needCheckVpnService() {
+        checkVpnService();
     }
 
 

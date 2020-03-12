@@ -78,7 +78,7 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter<ILogi
         //检查版本
         checkVersion();
         initView();
-        checkVpnService();
+//        checkVpnService();
     }
 
     private void initView() {
@@ -318,8 +318,6 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter<ILogi
         }else {
             ToastUtil.getInstance().showShort(HttpUtils.httpErrorCode(this, result.getCode()));
         }
-
-
     }
 
 
@@ -333,6 +331,5 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter<ILogi
         } else {
             onActivityResult(REQUEST_CODE_VPN_SERVICE, RESULT_OK, null);
         }
-
     }
 }

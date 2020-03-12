@@ -12,6 +12,7 @@ import com.kaadas.lock.R;
 import com.kaadas.lock.activity.addDevice.cateye.AddDeviceCatEyeFirstActivity;
 import com.kaadas.lock.activity.addDevice.cateye.AddDeviceCatEyeScanFailActivity;
 import com.kaadas.lock.activity.addDevice.cateye.AddDeviceCatEyeSecondActivity;
+import com.kaadas.lock.activity.addDevice.zigbeelocknew.QrCodeScanActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
@@ -44,7 +45,7 @@ public class AddGatewaySecondActivity extends BaseAddToApplicationActivity {
                 finish();
                 break;
             case R.id.scan_gateway:
-                Intent scanIntent=new Intent(this,AddGatewayScanActivity.class);
+                Intent scanIntent=new Intent(this,QrCodeScanActivity.class);
                 startActivityForResult(scanIntent, KeyConstants.SCANGATEWAY_REQUEST_CODE);
                 break;
         }
@@ -71,8 +72,6 @@ public class AddGatewaySecondActivity extends BaseAddToApplicationActivity {
                     }
                     break;
             }
-
         }
-
     }
 }

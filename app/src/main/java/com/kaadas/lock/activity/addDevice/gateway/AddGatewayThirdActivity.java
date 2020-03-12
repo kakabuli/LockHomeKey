@@ -89,11 +89,11 @@ public class AddGatewayThirdActivity extends BaseActivity<GatewayBindView, Gatew
     }
 
     @Override
-    public void bindGatewaySuitSuccess(String deviceSN, List<BindGatewayResultBean.DataBean.DeviceListBean> mDeviceList,boolean isbindMeMe) {
+    public void bindGatewaySuitSuccess(String deviceSN, List<BindGatewayResultBean.DataBean.DeviceListBean> mDeviceList, boolean isbindMeMe) {
         //绑定套装成功
-        Intent intent=new Intent(this, AddDeviceZigbeeLockNewFirstActivity.class);
-         intent.putExtra(KeyConstants.GATEWAY_ID,deviceSN);
-         intent.putExtra(KeyConstants.IS_BIND_MEME,isbindMeMe);
+        Intent intent = new Intent(this, AddDeviceZigbeeLockNewFirstActivity.class);
+        intent.putExtra(KeyConstants.GATEWAY_ID, deviceSN);
+        intent.putExtra(KeyConstants.IS_BIND_MEME, isbindMeMe);
         startActivity(intent);
     }
 

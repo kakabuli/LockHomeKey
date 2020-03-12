@@ -9,6 +9,7 @@ import android.widget.ImageView;
 
 import com.kaadas.lock.activity.MainActivity;
 import com.kaadas.lock.R;
+import com.kaadas.lock.activity.addDevice.DeviceAdd2Activity;
 import com.kaadas.lock.activity.addDevice.DeviceAddActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 
@@ -35,12 +36,12 @@ public class AddGatewaySuccessActivity extends BaseAddToApplicationActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.back:
-                Intent deviceAddIntent=new Intent(this, DeviceAddActivity.class);
+                Intent deviceAddIntent=new Intent(this, DeviceAdd2Activity.class);
                 startActivity(deviceAddIntent);
                 finish();
                 break;
             case R.id.button_add_zigbee:
-                Intent deviceAddZigbee=new Intent(this, DeviceAddActivity.class);
+                Intent deviceAddZigbee=new Intent(this, DeviceAdd2Activity.class);
                 startActivity(deviceAddZigbee);
                 finish();
                 break;
@@ -54,7 +55,7 @@ public class AddGatewaySuccessActivity extends BaseAddToApplicationActivity {
 
     @Override
     public void onBackPressed() {
-        startActivity(new Intent(this, DeviceAddActivity.class));
+        startActivity(new Intent(this, DeviceAdd2Activity.class));
         finish();
     }
 }

@@ -116,6 +116,7 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
     private Disposable getLockPwdInfoEventDisposable;
     private GatewayLockPasswordManager manager = new GatewayLockPasswordManager();
     private Disposable wifiLockStatusListenDisposable;
+    private Disposable allDeviceDisposable;
 
     public MainActivityPresenter(Context mContext) {
         this.mContext = mContext;
@@ -145,6 +146,23 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
         getLockPwdInfoEvent();
         //监听wifi锁  报警信息
         listenWifiLockStatus();
+        //监听设备变化
+        listenerDeviceChange();
+    }
+
+    private void listenerDeviceChange(){
+        allDeviceDisposable = MyApplication.getInstance().listenerAllDevices().subscribe(new Consumer<AllBindDevices>() {
+            @Override
+            public void accept(AllBindDevices allBindDevices) throws Exception {
+                List<CateEyeInfo> cateEyes = allBindDevices.getCateEyes();
+                if (cateEyes!=null && cateEyes.size()>0 && isSafe()){
+                    mViewRef.get().needCheckVpnService();
+                }
+            }
+        });
+        compositeDisposable.add(allDeviceDisposable);
+
+
     }
 
     /**

@@ -9,12 +9,12 @@ import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.google.gson.Gson;
 import com.kaadas.lock.R;
-import com.kaadas.lock.adapter.BluetoothPasswordAdapter;
 import com.kaadas.lock.adapter.WifiLockCardAndFingerAdapter;
 import com.kaadas.lock.adapter.WifiLockPasswordAdapter;
 import com.kaadas.lock.bean.WiFiLockCardAndFingerShowBean;
@@ -25,7 +25,6 @@ import com.kaadas.lock.publiclibrary.bean.ForeverPassword;
 import com.kaadas.lock.publiclibrary.bean.WiFiLockPassword;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.utils.KeyConstants;
-import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.ToastUtil;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
@@ -51,6 +50,8 @@ public class WiFiLockPasswordManagerActivity extends BaseActivity<IWifiLockPassw
     TextView tvNoPassword;
     @BindView(R.id.refreshLayout)
     SmartRefreshLayout refreshLayout;
+    @BindView(R.id.ll_no_password)
+    LinearLayout llNoPassword;
     private WifiLockPasswordAdapter passwordAdapter;
     private List<ForeverPassword> passwordList = new ArrayList<>();
     private int type;  // 1 密码  2指纹  3 卡片
@@ -110,11 +111,11 @@ public class WiFiLockPasswordManagerActivity extends BaseActivity<IWifiLockPassw
             } else {
                 havePassword = false;
             }
-            tvNoPassword.setText(getString(R.string.no_password));
+            tvNoPassword.setText(getString(R.string.no_pwd_sync));
             initPasswordAdapter();
         } else if (type == 2) {
             headTitle.setText(R.string.fingerprint);
-            tvNoPassword.setText(getString(R.string.no_finger));
+            tvNoPassword.setText(getString(R.string.no_finger_sync));
             cardAndFingerList = mPresenter.getShowCardsFingers(wiFiLockPassword, type);
             if (cardAndFingerList != null && cardAndFingerList.size() > 0) {
                 havePassword = true;
@@ -130,7 +131,7 @@ public class WiFiLockPasswordManagerActivity extends BaseActivity<IWifiLockPassw
             } else {
                 havePassword = false;
             }
-            tvNoPassword.setText(getString(R.string.no_card));
+            tvNoPassword.setText(getString(R.string.no_card_sync));
             initCardAndFingerAdapter();
         }
         changeState();
@@ -139,10 +140,10 @@ public class WiFiLockPasswordManagerActivity extends BaseActivity<IWifiLockPassw
     private void changeState() {
         if (havePassword) {
             recycleview.setVisibility(View.VISIBLE);
-            tvNoPassword.setVisibility(View.GONE);
+            llNoPassword.setVisibility(View.GONE);
         } else {
             recycleview.setVisibility(View.GONE);
-            tvNoPassword.setVisibility(View.VISIBLE);
+            llNoPassword.setVisibility(View.VISIBLE);
         }
     }
 

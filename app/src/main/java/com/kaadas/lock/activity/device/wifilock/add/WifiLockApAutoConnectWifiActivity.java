@@ -38,6 +38,7 @@ public class WifiLockApAutoConnectWifiActivity extends AppCompatActivity {
 
     private Disposable permissionDisposable;
     final RxPermissions rxPermissions = new RxPermissions(this);
+    private Disposable scanDisposable1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +67,7 @@ public class WifiLockApAutoConnectWifiActivity extends AppCompatActivity {
             Toast.makeText(this, getString(R.string.locak_no_open_please_open_local), Toast.LENGTH_SHORT).show();
         }
         WifiUtil.getIns().init(getApplicationContext());
-        WifiUtil.getIns().changeToWifi("kaadas_AP", "88888888");
+          WifiUtil.getIns().changeToWifi("kaadas_AP", "88888888");
         IntentFilter filter = new IntentFilter(WifiManager.NETWORK_STATE_CHANGED_ACTION);
         filter.addAction(LocationManager.PROVIDERS_CHANGED_ACTION);
         registerReceiver(mReceiver, filter);
@@ -124,7 +125,11 @@ public class WifiLockApAutoConnectWifiActivity extends AppCompatActivity {
                 ssid = ssid.substring(1, ssid.length() - 1);
             }
             LogUtils.e("网络切换    " + ssid + "   " + "网络可用   " + NetUtil.isNetworkAvailable());
+
             if ((ssid.equals("kaadas_AP"))) {
+                if (scanDisposable1!=null){
+                    scanDisposable1.dispose();
+                }
                 handler.removeCallbacks(runnable);
                 startActivity(new Intent(WifiLockApAutoConnectWifiActivity.this, WifiLockApInputAdminPasswordActivity.class));
                 handler.removeCallbacks(timeoutRunnable);
@@ -141,6 +146,9 @@ public class WifiLockApAutoConnectWifiActivity extends AppCompatActivity {
         if (permissionDisposable != null) {
             permissionDisposable.dispose();
         }
+        if (scanDisposable1!=null){
+            scanDisposable1.dispose();
+        }
     }
 
     @Override
@@ -152,4 +160,6 @@ public class WifiLockApAutoConnectWifiActivity extends AppCompatActivity {
     public void onClick() {
         startActivity(new Intent(this, WifiLockHelpActivity.class));
     }
+
+
 }

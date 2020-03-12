@@ -15,9 +15,6 @@ import android.widget.TextView;
 
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
-import com.kaadas.lock.activity.addDevice.gateway.AddGatewaySecondActivity;
-import com.kaadas.lock.activity.addDevice.gateway.AddGatewayThirdActivity;
-import com.kaadas.lock.activity.addDevice.zigbeelocknew.AddDeviceZigbeelockNewScanActivity;
 import com.kaadas.lock.activity.addDevice.zigbeelocknew.ProductActivationScanActivity;
 import com.kaadas.lock.activity.my.AboutUsActivity;
 import com.kaadas.lock.activity.my.BarCodeActivity;
@@ -37,7 +34,6 @@ import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.StorageUtil;
 import com.kaadas.lock.mvp.view.IMyFragmentView;
-import com.kaadas.lock.utils.ToastUtil;
 import com.kaadas.lock.utils.ftp.GeTui;
 import com.kaadas.lock.widget.CircleImageView;
 import com.king.zxing.Intents;

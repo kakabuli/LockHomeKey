@@ -119,12 +119,10 @@ public class WifiLockApWifiSetUpActivity extends BaseActivity<IWifiLockAPWifiSet
                     Toast.makeText(this, R.string.wifi_name_disable_empty, Toast.LENGTH_SHORT).show();
                     return;
                 }
-
                 if (TextUtils.isEmpty(sPassword)) { //WiFi密码为空
                     AlertDialogUtil.getInstance().noEditSingleButtonDialog(WifiLockApWifiSetUpActivity.this, "", getString(R.string.no_support_no_pwd_wifi), getString(R.string.ok_wifi_lock), null);
                     return;
                 }
-
                 Intent intent = new Intent(this,WifiLockApConnectDeviceActivity.class);
                 intent.putExtra(KeyConstants.WIFI_LOCK_WIFI_SSID, sSsid);
                 intent.putExtra(KeyConstants.WIFI_LOCK_WIFI_PASSWORD, sPassword);

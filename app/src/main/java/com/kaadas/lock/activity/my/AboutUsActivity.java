@@ -44,6 +44,7 @@ public class AboutUsActivity extends BaseAddToApplicationActivity implements Vie
         rlZhaoShangPhone.setOnClickListener(this);
         rlEnterpriseOfficialWebsite.setOnClickListener(this);
         tvContent.setText(getString(R.string.about_us));
+
     }
 
     @Override

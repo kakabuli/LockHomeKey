@@ -24,6 +24,7 @@ import android.widget.RadioGroup;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.MainActivity;
+import com.kaadas.lock.activity.addDevice.DeviceAdd2Activity;
 import com.kaadas.lock.activity.addDevice.DeviceAddActivity;
 import com.kaadas.lock.bean.HomeShowBean;
 import com.kaadas.lock.mvp.mvpbase.BaseFragment;
@@ -387,7 +388,7 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
         Intent intent;
         switch (v.getId()) {
             case R.id.btn_add_device:
-                intent = new Intent(getActivity(), DeviceAddActivity.class);
+                intent = new Intent(getActivity(), DeviceAdd2Activity.class);
                 startActivity(intent);
                 break;
         }

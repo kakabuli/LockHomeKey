@@ -83,12 +83,16 @@
             android:exported="true"
             android:launchMode="singleTop"
             android:screenOrientation="portrait">
+
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />
 
+
                 <action android:name="android.intent.action.MAIN" />
 
+
                 <category android:name="android.intent.category.LAUNCHER" />
+
 
                 <action android:name="android.intent.action.oppopush" />
             </intent-filter>
@@ -640,7 +644,7 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.addDevice.zigbeelocknew.AddDeviceZigbeelockNewScanActivity"
+            android:name=".activity.addDevice.zigbeelocknew.QrCodeScanActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
@@ -955,36 +959,197 @@
             android:name=".activity.device.wifilock.add.WifiLockAddSecondActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
-        <activity android:name=".activity.device.wifilock.add.WifiLockApAutoConnectWifiActivity" />
-        <activity android:name=".activity.addDevice.DeviceAdd2Activity" />
-        <activity android:name=".activity.addDevice.rg4300.AddRG4300FirstActivity" />
-        <activity android:name=".activity.addDevice.rg4300.Rg4300HelpActivity" />
-        <activity android:name=".activity.device.singleswitch.SingleSwitchDetailActivity" />
-        <activity android:name=".activity.device.singleswitch.SingleSwichMoreActivity" />
-        <activity android:name=".activity.device.singleswitch.TimerManagerActivity" />
-        <activity android:name=".activity.device.singleswitch.AddTimeActivity" />
-        <activity android:name=".activity.device.singleswitch.AddDeviceActivity" />
-        <activity android:name=".activity.addDevice.rg4300.AddRG4300ScanActivity" />
-        <activity android:name=".activity.addDevice.rg4300.AddRg4300PairActivity" />
-        <activity android:name=".activity.addDevice.rg4300.AddRg4300InputWifiActivity" />
-        <activity android:name=".activity.addDevice.rg4300.AddRG4300ConnectWifiActivity" />
-        <activity android:name=".activity.addDevice.rg4300.AddRg4300SuccessActivity" />
-        <activity android:name=".activity.addDevice.rg4300.AddRg4300FailedActivity" />
-        <activity android:name=".activity.addDevice.rg4300.AddRg4300PairFailedActivity" />
-        <activity android:name=".activity.addDevice.singleswitch.AddSingleSwitchFirstActivity" />
-        <activity android:name=".activity.addDevice.singleswitch.AddSingleSwitchSecondActivity" />
-        <activity android:name=".activity.addDevice.singleswitch.AddSingleSwitchThirdActivity" />
-        <activity android:name=".activity.addDevice.singleswitch.AddSingleSwitchSuccessActivity" />
-        <activity android:name=".activity.addDevice.doubleswitch.AddDoubleSwitchFirstActivity" />
-        <activity android:name=".activity.addDevice.doubleswitch.AddDoubleSwitchSecondActivity" />
-        <activity android:name=".activity.addDevice.doubleswitch.AddDoubleSwitchThirdActivity" />
-        <activity android:name=".activity.addDevice.doubleswitch.AddDoubleSwitchSuccessActivity" />
-        <activity android:name=".activity.addDevice.pir.AddPirFirstActivity" />
-        <activity android:name=".activity.addDevice.pir.AddPirSecondActivity" />
-        <activity android:name=".activity.addDevice.pir.AddPirThirdActivity" />
-        <activity android:name=".activity.addDevice.pir.AddPirSuccessActivity" />
-        <activity android:name=".activity.device.wifilock.WifiLockAuthDeviceInfoActivity" />
-        <activity android:name=".activity.device.wifilock.WifiLockAMActivity"></activity>
+        <activity
+            android:name=".activity.device.wifilock.add.WifiLockApAutoConnectWifiActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.addDevice.DeviceAdd2Activity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.addDevice.rg4300.AddRG4300FirstActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.addDevice.rg4300.Rg4300HelpActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.singleswitch.SingleSwitchDetailActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.singleswitch.SingleSwichMoreActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.singleswitch.TimerManagerActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.singleswitch.AddTimeActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.singleswitch.AddDeviceActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.addDevice.rg4300.AddRG4300ScanActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.addDevice.rg4300.AddRg4300PairActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.addDevice.rg4300.AddRg4300InputWifiActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.addDevice.rg4300.AddRG4300ConnectWifiActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.addDevice.rg4300.AddRg4300SuccessActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.addDevice.rg4300.AddRg4300FailedActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.addDevice.rg4300.AddRg4300PairFailedActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.addDevice.singleswitch.AddSingleSwitchFirstActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.addDevice.singleswitch.AddSingleSwitchSecondActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.addDevice.singleswitch.AddSingleSwitchThirdActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.addDevice.singleswitch.AddSingleSwitchSuccessActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.addDevice.doubleswitch.AddDoubleSwitchFirstActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.addDevice.doubleswitch.AddDoubleSwitchSecondActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.addDevice.doubleswitch.AddDoubleSwitchThirdActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.addDevice.doubleswitch.AddDoubleSwitchSuccessActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.addDevice.pir.AddPirFirstActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.addDevice.pir.AddPirSecondActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.addDevice.pir.AddPirThirdActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.addDevice.pir.AddPirSuccessActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.wifilock.WifiLockAuthDeviceInfoActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.wifilock.WifiLockAMActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity android:name=".activity.device.wifilock.newadd.WifiLockAddNewFirstActivity">
+
+        </activity>
+        <activity
+            android:name=".activity.device.wifilock.newadd.WifiLockAddNewSecondActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.wifilock.newadd.WifiLockAddNewThirdActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.wifilock.newadd.WifiLockAddNewNotActivateActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.wifilock.newadd.WifiLockAddNewWakeActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.wifilock.newadd.WifiLockAddNewScanFailedActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.wifilock.newadd.WifiLockAddNewScanActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.wifilock.newadd.WifiLockAddNewInputAdminPasswotdActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".activity.device.wifilock.newadd.WifiLockAddNewCheckAdminPasswordActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.wifilock.newadd.WifiLockAddNewModifyPasswordActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.wifilock.newadd.WifiLockAddNewInputWifiActivity"
+            android:windowSoftInputMode="adjustResize"></activity>
+        <activity
+            android:name=".activity.device.wifilock.newadd.WifiLockAddNewCheckWifiActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.wifilock.newadd.WifiLockAddNewBindFailedActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.wifilock.newadd.WifiLockAddNewBindSuccesssActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.wifilock.newadd.WifiLockAddNewThird2Activity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.wifilock.newadd.WifiLockOldUserFirstActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.wifilock.newadd.WifiLockOldUserSecondActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.wifilock.newadd.WifiLockOldUserThirdActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

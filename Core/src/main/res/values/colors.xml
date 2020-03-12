@@ -32,4 +32,5 @@
     <!--<color name="color_F8">#F8F8F8</color>-->
     <!--fafafa-->
     <color name="bg_state_color">#fafafa</color>
+    <color name="color_cdcdcd" >#CDCDCD</color>
 </resources>

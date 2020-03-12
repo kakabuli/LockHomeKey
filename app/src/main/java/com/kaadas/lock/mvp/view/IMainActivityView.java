@@ -49,4 +49,6 @@ public interface IMainActivityView extends IBleView {
     //网关重置通知
     void onWifiLockAlarmEvent(String wifiSn,int alarmCode);
 
+    void needCheckVpnService();
+
 }

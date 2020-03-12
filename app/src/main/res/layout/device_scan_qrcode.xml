@@ -1,85 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="#000"
     android:orientation="vertical">
-      <FrameLayout
-          android:id="@+id/scan_layout"
-          android:layout_width="match_parent"
-          android:layout_height="match_parent"
-          android:layout_gravity="center"
-          >
-          <SurfaceView
-              android:id="@+id/surfaceView"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              />
-
-          <com.king.zxing.ViewfinderView
-              android:id="@+id/viewfinderView"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              app:cornerColor="#149BF3"
-              app:frameColor="#EAE9E9"
-              app:frameHeight="250dp"
-              app:frameWidth="250dp"
-              app:labelText="@string/please_qrcode_in"
-              app:labelTextColor="@color/white"
-              app:labelTextLocation="bottom"
-              app:labelTextSize="@dimen/sp_15"
-              app:laserColor="#1488D4"
-              app:maskColor="@color/black" />
-          <ImageView
-              android:id="@+id/back"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:paddingLeft="@dimen/dp_16"
-              android:paddingRight="@dimen/dp_16"
-              android:paddingTop="@dimen/dp_5"
-              android:paddingBottom="@dimen/dp_5"
-              android:src="@mipmap/white_back"
-              android:layout_marginTop="@dimen/dp_10"
-              />
-          <TextView
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:text="@string/qr_code"
-              android:textSize="@dimen/sp_17"
-              android:textColor="#FFF"
-              android:textStyle="bold"
-              android:gravity="center_horizontal"
-              android:layout_marginTop="@dimen/dp_10"
-              />
-          <LinearLayout
-              android:id="@+id/touch_light_layout"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:layout_gravity="center"
-              android:layout_marginTop="80dp"
-              android:orientation="vertical"
-              android:gravity="center"
-              android:paddingLeft="@dimen/dp_10"
-              android:paddingRight="@dimen/dp_10"
-              >
-              <ImageView
-                  android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:src="@mipmap/flashlight"
-                  />
-              <TextView
-                  android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:text="@string/touch_your_light"
-                  android:textColor="#ff21a6fd"
-                  android:textSize="12sp"
-                  android:layout_marginTop="@dimen/dp_10"
-                  />
-          </LinearLayout>
-
-      </FrameLayout>
 
 
+    <cn.bingoogolapple.qrcode.zbar.ZBarView
+        android:id="@+id/zbarview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:qrcv_animTime="2000"
+        app:qrcv_barCodeTipText=""
+        app:qrcv_barcodeRectHeight="120dp"
+        app:qrcv_borderColor="@android:color/transparent"
+        app:qrcv_borderSize="1dp"
+        app:qrcv_cornerColor="#149BF3"
+        app:qrcv_cornerLength="20dp"
+        app:qrcv_cornerSize="3dp"
+        app:qrcv_customGridScanLineDrawable="@mipmap/scan_line"
+        app:qrcv_isAutoZoom="true"
+        app:qrcv_isBarcode="false"
+        app:qrcv_isOnlyDecodeScanBoxArea="false"
+        app:qrcv_isShowDefaultGridScanLineDrawable="false"
+        app:qrcv_isShowDefaultScanLineDrawable="true"
+        app:qrcv_isShowLocationPoint="false"
+        app:qrcv_isShowTipBackground="false"
+        app:qrcv_tipTextMargin="12dp"
+        app:qrcv_isShowTipTextAsSingleLine="false"
+        app:qrcv_isTipTextBelowRect="true"
+        app:qrcv_maskColor="#33FFFFFF"
+        app:qrcv_qrCodeTipText="@string/qr_notice"
+        app:qrcv_rectWidth="@dimen/dp_225"
+        app:qrcv_scanLineColor="#149BF3"
+        app:qrcv_toolbarHeight="56dp"
+        app:qrcv_topOffset="120dp"
+        app:qrcv_verticalBias="-1" />
 
-</LinearLayout>
+    <LinearLayout
+        android:layout_alignParentBottom="true"
+        android:gravity="center"
+        android:id="@+id/touch_light_layout"
+        android:layout_width="match_parent"
+        android:layout_height="160dp"
+        android:background="#66161616"
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/dp_10"
+        android:paddingRight="@dimen/dp_10">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/light_icon" />
+        <TextView
+            android:id="@+id/tv_light"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_10"
+            android:text="@string/touch_light"
+            android:textColor="#fff"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_46">
+
+        <ImageView
+            android:id="@+id/back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_10"
+            android:paddingLeft="@dimen/dp_16"
+            android:paddingTop="@dimen/dp_5"
+            android:paddingRight="@dimen/dp_16"
+            android:paddingBottom="@dimen/dp_5"
+            android:src="@mipmap/white_back" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_10"
+            android:gravity="center_horizontal"
+            android:text="@string/scan_add"
+            android:textColor="#FFF"
+            android:textSize="@dimen/sp_17"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+</RelativeLayout>

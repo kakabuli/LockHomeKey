@@ -467,6 +467,9 @@ public class KeyConstants {
     public static final String WIFI_LOCK_OPERATION_RECORD = "WifiLockOperationRecord";  //WiFi锁操作记录
     public static final String SHARE_USER_INFO = "shareUserInfo";   //分享用户信息
     public static final String WIFI_LOCK_ADMIN_PASSWORD = "wifiLockAdminPassword";  //WiFi锁管理员密码
+    public static final String WIFI_LOCK_ADMIN_PASSWORD_TIMES = "wifiLockAdminPasswordTimes";  //W管理员密码输入次数
+    public static final String WIFI_LOCK_WIFI_TIMES = "wifiLockAdminPasswordTimes";  //wifi账号密码输入次数
+    public static final String WIFI_LOCK_ADMIN_PASSWORD_DATA = "wifiLockAdminPasswordData";  //WiFi锁管理员密码
     public static final String WIFI_LOCK_INFO = "wifiLockInfo"; //WiFi锁信息
     public static final String WIFI_LOCK_FUNCTION = "wifiLockFunction"; //WiFi锁信息
     public static final String WIFI_LOCK_OPEN_COUNT = "wifiLockOpenCount"; //WiFi锁开锁次数

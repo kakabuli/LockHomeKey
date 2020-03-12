@@ -15,7 +15,7 @@ import com.kaadas.lock.activity.addDevice.bluetooth.AddBluetoothFirstActivity;
 import com.kaadas.lock.activity.addDevice.gateway.AddGatewayFirstActivity;
 import com.kaadas.lock.activity.addDevice.zigbeelocknew.AddDeviceZigbeeLockNewScanFailActivity;
 import com.kaadas.lock.activity.addDevice.zigbeelocknew.AddDeviceZigbeeLockNewZeroActivity;
-import com.kaadas.lock.activity.addDevice.zigbeelocknew.AddDeviceZigbeelockNewScanActivity;
+import com.kaadas.lock.activity.addDevice.zigbeelocknew.QrCodeScanActivity;
 import com.kaadas.lock.activity.device.wifilock.add.WifiLockAPAddFirstActivity;
 import com.kaadas.lock.bean.HomeShowBean;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
@@ -97,7 +97,9 @@ public class DeviceAddActivity extends BaseActivity<DeviceZigBeeDetailView, Devi
                 finish();
                 break;
             case R.id.scan:
-                 break;
+                Intent zigbeeLockIntent=new Intent(this, QrCodeScanActivity.class);
+                startActivityForResult(zigbeeLockIntent, KeyConstants.SCANGATEWAYNEW_REQUEST_CODE);
+                break;
             case R.id.add_device:
                 //添加锁
                 View mView = LayoutInflater.from(this).inflate(R.layout.device_add_lock, null);

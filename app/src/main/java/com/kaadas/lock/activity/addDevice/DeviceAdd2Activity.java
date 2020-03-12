@@ -3,7 +3,6 @@ package com.kaadas.lock.activity.addDevice;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -14,8 +13,9 @@ import com.kaadas.lock.activity.addDevice.bluetooth.AddBluetoothFirstActivity;
 import com.kaadas.lock.activity.addDevice.gateway.AddGatewayFirstActivity;
 import com.kaadas.lock.activity.addDevice.zigbeelocknew.AddDeviceZigbeeLockNewScanFailActivity;
 import com.kaadas.lock.activity.addDevice.zigbeelocknew.AddDeviceZigbeeLockNewZeroActivity;
-import com.kaadas.lock.activity.addDevice.zigbeelocknew.AddDeviceZigbeelockNewScanActivity;
+import com.kaadas.lock.activity.addDevice.zigbeelocknew.QrCodeScanActivity;
 import com.kaadas.lock.activity.device.wifilock.add.WifiLockAPAddFirstActivity;
+import com.kaadas.lock.activity.device.wifilock.newadd.WifiLockAddNewFirstActivity;
 import com.kaadas.lock.bean.HomeShowBean;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.mvp.presenter.deviceaddpresenter.DeviceZigBeeDetailPresenter;
@@ -58,8 +58,9 @@ public class DeviceAdd2Activity extends BaseActivity<DeviceZigBeeDetailView, Dev
     LinearLayout singleSwitch;
     @BindView(R.id.double_switch)
     LinearLayout doubleSwitch;
-    private boolean flag=false; //判断是否有绑定的网列表
-    private int isAdmin=1; //管理员，非1不是管理员
+    private boolean flag = false; //判断是否有绑定的网列表
+    private int isAdmin = 1; //管理员，非1不是管理员
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,18 +73,19 @@ public class DeviceAdd2Activity extends BaseActivity<DeviceZigBeeDetailView, Dev
     protected DeviceZigBeeDetailPresenter<DeviceZigBeeDetailView> createPresent() {
         return new DeviceZigBeeDetailPresenter<>();
     }
+
     private void initData() {
-        List<HomeShowBean> gatewayList= mPresenter.getGatewayBindList();
-        if (gatewayList!=null){
-            if (gatewayList.size()>0){
-                flag=true;
-                if (gatewayList.size()==1){
-                    HomeShowBean homeShowBean= gatewayList.get(0);
-                    GatewayInfo gatewayInfo= (GatewayInfo) homeShowBean.getObject();
-                    if (gatewayInfo.getServerInfo().getIsAdmin()==1){
-                        isAdmin=1;
-                    }else{
-                        isAdmin=0;
+        List<HomeShowBean> gatewayList = mPresenter.getGatewayBindList();
+        if (gatewayList != null) {
+            if (gatewayList.size() > 0) {
+                flag = true;
+                if (gatewayList.size() == 1) {
+                    HomeShowBean homeShowBean = gatewayList.get(0);
+                    GatewayInfo gatewayInfo = (GatewayInfo) homeShowBean.getObject();
+                    if (gatewayInfo.getServerInfo().getIsAdmin() == 1) {
+                        isAdmin = 1;
+                    } else {
+                        isAdmin = 0;
                     }
                 }
             }
@@ -98,7 +100,7 @@ public class DeviceAdd2Activity extends BaseActivity<DeviceZigBeeDetailView, Dev
                 finish();
                 break;
             case R.id.scan:
-                Intent zigbeeLockIntent=new Intent(this, AddDeviceZigbeelockNewScanActivity.class);
+                Intent zigbeeLockIntent = new Intent(this, QrCodeScanActivity.class);
                 startActivityForResult(zigbeeLockIntent, KeyConstants.SCANGATEWAYNEW_REQUEST_CODE);
                 break;
             case R.id.ble_lock:
@@ -106,22 +108,22 @@ public class DeviceAdd2Activity extends BaseActivity<DeviceZigBeeDetailView, Dev
                 startActivity(bluetoothIntent);
                 break;
             case R.id.wifi_lock:
-                Intent intent = new Intent(DeviceAdd2Activity.this, WifiLockAPAddFirstActivity.class);
-                startActivity(intent);
+                startActivity(new Intent(this,WifiLockAddNewFirstActivity.class));
                 break;
             case R.id.zigbee_lock:
-                if( (flag==true  && isAdmin==0)  || (flag==true  && isAdmin==1)){
+                if ((flag == true && isAdmin == 0) || (flag == true && isAdmin == 1)) {
                     Intent zigbeeIntent = new Intent(DeviceAdd2Activity.this, DeviceBindGatewayListActivity.class);
                     int type = 3;
                     zigbeeIntent.putExtra("type", type);
                     startActivity(zigbeeIntent);
 
-                } else if (flag==false) {
-                    AlertDialogUtil.getInstance().havaNoEditTwoButtonDialog(DeviceAdd2Activity.this, getString(R.string.no_usable_gateway), getString(R.string.add_zigbee_device_first_pair_gateway), getString(R.string.cancel), getString(R.string.configuration),"#1F96F7", new AlertDialogUtil.ClickListener() {
+                } else if (flag == false) {
+                    AlertDialogUtil.getInstance().havaNoEditTwoButtonDialog(DeviceAdd2Activity.this, getString(R.string.no_usable_gateway), getString(R.string.add_zigbee_device_first_pair_gateway), getString(R.string.cancel), getString(R.string.configuration), "#1F96F7", new AlertDialogUtil.ClickListener() {
                         @Override
                         public void left() {
 
                         }
+
                         @Override
                         public void right() {
                             //跳转到配置网关添加的流程
@@ -132,19 +134,20 @@ public class DeviceAdd2Activity extends BaseActivity<DeviceZigBeeDetailView, Dev
                 }
                 break;
             case R.id.cat_eye:
-                if( (flag==true  && isAdmin==0)  || (flag==true  && isAdmin==1)){
+                if ((flag == true && isAdmin == 0) || (flag == true && isAdmin == 1)) {
 
                     Intent catEyeIntent = new Intent(this, DeviceBindGatewayListActivity.class);
-                    int type =2;
+                    int type = 2;
                     catEyeIntent.putExtra("type", type);
                     startActivity(catEyeIntent);
 
-                } else if (flag==false) {
-                    AlertDialogUtil.getInstance().havaNoEditTwoButtonDialog(this, getString(R.string.no_usable_gateway), getString(R.string.add_zigbee_device_first_pair_gateway), getString(R.string.cancel), getString(R.string.configuration),"#1F96F7", new AlertDialogUtil.ClickListener() {
+                } else if (flag == false) {
+                    AlertDialogUtil.getInstance().havaNoEditTwoButtonDialog(this, getString(R.string.no_usable_gateway), getString(R.string.add_zigbee_device_first_pair_gateway), getString(R.string.cancel), getString(R.string.configuration), "#1F96F7", new AlertDialogUtil.ClickListener() {
                         @Override
                         public void left() {
 
                         }
+
                         @Override
                         public void right() {
                             //跳转到配置网关添加的流程
@@ -182,25 +185,33 @@ public class DeviceAdd2Activity extends BaseActivity<DeviceZigBeeDetailView, Dev
     }
 
 
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode == RESULT_OK && data!=null){
-            switch (requestCode){
+        if (resultCode == RESULT_OK && data != null) {
+            switch (requestCode) {
                 case KeyConstants.SCANGATEWAYNEW_REQUEST_CODE:
                     String result = data.getStringExtra(Intents.Scan.RESULT);
                     LogUtils.e("扫描结果是   " + result);
-                    if (result.contains("SN-GW")&&result.contains("MAC-")&&result.contains(" ")){
-                        String[] strs=result.split(" ");
-                        String deviceSN=strs[0].replace("SN-","");
-                        Intent scanSuccessIntent=new Intent(DeviceAdd2Activity.this, AddDeviceZigbeeLockNewZeroActivity.class);
-                        scanSuccessIntent.putExtra("deviceSN",deviceSN);
+
+                    if (result.contains("SN-GW") && result.contains("MAC-") && result.contains(" ")) {
+                        String[] strs = result.split(" ");
+                        String deviceSN = strs[0].replace("SN-", "");
+                        Intent scanSuccessIntent = new Intent(DeviceAdd2Activity.this, AddDeviceZigbeeLockNewZeroActivity.class);
+                        scanSuccessIntent.putExtra("deviceSN", deviceSN);
                         LogUtils.e("设备SN是   " + deviceSN);
                         startActivity(scanSuccessIntent);
                         finish();
-                    }else{
-                        Intent scanSuccessIntent=new Intent(DeviceAdd2Activity.this, AddDeviceZigbeeLockNewScanFailActivity.class);
+                    } else if (result.startsWith("kaadas_")&&(result.contains("_WiFi_1")||result.contains("_WiFi_master"))){  //老的
+
+                        startActivity(new Intent(this,WifiLockAPAddFirstActivity.class));
+
+                    } else if (result.startsWith("kaadas_")&&(result.contains("_WiFi_2")||result.contains("_WiFi_fast"))){  //新的
+                        startActivity(new Intent(this,WifiLockAddNewFirstActivity.class));
+
+
+                    } else {
+                        Intent scanSuccessIntent = new Intent(DeviceAdd2Activity.this, AddDeviceZigbeeLockNewScanFailActivity.class);
                         startActivity(scanSuccessIntent);
                         finish();
                     }
@@ -213,19 +224,19 @@ public class DeviceAdd2Activity extends BaseActivity<DeviceZigBeeDetailView, Dev
 
     @Override
     public void onDeviceRefresh(AllBindDevices allBindDevices) {
-        if (allBindDevices!=null){
+        if (allBindDevices != null) {
             LogUtils.e("添加设备加入网关");
-            List<HomeShowBean> gatewayList= mPresenter.getGatewayBindList();
-            if (gatewayList!=null){
-                if (gatewayList.size()>0){
-                    flag=true;
-                    if (gatewayList.size()==1){
-                        HomeShowBean homeShowBean= gatewayList.get(0);
-                        GatewayInfo gatewayInfo= (GatewayInfo) homeShowBean.getObject();
-                        if (gatewayInfo.getServerInfo().getIsAdmin()==1){
-                            isAdmin=1;
-                        }else{
-                            isAdmin=0;
+            List<HomeShowBean> gatewayList = mPresenter.getGatewayBindList();
+            if (gatewayList != null) {
+                if (gatewayList.size() > 0) {
+                    flag = true;
+                    if (gatewayList.size() == 1) {
+                        HomeShowBean homeShowBean = gatewayList.get(0);
+                        GatewayInfo gatewayInfo = (GatewayInfo) homeShowBean.getObject();
+                        if (gatewayInfo.getServerInfo().getIsAdmin() == 1) {
+                            isAdmin = 1;
+                        } else {
+                            isAdmin = 0;
                         }
                     }
                 }

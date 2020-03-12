@@ -22,8 +22,8 @@ android {
         applicationId "com.kaadas.lock"
         minSdkVersion 22
         targetSdkVersion 26
-        versionCode 202003030
-        versionName "3.7.2"
+        versionCode 202003120
+        versionName "3.7.3"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         flavorDimensions "versionCode"
         multiDexEnabled true
@@ -208,5 +208,6 @@ dependencies {
     implementation files('libs/GetuiSDK-support-VIVO-1.0.3.jar')
     implementation 'com.github.tbruyelle:rxpermissions:0.10.2'
 
+    implementation 'cn.bingoogolapple:bga-qrcode-zbar:1.3.7'
 //    implementation 'com.yanzhenjie.recyclerview:support:1.3.2'
 }

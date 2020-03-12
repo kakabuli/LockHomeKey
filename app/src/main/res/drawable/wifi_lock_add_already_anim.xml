@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animation-list
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:oneshot="false">
+    <item
+        android:drawable="@mipmap/wifi_lock_already_modify_admin1"
+        android:duration="500"/>
+    <item
+        android:drawable="@mipmap/wifi_lock_already_modify_admin2"
+        android:duration="500"/>
+    <item
+        android:drawable="@mipmap/wifi_lock_already_modify_admin3"
+        android:duration="500"/>
+    <item
+        android:drawable="@mipmap/wifi_lock_already_modify_admin4"
+        android:duration="2000"/>
+    <item
+        android:drawable="@mipmap/wifi_lock_already_modify_admin5"
+        android:duration="500"/>
+    <item
+        android:drawable="@mipmap/wifi_lock_already_modify_admin6"
+        android:duration="500"/>
+    <item
+        android:drawable="@mipmap/wifi_lock_already_modify_admin7"
+        android:duration="500"/>
+ </animation-list>

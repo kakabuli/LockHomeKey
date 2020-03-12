@@ -22,6 +22,7 @@ import android.widget.RelativeLayout;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
+import com.kaadas.lock.activity.addDevice.DeviceAdd2Activity;
 import com.kaadas.lock.activity.addDevice.DeviceAddActivity;
 import com.kaadas.lock.activity.device.BleDetailActivity;
 import com.kaadas.lock.activity.device.BleAuthActivity;
@@ -427,7 +428,7 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.device_add:
-                Intent deviceAdd = new Intent(getActivity(), DeviceAddActivity.class);
+                Intent deviceAdd = new Intent(getActivity(), DeviceAdd2Activity.class);
                 startActivity(deviceAdd);
                 break;
             case R.id.buy:

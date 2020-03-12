@@ -139,7 +139,6 @@ public class AddGatewayScanActivity extends CaptureActivity {
                 falshLight = false;
             }
         }
-
     }
 
 

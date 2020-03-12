@@ -10,9 +10,11 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
@@ -23,6 +25,7 @@ import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.ToastUtil;
 import com.king.zxing.CaptureActivity;
+import com.king.zxing.Intents;
 import com.king.zxing.camera.CameraManager;
 /*
 import com.uuzuche.lib_zxing.activity.CaptureFragment;
@@ -32,36 +35,55 @@ import com.uuzuche.lib_zxing.activity.CodeUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.bingoogolapple.qrcode.core.QRCodeView;
+import cn.bingoogolapple.qrcode.zbar.ZBarView;
 
-public class AddDeviceZigbeelockNewScanActivity extends CaptureActivity {
+public class QrCodeScanActivity extends BaseAddToApplicationActivity  implements QRCodeView.Delegate{
     @BindView(R.id.back)
     ImageView back;
     @BindView(R.id.touch_light_layout)
     LinearLayout touchLightLayout;
+    private ZBarView mZBarView;
+    private boolean isOpenLight = false;
 
-    private boolean falshLight=false;
 
-    private Camera.Parameters parameter;
-    private Camera camera;
-    @Override
-    public int getLayoutId() {
-        return R.layout.device_scan_qrcode;
-    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.device_scan_qrcode);
         MyApplication.getInstance().addActivity(this);
         ButterKnife.bind(this);
-        initView();
         checkVersion();
+
+        mZBarView = findViewById(R.id.zbarview);
+        mZBarView.setDelegate(this);
     }
 
-    private void initView() {
-        if (!hasFlash()){
-            touchLightLayout.setVisibility(View.GONE);
-        }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mZBarView.startCamera(); // 打开后置摄像头开始预览，但是并未开始识别
+        mZBarView.startSpotAndShowRect(); // 显示扫描框，并开始识别
     }
+
+
+
+    @Override
+    protected void onStop() {
+        mZBarView.stopCamera(); // 关闭摄像头预览，并且隐藏扫描框
+        super.onStop();
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        mZBarView.onDestroy(); // 销毁二维码扫描控件
+        super.onDestroy();
+    }
+
+
     private void checkVersion() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             int i=checkSelfPermission(Manifest.permission.CAMERA);
@@ -119,70 +141,52 @@ public class AddDeviceZigbeelockNewScanActivity extends CaptureActivity {
                 finish();
                 break;
             case R.id.touch_light_layout:
-                openFlashLight(falshLight);
+                mZBarView.openFlashlight(); // 打开闪光灯
+//                if (!isOpenLight){
+//                    isOpenLight = true;
+//                    mZBarView.openFlashlight(); // 打开闪光灯
+//                }else {
+//                    isOpenLight = true;
+//                    mZBarView.closeFlashlight(); // 打开闪光灯
+//                }
                 break;
         }
     }
 
+
+
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-        MyApplication.getInstance().removeActivity(this);
+    public void onScanQRCodeSuccess(String result) {
+        Intent intent = new Intent();
+        intent.putExtra(Intents.Scan.RESULT, result);
+        setResult(RESULT_OK,intent);
+        finish();
+        LogUtils.e(  "result:" + result);
     }
 
-    // 判断是否有闪光灯功能
-    private boolean hasFlash() {
-        return getApplicationContext().getPackageManager()
-                .hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH);
+    @Override
+    public void onCameraAmbientBrightnessChanged(boolean isDark) {
+//        // 这里是通过修改提示文案来展示环境是否过暗的状态，接入方也可以根据 isDark 的值来实现其他交互效果
+//        String tipText = mZBarView.getScanBoxView().getTipText();
+//        String ambientBrightnessTip = "\n环境过暗，请打开闪光灯";
+//        if (isDark) {
+//            if (!tipText.contains(ambientBrightnessTip)) {
+//                mZBarView.getScanBoxView().setTipText(tipText + ambientBrightnessTip);
+//            }
+//        } else {
+//            if (tipText.contains(ambientBrightnessTip)) {
+//                tipText = tipText.substring(0, tipText.indexOf(ambientBrightnessTip));
+//                mZBarView.getScanBoxView().setTipText(tipText);
+//            }
+//        }
     }
 
-    //打开手电筒
-    private void openFlashLight(boolean highlight){
-        LogUtils.e("开启闪光灯");
-        if (getCameraManager().getOpenCamera()!=null) {
-            camera = getCameraManager().getOpenCamera().getCamera();
-            parameter = camera.getParameters();
-            if (!highlight) {
-                parameter.setFlashMode(android.hardware.Camera.Parameters.FLASH_MODE_TORCH);
-                camera.setParameters(parameter);
-                falshLight = true;
-            } else {  // 关灯
-                parameter.setFlashMode(android.hardware.Camera.Parameters.FLASH_MODE_OFF);
-                camera.setParameters(parameter);
-                falshLight = false;
-            }
-        }
-
-
-
+    @Override
+    public void onScanQRCodeOpenCameraError() {
+        LogUtils.e("打开相机出错");
+        finish();
+        Toast.makeText(this, getString(R.string.open_camera_failed), Toast.LENGTH_SHORT).show();
     }
 
-    /*   *//**
-     * 二维码解析回调函数
-     *//*
-    CodeUtils.AnalyzeCallback analyzeCallback = new CodeUtils.AnalyzeCallback() {
-        @Override
-        public void onAnalyzeSuccess(Bitmap mBitmap, String result) {
-            LogUtils.e("result",result);
-            if (result.contains("SN-GW")&&result.contains("MAC-")&&result.contains(" ")){
-                String[] strs=result.split(" ");
-                String deviceSN=strs[0].replace("SN-","");
-                Intent scanSuccessIntent=new Intent(context,AddDeviceZigbeeLockNewZeroActivity.class);
-                scanSuccessIntent.putExtra("deviceSN",deviceSN);
-                LogUtils.e("设备SN是   " + deviceSN);
-                startActivity(scanSuccessIntent);
-                finish();
-            }else{
-                Intent scanSuccessIntent=new Intent(context, AddDeviceZigbeeLockNewScanFailActivity.class);
-                startActivity(scanSuccessIntent);
-            }
 
-        }
-
-
-        @Override
-        public void onAnalyzeFailed() {
-            ToastUtil.getInstance().showShort(getString(R.string.scan_qr_failed));
-        }
-    };*/
 }

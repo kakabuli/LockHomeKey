@@ -8,7 +8,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import com.kaadas.lock.R;
-import com.kaadas.lock.activity.addDevice.DeviceAddActivity;
+import com.kaadas.lock.activity.addDevice.DeviceAdd2Activity;
 import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
@@ -39,16 +39,16 @@ public class AddDeviceZigbeeLockNewFailActivity extends BaseAddToApplicationActi
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.back:
-                startActivity(new Intent(this, DeviceAddActivity.class));
+                startActivity(new Intent(this, DeviceAdd2Activity.class));
                 break;
             case R.id.button_again:
-                Intent intent = new Intent(this, AddDeviceZigbeelockNewScanActivity.class);
+                Intent intent = new Intent(this, QrCodeScanActivity.class);
                 startActivityForResult(intent, KeyConstants.SCANGATEWAYNEW_REQUEST_CODE);
                 //再来一次
                 break;
             case R.id.hand_bind:
                 //退出
-                Intent outIntent = new Intent(this, DeviceAddActivity.class);
+                Intent outIntent = new Intent(this, DeviceAdd2Activity.class);
                 startActivity(outIntent);
                 break;
         }
@@ -57,7 +57,7 @@ public class AddDeviceZigbeeLockNewFailActivity extends BaseAddToApplicationActi
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        startActivity(new Intent(this, DeviceAddActivity.class));
+        startActivity(new Intent(this, DeviceAdd2Activity.class));
     }
 
     @Override

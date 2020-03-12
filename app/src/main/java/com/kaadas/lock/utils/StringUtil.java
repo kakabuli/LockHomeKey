@@ -348,4 +348,14 @@ public class StringUtil {
         return data;
     }
 
+
+    public boolean isKaadasWifiQrCode(String result){
+        if (TextUtils.isEmpty(result)){
+            return false;
+        }
+
+        String rule = "kaadas_/^\\w+$/_WiFi_";
+        return result.matches(rule);
+    }
+
 }

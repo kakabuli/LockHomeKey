@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import com.kaadas.lock.R;
+import com.kaadas.lock.activity.addDevice.DeviceAdd2Activity;
 import com.kaadas.lock.activity.addDevice.DeviceAddActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 import com.kaadas.lock.utils.LogUtils;
@@ -70,7 +71,7 @@ public class AddGatewayFailActivity extends BaseAddToApplicationActivity {
                 startActivity(reConnection);
                 break;
             case R.id.button_unbind:
-                Intent addDeviceIntent=new Intent(this, DeviceAddActivity.class);
+                Intent addDeviceIntent=new Intent(this, DeviceAdd2Activity.class);
                 startActivity(addDeviceIntent);
                 finish();
                 break;
@@ -79,6 +80,6 @@ public class AddGatewayFailActivity extends BaseAddToApplicationActivity {
 
     @Override
     public void onBackPressed() {
-        startActivity(new Intent(this, DeviceAddActivity.class));
+        startActivity(new Intent(this, DeviceAdd2Activity.class));
     }
 }

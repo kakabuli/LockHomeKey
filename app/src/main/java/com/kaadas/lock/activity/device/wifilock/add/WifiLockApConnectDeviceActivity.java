@@ -58,11 +58,6 @@ public class WifiLockApConnectDeviceActivity extends BaseActivity<IWifiLockAPWif
         setContentView(R.layout.activity_wifi_lock_connect_device);
         ButterKnife.bind(this);
 
-
-        //通过设置android:background时，得到AnimationDrawable 用如下方法
-        final AnimationDrawable animationDrawable = (AnimationDrawable) ivAnim.getBackground();
-        animationDrawable.start();
-
         sSsid = getIntent().getStringExtra(KeyConstants.WIFI_LOCK_WIFI_SSID);
         sPassword = getIntent().getStringExtra(KeyConstants.WIFI_LOCK_WIFI_PASSWORD);
         wifiSn = getIntent().getStringExtra(KeyConstants.WIFI_SN);

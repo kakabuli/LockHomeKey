@@ -63,10 +63,24 @@ public class SocketManager {
         } catch (IOException e) {
             e.printStackTrace();
             release();
-            LogUtils.e("连接成功  " + e.getMessage());
+            LogUtils.e("连接失败  " + e.getMessage());
             return -3;
         }
         return 0;
+    }
+
+    public boolean isConnected(){
+        LogUtils.e("serverSocket  是否为空   " + (serverSocket == null ) + "socket  是否为空   " + (socket == null ));
+        if (serverSocket!=null && socket!=null &&!serverSocket.isClosed() && socket.isConnected()){
+            return true;
+        }
+        if (serverSocket!=null   ){
+            LogUtils.e("serverSocket状态  isClosed " + serverSocket.isClosed());
+        }
+        if (socket!=null){
+            LogUtils.e("socket状态  isClosed " + socket.isClosed());
+        }
+        return false;
     }
 
     /**
@@ -117,6 +131,55 @@ public class SocketManager {
         }
     }
 
+
+
+    /**
+     * @return -1 超时  -2获取输入流失败   -3 读取数据失败  -99 socket为空  >0读取到的数据个数
+     */
+    public ReadResult readWifiDataTimeout(int timeout) {
+        ReadResult readResult = new ReadResult();
+        if (socket == null) {
+            readResult.resultCode = -99;
+            return readResult;
+        }
+        try {
+            socket.setSoTimeout(timeout);
+        } catch (SocketException e) {
+            e.printStackTrace();
+            release();
+            readResult.resultCode = -1;
+            LogUtils.e("读取数据超时   -1 " + e.getMessage());
+            return readResult;
+        }
+        try {
+            inputStream = socket.getInputStream();
+        } catch (IOException e) {
+            e.printStackTrace();
+            release();
+            readResult.resultCode = -2;
+            LogUtils.e("读取数据超时   -2 " + e.getMessage());
+            return readResult;
+        }
+        int size = 0;
+        try {
+            byte[] temp = new byte[64];
+            size = inputStream.read(temp);
+            Log.e(TAG, "readWifiData: 读取到的数据是  " + new String(temp));
+            if (size > 0) {
+                readResult.data = temp;
+                readResult.dataLen = size;
+                return readResult;
+            } else {
+                readResult.resultCode = -3;
+                return readResult;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            release();
+            readResult.resultCode = -3;
+            return readResult;
+        }
+    }
     public class ReadResult {
         public byte[] data = new byte[10];
         public int resultCode;
@@ -140,6 +203,7 @@ public class SocketManager {
     public int writeData(byte[] data) {
         if (socket != null) {
             try {
+                LogUtils.e("发送数据  " + new String(data));
                 outputStream = socket.getOutputStream();
                 outputStream.write(data);
                 outputStream.flush();

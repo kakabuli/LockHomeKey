@@ -81,11 +81,13 @@
                     android:gravity="center">
 
                     <ImageView
+                        android:id="@+id/iv_ble"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:src="@mipmap/add_device__ble" />
 
                     <TextView
+                        android:layout_toRightOf="@+id/iv_ble"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="8dp"
@@ -114,11 +116,13 @@
                     android:gravity="center">
 
                     <ImageView
+                        android:id="@+id/iv_wifi"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:src="@mipmap/add_device__wifi" />
 
                     <TextView
+                        android:layout_toRightOf="@+id/iv_wifi"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="8dp"
@@ -147,11 +151,13 @@
                     android:gravity="center">
 
                     <ImageView
+                        android:id="@+id/iv_lock"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:src="@mipmap/add_device__zigbee" />
 
                     <TextView
+                        android:layout_toRightOf="@id/iv_lock"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="8dp"
