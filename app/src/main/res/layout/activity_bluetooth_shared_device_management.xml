@@ -13,12 +13,14 @@
         android:gravity="center_vertical">
 
         <ImageView
+            android:layout_centerVertical="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/dp_40"
             android:src="@mipmap/user_management_people_icon" />
 
         <LinearLayout
+            android:layout_centerVertical="true"
             android:id="@+id/ll_add_user"
             android:layout_width="@dimen/dp_170"
             android:layout_height="@dimen/dp_44"

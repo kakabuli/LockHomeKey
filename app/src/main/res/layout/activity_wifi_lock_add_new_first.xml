@@ -105,7 +105,7 @@
         android:layout_marginBottom="@dimen/dp_40"
         android:textColor="#1F96F7"
         android:textSize="12sp"
-        android:text="@string/retry_connect"
+        android:text="门锁已联网，重新配网"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 </LinearLayout>

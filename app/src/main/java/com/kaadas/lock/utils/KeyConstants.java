@@ -486,7 +486,13 @@ public class KeyConstants {
     public static final String WIFI_LOCK_WIFI_BSSID = "wifiLockWifiBSsid";
     public static final String WIFI_LOCK_WIFI_PASSWORD = "wifiLockWifiPassword";
 
-    public static final String WIFI_LOCK_CONNECT_NAME = "wifiLockConnectName";
+    public static final String WIFI_LOCK_CONNECT_NAME = "wifiLockConnectName";  //连接的wifi名称
+    public static final String WIFI_LOCK_CONNECT_ORIGINAL_DATA = "wifiLockConnectOriginalData"; //连接的wifi对应的原始数据
+
+
+    public static final String SCAN_TYPE = "scanType";  //扫描类型
+    public static final String QR_URL = "qrUrl";  //扫描到的链接
+    public static final String URL_RESULT = "urlResult";  //扫描到的链接
 
 
 

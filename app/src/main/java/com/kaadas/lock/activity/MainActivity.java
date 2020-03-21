@@ -149,7 +149,7 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
         MyLog.getInstance().save("MainActivity==>OnCreate");
         fragments.add(new HomePageFragment());
         fragments.add(new DeviceFragment());
-        fragments.add(new ShopFragment());
+//        fragments.add(new ShopFragment());
         fragments.add(new PersonalCenterFragment());
         evevt = this;
         instance = this;
@@ -233,8 +233,8 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
         filter.addAction(LocationManager.PROVIDERS_CHANGED_ACTION);
         registerReceiver(mReceiver, filter);
 
-        RadioButton rb_shop = findViewById(R.id.rb_shop);
-        rb_shop.setVisibility(View.GONE);
+//        RadioButton rb_shop = findViewById(R.id.rb_shop);
+//        rb_shop.setVisibility(View.GONE);
     }
 
     private static List<String> packages;
@@ -350,9 +350,9 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
             case R.id.rb_two:
                 homeViewPager.setCurrentItem(1);
                 break;
-            case R.id.rb_shop:
-                homeViewPager.setCurrentItem(2);
-                break;
+//            case R.id.rb_shop:
+//                homeViewPager.setCurrentItem(2);
+//                break;
             case R.id.rb_three:
                 homeViewPager.setCurrentItem(3);
                 break;
@@ -960,6 +960,10 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
             if (netWorkChangReceiver != null) {
                 unregisterReceiver(netWorkChangReceiver);
             }
+        }
+        if (mReceiver!=null){
+            unregisterReceiver(mReceiver);
+
         }
     }
 

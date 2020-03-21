@@ -36,6 +36,7 @@ import retrofit2.http.POST;
 import retrofit2.http.Part;
 import retrofit2.http.Path;
 import retrofit2.http.Streaming;
+import retrofit2.http.Url;
 
 /**
  * Create By lxj  on 2019/2/27
@@ -602,4 +603,12 @@ public interface IXiaoKaiNewService {
      */
     @POST(HttpUrlConstants.WIFI_LOCK_UPLOAD_OTA)
     Observable<BaseResult> wifiLockUploadOta(@Body RequestBody info);
+
+
+    /**
+     * 获取二维码连接数据
+     */
+    @GET
+    Observable<ResponseBody> getQrCodeContent(@Url String url);
+
 }

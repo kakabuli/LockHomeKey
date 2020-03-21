@@ -89,13 +89,16 @@ public class WifiLockAuthDeviceInfoActivity extends BaseActivity<IWifiLockMoreVi
         return new WifiLockMorePresenter<>();
     }
 
-    @OnClick({R.id.iv_message_free, R.id.rl_message_free})
+    @OnClick({R.id.iv_message_free, R.id.rl_message_free,R.id.back})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.iv_message_free:
                 int status = wifiLockInfo.getPushSwitch() == 2 ? 1 : 2;
                 showLoading(getString(R.string.is_setting));
                 mPresenter.updateSwitchStatus(status, wifiLockInfo.getWifiSN());
+                break;
+            case R.id.back:
+                finish();
                 break;
         }
     }

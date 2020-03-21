@@ -19,6 +19,8 @@ import com.kaadas.lock.mvp.view.wifilock.IWifiLockAPWifiSetUpView;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.Rsa;
+import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.SocketManager;
 import com.kaadas.lock.utils.WifiUtils;
 
@@ -131,8 +133,16 @@ public class WifiLockApConnectDeviceActivity extends BaseActivity<IWifiLockAPWif
             super.run();
             if (socketManager.isStart()) { //连接成功
                 LogUtils.e("连接成功");
-                byte[] bSsid = sSsid.getBytes();
+                byte[] bSsid ;
                 byte[] bPwd = sPassword.getBytes();
+                String wifiName = (String) SPUtils.get(KeyConstants.WIFI_LOCK_CONNECT_NAME, "");
+                if (sSsid.equals(wifiName)) {
+                    String pwdByteString = (String) SPUtils.get(KeyConstants.WIFI_LOCK_CONNECT_ORIGINAL_DATA, "");
+                    bSsid = Rsa.hex2byte2(pwdByteString);
+                } else {
+                    bSsid = sSsid.getBytes();
+                }
+
                 byte[] data = new byte[96];
                 System.arraycopy(bSsid, 0, data, 0, bSsid.length);
                 System.arraycopy(bPwd, 0, data, 32, bPwd.length);

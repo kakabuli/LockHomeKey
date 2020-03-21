@@ -1,6 +1,5 @@
-package com.kaadas.lock.fragment;
+package com.kaadas.lock.fragment.record;
 
-import android.net.Network;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -18,8 +17,11 @@ import com.kaadas.lock.adapter.BluetoothRecordAdapter;
 import com.kaadas.lock.bean.BluetoothItemRecordBean;
 import com.kaadas.lock.bean.BluetoothRecordBean;
 import com.kaadas.lock.mvp.mvpbase.BaseFragment;
+import com.kaadas.lock.mvp.presenter.gatewaylockpresenter.GatewayLockAlaramRecordPresenter;
 import com.kaadas.lock.mvp.presenter.gatewaylockpresenter.GatewayLockRecordPresenter;
+import com.kaadas.lock.mvp.view.gatewaylockview.IGatewayAlarmLockRecordView;
 import com.kaadas.lock.mvp.view.gatewaylockview.IGatewayLockRecordView;
+import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.GetAlarmRecordResult;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.SelectOpenLockResultBean;
 import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
@@ -44,7 +46,8 @@ import butterknife.Unbinder;
 /**
  * Created by David on 2019/4/22
  */
-public class GatewayOpenLockRecordFragment extends BaseFragment<IGatewayLockRecordView, GatewayLockRecordPresenter<IGatewayLockRecordView>> implements IGatewayLockRecordView {
+public class Gateway8100AlarmRecordFragment extends BaseFragment<IGatewayAlarmLockRecordView, GatewayLockAlaramRecordPresenter<IGatewayAlarmLockRecordView>>
+        implements IGatewayAlarmLockRecordView {
 
     List<BluetoothRecordBean> mOpenLockList = new ArrayList<>(); //全部数据
 
@@ -59,9 +62,10 @@ public class GatewayOpenLockRecordFragment extends BaseFragment<IGatewayLockReco
     private String gatewayId;
     private String deviceId;
     private BluetoothRecordAdapter openLockRecordAdapter;
-    private int page=1;
-    private int lastPage=0;
-    private List<SelectOpenLockResultBean.DataBean> openLockRecordList=new ArrayList<>();
+    private int page = 1;
+    private int lastPage = 0;
+    private List<GetAlarmRecordResult.DataBean> alarmRecordList = new ArrayList<>();
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -78,17 +82,18 @@ public class GatewayOpenLockRecordFragment extends BaseFragment<IGatewayLockReco
         refreshLayout.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh(@NonNull RefreshLayout refreshLayout) {
-                if (!TextUtils.isEmpty(gatewayId)&&!TextUtils.isEmpty(deviceId)){
-                    page=1;
-                    lastPage=0;
-                    if (mOpenLockList!=null){
+                if (!TextUtils.isEmpty(gatewayId) && !TextUtils.isEmpty(deviceId)) {
+                    page = 1;
+                    lastPage = 0;
+                    if (mOpenLockList != null) {
                         mOpenLockList.clear();
                     }
-                    if (openLockRecordList!=null){
-                        openLockRecordList.clear();
+                    if (alarmRecordList != null) {
+                        alarmRecordList.clear();
                     }
-                    mPresenter.openGatewayLockRecord(gatewayId,deviceId,MyApplication.getInstance().getUid(),1,20);
-                    refreshLayout.finishRefresh(5*1000);
+                    //String gwId, String deviceId, int pageNum
+                    mPresenter.openGatewayLockRecord(gatewayId, deviceId, 1);
+                    refreshLayout.finishRefresh(5 * 1000);
                 }
             }
         });
@@ -96,11 +101,11 @@ public class GatewayOpenLockRecordFragment extends BaseFragment<IGatewayLockReco
         refreshLayout.setOnLoadMoreListener(new OnLoadMoreListener() {
             @Override
             public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
-                if (!TextUtils.isEmpty(gatewayId)&&!TextUtils.isEmpty(deviceId)){
-                    if (lastPage==0){
-                        mPresenter.openGatewayLockRecord(gatewayId,deviceId,MyApplication.getInstance().getUid(),page,20);
-                        refreshLayout.finishRefresh(5*1000);
-                    }else{
+                if (!TextUtils.isEmpty(gatewayId) && !TextUtils.isEmpty(deviceId)) {
+                    if (lastPage == 0) {
+                        mPresenter.openGatewayLockRecord(gatewayId, deviceId, page);
+                        refreshLayout.finishRefresh(5 * 1000);
+                    } else {
                         refreshLayout.finishLoadMore();
                     }
                 }
@@ -116,19 +121,19 @@ public class GatewayOpenLockRecordFragment extends BaseFragment<IGatewayLockReco
             gatewayId = bundle.getString(KeyConstants.GATEWAY_ID);
             deviceId = bundle.getString(KeyConstants.DEVICE_ID);
         }
-        if (NetUtil.isNetworkAvailable()){
+        if (NetUtil.isNetworkAvailable()) {
             if (!TextUtils.isEmpty(gatewayId) && !TextUtils.isEmpty(deviceId)) {
-                mPresenter.openGatewayLockRecord(gatewayId, deviceId, MyApplication.getInstance().getUid(), 1, 20);
+                mPresenter.openGatewayLockRecord(gatewayId, deviceId, 1);
             }
-        }else{
+        } else {
             changeView(false);
         }
 
     }
 
     @Override
-    protected GatewayLockRecordPresenter<IGatewayLockRecordView> createPresent() {
-        return new GatewayLockRecordPresenter<>();
+    protected GatewayLockAlaramRecordPresenter<IGatewayAlarmLockRecordView> createPresent() {
+        return new GatewayLockAlaramRecordPresenter<>();
     }
 
     private void initRecycleView() {
@@ -143,13 +148,13 @@ public class GatewayOpenLockRecordFragment extends BaseFragment<IGatewayLockReco
 
     private void changeView(boolean noHaveOpenRecord) {
         if (noHaveOpenRecord) {
-            if (noHaveRecord != null && recycleview != null&&refreshLayout!=null) {
+            if (noHaveRecord != null && recycleview != null && refreshLayout != null) {
                 noHaveRecord.setVisibility(View.GONE);
                 refreshLayout.setVisibility(View.VISIBLE);
                 recycleview.setVisibility(View.VISIBLE);
             }
         } else {
-            if (noHaveRecord != null && recycleview != null&&refreshLayout!=null) {
+            if (noHaveRecord != null && recycleview != null && refreshLayout != null) {
                 noHaveRecord.setVisibility(View.VISIBLE);
                 refreshLayout.setVisibility(View.GONE);
                 recycleview.setVisibility(View.GONE);
@@ -166,47 +171,25 @@ public class GatewayOpenLockRecordFragment extends BaseFragment<IGatewayLockReco
 
 
     @Override
-    public void getOpenLockRecordSuccess(List<SelectOpenLockResultBean.DataBean> mOpenLockRecordList) {
+    public void getOpenLockRecordSuccess(List<GetAlarmRecordResult.DataBean> alarmList) {
         //获取开锁记录成功
-        LogUtils.e("获取到开锁记录多少条  " + mOpenLockRecordList.size());
-        String uid=MyApplication.getInstance().getUid();
-        if (mOpenLockRecordList.size()==0&&page==1){
+        LogUtils.e("获取到开锁记录多少条  " + alarmList.size());
+
+        if (alarmList.size() == 0 && page == 1) {
             changeView(false);
-        } else if (page==1){
-            //保存到数据库
-        DaoSession daoSession= MyApplication.getInstance().getDaoWriteSession();
-        //清空数据库
-        daoSession.getGatewayLockRecordDao().queryBuilder().where(GatewayLockRecordDao.Properties.Uid.eq(MyApplication.getInstance().getUid())).buildDelete().executeDeleteWithoutDetachingEntities();
-        //只保留二十条数据
-            for (SelectOpenLockResultBean.DataBean dataBean:mOpenLockRecordList){
-                GatewayLockRecord gatewayLockRecord=new GatewayLockRecord();
-                gatewayLockRecord.setDeviceId(deviceId);
-                gatewayLockRecord.setDeviceIdUid(deviceId+uid);
-                gatewayLockRecord.setGatewayId(gatewayId);
-                gatewayLockRecord.setLockName(dataBean.getLockName());
-                gatewayLockRecord.setLockNickName(dataBean.getLockNickName());
-                gatewayLockRecord.setOpen_purview(dataBean.getOpen_purview());
-                gatewayLockRecord.setNickName(dataBean.getNickName());
-                gatewayLockRecord.setOpen_time(dataBean.getOpen_time());
-                gatewayLockRecord.setOpen_type(dataBean.getOpen_type());
-                gatewayLockRecord.setUname(dataBean.getUname());
-                gatewayLockRecord.setVersionType(dataBean.getVersionType());
-                gatewayLockRecord.setUid(uid);
-                daoSession.getGatewayLockRecordDao().insertOrReplace(gatewayLockRecord);
-            }
         }
-          if (mOpenLockRecordList.size()==20){
-              page++;
-          }else{
-            lastPage=page+1;
-          }
-        openLockRecordList.addAll(mOpenLockRecordList);
-        groupData(openLockRecordList);
+        if (alarmList.size() == 20) {
+            page++;
+        } else {
+            lastPage = page + 1;
+        }
+        alarmRecordList.addAll(alarmList);
+        groupData(alarmRecordList);
         if (openLockRecordAdapter != null) {
             openLockRecordAdapter.notifyDataSetChanged();
         }
 
-        if (refreshLayout!=null){
+        if (refreshLayout != null) {
             refreshLayout.finishRefresh();
             refreshLayout.finishLoadMore();
         }
@@ -214,7 +197,7 @@ public class GatewayOpenLockRecordFragment extends BaseFragment<IGatewayLockReco
 
     @Override
     public void getOpenLockRecordFail() {
-        if (refreshLayout!=null){
+        if (refreshLayout != null) {
             refreshLayout.finishRefresh();
             refreshLayout.finishLoadMore();
         }
@@ -224,7 +207,7 @@ public class GatewayOpenLockRecordFragment extends BaseFragment<IGatewayLockReco
 
     @Override
     public void getOpenLockRecordThrowable(Throwable throwable) {
-        if (refreshLayout!=null){
+        if (refreshLayout != null) {
             refreshLayout.finishRefresh();
             refreshLayout.finishLoadMore();
         }
@@ -233,87 +216,57 @@ public class GatewayOpenLockRecordFragment extends BaseFragment<IGatewayLockReco
         changeView(false);
     }
 
-    private void groupData(List<SelectOpenLockResultBean.DataBean> mOpenLockRecordList) {
-        if (mOpenLockList!=null){
+    private void groupData(List<GetAlarmRecordResult.DataBean> alarmList) {
+        if (mOpenLockList != null) {
             mOpenLockList.clear();
         }
         String lastDayTime = "";
-        for (int i = 0; i < mOpenLockRecordList.size(); i++) {
-            SelectOpenLockResultBean.DataBean dataBean = mOpenLockRecordList.get(i);
+        for (int i = 0; i < alarmList.size(); i++) {
+            GetAlarmRecordResult.DataBean dataBean = alarmList.get(i);
             //获取开锁时间的毫秒数
-            long openTime = Long.parseLong(dataBean.getOpen_time()); //开锁毫秒时间
-            LogUtils.e("网关的开锁毫秒时间"+openTime);
+            LogUtils.e("网关的开锁毫秒时间" + dataBean.getWarningTime());
             List<BluetoothItemRecordBean> itemList = new ArrayList<>();
-
-            String open_time = DateUtils.getDateTimeFromMillisecond(openTime);//将毫秒时间转换成功年月日时分秒的格式
-            LogUtils.e("网关的开锁毫秒时间"+open_time);
+            String open_time = DateUtils.getDateTimeFromMillisecond(dataBean.getWarningTime()  );//将毫秒时间转换成功年月日时分秒的格式
+            LogUtils.e("网关的开锁毫秒时间" + open_time);
             //获取开锁时间的毫秒数
             String timeHead = open_time.substring(0, 10);
             String hourSecond = open_time.substring(11, 16);
             String titleTime = "";
-            String name="";
-            String openType="";
-          /*  try {*/
-           /*     int  nickName=Integer.parseInt(dataBean.getNickName());
-                if (nickName>=0&&nickName<=9){
-                    name=getString(R.string.standard_password_door)+nickName;
-                }else{
-                    switch (nickName){
-                        case 103: //APP开门
-                            name=getString(R.string.app_open_lock)+nickName;
-                            break;
-                        case 254:
-                            name=getString(R.string.admin_open_lock)+nickName;
-                            break;
-                        case 253:
-                            name=getString(R.string.visitor_opne_lock)+nickName;
-                            break;
-                        case 252:
-                            name=getString(R.string.disposable_open_lock)+nickName;
-                            break;
-                        case 100:
-                            name=getString(R.string.mechanical_key_open_lock)+nickName;
-                            break;
-                        case 101:
-                            name=getString(R.string.remote_control_open_lock)+nickName;
-                            break;
-                        case 102:
-                            name=getString(R.string.one_key_open_lock)+nickName;
-                            break;
-                        case 65535: //锁的问题。锁端说改了。不会出现这个
-                            name=getString(R.string.one_key_open_lock)+nickName;
-                            break;
-                    }
-                }
+            String name = "";
+            String openType = "";
 
-            }catch (Exception e){
+//            ：1 低电量 2 钥匙开门 3 验证错误 4 防撬提醒 5 即时性推送消息 6 胁迫开门 7 上锁故障
+            switch (dataBean.getWarningType()) {
 
-            }*/
-
-            switch (dataBean.getOpen_type()){
-                case "0":
-                    openType=getString(R.string.keypad_open_lock);
+                case 1:
+                    openType = getString(R.string.warring_low_power);
                     break;
-                case "1":
-                    openType=getString(R.string.rf_open_lock);
+                case 2:
+                    openType = getString(R.string.warring_mechanical_key);
                     break;
-                case "2":
-                    openType=getString(R.string.manual_open_lock);
+                case 3:
+                    openType = getString(R.string.warring_three_times);
                     break;
-                case "3":
-                    openType=getString(R.string.rfid_open_lock);
+                case 4:
+                    openType = getString(R.string.warring_broken);
                     break;
-                case "4":
-                    openType=getString(R.string.fingerprint_open_lock);
+                case 5:
+                    openType = "即时性推送消息";
                     break;
-                case "255":
-                    openType=getString(R.string.indeterminate);
+                case 6:
+                    openType = getString(R.string.warrign_hijack);
+                    break;
+                case 7:
+                    openType = getString(R.string.warring_door_not_lock);
+                    break;
+                default:
+                    openType = getString(R.string.warring_unkonw);
                     break;
             }
             if (!timeHead.equals(lastDayTime)) { //添加头
                 lastDayTime = timeHead;
-                titleTime = DateUtils.getDayTimeFromMillisecond(openTime); //转换成功顶部的时间
-                LogUtils.e("开锁记录昵称"+dataBean.getNickName());
+                titleTime = DateUtils.getDayTimeFromMillisecond(dataBean.getWarningTime()  ); //转换成功顶部的时间
+
                 itemList.add(new BluetoothItemRecordBean(name, openType, KeyConstants.BLUETOOTH_RECORD_COMMON,
                         hourSecond, false, false));
                 mOpenLockList.add(new BluetoothRecordBean(titleTime, itemList, false));

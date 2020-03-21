@@ -3,6 +3,7 @@ package com.kaadas.lock.activity.home;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
@@ -12,9 +13,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.kaadas.lock.R;
-import com.kaadas.lock.fragment.GatewayOpenLockRecordFragment;
-import com.kaadas.lock.fragment.GatewayWarnInformationFragment;
+import com.kaadas.lock.fragment.record.Gateway8100AlarmRecordFragment;
+import com.kaadas.lock.fragment.record.GatewayOpenLockRecordFragment;
+import com.kaadas.lock.fragment.record.GatewayWarnInformationFragment;
 import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
+import com.kaadas.lock.publiclibrary.bean.GwLockInfo;
 import com.kaadas.lock.utils.KeyConstants;
 
 import butterknife.BindView;
@@ -37,10 +40,11 @@ public class GatewayEquipmentDynamicActivity extends BaseAddToApplicationActivit
     private FragmentManager manager;
     private FragmentTransaction transaction;
     GatewayOpenLockRecordFragment gatewayOpenLockRecordFragment;
-    GatewayWarnInformationFragment gatewayWarnInformationFragment;
+    Fragment gatewayWarnInformationFragment;
 
     private String gatewaId;
     private String deviceId;
+    private GwLockInfo gatewayLockInfo;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -54,7 +58,7 @@ public class GatewayEquipmentDynamicActivity extends BaseAddToApplicationActivit
     }
 
     private void initView() {
-        if (tvContent!=null) {
+        if (tvContent != null) {
             tvContent.setText(getString(R.string.device_dynamic));
         }
     }
@@ -66,19 +70,20 @@ public class GatewayEquipmentDynamicActivity extends BaseAddToApplicationActivit
     }
 
     private void initData() {
-        Intent intent=getIntent();
-        gatewaId=intent.getStringExtra(KeyConstants.GATEWAY_ID);
-        deviceId=intent.getStringExtra(KeyConstants.DEVICE_ID);
+        Intent intent = getIntent();
+        gatewaId = intent.getStringExtra(KeyConstants.GATEWAY_ID);
+        deviceId = intent.getStringExtra(KeyConstants.DEVICE_ID);
+        gatewayLockInfo = (GwLockInfo) intent.getSerializableExtra(KeyConstants.GATEWAY_LOCK_INFO);
     }
 
     private void initFragment() {
         manager = getSupportFragmentManager();
         transaction = manager.beginTransaction();
         gatewayOpenLockRecordFragment = new GatewayOpenLockRecordFragment();
-        if (!TextUtils.isEmpty(gatewaId)&&!TextUtils.isEmpty(deviceId)){
+        if (!TextUtils.isEmpty(gatewaId) && !TextUtils.isEmpty(deviceId)) {
             Bundle gwBundle = new Bundle();
-            gwBundle.putString(KeyConstants.GATEWAY_ID,gatewaId);
-            gwBundle.putString(KeyConstants.DEVICE_ID,deviceId);
+            gwBundle.putString(KeyConstants.GATEWAY_ID, gatewaId);
+            gwBundle.putString(KeyConstants.DEVICE_ID, deviceId);
             gatewayOpenLockRecordFragment.setArguments(gwBundle);
         }
         transaction.add(R.id.content, gatewayOpenLockRecordFragment);
@@ -103,10 +108,10 @@ public class GatewayEquipmentDynamicActivity extends BaseAddToApplicationActivit
                     fragmentTransaction.show(gatewayOpenLockRecordFragment);
                 } else {
                     gatewayOpenLockRecordFragment = new GatewayOpenLockRecordFragment();
-                    if (!TextUtils.isEmpty(gatewaId)&&!TextUtils.isEmpty(deviceId)){
+                    if (!TextUtils.isEmpty(gatewaId) && !TextUtils.isEmpty(deviceId)) {
                         Bundle gwBundle = new Bundle();
-                        gwBundle.putString(KeyConstants.GATEWAY_ID,gatewaId);
-                        gwBundle.putString(KeyConstants.DEVICE_ID,deviceId);
+                        gwBundle.putString(KeyConstants.GATEWAY_ID, gatewaId);
+                        gwBundle.putString(KeyConstants.DEVICE_ID, deviceId);
                         gatewayOpenLockRecordFragment.setArguments(gwBundle);
                     }
                     fragmentTransaction.add(R.id.content, gatewayOpenLockRecordFragment);
@@ -124,14 +129,19 @@ public class GatewayEquipmentDynamicActivity extends BaseAddToApplicationActivit
                 if (gatewayWarnInformationFragment != null) {
                     fragmentTransaction.show(gatewayWarnInformationFragment);
                 } else {
-                    gatewayWarnInformationFragment = new GatewayWarnInformationFragment();
-                    if (!TextUtils.isEmpty(gatewaId)&&!TextUtils.isEmpty(deviceId)){
+                    String lockversion = gatewayLockInfo.getServerInfo().getLockversion();
+                    if (!TextUtils.isEmpty(lockversion) && lockversion.contains(";") &&
+                            (lockversion.split(";")[0].startsWith("8100Z") || lockversion.split(";")[0].startsWith("8100A"))) {
+                        gatewayWarnInformationFragment = new Gateway8100AlarmRecordFragment();
+                    } else {  //非8100锁
+                        gatewayWarnInformationFragment = new GatewayWarnInformationFragment();
+                    }
+                    if (!TextUtils.isEmpty(gatewaId) && !TextUtils.isEmpty(deviceId)) {
                         Bundle gwBundle = new Bundle();
-                        gwBundle.putString(KeyConstants.GATEWAY_ID,gatewaId);
-                        gwBundle.putString(KeyConstants.DEVICE_ID,deviceId);
+                        gwBundle.putString(KeyConstants.GATEWAY_ID, gatewaId);
+                        gwBundle.putString(KeyConstants.DEVICE_ID, deviceId);
                         gatewayWarnInformationFragment.setArguments(gwBundle);
                     }
-
                     fragmentTransaction.add(R.id.content, gatewayWarnInformationFragment);
                 }
                 fragmentTransaction.commit();

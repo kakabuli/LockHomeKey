@@ -1,4 +1,4 @@
-package com.kaadas.lock.fragment;
+package com.kaadas.lock.fragment.record;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;

@@ -462,6 +462,7 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
                 if (!TextUtils.isEmpty(gatewayId) && !TextUtils.isEmpty(deviceId)) {
                     intent.putExtra(KeyConstants.GATEWAY_ID, gatewayId);
                     intent.putExtra(KeyConstants.DEVICE_ID, deviceId);
+                    intent.putExtra(KeyConstants.GATEWAY_LOCK_INFO, gatewayLockInfo);
                     startActivity(intent);
                 }
                 break;
@@ -471,6 +472,7 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
                 if (!TextUtils.isEmpty(gatewayId) && !TextUtils.isEmpty(deviceId)) {
                     intent.putExtra(KeyConstants.GATEWAY_ID, gatewayId);
                     intent.putExtra(KeyConstants.DEVICE_ID, deviceId);
+                    intent.putExtra(KeyConstants.GATEWAY_LOCK_INFO, gatewayLockInfo);
                     startActivity(intent);
                 }
                 break;
@@ -479,6 +481,7 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
                 if (!TextUtils.isEmpty(gatewayId) && !TextUtils.isEmpty(deviceId)) {
                     intent.putExtra(KeyConstants.GATEWAY_ID, gatewayId);
                     intent.putExtra(KeyConstants.DEVICE_ID, deviceId);
+                    intent.putExtra(KeyConstants.GATEWAY_LOCK_INFO, gatewayLockInfo);
                     startActivity(intent);
                 }
                 break;

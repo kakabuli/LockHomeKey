@@ -1,5 +1,7 @@
 package com.kaadas.lock.mvp.presenter.gatewaylockpresenter;
 
+import android.text.TextUtils;
+
 import com.google.gson.Gson;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.mvp.mvpbase.BasePresenter;
@@ -18,6 +20,8 @@ import com.kaadas.lock.publiclibrary.mqtt.util.MqttConstant;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttData;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.greenDao.manager.GatewayLockPasswordManager;
+
+import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -65,13 +69,14 @@ public abstract class GatewayLockPasswordPresenter<T extends IGatewayLockPasswor
         this.syncType = syncType;
         toDisposable(getLockPwdInfoDisposable);
         if (mqttService != null) {
+            MqttMessage mqttMessage = MqttCommandFactory.getLockPwdInfo(gatewayId, deviceId);
             getLockPwdInfoDisposable = mqttService.mqttPublish(MqttConstant.getCallTopic(MyApplication.getInstance().getUid()),
-                    MqttCommandFactory.getLockPwdInfo(gatewayId, deviceId))
+                    mqttMessage)
                     .filter(new Predicate<MqttData>() {
                         @Override
                         public boolean test(MqttData mqttData) throws Exception {
                             if (mqttData != null) {
-                                if (MqttConstant.LOCK_PWD_INFO.equals(mqttData.getFunc())) {
+                                if (MqttConstant.LOCK_PWD_INFO.equals(mqttData.getFunc())&& mqttMessage.getId() == mqttData.getMessageId()) {
                                     return true;
                                 }
                             }
@@ -103,7 +108,7 @@ public abstract class GatewayLockPasswordPresenter<T extends IGatewayLockPasswor
 
                             } else {
                                 LogUtils.e("获取锁信息失败   " + returnCode);
-                                if (isSafe()) {
+                                 if (isSafe()) {
                                     mViewRef.get().getLockInfoFail();
                                 }
                             }
@@ -150,12 +155,13 @@ public abstract class GatewayLockPasswordPresenter<T extends IGatewayLockPasswor
         int currentNum = validIndex.get(currentIndex);
         toDisposable(getLockPwdDisposable);
         if (mqttService != null) {
+            MqttMessage mqttMessage = MqttCommandFactory.lockPwdFunc(gatewayId, deviceId, "get", "pin", currentNum > 9 ? "" + currentNum : "0" + currentNum, "");
             getLockPwdDisposable = mqttService.mqttPublish(MqttConstant.getCallTopic(MyApplication.getInstance().getUid()),
-                    MqttCommandFactory.lockPwdFunc(gatewayId, deviceId, "get", "pin", currentNum > 9 ? "" + currentNum : "0" + currentNum, ""))
+                    mqttMessage)
                     .filter(new Predicate<MqttData>() {
                         @Override
                         public boolean test(MqttData mqttData) throws Exception {
-                            if (MqttConstant.SET_PWD.equals(mqttData.getFunc())) {
+                            if (MqttConstant.SET_PWD.equals(mqttData.getFunc())&& mqttMessage.getId() == mqttData.getMessageId()) {
                                 return true;
                             }
                             return false;
@@ -166,10 +172,20 @@ public abstract class GatewayLockPasswordPresenter<T extends IGatewayLockPasswor
                     .subscribe(new Consumer<MqttData>() {
                         @Override
                         public void accept(MqttData mqttData) throws Exception {
-                            toDisposable(getLockPwdDisposable);
                             LockPwdFuncBean lockPwdFuncBean = new Gson().fromJson(mqttData.getPayload(), LockPwdFuncBean.class);
                             String returnCode = lockPwdFuncBean.getReturnCode();
                             if ("200".equals(returnCode)) {
+                                int id = 0;
+                                try {
+                                    id = Integer.parseInt(lockPwdFuncBean.getParams().getPwdid());
+                                } catch (Exception e) {
+                                    LogUtils.e(e.getMessage());
+                                }
+                                if (currentNum != id) {
+                                    LogUtils.e("返回的不是查询的数据");
+                                    return;
+                                }
+                                toDisposable(getLockPwdDisposable);
                                 int status = lockPwdFuncBean.getReturnData().getStatus();
                                 if (status == 1) {
                                     int pwdType = lockPwdFuncBean.getReturnData().getUserType();   //获取当前密码是什么类型的密码    是默认密码还是策略密码
@@ -191,7 +207,7 @@ public abstract class GatewayLockPasswordPresenter<T extends IGatewayLockPasswor
                                             zLocalEndT, zLocalStartT, dayMaskBits, endHour, endMinute, startHour, startMinute);
                                 }
                             } else {
-
+                                toDisposable(getLockPwdDisposable);
                                 LogUtils.e("获取密码列表失败   returnCode   " + returnCode);
                                 if (isSafe()) {
                                     mViewRef.get().syncPasswordFailed(new MqttBackCodeException(returnCode));
@@ -279,12 +295,13 @@ public abstract class GatewayLockPasswordPresenter<T extends IGatewayLockPasswor
                             int endMinute, int startHour, int startMinute) {
         toDisposable(setUserTypeDisposable);
         pwdType = 1;
+        MqttMessage mqttMessage = MqttCommandFactory.setUserType(deviceId, gwId, MyApplication.getInstance().getUid(), pwdId, pwdType);
         setUserTypeDisposable = mqttService.mqttPublish(MqttConstant.getCallTopic(MyApplication.getInstance().getUid()),
-                MqttCommandFactory.setUserType(deviceId, gwId, MyApplication.getInstance().getUid(), pwdId, pwdType))
+                mqttMessage)
                 .filter(new Predicate<MqttData>() {
                     @Override
                     public boolean test(MqttData mqttData) throws Exception {
-                        if (MqttConstant.SET_USER_TYPE.equals(mqttData.getFunc())) {
+                        if (MqttConstant.SET_USER_TYPE.equals(mqttData.getFunc())&& mqttMessage.getId() == mqttData.getMessageId()) {
                             return true;
                         }
                         return false;
@@ -340,15 +357,16 @@ public abstract class GatewayLockPasswordPresenter<T extends IGatewayLockPasswor
                 "  对象的数据是    zLocalEndT " + zLocalEndT + "  zLocalStartT " + zLocalStartT);
         toDisposable(setPlanDisposable1);
         //设置用户类型成功
+        MqttMessage mqttMessage = MqttCommandFactory.setPasswordPlan(deviceId, gwId, MyApplication.getInstance().getUid(),
+                action, scheduleId, type, pwdId, zLocalEndT, zLocalStartT,
+                dayMaskBits, endHour, endMinute, startHour, startMinute
+        );
         setPlanDisposable1 = mqttService.mqttPublish(MqttConstant.getCallTopic(MyApplication.getInstance().getUid()),
-                MqttCommandFactory.setPasswordPlan(deviceId, gwId, MyApplication.getInstance().getUid(),
-                        action, scheduleId, type, pwdId, zLocalEndT, zLocalStartT,
-                        dayMaskBits, endHour, endMinute, startHour, startMinute
-                ))
+                mqttMessage)
                 .filter(new Predicate<MqttData>() {
                     @Override
                     public boolean test(MqttData mqttData) throws Exception {
-                        if (MqttConstant.SCHEDULE.equals(mqttData.getFunc())) {
+                        if (MqttConstant.SCHEDULE.equals(mqttData.getFunc())&& mqttMessage.getId() == mqttData.getMessageId()) {
                             return true;
                         }
                         return false;
@@ -405,15 +423,16 @@ public abstract class GatewayLockPasswordPresenter<T extends IGatewayLockPasswor
 
     public void getPlan(String deviceId, String gwId, int scheduleId, int pwdId, String planType) {
         toDisposable(getPlanDisposable);
+        MqttMessage mqttMessage = MqttCommandFactory.setPasswordPlan(deviceId, gwId, MyApplication.getInstance().getUid(),
+                "get", scheduleId, planType, pwdId, 0, 0,
+                0, 0, 0, 0, 0
+        );
         getPlanDisposable = mqttService.mqttPublish(MqttConstant.getCallTopic(MyApplication.getInstance().getUid()),
-                MqttCommandFactory.setPasswordPlan(deviceId, gwId, MyApplication.getInstance().getUid(),
-                        "get", scheduleId, planType, pwdId, 0, 0,
-                        0, 0, 0, 0, 0
-                ))
+                mqttMessage)
                 .filter(new Predicate<MqttData>() {
                     @Override
                     public boolean test(MqttData mqttData) throws Exception {
-                        if (MqttConstant.SCHEDULE.equals(mqttData.getFunc())) {
+                        if (MqttConstant.SCHEDULE.equals(mqttData.getFunc()) && mqttMessage.getId() == mqttData.getMessageId()) {
                             return true;
                         }
                         return false;
@@ -424,13 +443,18 @@ public abstract class GatewayLockPasswordPresenter<T extends IGatewayLockPasswor
                 .subscribe(new Consumer<MqttData>() {
                     @Override
                     public void accept(MqttData mqttData) throws Exception {
-                        toDisposable(getPlanDisposable);
+
                         GatewayPasswordResultBean gatewayPasswordResultBean = new Gson().fromJson(mqttData.getPayload(), GatewayPasswordResultBean.class);
                         LogUtils.e("获取策略 返回数据  " + gatewayPasswordResultBean.toString());
                         String returnCode = gatewayPasswordResultBean.getReturnCode();
                         LogUtils.e("获取策略 返回数据  " + returnCode);
                         if ("200".equals(returnCode)) {
                             //设置用户类型成功
+                            int id = gatewayPasswordResultBean.getReturnData().getScheduleID();
+                            if (id!=scheduleId){
+                                return;
+                            }
+                            toDisposable(getPlanDisposable);
                             int scheduleStatus = gatewayPasswordResultBean.getReturnData().getScheduleStatus();
                             int index = planPasswordIndex.indexOf(scheduleId);
                             LogUtils.e("获取策略 返回数据  scheduleStatus " + scheduleStatus);
@@ -463,6 +487,7 @@ public abstract class GatewayLockPasswordPresenter<T extends IGatewayLockPasswor
                                 }
                             } else {
                                 //查询失败
+                                toDisposable(getPlanDisposable);
                                 if ("year".equals(planType)) {  //如果是年计划查询失败
                                     getPlan(deviceId, gwId, planPasswordIndex.get(index), planPasswordIndex.get(index), "week");
                                 } else if ("week".equals(planType)) {
@@ -510,12 +535,13 @@ public abstract class GatewayLockPasswordPresenter<T extends IGatewayLockPasswor
         );
         toDisposable(addLockPwddDisposable);
         if (mqttService != null) {
+            MqttMessage mqttMessage = MqttCommandFactory.lockPwdFunc(gatewayiId, deviceId, "set", "pin", "" + pwdId, pwdValue);
             addLockPwddDisposable = mqttService.mqttPublish(MqttConstant.getCallTopic(MyApplication.getInstance().getUid()),
-                    MqttCommandFactory.lockPwdFunc(gatewayiId, deviceId, "set", "pin", "" + pwdId, pwdValue))
+                    mqttMessage)
                     .filter(new Predicate<MqttData>() {
                         @Override
                         public boolean test(MqttData mqttData) throws Exception {
-                            if (mqttData.getFunc().equals(MqttConstant.SET_PWD)) {
+                            if (mqttData.getFunc().equals(MqttConstant.SET_PWD)&& mqttMessage.getId() == mqttData.getMessageId()) {
                                 return true;
                             }
                             return false;
@@ -597,12 +623,13 @@ public abstract class GatewayLockPasswordPresenter<T extends IGatewayLockPasswor
     public void deletePassword(String gatewayId, String deviceId, int passwordNumber) {
         if (mqttService != null) {
             {
+                MqttMessage mqttMessage = MqttCommandFactory.lockPwdFunc(gatewayId, deviceId, "clear", "pin", passwordNumber > 9 ? "" + passwordNumber : "0" + passwordNumber, "");
                 getLockPwdDisposable = mqttService.mqttPublish(MqttConstant.getCallTopic(MyApplication.getInstance().getUid()),
-                        MqttCommandFactory.lockPwdFunc(gatewayId, deviceId, "clear", "pin", passwordNumber > 9 ? "" + passwordNumber : "0" + passwordNumber, ""))
+                        mqttMessage)
                         .filter(new Predicate<MqttData>() {
                             @Override
                             public boolean test(MqttData mqttData) throws Exception {
-                                if (MqttConstant.SET_PWD.equals(mqttData.getFunc())) {
+                                if (MqttConstant.SET_PWD.equals(mqttData.getFunc())&& mqttMessage.getId() == mqttData.getMessageId()) {
                                     return true;
                                 }
                                 return false;

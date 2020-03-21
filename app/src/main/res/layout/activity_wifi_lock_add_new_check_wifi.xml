@@ -109,7 +109,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="30dp"
                 android:layout_marginRight="@dimen/dp_38"
-                android:background="@drawable/edit_text_line_ffdcdcdc"
+                android:background="@drawable/edit_text_line_f0f0f0"
                 android:orientation="horizontal">
 
                 <TextView
@@ -135,7 +135,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="30dp"
                 android:layout_marginRight="@dimen/dp_38"
-                android:background="@drawable/edit_text_line_ffdcdcdc"
+                android:background="@drawable/edit_text_line_f0f0f0"
                 android:orientation="horizontal">
 
                 <TextView
@@ -161,7 +161,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="30dp"
                 android:layout_marginRight="@dimen/dp_38"
-                android:background="@drawable/edit_text_line_ffdcdcdc"
+                android:background="@drawable/edit_text_line_f0f0f0"
                 android:orientation="horizontal">
 
                 <TextView

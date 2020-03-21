@@ -94,7 +94,6 @@ public class Test {
                     @Override
                     public void accept(Long aLong) throws Exception {
                         System.out.println("数据是   " + aLong);
-
                     }
                 });
 

@@ -87,8 +87,16 @@ public class WifiLockAddNewInputWifiActivity extends BaseAddToApplicationActivit
                     return;
                 }
                 if (TextUtils.isEmpty(sPassword) ) { //WiFi密码为空
-                    AlertDialogUtil.getInstance().noEditSingleButtonDialog(this, "", getString(R.string.no_support_no_pwd_wifi), getString(R.string.ok_wifi_lock), null);
+//                    AlertDialogUtil.getInstance().noEditSingleButtonDialog(this, "", getString(R.string.no_support_no_pwd_wifi), getString(R.string.ok_wifi_lock), null);
+                    Intent intent = new Intent(this,WifiLockAddNewCheckWifiActivity.class);
+                    intent.putExtra(KeyConstants.WIFI_LOCK_WIFI_SSID, sSsid);
+                    intent.putExtra(KeyConstants.WIFI_LOCK_WIFI_PASSWORD, sPassword);
+                    intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
+                    intent.putExtra(KeyConstants.WIFI_LOCK_RANDOM_CODE, randomCode);
+                    intent.putExtra(KeyConstants.WIFI_LOCK_FUNC, func);
+                    startActivity(intent);
                     return;
+
                 }
                 if (sPassword.length()<8){
                     Toast.makeText(this, "wifi密码必须不小于8位", Toast.LENGTH_SHORT).show();
@@ -100,6 +108,7 @@ public class WifiLockAddNewInputWifiActivity extends BaseAddToApplicationActivit
                 intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
                 intent.putExtra(KeyConstants.WIFI_LOCK_RANDOM_CODE, randomCode);
                 intent.putExtra(KeyConstants.WIFI_LOCK_FUNC, func);
+                intent.putExtra(KeyConstants.WIFI_LOCK_WIFI_TIMES, times);
                 startActivity(intent);
 
                 break;
@@ -136,7 +145,6 @@ public class WifiLockAddNewInputWifiActivity extends BaseAddToApplicationActivit
                     public void right() {
                         //退出当前界面
                         Intent intent = new Intent(WifiLockAddNewInputWifiActivity.this, WifiLockAddNewFirstActivity.class);
-                        intent.putExtra(KeyConstants.WIFI_LOCK_WIFI_TIMES, times);
                         startActivity(intent);
                     }
                 });

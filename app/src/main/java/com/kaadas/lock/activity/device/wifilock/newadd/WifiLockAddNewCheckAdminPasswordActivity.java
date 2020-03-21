@@ -117,8 +117,7 @@ public class WifiLockAddNewCheckAdminPasswordActivity extends AppCompatActivity 
                         ivStateLockCheckPwd.clearAnimation();
                         ivStateLockChecking.clearAnimation();
 
-                        circleProgressBar.setValue(3);
-
+                        circleProgressBar.setValue(10);
                         break;
                     case 2:
                         ivStateSendPwd.setImageResource(R.mipmap.wifi_lock_add_state_complete);
@@ -132,7 +131,7 @@ public class WifiLockAddNewCheckAdminPasswordActivity extends AppCompatActivity 
                         ivStateSendPwd.clearAnimation();//開始动画
                         ivStateLockCheckPwd.startAnimation(animation);
                         ivStateLockChecking.clearAnimation();
-                        circleProgressBar.setValue(33);
+                        circleProgressBar.setValue(40);
                         break;
                     case 3:
                         ivStateSendPwd.setImageResource(R.mipmap.wifi_lock_add_state_complete);
@@ -146,7 +145,7 @@ public class WifiLockAddNewCheckAdminPasswordActivity extends AppCompatActivity 
                         ivStateSendPwd.clearAnimation();//開始动画
                         ivStateLockCheckPwd.clearAnimation();
                         ivStateLockChecking.startAnimation(animation);
-                        circleProgressBar.setValue(66);
+                        circleProgressBar.setValue(80);
                         break;
                 }
             }

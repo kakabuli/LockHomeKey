@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.kaadas.lock.activity.TestActivity">
+
+    <Button
+        android:onClick="request"
+        android:text="请求"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:id="@+id/tv_content"
+        android:text="1111"
+        android:textSize="@dimen/sp_16"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <WebView
+        android:visibility="invisible"
+        android:id="@+id/wv_test"
+        android:layout_width="270dp"
+        android:layout_height="480dp"></WebView>
+
+</LinearLayout>

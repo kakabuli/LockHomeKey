@@ -87,12 +87,9 @@
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />
 
-
                 <action android:name="android.intent.action.MAIN" />
 
-
                 <category android:name="android.intent.category.LAUNCHER" />
-
 
                 <action android:name="android.intent.action.oppopush" />
             </intent-filter>
@@ -1079,9 +1076,10 @@
             android:name=".activity.device.wifilock.WifiLockAMActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
-        <activity android:name=".activity.device.wifilock.newadd.WifiLockAddNewFirstActivity">
-
-        </activity>
+        <activity
+            android:name=".activity.device.wifilock.newadd.WifiLockAddNewFirstActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.device.wifilock.newadd.WifiLockAddNewSecondActivity"
             android:launchMode="singleTask"
@@ -1121,7 +1119,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.device.wifilock.newadd.WifiLockAddNewInputWifiActivity"
-            android:windowSoftInputMode="adjustResize"></activity>
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".activity.device.wifilock.newadd.WifiLockAddNewCheckWifiActivity"
             android:launchMode="singleTask"
@@ -1146,10 +1144,10 @@
             android:name=".activity.device.wifilock.newadd.WifiLockOldUserSecondActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
-        <activity
-            android:name=".activity.device.wifilock.newadd.WifiLockOldUserThirdActivity"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait" />
+        <activity android:name=".activity.TestActivity">
+        </activity>
+        <activity android:name=".activity.ScanHttpDialogActivity"
+            android:theme="@style/gatewayDialog"></activity>
     </application>
 
 </manifest>

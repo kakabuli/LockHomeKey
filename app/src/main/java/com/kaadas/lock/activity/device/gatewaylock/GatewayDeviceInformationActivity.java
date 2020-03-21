@@ -98,6 +98,7 @@ public class GatewayDeviceInformationActivity extends BaseActivity<GatewayLockIn
             rlDeviceName.setVisibility(View.GONE);
         }
 
+
         tv_device_auth_name.setText(nickName);
         uid = MyApplication.getInstance().getUid();
         daoSession = MyApplication.getInstance().getDaoWriteSession();

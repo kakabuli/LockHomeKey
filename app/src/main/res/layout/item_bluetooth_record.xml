@@ -27,5 +27,5 @@
         android:layout_marginLeft="@dimen/dp_15"
         android:layout_marginTop="@dimen/dp_25"
         android:layout_marginRight="@dimen/dp_15"
-        android:background="#D8D8D8"></View>
+        android:background="#D8D8D8" />
 </LinearLayout>

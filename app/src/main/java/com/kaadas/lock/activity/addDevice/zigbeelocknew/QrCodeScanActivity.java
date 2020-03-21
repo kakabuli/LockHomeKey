@@ -1,16 +1,12 @@
 package com.kaadas.lock.activity.addDevice.zigbeelocknew;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.hardware.Camera;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -18,15 +14,12 @@ import android.widget.Toast;
 
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
-import com.kaadas.lock.activity.addDevice.gateway.AddGatewaySecondActivity;
-import com.kaadas.lock.activity.addDevice.gateway.AddGatewayThirdActivity;
-import com.kaadas.lock.activity.addDevice.zigbee.AddZigbeeLockFailActivity;
+import com.kaadas.lock.activity.ScanHttpDialogActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
+import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.ToastUtil;
-import com.king.zxing.CaptureActivity;
 import com.king.zxing.Intents;
-import com.king.zxing.camera.CameraManager;
 /*
 import com.uuzuche.lib_zxing.activity.CaptureFragment;
 import com.uuzuche.lib_zxing.activity.CodeUtils;
@@ -38,14 +31,15 @@ import butterknife.OnClick;
 import cn.bingoogolapple.qrcode.core.QRCodeView;
 import cn.bingoogolapple.qrcode.zbar.ZBarView;
 
-public class QrCodeScanActivity extends BaseAddToApplicationActivity  implements QRCodeView.Delegate{
+public class QrCodeScanActivity extends BaseAddToApplicationActivity implements QRCodeView.Delegate {
     @BindView(R.id.back)
     ImageView back;
     @BindView(R.id.touch_light_layout)
     LinearLayout touchLightLayout;
     private ZBarView mZBarView;
     private boolean isOpenLight = false;
-
+    int scan = 0;
+    private static final int REQUEST_CODE = 101;
 
 
     @Override
@@ -55,7 +49,7 @@ public class QrCodeScanActivity extends BaseAddToApplicationActivity  implements
         MyApplication.getInstance().addActivity(this);
         ButterKnife.bind(this);
         checkVersion();
-
+        scan = getIntent().getIntExtra(KeyConstants.SCAN_TYPE, 0);
         mZBarView = findViewById(R.id.zbarview);
         mZBarView.setDelegate(this);
     }
@@ -67,7 +61,6 @@ public class QrCodeScanActivity extends BaseAddToApplicationActivity  implements
         mZBarView.startCamera(); // 打开后置摄像头开始预览，但是并未开始识别
         mZBarView.startSpotAndShowRect(); // 显示扫描框，并开始识别
     }
-
 
 
     @Override
@@ -86,15 +79,15 @@ public class QrCodeScanActivity extends BaseAddToApplicationActivity  implements
 
     private void checkVersion() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            int i=checkSelfPermission(Manifest.permission.CAMERA);
-            LogUtils.e("权限是允许还是开启还是禁止"+i);
-            if (i==-1){
-                if (!shouldShowRequestPermissionRationale(Manifest.permission.CAMERA)){
+            int i = checkSelfPermission(Manifest.permission.CAMERA);
+            LogUtils.e("权限是允许还是开启还是禁止" + i);
+            if (i == -1) {
+                if (!shouldShowRequestPermissionRationale(Manifest.permission.CAMERA)) {
                     //禁止该权限
                     ToastUtil.getInstance().showShort(getString(R.string.ban_camera_permission));
                     finish();
                     return;
-                }else{
+                } else {
                     //询问该权限
                     ToastUtil.getInstance().showShort(getString(R.string.inquire_camera_permission));
                     finish();
@@ -103,8 +96,8 @@ public class QrCodeScanActivity extends BaseAddToApplicationActivity  implements
             }
         }
         //版本为22 5.1
-        if (Build.VERSION.SDK_INT==Build.VERSION_CODES.LOLLIPOP_MR1){
-            if (!isCameraCanUse()){
+        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.LOLLIPOP_MR1) {
+            if (!isCameraCanUse()) {
                 ToastUtil.getInstance().showShort(getString(R.string.ban_camera_permission));
                 finish();
                 return;
@@ -113,6 +106,7 @@ public class QrCodeScanActivity extends BaseAddToApplicationActivity  implements
         }
 
     }
+
     //Android6.0以下的摄像头权限处理：
     public static boolean isCameraCanUse() {
         boolean canUse = true;
@@ -130,8 +124,6 @@ public class QrCodeScanActivity extends BaseAddToApplicationActivity  implements
         }
         return canUse;
     }
-
-
 
 
     @OnClick({R.id.back, R.id.touch_light_layout})
@@ -154,14 +146,23 @@ public class QrCodeScanActivity extends BaseAddToApplicationActivity  implements
     }
 
 
-
+    private String result = "";
     @Override
     public void onScanQRCodeSuccess(String result) {
-        Intent intent = new Intent();
+        this.result = result;
+        //首页过来的
+        Intent intent;
+        if (scan == 1 && !TextUtils.isEmpty(result) && result.startsWith("http://")) {
+            intent = new Intent(this, ScanHttpDialogActivity.class);
+            intent.putExtra(KeyConstants.QR_URL, result);
+            startActivityForResult(intent, REQUEST_CODE);
+            return;
+        }
+        intent = new Intent();
         intent.putExtra(Intents.Scan.RESULT, result);
-        setResult(RESULT_OK,intent);
+        setResult(RESULT_OK, intent);
         finish();
-        LogUtils.e(  "result:" + result);
+        LogUtils.e("result:" + result);
     }
 
     @Override
@@ -189,4 +190,23 @@ public class QrCodeScanActivity extends BaseAddToApplicationActivity  implements
     }
 
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                String result2 = data.getStringExtra(KeyConstants.URL_RESULT);
+
+                Intent intent = new Intent();
+                intent.putExtra(Intents.Scan.RESULT, result2);
+                setResult(RESULT_OK, intent);
+                finish();
+            }else {
+                Intent intent = new Intent();
+                intent.putExtra(Intents.Scan.RESULT, result);
+                setResult(RESULT_OK, intent);
+                finish();
+            }
+        }
+    }
 }

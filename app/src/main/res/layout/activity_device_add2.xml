@@ -223,7 +223,7 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/rg4300"
+                    android:id="@+id/gw6010"
                     android:orientation="vertical"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -234,7 +234,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@drawable/right_line"
-                        android:src="@mipmap/add_device_rg4300" />
+                        android:src="@mipmap/add_device_gw6010" />
 
                     <TextView
                         android:textSize="10sp"
@@ -242,7 +242,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/dp_8"
                         android:gravity="center"
-                        android:text="RG4300" />
+                        android:text="GW6010" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -272,9 +272,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30dp"
                 android:orientation="horizontal">
-
                 <LinearLayout
-                    android:id="@+id/gw6010"
+                    android:visibility="gone"
+                    android:id="@+id/rg4300"
                     android:orientation="vertical"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -285,7 +285,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@drawable/right_line"
-                        android:src="@mipmap/add_device_gw6010" />
+                        android:src="@mipmap/add_device_rg4300" />
 
                     <TextView
                         android:textSize="10sp"
@@ -293,10 +293,12 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/dp_8"
                         android:gravity="center"
-                        android:text="GW6010" />
+                        android:text="RG4300" />
                 </LinearLayout>
 
+
                 <LinearLayout
+                    android:visibility="gone"
                     android:id="@+id/single_switch"
                     android:orientation="vertical"
                     android:layout_width="0dp"
@@ -320,6 +322,7 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:visibility="gone"
                     android:id="@+id/double_switch"
                     android:orientation="vertical"
                     android:layout_width="0dp"

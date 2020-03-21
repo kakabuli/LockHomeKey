@@ -1228,4 +1228,16 @@ public class XiaokaiNewServiceImp {
                 .subscribeOn(Schedulers.io())
                 .compose(RxjavaHelper.observeOnMainThread());
     }
+
+
+    /**
+     * @return
+     */
+    public static Observable<ResponseBody> getQrCodeContent(String url) {
+        return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
+                .getQrCodeContent(url)
+                .subscribeOn(Schedulers.io())
+                .compose(RxjavaHelper.observeOnMainThread());
+    }
+
 }

@@ -17,6 +17,7 @@ import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.NetUtil;
 import com.kaadas.lock.utils.SocketManager;
+import com.kaadas.lock.utils.WifiUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -84,7 +85,7 @@ public class WifiLockAddNewModifyPasswordActivity extends AppCompatActivity {
                 LogUtils.e("连接状态  wifiName   " +wifiName+"  isConnected " +SocketManager.getInstance().isConnected());
                 if (!(!TextUtils.isEmpty(wifiName ) && wifiName.contains("kaadas_AP")) || !SocketManager.getInstance().isConnected()){
                     Toast.makeText(this, "连接断开，请重新开始", Toast.LENGTH_SHORT).show();
-                    startActivity(new Intent(this,WifiLockAddNewFirstActivity.class));
+                    startActivity(new Intent(this,WifiLockAddNewWakeActivity.class));
                     socketManager.destroy();
                     return;
                 }
@@ -126,6 +127,7 @@ public class WifiLockAddNewModifyPasswordActivity extends AppCompatActivity {
                         Intent intent = new Intent(WifiLockAddNewModifyPasswordActivity.this, WifiLockAddNewFirstActivity.class);
                         intent.putExtra(KeyConstants.WIFI_LOCK_WIFI_TIMES, times);
                         startActivity(intent);
+
                         finish();
                         socketManager.destroy();
                         thread.interrupt();

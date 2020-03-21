@@ -15,6 +15,7 @@ import com.kaadas.lock.publiclibrary.mqtt.publishbean.DeviceShareUserBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.FtpEnableBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.GatewayComfirmOtaUpgradeBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.GetAMBean;
+import com.kaadas.lock.publiclibrary.mqtt.publishbean.GetAlarmListBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.GetAllBindDeviceBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.GetArmLockedBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.GetBindGatewayListBean;
@@ -550,6 +551,24 @@ public class MqttCommandFactory {
     public static MqttMessage selectOpenLockRecord(String gatewayId, String deviceId, String uid, int page, int pageNum) {
         int messageId = getMessageId();
         SelectOpenLockRecordBean selectOpenLockRecordBean = new SelectOpenLockRecordBean(messageId, MqttConstant.GET_OPEN_LOCK_RECORD, uid, gatewayId, deviceId, page, pageNum);
+        return getMessage(selectOpenLockRecordBean, messageId);
+
+    }
+
+
+
+
+    /**
+     * 报警记录
+     *
+     * @param deviceId
+     * @param pageNum
+     * @return
+     */
+
+    public static MqttMessage getAlarmList(  String userId, String gwId, String deviceId, int pageNum) {
+        int messageId = getMessageId();
+        GetAlarmListBean selectOpenLockRecordBean = new GetAlarmListBean(messageId, "request",MqttConstant.GET_ALARM_LIST  , userId, gwId, deviceId, pageNum);
         return getMessage(selectOpenLockRecordBean, messageId);
 
     }

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/dp_100"
+    android:background="#00000000"
+    android:gravity="center"
+    android:layout_gravity="center"
+    tools:context="com.kaadas.lock.activity.ScanHttpDialogActivity">
+
+    <WebView
+        android:id="@+id/wv_webview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <!--<ProgressBar-->
+        <!--android:layout_marginTop="@dimen/dp_10"-->
+        <!--android:layout_centerHorizontal="true"-->
+        <!--android:id="@+id/progress"-->
+        <!--android:layout_width="40dp"-->
+        <!--android:layout_height="40dp" />-->
+    <!--<TextView-->
+        <!--android:layout_marginTop="@dimen/dp_10"-->
+        <!--android:layout_centerHorizontal="true"-->
+        <!--android:layout_below="@+id/progress"-->
+        <!--android:textSize="@dimen/sp_16"-->
+        <!--android:textColor="#333333"-->
+        <!--android:text="@string/is_parsing_data"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content" />-->
+
+
+</RelativeLayout>

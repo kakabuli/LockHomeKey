@@ -52,6 +52,8 @@ public class WiFiLockPasswordManagerActivity extends BaseActivity<IWifiLockPassw
     SmartRefreshLayout refreshLayout;
     @BindView(R.id.ll_no_password)
     LinearLayout llNoPassword;
+    @BindView(R.id.iv_no_password)
+    ImageView ivNoPassword;
     private WifiLockPasswordAdapter passwordAdapter;
     private List<ForeverPassword> passwordList = new ArrayList<>();
     private int type;  // 1 密码  2指纹  3 卡片
@@ -111,6 +113,7 @@ public class WiFiLockPasswordManagerActivity extends BaseActivity<IWifiLockPassw
             } else {
                 havePassword = false;
             }
+            ivNoPassword.setImageResource(R.mipmap.wifi_lock_no_password);
             tvNoPassword.setText(getString(R.string.no_pwd_sync));
             initPasswordAdapter();
         } else if (type == 2) {
@@ -122,6 +125,7 @@ public class WiFiLockPasswordManagerActivity extends BaseActivity<IWifiLockPassw
             } else {
                 havePassword = false;
             }
+            ivNoPassword.setImageResource(R.mipmap.wifi_lock_no_finger);
             initCardAndFingerAdapter();
         } else if (type == 3) {
             headTitle.setText(R.string.door_card);
@@ -131,6 +135,7 @@ public class WiFiLockPasswordManagerActivity extends BaseActivity<IWifiLockPassw
             } else {
                 havePassword = false;
             }
+            ivNoPassword.setImageResource(R.mipmap.wifi_lock_no_card);
             tvNoPassword.setText(getString(R.string.no_card_sync));
             initCardAndFingerAdapter();
         }

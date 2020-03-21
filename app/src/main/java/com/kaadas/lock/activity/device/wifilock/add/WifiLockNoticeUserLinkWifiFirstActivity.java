@@ -16,11 +16,13 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.espressif.iot.esptouch.util.TouchNetUtil;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.NetUtil;
+import com.kaadas.lock.utils.Rsa;
 import com.kaadas.lock.utils.SPUtils;
 
 import butterknife.BindView;
@@ -90,8 +92,13 @@ public class WifiLockNoticeUserLinkWifiFirstActivity extends AppCompatActivity {
         }
         if (ssid.startsWith("\"") && ssid.endsWith("\"")) {
             ssid = ssid.substring(1, ssid.length() - 1);
+        }
+        if (!ssid.equals("kaadas_AP") && !"<unknown ssid>".equals(ssid)) {
             SPUtils.put(KeyConstants.WIFI_LOCK_CONNECT_NAME, ssid);
         }
+        byte[] ssidOriginalData = TouchNetUtil.getOriginalSsidBytes(info);
+        LogUtils.e("获取到的   byte数据是    " + Rsa.bytesToHexString(ssidOriginalData));
+        SPUtils.put(KeyConstants.WIFI_LOCK_CONNECT_ORIGINAL_DATA, Rsa.bytesToHexString(ssidOriginalData));
     }
 
     private void onWifiChanged(WifiInfo info) {

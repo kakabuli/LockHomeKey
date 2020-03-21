@@ -236,7 +236,7 @@ public class MqttService extends Service {
                 }
                 //收到消息
                 String payload = new String(message.getPayload());
-                LogUtils.e("收到mqtt消息", payload + "---topic" + topic + "  messageID  " + message.getId());
+                LogUtils.e("收到mqtt消息111", payload + "---topic" + topic + "  messageID  " + message.getId());
                 //String func, String topic, String payload, MqttMessage mqttMessage
                 JSONObject jsonObject = new JSONObject(payload);
                 int messageId = -1;
@@ -407,7 +407,7 @@ public class MqttService extends Service {
     public Observable<MqttData> mqttPublish(String topic, MqttMessage mqttMessage) {
         try {
             if (mqttClient!=null&&mqttClient.isConnected()) {
-                Log.e("发布消息", "topic: "+topic+"  mqttMessage: "+mqttMessage.toString());
+                Log.e("发布mqtt消息111", "topic: "+topic+"  mqttMessage: "+mqttMessage.toString());
                 mqttClient.publish(topic, mqttMessage, null, new IMqttActionListener() {
                     @Override
                     public void onSuccess(IMqttToken asyncActionToken) {

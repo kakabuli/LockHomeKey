@@ -54,7 +54,7 @@ public class WifiLockDetailAdapater extends RecyclerView.Adapter {
             LogUtils.e("设置共享用户个数   " + lockFunctionBean.getNumber());
             holder.tvNumber.setText("("+lockFunctionBean.getNumber() + context.getString(R.string.rad)+")");
         } else    {
-            holder.tvNumber.setVisibility(View.GONE);
+            holder.tvNumber.setVisibility(View.INVISIBLE);
         }
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {

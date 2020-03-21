@@ -17,11 +17,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.espressif.iot.esptouch.util.TouchNetUtil;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.utils.GpsUtil;
 import com.kaadas.lock.utils.KeyConstants;
+import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.NetUtil;
+import com.kaadas.lock.utils.Rsa;
 import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.WifiUtils;
 import com.tbruyelle.rxpermissions2.RxPermissions;
@@ -116,6 +119,8 @@ public class WifiLockApAddThirdActivity extends AppCompatActivity {
         if (!ssid.equals("kaadas_AP") && !"<unknown ssid>".equals(ssid)) {
             SPUtils.put(KeyConstants.WIFI_LOCK_CONNECT_NAME, ssid);
         }
-
+        byte[] ssidOriginalData = TouchNetUtil.getOriginalSsidBytes(info);
+        LogUtils.e("获取到的   byte数据是    " + Rsa.bytesToHexString(ssidOriginalData));
+        SPUtils.put(KeyConstants.WIFI_LOCK_CONNECT_ORIGINAL_DATA, Rsa.bytesToHexString(ssidOriginalData));
     }
 }

@@ -25,6 +25,8 @@ import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.Rsa;
+import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.SocketManager;
 import com.kaadas.lock.utils.WifiUtils;
 import com.kaadas.lock.widget.WifiCircleProgress;
@@ -84,11 +86,10 @@ public class WifiLockAddNewCheckWifiActivity extends BaseActivity<IWifiLockAPWif
 
         circleProgressBar2.setValue(0);
 
-        animation = new RotateAnimation(0, 359, Animation.RELATIVE_TO_SELF,0.5f, Animation.RELATIVE_TO_SELF,0.5f);
+        animation = new RotateAnimation(0, 359, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
         animation.setDuration(1000);
         animation.setRepeatCount(-1);//动画的反复次数
         animation.setFillAfter(false);//设置为true，动画转化结束后被应用
-
 
         changeState(1);
     }
@@ -125,15 +126,23 @@ public class WifiLockAddNewCheckWifiActivity extends BaseActivity<IWifiLockAPWif
             super.run();
             if (socketManager.isStart()) { //连接成功
                 LogUtils.e("连接成功");
-                byte[] bSsid = sSsid.getBytes();
+                byte[] bSsid ;
                 byte[] bPwd = sPassword.getBytes();
+                String wifiName = (String) SPUtils.get(KeyConstants.WIFI_LOCK_CONNECT_NAME, "");
+                if (sSsid.equals(wifiName)) {
+                    String pwdByteString = (String) SPUtils.get(KeyConstants.WIFI_LOCK_CONNECT_ORIGINAL_DATA, "");
+                    bSsid = Rsa.hex2byte2(pwdByteString);
+                } else {
+                    bSsid = sSsid.getBytes();
+                }
+
                 byte[] data = new byte[96];
                 System.arraycopy(bSsid, 0, data, 0, bSsid.length);
                 System.arraycopy(bPwd, 0, data, 32, bPwd.length);
                 int writeResult = socketManager.writeData(data);
                 if (writeResult == 0) {
                     LogUtils.e("发送账号密码成功   开始读取数据");
-                    SocketManager.ReadResult readResult = socketManager.readWifiDataTimeout(60*1000);
+                    SocketManager.ReadResult readResult = socketManager.readWifiDataTimeout(60 * 1000);
                     if (readResult.resultCode >= 0) { //读取成功
                         String sResult = new String(readResult.data);
                         LogUtils.e("读取成功   " + sResult);
@@ -144,18 +153,19 @@ public class WifiLockAddNewCheckWifiActivity extends BaseActivity<IWifiLockAPWif
                             socketManager.destroy();
                         } else if (!TextUtils.isEmpty(sResult) && sResult.startsWith("APError")) {
                             if (times < 5) {
-                              runOnUiThread(new Runnable() {
-                                  @Override
-                                  public void run() {
-                                      Intent intent = new Intent(WifiLockAddNewCheckWifiActivity.this, WifiLockAddNewInputWifiActivity.class);
-                                      intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
-                                      intent.putExtra(KeyConstants.WIFI_LOCK_RANDOM_CODE, randomCode);
-                                      intent.putExtra(KeyConstants.WIFI_LOCK_FUNC, func);
-                                      intent.putExtra(KeyConstants.WIFI_LOCK_WIFI_TIMES, times + 1);
-                                      startActivity(intent);
-                                      finish();
-                                  }
-                              });
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Toast.makeText(WifiLockAddNewCheckWifiActivity.this,"请靠近路由器检查账号或密码是否输入正确", Toast.LENGTH_SHORT).show();
+                                        Intent intent = new Intent(WifiLockAddNewCheckWifiActivity.this, WifiLockAddNewInputWifiActivity.class);
+                                        intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
+                                        intent.putExtra(KeyConstants.WIFI_LOCK_RANDOM_CODE, randomCode);
+                                        intent.putExtra(KeyConstants.WIFI_LOCK_FUNC, func);
+                                        intent.putExtra(KeyConstants.WIFI_LOCK_WIFI_TIMES, times + 1);
+                                        startActivity(intent);
+                                        finish();
+                                    }
+                                });
                             } else { //五次失败
                                 socketManager.writeData("************************************************************************************************APClose".getBytes());
                                 try {
@@ -216,7 +226,7 @@ public class WifiLockAddNewCheckWifiActivity extends BaseActivity<IWifiLockAPWif
 
 
     /**
-     * @param status  1初始状态  2 发送wifi信息成功  3设置成功 正在绑定  4
+     * @param status 1初始状态  2 发送wifi信息成功  3设置成功 正在绑定  4
      */
     private void changeState(int status) {
         runOnUiThread(new Runnable() {
@@ -251,7 +261,6 @@ public class WifiLockAddNewCheckWifiActivity extends BaseActivity<IWifiLockAPWif
                         ivSendWifiInfo.clearAnimation();//開始动画
                         ivSetSuccess.startAnimation(animation);
                         ivBindSuccess.clearAnimation();
-
 
                         circleProgressBar2.setValue(40);
                         break;
@@ -288,8 +297,6 @@ public class WifiLockAddNewCheckWifiActivity extends BaseActivity<IWifiLockAPWif
             }
         });
     }
-
-
 
 
     @Override
@@ -370,7 +377,7 @@ public class WifiLockAddNewCheckWifiActivity extends BaseActivity<IWifiLockAPWif
         thread.interrupt();
     }
 
-    private void showWarring(){
+    private void showWarring() {
         AlertDialogUtil.getInstance().noEditTitleTwoButtonDialog(
                 this
                 , "确定重新开始配网吗？",
@@ -384,7 +391,6 @@ public class WifiLockAddNewCheckWifiActivity extends BaseActivity<IWifiLockAPWif
                     public void right() {
                         //退出当前界面
                         Intent intent = new Intent(WifiLockAddNewCheckWifiActivity.this, WifiLockAddNewFirstActivity.class);
-                        intent.putExtra(KeyConstants.WIFI_LOCK_WIFI_TIMES, times);
                         startActivity(intent);
                     }
                 });

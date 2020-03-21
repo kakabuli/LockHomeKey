@@ -54,7 +54,6 @@ public class WifiLockAddNewScanActivity extends AppCompatActivity {
     private Disposable permissionDisposable;
     final RxPermissions rxPermissions = new RxPermissions(this);
     private Disposable progressDisposable;
-    private Disposable scanDisposable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -167,9 +166,7 @@ public class WifiLockAddNewScanActivity extends AppCompatActivity {
         if (progressDisposable != null) {
             progressDisposable.dispose();
         }
-        if (scanDisposable!=null){
-            scanDisposable.dispose();
-        }
+
         handler.removeCallbacks(runnable);
         handler.removeCallbacks(timeoutRunnable);
     }

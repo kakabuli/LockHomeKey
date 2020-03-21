@@ -95,13 +95,13 @@ public class WifiLockFragment extends BaseFragment<IWifiLockView, WifiLockPresen
         rlIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getContext(), getString(R.string.not_enable_click), Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getContext(), getString(R.string.not_enable_click), Toast.LENGTH_SHORT).show();
             }
         });
         rlIcon.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                Toast.makeText(getContext(), getString(R.string.not_enable_click), Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getContext(), getString(R.string.not_enable_click), Toast.LENGTH_SHORT).show();
                 return false;
             }
         });
@@ -322,7 +322,7 @@ public class WifiLockFragment extends BaseFragment<IWifiLockView, WifiLockPresen
     @Override
     public void onLoadServerRecordFailed(Throwable throwable, boolean isNotice) {
         if (isNotice) {
-            Toast.makeText(getContext(), getString(R.string.sync_failed), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), getString(R.string.synv_failed), Toast.LENGTH_SHORT).show();
         }
         hiddenLoading();
     }
@@ -330,7 +330,7 @@ public class WifiLockFragment extends BaseFragment<IWifiLockView, WifiLockPresen
     @Override
     public void onLoadServerRecordFailedServer(BaseResult result, boolean isNotice) {
         if (isNotice) {
-            Toast.makeText(getContext(), getString(R.string.sync_failed), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), getString(R.string.synv_failed), Toast.LENGTH_SHORT).show();
         }
         hiddenLoading();
     }

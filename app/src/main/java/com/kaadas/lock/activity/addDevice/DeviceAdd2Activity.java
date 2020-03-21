@@ -1,5 +1,6 @@
 package com.kaadas.lock.activity.addDevice;
 
+import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -7,6 +8,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.addDevice.bluetooth.AddBluetoothFirstActivity;
@@ -25,6 +27,7 @@ import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.AllBindDevices;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.PermissionUtil;
 import com.king.zxing.Intents;
 
 import java.util.List;
@@ -100,8 +103,15 @@ public class DeviceAdd2Activity extends BaseActivity<DeviceZigBeeDetailView, Dev
                 finish();
                 break;
             case R.id.scan:
-                Intent zigbeeLockIntent = new Intent(this, QrCodeScanActivity.class);
-                startActivityForResult(zigbeeLockIntent, KeyConstants.SCANGATEWAYNEW_REQUEST_CODE);
+                String[] strings = PermissionUtil.getInstance().checkPermission(new String[]{  Manifest.permission.CAMERA});
+                if (strings.length>0){
+                    Toast.makeText(this, "请允许拍照或录像权限", Toast.LENGTH_SHORT).show();
+                    PermissionUtil.getInstance().requestPermission(new String[]{  Manifest.permission.CAMERA}, this);
+                }else {
+                    Intent scanIntent = new Intent(this, QrCodeScanActivity.class);
+                    scanIntent.putExtra(KeyConstants.SCAN_TYPE, 1);
+                    startActivityForResult(scanIntent, KeyConstants.SCANGATEWAYNEW_REQUEST_CODE);
+                }
                 break;
             case R.id.ble_lock:
                 Intent bluetoothIntent = new Intent(DeviceAdd2Activity.this, AddBluetoothFirstActivity.class);
@@ -147,7 +157,6 @@ public class DeviceAdd2Activity extends BaseActivity<DeviceZigBeeDetailView, Dev
                         public void left() {
 
                         }
-
                         @Override
                         public void right() {
                             //跳转到配置网关添加的流程
@@ -155,13 +164,11 @@ public class DeviceAdd2Activity extends BaseActivity<DeviceZigBeeDetailView, Dev
                             startActivity(gatewayIntent);
                         }
                     });
-
 //                    Intent catEyeIntent = new Intent(this, DeviceBindGatewayListActivity.class);
 //                    int type =2;
 //                    catEyeIntent.putExtra("type", type);
 //                    startActivity(catEyeIntent);
                 }
-
 //                else{
 //                    Intent catEyeIntent = new Intent(this, DeviceBindGatewayListActivity.class);
 //                    int type =2;
@@ -202,15 +209,11 @@ public class DeviceAdd2Activity extends BaseActivity<DeviceZigBeeDetailView, Dev
                         LogUtils.e("设备SN是   " + deviceSN);
                         startActivity(scanSuccessIntent);
                         finish();
-                    } else if (result.startsWith("kaadas_")&&(result.contains("_WiFi_1")||result.contains("_WiFi_master"))){  //老的
-
+                    } else if ( (result.contains("_WiFi_1")||result.contains("_WiFi_master"))){  //老的
                         startActivity(new Intent(this,WifiLockAPAddFirstActivity.class));
-
-                    } else if (result.startsWith("kaadas_")&&(result.contains("_WiFi_2")||result.contains("_WiFi_fast"))){  //新的
+                    } else if ( (result.contains("_WiFi_2")||result.contains("_WiFi_fast"))){  //新的
                         startActivity(new Intent(this,WifiLockAddNewFirstActivity.class));
-
-
-                    } else {
+                    }  else {
                         Intent scanSuccessIntent = new Intent(DeviceAdd2Activity.this, AddDeviceZigbeeLockNewScanFailActivity.class);
                         startActivity(scanSuccessIntent);
                         finish();

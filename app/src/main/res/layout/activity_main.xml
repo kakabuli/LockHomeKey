@@ -54,19 +54,19 @@
                 android:textColor="@drawable/activity_main_radiobutton_bottom_text"
                 android:textSize="10sp" />
 
-            <RadioButton
-                android:id="@+id/rb_shop"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:button="@null"
-                android:drawableTop="@drawable/activity_main_radiobutton_shop"
-                android:gravity="center"
-                android:paddingTop="@dimen/dp_9"
-                android:paddingBottom="@dimen/dp_5"
-                android:text="@string/shop"
-                android:textColor="@drawable/activity_main_radiobutton_bottom_text"
-                android:textSize="10sp" />
+            <!--<RadioButton-->
+                <!--android:id="@+id/rb_shop"-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:layout_weight="1"-->
+                <!--android:button="@null"-->
+                <!--android:drawableTop="@drawable/activity_main_radiobutton_shop"-->
+                <!--android:gravity="center"-->
+                <!--android:paddingTop="@dimen/dp_9"-->
+                <!--android:paddingBottom="@dimen/dp_5"-->
+                <!--android:text="@string/shop"-->
+                <!--android:textColor="@drawable/activity_main_radiobutton_bottom_text"-->
+                <!--android:textSize="10sp" />-->
 
 
             <RadioButton

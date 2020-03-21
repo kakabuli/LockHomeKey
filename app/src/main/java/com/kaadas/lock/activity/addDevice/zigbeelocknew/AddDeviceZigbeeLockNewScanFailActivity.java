@@ -1,17 +1,20 @@
 package com.kaadas.lock.activity.addDevice.zigbeelocknew;
 
+import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.addDevice.DeviceAdd2Activity;
 import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.PermissionUtil;
 import com.king.zxing.Intents;
 
 import butterknife.BindView;
@@ -43,8 +46,15 @@ public class AddDeviceZigbeeLockNewScanFailActivity extends BaseAddToApplication
                 finish();
                 break;
             case R.id.rescan:
-                Intent rescanIntent=new Intent(this,QrCodeScanActivity.class);
-                startActivityForResult(rescanIntent,KeyConstants.SCANGATEWAYNEW_REQUEST_CODE);
+                String[] strings = PermissionUtil.getInstance().checkPermission(new String[]{  Manifest.permission.CAMERA});
+                if (strings.length>0){
+                    Toast.makeText(this, "请允许拍照或录像权限", Toast.LENGTH_SHORT).show();
+                    PermissionUtil.getInstance().requestPermission(new String[]{  Manifest.permission.CAMERA}, this);
+                }else {
+                    Intent rescanIntent=new Intent(this,QrCodeScanActivity.class);
+                    startActivityForResult(rescanIntent,KeyConstants.SCANGATEWAYNEW_REQUEST_CODE);
+                }
+
                 break;
             case R.id.scan_cancel:
                 Intent scanCancelntent=new Intent(this, DeviceAdd2Activity.class);

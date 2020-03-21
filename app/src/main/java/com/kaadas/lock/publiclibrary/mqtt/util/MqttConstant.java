@@ -230,4 +230,12 @@ public class MqttConstant {
     public static final String UPDATE_DEV_PUSH_SWITCH = "updateDevPushSwitch";
 
 
+    /**
+     * 获取报警记录
+     */
+    public static final String GET_ALARM_LIST = "getAlarmList";
+
+//
+
+
 }

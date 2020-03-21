@@ -17,6 +17,8 @@ import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.MainActivity;
 import com.kaadas.lock.activity.device.wifilock.add.WifiLockAPAddFirstActivity;
+import com.kaadas.lock.activity.device.wifilock.newadd.WifiLockAddNewFirstActivity;
+import com.kaadas.lock.activity.device.wifilock.newadd.WifiLockOldUserFirstActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.mvp.presenter.wifilock.WifiLockMorePresenter;
 import com.kaadas.lock.mvp.view.wifilock.IWifiLockMoreView;
@@ -245,7 +247,7 @@ public class WifiLockMoreActivity extends BaseActivity<IWifiLockMoreView, WifiLo
                 });
                 break;
             case R.id.rl_wifi_name: //WiFi名称
-                startActivity(new Intent(this, WifiLockAPAddFirstActivity.class));
+                startActivity(new Intent(this, WifiLockOldUserFirstActivity.class));
                 break;
         }
     }
