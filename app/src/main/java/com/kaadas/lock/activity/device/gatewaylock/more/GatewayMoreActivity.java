@@ -344,7 +344,7 @@ public class GatewayMoreActivity extends BaseActivity<GatewayLockMoreView, Gatew
         if (loadingDialog != null) {
             loadingDialog.dismiss();
         }
-        ToastUtil.getInstance().showShort(R.string.get_sound_volume_fail);
+        ToastUtil.getInstance().showShort("获取失败");
 
     }
 
@@ -356,7 +356,7 @@ public class GatewayMoreActivity extends BaseActivity<GatewayLockMoreView, Gatew
         if (loadingDialog != null) {
             loadingDialog.dismiss();
         }
-        ToastUtil.getInstance().showShort(R.string.get_sound_volume_fail);
+        ToastUtil.getInstance().showShort("获取失败");
         LogUtils.e("获取音量异常   " + throwable.getMessage());
 
     }
@@ -480,7 +480,7 @@ public class GatewayMoreActivity extends BaseActivity<GatewayLockMoreView, Gatew
             getAutoLockSuccess = true;
         } else {
             getAutoLockSuccess = false;
-            ToastUtil.getInstance().showShort(R.string.get_am_fail);
+            ToastUtil.getInstance().showShort("获取失败");
         }
 
     }
@@ -490,7 +490,7 @@ public class GatewayMoreActivity extends BaseActivity<GatewayLockMoreView, Gatew
         loadingDialog.dismiss();
         getAutoLockSuccess = false;
         flagAM = true;
-        ToastUtil.getInstance().showShort(R.string.get_am_fail);
+        ToastUtil.getInstance().showShort("获取失败");
     }
 
     @Override
