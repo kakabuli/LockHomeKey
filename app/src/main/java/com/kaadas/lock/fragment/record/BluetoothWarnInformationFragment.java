@@ -145,24 +145,6 @@ public class BluetoothWarnInformationFragment extends BaseBleFragment<IWarringRe
         list.clear();
         hiddenLoading();
         groupData(warringRecords);
-    /*    long lastDayTime = 0;
-
-        for (WarringRecord record : warringRecords) {
-            //获取开锁时间的毫秒数
-            long openTime = record.getWarningTime();
-            long dayTime = openTime - openTime % (24 * 60 * 60 * 1000);  //获取那一天开始的时间戳
-            String titleTime = "";
-            if (lastDayTime != dayTime) { //添加头
-                lastDayTime = dayTime;
-                titleTime = DateUtils.getDayTimeFromMillisecond(dayTime);
-            }
-            List<BluetoothItemRecordBean> itemList = new ArrayList<>();
-            String content = getWarnMessageContent(record);
-            itemList.add(new BluetoothItemRecordBean(content, "", KeyConstants.BLUETOOTH_RECORD_WARN,
-                    record.getWarningTime() + "", true, true));
-
-            showDatas.add(new BluetoothRecordBean(titleTime, itemList, true));
-        }*/
 
         bluetoothWarnMessageAdapter.notifyDataSetChanged();
         refreshLayout.setEnableLoadMore(false);
@@ -240,7 +222,6 @@ public class BluetoothWarnInformationFragment extends BaseBleFragment<IWarringRe
             String timeHead = sOpenTime.substring(0, 10);
             String hourSecond = sOpenTime.substring(11, 16);
 
-
             List<BluetoothItemRecordBean> itemList = new ArrayList<>();
 
             String content = getWarnMessageContent(record);
@@ -257,7 +238,6 @@ public class BluetoothWarnInformationFragment extends BaseBleFragment<IWarringRe
                 bluetoothItemRecordBeanList.add(new BluetoothItemRecordBean(content, "", KeyConstants.BLUETOOTH_RECORD_WARN,
                         hourSecond, false, false));
             }
-
         }
         for (int i = 0; i < list.size(); i++) {
             BluetoothRecordBean bluetoothRecordBean = list.get(i);
@@ -272,7 +252,6 @@ public class BluetoothWarnInformationFragment extends BaseBleFragment<IWarringRe
                 if (j == bluetoothRecordBeanList.size() - 1) {
                     bluetoothItemRecordBean.setLastData(true);
                 }
-
             }
             if (i == list.size() - 1) {
                 bluetoothRecordBean.setLastData(true);

@@ -27,7 +27,7 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:background="#999999"
-            android:visibility="invisible"></View>
+            android:visibility="invisible" />
 
         <ImageView
             android:id="@+id/iv"
@@ -41,7 +41,7 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:background="#999999"
-            android:visibility="invisible"></View>
+            android:visibility="invisible" />
     </LinearLayout>
 
     <TextView
@@ -50,7 +50,7 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_marginLeft="@dimen/dp_110"
-        android:layout_marginRight="@dimen/dp_50"
+        android:layout_marginRight="@dimen/dp_30"
         android:textColor="#999999"
         android:textSize="@dimen/sp_12" />
     <TextView

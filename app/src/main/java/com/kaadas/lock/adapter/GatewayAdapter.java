@@ -16,6 +16,7 @@ import com.kaadas.lock.publiclibrary.bean.CateEyeInfo;
 import com.kaadas.lock.publiclibrary.bean.GatewayInfo;
 import com.kaadas.lock.publiclibrary.bean.GwLockInfo;
 import com.kaadas.lock.utils.BatteryView;
+import com.kaadas.lock.utils.BleLockUtils;
 import com.kaadas.lock.utils.KeyConstants;
 
 import java.util.List;
@@ -62,9 +63,17 @@ public class GatewayAdapter extends BaseQuickAdapter<HomeShowBean, BaseViewHolde
             }
         }else if (HomeShowBean.TYPE_GATEWAY_LOCK==deviceType){
             //网关
-            ivDeviceType.setImageResource(R.mipmap.default_zigbee_lock_icon);
+
             GwLockInfo gwLockInfo= (GwLockInfo) item.getObject();
             GatewayInfo  gatewayInfo=MyApplication.getInstance().getGatewayById(gwLockInfo.getGwID());
+            String lockversion = gwLockInfo.getServerInfo().getLockversion();
+            ivDeviceType.setImageResource(R.mipmap.default_zigbee_lock_icon);
+
+            if (!TextUtils.isEmpty(lockversion) && lockversion.contains(";") &&
+                    (lockversion.split(";")[0].startsWith("8100Z") || lockversion.split(";")[0].startsWith("8100A"))) {
+                ivDeviceType.setImageResource(R.mipmap.small_8100);
+            }
+
             if (gatewayInfo!=null) {
                 if ("online".equals(gatewayInfo.getEvent_str())) {
                     deviceStatus = gwLockInfo.getServerInfo().getEvent_str();
@@ -72,6 +81,7 @@ public class GatewayAdapter extends BaseQuickAdapter<HomeShowBean, BaseViewHolde
                     deviceStatus = "offline";
                 }
             }
+
             power=gwLockInfo.getPower();
             int realPower=power/2;
             realPw=realPower;

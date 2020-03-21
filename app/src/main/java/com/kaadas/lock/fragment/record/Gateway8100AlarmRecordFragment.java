@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.adapter.BluetoothRecordAdapter;
+import com.kaadas.lock.adapter.BluetoothWarnMessageAdapter;
 import com.kaadas.lock.bean.BluetoothItemRecordBean;
 import com.kaadas.lock.bean.BluetoothRecordBean;
 import com.kaadas.lock.mvp.mvpbase.BaseFragment;
@@ -61,7 +62,7 @@ public class Gateway8100AlarmRecordFragment extends BaseFragment<IGatewayAlarmLo
 
     private String gatewayId;
     private String deviceId;
-    private BluetoothRecordAdapter openLockRecordAdapter;
+    private BluetoothWarnMessageAdapter openLockRecordAdapter;
     private int page = 1;
     private int lastPage = 0;
     private List<GetAlarmRecordResult.DataBean> alarmRecordList = new ArrayList<>();
@@ -139,7 +140,7 @@ public class Gateway8100AlarmRecordFragment extends BaseFragment<IGatewayAlarmLo
     private void initRecycleView() {
 
         if (mOpenLockList != null) {
-            openLockRecordAdapter = new BluetoothRecordAdapter(mOpenLockList);  //网关锁开锁记录
+            openLockRecordAdapter = new BluetoothWarnMessageAdapter(mOpenLockList);  //网关锁开锁记录
             recycleview.setLayoutManager(new LinearLayoutManager(getActivity()));
             recycleview.setAdapter(openLockRecordAdapter);
 
@@ -237,7 +238,6 @@ public class Gateway8100AlarmRecordFragment extends BaseFragment<IGatewayAlarmLo
 
 //            ：1 低电量 2 钥匙开门 3 验证错误 4 防撬提醒 5 即时性推送消息 6 胁迫开门 7 上锁故障
             switch (dataBean.getWarningType()) {
-
                 case 1:
                     openType = getString(R.string.warring_low_power);
                     break;
@@ -265,15 +265,14 @@ public class Gateway8100AlarmRecordFragment extends BaseFragment<IGatewayAlarmLo
             }
             if (!timeHead.equals(lastDayTime)) { //添加头
                 lastDayTime = timeHead;
-                titleTime = DateUtils.getDayTimeFromMillisecond(dataBean.getWarningTime()  ); //转换成功顶部的时间
 
-                itemList.add(new BluetoothItemRecordBean(name, openType, KeyConstants.BLUETOOTH_RECORD_COMMON,
+                itemList.add(new BluetoothItemRecordBean(openType, "", KeyConstants.BLUETOOTH_RECORD_WARN,
                         hourSecond, false, false));
-                mOpenLockList.add(new BluetoothRecordBean(titleTime, itemList, false));
+                mOpenLockList.add(new BluetoothRecordBean(timeHead, itemList, false));
             } else {
                 BluetoothRecordBean bluetoothRecordBean = mOpenLockList.get(mOpenLockList.size() - 1);
                 List<BluetoothItemRecordBean> bluetoothItemRecordBeanList = bluetoothRecordBean.getList();
-                bluetoothItemRecordBeanList.add(new BluetoothItemRecordBean(name, openType, KeyConstants.BLUETOOTH_RECORD_COMMON,
+                bluetoothItemRecordBeanList.add(new BluetoothItemRecordBean(openType, "", KeyConstants.BLUETOOTH_RECORD_WARN,
                         hourSecond, false, false));
             }
         }
@@ -296,8 +295,6 @@ public class Gateway8100AlarmRecordFragment extends BaseFragment<IGatewayAlarmLo
             if (i == mOpenLockList.size() - 1) {
                 bluetoothRecordBean.setLastData(true);
             }
-
-
         }
     }
 
