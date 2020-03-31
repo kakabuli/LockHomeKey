@@ -76,4 +76,19 @@ public class ExampleUnitTest {
         System.out.println("校验成功   ");
         return;
     }
+
+
+
+    @Test
+    public void socketTest(){
+
+
+    }
+
+    public void socket(String ip,int port){
+
+
+    }
+
+
 }
