@@ -71,7 +71,7 @@ public class FingerprintManagerActivity extends BaseBleActivity<IFingerprintMana
         setContentView(R.layout.activity_fingerprint_manager);
         ButterKnife.bind(this);
         bleLockInfo = MyApplication.getInstance().getBleService().getBleLockInfo();
-        mPresenter.getAllPassword(bleLockInfo, false);
+        mPresenter.getAllPassword(bleLockInfo, true);
         //进入默认鉴权
         mPresenter.isAuth(bleLockInfo, false);
         tvContent.setText(getString(R.string.fingerprint));
@@ -116,7 +116,7 @@ public class FingerprintManagerActivity extends BaseBleActivity<IFingerprintMana
     @Override
     protected void onResume() {
         super.onResume();
-        mPresenter.getAllPassword(bleLockInfo, false);
+        mPresenter.getAllPassword(bleLockInfo, true);
     }
 
     @Override
@@ -183,7 +183,7 @@ public class FingerprintManagerActivity extends BaseBleActivity<IFingerprintMana
 
     @Override
     public void onServerDataUpdate() {
-        mPresenter.getAllPassword(bleLockInfo, false);
+        mPresenter.getAllPassword(bleLockInfo, true);
     }
 
     @Override

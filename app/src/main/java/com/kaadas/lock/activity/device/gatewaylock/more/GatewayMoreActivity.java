@@ -272,7 +272,6 @@ public class GatewayMoreActivity extends BaseActivity<GatewayLockMoreView, Gatew
                 }
 
                 break;
-
             case R.id.btn_delete:
                 AlertDialogUtil.getInstance().noEditTwoButtonDialog(this, getString(R.string.device_delete_dialog_head), getString(R.string.device_delete_lock_dialog_content), getString(R.string.cancel), getString(R.string.query), new AlertDialogUtil.ClickListener() {
                     @Override
@@ -350,7 +349,7 @@ public class GatewayMoreActivity extends BaseActivity<GatewayLockMoreView, Gatew
 
     @Override
     public void getSoundVolumeThrowable(Throwable throwable) {
-      /*  if (!TextUtils.isEmpty(gatewayId) && !TextUtils.isEmpty(deviceId)) {
+      /* if (!TextUtils.isEmpty(gatewayId) && !TextUtils.isEmpty(deviceId)) {
             mPresenter.getAm(MyApplication.getInstance().getUid(), gatewayId, deviceId);
         }*/
         if (loadingDialog != null) {
@@ -358,7 +357,6 @@ public class GatewayMoreActivity extends BaseActivity<GatewayLockMoreView, Gatew
         }
         ToastUtil.getInstance().showShort("获取失败");
         LogUtils.e("获取音量异常   " + throwable.getMessage());
-
     }
 
     @Override
@@ -374,8 +372,6 @@ public class GatewayMoreActivity extends BaseActivity<GatewayLockMoreView, Gatew
             silentModeStatus = true;
         }
         rlSilentMode.setEnabled(true);
-
-
     }
 
     @Override

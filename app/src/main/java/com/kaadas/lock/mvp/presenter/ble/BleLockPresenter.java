@@ -699,7 +699,8 @@ public class BleLockPresenter<T> extends MyOpenLockRecordPresenter<IBleLockView>
                                     }
                                 }
                             }
-                        }, new Consumer<Throwable>() {
+                        },
+                        new Consumer<Throwable>() {
                             @Override
                             public void accept(Throwable throwable) throws Exception {
                                 LogUtils.e("取消订阅了吗   " + operationDisposable.isDisposed() + "   " + throwable.getMessage());

@@ -183,7 +183,7 @@ public class ForgetPasswordActivity extends BaseActivity<IResetPasswordView, Res
 
             String pwd = StringUtil.getEdittextContent(etPassword);
             if (StringUtil.judgeSpecialCharacter(pwd)) {
-                ToastUtil.getInstance().showShort(R.string.not_input_special_symbol);
+                ToastUtil.getInstance().showShort(R.string.password_judgment);
                 return;
             }
             if (!StringUtil.passwordJudge(pwd)) {

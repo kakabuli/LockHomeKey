@@ -84,7 +84,7 @@ public class DoorCardManagerActivity extends BaseBleActivity<ICardManagerView, C
         initRecycleview();
         initData();
         initRefresh();
-        mPresenter.getAllPassword(bleLockInfo, false);
+        mPresenter.getAllPassword(bleLockInfo, true);
     }
 
     @Override
@@ -95,7 +95,7 @@ public class DoorCardManagerActivity extends BaseBleActivity<ICardManagerView, C
     @Override
     protected void onRestart() {
         super.onRestart();
-        mPresenter.getAllPassword(bleLockInfo, false);
+        mPresenter.getAllPassword(bleLockInfo, true);
     }
 
     private void initRefresh() {
@@ -197,7 +197,7 @@ public class DoorCardManagerActivity extends BaseBleActivity<ICardManagerView, C
     @Override
     public void onServerDataUpdate() {
         LogUtils.e("卡片更新   ");
-        mPresenter.getAllPassword(bleLockInfo, false);
+        mPresenter.getAllPassword(bleLockInfo, true);
     }
 
     @Override
@@ -238,7 +238,7 @@ public class DoorCardManagerActivity extends BaseBleActivity<ICardManagerView, C
 
     @Override
     public void onUpdate(List<GetPasswordResult.DataBean.Card> cardList) {
-        mPresenter.getAllPassword(bleLockInfo, false);
+        mPresenter.getAllPassword(bleLockInfo, true);
     }
 
     @Override

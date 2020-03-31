@@ -80,6 +80,11 @@ public class SearchDevicePresenter<T> extends BasePresenter<ISearchDeviceView> {
                 .filter(new Predicate<BluetoothDevice>() {
                     @Override
                     public boolean test(BluetoothDevice device) throws Exception {
+                        for (BluetoothDevice bluetoothDevice : devices) {
+                            if (bluetoothDevice.getName().equals(device.getName())){
+                                return false;
+                            }
+                        }
                         return !devices.contains(device); //看是否包含有此设备
                     }
                 })

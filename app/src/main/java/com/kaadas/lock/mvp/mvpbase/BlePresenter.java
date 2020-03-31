@@ -837,14 +837,14 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
 
                     @Override
                     public void onAckErrorCode(BaseResult baseResult) {
-                        if (isSafe()) {
+                        if (isSafe() && !isForceServer) {
                             mViewRef.get().onGetPasswordFailedServer(baseResult);
                         }
                     }
 
                     @Override
                     public void onFailed(Throwable throwable) {
-                        if (isSafe()) {
+                        if (isSafe() && !isForceServer) {
                             mViewRef.get().onGetPasswordFailed(throwable);
                         }
                     }
@@ -874,7 +874,6 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
             bleService.release();  //连接蓝牙时的延时断开蓝牙连接  1
         }
     };
-
 
     ///////////////////////////////////////开锁逻辑/////////////////////////////////////////
     public void openLock() {

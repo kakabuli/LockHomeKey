@@ -88,7 +88,7 @@ public class BluetoothPasswordManagerDetailActivity extends BaseBleActivity<IPas
         } else {
             tvNumber.setVisibility(View.VISIBLE);
             // 2时间段 3周期 4 24小时 5 一次性密码
-            if (password.getType() == 2) {  //时效密码
+            if (password.getType() == 2 || password.getType() == 4 ) {  //时效密码
 //                tvPwdEnable.setText(DateUtils.getStrFromMillisecond2(password.getStartTime()) + "-" + DateUtils.getStrFromMillisecond2(password.getEndTime()));
 //                密码有效时效  2018/12/12  10：22~2018/12/24 10:22
                 String startTime = DateUtils.formatDetailTime(password.getStartTime());

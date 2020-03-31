@@ -235,7 +235,7 @@ public class PasswordManagerPresenter<T> extends BlePresenter<IPasswordManagerVi
                     @Override
                     public void onSuccess(BaseResult result) {
                         LogUtils.e("上传秘钥昵称到服务器成功  " + result.toString());
-                        getAllPassword(bleLockInfo, true);
+                        getAllPassword(bleLockInfo, false);
                     }
 
                     @Override
@@ -286,7 +286,7 @@ public class PasswordManagerPresenter<T> extends BlePresenter<IPasswordManagerVi
                     @Override
                     public void onSuccess(BaseResult result) {
                         LogUtils.e("删除秘钥 到成功   " + result.toString());
-                        getAllPassword(bleLockInfo, true);
+                        getAllPassword(bleLockInfo, false);
                     }
 
                     @Override
@@ -336,7 +336,7 @@ public class PasswordManagerPresenter<T> extends BlePresenter<IPasswordManagerVi
                     @Override
                     public void onSuccess(BaseResult result) {
                         LogUtils.e("上传密码添加成功  ");
-                        getAllPassword(bleLockInfo, true);
+                        getAllPassword(bleLockInfo, false);
                     }
 
                     @Override
@@ -347,7 +347,7 @@ public class PasswordManagerPresenter<T> extends BlePresenter<IPasswordManagerVi
                     @Override
                     public void onFailed(Throwable throwable) {
                         LogUtils.e("上传密码失败  ");
-                        getAllPassword(bleLockInfo, true);
+                        getAllPassword(bleLockInfo, false);
                     }
 
                     @Override

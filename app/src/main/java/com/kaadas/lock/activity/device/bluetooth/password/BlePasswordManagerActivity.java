@@ -77,7 +77,7 @@ public class BlePasswordManagerActivity extends BaseBleActivity<IPasswordManager
         ButterKnife.bind(this);
         tvContent.setText(getString(R.string.password));
         bleLockInfo = MyApplication.getInstance().getBleService().getBleLockInfo();
-        mPresenter.getAllPassword(bleLockInfo, false);
+        mPresenter.getAllPassword(bleLockInfo, true);
         ivBack.setOnClickListener(this);
         tvSynchronizedRecord.setOnClickListener(this);
         llAddPassword.setOnClickListener(this);
@@ -119,7 +119,7 @@ public class BlePasswordManagerActivity extends BaseBleActivity<IPasswordManager
         super.onResume();
         LogUtils.e("密码管理界面  onResume()   ");
         mPresenter.isAuth(bleLockInfo, false); //查看是否需要重现连接
-        mPresenter.getAllPassword(bleLockInfo, false);
+        mPresenter.getAllPassword(bleLockInfo, true);
         LogUtils.e("密码管理界面  onResume()   ");
     }
 
@@ -238,7 +238,7 @@ public class BlePasswordManagerActivity extends BaseBleActivity<IPasswordManager
     @Override
     public void onServerDataUpdate() {
         LogUtils.e("密码管理   服务器数据更新   ");
-        mPresenter.getAllPassword(bleLockInfo, false);
+        mPresenter.getAllPassword(bleLockInfo, true);
     }
 
     @Override

@@ -174,6 +174,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
             public void run() {
                 LogUtils.e(" 首页锁状态  反锁状态   " + bleLockInfo.getBackLock() + "    安全模式    " + bleLockInfo.getSafeMode() + "   布防模式   " + bleLockInfo.getArmMode());
                 isOpening = false;
+                isLoadingBleRecord = false;
                 if (bleLockInfo.isAuth()) {
                     changeOpenLockStatus(8);
                 } else {
@@ -274,7 +275,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
                     LogUtils.e(this + "   设置设备66  " + bleLockInfo.getServerLockInfo().toString()+bleLockInfo.getServerLockInfo().getLockNickName());
                     mPresenter.isAuth(bleLockInfo, true);
                     mPresenter.setBleLockInfo(bleLockInfo);
-                    mPresenter.getAllPassword(bleLockInfo, false);
+                    mPresenter.getAllPassword(bleLockInfo, true);
                 }
             }
         });
@@ -285,6 +286,8 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
                 if (!isSelect) {
                     mPresenter.detachView();
                     isOpening = false;
+                    isLoadingBleRecord = false;
+
                 } else {
                     LogUtils.e("切换到当前界面  设备11  isdestroy  " + isDestroy + this + isCurrentFragment);
                     //切换到当前页面
@@ -301,7 +304,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
                         boolean auth = mPresenter.isAuth(bleLockInfo, true);
                         LogUtils.e("切换到当前界面   设备 isdestroy  " + isDestroy + auth);
                         LogUtils.e(this + "   设置设备2  " + bleLockInfo.getServerLockInfo().toString());
-                        mPresenter.getAllPassword(bleLockInfo, false);
+                        mPresenter.getAllPassword(bleLockInfo, true);
                         isCurrentFragment = true;
                         if (auth) {
                             mPresenter.getDeviceInfo();
@@ -340,11 +343,12 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
                         onChangeInitView();
                         LogUtils.e(this + "   设置设备1  " + bleLockInfo.getServerLockInfo().toString());
 //                        mPresenter.isAuth(bleLockInfo, true);
-                        mPresenter.getAllPassword(bleLockInfo, false);
+                        mPresenter.getAllPassword(bleLockInfo, true);
                     }
                 } else {
                     mPresenter.detachView();
                     isOpening = false;
+                    isLoadingBleRecord = false;
                     isCurrentFragment = false;
                 }
             }
@@ -368,10 +372,11 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
             onChangeInitView();
             mPresenter.isAuth(bleLockInfo, true);
             LogUtils.e(this + "  设置设备3  " + bleLockInfo.getServerLockInfo().toString());
-            mPresenter.getAllPassword(bleLockInfo, false);
+            mPresenter.getAllPassword(bleLockInfo, true);
         } else {
             mPresenter.detachView();
             isOpening = false;
+            isLoadingBleRecord = false;
         }
 
         if (position == 0 && position == homeFragment.getCurrentPosition()) {
@@ -1184,8 +1189,8 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
             ToastUtil.getInstance().showShort(R.string.sync_success);
         } else {
             ToastUtil.getInstance().showShort(R.string.get_record_failed_please_wait);
-            hiddenLoading();
         }
+        hiddenLoading();
         //加载完了   设置正在加载数据
         isLoadingBleRecord = false;
     }
@@ -1194,6 +1199,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
     public void onLoadServerRecord(List<OpenLockRecord> lockRecords, int page) {
         LogUtils.e("收到服务器数据  " + lockRecords.size());
 //        currentPage = page + 1;
+        hiddenLoading();
         groupData(lockRecords);
         LogUtils.d("davi showDatas " + showDatas.toString());
         bluetoothRecordAdapter.notifyDataSetChanged();
@@ -1201,10 +1207,12 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
 
     @Override
     public void onLoadServerRecordFailed(Throwable throwable) {
+        hiddenLoading();
     }
 
     @Override
     public void onLoadServerRecordFailedServer(BaseResult result) {
+        hiddenLoading();
 
     }
 
