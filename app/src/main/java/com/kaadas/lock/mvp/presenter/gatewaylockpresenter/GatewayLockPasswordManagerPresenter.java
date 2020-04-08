@@ -15,6 +15,7 @@ public class GatewayLockPasswordManagerPresenter<T> extends GatewayLockPasswordP
     void onSyncComplete(String gatewayId, String deviceId, int currentIndex, int pwdId, String pwdValue,
                         int pwdType, long zLocalEndT, long zLocalStartT, int dayMaskBits,
                         int endHour, int endMinute, int startHour, int startMinute) {
+
         planPasswordIndex.clear();
         for (Integer key : pwds.keySet()) {
             if (pwds.get(key) != 0) {

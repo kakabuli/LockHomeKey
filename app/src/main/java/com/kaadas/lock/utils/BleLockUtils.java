@@ -478,6 +478,12 @@ public class BleLockUtils {
                 return R.mipmap.bluetooth_authorization_lock_8100;
             } else if (model.startsWith("K200")) {
                 return R.mipmap.bluetooth_authorization_lock_k200;
+            } else if (model.startsWith("S3001")) {
+                return R.mipmap.bluetooth_authorization_lock_s3001;
+            } else if (model.startsWith("S3006")) {
+                return R.mipmap.bluetooth_authorization_lock_s3006;
+            } else if (model.startsWith("S3007")) {
+                return R.mipmap.bluetooth_authorization_lock_s3007;
             } else if (model.startsWith("S300")) {
                 return R.mipmap.bluetooth_authorization_lock_s300;
             } else if (model.startsWith("5011")) {
@@ -567,6 +573,12 @@ public class BleLockUtils {
                 return R.mipmap.small_8100;
             } else if (model.startsWith("K200")) {
                 return R.mipmap.k200;
+            } else if (model.startsWith("S3001")) {
+                return R.mipmap.small_s3001;
+            } else if (model.startsWith("S3006")) {
+                return R.mipmap.small_s3006;
+            } else if (model.startsWith("S3007")) {
+                return R.mipmap.small_s3007;
             } else if (model.startsWith("S300")) {
                 return R.mipmap.s300;
             } else if (model.startsWith("5011")) {
@@ -656,6 +668,12 @@ public class BleLockUtils {
                 return R.mipmap.bluetooth_lock_8100;
             } else if (model.startsWith("K200")) {
                 return R.mipmap.bluetooth_lock_k200;
+            } else if (model.startsWith("S3001")) {
+                return R.mipmap.bluetooth_lock_s3001;
+            } else if (model.startsWith("S3006")) {
+                return R.mipmap.bluetooth_lock_s3006;
+            } else if (model.startsWith("S3007")) {
+                return R.mipmap.bluetooth_lock_s3007;
             } else if (model.startsWith("S300")) {
                 return R.mipmap.bluetooth_lock_s300;
             } else if (model.startsWith("5011")) {

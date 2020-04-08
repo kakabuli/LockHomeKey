@@ -25,6 +25,10 @@ public class WifiApWifiSetUpPresenter<T> extends BasePresenter<IWifiLockAPWifiSe
     private long times = 0;
     private Disposable bindDisposable;
 
+
+    private Disposable updateDisposable;
+    private Disposable realBindDisposable;
+
     @Override
     public void detachView() {
         super.detachView();
@@ -64,6 +68,7 @@ public class WifiApWifiSetUpPresenter<T> extends BasePresenter<IWifiLockAPWifiSe
     }
 
     public void bindDevice(String wifiSN, String lockNickName, String uid, String randomCode, String wifiName, int func) {
+        toDisposable(realBindDisposable);
         XiaokaiNewServiceImp.wifiLockBind(wifiSN, lockNickName, uid, randomCode, wifiName, func)
                 .subscribe(new BaseObserver<BaseResult>() {
                     @Override
@@ -95,6 +100,7 @@ public class WifiApWifiSetUpPresenter<T> extends BasePresenter<IWifiLockAPWifiSe
 
                     @Override
                     public void onSubscribe1(Disposable d) {
+                        realBindDisposable = d;
                         compositeDisposable.add(d);
                     }
                 });
@@ -102,6 +108,7 @@ public class WifiApWifiSetUpPresenter<T> extends BasePresenter<IWifiLockAPWifiSe
 
 
     public void update(String wifiSN, String randomCode, String wifiName, int func) {
+        toDisposable(updateDisposable);
         XiaokaiNewServiceImp.wifiLockUpdateInfo(MyApplication.getInstance().getUid(), wifiSN, randomCode, wifiName, func)
                 .subscribe(new BaseObserver<BaseResult>() {
                     @Override
@@ -131,6 +138,8 @@ public class WifiApWifiSetUpPresenter<T> extends BasePresenter<IWifiLockAPWifiSe
 
                     @Override
                     public void onSubscribe1(Disposable d) {
+
+                        updateDisposable = d;
                         compositeDisposable.add(d);
                     }
                 });

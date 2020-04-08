@@ -24,6 +24,7 @@ import com.kaadas.lock.utils.greenDao.manager.GatewayLockPasswordManager;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -58,6 +59,9 @@ public abstract class GatewayLockPasswordPresenter<T extends IGatewayLockPasswor
     private Disposable setUserTypeDisposable;
 
 
+    private LocalData[] localDatas;
+
+
     public void syncPassword(String gatewayId, String deviceId) {
         getLockBaseInfo(ALL_PASSWORD, gatewayId, deviceId, 0, "", 0, 0, 0, 0, 0, 0, 0, 0);
     }
@@ -76,7 +80,7 @@ public abstract class GatewayLockPasswordPresenter<T extends IGatewayLockPasswor
                         @Override
                         public boolean test(MqttData mqttData) throws Exception {
                             if (mqttData != null) {
-                                if (MqttConstant.LOCK_PWD_INFO.equals(mqttData.getFunc())&& mqttMessage.getId() == mqttData.getMessageId()) {
+                                if (MqttConstant.LOCK_PWD_INFO.equals(mqttData.getFunc()) && mqttMessage.getId() == mqttData.getMessageId()) {
                                     return true;
                                 }
                             }
@@ -103,12 +107,13 @@ public abstract class GatewayLockPasswordPresenter<T extends IGatewayLockPasswor
                                     }
                                     return;
                                 }
-                                getLockPwd(gatewayId, deviceId, 0, pwdId, pwdValue, pwdType,
-                                        zLocalEndT, zLocalStartT, dayMaskBits, endHour, endMinute, startHour, startMinute);
+//                                getLockPwd(gatewayId, deviceId, 0, pwdId, pwdValue, pwdType,
+//                                        zLocalEndT, zLocalStartT, dayMaskBits, endHour, endMinute, startHour, startMinute);
 
+                                startSyncPassword(gatewayId, deviceId, 0, pwdId, pwdValue, pwdType, zLocalEndT, zLocalStartT, dayMaskBits, endHour, endMinute, startHour, startMinute);
                             } else {
                                 LogUtils.e("获取锁信息失败   " + returnCode);
-                                 if (isSafe()) {
+                                if (isSafe()) {
                                     mViewRef.get().getLockInfoFail();
                                 }
                             }
@@ -161,7 +166,7 @@ public abstract class GatewayLockPasswordPresenter<T extends IGatewayLockPasswor
                     .filter(new Predicate<MqttData>() {
                         @Override
                         public boolean test(MqttData mqttData) throws Exception {
-                            if (MqttConstant.SET_PWD.equals(mqttData.getFunc())&& mqttMessage.getId() == mqttData.getMessageId()) {
+                            if (MqttConstant.SET_PWD.equals(mqttData.getFunc()) && mqttMessage.getId() == mqttData.getMessageId()) {
                                 return true;
                             }
                             return false;
@@ -301,7 +306,7 @@ public abstract class GatewayLockPasswordPresenter<T extends IGatewayLockPasswor
                 .filter(new Predicate<MqttData>() {
                     @Override
                     public boolean test(MqttData mqttData) throws Exception {
-                        if (MqttConstant.SET_USER_TYPE.equals(mqttData.getFunc())&& mqttMessage.getId() == mqttData.getMessageId()) {
+                        if (MqttConstant.SET_USER_TYPE.equals(mqttData.getFunc()) && mqttMessage.getId() == mqttData.getMessageId()) {
                             return true;
                         }
                         return false;
@@ -366,7 +371,7 @@ public abstract class GatewayLockPasswordPresenter<T extends IGatewayLockPasswor
                 .filter(new Predicate<MqttData>() {
                     @Override
                     public boolean test(MqttData mqttData) throws Exception {
-                        if (MqttConstant.SCHEDULE.equals(mqttData.getFunc())&& mqttMessage.getId() == mqttData.getMessageId()) {
+                        if (MqttConstant.SCHEDULE.equals(mqttData.getFunc()) && mqttMessage.getId() == mqttData.getMessageId()) {
                             return true;
                         }
                         return false;
@@ -451,7 +456,7 @@ public abstract class GatewayLockPasswordPresenter<T extends IGatewayLockPasswor
                         if ("200".equals(returnCode)) {
                             //设置用户类型成功
                             int id = gatewayPasswordResultBean.getReturnData().getScheduleID();
-                            if (id!=scheduleId){
+                            if (id != scheduleId) {
                                 return;
                             }
                             toDisposable(getPlanDisposable);
@@ -541,7 +546,7 @@ public abstract class GatewayLockPasswordPresenter<T extends IGatewayLockPasswor
                     .filter(new Predicate<MqttData>() {
                         @Override
                         public boolean test(MqttData mqttData) throws Exception {
-                            if (mqttData.getFunc().equals(MqttConstant.SET_PWD)&& mqttMessage.getId() == mqttData.getMessageId()) {
+                            if (mqttData.getFunc().equals(MqttConstant.SET_PWD) && mqttMessage.getId() == mqttData.getMessageId()) {
                                 return true;
                             }
                             return false;
@@ -629,7 +634,7 @@ public abstract class GatewayLockPasswordPresenter<T extends IGatewayLockPasswor
                         .filter(new Predicate<MqttData>() {
                             @Override
                             public boolean test(MqttData mqttData) throws Exception {
-                                if (MqttConstant.SET_PWD.equals(mqttData.getFunc())&& mqttMessage.getId() == mqttData.getMessageId()) {
+                                if (MqttConstant.SET_PWD.equals(mqttData.getFunc()) && mqttMessage.getId() == mqttData.getMessageId()) {
                                     return true;
                                 }
                                 return false;
@@ -679,4 +684,164 @@ public abstract class GatewayLockPasswordPresenter<T extends IGatewayLockPasswor
 
     abstract void onSyncComplete(String gatewayId, String deviceId, int currentIndex, int pwdId, String pwdValue, int pwdType,
                                  long zLocalEndT, long zLocalStartT, int dayMaskBits, int endHour, int endMinute, int startHour, int startMinute);
+
+
+    //获取开锁密码列表
+    public void getLockPwd2(LocalData localData) {
+        if (mqttService != null) {
+            MqttMessage mqttMessage = MqttCommandFactory.lockPwdFunc(localData.gatewayId, localData.deviceId, "get", "pin", localData.index > 9 ? "" + localData.index : "0" + localData.index, "");
+            Disposable disposable = mqttService.mqttPublish(MqttConstant.getCallTopic(MyApplication.getInstance().getUid()),
+                    mqttMessage)
+                    .filter(new Predicate<MqttData>() {
+                        @Override
+                        public boolean test(MqttData mqttData) throws Exception {
+                            if (MqttConstant.SET_PWD.equals(mqttData.getFunc()) && mqttMessage.getId() == mqttData.getMessageId()) {
+                                return true;
+                            }
+                            return false;
+                        }
+                    })
+                    .timeout(40 * 1000, TimeUnit.MILLISECONDS)
+                    .compose(RxjavaHelper.observeOnMainThread())
+                    .subscribe(new Consumer<MqttData>() {
+                        @Override
+                        public void accept(MqttData mqttData) throws Exception {
+                            LockPwdFuncBean lockPwdFuncBean = new Gson().fromJson(mqttData.getPayload(), LockPwdFuncBean.class);
+                            String returnCode = lockPwdFuncBean.getReturnCode();
+                            toDisposable(localData.disposable);
+                            if ("200".equals(returnCode)) {
+                                int id = 0;
+                                try {
+                                    id = Integer.parseInt(lockPwdFuncBean.getParams().getPwdid());
+                                } catch (Exception e) {
+                                    LogUtils.e(e.getMessage());
+                                }
+                                if (localData.index != id) {
+                                    LogUtils.e("返回的不是查询的数据");
+                                    return;
+                                }
+                                int status = lockPwdFuncBean.getReturnData().getStatus();
+                                if (status == 1) {
+                                    int pwdType = lockPwdFuncBean.getReturnData().getUserType();   //获取当前密码是什么类型的密码    是默认密码还是策略密码
+                                    pwds.put(localData.index, pwdType);
+                                    GatewayPasswordPlanBean gatewayPasswordPlanBean = new GatewayPasswordPlanBean(localData.deviceId, localData.gatewayId, MyApplication.getInstance().getUid());
+                                    gatewayPasswordPlanBean.setUserType(pwdType);
+                                    gatewayPasswordPlanBean.setPasswordNumber(localData.index);
+                                    passwordPlanBeans.put(localData.index, gatewayPasswordPlanBean);
+                                }
+                                localData.status = 2;
+                                //
+                                checkStatus(localData);
+                            } else { //获取失败  重新来过
+                                if (localData.retryTimes >1){ //已经重试了三次
+                                    localData.status = 3;
+                                    checkStatus(localData);
+                                }else { //重试
+                                    localData.retryTimes = localData.retryTimes+1;
+                                    getLockPwd2(localData);
+                                }
+                            }
+                        }
+                    }, new Consumer<Throwable>() {
+                        @Override
+                        public void accept(Throwable throwable) throws Exception {
+                            LogUtils.e("获取密码出错    " + throwable.getMessage() + "  第多少个数据  " + localData.index);
+                            if (localData.retryTimes >1){ //已经重试了三次
+                                localData.status = 3;
+                                checkStatus(localData);
+                            }else { //重试
+                                localData.retryTimes = localData.retryTimes+1;
+                                getLockPwd2(localData);
+                            }
+                        }
+                    });
+            compositeDisposable.add(disposable);
+            localData.disposable = disposable;
+            localData.status = 1;
+        }
+    }
+
+
+    private void checkStatus(LocalData localData) {
+//        LogUtils.e("秘钥数据是   " +   Arrays.toString(localDatas));
+        boolean isComplete = true;
+        for (int i = 0; i < localDatas.length; i++) {
+            if (localDatas[i].status == 0) {
+                getLockPwd2(localDatas[i]);
+                return;
+            }
+            if (!(localDatas[i].status == 2 || localDatas[i].status == 3)) {
+                isComplete = false;
+            }
+        }
+        if (isComplete) { //如果完成了
+            if (isSafe()) {
+                mViewRef.get().syncPasswordComplete(passwordPlanBeans);
+            }
+            onSyncComplete(localData.gatewayId, localData.deviceId, localData.index, localData.pwdId, localData.pwdValue, localData.pwdType,
+                    localData.zLocalEndT, localData.zLocalStartT, localData.dayMaskBits, localData.endHour, localData.endMinute, localData.startHour, localData.startMinute);
+        }
+    }
+
+
+
+    public void startSyncPassword(String gatewayId, String deviceId, int currentIndex, int pwdId, String pwdValue, int pwdType,
+                                  long zLocalEndT, long zLocalStartT, int dayMaskBits, int endHour, int endMinute, int startHour, int startMinute) {
+        localDatas = new LocalData[validIndex.size()];
+        for (int i = 0; i < validIndex.size(); i++) {
+            LocalData localData = new LocalData(gatewayId, deviceId, pwdId, pwdValue, pwdType, zLocalEndT, zLocalStartT, dayMaskBits, endHour, endMinute, startHour, startMinute);
+            localData.index = validIndex.get(i);
+            localDatas[i] = localData;
+        }
+        for (int i = 0; i < 5 && i < localDatas.length ; i++) {
+            getLockPwd2(localDatas[i]);
+        }
+    }
+
+    public static class LocalData {
+        public int index;
+        public Disposable disposable;
+        public int retryTimes;
+
+        public int status; // 0 初始状态   1  正在请求  2  请求成功  3 请求失败
+
+        public String gatewayId;
+        public String deviceId;
+        public int pwdId;
+        public String pwdValue;
+        public int pwdType;
+        public long zLocalEndT;
+        public long zLocalStartT;
+        public int dayMaskBits;
+        public int endHour;
+        public int endMinute;
+        public int startHour;
+        public int startMinute;
+
+        public LocalData(String gatewayId, String deviceId, int pwdId, String pwdValue, int pwdType, long zLocalEndT, long zLocalStartT, int dayMaskBits, int endHour, int endMinute, int startHour, int startMinute) {
+            this.gatewayId = gatewayId;
+            this.deviceId = deviceId;
+            this.pwdId = pwdId;
+            this.pwdValue = pwdValue;
+            this.pwdType = pwdType;
+            this.zLocalEndT = zLocalEndT;
+            this.zLocalStartT = zLocalStartT;
+            this.dayMaskBits = dayMaskBits;
+            this.endHour = endHour;
+            this.endMinute = endMinute;
+            this.startHour = startHour;
+            this.startMinute = startMinute;
+        }
+
+
+        @Override
+        public String toString() {
+            return "LocalData{" +
+                    "index=" + index +
+                    ", retryTimes=" + retryTimes +
+                    ", status=" + status +
+                    '}';
+        }
+    }
+
 }
