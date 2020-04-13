@@ -91,6 +91,12 @@ public class WifiLockRecordIAdapter extends BaseQuickAdapter<WifiLockOperationRe
                     case 9:
                         left = mContext.getString(R.string.machine_key);
                         break;
+                    case 10:
+                        left = mContext.getString(R.string.indoor_open);
+                        break;
+                    case 11:
+                        left = mContext.getString(R.string.indoor_Induction);
+                        break;
                     default:
                         right = mContext.getString(R.string.unknown_open);
                         break;
