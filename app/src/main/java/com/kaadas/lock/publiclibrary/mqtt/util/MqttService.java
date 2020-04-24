@@ -411,7 +411,7 @@ public class MqttService extends Service {
                 mqttClient.publish(topic, mqttMessage, null, new IMqttActionListener() {
                     @Override
                     public void onSuccess(IMqttToken asyncActionToken) {
-                        LogUtils.e("发布消息成功  ", topic + "  消息Id  " + mqttMessage.getId() );
+//                        LogUtils.e("发布消息成功  ", topic + "  消息Id  " + mqttMessage.getId() );
                         publishObservable.onNext(new PublishResult(true, asyncActionToken, mqttMessage));
                     }
 

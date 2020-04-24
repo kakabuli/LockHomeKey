@@ -1,5 +1,6 @@
 package com.kaadas.lock.activity.addDevice.cateye;
 
+import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -12,9 +13,11 @@ import android.widget.Toast;
 
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.addDevice.DeviceBindGatewayListActivity;
+import com.kaadas.lock.activity.addDevice.zigbeelocknew.QrCodeScanActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.PermissionUtil;
 import com.kaadas.lock.utils.ftp.GeTui;
 import com.king.zxing.Intents;
 
@@ -56,8 +59,18 @@ public class AddDeviceCatEyeFirstActivity extends BaseAddToApplicationActivity {
                startActivity(intent);
                 break;
             case R.id.scan_catEye:
-                Intent scanIntent = new Intent(this, AddDeviceCatEyeScanActivity.class);
-                startActivityForResult(scanIntent,KeyConstants.SCANCATEYE_REQUEST_CODE);
+//                Intent scanIntent = new Intent(this, AddDeviceCatEyeScanActivity.class);
+//                startActivityForResult(scanIntent,KeyConstants.SCANCATEYE_REQUEST_CODE);
+                String[] strings = PermissionUtil.getInstance().checkPermission(new String[]{  Manifest.permission.CAMERA});
+                if (strings.length>0){
+                    Toast.makeText(this, "请允许拍照或录像权限", Toast.LENGTH_SHORT).show();
+                    PermissionUtil.getInstance().requestPermission(new String[]{  Manifest.permission.CAMERA}, this);
+                }else {
+                    Intent scanIntent = new Intent(this, QrCodeScanActivity.class);
+                    scanIntent.putExtra(KeyConstants.SCAN_TYPE, 1);
+                    startActivityForResult(scanIntent, KeyConstants.SCANCATEYE_REQUEST_CODE);
+                }
+
                 break;
             case  R.id.phone_add_txt:
                 Intent phoneIntent = new Intent(this, CatEyeAddPhoneActivity.class);

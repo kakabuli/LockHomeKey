@@ -4,6 +4,13 @@ import com.kaadas.lock.utils.Rsa;
 
 import org.junit.Test;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.net.Socket;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.zip.CRC32;
@@ -16,6 +23,8 @@ import static org.junit.Assert.*;
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
 public class ExampleUnitTest {
+
+
     @Test
     public void addition_isCorrect() {
         assertEquals(4, 2 + 2);
@@ -23,10 +32,10 @@ public class ExampleUnitTest {
 
 
     @Test
-    public void test1(){
+    public void test1() {
         byte[] data = Rsa.hex2byte2("02cb28c6 7b41c467 60dfa626 108f4bfb 1802571a ddda986f 6e017911 84d676a9 55505330 32303038 31303031 380a");
         String adminPassword = "1470258";
-        parseWifiData(adminPassword,data);
+        parseWifiData(adminPassword, data);
     }
 
     public static void parseWifiData(String adminPassword, byte[] data) {
@@ -78,17 +87,91 @@ public class ExampleUnitTest {
     }
 
 
-
     @Test
-    public void socketTest(){
+    public void socketTest() {
+        String ip = "";
+        int port = 123;
+        startSocket(ip, port);
 
 
     }
 
-    public void socket(String ip,int port){
+    private OutputStream outputStream;
+    private InputStream inputStream;
+    private Socket socket;
+    private static final int SOCKET_CONNECT_TIMEOUT = 30 * 1000;
+    private byte[] buffer = new byte[0];
 
+    public void startSocket(String ip, int port) {
+        try {
+            socket = new Socket(ip, port);
+            socket.setSoTimeout(SOCKET_CONNECT_TIMEOUT); //
 
+            outputStream = socket.getOutputStream();
+            inputStream = socket.getInputStream();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.printf("连接失败  " + e.getMessage());
+        } finally {
+            release();
+        }
+    }
+
+    private void release() {
+        try {
+            if (inputStream != null) {
+                inputStream.close();
+                inputStream = null;
+            }
+            if (outputStream != null) {
+                outputStream.close();
+                outputStream = null;
+            }
+            if (socket != null) {
+                socket.close();
+                socket = null;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 
+    private void listenData() {
+        byte[] data = new byte[128];
+        int readSize = 0;
+        try {
+            while (inputStream != null && !socket.isClosed()) {
+                readSize = inputStream.read(data);
+                if (readSize > 0) {
+                    int length = buffer.length;
+                    byte[] temp = buffer;
+                    buffer = new byte[length + readSize];
+                    System.arraycopy(temp, 0, buffer, 0, temp.length);
+                    System.arraycopy(data, 0, buffer, temp.length, readSize);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public class DataInfo {
+        private int length; //payloads长度
+        private boolean group; //是否进行封包
+        private int type; //功能类型
+        private int dataLength; //payload长度
+        private byte[] payload;  //负载数据
+
+        public static final int TYPE_SING = 0x1001;//签到
+        public static final int TYPE_SLEEP = 0x1002;//睡觉
+        public static final int TYPE_RUN = 0x1003;//跑步
+        public static final int TYPE_EAT = 0x1004;//吃饭
+    }
+
+
+    public interface DataReceiveListener {
+
+    }
 }

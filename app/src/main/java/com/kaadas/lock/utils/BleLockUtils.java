@@ -411,16 +411,36 @@ public class BleLockUtils {
     }
 
     /**
-     * 根据设备型号,获取授权界面的显示图片
+     * 根据设备型号,获取授权界面的显示图片， 授权用户，大图
      *
      * @param model
      * @return
      */
     public static int getAuthorizationImageByModel(String model) {
         if (!TextUtils.isEmpty(model)) {
+
             if (model.startsWith("K7")) {
                 return R.mipmap.bluetooth_authorization_lock_k7;
-            } else if (model.startsWith("KX-T") || model.startsWith("K8300")) {
+            }
+
+            else if (model.startsWith("S118") ) {
+                return R.mipmap.bluetooth_authorization_lock_s118;
+            }
+            else if (model.startsWith("K10W") ) {
+                return R.mipmap.bluetooth_authorization_lock_k10w;
+            }
+            else if (model.startsWith("S300C") ) {
+                return R.mipmap.bluetooth_authorization_lock_s300c;
+            }
+            else if (model.startsWith("X6") ) {
+                return R.mipmap.bluetooth_authorization_lock_x6;
+            } else if (model.startsWith("K7P") ) {
+                return R.mipmap.bluetooth_authorization_lock_k7p;
+            }
+
+
+
+            else if (model.startsWith("KX-T") || model.startsWith("K8300")) {
                 return R.mipmap.bluetooth_authorization_lock_kx_t;
             } else if (model.startsWith("S110")) {
                 return R.mipmap.bluetooth_authorization_lock_s110;
@@ -478,6 +498,12 @@ public class BleLockUtils {
                 return R.mipmap.bluetooth_authorization_lock_8100;
             } else if (model.startsWith("K200")) {
                 return R.mipmap.bluetooth_authorization_lock_k200;
+            } else if (model.startsWith("S3001")) {
+                return R.mipmap.bluetooth_authorization_lock_s3001;
+            } else if (model.startsWith("S3006")) {
+                return R.mipmap.bluetooth_authorization_lock_s3006;
+            } else if (model.startsWith("S3007")) {
+                return R.mipmap.bluetooth_authorization_lock_s3007;
             } else if (model.startsWith("S300")) {
                 return R.mipmap.bluetooth_authorization_lock_s300;
             } else if (model.startsWith("5011")) {
@@ -500,7 +526,7 @@ public class BleLockUtils {
 
 
     /**
-     * 根据设备型号,获取设备列表显示的图片
+     * 根据设备型号,获取设备列表显示的图片，小图
      *
      * @param model
      * @return
@@ -509,7 +535,25 @@ public class BleLockUtils {
         if (!TextUtils.isEmpty(model)) {
             if (model.startsWith("K7")) {
                 return R.mipmap.k7;
-            } else if (model.startsWith("KX-T") || model.startsWith("K8300")) {
+            }
+
+
+            else if (model.startsWith("S118") ) {
+                return R.mipmap.s118;
+            }  else if (model.startsWith("K10W") ) {
+                return R.mipmap.k10w;
+            }  else if (model.startsWith("S300C") ) {
+                return R.mipmap.s300c;
+            }  else if (model.startsWith("X6") ) {
+                return R.mipmap.x6;
+            } else if (model.startsWith("K7P") ) {
+                return R.mipmap.k7p;
+            }
+
+
+
+
+            else if (model.startsWith("KX-T") || model.startsWith("K8300")) {
                 return R.mipmap.kx_t;
             } else if (model.startsWith("S110")) {
                 return R.mipmap.small_s110;
@@ -567,6 +611,12 @@ public class BleLockUtils {
                 return R.mipmap.small_8100;
             } else if (model.startsWith("K200")) {
                 return R.mipmap.k200;
+            } else if (model.startsWith("S3001")) {
+                return R.mipmap.small_s3001;
+            } else if (model.startsWith("S3006")) {
+                return R.mipmap.small_s3006;
+            } else if (model.startsWith("S3007")) {
+                return R.mipmap.small_s3007;
             } else if (model.startsWith("S300")) {
                 return R.mipmap.s300;
             } else if (model.startsWith("5011")) {
@@ -591,14 +641,33 @@ public class BleLockUtils {
     /**
      * 根据设备型号,获取设备详情界面显示的图片
      *
-     * @param model
+     * @param model   , 圈圈
      * @return
      */
     public static int getDetailImageByModel(String model) {
         if (!TextUtils.isEmpty(model)) {
             if (model.startsWith("K7")) {
                 return R.mipmap.bluetooth_lock_k7;
-            } else if (model.startsWith("KX-T") || model.startsWith("K8300")) {
+            }
+
+
+            else if (model.startsWith("S118") ) {
+                return R.mipmap.bluetooth_lock_s118;
+            }
+            else if (model.startsWith("K10W") ) {
+                return R.mipmap.bluetooth_lock_k10w;
+            }else if (model.startsWith("S300C") ) {
+                return R.mipmap.bluetooth_lock_s300c;
+            } else if (model.startsWith("X6") ) {
+                return R.mipmap.bluetooth_lock_x6;
+            } else if (model.startsWith("K7P") ) {
+                return R.mipmap.bluetooth_lock_k7p;
+            }
+
+
+
+
+            else if (model.startsWith("KX-T") || model.startsWith("K8300")) {
                 return R.mipmap.bluetooth_lock_kx_t;
             } else if (model.startsWith("S110")) {
                 return R.mipmap.bluetooth_lock_s110;
@@ -656,6 +725,12 @@ public class BleLockUtils {
                 return R.mipmap.bluetooth_lock_8100;
             } else if (model.startsWith("K200")) {
                 return R.mipmap.bluetooth_lock_k200;
+            } else if (model.startsWith("S3001")) {
+                return R.mipmap.bluetooth_lock_s3001;
+            } else if (model.startsWith("S3006")) {
+                return R.mipmap.bluetooth_lock_s3006;
+            } else if (model.startsWith("S3007")) {
+                return R.mipmap.bluetooth_lock_s3007;
             } else if (model.startsWith("S300")) {
                 return R.mipmap.bluetooth_lock_s300;
             } else if (model.startsWith("5011")) {

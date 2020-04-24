@@ -268,7 +268,7 @@ public class GatewayPasswordManagerActivity extends BaseActivity<IGatewayLockPas
         }
         //passwordPageChange(false);
         ToastUtil.getInstance().showShort(getString(R.string.get_lock_info_fail));
-        LogUtils.e("获取到锁信息异常   ");
+        LogUtils.e("获取到锁信息异常   " + throwable.getMessage());
     }
 
     @Override
