@@ -22,43 +22,43 @@ public class DaoMaster extends AbstractDaoMaster {
     /** Creates underlying database table using DAOs. */
     public static void createAllTables(Database db, boolean ifNotExists) {
         WifiLockInfoDao.createTable(db, ifNotExists);
-        BleLockServiceInfoDao.createTable(db, ifNotExists);
+        GatewayLockServiceInfoDao.createTable(db, ifNotExists);
         CateEyeInfoBaseDao.createTable(db, ifNotExists);
-        CatEyeEventDao.createTable(db, ifNotExists);
-        CatEyeServiceInfoDao.createTable(db, ifNotExists);
-        DBOpenLockRecordDao.createTable(db, ifNotExists);
-        DevicePowerDao.createTable(db, ifNotExists);
         GatewayBaseInfoDao.createTable(db, ifNotExists);
-        GatewayLockAlarmEventDaoDao.createTable(db, ifNotExists);
+        CatEyeEventDao.createTable(db, ifNotExists);
+        DevicePowerDao.createTable(db, ifNotExists);
+        GatewayPasswordPlanBeanDao.createTable(db, ifNotExists);
+        PirDefaultDao.createTable(db, ifNotExists);
+        CatEyeServiceInfoDao.createTable(db, ifNotExists);
+        BleLockServiceInfoDao.createTable(db, ifNotExists);
+        GatewayServiceInfoDao.createTable(db, ifNotExists);
+        GatewayLockRecordDao.createTable(db, ifNotExists);
         GatewayLockBaseInfoDao.createTable(db, ifNotExists);
         GatewayLockPwdDao.createTable(db, ifNotExists);
-        GatewayLockRecordDao.createTable(db, ifNotExists);
-        GatewayLockServiceInfoDao.createTable(db, ifNotExists);
-        GatewayPasswordPlanBeanDao.createTable(db, ifNotExists);
-        GatewayServiceInfoDao.createTable(db, ifNotExists);
+        GatewayLockAlarmEventDaoDao.createTable(db, ifNotExists);
+        DBOpenLockRecordDao.createTable(db, ifNotExists);
         HistoryInfoDao.createTable(db, ifNotExists);
-        PirDefaultDao.createTable(db, ifNotExists);
     }
 
     /** Drops underlying database table using DAOs. */
     public static void dropAllTables(Database db, boolean ifExists) {
         WifiLockInfoDao.dropTable(db, ifExists);
-        BleLockServiceInfoDao.dropTable(db, ifExists);
+        GatewayLockServiceInfoDao.dropTable(db, ifExists);
         CateEyeInfoBaseDao.dropTable(db, ifExists);
-        CatEyeEventDao.dropTable(db, ifExists);
-        CatEyeServiceInfoDao.dropTable(db, ifExists);
-        DBOpenLockRecordDao.dropTable(db, ifExists);
-        DevicePowerDao.dropTable(db, ifExists);
         GatewayBaseInfoDao.dropTable(db, ifExists);
-        GatewayLockAlarmEventDaoDao.dropTable(db, ifExists);
+        CatEyeEventDao.dropTable(db, ifExists);
+        DevicePowerDao.dropTable(db, ifExists);
+        GatewayPasswordPlanBeanDao.dropTable(db, ifExists);
+        PirDefaultDao.dropTable(db, ifExists);
+        CatEyeServiceInfoDao.dropTable(db, ifExists);
+        BleLockServiceInfoDao.dropTable(db, ifExists);
+        GatewayServiceInfoDao.dropTable(db, ifExists);
+        GatewayLockRecordDao.dropTable(db, ifExists);
         GatewayLockBaseInfoDao.dropTable(db, ifExists);
         GatewayLockPwdDao.dropTable(db, ifExists);
-        GatewayLockRecordDao.dropTable(db, ifExists);
-        GatewayLockServiceInfoDao.dropTable(db, ifExists);
-        GatewayPasswordPlanBeanDao.dropTable(db, ifExists);
-        GatewayServiceInfoDao.dropTable(db, ifExists);
+        GatewayLockAlarmEventDaoDao.dropTable(db, ifExists);
+        DBOpenLockRecordDao.dropTable(db, ifExists);
         HistoryInfoDao.dropTable(db, ifExists);
-        PirDefaultDao.dropTable(db, ifExists);
     }
 
     /**
@@ -78,22 +78,22 @@ public class DaoMaster extends AbstractDaoMaster {
     public DaoMaster(Database db) {
         super(db, SCHEMA_VERSION);
         registerDaoClass(WifiLockInfoDao.class);
-        registerDaoClass(BleLockServiceInfoDao.class);
+        registerDaoClass(GatewayLockServiceInfoDao.class);
         registerDaoClass(CateEyeInfoBaseDao.class);
-        registerDaoClass(CatEyeEventDao.class);
-        registerDaoClass(CatEyeServiceInfoDao.class);
-        registerDaoClass(DBOpenLockRecordDao.class);
-        registerDaoClass(DevicePowerDao.class);
         registerDaoClass(GatewayBaseInfoDao.class);
-        registerDaoClass(GatewayLockAlarmEventDaoDao.class);
+        registerDaoClass(CatEyeEventDao.class);
+        registerDaoClass(DevicePowerDao.class);
+        registerDaoClass(GatewayPasswordPlanBeanDao.class);
+        registerDaoClass(PirDefaultDao.class);
+        registerDaoClass(CatEyeServiceInfoDao.class);
+        registerDaoClass(BleLockServiceInfoDao.class);
+        registerDaoClass(GatewayServiceInfoDao.class);
+        registerDaoClass(GatewayLockRecordDao.class);
         registerDaoClass(GatewayLockBaseInfoDao.class);
         registerDaoClass(GatewayLockPwdDao.class);
-        registerDaoClass(GatewayLockRecordDao.class);
-        registerDaoClass(GatewayLockServiceInfoDao.class);
-        registerDaoClass(GatewayPasswordPlanBeanDao.class);
-        registerDaoClass(GatewayServiceInfoDao.class);
+        registerDaoClass(GatewayLockAlarmEventDaoDao.class);
+        registerDaoClass(DBOpenLockRecordDao.class);
         registerDaoClass(HistoryInfoDao.class);
-        registerDaoClass(PirDefaultDao.class);
     }
 
     public DaoSession newSession() {
