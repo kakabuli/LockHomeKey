@@ -381,4 +381,9 @@ public class HttpUrlConstants {
     public static final String WIFI_LOCK_UPLOAD_OTA = BASE_URL + "wifi/device/ota";
 
 
+    /**
+     * 获取开锁次数
+     */
+    public static final String  GET_ZIGBEEN_INFO = BASE_URL + "v1/user/getZigBeeInfo";
+
 }

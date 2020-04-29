@@ -214,6 +214,7 @@ public class GatewayPasswordManagerActivity extends BaseActivity<IGatewayLockPas
                 //点击同步
                 loadingDialog.show2(getString(R.string.get_gateway_lock_pwd_waiting));
                 mPresenter.syncPassword(gatewayId, deviceId);
+           //     mPresenter.sysPassworByhttp(MyApplication.getInstance().getUid(),gatewayId,deviceId);
                 break;
         }
     }

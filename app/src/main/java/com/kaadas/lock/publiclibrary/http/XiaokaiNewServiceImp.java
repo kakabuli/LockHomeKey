@@ -58,6 +58,7 @@ import com.kaadas.lock.publiclibrary.http.postbean.WifiLockUpdateInfoBean;
 import com.kaadas.lock.publiclibrary.http.postbean.WifiLockUpdatePushSwitchBean;
 import com.kaadas.lock.publiclibrary.http.postbean.WifiLockUpdatePwdNickBean;
 import com.kaadas.lock.publiclibrary.http.postbean.WifiLockUpdateShareNickBean;
+import com.kaadas.lock.publiclibrary.http.postbean.ZigBeenInfo;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.result.CheckOTAResult;
 import com.kaadas.lock.publiclibrary.http.result.DeleteMessageResult;
@@ -1239,5 +1240,19 @@ public class XiaokaiNewServiceImp {
                 .subscribeOn(Schedulers.io())
                 .compose(RxjavaHelper.observeOnMainThread());
     }
+
+
+    /**
+     * @return
+     */
+    public static Observable<BaseResult> getZIGBEENINFO(String uid,String gwSN,String zigbeeSN) {
+        ZigBeenInfo uploadOtaBean = new ZigBeenInfo(  zigbeeSN, uid, gwSN);
+
+        return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
+                .GET_ZIGBEEN_INFO_CONTEXT(new HttpUtils<ZigBeenInfo>().getBody(uploadOtaBean))
+                .subscribeOn(Schedulers.io())
+                .compose(RxjavaHelper.observeOnMainThread());
+    }
+
 
 }

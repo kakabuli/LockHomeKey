@@ -6,6 +6,8 @@ import com.google.gson.Gson;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.mvp.mvpbase.BasePresenter;
 import com.kaadas.lock.mvp.view.gatewaylockview.IGatewayLockPasswordView;
+import com.kaadas.lock.publiclibrary.http.XiaokaiNewServiceImp;
+import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.mqtt.MqttReturnCodeError;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.GatewayPasswordResultBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.SetPlanResultBean;
@@ -30,6 +32,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Predicate;
@@ -64,6 +67,23 @@ public abstract class GatewayLockPasswordPresenter<T extends IGatewayLockPasswor
 
     public void syncPassword(String gatewayId, String deviceId) {
         getLockBaseInfo(ALL_PASSWORD, gatewayId, deviceId, 0, "", 0, 0, 0, 0, 0, 0, 0, 0);
+    }
+
+    public void sysPassworByhttp(String uid,String gatewayId, String deviceId){
+        XiaokaiNewServiceImp.getZIGBEENINFO(uid,gatewayId,deviceId).subscribe(
+                new Consumer<BaseResult>() {
+                                  @Override
+                           public void accept(BaseResult baseResult) throws Exception {
+                              LogUtils.e("http:"+baseResult);
+                        }
+                     },
+                new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        LogUtils.e("error:"+throwable);
+                    }
+                });
+
     }
 
     //获取锁密码和RFID基本信息

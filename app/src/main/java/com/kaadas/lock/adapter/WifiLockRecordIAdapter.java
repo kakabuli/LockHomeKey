@@ -11,6 +11,7 @@ import com.kaadas.lock.R;
 import com.kaadas.lock.publiclibrary.bean.WifiLockOperationRecord;
 import com.kaadas.lock.publiclibrary.ble.BleUtil;
 import com.kaadas.lock.utils.DateUtils;
+import com.kaadas.lock.utils.LogUtils;
 
 import java.util.List;
 
@@ -89,13 +90,22 @@ public class WifiLockRecordIAdapter extends BaseQuickAdapter<WifiLockOperationRe
                         right = mContext.getString(R.string.app_open);
                         break;
                     case 9:
-                        left = mContext.getString(R.string.machine_key);
+                        right = mContext.getString(R.string.machine_key);
+                        if(left.equals("编号00")){
+                            return;
+                        }
                         break;
                     case 10:
-                        left = mContext.getString(R.string.indoor_open);
+                        right = mContext.getString(R.string.indoor_open);
+                        if(left.equals("编号00")){
+                            return;
+                        }
                         break;
                     case 11:
-                        left = mContext.getString(R.string.indoor_Induction);
+                        right = mContext.getString(R.string.indoor_Induction);
+                        if(left.equals("编号00")){
+                            return;
+                        }
                         break;
                     default:
                         right = mContext.getString(R.string.unknown_open);
@@ -215,6 +225,8 @@ public class WifiLockRecordIAdapter extends BaseQuickAdapter<WifiLockOperationRe
             tvRight.setVisibility(View.VISIBLE);
             tvRight.setText(right+"");
         }
+
+        LogUtils.e("denganzhi","left:"+left+ "right:"+right);
 
     }
 }

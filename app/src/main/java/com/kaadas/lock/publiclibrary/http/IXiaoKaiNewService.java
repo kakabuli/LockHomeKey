@@ -611,4 +611,8 @@ public interface IXiaoKaiNewService {
     @GET
     Observable<ResponseBody> getQrCodeContent(@Url String url);
 
+
+
+    @POST(HttpUrlConstants.GET_ZIGBEEN_INFO)
+    Observable<BaseResult> GET_ZIGBEEN_INFO_CONTEXT(@Body RequestBody info);
 }
