@@ -29,8 +29,7 @@ import com.kaadas.lock.utils.WifiUtil;
 import com.kaadas.lock.utils.WifiUtils;
 import com.kaadas.lock.widget.WifiCircleProgress;
 import com.tbruyelle.rxpermissions2.RxPermissions;
-import com.xiaomi.mipush.sdk.help.HelpActivity;
-
+import com.kaadas.lock.activity.device.wifilock.add.WifiLockHelpActivity;
 import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
@@ -179,7 +178,7 @@ public class WifiLockAddNewScanActivity extends AppCompatActivity {
                 finish();
                 break;
             case R.id.help:
-                startActivity(new Intent(this, HelpActivity.class));
+                startActivity(new Intent(this, WifiLockHelpActivity.class));
                 break;
             case R.id.circle_progress_bar2:
                 break;

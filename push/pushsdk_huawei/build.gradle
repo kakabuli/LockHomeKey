@@ -1,5 +1,6 @@
 apply plugin: 'com.android.library'
 
+
 android {
     compileSdkVersion 26
 
@@ -38,4 +39,7 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     api 'com.huawei.android.hms:push:2.6.3.301'
     api 'com.huawei.android.hms:hwid:2.6.3.301'
+    api 'com.huawei.android.hms:base:2.6.3.301'
+
 }
+
