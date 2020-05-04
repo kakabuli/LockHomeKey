@@ -10,6 +10,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
+        //目前发现gradle升级未3.6.1有问题
         classpath 'com.android.tools.build:gradle:3.5.0'
         classpath 'org.greenrobot:greendao-gradle-plugin:3.2.2'
         classpath 'com.tencent.bugly:symtabfileuploader:latest.release'

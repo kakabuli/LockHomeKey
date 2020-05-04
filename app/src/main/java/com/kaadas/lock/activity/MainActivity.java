@@ -127,6 +127,7 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
     protected void onCreate(Bundle savedInstanceState) {
         setContentView(R.layout.activity_main);
         super.onCreate(savedInstanceState);
+        LogUtils.e("MainActivity启动 ");
         ButterKnife.bind(this);
         PermissionUtil.getInstance().requestPermission(PermissionUtil.getInstance().permission, this);
         isRunning = true;
@@ -235,6 +236,8 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
 
 //        RadioButton rb_shop = findViewById(R.id.rb_shop);
 //        rb_shop.setVisibility(View.GONE);
+        LogUtils.e("MainActivity启动完成 ");
+
     }
 
     private static List<String> packages;
@@ -318,7 +321,7 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
                 || info.getNetworkId() == -1
                 || "<unknown ssid>".equals(info.getSSID());
         if (disconnected) {
-            LogUtils.e("切换wifi  断开连接");
+            LogUtils.e("切换wifi  断开连接 from MainActivity");
         } else {
             String ssid = info.getSSID();
             if (ssid.startsWith("\"") && ssid.endsWith("\"")) {

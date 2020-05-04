@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import com.kaadas.lock.R;
 import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
+import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.SPUtils;
 
 import java.util.ArrayList;
@@ -56,12 +57,16 @@ public class CountryActivity extends BaseAddToApplicationActivity implements Vie
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        LogUtils.e("CountryActivity启动 ");
+
         setContentView(R.layout.activity_country_choose);
         ButterKnife.bind(this);
         iv_head_left.setOnClickListener(this);
         init();
         setListener();
         getCountryList();
+        LogUtils.e("CountryActivity启动完成 ");
+
     }
 
 

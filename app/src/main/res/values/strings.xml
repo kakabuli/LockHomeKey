@@ -1541,7 +1541,7 @@
     <string name="device_scanning">设备搜索中...</string>
     <string name="scan_failed">搜索不到要添加的设备</string>
     <string name="reconfirm">再次确认</string>
-    <string name="scan_failed_notice3">① 后面板Wi-Fi模块插紧\n② 确定门锁已激活\n③ 门锁是否已联网</string>
+    <string name="scan_failed_notice3">① 后面板Wi-Fi模块插紧\n② 确定门锁已激活\n③ 门锁是否已联网\n④ 保持门锁唤醒状态</string>
     <string name="rescan_lock">重新搜索门锁</string>
     <string name="wifi_lock_add_new_connect_notice1">请将手机和设备尽量靠近路由器</string>
     <string name="wifi_lock_add_new_input_password_notice1">输入锁管理员密码</string>
@@ -1558,7 +1558,7 @@
     <string name="dkjsfkjhad">① 用手触碰按键区，唤醒门锁 \n语音是否播报:“密码过于简单，请及时修改管理密码”</string>
 
     <string name="dfsdfas">① 按键区输入“*”两次\n② 输入已修改的管理密码“********”\n③ 按“#”确认，\n④ 语音播报：“已进入管理模式”</string>
-    <string name="dsfdsasd">① 根据语音提示，按“4”选择“扩展功能” \n② 再按1，选择“加入网络” \n③ 语音播报：“配网中，请稍后”</string>
+    <string name="dsfdsasd">① 根据语音提示，按“4”选择“扩展功能” \n② 再按"1"，选择“加入网络” \n③ 语音播报：“配网中，请稍后”</string>
     <string name="sdfkjsjdkf">用手触碰按键区，唤醒门锁\n确保门锁数字键盘灯亮</string>
     <string name="is_parsing_data">正在解析数据...</string>
 </resources>

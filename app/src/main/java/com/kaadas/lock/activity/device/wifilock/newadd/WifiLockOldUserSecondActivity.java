@@ -50,7 +50,8 @@ public class WifiLockOldUserSecondActivity extends AppCompatActivity {
                 startActivity(new Intent(this,WifiLockHelpActivity.class));
                 break;
             case R.id.button_next:
-                startActivity(new Intent(this,WifiLockAddNewWakeActivity.class));
+//                startActivity(new Intent(this,WifiLockAddNewWakeActivity.class));
+                startActivity(new Intent(this,WifiLockAddNewScanActivity.class));
                 break;
         }
     }

@@ -54,14 +54,14 @@
         android:layout_height="match_parent">
 
         <TextView
-            android:layout_marginTop="@dimen/dp_40"
-            android:layout_gravity="center"
-            android:textSize="18sp"
-            android:textColor="#333333"
-            android:textStyle="bold"
-            android:text="保持门锁数字键盘灯亮"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/dp_40"
+            android:text="唤醒门锁确保数字键盘灯亮"
+            android:textColor="#333333"
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
 
         <RelativeLayout

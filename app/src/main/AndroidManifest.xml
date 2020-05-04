@@ -1089,6 +1089,10 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".activity.device.wifilock.newadd.WifiLockAddNewfourthActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".activity.device.wifilock.newadd.WifiLockAddNewNotActivateActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />

@@ -50,7 +50,6 @@ public class AAAAListActivity extends BaseActivity {
 
     AAAAListAdapter listAdapter;
 
-
     private int startIndex = 1;
     private int pageSize = 10;
     private int total ;
