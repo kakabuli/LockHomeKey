@@ -209,7 +209,7 @@ public class WifiLockAddNewScanActivity extends AppCompatActivity {
         LogUtils.e("onScanSuccess  from WifiLockAddNewScanActivity");
         startActivity(new Intent(this, WifiLockAddNewInputAdminPasswotdActivity.class));
     }
-    
+
     public void onScanFailed() {
         finish();
         startActivity(new Intent(this, WifiLockAddNewScanFailedActivity.class));

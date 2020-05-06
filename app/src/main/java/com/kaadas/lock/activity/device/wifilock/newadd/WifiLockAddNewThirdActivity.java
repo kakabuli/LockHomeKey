@@ -55,7 +55,6 @@ public class WifiLockAddNewThirdActivity extends AppCompatActivity {
                 startActivity(new Intent(this,WifiLockHelpActivity.class));
                 break;
             case R.id.already_modify:
-//                startActivity(new Intent(this,WifiLockAddNewWakeActivity.class));
                 startActivity(new Intent(this,WifiLockAddNewfourthActivity.class));
                 break;
             case R.id.not_modify:

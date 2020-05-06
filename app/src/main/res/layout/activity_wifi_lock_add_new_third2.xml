@@ -56,13 +56,13 @@
             android:orientation="vertical">
 
             <TextView
-                android:textStyle="bold"
                 android:id="@+id/head"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="第三步：修改初始管理密码"
+                android:text="第四步：修改初始管理密码"
                 android:textColor="#333333"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/notice"

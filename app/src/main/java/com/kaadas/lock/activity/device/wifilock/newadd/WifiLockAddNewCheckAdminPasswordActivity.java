@@ -72,13 +72,13 @@ public class WifiLockAddNewCheckAdminPasswordActivity extends AppCompatActivity 
                         WifiLockAddNewCheckAdminPasswordActivity.this, "", "连接已断开，请重新开始", getString(R.string.confirm), new AlertDialogUtil.ClickListener() {
                             @Override
                             public void left() {
-                                startActivity(new Intent(WifiLockAddNewCheckAdminPasswordActivity.this, WifiLockAddNewWakeActivity.class));
+                                startActivity(new Intent(WifiLockAddNewCheckAdminPasswordActivity.this, WifiLockAddNewScanFailedActivity.class));
                                 finish();
                             }
 
                             @Override
                             public void right() {
-                                startActivity(new Intent(WifiLockAddNewCheckAdminPasswordActivity.this, WifiLockAddNewWakeActivity.class));
+                                startActivity(new Intent(WifiLockAddNewCheckAdminPasswordActivity.this, WifiLockAddNewScanFailedActivity.class));
                                 finish();
                             }
                         });
@@ -179,7 +179,7 @@ public class WifiLockAddNewCheckAdminPasswordActivity extends AppCompatActivity 
             public void run() {
                 finish();
                 Toast.makeText(WifiLockAddNewCheckAdminPasswordActivity.this, R.string.bind_failed, Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(WifiLockAddNewCheckAdminPasswordActivity.this, WifiLockAddNewFirstActivity.class));
+                startActivity(new Intent(WifiLockAddNewCheckAdminPasswordActivity.this, WifiLockAddNewScanFailedActivity.class));
                 socketManager.destroy();
             }
         });
@@ -416,13 +416,13 @@ public class WifiLockAddNewCheckAdminPasswordActivity extends AppCompatActivity 
                     WifiLockAddNewCheckAdminPasswordActivity.this, "", "门锁管理密码验证已失败5次\n" + "请修改管理密码，重新配网", getString(R.string.confirm), new AlertDialogUtil.ClickListener() {
                         @Override
                         public void left() {
-                            startActivity(new Intent(WifiLockAddNewCheckAdminPasswordActivity.this, WifiLockAddNewFirstActivity.class));
+                            startActivity(new Intent(WifiLockAddNewCheckAdminPasswordActivity.this, WifiLockAddNewBindFailedActivity.class));
                             finish();
                         }
 
                         @Override
                         public void right() {
-                            startActivity(new Intent(WifiLockAddNewCheckAdminPasswordActivity.this, WifiLockAddNewFirstActivity.class));
+                            startActivity(new Intent(WifiLockAddNewCheckAdminPasswordActivity.this, WifiLockAddNewBindFailedActivity.class));
                             finish();
                         }
                     });

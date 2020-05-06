@@ -15,7 +15,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class WifiLockAddNewfourthActivity extends AppCompatActivity {
+public class WifiLockAddNewFifthActivity extends AppCompatActivity {
 
     @BindView(R.id.back)
     ImageView back;
@@ -33,7 +33,7 @@ public class WifiLockAddNewfourthActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_wifi_lock_add_new_fourth);
+        setContentView(R.layout.activity_wifi_lock_add_new_fifth);
         ButterKnife.bind(this);
         //通过设置android:background时，得到AnimationDrawable 用如下方法
         final AnimationDrawable animationDrawable = (AnimationDrawable) ivAnim.getBackground();
@@ -50,7 +50,7 @@ public class WifiLockAddNewfourthActivity extends AppCompatActivity {
                 startActivity(new Intent(this,WifiLockHelpActivity.class));
                 break;
             case R.id.button_next:
-                startActivity(new Intent(this,WifiLockAddNewFifthActivity.class));
+                startActivity(new Intent(this,WifiLockAddNewScanActivity.class));
                 break;
         }
     }

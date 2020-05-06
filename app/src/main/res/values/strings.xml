@@ -1288,7 +1288,7 @@
     <string name="wifi_lock_company">公司</string>
     <string name="add_failed">添加失败</string>
     <string name="pair_failed">配对失败</string>
-    <string name="wifi_lock_repair">重新配对</string>
+    <string name="wifi_lock_repair">重新配网</string>
     <string name="wifi_lovk_skip">跳 过</string>
     <string name="wifi_lock_temp_password">临时密码</string>
     <string name="pice">张</string>
@@ -1558,7 +1558,7 @@
     <string name="dkjsfkjhad">① 用手触碰按键区，唤醒门锁 \n语音是否播报:“密码过于简单，请及时修改管理密码”</string>
 
     <string name="dfsdfas">① 按键区输入“*”两次\n② 输入已修改的管理密码“********”\n③ 按“#”确认，\n④ 语音播报：“已进入管理模式”</string>
-    <string name="dsfdsasd">① 根据语音提示，按“4”选择“扩展功能” \n② 再按"1"，选择“加入网络” \n③ 语音播报：“配网中，请稍后”</string>
+    <string name="dsfdsasd">① 根据语音提示，按“4”选择“扩展功能” \n② 再按“1”，选择“加入网络” \n③ 语音播报：“配网中，请稍后”</string>
     <string name="sdfkjsjdkf">用手触碰按键区，唤醒门锁\n确保门锁数字键盘灯亮</string>
     <string name="is_parsing_data">正在解析数据...</string>
 </resources>

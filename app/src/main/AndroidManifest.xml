@@ -1093,6 +1093,10 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".activity.device.wifilock.newadd.WifiLockAddNewFifthActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".activity.device.wifilock.newadd.WifiLockAddNewNotActivateActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
@@ -1119,6 +1123,10 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.device.wifilock.newadd.WifiLockAddNewModifyPasswordActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.wifilock.newadd.WifiLockAddNewModifyPasswordDisconnectActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity

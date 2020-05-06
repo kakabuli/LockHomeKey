@@ -4,18 +4,25 @@ import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.device.wifilock.add.WifiLockHelpActivity;
+import com.kaadas.lock.utils.AlertDialogUtil;
+import com.kaadas.lock.utils.KeyConstants;
+import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.NetUtil;
+import com.kaadas.lock.utils.SocketManager;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class WifiLockAddNewfourthActivity extends AppCompatActivity {
+public class WifiLockAddNewModifyPasswordDisconnectActivity extends AppCompatActivity {
 
     @BindView(R.id.back)
     ImageView back;
@@ -33,7 +40,7 @@ public class WifiLockAddNewfourthActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_wifi_lock_add_new_fourth);
+        setContentView(R.layout.activity_wifi_lock_add_new_modify_password_disconnect);
         ButterKnife.bind(this);
         //通过设置android:background时，得到AnimationDrawable 用如下方法
         final AnimationDrawable animationDrawable = (AnimationDrawable) ivAnim.getBackground();
@@ -50,7 +57,8 @@ public class WifiLockAddNewfourthActivity extends AppCompatActivity {
                 startActivity(new Intent(this,WifiLockHelpActivity.class));
                 break;
             case R.id.button_next:
-                startActivity(new Intent(this,WifiLockAddNewFifthActivity.class));
+//                startActivity(new Intent(this,WifiLockAddNewWakeActivity.class));
+                startActivity(new Intent(this,WifiLockAddNewScanActivity.class));
                 break;
         }
     }
