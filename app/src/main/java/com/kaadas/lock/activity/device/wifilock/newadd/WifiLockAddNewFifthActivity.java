@@ -1,15 +1,25 @@
 package com.kaadas.lock.activity.device.wifilock.newadd;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.espressif.iot.esptouch.util.TouchNetUtil;
+import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.device.wifilock.add.WifiLockHelpActivity;
+import com.kaadas.lock.utils.KeyConstants;
+import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.Rsa;
+import com.kaadas.lock.utils.SPUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -50,8 +60,35 @@ public class WifiLockAddNewFifthActivity extends AppCompatActivity {
                 startActivity(new Intent(this,WifiLockHelpActivity.class));
                 break;
             case R.id.button_next:
+                //在连接前   保存密码
+                saveWifiName();
                 startActivity(new Intent(this,WifiLockAddNewScanActivity.class));
                 break;
         }
+    }
+    private void saveWifiName() {
+        WifiManager wifiMgr = (WifiManager) MyApplication.getInstance().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        WifiInfo info = wifiMgr.getConnectionInfo();
+        String ssid = info != null ? info.getSSID() : null;
+        if (TextUtils.isEmpty(ssid)) {
+            SPUtils.put(KeyConstants.WIFI_LOCK_CONNECT_NAME, "");
+            return;
+        }
+        if (ssid.startsWith("\"") && ssid.endsWith("\"")) {
+            ssid = ssid.substring(1, ssid.length() - 1);
+        }
+        if (!ssid.equals("kaadas_AP") && !"<unknown ssid>".equals(ssid)) {
+            SPUtils.put(KeyConstants.WIFI_LOCK_CONNECT_NAME, ssid);
+            byte[] ssidOriginalData = TouchNetUtil.getOriginalSsidBytes(info);
+            LogUtils.e("获取到的   byte数据是    " + Rsa.bytesToHexString(ssidOriginalData));
+            SPUtils.put(KeyConstants.WIFI_LOCK_CONNECT_ORIGINAL_DATA, Rsa.bytesToHexString(ssidOriginalData));
+        }
+        else if(ssid.equals("kaadas_AP")){
+
+        }
+        else {
+            SPUtils.put(KeyConstants.WIFI_LOCK_CONNECT_NAME, "");
+        }
+
     }
 }

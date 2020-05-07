@@ -223,6 +223,28 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/gw6032"
+                    android:orientation="vertical"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:src="@mipmap/add_device_gw6030" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dp_8"
+                        android:gravity="center"
+                        android:text="GW6032"
+                        android:textSize="10sp" />
+                </LinearLayout>
+
+                <LinearLayout
                     android:id="@+id/gw6010"
                     android:orientation="vertical"
                     android:layout_width="0dp"
@@ -243,27 +265,6 @@
                         android:layout_marginTop="@dimen/dp_8"
                         android:gravity="center"
                         android:text="GW6010" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/gw6030"
-                    android:orientation="vertical"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center">
-
-                    <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:src="@mipmap/add_device_gw6030" />
-
-                    <TextView android:textSize="10sp"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/dp_8"
-                        android:gravity="center"
-                        android:text="GW6030" />
                 </LinearLayout>
             </LinearLayout>
 

@@ -63,11 +63,15 @@ public class WifiLockAddNewCheckAdminPasswordActivity extends AppCompatActivity 
         if (times > 1) {
             if (socketManager.isConnected()) { //如果不是第一进来而且Socket是连接的   那么解析密码
                 if (data != null) { //
+                    LogUtils.e("--Kaadas--如果不是第一进来而且Socket是连接的   那么解析密码");
                     secondThread.start();
                 } else { //修改过管理员密码进来的
+                    LogUtils.e("--Kaadas--改过管理员密码进来的");
                     thirdThread.start();
                 }
             } else {
+                LogUtils.e("--Kaadas--socketManager断开连接");
+                LogUtils.e(getLocalClassName()+"次数是   " + times + "  data 是否为空 " + (data == null));
                 AlertDialogUtil.getInstance().noEditSingleCanNotDismissButtonDialog(
                         WifiLockAddNewCheckAdminPasswordActivity.this, "", "连接已断开，请重新开始", getString(R.string.confirm), new AlertDialogUtil.ClickListener() {
                             @Override
@@ -84,10 +88,10 @@ public class WifiLockAddNewCheckAdminPasswordActivity extends AppCompatActivity 
                         });
             }
         } else {
+            LogUtils.e("--Kaadas--管理员密码输入次数<=1");
             firstThread.start();
         }
     }
-
 
     public void initView() {
         animation = new RotateAnimation(0, 359, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
@@ -208,11 +212,13 @@ public class WifiLockAddNewCheckAdminPasswordActivity extends AppCompatActivity 
         public void run() {
             super.run();
             int result = socketManager.startServer();
-            LogUtils.e("连接结果   " + result + "   管理员密码是   " + adminPassword);
-            if (result == 0) { //连接成功
+            LogUtils.e("端口打开结果   " + result + "   管理员密码是   " + adminPassword);
+            if (result == 0) { //端口打开成功
+                LogUtils.e("--Kaadas--端口打开成功，并且Wi-Fi热点连接上");
                 SocketManager.ReadResult readResult = socketManager.readWifiData();
                 data = readResult.data;
                 LogUtils.e("读取结果2   " + readResult.toString());
+                LogUtils.e("--Kaadas--resultCode："+readResult.resultCode+"，数据长度："+readResult.dataLen+"，读取结果："+readResult.toString());
                 if (readResult.resultCode >= 0) {
                     if (readResult.dataLen < 46) {  //读取数据字数不够
                         onError(socketManager, -1);
@@ -229,6 +235,7 @@ public class WifiLockAddNewCheckAdminPasswordActivity extends AppCompatActivity 
                             return;
                         }
                         SocketManager.WifiResult wifiResult = socketManager.parseWifiData(adminPassword, data);
+                        LogUtils.e("--Kaadas--wifiResult："+wifiResult.result);
 
                         //解析数据   解析数据成功
                         if (wifiResult.result == 0) {
@@ -236,18 +243,23 @@ public class WifiLockAddNewCheckAdminPasswordActivity extends AppCompatActivity 
                             int writeResult = socketManager.writeData(("CRCSuccess\r").getBytes());
                             //写入 CRCsuccess 成功
                             if (writeResult == 0) {
+                                LogUtils.e("--Kaadas--写入 CRCsuccess 成功");
                                 SocketManager.ReadResult readResult2 = socketManager.readWifiData();
                                 if (readResult2.resultCode >= 0 && (new String(readResult2.data)).startsWith("APContinue")) {
+                                    LogUtils.e("--Kaadas--收到APContinue");
                                     onSuccess(wifiResult);
                                     changeState(3);
                                 } else {
+                                    LogUtils.e("--Kaadas--readResult2.resultCode："+readResult2.resultCode);
                                     onError(socketManager, -5);
                                 }
                             } else { //写入CRC失败
+                                LogUtils.e("--Kaadas--写入CRC失败");
                                 onError(socketManager, -4);
                             }
                         } else {
                             //解析数据失败  通知锁端蓄电？
+                            LogUtils.e("--Kaadas--解析数据失败");
                             int writeResult = socketManager.writeData(("APError\r").getBytes());
                             if (writeResult == 0) {
                                 runOnUiThread(new Runnable() {
@@ -262,10 +274,12 @@ public class WifiLockAddNewCheckAdminPasswordActivity extends AppCompatActivity 
                         }
                     }
                 } else { //读取失败
+                    LogUtils.e("--Kaadas--读取失败");
                     socketManager.writeData(("TimeOut").getBytes());
                     onError(socketManager, -1);
                 }
             } else {  //连接失败
+                LogUtils.e("--Kaadas--端口打开失败");
                 onError(socketManager, -2);
             }
         }
@@ -274,6 +288,18 @@ public class WifiLockAddNewCheckAdminPasswordActivity extends AppCompatActivity 
     private Thread secondThread = new Thread() {
         @Override
         public void run() {
+
+            if ("12345678".equals(adminPassword)) {
+                LogUtils.e("--Kaadas--12345678");
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        showModifyPasswordDialog();
+                    }
+                });
+                return;
+            }
             SocketManager.WifiResult wifiResult = socketManager.parseWifiData(adminPassword, data);
             if (wifiResult.result == 0) {
                 int writeResult = socketManager.writeData(("CRCSuccess\r").getBytes());

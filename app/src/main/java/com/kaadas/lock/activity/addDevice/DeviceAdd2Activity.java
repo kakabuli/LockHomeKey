@@ -53,8 +53,8 @@ public class DeviceAdd2Activity extends BaseActivity<DeviceZigBeeDetailView, Dev
     LinearLayout catEye;
     @BindView(R.id.rg4300)
     LinearLayout rg4300;
-    @BindView(R.id.gw6030)
-    LinearLayout gw6030;
+    @BindView(R.id.gw6032)
+    LinearLayout gw6032;
     @BindView(R.id.gw6010)
     LinearLayout gw6010;
     @BindView(R.id.single_switch)
@@ -96,7 +96,7 @@ public class DeviceAdd2Activity extends BaseActivity<DeviceZigBeeDetailView, Dev
     }
 
 
-    @OnClick({R.id.back, R.id.scan, R.id.ble_lock, R.id.wifi_lock, R.id.zigbee_lock, R.id.cat_eye, R.id.rg4300, R.id.gw6030, R.id.gw6010, R.id.single_switch, R.id.double_switch})
+    @OnClick({R.id.back, R.id.scan, R.id.ble_lock, R.id.wifi_lock, R.id.zigbee_lock, R.id.cat_eye, R.id.rg4300, R.id.gw6032, R.id.gw6010, R.id.single_switch, R.id.double_switch})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.back:
@@ -178,7 +178,7 @@ public class DeviceAdd2Activity extends BaseActivity<DeviceZigBeeDetailView, Dev
                 break;
             case R.id.rg4300:
                 break;
-            case R.id.gw6030:
+            case R.id.gw6032:
             case R.id.gw6010:
                 //跳转到添加网关
                 Intent addGateway = new Intent(this, AddGatewayFirstActivity.class);

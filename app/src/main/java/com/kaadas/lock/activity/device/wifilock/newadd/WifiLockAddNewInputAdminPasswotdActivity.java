@@ -63,7 +63,6 @@ public class WifiLockAddNewInputAdminPasswotdActivity extends AppCompatActivity 
                     return;
                 }
 
-
                 LogUtils.e(getLocalClassName()+"次数是   " + times + "  data 是否为空 " + (data == null));
                 Intent intent = new Intent(this, WifiLockAddNewCheckAdminPasswordActivity.class);
                 intent.putExtra(KeyConstants.WIFI_LOCK_ADMIN_PASSWORD, adminPassword);

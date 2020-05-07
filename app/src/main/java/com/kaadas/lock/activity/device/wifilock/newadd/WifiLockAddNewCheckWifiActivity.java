@@ -152,6 +152,7 @@ public class WifiLockAddNewCheckWifiActivity extends BaseActivity<IWifiLockAPWif
                             isSuccess = true;
                             socketManager.destroy();
                         } else if (!TextUtils.isEmpty(sResult) && sResult.startsWith("APError")) {
+
                             if (times < 5) {
                                 runOnUiThread(new Runnable() {
                                     @Override
@@ -167,13 +168,14 @@ public class WifiLockAddNewCheckWifiActivity extends BaseActivity<IWifiLockAPWif
                                     }
                                 });
                             } else { //五次失败
-                                socketManager.writeData("************************************************************************************************APClose".getBytes());
-                                try {
-                                    Thread.sleep(1000);
-                                } catch (InterruptedException e) {
-                                    e.printStackTrace();
-                                }
-                                onError(socketManager, -5);
+                                socketManager.writeData("--Kaadas--************************************************************************************************APClose".getBytes());
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        onWiFIAndPWDError();
+                                    }
+                                });
+
                             }
                         } else {
                             onError(socketManager, -5);
@@ -193,6 +195,22 @@ public class WifiLockAddNewCheckWifiActivity extends BaseActivity<IWifiLockAPWif
         }
     };
 
+    private void onWiFIAndPWDError() {
+        AlertDialogUtil.getInstance().noEditSingleCanNotDismissButtonDialog(
+                WifiLockAddNewCheckWifiActivity.this, "", "Wi-Fi账号或密码输错已超过5次", getString(R.string.confirm), new AlertDialogUtil.ClickListener() {
+                    @Override
+                    public void left() {
+
+                        onError(socketManager, -5);
+                    }
+
+                    @Override
+                    public void right() {
+
+                        onError(socketManager, -5);
+                    }
+                });
+    }
 
     /**
      * @param socketManager
@@ -206,6 +224,7 @@ public class WifiLockAddNewCheckWifiActivity extends BaseActivity<IWifiLockAPWif
                     return;
                 }
                 finish();
+                socketManager.release();
                 Toast.makeText(WifiLockAddNewCheckWifiActivity.this, R.string.bind_failed, Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(WifiLockAddNewCheckWifiActivity.this, WifiLockAddNewBindFailedActivity.class);
                 startActivity(intent);

@@ -29,7 +29,7 @@ public class SocketManager {
     public static SocketManager getInstance() {
         if (instance == null) {
             instance = new SocketManager();
-            LogUtils.e("重新获取数据  ");
+            LogUtils.e("--Kaadas--初始化SocketManager");
         }
         return instance;
     }
@@ -43,27 +43,40 @@ public class SocketManager {
      */
     public int startServer() {
         try {
-            serverSocket = new ServerSocket(PORT);
+            if (serverSocket == null){
+                serverSocket = new ServerSocket(PORT);
+                LogUtils.e("--Kaadas--打开socket端口：56789");
+            }
+            else {
+                LogUtils.e("--Kaadas--已存在socket端口：56789");
+            }
+
         } catch (IOException e) {
-            e.printStackTrace();
-            release();
-            LogUtils.e("打开socket失败  " + e.getMessage());
-            return -1;
+               LogUtils.e("--Kaadas--打开socket失败  " + e.getMessage());
+                e.printStackTrace();
+                release();
+                return -1;
         }
         try {
             serverSocket.setSoTimeout(30 * 1000);
+            LogUtils.e("--Kaadas--设置socket连接30s超时");
+
         } catch (SocketException e) {
             e.printStackTrace();
             release();
-            LogUtils.e("超时  " + e.getMessage());
+            LogUtils.e("--Kaadas--等待客户accept连接socket超时  " + e.getMessage());
             return -2;
         }
         try {
             socket = serverSocket.accept();
+            LogUtils.e("--Kaadas--socket等待连接");
+
         } catch (IOException e) {
             e.printStackTrace();
             release();
-            LogUtils.e("连接失败  " + e.getMessage());
+            LogUtils.e("--Kaadas--socket.accept连接失败 ： " + e.getMessage());
+            LogUtils.e("--Kaadas--socket.accept连接失败  == " + e);
+
             return -3;
         }
         return 0;
@@ -220,8 +233,8 @@ public class SocketManager {
         return 0;
     }
 
-    private void release(  ) {
-        LogUtils.e("释放Socket  " );
+    public void release(  ) {
+        LogUtils.e("--Kaadas--释放Socket  " );
         try {
             if (serverSocket != null) {
                 serverSocket.close();
