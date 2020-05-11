@@ -168,7 +168,7 @@ public class WifiLockAddNewCheckWifiActivity extends BaseActivity<IWifiLockAPWif
                                     }
                                 });
                             } else { //五次失败
-                                socketManager.writeData("--Kaadas--************************************************************************************************APClose".getBytes());
+                                socketManager.writeData("************************************************************************************************APClose".getBytes());
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
@@ -224,7 +224,7 @@ public class WifiLockAddNewCheckWifiActivity extends BaseActivity<IWifiLockAPWif
                     return;
                 }
                 finish();
-                socketManager.release();
+//                socketManager.destroy();
                 Toast.makeText(WifiLockAddNewCheckWifiActivity.this, R.string.bind_failed, Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(WifiLockAddNewCheckWifiActivity.this, WifiLockAddNewBindFailedActivity.class);
                 startActivity(intent);

@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import com.kaadas.lock.R;
+import com.kaadas.lock.activity.addDevice.DeviceAddCateyeHelpActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 import com.kaadas.lock.utils.GpsUtil;
 import com.kaadas.lock.utils.KeyConstants;
@@ -30,6 +31,8 @@ import butterknife.OnClick;
 public class AddDeviceCatEyeCheckWifiActivity extends BaseAddToApplicationActivity {
     @BindView(R.id.back)
     ImageView back;
+    @BindView(R.id.help)
+    ImageView help;
     @BindView(R.id.button_switch_wifi)
     Button buttonSwitchWifi;
     private String ssid;
@@ -71,7 +74,7 @@ public class AddDeviceCatEyeCheckWifiActivity extends BaseAddToApplicationActivi
         registerReceiver(netWorkChangReceiver, filter);
     }
 
-    @OnClick({R.id.back, R.id.button_switch_wifi})
+    @OnClick({R.id.back, R.id.button_switch_wifi, R.id.help})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.back:
@@ -81,6 +84,10 @@ public class AddDeviceCatEyeCheckWifiActivity extends BaseAddToApplicationActivi
                 Intent intent = new Intent();
                 intent.setAction("android.net.wifi.PICK_WIFI_NETWORK");
                 startActivity(intent);
+                break;
+            case R.id.help:
+                Intent helpIntent=new Intent(this, DeviceAddCateyeHelpActivity.class);
+                startActivity(helpIntent);
                 break;
         }
     }

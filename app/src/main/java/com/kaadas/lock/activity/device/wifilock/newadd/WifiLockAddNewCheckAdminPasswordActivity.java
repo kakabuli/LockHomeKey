@@ -59,7 +59,7 @@ public class WifiLockAddNewCheckAdminPasswordActivity extends AppCompatActivity 
         initView();
         circleProgressBar.setValue(0);
         changeState(1); //初始状态
-        LogUtils.e(getLocalClassName()+"次数是   " + times + "  data 是否为空 " + (data == null));
+        LogUtils.e("--Kaadas--"+getLocalClassName()+"次数是   " + times + "  data 是否为空 " + (data == null));
         if (times > 1) {
             if (socketManager.isConnected()) { //如果不是第一进来而且Socket是连接的   那么解析密码
                 if (data != null) { //
@@ -71,7 +71,7 @@ public class WifiLockAddNewCheckAdminPasswordActivity extends AppCompatActivity 
                 }
             } else {
                 LogUtils.e("--Kaadas--socketManager断开连接");
-                LogUtils.e(getLocalClassName()+"次数是   " + times + "  data 是否为空 " + (data == null));
+                LogUtils.e("--Kaadas--"+getLocalClassName()+"次数是   " + times + "  data 是否为空 " + (data == null));
                 AlertDialogUtil.getInstance().noEditSingleCanNotDismissButtonDialog(
                         WifiLockAddNewCheckAdminPasswordActivity.this, "", "连接已断开，请重新开始", getString(R.string.confirm), new AlertDialogUtil.ClickListener() {
                             @Override

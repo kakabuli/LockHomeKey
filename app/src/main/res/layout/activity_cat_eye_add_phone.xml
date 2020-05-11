@@ -32,6 +32,18 @@
             android:textColor="#000000"
             android:textStyle="bold"
             />
+        <ImageView
+            android:id="@+id/help"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:paddingLeft="@dimen/dp_16"
+            android:paddingRight="@dimen/dp_16"
+            android:paddingTop="@dimen/dp_5"
+            android:paddingBottom="@dimen/dp_5"
+            android:src="@mipmap/help"
+            android:layout_centerVertical="true"
+            />
     </RelativeLayout>
 
 

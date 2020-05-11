@@ -14,6 +14,7 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 
 import com.kaadas.lock.R;
+import com.kaadas.lock.activity.addDevice.DeviceAddCateyeHelpActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.mvp.presenter.deviceaddpresenter.AddCatEyePresenter;
 import com.kaadas.lock.mvp.presenter.qrcodePhoneAddPresenter;
@@ -35,6 +36,9 @@ public class  QrcodePhoneAddActivity extends BaseActivity<IAddCatEyeView, qrcode
 
     @BindView(R.id.qrcode_img)
     ImageView qrcode_img;
+    @BindView(R.id.help)
+    ImageView help;
+
     private String pwd;
     private String ssid;
     private String gwId;
@@ -70,11 +74,15 @@ public class  QrcodePhoneAddActivity extends BaseActivity<IAddCatEyeView, qrcode
         mPresenter.startJoin(null, null, gwId, ssid, pwd);
     }
 
-    @OnClick({R.id.back})
+    @OnClick({R.id.back, R.id.help})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.back:
                 finish();
+                break;
+            case R.id.help:
+                Intent helpIntent=new Intent(this, DeviceAddCateyeHelpActivity.class);
+                startActivity(helpIntent);
                 break;
         }
     }

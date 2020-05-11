@@ -43,7 +43,7 @@ public class SocketManager {
      */
     public int startServer() {
         try {
-            if (serverSocket == null){
+                if (serverSocket == null){
                 serverSocket = new ServerSocket(PORT);
                 LogUtils.e("--Kaadas--打开socket端口：56789");
             }
@@ -233,7 +233,7 @@ public class SocketManager {
         return 0;
     }
 
-    public void release(  ) {
+    private void release(  ) {
         LogUtils.e("--Kaadas--释放Socket  " );
         try {
             if (serverSocket != null) {

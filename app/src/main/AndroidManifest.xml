@@ -204,6 +204,10 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".activity.addDevice.DeviceAddCateyeHelpActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".activity.addDevice.DeviceAddGatewayHelpActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />

@@ -144,9 +144,11 @@
     <string name="research">重新搜索</string>
     <string name="help">帮助</string>
     <string name="help_title">您无法发现您的蓝牙设备，请按照以下步骤对设备进行检查：</string>
-    <string name="help_bottom">如果您已经完成以上操作,您仍然无法成功添加设备,可以在“我的-用户反馈”向我们的工作人员进行反馈.</string>
+    <string name="help_gateway_bottom">如果您已经完成以上操作，仍然无法成功添加设备，可以在“我的-用户反馈”向我们的工作人员进行反馈。</string>
+    <string name="help_bottom">如果您已经完成以上操作，仍然无法成功添加设备，可以在“我的-用户反馈”向我们的工作人员进行反馈。</string>
+    <string name="help_cateye_bottom">如果您已经完成以上操作，仍然无法成功添加设备，可以在“我的-用户反馈”向我们的工作人员进行反馈。</string>
     <string name="help_one">请保证您的设备已经接通电源，或电池电量充足。</string>
-    <string name="help_two">请打开您的手机蓝牙。由于系统原因，安卓手机需要同时开启定位权限。</string>
+    <string name="help_two">请打开您的手机蓝牙。（由于系统原因，安卓手机需要同时开启定位权限）</string>
     <string name="help_three">保持待添加的设备与手机的距离不超过5米，从而保证设备间的通信。</string>
     <string name="help_four">您需要确保您的设备处于待添加的状态下具体方法如下：</string>
     <string name="help_four_one">对于没有任何按键的设备，您可以尝试以 1 秒为间隙，反复对设备进行上电操作。</string>
@@ -1150,16 +1152,22 @@
     <string name="log_info">MyLog初始化失败</string>
     <string name="mqtt_already_disconnect_refresh">远程链接已断开，请刷新页面进行重连</string>
     <string name="help_gateway_title">您无法添加您的网关设备，请按照以下步骤对设备进行检查：</string>
-    <string name="help_gateway_one">检查网关离门的距离，建议使用距离为可视距离8米内(可视距离指站在网关放置的地方，可以看到门上的锁)，若距离过长或有墙遮挡，会导致信号衰减，影响使用；</string>
-    <string name="help_gateway_two">请按照App一步一步操作，只操作锁或只操作App都会失败；</string>
-    <string name="help_gateway_three">按键【2】退出网络，若提示操作失败，说明扩展模块松动，请打开电池盖，将扩展模块拔出，再插入；</string>
-    <string name="help_gateway_four">若锁上提示入网成功，App提示超时失败，可能网络不好，成功消息丢失了，请刷新设备页面，观察有无出现锁设备，若没有，多加入几次；</string>
+    <string name="help_gateway_one">检查网关离门锁的距离，建议使用距离为可视距离8米内，若距离过长或有墙遮挡，会导致信号衰减， 影响使用；</string>
+    <string name="help_gateway_two">唤醒门锁键盘按两次【*】，输入管理员密码，按【#】进入管理模式，按【4】进入扩展功能，按键【2】退出网络，若提示操作失败，说明扩展模块松动，请打开电池盖， 将扩展模块拔出，再插入； </string>
+    <string name="help_gateway_three">若锁上提示入网成功，App提示超时失败， 请刷新设备页面；</string>
+    <string name="help_gateway_four">锁提示入网失败，说明信号很弱，请拉近网关距离；</string>
     <string name="help_gateway_five">锁提示入网失败，说明信号很弱，请拉近网关距离；</string>
     <string name="gateway_reset_unbind">已被重置或者解绑</string>
     <string name="close_lock_success">门锁已关</string>
     <string name="unknow_function_set">未知锁型号(%1$s)，请更新到最新版本APP</string>
     <string name="is_open_auto_mode">正在关闭自动模式</string>
     <string name="is_close_auto_mode">正在关闭自动状态</string>
+
+    <string name="help_cateye_title">您无法添加您的猫眼，请按照以下步骤对设备进行检查：</string>
+    <string name="help_cateye_one">二维码扫描不出，请手动输 入SN和MAC；</string>
+    <string name="help_cateye_two">如配网过程中猫眼一直语音提示配网失败，请将猫眼主机取下，靠近网关，再次添加猫眼；</string>
+    <string name="help_cateye_three">猫眼提示配网成功，App提示配网超时，可能是配网成功消息丢失，请到设备页面刷新；</string>
+    <string name="help_cateye_four">若出现猫眼呼叫不稳定，经常离线等现象，请检查网关、猫眼的固件版本号，进行升级版本；</string>
 
     <string name="add_fowever_pwd">添加永久密码</string>
     <string name="add_temp_pwd">添加临时密码</string>
