@@ -17,6 +17,7 @@ import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.result.CheckOTAResult;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.KeyConstants;
+import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.ToastUtil;
 
 import butterknife.BindView;
@@ -59,7 +60,8 @@ public class WifiLockDeviceInfoActivity extends BaseActivity<IWifiLockMoreView, 
             wifiSN = wifiLockInfo.getWifiSN();
             sWifiVersion = wifiLockInfo.getWifiVersion();
             String productModel = wifiLockInfo.getProductModel();
-            tvDeviceModel.setText(TextUtils.isEmpty(productModel) ? "" : productModel.startsWith("K13") ? getString(R.string.lan_bo_ji_ni) : productModel);
+            tvDeviceModel.setText(TextUtils.isEmpty(productModel) ? "" : productModel.contentEquals("K13") ? getString(R.string.lan_bo_ji_ni) : productModel);
+
             tvSerialNumber.setText(TextUtils.isEmpty(wifiLockInfo.getWifiSN()) ? "" : wifiLockInfo.getWifiSN());
             lockFirmwareVersion = wifiLockInfo.getLockFirmwareVersion();
             tvLockFirmwareVersion.setText(TextUtils.isEmpty(lockFirmwareVersion) ? "" : wifiLockInfo.getLockFirmwareVersion());

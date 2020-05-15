@@ -448,7 +448,7 @@ public class BleLockUtils {
                 return R.mipmap.bluetooth_authorization_lock_f1;
             } else if (model.startsWith("K12W")) {
                 return R.mipmap.bluetooth_authorization_lock_k12w;
-            } else if (model.startsWith("K13")) {
+            } else if (model.contentEquals("K13")) {
                 return R.mipmap.bluetooth_authorization_lock_k13;
             } else if (model.startsWith("K9W")) {
                 return R.mipmap.bluetooth_authorization_lock_k9w;
@@ -561,7 +561,7 @@ public class BleLockUtils {
                 return R.mipmap.small_f1;
             } else if (model.startsWith("K12W")) {
                 return R.mipmap.small_k12w;
-            } else if (model.startsWith("K13")) {
+            } else if (model.contentEquals("K13")) {
                 return R.mipmap.small_k13;
             } else if (model.startsWith("K9W")) {
                 return R.mipmap.small_k9w;
@@ -675,7 +675,7 @@ public class BleLockUtils {
                 return R.mipmap.bluetooth_lock_f1;
             } else if (model.startsWith("K12W")) {
                 return R.mipmap.bluetooth_lock_k12w;
-            } else if (model.startsWith("K13")) {
+            } else if (model.contentEquals("K13")) {
                 return R.mipmap.bluetooth_lock_k13;
             } else if (model.startsWith("K9W")) {
                 return R.mipmap.bluetooth_lock_k9w;

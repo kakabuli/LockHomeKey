@@ -40,21 +40,23 @@ public class WifiLockInfoDao extends AbstractDao<WifiLockInfo, Long> {
         public final static Property PushSwitch = new Property(13, int.class, "pushSwitch", false, "PUSH_SWITCH");
         public final static Property AmMode = new Property(14, int.class, "amMode", false, "AM_MODE");
         public final static Property SafeMode = new Property(15, int.class, "safeMode", false, "SAFE_MODE");
-        public final static Property Defences = new Property(16, int.class, "defences", false, "DEFENCES");
-        public final static Property Language = new Property(17, String.class, "language", false, "LANGUAGE");
-        public final static Property OperatingMode = new Property(18, int.class, "operatingMode", false, "OPERATING_MODE");
-        public final static Property Volume = new Property(19, int.class, "volume", false, "VOLUME");
-        public final static Property BleVersion = new Property(20, String.class, "bleVersion", false, "BLE_VERSION");
-        public final static Property WifiVersion = new Property(21, String.class, "wifiVersion", false, "WIFI_VERSION");
-        public final static Property MqttVersion = new Property(22, String.class, "mqttVersion", false, "MQTT_VERSION");
-        public final static Property LockFirmwareVersion = new Property(23, String.class, "lockFirmwareVersion", false, "LOCK_FIRMWARE_VERSION");
-        public final static Property RandomCode = new Property(24, String.class, "randomCode", false, "RANDOM_CODE");
-        public final static Property CreateTime = new Property(25, long.class, "createTime", false, "CREATE_TIME");
-        public final static Property WifiName = new Property(26, String.class, "wifiName", false, "WIFI_NAME");
-        public final static Property Power = new Property(27, int.class, "power", false, "POWER");
-        public final static Property UpdateTime = new Property(28, long.class, "updateTime", false, "UPDATE_TIME");
-        public final static Property OpenStatus = new Property(29, int.class, "openStatus", false, "OPEN_STATUS");
-        public final static Property OpenStatusTime = new Property(30, long.class, "openStatusTime", false, "OPEN_STATUS_TIME");
+        public final static Property PowerSave = new Property(16, int.class, "powerSave", false, "POWER_SAVE");
+        public final static Property FaceStatus = new Property(17, int.class, "faceStatus", false, "FACE_STATUS");
+        public final static Property Defences = new Property(18, int.class, "defences", false, "DEFENCES");
+        public final static Property Language = new Property(19, String.class, "language", false, "LANGUAGE");
+        public final static Property OperatingMode = new Property(20, int.class, "operatingMode", false, "OPERATING_MODE");
+        public final static Property Volume = new Property(21, int.class, "volume", false, "VOLUME");
+        public final static Property BleVersion = new Property(22, String.class, "bleVersion", false, "BLE_VERSION");
+        public final static Property WifiVersion = new Property(23, String.class, "wifiVersion", false, "WIFI_VERSION");
+        public final static Property MqttVersion = new Property(24, String.class, "mqttVersion", false, "MQTT_VERSION");
+        public final static Property LockFirmwareVersion = new Property(25, String.class, "lockFirmwareVersion", false, "LOCK_FIRMWARE_VERSION");
+        public final static Property RandomCode = new Property(26, String.class, "randomCode", false, "RANDOM_CODE");
+        public final static Property CreateTime = new Property(27, long.class, "createTime", false, "CREATE_TIME");
+        public final static Property WifiName = new Property(28, String.class, "wifiName", false, "WIFI_NAME");
+        public final static Property Power = new Property(29, int.class, "power", false, "POWER");
+        public final static Property UpdateTime = new Property(30, long.class, "updateTime", false, "UPDATE_TIME");
+        public final static Property OpenStatus = new Property(31, int.class, "openStatus", false, "OPEN_STATUS");
+        public final static Property OpenStatusTime = new Property(32, long.class, "openStatusTime", false, "OPEN_STATUS_TIME");
     }
 
 
@@ -86,21 +88,23 @@ public class WifiLockInfoDao extends AbstractDao<WifiLockInfo, Long> {
                 "\"PUSH_SWITCH\" INTEGER NOT NULL ," + // 13: pushSwitch
                 "\"AM_MODE\" INTEGER NOT NULL ," + // 14: amMode
                 "\"SAFE_MODE\" INTEGER NOT NULL ," + // 15: safeMode
-                "\"DEFENCES\" INTEGER NOT NULL ," + // 16: defences
-                "\"LANGUAGE\" TEXT," + // 17: language
-                "\"OPERATING_MODE\" INTEGER NOT NULL ," + // 18: operatingMode
-                "\"VOLUME\" INTEGER NOT NULL ," + // 19: volume
-                "\"BLE_VERSION\" TEXT," + // 20: bleVersion
-                "\"WIFI_VERSION\" TEXT," + // 21: wifiVersion
-                "\"MQTT_VERSION\" TEXT," + // 22: mqttVersion
-                "\"LOCK_FIRMWARE_VERSION\" TEXT," + // 23: lockFirmwareVersion
-                "\"RANDOM_CODE\" TEXT," + // 24: randomCode
-                "\"CREATE_TIME\" INTEGER NOT NULL ," + // 25: createTime
-                "\"WIFI_NAME\" TEXT," + // 26: wifiName
-                "\"POWER\" INTEGER NOT NULL ," + // 27: power
-                "\"UPDATE_TIME\" INTEGER NOT NULL ," + // 28: updateTime
-                "\"OPEN_STATUS\" INTEGER NOT NULL ," + // 29: openStatus
-                "\"OPEN_STATUS_TIME\" INTEGER NOT NULL );"); // 30: openStatusTime
+                "\"POWER_SAVE\" INTEGER NOT NULL ," + // 16: powerSave
+                "\"FACE_STATUS\" INTEGER NOT NULL ," + // 17: faceStatus
+                "\"DEFENCES\" INTEGER NOT NULL ," + // 18: defences
+                "\"LANGUAGE\" TEXT," + // 19: language
+                "\"OPERATING_MODE\" INTEGER NOT NULL ," + // 20: operatingMode
+                "\"VOLUME\" INTEGER NOT NULL ," + // 21: volume
+                "\"BLE_VERSION\" TEXT," + // 22: bleVersion
+                "\"WIFI_VERSION\" TEXT," + // 23: wifiVersion
+                "\"MQTT_VERSION\" TEXT," + // 24: mqttVersion
+                "\"LOCK_FIRMWARE_VERSION\" TEXT," + // 25: lockFirmwareVersion
+                "\"RANDOM_CODE\" TEXT," + // 26: randomCode
+                "\"CREATE_TIME\" INTEGER NOT NULL ," + // 27: createTime
+                "\"WIFI_NAME\" TEXT," + // 28: wifiName
+                "\"POWER\" INTEGER NOT NULL ," + // 29: power
+                "\"UPDATE_TIME\" INTEGER NOT NULL ," + // 30: updateTime
+                "\"OPEN_STATUS\" INTEGER NOT NULL ," + // 31: openStatus
+                "\"OPEN_STATUS_TIME\" INTEGER NOT NULL );"); // 32: openStatusTime
     }
 
     /** Drops the underlying database table. */
@@ -172,49 +176,51 @@ public class WifiLockInfoDao extends AbstractDao<WifiLockInfo, Long> {
         stmt.bindLong(14, entity.getPushSwitch());
         stmt.bindLong(15, entity.getAmMode());
         stmt.bindLong(16, entity.getSafeMode());
-        stmt.bindLong(17, entity.getDefences());
+        stmt.bindLong(17, entity.getPowerSave());
+        stmt.bindLong(18, entity.getFaceStatus());
+        stmt.bindLong(19, entity.getDefences());
  
         String language = entity.getLanguage();
         if (language != null) {
-            stmt.bindString(18, language);
+            stmt.bindString(20, language);
         }
-        stmt.bindLong(19, entity.getOperatingMode());
-        stmt.bindLong(20, entity.getVolume());
+        stmt.bindLong(21, entity.getOperatingMode());
+        stmt.bindLong(22, entity.getVolume());
  
         String bleVersion = entity.getBleVersion();
         if (bleVersion != null) {
-            stmt.bindString(21, bleVersion);
+            stmt.bindString(23, bleVersion);
         }
  
         String wifiVersion = entity.getWifiVersion();
         if (wifiVersion != null) {
-            stmt.bindString(22, wifiVersion);
+            stmt.bindString(24, wifiVersion);
         }
  
         String mqttVersion = entity.getMqttVersion();
         if (mqttVersion != null) {
-            stmt.bindString(23, mqttVersion);
+            stmt.bindString(25, mqttVersion);
         }
  
         String lockFirmwareVersion = entity.getLockFirmwareVersion();
         if (lockFirmwareVersion != null) {
-            stmt.bindString(24, lockFirmwareVersion);
+            stmt.bindString(26, lockFirmwareVersion);
         }
  
         String randomCode = entity.getRandomCode();
         if (randomCode != null) {
-            stmt.bindString(25, randomCode);
+            stmt.bindString(27, randomCode);
         }
-        stmt.bindLong(26, entity.getCreateTime());
+        stmt.bindLong(28, entity.getCreateTime());
  
         String wifiName = entity.getWifiName();
         if (wifiName != null) {
-            stmt.bindString(27, wifiName);
+            stmt.bindString(29, wifiName);
         }
-        stmt.bindLong(28, entity.getPower());
-        stmt.bindLong(29, entity.getUpdateTime());
-        stmt.bindLong(30, entity.getOpenStatus());
-        stmt.bindLong(31, entity.getOpenStatusTime());
+        stmt.bindLong(30, entity.getPower());
+        stmt.bindLong(31, entity.getUpdateTime());
+        stmt.bindLong(32, entity.getOpenStatus());
+        stmt.bindLong(33, entity.getOpenStatusTime());
     }
 
     @Override
@@ -280,49 +286,51 @@ public class WifiLockInfoDao extends AbstractDao<WifiLockInfo, Long> {
         stmt.bindLong(14, entity.getPushSwitch());
         stmt.bindLong(15, entity.getAmMode());
         stmt.bindLong(16, entity.getSafeMode());
-        stmt.bindLong(17, entity.getDefences());
+        stmt.bindLong(17, entity.getPowerSave());
+        stmt.bindLong(18, entity.getFaceStatus());
+        stmt.bindLong(19, entity.getDefences());
  
         String language = entity.getLanguage();
         if (language != null) {
-            stmt.bindString(18, language);
+            stmt.bindString(20, language);
         }
-        stmt.bindLong(19, entity.getOperatingMode());
-        stmt.bindLong(20, entity.getVolume());
+        stmt.bindLong(21, entity.getOperatingMode());
+        stmt.bindLong(22, entity.getVolume());
  
         String bleVersion = entity.getBleVersion();
         if (bleVersion != null) {
-            stmt.bindString(21, bleVersion);
+            stmt.bindString(23, bleVersion);
         }
  
         String wifiVersion = entity.getWifiVersion();
         if (wifiVersion != null) {
-            stmt.bindString(22, wifiVersion);
+            stmt.bindString(24, wifiVersion);
         }
  
         String mqttVersion = entity.getMqttVersion();
         if (mqttVersion != null) {
-            stmt.bindString(23, mqttVersion);
+            stmt.bindString(25, mqttVersion);
         }
  
         String lockFirmwareVersion = entity.getLockFirmwareVersion();
         if (lockFirmwareVersion != null) {
-            stmt.bindString(24, lockFirmwareVersion);
+            stmt.bindString(26, lockFirmwareVersion);
         }
  
         String randomCode = entity.getRandomCode();
         if (randomCode != null) {
-            stmt.bindString(25, randomCode);
+            stmt.bindString(27, randomCode);
         }
-        stmt.bindLong(26, entity.getCreateTime());
+        stmt.bindLong(28, entity.getCreateTime());
  
         String wifiName = entity.getWifiName();
         if (wifiName != null) {
-            stmt.bindString(27, wifiName);
+            stmt.bindString(29, wifiName);
         }
-        stmt.bindLong(28, entity.getPower());
-        stmt.bindLong(29, entity.getUpdateTime());
-        stmt.bindLong(30, entity.getOpenStatus());
-        stmt.bindLong(31, entity.getOpenStatusTime());
+        stmt.bindLong(30, entity.getPower());
+        stmt.bindLong(31, entity.getUpdateTime());
+        stmt.bindLong(32, entity.getOpenStatus());
+        stmt.bindLong(33, entity.getOpenStatusTime());
     }
 
     @Override
@@ -349,21 +357,23 @@ public class WifiLockInfoDao extends AbstractDao<WifiLockInfo, Long> {
             cursor.getInt(offset + 13), // pushSwitch
             cursor.getInt(offset + 14), // amMode
             cursor.getInt(offset + 15), // safeMode
-            cursor.getInt(offset + 16), // defences
-            cursor.isNull(offset + 17) ? null : cursor.getString(offset + 17), // language
-            cursor.getInt(offset + 18), // operatingMode
-            cursor.getInt(offset + 19), // volume
-            cursor.isNull(offset + 20) ? null : cursor.getString(offset + 20), // bleVersion
-            cursor.isNull(offset + 21) ? null : cursor.getString(offset + 21), // wifiVersion
-            cursor.isNull(offset + 22) ? null : cursor.getString(offset + 22), // mqttVersion
-            cursor.isNull(offset + 23) ? null : cursor.getString(offset + 23), // lockFirmwareVersion
-            cursor.isNull(offset + 24) ? null : cursor.getString(offset + 24), // randomCode
-            cursor.getLong(offset + 25), // createTime
-            cursor.isNull(offset + 26) ? null : cursor.getString(offset + 26), // wifiName
-            cursor.getInt(offset + 27), // power
-            cursor.getLong(offset + 28), // updateTime
-            cursor.getInt(offset + 29), // openStatus
-            cursor.getLong(offset + 30) // openStatusTime
+            cursor.getInt(offset + 16), // powerSave
+            cursor.getInt(offset + 17), // faceStatus
+            cursor.getInt(offset + 18), // defences
+            cursor.isNull(offset + 19) ? null : cursor.getString(offset + 19), // language
+            cursor.getInt(offset + 20), // operatingMode
+            cursor.getInt(offset + 21), // volume
+            cursor.isNull(offset + 22) ? null : cursor.getString(offset + 22), // bleVersion
+            cursor.isNull(offset + 23) ? null : cursor.getString(offset + 23), // wifiVersion
+            cursor.isNull(offset + 24) ? null : cursor.getString(offset + 24), // mqttVersion
+            cursor.isNull(offset + 25) ? null : cursor.getString(offset + 25), // lockFirmwareVersion
+            cursor.isNull(offset + 26) ? null : cursor.getString(offset + 26), // randomCode
+            cursor.getLong(offset + 27), // createTime
+            cursor.isNull(offset + 28) ? null : cursor.getString(offset + 28), // wifiName
+            cursor.getInt(offset + 29), // power
+            cursor.getLong(offset + 30), // updateTime
+            cursor.getInt(offset + 31), // openStatus
+            cursor.getLong(offset + 32) // openStatusTime
         );
         return entity;
     }
@@ -386,21 +396,23 @@ public class WifiLockInfoDao extends AbstractDao<WifiLockInfo, Long> {
         entity.setPushSwitch(cursor.getInt(offset + 13));
         entity.setAmMode(cursor.getInt(offset + 14));
         entity.setSafeMode(cursor.getInt(offset + 15));
-        entity.setDefences(cursor.getInt(offset + 16));
-        entity.setLanguage(cursor.isNull(offset + 17) ? null : cursor.getString(offset + 17));
-        entity.setOperatingMode(cursor.getInt(offset + 18));
-        entity.setVolume(cursor.getInt(offset + 19));
-        entity.setBleVersion(cursor.isNull(offset + 20) ? null : cursor.getString(offset + 20));
-        entity.setWifiVersion(cursor.isNull(offset + 21) ? null : cursor.getString(offset + 21));
-        entity.setMqttVersion(cursor.isNull(offset + 22) ? null : cursor.getString(offset + 22));
-        entity.setLockFirmwareVersion(cursor.isNull(offset + 23) ? null : cursor.getString(offset + 23));
-        entity.setRandomCode(cursor.isNull(offset + 24) ? null : cursor.getString(offset + 24));
-        entity.setCreateTime(cursor.getLong(offset + 25));
-        entity.setWifiName(cursor.isNull(offset + 26) ? null : cursor.getString(offset + 26));
-        entity.setPower(cursor.getInt(offset + 27));
-        entity.setUpdateTime(cursor.getLong(offset + 28));
-        entity.setOpenStatus(cursor.getInt(offset + 29));
-        entity.setOpenStatusTime(cursor.getLong(offset + 30));
+        entity.setPowerSave(cursor.getInt(offset + 16));
+        entity.setFaceStatus(cursor.getInt(offset + 17));
+        entity.setDefences(cursor.getInt(offset + 18));
+        entity.setLanguage(cursor.isNull(offset + 19) ? null : cursor.getString(offset + 19));
+        entity.setOperatingMode(cursor.getInt(offset + 20));
+        entity.setVolume(cursor.getInt(offset + 21));
+        entity.setBleVersion(cursor.isNull(offset + 22) ? null : cursor.getString(offset + 22));
+        entity.setWifiVersion(cursor.isNull(offset + 23) ? null : cursor.getString(offset + 23));
+        entity.setMqttVersion(cursor.isNull(offset + 24) ? null : cursor.getString(offset + 24));
+        entity.setLockFirmwareVersion(cursor.isNull(offset + 25) ? null : cursor.getString(offset + 25));
+        entity.setRandomCode(cursor.isNull(offset + 26) ? null : cursor.getString(offset + 26));
+        entity.setCreateTime(cursor.getLong(offset + 27));
+        entity.setWifiName(cursor.isNull(offset + 28) ? null : cursor.getString(offset + 28));
+        entity.setPower(cursor.getInt(offset + 29));
+        entity.setUpdateTime(cursor.getLong(offset + 30));
+        entity.setOpenStatus(cursor.getInt(offset + 31));
+        entity.setOpenStatusTime(cursor.getLong(offset + 32));
      }
     
     @Override

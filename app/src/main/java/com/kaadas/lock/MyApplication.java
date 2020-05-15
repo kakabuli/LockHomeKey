@@ -597,6 +597,8 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
                      * operatingMode : 1
                      * safeMode : 1
                      * volume : 0
+                     * powerSave : 0
+                     * faceStatus : 1
                      */
                     if (wifiLockInfo.getWifiSN().equals(sn)) {
                         wifiLockInfo.setAmMode(actionBean.getEventparams().getAmMode());
@@ -605,6 +607,8 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
                         wifiLockInfo.setOperatingMode(actionBean.getEventparams().getOperatingMode());
                         wifiLockInfo.setSafeMode(actionBean.getEventparams().getSafeMode());
                         wifiLockInfo.setVolume(actionBean.getEventparams().getVolume());
+                        wifiLockInfo.setPowerSave(actionBean.getEventparams().getPowerSave());
+                        wifiLockInfo.setFaceStatus(actionBean.getEventparams().getFaceStatus());
                         long updateTime = Long.parseLong(actionBean.getTimestamp());
                         LogUtils.e("更新的时间为   " + DateUtils.getDateTimeFromMillisecond(updateTime * 1000));
                         wifiLockInfo.setUpdateTime(updateTime);

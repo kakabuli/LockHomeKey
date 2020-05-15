@@ -131,14 +131,22 @@ public class WifiLockFragment extends BaseFragment<IWifiLockView, WifiLockPresen
         int operatingMode = wifiLockInfo.getOperatingMode(); //反锁模式
         int defences = wifiLockInfo.getDefences();  //布防模式
         int openStatus = wifiLockInfo.getOpenStatus();
+        int faceStatus = wifiLockInfo.getFaceStatus();  //面容识别已关闭
+        int powerSave = wifiLockInfo.getPowerSave();   //已启动节能模式
+
 
         if (isOpening){
             changeLockStatus(4);
         }else {
             changeLockStatus(5);
         }
-
-
+        ///wifi锁首页状态优先级：开锁状态-> 布防-> 反琐-> 安全-> 面容-> 节能
+        if (powerSave == 1) {//已启动节能模式
+            changeLockStatus(8);
+        }
+        if (faceStatus == 1) {//面容识别已关闭
+            changeLockStatus(7);
+        }
         if (safeMode == 1) {//安全模式
             changeLockStatus(6);
         }
@@ -268,7 +276,19 @@ public class WifiLockFragment extends BaseFragment<IWifiLockView, WifiLockPresen
                 //已启动安全模式
                 ivBackGround.setImageResource(R.mipmap.wifi_lock_safe_bg);  //背景大图标
                 ivCenterIcon.setImageResource(isOpening ? R.mipmap.bluetooth_open_lock_success_niner_middle_icon : R.mipmap.bluetooth_lock_safe_inner_midder_icon);  //门锁关闭状态
-                tvTopStates.setText(getString(R.string.already_safe_model_open));  //设置设备状态   离线
+                tvTopStates.setText(getString(R.string.already_safe_model_open));
+                break;
+            case 7:
+                //面容识别已关闭
+                ivBackGround.setImageResource(R.mipmap.wifi_lock_face_model_close);  //背景大图标
+                ivCenterIcon.setImageResource(R.mipmap.wifi_lock_face_model_close_middle_icon);  //中间小图标
+                tvTopStates.setText(getString(R.string.already_face_model_close));
+                break;
+            case 8:
+                //已启动节能模式
+                ivBackGround.setImageResource(R.mipmap.wifi_lock_face_sensor_model_open);  //背景大图标
+                ivCenterIcon.setImageResource(R.mipmap.wifi_lock_face_sensor_model_middle_icon);  //中间小图标
+                tvTopStates.setText(getString(R.string.already_face_sensor_model_open));
                 break;
         }
     }

@@ -4,7 +4,7 @@ public class WifiLockActionBean {
 
     /**
      * devtype : kdswflock
-     * eventparams : {"amMode":1,"defences":1,"language":"zh/en","operatingMode":1,"safeMode":1,"volume":0}
+     * eventparams : {"amMode":1,"defences":1,"language":"zh/en","operatingMode":1,"safeMode":1,"volume":0,"powerSave":0,"faceStatus":1}
      * eventtype : action
      * func : wfevent
      * lockId :  lockId
@@ -104,6 +104,8 @@ public class WifiLockActionBean {
          * operatingMode : 1
          * safeMode : 1
          * volume : 0
+         * powerSave : 0
+         * faceStatus : 1
          */
 
         private int amMode;
@@ -112,6 +114,8 @@ public class WifiLockActionBean {
         private int operatingMode;
         private int safeMode;
         private int volume;
+        private int powerSave;
+        private int faceStatus;
 
         public int getAmMode() {
             return amMode;
@@ -159,6 +163,22 @@ public class WifiLockActionBean {
 
         public void setVolume(int volume) {
             this.volume = volume;
+        }
+
+        public int getPowerSave() {
+            return powerSave;
+        }
+
+        public void setPowerSave(int powerSave) {
+            this.powerSave = powerSave;
+        }
+
+        public int getFaceStatus() {
+            return faceStatus;
+        }
+
+        public void setFaceStatus(int faceStatus) {
+            this.faceStatus = faceStatus;
         }
     }
 }

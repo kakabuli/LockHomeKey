@@ -1341,6 +1341,8 @@
     <string name="open_lock_already">门已开锁</string>
     <string name="lock_lock_already">门已上锁</string>
     <string name="already_safe_model_open">已启动安全模式</string>
+    <string name="already_face_sensor_model_open">已启动节能模式</string>
+    <string name="already_face_model_close">面容识别已关闭</string>
     <string name="offline_password_notice">注：远程离线临时密码30分钟有效</string>
     <string name="sync_lock_status">同步门锁状态</string>
     <string name="modify_success__">更新成功</string>
