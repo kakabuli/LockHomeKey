@@ -4,12 +4,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.mvp.presenter.gatewaylockpresenter.GatewayLockPasswordTempPresenter;
@@ -45,7 +47,7 @@ public class GatewayLockTempararyPwdAddActivity extends BaseActivity<IGatewayLoc
     private String gatewayId;
     private String deviceId;
     private Context context;
-
+    String gatewayModel=null;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,6 +61,7 @@ public class GatewayLockTempararyPwdAddActivity extends BaseActivity<IGatewayLoc
         Intent intent = getIntent();
         gatewayId = intent.getStringExtra(KeyConstants.GATEWAY_ID);
         deviceId = intent.getStringExtra(KeyConstants.DEVICE_ID);
+        gatewayModel =getIntent().getStringExtra(KeyConstants.GATEWAY_MODEL);
     }
 
 
@@ -107,7 +110,15 @@ public class GatewayLockTempararyPwdAddActivity extends BaseActivity<IGatewayLoc
                     });
                     return;
                 }
-                mPresenter.setTempPassword(deviceId, gatewayId, strForeverPassword);
+
+
+                if(!TextUtils.isEmpty(gatewayModel) && gatewayModel.equals(KeyConstants.SMALL_GW2)){
+                      mPresenter.sysPassworByhttp(MyApplication.getInstance().getUid(),gatewayId,deviceId,strForeverPassword,null);
+                }else{
+                      mPresenter.setTempPassword(deviceId, gatewayId, strForeverPassword);
+                }
+
+
                 showLoading(getString(R.string.take_effect_be_being));
                 break;
         }

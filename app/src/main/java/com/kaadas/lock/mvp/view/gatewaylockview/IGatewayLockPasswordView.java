@@ -4,6 +4,7 @@ import com.kaadas.lock.mvp.mvpbase.IBaseView;
 import com.kaadas.lock.utils.greenDao.bean.GatewayPasswordPlanBean;
 
 
+import java.util.List;
 import java.util.Map;
 
 public interface IGatewayLockPasswordView extends IBaseView {
@@ -83,6 +84,6 @@ public interface IGatewayLockPasswordView extends IBaseView {
      */
     void deletePasswordFailed(Throwable throwable);
 
-
+    void gatewayPasswordFull();
 
 }

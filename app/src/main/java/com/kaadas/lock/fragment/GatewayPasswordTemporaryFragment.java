@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.device.gatewaylock.password.GatewayPasswordAddActivity;
 import com.kaadas.lock.activity.device.gatewaylock.password.GatewayLockPasswordShareActivity;
@@ -148,7 +150,21 @@ public class GatewayPasswordTemporaryFragment extends BaseFragment<IGatewayLockP
                     return;
                 }
                 showLoading(getString(R.string.is_setting_password));
-                mPresenter.setTempPassword(deviceId, gatewayId, strTemporaryPassword);
+
+                GatewayPasswordAddActivity gatewayPasswordAddActivity= (GatewayPasswordAddActivity) getActivity();
+                String model=  gatewayPasswordAddActivity.gatewayModel;
+
+                if(!TextUtils.isEmpty(model) && model.equals(KeyConstants.SMALL_GW2)){
+                    mPresenter.sysPassworByhttp(
+                            MyApplication.getInstance().getUid(),
+                            gatewayId
+                            ,deviceId,
+                            strTemporaryPassword,null);
+                }else{
+                    mPresenter.setTempPassword(deviceId, gatewayId, strTemporaryPassword);
+                }
+
+
                 break;
         }
     }

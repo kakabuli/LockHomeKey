@@ -44,15 +44,17 @@ public class GatewayPasswordAddActivity extends BaseAddToApplicationActivity imp
     public String deviceId;
 
     private String[] tabs;
+    public static String gatewayModel=null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gateway_password_add);
         ButterKnife.bind(this);
-
+        gatewayModel =getIntent().getStringExtra(KeyConstants.GATEWAY_MODEL);
         gatewayId = getIntent().getStringExtra(KeyConstants.GATEWAY_ID);
         deviceId = getIntent().getStringExtra(KeyConstants.DEVICE_ID);
+
         ivBack.setOnClickListener(this);
         tvContent.setText(getString(R.string.pwd_header_add_tv));
         tabs = getResources().getStringArray(R.array.home_top);

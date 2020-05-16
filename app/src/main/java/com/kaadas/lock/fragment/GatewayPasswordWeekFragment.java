@@ -18,15 +18,18 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.device.bluetooth.password.CycleRulesActivity;
 import com.kaadas.lock.activity.device.gatewaylock.password.GatewayPasswordAddActivity;
 import com.kaadas.lock.activity.device.gatewaylock.password.GatewayLockPasswordShareActivity;
 import com.kaadas.lock.adapter.ShiXiaoNameAdapter;
+import com.kaadas.lock.bean.GateWayArgsBean;
 import com.kaadas.lock.bean.ShiXiaoNameBean;
 import com.kaadas.lock.mvp.mvpbase.BaseFragment;
 import com.kaadas.lock.mvp.presenter.gatewaylockpresenter.GatewayLockPasswordWeekPresenter;
 import com.kaadas.lock.mvp.view.gatewaylockview.IGatewayLockPasswordWeekView;
+import com.kaadas.lock.publiclibrary.ble.BleCommandFactory;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.DateFormatUtils;
 import com.kaadas.lock.utils.DateUtils;
@@ -274,7 +277,31 @@ public class GatewayPasswordWeekFragment extends BaseFragment<IGatewayLockPasswo
                     dayMask += days[i] << i;
                 }
                 showLoading(getString(R.string.is_setting_password));
-                mPresenter.setWeekPassword(deviceId, gatewayId, strPassword, 0, dayMask, endHour, endMin, startHour, startMin);
+
+
+                GatewayPasswordAddActivity gatewayPasswordAddActivity= (GatewayPasswordAddActivity) getActivity();
+                String model=  gatewayPasswordAddActivity.gatewayModel;
+
+                GateWayArgsBean gateWayArgsBean=new GateWayArgsBean();
+                gateWayArgsBean.setPwdType(2);
+                gateWayArgsBean.setDayMaskBits(dayMask);
+                gateWayArgsBean.setStartHour(startHour);
+                gateWayArgsBean.setStartMinute(startMin);
+                gateWayArgsBean.setEndHour(endHour);
+                gateWayArgsBean.setEndMinute(endMin);
+
+                if(!TextUtils.isEmpty(model) && model.equals(KeyConstants.SMALL_GW2)){
+                    mPresenter.sysPassworByhttp(MyApplication.getInstance().getUid(),
+                            gatewayId,
+                            deviceId,
+                            strPassword,
+                            gateWayArgsBean
+                    );
+                }else{
+                    mPresenter.setWeekPassword(deviceId, gatewayId, strPassword, 0, dayMask, endHour, endMin, startHour, startMin);
+                }
+
+
                 break;
             case R.id.btn_random_generation:
                 String password = StringUtil.makeRandomPassword();

@@ -1245,7 +1245,7 @@ public class XiaokaiNewServiceImp {
     /**
      * @return
      */
-    public static Observable<BaseResult> getZIGBEENINFO(String uid,String gwSN,String zigbeeSN) {
+    public static Observable<String> getZIGBEENINFO(String uid,String gwSN,String zigbeeSN) {
         ZigBeenInfo uploadOtaBean = new ZigBeenInfo(  zigbeeSN, uid, gwSN);
 
         return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
