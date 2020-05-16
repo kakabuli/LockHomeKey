@@ -59,6 +59,7 @@ public class WelcomeActivity extends BaseActivity<ISplashView, SplashPresenter<I
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        LogUtils.e("WelcomeActivity启动 ");
         setContentView(R.layout.activity_splash);
 //        CheckLanguageUtil.getInstance().checkLag();//语言
         mainIntent = new Intent(WelcomeActivity.this, MainActivity.class);
@@ -110,6 +111,8 @@ public class WelcomeActivity extends BaseActivity<ISplashView, SplashPresenter<I
             mPresenter.listenerServiceConnect();
             currentTime = System.currentTimeMillis();
         }
+        LogUtils.e("WelcomeActivity启动完成 ");
+
     }
 
     @Override
@@ -285,6 +288,7 @@ public class WelcomeActivity extends BaseActivity<ISplashView, SplashPresenter<I
 
         if (!TextUtils.isEmpty(sip_package_json)) {
             String sip_package = new String(Base64.decode(sip_package_json, Base64.DEFAULT));
+
             Log.e(GeTui.VideoLog, "WelcomeActivity==>sip_package_json:" + sip_package);
             if (sip_package.equals("openLock")) {
                 Log.e(GeTui.VideoLog, "WelcomeActivity======>普通密码开锁");

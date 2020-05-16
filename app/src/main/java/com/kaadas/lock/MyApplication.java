@@ -125,8 +125,8 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
     @Override
     public void onCreate() {
         super.onCreate();
-        initALog();
         LogUtils.e("attachView  App启动 ");
+        initALog();
         instance = this;
         CrashReport.initCrashReport(getApplicationContext(), "3ac95f5a71", true);
         initBleService();
@@ -156,6 +156,7 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
 //        if (DemoApplication.payloadData != null) {
 //            tLogView.append(DemoApplication.payloadData);
 //        }
+        LogUtils.e("attachView  App启动完成 ");
 
     }
 
@@ -596,6 +597,8 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
                      * operatingMode : 1
                      * safeMode : 1
                      * volume : 0
+                     * powerSave : 0
+                     * faceStatus : 1
                      */
                     if (wifiLockInfo.getWifiSN().equals(sn)) {
                         wifiLockInfo.setAmMode(actionBean.getEventparams().getAmMode());
@@ -604,6 +607,8 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
                         wifiLockInfo.setOperatingMode(actionBean.getEventparams().getOperatingMode());
                         wifiLockInfo.setSafeMode(actionBean.getEventparams().getSafeMode());
                         wifiLockInfo.setVolume(actionBean.getEventparams().getVolume());
+                        wifiLockInfo.setPowerSave(actionBean.getEventparams().getPowerSave());
+                        wifiLockInfo.setFaceStatus(actionBean.getEventparams().getFaceStatus());
                         long updateTime = Long.parseLong(actionBean.getTimestamp());
                         LogUtils.e("更新的时间为   " + DateUtils.getDateTimeFromMillisecond(updateTime * 1000));
                         wifiLockInfo.setUpdateTime(updateTime);

@@ -63,7 +63,6 @@ public class SplashPresenter<T> extends BasePresenter<ISplashView> {
                             if (isSafe()) {
                                 mViewRef.get().serviceConnectSuccess();
                             }
-
                         }
                     }
                 }, new Consumer<Throwable>() {

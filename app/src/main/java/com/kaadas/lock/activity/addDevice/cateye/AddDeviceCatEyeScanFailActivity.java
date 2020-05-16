@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.addDevice.DeviceAdd2Activity;
 import com.kaadas.lock.activity.addDevice.DeviceAddActivity;
+import com.kaadas.lock.activity.addDevice.DeviceAddCateyeHelpActivity;
 import com.kaadas.lock.activity.addDevice.DeviceBindGatewayListActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 
@@ -24,6 +25,8 @@ public class AddDeviceCatEyeScanFailActivity extends BaseAddToApplicationActivit
     Button buttonReconnection;
     @BindView(R.id.button_out)
     Button buttonOut;
+    @BindView(R.id.help)
+    ImageView help;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -32,7 +35,7 @@ public class AddDeviceCatEyeScanFailActivity extends BaseAddToApplicationActivit
         ButterKnife.bind(this);
     }
 
-    @OnClick({R.id.back, R.id.button_reconnection, R.id.button_out})
+    @OnClick({R.id.back, R.id.button_reconnection, R.id.button_out, R.id.help})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.back:
@@ -47,6 +50,10 @@ public class AddDeviceCatEyeScanFailActivity extends BaseAddToApplicationActivit
                 //退出
                 Intent outIntent=new Intent(this, DeviceAdd2Activity.class);
                 startActivity(outIntent);
+                break;
+            case R.id.help:
+                Intent helpIntent=new Intent(this, DeviceAddCateyeHelpActivity.class);
+                startActivity(helpIntent);
                 break;
         }
     }

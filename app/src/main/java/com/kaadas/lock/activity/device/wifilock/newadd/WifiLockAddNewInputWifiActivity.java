@@ -13,11 +13,15 @@ import android.widget.Toast;
 
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.device.wifilock.add.WifiLcokSupportWifiActivity;
+import com.kaadas.lock.activity.device.wifilock.add.WifiLockApAddThirdActivity;
+import com.kaadas.lock.activity.device.wifilock.add.WifiLockApCheckAdminPasswordActivity;
 import com.kaadas.lock.activity.device.wifilock.add.WifiLockHelpActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.KeyConstants;
+import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.SPUtils;
+import com.kaadas.lock.utils.SocketManager;
 import com.kaadas.lock.widget.DropEditText;
 
 import butterknife.BindView;
@@ -47,7 +51,7 @@ public class WifiLockAddNewInputWifiActivity extends BaseAddToApplicationActivit
     private boolean passwordHide = true;
     public String adminPassword;
     public String sSsid;
-
+    private SocketManager socketManager = SocketManager.getInstance();
     private String wifiSn;
     private String randomCode;
     private int func;
@@ -143,13 +147,33 @@ public class WifiLockAddNewInputWifiActivity extends BaseAddToApplicationActivit
 
                     @Override
                     public void right() {
-                        //退出当前界面
-                        Intent intent = new Intent(WifiLockAddNewInputWifiActivity.this, WifiLockAddNewFirstActivity.class);
-                        startActivity(intent);
+                        thread.start();
                     }
                 });
     }
 
+    private Thread thread = new Thread() {
+        @Override
+        public void run() {
+            super.run();
+            LogUtils.e("--Kaadas--发送************************************************************************************************APClose");
+            socketManager.writeData("************************************************************************************************APClose".getBytes());
+
+            onError(socketManager, -1);
+
+        }
+    };
+    public void onError(SocketManager socketManager, int errorCode) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                finish();
+                //退出当前界面
+                Intent intent = new Intent(WifiLockAddNewInputWifiActivity.this, WifiLockAddNewFirstActivity.class);
+                startActivity(intent);
+            }
+        });
+    }
     @Override
     public void onBackPressed() {
         showWarring();

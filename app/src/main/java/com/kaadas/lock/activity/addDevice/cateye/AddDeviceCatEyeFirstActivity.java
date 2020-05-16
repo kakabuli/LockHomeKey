@@ -12,6 +12,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kaadas.lock.R;
+import com.kaadas.lock.activity.addDevice.DeviceAddCateyeHelpActivity;
+import com.kaadas.lock.activity.addDevice.DeviceAddHelpActivity;
 import com.kaadas.lock.activity.addDevice.DeviceBindGatewayListActivity;
 import com.kaadas.lock.activity.addDevice.zigbeelocknew.QrCodeScanActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
@@ -33,7 +35,8 @@ public class AddDeviceCatEyeFirstActivity extends BaseAddToApplicationActivity {
     ImageView back;
     @BindView(R.id.scan_catEye)
     LinearLayout scanCatEye;
-
+    @BindView(R.id.help)
+    ImageView help;
     @BindView(R.id.device_cateye_add_txt)
     TextView device_cateye_add_txt;
 
@@ -51,7 +54,7 @@ public class AddDeviceCatEyeFirstActivity extends BaseAddToApplicationActivity {
 
     }
 
-    @OnClick({R.id.back, R.id.scan_catEye,R.id.phone_add_txt})
+    @OnClick({R.id.back, R.id.scan_catEye,R.id.phone_add_txt, R.id.help})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.back:
@@ -82,6 +85,10 @@ public class AddDeviceCatEyeFirstActivity extends BaseAddToApplicationActivity {
                 phoneIntent.putExtra(KeyConstants.GW_WIFI_PWD,pwd);
                 phoneIntent.putExtra(KeyConstants.GW_SN, gwId);
                 startActivity(phoneIntent);
+                break;
+            case R.id.help:
+                Intent helpIntent=new Intent(this, DeviceAddCateyeHelpActivity.class);
+                startActivity(helpIntent);
                 break;
         }
     }

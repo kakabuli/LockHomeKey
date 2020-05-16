@@ -662,10 +662,10 @@ public class BleUtil {
     public static final int LOW_POWER = 0x10;
     public static final int DOOR_NOT_LOCK = 0x20;
     public static final int ARM = 0x40;
-
+    public static final int CLOSE_FACE = 0x80;
 
     /**
-     * @param type  	报警类型：1锁定 2劫持 3三次错误 4防撬 8机械钥匙报警 16低电压 32锁体异常 64布防
+     * @param type  	报警类型：1锁定 2劫持 3三次错误 4防撬 8机械钥匙报警 16低电压 32锁体异常 64布防 128低电量关人脸
      * @return
      */
     public static String getAlarmByType(int type,Context context) {
@@ -694,6 +694,9 @@ public class BleUtil {
                 break;
             case ARM://64布防
                 content = context.getString(R.string.wifi_lock_alarm_safe);
+                break;
+            case CLOSE_FACE://128低电量关人脸
+                content = context.getString(R.string.wifi_lock_alarm_lower_power_close_face);
                 break;
             default:
                 content = context.getString(R.string.warring_unkonw);

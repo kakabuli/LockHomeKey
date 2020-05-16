@@ -29,12 +29,14 @@ public class BasePresenter<T extends IBaseView> {
         if (mqttService == null) {
             LogUtils.e("mqttService  为空   异常情况  " + (MyApplication.getInstance().getMqttService() == null));
             mqttService = MyApplication.getInstance().getMqttService();
+            LogUtils.e("mqttService  为" + mqttService);
+
         }
         if (bleService == null) {
             LogUtils.e("bleService  为空   异常情况  " + (MyApplication.getInstance().getBleService() == null));
             bleService = MyApplication.getInstance().getBleService();
 //            MyApplication.getInstance().reStartApp();
-            LogUtils.e("bleService 是否仍然 为空   异常情况  " + (MyApplication.getInstance().getBleService() == null));
+            LogUtils.e("bleService 为 " + bleService);
         }
     }
 
@@ -55,6 +57,8 @@ public class BasePresenter<T extends IBaseView> {
             bleService = MyApplication.getInstance().getBleService();
         }
         mViewRef = new WeakReference<T>(view);
+        LogUtils.e("WeakReference=="+view);
+
         isAttach = true;
     }
 
@@ -74,6 +78,5 @@ public class BasePresenter<T extends IBaseView> {
             disposable.dispose();
         }
     }
-
 
 }

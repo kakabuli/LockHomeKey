@@ -71,6 +71,8 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter<ILogi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        LogUtils.e("LoginActivity启动 ");
+
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
         initEvent();
@@ -79,6 +81,8 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter<ILogi
         checkVersion();
         initView();
 //        checkVpnService();
+        LogUtils.e("LoginActivity启动完成 ");
+
     }
 
     private void initView() {

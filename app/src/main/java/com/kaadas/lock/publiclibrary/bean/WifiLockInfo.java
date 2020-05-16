@@ -28,6 +28,8 @@ public class WifiLockInfo implements Serializable {
      * pushSwitch : 1
      * amMode : 1
      * safeMode : 1
+     * powerSave : 1 节能模式开启 0 节能模式关闭
+     * faceStatus :  0 面容识别开启 1 面容识别关闭
      * defences : 0
      * language : zh
      * operatingMode : 0
@@ -71,6 +73,8 @@ public class WifiLockInfo implements Serializable {
     private int pushSwitch;
     private int amMode;
     private int safeMode;
+    private int powerSave;
+    private int faceStatus;
     private int defences;
     private String language;
     private int operatingMode;
@@ -80,6 +84,8 @@ public class WifiLockInfo implements Serializable {
     private String mqttVersion;
     private String lockFirmwareVersion;
     private String randomCode;
+
+
     /**
      * _id : 5de4c32a33cc1949441265ca
      * wifiName : wodewifi
@@ -111,55 +117,49 @@ public class WifiLockInfo implements Serializable {
     private long openStatusTime;
 
 
-
-
-
-
-
-
-
-    @Generated(hash = 952102782)
-    public WifiLockInfo(Long id, String wifiSN, int isAdmin, String adminUid,
-            String adminName, String productSN, String productModel, int appId,
-            String lockNickname, String lockSoftwareVersion, String functionSet,
-            String uid, String uname, int pushSwitch, int amMode, int safeMode,
-            int defences, String language, int operatingMode, int volume,
-            String bleVersion, String wifiVersion, String mqttVersion,
-            String lockFirmwareVersion, String randomCode, long createTime,
-            String wifiName, int power, long updateTime, int openStatus,
-            long openStatusTime) {
-        this.id = id;
-        this.wifiSN = wifiSN;
-        this.isAdmin = isAdmin;
-        this.adminUid = adminUid;
-        this.adminName = adminName;
-        this.productSN = productSN;
-        this.productModel = productModel;
-        this.appId = appId;
-        this.lockNickname = lockNickname;
-        this.lockSoftwareVersion = lockSoftwareVersion;
-        this.functionSet = functionSet;
-        this.uid = uid;
-        this.uname = uname;
-        this.pushSwitch = pushSwitch;
-        this.amMode = amMode;
-        this.safeMode = safeMode;
-        this.defences = defences;
-        this.language = language;
-        this.operatingMode = operatingMode;
-        this.volume = volume;
-        this.bleVersion = bleVersion;
-        this.wifiVersion = wifiVersion;
-        this.mqttVersion = mqttVersion;
-        this.lockFirmwareVersion = lockFirmwareVersion;
-        this.randomCode = randomCode;
-        this.createTime = createTime;
-        this.wifiName = wifiName;
-        this.power = power;
-        this.updateTime = updateTime;
-        this.openStatus = openStatus;
-        this.openStatusTime = openStatusTime;
-    }
+@Generated(hash = 390651843)
+public WifiLockInfo(Long id, String wifiSN, int isAdmin, String adminUid,
+        String adminName, String productSN, String productModel, int appId,
+        String lockNickname, String lockSoftwareVersion, String functionSet, String uid,
+        String uname, int pushSwitch, int amMode, int safeMode, int powerSave,
+        int faceStatus, int defences, String language, int operatingMode, int volume,
+        String bleVersion, String wifiVersion, String mqttVersion,
+        String lockFirmwareVersion, String randomCode, long createTime, String wifiName,
+        int power, long updateTime, int openStatus, long openStatusTime) {
+    this.id = id;
+    this.wifiSN = wifiSN;
+    this.isAdmin = isAdmin;
+    this.adminUid = adminUid;
+    this.adminName = adminName;
+    this.productSN = productSN;
+    this.productModel = productModel;
+    this.appId = appId;
+    this.lockNickname = lockNickname;
+    this.lockSoftwareVersion = lockSoftwareVersion;
+    this.functionSet = functionSet;
+    this.uid = uid;
+    this.uname = uname;
+    this.pushSwitch = pushSwitch;
+    this.amMode = amMode;
+    this.safeMode = safeMode;
+    this.powerSave = powerSave;
+    this.faceStatus = faceStatus;
+    this.defences = defences;
+    this.language = language;
+    this.operatingMode = operatingMode;
+    this.volume = volume;
+    this.bleVersion = bleVersion;
+    this.wifiVersion = wifiVersion;
+    this.mqttVersion = mqttVersion;
+    this.lockFirmwareVersion = lockFirmwareVersion;
+    this.randomCode = randomCode;
+    this.createTime = createTime;
+    this.wifiName = wifiName;
+    this.power = power;
+    this.updateTime = updateTime;
+    this.openStatus = openStatus;
+    this.openStatusTime = openStatusTime;
+}
 
     @Generated(hash = 666757199)
     public WifiLockInfo() {
@@ -293,6 +293,21 @@ public class WifiLockInfo implements Serializable {
         this.safeMode = safeMode;
     }
 
+    public int getPowerSave() {
+        return powerSave;
+    }
+
+    public void setPowerSave(int powerSave) {
+        this.powerSave = powerSave;
+    }
+    public int getFaceStatus() {
+        return faceStatus;
+    }
+
+    public void setFaceStatus(int faceStatus) {
+        this.faceStatus = faceStatus;
+    }
+
     public int getDefences() {
         return defences;
     }
@@ -365,6 +380,7 @@ public class WifiLockInfo implements Serializable {
         this.randomCode = randomCode;
     }
 
+
     public Long getId() {
         return this.id;
     }
@@ -393,6 +409,8 @@ public class WifiLockInfo implements Serializable {
                 ", pushSwitch=" + pushSwitch +
                 ", amMode=" + amMode +
                 ", safeMode=" + safeMode +
+                ", powerSave='" + powerSave + '\'' +
+                ", faceStatus='" + faceStatus + '\'' +
                 ", defences=" + defences +
                 ", language='" + language + '\'' +
                 ", operatingMode=" + operatingMode +
@@ -442,6 +460,7 @@ public class WifiLockInfo implements Serializable {
         return openStatus;
     }
 
+
     public void setOpenStatus(int openStatus) {
         this.openStatus = openStatus;
     }
@@ -453,4 +472,5 @@ public class WifiLockInfo implements Serializable {
     public void setOpenStatusTime(long openStatusTime) {
         this.openStatusTime = openStatusTime;
     }
+
 }

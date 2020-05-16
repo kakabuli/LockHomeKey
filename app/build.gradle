@@ -4,7 +4,7 @@ apply plugin: 'bugly'   //添加bugly的符号表
 apply plugin: 'com.mob.sdk'
 
 greendao {
-    schemaVersion 21// 数据库版本号
+    schemaVersion 22// 数据库版本号
     daoPackage 'com.kaadas.lock.utils.greenDao.db'//自动生成的dao的包名，包名默认是entity所在的包；
     targetGenDir 'src/main/java'//生成数据库文件的目录
 }
@@ -22,8 +22,8 @@ android {
         applicationId "com.kaadas.lock"
         minSdkVersion 22
         targetSdkVersion 26
-        versionCode 202004131
-        versionName "3.7.7"
+        versionCode 202005141
+        versionName "3.8.4"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         flavorDimensions "versionCode"
         multiDexEnabled true
@@ -73,7 +73,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    buildToolsVersion '28.0.2'
+    buildToolsVersion '28.0.3'
     compileOptions {
 
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -214,5 +214,6 @@ dependencies {
     implementation 'cn.bingoogolapple:bga-qrcode-zbar:1.3.7'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 //    implementation 'com.yanzhenjie.recyclerview:support:1.3.2'
+    implementation 'ru.alexbykov:nopermission:1.1.2'
 
 }

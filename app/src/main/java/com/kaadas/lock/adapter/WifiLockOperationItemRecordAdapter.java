@@ -60,7 +60,7 @@ public class WifiLockOperationItemRecordAdapter extends BaseQuickAdapter<WifiLoc
                     left = sNum;
                 }
                 switch (pwdType) {
-                    //	密码类型：0密码 3卡片 4指纹 8APP用户 9机械钥匙
+                    //	密码类型：0密码 3卡片 4指纹 5面容 8APP用户 9机械钥匙
                     case 0:
                         right = mContext.getString(R.string.password_open);
                         if (record.getPwdNum() == 252) {
@@ -82,6 +82,9 @@ public class WifiLockOperationItemRecordAdapter extends BaseQuickAdapter<WifiLoc
                         break;
                     case 3:
                         right = mContext.getString(R.string.rfid_open);
+                        break;
+                    case 5:
+                        right = mContext.getString(R.string.face_open);
                         break;
                     case 8:
                         right = mContext.getString(R.string.app_open);
@@ -115,15 +118,18 @@ public class WifiLockOperationItemRecordAdapter extends BaseQuickAdapter<WifiLoc
             case 3: //添加秘钥
                 left = mContext.getString(R.string.lock_add) + sNum;
                 switch (pwdType) {
-                    //	密码类型：0密码 3卡片 4指纹 8APP用户 9机械钥匙
+                    //	密码类型：0密码 3卡片 4指纹 5面容 8APP用户 9机械钥匙
                     case 0:
                         left = left + mContext.getString(R.string.password);
+                        break;
+                    case 3:
+                        left = left + mContext.getString(R.string.card);
                         break;
                     case 4:
                         left = left + mContext.getString(R.string.fingerprint);
                         break;
-                    case 3:
-                        left = left + mContext.getString(R.string.card);
+                    case 5:
+                        left = left + mContext.getString(R.string.face_open);
                         break;
                     default:
                         left = left + mContext.getString(R.string.unknown_open);
@@ -134,15 +140,18 @@ public class WifiLockOperationItemRecordAdapter extends BaseQuickAdapter<WifiLoc
                 int pwdNum = record.getPwdNum();
                 left = mContext.getString(R.string.lock_delete) + ((pwdNum == 255) ? mContext.getString(R.string.all) : sNum + "");
                 switch (pwdType) {
-                    //	密码类型：0密码 3卡片 4指纹 8APP用户 9机械钥匙
+                    //	密码类型：0密码 3卡片 4指纹 5面容 8APP用户 9机械钥匙
                     case 0:
                         left = left + mContext.getString(R.string.password);
+                        break;
+                    case 3:
+                        left = left + mContext.getString(R.string.card);
                         break;
                     case 4:
                         left = left + mContext.getString(R.string.fingerprint);
                         break;
-                    case 3:
-                        left = left + mContext.getString(R.string.card);
+                    case 5:
+                        left = left + mContext.getString(R.string.face_open);
                         break;
                     default:
                         left = mContext.getString(R.string.unknown_open);
@@ -175,15 +184,18 @@ public class WifiLockOperationItemRecordAdapter extends BaseQuickAdapter<WifiLoc
                 left = record.getUserNickname();
                 right = mContext.getString(R.string.modify) + sNum;
                 switch (pwdType) {
-                    //	密码类型：0密码 3卡片 4指纹 8APP用户 9机械钥匙
+                    //	密码类型：0密码 3卡片 4指纹 5面容 8APP用户 9机械钥匙
                     case 0:
                         right = right + mContext.getString(R.string.password);
+                        break;
+                    case 3:
+                        right = right + mContext.getString(R.string.card);
                         break;
                     case 4:
                         right = right + mContext.getString(R.string.fingerprint);
                         break;
-                    case 3:
-                        right = right + mContext.getString(R.string.card);
+                    case 5:
+                        left = left + mContext.getString(R.string.face_open);
                         break;
                     default:
                         right = right + mContext.getString(R.string.unknown_open);
@@ -208,6 +220,12 @@ public class WifiLockOperationItemRecordAdapter extends BaseQuickAdapter<WifiLoc
                 break;
             case 16: //   16添加管理员指纹
                 left = mContext.getString(R.string.lock_add_admin_finger);
+                break;
+            case 17: //   17开启节能模式
+                left = mContext.getString(R.string.face_lock_power_Save_open);
+                break;
+            case 18: //   18关闭节能模式
+                left = mContext.getString(R.string.face_lock_power_Save_close);
                 break;
             default:
                 left = mContext.getString(R.string.unknow_operation);

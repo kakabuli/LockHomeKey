@@ -9,11 +9,12 @@ import com.kaadas.lock.activity.MainActivity;
 import com.kaadas.lock.activity.device.wifilock.add.WifiLcokSupportWifiActivity;
 import com.kaadas.lock.activity.device.wifilock.add.WifiLockHelpActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
+import com.kaadas.lock.utils.SocketManager;
+
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class WifiLockAddNewBindFailedActivity extends BaseAddToApplicationActivity {
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
