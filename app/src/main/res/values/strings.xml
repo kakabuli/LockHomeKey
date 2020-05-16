@@ -1047,6 +1047,7 @@
     <string name="manual_open">手动开锁</string>
     <string name="rfid_open">卡片开锁</string>
     <string name="fingerprint_open">指纹开锁</string>
+    <string name="face_open">面容识别</string>
     <string name="voice_open">语音开锁</string>
     <string name="finger_vein_open">静脉开锁</string>
     <string name="face_recognition_open">人脸开锁</string>
@@ -1319,6 +1320,8 @@
     <string name="checked_off_line">您的门锁于检测已离线</string>
     <string name="wifi_lock_alarm_lock_5min">您的门锁错误验证多次，门锁系统锁定100秒</string>
     <string name="wifi_lock_alarm_hijack">有人使用劫持密码开启门锁，赶紧联系或报警</string>
+    <string name="wifi_lock_alarm_lower_power_close_face">您的智能门锁面容识别已关闭，如需重新开启面容
+识别，请更换电池</string>
     <string name="wifi_lock_alarm_many_failed">您的智能锁已多次验证开门失败，请回家或联系保安查看</string>
     <string name="wifi_lock_alarm_lock_broken">已监测到您的门锁被撬，请联系家人或小区保安</string>
     <string name="wifi_lock_alarm_opens">门锁正在被机械钥匙开启，请回家或联系保安查看</string>
@@ -1436,6 +1439,8 @@
     <string name="back_failed">返回失败</string>
     <string name="lock_modify_admin_finger">门锁修改管理指纹</string>
     <string name="lock_add_admin_finger">门锁添加管理指纹</string>
+    <string name="face_lock_power_Save_open">开启节能模式</string>
+    <string name="face_lock_power_Save_close">关闭节能模式</string>
     <string name="please_input_612">请输入6-12位有效密码</string>
     <string name="info_error">信息不全，请刷新设备列表</string>
     <string name="upload_success">上传成功</string>
@@ -1571,4 +1576,5 @@
     <string name="dsfdsasd">① 根据语音提示，按“4”选择“扩展功能” \n② 再按“1”，选择“加入网络” \n③ 语音播报：“配网中，请稍后”</string>
     <string name="sdfkjsjdkf">用手触碰按键区，唤醒门锁\n确保门锁数字键盘灯亮</string>
     <string name="is_parsing_data">正在解析数据...</string>
+
 </resources>
