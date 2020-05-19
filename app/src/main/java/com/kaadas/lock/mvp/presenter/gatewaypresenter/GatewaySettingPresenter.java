@@ -155,7 +155,9 @@ public class GatewaySettingPresenter<T> extends BasePresenter<GatewaySettingView
                         @Override
                         public void accept(MqttData mqttData) throws Exception {
                             if ("200".equals(mqttData.getReturnCode())) { //请求成功
+
                                 GetZbChannelBean getZbChannelBean = new Gson().fromJson(mqttData.getPayload(), GetZbChannelBean.class);
+
                                 if (isSafe()) {
                                     mViewRef.get().getZbChannelSuccess(getZbChannelBean);
                                 }

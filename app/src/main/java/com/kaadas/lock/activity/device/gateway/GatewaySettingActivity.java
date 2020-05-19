@@ -174,9 +174,13 @@ public class GatewaySettingActivity extends BaseActivity<GatewaySettingView, Gat
         gatewaySettingItemBeans.add(gatewaySettingItemBeanNewOne);
         gatewaySettingItemBeans.add(gatewaySettingItemBeanOne);
         gatewaySettingItemBeans.add(gatewaySettingItemBeanTwo);
-        if( (!TextUtils.isEmpty(model) && model.equals(KeyConstants.SMALL_GW)) || (!TextUtils.isEmpty(model) && model.equals(KeyConstants.SMALL_GW2)) ){
+        if( (!TextUtils.isEmpty(model) && model.equals(KeyConstants.SMALL_GW)) ){
 
-        }else{
+        }
+        else if((!TextUtils.isEmpty(model) && model.equals(KeyConstants.SMALL_GW2))){
+            gatewaySettingItemBeans.add(gatewaySettingItemBeanThree);
+        }
+        else{
             gatewaySettingItemBeans.add(gatewaySettingItemBeanThree);
             gatewaySettingItemBeans.add(gatewaySettingItemBeanFour);
             gatewaySettingItemBeans.add(gatewaySettingItemBeanFive);
@@ -186,7 +190,6 @@ public class GatewaySettingActivity extends BaseActivity<GatewaySettingView, Gat
             gatewaySettingItemBeans.add(gatewaySettingItemBeanNight);
             gatewaySettingItemBeans.add(gatewaySettingItemBeanTen);
         }
-
 
         if (gatewaySettingAdapter!=null){
             gatewaySettingAdapter.notifyDataSetChanged();
@@ -562,9 +565,14 @@ public class GatewaySettingActivity extends BaseActivity<GatewaySettingView, Gat
 
     @Override
     public void getNetBasicSuccess(GetNetBasicBean basicBean) {
-        if( (!TextUtils.isEmpty(model) && model.equals(KeyConstants.SMALL_GW)) || (!TextUtils.isEmpty(model) && model.equals(KeyConstants.SMALL_GW2)) ){  // 小网关
+        if( (!TextUtils.isEmpty(model) && model.equals(KeyConstants.SMALL_GW))){  // 小网关
 
-        }else{
+        }
+        else if((!TextUtils.isEmpty(model) && model.equals(KeyConstants.SMALL_GW2)) ){
+            mPresenter.getZbChannel(MyApplication.getInstance().getUid(),gatewayId,gatewayId);
+
+        }
+        else{
             mPresenter.getGatewayWifiPwd(gatewayId);
         }
 
@@ -689,18 +697,31 @@ public class GatewaySettingActivity extends BaseActivity<GatewaySettingView, Gat
 
     @Override
     public void getZbChannelSuccess(GetZbChannelBean getZbChannelBean) {
+        LogUtils.e("getZbChannel----="+getZbChannelBean.getReturnData().getChannel());
+
         if (loadingDialog!=null){
             loadingDialog.dismiss();
         }
         if (gatewaySettingItemBeans!=null&&gatewaySettingItemBeans.size()>0){
-            gatewaySettingItemBeans.get(10).setContent(getZbChannelBean.getReturnData().getChannel());
-            zbChannel=getZbChannelBean.getReturnData().getChannel();
-            gatewayBaseInfo.setChannel(zbChannel);
+            if( (!TextUtils.isEmpty(model) && model.equals(KeyConstants.SMALL_GW)) ){
+
+            }
+            else if((!TextUtils.isEmpty(model) && model.equals(KeyConstants.SMALL_GW2))){
+                gatewaySettingItemBeans.get(3).setContent(getZbChannelBean.getReturnData().getChannel());
+                zbChannel = getZbChannelBean.getReturnData().getChannel();
+                gatewayBaseInfo.setChannel(zbChannel);
+            }
+            else {
+                gatewaySettingItemBeans.get(10).setContent(getZbChannelBean.getReturnData().getChannel());
+                zbChannel = getZbChannelBean.getReturnData().getChannel();
+                gatewayBaseInfo.setChannel(zbChannel);
+            }
         }
         if (gatewaySettingAdapter!=null){
             gatewaySettingAdapter.notifyDataSetChanged();
         }
         MyApplication.getInstance().getDaoWriteSession().insertOrReplace(gatewayBaseInfo);
+
     }
 
     @Override
