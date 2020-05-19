@@ -6,6 +6,7 @@ import com.kaadas.lock.bean.WiFiLockCardAndFingerShowBean;
 import com.kaadas.lock.mvp.mvpbase.BasePresenter;
 import com.kaadas.lock.mvp.view.wifilock.IWifiLockPasswordManagerView;
 import com.kaadas.lock.publiclibrary.bean.ForeverPassword;
+import com.kaadas.lock.publiclibrary.bean.FacePassword;
 import com.kaadas.lock.publiclibrary.bean.WiFiLockPassword;
 import com.kaadas.lock.publiclibrary.http.XiaokaiNewServiceImp;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
@@ -33,7 +34,7 @@ public class WifiLockPasswordManagerPresenter<T> extends BasePresenter<IWifiLock
                         WiFiLockPassword wiFiLockPassword = wifiLockGetPasswordListResult.getData();
 
                         List<WiFiLockPassword.PwdListBean> pwdList = new ArrayList<>();
-//                         long time =  System.currentTimeMillis() / 1000;
+//                        long time =  System.currentTimeMillis() / 1000;
 //                        pwdList.add(new WiFiLockPassword.PwdListBean(time, 0, 0, 0, 1, null));
 //                        pwdList.add(new WiFiLockPassword.PwdListBean(time, 0, 2, 0, 0, null));
 //                        List<WiFiLockPassword.FingerprintListBean> fingerprintList = new ArrayList<>();
@@ -163,5 +164,72 @@ public class WifiLockPasswordManagerPresenter<T> extends BasePresenter<IWifiLock
         return passwords;
     }
 
+    public void getFacePasswordList(String wifiSn) {
+        XiaokaiNewServiceImp.wifiLockGetPwdList(wifiSn, MyApplication.getInstance().getUid())
+                .subscribe(new BaseObserver<WifiLockGetPasswordListResult>() {
+                    @Override
+                    public void onSuccess(WifiLockGetPasswordListResult wifiLockGetPasswordListResult) {
+                        WiFiLockPassword wiFiLockPassword = wifiLockGetPasswordListResult.getData();
+
+                        List<WiFiLockPassword.FaceListBean> pwdList = new ArrayList<>();
+
+                        String object = new Gson().toJson(wiFiLockPassword);
+                        LogUtils.e("服务器数据是   " + object);
+
+                        SPUtils.put(KeyConstants.WIFI_LOCK_PASSWORD_LIST + wifiSn, object);
+                        if (isSafe()) {
+                            mViewRef.get().onGetPasswordSuccess(wiFiLockPassword);
+                        }
+                    }
+
+                    @Override
+                    public void onAckErrorCode(BaseResult baseResult) {
+                        if (isSafe()) {
+                            mViewRef.get().onGetPasswordFailedServer(baseResult);
+                        }
+                    }
+
+                    @Override
+                    public void onFailed(Throwable throwable) {
+                        if (isSafe()) {
+                            mViewRef.get().onGetPasswordFailed(throwable);
+                        }
+                    }
+
+                    @Override
+                    public void onSubscribe1(Disposable d) {
+                        compositeDisposable.add(d);
+                    }
+                });
+    }
+    public List<FacePassword> getFacePasswords(WiFiLockPassword wiFiLockPassword) {
+        List<FacePassword> passwords = new ArrayList<>();
+        if (wiFiLockPassword != null) {
+            List<WiFiLockPassword.FaceListBean> faceList = wiFiLockPassword.getFaceList();
+            List<WiFiLockPassword.FaceNicknameBean> faceNickname = wiFiLockPassword.getFaceNickname();
+
+            if (faceList != null) {
+                //String num, String nickName, long createTime, int type, long startTime, long endTime, List<String> items
+                for (WiFiLockPassword.FaceListBean password : faceList) {
+                    int num = password.getNum();
+
+                    String sNum = num > 9 ? "" + num : "0" + num;
+                    FacePassword facePassword = new FacePassword(sNum, sNum,
+                            password.getCreateTime(), password.getType(), password.getStartTime(), password.getEndTime(), password.getItems());
+
+                    if (faceNickname != null) {
+                        for (WiFiLockPassword.FaceNicknameBean nickname : faceNickname) {
+                            if (nickname.getNum() == num) {
+                                facePassword.setNickName(nickname.getNickName());
+                            }
+                        }
+                    }
+
+                    passwords.add(facePassword);
+                }
+            }
+        }
+        return passwords;
+    }
 
 }

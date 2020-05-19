@@ -234,7 +234,7 @@ public class PersonalSystemSettingActivity extends BaseActivity<ISystemSettingVi
 
             @Override
             public void ShowUpgradePresenterFail() {
-              //  Log.e(GeTui.VideoLog,"update.....fail.......失败");
+                Log.e(GeTui.VideoLog,"update.....fail.......失败");
                 ToastUtil.getInstance().showShort(R.string.get_version_code_fail);
             }
         });

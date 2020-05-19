@@ -16,15 +16,18 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.google.gson.Gson;
 import com.kaadas.lock.R;
 import com.kaadas.lock.adapter.WifiLockCardAndFingerAdapter;
+import com.kaadas.lock.adapter.WifiLockFacePasswordAdapter;
 import com.kaadas.lock.adapter.WifiLockPasswordAdapter;
 import com.kaadas.lock.bean.WiFiLockCardAndFingerShowBean;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.mvp.presenter.wifilock.WifiLockPasswordManagerPresenter;
 import com.kaadas.lock.mvp.view.wifilock.IWifiLockPasswordManagerView;
+import com.kaadas.lock.publiclibrary.bean.FacePassword;
 import com.kaadas.lock.publiclibrary.bean.ForeverPassword;
 import com.kaadas.lock.publiclibrary.bean.WiFiLockPassword;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.utils.KeyConstants;
+import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.ToastUtil;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
@@ -54,9 +57,14 @@ public class WiFiLockPasswordManagerActivity extends BaseActivity<IWifiLockPassw
     LinearLayout llNoPassword;
     @BindView(R.id.iv_no_password)
     ImageView ivNoPassword;
+    @BindView(R.id.tv_how_to_add)
+    TextView tvHowToAdd;
+
     private WifiLockPasswordAdapter passwordAdapter;
     private List<ForeverPassword> passwordList = new ArrayList<>();
-    private int type;  // 1 密码  2指纹  3 卡片
+    private WifiLockFacePasswordAdapter facepasswordAdapter;
+    private List<FacePassword> facepasswordList = new ArrayList<>();
+    private int type;  // 1 密码  2指纹  3 卡片 4 面容
     private List<WiFiLockCardAndFingerShowBean> cardAndFingerList = new ArrayList<>();
     private WifiLockCardAndFingerAdapter wifiLockCardAndFingerAdapter;
     private boolean havePassword = false;
@@ -115,6 +123,7 @@ public class WiFiLockPasswordManagerActivity extends BaseActivity<IWifiLockPassw
             }
             ivNoPassword.setImageResource(R.mipmap.wifi_lock_no_password);
             tvNoPassword.setText(getString(R.string.no_pwd_sync));
+            tvHowToAdd.setVisibility(View.INVISIBLE);//不显示
             initPasswordAdapter();
         } else if (type == 2) {
             headTitle.setText(R.string.fingerprint);
@@ -126,6 +135,7 @@ public class WiFiLockPasswordManagerActivity extends BaseActivity<IWifiLockPassw
                 havePassword = false;
             }
             ivNoPassword.setImageResource(R.mipmap.wifi_lock_no_finger);
+            tvHowToAdd.setVisibility(View.INVISIBLE);//不显示
             initCardAndFingerAdapter();
         } else if (type == 3) {
             headTitle.setText(R.string.door_card);
@@ -137,7 +147,22 @@ public class WiFiLockPasswordManagerActivity extends BaseActivity<IWifiLockPassw
             }
             ivNoPassword.setImageResource(R.mipmap.wifi_lock_no_card);
             tvNoPassword.setText(getString(R.string.no_card_sync));
+            tvHowToAdd.setVisibility(View.INVISIBLE);//不显示
             initCardAndFingerAdapter();
+        }
+        else if (type == 4) {
+            headTitle.setText(R.string.face_password);
+            facepasswordList = mPresenter.getFacePasswords(wiFiLockPassword);
+            if (facepasswordList != null && facepasswordList.size() > 0) {
+                havePassword = true;
+            } else {
+                havePassword = false;
+            }
+
+            ivNoPassword.setImageResource(R.mipmap.wifi_lock_no_face_pwd);
+            tvNoPassword.setText(getString(R.string.no_face_password));
+            tvHowToAdd.setText(getString(R.string.how_to_add_face_password));
+            initFacePasswordAdapter();
         }
         changeState();
     }
@@ -194,6 +219,23 @@ public class WiFiLockPasswordManagerActivity extends BaseActivity<IWifiLockPassw
         });
     }
 
+    private void initFacePasswordAdapter() {
+        facepasswordAdapter = new WifiLockFacePasswordAdapter(facepasswordList, R.layout.item_bluetooth_password);
+        recycleview.setLayoutManager(new LinearLayoutManager(this));
+        recycleview.setAdapter(facepasswordAdapter);
+        facepasswordAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                Intent intent = new Intent(WiFiLockPasswordManagerActivity.this, WifiLockPasswordDetailActivity.class);
+                FacePassword foreverPassword = facepasswordList.get(position);
+                //输入密码类型
+                intent.putExtra(KeyConstants.PASSWORD_TYPE, type);
+                intent.putExtra(KeyConstants.TO_PWD_DETAIL, foreverPassword);  //密码数据
+                intent.putExtra(KeyConstants.WIFI_SN, wifiSn);  //WiFiSN
+                startActivityForResult(intent, REQUEST_CODE);
+            }
+        });
+    }
     @Override
     public void onGetPasswordSuccess(WiFiLockPassword wiFiLockPassword) {
         if (refreshLayout != null) {
