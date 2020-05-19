@@ -237,14 +237,25 @@ public class GatewayLockDeletePasswordActivity extends BaseActivity<IGatewayLock
 
     @Override
     public void deletePasswordSuccess() {
+        if(alertDialog!=null){
+            alertDialog.dismiss();
+        }
         hiddenLoading();
         finish();
     }
 
     @Override
     public void deletePasswordFailed(Throwable throwable) {
+        if(alertDialog!=null){
+            alertDialog.dismiss();
+        }
         hiddenLoading();
         //删除异常
         ToastUtil.getInstance().showShort(getString(R.string.delete_fialed));
+    }
+
+    @Override
+    public void gatewayPasswordFull() {
+
     }
 }

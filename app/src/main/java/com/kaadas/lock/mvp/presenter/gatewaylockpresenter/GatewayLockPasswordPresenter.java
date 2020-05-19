@@ -4,6 +4,8 @@ import android.text.TextUtils;
 
 import com.google.gson.Gson;
 import com.kaadas.lock.MyApplication;
+import com.kaadas.lock.bean.GateWay6032Result;
+import com.kaadas.lock.bean.GateWayArgsBean;
 import com.kaadas.lock.mvp.mvpbase.BasePresenter;
 import com.kaadas.lock.mvp.view.gatewaylockview.IGatewayLockPasswordView;
 import com.kaadas.lock.publiclibrary.http.XiaokaiNewServiceImp;
@@ -25,11 +27,15 @@ import com.kaadas.lock.utils.greenDao.manager.GatewayLockPasswordManager;
 
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
+import java.security.spec.KeySpec;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observer;
@@ -68,19 +74,189 @@ public abstract class GatewayLockPasswordPresenter<T extends IGatewayLockPasswor
     public void syncPassword(String gatewayId, String deviceId) {
         getLockBaseInfo(ALL_PASSWORD, gatewayId, deviceId, 0, "", 0, 0, 0, 0, 0, 0, 0, 0);
     }
-
-    public void sysPassworByhttp(String uid,String gatewayId, String deviceId){
+// 1  查询密码
+    // 2 添加密码
+    public void sysPassworByhttp(String uid, String gatewayId, String deviceId, String addPwdNumber, GateWayArgsBean gateWayArgsBean){
         XiaokaiNewServiceImp.getZIGBEENINFO(uid,gatewayId,deviceId).subscribe(
-                new Consumer<BaseResult>() {
+                new Consumer<String>() {
                                   @Override
-                           public void accept(BaseResult baseResult) throws Exception {
-                              LogUtils.e("http:"+baseResult);
+                           public void accept(String baseResult) throws Exception {
+
+                                      LogUtils.e("服务器http返回数据:"+ baseResult);
+
+                                      GateWay6032Result  gateWay6032Result=new Gson().fromJson(baseResult,GateWay6032Result.class);
+                                      int  maxCount=0;
+                                      if(gateWay6032Result !=null && gateWay6032Result.getCode().equals("200")){
+                                          // 获取数据成功
+                                          List<GateWay6032Result.DataEntity.EndpointListEntity> endpointList= gateWay6032Result.getData().getEndpointList();
+                                          //   "endpoint": 10,
+
+                                          for (int i=0;i<endpointList.size();i++){
+                                             int endpoint = endpointList.get(i).getEndpoint();
+                                             if(endpoint==10){
+                                                 // 找到对应端口
+                                                 GateWay6032Result.DataEntity.EndpointListEntity endpointListEntity= endpointList.get(i);
+                                                 maxCount= endpointListEntity.getOutputClusters().getDoorLockInfo().getLockInfo().getNumberOfPINUsersSupported();
+                                             }
+                                          }
+                                      }
+                                      if(gateWay6032Result.getData()==null || gateWay6032Result.getData().getPwdList()==null){
+                                          LogUtils.e("获取数据失败:"+ baseResult);
+                                          mViewRef.get().syncPasswordComplete(null);
+                                          return;
+                                      }
+
+                                      // 密码列表
+                                      List<GateWay6032Result.DataEntity.PwdListEntity> pwdListEntities= gateWay6032Result.getData().getPwdList();
+
+                                      // 年计划列表
+                                      List<GateWay6032Result.DataEntity.YearScheduleEntity> yearScheduleEntityLista= gateWay6032Result.getData().getYearSchedule();
+
+                                      // 周计划列表
+                                      List<GateWay6032Result.DataEntity.WeekScheduleEntity> weekScheduleEntityList= gateWay6032Result.getData().getWeekSchedule();
+
+                                      GatewayPasswordPlanBean gatewayPasswordPlanBean =null;
+
+                                      // 密码列表
+                                      List<GatewayPasswordPlanBean> gatewayPasswordPlanBeans=new ArrayList<>();
+                                      Map<Integer, GatewayPasswordPlanBean> passwordPlanBeansMap = new HashMap<>();
+
+                                      for(int i = 0; i < pwdListEntities.size(); i++) {
+                                         GateWay6032Result.DataEntity.PwdListEntity  pwdListEntity= pwdListEntities.get(i);
+                                         String status=  pwdListEntity.getUserStatus();
+                                         if(status.equals("1")){
+                                             gatewayPasswordPlanBean=new GatewayPasswordPlanBean();
+                                             int  user_id = pwdListEntity.getUserId();
+                                             // 0 是 临时用户 、 永久用户
+                                             // 1  是计划用户
+                                             String  user_status= pwdListEntity.getUserStatus();
+                                             gatewayPasswordPlanBean.setPasswordNumber(user_id);
+                                             gatewayPasswordPlanBean.setUserType(pwdListEntity.getUserType());
+
+                                             gatewayPasswordPlanBean.setDeviceId(deviceId);
+                                             gatewayPasswordPlanBean.setGatewayId(gatewayId);
+                                             gatewayPasswordPlanBean.setUid(uid);
+                                             // 判断  年计划
+                                             boolean isYear=false;
+                                             if(user_status.equals("1")){
+                                                 for (GateWay6032Result.DataEntity.YearScheduleEntity yearScheduleEntity : yearScheduleEntityLista){
+                                                     if(user_id == yearScheduleEntity.getUserId()){
+                                                         isYear= true;
+                                                         gatewayPasswordPlanBean.setPlanType("year");
+                                                         gatewayPasswordPlanBean.setUserType(1);
+                                                         gatewayPasswordPlanBean.setZigBeeLocalStartTime(yearScheduleEntity.getStartTime());
+                                                         gatewayPasswordPlanBean.setZigBeeLocalEndTime(yearScheduleEntity.getEndTime());
+                                                         break;
+                                                     }
+                                                 }
+                                                 if(!isYear){
+                                                     //  判断 周计划
+                                                     for (GateWay6032Result.DataEntity.WeekScheduleEntity weekScheduleEntity : weekScheduleEntityList){
+                                                         if(user_id == weekScheduleEntity.getUserId()){
+                                                             gatewayPasswordPlanBean.setUserType(1);
+                                                             gatewayPasswordPlanBean.setPlanType("week");
+                                                             gatewayPasswordPlanBean.setDaysMask(weekScheduleEntity.getDaysMask());
+                                                             gatewayPasswordPlanBean.setStartHour(weekScheduleEntity.getStartHour());
+                                                             gatewayPasswordPlanBean.setStartMinute(weekScheduleEntity.getStartMinutes());
+                                                             gatewayPasswordPlanBean.setEndHour(weekScheduleEntity.getEndHour());
+                                                             gatewayPasswordPlanBean.setEndMinute(weekScheduleEntity.getEndMinutes());
+                                                             break;
+                                                         }
+                                                     }
+                                                 }
+                                             }
+                                             gatewayPasswordPlanBeans.add(gatewayPasswordPlanBean);
+                                             passwordPlanBeansMap.put(pwdListEntity.getUserId(),gatewayPasswordPlanBean);
+                                         }
+                                      }
+
+                                      mViewRef.get().syncPasswordComplete(passwordPlanBeansMap);
+
+
+                                      if(!TextUtils.isEmpty(addPwdNumber)){
+                                          // 确定编码
+                                          Set<Integer> keySet=  passwordPlanBeansMap.keySet();
+                                          List<Integer> listNumber=new ArrayList<>();
+
+                                          for (Integer key1 : keySet) {
+                                              listNumber.add(key1);
+                                          }
+                                          // 默认是 升序
+                                          Collections.sort(listNumber);
+
+                                          int  addPwdId= -1 ;
+
+                                          if(gateWayArgsBean==null){
+                                              for (int i = 5; i < 9; i++) {
+                                                  if (listNumber.contains(i) == false) {
+                                                      addPwdId = i ;
+                                                      break;
+                                                  }
+                                              }
+                                          }else if(gateWayArgsBean.getPwdType() ==1   || gateWayArgsBean.getPwdType() ==2  || gateWayArgsBean.getPwdType() == 100 ) {
+                                              // 临时密码
+                                              if(maxCount==10){
+                                                  for (int i = 0; i < 5; i++) {  // 0-4
+                                                      if (listNumber.contains(i) == false) {
+                                                          addPwdId = i ;
+                                                          break;
+                                                      }
+                                                  }
+                                              }else if(maxCount ==20 ){
+                                                  for (int i = 0; i < 5; i++) {  // 0-4
+                                                      if (listNumber.contains(i) == false) {
+                                                          addPwdId = i ;
+                                                          break;
+                                                      }
+                                                  }
+                                                  if(addPwdId == -1 ){
+                                                      for (int i = 10; i < 20; i++) {  // 0-4
+                                                          if (listNumber.contains(i) == false) {
+                                                              addPwdId = i ;
+                                                              break;
+                                                          }
+                                                      }
+                                                  }
+                                              }
+                                          }
+
+                                          if(addPwdId == -1 ){
+                                              mViewRef.get().gatewayPasswordFull();
+                                              return;
+                                          }
+
+                                          // 临时密码
+                                          if(gateWayArgsBean==null  || gateWayArgsBean.getPwdType() == 100 ){
+                                              addLockPwd(gatewayId, deviceId, addPwdId, addPwdNumber, 0,
+                                                      0, 0, 0, 0, 0,
+                                                      0, 0);
+                                          }else  if(gateWayArgsBean.getPwdType() ==1) {
+                                              //pwdType  1     年计划
+                                              addLockPwd(gatewayId, deviceId, addPwdId, addPwdNumber, gateWayArgsBean.getPwdType(),
+                                                      gateWayArgsBean.getzLocalEndT(), gateWayArgsBean.getzLocalStartT(), 0, 0, 0,
+                                                      0, 0);
+                                          }else if(gateWayArgsBean.getPwdType()== 2){
+                                              // pwdType  2             周计划
+                                              addLockPwd(gatewayId, deviceId, addPwdId, addPwdNumber, gateWayArgsBean.getPwdType(),
+                                                      0, 0, gateWayArgsBean.getDayMaskBits(),
+                                                      gateWayArgsBean.getEndHour(),
+                                                      gateWayArgsBean.getEndMinute(),
+                                                      gateWayArgsBean.getStartHour(),
+                                                      gateWayArgsBean.getEndMinute());
+                                          }
+                                      }
+                               //       LogUtils.e("获取全部密码 -http    2 " + Arrays.toString(gatewayPasswordPlanBeans.toArray()));
+
+
+                             //  LogUtils.e("http:"+baseResult);
                         }
                      },
                 new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
                         LogUtils.e("error:"+throwable);
+
+                        mViewRef.get().syncPasswordFailed(throwable);
                     }
                 });
 
@@ -171,6 +347,8 @@ public abstract class GatewayLockPasswordPresenter<T extends IGatewayLockPasswor
                 }
             }
         }
+        LogUtils.e("initValidIndex："+ validIndex + "syncType :" + syncType );
+
     }
 
     //获取开锁密码列表
@@ -787,6 +965,7 @@ public abstract class GatewayLockPasswordPresenter<T extends IGatewayLockPasswor
         boolean isComplete = true;
         for (int i = 0; i < localDatas.length; i++) {
             if (localDatas[i].status == 0) {
+                // 第二个请求，后面15组
                 getLockPwd2(localDatas[i]);
                 return;
             }

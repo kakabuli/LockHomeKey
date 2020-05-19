@@ -614,5 +614,5 @@ public interface IXiaoKaiNewService {
 
 
     @POST(HttpUrlConstants.GET_ZIGBEEN_INFO)
-    Observable<BaseResult> GET_ZIGBEEN_INFO_CONTEXT(@Body RequestBody info);
+    Observable<String> GET_ZIGBEEN_INFO_CONTEXT(@Body RequestBody info);
 }

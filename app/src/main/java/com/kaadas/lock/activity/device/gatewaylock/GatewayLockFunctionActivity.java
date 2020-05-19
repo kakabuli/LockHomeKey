@@ -120,6 +120,7 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
 
     private int armLock = 0;
     private int flagEvent = 0;
+    String gatewayModel=null;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -234,6 +235,7 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
     private void initData() {
         Intent intent = getIntent();
         showBean = (HomeShowBean) intent.getSerializableExtra(KeyConstants.GATEWAY_LOCK_INFO);
+        gatewayModel= getIntent().getStringExtra(KeyConstants.GATEWAY_MODEL);
         //设置电量
         if (showBean != null) {
             GwLockInfo gwLockInfo = (GwLockInfo) showBean.getObject();
@@ -297,6 +299,7 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
                 intent.putExtra(KeyConstants.GATEWAY_ID, gatewayId);
                 intent.putExtra(KeyConstants.DEVICE_ID, deviceId);
                 intent.putExtra(KeyConstants.GATEWAY_LOCK_INFO, lockInfo);
+                intent.putExtra(KeyConstants.GATEWAY_MODEL,gatewayModel);
                 startActivity(intent);
 
                 break;

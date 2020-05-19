@@ -282,4 +282,9 @@ public class GatewayPlanPasswordShareActivity extends BaseActivity<IGatewayLockP
         hiddenLoading();
         ToastUtil.getInstance().showLong(getString(R.string.delete_fialed));
     }
+
+    @Override
+    public void gatewayPasswordFull() {
+
+    }
 }

@@ -77,7 +77,7 @@ public class GatewayPasswordManagerActivity extends BaseActivity<IGatewayLockPas
     private String userId;
 
     private GatewayLockPasswordManager daoManager = new GatewayLockPasswordManager();
-
+   String gatewayModel=null;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -198,6 +198,9 @@ public class GatewayPasswordManagerActivity extends BaseActivity<IGatewayLockPas
                         intent = new Intent(this, GatewayPasswordAddActivity.class);
                         intent.putExtra(KeyConstants.GATEWAY_ID, gatewayId);
                         intent.putExtra(KeyConstants.DEVICE_ID, deviceId);
+                        if(!TextUtils.isEmpty(gatewayModel)  && gatewayModel.equals(KeyConstants.SMALL_GW2)){
+                            intent.putExtra(KeyConstants.GATEWAY_MODEL,KeyConstants.SMALL_GW2);
+                        }
                         startActivity(intent);
                         return;
                     }
@@ -205,16 +208,24 @@ public class GatewayPasswordManagerActivity extends BaseActivity<IGatewayLockPas
                 intent = new Intent(this, GatewayLockTempararyPwdAddActivity.class);
                 intent.putExtra(KeyConstants.GATEWAY_ID, gatewayId);
                 intent.putExtra(KeyConstants.DEVICE_ID, deviceId);
+                if(!TextUtils.isEmpty(gatewayModel)  && gatewayModel.equals(KeyConstants.SMALL_GW2)){
+                    intent.putExtra(KeyConstants.GATEWAY_MODEL,KeyConstants.SMALL_GW2);
+                }
+
 //                intent = new Intent(this, PasswordTestActivity.class);
 //                intent.putExtra(KeyConstants.GATEWAY_ID, gatewayId);
 //                intent.putExtra(KeyConstants.DEVICE_ID, deviceId);
                 startActivity(intent);
                 break;
             case R.id.tv_synchronized_record:
-                //点击同步
-                loadingDialog.show2(getString(R.string.get_gateway_lock_pwd_waiting));
-                mPresenter.syncPassword(gatewayId, deviceId);
-           //     mPresenter.sysPassworByhttp(MyApplication.getInstance().getUid(),gatewayId,deviceId);
+                  loadingDialog.show2(getString(R.string.get_gateway_lock_pwd_waiting));
+                if(!TextUtils.isEmpty(gatewayModel)  &&  gatewayModel.equals(KeyConstants.SMALL_GW2)){
+                   mPresenter.sysPassworByhttp(MyApplication.getInstance().getUid(),gatewayId,deviceId,"",null);
+                }else{
+//                    //点击同步
+                     mPresenter.syncPassword(gatewayId, deviceId);
+                }
+
                 break;
         }
     }
@@ -225,6 +236,7 @@ public class GatewayPasswordManagerActivity extends BaseActivity<IGatewayLockPas
         deviceId = intent.getStringExtra(KeyConstants.DEVICE_ID);
         lockInfo = (GwLockInfo) intent.getSerializableExtra(KeyConstants.GATEWAY_LOCK_INFO);
         userId = MyApplication.getInstance().getUid();
+        gatewayModel =getIntent().getStringExtra(KeyConstants.GATEWAY_MODEL);
         //第一次进入该页面,由于锁上重置，删除，添加无法知道当前锁的信息所以只有第一次进入需要判断
 //        int firstIn = (int) SPUtils.get(KeyConstants.FIRST_IN_GATEWAY_LOCK + userId + deviceId, 0);
 //        LogUtils.e("是否是第一次进入   " + firstIn);
@@ -276,11 +288,13 @@ public class GatewayPasswordManagerActivity extends BaseActivity<IGatewayLockPas
     public void syncPasswordComplete(Map<Integer, GatewayPasswordPlanBean> passwordPlanBeans) {
         if (loadingDialog != null) {
             loadingDialog.dismiss();
+        }else if(passwordPlanBeans==null){
+            ToastUtil.getInstance().showLong(getString(R.string.pwd_list_null));
+            return;
         }
         SPUtils.put(KeyConstants.FIRST_IN_GATEWAY_LOCK + userId + deviceId, 1);
         List<GatewayPasswordPlanBean> gatewayPasswordPlanBeans = parsePassword(passwordPlanBeans);
         LogUtils.e("获取全部密码  1  " + Arrays.toString(gatewayPasswordPlanBeans.toArray()));
-
         daoManager.insertAfterDelete(deviceId, MyApplication.getInstance().getUid(), gatewayId, gatewayPasswordPlanBeans);
         mList.clear();
         mList.addAll(gatewayPasswordPlanBeans);
@@ -382,6 +396,11 @@ public class GatewayPasswordManagerActivity extends BaseActivity<IGatewayLockPas
 
     }
 
+    @Override
+    public void gatewayPasswordFull() {
+
+    }
+
     public List<GatewayPasswordPlanBean> parsePassword(Map<Integer, GatewayPasswordPlanBean> passwordPlanBeans) {
         List<GatewayPasswordPlanBean> passwords = new ArrayList<>();
         for (Integer number : passwordPlanBeans.keySet()) {
@@ -399,4 +418,6 @@ public class GatewayPasswordManagerActivity extends BaseActivity<IGatewayLockPas
     public void isSyncPlan() {
         showLoading(getString(R.string.is_sync_password_plan));
     }
+
+
 }

@@ -529,7 +529,7 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                 @Override
                 public void registrationOk() {
                     super.registrationOk();
-                    LogUtils.e("Linphone注册成功     ");
+               //     LogUtils.e("Linphone注册成功     ");
                     //  MyLog.getInstance().save("Linphone注册成功     ");
                     SPUtils.put(Constants.LINPHONE_REGESTER_STATE, true);
                 }

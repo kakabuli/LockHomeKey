@@ -244,10 +244,13 @@ public class KeyConstants {
     //网关的昵称
     public static final String GATEWAY_NICKNAME = "gatewayNickName";
     public static final String IS_GATEAWAY = "is_gateway";
-    // 大网关6015
+
     // 小的6030和6032
     public static final String SMALL_GW = "6030";
     public static final String SMALL_GW2 = "6032";
+    public static final String SMALL_GW_ID= "SMALL_GW_ID";
+
+    // 大网关6010
     public static final String BIG_GW = "6010";
     //是否是管理员
     public static final String IS_ADMIN = "isadmin";
@@ -495,6 +498,9 @@ public class KeyConstants {
     public static final String URL_RESULT = "urlResult";  //扫描到的链接
 
 
-
+    /**
+     * 传递网关Model
+     */
+    public static final String GATEWAY_MODEL = "gateway_model";
 }
 

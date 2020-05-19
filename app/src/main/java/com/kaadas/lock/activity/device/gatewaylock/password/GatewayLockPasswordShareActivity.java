@@ -270,4 +270,9 @@ public class GatewayLockPasswordShareActivity extends BaseActivity<IGatewayLockP
         alertDialog.dismiss();
         AlertDialogUtil.getInstance().noButtonDialog(this, getString(R.string.delete_fialed));
     }
+
+    @Override
+    public void gatewayPasswordFull() {
+
+    }
 }

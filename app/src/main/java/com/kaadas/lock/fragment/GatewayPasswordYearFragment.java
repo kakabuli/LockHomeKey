@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,10 +20,12 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.device.gatewaylock.password.GatewayPasswordAddActivity;
 import com.kaadas.lock.activity.device.gatewaylock.password.GatewayLockPasswordShareActivity;
 import com.kaadas.lock.adapter.ShiXiaoNameAdapter;
+import com.kaadas.lock.bean.GateWayArgsBean;
 import com.kaadas.lock.bean.ShiXiaoNameBean;
 import com.kaadas.lock.mvp.mvpbase.BaseFragment;
 import com.kaadas.lock.mvp.presenter.gatewaylockpresenter.GatewayLockPasswordYearPresenter;
@@ -105,7 +108,7 @@ public class GatewayPasswordYearFragment extends BaseFragment<IGatewayLockPasswo
     List<ShiXiaoNameBean> list = new ArrayList<>();
     private String deviceId;
     private String gatewayId;
-
+    public static String gatewayModel=null;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -207,13 +210,26 @@ public class GatewayPasswordYearFragment extends BaseFragment<IGatewayLockPasswo
                     return;
                 }
 
+                GatewayPasswordAddActivity gatewayPasswordAddActivity= (GatewayPasswordAddActivity) getActivity();
+                String model=  gatewayPasswordAddActivity.gatewayModel;
 
                 if (0 == timeStatus) {
                     ToastUtil.getInstance().showShort(R.string.select_time_ce_lue);
                     return;
                 } else if (KeyConstants.YONG_JIU == timeStatus) {
                     showLoading(getString(R.string.is_setting_password));
-                    mPresenter.setPassword(deviceId, gatewayId, strPassword);
+                    if(!TextUtils.isEmpty(model) && model.equals(KeyConstants.SMALL_GW2)){
+                        GateWayArgsBean gateWayArgsBean=new GateWayArgsBean();
+                        gateWayArgsBean.setPwdType(100);
+                        mPresenter.sysPassworByhttp(MyApplication.getInstance().getUid(),
+                                gatewayId,
+                                deviceId,
+                                strPassword,
+                                gateWayArgsBean
+                        );
+                    }else{
+                        mPresenter.setPassword(deviceId, gatewayId, strPassword);
+                    }
                     LogUtils.e("点击添加密码  永久 ");
                     //永久
                 } else if (KeyConstants.ONE_DAY == timeStatus) {
@@ -225,7 +241,21 @@ public class GatewayPasswordYearFragment extends BaseFragment<IGatewayLockPasswo
                     long startTime = (int) (System.currentTimeMillis() / 1000) - BleCommandFactory.defineTime;
                     long endTime = startTime + (24 * 60 * 60);
                     showLoading(getString(R.string.is_setting_password));
-                    mPresenter.setYearPassword(deviceId, gatewayId, strPassword, endTime, startTime);
+                    GateWayArgsBean gateWayArgsBean=new GateWayArgsBean();
+                    gateWayArgsBean.setPwdType(1);
+                    gateWayArgsBean.setzLocalEndT(endTime);
+                    gateWayArgsBean.setzLocalStartT(startTime);
+                    if(!TextUtils.isEmpty(model) && model.equals(KeyConstants.SMALL_GW2)){
+                        mPresenter.sysPassworByhttp(MyApplication.getInstance().getUid(),
+                                gatewayId,
+                                deviceId,
+                                strPassword,
+                                gateWayArgsBean
+                        );
+                    }else{
+                        mPresenter.setYearPassword(deviceId, gatewayId, strPassword, endTime, startTime);
+                    }
+
                 } else if (KeyConstants.CUSTOM == timeStatus) {
                     //自定义
                     if (startMilliseconds == 0) {
@@ -248,9 +278,30 @@ public class GatewayPasswordYearFragment extends BaseFragment<IGatewayLockPasswo
 //                        mPresenter.setPwd(strPassword, 4, nickName, startMilliseconds, endMilliseconds);
 //                    }
                     showLoading(getString(R.string.is_setting_password));
-                    mPresenter.setYearPassword(deviceId, gatewayId, strPassword,
-                            (endMilliseconds/1000) - BleCommandFactory.defineTime,
-                            (startMilliseconds/1000) - BleCommandFactory.defineTime);
+
+
+                    GateWayArgsBean gateWayArgsBean=new GateWayArgsBean();
+                    gateWayArgsBean.setPwdType(1);
+                    gateWayArgsBean.setzLocalEndT((endMilliseconds/1000) - BleCommandFactory.defineTime);
+                    gateWayArgsBean.setzLocalStartT((startMilliseconds/1000) - BleCommandFactory.defineTime);
+  //(String uid, String gatewayId, String deviceId, String addPwdNumber, GateWayArgsBean gateWayArgsBean)
+                   if(!TextUtils.isEmpty(model) && model.equals(KeyConstants.SMALL_GW2)){
+                        mPresenter.sysPassworByhttp(MyApplication.getInstance().getUid(),
+                                gatewayId,
+                                deviceId,
+                                strPassword,
+                                gateWayArgsBean
+                                );
+                   }else{
+
+                       mPresenter.setYearPassword(deviceId, gatewayId, strPassword,
+                               (endMilliseconds/1000) - BleCommandFactory.defineTime,
+                               (startMilliseconds/1000) - BleCommandFactory.defineTime);
+                   }
+
+
+
+
                 }
                 break;
         }
