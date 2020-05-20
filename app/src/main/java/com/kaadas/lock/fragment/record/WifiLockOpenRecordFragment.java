@@ -186,7 +186,6 @@ public class WifiLockOpenRecordFragment extends BaseFragment<IWifiLockOpenRecord
         }
     }
 
-
     @Override
     public void onLoadServerRecordFailed(Throwable throwable) {
         //加载服务器开锁记录失败

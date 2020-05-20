@@ -22,6 +22,7 @@ public class BleLockUtils {
     public static final int TYPE_SHARE = 4;
     public static final int TYPE_MORE = 5;
     public static final int TYPE_OFFLINE_PASSWORD = 6;
+    public static final int TYPE_FACE_PASSWORD = 7;
 
     /***
      * 1	开门	带密码开门,需要输入用户密码密码开门,不支持不带密码开门。安全模式（双重验证模式）下,APP不能开门；电子反锁状态下,APP不能开门；系统锁定模式下,APP不能开门
@@ -420,6 +421,10 @@ public class BleLockUtils {
         LogUtils.e("获取到的  功能集是2   " + Arrays.toString(funcs));
         LogUtils.e("获取到的  功能集是3否包含卡片      " + integers.contains(9));
         functionBeans.add(new WifiLockFunctionBean(MyApplication.getInstance().getString(R.string.offline_password), R.mipmap.bluetooth_password, TYPE_OFFLINE_PASSWORD));
+        if (integers.contains(26)) {
+
+            functionBeans.add(new WifiLockFunctionBean(MyApplication.getInstance().getString(R.string.face_password), R.mipmap.face_password, TYPE_FACE_PASSWORD));
+        }
         if (integers.contains(7)) {
 
             functionBeans.add(new WifiLockFunctionBean(MyApplication.getInstance().getString(R.string.password), R.mipmap.bluetooth_password, TYPE_PASSWORD));

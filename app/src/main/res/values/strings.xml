@@ -318,6 +318,7 @@
     <string name="bluetooth_type">型号：</string>
     <string name="nothing">（无）</string>
     <string name="password">密码</string>
+    <string name="face_password">面容识别</string>
     <string name="group">组</string>
     <string name="fingerprint">指纹</string>
     <string name="ge">个</string>
@@ -426,6 +427,9 @@
     <string name="get_password_failed">获取秘钥列表失败</string>
     <string name="add_password">添加密码</string>
     <string name="no_password">暂无密码</string>
+    <string name="no_face_password">门锁还没有面容识别，请到门锁添加同步</string>
+    <string name="how_to_add_face_password">如何添加面容识别？</string>
+
     <string name="pwd_header_add_tv">添加密码</string>
     <string-array name="home_top">
         <item>时效</item>

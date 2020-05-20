@@ -1,12 +1,7 @@
 package com.kaadas.lock.activity.device.wifilock;
 
-import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.app.Service;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Vibrator;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -21,7 +16,6 @@ import com.google.gson.reflect.TypeToken;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.device.wifilock.family.WifiLockFamilyManagerActivity;
-import com.kaadas.lock.activity.device.wifilock.password.AddWifiLockTempPasswordSecondActivity;
 import com.kaadas.lock.activity.device.wifilock.password.WiFiLockPasswordManagerActivity;
 import com.kaadas.lock.activity.device.wifilock.password.WifiLockPasswordShareActivity;
 import com.kaadas.lock.adapter.WifiLockDetailAdapater;
@@ -30,7 +24,6 @@ import com.kaadas.lock.bean.WifiLockFunctionBean;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.mvp.presenter.wifilock.WifiLockDetailPresenter;
 import com.kaadas.lock.mvp.view.wifilock.IWifiLockDetailView;
-import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.publiclibrary.bean.WiFiLockPassword;
 import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
@@ -356,6 +349,12 @@ public class WiFiLockDetailActivity extends BaseActivity<IWifiLockDetailView, Wi
                         intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
                         startActivity(intent);
                         break;
+                    case BleLockUtils.TYPE_FACE_PASSWORD:
+                        intent = new Intent(WiFiLockDetailActivity.this, WiFiLockPasswordManagerActivity.class);
+                        intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
+                        intent.putExtra(KeyConstants.KEY_TYPE, 4);
+                        startActivity(intent);
+                        break;
                 }
             }
         });
@@ -395,6 +394,12 @@ public class WiFiLockDetailActivity extends BaseActivity<IWifiLockDetailView, Wi
                     case BleLockUtils.TYPE_OFFLINE_PASSWORD:
                         intent = new Intent(WiFiLockDetailActivity.this, WifiLockPasswordShareActivity.class);
                         intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
+                        startActivity(intent);
+                        break;
+                    case BleLockUtils.TYPE_FACE_PASSWORD:
+                        intent = new Intent(WiFiLockDetailActivity.this, WiFiLockPasswordManagerActivity.class);
+                        intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
+                        intent.putExtra(KeyConstants.KEY_TYPE, 4);
                         startActivity(intent);
                         break;
                 }

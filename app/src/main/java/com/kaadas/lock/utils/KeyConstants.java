@@ -82,7 +82,7 @@ public class KeyConstants {
     public static final String TO_PWD_DETAIL = "toPwdDetail";
 
     /**
-     * 密码类型   	密钥类型：1密码 2指纹密码 3卡片密码
+     * 密码类型   	密钥类型：1密码 2指纹密码 3卡片密码 4面容识别
      */
     public static final String PASSWORD_TYPE = "passwordType";
 
