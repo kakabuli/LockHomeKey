@@ -106,7 +106,7 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
     ImageView gatewayLockImage;
     @BindView(R.id.tv_type)
     TextView tvType;
-    private String gatewayId;
+    private String   gatewayId;
     private String deviceId;
     private HomeShowBean showBean;
     private Handler mHandler = new Handler();

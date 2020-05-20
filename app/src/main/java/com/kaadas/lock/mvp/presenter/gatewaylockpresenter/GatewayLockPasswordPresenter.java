@@ -127,6 +127,10 @@ public abstract class GatewayLockPasswordPresenter<T extends IGatewayLockPasswor
                                          if(status.equals("1")){
                                              gatewayPasswordPlanBean=new GatewayPasswordPlanBean();
                                              int  user_id = pwdListEntity.getUserId();
+                                             if(user_id==9){
+                                                 continue;
+                                             }
+
                                              // 0 是 临时用户 、 永久用户
                                              // 1  是计划用户
                                              String  user_status= pwdListEntity.getUserStatus();
@@ -139,17 +143,19 @@ public abstract class GatewayLockPasswordPresenter<T extends IGatewayLockPasswor
                                              // 判断  年计划
                                              boolean isYear=false;
                                              if(user_status.equals("1")){
-                                                 for (GateWay6032Result.DataEntity.YearScheduleEntity yearScheduleEntity : yearScheduleEntityLista){
-                                                     if(user_id == yearScheduleEntity.getUserId()){
-                                                         isYear= true;
-                                                         gatewayPasswordPlanBean.setPlanType("year");
-                                                         gatewayPasswordPlanBean.setUserType(1);
-                                                         gatewayPasswordPlanBean.setZigBeeLocalStartTime(yearScheduleEntity.getStartTime());
-                                                         gatewayPasswordPlanBean.setZigBeeLocalEndTime(yearScheduleEntity.getEndTime());
-                                                         break;
+                                                 if(yearScheduleEntityLista!=null){
+                                                     for (GateWay6032Result.DataEntity.YearScheduleEntity yearScheduleEntity : yearScheduleEntityLista){
+                                                         if(user_id == yearScheduleEntity.getUserId()){
+                                                             isYear= true;
+                                                             gatewayPasswordPlanBean.setPlanType("year");
+                                                             gatewayPasswordPlanBean.setUserType(1);
+                                                             gatewayPasswordPlanBean.setZigBeeLocalStartTime(yearScheduleEntity.getStartTime());
+                                                             gatewayPasswordPlanBean.setZigBeeLocalEndTime(yearScheduleEntity.getEndTime());
+                                                             break;
+                                                         }
                                                      }
                                                  }
-                                                 if(!isYear){
+                                                 if(!isYear  && weekScheduleEntityList != null ){
                                                      //  判断 周计划
                                                      for (GateWay6032Result.DataEntity.WeekScheduleEntity weekScheduleEntity : weekScheduleEntityList){
                                                          if(user_id == weekScheduleEntity.getUserId()){
@@ -725,6 +731,9 @@ public abstract class GatewayLockPasswordPresenter<T extends IGatewayLockPasswor
                 + "  pwdValue  " + pwdValue + "  pwdType  " + pwdType + "  zLocalEndT  " + zLocalEndT + "  zLocalStartT  " + zLocalStartT
                 + "  dayMaskBits  " + dayMaskBits + "  endHour  " + endHour + "  endMinute  " + endMinute + "  startHour  " + startHour
                 + "  startMinute  " + startMinute);
+
+        this.pwdValue = pwdValue;
+
         String planType = null;
         if (pwdType == 1) {
             planType = "year";

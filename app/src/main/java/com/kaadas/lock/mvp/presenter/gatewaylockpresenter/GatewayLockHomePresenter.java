@@ -269,6 +269,9 @@ public class GatewayLockHomePresenter<T> extends BasePresenter<IGatewayLockHomeV
                                         LogUtils.e("已经开锁了");
                                         return true;
                                     }
+//                                    else if(deviceCode== 9  && openLockNotifyBean.getEventparams().getEventsource() ==2){
+//                                        return true;
+//                                    }
                                 }
                             }
                             return false;
@@ -427,10 +430,15 @@ public class GatewayLockHomePresenter<T> extends BasePresenter<IGatewayLockHomeV
                                     GatewayLockInfoEventBean gatewayLockInfoEventBean = new Gson().fromJson(mqttData.getPayload(), GatewayLockInfoEventBean.class);
                                     String eventParmDeveType = gatewayLockInfoEventBean.getEventparams().getDevetype();
                                     int devecode = gatewayLockInfoEventBean.getEventparams().getDevecode();
+                                    int deveEventsource= gatewayLockInfoEventBean.getEventparams().getEventsource();
                                     int pin = gatewayLockInfoEventBean.getEventparams().getPin();
                                     String gatewayId = gatewayLockInfoEventBean.getGwId();
                                     String deviceId = gatewayLockInfoEventBean.getDeviceId();
                                     if (eventParmDeveType.equals("lockop") && devecode == 2 && pin == 255) {
+                                        if (isSafe()) {
+                                            mViewRef.get().getLockEvent(gatewayId, deviceId);
+                                        }
+                                    }else if(eventParmDeveType.equals("lockop") && devecode == 9 && deveEventsource==2){
                                         if (isSafe()) {
                                             mViewRef.get().getLockEvent(gatewayId, deviceId);
                                         }
