@@ -14,7 +14,7 @@ public class WifiLockNickNamePresenter<T> extends BasePresenter<IWifiLockNickNam
     /**
      *
      * @param wifiSN
-     * @param pwdType  密钥类型：1密码 2指纹密码 3卡片密码
+     * @param pwdType  密钥类型：1密码 2指纹密码 3卡片密码 4面容识别
      * @param num
      * @param nickName
      */

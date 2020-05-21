@@ -1086,7 +1086,7 @@ public class XiaokaiNewServiceImp {
      *
      * @param uid      是	String	管理员用户ID
      * @param wifiSN   是	String	设备唯一编号
-     * @param pwdType  是	String	密钥类型：1密码 2指纹密码 3卡片密码
+     * @param pwdType  是	String	密钥类型：1密码 2指纹密码 3卡片密码 4面容识别
      * @param num      是	int	密钥编号
      * @param nickName 是	String	密钥昵称
      * @return

@@ -16,11 +16,13 @@ import com.kaadas.lock.bean.WiFiLockCardAndFingerShowBean;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.mvp.presenter.wifilock.WifiLockNickNamePresenter;
 import com.kaadas.lock.mvp.view.wifilock.IWifiLockNickNameView;
+import com.kaadas.lock.publiclibrary.bean.FacePassword;
 import com.kaadas.lock.publiclibrary.bean.ForeverPassword;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
+import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.StringUtil;
 import com.kaadas.lock.utils.ToastUtil;
@@ -52,10 +54,11 @@ public class WifiLockPasswordDetailActivity extends BaseActivity<IWifiLockNickNa
     @BindView(R.id.ll_card_finger)
     LinearLayout llCardFinger;
     private long createTime;
-    private int pwdType; //	密钥类型：1密码 2指纹密码 3卡片密码
+    private int pwdType; //	密钥类型：1密码 2指纹密码 3卡片密码 4面容识别
     private String wifiSn;
     private WiFiLockCardAndFingerShowBean wiFiLockCardAndFingerShowBean;
     private ForeverPassword foreverPassword;
+    private FacePassword facePassword;
     private String nickName;
     private int num;
     private String adminNickName;
@@ -84,10 +87,12 @@ public class WifiLockPasswordDetailActivity extends BaseActivity<IWifiLockNickNa
             if (pwdType == 2) {
                 ivCardFingerIcon.setImageResource(R.mipmap.fingerprint_icon);
                 headTitle.setText(R.string.fingerprint_detail);
-            } else {
+            }
+            else if (pwdType == 3) {
                 headTitle.setText(R.string.door_card_detail);
                 ivCardFingerIcon.setImageResource(R.mipmap.door_card_icon);
             }
+
             wiFiLockCardAndFingerShowBean = (WiFiLockCardAndFingerShowBean) getIntent().getSerializableExtra(KeyConstants.TO_PWD_DETAIL);
             llPassword.setVisibility(View.GONE);
             llCardFinger.setVisibility(View.VISIBLE);
@@ -97,6 +102,19 @@ public class WifiLockPasswordDetailActivity extends BaseActivity<IWifiLockNickNa
             String sNum = (num < 9 ? "0" + num : "" + num);
             tvCardFingerNumber.setText(sNum + " " + (TextUtils.isEmpty(nickName) ? num : nickName));
             this.num = wiFiLockCardAndFingerShowBean.getNum();
+        }else if(pwdType == 4){
+            headTitle.setText(R.string.face_password);
+            ivCardFingerIcon.setImageResource(R.mipmap.face_password);
+            llPassword.setVisibility(View.GONE);
+            llCardFinger.setVisibility(View.VISIBLE);
+
+            facePassword = (FacePassword) getIntent().getSerializableExtra(KeyConstants.TO_PWD_DETAIL);
+            nickName = facePassword.getNickName();
+            createTime = facePassword.getCreateTime();
+            num = Integer.parseInt(facePassword.getNum());
+            String sNum = (num < 9 ? "0" + num : "" + num);
+            tvCardFingerNumber.setText(sNum + " " + (TextUtils.isEmpty(nickName) ? num : nickName));
+
         }
 
         if (createTime == 0) {
@@ -140,7 +158,6 @@ public class WifiLockPasswordDetailActivity extends BaseActivity<IWifiLockNickNa
 
         }
 
-
     }
 
     @Override
@@ -171,6 +188,8 @@ public class WifiLockPasswordDetailActivity extends BaseActivity<IWifiLockNickNa
                     tvTitle.setText(getString(R.string.input_fingerprint_name));
                 } else if (pwdType == 3) {
                     tvTitle.setText(getString(R.string.input_door_card_name));
+                }else if (pwdType == 4) {
+                    tvTitle.setText(getString(R.string.input_door_face_name));
                 }
 
                 tv_cancel.setOnClickListener(new View.OnClickListener() {
