@@ -288,7 +288,8 @@ public class GatewayPasswordManagerActivity extends BaseActivity<IGatewayLockPas
     public void syncPasswordComplete(Map<Integer, GatewayPasswordPlanBean> passwordPlanBeans) {
         if (loadingDialog != null) {
             loadingDialog.dismiss();
-        }else if(passwordPlanBeans==null){
+        }
+        if(passwordPlanBeans==null){
             ToastUtil.getInstance().showLong(getString(R.string.pwd_list_null));
             return;
         }

@@ -488,8 +488,8 @@ public class GatewayPasswordYearFragment extends BaseFragment<IGatewayLockPasswo
         intent.putExtra(KeyConstants.DEVICE_ID, deviceId);
         //1表示永久密码，2表示临时密码
         intent.putExtra(KeyConstants.PWD_VALUE, passwordValue);
-        intent.putExtra(KeyConstants.PWD_ID, gatewayPasswordPlanBean.getPasswordNumber());
         intent.putExtra(KeyConstants.GATEWAY_PASSWORD_BEAN, gatewayPasswordPlanBean);
+        intent.putExtra(KeyConstants.PWD_ID, gatewayPasswordPlanBean.getPasswordNumber());
         startActivity(intent);
     }
 
