@@ -19,8 +19,8 @@ public class WifiLockAddFaceFirstActivity extends AppCompatActivity {
 
     @BindView(R.id.back)
     ImageView back;
-    @BindView(R.id.help)
-    ImageView help;
+//    @BindView(R.id.help)
+//    ImageView help;
     @BindView(R.id.head)
     TextView head;
     @BindView(R.id.notice)
