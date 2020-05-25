@@ -1,5 +1,6 @@
 package com.kaadas.lock.utils;
 import android.os.Build;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 
 import com.blankj.ALog;
@@ -176,4 +177,7 @@ public class LogUtils {
 		mTimestamp = currentTime;
 		LogUtils.e("[Elapsed：" + elapsedTime + "]" + msg);
 	}
+
+    public static void e(FragmentActivity activity) {
+    }
 }

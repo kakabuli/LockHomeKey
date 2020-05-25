@@ -139,7 +139,7 @@ public class WiFiLockDetailActivity extends BaseActivity<IWifiLockDetailView, Wi
         }
         lockType = wifiLockInfo.getProductModel();
         if (!TextUtils.isEmpty(lockType)) {
-            tvLockType.setText(lockType.contentEquals("K13")?getString(R.string.lan_bo_ji_ni):StringUtil.getSubstringFive(lockType));
+            tvLockType.setText(lockType.contentEquals("K13")?"型号: "+getString(R.string.lan_bo_ji_ni):"型号: "+StringUtil.getSubstringFive(lockType));
 
         }
     }

@@ -1384,6 +1384,7 @@
     <string name="app">App</string>
     <string name="machine_key">机械钥匙开锁</string>
     <string name="indoor_open">室内open键开锁</string>
+    <string name="indoor_open_new_express">室内多功能键开锁</string>
     <string name="indoor_Induction">室内感应把手开锁</string>
     <string name="connect_device_wifi">连接设备\nWi-Fi</string>
     <string name="connect_home_wifi">连接家庭\nWi-Fi</string>

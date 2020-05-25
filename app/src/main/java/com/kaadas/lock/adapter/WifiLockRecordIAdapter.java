@@ -93,22 +93,28 @@ public class WifiLockRecordIAdapter extends BaseQuickAdapter<WifiLockOperationRe
                         right = mContext.getString(R.string.app_open);
                         break;
                     case 9:
-                        right = mContext.getString(R.string.machine_key);
-                        if(left.equals("编号00")){
-                            return;
-                        }
+//                        right = mContext.getString(R.string.machine_key);
+//                        if(left.equals("编号00")){
+//                            return;
+//                        }
+                        left = mContext.getString(R.string.machine_key);
+                        right = "";
                         break;
                     case 10:
-                        right = mContext.getString(R.string.indoor_open);
-                        if(left.equals("编号00")){
-                            return;
-                        }
+//                        right = mContext.getString(R.string.indoor_open);
+//                        if(left.equals("编号00")){
+//                            return;
+//                        }
+                        left = mContext.getString(R.string.indoor_open_new_express);
+                        right = "";
                         break;
                     case 11:
-                        right = mContext.getString(R.string.indoor_Induction);
-                        if(left.equals("编号00")){
-                            return;
-                        }
+//                        right = mContext.getString(R.string.indoor_Induction);
+//                        if(left.equals("编号00")){
+//                            return;
+//                        }
+                        left = mContext.getString(R.string.indoor_Induction);
+                        right = "";
                         break;
                     default:
                         right = mContext.getString(R.string.unknown_open);
