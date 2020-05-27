@@ -19,3 +19,5 @@
 /app/mqtt_note.txt
 /app/kaadas
 /app/bugly
+/app/build
+/Core/build

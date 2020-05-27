@@ -135,6 +135,7 @@ public abstract class GatewayLockPasswordPresenter<T extends IGatewayLockPasswor
                                              // 1  是计划用户
                                              String  user_status= pwdListEntity.getUserStatus();
                                              gatewayPasswordPlanBean.setPasswordNumber(user_id);
+                                             int userType= pwdListEntity.getUserType();
                                              gatewayPasswordPlanBean.setUserType(pwdListEntity.getUserType());
 
                                              gatewayPasswordPlanBean.setDeviceId(deviceId);
@@ -142,13 +143,13 @@ public abstract class GatewayLockPasswordPresenter<T extends IGatewayLockPasswor
                                              gatewayPasswordPlanBean.setUid(uid);
                                              // 判断  年计划
                                              boolean isYear=false;
-                                             if(user_status.equals("1")){
+                                             if(user_status.equals("1")  && userType==1){
                                                  if(yearScheduleEntityLista!=null){
                                                      for (GateWay6032Result.DataEntity.YearScheduleEntity yearScheduleEntity : yearScheduleEntityLista){
                                                          if(user_id == yearScheduleEntity.getUserId()){
                                                              isYear= true;
                                                              gatewayPasswordPlanBean.setPlanType("year");
-                                                             gatewayPasswordPlanBean.setUserType(1);
+                                                    //         gatewayPasswordPlanBean.setUserType(1);
                                                              gatewayPasswordPlanBean.setZigBeeLocalStartTime(yearScheduleEntity.getStartTime());
                                                              gatewayPasswordPlanBean.setZigBeeLocalEndTime(yearScheduleEntity.getEndTime());
                                                              break;
@@ -159,7 +160,7 @@ public abstract class GatewayLockPasswordPresenter<T extends IGatewayLockPasswor
                                                      //  判断 周计划
                                                      for (GateWay6032Result.DataEntity.WeekScheduleEntity weekScheduleEntity : weekScheduleEntityList){
                                                          if(user_id == weekScheduleEntity.getUserId()){
-                                                             gatewayPasswordPlanBean.setUserType(1);
+                                                          //   gatewayPasswordPlanBean.setUserType(1);
                                                              gatewayPasswordPlanBean.setPlanType("week");
                                                              gatewayPasswordPlanBean.setDaysMask(weekScheduleEntity.getDaysMask());
                                                              gatewayPasswordPlanBean.setStartHour(weekScheduleEntity.getStartHour());

@@ -126,14 +126,21 @@ public class GatewaySettingActivity extends BaseActivity<GatewaySettingView, Gat
         gatewaySettingItemBeanTwo.setSetting(false);
 
         GatewaySettingItemBean gatewaySettingItemBeanThree=new GatewaySettingItemBean();
-        gatewaySettingItemBeanThree.setTitle(getString(R.string.gateway_setting_wifi_name));
+        if(model.equals(KeyConstants.SMALL_GW2)){
+            gatewaySettingItemBeanThree.setTitle(getString(R.string.gateway_coordinator_channel));
+        }else{
+            gatewaySettingItemBeanThree.setTitle(getString(R.string.gateway_setting_wifi_name));
+        }
+
         if (isAdmin==1){
             gatewaySettingItemBeanThree.setSetting(false);
         }else{
             gatewaySettingItemBeanThree.setSetting(false);
         }
         GatewaySettingItemBean gatewaySettingItemBeanFour=new GatewaySettingItemBean();
-        gatewaySettingItemBeanFour.setTitle(getString(R.string.gateway_setting_wifi_pwd));
+            gatewaySettingItemBeanFour.setTitle(getString(R.string.gateway_setting_wifi_pwd));
+
+
         if (isAdmin==1){
             gatewaySettingItemBeanFour.setSetting(false);
         }else{
@@ -180,6 +187,7 @@ public class GatewaySettingActivity extends BaseActivity<GatewaySettingView, Gat
         else if((!TextUtils.isEmpty(model) && model.equals(KeyConstants.SMALL_GW2))){
             gatewaySettingItemBeans.add(gatewaySettingItemBeanThree);
         }
+
         else{
             gatewaySettingItemBeans.add(gatewaySettingItemBeanThree);
             gatewaySettingItemBeans.add(gatewaySettingItemBeanFour);

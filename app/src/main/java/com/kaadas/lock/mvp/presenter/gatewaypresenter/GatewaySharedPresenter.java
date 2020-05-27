@@ -3,6 +3,7 @@ package com.kaadas.lock.mvp.presenter.gatewaypresenter;
 
 import com.google.gson.Gson;
 import com.kaadas.lock.MyApplication;
+import com.kaadas.lock.R;
 import com.kaadas.lock.mvp.mvpbase.BasePresenter;
 import com.kaadas.lock.mvp.view.gatewayView.IGatewaySharedView;
 import com.kaadas.lock.publiclibrary.http.util.RxjavaHelper;
@@ -14,6 +15,7 @@ import com.kaadas.lock.publiclibrary.mqtt.util.MqttConstant;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttData;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.ToastUtil;
 
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
@@ -53,7 +55,13 @@ public class GatewaySharedPresenter<T> extends BasePresenter<IGatewaySharedView>
                                 if (isSafe() && gatewayId.equals(shareResultBean.getGwId()) && deviceId.equals(shareResultBean.getDeviceId())) {
                                     mViewRef.get().shareDeviceSuccess(shareResultBean);
                                 }
-                            } else {
+                            } else if("402".equals(shareResultBean.getCode())){
+                                if (isSafe()) {
+                                //    mViewRef.get().shareDeviceFail();
+                                    ToastUtil.getInstance().showShort(shareResultBean.getMsg());
+                                }
+                            }
+                            else {
                                 if (isSafe()) {
                                     mViewRef.get().shareDeviceFail();
                                 }

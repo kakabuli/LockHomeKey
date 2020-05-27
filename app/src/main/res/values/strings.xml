@@ -498,13 +498,13 @@
     <string name="next_step">下一步</string>
 
     <string name="warring_lock">您的门锁错误验证多次,门锁系统锁定</string>
-    <string name="warring_three_times">您的智能锁已多次验证开门失败,请回家或联系保安查看</string>
+    <string name="warring_three_times">您的门锁错误验证多次，请回家或联系保安查看！</string>
     <string name="warring_broken">已监测到您的门锁被撬,请联系家人或小区保安</string>
     <string name="warring_mechanical_key">您的智能锁正在被机械锁开启,请回家或联系保安查看</string>
-    <string name="warring_low_power">您的智能锁电量过低,请及时更换电池</string>
+    <string name="warring_low_power">您的门锁电量过低，请及时更换</string>
     <string name="warring_door_not_lock">您的门锁有故障,请注意</string>
     <string name="warring_arm">您的门锁处于布防状态,有从门内开锁情况</string>
-    <string name="warrign_hijack">您的门锁发生劫持事件,赶紧联系或报警</string>
+    <string name="warrign_hijack">有人使用劫持密码开启门锁，赶紧联系或报警</string>
     <string name="warring_unkonw">未知警报</string>
     <string name="warring_defence">布防报警</string>
     <string name="warring_temp_exception">锁具温度异常</string>
@@ -1022,7 +1022,7 @@
     <string name="one_key_open_lock">一键开门</string>
     <string name="not_connected">未连接</string>
     <string name="keypad_open_lock">密码开锁</string>
-    <string name="rf_open_lock">App开锁</string>
+    <string name="rf_open_lock">APP开锁</string>
     <string name="manual_open_lock">机械开锁</string>
     <string name="rfid_open_lock">卡片开锁</string>
     <string name="fingerprint_open_lock">指纹开锁</string>

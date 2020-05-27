@@ -127,6 +127,8 @@ public class GatewayLockAuthorizeFunctionActivity extends BaseActivity<GatewayLo
     private Context context;
     private AlertDialog deleteDialog;
 
+    String gatewayModel=null;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -229,6 +231,7 @@ public class GatewayLockAuthorizeFunctionActivity extends BaseActivity<GatewayLo
     private void initData() {
         Intent intent = getIntent();
         showBean = (HomeShowBean) intent.getSerializableExtra(KeyConstants.GATEWAY_LOCK_INFO);
+        gatewayModel =getIntent().getStringExtra(KeyConstants.GATEWAY_MODEL);
         //设置电量
         if (showBean != null) {
             lockInfo = (GwLockInfo) showBean.getObject();
@@ -294,7 +297,7 @@ public class GatewayLockAuthorizeFunctionActivity extends BaseActivity<GatewayLo
                 intent.putExtra(KeyConstants.DEVICE_ID, deviceId);
                 intent.putExtra(KeyConstants.DEVICE_ID, deviceId);
                 intent.putExtra(KeyConstants.GATEWAY_LOCK_INFO, lockInfo);
-
+                intent.putExtra(KeyConstants.GATEWAY_MODEL,gatewayModel);
                 startActivity(intent);
                 break;
             case R.id.ll_two:
@@ -303,6 +306,8 @@ public class GatewayLockAuthorizeFunctionActivity extends BaseActivity<GatewayLo
                 intent.putExtra(KeyConstants.GATEWAY_ID, gatewayId);
                 intent.putExtra(KeyConstants.DEVICE_ID, deviceId);
                 intent.putExtra(KeyConstants.DEVICE_NICKNAME, nickName);
+                intent.putExtra(KeyConstants.GATEWAY_MODEL,gatewayModel);
+
                 //更多
                 startActivityForResult(intent, KeyConstants.DEVICE_DETAIL_BEAN_NUM);
                 break;
