@@ -31,9 +31,10 @@ public class WifiLockPasswordManagerPresenter<T> extends BasePresenter<IWifiLock
                 .subscribe(new BaseObserver<WifiLockGetPasswordListResult>() {
                     @Override
                     public void onSuccess(WifiLockGetPasswordListResult wifiLockGetPasswordListResult) {
+
                         WiFiLockPassword wiFiLockPassword = wifiLockGetPasswordListResult.getData();
 
-                        List<WiFiLockPassword.PwdListBean> pwdList = new ArrayList<>();
+//                        List<WiFiLockPassword.PwdListBean> pwdList = new ArrayList<>();
 //                        long time =  System.currentTimeMillis() / 1000;
 //                        pwdList.add(new WiFiLockPassword.PwdListBean(time, 0, 0, 0, 1, null));
 //                        pwdList.add(new WiFiLockPassword.PwdListBean(time, 0, 2, 0, 0, null));
@@ -164,45 +165,46 @@ public class WifiLockPasswordManagerPresenter<T> extends BasePresenter<IWifiLock
         return passwords;
     }
 
-    public void getFacePasswordList(String wifiSn) {
-        XiaokaiNewServiceImp.wifiLockGetPwdList(wifiSn, MyApplication.getInstance().getUid())
-                .subscribe(new BaseObserver<WifiLockGetPasswordListResult>() {
-                    @Override
-                    public void onSuccess(WifiLockGetPasswordListResult wifiLockGetPasswordListResult) {
-                        WiFiLockPassword wiFiLockPassword = wifiLockGetPasswordListResult.getData();
-
-                        List<WiFiLockPassword.FaceListBean> pwdList = new ArrayList<>();
-
-                        String object = new Gson().toJson(wiFiLockPassword);
-                        LogUtils.e("服务器数据是   " + object);
-
-                        SPUtils.put(KeyConstants.WIFI_LOCK_PASSWORD_LIST + wifiSn, object);
-                        if (isSafe()) {
-                            mViewRef.get().onGetPasswordSuccess(wiFiLockPassword);
-                        }
-                    }
-
-                    @Override
-                    public void onAckErrorCode(BaseResult baseResult) {
-                        if (isSafe()) {
-                            mViewRef.get().onGetPasswordFailedServer(baseResult);
-                        }
-                    }
-
-                    @Override
-                    public void onFailed(Throwable throwable) {
-                        if (isSafe()) {
-                            mViewRef.get().onGetPasswordFailed(throwable);
-                        }
-                    }
-
-                    @Override
-                    public void onSubscribe1(Disposable d) {
-                        compositeDisposable.add(d);
-                    }
-                });
-    }
-    public List<FacePassword> getFacePasswords(WiFiLockPassword wiFiLockPassword) {
+//    public void getFacePasswordList(String wifiSn) {
+//        XiaokaiNewServiceImp.wifiLockGetPwdList(wifiSn, MyApplication.getInstance().getUid())
+//                .subscribe(new BaseObserver<WifiLockGetPasswordListResult>() {
+//                    @Override
+//                    public void onSuccess(WifiLockGetPasswordListResult wifiLockGetPasswordListResult) {
+//                        WiFiLockPassword wiFiLockPassword = wifiLockGetPasswordListResult.getData();
+//
+//                        List<WiFiLockPassword.FaceListBean> pwdList = new ArrayList<>();
+//
+//                        String object = new Gson().toJson(wiFiLockPassword);
+//                        LogUtils.e("服务器数据是   " + object);
+//
+//                        SPUtils.put(KeyConstants.WIFI_LOCK_PASSWORD_LIST + wifiSn, object);
+//                        if (isSafe()) {
+//                            mViewRef.get().onGetPasswordSuccess(wiFiLockPassword);
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onAckErrorCode(BaseResult baseResult) {
+//                        if (isSafe()) {
+//                            mViewRef.get().onGetPasswordFailedServer(baseResult);
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onFailed(Throwable throwable) {
+//                        if (isSafe()) {
+//                            mViewRef.get().onGetPasswordFailed(throwable);
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onSubscribe1(Disposable d) {
+//                        compositeDisposable.add(d);
+//                    }
+//                });
+//    }
+//getShowFacePasswords   getFacePasswords
+    public List<FacePassword> getShowFacePasswords(WiFiLockPassword wiFiLockPassword) {
         List<FacePassword> passwords = new ArrayList<>();
         if (wiFiLockPassword != null) {
             List<WiFiLockPassword.FaceListBean> faceList = wiFiLockPassword.getFaceList();
@@ -216,7 +218,7 @@ public class WifiLockPasswordManagerPresenter<T> extends BasePresenter<IWifiLock
                     String sNum = num > 9 ? "" + num : "0" + num;
                     FacePassword facePassword = new FacePassword(sNum, sNum,
                             password.getCreateTime(), password.getType(), password.getStartTime(), password.getEndTime(), password.getItems());
-
+                    LogUtils.e("服务器数据是==faceNickname="+faceNickname);
                     if (faceNickname != null) {
                         for (WiFiLockPassword.FaceNicknameBean nickname : faceNickname) {
                             if (nickname.getNum() == num) {
@@ -224,7 +226,6 @@ public class WifiLockPasswordManagerPresenter<T> extends BasePresenter<IWifiLock
                             }
                         }
                     }
-
                     passwords.add(facePassword);
                 }
             }

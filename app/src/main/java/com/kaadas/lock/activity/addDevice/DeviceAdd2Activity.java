@@ -213,7 +213,10 @@ public class DeviceAdd2Activity extends BaseActivity<DeviceZigBeeDetailView, Dev
                         startActivity(new Intent(this,WifiLockAPAddFirstActivity.class));
                     } else if ( (result.contains("_WiFi_2")||result.contains("_WiFi_fast"))){  //新的
                         startActivity(new Intent(this,WifiLockAddNewFirstActivity.class));
-                    }  else {
+                    } else if ( (result.contains("http://qr01.cn/EYopdB"))){  //已生产的错误的X1二维码
+                        startActivity(new Intent(this,WifiLockAPAddFirstActivity.class));
+                    }
+                    else {
                         Intent scanSuccessIntent = new Intent(DeviceAdd2Activity.this, AddDeviceZigbeeLockNewScanFailActivity.class);
                         startActivity(scanSuccessIntent);
                         finish();

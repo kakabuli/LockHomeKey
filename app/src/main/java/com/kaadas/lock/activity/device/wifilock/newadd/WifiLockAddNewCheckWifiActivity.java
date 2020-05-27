@@ -225,7 +225,7 @@ public class WifiLockAddNewCheckWifiActivity extends BaseActivity<IWifiLockAPWif
                 }
                 finish();
 //                socketManager.destroy();
-                Toast.makeText(WifiLockAddNewCheckWifiActivity.this, R.string.bind_failed, Toast.LENGTH_SHORT).show();
+                Toast.makeText(WifiLockAddNewCheckWifiActivity.this, R.string.bind_failed+"=="+errorCode, Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(WifiLockAddNewCheckWifiActivity.this, WifiLockAddNewBindFailedActivity.class);
                 startActivity(intent);
 //                if (errorCode == -1) {
@@ -327,7 +327,7 @@ public class WifiLockAddNewCheckWifiActivity extends BaseActivity<IWifiLockAPWif
 
     @Override
     public void onBindFailed(BaseResult baseResult) {
-        Toast.makeText(this, R.string.bind_failed, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, R.string.bind_failed+"--1", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(this, WifiLockAddNewBindFailedActivity.class);
         intent.putExtra(KeyConstants.WIFI_LOCK_SETUP_IS_AP, true);
         startActivity(intent);
@@ -335,7 +335,7 @@ public class WifiLockAddNewCheckWifiActivity extends BaseActivity<IWifiLockAPWif
 
     @Override
     public void onBindThrowable(Throwable throwable) {
-        Toast.makeText(this, R.string.bind_failed, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, R.string.bind_failed+"--2", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(this, WifiLockAddNewBindFailedActivity.class);
         intent.putExtra(KeyConstants.WIFI_LOCK_SETUP_IS_AP, true);
         startActivity(intent);
@@ -350,7 +350,7 @@ public class WifiLockAddNewCheckWifiActivity extends BaseActivity<IWifiLockAPWif
 
     @Override
     public void onUpdateFailed(BaseResult baseResult) {
-        Toast.makeText(this, R.string.bind_failed, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, R.string.bind_failed+"--3", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(this, WifiLockAddNewBindFailedActivity.class);
         intent.putExtra(KeyConstants.WIFI_LOCK_SETUP_IS_AP, true);
         startActivity(intent);
@@ -358,7 +358,7 @@ public class WifiLockAddNewCheckWifiActivity extends BaseActivity<IWifiLockAPWif
 
     @Override
     public void onUpdateThrowable(Throwable throwable) {
-        Toast.makeText(this, R.string.bind_failed, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, R.string.bind_failed+"--4", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(this, WifiLockAddNewBindFailedActivity.class);
         intent.putExtra(KeyConstants.WIFI_LOCK_SETUP_IS_AP, true);
         startActivity(intent);
@@ -371,7 +371,7 @@ public class WifiLockAddNewCheckWifiActivity extends BaseActivity<IWifiLockAPWif
 
     @Override
     public void onSendFailed() {
-        Toast.makeText(this, R.string.bind_failed, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, R.string.bind_failed+"--5", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(this, WifiLockAddNewBindFailedActivity.class);
         intent.putExtra(KeyConstants.WIFI_LOCK_SETUP_IS_AP, true);
         startActivity(intent);
@@ -379,7 +379,7 @@ public class WifiLockAddNewCheckWifiActivity extends BaseActivity<IWifiLockAPWif
 
     @Override
     public void onReceiverFailed() {
-        Toast.makeText(this, R.string.bind_failed, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, R.string.bind_failed+"--6", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(this, WifiLockAddNewBindFailedActivity.class);
         intent.putExtra(KeyConstants.WIFI_LOCK_SETUP_IS_AP, true);
         startActivity(intent);

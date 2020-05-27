@@ -60,7 +60,7 @@ public class WifiLockOperationItemRecordAdapter extends BaseQuickAdapter<WifiLoc
                     left = sNum;
                 }
                 switch (pwdType) {
-                    //	密码类型：0密码 3卡片 4指纹 5面容 8APP用户 9机械钥匙
+                    //	密码类型：0密码 3卡片 4指纹 5面容 8APP用户 9机械钥匙开锁 10室内多功能键开锁（open） 11室内感应把手开锁
                     case 0:
                         right = mContext.getString(R.string.password_open);
                         if (record.getPwdNum() == 252) {
@@ -90,22 +90,28 @@ public class WifiLockOperationItemRecordAdapter extends BaseQuickAdapter<WifiLoc
                         right = mContext.getString(R.string.app_open);
                         break;
                     case 9:
-                        right = mContext.getString(R.string.machine_key);
-                        if(left.equals("编号00")){
-                            return;
-                        }
+//                        right = mContext.getString(R.string.machine_key);
+//                        if(left.equals("编号00")){
+//                            return;
+//                        }
+                        left = mContext.getString(R.string.machine_key);
+                        right = "";
                         break;
                     case 10:
-                        right = mContext.getString(R.string.indoor_open);
-                        if(left.equals("编号00")){
-                            return;
-                        }
+//                        right = mContext.getString(R.string.indoor_open);
+//                        if(left.equals("编号00")){
+//                            return;
+//                        }
+                        left = mContext.getString(R.string.indoor_open_new_express);
+                        right = "";
                         break;
                     case 11:
-                        right = mContext.getString(R.string.indoor_Induction);
-                        if(left.equals("编号00")){
-                            return;
-                        }
+//                        right = mContext.getString(R.string.indoor_Induction);
+//                        if(left.equals("编号00")){
+//                            return;
+//                        }
+                        left = mContext.getString(R.string.indoor_Induction);
+                        right = "";
                         break;
                     default:
                         right = mContext.getString(R.string.unknown_open);

@@ -8,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -15,6 +16,9 @@ import android.widget.TextView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.google.gson.Gson;
 import com.kaadas.lock.R;
+import com.kaadas.lock.activity.device.wifilock.add.WifiLockAddSecondActivity;
+import com.kaadas.lock.activity.device.wifilock.add.WifiLockHelpActivity;
+import com.kaadas.lock.activity.device.wifilock.newadd.WifiLockAddFaceFirstActivity;
 import com.kaadas.lock.adapter.WifiLockCardAndFingerAdapter;
 import com.kaadas.lock.adapter.WifiLockFacePasswordAdapter;
 import com.kaadas.lock.adapter.WifiLockPasswordAdapter;
@@ -39,6 +43,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class WiFiLockPasswordManagerActivity extends BaseActivity<IWifiLockPasswordManagerView, WifiLockPasswordManagerPresenter<IWifiLockPasswordManagerView>>
         implements IWifiLockPasswordManagerView {
@@ -59,6 +64,7 @@ public class WiFiLockPasswordManagerActivity extends BaseActivity<IWifiLockPassw
     ImageView ivNoPassword;
     @BindView(R.id.tv_how_to_add)
     TextView tvHowToAdd;
+
 
     private WifiLockPasswordAdapter passwordAdapter;
     private List<ForeverPassword> passwordList = new ArrayList<>();
@@ -152,13 +158,12 @@ public class WiFiLockPasswordManagerActivity extends BaseActivity<IWifiLockPassw
         }
         else if (type == 4) {
             headTitle.setText(R.string.face_password);
-            facepasswordList = mPresenter.getFacePasswords(wiFiLockPassword);
+            facepasswordList = mPresenter.getShowFacePasswords(wiFiLockPassword);
             if (facepasswordList != null && facepasswordList.size() > 0) {
                 havePassword = true;
             } else {
                 havePassword = false;
             }
-
             ivNoPassword.setImageResource(R.mipmap.wifi_lock_no_face_pwd);
             tvNoPassword.setText(getString(R.string.no_face_password));
             tvHowToAdd.setText(getString(R.string.how_to_add_face_password));
@@ -227,10 +232,10 @@ public class WiFiLockPasswordManagerActivity extends BaseActivity<IWifiLockPassw
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 Intent intent = new Intent(WiFiLockPasswordManagerActivity.this, WifiLockPasswordDetailActivity.class);
-                FacePassword foreverPassword = facepasswordList.get(position);
+                FacePassword facePassword = facepasswordList.get(position);
                 //输入密码类型
                 intent.putExtra(KeyConstants.PASSWORD_TYPE, type);
-                intent.putExtra(KeyConstants.TO_PWD_DETAIL, foreverPassword);  //密码数据
+                intent.putExtra(KeyConstants.TO_PWD_DETAIL, facePassword);  //密码数据
                 intent.putExtra(KeyConstants.WIFI_SN, wifiSn);  //WiFiSN
                 startActivityForResult(intent, REQUEST_CODE);
             }
@@ -260,12 +265,24 @@ public class WiFiLockPasswordManagerActivity extends BaseActivity<IWifiLockPassw
         ToastUtil.getInstance().showLong(R.string.refresh_failed_please_retry_later);
     }
 
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
             mPresenter.getPasswordList(wifiSn);
+        }
+    }
+
+    @OnClick({R.id.back, R.id.tv_how_to_add})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.back:
+                finish();
+                break;
+            case R.id.tv_how_to_add:
+                Intent nextIntent = new Intent(this, WifiLockAddFaceFirstActivity.class);
+                startActivity(nextIntent);
+                break;
         }
     }
 }

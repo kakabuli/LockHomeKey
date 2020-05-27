@@ -92,7 +92,7 @@ public class WiFiLockPassword {
         return faceNickname;
     }
 
-    public void settFaceNickname(List<FaceNicknameBean> faceNickname) {
+    public void setFaceNickname(List<FaceNicknameBean> faceNickname) {
         this.faceNickname = faceNickname;
     }
 

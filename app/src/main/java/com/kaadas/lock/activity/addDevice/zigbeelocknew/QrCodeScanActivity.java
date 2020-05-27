@@ -145,19 +145,19 @@ public class QrCodeScanActivity extends BaseAddToApplicationActivity implements 
         }
     }
 
-
     private String result = "";
     @Override
     public void onScanQRCodeSuccess(String result) {
         this.result = result;
         //首页过来的
         Intent intent;
-        if (scan == 1 && !TextUtils.isEmpty(result) && result.startsWith("http://")) {
+        if (scan == 1 && !TextUtils.isEmpty(result) && !result.contains("http://qr01.cn/EYopdB")) {
             intent = new Intent(this, ScanHttpDialogActivity.class);
             intent.putExtra(KeyConstants.QR_URL, result);
             startActivityForResult(intent, REQUEST_CODE);
             return;
         }
+
         intent = new Intent();
         intent.putExtra(Intents.Scan.RESULT, result);
         setResult(RESULT_OK, intent);

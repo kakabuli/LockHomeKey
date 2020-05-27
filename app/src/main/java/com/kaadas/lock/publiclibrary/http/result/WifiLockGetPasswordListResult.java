@@ -2,6 +2,7 @@ package com.kaadas.lock.publiclibrary.http.result;
 
 import com.google.gson.annotations.SerializedName;
 import com.kaadas.lock.publiclibrary.bean.WiFiLockPassword;
+import com.kaadas.lock.utils.LogUtils;
 
 import java.util.List;
 

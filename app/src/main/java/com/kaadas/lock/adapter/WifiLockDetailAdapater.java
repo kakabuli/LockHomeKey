@@ -45,6 +45,7 @@ public class WifiLockDetailAdapater extends RecyclerView.Adapter {
         holder.tvNumber.setVisibility(View.VISIBLE);
         if (lockFunctionBean.getType() == BleLockUtils.TYPE_PASSWORD
                 ||  lockFunctionBean.getType() == BleLockUtils.TYPE_FINGER
+                ||  lockFunctionBean.getType() == BleLockUtils.TYPE_FACE_PASSWORD
 //                ||  lockFunctionBean.getType() == BleLockUtils.TYPE_OFFLINE_PASSWORD
                 ) {
             holder.tvNumber.setText("("+lockFunctionBean.getNumber() + context.getString(R.string.group)+")");

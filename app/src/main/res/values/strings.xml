@@ -319,6 +319,7 @@
     <string name="nothing">（无）</string>
     <string name="password">密码</string>
     <string name="face_password">面容识别</string>
+    <string name="add_face_password">添加面容识别</string>
     <string name="group">组</string>
     <string name="fingerprint">指纹</string>
     <string name="ge">个</string>
@@ -557,6 +558,9 @@
     <string name="save_success">保存成功！</string>
 
     <string name="input_door_card_name">请输入门卡名称</string>
+
+    <string name="input_door_face_name">请输入面容名称</string>
+
     <string name="nickname_not_modify">昵称未修改</string>
     <string name="is_savving">正在保存</string>
     <string name="please_have_net_add_card">请在有网络情况下添加卡片！</string>
@@ -1380,6 +1384,7 @@
     <string name="app">App</string>
     <string name="machine_key">机械钥匙开锁</string>
     <string name="indoor_open">室内open键开锁</string>
+    <string name="indoor_open_new_express">室内多功能键开锁</string>
     <string name="indoor_Induction">室内感应把手开锁</string>
     <string name="connect_device_wifi">连接设备\nWi-Fi</string>
     <string name="connect_home_wifi">连接家庭\nWi-Fi</string>
@@ -1533,6 +1538,11 @@
     <string name="admin_error_reinput">门锁管理员密码验证失败请重新输入</string>
     <string name="wifi_view1">Wi-Fi模块固件版本</string>
     <string name="am_mode">A-M自动/手动模式</string>
+    <string name="power_Save_mode">节能模式</string>
+    <string name="face_function">面容识别功能</string>
+    <string name="open">开启</string>
+    <string name="close">关闭</string>
+
     <string name="lock_auto_mode">门锁自动模式状态</string>
     <string name="lock_hand_mode">门锁手动模式状态</string>
     <string name="hand">手动</string>
@@ -1578,6 +1588,7 @@
 
     <string name="dfsdfas">① 按键区输入“*”两次\n② 输入已修改的管理密码“********”\n③ 按“#”确认，\n④ 语音播报：“已进入管理模式”</string>
     <string name="dsfdsasd">① 根据语音提示，按“4”选择“扩展功能” \n② 再按“1”，选择“加入网络” \n③ 语音播报：“配网中，请稍后”</string>
+    <string name="addfacepassword">① 根据语音提示，按“1”选择“用户设置” \n② 再按“1”，选择“添加用户人脸” \n③ 根据语音提示，再输入2位编号，以“#”号确认 \n④ 开始录入，用户距离门锁60~80cm(约一臂距离)的位置站立，并请正视门锁，稍等片刻即可“添加成功”; \n⑤ 若添加失败，请再次添加录入，并根据语音提示，调整站立位置，稍等片刻即可“添加成功”</string>
     <string name="sdfkjsjdkf">用手触碰按键区，唤醒门锁\n确保门锁数字键盘灯亮</string>
     <string name="is_parsing_data">正在解析数据...</string>
     <string name="pwd_list_null">获取密码列表为空</string>

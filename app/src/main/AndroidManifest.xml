@@ -1080,6 +1080,16 @@
             android:name=".activity.device.wifilock.WifiLockAMActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".activity.device.wifilock.WifiLockPowerSaveActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.wifilock.WifiLockFaceModelAMActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+
         <activity
             android:name=".activity.device.wifilock.newadd.WifiLockAddNewFirstActivity"
             android:launchMode="singleTask"
@@ -1158,6 +1168,14 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.device.wifilock.newadd.WifiLockOldUserSecondActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.wifilock.newadd.WifiLockAddFaceFirstActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.wifilock.newadd.WifiLockAddFaceSecondActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity android:name=".activity.TestActivity">

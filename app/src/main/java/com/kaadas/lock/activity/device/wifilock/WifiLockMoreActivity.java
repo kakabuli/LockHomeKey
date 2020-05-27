@@ -51,6 +51,16 @@ public class WifiLockMoreActivity extends BaseActivity<IWifiLockMoreView, WifiLo
 
     @BindView(R.id.rl_am)
     RelativeLayout rlAm;
+    @BindView(R.id.iv_am)
+    TextView ivAm;
+
+    @BindView(R.id.rl_powerSave)
+    RelativeLayout rlPowerSave;
+    @BindView(R.id.iv_powerSave)
+    TextView ivPowerSave;
+//    @BindView(R.id.rl_faceStatus)
+//    RelativeLayout rlFaceStatus;
+
     @BindView(R.id.rl_door_lock_language_switch)
     RelativeLayout rlDoorLockLanguageSwitch;
     @BindView(R.id.iv_silent_mode)
@@ -78,8 +88,7 @@ public class WifiLockMoreActivity extends BaseActivity<IWifiLockMoreView, WifiLo
     TextView wifiName;
     @BindView(R.id.rl_wifi_name)
     RelativeLayout rlWifiName;
-    @BindView(R.id.iv_am)
-    TextView ivAm;
+
     private WifiLockInfo wifiLockInfo;
     private String wifiSn;
     String deviceNickname;//设备名称
@@ -138,6 +147,22 @@ public class WifiLockMoreActivity extends BaseActivity<IWifiLockMoreView, WifiLo
             rlAm.setVisibility(View.GONE);
         }
 
+
+        if (BleLockUtils.isSupportPowerSaveModeShow(func)) {
+            rlPowerSave.setVisibility(View.VISIBLE);
+            int powerSaveMode = wifiLockInfo.getPowerSave();
+            ivPowerSave.setText(powerSaveMode == 1 ? getString(R.string.open) : getString(R.string.close));
+        } else {
+            rlPowerSave.setVisibility(View.GONE);
+        }
+
+        //面容识别功能
+//        if (BleLockUtils.isSupportFaceStatusShow(func)) {
+//            rlFaceStatus.setVisibility(View.VISIBLE);
+//        } else {
+//            rlFaceStatus.setVisibility(View.GONE);
+//        }
+
         wifiName.setText(wifiLockInfo.getWifiName());
         deviceNickname = wifiLockInfo.getLockNickname();
     }
@@ -148,6 +173,8 @@ public class WifiLockMoreActivity extends BaseActivity<IWifiLockMoreView, WifiLo
         rlMessageFree.setOnClickListener(this);
         rlSafeMode.setOnClickListener(this);
         rlAm.setOnClickListener(this);
+        rlPowerSave.setOnClickListener(this);
+//        rlFaceStatus.setOnClickListener(this);
         rlDoorLockLanguageSwitch.setOnClickListener(this);
         rlSilentMode.setOnClickListener(this);
         rlDeviceInformation.setOnClickListener(this);
@@ -155,11 +182,19 @@ public class WifiLockMoreActivity extends BaseActivity<IWifiLockMoreView, WifiLo
         rlCheckFirmwareUpdate.setOnClickListener(this);
         btnDelete.setOnClickListener(this);
         ivAm.setOnClickListener(this);
+
     }
 
     @Override
     public void onClick(View v) {
         Intent intent;
+        String functionSet = wifiLockInfo.getFunctionSet();
+        int func = 0;
+        try {
+            func = Integer.parseInt(functionSet);
+        } catch (Exception e) {
+            LogUtils.e("" + e.getMessage());
+        }
         switch (v.getId()) {
             case R.id.back:  //返回
                 finish();
@@ -213,11 +248,34 @@ public class WifiLockMoreActivity extends BaseActivity<IWifiLockMoreView, WifiLo
                 intent.putExtra(KeyConstants.WIFI_SN, wifiLockInfo.getWifiSN());
                 startActivity(intent);
                 break;
+
+
             case R.id.iv_am:   //手动自动模式
-                intent = new Intent(this, WifiLockAMActivity.class);
+
+                if (BleLockUtils.isSupportFaceStatusShow(func)) {
+                    //支持面容识别
+                    intent = new Intent(this, WifiLockFaceModelAMActivity.class);
+                    intent.putExtra(KeyConstants.WIFI_SN, wifiLockInfo.getWifiSN());
+                    startActivity(intent);
+
+                } else {
+                    //不支持面容识别
+                    intent = new Intent(this, WifiLockAMActivity.class);
+                    intent.putExtra(KeyConstants.WIFI_SN, wifiLockInfo.getWifiSN());
+                    startActivity(intent);
+                }
+                break;
+            case R.id.rl_powerSave:   //节能模式
+
+                intent = new Intent(this, WifiLockPowerSaveActivity.class);
                 intent.putExtra(KeyConstants.WIFI_SN, wifiLockInfo.getWifiSN());
                 startActivity(intent);
                 break;
+//            case R.id.rl_faceStatus:   //面容识别功能
+//
+//
+//                break;
+
             case R.id.rl_door_lock_language_switch:
                 ToastUtil.getInstance().showLong(R.string.please_operation_in_lock);
                 break;

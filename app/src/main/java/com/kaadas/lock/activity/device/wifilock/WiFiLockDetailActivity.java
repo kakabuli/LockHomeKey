@@ -139,7 +139,7 @@ public class WiFiLockDetailActivity extends BaseActivity<IWifiLockDetailView, Wi
         }
         lockType = wifiLockInfo.getProductModel();
         if (!TextUtils.isEmpty(lockType)) {
-            tvLockType.setText(lockType.contentEquals("K13")?getString(R.string.lan_bo_ji_ni):StringUtil.getSubstringFive(lockType));
+            tvLockType.setText(lockType.contentEquals("K13")?"型号: "+getString(R.string.lan_bo_ji_ni):"型号: "+StringUtil.getSubstringFive(lockType));
 
         }
     }
@@ -148,6 +148,7 @@ public class WiFiLockDetailActivity extends BaseActivity<IWifiLockDetailView, Wi
         wifiSn = intent.getStringExtra(KeyConstants.WIFI_SN);
         LogUtils.e("获取到的设备Sn是   " + wifiSn);
         wifiLockInfo = MyApplication.getInstance().getWifiLockInfoBySn(wifiSn);
+        if (wifiLockInfo.getProductModel()!=null)
         ivLockIcon.setImageResource(BleLockUtils.getDetailImageByModel(wifiLockInfo.getProductModel()));
     }
 
@@ -178,6 +179,10 @@ public class WiFiLockDetailActivity extends BaseActivity<IWifiLockDetailView, Wi
                         List<WiFiLockPassword.CardListBean> cardList = wiFiLockPassword.getCardList();
                         wifiLockFunctionBean.setNumber(cardList == null ? 0 : cardList.size());
                         break;
+                    case BleLockUtils.TYPE_FACE_PASSWORD:
+                        List<WiFiLockPassword.FaceListBean> faceList = wiFiLockPassword.getFaceList();
+                        wifiLockFunctionBean.setNumber(faceList == null ? 0 : faceList.size());
+                        break;
                 }
             }
         } else {
@@ -190,6 +195,9 @@ public class WiFiLockDetailActivity extends BaseActivity<IWifiLockDetailView, Wi
                         wifiLockFunctionBean.setNumber(0);
                         break;
                     case BleLockUtils.TYPE_CARD:
+                        wifiLockFunctionBean.setNumber(0);
+                        break;
+                    case BleLockUtils.TYPE_FACE_PASSWORD:
                         wifiLockFunctionBean.setNumber(0);
                         break;
                 }
@@ -285,6 +293,10 @@ public class WiFiLockDetailActivity extends BaseActivity<IWifiLockDetailView, Wi
                     case BleLockUtils.TYPE_CARD:
                         List<WiFiLockPassword.CardListBean> cardList = wiFiLockPassword.getCardList();
                         wifiLockFunctionBean.setNumber(cardList == null ? 0 : cardList.size());
+                        break;
+                    case BleLockUtils.TYPE_FACE_PASSWORD:
+                        List<WiFiLockPassword.FaceListBean> faceList = wiFiLockPassword.getFaceList();
+                        wifiLockFunctionBean.setNumber(faceList == null ? 0 : faceList.size());
                         break;
                 }
             }

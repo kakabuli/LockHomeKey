@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#f2f2f2"
+    tools:context="com.kaadas.lock.activity.device.wifilock.WifiLockFaceModelAMActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_40"
+        android:background="#F8F8F8">
+
+        <ImageView
+            android:id="@+id/back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:paddingLeft="@dimen/dp_16"
+            android:paddingTop="@dimen/dp_5"
+            android:paddingRight="@dimen/dp_16"
+            android:paddingBottom="@dimen/dp_5"
+            android:src="@mipmap/back_gray" />
+
+        <TextView
+            android:id="@+id/head_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/am_mode"
+            android:textColor="#000000"
+            android:textSize="@dimen/sp_17"
+            android:textStyle="bold" />
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:paddingLeft="12dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/dp_10"
+        android:layout_marginTop="@dimen/dp_20"
+        android:background="@drawable/background_white_10dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:textSize="15sp"
+            android:layout_marginTop="@dimen/dp_20"
+            android:drawablePadding="@dimen/dp_10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="如何开启A-M自动模式"
+            android:textStyle="bold"
+            android:textColor="#606060" />
+
+        <TextView
+            android:textSize="14sp"
+            android:layout_marginTop="@dimen/dp_20"
+            android:drawablePadding="@dimen/dp_10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="① 按键区输入“*”两次 "
+            android:textColor="#606060" />
+
+        <TextView
+            android:textSize="14sp"
+            android:layout_marginTop="@dimen/dp_10"
+            android:drawablePadding="@dimen/dp_10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="② 输入已修改的管理密码“********” "
+            android:textColor="#606060" />
+
+        <TextView
+            android:textSize="14sp"
+            android:layout_marginTop="@dimen/dp_10"
+            android:drawablePadding="@dimen/dp_10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="③ 按“#”确认，"
+            android:textColor="#606060" />
+
+        <TextView
+            android:textSize="14sp"
+            android:layout_marginTop="@dimen/dp_10"
+            android:drawablePadding="@dimen/dp_10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="④ 语音播报：“已进入管理模式” "
+            android:textColor="#606060" />
+
+        <TextView
+            android:textSize="14sp"
+            android:layout_marginTop="@dimen/dp_10"
+            android:drawablePadding="@dimen/dp_10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="⑤ 根据语音提示,按“7”，在按“1” "
+            android:textColor="#606060" />
+
+        <TextView
+            android:textSize="14sp"
+            android:layout_marginTop="@dimen/dp_10"
+            android:drawablePadding="@dimen/dp_10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="⑥ 语音播报“设置成功，自动模式”"
+            android:textColor="#606060" />
+
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:paddingLeft="12dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/dp_10"
+        android:layout_marginTop="@dimen/dp_20"
+        android:background="@drawable/background_white_10dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:textSize="15sp"
+            android:layout_marginTop="@dimen/dp_20"
+            android:drawablePadding="@dimen/dp_10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="如何开启A-M手动模式"
+            android:textStyle="bold"
+            android:textColor="#606060" />
+
+        <TextView
+            android:textSize="14sp"
+            android:layout_marginTop="@dimen/dp_20"
+            android:drawablePadding="@dimen/dp_10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="① 按键区输入“*”两次 "
+            android:textColor="#606060" />
+
+        <TextView
+            android:textSize="14sp"
+            android:layout_marginTop="@dimen/dp_10"
+            android:drawablePadding="@dimen/dp_10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="② 输入已修改的管理密码“********” "
+            android:textColor="#606060" />
+
+        <TextView
+            android:textSize="14sp"
+            android:layout_marginTop="@dimen/dp_10"
+            android:drawablePadding="@dimen/dp_10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="③ 按“#”确认，"
+            android:textColor="#606060" />
+
+        <TextView
+            android:textSize="14sp"
+            android:layout_marginTop="@dimen/dp_10"
+            android:drawablePadding="@dimen/dp_10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="④ 语音播报：“已进入管理模式” "
+            android:textColor="#606060" />
+
+        <TextView
+            android:textSize="14sp"
+            android:layout_marginTop="@dimen/dp_10"
+            android:drawablePadding="@dimen/dp_10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="⑤ 根据语音提示,按“7”，在按“2” "
+            android:textColor="#606060" />
+
+        <TextView
+            android:textSize="14sp"
+            android:layout_marginTop="@dimen/dp_10"
+            android:drawablePadding="@dimen/dp_10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="⑥ 语音播报“设置成功，手动模式”"
+            android:textColor="#606060" />
+
+
+
+    </LinearLayout>
+
+
+
+</LinearLayout>

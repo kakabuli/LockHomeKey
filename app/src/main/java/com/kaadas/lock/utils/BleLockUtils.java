@@ -182,6 +182,36 @@ public class BleLockUtils {
     }
 
     /**
+     * 根据功能集判断是否支持节能模式显示
+     *
+     * @param functionSet
+     * @return
+     */
+    public static boolean isSupportPowerSaveModeShow(int functionSet) {
+        Integer[] funcs = FUNCTION_SET.get(functionSet);
+        if (funcs == null) {
+            return false;
+        }
+        List<Integer> integers = Arrays.asList(funcs);
+        return integers.contains(46);
+    }
+
+    /**
+     * 根据功能集判断是否支持面容识别功能显示
+     *
+     * @param functionSet
+     * @return
+     */
+    public static boolean isSupportFaceStatusShow(int functionSet) {
+        Integer[] funcs = FUNCTION_SET.get(functionSet);
+        if (funcs == null) {
+            return false;
+        }
+        List<Integer> integers = Arrays.asList(funcs);
+        return integers.contains(26);
+    }
+
+    /**
      * 根据功能集判断是否支持修改管理员密码
      *
      * @param functionSet
@@ -547,7 +577,13 @@ public class BleLockUtils {
                 return R.mipmap.bluetooth_authorization_lock_6113;
             } else if (model.startsWith("A8")) {
                 return R.mipmap.bluetooth_authorization_lock_a8;
-            } else {
+            } else if (model.contentEquals("K13F")) {
+                return R.mipmap.bluetooth_authorization_lock_k13f;
+            }
+            else if (model.contentEquals("A5601")) {
+                return R.mipmap.bluetooth_authorization_lock_a7_w;
+            }
+            else {
                 return R.mipmap.bluetooth_authorization_lock_default;
             }
         } else {
@@ -660,7 +696,13 @@ public class BleLockUtils {
                 return R.mipmap.small_6113;
             } else if (model.startsWith("A8")) {
                 return R.mipmap.small_a8;
-            } else {
+            } else if (model.contentEquals("K13F")) {
+                return R.mipmap.small_k13f;
+            }
+            else if (model.contentEquals("A5601")) {
+                return R.mipmap.small_a7_w;
+            }
+            else {
                 return R.mipmap.default_zigbee_lock_icon;
             }
         } else {
@@ -774,7 +816,12 @@ public class BleLockUtils {
                 return R.mipmap.bluetooth_lock_6113;
             } else if (model.startsWith("A8")) {
                 return R.mipmap.bluetooth_lock_a8;
-            } else {
+            } else if (model.contentEquals("K13F")) {
+                return R.mipmap.bluetooth_lock_k13f;
+            } else if (model.contentEquals("A5601")) {
+                return R.mipmap.bluetooth_lock_a7_w;
+            }
+            else {
                 return R.mipmap.bluetooth_lock_default;
             }
         } else {

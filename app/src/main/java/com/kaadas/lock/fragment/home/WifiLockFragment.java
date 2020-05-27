@@ -1,5 +1,6 @@
 package com.kaadas.lock.fragment.home;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -8,9 +9,11 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -20,6 +23,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
+import com.kaadas.lock.activity.device.gatewaylock.GatewayDeviceInformationActivity;
 import com.kaadas.lock.activity.device.wifilock.WifiLockRecordActivity;
 import com.kaadas.lock.adapter.WifiLockOperationGroupRecordAdapter;
 import com.kaadas.lock.bean.WifiLockOperationRecordGroup;
@@ -30,6 +34,7 @@ import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
 import com.kaadas.lock.publiclibrary.bean.WifiLockOperationRecord;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.mqtt.eventbean.WifiLockOperationBean;
+import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
@@ -41,6 +46,8 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import android.app.AlertDialog;
 
 public class WifiLockFragment extends BaseFragment<IWifiLockView, WifiLockPresenter<IWifiLockView>>
         implements View.OnClickListener, IWifiLockView, View.OnLongClickListener {
@@ -212,6 +219,7 @@ public class WifiLockFragment extends BaseFragment<IWifiLockView, WifiLockPresen
         ivDeviceDynamic.setOnClickListener(this);
         tvMore.setOnClickListener(this);
         tvSynchronizedRecord.setOnClickListener(this);
+        ivBackGround.setOnClickListener(this);
 
     }
 
@@ -320,6 +328,23 @@ public class WifiLockFragment extends BaseFragment<IWifiLockView, WifiLockPresen
             case R.id.tv_synchronized_record:
                 mPresenter.getOperationRecord(wifiLockInfo.getWifiSN(), true);
                 mPresenter.getOpenCount(wifiLockInfo.getWifiSN());
+                break;
+            case R.id.iv_external_big:
+
+                TextView msg = new TextView(getActivity());
+                msg.setText("不可点击");
+                msg.setPadding(100, 80, 100, 80);
+                msg.setGravity(Gravity.CENTER);
+                msg.setTextSize(15);
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+                builder.setView(msg);
+
+                builder.show();
+
+
+
                 break;
         }
     }

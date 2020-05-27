@@ -44,8 +44,8 @@ public class WifiLockAuthDeviceInfoActivity extends BaseActivity<IWifiLockMoreVi
     TextView tvSerialNumber;
     @BindView(R.id.tv_lock_firmware_version)
     TextView tvLockFirmwareVersion;
-    @BindView(R.id.tv_lock_software_version)
-    TextView tvLockSoftwareVersion;
+//    @BindView(R.id.tv_lock_software_version)
+//    TextView tvLockSoftwareVersion;
     @BindView(R.id.wifi_version)
     TextView wifiVersion;
     private WifiLockInfo wifiLockInfo;
@@ -71,7 +71,7 @@ public class WifiLockAuthDeviceInfoActivity extends BaseActivity<IWifiLockMoreVi
 
             tvSerialNumber.setText(TextUtils.isEmpty(wifiLockInfo.getWifiSN()) ? "" : wifiLockInfo.getWifiSN());
             tvLockFirmwareVersion.setText(TextUtils.isEmpty(wifiLockInfo.getLockFirmwareVersion()) ? "" : wifiLockInfo.getLockFirmwareVersion());
-            tvLockSoftwareVersion.setText(TextUtils.isEmpty(wifiLockInfo.getLockSoftwareVersion()) ? "" : wifiLockInfo.getLockSoftwareVersion());
+//            tvLockSoftwareVersion.setText(TextUtils.isEmpty(wifiLockInfo.getLockSoftwareVersion()) ? "" : wifiLockInfo.getLockSoftwareVersion());
             wifiVersion.setText(TextUtils.isEmpty(wifiLockInfo.getWifiVersion()) ? "" : wifiLockInfo.getWifiVersion());
             tvDeviceName.setText(TextUtils.isEmpty(wifiName) ? "" : wifiName);
 

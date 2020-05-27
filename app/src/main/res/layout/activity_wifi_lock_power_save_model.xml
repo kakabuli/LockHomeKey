@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#f2f2f2"
+    tools:context="com.kaadas.lock.activity.device.wifilock.WifiLockPowerSaveActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_40"
+        android:background="#F8F8F8">
+
+        <ImageView
+            android:id="@+id/back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:paddingLeft="@dimen/dp_16"
+            android:paddingTop="@dimen/dp_5"
+            android:paddingRight="@dimen/dp_16"
+            android:paddingBottom="@dimen/dp_5"
+            android:src="@mipmap/back_gray" />
+
+        <TextView
+            android:id="@+id/head_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/power_Save_mode"
+            android:textColor="#000000"
+            android:textSize="@dimen/sp_17"
+            android:textStyle="bold" />
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:paddingLeft="12dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/dp_10"
+        android:layout_marginTop="@dimen/dp_20"
+        android:background="@drawable/background_white_10dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:textSize="15sp"
+            android:layout_marginTop="@dimen/dp_20"
+            android:drawablePadding="@dimen/dp_10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="门锁如何开启节能模式"
+            android:textStyle="bold"
+            android:textColor="#606060" />
+
+        <TextView
+            android:textSize="14sp"
+            android:layout_marginTop="@dimen/dp_20"
+            android:drawablePadding="@dimen/dp_10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=" ① 按键区输入“*”两次"
+            android:textColor="#606060" />
+
+        <TextView
+            android:textSize="14sp"
+            android:layout_marginTop="@dimen/dp_10"
+            android:drawablePadding="@dimen/dp_10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=" ② 输入已修改的管理密码“********”"
+            android:textColor="#606060" />
+
+        <TextView
+            android:textSize="14sp"
+            android:layout_marginTop="@dimen/dp_10"
+            android:drawablePadding="@dimen/dp_10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=" ③ 按“#”确认，"
+            android:textColor="#606060" />
+
+        <TextView
+            android:textSize="14sp"
+            android:layout_marginTop="@dimen/dp_10"
+            android:drawablePadding="@dimen/dp_10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=" ④ 语音播报"
+            android:textColor="#606060" />
+
+        <TextView
+            android:textSize="14sp"
+            android:layout_marginTop="@dimen/dp_10"
+            android:drawablePadding="@dimen/dp_10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="⑤ 根据语音提示,按“6”，在按“1”"
+            android:textColor="#606060" />
+
+        <TextView
+            android:textSize="14sp"
+            android:layout_marginTop="@dimen/dp_10"
+            android:drawablePadding="@dimen/dp_10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="⑥ 语音播报“设置成功”"
+            android:textColor="#606060" />
+
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:paddingLeft="12dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/dp_10"
+        android:layout_marginTop="@dimen/dp_20"
+        android:background="@drawable/background_white_10dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:textSize="15sp"
+            android:layout_marginTop="@dimen/dp_20"
+            android:drawablePadding="@dimen/dp_10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="门锁如何关闭节能模式"
+            android:textStyle="bold"
+            android:textColor="#606060" />
+
+        <TextView
+            android:textSize="14sp"
+            android:layout_marginTop="@dimen/dp_20"
+            android:drawablePadding="@dimen/dp_10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=" ① 按键区输入“*”两次 "
+            android:textColor="#606060" />
+        activity_wifi_lock_power_save_model
+        <TextView
+            android:textSize="14sp"
+            android:layout_marginTop="@dimen/dp_10"
+            android:drawablePadding="@dimen/dp_10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="② 输入已修改的管理密码“********” "
+            android:textColor="#606060" />
+
+        <TextView
+            android:textSize="14sp"
+            android:layout_marginTop="@dimen/dp_10"
+            android:drawablePadding="@dimen/dp_10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="③ 按“#”确认， "
+            android:textColor="#606060" />
+
+        <TextView
+            android:textSize="14sp"
+            android:layout_marginTop="@dimen/dp_10"
+            android:drawablePadding="@dimen/dp_10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="④ 语音播报"
+            android:textColor="#606060" />
+
+        <TextView
+            android:textSize="14sp"
+            android:layout_marginTop="@dimen/dp_10"
+            android:drawablePadding="@dimen/dp_10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="⑤ 根据语音提示,按“6”，在按“2”"
+            android:textColor="#606060" />
+
+        <TextView
+            android:textSize="14sp"
+            android:layout_marginTop="@dimen/dp_10"
+            android:drawablePadding="@dimen/dp_10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="⑥ 语音播报“设置成功”"
+            android:textColor="#606060" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:paddingLeft="12dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/dp_10"
+        android:layout_marginTop="@dimen/dp_20"
+        android:background="@drawable/background_white_10dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:textSize="15sp"
+            android:layout_marginTop="@dimen/dp_20"
+            android:drawablePadding="@dimen/dp_10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="注：节能模式说明"
+            android:textStyle="bold"
+            android:textColor="#606060" />
+
+        <TextView
+            android:textSize="14sp"
+            android:layout_marginTop="@dimen/dp_20"
+            android:drawablePadding="@dimen/dp_10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="① 节能模式开启后，关闭人脸识别功能；节能模式关闭后，开启人脸识别功能；"
+            android:textColor="#606060" />
+        activity_wifi_lock_power_save_model
+        <TextView
+            android:textSize="14sp"
+            android:layout_marginTop="@dimen/dp_10"
+            android:drawablePadding="@dimen/dp_10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="② 当电池低于预调的电量时，为保障您更持续长久的智能进出体验，智能锁会把人脸识别功能关闭，进入节能模式，用户的指纹、密码、卡等开启方式可正常使用。若需要重新开启人脸识别功能，只需要重新更换充满的电池即可恢复。"
+            android:textColor="#606060" />
+
+
+    </LinearLayout>
+
+
+</LinearLayout>
