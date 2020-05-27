@@ -362,7 +362,6 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
         }
     }
 
-
     public boolean isOnBackground() {
         return isOnBackground;
     }

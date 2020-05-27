@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
     android:orientation="vertical"
     android:background="#f2f2f2"
+    android:scrollbarStyle="outsideInset"
+    android:scrollbars="vertical"
     tools:context="com.kaadas.lock.activity.device.wifilock.WifiLockPowerSaveActivity">
+
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -35,7 +39,19 @@
             android:textStyle="bold" />
 
     </RelativeLayout>
+    <ScrollView
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:scrollbars="vertical"
+    android:fadingEdge="vertical"
+    android:orientation="horizontal">
 
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical"
+        android:scrollbarStyle="outsideInset"
+        android:scrollbars="vertical">
     <LinearLayout
         android:paddingLeft="12dp"
         android:layout_width="match_parent"
@@ -140,7 +156,6 @@
             android:layout_height="wrap_content"
             android:text=" ① 按键区输入“*”两次 "
             android:textColor="#606060" />
-        activity_wifi_lock_power_save_model
         <TextView
             android:textSize="14sp"
             android:layout_marginTop="@dimen/dp_10"
@@ -188,6 +203,7 @@
 
     </LinearLayout>
 
+
     <LinearLayout
         android:paddingLeft="12dp"
         android:layout_width="match_parent"
@@ -215,7 +231,6 @@
             android:layout_height="wrap_content"
             android:text="① 节能模式开启后，关闭人脸识别功能；节能模式关闭后，开启人脸识别功能；"
             android:textColor="#606060" />
-        activity_wifi_lock_power_save_model
         <TextView
             android:textSize="14sp"
             android:layout_marginTop="@dimen/dp_10"
@@ -227,6 +242,9 @@
 
 
     </LinearLayout>
+    </LinearLayout>
 
+</ScrollView>
 
 </LinearLayout>
+

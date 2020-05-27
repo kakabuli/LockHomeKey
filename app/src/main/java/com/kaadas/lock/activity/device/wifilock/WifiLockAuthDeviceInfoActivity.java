@@ -65,7 +65,7 @@ public class WifiLockAuthDeviceInfoActivity extends BaseActivity<IWifiLockMoreVi
             sWifiVersion = wifiLockInfo.getWifiVersion();
             sLockSoftwareVersion = wifiLockInfo.getLockSoftwareVersion();
             String wifiName = wifiLockInfo.getWifiName();
-
+            String lockNickname = wifiLockInfo.getLockNickname();
             String productModel = wifiLockInfo.getProductModel();
             tvDeviceModel.setText(TextUtils.isEmpty(productModel) ? "" : productModel.contentEquals("K13") ? getString(R.string.lan_bo_ji_ni) : productModel);
 
@@ -73,7 +73,7 @@ public class WifiLockAuthDeviceInfoActivity extends BaseActivity<IWifiLockMoreVi
             tvLockFirmwareVersion.setText(TextUtils.isEmpty(wifiLockInfo.getLockFirmwareVersion()) ? "" : wifiLockInfo.getLockFirmwareVersion());
 //            tvLockSoftwareVersion.setText(TextUtils.isEmpty(wifiLockInfo.getLockSoftwareVersion()) ? "" : wifiLockInfo.getLockSoftwareVersion());
             wifiVersion.setText(TextUtils.isEmpty(wifiLockInfo.getWifiVersion()) ? "" : wifiLockInfo.getWifiVersion());
-            tvDeviceName.setText(TextUtils.isEmpty(wifiName) ? "" : wifiName);
+            tvDeviceName.setText(TextUtils.isEmpty(lockNickname) ? "" : lockNickname);
 
             int pushSwitch = wifiLockInfo.getPushSwitch();
             if (pushSwitch == 2) {
