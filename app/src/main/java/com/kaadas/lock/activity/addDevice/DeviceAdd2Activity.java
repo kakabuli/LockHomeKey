@@ -95,7 +95,6 @@ public class DeviceAdd2Activity extends BaseActivity<DeviceZigBeeDetailView, Dev
         }
     }
 
-
     @OnClick({R.id.back, R.id.scan, R.id.ble_lock, R.id.wifi_lock, R.id.zigbee_lock, R.id.cat_eye, R.id.rg4300, R.id.gw6032, R.id.gw6010, R.id.single_switch, R.id.double_switch})
     public void onViewClicked(View view) {
         switch (view.getId()) {
@@ -209,12 +208,25 @@ public class DeviceAdd2Activity extends BaseActivity<DeviceZigBeeDetailView, Dev
                         LogUtils.e("设备SN是   " + deviceSN);
                         startActivity(scanSuccessIntent);
                         finish();
-                    } else if ( (result.contains("_WiFi_1")||result.contains("_WiFi_master"))){  //老的
-                        startActivity(new Intent(this,WifiLockAPAddFirstActivity.class));
-                    } else if ( (result.contains("_WiFi_2")||result.contains("_WiFi_fast"))){  //新的
-                        startActivity(new Intent(this,WifiLockAddNewFirstActivity.class));
+//                    } else if ( (result.contains("_WiFi_1")||result.contains("_WiFi_master"))){  //老的4-1配网
+//                        startActivity(new Intent(this,WifiLockAPAddFirstActivity.class));
+//                    } else if ( (result.contains("_WiFi_2")||result.contains("_WiFi_fast"))){  //新的快速配网
+//                        startActivity(new Intent(this,WifiLockAddNewFirstActivity.class));
+                    } else if ( (result.contains("_WiFi_"))){  //4-30新的配网流程
+                        Intent wifiIntent = new Intent(this, WifiLockAddNewFirstActivity.class);
+                        String wifiModelType = "WiFi";
+                        wifiIntent.putExtra("wifiModelType", wifiModelType);
+                        startActivity(wifiIntent);
                     } else if ( (result.contains("http://qr01.cn/EYopdB"))){  //已生产的错误的X1二维码
-                        startActivity(new Intent(this,WifiLockAPAddFirstActivity.class));
+                        Intent wifiIntent = new Intent(this, WifiLockAddNewFirstActivity.class);
+                        String wifiModelType = "WiFi";
+                        wifiIntent.putExtra("wifiModelType", wifiModelType);
+                        startActivity(wifiIntent);
+                    }else if ( (result.contains("_WiFi&BLE_"))){  //5-11WiFi&BLE，蓝牙Wi-Fi模组配网
+                        Intent wifiIntent = new Intent(this, WifiLockAddNewFirstActivity.class);
+                        String wifiModelType = "WiFi&BLE";
+                        wifiIntent.putExtra("wifiModelType", wifiModelType);
+                        startActivity(wifiIntent);
                     }
                     else {
                         Intent scanSuccessIntent = new Intent(DeviceAdd2Activity.this, AddDeviceZigbeeLockNewScanFailActivity.class);

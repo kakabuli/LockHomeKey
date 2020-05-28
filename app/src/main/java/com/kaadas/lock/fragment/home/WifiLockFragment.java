@@ -343,8 +343,6 @@ public class WifiLockFragment extends BaseFragment<IWifiLockView, WifiLockPresen
 
                 builder.show();
 
-
-
                 break;
         }
     }

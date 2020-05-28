@@ -74,14 +74,14 @@
             android:textSize="@dimen/sp_12" />
 
         <TextView
-            android:layout_marginRight="@dimen/dp_40"
+            android:layout_marginRight="@dimen/dp_20"
             android:layout_marginLeft="@dimen/dp_20"
             android:id="@+id/tv_right"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="10"
             android:gravity="center_vertical"
-            android:lines="2"
+            android:lines="3"
             android:text="更改编号01密码为妈妈"
             android:textColor="#999999"
             android:textSize="@dimen/sp_12" />

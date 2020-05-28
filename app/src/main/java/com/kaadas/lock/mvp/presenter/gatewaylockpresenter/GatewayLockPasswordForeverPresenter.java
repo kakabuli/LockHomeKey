@@ -56,7 +56,6 @@ public class GatewayLockPasswordForeverPresenter<T> extends BasePresenter<Gatewa
                                     mViewRef.get().addLockPwdFail(pwdFuncBean.getReturnData().getStatus());
                                 }
                             }
-
                         }
                     }, new Consumer<Throwable>() {
                         @Override

@@ -37,6 +37,8 @@ public class WifiLockAddNewFirstActivity extends BaseAddToApplicationActivity {
     @BindView(R.id.tv_reconnect)
     TextView tvReconnect;
 
+    private String wifiModelType;
+
     private Disposable permissionDisposable;
     final RxPermissions rxPermissions = new RxPermissions(this);
 
@@ -44,6 +46,8 @@ public class WifiLockAddNewFirstActivity extends BaseAddToApplicationActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wifi_lock_add_new_first);
+        Intent intent = getIntent();
+        wifiModelType = intent.getStringExtra("wifiModelType");
         ButterKnife.bind(this);
     }
 
@@ -81,7 +85,11 @@ public class WifiLockAddNewFirstActivity extends BaseAddToApplicationActivity {
                     Toast.makeText(this, getString(R.string.locak_no_open_please_open_local), Toast.LENGTH_SHORT).show();
                     return;
                 }
-                startActivity(new Intent(this,WifiLockAddNewSecondActivity.class));
+//                startActivity(new Intent(this,WifiLockAddNewSecondActivity.class));
+                Intent wifiIntent = new Intent(this, WifiLockAddNewSecondActivity.class);
+//                String wifiModelType = wifiModelType;
+                wifiIntent.putExtra("wifiModelType", wifiModelType);
+                startActivity(wifiIntent);
                 break;
             case R.id.tv_reconnect:
                 startActivity(new Intent(this,WifiLockOldUserFirstActivity.class));
