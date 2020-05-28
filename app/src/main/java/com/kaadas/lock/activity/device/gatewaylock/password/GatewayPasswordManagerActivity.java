@@ -127,6 +127,18 @@ public class GatewayPasswordManagerActivity extends BaseActivity<IGatewayLockPas
         //从数据库获取数据
         List<GatewayPasswordPlanBean> gatewayPasswordPlanBeans = daoManager.queryAll(deviceId, MyApplication.getInstance().getUid(), gatewayId);
         mList.clear();
+
+        List<GatewayPasswordPlanBean> temp =new ArrayList<>();
+        temp.addAll(gatewayPasswordPlanBeans);
+
+        for (int i=0;i<temp.size();i++){
+            if(temp.get(i).getPasswordNumber()==9){
+                GatewayPasswordPlanBean gatewayPasswordPlanBean= temp.get(i);
+               gatewayPasswordPlanBeans.remove(gatewayPasswordPlanBean);
+            }
+        }
+
+
         mList.addAll(gatewayPasswordPlanBeans);
         if (gatewayPasswordPlanBeans.size() > 0) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
