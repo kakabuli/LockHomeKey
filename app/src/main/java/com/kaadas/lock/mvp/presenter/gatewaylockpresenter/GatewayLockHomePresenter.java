@@ -30,7 +30,7 @@ import com.kaadas.lock.utils.greenDao.bean.GatewayLockAlarmEventDao;
 import com.kaadas.lock.utils.networkListenerutil.NetWorkChangReceiver;
 
 import org.json.JSONObject;
-import org.linphone.mediastream.Log;
+
 
 import java.util.concurrent.TimeUnit;
 
