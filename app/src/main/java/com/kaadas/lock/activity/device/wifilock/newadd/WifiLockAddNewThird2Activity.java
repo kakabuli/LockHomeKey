@@ -30,11 +30,15 @@ public class WifiLockAddNewThird2Activity extends AppCompatActivity {
     @BindView(R.id.iv_anim)
     ImageView ivAnim;
 
+    private String wifiModelType;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wifi_lock_add_new_third2);
         ButterKnife.bind(this);
+        Intent intent = getIntent();
+        wifiModelType = intent.getStringExtra("wifiModelType");
         //通过设置android:background时，得到AnimationDrawable 用如下方法
         final AnimationDrawable animationDrawable = (AnimationDrawable) ivAnim.getBackground();
         animationDrawable.start();
@@ -50,7 +54,10 @@ public class WifiLockAddNewThird2Activity extends AppCompatActivity {
                 startActivity(new Intent(this, WifiLockHelpActivity.class));
                 break;
             case R.id.already_modify:
-                startActivity(new Intent(this, WifiLockAddNewFifthActivity.class));
+//                startActivity(new Intent(this, WifiLockAddNewFifthActivity.class));
+                Intent wifiIntent = new Intent(this, WifiLockAddNewFifthActivity.class);
+                wifiIntent.putExtra("wifiModelType", wifiModelType);
+                startActivity(wifiIntent);
                 break;
         }
     }

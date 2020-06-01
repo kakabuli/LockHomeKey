@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.device.wifilock.add.WifiLockHelpActivity;
+import com.kaadas.lock.utils.LogUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -30,11 +31,16 @@ public class WifiLockAddNewfourthActivity extends AppCompatActivity {
     @BindView(R.id.button_next)
     TextView buttonNext;
 
+    private String wifiModelType;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wifi_lock_add_new_fourth);
         ButterKnife.bind(this);
+        Intent intent = getIntent();
+        wifiModelType = intent.getStringExtra("wifiModelType");
+
         //通过设置android:background时，得到AnimationDrawable 用如下方法
         final AnimationDrawable animationDrawable = (AnimationDrawable) ivAnim.getBackground();
         animationDrawable.start();
@@ -50,7 +56,10 @@ public class WifiLockAddNewfourthActivity extends AppCompatActivity {
                 startActivity(new Intent(this,WifiLockHelpActivity.class));
                 break;
             case R.id.button_next:
-                startActivity(new Intent(this,WifiLockAddNewFifthActivity.class));
+//                startActivity(new Intent(this,WifiLockAddNewFifthActivity.class));
+                Intent wifiIntent = new Intent(this, WifiLockAddNewFifthActivity.class);
+                wifiIntent.putExtra("wifiModelType", wifiModelType);
+                startActivity(wifiIntent);
                 break;
         }
     }

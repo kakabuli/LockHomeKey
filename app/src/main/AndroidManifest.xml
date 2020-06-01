@@ -1111,6 +1111,10 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".activity.device.wifilock.newadd.WifiLockAddNewScanBLEActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".activity.device.wifilock.newadd.WifiLockAddNewNotActivateActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
@@ -1120,6 +1124,10 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.device.wifilock.newadd.WifiLockAddNewScanFailedActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.wifilock.newadd.WifiLockAddNewWiFiScanBLEFailedActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity

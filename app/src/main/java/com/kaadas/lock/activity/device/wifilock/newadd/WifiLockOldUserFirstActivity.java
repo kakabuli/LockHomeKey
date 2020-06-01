@@ -30,10 +30,14 @@ public class WifiLockOldUserFirstActivity extends AppCompatActivity {
     @BindView(R.id.button_next)
     TextView buttonNext;
 
+    private String wifiModelType;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wifi_lock_old_user_first);
+        Intent intent = getIntent();
+        wifiModelType = intent.getStringExtra("wifiModelType");
         ButterKnife.bind(this);
         //通过设置android:background时，得到AnimationDrawable 用如下方法
         final AnimationDrawable animationDrawable = (AnimationDrawable) ivAnim.getBackground();
@@ -50,7 +54,10 @@ public class WifiLockOldUserFirstActivity extends AppCompatActivity {
                 startActivity(new Intent(this,WifiLockHelpActivity.class));
                 break;
             case R.id.button_next:
-                startActivity(new Intent(this,WifiLockOldUserSecondActivity.class));
+//                startActivity(new Intent(this,WifiLockOldUserSecondActivity.class));
+                Intent wifiIntent = new Intent(this, WifiLockOldUserSecondActivity.class);
+                wifiIntent.putExtra("wifiModelType", wifiModelType);
+                startActivity(wifiIntent);
                 break;
         }
     }

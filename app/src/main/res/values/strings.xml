@@ -1328,8 +1328,7 @@
     <string name="checked_off_line">您的门锁于检测已离线</string>
     <string name="wifi_lock_alarm_lock_5min">您的门锁错误验证多次，门锁系统锁定100秒</string>
     <string name="wifi_lock_alarm_hijack">有人使用劫持密码开启门锁，赶紧联系或报警</string>
-    <string name="wifi_lock_alarm_lower_power_close_face">您的智能门锁面容识别已关闭，如需重新开启面容
-识别，请更换电池</string>
+    <string name="wifi_lock_alarm_lower_power_close_face">您的智能门锁面容识别已关闭，如需重新开启面容识别，请更换电池</string>
     <string name="wifi_lock_alarm_many_failed">您的智能锁已多次验证开门失败，请回家或联系保安查看</string>
     <string name="wifi_lock_alarm_lock_broken">已监测到您的门锁被撬，请联系家人或小区保安</string>
     <string name="wifi_lock_alarm_opens">门锁正在被机械钥匙开启，请回家或联系保安查看</string>
@@ -1568,9 +1567,11 @@
     <string name="wifi_lock_add_new_third_notice2">① 按键区输入“*”两次\n② 输入管理密码：“12345678”\n③ 按“#”确认，“已进入管理模式”\n④ 语音播报：“请修改管理密码”\n⑤输入新设定的管理密码，按“＃”确认\n⑥再输入新设定的管理密码，按“＃”完成修改</string>
     <string name="widi_lock_add_new_notice1">用手触碰按键区，唤醒门锁\n确保门锁数字键盘灯亮</string>
     <string name="device_scanning">设备搜索中...</string>
+    <string name="device_scan_fail">设备搜索失败</string>
     <string name="scan_failed">搜索不到要添加的设备</string>
     <string name="reconfirm">再次确认</string>
     <string name="scan_failed_notice3">① 后面板Wi-Fi模块插紧\n② 确定门锁已激活\n③ 门锁是否已联网\n④ 保持门锁唤醒状态</string>
+    <string name="scan_failed_notice4">① 后面板Wi-Fi模块插紧\n② 确定门锁已激活,门锁是否已联网\n③ 保持门锁唤醒状态\n④ 确保手机蓝牙处于开启状态\n⑤ 确保手机配对时处于门锁周边</string>
     <string name="rescan_lock">重新搜索门锁</string>
     <string name="wifi_lock_add_new_connect_notice1">请将手机和设备尽量靠近路由器</string>
     <string name="wifi_lock_add_new_input_password_notice1">输入锁管理员密码</string>

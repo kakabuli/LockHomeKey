@@ -91,7 +91,6 @@ public class WiFiLockAddShareUserActivity extends BaseActivity<IWiFiLockShareAdd
                         return;
                     }
 
-
                     if (StringUtil.isNumeric(phone)) {
                         if (!PhoneUtil.isMobileNO(phone)) {
                             // 账户密码错误 请输入正确验证码 调用这个方法传入对应的内容就可以

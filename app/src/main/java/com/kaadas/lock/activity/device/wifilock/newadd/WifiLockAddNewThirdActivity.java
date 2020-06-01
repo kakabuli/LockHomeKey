@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.device.wifilock.add.WifiLockHelpActivity;
 import com.kaadas.lock.activity.device.wifilock.add.WifiLockInputAdminPasswordActivity;
+import com.kaadas.lock.utils.LogUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -33,11 +34,15 @@ public class WifiLockAddNewThirdActivity extends AppCompatActivity {
     @BindView(R.id.not_modify)
     TextView notModify;
 
+    private String wifiModelType;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wifi_lock_add_new_third);
         ButterKnife.bind(this);
+        Intent intent = getIntent();
+        wifiModelType = intent.getStringExtra("wifiModelType");
 
         //通过设置android:background时，得到AnimationDrawable 用如下方法
         final AnimationDrawable animationDrawable = (AnimationDrawable) ivAnim.getBackground();
@@ -55,10 +60,16 @@ public class WifiLockAddNewThirdActivity extends AppCompatActivity {
                 startActivity(new Intent(this,WifiLockHelpActivity.class));
                 break;
             case R.id.already_modify:
-                startActivity(new Intent(this,WifiLockAddNewfourthActivity.class));
+//                startActivity(new Intent(this,WifiLockAddNewfourthActivity.class));
+                Intent wifiIntent = new Intent(this, WifiLockAddNewfourthActivity.class);
+                wifiIntent.putExtra("wifiModelType", wifiModelType);
+                startActivity(wifiIntent);
                 break;
             case R.id.not_modify:
-                startActivity(new Intent(this,WifiLockAddNewThird2Activity.class));
+//                startActivity(new Intent(this,WifiLockAddNewThird2Activity.class));
+                Intent UnModifyWifiIntent = new Intent(this, WifiLockAddNewThird2Activity.class);
+                UnModifyWifiIntent.putExtra("wifiModelType", wifiModelType);
+                startActivity(UnModifyWifiIntent);
                 break;
         }
     }

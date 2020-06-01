@@ -20,6 +20,7 @@ import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.Rsa;
 import com.kaadas.lock.utils.SPUtils;
+import com.kaadas.lock.utils.ToastUtil;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -40,10 +41,14 @@ public class WifiLockOldUserSecondActivity extends AppCompatActivity {
     @BindView(R.id.button_next)
     TextView buttonNext;
 
+    private String wifiModelType;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wifi_lock_old_user_second);
+        Intent intent = getIntent();
+        wifiModelType = intent.getStringExtra("wifiModelType");
         ButterKnife.bind(this);
         //通过设置android:background时，得到AnimationDrawable 用如下方法
         final AnimationDrawable animationDrawable = (AnimationDrawable) ivAnim.getBackground();
@@ -62,7 +67,19 @@ public class WifiLockOldUserSecondActivity extends AppCompatActivity {
             case R.id.button_next:
                 //在连接前   保存密码
                 saveWifiName();
-                startActivity(new Intent(this,WifiLockAddNewScanActivity.class));
+//                startActivity(new Intent(this,WifiLockAddNewScanActivity.class));
+                LogUtils.e("--Kaadas--wifiModelType==：" + wifiModelType);
+
+                if(wifiModelType.equals("WiFi")){
+                    startActivity(new Intent(this,WifiLockAddNewScanActivity.class));
+                }
+                else if(wifiModelType.equals("WiFi&BLE")){
+                    //新流程
+                    startActivity(new Intent(this,WifiLockAddNewScanBLEActivity.class));
+                }
+                else {
+                    ToastUtil.getInstance().showShort("未知模组类型");
+                }
                 break;
         }
     }

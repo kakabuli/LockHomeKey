@@ -14,6 +14,7 @@ import com.kaadas.lock.R;
 import com.kaadas.lock.activity.device.wifilock.add.WifiLockHelpActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 import com.kaadas.lock.utils.GpsUtil;
+import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.WifiUtils;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
@@ -48,6 +49,7 @@ public class WifiLockAddNewFirstActivity extends BaseAddToApplicationActivity {
         setContentView(R.layout.activity_wifi_lock_add_new_first);
         Intent intent = getIntent();
         wifiModelType = intent.getStringExtra("wifiModelType");
+
         ButterKnife.bind(this);
     }
 
@@ -87,12 +89,14 @@ public class WifiLockAddNewFirstActivity extends BaseAddToApplicationActivity {
                 }
 //                startActivity(new Intent(this,WifiLockAddNewSecondActivity.class));
                 Intent wifiIntent = new Intent(this, WifiLockAddNewSecondActivity.class);
-//                String wifiModelType = wifiModelType;
                 wifiIntent.putExtra("wifiModelType", wifiModelType);
                 startActivity(wifiIntent);
                 break;
             case R.id.tv_reconnect:
-                startActivity(new Intent(this,WifiLockOldUserFirstActivity.class));
+//                startActivity(new Intent(this,WifiLockOldUserFirstActivity.class));
+                Intent reconnectWifiIntent = new Intent(this, WifiLockOldUserFirstActivity.class);
+                reconnectWifiIntent.putExtra("wifiModelType", wifiModelType);
+                startActivity(reconnectWifiIntent);
                 break;
         }
     }

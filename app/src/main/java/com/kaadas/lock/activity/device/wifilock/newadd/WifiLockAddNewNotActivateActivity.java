@@ -39,11 +39,15 @@ public class WifiLockAddNewNotActivateActivity extends BaseAddToApplicationActiv
     @BindView(R.id.lock_activated)
     TextView lockActivated;
 
+    private String wifiModelType;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wifi_lock_add_new_not_activate);
         ButterKnife.bind(this);
+        Intent intent = getIntent();
+        wifiModelType = intent.getStringExtra("wifiModelType");
         ivWeiXinCode.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
@@ -107,7 +111,10 @@ public class WifiLockAddNewNotActivateActivity extends BaseAddToApplicationActiv
                 startActivity(new Intent(WifiLockAddNewNotActivateActivity.this,WifiLockHelpActivity.class));
                 break;
             case R.id.lock_activated:
-                startActivity(new Intent(this,WifiLockAddNewThirdActivity.class));
+//                startActivity(new Intent(this,WifiLockAddNewThirdActivity.class));
+                Intent wifiIntent = new Intent(this, WifiLockAddNewThirdActivity.class);
+                wifiIntent.putExtra("wifiModelType", wifiModelType);
+                startActivity(wifiIntent);
                 break;
         }
     }

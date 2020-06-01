@@ -82,7 +82,7 @@ public class WiFiLockShareUserDetailActivity extends BaseActivity<IWiFiLockShare
         tvTime.setText(time);
 
         adminNickname = (String) SPUtils.get(SPUtils.USERNAME, "");
-        if (!TextUtils.isEmpty(adminNickname)) {
+        if (TextUtils.isEmpty(adminNickname)) {
             adminNickname = (String) SPUtils.get(SPUtils.PHONEN, "");
         }
     }

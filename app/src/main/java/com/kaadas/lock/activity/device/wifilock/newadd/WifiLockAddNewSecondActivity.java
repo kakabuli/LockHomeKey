@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.device.wifilock.add.WifiLockHelpActivity;
+import com.kaadas.lock.utils.LogUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -32,12 +33,15 @@ public class WifiLockAddNewSecondActivity extends AppCompatActivity {
     @BindView(R.id.lock_not_activated)
     TextView lockNotActivated;
 
+    private String wifiModelType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wifi_lock_add_new_second);
         ButterKnife.bind(this);
+        Intent intent = getIntent();
+        wifiModelType = intent.getStringExtra("wifiModelType");
 
         //通过设置android:background时，得到AnimationDrawable 用如下方法
         final AnimationDrawable animationDrawable = (AnimationDrawable) ivAnim.getBackground();
@@ -54,10 +58,16 @@ public class WifiLockAddNewSecondActivity extends AppCompatActivity {
                 startActivity(new Intent(this,WifiLockHelpActivity.class));
                 break;
             case R.id.lock_activated:
-                startActivity(new Intent(this,WifiLockAddNewThirdActivity.class));
+//                startActivity(new Intent(this,WifiLockAddNewThirdActivity.class));
+                Intent wifiIntent = new Intent(this, WifiLockAddNewThirdActivity.class);
+                wifiIntent.putExtra("wifiModelType", wifiModelType);
+                startActivity(wifiIntent);
                 break;
             case R.id.lock_not_activated:
-                startActivity(new Intent(this,WifiLockAddNewNotActivateActivity.class));
+//                startActivity(new Intent(this,WifiLockAddNewNotActivateActivity.class));
+                Intent UnActivatedWifiIntent = new Intent(this, WifiLockAddNewNotActivateActivity.class);
+                UnActivatedWifiIntent.putExtra("wifiModelType", wifiModelType);
+                startActivity(UnActivatedWifiIntent);
                 break;
         }
     }

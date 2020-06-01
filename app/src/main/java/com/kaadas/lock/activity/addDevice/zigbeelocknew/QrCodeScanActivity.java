@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.ScanHttpDialogActivity;
+import com.kaadas.lock.activity.addDevice.DeviceAdd2Activity;
 import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
@@ -151,18 +152,17 @@ public class QrCodeScanActivity extends BaseAddToApplicationActivity implements 
         this.result = result;
         //首页过来的
         Intent intent;
-        if (scan == 1 && !TextUtils.isEmpty(result) && !result.contains("http://qr01.cn/EYopdB")) {
-            intent = new Intent(this, ScanHttpDialogActivity.class);
-            intent.putExtra(KeyConstants.QR_URL, result);
-            startActivityForResult(intent, REQUEST_CODE);
-            return;
+        if (scan == 1 && TextUtils.isEmpty(result)) {
+
+            Intent scanSuccessIntent = new Intent(this, AddDeviceZigbeeLockNewScanFailActivity.class);
+            startActivity(scanSuccessIntent);
+            finish();
         }
 
         intent = new Intent();
         intent.putExtra(Intents.Scan.RESULT, result);
         setResult(RESULT_OK, intent);
         finish();
-        LogUtils.e("result:" + result);
     }
 
     @Override
