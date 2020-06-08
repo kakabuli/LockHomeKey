@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#FFEEEEEE"
+    tools:context="com.kaadas.lock.activity.addDevice.singleswitch.SwipchSeetingArgus">
+
+    <include layout="@layout/swipch_head"></include>
+
+    <RelativeLayout
+        android:id="@+id/swipch_link_rl_one"
+        android:layout_marginTop="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/white"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/unit_type"
+            android:layout_marginLeft="30dp"
+            android:layout_centerVertical="true"
+            android:textColor="#FF333333"
+            android:layout_alignParentLeft="true">
+
+        </TextView>
+
+        <TextView
+            android:id="@+id/tv_start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="20dp"
+            android:textColor="#BEBEBE"
+            android:text="SU9879"
+            android:layout_alignParentRight="true"
+            ></TextView>
+
+
+    </RelativeLayout>
+
+
+
+    <RelativeLayout
+        android:id="@+id/swipch_link_btn_one_rl"
+        android:layout_marginTop="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/white"
+        android:clickable="true"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/swipch_setting_btn1"
+            android:layout_marginLeft="30dp"
+            android:layout_centerVertical="true"
+            android:textColor="#FF333333"
+            android:layout_alignParentLeft="true">
+
+        </TextView>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@id/swipch_link_setting_btn1"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="15dp"
+            android:text="@string/swipch_setting_pluease_input_name"
+            android:textColor="#BEBEBE"
+            ></TextView>
+
+        <ImageView
+            android:id="@+id/swipch_link_setting_btn1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@mipmap/add_wifi_lock_right"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="20dp"
+            ></ImageView>
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/swipch_link_btn_two_rl"
+        android:layout_marginTop="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/white"
+        android:clickable="true"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/swipch_setting_btn2"
+            android:layout_marginLeft="30dp"
+            android:layout_centerVertical="true"
+            android:textColor="#FF333333"
+            android:layout_alignParentLeft="true">
+
+        </TextView>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@id/swipch_link_setting_btn2"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="15dp"
+            android:text="@string/swipch_setting_pluease_input_name"
+            android:textColor="#BEBEBE"
+            ></TextView>
+
+        <ImageView
+            android:id="@+id/swipch_link_setting_btn2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@mipmap/add_wifi_lock_right"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="20dp"
+            ></ImageView>
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:layout_marginTop="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/white"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/module_mark"
+            android:layout_marginLeft="30dp"
+            android:layout_centerVertical="true"
+            android:textColor="#FF333333"
+            android:layout_alignParentLeft="true">
+
+        </TextView>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="20dp"
+            android:textColor="#BEBEBE"
+            android:text="00 00 00 00 00 00"
+            android:layout_alignParentRight="true"
+            ></TextView>
+
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_marginTop="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/white"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/bind_time1"
+            android:layout_marginLeft="30dp"
+            android:layout_centerVertical="true"
+            android:textColor="#FF333333"
+            android:layout_alignParentLeft="true">
+
+        </TextView>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="20dp"
+            android:textColor="#BEBEBE"
+            android:text="2020/03/24"
+            android:layout_alignParentRight="true"
+            ></TextView>
+
+
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/swipch_setting_arugs_change"
+        android:layout_marginTop="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/white"
+        android:clickable="true"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/swipch_change_btn_open"
+            android:layout_marginLeft="30dp"
+            android:layout_centerVertical="true"
+            android:textColor="#FF333333"
+            android:layout_alignParentLeft="true">
+
+        </TextView>
+
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@mipmap/add_wifi_lock_right"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="15dp"
+            ></ImageView>
+    </RelativeLayout>
+
+</LinearLayout>

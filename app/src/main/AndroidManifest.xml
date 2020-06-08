@@ -2,22 +2,15 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.kaadas.lock">
-
     <!-- // 使用蓝牙设备的权限 -->
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-
-    <!-- To auto-complete the email text field in the login form with the user's emails -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- To auto-complete the email text field in the login form with the user's emails -->
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.READ_PROFILE" />
-    <uses-permission android:name="android.permission.READ_CONTACTS" />
-    <!-- MQTT -->
+    <uses-permission android:name="android.permission.READ_CONTACTS" /> <!-- MQTT -->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <!-- 微信分享 -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" /> <!-- 微信分享 -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.USE_FINGERPRINT" />
-
-    <!-- 震动权限 -->
+    <uses-permission android:name="android.permission.USE_FINGERPRINT" /> <!-- 震动权限 -->
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
@@ -31,31 +24,20 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission
         android:name="android.permission.READ_LOGS"
-        tools:ignore="ProtectedPermissions" />
-
-    <!-- iBeancon功能所需权限 -->
+        tools:ignore="ProtectedPermissions" /> <!-- iBeancon功能所需权限 -->
     <uses-permission android:name="android.permission.BLUETOOTH" />
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
-    <!-- 个推3.0电子围栏功能所需权限 -->
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" /> <!-- 个推3.0电子围栏功能所需权限 -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <!-- OPPO辅助 SDK -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> <!-- OPPO辅助 SDK -->
     <uses-permission android:name="com.coloros.mcs.permission.RECIEVE_MCS_MESSAGE" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
-    <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
-
-    <!-- 使用网络 -->
-    <uses-permission android:name="android.permission.INTERNET" />
-    <!-- 网络状态 -->
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <!-- wifi状态权限 -->
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <!-- 位置信息 -->
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <!-- 如果是安卓10.0，需要后台获取连接的wifi名称则添加进程获取位置信息权限 -->
-    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
-    <!-- android 10.0使用wifi api新添加的权限 -->
+    <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" /> <!-- 使用网络 -->
+    <uses-permission android:name="android.permission.INTERNET" /> <!-- 网络状态 -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- wifi状态权限 -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" /> <!-- 位置信息 -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> <!-- 如果是安卓10.0，需要后台获取连接的wifi名称则添加进程获取位置信息权限 -->
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" /> <!-- android 10.0使用wifi api新添加的权限 -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
@@ -66,6 +48,21 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="android:name,android:allowBackup">
+        <activity android:name=".activity.addDevice.singleswitch.SwipchSeetingArgus"></activity>
+        <activity android:name=".activity.addDevice.singleswitch.SwipchLinkSettingActivity" />
+        <activity android:name=".activity.addDevice.singleswitch.SwipLinkSucActivity" />
+        <activity android:name=".activity.addDevice.singleswitch.SwipLinkFailActivity" />
+        <activity android:name=".activity.addDevice.singleswitch.SwipLinkThreeActivity" />
+        <activity android:name=".activity.addDevice.singleswitch.SwipLinkTwoActivity" />
+        <activity android:name=".activity.addDevice.singleswitch.SwipchLinkOne" >
+
+        </activity>
+        <activity android:name=".activity.addDevice.singleswitch.SwipchLinkNo" >
+
+        </activity>
+        <activity android:name=".activity.addDevice.singleswitch.SwipchLinkActivity">
+
+        </activity>
         <activity
             android:name=".activity.MainActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
@@ -84,37 +81,35 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait">
 
-            <intent-filter>
-                <category android:name="android.intent.category.DEFAULT" />
+             <intent-filter>
+             <category android:name="android.intent.category.DEFAULT" />
 
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
+             <action android:name="android.intent.action.MAIN" />
 
-                <action android:name="android.intent.action.oppopush" />
-            </intent-filter>
-        </activity>
-        <!-- 登录 -->
+
+             <category android:name="android.intent.category.LAUNCHER" />
+
+
+             <action android:name="android.intent.action.oppopush" />
+             </intent-filter>
+        </activity> <!-- 登录 -->
         <activity
             android:name=".activity.login.LoginActivity"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait" />
-        <!-- 注册 -->
+            android:screenOrientation="portrait" /> <!-- 注册 -->
         <activity
             android:name=".activity.login.RegisterActivity"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait" />
-        <!-- 忘记密码 -->
+            android:screenOrientation="portrait" /> <!-- 忘记密码 -->
         <activity
             android:name=".activity.login.ForgetPasswordActivity"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait" />
-        <!-- 我的消息 -->
+            android:screenOrientation="portrait" /> <!-- 我的消息 -->
         <activity
             android:name=".activity.my.PersonalMessageActivity"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait" />
-        <!-- 消息详情 -->
+            android:screenOrientation="portrait" /> <!-- 消息详情 -->
         <activity
             android:name=".activity.my.PersonalMessageDetailActivity"
             android:launchMode="singleTop"
@@ -697,20 +692,16 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.cateye.RecordingPreviewActivity"
-            android:screenOrientation="portrait" />
-        <!-- &lt;!&ndash; 配置SDK核心服务 &ndash;&gt; -->
+            android:screenOrientation="portrait" /> <!-- &lt;!&ndash; 配置SDK核心服务 &ndash;&gt; -->
         <!-- &lt;!&ndash; process必须指定为":pushservice"，切勿随意更改 &ndash;&gt; -->
         <service
             android:name="com.kaidishi.lock.service.GeTuiPushService"
             android:exported="true"
             android:label="PushService"
-            android:process=":pushservice" />
-
-        <!-- 用户自定义服务继承自GTIntentService,作为SDK与APP桥梁服务,用来接收各种消息和命令回复 -->
+            android:process=":pushservice" /> <!-- 用户自定义服务继承自GTIntentService,作为SDK与APP桥梁服务,用来接收各种消息和命令回复 -->
         <service
             android:name="com.kaidishi.lock.service.GeTuiIntentService"
-            android:permission="android.permission.BIND_JOB_SERVICE" />
-        <!-- OPPO辅助 SDK -->
+            android:permission="android.permission.BIND_JOB_SERVICE" /> <!-- OPPO辅助 SDK -->
         <meta-data
             android:name="OPPOPUSH_APPKEY"
             android:value="OP_${OPPO_APP_KEY}" />
@@ -782,7 +773,6 @@
         <activity
             android:name=".publiclibrary.ota.ble.ti.Ti2FileOtaUpgradeActivity"
             android:screenOrientation="portrait" />
-
         <!--
    接入HMSSDK PUSH模块需要注册，第三方相关 :接收Push消息（注册、透传消息、通知栏点击事件）广播，
     此receiver类需要开发者自己创建并继承com.huawei.hms.support.api.push.PushReceiver类，
@@ -807,9 +797,7 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity android:name=".publiclibrary.ota.face.FaceOtaActivity" />
-        <activity android:name=".activity.device.gatewaylock.password.test.PasswordTestActivity" />
-
-        <!-- VIVO辅助 SDK -->
+        <activity android:name=".activity.device.gatewaylock.password.test.PasswordTestActivity" /> <!-- VIVO辅助 SDK -->
         <meta-data
             android:name="com.vivo.push.app_id"
             android:value="${VIVO_APP_ID}" />
@@ -837,9 +825,7 @@
                 <!-- 接收 push 消息 -->
                 <action android:name="com.vivo.pushclient.action.RECEIVE" />
             </intent-filter>
-        </receiver>
-        <!-- VIVO辅助 SDK -->
-
+        </receiver> <!-- VIVO辅助 SDK -->
         <activity
             android:name=".activity.device.wifilock.add.WifiLockSetUpActivity"
             android:launchMode="singleTask"
@@ -1080,7 +1066,6 @@
             android:name=".activity.device.wifilock.WifiLockAMActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".activity.device.wifilock.WifiLockPowerSaveActivity"
             android:launchMode="singleTask"
@@ -1089,7 +1074,6 @@
             android:name=".activity.device.wifilock.WifiLockFaceModelAMActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".activity.device.wifilock.newadd.WifiLockAddNewFirstActivity"
             android:launchMode="singleTask"
@@ -1186,10 +1170,10 @@
             android:name=".activity.device.wifilock.newadd.WifiLockAddFaceSecondActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
-        <activity android:name=".activity.TestActivity">
-        </activity>
-        <activity android:name=".activity.ScanHttpDialogActivity"
-            android:theme="@style/gatewayDialog"></activity>
+        <activity android:name=".activity.TestActivity" />
+        <activity
+            android:name=".activity.ScanHttpDialogActivity"
+            android:theme="@style/gatewayDialog" />
     </application>
 
 </manifest>
