@@ -2,7 +2,6 @@ package com.kaadas.lock.mvp.presenter.deviceaddpresenter;
 
 import android.bluetooth.BluetoothDevice;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.google.gson.Gson;
 import com.kaadas.lock.MyApplication;
@@ -40,7 +39,7 @@ import retrofit2.Response;
  * Create By lxj  on 2019/1/7
  * Describe
  */
-public class SearchDevicePresenter<T> extends BasePresenter<ISearchDeviceView> {
+public class SearchBleWiFiDevicePresenter<T> extends BasePresenter<ISearchDeviceView> {
     private List<BluetoothDevice> devices = new ArrayList<>();
     List<BluetoothLockBroadcastListBean> broadcastList = new ArrayList<>();
     List<BluetoothLockBroadcastBean> broadcastItemList = new ArrayList<>();
@@ -70,11 +69,14 @@ public class SearchDevicePresenter<T> extends BasePresenter<ISearchDeviceView> {
         //看是否包含有此设备
         //搜索到设备
         toDisposable(disposable);
-        if (devices != null) {  //每次重新搜索都清空搜索到的设备，然后传递给界面让界面刷新
+        if (devices != null || broadcastList != null) {  //每次重新搜索都清空搜索到的设备，然后传递给界面让界面刷新
             devices.clear();
+            broadcastList.clear();//清空数据
             if (isSafe()) {
                 LogUtils.e("--kaadas--每次重新搜索都清空搜索到的设备");
-                mViewRef.get().loadDevices(devices);
+//                mViewRef.get().loadDevices(devices);
+                mViewRef.get().loadBLEWiFiModelDevices(devices, broadcastList);
+
             }
         }
         LogUtils.e("--kaadas--搜索设备    断开连接");
@@ -91,9 +93,11 @@ public class SearchDevicePresenter<T> extends BasePresenter<ISearchDeviceView> {
                         synchronized (this) {
                             for (BluetoothDevice bluetoothDevice : devices) {
                                 if (bluetoothDevice.getName().equals(device.getName())) {
+//                                    LogUtils.e("--kaadas--相同device   " + device.getName());
                                     return false;
                                 }
                             }
+
                             contains = devices.contains(device);
                         }
 
@@ -106,18 +110,27 @@ public class SearchDevicePresenter<T> extends BasePresenter<ISearchDeviceView> {
                     public void accept(BluetoothLockBroadcastBean broadcastBean) throws Exception {
                         BluetoothDevice device = broadcastBean.getDevice();
 
-                        LogUtils.e("--kaadas--搜索到设备   " + device.getName());
-                        devices.add(device);
-                        broadcastItemList.add(broadcastBean);
-                        broadcastList.add(new BluetoothLockBroadcastListBean(broadcastItemList, devices));
-                        //搜索到设备
-                        if (mViewRef != null) {
+                        //过滤出BLE&WiFi设备（目前仅做S110的单火开关项目）
+                        if (!TextUtils.isEmpty(broadcastBean.getDeviceModel())
+                                && !TextUtils.isEmpty(broadcastBean.getDeviceSN())
+//                                && broadcastBean.getBindingType() == 4
+                        && !broadcastItemList.contains(broadcastBean)
+                                && !devices.contains(device)
+                        ) {
 
+                                LogUtils.e("--kaadas--过滤掉非BLE&WiFi设备   " + device.getName());
+
+                                devices.add(device);
+                            broadcastItemList.add(broadcastBean);
+                            broadcastList.add(new BluetoothLockBroadcastListBean(broadcastItemList, devices));
+                                //搜索到设备
+                                if (mViewRef != null) {
 //                            mViewRef.get().loadDevices(devices);
+                                    mViewRef.get().loadBLEWiFiModelDevices(devices, broadcastList);
 
-                            mViewRef.get().loadBLEWiFiModelDevices(devices,broadcastList);
-
+                            }
                         }
+
                     }
                 }, new Consumer<Throwable>() {
                     @Override
@@ -313,11 +326,26 @@ public class SearchDevicePresenter<T> extends BasePresenter<ISearchDeviceView> {
                             handler.removeCallbacks(releaseRunnable);
                             toDisposable(bindDisposable);
                             if (bleStateBean.isConnected()) {
-                                LogUtils.e(SearchDevicePresenter.class.getName() + "连接成功");
-                                if (bleStateBean.getBleVersion() == 2 || bleStateBean.getBleVersion() == 3) {
+                                LogUtils.e(SearchBleWiFiDevicePresenter.class.getName() + "--kaadas--连接成功");
+
+                                if (bleStateBean.getBleVersion() == 4) {
+
                                     if (isSafe()) {
-                                        mViewRef.get().onConnectSuccess();
+                                        for (BluetoothLockBroadcastBean broadcastBean : broadcastItemList)
+                                        {
+                                            if (broadcastBean.getDevice().equals(device)){
+
+                                                mViewRef.get().onConnectBLEWIFISuccess(broadcastBean,bleStateBean.getBleVersion());
+
+                                            }
+
+                                        }
                                     }
+                                }
+                                else if (bleStateBean.getBleVersion() == 2 || bleStateBean.getBleVersion() == 3) {
+//                                    if (isSafe()) {
+//                                        mViewRef.get().onConnectSuccess();
+//                                    }
                                     readSnTimes = 0;  //初始化读取SN的次数
                                     readSn(bleStateBean.getBleVersion(), device.getAddress(), device.getName());
                                 } else if (bleStateBean.getBleVersion() == 1) { //最老的模块，走老的流程
@@ -327,7 +355,7 @@ public class SearchDevicePresenter<T> extends BasePresenter<ISearchDeviceView> {
                                 }
                             } else {
                                 connectTimes++;
-                                LogUtils.e(SearchDevicePresenter.class.getName() + "绑定界面连接失败");
+                                LogUtils.e(SearchBleWiFiDevicePresenter.class.getName() + "--kaadas--绑定界面连接失败");
                                 bindDevice(device, isBind);
                             }
                         }

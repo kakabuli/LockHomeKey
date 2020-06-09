@@ -2,7 +2,9 @@ package com.kaadas.lock.mvp.view.deviceaddview;
 
 
 import com.kaadas.lock.mvp.mvpbase.IBaseView;
+import com.kaadas.lock.publiclibrary.ble.responsebean.BleDataBean;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
+import com.kaadas.lock.utils.OfflinePasswordFactorManager;
 
 /**
  * Create By lxj  on 2019/1/8
@@ -37,7 +39,7 @@ public interface IBindBleView extends IBaseView {
     void onReceiveUnbind();
 
     /**
-     *  解绑设备成功
+     * 解绑设备成功
      */
     void onUnbindSuccess();
 
@@ -46,10 +48,12 @@ public interface IBindBleView extends IBaseView {
      * 解绑设备失败
      */
     void onUnbindFailed(Throwable throwable);
+
     /**
      * 解绑设备失败  服务器返回错误码
      */
     void onUnbindFailedServer(BaseResult result);
+
     /**
      * 读取锁型号失败
      */
@@ -60,19 +64,37 @@ public interface IBindBleView extends IBaseView {
      */
     void readLockTypeSucces();
 
-    void  onDeviceStateChange(boolean isConnected);
+    void onDeviceStateChange(boolean isConnected);
+
     /**
      * 未知锁型号
      */
     void unknownFunctionSet(int functionSet);
 
     /**
-     *  读取功能集成功
+     * 读取功能集成功
      */
     void readFunctionSetSuccess(int functionSet);
 
     /**
-     *  读取功能集失败
+     * 读取功能集失败
      */
     void readFunctionSetFailed(Throwable throwable);
+
+    /**
+     * 剩余校验次数（配网通道）
+     */
+    void onlistenerLastNum(int lastNum);
+
+    /**
+     * 离线密码因子（配网通道）
+     */
+    void onlistenerPasswordFactor(byte[] originalData,int pswLen,int index);
+
+    /**
+     * 解密离线密码因子结果（配网通道）
+     */
+    void onDecodeResult(int index,OfflinePasswordFactorManager.OfflinePasswordFactorResult result);
+
+
 }

@@ -6,16 +6,15 @@ package com.kaadas.lock.publiclibrary.ble;
  */
 public class BLeConstants {
     /**************************************     UUID     *************************************/
-    //app->给蓝牙
+    //app->给蓝牙（数据通道）
     public static final String UUID_SEND_SERVICE = "0000ffe5-0000-1000-8000-00805f9b34fb";// 发送数据
-    //app->给蓝牙
+    //app->给蓝牙（数据通道）
     public static final String UUID_WRITE_CHAR = "0000ffe9-0000-1000-8000-00805f9b34fb";// 发送数据
-    //蓝牙->app  服务
+    //蓝牙->app  （数据通道）服务
     public static final String UUID_NOTIFY_SERVICE = "0000ffe0-0000-1000-8000-00805f9b34fb";// 通知数据
-    //蓝牙->app 特征值
+    //蓝牙->app （数据通道）特征值
     public static final String UUID_NOTIFY_CHAR = "0000ffe4-0000-1000-8000-00805f9b34fb";// 通知charUUID
-    //门锁功能集
-
+    //门锁功能集 (数据通道)
     public static final String UUID_FUNCTION_SET = "0000ffe1-0000-1000-8000-00805f9b34fb";// 门锁功能集   最新版的协议才有这个服务  2019年5月9日
     /**
      * 电量特征值 UUID  0-100%，出厂默认值为100%
@@ -139,4 +138,31 @@ public class BLeConstants {
      */
     public static final String P6_OAD_SERVICE = "00060000-f8ce-11e4-abf4-0002a5d5c51b";;    //P6 OTA 模式下才有的服务UUID
 
+
+    ////////////////////////////////////////////////////BLE&WiFi配网服务/////////////////////////////////////////////////////////////
+
+    /**
+     * APP->BLE 配网通道服务
+     */
+    public static final String DISTRIBUTION_NETWORK_SEND_SERVICE = "0000ffc0-0000-1000-8000-00805f9b34fb";;
+
+    /**
+     * BLE->APP 配网通道服务
+     */
+    public static final String DISTRIBUTION_NETWORK_NOTIFY_SERVICE = "0000ffc5-0000-1000-8000-00805f9b34fb";;
+
+    ////////////////////////////////////////////////////BLE&WiFi配网服务下特征/////////////////////////////////////////////////////////////
+
+    /**
+     * APP->BLE （配网通道）特征
+     */
+    public static final String DISTRIBUTION_NETWORK_SEND_CHAR = "0000ffc1-0000-1000-8000-00805f9b34fb";// 通知charUUID
+    /**
+     * BLE->APP （配网通道）特征
+     */
+    public static final String DISTRIBUTION_NETWORK_NOTIFY_CHAR = "0000ffc6-0000-1000-8000-00805f9b34fb";// 通知charUUID
+    /**
+     * BLE->APP  门锁功能集 （配网通道）特征
+     */
+    public static final String DISTRIBUTION_NETWORK__UUID_FUNCTION_SET = "0000ffc7-0000-1000-8000-00805f9b34fb";// 门锁功能集   单火开关项目最新版的协议才有这个服务  2020年6月4日
 }

@@ -45,7 +45,6 @@ public abstract class BaseActivity<T extends IBaseView, V
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
     }
 
-
     @Override
     public void setContentView(int layoutResID) {
         super.setContentView(layoutResID);

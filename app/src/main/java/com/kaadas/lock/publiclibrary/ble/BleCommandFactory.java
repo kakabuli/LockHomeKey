@@ -40,6 +40,14 @@ public class BleCommandFactory {
     public static byte[] confirmCommand(byte[] originalData) {
         byte[] bytes = new byte[20];
         bytes[1] = originalData[1];
+
+        if ((((originalData[3] & 0xff) == 0x95)
+                ||(((originalData[3] & 0xff) == 0x92))
+                ||(((originalData[3] & 0xff) == 0x93)))){
+            //单火项目要求ACK带CMD
+            bytes[3] = originalData[3];
+        }
+
         return bytes;
     }
 
@@ -544,14 +552,16 @@ public class BleCommandFactory {
         for (int i = 0; i < payload.length; i++) {
             checkSum += payload[i];
         }
-        LogUtils.e("加密前 " + Rsa.bytesToHexString(payload) + "key是  " + Rsa.bytesToHexString(key));
+//        LogUtils.e("--kaadas--加密前 " + Rsa.bytesToHexString(payload) + "key是  " + Rsa.bytesToHexString(key));
         if (key != null) {
+            dataFrame[0] = 1;
             tempBuff = Rsa.encryptAES(payload, key);
         } else {
+            dataFrame[0] = 0;
             tempBuff = payload;
         }
         //设置数据头  是加密的
-        dataFrame[0] = 1;
+//        dataFrame[0] = 1;
         dataFrame[1] = getTSN();
         dataFrame[2] = checkSum;
         dataFrame[3] = cmd;
@@ -561,4 +571,49 @@ public class BleCommandFactory {
         return dataFrame;
     }
 
+    /**
+     *  密钥因子校验结果
+     * @param key
+     * @param result
+     * @return
+     */
+
+    public static byte[] onDecodeResult(byte[] key,byte result) {
+        byte cmd = (byte) 0x94;
+        byte[] payload = new byte[16]; //负载数据
+        payload[0] = result;
+        return groupPackage(cmd, payload, key);
+    }
+
+    /**
+     *  发送WIFI SSID
+     * @param key
+     * @param subSSID：分包
+     * @return
+     */
+
+    public static byte[] sendWiFiSSID(int index,byte[] key,byte[] subSSID) {
+        byte cmd = (byte) 0x90;
+        byte[] payload = new byte[16]; //负载数据
+        payload[0] = Rsa.int2BytesArray(33)[0];//SSID总长度
+        payload[1] = Rsa.int2BytesArray(index)[0];//包序号
+        System.arraycopy(subSSID,0,payload,2,subSSID.length);
+        return groupPackage(cmd, payload, key);
+    }
+
+    /**
+     *  发送WIFI PWD
+     * @param key
+     * @param subPWD：分包
+     * @return
+     */
+
+    public static byte[] sendWiFiPWD(int index,byte[] key,byte[] subPWD) {
+        byte cmd = (byte) 0x91;
+        byte[] payload = new byte[16]; //负载数据
+        payload[0] = Rsa.int2BytesArray(65)[0];//SSID总长度
+        payload[1] = Rsa.int2BytesArray(index)[0];//包序号
+        System.arraycopy(subPWD,0,payload,2,subPWD.length);
+        return groupPackage(cmd, payload, key);
+    }
 }

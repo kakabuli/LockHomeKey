@@ -25,6 +25,7 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -37,9 +38,13 @@ import com.kaadas.lock.R;
 import com.kaadas.lock.activity.addDevice.DeviceAddHelpActivity;
 import com.kaadas.lock.activity.addDevice.bluetooth.AddBluetoothSecondActivity;
 import com.kaadas.lock.activity.device.wifilock.add.WifiLockHelpActivity;
+import com.kaadas.lock.adapter.DeviceBleWiFiSearchAdapter;
 import com.kaadas.lock.adapter.DeviceSearchAdapter;
 import com.kaadas.lock.adapter.inf.OnBindClickListener;
+import com.kaadas.lock.bean.BluetoothLockBroadcastBean;
+import com.kaadas.lock.bean.BluetoothLockBroadcastListBean;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
+import com.kaadas.lock.mvp.presenter.deviceaddpresenter.SearchBleWiFiDevicePresenter;
 import com.kaadas.lock.mvp.presenter.deviceaddpresenter.SearchDevicePresenter;
 import com.kaadas.lock.mvp.view.deviceaddview.ISearchDeviceView;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
@@ -56,6 +61,7 @@ import com.kaadas.lock.utils.WifiUtils;
 import com.kaadas.lock.widget.WifiCircleProgress;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -69,7 +75,7 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import com.kaadas.lock.widget.ScanDeviceRadarView;
 
-public class WifiLockAddNewScanBLEActivity extends BaseActivity<ISearchDeviceView, SearchDevicePresenter<ISearchDeviceView>>
+public class WifiLockAddNewScanBLEActivity extends BaseActivity<ISearchDeviceView, SearchBleWiFiDevicePresenter<ISearchDeviceView>>
         implements ISearchDeviceView, OnBindClickListener {
 
     public static final int REQUEST_CALL_PERMISSION = 10111; //拨号请求码
@@ -83,7 +89,12 @@ public class WifiLockAddNewScanBLEActivity extends BaseActivity<ISearchDeviceVie
 
     private DividerItemDecoration dividerItemDecoration;
     private List<BluetoothDevice> mDevices;
+    List<BluetoothLockBroadcastListBean> broadcastList = new ArrayList<>();
+    List<BluetoothLockBroadcastBean> broadcastItemList = new ArrayList<>();
+
     private DeviceSearchAdapter deviceSearchAdapter;
+    private DeviceBleWiFiSearchAdapter deviceBleWiFiSearchAdapter;
+    private Thread radarViewThread; //声明一个子线程
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,7 +102,17 @@ public class WifiLockAddNewScanBLEActivity extends BaseActivity<ISearchDeviceVie
         setContentView(R.layout.activity_wifi_ble_scan_radar);
         ButterKnife.bind(this);
         mRadarView = (ScanDeviceRadarView) findViewById(R.id.radar_view);
-        mRadarView.setSearching(true);
+
+        radarViewThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                //这里写入子线程需要做的工作
+                mRadarView.setSearching(true);
+
+            }
+        });
+        radarViewThread.start();
+//        mRadarView.setSearching(true);
 //        mRadarView.addPoint();
 //        mRadarView.addPoint();
 
@@ -112,8 +133,8 @@ public class WifiLockAddNewScanBLEActivity extends BaseActivity<ISearchDeviceVie
     }
 
     @Override
-    protected SearchDevicePresenter<ISearchDeviceView> createPresent() {
-        return new SearchDevicePresenter<>();
+    protected SearchBleWiFiDevicePresenter<ISearchDeviceView> createPresent() {
+        return new SearchBleWiFiDevicePresenter<>();
     }
 
     private void initData() {
@@ -225,7 +246,6 @@ public class WifiLockAddNewScanBLEActivity extends BaseActivity<ISearchDeviceVie
         }
     }
 
-
     @Override
     public void onItemClickListener(View view, int position, BluetoothDevice device) {
         //添加设备
@@ -250,13 +270,53 @@ public class WifiLockAddNewScanBLEActivity extends BaseActivity<ISearchDeviceVie
 
         showRecycler(true);
         mDevices = devices;
-        if (deviceSearchAdapter == null) {
-            deviceSearchAdapter = new DeviceSearchAdapter(mDevices);
-            deviceSearchAdapter.setBindClickListener(this);
-            searchRecycler.setAdapter(deviceSearchAdapter);
+//        broadcastList.clear();//清空数据
+        if (deviceBleWiFiSearchAdapter == null) {
+            deviceBleWiFiSearchAdapter = new DeviceBleWiFiSearchAdapter(mDevices);
+            deviceBleWiFiSearchAdapter.setBindClickListener(this);
+//            deviceBleWiFiSearchAdapter.setBluetoothLockBroadcast(broadcastList);
+            searchRecycler.setAdapter(deviceBleWiFiSearchAdapter);
+
         } else {
-            deviceSearchAdapter.notifyDataSetChanged();
+            deviceBleWiFiSearchAdapter.notifyDataSetChanged();
         }
+    }
+
+    @Override
+    public void loadBLEWiFiModelDevices(List<BluetoothDevice> devices, List<BluetoothLockBroadcastListBean> broadcastList) {
+        if (devices == null) {
+            showRecycler(false);
+            return;
+        }
+        if (devices.size()==0){
+            showRecycler(false);
+            return;
+        }
+
+        showRecycler(true);
+
+        mDevices = devices;
+//        broadcastItemList.add(broadcastBean);
+//        broadcastList.add(new BluetoothLockBroadcastListBean(broadcastItemList, mDevices));
+
+        if (deviceBleWiFiSearchAdapter == null) {
+            deviceBleWiFiSearchAdapter = new DeviceBleWiFiSearchAdapter(mDevices);
+            deviceBleWiFiSearchAdapter.setBindClickListener(this);
+            deviceBleWiFiSearchAdapter.setBluetoothLockBroadcast(broadcastList);
+
+            searchRecycler.setAdapter(deviceBleWiFiSearchAdapter);
+        } else {
+            deviceBleWiFiSearchAdapter.notifyDataSetChanged();
+        }
+//        if (deviceSearchAdapter == null) {
+//            deviceSearchAdapter = new DeviceSearchAdapter(mDevices);
+//            deviceSearchAdapter.setBindClickListener(this);
+//            deviceSearchAdapter.setBluetoothLockBroadcast(broadcastList);
+//
+//            searchRecycler.setAdapter(deviceSearchAdapter);
+//        } else {
+//            deviceSearchAdapter.notifyDataSetChanged();
+//        }
     }
 
     @Override
@@ -366,6 +426,17 @@ public class WifiLockAddNewScanBLEActivity extends BaseActivity<ISearchDeviceVie
 
     }
 
+    @Override
+    public void onConnectBLEWIFISuccess(BluetoothLockBroadcastBean broadcastBean,int version) {
+        hiddenLoading();
+        Intent nextIntent = new Intent(this, WifiLockAddNewBLEWIFiSwitchActivity.class);
+        nextIntent.putExtra(KeyConstants.BLE_VERSION, version);
+        nextIntent.putExtra(KeyConstants.BLE_DEVICE_SN, broadcastBean.getDeviceSN());
+        nextIntent.putExtra(KeyConstants.BLE_MAC, broadcastBean.getDeviceMAC());
+        nextIntent.putExtra(KeyConstants.DEVICE_NAME, broadcastBean.getDeviceName());
+        startActivity(nextIntent);
+
+    }
     @Override
     public void onConnectedAndIsOldMode(int version,boolean isBind,String mac,String deviceName) {
         hiddenLoading();

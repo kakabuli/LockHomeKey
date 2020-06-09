@@ -9,10 +9,22 @@
         android:id="@+id/device_bluetooth_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="aadas  LEB"
+        android:text="kaadas  Dev"
         android:textColor="#ff333333"
         android:textSize="15sp"
         android:layout_marginLeft="@dimen/dp_26"
+        android:layout_centerVertical="true"
+
+        />
+    <TextView
+        android:id="@+id/device_bluetooth_sn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="SN"
+        android:textColor="#ff333333"
+        android:textSize="15sp"
+        android:layout_toRightOf="@+id/device_bluetooth_name"
+        android:layout_marginLeft="@dimen/dp_30"
         android:layout_centerVertical="true"
 
         />

@@ -14,11 +14,13 @@ import com.kaadas.lock.activity.addDevice.DeviceAddHelpActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.mvp.presenter.deviceaddpresenter.BindBlePresenter;
 import com.kaadas.lock.mvp.view.deviceaddview.IBindBleView;
+import com.kaadas.lock.publiclibrary.ble.responsebean.BleDataBean;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.util.HttpUtils;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.OfflinePasswordFactorManager;
 import com.kaadas.lock.utils.ToastUtil;
 
 import butterknife.BindView;
@@ -213,5 +215,21 @@ public class AddBluetoothThirdActivity extends BaseActivity<IBindBleView, BindBl
         finish();
         startActivity(new Intent(AddBluetoothThirdActivity.this, AddBluetoothSearchActivity.class));
     }
+
+    @Override
+    public void onlistenerLastNum(int lastNum) {
+
+    }
+
+    @Override
+    public void onlistenerPasswordFactor(byte[] originalData,int pswLen,int index) {
+
+    }
+
+    @Override
+    public void onDecodeResult(int index, OfflinePasswordFactorManager.OfflinePasswordFactorResult result) {
+
+    }
+
 
 }
