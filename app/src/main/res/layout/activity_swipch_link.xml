@@ -1,0 +1,506 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.kaadas.lock.activity.addDevice.singleswitch.SwipchLinkActivity"
+    android:orientation="vertical"
+    android:weightSum="9">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="4"
+        android:background="@mipmap/swipch_link_top_bg"
+        android:orientation="vertical"
+        >
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_40"
+            >
+
+            <ImageView
+                android:id="@+id/back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:paddingLeft="@dimen/dp_16"
+                android:paddingTop="@dimen/dp_5"
+                android:paddingRight="@dimen/dp_16"
+                android:paddingBottom="@dimen/dp_5"
+                android:src="@mipmap/back" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="@string/swipch_link_title"
+                android:textColor="#ffffff"
+                android:textSize="@dimen/sp_17"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/swipch_setting_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@mipmap/swipch_open_setting"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/dp_16"
+                ></ImageView>
+
+
+
+
+        </RelativeLayout>
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center">
+
+
+    <ImageView
+        android:id="@+id/swipch_link_center_img"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@mipmap/swipch_link_three"
+        android:layout_gravity="center"
+        ></ImageView>
+
+    <RelativeLayout
+        android:id="@+id/tv_double_rl"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_marginTop="10dp"
+        android:visibility="gone"
+        >
+
+        <View
+            android:id="@+id/swipch_link_center_view"
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"></View>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/swipch_link_btn1"
+            android:layout_toLeftOf="@id/swipch_link_center_view"
+            android:layout_marginRight="13dp"
+            android:layout_centerInParent="true"
+            android:textColor="#ffffff"
+            android:textStyle="bold"
+            ></TextView>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/swipch_link_btn1"
+            android:layout_toRightOf="@id/swipch_link_center_view"
+            android:layout_marginLeft="13dp"
+            android:layout_centerInParent="true"
+            android:textColor="#ffffff"
+            android:textStyle="bold"
+            ></TextView>
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/three_double_rl"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_marginTop="10dp"
+        >
+
+        <TextView
+            android:id="@+id/swipch_link_center_view_three"
+            android:layout_width="wrap_content"
+            android:text="@string/swipch_link_btn2"
+            android:layout_height="match_parent"
+            android:textColor="#ffffff"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:layout_centerInParent="true"></TextView>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/swipch_link_btn1"
+            android:layout_toLeftOf="@id/swipch_link_center_view_three"
+            android:layout_marginRight="13dp"
+            android:layout_centerInParent="true"
+            android:textColor="#ffffff"
+            android:textStyle="bold"
+            ></TextView>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/swipch_link_btn1"
+            android:layout_toRightOf="@id/swipch_link_center_view_three"
+            android:layout_marginLeft="13dp"
+            android:layout_centerInParent="true"
+            android:textColor="#ffffff"
+            android:textStyle="bold"
+            ></TextView>
+    </RelativeLayout>
+
+
+
+</LinearLayout>
+
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="5"
+        android:orientation="vertical"
+        android:weightSum="4"
+        android:background="#11DCD8D8"
+        >
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/swipch_link_corner"
+
+            >
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:orientation="vertical"
+                android:gravity="center_vertical"
+                >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    >
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@mipmap/swipperlinkleft1"
+                        android:layout_marginLeft="10dp"
+                       ></ImageView>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:layout_marginLeft="10dp"
+                    >
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@mipmap/swipperlinkleft2"
+                            ></ImageView>
+
+                    </LinearLayout>
+
+
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@mipmap/swipperlinkleft3"
+                        android:layout_marginLeft="10dp"
+                        ></ImageView>
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:text="@string/swipch_link_info"
+                    android:textColor="#FF6F6F6F"
+                    android:textSize="10sp"
+                    android:layout_marginTop="10dp"
+                    ></TextView>
+
+            </LinearLayout>
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                >
+
+
+                <ImageView
+                    android:id="@+id/swich_link_link_switch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@mipmap/swipperlinkleft_no"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true"
+                     android:layout_marginRight="15dp"
+                 ></ImageView>
+            </RelativeLayout>
+
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="3"
+            android:layout_marginLeft="10dp"
+            android:layout_marginBottom="15dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/swipch_link_corner"
+            android:orientation="vertical">
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/swipch_link_item"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="#FF333333"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="15dp"
+                ></TextView>
+
+             <LinearLayout
+                 android:id="@+id/swipch_one"
+                 android:layout_width="match_parent"
+                 android:layout_height="0dp"
+                 android:layout_weight="1"
+                 android:clickable="true"
+                 android:gravity="center_vertical">
+
+                 <LinearLayout
+                     android:layout_width="150dp"
+                     android:layout_height="wrap_content"
+                     android:orientation="vertical"
+                     >
+
+
+
+                     <ImageView
+                         android:layout_width="wrap_content"
+                         android:layout_height="wrap_content"
+                         android:background="@mipmap/swipperlink_item_bg"
+                         android:layout_marginLeft="15dp"
+                         android:layout_marginBottom="10dp"
+                         >
+                     </ImageView>
+
+                     <TextView
+                         android:layout_width="wrap_content"
+                         android:layout_height="wrap_content"
+                         android:layout_marginLeft="15dp"
+                         android:textColor="#FF333333"
+                         android:text="@string/swipch_link_btn1"></TextView>
+
+
+                 </LinearLayout>
+
+
+                 <RelativeLayout
+                     android:layout_width="match_parent"
+                     android:layout_height="match_parent"
+                     >
+
+                    <ImageButton
+                        android:id="@+id/swipch_one_img"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@mipmap/swipperlinkleft_yes"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="20dp"
+                        android:layout_centerVertical="true"
+                        ></ImageButton>
+
+                     <TextView
+                         android:layout_width="wrap_content"
+                         android:layout_height="wrap_content"
+                         android:layout_alignParentBottom="true"
+                         android:text="20:00-24:00"
+                         android:layout_alignParentRight="true"
+                         android:layout_marginRight="20dp"
+                         android:layout_marginBottom="7dp"
+                         android:drawablePadding="10dp"
+                         android:textColor="#FFBEBEBE"
+                         android:drawableRight="@mipmap/swipper_right_small"
+                         ></TextView>
+                 </RelativeLayout>
+
+             </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#DCD8D8">
+            </View>
+
+            <LinearLayout
+                android:clickable="true"
+                android:id="@+id/swipch_two"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                >
+
+                <LinearLayout
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    >
+
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@mipmap/swipperlink_item_bg"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginBottom="10dp"
+                        >
+                    </ImageView>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
+                        android:textColor="#FF333333"
+                        android:text="@string/swipch_link_btn2"></TextView>
+
+
+                </LinearLayout>
+
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+
+                    >
+
+                    <ImageView
+                        android:id="@+id/swipch_two_img"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@mipmap/swipperlinkleft_yes"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="20dp"
+                        android:layout_centerVertical="true"
+                        ></ImageView>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:text="20:00-24:00"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="20dp"
+                        android:layout_marginBottom="7dp"
+                        android:drawablePadding="10dp"
+                        android:textColor="#FFBEBEBE"
+                        android:drawableRight="@mipmap/swipper_right_small"
+                        ></TextView>
+                </RelativeLayout>
+
+            </LinearLayout>
+
+
+            <View
+                android:id="@+id/swich_view_item_two"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#DCD8D8">
+            </View>
+
+
+            <LinearLayout
+                android:clickable="true"
+                android:id="@+id/swipch_three"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                >
+
+                <LinearLayout
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    >
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@mipmap/swipperlink_item_bg"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginBottom="10dp"
+                        >
+                    </ImageView>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
+                        android:textColor="#FF333333"
+                        android:text="@string/swipch_link_btn2"></TextView>
+
+
+                </LinearLayout>
+
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+
+                    >
+
+                    <ImageView
+                        android:id="@+id/swipch_three_img"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@mipmap/swipperlinkleft_yes"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="20dp"
+                        android:layout_centerVertical="true"
+                        ></ImageView>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:text="20:00-24:00"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="20dp"
+                        android:layout_marginBottom="7dp"
+                        android:drawablePadding="10dp"
+                        android:textColor="#FFBEBEBE"
+                        android:drawableRight="@mipmap/swipper_right_small"
+                        ></TextView>
+                </RelativeLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+
+
+</LinearLayout>

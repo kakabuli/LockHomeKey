@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#FFF1F1F1"
+    tools:context="com.kaadas.lock.activity.addDevice.singleswitch.SwipLinkSucActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <include layout="@layout/swipch_head"></include>
+        <ImageView
+            android:id="@+id/swipch_link_join_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@mipmap/swipch_link_join_network_suc1"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="35dp"></ImageView>
+
+        <TextView
+            android:id="@+id/swipch_link_join_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20dp"
+            android:textSize="15sp"
+            android:text="@string/swipch_link_join_network_suc1">
+
+        </TextView>
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_centerInParent="true"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#FF333333"
+                android:layout_marginLeft="15dp"
+                android:layout_marginBottom="10dp"
+                android:text="@string/swipch_link_join_network_suc_name"></TextView>
+            <LinearLayout
+                android:id="@+id/swipch_link_ll_1"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/swipch_link_corner"
+
+                >
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="#ff333333"
+                    android:textSize="@dimen/sp_13"
+                    android:layout_marginLeft="@dimen/dp_17"
+                    android:lineSpacingExtra="@dimen/dp_6"
+                    android:layout_marginRight="@dimen/dp_24"
+                    android:background="@null"
+                    android:hint="@string/swipch_link_join_network_input1"
+                    android:layout_weight="1"
+                    />
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:background="@mipmap/swipch_link_join_network_edit"
+                    android:layout_marginRight="20dp"
+                    android:layout_gravity="center_vertical"
+                    />
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/swipch_link_ll_2"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:background="@drawable/swipch_link_corner"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginBottom="10dp"
+                >
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="#ff333333"
+                    android:textSize="@dimen/sp_13"
+                    android:layout_marginLeft="@dimen/dp_17"
+                    android:lineSpacingExtra="@dimen/dp_6"
+                    android:layout_marginRight="@dimen/dp_24"
+                    android:background="@null"
+                    android:hint="@string/swipch_link_join_network_input2"
+                    android:layout_weight="1"
+                    />
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:background="@mipmap/swipch_link_join_network_edit"
+                    android:layout_marginRight="20dp"
+                    android:layout_gravity="center_vertical"
+                    />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/swipch_link_ll_3"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:background="@drawable/swipch_link_corner"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                >
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="#ff333333"
+                    android:textSize="@dimen/sp_13"
+                    android:layout_marginLeft="@dimen/dp_17"
+                    android:lineSpacingExtra="@dimen/dp_6"
+                    android:layout_marginRight="@dimen/dp_24"
+                    android:background="@null"
+                    android:hint="@string/swipch_link_join_network_input3"
+                    android:layout_weight="1"
+                    />
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:background="@mipmap/swipch_link_join_network_edit"
+                    android:layout_marginRight="20dp"
+                    android:layout_gravity="center_vertical"
+                    />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_height="130dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:orientation="vertical">
+            <Button
+                android:id="@+id/btn_next"
+                android:layout_width="210dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/register_button_shape"
+                android:textColor="#ffffff"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/complete"></Button>
+
+        </LinearLayout>
+
+
+
+    </RelativeLayout>
+
+
+</LinearLayout>

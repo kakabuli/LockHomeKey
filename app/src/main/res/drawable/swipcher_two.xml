@@ -8,4 +8,6 @@
     <item
         android:drawable="@mipmap/swipch_lock_wake2"
         android:duration="1000"/>
+
+
 </animation-list>

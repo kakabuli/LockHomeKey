@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.kaadas.lock.activity.addDevice.singleswitch.SwipLinkTwoActivity">
+
+    <include layout="@layout/swipch_head"></include>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:textColor="#FF333333"
+        android:layout_gravity="center_horizontal"
+        android:textStyle="bold"
+        android:layout_marginTop="30dp"
+        android:text="@string/swipch_link_join_network_two_text"></TextView>
+
+
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+
+
+
+        <ImageView
+            android:id="@+id/swich_link_two_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="60dp"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/swipcher_two"></ImageView>
+
+        <Button
+            android:id="@+id/btn_next"
+            android:layout_width="210dp"
+            android:layout_height="wrap_content"
+            android:text="@string/swipch_link_join_network_three_text"
+            android:background="@drawable/register_button_shape"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:textColor="#FFFFFFFF"
+            android:layout_marginBottom="60dp">
+
+        </Button>
+
+    </RelativeLayout>
+</LinearLayout>
+

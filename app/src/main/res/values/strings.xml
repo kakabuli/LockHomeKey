@@ -1593,5 +1593,47 @@
     <string name="sdfkjsjdkf">用手触碰按键区，唤醒门锁\n确保门锁数字键盘灯亮</string>
     <string name="is_parsing_data">正在解析数据...</string>
     <string name="pwd_list_null">获取密码列表为空</string>
+    <string name="swipch_link_title">开关联动</string>
+    <string name="swipch_link_info">开门联动智能开关</string>
+    <string name="swipch_link_item">联动的智能开关</string>
+    <string name="swipch_link_btn1">键位1</string>
+    <string name="swipch_link_btn2">键位2</string>
+    <string name="swipch_link_btn3">键位3</string>
+    <string name="swipch_linl_no_info">您还没有配置智能开关 \n 添加智能开关后，门锁可打开联动</string>
+    <string name="swipch_linl_no_btn">添加智能开关</string>
+    <string name="swipch_link_add">添加开关</string>
+    <string name="swipch_link_join_network_text">开关配网</string>
+    <string name="swipch_link_join_network_text1">① 开启电源总闸，按下开关面板按键，可正常控制灯光，表示开关工作正常</string>
+    <string name="swipch_link_join_network_text2">② 长按开关任意按键5s以上，红色LED 快闪， 表示开关已进入配网模式</string>
+    <string name="swipch_link_join_network_two_text">用手触碰按键区，唤醒门锁 \n 确保门锁数字键盘灯亮</string>
+    <string name="swipch_link_join_network_three_text">已唤醒门锁</string>
+    <string name="swipch_link_join_network_two_title_text">唤醒门锁</string>
+    <string name="swipch_link_join_network_search_text">正在搜索附近的智能开关</string>
+    <string name="swipch_link_join_network_three_title_text">搜索设备</string>
+    <string name="swipch_link_join_network_fail_btn">重新配置</string>
+    <string name="swipch_link_join_network_fail_one">确保您的门锁已唤醒</string>
+    <string name="swipch_link_join_network_fail_two">查看开关面板按键是否能正常控制灯光</string>
+    <string name="swipch_link_join_network_fail_three">长按开关任意键5秒 ， 红色LED灯是否快闪</string>
 
+    <string name="swipch_link_join_network_suc1">您添加的是 1 键位开关，取个名字吧！</string>
+    <string name="swipch_link_join_network_suc2">您添加的是 2 键位开关，取个名字吧！</string>
+    <string name="swipch_link_join_network_suc3">您添加的是 3 键位开关，取个名字吧！</string>
+
+    <string name="swipch_link_join_network_input1">请输入键位1开关名称</string>
+    <string name="swipch_link_join_network_input2">请输入键位2开关名称</string>
+    <string name="swipch_link_join_network_input3">请输入键位3开关名称</string>
+
+    <string name="swipch_link_join_network_suc_name">开关名称</string>
+    <string name="swipch_link_every_day">全天</string>
+    <string name="swipch_link_setting_start_no">生效时间不能为空</string>
+    <string name="swipch_link_setting_end_no">结束时间不能为空</string>
+    <string name="swipch_link_setting_start_dayu_end">结束时间不能小于生效时间</string>
+    <string name="swipch_setting_btn1">键位（1）</string>
+    <string name="swipch_setting_btn2">键位（2）</string>
+    <string name="swipch_change_btn_open">更换智能开关</string>
+    <string name="swipch_setting_pluease_input_name">请输入名称</string>
+    <string name="swipch_setting_pluease_input_title_name">确认更换智能开关？</string>
+    <string name="swipch_setting_pluease_input_context_name">新的智能开关需要手动配置</string>
+    <string name="swipch_setting_pluease_input_center_hint">客厅吸顶灯</string>
+    <string name="swipch_setting_pluease_dialog_title1">请输入键位1名称</string>
 </resources>
