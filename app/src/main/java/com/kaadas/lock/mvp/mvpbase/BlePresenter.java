@@ -6,6 +6,7 @@ import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 
 import com.kaadas.lock.MyApplication;
+import com.kaadas.lock.bean.BluetoothLockBroadcastBean;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.publiclibrary.ble.BleCommandFactory;
 import com.kaadas.lock.publiclibrary.ble.BleProtocolFailedException;
@@ -229,9 +230,11 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
         disposable = bleService.getDeviceByMacOrName(this.bleLockInfo.getServerLockInfo().getMacLock(), this.bleLockInfo.getServerLockInfo().getLockName())  //搜索设备  1
                 .timeout(10 * 1000, TimeUnit.MILLISECONDS)
                 .compose(RxjavaHelper.observeOnMainThread())
-                .subscribe(new Consumer<BluetoothDevice>() {
+                .subscribe(new Consumer<BluetoothLockBroadcastBean>() {
                     @Override
-                    public void accept(BluetoothDevice device) throws Exception {
+                    public void accept(BluetoothLockBroadcastBean broadcastBean) throws Exception {
+                        BluetoothDevice device = broadcastBean.getDevice();
+
                         LogUtils.e("查找设备成功   " + device.getName());
                         toDisposable(disposable);
                         bleService.connectDeviceByDevice(device);  //1

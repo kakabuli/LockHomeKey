@@ -20,6 +20,7 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
@@ -33,6 +34,9 @@ import com.kaadas.lock.R;
 import com.kaadas.lock.activity.addDevice.DeviceAddHelpActivity;
 import com.kaadas.lock.adapter.DeviceSearchAdapter;
 import com.kaadas.lock.adapter.inf.OnBindClickListener;
+import com.kaadas.lock.bean.BluetoothLockBroadcastBean;
+import com.kaadas.lock.bean.BluetoothLockBroadcastListBean;
+import com.kaadas.lock.bean.BluetoothRecordBean;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.mvp.presenter.deviceaddpresenter.SearchDevicePresenter;
 import com.kaadas.lock.mvp.view.deviceaddview.ISearchDeviceView;
@@ -74,6 +78,9 @@ public class AddBluetoothSearchActivity extends BaseActivity<ISearchDeviceView, 
     private DeviceSearchAdapter deviceSearchAdapter;
 
     private DividerItemDecoration dividerItemDecoration;
+    List<BluetoothLockBroadcastListBean> broadcastList = new ArrayList<>();
+    List<BluetoothLockBroadcastBean> broadcastItemList = new ArrayList<>();
+
     private List<BluetoothDevice> mDevices;
     private ObjectAnimator ivGreenObjectAnimator;
     public static final int REQUEST_CALL_PERMISSION = 10111; //拨号请求码
@@ -244,6 +251,33 @@ public class AddBluetoothSearchActivity extends BaseActivity<ISearchDeviceView, 
     }
 
     @Override
+    public void loadBLEWiFiModelDevices(List<BluetoothDevice> devices, List<BluetoothLockBroadcastListBean> broadcastList) {
+        if (devices == null) {
+            showRecycler(false);
+            return;
+        }
+        if (devices.size()==0){
+            showRecycler(false);
+            return;
+        }
+
+        showRecycler(true);
+        mDevices = devices;
+//        broadcastItemList.add(broadcastBean);
+        Log.e("--kaadas--","mDevices："+ mDevices.size());
+//        broadcastList.add(new BluetoothLockBroadcastListBean(broadcastItemList, mDevices));
+        if (deviceSearchAdapter == null) {
+            deviceSearchAdapter = new DeviceSearchAdapter(mDevices);
+            deviceSearchAdapter.setBindClickListener(this);
+            deviceSearchAdapter.setBluetoothLockBroadcast(broadcastList);
+
+            searchRecycler.setAdapter(deviceSearchAdapter);
+        } else {
+            deviceSearchAdapter.notifyDataSetChanged();
+        }
+    }
+
+    @Override
     public void onAlreadyBind(BluetoothDevice device,String uName) {
         LogUtils.e("设备名是1   " + uName);
         String name = "";
@@ -347,6 +381,11 @@ public class AddBluetoothSearchActivity extends BaseActivity<ISearchDeviceView, 
 
     @Override
     public void onConnectSuccess() {
+
+    }
+
+    @Override
+    public void onConnectBLEWIFISuccess(BluetoothLockBroadcastBean broadcastBean,int version) {
 
     }
 

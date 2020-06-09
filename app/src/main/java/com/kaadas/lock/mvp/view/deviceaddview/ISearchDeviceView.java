@@ -2,6 +2,8 @@ package com.kaadas.lock.mvp.view.deviceaddview;
 
 import android.bluetooth.BluetoothDevice;
 
+import com.kaadas.lock.bean.BluetoothLockBroadcastBean;
+import com.kaadas.lock.bean.BluetoothLockBroadcastListBean;
 import com.kaadas.lock.mvp.mvpbase.IBaseView;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 
@@ -20,6 +22,12 @@ public interface ISearchDeviceView extends IBaseView {
      */
     void loadDevices(List<BluetoothDevice> devices);
 
+    /**
+     * 搜索到设备，带更多的信息
+     * @param devices
+     * @param broadcastList
+     */
+    void loadBLEWiFiModelDevices(List<BluetoothDevice> devices, List<BluetoothLockBroadcastListBean> broadcastList);
 
     /**
      * 设备已被绑定
@@ -53,6 +61,11 @@ public interface ISearchDeviceView extends IBaseView {
      * 连接成功
      */
     void onConnectSuccess();
+
+    /**
+     * 连接成功（单火开关项目：不鉴权、不心跳）
+     */
+    void onConnectBLEWIFISuccess(BluetoothLockBroadcastBean broadcastBean,int version);
 
     /**
      * 连接成功   而且是最老的模块

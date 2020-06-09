@@ -1,5 +1,7 @@
 package com.kaadas.lock.utils;
 
+import com.kaadas.lock.bean.BluetoothLockBroadcastBean;
+
 /**
  * Create By lxj  on 2019/2/14
  * Describe
@@ -502,5 +504,12 @@ public class KeyConstants {
      * 传递网关Model
      */
     public static final String GATEWAY_MODEL = "gateway_model";
+
+    /**
+     * 离线密码因子
+     */
+    public static final String PASSWORD_FACTOR = "password_Factor";
+
+
 }
 

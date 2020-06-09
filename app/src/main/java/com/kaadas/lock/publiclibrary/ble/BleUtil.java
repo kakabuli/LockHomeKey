@@ -46,6 +46,7 @@ public class BleUtil {
     public static final int BLE_VERSION_OLD = 1; //最老的版本  老版本协议  功能只有开锁  开锁记录  电量
     public static final int BLE_VERSION_NEW1 = 2;   //中间的版本  新版本协议   功能只有开锁  开锁记录  电量
     public static final int BLE_VERSION_NEW2 = 3;   //最新的版本  最新的协议  全功能支持
+    public static final int BLE_VERSION_NEW3 = 4;   //单火开关项目  最新的协议  全功能支持（不做心跳、鉴权）
 
 
 //    public static final String ADMINISTRATOR_PASSWORD_MODIFY = "修改管理员密码";
