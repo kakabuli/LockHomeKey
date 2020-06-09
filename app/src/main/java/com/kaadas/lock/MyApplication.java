@@ -49,6 +49,7 @@ import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.MyLog;
 import com.kaadas.lock.utils.Rom;
 import com.kaadas.lock.utils.SPUtils;
+import com.kaadas.lock.utils.SPUtils2;
 import com.kaadas.lock.utils.ToastUtil;
 import com.kaadas.lock.utils.ftp.GeTui;
 import com.kaadas.lock.utils.greenDao.db.DaoManager;
@@ -70,6 +71,7 @@ import com.scwang.smartrefresh.layout.header.ClassicsHeader;
 import com.tencent.bugly.crashreport.CrashReport;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
+import com.xiaomi.mipush.sdk.MiPushClient;
 import com.yun.software.kaadas.Utils.ActivityCollectorUtil;
 import com.yun.software.kaadas.Utils.UserUtils;
 /*import com.uuzuche.lib_zxing.activity.ZXingLibrary;*/
@@ -122,6 +124,12 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
     private List<HomeShowBean> homeShowDevices = new ArrayList<>();
     private int listService = 0;
 
+    // 小米
+    // user your appid the key.
+    private static final String M_APP_ID = "2882303761517594031";
+    // user your appid the key.
+    private static final String M_APP_KEY = "5931759473031";
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -146,6 +154,8 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
         // HuaWei phone
         if (Rom.isEmui()) {
             HMSAgent.init(this);
+        }else if(Rom.isMiui()){
+                MiPushClient.registerPush(this, M_APP_ID, M_APP_KEY);
         }
         PushManager.getInstance().initialize(this, userPushService);
         // 注册 intentService 后 PushDemoReceiver 无效, sdk 会使用 DemoIntentService 传递数据,
@@ -378,6 +388,7 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
         LinphoneHelper.deleteUser();
         //退出meme网
         MemeManager.getInstance().videoActivityDisconnectMeme();
+        SPUtils2.remove(this,Constants.PUSHID);
         //清除数据库数据
         for (Activity activity : activities) {
             if (activity != null) {
