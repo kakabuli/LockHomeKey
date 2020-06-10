@@ -324,6 +324,7 @@
     <string name="fingerprint">指纹</string>
     <string name="ge">个</string>
     <string name="card">卡片</string>
+    <string name="smart_switch">智能开关</string>
     <string name="zhang">张</string>
     <string name="device_share">设备共享</string>
     <string name="more">更多</string>

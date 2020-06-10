@@ -24,6 +24,7 @@ public class BleLockUtils {
     public static final int TYPE_MORE = 5;
     public static final int TYPE_OFFLINE_PASSWORD = 6;
     public static final int TYPE_FACE_PASSWORD = 7;
+    public static final int TYPE_SMART_SWITCH = 8;
 
     /***
      * 1	开门	带密码开门,需要输入用户密码密码开门,不支持不带密码开门。安全模式（双重验证模式）下,APP不能开门；电子反锁状态下,APP不能开门；系统锁定模式下,APP不能开门
@@ -403,7 +404,7 @@ public class BleLockUtils {
     }
 
     /**
-     * 根据功能集判断显示的界面
+     * 根据功能集判断显示蓝牙锁的界面
      *
      * @param functionSet
      * @return
@@ -435,7 +436,7 @@ public class BleLockUtils {
     }
 
     /**
-     * 根据功能集判断显示的界面
+     * 根据功能集判断显示WI-FI锁的界面
      *
      * @param functionSet
      * @return
@@ -466,6 +467,10 @@ public class BleLockUtils {
         if (integers.contains(9)) {
             functionBeans.add(new WifiLockFunctionBean(MyApplication.getInstance().getString(R.string.card), R.mipmap.bluetooth_card, TYPE_CARD));
         }
+        if (integers.contains(45)) {
+            functionBeans.add(new WifiLockFunctionBean(MyApplication.getInstance().getString(R.string.smart_switch), R.mipmap.single_switch_smart_icon, TYPE_SMART_SWITCH));
+        }
+
         functionBeans.add(new WifiLockFunctionBean(MyApplication.getInstance().getString(R.string.device_share), R.mipmap.wifi_lock_share, TYPE_SHARE));
         functionBeans.add(new WifiLockFunctionBean(MyApplication.getInstance().getString(R.string.more), R.mipmap.bluetooth_more, TYPE_MORE));
 

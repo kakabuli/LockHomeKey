@@ -212,7 +212,13 @@ public class WifiLockBleToWifiSetUpPresenter<T> extends BasePresenter<IWifiLockB
                         }
                         if ((originalData[3] & 0xff) == 0x93) {
                             LogUtils.e("--kaadas--收到配网结果");
-                            mViewRef.get().onUpdateSuccess();
+                            if ((originalData[4] & 0xff) == 0x00){
+                                //配网成功
+                                mViewRef.get().onUpdateSuccess();
+                            }else {
+                                //配网失败
+                                mViewRef.get().onUpdateFailed();
+                            }
                         }
                         //toDisposable(characterNotifyDisposable);
                     }

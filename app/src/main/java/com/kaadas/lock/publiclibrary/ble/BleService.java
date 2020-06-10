@@ -70,7 +70,7 @@ public class BleService extends Service {
 
     private BluetoothGattCharacteristic distribution_network_send_Character;  // App -> BLE 配网通道特征
     private BluetoothGattCharacteristic distribution_network_notify_Character;// BLE -> App 配网通道特征
-    private BluetoothGattCharacteristic distribution_network_lockFunctionSetChar;// BLE -> App 配网通道特征
+    private BluetoothGattCharacteristic distribution_network_lockFunctionSetChar;// BLE -> App 配网通道特征:获取功能集
 
     private boolean isConnected = false;
     private BluetoothGatt bluetoothGatt;
@@ -296,6 +296,7 @@ public class BleService extends Service {
 
             distribution_network_send_Character = null;
             distribution_network_notify_Character = null;
+            distribution_network_lockFunctionSetChar = null;
 
             bleVersion = 0;
             handler.removeCallbacks(getRemoteDeviceRunnable);
@@ -1043,6 +1044,12 @@ public class BleService extends Service {
                         }
                     }
                 }
+
+                if (uuidChar.equalsIgnoreCase(BLeConstants.DISTRIBUTION_NETWORK__UUID_FUNCTION_SET)) {
+                    //BLE+WiFi配网通道获取功能集特征
+                    distribution_network_lockFunctionSetChar = characteristic;
+                }
+
             }
         }
 

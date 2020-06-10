@@ -15,6 +15,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
+import com.kaadas.lock.activity.addDevice.singleswitch.SwipchLinkNo;
 import com.kaadas.lock.activity.device.wifilock.family.WifiLockFamilyManagerActivity;
 import com.kaadas.lock.activity.device.wifilock.password.WiFiLockPasswordManagerActivity;
 import com.kaadas.lock.activity.device.wifilock.password.WifiLockPasswordShareActivity;
@@ -346,6 +347,11 @@ public class WiFiLockDetailActivity extends BaseActivity<IWifiLockDetailView, Wi
                         intent.putExtra(KeyConstants.KEY_TYPE, 3);
                         startActivity(intent);
                         break;
+                    case BleLockUtils.TYPE_SMART_SWITCH:
+                        intent = new Intent(WiFiLockDetailActivity.this, SwipchLinkNo.class);
+//                        intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
+                        startActivity(intent);
+                        break;
                     case BleLockUtils.TYPE_SHARE:
                         intent = new Intent(WiFiLockDetailActivity.this, WifiLockFamilyManagerActivity.class);
                         intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
@@ -391,6 +397,11 @@ public class WiFiLockDetailActivity extends BaseActivity<IWifiLockDetailView, Wi
                         intent = new Intent(WiFiLockDetailActivity.this, WiFiLockPasswordManagerActivity.class);
                         intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
                         intent.putExtra(KeyConstants.KEY_TYPE, 3);
+                        startActivity(intent);
+                        break;
+                    case BleLockUtils.TYPE_SMART_SWITCH:
+                        intent = new Intent(WiFiLockDetailActivity.this, SwipchLinkNo.class);
+//                        intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
                         startActivity(intent);
                         break;
                     case BleLockUtils.TYPE_SHARE:

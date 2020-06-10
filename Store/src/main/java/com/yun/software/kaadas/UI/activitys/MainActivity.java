@@ -48,7 +48,6 @@ public class MainActivity extends BaseActivity {
     private HomeFragment homeFragment;
     private MineFragment mineFragment;
 
-
     private Fragment mCurrentFragment;
     private int selectIndex=0;
     private String[] mTitles = {"首页", "设备", "商城","我"};
@@ -59,10 +58,7 @@ public class MainActivity extends BaseActivity {
     private FragmentManager fragmentManager;
     private ArrayList<CustomTabEntity> mTabEntities = new ArrayList<>();
 
-
     public static boolean isForeground = false;
-
-
 
 
     @Override
@@ -75,14 +71,11 @@ public class MainActivity extends BaseActivity {
         return R.layout.activity_main;
     }
 
-
     //保证闪退后,fragment不重叠
     @Override
     public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
 
     }
-
-
 
     private void setCostomMsg(String msg){
         ToastUtil.showShort(msg);
@@ -92,10 +85,7 @@ public class MainActivity extends BaseActivity {
     protected void initViewsAndEvents() {
 
         StatusBarUtil.setLightMode(this);
-
         initDate();
-
-
 
     }
 
@@ -156,7 +146,6 @@ public class MainActivity extends BaseActivity {
                 break;
             //商城
             case 2:
-
 
                 if (shopFragment == null) {
                     shopFragment = new ShopFragment();

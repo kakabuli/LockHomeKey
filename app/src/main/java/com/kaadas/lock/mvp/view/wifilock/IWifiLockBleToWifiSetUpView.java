@@ -31,7 +31,7 @@ public interface IWifiLockBleToWifiSetUpView extends IBaseView {
     /**
      * 锁配网失败
      */
-    void onUpdateFailed(BaseResult baseResult);
+    void onUpdateFailed();
 
     /**
      * 锁配网异常
