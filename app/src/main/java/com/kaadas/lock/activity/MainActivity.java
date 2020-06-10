@@ -68,6 +68,8 @@ import com.kaadas.lock.utils.networkListenerutil.NetWorkChangReceiver;
 import com.kaadas.lock.widget.BottomMenuSelectMarketDialog;
 import com.kaadas.lock.widget.NoScrollViewPager;
 import com.kaidishi.lock.push.NetEvevt;
+import com.kaidishi.lock.xiaomi.SPUtils2;
+import com.kaidishi.lock.xiaomi.XiaoMiConstant;
 import com.yun.software.kaadas.Comment.Constans;
 import com.yun.software.kaadas.UI.fragment.ShopFragment;
 import com.yun.software.kaadas.Utils.UserUtils;
@@ -334,7 +336,7 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
 
     @Override
     public void onNetEventToken(String token) {
-        uploadToken(token);
+        uploadToken(3,token);
     }
 
 
@@ -374,10 +376,13 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
         isOnBackground = false;
 
         ispush = (boolean) SPUtils.get(Constants.PUSHID, false);
-        Log.e(GeTui.VideoLog, "ispush:" + ispush);
+        if(ispush){
+            LogUtils.e("上传成功token...");
+            return;
+        }
         if (Rom.isEmui()) {
             // no get token
-            String huawei = (String) SPUtils.get(GeTui.HUAWEI_KEY, "");
+              String huawei = (String) SPUtils.get(GeTui.HUAWEI_KEY, "");
             if (TextUtils.isEmpty(huawei)) {
                 // 初始化,生成token失败
                 Log.e(GeTui.VideoLog, "startSendFile to HMSAgent,token produce fail");
@@ -390,20 +395,27 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
                     }
                 });
             } else {
+                uploadToken(3,huawei);
                 // produce token success,upload token fail
-                if (!ispush) {
-                    uploadToken(huawei);
-                } else {
-                    Log.e(GeTui.VideoLog, "token upload to success");
-                }
+//                if (!ispush) {
+//                    uploadToken(huawei);
+//                } else {
+//                    Log.e(GeTui.VideoLog, "token upload to success");
+//                }
             }
-        } else {
+        } else if(Rom.isMiui()){
+            String xiaoMiToken = (String) SPUtils2.get(MainActivity.this, XiaoMiConstant.XIAOMIKEY,"");
+            uploadToken(4,xiaoMiToken);
+        } else{
             // 使用个推
-            if (!ispush) {
-                mPresenter.uploadpushmethod();
-            } else {
-                Log.e(GeTui.VideoLog, "getui upload to success");
-            }
+//            if (!ispush) {
+//                String JpushId = (String) SPUtils2.get(MyApplication.getInstance(), GeTui.JPUSH_ID, "");
+//                mPresenter.uploadpushmethod(2,JpushId );
+//            } else {
+//                Log.e(GeTui.VideoLog, "getui upload to success");
+//            }
+                String JpushId = (String) SPUtils2.get(MyApplication.getInstance(), GeTui.JPUSH_ID, "");
+                uploadToken(2,JpushId);
         }
 
         boolean isUploadPhoneMsg = (boolean) SPUtils.get(Constants.PHONE_MSG_UPLOAD_STATUS, false);
@@ -453,9 +465,8 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
         super.onResume();
     }
 
-    public void uploadToken(String token) {
-        Log.e(GeTui.VideoLog, "MainActivity-->ispush:" + ispush + " huawei:" + token);
-        mPresenter.uploadpushmethod();
+    public void uploadToken(int type,String token) {
+        mPresenter.uploadpushmethod( type, token);
     }
 
     public static final boolean isInstanciated() {

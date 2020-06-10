@@ -797,27 +797,30 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
         compositeDisposable.add(deviceChangeDisposable);
     }
 
-    public void uploadpushmethod() {
+    // 个推 2
+    // 华为 3
+    // 小米 4
+    public void uploadpushmethod(int type , String JpushId) {
         String uid = (String) SPUtils.get(SPUtils.UID, "");
-        String JpushId = (String) SPUtils2.get(MyApplication.getInstance(), GeTui.JPUSH_ID, "");
+    //    String JpushId = (String) SPUtils2.get(MyApplication.getInstance(), GeTui.JPUSH_ID, "");
         //uploadPushId(String uid, String jpushId, int type)
         // 个推
-        int type = 2;
-        String phoneType = "other";
+     //   int type = 2;
+     //   String phoneType = "other";
         //  华为
-        if (Rom.isEmui()) {
-            String token = (String) SPUtils.get(GeTui.HUAWEI_KEY, "");
-            if (!TextUtils.isEmpty(token)) {
-                JpushId = token;
-                type = 3;
-                phoneType = GeTui.HUAWEI_KEY;
-            } else {
-                Log.e(GeTui.VideoLog, "huawei-->MainAcvitiyPresenter=>获取token为null..上传失败");
-                return;
-            }
-        }
-        Log.e(GeTui.VideoLog, "MainActivityPresenter-->phoneType:" + phoneType + " uid:" + uid + " jpushid:" + JpushId + " token:" + MyApplication.getInstance().getToken());
-
+//        if (Rom.isEmui()) {
+//            String token = (String) SPUtils.get(GeTui.HUAWEI_KEY, "");
+//            if (!TextUtils.isEmpty(token)) {
+//                JpushId = token;
+//                type = 3;
+//                phoneType = GeTui.HUAWEI_KEY;
+//            } else {
+//                Log.e(GeTui.VideoLog, "huawei-->MainAcvitiyPresenter=>获取token为null..上传失败");
+//                return;
+//            }
+//        }
+       // Log.e(GeTui.VideoLog, "MainActivityPresenter-->phoneType:" + phoneType + " uid:" + uid + " jpushid:" + JpushId + " token:" + MyApplication.getInstance().getToken());
+        LogUtils.e(GeTui.VideoLog, "uid:" + uid + " JpushId:" + JpushId);
         if (!TextUtils.isEmpty(uid) && !TextUtils.isEmpty(JpushId)) {
             XiaokaiNewServiceImp.uploadPushId(uid, JpushId, type).subscribe(new BaseObserver<BaseResult>() {
                 @Override
@@ -842,7 +845,10 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                     compositeDisposable.add(d);
                 }
             });
+        }else {
+            LogUtils.e("jpushid上传失败");
         }
+
     }
 
 
