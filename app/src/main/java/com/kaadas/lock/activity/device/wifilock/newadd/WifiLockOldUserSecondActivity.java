@@ -70,7 +70,7 @@ public class WifiLockOldUserSecondActivity extends AppCompatActivity {
 //                startActivity(new Intent(this,WifiLockAddNewScanActivity.class));
                 LogUtils.e("--Kaadas--wifiModelType==：" + wifiModelType);
 
-                if(wifiModelType.equals("WiFi")){
+                if(wifiModelType == null || wifiModelType.equals("WiFi")){
                     startActivity(new Intent(this,WifiLockAddNewScanActivity.class));
                 }
                 else if(wifiModelType.equals("WiFi&BLE")){

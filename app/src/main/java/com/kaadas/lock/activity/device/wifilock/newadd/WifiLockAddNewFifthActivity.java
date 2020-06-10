@@ -80,6 +80,7 @@ public class WifiLockAddNewFifthActivity extends AppCompatActivity {
                 }
                 else {
                     ToastUtil.getInstance().showShort("未知模组类型");
+
                 }
 
                 break;
