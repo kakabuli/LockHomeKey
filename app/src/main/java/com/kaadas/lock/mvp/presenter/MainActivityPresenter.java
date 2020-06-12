@@ -197,7 +197,6 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
         }
     }
 
-
     private void listerBleVersion() {
         //监听是否有新版本
         if (bleService != null) {

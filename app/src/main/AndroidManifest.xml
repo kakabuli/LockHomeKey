@@ -54,15 +54,18 @@
         <activity android:name=".activity.addDevice.singleswitch.SwipLinkFailActivity" />
         <activity android:name=".activity.addDevice.singleswitch.SwipLinkThreeActivity" />
         <activity android:name=".activity.addDevice.singleswitch.SwipLinkTwoActivity" />
-        <activity android:name=".activity.addDevice.singleswitch.SwipchLinkOne" >
+        <activity android:name=".activity.addDevice.singleswitch.SwipchLinkOne"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"/>
 
-        </activity>
-        <activity android:name=".activity.addDevice.singleswitch.SwipchLinkNo" >
+        <activity android:name=".activity.addDevice.singleswitch.SwipchLinkNo"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"/>
 
-        </activity>
-        <activity android:name=".activity.addDevice.singleswitch.SwipchLinkActivity">
+        <activity android:name=".activity.addDevice.singleswitch.SwipchLinkActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
 
-        </activity>
         <activity
             android:name=".activity.MainActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"

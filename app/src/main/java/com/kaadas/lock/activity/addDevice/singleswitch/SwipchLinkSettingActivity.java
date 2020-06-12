@@ -22,12 +22,10 @@ import com.kaadas.lock.utils.ToastUtil;
 import butterknife.BindView;
 
 public class SwipchLinkSettingActivity extends AppCompatActivity implements View.OnClickListener{
-    TextView tv_content;
     // 1 表示全天
     int status=0 ;
-    ImageView link_setting_all_day;
-    TextView tvStart;
-    TextView tvEnd;
+    ImageView link_setting_all_day,iv_back;
+    TextView tv_content,tvStart,tvEnd;
     RelativeLayout swipch_link_rl_one,swipch_link_rl_two,swipch_link_rl_three;
     Button btn_next;
 
@@ -36,20 +34,20 @@ public class SwipchLinkSettingActivity extends AppCompatActivity implements View
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_swipch_link_setting);
         tv_content = findViewById(R.id.tv_content);
-        tv_content.setText(getString(R.string.effective_time));
         link_setting_all_day = findViewById(R.id.link_setting_all_day);
         link_setting_all_day.setOnClickListener(this);
         swipch_link_rl_one = findViewById(R.id.swipch_link_rl_one);
         swipch_link_rl_two = findViewById(R.id.swipch_link_rl_two);
         swipch_link_rl_three = findViewById(R.id.swipch_link_rl_three);
+        iv_back = findViewById(R.id.iv_back);
         tvStart = findViewById(R.id.tv_start);
         tvEnd = findViewById(R.id.tv_end);
         swipch_link_rl_one.setOnClickListener(this);
         swipch_link_rl_two.setOnClickListener(this);
         swipch_link_rl_three.setOnClickListener(this);
+        iv_back.setOnClickListener(this);
         btn_next = findViewById(R.id.btn_next);
         btn_next.setOnClickListener(this);
-
 
 // 1 表示全天
 
@@ -139,6 +137,9 @@ public class SwipchLinkSettingActivity extends AppCompatActivity implements View
              }
              break;
 
+         case R.id.iv_back:
+             finish();
+             break;
 
      }
     }

@@ -510,6 +510,11 @@ public class KeyConstants {
      */
     public static final String PASSWORD_FACTOR = "password_Factor";
 
+    /**
+     * 单火开关的开关个数
+     */
+    public static final String SWITCH_NUMBER = "switch_Number";
+
 
 }
 

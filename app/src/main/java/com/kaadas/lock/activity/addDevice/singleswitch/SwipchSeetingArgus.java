@@ -3,14 +3,18 @@ package com.kaadas.lock.activity.addDevice.singleswitch;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.kaadas.lock.R;
 import com.kaadas.lock.utils.AlertDialogUtil;
 
+import butterknife.BindView;
+
 public class SwipchSeetingArgus extends AppCompatActivity implements View.OnClickListener {
     TextView tv_content;
+    ImageView iv_back;
     RelativeLayout swipch_setting_arugs_change,swipch_link_btn_one_rl,swipch_link_btn_two_rl;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,12 +22,14 @@ public class SwipchSeetingArgus extends AppCompatActivity implements View.OnClic
         setContentView(R.layout.activity_swipch_seeting_argus);
         tv_content = findViewById(R.id.tv_content);
         tv_content.setText(getString(R.string.setting));
+        iv_back = findViewById(R.id.iv_back);
         swipch_setting_arugs_change = findViewById(R.id.swipch_setting_arugs_change);
         swipch_link_btn_one_rl = findViewById(R.id.swipch_link_btn_one_rl);
         swipch_link_btn_two_rl = findViewById(R.id.swipch_link_btn_two_rl);
         swipch_setting_arugs_change.setOnClickListener(this);
         swipch_link_btn_one_rl.setOnClickListener(this);
         swipch_link_btn_two_rl.setOnClickListener(this);
+        iv_back.setOnClickListener(this);
 
     }
 
@@ -70,6 +76,10 @@ public class SwipchSeetingArgus extends AppCompatActivity implements View.OnClic
             case R.id.swipch_link_btn_two_rl:
 
                 break;
+            case R.id.iv_back:
+                finish();
+                break;
+
         }
     }
 }

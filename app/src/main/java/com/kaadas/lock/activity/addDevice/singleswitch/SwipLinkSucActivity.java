@@ -10,10 +10,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.kaadas.lock.R;
-public class SwipLinkSucActivity extends AppCompatActivity {
+import com.kaadas.lock.activity.device.wifilock.WiFiLockDetailActivity;
+
+public class SwipLinkSucActivity extends AppCompatActivity implements View.OnClickListener{
     TextView tv_content,swipch_link_join_tv;
     Button btn_next;
-    ImageView swipch_link_join_img;
+    ImageView swipch_link_join_img,iv_back;
     LinearLayout swipch_link_ll_1,swipch_link_ll_2,swipch_link_ll_3;
     int  link=1;
     @Override
@@ -22,24 +24,18 @@ public class SwipLinkSucActivity extends AppCompatActivity {
         setContentView(R.layout.activity_swip_link_suc);
 
         tv_content = findViewById(R.id.tv_content);
+        tv_content.setText(getString(R.string.add_success));
         btn_next = findViewById(R.id.btn_next);
+        iv_back = findViewById(R.id.iv_back);
         swipch_link_join_img = findViewById(R.id.swipch_link_join_img);
         swipch_link_join_tv = findViewById(R.id.swipch_link_join_tv);
         swipch_link_ll_1 = findViewById(R.id.swipch_link_ll_1);
         swipch_link_ll_2 = findViewById(R.id.swipch_link_ll_2);
         swipch_link_ll_3 = findViewById(R.id.swipch_link_ll_3);
 
-        tv_content.setText(getString(R.string.add_success));
-        btn_next.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        btn_next.setOnClickListener(this);
+        iv_back.setOnClickListener(this);
 
-                Intent intent=new Intent(SwipLinkSucActivity.this,SwipLinkTwoActivity.class);
-
-                startActivity(intent);
-
-            }
-        });
         chageLink(1);
 
     }
@@ -62,6 +58,25 @@ public class SwipLinkSucActivity extends AppCompatActivity {
                 swipch_link_join_tv.setText(getString(R.string.swipch_link_join_network_suc3));
                 swipch_link_join_img.setBackgroundResource(R.mipmap.swipch_link_join_network_suc3);
                 break;
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case  R.id.btn_next:
+
+                Intent intent=new Intent(SwipLinkSucActivity.this, WiFiLockDetailActivity.class);
+
+                startActivity(intent);
+
+                break;
+
+
+            case R.id.iv_back:
+                finish();
+                break;
+
         }
     }
 }

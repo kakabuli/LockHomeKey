@@ -538,6 +538,8 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
                             allBindDeviceDisposable.dispose();
                         }
                         String payload = mqttData.getPayload();
+                        LogUtils.e("--kaadas--payload=="+payload);
+
                         allBindDevices = new Gson().fromJson(payload, AllBindDevices.class);
 
                         if (!"200".equals(allBindDevices.getCode())) {  ///服务器获取设备列表失败
@@ -563,6 +565,8 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
                             LogUtils.e("设备更新  application");
                             getDevicesFromServer.onNext(allBindDevices);
                             //缓存WiFi锁设备
+                            LogUtils.e("--kaadas--allBindDevices.getData().getWifiList()=="+allBindDevices.getData().getWifiList());
+
                             if (allBindDevices.getData() != null && allBindDevices.getData().getWifiList() != null) {
                                 List<WifiLockInfo> wifiList = allBindDevices.getData().getWifiList();
                                 WifiLockInfoDao wifiLockInfoDao = getDaoWriteSession().getWifiLockInfoDao();

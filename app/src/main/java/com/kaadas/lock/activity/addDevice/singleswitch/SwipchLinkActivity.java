@@ -15,6 +15,12 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
+import com.kaadas.lock.utils.KeyConstants;
+import com.kaadas.lock.utils.LogUtils;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 
 public class SwipchLinkActivity extends AppCompatActivity implements View.OnClickListener {
@@ -22,13 +28,17 @@ public class SwipchLinkActivity extends AppCompatActivity implements View.OnClic
     ImageView swipch_link_center_img,swipch_one_img,swipch_two_img,swipch_three_img;
     LinearLayout swipch_two,swipch_one,swipch_three;
     View swich_view_item_two;
-    ImageView swipch_setting_btn,swich_link_link_switch;
+    ImageView swipch_setting_btn,swich_link_link_switch,back;
     RelativeLayout tv_double_rl,three_double_rl;
+
+    private WifiLockInfo wifiLockInfo;
+    private int SwitchNumber;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_swipch_link);
+
         swipch_link_center_img = findViewById(R.id.swipch_link_center_img);
         swipch_one = findViewById(R.id.swipch_one);
         swipch_two = findViewById(R.id.swipch_two);
@@ -43,6 +53,7 @@ public class SwipchLinkActivity extends AppCompatActivity implements View.OnClic
 
         tv_double_rl = findViewById(R.id.tv_double_rl);
         three_double_rl = findViewById(R.id.three_double_rl);
+        back = findViewById(R.id.back);
 
         swipch_one.setOnClickListener(this);
         swipch_two.setOnClickListener(this);
@@ -52,12 +63,15 @@ public class SwipchLinkActivity extends AppCompatActivity implements View.OnClic
         three_double_rl.setOnClickListener(this);
         swipch_link_center_img.setOnClickListener(this);
         swich_link_link_switch.setOnClickListener(this);
-
+        back.setOnClickListener(this);
 
         swipch_link_center_img.setBackgroundResource(R.mipmap.swipch_link_two);
 
-        int open=3;
-        switch (open){
+        SwitchNumber = getIntent().getIntExtra(KeyConstants.SWITCH_NUMBER,1);
+
+//        int open = SwitchNumber;
+
+        switch (SwitchNumber){
             case 1:
                 swipch_link_center_img.setBackgroundResource(R.mipmap.swipch_link_one);
                 swipch_two.setVisibility(View.GONE);
@@ -99,7 +113,12 @@ public class SwipchLinkActivity extends AppCompatActivity implements View.OnClic
                 break;
         }
     }
-
+//    @Override
+//    protected void onNewIntent(Intent intent) {
+//        super.onNewIntent(intent);
+//        setIntent(intent);
+////        SwitchNumber = getIntent().getIntExtra(KeyConstants.SWITCH_NUMBER,1);
+//    }
     @Override
     public void onClick(View v) {
          switch (v.getId()) {
@@ -124,6 +143,10 @@ public class SwipchLinkActivity extends AppCompatActivity implements View.OnClic
 
              case R.id.swich_link_link_switch:
                  swich_link_link_switch.setBackgroundResource(R.mipmap.swipperlinkleft_blue);
+                 break;
+
+             case R.id.back:
+                 finish();
                  break;
 
          }

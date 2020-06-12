@@ -1,10 +1,16 @@
 package com.kaadas.lock.publiclibrary.bean;
 
+import com.google.gson.annotations.SerializedName;
+import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.greenDao.convert.SingleFireSwitchInfoConvert;
+
+import org.greenrobot.greendao.annotation.Convert;
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Id;
 
 import java.io.Serializable;
+import java.util.List;
 
 @Entity
 public class WifiLockInfo implements Serializable {
@@ -52,12 +58,14 @@ public class WifiLockInfo implements Serializable {
      * functionSet	串	功能集
      * productInfoList	清单	产品型号信息列表
      * wifi列表	清单	wifi锁列表
-     *
+     * switch  单火开关数据
      */
 
     @Id(autoincrement = true)
-    private Long id;
+    private long id;
 
+    @SerializedName("_id")
+    private String deviceID;
     private String wifiSN;
     private int isAdmin;
     private String adminUid;
@@ -117,16 +125,19 @@ public class WifiLockInfo implements Serializable {
     private long openStatusTime;
 
 
-@Generated(hash = 390651843)
-public WifiLockInfo(Long id, String wifiSN, int isAdmin, String adminUid,
-        String adminName, String productSN, String productModel, int appId,
-        String lockNickname, String lockSoftwareVersion, String functionSet, String uid,
-        String uname, int pushSwitch, int amMode, int safeMode, int powerSave,
-        int faceStatus, int defences, String language, int operatingMode, int volume,
-        String bleVersion, String wifiVersion, String mqttVersion,
-        String lockFirmwareVersion, String randomCode, long createTime, String wifiName,
-        int power, long updateTime, int openStatus, long openStatusTime) {
+    @Convert(converter = SingleFireSwitchInfoConvert.class , columnType = String.class)
+    @SerializedName("switch")
+    private SingleFireSwitchInfo singleFireSwitchInfo;
+
+@Generated(hash = 133069291)
+public WifiLockInfo(long id, String deviceID, String wifiSN, int isAdmin, String adminUid, String adminName, String productSN,
+        String productModel, int appId, String lockNickname, String lockSoftwareVersion, String functionSet, String uid,
+        String uname, int pushSwitch, int amMode, int safeMode, int powerSave, int faceStatus, int defences, String language,
+        int operatingMode, int volume, String bleVersion, String wifiVersion, String mqttVersion, String lockFirmwareVersion,
+        String randomCode, long createTime, String wifiName, int power, long updateTime, int openStatus, long openStatusTime,
+        SingleFireSwitchInfo singleFireSwitchInfo) {
     this.id = id;
+    this.deviceID = deviceID;
     this.wifiSN = wifiSN;
     this.isAdmin = isAdmin;
     this.adminUid = adminUid;
@@ -159,19 +170,12 @@ public WifiLockInfo(Long id, String wifiSN, int isAdmin, String adminUid,
     this.updateTime = updateTime;
     this.openStatus = openStatus;
     this.openStatusTime = openStatusTime;
+    this.singleFireSwitchInfo = singleFireSwitchInfo;
 }
 
     @Generated(hash = 666757199)
     public WifiLockInfo() {
     }
-
-
-
-
-
-
-
-
 
     public String getWifiSN() {
         return wifiSN;
@@ -381,19 +385,10 @@ public WifiLockInfo(Long id, String wifiSN, int isAdmin, String adminUid,
     }
 
 
-    public Long getId() {
-        return this.id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-
     @Override
     public String toString() {
         return "WifiLockInfo{" +
-                "id=" + id +
+                "_id=" + deviceID +
                 ", wifiSN='" + wifiSN + '\'' +
                 ", isAdmin=" + isAdmin +
                 ", adminUid='" + adminUid + '\'' +
@@ -420,6 +415,7 @@ public WifiLockInfo(Long id, String wifiSN, int isAdmin, String adminUid,
                 ", mqttVersion='" + mqttVersion + '\'' +
                 ", lockFirmwareVersion='" + lockFirmwareVersion + '\'' +
                 ", randomCode='" + randomCode + '\'' +
+                ", switch='" + singleFireSwitchInfo + '\'' +
                 '}';
     }
 
@@ -472,5 +468,35 @@ public WifiLockInfo(Long id, String wifiSN, int isAdmin, String adminUid,
     public void setOpenStatusTime(long openStatusTime) {
         this.openStatusTime = openStatusTime;
     }
+
+    public SingleFireSwitchInfo getSingleFireSwitchInfo() {
+
+        return this.singleFireSwitchInfo;
+    }
+
+    public void setSingleFireSwitchInfo(SingleFireSwitchInfo singleFireSwitchInfo) {
+        this.singleFireSwitchInfo = singleFireSwitchInfo;
+    }
+
+    public long getId() {
+        return this.id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public String getDeviceID() {
+        return this.deviceID;
+    }
+
+    public void setDeviceID(String deviceID) {
+        this.deviceID = deviceID;
+    }
+
+
+
+
+
 
 }

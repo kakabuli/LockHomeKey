@@ -15,6 +15,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
+import com.kaadas.lock.activity.addDevice.singleswitch.SwipchLinkActivity;
 import com.kaadas.lock.activity.addDevice.singleswitch.SwipchLinkNo;
 import com.kaadas.lock.activity.device.wifilock.family.WifiLockFamilyManagerActivity;
 import com.kaadas.lock.activity.device.wifilock.password.WiFiLockPasswordManagerActivity;
@@ -348,9 +349,25 @@ public class WiFiLockDetailActivity extends BaseActivity<IWifiLockDetailView, Wi
                         startActivity(intent);
                         break;
                     case BleLockUtils.TYPE_SMART_SWITCH:
-                        intent = new Intent(WiFiLockDetailActivity.this, SwipchLinkNo.class);
-//                        intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
-                        startActivity(intent);
+
+
+                        if (wifiLockInfo.getSingleFireSwitchInfo() != null) {
+
+                            int SwitchNumber = wifiLockInfo.getSingleFireSwitchInfo().getSwitchNumber().size();
+
+                            if (SwitchNumber > 0) {
+                                intent = new Intent(WiFiLockDetailActivity.this, SwipchLinkActivity.class);
+                                intent.putExtra(KeyConstants.SWITCH_NUMBER, SwitchNumber);
+                                startActivity(intent);
+                            } else {
+                                intent = new Intent(WiFiLockDetailActivity.this, SwipchLinkNo.class);
+                                startActivity(intent);
+                            }
+                        }else {
+
+                            intent = new Intent(WiFiLockDetailActivity.this, SwipchLinkNo.class);
+                            startActivity(intent);
+                        }
                         break;
                     case BleLockUtils.TYPE_SHARE:
                         intent = new Intent(WiFiLockDetailActivity.this, WifiLockFamilyManagerActivity.class);
@@ -400,9 +417,24 @@ public class WiFiLockDetailActivity extends BaseActivity<IWifiLockDetailView, Wi
                         startActivity(intent);
                         break;
                     case BleLockUtils.TYPE_SMART_SWITCH:
-                        intent = new Intent(WiFiLockDetailActivity.this, SwipchLinkNo.class);
-//                        intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
-                        startActivity(intent);
+
+                        if (wifiLockInfo.getSingleFireSwitchInfo() != null) {
+
+                            int SwitchNumber = wifiLockInfo.getSingleFireSwitchInfo().getSwitchNumber().size();
+
+                            if (SwitchNumber > 0) {
+                                intent = new Intent(WiFiLockDetailActivity.this, SwipchLinkActivity.class);
+                                intent.putExtra(KeyConstants.SWITCH_NUMBER, SwitchNumber);
+                                startActivity(intent);
+                            } else {
+                                intent = new Intent(WiFiLockDetailActivity.this, SwipchLinkNo.class);
+                                startActivity(intent);
+                            }
+                        }else {
+
+                            intent = new Intent(WiFiLockDetailActivity.this, SwipchLinkNo.class);
+                            startActivity(intent);
+                        }
                         break;
                     case BleLockUtils.TYPE_SHARE:
                         intent = new Intent(WiFiLockDetailActivity.this, WifiLockFamilyManagerActivity.class);
