@@ -10,10 +10,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.kaadas.lock.R;
+import com.kaadas.lock.utils.KeyConstants;
+
 public class SwipLinkTwoActivity extends AppCompatActivity implements View.OnClickListener{
     TextView tv_content;
     Button btn_next;
     ImageView swich_link_two_img,iv_back;
+
+    private String wifiSn;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,15 +37,23 @@ public class SwipLinkTwoActivity extends AppCompatActivity implements View.OnCli
         btn_next.setOnClickListener(this);
         iv_back.setOnClickListener(this);
 
+        initData();
+
+    }
+    private void initData() {
+
+        wifiSn = getIntent().getStringExtra(KeyConstants.WIFI_SN);
+
     }
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case  R.id.btn_next:
 
-                Intent intent=new Intent(SwipLinkTwoActivity.this,SwipLinkThreeActivity.class);
-
+                Intent intent = new Intent(SwipLinkTwoActivity.this, SwipLinkThreeActivity.class);
+                intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
                 startActivity(intent);
+
                 break;
 
 

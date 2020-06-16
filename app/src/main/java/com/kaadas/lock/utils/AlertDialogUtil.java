@@ -229,10 +229,10 @@ public class AlertDialogUtil {
 
 
     //no_et_dialog
-    public void noEditTwoButtonDialogWidthDialogEdit(Context context, String title, String left, String right, ClickListener clickListener) {
+    public void noEditTwoButtonDialogWidthDialogEdit(Context context, String title, String content, String left, String right, ClickListener clickListener) {
         View mView = LayoutInflater.from(context).inflate(R.layout.no_etit_dialog, null);
         TextView tvTitle = mView.findViewById(R.id.tv_hint);
-  //      TextView tvContent = mView.findViewById(R.id.tv_content);
+        EditText tvContent = mView.findViewById(R.id.et_content);
         TextView tv_cancel = mView.findViewById(R.id.tv_left);
         TextView tv_query = mView.findViewById(R.id.tv_right);
      //   tv_query.setTextColor(Color.parseColor("#101010"));
@@ -243,7 +243,7 @@ public class AlertDialogUtil {
             tvTitle.setVisibility(View.VISIBLE);
             tvTitle.setText(title);
         }
-      //  tvContent.setText(content);
+        tvContent.setText(content);
         tv_cancel.setText(left);
         tv_query.setText(right);
         //取消

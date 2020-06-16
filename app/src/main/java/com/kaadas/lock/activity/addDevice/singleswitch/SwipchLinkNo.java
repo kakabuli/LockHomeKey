@@ -2,6 +2,7 @@ package com.kaadas.lock.activity.addDevice.singleswitch;
 
 
 import com.kaadas.lock.R;
+import com.kaadas.lock.utils.KeyConstants;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -22,6 +23,8 @@ public class SwipchLinkNo extends AppCompatActivity implements View.OnClickListe
     @BindView(R.id.back)
     ImageView back;
 
+    private String wifiSn;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,9 +34,15 @@ public class SwipchLinkNo extends AppCompatActivity implements View.OnClickListe
         btn_swipch_ok.setOnClickListener(this);
         back.setOnClickListener(this);
 
+        initData();
 
     }
 
+    private void initData() {
+
+        wifiSn = getIntent().getStringExtra(KeyConstants.WIFI_SN);
+
+    }
     @Override
     public void onClick(View v) {
 
@@ -43,6 +52,7 @@ public class SwipchLinkNo extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.btn_swipch_ok:
                 Intent intent = new Intent(SwipchLinkNo.this, SwipchLinkOne.class);
+                intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
                 startActivity(intent);
                 break;
 

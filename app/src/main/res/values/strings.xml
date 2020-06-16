@@ -1631,10 +1631,14 @@
     <string name="swipch_link_setting_start_dayu_end">结束时间不能小于生效时间</string>
     <string name="swipch_setting_btn1">键位（1）</string>
     <string name="swipch_setting_btn2">键位（2）</string>
+    <string name="swipch_setting_btn3">键位（3）</string>
     <string name="swipch_change_btn_open">更换智能开关</string>
     <string name="swipch_setting_pluease_input_name">请输入名称</string>
     <string name="swipch_setting_pluease_input_title_name">确认更换智能开关？</string>
     <string name="swipch_setting_pluease_input_context_name">新的智能开关需要手动配置</string>
     <string name="swipch_setting_pluease_input_center_hint">客厅吸顶灯</string>
     <string name="swipch_setting_pluease_dialog_title1">请输入键位1名称</string>
+    <string name="swipch_setting_pluease_dialog_title2">请输入键位2名称</string>
+    <string name="swipch_setting_pluease_dialog_title3">请输入键位3名称</string>
+
 </resources>

@@ -87,6 +87,7 @@ import com.kaadas.lock.publiclibrary.http.temp.postbean.OpenLockAuth;
 import com.kaadas.lock.publiclibrary.http.util.HttpUtils;
 import com.kaadas.lock.publiclibrary.http.util.RetrofitServiceManager;
 import com.kaadas.lock.publiclibrary.http.util.RxjavaHelper;
+import com.kaadas.lock.publiclibrary.mqtt.publishbean.BindingSingleFireSwitchBean;
 
 
 import java.io.File;
@@ -1254,5 +1255,16 @@ public class XiaokaiNewServiceImp {
                 .compose(RxjavaHelper.observeOnMainThread());
     }
 
+    /**
+     * 单火开关设备昵称及开关修改
+     *
+     * @return
+     */
+    public static Observable<BaseResult> bindingAndModifyDeviceNick(BindingSingleFireSwitchBean bindingSingleFireSwitchBean) {
+        return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
+                .bindingAndModifyDeviceNick(new HttpUtils<BindingSingleFireSwitchBean>().getBody(bindingSingleFireSwitchBean))
+                .compose(RxjavaHelper.observeOnMainThread())
+                ;
+    }
 
 }

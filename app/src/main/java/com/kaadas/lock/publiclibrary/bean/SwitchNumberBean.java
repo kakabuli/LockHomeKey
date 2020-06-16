@@ -14,14 +14,14 @@ public class SwitchNumberBean implements Serializable {
          * "stopTime": 1440, 		//结束时间0-1440分
          * "week": 0xFF 			//周策略 0B 0111 1111 如：bit0->周日 bit1->周一 bit6->周六 无策略时全为0 （就是策励开关全为0）
          */
-        private String type;
-        private String startTime;
-        private String stopTime;
-        private String week;
-        private String timeEn;
+        private int type;
+        private int startTime;
+        private int stopTime;
+        private int week;
+        private int timeEn;
         private String nickname;
 
-        public SwitchNumberBean(String type, String startTime,String stopTime, String week, String timeEn, String nickname) {
+        public SwitchNumberBean(int type, int startTime,int stopTime, int week, int timeEn, String nickname) {
             this.type = type;
             this.startTime = startTime;
             this.stopTime = stopTime;
@@ -34,44 +34,44 @@ public class SwitchNumberBean implements Serializable {
         public SwitchNumberBean() {
         }
 
-        public String getType() {
+        public int getType() {
             return type;
         }
 
-        public void setType(String type) {
+        public void setType(int type) {
             this.type = type;
         }
 
-        public String getStartTime() {
+        public int getStartTime() {
             return startTime;
         }
 
-        public void setStartTime(String startTime) {
+        public void setStartTime(int startTime) {
             this.startTime = startTime;
         }
 
 
-        public String getStopTime() {
+        public int getStopTime() {
             return stopTime;
         }
 
-        public void setStopTime(String stopTime) {
+        public void setStopTime(int stopTime) {
             this.stopTime = stopTime;
         }
 
-        public String getWeek() {
+        public int getWeek() {
             return week;
         }
 
-        public void setWeek(String week) {
+        public void setWeek(int week) {
             this.week = week;
         }
 
-    public String getTimeEn() {
+    public int getTimeEn() {
         return timeEn;
     }
 
-    public void setTimeEn(String timeEn) {
+    public void setTimeEn(int timeEn) {
         this.timeEn = timeEn;
     }
 

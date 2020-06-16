@@ -358,14 +358,16 @@ public class WiFiLockDetailActivity extends BaseActivity<IWifiLockDetailView, Wi
                             if (SwitchNumber > 0) {
                                 intent = new Intent(WiFiLockDetailActivity.this, SwipchLinkActivity.class);
                                 intent.putExtra(KeyConstants.SWITCH_NUMBER, SwitchNumber);
+                                intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
                                 startActivity(intent);
                             } else {
                                 intent = new Intent(WiFiLockDetailActivity.this, SwipchLinkNo.class);
-                                startActivity(intent);
-                            }
+                                intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
+                                startActivity(intent);                            }
                         }else {
 
                             intent = new Intent(WiFiLockDetailActivity.this, SwipchLinkNo.class);
+                            intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
                             startActivity(intent);
                         }
                         break;
@@ -425,14 +427,17 @@ public class WiFiLockDetailActivity extends BaseActivity<IWifiLockDetailView, Wi
                             if (SwitchNumber > 0) {
                                 intent = new Intent(WiFiLockDetailActivity.this, SwipchLinkActivity.class);
                                 intent.putExtra(KeyConstants.SWITCH_NUMBER, SwitchNumber);
+                                intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
                                 startActivity(intent);
                             } else {
                                 intent = new Intent(WiFiLockDetailActivity.this, SwipchLinkNo.class);
+                                intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
                                 startActivity(intent);
                             }
                         }else {
 
                             intent = new Intent(WiFiLockDetailActivity.this, SwipchLinkNo.class);
+                            intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
                             startActivity(intent);
                         }
                         break;

@@ -514,7 +514,10 @@ public class KeyConstants {
      * 单火开关的开关个数
      */
     public static final String SWITCH_NUMBER = "switch_Number";
-
+    /**
+     * 添加单火开关模型
+     */
+    public static final String SWITCH_MODEL = "switch_model";
 
 }
 

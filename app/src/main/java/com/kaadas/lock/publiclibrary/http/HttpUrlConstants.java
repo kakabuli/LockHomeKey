@@ -386,4 +386,8 @@ public class HttpUrlConstants {
      */
     public static final String  GET_ZIGBEEN_INFO = BASE_URL + "v1/user/getZigBeeInfo";
 
+    /**
+     *  单火开关设备昵称及开关修改
+     */
+    public static final String BINDING_AND_MODIFY_DEVICE_NICK = BASE_URL + "wifi/device/updatenickname";
 }

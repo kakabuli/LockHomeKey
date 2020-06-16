@@ -13,22 +13,29 @@ public class SingleFireSwitchInfo implements Serializable {
      * switchArray   ：开关键位功能数组
      * switchBind   ：绑定时间
      */
-    private String switchEn;
+    private int switchEn;
     private String macaddr;
-    private String switchBind;
+    private long switchBind;
 
     @SerializedName("switchArray")
     private List<SwitchNumberBean> switchNumber;
+
+    public SingleFireSwitchInfo(int switchEn,String macaddr,long switchBind,List<SwitchNumberBean> switchNumber) {
+        this.switchEn = switchEn;
+        this.macaddr = macaddr;
+        this.switchBind = switchBind;
+        this.switchNumber = switchNumber;
+    }
 
     public SingleFireSwitchInfo() {
 
     }
 
-    public String getSwitchEn() {
+    public int getSwitchEn() {
         return switchEn;
     }
 
-    public void setSwitchEn(String switchEn) {
+    public void setSwitchEn(int switchEn) {
         this.switchEn = switchEn;
     }
 
@@ -40,11 +47,11 @@ public class SingleFireSwitchInfo implements Serializable {
         this.macaddr = macaddr;
     }
 
-    public String getSwitchBind() {
+    public long getSwitchBind() {
         return switchBind;
     }
 
-    public void setSwitchBind(String switchBind) {
+    public void setSwitchBind(long switchBind) {
         this.switchBind = switchBind;
     }
 

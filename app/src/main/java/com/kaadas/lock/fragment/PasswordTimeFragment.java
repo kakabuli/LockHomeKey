@@ -294,6 +294,7 @@ public class PasswordTimeFragment extends BaseBleFragment<IAddTimePasswprdView, 
     String endcurrentTime = DateFormatUtils.long2Str(System.currentTimeMillis(), true);
 
     private void initTimerPicker() {
+
         try {
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
             long after1 = formatter.parse("2019-02-14 15:30").getTime();
