@@ -91,6 +91,12 @@ public class GatewayLockStressAddActivity extends BaseActivity<IGatewayLockStres
                         public void right() {
 
                         }
+                        @Override
+                        public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        }
+                        @Override
+                        public void afterTextChanged(String toString) {
+                        }
                     });
                     return;
                 }
@@ -109,6 +115,12 @@ public class GatewayLockStressAddActivity extends BaseActivity<IGatewayLockStres
                         public void right() {
                             etPassword.setText("");
                             return;
+                        }
+                        @Override
+                        public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        }
+                        @Override
+                        public void afterTextChanged(String toString) {
                         }
                     });
                     return;
@@ -152,6 +164,12 @@ public class GatewayLockStressAddActivity extends BaseActivity<IGatewayLockStres
                 public void right() {
 
                 }
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+            @Override
+            public void afterTextChanged(String toString) {
+            }
             });
 
     }
@@ -172,6 +190,12 @@ public class GatewayLockStressAddActivity extends BaseActivity<IGatewayLockStres
                 @Override
                 public void right() {
 
+                }
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                }
+                @Override
+                public void afterTextChanged(String toString) {
                 }
             });
         }

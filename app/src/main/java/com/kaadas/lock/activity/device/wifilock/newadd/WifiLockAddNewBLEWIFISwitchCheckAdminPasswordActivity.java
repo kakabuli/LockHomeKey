@@ -399,6 +399,15 @@ public class WifiLockAddNewBLEWIFISwitchCheckAdminPasswordActivity extends BaseA
                             public void right() {
                                 toInputPasswordActivity();
                             }
+                            @Override
+                            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                            }
+
+                            @Override
+                            public void afterTextChanged(String toString) {
+
+                            }
                         });
             } else { // 正常提示
                 AlertDialogUtil.getInstance().noEditSingleCanNotDismissButtonDialog(
@@ -411,6 +420,15 @@ public class WifiLockAddNewBLEWIFISwitchCheckAdminPasswordActivity extends BaseA
                             @Override
                             public void right() {
                                 toInputPasswordActivity();
+                            }
+                            @Override
+                            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                            }
+
+                            @Override
+                            public void afterTextChanged(String toString) {
+
                             }
                         });
             }
@@ -427,6 +445,15 @@ public class WifiLockAddNewBLEWIFISwitchCheckAdminPasswordActivity extends BaseA
                         public void right() {
                             startActivity(new Intent(WifiLockAddNewBLEWIFISwitchCheckAdminPasswordActivity.this, WifiLockAddNewBindFailedActivity.class));
                             finish();
+                        }
+                        @Override
+                        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                        }
+
+                        @Override
+                        public void afterTextChanged(String toString) {
+
                         }
                     });
         }
@@ -450,6 +477,15 @@ public class WifiLockAddNewBLEWIFISwitchCheckAdminPasswordActivity extends BaseA
                         intent.putExtra(KeyConstants.WIFI_LOCK_WIFI_TIMES, times+1);
                         startActivity(intent);
                         finish();
+                    }
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                    }
+
+                    @Override
+                    public void afterTextChanged(String toString) {
+
                     }
                 });
     }
@@ -495,6 +531,15 @@ public class WifiLockAddNewBLEWIFISwitchCheckAdminPasswordActivity extends BaseA
                         startActivity(intent);
 //                        socketManager.destroy();
                         finish();
+                    }
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                    }
+
+                    @Override
+                    public void afterTextChanged(String toString) {
+
                     }
                 });
 

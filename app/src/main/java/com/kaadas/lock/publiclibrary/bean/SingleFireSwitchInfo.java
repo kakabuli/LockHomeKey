@@ -69,12 +69,10 @@ public class SingleFireSwitchInfo implements Serializable {
 
     public List<SwitchNumberBean> getSwitchNumber() {
     return switchNumber;
-}
+    }
 
     public void setSwitchNumber(List<SwitchNumberBean> switchNumber) {
         this.switchNumber = switchNumber;
     }
-
-
 
 }

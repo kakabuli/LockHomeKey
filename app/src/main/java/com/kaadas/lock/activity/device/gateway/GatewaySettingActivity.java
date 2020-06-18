@@ -294,6 +294,15 @@ public class GatewaySettingActivity extends BaseActivity<GatewaySettingView, Gat
                             }
 
                         }
+                        @Override
+                        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                        }
+
+                        @Override
+                        public void afterTextChanged(String toString) {
+
+                        }
                     });
                 /*else{
                     //取消分享

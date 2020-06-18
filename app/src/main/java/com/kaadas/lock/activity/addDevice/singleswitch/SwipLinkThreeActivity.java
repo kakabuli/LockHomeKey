@@ -137,17 +137,17 @@ public class SwipLinkThreeActivity extends BaseActivity<SingleFireSwitchView, Si
     }
 
     @Override
-    public void bindingDeviceSuccess() {
+    public void bindingAndModifyDeviceSuccess() {
 
     }
 
     @Override
-    public void bindingDeviceFail() {
+    public void bindingAndModifyDeviceFail() {
 
     }
 
     @Override
-    public void bindingDeviceThrowable() {
+    public void bindingAndModifyDeviceThrowable() {
 
     }
 }

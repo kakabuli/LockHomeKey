@@ -407,7 +407,7 @@ public class MqttService extends Service {
     public Observable<MqttData> mqttPublish(String topic, MqttMessage mqttMessage) {
         try {
             if (mqttClient!=null&&mqttClient.isConnected()) {
-                Log.e("发布mqtt消息111", "topic: "+topic+"  mqttMessage: "+mqttMessage.toString());
+                Log.e("发布mqtt消息", "topic: "+topic+"  mqttMessage: "+mqttMessage.toString());
                 mqttClient.publish(topic, mqttMessage, null, new IMqttActionListener() {
                     @Override
                     public void onSuccess(IMqttToken asyncActionToken) {

@@ -192,6 +192,15 @@ public class AddBluetoothThirdActivity extends BaseActivity<IBindBleView, BindBl
                     finish();
                     startActivity(new Intent(AddBluetoothThirdActivity.this, AddBluetoothSearchActivity.class));
                 }
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                }
+
+                @Override
+                public void afterTextChanged(String toString) {
+
+                }
             });
         }
     }

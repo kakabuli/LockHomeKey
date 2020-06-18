@@ -85,6 +85,15 @@ public class WifiLockAddNewCheckAdminPasswordActivity extends AppCompatActivity 
                                 startActivity(new Intent(WifiLockAddNewCheckAdminPasswordActivity.this, WifiLockAddNewScanFailedActivity.class));
                                 finish();
                             }
+                            @Override
+                            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                            }
+
+                            @Override
+                            public void afterTextChanged(String toString) {
+
+                            }
                         });
             }
         } else {
@@ -422,6 +431,15 @@ public class WifiLockAddNewCheckAdminPasswordActivity extends AppCompatActivity 
                             public void right() {
                                 toInputPasswordActivity();
                             }
+                            @Override
+                            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                            }
+
+                            @Override
+                            public void afterTextChanged(String toString) {
+
+                            }
                         });
             } else { // 正常提示
                 AlertDialogUtil.getInstance().noEditSingleCanNotDismissButtonDialog(
@@ -434,6 +452,15 @@ public class WifiLockAddNewCheckAdminPasswordActivity extends AppCompatActivity 
                             @Override
                             public void right() {
                                 toInputPasswordActivity();
+                            }
+                            @Override
+                            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                            }
+
+                            @Override
+                            public void afterTextChanged(String toString) {
+
                             }
                         });
             }
@@ -450,6 +477,15 @@ public class WifiLockAddNewCheckAdminPasswordActivity extends AppCompatActivity 
                         public void right() {
                             startActivity(new Intent(WifiLockAddNewCheckAdminPasswordActivity.this, WifiLockAddNewBindFailedActivity.class));
                             finish();
+                        }
+                        @Override
+                        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                        }
+
+                        @Override
+                        public void afterTextChanged(String toString) {
+
                         }
                     });
         }
@@ -473,6 +509,15 @@ public class WifiLockAddNewCheckAdminPasswordActivity extends AppCompatActivity 
                         intent.putExtra(KeyConstants.WIFI_LOCK_WIFI_TIMES, times+1);
                         startActivity(intent);
                         finish();
+                    }
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                    }
+
+                    @Override
+                    public void afterTextChanged(String toString) {
+
                     }
                 });
     }
@@ -513,6 +558,15 @@ public class WifiLockAddNewCheckAdminPasswordActivity extends AppCompatActivity 
                         startActivity(intent);
                         socketManager.destroy();
                         finish();
+                    }
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                    }
+
+                    @Override
+                    public void afterTextChanged(String toString) {
+
                     }
                 });
     }

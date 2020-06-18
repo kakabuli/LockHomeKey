@@ -187,6 +187,15 @@ public class DeviceAddActivity extends BaseActivity<DeviceZigBeeDetailView, Devi
                                     Intent gatewayIntent = new Intent(DeviceAddActivity.this, AddGatewayFirstActivity.class);
                                     startActivity(gatewayIntent);
                                 }
+                                @Override
+                                public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                                }
+
+                                @Override
+                                public void afterTextChanged(String toString) {
+
+                                }
                             });
 
                         }
@@ -212,6 +221,15 @@ public class DeviceAddActivity extends BaseActivity<DeviceZigBeeDetailView, Devi
                             //跳转到配置网关添加的流程
                             Intent gatewayIntent = new Intent(DeviceAddActivity.this, AddGatewayFirstActivity.class);
                             startActivity(gatewayIntent);
+                        }
+                        @Override
+                        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                        }
+
+                        @Override
+                        public void afterTextChanged(String toString) {
+
                         }
                     });
 

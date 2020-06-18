@@ -180,6 +180,12 @@ public class GatewayPlanPasswordShareActivity extends BaseActivity<IGatewayLockP
                         showLoading(getString(R.string.is_deleting));
                         mPresenter.deletePassword(gatewayId,deviceId,gatewayPasswordPlanBean.getPasswordNumber());
                     }
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    }
+                    @Override
+                    public void afterTextChanged(String toString) {
+                    }
                 });
                 break;
             case R.id.tv_short_message:

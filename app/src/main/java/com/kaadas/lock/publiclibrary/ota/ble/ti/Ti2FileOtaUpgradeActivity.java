@@ -366,6 +366,12 @@ public class Ti2FileOtaUpgradeActivity extends OtaBaseActivity implements View.O
             public void right() {
                 finish();
             }
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+            @Override
+            public void afterTextChanged(String toString) {
+            }
         });
     }
 
@@ -388,6 +394,12 @@ public class Ti2FileOtaUpgradeActivity extends OtaBaseActivity implements View.O
                         mutiProgress.setCurrNodeNO(0, true);
                         downFile(binDownUrl, filePath);
                         warring.setVisibility(View.VISIBLE);
+                    }
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    }
+                    @Override
+                    public void afterTextChanged(String toString) {
                     }
                 });
     }

@@ -117,6 +117,15 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter<ILogi
             public void right() {
                 toMarkApp();
             }
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(String toString) {
+
+            }
         });
     }
 
@@ -174,6 +183,15 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter<ILogi
 
             @Override
             public void right() {
+
+            }
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(String toString) {
 
             }
         });

@@ -175,6 +175,12 @@ public class WifiLockAuthActivity extends BaseActivity<IWifiLockAuthView, WifiLo
                         mPresenter.deleteDevice(wifiSn);
                         showLoading(getString(R.string.is_deleting));
                     }
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    }
+                    @Override
+                    public void afterTextChanged(String toString) {
+                    }
                 });
                 break;
         }

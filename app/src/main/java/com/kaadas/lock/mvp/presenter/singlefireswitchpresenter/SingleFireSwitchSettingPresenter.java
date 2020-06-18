@@ -6,10 +6,14 @@ import com.kaadas.lock.mvp.mvpbase.BasePresenter;
 import com.kaadas.lock.mvp.view.singlefireswitchview.SingleFireSwitchView;
 import com.kaadas.lock.publiclibrary.bean.SingleFireSwitchInfo;
 import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
+import com.kaadas.lock.publiclibrary.http.XiaokaiNewServiceImp;
+import com.kaadas.lock.publiclibrary.http.result.BaseResult;
+import com.kaadas.lock.publiclibrary.http.util.BaseObserver;
 import com.kaadas.lock.publiclibrary.http.util.RxjavaHelper;
 import com.kaadas.lock.publiclibrary.mqtt.MqttCommandFactory;
 import com.kaadas.lock.publiclibrary.mqtt.eventbean.DeviceOnLineBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.AddSingleFireSwitchBean;
+import com.kaadas.lock.publiclibrary.mqtt.publishbean.BindingSingleFireSwitchBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetJoinAllowBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetSingleFireSwitchBean;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttConstant;
@@ -78,6 +82,7 @@ public class SingleFireSwitchSettingPresenter<T> extends BasePresenter<SingleFir
                     }, new Consumer<Throwable>() {
                         @Override
                         public void accept(Throwable throwable) throws Exception {
+
                             if (isSafe()) {
                                 mViewRef.get().settingDeviceThrowable();
                             }
@@ -133,5 +138,36 @@ public class SingleFireSwitchSettingPresenter<T> extends BasePresenter<SingleFir
                     });
             compositeDisposable.add(addDeviceDisposable);
         }
+    }
+
+    public void bindingAndModifyDevice(BindingSingleFireSwitchBean bindingSingleFireSwitchBean) {
+        XiaokaiNewServiceImp.bindingAndModifyDeviceNick(bindingSingleFireSwitchBean).subscribe(new BaseObserver<BaseResult>() {
+            @Override
+            public void onSuccess(BaseResult baseResult) {
+                if (isSafe()) {
+                    if ("200".equals(baseResult.getCode()))
+                        mViewRef.get().bindingAndModifyDeviceSuccess();
+                }
+            }
+
+            @Override
+            public void onAckErrorCode(BaseResult baseResult) {
+                if (isSafe()) {
+                    mViewRef.get().bindingAndModifyDeviceFail();
+                }
+            }
+
+            @Override
+            public void onFailed(Throwable throwable) {
+                if (isSafe()) {
+                    mViewRef.get().bindingAndModifyDeviceThrowable();
+                }
+            }
+
+            @Override
+            public void onSubscribe1(Disposable d) {
+                compositeDisposable.add(d);
+            }
+        });
     }
 }

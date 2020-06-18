@@ -43,6 +43,16 @@ public abstract class BaseBleCheckInfoActivity<T extends ICheckOtaView, V extend
                     public void right() {
 
                     }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                    }
+
+                    @Override
+                    public void afterTextChanged(String toString) {
+
+                    }
                 });
     }
 
@@ -135,6 +145,15 @@ public abstract class BaseBleCheckInfoActivity<T extends ICheckOtaView, V extend
 //                            startActivity(intent);
                         }
                     }
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                    }
+
+                    @Override
+                    public void afterTextChanged(String toString) {
+
+                    }
                 }
         );
     }
@@ -179,7 +198,18 @@ public abstract class BaseBleCheckInfoActivity<T extends ICheckOtaView, V extend
                         onEnterOta();
                         startActivity(intent);
                     }
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                    }
+
+                    @Override
+                    public void afterTextChanged(String toString) {
+
+                    }
+
                 }
+
         );
     }
 

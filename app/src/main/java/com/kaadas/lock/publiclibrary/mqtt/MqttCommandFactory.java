@@ -989,6 +989,7 @@ public class MqttCommandFactory {
         return getMessage(addSingleFireSwitchBean, messageId);
 
 
+
     }
     //////////
 

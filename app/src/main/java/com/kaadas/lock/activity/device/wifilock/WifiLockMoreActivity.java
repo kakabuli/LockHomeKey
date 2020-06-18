@@ -302,6 +302,12 @@ public class WifiLockMoreActivity extends BaseActivity<IWifiLockMoreView, WifiLo
                         showLoading(getString(R.string.is_deleting));
                         mPresenter.deleteDevice(wifiLockInfo.getWifiSN());
                     }
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    }
+                    @Override
+                    public void afterTextChanged(String toString) {
+                    }
                 });
                 break;
             case R.id.rl_wifi_name: //WiFi名称

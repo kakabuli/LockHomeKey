@@ -157,6 +157,12 @@ public class GatewayLockDeletePasswordActivity extends BaseActivity<IGatewayLock
                             LogUtils.e("  gatewayId  为空   删除失败 ");
                         }
                     }
+                            @Override
+                            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                            }
+                            @Override
+                            public void afterTextChanged(String toString) {
+                            }
                 });
                 break;
         }

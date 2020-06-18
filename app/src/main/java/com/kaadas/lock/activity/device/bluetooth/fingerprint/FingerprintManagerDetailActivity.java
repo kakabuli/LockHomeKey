@@ -101,6 +101,15 @@ public class FingerprintManagerDetailActivity extends BaseBleActivity<IPasswordD
                                 mPresenter.deletePwd(3, Integer.parseInt(fingerprint.getNum()), 2, true);
                             }
                         }
+                        @Override
+                        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                        }
+
+                        @Override
+                        public void afterTextChanged(String toString) {
+
+                        }
                     });
                 } else {
                     ToastUtil.getInstance().showLong(R.string.network_exception);

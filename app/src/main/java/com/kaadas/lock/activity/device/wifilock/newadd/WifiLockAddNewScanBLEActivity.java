@@ -387,6 +387,15 @@ public class WifiLockAddNewScanBLEActivity extends BaseActivity<ISearchDeviceVie
                 mPresenter.bindDeviceInit(device, bindFlag);
                 showLoading(getString(R.string.connecting_ble));
             }
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(String toString) {
+
+            }
         });
 
 
@@ -521,6 +530,15 @@ public class WifiLockAddNewScanBLEActivity extends BaseActivity<ISearchDeviceVie
                     @Override
                     public void right() {
                         call("tel:"+"4001166667");
+                    }
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                    }
+
+                    @Override
+                    public void afterTextChanged(String toString) {
+
                     }
                 });
 

@@ -242,6 +242,12 @@ public class PasswordTimeFragment extends BaseBleFragment<IAddTimePasswprdView, 
                             etPassword.setText("");
                             return;
                         }
+                        @Override
+                        public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        }
+                        @Override
+                        public void afterTextChanged(String toString) {
+                        }
                     });
                     return;
                 }
@@ -436,6 +442,12 @@ public class PasswordTimeFragment extends BaseBleFragment<IAddTimePasswprdView, 
             @Override
             public void right() {
 
+            }
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+            @Override
+            public void afterTextChanged(String toString) {
             }
         });
     }

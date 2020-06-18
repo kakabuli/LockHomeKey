@@ -114,6 +114,12 @@ public class AddDeviceCatEyeThirdActivity extends BaseActivity<IAddCatEyeView, A
                         public void right() {
 
                         }
+                        @Override
+                        public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        }
+                        @Override
+                        public void afterTextChanged(String toString) {
+                        }
                     });
         }
 
@@ -141,6 +147,12 @@ public class AddDeviceCatEyeThirdActivity extends BaseActivity<IAddCatEyeView, A
                           @Override
                           public void right() {
 
+                          }
+                          @Override
+                          public void onTextChanged(CharSequence s, int start, int before, int count) {
+                          }
+                          @Override
+                          public void afterTextChanged(String toString) {
                           }
                       });
               return true;

@@ -1,7 +1,6 @@
 package com.kaadas.lock.activity.addDevice.singleswitch;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -14,9 +13,8 @@ import com.google.gson.annotations.SerializedName;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.MainActivity;
-import com.kaadas.lock.activity.device.wifilock.WiFiLockDetailActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
-import com.kaadas.lock.mvp.presenter.singlefireswitchpresenter.BindingSingleFireSwitchPresenter;
+import com.kaadas.lock.mvp.presenter.singlefireswitchpresenter.SingleFireSwitchSettingPresenter;
 import com.kaadas.lock.mvp.view.singlefireswitchview.SingleFireSwitchView;
 import com.kaadas.lock.publiclibrary.bean.SingleFireSwitchInfo;
 import com.kaadas.lock.publiclibrary.bean.SwitchNumberBean;
@@ -29,7 +27,7 @@ import com.kaadas.lock.utils.LogUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SwipLinkSucActivity  extends BaseActivity<SingleFireSwitchView, BindingSingleFireSwitchPresenter<SingleFireSwitchView>> implements View.OnClickListener,SingleFireSwitchView{
+public class SwipLinkSucActivity  extends BaseActivity<SingleFireSwitchView, SingleFireSwitchSettingPresenter<SingleFireSwitchView>> implements View.OnClickListener,SingleFireSwitchView{
     TextView tv_content,swipch_link_join_tv;
     Button btn_next;
     ImageView swipch_link_join_img,iv_back;
@@ -81,8 +79,8 @@ public class SwipLinkSucActivity  extends BaseActivity<SingleFireSwitchView, Bin
     }
 
     @Override
-    protected BindingSingleFireSwitchPresenter<SingleFireSwitchView> createPresent() {
-        return new BindingSingleFireSwitchPresenter<>();
+    protected SingleFireSwitchSettingPresenter<SingleFireSwitchView> createPresent() {
+        return new SingleFireSwitchSettingPresenter<>();
     }
 
     private void initData() {
@@ -183,7 +181,7 @@ public class SwipLinkSucActivity  extends BaseActivity<SingleFireSwitchView, Bin
     }
 
     private void bindingDevice() {
-        mPresenter.bindingDevice(bindingSingleFireSwitchBean);
+        mPresenter.bindingAndModifyDevice(bindingSingleFireSwitchBean);
     }
     @Override
     public void settingDeviceSuccess() {
@@ -231,7 +229,7 @@ public class SwipLinkSucActivity  extends BaseActivity<SingleFireSwitchView, Bin
     }
 
     @Override
-    public void bindingDeviceSuccess() {
+    public void bindingAndModifyDeviceSuccess() {
         MyApplication.getInstance().getAllDevicesByMqtt(true);
 //        Intent intent=new Intent(SwipLinkSucActivity.this, WiFiLockDetailActivity.class);
         Intent intent=new Intent(SwipLinkSucActivity.this, MainActivity.class);
@@ -240,14 +238,14 @@ public class SwipLinkSucActivity  extends BaseActivity<SingleFireSwitchView, Bin
     }
 
     @Override
-    public void bindingDeviceFail() {
+    public void bindingAndModifyDeviceFail() {
         Intent intent=new Intent(SwipLinkSucActivity.this,SwipLinkFailActivity.class);
         intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
         startActivity(intent);
     }
 
     @Override
-    public void bindingDeviceThrowable() {
+    public void bindingAndModifyDeviceThrowable() {
         Intent intent=new Intent(SwipLinkSucActivity.this,SwipLinkFailActivity.class);
         intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
         startActivity(intent);

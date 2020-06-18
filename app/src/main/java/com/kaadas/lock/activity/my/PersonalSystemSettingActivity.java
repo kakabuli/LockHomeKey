@@ -138,6 +138,15 @@ public class PersonalSystemSettingActivity extends BaseActivity<ISystemSettingVi
                 //清除缓存数据，关闭会话。
                 ToastUtil.getInstance().showShort(R.string.delete_cache_data_success);
             }
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(String toString) {
+
+            }
         });
 
 
@@ -154,6 +163,15 @@ public class PersonalSystemSettingActivity extends BaseActivity<ISystemSettingVi
             public void right() {
                 mPresenter.loginOut();
                 showLoading(getString(R.string.is_login_out));
+            }
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(String toString) {
+
             }
         });
     }
@@ -257,6 +275,15 @@ public class PersonalSystemSettingActivity extends BaseActivity<ISystemSettingVi
             @Override
             public void right() {
                 toMarkApp();
+            }
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(String toString) {
+
             }
         });
     }

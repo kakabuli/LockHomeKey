@@ -308,6 +308,7 @@
                      </ImageView>
 
                      <TextView
+                         android:id="@+id/swipch_one_nick_text"
                          android:layout_width="wrap_content"
                          android:layout_height="wrap_content"
                          android:layout_marginLeft="15dp"
@@ -334,6 +335,7 @@
                         ></ImageButton>
 
                      <TextView
+                         android:id="@+id/swipch_one_text"
                          android:layout_width="wrap_content"
                          android:layout_height="wrap_content"
                          android:layout_alignParentBottom="true"
@@ -381,6 +383,7 @@
                     </ImageView>
 
                     <TextView
+                        android:id="@+id/swipch_two_nick_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="15dp"
@@ -408,6 +411,7 @@
                         ></ImageView>
 
                     <TextView
+                        android:id="@+id/swipch_two_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentBottom="true"
@@ -457,11 +461,12 @@
                     </ImageView>
 
                     <TextView
+                        android:id="@+id/swipch_three_nick_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="15dp"
                         android:textColor="#FF333333"
-                        android:text="@string/swipch_link_btn2"></TextView>
+                        android:text="@string/swipch_link_btn3"></TextView>
 
 
                 </LinearLayout>
@@ -484,6 +489,7 @@
                         ></ImageView>
 
                     <TextView
+                        android:id="@+id/swipch_three_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentBottom="true"

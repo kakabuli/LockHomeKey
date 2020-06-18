@@ -206,6 +206,12 @@ public class GatewayPasswordYearFragment extends BaseFragment<IGatewayLockPasswo
                             etPassword.setText("");
                             return;
                         }
+                        @Override
+                        public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        }
+                        @Override
+                        public void afterTextChanged(String toString) {
+                        }
                     });
                     return;
                 }
@@ -538,6 +544,12 @@ public class GatewayPasswordYearFragment extends BaseFragment<IGatewayLockPasswo
             public void right() {
 
             }
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+            @Override
+            public void afterTextChanged(String toString) {
+            }
         });
     }
 
@@ -553,6 +565,12 @@ public class GatewayPasswordYearFragment extends BaseFragment<IGatewayLockPasswo
             @Override
             public void right() {
 
+            }
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+            @Override
+            public void afterTextChanged(String toString) {
             }
         });
     }

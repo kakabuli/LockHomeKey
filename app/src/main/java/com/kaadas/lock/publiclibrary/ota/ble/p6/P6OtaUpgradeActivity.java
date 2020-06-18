@@ -371,6 +371,15 @@ public class P6OtaUpgradeActivity extends BaseAddToApplicationActivity implement
             public void right() {
                 finish();
             }
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(String toString) {
+
+            }
         });
     }
 
@@ -393,6 +402,15 @@ public class P6OtaUpgradeActivity extends BaseAddToApplicationActivity implement
                         mutiProgress.setCurrNodeNO(0, false);
                         mCircleProgress2.setValue(0);
                         downFile(binDownUrl, filePath);
+                    }
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                    }
+
+                    @Override
+                    public void afterTextChanged(String toString) {
+
                     }
                 });
     }

@@ -33,12 +33,12 @@ public interface SingleFireSwitchView extends IBaseView {
     void addDeviceThrowable();
 
     //绑定锁外围（开关）成功
-    void bindingDeviceSuccess();
+    void bindingAndModifyDeviceSuccess();
 
     //绑定锁外围（开关）失败
-    void bindingDeviceFail();
+    void bindingAndModifyDeviceFail();
 
     //绑定锁外围（开关）异常
-    void bindingDeviceThrowable();
+    void bindingAndModifyDeviceThrowable();
 
 }

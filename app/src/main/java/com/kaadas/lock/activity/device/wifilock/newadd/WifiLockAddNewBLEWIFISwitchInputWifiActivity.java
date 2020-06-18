@@ -145,6 +145,15 @@ public class WifiLockAddNewBLEWIFISwitchInputWifiActivity extends BaseAddToAppli
                     public void right() {
 //                        thread.start();
                     }
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                    }
+
+                    @Override
+                    public void afterTextChanged(String toString) {
+
+                    }
                 });
     }
 

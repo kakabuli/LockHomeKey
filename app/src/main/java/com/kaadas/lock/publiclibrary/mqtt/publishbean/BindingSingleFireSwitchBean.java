@@ -12,8 +12,6 @@ public class BindingSingleFireSwitchBean implements Serializable {
      *   "uid": "5c4fe492dc93897aa7d8600b",
      *   "lockNickname": "wode",
      *   "switch": SingleFireSwitchInfo
-     *
-     *
      */
 
     private String wifiSN;

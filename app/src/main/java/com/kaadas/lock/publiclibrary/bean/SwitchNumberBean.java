@@ -13,6 +13,17 @@ public class SwitchNumberBean implements Serializable {
          * "startTime": 1440, 		//开始时间0-1440分
          * "stopTime": 1440, 		//结束时间0-1440分
          * "week": 0xFF 			//周策略 0B 0111 1111 如：bit0->周日 bit1->周一 bit6->周六 无策略时全为0 （就是策励开关全为0）
+         * "timeEn" : 0             //使能
+         * nickname                 //昵称
+         *
+         *
+         *          * 周一、二、三、四、五、六、七(int)127:(Ob 0111 1111),
+         *          * 周一、二、三、四、五、六(int)63:(Ob 0011 1111),
+         *          * 周一、二、三、四、五(int)31:(Ob 0001 1111),
+         *          * 周一、二、三、四(int)15:(Ob 0000 1111),
+         *          * 周一、二、三(int)7:(Ob 0000 0111),
+         *          * 周一、二(int)3:(Ob 0000 0011),
+         *          * 周一(int)1:(Ob 0000 0001)
          */
         private int type;
         private int startTime;

@@ -191,6 +191,15 @@ public class BluetoothPasswordManagerDetailActivity extends BaseBleActivity<IPas
                                 }
                             }
                         }
+                        @Override
+                        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                        }
+
+                        @Override
+                        public void afterTextChanged(String toString) {
+
+                        }
                     });
                 } else {
                     ToastUtil.getInstance().showLong(R.string.network_exception);

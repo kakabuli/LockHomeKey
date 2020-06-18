@@ -143,6 +143,12 @@ public class DoorCardManagerDetailActivity extends BaseBleActivity<IPasswordDeta
                                 mPresenter.deletePwd(4, Integer.parseInt(card.getNum()), 3, true);
                             }
                         }
+                        @Override
+                        public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        }
+                        @Override
+                        public void afterTextChanged(String toString) {
+                        }
                     });
                 } else {
                     ToastUtil.getInstance().showShort(getString(R.string.network_exception));

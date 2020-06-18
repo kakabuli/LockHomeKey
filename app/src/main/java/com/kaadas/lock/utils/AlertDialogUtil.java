@@ -4,6 +4,8 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -228,8 +230,8 @@ public class AlertDialogUtil {
 
 
 
-    //no_et_dialog
-    public void noEditTwoButtonDialogWidthDialogEdit(Context context, String title, String content, String left, String right, ClickListener clickListener) {
+    //have_edit_dialog
+    public void havaEditTwoButtonDialogWidthDialogEdit(Context context, String title, String content, String left, String right, ClickListener clickListener) {
         View mView = LayoutInflater.from(context).inflate(R.layout.no_etit_dialog, null);
         TextView tvTitle = mView.findViewById(R.id.tv_hint);
         EditText tvContent = mView.findViewById(R.id.et_content);
@@ -264,6 +266,23 @@ public class AlertDialogUtil {
                 alertDialog.dismiss();
                 if (clickListener != null) {
                     clickListener.right();
+                }
+            }
+        });
+        tvContent.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+//                LogUtils.e("--kaadas--","输入后字符串 [ " + s.toString() + " ] 起始光标 [ " + start + " ] 输入数量 [ " + count+" ]");
+            }
+            @Override
+            public void afterTextChanged(Editable s) {
+//                LogUtils.e("--kaadas--","输入结束后的内容为 [" + s.toString()+" ] 即将显示在屏幕上");
+                if (clickListener != null) {
+                    clickListener.afterTextChanged(s.toString());
                 }
             }
         });
@@ -505,6 +524,10 @@ public class AlertDialogUtil {
         void left();
 
         void right();
+
+        void onTextChanged(CharSequence s, int start, int before, int count);
+
+        void afterTextChanged(String toString);
     }
 
     public interface MessageListener {
