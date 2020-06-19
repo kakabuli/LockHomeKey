@@ -46,7 +46,7 @@ public class WifiLockAddNewWiFiScanBLEFailedActivity extends AppCompatActivity {
                 finish();
                 break;
             case R.id.help:
-                startActivity(new Intent(this, DeviceAddHelpActivity.class));
+                startActivity(new Intent(this, WifiLockHelpActivity.class));
                 break;
             case R.id.re_scan:
                 finish();

@@ -22,6 +22,8 @@ public class OfflinePasswordFactorManager {
         OfflinePasswordFactorResult wifiResult = new OfflinePasswordFactorResult();
         wifiResult.data = data;
         wifiResult.func = data[45] & 0xff;
+        wifiResult.switchType = data[46] & 0xff;
+        LogUtils.e("--kaadas--switchType==" + wifiResult.switchType);
 
         String temp = "";
         for (int i = 0; i < adminPassword.length(); i++) {
@@ -76,6 +78,7 @@ public class OfflinePasswordFactorManager {
         public byte[] password;
         public byte[] data;
         public int func;
+        public int switchType;
 
         @Override
         public String toString() {
@@ -85,6 +88,7 @@ public class OfflinePasswordFactorManager {
                     ", password=" + new String(password) +
                     ", data=" + new  String(data) +
                     ", func=" + func +
+                    ", switchType=" + switchType +
                     '}';
         }
     }

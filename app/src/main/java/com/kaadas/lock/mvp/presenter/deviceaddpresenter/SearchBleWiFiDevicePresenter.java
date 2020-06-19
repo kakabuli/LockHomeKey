@@ -127,14 +127,13 @@ public class SearchBleWiFiDevicePresenter<T> extends BasePresenter<ISearchDevice
                                 if (mViewRef != null) {
 //                            mViewRef.get().loadDevices(devices);
                                     mViewRef.get().loadBLEWiFiModelDevices(devices, broadcastList);
-
                             }
                         }
-
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
+                        LogUtils.e("--kaadas--throwable==" +throwable);
                         if (mViewRef != null) {
                             mViewRef.get().onScanFailed(throwable);
                         }
@@ -143,7 +142,6 @@ public class SearchBleWiFiDevicePresenter<T> extends BasePresenter<ISearchDevice
         compositeDisposable.add(disposable);
     }
 
-
     Runnable stopScanLe = new Runnable() {
         @Override
         public void run() {
@@ -151,14 +149,15 @@ public class SearchBleWiFiDevicePresenter<T> extends BasePresenter<ISearchDevice
                 bleService.scanBleDevice(false);
                 if (mViewRef != null) {
                     if (isAttach) {
-                        LogUtils.e("设备停止扫描   ");
+                        LogUtils.e("--kaadas--设备停止扫描");
+                        LogUtils.e("--kaadas--mViewRef=="+mViewRef);
+                        LogUtils.e("--kaadas--mViewRef.get()=="+mViewRef.get());
                         mViewRef.get().onStopScan();
                     }
                 }
             }
         }
     };
-
 
     public void checkBind(BluetoothDevice device) {
         if (bleService == null) { //判断

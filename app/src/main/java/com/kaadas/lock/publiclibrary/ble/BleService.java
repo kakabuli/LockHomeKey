@@ -356,6 +356,7 @@ public class BleService extends Service {
                 SparseArray<byte[]> hex16=result.getScanRecord().getManufacturerSpecificData();
                 //设备名
                 String deviceName = device.getName();
+                LogUtils.e("--kaadas--device.getName()==",device.getName());
 
 //                //新蓝牙广播协议带SN
                 if (hex16.size()>0){
@@ -597,6 +598,7 @@ public class BleService extends Service {
                         ||(((value[3] & 0xff) == 0x90))
                         ||(((value[3] & 0xff) == 0x91))
                 )) {
+
                     BleDataBean bleDataBean = new BleDataBean(value[3], value[1], value);
                     bleDataBean.setDevice(gatt.getDevice());
                     dataChangeSubject.onNext(bleDataBean);
@@ -1488,13 +1490,13 @@ public class BleService extends Service {
             //打开蓝牙
             if (!bluetoothAdapter.isEnabled()) {//判断是否已经打开
                 bluetoothAdapter.enable();  //静默打开蓝牙
-                LogUtils.e("打开蓝牙申请");
+                LogUtils.e("--kaadas-打开蓝牙申请");
             } else {
                 if (enable) {
                     bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
                     bluetoothLeScanner = bluetoothAdapter.getBluetoothLeScanner();
 //                    startLeScan();
-                    LogUtils.e("开始扫描设备");
+                    LogUtils.e("--kaadas-开始扫描设备");
                     new Thread() {
                         @Override
                         public void run() {
@@ -1509,7 +1511,7 @@ public class BleService extends Service {
                         }
                     }.start();
                 } else {
-                    LogUtils.e("停止扫描设备");
+                    LogUtils.e("--kaadas--停止扫描设备");
                     new Thread() {
                         @Override
                         public void run() {

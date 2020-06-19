@@ -1,41 +1,26 @@
 package com.kaadas.lock.activity.device.wifilock.newadd;
 
 import android.Manifest;
-import android.animation.ObjectAnimator;
-import android.animation.ValueAnimator;
 import android.bluetooth.BluetoothDevice;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.PackageManager;
-import android.graphics.Path;
-import android.location.LocationManager;
 import android.net.Uri;
-import android.net.wifi.WifiInfo;
-import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
-import com.kaadas.lock.activity.addDevice.DeviceAddHelpActivity;
 import com.kaadas.lock.activity.addDevice.bluetooth.AddBluetoothSecondActivity;
 import com.kaadas.lock.activity.device.wifilock.add.WifiLockHelpActivity;
 import com.kaadas.lock.adapter.DeviceBleWiFiSearchAdapter;
@@ -45,34 +30,23 @@ import com.kaadas.lock.bean.BluetoothLockBroadcastBean;
 import com.kaadas.lock.bean.BluetoothLockBroadcastListBean;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.mvp.presenter.deviceaddpresenter.SearchBleWiFiDevicePresenter;
-import com.kaadas.lock.mvp.presenter.deviceaddpresenter.SearchDevicePresenter;
 import com.kaadas.lock.mvp.view.deviceaddview.ISearchDeviceView;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.util.HttpUtils;
-import com.kaadas.lock.publiclibrary.http.util.RxjavaHelper;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.GpsUtil;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.NetUtil;
 import com.kaadas.lock.utils.ToastUtil;
-import com.kaadas.lock.utils.WifiUtil;
-import com.kaadas.lock.utils.WifiUtils;
-import com.kaadas.lock.widget.WifiCircleProgress;
-import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import io.reactivex.Observable;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
+
 import com.kaadas.lock.widget.ScanDeviceRadarView;
 
 public class WifiLockAddNewScanBLEActivity extends BaseActivity<ISearchDeviceView, SearchBleWiFiDevicePresenter<ISearchDeviceView>>
@@ -95,6 +69,7 @@ public class WifiLockAddNewScanBLEActivity extends BaseActivity<ISearchDeviceVie
     private DeviceSearchAdapter deviceSearchAdapter;
     private DeviceBleWiFiSearchAdapter deviceBleWiFiSearchAdapter;
     private Thread radarViewThread; //声明一个子线程
+    private boolean goToHelpActivity; //跳转到帮助页面
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,14 +83,12 @@ public class WifiLockAddNewScanBLEActivity extends BaseActivity<ISearchDeviceVie
             public void run() {
                 //这里写入子线程需要做的工作
                 mRadarView.setSearching(true);
-
             }
         });
         radarViewThread.start();
 //        mRadarView.setSearching(true);
 //        mRadarView.addPoint();
 //        mRadarView.addPoint();
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             int i=checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION);
             if (i==-1){
@@ -126,12 +99,10 @@ public class WifiLockAddNewScanBLEActivity extends BaseActivity<ISearchDeviceVie
                 }
             }
         }
-
         showRecycler(false);
         initView();
         initData();
     }
-
     @Override
     protected SearchBleWiFiDevicePresenter<ISearchDeviceView> createPresent() {
         return new SearchBleWiFiDevicePresenter<>();
@@ -173,10 +144,11 @@ public class WifiLockAddNewScanBLEActivity extends BaseActivity<ISearchDeviceVie
     @Override
     protected void onStop() {
         super.onStop();
-        mPresenter.detachView();
+        if (!goToHelpActivity){
+            LogUtils.e("--kaadas--onStop--detachView");
+            mPresenter.detachView();
+        }
     }
-
-
 
     //当没有搜索到蓝牙设备时，显示对话框。
     private void showNotScanDeviceDialog() {
@@ -230,7 +202,8 @@ public class WifiLockAddNewScanBLEActivity extends BaseActivity<ISearchDeviceVie
                 finish();
                 break;
             case R.id.help:
-                Intent helpIntent = new Intent(this, DeviceAddHelpActivity.class);
+                goToHelpActivity = true;
+                Intent helpIntent = new Intent(this, WifiLockHelpActivity.class);
                 startActivity(helpIntent);
                 break;
             case R.id.research:
@@ -411,13 +384,10 @@ public class WifiLockAddNewScanBLEActivity extends BaseActivity<ISearchDeviceVie
     public void onStopScan() {
         stopAnimation();
 //        tvIsSearching.setVisibility(View.INVISIBLE);
+        LogUtils.e("--kaadas--onStopScan()");
 
-        if (mDevices == null) {
-            showRecycler(false);
-            showNotScanDeviceDialog();
-            return;
-        }
-        if (mDevices.size()==0){
+        if (mDevices == null || mDevices.size()==0){
+            LogUtils.e("--kaadas--mDevices=="+mDevices);
             showRecycler(false);
             showNotScanDeviceDialog();
             return;

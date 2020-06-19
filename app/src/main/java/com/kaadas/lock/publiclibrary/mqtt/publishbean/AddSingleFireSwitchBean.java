@@ -8,6 +8,7 @@ public class AddSingleFireSwitchBean implements Serializable {
 
 
     /**
+     *
      * func : addSwitch
      * msgId
      * msgtype : request
@@ -28,6 +29,7 @@ public class AddSingleFireSwitchBean implements Serializable {
      * userId : 5b8cc0d735736f62253379fc
      * wfId : S1M0202410005
      * mac :
+     *
      */
 
     private String msgtype;

@@ -358,7 +358,7 @@ public class WifiLockAddNewBLEWIFICSwitchCheckWifiActivity extends BaseActivity<
                         break;
                     case 2:
                         ivSendWifiInfo.setImageResource(R.mipmap.wifi_lock_add_state_complete);
-                        ivSetSuccess.setImageResource(R.mipmap.wifi_lock_add_state_complete);
+                        ivSetSuccess.setImageResource(R.mipmap.wifi_lock_add_state_refresh);
                         ivBindSuccess.setImageResource(R.mipmap.wifi_lock_add_state_wait);
 
                         tvSendWifiInfo.setTextColor(getResources().getColor(R.color.color_333));
