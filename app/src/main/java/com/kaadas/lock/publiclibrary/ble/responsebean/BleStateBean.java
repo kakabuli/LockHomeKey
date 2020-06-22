@@ -13,6 +13,7 @@ public class BleStateBean {
      * 1 最老的模块   透传
      * 2 中间的模块    现在的指令
      * 3 最新的模块   支持全功能1
+     * 4 最新的模块   BLE&WIFI 模块
      */
     private int bleVersion = -1;
 

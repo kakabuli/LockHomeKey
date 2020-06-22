@@ -57,6 +57,7 @@ public class WifiLockAddNewBLEWIFISwitchCheckAdminPasswordActivity extends BaseA
     private int times = 1; //次数从1开始
     private byte[] data;
 
+    public int func;
     private int bleVersion;
     private String sn;
     private String mac;
@@ -80,6 +81,8 @@ public class WifiLockAddNewBLEWIFISwitchCheckAdminPasswordActivity extends BaseA
         changeState(1); //初始状态
         LogUtils.e("--Kaadas--"+getLocalClassName()+"次数是   " + times + "  passwordFactor 是否为空 " + (passwordFactor == null));
         mPresenter.listenerCharacterNotify();
+        //BLE&WIFI模组 读取功能集
+        mPresenter.readFeatureSet();
 
         if (times > 1) {
 //            if (socketManager.isConnected()) { //如果不是第一进来而且Socket是连接的   那么解析密码
@@ -234,7 +237,7 @@ public class WifiLockAddNewBLEWIFISwitchCheckAdminPasswordActivity extends BaseA
                 Intent intent = new Intent(WifiLockAddNewBLEWIFISwitchCheckAdminPasswordActivity.this, WifiLockAddNewBLEWIFISwitchInputWifiActivity.class);
                 intent.putExtra(KeyConstants.WIFI_SN, new String(wifiResult.wifiSn));
                 intent.putExtra(KeyConstants.WIFI_LOCK_RANDOM_CODE, Rsa.bytesToHexString(wifiResult.password));
-                intent.putExtra(KeyConstants.WIFI_LOCK_FUNC, wifiResult.func);
+                intent.putExtra(KeyConstants.WIFI_LOCK_FUNC, func);
                 startActivity(intent);
                 finish();
             }
@@ -608,7 +611,7 @@ public class WifiLockAddNewBLEWIFISwitchCheckAdminPasswordActivity extends BaseA
 
     @Override
     public void readFunctionSetSuccess(int functionSet) {
-
+        func = functionSet;
     }
 
     @Override

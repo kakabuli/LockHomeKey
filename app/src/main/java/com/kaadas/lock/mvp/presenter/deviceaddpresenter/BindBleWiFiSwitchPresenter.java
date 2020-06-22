@@ -1,9 +1,12 @@
 package com.kaadas.lock.mvp.presenter.deviceaddpresenter;
 
+import android.text.TextUtils;
+
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.mvp.mvpbase.BasePresenter;
 import com.kaadas.lock.mvp.presenter.wifilock.WifiSetUpPresenter;
 import com.kaadas.lock.mvp.view.deviceaddview.IBindBleView;
+import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.publiclibrary.ble.BleCommandFactory;
 import com.kaadas.lock.publiclibrary.ble.BleProtocolFailedException;
 import com.kaadas.lock.publiclibrary.ble.OldBleCommandFactory;
@@ -38,11 +41,13 @@ import io.reactivex.functions.Predicate;
  */
 public class BindBleWiFiSwitchPresenter<T> extends BasePresenter<IBindBleView> {
 
+    protected BleLockInfo bleLockInfo;
     private int bleVersion;
     private String mac;
     private String deviceName;
     private int functionSet = -1;
     private Disposable characterNotifyDisposable;
+    private Disposable featureSetDisposable;
     private OfflinePasswordFactorManager offlinePasswordFactorManager = OfflinePasswordFactorManager.getInstance();
     private OfflinePasswordFactorManager.OfflinePasswordFactorResult wifiResult;
     private int index;//命令包序号
@@ -112,9 +117,46 @@ public class BindBleWiFiSwitchPresenter<T> extends BasePresenter<IBindBleView> {
         }
         else {
             //校验失败
-
         }
+    }
 
+    public void readFeatureSet(){
+
+        if (bleService == null) { //判断
+            if (MyApplication.getInstance().getBleService() == null) {
+                return;
+            } else {
+                bleService = MyApplication.getInstance().getBleService(); //判断
+            }
+        }
+        toDisposable(featureSetDisposable);
+        featureSetDisposable = bleService.readFunctionSet(1000)
+                .filter(new Predicate<ReadInfoBean>() {
+                    @Override
+                    public boolean test(ReadInfoBean readInfoBean) throws Exception {
+                        return readInfoBean.type == ReadInfoBean.TYPE_LOCK_FUNCTION_SET;
+                    }
+                })
+                .timeout(2 * 1000, TimeUnit.MILLISECONDS)
+                .retryWhen(new RetryWithTime(2, 0))
+                .subscribe(new Consumer<ReadInfoBean>() {
+                    @Override
+                    public void accept(ReadInfoBean readInfoBean) throws Exception {
+                        toDisposable(featureSetDisposable);
+
+                        int functionSet = (int) readInfoBean.data;
+                        LogUtils.e("--kaadas--BLE&wifi锁功能集==" + functionSet);
+                        if (isSafe()) {
+                            mViewRef.get().readFunctionSetSuccess(functionSet);
+                        }
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+
+                    }
+                });
+        compositeDisposable.add(featureSetDisposable);
     }
 
 }

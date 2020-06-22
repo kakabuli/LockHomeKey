@@ -527,7 +527,6 @@ public class BleService extends Service {
             }
         }
 
-
         /**
          * 发现服务
          * @param gatt
@@ -733,7 +732,14 @@ public class BleService extends Service {
                     readSystemIDSubject.onNext(new ReadInfoBean(ReadInfoBean.TYPE_LOCK_STATUS, value));
                     break;
                 case BLeConstants.UUID_FUNCTION_SET:
-                    LogUtils.e("锁功能集  字节1  " + Rsa.bytesToHexString(value));
+                    LogUtils.e("--kaadas--锁功能集  字节1  " + Rsa.bytesToHexString(value));
+                    if (value == null || value.length <= 0) {
+                        return;
+                    }
+                    readSystemIDSubject.onNext(new ReadInfoBean(ReadInfoBean.TYPE_LOCK_FUNCTION_SET, characteristic.getValue()[0] & 0xff));
+                    break;
+                case BLeConstants.DISTRIBUTION_NETWORK__UUID_FUNCTION_SET:
+                    LogUtils.e("--kaadas--BLE&wifi锁功能集  字节1  " + Rsa.bytesToHexString(value));
                     if (value == null || value.length <= 0) {
                         return;
                     }
@@ -814,9 +820,14 @@ public class BleService extends Service {
             @Override
             public void run() {
                 if (lockFunctionSetChar != null && bluetoothGatt != null) {
-                    LogUtils.e("读取功能集 ");
+                    LogUtils.e("--kaadas--读取功能集 ");
                     bluetoothGatt.readCharacteristic(lockFunctionSetChar);
                 }
+                else if(distribution_network_lockFunctionSetChar != null && bluetoothGatt != null){
+                    LogUtils.e("--kaadas--读取BLE&WIFI功能集 ");
+                    bluetoothGatt.readCharacteristic(distribution_network_lockFunctionSetChar);
+                }
+
             }
         }, delay);
         return readSystemIDSubject;

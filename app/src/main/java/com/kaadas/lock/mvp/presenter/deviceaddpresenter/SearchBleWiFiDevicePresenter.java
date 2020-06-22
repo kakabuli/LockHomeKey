@@ -337,7 +337,6 @@ public class SearchBleWiFiDevicePresenter<T> extends BasePresenter<ISearchDevice
                                                 mViewRef.get().onConnectBLEWIFISuccess(broadcastBean,bleStateBean.getBleVersion());
 
                                             }
-
                                         }
                                     }
                                 }
