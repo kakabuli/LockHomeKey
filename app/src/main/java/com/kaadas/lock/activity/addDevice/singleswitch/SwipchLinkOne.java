@@ -37,9 +37,7 @@ public class SwipchLinkOne extends AppCompatActivity implements View.OnClickList
         btn_next.setOnClickListener(this);
         iv_back.setOnClickListener(this);
 
-
         initData();
-
 
     }
 

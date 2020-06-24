@@ -85,6 +85,7 @@ public class WifiLockAddNewScanBLEActivity extends BaseActivity<ISearchDeviceVie
                 mRadarView.setSearching(true);
             }
         });
+
         radarViewThread.start();
 //        mRadarView.setSearching(true);
 //        mRadarView.addPoint();

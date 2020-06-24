@@ -373,7 +373,7 @@ public class WifiLockAddNewBLEWIFICSwitchCheckWifiActivity extends BaseActivity<
                         break;
                     case 3:
                         ivSendWifiInfo.setImageResource(R.mipmap.wifi_lock_add_state_complete);
-                        ivBindSuccess.setImageResource(R.mipmap.wifi_lock_add_state_complete);
+                        ivSetSuccess.setImageResource(R.mipmap.wifi_lock_add_state_complete);
                         ivBindSuccess.setImageResource(R.mipmap.wifi_lock_add_state_refresh);
 
                         tvSendWifiInfo.setTextColor(getResources().getColor(R.color.color_333));
@@ -387,6 +387,21 @@ public class WifiLockAddNewBLEWIFICSwitchCheckWifiActivity extends BaseActivity<
                         circleProgressBar2.setValue(80);
                         break;
 
+                    case 4:
+                        ivSendWifiInfo.setImageResource(R.mipmap.wifi_lock_add_state_complete);
+                        ivSetSuccess.setImageResource(R.mipmap.wifi_lock_add_state_complete);
+                        ivBindSuccess.setImageResource(R.mipmap.wifi_lock_add_state_complete);
+
+                        tvSendWifiInfo.setTextColor(getResources().getColor(R.color.color_333));
+                        tvSetSuccess.setTextColor(getResources().getColor(R.color.color_333));
+                        tvBindSuccess.setTextColor(getResources().getColor(R.color.color_333));
+
+                        ivSendWifiInfo.clearAnimation();//開始动画
+                        ivSetSuccess.clearAnimation();
+                        ivBindSuccess.clearAnimation();
+
+                        circleProgressBar2.setValue(100);
+                        break;
                 }
 
             }
@@ -409,9 +424,12 @@ public class WifiLockAddNewBLEWIFICSwitchCheckWifiActivity extends BaseActivity<
 
     @Override
     public void onBindSuccess(String wifiSn) {
+        changeState(4);
+
         Intent intent = new Intent(this, WifiLockAddSuccessActivity.class);
         intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
         startActivity(intent);
+
     }
 
     @Override

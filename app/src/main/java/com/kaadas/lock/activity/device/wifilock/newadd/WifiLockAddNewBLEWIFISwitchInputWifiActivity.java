@@ -96,7 +96,6 @@ public class WifiLockAddNewBLEWIFISwitchInputWifiActivity extends BaseAddToAppli
                     intent.putExtra(KeyConstants.WIFI_LOCK_FUNC, func);
                     startActivity(intent);
                     return;
-
                 }
                 if (sPassword.length()<8){
                     Toast.makeText(this, "wifi密码必须不小于8位", Toast.LENGTH_SHORT).show();

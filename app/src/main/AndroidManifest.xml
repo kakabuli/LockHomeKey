@@ -799,6 +799,12 @@
             android:name=".activity.device.wifilock.add.WifiLockAddSuccessActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.wifilock.add.WifiLockAddSuccessToSetSwitchActivity"
+            android:theme="@style/DialogTransparent"
+            android:screenOrientation="portrait"
+        />
+
         <activity android:name=".publiclibrary.ota.face.FaceOtaActivity" />
         <activity android:name=".activity.device.gatewaylock.password.test.PasswordTestActivity" /> <!-- VIVO辅助 SDK -->
         <meta-data

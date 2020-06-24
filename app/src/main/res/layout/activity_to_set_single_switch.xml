@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#20000000"
+    android:orientation="vertical"
+    >
+
+    <ImageView
+        android:id="@+id/close"
+        android:src="@mipmap/close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="125dp"
+        android:layout_marginLeft="310dp"
+        android:layout_marginBottom="12dp"
+        />
+    <RelativeLayout
+        android:id="@+id/activity_to_set_single_switch"
+        android:layout_width="251.5dp"
+        android:layout_height="346dp"
+        android:layout_marginBottom="160.5dp"
+        android:background="@mipmap/activity_to_set_single_switch"
+        android:layout_gravity="center"
+        >
+
+    <TextView
+        android:layout_marginTop="@dimen/dp_32"
+        android:text="@string/have_add_lock"
+        android:textSize="19sp"
+        android:textColor="#fff"
+        android:layout_width="134dp"
+        android:layout_height="24dp"
+        android:layout_marginLeft="@dimen/dp_55"
+        android:layout_alignParentTop="true"
+        />
+
+    <TextView
+        android:layout_marginTop="@dimen/dp_66"
+        android:lineSpacingExtra="6dp"
+        android:layout_marginLeft="@dimen/dp_34"
+        android:layout_marginRight="@dimen/dp_26"
+        android:text="@string/have_add_lock_text"
+        android:textSize="19sp"
+        android:textColor="#fff"
+        android:layout_width="181dp"
+        android:layout_height="24dp" />
+
+
+    <TextView
+        android:id="@+id/tv_right_now_set"
+        android:layout_width="188.15dp"
+        android:layout_height="37.15dp"
+        android:background="@drawable/go_and_buy"
+        android:text="@string/right_now_set"
+        android:textColor="#fff"
+        android:textSize="@dimen/sp_15"
+        android:layout_marginBottom="@dimen/dp_19"
+        android:layout_marginLeft="@dimen/dp_32"
+        android:gravity="center"
+        android:layout_alignParentBottom="true"
+        />
+
+    </RelativeLayout>
+
+</LinearLayout>

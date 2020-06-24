@@ -15,7 +15,10 @@
     <string name="register_default_agree">注册默认同意</string>
     <string name="user_protocol">用户协议</string>
     <string name="forget_password">忘记密码</string>
+    <string name="have_add_lock">门锁已添加成功</string>
+    <string name="have_add_lock_text">快来设置智能开关吧!</string>
     <string name="complete">完成</string>
+    <string name="right_now_set">立即设置</string>
     <string name="search">搜索</string>
     <string name="not_input_special_symbol">不能输入特殊符号</string>
     <string name="phone_not_right">手机号错误</string>

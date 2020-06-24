@@ -2,6 +2,7 @@ package com.kaadas.lock.activity.addDevice.singleswitch;
 
 
 import com.kaadas.lock.R;
+import com.kaadas.lock.activity.device.wifilock.add.WifiLockAddSuccessToSetSwitchActivity;
 import com.kaadas.lock.utils.KeyConstants;
 
 import android.content.Intent;
@@ -54,6 +55,7 @@ public class SwipchLinkNo extends AppCompatActivity implements View.OnClickListe
                 Intent intent = new Intent(SwipchLinkNo.this, SwipchLinkOne.class);
                 intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
                 startActivity(intent);
+
                 break;
 
         }

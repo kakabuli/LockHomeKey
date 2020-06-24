@@ -62,7 +62,6 @@ public class WifiLockAddNewBLEWIFISwitchInputAdminPasswotdActivity extends BaseA
         deviceName = intent.getStringExtra( KeyConstants.DEVICE_NAME);
         passwordFactor = intent.getByteArrayExtra( KeyConstants.PASSWORD_FACTOR);
 
-
         data =  getIntent().getByteArrayExtra(KeyConstants.WIFI_LOCK_ADMIN_PASSWORD_DATA);
         times =  getIntent().getIntExtra(KeyConstants.WIFI_LOCK_ADMIN_PASSWORD_TIMES,1);
     }

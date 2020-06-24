@@ -8,6 +8,8 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.os.Handler;
+
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
@@ -58,6 +60,7 @@ public class WifiLockAddSuccessActivity extends BaseActivity<IWifiLockAddSuccess
 
     private AddBluetoothPairSuccessAdapter mAdapter;
     private String wifiSN;
+    private Handler handler = new Handler();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -122,8 +125,29 @@ public class WifiLockAddSuccessActivity extends BaseActivity<IWifiLockAddSuccess
         if (name != null) {
             inputName.setCursorVisible(false);
         }
+
+        handler.postDelayed(runnable, 500);
+
     }
 
+    Runnable runnable = new Runnable() {
+        @Override
+        public void run() {
+            toSetSwitch();
+
+            handler.removeCallbacks(runnable);
+
+        }
+    };
+
+    public void toSetSwitch() {
+
+        Intent intent = new Intent(this, WifiLockAddSuccessToSetSwitchActivity.class);
+        intent.putExtra(KeyConstants.WIFI_SN, wifiSN);
+        startActivity(intent);
+        overridePendingTransition(R.anim.page_centerzoom_enter, R.anim.page_centerzoom_exit);
+
+    }
 
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
