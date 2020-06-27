@@ -113,7 +113,7 @@ public class SearchBleWiFiDevicePresenter<T> extends BasePresenter<ISearchDevice
                         //过滤出BLE&WiFi设备（目前仅做S110的单火开关项目）
                         if (!TextUtils.isEmpty(broadcastBean.getDeviceModel())
                                 && !TextUtils.isEmpty(broadcastBean.getDeviceSN())
-//                                && broadcastBean.getBindingType() == 4
+                                && broadcastBean.getBindingType() == 4
                         && !broadcastItemList.contains(broadcastBean)
                                 && !devices.contains(device)
                         ) {

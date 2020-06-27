@@ -489,6 +489,7 @@ public class BleLockUtils {
      * @return
      */
     public static int getAuthorizationImageByModel(String model) {
+
         if (!TextUtils.isEmpty(model)) {
 
             if (model.startsWith("K7")) {
@@ -613,6 +614,7 @@ public class BleLockUtils {
      * @return
      */
     public static int getSmallImageByModel(String model) {
+
         if (!TextUtils.isEmpty(model)) {
             if (model.startsWith("K7")) {
                 return R.mipmap.k7;
@@ -735,11 +737,11 @@ public class BleLockUtils {
      * @return
      */
     public static int getDetailImageByModel(String model) {
+
         if (!TextUtils.isEmpty(model)) {
             if (model.startsWith("K7")) {
                 return R.mipmap.bluetooth_lock_k7;
             }
-
 
             else if (model.startsWith("S118") ) {
                 return R.mipmap.bluetooth_lock_s118;

@@ -9,23 +9,28 @@ public class SingleFireSwitchInfo implements Serializable {
 
     /**
      * switchEn     ：开关使能
-     * macaddr      : mac地址
-     * switchArray   ：开关键位功能数组
+     * mac          : mac地址
+     * switchArray  ：开关键位功能数组
      * switchBind   ：绑定时间
+     * total        : 开关总数
      */
     private int switchEn;
-    private String macaddr;
+    private int total;
+    private String mac;
+    @SerializedName("createTime")
     private long switchBind;
 
     @SerializedName("switchArray")
     private List<SwitchNumberBean> switchNumber;
 
-    public SingleFireSwitchInfo(int switchEn,String macaddr,long switchBind,List<SwitchNumberBean> switchNumber) {
+    public SingleFireSwitchInfo(int switchEn,String mac,long switchBind,List<SwitchNumberBean> switchNumber,int total) {
         this.switchEn = switchEn;
-        this.macaddr = macaddr;
+        this.mac = mac;
         this.switchBind = switchBind;
         this.switchNumber = switchNumber;
+        this.total = total;
     }
+
 
     public SingleFireSwitchInfo() {
 
@@ -39,12 +44,20 @@ public class SingleFireSwitchInfo implements Serializable {
         this.switchEn = switchEn;
     }
 
-    public String getMacaddr() {
-        return macaddr;
+    public int getTotal() {
+        return total;
     }
 
-    public void setMacaddr(String macaddr) {
-        this.macaddr = macaddr;
+    public void setTotal(int total) {
+        this.total = total;
+    }
+
+    public String getMac() {
+        return mac;
+    }
+
+    public void setMac(String macaddr) {
+        this.mac = mac;
     }
 
     public long getSwitchBind() {
@@ -60,8 +73,9 @@ public class SingleFireSwitchInfo implements Serializable {
     public String toString() {
         return "{" +
                 "switchEn='" + switchEn + '\'' +
-                ", macaddr='" + macaddr + '\'' +
-                ", switchBind='" + switchBind + '\'' +
+                ", mac='" + mac + '\'' +
+                ", total='" + total + '\'' +
+                ", createTime='" + switchBind + '\'' +
                 ", switchArray=" + switchNumber +
                 '}';
     }

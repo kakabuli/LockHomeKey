@@ -65,7 +65,12 @@
         <activity android:name=".activity.addDevice.singleswitch.SwipchLinkActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
-
+        <activity android:name=".activity.device.wifilock.newadd.WifiLockAddToSetSwitchActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity android:name=".activity.device.wifilock.newadd.WifiLockWaitForSwitchActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.MainActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"

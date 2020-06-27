@@ -62,7 +62,6 @@ public class WifiLockAddSuccessToSetSwitchActivity extends BaseActivity<IWifiLoc
 
     private void initData() {
         wifiSn = getIntent().getStringExtra(KeyConstants.WIFI_SN);
-        MyApplication.getInstance().getAllDevicesByMqtt(true);
 
     }
     public void initView(){
@@ -75,11 +74,15 @@ public class WifiLockAddSuccessToSetSwitchActivity extends BaseActivity<IWifiLoc
             case R.id.close:
 
                 finish();
+                Intent intent = new Intent(this, WifiLockAddSuccessActivity.class);
+                intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
+                startActivity(intent);
                 overridePendingTransition(R.anim.page_centerzoom_enter_quick, R.anim.page_centerzoom_exit);
                 break;
             case R.id.tv_right_now_set:
+                MyApplication.getInstance().getAllDevicesByMqtt(true);
 
-                handler.postDelayed(runnable, 500);
+                handler.postDelayed(runnable, 1000);
 
                 break;
         }
@@ -98,6 +101,7 @@ public class WifiLockAddSuccessToSetSwitchActivity extends BaseActivity<IWifiLoc
 
         wifiLockInfo = MyApplication.getInstance().getWifiLockInfoBySn(wifiSn);
         finish();
+        LogUtils.e("--kaadas--wifiLockInfo=="+wifiLockInfo);
 
         if (wifiLockInfo != null){
             if (wifiLockInfo.getSingleFireSwitchInfo() != null) {

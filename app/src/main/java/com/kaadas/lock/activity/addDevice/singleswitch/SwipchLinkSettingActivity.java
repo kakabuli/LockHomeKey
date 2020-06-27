@@ -1,5 +1,6 @@
 package com.kaadas.lock.activity.addDevice.singleswitch;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -53,6 +54,9 @@ public class SwipchLinkSettingActivity extends BaseActivity<SingleFireSwitchView
     private int SwitchKeyNumber;
     private int startTime;
     private int endTime;
+
+
+    private static final int TO_SET_TIME_REQUEST_CODE = 10102;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -211,20 +215,31 @@ public class SwipchLinkSettingActivity extends BaseActivity<SingleFireSwitchView
                  wifiLockInfoChange.getSingleFireSwitchInfo().getSwitchNumber().get(SwitchKeyNumber-1).setStartTime(startTime);
                  wifiLockInfoChange.getSingleFireSwitchInfo().getSwitchNumber().get(SwitchKeyNumber-1).setStopTime(endTime);
                  wifiLockInfoChange.getSingleFireSwitchInfo().getSwitchNumber().get(SwitchKeyNumber-1).setWeek(127);
-                 mPresenter.settingDevice(wifiLockInfoChange);
+//                 mPresenter.settingDevice(wifiLockInfoChange);
              }
              else {
                  //全天，默认设置开始时间00:00，结束时间：23:59
                  wifiLockInfoChange.getSingleFireSwitchInfo().getSwitchNumber().get(SwitchKeyNumber-1).setStartTime(0);
                  wifiLockInfoChange.getSingleFireSwitchInfo().getSwitchNumber().get(SwitchKeyNumber-1).setStopTime(1439);
                  wifiLockInfoChange.getSingleFireSwitchInfo().getSwitchNumber().get(SwitchKeyNumber-1).setWeek(127);
-                 mPresenter.settingDevice(wifiLockInfoChange);
+//                 mPresenter.settingDevice(wifiLockInfoChange);
              }
 
+             if (!wifiLockInfoChange.equals(wifiLockInfo)) {
+                 Intent intent = new Intent();
+                 intent.putExtra(KeyConstants.WIFI_LOCK_INFO_CHANGE, wifiLockInfoChange);
+                 setResult(TO_SET_TIME_REQUEST_CODE, intent);
+                 finish();
+             }
              break;
 
          case R.id.iv_back:
-             finish();
+             if (!wifiLockInfoChange.equals(wifiLockInfo)) {
+                 Intent intent = new Intent();
+                 intent.putExtra(KeyConstants.WIFI_LOCK_INFO_CHANGE, wifiLockInfoChange);
+                 setResult(TO_SET_TIME_REQUEST_CODE, intent);
+                 finish();
+             }
              break;
 
      }
@@ -299,9 +314,9 @@ public class SwipchLinkSettingActivity extends BaseActivity<SingleFireSwitchView
     @Override
     public void settingDeviceSuccess() {
         LogUtils.e("--kaadas--设置成功");
-        params = wifiLockInfoChange.getSingleFireSwitchInfo();
-        bindingSingleFireSwitchBean = new BindingSingleFireSwitchBean(wifiSn,wifiLockInfoChange.getUid(),wifiLockInfoChange.getLockNickname(),params);
-        mPresenter.bindingAndModifyDevice(bindingSingleFireSwitchBean);
+//        params = wifiLockInfoChange.getSingleFireSwitchInfo();
+//        bindingSingleFireSwitchBean = new BindingSingleFireSwitchBean(wifiSn,wifiLockInfoChange.getUid(),wifiLockInfoChange.getLockNickname(),params);
+//        mPresenter.bindingAndModifyDevice(bindingSingleFireSwitchBean);
     }
 
     @Override

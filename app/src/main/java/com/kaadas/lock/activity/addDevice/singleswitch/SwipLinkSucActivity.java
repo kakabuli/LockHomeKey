@@ -19,6 +19,7 @@ import com.kaadas.lock.mvp.view.singlefireswitchview.SingleFireSwitchView;
 import com.kaadas.lock.publiclibrary.bean.SingleFireSwitchInfo;
 import com.kaadas.lock.publiclibrary.bean.SwitchNumberBean;
 import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
+import com.kaadas.lock.publiclibrary.http.postbean.ModifySwitchNickBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.AddSingleFireSwitchBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.BindingSingleFireSwitchBean;
 import com.kaadas.lock.utils.KeyConstants;
@@ -44,6 +45,8 @@ public class SwipLinkSucActivity  extends BaseActivity<SingleFireSwitchView, Sin
     private String wifiSn;
     private AddSingleFireSwitchBean addSingleFireSwitchBean;
     private BindingSingleFireSwitchBean bindingSingleFireSwitchBean;
+    private ModifySwitchNickBean modifySwitchNickBean;
+    private List< ModifySwitchNickBean.nickname >  switchNickname= new ArrayList<>();
     @SerializedName("switch")
     private SingleFireSwitchInfo params;
     private SwitchNumberBean switchNumberBean;
@@ -172,16 +175,21 @@ public class SwipLinkSucActivity  extends BaseActivity<SingleFireSwitchView, Sin
         for (int i = 1 ; i <= link ; i++){
             LogUtils.e("--kaadas--SwitchNumberBean--==" + new SwitchNumberBean(i,0,0,0,0,i==1?switchNumberNickName1:i==2?switchNumberNickName2:switchNumberNickName3));
             switchNumber.add(new SwitchNumberBean(i,0,0,0,0,i==1?switchNumberNickName1:i==2?switchNumberNickName2:switchNumberNickName3));
+
+            switchNickname.add(new ModifySwitchNickBean.nickname(i==1?switchNumberNickName1:i==2?switchNumberNickName2:switchNumberNickName3,i));
+
         }
-        params = new SingleFireSwitchInfo(1,addSingleFireSwitchBean.getMac(),addSingleFireSwitchBean.getTimestamp(),switchNumber);
+        params = new SingleFireSwitchInfo(1,addSingleFireSwitchBean.getMac(),addSingleFireSwitchBean.getTimestamp(),switchNumber,switchNumber.size());
         bindingSingleFireSwitchBean = new BindingSingleFireSwitchBean(wifiSn,wifiLockInfo.getUid(),wifiLockInfo.getLockNickname(),params);
+
+        modifySwitchNickBean = new ModifySwitchNickBean(wifiSn, wifiLockInfo.getUid(), switchNickname);
         //发送绑定
         bindingDevice();
 
     }
 
     private void bindingDevice() {
-        mPresenter.bindingAndModifyDevice(bindingSingleFireSwitchBean);
+        mPresenter.updateSwitchNickname(modifySwitchNickBean);
     }
     @Override
     public void settingDeviceSuccess() {

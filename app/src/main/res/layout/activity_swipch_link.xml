@@ -264,11 +264,11 @@
             android:layout_height="0dp"
             android:layout_weight="3"
             android:layout_marginLeft="10dp"
-            android:layout_marginBottom="15dp"
+            android:layout_marginBottom="29dp"
             android:layout_marginRight="10dp"
+            android:layout_marginTop="12.5dp"
             android:background="@drawable/swipch_link_corner"
             android:orientation="vertical">
-
 
             <TextView
                 android:layout_width="wrap_content"
@@ -506,6 +506,20 @@
             </LinearLayout>
 
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/swipch_sure_to_perform"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:background="#1F96F7"
+            android:text="@string/sure_to_perform"
+            android:textColor="#fff"
+            android:textSize="@dimen/sp_15"
+            android:gravity="center"
+            android:layout_alignParentBottom="true"
+            />
+
+
     </LinearLayout>
 
 

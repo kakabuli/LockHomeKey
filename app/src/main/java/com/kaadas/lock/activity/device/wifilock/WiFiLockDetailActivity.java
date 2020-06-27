@@ -150,7 +150,7 @@ public class WiFiLockDetailActivity extends BaseActivity<IWifiLockDetailView, Wi
         wifiSn = intent.getStringExtra(KeyConstants.WIFI_SN);
         LogUtils.e("获取到的设备Sn是   " + wifiSn);
         wifiLockInfo = MyApplication.getInstance().getWifiLockInfoBySn(wifiSn);
-        if (wifiLockInfo.getProductModel()!=null)
+        if (!TextUtils.isEmpty(wifiLockInfo.getProductModel()))
         ivLockIcon.setImageResource(BleLockUtils.getDetailImageByModel(wifiLockInfo.getProductModel()));
     }
 

@@ -19,6 +19,7 @@
     <string name="have_add_lock_text">快来设置智能开关吧!</string>
     <string name="complete">完成</string>
     <string name="right_now_set">立即设置</string>
+    <string name="sure_to_perform">确定执行</string>
     <string name="search">搜索</string>
     <string name="not_input_special_symbol">不能输入特殊符号</string>
     <string name="phone_not_right">手机号错误</string>
@@ -1449,6 +1450,7 @@
     <string name="fkjdksklaj">根据语音提示，按‘4’选择‘扩展模式’，\n再按‘3’选择‘加入其它网络’</string>
     <string name="bind_success">绑定成功</string>
     <string name="back_failed">返回失败</string>
+    <string name="add_to_set">添加设置</string>
     <string name="lock_modify_admin_finger">门锁修改管理指纹</string>
     <string name="lock_add_admin_finger">门锁添加管理指纹</string>
     <string name="face_lock_power_Save_open">开启节能模式</string>
@@ -1474,6 +1476,8 @@
     <string name="fkjdshfjkh">进入管理模式根据语音提示完成更改</string>
     <string name="auto_connect_wifi_notice1">请将手机尽量靠近门锁，能够更好的连接设备热点</string>
     <string name="auto_connect_wifi_notice2">自动连接门锁热点中，请稍等...</string>
+    <string name="auto_connect_wifi_notice3">请将手机尽量靠近门锁</string>
+    <string name="auto_connect_wifi_notice4">添加过程中避免手机断电和App退出</string>
     <string name="is_connect_wifi_please_wait">正在切换WiFi，请稍后...</string>
     <string name="ble_lock">蓝牙锁</string>
     <string name="zigbeelock">网关锁</string>

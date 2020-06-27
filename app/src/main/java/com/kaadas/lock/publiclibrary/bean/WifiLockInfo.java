@@ -60,9 +60,8 @@ public class WifiLockInfo implements Serializable {
      * wifi列表	清单	wifi锁列表
      * switch  单火开关数据
      */
-
     @Id(autoincrement = true)
-    private long id;
+    private Long id;
 
     @SerializedName("_id")
     private String deviceID;
@@ -129,13 +128,12 @@ public class WifiLockInfo implements Serializable {
     @SerializedName("switch")
     private SingleFireSwitchInfo singleFireSwitchInfo;
 
-@Generated(hash = 133069291)
-public WifiLockInfo(long id, String deviceID, String wifiSN, int isAdmin, String adminUid, String adminName, String productSN,
-        String productModel, int appId, String lockNickname, String lockSoftwareVersion, String functionSet, String uid,
-        String uname, int pushSwitch, int amMode, int safeMode, int powerSave, int faceStatus, int defences, String language,
-        int operatingMode, int volume, String bleVersion, String wifiVersion, String mqttVersion, String lockFirmwareVersion,
-        String randomCode, long createTime, String wifiName, int power, long updateTime, int openStatus, long openStatusTime,
-        SingleFireSwitchInfo singleFireSwitchInfo) {
+@Generated(hash = 1888020266)
+public WifiLockInfo(Long id, String deviceID, String wifiSN, int isAdmin, String adminUid, String adminName, String productSN, String productModel,
+        int appId, String lockNickname, String lockSoftwareVersion, String functionSet, String uid, String uname, int pushSwitch, int amMode,
+        int safeMode, int powerSave, int faceStatus, int defences, String language, int operatingMode, int volume, String bleVersion,
+        String wifiVersion, String mqttVersion, String lockFirmwareVersion, String randomCode, long createTime, String wifiName, int power,
+        long updateTime, int openStatus, long openStatusTime, SingleFireSwitchInfo singleFireSwitchInfo) {
     this.id = id;
     this.deviceID = deviceID;
     this.wifiSN = wifiSN;
@@ -478,11 +476,13 @@ public WifiLockInfo(long id, String deviceID, String wifiSN, int isAdmin, String
         this.singleFireSwitchInfo = singleFireSwitchInfo;
     }
 
-    public long getId() {
+   
+
+    public Long getId() {
         return this.id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

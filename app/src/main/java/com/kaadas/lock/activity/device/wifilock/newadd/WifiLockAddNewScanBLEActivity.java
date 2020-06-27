@@ -233,27 +233,27 @@ public class WifiLockAddNewScanBLEActivity extends BaseActivity<ISearchDeviceVie
 
     @Override
     public void loadDevices(List<BluetoothDevice> devices) {
-        if (devices == null) {
-            showRecycler(false);
-            return;
-        }
-        if (devices.size()==0){
-            showRecycler(false);
-            return;
-        }
-
-        showRecycler(true);
-        mDevices = devices;
-//        broadcastList.clear();//清空数据
-        if (deviceBleWiFiSearchAdapter == null) {
-            deviceBleWiFiSearchAdapter = new DeviceBleWiFiSearchAdapter(mDevices);
-            deviceBleWiFiSearchAdapter.setBindClickListener(this);
-//            deviceBleWiFiSearchAdapter.setBluetoothLockBroadcast(broadcastList);
-            searchRecycler.setAdapter(deviceBleWiFiSearchAdapter);
-
-        } else {
-            deviceBleWiFiSearchAdapter.notifyDataSetChanged();
-        }
+//        if (devices == null) {
+//            showRecycler(false);
+//            return;
+//        }
+//        if (devices.size()==0){
+//            showRecycler(false);
+//            return;
+//        }
+//
+//        showRecycler(true);
+//        mDevices = devices;
+////        broadcastList.clear();//清空数据
+//        if (deviceBleWiFiSearchAdapter == null) {
+//            deviceBleWiFiSearchAdapter = new DeviceBleWiFiSearchAdapter(mDevices);
+//            deviceBleWiFiSearchAdapter.setBindClickListener(this);
+////            deviceBleWiFiSearchAdapter.setBluetoothLockBroadcast(broadcastList);
+//            searchRecycler.setAdapter(deviceBleWiFiSearchAdapter);
+//
+//        } else {
+//            deviceBleWiFiSearchAdapter.notifyDataSetChanged();
+//        }
     }
 
     @Override

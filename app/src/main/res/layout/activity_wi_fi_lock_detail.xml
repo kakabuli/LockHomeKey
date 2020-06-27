@@ -54,7 +54,7 @@
                     android:id="@+id/iv_lock_icon"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@mipmap/bluetooth_lock_k7" />
+                    android:src="@mipmap/bluetooth_lock_default" />
                 <TextView
                     android:visibility="gone"
                     android:id="@+id/tv_type"

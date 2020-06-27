@@ -526,6 +526,10 @@ public class KeyConstants {
      * 单火开关数据变更
      */
     public static final String WIFI_LOCK_INFO_CHANGE = "wifi_Lock_Info_Change";
+    /**
+     * 单火开关数据结果
+     */
+    public static final String WIFI_LOCK_INFO_CHANGE_RESULT = "wifi_Lock_Info_Change_Result";
 
 }
 

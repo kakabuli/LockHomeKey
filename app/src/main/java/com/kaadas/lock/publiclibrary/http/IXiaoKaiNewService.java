@@ -617,10 +617,10 @@ public interface IXiaoKaiNewService {
     Observable<String> GET_ZIGBEEN_INFO_CONTEXT(@Body RequestBody info);
 
     /**
-     * 单火开关设备昵称及开关修改
+     * 单火开关设备联动开关昵称修改
      *
      * @return
      */
-    @POST(HttpUrlConstants.BINDING_AND_MODIFY_DEVICE_NICK)
-    Observable<BaseResult> bindingAndModifyDeviceNick(@Body RequestBody info);
+    @POST(HttpUrlConstants.UPDATE_SWITCH_NICK_NAME)
+    Observable<BaseResult> updateSwitchNickname(@Body RequestBody info);
 }

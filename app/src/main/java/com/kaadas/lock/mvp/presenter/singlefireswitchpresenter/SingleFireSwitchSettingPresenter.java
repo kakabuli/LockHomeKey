@@ -7,6 +7,7 @@ import com.kaadas.lock.mvp.view.singlefireswitchview.SingleFireSwitchView;
 import com.kaadas.lock.publiclibrary.bean.SingleFireSwitchInfo;
 import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
 import com.kaadas.lock.publiclibrary.http.XiaokaiNewServiceImp;
+import com.kaadas.lock.publiclibrary.http.postbean.ModifySwitchNickBean;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.util.BaseObserver;
 import com.kaadas.lock.publiclibrary.http.util.RxjavaHelper;
@@ -140,8 +141,8 @@ public class SingleFireSwitchSettingPresenter<T> extends BasePresenter<SingleFir
         }
     }
 
-    public void bindingAndModifyDevice(BindingSingleFireSwitchBean bindingSingleFireSwitchBean) {
-        XiaokaiNewServiceImp.bindingAndModifyDeviceNick(bindingSingleFireSwitchBean).subscribe(new BaseObserver<BaseResult>() {
+    public void updateSwitchNickname(ModifySwitchNickBean modifySwitchNickBean) {
+        XiaokaiNewServiceImp.updateSwitchNickname(modifySwitchNickBean).subscribe(new BaseObserver<BaseResult>() {
             @Override
             public void onSuccess(BaseResult baseResult) {
                 if (isSafe()) {

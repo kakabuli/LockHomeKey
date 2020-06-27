@@ -126,7 +126,7 @@ public class WifiLockAddSuccessActivity extends BaseActivity<IWifiLockAddSuccess
             inputName.setCursorVisible(false);
         }
 
-        handler.postDelayed(runnable, 500);
+        handler.postDelayed(runnable, 400);
 
     }
 

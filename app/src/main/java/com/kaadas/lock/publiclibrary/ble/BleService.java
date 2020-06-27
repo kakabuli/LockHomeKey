@@ -368,7 +368,7 @@ public class BleService extends Service {
                     String product_type_str;
 
                     byte[] mvalue = hex16.valueAt(0);
-                    //0 蓝牙模块(菜单绑定)   1菜单绑定   2直接绑定     3都支持
+                    //1 蓝牙模块(菜单绑定)  2蓝牙绑定     3菜单和直接绑定都支持 4Wi-Fi
                     bindingType= mvalue[0];
                     //取出产品类型  1锁 2网关 3开关
                     productType= mvalue[1];

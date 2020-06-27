@@ -3,6 +3,7 @@ package com.kaadas.lock.activity.addDevice.singleswitch;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -18,6 +19,7 @@ import com.kaadas.lock.mvp.view.singlefireswitchview.SingleFireSwitchView;
 import com.kaadas.lock.publiclibrary.bean.SingleFireSwitchInfo;
 import com.kaadas.lock.publiclibrary.bean.SwitchNumberBean;
 import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
+import com.kaadas.lock.publiclibrary.http.postbean.ModifySwitchNickBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.AddSingleFireSwitchBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.BindingSingleFireSwitchBean;
 import com.kaadas.lock.utils.AlertDialogUtil;
@@ -26,6 +28,7 @@ import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -49,6 +52,10 @@ public class SwipchSeetingArgus extends BaseActivity<SingleFireSwitchView, Singl
     private String switch1ChangeNickname;
     private String switch2ChangeNickname;
     private String switch3ChangeNickname;
+    private ModifySwitchNickBean modifySwitchNickBean;
+    private List< ModifySwitchNickBean.nickname >  switchNickname= new ArrayList<>();
+
+    private static final int TO_SET_NICK_NAME_REQUEST_CODE = 10101;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +94,7 @@ public class SwipchSeetingArgus extends BaseActivity<SingleFireSwitchView, Singl
         wifiSn = getIntent().getStringExtra(KeyConstants.WIFI_SN);
         wifiLockInfoChange = (WifiLockInfo) getIntent().getSerializableExtra(KeyConstants.WIFI_LOCK_INFO_CHANGE);
         wifiLockInfo = MyApplication.getInstance().getWifiLockInfoBySn(wifiSn);
+
         //设备型号
 //        tv_start.setText(wifiLockInfo.getProductModel());
         //键位开关
@@ -95,27 +103,30 @@ public class SwipchSeetingArgus extends BaseActivity<SingleFireSwitchView, Singl
 
             switch (switchNumber.getType()) {
                 case 1://键位1开关
-                    if (!switchNumber.getNickname().isEmpty()) {
+                    if (!TextUtils.isEmpty(switchNumber.getNickname())) {
                         switch1Nickname = switchNumber.getNickname();
+                        switch1ChangeNickname = switch1Nickname;
                         swipch_link_text_one.setText(switchNumber.getNickname());
                     }
                     break;
                 case 2://键位2开关
-                    if (!switchNumber.getNickname().isEmpty()) {
+                    if (!TextUtils.isEmpty(switchNumber.getNickname())) {
                         switch2Nickname = switchNumber.getNickname();
+                        switch2ChangeNickname = switch2Nickname;
                         swipch_link_text_two.setText(switchNumber.getNickname());
                     }
                     break;
                 case 3://键位3开关
-                    if (!switchNumber.getNickname().isEmpty()) {
+                    if (!TextUtils.isEmpty(switchNumber.getNickname())) {
                         switch3Nickname = switchNumber.getNickname();
+                        switch3ChangeNickname = switch3Nickname;
                         swipch_link_text_three.setText(switchNumber.getNickname());
                     }
                     break;
             }
         }
         //MAC地址
-        swipch_link_setting_mac.setText(wifiLockInfo.getSingleFireSwitchInfo().getMacaddr());
+        swipch_link_setting_mac.setText(wifiLockInfo.getSingleFireSwitchInfo().getMac());
         //绑定时间
         String bindingTime = DateUtils.timestampToDateSecond(wifiLockInfo.getSingleFireSwitchInfo().getSwitchBind());
 
@@ -188,7 +199,7 @@ public class SwipchSeetingArgus extends BaseActivity<SingleFireSwitchView, Singl
                 AlertDialogUtil.getInstance().havaEditTwoButtonDialogWidthDialogEdit(
                         SwipchSeetingArgus.this,
                         getString(R.string.swipch_setting_pluease_dialog_title1)
-                        ,switch1Nickname
+                        ,switch1ChangeNickname
                         , getString(R.string.cancel),
                         getString(R.string.query), new AlertDialogUtil.ClickListener() {
                             @Override
@@ -201,7 +212,14 @@ public class SwipchSeetingArgus extends BaseActivity<SingleFireSwitchView, Singl
                                     wifiLockInfoChange.getSingleFireSwitchInfo().getSwitchNumber().get(0).setNickname(switch1ChangeNickname);
                                     params = wifiLockInfoChange.getSingleFireSwitchInfo();
                                     bindingSingleFireSwitchBean = new BindingSingleFireSwitchBean(wifiSn,wifiLockInfoChange.getUid(),wifiLockInfoChange.getLockNickname(),params);
-                                    mPresenter.bindingAndModifyDevice(bindingSingleFireSwitchBean);
+
+//                                    for (int i=1;i<=SwitchNumber;i++){
+//                                        switchNickname.add(new ModifySwitchNickBean.nickname(i==1?switch1ChangeNickname:i==2?switch2ChangeNickname:switch3ChangeNickname,i));
+//                                    }
+                                    switchNickname.add(new ModifySwitchNickBean.nickname(switch1ChangeNickname,1));
+
+                                    modifySwitchNickBean = new ModifySwitchNickBean(wifiSn, wifiLockInfo.getUid(), switchNickname);
+                                    mPresenter.updateSwitchNickname(modifySwitchNickBean);
                                 }
                             }
 
@@ -220,7 +238,7 @@ public class SwipchSeetingArgus extends BaseActivity<SingleFireSwitchView, Singl
                 AlertDialogUtil.getInstance().havaEditTwoButtonDialogWidthDialogEdit(
                         SwipchSeetingArgus.this,
                         getString(R.string.swipch_setting_pluease_dialog_title2)
-                        ,switch2Nickname
+                        ,switch2ChangeNickname
                         , getString(R.string.cancel),
                         getString(R.string.query), new AlertDialogUtil.ClickListener() {
                             @Override
@@ -235,7 +253,15 @@ public class SwipchSeetingArgus extends BaseActivity<SingleFireSwitchView, Singl
                                     wifiLockInfoChange.getSingleFireSwitchInfo().getSwitchNumber().get(1).setNickname(switch2ChangeNickname);
                                     params = wifiLockInfoChange.getSingleFireSwitchInfo();
                                     bindingSingleFireSwitchBean = new BindingSingleFireSwitchBean(wifiSn,wifiLockInfoChange.getUid(),wifiLockInfoChange.getLockNickname(),params);
-                                    mPresenter.bindingAndModifyDevice(bindingSingleFireSwitchBean);
+
+
+//                                    for (int i=1;i<=SwitchNumber;i++){
+//                                        switchNickname.add(new ModifySwitchNickBean.nickname(i==1?"0000":i==2?switch2ChangeNickname:switch3ChangeNickname,i));
+//                                    }
+                                    switchNickname.add(new ModifySwitchNickBean.nickname(switch2ChangeNickname,2));
+
+                                    modifySwitchNickBean = new ModifySwitchNickBean(wifiSn, wifiLockInfo.getUid(), switchNickname);
+                                    mPresenter.updateSwitchNickname(modifySwitchNickBean);
                                 }
                             }
 
@@ -256,7 +282,7 @@ public class SwipchSeetingArgus extends BaseActivity<SingleFireSwitchView, Singl
                 AlertDialogUtil.getInstance().havaEditTwoButtonDialogWidthDialogEdit(
                         SwipchSeetingArgus.this,
                         getString(R.string.swipch_setting_pluease_dialog_title3)
-                        ,switch3Nickname
+                        ,switch3ChangeNickname
                         , getString(R.string.cancel),
                         getString(R.string.query), new AlertDialogUtil.ClickListener() {
                             @Override
@@ -271,7 +297,12 @@ public class SwipchSeetingArgus extends BaseActivity<SingleFireSwitchView, Singl
                                     wifiLockInfoChange.getSingleFireSwitchInfo().getSwitchNumber().get(2).setNickname(switch3ChangeNickname);
                                     params = wifiLockInfoChange.getSingleFireSwitchInfo();
                                     bindingSingleFireSwitchBean = new BindingSingleFireSwitchBean(wifiSn,wifiLockInfoChange.getUid(),wifiLockInfoChange.getLockNickname(),params);
-                                    mPresenter.bindingAndModifyDevice(bindingSingleFireSwitchBean);
+
+                                    for (int i=1;i<=SwitchNumber;i++){
+                                        switchNickname.add(new ModifySwitchNickBean.nickname(i==1?switch1ChangeNickname:i==2?switch2ChangeNickname:switch3ChangeNickname,i));
+                                    }
+                                    modifySwitchNickBean = new ModifySwitchNickBean(wifiSn, wifiLockInfo.getUid(), switchNickname);
+                                    mPresenter.updateSwitchNickname(modifySwitchNickBean);
                                 }
                             }
 
@@ -289,7 +320,13 @@ public class SwipchSeetingArgus extends BaseActivity<SingleFireSwitchView, Singl
                         });
                 break;
             case R.id.iv_back:
-                finish();
+
+                if (!wifiLockInfoChange.equals(wifiLockInfo)) {
+                    Intent intent = new Intent();
+                    intent.putExtra(KeyConstants.WIFI_LOCK_INFO_CHANGE, wifiLockInfoChange);
+                    setResult(TO_SET_NICK_NAME_REQUEST_CODE, intent);
+                    finish();
+                }
                 break;
 
         }

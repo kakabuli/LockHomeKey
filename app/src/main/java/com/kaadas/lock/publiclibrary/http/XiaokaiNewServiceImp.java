@@ -32,6 +32,7 @@ import com.kaadas.lock.publiclibrary.http.postbean.ModifyFunctionSetBean;
 import com.kaadas.lock.publiclibrary.http.postbean.ModifyLockNickBean;
 import com.kaadas.lock.publiclibrary.http.postbean.ModifyPasswordBean;
 import com.kaadas.lock.publiclibrary.http.postbean.ModifyPasswordNickBean;
+import com.kaadas.lock.publiclibrary.http.postbean.ModifySwitchNickBean;
 import com.kaadas.lock.publiclibrary.http.postbean.ModifyUserNickBean;
 import com.kaadas.lock.publiclibrary.http.postbean.OTABean;
 import com.kaadas.lock.publiclibrary.http.postbean.PutMessageBean;
@@ -1256,13 +1257,14 @@ public class XiaokaiNewServiceImp {
     }
 
     /**
-     * 单火开关设备昵称及开关修改
+     * 单火开关设备联动开关昵称修改
      *
      * @return
      */
-    public static Observable<BaseResult> bindingAndModifyDeviceNick(BindingSingleFireSwitchBean bindingSingleFireSwitchBean) {
+    public static Observable<BaseResult> updateSwitchNickname(ModifySwitchNickBean modifySwitchNickBean) {
+
         return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
-                .bindingAndModifyDeviceNick(new HttpUtils<BindingSingleFireSwitchBean>().getBody(bindingSingleFireSwitchBean))
+                .updateSwitchNickname(new HttpUtils<ModifySwitchNickBean>().getBody(modifySwitchNickBean))
                 .compose(RxjavaHelper.observeOnMainThread())
                 ;
     }

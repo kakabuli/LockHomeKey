@@ -16,7 +16,6 @@ public class SwitchNumberBean implements Serializable {
          * "timeEn" : 0             //使能
          * nickname                 //昵称
          *
-         *
          *          * 周一、二、三、四、五、六、七(int)127:(Ob 0111 1111),
          *          * 周一、二、三、四、五、六(int)63:(Ob 0011 1111),
          *          * 周一、二、三、四、五(int)31:(Ob 0001 1111),

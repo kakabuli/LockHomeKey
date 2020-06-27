@@ -3,11 +3,13 @@ package com.kaadas.lock.activity.addDevice.singleswitch;
 import android.content.Intent;
 import android.media.Image;
 import android.os.Handler;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
 import com.google.gson.annotations.SerializedName;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
+import com.kaadas.lock.activity.device.wifilock.newadd.WifiLockAddToSetSwitchActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.mvp.presenter.singlefireswitchpresenter.SingleFireSwitchSettingPresenter;
 import com.kaadas.lock.mvp.view.singlefireswitchview.SingleFireSwitchView;
@@ -18,6 +20,7 @@ import com.kaadas.lock.publiclibrary.mqtt.publishbean.BindingSingleFireSwitchBea
 import com.kaadas.lock.utils.DensityUtil;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +34,7 @@ import android.widget.Toast;
 import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.dialog.InfoDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,13 +50,12 @@ public class SwipchLinkActivity extends BaseActivity<SingleFireSwitchView, Singl
     ImageView swipch_setting_btn,swich_link_link_switch,back;
     RelativeLayout tv_double_rl,three_double_rl;
     TextView swipch_one_text,swipch_two_text,swipch_three_text;
-    TextView swipch_one_nick_text,swipch_two_nick_text,swipch_three_nick_text;
+    TextView swipch_one_nick_text,swipch_two_nick_text,swipch_three_nick_text,swipch_sure_to_perform;
 
     // 两次点击按钮之间的最小点击间隔时间(单位:ms)
     private static final int MIN_CLICK_DELAY_TIME = 1000;
     // 最后一次点击的时间
     private long lastClickTime;
-
 
     private WifiLockInfo wifiLockInfo;
     private WifiLockInfo wifiLockInfoChange;
@@ -78,6 +81,11 @@ public class SwipchLinkActivity extends BaseActivity<SingleFireSwitchView, Singl
     private SwitchNumberBean switchNumberBean;
     @SerializedName("switchArray")
     private List<SwitchNumberBean> switchNumber = new ArrayList<>();
+
+
+    private static final int TO_SET_NICK_NAME_REQUEST_CODE = 10101;
+    private static final int TO_SET_TIME_REQUEST_CODE = 10102;
+    private static final int TO_SET_ALL_REQUEST_CODE = 10103;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,6 +114,7 @@ public class SwipchLinkActivity extends BaseActivity<SingleFireSwitchView, Singl
         swipch_one_nick_text = findViewById(R.id.swipch_one_nick_text);
         swipch_two_nick_text = findViewById(R.id.swipch_two_nick_text);
         swipch_three_nick_text = findViewById(R.id.swipch_three_nick_text);
+        swipch_sure_to_perform = findViewById(R.id.swipch_sure_to_perform);
 
         swipch_one.setOnClickListener(this);
         swipch_two.setOnClickListener(this);
@@ -119,6 +128,7 @@ public class SwipchLinkActivity extends BaseActivity<SingleFireSwitchView, Singl
         swipch_one_img.setOnClickListener(this);
         swipch_two_img.setOnClickListener(this);
         swipch_three_img.setOnClickListener(this);
+        swipch_sure_to_perform.setOnClickListener(this);
 
         initData();
         initRecycleview();
@@ -136,8 +146,11 @@ public class SwipchLinkActivity extends BaseActivity<SingleFireSwitchView, Singl
         wifiLockInfo = MyApplication.getInstance().getWifiLockInfoBySn(wifiSn);
         wifiLockInfoChange = wifiLockInfo;
 
+    }
+    private void initRecycleview() {
+
         //使能开关
-        switchEn = wifiLockInfo.getSingleFireSwitchInfo().getSwitchEn();
+        switchEn = wifiLockInfoChange.getSingleFireSwitchInfo().getSwitchEn();
         if (switchEn != 0) {
             switchIsEn = true;
             swich_link_link_switch.setBackgroundResource(R.mipmap.swipperlinkleft_blue);
@@ -147,7 +160,7 @@ public class SwipchLinkActivity extends BaseActivity<SingleFireSwitchView, Singl
         }
 
         //键位开关
-        List<SwitchNumberBean> switchNumberList = wifiLockInfo.getSingleFireSwitchInfo().getSwitchNumber();
+        List<SwitchNumberBean> switchNumberList = wifiLockInfoChange.getSingleFireSwitchInfo().getSwitchNumber();
         for (SwitchNumberBean switchNumber : switchNumberList) {
 
             switch (switchNumber.getType()) {
@@ -161,13 +174,13 @@ public class SwipchLinkActivity extends BaseActivity<SingleFireSwitchView, Singl
                         swipch_one_img.setBackgroundResource(R.mipmap.swipperlinkleft_yes);
                     }
                     //时间显示
-                     startTime = wifiLockInfoChange.getSingleFireSwitchInfo().getSwitchNumber().get(0).getStartTime();
-                     endTime = wifiLockInfoChange.getSingleFireSwitchInfo().getSwitchNumber().get(0).getStopTime();
-                     if ((startTime/60)<10){
-                         starHourt = "0"+(startTime/60);
-                     } else {
-                         starHourt = String.valueOf((startTime/60));
-                     }
+                    startTime = wifiLockInfoChange.getSingleFireSwitchInfo().getSwitchNumber().get(0).getStartTime();
+                    endTime = wifiLockInfoChange.getSingleFireSwitchInfo().getSwitchNumber().get(0).getStopTime();
+                    if ((startTime/60)<10){
+                        starHourt = "0"+(startTime/60);
+                    } else {
+                        starHourt = String.valueOf((startTime/60));
+                    }
                     if ((startTime%60)<10){
                         startMin = "0"+(startTime%60);
                     } else {
@@ -185,8 +198,10 @@ public class SwipchLinkActivity extends BaseActivity<SingleFireSwitchView, Singl
                     }
                     swipch_one_text.setText(starHourt + ":" + startMin +"-"+endHourt + ":" + endMin);
                     //键位昵称
-                    if (wifiLockInfoChange.getSingleFireSwitchInfo().getSwitchNumber().get(0).getNickname().length()>0)
-                    swipch_one_nick_text.setText(wifiLockInfoChange.getSingleFireSwitchInfo().getSwitchNumber().get(0).getNickname()+"(键位1)");
+                    if (wifiLockInfoChange.getSingleFireSwitchInfo().getSwitchNumber().get(0).getNickname()!=null) {
+                        if (wifiLockInfoChange.getSingleFireSwitchInfo().getSwitchNumber().get(0).getNickname().length() > 0)
+                            swipch_one_nick_text.setText(wifiLockInfoChange.getSingleFireSwitchInfo().getSwitchNumber().get(0).getNickname() + "(键位1)");
+                    }
                     break;
                 case 2://键位2开关
                     //开关显示
@@ -198,8 +213,8 @@ public class SwipchLinkActivity extends BaseActivity<SingleFireSwitchView, Singl
                         swipch_two_img.setBackgroundResource(R.mipmap.swipperlinkleft_yes);
                     }
                     //时间显示
-                     startTime = wifiLockInfoChange.getSingleFireSwitchInfo().getSwitchNumber().get(1).getStartTime();
-                     endTime = wifiLockInfoChange.getSingleFireSwitchInfo().getSwitchNumber().get(1).getStopTime();
+                    startTime = wifiLockInfoChange.getSingleFireSwitchInfo().getSwitchNumber().get(1).getStartTime();
+                    endTime = wifiLockInfoChange.getSingleFireSwitchInfo().getSwitchNumber().get(1).getStopTime();
                     if ((startTime/60)<10){
                         starHourt = "0"+(startTime/60);
                     } else {
@@ -222,8 +237,10 @@ public class SwipchLinkActivity extends BaseActivity<SingleFireSwitchView, Singl
                     }
                     swipch_two_text.setText(starHourt + ":" + startMin +"-"+endHourt + ":" + endMin);
                     //键位昵称
-                    if (wifiLockInfoChange.getSingleFireSwitchInfo().getSwitchNumber().get(1).getNickname().length()>0)
-                        swipch_two_nick_text.setText(wifiLockInfoChange.getSingleFireSwitchInfo().getSwitchNumber().get(1).getNickname()+"(键位2)");
+                    if (wifiLockInfoChange.getSingleFireSwitchInfo().getSwitchNumber().get(1).getNickname()!=null) {
+                        if (wifiLockInfoChange.getSingleFireSwitchInfo().getSwitchNumber().get(1).getNickname().length() > 0)
+                            swipch_two_nick_text.setText(wifiLockInfoChange.getSingleFireSwitchInfo().getSwitchNumber().get(1).getNickname() + "(键位2)");
+                    }
                     break;
                 case 3://键位3开关
                     //开关显示
@@ -235,8 +252,8 @@ public class SwipchLinkActivity extends BaseActivity<SingleFireSwitchView, Singl
                         swipch_three_img.setBackgroundResource(R.mipmap.swipperlinkleft_yes);
                     }
                     //时间显示
-                     startTime = wifiLockInfoChange.getSingleFireSwitchInfo().getSwitchNumber().get(2).getStartTime();
-                     endTime = wifiLockInfoChange.getSingleFireSwitchInfo().getSwitchNumber().get(2).getStopTime();
+                    startTime = wifiLockInfoChange.getSingleFireSwitchInfo().getSwitchNumber().get(2).getStartTime();
+                    endTime = wifiLockInfoChange.getSingleFireSwitchInfo().getSwitchNumber().get(2).getStopTime();
                     if ((startTime/60)<10){
                         starHourt = "0"+(startTime/60);
                     } else {
@@ -259,14 +276,16 @@ public class SwipchLinkActivity extends BaseActivity<SingleFireSwitchView, Singl
                     }
                     swipch_three_text.setText(starHourt + ":" + startMin +"-"+endHourt + ":" + endMin);
                     //键位昵称
-                    if (wifiLockInfoChange.getSingleFireSwitchInfo().getSwitchNumber().get(2).getNickname().length()>0)
-                        swipch_three_nick_text.setText(wifiLockInfoChange.getSingleFireSwitchInfo().getSwitchNumber().get(2).getNickname()+"(键位3)");
+                    if (wifiLockInfoChange.getSingleFireSwitchInfo().getSwitchNumber().get(2).getNickname()!=null) {
+
+                        if (wifiLockInfoChange.getSingleFireSwitchInfo().getSwitchNumber().get(2).getNickname().length() > 0)
+                            swipch_three_nick_text.setText(wifiLockInfoChange.getSingleFireSwitchInfo().getSwitchNumber().get(2).getNickname() + "(键位3)");
+                    }
                     break;
             }
 
         }
-    }
-    private void initRecycleview() {
+
 
         SwitchNumber = getIntent().getIntExtra(KeyConstants.SWITCH_NUMBER,1);
 
@@ -332,21 +351,22 @@ public class SwipchLinkActivity extends BaseActivity<SingleFireSwitchView, Singl
                     intent.putExtra(KeyConstants.SWITCH_KEY_NUMBER, 1);
                     intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
                     intent.putExtra(KeyConstants.WIFI_LOCK_INFO_CHANGE, wifiLockInfoChange);
-                    startActivity(intent);
+                    startActivityForResult(intent,TO_SET_TIME_REQUEST_CODE);
                     break;
                 case R.id.swipch_two:
                     intent = new Intent(this, SwipchLinkSettingActivity.class);
                     intent.putExtra(KeyConstants.SWITCH_KEY_NUMBER, 2);
                     intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
                     intent.putExtra(KeyConstants.WIFI_LOCK_INFO_CHANGE, wifiLockInfoChange);
-                    startActivity(intent);
+                    startActivityForResult(intent,TO_SET_TIME_REQUEST_CODE);
                     break;
                 case R.id.swipch_three:
                     intent = new Intent(this, SwipchLinkSettingActivity.class);
                     intent.putExtra(KeyConstants.SWITCH_KEY_NUMBER, 3);
                     intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
                     intent.putExtra(KeyConstants.WIFI_LOCK_INFO_CHANGE, wifiLockInfoChange);
-                    startActivity(intent);
+                    startActivityForResult(intent,TO_SET_TIME_REQUEST_CODE);
+
                     break;
                 case R.id.swipch_one_img:
                     if (switchOneIsEn) {
@@ -356,7 +376,7 @@ public class SwipchLinkActivity extends BaseActivity<SingleFireSwitchView, Singl
                         if (switchNumber.size()>0){
                             switchNumber.get(0).setTimeEn(0);
                         }
-                        mPresenter.settingDevice(wifiLockInfoChange);
+//                        mPresenter.settingDevice(wifiLockInfoChange);
 
                     } else {
 //                        switchOneIsEn = true;
@@ -365,7 +385,7 @@ public class SwipchLinkActivity extends BaseActivity<SingleFireSwitchView, Singl
                         if (switchNumber.size()>0){
                             switchNumber.get(0).setTimeEn(1);
                         }
-                        mPresenter.settingDevice(wifiLockInfoChange);
+//                        mPresenter.settingDevice(wifiLockInfoChange);
                     }
                     break;
                 case R.id.swipch_two_img:
@@ -376,7 +396,7 @@ public class SwipchLinkActivity extends BaseActivity<SingleFireSwitchView, Singl
                         if (switchNumber.size()>1){
                             switchNumber.get(1).setTimeEn(0);
                         }
-                        mPresenter.settingDevice(wifiLockInfoChange);
+//                        mPresenter.settingDevice(wifiLockInfoChange);
                     } else {
 //                        switchTwoIsEn = true;
                         swipch_two_img.setBackgroundResource(R.mipmap.swipperlinkleft_yes);
@@ -384,7 +404,7 @@ public class SwipchLinkActivity extends BaseActivity<SingleFireSwitchView, Singl
                         if (switchNumber.size()>1){
                             switchNumber.get(1).setTimeEn(1);
                         }
-                        mPresenter.settingDevice(wifiLockInfoChange);
+//                        mPresenter.settingDevice(wifiLockInfoChange);
                     }
                     break;
                 case R.id.swipch_three_img:
@@ -395,7 +415,7 @@ public class SwipchLinkActivity extends BaseActivity<SingleFireSwitchView, Singl
                         if (switchNumber.size()>2){
                             switchNumber.get(2).setTimeEn(0);
                         }
-                        mPresenter.settingDevice(wifiLockInfoChange);
+//                        mPresenter.settingDevice(wifiLockInfoChange);
                     } else {
 //                        switchThreeIsEn = true;
                         swipch_three_img.setBackgroundResource(R.mipmap.swipperlinkleft_yes);
@@ -403,7 +423,7 @@ public class SwipchLinkActivity extends BaseActivity<SingleFireSwitchView, Singl
                         if (switchNumber.size()>2){
                             switchNumber.get(2).setTimeEn(1);
                         }
-                        mPresenter.settingDevice(wifiLockInfoChange);
+//                        mPresenter.settingDevice(wifiLockInfoChange);
                     }
                     break;
                 case R.id.swipch_setting_btn:
@@ -411,7 +431,7 @@ public class SwipchLinkActivity extends BaseActivity<SingleFireSwitchView, Singl
                     intent.putExtra(KeyConstants.SWITCH_NUMBER, SwitchNumber);
                     intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
                     intent.putExtra(KeyConstants.WIFI_LOCK_INFO_CHANGE, wifiLockInfoChange);
-                    startActivity(intent);
+                    startActivityForResult(intent,TO_SET_NICK_NAME_REQUEST_CODE);
                     break;
 
                 case R.id.swich_link_link_switch:
@@ -420,13 +440,13 @@ public class SwipchLinkActivity extends BaseActivity<SingleFireSwitchView, Singl
 //                        switchIsEn = false;
                         swich_link_link_switch.setBackgroundResource(R.mipmap.swipperlinkleft_no);
                         wifiLockInfoChange.getSingleFireSwitchInfo().setSwitchEn(0);
-                        mPresenter.settingDevice(wifiLockInfoChange);
+//                        mPresenter.settingDevice(wifiLockInfoChange);
 
                     } else {
 //                        switchIsEn = true;
                         swich_link_link_switch.setBackgroundResource(R.mipmap.swipperlinkleft_blue);
                         wifiLockInfoChange.getSingleFireSwitchInfo().setSwitchEn(1);
-                        mPresenter.settingDevice(wifiLockInfoChange);
+//                        mPresenter.settingDevice(wifiLockInfoChange);
                     }
                     break;
 
@@ -434,6 +454,14 @@ public class SwipchLinkActivity extends BaseActivity<SingleFireSwitchView, Singl
                     finish();
                     break;
 
+                case R.id.swipch_sure_to_perform:
+
+                    intent = new Intent(this, WifiLockAddToSetSwitchActivity.class);
+                    intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
+                    intent.putExtra(KeyConstants.WIFI_LOCK_INFO_CHANGE, wifiLockInfoChange);
+                    startActivityForResult(intent,TO_SET_ALL_REQUEST_CODE);
+
+                    break;
             }
         }
     }
@@ -441,9 +469,9 @@ public class SwipchLinkActivity extends BaseActivity<SingleFireSwitchView, Singl
     @Override
     public void settingDeviceSuccess() {
         LogUtils.e("--kaadas--设置成功");
-        params = wifiLockInfoChange.getSingleFireSwitchInfo();
-        bindingSingleFireSwitchBean = new BindingSingleFireSwitchBean(wifiSn,wifiLockInfoChange.getUid(),wifiLockInfoChange.getLockNickname(),params);
-        mPresenter.bindingAndModifyDevice(bindingSingleFireSwitchBean);
+//        params = wifiLockInfoChange.getSingleFireSwitchInfo();
+//        bindingSingleFireSwitchBean = new BindingSingleFireSwitchBean(wifiSn,wifiLockInfoChange.getUid(),wifiLockInfoChange.getLockNickname(),params);
+//        mPresenter.updateSwitchNickname(bindingSingleFireSwitchBean);
     }
 
     @Override
@@ -562,16 +590,55 @@ public class SwipchLinkActivity extends BaseActivity<SingleFireSwitchView, Singl
     }
 
 //    @Override
-//    protected void onResume() {
-//        super.onResume();
-//        LogUtils.e("--kaadas--返回SwipchLinkActivity显示");
-////        handler.postDelayed(new Runnable() {
-////            @Override
-////            public void run() {
-////                initData();
-////                initRecycleview();
-////            }
-////        }, 3000);
+//    protected void onRestart() {
+//        super.onRestart();
+////        initData();
+////        initRecycleview();
+//        if (!TextUtils.isEmpty(getIntent().getStringExtra(KeyConstants.WIFI_LOCK_INFO_CHANGE_RESULT))) {
+//            if (getIntent().getStringExtra(KeyConstants.WIFI_LOCK_INFO_CHANGE_RESULT).contentEquals("true")) {
+////            android:src="@mipmap/set_right",set_false
+////            android:id="@+id/set_text",set_status
+////            android:text="设置成功"
+//                InfoDialog infoDialog = new InfoDialog.Builder(this)
+//                        .setMessage("Something done")
+//                        .create();
+//                infoDialog.show();
+//            } else if (getIntent().getStringExtra(KeyConstants.WIFI_LOCK_INFO_CHANGE_RESULT).contentEquals("false")) {
+//                InfoDialog infoDialog = new InfoDialog.Builder(this)
+//                        .setMessage("Something to do")
+//                        .create();
+//                infoDialog.show();
+//            }
+//        }
 //
 //    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == TO_SET_NICK_NAME_REQUEST_CODE || requestCode == TO_SET_TIME_REQUEST_CODE ) {
+            wifiLockInfoChange = (WifiLockInfo) data.getSerializableExtra(KeyConstants.WIFI_LOCK_INFO_CHANGE);
+            initRecycleview();
+        }
+//        else if (requestCode == TO_SET_ALL_REQUEST_CODE){
+//            if (!TextUtils.isEmpty(data.getStringExtra(KeyConstants.WIFI_LOCK_INFO_CHANGE_RESULT))) {
+//                if (data.getStringExtra(KeyConstants.WIFI_LOCK_INFO_CHANGE_RESULT).contentEquals("true")) {
+////            android:src="@mipmap/set_right",set_false
+////            android:id="@+id/set_text",set_status
+////            android:text="设置成功"
+//                    InfoDialog infoDialog = new InfoDialog.Builder(this)
+//                            .setMessage("Something done")
+//                            .create();
+//                    infoDialog.show();
+//                } else if (data.getStringExtra(KeyConstants.WIFI_LOCK_INFO_CHANGE_RESULT).contentEquals("false")) {
+//                    InfoDialog infoDialog = new InfoDialog.Builder(this)
+//                            .setMessage("Something to do")
+//                            .create();
+//                    infoDialog.show();
+//                }
+//            }
+//        }
+
+    }
+
+
 }
