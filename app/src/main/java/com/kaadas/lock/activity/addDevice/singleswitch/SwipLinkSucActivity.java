@@ -259,6 +259,7 @@ public class SwipLinkSucActivity  extends BaseActivity<SingleFireSwitchView, Sin
         startActivity(intent);
     }
 
+
     @Override
     public void showLoading(String content) {
 

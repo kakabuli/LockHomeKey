@@ -21,6 +21,8 @@
     <string name="right_now_set">立即设置</string>
     <string name="sure_to_perform">确定执行</string>
     <string name="search">搜索</string>
+    <string name="input_lock_product">请输入您的门锁型号</string>
+    <string name="look_for_QRCode">在门锁后面板找到配网二维码</string>
     <string name="not_input_special_symbol">不能输入特殊符号</string>
     <string name="phone_not_right">手机号错误</string>
     <string name="hint">提示</string>
@@ -144,6 +146,7 @@
     <string name="go_bind">去绑定</string>
     <string name="wifi_is_connecting">正在连接kaadas网关Wi-Fi中...</string>
     <string name="add_lock">添加门锁</string>
+    <string name="choose_to_add_wifi">选择配网</string>
     <string name="searching_bluetooth">正在搜索附近设备...</string>
     <string name="research">重新搜索</string>
     <string name="help">帮助</string>

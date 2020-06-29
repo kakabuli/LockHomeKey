@@ -98,13 +98,13 @@ public class InfoDialog extends Dialog {
             }
 
             public InfoDialog create() {
-                mButton.setOnClickListener(view -> {
-                    mDialog.dismiss();
-                    mButtonClickListener.onClick(view);
-                });
+//                mButton.setOnClickListener(view -> {
+//                    mDialog.dismiss();
+//                    mButtonClickListener.onClick(view);
+//                });
                 mDialog.setContentView(mLayout);
-                mDialog.setCancelable(true);                //用户可以点击后退键关闭 Dialog
-                mDialog.setCanceledOnTouchOutside(false);   //用户不可以点击外部来关闭 Dialog
+//                mDialog.setCancelable(true);                //用户可以点击后退键关闭 Dialog
+//                mDialog.setCanceledOnTouchOutside(false);   //用户不可以点击外部来关闭 Dialog
                 return mDialog;
             }
         }

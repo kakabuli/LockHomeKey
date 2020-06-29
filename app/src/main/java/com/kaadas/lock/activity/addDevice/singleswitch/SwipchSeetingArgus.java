@@ -400,6 +400,8 @@ public class SwipchSeetingArgus extends BaseActivity<SingleFireSwitchView, Singl
         Toast.makeText(this, "设置失败", Toast.LENGTH_SHORT).show();
 
     }
+
+
     public void refresh() {
 
         finish();

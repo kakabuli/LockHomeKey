@@ -150,4 +150,6 @@ public class SwipLinkThreeActivity extends BaseActivity<SingleFireSwitchView, Si
     public void bindingAndModifyDeviceThrowable() {
 
     }
+
+
 }

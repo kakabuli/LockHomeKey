@@ -18,6 +18,7 @@ import com.kaadas.lock.activity.addDevice.zigbeelocknew.AddDeviceZigbeeLockNewZe
 import com.kaadas.lock.activity.addDevice.zigbeelocknew.QrCodeScanActivity;
 import com.kaadas.lock.activity.device.wifilock.add.WifiLockAPAddFirstActivity;
 import com.kaadas.lock.activity.device.wifilock.newadd.WifiLockAddNewFirstActivity;
+import com.kaadas.lock.activity.device.wifilock.newadd.WifiLockAddNewToChooseActivity;
 import com.kaadas.lock.bean.HomeShowBean;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.mvp.presenter.deviceaddpresenter.DeviceZigBeeDetailPresenter;
@@ -117,7 +118,9 @@ public class DeviceAdd2Activity extends BaseActivity<DeviceZigBeeDetailView, Dev
                 startActivity(bluetoothIntent);
                 break;
             case R.id.wifi_lock:
-                startActivity(new Intent(this,WifiLockAddNewFirstActivity.class));
+//                startActivity(new Intent(this,WifiLockAddNewFirstActivity.class));
+                Intent chooseAddIntent = new Intent(this, WifiLockAddNewToChooseActivity.class);
+                startActivity(chooseAddIntent);
                 break;
             case R.id.zigbee_lock:
                 if ((flag == true && isAdmin == 0) || (flag == true && isAdmin == 1)) {

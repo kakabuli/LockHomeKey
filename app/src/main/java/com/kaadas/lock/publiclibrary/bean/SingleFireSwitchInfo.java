@@ -31,7 +31,6 @@ public class SingleFireSwitchInfo implements Serializable {
         this.total = total;
     }
 
-
     public SingleFireSwitchInfo() {
 
     }
@@ -88,5 +87,6 @@ public class SingleFireSwitchInfo implements Serializable {
     public void setSwitchNumber(List<SwitchNumberBean> switchNumber) {
         this.switchNumber = switchNumber;
     }
+
 
 }

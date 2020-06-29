@@ -38,18 +38,13 @@ public class WifiLockWaitForSwitchActivity extends BaseActivity<SingleFireSwitch
     private Animation animation;
     private Handler handler = new Handler();
 
-    private static final int TO_SET_ALL_REQUEST_CODE = 10103;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wifi_lock_wait_to_set_switch);
         ButterKnife.bind(this);
-
         initData();
         initView();
-
     }
 
     @Override
@@ -89,11 +84,11 @@ public class WifiLockWaitForSwitchActivity extends BaseActivity<SingleFireSwitch
                         circleProgressBar.setValue(50);
                         break;
 
-                    case 3:
+                    case 2:
 
                         circleProgressBar.setValue(100);
 
-                        handler.postDelayed(runnable, 500);
+                        handler.postDelayed(runnable, 1000);
 
                         break;
                 }
@@ -105,27 +100,46 @@ public class WifiLockWaitForSwitchActivity extends BaseActivity<SingleFireSwitch
         @Override
         public void run() {
             onSuccess();
-
             handler.removeCallbacks(runnable);
             finish();
 
         }
     };
+    Runnable runnable1 = new Runnable() {
+        @Override
+        public void run() {
+            onFail();
+            handler.removeCallbacks(runnable1);
+            finish();
+
+        }
+    };
     public void onSuccess() {
-        LogUtils.e("--kaadas--设置完成");
+        LogUtils.e("--kaadas--设置完成-onSuccess");
 //        finish();
         Intent intent;
         intent = new Intent(this, SwipchLinkActivity.class);
-        intent.putExtra(KeyConstants.WIFI_LOCK_INFO_CHANGE_RESULT, "true");
-        intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
-        intent.putExtra(KeyConstants.WIFI_LOCK_INFO_CHANGE, wifiLockInfoChange);
+        intent.putExtra(KeyConstants.WIFI_LOCK_INFO_CHANGE_RESULT, true);
+//        intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
+//        intent.putExtra(KeyConstants.WIFI_LOCK_INFO_CHANGE, wifiLockInfoChange);
 //        startActivity(intent);
+        setResult(RESULT_OK, intent);
+//        setResult(RESULT_OK);
+
 //        if (!wifiLockInfoChange.equals(wifiLockInfo)) {
 //            Intent intent = new Intent();
 //            intent.putExtra(KeyConstants.WIFI_LOCK_INFO_CHANGE, wifiLockInfoChange);
-            setResult(TO_SET_ALL_REQUEST_CODE, intent);
-            finish();
+//            finish();
 //        }
+    }
+    public void onFail() {
+        LogUtils.e("--kaadas--设置失败-onFail");
+        Intent intent;
+        intent = new Intent(this, SwipchLinkActivity.class);
+        intent.putExtra(KeyConstants.WIFI_LOCK_INFO_CHANGE_RESULT, false);
+//        intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
+//        intent.putExtra(KeyConstants.WIFI_LOCK_INFO_CHANGE, wifiLockInfoChange);
+        setResult(RESULT_OK, intent);
     }
     @OnClick({R.id.back})
     public void onClick(View view) {
@@ -133,45 +147,48 @@ public class WifiLockWaitForSwitchActivity extends BaseActivity<SingleFireSwitch
             case R.id.back:
                 finish();
                 break;
-
         }
     }
 
     @Override
     public void settingDeviceSuccess() {
-        LogUtils.e("--kaadas--设置成功");
+        LogUtils.e("--kaadas--设置成功-settingDeviceSuccess");
         changeState(2); //
-
     }
 
     @Override
     public void settingDeviceFail() {
-        LogUtils.e("--kaadas--设置失败");
+        LogUtils.e("--kaadas--设置失败-settingDeviceFail");
+        handler.postDelayed(runnable1, 500);
 //        finish();
 //        Intent intent;
 //        intent = new Intent(this, SwipchLinkActivity.class);
 //        intent.putExtra(KeyConstants.WIFI_LOCK_INFO_CHANGE_RESULT, "false");
 //        startActivity(intent);
-        Intent intent = new Intent();
-        intent.putExtra(KeyConstants.WIFI_LOCK_INFO_CHANGE, wifiLockInfoChange);
-        intent.putExtra(KeyConstants.WIFI_LOCK_INFO_CHANGE_RESULT, "false");
-        setResult(TO_SET_ALL_REQUEST_CODE, intent);
-        finish();
+//        Intent intent = new Intent();
+//        intent.putExtra(KeyConstants.WIFI_LOCK_INFO_CHANGE, wifiLockInfoChange);
+//        intent.putExtra(KeyConstants.WIFI_LOCK_INFO_CHANGE_RESULT, "false");
+//        startActivity(intent);
+//        mPresenter.updateResult(false);
+//        finish();
     }
 
     @Override
     public void settingDeviceThrowable() {
-        LogUtils.e("--kaadas--设置失败");
+        LogUtils.e("--kaadas--设置失败-settingDeviceThrowable");
+        handler.postDelayed(runnable1, 500);
 //        finish();
 //        Intent intent;
 //        intent = new Intent(this, SwipchLinkActivity.class);
 //        intent.putExtra(KeyConstants.WIFI_LOCK_INFO_CHANGE_RESULT, "false");
 //        startActivity(intent);
-        Intent intent = new Intent();
-        intent.putExtra(KeyConstants.WIFI_LOCK_INFO_CHANGE, wifiLockInfoChange);
-        intent.putExtra(KeyConstants.WIFI_LOCK_INFO_CHANGE_RESULT, "false");
-        setResult(TO_SET_ALL_REQUEST_CODE, intent);
-        finish();
+//        Intent intent = new Intent();
+//        intent.putExtra(KeyConstants.WIFI_LOCK_INFO_CHANGE, wifiLockInfoChange);
+//        intent.putExtra(KeyConstants.WIFI_LOCK_INFO_CHANGE_RESULT, "false");
+//        startActivity(intent);
+//        mPresenter.updateResult(false);
+
+//        finish();
     }
 
     @Override
@@ -218,4 +235,5 @@ public class WifiLockWaitForSwitchActivity extends BaseActivity<SingleFireSwitch
     public void bindingAndModifyDeviceThrowable() {
 
     }
+
 }

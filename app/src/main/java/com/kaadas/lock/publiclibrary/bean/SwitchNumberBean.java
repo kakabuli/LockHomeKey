@@ -38,7 +38,6 @@ public class SwitchNumberBean implements Serializable {
             this.week = week;
             this.timeEn = timeEn;
             this.nickname = nickname;
-
         }
 
         public SwitchNumberBean() {

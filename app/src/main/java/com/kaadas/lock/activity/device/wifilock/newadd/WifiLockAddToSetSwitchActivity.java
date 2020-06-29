@@ -6,6 +6,7 @@ import android.graphics.drawable.AnimationDrawable;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 import com.espressif.iot.esptouch.util.TouchNetUtil;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
+import com.kaadas.lock.activity.addDevice.singleswitch.SwipchLinkActivity;
 import com.kaadas.lock.activity.device.wifilock.add.WifiLockHelpActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.mvp.presenter.singlefireswitchpresenter.SingleFireSwitchSettingPresenter;
@@ -83,16 +85,31 @@ public class WifiLockAddToSetSwitchActivity extends BaseActivity<SingleFireSwitc
 
             case R.id.button_next:
 
-                finish();
                 intent = new Intent(this, WifiLockWaitForSwitchActivity.class);
                 intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
                 intent.putExtra(KeyConstants.WIFI_LOCK_INFO_CHANGE, wifiLockInfoChange);
-//                startActivityForResult(intent,TO_SET_ALL_REQUEST_CODE);
-                startActivity(intent);
+//                startActivity(intent);
+                startActivityForResult(intent,TO_SET_ALL_REQUEST_CODE);
+//                finish();
                 break;
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == TO_SET_ALL_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+//                LogUtils.e("--kaadas--11111WIFI_LOCK_INFO_CHANGE_RESULT=="+data.getBooleanExtra(KeyConstants.WIFI_LOCK_INFO_CHANGE_RESULT,false));
+//                Intent intent;
+//                intent = new Intent(this, SwipchLinkActivity.class);
+//                intent.putExtra(KeyConstants.WIFI_LOCK_INFO_CHANGE_RESULT, data.getBooleanExtra(KeyConstants.WIFI_LOCK_INFO_CHANGE_RESULT,false));
+                setResult(RESULT_OK, data);
+                finish();
+            }
+        }
+    }
     @Override
     public void settingDeviceSuccess() {
 
@@ -152,4 +169,6 @@ public class WifiLockAddToSetSwitchActivity extends BaseActivity<SingleFireSwitc
     public void bindingAndModifyDeviceThrowable() {
 
     }
+
+
 }

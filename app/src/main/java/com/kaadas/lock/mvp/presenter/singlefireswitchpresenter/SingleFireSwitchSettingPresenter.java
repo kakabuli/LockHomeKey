@@ -41,12 +41,11 @@ public class SingleFireSwitchSettingPresenter<T> extends BasePresenter<SingleFir
     private Disposable addDeviceDisposable;
     private Disposable gettingDeviceDisposable;
 
-    private WifiLockInfo wifiLockInfo;
-
     public void settingDevice(WifiLockInfo wifiLockInfo) {
         toDisposable(settingDeviceDisposable);
         if (mqttService != null && mqttService.getMqttClient() != null && mqttService.getMqttClient().isConnected()) {
             MqttMessage mqttMessage = MqttCommandFactory.setSingleFireSwitch(MyApplication.getInstance().getUid(), wifiLockInfo.getWifiSN(), wifiLockInfo.getSingleFireSwitchInfo());
+//            LogUtils.e("--kaadas--设置单火开关mqttMessage=="+mqttMessage);
             settingDeviceDisposable = mqttService.mqttPublish(MqttConstant.getCallTopic(MyApplication.getInstance().getUid()), mqttMessage)
                     .filter(new Predicate<MqttData>() {
                         @Override
@@ -171,4 +170,5 @@ public class SingleFireSwitchSettingPresenter<T> extends BasePresenter<SingleFir
             }
         });
     }
+
 }

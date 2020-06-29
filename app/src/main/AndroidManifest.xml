@@ -68,6 +68,9 @@
         <activity android:name=".activity.device.wifilock.newadd.WifiLockAddToSetSwitchActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
+        <activity android:name=".activity.device.wifilock.newadd.WifiLockAddNewToChooseActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
         <activity android:name=".activity.device.wifilock.newadd.WifiLockWaitForSwitchActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />

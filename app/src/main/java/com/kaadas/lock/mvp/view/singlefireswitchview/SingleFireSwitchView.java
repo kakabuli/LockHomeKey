@@ -41,4 +41,5 @@ public interface SingleFireSwitchView extends IBaseView {
     //绑定锁外围（开关）异常
     void bindingAndModifyDeviceThrowable();
 
+
 }

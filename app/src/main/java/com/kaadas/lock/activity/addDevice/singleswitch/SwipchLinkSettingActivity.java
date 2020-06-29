@@ -380,4 +380,6 @@ public class SwipchLinkSettingActivity extends BaseActivity<SingleFireSwitchView
         Toast.makeText(this, "设置超时", Toast.LENGTH_SHORT).show();
 
     }
+
+
 }

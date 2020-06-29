@@ -598,6 +598,21 @@ public class BleLockUtils {
             else if (model.contentEquals("K5501")) {
                 return R.mipmap.bluetooth_authorization_lock_k5501;
             }
+            else if (model.contentEquals("A5602")) {
+                return R.mipmap.bluetooth_authorization_lock_a8_w;
+            }
+            else if (model.contentEquals("A5603")) {
+                return R.mipmap.bluetooth_authorization_lock_k100_w;
+            }
+            else if (model.contentEquals("G5601")) {
+                return R.mipmap.bluetooth_authorization_lock_5500_a5p_w;
+            }
+            else if (model.contentEquals("G5602")) {
+                return R.mipmap.bluetooth_authorization_lock_5310_a5p_w;
+            }
+            else if (model.contentEquals("G8501")) {
+                return R.mipmap.bluetooth_authorization_lock_k9_a5p_w;
+            }
             else {
                 return R.mipmap.bluetooth_authorization_lock_default;
             }
@@ -721,6 +736,21 @@ public class BleLockUtils {
             else if (model.contentEquals("K5501")) {
                 return R.mipmap.small_k5501;
             }
+            else if (model.contentEquals("A5602")) {
+                return R.mipmap.small_a8_w;
+            }
+            else if (model.contentEquals("A5603")) {
+                return R.mipmap.small_k100_w;
+            }
+            else if (model.contentEquals("G5601")) {
+                return R.mipmap.small_5500_a5p_w;
+            }
+            else if (model.contentEquals("G5602")) {
+                return R.mipmap.small_5310_a5p_w;
+            }
+            else if (model.contentEquals("G8501")) {
+                return R.mipmap.small_k9_a5p_w;
+            }
             else {
                 return R.mipmap.default_zigbee_lock_icon;
             }
@@ -755,8 +785,6 @@ public class BleLockUtils {
             } else if (model.startsWith("K7P") ) {
                 return R.mipmap.bluetooth_lock_k7p;
             }
-
-
 
 
             else if (model.startsWith("KX-T") || model.startsWith("K8300")) {
@@ -842,6 +870,21 @@ public class BleLockUtils {
             }
             else if (model.contentEquals("K5501")) {
                 return R.mipmap.bluetooth_lock_k5501;
+            }
+             else if (model.contentEquals("A5602")) {
+                return R.mipmap.bluetooth_lock_a8_w;
+            }
+             else if (model.contentEquals("A5603")) {
+                return R.mipmap.bluetooth_lock_k100_w;
+            }
+            else if (model.contentEquals("G5601")) {
+                return R.mipmap.bluetooth_lock_5500_a5p_w;
+            }
+            else if (model.contentEquals("G5602")) {
+                return R.mipmap.bluetooth_lock_5310_a5p_w;
+            }
+            else if (model.contentEquals("G8501")) {
+                return R.mipmap.bluetooth_lock_k9_a5p_w;
             }
             else {
                 return R.mipmap.bluetooth_lock_default;
