@@ -36,7 +36,7 @@ import butterknife.BindView;
 public class SwipchSeetingArgus extends BaseActivity<SingleFireSwitchView, SingleFireSwitchSettingPresenter<SingleFireSwitchView>> implements View.OnClickListener,SingleFireSwitchView  {
     TextView tv_content,swipch_link_text_one,swipch_link_text_two,swipch_link_text_three,tv_start,swipch_link_setting_mac,swipch_link_setting_binding_time;
     ImageView iv_back;
-    RelativeLayout swipch_setting_arugs_change,swipch_link_btn_one_rl,swipch_link_btn_two_rl,swipch_link_btn_three_rl;
+    RelativeLayout swipch_setting_arugs_change,swipch_link_btn_one_rl,swipch_link_btn_two_rl,swipch_link_btn_three_rl,swipch_link_setting_binding_time_rl;
 
     private int SwitchNumber;
     private WifiLockInfo wifiLockInfo;
@@ -71,6 +71,7 @@ public class SwipchSeetingArgus extends BaseActivity<SingleFireSwitchView, Singl
         swipch_link_btn_one_rl = findViewById(R.id.swipch_link_btn_one_rl);
         swipch_link_btn_two_rl = findViewById(R.id.swipch_link_btn_two_rl);
         swipch_link_btn_three_rl = findViewById(R.id.swipch_link_btn_three_rl);
+        swipch_link_setting_binding_time_rl = findViewById(R.id.swipch_link_setting_binding_time_rl);
         swipch_link_text_one = findViewById(R.id.swipch_link_text_one);
         swipch_link_text_two = findViewById(R.id.swipch_link_text_two);
         swipch_link_text_three = findViewById(R.id.swipch_link_text_three);
@@ -78,6 +79,7 @@ public class SwipchSeetingArgus extends BaseActivity<SingleFireSwitchView, Singl
         swipch_link_btn_one_rl.setOnClickListener(this);
         swipch_link_btn_two_rl.setOnClickListener(this);
         swipch_link_btn_three_rl.setOnClickListener(this);
+        swipch_link_setting_binding_time_rl.setOnClickListener(this);
         iv_back.setOnClickListener(this);
 
         initData();
@@ -134,6 +136,8 @@ public class SwipchSeetingArgus extends BaseActivity<SingleFireSwitchView, Singl
     }
 
     private void initRecycleview() {
+
+        swipch_link_setting_binding_time_rl.setVisibility(View.GONE);//产品需求绑定时间不显示（存在问题：开关和锁绑定出场，默认锁上报时间为0，即1970年）
 
         SwitchNumber = getIntent().getIntExtra(KeyConstants.SWITCH_NUMBER,1);
 
