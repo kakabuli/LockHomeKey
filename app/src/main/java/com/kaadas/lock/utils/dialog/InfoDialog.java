@@ -33,11 +33,12 @@ public class InfoDialog extends Dialog {
             private Button mButton;
 
             private View.OnClickListener mButtonClickListener;
+            private View.OnClickListener mIconClickListener;
 
             private InfoDialog mDialog;
 
             public Builder(Context context) {
-                mDialog = new InfoDialog(context, R.style.Theme_AppCompat_Dialog);
+                mDialog = new InfoDialog(context, R.style.dialog_loading_view);
                 LayoutInflater inflater =
                         (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 //加载布局文件
@@ -57,51 +58,55 @@ public class InfoDialog extends Dialog {
 
             /**
              * 通过 ID 设置 Dialog 图标
+             * 加监听
              */
-            public Builder setIcon(int resId) {
+            public Builder setIcon(int resId , View.OnClickListener listener) {
                 mIcon.setImageResource(resId);
+                mIconClickListener = listener;
                 return this;
             }
 
             /**
              * 用 Bitmap 作为 Dialog 图标
+             * 加监听
              */
-            public Builder setIcon(Bitmap bitmap) {
+            public Builder setIcon(Bitmap bitmap , View.OnClickListener listener) {
                 mIcon.setImageBitmap(bitmap);
+                mIconClickListener = listener;
                 return this;
             }
 
-            /**
-             * 设置 Dialog 标题
-             */
-            public Builder setTitle(@NonNull String title) {
-                mTitle.setText(title);
-                mTitle.setVisibility(View.VISIBLE);
-                return this;
-            }
-
+//            /**
+//             * 设置 Dialog 标题
+//             */
+//            public Builder setTitle(@NonNull String title) {
+//                mTitle.setText(title);
+//                mTitle.setVisibility(View.VISIBLE);
+//                return this;
+//            }
+//
             /**
              * 设置 Message
              */
-            public Builder setMessage(@NonNull String message) {
-                mMessage.setText(message);
+            public Builder setMessage(@NonNull int resId) {
+                mMessage.setText(resId);
                 return this;
             }
-
-            /**
-             * 设置按钮文字和监听
-             */
-            public Builder setButton(@NonNull String text, View.OnClickListener listener) {
-                mButton.setText(text);
-                mButtonClickListener = listener;
-                return this;
-            }
+//
+//            /**
+//             * 设置按钮文字和监听
+//             */
+//            public Builder setButton(@NonNull String text, View.OnClickListener listener) {
+//                mButton.setText(text);
+//                mButtonClickListener = listener;
+//                return this;
+//            }
 
             public InfoDialog create() {
-//                mButton.setOnClickListener(view -> {
-//                    mDialog.dismiss();
-//                    mButtonClickListener.onClick(view);
-//                });
+                mIcon.setOnClickListener(view -> {
+                    mDialog.dismiss();
+                    mIconClickListener.onClick(view);
+                });
                 mDialog.setContentView(mLayout);
 //                mDialog.setCancelable(true);                //用户可以点击后退键关闭 Dialog
 //                mDialog.setCanceledOnTouchOutside(false);   //用户不可以点击外部来关闭 Dialog

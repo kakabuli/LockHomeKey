@@ -17,25 +17,19 @@
         android:windowIsTranslucent = "true"
         >
 
-        <ImageView
-            android:id="@+id/set_status"
-            android:layout_width="31dp"
-            android:layout_height="31dp"
-            android:layout_marginTop="8.5dp"
-            android:layout_marginLeft="77dp"
-            android:layout_marginBottom="55.5dp"
-            />
     <TextView
         android:id="@+id/set_text"
         android:textSize="16sp"
         android:textColor="#fff"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="15.5dp"
+        android:layout_marginRight="16dp"
         android:lines="3"
-        android:layout_marginLeft="13dp"
-        android:layout_marginTop="56.5dp"
-        android:layout_marginBottom="21.5dp"
-
+        android:layout_centerInParent="true"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center"
+        android:gravity ="center"
         />
 
 

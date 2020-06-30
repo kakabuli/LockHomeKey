@@ -661,6 +661,7 @@
     <string name="is_setting">正在设置...</string>
     <string name="set_success">设置成功</string>
     <string name="set_failed">设置失败</string>
+    <string name="set_failed_and_reset">设置失败，请重新设置</string>
     <string name="upload_device_name">正在上传设备名称</string>
     <string name="delete_lock_pwd_fail">删除锁上指纹失败</string>
     <string name="lock_no_this_finger">锁上没有此指纹，请同步！</string>
@@ -961,6 +962,7 @@
     <string name="input_lan_mask">请输入子网掩码</string>
     <string name="lan_ip_not_null">局域网ip不能为空</string>
     <string name="input_right_lan_ip">请输入正确的局域网ip</string>
+    <string name="input_right_lock_product_or_scan">请输入正确的门锁型号，或者扫描添加</string>
     <string name="input_lan_ip">请输入局域网IP</string>
     <string name="lan_mask_not_null">子网掩码不能为空</string>
     <string name="range_channel">信道范围 11~26</string>

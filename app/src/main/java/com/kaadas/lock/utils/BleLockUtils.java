@@ -613,6 +613,9 @@ public class BleLockUtils {
             else if (model.contentEquals("G8501")) {
                 return R.mipmap.bluetooth_authorization_lock_k9_a5p_w;
             }
+            else if (model.contentEquals("K10F")) {
+                return R.mipmap.bluetooth_authorization_lock_k10_f;
+            }
             else {
                 return R.mipmap.bluetooth_authorization_lock_default;
             }
@@ -751,6 +754,9 @@ public class BleLockUtils {
             else if (model.contentEquals("G8501")) {
                 return R.mipmap.small_k9_a5p_w;
             }
+            else if (model.contentEquals("K10F")) {
+                return R.mipmap.small_k10_f;
+            }
             else {
                 return R.mipmap.default_zigbee_lock_icon;
             }
@@ -885,6 +891,9 @@ public class BleLockUtils {
             }
             else if (model.contentEquals("G8501")) {
                 return R.mipmap.bluetooth_lock_k9_a5p_w;
+            }
+            else if (model.contentEquals("K10F")) {
+                return R.mipmap.bluetooth_lock_k10_f;
             }
             else {
                 return R.mipmap.bluetooth_lock_default;

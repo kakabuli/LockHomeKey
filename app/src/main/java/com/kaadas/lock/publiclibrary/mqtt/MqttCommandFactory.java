@@ -988,7 +988,7 @@ public class MqttCommandFactory {
     public static MqttMessage addSingleFireSwitch(String userId, String wfId) {
         int messageId = getMessageId();
         SingleFireSwitchInfo params = new SingleFireSwitchInfo();//空
-        AddSingleFireSwitchBean addSingleFireSwitchBean = new AddSingleFireSwitchBean(MqttConstant.MSG_TYPE_REQUEST, userId, messageId, wfId, MqttConstant.ADD_DEVICE, params, System.currentTimeMillis());
+        AddSingleFireSwitchBean addSingleFireSwitchBean = new AddSingleFireSwitchBean(MqttConstant.MSG_TYPE_REQUEST, userId, messageId, wfId, MqttConstant.ADD_DEVICE, params, System.currentTimeMillis()/ 1000);
         return getMessage(addSingleFireSwitchBean, messageId);
 
 

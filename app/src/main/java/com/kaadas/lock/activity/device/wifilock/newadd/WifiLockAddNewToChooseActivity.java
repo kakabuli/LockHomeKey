@@ -5,6 +5,7 @@ import android.content.Intent;
 
 import android.os.Bundle;
 
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.View;
@@ -25,10 +26,15 @@ import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.mvp.presenter.deviceaddpresenter.WiFiLockChooseToAddPresenter;
 import com.kaadas.lock.mvp.view.deviceaddview.WiFiLockChooseToAddView;
 import com.kaadas.lock.utils.KeyConstants;
+import com.kaadas.lock.utils.LoadingDialog;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.StringUtil;
 import com.kaadas.lock.utils.ToastUtil;
+import com.kaadas.lock.utils.dialog.InfoDialog;
+import com.kaadas.lock.utils.dialog.MessageDialog;
 import com.king.zxing.Intents;
+
+import java.util.logging.LogRecord;
 
 import butterknife.ButterKnife;
 
@@ -44,7 +50,7 @@ public class WifiLockAddNewToChooseActivity extends BaseActivity<WiFiLockChooseT
     ImageView back,help;
     TextView add;
 
-
+    private MessageDialog messageDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,11 +85,8 @@ public class WifiLockAddNewToChooseActivity extends BaseActivity<WiFiLockChooseT
     }
 
     private void initView() {
-
-
+        
     }
-
-
 
     @Override
     protected void onResume() {
@@ -148,7 +151,21 @@ public class WifiLockAddNewToChooseActivity extends BaseActivity<WiFiLockChooseT
 
     @Override
     public void searchLockProductThrowable() {
-        Toast.makeText(this, "请输入正确的门锁型号，或者扫描添加", Toast.LENGTH_SHORT).show();
+
+        //信息
+        messageDialog = new MessageDialog.Builder(this)
+                .setMessage(R.string.input_right_lock_product_or_scan)
+                .create();
+        messageDialog.show();
+
+        new Handler().postDelayed(new Runnable() {
+            public void run() {
+                if(messageDialog != null){
+                    messageDialog.dismiss();
+
+                }
+            }
+        }, 3000); //延迟2秒消失
     }
 
     @Override

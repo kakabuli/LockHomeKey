@@ -99,12 +99,12 @@ public class WifiLockAddNewBLEWIFICSwitchCheckWifiActivity extends BaseActivity<
     }
 
     private void onBindSuccess() {
-        startActivity(new Intent(this, WifiLockAddNewBindSuccesssActivity.class));
+//        startActivity(new Intent(this, WifiLockAddNewBindSuccesssActivity.class));
 
     }
 
     private void onBindFailed() {
-        startActivity(new Intent(this, WifiLockAddNewBindFailedActivity.class));
+//        startActivity(new Intent(this, WifiLockAddNewBindFailedActivity.class));
     }
 
     @OnClick({R.id.back, R.id.help})

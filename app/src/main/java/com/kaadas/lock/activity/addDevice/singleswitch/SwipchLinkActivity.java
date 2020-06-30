@@ -1,5 +1,6 @@
 package com.kaadas.lock.activity.addDevice.singleswitch;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.Image;
 import android.os.Handler;
@@ -631,34 +632,34 @@ public class SwipchLinkActivity extends BaseActivity<SingleFireSwitchView, Singl
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == TO_SET_NICK_NAME_REQUEST_CODE || requestCode == TO_SET_TIME_REQUEST_CODE ) {
-            wifiLockInfoChange = (WifiLockInfo) data.getSerializableExtra(KeyConstants.WIFI_LOCK_INFO_CHANGE);
-            initRecycleview();
-        }
-        else if (requestCode == TO_SET_ALL_REQUEST_CODE ){
-            LogUtils.e("--kaadas--TO_SET_ALL_REQUEST_CODE=="+resultCode);
-            if (resultCode == RESULT_OK) {
-                LogUtils.e("--kaadas--WIFI_LOCK_INFO_CHANGE_RESULT=="+data.getBooleanExtra(KeyConstants.WIFI_LOCK_INFO_CHANGE_RESULT,false));
-                reload(data.getBooleanExtra(KeyConstants.WIFI_LOCK_INFO_CHANGE_RESULT,false));
+            if (data != null) {
+                wifiLockInfoChange = (WifiLockInfo) data.getSerializableExtra(KeyConstants.WIFI_LOCK_INFO_CHANGE);
+                initRecycleview();
             }
         }
-        //
-//            LogUtils.e("--kaadas--WIFI_LOCK_INFO_CHANGE_RESULT=="+data.getStringExtra(KeyConstants.WIFI_LOCK_INFO_CHANGE_RESULT));
-//            if (!TextUtils.isEmpty(data.getStringExtra(KeyConstants.WIFI_LOCK_INFO_CHANGE_RESULT))) {
-//                if (data.getStringExtra(KeyConstants.WIFI_LOCK_INFO_CHANGE_RESULT).contentEquals("true")) {
-////            android:src="@mipmap/set_right",set_false
-////            android:id="@+id/set_text",set_status
-////            android:text="设置成功"
-//                    InfoDialog infoDialog = new InfoDialog.Builder(this)
-//                            .setMessage("Something done")
-//                            .create();
-//                    infoDialog.show();
-//                } else if (data.getStringExtra(KeyConstants.WIFI_LOCK_INFO_CHANGE_RESULT).contentEquals("false")) {
-//                    InfoDialog infoDialog = new InfoDialog.Builder(this)
-//                            .setMessage("Something to do")
-//                            .create();
-//                    infoDialog.show();
-//                }
-//            }
+        else if (requestCode == TO_SET_ALL_REQUEST_CODE ){
+//            LogUtils.e("--kaadas--TO_SET_ALL_REQUEST_CODE=="+resultCode);
+            if (resultCode == RESULT_OK && data != null) {
+//                LogUtils.e("--kaadas--WIFI_LOCK_INFO_CHANGE_RESULT=="+data.getBooleanExtra(KeyConstants.WIFI_LOCK_INFO_CHANGE_RESULT,false));
+                reload(data.getBooleanExtra(KeyConstants.WIFI_LOCK_INFO_CHANGE_RESULT,false));
+
+                    if (data.getBooleanExtra(KeyConstants.WIFI_LOCK_INFO_CHANGE_RESULT,false)) {
+                        //图标+信息+点击事件
+                        InfoDialog infoDialog = new InfoDialog.Builder(this)
+                                .setIcon(R.mipmap.set_right,this)
+                                .setMessage(R.string.set_success)
+                                .create();
+                        infoDialog.show();
+                    } else  {
+                        InfoDialog infoDialog = new InfoDialog.Builder(this)
+                                .setIcon(R.mipmap.set_false,this)
+                                .setMessage(R.string.set_failed_and_reset)
+                                .create();
+                        infoDialog.show();
+                    }
+
+            }
+        }
 
     }
 
