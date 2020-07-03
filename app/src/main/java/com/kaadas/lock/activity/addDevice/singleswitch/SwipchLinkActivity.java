@@ -287,7 +287,6 @@ public class SwipchLinkActivity extends BaseActivity<SingleFireSwitchView, Singl
 
         }
 
-
         SwitchNumber = getIntent().getIntExtra(KeyConstants.SWITCH_NUMBER,1);
 
         switch (SwitchNumber){
@@ -295,6 +294,8 @@ public class SwipchLinkActivity extends BaseActivity<SingleFireSwitchView, Singl
                 swipch_link_center_img.setBackgroundResource(R.mipmap.swipch_link_one);
                 swipch_two.setVisibility(View.GONE);
                 swipch_three.setVisibility(View.GONE);
+                tv_double_rl.setVisibility(View.GONE);
+                three_double_rl.setVisibility(View.GONE);
                 break;
             case  2:
                 swipch_link_center_img.setBackgroundResource(R.mipmap.swipch_link_two);

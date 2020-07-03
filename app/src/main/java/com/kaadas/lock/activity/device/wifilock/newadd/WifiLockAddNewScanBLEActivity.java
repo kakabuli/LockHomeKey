@@ -47,6 +47,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import com.kaadas.lock.utils.dialog.MessageDialog;
 import com.kaadas.lock.widget.ScanDeviceRadarView;
 
 public class WifiLockAddNewScanBLEActivity extends BaseActivity<ISearchDeviceView, SearchBleWiFiDevicePresenter<ISearchDeviceView>>
@@ -70,6 +71,8 @@ public class WifiLockAddNewScanBLEActivity extends BaseActivity<ISearchDeviceVie
     private DeviceBleWiFiSearchAdapter deviceBleWiFiSearchAdapter;
     private Thread radarViewThread; //声明一个子线程
     private boolean goToHelpActivity; //跳转到帮助页面
+
+    private MessageDialog messageDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -153,7 +156,9 @@ public class WifiLockAddNewScanBLEActivity extends BaseActivity<ISearchDeviceVie
 
     //当没有搜索到蓝牙设备时，显示对话框。
     private void showNotScanDeviceDialog() {
-        Toast.makeText(this, "未搜索到门锁，请重新扫描\n" + "或返回添加设备扫码添加", Toast.LENGTH_LONG).show();
+//        Toast.makeText(this, "未搜索到门锁，请重新扫描\n" + "或返回添加设备扫码添加", Toast.LENGTH_LONG).show();
+
+        didnotdiscoverlock();
 
         new Handler().postDelayed(new Runnable() {
             public void run() {
@@ -174,7 +179,22 @@ public class WifiLockAddNewScanBLEActivity extends BaseActivity<ISearchDeviceVie
 //            startActivity(new Intent(this,.class));
 
     }
+    public void didnotdiscoverlock(){
+        //信息
+        messageDialog = new MessageDialog.Builder(this)
+                .setMessage(R.string.did_not_discover_lock)
+                .create();
+        messageDialog.show();
 
+        new Handler().postDelayed(new Runnable() {
+            public void run() {
+                if(messageDialog != null){
+                    messageDialog.dismiss();
+
+                }
+            }
+        }, 2000); //延迟2秒消失
+    }
     private void initAnimation() {
 //        Path path = new Path();
 //        path.addOval(-38, -38, 38, 38, Path.Direction.CW);

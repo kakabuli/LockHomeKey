@@ -9,12 +9,11 @@ import com.kaadas.lock.activity.MainActivity;
 import com.kaadas.lock.activity.device.wifilock.add.WifiLcokSupportWifiActivity;
 import com.kaadas.lock.activity.device.wifilock.add.WifiLockHelpActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
-import com.kaadas.lock.utils.SocketManager;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class WifiLockAddNewBindFailedActivity extends BaseAddToApplicationActivity {
+public class WifiLockAddBLEFailedActivity extends BaseAddToApplicationActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,7 +25,7 @@ public class WifiLockAddNewBindFailedActivity extends BaseAddToApplicationActivi
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Intent intent = new Intent(WifiLockAddNewBindFailedActivity.this, WifiLockAddNewFirstActivity.class);
+        Intent intent = new Intent(this, WifiLockAddNewFirstActivity.class);
         startActivity(intent);
     }
 
@@ -36,21 +35,21 @@ public class WifiLockAddNewBindFailedActivity extends BaseAddToApplicationActivi
         switch (view.getId()) {
             case R.id.back:
             case R.id.bt_repair:
-                intent = new Intent(WifiLockAddNewBindFailedActivity.this, WifiLockAddNewFirstActivity.class);
+                intent = new Intent(this, WifiLockAddNewFirstActivity.class);
                 startActivity(intent);
                 finish();
                 break;
             case R.id.to_look_support_route:
                 //跳转查看支持WiFi列表
-                startActivity(new Intent(WifiLockAddNewBindFailedActivity.this, WifiLcokSupportWifiActivity.class));
+                startActivity(new Intent(this, WifiLcokSupportWifiActivity.class));
                 break;
             case R.id.tv_support_list:
                 //跳转查看支持WiFi列表
-                startActivity(new Intent(WifiLockAddNewBindFailedActivity.this, WifiLcokSupportWifiActivity.class));
+                startActivity(new Intent(this, WifiLcokSupportWifiActivity.class));
                 break;
             case R.id.help:
                 //跳转查看支持WiFi列表
-                startActivity(new Intent(WifiLockAddNewBindFailedActivity.this, WifiLockHelpActivity.class));
+                startActivity(new Intent(this, WifiLockHelpActivity.class));
                 break;
             case R.id.et_other_method:
                 break;

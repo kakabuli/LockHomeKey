@@ -2,6 +2,7 @@ package com.kaadas.lock.activity.device.wifilock.newadd;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
@@ -11,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.device.wifilock.add.WifiLcokSupportWifiActivity;
 import com.kaadas.lock.activity.device.wifilock.add.WifiLockHelpActivity;
@@ -33,8 +35,10 @@ public class WifiLockAddNewBLEWIFISwitchInputWifiActivity extends BaseAddToAppli
     TextView headTitle;
     @BindView(R.id.help)
     ImageView help;
+//    @BindView(R.id.ap_ssid_text)
+//    DropEditText apSsidText;
     @BindView(R.id.ap_ssid_text)
-    DropEditText apSsidText;
+    EditText apSsidText;
     @BindView(R.id.ap_password_edit)
     EditText apPasswordEdit;
     @BindView(R.id.iv_eye)
@@ -43,6 +47,8 @@ public class WifiLockAddNewBLEWIFISwitchInputWifiActivity extends BaseAddToAppli
     TextView confirmBtn;
     @BindView(R.id.tv_support_list)
     TextView tvSupportList;
+    @BindView(R.id.tv_to_change_wifi)
+    TextView tv_to_change_wifi;
 
 
     private boolean passwordHide = true;
@@ -52,6 +58,8 @@ public class WifiLockAddNewBLEWIFISwitchInputWifiActivity extends BaseAddToAppli
     private String randomCode;
     private int func;
     private int times = 1;
+    private static final int TO_CHECK_WIFI_PASSWORD = 10105;
+    private static final int TO_CHOOSE_WIFI_PASSWORD = 10106;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,8 +76,7 @@ public class WifiLockAddNewBLEWIFISwitchInputWifiActivity extends BaseAddToAppli
         apSsidText.setText(wifiName.trim());
     }
 
-
-    @OnClick({R.id.back, R.id.help, R.id.confirm_btn, R.id.tv_support_list,R.id.iv_eye})
+    @OnClick({R.id.back, R.id.help, R.id.confirm_btn, R.id.tv_support_list,R.id.iv_eye,R.id.tv_to_change_wifi})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.back:
@@ -94,7 +101,10 @@ public class WifiLockAddNewBLEWIFISwitchInputWifiActivity extends BaseAddToAppli
                     intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
                     intent.putExtra(KeyConstants.WIFI_LOCK_RANDOM_CODE, randomCode);
                     intent.putExtra(KeyConstants.WIFI_LOCK_FUNC, func);
-                    startActivity(intent);
+                    intent.putExtra(KeyConstants.WIFI_LOCK_WIFI_TIMES, times);
+//                    startActivity(intent);
+                    startActivityForResult(intent,TO_CHECK_WIFI_PASSWORD);
+
                     return;
                 }
                 if (sPassword.length()<8){
@@ -108,7 +118,8 @@ public class WifiLockAddNewBLEWIFISwitchInputWifiActivity extends BaseAddToAppli
                 intent.putExtra(KeyConstants.WIFI_LOCK_RANDOM_CODE, randomCode);
                 intent.putExtra(KeyConstants.WIFI_LOCK_FUNC, func);
                 intent.putExtra(KeyConstants.WIFI_LOCK_WIFI_TIMES, times);
-                startActivity(intent);
+//                startActivity(intent);
+                startActivityForResult(intent,TO_CHECK_WIFI_PASSWORD);
 
                 break;
             case R.id.iv_eye:
@@ -126,9 +137,13 @@ public class WifiLockAddNewBLEWIFISwitchInputWifiActivity extends BaseAddToAppli
             case R.id.tv_support_list:
                 startActivity(new Intent(this,WifiLcokSupportWifiActivity.class));
                 break;
+            case R.id.tv_to_change_wifi:
+                Intent scanIntent = new Intent(this,WifiLockScanWifiListActivity.class);
+                startActivityForResult(scanIntent,TO_CHOOSE_WIFI_PASSWORD);
+
+                break;
         }
     }
-
 
     private void showWarring(){
         AlertDialogUtil.getInstance().noEditTitleTwoButtonDialog(
@@ -142,7 +157,16 @@ public class WifiLockAddNewBLEWIFISwitchInputWifiActivity extends BaseAddToAppli
 
                     @Override
                     public void right() {
-//                        thread.start();
+                        //退出当前界面
+                        if (MyApplication.getInstance().getBleService() == null) {
+                            return;
+                        } else {
+                            MyApplication.getInstance().getBleService().release();
+                        }
+
+                        Intent intent = new Intent(WifiLockAddNewBLEWIFISwitchInputWifiActivity.this, WifiLockAddNewFirstActivity.class);
+                        startActivity(intent);
+                        finish();
                     }
                     @Override
                     public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -156,30 +180,28 @@ public class WifiLockAddNewBLEWIFISwitchInputWifiActivity extends BaseAddToAppli
                 });
     }
 
-//    private Thread thread = new Thread() {
-//        @Override
-//        public void run() {
-//            super.run();
-//            LogUtils.e("--Kaadas--发送************************************************************************************************APClose");
-//            socketManager.writeData("************************************************************************************************APClose".getBytes());
-//
-//            onError(socketManager, -1);
-//
-//        }
-//    };
-//    public void onError(SocketManager socketManager, int errorCode) {
-//        runOnUiThread(new Runnable() {
-//            @Override
-//            public void run() {
-//                finish();
-//                //退出当前界面
-//                Intent intent = new Intent(WifiLockAddNewBLEWIFISwitchInputWifiActivity.this, WifiLockAddNewFirstActivity.class);
-//                startActivity(intent);
-//            }
-//        });
-//    }
     @Override
     public void onBackPressed() {
         showWarring();
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == TO_CHECK_WIFI_PASSWORD ) {
+
+            if (resultCode == RESULT_OK && data != null) {
+                times = data.getIntExtra(KeyConstants.WIFI_LOCK_WIFI_TIMES, 1);
+
+                LogUtils.e("--Kaadas--onDecodeResult wifi和密码输入次数==" + times);
+            }
+        }
+        if (requestCode == TO_CHOOSE_WIFI_PASSWORD ) {
+
+            if (resultCode == RESULT_OK && data != null) {
+                apSsidText.setText(data.getStringExtra(KeyConstants.CHOOSE_WIFI_NAME));
+                LogUtils.e("--Kaadas--更换的wifi名称==" + data.getStringExtra(KeyConstants.CHOOSE_WIFI_NAME));
+            }
+        }
+
     }
 }

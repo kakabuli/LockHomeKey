@@ -94,7 +94,8 @@ public class BindBleWiFiSwitchPresenter<T> extends BasePresenter<IBindBleView> {
                         }
                         if ((originalData[3] & 0xff) == 0x94){//收到解密结果
 //                            LogUtils.e("--kaadas--收到解密结果");
-                            mViewRef.get().onDecodeResult(3,wifiResult);
+                            checkAdminPassWordResult();
+
                         }
                         //toDisposable(characterNotifyDisposable);
                     }
@@ -113,10 +114,14 @@ public class BindBleWiFiSwitchPresenter<T> extends BasePresenter<IBindBleView> {
             byte[] authKey = null;//不加密
             byte[] command = BleCommandFactory.onDecodeResult(authKey,Rsa.int2BytesArray(wifiResult.result)[0]);
             bleService.sendCommand(command);
-
         }
         else {
             //校验失败
+            mViewRef.get().onDecodeResult(-1,wifiResult);
+            wifiResult = null;
+            byte[] authKey = null;//不加密
+            byte[] command = BleCommandFactory.onDecodeResult(authKey,Rsa.int2BytesArray(1)[0]);
+            bleService.sendCommand(command);
         }
     }
 
@@ -158,5 +163,19 @@ public class BindBleWiFiSwitchPresenter<T> extends BasePresenter<IBindBleView> {
                 });
         compositeDisposable.add(featureSetDisposable);
     }
+    public void checkAdminPassWordResult() {
 
+            if (wifiResult != null){
+                mViewRef.get().onDecodeResult(3, wifiResult);
+            }
+
+    }
+
+    public void disconnectBLE() {
+
+        if (bleService != null) { //停止扫描设备
+            bleService.scanBleDevice(false);  //1
+            bleService.release();
+        }
+    }
 }

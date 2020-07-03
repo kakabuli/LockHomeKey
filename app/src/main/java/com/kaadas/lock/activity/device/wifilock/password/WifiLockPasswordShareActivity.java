@@ -76,8 +76,9 @@ public class WifiLockPasswordShareActivity extends AppCompatActivity {
         String randomCode = wifiLockInfo.getRandomCode();
         String time = (System.currentTimeMillis() / 1000 / 60 / 5) + "";
         String content = wifiSN + randomCode + time;
+        LogUtils.e("--kaadas--服务器获取的数据是  " + randomCode);
 
-        LogUtils.e("本地数据是  " + content);
+        LogUtils.e("--kaadas--本地数据是  " + content);
         byte[] data = content.toUpperCase().getBytes();
         try {
             MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
@@ -87,12 +88,12 @@ public class WifiLockPasswordShareActivity extends AppCompatActivity {
             System.arraycopy(digest, 0, temp, 0, 4);
             long l = Rsa.getInt(temp);
             String text = (l % 1000000) + "";
-            LogUtils.e("转换之后的数据是     " + l + "    " + Rsa.bytes2Int(temp));
+            LogUtils.e("--kaadas--转换之后的数据是     " + l + "    " + Rsa.bytes2Int(temp));
             int offSet = (6 - text.length());
             for (int i = 0; i < offSet; i++) {
                 text = "0" + text;
             }
-            System.out.println("   testSha256 数据是   " + Rsa.bytesToHexString(messageDigest.digest()));
+            System.out.println("--kaadas--   testSha256 数据是   " + Rsa.bytesToHexString(messageDigest.digest()));
             return text;
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();

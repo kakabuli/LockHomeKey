@@ -251,7 +251,7 @@ public class WifiLockBleToWifiSetUpPresenter<T> extends BasePresenter<IWifiLockB
         System.arraycopy(bPwd, 4 * 14, fifthSubPWD, 0, fifthSubPWD.length);
 
         indexSSID = 0;
-        sendSSID(0);
+        sendSSID(indexSSID);
 
     }
 

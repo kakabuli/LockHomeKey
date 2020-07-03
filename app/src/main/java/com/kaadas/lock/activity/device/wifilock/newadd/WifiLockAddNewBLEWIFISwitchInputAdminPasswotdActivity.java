@@ -2,6 +2,7 @@ package com.kaadas.lock.activity.device.wifilock.newadd;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
@@ -41,6 +42,7 @@ public class WifiLockAddNewBLEWIFISwitchInputAdminPasswotdActivity extends BaseA
     TextView buttonNext;
     int times = 1;
     byte[] data;
+    private static final int TO_CHECK_ADMIN_PASSWORD = 10104;
 
     private int bleVersion;
     private String sn;
@@ -64,6 +66,8 @@ public class WifiLockAddNewBLEWIFISwitchInputAdminPasswotdActivity extends BaseA
 
         data =  getIntent().getByteArrayExtra(KeyConstants.WIFI_LOCK_ADMIN_PASSWORD_DATA);
         times =  getIntent().getIntExtra(KeyConstants.WIFI_LOCK_ADMIN_PASSWORD_TIMES,1);
+        LogUtils.e("--Kaadas--管理员密码输入次数=="+times);
+
     }
 
     @Override
@@ -97,8 +101,8 @@ public class WifiLockAddNewBLEWIFISwitchInputAdminPasswotdActivity extends BaseA
                 intent.putExtra(KeyConstants.BLE_MAC, mac);
                 intent.putExtra(KeyConstants.DEVICE_NAME, deviceName);
                 intent.putExtra(KeyConstants.PASSWORD_FACTOR, passwordFactor);
-                startActivity(intent);
-//                finish();
+//                startActivity(intent);
+                startActivityForResult(intent,TO_CHECK_ADMIN_PASSWORD);
                 break;
         }
     }
@@ -121,7 +125,6 @@ public class WifiLockAddNewBLEWIFISwitchInputAdminPasswotdActivity extends BaseA
                     @Override
                     public void right() {
                         //退出当前界面
-
                         if (MyApplication.getInstance().getBleService() == null) {
                             return;
                         } else {
@@ -129,7 +132,6 @@ public class WifiLockAddNewBLEWIFISwitchInputAdminPasswotdActivity extends BaseA
                         }
 
                         Intent intent = new Intent(WifiLockAddNewBLEWIFISwitchInputAdminPasswotdActivity.this, WifiLockAddNewFirstActivity.class);
-                        intent.putExtra(KeyConstants.WIFI_LOCK_WIFI_TIMES, times);
                         startActivity(intent);
                         finish();
                     }
@@ -229,6 +231,17 @@ public class WifiLockAddNewBLEWIFISwitchInputAdminPasswotdActivity extends BaseA
     public void onDecodeResult(int index, OfflinePasswordFactorManager.OfflinePasswordFactorResult result) {
 
     }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == TO_CHECK_ADMIN_PASSWORD ) {
 
+            if (resultCode == RESULT_OK && data != null) {
+                times = data.getIntExtra(KeyConstants.WIFI_LOCK_ADMIN_PASSWORD_TIMES, 1);
+
+                LogUtils.e("--Kaadas--onDecodeResult管理员密码输入次数==" + times);
+            }
+        }
+    }
 
 }

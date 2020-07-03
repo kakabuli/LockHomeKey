@@ -19,6 +19,7 @@ import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.AddSingleFireSwitchBean;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.widget.ScanDeviceRadarView;
 
 import java.util.List;
 
@@ -28,6 +29,8 @@ public class SwipLinkThreeActivity extends BaseActivity<SingleFireSwitchView, Si
 
     private WifiLockInfo wifiLockInfo;
     private String wifiSn;
+    private ScanDeviceRadarView mRadarView;
+    private Thread radarViewThread; //声明一个子线程
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +42,18 @@ public class SwipLinkThreeActivity extends BaseActivity<SingleFireSwitchView, Si
         iv_back = findViewById(R.id.iv_back);
         tv_content.setOnClickListener(this);
         iv_back.setOnClickListener(this);
+
+        mRadarView = (ScanDeviceRadarView) findViewById(R.id.radar_view);
+
+        radarViewThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                //这里写入子线程需要做的工作
+                mRadarView.setSearching(true);
+            }
+        });
+
+        radarViewThread.start();
 
         initData();
 

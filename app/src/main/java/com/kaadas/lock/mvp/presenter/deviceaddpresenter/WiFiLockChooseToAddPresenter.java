@@ -11,7 +11,7 @@ public class WiFiLockChooseToAddPresenter<T> extends BasePresenter<WiFiLockChoos
     private Disposable chooseToAddDisposable;
 
     public void searchLockProduct(String Product) {
-
+        //equalsIgnoreCase不区分大小写
         if (WiFiLockUtils.pairMode(Product).equals("WiFi")) {
         //searchLockProductSuccessForWiFi
             mViewRef.get().searchLockProductSuccessForWiFi("WiFi");

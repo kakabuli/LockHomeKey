@@ -102,7 +102,6 @@ public class AlertDialogUtil {
         return alertDialog;
     }
 
-
     //没有标题，只有内容和一个按钮
     public AlertDialog singleButtonNoTitleDialogNoLine(Context context, String content, String query, String queryColor, ClickListener clickListener) {
         View mView = LayoutInflater.from(context).inflate(R.layout.no_edit_singlebutton_dialog_no_title_noline, null);
@@ -126,7 +125,6 @@ public class AlertDialogUtil {
 
         return alertDialog;
     }
-
 
     //2  no_edit_singleButton
     public void noEditSingleButtonDialog(Context context, String title, String content, String query, ClickListener clickListener) {
@@ -156,7 +154,6 @@ public class AlertDialogUtil {
         });
     }
 
-
     //2  不能隐藏的
     public void noEditSingleCanNotDismissButtonDialog(Context context, String title, String content, String query, ClickListener clickListener) {
         View mView = LayoutInflater.from(context).inflate(R.layout.no_edit_singlebutton_dialog, null);
@@ -185,7 +182,6 @@ public class AlertDialogUtil {
             }
         });
     }
-
 
     //no_et_dialog
     public void noEditTwoButtonDialogWidthDialog_color(Context context, String title, String content, String left, String right, ClickListener clickListener) {

@@ -157,7 +157,7 @@ public class WifiLockAddNewCheckWifiActivity extends BaseActivity<IWifiLockAPWif
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
-                                        Toast.makeText(WifiLockAddNewCheckWifiActivity.this,"请靠近路由器检查账号或密码是否输入正确", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(WifiLockAddNewCheckWifiActivity.this,getString(R.string.recheck_wifi_password), Toast.LENGTH_SHORT).show();
                                         Intent intent = new Intent(WifiLockAddNewCheckWifiActivity.this, WifiLockAddNewInputWifiActivity.class);
                                         intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
                                         intent.putExtra(KeyConstants.WIFI_LOCK_RANDOM_CODE, randomCode);

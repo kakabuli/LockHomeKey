@@ -34,6 +34,7 @@ import com.kaadas.lock.utils.dialog.InfoDialog;
 import com.kaadas.lock.utils.dialog.MessageDialog;
 import com.king.zxing.Intents;
 
+import java.util.Objects;
 import java.util.logging.LogRecord;
 
 import butterknife.ButterKnife;
@@ -165,7 +166,7 @@ public class WifiLockAddNewToChooseActivity extends BaseActivity<WiFiLockChooseT
 
                 }
             }
-        }, 3000); //延迟2秒消失
+        }, 3000); //延迟3秒消失
     }
 
     @Override
@@ -194,14 +195,13 @@ public class WifiLockAddNewToChooseActivity extends BaseActivity<WiFiLockChooseT
                         startActivity(wifiIntent);
                     }
                     else {
-                        Intent scanSuccessIntent = new Intent(WifiLockAddNewToChooseActivity.this, AddDeviceZigbeeLockNewScanFailActivity.class);
-                        startActivity(scanSuccessIntent);
+                        setResult(RESULT_OK, data);
                         finish();
                     }
                     break;
             }
 
         }
-
     }
+
 }

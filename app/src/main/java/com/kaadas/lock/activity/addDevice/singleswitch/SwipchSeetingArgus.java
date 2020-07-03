@@ -159,9 +159,6 @@ public class SwipchSeetingArgus extends BaseActivity<SingleFireSwitchView, Singl
                 break;
         }
 
-
-
-
     }
 
     @Override

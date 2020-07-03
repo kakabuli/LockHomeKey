@@ -531,5 +531,11 @@ public class KeyConstants {
      */
     public static final String WIFI_LOCK_INFO_CHANGE_RESULT = "wifi_Lock_Info_Change_Result";
 
+    /**
+     * WIFI列表选择的wifi名称
+     */
+    public static final String CHOOSE_WIFI_NAME = "choose_wifi_name";
+
+
 }
 

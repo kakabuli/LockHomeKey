@@ -99,7 +99,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/swipch_link_btn1"
+            android:text="@string/swipch_link_btn2"
             android:layout_toRightOf="@id/swipch_link_center_view"
             android:layout_marginLeft="13dp"
             android:layout_centerInParent="true"
@@ -141,7 +141,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/swipch_link_btn1"
+            android:text="@string/swipch_link_btn3"
             android:layout_toRightOf="@id/swipch_link_center_view_three"
             android:layout_marginLeft="13dp"
             android:layout_centerInParent="true"

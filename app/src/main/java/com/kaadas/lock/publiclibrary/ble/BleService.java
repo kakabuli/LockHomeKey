@@ -749,13 +749,14 @@ public class BleService extends Service {
         }
 
         /**
-         * 朝蓝牙设备写数据的回调
+         * 往蓝牙设备写数据的回调
          * @param gatt
          * @param characteristic
          * @param status
          */
         @Override
         public void onCharacteristicWrite(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
+            LogUtils.e("--kaadas--往蓝牙设备写数据的回调status=="+status);
             super.onCharacteristicWrite(gatt, characteristic, status);
         }
     };
@@ -1193,11 +1194,12 @@ public class BleService extends Service {
                 return;
             }
             if (command.length != 20) { //命令长度不是  20  直接发送
+                LogUtils.e("--kaadas--/命令长度不是  20  直接发送   " );
                 writeStack(command, 1);
                 return;
             }
             if (command[0] != 0x01) { //如果第一个字节不是1   那么不是确认帧就是透传模块的  透传模块数据   直接发送
-//                LogUtils.e("当前数据为空   直接发送   发送队列数据   " + commands.size());
+                LogUtils.e("--kaadas--当前数据为空   直接发送   发送队列数据   " + commands.size());
                 writeStack(command, 2);
             } else {
                 if ((command[3]&0xff) == 0x88){     //如果是ota状态上报
@@ -1206,24 +1208,24 @@ public class BleService extends Service {
                 }
 //                LogUtils.e("加入指令   " + Rsa.bytesToHexString(command) + "  已经等待的指令  " + getCommands(waitBackCommands) + "  当前等待的指令  " + (currentCommand == null ? "" : Rsa.bytesToHexString(currentCommand)));
                 if (waitBackCommands.size() >= 4) {
-                    LogUtils.e("指令满了    ");
+                    LogUtils.e("--kaadas--指令满了    ");
                     return;
                 }
                 for (byte[] temp : waitBackCommands) {
                     if (isSameCommand(temp, command)) {
-                        LogUtils.e("相同指令   待发送");
+                        LogUtils.e("--kaadas--相同指令   待发送");
                         return;
                     }
                 }
                 for (byte[] temp : commands) {
                     if (isSameCommand(temp, command)) {
-                        LogUtils.e("相同指令   发送队列");
+                        LogUtils.e("--kaadas--相同指令   发送队列");
                         return;
                     }
                 }
                 if (currentCommand != null) {
                     if (isSameCommand(currentCommand, command)) {
-                        LogUtils.e("相同指令   等待返回");
+                        LogUtils.e("--kaadas--相同指令   等待返回");
                         return;
                     }
                 }
@@ -1244,10 +1246,10 @@ public class BleService extends Service {
         }
     }
 
-
     private void writeStack(byte[] command, int position) {
         LogUtils.e("--kaadas--当前指令   " + position + "   " + Rsa.bytesToHexString(command) + "    加入指令    " + getCommands(commands)+"    isConnected    "+isConnected);
         if (!isConnected) {
+            LogUtils.e("--kaadas--未连接");
             commands.clear();
             waitBackCommands.clear();
             handler.removeCallbacks(sendCommandRannble);
@@ -1256,6 +1258,7 @@ public class BleService extends Service {
         if (bleVersion == 2 || bleVersion == 3) {
             for (byte[] temp : commands) {
                 if (isSameCommand(temp, command)) {  //如果发送队列中有要发送的当前数据  不在加入
+                    LogUtils.e("--kaadas--如果发送队列中有要发送的当前数据  不在加入");
                     return;
                 }
             }
@@ -1264,9 +1267,13 @@ public class BleService extends Service {
         long last = System.currentTimeMillis() - lastSendTime;
         //如果上次发送的时间大于当前时间   那么认为手机发生变化，直接发送
         handler.removeCallbacks(sendCommandRannble);
+
         if (last < 0 || last > 100) {
+            LogUtils.e("--kaadas--sendCommandRannble.run()");
             sendCommandRannble.run();
         } else {
+            LogUtils.e("--kaadas--postDelayed->sendCommandRannble.run()");
+
             handler.postDelayed(sendCommandRannble, sendInterval - last);
         }
     }
@@ -1297,7 +1304,7 @@ public class BleService extends Service {
         //此次发送数据的时间和上次发送数据的时间间隔  小于预定的时间间隔
         //将此命令添加进commands集合  再延时 离最小间隔时间的差发送
 
-//        LogUtils.e("--kaadas--准备发送  " + Rsa.bytesToHexString(command) + "  等待发送的指令  " + getCommands(commands));
+        LogUtils.e("--kaadas--准备发送  " + Rsa.bytesToHexString(command) + "  等待发送的指令  " + getCommands(commands));
         if ((System.currentTimeMillis() - lastSendTime >= 0)) {
             if (System.currentTimeMillis() - lastSendTime < sendInterval) {
                 handler.removeCallbacks(sendCommandRannble);
@@ -1329,13 +1336,13 @@ public class BleService extends Service {
                     handler.removeCallbacks(sendCommandRannble);
                     handler.postDelayed(sendCommandRannble, sendInterval);
                 }
-                LogUtils.e("发送数据11111    " + Rsa.bytesToHexString(command) + " isWrite: " + isWrite + "时间 " + System.currentTimeMillis());
+                LogUtils.e("--kaadas--发送数据11111    " + Rsa.bytesToHexString(command) + " isWrite: " + isWrite + "时间 " + System.currentTimeMillis());
             } else {
-                LogUtils.e("Ble 发送数据  Gatt为空  断开连接 ");
+                LogUtils.e("--kaadas--Ble 发送数据  Gatt为空  断开连接 ");
                 release();  //Gatt为空  断开连接
             }
         } else {
-            LogUtils.e("Ble 发送数据   characteristic为空  断开连接");
+            LogUtils.e("--kaadas--Ble 发送数据   characteristic为空  断开连接");
             release(); //characteristic为空  断开连接
         }
     }
@@ -1414,6 +1421,8 @@ public class BleService extends Service {
                         ||(((commands.get(0)[3] & 0xff) == 0x91))
                         ||(((commands.get(0)[3] & 0xff) == 0x90))){
                     //单火项目配网通道
+                    LogUtils.e("--kaadas--bluetoothGatt== " + bluetoothGatt.toString());
+                    LogUtils.e("--kaadas--distribution_network_send_Character== " + distribution_network_send_Character.getUuid().toString());
                     writeCommand(bluetoothGatt, distribution_network_send_Character, commands.get(0));
                 }else {
                     writeCommand(bluetoothGatt, mWritableCharacter, commands.get(0));

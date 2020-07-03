@@ -1148,6 +1148,10 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".activity.device.wifilock.newadd.WifiLockScanWifiListActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".activity.device.wifilock.newadd.WifiLockAddNewBLEWIFICSwitchCheckWifiActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
@@ -1189,6 +1193,18 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.device.wifilock.newadd.WifiLockAddNewThird2Activity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.wifilock.newadd.WifiLockChangeAdminPasswordActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.wifilock.newadd.WifiLockHasModifyPasswordAndDisconnectActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.wifilock.newadd.WifiLockAddBLEFailedActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
