@@ -64,6 +64,7 @@ public class WifiLockAddNewBLEWIFiSwitchActivity extends BaseActivity<IBindBleVi
     private String mac;
     private String deviceName;
     private byte[] passwordFactor;
+    int lastTimes = 5;//剩余校验次数
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -283,7 +284,7 @@ public class WifiLockAddNewBLEWIFiSwitchActivity extends BaseActivity<IBindBleVi
         nextIntent.putExtra(KeyConstants.BLE_MAC, mac);
         nextIntent.putExtra(KeyConstants.DEVICE_NAME, deviceName);
         nextIntent.putExtra(KeyConstants.PASSWORD_FACTOR, passwordFactor);
-
+        nextIntent.putExtra(KeyConstants.WIFI_LOCK_ADMIN_PASSWORD_TIMES, lastTimes);
         startActivity(nextIntent);
 
     }
@@ -293,7 +294,8 @@ public class WifiLockAddNewBLEWIFiSwitchActivity extends BaseActivity<IBindBleVi
      * 剩余校验次数（配网通道）
      */
     public void onlistenerLastNum(int lastNum) {
-
+        LogUtils.e("--Kaadas--管理员密码输入次数=="+lastNum);
+        lastTimes = 5-lastNum;
         firstThread.start();
     }
     @Override

@@ -78,7 +78,7 @@ public class BindBleWiFiSwitchPresenter<T> extends BasePresenter<IBindBleView> {
                         byte[] originalData = bleDataBean.getOriginalData();
 //                        LogUtils.e("--kaadas--收到锁的配网数据" + Rsa.bytesToHexString(originalData));
                         if ((originalData[3] & 0xff) == 0x95) {//接到剩余校验次数
-                            mViewRef.get().onlistenerLastNum(originalData[3]);
+                            mViewRef.get().onlistenerLastNum(originalData[4] & 0xFF);
                         }
                         if ((originalData[3] & 0xff) == 0x92){//离线密码因子
 

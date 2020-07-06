@@ -192,6 +192,7 @@ public class AlertDialogUtil {
         TextView tv_query = mView.findViewById(R.id.tv_right);
      //   tv_query.setTextColor(Color.parseColor("#101010"));
         AlertDialog alertDialog = AlertDialogUtil.getInstance().common(context, mView);
+        alertDialog.setCancelable(false);//窗口外不隐藏
         if ("".equals(title)) {
             tvTitle.setVisibility(View.GONE);
         } else {

@@ -410,7 +410,7 @@ public class WifiLockAddNewBLEWIFICSwitchCheckWifiActivity extends BaseActivity<
     @Override
     public void onUpdateFailed() {
 
-        if (times<=5) {
+        if (times<5) {
             //信息
             runOnUiThread(new Runnable() {
                               @Override

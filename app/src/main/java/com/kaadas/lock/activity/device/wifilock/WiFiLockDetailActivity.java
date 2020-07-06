@@ -359,6 +359,7 @@ public class WiFiLockDetailActivity extends BaseActivity<IWifiLockDetailView, Wi
                                 intent = new Intent(WiFiLockDetailActivity.this, SwipchLinkActivity.class);
                                 intent.putExtra(KeyConstants.SWITCH_NUMBER, SwitchNumber);
                                 intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
+                                intent.putExtra(KeyConstants.WIFI_LOCK_INFO_CHANGE, wifiLockInfo);
                                 startActivity(intent);
                             } else {
                                 intent = new Intent(WiFiLockDetailActivity.this, SwipchLinkNo.class);
@@ -428,6 +429,7 @@ public class WiFiLockDetailActivity extends BaseActivity<IWifiLockDetailView, Wi
                                 intent = new Intent(WiFiLockDetailActivity.this, SwipchLinkActivity.class);
                                 intent.putExtra(KeyConstants.SWITCH_NUMBER, SwitchNumber);
                                 intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
+                                intent.putExtra(KeyConstants.WIFI_LOCK_INFO_CHANGE, wifiLockInfo);
                                 startActivity(intent);
                             } else {
                                 intent = new Intent(WiFiLockDetailActivity.this, SwipchLinkNo.class);

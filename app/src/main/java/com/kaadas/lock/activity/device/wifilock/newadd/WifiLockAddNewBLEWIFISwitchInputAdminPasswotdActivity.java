@@ -40,7 +40,7 @@ public class WifiLockAddNewBLEWIFISwitchInputAdminPasswotdActivity extends BaseA
     EditText apPasswordEdit;
     @BindView(R.id.button_next)
     TextView buttonNext;
-    int times = 1;
+    int times = 1;//已经校验次数
     byte[] data;
     private static final int TO_CHECK_ADMIN_PASSWORD = 10104;
 
