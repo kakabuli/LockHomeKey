@@ -1,6 +1,5 @@
 package com.kaadas.lock.utils;
 
-
 public class ConstantConfig {
 
     public static final String HTTP_BASE_URL = "https://app-kaadas.juziwulian.com:34000/";//凯迪仕正式服务器
