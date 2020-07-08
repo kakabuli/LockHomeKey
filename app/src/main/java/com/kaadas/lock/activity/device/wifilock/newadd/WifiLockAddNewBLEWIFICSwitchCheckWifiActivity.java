@@ -15,12 +15,10 @@ import android.widget.Toast;
 
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
-import com.kaadas.lock.activity.device.wifilock.add.WifiLockAddSuccessActivity;
+import com.kaadas.lock.activity.device.wifilock.add.WifiLockAddBleSuccessActivity;
 import com.kaadas.lock.activity.device.wifilock.add.WifiLockHelpActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
-import com.kaadas.lock.mvp.presenter.wifilock.WifiApWifiSetUpPresenter;
 import com.kaadas.lock.mvp.presenter.wifilock.WifiLockBleToWifiSetUpPresenter;
-import com.kaadas.lock.mvp.view.wifilock.IWifiLockAPWifiSetUpView;
 import com.kaadas.lock.mvp.view.wifilock.IWifiLockBleToWifiSetUpView;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.utils.AlertDialogUtil;
@@ -29,7 +27,6 @@ import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.Rsa;
 import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.SocketManager;
-import com.kaadas.lock.utils.WifiUtils;
 import com.kaadas.lock.utils.dialog.MessageDialog;
 import com.kaadas.lock.widget.WifiCircleProgress;
 
@@ -379,7 +376,7 @@ public class WifiLockAddNewBLEWIFICSwitchCheckWifiActivity extends BaseActivity<
     public void onBindSuccess(String wifiSn) {
         changeState(4);
 
-        Intent intent = new Intent(this, WifiLockAddSuccessActivity.class);
+        Intent intent = new Intent(this, WifiLockAddBleSuccessActivity.class);
         intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
         startActivity(intent);
 

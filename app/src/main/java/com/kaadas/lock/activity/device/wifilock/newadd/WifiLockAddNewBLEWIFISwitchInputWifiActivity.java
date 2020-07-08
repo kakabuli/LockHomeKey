@@ -64,7 +64,7 @@ public class WifiLockAddNewBLEWIFISwitchInputWifiActivity extends BaseAddToAppli
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_wifi_lock_add_new_input_wifi);
+        setContentView(R.layout.activity_wifi_lock_add_new_ble_input_wifi);
         ButterKnife.bind(this);
 
         wifiSn = getIntent().getStringExtra(KeyConstants.WIFI_SN);

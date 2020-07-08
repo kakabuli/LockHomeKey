@@ -66,7 +66,7 @@ public class WifiLockAddNewBLEWIFISwitchInputAdminPasswotdActivity extends BaseA
 
         data =  getIntent().getByteArrayExtra(KeyConstants.WIFI_LOCK_ADMIN_PASSWORD_DATA);
         times =  getIntent().getIntExtra(KeyConstants.WIFI_LOCK_ADMIN_PASSWORD_TIMES,1);
-        LogUtils.e("--Kaadas--管理员密码输入次数=="+times);
+        LogUtils.e("--Kaadas--管理员密码输入次数==check=="+times);
 
     }
 

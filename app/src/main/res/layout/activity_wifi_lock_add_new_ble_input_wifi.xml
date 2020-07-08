@@ -88,7 +88,8 @@
                 android:paddingRight="@dimen/dp_10"
                 android:src="@mipmap/add_wifi_lock_wifi" />
 
-            <com.kaadas.lock.widget.DropEditText
+<!--            <com.kaadas.lock.widget.DropEditText-->
+            <EditText
                 android:id="@+id/ap_ssid_text"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -105,6 +106,17 @@
                 android:textColorHint="#959595"
                 android:textSize="14sp" />
 
+            <TextView
+                android:id="@+id/tv_to_change_wifi"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:gravity="center"
+                android:layout_marginRight="@dimen/dp_12"
+                android:text="@string/to_change_wifi"
+                android:textColor="#606060"
+                android:textSize="13sp" />
 
         </RelativeLayout>
 

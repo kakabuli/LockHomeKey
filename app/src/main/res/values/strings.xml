@@ -1376,6 +1376,7 @@
     <string name="wifi_lock_alarm_10">您的%1$s门锁门锁低电量，请及时更换</string>
     <string name="wifi_lock_alarm_20">您的%1$s门锁有故障，请注意</string>
     <string name="wifi_lock_alarm_40">您的%1$s门锁处于布防状态，有从门内开锁情况</string>
+    <string name="wifi_lock_alarm_80">您的%1$s门锁面容识别已关闭，如需重新开启面容识别，请更换电池</string>
     <string name="lock_already_lock">门锁已上锁</string>
     <string name="lock_delete">门锁删除</string>
     <string name="lock_add">门锁添加</string>

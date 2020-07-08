@@ -277,7 +277,7 @@ public class WifiLockAddNewBLEWIFiSwitchActivity extends BaseActivity<IBindBleVi
 
     public void onScanSuccess() {
 //        finish();
-        LogUtils.e("onScanSuccess  from WifiLockAddNewScanActivity");
+        LogUtils.e("--Kaadas--onScanSuccess  from WifiLockAddNewScanActivity");
         Intent nextIntent = new Intent(this, WifiLockAddNewBLEWIFISwitchInputAdminPasswotdActivity.class);
         nextIntent.putExtra(KeyConstants.BLE_VERSION, bleVersion);
         nextIntent.putExtra(KeyConstants.BLE_DEVICE_SN, sn);
@@ -295,7 +295,7 @@ public class WifiLockAddNewBLEWIFiSwitchActivity extends BaseActivity<IBindBleVi
      */
     public void onlistenerLastNum(int lastNum) {
         LogUtils.e("--Kaadas--管理员密码输入次数=="+lastNum);
-        lastTimes = 5-lastNum;
+        lastTimes = 6-lastNum;
         firstThread.start();
     }
     @Override
@@ -341,7 +341,7 @@ public class WifiLockAddNewBLEWIFiSwitchActivity extends BaseActivity<IBindBleVi
                     System.arraycopy(originalData, 0, passwordFactor, copyLocation, copyLength);
 //                    fifthThread.start();
                     changeState(5);
-                    handler.postDelayed(runnable, 1000);
+                    handler.postDelayed(runnable, 1500);
                     LogUtils.e("--kaadas--合并密码因子数据==    " + Rsa.bytesToHexString(passwordFactor));
                     break;
 //                case 4:

@@ -371,7 +371,7 @@ public class BindBlePresenter<T> extends BasePresenter<IBindBleView> {
                             mViewRef.get().readFunctionSetSuccess(funcSet);
                         }
 
-                        LogUtils.e("收到锁功能集   " + Rsa.byteToHexString((byte) funcSet));
+                        LogUtils.e("--kaadas--收到锁功能集   " + Rsa.byteToHexString((byte) funcSet));
                         if (BleLockUtils.isExistFunctionSet(funcSet)) {
                             functionSet = funcSet;
                             if (funcSet == 0xff) {

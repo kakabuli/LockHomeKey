@@ -15,6 +15,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 
+import com.kaadas.lock.activity.MainActivity;
 import com.kaadas.lock.activity.addDevice.singleswitch.SwipchLinkActivity;
 import com.kaadas.lock.activity.addDevice.singleswitch.SwipchLinkNo;
 
@@ -74,10 +75,12 @@ public class WifiLockAddSuccessToSetSwitchActivity extends BaseActivity<IWifiLoc
             case R.id.close:
 
                 finish();
-                Intent intent = new Intent(this, WifiLockAddSuccessActivity.class);
-                intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
-                startActivity(intent);
-                overridePendingTransition(R.anim.page_centerzoom_enter_quick, R.anim.page_centerzoom_exit);
+//                Intent intent = new Intent(this, WifiLockAddSuccessActivity.class);
+//                intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
+//                startActivity(intent);
+                Intent backIntent=new Intent(this, MainActivity.class);
+                startActivity(backIntent);
+//                overridePendingTransition(R.anim.page_centerzoom_enter_quick, R.anim.page_centerzoom_exit);
                 break;
             case R.id.tv_right_now_set:
                 MyApplication.getInstance().getAllDevicesByMqtt(true);

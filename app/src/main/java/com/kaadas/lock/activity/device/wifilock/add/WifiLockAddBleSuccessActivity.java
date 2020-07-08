@@ -2,14 +2,13 @@ package com.kaadas.lock.activity.device.wifilock.add;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.os.Handler;
-
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
@@ -24,12 +23,9 @@ import com.kaadas.lock.activity.MainActivity;
 import com.kaadas.lock.adapter.AddBluetoothPairSuccessAdapter;
 import com.kaadas.lock.bean.deviceAdd.AddBluetoothPairSuccessBean;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
-import com.kaadas.lock.mvp.presenter.deviceaddpresenter.BindBleSuccessPresenter;
 import com.kaadas.lock.mvp.presenter.wifilock.WifiLockAddSuccessPresenter;
-import com.kaadas.lock.mvp.view.deviceaddview.IBindBleSuccessView;
 import com.kaadas.lock.mvp.view.wifilock.IWifiLockAddSuccessView;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
-import com.kaadas.lock.publiclibrary.http.util.HttpUtils;
 import com.kaadas.lock.utils.EditTextWatcher;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.StringUtil;
@@ -42,7 +38,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class WifiLockAddSuccessActivity extends BaseActivity<IWifiLockAddSuccessView
+public class WifiLockAddBleSuccessActivity extends BaseActivity<IWifiLockAddSuccessView
         , WifiLockAddSuccessPresenter<IWifiLockAddSuccessView>> implements IWifiLockAddSuccessView, BaseQuickAdapter.OnItemClickListener {
 
     @BindView(R.id.input_name)
@@ -125,6 +121,26 @@ public class WifiLockAddSuccessActivity extends BaseActivity<IWifiLockAddSuccess
         if (name != null) {
             inputName.setCursorVisible(false);
         }
+
+    }
+
+    Runnable runnable = new Runnable() {
+        @Override
+        public void run() {
+            toSetSwitch();
+
+            handler.removeCallbacks(runnable);
+
+        }
+    };
+
+    public void toSetSwitch() {
+
+        Intent intent = new Intent(this, WifiLockAddSuccessToSetSwitchActivity.class);
+        intent.putExtra(KeyConstants.WIFI_SN, wifiSN);
+        startActivity(intent);
+        overridePendingTransition(R.anim.page_centerzoom_enter, R.anim.page_centerzoom_exit);
+
     }
 
     @Override
@@ -193,8 +209,11 @@ public class WifiLockAddSuccessActivity extends BaseActivity<IWifiLockAddSuccess
     public void onSetNameSuccess() {
         hiddenLoading();
         MyApplication.getInstance().getAllDevicesByMqtt(true);
-        Intent backIntent=new Intent(this, MainActivity.class);
-        startActivity(backIntent);
+
+        handler.postDelayed(runnable, 400);
+
+//        Intent backIntent=new Intent(this, MainActivity.class);
+//        startActivity(backIntent);
     }
 
     @Override

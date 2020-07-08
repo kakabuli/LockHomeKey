@@ -724,6 +724,9 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
             case 0x40:// 门锁布防报警
                 content = String.format(getString(R.string.wifi_lock_alarm_40), nickName);
                 break;
+            case 0x80:// 一级低电告警（电量低，进入节能模式）
+                content = String.format(getString(R.string.wifi_lock_alarm_80), nickName);
+                break;
         }
         Toast.makeText(MainActivity.this, content, Toast.LENGTH_SHORT).show();
     }

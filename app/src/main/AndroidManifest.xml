@@ -808,6 +808,10 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".activity.device.wifilock.add.WifiLockAddBleSuccessActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".activity.device.wifilock.add.WifiLockAddSuccessToSetSwitchActivity"
             android:theme="@style/DialogTransparent"
             android:screenOrientation="portrait"

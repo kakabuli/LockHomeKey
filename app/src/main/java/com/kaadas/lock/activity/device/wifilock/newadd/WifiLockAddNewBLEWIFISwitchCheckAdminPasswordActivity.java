@@ -1,5 +1,6 @@
 package com.kaadas.lock.activity.device.wifilock.newadd;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -27,6 +28,7 @@ import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.OfflinePasswordFactorManager;
 import com.kaadas.lock.utils.Rsa;
+import com.kaadas.lock.utils.dialog.MessageDialog;
 import com.kaadas.lock.widget.WifiCircleProgress;
 
 import butterknife.BindView;
@@ -66,6 +68,7 @@ public class WifiLockAddNewBLEWIFISwitchCheckAdminPasswordActivity extends BaseA
     private byte[] passwordFactor;
     private Handler handler = new Handler();
     private OfflinePasswordFactorManager.OfflinePasswordFactorResult wifiResult;
+    private AlertDialog systemLockAlertDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -448,23 +451,46 @@ public class WifiLockAddNewBLEWIFISwitchCheckAdminPasswordActivity extends BaseA
                         });
             }
         } else { //都五次输入错误提示   退出
-            AlertDialogUtil.getInstance().noEditSingleCanNotDismissButtonDialog(
-                    WifiLockAddNewBLEWIFISwitchCheckAdminPasswordActivity.this, "", getString(R.string.admin_error_reinput_5), getString(R.string.confirm), new AlertDialogUtil.ClickListener() {
-                        @Override
-                        public void left() {
+//            AlertDialogUtil.getInstance().noEditSingleCanNotDismissButtonDialog(
+//                    WifiLockAddNewBLEWIFISwitchCheckAdminPasswordActivity.this, "", getString(R.string.admin_error_reinput_5), getString(R.string.confirm), new AlertDialogUtil.ClickListener() {
+//                        @Override
+//                        public void left() {
+//                        }
+//                        @Override
+//                        public void right() {
+//                            startActivity(new Intent(WifiLockAddNewBLEWIFISwitchCheckAdminPasswordActivity.this, WifiLockAddBLEFailedActivity.class));
+//                            finish();
+//                        }
+//                        @Override
+//                        public void onTextChanged(CharSequence s, int start, int before, int count) {
+//                        }
+//                        @Override
+//                        public void afterTextChanged(String toString) {
+//                        }
+//                    });
+            systemLockAlertDialog = AlertDialogUtil.getInstance().noButtonDialog(WifiLockAddNewBLEWIFISwitchCheckAdminPasswordActivity.this, getString(R.string.admin_error_reinput_5));
+            systemLockAlertDialog.setCancelable(false);//不可取消
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    new Handler().postDelayed(new Runnable() {
+                        public void run() {
+                            if (systemLockAlertDialog != null) {
+                                systemLockAlertDialog.dismiss();
+                                if (MyApplication.getInstance().getBleService() == null) {
+                                    return;
+                                } else {
+                                    MyApplication.getInstance().getBleService().release();
+                                }
+                                //退出当前界面
+                                Intent intent = new Intent(WifiLockAddNewBLEWIFISwitchCheckAdminPasswordActivity.this, WifiLockAddNewFirstActivity.class);
+                                startActivity(intent);
+                                finish();
+                            }
                         }
-                        @Override
-                        public void right() {
-                            startActivity(new Intent(WifiLockAddNewBLEWIFISwitchCheckAdminPasswordActivity.this, WifiLockAddBLEFailedActivity.class));
-                            finish();
-                        }
-                        @Override
-                        public void onTextChanged(CharSequence s, int start, int before, int count) {
-                        }
-                        @Override
-                        public void afterTextChanged(String toString) {
-                        }
-                    });
+                    }, 100*1000); //延迟100秒消失
+                }
+            });
         }
     }
     private void showModifyPasswordDialog() {
