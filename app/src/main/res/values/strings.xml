@@ -1554,6 +1554,7 @@
     <string name="admin_error_reinput_3">门锁管理密码验证已失败3次，超过5次门锁将锁定</string>
     <string name="admin_error_reinput_4">门锁管理密码验证已失败4次，超过5次门锁将锁定</string>
     <string name="admin_error_reinput_5">门锁管理密码验证已失败5次，门锁将锁定100 S</string>
+    <string name="ble_break_authenticate">门锁断开连接，无法验证</string>
 
     <string name="wifi_view1">Wi-Fi模块固件版本</string>
     <string name="am_mode">A-M自动/手动模式</string>

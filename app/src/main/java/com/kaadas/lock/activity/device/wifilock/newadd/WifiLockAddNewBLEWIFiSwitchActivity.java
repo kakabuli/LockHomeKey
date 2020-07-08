@@ -341,7 +341,7 @@ public class WifiLockAddNewBLEWIFiSwitchActivity extends BaseActivity<IBindBleVi
                     System.arraycopy(originalData, 0, passwordFactor, copyLocation, copyLength);
 //                    fifthThread.start();
                     changeState(5);
-                    handler.postDelayed(runnable, 1500);
+                    handler.postDelayed(runnable, 2000);
                     LogUtils.e("--kaadas--合并密码因子数据==    " + Rsa.bytesToHexString(passwordFactor));
                     break;
 //                case 4:

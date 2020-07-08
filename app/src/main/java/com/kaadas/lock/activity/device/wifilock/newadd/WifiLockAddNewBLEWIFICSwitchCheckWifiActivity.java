@@ -215,6 +215,7 @@ public class WifiLockAddNewBLEWIFICSwitchCheckWifiActivity extends BaseActivity<
 //                  bSsid = sSsid.getBytes();
             System.arraycopy(sSsid.getBytes(), 0, bSsid, 0, sSsid.getBytes().length);
         }
+        mPresenter.listenConnectState();
         mPresenter.listenerCharacterNotify();
         mPresenter.sendSSIDAndPWD(bSsid, bPwd);
 //      }
@@ -498,6 +499,33 @@ public class WifiLockAddNewBLEWIFICSwitchCheckWifiActivity extends BaseActivity<
     @Override
     public void onReceiverSuccess() {
 
+    }
+
+    @Override
+    public void onDeviceStateChange(boolean isConnected) {
+
+        if (!isConnected) {
+            AlertDialogUtil.getInstance().noEditSingleCanNotDismissButtonDialog(
+                    WifiLockAddNewBLEWIFICSwitchCheckWifiActivity.this, "", getString(R.string.ble_break_authenticate), getString(R.string.confirm), new AlertDialogUtil.ClickListener() {
+                        @Override
+                        public void left() {
+                        }
+
+                        @Override
+                        public void right() {
+                            startActivity(new Intent(WifiLockAddNewBLEWIFICSwitchCheckWifiActivity.this, WifiLockAddBLEFailedActivity.class));
+                            finish();
+                        }
+
+                        @Override
+                        public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        }
+
+                        @Override
+                        public void afterTextChanged(String toString) {
+                        }
+                    });
+        }
     }
 
     @Override

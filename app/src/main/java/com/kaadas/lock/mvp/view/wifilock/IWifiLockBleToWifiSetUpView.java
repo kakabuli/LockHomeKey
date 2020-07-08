@@ -49,6 +49,9 @@ public interface IWifiLockBleToWifiSetUpView extends IBaseView {
     void onReceiverFailed();
 
     void onReceiverSuccess();
-
+    /**
+     * 蓝牙连接状态
+     */
+    void onDeviceStateChange(boolean isConnected);
 
 }

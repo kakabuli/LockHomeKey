@@ -84,6 +84,7 @@ public class WifiLockAddNewBLEWIFISwitchCheckAdminPasswordActivity extends BaseA
         circleProgressBar.setValue(0);
         changeState(1); //初始状态
         LogUtils.e("--Kaadas--"+getLocalClassName()+"次数是   " + times + "  passwordFactor 是否为空 " + (passwordFactor == null));
+        mPresenter.listenConnectState();
         mPresenter.listenerCharacterNotify();
         //BLE&WIFI模组 读取功能集
         mPresenter.readFeatureSet();
@@ -615,7 +616,28 @@ public class WifiLockAddNewBLEWIFISwitchCheckAdminPasswordActivity extends BaseA
     }
     @Override
     public void onDeviceStateChange(boolean isConnected) {
+        if (!isConnected) {
+            AlertDialogUtil.getInstance().noEditSingleCanNotDismissButtonDialog(
+                    WifiLockAddNewBLEWIFISwitchCheckAdminPasswordActivity.this, "", getString(R.string.ble_break_authenticate), getString(R.string.confirm), new AlertDialogUtil.ClickListener() {
+                        @Override
+                        public void left() {
+                        }
 
+                        @Override
+                        public void right() {
+                            startActivity(new Intent(WifiLockAddNewBLEWIFISwitchCheckAdminPasswordActivity.this, WifiLockAddBLEFailedActivity.class));
+                            finish();
+                        }
+
+                        @Override
+                        public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        }
+
+                        @Override
+                        public void afterTextChanged(String toString) {
+                        }
+                    });
+        }
     }
     @Override
     public void unknownFunctionSet(int functionSet) {

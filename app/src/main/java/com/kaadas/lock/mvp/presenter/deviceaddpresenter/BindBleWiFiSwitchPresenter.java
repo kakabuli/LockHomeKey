@@ -47,6 +47,7 @@ public class BindBleWiFiSwitchPresenter<T> extends BasePresenter<IBindBleView> {
     private String deviceName;
     private int functionSet = -1;
     private Disposable characterNotifyDisposable;
+    private Disposable listenConnectStateDisposable;
     private Disposable featureSetDisposable;
     private OfflinePasswordFactorManager offlinePasswordFactorManager = OfflinePasswordFactorManager.getInstance();
     private OfflinePasswordFactorManager.OfflinePasswordFactorResult wifiResult;
@@ -177,5 +178,31 @@ public class BindBleWiFiSwitchPresenter<T> extends BasePresenter<IBindBleView> {
             bleService.scanBleDevice(false);  //1
             bleService.release();
         }
+    }
+    public void listenConnectState() {
+        toDisposable(listenConnectStateDisposable);
+        if (bleService == null) { //判断
+            if (MyApplication.getInstance().getBleService() == null) {
+                return;
+            } else {
+                bleService = MyApplication.getInstance().getBleService(); //判断
+            }
+        }
+        listenConnectStateDisposable = bleService.subscribeDeviceConnectState() //1
+                .compose(RxjavaHelper.observeOnMainThread())
+                .subscribe(new Consumer<BleStateBean>() {
+                    @Override
+                    public void accept(BleStateBean bleStateBean) throws Exception {
+                        if (isSafe()) {
+                            mViewRef.get().onDeviceStateChange(bleStateBean.isConnected());
+                        }
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+
+                    }
+                });
+        compositeDisposable.add(listenConnectStateDisposable);
     }
 }

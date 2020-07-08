@@ -618,17 +618,43 @@ public class SwipchLinkActivity extends BaseActivity<SingleFireSwitchView, Singl
 
                     if (data.getBooleanExtra(KeyConstants.WIFI_LOCK_INFO_CHANGE_RESULT,false)) {
                         //图标+信息+点击事件
-                        InfoDialog infoDialog = new InfoDialog.Builder(this)
+                        InfoDialog infoDialog = new InfoDialog.Builder(SwipchLinkActivity.this)
                                 .setIcon(R.mipmap.set_right,this)
                                 .setMessage(R.string.set_success)
                                 .create();
                         infoDialog.show();
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+
+                                new Handler().postDelayed(new Runnable() {
+                                    public void run() {
+                                        if (infoDialog != null) {
+                                            infoDialog.dismiss();
+                                        }
+                                    }
+                                }, 3000); //延迟3秒消失
+                            }
+                        });
                     } else  {
                         InfoDialog infoDialog = new InfoDialog.Builder(this)
                                 .setIcon(R.mipmap.set_false,this)
                                 .setMessage(R.string.set_failed_and_reset)
                                 .create();
                         infoDialog.show();
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+
+                                new Handler().postDelayed(new Runnable() {
+                                    public void run() {
+                                        if (infoDialog != null) {
+                                            infoDialog.dismiss();
+                                        }
+                                    }
+                                }, 3000); //延迟3秒消失
+                            }
+                        });
                     }
             }
         }

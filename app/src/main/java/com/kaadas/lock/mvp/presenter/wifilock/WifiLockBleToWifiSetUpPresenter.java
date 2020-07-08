@@ -7,6 +7,7 @@ import com.kaadas.lock.mvp.view.wifilock.IWifiLockBleToWifiSetUpView;
 import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
 import com.kaadas.lock.publiclibrary.ble.BleCommandFactory;
 import com.kaadas.lock.publiclibrary.ble.responsebean.BleDataBean;
+import com.kaadas.lock.publiclibrary.ble.responsebean.BleStateBean;
 import com.kaadas.lock.publiclibrary.http.XiaokaiNewServiceImp;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.util.BaseObserver;
@@ -32,6 +33,8 @@ public class WifiLockBleToWifiSetUpPresenter<T> extends BasePresenter<IWifiLockB
     private Disposable realBindDisposable;
     private Disposable sendSSIDAndPWDDisposable;
     private Disposable characterNotifyDisposable;
+    private Disposable listenConnectStateDisposable;
+
     //根据流程协议SSID需要33byte，一共分3包
     private byte[] firstSubSSID = new byte[14];
     private byte[] secondSubSSID = new byte[14];
@@ -299,5 +302,31 @@ public class WifiLockBleToWifiSetUpPresenter<T> extends BasePresenter<IWifiLockB
                 break;
 
         }
+    }
+    public void listenConnectState() {
+        toDisposable(listenConnectStateDisposable);
+        if (bleService == null) { //判断
+            if (MyApplication.getInstance().getBleService() == null) {
+                return;
+            } else {
+                bleService = MyApplication.getInstance().getBleService(); //判断
+            }
+        }
+        listenConnectStateDisposable = bleService.subscribeDeviceConnectState() //1
+                .compose(RxjavaHelper.observeOnMainThread())
+                .subscribe(new Consumer<BleStateBean>() {
+                    @Override
+                    public void accept(BleStateBean bleStateBean) throws Exception {
+                        if (isSafe()) {
+                            mViewRef.get().onDeviceStateChange(bleStateBean.isConnected());
+                        }
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+
+                    }
+                });
+        compositeDisposable.add(listenConnectStateDisposable);
     }
 }
