@@ -90,6 +90,9 @@ public class SingleFireSwitchSettingPresenter<T> extends BasePresenter<SingleFir
                     });
             compositeDisposable.add(settingDeviceDisposable);
         }
+        else {
+            mViewRef.get().settingDeviceFail();
+        }
     }
 
 
@@ -137,6 +140,9 @@ public class SingleFireSwitchSettingPresenter<T> extends BasePresenter<SingleFir
                         }
                     });
             compositeDisposable.add(addDeviceDisposable);
+        }
+        else {
+            mViewRef.get().addDeviceFail();
         }
     }
 

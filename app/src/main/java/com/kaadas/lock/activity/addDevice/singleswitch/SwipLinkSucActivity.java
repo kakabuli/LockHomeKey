@@ -2,6 +2,7 @@ package com.kaadas.lock.activity.addDevice.singleswitch;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -24,6 +25,7 @@ import com.kaadas.lock.publiclibrary.mqtt.publishbean.AddSingleFireSwitchBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.BindingSingleFireSwitchBean;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.dialog.InfoDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -239,24 +241,81 @@ public class SwipLinkSucActivity  extends BaseActivity<SingleFireSwitchView, Sin
     @Override
     public void bindingAndModifyDeviceSuccess() {
         MyApplication.getInstance().getAllDevicesByMqtt(true);
+        //图标+信息+点击事件
+        InfoDialog infoDialog = new InfoDialog.Builder(SwipLinkSucActivity.this)
+                .setIcon(R.mipmap.set_right,this)
+                .setMessage(R.string.set_success)
+                .create();
+        infoDialog.show();
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+
+                new Handler().postDelayed(new Runnable() {
+                    public void run() {
+                        if (infoDialog != null) {
+                            infoDialog.dismiss();
+                            Intent intent=new Intent(SwipLinkSucActivity.this, MainActivity.class);
+                            intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
+                            startActivity(intent);
+                        }
+                    }
+                }, 3000); //延迟3秒消失
+            }
+        });
 //        Intent intent=new Intent(SwipLinkSucActivity.this, WiFiLockDetailActivity.class);
-        Intent intent=new Intent(SwipLinkSucActivity.this, MainActivity.class);
-        intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
-        startActivity(intent);
+
     }
 
     @Override
     public void bindingAndModifyDeviceFail() {
-        Intent intent=new Intent(SwipLinkSucActivity.this,SwipLinkFailActivity.class);
-        intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
-        startActivity(intent);
+        InfoDialog infoDialog = new InfoDialog.Builder(SwipLinkSucActivity.this)
+                .setIcon(R.mipmap.set_false,this)
+                .setMessage(R.string.set_failed_and_reset)
+                .create();
+        infoDialog.show();
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+
+                new Handler().postDelayed(new Runnable() {
+                    public void run() {
+                        if (infoDialog != null) {
+                            infoDialog.dismiss();
+                            Intent intent=new Intent(SwipLinkSucActivity.this,SwipLinkFailActivity.class);
+                            intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
+                            startActivity(intent);
+                        }
+                    }
+                }, 3000); //延迟3秒消失
+            }
+        });
+
     }
 
     @Override
     public void bindingAndModifyDeviceThrowable() {
-        Intent intent=new Intent(SwipLinkSucActivity.this,SwipLinkFailActivity.class);
-        intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
-        startActivity(intent);
+        InfoDialog infoDialog = new InfoDialog.Builder(SwipLinkSucActivity.this)
+                .setIcon(R.mipmap.set_false,this)
+                .setMessage(R.string.set_failed_and_reset)
+                .create();
+        infoDialog.show();
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+
+                new Handler().postDelayed(new Runnable() {
+                    public void run() {
+                        if (infoDialog != null) {
+                            infoDialog.dismiss();
+                            Intent intent=new Intent(SwipLinkSucActivity.this,SwipLinkFailActivity.class);
+                            intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
+                            startActivity(intent);
+                        }
+                    }
+                }, 3000); //延迟3秒消失
+            }
+        });
     }
 
 

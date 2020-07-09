@@ -350,8 +350,9 @@ public class BleService extends Service {
             if (device.getName().contains("Bootloader")
                     || device.getName().contains("OAD")
                     || device.getName().contains("KDS")
-                    || device.getName().contains("XK")
-                    || device.getName().contains("KdsLock")) {
+                    || device.getName().contains("XK")//小凯锁放凯迪仕卖
+                    || device.getName().contains("KdsLock")
+            ) {
                 //返回Manufacture ID之后的data
                 SparseArray<byte[]> hex16=result.getScanRecord().getManufacturerSpecificData();
                 //设备名
