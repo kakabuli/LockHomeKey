@@ -112,59 +112,61 @@ public class WifiLockMoreActivity extends BaseActivity<IWifiLockMoreView, WifiLo
         return new WifiLockMorePresenter();
     }
 
-
     private void initData() {
-        tvDeviceName.setText(wifiLockInfo.getLockNickname());  //昵称
-        ivSilentMode.setImageResource(wifiLockInfo.getVolume() == 1 ? R.mipmap.iv_open : R.mipmap.iv_close);             //静音非静音模式
+
+        if (wifiLockInfo != null) {
+
+            tvDeviceName.setText(wifiLockInfo.getLockNickname());  //昵称
+            ivSilentMode.setImageResource(wifiLockInfo.getVolume() == 1 ? R.mipmap.iv_open : R.mipmap.iv_close);             //静音非静音模式
+
+            int pushSwitch = wifiLockInfo.getPushSwitch();
+            if (pushSwitch == 2) {
+                ivMessageFree.setImageResource(R.mipmap.iv_open);
+            } else {
+                ivMessageFree.setImageResource(R.mipmap.iv_close);
+            }
+            String language = wifiLockInfo.getLanguage();
+            if ("zh".equals(language)) {
+                tvLanguage.setText(R.string.chinese);
+            } else if ("en".equals(language)) {
+                tvLanguage.setText(R.string.setting_language_en);
+            }
+
+            String functionSet = wifiLockInfo.getFunctionSet();
+            int func = 0;
+            try {
+                func = Integer.parseInt(functionSet);
+            } catch (Exception e) {
+                LogUtils.e("" + e.getMessage());
+            }
+
+            if (BleLockUtils.isSupportAMModeShow(func)) {
+                rlAm.setVisibility(View.VISIBLE);
+                int amMode = wifiLockInfo.getAmMode();
+                ivAm.setText(amMode == 1 ? getString(R.string.hand) : getString(R.string.auto));
+            } else {
+                rlAm.setVisibility(View.GONE);
+            }
 
 
-        int pushSwitch = wifiLockInfo.getPushSwitch();
-        if (pushSwitch == 2) {
-            ivMessageFree.setImageResource(R.mipmap.iv_open);
-        } else {
-            ivMessageFree.setImageResource(R.mipmap.iv_close);
-        }
-        String language = wifiLockInfo.getLanguage();
-        if ("zh".equals(language)) {
-            tvLanguage.setText(R.string.chinese);
-        } else if ("en".equals(language)) {
-            tvLanguage.setText(R.string.setting_language_en);
-        }
+            if (BleLockUtils.isSupportPowerSaveModeShow(func)) {
+                rlPowerSave.setVisibility(View.VISIBLE);
+                int powerSaveMode = wifiLockInfo.getPowerSave();
+                ivPowerSave.setText(powerSaveMode == 1 ? getString(R.string.open) : getString(R.string.close));
+            } else {
+                rlPowerSave.setVisibility(View.GONE);
+            }
 
-        String functionSet = wifiLockInfo.getFunctionSet();
-        int func = 0;
-        try {
-            func = Integer.parseInt(functionSet);
-        } catch (Exception e) {
-            LogUtils.e("" + e.getMessage());
-        }
-
-        if (BleLockUtils.isSupportAMModeShow(func)) {
-            rlAm.setVisibility(View.VISIBLE);
-            int amMode = wifiLockInfo.getAmMode();
-            ivAm.setText(amMode == 1 ? getString(R.string.hand) : getString(R.string.auto));
-        } else {
-            rlAm.setVisibility(View.GONE);
-        }
-
-
-        if (BleLockUtils.isSupportPowerSaveModeShow(func)) {
-            rlPowerSave.setVisibility(View.VISIBLE);
-            int powerSaveMode = wifiLockInfo.getPowerSave();
-            ivPowerSave.setText(powerSaveMode == 1 ? getString(R.string.open) : getString(R.string.close));
-        } else {
-            rlPowerSave.setVisibility(View.GONE);
-        }
-
-        //面容识别功能
+            //面容识别功能
 //        if (BleLockUtils.isSupportFaceStatusShow(func)) {
 //            rlFaceStatus.setVisibility(View.VISIBLE);
 //        } else {
 //            rlFaceStatus.setVisibility(View.GONE);
 //        }
 
-        wifiName.setText(wifiLockInfo.getWifiName());
-        deviceNickname = wifiLockInfo.getLockNickname();
+            wifiName.setText(wifiLockInfo.getWifiName());
+            deviceNickname = wifiLockInfo.getLockNickname();
+        }
     }
 
     private void initClick() {

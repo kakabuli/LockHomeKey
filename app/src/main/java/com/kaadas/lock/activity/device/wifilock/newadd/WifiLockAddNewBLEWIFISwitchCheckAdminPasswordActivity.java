@@ -89,37 +89,7 @@ public class WifiLockAddNewBLEWIFISwitchCheckAdminPasswordActivity extends BaseA
         //BLE&WIFI模组 读取功能集
         mPresenter.readFeatureSet();
 
-//        if (times > 1) {
-//            if (socketManager.isConnected()) { //如果不是第一进来而且Socket是连接的   那么解析密码
-//                if (data != null) { //
-//                    LogUtils.e("--Kaadas--如果不是第一进来而且Socket是连接的   那么解析密码");
-//                    secondThread.start();
-//                } else { //修改过管理员密码进来的
-//                    LogUtils.e("--Kaadas--改过管理员密码进来的");
-//                    thirdThread.start();
-//                }
-//            } else {
-//                LogUtils.e("--Kaadas--socketManager断开连接");
-//                LogUtils.e("--Kaadas--"+getLocalClassName()+"次数是   " + times + "  data 是否为空 " + (data == null));
-//                AlertDialogUtil.getInstance().noEditSingleCanNotDismissButtonDialog(
-//                        WifiLockAddNewBLEWIFISwitchCheckAdminPasswordActivity.this, "", "连接已断开，请重新开始", getString(R.string.confirm), new AlertDialogUtil.ClickListener() {
-//                            @Override
-//                            public void left() {
-//                                startActivity(new Intent(WifiLockAddNewBLEWIFISwitchCheckAdminPasswordActivity.this, WifiLockAddNewScanFailedActivity.class));
-//                                finish();
-//                            }
-//
-//                            @Override
-//                            public void right() {
-//                                startActivity(new Intent(WifiLockAddNewBLEWIFISwitchCheckAdminPasswordActivity.this, WifiLockAddNewScanFailedActivity.class));
-//                                finish();
-//                            }
-//                        });
-//            }
-//        } else {
-//            LogUtils.e("--Kaadas--管理员密码输入次数<=1");
-            firstThread.start();
-//        }
+        firstThread.start();
     }
 
     public void initView() {
@@ -198,11 +168,6 @@ public class WifiLockAddNewBLEWIFISwitchCheckAdminPasswordActivity extends BaseA
             handler.removeCallbacks(runnable);
             finish();
             firstThread.interrupt();
-//            secondThread.interrupt();
-//            thirtyThread.interrupt();
-//            fourthThread.interrupt();
-//            fifthThread.interrupt();
-//            sixthThread.interrupt();
         }
     };
     @OnClick({R.id.back, R.id.help, R.id.circle_progress_bar})
@@ -268,129 +233,8 @@ public class WifiLockAddNewBLEWIFISwitchCheckAdminPasswordActivity extends BaseA
                 return;
             }
             mPresenter.parsePasswordFactorData(adminPassword, passwordFactor);
-    };
-//    //非第一次进来开启的线程1
-//    private Thread secondThread = new Thread() {
-//        @Override
-//        public void run() {
-//
-//            if ("12345678".equals(adminPassword)) {
-//                LogUtils.e("--Kaadas--12345678");
-//
-//                runOnUiThread(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        showModifyPasswordDialog();
-//                    }
-//                });
-//                return;
-//            }
-//            SocketManager.WifiResult wifiResult = socketManager.parseWifiData(adminPassword, data);
-//            if (wifiResult.result == 0) {
-//                int writeResult = socketManager.writeData(("CRCSuccess\r").getBytes());
-//                //写入 CRCsuccess 成功
-//                if (writeResult == 0) {
-//                    SocketManager.ReadResult readResult2 = socketManager.readWifiData();
-//                    if (readResult2.resultCode >= 0 && (new String(readResult2.data)).startsWith("APContinue")) {
-//                        onSuccess(wifiResult);
-//                        changeState(3);
-//                    } else {
-//                        onError(socketManager, -5);
-//                    }
-//                } else { //写入CRC失败
-//                    onError(socketManager, -4);
-//                }
-//            } else {
-//                //解析数据失败  通知锁端蓄电？
-//                int writeResult = socketManager.writeData(("APError\r").getBytes());
-//                if (writeResult == 0) {
-//                    runOnUiThread(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            onAdminPasswordError();
-//                        }
-//                    });
-//                } else { //写入数据失败
-//                    onError(socketManager, -4);
-//                }
-//            }
-//        }
-//    };
-//    //修改过管理员密码了
-//    private Thread thirdThread = new Thread() {
-//        @Override
-//        public void run() {
-//            int writeResult = socketManager.writeData(("ApFactorResend\r").getBytes());  //要求锁端重新发送密码因子
-//            if (writeResult == 0) {
-//                SocketManager.ReadResult readResult = socketManager.readWifiData();
-//                data = readResult.data;
-//                //写入 CRCsuccess 成功
-//                if (readResult.resultCode == 0) {
-//                    if (readResult.dataLen < 46) {  //读取数据字数不够
-//                        onError(socketManager, -1);
-//                        return;
-//                    } else { //读取到数据  而且数据够46
-//                        changeState(2);
-//                        if ("12345678".equals(adminPassword)) {
-//
-//                            runOnUiThread(new Runnable() {
-//                                @Override
-//                                public void run() {
-//                                    showModifyPasswordDialog();
-//                                }
-//                            });
-//                            return;
-//                        }
-//                        SocketManager.WifiResult wifiResult = socketManager.parseWifiData(adminPassword, data);
-//                        //解析数据   解析数据成功
-//                        if (wifiResult.result == 0) {
-//                            //发送CRCSuccess 通知锁端
-//                            writeResult = socketManager.writeData(("CRCSuccess\r").getBytes());
-//                            //写入 CRCsuccess 成功
-//                            if (writeResult == 0) {
-//                                SocketManager.ReadResult readResult2 = socketManager.readWifiData();
-//                                if (readResult2.resultCode >= 0 && (new String(readResult2.data)).startsWith("APContinue")) {
-//                                    onSuccess(wifiResult);
-//                                    changeState(3);
-//                                } else {
-//                                    onError(socketManager, -5);
-//                                }
-//                            } else { //写入CRC失败
-//                                onError(socketManager, -4);
-//                            }
-//                        } else {
-//                            //解析数据失败  通知锁端蓄电？
-//                            writeResult = socketManager.writeData(("APError\r").getBytes());
-//                            if (writeResult == 0) {
-//                                runOnUiThread(new Runnable() {
-//                                    @Override
-//                                    public void run() {
-//                                        onAdminPasswordError();
-//                                    }
-//                                });
-//                            } else { //写入数据失败
-//                                onError(socketManager, -4);
-//                            }
-//                        }
-//                    }
-//                } else { //写入CRC失败
-//                    onError(socketManager, -4);
-//                }
-//            } else {
-//                //解析数据失败  通知锁端蓄电？
-//                writeResult = socketManager.writeData(("APError\r").getBytes());
-//                if (writeResult == 0) {
-//                    runOnUiThread(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            onAdminPasswordError();
-//                        }
-//                    });
-//                } else { //写入数据失败
-//                    onError(socketManager, -4);
-//                }
-//            }
-//        }
+        };
+
     };
 
     private void onAdminPasswordError() {
@@ -451,7 +295,8 @@ public class WifiLockAddNewBLEWIFISwitchCheckAdminPasswordActivity extends BaseA
                             public void afterTextChanged(String toString) { }
                         });
             }
-        } else { //都五次输入错误提示   退出
+        } else {
+            //都五次输入错误提示   退出
 //            AlertDialogUtil.getInstance().noEditSingleCanNotDismissButtonDialog(
 //                    WifiLockAddNewBLEWIFISwitchCheckAdminPasswordActivity.this, "", getString(R.string.admin_error_reinput_5), getString(R.string.confirm), new AlertDialogUtil.ClickListener() {
 //                        @Override

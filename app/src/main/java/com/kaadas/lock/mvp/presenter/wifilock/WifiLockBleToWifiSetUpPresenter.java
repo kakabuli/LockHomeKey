@@ -127,7 +127,6 @@ public class WifiLockBleToWifiSetUpPresenter<T> extends BasePresenter<IWifiLockB
                 });
     }
 
-//
 //    public void update(String wifiSN, String randomCode, String wifiName, int func) {
 //        toDisposable(updateDisposable);
 //        XiaokaiNewServiceImp.wifiLockUpdateInfo(MyApplication.getInstance().getUid(), wifiSN, randomCode, wifiName, func)
@@ -324,6 +323,7 @@ public class WifiLockBleToWifiSetUpPresenter<T> extends BasePresenter<IWifiLockB
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
+                        //抛出异常
 
                     }
                 });

@@ -74,13 +74,9 @@ public class WifiLockAddSuccessToSetSwitchActivity extends BaseActivity<IWifiLoc
         switch (view.getId()) {
             case R.id.close:
 
-                finish();
-//                Intent intent = new Intent(this, WifiLockAddSuccessActivity.class);
-//                intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
-//                startActivity(intent);
-                Intent backIntent=new Intent(this, MainActivity.class);
-                startActivity(backIntent);
-//                overridePendingTransition(R.anim.page_centerzoom_enter_quick, R.anim.page_centerzoom_exit);
+                MyApplication.getInstance().getAllDevicesByMqtt(true);
+                handler.postDelayed(runnable1, 1000);
+
                 break;
             case R.id.tv_right_now_set:
                 MyApplication.getInstance().getAllDevicesByMqtt(true);
@@ -90,6 +86,22 @@ public class WifiLockAddSuccessToSetSwitchActivity extends BaseActivity<IWifiLoc
                 break;
         }
     }
+    Runnable runnable1 = new Runnable() {
+        @Override
+        public void run() {
+
+//            finish();
+//                Intent intent = new Intent(this, WifiLockAddSuccessActivity.class);
+//                intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
+//                startActivity(intent);
+            Intent backIntent=new Intent(WifiLockAddSuccessToSetSwitchActivity.this, MainActivity.class);
+            startActivity(backIntent);
+            overridePendingTransition(R.anim.page_centerzoom_enter_quick, R.anim.page_centerzoom_exit);
+
+            handler.removeCallbacks(runnable1);
+
+        }
+    };
     Runnable runnable = new Runnable() {
         @Override
         public void run() {

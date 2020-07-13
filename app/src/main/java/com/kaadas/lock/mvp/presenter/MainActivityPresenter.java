@@ -1180,6 +1180,7 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                         @Override
                         public void accept(MqttData mqttData) throws Exception {
                             String payload = mqttData.getPayload();
+
                             JSONObject jsonObject = new JSONObject(payload);
 
                             String eventtype = "";

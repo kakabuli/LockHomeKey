@@ -16,10 +16,15 @@ import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.device.wifilock.add.WifiLcokSupportWifiActivity;
 import com.kaadas.lock.activity.device.wifilock.add.WifiLockHelpActivity;
+import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
+import com.kaadas.lock.mvp.presenter.deviceaddpresenter.BindBleWiFiSwitchPresenter;
+import com.kaadas.lock.mvp.view.deviceaddview.IBindBleView;
+import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.OfflinePasswordFactorManager;
 import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.widget.DropEditText;
 
@@ -27,7 +32,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class WifiLockAddNewBLEWIFISwitchInputWifiActivity extends BaseAddToApplicationActivity {
+public class WifiLockAddNewBLEWIFISwitchInputWifiActivity extends BaseActivity<IBindBleView, BindBleWiFiSwitchPresenter<IBindBleView>> implements IBindBleView  {
 
     @BindView(R.id.back)
     ImageView back;
@@ -72,8 +77,18 @@ public class WifiLockAddNewBLEWIFISwitchInputWifiActivity extends BaseAddToAppli
         func = getIntent().getIntExtra(KeyConstants.WIFI_LOCK_FUNC,0);
         times = getIntent().getIntExtra(KeyConstants.WIFI_LOCK_WIFI_TIMES, 1);
 
+        if (func == 0){
+            //BLE&WIFI模组 读取功能集
+            mPresenter.readFeatureSet();
+        }
+
         String wifiName = (String) SPUtils.get(KeyConstants.WIFI_LOCK_CONNECT_NAME, "");
         apSsidText.setText(wifiName.trim());
+    }
+
+    @Override
+    protected BindBleWiFiSwitchPresenter<IBindBleView> createPresent() {
+        return new BindBleWiFiSwitchPresenter<>();
     }
 
     @OnClick({R.id.back, R.id.help, R.id.confirm_btn, R.id.tv_support_list,R.id.iv_eye,R.id.tv_to_change_wifi})
@@ -202,6 +217,91 @@ public class WifiLockAddNewBLEWIFISwitchInputWifiActivity extends BaseAddToAppli
                 LogUtils.e("--Kaadas--更换的wifi名称==" + data.getStringExtra(KeyConstants.CHOOSE_WIFI_NAME));
             }
         }
+
+    }
+
+    @Override
+    public void onBindSuccess(String deviceName) {
+
+    }
+
+    @Override
+    public void onBindFailed(Throwable throwable) {
+
+    }
+
+    @Override
+    public void onBindFailedServer(BaseResult result) {
+
+    }
+
+    @Override
+    public void onReceiveInNetInfo() {
+
+    }
+
+    @Override
+    public void onReceiveUnbind() {
+
+    }
+
+    @Override
+    public void onUnbindSuccess() {
+
+    }
+
+    @Override
+    public void onUnbindFailed(Throwable throwable) {
+
+    }
+
+    @Override
+    public void onUnbindFailedServer(BaseResult result) {
+
+    }
+
+    @Override
+    public void readLockTypeFailed(Throwable throwable) {
+
+    }
+
+    @Override
+    public void readLockTypeSucces() {
+
+    }
+
+    @Override
+    public void onDeviceStateChange(boolean isConnected) {
+
+    }
+
+    @Override
+    public void unknownFunctionSet(int functionSet) {
+
+    }
+
+    @Override
+    public void readFunctionSetSuccess(int functionSet) {
+        func = functionSet;
+    }
+
+    @Override
+    public void readFunctionSetFailed(Throwable throwable) {
+
+    }
+
+    @Override
+    public void onlistenerLastNum(int lastNum) {
+
+    }
+
+    @Override
+    public void onlistenerPasswordFactor(byte[] originalData, int pswLen, int index) {
+
+    }
+
+    @Override
+    public void onDecodeResult(int index, OfflinePasswordFactorManager.OfflinePasswordFactorResult result) {
 
     }
 }

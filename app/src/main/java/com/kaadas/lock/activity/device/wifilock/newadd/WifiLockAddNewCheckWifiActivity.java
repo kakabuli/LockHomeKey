@@ -233,21 +233,21 @@ public class WifiLockAddNewCheckWifiActivity extends BaseActivity<IWifiLockAPWif
                     return;
                 }
                 finish();
-//                socketManager.destroy();
-                Toast.makeText(WifiLockAddNewCheckWifiActivity.this, R.string.bind_failed+"=="+errorCode, Toast.LENGTH_SHORT).show();
+//                Toast.makeText(WifiLockAddNewCheckWifiActivity.this, R.string.bind_failed+"=="+errorCode, Toast.LENGTH_SHORT).show();
+
+                if (errorCode == -1) {
+                    Toast.makeText(WifiLockAddNewCheckWifiActivity.this, "读取失败,请尝试手机系统忘记kaadas_AP热点", Toast.LENGTH_SHORT).show();
+                } else if (errorCode == -2) {
+                    Toast.makeText(WifiLockAddNewCheckWifiActivity.this, "连接失败,请尝试手机系统忘记kaadas_AP热点", Toast.LENGTH_SHORT).show();
+                } else if (errorCode == -3) {
+                    Toast.makeText(WifiLockAddNewCheckWifiActivity.this, "管理员密码输入错误，请重新输入", Toast.LENGTH_SHORT).show();
+                } else if (errorCode == -4) {
+                    Toast.makeText(WifiLockAddNewCheckWifiActivity.this, "写数据错误,请尝试手机系统忘记kaadas_AP热点", Toast.LENGTH_SHORT).show();
+                } else if (errorCode == -5) {
+                    Toast.makeText(WifiLockAddNewCheckWifiActivity.this, "返回错误,请尝试手机系统忘记kaadas_AP热点", Toast.LENGTH_SHORT).show();
+                }
                 Intent intent = new Intent(WifiLockAddNewCheckWifiActivity.this, WifiLockAddNewBindFailedActivity.class);
                 startActivity(intent);
-//                if (errorCode == -1) {
-//                    Toast.makeText(WifiLockApConnectDeviceActivity.this, "读取失败", Toast.LENGTH_SHORT).show();
-//                } else if (errorCode == -2) {
-//                    Toast.makeText(WifiLockApConnectDeviceActivity.this, "连接失败", Toast.LENGTH_SHORT).show();
-//                } else if (errorCode == -3) {
-//                    Toast.makeText(WifiLockApConnectDeviceActivity.this, "管理员密码输入错误，请重新输入", Toast.LENGTH_SHORT).show();
-//                } else if (errorCode == -4) {
-//                    Toast.makeText(WifiLockApConnectDeviceActivity.this, "写数据错误", Toast.LENGTH_SHORT).show();
-//                } else if (errorCode == -5) {
-//                    Toast.makeText(WifiLockApConnectDeviceActivity.this, "返回错误", Toast.LENGTH_SHORT).show();
-//                }
             }
         });
     }
