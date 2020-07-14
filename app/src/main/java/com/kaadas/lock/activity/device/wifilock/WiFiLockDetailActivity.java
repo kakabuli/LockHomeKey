@@ -104,20 +104,23 @@ public class WiFiLockDetailActivity extends BaseActivity<IWifiLockDetailView, Wi
 
     private void initData() {
         wifiLockInfo = MyApplication.getInstance().getWifiLockInfoBySn(wifiSn);
-        String localPasswordCache = (String) SPUtils.get(KeyConstants.WIFI_LOCK_PASSWORD_LIST + wifiSn, "");
-        if (!TextUtils.isEmpty(localPasswordCache)) {
-            wiFiLockPassword = new Gson().fromJson(localPasswordCache, WiFiLockPassword.class);
+        if (wifiLockInfo != null){
+            String localPasswordCache = (String) SPUtils.get(KeyConstants.WIFI_LOCK_PASSWORD_LIST + wifiSn, "");
+            if (!TextUtils.isEmpty(localPasswordCache)) {
+                wiFiLockPassword = new Gson().fromJson(localPasswordCache, WiFiLockPassword.class);
+            }
+            String localShareUsers = (String) SPUtils.get(KeyConstants.WIFI_LOCK_SHARE_USER_LIST + wifiSn, "");
+            if (!TextUtils.isEmpty(localShareUsers)) {
+                shareUsers = new Gson().fromJson(localShareUsers, new TypeToken<List<WifiLockShareResult.WifiLockShareUser>>() {
+                }.getType());
+                LogUtils.e("本地的分享用户为  shareUsers  " + (shareUsers == null ? 0 : shareUsers.size()));
+            }
+            initPassword();
+            mPresenter.getPasswordList(wifiSn);
+            mPresenter.queryUserList(wifiSn);
+            dealWithPower(wifiLockInfo.getPower(), wifiLockInfo.getUpdateTime());
         }
-        String localShareUsers = (String) SPUtils.get(KeyConstants.WIFI_LOCK_SHARE_USER_LIST + wifiSn, "");
-        if (!TextUtils.isEmpty(localShareUsers)) {
-            shareUsers = new Gson().fromJson(localShareUsers, new TypeToken<List<WifiLockShareResult.WifiLockShareUser>>() {
-            }.getType());
-            LogUtils.e("本地的分享用户为  shareUsers  " + (shareUsers == null ? 0 : shareUsers.size()));
-        }
-        initPassword();
-        mPresenter.getPasswordList(wifiSn);
-        mPresenter.queryUserList(wifiSn);
-        dealWithPower(wifiLockInfo.getPower(), wifiLockInfo.getUpdateTime());
+
 
     }
 
@@ -150,8 +153,10 @@ public class WiFiLockDetailActivity extends BaseActivity<IWifiLockDetailView, Wi
         wifiSn = intent.getStringExtra(KeyConstants.WIFI_SN);
         LogUtils.e("获取到的设备Sn是   " + wifiSn);
         wifiLockInfo = MyApplication.getInstance().getWifiLockInfoBySn(wifiSn);
-        if (!TextUtils.isEmpty(wifiLockInfo.getProductModel()))
-        ivLockIcon.setImageResource(BleLockUtils.getDetailImageByModel(wifiLockInfo.getProductModel()));
+        if (wifiLockInfo != null) {
+            if (!TextUtils.isEmpty(wifiLockInfo.getProductModel()))
+                ivLockIcon.setImageResource(BleLockUtils.getDetailImageByModel(wifiLockInfo.getProductModel()));
+        }
     }
 
     @Override

@@ -369,7 +369,10 @@ public class BleService extends Service {
                     String product_type_str;
 
                     byte[] mvalue = hex16.valueAt(0);
-                    //1 蓝牙模块(菜单绑定)  2蓝牙绑定     3菜单和直接绑定都支持 4Wi-Fi
+                    if(mvalue.length<16){
+                        return;//过滤无用蓝牙广播数据
+                    }
+                    //1蓝牙模块(菜单绑定)  2蓝牙绑定  3菜单和直接绑定都支持 4Wi-Fi
                     bindingType= mvalue[0];
                     //取出产品类型  1锁 2网关 3开关
                     productType= mvalue[1];
@@ -407,7 +410,6 @@ public class BleService extends Service {
                     itemList.setDeviceModel(product_type_str);
                     itemList.setBindingType(bindingType);
                     itemList.setProductType(productType);
-
 
 //                    deviceScanSubject.onNext(device);
                     deviceScanSubject.onNext( itemList);

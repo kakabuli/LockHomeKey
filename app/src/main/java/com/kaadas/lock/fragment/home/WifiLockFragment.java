@@ -95,10 +95,13 @@ public class WifiLockFragment extends BaseFragment<IWifiLockView, WifiLockPresen
         ButterKnife.bind(this, view);
         initRecycleView();
         wifiLockInfo = (WifiLockInfo) getArguments().getSerializable(KeyConstants.WIFI_LOCK_INFO);
-        wifiLockInfo = MyApplication.getInstance().getWifiLockInfoBySn(wifiLockInfo.getWifiSN());
-        mPresenter.getOpenCount(wifiLockInfo.getWifiSN());
-        mPresenter.getOperationRecord(wifiLockInfo.getWifiSN(), false);
-        initData();
+        if (wifiLockInfo!=null){
+            wifiLockInfo = MyApplication.getInstance().getWifiLockInfoBySn(wifiLockInfo.getWifiSN());
+            mPresenter.getOpenCount(wifiLockInfo.getWifiSN());
+            mPresenter.getOperationRecord(wifiLockInfo.getWifiSN(), false);
+            initData();
+        }
+
         rlIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
