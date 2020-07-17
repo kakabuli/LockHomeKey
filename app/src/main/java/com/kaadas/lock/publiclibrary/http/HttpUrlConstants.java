@@ -370,7 +370,7 @@ public class HttpUrlConstants {
 
 
     /**
-     * 获取开锁次数
+     * 设备信息修改
      */
     public static final String WIFI_LOCK_UPDATE_INFO = BASE_URL + "wifi/device/infoUpdate";
 

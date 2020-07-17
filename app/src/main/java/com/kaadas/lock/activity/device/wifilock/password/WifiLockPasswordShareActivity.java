@@ -13,6 +13,7 @@ import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
 import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.MyLog;
 import com.kaadas.lock.utils.Rsa;
 import com.kaadas.lock.utils.SharedUtil;
 import com.kaadas.lock.utils.ToastUtil;
@@ -26,7 +27,6 @@ import butterknife.OnClick;
 
 public class WifiLockPasswordShareActivity extends AppCompatActivity {
 
-
     @BindView(R.id.head_title)
     TextView headTitle;
     @BindView(R.id.tv_notice)
@@ -38,7 +38,6 @@ public class WifiLockPasswordShareActivity extends AppCompatActivity {
 
     private String password;
     private WifiLockInfo wifiLockInfo;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +53,6 @@ public class WifiLockPasswordShareActivity extends AppCompatActivity {
         initPassword();
     }
 
-
     public static void main(String[] args) {
 
     }
@@ -68,13 +66,20 @@ public class WifiLockPasswordShareActivity extends AppCompatActivity {
             }
         }
         tvPassword.setText(temp);
+        MyLog.getInstance().save("--kaadas调试--UI显示的临时密码==" + temp);
+
     }
 
-
     private String getPassword() {
+
         String wifiSN = wifiLockInfo.getWifiSN();
         String randomCode = wifiLockInfo.getRandomCode();
         String time = (System.currentTimeMillis() / 1000 / 60 / 5) + "";
+
+        MyLog.getInstance().save("--kaadas调试--wifiSN  " + wifiSN);
+        MyLog.getInstance().save("--kaadas调试--randomCode  " + randomCode);
+        MyLog.getInstance().save("--kaadas调试--System.currentTimeMillis()  " + System.currentTimeMillis());
+
         String content = wifiSN + randomCode + time;
         LogUtils.e("--kaadas--服务器获取的数据是  " + randomCode);
 

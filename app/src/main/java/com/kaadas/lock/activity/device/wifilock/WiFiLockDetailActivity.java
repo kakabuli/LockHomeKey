@@ -80,7 +80,6 @@ public class WiFiLockDetailActivity extends BaseActivity<IWifiLockDetailView, Wi
     private List<WifiLockFunctionBean> supportFunctions;
     private List<WifiLockShareResult.WifiLockShareUser> shareUsers;
 
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -121,9 +120,7 @@ public class WiFiLockDetailActivity extends BaseActivity<IWifiLockDetailView, Wi
             dealWithPower(wifiLockInfo.getPower(), wifiLockInfo.getUpdateTime());
         }
 
-
     }
-
 
     @Override
     protected void onStart() {

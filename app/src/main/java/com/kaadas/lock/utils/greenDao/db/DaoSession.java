@@ -9,6 +9,7 @@ import org.greenrobot.greendao.identityscope.IdentityScopeType;
 import org.greenrobot.greendao.internal.DaoConfig;
 
 import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
+import com.kaadas.lock.publiclibrary.bean.ProductInfo;
 import com.kaadas.lock.utils.greenDao.bean.GatewayLockServiceInfo;
 import com.kaadas.lock.utils.greenDao.bean.CateEyeInfoBase;
 import com.kaadas.lock.utils.greenDao.bean.GatewayBaseInfo;
@@ -27,6 +28,7 @@ import com.kaadas.lock.utils.greenDao.bean.DBOpenLockRecord;
 import com.kaadas.lock.utils.greenDao.bean.HistoryInfo;
 
 import com.kaadas.lock.utils.greenDao.db.WifiLockInfoDao;
+import com.kaadas.lock.utils.greenDao.db.ProductInfoDao;
 import com.kaadas.lock.utils.greenDao.db.GatewayLockServiceInfoDao;
 import com.kaadas.lock.utils.greenDao.db.CateEyeInfoBaseDao;
 import com.kaadas.lock.utils.greenDao.db.GatewayBaseInfoDao;
@@ -54,6 +56,7 @@ import com.kaadas.lock.utils.greenDao.db.HistoryInfoDao;
 public class DaoSession extends AbstractDaoSession {
 
     private final DaoConfig wifiLockInfoDaoConfig;
+    private final DaoConfig productInfoDaoConfig;
     private final DaoConfig gatewayLockServiceInfoDaoConfig;
     private final DaoConfig cateEyeInfoBaseDaoConfig;
     private final DaoConfig gatewayBaseInfoDaoConfig;
@@ -72,6 +75,7 @@ public class DaoSession extends AbstractDaoSession {
     private final DaoConfig historyInfoDaoConfig;
 
     private final WifiLockInfoDao wifiLockInfoDao;
+    private final ProductInfoDao productInfoDao;
     private final GatewayLockServiceInfoDao gatewayLockServiceInfoDao;
     private final CateEyeInfoBaseDao cateEyeInfoBaseDao;
     private final GatewayBaseInfoDao gatewayBaseInfoDao;
@@ -95,6 +99,9 @@ public class DaoSession extends AbstractDaoSession {
 
         wifiLockInfoDaoConfig = daoConfigMap.get(WifiLockInfoDao.class).clone();
         wifiLockInfoDaoConfig.initIdentityScope(type);
+
+        productInfoDaoConfig = daoConfigMap.get(ProductInfoDao.class).clone();
+        productInfoDaoConfig.initIdentityScope(type);
 
         gatewayLockServiceInfoDaoConfig = daoConfigMap.get(GatewayLockServiceInfoDao.class).clone();
         gatewayLockServiceInfoDaoConfig.initIdentityScope(type);
@@ -145,6 +152,7 @@ public class DaoSession extends AbstractDaoSession {
         historyInfoDaoConfig.initIdentityScope(type);
 
         wifiLockInfoDao = new WifiLockInfoDao(wifiLockInfoDaoConfig, this);
+        productInfoDao = new ProductInfoDao(productInfoDaoConfig, this);
         gatewayLockServiceInfoDao = new GatewayLockServiceInfoDao(gatewayLockServiceInfoDaoConfig, this);
         cateEyeInfoBaseDao = new CateEyeInfoBaseDao(cateEyeInfoBaseDaoConfig, this);
         gatewayBaseInfoDao = new GatewayBaseInfoDao(gatewayBaseInfoDaoConfig, this);
@@ -163,6 +171,7 @@ public class DaoSession extends AbstractDaoSession {
         historyInfoDao = new HistoryInfoDao(historyInfoDaoConfig, this);
 
         registerDao(WifiLockInfo.class, wifiLockInfoDao);
+        registerDao(ProductInfo.class, productInfoDao);
         registerDao(GatewayLockServiceInfo.class, gatewayLockServiceInfoDao);
         registerDao(CateEyeInfoBase.class, cateEyeInfoBaseDao);
         registerDao(GatewayBaseInfo.class, gatewayBaseInfoDao);
@@ -183,6 +192,7 @@ public class DaoSession extends AbstractDaoSession {
     
     public void clear() {
         wifiLockInfoDaoConfig.clearIdentityScope();
+        productInfoDaoConfig.clearIdentityScope();
         gatewayLockServiceInfoDaoConfig.clearIdentityScope();
         cateEyeInfoBaseDaoConfig.clearIdentityScope();
         gatewayBaseInfoDaoConfig.clearIdentityScope();
@@ -203,6 +213,10 @@ public class DaoSession extends AbstractDaoSession {
 
     public WifiLockInfoDao getWifiLockInfoDao() {
         return wifiLockInfoDao;
+    }
+
+    public ProductInfoDao getProductInfoDao() {
+        return productInfoDao;
     }
 
     public GatewayLockServiceInfoDao getGatewayLockServiceInfoDao() {

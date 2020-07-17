@@ -20,6 +20,7 @@ import com.kaadas.lock.activity.device.wifilock.add.WifiLockHelpActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.mvp.presenter.wifilock.WifiLockBleToWifiSetUpPresenter;
 import com.kaadas.lock.mvp.view.wifilock.IWifiLockBleToWifiSetUpView;
+import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.KeyConstants;
@@ -300,10 +301,18 @@ public class WifiLockAddNewBLEWIFICSwitchCheckWifiActivity extends BaseActivity<
 
     private void onSuccess() {
         LogUtils.e("--kaadas--开始往服务器发送绑定命令");
-//        WifiUtils.getInstance(MyApplication.getInstance()).disableWiFi();
-        mPresenter.bindDevice(wifiSn, wifiSn, MyApplication.getInstance().getUid(),randomCode, sSsid, func);
 
-            runOnUiThread(new Runnable() {
+        WifiLockInfo wifiLockInfo = MyApplication.getInstance().getWifiLockInfoBySn(wifiSn);
+        if (wifiLockInfo != null && wifiLockInfo.getIsAdmin() == 1) {
+            LogUtils.e("--kaadas--更新密码因子=="+randomCode);
+            //更新密码因子
+            mPresenter.update(wifiSn, randomCode, wifiSn, func);
+        } else {
+            LogUtils.e("--kaadas--绑定设备=="+randomCode);
+            //绑定设备
+            mPresenter.bindDevice(wifiSn, wifiSn, MyApplication.getInstance().getUid(), randomCode, sSsid, func);
+        }
+        runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 changeState(3);
@@ -311,14 +320,16 @@ public class WifiLockAddNewBLEWIFICSwitchCheckWifiActivity extends BaseActivity<
         });
     }
 
+    public void toReInputWifi() {
+        secondThread.start();
+    }
+
     @Override
     public void onBindSuccess(String wifiSn) {
         changeState(4);
-
         Intent intent = new Intent(this, WifiLockAddBleSuccessActivity.class);
         intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
         startActivity(intent);
-
     }
 
     @Override
@@ -335,16 +346,15 @@ public class WifiLockAddNewBLEWIFICSwitchCheckWifiActivity extends BaseActivity<
         Intent intent = new Intent(this, WifiLockAddNewBindFailedActivity.class);
         intent.putExtra(KeyConstants.WIFI_LOCK_SETUP_IS_AP, true);
         startActivity(intent);
-
     }
-
+    //收到模块配网成功命令
     @Override
-    public void onUpdateSuccess() {
+    public void onMatchingSuccess() {
         onSuccess();
     }
-
+    //收到模块配网失败命令
     @Override
-    public void onUpdateFailed() {
+    public void onMatchingFailed() {
 
         if (times<5) {
             //信息
@@ -402,15 +412,34 @@ public class WifiLockAddNewBLEWIFICSwitchCheckWifiActivity extends BaseActivity<
                 }
             });
         }
-
     }
-    public void toReInputWifi() {
-        secondThread.start();
 
+    @Override
+    public void onMatchingThrowable(Throwable throwable) {
     }
+
+    @Override
+    public void onUpdateSuccess(String wifiSn){
+        changeState(4);
+        Intent intent = new Intent(this, WifiLockAddBleSuccessActivity.class);
+        intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
+        startActivity(intent);
+    }
+
+    @Override
+    public void onUpdateFailed(BaseResult baseResult){
+        Toast.makeText(this, R.string.bind_failed+"--1", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(this, WifiLockAddNewBindFailedActivity.class);
+        intent.putExtra(KeyConstants.WIFI_LOCK_SETUP_IS_AP, true);
+        startActivity(intent);
+    }
+
     @Override
     public void onUpdateThrowable(Throwable throwable) {
-
+        Toast.makeText(this, R.string.bind_failed+"--2", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(this, WifiLockAddNewBindFailedActivity.class);
+        intent.putExtra(KeyConstants.WIFI_LOCK_SETUP_IS_AP, true);
+        startActivity(intent);
     }
 
     @Override

@@ -26,6 +26,7 @@ import com.kaadas.lock.publiclibrary.bean.CateEyeInfo;
 import com.kaadas.lock.publiclibrary.bean.GatewayInfo;
 import com.kaadas.lock.publiclibrary.bean.GwLockInfo;
 import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
+import com.kaadas.lock.publiclibrary.bean.ProductInfo;
 import com.kaadas.lock.publiclibrary.http.XiaokaiNewServiceImp;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.result.CheckOTAResult;
@@ -55,6 +56,7 @@ import com.kaadas.lock.utils.ftp.GeTui;
 import com.kaadas.lock.utils.greenDao.db.DaoManager;
 import com.kaadas.lock.utils.greenDao.db.DaoMaster;
 import com.kaadas.lock.utils.greenDao.db.DaoSession;
+import com.kaadas.lock.utils.greenDao.db.ProductInfoDao;
 import com.kaadas.lock.utils.greenDao.db.WifiLockInfoDao;
 import com.kaadas.lock.utils.greenDao.manager.WifiLockInfoManager;
 import com.kaidishi.lock.service.GeTuiIntentService;
@@ -543,7 +545,7 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
                             allBindDeviceDisposable.dispose();
                         }
                         String payload = mqttData.getPayload();
-                        LogUtils.e("--kaadas--payload=="+payload);
+                        MyLog.getInstance().save("--kaadas调试--payload=="+payload);
 
                         allBindDevices = new Gson().fromJson(payload, AllBindDevices.class);
 
@@ -569,14 +571,23 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
                             homeShowDevices = allBindDevices.getHomeShow();
                             LogUtils.e("设备更新  application");
                             getDevicesFromServer.onNext(allBindDevices);
-                            //缓存WiFi锁设备
-                            LogUtils.e("--kaadas--allBindDevices.getData().getWifiList()=="+allBindDevices.getData().getWifiList());
 
+                            //缓存WiFi锁设备信息
                             if (allBindDevices.getData() != null && allBindDevices.getData().getWifiList() != null) {
+                                LogUtils.e("--kaadas--allBindDevices.getData().getWifiList=="+allBindDevices.getData().getWifiList());
                                 List<WifiLockInfo> wifiList = allBindDevices.getData().getWifiList();
                                 WifiLockInfoDao wifiLockInfoDao = getDaoWriteSession().getWifiLockInfoDao();
                                 wifiLockInfoDao.deleteAll();
                                 wifiLockInfoDao.insertInTx(wifiList);
+                            }
+
+                            //缓存产品型号信息列表，主要是图片下载地址（下载过的图片不再下载）
+                            if (allBindDevices.getData() != null && allBindDevices.getData().getProductInfoList() != null) {
+                                LogUtils.e("--kaadas--allBindDevices.getData().getProductInfoList=="+allBindDevices.getData().getProductInfoList());
+                                List<ProductInfo> productList = allBindDevices.getData().getProductInfoList();
+                                ProductInfoDao productInfoDao = getDaoWriteSession().getProductInfoDao();
+                                productInfoDao.deleteAll();
+                                productInfoDao.insertInTx(productList);
                             }
                         }
                     }
@@ -602,7 +613,6 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
         }
         return null;
     }
-
 
     public void updateWifiLockInfo(String sn, WifiLockActionBean actionBean) {
         if (homeShowDevices != null) {
@@ -992,11 +1002,7 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
                     public void onSubscribe1(Disposable d) {
 
                     }
-                })
-
-        ;
-
-
+                });
     }
 
     private void closeAndroidPDialog(){
@@ -1020,6 +1026,64 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
         }
     }
 
+    public ProductInfo getProductInfoByDevelopmentModel(String developmentModel) {
+//        if (homeShowDevices != null) {
+//            for (int i = homeShowDevices.size() - 1; i >= 0; i--) {
+//                HomeShowBean homeShowBean = homeShowDevices.get(i);
+//                //wifi锁
+//                if (homeShowBean.getDeviceType() == HomeShowBean.TYPE_WIFI_LOCK) {
+//                    ProductInfo productInfo = (ProductInfo) homeShowBean.getObject();
+//                    if (productInfo.getDevelopmentModel().equals(developmentModel)) {
+//                        return productInfo;
+//                    }
+//                    WifiLockInfo wifiLockInfo = (WifiLockInfo) homeShowBean.getObject();
+//                    if (wifiLockInfo.getProductModel().equals(developmentModel)) {
+//                        return productInfo;
+//                    }
+//                }
+////                if (homeShowDevices != null) {
+////                    for (int i = homeShowDevices.size() - 1; i >= 0; i--) {
+////                        HomeShowBean homeShowBean = homeShowDevices.get(i);
+////                        if (homeShowBean.getDeviceType() == HomeShowBean.TYPE_WIFI_LOCK) {
+////                            WifiLockInfo wifiLockInfo = (WifiLockInfo) homeShowBean.getObject();
+////                            if (wifiLockInfo.getWifiSN().equals(sn)) {
+////                                return wifiLockInfo;
+////                            }
+////                        }
+////                    }
+////                }
+//                //蓝牙锁
+//                if (homeShowBean.getDeviceType() == HomeShowBean.TYPE_BLE_LOCK) {
+////                    ProductInfo productInfo = (ProductInfo) homeShowBean.getObject();
+////                    if (productInfo.getDevelopmentModel().equals(developmentModel)) {
+////                        return productInfo;
+////                    }
+//                }
+//                //网关锁
+//                if (homeShowBean.getDeviceType() == HomeShowBean.TYPE_GATEWAY_LOCK) {
+////                    ProductInfo productInfo = (ProductInfo) homeShowBean.getObject();
+////                    if (productInfo.getDevelopmentModel().equals(developmentModel)) {
+////                        return productInfo;
+////                    }
+//                }
+//                //猫眼
+//                if (homeShowBean.getDeviceType() == HomeShowBean.TYPE_CAT_EYE) {
+////                    ProductInfo productInfo = (ProductInfo) homeShowBean.getObject();
+////                    if (productInfo.getDevelopmentModel().equals(developmentModel)) {
+////                        return productInfo;
+////                    }
+//                }
+//                //网关
+//                if (homeShowBean.getDeviceType() == HomeShowBean.TYPE_GATEWAY) {
+////                    ProductInfo productInfo = (ProductInfo) homeShowBean.getObject();
+////                    if (productInfo.getDevelopmentModel().equals(developmentModel)) {
+////                        return productInfo;
+////                    }
+//                }
+//            }
+//        }
+        return null;
+    }
 }
 
 

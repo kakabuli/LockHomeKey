@@ -60,11 +60,14 @@ public class OfflinePasswordFactorManager {
         crc32.update(pwd);
         long localCrc = crc32.getValue();
         byte[] bytes = Rsa.int2BytesArray((int) localCrc);
-        LogUtils.e("--kaadas--校验和 本地CRC  " + Rsa.bytesToHexString(bytes) + "   锁端CRC  " + Rsa.bytesToHexString(crc));
+        LogUtils.e("--kaadas--密码因子校验--本地CRC  " + Rsa.bytesToHexString(bytes) + "   锁端CRC  " + Rsa.bytesToHexString(crc));
         if (bytes[0] != crc[0] || bytes[1] != crc[1] || bytes[2] != crc[2] || bytes[3] != crc[3]) { //校验失败
+//            MyLog.getInstance().save("--kaadas调试--配网过程密码因子校验--校验失败");
             wifiResult.result = -2;
             return wifiResult;
         }
+//        MyLog.getInstance().save("--kaadas调试--配网过程密码因子校验--校验成功");
+        MyLog.getInstance().save("--kaadas调试--配网过程解密后的密码因子==" + Rsa.bytesToHexString(pwd));
         wifiResult.password = pwd;
         wifiResult.wifiSn = sn;
         return wifiResult;

@@ -458,11 +458,9 @@ public class BleLockUtils {
         LogUtils.e("获取到的  功能集是3否包含卡片      " + integers.contains(9));
         functionBeans.add(new WifiLockFunctionBean(MyApplication.getInstance().getString(R.string.offline_password), R.mipmap.bluetooth_password, TYPE_OFFLINE_PASSWORD));
         if (integers.contains(26)) {
-
             functionBeans.add(new WifiLockFunctionBean(MyApplication.getInstance().getString(R.string.face_password), R.mipmap.face_password, TYPE_FACE_PASSWORD));
         }
         if (integers.contains(7)) {
-
             functionBeans.add(new WifiLockFunctionBean(MyApplication.getInstance().getString(R.string.password), R.mipmap.bluetooth_password, TYPE_PASSWORD));
         }
         if (integers.contains(8)) {

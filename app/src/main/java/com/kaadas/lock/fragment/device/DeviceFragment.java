@@ -43,6 +43,7 @@ import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.publiclibrary.bean.CateEyeInfo;
 import com.kaadas.lock.publiclibrary.bean.GatewayInfo;
 import com.kaadas.lock.publiclibrary.bean.GwLockInfo;
+import com.kaadas.lock.publiclibrary.bean.ProductInfo;
 import com.kaadas.lock.publiclibrary.bean.ServerGatewayInfo;
 import com.kaadas.lock.publiclibrary.bean.ServerGwDevice;
 import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
@@ -115,6 +116,8 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
     private String uid;
     private DaoSession daoSession;
     private MqttService mqttService;
+
+    private ProductInfo productInfo;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -339,6 +342,10 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                         case HomeShowBean.TYPE_WIFI_LOCK:
                             WifiLockInfo wifiLockInfo = (WifiLockInfo) homeShowBean.getObject();
                             mDeviceList.add(homeShowBean);
+//                            wifiLockInfo = MyApplication.getInstance().getWifiLockInfoBySn(wifiSn);
+//                            productInfo = MyApplication.getInstance().getProductInfoByDevelopmentModel(wifiLockInfo.getProductModel());
+//                            LogUtils.e("--kaadas--productInfo.getAuthUrl=="+productInfo.getAuthUrl());
+
                             break;
                     }
                 }

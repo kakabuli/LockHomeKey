@@ -23,20 +23,36 @@ public interface IWifiLockBleToWifiSetUpView extends IBaseView {
     void onBindThrowable(Throwable throwable);
 
     /**
+     * 锁重新配网成功
+     */
+
+    void onUpdateSuccess(String wifiSn);
+
+    /**
+     * 锁重新配网失败
+     */
+    void onUpdateFailed(BaseResult baseResult);
+
+    /**
+     * 锁重新配网异常
+     */
+    void onUpdateThrowable(Throwable throwable);
+
+    /**
      * 锁配网成功
      */
 
-    void onUpdateSuccess();
+    void onMatchingSuccess();
 
     /**
      * 锁配网失败
      */
-    void onUpdateFailed() throws InterruptedException;
+    void onMatchingFailed();
 
     /**
      * 锁配网异常
      */
-    void onUpdateThrowable(Throwable throwable);
+    void onMatchingThrowable(Throwable throwable);
 
 
     /**

@@ -28,6 +28,7 @@ import com.kaadas.lock.publiclibrary.http.util.RxjavaHelper;
 import com.kaadas.lock.utils.GpsUtil;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.MyLog;
 import com.kaadas.lock.utils.NetUtil;
 import com.kaadas.lock.utils.OfflinePasswordFactorManager;
 import com.kaadas.lock.utils.Rsa;
@@ -342,7 +343,8 @@ public class WifiLockAddNewBLEWIFiSwitchActivity extends BaseActivity<IBindBleVi
 //                    fifthThread.start();
                     changeState(5);
                     handler.postDelayed(runnable, 2000);
-                    LogUtils.e("--kaadas--合并密码因子数据==    " + Rsa.bytesToHexString(passwordFactor));
+//                    MyLog.getInstance().save("--kaadas调试--蓝牙0x92命令交互完成后的合并的密码因子数据==" + Rsa.bytesToHexString(passwordFactor));
+//                    LogUtils.e("--kaadas--合并密码因子数据==    " + Rsa.bytesToHexString(passwordFactor));
                     break;
 //                case 4:
 //
