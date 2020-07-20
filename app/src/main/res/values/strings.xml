@@ -1666,6 +1666,8 @@
     <string name="unknow_qr">扫描的二维码不符合规定</string>
     <string name="did_not_discover_lock">未搜索到门锁，请重新扫描或返回添加设备扫码添加</string>
     <string name="to_change_wifi">更换网络</string>
+    <string name="have_not_set_time">你还没有设置生效时段，请重新设置</string>
+
 
 
 </resources>

@@ -10,6 +10,10 @@ import android.support.v7.app.AppCompatActivity;
 import com.google.gson.annotations.SerializedName;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
+import com.kaadas.lock.activity.device.wifilock.newadd.WifiLockAddBLEFailedActivity;
+import com.kaadas.lock.activity.device.wifilock.newadd.WifiLockAddNewBLEWIFICSwitchCheckWifiActivity;
+import com.kaadas.lock.activity.device.wifilock.newadd.WifiLockAddNewCheckWifiActivity;
+import com.kaadas.lock.activity.device.wifilock.newadd.WifiLockAddNewFirstActivity;
 import com.kaadas.lock.activity.device.wifilock.newadd.WifiLockAddToSetSwitchActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.mvp.presenter.singlefireswitchpresenter.SingleFireSwitchSettingPresenter;
@@ -18,6 +22,7 @@ import com.kaadas.lock.publiclibrary.bean.SingleFireSwitchInfo;
 import com.kaadas.lock.publiclibrary.bean.SwitchNumberBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.AddSingleFireSwitchBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.BindingSingleFireSwitchBean;
+import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.CloneObjectUtils;
 import com.kaadas.lock.utils.DensityUtil;
 
@@ -83,7 +88,6 @@ public class SwipchLinkActivity extends BaseActivity<SingleFireSwitchView, Singl
     private SwitchNumberBean switchNumberBean;
     @SerializedName("switchArray")
     private List<SwitchNumberBean> switchNumber = new ArrayList<>();
-
 
     private static final int TO_SET_NICK_NAME_REQUEST_CODE = 10101;
     private static final int TO_SET_TIME_REQUEST_CODE = 10102;
@@ -454,15 +458,63 @@ public class SwipchLinkActivity extends BaseActivity<SingleFireSwitchView, Singl
                     finish();
                     break;
                 case R.id.swipch_sure_to_perform:
+                    LogUtils.e("--kaadas--swipch_one_text==" + swipch_one_text.getText());
+
+                    if (swipch_one.getVisibility() == View.VISIBLE){
+                        if (swipch_one_text.getText().equals("00:00-00:00")||swipch_one_text == null){
+                            haveNotSetTime();
+                            break;
+                        }
+                    }
+                    if (swipch_two.getVisibility() == View.VISIBLE){
+                        if (swipch_two_text.getText().equals("00:00-00:00")||swipch_two_text == null){
+                            haveNotSetTime();
+                            break;
+                        }
+                    }
+                    if (swipch_three.getVisibility() == View.VISIBLE){
+                        if (swipch_three_text.getText().equals("00:00-00:00")||swipch_three_text == null){
+                            haveNotSetTime();
+                            break;
+                        }
+
+                    }
 
                     intent = new Intent(this, WifiLockAddToSetSwitchActivity.class);
                     intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
                     intent.putExtra(KeyConstants.WIFI_LOCK_INFO_CHANGE, wifiLockInfoChange);
 //                    startActivity(intent);
-                    startActivityForResult(intent,TO_SET_ALL_REQUEST_CODE);
+                    startActivityForResult(intent, TO_SET_ALL_REQUEST_CODE);
+
                     break;
             }
         }
+    }
+    public void haveNotSetTime() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+
+                AlertDialogUtil.getInstance().singleButtonNoTitleDialogNoLine(SwipchLinkActivity.this, getString(R.string.have_not_set_time),
+                        getString(R.string.hao_de), "#1F96F7", new AlertDialogUtil.ClickListener() {
+                            @Override
+                            public void left() {
+                            }
+
+                            @Override
+                            public void right() {
+                            }
+
+                            @Override
+                            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                            }
+
+                            @Override
+                            public void afterTextChanged(String toString) {
+                            }
+                        });
+            }
+        });
     }
     @Override
     public void settingDeviceSuccess() {
