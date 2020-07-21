@@ -357,7 +357,7 @@ public class BleService extends Service {
                 SparseArray<byte[]> hex16=result.getScanRecord().getManufacturerSpecificData();
                 //设备名
                 String deviceName = device.getName();
-                LogUtils.e("--kaadas--device.getName()==",device.getName());
+//                LogUtils.e("--kaadas--device.getName()==",device.getName());
 
 //                //新蓝牙广播协议带SN
                 if (hex16.size()>0){

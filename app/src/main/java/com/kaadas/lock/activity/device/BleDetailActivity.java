@@ -20,6 +20,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.device.bluetooth.BluetoothMoreActivity;
 import com.kaadas.lock.activity.device.bluetooth.BluetoothSharedDeviceManagementActivity;
@@ -35,6 +38,8 @@ import com.kaadas.lock.mvp.presenter.ble.BleDeviceDetailPresenter;
 import com.kaadas.lock.mvp.view.IDeviceDetailView;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.publiclibrary.bean.ForeverPassword;
+import com.kaadas.lock.publiclibrary.bean.ProductInfo;
+import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
 import com.kaadas.lock.publiclibrary.ble.BleProtocolFailedException;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.result.GetPasswordResult;
@@ -50,6 +55,7 @@ import com.kaadas.lock.utils.StringUtil;
 import com.kaadas.lock.utils.ToastUtil;
 import com.kaadas.lock.widget.MyGridItemDecoration;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeoutException;
 
@@ -139,6 +145,11 @@ public class BleDetailActivity extends BaseBleActivity<IDeviceDetailView, BleDev
     private boolean isOpening = false;
     private Handler handler = new Handler();
     String lockType;
+    private WifiLockInfo wifiLockInfo;
+    private List<ProductInfo> productList = new ArrayList<>();
+    private RequestOptions options;
+
+
     private Runnable lockRunnable = new Runnable() {
         @Override
         public void run() {
@@ -168,6 +179,8 @@ public class BleDetailActivity extends BaseBleActivity<IDeviceDetailView, BleDev
         setContentView(R.layout.activity_bluetooth_lock_function);
         LogUtils.e("全功能界面  2 ");
         ButterKnife.bind(this);
+        productList = MyApplication.getInstance().getProductInfos();
+
         Intent intent = getIntent();
         changeLockIcon(intent);
         bleLockInfo = mPresenter.getBleLockInfo();
@@ -201,6 +214,12 @@ public class BleDetailActivity extends BaseBleActivity<IDeviceDetailView, BleDev
         lockType = bleLockInfo.getServerLockInfo().getModel();
         if (!TextUtils.isEmpty(lockType)) {
             tvType.setText(StringUtil.getSubstringFive(lockType) );
+            //适配服务器上的产品型号，适配不上则显示锁本地的研发型号
+            for (ProductInfo productInfo:productList) {
+                if (productInfo.getDevelopmentModel().contentEquals(lockType)){
+                    tvType.setText(productInfo.getProductModel());
+                }
+            }
         }
     }
 
@@ -208,6 +227,22 @@ public class BleDetailActivity extends BaseBleActivity<IDeviceDetailView, BleDev
         String model = intent.getStringExtra(KeyConstants.DEVICE_TYPE);
         LogUtils.e("获取到的设备型号是   "+ model);
         ivLockIcon.setImageResource(BleLockUtils.getDetailImageByModel(model));
+        //本地图片有对应的产品则不获取缓存的产品型号图片，缓存没有则选择尝试下载
+        if (BleLockUtils.getDetailImageByModel(model) == R.mipmap.bluetooth_lock_default){
+            options = new RequestOptions()
+                    .placeholder(R.mipmap.bluetooth_lock_default)      //加载成功之前占位图
+                    .error(R.mipmap.bluetooth_lock_default)      //加载错误之后的错误图
+                    .fitCenter();//指定图片的缩放类型为fitCenter （等比例缩放图片，宽或者是高等于ImageView的宽或者是高。）
+
+            for (ProductInfo productInfo:productList) {
+                if (productInfo.getDevelopmentModel().contentEquals(model)){
+                    //LogUtils.e("--kaadas--productList.getDevelopmentModel==" + productInfo.getDevelopmentModel());
+                    //LogUtils.e("--kaadas--productList.DeviceListUrl==" + productInfo.getAdminUrl());
+                    //匹配型号获取下载地址
+                    Glide.with(this).load(productInfo.getAdminUrl()).apply(options).into(ivLockIcon);
+                }
+            }
+        }
     }
 
     @Override

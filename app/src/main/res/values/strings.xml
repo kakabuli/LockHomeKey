@@ -132,7 +132,7 @@
     <string name="pwd_resetting_success">密码重置成功</string>
     <string name="my_device">我的设备</string>
     <string name="you_no_device">您还没有设备哦</string>
-    <string name="lockNickName">Kaadas K9 智能锁</string>
+    <string name="lockNickName">Kaadas 智能锁</string>
     <string name="device_power">电量</string>
     <string name="add_device">添加设备</string>
     <string name="device_zigbee">ZigBee</string>

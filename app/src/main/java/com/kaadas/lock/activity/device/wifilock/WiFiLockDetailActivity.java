@@ -11,6 +11,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.kaadas.lock.MyApplication;
@@ -26,6 +28,7 @@ import com.kaadas.lock.bean.WifiLockFunctionBean;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.mvp.presenter.wifilock.WifiLockDetailPresenter;
 import com.kaadas.lock.mvp.view.wifilock.IWifiLockDetailView;
+import com.kaadas.lock.publiclibrary.bean.ProductInfo;
 import com.kaadas.lock.publiclibrary.bean.WiFiLockPassword;
 import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
@@ -39,6 +42,7 @@ import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.StringUtil;
 import com.kaadas.lock.widget.MyGridItemDecoration;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -77,14 +81,18 @@ public class WiFiLockDetailActivity extends BaseActivity<IWifiLockDetailView, Wi
     private String wifiSn;
     private WifiLockInfo wifiLockInfo;
     private WiFiLockPassword wiFiLockPassword;
+    private RequestOptions options;
     private List<WifiLockFunctionBean> supportFunctions;
     private List<WifiLockShareResult.WifiLockShareUser> shareUsers;
+    private List<ProductInfo> productList = new ArrayList<>();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wi_fi_lock_detail);
         ButterKnife.bind(this);
+        productList = MyApplication.getInstance().getProductInfos();
+
         Intent intent = getIntent();
         changeLockIcon(intent);
         ivBack.setOnClickListener(this);
@@ -143,6 +151,15 @@ public class WiFiLockDetailActivity extends BaseActivity<IWifiLockDetailView, Wi
         if (!TextUtils.isEmpty(lockType)) {
             tvLockType.setText(lockType.contentEquals("K13")?"型号: "+getString(R.string.lan_bo_ji_ni):"型号: "+StringUtil.getSubstringFive(lockType));
 
+            //适配服务器上的产品型号，适配不上则显示锁本地的研发型号
+            for (ProductInfo productInfo:productList) {
+
+                if (productInfo.getDevelopmentModel().contentEquals(lockType)){
+                    LogUtils.e("--kaadas--productInfo.getProductModel()==" + productInfo.getProductModel());
+                    tvLockType.setText(productInfo.getProductModel());
+                }
+            }
+
         }
     }
 
@@ -150,9 +167,28 @@ public class WiFiLockDetailActivity extends BaseActivity<IWifiLockDetailView, Wi
         wifiSn = intent.getStringExtra(KeyConstants.WIFI_SN);
         LogUtils.e("获取到的设备Sn是   " + wifiSn);
         wifiLockInfo = MyApplication.getInstance().getWifiLockInfoBySn(wifiSn);
+
         if (wifiLockInfo != null) {
-            if (!TextUtils.isEmpty(wifiLockInfo.getProductModel()))
+            if (!TextUtils.isEmpty(wifiLockInfo.getProductModel())){
                 ivLockIcon.setImageResource(BleLockUtils.getDetailImageByModel(wifiLockInfo.getProductModel()));
+                String model = wifiLockInfo.getProductModel();
+                //本地图片有对应的产品则不获取缓存的产品型号图片，缓存没有则选择尝试下载
+                if (BleLockUtils.getDetailImageByModel(model) == R.mipmap.bluetooth_lock_default){
+                    options = new RequestOptions()
+                        .placeholder(R.mipmap.bluetooth_lock_default)      //加载成功之前占位图
+                        .error(R.mipmap.bluetooth_lock_default)      //加载错误之后的错误图
+                        .fitCenter();//指定图片的缩放类型为fitCenter （等比例缩放图片，宽或者是高等于ImageView的宽或者是高。）
+
+                    for (ProductInfo productInfo:productList) {
+                        if (productInfo.getDevelopmentModel().contentEquals(model)){
+//                                LogUtils.e("--kaadas--productList.getDevelopmentModel==" + productInfo.getDevelopmentModel());
+//                                LogUtils.e("--kaadas--productList.DeviceListUrl==" + productInfo.getAdminUrl());
+                            //匹配型号获取下载地址
+                            Glide.with(this).load(productInfo.getAdminUrl()).apply(options).into(ivLockIcon);
+                        }
+                    }
+                }
+            }
         }
     }
 

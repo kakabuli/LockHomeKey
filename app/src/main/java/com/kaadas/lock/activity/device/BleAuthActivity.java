@@ -19,6 +19,9 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.MainActivity;
 import com.kaadas.lock.activity.device.bluetooth.BleDeviceInfoActivity;
@@ -28,6 +31,7 @@ import com.kaadas.lock.mvp.mvpbase.BaseBleActivity;
 import com.kaadas.lock.mvp.presenter.ble.OldAndAuthBleDetailPresenter;
 import com.kaadas.lock.mvp.view.IOldBleDetailView;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
+import com.kaadas.lock.publiclibrary.bean.ProductInfo;
 import com.kaadas.lock.publiclibrary.ble.BleProtocolFailedException;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.util.HttpUtils;
@@ -41,6 +45,8 @@ import com.kaadas.lock.utils.ToastUtil;
 
 import net.sdvn.cmapi.util.LogUtils;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeoutException;
 
 import butterknife.BindView;
@@ -77,12 +83,15 @@ public class BleAuthActivity extends BaseBleActivity<IOldBleDetailView, OldAndAu
     private Runnable lockRunnable;
     private boolean isOpening = false;
     private Handler handler = new Handler();
+    private List<ProductInfo> productList = new ArrayList<>();
+    private RequestOptions options;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bluetooth_lock_authorization);
         ButterKnife.bind(this);
+        productList = MyApplication.getInstance().getProductInfos();
         Intent intent = getIntent();
         changeLockIcon(intent);
         bleLockInfo = mPresenter.getBleLockInfo();
@@ -134,12 +143,34 @@ public class BleAuthActivity extends BaseBleActivity<IOldBleDetailView, OldAndAu
         String lockType = bleLockInfo.getServerLockInfo().getModel();
         if (!TextUtils.isEmpty(lockType)) {
             tvType.setText(StringUtil.getSubstringFive(lockType));
+            //适配服务器上的产品型号，适配不上则显示锁本地的研发型号
+            for (ProductInfo productInfo:productList) {
+                if (productInfo.getDevelopmentModel().contentEquals(lockType)){
+                    tvType.setText(productInfo.getProductModel());
+                }
+            }
         }
     }
 
     private void changeLockIcon(Intent intent) {
         String model = intent.getStringExtra(KeyConstants.DEVICE_TYPE);
         ivLockIcon.setImageResource(BleLockUtils.getAuthorizationImageByModel(model));
+        //本地图片有对应的产品则不获取缓存的产品型号图片，缓存没有则选择尝试下载
+        if (BleLockUtils.getAuthorizationImageByModel(model) == R.mipmap.bluetooth_authorization_lock_default){
+            options = new RequestOptions()
+                    .placeholder(R.mipmap.bluetooth_authorization_lock_default)      //加载成功之前占位图
+                    .error(R.mipmap.bluetooth_authorization_lock_default)      //加载错误之后的错误图
+                    .fitCenter();//指定图片的缩放类型为fitCenter （等比例缩放图片，宽或者是高等于ImageView的宽或者是高。）
+
+            for (ProductInfo productInfo:productList) {
+                if (productInfo.getDevelopmentModel().contentEquals(model)){
+                    //LogUtils.e("--kaadas--productList.getDevelopmentModel==" + productInfo.getDevelopmentModel());
+                    //LogUtils.e("--kaadas--productList.DeviceListUrl==" + productInfo.getAuthUrl());
+                    //匹配型号获取下载地址
+                    Glide.with(this).load(productInfo.getAuthUrl()).apply(options).into(ivLockIcon);
+                }
+            }
+        }
     }
 
     @Override

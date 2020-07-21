@@ -1,12 +1,24 @@
 package com.kaadas.lock.adapter;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.os.Build;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.RequiresApi;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.kaadas.lock.MyApplication;
@@ -17,6 +29,7 @@ import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.publiclibrary.bean.CateEyeInfo;
 import com.kaadas.lock.publiclibrary.bean.GatewayInfo;
 import com.kaadas.lock.publiclibrary.bean.GwLockInfo;
+import com.kaadas.lock.publiclibrary.bean.ProductInfo;
 import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
 import com.kaadas.lock.utils.BatteryView;
 import com.kaadas.lock.utils.BleLockUtils;
@@ -24,18 +37,31 @@ import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 
 import java.security.Key;
+import java.util.ArrayList;
 import java.util.List;
 
 public class DeviceDetailAdapter extends BaseQuickAdapter<HomeShowBean, BaseViewHolder> {
 
+    private List<ProductInfo> productList = new ArrayList<>();
+    private RequestOptions options;
 
-    public DeviceDetailAdapter(@Nullable List<HomeShowBean> data) {
+    public DeviceDetailAdapter(@Nullable List<HomeShowBean> data,List<ProductInfo> product) {
         super(R.layout.fragment_device_item, data);
+        productList = product;
+        //LogUtils.e("--kaadas--productList==" +  productList);
+        options = new RequestOptions()
+                .placeholder(R.mipmap.default_zigbee_lock_icon)      //加载成功之前占位图
+                .error(R.mipmap.default_zigbee_lock_icon)      //加载错误之后的错误图
+                .fitCenter();//指定图片的缩放类型为fitCenter （等比例缩放图片，宽或者是高等于ImageView的宽或者是高。）
     }
 
-
+    //多次加载
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void convert(BaseViewHolder helper, HomeShowBean item) {
+//        if (productList == null){
+//            productList = MyApplication.getInstance().getProductInfos();
+//        }
         BatteryView batteryView = helper.getView(R.id.horizontalBatteryView);
         TextView textView = helper.getView(R.id.device_name);
         if (HomeShowBean.TYPE_GATEWAY == item.getDeviceType()) {
@@ -110,7 +136,6 @@ public class DeviceDetailAdapter extends BaseQuickAdapter<HomeShowBean, BaseView
                         textView.setText(gwLockInfo.getServerInfo().getDeviceId());
                     }
 
-
                 }
                 break;
             //网关
@@ -149,9 +174,21 @@ public class DeviceDetailAdapter extends BaseQuickAdapter<HomeShowBean, BaseView
                     isWifiDevice(false, helper, status, batteryView, blePower);
                     String model = bleLockInfo.getServerLockInfo().getModel();
                     helper.setImageResource(R.id.device_image, BleLockUtils.getSmallImageByModel(model));
-
+                    //本地图片有对应的产品则不获取缓存的产品型号图片，缓存没有则选择尝试下载
+                    if (BleLockUtils.getSmallImageByModel(model) == R.mipmap.default_zigbee_lock_icon){
+                        for (ProductInfo productInfo:productList) {
+                            if (productInfo.getDevelopmentModel().contentEquals(model)){
+//                                LogUtils.e("--kaadas--productList.DeviceListUrl==" + productInfo.getDeviceListUrl());
+//                                LogUtils.e("--kaadas--productList.getDevelopmentModel==" + productInfo.getDevelopmentModel());
+                                //匹配型号获取下载地址
+//                                Glide.with(mContext).load(productInfo.getDeviceListUrl()).into((ImageView) helper.getView(R.id.device_image));
+                                Glide.with(mContext).load(productInfo.getDeviceListUrl()).apply(options).into((ImageView) helper.getView(R.id.device_image));
+                            }
+                        }
+                    }
                     batteryView.setPower(blePower);
                     helper.setText(R.id.device_power_text, blePower + "%");
+
                     textView.setText(bleLockInfo.getServerLockInfo().getLockNickName());
                 }
                 break;
@@ -163,9 +200,24 @@ public class DeviceDetailAdapter extends BaseQuickAdapter<HomeShowBean, BaseView
                     int power1 = wifiLockInfo.getPower();
                     isWifiDevice(false, helper, "online", batteryView, power1);
                     String model = wifiLockInfo.getProductModel();
+
                     helper.setImageResource(R.id.device_image, BleLockUtils.getSmallImageByModel(model));
+                    //本地图片有对应的产品则不获取缓存的产品型号图片，缓存没有则选择尝试下载
+                    if (BleLockUtils.getSmallImageByModel(model) == R.mipmap.default_zigbee_lock_icon){
+                        for (ProductInfo productInfo:productList) {
+                            if (productInfo.getDevelopmentModel().contentEquals(model)){
+//                                LogUtils.e("--kaadas--productList.getDevelopmentModel==" + productInfo.getDevelopmentModel());
+//                                LogUtils.e("--kaadas--productList.DeviceListUrl==" + productInfo.getDeviceListUrl());
+                            //匹配型号获取下载地址
+//                                Glide.with(mContext).load(productInfo.getDeviceListUrl()).into((ImageView) helper.getView(R.id.device_image));
+                                Glide.with(mContext).load(productInfo.getDeviceListUrl()).apply(options).into((ImageView) helper.getView(R.id.device_image));
+                            }
+                        }
+                    }
+
                     batteryView.setPower(power1);
                     helper.setText(R.id.device_power_text, power1 + "%");
+
                     textView.setText(wifiLockInfo.getLockNickname());
 
                     helper.setVisible(R.id.device_type_image, false);

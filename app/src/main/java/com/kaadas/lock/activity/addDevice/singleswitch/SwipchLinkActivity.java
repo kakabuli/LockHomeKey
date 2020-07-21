@@ -458,7 +458,6 @@ public class SwipchLinkActivity extends BaseActivity<SingleFireSwitchView, Singl
                     finish();
                     break;
                 case R.id.swipch_sure_to_perform:
-                    LogUtils.e("--kaadas--swipch_one_text==" + swipch_one_text.getText());
 
                     if (swipch_one.getVisibility() == View.VISIBLE){
                         if (swipch_one_text.getText().equals("00:00-00:00")||swipch_one_text == null){

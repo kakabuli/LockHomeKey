@@ -82,11 +82,11 @@
 
             <TextView
                 android:id="@+id/tv_lock_type"
-                android:textSize="14sp"
-                android:textColor="#FFFFFF"
-                android:text=""
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textColor="#FFFFFF"
+                android:textSize="14sp" />
 
 
 

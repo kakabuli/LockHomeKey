@@ -21,6 +21,7 @@ import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.publiclibrary.bean.CateEyeInfo;
 import com.kaadas.lock.publiclibrary.bean.GatewayInfo;
 import com.kaadas.lock.publiclibrary.bean.GwLockInfo;
+import com.kaadas.lock.publiclibrary.bean.ProductInfo;
 import com.kaadas.lock.publiclibrary.bean.ServerGatewayInfo;
 import com.kaadas.lock.publiclibrary.bean.ServerGwDevice;
 import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
@@ -133,7 +134,10 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
         super.attachView(view);
         //网关上线监听
         getPublishNotify();
+        //从Dao中获取蓝牙、网关、猫眼、wifi锁的昵称等信息在UI上显示
         setHomeShowBean();
+        //从Dao中产品型号信息列表
+        setProductInfo();
         //监听猫眼锁的报警信息
         listenCatEyeEvent();
         //监听是否有新版本
@@ -1049,8 +1053,20 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
             }
         }
         MyApplication.getInstance().setHomeshowDevice(homeShowBeans);
+
     }
 
+    //设置产品型号信息列表
+    public void setProductInfo() {
+        DaoSession daoSession = MyApplication.getInstance().getDaoWriteSession();
+        //获取产品型号信息列表
+        if (daoSession != null && daoSession.getCatEyeServiceInfoDao() != null) {
+            List<ProductInfo> ProductInfoList = daoSession.getProductInfoDao().loadAll();
+            if (ProductInfoList != null && ProductInfoList.size() > 0) {
+                MyApplication.getInstance().setProductInfos(ProductInfoList);
+            }
+        }
+    }
 
     //监听网关重置上报
     public void gatewayResetListener() {

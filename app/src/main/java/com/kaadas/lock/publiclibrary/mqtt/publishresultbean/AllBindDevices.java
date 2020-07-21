@@ -501,17 +501,4 @@ public class AllBindDevices {
         return gwList;
     }
 
-    /**
-     * 获取产品信息列表
-     *
-     * @return
-     */
-//    public List<ReturnDataBean.ProductInfo> getProductInfo() {
-//        List<ReturnDataBean.ProductInfo> pdList = data.getProductInfoList();
-//        List<ServerGatewayInfo> productInfos = new ArrayList<>();
-//        for (ReturnDataBean.ProductInfo pdListBean : pdList) {
-//            productInfos.add(new ServerGatewayInfo());
-//        }
-//        return pdList;
-//    }
 }

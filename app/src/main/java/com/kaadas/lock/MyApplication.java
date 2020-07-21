@@ -127,6 +127,7 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
     private String TAG = "凯迪仕";
     private IWXAPI api;
     private List<HomeShowBean> homeShowDevices = new ArrayList<>();
+    private List<ProductInfo> productLists = new ArrayList<>();
     private int listService = 0;
 
     // 小米
@@ -390,6 +391,8 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
             bleService.removeBleLockInfo();
         }
         homeShowDevices.clear();
+        productLists.clear();
+
         MyApplication.getInstance().initTokenAndUid();
         //退出linphone
         LinphoneHelper.deleteUser();
@@ -572,22 +575,22 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
                             LogUtils.e("设备更新  application");
                             getDevicesFromServer.onNext(allBindDevices);
 
-                            //缓存WiFi锁设备信息
+                            //缓存WiFi锁设备信息 到Dao
                             if (allBindDevices.getData() != null && allBindDevices.getData().getWifiList() != null) {
-                                LogUtils.e("--kaadas--allBindDevices.getData().getWifiList=="+allBindDevices.getData().getWifiList());
+//                                LogUtils.e("--kaadas--allBindDevices.getData().getWifiList=="+allBindDevices.getData().getWifiList());
                                 List<WifiLockInfo> wifiList = allBindDevices.getData().getWifiList();
                                 WifiLockInfoDao wifiLockInfoDao = getDaoWriteSession().getWifiLockInfoDao();
                                 wifiLockInfoDao.deleteAll();
                                 wifiLockInfoDao.insertInTx(wifiList);
                             }
 
-                            //缓存产品型号信息列表，主要是图片下载地址（下载过的图片不再下载）
+                            //缓存产品型号信息列表 到Dao，主要是图片下载地址（下载过的图片不再下载）
                             if (allBindDevices.getData() != null && allBindDevices.getData().getProductInfoList() != null) {
-                                LogUtils.e("--kaadas--allBindDevices.getData().getProductInfoList=="+allBindDevices.getData().getProductInfoList());
-                                List<ProductInfo> productList = allBindDevices.getData().getProductInfoList();
+                                productLists = allBindDevices.getData().getProductInfoList();
+//                                LogUtils.e("--kaadas--productLists=="+productLists);
                                 ProductInfoDao productInfoDao = getDaoWriteSession().getProductInfoDao();
                                 productInfoDao.deleteAll();
-                                productInfoDao.insertInTx(productList);
+                                productInfoDao.insertInTx(productLists);
                             }
                         }
                     }
@@ -683,7 +686,6 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
     public List<HomeShowBean> getAllDevices() {
         return homeShowDevices;
     }
-
 
     public String getNickByDeviceId(String deviceId) {
         for (HomeShowBean homeShowBean : homeShowDevices) {
@@ -1026,63 +1028,12 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
         }
     }
 
-    public ProductInfo getProductInfoByDevelopmentModel(String developmentModel) {
-//        if (homeShowDevices != null) {
-//            for (int i = homeShowDevices.size() - 1; i >= 0; i--) {
-//                HomeShowBean homeShowBean = homeShowDevices.get(i);
-//                //wifi锁
-//                if (homeShowBean.getDeviceType() == HomeShowBean.TYPE_WIFI_LOCK) {
-//                    ProductInfo productInfo = (ProductInfo) homeShowBean.getObject();
-//                    if (productInfo.getDevelopmentModel().equals(developmentModel)) {
-//                        return productInfo;
-//                    }
-//                    WifiLockInfo wifiLockInfo = (WifiLockInfo) homeShowBean.getObject();
-//                    if (wifiLockInfo.getProductModel().equals(developmentModel)) {
-//                        return productInfo;
-//                    }
-//                }
-////                if (homeShowDevices != null) {
-////                    for (int i = homeShowDevices.size() - 1; i >= 0; i--) {
-////                        HomeShowBean homeShowBean = homeShowDevices.get(i);
-////                        if (homeShowBean.getDeviceType() == HomeShowBean.TYPE_WIFI_LOCK) {
-////                            WifiLockInfo wifiLockInfo = (WifiLockInfo) homeShowBean.getObject();
-////                            if (wifiLockInfo.getWifiSN().equals(sn)) {
-////                                return wifiLockInfo;
-////                            }
-////                        }
-////                    }
-////                }
-//                //蓝牙锁
-//                if (homeShowBean.getDeviceType() == HomeShowBean.TYPE_BLE_LOCK) {
-////                    ProductInfo productInfo = (ProductInfo) homeShowBean.getObject();
-////                    if (productInfo.getDevelopmentModel().equals(developmentModel)) {
-////                        return productInfo;
-////                    }
-//                }
-//                //网关锁
-//                if (homeShowBean.getDeviceType() == HomeShowBean.TYPE_GATEWAY_LOCK) {
-////                    ProductInfo productInfo = (ProductInfo) homeShowBean.getObject();
-////                    if (productInfo.getDevelopmentModel().equals(developmentModel)) {
-////                        return productInfo;
-////                    }
-//                }
-//                //猫眼
-//                if (homeShowBean.getDeviceType() == HomeShowBean.TYPE_CAT_EYE) {
-////                    ProductInfo productInfo = (ProductInfo) homeShowBean.getObject();
-////                    if (productInfo.getDevelopmentModel().equals(developmentModel)) {
-////                        return productInfo;
-////                    }
-//                }
-//                //网关
-//                if (homeShowBean.getDeviceType() == HomeShowBean.TYPE_GATEWAY) {
-////                    ProductInfo productInfo = (ProductInfo) homeShowBean.getObject();
-////                    if (productInfo.getDevelopmentModel().equals(developmentModel)) {
-////                        return productInfo;
-////                    }
-//                }
-//            }
-//        }
-        return null;
+    public void setProductInfos(List<ProductInfo> productList){
+        productLists = productList;
+    }
+
+    public List<ProductInfo> getProductInfos() {
+        return productLists;
     }
 }
 

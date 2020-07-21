@@ -51,6 +51,7 @@ import com.kaadas.lock.publiclibrary.http.result.ServerBleDevice;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.AllBindDevices;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttService;
 import com.kaadas.lock.utils.AlertDialogUtil;
+import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.NetUtil;
@@ -108,11 +109,12 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
 
     private Unbinder unbinder;
 
-
     private DeviceDetailAdapter deviceDetailAdapter;
 
     private List<HomeShowBean> mDeviceList = new ArrayList<>();
     private List<HomeShowBean> homeShowBeanList;
+    private List<ProductInfo> productList = new ArrayList<>();
+
     private String uid;
     private DaoSession daoSession;
     private MqttService mqttService;
@@ -134,11 +136,14 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
         deviceRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
         homeShowBeanList = MyApplication.getInstance().getAllDevices();
         mqttService = MyApplication.getInstance().getMqttService();
+        //获取缓存的producinfo
+//        LogUtils.e("--kaadas--productList.getProductInfos==" + MyApplication.getInstance().getProductInfos());
+        productList = MyApplication.getInstance().getProductInfos();
+
         initData(homeShowBeanList);
         initRefresh();
         return mView;
     }
-
 
     @Override
     protected DevicePresenter<IDeviceView> createPresent() {
@@ -163,7 +168,9 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
 
     private void initAdapter() {
         if (mDeviceList != null) {
-            deviceDetailAdapter = new DeviceDetailAdapter(mDeviceList);
+
+            deviceDetailAdapter = new DeviceDetailAdapter(mDeviceList,productList);
+//            deviceDetailAdapter = new DeviceDetailAdapter(mDeviceList);
             deviceRecycler.setAdapter(deviceDetailAdapter);
             deviceDetailAdapter.setOnItemClickListener(this);
             for (int i = 0; i < mDeviceList.size(); i++) {
@@ -342,10 +349,6 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                         case HomeShowBean.TYPE_WIFI_LOCK:
                             WifiLockInfo wifiLockInfo = (WifiLockInfo) homeShowBean.getObject();
                             mDeviceList.add(homeShowBean);
-//                            wifiLockInfo = MyApplication.getInstance().getWifiLockInfoBySn(wifiSn);
-//                            productInfo = MyApplication.getInstance().getProductInfoByDevelopmentModel(wifiLockInfo.getProductModel());
-//                            LogUtils.e("--kaadas--productInfo.getAuthUrl=="+productInfo.getAuthUrl());
-
                             break;
                     }
                 }
