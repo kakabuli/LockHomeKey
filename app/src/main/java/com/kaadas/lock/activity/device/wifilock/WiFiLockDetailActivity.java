@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -177,12 +178,14 @@ public class WiFiLockDetailActivity extends BaseActivity<IWifiLockDetailView, Wi
                     options = new RequestOptions()
                         .placeholder(R.mipmap.bluetooth_lock_default)      //加载成功之前占位图
                         .error(R.mipmap.bluetooth_lock_default)      //加载错误之后的错误图
-                        .fitCenter();//指定图片的缩放类型为fitCenter （等比例缩放图片，宽或者是高等于ImageView的宽或者是高。）
+                            .diskCacheStrategy(DiskCacheStrategy.RESOURCE)    //只缓存最终的图片
+                            .dontAnimate()                                    //直接显示图片
+                .fitCenter();//指定图片的缩放类型为fitCenter （是一种“中心匹配”的方式裁剪方式，它裁剪出来的图片长宽都会小于等于ImageView的大小，这样一来。图片会完整地显示出来，但是ImageView可能并没有被填充满）
+//                            .centerCrop();//指定图片的缩放类型为centerCrop （是一种“去除多余”的裁剪方式，它会把ImageView边界以外的部分裁剪掉。这样一来ImageView会被填充满，但是这张图片可能不会完整地显示出来(ps:因为超出部分都被裁剪掉了）
 
                     for (ProductInfo productInfo:productList) {
                         if (productInfo.getDevelopmentModel().contentEquals(model)){
-//                                LogUtils.e("--kaadas--productList.getDevelopmentModel==" + productInfo.getDevelopmentModel());
-//                                LogUtils.e("--kaadas--productList.DeviceListUrl==" + productInfo.getAdminUrl());
+
                             //匹配型号获取下载地址
                             Glide.with(this).load(productInfo.getAdminUrl()).apply(options).into(ivLockIcon);
                         }

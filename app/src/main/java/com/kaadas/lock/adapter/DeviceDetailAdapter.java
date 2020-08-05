@@ -52,7 +52,12 @@ public class DeviceDetailAdapter extends BaseQuickAdapter<HomeShowBean, BaseView
         options = new RequestOptions()
                 .placeholder(R.mipmap.default_zigbee_lock_icon)      //加载成功之前占位图
                 .error(R.mipmap.default_zigbee_lock_icon)      //加载错误之后的错误图
-                .fitCenter();//指定图片的缩放类型为fitCenter （等比例缩放图片，宽或者是高等于ImageView的宽或者是高。）
+                .diskCacheStrategy(DiskCacheStrategy.RESOURCE)    //只缓存最终的图片
+                .dontAnimate()                                      //直接显示图片
+//                .override(180, 352); //按照这个像素，调整图片的尺寸，不保持长宽比例
+                .fitCenter();//指定图片的缩放类型为fitCenter （是一种“中心匹配”的方式裁剪方式，它裁剪出来的图片长宽都会小于等于ImageView的大小，这样一来。图片会完整地显示出来，但是ImageView可能并没有被填充满）
+//                .centerCrop();//指定图片的缩放类型为centerCrop （是一种“去除多余”的裁剪方式，它会把ImageView边界以外的部分裁剪掉。这样一来ImageView会被填充满，但是这张图片可能不会完整地显示出来(ps:因为超出部分都被裁剪掉了）
+
     }
 
     //多次加载

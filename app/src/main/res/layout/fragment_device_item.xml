@@ -15,8 +15,8 @@
         >
         <ImageView
             android:id="@+id/device_image"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/dp_46"
+            android:layout_height="@dimen/dp_82"
             android:layout_centerVertical="true"
             android:src="@mipmap/default_zigbee_lock_icon"
             />

@@ -9,7 +9,7 @@ import java.io.Serializable;
 
 /**
  * Create By lxj  on 2019/3/3
- * Describe
+ * Describe MQTT中返回蓝牙设备的数据
  */
 public class ServerBleDevice implements Serializable {
     private String _id;
