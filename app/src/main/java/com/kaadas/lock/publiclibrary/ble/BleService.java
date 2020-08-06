@@ -712,8 +712,10 @@ public class BleService extends Service {
                     readSystemIDSubject.onNext(new ReadInfoBean(ReadInfoBean.TYPE_MODE, new String(characteristic.getValue())));
                     break;
                 case BLeConstants.UUID_LOCK_TYPE:
-                    LogUtils.e("读取锁型号  " + new String(value));
-                    readSystemIDSubject.onNext(new ReadInfoBean(ReadInfoBean.TYPE_FIRMWARE_REV, new String(characteristic.getValue())));
+                    LogUtils.e("读取锁型号（原始数据）  " + new String(value));
+                    LogUtils.e("读取锁型号（去掉结束符）  " + new String(value).trim());
+                    //byte数组转字符串去掉尾部的空白（结束符号）
+                    readSystemIDSubject.onNext(new ReadInfoBean(ReadInfoBean.TYPE_FIRMWARE_REV, new String(characteristic.getValue()).trim()));
                     break;
                 case BLeConstants.UUID_HARDWARE_INFO:
                     LogUtils.e("硬件版本号  " + new String(value));
