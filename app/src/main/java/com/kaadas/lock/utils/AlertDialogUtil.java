@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Gravity;
@@ -43,6 +44,7 @@ public class AlertDialogUtil {
     //xml中有四种布局，
     // 1 have_edit_dialog（存在输入框，两个按钮）2 no_button_dialog(只有内容的对话框)
     //3 no_edit_singleButton(没有输入框，只有一个按钮)4 no_et_dialog(没有输入框，有两个按钮)
+    //5 hava_title_content_no_button
     //由于有输入框这种需要不同的约束，所以不进行封装。
     public AlertDialog common(Context context, View view) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.MyDialog);
@@ -512,7 +514,29 @@ public class AlertDialogUtil {
 
     }
 
+//    hava_title_content_no_button
+public void haveTitleContentNoButtonDialog(Context context, String title, String content ,Integer disappearTime) {
+    View mView = LayoutInflater.from(context).inflate(R.layout.no_edit_button_dialog, null);
+    TextView tvTitle = mView.findViewById(R.id.tv_title);
+    TextView tvContent = mView.findViewById(R.id.tv_content);
+    AlertDialog alertDialog = AlertDialogUtil.getInstance().common(context, mView);
+    if ("".equals(title)) {
+        tvTitle.setVisibility(View.GONE);
+    } else {
+        tvTitle.setText(title);
+        tvTitle.setVisibility(View.VISIBLE);
+    }
 
+    tvContent.setText(content);
+
+    new Handler().postDelayed(new Runnable() {
+        @Override
+        public void run() {  //延时5秒消失
+            alertDialog.dismiss();
+        }
+    }, disappearTime *1000);
+
+}
 
 
 

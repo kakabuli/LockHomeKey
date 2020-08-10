@@ -63,7 +63,7 @@ public class BleLockUtils {
      * 		        添加人脸
      * 		        删除人脸
      * 27	人脸低电量提示	电量低关闭人识别记录与推送提示
-     * 28	人脸模组OTA	独立机制升级人脸模组
+     * 28	人脸模组OTA	独立机制升级人脸模组（wifiOTA）
      * 29	获取操作记录
      *     （+人脸信息）	用户添加删除密码、指纹、人脸或者卡片等的操作记录
      * 30	获取门锁日志
@@ -106,7 +106,7 @@ public class BleLockUtils {
         FUNCTION_SET.put(0x0B, new Integer[]{2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 19, 20, 21, 22, 23, 24, 38, 40});        //2019年12月30日15:16:25
         FUNCTION_SET.put(0x0C, new Integer[]{2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 15, 19, 20, 21, 22, 23, 26, 27, 29, 30, 34, 38, 39, 46, 47});
         FUNCTION_SET.put(0x0D, new Integer[]{2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 19, 20, 21, 22, 23, 24, 38, 40, 49});
-        FUNCTION_SET.put(0x0E, new Integer[]{2, 3, 4, 5, 6, 7, 8, 10, 11, 15, 19, 20, 21, 22, 23, 24, 26, 27, 29, 30, 33, 34, 38, 39, 46, 47});
+        FUNCTION_SET.put(0x0E, new Integer[]{2, 3, 4, 5, 6, 7, 8, 10, 11, 15, 19, 20, 21, 22, 23, 24, 26, 27, 28, 29, 30, 33, 34, 38, 39, 46, 47});
         FUNCTION_SET.put(0x10, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 19, 20, 21, 22, 23, 24, 32, 36, 38, 40, 48});
 
 
@@ -901,5 +901,19 @@ public class BleLockUtils {
         }
     }
 
+    /**
+     * 根据功能集判断是否显示人脸模组OTA
+     *
+     * @param functionSet
+     * @return
+     */
+    public static boolean isSupportWiFiFaceOTA(String functionSet) {
+        Integer[] funcs = FUNCTION_SET.get(Integer.parseInt(functionSet));
+        if (funcs == null) {
+            return false;
+        }
+        List<Integer> integers = Arrays.asList(funcs);
+        return integers.contains(28);
+    }
 
 }

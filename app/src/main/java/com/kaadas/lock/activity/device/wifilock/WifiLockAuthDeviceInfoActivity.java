@@ -17,6 +17,7 @@ import com.kaadas.lock.publiclibrary.bean.ProductInfo;
 import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.result.CheckOTAResult;
+import com.kaadas.lock.utils.BleLockUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.ToastUtil;
@@ -46,6 +47,10 @@ public class WifiLockAuthDeviceInfoActivity extends BaseActivity<IWifiLockMoreVi
     RelativeLayout rlMessageFree;
     @BindView(R.id.tv_serial_number)
     TextView tvSerialNumber;
+    @BindView(R.id.rl_face_model_firmware_version)
+    RelativeLayout rlFaceModelFirmwareVersion;
+    @BindView(R.id.tv_face_model_firmware_version)
+    TextView tvFaceModelFirmwareVersion;
     @BindView(R.id.tv_lock_firmware_version)
     TextView tvLockFirmwareVersion;
 //    @BindView(R.id.tv_lock_software_version)
@@ -83,6 +88,17 @@ public class WifiLockAuthDeviceInfoActivity extends BaseActivity<IWifiLockMoreVi
             }
 
             tvSerialNumber.setText(TextUtils.isEmpty(wifiLockInfo.getWifiSN()) ? "" : wifiLockInfo.getWifiSN());
+//            int func = Integer.parseInt(bleLockInfo.getServerLockInfo().getFunctionSet());
+
+            if(BleLockUtils.isSupportWiFiFaceOTA(wifiLockInfo.getFunctionSet())){
+                rlFaceModelFirmwareVersion.setVisibility(View.VISIBLE);
+                tvFaceModelFirmwareVersion.setText(TextUtils.isEmpty(wifiLockInfo.getFaceVersion()) ? "" : wifiLockInfo.getFaceVersion());
+
+            }
+            else {//不支持
+                rlFaceModelFirmwareVersion.setVisibility(View.GONE);
+            }
+
             tvLockFirmwareVersion.setText(TextUtils.isEmpty(wifiLockInfo.getLockFirmwareVersion()) ? "" : wifiLockInfo.getLockFirmwareVersion());
 //            tvLockSoftwareVersion.setText(TextUtils.isEmpty(wifiLockInfo.getLockSoftwareVersion()) ? "" : wifiLockInfo.getLockSoftwareVersion());
             wifiVersion.setText(TextUtils.isEmpty(wifiLockInfo.getWifiVersion()) ? "" : wifiLockInfo.getWifiVersion());
@@ -94,6 +110,7 @@ public class WifiLockAuthDeviceInfoActivity extends BaseActivity<IWifiLockMoreVi
             } else {
                 ivMessageFree.setImageResource(R.mipmap.iv_close);
             }
+
         } else {
             rlMessageFree.setVisibility(View.GONE);
         }
