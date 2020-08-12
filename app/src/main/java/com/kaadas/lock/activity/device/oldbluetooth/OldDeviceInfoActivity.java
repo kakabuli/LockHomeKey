@@ -18,12 +18,16 @@ import com.kaadas.lock.mvp.mvpbase.BaseBleCheckInfoActivity;
 import com.kaadas.lock.mvp.presenter.ble.OldDeviceInfoPresenter;
 import com.kaadas.lock.mvp.view.IOldDeviceInfoView;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
+import com.kaadas.lock.publiclibrary.bean.ProductInfo;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.util.HttpUtils;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.StringUtil;
 import com.kaadas.lock.utils.ToastUtil;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -63,12 +67,16 @@ public class OldDeviceInfoActivity extends BaseBleCheckInfoActivity<IOldDeviceIn
     String name;
     private String sn;
     private String version;
+    private List<ProductInfo> productList = new ArrayList<>();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_old_bluetooth_more);
         ButterKnife.bind(this);
+
+        productList = MyApplication.getInstance().getProductInfos();
+
         bleLockInfo = MyApplication.getInstance().getBleService().getBleLockInfo();
         deviceNickname = bleLockInfo.getServerLockInfo().getLockNickName();
         tvDeviceName.setText(deviceNickname);
@@ -195,7 +203,15 @@ public class OldDeviceInfoActivity extends BaseBleCheckInfoActivity<IOldDeviceIn
 
     @Override
     public void FirmwareRevDataSuccess(String data) {
-        tvDeviceModel.setText(data.trim());
+        if (!TextUtils.isEmpty(data.trim())) {
+            tvDeviceModel.setText(data.trim());
+            //适配服务器上的产品型号，适配不上则显示锁本地的研发型号
+            for (ProductInfo productInfo : productList) {
+                if (productInfo.getDevelopmentModel().contentEquals(data.trim())) {
+                    tvDeviceModel.setText(productInfo.getProductModel());
+                }
+            }
+        }
     }
 
     @Override
