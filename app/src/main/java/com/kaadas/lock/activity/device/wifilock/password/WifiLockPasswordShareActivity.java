@@ -71,37 +71,39 @@ public class WifiLockPasswordShareActivity extends AppCompatActivity {
     }
 
     private String getPassword() {
+        if (!TextUtils.isEmpty(wifiLockInfo.getWifiSN())){
 
-        String wifiSN = wifiLockInfo.getWifiSN();
-        String randomCode = wifiLockInfo.getRandomCode();
-        String time = (System.currentTimeMillis() / 1000 / 60 / 5) + "";
+            String wifiSN = wifiLockInfo.getWifiSN();
+            String randomCode = wifiLockInfo.getRandomCode();
+            String time = (System.currentTimeMillis() / 1000 / 60 / 5) + "";
 
-        MyLog.getInstance().save("--kaadas调试--wifiSN  " + wifiSN);
-        MyLog.getInstance().save("--kaadas调试--randomCode  " + randomCode);
-        MyLog.getInstance().save("--kaadas调试--System.currentTimeMillis()  " + System.currentTimeMillis());
+            MyLog.getInstance().save("--kaadas调试--wifiSN  " + wifiSN);
+            MyLog.getInstance().save("--kaadas调试--randomCode  " + randomCode);
+            MyLog.getInstance().save("--kaadas调试--System.currentTimeMillis()  " + System.currentTimeMillis());
 
-        String content = wifiSN + randomCode + time;
-        LogUtils.e("--kaadas--服务器获取的数据是  " + randomCode);
+            String content = wifiSN + randomCode + time;
+            LogUtils.e("--kaadas--服务器获取的数据是  " + randomCode);
 
-        LogUtils.e("--kaadas--本地数据是  " + content);
-        byte[] data = content.toUpperCase().getBytes();
-        try {
-            MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
-            messageDigest.update(data);
-            byte[] digest = messageDigest.digest();
-            byte[] temp = new byte[4];
-            System.arraycopy(digest, 0, temp, 0, 4);
-            long l = Rsa.getInt(temp);
-            String text = (l % 1000000) + "";
-            LogUtils.e("--kaadas--转换之后的数据是     " + l + "    " + Rsa.bytes2Int(temp));
-            int offSet = (6 - text.length());
-            for (int i = 0; i < offSet; i++) {
-                text = "0" + text;
+            LogUtils.e("--kaadas--本地数据是  " + content);
+            byte[] data = content.toUpperCase().getBytes();
+            try {
+                MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
+                messageDigest.update(data);
+                byte[] digest = messageDigest.digest();
+                byte[] temp = new byte[4];
+                System.arraycopy(digest, 0, temp, 0, 4);
+                long l = Rsa.getInt(temp);
+                String text = (l % 1000000) + "";
+                LogUtils.e("--kaadas--转换之后的数据是     " + l + "    " + Rsa.bytes2Int(temp));
+                int offSet = (6 - text.length());
+                for (int i = 0; i < offSet; i++) {
+                    text = "0" + text;
+                }
+                System.out.println("--kaadas--   testSha256 数据是   " + Rsa.bytesToHexString(messageDigest.digest()));
+                return text;
+            } catch (NoSuchAlgorithmException e) {
+                e.printStackTrace();
             }
-            System.out.println("--kaadas--   testSha256 数据是   " + Rsa.bytesToHexString(messageDigest.digest()));
-            return text;
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
         }
         return "";
     }
