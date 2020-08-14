@@ -46,6 +46,7 @@ public class WifiLockInfo implements Serializable {
      * faceVersion : 66666
      * lockFirmwareVersion : 11111
      * randomCode : randomCode666
+     * distributionNetwork : 1
      * 设备类型	串	设备类型：gateway或者为空：网关wifi：WIFI锁
      * wifiPwdNum	串	临时密码编号
      * wifiPwd昵称	串	临时密码昵称
@@ -93,7 +94,7 @@ public class WifiLockInfo implements Serializable {
     private String faceVersion;
     private String lockFirmwareVersion;
     private String randomCode;
-
+    private int distributionNetwork;
 
     /**
      * _id : 5de4c32a33cc1949441265ca
@@ -130,12 +131,12 @@ public class WifiLockInfo implements Serializable {
     @SerializedName("switch")
     private SingleFireSwitchInfo singleFireSwitchInfo;
 
-@Generated(hash = 228268546)
-public WifiLockInfo(Long id, String deviceID, String wifiSN, int isAdmin, String adminUid, String adminName, String productSN, String productModel, int appId,
-        String lockNickname, String lockSoftwareVersion, String functionSet, String uid, String uname, int pushSwitch, int amMode, int safeMode, int powerSave,
-        int faceStatus, int defences, String language, int operatingMode, int volume, String bleVersion, String wifiVersion, String mqttVersion,
-        String faceVersion, String lockFirmwareVersion, String randomCode, long createTime, String wifiName, int power, long updateTime, int openStatus,
-        long openStatusTime, SingleFireSwitchInfo singleFireSwitchInfo) {
+@Generated(hash = 1292958499)
+public WifiLockInfo(Long id, String deviceID, String wifiSN, int isAdmin, String adminUid, String adminName, String productSN, String productModel, int appId, String lockNickname,
+        String lockSoftwareVersion, String functionSet, String uid, String uname, int pushSwitch, int amMode, int safeMode, int powerSave, int faceStatus, int defences,
+        String language, int operatingMode, int volume, String bleVersion, String wifiVersion, String mqttVersion, String faceVersion, String lockFirmwareVersion,
+        String randomCode, int distributionNetwork, long createTime, String wifiName, int power, long updateTime, int openStatus, long openStatusTime,
+        SingleFireSwitchInfo singleFireSwitchInfo) {
     this.id = id;
     this.deviceID = deviceID;
     this.wifiSN = wifiSN;
@@ -165,6 +166,7 @@ public WifiLockInfo(Long id, String deviceID, String wifiSN, int isAdmin, String
     this.faceVersion = faceVersion;
     this.lockFirmwareVersion = lockFirmwareVersion;
     this.randomCode = randomCode;
+    this.distributionNetwork = distributionNetwork;
     this.createTime = createTime;
     this.wifiName = wifiName;
     this.power = power;
@@ -393,6 +395,13 @@ public WifiLockInfo(Long id, String deviceID, String wifiSN, int isAdmin, String
         this.randomCode = randomCode;
     }
 
+    public int getDistributionNetwork() {
+        return distributionNetwork;
+    }
+
+    public void setDistributionNetwork(int distributionNetwork) {
+        this.distributionNetwork = distributionNetwork;
+    }
 
     @Override
     public String toString() {
@@ -425,6 +434,7 @@ public WifiLockInfo(Long id, String deviceID, String wifiSN, int isAdmin, String
                 ", faceVersion='" + faceVersion + '\'' +
                 ", lockFirmwareVersion='" + lockFirmwareVersion + '\'' +
                 ", randomCode='" + randomCode + '\'' +
+                ", distributionNetwork='" + distributionNetwork + '\'' +
                 ", switch='" + singleFireSwitchInfo + '\'' +
                 '}';
     }

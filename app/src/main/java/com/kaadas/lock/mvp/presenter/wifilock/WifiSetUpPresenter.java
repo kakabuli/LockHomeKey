@@ -100,7 +100,7 @@ public class WifiSetUpPresenter<T> extends BasePresenter<IWifiSetUpView> {
                     if (wifiLockInfo != null && wifiLockInfo.getIsAdmin() == 1) {
                         update(wifiSn, randomCode, wifiName, wifiResult.func);
                     } else {
-                        bindDevice(wifiSn, wifiSn, MyApplication.getInstance().getUid(), randomCode, wifiName, wifiResult.func);
+                        bindDevice(wifiSn, wifiSn, MyApplication.getInstance().getUid(), randomCode, wifiName, wifiResult.func,1);
                     }
                     LogUtils.e("读取数据成功");
                 } catch (IOException e) {
@@ -157,8 +157,8 @@ public class WifiSetUpPresenter<T> extends BasePresenter<IWifiSetUpView> {
         release();
     }
 
-    private void bindDevice(String wifiSN, String lockNickName, String uid, String randomCode, String wifiName, int func) {
-        XiaokaiNewServiceImp.wifiLockBind(wifiSN, lockNickName, uid, randomCode, wifiName, func)
+    private void bindDevice(String wifiSN, String lockNickName, String uid, String randomCode, String wifiName, int func,int distributionNetwork) {
+        XiaokaiNewServiceImp.wifiLockBind(wifiSN, lockNickName, uid, randomCode, wifiName, func,distributionNetwork)
                 .subscribe(new BaseObserver<BaseResult>() {
                     @Override
                     public void onSuccess(BaseResult baseResult) {

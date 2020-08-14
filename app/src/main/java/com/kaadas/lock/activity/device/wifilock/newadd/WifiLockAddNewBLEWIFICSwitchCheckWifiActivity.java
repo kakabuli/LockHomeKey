@@ -310,7 +310,7 @@ public class WifiLockAddNewBLEWIFICSwitchCheckWifiActivity extends BaseActivity<
         } else {
             LogUtils.e("--kaadas--绑定设备=="+randomCode);
             //绑定设备
-            mPresenter.bindDevice(wifiSn, wifiSn, MyApplication.getInstance().getUid(), randomCode, sSsid, func);
+            mPresenter.bindDevice(wifiSn, wifiSn, MyApplication.getInstance().getUid(), randomCode, sSsid, func,2);
         }
         runOnUiThread(new Runnable() {
             @Override

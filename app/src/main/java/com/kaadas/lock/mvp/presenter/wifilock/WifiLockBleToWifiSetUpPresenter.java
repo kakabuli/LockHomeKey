@@ -88,9 +88,9 @@ public class WifiLockBleToWifiSetUpPresenter<T> extends BasePresenter<IWifiLockB
 //        compositeDisposable.add(bindDisposable);
 //    }
 //
-    public void bindDevice(String wifiSN, String lockNickName, String uid, String randomCode, String wifiName, int func) {
+    public void bindDevice(String wifiSN, String lockNickName, String uid, String randomCode, String wifiName, int func,int distributionNetwork) {
         toDisposable(realBindDisposable);
-        XiaokaiNewServiceImp.wifiLockBind(wifiSN, lockNickName, uid, randomCode, wifiName, func)
+        XiaokaiNewServiceImp.wifiLockBind(wifiSN, lockNickName, uid, randomCode, wifiName, func, distributionNetwork)
                 .subscribe(new BaseObserver<BaseResult>() {
                     @Override
                     public void onSuccess(BaseResult baseResult) {

@@ -333,7 +333,7 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
     }
 
     public void initTokenAndUid() {
-        token = (String) SPUtils.get(SPUtils.TOKEN, "");
+        token = (String) SPUtils.get(SPUtils.TOKEN, "");//类型转换有崩溃
         uid = (String) SPUtils.get(SPUtils.UID, "");
         RetrofitServiceManager.updateToken();
     }
