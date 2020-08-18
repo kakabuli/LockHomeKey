@@ -98,6 +98,10 @@ public class WifiLockNoticeUserLinkWifiFirstActivity extends AppCompatActivity {
         }
         byte[] ssidOriginalData = TouchNetUtil.getOriginalSsidBytes(info);
         LogUtils.e("获取到的   byte数据是    " + Rsa.bytesToHexString(ssidOriginalData));
+        if (Rsa.bytesToHexString(ssidOriginalData) == null) {
+            SPUtils.put(KeyConstants.WIFI_LOCK_CONNECT_NAME, "");
+            return;
+        }
         SPUtils.put(KeyConstants.WIFI_LOCK_CONNECT_ORIGINAL_DATA, Rsa.bytesToHexString(ssidOriginalData));
     }
 
