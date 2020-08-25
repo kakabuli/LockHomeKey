@@ -3,6 +3,7 @@ package com.kaadas.lock.activity.addDevice;
 import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.ImageView;
@@ -18,6 +19,7 @@ import com.kaadas.lock.activity.addDevice.zigbeelocknew.AddDeviceZigbeeLockNewZe
 import com.kaadas.lock.activity.addDevice.zigbeelocknew.QrCodeScanActivity;
 import com.kaadas.lock.activity.device.wifilock.add.WifiLockAPAddFirstActivity;
 import com.kaadas.lock.activity.device.wifilock.newadd.WifiLockAddNewFirstActivity;
+import com.kaadas.lock.activity.device.wifilock.newadd.WifiLockAddNewToChooseActivity;
 import com.kaadas.lock.bean.HomeShowBean;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.mvp.presenter.deviceaddpresenter.DeviceZigBeeDetailPresenter;
@@ -28,6 +30,7 @@ import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.PermissionUtil;
+import com.kaadas.lock.utils.dialog.MessageDialog;
 import com.king.zxing.Intents;
 
 import java.util.List;
@@ -63,6 +66,7 @@ public class DeviceAdd2Activity extends BaseActivity<DeviceZigBeeDetailView, Dev
     LinearLayout doubleSwitch;
     private boolean flag = false; //判断是否有绑定的网列表
     private int isAdmin = 1; //管理员，非1不是管理员
+    private MessageDialog messageDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,7 +121,10 @@ public class DeviceAdd2Activity extends BaseActivity<DeviceZigBeeDetailView, Dev
                 startActivity(bluetoothIntent);
                 break;
             case R.id.wifi_lock:
-                startActivity(new Intent(this,WifiLockAddNewFirstActivity.class));
+//                startActivity(new Intent(this,WifiLockAddNewFirstActivity.class));
+                Intent chooseAddIntent = new Intent(this, WifiLockAddNewToChooseActivity.class);
+                chooseAddIntent.putExtra(KeyConstants.SCAN_TYPE, 1);
+                startActivityForResult(chooseAddIntent, KeyConstants.SCANGATEWAYNEW_REQUEST_CODE);
                 break;
             case R.id.zigbee_lock:
                 if ((flag == true && isAdmin == 0) || (flag == true && isAdmin == 1)) {
@@ -138,6 +145,12 @@ public class DeviceAdd2Activity extends BaseActivity<DeviceZigBeeDetailView, Dev
                             //跳转到配置网关添加的流程
                             Intent gatewayIntent = new Intent(DeviceAdd2Activity.this, AddGatewayFirstActivity.class);
                             startActivity(gatewayIntent);
+                        }
+                        @Override
+                        public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        }
+                        @Override
+                        public void afterTextChanged(String toString) {
                         }
                     });
                 }
@@ -161,6 +174,12 @@ public class DeviceAdd2Activity extends BaseActivity<DeviceZigBeeDetailView, Dev
                             //跳转到配置网关添加的流程
                             Intent gatewayIntent = new Intent(DeviceAdd2Activity.this, AddGatewayFirstActivity.class);
                             startActivity(gatewayIntent);
+                        }
+                        @Override
+                        public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        }
+                        @Override
+                        public void afterTextChanged(String toString) {
                         }
                     });
 //                    Intent catEyeIntent = new Intent(this, DeviceBindGatewayListActivity.class);
@@ -229,15 +248,28 @@ public class DeviceAdd2Activity extends BaseActivity<DeviceZigBeeDetailView, Dev
                         startActivity(wifiIntent);
                     }
                     else {
-                        Intent scanSuccessIntent = new Intent(DeviceAdd2Activity.this, AddDeviceZigbeeLockNewScanFailActivity.class);
-                        startActivity(scanSuccessIntent);
-                        finish();
+                        unknow_qr();
                     }
                     break;
             }
-
         }
+    }
 
+    public void unknow_qr(){
+        //信息
+        messageDialog = new MessageDialog.Builder(this)
+                .setMessage(R.string.unknow_qr)
+                .create();
+        messageDialog.show();
+
+        new Handler().postDelayed(new Runnable() {
+            public void run() {
+                if(messageDialog != null){
+                    messageDialog.dismiss();
+
+                }
+            }
+        }, 3000); //延迟3秒消失
     }
 
     @Override

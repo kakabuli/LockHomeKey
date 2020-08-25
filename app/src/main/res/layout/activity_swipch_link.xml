@@ -99,7 +99,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/swipch_link_btn1"
+            android:text="@string/swipch_link_btn2"
             android:layout_toRightOf="@id/swipch_link_center_view"
             android:layout_marginLeft="13dp"
             android:layout_centerInParent="true"
@@ -141,7 +141,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/swipch_link_btn1"
+            android:text="@string/swipch_link_btn3"
             android:layout_toRightOf="@id/swipch_link_center_view_three"
             android:layout_marginLeft="13dp"
             android:layout_centerInParent="true"
@@ -264,11 +264,11 @@
             android:layout_height="0dp"
             android:layout_weight="3"
             android:layout_marginLeft="10dp"
-            android:layout_marginBottom="15dp"
+            android:layout_marginBottom="29dp"
             android:layout_marginRight="10dp"
+            android:layout_marginTop="12.5dp"
             android:background="@drawable/swipch_link_corner"
             android:orientation="vertical">
-
 
             <TextView
                 android:layout_width="wrap_content"
@@ -308,6 +308,7 @@
                      </ImageView>
 
                      <TextView
+                         android:id="@+id/swipch_one_nick_text"
                          android:layout_width="wrap_content"
                          android:layout_height="wrap_content"
                          android:layout_marginLeft="15dp"
@@ -334,10 +335,11 @@
                         ></ImageButton>
 
                      <TextView
+                         android:id="@+id/swipch_one_text"
                          android:layout_width="wrap_content"
                          android:layout_height="wrap_content"
                          android:layout_alignParentBottom="true"
-                         android:text="20:00-24:00"
+                         android:text="00:00-00:00"
                          android:layout_alignParentRight="true"
                          android:layout_marginRight="20dp"
                          android:layout_marginBottom="7dp"
@@ -381,6 +383,7 @@
                     </ImageView>
 
                     <TextView
+                        android:id="@+id/swipch_two_nick_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="15dp"
@@ -408,10 +411,11 @@
                         ></ImageView>
 
                     <TextView
+                        android:id="@+id/swipch_two_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentBottom="true"
-                        android:text="20:00-24:00"
+                        android:text="00:00-00:00"
                         android:layout_alignParentRight="true"
                         android:layout_marginRight="20dp"
                         android:layout_marginBottom="7dp"
@@ -457,11 +461,12 @@
                     </ImageView>
 
                     <TextView
+                        android:id="@+id/swipch_three_nick_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="15dp"
                         android:textColor="#FF333333"
-                        android:text="@string/swipch_link_btn2"></TextView>
+                        android:text="@string/swipch_link_btn3"></TextView>
 
 
                 </LinearLayout>
@@ -484,10 +489,11 @@
                         ></ImageView>
 
                     <TextView
+                        android:id="@+id/swipch_three_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentBottom="true"
-                        android:text="20:00-24:00"
+                        android:text="00:00-00:00"
                         android:layout_alignParentRight="true"
                         android:layout_marginRight="20dp"
                         android:layout_marginBottom="7dp"
@@ -500,6 +506,20 @@
             </LinearLayout>
 
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/swipch_sure_to_perform"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:background="#1F96F7"
+            android:text="@string/sure_to_perform"
+            android:textColor="#fff"
+            android:textSize="@dimen/sp_15"
+            android:gravity="center"
+            android:layout_alignParentBottom="true"
+            />
+
+
     </LinearLayout>
 
 

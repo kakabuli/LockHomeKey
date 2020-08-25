@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -12,13 +13,18 @@ import com.kaadas.lock.R;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.mvp.presenter.wifilock.WifiLockMorePresenter;
 import com.kaadas.lock.mvp.view.wifilock.IWifiLockMoreView;
+import com.kaadas.lock.publiclibrary.bean.ProductInfo;
 import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.result.CheckOTAResult;
 import com.kaadas.lock.utils.AlertDialogUtil;
+import com.kaadas.lock.utils.BleLockUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.ToastUtil;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -36,6 +42,10 @@ public class WifiLockDeviceInfoActivity extends BaseActivity<IWifiLockMoreView, 
     TextView tvDeviceModel;
     @BindView(R.id.tv_serial_number)
     TextView tvSerialNumber;
+    @BindView(R.id.rl_face_model_firmware_version)
+    RelativeLayout rlFaceModelFirmwareVersion;
+    @BindView(R.id.tv_face_model_firmware_version)
+    TextView tvFaceModelFirmwareVersion;
     @BindView(R.id.tv_lock_firmware_version)
     TextView tvLockFirmwareVersion;
     @BindView(R.id.iv_wifilock)
@@ -46,8 +56,10 @@ public class WifiLockDeviceInfoActivity extends BaseActivity<IWifiLockMoreView, 
     ImageView ivWifimodel;
     private WifiLockInfo wifiLockInfo;
     private String wifiSN;
+    private String faceModelFirmwareVersion;
     private String sWifiVersion;
     private String lockFirmwareVersion;
+    private List<ProductInfo> productList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,13 +68,31 @@ public class WifiLockDeviceInfoActivity extends BaseActivity<IWifiLockMoreView, 
         ButterKnife.bind(this);
         String wifiSn = getIntent().getStringExtra(KeyConstants.WIFI_SN);
         wifiLockInfo = MyApplication.getInstance().getWifiLockInfoBySn(wifiSn);
+        productList = MyApplication.getInstance().getProductInfos();
+
         if (wifiLockInfo != null) {
             wifiSN = wifiLockInfo.getWifiSN();
             sWifiVersion = wifiLockInfo.getWifiVersion();
             String productModel = wifiLockInfo.getProductModel();
             tvDeviceModel.setText(TextUtils.isEmpty(productModel) ? "" : productModel.contentEquals("K13") ? getString(R.string.lan_bo_ji_ni) : productModel);
-
+            //适配服务器上的产品型号，适配不上则显示锁本地的研发型号
+            for (ProductInfo productInfo:productList) {
+                if (productInfo.getDevelopmentModel().contentEquals(productModel)){
+                    tvDeviceModel.setText(productInfo.getProductModel());
+                }
+            }
             tvSerialNumber.setText(TextUtils.isEmpty(wifiLockInfo.getWifiSN()) ? "" : wifiLockInfo.getWifiSN());
+
+            if(BleLockUtils.isSupportWiFiFaceOTA(wifiLockInfo.getFunctionSet())){
+                rlFaceModelFirmwareVersion.setVisibility(View.VISIBLE);
+                faceModelFirmwareVersion = wifiLockInfo.getFaceVersion();
+                tvFaceModelFirmwareVersion.setText(TextUtils.isEmpty(faceModelFirmwareVersion) ? "" : wifiLockInfo.getFaceVersion());
+
+            }
+            else {//不支持
+                rlFaceModelFirmwareVersion.setVisibility(View.GONE);
+            }
+
             lockFirmwareVersion = wifiLockInfo.getLockFirmwareVersion();
             tvLockFirmwareVersion.setText(TextUtils.isEmpty(lockFirmwareVersion) ? "" : wifiLockInfo.getLockFirmwareVersion());
             wifiVersion.setText(TextUtils.isEmpty(wifiLockInfo.getWifiVersion()) ? "" : wifiLockInfo.getWifiVersion());
@@ -79,9 +109,17 @@ public class WifiLockDeviceInfoActivity extends BaseActivity<IWifiLockMoreView, 
         finish();
     }
 
-    @OnClick({ R.id.tv_lock_firmware_version, R.id.wifi_version})
+    @OnClick({R.id.tv_face_model_firmware_version, R.id.tv_lock_firmware_version, R.id.wifi_version})
     public void onClick(View view) {
         switch (view.getId()) {
+            case R.id.tv_face_model_firmware_version:
+                if (!TextUtils.isEmpty(wifiSN) && !TextUtils.isEmpty(faceModelFirmwareVersion)) {
+                    showLoading(getString(R.string.is_check_version));
+                    mPresenter.checkOtaInfo(wifiSN, faceModelFirmwareVersion, 3);
+                } else {
+                    Toast.makeText(this, getString(R.string.info_error), Toast.LENGTH_SHORT).show();
+                }
+                break;
             case R.id.tv_lock_firmware_version:
                 if (!TextUtils.isEmpty(wifiSN) && !TextUtils.isEmpty(lockFirmwareVersion)) {
                     showLoading(getString(R.string.is_check_version));
@@ -172,6 +210,12 @@ public class WifiLockDeviceInfoActivity extends BaseActivity<IWifiLockMoreView, 
                     public void right() {
 
                     }
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    }
+                    @Override
+                    public void afterTextChanged(String toString) {
+                    }
                 });
     }
 
@@ -196,6 +240,9 @@ public class WifiLockDeviceInfoActivity extends BaseActivity<IWifiLockMoreView, 
         } else if (type == 2) { //wifi 锁
             content = getString(R.string.hava_lock_new_version) + appInfo.getFileVersion() + getString(R.string.is_update);
         }
+        else if (type == 3) { //人脸模组
+            content = getString(R.string.hava_face_model_new_version) + appInfo.getFileVersion() + getString(R.string.is_update);
+        }
         AlertDialogUtil.getInstance().noEditTwoButtonDialog(this, getString(R.string.hint)
                 , content, getString(R.string.cancel), getString(R.string.confirm), new AlertDialogUtil.ClickListener() {
                     @Override
@@ -207,6 +254,12 @@ public class WifiLockDeviceInfoActivity extends BaseActivity<IWifiLockMoreView, 
                     public void right() {
                         showLoading(getString(R.string.iploading));
                         mPresenter.uploadOta(appInfo, wifiSN);
+                    }
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    }
+                    @Override
+                    public void afterTextChanged(String toString) {
                     }
                 }
         );
@@ -234,13 +287,19 @@ public class WifiLockDeviceInfoActivity extends BaseActivity<IWifiLockMoreView, 
             hiddenLoading();
             Toast.makeText(this, getString(R.string.notice_lock_update), Toast.LENGTH_SHORT).show();
         }
+        else if (type == 3) {
+            hiddenLoading();
+
+            AlertDialogUtil.getInstance().haveTitleContentNoButtonDialog(this, getString(R.string.wakeup_lock)
+                    , getString(R.string.wakeup_lock_face_ota_tips), 5);
+            }
 
     }
 
     @Override
     public void uploadFailed() {
         hiddenLoading();
-        Toast.makeText(this, "", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, getString(R.string.notice_lock_update_uploadFailed), Toast.LENGTH_SHORT).show();
     }
 
 }

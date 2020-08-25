@@ -32,6 +32,7 @@ import com.kaadas.lock.publiclibrary.http.postbean.ModifyFunctionSetBean;
 import com.kaadas.lock.publiclibrary.http.postbean.ModifyLockNickBean;
 import com.kaadas.lock.publiclibrary.http.postbean.ModifyPasswordBean;
 import com.kaadas.lock.publiclibrary.http.postbean.ModifyPasswordNickBean;
+import com.kaadas.lock.publiclibrary.http.postbean.ModifySwitchNickBean;
 import com.kaadas.lock.publiclibrary.http.postbean.ModifyUserNickBean;
 import com.kaadas.lock.publiclibrary.http.postbean.OTABean;
 import com.kaadas.lock.publiclibrary.http.postbean.PutMessageBean;
@@ -87,6 +88,7 @@ import com.kaadas.lock.publiclibrary.http.temp.postbean.OpenLockAuth;
 import com.kaadas.lock.publiclibrary.http.util.HttpUtils;
 import com.kaadas.lock.publiclibrary.http.util.RetrofitServiceManager;
 import com.kaadas.lock.publiclibrary.http.util.RxjavaHelper;
+import com.kaadas.lock.publiclibrary.mqtt.publishbean.BindingSingleFireSwitchBean;
 
 
 import java.io.File;
@@ -995,8 +997,8 @@ public class XiaokaiNewServiceImp {
      * @param uid          是	String	用户ID
      * @return
      */
-    public static Observable<BaseResult> wifiLockBind(String wifiSN, String lockNickName, String uid, String randomCode, String wifiName,int func) {
-        WiFiLockBindBean wiFiLockBindBean = new WiFiLockBindBean(wifiSN, lockNickName, uid, randomCode, wifiName,func);
+    public static Observable<BaseResult> wifiLockBind(String wifiSN, String lockNickName, String uid, String randomCode, String wifiName,int func, int distributionNetwork) {
+        WiFiLockBindBean wiFiLockBindBean = new WiFiLockBindBean(wifiSN, lockNickName, uid, randomCode, wifiName,func, distributionNetwork);
         return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
                 .wifiLockBind(new HttpUtils<WiFiLockBindBean>().getBody(wiFiLockBindBean))
                 .subscribeOn(Schedulers.io())
@@ -1254,5 +1256,17 @@ public class XiaokaiNewServiceImp {
                 .compose(RxjavaHelper.observeOnMainThread());
     }
 
+    /**
+     * 单火开关设备联动开关昵称修改
+     *
+     * @return
+     */
+    public static Observable<BaseResult> updateSwitchNickname(ModifySwitchNickBean modifySwitchNickBean) {
+
+        return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
+                .updateSwitchNickname(new HttpUtils<ModifySwitchNickBean>().getBody(modifySwitchNickBean))
+                .compose(RxjavaHelper.observeOnMainThread())
+                ;
+    }
 
 }

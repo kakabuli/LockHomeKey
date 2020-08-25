@@ -23,20 +23,36 @@ public interface IWifiLockBleToWifiSetUpView extends IBaseView {
     void onBindThrowable(Throwable throwable);
 
     /**
-     * 锁配网成功
+     * 锁重新配网成功
      */
 
-    void onUpdateSuccess();
+    void onUpdateSuccess(String wifiSn);
 
     /**
-     * 锁配网失败
+     * 锁重新配网失败
      */
     void onUpdateFailed(BaseResult baseResult);
 
     /**
-     * 锁配网异常
+     * 锁重新配网异常
      */
     void onUpdateThrowable(Throwable throwable);
+
+    /**
+     * 锁配网成功
+     */
+
+    void onMatchingSuccess();
+
+    /**
+     * 锁配网失败
+     */
+    void onMatchingFailed();
+
+    /**
+     * 锁配网异常
+     */
+    void onMatchingThrowable(Throwable throwable);
 
 
     /**
@@ -49,6 +65,9 @@ public interface IWifiLockBleToWifiSetUpView extends IBaseView {
     void onReceiverFailed();
 
     void onReceiverSuccess();
-
+    /**
+     * 蓝牙连接状态
+     */
+    void onDeviceStateChange(boolean isConnected);
 
 }

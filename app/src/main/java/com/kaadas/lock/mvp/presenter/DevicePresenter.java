@@ -84,6 +84,8 @@ public class DevicePresenter<T> extends BasePresenter<IDeviceView> {
                         public void accept(MqttData mqttData) throws Exception {
                             toDisposable(allBindDeviceDisposable);
                             String payload = mqttData.getPayload();
+                            LogUtils.e("--kaadas--payload=="+payload);
+
                             AllBindDevices allBindDevices = new Gson().fromJson(payload, AllBindDevices.class);
                             if (allBindDevices != null) {
                                 if ("200".equals(allBindDevices.getCode())) {

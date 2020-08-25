@@ -28,6 +28,7 @@ import com.kaadas.lock.publiclibrary.http.util.RxjavaHelper;
 import com.kaadas.lock.utils.GpsUtil;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.MyLog;
 import com.kaadas.lock.utils.NetUtil;
 import com.kaadas.lock.utils.OfflinePasswordFactorManager;
 import com.kaadas.lock.utils.Rsa;
@@ -64,6 +65,7 @@ public class WifiLockAddNewBLEWIFiSwitchActivity extends BaseActivity<IBindBleVi
     private String mac;
     private String deviceName;
     private byte[] passwordFactor;
+    int lastTimes = 5;//剩余校验次数
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,44 +126,44 @@ public class WifiLockAddNewBLEWIFiSwitchActivity extends BaseActivity<IBindBleVi
             changeState(1);
         }
     };
-    private Thread secondThread = new Thread() {
-        @Override
-        public void run() {
-            super.run();
-            changeState(2);
-        }
-    };
-    private Thread thirtyThread = new Thread() {
-        @Override
-        public void run() {
-            super.run();
-            changeState(3);
-        }
-    };
-    private Thread fourthThread = new Thread() {
-        @Override
-        public void run() {
-            super.run();
-            changeState(4);
-        }
-    };
-    private Thread fifthThread = new Thread() {
-        @Override
-        public void run() {
-            super.run();
-            changeState(5);
-        }
-    };
-    private Thread sixthThread = new Thread() {
-        @Override
-        public void run() {
-            super.run();
-            changeState(6);
-        }
-    };
+//    private Thread secondThread = new Thread() {
+//        @Override
+//        public void run() {
+//            super.run();
+//            changeState(2);
+//        }
+//    };
+//    private Thread thirtyThread = new Thread() {
+//        @Override
+//        public void run() {
+//            super.run();
+//            changeState(3);
+//        }
+//    };
+//    private Thread fourthThread = new Thread() {
+//        @Override
+//        public void run() {
+//            super.run();
+//            changeState(4);
+//        }
+//    };
+//    private Thread fifthThread = new Thread() {
+//        @Override
+//        public void run() {
+//            super.run();
+//            changeState(5);
+//        }
+//    };
+//    private Thread sixthThread = new Thread() {
+//        @Override
+//        public void run() {
+//            super.run();
+//            changeState(6);
+//        }
+//    };
 
     /**
-     * @param status 1 收到剩余校验次数   2 收到第一包离线密码因子 3 收到第二包离线密码因子 4 收到第三包离线密码因子 5 收到第四包离线密码因子 6 收到第五包离线密码因子
+     * @param status 1 收到剩余校验次数   2 收到第一包离线密码因子 3 收到第二包离线密码因子 4 收到第三包离线密码因子 5 收到第四包离线密码因子
      */
     private void changeState(int status) {
         runOnUiThread(new Runnable() {
@@ -169,7 +171,7 @@ public class WifiLockAddNewBLEWIFiSwitchActivity extends BaseActivity<IBindBleVi
             public void run() {
                 switch (status) {
                     case 1:
-                        circleProgressBar2.setValue(25);
+                        circleProgressBar2.setValue(20);
 
                         break;
                     case 2:
@@ -177,18 +179,14 @@ public class WifiLockAddNewBLEWIFiSwitchActivity extends BaseActivity<IBindBleVi
 
                         break;
                     case 3:
-                        circleProgressBar2.setValue(55);
+                        circleProgressBar2.setValue(60);
 
                         break;
                     case 4:
-                        circleProgressBar2.setValue(70);
+                        circleProgressBar2.setValue(80);
 
                         break;
                     case 5:
-                        circleProgressBar2.setValue(85);
-
-                        break;
-                    case 6:
                         circleProgressBar2.setValue(100);
 
                         break;
@@ -228,11 +226,11 @@ public class WifiLockAddNewBLEWIFiSwitchActivity extends BaseActivity<IBindBleVi
             handler.removeCallbacks(timeoutRunnable);
 //            finish();
             firstThread.interrupt();
-            secondThread.interrupt();
-            thirtyThread.interrupt();
-            fourthThread.interrupt();
-            fifthThread.interrupt();
-            sixthThread.interrupt();
+//            secondThread.interrupt();
+//            thirtyThread.interrupt();
+//            fourthThread.interrupt();
+//            fifthThread.interrupt();
+//            sixthThread.interrupt();
         }
     };
 
@@ -251,11 +249,11 @@ public class WifiLockAddNewBLEWIFiSwitchActivity extends BaseActivity<IBindBleVi
         handler.removeCallbacks(runnable);
         handler.removeCallbacks(timeoutRunnable);
         firstThread.interrupt();
-        secondThread.interrupt();
-        thirtyThread.interrupt();
-        fourthThread.interrupt();
-        fifthThread.interrupt();
-        sixthThread.interrupt();
+//        secondThread.interrupt();
+//        thirtyThread.interrupt();
+//        fourthThread.interrupt();
+//        fifthThread.interrupt();
+//        sixthThread.interrupt();
     }
 
     @Override
@@ -280,14 +278,14 @@ public class WifiLockAddNewBLEWIFiSwitchActivity extends BaseActivity<IBindBleVi
 
     public void onScanSuccess() {
 //        finish();
-        LogUtils.e("onScanSuccess  from WifiLockAddNewScanActivity");
+        LogUtils.e("--Kaadas--onScanSuccess  from WifiLockAddNewScanActivity");
         Intent nextIntent = new Intent(this, WifiLockAddNewBLEWIFISwitchInputAdminPasswotdActivity.class);
         nextIntent.putExtra(KeyConstants.BLE_VERSION, bleVersion);
         nextIntent.putExtra(KeyConstants.BLE_DEVICE_SN, sn);
         nextIntent.putExtra(KeyConstants.BLE_MAC, mac);
         nextIntent.putExtra(KeyConstants.DEVICE_NAME, deviceName);
         nextIntent.putExtra(KeyConstants.PASSWORD_FACTOR, passwordFactor);
-
+        nextIntent.putExtra(KeyConstants.WIFI_LOCK_ADMIN_PASSWORD_TIMES, lastTimes);
         startActivity(nextIntent);
 
     }
@@ -297,7 +295,8 @@ public class WifiLockAddNewBLEWIFiSwitchActivity extends BaseActivity<IBindBleVi
      * 剩余校验次数（配网通道）
      */
     public void onlistenerLastNum(int lastNum) {
-
+        LogUtils.e("--Kaadas--管理员密码输入次数=="+lastNum);
+        lastTimes = 6-lastNum;
         firstThread.start();
     }
     @Override
@@ -306,30 +305,54 @@ public class WifiLockAddNewBLEWIFiSwitchActivity extends BaseActivity<IBindBleVi
      */
     public void onlistenerPasswordFactor(byte[] originalData,int pswLen,int index){
 
-            switch (index) {
+        int fenmu ;
+        int fenzi ;
+        int copyLength ;
+        int copyLocation ;
+        fenmu = pswLen - index*originalData.length;
+        fenzi = originalData.length;
+        copyLength = fenmu/fenzi > 0?fenzi:fenmu;
+        copyLocation = index*fenzi;
+
+        switch (index) {
                 case 0:
                     passwordFactor = new byte[pswLen];
-                    System.arraycopy(originalData, 0, passwordFactor, 0, originalData.length);
-                    secondThread.start();
+
+                    System.arraycopy(originalData, 0, passwordFactor, copyLocation, copyLength);
+//                    secondThread.start();
+                    changeState(2);
+
                     break;
                 case 1:
-                    System.arraycopy(originalData, 0, passwordFactor, originalData.length, originalData.length);
-                    thirtyThread.start();
+
+                    System.arraycopy(originalData, 0, passwordFactor, copyLocation, copyLength);
+//                    thirtyThread.start();
+                    changeState(3);
+
                     break;
                 case 2:
-                    System.arraycopy(originalData, 0, passwordFactor, originalData.length*2, originalData.length);
-                    fourthThread.start();
+
+                    System.arraycopy(originalData, 0, passwordFactor, copyLocation, copyLength);
+//                    fourthThread.start();
+                    changeState(4);
+
                     break;
                 case 3:
-                    System.arraycopy(originalData, 0, passwordFactor, originalData.length*3, originalData.length);
-                    fifthThread.start();
+
+                    System.arraycopy(originalData, 0, passwordFactor, copyLocation, copyLength);
+//                    fifthThread.start();
+                    changeState(5);
+                    handler.postDelayed(runnable, 2000);
+//                    MyLog.getInstance().save("--kaadas调试--蓝牙0x92命令交互完成后的合并的密码因子数据==" + Rsa.bytesToHexString(passwordFactor));
+//                    LogUtils.e("--kaadas--合并密码因子数据==    " + Rsa.bytesToHexString(passwordFactor));
                     break;
-                case 4:
-                    System.arraycopy(originalData, 0, passwordFactor, originalData.length*4, 1);
-                    LogUtils.e("--kaadas--合并密码因子数据==    " + Rsa.bytesToHexString(passwordFactor));
-                    sixthThread.start();
-                    handler.postDelayed(runnable, 1000);
-                    break;
+//                case 4:
+//
+//                    System.arraycopy(originalData, 0, passwordFactor, copyLocation, copyLength);
+//                    LogUtils.e("--kaadas--合并密码因子数据==    " + Rsa.bytesToHexString(passwordFactor));
+////                    sixthThread.start();
+//                    handler.postDelayed(runnable, 1000);
+//                    break;
             }
     }
 

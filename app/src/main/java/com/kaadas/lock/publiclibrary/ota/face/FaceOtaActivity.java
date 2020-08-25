@@ -215,6 +215,12 @@ public class FaceOtaActivity extends BaseBleActivity<IFaceOtaView, FaceOtaPresen
                 setResult(RESULT_OK);
                 finish();
             }
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+            @Override
+            public void afterTextChanged(String toString) {
+            }
         });
     }
 
@@ -261,6 +267,12 @@ public class FaceOtaActivity extends BaseBleActivity<IFaceOtaView, FaceOtaPresen
                     @Override
                     public void right() {
                         finish();
+                    }
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    }
+                    @Override
+                    public void afterTextChanged(String toString) {
                     }
                 });
     }

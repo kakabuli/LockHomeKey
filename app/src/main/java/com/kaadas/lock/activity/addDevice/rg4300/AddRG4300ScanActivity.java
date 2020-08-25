@@ -165,6 +165,15 @@ public class AddRG4300ScanActivity extends BaseActivity<ISearchDeviceView, Searc
                 }
                 mPresenter.searchDevices();
             }
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(String toString) {
+
+            }
         });
     }
 
@@ -341,6 +350,15 @@ public class AddRG4300ScanActivity extends BaseActivity<ISearchDeviceView, Searc
                 mPresenter.bindDeviceInit(device, bindFlag);
                 showLoading(getString(R.string.connecting_ble));
             }
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(String toString) {
+
+            }
         });
 
 
@@ -468,6 +486,15 @@ public class AddRG4300ScanActivity extends BaseActivity<ISearchDeviceView, Searc
                     @Override
                     public void right() {
                         call("tel:"+"4001166667");
+                    }
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                    }
+
+                    @Override
+                    public void afterTextChanged(String toString) {
+
                     }
                 });
 

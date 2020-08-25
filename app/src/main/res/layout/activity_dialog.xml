@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    >
+
+
+    <RelativeLayout
+        android:id="@+id/activity_to_set_single_switch"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_marginLeft="70dp"
+        android:layout_marginRight="62dp"
+        android:background="#000000"
+        android:alpha="0.55"
+        android:layout_gravity="center"
+        android:windowIsTranslucent = "true"
+        >
+
+        <ImageView
+            android:id="@+id/set_status"
+            android:layout_width="31dp"
+            android:layout_height="31dp"
+            android:layout_marginTop="8.5dp"
+            android:layout_marginLeft="77dp"
+            android:layout_marginBottom="55.5dp"
+            />
+    <TextView
+        android:id="@+id/set_text"
+        android:textSize="16sp"
+        android:textColor="#fff"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:lines="3"
+        android:layout_marginTop="56.5dp"
+        android:layout_marginBottom="21.5dp"
+        android:layout_marginLeft="11dp"
+        android:layout_marginRight="8dp"
+        android:gravity="center_horizontal"
+        />
+
+
+
+    </RelativeLayout>
+
+</LinearLayout>

@@ -172,6 +172,12 @@ public class PasswordTempFragment extends BaseBleFragment<IAddTempView, AddTempP
                             etPassword.setText("");
                             return;
                         }
+                        @Override
+                        public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        }
+                        @Override
+                        public void afterTextChanged(String toString) {
+                        }
                     });
                     return;
                 }
@@ -263,6 +269,12 @@ public class PasswordTempFragment extends BaseBleFragment<IAddTempView, AddTempP
             @Override
             public void right() {
 
+            }
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+            @Override
+            public void afterTextChanged(String toString) {
             }
         });
     }

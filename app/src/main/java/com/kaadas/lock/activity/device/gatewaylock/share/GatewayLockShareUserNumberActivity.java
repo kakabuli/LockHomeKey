@@ -120,6 +120,15 @@ public class GatewayLockShareUserNumberActivity extends BaseActivity<IGatewayDel
                             deleteDialog= AlertDialogUtil.getInstance().noButtonDialog(context,getString(R.string.delete_be_being));
                             deleteDialog.setCancelable(false);
                         }
+                        @Override
+                        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                        }
+
+                        @Override
+                        public void afterTextChanged(String toString) {
+
+                        }
                     });
                 } else {
                     ToastUtil.getInstance().showLong(R.string.network_exception);

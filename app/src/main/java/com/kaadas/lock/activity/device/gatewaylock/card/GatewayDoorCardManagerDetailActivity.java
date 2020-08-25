@@ -112,6 +112,15 @@ public class GatewayDoorCardManagerDetailActivity extends BaseAddToApplicationAc
                         public void right() {
                             //todo 删除
                         }
+                        @Override
+                        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                        }
+
+                        @Override
+                        public void afterTextChanged(String toString) {
+
+                        }
                     });
                 } else {
                     ToastUtil.getInstance().showShort(getString(R.string.network_exception));

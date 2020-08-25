@@ -15,8 +15,14 @@
     <string name="register_default_agree">注册默认同意</string>
     <string name="user_protocol">用户协议</string>
     <string name="forget_password">忘记密码</string>
+    <string name="have_add_lock">门锁已添加成功</string>
+    <string name="have_add_lock_text">快来设置智能开关吧!</string>
     <string name="complete">完成</string>
+    <string name="right_now_set">立即设置</string>
+    <string name="sure_to_perform">确定执行</string>
     <string name="search">搜索</string>
+    <string name="input_lock_product">请输入您的门锁型号</string>
+    <string name="look_for_QRCode">在门锁后面板找到配网二维码</string>
     <string name="not_input_special_symbol">不能输入特殊符号</string>
     <string name="phone_not_right">手机号错误</string>
     <string name="hint">提示</string>
@@ -126,7 +132,7 @@
     <string name="pwd_resetting_success">密码重置成功</string>
     <string name="my_device">我的设备</string>
     <string name="you_no_device">您还没有设备哦</string>
-    <string name="lockNickName">Kaadas K9 智能锁</string>
+    <string name="lockNickName">Kaadas 智能锁</string>
     <string name="device_power">电量</string>
     <string name="add_device">添加设备</string>
     <string name="device_zigbee">ZigBee</string>
@@ -140,6 +146,7 @@
     <string name="go_bind">去绑定</string>
     <string name="wifi_is_connecting">正在连接kaadas网关Wi-Fi中...</string>
     <string name="add_lock">添加门锁</string>
+    <string name="choose_to_add_wifi">选择配网</string>
     <string name="searching_bluetooth">正在搜索附近设备...</string>
     <string name="research">重新搜索</string>
     <string name="help">帮助</string>
@@ -324,6 +331,7 @@
     <string name="fingerprint">指纹</string>
     <string name="ge">个</string>
     <string name="card">卡片</string>
+    <string name="smart_switch">智能开关</string>
     <string name="zhang">张</string>
     <string name="device_share">设备共享</string>
     <string name="more">更多</string>
@@ -653,6 +661,7 @@
     <string name="is_setting">正在设置...</string>
     <string name="set_success">设置成功</string>
     <string name="set_failed">设置失败</string>
+    <string name="set_failed_and_reset">设置失败，请重新设置</string>
     <string name="upload_device_name">正在上传设备名称</string>
     <string name="delete_lock_pwd_fail">删除锁上指纹失败</string>
     <string name="lock_no_this_finger">锁上没有此指纹，请同步！</string>
@@ -854,6 +863,7 @@
     <string name="no_unlock_record">暂无操作记录</string>
     <string name="connection_server">连接服务器失败,请检查网络退出该页面重新进去</string>
     <string name="lock_firware_version_number">门锁固件版本</string>
+    <string name="face_model_firware_version_number">人脸模组版本</string>
     <string name="lock_software_version">门锁软件版本</string>
     <string name="no_lock_alarm">暂无预警信息</string>
     <string name="no_catEye_alarm">暂无猫眼动态信息</string>
@@ -953,6 +963,8 @@
     <string name="input_lan_mask">请输入子网掩码</string>
     <string name="lan_ip_not_null">局域网ip不能为空</string>
     <string name="input_right_lan_ip">请输入正确的局域网ip</string>
+    <string name="input_right_lock_product_or_scan">请输入正确的门锁型号，或者扫描添加</string>
+    <string name="recheck_wifi_password">请靠近路由器检查账号或密码是否输入正确</string>
     <string name="input_lan_ip">请输入局域网IP</string>
     <string name="lan_mask_not_null">子网掩码不能为空</string>
     <string name="range_channel">信道范围 11~26</string>
@@ -1290,6 +1302,7 @@
     <string name="already_noti_net_in">已提示进入配网</string>
     <string name="input_family_wifi">输入Wi-Fi</string>
     <string name="notice_lock_wifi">连接您的家庭Wi-Fi </string>
+    <string name="notice_lock_wifi_message">暂不支持5G频段的Wi-Fi以及酒店机场需认证的Wi-Fi</string>
     <string name="click_link">输入家庭Wi-Fi密码，点击连接</string>
     <string name="noly_support_24G">请使用手机连接2.4G  Wi-Fi</string>
     <string name="connect">连 接</string>
@@ -1364,6 +1377,7 @@
     <string name="wifi_lock_alarm_10">您的%1$s门锁门锁低电量，请及时更换</string>
     <string name="wifi_lock_alarm_20">您的%1$s门锁有故障，请注意</string>
     <string name="wifi_lock_alarm_40">您的%1$s门锁处于布防状态，有从门内开锁情况</string>
+    <string name="wifi_lock_alarm_80">您的%1$s门锁面容识别已关闭，如需重新开启面容识别，请更换电池</string>
     <string name="lock_already_lock">门锁已上锁</string>
     <string name="lock_delete">门锁删除</string>
     <string name="lock_add">门锁添加</string>
@@ -1445,6 +1459,7 @@
     <string name="fkjdksklaj">根据语音提示，按‘4’选择‘扩展模式’，\n再按‘3’选择‘加入其它网络’</string>
     <string name="bind_success">绑定成功</string>
     <string name="back_failed">返回失败</string>
+    <string name="add_to_set">添加设置</string>
     <string name="lock_modify_admin_finger">门锁修改管理指纹</string>
     <string name="lock_add_admin_finger">门锁添加管理指纹</string>
     <string name="face_lock_power_Save_open">开启节能模式</string>
@@ -1457,8 +1472,10 @@
     <string name="notice">目前暂不支持5G频段的Wi-Fi以及酒店机场需认证的Wi-Fi</string>
     <string name="notice_wifi_update">注意观察Wi-Fi模块升级</string>
     <string name="notice_lock_update">注意观察Wi-Fi锁升级</string>
+    <string name="notice_lock_update_uploadFailed">上传失败，请重试</string>
     <string name="hava_wifi_new_version">检测有新Wi-Fi模块版本</string>
     <string name="hava_lock_new_version">检测有新Wi-Fi锁版本</string>
+    <string name="hava_face_model_new_version">检测到人脸模组版本</string>
     <string name="is_update">,是否升级?</string>
     <string name="temp_password_open_lock">临时密码开锁</string>
     <string name="dsfkjasdfsdfsdfshj">① 触摸按键区唤醒面板\n② 按键区先输入“*”两次\n③ 输入管理密码 :“******”\n④按“#”确认，“已进入管理模式”</string>
@@ -1470,6 +1487,8 @@
     <string name="fkjdshfjkh">进入管理模式根据语音提示完成更改</string>
     <string name="auto_connect_wifi_notice1">请将手机尽量靠近门锁，能够更好的连接设备热点</string>
     <string name="auto_connect_wifi_notice2">自动连接门锁热点中，请稍等...</string>
+    <string name="auto_connect_wifi_notice3">请将手机尽量靠近门锁</string>
+    <string name="auto_connect_wifi_notice4">添加过程中避免手机断电和App退出</string>
     <string name="is_connect_wifi_please_wait">正在切换WiFi，请稍后...</string>
     <string name="ble_lock">蓝牙锁</string>
     <string name="zigbeelock">网关锁</string>
@@ -1534,7 +1553,12 @@
     <string name="add_pir_second_notice2">取下电池绝缘片通电</string>
     <string name="add_pir_first_notice1">1. PIR配网准备</string>
     <string name="add_pir_first_notice2">设备通电后，逆时针打开电池后盖</string>
-    <string name="admin_error_reinput">门锁管理员密码验证失败请重新输入</string>
+    <string name="admin_error_reinput">门锁管理员密码验证失败,请重新输入</string>
+    <string name="admin_error_reinput_3">门锁管理密码验证已失败3次，超过5次门锁将锁定</string>
+    <string name="admin_error_reinput_4">门锁管理密码验证已失败4次，超过5次门锁将锁定</string>
+    <string name="admin_error_reinput_5">门锁管理密码验证已失败5次，门锁将锁定100 S</string>
+    <string name="ble_break_authenticate">门锁断开连接，无法验证</string>
+
     <string name="wifi_view1">Wi-Fi模块固件版本</string>
     <string name="am_mode">A-M自动/手动模式</string>
     <string name="power_Save_mode">节能模式</string>
@@ -1581,8 +1605,11 @@
     <string name="lock_checking">门锁设备验证中</string>
     <string name="modify_admin_pwd">修改初始管理密码</string>
     <string name="modify_pwd_notice">① 按键区输入“*”两次 \n② 输入管理密码：“12345678” \n③ 按“#”确认，“已进入管理模式” \n④ 语音播报：“请修改管理密码” \n⑤ 输入新设定的管理密码，按“＃”确认 \n⑥ 再输入新设定的管理密码，按“＃”完成修改</string>
+    <string name="wifi_lock_modify_admin_pwd">① 在通电情况下，双击后面板Restart键，语音提示：“已恢复出厂设置” \n② 按键区输入“*”两次 \n③ 输入管理密码：“12345678” \n④ 按“#”确认，“已进入管理模式” \n⑤ 语音播报：“请修改管理密码” \n⑥ 输入新设定的管理密码，按“＃”确认 \n⑦ 再输入新设定的管理密码，按“＃”完成修改</string>
     <string name="continue_check">继续验证</string>
+    <string name="has_change_continue_check">已修改，继续验证</string>
     <string name="pwd_already_modify">管理密码已修改</string>
+    <string name="has_change_admin_pwd">修改管理密码</string>
     <string name="send_wifi_info">发送Wi-Fi账号、密码</string>
     <string name="set_success1">配网成功</string>
     <string name="dkjsfkjhad">① 用手触碰按键区，唤醒门锁 \n语音是否播报:“密码过于简单，请及时修改管理密码”</string>
@@ -1630,10 +1657,24 @@
     <string name="swipch_link_setting_start_dayu_end">结束时间不能小于生效时间</string>
     <string name="swipch_setting_btn1">键位（1）</string>
     <string name="swipch_setting_btn2">键位（2）</string>
+    <string name="swipch_setting_btn3">键位（3）</string>
     <string name="swipch_change_btn_open">更换智能开关</string>
     <string name="swipch_setting_pluease_input_name">请输入名称</string>
     <string name="swipch_setting_pluease_input_title_name">确认更换智能开关？</string>
     <string name="swipch_setting_pluease_input_context_name">新的智能开关需要手动配置</string>
     <string name="swipch_setting_pluease_input_center_hint">客厅吸顶灯</string>
     <string name="swipch_setting_pluease_dialog_title1">请输入键位1名称</string>
+    <string name="swipch_setting_pluease_dialog_title2">请输入键位2名称</string>
+    <string name="swipch_setting_pluease_dialog_title3">请输入键位3名称</string>
+    <string name="unknow_qr">扫描的二维码不符合规定</string>
+    <string name="did_not_discover_lock">未搜索到门锁，请重新扫描或返回添加设备扫码添加</string>
+    <string name="to_change_wifi">更换网络</string>
+    <string name="have_not_set_time">你还没有设置生效时段，请重新设置</string>
+
+    <string name="wakeup_lock">请唤醒门锁</string>
+    <string name="wakeup_lock_face_ota_tips">请确保门锁有充足的电量，人脸模组升级中，门锁面容识别不可用</string>
+
+
+
+
 </resources>

@@ -111,6 +111,15 @@ public class AddBluetoothSecondActivity extends BaseActivity<IBindBleSecondView,
                     finish();
                     startActivity(new Intent(AddBluetoothSecondActivity.this,AddBluetoothSearchActivity.class));
                 }
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                }
+
+                @Override
+                public void afterTextChanged(String toString) {
+
+                }
             });
 
         }

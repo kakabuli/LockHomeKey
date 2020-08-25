@@ -79,7 +79,7 @@
                     android:lineSpacingExtra="5dp"
                     android:textSize="10sp"
                     android:textColor="#666666"
-                    android:text="① 确认门锁已安装 \n② 建议在门锁后面板装入用本产品配置的碱性电池或其他符合规格的干电 池4节或8节，确保门锁正常使用Wi-Fi联网功能 \n③ 当门锁出现低电量报警时，请及时更换掉电池，确保电池正负极安装正确 ④ 确认门锁后面板Wi-Fi 模块已插紧，不松动 \n⑤ 确保家里Wi-Fi网络(2.4G网络) 可正常使用，并且手机已经连接该网络"
+                    android:text="① 确认门锁已安装 \n② 建议在门锁后面板装入用本产品配置的碱性电池或其他符合规格的干电 池4节或8节，确保门锁正常使用Wi-Fi联网功能 \n③ 当门锁出现低电量报警时，请及时更换掉电池，确保电池正负极安装正确 \n④ 确认门锁后面板Wi-Fi 模块已插紧，不松动 \n⑤ 确保手机蓝牙已打开，家里Wi-Fi网络(2.4G网络) 可正常使用，并且手机已经连接该网络"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
             </LinearLayout>
@@ -137,7 +137,7 @@
                     android:lineSpacingExtra="5dp"
                     android:textSize="10sp"
                     android:textColor="#666666"
-                    android:text="① 在[添加设备页面]， 点击右上角图标，扫描对应包装盒上的配网二维码，进行配网\n② 请确保手机已优先连接上2.4G Wi-Fi，\n③ 用手触碰按键区，唤醒门锁 ，确保门锁数字键盘灯亮，手机App连上门锁热点，如手机连接不上门锁热点，请选择其他配网方式进行配网\n④ 门锁验证-输入配置门锁当前管理密码进行验证，验证通过，跳转下一步\n⑤ 输入Wi-Fi 密码， (确保此处选择的Wi-Fi与手机已连接的Wi-Fi是同一个2.4G Wi-Fi网络)，点击[下一步]\n⑥ 在 [连接设备]，等待设备连接成功"
+                    android:text="① 在[添加设备页面]， 点击右上角图标，扫描对应包装盒上的配网二维码，进行配网\n② 请确保手机已打开蓝牙,并优先连接上2.4G Wi-Fi \n③ 用手触碰按键区，唤醒门锁 ，确保门锁数字键盘灯亮，手机App连上门锁热点，如手机连接不上门锁热点，请选择其他配网方式进行配网\n④ 门锁验证-输入配置门锁当前管理密码进行验证，验证通过，跳转下一步\n⑤ 输入Wi-Fi 密码， (确保此处选择的Wi-Fi与手机已连接的Wi-Fi是同一个2.4G Wi-Fi网络)，点击[下一步]\n⑥ 在 [连接设备]，等待设备连接成功"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
             </LinearLayout>
@@ -165,7 +165,7 @@
                     android:lineSpacingExtra="5dp"
                     android:textSize="10sp"
                     android:textColor="#666666"
-                    android:text="① 用手触碰按键区，唤醒门锁 ，确保门锁数字键盘灯亮 \n② 门锁后面板Wi-Fi 模块已插紧，不松动\n③ 为门锁配网过程中，针对苹果手机，App会根据系统情况弹窗提示您打开“Wi-Fi开关”， “系统位置服务”和“应用定位权限”，请务必打开以保证完成配网过程\n④ 对于安卓手机，如果没有任何弹窗提示，请手动检查并打开:“系统位置服务”在:设置->高级(更多)设置->系统安全->位置信息,“应用定位权限”在系统的应用权限管理界面"
+                    android:text="① 用手触碰按键区，唤醒门锁 ，确保门锁数字键盘灯亮 \n② 确保手机蓝牙已打开 \n③ 门锁后面板Wi-Fi 模块已插紧，不松动\n④ 为门锁配网过程中，针对苹果手机，App会根据系统情况弹窗提示您打开“Wi-Fi开关”， “系统位置服务”和“应用定位权限”，请务必打开以保证完成配网过程\n⑤ 对于安卓手机，如果没有任何弹窗提示，请手动检查并打开:“系统位置服务”在:设置->高级(更多)设置->系统安全->位置信息,“应用定位权限”在系统的应用权限管理界面"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
             </LinearLayout>

@@ -8,6 +8,8 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.os.Handler;
+
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
@@ -58,6 +60,7 @@ public class WifiLockAddSuccessActivity extends BaseActivity<IWifiLockAddSuccess
 
     private AddBluetoothPairSuccessAdapter mAdapter;
     private String wifiSN;
+    private Handler handler = new Handler();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -123,7 +126,6 @@ public class WifiLockAddSuccessActivity extends BaseActivity<IWifiLockAddSuccess
             inputName.setCursorVisible(false);
         }
     }
-
 
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {

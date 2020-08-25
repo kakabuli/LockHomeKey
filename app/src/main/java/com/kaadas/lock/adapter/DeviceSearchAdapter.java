@@ -26,11 +26,10 @@ public class DeviceSearchAdapter extends BaseQuickAdapter<BluetoothDevice, BaseV
 
     public void setBluetoothLockBroadcast(List<BluetoothLockBroadcastListBean> broadcastList) {
         this.mBroadcastList = broadcastList;
-
     }
+
     public void setBindClickListener(OnBindClickListener bindClickListener) {
         this.bindClickListener = bindClickListener;
-
     }
 
     public DeviceSearchAdapter(@Nullable List<BluetoothDevice> data) {
@@ -49,6 +48,4 @@ public class DeviceSearchAdapter extends BaseQuickAdapter<BluetoothDevice, BaseV
             }
         });
     }
-
-
 }

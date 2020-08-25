@@ -157,7 +157,7 @@ public class WifiLockAddNewCheckWifiActivity extends BaseActivity<IWifiLockAPWif
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
-                                        Toast.makeText(WifiLockAddNewCheckWifiActivity.this,"请靠近路由器检查账号或密码是否输入正确", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(WifiLockAddNewCheckWifiActivity.this,getString(R.string.recheck_wifi_password), Toast.LENGTH_SHORT).show();
                                         Intent intent = new Intent(WifiLockAddNewCheckWifiActivity.this, WifiLockAddNewInputWifiActivity.class);
                                         intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
                                         intent.putExtra(KeyConstants.WIFI_LOCK_RANDOM_CODE, randomCode);
@@ -209,6 +209,15 @@ public class WifiLockAddNewCheckWifiActivity extends BaseActivity<IWifiLockAPWif
 
                         onError(socketManager, -5);
                     }
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                    }
+
+                    @Override
+                    public void afterTextChanged(String toString) {
+
+                    }
                 });
     }
 
@@ -224,21 +233,21 @@ public class WifiLockAddNewCheckWifiActivity extends BaseActivity<IWifiLockAPWif
                     return;
                 }
                 finish();
-//                socketManager.destroy();
-                Toast.makeText(WifiLockAddNewCheckWifiActivity.this, R.string.bind_failed+"=="+errorCode, Toast.LENGTH_SHORT).show();
+//                Toast.makeText(WifiLockAddNewCheckWifiActivity.this, R.string.bind_failed+"=="+errorCode, Toast.LENGTH_SHORT).show();
+
+                if (errorCode == -1) {
+                    Toast.makeText(WifiLockAddNewCheckWifiActivity.this, "读取失败,请尝试手机系统忘记kaadas_AP热点", Toast.LENGTH_SHORT).show();
+                } else if (errorCode == -2) {
+                    Toast.makeText(WifiLockAddNewCheckWifiActivity.this, "连接失败,请尝试手机系统忘记kaadas_AP热点", Toast.LENGTH_SHORT).show();
+                } else if (errorCode == -3) {
+                    Toast.makeText(WifiLockAddNewCheckWifiActivity.this, "管理员密码输入错误，请重新输入", Toast.LENGTH_SHORT).show();
+                } else if (errorCode == -4) {
+                    Toast.makeText(WifiLockAddNewCheckWifiActivity.this, "写数据错误,请尝试手机系统忘记kaadas_AP热点", Toast.LENGTH_SHORT).show();
+                } else if (errorCode == -5) {
+                    Toast.makeText(WifiLockAddNewCheckWifiActivity.this, "返回错误,请尝试手机系统忘记kaadas_AP热点", Toast.LENGTH_SHORT).show();
+                }
                 Intent intent = new Intent(WifiLockAddNewCheckWifiActivity.this, WifiLockAddNewBindFailedActivity.class);
                 startActivity(intent);
-//                if (errorCode == -1) {
-//                    Toast.makeText(WifiLockApConnectDeviceActivity.this, "读取失败", Toast.LENGTH_SHORT).show();
-//                } else if (errorCode == -2) {
-//                    Toast.makeText(WifiLockApConnectDeviceActivity.this, "连接失败", Toast.LENGTH_SHORT).show();
-//                } else if (errorCode == -3) {
-//                    Toast.makeText(WifiLockApConnectDeviceActivity.this, "管理员密码输入错误，请重新输入", Toast.LENGTH_SHORT).show();
-//                } else if (errorCode == -4) {
-//                    Toast.makeText(WifiLockApConnectDeviceActivity.this, "写数据错误", Toast.LENGTH_SHORT).show();
-//                } else if (errorCode == -5) {
-//                    Toast.makeText(WifiLockApConnectDeviceActivity.this, "返回错误", Toast.LENGTH_SHORT).show();
-//                }
             }
         });
     }
@@ -270,7 +279,7 @@ public class WifiLockAddNewCheckWifiActivity extends BaseActivity<IWifiLockAPWif
                         break;
                     case 2:
                         ivSendWifiInfo.setImageResource(R.mipmap.wifi_lock_add_state_complete);
-                        ivSetSuccess.setImageResource(R.mipmap.wifi_lock_add_state_complete);
+                        ivSetSuccess.setImageResource(R.mipmap.wifi_lock_add_state_refresh);
                         ivBindSuccess.setImageResource(R.mipmap.wifi_lock_add_state_wait);
 
                         tvSendWifiInfo.setTextColor(getResources().getColor(R.color.color_333));
@@ -285,7 +294,7 @@ public class WifiLockAddNewCheckWifiActivity extends BaseActivity<IWifiLockAPWif
                         break;
                     case 3:
                         ivSendWifiInfo.setImageResource(R.mipmap.wifi_lock_add_state_complete);
-                        ivBindSuccess.setImageResource(R.mipmap.wifi_lock_add_state_complete);
+                        ivSetSuccess.setImageResource(R.mipmap.wifi_lock_add_state_complete);
                         ivBindSuccess.setImageResource(R.mipmap.wifi_lock_add_state_refresh);
 
                         tvSendWifiInfo.setTextColor(getResources().getColor(R.color.color_333));
@@ -411,6 +420,15 @@ public class WifiLockAddNewCheckWifiActivity extends BaseActivity<IWifiLockAPWif
                         //退出当前界面
                         Intent intent = new Intent(WifiLockAddNewCheckWifiActivity.this, WifiLockAddNewFirstActivity.class);
                         startActivity(intent);
+                    }
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                    }
+
+                    @Override
+                    public void afterTextChanged(String toString) {
+
                     }
                 });
     }

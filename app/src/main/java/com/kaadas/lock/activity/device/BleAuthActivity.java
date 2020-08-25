@@ -19,6 +19,10 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
+import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.MainActivity;
 import com.kaadas.lock.activity.device.bluetooth.BleDeviceInfoActivity;
@@ -28,6 +32,7 @@ import com.kaadas.lock.mvp.mvpbase.BaseBleActivity;
 import com.kaadas.lock.mvp.presenter.ble.OldAndAuthBleDetailPresenter;
 import com.kaadas.lock.mvp.view.IOldBleDetailView;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
+import com.kaadas.lock.publiclibrary.bean.ProductInfo;
 import com.kaadas.lock.publiclibrary.ble.BleProtocolFailedException;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.util.HttpUtils;
@@ -41,6 +46,8 @@ import com.kaadas.lock.utils.ToastUtil;
 
 import net.sdvn.cmapi.util.LogUtils;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeoutException;
 
 import butterknife.BindView;
@@ -77,12 +84,15 @@ public class BleAuthActivity extends BaseBleActivity<IOldBleDetailView, OldAndAu
     private Runnable lockRunnable;
     private boolean isOpening = false;
     private Handler handler = new Handler();
+    private List<ProductInfo> productList = new ArrayList<>();
+    private RequestOptions options;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bluetooth_lock_authorization);
         ButterKnife.bind(this);
+        productList = MyApplication.getInstance().getProductInfos();
         Intent intent = getIntent();
         changeLockIcon(intent);
         bleLockInfo = mPresenter.getBleLockInfo();
@@ -134,12 +144,36 @@ public class BleAuthActivity extends BaseBleActivity<IOldBleDetailView, OldAndAu
         String lockType = bleLockInfo.getServerLockInfo().getModel();
         if (!TextUtils.isEmpty(lockType)) {
             tvType.setText(StringUtil.getSubstringFive(lockType));
+            //适配服务器上的产品型号，适配不上则显示锁本地的研发型号
+            for (ProductInfo productInfo:productList) {
+                if (productInfo.getDevelopmentModel().contentEquals(lockType)){
+                    tvType.setText(productInfo.getProductModel());
+                }
+            }
         }
     }
 
     private void changeLockIcon(Intent intent) {
         String model = intent.getStringExtra(KeyConstants.DEVICE_TYPE);
         ivLockIcon.setImageResource(BleLockUtils.getAuthorizationImageByModel(model));
+        //本地图片有对应的产品则不获取缓存的产品型号图片，缓存没有则选择尝试下载
+        if (BleLockUtils.getAuthorizationImageByModel(model) == R.mipmap.bluetooth_authorization_lock_default){
+            options = new RequestOptions()
+                    .placeholder(R.mipmap.bluetooth_authorization_lock_default)      //加载成功之前占位图
+                    .error(R.mipmap.bluetooth_authorization_lock_default)      //加载错误之后的错误图
+                    .diskCacheStrategy(DiskCacheStrategy.RESOURCE)    //只缓存最终的图片
+                    .dontAnimate()                                      //直接显示图片
+                .fitCenter();//指定图片的缩放类型为fitCenter （是一种“中心匹配”的方式裁剪方式，它裁剪出来的图片长宽都会小于等于ImageView的大小，这样一来。图片会完整地显示出来，但是ImageView可能并没有被填充满）
+//                    .centerCrop();//指定图片的缩放类型为centerCrop （是一种“去除多余”的裁剪方式，它会把ImageView边界以外的部分裁剪掉。这样一来ImageView会被填充满，但是这张图片可能不会完整地显示出来(ps:因为超出部分都被裁剪掉了）
+
+            for (ProductInfo productInfo:productList) {
+                if (productInfo.getDevelopmentModel().contentEquals(model)){
+
+                    //匹配型号获取下载地址
+                    Glide.with(this).load(productInfo.getAuthUrl()).apply(options).into(ivLockIcon);
+                }
+            }
+        }
     }
 
     @Override
@@ -460,6 +494,15 @@ public class BleAuthActivity extends BaseBleActivity<IOldBleDetailView, OldAndAu
                     public void right() {
                         showLoading(getString(R.string.is_deleting));
                         mPresenter.deleteDevice(bleLockInfo.getServerLockInfo().getLockName());
+                    }
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                    }
+
+                    @Override
+                    public void afterTextChanged(String toString) {
+
                     }
                 });
                 break;

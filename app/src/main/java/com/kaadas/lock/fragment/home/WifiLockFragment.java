@@ -95,10 +95,13 @@ public class WifiLockFragment extends BaseFragment<IWifiLockView, WifiLockPresen
         ButterKnife.bind(this, view);
         initRecycleView();
         wifiLockInfo = (WifiLockInfo) getArguments().getSerializable(KeyConstants.WIFI_LOCK_INFO);
-        wifiLockInfo = MyApplication.getInstance().getWifiLockInfoBySn(wifiLockInfo.getWifiSN());
-        mPresenter.getOpenCount(wifiLockInfo.getWifiSN());
-        mPresenter.getOperationRecord(wifiLockInfo.getWifiSN(), false);
-        initData();
+        if (wifiLockInfo!=null){
+            wifiLockInfo = MyApplication.getInstance().getWifiLockInfoBySn(wifiLockInfo.getWifiSN());
+            mPresenter.getOpenCount(wifiLockInfo.getWifiSN());
+            mPresenter.getOperationRecord(wifiLockInfo.getWifiSN(), false);
+            initData();
+        }
+
         rlIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -356,34 +359,34 @@ public class WifiLockFragment extends BaseFragment<IWifiLockView, WifiLockPresen
     @Override
     public void onLoadServerRecord(List<WifiLockOperationRecord> operationRecords, boolean isNotice) {
         groupData(operationRecords);
-        hiddenLoading();
-        if (isNotice) {
-            Toast.makeText(getContext(), getString(R.string.sync_success), Toast.LENGTH_SHORT).show();
-        }
+//        hiddenLoading();
+//        if (isNotice) {
+//            Toast.makeText(getContext(), getString(R.string.sync_success), Toast.LENGTH_SHORT).show();
+//        }
     }
 
     @Override
     public void onLoadServerRecordFailed(Throwable throwable, boolean isNotice) {
-        if (isNotice) {
-            Toast.makeText(getContext(), getString(R.string.synv_failed), Toast.LENGTH_SHORT).show();
-        }
-        hiddenLoading();
+//        if (isNotice) {
+//            Toast.makeText(getContext(), getString(R.string.synv_failed), Toast.LENGTH_SHORT).show();
+//        }
+//        hiddenLoading();
     }
 
     @Override
     public void onLoadServerRecordFailedServer(BaseResult result, boolean isNotice) {
-        if (isNotice) {
-            Toast.makeText(getContext(), getString(R.string.synv_failed), Toast.LENGTH_SHORT).show();
-        }
-        hiddenLoading();
+//        if (isNotice) {
+//            Toast.makeText(getContext(), getString(R.string.synv_failed), Toast.LENGTH_SHORT).show();
+//        }
+//        hiddenLoading();
     }
 
     @Override
     public void onServerNoData(boolean isNotice) {
-        if (isNotice) {
-            Toast.makeText(getContext(), getString(R.string.no_data), Toast.LENGTH_SHORT).show();
-        }
-        hiddenLoading();
+//        if (isNotice) {
+//            Toast.makeText(getContext(), getString(R.string.no_data), Toast.LENGTH_SHORT).show();
+//        }
+//        hiddenLoading();
     }
 
     @Override

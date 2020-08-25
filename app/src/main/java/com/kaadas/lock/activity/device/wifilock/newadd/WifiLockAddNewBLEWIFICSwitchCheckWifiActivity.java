@@ -2,6 +2,8 @@ package com.kaadas.lock.activity.device.wifilock.newadd;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -13,13 +15,12 @@ import android.widget.Toast;
 
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
-import com.kaadas.lock.activity.device.wifilock.add.WifiLockAddSuccessActivity;
+import com.kaadas.lock.activity.device.wifilock.add.WifiLockAddBleSuccessActivity;
 import com.kaadas.lock.activity.device.wifilock.add.WifiLockHelpActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
-import com.kaadas.lock.mvp.presenter.wifilock.WifiApWifiSetUpPresenter;
 import com.kaadas.lock.mvp.presenter.wifilock.WifiLockBleToWifiSetUpPresenter;
-import com.kaadas.lock.mvp.view.wifilock.IWifiLockAPWifiSetUpView;
 import com.kaadas.lock.mvp.view.wifilock.IWifiLockBleToWifiSetUpView;
+import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.KeyConstants;
@@ -27,7 +28,7 @@ import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.Rsa;
 import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.SocketManager;
-import com.kaadas.lock.utils.WifiUtils;
+import com.kaadas.lock.utils.dialog.MessageDialog;
 import com.kaadas.lock.widget.WifiCircleProgress;
 
 import butterknife.BindView;
@@ -57,7 +58,7 @@ public class WifiLockAddNewBLEWIFICSwitchCheckWifiActivity extends BaseActivity<
     ImageView ivBindSuccess;
 
     private Animation animation;
-//    SocketManager socketManager = SocketManager.getInstance();
+
     private int func;
     private String randomCode;
     private String wifiSn;
@@ -65,6 +66,8 @@ public class WifiLockAddNewBLEWIFICSwitchCheckWifiActivity extends BaseActivity<
     private String sSsid;
     private boolean isSuccess = false;
     private int times = 1;
+    private MessageDialog messageDialog;
+    private Handler mHandler = new Handler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,9 +82,13 @@ public class WifiLockAddNewBLEWIFICSwitchCheckWifiActivity extends BaseActivity<
         func = getIntent().getIntExtra(KeyConstants.WIFI_LOCK_FUNC, 0);
         times = getIntent().getIntExtra(KeyConstants.WIFI_LOCK_WIFI_TIMES, 1);
         Log.e("--kaadas--", "onCreate: sSsid " + sSsid + "   sPassword " + sPassword);
-        thread.start();
+
+        totalTimeOut();//设置页面总超时
+        startSendComand();
+
         LogUtils.e("--kaadas--randomCode数据是==" + randomCode);
         LogUtils.e("--kaadas--功能集是=="+ func);
+        LogUtils.e("--kaadas--校验次数=="+ times);
 
         circleProgressBar2.setValue(0);
 
@@ -93,18 +100,32 @@ public class WifiLockAddNewBLEWIFICSwitchCheckWifiActivity extends BaseActivity<
         changeState(1);
     }
 
+    private void totalTimeOut(){
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                    mHandler.postDelayed(new Runnable() {
+                        public void run() {
+                            if(circleProgressBar2 != null && circleProgressBar2.getValue() != 100){
+                                Toast.makeText(WifiLockAddNewBLEWIFICSwitchCheckWifiActivity.this, "绑定100s超时", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(WifiLockAddNewBLEWIFICSwitchCheckWifiActivity.this, WifiLockAddNewBindFailedActivity.class);
+                                startActivity(intent);
+                            }
+                        }
+                    }, 100*1000); //延迟100秒失败
+                }
+        });
+
+    }
     @Override
     protected WifiLockBleToWifiSetUpPresenter<WifiLockBleToWifiSetUpPresenter> createPresent() {
         return new WifiLockBleToWifiSetUpPresenter<>();
     }
-
     private void onBindSuccess() {
-        startActivity(new Intent(this, WifiLockAddNewBindSuccesssActivity.class));
-
+//        startActivity(new Intent(this, WifiLockAddNewBindSuccesssActivity.class));
     }
-
     private void onBindFailed() {
-        startActivity(new Intent(this, WifiLockAddNewBindFailedActivity.class));
+//        startActivity(new Intent(this, WifiLockAddNewBindFailedActivity.class));
     }
 
     @OnClick({R.id.back, R.id.help})
@@ -119,174 +140,55 @@ public class WifiLockAddNewBLEWIFICSwitchCheckWifiActivity extends BaseActivity<
         }
     }
 
-//    private Thread thread = new Thread() {
-//        @Override
-//        public void run() {
-//            super.run();
-//            if (socketManager.isStart()) { //连接成功
-//                LogUtils.e("连接成功");
-//                byte[] bSsid ;
-//                byte[] bPwd = sPassword.getBytes();
-//                String wifiName = (String) SPUtils.get(KeyConstants.WIFI_LOCK_CONNECT_NAME, "");
-//                if (sSsid.equals(wifiName)) {
-//                    String pwdByteString = (String) SPUtils.get(KeyConstants.WIFI_LOCK_CONNECT_ORIGINAL_DATA, "");
-//                    bSsid = Rsa.hex2byte2(pwdByteString);
-//                } else {
-//                    bSsid = sSsid.getBytes();
-//                }
-//
-//                byte[] data = new byte[96];
-//                System.arraycopy(bSsid, 0, data, 0, bSsid.length);
-//                System.arraycopy(bPwd, 0, data, 32, bPwd.length);
-//                int writeResult = socketManager.writeData(data);
-//                if (writeResult == 0) {
-//                    LogUtils.e("发送账号密码成功   开始读取数据");
-//                    SocketManager.ReadResult readResult = socketManager.readWifiDataTimeout(60 * 1000);
-//                    if (readResult.resultCode >= 0) { //读取成功
-//                        String sResult = new String(readResult.data);
-//                        LogUtils.e("读取成功   " + sResult);
-//                        if (!TextUtils.isEmpty(sResult) && sResult.startsWith("APSuccess")) {
-//                            changeState(2);
-//                            onSuccess();
-//                            isSuccess = true;
-//                            socketManager.destroy();
-//                        } else if (!TextUtils.isEmpty(sResult) && sResult.startsWith("APError")) {
-//
-//                            if (times < 5) {
-//                                runOnUiThread(new Runnable() {
-//                                    @Override
-//                                    public void run() {
-//                                        Toast.makeText(WifiLockAddNewBLEWIFICSwitchCheckWifiActivity.this,"请靠近路由器检查账号或密码是否输入正确", Toast.LENGTH_SHORT).show();
-//                                        Intent intent = new Intent(WifiLockAddNewBLEWIFICSwitchCheckWifiActivity.this, WifiLockAddNewInputWifiActivity.class);
-//                                        intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
-//                                        intent.putExtra(KeyConstants.WIFI_LOCK_RANDOM_CODE, randomCode);
-//                                        intent.putExtra(KeyConstants.WIFI_LOCK_FUNC, func);
-//                                        intent.putExtra(KeyConstants.WIFI_LOCK_WIFI_TIMES, times + 1);
-//                                        startActivity(intent);
-//                                        finish();
-//                                    }
-//                                });
-//                            } else { //五次失败
-//                                socketManager.writeData("************************************************************************************************APClose".getBytes());
-//                                runOnUiThread(new Runnable() {
-//                                    @Override
-//                                    public void run() {
-//                                        onWiFIAndPWDError();
-//                                    }
-//                                });
-//
-//                            }
-//                        } else {
-//                            onError(socketManager, -5);
-//                        }
-//                    } else {
-//                        onError(socketManager, -1);
-//                        LogUtils.e("读数据失败   " + writeResult);
-//                    }
-//                } else { //写数据失败
-//                    LogUtils.e("写数据失败   " + writeResult);
-//                    onError(socketManager, -4);
-//                }
-//            } else {  //连接失败
-//                LogUtils.e("连接失败");
-//                onError(socketManager, -2);
-//            }
-//        }
-//    };
-    private Thread thread = new Thread() {
-      @Override
-      public void run() {
-        super.run();
-
-            byte[] bSsid = new byte[42];
-            byte[] bPwd = new byte[70];
-          System.arraycopy(sPassword.getBytes(),0,bPwd,0,sPassword.getBytes().length);
+    private  void startSendComand()
+    {
+        byte[] bSsid = new byte[42];
+        byte[] bPwd = new byte[70];
+        System.arraycopy(sPassword.getBytes(), 0, bPwd, 0, sPassword.getBytes().length);
 //            bPwd = sPassword.getBytes();
-
-            String wifiName = (String) SPUtils.get(KeyConstants.WIFI_LOCK_CONNECT_NAME, "");
-              if (sSsid.equals(wifiName)) {
-                  String pwdByteString = (String) SPUtils.get(KeyConstants.WIFI_LOCK_CONNECT_ORIGINAL_DATA, "");
+        String wifiName = (String) SPUtils.get(KeyConstants.WIFI_LOCK_CONNECT_NAME, "");
+        if (sSsid.equals(wifiName)) {
+            String pwdByteString = (String) SPUtils.get(KeyConstants.WIFI_LOCK_CONNECT_ORIGINAL_DATA, "");
 //                  bSsid = Rsa.hex2byte2(pwdByteString);
-                  System.arraycopy(Rsa.hex2byte2(pwdByteString),0,bSsid,0,Rsa.hex2byte2(pwdByteString).length);
-
-              } else {
+            System.arraycopy(Rsa.hex2byte2(pwdByteString), 0, bSsid, 0, Rsa.hex2byte2(pwdByteString).length);
+        } else {
 //                  bSsid = sSsid.getBytes();
-                  System.arraycopy(sSsid.getBytes(),0,bSsid,0,sSsid.getBytes().length);
+            System.arraycopy(sSsid.getBytes(), 0, bSsid, 0, sSsid.getBytes().length);
+        }
+        mPresenter.listenConnectState();
+        mPresenter.listenerCharacterNotify();
+        mPresenter.sendSSIDAndPWD(bSsid, bPwd);
+//      }
+//    };
+    }
+    private Thread secondThread = new Thread() {
+        @Override
+        public void run() {
+            super.run();
+            Intent intent = new Intent(WifiLockAddNewBLEWIFICSwitchCheckWifiActivity.this, WifiLockAddNewBLEWIFISwitchInputWifiActivity.class);
+            intent.putExtra(KeyConstants.WIFI_LOCK_WIFI_TIMES, times + 1);
+            setResult(RESULT_OK, intent);
+            finish();
 
-              }
-            mPresenter.listenerCharacterNotify();
-
-             mPresenter.sendSSIDAndPWD(bSsid,bPwd);
-
-
-//              byte[] data = new byte[96];
-//              System.arraycopy(bSsid, 0, data, 0, bSsid.length);
-//              System.arraycopy(bPwd, 0, data, 32, bPwd.length);
-//              int writeResult = socketManager.writeData(data);
-//              if (writeResult == 0) {
-//                  LogUtils.e("发送账号密码成功   开始读取数据");
-//                  SocketManager.ReadResult readResult = socketManager.readWifiDataTimeout(60 * 1000);
-//                  if (readResult.resultCode >= 0) { //读取成功
-//                      String sResult = new String(readResult.data);
-//                      LogUtils.e("读取成功   " + sResult);
-//                      if (!TextUtils.isEmpty(sResult) && sResult.startsWith("APSuccess")) {
-//                          changeState(2);
-//                          onSuccess();
-//                          isSuccess = true;
-////                          socketManager.destroy();
-//                      } else if (!TextUtils.isEmpty(sResult) && sResult.startsWith("APError")) {
-//
-//                          if (times < 5) {
-//                              runOnUiThread(new Runnable() {
-//                                  @Override
-//                                  public void run() {
-//                                      Toast.makeText(WifiLockAddNewBLEWIFICSwitchCheckWifiActivity.this,"请靠近路由器检查账号或密码是否输入正确", Toast.LENGTH_SHORT).show();
-//                                      Intent intent = new Intent(WifiLockAddNewBLEWIFICSwitchCheckWifiActivity.this, WifiLockAddNewInputWifiActivity.class);
-//                                      intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
-//                                      intent.putExtra(KeyConstants.WIFI_LOCK_RANDOM_CODE, randomCode);
-//                                      intent.putExtra(KeyConstants.WIFI_LOCK_FUNC, func);
-//                                      intent.putExtra(KeyConstants.WIFI_LOCK_WIFI_TIMES, times + 1);
-//                                      startActivity(intent);
-//                                      finish();
-//                                  }
-//                              });
-//                          } else { //五次失败
-////                              socketManager.writeData("************************************************************************************************APClose".getBytes());
-//                              runOnUiThread(new Runnable() {
-//                                  @Override
-//                                  public void run() {
-//                                      onWiFIAndPWDError();
-//                                  }
-//                              });
-//
-//                          }
-//                      } else {
-////                          onError(socketManager, -5);
-//                      }
-//                  } else {
-////                      onError(socketManager, -1);
-//                      LogUtils.e("读数据失败   " + writeResult);
-//                  }
-//              } else { //写数据失败
-//                  LogUtils.e("写数据失败   " + writeResult);
-////                  onError(socketManager, -4);
-//              }
-
-      }
+        }
     };
     private void onWiFIAndPWDError() {
         AlertDialogUtil.getInstance().noEditSingleCanNotDismissButtonDialog(
                 WifiLockAddNewBLEWIFICSwitchCheckWifiActivity.this, "", "Wi-Fi账号或密码输错已超过5次", getString(R.string.confirm), new AlertDialogUtil.ClickListener() {
                     @Override
                     public void left() {
-
 //                        onError(socketManager, -5);
                     }
-
                     @Override
                     public void right() {
-
 //                        onError(socketManager, -5);
+                    }
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                    }
+                    @Override
+                    public void afterTextChanged(String toString) {
                     }
                 });
     }
@@ -322,7 +224,6 @@ public class WifiLockAddNewBLEWIFICSwitchCheckWifiActivity extends BaseActivity<
         });
     }
 
-
     /**
      * @param status 1初始状态  2 发送wifi信息成功  3设置成功 正在绑定  4
      */
@@ -349,7 +250,7 @@ public class WifiLockAddNewBLEWIFICSwitchCheckWifiActivity extends BaseActivity<
                         break;
                     case 2:
                         ivSendWifiInfo.setImageResource(R.mipmap.wifi_lock_add_state_complete);
-                        ivSetSuccess.setImageResource(R.mipmap.wifi_lock_add_state_complete);
+                        ivSetSuccess.setImageResource(R.mipmap.wifi_lock_add_state_refresh);
                         ivBindSuccess.setImageResource(R.mipmap.wifi_lock_add_state_wait);
 
                         tvSendWifiInfo.setTextColor(getResources().getColor(R.color.color_333));
@@ -364,7 +265,7 @@ public class WifiLockAddNewBLEWIFICSwitchCheckWifiActivity extends BaseActivity<
                         break;
                     case 3:
                         ivSendWifiInfo.setImageResource(R.mipmap.wifi_lock_add_state_complete);
-                        ivBindSuccess.setImageResource(R.mipmap.wifi_lock_add_state_complete);
+                        ivSetSuccess.setImageResource(R.mipmap.wifi_lock_add_state_complete);
                         ivBindSuccess.setImageResource(R.mipmap.wifi_lock_add_state_refresh);
 
                         tvSendWifiInfo.setTextColor(getResources().getColor(R.color.color_333));
@@ -378,18 +279,40 @@ public class WifiLockAddNewBLEWIFICSwitchCheckWifiActivity extends BaseActivity<
                         circleProgressBar2.setValue(80);
                         break;
 
-                }
+                    case 4:
+                        ivSendWifiInfo.setImageResource(R.mipmap.wifi_lock_add_state_complete);
+                        ivSetSuccess.setImageResource(R.mipmap.wifi_lock_add_state_complete);
+                        ivBindSuccess.setImageResource(R.mipmap.wifi_lock_add_state_complete);
 
+                        tvSendWifiInfo.setTextColor(getResources().getColor(R.color.color_333));
+                        tvSetSuccess.setTextColor(getResources().getColor(R.color.color_333));
+                        tvBindSuccess.setTextColor(getResources().getColor(R.color.color_333));
+
+                        ivSendWifiInfo.clearAnimation();//開始动画
+                        ivSetSuccess.clearAnimation();
+                        ivBindSuccess.clearAnimation();
+
+                        circleProgressBar2.setValue(100);
+                        break;
+                }
             }
         });
     }
 
     private void onSuccess() {
         LogUtils.e("--kaadas--开始往服务器发送绑定命令");
-//        WifiUtils.getInstance(MyApplication.getInstance()).disableWiFi();
-        mPresenter.bindDevice(wifiSn, wifiSn, MyApplication.getInstance().getUid(),randomCode, sSsid, func);
 
-            runOnUiThread(new Runnable() {
+        WifiLockInfo wifiLockInfo = MyApplication.getInstance().getWifiLockInfoBySn(wifiSn);
+        if (wifiLockInfo != null && wifiLockInfo.getIsAdmin() == 1) {
+            LogUtils.e("--kaadas--更新密码因子=="+randomCode);
+            //更新密码因子
+            mPresenter.update(wifiSn, randomCode, wifiSn, func);
+        } else {
+            LogUtils.e("--kaadas--绑定设备=="+randomCode);
+            //绑定设备
+            mPresenter.bindDevice(wifiSn, wifiSn, MyApplication.getInstance().getUid(), randomCode, sSsid, func,2);
+        }
+        runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 changeState(3);
@@ -397,10 +320,14 @@ public class WifiLockAddNewBLEWIFICSwitchCheckWifiActivity extends BaseActivity<
         });
     }
 
+    public void toReInputWifi() {
+        secondThread.start();
+    }
 
     @Override
     public void onBindSuccess(String wifiSn) {
-        Intent intent = new Intent(this, WifiLockAddSuccessActivity.class);
+        changeState(4);
+        Intent intent = new Intent(this, WifiLockAddBleSuccessActivity.class);
         intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
         startActivity(intent);
     }
@@ -420,29 +347,99 @@ public class WifiLockAddNewBLEWIFICSwitchCheckWifiActivity extends BaseActivity<
         intent.putExtra(KeyConstants.WIFI_LOCK_SETUP_IS_AP, true);
         startActivity(intent);
     }
-
+    //收到模块配网成功命令
     @Override
-    public void onUpdateSuccess() {
+    public void onMatchingSuccess() {
         onSuccess();
-//        Intent intent = new Intent(this, WifiLockAddSuccessActivity.class);
-//        intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
-//        startActivity(intent);
+    }
+    //收到模块配网失败命令
+    @Override
+    public void onMatchingFailed() {
+
+        if (times<5) {
+            //信息
+            runOnUiThread(new Runnable() {
+                              @Override
+                              public void run() {
+                                  messageDialog = new MessageDialog.Builder(WifiLockAddNewBLEWIFICSwitchCheckWifiActivity.this)
+                                          .setMessage(R.string.recheck_wifi_password)
+                                          .create();
+                                  messageDialog.show();
+                                  mHandler.postDelayed(new Runnable() {
+                                      public void run() {
+                                          if (messageDialog != null) {
+                                              messageDialog.dismiss();
+                                              toReInputWifi();
+                                          }
+                                      }
+                                  }, 3000); //延迟3秒消失
+                              }
+                          });
+
+        }
+        else {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+
+                    AlertDialogUtil.getInstance().singleButtonNoTitleDialogNoLine(WifiLockAddNewBLEWIFICSwitchCheckWifiActivity.this, "Wi-Fi账号或密码输错已超过5次",
+                            getString(R.string.hao_de), "#1F96F7", new AlertDialogUtil.ClickListener() {
+                                @Override
+                                public void left() {
+                                }
+
+                                @Override
+                                public void right() {
+                                    //退出当前界面
+                                    if (MyApplication.getInstance().getBleService() == null) {
+                                        return;
+                                    } else {
+                                        MyApplication.getInstance().getBleService().release();
+                                    }
+                                    Intent intent = new Intent(WifiLockAddNewBLEWIFICSwitchCheckWifiActivity.this, WifiLockAddBLEFailedActivity.class);
+                                    startActivity(intent);
+                                    finish();
+                                }
+
+                                @Override
+                                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                                }
+
+                                @Override
+                                public void afterTextChanged(String toString) {
+                                }
+                            });
+                }
+            });
+        }
     }
 
     @Override
-    public void onUpdateFailed(BaseResult baseResult) {
-//        Toast.makeText(this, R.string.bind_failed+"--3", Toast.LENGTH_SHORT).show();
-//        Intent intent = new Intent(this, WifiLockAddNewBindFailedActivity.class);
-//        intent.putExtra(KeyConstants.WIFI_LOCK_SETUP_IS_AP, true);
-//        startActivity(intent);
+    public void onMatchingThrowable(Throwable throwable) {
+    }
+
+    @Override
+    public void onUpdateSuccess(String wifiSn){
+        changeState(4);
+        Intent intent = new Intent(this, WifiLockAddBleSuccessActivity.class);
+        intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
+        startActivity(intent);
+    }
+
+    @Override
+    public void onUpdateFailed(BaseResult baseResult){
+        Toast.makeText(this, R.string.bind_failed+"--1", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(this, WifiLockAddNewBindFailedActivity.class);
+        intent.putExtra(KeyConstants.WIFI_LOCK_SETUP_IS_AP, true);
+        startActivity(intent);
     }
 
     @Override
     public void onUpdateThrowable(Throwable throwable) {
-//        Toast.makeText(this, R.string.bind_failed+"--4", Toast.LENGTH_SHORT).show();
-//        Intent intent = new Intent(this, WifiLockAddNewBindFailedActivity.class);
-//        intent.putExtra(KeyConstants.WIFI_LOCK_SETUP_IS_AP, true);
-//        startActivity(intent);
+        Toast.makeText(this, R.string.bind_failed+"--2", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(this, WifiLockAddNewBindFailedActivity.class);
+        intent.putExtra(KeyConstants.WIFI_LOCK_SETUP_IS_AP, true);
+        startActivity(intent);
     }
 
     @Override
@@ -472,9 +469,39 @@ public class WifiLockAddNewBLEWIFICSwitchCheckWifiActivity extends BaseActivity<
     }
 
     @Override
+    public void onDeviceStateChange(boolean isConnected) {
+
+        if (!isConnected) {
+            AlertDialogUtil.getInstance().noEditSingleCanNotDismissButtonDialog(
+                    WifiLockAddNewBLEWIFICSwitchCheckWifiActivity.this, "", getString(R.string.ble_break_authenticate), getString(R.string.confirm), new AlertDialogUtil.ClickListener() {
+                        @Override
+                        public void left() {
+                        }
+
+                        @Override
+                        public void right() {
+                            startActivity(new Intent(WifiLockAddNewBLEWIFICSwitchCheckWifiActivity.this, WifiLockAddBLEFailedActivity.class));
+                            finish();
+                        }
+
+                        @Override
+                        public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        }
+
+                        @Override
+                        public void afterTextChanged(String toString) {
+                        }
+                    });
+        }
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
-        thread.interrupt();
+//        thread.interrupt();
+        secondThread.interrupt();
+        LogUtils.e("--kaadas--onDestroy");
+
     }
 
     private void showWarring() {
@@ -490,8 +517,24 @@ public class WifiLockAddNewBLEWIFICSwitchCheckWifiActivity extends BaseActivity<
                     @Override
                     public void right() {
                         //退出当前界面
+                        if (MyApplication.getInstance().getBleService() == null) {
+                            return;
+                        } else {
+                            MyApplication.getInstance().getBleService().release();
+                        }
                         Intent intent = new Intent(WifiLockAddNewBLEWIFICSwitchCheckWifiActivity.this, WifiLockAddNewFirstActivity.class);
                         startActivity(intent);
+                        finish();
+
+                    }
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                    }
+
+                    @Override
+                    public void afterTextChanged(String toString) {
+
                     }
                 });
     }

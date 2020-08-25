@@ -58,7 +58,6 @@ public class WifiLockAddNewBindFailedActivity extends BaseAddToApplicationActivi
                 finish();
                 startActivity(new Intent(this, MainActivity.class));
                 break;
-
         }
     }
 }

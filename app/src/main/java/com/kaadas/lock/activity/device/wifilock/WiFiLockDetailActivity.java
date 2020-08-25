@@ -11,10 +11,15 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
+import com.kaadas.lock.activity.addDevice.singleswitch.SwipchLinkActivity;
+import com.kaadas.lock.activity.addDevice.singleswitch.SwipchLinkNo;
 import com.kaadas.lock.activity.device.wifilock.family.WifiLockFamilyManagerActivity;
 import com.kaadas.lock.activity.device.wifilock.password.WiFiLockPasswordManagerActivity;
 import com.kaadas.lock.activity.device.wifilock.password.WifiLockPasswordShareActivity;
@@ -24,6 +29,7 @@ import com.kaadas.lock.bean.WifiLockFunctionBean;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.mvp.presenter.wifilock.WifiLockDetailPresenter;
 import com.kaadas.lock.mvp.view.wifilock.IWifiLockDetailView;
+import com.kaadas.lock.publiclibrary.bean.ProductInfo;
 import com.kaadas.lock.publiclibrary.bean.WiFiLockPassword;
 import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
@@ -37,6 +43,7 @@ import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.StringUtil;
 import com.kaadas.lock.widget.MyGridItemDecoration;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -75,15 +82,18 @@ public class WiFiLockDetailActivity extends BaseActivity<IWifiLockDetailView, Wi
     private String wifiSn;
     private WifiLockInfo wifiLockInfo;
     private WiFiLockPassword wiFiLockPassword;
+    private RequestOptions options;
     private List<WifiLockFunctionBean> supportFunctions;
     private List<WifiLockShareResult.WifiLockShareUser> shareUsers;
-
+    private List<ProductInfo> productList = new ArrayList<>();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wi_fi_lock_detail);
         ButterKnife.bind(this);
+        productList = MyApplication.getInstance().getProductInfos();
+
         Intent intent = getIntent();
         changeLockIcon(intent);
         ivBack.setOnClickListener(this);
@@ -102,23 +112,24 @@ public class WiFiLockDetailActivity extends BaseActivity<IWifiLockDetailView, Wi
 
     private void initData() {
         wifiLockInfo = MyApplication.getInstance().getWifiLockInfoBySn(wifiSn);
-        String localPasswordCache = (String) SPUtils.get(KeyConstants.WIFI_LOCK_PASSWORD_LIST + wifiSn, "");
-        if (!TextUtils.isEmpty(localPasswordCache)) {
-            wiFiLockPassword = new Gson().fromJson(localPasswordCache, WiFiLockPassword.class);
+        if (wifiLockInfo != null){
+            String localPasswordCache = (String) SPUtils.get(KeyConstants.WIFI_LOCK_PASSWORD_LIST + wifiSn, "");
+            if (!TextUtils.isEmpty(localPasswordCache)) {
+                wiFiLockPassword = new Gson().fromJson(localPasswordCache, WiFiLockPassword.class);
+            }
+            String localShareUsers = (String) SPUtils.get(KeyConstants.WIFI_LOCK_SHARE_USER_LIST + wifiSn, "");
+            if (!TextUtils.isEmpty(localShareUsers)) {
+                shareUsers = new Gson().fromJson(localShareUsers, new TypeToken<List<WifiLockShareResult.WifiLockShareUser>>() {
+                }.getType());
+                LogUtils.e("本地的分享用户为  shareUsers  " + (shareUsers == null ? 0 : shareUsers.size()));
+            }
+            initPassword();
+            mPresenter.getPasswordList(wifiSn);
+            mPresenter.queryUserList(wifiSn);
+            dealWithPower(wifiLockInfo.getPower(), wifiLockInfo.getUpdateTime());
         }
-        String localShareUsers = (String) SPUtils.get(KeyConstants.WIFI_LOCK_SHARE_USER_LIST + wifiSn, "");
-        if (!TextUtils.isEmpty(localShareUsers)) {
-            shareUsers = new Gson().fromJson(localShareUsers, new TypeToken<List<WifiLockShareResult.WifiLockShareUser>>() {
-            }.getType());
-            LogUtils.e("本地的分享用户为  shareUsers  " + (shareUsers == null ? 0 : shareUsers.size()));
-        }
-        initPassword();
-        mPresenter.getPasswordList(wifiSn);
-        mPresenter.queryUserList(wifiSn);
-        dealWithPower(wifiLockInfo.getPower(), wifiLockInfo.getUpdateTime());
 
     }
-
 
     @Override
     protected void onStart() {
@@ -141,6 +152,15 @@ public class WiFiLockDetailActivity extends BaseActivity<IWifiLockDetailView, Wi
         if (!TextUtils.isEmpty(lockType)) {
             tvLockType.setText(lockType.contentEquals("K13")?"型号: "+getString(R.string.lan_bo_ji_ni):"型号: "+StringUtil.getSubstringFive(lockType));
 
+            //适配服务器上的产品型号，适配不上则显示锁本地的研发型号
+            for (ProductInfo productInfo:productList) {
+
+                if (productInfo.getDevelopmentModel().contentEquals(lockType)){
+                    LogUtils.e("--kaadas--productInfo.getProductModel()==" + productInfo.getProductModel());
+                    tvLockType.setText(productInfo.getProductModel());
+                }
+            }
+
         }
     }
 
@@ -148,8 +168,31 @@ public class WiFiLockDetailActivity extends BaseActivity<IWifiLockDetailView, Wi
         wifiSn = intent.getStringExtra(KeyConstants.WIFI_SN);
         LogUtils.e("获取到的设备Sn是   " + wifiSn);
         wifiLockInfo = MyApplication.getInstance().getWifiLockInfoBySn(wifiSn);
-        if (wifiLockInfo.getProductModel()!=null)
-        ivLockIcon.setImageResource(BleLockUtils.getDetailImageByModel(wifiLockInfo.getProductModel()));
+
+        if (wifiLockInfo != null) {
+            if (!TextUtils.isEmpty(wifiLockInfo.getProductModel())){
+                ivLockIcon.setImageResource(BleLockUtils.getDetailImageByModel(wifiLockInfo.getProductModel()));
+                String model = wifiLockInfo.getProductModel();
+                //本地图片有对应的产品则不获取缓存的产品型号图片，缓存没有则选择尝试下载
+                if (BleLockUtils.getDetailImageByModel(model) == R.mipmap.bluetooth_lock_default){
+                    options = new RequestOptions()
+                        .placeholder(R.mipmap.bluetooth_lock_default)      //加载成功之前占位图
+                        .error(R.mipmap.bluetooth_lock_default)      //加载错误之后的错误图
+                            .diskCacheStrategy(DiskCacheStrategy.RESOURCE)    //只缓存最终的图片
+                            .dontAnimate()                                    //直接显示图片
+                .fitCenter();//指定图片的缩放类型为fitCenter （是一种“中心匹配”的方式裁剪方式，它裁剪出来的图片长宽都会小于等于ImageView的大小，这样一来。图片会完整地显示出来，但是ImageView可能并没有被填充满）
+//                            .centerCrop();//指定图片的缩放类型为centerCrop （是一种“去除多余”的裁剪方式，它会把ImageView边界以外的部分裁剪掉。这样一来ImageView会被填充满，但是这张图片可能不会完整地显示出来(ps:因为超出部分都被裁剪掉了）
+
+                    for (ProductInfo productInfo:productList) {
+                        if (productInfo.getDevelopmentModel().contentEquals(model)){
+
+                            //匹配型号获取下载地址
+                            Glide.with(this).load(productInfo.getAdminUrl()).apply(options).into(ivLockIcon);
+                        }
+                    }
+                }
+            }
+        }
     }
 
     @Override
@@ -346,6 +389,30 @@ public class WiFiLockDetailActivity extends BaseActivity<IWifiLockDetailView, Wi
                         intent.putExtra(KeyConstants.KEY_TYPE, 3);
                         startActivity(intent);
                         break;
+                    case BleLockUtils.TYPE_SMART_SWITCH:
+
+
+                        if (wifiLockInfo.getSingleFireSwitchInfo() != null) {
+
+                            int SwitchNumber = wifiLockInfo.getSingleFireSwitchInfo().getSwitchNumber().size();
+
+                            if (SwitchNumber > 0) {
+                                intent = new Intent(WiFiLockDetailActivity.this, SwipchLinkActivity.class);
+                                intent.putExtra(KeyConstants.SWITCH_NUMBER, SwitchNumber);
+                                intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
+                                intent.putExtra(KeyConstants.WIFI_LOCK_INFO_CHANGE, wifiLockInfo);
+                                startActivity(intent);
+                            } else {
+                                intent = new Intent(WiFiLockDetailActivity.this, SwipchLinkNo.class);
+                                intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
+                                startActivity(intent);                            }
+                        }else {
+
+                            intent = new Intent(WiFiLockDetailActivity.this, SwipchLinkNo.class);
+                            intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
+                            startActivity(intent);
+                        }
+                        break;
                     case BleLockUtils.TYPE_SHARE:
                         intent = new Intent(WiFiLockDetailActivity.this, WifiLockFamilyManagerActivity.class);
                         intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
@@ -392,6 +459,30 @@ public class WiFiLockDetailActivity extends BaseActivity<IWifiLockDetailView, Wi
                         intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
                         intent.putExtra(KeyConstants.KEY_TYPE, 3);
                         startActivity(intent);
+                        break;
+                    case BleLockUtils.TYPE_SMART_SWITCH:
+
+                        if (wifiLockInfo.getSingleFireSwitchInfo() != null) {
+
+                            int SwitchNumber = wifiLockInfo.getSingleFireSwitchInfo().getSwitchNumber().size();
+
+                            if (SwitchNumber > 0) {
+                                intent = new Intent(WiFiLockDetailActivity.this, SwipchLinkActivity.class);
+                                intent.putExtra(KeyConstants.SWITCH_NUMBER, SwitchNumber);
+                                intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
+                                intent.putExtra(KeyConstants.WIFI_LOCK_INFO_CHANGE, wifiLockInfo);
+                                startActivity(intent);
+                            } else {
+                                intent = new Intent(WiFiLockDetailActivity.this, SwipchLinkNo.class);
+                                intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
+                                startActivity(intent);
+                            }
+                        }else {
+
+                            intent = new Intent(WiFiLockDetailActivity.this, SwipchLinkNo.class);
+                            intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
+                            startActivity(intent);
+                        }
                         break;
                     case BleLockUtils.TYPE_SHARE:
                         intent = new Intent(WiFiLockDetailActivity.this, WifiLockFamilyManagerActivity.class);

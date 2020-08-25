@@ -195,6 +195,12 @@ public class BluetoothPasswordShareActivity extends BaseBleActivity<IPasswordDet
                             mPresenter.deletePwd(type, Integer.parseInt(number), 1, true);
                         }
                     }
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    }
+                    @Override
+                    public void afterTextChanged(String toString) {
+                    }
                 });
                 break;
             case R.id.tv_short_message:

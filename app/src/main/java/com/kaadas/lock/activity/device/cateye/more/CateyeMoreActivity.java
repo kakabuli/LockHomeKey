@@ -284,7 +284,15 @@ public class CateyeMoreActivity extends BaseActivity<IGatEyeView, CatEyeMorePres
                             deleteAlertDialog.setCancelable(false);
                         }
                     }
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
 
+                    }
+
+                    @Override
+                    public void afterTextChanged(String toString) {
+
+                    }
                 });
                 break;
             case R.id.rl_device_information:

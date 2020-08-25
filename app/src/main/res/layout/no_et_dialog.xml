@@ -24,9 +24,9 @@
         android:gravity="center"
         android:layout_marginTop="@dimen/dp_14"
         android:textColor="@color/dialog_color"
-        android:textSize="@dimen/sp_13"
+        android:textSize="@dimen/sp_16"
         android:text="@string/safe_mode_dialog"
-        android:lineSpacingExtra="@dimen/dp_10"
+        android:lineSpacingExtra="@dimen/dp_20"
         />
     <TextView
         android:layout_width="match_parent"

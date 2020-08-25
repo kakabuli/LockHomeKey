@@ -47,7 +47,7 @@ public class WifiApWifiSetUpPresenter<T> extends BasePresenter<IWifiLockAPWifiSe
                         if (wifiLockInfo != null && wifiLockInfo.getIsAdmin() == 1) {
                             update(wifiSN, randomCode, wifiName, func);
                         } else {
-                            bindDevice(wifiSN, wifiSN, MyApplication.getInstance().getUid(), randomCode, wifiName, func);
+                            bindDevice(wifiSN, wifiSN, MyApplication.getInstance().getUid(), randomCode, wifiName, func ,1);
                         }
                     }
                 }, new Consumer<Throwable>() {
@@ -67,9 +67,9 @@ public class WifiApWifiSetUpPresenter<T> extends BasePresenter<IWifiLockAPWifiSe
         compositeDisposable.add(bindDisposable);
     }
 
-    public void bindDevice(String wifiSN, String lockNickName, String uid, String randomCode, String wifiName, int func) {
+    public void bindDevice(String wifiSN, String lockNickName, String uid, String randomCode, String wifiName, int func,int distributionNetwork) {
         toDisposable(realBindDisposable);
-        XiaokaiNewServiceImp.wifiLockBind(wifiSN, lockNickName, uid, randomCode, wifiName, func)
+        XiaokaiNewServiceImp.wifiLockBind(wifiSN, lockNickName, uid, randomCode, wifiName, func,distributionNetwork)
                 .subscribe(new BaseObserver<BaseResult>() {
                     @Override
                     public void onSuccess(BaseResult baseResult) {

@@ -261,8 +261,8 @@ public class WifiLockApPresenter<T> extends BasePresenter<IWifiLockApView> {
         release();
     }
 
-    public void bindDevice(String wifiSN, String lockNickName, String uid, String randomCode, String wifiName, int func) {
-        XiaokaiNewServiceImp.wifiLockBind(wifiSN, lockNickName, uid, randomCode, wifiName, func)
+    public void bindDevice(String wifiSN, String lockNickName, String uid, String randomCode, String wifiName, int func,int distributionNetwork) {
+        XiaokaiNewServiceImp.wifiLockBind(wifiSN, lockNickName, uid, randomCode, wifiName, func, distributionNetwork)
                 .subscribe(new BaseObserver<BaseResult>() {
                     @Override
                     public void onSuccess(BaseResult baseResult) {
@@ -311,7 +311,7 @@ public class WifiLockApPresenter<T> extends BasePresenter<IWifiLockApView> {
                                     if (wifiLockInfo != null && wifiLockInfo.getIsAdmin() == 1) {
                                         update(wifiSN, randomCode, wifiName, func);
                                     } else {
-                                        bindDevice(wifiSN, wifiSN, MyApplication.getInstance().getUid(), randomCode, wifiName, func);
+                                        bindDevice(wifiSN, wifiSN, MyApplication.getInstance().getUid(), randomCode, wifiName, func,1);
                                     }
                                 }
                             }, 10 * 1000);

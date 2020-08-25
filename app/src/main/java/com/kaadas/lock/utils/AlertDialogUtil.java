@@ -4,6 +4,9 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
+import android.os.Handler;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,6 +44,7 @@ public class AlertDialogUtil {
     //xml中有四种布局，
     // 1 have_edit_dialog（存在输入框，两个按钮）2 no_button_dialog(只有内容的对话框)
     //3 no_edit_singleButton(没有输入框，只有一个按钮)4 no_et_dialog(没有输入框，有两个按钮)
+    //5 hava_title_content_no_button
     //由于有输入框这种需要不同的约束，所以不进行封装。
     public AlertDialog common(Context context, View view) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.MyDialog);
@@ -100,7 +104,6 @@ public class AlertDialogUtil {
         return alertDialog;
     }
 
-
     //没有标题，只有内容和一个按钮
     public AlertDialog singleButtonNoTitleDialogNoLine(Context context, String content, String query, String queryColor, ClickListener clickListener) {
         View mView = LayoutInflater.from(context).inflate(R.layout.no_edit_singlebutton_dialog_no_title_noline, null);
@@ -124,7 +127,6 @@ public class AlertDialogUtil {
 
         return alertDialog;
     }
-
 
     //2  no_edit_singleButton
     public void noEditSingleButtonDialog(Context context, String title, String content, String query, ClickListener clickListener) {
@@ -153,7 +155,6 @@ public class AlertDialogUtil {
             }
         });
     }
-
 
     //2  不能隐藏的
     public void noEditSingleCanNotDismissButtonDialog(Context context, String title, String content, String query, ClickListener clickListener) {
@@ -184,7 +185,6 @@ public class AlertDialogUtil {
         });
     }
 
-
     //no_et_dialog
     public void noEditTwoButtonDialogWidthDialog_color(Context context, String title, String content, String left, String right, ClickListener clickListener) {
         View mView = LayoutInflater.from(context).inflate(R.layout.no_et_dialog, null);
@@ -194,6 +194,7 @@ public class AlertDialogUtil {
         TextView tv_query = mView.findViewById(R.id.tv_right);
      //   tv_query.setTextColor(Color.parseColor("#101010"));
         AlertDialog alertDialog = AlertDialogUtil.getInstance().common(context, mView);
+        alertDialog.setCancelable(false);//窗口外不隐藏
         if ("".equals(title)) {
             tvTitle.setVisibility(View.GONE);
         } else {
@@ -228,11 +229,11 @@ public class AlertDialogUtil {
 
 
 
-    //no_et_dialog
-    public void noEditTwoButtonDialogWidthDialogEdit(Context context, String title, String left, String right, ClickListener clickListener) {
+    //have_edit_dialog
+    public void havaEditTwoButtonDialogWidthDialogEdit(Context context, String title, String content, String left, String right, ClickListener clickListener) {
         View mView = LayoutInflater.from(context).inflate(R.layout.no_etit_dialog, null);
         TextView tvTitle = mView.findViewById(R.id.tv_hint);
-  //      TextView tvContent = mView.findViewById(R.id.tv_content);
+        EditText tvContent = mView.findViewById(R.id.et_content);
         TextView tv_cancel = mView.findViewById(R.id.tv_left);
         TextView tv_query = mView.findViewById(R.id.tv_right);
      //   tv_query.setTextColor(Color.parseColor("#101010"));
@@ -243,7 +244,7 @@ public class AlertDialogUtil {
             tvTitle.setVisibility(View.VISIBLE);
             tvTitle.setText(title);
         }
-      //  tvContent.setText(content);
+        tvContent.setText(content);
         tv_cancel.setText(left);
         tv_query.setText(right);
         //取消
@@ -264,6 +265,23 @@ public class AlertDialogUtil {
                 alertDialog.dismiss();
                 if (clickListener != null) {
                     clickListener.right();
+                }
+            }
+        });
+        tvContent.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+//                LogUtils.e("--kaadas--","输入后字符串 [ " + s.toString() + " ] 起始光标 [ " + start + " ] 输入数量 [ " + count+" ]");
+            }
+            @Override
+            public void afterTextChanged(Editable s) {
+//                LogUtils.e("--kaadas--","输入结束后的内容为 [" + s.toString()+" ] 即将显示在屏幕上");
+                if (clickListener != null) {
+                    clickListener.afterTextChanged(s.toString());
                 }
             }
         });
@@ -496,7 +514,29 @@ public class AlertDialogUtil {
 
     }
 
+//    hava_title_content_no_button
+public void haveTitleContentNoButtonDialog(Context context, String title, String content ,Integer disappearTime) {
+    View mView = LayoutInflater.from(context).inflate(R.layout.no_edit_button_dialog, null);
+    TextView tvTitle = mView.findViewById(R.id.tv_title);
+    TextView tvContent = mView.findViewById(R.id.tv_content);
+    AlertDialog alertDialog = AlertDialogUtil.getInstance().common(context, mView);
+    if ("".equals(title)) {
+        tvTitle.setVisibility(View.GONE);
+    } else {
+        tvTitle.setText(title);
+        tvTitle.setVisibility(View.VISIBLE);
+    }
 
+    tvContent.setText(content);
+
+    new Handler().postDelayed(new Runnable() {
+        @Override
+        public void run() {  //延时5秒消失
+            alertDialog.dismiss();
+        }
+    }, disappearTime *1000);
+
+}
 
 
 
@@ -505,6 +545,10 @@ public class AlertDialogUtil {
         void left();
 
         void right();
+
+        void onTextChanged(CharSequence s, int start, int before, int count);
+
+        void afterTextChanged(String toString);
     }
 
     public interface MessageListener {

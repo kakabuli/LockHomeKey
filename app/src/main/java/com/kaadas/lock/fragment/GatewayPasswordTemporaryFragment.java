@@ -146,6 +146,12 @@ public class GatewayPasswordTemporaryFragment extends BaseFragment<IGatewayLockP
                             etPassword.setText("");
                             return;
                         }
+                        @Override
+                        public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        }
+                        @Override
+                        public void afterTextChanged(String toString) {
+                        }
                     });
                     return;
                 }
@@ -279,6 +285,12 @@ public class GatewayPasswordTemporaryFragment extends BaseFragment<IGatewayLockP
             public void right() {
 
             }
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+            @Override
+            public void afterTextChanged(String toString) {
+            }
         });
     }
 
@@ -294,6 +306,12 @@ public class GatewayPasswordTemporaryFragment extends BaseFragment<IGatewayLockP
             @Override
             public void right() {
 
+            }
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+            @Override
+            public void afterTextChanged(String toString) {
             }
         });
     }

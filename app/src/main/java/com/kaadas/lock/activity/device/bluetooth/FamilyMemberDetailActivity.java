@@ -108,6 +108,12 @@ public class FamilyMemberDetailActivity extends BaseActivity<IFamilyMemberDeatil
                             }
                             mPresenter.deleteUserList(uid, dataBean.getUname(), bleLockInfo.getServerLockInfo().getLockName());
                         }
+                        @Override
+                        public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        }
+                        @Override
+                        public void afterTextChanged(String toString) {
+                        }
                     });
                 } else {
                     ToastUtil.getInstance().showLong(R.string.network_exception);

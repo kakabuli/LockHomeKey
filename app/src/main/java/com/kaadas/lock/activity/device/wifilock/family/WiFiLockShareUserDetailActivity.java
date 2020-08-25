@@ -115,6 +115,15 @@ public class WiFiLockShareUserDetailActivity extends BaseActivity<IWiFiLockShare
                             showLoading(getString(R.string.is_deleting));
                             mPresenter.deleteUserList(shareUser.get_id(),adminNickname);
                         }
+                        @Override
+                        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                        }
+
+                        @Override
+                        public void afterTextChanged(String toString) {
+
+                        }
                     });
                 } else {
                     ToastUtil.getInstance().showLong(R.string.network_exception);

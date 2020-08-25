@@ -7,6 +7,7 @@ import com.kaadas.lock.mvp.view.wifilock.IWifiLockBleToWifiSetUpView;
 import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
 import com.kaadas.lock.publiclibrary.ble.BleCommandFactory;
 import com.kaadas.lock.publiclibrary.ble.responsebean.BleDataBean;
+import com.kaadas.lock.publiclibrary.ble.responsebean.BleStateBean;
 import com.kaadas.lock.publiclibrary.http.XiaokaiNewServiceImp;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.util.BaseObserver;
@@ -32,6 +33,8 @@ public class WifiLockBleToWifiSetUpPresenter<T> extends BasePresenter<IWifiLockB
     private Disposable realBindDisposable;
     private Disposable sendSSIDAndPWDDisposable;
     private Disposable characterNotifyDisposable;
+    private Disposable listenConnectStateDisposable;
+
     //根据流程协议SSID需要33byte，一共分3包
     private byte[] firstSubSSID = new byte[14];
     private byte[] secondSubSSID = new byte[14];
@@ -85,12 +88,13 @@ public class WifiLockBleToWifiSetUpPresenter<T> extends BasePresenter<IWifiLockB
 //        compositeDisposable.add(bindDisposable);
 //    }
 //
-    public void bindDevice(String wifiSN, String lockNickName, String uid, String randomCode, String wifiName, int func) {
+    public void bindDevice(String wifiSN, String lockNickName, String uid, String randomCode, String wifiName, int func,int distributionNetwork) {
         toDisposable(realBindDisposable);
-        XiaokaiNewServiceImp.wifiLockBind(wifiSN, lockNickName, uid, randomCode, wifiName, func)
+        XiaokaiNewServiceImp.wifiLockBind(wifiSN, lockNickName, uid, randomCode, wifiName, func, distributionNetwork)
                 .subscribe(new BaseObserver<BaseResult>() {
                     @Override
                     public void onSuccess(BaseResult baseResult) {
+
                         MyApplication.getInstance().getAllDevicesByMqtt(true);
                         toDisposable(bindDisposable);
                         SPUtils.put(KeyConstants.WIFI_LOCK_OPERATION_RECORD + wifiSN, "");
@@ -124,44 +128,43 @@ public class WifiLockBleToWifiSetUpPresenter<T> extends BasePresenter<IWifiLockB
                 });
     }
 
-//
-//    public void update(String wifiSN, String randomCode, String wifiName, int func) {
-//        toDisposable(updateDisposable);
-//        XiaokaiNewServiceImp.wifiLockUpdateInfo(MyApplication.getInstance().getUid(), wifiSN, randomCode, wifiName, func)
-//                .subscribe(new BaseObserver<BaseResult>() {
-//                    @Override
-//                    public void onSuccess(BaseResult baseResult) {
-//                        MyApplication.getInstance().getAllDevicesByMqtt(true);
-//                        toDisposable(bindDisposable);
-//                        if (isSafe()) {
-//                            mViewRef.get().onUpdateSuccess(wifiSN);
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onAckErrorCode(BaseResult baseResult) {
-//                        if (isSafe() && times >= 19) {
-//                            mViewRef.get().onUpdateFailed(baseResult);
-//                            toDisposable(bindDisposable);
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onFailed(Throwable throwable) {
-//                        if (isSafe() && times >= 19) {
-//                            mViewRef.get().onUpdateThrowable(throwable);
-//                            toDisposable(bindDisposable);
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onSubscribe1(Disposable d) {
-//
-//                        updateDisposable = d;
-//                        compositeDisposable.add(d);
-//                    }
-//                });
-//    }
+    public void update(String wifiSN, String randomCode, String wifiName, int func) {
+        toDisposable(updateDisposable);
+        XiaokaiNewServiceImp.wifiLockUpdateInfo(MyApplication.getInstance().getUid(), wifiSN, randomCode, wifiName, func)
+                .subscribe(new BaseObserver<BaseResult>() {
+                    @Override
+                    public void onSuccess(BaseResult baseResult) {
+                        MyApplication.getInstance().getAllDevicesByMqtt(true);
+                        toDisposable(bindDisposable);
+                        if (isSafe()) {
+                            mViewRef.get().onUpdateSuccess(wifiSN);
+                        }
+                    }
+
+                    @Override
+                    public void onAckErrorCode(BaseResult baseResult) {
+                        if (isSafe() && times >= 19) {
+                            mViewRef.get().onUpdateFailed(baseResult);
+                            toDisposable(bindDisposable);
+                        }
+                    }
+
+                    @Override
+                    public void onFailed(Throwable throwable) {
+                        if (isSafe() && times >= 19) {
+                            mViewRef.get().onUpdateThrowable(throwable);
+                            toDisposable(bindDisposable);
+                        }
+                    }
+
+                    @Override
+                    public void onSubscribe1(Disposable d) {
+
+                        updateDisposable = d;
+                        compositeDisposable.add(d);
+                    }
+                });
+    }
 
     public void listenerCharacterNotify() {
         LogUtils.e("--kaadas--listenerCharacterNotify");
@@ -212,7 +215,13 @@ public class WifiLockBleToWifiSetUpPresenter<T> extends BasePresenter<IWifiLockB
                         }
                         if ((originalData[3] & 0xff) == 0x93) {
                             LogUtils.e("--kaadas--收到配网结果");
-                            mViewRef.get().onUpdateSuccess();
+                            if ((originalData[4] & 0xff) == 0x00){
+                                //配网成功
+                                mViewRef.get().onMatchingSuccess();
+                            }else {
+                                //配网失败
+                                mViewRef.get().onMatchingFailed();
+                            }
                         }
                         //toDisposable(characterNotifyDisposable);
                     }
@@ -245,7 +254,7 @@ public class WifiLockBleToWifiSetUpPresenter<T> extends BasePresenter<IWifiLockB
         System.arraycopy(bPwd, 4 * 14, fifthSubPWD, 0, fifthSubPWD.length);
 
         indexSSID = 0;
-        sendSSID(0);
+        sendSSID(indexSSID);
 
     }
 
@@ -293,5 +302,32 @@ public class WifiLockBleToWifiSetUpPresenter<T> extends BasePresenter<IWifiLockB
                 break;
 
         }
+    }
+    public void listenConnectState() {
+        toDisposable(listenConnectStateDisposable);
+        if (bleService == null) { //判断
+            if (MyApplication.getInstance().getBleService() == null) {
+                return;
+            } else {
+                bleService = MyApplication.getInstance().getBleService(); //判断
+            }
+        }
+        listenConnectStateDisposable = bleService.subscribeDeviceConnectState() //1
+                .compose(RxjavaHelper.observeOnMainThread())
+                .subscribe(new Consumer<BleStateBean>() {
+                    @Override
+                    public void accept(BleStateBean bleStateBean) throws Exception {
+                        if (isSafe()) {
+                            mViewRef.get().onDeviceStateChange(bleStateBean.isConnected());
+                        }
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        //抛出异常
+
+                    }
+                });
+        compositeDisposable.add(listenConnectStateDisposable);
     }
 }

@@ -364,6 +364,12 @@ public class TiOtaUpgradeActivity extends BaseAddToApplicationActivity implement
             public void right() {
                 finish();
             }
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+            @Override
+            public void afterTextChanged(String toString) {
+            }
         });
     }
 
@@ -385,6 +391,12 @@ public class TiOtaUpgradeActivity extends BaseAddToApplicationActivity implement
                         isHand = false;
                         downBinNew(binDownUrl, filePath);
                         warring.setVisibility(View.VISIBLE);
+                    }
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    }
+                    @Override
+                    public void afterTextChanged(String toString) {
                     }
                 });
     }

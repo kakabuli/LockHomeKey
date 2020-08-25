@@ -370,7 +370,7 @@ public class HttpUrlConstants {
 
 
     /**
-     * 获取开锁次数
+     * 设备信息修改
      */
     public static final String WIFI_LOCK_UPDATE_INFO = BASE_URL + "wifi/device/infoUpdate";
 
@@ -386,4 +386,8 @@ public class HttpUrlConstants {
      */
     public static final String  GET_ZIGBEEN_INFO = BASE_URL + "v1/user/getZigBeeInfo";
 
+    /**
+     *  单火开关设备联动开关昵称修改
+     */
+    public static final String UPDATE_SWITCH_NICK_NAME = BASE_URL + "wifi/device/updateSwitchNickname";
 }

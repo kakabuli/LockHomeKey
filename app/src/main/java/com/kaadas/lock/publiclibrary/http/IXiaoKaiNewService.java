@@ -615,4 +615,12 @@ public interface IXiaoKaiNewService {
 
     @POST(HttpUrlConstants.GET_ZIGBEEN_INFO)
     Observable<String> GET_ZIGBEEN_INFO_CONTEXT(@Body RequestBody info);
+
+    /**
+     * 单火开关设备联动开关昵称修改
+     *
+     * @return
+     */
+    @POST(HttpUrlConstants.UPDATE_SWITCH_NICK_NAME)
+    Observable<BaseResult> updateSwitchNickname(@Body RequestBody info);
 }

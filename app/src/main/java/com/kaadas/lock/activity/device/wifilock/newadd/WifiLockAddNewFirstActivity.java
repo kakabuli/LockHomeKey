@@ -15,6 +15,7 @@ import com.kaadas.lock.activity.device.wifilock.add.WifiLockHelpActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 import com.kaadas.lock.utils.GpsUtil;
 import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.WiFiLockUtils;
 import com.kaadas.lock.utils.WifiUtils;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
@@ -75,18 +76,21 @@ public class WifiLockAddNewFirstActivity extends BaseAddToApplicationActivity {
 
                             }
                         });
-                //打开wifi
-                WifiUtils wifiUtils = WifiUtils.getInstance(MyApplication.getInstance());
-                if (!wifiUtils.isWifiEnable()) {
-                    wifiUtils.openWifi();
-                    Toast.makeText(this, getString(R.string.wifi_no_open_please_open_wifi), Toast.LENGTH_SHORT).show();
-                    return;
+                if(!wifiModelType.equals("WiFi&BLE")) {
+                    //打开wifi
+                    WifiUtils wifiUtils = WifiUtils.getInstance(MyApplication.getInstance());
+                    if (!wifiUtils.isWifiEnable()) {
+                        wifiUtils.openWifi();
+                        Toast.makeText(this, getString(R.string.wifi_no_open_please_open_wifi), Toast.LENGTH_SHORT).show();
+                        return;
+                    }
                 }
                 if (!GpsUtil.isOPen(MyApplication.getInstance())) {
                     GpsUtil.openGPS(MyApplication.getInstance());
                     Toast.makeText(this, getString(R.string.locak_no_open_please_open_local), Toast.LENGTH_SHORT).show();
                     return;
                 }
+                LogUtils.e("--Kaadas--wifiModelType=="+wifiModelType);
 //                startActivity(new Intent(this,WifiLockAddNewSecondActivity.class));
                 Intent wifiIntent = new Intent(this, WifiLockAddNewSecondActivity.class);
                 wifiIntent.putExtra("wifiModelType", wifiModelType);

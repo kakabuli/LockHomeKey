@@ -11,6 +11,7 @@ import com.kaadas.lock.publiclibrary.bean.GwLockInfo;
 import com.kaadas.lock.publiclibrary.bean.ServerGwDevice;
 import com.kaadas.lock.publiclibrary.bean.ServerGatewayInfo;
 import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
+import com.kaadas.lock.publiclibrary.bean.ProductInfo;
 import com.kaadas.lock.publiclibrary.http.result.ServerBleDevice;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.SPUtils;
@@ -125,6 +126,7 @@ public class AllBindDevices {
         private List<GwListBean> gwList;
         private List<ServerBleDevice> devList;
         private List<WifiLockInfo> wifiList;
+        private List<ProductInfo> productInfoList;
 
         public List<GwListBean> getGwList() {
             return gwList;
@@ -148,6 +150,14 @@ public class AllBindDevices {
 
         public void setWifiList(List<WifiLockInfo> wifiList) {
             this.wifiList = wifiList;
+        }
+
+        public List<ProductInfo> getProductInfoList() {
+            return productInfoList;
+        }
+
+        public void setProductInfoList(List<ProductInfo> productInfoList) {
+            this.productInfoList = productInfoList;
         }
 
         public static class GwListBean {
@@ -332,7 +342,6 @@ public class AllBindDevices {
                             bleLockInfo.setServerLockInfo(bleDevice);
                             homeShowBean.setDeviceNickName(bleDevice.getLockNickName());
                             homeShowBeans.add(homeShowBean);
-
                         }
                         LogUtils.e("设备已存在  是否连接 " + bleLockInfo.isConnected());
                     }
@@ -351,7 +360,6 @@ public class AllBindDevices {
                 homeShowBeans.add(new HomeShowBean(HomeShowBean.TYPE_WIFI_LOCK, wifiLockInfo.getWifiSN(), wifiLockInfo.getLockNickname(), wifiLockInfo));
             }
         }
-
 
         List<ReturnDataBean.GwListBean> gwList = returnData.getGwList();
         if (gwList != null) {
@@ -492,6 +500,5 @@ public class AllBindDevices {
         }
         return gwList;
     }
-
 
 }

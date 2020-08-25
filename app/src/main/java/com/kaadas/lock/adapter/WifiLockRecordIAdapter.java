@@ -204,7 +204,7 @@ public class WifiLockRecordIAdapter extends BaseQuickAdapter<WifiLockOperationRe
                         right = right + mContext.getString(R.string.fingerprint);
                         break;
                     case 7:
-                        left = left + mContext.getString(R.string.face_open);
+                        right = right + mContext.getString(R.string.face_open);
                         break;
                     default:
                         right = right + mContext.getString(R.string.unknown_open);

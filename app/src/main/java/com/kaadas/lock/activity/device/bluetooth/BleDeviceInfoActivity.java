@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.InputFilter;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -18,6 +19,7 @@ import com.kaadas.lock.mvp.mvpbase.BaseBleCheckInfoActivity;
 import com.kaadas.lock.mvp.presenter.ble.BleDeviceInfoPresenter;
 import com.kaadas.lock.mvp.view.IDeviceInfoView;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
+import com.kaadas.lock.publiclibrary.bean.ProductInfo;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.result.CheckOTAResult;
 import com.kaadas.lock.publiclibrary.http.util.HttpUtils;
@@ -32,6 +34,8 @@ import com.kaadas.lock.utils.ToastUtil;
 import com.liulishuo.filedownloader.FileDownloader;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -79,6 +83,7 @@ public class BleDeviceInfoActivity extends BaseBleCheckInfoActivity<IDeviceInfoV
     private int cameraNumber;
     private int cameraOtaType;
     private static int FACE_OTA_REQUEST_CODE = 101;
+    private List<ProductInfo> productList = new ArrayList<>();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -87,6 +92,9 @@ public class BleDeviceInfoActivity extends BaseBleCheckInfoActivity<IDeviceInfoV
 
         FileDownloader.setup(this);
         ButterKnife.bind(this);
+
+        productList = MyApplication.getInstance().getProductInfos();
+
         bleLockInfo = MyApplication.getInstance().getBleService().getBleLockInfo();
 
         deviceNickname = bleLockInfo.getServerLockInfo().getLockNickName();
@@ -186,7 +194,15 @@ public class BleDeviceInfoActivity extends BaseBleCheckInfoActivity<IDeviceInfoV
 
     @Override
     public void FirmwareRevDataSuccess(String data) {
-        tvDeviceModel.setText(data.trim());
+        if (!TextUtils.isEmpty(data.trim())) {
+            tvDeviceModel.setText(data.trim());
+            //适配服务器上的产品型号，适配不上则显示锁本地的研发型号
+            for (ProductInfo productInfo : productList) {
+                if (productInfo.getDevelopmentModel().contentEquals(data.trim())) {
+                    tvDeviceModel.setText(productInfo.getProductModel());
+                }
+            }
+        }
     }
 
     @Override

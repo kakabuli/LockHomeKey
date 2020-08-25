@@ -77,6 +77,12 @@ public class DoorCardIdentificationActivity extends BaseBleActivity<IAddCardEndV
             public void right() {
 
             }
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+            @Override
+            public void afterTextChanged(String toString) {
+            }
         });
     }
 

@@ -242,6 +242,12 @@ public class PasswordTimeFragment extends BaseBleFragment<IAddTimePasswprdView, 
                             etPassword.setText("");
                             return;
                         }
+                        @Override
+                        public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        }
+                        @Override
+                        public void afterTextChanged(String toString) {
+                        }
                     });
                     return;
                 }
@@ -294,6 +300,7 @@ public class PasswordTimeFragment extends BaseBleFragment<IAddTimePasswprdView, 
     String endcurrentTime = DateFormatUtils.long2Str(System.currentTimeMillis(), true);
 
     private void initTimerPicker() {
+
         try {
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
             long after1 = formatter.parse("2019-02-14 15:30").getTime();
@@ -435,6 +442,12 @@ public class PasswordTimeFragment extends BaseBleFragment<IAddTimePasswprdView, 
             @Override
             public void right() {
 
+            }
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+            @Override
+            public void afterTextChanged(String toString) {
             }
         });
     }

@@ -263,6 +263,12 @@ public class PasswordWeekFragment extends BaseBleFragment<IPasswordLoopView, Pas
                             etPassword.setText("");
                             return;
                         }
+                        @Override
+                        public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        }
+                        @Override
+                        public void afterTextChanged(String toString) {
+                        }
                     });
                     return;
                 }
@@ -376,6 +382,15 @@ public class PasswordWeekFragment extends BaseBleFragment<IPasswordLoopView, Pas
 
             @Override
             public void right() {
+
+            }
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(String toString) {
 
             }
         });

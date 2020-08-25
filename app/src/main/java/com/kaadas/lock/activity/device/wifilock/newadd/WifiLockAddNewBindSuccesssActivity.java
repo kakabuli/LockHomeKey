@@ -80,7 +80,6 @@ public class WifiLockAddNewBindSuccesssActivity extends BaseActivity<IWifiLockAd
                     mList.get(i).setSelected(false);
                 }
                 mAdapter.notifyDataSetChanged();
-
             }
 
             @Override

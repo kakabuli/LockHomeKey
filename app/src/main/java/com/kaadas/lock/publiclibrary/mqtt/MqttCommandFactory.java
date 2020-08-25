@@ -3,6 +3,8 @@ package com.kaadas.lock.publiclibrary.mqtt;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.kaadas.lock.MyApplication;
+import com.kaadas.lock.publiclibrary.bean.SingleFireSwitchInfo;
+import com.kaadas.lock.publiclibrary.mqtt.publishbean.AddSingleFireSwitchBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.AllowCateyeJoinBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.BindGatewayBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.BindGatewayMemeBean;
@@ -43,6 +45,7 @@ import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetPasswordPlanBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetPirEnableBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetPirSlientBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetPirWanderBean;
+import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetSingleFireSwitchBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetUserTypeBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetVedioResBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetWiFiBasic;
@@ -938,7 +941,69 @@ public class MqttCommandFactory {
         DeviceShareUserBean shareUserBean = new DeviceShareUserBean(messageId, MqttConstant.MSG_TYPE_REQUEST, MqttConstant.SHARE_USER_LIST, gatewayId, deviceId, adminId);
         return getMessage(shareUserBean, messageId);
     }
+//////////
+    /**
+     * 设置锁外围（开关）
+     *
+     * @param userId
+     * @param wfId
+     * @param singleFireSwitchInfoChange
+     * @return
+     */
 
+    public static MqttMessage setSingleFireSwitch(String userId, String wfId, SingleFireSwitchInfo singleFireSwitchInfoChange) {
+        int messageId = getMessageId();
+        SingleFireSwitchInfo params = new SingleFireSwitchInfo();
+        params.setSwitchEn(singleFireSwitchInfoChange.getSwitchEn());
+        params.setTotal(singleFireSwitchInfoChange.getTotal());
+        params.setSwitchBind(singleFireSwitchInfoChange.getSwitchBind());
+        params.setSwitchNumber(singleFireSwitchInfoChange.getSwitchNumber());
+
+        SetSingleFireSwitchBean setSingleFireSwitchBean = new SetSingleFireSwitchBean(MqttConstant.MSG_TYPE_REQUEST, userId, messageId, wfId, MqttConstant.SETTING_DEVICE, params, System.currentTimeMillis() + "");
+        return getMessage(setSingleFireSwitchBean, messageId);
+
+    }
+
+//    /**
+//     * 查询锁外围（开关）
+//     *
+//     * @param userId
+//     * @param gwId
+//     * @param deviceId
+//     * @return
+//     */
+//
+//    public static MqttMessage getSingleFireSwitch(String userId, String gwId, String deviceId) {
+//
+//    }
+//
+    /**
+     * 添加锁外围（开关）
+     *
+     * @param userId
+     * @param wfId
+     * @return
+     */
+
+    public static MqttMessage addSingleFireSwitch(String userId, String wfId) {
+        int messageId = getMessageId();
+        SingleFireSwitchInfo params = new SingleFireSwitchInfo();//空
+        AddSingleFireSwitchBean addSingleFireSwitchBean = new AddSingleFireSwitchBean(MqttConstant.MSG_TYPE_REQUEST, userId, messageId, wfId, MqttConstant.ADD_DEVICE, params, System.currentTimeMillis()/ 1000);
+        return getMessage(addSingleFireSwitchBean, messageId);
+
+
+
+    }
+    //////////
+
+
+    /**
+     * mqtt公用方法
+     *
+     * @param o
+     * @param messageID
+     * @return
+     */
 
     public static MqttMessage getMessage(Object o, int messageID) {
         String payload = new Gson().toJson(o);

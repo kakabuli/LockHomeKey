@@ -26,6 +26,7 @@ import com.kaadas.lock.publiclibrary.bean.CateEyeInfo;
 import com.kaadas.lock.publiclibrary.bean.GatewayInfo;
 import com.kaadas.lock.publiclibrary.bean.GwLockInfo;
 import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
+import com.kaadas.lock.publiclibrary.bean.ProductInfo;
 import com.kaadas.lock.publiclibrary.http.XiaokaiNewServiceImp;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.result.CheckOTAResult;
@@ -55,6 +56,7 @@ import com.kaadas.lock.utils.ftp.GeTui;
 import com.kaadas.lock.utils.greenDao.db.DaoManager;
 import com.kaadas.lock.utils.greenDao.db.DaoMaster;
 import com.kaadas.lock.utils.greenDao.db.DaoSession;
+import com.kaadas.lock.utils.greenDao.db.ProductInfoDao;
 import com.kaadas.lock.utils.greenDao.db.WifiLockInfoDao;
 import com.kaadas.lock.utils.greenDao.manager.WifiLockInfoManager;
 import com.kaidishi.lock.service.GeTuiIntentService;
@@ -87,6 +89,9 @@ import org.linphone.mediastream.Log;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -122,6 +127,7 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
     private String TAG = "凯迪仕";
     private IWXAPI api;
     private List<HomeShowBean> homeShowDevices = new ArrayList<>();
+    private List<ProductInfo> productLists = new ArrayList<>();
     private int listService = 0;
 
     // 小米
@@ -167,6 +173,8 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
 //            tLogView.append(DemoApplication.payloadData);
 //        }
         LogUtils.e("attachView  App启动完成 ");
+        //去掉在Android 9以上调用反射警告提醒弹窗 （Detected problems with API compatibility(visit g.co/dev/appcompat for more info)
+        closeAndroidPDialog();
 
     }
 
@@ -325,9 +333,13 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
     }
 
     public void initTokenAndUid() {
-        token = (String) SPUtils.get(SPUtils.TOKEN, "");
-        uid = (String) SPUtils.get(SPUtils.UID, "");
-        RetrofitServiceManager.updateToken();
+        try{
+            token = (String) SPUtils.get(SPUtils.TOKEN, "");//类型转换有崩溃
+            uid = (String) SPUtils.get(SPUtils.UID, "");
+            RetrofitServiceManager.updateToken();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -383,6 +395,8 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
             bleService.removeBleLockInfo();
         }
         homeShowDevices.clear();
+        productLists.clear();
+
         MyApplication.getInstance().initTokenAndUid();
         //退出linphone
         LinphoneHelper.deleteUser();
@@ -538,6 +552,8 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
                             allBindDeviceDisposable.dispose();
                         }
                         String payload = mqttData.getPayload();
+                        MyLog.getInstance().save("--kaadas调试--payload=="+payload);
+
                         allBindDevices = new Gson().fromJson(payload, AllBindDevices.class);
 
                         if (!"200".equals(allBindDevices.getCode())) {  ///服务器获取设备列表失败
@@ -562,12 +578,23 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
                             homeShowDevices = allBindDevices.getHomeShow();
                             LogUtils.e("设备更新  application");
                             getDevicesFromServer.onNext(allBindDevices);
-                            //缓存WiFi锁设备
+
+                            //缓存WiFi锁设备信息 到Dao
                             if (allBindDevices.getData() != null && allBindDevices.getData().getWifiList() != null) {
+//                                LogUtils.e("--kaadas--allBindDevices.getData().getWifiList=="+allBindDevices.getData().getWifiList());
                                 List<WifiLockInfo> wifiList = allBindDevices.getData().getWifiList();
                                 WifiLockInfoDao wifiLockInfoDao = getDaoWriteSession().getWifiLockInfoDao();
                                 wifiLockInfoDao.deleteAll();
                                 wifiLockInfoDao.insertInTx(wifiList);
+                            }
+
+                            //缓存产品型号信息列表 到Dao，主要是图片下载地址（下载过的图片不再下载）
+                            if (allBindDevices.getData() != null && allBindDevices.getData().getProductInfoList() != null) {
+                                productLists = allBindDevices.getData().getProductInfoList();
+//                                LogUtils.e("--kaadas--productLists=="+productLists);
+                                ProductInfoDao productInfoDao = getDaoWriteSession().getProductInfoDao();
+                                productInfoDao.deleteAll();
+                                productInfoDao.insertInTx(productLists);
                             }
                         }
                     }
@@ -593,7 +620,6 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
         }
         return null;
     }
-
 
     public void updateWifiLockInfo(String sn, WifiLockActionBean actionBean) {
         if (homeShowDevices != null) {
@@ -664,7 +690,6 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
     public List<HomeShowBean> getAllDevices() {
         return homeShowDevices;
     }
-
 
     public String getNickByDeviceId(String deviceId) {
         for (HomeShowBean homeShowBean : homeShowDevices) {
@@ -983,13 +1008,37 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
                     public void onSubscribe1(Disposable d) {
 
                     }
-                })
-
-        ;
-
-
+                });
     }
 
+    private void closeAndroidPDialog(){
+        try {
+            Class aClass = Class.forName("android.content.pm.PackageParser$Package");
+            Constructor declaredConstructor = aClass.getDeclaredConstructor(String.class);
+            declaredConstructor.setAccessible(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            Class cls = Class.forName("android.app.ActivityThread");
+            Method declaredMethod = cls.getDeclaredMethod("currentActivityThread");
+            declaredMethod.setAccessible(true);
+            Object activityThread = declaredMethod.invoke(null);
+            Field mHiddenApiWarningShown = cls.getDeclaredField("mHiddenApiWarningShown");
+            mHiddenApiWarningShown.setAccessible(true);
+            mHiddenApiWarningShown.setBoolean(activityThread, true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void setProductInfos(List<ProductInfo> productList){
+        productLists = productList;
+    }
+
+    public List<ProductInfo> getProductInfos() {
+        return productLists;
+    }
 }
 
 

@@ -61,7 +61,6 @@ public class WifiLockMorePresenter<T> extends BasePresenter<IWifiLockMoreView> {
         ;
     }
 
-
     public void deleteDevice(String wifiSn) {
         XiaokaiNewServiceImp.wifiLockUnbind(wifiSn, MyApplication.getInstance().getUid())
                 .subscribe(new BaseObserver<BaseResult>() {

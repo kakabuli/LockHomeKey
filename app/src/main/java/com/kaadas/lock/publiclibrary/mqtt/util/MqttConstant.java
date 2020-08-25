@@ -229,13 +229,25 @@ public class MqttConstant {
 
     public static final String UPDATE_DEV_PUSH_SWITCH = "updateDevPushSwitch";
 
-
     /**
      * 获取报警记录
      */
     public static final String GET_ALARM_LIST = "getAlarmList";
 
-//
+    /**
+     * 设置锁外围（开关）
+     */
+    public static final String SETTING_DEVICE = "setSwitch";
+
+    /**
+     * 查询锁外围（开关）
+     */
+    public static final String GETTING_DEVICE = "getSwitch";
+
+    /**
+     * 添加锁外围（开关）
+     */
+    public static final String ADD_DEVICE = "addSwitch";
 
 
 }

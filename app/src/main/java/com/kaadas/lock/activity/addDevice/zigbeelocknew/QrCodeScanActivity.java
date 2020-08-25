@@ -42,7 +42,6 @@ public class QrCodeScanActivity extends BaseAddToApplicationActivity implements 
     int scan = 0;
     private static final int REQUEST_CODE = 101;
 
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,7 +54,6 @@ public class QrCodeScanActivity extends BaseAddToApplicationActivity implements 
         mZBarView.setDelegate(this);
     }
 
-
     @Override
     protected void onStart() {
         super.onStart();
@@ -63,20 +61,17 @@ public class QrCodeScanActivity extends BaseAddToApplicationActivity implements 
         mZBarView.startSpotAndShowRect(); // 显示扫描框，并开始识别
     }
 
-
     @Override
     protected void onStop() {
         mZBarView.stopCamera(); // 关闭摄像头预览，并且隐藏扫描框
         super.onStop();
     }
 
-
     @Override
     protected void onDestroy() {
         mZBarView.onDestroy(); // 销毁二维码扫描控件
         super.onDestroy();
     }
-
 
     private void checkVersion() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -126,7 +121,6 @@ public class QrCodeScanActivity extends BaseAddToApplicationActivity implements 
         return canUse;
     }
 
-
     @OnClick({R.id.back, R.id.touch_light_layout})
     public void onViewClicked(View view) {
         switch (view.getId()) {
@@ -152,12 +146,13 @@ public class QrCodeScanActivity extends BaseAddToApplicationActivity implements 
         this.result = result;
         //首页过来的
         Intent intent;
-        if (scan == 1 && TextUtils.isEmpty(result)) {
-
-            Intent scanSuccessIntent = new Intent(this, AddDeviceZigbeeLockNewScanFailActivity.class);
-            startActivity(scanSuccessIntent);
-            finish();
-        }
+//        if (scan == 1 && TextUtils.isEmpty(result)) {
+//
+//            Intent scanSuccessIntent = new Intent(this, AddDeviceZigbeeLockNewScanFailActivity.class);
+//            startActivity(scanSuccessIntent);
+//            finish();
+//
+//        }
 
         intent = new Intent();
         intent.putExtra(Intents.Scan.RESULT, result);
@@ -188,7 +183,6 @@ public class QrCodeScanActivity extends BaseAddToApplicationActivity implements 
         finish();
         Toast.makeText(this, getString(R.string.open_camera_failed), Toast.LENGTH_SHORT).show();
     }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {

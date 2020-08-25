@@ -21,4 +21,5 @@ public class WifiLockHelpActivity extends AppCompatActivity {
     public void onClick() {
         finish();
     }
+
 }

@@ -43,6 +43,7 @@ import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.publiclibrary.bean.CateEyeInfo;
 import com.kaadas.lock.publiclibrary.bean.GatewayInfo;
 import com.kaadas.lock.publiclibrary.bean.GwLockInfo;
+import com.kaadas.lock.publiclibrary.bean.ProductInfo;
 import com.kaadas.lock.publiclibrary.bean.ServerGatewayInfo;
 import com.kaadas.lock.publiclibrary.bean.ServerGwDevice;
 import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
@@ -50,6 +51,7 @@ import com.kaadas.lock.publiclibrary.http.result.ServerBleDevice;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.AllBindDevices;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttService;
 import com.kaadas.lock.utils.AlertDialogUtil;
+import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.NetUtil;
@@ -107,14 +109,17 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
 
     private Unbinder unbinder;
 
-
     private DeviceDetailAdapter deviceDetailAdapter;
 
     private List<HomeShowBean> mDeviceList = new ArrayList<>();
     private List<HomeShowBean> homeShowBeanList;
+    private List<ProductInfo> productList = new ArrayList<>();
+
     private String uid;
     private DaoSession daoSession;
     private MqttService mqttService;
+
+    private ProductInfo productInfo;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -131,11 +136,14 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
         deviceRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
         homeShowBeanList = MyApplication.getInstance().getAllDevices();
         mqttService = MyApplication.getInstance().getMqttService();
+        //获取缓存的producinfo
+//        LogUtils.e("--kaadas--productList.getProductInfos==" + MyApplication.getInstance().getProductInfos());
+        productList = MyApplication.getInstance().getProductInfos();
+
         initData(homeShowBeanList);
         initRefresh();
         return mView;
     }
-
 
     @Override
     protected DevicePresenter<IDeviceView> createPresent() {
@@ -160,7 +168,9 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
 
     private void initAdapter() {
         if (mDeviceList != null) {
-            deviceDetailAdapter = new DeviceDetailAdapter(mDeviceList);
+
+            deviceDetailAdapter = new DeviceDetailAdapter(mDeviceList,productList);
+//            deviceDetailAdapter = new DeviceDetailAdapter(mDeviceList);
             deviceRecycler.setAdapter(deviceDetailAdapter);
             deviceDetailAdapter.setOnItemClickListener(this);
             for (int i = 0; i < mDeviceList.size(); i++) {
@@ -382,6 +392,12 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                                             intent.setData(Uri.fromParts("package", "com.kaidishi.lock", null));
                                             startActivity(intent);
                                         }
+                                    }
+                                    @Override
+                                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                                    }
+                                    @Override
+                                    public void afterTextChanged(String toString) {
                                     }
                                 });
                     }

@@ -510,6 +510,32 @@ public class KeyConstants {
      */
     public static final String PASSWORD_FACTOR = "password_Factor";
 
+    /**
+     * 单火开关的开关个数
+     */
+    public static final String SWITCH_NUMBER = "switch_Number";
+    /**
+     * 单火开关的开关键位
+     */
+    public static final String SWITCH_KEY_NUMBER = "switch_Key_Number";
+    /**
+     * 添加单火开关模型
+     */
+    public static final String SWITCH_MODEL = "switch_model";
+    /**
+     * 单火开关数据变更
+     */
+    public static final String WIFI_LOCK_INFO_CHANGE = "wifi_Lock_Info_Change";
+    /**
+     * 单火开关数据结果
+     */
+    public static final String WIFI_LOCK_INFO_CHANGE_RESULT = "wifi_Lock_Info_Change_Result";
+
+    /**
+     * WIFI列表选择的wifi名称
+     */
+    public static final String CHOOSE_WIFI_NAME = "choose_wifi_name";
+
 
 }
 

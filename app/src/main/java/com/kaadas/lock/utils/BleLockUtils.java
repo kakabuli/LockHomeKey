@@ -24,8 +24,10 @@ public class BleLockUtils {
     public static final int TYPE_MORE = 5;
     public static final int TYPE_OFFLINE_PASSWORD = 6;
     public static final int TYPE_FACE_PASSWORD = 7;
+    public static final int TYPE_SMART_SWITCH = 8;
 
-    /***
+    /***更新版本V 3.6(20200603) 刘静
+     *
      * 1	开门	带密码开门,需要输入用户密码密码开门,不支持不带密码开门。安全模式（双重验证模式）下,APP不能开门；电子反锁状态下,APP不能开门；系统锁定模式下,APP不能开门
      * 2	获取开锁记录
      * 3	电量显示	电量只能下降,不能上升（除去更换电池的情况）。
@@ -61,7 +63,7 @@ public class BleLockUtils {
      * 		        添加人脸
      * 		        删除人脸
      * 27	人脸低电量提示	电量低关闭人识别记录与推送提示
-     * 28	人脸模组OTA	独立机制升级人脸模组
+     * 28	人脸模组OTA	独立机制升级人脸模组（wifiOTA）
      * 29	获取操作记录
      *     （+人脸信息）	用户添加删除密码、指纹、人脸或者卡片等的操作记录
      * 30	获取门锁日志
@@ -104,6 +106,7 @@ public class BleLockUtils {
         FUNCTION_SET.put(0x0B, new Integer[]{2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 19, 20, 21, 22, 23, 24, 38, 40});        //2019年12月30日15:16:25
         FUNCTION_SET.put(0x0C, new Integer[]{2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 15, 19, 20, 21, 22, 23, 26, 27, 29, 30, 34, 38, 39, 46, 47});
         FUNCTION_SET.put(0x0D, new Integer[]{2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 19, 20, 21, 22, 23, 24, 38, 40, 49});
+        FUNCTION_SET.put(0x0E, new Integer[]{2, 3, 4, 5, 6, 7, 8, 10, 11, 15, 19, 20, 21, 22, 23, 24, 26, 27, 28, 29, 30, 33, 34, 38, 39, 46, 47});
         FUNCTION_SET.put(0x10, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 19, 20, 21, 22, 23, 24, 32, 36, 38, 40, 48});
 
 
@@ -128,20 +131,22 @@ public class BleLockUtils {
         FUNCTION_SET.put(0x64, new Integer[]{2, 3, 4, 5, 6, 7, 8, 10, 13, 16, 17, 19, 20, 21, 22, 23, 24, 25, 38, 39});
         FUNCTION_SET.put(0x65, new Integer[]{2, 3, 4, 5, 6, 7, 8, 9, 10, 13, 16, 17, 19, 20, 21, 22, 23, 24, 25, 38, 39});
         FUNCTION_SET.put(0x66, new Integer[]{2, 3, 4, 5, 6, 7, 8, 9, 13, 16, 17, 19, 20, 21, 22, 23, 24, 25, 38, 40, 45});
+        FUNCTION_SET.put(0x67, new Integer[]{2, 3, 4, 5, 6, 7, 8, 10, 13, 16, 17, 19, 20, 21, 22, 23, 38, 39});
+        FUNCTION_SET.put(0x68, new Integer[]{2, 3, 4, 5, 6, 7, 8, 9, 10, 13, 16, 17, 19, 20, 21, 22, 23, 38, 39});
 
 
         FUNCTION_SET.put(0x70, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 15, 16, 17, 19, 20, 21, 22, 23});        //2019年12月3日17:18:47
         FUNCTION_SET.put(0x71, new Integer[]{1, 2, 3, 4, 5, 6, 7, 9, 10, 11, 13, 14, 15, 16, 17, 19, 20, 21, 22, 23});
         FUNCTION_SET.put(0x72, new Integer[]{1, 2, 3, 4, 5, 6, 7, 10, 11, 13, 14, 15, 16, 17, 19, 20, 21, 22, 23});
-        FUNCTION_SET.put(0x73, new Integer[]{1, 2, 3, 4, 5, 6, 7, 10, 11, 14, 15, 16, 17, 19, 20, 21, 22, 23, 41, 43});        //2020年3月21日14:02:06
-        FUNCTION_SET.put(0x74, new Integer[]{1, 2, 3, 4, 5, 6, 7, 9, 10, 11, 13, 14, 15, 16, 17, 19, 20, 21, 22, 23, 41, 43});
-        FUNCTION_SET.put(0x75, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 15, 16, 17, 19, 20, 21, 22, 23, 41, 43});
+        FUNCTION_SET.put(0x73, new Integer[]{1, 2, 3, 4, 5, 6, 7, 10, 11, 15, 16, 17, 19, 20, 21, 22, 23, 41, 43});        //2020年3月21日14:02:06
+        FUNCTION_SET.put(0x74, new Integer[]{1, 2, 3, 4, 5, 6, 7, 9, 10, 11, 13, 15, 16, 17, 19, 20, 21, 22, 23, 41, 43});
+        FUNCTION_SET.put(0x75, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 15, 16, 17, 19, 20, 21, 22, 23, 41, 43});
 
 
         FUNCTION_SET.put(0xC0, new Integer[]{1, 2, 3, 4, 5, 6, 7, 10, 11, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 31, 32, 33, 36, 41, 42, 44});
-        FUNCTION_SET.put(0xC1, new Integer[]{1, 2, 3, 4, 5, 6, 7, 10, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 31, 33, 35, 36, 41, 42, 44});
+        FUNCTION_SET.put(0xC1, new Integer[]{1, 2, 3, 4, 5, 6, 7, 10, 15, 16, 17, 18, 19, 20, 21, 22, 23, 31, 33, 35, 36, 41, 42, 44});
         FUNCTION_SET.put(0xC3, new Integer[]{1, 2, 3, 4, 5, 6, 7, 10, 11, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 31, 32, 33, 41, 42, 44});
-        FUNCTION_SET.put(0xC4, new Integer[]{1, 2, 3, 4, 5, 6, 7, 10, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 31, 33, 35, 41, 42, 44});
+        FUNCTION_SET.put(0xC4, new Integer[]{1, 2, 3, 4, 5, 6, 7, 10, 15, 16, 17, 18, 19, 20, 21, 22, 23, 31, 33, 35, 41, 42, 44});
         FUNCTION_SET.put(0xC5, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 15, 16, 17, 19, 20, 21, 22, 23, 36});        //2020年3月21日14:02:06
         FUNCTION_SET.put(0xC6, new Integer[]{1, 2, 3, 4, 5, 6, 7, 9, 10, 11, 13, 14, 15, 16, 17, 19, 20, 21, 22, 23, 36});
         FUNCTION_SET.put(0xC7, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 13, 16, 17, 19, 20, 21, 22, 23, 36});
@@ -403,7 +408,7 @@ public class BleLockUtils {
     }
 
     /**
-     * 根据功能集判断显示的界面
+     * 根据功能集判断显示蓝牙锁的界面
      *
      * @param functionSet
      * @return
@@ -435,7 +440,7 @@ public class BleLockUtils {
     }
 
     /**
-     * 根据功能集判断显示的界面
+     * 根据功能集判断显示WI-FI锁的界面
      *
      * @param functionSet
      * @return
@@ -453,11 +458,9 @@ public class BleLockUtils {
         LogUtils.e("获取到的  功能集是3否包含卡片      " + integers.contains(9));
         functionBeans.add(new WifiLockFunctionBean(MyApplication.getInstance().getString(R.string.offline_password), R.mipmap.bluetooth_password, TYPE_OFFLINE_PASSWORD));
         if (integers.contains(26)) {
-
             functionBeans.add(new WifiLockFunctionBean(MyApplication.getInstance().getString(R.string.face_password), R.mipmap.face_password, TYPE_FACE_PASSWORD));
         }
         if (integers.contains(7)) {
-
             functionBeans.add(new WifiLockFunctionBean(MyApplication.getInstance().getString(R.string.password), R.mipmap.bluetooth_password, TYPE_PASSWORD));
         }
         if (integers.contains(8)) {
@@ -466,6 +469,10 @@ public class BleLockUtils {
         if (integers.contains(9)) {
             functionBeans.add(new WifiLockFunctionBean(MyApplication.getInstance().getString(R.string.card), R.mipmap.bluetooth_card, TYPE_CARD));
         }
+        if (integers.contains(45)) {
+            functionBeans.add(new WifiLockFunctionBean(MyApplication.getInstance().getString(R.string.smart_switch), R.mipmap.single_switch_smart_icon, TYPE_SMART_SWITCH));
+        }
+
         functionBeans.add(new WifiLockFunctionBean(MyApplication.getInstance().getString(R.string.device_share), R.mipmap.wifi_lock_share, TYPE_SHARE));
         functionBeans.add(new WifiLockFunctionBean(MyApplication.getInstance().getString(R.string.more), R.mipmap.bluetooth_more, TYPE_MORE));
 
@@ -480,6 +487,7 @@ public class BleLockUtils {
      * @return
      */
     public static int getAuthorizationImageByModel(String model) {
+
         if (!TextUtils.isEmpty(model)) {
 
             if (model.startsWith("K7")) {
@@ -575,7 +583,7 @@ public class BleLockUtils {
                 return R.mipmap.bluetooth_authorization_lock_g3350;
             } else if (model.startsWith("G3560")) {
                 return R.mipmap.bluetooth_authorization_lock_g3560;
-            } else if (model.startsWith("6113")) {
+            } else if (model.startsWith("6113")||model.startsWith("G5361")) {
                 return R.mipmap.bluetooth_authorization_lock_6113;
             } else if (model.startsWith("A8")) {
                 return R.mipmap.bluetooth_authorization_lock_a8;
@@ -585,8 +593,26 @@ public class BleLockUtils {
             else if (model.contentEquals("A5601")) {
                 return R.mipmap.bluetooth_authorization_lock_a7_w;
             }
-            else if (model.contentEquals("K5501")) {
+            else if (model.startsWith("K5501")) {
                 return R.mipmap.bluetooth_authorization_lock_k5501;
+            }
+            else if (model.contentEquals("A5602")) {
+                return R.mipmap.bluetooth_authorization_lock_a8_w;
+            }
+            else if (model.contentEquals("A5603")) {
+                return R.mipmap.bluetooth_authorization_lock_k100_w;
+            }
+            else if (model.contentEquals("G5601")) {
+                return R.mipmap.bluetooth_authorization_lock_5500_a5p_w;
+            }
+            else if (model.contentEquals("G5602")) {
+                return R.mipmap.bluetooth_authorization_lock_5310_a5p_w;
+            }
+            else if (model.startsWith("G8501")) {
+                return R.mipmap.bluetooth_authorization_lock_k9_a5p_w;
+            }
+            else if (model.contentEquals("K10F")) {
+                return R.mipmap.bluetooth_authorization_lock_k10_f;
             }
             else {
                 return R.mipmap.bluetooth_authorization_lock_default;
@@ -604,6 +630,7 @@ public class BleLockUtils {
      * @return
      */
     public static int getSmallImageByModel(String model) {
+
         if (!TextUtils.isEmpty(model)) {
             if (model.startsWith("K7")) {
                 return R.mipmap.k7;
@@ -697,7 +724,7 @@ public class BleLockUtils {
                 return R.mipmap.small_g3350;
             } else if (model.startsWith("G3560")) {
                 return R.mipmap.small_g3560;
-            } else if (model.startsWith("6113")) {
+            } else if (model.startsWith("6113")||model.startsWith("G5361")) {
                 return R.mipmap.small_6113;
             } else if (model.startsWith("A8")) {
                 return R.mipmap.small_a8;
@@ -707,8 +734,26 @@ public class BleLockUtils {
             else if (model.contentEquals("A5601")) {
                 return R.mipmap.small_a7_w;
             }
-            else if (model.contentEquals("K5501")) {
+            else if (model.startsWith("K5501")) {
                 return R.mipmap.small_k5501;
+            }
+            else if (model.contentEquals("A5602")) {
+                return R.mipmap.small_a8_w;
+            }
+            else if (model.contentEquals("A5603")) {
+                return R.mipmap.small_k100_w;
+            }
+            else if (model.contentEquals("G5601")) {
+                return R.mipmap.small_5500_a5p_w;
+            }
+            else if (model.contentEquals("G5602")) {
+                return R.mipmap.small_5310_a5p_w;
+            }
+            else if (model.startsWith("G8501")) {
+                return R.mipmap.small_k9_a5p_w;
+            }
+            else if (model.contentEquals("K10F")) {
+                return R.mipmap.small_k10_f;
             }
             else {
                 return R.mipmap.default_zigbee_lock_icon;
@@ -726,11 +771,11 @@ public class BleLockUtils {
      * @return
      */
     public static int getDetailImageByModel(String model) {
+
         if (!TextUtils.isEmpty(model)) {
             if (model.startsWith("K7")) {
                 return R.mipmap.bluetooth_lock_k7;
             }
-
 
             else if (model.startsWith("S118") ) {
                 return R.mipmap.bluetooth_lock_s118;
@@ -744,8 +789,6 @@ public class BleLockUtils {
             } else if (model.startsWith("K7P") ) {
                 return R.mipmap.bluetooth_lock_k7p;
             }
-
-
 
 
             else if (model.startsWith("KX-T") || model.startsWith("K8300")) {
@@ -820,7 +863,7 @@ public class BleLockUtils {
                 return R.mipmap.bluetooth_lock_g3350;
             } else if (model.startsWith("G3560")) {
                 return R.mipmap.bluetooth_lock_g3560;
-            } else if (model.startsWith("6113")) {
+            } else if (model.startsWith("6113")||model.startsWith("G5361")) {
                 return R.mipmap.bluetooth_lock_6113;
             } else if (model.startsWith("A8")) {
                 return R.mipmap.bluetooth_lock_a8;
@@ -829,8 +872,26 @@ public class BleLockUtils {
             } else if (model.contentEquals("A5601")) {
                 return R.mipmap.bluetooth_lock_a7_w;
             }
-            else if (model.contentEquals("K5501")) {
+            else if (model.startsWith("K5501")) {
                 return R.mipmap.bluetooth_lock_k5501;
+            }
+             else if (model.contentEquals("A5602")) {
+                return R.mipmap.bluetooth_lock_a8_w;
+            }
+             else if (model.contentEquals("A5603")) {
+                return R.mipmap.bluetooth_lock_k100_w;
+            }
+            else if (model.contentEquals("G5601")) {
+                return R.mipmap.bluetooth_lock_5500_a5p_w;
+            }
+            else if (model.contentEquals("G5602")) {
+                return R.mipmap.bluetooth_lock_5310_a5p_w;
+            }
+            else if (model.startsWith("G8501")) {
+                return R.mipmap.bluetooth_lock_k9_a5p_w;
+            }
+            else if (model.contentEquals("K10F")) {
+                return R.mipmap.bluetooth_lock_k10_f;
             }
             else {
                 return R.mipmap.bluetooth_lock_default;
@@ -840,5 +901,19 @@ public class BleLockUtils {
         }
     }
 
+    /**
+     * 根据功能集判断是否显示人脸模组OTA
+     *
+     * @param functionSet
+     * @return
+     */
+    public static boolean isSupportWiFiFaceOTA(String functionSet) {
+        Integer[] funcs = FUNCTION_SET.get(Integer.parseInt(functionSet));
+        if (funcs == null) {
+            return false;
+        }
+        List<Integer> integers = Arrays.asList(funcs);
+        return integers.contains(28);
+    }
 
 }
