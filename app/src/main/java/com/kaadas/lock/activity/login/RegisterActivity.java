@@ -19,6 +19,7 @@ import android.widget.TextView;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.choosecountry.CountryActivity;
 import com.kaadas.lock.activity.my.PersonalUserAgreementActivity;
+import com.kaadas.lock.activity.my.PrivacyActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.mvp.presenter.RegisterPresenter;
 import com.kaadas.lock.mvp.view.IRegisterView;
@@ -79,7 +80,8 @@ public class RegisterActivity extends BaseActivity<IRegisterView, RegisterPresen
     String countryNumber;
     @BindView(R.id.ll_user_protocol)
     LinearLayout llUserProtocol;
-
+    @BindView(R.id.primary_user_protocol)
+    LinearLayout primary_user_protocol;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,6 +94,7 @@ public class RegisterActivity extends BaseActivity<IRegisterView, RegisterPresen
         rlCountryChoose.setOnClickListener(this);
         tvRegisterDefaultAgree.setOnClickListener(this);
         llUserProtocol.setOnClickListener(this);
+        primary_user_protocol.setOnClickListener(this);
     }
 
     @Override
@@ -134,6 +137,10 @@ public class RegisterActivity extends BaseActivity<IRegisterView, RegisterPresen
             case R.id.ll_user_protocol:
                 Intent agreementIntent = new Intent(this, PersonalUserAgreementActivity.class);
                 startActivity(agreementIntent);
+                break;
+            case R.id.primary_user_protocol:
+                Intent primatyIntent = new Intent(this, PrivacyActivity.class);
+                startActivity(primatyIntent);
                 break;
         }
     }

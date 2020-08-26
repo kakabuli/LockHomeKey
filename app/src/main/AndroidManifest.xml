@@ -1231,6 +1231,11 @@
         <activity
             android:name=".activity.ScanHttpDialogActivity"
             android:theme="@style/gatewayDialog" />
+
+        <activity
+            android:name=".activity.my.PrivacyActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

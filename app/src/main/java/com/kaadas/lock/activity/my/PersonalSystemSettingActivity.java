@@ -69,6 +69,8 @@ public class PersonalSystemSettingActivity extends BaseActivity<ISystemSettingVi
     Button logOut;
     @BindView(R.id.rl_language_setting)
     RelativeLayout rlLanguageSetting;
+    @BindView(R.id.primary_layout)
+    RelativeLayout primary_layout;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -101,7 +103,7 @@ public class PersonalSystemSettingActivity extends BaseActivity<ISystemSettingVi
     }
 
 
-    @OnClick({R.id.version_layout, R.id.user_agreement_layout, R.id.clear_cache_layout, R.id.log_out})
+    @OnClick({R.id.version_layout, R.id.user_agreement_layout, R.id.clear_cache_layout, R.id.log_out,R.id.primary_layout})
     public void onViewClicked(View view) {
         switch (view.getId()) {
 
@@ -122,6 +124,10 @@ public class PersonalSystemSettingActivity extends BaseActivity<ISystemSettingVi
                 break;
             case R.id.log_out:
                 loginOut();
+                break;
+            case R.id.primary_layout:
+                Intent privacyIntent = new Intent(this, PrivacyActivity.class);
+                startActivity(privacyIntent);
                 break;
         }
     }

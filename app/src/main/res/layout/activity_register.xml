@@ -288,12 +288,40 @@
                         android:text="@string/user_protocol"
                         android:textColor="#1F96F7"
                         android:textSize="@dimen/sp_12" />
-
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/dp_1"
                         android:background="#1F96F7"></View>
                 </LinearLayout>
+
+                <TextView
+                    android:layout_width="10dp"
+                    android:layout_height="wrap_content"
+                 ></TextView>
+
+                <LinearLayout
+                    android:id="@+id/primary_user_protocol"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingBottom="@dimen/dp_21">
+
+
+                    <TextView
+                        android:id="@+id/primary_user_protocol_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:paddingTop="@dimen/dp_21"
+                        android:text="@string/primary_user_agreement"
+                        android:textColor="#1F96F7"
+                        android:textSize="@dimen/sp_12" />
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dp_1"
+                        android:background="#1F96F7"></View>
+                </LinearLayout>
+
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

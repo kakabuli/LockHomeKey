@@ -87,6 +87,36 @@
         </RelativeLayout>
 
         <RelativeLayout
+            android:id="@+id/primary_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dp_75">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/dp_16"
+                android:text="@string/primary_user_agreement"
+                android:textColor="#333333"
+                android:textSize="@dimen/sp_15" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/dp_16"
+                android:src="@mipmap/right" />
+
+            <!-- <View
+                 android:layout_width="match_parent"
+                 android:layout_height="@dimen/dp_1"
+                 android:layout_alignParentBottom="true"
+                 android:layout_marginLeft="@dimen/dp_20"
+                 android:background="#F2F2F2"></View>-->
+        </RelativeLayout>
+
+        <RelativeLayout
             android:id="@+id/user_agreement_layout"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/dp_75">
