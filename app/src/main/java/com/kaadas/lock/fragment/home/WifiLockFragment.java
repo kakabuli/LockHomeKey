@@ -148,7 +148,12 @@ public class WifiLockFragment extends BaseFragment<IWifiLockView, WifiLockPresen
         if (isOpening){
             changeLockStatus(4);
         }else {
-            changeLockStatus(5);
+            if (openStatus == 1){ //关锁
+                changeLockStatus(5);
+            }
+            else if (openStatus == 3){//主锁舌伸出
+                changeLockStatus(9);
+            }
         }
         ///wifi锁首页状态优先级：开锁状态-> 布防-> 反琐-> 安全-> 面容-> 节能
         if (powerSave == 1) {//已启动节能模式
@@ -253,12 +258,22 @@ public class WifiLockFragment extends BaseFragment<IWifiLockView, WifiLockPresen
                 ivBackGround.setImageResource(R.mipmap.bluetooth_bu_fang_big_middle_icon);  //背景大图标
                 ivCenterIcon.setImageResource(isOpening ? R.mipmap.bluetooth_open_lock_success_niner_middle_icon : R.mipmap.bluetooth_lock_safe_inner_midder_icon);  //门锁关闭状态
                 tvTopStates.setText(getString(R.string.already_open_alarm));  //设置设备状态   离线
+                if (openStatusTime == 0) {
+                    tvUpdateTime.setText(""+ DateUtils.timestampToDateSecond(updateTime));
+                } else {
+                    tvUpdateTime.setText("" + DateUtils.timestampToDateSecond(openStatusTime));
+                }
                 break;
             case 3:
                 //“已反锁，请门内开锁”
                 ivBackGround.setImageResource(R.mipmap.bluetooth_double_lock_big_middle_icon);  //背景大图标
                 ivCenterIcon.setImageResource(isOpening ? R.mipmap.bluetooth_open_lock_success_niner_middle_icon : R.mipmap.bluetooth_lock_safe_inner_midder_icon);  //门锁关闭状态
                 tvTopStates.setText(getString(R.string.already_back_lock));  //设置设备状态   离线
+                if (openStatusTime == 0) {
+                    tvUpdateTime.setText(""+ DateUtils.timestampToDateSecond(updateTime));
+                } else {
+                    tvUpdateTime.setText("" + DateUtils.timestampToDateSecond(openStatusTime));
+                }
                 break;
             case 4:
                 //“锁已打开”
@@ -288,18 +303,44 @@ public class WifiLockFragment extends BaseFragment<IWifiLockView, WifiLockPresen
                 ivBackGround.setImageResource(R.mipmap.wifi_lock_safe_bg);  //背景大图标
                 ivCenterIcon.setImageResource(isOpening ? R.mipmap.bluetooth_open_lock_success_niner_middle_icon : R.mipmap.bluetooth_lock_safe_inner_midder_icon);  //门锁关闭状态
                 tvTopStates.setText(getString(R.string.already_safe_model_open));
+                if (openStatusTime == 0) {
+                    tvUpdateTime.setText(""+ DateUtils.timestampToDateSecond(updateTime));
+                } else {
+                    tvUpdateTime.setText("" + DateUtils.timestampToDateSecond(openStatusTime));
+                }
                 break;
             case 7:
                 //面容识别已关闭
                 ivBackGround.setImageResource(R.mipmap.wifi_lock_face_model_close);  //背景大图标
                 ivCenterIcon.setImageResource(R.mipmap.wifi_lock_face_model_close_middle_icon);  //中间小图标
                 tvTopStates.setText(getString(R.string.already_face_model_close));
+                if (openStatusTime == 0) {
+                    tvUpdateTime.setText(""+ DateUtils.timestampToDateSecond(updateTime));
+                } else {
+                    tvUpdateTime.setText("" + DateUtils.timestampToDateSecond(openStatusTime));
+                }
                 break;
             case 8:
                 //已启动节能模式
                 ivBackGround.setImageResource(R.mipmap.wifi_lock_face_sensor_model_open);  //背景大图标
                 ivCenterIcon.setImageResource(R.mipmap.wifi_lock_face_sensor_model_middle_icon);  //中间小图标
                 tvTopStates.setText(getString(R.string.already_face_sensor_model_open));
+                if (openStatusTime == 0) {
+                    tvUpdateTime.setText(""+ DateUtils.timestampToDateSecond(updateTime));
+                } else {
+                    tvUpdateTime.setText("" + DateUtils.timestampToDateSecond(openStatusTime));
+                }
+                break;
+            case 9:
+                //已提拉上锁
+                ivBackGround.setImageResource(R.mipmap.wifi_lock_close_big_middle_icon);  //背景大图标
+                ivCenterIcon.setImageResource(R.mipmap.bluetooth_lock_safe_inner_midder_icon);  //中间小图标
+                tvTopStates.setText(getString(R.string.already_up_lock));
+                if (openStatusTime == 0) {
+                    tvUpdateTime.setText(""+ DateUtils.timestampToDateSecond(updateTime));
+                } else {
+                    tvUpdateTime.setText("" + DateUtils.timestampToDateSecond(openStatusTime));
+                }
                 break;
         }
     }
@@ -409,13 +450,22 @@ public class WifiLockFragment extends BaseFragment<IWifiLockView, WifiLockPresen
         if (!TextUtils.isEmpty(wifiSn) && wifiLockInfo != null && wifiSn.equals(wifiLockInfo.getWifiSN())) {
             if (eventparams.getEventType() == 0x01) { //操作类
                 if (eventparams.getEventCode() == 0x01) {  //上锁
-                    LogUtils.e("门锁状态上报   上锁" );
+                    LogUtils.e("门锁状态上报  上锁" );
                     isOpening = false;
                     wifiLockInfo.setOpenStatusTime(System.currentTimeMillis()/1000);
                     wifiLockInfo.setOpenStatus(1);
                     changeLockStatus(5);
                     new WifiLockInfoManager().insertOrReplace(wifiLockInfo);
-                } else if (eventparams.getEventCode() == 0x02) { //开锁
+                }
+                else if (eventparams.getEventCode() == 0x03) { //主锁舌伸出
+                    LogUtils.e("门锁状态上报  主锁舌伸出" );
+                    isOpening = false;
+                    wifiLockInfo.setOpenStatusTime(System.currentTimeMillis()/1000);
+                    wifiLockInfo.setOpenStatus(3);
+                    changeLockStatus(9);
+                    new WifiLockInfoManager().insertOrReplace(wifiLockInfo);
+                }
+                else if (eventparams.getEventCode() == 0x02) { //开锁
                     LogUtils.e("门锁状态上报   开锁" );
                     mPresenter.getOperationRecord(wifiLockInfo.getWifiSN(), true);
                     isOpening = true;
