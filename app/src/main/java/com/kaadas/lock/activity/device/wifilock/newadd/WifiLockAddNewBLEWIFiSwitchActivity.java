@@ -36,9 +36,6 @@ import com.kaadas.lock.utils.WifiUtil;
 import com.kaadas.lock.utils.WifiUtils;
 import com.kaadas.lock.widget.WifiCircleProgress;
 import com.tbruyelle.rxpermissions2.RxPermissions;
-
-import org.greenrobot.greendao.annotation.NotNull;
-
 import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
@@ -306,12 +303,11 @@ public class WifiLockAddNewBLEWIFiSwitchActivity extends BaseActivity<IBindBleVi
     /**
      * 离线密码因子（配网通道）
      */
-    public void onlistenerPasswordFactor(@NotNull byte[] originalData, int pswLen, int index){
+    public void onlistenerPasswordFactor(byte[] originalData,int pswLen,int index){
 
         if (originalData == null){
             return;
         }
-
         int fenmu ;
         int fenzi ;
         int copyLength ;
