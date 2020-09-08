@@ -76,14 +76,21 @@ public class WifiLockAddNewFirstActivity extends BaseAddToApplicationActivity {
 
                             }
                         });
-                if(!wifiModelType.equals("WiFi&BLE")) {
-                    //打开wifi
-                    WifiUtils wifiUtils = WifiUtils.getInstance(MyApplication.getInstance());
-                    if (!wifiUtils.isWifiEnable()) {
-                        wifiUtils.openWifi();
-                        Toast.makeText(this, getString(R.string.wifi_no_open_please_open_wifi), Toast.LENGTH_SHORT).show();
-                        return;
+                if (wifiModelType != null) {
+                    if (!(wifiModelType.equals("WiFi&BLE"))) {
+                        //打开wifi
+                        WifiUtils wifiUtils = WifiUtils.getInstance(MyApplication.getInstance());
+                        if (!wifiUtils.isWifiEnable()) {
+                            wifiUtils.openWifi();
+                            Toast.makeText(this, getString(R.string.wifi_no_open_please_open_wifi), Toast.LENGTH_SHORT).show();
+                            return;
+                        }
                     }
+                }
+                else {
+
+                    return;
+
                 }
                 if (!GpsUtil.isOPen(MyApplication.getInstance())) {
                     GpsUtil.openGPS(MyApplication.getInstance());

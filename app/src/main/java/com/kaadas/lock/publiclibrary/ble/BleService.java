@@ -345,53 +345,53 @@ public class BleService extends Service {
             if (device==null || device.getName() == null) {  //如果名字为空
                 return;
             }
-
-            //符合要求的设备
-            if (device.getName().contains("Bootloader")
-                    || device.getName().contains("OAD")
-                    || device.getName().contains("KDS")
-                    || device.getName().contains("XK")//小凯锁放凯迪仕卖
-                    || device.getName().contains("KdsLock")
-            ) {
-                //返回Manufacture ID之后的data
-                SparseArray<byte[]> hex16=result.getScanRecord().getManufacturerSpecificData();
-                //设备名
-                String deviceName = device.getName();
+            try {
+                //符合要求的设备
+                if (device.getName().contains("Bootloader")
+                        || device.getName().contains("OAD")
+                        || device.getName().contains("KDS")
+                        || device.getName().contains("XK")//小凯锁放凯迪仕卖
+                        || device.getName().contains("KdsLock")
+                ) {
+                    //返回Manufacture ID之后的data
+                    SparseArray<byte[]> hex16 = result.getScanRecord().getManufacturerSpecificData();
+                    //设备名
+                    String deviceName = device.getName();
 //                LogUtils.e("--kaadas--device.getName()==",device.getName());
 
 //                //新蓝牙广播协议带SN
-                if (hex16.size()>0){
+                    if (hex16.size() > 0) {
 
-                    StringBuilder sb=new StringBuilder();
-                    int bindingType=0; //bit0:菜单绑定 bit1:蓝牙绑定 bit2:WIFI bit3:ZigBee bit4~7:Res erved
-                    int productType=1; //0x01:lock 0x02:gateway 0x03:switch
-                    int startLength=0;
-                    String product_type_str;
+                        StringBuilder sb = new StringBuilder();
+                        int bindingType = 0; //bit0:菜单绑定 bit1:蓝牙绑定 bit2:WIFI bit3:ZigBee bit4~7:Res erved
+                        int productType = 1; //0x01:lock 0x02:gateway 0x03:switch
+                        int startLength = 0;
+                        String product_type_str;
 
-                    byte[] mvalue = hex16.valueAt(0);
-                    if(mvalue.length<16){
-                        return;//过滤无用蓝牙广播数据
-                    }
-                    //1蓝牙模块(菜单绑定)  2蓝牙绑定  3菜单和直接绑定都支持 4Wi-Fi
-                    bindingType= mvalue[0];
-                    //取出产品类型  1锁 2网关 3开关
-                    productType= mvalue[1];
-                    //截取出SN
-                    for (int j=3;j<16;j++){
-                        sb.append((char)mvalue[j]);
-                    }
-                    String sn=sb.toString();
-                    //截取出型号
-                    for (int k=16;k<mvalue.length;k++){
-                        if(mvalue[k]!=0){
-                            startLength++;
+                        byte[] mvalue = hex16.valueAt(0);
+                        if (mvalue.length < 16) {
+                            return;//过滤无用蓝牙广播数据
                         }
-                    }
-                    byte[] product_type=new byte[startLength] ;
-                    System.arraycopy(mvalue, 16, product_type, 0, startLength);
-                    product_type_str= new String(product_type);
-                    //获取MAC码
-                    String mac= device.getAddress();
+                        //1蓝牙模块(菜单绑定)  2蓝牙绑定  3菜单和直接绑定都支持 4Wi-Fi
+                        bindingType = mvalue[0];
+                        //取出产品类型  1锁 2网关 3开关
+                        productType = mvalue[1];
+                        //截取出SN
+                        for (int j = 3; j < 16; j++) {
+                            sb.append((char) mvalue[j]);
+                        }
+                        String sn = sb.toString();
+                        //截取出型号
+                        for (int k = 16; k < mvalue.length; k++) {
+                            if (mvalue[k] != 0) {
+                                startLength++;
+                            }
+                        }
+                        byte[] product_type = new byte[startLength];
+                        System.arraycopy(mvalue, 16, product_type, 0, startLength);
+                        product_type_str = new String(product_type);
+                        //获取MAC码
+                        String mac = device.getAddress();
 
 //                    //拼接数据
 //                    String snStr = mac+"="+sn+"="+bindingType+"="+product_type_str;
@@ -400,40 +400,43 @@ public class BleService extends Service {
 
 //                    List<BluetoothLockBroadcastBean> itemList = new ArrayList<>();
 //                    itemList.add(new BluetoothLockBroadcastBean(device,Rsa.bytesToHexString(mvalue),deviceName,sn,mac,product_type_str,bindingType));
-                    BluetoothLockBroadcastBean itemList = new BluetoothLockBroadcastBean();
+                        BluetoothLockBroadcastBean itemList = new BluetoothLockBroadcastBean();
 
-                    itemList.setDevice(device);
-                    itemList.setOriginalData(Rsa.bytesToHexString(mvalue));
-                    itemList.setDeviceName(deviceName);
-                    itemList.setDeviceSN(sn);
-                    itemList.setDeviceMAC(mac);
-                    itemList.setDeviceModel(product_type_str);
-                    itemList.setBindingType(bindingType);
-                    itemList.setProductType(productType);
+                        itemList.setDevice(device);
+                        itemList.setOriginalData(Rsa.bytesToHexString(mvalue));
+                        itemList.setDeviceName(deviceName);
+                        itemList.setDeviceSN(sn);
+                        itemList.setDeviceMAC(mac);
+                        itemList.setDeviceModel(product_type_str);
+                        itemList.setBindingType(bindingType);
+                        itemList.setProductType(productType);
 
 //                    deviceScanSubject.onNext(device);
-                    deviceScanSubject.onNext( itemList);
+                        deviceScanSubject.onNext(itemList);
 
-                }
-                //旧蓝牙广播协议不带SN
-                else{
-                    int bindingType=0; //bit0:菜单绑定 bit1:蓝牙绑定 bit2:WIFI bit3:ZigBee bit4~7:Res erved
+                    }
+                    //旧蓝牙广播协议不带SN
+                    else {
+                        int bindingType = 0; //bit0:菜单绑定 bit1:蓝牙绑定 bit2:WIFI bit3:ZigBee bit4~7:Res erved
 
-                    //获取MAC码
-                    String mac= device.getAddress();
+                        //获取MAC码
+                        String mac = device.getAddress();
 
-                    BluetoothLockBroadcastBean itemList = new BluetoothLockBroadcastBean();
+                        BluetoothLockBroadcastBean itemList = new BluetoothLockBroadcastBean();
 
 //                    itemList.setDevice(new BluetoothLockBroadcastBean(device,null,deviceName,null,mac,null,bindingType));
-                    itemList.setDevice(device);
-                    itemList.setDeviceName(deviceName);
-                    itemList.setDeviceMAC(mac);
-                    itemList.setBindingType(bindingType);
+                        itemList.setDevice(device);
+                        itemList.setDeviceName(deviceName);
+                        itemList.setDeviceMAC(mac);
+                        itemList.setBindingType(bindingType);
 
 //                    mItemList.add(itemList);
-                    deviceScanSubject.onNext( itemList);
+                        deviceScanSubject.onNext(itemList);
 
+                    }
                 }
+            }catch (Exception e){
+
             }
         }
 

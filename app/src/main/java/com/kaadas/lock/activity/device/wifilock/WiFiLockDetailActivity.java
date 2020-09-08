@@ -173,21 +173,27 @@ public class WiFiLockDetailActivity extends BaseActivity<IWifiLockDetailView, Wi
             if (!TextUtils.isEmpty(wifiLockInfo.getProductModel())){
                 ivLockIcon.setImageResource(BleLockUtils.getDetailImageByModel(wifiLockInfo.getProductModel()));
                 String model = wifiLockInfo.getProductModel();
-                //本地图片有对应的产品则不获取缓存的产品型号图片，缓存没有则选择尝试下载
-                if (BleLockUtils.getDetailImageByModel(model) == R.mipmap.bluetooth_lock_default){
-                    options = new RequestOptions()
-                        .placeholder(R.mipmap.bluetooth_lock_default)      //加载成功之前占位图
-                        .error(R.mipmap.bluetooth_lock_default)      //加载错误之后的错误图
-                            .diskCacheStrategy(DiskCacheStrategy.RESOURCE)    //只缓存最终的图片
-                            .dontAnimate()                                    //直接显示图片
-                .fitCenter();//指定图片的缩放类型为fitCenter （是一种“中心匹配”的方式裁剪方式，它裁剪出来的图片长宽都会小于等于ImageView的大小，这样一来。图片会完整地显示出来，但是ImageView可能并没有被填充满）
+                if (model != null) {
+                    //本地图片有对应的产品则不获取缓存的产品型号图片，缓存没有则选择尝试下载
+                    if (BleLockUtils.getDetailImageByModel(model) == R.mipmap.bluetooth_lock_default) {
+                        options = new RequestOptions()
+                                .placeholder(R.mipmap.bluetooth_lock_default)      //加载成功之前占位图
+                                .error(R.mipmap.bluetooth_lock_default)      //加载错误之后的错误图
+                                .diskCacheStrategy(DiskCacheStrategy.RESOURCE)    //只缓存最终的图片
+                                .dontAnimate()                                    //直接显示图片
+                                .fitCenter();//指定图片的缩放类型为fitCenter （是一种“中心匹配”的方式裁剪方式，它裁剪出来的图片长宽都会小于等于ImageView的大小，这样一来。图片会完整地显示出来，但是ImageView可能并没有被填充满）
 //                            .centerCrop();//指定图片的缩放类型为centerCrop （是一种“去除多余”的裁剪方式，它会把ImageView边界以外的部分裁剪掉。这样一来ImageView会被填充满，但是这张图片可能不会完整地显示出来(ps:因为超出部分都被裁剪掉了）
 
-                    for (ProductInfo productInfo:productList) {
-                        if (productInfo.getDevelopmentModel().contentEquals(model)){
+                        for (ProductInfo productInfo : productList) {
+                            try {
+                                if (productInfo.getDevelopmentModel().contentEquals(model)) {
 
-                            //匹配型号获取下载地址
-                            Glide.with(this).load(productInfo.getAdminUrl()).apply(options).into(ivLockIcon);
+                                    //匹配型号获取下载地址
+                                    Glide.with(this).load(productInfo.getAdminUrl()).apply(options).into(ivLockIcon);
+                                }
+                            } catch (Exception e) {
+                                LogUtils.e("--kaadas--:" + e.getMessage());
+                            }
                         }
                     }
                 }
@@ -311,205 +317,209 @@ public class WiFiLockDetailActivity extends BaseActivity<IWifiLockDetailView, Wi
     }
 
     private void initRecycleview() {
-        String functionSet = wifiLockInfo.getFunctionSet(); //锁功能集
-        int func;
-        try {
-            func = Integer.parseInt(functionSet);
-        } catch (Exception e) {
-            func = 0x64;
-        }
+        if (wifiLockInfo != null) {
 
-        LogUtils.e("功能集是   " + func);
-        supportFunctions = BleLockUtils.getWifiLockSupportFunction(func);
-        LogUtils.e("获取到的功能集是   " + supportFunctions.size());
-        if (wiFiLockPassword != null) {
-            for (WifiLockFunctionBean wifiLockFunctionBean : supportFunctions) {
-                switch (wifiLockFunctionBean.getType()) {
-                    case BleLockUtils.TYPE_PASSWORD:
-                        List<WiFiLockPassword.PwdListBean> pwdList = wiFiLockPassword.getPwdList();
-                        wifiLockFunctionBean.setNumber(pwdList == null ? 0 : pwdList.size());
-                        break;
-                    case BleLockUtils.TYPE_FINGER:
-                        List<WiFiLockPassword.FingerprintListBean> fingerprintList = wiFiLockPassword.getFingerprintList();
-                        wifiLockFunctionBean.setNumber(fingerprintList == null ? 0 : fingerprintList.size());
-                        break;
-                    case BleLockUtils.TYPE_CARD:
-                        List<WiFiLockPassword.CardListBean> cardList = wiFiLockPassword.getCardList();
-                        wifiLockFunctionBean.setNumber(cardList == null ? 0 : cardList.size());
-                        break;
-                    case BleLockUtils.TYPE_FACE_PASSWORD:
-                        List<WiFiLockPassword.FaceListBean> faceList = wiFiLockPassword.getFaceList();
-                        wifiLockFunctionBean.setNumber(faceList == null ? 0 : faceList.size());
-                        break;
+            String functionSet = wifiLockInfo.getFunctionSet(); //锁功能集
+            int func;
+            try {
+                func = Integer.parseInt(functionSet);
+            } catch (Exception e) {
+                func = 0x64;
+            }
+
+            LogUtils.e("功能集是   " + func);
+            supportFunctions = BleLockUtils.getWifiLockSupportFunction(func);
+            LogUtils.e("获取到的功能集是   " + supportFunctions.size());
+            if (wiFiLockPassword != null) {
+                for (WifiLockFunctionBean wifiLockFunctionBean : supportFunctions) {
+                    switch (wifiLockFunctionBean.getType()) {
+                        case BleLockUtils.TYPE_PASSWORD:
+                            List<WiFiLockPassword.PwdListBean> pwdList = wiFiLockPassword.getPwdList();
+                            wifiLockFunctionBean.setNumber(pwdList == null ? 0 : pwdList.size());
+                            break;
+                        case BleLockUtils.TYPE_FINGER:
+                            List<WiFiLockPassword.FingerprintListBean> fingerprintList = wiFiLockPassword.getFingerprintList();
+                            wifiLockFunctionBean.setNumber(fingerprintList == null ? 0 : fingerprintList.size());
+                            break;
+                        case BleLockUtils.TYPE_CARD:
+                            List<WiFiLockPassword.CardListBean> cardList = wiFiLockPassword.getCardList();
+                            wifiLockFunctionBean.setNumber(cardList == null ? 0 : cardList.size());
+                            break;
+                        case BleLockUtils.TYPE_FACE_PASSWORD:
+                            List<WiFiLockPassword.FaceListBean> faceList = wiFiLockPassword.getFaceList();
+                            wifiLockFunctionBean.setNumber(faceList == null ? 0 : faceList.size());
+                            break;
+                    }
                 }
             }
-        }
 
-        MyGridItemDecoration dividerItemDecoration;
-        if (supportFunctions.size() <= 2) {
-            detailFunctionOnLine.setLayoutManager(new GridLayoutManager(this, 2));
-            dividerItemDecoration = new MyGridItemDecoration(this, 2);
-            detailFunctionRecyclerView.setVisibility(View.GONE);
-            detailFunctionOnLine.setVisibility(View.VISIBLE);
-        } else if (supportFunctions.size() <= 4) {
-            dividerItemDecoration = new MyGridItemDecoration(this, 2);
-            detailFunctionRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
-            detailFunctionRecyclerView.setVisibility(View.VISIBLE);
-            detailFunctionOnLine.setVisibility(View.GONE);
-        } else {
-            detailFunctionRecyclerView.setLayoutManager(new GridLayoutManager(this, 3));
-            detailFunctionRecyclerView.setVisibility(View.VISIBLE);
-            detailFunctionOnLine.setVisibility(View.GONE);
-            dividerItemDecoration = new MyGridItemDecoration(this, 3);
-        }
+            MyGridItemDecoration dividerItemDecoration;
+            if (supportFunctions.size() <= 2) {
+                detailFunctionOnLine.setLayoutManager(new GridLayoutManager(this, 2));
+                dividerItemDecoration = new MyGridItemDecoration(this, 2);
+                detailFunctionRecyclerView.setVisibility(View.GONE);
+                detailFunctionOnLine.setVisibility(View.VISIBLE);
+            } else if (supportFunctions.size() <= 4) {
+                dividerItemDecoration = new MyGridItemDecoration(this, 2);
+                detailFunctionRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
+                detailFunctionRecyclerView.setVisibility(View.VISIBLE);
+                detailFunctionOnLine.setVisibility(View.GONE);
+            } else {
+                detailFunctionRecyclerView.setLayoutManager(new GridLayoutManager(this, 3));
+                detailFunctionRecyclerView.setVisibility(View.VISIBLE);
+                detailFunctionOnLine.setVisibility(View.GONE);
+                dividerItemDecoration = new MyGridItemDecoration(this, 3);
+            }
 
-        detailFunctionOnLine.addItemDecoration(dividerItemDecoration);
-        detailFunctionRecyclerView.addItemDecoration(dividerItemDecoration);
+            detailFunctionOnLine.addItemDecoration(dividerItemDecoration);
+            detailFunctionRecyclerView.addItemDecoration(dividerItemDecoration);
 
-        adapater = new WifiLockDetailAdapater(supportFunctions, new WifiLockDetailAdapater.OnItemClickListener() {
-            @Override
-            public void onItemClick(int position, WifiLockFunctionBean bluetoothLockFunctionBean) {
-                Intent intent;
-                switch (bluetoothLockFunctionBean.getType()) {
-                    case BleLockUtils.TYPE_PASSWORD:
-                        intent = new Intent(WiFiLockDetailActivity.this, WiFiLockPasswordManagerActivity.class);
-                        intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
-                        intent.putExtra(KeyConstants.KEY_TYPE, 1);
-                        startActivity(intent);
-                        break;
-                    case BleLockUtils.TYPE_FINGER:
-                        intent = new Intent(WiFiLockDetailActivity.this, WiFiLockPasswordManagerActivity.class);
-                        intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
-                        intent.putExtra(KeyConstants.KEY_TYPE, 2);
-                        startActivity(intent);
-                        break;
-                    case BleLockUtils.TYPE_CARD:
-                        intent = new Intent(WiFiLockDetailActivity.this, WiFiLockPasswordManagerActivity.class);
-                        intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
-                        intent.putExtra(KeyConstants.KEY_TYPE, 3);
-                        startActivity(intent);
-                        break;
-                    case BleLockUtils.TYPE_SMART_SWITCH:
-
-
-                        if (wifiLockInfo.getSingleFireSwitchInfo() != null) {
-
-                            int SwitchNumber = wifiLockInfo.getSingleFireSwitchInfo().getSwitchNumber().size();
-
-                            if (SwitchNumber > 0) {
-                                intent = new Intent(WiFiLockDetailActivity.this, SwipchLinkActivity.class);
-                                intent.putExtra(KeyConstants.SWITCH_NUMBER, SwitchNumber);
-                                intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
-                                intent.putExtra(KeyConstants.WIFI_LOCK_INFO_CHANGE, wifiLockInfo);
-                                startActivity(intent);
-                            } else {
-                                intent = new Intent(WiFiLockDetailActivity.this, SwipchLinkNo.class);
-                                intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
-                                startActivity(intent);                            }
-                        }else {
-
-                            intent = new Intent(WiFiLockDetailActivity.this, SwipchLinkNo.class);
+            adapater = new WifiLockDetailAdapater(supportFunctions, new WifiLockDetailAdapater.OnItemClickListener() {
+                @Override
+                public void onItemClick(int position, WifiLockFunctionBean bluetoothLockFunctionBean) {
+                    Intent intent;
+                    switch (bluetoothLockFunctionBean.getType()) {
+                        case BleLockUtils.TYPE_PASSWORD:
+                            intent = new Intent(WiFiLockDetailActivity.this, WiFiLockPasswordManagerActivity.class);
                             intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
+                            intent.putExtra(KeyConstants.KEY_TYPE, 1);
                             startActivity(intent);
-                        }
-                        break;
-                    case BleLockUtils.TYPE_SHARE:
-                        intent = new Intent(WiFiLockDetailActivity.this, WifiLockFamilyManagerActivity.class);
-                        intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
-                        startActivity(intent);
-                        break;
-                    case BleLockUtils.TYPE_MORE:
-                        intent = new Intent(WiFiLockDetailActivity.this, WifiLockMoreActivity.class);
-                        intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
-                        startActivityForResult(intent, TO_MORE_REQUEST_CODE);
-                        break;
-                    case BleLockUtils.TYPE_OFFLINE_PASSWORD:
-                        intent = new Intent(WiFiLockDetailActivity.this, WifiLockPasswordShareActivity.class);
-                        intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
-                        startActivity(intent);
-                        break;
-                    case BleLockUtils.TYPE_FACE_PASSWORD:
-                        intent = new Intent(WiFiLockDetailActivity.this, WiFiLockPasswordManagerActivity.class);
-                        intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
-                        intent.putExtra(KeyConstants.KEY_TYPE, 4);
-                        startActivity(intent);
-                        break;
-                }
-            }
-        });
-        oneLineAdapater = new WifiLockDetailOneLineAdapater(supportFunctions, new WifiLockDetailOneLineAdapater.OnItemClickListener() {
-            @Override
-            public void onItemClick(int position, WifiLockFunctionBean bluetoothLockFunctionBean) {
-                Intent intent;
-                switch (bluetoothLockFunctionBean.getType()) {
-                    case BleLockUtils.TYPE_PASSWORD:
-                        intent = new Intent(WiFiLockDetailActivity.this, WiFiLockPasswordManagerActivity.class);
-                        intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
-                        intent.putExtra(KeyConstants.KEY_TYPE, 1);
-                        startActivity(intent);
-                        break;
-                    case BleLockUtils.TYPE_FINGER:
-                        intent = new Intent(WiFiLockDetailActivity.this, WiFiLockPasswordManagerActivity.class);
-                        intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
-                        intent.putExtra(KeyConstants.KEY_TYPE, 2);
-                        startActivity(intent);
-                        break;
-                    case BleLockUtils.TYPE_CARD:
-                        intent = new Intent(WiFiLockDetailActivity.this, WiFiLockPasswordManagerActivity.class);
-                        intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
-                        intent.putExtra(KeyConstants.KEY_TYPE, 3);
-                        startActivity(intent);
-                        break;
-                    case BleLockUtils.TYPE_SMART_SWITCH:
+                            break;
+                        case BleLockUtils.TYPE_FINGER:
+                            intent = new Intent(WiFiLockDetailActivity.this, WiFiLockPasswordManagerActivity.class);
+                            intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
+                            intent.putExtra(KeyConstants.KEY_TYPE, 2);
+                            startActivity(intent);
+                            break;
+                        case BleLockUtils.TYPE_CARD:
+                            intent = new Intent(WiFiLockDetailActivity.this, WiFiLockPasswordManagerActivity.class);
+                            intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
+                            intent.putExtra(KeyConstants.KEY_TYPE, 3);
+                            startActivity(intent);
+                            break;
+                        case BleLockUtils.TYPE_SMART_SWITCH:
 
-                        if (wifiLockInfo.getSingleFireSwitchInfo() != null) {
 
-                            int SwitchNumber = wifiLockInfo.getSingleFireSwitchInfo().getSwitchNumber().size();
+                            if (wifiLockInfo.getSingleFireSwitchInfo() != null) {
 
-                            if (SwitchNumber > 0) {
-                                intent = new Intent(WiFiLockDetailActivity.this, SwipchLinkActivity.class);
-                                intent.putExtra(KeyConstants.SWITCH_NUMBER, SwitchNumber);
-                                intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
-                                intent.putExtra(KeyConstants.WIFI_LOCK_INFO_CHANGE, wifiLockInfo);
-                                startActivity(intent);
+                                int SwitchNumber = wifiLockInfo.getSingleFireSwitchInfo().getSwitchNumber().size();
+
+                                if (SwitchNumber > 0) {
+                                    intent = new Intent(WiFiLockDetailActivity.this, SwipchLinkActivity.class);
+                                    intent.putExtra(KeyConstants.SWITCH_NUMBER, SwitchNumber);
+                                    intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
+                                    intent.putExtra(KeyConstants.WIFI_LOCK_INFO_CHANGE, wifiLockInfo);
+                                    startActivity(intent);
+                                } else {
+                                    intent = new Intent(WiFiLockDetailActivity.this, SwipchLinkNo.class);
+                                    intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
+                                    startActivity(intent);
+                                }
                             } else {
+
                                 intent = new Intent(WiFiLockDetailActivity.this, SwipchLinkNo.class);
                                 intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
                                 startActivity(intent);
                             }
-                        }else {
-
-                            intent = new Intent(WiFiLockDetailActivity.this, SwipchLinkNo.class);
+                            break;
+                        case BleLockUtils.TYPE_SHARE:
+                            intent = new Intent(WiFiLockDetailActivity.this, WifiLockFamilyManagerActivity.class);
                             intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
                             startActivity(intent);
-                        }
-                        break;
-                    case BleLockUtils.TYPE_SHARE:
-                        intent = new Intent(WiFiLockDetailActivity.this, WifiLockFamilyManagerActivity.class);
-                        intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
-                        startActivity(intent);
-                        break;
-                    case BleLockUtils.TYPE_MORE:
-                        intent = new Intent(WiFiLockDetailActivity.this, WifiLockMoreActivity.class);
-                        intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
-                        startActivityForResult(intent, TO_MORE_REQUEST_CODE);
-                        break;
-                    case BleLockUtils.TYPE_OFFLINE_PASSWORD:
-                        intent = new Intent(WiFiLockDetailActivity.this, WifiLockPasswordShareActivity.class);
-                        intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
-                        startActivity(intent);
-                        break;
-                    case BleLockUtils.TYPE_FACE_PASSWORD:
-                        intent = new Intent(WiFiLockDetailActivity.this, WiFiLockPasswordManagerActivity.class);
-                        intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
-                        intent.putExtra(KeyConstants.KEY_TYPE, 4);
-                        startActivity(intent);
-                        break;
+                            break;
+                        case BleLockUtils.TYPE_MORE:
+                            intent = new Intent(WiFiLockDetailActivity.this, WifiLockMoreActivity.class);
+                            intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
+                            startActivityForResult(intent, TO_MORE_REQUEST_CODE);
+                            break;
+                        case BleLockUtils.TYPE_OFFLINE_PASSWORD:
+                            intent = new Intent(WiFiLockDetailActivity.this, WifiLockPasswordShareActivity.class);
+                            intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
+                            startActivity(intent);
+                            break;
+                        case BleLockUtils.TYPE_FACE_PASSWORD:
+                            intent = new Intent(WiFiLockDetailActivity.this, WiFiLockPasswordManagerActivity.class);
+                            intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
+                            intent.putExtra(KeyConstants.KEY_TYPE, 4);
+                            startActivity(intent);
+                            break;
+                    }
                 }
-            }
-        });
-        detailFunctionRecyclerView.setAdapter(adapater);
-        detailFunctionOnLine.setAdapter(oneLineAdapater);
+            });
+            oneLineAdapater = new WifiLockDetailOneLineAdapater(supportFunctions, new WifiLockDetailOneLineAdapater.OnItemClickListener() {
+                @Override
+                public void onItemClick(int position, WifiLockFunctionBean bluetoothLockFunctionBean) {
+                    Intent intent;
+                    switch (bluetoothLockFunctionBean.getType()) {
+                        case BleLockUtils.TYPE_PASSWORD:
+                            intent = new Intent(WiFiLockDetailActivity.this, WiFiLockPasswordManagerActivity.class);
+                            intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
+                            intent.putExtra(KeyConstants.KEY_TYPE, 1);
+                            startActivity(intent);
+                            break;
+                        case BleLockUtils.TYPE_FINGER:
+                            intent = new Intent(WiFiLockDetailActivity.this, WiFiLockPasswordManagerActivity.class);
+                            intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
+                            intent.putExtra(KeyConstants.KEY_TYPE, 2);
+                            startActivity(intent);
+                            break;
+                        case BleLockUtils.TYPE_CARD:
+                            intent = new Intent(WiFiLockDetailActivity.this, WiFiLockPasswordManagerActivity.class);
+                            intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
+                            intent.putExtra(KeyConstants.KEY_TYPE, 3);
+                            startActivity(intent);
+                            break;
+                        case BleLockUtils.TYPE_SMART_SWITCH:
+
+                            if (wifiLockInfo.getSingleFireSwitchInfo() != null) {
+
+                                int SwitchNumber = wifiLockInfo.getSingleFireSwitchInfo().getSwitchNumber().size();
+
+                                if (SwitchNumber > 0) {
+                                    intent = new Intent(WiFiLockDetailActivity.this, SwipchLinkActivity.class);
+                                    intent.putExtra(KeyConstants.SWITCH_NUMBER, SwitchNumber);
+                                    intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
+                                    intent.putExtra(KeyConstants.WIFI_LOCK_INFO_CHANGE, wifiLockInfo);
+                                    startActivity(intent);
+                                } else {
+                                    intent = new Intent(WiFiLockDetailActivity.this, SwipchLinkNo.class);
+                                    intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
+                                    startActivity(intent);
+                                }
+                            } else {
+
+                                intent = new Intent(WiFiLockDetailActivity.this, SwipchLinkNo.class);
+                                intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
+                                startActivity(intent);
+                            }
+                            break;
+                        case BleLockUtils.TYPE_SHARE:
+                            intent = new Intent(WiFiLockDetailActivity.this, WifiLockFamilyManagerActivity.class);
+                            intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
+                            startActivity(intent);
+                            break;
+                        case BleLockUtils.TYPE_MORE:
+                            intent = new Intent(WiFiLockDetailActivity.this, WifiLockMoreActivity.class);
+                            intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
+                            startActivityForResult(intent, TO_MORE_REQUEST_CODE);
+                            break;
+                        case BleLockUtils.TYPE_OFFLINE_PASSWORD:
+                            intent = new Intent(WiFiLockDetailActivity.this, WifiLockPasswordShareActivity.class);
+                            intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
+                            startActivity(intent);
+                            break;
+                        case BleLockUtils.TYPE_FACE_PASSWORD:
+                            intent = new Intent(WiFiLockDetailActivity.this, WiFiLockPasswordManagerActivity.class);
+                            intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
+                            intent.putExtra(KeyConstants.KEY_TYPE, 4);
+                            startActivity(intent);
+                            break;
+                    }
+                }
+            });
+            detailFunctionRecyclerView.setAdapter(adapater);
+            detailFunctionOnLine.setAdapter(oneLineAdapater);
+        }
     }
 
     @Override

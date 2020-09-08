@@ -1246,6 +1246,8 @@
     <string name="update_wating">设置中,请稍等!</string>
     <string name="update_nightsight_invalid">设置无效</string>
     <string name="gateway_no_support">该网关不支持绑定猫眼</string>
+    <string name="gateway_confirm_version">请确认该网关版本是否最新</string>
+
     <string name="shop">商城</string>
     <string name="unknown_error">未知错误</string>
     <string name="check_face_ota">检查人脸模块升级</string>

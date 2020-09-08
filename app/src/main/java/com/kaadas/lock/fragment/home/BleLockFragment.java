@@ -839,7 +839,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
 
     @Override
     public void onGetOpenNumberSuccess(int number) {
-        LogUtils.e("界面获取到开锁次数    " + number +bleLockInfo.getServerLockInfo().getLockNickName() +"    "+ this);
+//        LogUtils.e("界面获取到开锁次数    " + number);
         tvOpenLockTimes.setText(number + "");
     }
 

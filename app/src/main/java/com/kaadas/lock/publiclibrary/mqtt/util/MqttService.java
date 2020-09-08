@@ -395,13 +395,11 @@ public class MqttService extends Service {
         }
     }
 
-
     //发布
     public Observable<MqttData> mqttPublishListener() {
 
         return notifyDataObservable;
     }
-
 
     //发布
     public Observable<MqttData> mqttPublish(String topic, MqttMessage mqttMessage) {

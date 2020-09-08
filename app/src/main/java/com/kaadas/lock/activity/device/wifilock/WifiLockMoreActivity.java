@@ -191,162 +191,163 @@ public class WifiLockMoreActivity extends BaseActivity<IWifiLockMoreView, WifiLo
     @Override
     public void onClick(View v) {
         Intent intent;
-        if (!TextUtils.isEmpty(wifiLockInfo.getFunctionSet())) {
-            String functionSet = wifiLockInfo.getFunctionSet();
-            int func = 0;
-            try {
-                func = Integer.parseInt(functionSet);
-            } catch (Exception e) {
-                LogUtils.e("" + e.getMessage());
-            }
-            switch (v.getId()) {
-                case R.id.back:  //返回
-                    finish();
-                    break;
-                case R.id.rl_device_name:  //设备昵称
-                    View mView = LayoutInflater.from(this).inflate(R.layout.have_edit_dialog, null);
-                    TextView tvTitle = mView.findViewById(R.id.tv_title);
-                    EditText editText = mView.findViewById(R.id.et_name);
-                    TextView tv_cancel = mView.findViewById(R.id.tv_left);
-                    TextView tv_query = mView.findViewById(R.id.tv_right);
-                    AlertDialog alertDialog = AlertDialogUtil.getInstance().common(this, mView);
-                    tvTitle.setText(getString(R.string.input_device_name));
-                    //获取到设备名称设置
-                    editText.setText(deviceNickname);
-                    editText.setSelection(deviceNickname.length());
-                    editText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(50)});
-                    tv_cancel.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            alertDialog.dismiss();
-                        }
-                    });
-                    tv_query.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            name = editText.getText().toString().trim();
-                            if (!StringUtil.nicknameJudge(name)) {
-                                ToastUtil.getInstance().showShort(R.string.nickname_verify_error);
-                                return;
+        if (wifiLockInfo != null) {
+            if (!TextUtils.isEmpty(wifiLockInfo.getFunctionSet())) {
+                String functionSet = wifiLockInfo.getFunctionSet();
+                int func = 0;
+                try {
+                    func = Integer.parseInt(functionSet);
+                } catch (Exception e) {
+                    LogUtils.e("" + e.getMessage());
+                }
+                switch (v.getId()) {
+                    case R.id.back:  //返回
+                        finish();
+                        break;
+                    case R.id.rl_device_name:  //设备昵称
+                        View mView = LayoutInflater.from(this).inflate(R.layout.have_edit_dialog, null);
+                        TextView tvTitle = mView.findViewById(R.id.tv_title);
+                        EditText editText = mView.findViewById(R.id.et_name);
+                        TextView tv_cancel = mView.findViewById(R.id.tv_left);
+                        TextView tv_query = mView.findViewById(R.id.tv_right);
+                        AlertDialog alertDialog = AlertDialogUtil.getInstance().common(this, mView);
+                        tvTitle.setText(getString(R.string.input_device_name));
+                        //获取到设备名称设置
+                        editText.setText(deviceNickname);
+                        editText.setSelection(deviceNickname.length());
+                        editText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(50)});
+                        tv_cancel.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                alertDialog.dismiss();
                             }
-                            if (deviceNickname != null) {
-                                if (deviceNickname.equals(name)) {
-                                    ToastUtil.getInstance().showShort(getString(R.string.device_nick_name_no_update));
-                                    alertDialog.dismiss();
+                        });
+                        tv_query.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                name = editText.getText().toString().trim();
+                                if (!StringUtil.nicknameJudge(name)) {
+                                    ToastUtil.getInstance().showShort(R.string.nickname_verify_error);
                                     return;
                                 }
+                                if (deviceNickname != null) {
+                                    if (deviceNickname.equals(name)) {
+                                        ToastUtil.getInstance().showShort(getString(R.string.device_nick_name_no_update));
+                                        alertDialog.dismiss();
+                                        return;
+                                    }
+                                }
+                                showLoading(getString(R.string.upload_device_name));
+                                mPresenter.setNickName(wifiLockInfo.getWifiSN(), name);
+                                alertDialog.dismiss();
                             }
-                            showLoading(getString(R.string.upload_device_name));
-                            mPresenter.setNickName(wifiLockInfo.getWifiSN(), name);
-                            alertDialog.dismiss();
+                        });
+                        break;
+                    case R.id.rl_message_free: //消息免打扰
+                        int status = wifiLockInfo.getPushSwitch() == 2 ? 1 : 2;
+                        showLoading(getString(R.string.is_setting));
+                        mPresenter.updateSwitchStatus(status, wifiLockInfo.getWifiSN());
+                        break;
+                    case R.id.rl_safe_mode:
+                        intent = new Intent(this, WifiLockSafeModelActivity.class);
+                        intent.putExtra(KeyConstants.WIFI_SN, wifiLockInfo.getWifiSN());
+                        startActivity(intent);
+                        break;
+
+
+                    case R.id.iv_am:   //手动自动模式
+
+                        if (BleLockUtils.isSupportFaceStatusShow(func)) {
+                            //支持面容识别
+                            intent = new Intent(this, WifiLockFaceModelAMActivity.class);
+                            intent.putExtra(KeyConstants.WIFI_SN, wifiLockInfo.getWifiSN());
+                            startActivity(intent);
+
+                        } else {
+                            //不支持面容识别
+                            intent = new Intent(this, WifiLockAMActivity.class);
+                            intent.putExtra(KeyConstants.WIFI_SN, wifiLockInfo.getWifiSN());
+                            startActivity(intent);
                         }
-                    });
-                    break;
-                case R.id.rl_message_free: //消息免打扰
-                    int status = wifiLockInfo.getPushSwitch() == 2 ? 1 : 2;
-                    showLoading(getString(R.string.is_setting));
-                    mPresenter.updateSwitchStatus(status, wifiLockInfo.getWifiSN());
-                    break;
-                case R.id.rl_safe_mode:
-                    intent = new Intent(this, WifiLockSafeModelActivity.class);
-                    intent.putExtra(KeyConstants.WIFI_SN, wifiLockInfo.getWifiSN());
-                    startActivity(intent);
-                    break;
+                        break;
+                    case R.id.rl_powerSave:   //节能模式
 
-
-                case R.id.iv_am:   //手动自动模式
-
-                    if (BleLockUtils.isSupportFaceStatusShow(func)) {
-                        //支持面容识别
-                        intent = new Intent(this, WifiLockFaceModelAMActivity.class);
+                        intent = new Intent(this, WifiLockPowerSaveActivity.class);
                         intent.putExtra(KeyConstants.WIFI_SN, wifiLockInfo.getWifiSN());
                         startActivity(intent);
-
-                    } else {
-                        //不支持面容识别
-                        intent = new Intent(this, WifiLockAMActivity.class);
-                        intent.putExtra(KeyConstants.WIFI_SN, wifiLockInfo.getWifiSN());
-                        startActivity(intent);
-                    }
-                    break;
-                case R.id.rl_powerSave:   //节能模式
-
-                    intent = new Intent(this, WifiLockPowerSaveActivity.class);
-                    intent.putExtra(KeyConstants.WIFI_SN, wifiLockInfo.getWifiSN());
-                    startActivity(intent);
-                    break;
+                        break;
 //            case R.id.rl_faceStatus:   //面容识别功能
 //
 //
 //                break;
 
-                case R.id.rl_door_lock_language_switch:
-                    ToastUtil.getInstance().showLong(R.string.please_operation_in_lock);
-                    break;
-                case R.id.rl_silent_mode:  //静音模式
-                    ToastUtil.getInstance().showLong(R.string.please_operation_in_lock);
-                    break;
-                case R.id.rl_device_information:
-                    intent = new Intent(this, WifiLockDeviceInfoActivity.class);
-                    intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
-                    startActivity(intent);
-                    break;
-                case R.id.rl_check_firmware_update: //检查固件
+                    case R.id.rl_door_lock_language_switch:
+                        ToastUtil.getInstance().showLong(R.string.please_operation_in_lock);
+                        break;
+                    case R.id.rl_silent_mode:  //静音模式
+                        ToastUtil.getInstance().showLong(R.string.please_operation_in_lock);
+                        break;
+                    case R.id.rl_device_information:
+                        intent = new Intent(this, WifiLockDeviceInfoActivity.class);
+                        intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
+                        startActivity(intent);
+                        break;
+                    case R.id.rl_check_firmware_update: //检查固件
 
-                    break;
-                case R.id.btn_delete:  //删除设备
-                    AlertDialogUtil.getInstance().noEditTwoButtonDialog(this, getString(R.string.device_delete_dialog_head), getString(R.string.device_delete_lock_dialog_content), getString(R.string.cancel), getString(R.string.query), new AlertDialogUtil.ClickListener() {
-                        @Override
-                        public void left() {
+                        break;
+                    case R.id.btn_delete:  //删除设备
+                        AlertDialogUtil.getInstance().noEditTwoButtonDialog(this, getString(R.string.device_delete_dialog_head), getString(R.string.device_delete_lock_dialog_content), getString(R.string.cancel), getString(R.string.query), new AlertDialogUtil.ClickListener() {
+                            @Override
+                            public void left() {
 
-                        }
+                            }
 
-                        @Override
-                        public void right() {
-                            showLoading(getString(R.string.is_deleting));
-                            mPresenter.deleteDevice(wifiLockInfo.getWifiSN());
-                        }
+                            @Override
+                            public void right() {
+                                showLoading(getString(R.string.is_deleting));
+                                mPresenter.deleteDevice(wifiLockInfo.getWifiSN());
+                            }
 
-                        @Override
-                        public void onTextChanged(CharSequence s, int start, int before, int count) {
-                        }
+                            @Override
+                            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                            }
 
-                        @Override
-                        public void afterTextChanged(String toString) {
-                        }
-                    });
-                    break;
-                case R.id.rl_wifi_name: //WiFi名称
-                    //老的wifi锁不存在这个字段，为wifi配网1，wifi&ble为2
-                    LogUtils.e("--kaadas--老的wifi锁不存在这个字段，为wifi配网1，wifi&ble为2");
-                    if (TextUtils.isEmpty(String.valueOf(wifiLockInfo.getDistributionNetwork()))) {
-                        Intent wifiIntent = new Intent(this, WifiLockOldUserFirstActivity.class);
-                        String wifiModelType = "WiFi";
-                        wifiIntent.putExtra("wifiModelType", wifiModelType);
-                        startActivity(wifiIntent);
+                            @Override
+                            public void afterTextChanged(String toString) {
+                            }
+                        });
+                        break;
+                    case R.id.rl_wifi_name: //WiFi名称
+                        //老的wifi锁不存在这个字段，为wifi配网1，wifi&ble为2
+                        LogUtils.e("--kaadas--老的wifi锁不存在这个字段，为wifi配网1，wifi&ble为2");
+                        if (TextUtils.isEmpty(String.valueOf(wifiLockInfo.getDistributionNetwork()))) {
+                            Intent wifiIntent = new Intent(this, WifiLockOldUserFirstActivity.class);
+                            String wifiModelType = "WiFi";
+                            wifiIntent.putExtra("wifiModelType", wifiModelType);
+                            startActivity(wifiIntent);
 //                    startActivity(new Intent(this, WifiLockOldUserFirstActivity.class));
-                    } else if (wifiLockInfo.getDistributionNetwork() == 0||wifiLockInfo.getDistributionNetwork() == 1) {
-                        Intent wifiIntent = new Intent(this, WifiLockOldUserFirstActivity.class);
-                        String wifiModelType = "WiFi";
-                        wifiIntent.putExtra("wifiModelType", wifiModelType);
-                        startActivity(wifiIntent);
-                    } else if (wifiLockInfo.getDistributionNetwork() == 2) {
-                        Intent wifiIntent = new Intent(this, WifiLockAddNewFirstActivity.class);
-                        String wifiModelType = "WiFi&BLE";
-                        wifiIntent.putExtra("wifiModelType", wifiModelType);
-                        startActivity(wifiIntent);
-                    }
-                    else {
-                        LogUtils.e("--kaadas--wifiLockInfo.getDistributionNetwork()为"+wifiLockInfo.getDistributionNetwork());
+                        } else if (wifiLockInfo.getDistributionNetwork() == 0 || wifiLockInfo.getDistributionNetwork() == 1) {
+                            Intent wifiIntent = new Intent(this, WifiLockOldUserFirstActivity.class);
+                            String wifiModelType = "WiFi";
+                            wifiIntent.putExtra("wifiModelType", wifiModelType);
+                            startActivity(wifiIntent);
+                        } else if (wifiLockInfo.getDistributionNetwork() == 2) {
+                            Intent wifiIntent = new Intent(this, WifiLockAddNewFirstActivity.class);
+                            String wifiModelType = "WiFi&BLE";
+                            wifiIntent.putExtra("wifiModelType", wifiModelType);
+                            startActivity(wifiIntent);
+                        } else {
+                            LogUtils.e("--kaadas--wifiLockInfo.getDistributionNetwork()为" + wifiLockInfo.getDistributionNetwork());
 
-                    }
+                        }
 
 
-                    break;
+                        break;
+                }
+            } else {
+                LogUtils.e("--kaadas--取功能集为空");
+
             }
-        }else  {
-            LogUtils.e("--kaadas--取功能集为空");
-
         }
     }
 

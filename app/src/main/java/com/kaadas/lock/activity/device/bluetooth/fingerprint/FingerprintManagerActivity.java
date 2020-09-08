@@ -23,6 +23,7 @@ import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.result.GetPasswordResult;
 import com.kaadas.lock.utils.KeyConstants;
+import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.NetUtil;
 import com.kaadas.lock.utils.ToastUtil;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
@@ -70,18 +71,27 @@ public class FingerprintManagerActivity extends BaseBleActivity<IFingerprintMana
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fingerprint_manager);
         ButterKnife.bind(this);
-        bleLockInfo = MyApplication.getInstance().getBleService().getBleLockInfo();
-        mPresenter.getAllPassword(bleLockInfo, true);
-        //进入默认鉴权
-        mPresenter.isAuth(bleLockInfo, false);
-        tvContent.setText(getString(R.string.fingerprint));
-        ivBack.setOnClickListener(this);
-        tvSynchronizedRecord.setOnClickListener(this);
-        llAdd.setOnClickListener(this);
-        pageChange();
-        initRecycleview();
-        initData();
-        initRefresh();
+        if (MyApplication.getInstance().getBleService() != null || MyApplication.getInstance().getBleService().getBleLockInfo() != null) {
+            try {
+                bleLockInfo = MyApplication.getInstance().getBleService().getBleLockInfo();
+                mPresenter.getAllPassword(bleLockInfo, true);
+                //进入默认鉴权
+                mPresenter.isAuth(bleLockInfo, false);
+
+                tvContent.setText(getString(R.string.fingerprint));
+                ivBack.setOnClickListener(this);
+                tvSynchronizedRecord.setOnClickListener(this);
+                llAdd.setOnClickListener(this);
+                pageChange();
+                initRecycleview();
+                initData();
+                initRefresh();
+            } catch (Exception e) {
+                LogUtils.e("--kaadas--:" + e.getMessage());
+            }
+
+
+        }
     }
 
     private void initRefresh() {

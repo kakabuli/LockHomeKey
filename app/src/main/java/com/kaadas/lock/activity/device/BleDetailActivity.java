@@ -354,98 +354,104 @@ public class BleDetailActivity extends BaseBleActivity<IDeviceDetailView, BleDev
 
 
     private void initRecycleview() {
-        String functionSet = bleLockInfo.getServerLockInfo().getFunctionSet(); //锁功能集
-        int func = Integer.parseInt(functionSet);
-        LogUtils.e("功能集是   " + func);
-        List<BluetoothLockFunctionBean> supportFunction = BleLockUtils.getSupportFunction(func);
-        LogUtils.e("获取到的功能集是   " + supportFunction.size());
-        MyGridItemDecoration dividerItemDecoration;
-        if (supportFunction.size() <= 2) {
-            detailFunctionOnLine.setLayoutManager(new GridLayoutManager(this, 2));
-            dividerItemDecoration = new MyGridItemDecoration(this, 2);
+        if (bleLockInfo.getServerLockInfo() != null) {
+            try {
+                String functionSet = bleLockInfo.getServerLockInfo().getFunctionSet(); //锁功能集
+                int func = Integer.parseInt(functionSet);
+                LogUtils.e("功能集是   " + func);
+                List<BluetoothLockFunctionBean> supportFunction = BleLockUtils.getSupportFunction(func);
+                LogUtils.e("获取到的功能集是   " + supportFunction.size());
+                MyGridItemDecoration dividerItemDecoration;
+                if (supportFunction.size() <= 2) {
+                    detailFunctionOnLine.setLayoutManager(new GridLayoutManager(this, 2));
+                    dividerItemDecoration = new MyGridItemDecoration(this, 2);
 
-            detailFunctionRecyclerView.setVisibility(View.GONE);
-            detailFunctionOnLine.setVisibility(View.VISIBLE);
-        } else if (supportFunction.size() <= 4) {
-            dividerItemDecoration = new MyGridItemDecoration(this, 2);
-            detailFunctionRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
-            detailFunctionRecyclerView.setVisibility(View.VISIBLE);
-            detailFunctionOnLine.setVisibility(View.GONE);
-        } else {
-            detailFunctionRecyclerView.setLayoutManager(new GridLayoutManager(this, 3));
-            detailFunctionRecyclerView.setVisibility(View.VISIBLE);
-            detailFunctionOnLine.setVisibility(View.GONE);
-            dividerItemDecoration = new MyGridItemDecoration(this, 3);
-        }
+                    detailFunctionRecyclerView.setVisibility(View.GONE);
+                    detailFunctionOnLine.setVisibility(View.VISIBLE);
+                } else if (supportFunction.size() <= 4) {
+                    dividerItemDecoration = new MyGridItemDecoration(this, 2);
+                    detailFunctionRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
+                    detailFunctionRecyclerView.setVisibility(View.VISIBLE);
+                    detailFunctionOnLine.setVisibility(View.GONE);
+                } else {
+                    detailFunctionRecyclerView.setLayoutManager(new GridLayoutManager(this, 3));
+                    detailFunctionRecyclerView.setVisibility(View.VISIBLE);
+                    detailFunctionOnLine.setVisibility(View.GONE);
+                    dividerItemDecoration = new MyGridItemDecoration(this, 3);
+                }
 
-        detailFunctionOnLine.addItemDecoration(dividerItemDecoration);
-        detailFunctionRecyclerView.addItemDecoration(dividerItemDecoration);
+                detailFunctionOnLine.addItemDecoration(dividerItemDecoration);
+                detailFunctionRecyclerView.addItemDecoration(dividerItemDecoration);
 
-        adapater = new BluetoothFunctionAdapater(supportFunction, new BluetoothFunctionAdapater.OnItemClickListener() {
-            @Override
-            public void onItemClick(int position, BluetoothLockFunctionBean bluetoothLockFunctionBean) {
-                Intent intent;
-                switch (bluetoothLockFunctionBean.getType()) {
-                    case BleLockUtils.TYPE_PASSWORD:
-                        intent = new Intent(BleDetailActivity.this, BlePasswordManagerActivity.class);
-                        startActivity(intent);
-                        break;
-                    case BleLockUtils.TYPE_FINGER:
-                        intent = new Intent(BleDetailActivity.this, FingerprintManagerActivity.class);
-                        startActivity(intent);
-                        break;
-                    case BleLockUtils.TYPE_CARD:
-                        intent = new Intent(BleDetailActivity.this, DoorCardManagerActivity.class);
-                        startActivity(intent);
-                        break;
-                    case BleLockUtils.TYPE_SHARE:
-                        intent = new Intent(BleDetailActivity.this, BluetoothSharedDeviceManagementActivity.class);
-                        startActivity(intent);
-                        break;
-                    case BleLockUtils.TYPE_MORE:
-                        intent = new Intent(BleDetailActivity.this, BluetoothMoreActivity.class);
-                        if (lockType.startsWith("S8") || lockType.startsWith("V6") || lockType.startsWith("V7") || lockType.startsWith("S100")) {
-                            intent.putExtra(KeyConstants.SOURCE, "BluetoothLockFunctionV6V7Activity");
+                adapater = new BluetoothFunctionAdapater(supportFunction, new BluetoothFunctionAdapater.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(int position, BluetoothLockFunctionBean bluetoothLockFunctionBean) {
+                        Intent intent;
+                        switch (bluetoothLockFunctionBean.getType()) {
+                            case BleLockUtils.TYPE_PASSWORD:
+                                intent = new Intent(BleDetailActivity.this, BlePasswordManagerActivity.class);
+                                startActivity(intent);
+                                break;
+                            case BleLockUtils.TYPE_FINGER:
+                                intent = new Intent(BleDetailActivity.this, FingerprintManagerActivity.class);
+                                startActivity(intent);
+                                break;
+                            case BleLockUtils.TYPE_CARD:
+                                intent = new Intent(BleDetailActivity.this, DoorCardManagerActivity.class);
+                                startActivity(intent);
+                                break;
+                            case BleLockUtils.TYPE_SHARE:
+                                intent = new Intent(BleDetailActivity.this, BluetoothSharedDeviceManagementActivity.class);
+                                startActivity(intent);
+                                break;
+                            case BleLockUtils.TYPE_MORE:
+                                intent = new Intent(BleDetailActivity.this, BluetoothMoreActivity.class);
+                                if (lockType.startsWith("S8") || lockType.startsWith("V6") || lockType.startsWith("V7") || lockType.startsWith("S100")) {
+                                    intent.putExtra(KeyConstants.SOURCE, "BluetoothLockFunctionV6V7Activity");
+                                }
+                                startActivityForResult(intent, TO_MORE_REQUEST_CODE);
+                                break;
                         }
-                        startActivityForResult(intent, TO_MORE_REQUEST_CODE);
-                        break;
-                }
+                    }
+                });
+                oneLineAdapater = new BluetoothFunctionOneLineAdapater(supportFunction, new BluetoothFunctionOneLineAdapater.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(int position, BluetoothLockFunctionBean bluetoothLockFunctionBean) {
+                        Intent intent;
+                        LogUtils.e("点击类型是    " + bluetoothLockFunctionBean.getType());
+                        switch (bluetoothLockFunctionBean.getType()) {
+                            case BleLockUtils.TYPE_PASSWORD:
+                                intent = new Intent(BleDetailActivity.this, BlePasswordManagerActivity.class);
+                                startActivity(intent);
+                                break;
+                            case BleLockUtils.TYPE_FINGER:
+                                intent = new Intent(BleDetailActivity.this, FingerprintManagerActivity.class);
+                                startActivity(intent);
+                                break;
+                            case BleLockUtils.TYPE_CARD:
+                                intent = new Intent(BleDetailActivity.this, DoorCardManagerActivity.class);
+                                startActivity(intent);
+                                break;
+                            case BleLockUtils.TYPE_SHARE:
+                                LogUtils.e("分享   ");
+                                intent = new Intent(BleDetailActivity.this, BluetoothSharedDeviceManagementActivity.class);
+                                startActivity(intent);
+                                break;
+                            case BleLockUtils.TYPE_MORE:
+                                LogUtils.e("更多   ");  //这是老模块的  跳转地方
+                                intent = new Intent(BleDetailActivity.this, OldDeviceInfoActivity.class);
+                                startActivityForResult(intent, TO_MORE_REQUEST_CODE);
+                                break;
+                        }
+                    }
+                });
+                detailFunctionRecyclerView.setAdapter(adapater);
+                detailFunctionOnLine.setAdapter(oneLineAdapater);
             }
-        });
-        oneLineAdapater = new BluetoothFunctionOneLineAdapater(supportFunction, new BluetoothFunctionOneLineAdapater.OnItemClickListener() {
-            @Override
-            public void onItemClick(int position, BluetoothLockFunctionBean bluetoothLockFunctionBean) {
-                Intent intent;
-                LogUtils.e("点击类型是    " + bluetoothLockFunctionBean.getType());
-                switch (bluetoothLockFunctionBean.getType()) {
-                    case BleLockUtils.TYPE_PASSWORD:
-                        intent = new Intent(BleDetailActivity.this, BlePasswordManagerActivity.class);
-                        startActivity(intent);
-                        break;
-                    case BleLockUtils.TYPE_FINGER:
-                        intent = new Intent(BleDetailActivity.this, FingerprintManagerActivity.class);
-                        startActivity(intent);
-                        break;
-                    case BleLockUtils.TYPE_CARD:
-                        intent = new Intent(BleDetailActivity.this, DoorCardManagerActivity.class);
-                        startActivity(intent);
-                        break;
-                    case BleLockUtils.TYPE_SHARE:
-                        LogUtils.e("分享   ");
-                        intent = new Intent(BleDetailActivity.this, BluetoothSharedDeviceManagementActivity.class);
-                        startActivity(intent);
-                        break;
-                    case BleLockUtils.TYPE_MORE:
-                        LogUtils.e("更多   ");  //这是老模块的  跳转地方
-                        intent = new Intent(BleDetailActivity.this, OldDeviceInfoActivity.class);
-                        startActivityForResult(intent, TO_MORE_REQUEST_CODE);
-                        break;
-                }
+            catch (Exception e) {
+                LogUtils.e("--kaadas--:" + e.getMessage());
             }
-        });
-        detailFunctionRecyclerView.setAdapter(adapater);
-        detailFunctionOnLine.setAdapter(oneLineAdapater);
-
+        }
 
     }
 

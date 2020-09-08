@@ -123,21 +123,27 @@ public class WifiLockAuthActivity extends BaseActivity<IWifiLockAuthView, WifiLo
     private void changeLockIcon() {
         String model = wifiLockInfo.getProductModel();
         ivLockIcon.setImageResource(BleLockUtils.getAuthorizationImageByModel(model));
-        //本地图片有对应的产品则不获取缓存的产品型号图片，缓存没有则选择尝试下载
-        if (BleLockUtils.getAuthorizationImageByModel(model) == R.mipmap.bluetooth_authorization_lock_default){
-            options = new RequestOptions()
-                    .placeholder(R.mipmap.bluetooth_authorization_lock_default)      //加载成功之前占位图
-                    .error(R.mipmap.bluetooth_authorization_lock_default)      //加载错误之后的错误图
-                    .diskCacheStrategy(DiskCacheStrategy.RESOURCE)    //只缓存最终的图片
-                    .dontAnimate()                                  //直接显示图片
-                .fitCenter();//指定图片的缩放类型为fitCenter （是一种“中心匹配”的方式裁剪方式，它裁剪出来的图片长宽都会小于等于ImageView的大小，这样一来。图片会完整地显示出来，但是ImageView可能并没有被填充满）
+        if (model != null) {
+            //本地图片有对应的产品则不获取缓存的产品型号图片，缓存没有则选择尝试下载
+            if (BleLockUtils.getAuthorizationImageByModel(model) == R.mipmap.bluetooth_authorization_lock_default) {
+                options = new RequestOptions()
+                        .placeholder(R.mipmap.bluetooth_authorization_lock_default)      //加载成功之前占位图
+                        .error(R.mipmap.bluetooth_authorization_lock_default)      //加载错误之后的错误图
+                        .diskCacheStrategy(DiskCacheStrategy.RESOURCE)    //只缓存最终的图片
+                        .dontAnimate()                                  //直接显示图片
+                        .fitCenter();//指定图片的缩放类型为fitCenter （是一种“中心匹配”的方式裁剪方式，它裁剪出来的图片长宽都会小于等于ImageView的大小，这样一来。图片会完整地显示出来，但是ImageView可能并没有被填充满）
 //                    .centerCrop();//指定图片的缩放类型为centerCrop （是一种“去除多余”的裁剪方式，它会把ImageView边界以外的部分裁剪掉。这样一来ImageView会被填充满，但是这张图片可能不会完整地显示出来(ps:因为超出部分都被裁剪掉了）
 
-            for (ProductInfo productInfo:productList) {
-                if (productInfo.getDevelopmentModel().contentEquals(model)){
+                for (ProductInfo productInfo : productList) {
+                    try {
+                        if (productInfo.getDevelopmentModel().contentEquals(model)) {
 
-                    //匹配型号获取下载地址
-                    Glide.with(this).load(productInfo.getAuthUrl()).apply(options).into(ivLockIcon);
+                            //匹配型号获取下载地址
+                            Glide.with(this).load(productInfo.getAuthUrl()).apply(options).into(ivLockIcon);
+                        }
+                    } catch (Exception e) {
+                        com.kaadas.lock.utils.LogUtils.e("--kaadas--:" + e.getMessage());
+                    }
                 }
             }
         }

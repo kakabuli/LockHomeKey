@@ -181,14 +181,21 @@ public class DeviceBindGatewayListActivity extends BaseActivity<DeviceGatewayBin
             ToastUtil.getInstance().showShort(R.string.gateway_is_authorization);
             return;
         }
+        if (zigbeeBindGatewayBeanSelect.getModel() != null) {
 
-        if( (zigbeeBindGatewayBeanSelect.getModel().equals(KeyConstants.SMALL_GW)  && type ==2)
-                ||  (zigbeeBindGatewayBeanSelect.getModel().equals(KeyConstants.SMALL_GW2) && type ==2)){
-            zigbeeBindGatewayBeanSelect=lastzigbeeBindGatewayBeanSelect;
-            if(zigbeeBindGatewayBeanSelect!=null){
-                zigbeeBindGatewayBeanSelect.setSelect(true);
+
+            if ((zigbeeBindGatewayBeanSelect.getModel().equals(KeyConstants.SMALL_GW) && type == 2)
+                    || (zigbeeBindGatewayBeanSelect.getModel().equals(KeyConstants.SMALL_GW2) && type == 2)) {
+                zigbeeBindGatewayBeanSelect = lastzigbeeBindGatewayBeanSelect;
+                if (zigbeeBindGatewayBeanSelect != null) {
+                    zigbeeBindGatewayBeanSelect.setSelect(true);
+                }
+                ToastUtil.getInstance().showShort(R.string.gateway_no_support);
+                return;
             }
-            ToastUtil.getInstance().showShort(R.string.gateway_no_support);
+        }
+        else {
+            ToastUtil.getInstance().showShort(R.string.gateway_confirm_version);
             return;
         }
         lastzigbeeBindGatewayBeanSelect= zigbeeBindGatewayBeanSelect;

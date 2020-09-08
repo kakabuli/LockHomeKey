@@ -100,39 +100,47 @@ public class SwipchSeetingArgus extends BaseActivity<SingleFireSwitchView, Singl
         //设备型号
 //        tv_start.setText(wifiLockInfo.getProductModel());
         //键位开关
-        List<SwitchNumberBean> switchNumberList = wifiLockInfo.getSingleFireSwitchInfo().getSwitchNumber();
-        for (SwitchNumberBean switchNumber : switchNumberList) {
+        if (wifiLockInfo.getSingleFireSwitchInfo() != null) {
+            try {
 
-            switch (switchNumber.getType()) {
-                case 1://键位1开关
-                    if (!TextUtils.isEmpty(switchNumber.getNickname())) {
-                        switch1Nickname = switchNumber.getNickname();
-                        switch1ChangeNickname = switch1Nickname;
-                        swipch_link_text_one.setText(switchNumber.getNickname());
+
+                List<SwitchNumberBean> switchNumberList = wifiLockInfo.getSingleFireSwitchInfo().getSwitchNumber();
+                for (SwitchNumberBean switchNumber : switchNumberList) {
+
+                    switch (switchNumber.getType()) {
+                        case 1://键位1开关
+                            if (!TextUtils.isEmpty(switchNumber.getNickname())) {
+                                switch1Nickname = switchNumber.getNickname();
+                                switch1ChangeNickname = switch1Nickname;
+                                swipch_link_text_one.setText(switchNumber.getNickname());
+                            }
+                            break;
+                        case 2://键位2开关
+                            if (!TextUtils.isEmpty(switchNumber.getNickname())) {
+                                switch2Nickname = switchNumber.getNickname();
+                                switch2ChangeNickname = switch2Nickname;
+                                swipch_link_text_two.setText(switchNumber.getNickname());
+                            }
+                            break;
+                        case 3://键位3开关
+                            if (!TextUtils.isEmpty(switchNumber.getNickname())) {
+                                switch3Nickname = switchNumber.getNickname();
+                                switch3ChangeNickname = switch3Nickname;
+                                swipch_link_text_three.setText(switchNumber.getNickname());
+                            }
+                            break;
                     }
-                    break;
-                case 2://键位2开关
-                    if (!TextUtils.isEmpty(switchNumber.getNickname())) {
-                        switch2Nickname = switchNumber.getNickname();
-                        switch2ChangeNickname = switch2Nickname;
-                        swipch_link_text_two.setText(switchNumber.getNickname());
-                    }
-                    break;
-                case 3://键位3开关
-                    if (!TextUtils.isEmpty(switchNumber.getNickname())) {
-                        switch3Nickname = switchNumber.getNickname();
-                        switch3ChangeNickname = switch3Nickname;
-                        swipch_link_text_three.setText(switchNumber.getNickname());
-                    }
-                    break;
+                }
+            }catch (Exception e){
+
             }
-        }
-        //MAC地址
-        swipch_link_setting_mac.setText(wifiLockInfo.getSingleFireSwitchInfo().getMac());
-        //绑定时间
-        String bindingTime = DateUtils.timestampToDateSecond(wifiLockInfo.getSingleFireSwitchInfo().getSwitchBind());
+            //MAC地址
+            swipch_link_setting_mac.setText(wifiLockInfo.getSingleFireSwitchInfo().getMac());
+            //绑定时间
+            String bindingTime = DateUtils.timestampToDateSecond(wifiLockInfo.getSingleFireSwitchInfo().getSwitchBind());
 
-        swipch_link_setting_binding_time.setText(bindingTime);
+            swipch_link_setting_binding_time.setText(bindingTime);
+        }
     }
 
     private void initRecycleview() {

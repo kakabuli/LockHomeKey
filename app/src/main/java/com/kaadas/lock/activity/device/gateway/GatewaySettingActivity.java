@@ -126,12 +126,16 @@ public class GatewaySettingActivity extends BaseActivity<GatewaySettingView, Gat
         gatewaySettingItemBeanTwo.setSetting(false);
 
         GatewaySettingItemBean gatewaySettingItemBeanThree=new GatewaySettingItemBean();
-        if(model.equals(KeyConstants.SMALL_GW2)){
-            gatewaySettingItemBeanThree.setTitle(getString(R.string.gateway_coordinator_channel));
-        }else{
-            gatewaySettingItemBeanThree.setTitle(getString(R.string.gateway_setting_wifi_name));
+        if (model != null) {
+            if (model.equals(KeyConstants.SMALL_GW2)) {
+                gatewaySettingItemBeanThree.setTitle(getString(R.string.gateway_coordinator_channel));
+            } else {
+                gatewaySettingItemBeanThree.setTitle(getString(R.string.gateway_setting_wifi_name));
+            }
+        }else {
+            ToastUtil.getInstance().showShort(R.string.gateway_confirm_version);
+            return;
         }
-
         if (isAdmin==1){
             gatewaySettingItemBeanThree.setSetting(false);
         }else{

@@ -207,19 +207,26 @@ public class DeviceDetailAdapter extends BaseQuickAdapter<HomeShowBean, BaseView
                     String model = wifiLockInfo.getProductModel();
 
                     helper.setImageResource(R.id.device_image, BleLockUtils.getSmallImageByModel(model));
-                    //本地图片有对应的产品则不获取缓存的产品型号图片，缓存没有则选择尝试下载
-                    if (BleLockUtils.getSmallImageByModel(model) == R.mipmap.default_zigbee_lock_icon){
-                        for (ProductInfo productInfo:productList) {
-                            if (productInfo.getDevelopmentModel().contentEquals(model)){
+                    if (model != null) {
+                        //本地图片有对应的产品则不获取缓存的产品型号图片，缓存没有则选择尝试下载
+                        if (BleLockUtils.getSmallImageByModel(model) == R.mipmap.default_zigbee_lock_icon) {
+                            for (ProductInfo productInfo : productList) {
+                                try {
+
+                                    if (productInfo.getDevelopmentModel().contentEquals(model)) {
 //                                LogUtils.e("--kaadas--productList.getDevelopmentModel==" + productInfo.getDevelopmentModel());
 //                                LogUtils.e("--kaadas--productList.DeviceListUrl==" + productInfo.getDeviceListUrl());
-                            //匹配型号获取下载地址
+                                        //匹配型号获取下载地址
 //                                Glide.with(mContext).load(productInfo.getDeviceListUrl()).into((ImageView) helper.getView(R.id.device_image));
-                                Glide.with(mContext).load(productInfo.getDeviceListUrl()).apply(options).into((ImageView) helper.getView(R.id.device_image));
+                                        Glide.with(mContext).load(productInfo.getDeviceListUrl()).apply(options).into((ImageView) helper.getView(R.id.device_image));
+                                    }
+                                } catch (Exception e) {
+                                    LogUtils.e("--kaadas--:" + e.getMessage());
+                                }
+
                             }
                         }
                     }
-
                     batteryView.setPower(power1);
                     helper.setText(R.id.device_power_text, power1 + "%");
 

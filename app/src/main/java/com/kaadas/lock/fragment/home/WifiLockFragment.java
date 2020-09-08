@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -148,11 +149,12 @@ public class WifiLockFragment extends BaseFragment<IWifiLockView, WifiLockPresen
         if (isOpening){
             changeLockStatus(4);
         }else {
-            if (openStatus == 1){ //关锁
-                changeLockStatus(5);
-            }
-            else if (openStatus == 3){//主锁舌伸出
+
+            if (openStatus == 3){//主锁舌伸出
                 changeLockStatus(9);
+            }
+            else {
+                changeLockStatus(5);//关锁
             }
         }
         ///wifi锁首页状态优先级：开锁状态-> 布防-> 反琐-> 安全-> 面容-> 节能
@@ -238,7 +240,9 @@ public class WifiLockFragment extends BaseFragment<IWifiLockView, WifiLockPresen
     }
 
     public void changeLockStatus(int status) {
-        LogUtils.e("状态改变   " + status);
+        LogUtils.e("--kaadas--状态改变   " + status);
+        LogUtils.e("--kaadas--研发型号   " + wifiLockInfo.getProductModel());
+
         if (!isAdded()) {
             return;
         }
