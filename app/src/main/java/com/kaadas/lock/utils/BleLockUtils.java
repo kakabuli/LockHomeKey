@@ -25,6 +25,9 @@ public class BleLockUtils {
     public static final int TYPE_OFFLINE_PASSWORD = 6;
     public static final int TYPE_FACE_PASSWORD = 7;
     public static final int TYPE_SMART_SWITCH = 8;
+    public static final int TYPE_VIDEO = 9;
+    public static final int TYPE_RECORD = 10;
+    public static final int TYPE_ALBUM = 11;
 
     /***更新版本V 3.6(20200603) 刘静
      *
@@ -87,7 +90,17 @@ public class BleLockUtils {
      * 47	感应把手开门	区分感应把手与内门按键的开门方式信息
      * 48	反锁状态设置	支持通过APP进行反锁状态设置
      * 49	BLE辅助wifi配网	支持通过BLE辅助wifi配网
+     * 50   多国语言
+     * 51   报警视频记录
+     * 52   按门铃记录
+     * 53   远程视频通话
+     * 54   WiFi模组设置
+     * 55   门铃消息推送
+     * 56   支持250组指纹
+     *  57  PIR报警视频记录
+     *  58  PIR设置
      */
+
 
     public static final Map<Integer, Integer[]> FUNCTION_SET = new HashMap<>();
 
@@ -141,6 +154,8 @@ public class BleLockUtils {
         FUNCTION_SET.put(0x73, new Integer[]{1, 2, 3, 4, 5, 6, 7, 10, 11, 15, 16, 17, 19, 20, 21, 22, 23, 41, 43});        //2020年3月21日14:02:06
         FUNCTION_SET.put(0x74, new Integer[]{1, 2, 3, 4, 5, 6, 7, 9, 10, 11, 13, 15, 16, 17, 19, 20, 21, 22, 23, 41, 43});
         FUNCTION_SET.put(0x75, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 15, 16, 17, 19, 20, 21, 22, 23, 41, 43});
+
+        FUNCTION_SET.put(0x7A, new Integer[]{1,2,3,4,5,6,7,8,10,11,13,14,15,16,17,19,20,21,22,23,28,33,34,38,39,46,47,49,51,52,53,54,55,57,58});//2020年9月28日11:24:09
 
 
         FUNCTION_SET.put(0xC0, new Integer[]{1, 2, 3, 4, 5, 6, 7, 10, 11, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 31, 32, 33, 36, 41, 42, 44});
@@ -203,6 +218,21 @@ public class BleLockUtils {
     }
 
     /**
+     * 根据功能集判断是否支持节能模式显示
+     *
+     * @param functionSet
+     * @return
+     */
+    public static boolean isSupportPirSetting(int functionSet) {
+        Integer[] funcs = FUNCTION_SET.get(functionSet);
+        if (funcs == null) {
+            return false;
+        }
+        List<Integer> integers = Arrays.asList(funcs);
+        return integers.contains(58) || integers.contains(57);
+    }
+
+    /**
      * 根据功能集判断是否支持面容识别功能显示
      *
      * @param functionSet
@@ -230,6 +260,21 @@ public class BleLockUtils {
         }
         List<Integer> integers = Arrays.asList(funcs);
         return integers.contains(18);
+    }
+
+    /**
+     * 根据功能集判断是否支持实时视频这只
+     *
+     * @param functionSet
+     * @return
+     */
+    public static boolean isSupportRealTimeVideo(int functionSet) {
+        Integer[] funcs = FUNCTION_SET.get(functionSet);
+        if (funcs == null) {
+            return false;
+        }
+        List<Integer> integers = Arrays.asList(funcs);
+        return integers.contains(53);
     }
 
     /**
@@ -457,6 +502,10 @@ public class BleLockUtils {
         LogUtils.e("获取到的  功能集是2   " + Arrays.toString(funcs));
         LogUtils.e("获取到的  功能集是3否包含卡片      " + integers.contains(9));
         functionBeans.add(new WifiLockFunctionBean(MyApplication.getInstance().getString(R.string.offline_password), R.mipmap.bluetooth_password, TYPE_OFFLINE_PASSWORD));
+        if(integers.contains(53)){
+            functionBeans.add(new WifiLockFunctionBean(MyApplication.getInstance().getString(R.string.real_time_video_function),R.mipmap.wifi_lock_video,TYPE_VIDEO));
+            functionBeans.add(new WifiLockFunctionBean(MyApplication.getInstance().getString(R.string.dynamic_recording),R.mipmap.wifi_lock_recording,TYPE_RECORD));
+        }
         if (integers.contains(26)) {
             functionBeans.add(new WifiLockFunctionBean(MyApplication.getInstance().getString(R.string.face_password), R.mipmap.face_password, TYPE_FACE_PASSWORD));
         }
@@ -466,10 +515,13 @@ public class BleLockUtils {
         if (integers.contains(8)) {
             functionBeans.add(new WifiLockFunctionBean(MyApplication.getInstance().getString(R.string.fingerprint), R.mipmap.bluetooth_fingerprint, TYPE_FINGER));
         }
-        if (integers.contains(9)) {
+        if(integers.contains(53)){
+            functionBeans.add(new WifiLockFunctionBean(MyApplication.getInstance().getString(R.string.my_album),R.mipmap.wifi_lock_album,TYPE_ALBUM));
+        }
+        if (!integers.contains(53) && integers.contains(9)) {
             functionBeans.add(new WifiLockFunctionBean(MyApplication.getInstance().getString(R.string.card), R.mipmap.bluetooth_card, TYPE_CARD));
         }
-        if (integers.contains(45)) {
+        if (!integers.contains(53) && integers.contains(45)) {
             functionBeans.add(new WifiLockFunctionBean(MyApplication.getInstance().getString(R.string.smart_switch), R.mipmap.single_switch_smart_icon, TYPE_SMART_SWITCH));
         }
 
@@ -481,7 +533,7 @@ public class BleLockUtils {
 
 
     /**
-     * 根据设备型号,获取授权界面的显示图片， 授权用户，大图
+     * 根据设备型号,获取授权界面的显示图片, 授权用户，大图
      *
      * @param model
      * @return

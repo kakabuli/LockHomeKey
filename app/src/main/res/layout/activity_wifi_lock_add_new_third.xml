@@ -77,24 +77,24 @@
         android:id="@+id/iv_anim"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/wifi_lock_add_wake_anim"/>
+        android:background="@drawable/wifi_lock_add_wake_anim"
+        />
     <View
         android:layout_weight="1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
-
-
     <TextView
         android:layout_gravity="center"
         android:gravity="center"
-        android:id="@+id/already_modify"
-        android:layout_width="@dimen/dp_200"
-        android:layout_height="@dimen/dp_44"
-        android:background="@drawable/go_and_buy"
-        android:text="已修改管理密码"
-        android:textColor="#fff"
-        android:textSize="@dimen/sp_15"
+        android:id="@+id/not_modify_1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/edit_text_line_209afd"
+        android:text="如何修改管理密码"
+        android:textColor="#1F96F7"
+        android:textSize="@dimen/sp_13"
         />
+
     <TextView
         android:layout_marginTop="@dimen/dp_18"
         android:layout_gravity="center"
@@ -106,6 +106,23 @@
         android:text="去修改管理密码"
         android:textColor="#1F96F7"
         android:textSize="@dimen/sp_15"
+        android:visibility="gone"
         android:layout_marginBottom="@dimen/dp_40"
         />
+
+
+    <TextView
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:id="@+id/already_modify"
+        android:layout_width="@dimen/dp_200"
+        android:layout_height="@dimen/dp_44"
+        android:background="@drawable/go_and_buy"
+        android:layout_marginTop="@dimen/dp_18"
+        android:text="下一步"
+        android:textColor="#fff"
+        android:layout_marginBottom="@dimen/dp_40"
+        android:textSize="@dimen/sp_15"
+        />
+
 </LinearLayout>

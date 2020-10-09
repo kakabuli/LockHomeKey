@@ -2,18 +2,14 @@ package com.kaadas.lock;
 
 import android.app.Activity;
 import android.app.AlarmManager;
-import android.app.Application;
 import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.content.pm.PackageManager;
-import android.graphics.ImageDecoder;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.text.TextUtils;
-import android.widget.Toast;
 
 import com.blankj.ALog;
 import com.google.gson.Gson;
@@ -29,7 +25,6 @@ import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
 import com.kaadas.lock.publiclibrary.bean.ProductInfo;
 import com.kaadas.lock.publiclibrary.http.XiaokaiNewServiceImp;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
-import com.kaadas.lock.publiclibrary.http.result.CheckOTAResult;
 import com.kaadas.lock.publiclibrary.http.util.BaseObserver;
 import com.kaadas.lock.publiclibrary.linphone.MemeManager;
 import com.kaadas.lock.publiclibrary.ble.BleService;
@@ -37,12 +32,12 @@ import com.kaadas.lock.publiclibrary.http.result.GetPasswordResult;
 import com.kaadas.lock.publiclibrary.http.util.RetrofitServiceManager;
 import com.kaadas.lock.publiclibrary.http.util.RxjavaHelper;
 import com.kaadas.lock.publiclibrary.linphone.linphone.util.LinphoneHelper;
-import com.kaadas.lock.publiclibrary.linphone.linphonenew.LinphoneService;
 import com.kaadas.lock.publiclibrary.mqtt.MqttCommandFactory;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.AllBindDevices;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttConstant;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttData;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttService;
+import com.kaadas.lock.publiclibrary.xm.XMP2PManager;
 import com.kaadas.lock.utils.Constants;
 import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
@@ -52,7 +47,6 @@ import com.kaadas.lock.utils.Rom;
 import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.SPUtils2;
 import com.kaadas.lock.utils.ToastUtil;
-import com.kaadas.lock.utils.ftp.GeTui;
 import com.kaadas.lock.utils.greenDao.db.DaoManager;
 import com.kaadas.lock.utils.greenDao.db.DaoMaster;
 import com.kaadas.lock.utils.greenDao.db.DaoSession;
@@ -81,14 +75,11 @@ import com.yun.software.kaadas.Utils.UserUtils;
 
 import net.sdvn.cmapi.CMAPI;
 import net.sdvn.cmapi.Config;
-import net.sqlcipher.database.SQLiteDatabase;
 
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.greenrobot.greendao.database.Database;
-import org.linphone.mediastream.Log;
 
 import java.io.File;
-import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -154,6 +145,7 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
         //扫描二维码初始化
         /* ZXingLibrary.initDisplayOpinion(this);*/
         initMeme();
+        initXMP2PManager();
         regToWx();
         //配置数据库
         setUpWriteDataBase();
@@ -176,6 +168,11 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
         //去掉在Android 9以上调用反射警告提醒弹窗 （Detected problems with API compatibility(visit g.co/dev/appcompat for more info)
         closeAndroidPDialog();
 
+    }
+
+    private void initXMP2PManager() {
+        XMP2PManager.getInstanceP2P().initAPI("EBGDEIBIKEJPGDJMEBHLFFEJHPNFHGNMGBFHBPCIAOJJLGLIDEABCKOOGILMJFLJAOMLLMDIOLMGBMCGIO");
+        XMP2PManager.getCodecInstance().init(getApplicationContext());
     }
 
     private void regToWx() {
@@ -610,7 +607,7 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
         if (homeShowDevices != null) {
             for (int i = homeShowDevices.size() - 1; i >= 0; i--) {
                 HomeShowBean homeShowBean = homeShowDevices.get(i);
-                if (homeShowBean.getDeviceType() == HomeShowBean.TYPE_WIFI_LOCK) {
+                if (homeShowBean.getDeviceType() == HomeShowBean.TYPE_WIFI_LOCK || homeShowBean.getDeviceType() == HomeShowBean.TYPE_WIFI_VIDEO_LOCK) {
                     WifiLockInfo wifiLockInfo = (WifiLockInfo) homeShowBean.getObject();
                     if (wifiLockInfo.getWifiSN().equals(sn)) {
                         return wifiLockInfo;
@@ -621,11 +618,26 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
         return null;
     }
 
+    public int getWifiVideoLockTypeBySn(String sn){
+        if(homeShowDevices != null){
+            for(int i = homeShowDevices.size() - 1; i >= 0; i--){
+                HomeShowBean homeShowBean = homeShowDevices.get(i);
+                if(homeShowBean.getDeviceType() == HomeShowBean.TYPE_WIFI_VIDEO_LOCK){
+                    WifiLockInfo wifiLockInfo = (WifiLockInfo) homeShowBean.getObject();
+                    if (wifiLockInfo.getWifiSN().equals(sn)) {
+                        return HomeShowBean.TYPE_WIFI_VIDEO_LOCK;
+                    }
+                }
+            }
+        }
+        return HomeShowBean.TYPE_UNKOWN_LOCK;
+    }
+
     public void updateWifiLockInfo(String sn, WifiLockActionBean actionBean) {
         if (homeShowDevices != null) {
             for (int i = homeShowDevices.size() - 1; i >= 0; i--) {
                 HomeShowBean homeShowBean = homeShowDevices.get(i);
-                if (homeShowBean.getDeviceType() == HomeShowBean.TYPE_WIFI_LOCK) {
+                if (homeShowBean.getDeviceType() == HomeShowBean.TYPE_WIFI_LOCK || homeShowBean.getDeviceType() == HomeShowBean.TYPE_WIFI_VIDEO_LOCK) {
                     WifiLockInfo wifiLockInfo = (WifiLockInfo) homeShowBean.getObject();
                     /**
                      * amMode : 1

@@ -9,4 +9,5 @@ public interface IWifiLockAddSuccessView extends IBaseView {
     void onSetNameFailedServer(BaseResult baseResult);  //设置名称  服务器返回错误
 
 
+
 }

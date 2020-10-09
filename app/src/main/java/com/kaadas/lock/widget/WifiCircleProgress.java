@@ -11,6 +11,7 @@ import android.graphics.Point;
 import android.graphics.RectF;
 import android.graphics.SweepGradient;
 import android.text.TextPaint;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
@@ -38,6 +39,7 @@ public class WifiCircleProgress extends View {
     //绘制提示
     private TextPaint mHintPaint;
     private CharSequence mHint;
+    private CharSequence mSuffix;
     private int mHintColor;
     private float mHintSize;
     private float mHintOffset;
@@ -112,10 +114,15 @@ public class WifiCircleProgress extends View {
         antiAlias = typedArray.getBoolean(R.styleable.CircleProgressBar_antiAlias, CircleConstant.ANTI_ALIAS);
 
         mHint = typedArray.getString(R.styleable.CircleProgressBar_hint);
+        mSuffix = typedArray.getString(R.styleable.CircleProgressBar_textsuffix);
+        if(TextUtils.isEmpty(mSuffix)){
+            mSuffix = "%";
+        }
         mHintColor = typedArray.getColor(R.styleable.CircleProgressBar_hintColor, Color.BLACK);
         mHintSize = typedArray.getDimension(R.styleable.CircleProgressBar_hintSize, CircleConstant.DEFAULT_HINT_SIZE);
 
         mValue = typedArray.getFloat(R.styleable.CircleProgressBar_value, CircleConstant.DEFAULT_VALUE);
+        Log.d("shulan", "WifiCircleProgress initAttrs: mValue=" + mValue);
         mMaxValue = typedArray.getFloat(R.styleable.CircleProgressBar_maxValue, CircleConstant.DEFAULT_MAX_VALUE);
         //内容数值精度格式
         mPrecision = typedArray.getInt(R.styleable.CircleProgressBar_precision, 0);
@@ -264,7 +271,7 @@ public class WifiCircleProgress extends View {
         // 计算文字宽度，由于Paint已设置为居中绘制，故此处不需要重新计算
         // float textWidth = mValuePaint.measureText(mValue.toString());
         // float x = mCenterPoint.x - textWidth / 2;
-        canvas.drawText(String.format(mPrecisionFormat, mValue == 1 ? 0 : mValue) + "%", mCenterPoint.x, mValueOffset * 0.9f, mValuePaint);
+        canvas.drawText(String.format(mPrecisionFormat, mValue == 1 ? 0 : mValue) + mSuffix, mCenterPoint.x, mValueOffset * 0.9f, mValuePaint);
 
         if (mHint != null) {
             canvas.drawText(mHint.toString(), mCenterPoint.x, mHintOffset, mHintPaint);
@@ -357,11 +364,11 @@ public class WifiCircleProgress extends View {
             public void onAnimationUpdate(ValueAnimator animation) {
                 mPercent = (float) animation.getAnimatedValue();
                 mValue = mPercent * mMaxValue;
-                if (BuildConfig.DEBUG) {
+                /*if (BuildConfig.DEBUG) {
                     Log.d(TAG, "onAnimationUpdate: percent = " + mPercent
                             + ";currentAngle = " + (mSweepAngle * mPercent)
                             + ";value = " + mValue);
-                }
+                }*/
                 invalidate();
             }
         });

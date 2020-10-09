@@ -191,4 +191,29 @@ public class WifiLockOperationRecord {
     public void setDayTime(String dayTime) {
         this.dayTime = dayTime;
     }
+
+    @Override
+    public String toString() {
+        return "WifiLockOperationRecord{" +
+                "_id='" + _id + '\'' +
+                ", time=" + time +
+                ", type=" + type +
+                ", wifiSN='" + wifiSN + '\'' +
+                ", bleSN='" + bleSN + '\'' +
+                ", pwdType=" + pwdType +
+                ", pwdNum=" + pwdNum +
+                ", createTime=" + createTime +
+                ", appId=" + appId +
+                ", uid='" + uid + '\'' +
+                ", uname='" + uname + '\'' +
+                ", userNickname='" + userNickname + '\'' +
+                ", shareAccount='" + shareAccount + '\'' +
+                ", shareUid='" + shareUid + '\'' +
+                ", shareUserNickname='" + shareUserNickname + '\'' +
+                ", pwdNickname='" + pwdNickname + '\'' +
+                ", first=" + first +
+                ", last=" + last +
+                ", dayTime='" + dayTime + '\'' +
+                '}';
+    }
 }

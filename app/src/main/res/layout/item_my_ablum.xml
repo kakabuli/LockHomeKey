@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+     <ImageView
+         android:id="@+id/iv_pic"
+         android:layout_width="@dimen/dp_120"
+         android:layout_height="@dimen/dp_120"
+         android:scaleType="centerCrop"/>
+
+     <TextView
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:textColor="#ffffff"
+         android:textSize="@dimen/sp_10"
+         android:id="@+id/duration"
+         android:layout_alignBottom="@id/iv_pic"
+         android:layout_marginBottom="@dimen/dp_4"
+         android:layout_alignRight="@id/iv_pic"
+         android:layout_marginRight="@dimen/dp_7"
+         />
+
+     <ImageView
+         android:id="@+id/iv_icon_paly"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:src="@mipmap/item_icon_play"
+         android:layout_centerInParent="true"/>
+
+
+</RelativeLayout>

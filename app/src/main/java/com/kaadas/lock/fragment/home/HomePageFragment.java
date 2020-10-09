@@ -301,6 +301,15 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
                     wifiLockFragment.setArguments(wifiBundle);
                     fragments.add(wifiLockFragment);
                     break;
+                case HomeShowBean.TYPE_WIFI_VIDEO_LOCK:
+                    rb.setCompoundDrawablesRelativeWithIntrinsicBounds(null, getContext().getDrawable(R.drawable.home_rb_lock_drawable), null, null);
+                    WifiVideoLockFragment wifiVideoLockFragment = new WifiVideoLockFragment();
+                    Bundle wifiVideoBundle = new Bundle();
+                    WifiLockInfo wifiVideoLockInfo = (WifiLockInfo) devices.get(i).getObject();
+                    wifiVideoBundle.putSerializable(KeyConstants.WIFI_VIEDO_LOCK_INFO, wifiVideoLockInfo);
+                    wifiVideoLockFragment.setArguments(wifiVideoBundle);
+                    fragments.add(wifiVideoLockFragment);
+                    break;
             }
             //根据需要设置显示初始标签的个数，这里显示3个
             if (devices.size() > 2) {

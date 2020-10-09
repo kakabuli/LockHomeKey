@@ -32,6 +32,7 @@ public class WifiLockChangeAdminPasswordActivity extends AppCompatActivity {
     ImageView ivAnim;
 
     int times;
+    private boolean video;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,8 +40,8 @@ public class WifiLockChangeAdminPasswordActivity extends AppCompatActivity {
         setContentView(R.layout.activity_wifi_lock_change_admin_password);
         ButterKnife.bind(this);
         Intent intent = getIntent();
-//        times = getIntent().getIntExtra(KeyConstants.WIFI_LOCK_ADMIN_PASSWORD_TIMES, 1);
-
+        times = getIntent().getIntExtra(KeyConstants.WIFI_LOCK_ADMIN_PASSWORD_TIMES, 1);
+        video = intent.getBooleanExtra("video",false);
         //通过设置android:background时，得到AnimationDrawable 用如下方法
         final AnimationDrawable animationDrawable = (AnimationDrawable) ivAnim.getBackground();
         animationDrawable.start();
@@ -56,9 +57,13 @@ public class WifiLockChangeAdminPasswordActivity extends AppCompatActivity {
                 startActivity(new Intent(this, WifiLockHelpActivity.class));
                 break;
             case R.id.already_modify:
-                Intent wifiIntent = new Intent(this, WifiLockHasModifyPasswordAndDisconnectActivity.class);
+                if(video){
+                    finish();
+                }else{
+                    Intent wifiIntent = new Intent(this, WifiLockHasModifyPasswordAndDisconnectActivity.class);
 //                wifiIntent.putExtra(KeyConstants.WIFI_LOCK_ADMIN_PASSWORD_TIMES, times);
-                startActivity(wifiIntent);
+                    startActivity(wifiIntent);
+                }
                 break;
         }
     }

@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#f2f2f2"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_40"
+        android:background="#F8F8F8">
+
+        <ImageView
+            android:id="@+id/back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:paddingLeft="@dimen/dp_16"
+            android:paddingTop="@dimen/dp_5"
+            android:paddingRight="@dimen/dp_16"
+            android:paddingBottom="@dimen/dp_5"
+            android:src="@mipmap/back_gray" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/add_lock"
+            android:textColor="#000000"
+            android:textSize="@dimen/sp_17"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/help"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:paddingLeft="@dimen/dp_16"
+            android:paddingTop="@dimen/dp_5"
+            android:paddingRight="@dimen/dp_16"
+            android:paddingBottom="@dimen/dp_5"
+            android:src="@mipmap/help" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/background_add_white"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/head"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dp_30"
+            android:layout_marginTop="35dp"
+            android:text="第六步：输入管理员密码，激活临时密码"
+            android:textColor="#333333"
+            android:textSize="17sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/content"
+            android:layout_below="@id/head"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dp_30"
+            android:layout_marginTop="@dimen/dp_14"
+            android:textColor="#7D7D7D"
+            android:text="①使用临时密码，请先输入管理密码激活"/>
+
+        <ScrollView
+            android:layout_below="@+id/content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fillViewport="true">
+
+            <EditText
+                android:id="@+id/ap_password_edit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dp_30"
+                android:layout_marginTop="30dp"
+                android:layout_marginRight="@dimen/dp_25"
+                android:background="@drawable/edit_text_line_ffdcdcdc"
+                android:drawableLeft="@mipmap/add_wifi_lock_pwd"
+                android:drawablePadding="@dimen/dp_6"
+                android:ellipsize="end"
+                android:hint="@string/wifi_lock_add_new_input_password_notice2"
+                android:paddingBottom="8dp"
+                android:singleLine="true"
+                android:inputType="number"
+                android:textColor="#000"
+                android:textColorHint="#959595"
+                android:textSize="13sp" />
+        </ScrollView>
+
+        <TextView
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:id="@+id/button_next"
+            android:layout_width="@dimen/dp_200"
+            android:layout_height="@dimen/dp_44"
+            android:background="@drawable/go_and_buy"
+            android:text="@string/next_step"
+            android:textColor="#fff"
+            android:textSize="@dimen/sp_15"
+            android:layout_marginBottom="@dimen/dp_70"
+            />
+    </RelativeLayout>
+
+
+</LinearLayout>

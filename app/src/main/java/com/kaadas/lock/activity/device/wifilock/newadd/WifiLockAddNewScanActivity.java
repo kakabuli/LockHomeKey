@@ -93,7 +93,6 @@ public class WifiLockAddNewScanActivity extends AppCompatActivity {
                         circleProgressBar2.setValue(aLong * 5);
                     }
                 });
-
         WifiUtil.getIns().init(getApplicationContext());
         LogUtils.e("开始搜索Kaadas_Ap热点");
         WifiUtil.getIns().changeToWifi("kaadas_AP", "88888888");

@@ -50,6 +50,7 @@ import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetUserTypeBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetVedioResBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetWiFiBasic;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetZBChannel;
+import com.kaadas.lock.publiclibrary.mqtt.publishbean.SettingVideoModuleFuncBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.UnBindGatewayBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.UpdateDevNickNameBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.UpdateDevPushSwitchBean;
@@ -995,6 +996,21 @@ public class MqttCommandFactory {
 
     }
     //////////
+
+
+    ///////////////////////视频锁///////////////////////
+    /**
+     * 设置视频模组
+     *
+     */
+    public static MqttMessage settingVideoModule(String wifiID,int keep_alive_status,int[] keep_alive_snooze, int snooze_start_time, int snooze_end_time ) {
+        int messageId = getMessageId();
+        SettingVideoModuleFuncBean.AliveTimeBean aliveTimeBean = new SettingVideoModuleFuncBean.AliveTimeBean(keep_alive_snooze, snooze_start_time, snooze_end_time);
+        SettingVideoModuleFuncBean.ParamsBean paramsBean = new SettingVideoModuleFuncBean.ParamsBean(keep_alive_status,aliveTimeBean);
+        SettingVideoModuleFuncBean mSettingVideoModuleFuncBean = new SettingVideoModuleFuncBean(MqttConstant.MSG_TYPE_REQUEST, messageId,MyApplication.getInstance().getUid(),
+                wifiID,MqttConstant.SET_CAMERA,paramsBean,System.currentTimeMillis()+"");
+        return getMessage(mSettingVideoModuleFuncBean, messageId);
+    }
 
 
     /**

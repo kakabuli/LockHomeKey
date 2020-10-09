@@ -9,6 +9,7 @@ import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
 import com.kaadas.lock.publiclibrary.http.XiaokaiNewServiceImp;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.result.CheckOTAResult;
+import com.kaadas.lock.publiclibrary.http.result.WifiLockVideoBindResult;
 import com.kaadas.lock.publiclibrary.http.util.BaseObserver;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
@@ -59,6 +60,44 @@ public class WifiLockMorePresenter<T> extends BasePresenter<IWifiLockMoreView> {
                     }
                 })
         ;
+    }
+
+    public void deleteVideDevice(String wifiSn){
+        XiaokaiNewServiceImp.wifiVideoLockUnbind(wifiSn, MyApplication.getInstance().getUid())
+                .subscribe(new BaseObserver<WifiLockVideoBindResult>() {
+            @Override
+            public void onSuccess(WifiLockVideoBindResult wifiLockVideoBindResult) {
+                MyApplication.getInstance().getAllDevicesByMqtt(true);
+                SPUtils.remove(KeyConstants.WIFI_LOCK_ALARM_RECORD + wifiSn);
+                SPUtils.remove(KeyConstants.WIFI_LOCK_OPERATION_RECORD + wifiSn);
+                SPUtils.remove(KeyConstants.WIFI_LOCK_OPEN_COUNT + wifiSn);
+                SPUtils.remove(KeyConstants.WIFI_LOCK_SHARE_USER_LIST + wifiSn);
+                SPUtils.remove(KeyConstants.WIFI_LOCK_PASSWORD_LIST + wifiSn);
+                SPUtils.remove(KeyConstants.WIFI_VIDEO_LOCK_VISITOR_RECORD + wifiSn);
+                if (isSafe()) {
+                    mViewRef.get().onDeleteDeviceSuccess();
+                }
+            }
+
+            @Override
+            public void onAckErrorCode(BaseResult baseResult) {
+                if (isSafe()) {
+                    mViewRef.get().onDeleteDeviceFailedServer(baseResult);
+                }
+            }
+
+            @Override
+            public void onFailed(Throwable throwable) {
+                if (isSafe()) {
+                    mViewRef.get().onDeleteDeviceFailed(throwable);
+                }
+            }
+
+            @Override
+            public void onSubscribe1(Disposable d) {
+                compositeDisposable.add(d);
+            }
+        });
     }
 
     public void deleteDevice(String wifiSn) {
@@ -227,5 +266,42 @@ public class WifiLockMorePresenter<T> extends BasePresenter<IWifiLockMoreView> {
                     }
                 });
 
+    }
+
+
+    public void deleteWifiVideoDevice(String wifiSn){
+        XiaokaiNewServiceImp.wifiVideoLockUnbind(wifiSn,MyApplication.getInstance().getUid()).subscribe(new BaseObserver<WifiLockVideoBindResult>() {
+            @Override
+            public void onSuccess(WifiLockVideoBindResult wifiLockVideoBindResult) {
+                MyApplication.getInstance().getAllDevicesByMqtt(true);
+                SPUtils.remove(KeyConstants.WIFI_LOCK_ALARM_RECORD + wifiSn);
+                SPUtils.remove(KeyConstants.WIFI_LOCK_OPERATION_RECORD + wifiSn);
+                SPUtils.remove(KeyConstants.WIFI_LOCK_OPEN_COUNT + wifiSn);
+                SPUtils.remove(KeyConstants.WIFI_LOCK_SHARE_USER_LIST + wifiSn);
+                SPUtils.remove(KeyConstants.WIFI_LOCK_PASSWORD_LIST + wifiSn);
+                if (isSafe()) {
+                    mViewRef.get().onDeleteDeviceSuccess();
+                }
+            }
+
+            @Override
+            public void onAckErrorCode(BaseResult baseResult) {
+                if (isSafe()) {
+                    mViewRef.get().onDeleteDeviceFailedServer(baseResult);
+                }
+            }
+
+            @Override
+            public void onFailed(Throwable throwable) {
+                if (isSafe()) {
+                    mViewRef.get().onDeleteDeviceFailed(throwable);
+                }
+            }
+
+            @Override
+            public void onSubscribe1(Disposable d) {
+                compositeDisposable.add(d);
+            }
+        });
     }
 }

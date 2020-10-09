@@ -494,6 +494,16 @@ public class KeyConstants {
     public static final String WIFI_LOCK_CONNECT_NAME = "wifiLockConnectName";  //连接的wifi名称
     public static final String WIFI_LOCK_CONNECT_ORIGINAL_DATA = "wifiLockConnectOriginalData"; //连接的wifi对应的原始数据
 
+    public static final String WIFI_VIDEO_LOCK_OPERATION_RECORD = "wifi_video_lock_operation_record";
+    public static final String WIFI_VIDEO_LOCK_ALARM_RECORD = "wifi_video_lock_alarm_record";
+    public static final String WIFI_VIDEO_LOCK_VISITOR_RECORD = "wifi_video_lock_visitor_record";
+
+    public static final String WIFI_VIDEO_LOCK_DEVICE_DATA = "wifi_video_device_data";
+
+    public static final String WIFI_VIEDO_LOCK_INFO = "wifi_video_lock_info";
+
+    public static final String WIFI_VIDEO_LOCK_RANDOMCODE = "wifi_video_lock_randomcode";
+
 
     public static final String SCAN_TYPE = "scanType";  //扫描类型
     public static final String QR_URL = "qrUrl";  //扫描到的链接
@@ -537,5 +547,9 @@ public class KeyConstants {
     public static final String CHOOSE_WIFI_NAME = "choose_wifi_name";
 
 
+    /**
+     *  Video的路径
+     */
+    public static final String VIDEO_PIC_PATH = "video_pic_path";
 }
 

@@ -41,9 +41,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-/**
- * Created by David on 2019/4/22
- */
+
 public class WifiLockAlarmRecordFragment extends BaseFragment<IWifiLockAlarmRecordView, WifiLockAlarmRecordPresenter<IWifiLockAlarmRecordView>>
         implements IWifiLockAlarmRecordView, View.OnClickListener {
 

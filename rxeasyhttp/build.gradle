@@ -8,6 +8,7 @@ android {
         targetSdkVersion 26
         versionCode 201909250
         versionName "3.4.8"
+        multiDexEnabled true
     }
 
     buildTypes {

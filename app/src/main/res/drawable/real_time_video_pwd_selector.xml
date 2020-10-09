@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@mipmap/real_time_video_pws_seleted" android:state_selected="true"/>
+    <item android:drawable="@mipmap/real_time_video_pws"/>
+</selector>

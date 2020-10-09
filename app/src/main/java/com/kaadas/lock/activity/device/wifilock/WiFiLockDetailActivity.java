@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -23,8 +24,11 @@ import com.kaadas.lock.activity.addDevice.singleswitch.SwipchLinkNo;
 import com.kaadas.lock.activity.device.wifilock.family.WifiLockFamilyManagerActivity;
 import com.kaadas.lock.activity.device.wifilock.password.WiFiLockPasswordManagerActivity;
 import com.kaadas.lock.activity.device.wifilock.password.WifiLockPasswordShareActivity;
+import com.kaadas.lock.activity.device.wifilock.videolock.WifiLockVideoAlbumActivity;
+import com.kaadas.lock.activity.device.wifilock.videolock.WifiLockVideoCallingActivity;
 import com.kaadas.lock.adapter.WifiLockDetailAdapater;
 import com.kaadas.lock.adapter.WifiLockDetailOneLineAdapater;
+import com.kaadas.lock.bean.HomeShowBean;
 import com.kaadas.lock.bean.WifiLockFunctionBean;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.mvp.presenter.wifilock.WifiLockDetailPresenter;
@@ -39,12 +43,17 @@ import com.kaadas.lock.utils.BleLockUtils;
 import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.Rsa;
 import com.kaadas.lock.utils.SPUtils;
+import com.kaadas.lock.utils.SocketManager;
 import com.kaadas.lock.utils.StringUtil;
 import com.kaadas.lock.widget.MyGridItemDecoration;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.zip.CRC32;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -100,6 +109,7 @@ public class WiFiLockDetailActivity extends BaseActivity<IWifiLockDetailView, Wi
         showLockType();
         initRecycleview();
         initData();
+
         String lockNickname = wifiLockInfo.getLockNickname();
         tvBluetoothName.setText(TextUtils.isEmpty(lockNickname) ? wifiLockInfo.getWifiSN() : lockNickname);
     }
@@ -127,6 +137,7 @@ public class WiFiLockDetailActivity extends BaseActivity<IWifiLockDetailView, Wi
             mPresenter.getPasswordList(wifiSn);
             mPresenter.queryUserList(wifiSn);
             dealWithPower(wifiLockInfo.getPower(), wifiLockInfo.getUpdateTime());
+
         }
 
     }
@@ -157,7 +168,7 @@ public class WiFiLockDetailActivity extends BaseActivity<IWifiLockDetailView, Wi
 
                 if (productInfo.getDevelopmentModel().contentEquals(lockType)){
                     LogUtils.e("--kaadas--productInfo.getProductModel()==" + productInfo.getProductModel());
-                    tvLockType.setText(productInfo.getProductModel());
+                    tvLockType.setText("型号："+productInfo.getProductModel());
                 }
             }
 
@@ -377,6 +388,7 @@ public class WiFiLockDetailActivity extends BaseActivity<IWifiLockDetailView, Wi
             adapater = new WifiLockDetailAdapater(supportFunctions, new WifiLockDetailAdapater.OnItemClickListener() {
                 @Override
                 public void onItemClick(int position, WifiLockFunctionBean bluetoothLockFunctionBean) {
+                    Log.d("shulan", "=WifiLockDetailAdapater onItemClick: ");
                     Intent intent;
                     switch (bluetoothLockFunctionBean.getType()) {
                         case BleLockUtils.TYPE_PASSWORD:
@@ -443,12 +455,29 @@ public class WiFiLockDetailActivity extends BaseActivity<IWifiLockDetailView, Wi
                             intent.putExtra(KeyConstants.KEY_TYPE, 4);
                             startActivity(intent);
                             break;
+
+                        case BleLockUtils.TYPE_ALBUM:
+                            startActivity(new Intent(WiFiLockDetailActivity.this, WifiLockVideoAlbumActivity.class));
+                            break;
+                        case BleLockUtils.TYPE_RECORD:
+                            intent = new Intent(WiFiLockDetailActivity.this,WifiLockRecordActivity.class);
+                            intent.putExtra(KeyConstants.WIFI_SN, wifiLockInfo.getWifiSN());
+                            startActivity(intent);
+
+                            break;
+                        case BleLockUtils.TYPE_VIDEO:
+                            intent = new Intent(WiFiLockDetailActivity.this,WifiLockVideoCallingActivity.class);
+                            intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
+                            startActivity(intent);
+
+                            break;
                     }
                 }
             });
             oneLineAdapater = new WifiLockDetailOneLineAdapater(supportFunctions, new WifiLockDetailOneLineAdapater.OnItemClickListener() {
                 @Override
                 public void onItemClick(int position, WifiLockFunctionBean bluetoothLockFunctionBean) {
+                    Log.d("shulan", "WifiLockDetailOneLineAdapater onItemClick: ");
                     Intent intent;
                     switch (bluetoothLockFunctionBean.getType()) {
                         case BleLockUtils.TYPE_PASSWORD:
@@ -582,4 +611,7 @@ public class WiFiLockDetailActivity extends BaseActivity<IWifiLockDetailView, Wi
     public void queryFailed(Throwable throwable) {
 
     }
+
+
+
 }

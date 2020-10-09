@@ -25,7 +25,7 @@ public class WifiLockRecordIAdapter extends BaseQuickAdapter<WifiLockOperationRe
         boolean first = record.isFirst();
         boolean last = record.isLast();
 
-
+        int size = getData().size();
         TextView tvTime = helper.getView(R.id.tv_time);
         TextView tvDayTime = helper.getView(R.id.tv_day_time);
         long time = record.getTime();
@@ -42,10 +42,11 @@ public class WifiLockRecordIAdapter extends BaseQuickAdapter<WifiLockOperationRe
         }
 
 
-
+        int position = helper.getPosition();
         helper.getView(R.id.view_top).setVisibility( first? View.INVISIBLE : View.VISIBLE);
-        helper.getView(R.id.view_bottom).setVisibility(last ? View.INVISIBLE : View.VISIBLE);
         helper.getView(R.id.driver).setVisibility(last ? View.VISIBLE : View.GONE);
+//        helper.getView(R.id.view_bottom).setVisibility( ? View.INVISIBLE : View.VISIBLE);
+        helper.getView(R.id.view_bottom).setVisibility((position == size -1 || last) ? View.INVISIBLE : View.VISIBLE);
         TextView tvContent = helper.getView(R.id.tv_content);
         String content = BleUtil.getAlarmByType(record.getType(), mContext);
         TextView tvRight = helper.getView(R.id.tv_right);

@@ -2,6 +2,7 @@ apply plugin: 'com.mob.sdk'
 MobSDK {
     appKey "2a9cebda1ff8c"
     appSecret "5d9346438bdf76631cd9a74ec5bad9ab"
+    mobEnv 'x'
     ShareSDK {
         devInfo {
             SinaWeibo {

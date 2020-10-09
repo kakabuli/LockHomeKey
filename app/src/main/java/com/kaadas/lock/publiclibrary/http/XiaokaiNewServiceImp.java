@@ -50,6 +50,9 @@ import com.kaadas.lock.publiclibrary.http.postbean.UploadOtaBean;
 import com.kaadas.lock.publiclibrary.http.postbean.UploadOtaResultBean;
 import com.kaadas.lock.publiclibrary.http.postbean.UploadWarringRecordBean;
 import com.kaadas.lock.publiclibrary.http.postbean.WiFiLockBindBean;
+import com.kaadas.lock.publiclibrary.http.postbean.WiFiLockVideoBindBean;
+import com.kaadas.lock.publiclibrary.http.postbean.WiFiLockVideoUpdateBindBean;
+import com.kaadas.lock.publiclibrary.http.postbean.WiFiLockViewBindFailBean;
 import com.kaadas.lock.publiclibrary.http.postbean.WiFiLockWifiSNAndUid;
 import com.kaadas.lock.publiclibrary.http.postbean.WiFiLockUpdateNickNameBean;
 import com.kaadas.lock.publiclibrary.http.postbean.WifiLockDeleteShareBean;
@@ -71,6 +74,7 @@ import com.kaadas.lock.publiclibrary.http.result.GetPwdBySnResult;
 import com.kaadas.lock.publiclibrary.http.result.GetWarringRecordResult;
 import com.kaadas.lock.publiclibrary.http.result.GetWifiLockAlarmRecordResult;
 import com.kaadas.lock.publiclibrary.http.result.GetWifiLockOperationRecordResult;
+import com.kaadas.lock.publiclibrary.http.result.GetWifiVideoLockAlarmRecordResult;
 import com.kaadas.lock.publiclibrary.http.result.LockRecordResult;
 import com.kaadas.lock.publiclibrary.http.result.LoginResult;
 import com.kaadas.lock.publiclibrary.http.result.OperationRecordResult;
@@ -80,8 +84,10 @@ import com.kaadas.lock.publiclibrary.http.result.SwitchStatusResult;
 import com.kaadas.lock.publiclibrary.http.result.UserNickResult;
 import com.kaadas.lock.publiclibrary.http.result.UserProtocolResult;
 import com.kaadas.lock.publiclibrary.http.result.UserProtocolVersionResult;
+import com.kaadas.lock.publiclibrary.http.result.WifiDeviceListResult;
 import com.kaadas.lock.publiclibrary.http.result.WifiLockGetPasswordListResult;
 import com.kaadas.lock.publiclibrary.http.result.WifiLockShareResult;
+import com.kaadas.lock.publiclibrary.http.result.WifiLockVideoBindResult;
 import com.kaadas.lock.publiclibrary.http.temp.postbean.DeleteDeviceNormalUserBean;
 import com.kaadas.lock.publiclibrary.http.temp.postbean.GetDeviceGeneralAdministratorBean;
 import com.kaadas.lock.publiclibrary.http.temp.postbean.OpenLockAuth;
@@ -95,6 +101,7 @@ import java.io.File;
 import java.util.List;
 
 import io.reactivex.Observable;
+import io.reactivex.Scheduler;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -140,8 +147,7 @@ public class XiaokaiNewServiceImp {
         RegisterByPhoneBean registerByPhoneBean = new RegisterByPhoneBean(name, password, tokens);
         return RetrofitServiceManager.getNoTokenInstance().create(IXiaoKaiNewService.class)
                 .registerByEmail(new HttpUtils<RegisterByPhoneBean>().getBody(registerByPhoneBean))
-                .compose(RxjavaHelper.observeOnMainThread())
-                ;
+                .compose(RxjavaHelper.observeOnMainThread());
     }
 
     /**
@@ -1269,4 +1275,78 @@ public class XiaokaiNewServiceImp {
                 ;
     }
 
+
+    ////////////////////////////////////////////           WiFi视频锁api功能            ///////////////////////////////////////////////
+
+    /**
+     * 绑定视频锁
+     */
+    public static Observable<WifiLockVideoBindResult> wifiVideoLockBind(WiFiLockVideoBindBean wiFiLockBindBean) {
+        return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
+                .wifiVideoLockBind(new HttpUtils<WiFiLockVideoBindBean>().getBody(wiFiLockBindBean))
+                .subscribeOn(Schedulers.io())
+                .compose(RxjavaHelper.observeOnMainThread());
+    }
+
+    /**
+     *  解绑视频锁
+     */
+    public static Observable<WifiLockVideoBindResult> wifiVideoLockUnbind(String wifiSN, String uid) {
+        WiFiLockWifiSNAndUid wiFiLockUnbind = new WiFiLockWifiSNAndUid(wifiSN, uid);
+        return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
+                .wifiVideoLockUnbind(new HttpUtils<WiFiLockWifiSNAndUid>().getBody(wiFiLockUnbind))
+                .subscribeOn(Schedulers.io())
+                .compose(RxjavaHelper.observeOnMainThread());
+    }
+
+    /**
+     *  绑定视频锁失败
+     */
+    public static Observable<WifiLockVideoBindResult> wifiVideoLockBindFail(String wifiSN, int result) {
+        WiFiLockViewBindFailBean wiFiLockUnbind = new WiFiLockViewBindFailBean(wifiSN, result);
+        return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
+                .wifiVideoLockBindFail(new HttpUtils<WiFiLockViewBindFailBean>().getBody(wiFiLockUnbind))
+                .subscribeOn(Schedulers.io())
+                .compose(RxjavaHelper.observeOnMainThread());
+    }
+
+    /**
+     *  更新视频锁
+     */
+    public static Observable<WifiLockVideoBindResult> wifiVideoLockUpdateBind(WiFiLockVideoUpdateBindBean wiFiLockBindBean) {
+        return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
+                .wifiVideoLockUpdateBind(new HttpUtils<WiFiLockVideoUpdateBindBean>().getBody(wiFiLockBindBean))
+                .subscribeOn(Schedulers.io())
+                .compose(RxjavaHelper.observeOnMainThread());
+    }
+
+    /**
+     *  视频锁分页查询报警记录
+     */
+    public static Observable<GetWifiVideoLockAlarmRecordResult> wifiVideoLockGetAlarmList(String wifiSn, int page) {
+        WifiLockRecordBean wiFiLockWifiSNAndUid = new WifiLockRecordBean(wifiSn, page);
+        return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
+                .wifiVideoLockGetAlarmList(new HttpUtils<WifiLockRecordBean>().getBody(wiFiLockWifiSNAndUid))
+                .subscribeOn(Schedulers.io())
+                .compose(RxjavaHelper.observeOnMainThread());
+    }
+
+    /**
+     *  视频锁分页查询门铃记录
+     */
+    public static Observable<GetWifiVideoLockAlarmRecordResult> wifiVideoLockGetDoorbellList(String wifiSn,int page){
+        WifiLockRecordBean wiFiLockWifiSNAndUid = new WifiLockRecordBean(wifiSn, page);
+        return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
+                .wifiVideoLockGetDoorbellList(new HttpUtils<WifiLockRecordBean>().getBody(wiFiLockWifiSNAndUid))
+                .subscribeOn(Schedulers.io())
+                .compose(RxjavaHelper.observeOnMainThread());
+    }
+
+    /**
+     *  查询wifi锁设备列表
+     */
+    public static Observable<WifiDeviceListResult> wifiDeviceLisst(String wifiSn, int page){
+        WifiLockRecordBean wiFiLockWifiSNAndUid = new WifiLockRecordBean(wifiSn, page);
+        return null;
+    }
 }

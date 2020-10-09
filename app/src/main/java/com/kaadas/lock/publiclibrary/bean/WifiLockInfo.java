@@ -126,58 +126,71 @@ public class WifiLockInfo implements Serializable {
     private int openStatus;
     private long openStatusTime;
 
+    /**
+     * 		"device_did": "AYIOTCN-000343-PMHXH",
+     * 			"device_sn": "020020900003",
+     * 			"p2p_password": "12345678",
+     */
+    private String device_did;
+    private String device_sn;
+    private String p2p_password;
+    private String mac;
 
     @Convert(converter = SingleFireSwitchInfoConvert.class , columnType = String.class)
     @SerializedName("switch")
     private SingleFireSwitchInfo singleFireSwitchInfo;
 
-@Generated(hash = 1292958499)
-public WifiLockInfo(Long id, String deviceID, String wifiSN, int isAdmin, String adminUid, String adminName, String productSN, String productModel, int appId, String lockNickname,
-        String lockSoftwareVersion, String functionSet, String uid, String uname, int pushSwitch, int amMode, int safeMode, int powerSave, int faceStatus, int defences,
-        String language, int operatingMode, int volume, String bleVersion, String wifiVersion, String mqttVersion, String faceVersion, String lockFirmwareVersion,
-        String randomCode, int distributionNetwork, long createTime, String wifiName, int power, long updateTime, int openStatus, long openStatusTime,
-        SingleFireSwitchInfo singleFireSwitchInfo) {
-    this.id = id;
-    this.deviceID = deviceID;
-    this.wifiSN = wifiSN;
-    this.isAdmin = isAdmin;
-    this.adminUid = adminUid;
-    this.adminName = adminName;
-    this.productSN = productSN;
-    this.productModel = productModel;
-    this.appId = appId;
-    this.lockNickname = lockNickname;
-    this.lockSoftwareVersion = lockSoftwareVersion;
-    this.functionSet = functionSet;
-    this.uid = uid;
-    this.uname = uname;
-    this.pushSwitch = pushSwitch;
-    this.amMode = amMode;
-    this.safeMode = safeMode;
-    this.powerSave = powerSave;
-    this.faceStatus = faceStatus;
-    this.defences = defences;
-    this.language = language;
-    this.operatingMode = operatingMode;
-    this.volume = volume;
-    this.bleVersion = bleVersion;
-    this.wifiVersion = wifiVersion;
-    this.mqttVersion = mqttVersion;
-    this.faceVersion = faceVersion;
-    this.lockFirmwareVersion = lockFirmwareVersion;
-    this.randomCode = randomCode;
-    this.distributionNetwork = distributionNetwork;
-    this.createTime = createTime;
-    this.wifiName = wifiName;
-    this.power = power;
-    this.updateTime = updateTime;
-    this.openStatus = openStatus;
-    this.openStatusTime = openStatusTime;
-    this.singleFireSwitchInfo = singleFireSwitchInfo;
-}
-
     @Generated(hash = 666757199)
     public WifiLockInfo() {
+    }
+
+    @Generated(hash = 355824492)
+    public WifiLockInfo(Long id, String deviceID, String wifiSN, int isAdmin, String adminUid, String adminName, String productSN, String productModel, int appId, String lockNickname,
+            String lockSoftwareVersion, String functionSet, String uid, String uname, int pushSwitch, int amMode, int safeMode, int powerSave, int faceStatus, int defences,
+            String language, int operatingMode, int volume, String bleVersion, String wifiVersion, String mqttVersion, String faceVersion, String lockFirmwareVersion,
+            String randomCode, int distributionNetwork, long createTime, String wifiName, int power, long updateTime, int openStatus, long openStatusTime, String device_did,
+            String device_sn, String p2p_password, String mac, SingleFireSwitchInfo singleFireSwitchInfo) {
+        this.id = id;
+        this.deviceID = deviceID;
+        this.wifiSN = wifiSN;
+        this.isAdmin = isAdmin;
+        this.adminUid = adminUid;
+        this.adminName = adminName;
+        this.productSN = productSN;
+        this.productModel = productModel;
+        this.appId = appId;
+        this.lockNickname = lockNickname;
+        this.lockSoftwareVersion = lockSoftwareVersion;
+        this.functionSet = functionSet;
+        this.uid = uid;
+        this.uname = uname;
+        this.pushSwitch = pushSwitch;
+        this.amMode = amMode;
+        this.safeMode = safeMode;
+        this.powerSave = powerSave;
+        this.faceStatus = faceStatus;
+        this.defences = defences;
+        this.language = language;
+        this.operatingMode = operatingMode;
+        this.volume = volume;
+        this.bleVersion = bleVersion;
+        this.wifiVersion = wifiVersion;
+        this.mqttVersion = mqttVersion;
+        this.faceVersion = faceVersion;
+        this.lockFirmwareVersion = lockFirmwareVersion;
+        this.randomCode = randomCode;
+        this.distributionNetwork = distributionNetwork;
+        this.createTime = createTime;
+        this.wifiName = wifiName;
+        this.power = power;
+        this.updateTime = updateTime;
+        this.openStatus = openStatus;
+        this.openStatusTime = openStatusTime;
+        this.device_did = device_did;
+        this.device_sn = device_sn;
+        this.p2p_password = p2p_password;
+        this.mac = mac;
+        this.singleFireSwitchInfo = singleFireSwitchInfo;
     }
 
     public String getWifiSN() {
@@ -406,7 +419,8 @@ public WifiLockInfo(Long id, String deviceID, String wifiSN, int isAdmin, String
     @Override
     public String toString() {
         return "WifiLockInfo{" +
-                "_id=" + deviceID +
+                "id=" + id +
+                ", deviceID='" + deviceID + '\'' +
                 ", wifiSN='" + wifiSN + '\'' +
                 ", isAdmin=" + isAdmin +
                 ", adminUid='" + adminUid + '\'' +
@@ -422,8 +436,8 @@ public WifiLockInfo(Long id, String deviceID, String wifiSN, int isAdmin, String
                 ", pushSwitch=" + pushSwitch +
                 ", amMode=" + amMode +
                 ", safeMode=" + safeMode +
-                ", powerSave='" + powerSave + '\'' +
-                ", faceStatus='" + faceStatus + '\'' +
+                ", powerSave=" + powerSave +
+                ", faceStatus=" + faceStatus +
                 ", defences=" + defences +
                 ", language='" + language + '\'' +
                 ", operatingMode=" + operatingMode +
@@ -434,8 +448,18 @@ public WifiLockInfo(Long id, String deviceID, String wifiSN, int isAdmin, String
                 ", faceVersion='" + faceVersion + '\'' +
                 ", lockFirmwareVersion='" + lockFirmwareVersion + '\'' +
                 ", randomCode='" + randomCode + '\'' +
-                ", distributionNetwork='" + distributionNetwork + '\'' +
-                ", switch='" + singleFireSwitchInfo + '\'' +
+                ", distributionNetwork=" + distributionNetwork +
+                ", createTime=" + createTime +
+                ", wifiName='" + wifiName + '\'' +
+                ", power=" + power +
+                ", updateTime=" + updateTime +
+                ", openStatus=" + openStatus +
+                ", openStatusTime=" + openStatusTime +
+                ", device_did='" + device_did + '\'' +
+                ", device_sn='" + device_sn + '\'' +
+                ", p2p_password='" + p2p_password + '\'' +
+                ", mac='" + mac + '\'' +
+                ", singleFireSwitchInfo=" + singleFireSwitchInfo +
                 '}';
     }
 
@@ -517,8 +541,35 @@ public WifiLockInfo(Long id, String deviceID, String wifiSN, int isAdmin, String
     }
 
 
+    public String getDevice_did() {
+        return device_did;
+    }
 
+    public void setDevice_did(String device_did) {
+        this.device_did = device_did;
+    }
 
+    public String getDevice_sn() {
+        return device_sn;
+    }
 
+    public void setDevice_sn(String device_sn) {
+        this.device_sn = device_sn;
+    }
 
+    public String getP2p_password() {
+        return p2p_password;
+    }
+
+    public void setP2p_password(String p2p_password) {
+        this.p2p_password = p2p_password;
+    }
+
+    public String getMac() {
+        return mac;
+    }
+
+    public void setMac(String mac) {
+        this.mac = mac;
+    }
 }

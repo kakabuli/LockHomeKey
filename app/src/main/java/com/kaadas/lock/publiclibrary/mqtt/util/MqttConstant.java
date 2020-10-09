@@ -249,5 +249,10 @@ public class MqttConstant {
      */
     public static final String ADD_DEVICE = "addSwitch";
 
+    /**
+     *  设置视频模组
+     */
+    public static final String SET_CAMERA = "setCamera";
+
 
 }

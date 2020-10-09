@@ -347,6 +347,7 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                             mDeviceList.add(homeShowBean);
                             break;
                         case HomeShowBean.TYPE_WIFI_LOCK:
+                        case HomeShowBean.TYPE_WIFI_VIDEO_LOCK:
                             WifiLockInfo wifiLockInfo = (WifiLockInfo) homeShowBean.getObject();
                             mDeviceList.add(homeShowBean);
                             break;
@@ -543,6 +544,7 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                         }
                         break;
                     case HomeShowBean.TYPE_WIFI_LOCK:
+                    case HomeShowBean.TYPE_WIFI_VIDEO_LOCK:
                         WifiLockInfo wifiLockInfo = (WifiLockInfo) deviceDetailBean.getObject();
                         if (!TextUtils.isEmpty(wifiLockInfo.getFunctionSet())) {
                             if (wifiLockInfo.getIsAdmin() == 1) { //主用户

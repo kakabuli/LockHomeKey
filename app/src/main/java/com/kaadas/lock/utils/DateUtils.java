@@ -43,6 +43,22 @@ public class DateUtils {
         return dateStr;
     }
 
+    /**
+     * 将毫秒转化成固定格式的时间
+     * 时间格式: yyyy/MM
+     *
+     * @param millisecond
+     * @return
+     */
+    public static String getDayTimeFromat(Long millisecond) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM ");
+//		simpleDateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Beijing"));
+        simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT+8"));
+        Date date = new Date(millisecond);
+        String dateStr = simpleDateFormat.format(date);
+        return dateStr;
+    }
+
     public static String getStrFromMillisecond2(Long millisecond) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String dateStr = simpleDateFormat.format(millisecond);
@@ -179,5 +195,45 @@ public class DateUtils {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         return dateFormat.format(date);
 
+    }
+
+    /**
+     * 时间转换  秒转分
+     */
+    public static String GetMinutes(int s) {
+
+        String timeStr = null;
+        int hour = 0;
+        int minute = 0;
+        int second = 0;
+
+        minute = s / 60;
+        if (minute < 60) {
+            second = s % 60;
+            timeStr = unitFormat(minute) + ":" + unitFormat(second);
+        } else {
+            hour = minute / 60;
+            if (hour > 99)
+                return "";
+            minute = minute % 60;
+            second = s - hour * 3600 - minute * 60;
+            if(hour == 0){
+                timeStr = unitFormat(minute) + ":" + unitFormat(second);
+            }else{
+                timeStr = unitFormat(hour) + ":" + unitFormat(minute) + ":" + unitFormat(second);
+            }
+            timeStr = unitFormat(hour) + ":" + unitFormat(minute) + ":" + unitFormat(second);
+        }
+
+        return timeStr;
+    }
+
+    private static String unitFormat(int i) {
+        String retStr = null;
+        if (i >= 0 && i < 10)
+            retStr = "0" + i;
+        else
+            retStr = "" + i;
+        return retStr;
     }
 }

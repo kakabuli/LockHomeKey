@@ -54,4 +54,7 @@
     <color name="red">#FF0000</color>
     <color name="c78BEF7">#78BEF7</color>
     <color name="common_red">#DD262C</color>
+
+    <color name="seekbar_bg">#9E9E9E</color>
+    <color name="seekbar_process">#149CF3</color>
 </resources>

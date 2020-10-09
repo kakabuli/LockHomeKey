@@ -42,6 +42,7 @@ public class WiFiLockUtils {
         PAIRING_MODE.put("WiFi&BLE",new String[]{"S110M", "S110-D1", "S110-D2", "S110-D3", "S110-D4"
         ,"S110-D","S110D","S110 D","S110_D"});
         // -----------------------------------------
+        PAIRING_MODE.put("WiFi&VIDEO",new String[]{"K10V"});
     }
     /**
      * 根据型号判断对应的配网方式
@@ -55,12 +56,18 @@ public class WiFiLockUtils {
         List<String> wifiModesList=Arrays.asList(wifiModes);//数组转换成为List
         String[] wifi_bleModes = PAIRING_MODE.get("WiFi&BLE");
         List<String> wifi_bleModesList=Arrays.asList(wifi_bleModes);//数组转换成为List
+        String[] wifi_videoModes = PAIRING_MODE.get("WiFi&VIDEO");
+        List<String> wifi_videoModesList=Arrays.asList(wifi_videoModes);//数组转换成为List
 
         if (containsIgnoreCase(wifiModesList,product)){
             return "WiFi";
         }
         else if(containsIgnoreCase(wifi_bleModesList,product)){
             return "WiFi&BLE";
+        }
+        else if(containsIgnoreCase(wifi_videoModesList,product)){
+
+            return "WiFi&VIDEO";
         }
         else {
             return "NotFind";

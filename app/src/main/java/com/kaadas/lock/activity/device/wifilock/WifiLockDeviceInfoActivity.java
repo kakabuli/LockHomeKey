@@ -1,5 +1,6 @@
 package com.kaadas.lock.activity.device.wifilock;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -10,6 +11,9 @@ import android.widget.Toast;
 
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
+import com.kaadas.lock.activity.device.wifilock.videolock.WifiLockVideoCameraVersionActivity;
+import com.kaadas.lock.activity.device.wifilock.videolock.WifiLockVideoLockFirwareNumberActivity;
+import com.kaadas.lock.bean.HomeShowBean;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.mvp.presenter.wifilock.WifiLockMorePresenter;
 import com.kaadas.lock.mvp.view.wifilock.IWifiLockMoreView;
@@ -54,6 +58,14 @@ public class WifiLockDeviceInfoActivity extends BaseActivity<IWifiLockMoreView, 
     TextView wifiVersion;
     @BindView(R.id.iv_wifimodel)
     ImageView ivWifimodel;
+    @BindView(R.id.rl_wifi_model_firmware_version)
+    RelativeLayout rlWifiModelFirmwareVersion;
+    @BindView(R.id.rl_lock_model_firmware_version)
+    RelativeLayout rlLockModelFirmwareVersion;
+    @BindView(R.id.rl_camera_version)
+    RelativeLayout rlCameraVersion;
+    @BindView(R.id.rl_lock_firware_number)
+    RelativeLayout rlLockFirwareNumber;
     private WifiLockInfo wifiLockInfo;
     private String wifiSN;
     private String faceModelFirmwareVersion;
@@ -93,6 +105,20 @@ public class WifiLockDeviceInfoActivity extends BaseActivity<IWifiLockMoreView, 
                 rlFaceModelFirmwareVersion.setVisibility(View.GONE);
             }
 
+            if(MyApplication.getInstance().getWifiVideoLockTypeBySn(wifiSn) == HomeShowBean.TYPE_WIFI_VIDEO_LOCK){
+                rlFaceModelFirmwareVersion.setVisibility(View.GONE);
+                rlWifiModelFirmwareVersion.setVisibility(View.GONE);
+                rlLockModelFirmwareVersion.setVisibility(View.GONE);
+                rlCameraVersion.setVisibility(View.VISIBLE);
+                rlLockFirwareNumber.setVisibility(View.VISIBLE);
+            }else{
+                rlFaceModelFirmwareVersion.setVisibility(View.VISIBLE);
+                rlWifiModelFirmwareVersion.setVisibility(View.VISIBLE);
+                rlLockModelFirmwareVersion.setVisibility(View.VISIBLE);
+                rlCameraVersion.setVisibility(View.GONE);
+                rlLockFirwareNumber.setVisibility(View.GONE);
+            }
+
             lockFirmwareVersion = wifiLockInfo.getLockFirmwareVersion();
             tvLockFirmwareVersion.setText(TextUtils.isEmpty(lockFirmwareVersion) ? "" : wifiLockInfo.getLockFirmwareVersion());
             wifiVersion.setText(TextUtils.isEmpty(wifiLockInfo.getWifiVersion()) ? "" : wifiLockInfo.getWifiVersion());
@@ -109,7 +135,7 @@ public class WifiLockDeviceInfoActivity extends BaseActivity<IWifiLockMoreView, 
         finish();
     }
 
-    @OnClick({R.id.tv_face_model_firmware_version, R.id.tv_lock_firmware_version, R.id.wifi_version})
+    @OnClick({R.id.tv_face_model_firmware_version, R.id.tv_lock_firmware_version, R.id.wifi_version,R.id.rl_camera_version,R.id.rl_lock_firware_number})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv_face_model_firmware_version:
@@ -135,6 +161,12 @@ public class WifiLockDeviceInfoActivity extends BaseActivity<IWifiLockMoreView, 
                 } else {
                     Toast.makeText(this, getString(R.string.info_error), Toast.LENGTH_SHORT).show();
                 }
+                break;
+            case R.id.rl_lock_firware_number:
+                startActivity(new Intent(this, WifiLockVideoLockFirwareNumberActivity.class));
+                break;
+            case R.id.rl_camera_version:
+                startActivity(new Intent(this, WifiLockVideoCameraVersionActivity.class));
                 break;
 
         }

@@ -4,9 +4,11 @@ import com.google.gson.Gson;
 import com.kaadas.lock.mvp.mvpbase.BasePresenter;
 import com.kaadas.lock.mvp.view.wifilock.IWifiLockAlarmRecordView;
 import com.kaadas.lock.publiclibrary.bean.WifiLockAlarmRecord;
+import com.kaadas.lock.publiclibrary.bean.WifiVideoLockAlarmRecord;
 import com.kaadas.lock.publiclibrary.http.XiaokaiNewServiceImp;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.result.GetWifiLockAlarmRecordResult;
+import com.kaadas.lock.publiclibrary.http.result.GetWifiVideoLockAlarmRecordResult;
 import com.kaadas.lock.publiclibrary.http.util.BaseObserver;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
@@ -19,6 +21,8 @@ import io.reactivex.disposables.Disposable;
 
 public class WifiLockAlarmRecordPresenter<T> extends BasePresenter<IWifiLockAlarmRecordView> {
     private List<WifiLockAlarmRecord> wifiLockAlarmRecords = new ArrayList<>();
+
+    private List<WifiVideoLockAlarmRecord> wifiVideoLockAlarmRecords = new ArrayList<>();
 
     public void getOpenRecordFromServer(int page, String wifiSn) {
         if (page == 1) {
@@ -74,4 +78,62 @@ public class WifiLockAlarmRecordPresenter<T> extends BasePresenter<IWifiLockAlar
                 });
 
     }
+
+
+    public void getWifiVideoLockGetAlarmList(int page, String wifiSn){
+        if (page == 1) {
+            wifiVideoLockAlarmRecords.clear();
+        }
+        XiaokaiNewServiceImp.wifiVideoLockGetAlarmList(wifiSn,1).subscribe(new BaseObserver<GetWifiVideoLockAlarmRecordResult>() {
+            @Override
+            public void onSuccess(GetWifiVideoLockAlarmRecordResult getWifiVideoLockAlarmRecordResult) {
+                LogUtils.e("shulan----------2222------------------");
+                LogUtils.e("shulan getWifiVideoLockAlarmRecordResult-->" + getWifiVideoLockAlarmRecordResult.toString());
+                List<WifiVideoLockAlarmRecord> alarmRecords = getWifiVideoLockAlarmRecordResult.getData();
+                if (alarmRecords != null && alarmRecords.size() > 0) {
+                    if (page == 1) {
+                        String object = new Gson().toJson(alarmRecords);
+                        SPUtils.put(KeyConstants.WIFI_LOCK_ALARM_RECORD + wifiSn, object);
+                    }
+                    wifiVideoLockAlarmRecords.addAll(alarmRecords);
+                    if (isSafe()) {
+                        mViewRef.get().onLoadServerRecord(wifiLockAlarmRecords, page);
+                    }
+                } else {
+                    if (page == 1) {
+                        SPUtils.put(KeyConstants.WIFI_LOCK_ALARM_RECORD + wifiSn, "");
+                    }
+                    if (isSafe()) {//服务器没有数据  提示用户
+
+                        if (page == 1) { //第一次获取数据就没有
+                            mViewRef.get().onServerNoData();
+                        } else {
+                            mViewRef.get().noMoreData();
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onAckErrorCode(BaseResult baseResult) {
+
+            }
+
+            @Override
+            public void onFailed(Throwable throwable) {
+
+            }
+
+            @Override
+            public void onSubscribe1(Disposable d) {
+
+            }
+        });
+    }
+
+
+
+
+
+
 }

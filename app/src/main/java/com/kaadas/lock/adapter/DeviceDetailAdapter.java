@@ -200,6 +200,7 @@ public class DeviceDetailAdapter extends BaseQuickAdapter<HomeShowBean, BaseView
 
             //wifi锁
             case HomeShowBean.TYPE_WIFI_LOCK:
+            case HomeShowBean.TYPE_WIFI_VIDEO_LOCK:
                 WifiLockInfo wifiLockInfo = (WifiLockInfo) item.getObject();
                 if (wifiLockInfo != null) {
                     int power1 = wifiLockInfo.getPower();

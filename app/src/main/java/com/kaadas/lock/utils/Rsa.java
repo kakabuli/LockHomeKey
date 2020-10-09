@@ -381,5 +381,42 @@ public class Rsa {
         return (l4<<24)+(l3<<16)+(l2<<8)+l1;
     }
 
+    /**
+     * hexString转byteArr
+     * <p>例如：</p>
+     * hexString2Bytes("00A8") returns { 0, (byte) 0xA8 }
+     *
+     * @param hexString 十六进制字符串
+     * @return 字节数组
+     */
+    public static byte[] hexString2Bytes(String hexString) {
+        int len = hexString.length();
+        if (len % 2 != 0) {
+            throw new IllegalArgumentException("长度不是偶数");
+        }
+        char[] hexBytes = hexString.toUpperCase().toCharArray();
+        byte[] ret = new byte[len >>> 1];
+        for (int i = 0; i < len; i += 2) {
+            ret[i >> 1] = (byte) (hex2Dec(hexBytes[i]) << 4 | hex2Dec(hexBytes[i + 1]));
+        }
+        return ret;
+    }
+
+    /**
+     * hexChar转int
+     *
+     * @param hexChar hex单个字节
+     * @return 0..15
+     */
+    private static int hex2Dec(char hexChar) {
+        if (hexChar >= '0' && hexChar <= '9') {
+            return hexChar - '0';
+        } else if (hexChar >= 'A' && hexChar <= 'F') {
+            return hexChar - 'A' + 10;
+        } else {
+            throw new IllegalArgumentException();
+        }
+    }
+
 }
 

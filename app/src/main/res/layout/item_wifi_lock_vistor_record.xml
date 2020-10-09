@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="@dimen/dp_29"
+    android:gravity="center_vertical"
+    android:orientation="vertical"
+ >
+
+
+    <TextView
+        android:layout_marginLeft="@dimen/dp_25"
+        android:layout_marginVertical="@dimen/dp_15"
+        android:textSize="12sp"
+        android:textColor="#333333"
+        android:text="今天"
+        android:id="@+id/tv_day_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_75"
+        android:orientation="horizontal">
+
+    <TextView
+        android:layout_gravity="center"
+        android:layout_marginLeft="@dimen/dp_10"
+        android:id="@+id/tv_time"
+        android:layout_width="70dp"
+        android:layout_height="match_parent"
+        android:gravity="top|center_horizontal"
+        android:text="16:40"
+        android:textColor="#999999"
+        android:textSize="@dimen/sp_12" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+
+
+        <ImageView
+            android:id="@+id/iv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/bluetooth_common_icon" />
+
+        <View
+            android:id="@+id/view_bottom"
+            android:layout_width="@dimen/dp_1"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="#999999"
+            android:visibility="invisible" />
+    </LinearLayout>
+
+    <ImageView
+        android:layout_marginLeft="@dimen/dp_16"
+        android:id="@+id/iv_content"
+        android:layout_width="@dimen/dp_50"
+        android:layout_height="@dimen/dp_50"
+        android:src="@mipmap/default_head"
+         />
+
+    <TextView
+        android:id="@+id/tv_right"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="@dimen/dp_52"
+        android:layout_weight="1"
+        android:inputType="textMultiLine"
+        android:text="16:40"
+        android:textColor="#999999"
+        android:textSize="@dimen/sp_12" />
+    </LinearLayout>
+
+    <View
+        android:id="@+id/driver"
+        android:layout_marginRight="@dimen/dp_15"
+        android:layout_marginLeft="@dimen/dp_15"
+        android:layout_marginTop="@dimen/dp_4"
+        android:background="#D8D8D8"
+        android:layout_width="match_parent"
+        android:layout_height="1dp" />
+
+</LinearLayout>

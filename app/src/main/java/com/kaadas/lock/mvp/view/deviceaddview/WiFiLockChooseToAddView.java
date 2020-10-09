@@ -13,6 +13,9 @@ public interface WiFiLockChooseToAddView extends IBaseView {
     //检索门锁型号成功：WiFi&BLE
     void searchLockProductSuccessForWiFiAndBLE(String pairMode);
 
+    //检索门锁型号成功：WiFi&VIDEO
+    void searchLockProductSuccessForWiFiAndVideo(String pairMode);
+
     //检索门锁型号异常
     void searchLockProductThrowable();
 

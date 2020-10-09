@@ -140,21 +140,29 @@ public class BitmapUtil {
      * @param bitmap 要保存的图片
      * @throws IOException 读写图片文件出现的异常信息
      */
-    public static void save(String path, String name, Bitmap bitmap) throws IOException {
+    public static void save(String path, String name, Bitmap bitmap) {
         File file = new File(path, name);
         // 若图片文件在SD卡的文件夹不存在
         if (!file.getParentFile().exists()) {
             // 创建该文件夹
             file.getParentFile().mkdirs();
         }
-        // 若文件不存在，则创建
-        if (!file.exists()) {
-            file.createNewFile();
+        try {
+            // 若文件不存在，则创建
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+            // 创建文件输出流
+            FileOutputStream out = new FileOutputStream(file);
+            // 保存图片至SD卡指定文件夹
+            bitmap.compress(CompressFormat.JPEG, 100, out);
+            out.flush();
+            out.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        // 创建文件输出流
-        FileOutputStream out = new FileOutputStream(file);
-        // 保存图片至SD卡指定文件夹
-        bitmap.compress(CompressFormat.JPEG, 100, out);
     }
 
 

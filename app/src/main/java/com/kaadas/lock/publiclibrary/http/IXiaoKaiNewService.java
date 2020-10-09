@@ -11,6 +11,7 @@ import com.kaadas.lock.publiclibrary.http.result.GetPwdBySnResult;
 import com.kaadas.lock.publiclibrary.http.result.GetWarringRecordResult;
 import com.kaadas.lock.publiclibrary.http.result.GetWifiLockAlarmRecordResult;
 import com.kaadas.lock.publiclibrary.http.result.GetWifiLockOperationRecordResult;
+import com.kaadas.lock.publiclibrary.http.result.GetWifiVideoLockAlarmRecordResult;
 import com.kaadas.lock.publiclibrary.http.result.LockRecordResult;
 import com.kaadas.lock.publiclibrary.http.result.LoginResult;
 import com.kaadas.lock.publiclibrary.http.result.CheckOTAResult;
@@ -21,8 +22,10 @@ import com.kaadas.lock.publiclibrary.http.result.SwitchStatusResult;
 import com.kaadas.lock.publiclibrary.http.result.UserNickResult;
 import com.kaadas.lock.publiclibrary.http.result.UserProtocolResult;
 import com.kaadas.lock.publiclibrary.http.result.UserProtocolVersionResult;
+import com.kaadas.lock.publiclibrary.http.result.WifiDeviceListResult;
 import com.kaadas.lock.publiclibrary.http.result.WifiLockGetPasswordListResult;
 import com.kaadas.lock.publiclibrary.http.result.WifiLockShareResult;
+import com.kaadas.lock.publiclibrary.http.result.WifiLockVideoBindResult;
 
 
 import io.reactivex.Observable;
@@ -623,4 +626,48 @@ public interface IXiaoKaiNewService {
      */
     @POST(HttpUrlConstants.UPDATE_SWITCH_NICK_NAME)
     Observable<BaseResult> updateSwitchNickname(@Body RequestBody info);
+
+    ////////////////////////////////////////////           WiFi视频锁api功能            ///////////////////////////////////////////////
+
+    /**
+     * 绑定视频锁
+     */
+    @POST(HttpUrlConstants.WIFI_VIDEO_LOCK_BIND)
+    Observable<WifiLockVideoBindResult> wifiVideoLockBind(@Body RequestBody info);
+
+    /**
+     * 解绑视频锁
+     */
+    @POST(HttpUrlConstants.WIFI_VIDEO_LOCK_UNBIND)
+    Observable<WifiLockVideoBindResult> wifiVideoLockUnbind(@Body RequestBody info);
+
+    /**
+     * 解绑视频锁失败
+     */
+    @POST(HttpUrlConstants.WIFI_VIDEO_LOCK_BIND_FAIL)
+    Observable<WifiLockVideoBindResult> wifiVideoLockBindFail(@Body RequestBody info);
+
+    /**
+     *  更新视频锁
+     */
+    @POST(HttpUrlConstants.WIFI_VIDEO_LOCK_UPDATE_BIND)
+    Observable<WifiLockVideoBindResult> wifiVideoLockUpdateBind(@Body RequestBody info);
+
+    /**
+     * 获取视频锁报警记录
+     */
+    @POST(HttpUrlConstants.WIFI_VIDEO_LOCK_ALARM_LIST)
+    Observable<GetWifiVideoLockAlarmRecordResult> wifiVideoLockGetAlarmList(@Body RequestBody info);
+
+    /**
+     * 获取分页查询门铃记录
+     */
+    @POST(HttpUrlConstants.WIFI_VIDEO_LOCK_DOORBELL_LIST)
+    Observable<GetWifiVideoLockAlarmRecordResult> wifiVideoLockGetDoorbellList(@Body RequestBody info);
+
+    /**
+     *  查询wifi锁设备列表
+     */
+    @POST(HttpUrlConstants.WIFI_DEVICE_LIST)
+    Observable<WifiDeviceListResult> wifiDeviceList(@Body RequestBody info);
 }

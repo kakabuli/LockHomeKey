@@ -1,6 +1,7 @@
 package com.kaadas.lock.publiclibrary.mqtt.publishresultbean;
 
 import android.text.TextUtils;
+import android.widget.TextView;
 
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.bean.HomeShowBean;
@@ -357,7 +358,15 @@ public class AllBindDevices {
         List<WifiLockInfo> wifiList = returnData.getWifiList();
         if (wifiList != null) {
             for (WifiLockInfo wifiLockInfo : wifiList) {
-                homeShowBeans.add(new HomeShowBean(HomeShowBean.TYPE_WIFI_LOCK, wifiLockInfo.getWifiSN(), wifiLockInfo.getLockNickname(), wifiLockInfo));
+                if(!TextUtils.isEmpty(wifiLockInfo.getDevice_did()) && !TextUtils.isEmpty(wifiLockInfo.getP2p_password())
+                        && !TextUtils.isEmpty(wifiLockInfo.getDevice_sn()) && !TextUtils.isEmpty(wifiLockInfo.getMac())){
+                    homeShowBeans.add(new HomeShowBean(HomeShowBean.TYPE_WIFI_VIDEO_LOCK, wifiLockInfo.getWifiSN(), wifiLockInfo.getLockNickname(), wifiLockInfo));
+                    LogUtils.e("shulan____1-->" + wifiLockInfo.toString());
+                }else {
+                    homeShowBeans.add(new HomeShowBean(HomeShowBean.TYPE_WIFI_LOCK, wifiLockInfo.getWifiSN(), wifiLockInfo.getLockNickname(), wifiLockInfo));
+                    LogUtils.e("shulan____2-->" + wifiLockInfo.toString());
+                }
+
             }
         }
 

@@ -1047,8 +1047,14 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
             List<WifiLockInfo> wifiLockInfos = daoSession.getWifiLockInfoDao().loadAll();
             if (wifiLockInfos != null && wifiLockInfos.size() > 0) {
                 for (WifiLockInfo wifiLockInfo : wifiLockInfos) {
-                    homeShowBeans.add(new HomeShowBean(HomeShowBean.TYPE_WIFI_LOCK, wifiLockInfo.getWifiSN(),
-                            wifiLockInfo.getLockNickname(), wifiLockInfo));
+                    if(!TextUtils.isEmpty(wifiLockInfo.getDevice_did()) && !TextUtils.isEmpty(wifiLockInfo.getP2p_password())
+                            && !TextUtils.isEmpty(wifiLockInfo.getDevice_sn()) && !TextUtils.isEmpty(wifiLockInfo.getMac())){
+                        homeShowBeans.add(new HomeShowBean(HomeShowBean.TYPE_WIFI_VIDEO_LOCK, wifiLockInfo.getWifiSN(),
+                                wifiLockInfo.getLockNickname(), wifiLockInfo));
+                    }else{
+                        homeShowBeans.add(new HomeShowBean(HomeShowBean.TYPE_WIFI_LOCK, wifiLockInfo.getWifiSN(),
+                                wifiLockInfo.getLockNickname(), wifiLockInfo));
+                    }
                 }
             }
         }

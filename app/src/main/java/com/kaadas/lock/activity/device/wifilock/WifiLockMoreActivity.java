@@ -19,7 +19,10 @@ import com.kaadas.lock.R;
 import com.kaadas.lock.activity.MainActivity;
 import com.kaadas.lock.activity.device.wifilock.add.WifiLockAPAddFirstActivity;
 import com.kaadas.lock.activity.device.wifilock.newadd.WifiLockAddNewFirstActivity;
+import com.kaadas.lock.activity.device.wifilock.newadd.WifiLockAddNewThirdActivity;
 import com.kaadas.lock.activity.device.wifilock.newadd.WifiLockOldUserFirstActivity;
+import com.kaadas.lock.activity.device.wifilock.videolock.WifiLockVideoFourthActivity;
+import com.kaadas.lock.bean.HomeShowBean;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.mvp.presenter.wifilock.WifiLockMorePresenter;
 import com.kaadas.lock.mvp.view.wifilock.IWifiLockMoreView;
@@ -36,6 +39,7 @@ import com.kaadas.lock.utils.ToastUtil;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import la.xiong.androidquick.tool.DialogUtil;
 
 public class WifiLockMoreActivity extends BaseActivity<IWifiLockMoreView, WifiLockMorePresenter<IWifiLockMoreView>>
         implements IWifiLockMoreView, View.OnClickListener {
@@ -89,10 +93,18 @@ public class WifiLockMoreActivity extends BaseActivity<IWifiLockMoreView, WifiLo
     TextView wifiName;
     @BindView(R.id.rl_wifi_name)
     RelativeLayout rlWifiName;
+    @BindView(R.id.rl_message_push)
+    RelativeLayout rlMessagePush;
+    @BindView(R.id.rl_wandering_alarm)
+    RelativeLayout rlWanderingAlarm;
+    @BindView(R.id.rl_real_time_video)
+    RelativeLayout rlRealTimeVideo;
 
     private WifiLockInfo wifiLockInfo;
     private String wifiSn;
     String deviceNickname;//设备名称
+
+    private boolean isWifiVideoLockType = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -102,6 +114,11 @@ public class WifiLockMoreActivity extends BaseActivity<IWifiLockMoreView, WifiLo
         wifiSn = getIntent().getStringExtra(KeyConstants.WIFI_SN);
         wifiLockInfo = MyApplication.getInstance().getWifiLockInfoBySn(wifiSn);
 
+        if(wifiLockInfo != null){
+            if(MyApplication.getInstance().getWifiVideoLockTypeBySn(wifiSn) == HomeShowBean.TYPE_WIFI_VIDEO_LOCK){
+                isWifiVideoLockType = true;
+            }
+        }
         rlAm.setVisibility(View.GONE);
         mPresenter.init(wifiSn);
         initClick();
@@ -158,13 +175,33 @@ public class WifiLockMoreActivity extends BaseActivity<IWifiLockMoreView, WifiLo
                 rlPowerSave.setVisibility(View.GONE);
             }
 
+            if(BleLockUtils.isSupportRealTimeVideo(func)){
+                rlRealTimeVideo.setVisibility(View.VISIBLE);
+            }else{
+                rlRealTimeVideo.setVisibility(View.GONE);
+            }
+
+            if(BleLockUtils.isSupportPirSetting(func)){
+                rlWanderingAlarm.setVisibility(View.VISIBLE);
+            }else {
+                rlWanderingAlarm.setVisibility(View.GONE);
+            }
+
             //面容识别功能
 //        if (BleLockUtils.isSupportFaceStatusShow(func)) {
 //            rlFaceStatus.setVisibility(View.VISIBLE);
 //        } else {
 //            rlFaceStatus.setVisibility(View.GONE);
 //        }
-
+            if(isWifiVideoLockType){
+                rlAm.setVisibility(View.GONE);
+                rlMessageFree.setVisibility(View.GONE);
+                rlPowerSave.setVisibility(View.GONE);
+                rlMessagePush.setVisibility(View.VISIBLE);
+            }else{
+                rlMessageFree.setVisibility(View.VISIBLE);
+                rlMessagePush.setVisibility(View.GONE);
+            }
             wifiName.setText(wifiLockInfo.getWifiName());
             deviceNickname = wifiLockInfo.getLockNickname();
         }
@@ -181,11 +218,13 @@ public class WifiLockMoreActivity extends BaseActivity<IWifiLockMoreView, WifiLo
         rlDoorLockLanguageSwitch.setOnClickListener(this);
         rlSilentMode.setOnClickListener(this);
         rlDeviceInformation.setOnClickListener(this);
+        rlMessagePush.setOnClickListener(this);
         rlWifiName.setOnClickListener(this);
         rlCheckFirmwareUpdate.setOnClickListener(this);
         btnDelete.setOnClickListener(this);
         ivAm.setOnClickListener(this);
-
+        rlWanderingAlarm.setOnClickListener(this);
+        rlRealTimeVideo.setOnClickListener(this);
     }
 
     @Override
@@ -282,7 +321,11 @@ public class WifiLockMoreActivity extends BaseActivity<IWifiLockMoreView, WifiLo
 //                break;
 
                     case R.id.rl_door_lock_language_switch:
-                        ToastUtil.getInstance().showLong(R.string.please_operation_in_lock);
+                        if(isWifiVideoLockType){
+
+                        }else{
+                            ToastUtil.getInstance().showLong(R.string.please_operation_in_lock);
+                        }
                         break;
                     case R.id.rl_silent_mode:  //静音模式
                         ToastUtil.getInstance().showLong(R.string.please_operation_in_lock);
@@ -305,7 +348,12 @@ public class WifiLockMoreActivity extends BaseActivity<IWifiLockMoreView, WifiLo
                             @Override
                             public void right() {
                                 showLoading(getString(R.string.is_deleting));
-                                mPresenter.deleteDevice(wifiLockInfo.getWifiSN());
+                                if(isWifiVideoLockType){
+                                    mPresenter.deleteVideDevice(wifiLockInfo.getWifiSN());
+                                }else{
+                                    mPresenter.deleteDevice(wifiLockInfo.getWifiSN());
+                                }
+
                             }
 
                             @Override
@@ -319,7 +367,7 @@ public class WifiLockMoreActivity extends BaseActivity<IWifiLockMoreView, WifiLo
                         break;
                     case R.id.rl_wifi_name: //WiFi名称
                         //老的wifi锁不存在这个字段，为wifi配网1，wifi&ble为2
-                        LogUtils.e("--kaadas--老的wifi锁不存在这个字段，为wifi配网1，wifi&ble为2");
+                        LogUtils.e("--kaadas--老的wifi锁不存在这个字段，为wifi配网1，wifi&ble为2--->" + wifiLockInfo.getDistributionNetwork());
                         if (TextUtils.isEmpty(String.valueOf(wifiLockInfo.getDistributionNetwork()))) {
                             Intent wifiIntent = new Intent(this, WifiLockOldUserFirstActivity.class);
                             String wifiModelType = "WiFi";
@@ -336,12 +384,27 @@ public class WifiLockMoreActivity extends BaseActivity<IWifiLockMoreView, WifiLo
                             String wifiModelType = "WiFi&BLE";
                             wifiIntent.putExtra("wifiModelType", wifiModelType);
                             startActivity(wifiIntent);
-                        } else {
+                        } else if(wifiLockInfo.getDistributionNetwork() == 3){
+                            showWifiDialog();
+                        }else {
                             LogUtils.e("--kaadas--wifiLockInfo.getDistributionNetwork()为" + wifiLockInfo.getDistributionNetwork());
 
                         }
 
 
+                        break;
+                    case R.id.rl_message_push:
+                        intent = new Intent(this,WifiLockMessagePushActivity.class);
+                        startActivity(intent);
+                        break;
+
+                    case R.id.rl_real_time_video:
+                        intent = new Intent(this,WifiLockRealTimeActivity.class);
+                        startActivity(intent);
+                        break;
+                    case R.id.rl_wandering_alarm:
+                        intent = new Intent(this,WifiLockWanderingAlarmActivity.class);
+                        startActivity(intent);
                         break;
                 }
             } else {
@@ -349,6 +412,35 @@ public class WifiLockMoreActivity extends BaseActivity<IWifiLockMoreView, WifiLo
 
             }
         }
+    }
+
+    private void showWifiDialog() {
+        AlertDialogUtil.getInstance().noEditTitleTwoButtonDialog(WifiLockMoreActivity.this, "更换WIFI需重新进入添加门锁步骤",
+                "取消", "确定", "#999999", "#1F95F7", new AlertDialogUtil.ClickListener() {
+                    @Override
+                    public void left() {
+
+                    }
+
+                    @Override
+                    public void right() {
+                        Intent wifiIntent = new Intent(WifiLockMoreActivity.this, WifiLockAddNewThirdActivity.class);
+                        String wifiModelType = "WiFi&VIDEO";
+                        wifiIntent.putExtra("wifiModelType", wifiModelType);
+                        wifiIntent.putExtra("distribution_again", true);
+                        startActivity(wifiIntent);
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                    }
+
+                    @Override
+                    public void afterTextChanged(String toString) {
+
+                    }
+                });
     }
 
     @Override

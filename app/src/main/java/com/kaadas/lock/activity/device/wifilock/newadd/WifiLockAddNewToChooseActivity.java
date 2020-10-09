@@ -151,6 +151,14 @@ public class WifiLockAddNewToChooseActivity extends BaseActivity<WiFiLockChooseT
     }
 
     @Override
+    public void searchLockProductSuccessForWiFiAndVideo(String pairMode) {
+        Intent wifiIntent = new Intent(this, WifiLockAddNewFirstActivity.class);
+        String wifiModelType = pairMode;
+        wifiIntent.putExtra("wifiModelType", wifiModelType);
+        startActivity(wifiIntent);
+    }
+
+    @Override
     public void searchLockProductThrowable() {
 
         //信息
@@ -191,6 +199,12 @@ public class WifiLockAddNewToChooseActivity extends BaseActivity<WiFiLockChooseT
                     }else if ( (result.contains("_WiFi&BLE_"))){  //5-11WiFi&BLE，蓝牙Wi-Fi模组配网
                         Intent wifiIntent = new Intent(this, WifiLockAddNewFirstActivity.class);
                         String wifiModelType = "WiFi&BLE";
+                        wifiIntent.putExtra("wifiModelType", wifiModelType);
+                        startActivity(wifiIntent);
+                    }else if(result.contains("WiFi&VIDEO") || result.contains("kaadas_WiFi_camera")){
+                        //视频WIFI锁
+                        Intent wifiIntent = new Intent(this, WifiLockAddNewFirstActivity.class);
+                        String wifiModelType = "WiFi&VIDEO";
                         wifiIntent.putExtra("wifiModelType", wifiModelType);
                         startActivity(wifiIntent);
                     }

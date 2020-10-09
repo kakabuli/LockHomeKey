@@ -442,6 +442,27 @@ public class AlertDialogUtil {
     }
 
     //没有标题的对话框
+    public void noEditTitleOneButtonDialog(Context context, String content, String right, String rightColor, ClickListener clickListener) {
+        View mView = LayoutInflater.from(context).inflate(R.layout.no_et_title_one_button_dialog, null);
+        TextView tvContent = mView.findViewById(R.id.tv_content);
+        TextView tv_query = mView.findViewById(R.id.tv_right);
+        AlertDialog alertDialog = AlertDialogUtil.getInstance().common(context, mView);
+        tvContent.setText(content);
+        tv_query.setText(right);
+        tv_query.setTextColor(Color.parseColor(rightColor));
+        //确定
+        tv_query.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (clickListener != null) {
+                    clickListener.right();
+                }
+                alertDialog.dismiss();
+            }
+        });
+    }
+
+    //没有标题的对话框
     public void noEditTitleTwoButtonDialog(Context context, String content, String left, String right, String leftColor, String rightColor, ClickListener clickListener) {
         View mView = LayoutInflater.from(context).inflate(R.layout.no_et_title_two_button_dialog, null);
         TextView tvTitle = mView.findViewById(R.id.tv_hint);
@@ -514,7 +535,47 @@ public class AlertDialogUtil {
 
     }
 
-//    hava_title_content_no_button
+    //有标题的对话框
+    public void havaNoEditTwoButtonDialog(Context context, String title, String content, String left, String right, String lefrColor,String rightColor, ClickListener clickListener) {
+        View mView = LayoutInflater.from(context).inflate(R.layout.no_et_two_button_dialog, null);
+        TextView tvTitle = mView.findViewById(R.id.tv_title);
+        TextView tvContent = mView.findViewById(R.id.tv_content);
+        TextView tv_cancel = mView.findViewById(R.id.tv_left);
+        TextView tv_query = mView.findViewById(R.id.tv_right);
+        AlertDialog alertDialog = AlertDialogUtil.getInstance().common(context, mView);
+        tvTitle.setText(title);
+        tvContent.setText(content);
+        tv_cancel.setText(left);
+        tv_cancel.setTextColor(Color.parseColor(lefrColor));
+        tv_query.setText(right);
+        tv_query.setTextColor(Color.parseColor(rightColor));
+        //取消
+        tv_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (clickListener != null) {
+                    clickListener.left();
+                }
+                alertDialog.dismiss();
+            }
+        });
+        //确定
+        tv_query.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (clickListener != null) {
+                    clickListener.right();
+                }
+                alertDialog.dismiss();
+            }
+        });
+
+
+
+    }
+
+
+    //    hava_title_content_no_button
 public void haveTitleContentNoButtonDialog(Context context, String title, String content ,Integer disappearTime) {
     View mView = LayoutInflater.from(context).inflate(R.layout.no_edit_button_dialog, null);
     TextView tvTitle = mView.findViewById(R.id.tv_title);

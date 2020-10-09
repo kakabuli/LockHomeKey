@@ -63,7 +63,11 @@ public class WifiLockInfoDao extends AbstractDao<WifiLockInfo, Long> {
         public final static Property UpdateTime = new Property(33, long.class, "updateTime", false, "UPDATE_TIME");
         public final static Property OpenStatus = new Property(34, int.class, "openStatus", false, "OPEN_STATUS");
         public final static Property OpenStatusTime = new Property(35, long.class, "openStatusTime", false, "OPEN_STATUS_TIME");
-        public final static Property SingleFireSwitchInfo = new Property(36, String.class, "singleFireSwitchInfo", false, "SINGLE_FIRE_SWITCH_INFO");
+        public final static Property Device_did = new Property(36, String.class, "device_did", false, "DEVICE_DID");
+        public final static Property Device_sn = new Property(37, String.class, "device_sn", false, "DEVICE_SN");
+        public final static Property P2p_password = new Property(38, String.class, "p2p_password", false, "P2P_PASSWORD");
+        public final static Property Mac = new Property(39, String.class, "mac", false, "MAC");
+        public final static Property SingleFireSwitchInfo = new Property(40, String.class, "singleFireSwitchInfo", false, "SINGLE_FIRE_SWITCH_INFO");
     }
 
     private final SingleFireSwitchInfoConvert singleFireSwitchInfoConverter = new SingleFireSwitchInfoConvert();
@@ -116,7 +120,11 @@ public class WifiLockInfoDao extends AbstractDao<WifiLockInfo, Long> {
                 "\"UPDATE_TIME\" INTEGER NOT NULL ," + // 33: updateTime
                 "\"OPEN_STATUS\" INTEGER NOT NULL ," + // 34: openStatus
                 "\"OPEN_STATUS_TIME\" INTEGER NOT NULL ," + // 35: openStatusTime
-                "\"SINGLE_FIRE_SWITCH_INFO\" TEXT);"); // 36: singleFireSwitchInfo
+                "\"DEVICE_DID\" TEXT," + // 36: device_did
+                "\"DEVICE_SN\" TEXT," + // 37: device_sn
+                "\"P2P_PASSWORD\" TEXT," + // 38: p2p_password
+                "\"MAC\" TEXT," + // 39: mac
+                "\"SINGLE_FIRE_SWITCH_INFO\" TEXT);"); // 40: singleFireSwitchInfo
     }
 
     /** Drops the underlying database table. */
@@ -245,9 +253,29 @@ public class WifiLockInfoDao extends AbstractDao<WifiLockInfo, Long> {
         stmt.bindLong(35, entity.getOpenStatus());
         stmt.bindLong(36, entity.getOpenStatusTime());
  
+        String device_did = entity.getDevice_did();
+        if (device_did != null) {
+            stmt.bindString(37, device_did);
+        }
+ 
+        String device_sn = entity.getDevice_sn();
+        if (device_sn != null) {
+            stmt.bindString(38, device_sn);
+        }
+ 
+        String p2p_password = entity.getP2p_password();
+        if (p2p_password != null) {
+            stmt.bindString(39, p2p_password);
+        }
+ 
+        String mac = entity.getMac();
+        if (mac != null) {
+            stmt.bindString(40, mac);
+        }
+ 
         SingleFireSwitchInfo singleFireSwitchInfo = entity.getSingleFireSwitchInfo();
         if (singleFireSwitchInfo != null) {
-            stmt.bindString(37, singleFireSwitchInfoConverter.convertToDatabaseValue(singleFireSwitchInfo));
+            stmt.bindString(41, singleFireSwitchInfoConverter.convertToDatabaseValue(singleFireSwitchInfo));
         }
     }
 
@@ -371,9 +399,29 @@ public class WifiLockInfoDao extends AbstractDao<WifiLockInfo, Long> {
         stmt.bindLong(35, entity.getOpenStatus());
         stmt.bindLong(36, entity.getOpenStatusTime());
  
+        String device_did = entity.getDevice_did();
+        if (device_did != null) {
+            stmt.bindString(37, device_did);
+        }
+ 
+        String device_sn = entity.getDevice_sn();
+        if (device_sn != null) {
+            stmt.bindString(38, device_sn);
+        }
+ 
+        String p2p_password = entity.getP2p_password();
+        if (p2p_password != null) {
+            stmt.bindString(39, p2p_password);
+        }
+ 
+        String mac = entity.getMac();
+        if (mac != null) {
+            stmt.bindString(40, mac);
+        }
+ 
         SingleFireSwitchInfo singleFireSwitchInfo = entity.getSingleFireSwitchInfo();
         if (singleFireSwitchInfo != null) {
-            stmt.bindString(37, singleFireSwitchInfoConverter.convertToDatabaseValue(singleFireSwitchInfo));
+            stmt.bindString(41, singleFireSwitchInfoConverter.convertToDatabaseValue(singleFireSwitchInfo));
         }
     }
 
@@ -421,7 +469,11 @@ public class WifiLockInfoDao extends AbstractDao<WifiLockInfo, Long> {
             cursor.getLong(offset + 33), // updateTime
             cursor.getInt(offset + 34), // openStatus
             cursor.getLong(offset + 35), // openStatusTime
-            cursor.isNull(offset + 36) ? null : singleFireSwitchInfoConverter.convertToEntityProperty(cursor.getString(offset + 36)) // singleFireSwitchInfo
+            cursor.isNull(offset + 36) ? null : cursor.getString(offset + 36), // device_did
+            cursor.isNull(offset + 37) ? null : cursor.getString(offset + 37), // device_sn
+            cursor.isNull(offset + 38) ? null : cursor.getString(offset + 38), // p2p_password
+            cursor.isNull(offset + 39) ? null : cursor.getString(offset + 39), // mac
+            cursor.isNull(offset + 40) ? null : singleFireSwitchInfoConverter.convertToEntityProperty(cursor.getString(offset + 40)) // singleFireSwitchInfo
         );
         return entity;
     }
@@ -464,7 +516,11 @@ public class WifiLockInfoDao extends AbstractDao<WifiLockInfo, Long> {
         entity.setUpdateTime(cursor.getLong(offset + 33));
         entity.setOpenStatus(cursor.getInt(offset + 34));
         entity.setOpenStatusTime(cursor.getLong(offset + 35));
-        entity.setSingleFireSwitchInfo(cursor.isNull(offset + 36) ? null : singleFireSwitchInfoConverter.convertToEntityProperty(cursor.getString(offset + 36)));
+        entity.setDevice_did(cursor.isNull(offset + 36) ? null : cursor.getString(offset + 36));
+        entity.setDevice_sn(cursor.isNull(offset + 37) ? null : cursor.getString(offset + 37));
+        entity.setP2p_password(cursor.isNull(offset + 38) ? null : cursor.getString(offset + 38));
+        entity.setMac(cursor.isNull(offset + 39) ? null : cursor.getString(offset + 39));
+        entity.setSingleFireSwitchInfo(cursor.isNull(offset + 40) ? null : singleFireSwitchInfoConverter.convertToEntityProperty(cursor.getString(offset + 40)));
      }
     
     @Override

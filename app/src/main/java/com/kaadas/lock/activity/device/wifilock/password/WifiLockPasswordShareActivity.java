@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
+import com.kaadas.lock.bean.HomeShowBean;
 import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
 import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
@@ -59,6 +60,7 @@ public class WifiLockPasswordShareActivity extends AppCompatActivity {
 
     public void initPassword() {
         password = getPassword();
+
         String temp = "";
         if (!TextUtils.isEmpty(password)) {
             for (int length = 0; length < password.length(); length++) {
@@ -75,9 +77,12 @@ public class WifiLockPasswordShareActivity extends AppCompatActivity {
             if (!TextUtils.isEmpty(wifiLockInfo.getWifiSN())) {
 
                 String wifiSN = wifiLockInfo.getWifiSN();
+                LogUtils.e("shulan wifiSN-->" + wifiSN);
                 String randomCode = wifiLockInfo.getRandomCode();
+                LogUtils.e("shulan randomCode-->" + randomCode);
                 String time = (System.currentTimeMillis() / 1000 / 60 / 5) + "";
-
+                LogUtils.e("--kaadas--wifiSN-  " + wifiSN);
+                LogUtils.e("shulan time-->  " + time);
                 MyLog.getInstance().save("--kaadas调试--wifiSN  " + wifiSN);
                 MyLog.getInstance().save("--kaadas调试--randomCode  " + randomCode);
                 MyLog.getInstance().save("--kaadas调试--System.currentTimeMillis()  " + System.currentTimeMillis());
@@ -110,6 +115,49 @@ public class WifiLockPasswordShareActivity extends AppCompatActivity {
         return "";
     }
 
+    private String getVideoPassword() {
+        if (wifiLockInfo != null) {
+            if (!TextUtils.isEmpty(wifiLockInfo.getWifiSN())) {
+
+                String wifiSN = wifiLockInfo.getWifiSN();
+                LogUtils.e("shulan wifiSN-->" + wifiSN);
+                String randomCode = wifiLockInfo.getRandomCode();
+                LogUtils.e("shulan randomCode-->" + randomCode);
+                randomCode = randomCode.substring(0,64) + randomCode.substring(randomCode.length() - 2);;
+                String time = (System.currentTimeMillis() / 1000 / 60 / 5) + "";
+                LogUtils.e("--kaadas--wifiSN-  " + wifiSN);
+                LogUtils.e("shulan time-->  " + time);
+                MyLog.getInstance().save("--kaadas调试--wifiSN  " + wifiSN);
+                MyLog.getInstance().save("--kaadas调试--randomCode  " + randomCode);
+                MyLog.getInstance().save("--kaadas调试--System.currentTimeMillis()  " + System.currentTimeMillis());
+
+                String content = wifiSN + randomCode + time;
+                LogUtils.e("--kaadas--服务器获取的数据是  " + randomCode);
+
+                LogUtils.e("--kaadas--本地数据是  " + content);
+                byte[] data = content.toUpperCase().getBytes();
+                try {
+                    MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
+                    messageDigest.update(data);
+                    byte[] digest = messageDigest.digest();
+                    byte[] temp = new byte[4];
+                    System.arraycopy(digest, 0, temp, 0, 4);
+                    long l = Rsa.getInt(temp);
+                    String text = (l % 1000000) + "";
+                    LogUtils.e("--kaadas--转换之后的数据是     " + l + "    " + Rsa.bytes2Int(temp));
+                    int offSet = (6 - text.length());
+                    for (int i = 0; i < offSet; i++) {
+                        text = "0" + text;
+                    }
+                    System.out.println("--kaadas--   testSha256 数据是   " + Rsa.bytesToHexString(messageDigest.digest()));
+                    return text;
+                } catch (NoSuchAlgorithmException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return "";
+    }
 
     @OnClick({R.id.back, R.id.tv_short_message, R.id.tv_wei_xin, R.id.tv_copy})
     public void onClick(View view) {

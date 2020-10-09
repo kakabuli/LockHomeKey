@@ -23,6 +23,8 @@ public class WiFiLockChooseToAddPresenter<T> extends BasePresenter<WiFiLockChoos
         else if(WiFiLockUtils.pairMode(Product).equals("WiFi&BLE")){
         //searchLockProductSuccessForWiFiAndBLE
             mViewRef.get().searchLockProductSuccessForWiFiAndBLE("WiFi&BLE");
+        }else if(WiFiLockUtils.pairMode(Product).equals("WiFi&VIDEO")){
+            mViewRef.get().searchLockProductSuccessForWiFiAndVideo("WiFi&VIDEO");
         }
         else {
             //searchLockProductThrowable

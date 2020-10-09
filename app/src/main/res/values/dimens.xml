@@ -104,6 +104,7 @@
     <dimen name="dp_170">170dp</dimen>
     <dimen name="dp_200">200dp</dimen>
     <dimen name="dp_225">225dp</dimen>
+    <dimen name="dp_255">255dp</dimen>
     <dimen name="dp_267">267dp</dimen>
 
     <dimen name="sp_10">10sp</dimen>

@@ -1,0 +1,228 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#fff"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/title_bar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_40"
+        android:background="#F8F8F8">
+
+        <ImageView
+            android:id="@+id/back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:paddingLeft="@dimen/dp_16"
+            android:paddingTop="@dimen/dp_5"
+            android:paddingRight="@dimen/dp_16"
+            android:paddingBottom="@dimen/dp_5"
+            android:src="@mipmap/back_gray" />
+
+        <TextView
+            android:id="@+id/head_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/real_time_video_function"
+            android:textColor="#000000"
+            android:textSize="@dimen/sp_17"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/iv_setting"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:paddingLeft="@dimen/dp_16"
+            android:paddingTop="@dimen/dp_5"
+            android:paddingRight="@dimen/dp_16"
+            android:paddingBottom="@dimen/dp_5"
+            android:src="@mipmap/video_setting" />
+
+    </RelativeLayout>
+
+
+    <SurfaceView
+        android:id="@+id/surface_view"
+        android:layout_below="@id/title_bar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <LinearLayout
+        android:id="@+id/lly_bottom_bar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_87"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
+        android:background="#90232323">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="@dimen/dp_13"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/iv_screenshot"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/real_time_video_screenshot"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="截图"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/dp_8"
+                android:textSize="@dimen/sp_11"
+                android:textColor="#ffffff"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="@dimen/dp_43"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/iv_mute"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/real_time_video_mute"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="静音"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/dp_8"
+                android:textSize="@dimen/sp_11"
+                android:textColor="#ffffff"/>
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/iv_calling"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/real_time_video_calling_selected"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="@dimen/dp_34"/>
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="@dimen/dp_34"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/iv_recoring"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/real_time_video_record"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="录屏"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/dp_8"
+                android:textSize="@dimen/sp_11"
+                android:textColor="#ffffff"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="@dimen/dp_34"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/iv_album"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/real_time_video_album"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="相册"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/dp_8"
+                android:textSize="@dimen/sp_11"
+                android:textColor="#ffffff"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_above="@id/lly_bottom_bar"
+        android:layout_marginBottom="@dimen/dp_25"
+        android:text="00:00:00"
+        android:textSize="@dimen/sp_13"
+        android:textColor="#FFFFFF"/>
+
+
+    <ImageView
+        android:id="@+id/iv_temporary_pwd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="@dimen/dp_19"
+        android:layout_above="@id/lly_bottom_bar"
+        android:layout_marginBottom="@dimen/dp_49"
+        android:src="@mipmap/real_time_video_pws"/>
+
+    <TextView
+        android:layout_above="@id/lly_bottom_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/dp_24"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="@dimen/dp_13"
+        android:textSize="@dimen/sp_15"
+        android:textColor="#FFFFFF"
+        android:text="@string/wifi_lock_temp_password"/>
+    <LinearLayout
+        android:id="@+id/lly_temporary_password"
+        android:layout_width="@dimen/dp_255"
+        android:layout_height="@dimen/dp_50"
+        android:layout_above="@id/lly_bottom_bar"
+        android:layout_marginBottom="@dimen/dp_49"
+        android:background="@drawable/temporary_password_background"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="注：远程临时密码30分钟有效"
+            android:layout_marginTop="@dimen/dp_8"
+            android:layout_gravity="center_horizontal"
+            android:textColor="#505050"/>
+
+        <TextView
+            android:id="@+id/tv_temporary_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#333"
+            android:textStyle="bold"
+            android:gravity="center_horizontal"
+            android:textSize="@dimen/sp_18"
+            android:letterSpacing="0.5"
+            android:text="12345678123"/>
+
+    </LinearLayout>
+
+</RelativeLayout>

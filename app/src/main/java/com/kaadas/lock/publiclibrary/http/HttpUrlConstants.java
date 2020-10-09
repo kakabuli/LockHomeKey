@@ -390,4 +390,42 @@ public class HttpUrlConstants {
      *  单火开关设备联动开关昵称修改
      */
     public static final String UPDATE_SWITCH_NICK_NAME = BASE_URL + "wifi/device/updateSwitchNickname";
+
+
+    ////////////////////////////////////////////           WiFi视频锁api功能            ///////////////////////////////////////////////
+
+    /**
+     *  app绑定设备
+     */
+    public static final String WIFI_VIDEO_LOCK_BIND = BASE_URL + "wifi/vedio/bind";
+
+    /**
+     *  app解绑设备
+     */
+    public static final String WIFI_VIDEO_LOCK_UNBIND = BASE_URL + "wifi/vedio/unbind";
+
+    /**
+     *  app绑定设备失败
+     */
+    public static final String WIFI_VIDEO_LOCK_BIND_FAIL = BASE_URL + "wifi/vedio/bindFail";
+
+    /**
+     *  更新设备
+     */
+    public static final String WIFI_VIDEO_LOCK_UPDATE_BIND = BASE_URL + "wifi/vedio/updateBind";
+
+    /**
+     * 获取视频锁报警记录
+     */
+    public static final String WIFI_VIDEO_LOCK_ALARM_LIST = BASE_URL + "wifi/vedio/alarmList";
+
+    /**
+     * 获取视频锁门铃记录
+     */
+    public static final String WIFI_VIDEO_LOCK_DOORBELL_LIST = BASE_URL + "wifi/vedio/doorbellList";
+
+    /**
+     *  查询wifi锁设备列表
+     */
+    public static final String WIFI_DEVICE_LIST = BASE_URL + "wifi/device/list";
 }

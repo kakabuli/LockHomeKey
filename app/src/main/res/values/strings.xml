@@ -207,6 +207,12 @@
     <string name="set_again_gesture_pattern">请再次绘制手势密码</string>
     <string name="least_four_again_input">最少连接4个点, 请重新输入</string>
     <string name="setting">设置</string>
+    <string name="real_time_video_setting">视频长连接</string>
+    <string name="real_time_video_setting_period">长连接周期</string>
+    <string name="real_time_video_rule_repet">规则重复</string>
+    <string name="real_time_video_time_setting">时间设置</string>
+    <string name="real_time_video_setting_period_detail">可设置定时开启视频WI-FI长连接</string>
+    <string name="real_time_video_setting_detail">开启后，可用App远程查看门外情况，若使用不频繁，建议定时开启或关闭，可节省锁的电池电量</string>
     <string name="new_version">已是最新版本</string>
     <string name="confirm_log_out">确定退出登录?</string>
     <string name="delete_cache_data_success">清除成功</string>
@@ -335,11 +341,23 @@
     <string name="zhang">张</string>
     <string name="device_share">设备共享</string>
     <string name="more">更多</string>
+    <string name="real_time_video_function">实时视频</string>
+    <string name="dynamic_recording">动态记录</string>
+    <string name="my_album">我的相册</string>
     <string name="device_detail_power_date">(刚刚)</string>
     <string name="today">今天</string>
     <string name="yesterday">昨天</string>
     <string name="click_lock">点击开锁</string>
     <string name="device_information">设备信息</string>
+    <string name="message_push">消息推送</string>
+    <string name="real_time_video">实时视频设置</string>
+    <string name="wandering_alarm">徘徊报警</string>
+    <string name="wandering_pir_sensitivity">PIR灵敏度</string>
+    <string name="wandering_judge_time">徘徊判定时间</string>
+    <string name="wandering_alarm_close">已关闭</string>
+    <string name="wandering_alarm_text">开启后，可摄像头会侦测门外徘徊人员，比较耗电</string>
+    <string name="wandering_pir_sensitivity_text">高度灵敏会增加频繁检测距离，导致耗电</string>
+    <string name="wandering_judge_time_text">判定时间不宜太短，防止误报</string>
     <string name="serial_number">序列号</string>
     <string name="device_signal">设备信号</string>
     <string name="link_signal">链路信号</string>
@@ -397,6 +415,9 @@
     <string name="immediate_experience">立即体验</string>
     <string name="device_name">设备名称</string>
     <string name="message_free">消息免打扰</string>
+    <string name="message_push_wnadering_alarm">徘徊报警</string>
+    <string name="message_push_doorbell_info">门铃信息</string>
+    <string name="message_push_lock_info">开关锁信息</string>
     <string name="safe_mode">安全模式</string>
     <string name="a_m_auto_lock">A-M 自动上锁</string>
     <string name="door_lock_language_switch">门锁语言切换</string>
@@ -609,6 +630,7 @@
     <string name="already_notify_admin">已通知管理员确认</string>
     <string name="already_bind_gatway">您已绑定该网关</string>
     <string name="open_lock_record">操作记录</string>
+    <string name="vistor_record">访客记录</string>
     <string name="warn_information">预警信息</string>
     <string name="device_dynamic">设备动态</string>
     <string name="cateye_dynamic">猫眼动态</string>
@@ -863,6 +885,8 @@
     <string name="no_unlock_record">暂无操作记录</string>
     <string name="connection_server">连接服务器失败,请检查网络退出该页面重新进去</string>
     <string name="lock_firware_version_number">门锁固件版本</string>
+    <string name="lock_firware_hardware_number">门锁硬件版本</string>
+    <string name="lock_firware__number">门锁版本</string>
     <string name="face_model_firware_version_number">人脸模组版本</string>
     <string name="lock_software_version">门锁软件版本</string>
     <string name="no_lock_alarm">暂无预警信息</string>
@@ -1360,6 +1384,7 @@
     <string name="set_up_success">配置成功</string>
     <string name="wifi_model_set_up_failed">Wi-Fi模块配置失败</string>
     <string name="wifi">Wi-Fi</string>
+    <string name="click_door_info">点击查看门外情况</string>
     <string name="message_no_touch">消息免打扰</string>
     <string name="already_open_alarm">已启动布防模式</string>
     <string name="already_back_lock">已反锁，请门内开锁</string>
@@ -1382,6 +1407,8 @@
     <string name="wifi_lock_alarm_40">您的%1$s门锁处于布防状态，有从门内开锁情况</string>
     <string name="wifi_lock_alarm_80">您的%1$s门锁面容识别已关闭，如需重新开启面容识别，请更换电池</string>
     <string name="lock_already_lock">门锁已上锁</string>
+    <string name="video_lock_open">锁已开启</string>
+    <string name="video_lock_close">锁已关闭</string>
     <string name="lock_delete">门锁删除</string>
     <string name="lock_add">门锁添加</string>
     <string name="wifi_lock_modify_admin_password">门锁修改管理员密码</string>
@@ -1472,6 +1499,7 @@
     <string name="upload_success">上传成功</string>
     <string name="upload_failed">上传失败</string>
     <string name="iploading">正在上传服务器</string>
+    <string name="video_notice">① 请输入要连接的Wi-Fi信息\n② 暂不支持5G频段的Wi-Fi以及\n酒店机场需认证的Wi-Fi</string>
     <string name="notice">目前暂不支持5G频段的Wi-Fi以及酒店机场需认证的Wi-Fi</string>
     <string name="notice_wifi_update">注意观察Wi-Fi模块升级</string>
     <string name="notice_lock_update">注意观察Wi-Fi锁升级</string>
@@ -1563,6 +1591,10 @@
     <string name="ble_break_authenticate">门锁断开连接，无法验证</string>
 
     <string name="wifi_view1">Wi-Fi模块固件版本</string>
+    <string name="camera_serial_numer">摄像头序列号</string>
+    <string name="camera_hardware_version">摄像头硬件版本</string>
+    <string name="camera__version">摄像头版本</string>
+    <string name="camera_firmware_version">摄像头固件版本</string>
     <string name="am_mode">A-M自动/手动模式</string>
     <string name="power_Save_mode">节能模式</string>
     <string name="face_function">面容识别功能</string>
@@ -1578,19 +1610,23 @@
     <string name="no_card_sync">门锁还没有门卡，请到门锁添加同步</string>
     <string name="scan_add">扫码添加</string>
     <string name="touch_light">轻触照亮</string>
-    <string name="qr_notice">将二维码放入框内</string>
+    <string name="qr_notice">在门锁后面板找到配网二维码\n将二维码放入框内</string>
     <string name="open_camera_failed">打开相机失败，请检查是否拒绝了应用权限</string>
     <string name="wifi_lock_new_add_first_notice1">第一步：门锁配网准备</string>
-    <string name="wifi_lock_new_add_first_notice2">① 按照说明书安装完门锁\n② 检查后面板Wi-Fi模块是否插紧\n③ 电池仓装上4节或8节电池</string>
+    <string name="wifi_lock_new_add_first_notice2">① 按照说明书安装完门锁\n② 电池仓上装上锂电池(锂电池需要\n保证电池充足)</string>
+<!--    <string name="wifi_lock_new_add_first_notice2">① 按照说明书安装完门锁\n② 检查后面板Wi-Fi模块是否插紧\n③ 电池仓装上4节或8节电池</string>-->
     <string name="retry_connect">已联网，重新连接</string>
     <string name="lock_ok_set_net">门锁安装好，去配网</string>
     <string name="wifi_lodfdsjfsdfj">① 用手触碰按键区，唤醒门锁\n门锁是否语音播报：“门锁未激活”</string>
+    <string name="wifi_video_fifth_content">① 请距离锁端前面板的摄像头 10-15CM \n②出示此二维码，扫描成功后语音播报：\n“扫描成功，配网中”\n③根据语音提示，点击对应的按钮</string>
     <string name="lock_activated">门锁已激活</string>
     <string name="lock_not_activa">门锁未激活</string>
     <string name="wifi_lock_add_new_second_notice1">第二步：门锁激活</string>
     <string name="wifi_lock_add_new_lock_activate_notice">①微信搜索【凯迪仕智能锁】公众号并关注 \n②进入公众号－【售后服务】，点击【产品激活】 \n③扫描包装盒产品序列号，获取激活码 \n④唤醒门锁，输入激活码，按“＃”确认</string>
     <string name="long_save_qr_code">长按保存二维码</string>
     <string name="wifi_lock_add_new_third_notice1">第三步：修改初始管理密码</string>
+    <string name="wifi_lock_add_new_third_notice1_1">第三步：已进入管理配置模式</string>
+    <string name="wifi_lock_add_new_third_notice1_2">第一步：已进入管理配置模式</string>
     <string name="wifi_lock_add_new_third_notice2">① 按键区输入“*”两次\n② 输入管理密码：“12345678”\n③ 按“#”确认，“已进入管理模式”\n④ 语音播报：“请修改管理密码”\n⑤输入新设定的管理密码，按“＃”确认\n⑥再输入新设定的管理密码，按“＃”完成修改</string>
     <string name="widi_lock_add_new_notice1">用手触碰按键区，唤醒门锁\n确保门锁数字键盘灯亮</string>
     <string name="device_scanning">设备搜索中...</string>
@@ -1616,6 +1652,8 @@
     <string name="send_wifi_info">发送Wi-Fi账号、密码</string>
     <string name="set_success1">配网成功</string>
     <string name="dkjsfkjhad">① 用手触碰按键区，唤醒门锁 \n语音是否播报:“密码过于简单，请及时修改管理密码”</string>
+    <string name="dkjsfkjhad_1">① 按键区输入“*”两次 \n② 输入已修改的管理密码“********”\n③ 按“#”确认，\n④ 语音播报：“已进入管理模式”\n⑤ 根据语音提示，按“4”选择“扩展功能” \n⑥ 再按“1”，选择“加入网络” \n⑦ 语音播报：“配网中，请稍后 ”</string>
+    <string name="dkjsfkjhad_2">① 按键区输入“*”两次 \n② 输入已修改的管理密码“********”\n③ 按“#”确认，\n④ 语音播报：“已进入管理模式”\n⑤ 根据语音提示，按“4”选择“配网模式” \n⑥ 语音播报：“已进入配网状态 ”</string>
 
     <string name="dfsdfas">① 按键区输入“*”两次\n② 输入已修改的管理密码“********”\n③ 按“#”确认，\n④ 语音播报：“已进入管理模式”</string>
     <string name="dsfdsasd">① 根据语音提示，按“4”选择“扩展功能” \n② 再按“1”，选择“加入网络” \n③ 语音播报：“配网中，请稍后”</string>
@@ -1769,10 +1807,9 @@
 电子邮箱： kds@kaadas.com  \n
 感谢您花时间了解我们的隐私政策！  \n
     </string>
-
-
-
-
+    <string name="lock_firware_number">固件版本</string>
+    <string name="lock_wifi_firware_number">Wi-Fi固件版本</string>
+    <string name="child_system_firware_number">子系统固件版本</string>
 
 
 </resources>
