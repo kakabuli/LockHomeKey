@@ -16,7 +16,9 @@ import com.kaadas.lock.bean.FileItemBean;
 import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 import com.kaadas.lock.publiclibrary.linphone.linphone.util.DateUtil;
 import com.kaadas.lock.utils.DateUtils;
+import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
+import com.yun.software.kaadas.Utils.FileTool;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -42,16 +44,24 @@ public class WifiLockVideoAlbumActivity extends BaseAddToApplicationActivity {
 
     List<FileBean> items = new ArrayList<>();
 
+    String wifiSn = "";
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wifi_lock_video_album);
 
         ButterKnife.bind(this);
+        wifiSn = getIntent().getStringExtra(KeyConstants.WIFI_SN);
+        String filePath = FileTool.getVideoLockPath(this,wifiSn).getPath();
 
-        String path = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "DCIM" + File.separator + "Camera" ;
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                searchFiles(filePath);
 
-        searchFiles(path);
+            }
+        }).start();
 
     }
 
@@ -62,6 +72,9 @@ public class WifiLockVideoAlbumActivity extends BaseAddToApplicationActivity {
     }
 
     private void searchFiles(String path) {
+        if(path.isEmpty()){
+            return;
+        }
         File file = new File(path);
         File[] list = file.listFiles();
 
@@ -76,6 +89,9 @@ public class WifiLockVideoAlbumActivity extends BaseAddToApplicationActivity {
                 }else if(str.equals("jpg")){
                     files.add(new FileItemBean(list[i].getName(),list[i].getPath(),list[i].toURI(),
                             list[i].lastModified(),"jpg",1));
+                }else if(str.equals("png")){
+                    files.add(new FileItemBean(list[i].getName(),list[i].getPath(),list[i].toURI(),
+                            list[i].lastModified(),"png",1));
                 }
             }
 
@@ -119,7 +135,12 @@ public class WifiLockVideoAlbumActivity extends BaseAddToApplicationActivity {
             }
         }
 
-        initRecycleView();
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                initRecycleView();
+            }
+        });
 
         for(FileBean i : items){
             LogUtils.e(i.toString());

@@ -95,7 +95,7 @@
                 android:id="@+id/iv_mute"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@mipmap/real_time_video_mute"/>
+                />
 
             <TextView
                 android:layout_width="wrap_content"

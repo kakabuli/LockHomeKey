@@ -664,9 +664,10 @@ public class BleUtil {
     public static final int DOOR_NOT_LOCK = 0x20;
     public static final int ARM = 0x40;
     public static final int CLOSE_FACE = 0x80;
+    public static final int DOOR_BELL = 0x60;
 
     /**
-     * @param type  	报警类型：1锁定 2劫持 3三次错误 4防撬 8机械钥匙报警 16低电压 32锁体异常 64布防 128低电量关人脸
+     * @param type  	报警类型：1锁定 2劫持 3三次错误 4防撬 8机械钥匙报警 16低电压 32锁体异常 64布防 128低电量关人脸 96门铃
      * @return
      */
     public static String getAlarmByType(int type,Context context) {
@@ -698,10 +699,24 @@ public class BleUtil {
                 break;
             case CLOSE_FACE://128低电量关人脸
                 content = context.getString(R.string.wifi_lock_alarm_lower_power_close_face);
-                break;
+                break;//96门铃
+
             default:
                 content = context.getString(R.string.warring_unkonw);
                 break;
+        }
+        return content;
+    }
+
+    /**
+            * @param type  	报警类型：1锁定 2劫持 3三次错误 4防撬 8机械钥匙报警 16低电压 32锁体异常 64布防 128低电量关人脸 96门铃
+     * @return
+     */
+    public static String getVideoAlarmByType(int type,Context context) {
+        String content = "";
+        switch (type){
+            case DOOR_BELL:
+                content = context.getString(R.string.wifi_video_lock_alarm_doorbell);
         }
         return content;
     }

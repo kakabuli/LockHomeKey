@@ -65,10 +65,10 @@ public class WifiLockRealTimeVideoActivity extends BaseActivity<IWifiLockRealTim
             case R.id.iv_screenshot:
                 break;
             case R.id.iv_mute:
-                ret= XMP2PManager.getInstanceP2P().startAudioStream();
+                ret= XMP2PManager.getInstance().startAudioStream();
                 if(ret>=0){
-                    if(!XMP2PManager.getCodecInstance().isEnableAudio()){
-                        XMP2PManager.getCodecInstance().enableAudio(true);
+                    if(!XMP2PManager.getInstance().isEnableAudio()){
+                        XMP2PManager.getInstance().enableAudio(true);
                     }
                 }
                 break;

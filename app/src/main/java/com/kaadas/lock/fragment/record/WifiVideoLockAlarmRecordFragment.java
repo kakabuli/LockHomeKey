@@ -1,5 +1,7 @@
 package com.kaadas.lock.fragment.record;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -12,7 +14,10 @@ import android.widget.RelativeLayout;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
+import com.kaadas.lock.activity.device.wifilock.videolock.WifiLockVideoAlbumDetailActivity;
+import com.kaadas.lock.activity.device.wifilock.videolock.WifiLockVideoCallingActivity;
 import com.kaadas.lock.adapter.WifiLockAlarmGroupRecordAdapter;
 import com.kaadas.lock.adapter.WifiVideoLockAlarmIAdapter;
 import com.kaadas.lock.bean.WifiLockAlarmRecordGroup;
@@ -22,18 +27,22 @@ import com.kaadas.lock.mvp.presenter.wifilock.WifiVideoLockAlarmRecordPresenter;
 import com.kaadas.lock.mvp.view.wifilock.IWifiLockAlarmRecordView;
 import com.kaadas.lock.mvp.view.wifilock.IWifiVideoLockAlarmRecordView;
 import com.kaadas.lock.publiclibrary.bean.WifiLockAlarmRecord;
+import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
 import com.kaadas.lock.publiclibrary.bean.WifiVideoLockAlarmRecord;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.util.HttpUtils;
 import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
+import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.ToastUtil;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+import com.xmitech.sdk.MP4Info;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,19 +66,67 @@ public class WifiVideoLockAlarmRecordFragment extends BaseFragment<IWifiVideoLoc
     private Unbinder unbinder;
     private String wifiSn;
     List<WifiVideoLockAlarmRecord> list = new ArrayList<>();
+    private boolean isP2PConnect = false;
+    private WifiLockInfo wifiLockInfoBySn;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view = View.inflate(getActivity(), R.layout.fragment_bluetooth_warn_information, null);
+        view = View.inflate(getActivity(), R.layout.fragment_bluetooth_open_lock_record, null);
         unbinder = ButterKnife.bind(this, view);
-
+        isP2PConnect = getArguments().getBoolean(KeyConstants.WIFI_VIDEO_LOCK_XM_CONNECT);
         wifiSn = getArguments().getString(KeyConstants.WIFI_SN);
+        wifiLockInfoBySn = MyApplication.getInstance().getWifiLockInfoBySn(wifiSn);
         initRecycleView();
         initRefresh();
+        initData();
         rlHead.setVisibility(View.GONE);
+        mPresenter.settingDevice(wifiLockInfoBySn);
+        if(!isP2PConnect){
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    mPresenter.connectP2P();
+                }
+            }).start();
+        }
         return view;
     }
+
+    private void initData() {
+        String alarmCache = (String) SPUtils.get(KeyConstants.WIFI_VIDEO_LOCK_ALARM_RECORD + wifiSn, "");
+        Gson gson = new Gson();
+        List<WifiVideoLockAlarmRecord> records = gson.fromJson(alarmCache, new TypeToken<List<WifiVideoLockAlarmRecord>>() {
+        }.getType());
+        groupData(records);
+        wifiLockAlarmGroupRecordAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        mPresenter.getWifiVideoLockGetAlarmList(1, wifiSn);
+    }
+
+    private void initRecycleView() {
+        wifiLockAlarmGroupRecordAdapter = new WifiVideoLockAlarmIAdapter(list, new WifiVideoLockAlarmIAdapter.VideoRecordCallBackLinstener() {
+            @Override
+            public void onVideoRecordCallBackLinstener(WifiVideoLockAlarmRecord record) {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mPresenter.playDeviceRecordVideo(record.getFileName(),record.getFileDate(),record.get_id(),record.getStartTime() + "");
+                    }
+                }).start();
+
+            }
+        });
+        recycleview.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recycleview.setAdapter(wifiLockAlarmGroupRecordAdapter);
+
+
+    }
+
 
     private void initRefresh() {
         refreshLayout.setOnRefreshListener(new OnRefreshListener() {
@@ -82,6 +139,7 @@ public class WifiVideoLockAlarmRecordFragment extends BaseFragment<IWifiVideoLoc
         refreshLayout.setOnLoadMoreListener(new OnLoadMoreListener() {
             @Override
             public void onLoadMore(RefreshLayout refreshlayout) {
+                LogUtils.e("shulan WifiVideoLockAlarmRecordFragment onLoadMore");
                 mPresenter.getWifiVideoLockGetAlarmList(currentPage, wifiSn);
             }
         });
@@ -92,18 +150,6 @@ public class WifiVideoLockAlarmRecordFragment extends BaseFragment<IWifiVideoLoc
         return new WifiVideoLockAlarmRecordPresenter<>();
     }
 
-    private void initRecycleView() {
-        wifiLockAlarmGroupRecordAdapter = new WifiVideoLockAlarmIAdapter(list);
-        recycleview.setLayoutManager(new LinearLayoutManager(getActivity()));
-        recycleview.setAdapter(wifiLockAlarmGroupRecordAdapter);
-
-        String alarmCache = (String) SPUtils.get(KeyConstants.WIFI_VIDEO_LOCK_ALARM_RECORD + wifiSn, "");
-        Gson gson = new Gson();
-        List<WifiVideoLockAlarmRecord> records = gson.fromJson(alarmCache, new TypeToken<List<WifiLockAlarmRecord>>() {
-        }.getType());
-        groupData(records);
-        wifiLockAlarmGroupRecordAdapter.notifyDataSetChanged();
-    }
 
     @Override
     public void onDestroyView() {
@@ -115,40 +161,52 @@ public class WifiVideoLockAlarmRecordFragment extends BaseFragment<IWifiVideoLoc
 
     @Override
     public void onLoadServerRecord(List<WifiVideoLockAlarmRecord> alarmRecords, int page) {
+        LogUtils.e("shulan WifiVideoLockAlarmRecordFragment onLoadServerRecord");
+        if (page == 1) {
+            list.clear();
+        }
+        int size = list.size();
         currentPage = page + 1;
         groupData(alarmRecords);
-        wifiLockAlarmGroupRecordAdapter.notifyDataSetChanged();
+
+        if (size>0){
+            wifiLockAlarmGroupRecordAdapter.notifyItemRangeInserted(size,alarmRecords.size());
+        }else {
+            wifiLockAlarmGroupRecordAdapter.notifyDataSetChanged();
+        }
+
         if (page == 1) { //这时候是刷新
             refreshLayout.finishRefresh();
             refreshLayout.setEnableLoadMore(true);
         } else {
             refreshLayout.finishLoadMore();
         }
+
     }
 
-    private void groupData(List<WifiVideoLockAlarmRecord> warringRecords) {
-        list.clear();
-       /* String lastTimeHead = "";
-        if (warringRecords != null && warringRecords.size() > 0) {
-            for (int i = 0; i < warringRecords.size(); i++) {
-                WifiVideoLockAlarmRecord record = warringRecords.get(i);
-                long openTime = record.getTime();
+    private void groupData(List<WifiVideoLockAlarmRecord> lockRecords) {
+        String lastTimeHead = "";
+        WifiVideoLockAlarmRecord lastRecord = null;
+        if (lockRecords != null && lockRecords.size() > 0) {
+            for (int i = 0; i < lockRecords.size(); i++) {
+                if (list.size() > 0) {
+                    lastRecord = list.get(list.size() - 1);
+                    lastTimeHead = lastRecord.getDayTime();
+                }
+                WifiVideoLockAlarmRecord record = lockRecords.get(i);
+                long openTime = Long.parseLong(record.getTime());
                 String sOpenTime = DateUtils.getDateTimeFromMillisecond(openTime * 1000);
                 String timeHead = sOpenTime.substring(0, 10);
-                List<WifiLockAlarmRecord> itemList;
+                record.setDayTime(timeHead);
                 if (!timeHead.equals(lastTimeHead)) { //添加头
-                    itemList = new ArrayList<>();
-                    lastTimeHead = timeHead;
-                    itemList.add(record);
-                    list.add(new WifiLockAlarmRecordGroup(timeHead, itemList, false));
-                } else {
-                    WifiLockAlarmRecordGroup alarmRecordGroup = list.get(list.size() - 1);
-                    itemList = alarmRecordGroup.getList();
-                    itemList.add(record);
+                    record.setFirst(true);
+                    if (lastRecord != null) {
+                        lastRecord.setLast(true);
+                    }
                 }
+                list.add(record);
             }
-
-        }*/
+        }
     }
 
 
@@ -180,6 +238,51 @@ public class WifiVideoLockAlarmRecordFragment extends BaseFragment<IWifiVideoLoc
         ToastUtil.getInstance().showShort(R.string.no_more_data);
         refreshLayout.finishLoadMore();
         refreshLayout.setEnableLoadMore(false);
+    }
+
+    @Override
+    public void onConnectFailed(int paramInt) {
+        if(paramInt < 0){
+            isP2PConnect = false;
+        }
+    }
+
+    @Override
+    public void onConnectSuccess() {
+        isP2PConnect = true;
+    }
+
+    @Override
+    public void onStartConnect(String paramString) {
+
+    }
+
+    @Override
+    public void onErrorMessage(String message) {
+
+    }
+
+    @Override
+    public void onStopRecordMP4CallBack(MP4Info mp4Info,String fileName) {
+        if(mp4Info.isResult()){
+            if(mp4Info.isResult()){
+                getActivity().sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(new File(mp4Info.getFilePath()))));
+//                    ToastUtil.getInstance()
+                Intent intent = new Intent(getActivity(), WifiLockVideoAlbumDetailActivity.class);
+                intent.putExtra(KeyConstants.VIDEO_PIC_PATH,mp4Info.getFilePath());
+                LogUtils.e("shulan createTime-->" + fileName);
+                fileName = DateUtils.getStrFromMillisecond2(Long.parseLong(fileName));
+                LogUtils.e("shulan filename-->" + fileName);
+                intent.putExtra("NAME",fileName);
+                startActivity(intent);
+
+            }
+        }
+    }
+
+    @Override
+    public void onstartRecordMP4CallBack() {
+
     }
 
 }

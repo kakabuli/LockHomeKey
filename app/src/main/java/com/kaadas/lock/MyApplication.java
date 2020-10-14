@@ -171,8 +171,8 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
     }
 
     private void initXMP2PManager() {
-        XMP2PManager.getInstanceP2P().initAPI("EBGDEIBIKEJPGDJMEBHLFFEJHPNFHGNMGBFHBPCIAOJJLGLIDEABCKOOGILMJFLJAOMLLMDIOLMGBMCGIO");
-        XMP2PManager.getCodecInstance().init(getApplicationContext());
+        XMP2PManager.getInstance().initAPI("EBGDEIBIKEJPGDJMEBHLFFEJHPNFHGNMGBFHBPCIAOJJLGLIDEABCKOOGILMJFLJAOMLLMDIOLMGBMCGIO");
+        XMP2PManager.getInstance().init(getApplicationContext());
     }
 
     private void regToWx() {

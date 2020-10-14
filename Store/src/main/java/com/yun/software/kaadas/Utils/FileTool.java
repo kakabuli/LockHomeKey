@@ -76,6 +76,9 @@ public class FileTool {
     public static final int BUFSIZE = 1024 * 8;
     private static final String TAG = "RxFileTool";
 
+    private static final String VIDEO_LOCK = "videolock";
+    private static final String VIDEO_LOCK_PATH = "kaadas";
+
     /**
      * 得到SD卡根目录.
      */
@@ -101,6 +104,25 @@ public class FileTool {
             folder.mkdir();
         }
         return folder;
+    }
+
+    public static File getVideoLockRootDir(Context context){
+        File folder = new File(getRootPath(), VIDEO_LOCK_PATH);
+        if (!folder.exists()) {
+            folder.mkdir();
+        }
+        return folder;
+    }
+
+    /**
+     *  获取video lock 的目录
+     */
+    public static File getVideoLockPath(Context context,String wifiSn){
+        File videoLockDir = new File(getVideoLockRootDir(context),VIDEO_LOCK + wifiSn);
+        if(!videoLockDir.exists()){
+            videoLockDir.mkdir();
+        }
+        return videoLockDir;
     }
 
     /**

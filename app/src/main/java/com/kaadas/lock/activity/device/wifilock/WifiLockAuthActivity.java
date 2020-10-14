@@ -28,6 +28,7 @@ import com.kaadas.lock.R;
 import com.kaadas.lock.activity.MainActivity;
 import com.kaadas.lock.activity.device.bluetooth.BleDeviceInfoActivity;
 import com.kaadas.lock.activity.device.oldbluetooth.OldDeviceInfoActivity;
+import com.kaadas.lock.bean.HomeShowBean;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseBleActivity;
 import com.kaadas.lock.mvp.presenter.ble.OldAndAuthBleDetailPresenter;
@@ -200,9 +201,17 @@ public class WifiLockAuthActivity extends BaseActivity<IWifiLockAuthView, WifiLo
                 break;
             case R.id.rl_device_information:
                 //先拿本地的数据    然后拿读取到的数据
-                Intent intent = new Intent(this, WifiLockAuthDeviceInfoActivity.class);
-                intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
-                startActivity(intent);
+                Intent intent;
+                if(MyApplication.getInstance().getWifiVideoLockTypeBySn(wifiSn) == HomeShowBean.TYPE_WIFI_VIDEO_LOCK){
+                    intent = new Intent(this, WifiLockDeviceInfoActivity.class);
+                    intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
+                    startActivity(intent);
+                }else{
+                    intent = new Intent(this, WifiLockAuthDeviceInfoActivity.class);
+                    intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
+                    startActivity(intent);
+                }
+
                 break;
             case R.id.iv_delete:
                 AlertDialogUtil.getInstance().noEditTwoButtonDialog(this, getString(R.string.device_delete_dialog_head), getString(R.string.device_delete_lock_dialog_content), getString(R.string.cancel), getString(R.string.query), new AlertDialogUtil.ClickListener() {

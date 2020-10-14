@@ -393,6 +393,7 @@ public class WifiVideoLockFragment extends BaseFragment<IWifiVideoLockView, Wifi
             case R.id.iv_external_big:
 
                 intent = new Intent(getContext(),WifiLockVideoCallingActivity.class);
+                intent.putExtra(KeyConstants.WIFI_VIDEO_LOCK_CALLING,0);
                 intent.putExtra(KeyConstants.WIFI_SN,  wifiLockInfo.getWifiSN());
                 startActivity(intent);
 

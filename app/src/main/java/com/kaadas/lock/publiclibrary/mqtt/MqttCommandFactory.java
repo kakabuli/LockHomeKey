@@ -48,9 +48,14 @@ import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetPirWanderBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetSingleFireSwitchBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetUserTypeBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetVedioResBean;
+import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetVideoLockAmMode;
+import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetVideoLockLang;
+import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetVideoLockSafeMode;
+import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetVideoLockVolume;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetWiFiBasic;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetZBChannel;
-import com.kaadas.lock.publiclibrary.mqtt.publishbean.SettingVideoModuleFuncBean;
+import com.kaadas.lock.publiclibrary.mqtt.publishbean.SettingVideoLockAliveTime;
+import com.kaadas.lock.publiclibrary.mqtt.publishbean.SettingVideoLockPir;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.UnBindGatewayBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.UpdateDevNickNameBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.UpdateDevPushSwitchBean;
@@ -62,8 +67,6 @@ import com.kaadas.lock.utils.LogUtils;
 
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -1000,18 +1003,81 @@ public class MqttCommandFactory {
 
     ///////////////////////视频锁///////////////////////
     /**
-     * 设置视频模组
+     * 设置视频模组 视频长/短连接设置
      *
      */
-    public static MqttMessage settingVideoModule(String wifiID,int keep_alive_status,int[] keep_alive_snooze, int snooze_start_time, int snooze_end_time ) {
+    public static MqttMessage settingVideoLockAliveTime(String wifiID,int keep_alive_status,int[] keep_alive_snooze, int snooze_start_time, int snooze_end_time ) {
         int messageId = getMessageId();
-        SettingVideoModuleFuncBean.AliveTimeBean aliveTimeBean = new SettingVideoModuleFuncBean.AliveTimeBean(keep_alive_snooze, snooze_start_time, snooze_end_time);
-        SettingVideoModuleFuncBean.ParamsBean paramsBean = new SettingVideoModuleFuncBean.ParamsBean(keep_alive_status,aliveTimeBean);
-        SettingVideoModuleFuncBean mSettingVideoModuleFuncBean = new SettingVideoModuleFuncBean(MqttConstant.MSG_TYPE_REQUEST, messageId,MyApplication.getInstance().getUid(),
-                wifiID,MqttConstant.SET_CAMERA,paramsBean,System.currentTimeMillis()+"");
-        return getMessage(mSettingVideoModuleFuncBean, messageId);
+        SettingVideoLockAliveTime.AliveTimeBean aliveTimeBean = new SettingVideoLockAliveTime.AliveTimeBean(keep_alive_snooze, snooze_start_time, snooze_end_time);
+        SettingVideoLockAliveTime.ParamsBean paramsBean = new SettingVideoLockAliveTime.ParamsBean(keep_alive_status,aliveTimeBean);
+        SettingVideoLockAliveTime mSettingVideoLockAliveTime = new SettingVideoLockAliveTime(MqttConstant.MSG_TYPE_REQUEST, messageId,MyApplication.getInstance().getUid(),
+                wifiID,MqttConstant.SET_CAMERA,paramsBean,System.currentTimeMillis()+"",0);
+        return getMessage(mSettingVideoLockAliveTime, messageId);
     }
 
+    /**
+     *  设置视频模组 徘徊报警设置
+     */
+    public static MqttMessage settingVideoLockPir(String wifiID,int stayStatu,int stayTime,int pirSen) {
+        int messageId = getMessageId();
+        SettingVideoLockPir.PIRBean pirBean = new SettingVideoLockPir.PIRBean(stayTime,pirSen);
+        SettingVideoLockPir.ParamsBean paramsBean = new SettingVideoLockPir.ParamsBean(stayStatu,pirBean);
+        SettingVideoLockPir mSettingVideoLockAliveTime = new SettingVideoLockPir(MqttConstant.MSG_TYPE_REQUEST, messageId,MyApplication.getInstance().getUid(),
+                wifiID,MqttConstant.SET_CAMERA,paramsBean,System.currentTimeMillis()+"",0);
+        return getMessage(mSettingVideoLockAliveTime, messageId);
+    }
+
+    /**
+     * 设置锁的语言
+     *
+     */
+    public static MqttMessage setVideoLockLang(String wifiID, String lang) {
+        int messageId = getMessageId();
+        SetVideoLockLang.ParamsBean paramsBean = new SetVideoLockLang.ParamsBean();
+        paramsBean.setLanguage(lang);
+        SetVideoLockLang lockLang = new SetVideoLockLang(MqttConstant.MSG_TYPE_REQUEST, MyApplication.getInstance().getUid(),
+                messageId, wifiID, MqttConstant.SET_LOCK, paramsBean,  System.currentTimeMillis() + "",0);
+        return getMessage(lockLang, messageId);
+    }
+
+    /**
+     * 设置安全 模式
+     *
+     */
+    public static MqttMessage setVideoLockSafeMode(String wifiID,int safeMode) {
+        int messageId = getMessageId();
+        SetVideoLockSafeMode.ParamsBean paramsBean = new SetVideoLockSafeMode.ParamsBean();
+        paramsBean.setSafeMode(safeMode);
+        SetVideoLockSafeMode lockLang = new SetVideoLockSafeMode(MqttConstant.MSG_TYPE_REQUEST, MyApplication.getInstance().getUid(),
+                messageId, wifiID, MqttConstant.SET_LOCK, paramsBean,  System.currentTimeMillis() + "",0);
+        return getMessage(lockLang, messageId);
+    }
+
+    /**
+     * 设置静音 模式
+     *
+     */
+    public static MqttMessage setVideoLockVolume(String wifiID,int volume) {
+        int messageId = getMessageId();
+        SetVideoLockVolume.ParamsBean paramsBean = new SetVideoLockVolume.ParamsBean();
+        paramsBean.setVolume(volume);
+        SetVideoLockVolume lockLang = new SetVideoLockVolume(MqttConstant.MSG_TYPE_REQUEST, MyApplication.getInstance().getUid(),
+                messageId, wifiID, MqttConstant.SET_LOCK, paramsBean,  System.currentTimeMillis() + "",0);
+        return getMessage(lockLang, messageId);
+    }
+
+    /**
+     * 设置自动 模式
+     *
+     */
+    public static MqttMessage setVideoLockAmMode(String wifiID,int amMode) {
+        int messageId = getMessageId();
+        SetVideoLockAmMode.ParamsBean paramsBean = new SetVideoLockAmMode.ParamsBean();
+        paramsBean.setAmMode(amMode);
+        SetVideoLockAmMode lockLang = new SetVideoLockAmMode(MqttConstant.MSG_TYPE_REQUEST, MyApplication.getInstance().getUid(),
+                messageId, wifiID, MqttConstant.SET_LOCK, paramsBean,  System.currentTimeMillis() + "",0);
+        return getMessage(lockLang, messageId);
+    }
 
     /**
      * mqtt公用方法

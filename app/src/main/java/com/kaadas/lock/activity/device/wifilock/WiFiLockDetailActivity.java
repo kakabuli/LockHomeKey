@@ -457,7 +457,9 @@ public class WiFiLockDetailActivity extends BaseActivity<IWifiLockDetailView, Wi
                             break;
 
                         case BleLockUtils.TYPE_ALBUM:
-                            startActivity(new Intent(WiFiLockDetailActivity.this, WifiLockVideoAlbumActivity.class));
+                            intent = new Intent(WiFiLockDetailActivity.this, WifiLockVideoAlbumActivity.class);
+                            intent.putExtra(KeyConstants.WIFI_SN,wifiSn);
+                            startActivity(intent);
                             break;
                         case BleLockUtils.TYPE_RECORD:
                             intent = new Intent(WiFiLockDetailActivity.this,WifiLockRecordActivity.class);
@@ -467,6 +469,7 @@ public class WiFiLockDetailActivity extends BaseActivity<IWifiLockDetailView, Wi
                             break;
                         case BleLockUtils.TYPE_VIDEO:
                             intent = new Intent(WiFiLockDetailActivity.this,WifiLockVideoCallingActivity.class);
+                            intent.putExtra(KeyConstants.WIFI_VIDEO_LOCK_CALLING,0);
                             intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
                             startActivity(intent);
 

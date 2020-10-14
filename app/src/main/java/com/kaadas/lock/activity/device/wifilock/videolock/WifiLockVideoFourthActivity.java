@@ -63,7 +63,8 @@ public class WifiLockVideoFourthActivity extends BaseAddToApplicationActivity {
     private int func;
     private int times = 1;
 
-    private Boolean distributionAgain;
+    private boolean distributionAgain;
+    private boolean distribution;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -77,12 +78,19 @@ public class WifiLockVideoFourthActivity extends BaseAddToApplicationActivity {
         func = getIntent().getIntExtra(KeyConstants.WIFI_LOCK_FUNC,0);
         times = getIntent().getIntExtra(KeyConstants.WIFI_LOCK_WIFI_TIMES, 1);
         distributionAgain = getIntent().getBooleanExtra("distribution_again",false);
+        distribution = getIntent().getBooleanExtra("distribution", false);
         String wifiName = (String) SPUtils.get(KeyConstants.WIFI_LOCK_CONNECT_NAME, "");
         apSsidText.setText(wifiName.trim());
+        LogUtils.e("shulan WifiLockVideoFourthActivity-->distribution-->" +distribution);
         if(distributionAgain){
             head.setText("第二步：配置连接WI-FI");
         }else{
-            head.setText("第四步：配置连接WI-FI");
+            if(distribution){
+                head.setText("第三步：配置连接WI-FI");
+            }else{
+                head.setText("第四步：配置连接WI-FI");
+            }
+
         }
     }
 
@@ -127,7 +135,8 @@ public class WifiLockVideoFourthActivity extends BaseAddToApplicationActivity {
                 intent.putExtra(KeyConstants.WIFI_LOCK_RANDOM_CODE, randomCode);
                 intent.putExtra(KeyConstants.WIFI_LOCK_FUNC, func);
                 intent.putExtra(KeyConstants.WIFI_LOCK_WIFI_TIMES, times);
-                intent.getBooleanExtra("distribution_again",distributionAgain);
+                intent.putExtra("distribution_again",distributionAgain);
+                intent.putExtra("distribution",distribution);
                 startActivity(intent);
 
                 break;

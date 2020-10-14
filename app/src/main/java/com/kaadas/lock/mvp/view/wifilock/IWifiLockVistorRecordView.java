@@ -4,6 +4,7 @@ import com.kaadas.lock.mvp.mvpbase.IBaseView;
 import com.kaadas.lock.publiclibrary.bean.WifiLockAlarmRecord;
 import com.kaadas.lock.publiclibrary.bean.WifiVideoLockAlarmRecord;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
+import com.xmitech.sdk.MP4Info;
 
 import java.util.List;
 
@@ -35,6 +36,10 @@ public interface IWifiLockVistorRecordView extends IBaseView {
      */
     void noMoreData();
 
+    //录屏回调
+    void onStopRecordMP4CallBack(MP4Info mp4Info,String fileName);
 
+    //录屏开始回调
+    void onstartRecordMP4CallBack();
 
 }

@@ -113,10 +113,17 @@ public class WifiLockAddNewFirstActivity extends BaseAddToApplicationActivity {
                 startActivity(wifiIntent);
                 break;
             case R.id.tv_reconnect:
-//                startActivity(new Intent(this,WifiLockOldUserFirstActivity.class));
-                Intent reconnectWifiIntent = new Intent(this, WifiLockOldUserFirstActivity.class);
-                reconnectWifiIntent.putExtra("wifiModelType", wifiModelType);
-                startActivity(reconnectWifiIntent);
+                if(wifiModelType.contains("VIDEO")){
+                    Intent thirdIntent = new Intent(this, WifiLockAddNewThirdActivity.class);
+                    thirdIntent.putExtra("wifiModelType", wifiModelType);
+                    thirdIntent.putExtra("distribution", true);
+                    startActivity(thirdIntent);
+                }else {
+                    //startActivity(new Intent(this,WifiLockOldUserFirstActivity.class));
+                    Intent reconnectWifiIntent = new Intent(this, WifiLockOldUserFirstActivity.class);
+                    reconnectWifiIntent.putExtra("wifiModelType", wifiModelType);
+                    startActivity(reconnectWifiIntent);
+                }
                 break;
         }
     }

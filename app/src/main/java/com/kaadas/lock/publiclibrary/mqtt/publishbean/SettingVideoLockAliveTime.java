@@ -3,7 +3,7 @@ package com.kaadas.lock.publiclibrary.mqtt.publishbean;
 import java.io.Serializable;
 import java.util.Arrays;
 
-public class SettingVideoModuleFuncBean implements Serializable {
+public class SettingVideoLockAliveTime implements Serializable {
 
 
     /**
@@ -31,8 +31,9 @@ public class SettingVideoModuleFuncBean implements Serializable {
     private String func;
     private ParamsBean params;
     private String timestamp;
+    private int code;
 
-    public SettingVideoModuleFuncBean(String msgtype, int msgId, String userId, String wfId, String func, ParamsBean params, String timestamp) {
+    public SettingVideoLockAliveTime(String msgtype, int msgId, String userId, String wfId, String func, ParamsBean params, String timestamp,int code) {
         this.msgtype = msgtype;
         this.userId = userId;
         this.msgId = msgId;
@@ -40,6 +41,15 @@ public class SettingVideoModuleFuncBean implements Serializable {
         this.func = func;
         this.params = params;
         this.timestamp = timestamp;
+        this.code = code;
+    }
+
+    public int getCode() {
+        return code;
+    }
+
+    public void setCode(int code) {
+        this.code = code;
     }
 
     public String getMsgtype() {

@@ -1,10 +1,13 @@
 package com.kaadas.lock.publiclibrary.xm;
 
+import android.content.Context;
+import android.graphics.Canvas;
 import android.util.Log;
 import android.view.SurfaceView;
 
 import com.kaadas.lock.publiclibrary.xm.bean.DeviceInfo;
 import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.ToastUtil;
 import com.p2p.pppp_api.st_PPCS_Session;
 import com.xm.sdk.apis.XMStreamComCtrl;
 import com.xm.sdk.bean.ParamConnectDev;
@@ -13,10 +16,12 @@ import com.xm.sdk.bean.ParamInitDev;
 import com.xm.sdk.interfaces.av.AVStreamListener;
 import com.xm.sdk.interfaces.av.StreamListener;
 import com.xm.sdk.struct.stream.AVStreamHeader;
+import com.xmitech.sdk.AudioFrame;
 import com.xmitech.sdk.H264Frame;
 import com.xmitech.sdk.XmMovieViewController;
 import com.xmitech.sdk.frame.FrameAV;
 import com.xmitech.sdk.interfaces.AVFilterListener;
+import com.xmitech.sdk.interfaces.VideoPackagedListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -40,20 +45,30 @@ public class XMP2PManager extends StreamListener  {
     public static final String FUNCTION_START_CONNECT="START_CONNECT";
 
     /**
+     *  镜头旋转角度
+     */
+    public static final int SCREEN_ROTATE = 90;
+
+    /**
      * 初始化实例 对象
      */
-    private static class SingletonHolder
+   /* private static class SingletonHolder
     {
-        private static XmMovieViewController codecInstance;
-        private static XMP2PManager instance;
+        private static XmMovieViewController codecInstance = null;
+        private static XMP2PManager instance = null;
         private static XMStreamComCtrl xmStreamComCtrl = new XMStreamComCtrl();
 
         static
         {
             codecInstance = new XmMovieViewController();
+
             instance = new XMP2PManager();
         }
-    }
+    }*/
+
+    private static XmMovieViewController codecInstance = null;
+    private static XMP2PManager instance = null;
+    private static XMStreamComCtrl xmStreamComCtrl = null;
 
     /**
      * 获取 单例 对象操作
@@ -61,25 +76,45 @@ public class XMP2PManager extends StreamListener  {
      * @return
      */
     public static XMP2PManager getInstance(){
-        return SingletonHolder.instance;
+        if (null == instance) {
+            synchronized (XMP2PManager.class) {
+                if (null == instance) {
+                    instance = new XMP2PManager();
+                }
+            }
+        }
+        return instance;
     }
 
     /**
      * 获取 p2p通讯实例
      * @return
      */
-    public static XMStreamComCtrl getInstanceP2P(){
-        return SingletonHolder.xmStreamComCtrl;
+    private static XMStreamComCtrl getInstanceP2P(){
+        if (null == xmStreamComCtrl) {
+            synchronized (XMStreamComCtrl.class) {
+                if (null == xmStreamComCtrl) {
+                    xmStreamComCtrl = new XMStreamComCtrl();
+                }
+            }
+        }
+        return xmStreamComCtrl;
     }
 
     /**
      * 获取 音视频编解码 单例
      * @return
      */
-    public static XmMovieViewController getCodecInstance() {
-        return SingletonHolder.codecInstance;
+    private static XmMovieViewController getCodecInstance() {
+        if (null == codecInstance) {
+            synchronized (XmMovieViewController.class) {
+                if (null == codecInstance) {
+                    codecInstance = new XmMovieViewController();
+                }
+            }
+        }
+        return codecInstance;
     }
-
 
     private ConnectStatusListener mConnectListener = null;
 
@@ -101,15 +136,31 @@ public class XMP2PManager extends StreamListener  {
     private AudioVideoStatusListener mAudioVideoStatusListener;
 
     public interface AudioVideoStatusListener{
-        void onVideoDataAVStreamHeader();
+        void onVideoDataAVStreamHeader(AVStreamHeader paramAVStreamHeader);
     }
 
     public void setOnAudioVideoStatusLinstener(AudioVideoStatusListener listener){
         this.mAudioVideoStatusListener = listener;
     }
 
+    public interface PlayDeviceRecordVideo{
+        void onPlayDeviceRecordVideoProcResult(JSONObject jsonObject);
+        void onPlayRecViewCtrlResult(JSONObject jsonObject);
+        void onPushCmdRet(int cmdCode, JSONObject jsonString);
+    }
+
+    private PlayDeviceRecordVideo mPlayDeviceRecordVideoListener;
+
+    public void setOnPlayDeviceRecordVideo(PlayDeviceRecordVideo listener){
+        this.mPlayDeviceRecordVideoListener = listener;
+    }
+
     public void setOnConnectStatusListener(ConnectStatusListener connectListener){
         this.mConnectListener = connectListener;
+    }
+
+    public boolean isConnected(int handleSession){
+        return getInstanceP2P().isConnected(handleSession);
     }
 
     public int connectDevice(DeviceInfo paramDeviceInfo){
@@ -126,9 +177,9 @@ public class XMP2PManager extends StreamListener  {
                 return handleSession;
             }
         }else{
-            if(handleSession>0){
+            /*if(handleSession>0){
                 getInstanceP2P().stopConnectDevice();
-            }
+            }*/
         }
         LogUtils.e( "connectDevice: ====================");
         // 创建相关信息
@@ -162,14 +213,23 @@ public class XMP2PManager extends StreamListener  {
         // session>0时，则建立成功
         if(handleSession<0){
             currentDid=null;
-            if(mConnectListener != null)
-                mConnectListener.onConnectFailed(handleSession);
+            LogUtils.e("shulan--------------111");
+            /*if(mConnectListener != null)
+                mConnectListener.onConnectFailed(handleSession);*/
         }else {
             //获取P2P当前信息
             sessionStatus();
         }
 
         return handleSession;
+    }
+
+    public void initAPI(String s){
+        getInstanceP2P().initAPI(s);
+    }
+
+    public void init(Context context){
+        getCodecInstance().init(context);
     }
 
 
@@ -197,6 +257,7 @@ public class XMP2PManager extends StreamListener  {
 
     @Override
     public void onConnectfailed(int paramInt) {
+        LogUtils.e("shulan--------------222");
         if(mConnectListener != null)
             mConnectListener.onConnectFailed(paramInt);
     }
@@ -249,6 +310,7 @@ public class XMP2PManager extends StreamListener  {
         sendP2PResult(paramJSONObject, FUNCTION_REBOOT_DEVICE);
     }
 
+
     /**
      * 打开音频流 回调
      * @param paramJSONObject
@@ -256,6 +318,8 @@ public class XMP2PManager extends StreamListener  {
     @Override
     public void onStartAudioStreamProcResult(JSONObject paramJSONObject) {
         super.onStartAudioStreamProcResult(paramJSONObject);
+        LogUtils.e("shulan onStartAudioStreamProcResult-->" + paramJSONObject.toString());
+
     }
 
     /**
@@ -265,6 +329,7 @@ public class XMP2PManager extends StreamListener  {
     @Override
     public void onStopAudioStreamProcResult(JSONObject paramJSONObject) {
         super.onStopAudioStreamProcResult(paramJSONObject);
+        LogUtils.e("shulan onStopAudioStreamProcResult-->" + paramJSONObject.toString());
     }
 
     /**
@@ -308,8 +373,16 @@ public class XMP2PManager extends StreamListener  {
         h264Frame.setDataType(paramAVStreamHeader.m_VideoType);
         // 时间戳
         h264Frame.setFrameTimeStamp(paramAVStreamHeader.m_TimeStamp);
-        // 封装 丢进解码库  解码
-        getCodecInstance().InputMediaH264(h264Frame);
+        // 封装 丢进解码库  解码+
+        if(paramAVStreamHeader.m_VideoType == 0){
+            getCodecInstance().InputMediaH264(h264Frame);
+        }else if(paramAVStreamHeader.m_VideoType == 1){
+            getCodecInstance().InputMP4H264(h264Frame);
+        }
+
+        if(mAudioVideoStatusListener != null){
+            this.mAudioVideoStatusListener.onVideoDataAVStreamHeader(paramAVStreamHeader);
+        }
     }
 
 
@@ -336,8 +409,8 @@ public class XMP2PManager extends StreamListener  {
      */
     public void stopConnect()
     {
-        LogUtils.e("connectDevice -----> stopConnect");
-
+        LogUtils.e("shulan connectDevice -----> stopConnect");
+//        ToastUtil.getInstance().showLong("connectDevice -----> stopConnect");
         getInstanceP2P().stopConnectDevice();
         currentDid=null;
     }
@@ -408,6 +481,13 @@ public class XMP2PManager extends StreamListener  {
     }
 
     /**
+     *  是否开启视频播放
+     */
+    public void isPlay(){
+        getCodecInstance().isPlay();
+    }
+
+    /**
      * 统一处理 数据回调 错误值分析
      * @param paramJSONObject
      */
@@ -457,8 +537,22 @@ public class XMP2PManager extends StreamListener  {
      * @param Rate   录制的视频的帧率
      */
     public void startRecordMP4(String filePath, int width, int height, int Rate){
-
+        LogUtils.e("shulan startRecordMP4");
         getCodecInstance().startRecordToMP4(filePath, width, height, Rate);
+
+    }
+
+    /**
+     * @param filePath 保存文件的路径
+     * @param width  录制的视频的分辨率宽度
+     * @param height 录制的视频的分辨率高度
+     * @param Rate   录制的视频的帧率
+     * @param rotate 旋转角度 0，90，180，270
+     */
+    public void startRecordMP4(String filePath, int width, int height, int Rate,int rotate){
+        LogUtils.e("shulan startRecordMP4");
+        getCodecInstance().startRecordToMP4(filePath, width, height, Rate,rotate);
+
     }
 
     public void stopRecordMP4(){
@@ -469,8 +563,20 @@ public class XMP2PManager extends StreamListener  {
         return getInstanceP2P().startAudioStream();
     }
 
+    public int stopAudioStream(){
+        return getInstanceP2P().stopAudioStream();
+    }
+
     public void play(){
         getCodecInstance().play();
+    }
+
+    /**
+     * 设置解码 视频翻转 ：
+     * @param rotate  0，90，180，270
+     */
+    public void setRotate(int rotate){
+        getCodecInstance().setRotate(rotate);
     }
 
     public int startVideoStream(){
@@ -483,5 +589,156 @@ public class XMP2PManager extends StreamListener  {
 
     public void enableAudio(boolean flag){
         XMP2PManager.getCodecInstance().enableAudio(flag);
+    }
+
+    //打开/关闭手机麦克风
+    public void talkback(boolean enable){
+        //true=打开,false=关闭
+        XMP2PManager.getCodecInstance().talkback(enable);
+    }
+
+    public boolean isTalkback(){
+        return XMP2PManager.getCodecInstance().isTalkback();
+    }
+
+    public void setVideoPackagedListener(VideoPackagedListener listener){
+        XMP2PManager.getCodecInstance().setVideoPackagedListener(listener);
+    }
+
+    //[0]:宽度,[1]:高度
+    public int[] getVideoResolution(){
+        return XMP2PManager.getCodecInstance().getVideoResolution();
+    }
+
+    public void setAudioFrame(){
+        LogUtils.e("shulan setAudioFrame");
+        AudioFrame audioFrame = new AudioFrame();
+        audioFrame.setSampRate(8000);//设置采样率，目前只支持8K
+        audioFrame.setFrameType(3);//1：表示 G711A，3:表示AAC 音频格式
+        XMP2PManager.getCodecInstance().initAudioRecordAndTrack(1, 8000);// 初始化麦克风参数，0：G711A,1:AAC，8000：采样率
+        XMP2PManager.getCodecInstance().setAudioFrame(audioFrame);//设置编解码器参数
+    }
+
+
+
+    public void openCameraSpeaker(){
+        XMP2PManager.getInstanceP2P().openCameraSpeaker();
+    }
+
+    public void closeCameraSpeaker(){
+        XMP2PManager.getInstanceP2P().closeCameraSpeaker();
+    }
+
+    @Override
+    public void onOpenCameraMicProcResult(JSONObject jsonObject) {
+        super.onOpenCameraMicProcResult(jsonObject);
+        //打开摄像机扬声器的结果回调
+    }
+
+    @Override
+    public void onOpenCameraSpeakerProcResult(JSONObject jsonObject) {
+        super.onOpenCameraSpeakerProcResult(jsonObject);
+        // 关闭摄像机扬声器的结果回调
+    }
+
+    @Override
+    public void onStartTalkbackProcResult(JSONObject jsonObject) {
+        super.onStartTalkbackProcResult(jsonObject);
+        //打开对讲语音的结果回调
+        LogUtils.e("shulan onStartTalkbackProcResult--" + jsonObject.toString());
+    }
+
+    public void startTalkback(){
+        XMP2PManager.getInstanceP2P().startTalkback();
+    }
+
+    public void stopTalkback(){
+        XMP2PManager.getInstanceP2P().stopTalkback();
+    }
+
+    @Override
+    public void onStopTalkbackProcResult(JSONObject jsonObject) {
+        super.onStopTalkbackProcResult(jsonObject);
+        // 关闭对讲语音的结果回调
+        LogUtils.e("shulan onStopTalkbackProcResult--" + jsonObject.toString());
+    }
+
+    public int sendTalkBackAudioData(AudioFrame audioFrame){
+        return XMP2PManager.getInstanceP2P().sendTalkBackAudioData(audioFrame);
+    }
+
+    /*
+    ctrl : 默认值为true
+    true打开回声消除算法，false：关闭回声消除算法
+    */
+    public void setAECM(boolean ctrl){
+        XMP2PManager.getCodecInstance().setAECM(ctrl);
+    }
+
+    /**
+     * 发送回放指定录像文件
+     *
+     * @param fileDate 文件日期(20180830)<br>
+     * @param fileName 文件名(120159)<br>
+     * @param type     类型  0正常播放<br>
+     *                                     1快速回放<br>
+     * @param cameraChannel 默认填 0
+     * @return (错误代码参考APIS_Error.java)
+     */
+    public int playDeviceRecordVideo(String fileDate, String fileName, int type, int cameraChannel){
+       // getInstanceP2P().searchRecordFileList(fileDate,0)
+        return getInstanceP2P().playDeviceRecordVideo(fileDate,fileName,type,cameraChannel);
+    }
+
+
+    @Override
+    public void onPlayDeviceRecordVideoProcResult(JSONObject jsonObject) {
+        super.onPlayDeviceRecordVideoProcResult(jsonObject);
+        //回放录像文件返回的回调,
+        LogUtils.e("shulan onPlayDeviceRecordVideoProcResult");
+        if(mPlayDeviceRecordVideoListener != null){
+            this.mPlayDeviceRecordVideoListener.onPlayDeviceRecordVideoProcResult(jsonObject);
+        }
+    }
+
+    @Override
+    public void onPushCmdRet(int i, JSONObject jsonObject) {
+        super.onPushCmdRet(i, jsonObject);
+        LogUtils.e("shulan onPushCmdRet--i=" + i + "--jsonObject->" + jsonObject.toString());
+        if(mPlayDeviceRecordVideoListener != null){
+            this.mPlayDeviceRecordVideoListener.onPushCmdRet(i,jsonObject);
+        }
+    }
+
+    @Override
+    public void onSearchRecordFileListProcResult(JSONObject jsonObject) {
+        super.onSearchRecordFileListProcResult(jsonObject);
+
+        LogUtils.e("shulan --onSearchRecordFileListProcResult--jsonObject--" + jsonObject.toString());
+    }
+
+    /**
+     * 发送控制录像回放数据传输回调返回命令
+     *
+     * @param token         控制口令(参数使用PlayDeviceRecordVideoProcResult回调返回结果中的token字段)
+     * @param id            控制命令字<br>
+     *                      0:继续回放(继续播放文件)<br>
+     *                      1:暂停回放(暂停设备传输数据,下次继续调用token播放)<br>
+     *                      2:停止回放(设备没有传完数据,用户关闭文件,释放回放资源)<br>
+     * @param camearChannel 摄像机通道号
+     * @return (错误代码参考APIS_Error.java)
+     */
+    public int playRecViewCtrl(int token, int id, int camearChannel){
+        return getInstanceP2P().playRecViewCtrl(token,id,camearChannel);
+    }
+
+    @Override
+    public void onPlayRecViewCtrlProcResult(JSONObject jsonObject) {
+        super.onPlayRecViewCtrlProcResult(jsonObject);
+        //发送控制录像回放数据传输回调
+        LogUtils.e("shulan onPlayRecViewCtrlProcResult");
+        if(mPlayDeviceRecordVideoListener != null){
+            this.mPlayDeviceRecordVideoListener.onPlayRecViewCtrlResult(jsonObject);
+        }
     }
 }

@@ -33,9 +33,9 @@ public class WifiLockAddNewThird2Activity extends AppCompatActivity {
     @BindView(R.id.title)
     TextView title;
 
+
     private String wifiModelType;
 
-    private boolean video = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +48,7 @@ public class WifiLockAddNewThird2Activity extends AppCompatActivity {
         final AnimationDrawable animationDrawable = (AnimationDrawable) ivAnim.getBackground();
         animationDrawable.start();
 
-        if(video){
+        if(wifiModelType.contains("VIDEO")){
             head.setText(R.string.modify_admin_pwd);
             title.setText(R.string.modify_admin_pwd);
         }else {
@@ -67,7 +67,7 @@ public class WifiLockAddNewThird2Activity extends AppCompatActivity {
                 startActivity(new Intent(this, WifiLockHelpActivity.class));
                 break;
             case R.id.already_modify:
-                if(video){
+                if(wifiModelType.contains("VIDEO")){
                     Intent wifiVideoIntent = new Intent(this, WifiLockVideoFourthActivity.class);
                     wifiVideoIntent.putExtra("wifiModelType", wifiModelType);
                     startActivity(wifiVideoIntent);

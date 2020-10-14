@@ -1,5 +1,7 @@
 package com.kaadas.lock.fragment.record;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -16,6 +18,7 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.kaadas.lock.R;
+import com.kaadas.lock.activity.device.wifilock.videolock.WifiLockVideoAlbumDetailActivity;
 import com.kaadas.lock.adapter.WifiLockRecordIAdapter;
 import com.kaadas.lock.adapter.WifiLockVistorIAdapter;
 import com.kaadas.lock.bean.WifiLockOperationRecordGroup;
@@ -37,7 +40,9 @@ import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+import com.xmitech.sdk.MP4Info;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,7 +57,7 @@ public class WifiLockVistorRecordFragment extends BaseFragment<IWifiLockVistorRe
         implements IWifiLockVistorRecordView {
     @BindView(R.id.recycleview)
     RecyclerView recycleview;
-    List<WifiLockOperationRecord> records = new ArrayList<>();
+    List<WifiVideoLockAlarmRecord> records = new ArrayList<>();
     WifiLockVistorIAdapter operationGroupRecordAdapter;
     @BindView(R.id.refreshLayout)
     SmartRefreshLayout refreshLayout;
@@ -102,7 +107,18 @@ public class WifiLockVistorRecordFragment extends BaseFragment<IWifiLockVistorRe
     }
 
     private void initRecycleView() {
-        operationGroupRecordAdapter = new WifiLockVistorIAdapter(records);
+        operationGroupRecordAdapter = new WifiLockVistorIAdapter(records, new WifiLockVistorIAdapter.VideoRecordCallBackLinstener() {
+            @Override
+            public void onVideoRecordCallBackLinstener(WifiVideoLockAlarmRecord record) {
+                LogUtils.e("shulan onVideoRecordCallBackLinstener");
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mPresenter.playDeviceRecordVideo(record.getFileName(),record.getFileDate(),record.get_id(),record.getStartTime() + "");
+                    }
+                }).start();
+            }
+        });
         recycleview.setLayoutManager(new LinearLayoutManager(getActivity()));
         recycleview.setAdapter(operationGroupRecordAdapter);
     }
@@ -136,7 +152,7 @@ public class WifiLockVistorRecordFragment extends BaseFragment<IWifiLockVistorRe
     @Override
     public void onLoadServerRecord(List<WifiVideoLockAlarmRecord> lockRecords, int page) {
         LogUtils.e("收到服务器数据  " + lockRecords.size());
-
+        LogUtils.e("shulan page-->" + page);
         if (page == 1) {
             records.clear();
         }
@@ -160,7 +176,7 @@ public class WifiLockVistorRecordFragment extends BaseFragment<IWifiLockVistorRe
 
     private void groupData(List<WifiVideoLockAlarmRecord> lockRecords) {
         String lastTimeHead = "";
-        WifiLockOperationRecord lastRecord = null;
+        WifiVideoLockAlarmRecord lastRecord = null;
         if (lockRecords != null && lockRecords.size() > 0) {
             for (int i = 0; i < lockRecords.size(); i++) {
                 if (records.size() > 0) {
@@ -168,7 +184,7 @@ public class WifiLockVistorRecordFragment extends BaseFragment<IWifiLockVistorRe
                     lastTimeHead = lastRecord.getDayTime();
                 }
                 WifiVideoLockAlarmRecord record = lockRecords.get(i);
-              /*  long openTime = record.getTime();
+                long openTime = Long.parseLong(record.getTime());
                 String sOpenTime = DateUtils.getDateTimeFromMillisecond(openTime * 1000);
                 String timeHead = sOpenTime.substring(0, 10);
                 record.setDayTime(timeHead);
@@ -178,7 +194,7 @@ public class WifiLockVistorRecordFragment extends BaseFragment<IWifiLockVistorRe
                         lastRecord.setLast(true);
                     }
                 }
-                records.add(record);*/
+                records.add(record);
             }
         }
     }
@@ -211,6 +227,27 @@ public class WifiLockVistorRecordFragment extends BaseFragment<IWifiLockVistorRe
         ToastUtil.getInstance().showShort(R.string.no_more_data);
         refreshLayout.finishLoadMore();
         refreshLayout.setEnableLoadMore(false);
+    }
+
+    @Override
+    public void onStopRecordMP4CallBack(MP4Info mp4Info,String fileName) {
+        if(mp4Info.isResult()){
+            getActivity().sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(new File(mp4Info.getFilePath()))));
+//                    ToastUtil.getInstance()
+            Intent intent = new Intent(getActivity(), WifiLockVideoAlbumDetailActivity.class);
+            intent.putExtra(KeyConstants.VIDEO_PIC_PATH,mp4Info.getFilePath());
+            LogUtils.e("shulan createTime-->" + fileName);
+            fileName = DateUtils.getStrFromMillisecond2(Long.parseLong(fileName));
+            LogUtils.e("shulan filename-->" + fileName);
+            intent.putExtra("NAME",fileName);
+            startActivity(intent);
+
+        }
+    }
+
+    @Override
+    public void onstartRecordMP4CallBack() {
+
     }
 
 

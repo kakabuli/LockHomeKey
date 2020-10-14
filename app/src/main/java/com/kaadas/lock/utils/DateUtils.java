@@ -4,6 +4,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import java.util.TimeZone;
 
 /**
@@ -235,5 +236,25 @@ public class DateUtils {
         else
             retStr = "" + i;
         return retStr;
+    }
+
+
+    public static String getStringTime(int cnt) {
+        int hour = cnt/3600;
+        int min = cnt % 3600 / 60;
+        int second = cnt % 60;
+        return String.format(Locale.CHINA,"%02d:%02d:%02d",hour,min,second);
+    }
+
+    public static String getStringTime1(int cnt){
+        int hour = cnt/3600;
+        int min = cnt % 3600 / 60;
+        int second = cnt % 60;
+        if(hour == 0){
+            return String.format(Locale.CHINA,"%02d:%02d",min,second);
+        }else{
+            return String.format(Locale.CHINA,"%02d:%02d:%02d",hour,min,second);
+        }
+
     }
 }

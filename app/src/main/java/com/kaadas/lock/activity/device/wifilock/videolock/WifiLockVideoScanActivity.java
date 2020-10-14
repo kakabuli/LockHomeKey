@@ -252,24 +252,25 @@ public class WifiLockVideoScanActivity extends BaseActivity<IWifiLockVideoFifthV
     }
 
     public void onScanSuccess(WifiLockVideoBindBean wifiLockVideoBindBean) {
-        finish();
+        if(!WifiLockVideoScanActivity.this.isFinishing()){
+            finish();
 
-        mPresenter.handler.post(new Runnable() {
-            @Override
-            public void run() {
-                Intent intent = new Intent(WifiLockVideoScanActivity.this, WifiLockVideoSixthActivity.class);
-                intent.putExtra(KeyConstants.WIFI_LOCK_WIFI_SSID, sSsid);
-                intent.putExtra(KeyConstants.WIFI_LOCK_WIFI_PASSWORD, sPassword);
-                intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
-                intent.putExtra(KeyConstants.WIFI_LOCK_RANDOM_CODE, randomCode);
-                intent.putExtra(KeyConstants.WIFI_LOCK_FUNC, func);
-                intent.putExtra(KeyConstants.WIFI_LOCK_WIFI_TIMES, times);
+            mPresenter.handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    Intent intent = new Intent(WifiLockVideoScanActivity.this, WifiLockVideoSixthActivity.class);
+                    intent.putExtra(KeyConstants.WIFI_LOCK_WIFI_SSID, sSsid);
+                    intent.putExtra(KeyConstants.WIFI_LOCK_WIFI_PASSWORD, sPassword);
+                    intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
+                    intent.putExtra(KeyConstants.WIFI_LOCK_RANDOM_CODE, randomCode);
+                    intent.putExtra(KeyConstants.WIFI_LOCK_FUNC, func);
+                    intent.putExtra(KeyConstants.WIFI_LOCK_WIFI_TIMES, times);
 
-                intent.putExtra(KeyConstants.WIFI_VIDEO_LOCK_DEVICE_DATA,wifiLockVideoBindBean);
-                startActivity(intent);
-            }
-        });
-
+                    intent.putExtra(KeyConstants.WIFI_VIDEO_LOCK_DEVICE_DATA,wifiLockVideoBindBean);
+                    startActivity(intent);
+                }
+            });
+        }
     }
 
     public void onScanFailed() {

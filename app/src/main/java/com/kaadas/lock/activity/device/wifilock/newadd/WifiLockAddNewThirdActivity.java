@@ -46,10 +46,14 @@ public class WifiLockAddNewThirdActivity extends AppCompatActivity {
     TextView notModify;
     @BindView(R.id.not_modify_1)
     TextView notModify1;
+    @BindView(R.id.view_2)
+    View view2;
 
     private String wifiModelType;
 
-    private Boolean distributionAgain;
+    private boolean distributionAgain;
+
+    private boolean distribution;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,28 +67,35 @@ public class WifiLockAddNewThirdActivity extends AppCompatActivity {
         final AnimationDrawable animationDrawable = (AnimationDrawable) ivAnim.getBackground();
         animationDrawable.start();
         distributionAgain = intent.getBooleanExtra("distribution_again",false);
+        distribution = intent.getBooleanExtra("distribution",false);
         if(wifiModelType.contains("VIDEO")){
             if(distributionAgain){
                 head.setText(R.string.wifi_lock_add_new_third_notice1_2);
             }else{
-                head.setText(R.string.wifi_lock_add_new_third_notice1_1);
+                if(distribution){
+                    head.setText(R.string.wifi_lock_add_new_third_notice1_3);
+                }else{
+                    head.setText(R.string.wifi_lock_add_new_third_notice1_1);
+                }
+
             }
             notice.setText(R.string.dkjsfkjhad_2);
             ivAnim.setVisibility(View.GONE);
             notModify1.setVisibility(View.VISIBLE);
             notModify.setVisibility(View.GONE);
+            view2.setVisibility(View.VISIBLE);
         }else {
             head.setText(R.string.wifi_lock_add_new_third_notice1);
             ivAnim.setVisibility(View.VISIBLE);
             notice.setText(R.string.dkjsfkjhad);
             notModify1.setVisibility(View.GONE);
             notModify.setVisibility(View.VISIBLE);
-
+            view2.setVisibility(View.GONE);
         }
     }
 
 
-    @OnClick({R.id.back, R.id.help, R.id.already_modify, R.id.not_modify})
+    @OnClick({R.id.back, R.id.help, R.id.already_modify, R.id.not_modify,R.id.not_modify_1})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.back:
@@ -98,7 +109,9 @@ public class WifiLockAddNewThirdActivity extends AppCompatActivity {
                     saveWifiName();
                     Intent wifiVideoIntent = new Intent(this, WifiLockVideoFourthActivity.class);
                     wifiVideoIntent.putExtra("wifiModelType", wifiModelType);
-                    wifiVideoIntent.getBooleanExtra("distribution_again",distributionAgain);
+                    wifiVideoIntent.putExtra("distribution_again",distributionAgain);
+                    wifiVideoIntent.putExtra("distribution",distribution);
+                    LogUtils.e("shulan already_modify-->distribution-->" + distribution);
                     startActivity(wifiVideoIntent);
                 }else{
                     //startActivity(new Intent(this,WifiLockAddNewfourthActivity.class));

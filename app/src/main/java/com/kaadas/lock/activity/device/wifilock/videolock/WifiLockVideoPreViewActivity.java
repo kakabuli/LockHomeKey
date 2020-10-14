@@ -10,6 +10,7 @@ import com.bm.library.PhotoView;
 import com.bumptech.glide.Glide;
 import com.kaadas.lock.R;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
+import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 import com.kaadas.lock.mvp.presenter.wifilock.MyAlbumPlayerPresenter;
 import com.kaadas.lock.mvp.view.wifilock.IMyAlbumPlayerView;
 import com.kaadas.lock.utils.KeyConstants;
@@ -18,7 +19,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class WifiLockVideoPreViewActivity extends BaseActivity<IMyAlbumPlayerView, MyAlbumPlayerPresenter<IMyAlbumPlayerView>> implements IMyAlbumPlayerView {
+public class WifiLockVideoPreViewActivity extends BaseAddToApplicationActivity {
 
     @BindView(R.id.preview_img)
     PhotoView preview_img;
@@ -28,10 +29,10 @@ public class WifiLockVideoPreViewActivity extends BaseActivity<IMyAlbumPlayerVie
     TextView tvName;
 
 
-    @Override
+    /*@Override
     protected MyAlbumPlayerPresenter<IMyAlbumPlayerView> createPresent() {
         return new MyAlbumPlayerPresenter<>();
-    }
+    }*/
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

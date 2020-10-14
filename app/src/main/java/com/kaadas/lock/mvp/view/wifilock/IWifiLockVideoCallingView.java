@@ -1,6 +1,8 @@
 package com.kaadas.lock.mvp.view.wifilock;
 
 import com.kaadas.lock.mvp.mvpbase.IBaseView;
+import com.xm.sdk.struct.stream.AVStreamHeader;
+import com.xmitech.sdk.MP4Info;
 
 public interface IWifiLockVideoCallingView extends IBaseView {
 
@@ -19,4 +21,13 @@ public interface IWifiLockVideoCallingView extends IBaseView {
 
     //截图
     void onLastFrameRgbData(int[] ints, int height, int width, boolean b);
+
+    //录屏回调
+    void onStopRecordMP4CallBack(MP4Info mp4Info);
+
+    //录屏开始回调
+    void onstartRecordMP4CallBack();
+
+    //开始视频回调
+    void onVideoDataAVStreamHeader(AVStreamHeader paramAVStreamHeader);
 }

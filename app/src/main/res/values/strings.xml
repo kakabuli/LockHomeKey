@@ -1366,6 +1366,7 @@
     <string name="share_success">分享成功</string>
     <string name="checked_off_line">您的门锁于检测已离线</string>
     <string name="wifi_lock_alarm_lock_5min">您的门锁错误验证多次，门锁系统锁定100秒</string>
+    <string name="wifi_lock_alarm_lock_5min_1">您的门锁错误验证多次，门锁系统锁定90秒</string>
     <string name="wifi_lock_alarm_hijack">有人使用劫持密码开启门锁，赶紧联系或报警</string>
     <string name="wifi_lock_alarm_lower_power_close_face">您的智能门锁面容识别已关闭，如需重新开启面容识别，请更换电池</string>
     <string name="wifi_lock_alarm_many_failed">您的智能锁已多次验证开门失败，请回家或联系保安查看</string>
@@ -1374,6 +1375,7 @@
     <string name="wifi_lock_alarm_low_power">您的智能门锁低电量,请及时更换</string>
     <string name="wifi_lock_alarm_problem">您的门锁有故障，请注意</string>
     <string name="wifi_lock_alarm_safe">您的门锁处于布防状态，有从门内开锁情况</string>
+    <string name="wifi_video_lock_alarm_doorbell">有人按门铃</string>
     <string name="wifi_lockbind_success">绑定成功</string>
     <string name="is_swap_data">正在交换数据...</string>
     <string name="please_operation_in_lock">App不可设置，请在锁端设置</string>
@@ -1627,6 +1629,7 @@
     <string name="wifi_lock_add_new_third_notice1">第三步：修改初始管理密码</string>
     <string name="wifi_lock_add_new_third_notice1_1">第三步：已进入管理配置模式</string>
     <string name="wifi_lock_add_new_third_notice1_2">第一步：已进入管理配置模式</string>
+    <string name="wifi_lock_add_new_third_notice1_3">第二步：已进入管理配置模式</string>
     <string name="wifi_lock_add_new_third_notice2">① 按键区输入“*”两次\n② 输入管理密码：“12345678”\n③ 按“#”确认，“已进入管理模式”\n④ 语音播报：“请修改管理密码”\n⑤输入新设定的管理密码，按“＃”确认\n⑥再输入新设定的管理密码，按“＃”完成修改</string>
     <string name="widi_lock_add_new_notice1">用手触碰按键区，唤醒门锁\n确保门锁数字键盘灯亮</string>
     <string name="device_scanning">设备搜索中...</string>

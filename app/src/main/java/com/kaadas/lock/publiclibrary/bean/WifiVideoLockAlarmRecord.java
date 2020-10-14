@@ -34,12 +34,26 @@ public class WifiVideoLockAlarmRecord implements Serializable {
     private String thumbUrl;
     private String fileDate;//视频地址
     private String fileName;
+    private String devtype;
     private int height;
     private int width;
     private long startTime;
     private boolean thumbState;
     private int vedioTime;
     private long updateTime;
+
+    private boolean first = false; // 是否是第一个
+    private boolean last = false; //是否是最后一个
+
+    private String dayTime;
+
+    public String getDevtype() {
+        return devtype;
+    }
+
+    public void setDevtype(String devtype) {
+        this.devtype = devtype;
+    }
 
     public String getCreateTime() {
         return createTime;
@@ -169,6 +183,29 @@ public class WifiVideoLockAlarmRecord implements Serializable {
         this.wifiSN = wifiSN;
     }
 
+    public boolean isFirst() {
+        return first;
+    }
+
+    public void setFirst(boolean first) {
+        this.first = first;
+    }
+
+    public boolean isLast() {
+        return last;
+    }
+
+    public void setLast(boolean last) {
+        this.last = last;
+    }
+
+    public String getDayTime() {
+        return dayTime;
+    }
+
+    public void setDayTime(String dayTime) {
+        this.dayTime = dayTime;
+    }
 
     @Override
     public String toString() {

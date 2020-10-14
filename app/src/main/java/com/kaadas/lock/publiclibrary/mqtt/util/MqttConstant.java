@@ -254,5 +254,8 @@ public class MqttConstant {
      */
     public static final String SET_CAMERA = "setCamera";
 
-
+    /**
+     *  设置门锁
+     */
+    public static final String SET_LOCK = "setLock";
 }

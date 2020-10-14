@@ -2,23 +2,31 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-
-
-
+    android:layout_height="match_parent"
+    android:background="@color/transparent"
+    >
 
 
     <RelativeLayout
         android:id="@+id/rl_video_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:background="@color/transparent"
+        android:visibility="gone">
+
+        <SurfaceView
+            android:id="@+id/surface_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+
+            />
+
         <RelativeLayout
             android:id="@+id/title_bar"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_40"
-            android:background="#F8F8F8">
+            android:background="#17000000">
 
             <ImageView
                 android:id="@+id/back"
@@ -29,7 +37,7 @@
                 android:paddingLeft="@dimen/dp_16"
                 android:paddingRight="@dimen/dp_16"
                 android:paddingTop="@dimen/dp_5"
-                android:src="@mipmap/back_gray" />
+                android:src="@mipmap/white_back" />
 
             <ImageView
                 android:id="@+id/iv_setting"
@@ -41,7 +49,7 @@
                 android:paddingLeft="@dimen/dp_16"
                 android:paddingRight="@dimen/dp_16"
                 android:paddingTop="@dimen/dp_5"
-                android:src="@mipmap/video_setting" />
+                android:src="@mipmap/video_icon_setting" />
 
             <TextView
                 android:id="@+id/head_title"
@@ -49,16 +57,12 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:text="@string/real_time_video_function"
-                android:textColor="#000000"
+                android:textColor="#ffff"
                 android:textSize="@dimen/sp_17"
                 android:textStyle="bold" />
 
         </RelativeLayout>
-        <SurfaceView
-            android:id="@+id/surface_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@id/title_bar" />
+
 
         <ImageView
             android:id="@+id/iv_temporary_pwd"
@@ -70,15 +74,21 @@
             android:layout_marginRight="@dimen/dp_19"
             android:src="@drawable/real_time_video_pwd_selector" />
 
+        <ImageView
+            android:id="@+id/iv_screenshot_bitmap"
+            android:layout_width="@dimen/dp_66"
+            android:layout_height="@dimen/dp_104"
+            android:layout_above="@id/lly_bottom_bar"
+            android:layout_marginBottom="@dimen/dp_5"
+            android:layout_marginLeft="@dimen/dp_10" />
 
         <LinearLayout
             android:id="@+id/lly_bottom_bar"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_87"
             android:layout_alignParentBottom="true"
-            android:background="#90232323"
+            android:background="#B2232323"
             android:orientation="horizontal">
-
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -103,7 +113,6 @@
                     android:textSize="@dimen/sp_11" />
             </LinearLayout>
 
-
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -115,7 +124,8 @@
                     android:id="@+id/iv_mute"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/real_time_video_mute_selector" />
+                    android:src="@mipmap/real_time_video_mute"
+                     />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -127,6 +137,9 @@
                     android:textSize="@dimen/sp_11" />
             </LinearLayout>
 
+
+
+
             <ImageView
                 android:id="@+id/iv_calling"
                 android:layout_width="wrap_content"
@@ -134,6 +147,8 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="@dimen/dp_34"
                 android:src="@drawable/real_time_video_calling_selector" />
+
+
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -181,6 +196,7 @@
             </LinearLayout>
         </LinearLayout>
 
+
         <LinearLayout
             android:id="@+id/lly_temporary_password"
             android:layout_width="@dimen/dp_255"
@@ -214,6 +230,40 @@
 
 
 
+        <RelativeLayout
+            android:id="@+id/lly_record"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/title_bar"
+            android:layout_marginTop="@dimen/dp_15"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/iv_record_spot"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/dp_23"
+                android:src="@drawable/spot_bg" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/dp_8"
+                android:layout_toRightOf="@id/iv_record_spot"
+                android:text="REC"
+                android:textColor="#FFF" />
+
+            <TextView
+                android:id="@+id/tv_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:text="00:00:00"
+                android:textColor="#FFFFFF"
+                android:textSize="@dimen/sp_17" />
+        </RelativeLayout>
 
         <TextView
             android:layout_width="wrap_content"
@@ -226,40 +276,8 @@
             android:textColor="#FFFFFF"
             android:textSize="@dimen/sp_15" />
 
-        <RelativeLayout
-            android:id="@+id/lly_record"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="@dimen/dp_15"
-            android:layout_below="@id/title_bar">
 
-            <ImageView
-                android:id="@+id/iv_record_spot"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:src="@drawable/spot_bg"
-                android:layout_marginLeft="@dimen/dp_23"/>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toRightOf="@id/iv_record_spot"
-                android:textColor="#FFF"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="@dimen/dp_8"
-                android:text="REC"/>
-
-        <TextView
-            android:id="@+id/tv_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="00:00:00"
-            android:textColor="#FFFFFF"
-            android:layout_centerHorizontal="true"
-            android:textSize="@dimen/sp_17" />
-        </RelativeLayout>
     </RelativeLayout>
 
 
@@ -267,7 +285,7 @@
         android:id="@+id/rl_mark_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="gone">
+        >
 
 
         <RelativeLayout
@@ -276,18 +294,84 @@
             android:background="@mipmap/call_mask" />
 
 
-
-
-        <TextView
+        <RelativeLayout
+            android:id="@+id/rl_calling_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignTop="@id/iv_head_pic"
-            android:layout_marginLeft="@dimen/sp_18"
-            android:layout_marginTop="@dimen/dp_25"
-            android:layout_toRightOf="@id/iv_head_pic"
-            android:text="壮壮家门锁"
-            android:textColor="#ffffff"
-            android:textSize="@dimen/sp_15" />
+            android:layout_marginTop="@dimen/dp_155"
+            android:layout_below="@id/v_view"
+            >
+
+            <ImageView
+                android:id="@+id/iv_answer_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="@dimen/dp_78"
+                android:src="@mipmap/answer_icon" />
+
+            <ImageView
+                android:id="@+id/iv_refuse_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="@dimen/dp_78"
+                android:src="@mipmap/refuse_icon" />
+
+            <TextView
+                android:id="@+id/tv_refuse"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@id/iv_refuse_icon"
+                android:layout_marginLeft="@dimen/dp_94"
+                android:layout_marginTop="@dimen/dp_32"
+                android:text="@string/cancel"
+                android:textColor="#ffffff"
+                android:textSize="@dimen/sp_11" />
+
+            <TextView
+                android:id="@+id/tv_answer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_below="@id/iv_answer_icon"
+                android:layout_marginRight="@dimen/dp_94"
+                android:layout_marginTop="@dimen/dp_32"
+                android:text="接听"
+                android:textColor="#ffffff"
+                android:textSize="@dimen/sp_11" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_real_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_155"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/v_view"
+            android:visibility="gone">
+
+
+            <ImageView
+                android:id="@+id/iv_real_time_refuse_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/refuse_icon" />
+
+
+            <TextView
+                android:id="@+id/tv_real_time_refuse"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/iv_real_time_refuse_icon"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/dp_32"
+                android:text="@string/cancel"
+                android:textColor="#ffffff"
+                android:textSize="@dimen/sp_11" />
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/tv_tips"
@@ -299,77 +383,85 @@
             android:text="视频连接中..."
             android:textColor="#ffffff"
             android:textSize="@dimen/sp_15" />
+
+
+
         <View
-            android:id="@+id/view"
-            android:layout_centerHorizontal="true"
+            android:id="@+id/v_view"
             android:layout_width="1dp"
             android:layout_height="60dp"
-            android:layout_marginTop="@dimen/dp_170"
             android:layout_below="@id/iv_head_pic"
-            />
-
-
-        <ImageView
-            android:id="@+id/iv_answer_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_below="@id/view"
-            android:layout_marginRight="@dimen/dp_78"
-            android:layout_marginTop="@dimen/dp_155"
-            android:src="@mipmap/answer_icon" />
-
-        <ImageView
-            android:id="@+id/iv_refuse_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_below="@id/view"
-            android:layout_marginTop="@dimen/dp_155"
-            android:layout_marginLeft="@dimen/dp_78"
-            android:src="@mipmap/refuse_icon" />
-
-        <TextView
-            android:id="@+id/tv_refuse"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_marginLeft="@dimen/dp_94"
-            android:text="@string/cancel"
-            android:textColor="#ffffff"
-            android:layout_below="@id/iv_refuse_icon"
-            android:layout_marginTop="@dimen/dp_32"
-            android:textSize="@dimen/sp_11" />
-
-        <TextView
-            android:id="@+id/tv_answer"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="@dimen/dp_94"
-            android:text="接听"
-            android:layout_below="@id/iv_answer_icon"
-            android:layout_marginTop="@dimen/dp_32"
-            android:textColor="#ffffff"
-            android:textSize="@dimen/sp_11" />
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/dp_170" />
 
         <com.kaadas.lock.widget.AVLoadingIndicatorView
             android:id="@+id/avi"
             style="@style/AVLoadingIndicatorView.Large"
             android:layout_width="@dimen/dp_35"
             android:layout_height="@dimen/dp_35"
-            android:layout_below="@id/iv_head_pic"
+            android:layout_below="@id/view_head"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="@dimen/dp_150" />
 
+            <com.kaadas.lock.widget.CircleImageView
+                android:id="@+id/iv_head_pic"
+                android:layout_width="@dimen/dp_63"
+                android:layout_height="@dimen/dp_63"
+                android:layout_marginLeft="@dimen/dp_15"
+                android:layout_marginTop="@dimen/dp_51"
+                android:src="@mipmap/default_head" />
+            <View
+                android:id="@+id/view_head"
+                android:layout_width="@dimen/dp_63"
+                android:layout_height="@dimen/dp_63"
+                android:layout_marginTop="@dimen/dp_51"
+                />
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/dp_40">
+                <ImageView
+                    android:id="@+id/mark_back"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="@dimen/dp_5"
+                    android:paddingLeft="@dimen/dp_16"
+                    android:paddingRight="@dimen/dp_16"
+                    android:paddingTop="@dimen/dp_5"
+                    android:layout_centerVertical="true"
+                    android:src="@mipmap/white_back" />
+            </RelativeLayout>
+            <TextView
+                android:id="@+id/tv_head_pic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@id/iv_head_pic"
+                android:layout_marginLeft="@dimen/sp_18"
+                android:layout_marginTop="@dimen/dp_25"
+                android:layout_toRightOf="@id/iv_head_pic"
+                android:text="壮壮家门锁"
+                android:textColor="#ffffff"
+                android:textSize="@dimen/sp_15" />
 
         <com.kaadas.lock.widget.CircleImageView
-            android:id="@+id/iv_head_pic"
-            android:layout_width="@dimen/dp_63"
-            android:layout_height="@dimen/dp_63"
+            android:id="@+id/iv_big_head_pic"
+            android:layout_width="@dimen/dp_87"
+            android:layout_height="@dimen/dp_87"
             android:layout_marginLeft="@dimen/dp_15"
             android:layout_marginTop="@dimen/dp_51"
+            android:scaleType="centerCrop"
+            android:layout_centerHorizontal="true"
             android:src="@mipmap/default_head" />
 
+        <TextView
+            android:id="@+id/tv_big_head_pic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/iv_big_head_pic"
+            android:layout_marginTop="@dimen/dp_10"
+            android:text="壮壮家门锁"
+            android:textColor="#ffffff"
+            android:textSize="@dimen/sp_15" />
     </RelativeLayout>
 </RelativeLayout>

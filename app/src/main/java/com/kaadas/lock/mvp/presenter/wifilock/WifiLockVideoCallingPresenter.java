@@ -10,6 +10,7 @@ import android.view.SurfaceView;
 
 import com.google.gson.Gson;
 import com.kaadas.lock.MyApplication;
+import com.kaadas.lock.activity.device.wifilock.videolock.WifiLockVideoCallingActivity;
 import com.kaadas.lock.mvp.mvpbase.BasePresenter;
 import com.kaadas.lock.mvp.view.wifilock.IWifiLockVideoCallingView;
 import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
@@ -22,9 +23,12 @@ import com.kaadas.lock.publiclibrary.xm.XMP2PManager;
 import com.kaadas.lock.publiclibrary.xm.bean.DeviceInfo;
 import com.kaadas.lock.utils.BitmapUtil;
 import com.kaadas.lock.utils.LogUtils;
+import com.xm.sdk.struct.stream.AVStreamHeader;
 import com.xmitech.sdk.AudioFrame;
 import com.xmitech.sdk.H264Frame;
+import com.xmitech.sdk.MP4Info;
 import com.xmitech.sdk.interfaces.AVFilterListener;
+import com.xmitech.sdk.interfaces.VideoPackagedListener;
 import com.yuv.display.MyBitmapFactory;
 
 
@@ -60,9 +64,6 @@ public class WifiLockVideoCallingPresenter<T> extends BasePresenter<IWifiLockVid
             @Override
             public void run() {
                 connectP2P();
-//                if( < 0){
-//                    mViewRef.get().onConnectFailed(-999);
-//                }
             }
         }).start();
 
@@ -74,7 +75,6 @@ public class WifiLockVideoCallingPresenter<T> extends BasePresenter<IWifiLockVid
         public void onConnectFailed(int paramInt) {
             XMP2PManager.getInstance().stopCodec();//
             LogUtils.e("shulan", "onConnectFailed: paramInt=" + paramInt);
-//            stopConnect();
 
             if(isSafe()){
                 mViewRef.get().onConnectFailed(paramInt);
@@ -103,7 +103,7 @@ public class WifiLockVideoCallingPresenter<T> extends BasePresenter<IWifiLockVid
         @Override
         public void onErrorMessage(String message) {
             LogUtils.e("shulan","onErrorMessage");
-            stopConnect();
+//            stopConnect();
             if(isSafe()){
                 mViewRef.get().onErrorMessage(message);
             }
@@ -140,8 +140,8 @@ public class WifiLockVideoCallingPresenter<T> extends BasePresenter<IWifiLockVid
 
 
     public void release(){
-        XMP2PManager.getInstance().stopConnect();//
         XMP2PManager.getInstance().stopCodec();
+        XMP2PManager.getInstance().stopConnect();//
     }
 
     public void stopConnect(){
@@ -150,15 +150,34 @@ public class WifiLockVideoCallingPresenter<T> extends BasePresenter<IWifiLockVid
     }
 
     public void startRealTimeVideo(SurfaceView surfaceView){
-//        if(XMP2PManager.getInstanceP2P().isConnected(-1)){
+        LogUtils.e("shulan isConnect--> " + XMP2PManager.getInstance().isConnected(-1));
+//        if(XMP2PManager.getInstance().isConnected(-1)){
             LogUtils.e("startRealTimeVideo");
+                XMP2PManager.getInstance().setRotate(XMP2PManager.SCREEN_ROTATE);
+            XMP2PManager.getInstance().setAudioFrame();
             XMP2PManager.getInstance().setSurfaceView(surfaceView);
             XMP2PManager.getInstance().play();
             XMP2PManager.getInstance().startVideoStream();
+
+
+            XMP2PManager.getInstance().setOnAudioVideoStatusLinstener(new XMP2PManager.AudioVideoStatusListener() {
+                @Override
+                public void onVideoDataAVStreamHeader(AVStreamHeader paramAVStreamHeader) {
+                    if(isSafe()){
+                        mViewRef.get().onVideoDataAVStreamHeader(paramAVStreamHeader);
+                    }
+                }
+            });
             XMP2PManager.getInstance().setAVFilterListener(new AVFilterListener() {
                 @Override
                 public void onAudioRecordData(AudioFrame audioFrame) {
 
+                    //frame为采集封装的数据,通过传输库发送给设备
+                    int ret = XMP2PManager.getInstance().sendTalkBackAudioData(audioFrame);
+                    LogUtils.e("shulan onAudioRecordData length-->" +audioFrame.getAudioBuff().length);
+                    LogUtils.e("shulan onAudioRecordData ret-->" +ret);
+                    LogUtils.e("shulan onAudioRecordData frameType-->" +audioFrame.frameType);
+                    LogUtils.e("shulan onAudioRecordData frameRate-->" +audioFrame.frameRate);
                 }
 
                 @Override
@@ -195,5 +214,80 @@ public class WifiLockVideoCallingPresenter<T> extends BasePresenter<IWifiLockVid
         p2pPassword = wifiLockInfo.getP2p_password();
 
     }
+
+    public void snapImage(){
+        XMP2PManager.getInstance().snapImage();
+    }
+
+    public int startAudioStream(){
+        return XMP2PManager.getInstance().startAudioStream();
+    }
+
+    public int stopAudioStream(){
+        return XMP2PManager.getInstance().stopAudioStream();
+    }
+
+    public boolean isEnableAudio(){
+       return XMP2PManager.getInstance().isEnableAudio();
+    }
+
+    public void enableAudio(boolean flag){
+        try {
+            XMP2PManager.getInstance().enableAudio(flag);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+    }
+
+    public boolean isTalkback(){
+        return XMP2PManager.getInstance().isTalkback();
+    }
+
+    public void talkback(boolean flag){
+        XMP2PManager.getInstance().talkback(flag);
+    }
+
+    public void startRecordMP4(String filePath){
+        XMP2PManager.getInstance().startRecordMP4(filePath,0,0,0,XMP2PManager.SCREEN_ROTATE);
+        XMP2PManager.getInstance().setVideoPackagedListener(new VideoPackagedListener() {
+            @Override
+            public void onStartedPackaged() {
+                LogUtils.e("shulan 开始录制");
+                if(isSafe()){
+                    mViewRef.get().onstartRecordMP4CallBack();
+                }
+            }
+
+            @Override
+            public void onStopPackaged(MP4Info mp4Info) {
+                LogUtils.e("shulan mp4Info-->" +mp4Info.toString());
+                if(isSafe()){
+                    mViewRef.get().onStopRecordMP4CallBack(mp4Info);
+                }
+            }
+        });
+    }
+
+    public void stopRecordMP4(){
+        XMP2PManager.getInstance().stopRecordMP4();
+    }
+
+    public int[] getVideoResolution(){
+        return XMP2PManager.getInstance().getVideoResolution();
+    }
+
+    public void startTalkback(){
+        XMP2PManager.getInstance().startTalkback();
+    }
+
+    public void stopTalkback(){
+        XMP2PManager.getInstance().stopTalkback();
+    }
+
+    public void setAECM(boolean falg){
+        XMP2PManager.getInstance().setAECM(falg);
+    }
+
 
 }

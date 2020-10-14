@@ -23,11 +23,11 @@ public class WifiLockRealTimeVideoPresenter<T> extends BasePresenter<IWifiLockRe
 
 
     public void startRealTimeVideo(SurfaceView surfaceView){
-        if(XMP2PManager.getInstanceP2P().isConnected(-1)){
+        if(XMP2PManager.getInstance().isConnected(-1)){
             LogUtils.e("startRealTimeVideo");
-            XMP2PManager.getCodecInstance().play();
+            XMP2PManager.getInstance().play();
             XMP2PManager.getInstance().setSurfaceView(surfaceView);
-            XMP2PManager.getInstance().getInstanceP2P().startVideoStream();
+            XMP2PManager.getInstance().getInstance().startVideoStream();
             XMP2PManager.getInstance().setAVFilterListener(new AVFilterListener() {
                 @Override
                 public void onAudioRecordData(AudioFrame audioFrame) {

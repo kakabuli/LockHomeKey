@@ -57,7 +57,8 @@ public class WifiLockVideoFifthActivity extends BaseActivity<IWifiLockVideoFifth
     public String sSsid = "";
     private String sPassword = "";
 
-    private Boolean distributionAgain;
+    private boolean distributionAgain;
+    private boolean distribution;
 
 
     @Override
@@ -80,10 +81,16 @@ public class WifiLockVideoFifthActivity extends BaseActivity<IWifiLockVideoFifth
         randomCode = getIntent().getStringExtra(KeyConstants.WIFI_LOCK_RANDOM_CODE);
         func = getIntent().getIntExtra(KeyConstants.WIFI_LOCK_FUNC,0);
         times = getIntent().getIntExtra(KeyConstants.WIFI_LOCK_WIFI_TIMES, 1);
+        distribution = getIntent().getBooleanExtra("distribution", false);
         if(distributionAgain){
             head.setText("第三步：门锁扫描二维码");
         }else{
-            head.setText("第五步：门锁扫描二维码");
+            if(distribution){
+                head.setText("第四步：门锁扫描二维码");
+            }else{
+                head.setText("第五步：门锁扫描二维码");
+            }
+
         }
     }
 
@@ -166,22 +173,24 @@ public class WifiLockVideoFifthActivity extends BaseActivity<IWifiLockVideoFifth
     @Override
     public void onDeviceBinding(WifiLockVideoBindBean mWifiLockVideoBindBean) {
         LogUtils.e("---------------------ss------------");
-        mPresenter.handler.post(new Runnable() {
-            @Override
-            public void run() {
-                Intent intent = new Intent(WifiLockVideoFifthActivity.this, WifiLockVideoScanActivity.class);
-                intent.putExtra(KeyConstants.WIFI_LOCK_WIFI_SSID, sSsid);
-                intent.putExtra(KeyConstants.WIFI_LOCK_WIFI_PASSWORD, sPassword);
-                intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
-                intent.putExtra(KeyConstants.WIFI_LOCK_RANDOM_CODE, randomCode);
-                intent.putExtra(KeyConstants.WIFI_LOCK_FUNC, func);
-                intent.putExtra(KeyConstants.WIFI_LOCK_WIFI_TIMES, times);
-                intent.putExtra(KeyConstants.WIFI_VIDEO_LOCK_DEVICE_DATA ,mWifiLockVideoBindBean);
-                startActivity(intent);
-                LogUtils.e("---------------------aaa------------");
-                finish();
-            }
-        });
+        if(!WifiLockVideoFifthActivity.this.isFinishing()){
+            mPresenter.handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    Intent intent = new Intent(WifiLockVideoFifthActivity.this, WifiLockVideoScanActivity.class);
+                    intent.putExtra(KeyConstants.WIFI_LOCK_WIFI_SSID, sSsid);
+                    intent.putExtra(KeyConstants.WIFI_LOCK_WIFI_PASSWORD, sPassword);
+                    intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
+                    intent.putExtra(KeyConstants.WIFI_LOCK_RANDOM_CODE, randomCode);
+                    intent.putExtra(KeyConstants.WIFI_LOCK_FUNC, func);
+                    intent.putExtra(KeyConstants.WIFI_LOCK_WIFI_TIMES, times);
+                    intent.putExtra(KeyConstants.WIFI_VIDEO_LOCK_DEVICE_DATA ,mWifiLockVideoBindBean);
+                    startActivity(intent);
+                    LogUtils.e("---------------------aaa------------");
+                    finish();
+                }
+            });
+        }
 
     }
 }

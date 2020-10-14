@@ -504,6 +504,9 @@ public class KeyConstants {
 
     public static final String WIFI_VIDEO_LOCK_RANDOMCODE = "wifi_video_lock_randomcode";
 
+    public static final String WIFI_VIDEO_LOCK_ALARM_RECORD_DATA = "wifi_video_lock_alarm_record_data";//WifiVideoLockAlarmRecord的数据
+
+    public static final String WIFI_VIDEO_LOCK_XM_CONNECT = "wifi_video_lock_xm_connect";//讯美P2P是否连接
 
     public static final String SCAN_TYPE = "scanType";  //扫描类型
     public static final String QR_URL = "qrUrl";  //扫描到的链接
@@ -551,5 +554,10 @@ public class KeyConstants {
      *  Video的路径
      */
     public static final String VIDEO_PIC_PATH = "video_pic_path";
+
+    /**
+     *  呼叫或者实时视频
+     */
+    public static final String WIFI_VIDEO_LOCK_CALLING = "wifi_video_lock_calling";
 }
 

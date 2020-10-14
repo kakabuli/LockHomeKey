@@ -38,7 +38,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class WifiLockVideoAlbumDetailActivity extends BaseActivity<IMyAlbumPlayerView, MyAlbumPlayerPresenter<IMyAlbumPlayerView>>  implements IMyAlbumPlayerView {
+public class WifiLockVideoAlbumDetailActivity extends BaseAddToApplicationActivity{
 
     private MediaPlayerWrapper mediaPlayer;
     private String filepath;
@@ -204,7 +204,7 @@ public class WifiLockVideoAlbumDetailActivity extends BaseActivity<IMyAlbumPlaye
     @Override
     protected void onResume() {
         super.onResume();
-        mPresenter.attachView(this);
+//        mPresenter.attachView(this);
     }
 
     @Override
@@ -216,7 +216,7 @@ public class WifiLockVideoAlbumDetailActivity extends BaseActivity<IMyAlbumPlaye
     @Override
     protected void onStop() {
         super.onStop();
-        mPresenter.detachView();
+//        mPresenter.detachView();
     }
 
     @Override
@@ -236,10 +236,10 @@ public class WifiLockVideoAlbumDetailActivity extends BaseActivity<IMyAlbumPlaye
         timerHandler.removeCallbacks(timerRunnable);
     }
 
-    @Override
+    /*@Override
     protected MyAlbumPlayerPresenter<IMyAlbumPlayerView> createPresent() {
         return new MyAlbumPlayerPresenter<>();
-    }
+    }*/
 
     private void reset() {
         ivPlayStart.setVisibility(View.VISIBLE);

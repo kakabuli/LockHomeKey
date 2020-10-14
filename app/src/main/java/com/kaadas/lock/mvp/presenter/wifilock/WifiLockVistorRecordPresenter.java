@@ -1,5 +1,7 @@
 package com.kaadas.lock.mvp.presenter.wifilock;
 
+import android.os.Environment;
+
 import com.google.gson.Gson;
 import com.kaadas.lock.mvp.mvpbase.BasePresenter;
 import com.kaadas.lock.mvp.view.wifilock.IWifiLockAlarmRecordView;
@@ -11,23 +13,29 @@ import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.result.GetWifiLockAlarmRecordResult;
 import com.kaadas.lock.publiclibrary.http.result.GetWifiVideoLockAlarmRecordResult;
 import com.kaadas.lock.publiclibrary.http.util.BaseObserver;
+import com.kaadas.lock.publiclibrary.xm.XMP2PManager;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.SPUtils;
+import com.xmitech.sdk.MP4Info;
+import com.xmitech.sdk.interfaces.VideoPackagedListener;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.disposables.Disposable;
 
 public class WifiLockVistorRecordPresenter<T> extends BasePresenter<IWifiLockVistorRecordView> {
-    private List<WifiLockAlarmRecord> wifiLockAlarmRecords = new ArrayList<>();
 
     private List<WifiVideoLockAlarmRecord> wifiVideoLockAlarmRecords = new ArrayList<>();
 
     public void getWifiVideoLockGetAlarmList(int page, String wifiSn) {
         if (page == 1) {
-            wifiLockAlarmRecords.clear();
+            wifiVideoLockAlarmRecords.clear();
         }
         XiaokaiNewServiceImp.wifiVideoLockGetDoorbellList(wifiSn,page).subscribe(new BaseObserver<GetWifiVideoLockAlarmRecordResult>() {
             @Override
@@ -79,6 +87,68 @@ public class WifiLockVistorRecordPresenter<T> extends BasePresenter<IWifiLockVis
 
     }
 
+    public void startRecordMP4(String filePath,String name){
+        XMP2PManager.getInstance().startRecordMP4(filePath,0,0,0,270);
+        XMP2PManager.getInstance().setVideoPackagedListener(new VideoPackagedListener() {
+            @Override
+            public void onStartedPackaged() {
+                LogUtils.e("shulan 开始录制");
+                if(isSafe()){
+                    mViewRef.get().onstartRecordMP4CallBack();
+                }
+            }
 
+            @Override
+            public void onStopPackaged(MP4Info mp4Info) {
+                LogUtils.e("shulan mp4Info-->" +mp4Info.toString());
+                if(isSafe()){
+                    mViewRef.get().onStopRecordMP4CallBack(mp4Info,name);
+                }
+            }
+        });
+    }
+
+    public void stopRecordMP4(){
+        XMP2PManager.getInstance().stopRecordMP4();
+    }
+
+    String path = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "DCIM" + File.separator + "Camera" ;
+
+    public void playDeviceRecordVideo(String fileName,String filaDate,String id,String createTime){
+        XMP2PManager.getInstance().setRotate(XMP2PManager.SCREEN_ROTATE);
+        XMP2PManager.getInstance().setAudioFrame();
+        LogUtils.e("shulan  path-->" + path +  File.separator + id + ".mp4");
+        startRecordMP4(path +  File.separator + id + ".mp4",createTime);
+        int ret = XMP2PManager.getInstance().playDeviceRecordVideo(filaDate,fileName,0,0);
+        LogUtils.e("shulan playDeviceRecordVideo -- ret" + ret);
+        XMP2PManager.getInstance().play();
+//        XMP2PManager.getInstance().enableAudio(true);
+        XMP2PManager.getInstance().setOnPlayDeviceRecordVideo(new XMP2PManager.PlayDeviceRecordVideo() {
+            @Override
+            public void onPlayDeviceRecordVideoProcResult(JSONObject jsonObject) {
+                LogUtils.e("shulan onPlayDeviceRecordVideoProcResult--jsonObject-->" + jsonObject);
+                try {
+                    if(jsonObject.getString("result").equals("ok")){
+//                        startRecordMP4(path +  File.separator + id + ".mp4");
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onPlayRecViewCtrlResult(JSONObject jsonObject) {
+                LogUtils.e("shulan onPlayRecViewCtrlResult--jsonObject-->" + jsonObject);
+            }
+
+            @Override
+            public void onPushCmdRet(int cmdCode, JSONObject jsonString) {
+                if(cmdCode == 101){
+                    stopRecordMP4();
+                }
+            }
+        });
+    }
 
 }
