@@ -7,14 +7,17 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.device.wifilock.add.WifiLockHelpActivity;
 import com.kaadas.lock.bean.UpgradeBean;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.mvp.presenter.wifilock.WifiLockMorePresenter;
 import com.kaadas.lock.mvp.view.wifilock.IWifiLockMoreView;
+import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.result.CheckOTAResult;
+import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.widget.BottomMenuDialog;
 import com.kaadas.lock.widget.BottomMenuSelectMarketDialog;
 
@@ -43,7 +46,12 @@ public class WifiLockMessagePushActivity extends BaseActivity<IWifiLockMoreView,
     @BindView(R.id.rl_message_free)
     RelativeLayout rlMessageFree;
     @BindView(R.id.iv_message_free)
-    ImageView iv_message_free;
+    ImageView ivMessageFree;
+
+    private String wifiSn;
+    private WifiLockInfo wifiLockInfo;
+
+    private int pushSwitch;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -51,21 +59,37 @@ public class WifiLockMessagePushActivity extends BaseActivity<IWifiLockMoreView,
         setContentView(R.layout.activity_wifi_lock_message_push);
         ButterKnife.bind(this);
 
+        wifiSn = getIntent().getStringExtra(KeyConstants.WIFI_SN);
+        wifiLockInfo = MyApplication.getInstance().getWifiLockInfoBySn(wifiSn);
         initData();
     }
 
 
     private void initData() {
+        if(wifiLockInfo != null){
+            pushSwitch = wifiLockInfo.getPushSwitch();
+            if(pushSwitch == 1){
+                ivMessageFree.setSelected(true);
+            }else if(pushSwitch == 2){
+                ivMessageFree.setSelected(false);
+            }
+        }
     }
 
 
-    @OnClick({R.id.back, R.id.iv_message_free})
+    @OnClick({R.id.back, R.id.iv_message_free,R.id.rl_message_free})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.back:
                 finish();
                 break;
+            case R.id.rl_message_free:
             case R.id.iv_message_free:
+                if(ivMessageFree.isSelected()){
+                    mPresenter.updateSwitchStatus(2,wifiSn);
+                }else{
+                    mPresenter.updateSwitchStatus(1,wifiSn);
+                }
                 break;
         }
     }
@@ -108,6 +132,18 @@ public class WifiLockMessagePushActivity extends BaseActivity<IWifiLockMoreView,
 
     @Override
     public void onUpdatePushStatusSuccess(int status) {
+        if(!WifiLockMessagePushActivity.this.isFinishing()){
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if(status == 1){
+                        ivMessageFree.setSelected(true);
+                    }else if(status == 2){
+                        ivMessageFree.setSelected(false);
+                    }
+                }
+            });
+        }
 
     }
 

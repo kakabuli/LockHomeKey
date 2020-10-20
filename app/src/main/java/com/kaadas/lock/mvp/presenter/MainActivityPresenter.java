@@ -824,12 +824,14 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
 //        }
        // Log.e(GeTui.VideoLog, "MainActivityPresenter-->phoneType:" + phoneType + " uid:" + uid + " jpushid:" + JpushId + " token:" + MyApplication.getInstance().getToken());
         LogUtils.e(GeTui.VideoLog, "uid:" + uid + " JpushId:" + JpushId);
+        LogUtils.e("shulan------"+ "uid:" + uid + " JpushId:" + JpushId);
         if (!TextUtils.isEmpty(uid) && !TextUtils.isEmpty(JpushId)) {
             XiaokaiNewServiceImp.uploadPushId(uid, JpushId, type).subscribe(new BaseObserver<BaseResult>() {
                 @Override
                 public void onSuccess(BaseResult baseResult) {
                     if (mViewRef != null) {
                         mViewRef.get().uploadpush(baseResult);
+                        LogUtils.e("shulan uploadPushId---baseResult-->" + baseResult.toString());
                     }
                 }
 

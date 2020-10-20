@@ -294,6 +294,48 @@
             android:background="@mipmap/call_mask" />
 
 
+
+
+        <RelativeLayout
+            android:id="@+id/rl_real_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_155"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/v_view"
+            android:visibility="gone">
+
+
+            <ImageView
+                android:id="@+id/iv_real_time_refuse_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/refuse_icon" />
+
+
+            <TextView
+                android:id="@+id/tv_real_time_refuse"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/iv_real_time_refuse_icon"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/dp_32"
+                android:text="@string/cancel"
+                android:textColor="#ffffff"
+                android:textSize="@dimen/sp_11" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/tv_tips"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/avi"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/sp_17"
+            android:text="视频连接中..."
+            android:textColor="#ffffff"
+            android:textSize="@dimen/sp_15" />
+
         <RelativeLayout
             android:id="@+id/rl_calling_time"
             android:layout_width="wrap_content"
@@ -344,53 +386,11 @@
 
         </RelativeLayout>
 
-        <RelativeLayout
-            android:id="@+id/rl_real_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dp_155"
-            android:layout_centerHorizontal="true"
-            android:layout_below="@id/v_view"
-            android:visibility="gone">
-
-
-            <ImageView
-                android:id="@+id/iv_real_time_refuse_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@mipmap/refuse_icon" />
-
-
-            <TextView
-                android:id="@+id/tv_real_time_refuse"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/iv_real_time_refuse_icon"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="@dimen/dp_32"
-                android:text="@string/cancel"
-                android:textColor="#ffffff"
-                android:textSize="@dimen/sp_11" />
-        </RelativeLayout>
-
-        <TextView
-            android:id="@+id/tv_tips"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/avi"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="@dimen/sp_17"
-            android:text="视频连接中..."
-            android:textColor="#ffffff"
-            android:textSize="@dimen/sp_15" />
-
-
-
         <View
             android:id="@+id/v_view"
             android:layout_width="1dp"
             android:layout_height="60dp"
-            android:layout_below="@id/iv_head_pic"
+            android:layout_below="@id/view_head"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="@dimen/dp_170" />
 

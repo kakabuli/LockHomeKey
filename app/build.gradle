@@ -4,7 +4,7 @@ apply plugin: 'bugly'   //添加bugly的符号表
 apply plugin: 'com.mob.sdk'
 
 greendao {
-    schemaVersion 28// 数据库版本号
+    schemaVersion 30// 数据库版本号
     daoPackage 'com.kaadas.lock.utils.greenDao.db'//自动生成的dao的包名，包名默认是entity所在的包；
     targetGenDir 'src/main/java'//生成数据库文件的目录
 }
@@ -22,8 +22,8 @@ android {
         applicationId "com.kaadas.lock"
         minSdkVersion 22
         targetSdkVersion 26
-        versionCode 202010141
-        versionName "4.0.8"
+        versionCode 202010201
+        versionName "4.0.9"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         flavorDimensions "versionCode"
         multiDexEnabled true

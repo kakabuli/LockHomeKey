@@ -7,7 +7,6 @@ import android.view.SurfaceView;
 
 import com.kaadas.lock.publiclibrary.xm.bean.DeviceInfo;
 import com.kaadas.lock.utils.LogUtils;
-import com.kaadas.lock.utils.ToastUtil;
 import com.p2p.pppp_api.st_PPCS_Session;
 import com.xm.sdk.apis.XMStreamComCtrl;
 import com.xm.sdk.bean.ParamConnectDev;
@@ -69,6 +68,9 @@ public class XMP2PManager extends StreamListener  {
     private static XmMovieViewController codecInstance = null;
     private static XMP2PManager instance = null;
     private static XMStreamComCtrl xmStreamComCtrl = null;
+
+//    public static  String serviceString="EBGDEIBIKEJPGDJMEBHLFFEJHPNFHGNMGBFHBPCIAOJJLGLIDEABCKOOGILMJFLJAOMLLMDIOLMGBMCGIO";
+    public static  String serviceString="EBGDEJBJKEJLGHJKEIHCFMEDHENOHINHHHFOBCCGAAJOLJKNDIAFDDPGGELGIGLNAJNDKJCNPJNDAL";
 
     /**
      * 获取 单例 对象操作
@@ -143,6 +145,16 @@ public class XMP2PManager extends StreamListener  {
         this.mAudioVideoStatusListener = listener;
     }
 
+    private XMP2PMqttCtrlListener mXMP2PMqttCtrlListener;
+
+    public interface XMP2PMqttCtrlListener{
+        void onMqttCtrl(JSONObject jsonObject);
+    }
+
+    public void setOnMqttCtrl(XMP2PMqttCtrlListener listener){
+        this.mXMP2PMqttCtrlListener = listener;
+    }
+
     public interface PlayDeviceRecordVideo{
         void onPlayDeviceRecordVideoProcResult(JSONObject jsonObject);
         void onPlayRecViewCtrlResult(JSONObject jsonObject);
@@ -181,7 +193,7 @@ public class XMP2PManager extends StreamListener  {
                 getInstanceP2P().stopConnectDevice();
             }*/
         }
-        LogUtils.e( "connectDevice: ====================");
+        LogUtils.e( "shulan connectDevice: ====================");
         // 创建相关信息
         ParamConnectDev paramConnectDev = new ParamConnectDev();
         // 通道 默认是0
@@ -296,7 +308,7 @@ public class XMP2PManager extends StreamListener  {
     public void onNotifyGateWayNewVersionProcResult(JSONObject paramJSONObject)
     {
         super.onNotifyGateWayNewVersionProcResult(paramJSONObject);
-        LogUtils.e(paramJSONObject.toString());
+        LogUtils.e("shulan onNotifyGateWayNewVersionProcResult--"+paramJSONObject.toString());
         sendP2PResult(paramJSONObject, FUNCTION_GATEWAY_UPDATE);
     }
 
@@ -410,7 +422,6 @@ public class XMP2PManager extends StreamListener  {
     public void stopConnect()
     {
         LogUtils.e("shulan connectDevice -----> stopConnect");
-//        ToastUtil.getInstance().showLong("connectDevice -----> stopConnect");
         getInstanceP2P().stopConnectDevice();
         currentDid=null;
     }
@@ -686,8 +697,25 @@ public class XMP2PManager extends StreamListener  {
      * @return (错误代码参考APIS_Error.java)
      */
     public int playDeviceRecordVideo(String fileDate, String fileName, int type, int cameraChannel){
-       // getInstanceP2P().searchRecordFileList(fileDate,0)
         return getInstanceP2P().playDeviceRecordVideo(fileDate,fileName,type,cameraChannel);
+    }
+
+    /**
+     * 发送搜索指定日期指定通道指定类型的录像文件或抓拍图片命令
+     *
+     * @param searchType 搜索类型<br>
+     *                   0全部录像<br>
+     *                   1全时录像<br>
+     *                   2报警录像<br>
+     *                   3抓拍录像<br>
+     *                   4抓拍图片<br>
+     * @param date       搜索日期(20180830)
+     * @param channel    搜索的通道号
+     * @return (错误代码参考APIS_Error.java)
+     */
+    public int searchRecordFileList(int searchType, String date, int channel){
+        LogUtils.e("shulan searchRecordFileList-->" );
+        return getInstanceP2P().searchRecordFileList(searchType,date,channel);
     }
 
 
@@ -740,5 +768,23 @@ public class XMP2PManager extends StreamListener  {
         if(mPlayDeviceRecordVideoListener != null){
             this.mPlayDeviceRecordVideoListener.onPlayRecViewCtrlResult(jsonObject);
         }
+    }
+
+    public int mqttCtrl(int ctrl){
+        return getInstanceP2P().mqttCtrl(ctrl);
+    }
+
+    @Override
+    public void onMqttCtrlProResult(JSONObject jsonObject) {
+        super.onMqttCtrlProResult(jsonObject);
+        //设备响应操作mqtt动作，动作结果会在onPushCmdRet返回
+        LogUtils.e("shulan onMqttCtrlProResult-->"+jsonObject.toString());
+        if(mXMP2PMqttCtrlListener != null){
+            this.mXMP2PMqttCtrlListener.onMqttCtrl(jsonObject);
+        }
+    }
+
+    public void notifyGateWayNewVersion(){
+        getInstanceP2P().notifyGateWayNewVersion();
     }
 }

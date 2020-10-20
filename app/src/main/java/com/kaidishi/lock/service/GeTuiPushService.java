@@ -46,7 +46,6 @@ public class GeTuiPushService extends Service {
     public void onDestroy() {
         // 该行日志在 release 版本去掉
         Log.d(TAG, "onDestroy -------");
-
         super.onDestroy();
         GTServiceManager.getInstance().onDestroy();
     }

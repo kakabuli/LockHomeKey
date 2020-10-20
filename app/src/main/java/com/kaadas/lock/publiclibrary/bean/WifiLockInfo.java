@@ -3,6 +3,9 @@ package com.kaadas.lock.publiclibrary.bean;
 import com.google.gson.annotations.SerializedName;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.greenDao.convert.SingleFireSwitchInfoConvert;
+import com.kaadas.lock.utils.greenDao.convert.WifiVideoAliveTimeBeanConvert;
+import com.kaadas.lock.utils.greenDao.convert.WifiVideoLockSetPirConvert;
+import com.yun.software.kaadas.UI.wxchat.PayResult;
 
 import org.greenrobot.greendao.annotation.Convert;
 import org.greenrobot.greendao.annotation.Entity;
@@ -140,16 +143,28 @@ public class WifiLockInfo implements Serializable {
     @SerializedName("switch")
     private SingleFireSwitchInfo singleFireSwitchInfo;
 
+    @Convert(converter = WifiVideoLockSetPirConvert.class , columnType = String.class)
+    private WifiVideoLockSetPirBean setPir;
+    @Convert(converter = WifiVideoAliveTimeBeanConvert.class , columnType = String.class)
+    private WifiVideoLockAliveTimeBean alive_time;
+    private int stay_status;
+    private String camera_version;
+    private String mcu_version;
+    private String device_model;
+
+    private int keep_alive_status;
+
     @Generated(hash = 666757199)
     public WifiLockInfo() {
     }
 
-    @Generated(hash = 355824492)
+    @Generated(hash = 222985687)
     public WifiLockInfo(Long id, String deviceID, String wifiSN, int isAdmin, String adminUid, String adminName, String productSN, String productModel, int appId, String lockNickname,
             String lockSoftwareVersion, String functionSet, String uid, String uname, int pushSwitch, int amMode, int safeMode, int powerSave, int faceStatus, int defences,
             String language, int operatingMode, int volume, String bleVersion, String wifiVersion, String mqttVersion, String faceVersion, String lockFirmwareVersion,
             String randomCode, int distributionNetwork, long createTime, String wifiName, int power, long updateTime, int openStatus, long openStatusTime, String device_did,
-            String device_sn, String p2p_password, String mac, SingleFireSwitchInfo singleFireSwitchInfo) {
+            String device_sn, String p2p_password, String mac, SingleFireSwitchInfo singleFireSwitchInfo, WifiVideoLockSetPirBean setPir, WifiVideoLockAliveTimeBean alive_time,
+            int stay_status, String camera_version, String mcu_version, String device_model, int keep_alive_status) {
         this.id = id;
         this.deviceID = deviceID;
         this.wifiSN = wifiSN;
@@ -191,6 +206,70 @@ public class WifiLockInfo implements Serializable {
         this.p2p_password = p2p_password;
         this.mac = mac;
         this.singleFireSwitchInfo = singleFireSwitchInfo;
+        this.setPir = setPir;
+        this.alive_time = alive_time;
+        this.stay_status = stay_status;
+        this.camera_version = camera_version;
+        this.mcu_version = mcu_version;
+        this.device_model = device_model;
+        this.keep_alive_status = keep_alive_status;
+    }
+
+
+    public int getKeep_alive_status() {
+        return keep_alive_status;
+    }
+
+    public void setKeep_alive_status(int keep_alive_status) {
+        this.keep_alive_status = keep_alive_status;
+    }
+
+    public WifiVideoLockSetPirBean getSetPir() {
+        return setPir;
+    }
+
+    public void setSetPir(WifiVideoLockSetPirBean setPir) {
+        this.setPir = setPir;
+    }
+
+    public WifiVideoLockAliveTimeBean getAlive_time() {
+        return alive_time;
+    }
+
+    public void setAlive_time(WifiVideoLockAliveTimeBean alive_time) {
+        this.alive_time = alive_time;
+    }
+
+    public int getStay_status() {
+        return stay_status;
+    }
+
+    public void setStay_status(int stay_status) {
+        this.stay_status = stay_status;
+    }
+
+    public String getCamera_version() {
+        return camera_version;
+    }
+
+    public void setCamera_version(String camera_version) {
+        this.camera_version = camera_version;
+    }
+
+    public String getMcu_version() {
+        return mcu_version;
+    }
+
+    public void setMcu_version(String mcu_version) {
+        this.mcu_version = mcu_version;
+    }
+
+    public String getDevice_model() {
+        return device_model;
+    }
+
+    public void setDevice_model(String device_model) {
+        this.device_model = device_model;
     }
 
     public String getWifiSN() {

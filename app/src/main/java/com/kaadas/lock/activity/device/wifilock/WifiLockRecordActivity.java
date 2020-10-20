@@ -15,7 +15,6 @@ import android.widget.TextView;
 
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
-import com.kaadas.lock.activity.device.wifilock.videolock.WifiLockVideoCallingActivity;
 import com.kaadas.lock.bean.HomeShowBean;
 import com.kaadas.lock.fragment.record.WifiLockAlarmRecordFragment;
 import com.kaadas.lock.fragment.record.WifiLockOpenRecordFragment;

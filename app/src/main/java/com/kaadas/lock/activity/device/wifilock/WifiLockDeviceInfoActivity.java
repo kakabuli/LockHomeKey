@@ -73,6 +73,7 @@ public class WifiLockDeviceInfoActivity extends BaseActivity<IWifiLockMoreView, 
     private String lockFirmwareVersion;
     private List<ProductInfo> productList = new ArrayList<>();
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -163,10 +164,14 @@ public class WifiLockDeviceInfoActivity extends BaseActivity<IWifiLockMoreView, 
                 }
                 break;
             case R.id.rl_lock_firware_number:
-                startActivity(new Intent(this, WifiLockVideoLockFirwareNumberActivity.class));
+                Intent intent = new Intent(this, WifiLockVideoLockFirwareNumberActivity.class);
+                intent.putExtra(KeyConstants.WIFI_SN, wifiSN);
+                startActivity(intent);
                 break;
             case R.id.rl_camera_version:
-                startActivity(new Intent(this, WifiLockVideoCameraVersionActivity.class));
+                Intent intent1 = new Intent(this, WifiLockVideoCameraVersionActivity.class);
+                intent1.putExtra(KeyConstants.WIFI_SN, wifiSN);
+                startActivity(intent1);
                 break;
 
         }

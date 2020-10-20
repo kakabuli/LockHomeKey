@@ -151,6 +151,7 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
         setUpWriteDataBase();
         // HuaWei phone
         if (Rom.isEmui()) {
+            LogUtils.e("shulan Rom.isEmui()");
             HMSAgent.init(this);
         }else if(Rom.isMiui()){
                 MiPushClient.registerPush(this, M_APP_ID, M_APP_KEY);
@@ -171,7 +172,7 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
     }
 
     private void initXMP2PManager() {
-        XMP2PManager.getInstance().initAPI("EBGDEIBIKEJPGDJMEBHLFFEJHPNFHGNMGBFHBPCIAOJJLGLIDEABCKOOGILMJFLJAOMLLMDIOLMGBMCGIO");
+        XMP2PManager.getInstance().initAPI(XMP2PManager.serviceString);
         XMP2PManager.getInstance().init(getApplicationContext());
     }
 

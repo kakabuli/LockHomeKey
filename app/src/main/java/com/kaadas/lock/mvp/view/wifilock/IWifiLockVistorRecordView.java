@@ -42,4 +42,21 @@ public interface IWifiLockVistorRecordView extends IBaseView {
     //录屏开始回调
     void onstartRecordMP4CallBack();
 
+    //进度条回调
+    void onStartProgress(long time);
+
+    //下载成功
+    void onSuccessRecord(boolean flag);
+
+    //连接失败，失败code，关闭资源
+    void onConnectFailed(int paramInt);
+    //连接成功
+    void onConnectSuccess();
+    //连接状态信息
+    void onStartConnect(String paramString);
+    //连接失败，错误信息
+    void onErrorMessage(String message);
+
+
+
 }

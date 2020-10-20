@@ -1,5 +1,6 @@
 package com.kaadas.lock.publiclibrary.http;
 
+import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.bean.PhoneMessage;
 import com.kaadas.lock.bean.PushBean;
 import com.kaadas.lock.bean.PushSwitch;
@@ -56,6 +57,7 @@ import com.kaadas.lock.publiclibrary.http.postbean.WiFiLockViewBindFailBean;
 import com.kaadas.lock.publiclibrary.http.postbean.WiFiLockWifiSNAndUid;
 import com.kaadas.lock.publiclibrary.http.postbean.WiFiLockUpdateNickNameBean;
 import com.kaadas.lock.publiclibrary.http.postbean.WifiLockDeleteShareBean;
+import com.kaadas.lock.publiclibrary.http.postbean.WifiLockDeviceBean;
 import com.kaadas.lock.publiclibrary.http.postbean.WifiLockRecordBean;
 import com.kaadas.lock.publiclibrary.http.postbean.WifiLockShareBean;
 import com.kaadas.lock.publiclibrary.http.postbean.WifiLockUpdateInfoBean;
@@ -1345,8 +1347,12 @@ public class XiaokaiNewServiceImp {
     /**
      *  查询wifi锁设备列表
      */
-    public static Observable<WifiDeviceListResult> wifiDeviceLisst(String wifiSn, int page){
-        WifiLockRecordBean wiFiLockWifiSNAndUid = new WifiLockRecordBean(wifiSn, page);
-        return null;
+    public static Observable<WifiDeviceListResult> wifiDeviceLisst(){
+
+        return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
+                .wifiDeviceList(new HttpUtils<WifiLockDeviceBean>().getBody(new WifiLockDeviceBean(MyApplication.getInstance().getUid())))
+                .subscribeOn(Schedulers.io())
+                .compose(RxjavaHelper.observeOnMainThread());
+
     }
 }

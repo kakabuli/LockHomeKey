@@ -226,8 +226,15 @@ public class MqttConstant {
     //wifi锁上报的  Function
     public static final String FUNC_WFEVENT = "wfevent";
 
+    //视频锁 讯美
+    public static final String WIFI_VIDEO_LOCK_XM ="xmkdswflock";
+
+    //视频锁 门铃
+    public static final String VIDEO_LOCK_DOORBELLING = "alarm";
 
     public static final String UPDATE_DEV_PUSH_SWITCH = "updateDevPushSwitch";
+
+    public static final String WIFI_VIDEO_BINDINFO_NOTIFY = "bindInfoNotify";
 
     /**
      * 获取报警记录

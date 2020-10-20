@@ -1,8 +1,14 @@
 package com.kaadas.lock.activity.device.wifilock;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -26,6 +32,7 @@ import com.kaadas.lock.activity.device.wifilock.password.WiFiLockPasswordManager
 import com.kaadas.lock.activity.device.wifilock.password.WifiLockPasswordShareActivity;
 import com.kaadas.lock.activity.device.wifilock.videolock.WifiLockVideoAlbumActivity;
 import com.kaadas.lock.activity.device.wifilock.videolock.WifiLockVideoCallingActivity;
+import com.kaadas.lock.activity.device.wifilock.videolock.WifiLockVideoMoreActivity;
 import com.kaadas.lock.adapter.WifiLockDetailAdapater;
 import com.kaadas.lock.adapter.WifiLockDetailOneLineAdapater;
 import com.kaadas.lock.bean.HomeShowBean;
@@ -38,16 +45,19 @@ import com.kaadas.lock.publiclibrary.bean.WiFiLockPassword;
 import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.result.WifiLockShareResult;
+import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.BatteryView;
 import com.kaadas.lock.utils.BleLockUtils;
 import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.PermissionUtil;
 import com.kaadas.lock.utils.Rsa;
 import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.SocketManager;
 import com.kaadas.lock.utils.StringUtil;
 import com.kaadas.lock.widget.MyGridItemDecoration;
+import com.lzy.imagepicker.ui.ImageGridActivity;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -57,6 +67,10 @@ import java.util.zip.CRC32;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import la.xiong.androidquick.tool.ToastUtil;
+
+import static com.kaadas.lock.utils.PermissionUtil.REQUEST_AUDIO_PERMISSION_REQUEST_CODE;
+import static com.kaadas.lock.utils.PermissionUtil.REQUEST_PERMISSION_REQUEST_CODE;
 
 public class WiFiLockDetailActivity extends BaseActivity<IWifiLockDetailView, WifiLockDetailPresenter<IWifiLockDetailView>>
         implements IWifiLockDetailView, View.OnClickListener {
@@ -440,9 +454,17 @@ public class WiFiLockDetailActivity extends BaseActivity<IWifiLockDetailView, Wi
                             startActivity(intent);
                             break;
                         case BleLockUtils.TYPE_MORE:
-                            intent = new Intent(WiFiLockDetailActivity.this, WifiLockMoreActivity.class);
-                            intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
-                            startActivityForResult(intent, TO_MORE_REQUEST_CODE);
+                            if(MyApplication.getInstance().getWifiVideoLockTypeBySn(wifiSn) == HomeShowBean.TYPE_WIFI_VIDEO_LOCK){
+                                LogUtils.e("shulan -------------");
+                                intent = new Intent(WiFiLockDetailActivity.this, WifiLockVideoMoreActivity.class);
+                                intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
+                                startActivityForResult(intent, TO_MORE_REQUEST_CODE);
+                            }else{
+
+                                intent = new Intent(WiFiLockDetailActivity.this, WifiLockMoreActivity.class);
+                                intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
+                                startActivityForResult(intent, TO_MORE_REQUEST_CODE);
+                            }
                             break;
                         case BleLockUtils.TYPE_OFFLINE_PASSWORD:
                             intent = new Intent(WiFiLockDetailActivity.this, WifiLockPasswordShareActivity.class);
@@ -468,10 +490,15 @@ public class WiFiLockDetailActivity extends BaseActivity<IWifiLockDetailView, Wi
 
                             break;
                         case BleLockUtils.TYPE_VIDEO:
-                            intent = new Intent(WiFiLockDetailActivity.this,WifiLockVideoCallingActivity.class);
-                            intent.putExtra(KeyConstants.WIFI_VIDEO_LOCK_CALLING,0);
-                            intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
-                            startActivity(intent);
+                            if(wifiLockInfo.getPowerSave() == 0){
+                                intent = new Intent(WiFiLockDetailActivity.this,WifiLockVideoCallingActivity.class);
+                                intent.putExtra(KeyConstants.WIFI_VIDEO_LOCK_CALLING,0);
+                                intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
+                                startActivity(intent);
+
+                            }else{
+                                powerStatusDialog();
+                            }
 
                             break;
                     }
@@ -531,9 +558,17 @@ public class WiFiLockDetailActivity extends BaseActivity<IWifiLockDetailView, Wi
                             startActivity(intent);
                             break;
                         case BleLockUtils.TYPE_MORE:
-                            intent = new Intent(WiFiLockDetailActivity.this, WifiLockMoreActivity.class);
-                            intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
-                            startActivityForResult(intent, TO_MORE_REQUEST_CODE);
+                            if(MyApplication.getInstance().getWifiVideoLockTypeBySn(wifiSn) == HomeShowBean.TYPE_WIFI_VIDEO_LOCK){
+                                LogUtils.e("shulan -------------");
+                                intent = new Intent(WiFiLockDetailActivity.this, WifiLockVideoMoreActivity.class);
+                                intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
+                                startActivityForResult(intent, TO_MORE_REQUEST_CODE);
+                            }else{
+                                intent = new Intent(WiFiLockDetailActivity.this, WifiLockMoreActivity.class);
+                                intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
+                                startActivityForResult(intent, TO_MORE_REQUEST_CODE);
+                            }
+
                             break;
                         case BleLockUtils.TYPE_OFFLINE_PASSWORD:
                             intent = new Intent(WiFiLockDetailActivity.this, WifiLockPasswordShareActivity.class);
@@ -564,6 +599,30 @@ public class WiFiLockDetailActivity extends BaseActivity<IWifiLockDetailView, Wi
         }
     }
 
+    public void powerStatusDialog(){
+        AlertDialogUtil.getInstance().noEditSingleButtonDialog(this, "设置失败", "\n已开启省电模式，需唤醒门锁后再试\n",
+                "确定", new AlertDialogUtil.ClickListener() {
+                    @Override
+                    public void left() {
+
+                    }
+
+                    @Override
+                    public void right() {
+
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                    }
+
+                    @Override
+                    public void afterTextChanged(String toString) {
+
+                    }
+                });
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -615,6 +674,24 @@ public class WiFiLockDetailActivity extends BaseActivity<IWifiLockDetailView, Wi
 
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        LogUtils.e("shulan --"+ this +"-requestCode-->" + requestCode);
+        switch (requestCode){
+            case REQUEST_AUDIO_PERMISSION_REQUEST_CODE:
+                if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){//同意授权
 
+                }else {
+                    // 勾选了不再提示
+                    if (! ActivityCompat.shouldShowRequestPermissionRationale
+                            (this,Manifest.permission.RECORD_AUDIO )) {
+                        // ...
+                    }
+                    ToastUtil.showShort("请先获取麦克风权限");
+                }
+                break;
+        }
+    }
 
 }

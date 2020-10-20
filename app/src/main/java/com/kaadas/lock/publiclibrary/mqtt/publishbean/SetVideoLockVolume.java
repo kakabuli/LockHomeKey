@@ -108,6 +108,13 @@ public class SetVideoLockVolume implements Serializable {
         public void setVolume(int volume) {
             this.volume = volume;
         }
+
+        @Override
+        public String toString() {
+            return "ParamsBean{" +
+                    "volume=" + volume +
+                    '}';
+        }
     }
 
     public SetVideoLockVolume(String msgtype, String userId, int msgId, String wfId, String func, ParamsBean params, String timestamp,int code) {
@@ -119,5 +126,19 @@ public class SetVideoLockVolume implements Serializable {
         this.params = params;
         this.timestamp = timestamp;
         this.code = code;
+    }
+
+    @Override
+    public String toString() {
+        return "SetVideoLockVolume{" +
+                "msgtype='" + msgtype + '\'' +
+                ", userId='" + userId + '\'' +
+                ", msgId=" + msgId +
+                ", wfId='" + wfId + '\'' +
+                ", func='" + func + '\'' +
+                ", params=" + params.toString() +
+                ", timestamp='" + timestamp + '\'' +
+                ", code=" + code +
+                '}';
     }
 }

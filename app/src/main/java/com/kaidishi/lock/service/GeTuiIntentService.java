@@ -11,6 +11,7 @@ import com.igexin.sdk.message.GTCmdMessage;
 import com.igexin.sdk.message.GTNotificationMessage;
 import com.igexin.sdk.message.GTTransmitMessage;
 import com.kaadas.lock.R;
+import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.SPUtils2;
 import com.kaadas.lock.utils.ftp.GeTui;
 
@@ -49,6 +50,8 @@ public class GeTuiIntentService extends GTIntentService {
         String pkg = msg.getPkgName();
         String cid = msg.getClientId();
 
+        LogUtils.e("shulan------------------------");
+
         // 第三方回执调用接口，actionid范围为90000-90999，可根据业务场景执行
         boolean result = PushManager.getInstance().sendFeedbackMessage(context, taskid, messageid, 90001);
         Log.d(TAG, "call sendFeedbackMessage = " + (result ? "success" : "failed"));
@@ -73,6 +76,7 @@ public class GeTuiIntentService extends GTIntentService {
         }
 
         Log.d(TAG, "----------------------------------------------------------------------------------------------");
+
     }
 
     // App初始化以后会回调这个方法
@@ -80,7 +84,7 @@ public class GeTuiIntentService extends GTIntentService {
     @Override
     public void onReceiveClientId(Context context, String clientid) {
         Log.e(TAG, "onReceiveClientId -> " + "clientid = " + clientid);
-
+        LogUtils.e("shulan -- onReceiveClientId-->clientid=" + clientid);
 	//	SPUtils.put(context,"clientId_GetTui",clientid);
 		SPUtils2.put(context, GeTui.JPUSH_ID,clientid);
         sendMessage(clientid, 1);

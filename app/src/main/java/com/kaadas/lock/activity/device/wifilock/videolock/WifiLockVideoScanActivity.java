@@ -1,6 +1,7 @@
 package com.kaadas.lock.activity.device.wifilock.videolock;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -10,37 +11,54 @@ import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
+import android.support.annotation.Nullable;
+import android.text.InputFilter;
 import android.text.TextUtils;
-import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
+import com.kaadas.lock.activity.MainActivity;
+import com.kaadas.lock.activity.device.wifilock.WifiLockAMActivity;
+import com.kaadas.lock.activity.device.wifilock.WifiLockDeviceInfoActivity;
+import com.kaadas.lock.activity.device.wifilock.WifiLockFaceModelAMActivity;
+import com.kaadas.lock.activity.device.wifilock.WifiLockMessagePushActivity;
+import com.kaadas.lock.activity.device.wifilock.WifiLockPowerSaveActivity;
+import com.kaadas.lock.activity.device.wifilock.WifiLockRealTimeActivity;
+import com.kaadas.lock.activity.device.wifilock.WifiLockSafeModelActivity;
+import com.kaadas.lock.activity.device.wifilock.WifiLockWanderingAlarmActivity;
 import com.kaadas.lock.activity.device.wifilock.add.WifiLockHelpActivity;
-import com.kaadas.lock.activity.device.wifilock.newadd.WifiLockAddNewBindFailedActivity;
-import com.kaadas.lock.activity.device.wifilock.newadd.WifiLockAddNewCheckWifiActivity;
 import com.kaadas.lock.activity.device.wifilock.newadd.WifiLockAddNewFirstActivity;
-import com.kaadas.lock.activity.device.wifilock.newadd.WifiLockAddNewInputAdminPasswotdActivity;
-import com.kaadas.lock.activity.device.wifilock.newadd.WifiLockAddNewInputWifiActivity;
-import com.kaadas.lock.activity.device.wifilock.newadd.WifiLockAddNewScanFailedActivity;
+import com.kaadas.lock.activity.device.wifilock.newadd.WifiLockAddNewThirdActivity;
+import com.kaadas.lock.activity.device.wifilock.newadd.WifiLockOldUserFirstActivity;
+import com.kaadas.lock.bean.HomeShowBean;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
+import com.kaadas.lock.mvp.presenter.wifilock.WifiLockMorePresenter;
 import com.kaadas.lock.mvp.presenter.wifilock.WifiLockVideoFifthPresenter;
-import com.kaadas.lock.mvp.presenter.wifilock.WifiLockVideoScanPresenter;
+import com.kaadas.lock.mvp.view.wifilock.IWifiLockMoreView;
 import com.kaadas.lock.mvp.view.wifilock.IWifiLockVideoFifthView;
+import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
+import com.kaadas.lock.publiclibrary.http.result.BaseResult;
+import com.kaadas.lock.publiclibrary.http.result.CheckOTAResult;
+import com.kaadas.lock.publiclibrary.http.util.HttpUtils;
 import com.kaadas.lock.publiclibrary.http.util.RxjavaHelper;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.WifiLockVideoBindBean;
 import com.kaadas.lock.utils.AlertDialogUtil;
+import com.kaadas.lock.utils.BleLockUtils;
 import com.kaadas.lock.utils.GpsUtil;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.NetUtil;
-import com.kaadas.lock.utils.Rsa;
-import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.SocketManager;
-import com.kaadas.lock.utils.WifiUtil;
+import com.kaadas.lock.utils.StringUtil;
+import com.kaadas.lock.utils.ToastUtil;
 import com.kaadas.lock.utils.WifiUtils;
 import com.kaadas.lock.widget.WifiCircleProgress;
 import com.tbruyelle.rxpermissions2.RxPermissions;
@@ -431,4 +449,5 @@ public class WifiLockVideoScanActivity extends BaseActivity<IWifiLockVideoFifthV
             }
         });
     }
+
 }

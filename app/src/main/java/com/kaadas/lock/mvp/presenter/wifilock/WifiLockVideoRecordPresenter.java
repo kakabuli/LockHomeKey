@@ -27,7 +27,7 @@ public class WifiLockVideoRecordPresenter<T> extends BasePresenter<IWifiLockVide
 
     private static  String p2pPassword ="";//ut4D0mvz
 
-    private static  String serviceString="EBGDEIBIKEJPGDJMEBHLFFEJHPNFHGNMGBFHBPCIAOJJLGLIDEABCKOOGILMJFLJAOMLLMDIOLMGBMCGIO";
+    private static  String serviceString=XMP2PManager.serviceString;;
 
     static int	m_handleSession	= -1;
     int			mChannel		= 0;
@@ -103,8 +103,9 @@ public class WifiLockVideoRecordPresenter<T> extends BasePresenter<IWifiLockVide
         deviceInfo.setP2pPassword(p2pPassword);
         deviceInfo.setDeviceSn(sn);
         deviceInfo.setServiceString(serviceString);
-        int param = XMP2PManager.getInstance().connectDevice(deviceInfo);
         XMP2PManager.getInstance().setOnConnectStatusListener(listener);
+        int param = XMP2PManager.getInstance().connectDevice(deviceInfo);
+
         return param;
     }
 

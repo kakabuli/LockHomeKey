@@ -52,7 +52,7 @@ public class WifiLockVideoCallingPresenter<T> extends BasePresenter<IWifiLockVid
 
     private static  String p2pPassword ="";//ut4D0mvz
 
-    private static  String serviceString="EBGDEIBIKEJPGDJMEBHLFFEJHPNFHGNMGBFHBPCIAOJJLGLIDEABCKOOGILMJFLJAOMLLMDIOLMGBMCGIO";
+    private static  String serviceString=XMP2PManager.serviceString;;
 
     static int	m_handleSession	= -1;
     int			mChannel		= 0;
@@ -60,13 +60,6 @@ public class WifiLockVideoCallingPresenter<T> extends BasePresenter<IWifiLockVid
     @Override
     public void attachView(IWifiLockVideoCallingView view) {
         super.attachView(view);
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                connectP2P();
-            }
-        }).start();
-
 
     }
 
@@ -74,7 +67,7 @@ public class WifiLockVideoCallingPresenter<T> extends BasePresenter<IWifiLockVid
         @Override
         public void onConnectFailed(int paramInt) {
             XMP2PManager.getInstance().stopCodec();//
-            LogUtils.e("shulan", "onConnectFailed: paramInt=" + paramInt);
+            LogUtils.e("shulan", this + "onConnectFailed: paramInt=" + paramInt);
 
             if(isSafe()){
                 mViewRef.get().onConnectFailed(paramInt);
@@ -133,8 +126,9 @@ public class WifiLockVideoCallingPresenter<T> extends BasePresenter<IWifiLockVid
         deviceInfo.setP2pPassword(p2pPassword);
         deviceInfo.setDeviceSn(sn);
         deviceInfo.setServiceString(serviceString);
-        int param = XMP2PManager.getInstance().connectDevice(deviceInfo);
         XMP2PManager.getInstance().setOnConnectStatusListener(listener);
+        int param = XMP2PManager.getInstance().connectDevice(deviceInfo);
+
         return param;
     }
 
@@ -153,8 +147,15 @@ public class WifiLockVideoCallingPresenter<T> extends BasePresenter<IWifiLockVid
         LogUtils.e("shulan isConnect--> " + XMP2PManager.getInstance().isConnected(-1));
 //        if(XMP2PManager.getInstance().isConnected(-1)){
             LogUtils.e("startRealTimeVideo");
-                XMP2PManager.getInstance().setRotate(XMP2PManager.SCREEN_ROTATE);
-            XMP2PManager.getInstance().setAudioFrame();
+            XMP2PManager.getInstance().setRotate(XMP2PManager.SCREEN_ROTATE);
+            try {
+                XMP2PManager.getInstance().setAudioFrame();
+            }catch (java.lang.NegativeArraySizeException e){
+                if(isSafe()){
+                    mViewRef.get().recordAudidFailed();
+                }
+            }
+
             XMP2PManager.getInstance().setSurfaceView(surfaceView);
             XMP2PManager.getInstance().play();
             XMP2PManager.getInstance().startVideoStream();
@@ -241,11 +242,26 @@ public class WifiLockVideoCallingPresenter<T> extends BasePresenter<IWifiLockVid
     }
 
     public boolean isTalkback(){
-        return XMP2PManager.getInstance().isTalkback();
+        try {
+            return XMP2PManager.getInstance().isTalkback();
+        }catch (java.lang.NegativeArraySizeException e){
+            if(isSafe()){
+                mViewRef.get().recordAudidFailed();
+            }
+            return true;
+        }
+
     }
 
     public void talkback(boolean flag){
-        XMP2PManager.getInstance().talkback(flag);
+        try {
+            XMP2PManager.getInstance().talkback(flag);;
+        }catch (java.lang.NegativeArraySizeException e){
+            if(isSafe()){
+                mViewRef.get().recordAudidFailed();
+            }
+        }
+
     }
 
     public void startRecordMP4(String filePath){
@@ -278,7 +294,14 @@ public class WifiLockVideoCallingPresenter<T> extends BasePresenter<IWifiLockVid
     }
 
     public void startTalkback(){
-        XMP2PManager.getInstance().startTalkback();
+        try {
+            XMP2PManager.getInstance().startTalkback();
+        }catch (java.lang.NegativeArraySizeException e){
+            if(isSafe()){
+                mViewRef.get().recordAudidFailed();
+            }
+        }
+
     }
 
     public void stopTalkback(){

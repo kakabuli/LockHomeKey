@@ -304,4 +304,5 @@ public class WifiLockMorePresenter<T> extends BasePresenter<IWifiLockMoreView> {
             }
         });
     }
+
 }

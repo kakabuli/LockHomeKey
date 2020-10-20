@@ -40,7 +40,7 @@ public class MyAlbumPlayerPresenter<T> extends BasePresenter<IMyAlbumPlayerView>
 
     private static  String p2pPassword ="";//ut4D0mvz
 
-    private static  String serviceString="EBGDEIBIKEJPGDJMEBHLFFEJHPNFHGNMGBFHBPCIAOJJLGLIDEABCKOOGILMJFLJAOMLLMDIOLMGBMCGIO";
+    private static  String serviceString=XMP2PManager.serviceString;;
 
 
     @Override
@@ -67,8 +67,9 @@ public class MyAlbumPlayerPresenter<T> extends BasePresenter<IMyAlbumPlayerView>
         deviceInfo.setP2pPassword(p2pPassword);
         deviceInfo.setDeviceSn(sn);
         deviceInfo.setServiceString(serviceString);
-        int param = XMP2PManager.getInstance().connectDevice(deviceInfo);
         XMP2PManager.getInstance().setOnConnectStatusListener(listener);
+        int param = XMP2PManager.getInstance().connectDevice(deviceInfo);
+
         return param;
     }
 

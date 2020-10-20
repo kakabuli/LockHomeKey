@@ -8,12 +8,14 @@ import android.widget.TextView;
 
 import com.bm.library.PhotoView;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.kaadas.lock.R;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 import com.kaadas.lock.mvp.presenter.wifilock.MyAlbumPlayerPresenter;
 import com.kaadas.lock.mvp.view.wifilock.IMyAlbumPlayerView;
 import com.kaadas.lock.utils.KeyConstants;
+import com.kaadas.lock.utils.RotateTransformation;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -47,6 +49,7 @@ public class WifiLockVideoPreViewActivity extends BaseAddToApplicationActivity {
         // 启用图片缩放功能
         preview_img.enable();
 
+        //.apply(new RequestOptions().transform(new RotateTransformation(90)))
         Glide.with(this).load(stringExtra).into(preview_img);
     }
 

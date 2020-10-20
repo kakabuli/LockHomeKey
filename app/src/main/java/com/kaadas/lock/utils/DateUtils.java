@@ -3,9 +3,13 @@ package com.kaadas.lock.utils;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by ty on 2018/3/7.
@@ -145,6 +149,7 @@ public class DateUtils {
         Date curDate = new Date(time);
         //格式化
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
+        formatter.setTimeZone(TimeZone.getTimeZone("GMT+8"));
         return formatter.format(curDate);
     }
 
@@ -238,6 +243,12 @@ public class DateUtils {
         return retStr;
     }
 
+    public static String getStringTime2(int cnt) {
+        int hour = cnt/3600;
+        int min = cnt % 3600 / 60;
+        int second = cnt % 60;
+        return String.format(Locale.CHINA,"%02d:%02d",hour,min);
+    }
 
     public static String getStringTime(int cnt) {
         int hour = cnt/3600;
@@ -257,4 +268,56 @@ public class DateUtils {
         }
 
     }
+
+    //时分转成秒
+    public static int getSecondTime(String s){
+        int hour = Integer.parseInt(s.substring(0, s.indexOf(":")));
+        int minute = Integer.parseInt(s.substring(s.indexOf(":") + 1));
+
+        return (hour * 3600) + (minute * 60);
+    }
+
+    public static List<String> getRegEx(String input, String regex) {
+        List<String> stringList = new ArrayList<>();
+        Pattern p = Pattern.compile(regex);
+        Matcher m = p.matcher(input);
+        while (m.find())
+            stringList.add(m.group());
+
+        return stringList;
+    }
+
+    public static boolean isNull(String checkStr) {
+
+        boolean result = false;
+
+        if (null == checkStr){
+
+            result = true;
+        } else {
+            if (checkStr.length() == 0) {
+
+                result = true;
+            }
+        }
+        return result;
+    }
+
+    public static boolean isNull(List<?> list) {
+
+        boolean result = false;
+
+        if (null == list){
+
+            result = true;
+        } else {
+            if (list.size() == 0) {
+
+                result = true;
+            }
+        }
+        return result;
+    }
+
+
 }

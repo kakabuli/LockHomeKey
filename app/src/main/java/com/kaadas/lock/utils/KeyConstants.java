@@ -345,6 +345,29 @@ public class KeyConstants {
     //传递蓝牙电量
     public static final int GET_BLE_POWER = 1004;
 
+    //传递pir sen
+    public static final int WIFI_VIDEO_LOCK_WANDERING_SENSITIVITY_CODE = 2011;
+
+    //传递pir stay time
+    public static final int WIFI_VIDEO_LOCK_WANDERING_STAY_TIME_CODE = 2012;
+
+    //传递安全模式
+    public static final int WIFI_VIDEO_LOCK_SAFE_MODE_CODE = 2013;
+
+    //传递自动模式
+    public static final int WIFI_VIDEO_LOCK_AM_MODE_CODE =2014;
+
+    //传递语言
+    public static final int WIFI_VIDEO_LOCK_LANGUAGE_CODE = 2015;
+
+    //徘徊报警
+    public static final int WIFI_VIDEO_LOCK_WANDERING_ALARM_CODE = 2016;
+
+    //传递视频重复规则
+    public static final int WIFI_VIDEO_LOCK_REAL_TIME_PERIOD_CODE = 2017;
+
+    //实时视频设置
+    public static final int WIFI_VIDEO_LOCK_REAL_TIME_SETTING_CODE = 2018;
 
     /**
      * 传递蓝牙设备信息的Key
@@ -513,6 +536,10 @@ public class KeyConstants {
     public static final String URL_RESULT = "urlResult";  //扫描到的链接
 
 
+    public static final int WIFI_VIDEO_LOCK_PIR_SEN_1 = 35;
+    public static final int WIFI_VIDEO_LOCK_PIR_SEN_2 = 70;
+    public static final int WIFI_VIDEO_LOCK_PIR_SEN_3 = 90;
+
     /**
      * 传递网关Model
      */
@@ -559,5 +586,56 @@ public class KeyConstants {
      *  呼叫或者实时视频
      */
     public static final String WIFI_VIDEO_LOCK_CALLING = "wifi_video_lock_calling";
+
+    /**
+     *  PIR灵敏度
+     */
+    public static final String WIFI_VIDEO_PIR_SENSITIVITY = "wifi_video_lock_pir_sensitivity";
+
+    /**
+     * 徘徊时间
+     */
+    public static final String WIFI_VIDEO_WANDERING_TIME = "wifi_video_lock_wandering_time";
+
+    /**
+     *  pri
+     */
+    public static final String WIFI_VIDEO_WANDERING_SENSITIVITY = "wifi_video_lock_wandering_sensitivity";
+
+    /**
+     * 安全模式
+     */
+    public static final String WIFI_VIDEO_LOCK_SAFE_MODE = "wifi_video_lock_safe_mode";
+
+    /**
+     * 自动模式
+     */
+    public static final String WIFI_VIDEO_LOCK_AM_MODE ="wifi_video_lock_am_mode";
+
+    /**
+     * 门锁语言
+     */
+    public static final String WIFI_VIDEO_LOCK_LANGUAGE = "wifi_video_lock_language";
+
+    /**
+     * 徘徊报警
+     */
+    public static final String WIFI_VIDEO_LOCK_WANDERING_ALARM = "wifi_video_lock_wandering_alarm";
+
+    /**
+     *  开始时间
+     */
+    public static final String WIFI_VIDEO_LOCK_REAL_TIME_SETTING_START = "wifi_video_lock_real_time_setting_start";
+
+    /**
+     * 结束时间
+     */
+    public static final String WIFI_VIDEO_LOCK_REAL_TIME_SETTING_END = "wifi_video_lock_real_time_setting_end";
+
+    /**
+     *  重复规则
+     */
+    public static final String WIFI_VIDEO_LOCK_REAL_TIME_PERIOD = "wifi_video_lock_real_time_period";
+
 }
 

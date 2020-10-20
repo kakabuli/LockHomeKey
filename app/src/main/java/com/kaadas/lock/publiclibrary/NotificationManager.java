@@ -11,6 +11,8 @@ import android.support.v4.app.NotificationManagerCompat;
 import com.kaadas.lock.R;
 import com.kaadas.lock.utils.LogUtils;
 
+import org.linphone.mediastream.Log;
+
 public class NotificationManager {
     public static final int notificationId = 4685;
 
@@ -41,6 +43,7 @@ public class NotificationManager {
             // 这里两个通知使用同一个id且必须按照这个顺序后调用startForeground
 //            int id = NotificationUtil.nextNotifyId();
             NotificationManagerCompat.from(context).notify(notificationId, builder.build());
+            LogUtils.e("shulan -notificationId-->" + notificationId);
             context.startForeground(notificationId, builder.build());
         }
     }

@@ -1,11 +1,15 @@
 package com.kaadas.lock.fragment.home;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -38,9 +42,11 @@ import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.result.GetWifiLockOperationRecordResult;
 import com.kaadas.lock.publiclibrary.http.util.BaseObserver;
 import com.kaadas.lock.publiclibrary.mqtt.eventbean.WifiLockOperationBean;
+import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.PermissionUtil;
 import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.greenDao.manager.WifiLockInfoManager;
 
@@ -50,6 +56,10 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.disposables.Disposable;
+import la.xiong.androidquick.tool.ToastUtil;
+
+import static com.kaadas.lock.utils.PermissionUtil.REQUEST_AUDIO_PERMISSION_REQUEST_CODE;
+import static com.kaadas.lock.utils.PermissionUtil.REQUEST_PERMISSION_REQUEST_CODE;
 
 public class WifiVideoLockFragment extends BaseFragment<IWifiVideoLockView, WifiVideoLockPresenter<IWifiVideoLockView>>
         implements View.OnClickListener, IWifiVideoLockView, View.OnLongClickListener {
@@ -151,7 +161,7 @@ public class WifiVideoLockFragment extends BaseFragment<IWifiVideoLockView, Wifi
         int faceStatus = wifiLockInfo.getFaceStatus();  //面容识别已关闭
         int powerSave = wifiLockInfo.getPowerSave();   //已启动节能模式
 
-
+        LogUtils.e("shulan -----节能模式 powerSave-->" + powerSave);
         if (isOpening){
             changeLockStatus(4);
         }else {
@@ -391,11 +401,15 @@ public class WifiVideoLockFragment extends BaseFragment<IWifiVideoLockView, Wifi
                 mPresenter.getOpenCount(wifiLockInfo.getWifiSN());
                 break;
             case R.id.iv_external_big:
+                if(wifiLockInfo.getPowerSave() == 0){
 
-                intent = new Intent(getContext(),WifiLockVideoCallingActivity.class);
-                intent.putExtra(KeyConstants.WIFI_VIDEO_LOCK_CALLING,0);
-                intent.putExtra(KeyConstants.WIFI_SN,  wifiLockInfo.getWifiSN());
-                startActivity(intent);
+                    intent = new Intent(getContext(),WifiLockVideoCallingActivity.class);
+                    intent.putExtra(KeyConstants.WIFI_VIDEO_LOCK_CALLING,0);
+                    intent.putExtra(KeyConstants.WIFI_SN,  wifiLockInfo.getWifiSN());
+                    startActivity(intent);
+                }else{
+                    powerStatusDialog();
+                }
 
                /* TextView msg = new TextView(getActivity());
                 msg.setText("不可点击");
@@ -555,4 +569,30 @@ public class WifiVideoLockFragment extends BaseFragment<IWifiVideoLockView, Wifi
                 })
         ;
     }
+
+    public void powerStatusDialog(){
+        AlertDialogUtil.getInstance().noEditSingleButtonDialog(getActivity(), "设置失败", "\n已开启省电模式，需唤醒门锁后再试\n",
+                "确定", new AlertDialogUtil.ClickListener() {
+                    @Override
+                    public void left() {
+
+                    }
+
+                    @Override
+                    public void right() {
+
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                    }
+
+                    @Override
+                    public void afterTextChanged(String toString) {
+
+                    }
+                });
+    }
+
 }

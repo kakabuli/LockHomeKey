@@ -2,7 +2,11 @@ package com.kaadas.lock.utils;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
+import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 
@@ -23,11 +27,13 @@ public String[] permission=new String[] {
         Manifest.permission.WRITE_EXTERNAL_STORAGE,
         Manifest.permission.READ_PHONE_STATE,
         Manifest.permission.ACCESS_FINE_LOCATION,
-        Manifest.permission.READ_EXTERNAL_STORAGE};
+        Manifest.permission.READ_EXTERNAL_STORAGE,
+        Manifest.permission.RECORD_AUDIO};
 
 
 
     public static final int REQUEST_PERMISSION_REQUEST_CODE=1;
+    public static final int REQUEST_AUDIO_PERMISSION_REQUEST_CODE=8;
     private static PermissionUtil permissionUtil = null;
 
     public static PermissionUtil getInstance()
@@ -61,6 +67,7 @@ public String[] permission=new String[] {
                 //如果应用之前请求过此权限但用户拒绝了请求，此方法将返回 true。
                 //申请权限，字符串数组内是一个或多个要申请的权限，1是申请权限结果的返回参数，在onRequestPermissionsResult可以得知申请结果
                 ActivityCompat.requestPermissions(activity, checkPermission(permissions), REQUEST_PERMISSION_REQUEST_CODE);
+
             }
         }
     }
@@ -81,5 +88,50 @@ public String[] permission=new String[] {
 
     public interface PermissionListener {
         void allPermissionAgree();
+    }
+
+    /**
+     * 跳转到权限设置
+     *
+     * @param activity
+     */
+    public static void toPermissionSetting(Context activity) {
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.LOLLIPOP_MR1) {
+            toSystemConfig(activity);
+        } else {
+            try {
+                toApplicationInfo(activity);
+            } catch (Exception e) {
+                e.printStackTrace();
+                toSystemConfig(activity);
+            }
+        }
+    }
+
+    /**
+     * 应用信息界面
+     *
+     * @param activity
+     */
+    public static void toApplicationInfo(Context activity) {
+        Intent localIntent = new Intent();
+        localIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        localIntent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+        localIntent.setData(Uri.fromParts("package", activity.getPackageName(), null));
+        activity.startActivity(localIntent);
+    }
+
+    /**
+     * 系统设置界面
+     *
+     * @param activity
+     */
+    public static void toSystemConfig(Context activity) {
+        try {
+            Intent intent = new Intent(Settings.ACTION_SETTINGS);
+            activity.startActivity(intent);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

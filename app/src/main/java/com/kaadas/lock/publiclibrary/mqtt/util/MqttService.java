@@ -1,26 +1,36 @@
 package com.kaadas.lock.publiclibrary.mqtt.util;
 
+import android.Manifest;
 import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
+import android.support.v4.app.ActivityCompat;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.google.gson.Gson;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
+import com.kaadas.lock.activity.device.wifilock.videolock.WifiLockVideoCallingActivity;
 import com.kaadas.lock.bean.PirEventBus;
 import com.kaadas.lock.publiclibrary.NotificationManager;
+import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
+import com.kaadas.lock.publiclibrary.ble.BleUtil;
 import com.kaadas.lock.publiclibrary.mqtt.PublishResult;
+import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.DoorbellingResult;
 import com.kaadas.lock.utils.Constants;
+import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.NetUtil;
+import com.kaadas.lock.utils.PermissionUtil;
 import com.kaadas.lock.utils.SPUtils2;
 import com.kaadas.lock.utils.ToastUtil;
 import com.kaadas.lock.utils.ftp.FtpUtils;
 import com.kaadas.lock.utils.ftp.GeTui;
 import com.kaadas.lock.utils.greenDao.bean.HistoryInfo;
+import com.kaidishi.lock.WelcomeActivity;
 
 import org.eclipse.paho.android.service.MqttAndroidClient;
 import org.eclipse.paho.client.mqttv3.DisconnectedBufferOptions;
@@ -42,6 +52,8 @@ import java.util.Date;
 
 import io.reactivex.Observable;
 import io.reactivex.subjects.PublishSubject;
+
+import static com.kaadas.lock.utils.PermissionUtil.REQUEST_PERMISSION_REQUEST_CODE;
 
 public class MqttService extends Service {
 
@@ -276,6 +288,15 @@ public class MqttService extends Service {
                     powerDataObversable.onNext(mqttData);
                 }
 
+                LogUtils.e("shulan mqttData.getFunc()-->" + mqttData.getFunc() );
+                LogUtils.e("shulan MqttConstant.FUNC_WFEVENT-->" + MqttConstant.FUNC_WFEVENT );
+                LogUtils.e("shulan -->" + MqttConstant.FUNC_WFEVENT.equals(mqttData.getFunc()));
+                if(MqttConstant.FUNC_WFEVENT.equals(mqttData.getFunc())){
+                    LogUtils.e("shulan 进来啦");
+
+                    executeDoorbellingFunction(jsonObject);
+                }
+
 
                 if(MqttConstant.GATEWAY_EVENT_NOTIFY.equals(mqttData.getFunc())){
                     int code = jsonObject.getInt("eventcode");
@@ -359,6 +380,8 @@ public class MqttService extends Service {
             e.printStackTrace();
         }
     }
+
+
 
     //订阅
     private void mqttSubscribe(MqttAndroidClient mqttClient, String topic, int qos) {
@@ -583,6 +606,23 @@ public class MqttService extends Service {
     }
 
 
+    private void executeDoorbellingFunction(JSONObject jsonObject) {
+        DoorbellingResult mDoorbellingResult = new Gson().fromJson(jsonObject.toString(), DoorbellingResult.class);
+        if(mDoorbellingResult.getDevtype().equals(MqttConstant.WIFI_VIDEO_LOCK_XM) && mDoorbellingResult.getEventtype().equals(MqttConstant.VIDEO_LOCK_DOORBELLING)){
+            if(mDoorbellingResult.getEventparams().getAlarmCode() == BleUtil.DOOR_BELL){
+                WifiLockInfo wifiLockInfoBySn = MyApplication.getInstance().getWifiLockInfoBySn(mDoorbellingResult.getWfId());
+                if(wifiLockInfoBySn.getPowerSave() == 0){
+                    Intent intent = new Intent(this, WifiLockVideoCallingActivity.class);
+                    intent.putExtra(KeyConstants.WIFI_VIDEO_LOCK_CALLING,1);
+                    intent.putExtra(KeyConstants.WIFI_SN,mDoorbellingResult.getWfId());
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                }
 
+            }
+
+        }
+
+    }
 
 }

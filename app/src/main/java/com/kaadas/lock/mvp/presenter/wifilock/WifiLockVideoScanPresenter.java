@@ -50,7 +50,7 @@ public class WifiLockVideoScanPresenter<T> extends BasePresenter<IWifiLockVideoF
 
                                     LogUtils.e("shulan getDeviceBindingStatus-----------------"+mWifiLockVideoBindBean.toString());
 
-                                    if(mWifiLockVideoBindBean.getEventparams() != null){
+                                    if(mWifiLockVideoBindBean.getEventparams() != null && mWifiLockVideoBindBean.getEventtype().equals(MqttConstant.WIFI_VIDEO_BINDINFO_NOTIFY)){
                                         if (isSafe())
                                             mViewRef.get().onDeviceBinding(mWifiLockVideoBindBean);
 

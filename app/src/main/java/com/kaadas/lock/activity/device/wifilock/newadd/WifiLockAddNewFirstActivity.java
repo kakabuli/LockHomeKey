@@ -42,6 +42,8 @@ public class WifiLockAddNewFirstActivity extends BaseAddToApplicationActivity {
     TextView buttonNext;
     @BindView(R.id.tv_reconnect)
     TextView tvReconnect;
+    @BindView(R.id.iv_img_lock)
+    ImageView ivImgLock;
 
     private String wifiModelType;
 
@@ -56,6 +58,12 @@ public class WifiLockAddNewFirstActivity extends BaseAddToApplicationActivity {
         wifiModelType = intent.getStringExtra("wifiModelType");
         LogUtils.e("shulan", "WifiLockAddNewFirstActivity onCreate: wifiModelType=" + wifiModelType);
         ButterKnife.bind(this);
+
+        if(wifiModelType.contains("VIDEO")){
+            ivImgLock.setImageResource(R.mipmap.wifi_video_lock_img_lock);
+        }else{
+            ivImgLock.setImageResource(R.mipmap.new_add_first);
+        }
     }
 
     @OnClick({R.id.back, R.id.help, R.id.button_next, R.id.tv_reconnect})
@@ -68,7 +76,7 @@ public class WifiLockAddNewFirstActivity extends BaseAddToApplicationActivity {
                 startActivity(new Intent(this,WifiLockHelpActivity.class));
                 break;
             case R.id.button_next:
-                //todo 检查权限，检查是否连接wifi
+                //检查权限，检查是否连接wifi
                 permissionDisposable = rxPermissions
                         .request(Manifest.permission.ACCESS_FINE_LOCATION)
                         .subscribe(granted -> {

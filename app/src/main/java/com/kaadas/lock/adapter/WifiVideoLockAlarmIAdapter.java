@@ -2,6 +2,7 @@ package com.kaadas.lock.adapter;
 
 import android.content.Intent;
 import android.support.annotation.Nullable;
+import android.text.Html;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
@@ -107,7 +108,7 @@ public class WifiVideoLockAlarmIAdapter extends BaseQuickAdapter<WifiVideoLockAl
 
         switch (record.getType()){
             case 0x10://您的智能门锁低电量，请及时更换
-                tvRight.setText(mContext.getText(R.string.wifi_lock_alarm_low_power));
+                tvRight.setText(Html.fromHtml("<font color='#666666'>"+ mContext.getText(R.string.wifi_lock_alarm_low_power) +"</font>" + "<br><font color='#999999'>已自动开启节能模式（视频功能已关闭）</font>"));
                 iv.setImageResource(R.mipmap.video_lock_alarm_icon_battery);
                 rlPic.setVisibility(View.GONE);
                 break;
@@ -124,7 +125,7 @@ public class WifiVideoLockAlarmIAdapter extends BaseQuickAdapter<WifiVideoLockAl
                 iv.setImageResource(R.mipmap.video_lock_alarm_icon_prylock);
                 break;
             case 0x04:// 已监测到您的门锁被撬，请联系家人或小区保安
-                tvRight.setText(mContext.getText(R.string.wifi_lock_alarm_lock_broken));
+                tvRight.setText(Html.fromHtml("<font color='#666666'>"+ mContext.getText(R.string.pick_proof) +"</font>" + "<br><font color='#999999'>已监测到您的门锁被撬</font>"));
                 iv.setImageResource(R.mipmap.video_lock_alarm_icon_prylock);
                 break;
             case 0x70:// 徘徊报警
@@ -140,7 +141,7 @@ public class WifiVideoLockAlarmIAdapter extends BaseQuickAdapter<WifiVideoLockAl
                 iv.setImageResource(R.mipmap.video_lock_alarm_icon_locking);
                 break;
             case 0x40:// 布防报警
-                tvRight.setText(mContext.getText(R.string.warring_defence));
+                tvRight.setText(Html.fromHtml("<font color='#666666'>"+ mContext.getText(R.string.warring_defence) +"</font>" + "<br><font color='#999999'>您的门锁有从门内开锁情况</font>"));
                 iv.setImageResource(R.mipmap.video_lock_alarm_icon_protection);
                 break;
         }
@@ -148,7 +149,7 @@ public class WifiVideoLockAlarmIAdapter extends BaseQuickAdapter<WifiVideoLockAl
         if(record.getThumbUrl()!=null && !record.getThumbUrl().isEmpty()){
             Glide.with(mContext).load(record.getThumbUrl())
                     .apply(new RequestOptions().error(R.mipmap.img_video_lock_default).placeholder(R.mipmap.img_video_lock_default)
-                            .transform(new RotateTransformation(270.0f))).into(ivContent);
+                            .transform(new RotateTransformation(90f))).into(ivContent);
         }
 
         if(record.isThumbState() && record.getFileName() != null){

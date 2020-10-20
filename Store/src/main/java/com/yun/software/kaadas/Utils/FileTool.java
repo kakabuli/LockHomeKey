@@ -106,6 +106,20 @@ public class FileTool {
         return folder;
     }
 
+    /**
+     * 获取的目录默认没有最后的”/”,需要自己加上
+     * 获取本应用视频缓存目录
+     *
+     * @return
+     */
+    public static File getVideoCacheFolder(Context context,String wifiSn) {
+        File folder = new File(context.getCacheDir(), "VIDEOCACHE-" + wifiSn);
+        if (!folder.exists()) {
+            folder.mkdir();
+        }
+        return folder;
+    }
+
     public static File getVideoLockRootDir(Context context){
         File folder = new File(getRootPath(), VIDEO_LOCK_PATH);
         if (!folder.exists()) {

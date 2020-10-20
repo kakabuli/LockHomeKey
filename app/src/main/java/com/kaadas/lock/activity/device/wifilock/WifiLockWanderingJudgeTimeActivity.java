@@ -1,49 +1,249 @@
 package com.kaadas.lock.activity.device.wifilock;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
+import android.widget.CheckBox;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 
+import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.mvp.presenter.wifilock.WifiLockMorePresenter;
 import com.kaadas.lock.mvp.view.wifilock.IWifiLockMoreView;
+import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.result.CheckOTAResult;
+import com.kaadas.lock.utils.KeyConstants;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class WifiLockWanderingJudgeTimeActivity extends BaseActivity<IWifiLockMoreView, WifiLockMorePresenter<IWifiLockMoreView>>
-        implements IWifiLockMoreView, View.OnClickListener  {
+        implements IWifiLockMoreView{
 
     @BindView(R.id.back)
     ImageView back;
+    @BindView(R.id.iv_judge_time_1)
+    CheckBox ivJudgeTime1;
+    @BindView(R.id.iv_judge_time_2)
+    CheckBox ivJudgeTime2;
+    @BindView(R.id.iv_judge_time_3)
+    CheckBox ivJudgeTime3;
+    @BindView(R.id.iv_judge_time_4)
+    CheckBox ivJudgeTime4;
+    @BindView(R.id.iv_judge_time_5)
+    CheckBox ivJudgeTime5;
+    @BindView(R.id.iv_judge_time_6)
+    CheckBox ivJudgeTime6;
+
+    private String wifiSn;
+    private WifiLockInfo wifiLockInfo;
+
+    private int stay_time ;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wifi_lock_wandering_judge_time);
         ButterKnife.bind(this);
+        wifiSn = getIntent().getStringExtra(KeyConstants.WIFI_SN);
+        wifiLockInfo = MyApplication.getInstance().getWifiLockInfoBySn(wifiSn);
 
-        initClick();
         initData();
     }
 
     private void initData() {
-
+        if(wifiLockInfo != null){
+            if(wifiLockInfo.getSetPir() != null){
+                stay_time = wifiLockInfo.getSetPir().getStay_time();
+                if(stay_time == 10){
+                    setJudgeTimeInit(R.id.rl_judge_time_1);
+                }else if(stay_time == 20){
+                    setJudgeTimeInit(R.id.rl_judge_time_2);
+                }else if(stay_time == 30){
+                    setJudgeTimeInit(R.id.rl_judge_time_3);
+                }else if(stay_time == 40){
+                    setJudgeTimeInit(R.id.rl_judge_time_4);
+                }else if(stay_time == 50){
+                    setJudgeTimeInit(R.id.rl_judge_time_5);
+                }else if(stay_time == 60){
+                    setJudgeTimeInit(R.id.rl_judge_time_6);
+                }
+            }
+        }
     }
 
-    private void initClick() {
-        back.setOnClickListener(this);
-    }
 
-    @Override
+    @OnClick({R.id.back,R.id.rl_judge_time_6,R.id.rl_judge_time_5,R.id.rl_judge_time_4,R.id.rl_judge_time_3,R.id.rl_judge_time_2,R.id.rl_judge_time_1})
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.back:
+                Intent intent = new Intent();
+                intent.putExtra(KeyConstants.WIFI_VIDEO_WANDERING_TIME,stay_time);
+                setResult(RESULT_OK,intent);
                 finish();
+                break;
+            case R.id.rl_judge_time_6:
+                setJudgeTime(R.id.rl_judge_time_6);
+                break;
+            case R.id.rl_judge_time_5:
+                setJudgeTime(R.id.rl_judge_time_5);
+                break;
+            case R.id.rl_judge_time_4:
+                setJudgeTime(R.id.rl_judge_time_4);
+                break;
+            case R.id.rl_judge_time_3:
+                setJudgeTime(R.id.rl_judge_time_3);
+                break;
+            case R.id.rl_judge_time_2:
+                setJudgeTime(R.id.rl_judge_time_2);
+                break;
+            case R.id.rl_judge_time_1:
+                setJudgeTime(R.id.rl_judge_time_1);
+                break;
+        }
+    }
+
+    private void setJudgeTimeInit(int id){
+        switch (id){
+            case R.id.rl_judge_time_6:
+                    ivJudgeTime6.setChecked(true);
+                    ivJudgeTime5.setChecked(false);
+                    ivJudgeTime4.setChecked(false);
+                    ivJudgeTime3.setChecked(false);
+                    ivJudgeTime2.setChecked(false);
+                    ivJudgeTime1.setChecked(false);
+
+
+                break;
+            case R.id.rl_judge_time_5:
+
+                    ivJudgeTime6.setChecked(false);
+                    ivJudgeTime5.setChecked(true);
+                    ivJudgeTime4.setChecked(false);
+                    ivJudgeTime3.setChecked(false);
+                    ivJudgeTime2.setChecked(false);
+                    ivJudgeTime1.setChecked(false);
+
+                break;
+            case R.id.rl_judge_time_4:
+
+
+                    ivJudgeTime6.setChecked(false);
+                    ivJudgeTime5.setChecked(false);
+                    ivJudgeTime4.setChecked(true);
+                    ivJudgeTime3.setChecked(false);
+                    ivJudgeTime2.setChecked(false);
+                    ivJudgeTime1.setChecked(false);
+
+                break;
+            case R.id.rl_judge_time_3:
+
+                    ivJudgeTime6.setChecked(false);
+                    ivJudgeTime5.setChecked(false);
+                    ivJudgeTime4.setChecked(false);
+                    ivJudgeTime3.setChecked(true);
+                    ivJudgeTime2.setChecked(false);
+                    ivJudgeTime1.setChecked(false);
+
+                break;
+            case R.id.rl_judge_time_2:
+                    ivJudgeTime6.setChecked(false);
+                    ivJudgeTime5.setChecked(false);
+                    ivJudgeTime4.setChecked(false);
+                    ivJudgeTime3.setChecked(false);
+                    ivJudgeTime2.setChecked(true);
+                    ivJudgeTime1.setChecked(false);
+                break;
+            case R.id.rl_judge_time_1:
+
+                    ivJudgeTime6.setChecked(false);
+                    ivJudgeTime5.setChecked(false);
+                    ivJudgeTime4.setChecked(false);
+                    ivJudgeTime3.setChecked(false);
+                    ivJudgeTime2.setChecked(false);
+                    ivJudgeTime1.setChecked(true);
+                break;
+        }
+    }
+
+    private void setJudgeTime(int id){
+        switch (id){
+            case R.id.rl_judge_time_6:
+                if(!ivJudgeTime6.isChecked()){
+                    ivJudgeTime6.setChecked(true);
+                    ivJudgeTime5.setChecked(false);
+                    ivJudgeTime4.setChecked(false);
+                    ivJudgeTime3.setChecked(false);
+                    ivJudgeTime2.setChecked(false);
+                    ivJudgeTime1.setChecked(false);
+                    stay_time = 60;
+                }
+
+                break;
+            case R.id.rl_judge_time_5:
+                if(!ivJudgeTime5.isChecked()){
+
+                    ivJudgeTime6.setChecked(false);
+                    ivJudgeTime5.setChecked(true);
+                    ivJudgeTime4.setChecked(false);
+                    ivJudgeTime3.setChecked(false);
+                    ivJudgeTime2.setChecked(false);
+                    ivJudgeTime1.setChecked(false);
+                    stay_time = 50;
+                }
+                break;
+            case R.id.rl_judge_time_4:
+                if(!ivJudgeTime4.isChecked()){
+
+                    ivJudgeTime6.setChecked(false);
+                    ivJudgeTime5.setChecked(false);
+                    ivJudgeTime4.setChecked(true);
+                    ivJudgeTime3.setChecked(false);
+                    ivJudgeTime2.setChecked(false);
+                    ivJudgeTime1.setChecked(false);
+                    stay_time = 40;
+                }
+                break;
+            case R.id.rl_judge_time_3:
+                if(!ivJudgeTime3.isChecked()){
+
+                    ivJudgeTime6.setChecked(false);
+                    ivJudgeTime5.setChecked(false);
+                    ivJudgeTime4.setChecked(false);
+                    ivJudgeTime3.setChecked(true);
+                    ivJudgeTime2.setChecked(false);
+                    ivJudgeTime1.setChecked(false);
+                    stay_time = 30;
+                }
+                break;
+            case R.id.rl_judge_time_2:
+                if(!ivJudgeTime2.isChecked()){
+
+                    ivJudgeTime6.setChecked(false);
+                    ivJudgeTime5.setChecked(false);
+                    ivJudgeTime4.setChecked(false);
+                    ivJudgeTime3.setChecked(false);
+                    ivJudgeTime2.setChecked(true);
+                    ivJudgeTime1.setChecked(false);
+                    stay_time = 20;
+                }
+                break;
+            case R.id.rl_judge_time_1:
+                if(!ivJudgeTime1.isChecked()){
+
+                    ivJudgeTime6.setChecked(false);
+                    ivJudgeTime5.setChecked(false);
+                    ivJudgeTime4.setChecked(false);
+                    ivJudgeTime3.setChecked(false);
+                    ivJudgeTime2.setChecked(false);
+                    ivJudgeTime1.setChecked(true);
+                    stay_time = 10;
+                }
                 break;
         }
     }

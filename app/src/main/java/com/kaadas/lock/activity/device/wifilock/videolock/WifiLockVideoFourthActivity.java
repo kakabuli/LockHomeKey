@@ -98,7 +98,8 @@ public class WifiLockVideoFourthActivity extends BaseAddToApplicationActivity {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.back:
-                showWarring();
+//                showWarring();
+                finish();
                 break;
             case R.id.help:
                 startActivity(new Intent(this, WifiLockHelpActivity.class));

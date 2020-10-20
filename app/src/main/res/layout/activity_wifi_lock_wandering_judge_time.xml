@@ -35,7 +35,7 @@
     </RelativeLayout>
     
     <RelativeLayout
-        android:id="@+id/rl_message_free"
+        android:id="@+id/rl_judge_time_1"
         android:layout_width="match_parent"
         android:layout_height="58dp"
         android:background="#FFFFFF"
@@ -51,14 +51,14 @@
             android:textColor="#333333"
             android:textSize="@dimen/sp_13" />
 
-        <ImageButton
+        <CheckBox
             android:id="@+id/iv_judge_time_1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="@dimen/dp_16"
-            android:background="@mipmap/week_period_select"
+            android:button="@drawable/wandering_judge_time_selector"
             />
 
         <View
@@ -70,6 +70,7 @@
     </RelativeLayout>
 
         <RelativeLayout
+            android:id="@+id/rl_judge_time_2"
             android:layout_width="match_parent"
             android:layout_height="58dp"
             android:background="#FFFFFF"
@@ -85,14 +86,14 @@
                 android:textColor="#333333"
                 android:textSize="@dimen/sp_13" />
 
-            <ImageButton
+            <CheckBox
                 android:id="@+id/iv_judge_time_2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="@dimen/dp_16"
-                android:background="@mipmap/week_period_normal"
+                android:button="@drawable/wandering_judge_time_selector"
                 />
 
             <View
@@ -104,6 +105,7 @@
         </RelativeLayout>
 
         <RelativeLayout
+            android:id="@+id/rl_judge_time_3"
             android:layout_width="match_parent"
             android:layout_height="58dp"
             android:background="#FFFFFF"
@@ -119,14 +121,14 @@
                 android:textColor="#333333"
                 android:textSize="@dimen/sp_13" />
 
-            <ImageButton
+            <CheckBox
                 android:id="@+id/iv_judge_time_3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="@dimen/dp_16"
-                android:background="@mipmap/week_period_normal"
+                android:button="@drawable/wandering_judge_time_selector"
                 />
 
             <View
@@ -138,6 +140,7 @@
         </RelativeLayout>
 
         <RelativeLayout
+            android:id="@+id/rl_judge_time_4"
             android:layout_width="match_parent"
             android:layout_height="58dp"
             android:background="#FFFFFF"
@@ -153,14 +156,14 @@
                 android:textColor="#333333"
                 android:textSize="@dimen/sp_13" />
 
-            <ImageButton
+            <CheckBox
                 android:id="@+id/iv_judge_time_4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="@dimen/dp_16"
-                android:background="@mipmap/week_period_normal"
+                android:button="@drawable/wandering_judge_time_selector"
                 />
 
             <View
@@ -172,6 +175,7 @@
         </RelativeLayout>
 
         <RelativeLayout
+            android:id="@+id/rl_judge_time_5"
             android:layout_width="match_parent"
             android:layout_height="58dp"
             android:background="#FFFFFF"
@@ -187,14 +191,14 @@
                 android:textColor="#333333"
                 android:textSize="@dimen/sp_13" />
 
-            <ImageButton
+            <CheckBox
                 android:id="@+id/iv_judge_time_5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="@dimen/dp_16"
-                android:background="@mipmap/week_period_normal"
+                android:button="@drawable/wandering_judge_time_selector"
                 />
 
             <View
@@ -206,6 +210,7 @@
         </RelativeLayout>
 
         <RelativeLayout
+            android:id="@+id/rl_judge_time_6"
             android:layout_width="match_parent"
             android:layout_height="58dp"
             android:background="#FFFFFF"
@@ -221,14 +226,14 @@
                 android:textColor="#333333"
                 android:textSize="@dimen/sp_13" />
 
-            <ImageButton
+            <CheckBox
                 android:id="@+id/iv_judge_time_6"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="@dimen/dp_16"
-                android:background="@mipmap/week_period_normal"
+                android:button="@drawable/wandering_judge_time_selector"
                 />
 
             <View

@@ -18,8 +18,10 @@ import com.kaadas.lock.activity.device.wifilock.videolock.WifiLockVideoAlbumDeta
 import com.kaadas.lock.activity.device.wifilock.videolock.WifiLockVideoPreViewActivity;
 import com.kaadas.lock.bean.FileBean;
 import com.kaadas.lock.bean.FileItemBean;
+import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.StringUtil;
 import com.lzy.imagepicker.util.Utils;
 
 import java.util.List;
@@ -78,11 +80,19 @@ public class MyAlbumAdapter extends BaseQuickAdapter<FileBean, BaseViewHolder> {
                 if(((List<FileItemBean>)adapter.getData()).get(position).getType() == 1){
                     Intent intent = new Intent(context, WifiLockVideoPreViewActivity.class);
                     intent.putExtra(KeyConstants.VIDEO_PIC_PATH,((List<FileItemBean>)adapter.getData()).get(position).getPath());
-                    intent.putExtra("NAME",((List<FileItemBean>)adapter.getData()).get(position).getName());
+                    LogUtils.e("shulan name -- > " + ((List<FileItemBean>)adapter.getData()).get(position).getName());
+                    String filename = ((List<FileItemBean>)adapter.getData()).get(position).getName();
+                    filename = StringUtil.getFileNameNoEx(filename);
+                    filename = DateUtils.getStrFromMillisecond2(Long.parseLong(filename));
+                    intent.putExtra("NAME",filename);
                     context.startActivity(intent);
                 }else if(((List<FileItemBean>)adapter.getData()).get(position).getType() == 2){
                     Intent intent = new Intent(context, WifiLockVideoAlbumDetailActivity.class);
-                    intent.putExtra("NAME",((List<FileItemBean>)adapter.getData()).get(position).getName());
+                    String filename = ((List<FileItemBean>)adapter.getData()).get(position).getName();
+                    filename = StringUtil.getFileNameNoEx(filename);
+                    filename = DateUtils.getStrFromMillisecond2(Long.parseLong(filename));
+                    intent.putExtra("NAME",filename);
+                    LogUtils.e("shulan name -- > " + ((List<FileItemBean>)adapter.getData()).get(position).getName());
                     intent.putExtra(KeyConstants.VIDEO_PIC_PATH,((List<FileItemBean>)adapter.getData()).get(position).getPath());
                     context.startActivity(intent);
                 }

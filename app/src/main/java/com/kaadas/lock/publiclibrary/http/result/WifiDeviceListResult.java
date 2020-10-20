@@ -195,45 +195,298 @@ public class WifiDeviceListResult extends BaseResult {
         private AliveTimeBean alive_time;
         private int stay_status;
         private SetPirBean setPir;
+        private String camera_version;
+        private String mcu_version;
+        private String device_model;
 
 
-        public WifiDeviceListBean(String _id, String wifiSN, int isAdmin, String adminUid, String adminName, String productSN, String productModel, int appId, String lockNickname, String lockSoftwareVersion, String functionSet, String uid, String uname, int pushSwitch, int amMode, int safeMode, int defences, String language, int operatingMode, int volume, String bleVersion, String wifiVersion, String mqttVersion, String faceVersion, String lockFirmwareVersion, String randomCode, int distributionNetwork, String wifiName, WifiSwitchBean switchX, int keep_alive_status, AliveTimeBean alive_time, int stay_status, SetPirBean setPir) {
+        public String get_id() {
+            return _id;
+        }
+
+        public void set_id(String _id) {
             this._id = _id;
+        }
+
+        public String getWifiSN() {
+            return wifiSN;
+        }
+
+        public void setWifiSN(String wifiSN) {
             this.wifiSN = wifiSN;
+        }
+
+        public int getIsAdmin() {
+            return isAdmin;
+        }
+
+        public void setIsAdmin(int isAdmin) {
             this.isAdmin = isAdmin;
+        }
+
+        public String getAdminUid() {
+            return adminUid;
+        }
+
+        public void setAdminUid(String adminUid) {
             this.adminUid = adminUid;
+        }
+
+        public String getAdminName() {
+            return adminName;
+        }
+
+        public void setAdminName(String adminName) {
             this.adminName = adminName;
+        }
+
+        public String getProductSN() {
+            return productSN;
+        }
+
+        public void setProductSN(String productSN) {
             this.productSN = productSN;
+        }
+
+        public String getProductModel() {
+            return productModel;
+        }
+
+        public void setProductModel(String productModel) {
             this.productModel = productModel;
+        }
+
+        public int getAppId() {
+            return appId;
+        }
+
+        public void setAppId(int appId) {
             this.appId = appId;
+        }
+
+        public String getLockNickname() {
+            return lockNickname;
+        }
+
+        public void setLockNickname(String lockNickname) {
             this.lockNickname = lockNickname;
+        }
+
+        public String getLockSoftwareVersion() {
+            return lockSoftwareVersion;
+        }
+
+        public void setLockSoftwareVersion(String lockSoftwareVersion) {
             this.lockSoftwareVersion = lockSoftwareVersion;
+        }
+
+        public String getFunctionSet() {
+            return functionSet;
+        }
+
+        public void setFunctionSet(String functionSet) {
             this.functionSet = functionSet;
+        }
+
+        public String getUid() {
+            return uid;
+        }
+
+        public void setUid(String uid) {
             this.uid = uid;
+        }
+
+        public String getUname() {
+            return uname;
+        }
+
+        public void setUname(String uname) {
             this.uname = uname;
+        }
+
+        public int getPushSwitch() {
+            return pushSwitch;
+        }
+
+        public void setPushSwitch(int pushSwitch) {
             this.pushSwitch = pushSwitch;
+        }
+
+        public int getAmMode() {
+            return amMode;
+        }
+
+        public void setAmMode(int amMode) {
             this.amMode = amMode;
+        }
+
+        public int getSafeMode() {
+            return safeMode;
+        }
+
+        public void setSafeMode(int safeMode) {
             this.safeMode = safeMode;
+        }
+
+        public int getDefences() {
+            return defences;
+        }
+
+        public void setDefences(int defences) {
             this.defences = defences;
+        }
+
+        public String getLanguage() {
+            return language;
+        }
+
+        public void setLanguage(String language) {
             this.language = language;
+        }
+
+        public int getOperatingMode() {
+            return operatingMode;
+        }
+
+        public void setOperatingMode(int operatingMode) {
             this.operatingMode = operatingMode;
+        }
+
+        public int getVolume() {
+            return volume;
+        }
+
+        public void setVolume(int volume) {
             this.volume = volume;
+        }
+
+        public String getBleVersion() {
+            return bleVersion;
+        }
+
+        public void setBleVersion(String bleVersion) {
             this.bleVersion = bleVersion;
+        }
+
+        public String getWifiVersion() {
+            return wifiVersion;
+        }
+
+        public void setWifiVersion(String wifiVersion) {
             this.wifiVersion = wifiVersion;
+        }
+
+        public String getMqttVersion() {
+            return mqttVersion;
+        }
+
+        public void setMqttVersion(String mqttVersion) {
             this.mqttVersion = mqttVersion;
+        }
+
+        public String getFaceVersion() {
+            return faceVersion;
+        }
+
+        public void setFaceVersion(String faceVersion) {
             this.faceVersion = faceVersion;
+        }
+
+        public String getLockFirmwareVersion() {
+            return lockFirmwareVersion;
+        }
+
+        public void setLockFirmwareVersion(String lockFirmwareVersion) {
             this.lockFirmwareVersion = lockFirmwareVersion;
+        }
+
+        public String getRandomCode() {
+            return randomCode;
+        }
+
+        public void setRandomCode(String randomCode) {
             this.randomCode = randomCode;
+        }
+
+        public int getDistributionNetwork() {
+            return distributionNetwork;
+        }
+
+        public void setDistributionNetwork(int distributionNetwork) {
             this.distributionNetwork = distributionNetwork;
+        }
+
+        public String getWifiName() {
+            return wifiName;
+        }
+
+        public void setWifiName(String wifiName) {
             this.wifiName = wifiName;
+        }
+
+        public WifiSwitchBean getSwitchX() {
+            return switchX;
+        }
+
+        public void setSwitchX(WifiSwitchBean switchX) {
             this.switchX = switchX;
+        }
+
+        public int getKeep_alive_status() {
+            return keep_alive_status;
+        }
+
+        public void setKeep_alive_status(int keep_alive_status) {
             this.keep_alive_status = keep_alive_status;
+        }
+
+        public AliveTimeBean getAlive_time() {
+            return alive_time;
+        }
+
+        public void setAlive_time(AliveTimeBean alive_time) {
             this.alive_time = alive_time;
+        }
+
+        public int getStay_status() {
+            return stay_status;
+        }
+
+        public void setStay_status(int stay_status) {
             this.stay_status = stay_status;
+        }
+
+        public SetPirBean getSetPir() {
+            return setPir;
+        }
+
+        public void setSetPir(SetPirBean setPir) {
             this.setPir = setPir;
         }
 
+        public String getCamera_version() {
+            return camera_version;
+        }
 
+        public void setCamera_version(String camera_version) {
+            this.camera_version = camera_version;
+        }
+
+        public String getMcu_version() {
+            return mcu_version;
+        }
+
+        public void setMcu_version(String mcu_version) {
+            this.mcu_version = mcu_version;
+        }
+
+        public String getDevice_model() {
+            return device_model;
+        }
+
+        public void setDevice_model(String device_model) {
+            this.device_model = device_model;
+        }
     }
 
     public class SetPirBean{

@@ -1,51 +1,238 @@
 package com.kaadas.lock.activity.device.wifilock;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 
+import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.mvp.presenter.wifilock.WifiLockMorePresenter;
 import com.kaadas.lock.mvp.view.wifilock.IWifiLockMoreView;
+import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.result.CheckOTAResult;
+import com.kaadas.lock.utils.KeyConstants;
+import com.kaadas.lock.utils.LogUtils;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class WifiLockRealTimeWeekPeriodActivity extends BaseActivity<IWifiLockMoreView, WifiLockMorePresenter<IWifiLockMoreView>>
         implements IWifiLockMoreView, View.OnClickListener  {
 
     @BindView(R.id.back)
     ImageView back;
+    @BindView(R.id.iv_week_0)
+    CheckBox ivWeek0;
+    @BindView(R.id.iv_week_1)
+    CheckBox ivWeek1;
+    @BindView(R.id.iv_week_2)
+    CheckBox ivWeek2;
+    @BindView(R.id.iv_week_3)
+    CheckBox ivWeek3;
+    @BindView(R.id.iv_week_4)
+    CheckBox ivWeek4;
+    @BindView(R.id.iv_week_5)
+    CheckBox ivWeek5;
+    @BindView(R.id.iv_week_6)
+    CheckBox ivWeek6;
+    @BindView(R.id.iv_week_7)
+    CheckBox ivWeek7;
+
+    private String wifiSn;
+    private WifiLockInfo wifiLockInfo;
+    private int[] weekPeriod;
+    private int[] weekTimp = new int[]{1,2,3,4,5,6,7};
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wifi_lock_real_time_week_period);
         ButterKnife.bind(this);
-        initClick();
+
+
+        wifiSn = getIntent().getStringExtra(KeyConstants.WIFI_SN);
+        wifiLockInfo = MyApplication.getInstance().getWifiLockInfoBySn(wifiSn);
+        weekPeriod = getIntent().getIntArrayExtra(KeyConstants.WIFI_VIDEO_LOCK_REAL_TIME_PERIOD);
         initData();
     }
 
     private void initData() {
 
+        if(wifiLockInfo != null){
+            if(wifiLockInfo.getAlive_time() != null){
+                weekPeriod = wifiLockInfo.getAlive_time().getKeep_alive_snooze();
+                int sum = 0;
+                for(int i = 0 ; i<weekPeriod.length;i++){
+
+                    sum += weekPeriod[i];
+                    if(weekPeriod[i] == 1){
+                        ivWeek1.setChecked(true);
+                    }else if(weekPeriod[i] == 2){
+                        ivWeek2.setChecked(true);
+                    }else if(weekPeriod[i] == 3){
+                        ivWeek3.setChecked(true);
+                    }else if(weekPeriod[i] == 4){
+                        ivWeek4.setChecked(true);
+                    }else if(weekPeriod[i] == 5){
+                        ivWeek5.setChecked(true);
+                    }else if(weekPeriod[i] == 6){
+                        ivWeek6.setChecked(true);
+                    }else if(weekPeriod[i] == 7){
+                        ivWeek7.setChecked(true);
+                    }
+                }
+                if(sum == 28){
+                    ivWeek0.setChecked(true);
+                    ivWeek1.setChecked(true);
+                    ivWeek2.setChecked(true);
+                    ivWeek3.setChecked(true);
+                    ivWeek4.setChecked(true);
+                    ivWeek5.setChecked(true);
+                    ivWeek6.setChecked(true);
+                    ivWeek7.setChecked(true);
+                }
+            }
+        }
     }
 
-    private void initClick() {
-        back.setOnClickListener(this);
-    }
 
-    @Override
+    @OnClick({R.id.back,R.id.rl_iv_week_0,R.id.rl_iv_week_1,R.id.rl_iv_week_2,R.id.rl_iv_week_3,R.id.rl_iv_week_4,R.id.rl_iv_week_5,
+    R.id.rl_iv_week_6,R.id.rl_iv_week_7,R.id.iv_week_0})
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.back:
-                finish();
+                setWeekPeriod();
+//                finish();
                 break;
-
+            case R.id.iv_week_0:
+            case R.id.rl_iv_week_0:
+                if(ivWeek0.isChecked()){
+                    ivWeek0.setChecked(false);
+                    ivWeek1.setChecked(false);
+                    ivWeek2.setChecked(false);
+                    ivWeek3.setChecked(false);
+                    ivWeek4.setChecked(false);
+                    ivWeek5.setChecked(false);
+                    ivWeek6.setChecked(false);
+                    ivWeek7.setChecked(false);
+                }else{
+                    ivWeek0.setChecked(true);
+                    ivWeek1.setChecked(true);
+                    ivWeek2.setChecked(true);
+                    ivWeek3.setChecked(true);
+                    ivWeek4.setChecked(true);
+                    ivWeek5.setChecked(true);
+                    ivWeek6.setChecked(true);
+                    ivWeek7.setChecked(true);
+                }
+                break;
+            case R.id.rl_iv_week_1:
+                if(ivWeek1.isChecked()){
+                    ivWeek1.setChecked(false);
+                    ivWeek0.setChecked(false);
+                    weekTimp[0] = 0;
+                }else{
+                    ivWeek1.setChecked(true);
+                    weekTimp[0] = 1;
+                }
+                break;
+            case R.id.rl_iv_week_2:
+                if(ivWeek2.isChecked()){
+                    ivWeek2.setChecked(false);
+                    ivWeek0.setChecked(false);
+                    weekTimp[1] = 0;
+                }else{
+                    ivWeek2.setChecked(true);
+                    weekTimp[1] = 2;
+                }
+                break;
+            case R.id.rl_iv_week_3:
+                if(ivWeek3.isChecked()){
+                    ivWeek3.setChecked(false);
+                    ivWeek0.setChecked(false);
+                    weekTimp[2] = 0;
+                }else{
+                    ivWeek3.setChecked(true);
+                    weekTimp[2] = 3;
+                }
+                break;
+            case R.id.rl_iv_week_4:
+                if(ivWeek4.isChecked()){
+                    ivWeek4.setChecked(false);
+                    ivWeek0.setChecked(false);
+                    weekTimp[3] = 0;
+                }else{
+                    ivWeek4.setChecked(true);
+                    weekTimp[3] = 4;
+                }
+                break;
+            case R.id.rl_iv_week_5:
+                if(ivWeek5.isChecked()){
+                    ivWeek5.setChecked(false);
+                    ivWeek0.setChecked(false);
+                    weekTimp[4] = 0;
+                }else{
+                    ivWeek5.setChecked(true);
+                    weekTimp[4] = 5;
+                }
+                break;
+            case R.id.rl_iv_week_6:
+                if(ivWeek6.isChecked()){
+                    ivWeek6.setChecked(false);
+                    ivWeek0.setChecked(false);
+                    weekTimp[5] = 0;
+                }else{
+                    ivWeek6.setChecked(true);
+                    weekTimp[5] = 6;
+                }
+                break;
+            case R.id.rl_iv_week_7:
+                if(ivWeek7.isChecked()){
+                    ivWeek7.setChecked(false);
+                    ivWeek0.setChecked(false);
+                    weekTimp[6] = 0;
+                }else{
+                    ivWeek7.setChecked(true);
+                    weekTimp[6] = 7;
+                }
+                break;
         }
+    }
+
+    private void setWeekPeriod() {
+        Integer[] weekPeriod;
+
+        List<Integer> list = new ArrayList<>();
+        if(ivWeek0.isChecked()){
+            weekPeriod = new Integer[]{1,2,3,4,5,6,7};
+        }else {
+            for (int i = 0 ; i < weekTimp.length;i++){
+                if(weekTimp[i] != 0){
+                    list.add(weekTimp[i]);
+                }
+            }
+            weekPeriod = new Integer[list.size()];
+            list.toArray(weekPeriod);
+        }
+        int[] week = new int[weekPeriod.length];
+        for(int j = 0 ;j < weekPeriod.length;j++){
+            week[j] = weekPeriod[j];
+        }
+        Intent intent = new Intent();
+        intent.putExtra(KeyConstants.WIFI_VIDEO_LOCK_REAL_TIME_PERIOD, week);
+        setResult(RESULT_OK,intent);
+        finish();
     }
 
     @Override

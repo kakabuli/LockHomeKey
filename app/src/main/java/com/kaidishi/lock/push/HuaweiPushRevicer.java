@@ -14,6 +14,7 @@ import android.util.Log;
 
 import com.huawei.hms.support.api.push.PushReceiver;
 import com.kaadas.lock.activity.MainActivity;
+import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.ftp.GeTui;
 
@@ -86,7 +87,7 @@ public class HuaweiPushRevicer extends PushReceiver {
 //        if(evevt!=null){
 //            evevt.onNetEventToken(tokenIn);
 //        }
-
+        LogUtils.e("shulan huawei tokenIn-------->" + tokenIn);
         if(!TextUtils.isEmpty(tokenIn)){
             SPUtils.put(GeTui.HUAWEI_KEY,tokenIn);
             evevt.onNetEventToken(tokenIn);

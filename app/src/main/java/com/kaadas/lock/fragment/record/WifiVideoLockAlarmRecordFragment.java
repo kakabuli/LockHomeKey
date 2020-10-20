@@ -1,5 +1,6 @@
 package com.kaadas.lock.fragment.record;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -31,6 +32,8 @@ import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
 import com.kaadas.lock.publiclibrary.bean.WifiVideoLockAlarmRecord;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.util.HttpUtils;
+import com.kaadas.lock.publiclibrary.xm.XMP2PManager;
+import com.kaadas.lock.publiclibrary.xm.bean.DeviceInfo;
 import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
@@ -41,6 +44,7 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.xmitech.sdk.MP4Info;
+import com.yun.software.kaadas.Utils.FileTool;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -68,6 +72,8 @@ public class WifiVideoLockAlarmRecordFragment extends BaseFragment<IWifiVideoLoc
     List<WifiVideoLockAlarmRecord> list = new ArrayList<>();
     private boolean isP2PConnect = false;
     private WifiLockInfo wifiLockInfoBySn;
+    private ProgressDialog progressDialog;//创建ProgressDialog
+
 
     @Nullable
     @Override
@@ -80,6 +86,7 @@ public class WifiVideoLockAlarmRecordFragment extends BaseFragment<IWifiVideoLoc
         initRecycleView();
         initRefresh();
         initData();
+        createProgress();
         rlHead.setVisibility(View.GONE);
         mPresenter.settingDevice(wifiLockInfoBySn);
         if(!isP2PConnect){
@@ -115,7 +122,20 @@ public class WifiVideoLockAlarmRecordFragment extends BaseFragment<IWifiVideoLoc
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        mPresenter.playDeviceRecordVideo(record.getFileName(),record.getFileDate(),record.get_id(),record.getStartTime() + "");
+                        String path = FileTool.getVideoLockPath(getActivity(),record.getWifiSN()).getPath();
+                        String fileName = path +  File.separator + record.get_id() + ".mp4";
+                        if (new File(fileName).exists()){
+                            Intent intent = new Intent(getActivity(), WifiLockVideoAlbumDetailActivity.class);
+                            intent.putExtra(KeyConstants.VIDEO_PIC_PATH,fileName);
+                            LogUtils.e("shulan createTime-->" + fileName);
+                            fileName = DateUtils.getStrFromMillisecond2(record.getStartTime());
+                            LogUtils.e("shulan filename-->" + fileName);
+                            intent.putExtra("NAME",fileName);
+                            startActivity(intent);
+                        }else{
+                            LogUtils.e("shulan 时间戳开始-->" + System.currentTimeMillis());
+                            mPresenter.playDeviceRecordVideo(record,path);
+                        }
                     }
                 }).start();
 
@@ -204,7 +224,12 @@ public class WifiVideoLockAlarmRecordFragment extends BaseFragment<IWifiVideoLoc
                         lastRecord.setLast(true);
                     }
                 }
-                list.add(record);
+
+                for(int j = 0 ;j < list.size();j++){
+                    if(record.get_id() != list.get(j).get_id()){
+                        list.add(record);
+                    }
+                }
             }
         }
     }
@@ -241,6 +266,40 @@ public class WifiVideoLockAlarmRecordFragment extends BaseFragment<IWifiVideoLoc
     }
 
     @Override
+    public void onStartProgress(long time) {
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if(progressDialog != null){
+                    if (!progressDialog.isShowing()){
+                        progressDialog.show();
+                    }
+                }
+            }
+        });
+        progressDialog.incrementProgressBy((int) time);
+    }
+
+    @Override
+    public void onSuccessRecord(boolean flag) {
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if(!getActivity().isFinishing() && progressDialog != null){
+                    if(progressDialog!=null){
+                        progressDialog.dismiss();
+                        LogUtils.e("shulan progressDialog2-->" +progressDialog);
+                    }
+
+                }
+                if(!flag){
+                    ToastUtil.getInstance().showLong("下载失败!");
+                }
+            }
+        });
+    }
+
+    @Override
     public void onConnectFailed(int paramInt) {
         if(paramInt < 0){
             isP2PConnect = false;
@@ -266,6 +325,15 @@ public class WifiVideoLockAlarmRecordFragment extends BaseFragment<IWifiVideoLoc
     public void onStopRecordMP4CallBack(MP4Info mp4Info,String fileName) {
         if(mp4Info.isResult()){
             if(mp4Info.isResult()){
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(progressDialog!=null){
+                            LogUtils.e("shulan progressDialog11-->" +progressDialog);
+                            progressDialog.dismiss();
+                        }
+                    }
+                });
                 getActivity().sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(new File(mp4Info.getFilePath()))));
 //                    ToastUtil.getInstance()
                 Intent intent = new Intent(getActivity(), WifiLockVideoAlbumDetailActivity.class);
@@ -285,4 +353,20 @@ public class WifiVideoLockAlarmRecordFragment extends BaseFragment<IWifiVideoLoc
 
     }
 
+    public void createProgress(){
+        if (null == progressDialog) {
+            synchronized (ProgressDialog.class) {
+                if (null == progressDialog) {
+                    progressDialog = new ProgressDialog(getActivity());
+                }
+            }
+        }
+        progressDialog.setMessage("正在下载...");
+        progressDialog.setCancelable(false);//按空白地方 进度条窗口不会消失
+        progressDialog.setMax(9000);
+        progressDialog.incrementProgressBy(0);
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+    }
+
+//    public void
 }

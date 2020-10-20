@@ -50,6 +50,18 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="android:name,android:allowBackup">
+        <activity
+            android:name=".activity.device.wifilock.videolock.WifiVideoLockAMModeActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.wifilock.videolock.WifiVideoLockSafeModeActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.wifilock.videolock.WifiLockVideoLanguageSettingActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait" />
         <activity android:name=".activity.device.wifilock.videolock.WifiLockVideoDeviceRecordActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
@@ -972,6 +984,10 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.device.wifilock.WifiLockMoreActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.wifilock.videolock.WifiLockVideoMoreActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity

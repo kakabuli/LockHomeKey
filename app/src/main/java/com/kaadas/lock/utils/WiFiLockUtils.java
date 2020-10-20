@@ -42,7 +42,7 @@ public class WiFiLockUtils {
         PAIRING_MODE.put("WiFi&BLE",new String[]{"S110M", "S110-D1", "S110-D2", "S110-D3", "S110-D4"
         ,"S110-D","S110D","S110 D","S110_D"});
         // -----------------------------------------
-        PAIRING_MODE.put("WiFi&VIDEO",new String[]{"K10V"});
+        PAIRING_MODE.put("WiFi&VIDEO",new String[]{"K10V","K20V","K20-V"});
     }
     /**
      * 根据型号判断对应的配网方式

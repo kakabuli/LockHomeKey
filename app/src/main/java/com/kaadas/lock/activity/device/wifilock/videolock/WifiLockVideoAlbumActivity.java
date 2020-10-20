@@ -121,9 +121,9 @@ public class WifiLockVideoAlbumActivity extends BaseAddToApplicationActivity {
         String str2 = "";
         int temp = 0;
         for(int j = 0 ; j <files.size() ; j++){
-            str1 = DateUtils.getDayTimeFromat(files.get(j).getLastModified());
+            str1 = DateUtils.formatYearMonthDay(files.get(j).getLastModified());
             if(j+1 < files.size()){
-                str2 = DateUtils.getDayTimeFromat(files.get(j+1).getLastModified());
+                str2 = DateUtils.formatYearMonthDay(files.get(j+1).getLastModified());
             }else{
                 str2 = "";
             }

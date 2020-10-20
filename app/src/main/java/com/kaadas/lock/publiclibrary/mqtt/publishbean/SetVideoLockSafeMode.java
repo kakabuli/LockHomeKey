@@ -120,4 +120,18 @@ public class SetVideoLockSafeMode implements Serializable {
         this.timestamp = timestamp;
         this.code = code;
     }
+
+    @Override
+    public String toString() {
+        return "SetVideoLockSafeMode{" +
+                "msgtype='" + msgtype + '\'' +
+                ", userId='" + userId + '\'' +
+                ", msgId=" + msgId +
+                ", wfId='" + wfId + '\'' +
+                ", func='" + func + '\'' +
+                ", params=" + params +
+                ", timestamp='" + timestamp + '\'' +
+                ", code=" + code +
+                '}';
+    }
 }

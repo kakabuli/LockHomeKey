@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <RelativeLayout
+        android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_40"
         android:background="#F8F8F8">
@@ -31,6 +32,8 @@
     </RelativeLayout>
 
     <RelativeLayout
+        android:layout_below="@id/title"
+        android:id="@+id/rl_video_connect_open"
         android:layout_width="match_parent"
         android:layout_height="78dp"
         android:background="#FFFFFF"
@@ -62,7 +65,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_marginRight="@dimen/dp_16"
-            android:src="@mipmap/iv_close" />
+            android:src="@drawable/wandering_alarm_selector" />
 
         <View
             android:layout_width="match_parent"
@@ -73,6 +76,7 @@
     </RelativeLayout>
 
     <RelativeLayout
+        android:layout_below="@id/rl_video_connect_open"
         android:id="@+id/rl_real_time_period"
         android:layout_width="match_parent"
         android:layout_height="78dp"
@@ -120,4 +124,12 @@
 
     </RelativeLayout>
 
-</LinearLayout>
+    <com.kaadas.lock.widget.AVLoadingIndicatorView
+        android:id="@+id/avi"
+        style="@style/AVLoadingIndicatorView.Large"
+        android:layout_width="@dimen/dp_35"
+        android:layout_height="@dimen/dp_35"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="@dimen/dp_150" />
+
+</RelativeLayout>

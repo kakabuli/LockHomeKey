@@ -17,6 +17,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.SystemClock;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -54,10 +55,12 @@ import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.GatewayOtaNotifyBean
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttService;
 import com.kaadas.lock.publiclibrary.ota.ble.OTADialogActivity;
 import com.kaadas.lock.publiclibrary.ota.gatewayota.GatewayOTADialogActivity;
+import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.Constants;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.MyLog;
+import com.kaadas.lock.utils.NotificationUtil;
 import com.kaadas.lock.utils.PermissionUtil;
 import com.kaadas.lock.utils.Rom;
 import com.kaadas.lock.utils.SPUtils;
@@ -94,6 +97,9 @@ import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 import de.greenrobot.event.ThreadMode;
 import la.xiong.androidquick.ui.eventbus.EventCenter;
+
+import static com.kaadas.lock.utils.PermissionUtil.REQUEST_AUDIO_PERMISSION_REQUEST_CODE;
+import static com.kaadas.lock.utils.PermissionUtil.REQUEST_PERMISSION_REQUEST_CODE;
 
 public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivityPresenter<IMainActivityView>>
         implements ViewPager.OnPageChangeListener, IMainActivityView, RadioGroup.OnCheckedChangeListener, NetEvevt {
@@ -240,6 +246,37 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
 //        rb_shop.setVisibility(View.GONE);
         LogUtils.e("MainActivity启动完成 ");
 
+        checkNotificatoinEnabled();
+
+
+    }
+
+    private void checkNotificatoinEnabled() {
+        LogUtils.e("shulan-----------checkNotificatoinEnabled");
+        if(!NotificationUtil.isNotifyEnabled(this)){
+            AlertDialogUtil.getInstance().noEditTitleTwoButtonDialog(this, "检测到您没有打开通知权限，是否去打开",
+                    "取消", "确定", "#A4A4A4", "#1F96F7", new AlertDialogUtil.ClickListener() {
+                        @Override
+                        public void left() {
+
+                        }
+
+                        @Override
+                        public void right() {
+                            NotificationUtil.settingActivity(MainActivity.this);
+                        }
+
+                        @Override
+                        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                        }
+
+                        @Override
+                        public void afterTextChanged(String toString) {
+
+                        }
+                    });
+        }
     }
 
     private static List<String> packages;
@@ -383,6 +420,7 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
         if (Rom.isEmui()) {
             // no get token
               String huawei = (String) SPUtils.get(GeTui.HUAWEI_KEY, "");
+            LogUtils.e("shulan huawei--->" + huawei);
             if (TextUtils.isEmpty(huawei)) {
                 // 初始化,生成token失败
                 Log.e(GeTui.VideoLog, "startSendFile to HMSAgent,token produce fail");
@@ -392,9 +430,12 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
 //                        showLog("get token: end code=" + rtnCode);
                         // 0:表示成功
                         Log.e(GeTui.VideoLog, "get token: end code=" + rtnCode);
+                        LogUtils.e("shulan get token: end code=" + rtnCode);
+                        uploadToken(3,huawei);
                     }
                 });
             } else {
+                LogUtils.e("shulan huawei--->" + huawei);
                 uploadToken(3,huawei);
                 // produce token success,upload token fail
 //                if (!ispush) {
@@ -406,6 +447,7 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
         } else if(Rom.isMiui()){
             String xiaoMiToken = (String) SPUtils2.get(MainActivity.this, XiaoMiConstant.XIAOMIKEY,"");
             uploadToken(4,xiaoMiToken);
+            LogUtils.e("shulan xiaoMiToken--->" + xiaoMiToken);
         } else{
             // 使用个推
 //            if (!ispush) {
@@ -415,6 +457,7 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
 //                Log.e(GeTui.VideoLog, "getui upload to success");
 //            }
                 String JpushId = (String) SPUtils2.get(MyApplication.getInstance(), GeTui.JPUSH_ID, "");
+            LogUtils.e("shulan---JpushId-->---" + JpushId );
                 uploadToken(2,JpushId);
         }
 
@@ -996,5 +1039,18 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
         }
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        LogUtils.e("shulan ---requestCode-->" + requestCode);
+        switch (requestCode){
+            case REQUEST_AUDIO_PERMISSION_REQUEST_CODE:
+                if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){//同意授权
 
+                }else {
+                    ToastUtil.getInstance().showShort("请先获取麦克风权限");
+                }
+                break;
+        }
+    }
 }

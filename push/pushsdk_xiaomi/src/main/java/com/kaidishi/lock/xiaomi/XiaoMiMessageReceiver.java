@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Message;
+import android.text.LoginFilter;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -92,6 +93,8 @@ public class XiaoMiMessageReceiver extends PushMessageReceiver {
             mAlias = message.getAlias();
         }
 
+        Log.e("shulan" ,"内容--->"+message.getContent());
+        Log.e("shulan" , "点击通知栏:"+message);
         Message msg = Message.obtain();
 //        if (message.isNotified()) {
 //            msg.obj = log;
@@ -105,7 +108,8 @@ public class XiaoMiMessageReceiver extends PushMessageReceiver {
 //                "onNotificationMessageArrived is called. " + message.toString());
 //        String log = context.getString(R.string.arrive_notification_message, message.getContent());
 //        com.kaidishi.lock.MainActivity.logList.add(0, getSimpleDate() + " " + log);
-        Log.e("denganzhi1","消息到达:"+message);
+        Log.e("shulan" ,"onNotificationMessageArrived--->"+message.getContent());
+        Log.e("shulan","消息到达:"+message);
         if (!TextUtils.isEmpty(message.getTopic())) {
             mTopic = message.getTopic();
         } else if (!TextUtils.isEmpty(message.getAlias())) {

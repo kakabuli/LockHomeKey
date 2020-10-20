@@ -37,6 +37,12 @@ public interface IWifiVideoLockAlarmRecordView extends IBaseView {
     void noMoreData();
 
 
+    //进度条回调
+    void onStartProgress(long time);
+
+    //下载成功
+    void onSuccessRecord(boolean flag);
+
     //连接失败，失败code，关闭资源
     void onConnectFailed(int paramInt);
     //连接成功

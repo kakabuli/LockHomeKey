@@ -1,5 +1,6 @@
 package com.kaidishi.lock;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Intent;
@@ -8,19 +9,24 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.ActivityCompat;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kaadas.lock.activity.MainActivity;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
+import com.kaadas.lock.activity.device.wifilock.videolock.WifiLockVideoCallingActivity;
 import com.kaadas.lock.activity.login.GuidePageActivity;
 import com.kaadas.lock.activity.login.LoginActivity;
 import com.kaadas.lock.activity.login.PersonalVerifyFingerPrintActivity;
 import com.kaadas.lock.activity.login.PersonalVerifyGesturePasswordActivity;
+import com.kaadas.lock.bean.HomeShowBean;
 import com.kaadas.lock.bean.UpgradePresenter;
+import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
 import com.kaadas.lock.publiclibrary.linphone.linphonenew.LinphoneService;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.bean.VersionBean;
@@ -33,6 +39,7 @@ import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.MyLog;
 import com.kaadas.lock.utils.NetUtil;
+import com.kaadas.lock.utils.PermissionUtil;
 import com.kaadas.lock.utils.Rom;
 import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.SPUtils2;
@@ -42,9 +49,14 @@ import com.kaadas.lock.utils.cachefloder.ACache;
 import com.kaadas.lock.utils.cachefloder.CacheFloder;
 import com.kaadas.lock.mvp.view.ISplashView;
 import com.kaadas.lock.utils.ftp.GeTui;
+import com.kaadas.lock.utils.greenDao.db.DaoSession;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.List;
+
+import static com.kaadas.lock.utils.PermissionUtil.REQUEST_PERMISSION_REQUEST_CODE;
 
 
 public class WelcomeActivity extends BaseActivity<ISplashView, SplashPresenter<ISplashView>> implements ISplashView {
@@ -55,6 +67,10 @@ public class WelcomeActivity extends BaseActivity<ISplashView, SplashPresenter<I
     private long currentTime = 0;
     private long remainTime = 0;
     Intent mainIntent = null;
+
+    private String wifiSN;
+    private String func;
+    private long time;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,8 +84,24 @@ public class WelcomeActivity extends BaseActivity<ISplashView, SplashPresenter<I
         initData();
         MqttService mqttService = MyApplication.getInstance().getMqttService();
         BleService bleService = MyApplication.getInstance().getBleService();
+
+        if(TextUtils.equals(func,"doorbell") &&!TextUtils.isEmpty(wifiSN)){
+            if((time + 180000) > System.currentTimeMillis()){
+                Intent intent = new Intent(WelcomeActivity.this, WifiLockVideoCallingActivity.class);
+                intent.putExtra(KeyConstants.WIFI_VIDEO_LOCK_CALLING,1);
+                intent.putExtra("VIDEO_CALLING_IS_MAINACTIVITY",true);
+                intent.putExtra(KeyConstants.WIFI_SN,wifiSN);
+                startActivity(intent);
+                finish();
+                return;
+
+            }
+
+        }
+
         if (mqttService != null && bleService != null) {
             LogUtils.e("蓝牙和mqttService不为空");
+
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -273,17 +305,22 @@ public class WelcomeActivity extends BaseActivity<ISplashView, SplashPresenter<I
 
     public void executeGeTui() {
 
+        //java.lang.ClassCastException: com.xiaomi.mipush.sdk.MiPushMessage cannot be cast to java.lang.String
         String sip_package_json = getIntent().getStringExtra("stringType");
+        LogUtils.e("shulan ----messageId--->" + getIntent().getStringExtra("messageId"));
+       getIntent().getStringExtra("stringType");
         //String sip_package_json="eyJmdW5jIjoiY2F0RXllQ2FsbCIsImd3SWQiOiJHVzAxMTgzODEwMTI3IiwiZGV2aWNlSWQiOiJBQzM1RUU4ODQwMUEiLCJkYXRhIjoiSU5WSVRFIHNpcDpBQzM1RUU4ODQwMUFAMTkyLjE2OC4zLjkxIFNJUC8yLjBcclxuVmlhOiBTSVAvMi4wL1VEUCAxOTIuMTY4LjMuOTE6NTA2MDticmFuY2g9ejloRzRiS2E3ZTRkZTJlZTc1MTU5NjU1MDFhNjY2Yzg5NmQ0ODAyO3JlY2VpdmVkPTEyMC43Ni43My4xOTM7cnBvcnQ9NTA2MSxTSVAvMi4wL1VEUCAxOTIuMTY4LjE2OC4xMDQ6NTA2MDtycG9ydD01MDYxO2JyYW5jaD16OWhHNGJLOTg2ODA3MjM2O3JlY2VpdmVkPTEyMC43Ni43My4xOTNcclxuRnJvbTogPHNpcDpBQzM1RUU4ODQwMUFAc2lwLWthYWRhcy5qdXppd3VsaWFuLmNvbT47dGFnPTk1NDE5ODcwXHJcblRvOiA8c2lwOjViZjY1MzY5MzU3MzZmMGFmODQ2N2E0ZkBzaXAta2FhZGFzLmp1eml3dWxpYW4uY29tPlxyXG5DYWxsLUlEOiAxMDM5Nzg4MTkyXHJcbkNTZXE6IDIwIElOVklURVxyXG5Db250ZW50LVR5cGU6IGFwcGxpY2F0aW9uL3NkcFxyXG5BbGxvdzogSU5WSVRFLE9QVElPTlMsSU5GTyxCWUUsQ0FOQ0VMLEFDSyxQUkFDSyxVUERBVEVcclxuTWF4LUZvcndhcmRzOiA2OVxyXG5Vc2VyLUFnZW50OiBPUkFOR0UtSU9UIHYxLjBcclxuU3ViamVjdDogRG9vckJlbGxcclxuU3VwcG9ydGVkOiAxMDByZWxcclxuQ29udGFjdDogPHNpcDpzaXBTZXJ2ZXJAMTIwLjc2LjczLjE5Mzo1MDYxPjtleHBpcmVzPTM2MDBcclxuQ29udGVudC1MZW5ndGg6IDMxMFxyXG5cclxudj0wXHJcbm89am9zdWEgMCAwIElOIElQNCAxOTguMTguNDYuMTVcclxucz1jb252ZXJzYXRpb25cclxuYz1JTiBJUDQgMTk4LjE4LjQ2LjE1XHJcbnQ9MCAwXHJcbm09YXVkaW8gNzA4NiBSVFAvQVZQIDBcclxuYT1ydHBtYXA6MCBQQ01VLzgwMDAvMVxyXG5tPXZpZGVvIDcwODggUlRQL0FWUCA5NlxyXG5hPXJ0cG1hcDo5NiBIMjY0LzkwMDAwXHJcbmE9Zm10cDo5NiBwcm9maWxlLWxldmVsLWlkPTQyMDAxZlxyXG5hPWZtdHA6OTYgcGFja2V0aXphdGlvbi1tb2RlPTFcclxuYT1mbXRwOjk2IHNwcm9wLXBhcmFtZXRlci1zZXRzPVowSUFINTJvUEFSZnViZ0lDQWdRLGFNNDhnQT09XHJcbiJ9";
         long sip_time_json = getIntent().getLongExtra("longType", 0);
         //Log.e("denganzhi1","sip_package_json11:"+sip_package_json);
-
+        LogUtils.e("shulan---------sip_time_json=" + sip_time_json);
         if (Rom.isOppo()) {
             String sip_time_json_str = getIntent().getStringExtra("longType");
             if (!TextUtils.isEmpty(sip_time_json_str)) {
                 sip_time_json = Long.valueOf(sip_time_json_str);
             }
             Log.e(GeTui.VideoLog, "WelcomeActivity==>oppo===>sip_time_json_str:" + sip_time_json);
+        }else if(Rom.isMiui()){
+
         }
 
         if (!TextUtils.isEmpty(sip_package_json)) {
@@ -296,6 +333,17 @@ public class WelcomeActivity extends BaseActivity<ISplashView, SplashPresenter<I
                 Log.e(GeTui.VideoLog, "WelcomeActivity======>胁迫密码开锁");
             } else if(sip_package.equals("{\"func\":\"alarm\"}")){
                 Log.e(GeTui.VideoLog, "WelcomeActivity======>wifi锁开锁");
+            }else if(sip_package.contains("\"func\":\"doorbell\"") && sip_package.contains("wifiSN")){
+                LogUtils.e("shulan 呼叫");
+                JSONObject jsonObject = null;
+                try {
+                    jsonObject = new JSONObject(sip_package);
+                    wifiSN = jsonObject.optString("wifiSN");
+                    func = jsonObject.optString("func");
+                    time = getIntent().getLongExtra("longType",0);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }else if (sip_package.contains("{\"func\":\"alarm\"}")){ //11
 
             }else  {
@@ -364,4 +412,5 @@ public class WelcomeActivity extends BaseActivity<ISplashView, SplashPresenter<I
             }
         }
     }
+
 }
