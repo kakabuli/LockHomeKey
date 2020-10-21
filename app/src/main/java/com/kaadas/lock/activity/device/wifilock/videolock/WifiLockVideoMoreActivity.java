@@ -203,12 +203,12 @@ public class WifiLockVideoMoreActivity extends BaseActivity<IWifiVideoLockMoreVi
                 LogUtils.e("" + e.getMessage());
             }
 
-            if (BleLockUtils.isSupportAMModeShow(func)) {
-//                rlAm.setVisibility(View.VISIBLE);
+            if (BleLockUtils.isSupportAMModeSet(func)) {
+                rlAm.setVisibility(View.VISIBLE);
                 int amMode = wifiLockInfo.getAmMode();
                 ivAm.setText(amMode == 1 ? getString(R.string.hand) + "上锁": getString(R.string.auto) + "上锁");
             } else {
-//                rlAm.setVisibility(View.GONE);
+                rlAm.setVisibility(View.GONE);
             }
 
             if(wifiLockInfo.getStay_status() == 0){
@@ -245,7 +245,6 @@ public class WifiLockVideoMoreActivity extends BaseActivity<IWifiVideoLockMoreVi
 //            rlFaceStatus.setVisibility(View.GONE);
 //        }
             if(isWifiVideoLockType){
-//                rlAm.setVisibility(View.GONE);
                 rlMessageFree.setVisibility(View.GONE);
                 rlPowerSave.setVisibility(View.GONE);
                 rlMessagePush.setVisibility(View.VISIBLE);

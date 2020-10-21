@@ -72,6 +72,8 @@ public class WifiLockVideoSixthActivity extends BaseActivity<IWifiLockVideoSixth
 
     private WifiLockVideoBindBean wifiLockVideoBindBean;
 
+    private String wifiModelType;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,6 +86,7 @@ public class WifiLockVideoSixthActivity extends BaseActivity<IWifiLockVideoSixth
         wifiSn = getIntent().getStringExtra(KeyConstants.WIFI_SN);
         sSsid = getIntent().getStringExtra(KeyConstants.WIFI_LOCK_WIFI_SSID);
         wifiLockVideoBindBean = (WifiLockVideoBindBean) getIntent().getSerializableExtra(KeyConstants.WIFI_VIDEO_LOCK_DEVICE_DATA);
+        wifiModelType = getIntent().getStringExtra("wifiModelType");
 
         randomCode = wifiLockVideoBindBean.getEventparams().getRandomCode();
     }
@@ -96,6 +99,7 @@ public class WifiLockVideoSixthActivity extends BaseActivity<IWifiLockVideoSixth
         wifiSn = getIntent().getStringExtra(KeyConstants.WIFI_SN);
         sSsid = getIntent().getStringExtra(KeyConstants.WIFI_LOCK_WIFI_SSID);
         wifiLockVideoBindBean = (WifiLockVideoBindBean) getIntent().getSerializableExtra(KeyConstants.WIFI_VIDEO_LOCK_DEVICE_DATA);
+        wifiModelType = getIntent().getStringExtra("wifiModelType");
 
         randomCode = wifiLockVideoBindBean.getEventparams().getRandomCode();
     }
@@ -209,19 +213,11 @@ public class WifiLockVideoSixthActivity extends BaseActivity<IWifiLockVideoSixth
 
     private void onAdminPasswordError() {
         if (times < 5) {
-            new Thread(){
-                @Override
-                public void run() {
-                    super.run();
-
-                    LogUtils.e("写 CRC Error  结果为   " );
-                }
-            }.start();
             if(times < 3){ // 正常提示
                 showDialog("门锁管理密码验证失败，\n请重新输入");
 
             }else {
-                showDialog("门锁管理密码验证失败3次，\n超过5次，配网失败");
+                showDialog("门锁管理密码验证失败"+ times +"次，\n超过5次，配网失败");
             }
         } else { //都五次输入错误提示   退出
             AlertDialogUtil.getInstance().noEditSingleCanNotDismissButtonDialog(
@@ -262,6 +258,7 @@ public class WifiLockVideoSixthActivity extends BaseActivity<IWifiLockVideoSixth
                     public void right() {
                         //退出当前界面
                         Intent intent = new Intent(WifiLockVideoSixthActivity.this, WifiLockAddNewFirstActivity.class);
+                        intent.putExtra("wifiModelType",wifiModelType);
                         startActivity(intent);
                         finish();
                     }
@@ -321,7 +318,10 @@ public class WifiLockVideoSixthActivity extends BaseActivity<IWifiLockVideoSixth
         mPresenter.handler.post(new Runnable() {
             @Override
             public void run() {
-                startActivity(new Intent(WifiLockVideoSixthActivity.this, WifiLockVideoScanFailedActivity.class));
+                Intent intent = new Intent(WifiLockVideoSixthActivity.this, WifiLockVideoScanFailedActivity.class);
+                intent.putExtra("wifiModelType",wifiModelType);
+                startActivity(intent);
+
                 finish();
             }
         });

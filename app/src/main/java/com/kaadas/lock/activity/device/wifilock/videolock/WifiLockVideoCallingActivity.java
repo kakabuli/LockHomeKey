@@ -50,6 +50,7 @@ import com.kaadas.lock.mvp.presenter.wifilock.WifiLockVideoCallingPresenter;
 import com.kaadas.lock.mvp.view.wifilock.IWifiLockRealTimeVideoView;
 import com.kaadas.lock.mvp.view.wifilock.IWifiLockVideoCallingView;
 import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
+import com.kaadas.lock.publiclibrary.mqtt.eventbean.WifiLockOperationBean;
 import com.kaadas.lock.publiclibrary.xm.XMP2PManager;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.BitmapUtil;
@@ -153,8 +154,11 @@ public class WifiLockVideoCallingActivity extends BaseActivity<IWifiLockVideoCal
     TextView tvHeadPic;
     @BindView(R.id.tv_big_head_pic)
     TextView tvBigHeadPic;
+    @BindView(R.id.tv_video_timestamp)
+    TextView tvVideoTimeStamp;
 
     private Dialog dialog;
+    private Dialog openDialog;
 
     private int cnt = 0;
     private Timer timer = null;
@@ -384,7 +388,6 @@ public class WifiLockVideoCallingActivity extends BaseActivity<IWifiLockVideoCal
     @Override
     protected void onResume() {
         super.onResume();
-        mPresenter.attachView(this);
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -556,6 +559,7 @@ public class WifiLockVideoCallingActivity extends BaseActivity<IWifiLockVideoCal
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                tvVideoTimeStamp.setText(DateUtils.getDateTimeFromMillisecond(paramAVStreamHeader.m_TimeStamp));
                 if(isCalling == 0){
                     avi.hide();
                     tvTips.setVisibility(View.GONE);
@@ -586,6 +590,71 @@ public class WifiLockVideoCallingActivity extends BaseActivity<IWifiLockVideoCal
                 ToastUtil.showShort("请先获取麦克风权限");
             }
         });
+    }
+
+    @Override
+    public void openDoor(WifiLockOperationBean.EventparamsBean eventparams) {
+        if(!WifiLockVideoCallingActivity.this.isFinishing()){
+            if(eventparams.getEventCode() == 2){
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        openDialog();
+                    }
+                });
+            }
+        }
+    }
+
+    private void openDialog() {
+        if(openDialog == null){
+            openDialog = new Dialog(this, R.style.MyDialog);
+        }
+        // 获取Dialog布局
+        View mView = LayoutInflater.from(this).inflate(R.layout.dialog_title_two_button_dialog, null);
+   /*     tvTitle = mView.findViewById(R.id.tv_hint);
+        tvTitle.setVisibility(View.GONE);*/
+        TextView tvContent = mView.findViewById(R.id.tv_content);
+        TextView title = mView.findViewById(R.id.title);
+        title.setText("温馨提示");
+        tvContent.setText("门锁已打开，是否继续观看?");
+        TextView tv_cancel = mView.findViewById(R.id.tv_left);
+        tv_cancel.setText("继续播放");
+        tv_cancel.setTextColor(Color.parseColor("#9A9A9A"));
+        TextView tv_query = mView.findViewById(R.id.tv_right);
+        tv_query.setTextColor(Color.parseColor("#2096F8"));
+        tv_query.setText("关闭");
+        openDialog.setContentView(mView);
+
+        Window window = openDialog.getWindow();
+        window.setGravity(Gravity.CENTER);
+
+        WindowManager.LayoutParams params = window.getAttributes();
+        WindowManager windowManager = (WindowManager) this
+                .getSystemService(Context.WINDOW_SERVICE);
+        Display display = windowManager.getDefaultDisplay();
+        int width = display.getWidth();
+        window.clearFlags(WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
+        params.width = (int) (width * 0.8);
+        window.setAttributes(params);
+
+        tv_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openDialog.dismiss();
+            }
+        });
+        tv_query.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openDialog.dismiss();
+                finish();
+            }
+        });
+//        LogUtils.e("shulan -----+++++");
+        if(!WifiLockVideoCallingActivity.this.isFinishing()){
+            openDialog.show();
+        }
     }
 
     @Override
@@ -695,6 +764,8 @@ public class WifiLockVideoCallingActivity extends BaseActivity<IWifiLockVideoCal
         }
         return "";
     }
+
+
 
     public void creteDialog(String content){
         if(dialog == null){

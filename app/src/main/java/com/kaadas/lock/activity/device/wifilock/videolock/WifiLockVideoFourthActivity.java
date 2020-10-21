@@ -65,6 +65,7 @@ public class WifiLockVideoFourthActivity extends BaseAddToApplicationActivity {
 
     private boolean distributionAgain;
     private boolean distribution;
+    private String wifiModelType;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -79,7 +80,10 @@ public class WifiLockVideoFourthActivity extends BaseAddToApplicationActivity {
         times = getIntent().getIntExtra(KeyConstants.WIFI_LOCK_WIFI_TIMES, 1);
         distributionAgain = getIntent().getBooleanExtra("distribution_again",false);
         distribution = getIntent().getBooleanExtra("distribution", false);
+        wifiModelType = getIntent().getStringExtra("wifiModelType");
+
         String wifiName = (String) SPUtils.get(KeyConstants.WIFI_LOCK_CONNECT_NAME, "");
+
         apSsidText.setText(wifiName.trim());
         LogUtils.e("shulan WifiLockVideoFourthActivity-->distribution-->" +distribution);
         if(distributionAgain){
@@ -138,6 +142,7 @@ public class WifiLockVideoFourthActivity extends BaseAddToApplicationActivity {
                 intent.putExtra(KeyConstants.WIFI_LOCK_WIFI_TIMES, times);
                 intent.putExtra("distribution_again",distributionAgain);
                 intent.putExtra("distribution",distribution);
+                intent.putExtra("wifiModelType",wifiModelType);
                 startActivity(intent);
 
                 break;
@@ -166,6 +171,7 @@ public class WifiLockVideoFourthActivity extends BaseAddToApplicationActivity {
                 finish();
                 //退出当前界面
                 Intent intent = new Intent(WifiLockVideoFourthActivity.this, WifiLockAddNewFirstActivity.class);
+                intent.putExtra("wifiModelType",wifiModelType);
                 startActivity(intent);
             }
         });

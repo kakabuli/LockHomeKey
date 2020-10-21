@@ -79,12 +79,15 @@ public class WifiLockDeviceInfoActivity extends BaseActivity<IWifiLockMoreView, 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wifi_lock_device_info);
         ButterKnife.bind(this);
-        String wifiSn = getIntent().getStringExtra(KeyConstants.WIFI_SN);
-        wifiLockInfo = MyApplication.getInstance().getWifiLockInfoBySn(wifiSn);
+        wifiSN = getIntent().getStringExtra(KeyConstants.WIFI_SN);
+        wifiLockInfo = MyApplication.getInstance().getWifiLockInfoBySn(wifiSN);
         productList = MyApplication.getInstance().getProductInfos();
 
+        initData();
+    }
+
+    private void initData() {
         if (wifiLockInfo != null) {
-            wifiSN = wifiLockInfo.getWifiSN();
             sWifiVersion = wifiLockInfo.getWifiVersion();
             String productModel = wifiLockInfo.getProductModel();
             tvDeviceModel.setText(TextUtils.isEmpty(productModel) ? "" : productModel.contentEquals("K13") ? getString(R.string.lan_bo_ji_ni) : productModel);
@@ -106,7 +109,7 @@ public class WifiLockDeviceInfoActivity extends BaseActivity<IWifiLockMoreView, 
                 rlFaceModelFirmwareVersion.setVisibility(View.GONE);
             }
 
-            if(MyApplication.getInstance().getWifiVideoLockTypeBySn(wifiSn) == HomeShowBean.TYPE_WIFI_VIDEO_LOCK){
+            if(MyApplication.getInstance().getWifiVideoLockTypeBySn(wifiSN) == HomeShowBean.TYPE_WIFI_VIDEO_LOCK){
                 rlFaceModelFirmwareVersion.setVisibility(View.GONE);
                 rlWifiModelFirmwareVersion.setVisibility(View.GONE);
                 rlLockModelFirmwareVersion.setVisibility(View.GONE);
@@ -228,7 +231,10 @@ public class WifiLockDeviceInfoActivity extends BaseActivity<IWifiLockMoreView, 
 
     @Override
     public void onWifiLockActionUpdate() {
-
+        if(!WifiLockDeviceInfoActivity.this.isFinishing()){
+            wifiLockInfo = MyApplication.getInstance().getWifiLockInfoBySn(wifiSN);
+            initData();
+        }
     }
 
 

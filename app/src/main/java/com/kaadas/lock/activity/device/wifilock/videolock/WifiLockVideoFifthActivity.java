@@ -60,6 +60,8 @@ public class WifiLockVideoFifthActivity extends BaseActivity<IWifiLockVideoFifth
     private boolean distributionAgain;
     private boolean distribution;
 
+    private String wifiModelType;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -82,6 +84,7 @@ public class WifiLockVideoFifthActivity extends BaseActivity<IWifiLockVideoFifth
         func = getIntent().getIntExtra(KeyConstants.WIFI_LOCK_FUNC,0);
         times = getIntent().getIntExtra(KeyConstants.WIFI_LOCK_WIFI_TIMES, 1);
         distribution = getIntent().getBooleanExtra("distribution", false);
+        wifiModelType = getIntent().getStringExtra("wifiModelType");
         if(distributionAgain){
             head.setText("第三步：门锁扫描二维码");
         }else{
@@ -116,6 +119,7 @@ public class WifiLockVideoFifthActivity extends BaseActivity<IWifiLockVideoFifth
                 intent.putExtra(KeyConstants.WIFI_LOCK_RANDOM_CODE, randomCode);
                 intent.putExtra(KeyConstants.WIFI_LOCK_FUNC, func);
                 intent.putExtra(KeyConstants.WIFI_LOCK_WIFI_TIMES, times);
+                intent.putExtra("wifiModelType",wifiModelType);
                 startActivity(intent);
                 finish();
                 break;
@@ -153,6 +157,7 @@ public class WifiLockVideoFifthActivity extends BaseActivity<IWifiLockVideoFifth
                         finish();
                         //退出当前界面
                         Intent intent = new Intent(WifiLockVideoFifthActivity.this, WifiLockAddNewFirstActivity.class);
+                        intent.putExtra("wifiModelType",wifiModelType);
                         startActivity(intent);
                     }
                     @Override
@@ -185,6 +190,7 @@ public class WifiLockVideoFifthActivity extends BaseActivity<IWifiLockVideoFifth
                     intent.putExtra(KeyConstants.WIFI_LOCK_FUNC, func);
                     intent.putExtra(KeyConstants.WIFI_LOCK_WIFI_TIMES, times);
                     intent.putExtra(KeyConstants.WIFI_VIDEO_LOCK_DEVICE_DATA ,mWifiLockVideoBindBean);
+                    intent.putExtra("wifiModelType",wifiModelType);
                     startActivity(intent);
                     LogUtils.e("---------------------aaa------------");
                     finish();

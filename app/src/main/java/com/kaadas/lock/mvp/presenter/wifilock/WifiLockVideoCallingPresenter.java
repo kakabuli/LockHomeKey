@@ -11,11 +11,13 @@ import android.view.SurfaceView;
 import com.google.gson.Gson;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.activity.device.wifilock.videolock.WifiLockVideoCallingActivity;
+import com.kaadas.lock.bean.WifiLockActionBean;
 import com.kaadas.lock.mvp.mvpbase.BasePresenter;
 import com.kaadas.lock.mvp.view.wifilock.IWifiLockVideoCallingView;
 import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
 import com.kaadas.lock.publiclibrary.http.util.RxjavaHelper;
 import com.kaadas.lock.publiclibrary.mqtt.MqttCommandFactory;
+import com.kaadas.lock.publiclibrary.mqtt.eventbean.WifiLockOperationBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetSingleFireSwitchBean;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttConstant;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttData;
@@ -33,6 +35,8 @@ import com.yuv.display.MyBitmapFactory;
 
 
 import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -54,14 +58,57 @@ public class WifiLockVideoCallingPresenter<T> extends BasePresenter<IWifiLockVid
 
     private static  String serviceString=XMP2PManager.serviceString;;
 
+    private Disposable wifiVideoLockStatusListenDisposable;
+
     static int	m_handleSession	= -1;
     int			mChannel		= 0;
 
     @Override
     public void attachView(IWifiLockVideoCallingView view) {
         super.attachView(view);
-
+        listenWifiLockStatus();
     }
+
+    public void listenWifiLockStatus() {
+        if (mqttService != null) {
+            toDisposable(wifiVideoLockStatusListenDisposable);
+            wifiVideoLockStatusListenDisposable = mqttService.listenerDataBack()
+                    .filter(new Predicate<MqttData>() {
+                        @Override
+                        public boolean test(MqttData mqttData) throws Exception {
+                            if (mqttData.getFunc().equals(MqttConstant.FUNC_WFEVENT)) {
+                                return true;
+                            }
+                            return false;
+                        }
+                    })
+                    .compose(RxjavaHelper.observeOnMainThread())
+                    .subscribe(new Consumer<MqttData>() {
+                        @Override
+                        public void accept(MqttData mqttData) throws Exception {
+                            LogUtils.e("shulan --------listenWifiLockStatus");
+                            String payload = mqttData.getPayload();
+                            WifiLockOperationBean wifiLockOperationBean = new Gson().fromJson(payload, WifiLockOperationBean.class);
+                            if (wifiLockOperationBean != null) {
+                                if(wifiLockOperationBean.getDevtype().equals("xmkdswflock") && wifiLockOperationBean.getEventtype().equals("record")){
+                                    if( wifiLockOperationBean.getEventparams() != null){
+                                        if(wifiLockOperationBean.getEventparams().getEventType() == 1){
+                                            if(isSafe()){
+                                                mViewRef.get().openDoor(wifiLockOperationBean.getEventparams());
+                                            }
+                                        }
+                                    }
+                                }
+
+                            }
+
+
+                        }
+                    });
+            compositeDisposable.add(wifiVideoLockStatusListenDisposable);
+        }
+    }
+
 
     XMP2PManager.ConnectStatusListener listener = new XMP2PManager.ConnectStatusListener() {
         @Override

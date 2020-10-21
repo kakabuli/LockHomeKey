@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.view.Display;
 import android.view.Gravity;
@@ -64,6 +65,8 @@ public class WifiLockVideoCameraVersionActivity extends BaseActivity<IWifiVideoL
 
     private String language;
 
+    private boolean updataSuccess = false;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,22 +78,27 @@ public class WifiLockVideoCameraVersionActivity extends BaseActivity<IWifiVideoL
 
         wifiLockInfo = MyApplication.getInstance().getWifiLockInfoBySn(wifiSN);
 
+        initData();
+
+    }
+
+    private void initData() {
         if(wifiLockInfo != null){
             tvSerialNumber.setText(wifiSN);
             if(wifiLockInfo.getCamera_version() != null){
-                tvLockFirwareNumber.setText(wifiLockInfo.getCamera_version());
+                tvLockFirwareNumber.setText(wifiLockInfo.getCamera_version() + "");
             }
 
             if(wifiLockInfo.getMcu_version() != null){
-                tvLockWifiFirwareNumber.setText(wifiLockInfo.getMcu_version());
+                tvLockWifiFirwareNumber.setText(wifiLockInfo.getMcu_version()+ "");
             }
 
             if(wifiLockInfo.getWifiVersion() != null){
-                tvChildSystemFirwareNumber.setText(wifiLockInfo.getWifiVersion());
+                tvChildSystemFirwareNumber.setText(wifiLockInfo.getWifiVersion()+ "");
             }
 
             if(wifiLockInfo.getDevice_model() != null){
-                tvHardwareVersion.setText(wifiLockInfo.getDevice_model());
+                tvHardwareVersion.setText(wifiLockInfo.getDevice_model()+ "");
             }
             mPresenter.settingDevice(wifiLockInfo);
         }
@@ -160,7 +168,9 @@ public class WifiLockVideoCameraVersionActivity extends BaseActivity<IWifiVideoL
     @Override
     public void finish() {
         super.finish();
-        mPresenter.release();
+        if(!updataSuccess){
+            mPresenter.release();
+        }
     }
 
     public void creteDialog(String content){
@@ -276,7 +286,7 @@ public class WifiLockVideoCameraVersionActivity extends BaseActivity<IWifiVideoL
         }
     }
 
-    public void updateDialog(String content){
+    public void updateDialog(CheckOTAResult.UpdateFileInfo appInfo,String content,String wifiSN){
         AlertDialogUtil.getInstance().noEditTwoButtonDialogWidthDialog_color(this, "", "检测有新"+ content+"\n是否升级",
                 "取消","确定", new AlertDialogUtil.ClickListener() {
                     @Override
@@ -286,8 +296,8 @@ public class WifiLockVideoCameraVersionActivity extends BaseActivity<IWifiVideoL
 
                     @Override
                     public void right() {
-                        //升级
-                        mPresenter.notifyGateWayNewVersion();
+                        mPresenter.uploadOta(appInfo,wifiSN);
+
                     }
 
                     @Override
@@ -375,6 +385,10 @@ public class WifiLockVideoCameraVersionActivity extends BaseActivity<IWifiVideoL
 
     @Override
     public void onWifiLockActionUpdate() {
+        if(!WifiLockVideoCameraVersionActivity.this.isFinishing()){
+            wifiLockInfo = MyApplication.getInstance().getWifiLockInfoBySn(wifiSN);
+            initData();
+        }
 
     }
 
@@ -396,15 +410,17 @@ public class WifiLockVideoCameraVersionActivity extends BaseActivity<IWifiVideoL
 
     @Override
     public void needUpdate(CheckOTAResult.UpdateFileInfo appInfo, String SN, String version,int type) {
+        //升级
+        mPresenter.notifyGateWayNewVersion();
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 if(type == 1){
-                    updateDialog("WIFI固件版本" + version);
+                    updateDialog(appInfo,"WIFI固件版本" + version,SN);
                 }else if(type ==4){
-                    updateDialog("视频模组版本" + version);
+                    updateDialog(appInfo,"视频模组版本" + version,SN);
                 }else if(type == 5){
-                    updateDialog("视频模组微控制器版本" + version);
+                    updateDialog(appInfo,"视频模组微控制器版本" + version,SN);
                 }
 
             }
@@ -423,7 +439,8 @@ public class WifiLockVideoCameraVersionActivity extends BaseActivity<IWifiVideoL
 
     @Override
     public void uploadSuccess(int type) {
-
+        mPresenter.release();
+        updataSuccess = true;
     }
 
     @Override

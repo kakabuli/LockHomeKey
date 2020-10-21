@@ -120,6 +120,7 @@ public class BleLockUtils {
         FUNCTION_SET.put(0x0C, new Integer[]{2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 15, 19, 20, 21, 22, 23, 26, 27, 29, 30, 34, 38, 39, 46, 47});
         FUNCTION_SET.put(0x0D, new Integer[]{2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 19, 20, 21, 22, 23, 24, 38, 40, 49});
         FUNCTION_SET.put(0x0E, new Integer[]{2, 3, 4, 5, 6, 7, 8, 10, 11, 15, 19, 20, 21, 22, 23, 24, 26, 27, 28, 29, 30, 33, 34, 38, 39, 46, 47});
+        FUNCTION_SET.put(0x0F, new Integer[]{2, 3, 4, 5, 6, 7, 8, 10, 11, 15, 19, 20, 21, 22, 23, 24, 26, 27, 28, 29, 30, 33, 34, 38, 39, 46});//2020年10月21日14:10
         FUNCTION_SET.put(0x10, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 19, 20, 21, 22, 23, 24, 32, 36, 38, 40, 48});
 
 
@@ -193,13 +194,28 @@ public class BleLockUtils {
      * @param functionSet
      * @return
      */
+    public static boolean isSupportAppAMModeSet(int functionSet) {
+        Integer[] funcs = FUNCTION_SET.get(functionSet);
+        if (funcs == null) {
+            return false;
+        }
+        List<Integer> integers = Arrays.asList(funcs);
+        return integers.contains(32);
+    }
+
+    /**
+     * 根据功能集判断是否支持手动自动模式设置
+     *
+     * @param functionSet
+     * @return
+     */
     public static boolean isSupportAMModeSet(int functionSet) {
         Integer[] funcs = FUNCTION_SET.get(functionSet);
         if (funcs == null) {
             return false;
         }
         List<Integer> integers = Arrays.asList(funcs);
-        return integers.contains(12);
+        return integers.contains(32);
     }
 
     /**

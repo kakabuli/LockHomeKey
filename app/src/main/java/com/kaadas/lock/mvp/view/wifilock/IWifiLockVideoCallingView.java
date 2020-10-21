@@ -1,6 +1,7 @@
 package com.kaadas.lock.mvp.view.wifilock;
 
 import com.kaadas.lock.mvp.mvpbase.IBaseView;
+import com.kaadas.lock.publiclibrary.mqtt.eventbean.WifiLockOperationBean;
 import com.xm.sdk.struct.stream.AVStreamHeader;
 import com.xmitech.sdk.MP4Info;
 
@@ -33,4 +34,6 @@ public interface IWifiLockVideoCallingView extends IBaseView {
 
     //麦克风权限未打开Manifest.permission.RECORD_AUDIO
     void recordAudidFailed();
+
+    void openDoor(WifiLockOperationBean.EventparamsBean eventparams);
 }

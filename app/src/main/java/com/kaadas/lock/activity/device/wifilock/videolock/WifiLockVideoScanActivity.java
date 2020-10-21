@@ -98,6 +98,8 @@ public class WifiLockVideoScanActivity extends BaseActivity<IWifiLockVideoFifthV
 
     private WifiLockVideoBindBean mWifiLockVideoBindBean;
 
+    private String wifiModelType;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -111,6 +113,7 @@ public class WifiLockVideoScanActivity extends BaseActivity<IWifiLockVideoFifthV
         randomCode = getIntent().getStringExtra(KeyConstants.WIFI_LOCK_RANDOM_CODE);
         func = getIntent().getIntExtra(KeyConstants.WIFI_LOCK_FUNC, 0);
         times = getIntent().getIntExtra(KeyConstants.WIFI_LOCK_WIFI_TIMES, 1);
+        wifiModelType = getIntent().getStringExtra("wifiModelType");
 
         mWifiLockVideoBindBean = (WifiLockVideoBindBean) getIntent().getSerializableExtra(KeyConstants.WIFI_VIDEO_LOCK_DEVICE_DATA);
 
@@ -283,6 +286,7 @@ public class WifiLockVideoScanActivity extends BaseActivity<IWifiLockVideoFifthV
                     intent.putExtra(KeyConstants.WIFI_LOCK_RANDOM_CODE, randomCode);
                     intent.putExtra(KeyConstants.WIFI_LOCK_FUNC, func);
                     intent.putExtra(KeyConstants.WIFI_LOCK_WIFI_TIMES, times);
+                    intent.putExtra("wifiModelType",wifiModelType);
 
                     intent.putExtra(KeyConstants.WIFI_VIDEO_LOCK_DEVICE_DATA,wifiLockVideoBindBean);
                     startActivity(intent);
@@ -293,7 +297,9 @@ public class WifiLockVideoScanActivity extends BaseActivity<IWifiLockVideoFifthV
 
     public void onScanFailed() {
         finish();
-        startActivity(new Intent(this, WifiLockVideoScanFailedActivity.class));
+        Intent intent = new Intent(this, WifiLockVideoScanFailedActivity.class);
+        intent.putExtra("wifiModelType",wifiModelType);
+        startActivity(intent);
 //        startActivity(new Intent(this, WifiLockVideoSixthActivity.class));
 
     }
@@ -387,6 +393,7 @@ public class WifiLockVideoScanActivity extends BaseActivity<IWifiLockVideoFifthV
     private void onSuccess() {
         Intent intent = new Intent(WifiLockVideoScanActivity.this,WifiLockVideoSixthActivity.class);
         intent.putExtra(KeyConstants.WIFI_SN,wifiSn);
+        intent.putExtra("wifiModelType",wifiModelType);
         startActivity(intent);
     }
 
@@ -445,6 +452,7 @@ public class WifiLockVideoScanActivity extends BaseActivity<IWifiLockVideoFifthV
                 finish();
                 //退出当前界面
                 Intent intent = new Intent(WifiLockVideoScanActivity.this, WifiLockAddNewFirstActivity.class);
+                intent.putExtra("wifiModelType",wifiModelType);
                 startActivity(intent);
             }
         });

@@ -431,7 +431,7 @@ public class WifiLockVideoOTAPresenter<T> extends BasePresenter<IWifiVideoLockOT
     }
 
     public void setMqttCtrl(int ctrl){
-        XMP2PManager.getInstance().mqttCtrl(ctrl);
+
         XMP2PManager.getInstance().setOnMqttCtrl(new XMP2PManager.XMP2PMqttCtrlListener() {
             @Override
             public void onMqttCtrl(JSONObject jsonObject) {
@@ -451,6 +451,12 @@ public class WifiLockVideoOTAPresenter<T> extends BasePresenter<IWifiVideoLockOT
                 }
             }
         });
+        try{
+            XMP2PManager.getInstance().mqttCtrl(ctrl);
+        }catch (Exception e){
+
+        }
+
     }
 
     public void setSafeMode(String wifiSN,int safeMode){
@@ -588,7 +594,6 @@ public class WifiLockVideoOTAPresenter<T> extends BasePresenter<IWifiVideoLockOT
 
         }
     }
-
 
 
 }

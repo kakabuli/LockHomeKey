@@ -36,11 +36,14 @@ public class WifiLockVideoScanFailedActivity extends AppCompatActivity {
     @BindView(R.id.notice)
     TextView notice;
 
+    private String wifiModelType;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wifi_lock_video_scan_failed);
 
+        wifiModelType = getIntent().getStringExtra("wifiModelType");
         ButterKnife.bind(this);
     }
 
@@ -60,6 +63,7 @@ public class WifiLockVideoScanFailedActivity extends AppCompatActivity {
                 finish();
                 //退出当前界面
                 Intent intent = new Intent(WifiLockVideoScanFailedActivity.this, WifiLockAddNewFirstActivity.class);
+                intent.putExtra("wifiModelType",wifiModelType);
                 startActivity(intent);
                 break;
             case R.id.cancel:
@@ -67,7 +71,7 @@ public class WifiLockVideoScanFailedActivity extends AppCompatActivity {
         }
     }
 
-    public static class WifiVideoLockSafeModelActivity extends BaseActivity<IWifiLockSafeModeView, WifiLockSafeModePresenter<IWifiLockSafeModeView>> implements
+   /* public static class WifiVideoLockSafeModelActivity extends BaseActivity<IWifiLockSafeModeView, WifiLockSafeModePresenter<IWifiLockSafeModeView>> implements
             View.OnClickListener,IWifiLockSafeModeView {
 
 
@@ -180,5 +184,5 @@ public class WifiLockVideoScanFailedActivity extends AppCompatActivity {
                 ivSafeMode.setImageResource(safeMode == 1 ? R.mipmap.iv_open : R.mipmap.iv_close);
             }
         }
-    }
+    }*/
 }

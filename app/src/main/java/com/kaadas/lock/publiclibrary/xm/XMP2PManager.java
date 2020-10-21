@@ -371,7 +371,7 @@ public class XMP2PManager extends StreamListener  {
     @Override
     public void onVideoDataAVStreamHeader(byte[] paramArrayOfByte, int paramInt, AVStreamHeader paramAVStreamHeader) {
         super.onVideoDataAVStreamHeader(paramArrayOfByte, paramInt, paramAVStreamHeader);
-        LogUtils.e("paramArrayOfByte --->"+paramArrayOfByte.length);
+
         H264Frame h264Frame = new H264Frame();
         // H264 数据流
         h264Frame.setH264(paramArrayOfByte);
@@ -786,5 +786,6 @@ public class XMP2PManager extends StreamListener  {
 
     public void notifyGateWayNewVersion(){
         getInstanceP2P().notifyGateWayNewVersion();
+
     }
 }
