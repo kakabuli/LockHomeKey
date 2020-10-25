@@ -1033,7 +1033,7 @@
     <string name="admin_open_lock">管理密码开门</string>
     <string name="visitor_opne_lock">访客密码开门</string>
     <string name="disposable_open_lock">一次性开门</string>
-    <string name="mechanical_key_open_lock">机械钥匙开门</string>
+    <string name="mechanical_key_open_lock">机械方式开门</string>
     <string name="remote_control_open_lock">遥控开门</string>
     <string name="one_key_open_lock">一键开门</string>
     <string name="not_connected">未连接</string>
@@ -1096,7 +1096,7 @@
     <string name="ri">日</string>
     <string name="warrning_open">防拆报警</string>
     <string name="warrning_lock_block">门锁堵转报警</string>
-    <string name="warrning_machine_key_open">机械钥匙开锁报警</string>
+    <string name="warrning_machine_key_open">机械方式开锁报警</string>
     <string name="get_version_code_fail">获取版本号失败</string>
     <string name="ble_disconnected_please_retry">设备蓝牙已断开，无法绑定，重新搜索</string>
     <string name="please_refresh_page_get_newdata">请刷新页面,获取最新数据！</string>
@@ -1279,7 +1279,7 @@
     <string name="is_setting_password">正在添加密码.......</string>
     <string name="is_sync_password_plan">正在同步密码计划...</string>
     <string name="synv_failed">同步失败</string>
-    <string name="notice_419_call">蓝牙SN未检索到，请拨打 \n400-11-66667</string>
+    <string name="notice_419_call">蓝牙SN未检索到，请拨打 \n400-800-5919</string>
 
 
     <string name="menu_item_about">关于App</string>
@@ -1346,7 +1346,7 @@
     <string name="wifi_lock_alarm_lower_power_close_face">您的智能门锁面容识别已关闭，如需重新开启面容识别，请更换电池</string>
     <string name="wifi_lock_alarm_many_failed">您的智能锁已多次验证开门失败，请回家或联系保安查看</string>
     <string name="wifi_lock_alarm_lock_broken">已监测到您的门锁被撬，请联系家人或小区保安</string>
-    <string name="wifi_lock_alarm_opens">门锁正在被机械钥匙开启，请回家或联系保安查看</string>
+    <string name="wifi_lock_alarm_opens">门锁正在被机械方式开启，请回家或联系保安查看</string>
     <string name="wifi_lock_alarm_low_power">您的智能门锁低电量,请及时更换</string>
     <string name="wifi_lock_alarm_problem">您的门锁有故障，请注意</string>
     <string name="wifi_lock_alarm_safe">您的门锁处于布防状态，有从门内开锁情况</string>
@@ -1376,7 +1376,7 @@
     <string name="wifi_lock_alarm_2">您的家人使用劫持密码开启%1$s门锁，赶紧联系或报警</string>
     <string name="wifi_lock_alarm_3">您的%1$s门锁错误验证多次</string>
     <string name="wifi_lock_alarm_4">已监测到您的%1$s门锁被撬，请联系家人或小区保安</string>
-    <string name="wifi_lock_alarm_8">您的%1$s门锁错正在被机械钥匙开启，请回家或联系保安查看</string>
+    <string name="wifi_lock_alarm_8">您的%1$s门锁错正在被机械方式开启，请回家或联系保安查看</string>
     <string name="wifi_lock_alarm_10">您的%1$s门锁门锁低电量，请及时更换</string>
     <string name="wifi_lock_alarm_20">您的%1$s门锁有故障，请注意</string>
     <string name="wifi_lock_alarm_40">您的%1$s门锁处于布防状态，有从门内开锁情况</string>
@@ -1398,7 +1398,7 @@
     <string name="no_support_no_pwd_wifi">不支持无密码Wi-Fi</string>
     <string name="ok_wifi_lock">好的</string>
     <string name="app">App</string>
-    <string name="machine_key">机械钥匙开锁</string>
+    <string name="machine_key">机械方式开锁</string>
     <string name="indoor_open">室内open键开锁</string>
     <string name="indoor_open_new_express">室内多功能键开锁</string>
     <string name="indoor_Induction">室内感应把手开锁</string>

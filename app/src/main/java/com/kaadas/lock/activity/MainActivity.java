@@ -712,7 +712,7 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
             case 0x04:// 防撬报警（锁被撬开）
                 content = String.format(getString(R.string.wifi_lock_alarm_4), nickName);
                 break;
-            case 0x08:// 机械钥匙报警（使用机械钥匙开锁）
+            case 0x08:// 机械方式报警（使用机械方式开锁）
                 content = String.format(getString(R.string.wifi_lock_alarm_8), nickName);
                 break;
             case 0x10:// 低电压报警（电池电量不足）

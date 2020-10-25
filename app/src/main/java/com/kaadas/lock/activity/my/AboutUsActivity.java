@@ -54,7 +54,7 @@ public class AboutUsActivity extends BaseAddToApplicationActivity implements Vie
                 finish();
                 break;
             case R.id.rl_customer_service_phone:
-                SharedUtil.getInstance().callPhone(this,"400-11-66667");
+                SharedUtil.getInstance().callPhone(this,"400-800-5919");
                 break;
             case R.id.rl_zhao_shang_phone:
                 SharedUtil.getInstance().callPhone(this,"400-800-3756");
