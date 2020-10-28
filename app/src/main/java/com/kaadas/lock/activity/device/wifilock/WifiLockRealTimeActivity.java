@@ -117,9 +117,6 @@ public class WifiLockRealTimeActivity extends BaseActivity<IWifiVideoRealTimeVie
             case R.id.rl_real_time_period:
                 if(avi.isShow()) {
                     if (wifiLockInfo.getPowerSave() == 0) {
-                        for (int i = 0 ;i<snoozeStartTime.length;i++){
-                            LogUtils.e("shulan -WifiLockRealTimeActivity---snoozeStartTime["+i+"]--" + snoozeStartTime[i]);
-                        }
                         Intent intent = new Intent(this,WifiLockRealTimePeriodActivity.class);
                         intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
                         intent.putExtra(KeyConstants.WIFI_VIDEO_LOCK_REAL_TIME_SETTING_START, startTime);
@@ -155,15 +152,20 @@ public class WifiLockRealTimeActivity extends BaseActivity<IWifiVideoRealTimeVie
     }
 
     private void setRealTime() {
-        if(keepAliveStatus != wifiLockInfo.getKeep_alive_status() || startTime != wifiLockInfo.getAlive_time().getSnooze_start_time()
-                || endTime != wifiLockInfo.getAlive_time().getSnooze_end_time() || snoozeStartTime != wifiLockInfo.getAlive_time().getKeep_alive_snooze()){
-            tvTips.setVisibility(View.VISIBLE);
-            avi.setVisibility(View.VISIBLE);
-            avi.show();
-            mPresenter.setConnectRealTime(keepAliveStatus,startTime,endTime,snoozeStartTime,wifiSn);
-        }else{
-            finish();
+        try{
+            if(keepAliveStatus != wifiLockInfo.getKeep_alive_status() || startTime != wifiLockInfo.getAlive_time().getSnooze_start_time()
+                    || endTime != wifiLockInfo.getAlive_time().getSnooze_end_time() || snoozeStartTime != wifiLockInfo.getAlive_time().getKeep_alive_snooze()){
+                tvTips.setVisibility(View.VISIBLE);
+                avi.setVisibility(View.VISIBLE);
+                avi.show();
+                mPresenter.setConnectRealTime(keepAliveStatus,startTime,endTime,snoozeStartTime,wifiSn);
+            }else{
+                finish();
+            }
+        }catch (Exception e){
+
         }
+
     }
 
     @Override

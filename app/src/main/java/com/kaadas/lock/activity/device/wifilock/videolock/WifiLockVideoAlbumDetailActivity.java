@@ -127,10 +127,8 @@ public class WifiLockVideoAlbumDetailActivity extends BaseActivity<IMyAlbumPlaye
 
         filepath = getIntent().getStringExtra(KeyConstants.VIDEO_PIC_PATH);
         String name = getIntent().getStringExtra("NAME");
-        wifiSn = getIntent().getStringExtra(KeyConstants.WIFI_SN);
-        wifiLockInfo = MyApplication.getInstance().getWifiLockInfoBySn(wifiSn);
-        record = (WifiVideoLockAlarmRecord) getIntent().getSerializableExtra("record");
-        path = FileTool.getVideoCacheFolder(this,record.getWifiSN()).getPath();
+
+
         tvName.setText(name);
         // initDate
         statusHelper = new StatusHelper(this);
@@ -163,6 +161,10 @@ public class WifiLockVideoAlbumDetailActivity extends BaseActivity<IMyAlbumPlaye
             ivCache.setVisibility(View.GONE);
             isRecordSuccess = true;
         }else{
+            path = FileTool.getVideoCacheFolder(this,record.getWifiSN()).getPath();
+            wifiSn = getIntent().getStringExtra(KeyConstants.WIFI_SN);
+            wifiLockInfo = MyApplication.getInstance().getWifiLockInfoBySn(wifiSn);
+            record = (WifiVideoLockAlarmRecord) getIntent().getSerializableExtra("record");
             avi.setVisibility(View.VISIBLE);
             avi.show();
             tvTips.setVisibility(View.VISIBLE);
